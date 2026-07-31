@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-31T10:00:56.050Z",
-    "lastSuccessAt": "2026-07-31T10:01:00.744Z",
-    "lastChangedAt": "2026-07-31T10:00:59.883Z",
+    "lastRunAt": "2026-07-31T11:35:17.178Z",
+    "lastSuccessAt": "2026-07-31T11:35:22.330Z",
+    "lastChangedAt": "2026-07-31T11:35:21.256Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a6c6af8-1fa04c\"",
-    "lastModified": "Fri, 31 Jul 2026 09:29:28 GMT",
+    "etag": "\"6a6c84fb-1f3055\"",
+    "lastModified": "Fri, 31 Jul 2026 11:20:27 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 16,
@@ -451,7 +451,7 @@
     "streamCount": 2,
     "completeness": {
       "capMessages": 1,
-      "infoBlocks": 42,
+      "infoBlocks": 41,
       "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -466,8 +466,8 @@
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 119,
-      "mappedAreas": 1036,
+      "totalAreas": 121,
+      "mappedAreas": 1063,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 16,
@@ -484,18 +484,18 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-07-31T11:29:22+02:00",
+    "lastCapSent": "2026-07-31T13:20:19+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5018,
+    "runMs": 5634,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-31T10:00:56.050Z",
+    "lastSnapshotAt": "2026-07-31T11:35:17.178Z",
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_310929.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_311120.xml",
           "productKey": "50",
           "status": 200,
           "action": "process",
@@ -514,7 +514,7 @@
         "reason": "ok",
         "completeness": {
           "capMessages": 1,
-          "infoBlocks": 42,
+          "infoBlocks": 41,
           "logicalAlerts": 21,
           "uniqueEvents": [
             "Velmi vysoké teploty",
@@ -529,8 +529,8 @@
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 119,
-          "mappedAreas": 1036,
+          "totalAreas": 121,
+          "mappedAreas": 1063,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
           "publishedActive": 16,
@@ -565,6 +565,17 @@
       }
     },
     "runHistory": [
+      {
+        "at": "2026-07-31T11:35:17.178Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 5634,
+        "error": null,
+        "activeCount": 16,
+        "scheduledCount": 5,
+        "publishableCount": 21
+      },
       {
         "at": "2026-07-31T10:00:56.050Z",
         "status": "not_modified",

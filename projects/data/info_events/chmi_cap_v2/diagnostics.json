@@ -1,6 +1,6 @@
 {
-  "runId": "c0d5c9a59e076524",
-  "started": "2026-07-31T10:00:56.050Z",
+  "runId": "85f057b2ab3c9f63",
+  "started": "2026-07-31T11:35:17.178Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,7 +16,7 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_310929.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_311120.xml",
       "productKey": "50",
       "status": 200,
       "action": "process",
@@ -49,7 +49,7 @@
     "reason": "ok",
     "completeness": {
       "capMessages": 1,
-      "infoBlocks": 42,
+      "infoBlocks": 41,
       "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -64,8 +64,8 @@
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 119,
-      "mappedAreas": 1036,
+      "totalAreas": 121,
+      "mappedAreas": 1063,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 16,
@@ -98,7 +98,7 @@
   },
   "completeness": {
     "capMessages": 1,
-    "infoBlocks": 42,
+    "infoBlocks": 41,
     "logicalAlerts": 21,
     "uniqueEvents": [
       "Velmi vysoké teploty",
@@ -113,8 +113,8 @@
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 119,
-    "mappedAreas": 1036,
+    "totalAreas": 121,
+    "mappedAreas": 1063,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
     "publishedActive": 16,
@@ -135,7 +135,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 1036,
+    "headAreas": 1063,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -143,6 +143,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-07-31T10:01:01.068Z",
-  "runMs": 5018
+  "finished": "2026-07-31T11:35:22.813Z",
+  "runMs": 5635
 }
