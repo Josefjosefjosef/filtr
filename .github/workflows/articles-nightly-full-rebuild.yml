@@ -23,7 +23,7 @@ jobs:
       IU_FULL_REBUILD: "1"
       IU_ARTICLE_PIPELINE_PHASE: ingest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
           fetch-depth: 1
@@ -45,7 +45,7 @@ jobs:
           fi
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: steps.cutover.outputs.skip != 'true'
         with:
           ref: main
