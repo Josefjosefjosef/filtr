@@ -1,8 +1,10 @@
 name: Update CHMI CAP v2
 
-# CAP v2 sync every 15 min.
+# CAP v2 sync every 5 min (GitHub schedule is best-effort; */5 leaves headroom for
+# transform + data-only checks + auto-merge + Pages dispatch within 15 min E2E SLA).
 # Completeness: newest bulletin per CAP product stream (no fixed maxFiles / first-N).
 # Data PR must receive required checks and auto-merge; incomplete sync = FAIL (no silent healthy).
+# After merge, explicitly dispatch pages.yml (bot GITHUB_TOKEN merges do not reliably trigger push→pages).
 
 on:
   workflow_dispatch:
@@ -12,7 +14,7 @@ on:
         required: false
         default: "active"
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
 
 # Share writer lock with update-info-events to prevent lost updates on feed/monitoring.
 concurrency:
@@ -28,11 +30,12 @@ permissions:
 env:
   AUTOMATION_BRANCH: automation/update-chmi-cap-v2
   PR_TITLE: "chore(data): refresh CHMI CAP v2 snapshot"
+  IU_CHMI_E2E_SLA_MS: "900000"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -53,10 +56,15 @@ jobs:
         run: npm run iu-chmi-cap-v2-architecture-validation
 
       - name: Sync CHMI CAP v2
+        id: sync
         env:
           IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}
           IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_active_streams' }}
-        run: node scripts/chmi-cap-v2-prod-sync.mjs
+        run: |
+          set -euo pipefail
+          echo "discoveredAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          node scripts/chmi-cap-v2-prod-sync.mjs
+          echo "transformedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
       - name: Commit data if changed
         id: commit_push
@@ -77,6 +85,7 @@ jobs:
           git commit -m "${{ env.PR_TITLE }}"
           git push -u origin "$BRANCH" --force
           echo "pushed=true" >> "$GITHUB_OUTPUT"
+          echo "committedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
       - name: Dispatch required checks
         if: steps.commit_push.outputs.pushed == 'true'
@@ -107,7 +116,7 @@ jobs:
           fi
           gh pr create --base main --head "$BRANCH" \
             --title "${{ env.PR_TITLE }}" \
-            --body "Automated CHMI CAP v2 sync (15 min). Completeness: all CAP product-stream heads (no fixed file count), union of active hazards, conditional GET + per-URL bulletin cache. Incomplete sync fails the job."
+            --body "Automated CHMI CAP v2 sync (*/5). Completeness: all CAP product-stream heads, union of active hazards, conditional GET + bulletin cache. Data-only auto-merge after required checks. Pages.yml is dispatched explicitly after merge (15 min E2E SLA)."
           NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
           echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
@@ -160,6 +169,7 @@ jobs:
 
       - name: Wait for required checks (fail if missing/failing)
         if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        id: wait_merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -173,6 +183,8 @@ jobs:
             MERGED=$(gh pr view "$NUM" --json state -q .state)
             if [ "$MERGED" = "MERGED" ]; then
               echo "[WAIT] PR already merged"
+              echo "merged=true" >> "$GITHUB_OUTPUT"
+              echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             ROLLUP=$(gh pr view "$NUM" --json mergeStateStatus,statusCheckRollup -q '{m:.mergeStateStatus,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
@@ -183,7 +195,6 @@ jobs:
               gh pr checks "$NUM" || true
               exit 1
             fi
-            # Treat empty rollup / missing required contexts as still starting — do not fail-fast.
             HAVE=0
             for ctx in $REQUIRED; do
               HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase))] | length')
@@ -198,16 +209,18 @@ jobs:
             MS=$(echo "$ROLLUP" | jq -r .m)
             if [ "$PENDING" = "0" ] && { [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; }; then
               echo "[WAIT] checks ready (mergeState=$MS)"
-              # Give auto-merge a moment to land
               for _try in $(seq 1 12); do
                 ST=$(gh pr view "$NUM" --json state -q .state)
                 if [ "$ST" = "MERGED" ]; then
                   echo "[WAIT] auto-merge completed (try=$_try)"
+                  echo "merged=true" >> "$GITHUB_OUTPUT"
+                  echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
                   exit 0
                 fi
                 sleep 10
               done
               echo "[WAIT] checks green but PR not merged yet — leaving auto-merge enabled"
+              echo "merged=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             sleep 15
@@ -215,3 +228,14 @@ jobs:
           echo "[WAIT] timeout waiting for checks"
           gh pr checks "$NUM" || true
           exit 1
+
+      - name: Dispatch Pages after successful data merge
+        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true' && steps.wait_merge.outputs.merged == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "[PAGES] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[PAGES] Dispatched pages.yml on main after CHMI data merge"
+          gh workflow run pages-publish-from-main-data.yml --ref main --repo "${{ github.repository }}" || true
