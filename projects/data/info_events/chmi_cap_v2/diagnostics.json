@@ -1,6 +1,6 @@
 {
-  "runId": "299d16e581fceeea",
-  "started": "2026-07-31T07:14:42.620Z",
+  "runId": "c0d5c9a59e076524",
+  "started": "2026-07-31T10:00:56.050Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,11 +16,11 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_310929.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
@@ -30,13 +30,26 @@
       "cacheHit": true
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 1,
+    "valid": 1,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 1,
+    "status": "healthy",
+    "alert": 0,
+    "update": 1,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 42,
       "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -44,18 +57,19 @@
         "Velmi silná zátěž teplem",
         "Silná zátěž teplem",
         "Extrémní zátěž teplem",
+        "Silné bouřky",
         "Riziko požárů",
         "Vysoké riziko požárů",
         "Smogová situace - troposférický ozón O3",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 109,
-      "mappedAreas": 843,
+      "totalAreas": 119,
+      "mappedAreas": 1036,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 18,
-      "publishedScheduled": 3,
+      "publishedActive": 16,
+      "publishedScheduled": 5,
       "publishableCount": 21,
       "productStreams": [
         "50",
@@ -64,27 +78,27 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 1,
-      "expiredCount": 5,
+      "expiredCount": 0,
       "cancelledCount": 0
     },
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
   "temporalCounts": {
-    "totalItems": 27,
-    "activeCount": 18,
-    "scheduledCount": 3,
-    "expiredCount": 5,
+    "totalItems": 22,
+    "activeCount": 16,
+    "scheduledCount": 5,
+    "expiredCount": 0,
     "cancelledCount": 0,
     "invalidCount": 1,
     "publishableCount": 21,
     "visibleCount": 21
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
+    "capMessages": 1,
+    "infoBlocks": 42,
     "logicalAlerts": 21,
     "uniqueEvents": [
       "Velmi vysoké teploty",
@@ -92,18 +106,19 @@
       "Velmi silná zátěž teplem",
       "Silná zátěž teplem",
       "Extrémní zátěž teplem",
+      "Silné bouřky",
       "Riziko požárů",
       "Vysoké riziko požárů",
       "Smogová situace - troposférický ozón O3",
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 109,
-    "mappedAreas": 843,
+    "totalAreas": 119,
+    "mappedAreas": 1036,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 18,
-    "publishedScheduled": 3,
+    "publishedActive": 16,
+    "publishedScheduled": 5,
     "publishableCount": 21,
     "productStreams": [
       "50",
@@ -112,7 +127,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 1,
-    "expiredCount": 5,
+    "expiredCount": 0,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -120,7 +135,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 843,
+    "headAreas": 1036,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -128,6 +143,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-07-31T07:14:46.185Z",
-  "runMs": 3565
+  "finished": "2026-07-31T10:01:01.068Z",
+  "runMs": 5018
 }
