@@ -414,30 +414,30 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-07-31T18:15:08.466Z",
-    "lastSuccessAt": "2026-07-31T18:15:11.173Z",
-    "lastChangedAt": "2026-07-31T17:06:30.645Z",
+    "lastRunAt": "2026-07-31T18:18:41.238Z",
+    "lastSuccessAt": "2026-07-31T18:18:46.665Z",
+    "lastChangedAt": "2026-07-31T18:18:45.681Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a688d7b-e76a\"",
-    "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
+    "etag": "\"6a6ce680-1ed7cf\"",
+    "lastModified": "Fri, 31 Jul 2026 18:16:32 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 17,
+    "activeCount": 18,
     "scheduledCount": 4,
     "expiredCount": 0,
     "cancelledCount": 0,
     "invalidCount": 1,
-    "publishableCount": 38,
-    "visibleCount": 38,
-    "totalItems": 22,
+    "publishableCount": 39,
+    "visibleCount": 39,
+    "totalItems": 23,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,9 +450,9 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 38,
+      "capMessages": 1,
+      "infoBlocks": 42,
+      "logicalAlerts": 39,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -460,19 +460,20 @@
         "Silná zátěž teplem",
         "Extrémní zátěž teplem",
         "Silné bouřky",
+        "Velmi silné bouřky",
         "Vysoké riziko požárů",
         "Riziko požárů",
         "Smogová situace - troposférický ozón O3",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 499,
-      "mappedAreas": 1093,
+      "totalAreas": 503,
+      "mappedAreas": 1105,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 34,
+      "publishedActive": 35,
       "publishedScheduled": 4,
-      "publishableCount": 38,
+      "publishableCount": 39,
       "productStreams": [
         "50",
         "70"
@@ -484,34 +485,34 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-07-31T14:30:48+02:00",
+    "lastCapSent": "2026-07-31T20:15:51+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5624,
+    "runMs": 8839,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-31T18:15:08.466Z",
+    "lastSnapshotAt": "2026-07-31T18:18:41.238Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-07-31T17:06:24.982Z",
-      "officialLatestSentAt": "2026-07-31T14:30:48+02:00",
+      "officialFirstSeenAt": "2026-07-31T18:18:41.238Z",
+      "officialLatestSentAt": "2026-07-31T20:15:51+02:00",
       "officialLatestValidFrom": "2026-08-01T00:00:00+02:00",
-      "discoveredAt": "2026-07-31T18:15:08.466Z",
-      "fetchedAt": "2026-07-31T18:15:08.466Z",
-      "transformedAt": "2026-07-31T18:15:14.090Z",
-      "validatedAt": "2026-07-31T18:15:14.090Z",
-      "publishedAt": "2026-07-31T18:15:08.466Z",
-      "endToEndLagMs": 16536982
+      "discoveredAt": "2026-07-31T18:18:41.238Z",
+      "fetchedAt": "2026-07-31T18:18:41.238Z",
+      "transformedAt": "2026-07-31T18:18:50.077Z",
+      "validatedAt": "2026-07-31T18:18:50.077Z",
+      "publishedAt": "2026-07-31T18:18:41.238Z",
+      "endToEndLagMs": 170238
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_311230.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_311815.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
@@ -525,9 +526,9 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
-          "logicalAlerts": 38,
+          "capMessages": 1,
+          "infoBlocks": 42,
+          "logicalAlerts": 39,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -535,19 +536,20 @@
             "Silná zátěž teplem",
             "Extrémní zátěž teplem",
             "Silné bouřky",
+            "Velmi silné bouřky",
             "Vysoké riziko požárů",
             "Riziko požárů",
             "Smogová situace - troposférický ozón O3",
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 499,
-          "mappedAreas": 1093,
+          "totalAreas": 503,
+          "mappedAreas": 1105,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 34,
+          "publishedActive": 35,
           "publishedScheduled": 4,
-          "publishableCount": 38,
+          "publishableCount": 39,
           "productStreams": [
             "50",
             "70"
@@ -561,9 +563,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-07-31T18:18:41.238Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 8839,
+        "error": null,
+        "activeCount": 18,
+        "scheduledCount": 4,
+        "publishableCount": 39
+      },
       {
         "at": "2026-07-31T18:15:08.466Z",
         "status": "not_modified",
@@ -1080,17 +1106,6 @@
         "activeCount": 18,
         "scheduledCount": 3,
         "publishableCount": 21
-      },
-      {
-        "at": "2026-07-30T21:51:11.280Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2512,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
       }
     ]
   }
