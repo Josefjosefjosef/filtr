@@ -247,7 +247,7 @@ const prodSync = fs.readFileSync(path.join(REPO, "scripts/chmi-cap-v2-prod-sync.
 ok("wires_referencesTraversal", /referencesTraversal:\s*true/.test(prodSync));
 ok("wires_ONSET_LEDGER_RECENT", /ONSET_LEDGER_RECENT_PER_STREAM/.test(prodSync));
 ok("wires_resolveReferenceChain", /resolveReferenceChainEntries/.test(prodSync));
-ok("wires_mergeLedgers", /mergeOnsetLedgersEarliest/.test(prodSync));
+ok("wires_mergeLedgers", /mergeOnsetLedgersPreferPrimary/.test(prodSync));
 ok("no_hardcoded_6_only", !/listRecentForOnsetLedger\(6\)/.test(prodSync));
 
 if (fails.length) {

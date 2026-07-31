@@ -11,6 +11,7 @@ import {
   buildTerritoryOnsetLedgerFromOrderedDocuments,
 } from "./chmi-cap-v2/territory-onset-ledger.mjs";
 import { isPublishableChmiItem, normalizeCapInstant } from "./chmi-cap-v2/normalize-feed.mjs";
+import { mergeOnsetLedgersPreferPrimary } from "./chmi-cap-v2/revision-chain-history.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIX = path.join(REPO, "scripts/fixtures/chmi-cap-v2");
@@ -54,6 +55,25 @@ ok("orp_6208_present", !!item6208, "6208");
 ok("handoff_sets_new_onset", onset === normalizeCapInstant(newOnset), onset);
 ok("handoff_does_not_keep_old_onset", onset !== normalizeCapInstant(oldOnset), onset);
 ok("cold_start_ids_deterministic", JSON.stringify(firstIds) === JSON.stringify(secondIds), firstIds.join(","));
+
+// Persisted pre-handoff onset must not resurrect when merging with history ledger.
+const built = buildTerritoryOnsetLedgerFromOrderedDocuments(docs, { nowIso, seedLedger: {} });
+const primarySem = Object.keys(built.ledger || {}).find((k) => /until-revoked/.test(k));
+ok("history_ledger_has_sem", !!primarySem, Object.keys(built.ledger || {}).join("|"));
+const stalePersisted = primarySem
+  ? {
+      [primarySem]: {
+        "orp:6208": { validFrom: oldOnset, itemId: "stale", sourceDocument: "stale" },
+      },
+    }
+  : {};
+const merged = mergeOnsetLedgersPreferPrimary(built.ledger, stalePersisted);
+const mergedOnset = primarySem && merged[primarySem] && merged[primarySem]["orp:6208"] && merged[primarySem]["orp:6208"].validFrom;
+ok(
+  "persist_merge_keeps_handoff_onset",
+  normalizeCapInstant(mergedOnset) === normalizeCapInstant(newOnset),
+  String(mergedOnset)
+);
 
 if (fails.length) {
   console.error("IU_CHMI_FIRE_ONSET_HANDOFF_GUARD=FAIL");

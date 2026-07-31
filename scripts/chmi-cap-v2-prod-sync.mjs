@@ -37,7 +37,7 @@ import {
 import {
   ONSET_LEDGER_RECENT_PER_STREAM,
   mergeOnsetHistoryEntries,
-  mergeOnsetLedgersEarliest,
+  mergeOnsetLedgersPreferPrimary,
   resolveReferenceChainEntries,
 } from "./chmi-cap-v2/revision-chain-history.mjs";
 import { listCapXmlFromIndex } from "./iu-info-events-lib.mjs";
@@ -52,7 +52,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
-const BULLETIN_CACHE_EPOCH = 11;
+const BULLETIN_CACHE_EPOCH = 12;
 
 function readJson(p, fallback) {
   try {
@@ -193,6 +193,9 @@ export async function runChmiCapV2Sync(opts = {}) {
       state.bulletinCache = {};
       state.bulletinCacheEpoch = BULLETIN_CACHE_EPOCH;
       state.endpointMeta = {};
+      // Drop stale per-ORP onset cache so timed handoffs cannot be resurrected
+      // by earliest-wins merge against a pre-handoff persistent ledger.
+      state.openEndedOrpOnset = {};
       if (state.sync) state.sync.bodyHash = null;
       diagnostics.discovery = diagnostics.discovery || {};
       diagnostics.cacheEpochInvalidated = BULLETIN_CACHE_EPOCH;
@@ -439,8 +442,9 @@ export async function runChmiCapV2Sync(opts = {}) {
         nowIso: started,
         seedLedger: {},
       });
-      // Persistent ledger fills gaps when a historical document is temporarily unavailable.
-      chainLedger = canonicalizeLedgerOrpKeys(mergeOnsetLedgersEarliest(built.ledger, persistedLedger));
+      // History-built ledger is authoritative (includes timed handoff resets).
+      // Persistent ledger only fills ORPs missing after a temporary history gap.
+      chainLedger = canonicalizeLedgerOrpKeys(mergeOnsetLedgersPreferPrimary(built.ledger, persistedLedger));
       chainSteps = built.steps;
     } else if (prevFeedEarly.items && prevFeedEarly.items.length) {
       chainLedger = canonicalizeLedgerOrpKeys(

@@ -29,7 +29,8 @@ const geoJson = JSON.parse(fs.readFileSync(path.join(REPO, "scripts/chmi-cap-v2/
 ok("window_ge_16", ONSET_LEDGER_RECENT_PER_STREAM >= 16, String(ONSET_LEDGER_RECENT_PER_STREAM));
 ok("no_sole_listRecent_6", !/listRecentForOnsetLedger\(\s*6\s*\)/.test(prodSync));
 ok("references_traversal", /resolveReferenceChainEntries/.test(prodSync));
-ok("persistent_ledger_merge", /mergeOnsetLedgersEarliest/.test(prodSync));
+ok("persistent_ledger_merge", /mergeOnsetLedgersPreferPrimary/.test(prodSync));
+ok("epoch_clears_onset_ledger", /openEndedOrpOnset\s*=\s*\{\s*\}/.test(prodSync));
 ok("no_unused_split_import", !/splitOpenEndedByPriorTerritoryOnset/.test(prodSync));
 ok("select_latest_per_stream", /selectLatestPerProductStream/.test(discovery));
 ok("praha_alias_1100_to_1000_build", /aliases\["1100"\]\s*=\s*"1000"/.test(geoBuild));
