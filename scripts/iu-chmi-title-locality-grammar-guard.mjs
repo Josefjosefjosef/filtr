@@ -11,6 +11,7 @@ import {
   summarizeAlertLocality,
   formatExtraOrpAreasPhrase,
   formatChmiEventDisplayName,
+  refreshItemLocalityPresentation,
 } from "./chmi-cap-v2/normalize-feed.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -92,6 +93,32 @@ ok("phrase_5", formatExtraOrpAreasPhrase(5) === "a dalších 5 oblastí", format
 ok("phrase_32", formatExtraOrpAreasPhrase(32) === "a dalších 32 oblastí", formatExtraOrpAreasPhrase(32));
 ok("o3_display", formatChmiEventDisplayName("Smogová situace - troposférický ozón O3") === "Smogová situace - troposférický ozón O₃", "o3");
 ok("o3_identity_safe", formatChmiEventDisplayName("O3") === "O₃" && "O3" !== "O₃", "identity");
+
+// 304 cache: refresh presentation without changing id / validity
+{
+  const stale = {
+    id: "ie-chmi-v2-stale-rumburk",
+    title: "Stav sucha — Rumburk a dalších 1 oblastí",
+    validFrom: "2026-07-28T14:00:00+02:00",
+    validTo: null,
+    publicUrl: "https://example.test/portal",
+    region: { summary: "Rumburk a dalších 1 oblastí", name: "Rumburk" },
+    capV2: {
+      event: "Stav sucha",
+      geo: {
+        links: [
+          { orpName: "Rumburk", krajName: "Ústecký kraj", orpId: "r" },
+          { orpName: "Vrchlabí", krajName: "Královéhradecký kraj", orpId: "v" },
+        ],
+      },
+    },
+  };
+  const fresh = refreshItemLocalityPresentation(stale);
+  ok("cache_refresh_two_names", fresh.title === "Stav sucha — Rumburk a Vrchlabí", fresh.title);
+  ok("cache_refresh_id_stable", fresh.id === stale.id, fresh.id);
+  ok("cache_refresh_validFrom_stable", fresh.validFrom === stale.validFrom, fresh.validFrom);
+  ok("cache_refresh_url_stable", fresh.publicUrl === stale.publicUrl, fresh.publicUrl);
+}
 
 // concrete ORP list (multi kraj) — count unique ORP only
 const multi = summarizeAlertLocality(
