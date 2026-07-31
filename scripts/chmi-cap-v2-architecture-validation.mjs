@@ -41,7 +41,7 @@ function makeCapXml(opts) {
     msgType = "Alert",
     status = "Actual",
     references = "",
-    infos = [{ event: "Test", severity: "Moderate", orps: ["6203"], expires: "2026-08-01T00:00:00+02:00" }],
+    infos = [{ event: "Test", severity: "Moderate", orps: ["6203"], expires: "2026-12-31T23:59:00+02:00" }],
   } = opts;
   const identifier = `2.49.0.0.203.0.CZ.ARCH.${product}.${seq}`;
   const infoXml = infos
@@ -231,7 +231,7 @@ function listedForStreams(streamCount, filesPerStream = 3) {
         product,
         seq: "P1",
         sent: "2026-07-29T12:00:00+02:00",
-        infos: [{ event, severity: "Moderate", orps: [orp], expires: "2026-08-01T00:00:00+02:00" }],
+        infos: [{ event, severity: "Moderate", orps: [orp], expires: "2026-12-31T23:59:00+02:00" }],
       }),
       sourceUrl: `stream-${product}`,
     });
@@ -299,7 +299,7 @@ function listedForStreams(streamCount, filesPerStream = 3) {
         event: "Vysoké teploty",
         severity: "Moderate",
         orps: ["1000", "6203", "3213", "4212", "2101"],
-        expires: "2026-08-01T00:00:00+02:00",
+        expires: "2026-12-31T23:59:00+02:00",
       },
     ],
   });
@@ -329,7 +329,7 @@ function listedForStreams(streamCount, filesPerStream = 3) {
       makeCapXml({
         product: "50",
         seq: "T1",
-        infos: [{ event: "X", severity: "Moderate", orps: ["1000", "6203", "3213"], expires: "2026-08-01T00:00:00+02:00" }],
+        infos: [{ event: "X", severity: "Moderate", orps: ["1000", "6203", "3213"], expires: "2026-12-31T23:59:00+02:00" }],
       }),
       { limits: { maxAreasPerInfo: 1 } }
     );
