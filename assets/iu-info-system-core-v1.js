@@ -1146,6 +1146,12 @@ function publishedAtIso(ev) {
  * Shared timeline presentation for feed cards (CHMI active-day rollover + AKTIVNÍ).
  * Does not mutate the item. timelineAt is sort-only; never write it onto the event.
  *
+ * Public times for CAP cards:
+ * - ACTIVE with onset/validFrom → primary axis = official validFrom (never ingest/deploy time).
+ * - “vydáno” = CAP sent/publishedAtSource when it differs from validFrom (or on rolled days).
+ * - FUTURE → primary may show issued; secondary “platnost od” = validFrom (date+time).
+ * - Never use fetchedAt / generatedAt / firstSeenByInfoUzel as the user-facing clock.
+ *
  * @param {object} item
  * @param {number} [nowMs]
  */
@@ -1160,29 +1166,53 @@ function getEffectiveTimelinePresentation(item, nowMs) {
   const today = pragueYmd(now);
   const isRolledActiveWarning = !!(isActiveWarning && pubDay < today);
 
+  const validFromRaw = canonicalChmiValidFromRaw(item);
+  const validFromMs = parseTime(validFromRaw);
+  const hasOfficialValidFrom =
+    !!(isChmiCapWarning(item) && validFromMs && chmiRawHasClockTime(validFromRaw));
+
   let timelineMs = publishedMs;
   if (isRolledActiveWarning) timelineMs = startOfPragueDayMs(now);
+  else if (isActiveWarning && hasOfficialValidFrom) timelineMs = validFromMs;
 
-  const primaryDate = formatPragueDayMonth(isRolledActiveWarning ? now : publishedMs);
+  let primaryDate = formatPragueDayMonth(isRolledActiveWarning ? now : publishedMs);
   let primaryTime = null;
   let secondaryIssuedLabel = null;
-  if (isRolledActiveWarning) {
-    secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
-  } else {
-    primaryTime = formatPragueTime(publishedMs);
-  }
-
   let secondaryValidFromLabel = null;
   let secondaryValidFromDate = null;
   let secondaryValidFromTime = null;
+
   if (isFutureWarning) {
+    primaryTime = formatPragueTime(publishedMs);
     const parts = chmiValidFromDisplayParts(item);
     if (parts) {
       secondaryValidFromLabel = "platnost od";
-      // Always show date + time when both are known (same-day FUTURE must stay unambiguous).
       secondaryValidFromDate = parts.date;
       secondaryValidFromTime = parts.time;
     }
+  } else if (isActiveWarning && hasOfficialValidFrom) {
+    // Primary public clock = official onset / Platnost od (e.g. 11:25, not CAP sent 11:29).
+    primaryDate = formatPragueDayMonth(isRolledActiveWarning ? now : validFromMs);
+    if (!isRolledActiveWarning) {
+      primaryTime = formatPragueTime(validFromMs);
+    }
+    const issuedDiffers =
+      !!publishedMs && Math.abs(publishedMs - validFromMs) >= 60 * 1000;
+    if (isRolledActiveWarning) {
+      secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
+      const parts = chmiValidFromDisplayParts(item);
+      if (parts) {
+        secondaryValidFromLabel = "platnost od";
+        secondaryValidFromDate = parts.date;
+        secondaryValidFromTime = parts.time;
+      }
+    } else if (issuedDiffers) {
+      secondaryIssuedLabel = "vydáno " + formatPragueTime(publishedMs);
+    }
+  } else if (isRolledActiveWarning) {
+    secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
+  } else {
+    primaryTime = formatPragueTime(publishedMs);
   }
 
   return {

@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
+const CACHE_BUST = "info-system-v6-chmi-validfrom-timeline-20260731";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -275,8 +275,27 @@ function unitGate(IU) {
   ok("H_valid_from_same_day_time", h12.secondaryValidFromTime === "14:00", String(h12.secondaryValidFromTime));
   ok("H_after_active", h15.isActiveWarning === true, String(h15.isActiveWarning));
   ok("H_after_not_future", h15.isFutureWarning === false, String(h15.isFutureWarning));
-  ok("H_after_no_valid_from", !h15.secondaryValidFromLabel, String(h15.secondaryValidFromLabel));
+  // ACTIVE primary clock = official validFrom (14:00), not CAP sent (08:00).
+  ok("H_after_primary_validFrom", h15.primaryTime === "14:00", String(h15.primaryTime));
+  ok("H_after_issued_label", /vydáno\s*8:00|vydáno\s*08:00/.test(String(h15.secondaryIssuedLabel || "")), String(h15.secondaryIssuedLabel));
   ok("H_same_id", future.id === "ie-chmi-v2-roll-1", future.id);
+
+  // H1b: 11:25 onset vs 11:29 CAP sent — public primary must be 11:25
+  const heatSent = warning({
+    id: "ie-chmi-v2-heat-1125",
+    publishedAtSource: "2026-07-31T11:29:00+02:00",
+    publishedAt: "2026-07-31T11:29:00+02:00",
+    validFrom: "2026-07-31T11:25:00+02:00",
+    validTo: "2026-08-01T00:00:00+02:00",
+    firstSeenByInfoUzel: "2026-07-31T12:00:00.000Z",
+    sortAt: "2026-07-31T11:29:00+02:00",
+  });
+  const heatT = IU.getEffectiveTimelinePresentation(heatSent, Date.parse("2026-07-31T12:00:00+02:00"));
+  ok("H1b_active", heatT.isActiveWarning === true, String(heatT.isActiveWarning));
+  ok("H1b_primary_1125", heatT.primaryTime === "11:25", String(heatT.primaryTime));
+  ok("H1b_not_1129", heatT.primaryTime !== "11:29", String(heatT.primaryTime));
+  ok("H1b_issued_1129", /vydáno\s*11:29/.test(String(heatT.secondaryIssuedLabel || "")), String(heatT.secondaryIssuedLabel));
+  ok("H1b_no_ingest_clock", !/12:00/.test(String(heatT.primaryTime || "") + String(heatT.secondaryIssuedLabel || "")), "ingest");
 
   // H2: future next day — date + time under platnost od
   const futureNext = warning({

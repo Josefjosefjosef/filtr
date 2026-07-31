@@ -1,17 +1,17 @@
 {
-  "freezeId": "chmi-title-locality-20260731",
+  "freezeId": "chmi-validfrom-timeline-20260731",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-07-31T11:25:00Z",
-  "note": "Freeze bump: CHMI title locality grammar + O3 display + same-day platnost od; cache bust",
+  "updatedAt": "2026-07-31T12:15:00Z",
+  "note": "Freeze bump: ACTIVE timeline primary = official CAP validFrom/onset (not sent/ingest)",
   "files": {
-    "projects/index.html": "127b7e98bd9a8d9d941c3ec6eeb7066f108ac7ede07784a5b360e11f4974b8e9",
+    "projects/index.html": "ad4e2af199489a20c6e0063bacd080516485bc91d4b686ec080c8c601f8b8df0",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
     "assets/app.js": "23b5c4b9eee014c10349fc701302d46bf1ab8b57a44e50b7feb9ee454e48db36",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "589b159c4b5e632f054fbf7dadd51b97e8fcf58767f01a4dba372c12000283d4",
+    "sw.js": "702f4454acdf2589173ac17cd41557a1b2029d5a4b7e67010f26975ee0f28d2b",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-07-31-chmi-title-locality-v1\"",
+      "CACHE_VERSION = \"2026-07-31-chmi-validfrom-timeline-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
