@@ -27,7 +27,7 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem, splitOpenEndedByPriorTerritoryOnset, updateOpenEndedOrpOnsetLedger } from "./chmi-cap-v2/normalize-feed.mjs";
+import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem, updateOpenEndedOrpOnsetLedger } from "./chmi-cap-v2/normalize-feed.mjs";
 import {
   applyTerritoryOnsetLedgerToFeed,
   buildTerritoryOnsetLedgerFromOrderedDocuments,
