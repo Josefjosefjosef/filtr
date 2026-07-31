@@ -22,8 +22,8 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
-const SW_VER = "2026-07-31-chmi-info-events-passthrough-v1";
+const CACHE_BUST = "info-system-v6-chmi-validfrom-timeline-20260731";
+const SW_VER = "2026-07-31-chmi-info-events-passthrough-v2";
 
 const fails = [];
 function ok(id, cond, detail) {

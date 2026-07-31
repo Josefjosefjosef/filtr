@@ -237,13 +237,17 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-title-locality-grammar-guard
 
-      - name: CHMI cache refresh guard
+      - name: CHMI source-time not ingest-time guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
-        run: npm run iu-chmi-cache-refresh-guard
+        run: npm run iu-chmi-source-time-not-ingest-guard
 
       - name: CHMI E2E freshness SLA guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-e2e-freshness-sla-guard
+
+      - name: CHMI cache refresh guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-cache-refresh-guard
 
       - name: CHMI CAP no-segment-dedupe guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
