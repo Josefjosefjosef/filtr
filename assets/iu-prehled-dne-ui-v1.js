@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-title-locality-20260731";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-validfrom-timeline-20260731";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
+const CACHE_BUST = "info-system-v6-chmi-validfrom-timeline-20260731";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
