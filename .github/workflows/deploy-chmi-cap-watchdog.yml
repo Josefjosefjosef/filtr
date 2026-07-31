@@ -43,6 +43,7 @@ jobs:
       - name: Put GITHUB_TOKEN secret on worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 577868e9aac9c289e9323100f68fad16
           TOKEN_A: ${{ secrets.CHMI_CAP_WATCHDOG_GITHUB_TOKEN }}
           TOKEN_B: ${{ secrets.ARTICLES_WATCHDOG_GITHUB_TOKEN }}
         run: |
@@ -62,6 +63,7 @@ jobs:
       - name: Deploy worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 577868e9aac9c289e9323100f68fad16
         run: npx wrangler deploy
 
       - name: Probe worker health
