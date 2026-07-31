@@ -166,6 +166,8 @@ export function createOpendataActiveStreamsDiscovery(opts = {}) {
   const indexUrl = opts.indexUrl || CHMI_OPENDATA_CAP_INDEX;
   const fetchImpl = opts.fetchImpl || globalThis.fetch;
   const ua = opts.userAgent || CHMI_SYNC_UA;
+  /** @type {{ url: string, mtime?: number }[]} */
+  let lastListed = [];
   return {
     type: "opendata_active_streams",
     role: "open_data_file_distribution_discovery_not_api",
@@ -181,11 +183,19 @@ export function createOpendataActiveStreamsDiscovery(opts = {}) {
       if (!res.ok) throw Object.assign(new Error("opendata_index_http_" + res.status), { code: "DISCOVERY_INDEX" });
       const html = await res.text();
       const listed = listCapXmlFromIndex(html, indexUrl);
+      lastListed = listed;
       const selected = selectLatestPerProductStream(listed);
       if (!selected.length) {
         throw Object.assign(new Error("opendata_no_product_streams"), { code: "DISCOVERY_EMPTY" });
       }
       return selected;
+    },
+    /**
+     * Bounded recent history for territory-onset ledger (not a publish set).
+     * Oldest → newest within each product stream slice.
+     */
+    listRecentForOnsetLedger(maxPerStream = 6) {
+      return selectRecentPerProductStream(lastListed, maxPerStream);
     },
     async fetchBody(url, conditional = {}) {
       const headers = {

@@ -1,0 +1,41 @@
+# GitHub-side fallback when Cloudflare cron is intermittent.
+# Calls /probe?dispatch=1 so the CHMI CAP sync loop self-sustains.
+name: CHMI CAP watchdog cron fallback
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "3,18,33,48 * * * *"
+  workflow_run:
+    workflows: ["Update CHMI CAP v2"]
+    types: [completed]
+
+concurrency:
+  group: chmi-cap-watchdog-cron-fallback
+  cancel-in-progress: true
+
+env:
+  WATCHDOG_PROBE_URL: "https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/probe"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe CHMI CAP watchdog (worker decides dispatch)
+        run: |
+          set -euo pipefail
+          OUT="${RUNNER_TEMP}/chmi_cap_watchdog_probe.json"
+          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" "${WATCHDOG_PROBE_URL}?dispatch=1" || true)
+          echo "probe_http=$code"
+          head -c 4000 "$OUT" || true
+          echo ""
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "WATCHDOG_PROBE_UNEXPECTED_HTTP=$code"
+            exit 1
+          fi
+          if grep -q '"ok":false' "$OUT" && grep -q 'dispatch_failed\|GitHub dispatch failed' "$OUT"; then
+            echo "WATCHDOG_DISPATCH_FAILED"
+            exit 1
+          fi
+          echo "WATCHDOG_PROBE_OK"
