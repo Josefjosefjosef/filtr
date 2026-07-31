@@ -27,13 +27,31 @@ for (const r of rows) {
   console.log("checkout\t" + r.file + "\t" + r.ref + "\t" + (r.pinned ? "sha" : "tag"));
 }
 
+const EXPECTED_SHA = "3d3c42e5aac5ba805825da76410c181273ba90b1";
 const writers = rows.filter((r) =>
   /update-info-events\.yml|update-chmi-cap-v2\.yml/.test(r.file)
 );
-const writersPinned = writers.every((r) => r.pinned);
-if (!writersPinned) {
-  console.error("IU_ACTIONS_CHECKOUT_INVENTORY=FAIL writers_not_sha_pinned");
+const unpinned = rows.filter((r) => !r.pinned);
+const wrongSha = rows.filter((r) => r.pinned && r.ref.toLowerCase() !== EXPECTED_SHA);
+if (unpinned.length) {
+  console.error("IU_ACTIONS_CHECKOUT_INVENTORY=FAIL unpinned=" + unpinned.length);
+  for (const r of unpinned) console.error("UNPINNED\t" + r.file + "\t" + r.ref);
   process.exit(1);
 }
-console.log("IU_ACTIONS_CHECKOUT_INVENTORY=PASS writers_sha_pinned=" + writers.length);
+if (wrongSha.length) {
+  console.error("IU_ACTIONS_CHECKOUT_INVENTORY=FAIL wrong_sha=" + wrongSha.length);
+  process.exit(1);
+}
+if (!writers.length) {
+  console.error("IU_ACTIONS_CHECKOUT_INVENTORY=FAIL writers_missing");
+  process.exit(1);
+}
+console.log(
+  "IU_ACTIONS_CHECKOUT_INVENTORY=PASS all_sha_pinned=" +
+    rows.length +
+    " writers=" +
+    writers.length +
+    " sha=" +
+    EXPECTED_SHA
+);
 process.exit(0);
