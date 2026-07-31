@@ -1,6 +1,6 @@
 {
-  "runId": "85f057b2ab3c9f63",
-  "started": "2026-07-31T11:35:17.178Z",
+  "runId": "790dc2a0468def6e",
+  "started": "2026-07-31T11:39:09.469Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_311120.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
@@ -30,26 +30,13 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 0,
-    "update": 1,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 41,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 21,
       "uniqueEvents": [
         "Velmi vysoké teploty",
@@ -84,7 +71,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "temporalCounts": {
     "totalItems": 22,
@@ -97,8 +84,8 @@
     "visibleCount": 21
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 41,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 21,
     "uniqueEvents": [
       "Velmi vysoké teploty",
@@ -143,6 +130,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-07-31T11:35:22.813Z",
-  "runMs": 5635
+  "finished": "2026-07-31T11:39:13.372Z",
+  "runMs": 3903
 }
