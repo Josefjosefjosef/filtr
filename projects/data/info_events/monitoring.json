@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "generatedAt": "2026-07-30T21:44:33.682Z",
+  "generatedAt": "2026-07-31T06:37:04.147Z",
   "cutover": {
     "version": "1.0.0",
     "cutoverAt": "2026-07-17T21:00:00Z",
@@ -8,22 +8,24 @@
     "commercialAggregationActive": false,
     "commercialUiActive": false,
     "infoSystemActive": true,
-    "reason": "Atomické přepnutí na Přehled dne — komerční mediální agregace deaktivována v produkčním UI a jobech.",
+    "reason": "Strukturální odstranění současných mediálních zdrojů — registry prázdný, produkční articles vyřazeny, engine + ČHMÚ zachovány. commercialAggregationActive zůstává false.",
     "rollback": {
       "tag": "pre-aggregator-stable-20260717",
       "commit": "5647bb3fe365a12feb4bb4d2830c6957de73c853",
-      "queryOff": "?iuInfoSystem=off"
-    }
+      "queryOff": "?iuInfoSystem=off",
+      "note": "Code/data rollback must NOT auto-enable media sync. Re-activation requires dedicated PR + deny-list update."
+    },
+    "structuralRemovalAt": "2026-07-29T00:00:00Z"
   },
-  "runMs": 1868,
+  "runMs": 17641,
   "onlyGroup": null,
-  "feedItemCount": 26,
+  "feedItemCount": 15,
   "droppedHomepageUrls": 0,
-  "removedDuplicates": 0,
+  "removedDuplicates": 13,
   "sourceErrors": 0,
   "laneCounts": {
     "doprava": 0,
-    "pocasi": 5,
+    "pocasi": 15,
     "bezpecnost": 0,
     "ministerstva": 0,
     "ekonomika": 0,
@@ -40,10 +42,10 @@
       "capIndexUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/",
       "ok": true,
       "status": 200,
-      "kept": 5,
-      "raw": 17,
+      "kept": 28,
+      "raw": 28,
       "files": 6,
-      "ms": 1707,
+      "ms": 15764,
       "mode": "cap"
     }
   ],
@@ -67,14 +69,14 @@
         "freshness": "ok",
         "structureChange": "none",
         "lastProbeStatus": 200,
-        "lastProbeAt": "2026-07-23T19:01:08.718Z",
-        "lastAttemptAt": "2026-07-23T19:01:08.718Z",
-        "lastSuccessAt": "2026-07-23T19:01:08.718Z",
+        "lastProbeAt": "2026-07-31T06:37:04.147Z",
+        "lastAttemptAt": "2026-07-31T06:37:04.147Z",
+        "lastSuccessAt": "2026-07-31T06:37:04.147Z",
         "lastError": null,
-        "itemsKept": 5,
-        "itemsNew": 5,
-        "runMs": 1861,
-        "responseMs": 154,
+        "itemsKept": 28,
+        "itemsNew": 28,
+        "runMs": 17634,
+        "responseMs": 1870,
         "dataAgeHours": 0,
         "lane": "pocasi",
         "connectorType": "opendata",
@@ -352,10 +354,10 @@
       "blocker": "Regionální HTML listing s konkrétními URL položek."
     }
   ],
-  "dedupeGroups": 5,
+  "dedupeGroups": 13,
   "droppedOutsideActiveWindow": 0,
   "dataQuality": {
-    "itemCount": 5,
+    "itemCount": 15,
     "fallbackTime": 0,
     "lowConfidence": 0,
     "futureTime": 0,
@@ -371,11 +373,11 @@
   },
   "commercialAggregationActive": false,
   "datasetAges": {
-    "feedGeneratedAt": "2026-07-23T19:01:08.718Z",
-    "feedAgeHours": 0.13,
+    "feedGeneratedAt": "2026-07-31T06:37:04.147Z",
+    "feedAgeHours": 0,
     "lanes": {
       "doprava": 0,
-      "pocasi": 5,
+      "pocasi": 15,
       "bezpecnost": 0,
       "ministerstva": 0,
       "ekonomika": 0,
@@ -412,211 +414,5 @@
       "status": 403,
       "reason": "down"
     }
-  ],
-  "chmiCapV2": {
-    "mode": "active",
-    "lastRunAt": "2026-07-31T04:00:49.209Z",
-    "lastSuccessAt": "2026-07-31T04:00:52.477Z",
-    "lastChangedAt": "2026-07-30T21:17:57.928Z",
-    "lastError": null,
-    "status": "not_modified",
-    "etag": "\"6a688d7b-e76a\"",
-    "lastModified": "Tue, 28 Jul 2026 11:07:39 GMT",
-    "consecutiveErrors": 0,
-    "backoffUntil": null,
-    "activeCount": 18,
-    "scheduledCount": 3,
-    "expiredCount": 5,
-    "cancelledCount": 0,
-    "invalidCount": 1,
-    "publishableCount": 21,
-    "visibleCount": 21,
-    "totalItems": 27,
-    "sourceCount": 2,
-    "activeSourceCount": 1,
-    "updateCount": 0,
-    "alertCount": 0,
-    "cancelMsgCount": 0,
-    "quarantineCount": 0,
-    "validCount": 0,
-    "rejectedCount": 0,
-    "discoveryType": "opendata_active_streams",
-    "discoveryRole": "open_data_file_distribution_discovery_not_api",
-    "discoverySelection": "latest_per_product_stream",
-    "discoveryMaxFiles": null,
-    "discoveryFixedLimit": false,
-    "productStreams": [
-      "50",
-      "70"
-    ],
-    "streamCount": 2,
-    "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 21,
-      "uniqueEvents": [
-        "Velmi vysoké teploty",
-        "Vysoké teploty",
-        "Velmi silná zátěž teplem",
-        "Silná zátěž teplem",
-        "Extrémní zátěž teplem",
-        "Riziko požárů",
-        "Vysoké riziko požárů",
-        "Smogová situace - troposférický ozón O3",
-        "Stav sucha",
-        "Hydrologické sucho"
-      ],
-      "totalAreas": 109,
-      "mappedAreas": 843,
-      "unmappedAreas": 0,
-      "mappingCoveragePercent": 100,
-      "publishedActive": 18,
-      "publishedScheduled": 3,
-      "publishableCount": 21,
-      "productStreams": [
-        "50",
-        "70"
-      ],
-      "streamCount": 2,
-      "missingStreamCache": 0,
-      "invalidCount": 1,
-      "expiredCount": 5,
-      "cancelledCount": 0
-    },
-    "alarms": [],
-    "lastCapSent": "2026-07-30T13:16:03+02:00",
-    "bulletinCacheSize": 2,
-    "publish": true,
-    "publishReason": "ok",
-    "productionVerified": false,
-    "runMs": 3281,
-    "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-07-31T04:00:49.209Z",
-    "audit": {
-      "http": [
-        {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_301116.xml",
-          "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
-        },
-        {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
-          "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
-        }
-      ],
-      "publish": {
-        "publish": true,
-        "reason": "ok",
-        "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
-          "logicalAlerts": 21,
-          "uniqueEvents": [
-            "Velmi vysoké teploty",
-            "Vysoké teploty",
-            "Velmi silná zátěž teplem",
-            "Silná zátěž teplem",
-            "Extrémní zátěž teplem",
-            "Riziko požárů",
-            "Vysoké riziko požárů",
-            "Smogová situace - troposférický ozón O3",
-            "Stav sucha",
-            "Hydrologické sucho"
-          ],
-          "totalAreas": 109,
-          "mappedAreas": 843,
-          "unmappedAreas": 0,
-          "mappingCoveragePercent": 100,
-          "publishedActive": 18,
-          "publishedScheduled": 3,
-          "publishableCount": 21,
-          "productStreams": [
-            "50",
-            "70"
-          ],
-          "streamCount": 2,
-          "missingStreamCache": 0,
-          "invalidCount": 1,
-          "expiredCount": 5,
-          "cancelledCount": 0
-        },
-        "alarms": [],
-        "productionVerified": false
-      },
-      "parser": null
-    },
-    "runHistory": [
-      {
-        "at": "2026-07-31T04:00:49.209Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 3281,
-        "error": null,
-        "activeCount": 18,
-        "scheduledCount": 3,
-        "publishableCount": 21
-      },
-      {
-        "at": "2026-07-31T00:16:02.873Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4304,
-        "error": null,
-        "activeCount": 18,
-        "scheduledCount": 3,
-        "publishableCount": 21
-      },
-      {
-        "at": "2026-07-30T23:21:15.515Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2828,
-        "error": null,
-        "activeCount": 18,
-        "scheduledCount": 3,
-        "publishableCount": 21
-      },
-      {
-        "at": "2026-07-30T21:51:11.280Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2512,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
-      },
-      {
-        "at": "2026-07-30T21:44:33.682Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 2839,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
-      },
-      {
-        "at": "2026-07-30T21:17:57.433Z",
-        "status": "healthy",
-        "mode": "active",
-        "publish": true,
-        "runMs": 941,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 10,
-        "publishableCount": 26
-      }
-    ]
-  }
+  ]
 }
