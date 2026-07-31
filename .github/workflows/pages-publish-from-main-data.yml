@@ -15,6 +15,7 @@ on:
     workflows:
       - Pages deploy after data PR merge
       - After-merge articles freshness (prod)
+      - Update CHMI CAP v2
     types:
       - completed
 

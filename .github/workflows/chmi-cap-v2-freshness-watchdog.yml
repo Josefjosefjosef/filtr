@@ -1,0 +1,150 @@
+# Fail-closed liveness + production freshness for CHMI CAP v2.
+# Compares workflow success age, main feed generatedAt, and live production feed.
+# Green workflow alone is NOT enough — production must match main within SLA.
+name: CHMI CAP v2 freshness watchdog
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # CAP sync aims for */5; alert if no success or prod lag exceeds ~20 minutes.
+    - cron: "2,7,12,17,22,27,32,37,42,47,52,57 * * * *"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: chmi-cap-v2-freshness-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+
+      - name: Check CHMI CAP workflow + production freshness
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STALE_SUCCESS_MINUTES: "20"
+          PROD_STALE_MINUTES: "20"
+          WORKFLOW_FILE: update-chmi-cap-v2.yml
+          PROD_FEED_URL: https://infouzel.cz/projects/data/info_events/feed.json
+        run: |
+          set -euo pipefail
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          runs_json="$(gh api "repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE/runs?per_page=20")"
+          printf '%s' "$runs_json" > /tmp/chmi-cap-runs.json
+          MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/info_events/feed.json)
+          MAIN_COUNT=$(jq -r '[.items[]? | select(.capV2)] | length' projects/data/info_events/feed.json)
+          PROD_JSON=$(curl -sS -m 25 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$PROD_FEED_URL" || true)
+          printf '%s' "$PROD_JSON" > /tmp/chmi-prod-feed.json
+          export MAIN_AT MAIN_COUNT
+          node <<'NODE'
+          const fs = require("fs");
+          const staleMin = Number(process.env.STALE_SUCCESS_MINUTES || 20);
+          const prodStaleMin = Number(process.env.PROD_STALE_MINUTES || 20);
+          const runs = JSON.parse(fs.readFileSync("/tmp/chmi-cap-runs.json", "utf8")).workflow_runs || [];
+          const now = Date.now();
+          function ageMin(iso) {
+            if (!iso) return null;
+            const t = Date.parse(iso);
+            return Number.isFinite(t) ? (now - t) / 60000 : null;
+          }
+          const inProgress = runs.find((r) => r.status === "in_progress" || r.status === "queued");
+          const completed = runs.filter((r) => r.status === "completed");
+          const lastSuccess = completed.find((r) => r.conclusion === "success") || null;
+          const lastBad = completed.find((r) =>
+            r.conclusion === "failure" || r.conclusion === "cancelled" || r.conclusion === "timed_out"
+          ) || null;
+
+          let prodAt = "";
+          let prodCount = 0;
+          let prodIds = [];
+          try {
+            const prod = JSON.parse(fs.readFileSync("/tmp/chmi-prod-feed.json", "utf8"));
+            prodAt = String(prod.generatedAt || "");
+            const items = Array.isArray(prod.items) ? prod.items.filter((i) => i && i.capV2) : [];
+            prodCount = items.length;
+            prodIds = items.map((i) => String(i.id || "")).filter(Boolean).sort();
+          } catch (_) {}
+
+          const mainAt = String(process.env.MAIN_AT || "");
+          const mainCount = Number(process.env.MAIN_COUNT || 0);
+          let mainIds = [];
+          try {
+            const main = JSON.parse(fs.readFileSync("projects/data/info_events/feed.json", "utf8"));
+            mainIds = (main.items || []).filter((i) => i && i.capV2).map((i) => String(i.id || "")).filter(Boolean).sort();
+          } catch (_) {}
+
+          const missing = mainIds.filter((id) => !prodIds.includes(id));
+          const extra = prodIds.filter((id) => !mainIds.includes(id));
+          const prodAge = ageMin(prodAt);
+          const mainAge = ageMin(mainAt);
+
+          let state = "SOURCE_CURRENT_PRODUCTION_CURRENT";
+          if (inProgress) state = "SOURCE_NEW_PRODUCTION_PENDING_WITHIN_SLA";
+          else if (!lastSuccess) state = "SOURCE_FETCH_FAILED";
+          else if (ageMin(lastSuccess.updated_at || lastSuccess.created_at) > staleMin) state = "SOURCE_NEW_PRODUCTION_STALE";
+          else if (!prodAt) state = "DEPLOY_PENDING";
+          else if (mainAt && prodAt && mainAt !== prodAt) {
+            if (prodAge != null && prodAge <= prodStaleMin && mainAge != null && mainAge <= prodStaleMin) {
+              state = "SOURCE_NEW_PRODUCTION_PENDING_WITHIN_SLA";
+            } else {
+              state = "CDN_OR_SW_STALE";
+            }
+          } else if (missing.length || extra.length) {
+            state = "PRODUCTION_DATA_MISMATCH";
+          }
+
+          const report = {
+            state,
+            now: new Date(now).toISOString(),
+            staleSuccessMinutes: staleMin,
+            prodStaleMinutes: prodStaleMin,
+            lastSuccess: lastSuccess
+              ? { id: lastSuccess.id, ageMinutes: ageMin(lastSuccess.updated_at || lastSuccess.created_at), html_url: lastSuccess.html_url }
+              : null,
+            lastBad: lastBad
+              ? { id: lastBad.id, conclusion: lastBad.conclusion, ageMinutes: ageMin(lastBad.updated_at || lastBad.created_at) }
+              : null,
+            inProgress: !!inProgress,
+            mainGeneratedAt: mainAt || null,
+            prodGeneratedAt: prodAt || null,
+            mainCapCount: mainCount,
+            prodCapCount: prodCount,
+            missingIds: missing.slice(0, 20),
+            extraIds: extra.slice(0, 20),
+            endToEndLagMsEstimate:
+              mainAt && prodAt && mainAt === prodAt && lastSuccess
+                ? Math.round((ageMin(lastSuccess.updated_at || lastSuccess.created_at) || 0) * 60000)
+                : null,
+          };
+          console.log("CHMI_CAP_FRESHNESS_WATCHDOG_REPORT=" + JSON.stringify(report));
+
+          const failStates = new Set([
+            "SOURCE_NEW_PRODUCTION_STALE",
+            "SOURCE_FETCH_FAILED",
+            "CDN_OR_SW_STALE",
+            "PRODUCTION_DATA_MISMATCH",
+            "DEPLOY_PENDING",
+          ]);
+          // Pending within SLA is OK (in-progress sync / brief pages lag).
+          if (state === "SOURCE_NEW_PRODUCTION_PENDING_WITHIN_SLA") {
+            console.log("CHMI_CAP_FRESHNESS_WATCHDOG=PASS state=" + state);
+            process.exit(0);
+          }
+          if (failStates.has(state)) {
+            console.error("CHMI_CAP_FRESHNESS_WATCHDOG=FAIL state=" + state);
+            process.exit(1);
+          }
+          console.log("CHMI_CAP_FRESHNESS_WATCHDOG=PASS state=" + state);
+          process.exit(0);
+          NODE
