@@ -5,6 +5,7 @@
 name = "infouzel-chmi-cap-watchdog"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
+account_id = "577868e9aac9c289e9323100f68fad16"
 
 [triggers]
 # Every 5 minutes; dispatch when production feed generatedAt is older than STALE_AFTER_MINUTES.
