@@ -113,7 +113,13 @@ async function measureHeader(page) {
     if (!header || !title) return null;
     const pick = (el) => {
       if (!el || el.hidden) return null;
-      const r = el.getBoundingClientRect();
+      let r = el.getBoundingClientRect();
+      // display:contents ancestors / late grid apply can yield a transient 0×0
+      // primary box; fall back to client rects so long titles stay measurable.
+      if ((r.width < 1 || r.height < 1) && typeof el.getClientRects === "function") {
+        const rects = el.getClientRects();
+        if (rects && rects.length) r = rects[0];
+      }
       if (r.width < 1 || r.height < 1) return null;
       return { top: r.top, left: r.left, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
     };
@@ -137,6 +143,22 @@ async function measureHeader(page) {
   });
 }
 
+async function waitForPanelMode(page, mode) {
+  await page.waitForFunction(
+    (want) => {
+      const panel = document.getElementById("iuFinancialCalcPanel");
+      const title = document.getElementById("iuFinancialCalcTitle");
+      if (!panel || panel.hasAttribute("hidden") || !title) return false;
+      if (!panel.classList.contains(`iu-financial-overlay-panel--${want}`)) return false;
+      return String(title.textContent || "").trim().length > 0;
+    },
+    mode,
+    { timeout: 30000 },
+  );
+  // Two frames: allow unified mobile/tablet grid + privacy button to settle.
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
 async function openHub(page) {
   await bootFinancial(page);
   await page.evaluate(() => {
@@ -144,33 +166,43 @@ async function openHub(page) {
       window.iuFinancialCalcOpenSurface();
     }
   });
-  await page.waitForFunction(
-    () => {
-      const panel = document.getElementById("iuFinancialCalcPanel");
-      return panel && !panel.hasAttribute("hidden") && panel.classList.contains("iu-financial-overlay-panel--hub");
-    },
-    null,
-    { timeout: 30000 },
-  );
-  await page.waitForTimeout(400);
+  await waitForPanelMode(page, "hub");
 }
 
-async function openCalculator(page, calcId) {
+async function openCalculator(page, calcId, expectedTitle) {
   await bootFinancial(page);
   await page.evaluate((id) => {
     if (typeof window.iuFinancialCalcOpenSurface === "function") {
       window.iuFinancialCalcOpenSurface({ calculatorId: id });
     }
   }, calcId);
-  await page.waitForFunction(
-    () => {
-      const panel = document.getElementById("iuFinancialCalcPanel");
-      return panel && !panel.hasAttribute("hidden") && panel.classList.contains("iu-financial-overlay-panel--detail");
-    },
-    null,
-    { timeout: 30000 },
-  );
-  await page.waitForTimeout(400);
+  await waitForPanelMode(page, "detail");
+  const wantTitle = String(expectedTitle || "").trim();
+  if (wantTitle) {
+    await page.waitForFunction(
+      (titleWanted) => {
+        const title = document.getElementById("iuFinancialCalcTitle");
+        const panel = document.getElementById("iuFinancialCalcPanel");
+        if (!title || !panel || panel.hasAttribute("hidden")) return false;
+        if (!panel.classList.contains("iu-financial-overlay-panel--detail")) return false;
+        return String(title.textContent || "").trim() === titleWanted;
+      },
+      wantTitle,
+      { timeout: 30000 },
+    );
+  }
+  // Privacy btn + grid areas can lag one paint after title text assignment.
+  await page.waitForTimeout(250);
+}
+
+async function measureHeaderStable(page, attempts = 8) {
+  let last = null;
+  for (let i = 0; i < attempts; i++) {
+    last = await measureHeader(page);
+    if (last && last.header && last.title) return last;
+    await page.waitForTimeout(150);
+  }
+  return last;
 }
 
 function validateHubSingleRow(row, viewportLabel) {
@@ -257,12 +289,12 @@ async function runViewport(page, viewport, label) {
 
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
   await openHub(page);
-  fails.push(...validateHubSingleRow(await measureHeader(page), label));
+  fails.push(...validateHubSingleRow(await measureHeaderStable(page), label));
 
   for (const calc of LONG_CALCS) {
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
-    await openCalculator(page, calc.id);
-    const row = await measureHeader(page);
+    await openCalculator(page, calc.id, calc.title);
+    const row = await measureHeaderStable(page);
     if (row && row.titleText !== calc.title) {
       fails.push(`${label} ${calc.id}: title mismatch "${row.titleText}"`);
     }
@@ -276,7 +308,7 @@ async function runDesktopRegression(page) {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
   await openHub(page);
-  const hubRow = await measureHeader(page);
+  const hubRow = await measureHeaderStable(page);
   const fails = [];
   if (!hubRow) {
     fails.push("desktop/hub: layout missing");
@@ -286,8 +318,8 @@ async function runDesktopRegression(page) {
     fails.push(`desktop/hub: header must not use mobile grid (display=${hubRow.headerDisplay})`);
   }
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await openCalculator(page, "budget");
-  const detailRow = await measureHeader(page);
+  await openCalculator(page, "budget", "Rozpočet domácnosti");
+  const detailRow = await measureHeaderStable(page);
   if (!detailRow) {
     fails.push("desktop/detail: layout missing");
     return fails;
