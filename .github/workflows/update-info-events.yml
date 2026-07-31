@@ -2,6 +2,7 @@ name: Update info events
 
 # Production connector for Přehled dne V2 (public/official sources only).
 # Backend-only fetch → atomic publish of split datasets. Does not touch commercial aggregation.
+# CHMI CAP v2 items (ie-chmi-v2-*) and monitoring.chmiCapV2 are owned by update-chmi-cap-v2.
 
 on:
   workflow_dispatch:
@@ -13,9 +14,10 @@ on:
   schedule:
     - cron: "*/30 * * * *"
 
+# Share writer lock with update-chmi-cap-v2 to prevent lost updates on feed/monitoring.
 concurrency:
-  group: update-info-events-v1
-  cancel-in-progress: true
+  group: info-events-data-writers
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -26,9 +28,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # Minimal checkout: refresh scripts do not need full history/tags/all branches.
+      # fetch-depth: 0 previously caused ~12–20 min hung git fetch (job timeout).
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
 
       - uses: actions/setup-node@v4
         with:
@@ -44,6 +51,12 @@ jobs:
 
       - name: Legal whitelist guard
         run: node scripts/iu-info-events-legal-whitelist-guard.mjs
+
+      - name: Preserve CHMI namespaces guard
+        run: node scripts/iu-info-events-preserve-chmi-namespaces-guard.mjs
+
+      - name: Checkout scope guard
+        run: node scripts/iu-info-events-checkout-scope-guard.mjs
 
       - name: Commit data if changed
         env:
@@ -63,7 +76,7 @@ jobs:
           git push -u origin "$BRANCH" --force
           EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
           if [ -z "$EXISTING" ]; then
-            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne V2)." --base main --head "$BRANCH"
+            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne V2). Preserves CHMI CAP v2 feed items and monitoring.chmiCapV2." --base main --head "$BRANCH"
           fi
           NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
           gh pr merge "$NUM" --squash --auto || true

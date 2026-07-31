@@ -14,8 +14,9 @@ on:
   schedule:
     - cron: "*/15 * * * *"
 
+# Share writer lock with update-info-events to prevent lost updates on feed/monitoring.
 concurrency:
-  group: update-chmi-cap-v2
+  group: info-events-data-writers
   cancel-in-progress: false
 
 permissions:
