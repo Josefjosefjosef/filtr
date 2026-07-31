@@ -37,11 +37,19 @@ function classify(ev) {
   // Aborted navigations during redirects are not app logic errors.
   if (/net::err_aborted/i.test(text) && ev.kind === "requestfailed") return "noise";
   if (/favicon\.ico|chrome-extension:/i.test(text)) return "noise";
+  // Narrow WebKit/Chromium browser-only ResizeObserver loop notification (exact text).
+  // App also preventDefault()s this in assets/app.js; keep classification for residual harness noise.
+  // Do NOT broaden to all ResizeObserver messages — callback throws must stay unexpected.
+  if (/^ResizeObserver loop (limit exceeded|completed with undelivered notifications)\.?$/i.test(text.trim())) {
+    return "browserOnlyResizeObserverLoop";
+  }
   if (ev.kind === "pageerror") return "unexpectedConsoleError";
   if (ev.kind === "console.error" || ev.type === "error") return "unexpectedConsoleError";
   if (ev.kind === "requestfailed") return "noise";
   return "unexpectedConsoleError";
 }
+
+export { classify };
 
 function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
@@ -135,6 +143,7 @@ async function runAgainst(url, label) {
 
   const unexpected = events.filter((e) => e.classification === "unexpectedConsoleError");
   const expectedOffline = events.filter((e) => e.classification === "expectedOfflineNetworkFailure");
+  const browserOnlyRo = events.filter((e) => e.classification === "browserOnlyResizeObserverLoop");
   const warnings = events.filter((e) => e.classification === "warning");
   const rawConsoleErrors = events.filter((e) => e.kind === "console.error").length;
 
@@ -147,6 +156,7 @@ async function runAgainst(url, label) {
       rawConsoleErrorCount: rawConsoleErrors,
       unexpectedConsoleErrors: unexpected.length,
       expectedOfflineNetworkFailures: expectedOffline.length,
+      browserOnlyResizeObserverLoop: browserOnlyRo.length,
       warnings: warnings.length,
     },
     unexpected: unexpected.slice(0, 12),
@@ -156,6 +166,36 @@ async function runAgainst(url, label) {
 
 let server = null;
 try {
+  // Self-check: narrow RO classification must not swallow real app errors.
+  const selfChecks = [
+    [
+      "ro_loop_exact",
+      classify({
+        kind: "pageerror",
+        text: "ResizeObserver loop completed with undelivered notifications.",
+        phase: "load",
+      }) === "browserOnlyResizeObserverLoop",
+    ],
+    [
+      "real_typeerror_still_unexpected",
+      classify({ kind: "pageerror", text: "TypeError: x is not a function", phase: "load" }) ===
+        "unexpectedConsoleError",
+    ],
+    [
+      "invalid_state_still_unexpected",
+      classify({
+        kind: "pageerror",
+        text: "An attempt was made to use an object that is not, or is no longer, usable",
+        phase: "load",
+      }) === "unexpectedConsoleError",
+    ],
+  ];
+  const selfFail = selfChecks.filter((row) => !row[1]).map((row) => row[0]);
+  if (selfFail.length) {
+    console.error(JSON.stringify({ pass: false, selfCheckFails: selfFail }, null, 2));
+    process.exit(1);
+  }
+
   const targets = [];
   if (LIVE) targets.push({ url: LIVE, label: "live" });
   server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

@@ -465,7 +465,14 @@ function initGapSync() {
     const btn = document.getElementById(MIND_MENU_BTN_ID);
     const stack = document.getElementById("iuSilverWelcomeStack");
     if (typeof ResizeObserver === "function" && (btn || stack)) {
-      gapObserver = new ResizeObserver(() => syncMindMenuPanelGap());
+      let gapRoRaf = 0;
+      gapObserver = new ResizeObserver(() => {
+        if (gapRoRaf) return;
+        gapRoRaf = requestAnimationFrame(() => {
+          gapRoRaf = 0;
+          syncMindMenuPanelGap();
+        });
+      });
       if (btn) gapObserver.observe(btn);
       if (stack) gapObserver.observe(stack);
     }
