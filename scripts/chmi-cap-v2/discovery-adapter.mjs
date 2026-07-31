@@ -134,6 +134,30 @@ export function selectLatestPerProductStream(listed) {
 }
 
 /**
+ * Recent bulletins per product stream (newest first), capped — for open-ended onset
+ * ledger recovery only. Not a publish set; avoids full archive walk.
+ */
+export function selectRecentPerProductStream(listed, maxPerStream = 4) {
+  const n = Math.max(1, Math.min(8, Number(maxPerStream) || 4));
+  const byProduct = new Map();
+  for (const item of listed || []) {
+    const url = item && item.url ? String(item.url) : "";
+    if (!url) continue;
+    const name = url.split("/").pop() || url;
+    const productKey = capProductKeyFromUrl(name);
+    const mtime = Number(item.mtime) || 0;
+    if (!byProduct.has(productKey)) byProduct.set(productKey, []);
+    byProduct.get(productKey).push({ url, name, mtime, productKey });
+  }
+  const out = [];
+  for (const arr of byProduct.values()) {
+    arr.sort((a, b) => (b.mtime || 0) - (a.mtime || 0) || String(b.name).localeCompare(String(a.name)));
+    out.push(...arr.slice(0, n));
+  }
+  return out.sort((a, b) => (a.mtime || 0) - (b.mtime || 0) || String(a.name).localeCompare(String(b.name)));
+}
+
+/**
  * Discover current CAP product-stream heads from CHMI open-data directory listing.
  * Max 1 GET to index per cycle; never walks/downloads the full archive.
  * Completeness = every product stream's newest file, not a fixed N.

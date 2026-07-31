@@ -68,24 +68,53 @@ jobs:
           let prodAt = "";
           let prodCount = 0;
           let prodIds = [];
+          let prodSmogFingerprints = [];
           try {
             const prod = JSON.parse(fs.readFileSync("/tmp/chmi-prod-feed.json", "utf8"));
             prodAt = String(prod.generatedAt || "");
             const items = Array.isArray(prod.items) ? prod.items.filter((i) => i && i.capV2) : [];
             prodCount = items.length;
             prodIds = items.map((i) => String(i.id || "")).filter(Boolean).sort();
+            prodSmogFingerprints = items
+              .filter((i) => /smogov/i.test(String((i.capV2 && i.capV2.event) || i.title || "")))
+              .map((i) => {
+                const vf = String(i.validFrom || "");
+                const orps = ((i.region && i.region.orpIds) || []).map(String).sort();
+                return vf + "|" + orps.length + "|" + orps.join(",");
+              })
+              .sort();
           } catch (_) {}
 
           const mainAt = String(process.env.MAIN_AT || "");
           const mainCount = Number(process.env.MAIN_COUNT || 0);
           let mainIds = [];
+          let mainSmogFingerprints = [];
           try {
             const main = JSON.parse(fs.readFileSync("projects/data/info_events/feed.json", "utf8"));
             mainIds = (main.items || []).filter((i) => i && i.capV2).map((i) => String(i.id || "")).filter(Boolean).sort();
+            mainSmogFingerprints = (main.items || [])
+              .filter((i) => i && i.capV2 && /smogov/i.test(String((i.capV2 && i.capV2.event) || i.title || "")))
+              .map((i) => {
+                const vf = String(i.validFrom || "");
+                const orps = ((i.region && i.region.orpIds) || []).map(String).sort();
+                return vf + "|" + orps.length + "|" + orps.join(",");
+              })
+              .sort();
           } catch (_) {}
 
           const missing = mainIds.filter((id) => !prodIds.includes(id));
           const extra = prodIds.filter((id) => !mainIds.includes(id));
+          const smogMismatch =
+            mainSmogFingerprints.join("||") !== prodSmogFingerprints.join("||");
+          // Collapsed multi-onset smog: prod has one card covering Praha(1100)+Ústecký(42xx)
+          // while main already split into multiple validFrom fingerprints.
+          const collapsedOnProd =
+            prodSmogFingerprints.length === 1 &&
+            prodSmogFingerprints.some((fp) => {
+              const parts = String(fp).split("|");
+              const orps = (parts[2] || "").split(",").filter(Boolean);
+              return orps.includes("1100") && orps.some((o) => /^42\d{2}$/.test(o));
+            });
           const prodAge = ageMin(prodAt);
           const mainAge = ageMin(mainAt);
 
@@ -94,7 +123,12 @@ jobs:
           else if (!lastSuccess) state = "SOURCE_FETCH_FAILED";
           else if (ageMin(lastSuccess.updated_at || lastSuccess.created_at) > staleMin) state = "SOURCE_NEW_PRODUCTION_STALE";
           else if (!prodAt) state = "DEPLOY_PENDING";
-          else if (mainAt && prodAt && mainAt !== prodAt) {
+          else if (
+            (mainSmogFingerprints.length >= 2 && collapsedOnProd) ||
+            (smogMismatch && mainSmogFingerprints.length > prodSmogFingerprints.length)
+          ) {
+            state = "PRODUCTION_DATA_MISMATCH";
+          } else if (mainAt && prodAt && mainAt !== prodAt) {
             if (prodAge != null && prodAge <= prodStaleMin && mainAge != null && mainAge <= prodStaleMin) {
               state = "SOURCE_NEW_PRODUCTION_PENDING_WITHIN_SLA";
             } else {
@@ -122,6 +156,9 @@ jobs:
             prodCapCount: prodCount,
             missingIds: missing.slice(0, 20),
             extraIds: extra.slice(0, 20),
+            mainSmogFingerprints,
+            prodSmogFingerprints,
+            collapsedSmog: !!collapsedOnProd,
             endToEndLagMsEstimate:
               mainAt && prodAt && mainAt === prodAt && lastSuccess
                 ? Math.round((ageMin(lastSuccess.updated_at || lastSuccess.created_at) || 0) * 60000)

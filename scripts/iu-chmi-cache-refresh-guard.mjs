@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Guard: info_events JSON is SW network-only passthrough (no meta TTL stale CHMI feed).
+ * Guard: info_events JSON is SW network-first passthrough with offline last-good
+ * (never meta TTL stale-while-revalidate as the online path).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -21,7 +22,12 @@ const core = fs.readFileSync(CORE, "utf8");
 
 ok("sw_info_events_feed", /info_events\/feed\.json/.test(sw), "feed");
 ok("sw_info_events_lanes", /info_events\/lanes\//.test(sw), "lanes");
-ok("sw_passthrough_comment", /network-only \(never SW meta TTL/.test(sw), "comment");
+ok(
+  "sw_network_first_offline_last_good",
+  /network-first \(no-store\)/.test(sw) && /FEED_OFFLINE_CACHE/.test(sw) && /matchFeedOfflineLastGood/.test(sw),
+  "strategy"
+);
+ok("sw_info_events_offline_json", /OFFLINE_NO_LAST_GOOD_FEED/.test(sw), "offline_json");
 ok("core_no_store", /cache:\s*["']no-store["']/.test(core), "fetch");
 ok("core_data_ver", /iu-data-ver|Date\.now\(\)/.test(core), "bust");
 
