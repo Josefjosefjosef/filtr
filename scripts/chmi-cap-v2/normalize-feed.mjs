@@ -1003,8 +1003,96 @@ export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts =
     }
   }
   const merged = mergeFeedItemsById(out);
-  const nextLedger = updateOpenEndedOrpOnsetLedger(ledger, merged);
-  return { items: merged, ledger: nextLedger };
+  const coalesced = coalesceOpenEndedSameSemanticOnset(merged, { nowIso: opts.nowIso });
+  const nextLedger = updateOpenEndedOrpOnsetLedger(ledger, coalesced);
+  return { items: coalesced, ledger: nextLedger };
+}
+
+/**
+ * After onset splits, ORPs that share the same open-ended semantic key AND the
+ * same normalized firstValidFrom are one public segment — even if the head CAP
+ * packed them into different <info> geography groups (e.g. Holice vs Praha).
+ *
+ * Only coalesces items marked capV2.onsetSplit (ledger projections). Head-native
+ * separate <info> blocks with the same onset stay separate (e.g. future kraj cards).
+ */
+export function coalesceOpenEndedSameSemanticOnset(items, opts = {}) {
+  const nowMs = Date.parse(opts.nowIso || "") || Date.now();
+  const openSplit = [];
+  const passthrough = [];
+  for (const item of items || []) {
+    if (!item) continue;
+    const ur = !!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked));
+    const split = !!(item.capV2 && item.capV2.onsetSplit);
+    if (ur && String(item.sourceId) === "chmi" && split) openSplit.push(item);
+    else passthrough.push(item);
+  }
+  const groups = new Map();
+  for (const item of openSplit) {
+    const sem = openEndedSemanticKey(item);
+    const vf = normalizeCapInstant(item.validFrom) || String(item.validFrom || "").trim();
+    const key = `${sem}|${vf}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  const coalescedOpen = [];
+  for (const group of groups.values()) {
+    if (group.length === 1) {
+      coalescedOpen.push(group[0]);
+      continue;
+    }
+    // Prefer largest ORP set as base (stable presentation), union all ORPs.
+    const sorted = [...group].sort(
+      (a, b) => itemOrpIdSet(b).size - itemOrpIdSet(a).size || String(a.id).localeCompare(String(b.id))
+    );
+    const base = sorted[0];
+    const union = new Set();
+    for (const g of sorted) for (const o of itemOrpIdSet(g)) union.add(o);
+    // Need geo links for all ORPs — gather from every group member.
+    const linkByOrp = new Map();
+    for (const g of sorted) {
+      for (const l of (g.capV2 && g.capV2.geo && g.capV2.geo.links) || []) {
+        const k = canonicalOrpKey(l.orpId || l.orpCode || "");
+        if (k && !linkByOrp.has(k)) linkByOrp.set(k, l);
+      }
+    }
+    const baseWithLinks = {
+      ...base,
+      capV2: {
+        ...(base.capV2 || {}),
+        geo: {
+          ...((base.capV2 && base.capV2.geo) || {}),
+          links: [...linkByOrp.values()],
+        },
+      },
+    };
+    const projected = projectFeedItemToOrpIds(baseWithLinks, [...union]);
+    if (!projected) {
+      coalescedOpen.push(...group);
+      continue;
+    }
+    // Prefer prior stable id when any member already matches the union set.
+    const priorMatch = sorted.find((p) => {
+      const porps = itemOrpIdSet(p);
+      return porps.size === union.size && isOrpSubset(porps, union);
+    });
+    const withId = priorMatch
+      ? {
+          ...projected,
+          id: priorMatch.id,
+          firstSeenByInfoUzel: priorMatch.firstSeenByInfoUzel || projected.firstSeenByInfoUzel,
+          capV2: {
+            ...projected.capV2,
+            hazard_instance_id:
+              (priorMatch.capV2 && priorMatch.capV2.hazard_instance_id) || projected.capV2.hazard_instance_id,
+            coalescedOnset: true,
+            onsetSplit: true,
+          },
+        }
+      : { ...projected, capV2: { ...projected.capV2, coalescedOnset: true, onsetSplit: true } };
+    coalescedOpen.push(refreshItemLocalityPresentation(refreshItemTemporalFields(withId, nowMs)));
+  }
+  return mergeFeedItemsById([...passthrough, ...coalescedOpen]);
 }
 
 /**

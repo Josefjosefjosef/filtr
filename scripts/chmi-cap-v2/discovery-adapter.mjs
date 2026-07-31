@@ -138,7 +138,9 @@ export function selectLatestPerProductStream(listed) {
  * ledger recovery only. Not a publish set; avoids full archive walk.
  */
 export function selectRecentPerProductStream(listed, maxPerStream = 4) {
-  const n = Math.max(1, Math.min(8, Number(maxPerStream) || 4));
+  // Cap raised so drought/fire revision chains (>6) remain recoverable on cold start.
+  // Recent window is NOT the sole source of truth — prod-sync also walks CAP references.
+  const n = Math.max(1, Math.min(24, Number(maxPerStream) || 4));
   const byProduct = new Map();
   for (const item of listed || []) {
     const url = item && item.url ? String(item.url) : "";
@@ -196,6 +198,10 @@ export function createOpendataActiveStreamsDiscovery(opts = {}) {
      */
     listRecentForOnsetLedger(maxPerStream = 6) {
       return selectRecentPerProductStream(lastListed, maxPerStream);
+    },
+    /** Full open-data listing from the last listLatest() call (for reference resolution). */
+    getLastListed() {
+      return lastListed.slice();
     },
     async fetchBody(url, conditional = {}) {
       const headers = {

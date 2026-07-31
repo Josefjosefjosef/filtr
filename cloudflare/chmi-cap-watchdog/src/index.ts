@@ -44,16 +44,28 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-async function fetchGeneratedAt(url: string): Promise<string | null> {
+async function fetchFreshnessSnapshot(url: string): Promise<{
+  generatedAt: string | null;
+  chmiCount: number | null;
+  activeCount: number | null;
+  futureCount: number | null;
+}> {
   const res = await fetch(url, {
     headers: { Accept: "application/json", "Cache-Control": "no-cache" },
   });
   if (!res.ok) {
     console.log(`[chmi-cap-watchdog] freshness fetch failed: ${res.status}`);
-    return null;
+    return { generatedAt: null, chmiCount: null, activeCount: null, futureCount: null };
   }
-  const json = (await res.json()) as { generatedAt?: string };
-  return typeof json.generatedAt === "string" && json.generatedAt ? json.generatedAt : null;
+  const json = (await res.json()) as {
+    generatedAt?: string;
+    items?: Array<{ sourceId?: string; status?: string }>;
+  };
+  const generatedAt = typeof json.generatedAt === "string" && json.generatedAt ? json.generatedAt : null;
+  const chmi = (json.items || []).filter((i) => i && i.sourceId === "chmi");
+  const activeCount = chmi.filter((i) => i.status === "aktivni").length;
+  const futureCount = chmi.filter((i) => i.status === "naplanovano").length;
+  return { generatedAt, chmiCount: chmi.length, activeCount, futureCount };
 }
 
 async function listRuns(env: Env): Promise<GhRun[]> {
@@ -117,7 +129,8 @@ async function cancelStaleQueued(env: Env, staleMin: number): Promise<number> {
 
 async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Record<string, unknown>> {
   const staleAfter = Math.max(1, Number(env.STALE_AFTER_MINUTES) || 8);
-  const generatedAt = await fetchGeneratedAt(env.FRESHNESS_URL);
+  const snap = await fetchFreshnessSnapshot(env.FRESHNESS_URL);
+  const generatedAt = snap.generatedAt;
   const runs = await listRuns(env);
   await cancelStaleQueued(env, Math.max(staleAfter, 20));
 
@@ -145,12 +158,17 @@ async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Recor
     ok: decision.action !== "dispatch" || !!(dispatch && dispatch.ok),
     triggerAt: new Date().toISOString(),
     generatedAt,
+    production: {
+      chmiCount: snap.chmiCount,
+      activeCount: snap.activeCount,
+      futureCount: snap.futureCount,
+    },
     decision,
     dispatch,
     workflowFile: env.WORKFLOW_FILE,
     freshnessUrl: env.FRESHNESS_URL,
     github_token_present: !!(env.GITHUB_TOKEN && env.GITHUB_TOKEN.trim()),
-    // Never include token value or length that could leak via logs in prod probes beyond presence.
+    // Never include token value.
   };
   console.log(`[chmi-cap-watchdog] REPORT=${JSON.stringify(report)}`);
   if (decision.action === "dispatch" && dispatch && !dispatch.ok) {

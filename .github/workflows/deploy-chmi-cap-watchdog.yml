@@ -69,7 +69,37 @@ jobs:
       - name: Probe worker health
         run: |
           set -euo pipefail
-          curl -fsS "https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/health"
-          echo ""
-          curl -fsS "https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/probe" | head -c 4000
+          HEALTH_URL="https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/health"
+          PROBE_URL="https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/probe"
+          MAX_ATTEMPTS=8
+          DELAY_MS=500
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            echo "health_attempt=${attempt}/${MAX_ATTEMPTS}"
+            set +e
+            body="$(curl -sS -w "\n%{http_code}" --max-time 15 "$HEALTH_URL" 2>/tmp/chmi_health_err.txt)"
+            curl_ec=$?
+            set -e
+            http_code="$(printf '%s' "$body" | tail -n1)"
+            payload="$(printf '%s' "$body" | sed '$d')"
+            if [ "$curl_ec" -eq 0 ] && [ "$http_code" = "200" ] && printf '%s' "$payload" | grep -q '"ok"[[:space:]]*:[[:space:]]*true'; then
+              echo "health_ok attempt=${attempt}"
+              printf '%s\n' "$payload"
+              break
+            fi
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "ERROR: /health failed after ${MAX_ATTEMPTS} attempts (last_http=${http_code} curl_ec=${curl_ec})"
+              printf '%s\n' "$payload" | head -c 500
+              if [ -f /tmp/chmi_health_err.txt ]; then
+                head -c 300 /tmp/chmi_health_err.txt
+                echo ""
+              fi
+              exit 1
+            fi
+            sleep_secs="$(awk -v d="$DELAY_MS" -v a="$attempt" 'BEGIN{s=d*(2^(a-1))/1000; if(s>8)s=8; printf "%.3f", s}')"
+            echo "health_retry sleep_s=${sleep_secs} http=${http_code} curl_ec=${curl_ec}"
+            sleep "$sleep_secs"
+            attempt=$((attempt + 1))
+          done
+          curl -fsS --max-time 30 "$PROBE_URL" | head -c 4000
           echo ""

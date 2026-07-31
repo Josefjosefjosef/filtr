@@ -71,7 +71,12 @@ ok("no_fixture_seed_fn", !/seedOpenEndedLedgerFromSmogFixtures/.test(prodSync), 
 ok("no_usti_orp_hardcode", !/USTI_ORP_RE/.test(prodSync), "usti_re");
 ok("uses_revision_chain_builder", /buildTerritoryOnsetLedgerFromOrderedDocuments/.test(prodSync), "builder");
 ok("fixtureSeed_false", /fixtureSeed:\s*false/.test(prodSync), "flag");
-ok("listRecent_for_ledger", /listRecentForOnsetLedger/.test(prodSync), "recent");
+ok("listRecent_for_ledger", /listRecentForOnsetLedger|ONSET_LEDGER_RECENT_PER_STREAM/.test(prodSync), "recent");
+ok("references_traversal", /resolveReferenceChainEntries|referencesTraversal/.test(prodSync), "refs");
+ok("no_sole_window_6", !/listRecentForOnsetLedger\(\s*6\s*\)/.test(prodSync), "no_6");
+ok("coalesce_same_onset", /coalesceOpenEndedSameSemanticOnset/.test(
+  fs.readFileSync(path.join(REPO, "scripts/chmi-cap-v2/normalize-feed.mjs"), "utf8")
+), "coalesce");
 
 if (fails.length) {
   console.error("IU_CHMI_REVISION_AWARE_TERRITORY_ONSET_GUARD=FAIL");
