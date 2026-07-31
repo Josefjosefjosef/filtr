@@ -27,7 +27,7 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
+import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -331,8 +331,10 @@ export async function runChmiCapV2Sync(opts = {}) {
           timeConfidence: i.timeConfidence || (i.publishedAtSource ? "high" : "fallback"),
         };
       }
-      // Recompute temporal status from validFrom/validTo on every sync (304-safe).
-      return refreshItemTemporalFields(next, Date.parse(started) || Date.now());
+      // Recompute temporal status + locality presentation on every sync (304-safe).
+      return refreshItemLocalityPresentation(
+        refreshItemTemporalFields(next, Date.parse(started) || Date.now())
+      );
     });
     feedItems = classifiedAll.filter((i) => isPublishableChmiItem(i));
     diagnostics.temporalCounts = {

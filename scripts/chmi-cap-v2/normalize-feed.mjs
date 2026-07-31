@@ -338,6 +338,36 @@ export function isPublishableChmiItem(item) {
 }
 
 /**
+ * Recompute public locality title/summary from geo.links (bulletin-cache / 304 safe).
+ * Does not change id, validity, publicUrl, or geo link set — presentation only.
+ */
+export function refreshItemLocalityPresentation(item) {
+  if (!item || !item.capV2) return item;
+  const links = (item.capV2.geo && item.capV2.geo.links) || [];
+  const areaDescs =
+    (item.region && item.region.areaDescs) ||
+    (item.capV2.geo && item.capV2.geo.displayNames) ||
+    [];
+  if (!links.length && !(areaDescs && areaDescs.length)) return item;
+  const loc = summarizeAlertLocality(links, areaDescs);
+  const titleBase = formatChmiEventDisplayName(
+    (item.capV2 && item.capV2.event) || String(item.title || "").split(" — ")[0] || "Výstraha ČHMÚ"
+  );
+  const title = loc.summary && !titleBase.includes(loc.summary) ? `${titleBase} — ${loc.summary}` : titleBase;
+  return {
+    ...item,
+    title,
+    region: {
+      ...(item.region || {}),
+      name: loc.name,
+      summary: loc.summary,
+      level: loc.level,
+      extraAreaCount: loc.extraAreaCount,
+    },
+  };
+}
+
+/**
  * Recompute temporal fields from validFrom/validTo (e.g. bulletin cache on 304).
  * Does not invent times; preserves cancelled via msgType/status; preserves untilRevoked.
  */
