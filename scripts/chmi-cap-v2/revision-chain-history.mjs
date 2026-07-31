@@ -120,6 +120,8 @@ export function mergeOnsetHistoryEntries(recentEntries, refEntries) {
 
 /**
  * Merge two onset ledgers — earliest validFrom wins per ORP under each semantic key.
+ * Prefer mergeOnsetLedgersPreferPrimary when combining authoritative history with
+ * a persistent cache (earliest-wins can resurrect pre-handoff onsets).
  */
 export function mergeOnsetLedgersEarliest(a, b) {
   const out = a && typeof a === "object" ? { ...a } : {};
@@ -140,6 +142,27 @@ export function mergeOnsetLedgersEarliest(a, b) {
       if (Number.isFinite(prevMs) && Number.isFinite(nextMs) && nextMs < prevMs) {
         next[orp] = { ...meta };
       }
+    }
+    out[sem] = next;
+  }
+  return out;
+}
+
+/**
+ * Merge ledgers with primary winning on conflict.
+ * Fallback only fills ORPs missing from primary (e.g. temporary history gap).
+ * Never reintroduces an older onset that primary already reconciled away.
+ */
+export function mergeOnsetLedgersPreferPrimary(primary, fallback) {
+  const out = primary && typeof primary === "object" ? { ...primary } : {};
+  for (const [sem, bucket] of Object.entries(fallback || {})) {
+    if (!out[sem]) {
+      out[sem] = { ...bucket };
+      continue;
+    }
+    const next = { ...out[sem] };
+    for (const [orp, meta] of Object.entries(bucket || {})) {
+      if (!next[orp] && meta) next[orp] = { ...meta };
     }
     out[sem] = next;
   }
