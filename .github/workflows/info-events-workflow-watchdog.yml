@@ -1,0 +1,152 @@
+# Independent liveness watchdog for "Update info events".
+# Does NOT depend on that workflow's checkout/Refresh succeeding.
+# Fail-closed when last success is too old, or last completed run was cancelled/timed out/failed.
+name: Info events workflow watchdog
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Info-events runs */30. Alert if no success within ~75 minutes.
+    - cron: "15,45 * * * *"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: info-events-workflow-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # No checkout of application code — only Actions API + optional empty workspace.
+      - name: Check Update info events liveness
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STALE_SUCCESS_MINUTES: "75"
+          WORKFLOW_FILE: update-info-events.yml
+        run: |
+          set -euo pipefail
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+
+          runs_json="$(gh api "repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE/runs?per_page=20")"
+          printf '%s' "$runs_json" > /tmp/info-events-runs.json
+          node <<'NODE'
+          const fs = require("fs");
+          const staleMin = Number(process.env.STALE_SUCCESS_MINUTES || 75);
+          const raw = fs.readFileSync("/tmp/info-events-runs.json", "utf8");
+          const data = JSON.parse(raw);
+          const runs = Array.isArray(data.workflow_runs) ? data.workflow_runs : [];
+          const now = Date.now();
+
+          function ageMin(iso) {
+            if (!iso) return null;
+            return (now - Date.parse(iso)) / 60000;
+          }
+
+          const inProgress = runs.find((r) => r.status === "in_progress" || r.status === "queued");
+          const completed = runs.filter((r) => r.status === "completed");
+          const last = completed[0] || null;
+          const lastSuccess = completed.find((r) => r.conclusion === "success") || null;
+          const lastBad = completed.find((r) =>
+            r.conclusion === "failure" ||
+            r.conclusion === "cancelled" ||
+            r.conclusion === "timed_out"
+          ) || null;
+
+          const report = {
+            workflow: process.env.WORKFLOW_FILE,
+            now: new Date(now).toISOString(),
+            staleSuccessMinutes: staleMin,
+            inProgress: inProgress
+              ? { id: inProgress.id, status: inProgress.status, html_url: inProgress.html_url }
+              : null,
+            lastCompleted: last
+              ? {
+                  id: last.id,
+                  conclusion: last.conclusion,
+                  created_at: last.created_at,
+                  updated_at: last.updated_at,
+                  ageMinutes: ageMin(last.updated_at || last.created_at),
+                  html_url: last.html_url,
+                }
+              : null,
+            lastSuccess: lastSuccess
+              ? {
+                  id: lastSuccess.id,
+                  created_at: lastSuccess.created_at,
+                  updated_at: lastSuccess.updated_at,
+                  ageMinutes: ageMin(lastSuccess.updated_at || lastSuccess.created_at),
+                  html_url: lastSuccess.html_url,
+                }
+              : null,
+            lastBad: lastBad
+              ? {
+                  id: lastBad.id,
+                  conclusion: lastBad.conclusion,
+                  created_at: lastBad.created_at,
+                  updated_at: lastBad.updated_at,
+                  ageMinutes: ageMin(lastBad.updated_at || lastBad.created_at),
+                  html_url: lastBad.html_url,
+                }
+              : null,
+            expectedFrequency: "*/30 * * * *",
+          };
+
+          console.log("INFO_EVENTS_WATCHDOG_REPORT=" + JSON.stringify(report));
+
+          if (inProgress) {
+            console.log("INFO_EVENTS_WATCHDOG=PASS reason=in_progress");
+            process.exit(0);
+          }
+
+          if (!lastSuccess) {
+            console.error("INFO_EVENTS_WATCHDOG=FAIL reason=no_success_in_window");
+            process.exit(1);
+          }
+
+          const successAge = ageMin(lastSuccess.updated_at || lastSuccess.created_at);
+          if (successAge == null || successAge > staleMin) {
+            console.error(
+              "INFO_EVENTS_WATCHDOG=FAIL reason=stale_success ageMinutes=" +
+                successAge +
+                " lastSuccessId=" +
+                lastSuccess.id +
+                " lastConclusion=" +
+                (last && last.conclusion)
+            );
+            process.exit(1);
+          }
+
+          if (
+            last &&
+            (last.conclusion === "cancelled" ||
+              last.conclusion === "timed_out" ||
+              last.conclusion === "failure") &&
+            ageMin(last.updated_at || last.created_at) <= staleMin
+          ) {
+            // Recent non-success is an alert even if an older success exists within window.
+            // Prefer fail when the newest completed run is bad.
+            console.error(
+              "INFO_EVENTS_WATCHDOG=FAIL reason=last_completed_" +
+                last.conclusion +
+                " lastId=" +
+                last.id +
+                " lastSuccessId=" +
+                lastSuccess.id
+            );
+            process.exit(1);
+          }
+
+          console.log(
+            "INFO_EVENTS_WATCHDOG=PASS lastSuccessId=" +
+              lastSuccess.id +
+              " ageMinutes=" +
+              successAge.toFixed(1)
+          );
+          process.exit(0);
+          NODE
