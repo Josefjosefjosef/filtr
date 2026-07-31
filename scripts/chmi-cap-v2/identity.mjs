@@ -210,7 +210,7 @@ export function buildHazardInstances(alert, alertThreadId) {
     // Empty expires after sibling resolution = open-ended ("do odvolání"), not invalid.
     const untilRevoked = !expiresRaw;
     const tk = `${info.onset || info.effective || alert.sent || ""}|${expiresRaw || (untilRevoked ? "until-revoked" : "")}`;
-    const raw = `${alertThreadId}|${ek}|${ak}|${tk}|${idx}`;
+    const raw = `${alertThreadId}|${ek}|${ak}|${tk}`;
     instances.push({
       hazard_instance_id: `haz:${shortHash(raw)}`,
       alert_thread_id: alertThreadId,
