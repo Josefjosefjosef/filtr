@@ -1,4 +1,40 @@
 {
+  "version": "2.0.0",
+  "generatedAt": "2026-07-31T08:15:27.488Z",
+  "connector": "iu-info-events-refresh",
+  "architecture": "v2-pipeline",
+  "itemCount": 21,
+  "maxAgeHours": 96,
+  "activeWindowHours": 96,
+  "onlyGroup": null,
+  "laneCounts": {
+    "doprava": 0,
+    "pocasi": 21,
+    "bezpecnost": 0,
+    "ministerstva": 0,
+    "ekonomika": 0,
+    "zdravotnictvi": 0,
+    "skoly-kultura": 0,
+    "regionalni": 0,
+    "verejnopravni-media": 0,
+    "ostatni": 0
+  },
+  "dataQuality": {
+    "itemCount": 21,
+    "fallbackTime": 0,
+    "lowConfidence": 0,
+    "futureTime": 0,
+    "missingUrl": 0,
+    "missingInstitution": 0,
+    "missingGroup": 0,
+    "techArtifactsInTags": 0,
+    "multiSourcePublications": 0,
+    "invalidLifecycle": 0,
+    "suspiciousSameCaptureBatch": 0,
+    "blockers": [],
+    "warnings": []
+  },
+  "chmiCapV2Active": true,
   "items": [
     {
       "id": "ie-chmi-v2-0c890c79f0616187",
@@ -16738,8 +16774,5 @@
       "timeConfidence": "high",
       "isNewCapture": true
     }
-  ],
-  "generatedAt": "2026-07-31T07:14:42.620Z",
-  "itemCount": 21,
-  "chmiCapV2Active": true
+  ]
 }
