@@ -1,6 +1,7 @@
 /**
  * Normalize CAP v2 hazards → info-events compatible feed items.
  */
+import crypto from "crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CHMI_ATTRIBUTION, CHMI_OPENDATA_CAP_INDEX, CHMI_PUBLIC_ALERTS_URL } from "./config.mjs";
@@ -789,15 +790,228 @@ export function revisionToFeedItems(revision, opts = {}) {
 }
 
 /**
- * Merge feed items that share the same stable id — union geographic coverage.
+ * Canonical instant for segment identity — Z and +02:00 of the same moment match.
+ * Display may hide seconds; identity must not drop minutes or invent sent.
+ */
+export function normalizeCapInstant(iso) {
+  const raw = String(iso || "").trim();
+  if (!raw) return "";
+  const ms = Date.parse(raw);
+  if (!Number.isFinite(ms)) return raw;
+  return new Date(ms).toISOString();
+}
+
+function openEndedSemanticKey(item) {
+  const c = (item && item.capV2) || {};
+  return [
+    foldCs(c.event || String(item.title || "").split(" — ")[0] || ""),
+    foldCs(c.severity || ""),
+    foldCs(c.urgency || ""),
+    foldCs(c.certainty || ""),
+    String(item.status || c.temporalState || ""),
+    item.untilRevoked || c.untilRevoked ? "until-revoked" : normalizeCapInstant(item.validTo),
+  ].join("|");
+}
+
+function itemOrpIdSet(item) {
+  const ids = (item && item.region && item.region.orpIds) || [];
+  return new Set(ids.map(String).filter(Boolean));
+}
+
+function isOrpSubset(inner, outer) {
+  if (!inner.size || !outer.size) return false;
+  for (const x of inner) if (!outer.has(x)) return false;
+  return true;
+}
+
+/**
+ * Project a feed item onto an ORP subset — new stable id from areas + exact validFrom.
+ */
+export function projectFeedItemToOrpIds(item, orpIds, opts = {}) {
+  if (!item) return null;
+  const want = new Set((orpIds || []).map(String).filter(Boolean));
+  if (!want.size) return null;
+  const allLinks = (item.capV2 && item.capV2.geo && item.capV2.geo.links) || [];
+  const links = allLinks.filter((l) => want.has(String(l.orpId || l.orpCode || "")));
+  if (!links.length) return null;
+  const areaDescs = links.map((l) => l.orpName || l.areaDesc).filter(Boolean);
+  const loc = summarizeAlertLocality(links, areaDescs);
+  const titleBase = formatChmiEventDisplayName(
+    (item.capV2 && item.capV2.event) || String(item.title || "").split(" — ")[0] || "Výstraha ČHMÚ"
+  );
+  const title = loc.summary && !titleBase.includes(loc.summary) ? `${titleBase} — ${loc.summary}` : titleBase;
+  const validFrom = String(item.validFrom || "").trim();
+  const untilRevoked = !!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked));
+  const areaKey = [...want].sort().map((o) => `orp:${o}`).join(",");
+  const thread = (item.capV2 && item.capV2.alert_thread_id) || "";
+  const ek = foldCs((item.capV2 && item.capV2.event) || "");
+  const tk = `${validFrom}|${untilRevoked ? "until-revoked" : String(item.validTo || "").trim()}`;
+  const raw = `${thread}|${ek}|${areaKey}|${tk}|split-onset`;
+  const hid = crypto.createHash("sha1").update(raw).digest("hex").slice(0, 16);
+  const id = opts.keepId && item.id ? item.id : `ie-chmi-v2-${hid}`;
+  const orpNames = [...new Set(links.map((l) => l.orpName).filter(Boolean))];
+  const okresNames = [...new Set(links.map((l) => l.okresName).filter(Boolean))];
+  const krajNames = [...new Set(links.map((l) => l.krajName).filter(Boolean))];
+  return {
+    ...item,
+    id,
+    title,
+    region: {
+      ...(item.region || {}),
+      ...loc,
+      orpIds: [...want],
+      orpCodes: links.map((l) => l.orpCode).filter(Boolean),
+      orpNames,
+      okresIds: [...new Set(links.map((l) => l.okresId).filter(Boolean))],
+      okresNames,
+      krajIds: [...new Set(links.map((l) => l.krajId).filter(Boolean))],
+      krajNames,
+      areaDescs,
+      precise: true,
+    },
+    capV2: {
+      ...(item.capV2 || {}),
+      hazard_instance_id: `haz:${hid}`,
+      geo: {
+        ...((item.capV2 && item.capV2.geo) || {}),
+        links,
+        mappedAreas: links.length,
+        totalAreas: links.length,
+      },
+      searchText: foldCs([title, ...orpNames, ...krajNames].filter(Boolean).join(" ")),
+      onsetSplit: true,
+    },
+  };
+}
+
+/**
+ * Seed / update ORP → first open-ended onset ledger from publishable items.
+ * Later CAP Updates with a newer onset for continuing ORPs do not overwrite.
+ */
+export function updateOpenEndedOrpOnsetLedger(ledger, items) {
+  const out = ledger && typeof ledger === "object" ? { ...ledger } : {};
+  for (const item of items || []) {
+    if (!item || String(item.sourceId) !== "chmi") continue;
+    if (!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked))) continue;
+    if (!isPublishableChmiItem(item)) continue;
+    const sem = openEndedSemanticKey(item);
+    const vf = String(item.validFrom || "").trim();
+    const vfNorm = normalizeCapInstant(vf);
+    if (!vf || !vfNorm) continue;
+    if (!out[sem]) out[sem] = {};
+    const bucket = { ...out[sem] };
+    for (const orp of itemOrpIdSet(item)) {
+      const prev = bucket[orp];
+      if (!prev) {
+        bucket[orp] = { validFrom: vf, itemId: item.id };
+        continue;
+      }
+      const prevMs = Date.parse(prev.validFrom);
+      const nextMs = Date.parse(vf);
+      // Keep earliest declaration onset for continuing territories.
+      if (Number.isFinite(prevMs) && Number.isFinite(nextMs) && nextMs < prevMs) {
+        bucket[orp] = { validFrom: vf, itemId: item.id };
+      }
+    }
+    out[sem] = bucket;
+  }
+  return out;
+}
+
+/**
+ * When a superseding open-ended CAP info expands geography under a new onset,
+ * keep continuing ORPs on their earlier declaration onset (separate cards).
+ * Same semantic + same normalized validFrom → territories may remain one card.
+ */
+export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts = {}) {
+  const nowMs = Date.parse(opts.nowIso || "") || Date.now();
+  let ledger = opts.ledger && typeof opts.ledger === "object" ? { ...opts.ledger } : {};
+  ledger = updateOpenEndedOrpOnsetLedger(ledger, prevItems || []);
+  const out = [];
+  for (const item of nextItems || []) {
+    if (!item) continue;
+    const openEnded = !!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked));
+    if (!openEnded || String(item.sourceId) !== "chmi") {
+      out.push(item);
+      continue;
+    }
+    const sem = openEndedSemanticKey(item);
+    const nextVf = String(item.validFrom || "").trim();
+    const nextNorm = normalizeCapInstant(nextVf);
+    const nextOrps = itemOrpIdSet(item);
+    const bucket = ledger[sem] || {};
+    const byOnset = new Map();
+    for (const orp of nextOrps) {
+      const prior = bucket[orp];
+      const priorVf = prior && String(prior.validFrom || "").trim();
+      const priorNorm = normalizeCapInstant(priorVf);
+      let useVf = nextVf;
+      if (
+        priorVf &&
+        priorNorm &&
+        nextNorm &&
+        priorNorm !== nextNorm &&
+        Number.isFinite(Date.parse(priorVf)) &&
+        Number.isFinite(Date.parse(nextVf)) &&
+        Date.parse(priorVf) < Date.parse(nextVf)
+      ) {
+        useVf = priorVf;
+      }
+      const key = normalizeCapInstant(useVf) || useVf;
+      if (!byOnset.has(key)) byOnset.set(key, { validFrom: useVf, orps: [] });
+      byOnset.get(key).orps.push(orp);
+    }
+    if (byOnset.size <= 1) {
+      out.push(item);
+      continue;
+    }
+    for (const group of byOnset.values()) {
+      const projected = projectFeedItemToOrpIds({ ...item, validFrom: group.validFrom }, group.orps);
+      if (!projected) continue;
+      // Prefer stable prior item id when ORP set matches a previous segment.
+      const priorMatch = (prevItems || []).find((p) => {
+        if (!p || String(p.sourceId) !== "chmi") return false;
+        if (openEndedSemanticKey(p) !== sem) return false;
+        if (normalizeCapInstant(p.validFrom) !== normalizeCapInstant(group.validFrom)) return false;
+        const porps = itemOrpIdSet(p);
+        return porps.size === group.orps.length && isOrpSubset(porps, new Set(group.orps));
+      });
+      const withId = priorMatch
+        ? {
+            ...projected,
+            id: priorMatch.id,
+            firstSeenByInfoUzel: priorMatch.firstSeenByInfoUzel || projected.firstSeenByInfoUzel,
+            capV2: {
+              ...projected.capV2,
+              hazard_instance_id:
+                (priorMatch.capV2 && priorMatch.capV2.hazard_instance_id) || projected.capV2.hazard_instance_id,
+            },
+          }
+        : projected;
+      out.push(refreshItemLocalityPresentation(refreshItemTemporalFields(withId, nowMs)));
+    }
+  }
+  const merged = mergeFeedItemsById(out);
+  const nextLedger = updateOpenEndedOrpOnsetLedger(ledger, merged);
+  return { items: merged, ledger: nextLedger };
+}
+
+/**
+ * Merge feed items that share the same stable id — union geographic coverage
+ * only when validFrom/validTo/untilRevoked also match (exact normalized instant).
  */
 export function mergeFeedItemsById(items) {
   const map = new Map();
   for (const item of items || []) {
     if (!item || !item.id) continue;
-    const prev = map.get(item.id);
+    const vf = normalizeCapInstant(item.validFrom);
+    const vt = item.untilRevoked || (item.capV2 && item.capV2.untilRevoked)
+      ? "until-revoked"
+      : normalizeCapInstant(item.validTo);
+    const mergeKey = `${item.id}|${vf}|${vt}`;
+    const prev = map.get(mergeKey);
     if (!prev) {
-      map.set(item.id, item);
+      map.set(mergeKey, item);
       continue;
     }
     const a = prev.region || {};
@@ -824,7 +1038,7 @@ export function mergeFeedItemsById(items) {
       (newer.capV2 && newer.capV2.event) || String(newer.title || "").split(" — ")[0]
     );
     const title = loc.summary && !titleBase.includes(loc.summary) ? `${titleBase} — ${loc.summary}` : titleBase;
-    map.set(item.id, {
+    map.set(mergeKey, {
       ...newer,
       title,
       region: {

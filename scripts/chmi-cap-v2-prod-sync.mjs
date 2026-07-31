@@ -27,7 +27,7 @@ import {
   suspiciousDrop,
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
-import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
+import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem, splitOpenEndedByPriorTerritoryOnset, updateOpenEndedOrpOnsetLedger } from "./chmi-cap-v2/normalize-feed.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -39,7 +39,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
-const BULLETIN_CACHE_EPOCH = 7;
+const BULLETIN_CACHE_EPOCH = 8;
 
 function readJson(p, fallback) {
   try {
@@ -85,6 +85,55 @@ function loadState() {
 
 function countByStatus(items, status) {
   return (items || []).filter((i) => i && i.status === status).length;
+}
+
+/** Ústecký ORP band used to detect wrongly collapsed Praha+Ústecký open-ended smog. */
+const USTI_ORP_RE = /^42\d{2}$/;
+
+/**
+ * When ledger is empty or a single open-ended smog still covers Ústecký+Praha,
+ * seed earliest onsets from frozen CAP fixtures (no extra CHMI HTTP).
+ */
+function seedOpenEndedLedgerFromSmogFixtures(ledger, feedItems) {
+  const smog = (feedItems || []).filter(
+    (i) => i && String(i.sourceId) === "chmi" && /smogov/i.test((i.capV2 && i.capV2.event) || i.title || "")
+  );
+  const collapsed = smog.some((i) => {
+    const orps = (i.region && i.region.orpIds) || [];
+    const hasUsti = orps.some((o) => USTI_ORP_RE.test(String(o)));
+    const hasPraha = orps.some((o) => String(o) === "1100");
+    return hasUsti && hasPraha;
+  });
+  const empty = !ledger || !Object.keys(ledger).length;
+  if (!empty && !collapsed) return ledger || {};
+
+  const fixDir = path.join(REPO, "scripts", "fixtures", "chmi-cap-v2");
+  const files = [
+    {
+      name: "alert-smog-oustecky-1125.xml",
+      url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-smog-oustecky-1125.xml",
+    },
+    {
+      name: "alert-smog-expand-praha-sc-1317.xml",
+      url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-smog-expand-praha-sc-1317.xml",
+    },
+  ];
+  let next = ledger && typeof ledger === "object" ? { ...ledger } : {};
+  const nowIso = new Date().toISOString();
+  for (const f of files) {
+    const p = path.join(fixDir, f.name);
+    if (!fs.existsSync(p)) continue;
+    const xml = fs.readFileSync(p, "utf8");
+    const one = processCapDocuments([{ xml, sourceUrl: f.url }], {
+      registry: createGeoRegistry(),
+      receivedAt: nowIso,
+    });
+    const tids = [...new Set(one.report.revisions.map((r) => r.alert_thread_id))];
+    const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
+    const items = revisionsToFeed(revs, { nowIso }).filter((i) => isPublishableChmiItem(i));
+    next = updateOpenEndedOrpOnsetLedger(next, items);
+  }
+  return next;
 }
 
 function completenessMetrics(items, processResult) {
@@ -337,6 +386,18 @@ export async function runChmiCapV2Sync(opts = {}) {
       );
     });
     feedItems = classifiedAll.filter((i) => isPublishableChmiItem(i));
+    const seededLedger = seedOpenEndedLedgerFromSmogFixtures(state.openEndedOrpOnset || {}, feedItems);
+    const onsetSplit = splitOpenEndedByPriorTerritoryOnset(prevFeedEarly.items || [], feedItems, {
+      nowIso: started,
+      ledger: seededLedger,
+    });
+    feedItems = (onsetSplit.items || []).filter((i) => isPublishableChmiItem(i));
+    state.openEndedOrpOnset = onsetSplit.ledger || seededLedger || state.openEndedOrpOnset || {};
+    diagnostics.onsetSplit = {
+      before: classifiedAll.filter((i) => isPublishableChmiItem(i)).length,
+      after: feedItems.length,
+      ledgerKeys: Object.keys(state.openEndedOrpOnset || {}).length,
+    };
     diagnostics.temporalCounts = {
       totalItems: classifiedAll.length,
       activeCount: countByStatus(classifiedAll, "aktivni"),

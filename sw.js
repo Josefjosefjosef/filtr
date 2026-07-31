@@ -21,7 +21,7 @@
 // 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
 // 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
 // 2026-07-30: Prehled dne banner + HomeCard FOUC fix — bust shell so cutover-first HTML/CSS reach clients
-const CACHE_VERSION = "2026-07-31-chmi-info-events-passthrough-v2";
+const CACHE_VERSION = "2026-07-31-chmi-smog-onset-split-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -473,8 +473,8 @@ async function matchFeedOfflineLastGood(request) {
 }
 
 /**
- * Online: network-only (no-store) — never serve stale as fresh.
- * Offline: last-good JSON from FEED_OFFLINE_CACHE when available.
+ * Online: network-first (no-store) — never serve stale as fresh when network works.
+ * Offline: last-good JSON from FEED_OFFLINE_CACHE; then DATA_CACHE; then seed.
  */
 async function handleProjectsFeedDataPassthrough(event, pathname) {
   const doFetch = () => fetch(event.request, { cache: "no-store" });
@@ -497,8 +497,28 @@ async function handleProjectsFeedDataPassthrough(event, pathname) {
   const lastGood = await matchFeedOfflineLastGood(event.request);
   if (lastGood) return lastGood;
 
+  try {
+    const cached = await caches.match(event.request);
+    if (cached) {
+      const ct = cached.headers.get("content-type") || "";
+      if (!pathname.endsWith(".json") || ct.includes("application/json") || ct.includes("text/plain")) {
+        return cached;
+      }
+    }
+  } catch (_) {}
+
   if (pathname.endsWith("articles.json") || pathname.endsWith("publishable_pool.json")) return seedResponse(pathname);
   if (pathname.endsWith("videos.json")) return seedResponse(pathname);
+  if (pathname.includes("/info_events/") && pathname.endsWith(".json")) {
+    return new Response(JSON.stringify({ error: "OFFLINE_NO_LAST_GOOD_FEED", items: [] }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+        "X-IU-Offline": "1",
+      },
+    });
+  }
   return new Response("stale\n", {
     status: 200,
     headers: {
