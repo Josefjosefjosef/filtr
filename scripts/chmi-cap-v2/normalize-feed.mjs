@@ -836,7 +836,7 @@ function isOrpSubset(inner, outer) {
 }
 
 /**
- * Project a feed item onto an ORP subset — new stable id from areas + exact validFrom.
+ * Project a feed item onto an ORP subset — stable segment id from semantic onset.
  */
 export function projectFeedItemToOrpIds(item, orpIds, opts = {}) {
   if (!item) return null;
@@ -852,12 +852,9 @@ export function projectFeedItemToOrpIds(item, orpIds, opts = {}) {
   );
   const title = loc.summary && !titleBase.includes(loc.summary) ? `${titleBase} — ${loc.summary}` : titleBase;
   const validFrom = String(item.validFrom || "").trim();
-  const untilRevoked = !!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked));
-  const areaKey = [...want].sort().map((o) => `orp:${o}`).join(",");
   const thread = (item.capV2 && item.capV2.alert_thread_id) || "";
-  const ek = foldCs((item.capV2 && item.capV2.event) || "");
-  const tk = `${validFrom}|${untilRevoked ? "until-revoked" : String(item.validTo || "").trim()}`;
-  const raw = `${thread}|${ek}|${areaKey}|${tk}|split-onset`;
+  const semantic = openEndedSemanticKey(item);
+  const raw = `${thread}|${semantic}|${normalizeCapInstant(validFrom)}|split-onset`;
   const hid = crypto.createHash("sha1").update(raw).digest("hex").slice(0, 16);
   const id = opts.keepId && item.id ? item.id : `ie-chmi-v2-${hid}`;
   const orpNames = [...new Set(links.map((l) => l.orpName).filter(Boolean))];
@@ -929,6 +926,69 @@ export function updateOpenEndedOrpOnsetLedger(ledger, items) {
   return out;
 }
 
+function sameHazardSemantic(item, openEndedItem) {
+  const a = (item && item.capV2) || {};
+  const b = (openEndedItem && openEndedItem.capV2) || {};
+  return (
+    foldCs(a.event || String(item && item.title || "").split(" — ")[0] || "") ===
+      foldCs(b.event || String(openEndedItem && openEndedItem.title || "").split(" — ")[0] || "") &&
+    foldCs(a.severity || "") === foldCs(b.severity || "") &&
+    foldCs(a.urgency || "") === foldCs(b.urgency || "") &&
+    foldCs(a.certainty || "") === foldCs(b.certainty || "")
+  );
+}
+
+/**
+ * Reconcile the open-ended onset ledger against one authoritative CAP snapshot.
+ * Missing ORPs broke continuity; a timed segment ending at/before a new
+ * open-ended onset starts a new continuous segment for that ORP.
+ */
+export function reconcileOpenEndedOrpOnsetLedger(ledger, items) {
+  const out = ledger && typeof ledger === "object" ? { ...ledger } : {};
+  const current = new Map();
+  const publishable = (items || []).filter((item) => item && String(item.sourceId) === "chmi" && isPublishableChmiItem(item));
+
+  for (const item of publishable) {
+    if (!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked))) continue;
+    const sem = openEndedSemanticKey(item);
+    if (!current.has(sem)) current.set(sem, []);
+    current.get(sem).push(item);
+  }
+
+  for (const sem of Object.keys(out)) {
+    if (!current.has(sem)) delete out[sem];
+  }
+
+  for (const [sem, openItems] of current) {
+    const bucket = {};
+    for (const item of openItems) {
+      const validFrom = String(item.validFrom || "").trim();
+      const validFromMs = Date.parse(validFrom);
+      if (!validFrom || !Number.isFinite(validFromMs)) continue;
+      for (const orp of itemOrpIdSet(item)) {
+        const timedHandoff = publishable.some((candidate) => {
+          if (candidate.untilRevoked || (candidate.capV2 && candidate.capV2.untilRevoked)) return false;
+          if (!sameHazardSemantic(candidate, item) || !itemOrpIdSet(candidate).has(orp)) return false;
+          const expiresMs = Date.parse(String(candidate.validTo || "").trim());
+          return Number.isFinite(expiresMs) && expiresMs <= validFromMs;
+        });
+        const prior = out[sem] && out[sem][orp];
+        const priorMs = Date.parse(prior && prior.validFrom);
+        const keepPrior = !timedHandoff && Number.isFinite(priorMs) && priorMs <= validFromMs;
+        bucket[orp] = keepPrior
+          ? prior
+          : {
+              validFrom,
+              itemId: item.id,
+              sourceDocument: (item.capV2 && item.capV2.cap_message_id) || null,
+            };
+      }
+    }
+    out[sem] = bucket;
+  }
+  return out;
+}
+
 /**
  * When a superseding open-ended CAP info expands geography under a new onset,
  * keep continuing ORPs on their earlier declaration onset (separate cards).
@@ -979,13 +1039,12 @@ export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts =
     for (const group of byOnset.values()) {
       const projected = projectFeedItemToOrpIds({ ...item, validFrom: group.validFrom }, group.orps);
       if (!projected) continue;
-      // Prefer stable prior item id when ORP set matches a previous segment.
+      // Match semantic onset only: a territory membership change must not churn
+      // a deterministic onset-segment id.
       const priorMatch = (prevItems || []).find((p) => {
         if (!p || String(p.sourceId) !== "chmi") return false;
         if (openEndedSemanticKey(p) !== sem) return false;
-        if (normalizeCapInstant(p.validFrom) !== normalizeCapInstant(group.validFrom)) return false;
-        const porps = itemOrpIdSet(p);
-        return porps.size === group.orps.length && isOrpSubset(porps, new Set(group.orps));
+        return normalizeCapInstant(p.validFrom) === normalizeCapInstant(group.validFrom);
       });
       const withId = priorMatch
         ? {
@@ -1004,7 +1063,7 @@ export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts =
   }
   const merged = mergeFeedItemsById(out);
   const coalesced = coalesceOpenEndedSameSemanticOnset(merged, { nowIso: opts.nowIso });
-  const nextLedger = updateOpenEndedOrpOnsetLedger(ledger, coalesced);
+  const nextLedger = reconcileOpenEndedOrpOnsetLedger(ledger, nextItems || []);
   return { items: coalesced, ledger: nextLedger };
 }
 

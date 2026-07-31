@@ -15,9 +15,9 @@ import {
   canonicalOrpKey,
   isPublishableChmiItem,
   mergeFeedItemsById,
+  reconcileOpenEndedOrpOnsetLedger,
   revisionsToFeed,
   splitOpenEndedByPriorTerritoryOnset,
-  updateOpenEndedOrpOnsetLedger,
 } from "./normalize-feed.mjs";
 
 export { canonicalOrpKey };
@@ -69,7 +69,7 @@ export function buildTerritoryOnsetLedgerFromOrderedDocuments(docsAsc, opts = {}
     const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
     const items = mergeFeedItemsById(revisionsToFeed(revs, { nowIso })).filter((i) => isPublishableChmiItem(i));
     const before = JSON.stringify(ledger);
-    ledger = canonicalizeLedgerOrpKeys(updateOpenEndedOrpOnsetLedger(ledger, items));
+    ledger = canonicalizeLedgerOrpKeys(reconcileOpenEndedOrpOnsetLedger(ledger, items));
     const after = JSON.stringify(ledger);
     const openEnded = items.filter((i) => i.untilRevoked || (i.capV2 && i.capV2.untilRevoked));
     steps.push({
