@@ -46,6 +46,13 @@ import {
   validateStagingFeed,
 } from "./iu-info-events-v2.mjs";
 import {
+  assertChmiCapV2FeedPreserved,
+  assertMonitoringForeignNamespacesPreserved,
+  composeFeedItemsWithForeignNamespaces,
+  composeMonitoringWithForeignNamespaces,
+  shouldSkipChmiLegacyIngest,
+} from "./iu-info-events-namespace-compose.mjs";
+import {
   attachLegalProvenance,
   canPublishFromSource,
   loadLegalRegistry,
@@ -355,6 +362,15 @@ async function main() {
   const cutover = readJson("cutover_state.json");
   const legalRegistry = loadLegalRegistry(REPO);
   const firstSeenMap = loadPreviousFirstSeen(DIR);
+  let prevFeed = null;
+  try {
+    prevFeed = readJson("feed.json");
+  } catch {
+    prevFeed = null;
+  }
+  const prevFeedItems = (prevFeed && Array.isArray(prevFeed.items) && prevFeed.items) || [];
+  const chmiV2CfgEarly = getChmiCapV2Config(process.env);
+  const skipChmiLegacy = shouldSkipChmiLegacyIngest(prevFeedItems, chmiV2CfgEarly);
   const collected = [];
   const ingestReport = [];
   let sourceErrors = 0;
@@ -387,16 +403,23 @@ async function main() {
     const srcStarted = Date.now();
     try {
       if (entry.capIndexUrl) {
-        const chmiV2 = getChmiCapV2Config(process.env);
-        if (entry.id === "chmi" && chmiV2.mode === "active") {
+        if (entry.id === "chmi" && skipChmiLegacy) {
+          // CAP v2 owns ie-chmi-v2-* / monitoring.chmiCapV2. Never legacy-overwrite.
+          const preservedN = prevFeedItems.filter(
+            (i) => i && String(i.sourceId || "") === "chmi" && (i.capV2 || /^ie-chmi-v2-/i.test(String(i.id || "")))
+          ).length;
           ingestReport.push({
             id: entry.id,
             ok: true,
-            kept: 0,
-            reason: "delegated_to_chmi_cap_v2_active",
-            mode: "cap-v2-delegated",
+            kept: preservedN,
+            reason:
+              chmiV2CfgEarly.mode === "active"
+                ? "delegated_to_chmi_cap_v2_active"
+                : "preserve_existing_chmi_cap_v2_items",
+            mode: "cap-v2-namespace-preserve",
             ms: 0,
           });
+          keptTotal += preservedN;
         } else {
           keptTotal += await ingestCapIndex(entry, entry.capIndexUrl, nowIso, collected, ingestReport);
         }
@@ -546,6 +569,14 @@ async function main() {
   items = items.filter((it) => isConcreteItemUrl(it.url, null) && isConcreteItemUrl(it.originalUrl || it.url, null));
   const droppedHome = beforeHome - items.length;
 
+  // Preserve CHMI CAP v2 namespace from previous feed; drop legacy CHMI replacements.
+  // Must run BEFORE splitIntoLanes so lane files also keep CAP v2 cards.
+  items = composeFeedItemsWithForeignNamespaces(prevFeedItems, items);
+  assertChmiCapV2FeedPreserved(prevFeedItems, items);
+  const feedChmiV2N = items.filter(
+    (i) => i && String(i.sourceId || "") === "chmi" && (i.capV2 || /^ie-chmi-v2-/i.test(String(i.id || "")))
+  ).length;
+
   const dataQuality = buildDataQualityMetrics(items, { nowIso });
 
   const lanes = splitIntoLanes(items);
@@ -563,6 +594,7 @@ async function main() {
     onlyGroup: ONLY_GROUP || null,
     laneCounts,
     dataQuality,
+    chmiCapV2Active: feedChmiV2N > 0 || skipChmiLegacy,
     items,
   };
 
@@ -677,7 +709,16 @@ async function main() {
     dataQuality,
     commercialAggregationActive: !!cutover.commercialAggregationActive,
   };
-  const monitoring = enrichMonitoringV3(monitoringBase, prevMonitoring, nowIso);
+  const monitoringOwned = enrichMonitoringV3(monitoringBase, prevMonitoring, nowIso);
+  const monitoring = composeMonitoringWithForeignNamespaces(prevMonitoring, monitoringOwned);
+  assertMonitoringForeignNamespacesPreserved(prevMonitoring, monitoring);
+
+  // Fail-closed if CAP v2 items exist in feed but monitoring lost the ops block.
+  if (feedChmiV2N > 0 && !(monitoring.chmiCapV2 && typeof monitoring.chmiCapV2 === "object")) {
+    if (prevMonitoring && prevMonitoring.chmiCapV2) {
+      throw new Error("MONITORING_COMPOSE_ABORT: chmiCapV2 required when CAP v2 feed items are present");
+    }
+  }
 
   registry.version = IU_INFO_EVENTS_V2;
   registry.generatedAt = nowIso;
