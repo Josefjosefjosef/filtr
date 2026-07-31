@@ -17,7 +17,7 @@ const { chromium } = require("playwright");
 
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8896", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8986", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
 const HUB_TITLE = "Finanční kalkulačky";
@@ -89,6 +89,11 @@ function sameRow(a, b, tolerance = 4) {
 }
 
 async function bootFinancial(page) {
+  await page.waitForFunction(
+    () => typeof window.iuEnsureFinancialCalcOverlayBoot === "function" || typeof window.iuFinancialCalcOpenSurface === "function",
+    null,
+    { timeout: 60000 },
+  );
   await page.evaluate(async () => {
     if (typeof window.iuEnsureFinancialCalcOverlayBoot === "function") {
       await window.iuEnsureFinancialCalcOverlayBoot();
@@ -100,6 +105,11 @@ async function bootFinancial(page) {
       window.iuToolPrivacyBoot();
     }
   });
+  await page.waitForFunction(
+    () => typeof window.iuFinancialCalcOpenSurface === "function",
+    null,
+    { timeout: 60000 },
+  );
 }
 
 async function measureHeader(page) {
