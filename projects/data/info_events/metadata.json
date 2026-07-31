@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "generatedAt": "2026-07-23T19:01:08.718Z",
+  "generatedAt": "2026-07-31T08:15:27.488Z",
   "architecture": {
     "backendOnlyFetch": true,
     "frontendLocalFirst": true,
@@ -283,7 +283,7 @@
     "neverRejuvenateByFirstSeen": true
   },
   "dataQuality": {
-    "itemCount": 5,
+    "itemCount": 21,
     "fallbackTime": 0,
     "lowConfidence": 0,
     "futureTime": 0,
@@ -296,5 +296,14 @@
     "suspiciousSameCaptureBatch": 0,
     "blockers": [],
     "warnings": []
+  },
+  "chmiCapV2": {
+    "mode": "off",
+    "enabled": false,
+    "shadow": false,
+    "legacyProductionPath": true,
+    "productionPublishV2": false,
+    "intervalMinutes": 15,
+    "note": "CAP v2 flag off — legacy CHMI CAP ingest unchanged"
   }
 }
