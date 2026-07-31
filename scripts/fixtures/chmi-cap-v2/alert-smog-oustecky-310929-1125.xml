@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>2.49.0.0.203.0.CZ.260731092922.XOCZ50_OKPR_000278</identifier>
+  <sender>chmi@chmi.cz</sender>
+  <sent>2026-07-31T11:29:22+02:00</sent>
+  <status>Actual</status>
+  <msgType>Update</msgType>
+  <scope>Public</scope>
+  <references>chmi@chmi.cz,2.49.0.0.203.0.CZ.260730111603.XOCZ50_OKPR_000277,2026-07-30T13:16:03+02:00</references>
+  <info>
+
+    <language>cs</language>
+    <category>Env</category>
+    <event>Smogová situace - troposférický ozón O3</event>
+    <responseType>Avoid</responseType>
+    <urgency>Immediate</urgency>
+    <severity>Moderate</severity>
+    <certainty>Observed</certainty>
+    <audience>veřejnost, HZS, web</audience>
+    <eventCode>
+      <valueName>SVRS</valueName>
+      <value>SMOGSIT.O3</value>
+    </eventCode>
+    <onset>2026-07-31T11:25:23+02:00</onset>
+    <senderName>ČHMÚ, Jan Hrubý</senderName>
+    <description>
+VYHLAŠUJEME SMOGOVOU SITUACI z důvodu vysokých koncentrací troposférického OZONU.
+Smogová situace nastala s vydáním této informace.
+
+Alespoň na jedné stanici reprezentativní pro toto území překročil hodinový průměr troposférického ozonu informativní prahovou hodnotu 180 mikrogramů/m3 a její překročení je na některé z reprezentativních stanic očekáváno i následující hodinu. Aktuální koncentrace na stanicích smogového varovného a regulačního systému jsou uvedeny zde: https://ovzdusi.chmi.cz/SVRS.php?showPol=O3.
+</description>
+    <instruction>Při pobytu venku v odpoledních hodinách doporučujeme zdržet se zvýšené fyzické zátěže, spojené se zvýšenou frekvencí dýchání. Doporučení platí zejména pro osoby s chronickými dýchacími potížemi, starší lidi a malé děti. Více viz doporučení SZÚ: http://www.szu.cz/tema/zivotni-prostredi/smogova-situace-co-muzeme-udelat
+Podrobné aktuální informace o kvalitě ovzduší jsou k dispozici na internetových stránkách ČHMÚ, rozcestník Ovzduší: index kvality ovzduší a aktuální koncentrace na stanicích, mapy indexu kvality ovzduší a koncentrací, předpověď koncentrací pro kraje a ORP (po kliknutí do mapy zobrazíte předpověď pro zvolené území).
+
+Podrobné aktuální informace o kvalitě ovzduší jsou k dispozici na internetových stránkách ČHMÚ www.chmi.cz, záložka Ovzduší.
+Každou hodinu jsou doplňovány 1hodinové průměrné koncentrace automaticky měřených škodlivin a hodnoty doprovodných meteorologických prvků. Aktualizovány jsou rovněž vícehodinové průměrné koncentrace škodlivin, vypočtené z 1hodinových koncentrací. Předpověď rozptylových podmínek je součástí předpovědí počasí pro ČR a jednotlivé kraje, viz www.chmi.cz, záložka Počasí.
+</instruction>
+    <web>https://ovzdusi.chmi.cz/SVRS.php?showPol=O3</web>
+    <parameter>
+      <valueName>situation</valueName>
+      <value>Kolem tlakové výše nad východní Evropou k nám bude nadále proudit mimořádně teplý vzduch od jihozápadu. </value>
+    </parameter>
+    <parameter>
+      <valueName>expectedExceedingTomorrow</valueName>
+      <value>False</value>
+    </parameter>
+    <parameter>
+      <valueName>awareness_level</valueName>
+      <value>2; yellow; Moderate</value>
+    </parameter>
+    <parameter>
+      <valueName>awareness_type</valueName>
+      <value>11; unknown</value>
+    </parameter>
+    <area>
+      <areaDesc>Ústecký kraj</areaDesc>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4201</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04201</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4202</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04202</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4203</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04203</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4204</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04204</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4205</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04205</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4206</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04206</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4207</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04207</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4208</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04208</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4209</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04209</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4210</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04210</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4211</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04211</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4212</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04212</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4213</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04213</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4214</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04214</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4215</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04215</value>
+      </geocode>
+      <geocode>
+        <valueName>CISORP</valueName>
+        <value>4216</value>
+      </geocode>
+      <geocode>
+        <valueName>EMMA_ID</valueName>
+        <value>CZ04216</value>
+      </geocode>
+    </area>
+  
+  </info>
+</alert>

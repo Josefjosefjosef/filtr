@@ -28,6 +28,12 @@ import {
   tryAcquireLock,
 } from "./chmi-cap-v2/sync-core.mjs";
 import { loadChmiFirstSeenById, mergeFeedItemsById, refreshItemLocalityPresentation, refreshItemTemporalFields, revisionsToFeed, isPublishableChmiItem, splitOpenEndedByPriorTerritoryOnset, updateOpenEndedOrpOnsetLedger } from "./chmi-cap-v2/normalize-feed.mjs";
+import {
+  applyTerritoryOnsetLedgerToFeed,
+  buildTerritoryOnsetLedgerFromOrderedDocuments,
+  canonicalizeLedgerOrpKeys,
+  ledgerFingerprint,
+} from "./chmi-cap-v2/territory-onset-ledger.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -39,7 +45,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
-const BULLETIN_CACHE_EPOCH = 8;
+const BULLETIN_CACHE_EPOCH = 9;
 
 function readJson(p, fallback) {
   try {
@@ -85,55 +91,6 @@ function loadState() {
 
 function countByStatus(items, status) {
   return (items || []).filter((i) => i && i.status === status).length;
-}
-
-/** Ústecký ORP band used to detect wrongly collapsed Praha+Ústecký open-ended smog. */
-const USTI_ORP_RE = /^42\d{2}$/;
-
-/**
- * When ledger is empty or a single open-ended smog still covers Ústecký+Praha,
- * seed earliest onsets from frozen CAP fixtures (no extra CHMI HTTP).
- */
-function seedOpenEndedLedgerFromSmogFixtures(ledger, feedItems) {
-  const smog = (feedItems || []).filter(
-    (i) => i && String(i.sourceId) === "chmi" && /smogov/i.test((i.capV2 && i.capV2.event) || i.title || "")
-  );
-  const collapsed = smog.some((i) => {
-    const orps = (i.region && i.region.orpIds) || [];
-    const hasUsti = orps.some((o) => USTI_ORP_RE.test(String(o)));
-    const hasPraha = orps.some((o) => String(o) === "1100");
-    return hasUsti && hasPraha;
-  });
-  const empty = !ledger || !Object.keys(ledger).length;
-  if (!empty && !collapsed) return ledger || {};
-
-  const fixDir = path.join(REPO, "scripts", "fixtures", "chmi-cap-v2");
-  const files = [
-    {
-      name: "alert-smog-oustecky-1125.xml",
-      url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-smog-oustecky-1125.xml",
-    },
-    {
-      name: "alert-smog-expand-praha-sc-1317.xml",
-      url: "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert-smog-expand-praha-sc-1317.xml",
-    },
-  ];
-  let next = ledger && typeof ledger === "object" ? { ...ledger } : {};
-  const nowIso = new Date().toISOString();
-  for (const f of files) {
-    const p = path.join(fixDir, f.name);
-    if (!fs.existsSync(p)) continue;
-    const xml = fs.readFileSync(p, "utf8");
-    const one = processCapDocuments([{ xml, sourceUrl: f.url }], {
-      registry: createGeoRegistry(),
-      receivedAt: nowIso,
-    });
-    const tids = [...new Set(one.report.revisions.map((r) => r.alert_thread_id))];
-    const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
-    const items = revisionsToFeed(revs, { nowIso }).filter((i) => isPublishableChmiItem(i));
-    next = updateOpenEndedOrpOnsetLedger(next, items);
-  }
-  return next;
 }
 
 function completenessMetrics(items, processResult) {
@@ -386,17 +343,91 @@ export async function runChmiCapV2Sync(opts = {}) {
       );
     });
     feedItems = classifiedAll.filter((i) => isPublishableChmiItem(i));
-    const seededLedger = seedOpenEndedLedgerFromSmogFixtures(state.openEndedOrpOnset || {}, feedItems);
-    const onsetSplit = splitOpenEndedByPriorTerritoryOnset(prevFeedEarly.items || [], feedItems, {
+
+    // Revision-aware territory onset ledger: walk bounded recent CAP history
+    // (oldest→newest) so continuing ORPs keep firstValidFrom from the first
+    // declaration — never from a later Update that rewrites <onset>.
+    // No incident-specific fixture seed in production.
+    const historyDocs = [];
+    const historyMeta = { fetched: 0, cached: 0, skipped: 0, urls: [] };
+    if (typeof discovery.listRecentForOnsetLedger === "function") {
+      const recent = discovery.listRecentForOnsetLedger(6);
+      const headUrls = new Set(latest.map((x) => x.url));
+      const keepHistory = new Set(recent.map((r) => r.url));
+      for (const item of recent) {
+        const url = item.url;
+        historyMeta.urls.push(url);
+        const headDoc = docs.find((d) => d.sourceUrl === url);
+        if (headDoc && headDoc.xml) {
+          historyDocs.push({ xml: headDoc.xml, sourceUrl: url, name: item.name });
+          historyMeta.cached += 1;
+          continue;
+        }
+        if (state.onsetHistoryCache && state.onsetHistoryCache[url] && state.onsetHistoryCache[url].xml) {
+          historyDocs.push({
+            xml: state.onsetHistoryCache[url].xml,
+            sourceUrl: url,
+            name: item.name,
+          });
+          historyMeta.cached += 1;
+          continue;
+        }
+        try {
+          const resp = await discovery.fetchBody(url, {});
+          if (resp.status === 200 && resp.body) {
+            if (!state.onsetHistoryCache || typeof state.onsetHistoryCache !== "object") {
+              state.onsetHistoryCache = {};
+            }
+            state.onsetHistoryCache[url] = { xml: resp.body, updatedAt: started };
+            historyDocs.push({ xml: resp.body, sourceUrl: url, name: item.name });
+            historyMeta.fetched += 1;
+          } else {
+            historyMeta.skipped += 1;
+          }
+        } catch (_) {
+          historyMeta.skipped += 1;
+        }
+      }
+      if (state.onsetHistoryCache) {
+        for (const k of Object.keys(state.onsetHistoryCache)) {
+          if (!keepHistory.has(k) && !headUrls.has(k)) delete state.onsetHistoryCache[k];
+        }
+      }
+    }
+
+    let chainLedger = canonicalizeLedgerOrpKeys(state.openEndedOrpOnset || {});
+    let chainSteps = [];
+    if (historyDocs.length) {
+      const built = buildTerritoryOnsetLedgerFromOrderedDocuments(historyDocs, {
+        nowIso: started,
+        seedLedger: {},
+      });
+      chainLedger = built.ledger;
+      chainSteps = built.steps;
+    } else if (prevFeedEarly.items && prevFeedEarly.items.length) {
+      chainLedger = canonicalizeLedgerOrpKeys(
+        updateOpenEndedOrpOnsetLedger(chainLedger, prevFeedEarly.items)
+      );
+    }
+
+    const onsetSplit = applyTerritoryOnsetLedgerToFeed(prevFeedEarly.items || [], feedItems, chainLedger, {
       nowIso: started,
-      ledger: seededLedger,
     });
     feedItems = (onsetSplit.items || []).filter((i) => isPublishableChmiItem(i));
-    state.openEndedOrpOnset = onsetSplit.ledger || seededLedger || state.openEndedOrpOnset || {};
+    state.openEndedOrpOnset = onsetSplit.ledger || chainLedger || {};
     diagnostics.onsetSplit = {
       before: classifiedAll.filter((i) => isPublishableChmiItem(i)).length,
       after: feedItems.length,
       ledgerKeys: Object.keys(state.openEndedOrpOnset || {}).length,
+      ledgerFingerprint: ledgerFingerprint(state.openEndedOrpOnset),
+      history: historyMeta,
+      chainSteps: chainSteps.map((s) => ({
+        sent: s.sent,
+        msgType: s.msgType,
+        openEndedCount: s.openEndedCount,
+        sourceUrl: s.sourceUrl,
+      })),
+      fixtureSeed: false,
     };
     diagnostics.temporalCounts = {
       totalItems: classifiedAll.length,

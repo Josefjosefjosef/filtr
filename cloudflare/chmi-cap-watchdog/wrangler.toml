@@ -1,0 +1,21 @@
+# CHMI CAP v2 freshness watchdog: Cloudflare Cron → GitHub workflow_dispatch.
+# Primary autorun for update-chmi-cap-v2.yml; GitHub schedule remains backup.
+# Deploy: cd cloudflare/chmi-cap-watchdog && npm ci && npx wrangler deploy
+# Secret: npx wrangler secret put GITHUB_TOKEN
+name = "infouzel-chmi-cap-watchdog"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[triggers]
+# Every 5 minutes; dispatch when production feed generatedAt is older than STALE_AFTER_MINUTES.
+crons = ["*/5 * * * *"]
+
+[observability]
+enabled = true
+
+[vars]
+GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
+WORKFLOW_FILE = "update-chmi-cap-v2.yml"
+FRESHNESS_URL = "https://infouzel.cz/projects/data/info_events/feed.json"
+# Keep headroom for fetch+CI+merge+Pages under 15m E2E SLA target.
+STALE_AFTER_MINUTES = "8"

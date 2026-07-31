@@ -803,19 +803,30 @@ export function normalizeCapInstant(iso) {
 
 function openEndedSemanticKey(item) {
   const c = (item && item.capV2) || {};
+  // Identity for territorial onset continuity — exclude ephemeral temporal status
+  // (ACTIVE/FUTURE) so the same hazard keeps one ledger bucket across clock ticks.
   return [
     foldCs(c.event || String(item.title || "").split(" — ")[0] || ""),
     foldCs(c.severity || ""),
     foldCs(c.urgency || ""),
     foldCs(c.certainty || ""),
-    String(item.status || c.temporalState || ""),
     item.untilRevoked || c.untilRevoked ? "until-revoked" : normalizeCapInstant(item.validTo),
   ].join("|");
 }
 
+/** Canonical ORP key shared with territory-onset-ledger. */
+export function canonicalOrpKey(id) {
+  const s = String(id || "").trim();
+  if (!s) return "";
+  const m = s.match(/^(?:orp:)?(\d{3,5})$/i);
+  if (m) return `orp:${m[1]}`;
+  if (/^orp:/i.test(s)) return s.toLowerCase();
+  return s;
+}
+
 function itemOrpIdSet(item) {
   const ids = (item && item.region && item.region.orpIds) || [];
-  return new Set(ids.map(String).filter(Boolean));
+  return new Set(ids.map(canonicalOrpKey).filter(Boolean));
 }
 
 function isOrpSubset(inner, outer) {
@@ -829,10 +840,10 @@ function isOrpSubset(inner, outer) {
  */
 export function projectFeedItemToOrpIds(item, orpIds, opts = {}) {
   if (!item) return null;
-  const want = new Set((orpIds || []).map(String).filter(Boolean));
+  const want = new Set((orpIds || []).map(canonicalOrpKey).filter(Boolean));
   if (!want.size) return null;
   const allLinks = (item.capV2 && item.capV2.geo && item.capV2.geo.links) || [];
-  const links = allLinks.filter((l) => want.has(String(l.orpId || l.orpCode || "")));
+  const links = allLinks.filter((l) => want.has(canonicalOrpKey(l.orpId || l.orpCode || "")));
   if (!links.length) return null;
   const areaDescs = links.map((l) => l.orpName || l.areaDesc).filter(Boolean);
   const loc = summarizeAlertLocality(links, areaDescs);
@@ -903,14 +914,14 @@ export function updateOpenEndedOrpOnsetLedger(ledger, items) {
     for (const orp of itemOrpIdSet(item)) {
       const prev = bucket[orp];
       if (!prev) {
-        bucket[orp] = { validFrom: vf, itemId: item.id };
+        bucket[orp] = { validFrom: vf, itemId: item.id, sourceDocument: (item.capV2 && item.capV2.cap_message_id) || null };
         continue;
       }
       const prevMs = Date.parse(prev.validFrom);
       const nextMs = Date.parse(vf);
       // Keep earliest declaration onset for continuing territories.
       if (Number.isFinite(prevMs) && Number.isFinite(nextMs) && nextMs < prevMs) {
-        bucket[orp] = { validFrom: vf, itemId: item.id };
+        bucket[orp] = { validFrom: vf, itemId: item.id, sourceDocument: (item.capV2 && item.capV2.cap_message_id) || null };
       }
     }
     out[sem] = bucket;
