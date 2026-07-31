@@ -558,6 +558,43 @@ export async function runChmiCapV2Sync(opts = {}) {
       runMs: Date.now() - t0,
       registryVersion: createGeoRegistry().version,
       lastSnapshotAt: decision.publish ? started : prevDiag.lastSnapshotAt || null,
+      // Internal audit freshness (never shown as public warning clock).
+      freshness: (() => {
+        const finished = new Date().toISOString();
+        let officialLatestSentAt = null;
+        let officialLatestValidFrom = null;
+        let newestFirstSeenAt = null;
+        for (const it of feedItems) {
+          const sent = it && (it.publishedAtSource || (it.capV2 && it.capV2.sent));
+          if (sent && (!officialLatestSentAt || String(sent) > String(officialLatestSentAt))) {
+            officialLatestSentAt = String(sent);
+          }
+          const vf = it && it.validFrom;
+          if (vf && (!officialLatestValidFrom || String(vf) > String(officialLatestValidFrom))) {
+            officialLatestValidFrom = String(vf);
+          }
+          const fs = it && it.firstSeenByInfoUzel;
+          if (fs && (!newestFirstSeenAt || String(fs) > String(newestFirstSeenAt))) {
+            newestFirstSeenAt = String(fs);
+          }
+        }
+        const officialMs = Date.parse(officialLatestSentAt || "") || 0;
+        const firstSeenMs = Date.parse(newestFirstSeenAt || started) || Date.parse(started) || Date.now();
+        const endToEndLagMs =
+          officialMs > 0 && firstSeenMs >= officialMs ? firstSeenMs - officialMs : null;
+        return {
+          slaLimitMs: 15 * 60 * 1000,
+          officialFirstSeenAt: newestFirstSeenAt || null,
+          officialLatestSentAt,
+          officialLatestValidFrom,
+          discoveredAt: started,
+          fetchedAt: started,
+          transformedAt: finished,
+          validatedAt: finished,
+          publishedAt: decision.publish ? started : prevDiag.lastSnapshotAt || null,
+          endToEndLagMs,
+        };
+      })(),
       audit: {
         http: diagnostics.http || [],
         publish: diagnostics.publish,
