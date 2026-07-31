@@ -207,7 +207,7 @@ function read(name) {
     ok("multi_area_orp_names", heat && (heat.region.orpNames || []).length >= 3, heat && JSON.stringify(heat.region.orpNames));
     ok(
       "title_not_single_town_only",
-      heat && /dalších|ORP|kraj/i.test(String(heat.region.summary || heat.title || "")),
+      heat && /další(ch)?|ORP|kraj/i.test(String(heat.region.summary || heat.title || "")),
       heat && (heat.region.summary || heat.title)
     );
     ok("description_published", heat && String(heat.description || "").length > 0, heat && heat.description);

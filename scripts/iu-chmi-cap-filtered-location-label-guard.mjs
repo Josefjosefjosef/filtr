@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-no-segment-dedupe-20260730";
+const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -196,7 +196,7 @@ function unitGate(IU) {
     homeOkres: "Benešov",
   });
   ok("okres_starts_benesov", okres.startsWith("Benešov"), okres);
-  ok("okres_extra_2", /další 2 oblasti/.test(okres), okres);
+  ok("okres_extra_2", /a 2 další oblasti/.test(okres), okres);
 
   const praha = IU.getFilteredWarningLocationLabel(warning, {
     localities: [{ name: "Praha", level: "mesto" }],
@@ -242,7 +242,7 @@ function unitGate(IU) {
     ],
   });
   ok("multi_starts_hk", multi.startsWith("Hradec Králové"), multi);
-  ok("multi_intersection_extra", /další 2 oblasti|dalších 2 oblastí/.test(multi), multi);
+  ok("multi_intersection_extra", /a 2 další oblasti/.test(multi), multi);
 
   ok("no_mutate", JSON.stringify(warning) === snapshot, "mutated");
 

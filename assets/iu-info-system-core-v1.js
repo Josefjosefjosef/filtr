@@ -853,12 +853,12 @@ function intersectWarningLinks(links, active) {
   });
 }
 
-/** Czech inflection for “N dalších oblastí”. */
+/** Czech inflection for “N dalších oblastí” (public unit = unique ORP). */
 function formatExtraAreasPhrase(extra) {
   const n = Number(extra) || 0;
   if (n <= 0) return "";
   if (n === 1) return "a 1 další oblast";
-  if (n >= 2 && n <= 4) return "a další " + n + " oblasti";
+  if (n >= 2 && n <= 4) return "a " + n + " další oblasti";
   return "a dalších " + n + " oblastí";
 }
 
@@ -867,7 +867,8 @@ function formatLocationLabel(primary, extra, style) {
   if (!name) return "";
   const n = Number(extra) || 0;
   if (n <= 0) return name;
-  if (style === "legacyMulti") return name + " a dalších " + n + " oblastí";
+  // style reserved for callers; public phrase always uses Czech inflection.
+  void style;
   return name + " " + formatExtraAreasPhrase(n);
 }
 
@@ -1178,16 +1179,9 @@ function getEffectiveTimelinePresentation(item, nowMs) {
     const parts = chmiValidFromDisplayParts(item);
     if (parts) {
       secondaryValidFromLabel = "platnost od";
-      const vfMs = parseTime(canonicalChmiValidFromRaw(item));
-      const samePubDay = !!(vfMs && pragueYmd(vfMs) === pubDay);
-      if (samePubDay && parts.time) {
-        // Same calendar day as publish: show only the onset clock time.
-        secondaryValidFromDate = null;
-        secondaryValidFromTime = parts.time;
-      } else {
-        secondaryValidFromDate = parts.date;
-        secondaryValidFromTime = parts.time;
-      }
+      // Always show date + time when both are known (same-day FUTURE must stay unambiguous).
+      secondaryValidFromDate = parts.date;
+      secondaryValidFromTime = parts.time;
     }
   }
 

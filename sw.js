@@ -21,7 +21,7 @@
 // 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
 // 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
 // 2026-07-30: Prehled dne banner + HomeCard FOUC fix — bust shell so cutover-first HTML/CSS reach clients
-const CACHE_VERSION = "2026-07-31-chmi-multibrowser-console-v1";
+const CACHE_VERSION = "2026-07-31-chmi-title-locality-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

@@ -66,6 +66,7 @@ export function mapHazardGeography(hazard, registry) {
   const quarantine = [];
   const displayNames = [];
   let hasOfficialGeocode = false;
+  const seenOrp = new Set();
 
   for (const area of hazard.areas || []) {
     if (area.areaDesc) displayNames.push(area.areaDesc);
@@ -86,6 +87,8 @@ export function mapHazardGeography(hazard, registry) {
           });
           continue;
         }
+        if (seenOrp.has(orp.id)) continue;
+        seenOrp.add(orp.id);
         const chain = registry.ancestors(orp.id);
         const okres = chain.find((x) => x.type === "okres") || null;
         const kraj = chain.find((x) => x.type === "kraj") || null;
