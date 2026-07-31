@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-no-segment-dedupe-20260730";
+const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -271,7 +271,8 @@ function unitGate(IU) {
   ok("H_before_future", h12.isFutureWarning === true, String(h12.isFutureWarning));
   ok("H_before_not_rolled", h12.isRolledActiveWarning === false, String(h12.isRolledActiveWarning));
   ok("H_valid_from_label", h12.secondaryValidFromLabel === "platnost od", String(h12.secondaryValidFromLabel));
-  ok("H_valid_from_same_day_time_only", !h12.secondaryValidFromDate && h12.secondaryValidFromTime === "14:00", String(h12.secondaryValidFromTime));
+  ok("H_valid_from_same_day_date", String(h12.secondaryValidFromDate || "") === "30. 7.", String(h12.secondaryValidFromDate));
+  ok("H_valid_from_same_day_time", h12.secondaryValidFromTime === "14:00", String(h12.secondaryValidFromTime));
   ok("H_after_active", h15.isActiveWarning === true, String(h15.isActiveWarning));
   ok("H_after_not_future", h15.isFutureWarning === false, String(h15.isFutureWarning));
   ok("H_after_no_valid_from", !h15.secondaryValidFromLabel, String(h15.secondaryValidFromLabel));

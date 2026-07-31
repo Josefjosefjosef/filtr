@@ -414,12 +414,43 @@ export function applyCapChronology(item, opts = {}) {
 }
 
 /**
- * User-facing locality summary — never pretend a multi-ORP alert is a single town.
- * @param {{ orpName?: string, krajName?: string }[]} links
+ * Czech inflection for public “N dalších oblastí” (unit = unique ORP).
+ * 1 → „a 1 další oblast“; 2–4 → „a N další oblasti“; 5+ → „a dalších N oblastí“.
+ */
+export function formatExtraOrpAreasPhrase(extra) {
+  const n = Number(extra) || 0;
+  if (n <= 0) return "";
+  if (n === 1) return "a 1 další oblast";
+  if (n >= 2 && n <= 4) return "a " + n + " další oblasti";
+  return "a dalších " + n + " oblastí";
+}
+
+/** Display-only chemical notation in titles; does not change identity/event keys. */
+export function formatChmiEventDisplayName(name) {
+  return String(name || "").replace(/\bO3\b/g, "O₃");
+}
+
+function dedupeGeoLinksByOrp(links) {
+  const list = [];
+  const seen = new Set();
+  for (const l of Array.isArray(links) ? links : []) {
+    if (!l) continue;
+    const key = String(l.orpId || l.orpCode || l.orpName || "").trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    list.push(l);
+  }
+  return list;
+}
+
+/**
+ * User-facing locality summary — public unit = unique ORP (never kraj+okres+ORP triple-count).
+ * Whole-kraj coverage: „Kraj (N ORP)“ (expand count; do not also add kraj as an area).
+ * @param {{ orpName?: string, krajName?: string, orpId?: string, orpCode?: string }[]} links
  * @param {string[]} displayNames
  */
 export function summarizeAlertLocality(links, displayNames = []) {
-  const list = Array.isArray(links) ? links.filter(Boolean) : [];
+  const list = dedupeGeoLinksByOrp(links);
   if (!list.length) {
     const d0 = String((displayNames && displayNames[0]) || "").split("(")[0].trim();
     return {
@@ -439,6 +470,7 @@ export function summarizeAlertLocality(links, displayNames = []) {
     };
   }
   const kraje = [...new Set(list.map((l) => l.krajName).filter(Boolean))];
+  // Rule B: single kraj → kraj name + exact unique ORP count.
   if (kraje.length === 1) {
     return {
       name: kraje[0],
@@ -448,11 +480,22 @@ export function summarizeAlertLocality(links, displayNames = []) {
     };
   }
   const primary = list[0].orpName || "oblast";
+  if (list.length === 2) {
+    const second = list[1].orpName || "oblast";
+    return {
+      name: primary,
+      level: "multi",
+      summary: `${primary} a ${second}`,
+      extraAreaCount: 1,
+    };
+  }
+  const extra = list.length - 1;
+  const phrase = formatExtraOrpAreasPhrase(extra);
   return {
     name: primary,
     level: "multi",
-    summary: `${primary} a dalších ${list.length - 1} oblastí`,
-    extraAreaCount: list.length - 1,
+    summary: phrase ? `${primary} ${phrase}` : primary,
+    extraAreaCount: extra,
   };
 }
 
@@ -559,7 +602,7 @@ export function revisionToFeedItems(revision, opts = {}) {
             }
           : { level: "cr", name: "Česká republika", summary: "Česká republika", precise: false };
 
-    const titleBase = h.headline || h.event || "Výstraha ČHMÚ";
+    const titleBase = formatChmiEventDisplayName(h.headline || h.event || "Výstraha ČHMÚ");
     const areaBit = loc.summary && loc.summary !== "Česká republika" ? loc.summary : "";
     const title = areaBit && !titleBase.includes(areaBit) ? `${titleBase} — ${areaBit}` : titleBase;
 
@@ -747,7 +790,9 @@ export function mergeFeedItemsById(items) {
     }
     const loc = summarizeAlertLocality(uniqLinks, areaDescs);
     const newer = String(item.updatedAt || "") >= String(prev.updatedAt || "") ? item : prev;
-    const titleBase = (newer.capV2 && newer.capV2.event) || String(newer.title || "").split(" — ")[0];
+    const titleBase = formatChmiEventDisplayName(
+      (newer.capV2 && newer.capV2.event) || String(newer.title || "").split(" — ")[0]
+    );
     const title = loc.summary && !titleBase.includes(loc.summary) ? `${titleBase} — ${loc.summary}` : titleBase;
     map.set(item.id, {
       ...newer,

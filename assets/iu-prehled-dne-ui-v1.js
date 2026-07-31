@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-no-segment-dedupe-20260730";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-title-locality-20260731";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-no-segment-dedupe-20260730";
+const CACHE_BUST = "info-system-v6-chmi-title-locality-20260731";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -424,7 +424,9 @@ function chmiPublicDetailUrl(ev) {
  * For CAP v2, locality suffix follows the active location filter (display-only).
  */
 function displayEventTitle(ev, locationFilter) {
-  const base = eventTitleBaseWithoutLocality(ev);
+  let base = eventTitleBaseWithoutLocality(ev);
+  // Display-only chemical notation; capV2.event / identity stay ASCII O3.
+  base = String(base || "").replace(/\bO3\b/g, "O₃");
   if (!(ev && ev.capV2)) return base;
   const loc = getFilteredWarningLocationLabel(ev, locationFilter || state.prefs || getPrefs());
   if (!loc) return base;
