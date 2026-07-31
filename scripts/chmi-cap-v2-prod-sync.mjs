@@ -15,7 +15,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getChmiCapV2Config, shouldPublishV2, shouldRunShadow } from "./chmi-cap-v2/config.mjs";
+import { getChmiCapV2Config, shouldPublishV2, shouldRunShadow, CHMI_OPENDATA_CAP_INDEX } from "./chmi-cap-v2/config.mjs";
 import { capProductKeyFromUrl, resolveDiscoveryAdapter } from "./chmi-cap-v2/discovery-adapter.mjs";
 import {
   applyConditionalResult,
@@ -34,6 +34,13 @@ import {
   canonicalizeLedgerOrpKeys,
   ledgerFingerprint,
 } from "./chmi-cap-v2/territory-onset-ledger.mjs";
+import {
+  ONSET_LEDGER_RECENT_PER_STREAM,
+  mergeOnsetHistoryEntries,
+  mergeOnsetLedgersEarliest,
+  resolveReferenceChainEntries,
+} from "./chmi-cap-v2/revision-chain-history.mjs";
+import { listCapXmlFromIndex } from "./iu-info-events-lib.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 
@@ -45,7 +52,7 @@ const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
 const REVISIONS_FILE = path.join(STATE_DIR, "revisions_index.json");
 /** Bump when normalize/parser semantics change so bulletinCache cannot keep stale items. */
-const BULLETIN_CACHE_EPOCH = 9;
+const BULLETIN_CACHE_EPOCH = 10;
 
 function readJson(p, fallback) {
   try {
@@ -344,22 +351,47 @@ export async function runChmiCapV2Sync(opts = {}) {
     });
     feedItems = classifiedAll.filter((i) => isPublishableChmiItem(i));
 
-    // Revision-aware territory onset ledger: walk bounded recent CAP history
-    // (oldest→newest) so continuing ORPs keep firstValidFrom from the first
-    // declaration — never from a later Update that rewrites <onset>.
-    // No incident-specific fixture seed in production.
+    // Revision-aware territory onset ledger:
+    // - recent mtime window (default 16, not 6) + CAP references traversal
+    // - merge with persistent state ledger (earliest onset wins)
+    // - never incident-specific fixture seed
     const historyDocs = [];
-    const historyMeta = { fetched: 0, cached: 0, skipped: 0, urls: [] };
+    const historyMeta = {
+      fetched: 0,
+      cached: 0,
+      skipped: 0,
+      urls: [],
+      recentCount: 0,
+      refCount: 0,
+      window: ONSET_LEDGER_RECENT_PER_STREAM,
+    };
     if (typeof discovery.listRecentForOnsetLedger === "function") {
-      const recent = discovery.listRecentForOnsetLedger(6);
+      const recent = discovery.listRecentForOnsetLedger(ONSET_LEDGER_RECENT_PER_STREAM);
+      historyMeta.recentCount = recent.length;
+      let listed = typeof discovery.getLastListed === "function" ? discovery.getLastListed() : [];
+      if (!listed.length) {
+        try {
+          const idxRes = await fetch(CHMI_OPENDATA_CAP_INDEX, {
+            headers: { Accept: "text/html,application/xhtml+xml;q=0.9", "User-Agent": "infouzel-chmi-cap-v2" },
+          });
+          if (idxRes.ok) {
+            listed = listCapXmlFromIndex(await idxRes.text(), CHMI_OPENDATA_CAP_INDEX);
+          }
+        } catch (_) {
+          listed = [];
+        }
+      }
+      const refEntries = resolveReferenceChainEntries(docs, listed);
+      historyMeta.refCount = refEntries.length;
+      const mergedEntries = mergeOnsetHistoryEntries(recent, refEntries);
       const headUrls = new Set(latest.map((x) => x.url));
-      const keepHistory = new Set(recent.map((r) => r.url));
-      for (const item of recent) {
+      const keepHistory = new Set(mergedEntries.map((r) => r.url));
+      for (const item of mergedEntries) {
         const url = item.url;
         historyMeta.urls.push(url);
         const headDoc = docs.find((d) => d.sourceUrl === url);
         if (headDoc && headDoc.xml) {
-          historyDocs.push({ xml: headDoc.xml, sourceUrl: url, name: item.name });
+          historyDocs.push({ xml: headDoc.xml, sourceUrl: url, name: item.name, mtime: item.mtime });
           historyMeta.cached += 1;
           continue;
         }
@@ -368,6 +400,7 @@ export async function runChmiCapV2Sync(opts = {}) {
             xml: state.onsetHistoryCache[url].xml,
             sourceUrl: url,
             name: item.name,
+            mtime: item.mtime,
           });
           historyMeta.cached += 1;
           continue;
@@ -379,7 +412,7 @@ export async function runChmiCapV2Sync(opts = {}) {
               state.onsetHistoryCache = {};
             }
             state.onsetHistoryCache[url] = { xml: resp.body, updatedAt: started };
-            historyDocs.push({ xml: resp.body, sourceUrl: url, name: item.name });
+            historyDocs.push({ xml: resp.body, sourceUrl: url, name: item.name, mtime: item.mtime });
             historyMeta.fetched += 1;
           } else {
             historyMeta.skipped += 1;
@@ -395,14 +428,19 @@ export async function runChmiCapV2Sync(opts = {}) {
       }
     }
 
-    let chainLedger = canonicalizeLedgerOrpKeys(state.openEndedOrpOnset || {});
+    const persistedLedger = canonicalizeLedgerOrpKeys(state.openEndedOrpOnset || {});
+    let chainLedger = persistedLedger;
     let chainSteps = [];
     if (historyDocs.length) {
-      const built = buildTerritoryOnsetLedgerFromOrderedDocuments(historyDocs, {
+      const ordered = [...historyDocs].sort(
+        (a, b) => (a.mtime || 0) - (b.mtime || 0) || String(a.name || "").localeCompare(String(b.name || ""))
+      );
+      const built = buildTerritoryOnsetLedgerFromOrderedDocuments(ordered, {
         nowIso: started,
         seedLedger: {},
       });
-      chainLedger = built.ledger;
+      // Persistent ledger fills gaps when a historical document is temporarily unavailable.
+      chainLedger = canonicalizeLedgerOrpKeys(mergeOnsetLedgersEarliest(built.ledger, persistedLedger));
       chainSteps = built.steps;
     } else if (prevFeedEarly.items && prevFeedEarly.items.length) {
       chainLedger = canonicalizeLedgerOrpKeys(
@@ -428,6 +466,7 @@ export async function runChmiCapV2Sync(opts = {}) {
         sourceUrl: s.sourceUrl,
       })),
       fixtureSeed: false,
+      referencesTraversal: true,
     };
     diagnostics.temporalCounts = {
       totalItems: classifiedAll.length,
