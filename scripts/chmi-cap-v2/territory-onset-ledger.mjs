@@ -60,6 +60,9 @@ export function buildTerritoryOnsetLedgerFromOrderedDocuments(docsAsc, opts = {}
 
   for (const doc of docsAsc || []) {
     if (!doc || !doc.xml) continue;
+    // Evaluate each historical snapshot at its own CAP sent time. Using wall-clock
+    // sync "now" drops timed handoff segments (already expired) before reconcile
+    // can detect open-ended restart, wrongly keeping the pre-handoff onset.
     const one = processCapDocuments([{ xml: doc.xml, sourceUrl: doc.sourceUrl || doc.name || "cap.xml" }], {
       registry,
       receivedAt: nowIso,
@@ -67,9 +70,12 @@ export function buildTerritoryOnsetLedgerFromOrderedDocuments(docsAsc, opts = {}
     });
     const tids = [...new Set(one.report.revisions.map((r) => r.alert_thread_id))];
     const revs = tids.map((tid) => latestRevisionForThread(one.store, tid)).filter(Boolean);
-    const items = mergeFeedItemsById(revisionsToFeed(revs, { nowIso })).filter((i) => isPublishableChmiItem(i));
+    const docNow = (revs[0] && revs[0].sent) || nowIso;
+    const itemsAtDoc = mergeFeedItemsById(revisionsToFeed(revs, { nowIso: docNow }));
+    const items = itemsAtDoc.filter((i) => isPublishableChmiItem(i));
     const before = JSON.stringify(ledger);
-    ledger = canonicalizeLedgerOrpKeys(reconcileOpenEndedOrpOnsetLedger(ledger, items));
+    // Pass the full document-time feed (incl. timed segments) for handoff detection.
+    ledger = canonicalizeLedgerOrpKeys(reconcileOpenEndedOrpOnsetLedger(ledger, itemsAtDoc));
     const after = JSON.stringify(ledger);
     const openEnded = items.filter((i) => i.untilRevoked || (i.capV2 && i.capV2.untilRevoked));
     steps.push({
@@ -77,6 +83,7 @@ export function buildTerritoryOnsetLedgerFromOrderedDocuments(docsAsc, opts = {}
       cap_message_id: revs[0] ? revs[0].cap_message_id : null,
       sent: revs[0] ? revs[0].sent : null,
       msgType: revs[0] ? revs[0].msgType : null,
+      evaluatedAt: docNow,
       openEndedCount: openEnded.length,
       ledgerChanged: before !== after,
     });
