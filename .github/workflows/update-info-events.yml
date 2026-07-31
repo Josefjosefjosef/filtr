@@ -29,13 +29,15 @@ jobs:
     timeout-minutes: 20
     steps:
       # Minimal checkout: refresh scripts do not need full history/tags/all branches.
-      # fetch-depth: 0 previously caused ~12–20 min hung git fetch (job timeout).
-      - uses: actions/checkout@v4
+      # Previously fetch-depth: 0 caused ~12–20 min hung git fetch (job timeout).
+      # Pin actions/checkout v7.0.1 by commit SHA (Node 24 ready).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           fetch-tags: false
           submodules: false
           lfs: false
+          persist-credentials: true
 
       - uses: actions/setup-node@v4
         with:
