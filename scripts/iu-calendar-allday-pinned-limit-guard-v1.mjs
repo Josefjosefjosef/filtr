@@ -161,13 +161,7 @@ async function testPinnedAndLimit(page) {
     titleIn.value = "Guard AD form 4";
     titleIn.dispatchEvent(new Event("input", { bubbles: true }));
   });
-  // Prefer DOM click: Playwright force-click can still fail with "outside of the viewport"
-  // when the inline form is partially scrolled on Linux CI.
-  await page.evaluate(() => {
-    const t = document.querySelector("[data-iu-cal-inline-all-day]");
-    if (!t) throw new Error("all-day toggle missing");
-    t.click();
-  });
+  await page.locator("[data-iu-cal-inline-all-day]").click({ force: true });
   await page.waitForTimeout(150);
   const toggleOn = await page.evaluate(() => {
     const t = document.querySelector("[data-iu-cal-inline-all-day]");
