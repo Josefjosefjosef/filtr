@@ -29,11 +29,37 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-homecard-cta-square-20260801";
+} from "./iu-info-system-core-v1.js?v=chmi-cz-map-click-v2-20260801";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-homecard-cta-square-20260801";
+const CACHE_BUST = "chmi-cz-map-click-v2-20260801";
+const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
+let czMapSpritePromise = null;
 const NONE_SENTINEL = "__none__";
+
+/** Inject shared Czechia silhouette sprite once (local #iu-cz-map for all cards). */
+function ensureCzMapSprite() {
+  if (typeof document === "undefined") return Promise.resolve();
+  if (document.getElementById(CZ_MAP_SPRITE_ID)) return Promise.resolve();
+  if (czMapSpritePromise) return czMapSpritePromise;
+  const holder = document.createElement("div");
+  holder.id = CZ_MAP_SPRITE_ID;
+  holder.hidden = true;
+  holder.setAttribute("aria-hidden", "true");
+  document.documentElement.appendChild(holder);
+  czMapSpritePromise = fetch("/assets/icons/iu-cz-map.svg?v=" + CACHE_BUST, { credentials: "same-origin" })
+    .then((r) => {
+      if (!r.ok) throw new Error("cz-map-svg");
+      return r.text();
+    })
+    .then((txt) => {
+      holder.innerHTML = txt;
+    })
+    .catch(() => {
+      czMapSpritePromise = null;
+    });
+  return czMapSpritePromise;
+}
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
   temata: "Témata",
@@ -498,11 +524,26 @@ function renderItem(ev) {
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
-  // Shared CZ silhouette link — same href + data-act as title (no second URL logic).
+  // Shared CZ silhouette — same href + data-act as title (no second URL logic).
+  // Color comes from inherited --iu-pd-dot (same token as timeline dot fill).
   const czMapMarkup =
     ev && ev.capV2 && url
-      ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 36.51" width="28" height="10" aria-hidden="true" focusable="false"><use href="/assets/icons/iu-cz-map.svg#iu-cz-map"></use></svg></a>`
+      ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 36.51" width="36" height="13" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
       : "";
+  const warnBadge = capActive
+    ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
+    : capEnded
+      ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
+      : "";
+  const cardHead = czMapMarkup
+    ? `<div class="iuPrehledDne__cardHead">` +
+      `<div class="iuPrehledDne__cardHeadMain">` +
+      warnBadge +
+      titleMarkup +
+      `</div>` +
+      czMapMarkup +
+      `</div>`
+    : warnBadge + titleMarkup;
   return (
     `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
@@ -514,13 +555,7 @@ function renderItem(ev) {
     `</div>` +
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""}">` +
-    czMapMarkup +
-    (capActive
-      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
-      : capEnded
-        ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
-        : "") +
-    titleMarkup +
+    cardHead +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (srcPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(srcPill)}</span>` : "") +
     activePill +
@@ -928,6 +963,7 @@ function restoreSettingsScroll(y) {
 function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
+  void ensureCzMapSprite();
   const list = filteredList();
   const pageItems = list.slice(0, state.page * PAGE_SIZE);
   const count = root.querySelector("#iuPdCount");
@@ -1388,6 +1424,7 @@ async function boot() {
   if (infoSystemQueryMode() === "off") return;
   migrateLocalStateOnce();
   applyCutoverDom();
+  void ensureCzMapSprite();
   const root = ensureRoot();
   if (!root) return;
   root.innerHTML =
