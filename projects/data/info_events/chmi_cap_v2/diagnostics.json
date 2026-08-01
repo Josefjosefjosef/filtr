@@ -1,6 +1,6 @@
 {
-  "runId": "a514ae6fe49ca0e4",
-  "started": "2026-08-01T01:36:08.523Z",
+  "runId": "8e706e009345bbed",
+  "started": "2026-08-01T01:38:08.756Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,38 +18,25 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_312101.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
       "productKey": "70",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 2,
-    "valid": 2,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 2,
-    "status": "healthy",
-    "alert": 0,
-    "update": 2,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 2,
-      "infoBlocks": 45,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 15,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -81,9 +68,8 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
-  "cacheEpochInvalidated": 14,
   "onsetSplit": {
     "before": 13,
     "after": 15,
@@ -128,7 +114,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_312101.xml"
       ],
       "recentCount": 32,
-      "refCount": 4,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -339,8 +325,8 @@
     "visibleCount": 15
   },
   "completeness": {
-    "capMessages": 2,
-    "infoBlocks": 45,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 15,
     "uniqueEvents": [
       "Vysoké teploty",
@@ -382,6 +368,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-01T01:36:17.260Z",
-  "runMs": 8737
+  "finished": "2026-08-01T01:38:14.392Z",
+  "runMs": 5636
 }
