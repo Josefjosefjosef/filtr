@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=chmi-cz-map-click-v3-20260801";
+} from "./iu-info-system-core-v1.js?v=chmi-cz-map-click-v4-20260801";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-cz-map-click-v3-20260801";
+const CACHE_BUST = "chmi-cz-map-click-v4-20260801";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
 let czMapSpritePromise = null;
 const NONE_SENTINEL = "__none__";

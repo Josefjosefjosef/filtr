@@ -88,8 +88,14 @@ function staticGate() {
   ok("css_focus_no_rect_outline", /\.iuPrehledDne__czMap:focus-visible[\s\S]*?outline:\s*none/.test(css), "focus outline");
   ok("css_focus_silhouette", /focus-visible[\s\S]*?drop-shadow/.test(css), "focus glow");
 
-  ok("index_css_bust", /iu-prehled-dne-v1\.css\?v=chmi-cz-map-click-v3-/.test(index), "css ver");
-  ok("index_js_bust", /iu-prehled-dne-ui-v1\.js\?v=chmi-cz-map-click-v3-/.test(index), "js ver");
+  ok("index_css_bust", /iu-prehled-dne-v1\.css\?v=chmi-cz-map-click-v4-/.test(index), "css ver");
+  ok("index_js_bust", /iu-prehled-dne-ui-v1\.js\?v=chmi-cz-map-click-v4-/.test(index), "js ver");
+  ok(
+    "css_map_scoped_to_chmi_card",
+    /\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMap\s*\{/.test(css) &&
+      /\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMapSvg\s*\{/.test(css),
+    "scoped"
+  );
 }
 
 function waitForPort(host, port, timeoutMs) {
