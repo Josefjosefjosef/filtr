@@ -101,6 +101,7 @@ export function applyTerritoryOnsetLedgerToFeed(prevItems, headItems, ledger, op
   return splitOpenEndedByPriorTerritoryOnset(prevItems || [], headItems || [], {
     nowIso: opts.nowIso,
     ledger: canon,
+    authoritativeLedger: opts.authoritativeLedger !== false,
   });
 }
 
