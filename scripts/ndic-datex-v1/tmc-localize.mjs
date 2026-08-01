@@ -1,0 +1,142 @@
+/**
+ * Localize DATEX TMC refs using active internal table + optional geo-registry.
+ * Hierarchy of trust: explicit coordinates > TMC point/linear > text road/name > national fallback.
+ * Never invent a municipality assignment.
+ */
+import { TMC_COUNTRY_CODE, TMC_LOCATION_TABLE_NUMBER } from "./config.mjs";
+import { lookupTmcPoint } from "./tmc-table.mjs";
+
+const DIR_CS = Object.freeze({
+  positive: "kladný směr",
+  negative: "záporný směr",
+  both: "oba směry",
+  unknown: "",
+});
+
+function directionLabel(raw) {
+  const s = String(raw || "").toLowerCase();
+  if (!s) return "";
+  if (/positive|pos|plus|bothDirectionsPositive/i.test(s)) return DIR_CS.positive;
+  if (/negative|neg|minus/i.test(s)) return DIR_CS.negative;
+  if (/both/i.test(s)) return DIR_CS.both;
+  // Pass through short Czech-looking tokens only
+  if (/^[a-zá-žA-ZÁ-Ž0-9 ./-]{2,40}$/.test(String(raw))) return String(raw);
+  return "";
+}
+
+/**
+ * @param {object[]} tmcRefs
+ * @param {import("./tmc-table.mjs").TmcTable|null} table
+ * @param {{ coordinates?: {lat:number,lon:number}|null, roadNumber?: string, roadName?: string, geoRegistry?: object|null }} [ctx]
+ */
+export function localizeFromTmc(tmcRefs, table, ctx = {}) {
+  const refs = Array.isArray(tmcRefs) ? tmcRefs : [];
+  const codes = [];
+  const names = [];
+  const roads = new Set();
+  let lat = ctx.coordinates && ctx.coordinates.lat;
+  let lon = ctx.coordinates && ctx.coordinates.lon;
+  let direction = "";
+  let kind = "unknown";
+  let tmcOk = 0;
+  let tmcMiss = 0;
+  let trust = "none";
+
+  if (ctx.roadNumber) roads.add(ctx.roadNumber);
+  if (ctx.roadName) roads.add(ctx.roadName);
+
+  for (const ref of refs) {
+    if (!ref || ref.locationCode == null) continue;
+    const cc = ref.countryCode != null ? Number(ref.countryCode) : TMC_COUNTRY_CODE;
+    const tn = ref.tableNumber != null ? Number(ref.tableNumber) : TMC_LOCATION_TABLE_NUMBER;
+    // Accept missing CC/LTN on ref (inherit approved table); reject wrong table.
+    if (ref.countryCode != null && cc !== TMC_COUNTRY_CODE) {
+      tmcMiss += 1;
+      continue;
+    }
+    if (ref.tableNumber != null && tn !== TMC_LOCATION_TABLE_NUMBER) {
+      tmcMiss += 1;
+      continue;
+    }
+    codes.push(Number(ref.locationCode));
+    if (ref.secondaryLocationCode != null) codes.push(Number(ref.secondaryLocationCode));
+    if (!direction && ref.direction) direction = directionLabel(ref.direction);
+    kind = ref.kind || kind;
+
+    const pt = lookupTmcPoint(table, ref.locationCode);
+    if (!pt) {
+      tmcMiss += 1;
+      continue;
+    }
+    tmcOk += 1;
+    if (pt.name) names.push(String(pt.name));
+    if (pt.roadNumber) roads.add(String(pt.roadNumber));
+    if ((lat == null || lon == null) && pt.lat != null && pt.lon != null) {
+      lat = pt.lat;
+      lon = pt.lon;
+    }
+    if (ref.secondaryLocationCode != null) {
+      const pt2 = lookupTmcPoint(table, ref.secondaryLocationCode);
+      if (pt2 && pt2.name) names.push(String(pt2.name));
+      if (pt2 && pt2.roadNumber) roads.add(String(pt2.roadNumber));
+    }
+  }
+
+  if (ctx.coordinates && ctx.coordinates.lat != null && ctx.coordinates.lon != null) {
+    trust = "coordinates";
+    lat = ctx.coordinates.lat;
+    lon = ctx.coordinates.lon;
+  } else if (tmcOk > 0) {
+    trust = "tmc";
+  } else if (roads.size || names.length) {
+    trust = "text";
+  } else {
+    trust = "national_fallback";
+  }
+
+  const uniqueNames = [...new Set(names.filter(Boolean))];
+  const roadList = [...roads].filter(Boolean);
+  const locationLabel =
+    uniqueNames.slice(0, 2).join(" – ") ||
+    roadList[0] ||
+    (trust === "national_fallback" ? "Česká republika" : "");
+
+  // Region: never invent obec/ORP/okres from TMC alone without geo-registry hit.
+  const region = {
+    level: trust === "national_fallback" ? "stat" : roadList.length || uniqueNames.length ? "usek" : "stat",
+    name: locationLabel || "Česká republika",
+    tmcCodes: [...new Set(codes)],
+    roadNumbers: roadList,
+    confidence: trust,
+  };
+
+  // Optional geo-registry enrichment by coordinates (if provided)
+  if (ctx.geoRegistry && lat != null && lon != null && typeof ctx.geoRegistry.lookupByLatLon === "function") {
+    try {
+      const hit = ctx.geoRegistry.lookupByLatLon(lat, lon);
+      if (hit && hit.kraj) {
+        region.kraj = hit.kraj;
+        region.okres = hit.okres || undefined;
+        region.orp = hit.orp || undefined;
+        region.obec = hit.obec || undefined;
+        region.level = hit.obec ? "obec" : hit.orp ? "orp" : hit.okres ? "okres" : "kraj";
+        if (hit.obec || hit.orp) region.name = hit.obec || hit.orp;
+      }
+    } catch (_) {
+      /* ignore geo enrich failures */
+    }
+  }
+
+  return {
+    locationLabel,
+    direction,
+    kind,
+    lat: lat != null ? lat : null,
+    lon: lon != null ? lon : null,
+    region,
+    tmcOk,
+    tmcMiss,
+    trust,
+    roadNumber: roadList[0] || ctx.roadNumber || "",
+  };
+}

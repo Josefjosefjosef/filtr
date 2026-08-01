@@ -356,12 +356,12 @@
       "orgType": "transport"
     },
     {
-      "legalStatus": "review",
+      "legalStatus": "approved",
       "technicalStatus": "ok",
-      "periodicityMin": 30,
+      "periodicityMin": 5,
       "lastAuditAt": "2026-07-18T19:36:46.027Z",
-      "productionApproved": false,
-      "productionActive": false,
+      "productionApproved": true,
+      "productionActive": true,
       "monitoring": {
         "availability": "ok",
         "freshness": "unknown",
@@ -374,12 +374,13 @@
       "institution": "NDIC",
       "group": "doprava",
       "url": "https://www.dopravniinfo.cz/",
-      "notes": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek).",
-      "connectorStatus": "TECHNICALLY_BLOCKED",
-      "blocker": "dopravniinfo.cz je SPA bez veřejného RSS/XML item feedu s konkrétními URL událostí (HTML bez položek).",
+      "notes": "DATEX II SituationPublication via MobilityData HTTP PULL (cz-ndic_pull-v1.1) + TMC CC2/LTN25. Adapter: scripts/ndic-datex-v1. Kill switch IU_NDIC_DATEX_V1_MODE.",
+      "connectorStatus": "NDIC_DATEX_V1_ADAPTER",
+      "blocker": null,
       "lane": "doprava",
-      "connectorType": "none",
-      "orgType": "transport"
+      "connectorType": "opendata",
+      "orgType": "transport",
+      "defaultSectionGroup": "doprava"
     },
     {
       "legalStatus": "review",

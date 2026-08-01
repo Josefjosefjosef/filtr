@@ -1,0 +1,112 @@
+name: Update NDIC DATEX v1
+
+# Default mode=shadow until pull credentials + production verification.
+# Kill switch: repository variable IU_NDIC_DATEX_V1_MODE=off|shadow|active
+# Secrets (never echo): IU_NDIC_PULL_URL, IU_NDIC_PULL_USER, IU_NDIC_PULL_PASS,
+#   optional IU_NDIC_TMC_PULL_URL / IU_NDIC_TMC_PULL_USER / IU_NDIC_TMC_PULL_PASS,
+#   optional IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID (ops only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "off | shadow | active"
+        required: false
+        default: "shadow"
+  schedule:
+    - cron: "*/5 * * * *"
+
+concurrency:
+  group: info-events-data-writers
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  statuses: write
+
+env:
+  AUTOMATION_BRANCH: automation/update-ndic-datex-v1
+  PR_TITLE: "chore(data): refresh NDIC DATEX v1 snapshot"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: NDIC DATEX v1 guard (fixtures)
+        run: npm run iu-ndic-datex-v1-guard
+
+      - name: NDIC exposure guard
+        run: npm run iu-ndic-datex-v1-exposure-guard
+
+      - name: Sync NDIC DATEX v1
+        id: sync
+        env:
+          IU_NDIC_DATEX_V1_MODE: ${{ github.event.inputs.mode || vars.IU_NDIC_DATEX_V1_MODE || 'shadow' }}
+          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
+          IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
+        run: |
+          set -euo pipefail
+          node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
+          # Never print secrets; only structured result keys already redacted by script.
+
+      - name: Commit data if changed
+        id: commit_push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Never add full TMC store / raw caches
+          git add projects/data/info_events/feed.json \
+                  projects/data/info_events/lanes/doprava.json \
+                  projects/data/info_events/monitoring.json \
+                  projects/data/info_events/ndic_datex_v1/sync_state.json \
+                  projects/data/info_events/ndic_datex_v1/diagnostics.json \
+                  projects/data/info_events/ndic_datex_v1/tmc_meta.json \
+                  projects/data/info_events/ndic_datex_v1/shadow_feed.json \
+                  2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "NO_CHANGES"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          git checkout -B "$BRANCH"
+          git commit -m "${{ env.PR_TITLE }}"
+          git push -u origin "$BRANCH" --force
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or refresh data PR
+        if: steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
+            echo "PR exists"
+          else
+            gh pr create --base main --head "$BRANCH" --title "${{ env.PR_TITLE }}" --body "Automated NDIC DATEX v1 data refresh."
+          fi

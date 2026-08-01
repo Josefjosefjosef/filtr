@@ -3,6 +3,7 @@
  * Info-events may update its own items/sections; must never wipe CAP v2 feed items or monitoring.chmiCapV2.
  */
 export const CHMI_CAP_V2_ID_RE = /^ie-chmi-v2-/i;
+export const NDIC_DATEX_V1_ID_RE = /^ie-ndic-v1-/i;
 
 /** Items owned by the CHMI CAP v2 adapter (not by info-events legacy CAP). */
 export function isOwnedByChmiCapV2(item) {
@@ -13,9 +14,21 @@ export function isOwnedByChmiCapV2(item) {
   return false;
 }
 
+/** Items owned by the NDIC DATEX II v1 adapter. */
+export function isOwnedByNdicDatexV1(item) {
+  if (!item || typeof item !== "object") return false;
+  if (String(item.adapterOwner || "") === "ndic-datex-v1") return true;
+  if (String(item.sourceId || "") === "ndic" && (item.ndicV1 || NDIC_DATEX_V1_ID_RE.test(String(item.id || "")))) {
+    return true;
+  }
+  if (NDIC_DATEX_V1_ID_RE.test(String(item.id || ""))) return true;
+  return false;
+}
+
 /** Foreign feed namespaces that info-events must not delete. */
 export function isForeignFeedItem(item) {
   if (isOwnedByChmiCapV2(item)) return true;
+  if (isOwnedByNdicDatexV1(item)) return true;
   if (item && item.adapterOwner && String(item.adapterOwner) !== "info-events") return true;
   return false;
 }
@@ -113,6 +126,10 @@ export function composeMonitoringWithForeignNamespaces(prevMonitoring, nextOwned
   if (Object.prototype.hasOwnProperty.call(prev, "chmiCapV2")) {
     out.chmiCapV2 = prev.chmiCapV2;
   }
+  // Hard preserve NDIC DATEX v1 ops block when it existed.
+  if (Object.prototype.hasOwnProperty.call(prev, "ndicDatexV1")) {
+    out.ndicDatexV1 = prev.ndicDatexV1;
+  }
 
   // Preserve any other foreign/unknown keys already on out via Object.assign({}, prev).
   return out;
@@ -134,6 +151,9 @@ export function assertMonitoringForeignNamespacesPreserved(prevMonitoring, nextM
   if (!prev) return;
   if (Object.prototype.hasOwnProperty.call(prev, "chmiCapV2") && !Object.prototype.hasOwnProperty.call(next, "chmiCapV2")) {
     throw new Error("MONITORING_COMPOSE_ABORT: chmiCapV2 removed");
+  }
+  if (Object.prototype.hasOwnProperty.call(prev, "ndicDatexV1") && !Object.prototype.hasOwnProperty.call(next, "ndicDatexV1")) {
+    throw new Error("MONITORING_COMPOSE_ABORT: ndicDatexV1 removed");
   }
   for (const key of Object.keys(prev)) {
     if (INFO_EVENTS_MONITORING_OWNED_KEYS.includes(key)) continue;

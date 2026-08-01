@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2">
+  <exchange>
+    <supplierIdentification>
+      <country>cz</country>
+      <nationalIdentifier>NDIC</nationalIdentifier>
+    </supplierIdentification>
+  </exchange>
+  <payloadPublication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SituationPublication" lang="cs">
+    <publicationTime>2026-07-01T08:00:00+02:00</publicationTime>
+    <publicationCreator>
+      <country>cz</country>
+      <nationalIdentifier>NDIC</nationalIdentifier>
+    </publicationCreator>
+    <situation id="CZ-NDIC-FIX-ACC-001" version="1">
+      <headerInformation>
+        <confidentiality>noRestriction</confidentiality>
+        <informationStatus>real</informationStatus>
+      </headerInformation>
+      <situationRecord xsi:type="Accident" id="CZ-NDIC-FIX-ACC-001-R1" version="1">
+        <situationRecordCreationTime>2026-07-01T07:45:00+02:00</situationRecordCreationTime>
+        <situationRecordVersionTime>2026-07-01T07:45:00+02:00</situationRecordVersionTime>
+        <probabilityOfOccurrence>certain</probabilityOfOccurrence>
+        <severity>medium</severity>
+        <validity>
+          <validityStatus>definedByValidityTimeSpec</validityStatus>
+          <validityTimeSpecification>
+            <overallStartTime>2026-07-01T07:45:00+02:00</overallStartTime>
+          </validityTimeSpecification>
+        </validity>
+        <groupOfLocations>
+          <alertCPoint>
+            <alertCLocationCountryCode>2</alertCLocationCountryCode>
+            <alertCLocationTableNumber>25</alertCLocationTableNumber>
+            <alertCDirection>
+              <alertCDirectionCoded>positive</alertCDirectionCoded>
+            </alertCDirection>
+            <alertCMethod2PrimaryPointLocation>
+              <alertCLocation>
+                <specificLocation>101</specificLocation>
+              </alertCLocation>
+            </alertCMethod2PrimaryPointLocation>
+          </alertCPoint>
+          <pointByCoordinates>
+            <pointCoordinates>
+              <latitude>49.2</latitude>
+              <longitude>16.6</longitude>
+            </pointCoordinates>
+          </pointByCoordinates>
+        </groupOfLocations>
+        <generalPublicComment>
+          <comment>
+            <value lang="cs">Nehoda osobního vozidla, provoz omezen.</value>
+          </comment>
+        </generalPublicComment>
+      </situationRecord>
+    </situation>
+    <situation id="CZ-NDIC-FIX-RW-002" version="1">
+      <headerInformation>
+        <confidentiality>noRestriction</confidentiality>
+        <informationStatus>real</informationStatus>
+      </headerInformation>
+      <situationRecord xsi:type="Roadworks" id="CZ-NDIC-FIX-RW-002-R1" version="1">
+        <situationRecordCreationTime>2026-06-20T06:00:00+02:00</situationRecordCreationTime>
+        <situationRecordVersionTime>2026-06-20T06:00:00+02:00</situationRecordVersionTime>
+        <probabilityOfOccurrence>certain</probabilityOfOccurrence>
+        <validity>
+          <validityStatus>definedByValidityTimeSpec</validityStatus>
+          <validityTimeSpecification>
+            <overallStartTime>2026-08-10T08:00:00+02:00</overallStartTime>
+            <overallEndTime>2026-08-20T18:00:00+02:00</overallEndTime>
+          </validityTimeSpecification>
+        </validity>
+        <groupOfLocations>
+          <alertCLinear>
+            <alertCLocationCountryCode>2</alertCLocationCountryCode>
+            <alertCLocationTableNumber>25</alertCLocationTableNumber>
+            <alertCDirection>
+              <alertCDirectionCoded>both</alertCDirectionCoded>
+            </alertCDirection>
+            <alertCMethod2PrimaryPointLocation>
+              <alertCLocation>
+                <specificLocation>201</specificLocation>
+              </alertCLocation>
+            </alertCMethod2PrimaryPointLocation>
+            <alertCMethod2SecondaryPointLocation>
+              <alertCLocation>
+                <specificLocation>202</specificLocation>
+              </alertCLocation>
+            </alertCMethod2SecondaryPointLocation>
+          </alertCLinear>
+        </groupOfLocations>
+        <generalPublicComment>
+          <comment>
+            <value lang="cs">Plánovaná uzavírka jednoho jízdního pruhu.</value>
+          </comment>
+        </generalPublicComment>
+      </situationRecord>
+    </situation>
+    <situation id="CZ-NDIC-FIX-OB-003" version="1">
+      <headerInformation>
+        <confidentiality>noRestriction</confidentiality>
+        <informationStatus>real</informationStatus>
+      </headerInformation>
+      <situationRecord xsi:type="VehicleObstruction" id="CZ-NDIC-FIX-OB-003-R1" version="1">
+        <situationRecordCreationTime>2026-07-01T07:50:00+02:00</situationRecordCreationTime>
+        <situationRecordVersionTime>2026-07-01T07:50:00+02:00</situationRecordVersionTime>
+        <probabilityOfOccurrence>certain</probabilityOfOccurrence>
+        <validity>
+          <validityStatus>active</validityStatus>
+          <validityTimeSpecification>
+            <overallStartTime>2026-07-01T07:50:00+02:00</overallStartTime>
+            <overallEndTime>2026-07-01T09:00:00+02:00</overallEndTime>
+          </validityTimeSpecification>
+        </validity>
+        <groupOfLocations>
+          <roadNumber>II/123</roadNumber>
+        </groupOfLocations>
+        <generalPublicComment>
+          <comment>
+            <value lang="cs">Vozidlo na krajnici.</value>
+          </comment>
+        </generalPublicComment>
+      </situationRecord>
+    </situation>
+  </payloadPublication>
+</d2LogicalModel>

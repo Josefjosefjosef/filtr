@@ -32,7 +32,7 @@ import {
 } from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-issued-updated-20260801";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
+const CACHE_BUST = "info-system-v6-ndic-datex-v1-20260801";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -59,6 +59,7 @@ const SOURCE_GROUPS = [
   { id: "policie", label: "Policie", groups: ["policie"] },
   { id: "hzs", label: "HZS", groups: ["hzs"] },
   { id: "chmi", label: "ČHMÚ", groups: ["pocasi"], sourceIds: ["chmi"] },
+  { id: "ndic", label: "NDIC", groups: ["doprava"], sourceIds: ["ndic"] },
   { id: "verejnopravni-media", label: "Veřejnoprávní média", groups: ["verejnopravni-media"] },
 ];
 
@@ -442,11 +443,17 @@ function renderItem(ev) {
   const locationFilter = state.prefs || getPrefs();
   const title = displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
+  const isNdic =
+    String(ev.sourceId || "") === "ndic" ||
+    String(ev.adapterOwner || "") === "ndic-datex-v1" ||
+    !!(ev && ev.ndicV1);
   const srcPill = ev.capV2
     ? srcRaw
       ? "Zdroj: " + srcRaw
       : "Zdroj: ČHMÚ"
-    : srcRaw;
+    : isNdic
+      ? "Zdroj: NDIC"
+      : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
   const region = ev.capV2
     ? String(regionFiltered || "")
