@@ -1585,7 +1585,8 @@ function filterEvents(events, filters, opts) {
       const lifecycleOk =
         (validTo && validTo >= now && status !== "ukoncene" && status !== "archivovano" && status !== "nezaraditelne") ||
         (status === "prave-probihajici" && validFrom && validFrom <= now && (!validTo || validTo >= now)) ||
-        (status === "aktivni" && validTo && validTo >= now) ||
+        // Open-ended ACTIVE (validTo null) must stay visible — e.g. ongoing drought CAP.
+        (status === "aktivni" && (!validTo || validTo >= now)) ||
         (status === "naplanovano" && validTo && validTo >= now) ||
         status === "planovane";
       const pubT = parseTime(ev.publishedAtSource || (ev.timeConfidence !== "fallback" ? ev.publishedAt : null));
