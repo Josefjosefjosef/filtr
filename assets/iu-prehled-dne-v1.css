@@ -1,4 +1,4 @@
-﻿/* InfoUzel P┼Öehled dne v1 ÔÇö control panel + timeline (no images/perex) */
+/* InfoUzel P┼Öehled dne v1 ÔÇö control panel + timeline (no images/perex) */
 :root {
   --iu-pd-accent: #5b6cff;
   --iu-pd-accent-2: #2563eb;
@@ -337,7 +337,7 @@
   position: relative;
 }
 
-/* Card head: title/badge column + CZ map (flex, no absolute overlay). */
+/* Card head: title/badge column; CZ map is absolutely pinned to card TR. */
 .iuPrehledDne__cardHead {
   display: flex;
   align-items: flex-start;
@@ -350,22 +350,42 @@
   min-width: 0;
 }
 
+/* Reserve space so title/badge never sit under the TR map (≈ SVG width + gap). */
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+  padding-right: 80px;
+}
+
+@media (min-width: 768px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 88px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 92px;
+  }
+}
+
 /*
- * Clickable CZ silhouette.
+ * Clickable CZ silhouette — top-right of card, equal inset from top & right
+ * (top/right: 0 inside the card padding box ⇒ same distance as card padding).
  * Fill color MUST use the same token chain as .iuPrehledDne__dot background:
  *   var(--iu-pd-dot, var(--iu-pd-accent))
- * Invisible hit target is larger than the visible SVG (variant B).
+ * Invisible hit target wraps the silhouette (variant B); min 44×44.
+ * Aspect 100/57.48 ≈ 1.74 (true CZ proportions; no stretch).
  */
 .iuPdCard__czMap,
 .iuPrehledDne__czMap {
-  position: relative;
-  flex: 0 0 auto;
-  align-self: flex-start;
-  z-index: 1;
+  position: absolute;
+  /* Equal inset from card top & right — same value as .iuPrehledDne__card padding. */
+  top: 12px;
+  right: 12px;
+  z-index: 2;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 72px;
   height: 44px;
   margin: 0;
   padding: 0;
@@ -382,25 +402,40 @@
 
 .iuPrehledDne__czMapSvg {
   display: block;
-  width: 36px;
+  width: 72px;
   height: auto;
-  aspect-ratio: 100 / 36.51;
-  max-width: 100%;
+  aspect-ratio: 100 / 57.48;
+  max-width: none;
+  flex: 0 0 auto;
   pointer-events: none;
   overflow: visible;
   color: inherit;
   fill: currentColor;
+  /* Never stretch — preserve SVG viewBox proportions. */
+  object-fit: contain;
 }
 
 @media (min-width: 768px) {
+  .iuPdCard__czMap,
+  .iuPrehledDne__czMap {
+    width: 80px;
+    height: 46px;
+  }
+
   .iuPrehledDne__czMapSvg {
-    width: 40px;
+    width: 80px;
   }
 }
 
 @media (min-width: 1024px) {
+  .iuPdCard__czMap,
+  .iuPrehledDne__czMap {
+    width: 84px;
+    height: 49px;
+  }
+
   .iuPrehledDne__czMapSvg {
-    width: 42px;
+    width: 84px;
   }
 }
 

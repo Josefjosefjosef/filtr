@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "chmi-cz-map-click-v2-20260801";
+const CACHE_BUST = "chmi-cz-map-click-v3-20260801";
 const fails = [];
 
 function must(cond, id) {
