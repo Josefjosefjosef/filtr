@@ -43,6 +43,8 @@ jobs:
       - name: Prehled dne hero contract guard (banner+CTA seam/radius/visibility)
         run: npm run iu-prehled-dne-hero-contract-guard
       - run: node scripts/silver-stack-guard.js
+      - name: Silver home prefix first-tap static contract
+        run: npm run silver-home-prefix-first-tap-static-guard
       - run: node scripts/tall-preview-first-row-badge-guard.js
       - name: Silver summary + calendar accent UI proof
         run: node scripts/silver-summary-ui-proof.mjs

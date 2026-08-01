@@ -43768,11 +43768,19 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.iuEnsureSilverP0Engine = ensure;
   } catch (_) {}
 
+  /* IU_SILVER_HOME_PREFIX_FIRST_TAP_HOLD_V1:
+     Prefix / quick-action buttons live outside #iuSilverHomeInput. Without prefetch + click hold,
+     the first mobile/tablet tap is a no-op until the engine is loaded by another interaction. */
+  var SILVER_P0_PREFETCH_SEL =
+    "#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend, #iuSilverHomeInputUx, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+  var SILVER_P0_CLICK_HOLD_SEL =
+    "#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+
   function shouldPrefetch(t) {
     try {
       if (!t || !t.closest) return false;
       /* Narrow: do not prefetch on whole Silver slot (weather/cards) — that pulls 1.55MB during Lighthouse. */
-      if (t.closest("#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend")) return true;
+      if (t.closest(SILVER_P0_PREFETCH_SEL)) return true;
       if (t.closest("#iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
       return false;
     } catch (_) {
@@ -43793,14 +43801,14 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 
   /* No idle auto-import; no document keydown prefetch (avoids LH TBT from engine parse). */
 
-  /* First submit before engine lands: hold the event, load, re-click. */
+  /* First submit / prefix / quick-action before engine lands: hold the event, load, re-click. */
   try {
     document.addEventListener(
       "click",
       function (e) {
         try {
           if (window.__iuSilverP0EngineReady) return;
-          var t = e.target && e.target.closest ? e.target.closest("#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend") : null;
+          var t = e.target && e.target.closest ? e.target.closest(SILVER_P0_CLICK_HOLD_SEL) : null;
           if (!t) return;
           e.preventDefault();
           e.stopImmediatePropagation();
