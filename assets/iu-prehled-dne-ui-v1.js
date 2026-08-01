@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-issued-updated-20260801";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-homecard-cta-flush-20260801";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
+const CACHE_BUST = "info-system-v6-homecard-cta-flush-20260801";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -840,9 +840,11 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
   const mode = state.viewMode;
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+    `<div class="iuPd__hero" data-iu-pd-hero="1">` +
     bannerHtml() +
     `<div class="iuPd__top">` +
     `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings">Můj přehled / Nastavení</button>` +
+    `</div>` +
     `</div>` +
     `<div class="iuPd__show">` +
     `<div class="iuPd__label">Zobrazit</div>` +
@@ -1384,8 +1386,10 @@ async function boot() {
   if (!root) return;
   root.innerHTML =
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+    `<div class="iuPd__hero" data-iu-pd-hero="1">` +
     bannerHtml() +
     `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
+    `</div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
     `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
     `</div></div>` +
