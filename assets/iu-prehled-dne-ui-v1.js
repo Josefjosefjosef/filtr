@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-validfrom-timeline-20260731";
+} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-issued-updated-20260801";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-chmi-validfrom-timeline-20260731";
+const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
 const NONE_SENTINEL = "__none__";
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
@@ -469,9 +469,13 @@ function renderItem(ev) {
   let timeIssued = "";
   if (timeline.secondaryIssuedLabel) {
     const issued = String(timeline.secondaryIssuedLabel);
-    const m = issued.match(/^vydáno\s+(.+)$/i);
+    const m = issued.match(/^(Vydáno|Aktualizováno)\s+(.+)$/i);
+    let issuedWord = "";
+    if (m) {
+      issuedWord = /^aktualiz/i.test(m[1]) ? "Aktualizováno" : "Vydáno";
+    }
     timeIssued = m
-      ? `<div class="iuPrehledDne__issued"><span class="iuPrehledDne__issuedWord">vydáno</span><span class="iuPrehledDne__issuedDate">${esc(m[1])}</span></div>`
+      ? `<div class="iuPrehledDne__issued"><span class="iuPrehledDne__issuedWord">${esc(issuedWord)}</span><span class="iuPrehledDne__issuedDate">${esc(m[2])}</span></div>`
       : `<div class="iuPrehledDne__issued">${esc(issued)}</div>`;
   }
   let timeValidFrom = "";

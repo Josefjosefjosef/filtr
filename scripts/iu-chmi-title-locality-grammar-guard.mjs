@@ -22,7 +22,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "info-system-v6-chmi-validfrom-timeline-20260731";
+const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
 const SW_VER = "2026-07-31-chmi-smog-onset-split-v1";
 
 const fails = [];
@@ -221,7 +221,7 @@ const future = {
   validTo: "2026-08-01T00:00:00+02:00",
 };
 const t = IU.getEffectiveTimelinePresentation(future, Date.parse("2026-07-31T12:00:00+02:00"));
-ok("future_same_day_label", t.secondaryValidFromLabel === "platnost od", String(t.secondaryValidFromLabel));
+ok("future_same_day_label", t.secondaryValidFromLabel === "Platí od", String(t.secondaryValidFromLabel));
 ok("future_same_day_date", String(t.secondaryValidFromDate || "") === "31. 7.", String(t.secondaryValidFromDate));
 ok("future_same_day_time", t.secondaryValidFromTime === "16:00", String(t.secondaryValidFromTime));
 

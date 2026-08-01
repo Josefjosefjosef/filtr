@@ -1185,13 +1185,37 @@ function publishedAtIso(ev) {
 }
 
 /**
+ * Authoritative CAP revision label from msgType provenance (never calendar-date heuristics).
+ * Alert → Vydáno; Update → Aktualizováno. Missing/unknown msgType → null (do not guess).
+ */
+function chmiCapRevisionIssuedWord(item) {
+  const mt = String((item && item.capV2 && item.capV2.msgType) || "")
+    .trim()
+    .toLowerCase();
+  if (mt === "update") return "Aktualizováno";
+  if (mt === "alert") return "Vydáno";
+  return null;
+}
+
+/**
+ * Secondary issued/updated line: word from msgType + stamp from CAP sent (publishedAtSource).
+ */
+function formatChmiSecondaryIssuedLabel(item, whenMs, asDayMonth) {
+  const word = chmiCapRevisionIssuedWord(item);
+  if (!word || !(Number(whenMs) > 0)) return null;
+  const stamp = asDayMonth ? formatPragueDayMonth(whenMs) : formatPragueTime(whenMs);
+  if (!stamp) return null;
+  return word + " " + stamp;
+}
+
+/**
  * Shared timeline presentation for feed cards (CHMI active-day rollover + AKTIVNÍ).
  * Does not mutate the item. timelineAt is sort-only; never write it onto the event.
  *
  * Public times for CAP cards:
  * - ACTIVE with onset/validFrom → primary axis = official validFrom (never ingest/deploy time).
- * - “vydáno” = CAP sent/publishedAtSource when it differs from validFrom (or on rolled days).
- * - FUTURE → primary may show issued; secondary “platnost od” = validFrom (date+time).
+ * - “Vydáno” / “Aktualizováno” = CAP sent/publishedAtSource of the head revision (msgType Alert vs Update).
+ * - FUTURE → primary may show issued; secondary “Platí od” = validFrom (date+time).
  * - Never use fetchedAt / generatedAt / firstSeenByInfoUzel as the user-facing clock.
  *
  * @param {object} item
@@ -1228,12 +1252,12 @@ function getEffectiveTimelinePresentation(item, nowMs) {
     primaryTime = formatPragueTime(publishedMs);
     const parts = chmiValidFromDisplayParts(item);
     if (parts) {
-      secondaryValidFromLabel = "platnost od";
+      secondaryValidFromLabel = "Platí od";
       secondaryValidFromDate = parts.date;
       secondaryValidFromTime = parts.time;
     }
   } else if (isActiveWarning && hasOfficialValidFrom) {
-    // Primary public clock = official onset / Platnost od (e.g. 11:25, not CAP sent 11:29).
+    // Primary public clock = official onset / Platí od (e.g. 11:25, not CAP sent 11:29).
     primaryDate = formatPragueDayMonth(isRolledActiveWarning ? now : validFromMs);
     if (!isRolledActiveWarning) {
       primaryTime = formatPragueTime(validFromMs);
@@ -1241,18 +1265,18 @@ function getEffectiveTimelinePresentation(item, nowMs) {
     const issuedDiffers =
       !!publishedMs && Math.abs(publishedMs - validFromMs) >= 60 * 1000;
     if (isRolledActiveWarning) {
-      secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
+      secondaryIssuedLabel = formatChmiSecondaryIssuedLabel(item, publishedMs, true);
       const parts = chmiValidFromDisplayParts(item);
       if (parts) {
-        secondaryValidFromLabel = "platnost od";
+        secondaryValidFromLabel = "Platí od";
         secondaryValidFromDate = parts.date;
         secondaryValidFromTime = parts.time;
       }
     } else if (issuedDiffers) {
-      secondaryIssuedLabel = "vydáno " + formatPragueTime(publishedMs);
+      secondaryIssuedLabel = formatChmiSecondaryIssuedLabel(item, publishedMs, false);
     }
   } else if (isRolledActiveWarning) {
-    secondaryIssuedLabel = "vydáno " + formatPragueDayMonth(publishedMs);
+    secondaryIssuedLabel = formatChmiSecondaryIssuedLabel(item, publishedMs, true);
   } else {
     primaryTime = formatPragueTime(publishedMs);
   }
