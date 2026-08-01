@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-01T16:55:23.087Z",
-    "lastSuccessAt": "2026-08-01T16:55:26.809Z",
+    "lastRunAt": "2026-08-01T17:13:58.907Z",
+    "lastSuccessAt": "2026-08-01T17:14:02.168Z",
     "lastChangedAt": "2026-08-01T16:55:26.101Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,21 +423,21 @@
     "lastModified": "Sat, 01 Aug 2026 16:41:31 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 12,
+    "activeCount": 11,
     "scheduledCount": 5,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 20,
-    "visibleCount": 20,
+    "publishableCount": 19,
+    "visibleCount": 19,
     "totalItems": 17,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 1,
+    "updateCount": 0,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,9 +450,9 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 38,
-      "logicalAlerts": 20,
+      "capMessages": null,
+      "infoBlocks": null,
+      "logicalAlerts": 19,
       "uniqueEvents": [
         "Vysoké teploty",
         "Velmi vysoké teploty",
@@ -465,13 +465,13 @@
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 305,
-      "mappedAreas": 983,
+      "totalAreas": 304,
+      "mappedAreas": 973,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 15,
+      "publishedActive": 14,
       "publishedScheduled": 5,
-      "publishableCount": 20,
+      "publishableCount": 19,
       "productStreams": [
         "50",
         "70"
@@ -479,7 +479,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -488,19 +488,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7372,
+    "runMs": 6588,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-01T16:55:23.087Z",
+    "lastSnapshotAt": "2026-08-01T17:13:58.907Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-01T16:55:23.087Z",
       "officialLatestSentAt": "2026-08-01T18:41:27+02:00",
       "officialLatestValidFrom": "2026-08-03T10:00:00+02:00",
-      "discoveredAt": "2026-08-01T16:55:23.087Z",
-      "fetchedAt": "2026-08-01T16:55:23.087Z",
-      "transformedAt": "2026-08-01T16:55:30.459Z",
-      "validatedAt": "2026-08-01T16:55:30.459Z",
-      "publishedAt": "2026-08-01T16:55:23.087Z",
+      "discoveredAt": "2026-08-01T17:13:58.907Z",
+      "fetchedAt": "2026-08-01T17:13:58.907Z",
+      "transformedAt": "2026-08-01T17:14:05.495Z",
+      "validatedAt": "2026-08-01T17:14:05.495Z",
+      "publishedAt": "2026-08-01T17:13:58.907Z",
       "endToEndLagMs": 836087
     },
     "audit": {
@@ -508,9 +508,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011641.xml",
           "productKey": "50",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
@@ -524,9 +524,9 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 38,
-          "logicalAlerts": 20,
+          "capMessages": null,
+          "infoBlocks": null,
+          "logicalAlerts": 19,
           "uniqueEvents": [
             "Vysoké teploty",
             "Velmi vysoké teploty",
@@ -539,13 +539,13 @@
             "Riziko požárů",
             "Vysoké riziko požárů"
           ],
-          "totalAreas": 305,
-          "mappedAreas": 983,
+          "totalAreas": 304,
+          "mappedAreas": 973,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 15,
+          "publishedActive": 14,
           "publishedScheduled": 5,
-          "publishableCount": 20,
+          "publishableCount": 19,
           "productStreams": [
             "50",
             "70"
@@ -553,28 +553,37 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 0,
-          "expiredCount": 0,
+          "expiredCount": 1,
           "cancelledCount": 0
         },
         "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 0,
-        "update": 1,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-01T17:13:58.907Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6588,
+        "error": null,
+        "activeCount": 11,
+        "scheduledCount": 5,
+        "publishableCount": 19
+      },
+      {
+        "at": "2026-08-01T17:11:10.699Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 9581,
+        "error": null,
+        "activeCount": 11,
+        "scheduledCount": 5,
+        "publishableCount": 19
+      },
       {
         "at": "2026-08-01T16:55:23.087Z",
         "status": "not_modified",
@@ -1076,28 +1085,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7181,
-        "error": null,
-        "activeCount": 10,
-        "scheduledCount": 4,
-        "publishableCount": 17
-      },
-      {
-        "at": "2026-08-01T12:22:01.298Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6420,
-        "error": null,
-        "activeCount": 10,
-        "scheduledCount": 4,
-        "publishableCount": 17
-      },
-      {
-        "at": "2026-08-01T12:20:12.952Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6579,
         "error": null,
         "activeCount": 10,
         "scheduledCount": 4,
