@@ -1,6 +1,6 @@
 {
-  "runId": "a14245003fb3edb1",
-  "started": "2026-08-01T00:20:54.324Z",
+  "runId": "244e498d0568e068",
+  "started": "2026-08-01T01:02:59.305Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,26 +18,39 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_312101.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
       "productKey": "70",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 2,
+    "valid": 2,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 2,
+    "status": "healthy",
+    "alert": 0,
+    "update": 2,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 28,
+      "capMessages": 2,
+      "infoBlocks": 45,
+      "logicalAlerts": 29,
       "uniqueEvents": [
         "Vysoké teploty",
         "Silná zátěž teplem",
@@ -48,13 +61,13 @@
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 377,
+      "totalAreas": 387,
       "mappedAreas": 563,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 28,
+      "publishedActive": 29,
       "publishedScheduled": 0,
-      "publishableCount": 28,
+      "publishableCount": 29,
       "productStreams": [
         "50",
         "70"
@@ -68,13 +81,14 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
+  "cacheEpochInvalidated": 13,
   "onsetSplit": {
     "before": 13,
-    "after": 28,
-    "ledgerKeys": 5,
-    "ledgerFingerprint": "4d5204089c771a9a",
+    "after": 29,
+    "ledgerKeys": 4,
+    "ledgerFingerprint": "6771c7edcb664da0",
     "history": {
       "fetched": 0,
       "cached": 32,
@@ -114,7 +128,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_312101.xml"
       ],
       "recentCount": 32,
-      "refCount": 0,
+      "refCount": 4,
       "window": 16
     },
     "chainSteps": [
@@ -321,13 +335,13 @@
     "expiredCount": 8,
     "cancelledCount": 0,
     "invalidCount": 1,
-    "publishableCount": 28,
-    "visibleCount": 28
+    "publishableCount": 29,
+    "visibleCount": 29
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
-    "logicalAlerts": 28,
+    "capMessages": 2,
+    "infoBlocks": 45,
+    "logicalAlerts": 29,
     "uniqueEvents": [
       "Vysoké teploty",
       "Silná zátěž teplem",
@@ -338,13 +352,13 @@
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 377,
+    "totalAreas": 387,
     "mappedAreas": 563,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 28,
+    "publishedActive": 29,
     "publishedScheduled": 0,
-    "publishableCount": 28,
+    "publishableCount": 29,
     "productStreams": [
       "50",
       "70"
@@ -368,6 +382,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-01T00:21:00.455Z",
-  "runMs": 6131
+  "finished": "2026-08-01T01:03:08.835Z",
+  "runMs": 9530
 }
