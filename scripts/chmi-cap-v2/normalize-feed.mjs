@@ -1003,7 +1003,13 @@ export function reconcileOpenEndedOrpOnsetLedger(ledger, items) {
 export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts = {}) {
   const nowMs = Date.parse(opts.nowIso || "") || Date.now();
   let ledger = opts.ledger && typeof opts.ledger === "object" ? { ...opts.ledger } : {};
-  ledger = updateOpenEndedOrpOnsetLedger(ledger, prevItems || []);
+  // When the ledger comes from a revision-chain history walk it is authoritative
+  // (includes timed→open-ended handoff resets). Merging previous published feed
+  // items via earliest-wins would resurrect pre-handoff onsets still present in
+  // last-good production cards.
+  if (!opts.authoritativeLedger) {
+    ledger = updateOpenEndedOrpOnsetLedger(ledger, prevItems || []);
+  }
   const out = [];
   for (const item of nextItems || []) {
     if (!item) continue;

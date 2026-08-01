@@ -98,6 +98,37 @@ const lateOnset = late6208 && normalizeCapInstant(late6208.validFrom);
 ok("late_sync_handoff_sets_new_onset", lateOnset === normalizeCapInstant(newOnset), lateOnset);
 ok("late_sync_does_not_keep_old_onset", lateOnset !== normalizeCapInstant(oldOnset), lateOnset);
 
+// Stale published feed cards must not resurrect pre-handoff onset via earliest-wins.
+const stalePrev = [
+  {
+    id: "ie-chmi-v2-stale-prev",
+    sourceId: "chmi",
+    title: "Riziko požárů — Ivančice",
+    validFrom: oldOnset,
+    untilRevoked: true,
+    region: { orpIds: ["orp:6208"] },
+    capV2: {
+      event: "Riziko požárů",
+      severity: "Moderate",
+      urgency: "Immediate",
+      certainty: "Likely",
+      untilRevoked: true,
+    },
+  },
+];
+const againstStale = applyTerritoryOnsetLedgerToFeed(stalePrev, lateHead, lateBuilt.ledger, {
+  nowIso: lateNow,
+});
+const againstStale6208 = (againstStale.items || []).find((item) =>
+  /riziko požárů/i.test((item.capV2 && item.capV2.event) || item.title || "") &&
+  (item.region && item.region.orpIds || []).some((orp) => String(orp).replace(/^orp:/, "") === "6208")
+);
+ok(
+  "stale_prev_feed_does_not_resurrect_old_onset",
+  againstStale6208 && normalizeCapInstant(againstStale6208.validFrom) === normalizeCapInstant(newOnset),
+  againstStale6208 && againstStale6208.validFrom
+);
+
 if (fails.length) {
   console.error("IU_CHMI_FIRE_ONSET_HANDOFF_GUARD=FAIL");
   for (const failure of fails) console.error("FAIL " + failure);
