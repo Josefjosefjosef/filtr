@@ -1,6 +1,6 @@
 {
-  "runId": "77cd9aed733c6ff1",
-  "started": "2026-08-01T17:13:58.907Z",
+  "runId": "e3b59407118bd47f",
+  "started": "2026-08-01T17:42:56.923Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,7 +37,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 19,
+      "logicalAlerts": 18,
       "uniqueEvents": [
         "Vysoké teploty",
         "Velmi vysoké teploty",
@@ -50,13 +50,13 @@
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 304,
-      "mappedAreas": 973,
+      "totalAreas": 302,
+      "mappedAreas": 962,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 14,
-      "publishedScheduled": 5,
-      "publishableCount": 19,
+      "publishedScheduled": 4,
+      "publishableCount": 18,
       "productStreams": [
         "50",
         "70"
@@ -64,7 +64,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 1,
+      "expiredCount": 2,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -73,8 +73,8 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 16,
-    "after": 19,
+    "before": 15,
+    "after": 18,
     "ledgerKeys": 7,
     "ledgerFingerprint": "ab43e0d79dfe3d2b",
     "history": {
@@ -319,17 +319,17 @@
   "temporalCounts": {
     "totalItems": 17,
     "activeCount": 11,
-    "scheduledCount": 5,
-    "expiredCount": 1,
+    "scheduledCount": 4,
+    "expiredCount": 2,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 19,
-    "visibleCount": 19
+    "publishableCount": 18,
+    "visibleCount": 18
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 19,
+    "logicalAlerts": 18,
     "uniqueEvents": [
       "Vysoké teploty",
       "Velmi vysoké teploty",
@@ -342,13 +342,13 @@
       "Riziko požárů",
       "Vysoké riziko požárů"
     ],
-    "totalAreas": 304,
-    "mappedAreas": 973,
+    "totalAreas": 302,
+    "mappedAreas": 962,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
     "publishedActive": 14,
-    "publishedScheduled": 5,
-    "publishableCount": 19,
+    "publishedScheduled": 4,
+    "publishableCount": 18,
     "productStreams": [
       "50",
       "70"
@@ -356,7 +356,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 1,
+    "expiredCount": 2,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -364,7 +364,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 973,
+    "headAreas": 962,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -372,6 +372,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-01T17:14:05.495Z",
-  "runMs": 6588
+  "finished": "2026-08-01T17:43:02.599Z",
+  "runMs": 5676
 }
