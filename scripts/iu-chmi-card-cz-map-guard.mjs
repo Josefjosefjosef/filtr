@@ -278,6 +278,8 @@ async function viewportCheck(page, label, size) {
   await page.locator(".iuPrehledDne__timeline").screenshot({ path: shotPath });
   const mapShot = path.join(SHOT_DIR, "cz-map-hit-" + label + "-" + size.width + ".png");
   await page.locator(".iuPrehledDne__card--hasCzMap").first().screenshot({ path: mapShot });
+  const longShot = path.join(SHOT_DIR, "cz-map-long-" + label + "-" + size.width + ".png");
+  await page.locator(".iuPrehledDne__card--hasCzMap").nth(1).screenshot({ path: longShot });
 
   // Keyboard focus-visible: silhouette glow, no rectangular outline.
   await page.locator(".iuPrehledDne__czMap").first().focus();
@@ -296,6 +298,8 @@ async function viewportCheck(page, label, size) {
       focusVisible: map.matches(":focus-visible"),
     };
   });
+  const focusShot = path.join(SHOT_DIR, "cz-map-focus-" + label + "-" + size.width + ".png");
+  await page.locator(".iuPrehledDne__card--hasCzMap").first().screenshot({ path: focusShot });
   await page.evaluate(() => {
     const map = document.querySelector(".iuPrehledDne__czMap");
     if (map) map.blur();
@@ -356,8 +360,30 @@ async function viewportCheck(page, label, size) {
   ok(label + "_painted", painted === true, "use paint");
   ok(label + "_screenshot", fs.existsSync(shotPath) && fs.statSync(shotPath).size > 800, shotPath);
   ok(label + "_map_shot", fs.existsSync(mapShot) && fs.statSync(mapShot).size > 400, mapShot);
+  ok(label + "_long_shot", fs.existsSync(longShot) && fs.statSync(longShot).size > 400, longShot);
+  ok(label + "_focus_shot", fs.existsSync(focusShot) && fs.statSync(focusShot).size > 400, focusShot);
+
+  // One real click → new tab (same portal URL as title); only on mobile390 to keep runtime low.
+  if (label === "mobile390") {
+    const context = page.context();
+    const before = context.pages().length;
+    const popupPromise = context.waitForEvent("page", { timeout: 5000 }).catch(() => null);
+    await page.locator(".iuPrehledDne__czMap").first().click({ force: true });
+    const popup = await popupPromise;
+    let clickUrl = "";
+    if (popup) {
+      await popup.waitForLoadState("domcontentloaded").catch(() => {});
+      clickUrl = popup.url();
+      await popup.close().catch(() => {});
+    }
+    ok(label + "_click_new_tab", !!popup && context.pages().length === before, "pages");
+    ok(label + "_click_same_url", clickUrl === metrics.mapHref || /vystrahy-cr\.chmi\.cz/i.test(clickUrl), clickUrl);
+  }
+
   console.log("SHOT " + shotPath);
   console.log("SHOT_HIT " + mapShot);
+  console.log("SHOT_LONG " + longShot);
+  console.log("SHOT_FOCUS " + focusShot);
 }
 
 async function main() {
@@ -383,9 +409,13 @@ async function main() {
     if (serverProc) serverProc.kill("SIGTERM");
   }
 
+  fs.mkdirSync(SHOT_DIR, { recursive: true });
+  const reportPath = path.join(SHOT_DIR, "size-report.json");
+  fs.writeFileSync(reportPath, JSON.stringify(sizeReport, null, 2));
   console.log("IU_CHMI_CARD_CZ_MAP_GUARD");
   console.log("SHOT_DIR=" + SHOT_DIR);
   console.log("SIZE_REPORT=" + JSON.stringify(sizeReport));
+  console.log("SIZE_REPORT_FILE=" + reportPath);
   console.log("CLICK_MODEL=B_invisible_hit_around_silhouette_min44");
   console.log("ASPECT=100/57.48≈1.74");
   console.log("PLACEMENT=absolute_top_right_equal_inset");
