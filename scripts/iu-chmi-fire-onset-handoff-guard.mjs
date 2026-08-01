@@ -129,6 +129,28 @@ ok(
   againstStale6208 && againstStale6208.validFrom
 );
 
+// Warm path must not keep a stale prior id — cold and warm IDs must match.
+const coldIds = (lateFeed.items || []).map((item) => item.id).sort();
+const staleIdPrev = (lateFeed.items || []).map((item) => ({
+  ...item,
+  id: "ie-chmi-v2-stale-warm-id",
+  capV2: { ...(item.capV2 || {}), hazard_instance_id: "haz:stale-warm-id" },
+}));
+const warm = applyTerritoryOnsetLedgerToFeed(staleIdPrev, lateHead, lateBuilt.ledger, { nowIso: lateNow });
+const warmIds = (warm.items || []).map((item) => item.id).sort();
+ok("warm_ids_match_cold_canonical", JSON.stringify(warmIds) === JSON.stringify(coldIds), warmIds.join(","));
+ok(
+  "warm_emits_supersedes_for_stale_id",
+  (warm.items || []).some(
+    (item) =>
+      item &&
+      item.capV2 &&
+      Array.isArray(item.capV2.supersedesIds) &&
+      item.capV2.supersedesIds.includes("ie-chmi-v2-stale-warm-id")
+  ),
+  "supersedes"
+);
+
 if (fails.length) {
   console.error("IU_CHMI_FIRE_ONSET_HANDOFF_GUARD=FAIL");
   for (const failure of fails) console.error("FAIL " + failure);

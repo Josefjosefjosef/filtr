@@ -274,8 +274,50 @@ const LS_CHMI_V2_BACKUP = "iu.infoEvents.chmiCapV2.backup.v1";
  * Map legacy ie-chmi-* states onto ie-chmi-v2-* when feed contains capV2 items.
  * Certain matches only; ambiguous kept on legacy ids. Reversible via backup key.
  */
+/**
+ * Continuous migration: when feed items declare capV2.supersedesIds (canonical
+ * onset-split id replaced a stale warm id), remap saved/hidden/read prefs.
+ * Does not revive user-hidden cards — only rewrites ids that already exist in prefs.
+ */
+function migrateChmiSupersedesIds(events) {
+  const items = Array.isArray(events) ? events : [];
+  const pairs = [];
+  for (const e of items) {
+    if (!e || !e.capV2 || !String(e.id || "").startsWith("ie-chmi-v2-")) continue;
+    const olds = Array.isArray(e.capV2.supersedesIds) ? e.capV2.supersedesIds : [];
+    for (const oldId of olds) {
+      if (oldId && String(oldId) !== String(e.id)) pairs.push([String(oldId), String(e.id)]);
+    }
+  }
+  if (!pairs.length) return { migrated: false, reason: "no_supersedes" };
+  try {
+    const read = readJsonSet(LS_READ);
+    const saved = readJsonSet(LS_SAVED);
+    const hidden = readJsonSet(LS_HIDDEN);
+    let changed = 0;
+    for (const [from, to] of pairs) {
+      for (const set of [read, saved, hidden]) {
+        if (set.has(from)) {
+          set.delete(from);
+          set.add(to);
+          changed += 1;
+        }
+      }
+    }
+    if (!changed) return { migrated: false, reason: "no_matching_prefs", pairs: pairs.length };
+    writeJsonSet(LS_READ, read);
+    writeJsonSet(LS_SAVED, saved);
+    writeJsonSet(LS_HIDDEN, hidden);
+    return { migrated: true, changed, pairs: pairs.length };
+  } catch (_) {
+    return { migrated: false, reason: "storage_error" };
+  }
+}
+
 function migrateChmiCapV2UserStates(events) {
   const items = Array.isArray(events) ? events : [];
+  // Always apply supersedes remaps when present (independent of one-shot v1 mig).
+  migrateChmiSupersedesIds(items);
   const v2 = items.filter((e) => e && e.capV2 && String(e.id || "").startsWith("ie-chmi-v2-"));
   if (!v2.length) return { migrated: false, reason: "no_v2_items" };
   try {

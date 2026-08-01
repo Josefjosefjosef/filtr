@@ -103,20 +103,28 @@ if (process.env.IU_CHMI_ORACLE_LIVE === "1") {
     isPublishableChmiItem
   );
 
-  const prod = await (
-    await fetch("https://josefjosefjosef.github.io/filtr/projects/data/info_events/feed.json", { cache: "no-store" })
-  ).json();
-  const prodItems = (prod.items || []).filter((i) => i && i.sourceId === "chmi" && isPublishableChmiItem(i));
+  // Prefer live production site; fall back to Pages mirror.
+  let prod = null;
+  for (const url of [
+    "https://infouzel.cz/projects/data/info_events/feed.json",
+    "https://josefjosefjosef.github.io/filtr/projects/data/info_events/feed.json",
+  ]) {
+    try {
+      prod = await (await fetch(url, { cache: "no-store" })).json();
+      if (prod) break;
+    } catch (_) {}
+  }
+  const prodItems = ((prod && prod.items) || []).filter((i) => i && i.sourceId === "chmi" && isPublishableChmiItem(i));
   const expIds = new Set(expected.map((i) => i.id));
   const prodIds = new Set(prodItems.map((i) => i.id));
   ok("live_count_match", expected.length === prodItems.length, `${expected.length}!=${prodItems.length}`);
-  ok("live_missing_id_0", [...expIds].every((id) => prodIds.has(id)));
-  ok("live_extra_id_0", [...prodIds].every((id) => expIds.has(id)));
+  ok("live_missing_id_0", [...expIds].every((id) => prodIds.has(id)), [...expIds].filter((id) => !prodIds.has(id)).join(","));
+  ok("live_extra_id_0", [...prodIds].every((id) => expIds.has(id)), [...prodIds].filter((id) => !expIds.has(id)).join(","));
   ok("live_no_holice_card", !prodItems.some((i) => /^Riziko požárů — Holice$/i.test(i.title || "")));
-  ok(
-    "live_smog_3",
-    prodItems.filter((i) => /smogov/i.test((i.capV2 && i.capV2.event) || "")).length === 3
-  );
+  // Smog count is dynamic from official CAP — must match cold-start, never a hardcoded incident size.
+  const smogExp = expected.filter((i) => /smogov/i.test((i.capV2 && i.capV2.event) || "")).length;
+  const smogProd = prodItems.filter((i) => /smogov/i.test((i.capV2 && i.capV2.event) || "")).length;
+  ok("live_smog_matches_oracle", smogExp === smogProd, `${smogExp}!=${smogProd}`);
 }
 
 if (fails.length) {
