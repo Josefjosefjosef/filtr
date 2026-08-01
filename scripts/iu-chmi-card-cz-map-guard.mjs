@@ -347,8 +347,8 @@ async function viewportCheck(page, label, size) {
   ok(label + "_pos_absolute", metrics.pos === "absolute", metrics.pos);
   ok(label + "_focus_no_rect", focusMetrics.focusOutlineNone === true, "outline");
   ok(label + "_focus_glow", focusMetrics.focusGlow === true || focusMetrics.focusVisible === true, JSON.stringify(focusMetrics));
-  // Narrow phones wrap long titles taller (Linux CI fonts taller than Windows).
-  const longHMax = size.width <= 360 ? 640 : 560;
+  // Narrow phones wrap long titles taller (Linux CI fonts + TR map padding-right ~80px).
+  const longHMax = size.width <= 360 ? 760 : size.width < 768 ? 620 : 560;
   ok(label + "_long_title_ok", metrics.longCardH > 60 && metrics.longCardH < longHMax, String(metrics.longCardH));
 
   const useHref = await page.locator(".iuPrehledDne__czMapSvg use").first().getAttribute("href");
