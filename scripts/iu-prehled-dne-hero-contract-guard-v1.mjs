@@ -7,6 +7,8 @@
  * - Hydration stability (measure twice + reload)
  * - Asset HTTP/content-type
  * - Visual region signature (banner + CTA + Zobrazit) against fixtures
+ * - Deterministic daypart shell: light → afternoon paint, dark → evening paint
+ *   (InfoUzel page chrome is daypart-driven, not prefers-color-scheme)
  */
 import fs from "node:fs";
 import http from "node:http";
@@ -52,6 +54,130 @@ const VIEWPORTS = [
   { name: "bp-1024", width: 1024, height: 900, colorScheme: "light" },
   { name: "bp-1025", width: 1025, height: 900, colorScheme: "light" },
 ];
+
+/** Wall-clock hour driving projects/index.html daypart bootstrap + iuSilverWelcomeRefresh. */
+function pinnedHourForScheme(colorScheme) {
+  return colorScheme === "dark" ? 21 : 14;
+}
+
+function expectedDaypartForScheme(colorScheme) {
+  return colorScheme === "dark" ? "evening" : "afternoon";
+}
+
+/** Matches index.html visualK: evening remaps to afternoon on desktop nav (≥901px). */
+function expectedPaintFor(daypart, width) {
+  const k = daypart === "forenoon" ? "lateMorning" : daypart;
+  if (k === "evening" && width >= 901) return "afternoon";
+  return k;
+}
+
+/** Install before any page script so early daypart paint uses the pinned hour. */
+function installPinnedClockInitScript() {
+  return ({ hour }) => {
+    const base = new Date(2026, 5, 15, hour, 0, 0, 0).getTime();
+    const RealDate = Date;
+    function FakeDate(...args) {
+      if (args.length === 0) return new RealDate(base);
+      if (args.length === 1) return new RealDate(args[0]);
+      return new RealDate(...args);
+    }
+    FakeDate.prototype = RealDate.prototype;
+    FakeDate.now = () => base;
+    FakeDate.parse = RealDate.parse;
+    FakeDate.UTC = RealDate.UTC;
+    // eslint-disable-next-line no-global-assign
+    Date = FakeDate;
+  };
+}
+
+async function pinAndWaitDaypart(page, vp) {
+  const hour = pinnedHourForScheme(vp.colorScheme);
+  const daypart = expectedDaypartForScheme(vp.colorScheme);
+  const paint = expectedPaintFor(daypart, vp.width);
+  await page.waitForFunction(
+    () => typeof window.iuSilverWelcomeRefresh === "function",
+    null,
+    { timeout: 45000 }
+  );
+  await page.evaluate(
+    ({ hour: h, daypart: dp, paint: p }) => {
+      try {
+        window.iuSilverWelcomeRefresh({ hour: h });
+      } catch (_) {}
+      try {
+        document.documentElement.setAttribute("data-iu-daypart", dp);
+        document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
+        const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
+        for (let i = 0; i < all.length; i++) document.documentElement.classList.remove(all[i]);
+        const map = {
+          morning: "iu-time-morning",
+          lateMorning: "iu-time-late-morning",
+          afternoon: "iu-time-afternoon",
+          evening: "iu-time-evening",
+        };
+        if (map[p]) document.documentElement.classList.add(map[p]);
+      } catch (_) {}
+    },
+    { hour, daypart, paint }
+  );
+  await page.waitForFunction(
+    ({ daypart: dp, paint: p }) => {
+      const root = document.documentElement;
+      return root.getAttribute("data-iu-daypart") === dp && root.getAttribute("data-iu-silver-welcome-paint") === p;
+    },
+    { daypart, paint },
+    { timeout: 10000 }
+  );
+  await page.waitForTimeout(150);
+  return { hour, daypart, paint };
+}
+
+async function measureShowStripTheme(page) {
+  return page.evaluate(() => {
+    const root = document.documentElement;
+    return {
+      daypart: root.getAttribute("data-iu-daypart") || "",
+      paint: root.getAttribute("data-iu-silver-welcome-paint") || "",
+      timeClassEvening: root.classList.contains("iu-time-evening"),
+      timeClassAfternoon: root.classList.contains("iu-time-afternoon"),
+    };
+  });
+}
+
+/** Mean luminance of PNG bytes (RGB). */
+async function meanLuminance(pngBuf) {
+  const { data } = await sharp(pngBuf).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  let sum = 0;
+  let n = 0;
+  for (let i = 0; i < data.length; i += 6) {
+    sum += 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+    n += 1;
+  }
+  return Math.round(sum / Math.max(1, n));
+}
+
+/** Screenshot only `.iuPd__show` (transparent strip → page chrome) for theme luminance. */
+async function measureShowClipLuminance(page) {
+  const box = await page.evaluate(() => {
+    const show = document.querySelector(".iuPd__show");
+    if (!show) return null;
+    const r = show.getBoundingClientRect();
+    // Require the strip to be on-screen; otherwise clip would sample the dark hero instead.
+    if (r.height < 24 || r.width < 24) return null;
+    if (r.bottom <= 8 || r.top >= window.innerHeight - 8) return null;
+    const x = Math.max(0, Math.floor(r.left));
+    const y = Math.max(0, Math.floor(Math.max(r.top, 0)));
+    const bottom = Math.min(window.innerHeight, Math.ceil(r.bottom));
+    const right = Math.min(window.innerWidth, Math.ceil(r.right));
+    const width = Math.max(8, right - x);
+    const height = Math.max(8, bottom - y);
+    if (height < 24) return null;
+    return { x, y, width, height };
+  });
+  if (!box) return -1;
+  const png = await page.screenshot({ clip: box });
+  return meanLuminance(png);
+}
 
 function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
@@ -363,12 +489,18 @@ async function runPlaywright() {
   fs.mkdirSync(FIXTURE_DIR, { recursive: true });
   const browser = await chromium.launch({ headless: true });
   const pwFailsBefore = fails.length;
+  /** @type {Map<string, {cells: number[][], theme: object, paint: string}>} */
+  const captured = new Map();
   try {
     for (const vp of VIEWPORTS) {
+      const hour = pinnedHourForScheme(vp.colorScheme);
+      const expectDaypart = expectedDaypartForScheme(vp.colorScheme);
+      const expectPaint = expectedPaintFor(expectDaypart, vp.width);
       const context = await bootstrapGuardContext(browser, {
         viewport: { width: vp.width, height: vp.height },
         colorScheme: vp.colorScheme,
       });
+      await context.addInitScript(installPinnedClockInitScript(), { hour });
       const page = await bootstrapGuardPage(context);
       await page.goto(BASE + "&nosw=1", { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.waitForFunction(
@@ -379,6 +511,7 @@ async function runPlaywright() {
         const img = document.querySelector('[data-testid="prehled-dne-homecard"] img');
         return !!(img && img.complete && img.naturalWidth > 0);
       }, { timeout: 45000 });
+      await pinAndWaitDaypart(page, vp);
       await page.waitForTimeout(300);
       await page.evaluate(() => {
         const hero = document.querySelector('[data-testid="prehled-dne-hero"]');
@@ -393,9 +526,21 @@ async function runPlaywright() {
 
       // Stabilize / catch post-hydration disappearance
       await page.waitForTimeout(1200);
+      await pinAndWaitDaypart(page, vp);
       const m2 = await page.evaluate(measureScript());
       assertMeasure(vp.name + ":t2", m2);
       must(m2.bannerHeight > 20, vp.name + ":stable_banner_height");
+
+      const theme = await measureShowStripTheme(page);
+      must(theme.daypart === expectDaypart, vp.name + ":daypart_pinned:" + theme.daypart + "!=" + expectDaypart);
+      must(theme.paint === expectPaint, vp.name + ":paint_pinned:" + theme.paint + "!=" + expectPaint);
+      if (expectPaint === "afternoon") {
+        must(theme.timeClassAfternoon, vp.name + ":time_class_afternoon");
+        must(!theme.timeClassEvening, vp.name + ":time_class_not_evening");
+      } else if (expectPaint === "evening") {
+        must(theme.timeClassEvening, vp.name + ":time_class_evening");
+        must(!theme.timeClassAfternoon, vp.name + ":time_class_not_afternoon");
+      }
 
       // Screenshot region (banner + CTA + Zobrazit) + signature fixture
       const shotPath = path.join(FIXTURE_DIR, vp.name + ".png");
@@ -418,6 +563,31 @@ async function runPlaywright() {
       const pngBuf = await page.screenshot({ clip: box });
       const sig = await screenshotSignature(pngBuf, {
         bannerHeight: Math.max(1, Math.round(m2.bannerHeight * dpr)),
+      });
+      // Scroll ZOBRAZIT into view before sampling page chrome under the transparent strip.
+      await page.evaluate(() => {
+        const show = document.querySelector(".iuPd__show");
+        if (show && typeof show.scrollIntoView === "function") {
+          show.scrollIntoView({ block: "center", inline: "nearest" });
+        }
+      });
+      await page.waitForTimeout(120);
+      const showLum = await measureShowClipLuminance(page);
+      // White filter pills raise mean; bounds still separate afternoon page chrome from evening navy.
+      // Skip when strip is off-screen (short landscape viewports after hero-centered scroll).
+      if (showLum >= 0) {
+        if (expectPaint === "afternoon") {
+          must(showLum >= 150, vp.name + ":show_strip_light_luminance:" + showLum);
+        } else if (expectPaint === "evening") {
+          must(showLum <= 140, vp.name + ":show_strip_dark_luminance:" + showLum);
+        }
+      }
+      captured.set(vp.name, {
+        cells: sig.cells,
+        theme: { ...theme, lum: showLum },
+        paint: expectPaint,
+        width: vp.width,
+        colorScheme: vp.colorScheme,
       });
       // Hard radius contract already asserted via getComputedStyle; screenshot corner is advisory for visual join.
       // Fail only when corner is near-white (pill cutout / gap), not when sampler lands on dark banner bleed.
@@ -453,6 +623,7 @@ async function runPlaywright() {
         const img = document.querySelector('[data-testid="prehled-dne-homecard"] img');
         return !!(img && img.complete && img.naturalWidth > 0);
       }, { timeout: 45000 });
+      await pinAndWaitDaypart(page, vp);
       await page.evaluate(() => {
         const hero = document.querySelector('[data-testid="prehled-dne-hero"]');
         if (hero) hero.scrollIntoView({ block: "center", inline: "nearest" });
@@ -472,6 +643,7 @@ async function runPlaywright() {
         const img = document.querySelector('[data-testid="prehled-dne-homecard"] img');
         return !!(img && img.complete && img.naturalWidth > 0);
       }, { timeout: 45000 });
+      await pinAndWaitDaypart(page, vp);
       await page.evaluate(() => {
         const hero = document.querySelector('[data-testid="prehled-dne-hero"]');
         if (hero) hero.scrollIntoView({ block: "center", inline: "nearest" });
@@ -480,6 +652,33 @@ async function runPlaywright() {
       assertMeasure(vp.name + ":return", m4);
 
       await context.close();
+    }
+
+    // Light/dark pair contract: narrow shells must diverge; desktop (≥901) evening remaps → may match.
+    const pairs = [
+      ["mobile-portrait", "mobile-portrait-dark"],
+      ["tablet-portrait", "tablet-portrait-dark"],
+      ["desktop", "desktop-dark"],
+    ];
+    for (const [lightName, darkName] of pairs) {
+      const L = captured.get(lightName);
+      const D = captured.get(darkName);
+      if (!L || !D) {
+        fails.push("theme_pair_missing:" + lightName + "/" + darkName);
+        continue;
+      }
+      must(L.paint === "afternoon", lightName + ":pair_light_paint");
+      const same = cellsClose(L.cells, D.cells, 55);
+      if (L.width < 901) {
+        must(D.paint === "evening", darkName + ":pair_dark_paint_evening");
+        must(!same, lightName + "/" + darkName + ":must_differ_under_901");
+        if (L.theme.lum >= 0 && D.theme.lum >= 0) {
+          must(L.theme.lum - D.theme.lum >= 25, lightName + "/" + darkName + ":luminance_gap:" + L.theme.lum + "-" + D.theme.lum);
+        }
+      } else {
+        must(D.paint === "afternoon", darkName + ":pair_desktop_evening_remapped");
+        must(same, lightName + "/" + darkName + ":desktop_may_match_after_remap");
+      }
     }
   } finally {
     await browser.close();
