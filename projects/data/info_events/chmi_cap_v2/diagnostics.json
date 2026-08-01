@@ -1,6 +1,6 @@
 {
-  "runId": "7f69fc122d48a10f",
-  "started": "2026-08-01T15:54:00.381Z",
+  "runId": "4b738a195e90e973",
+  "started": "2026-08-01T15:57:01.702Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011552.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
@@ -30,26 +30,13 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 0,
-    "update": 1,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 35,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 19,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -83,7 +70,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
     "before": 16,
@@ -129,7 +116,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011552.xml"
       ],
       "recentCount": 32,
-      "refCount": 2,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -340,8 +327,8 @@
     "visibleCount": 19
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 35,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 19,
     "uniqueEvents": [
       "Vysoké teploty",
@@ -385,6 +372,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-01T15:54:10.872Z",
-  "runMs": 10491
+  "finished": "2026-08-01T15:57:11.820Z",
+  "runMs": 10118
 }
