@@ -54,6 +54,13 @@ ok("one_current_fire_segment", fire.length === 1, String(fire.length));
 ok("orp_6208_present", !!item6208, "6208");
 ok("handoff_sets_new_onset", onset === normalizeCapInstant(newOnset), onset);
 ok("handoff_does_not_keep_old_onset", onset !== normalizeCapInstant(oldOnset), onset);
+ok(
+  "handoff_rejects_pre_break_legacy_onsets",
+  onset !== normalizeCapInstant("2026-07-19T14:48:30+02:00") &&
+    onset !== normalizeCapInstant("2026-07-19T15:26:21+02:00") &&
+    onset !== normalizeCapInstant("2026-07-30T11:37:29+02:00"),
+  onset
+);
 ok("cold_start_ids_deterministic", JSON.stringify(firstIds) === JSON.stringify(secondIds), firstIds.join(","));
 
 // Persisted pre-handoff onset must not resurrect when merging with history ledger.
@@ -74,6 +81,22 @@ ok(
   normalizeCapInstant(mergedOnset) === normalizeCapInstant(newOnset),
   String(mergedOnset)
 );
+
+// Production sync evaluates days after the handoff midnight. Wall-clock "now"
+// must not prevent detecting the timed→open-ended restart in history.
+const lateNow = "2026-07-31T20:00:00.000Z";
+const lateBuilt = buildTerritoryOnsetLedgerFromOrderedDocuments(docs, { nowIso: lateNow, seedLedger: {} });
+const lateHead = (lateBuilt.itemsByStep.at(-1) || []).filter(isPublishableChmiItem);
+const lateFeed = applyTerritoryOnsetLedgerToFeed([], lateHead, lateBuilt.ledger, { nowIso: lateNow });
+const lateFire = (lateFeed.items || []).filter((item) =>
+  /riziko požárů/i.test((item.capV2 && item.capV2.event) || item.title || "")
+);
+const late6208 = lateFire.find((item) =>
+  (item.region && item.region.orpIds || []).some((orp) => String(orp).replace(/^orp:/, "") === "6208")
+);
+const lateOnset = late6208 && normalizeCapInstant(late6208.validFrom);
+ok("late_sync_handoff_sets_new_onset", lateOnset === normalizeCapInstant(newOnset), lateOnset);
+ok("late_sync_does_not_keep_old_onset", lateOnset !== normalizeCapInstant(oldOnset), lateOnset);
 
 if (fails.length) {
   console.error("IU_CHMI_FIRE_ONSET_HANDOFF_GUARD=FAIL");

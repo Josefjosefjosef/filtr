@@ -803,14 +803,15 @@ export function normalizeCapInstant(iso) {
 
 function openEndedSemanticKey(item) {
   const c = (item && item.capV2) || {};
-  // Identity for territorial onset continuity — exclude ephemeral temporal status
-  // (ACTIVE/FUTURE) so the same hazard keeps one ledger bucket across clock ticks.
+  const until = !!(item.untilRevoked || c.untilRevoked);
+  // Identity for territorial onset continuity — exclude ephemeral CAP urgency
+  // (Immediate↔Future) and publishable ACTIVE/FUTURE so the same open-ended
+  // hazard keeps one ledger bucket across planned handoffs and clock ticks.
   return [
     foldCs(c.event || String(item.title || "").split(" — ")[0] || ""),
     foldCs(c.severity || ""),
-    foldCs(c.urgency || ""),
     foldCs(c.certainty || ""),
-    item.untilRevoked || c.untilRevoked ? "until-revoked" : normalizeCapInstant(item.validTo),
+    until ? "until-revoked" : normalizeCapInstant(item.validTo),
   ].join("|");
 }
 
@@ -929,11 +930,12 @@ export function updateOpenEndedOrpOnsetLedger(ledger, items) {
 function sameHazardSemantic(item, openEndedItem) {
   const a = (item && item.capV2) || {};
   const b = (openEndedItem && openEndedItem.capV2) || {};
+  // Urgency is omitted: CAP often pairs Immediate timed expires=T with Future
+  // open-ended onset=T for the same ORP continuum, then flips Future→Immediate.
   return (
     foldCs(a.event || String(item && item.title || "").split(" — ")[0] || "") ===
       foldCs(b.event || String(openEndedItem && openEndedItem.title || "").split(" — ")[0] || "") &&
     foldCs(a.severity || "") === foldCs(b.severity || "") &&
-    foldCs(a.urgency || "") === foldCs(b.urgency || "") &&
     foldCs(a.certainty || "") === foldCs(b.certainty || "")
   );
 }
@@ -946,7 +948,11 @@ function sameHazardSemantic(item, openEndedItem) {
 export function reconcileOpenEndedOrpOnsetLedger(ledger, items) {
   const out = ledger && typeof ledger === "object" ? { ...ledger } : {};
   const current = new Map();
-  const publishable = (items || []).filter((item) => item && String(item.sourceId) === "chmi" && isPublishableChmiItem(item));
+  const allChmi = (items || []).filter((item) => item && String(item.sourceId) === "chmi");
+  // Open-ended membership uses publishable items. Timed handoff candidates may be
+  // expired relative to wall-clock sync "now" but still present in the same CAP
+  // snapshot — scan all CHMI infos so history walks remain correct.
+  const publishable = allChmi.filter((item) => isPublishableChmiItem(item));
 
   for (const item of publishable) {
     if (!(item.untilRevoked || (item.capV2 && item.capV2.untilRevoked))) continue;
@@ -966,7 +972,7 @@ export function reconcileOpenEndedOrpOnsetLedger(ledger, items) {
       const validFromMs = Date.parse(validFrom);
       if (!validFrom || !Number.isFinite(validFromMs)) continue;
       for (const orp of itemOrpIdSet(item)) {
-        const timedHandoff = publishable.some((candidate) => {
+        const timedHandoff = allChmi.some((candidate) => {
           if (candidate.untilRevoked || (candidate.capV2 && candidate.capV2.untilRevoked)) return false;
           if (!sameHazardSemantic(candidate, item) || !itemOrpIdSet(candidate).has(orp)) return false;
           const expiresMs = Date.parse(String(candidate.validTo || "").trim());
@@ -1032,7 +1038,13 @@ export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts =
       if (!byOnset.has(key)) byOnset.set(key, { validFrom: useVf, orps: [] });
       byOnset.get(key).orps.push(orp);
     }
-    if (byOnset.size <= 1) {
+    // Even a single onset group must rewrite validFrom when the ledger kept an
+    // earlier firstContinuousValidFrom (e.g. timed→Future handoff, then CAP
+    // republished Immediate with a later technical onset).
+    const needsRewrite =
+      byOnset.size > 1 ||
+      [...byOnset.values()].some((g) => normalizeCapInstant(g.validFrom) !== nextNorm);
+    if (!needsRewrite) {
       out.push(item);
       continue;
     }
