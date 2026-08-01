@@ -1064,23 +1064,26 @@ export function splitOpenEndedByPriorTerritoryOnset(prevItems, nextItems, opts =
         if (openEndedSemanticKey(p) !== sem) return false;
         return normalizeCapInstant(p.validFrom) === normalizeCapInstant(group.validFrom);
       });
-      const withId = priorMatch
-        ? {
-            ...projected,
-            id: priorMatch.id,
-            firstSeenByInfoUzel: priorMatch.firstSeenByInfoUzel || projected.firstSeenByInfoUzel,
-            capV2: {
-              ...projected.capV2,
-              hazard_instance_id:
-                (priorMatch.capV2 && priorMatch.capV2.hazard_instance_id) || projected.capV2.hazard_instance_id,
-            },
-          }
-        : projected;
+      // Onset-split IDs are canonical (thread|semantic|validFrom). Never preserve a
+      // stale prior id — that made warm/prod diverge from cold-start forever.
+      const supersedes = [];
+      if (priorMatch && priorMatch.id && priorMatch.id !== projected.id) supersedes.push(priorMatch.id);
+      const withId = {
+        ...projected,
+        firstSeenByInfoUzel: (priorMatch && priorMatch.firstSeenByInfoUzel) || projected.firstSeenByInfoUzel,
+        capV2: {
+          ...projected.capV2,
+          ...(supersedes.length ? { supersedesIds: supersedes } : {}),
+        },
+      };
       out.push(refreshItemLocalityPresentation(refreshItemTemporalFields(withId, nowMs)));
     }
   }
   const merged = mergeFeedItemsById(out);
-  const coalesced = coalesceOpenEndedSameSemanticOnset(merged, { nowIso: opts.nowIso });
+  const coalesced = coalesceOpenEndedSameSemanticOnset(merged, {
+    nowIso: opts.nowIso,
+    prevItems: prevItems || [],
+  });
   const nextLedger = reconcileOpenEndedOrpOnsetLedger(ledger, nextItems || []);
   return { items: coalesced, ledger: nextLedger };
 }
@@ -1148,25 +1151,28 @@ export function coalesceOpenEndedSameSemanticOnset(items, opts = {}) {
       coalescedOpen.push(...group);
       continue;
     }
-    // Prefer prior stable id when any member already matches the union set.
-    const priorMatch = sorted.find((p) => {
-      const porps = itemOrpIdSet(p);
-      return porps.size === union.size && isOrpSubset(porps, union);
-    });
-    const withId = priorMatch
-      ? {
-          ...projected,
-          id: priorMatch.id,
-          firstSeenByInfoUzel: priorMatch.firstSeenByInfoUzel || projected.firstSeenByInfoUzel,
-          capV2: {
-            ...projected.capV2,
-            hazard_instance_id:
-              (priorMatch.capV2 && priorMatch.capV2.hazard_instance_id) || projected.capV2.hazard_instance_id,
-            coalescedOnset: true,
-            onsetSplit: true,
-          },
-        }
-      : { ...projected, capV2: { ...projected.capV2, coalescedOnset: true, onsetSplit: true } };
+    const supersedes = [];
+    for (const g of sorted) {
+      if (g.id && g.id !== projected.id) supersedes.push(g.id);
+    }
+    for (const p of opts.prevItems || []) {
+      if (!p || String(p.sourceId) !== "chmi") continue;
+      if (openEndedSemanticKey(p) !== openEndedSemanticKey(projected)) continue;
+      if (normalizeCapInstant(p.validFrom) !== normalizeCapInstant(projected.validFrom)) continue;
+      if (p.id && p.id !== projected.id) supersedes.push(p.id);
+    }
+    const uniqSupersedes = [...new Set(supersedes)];
+    const withId = {
+      ...projected,
+      firstSeenByInfoUzel:
+        sorted.map((g) => g.firstSeenByInfoUzel).find(Boolean) || projected.firstSeenByInfoUzel,
+      capV2: {
+        ...projected.capV2,
+        coalescedOnset: true,
+        onsetSplit: true,
+        ...(uniqSupersedes.length ? { supersedesIds: uniqSupersedes } : {}),
+      },
+    };
     coalescedOpen.push(refreshItemLocalityPresentation(refreshItemTemporalFields(withId, nowMs)));
   }
   return mergeFeedItemsById([...passthrough, ...coalescedOpen]);
