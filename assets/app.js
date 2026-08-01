@@ -43736,20 +43736,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 (function iuBootDeferredSilverP0Engine() {
   "use strict";
   var p = null;
+  var pendingTap = null;
+  var pendingGen = 0;
+  var PREFIX_TEXT = {
+    calendar: "Do kalendáře ",
+    reminder: "Připomeň mi ",
+    notes: "Do poznámek ",
+  };
+
+  function markReady() {
+    try {
+      window.__iuSilverP0EngineReady = 1;
+    } catch (_) {}
+    try {
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (ux) ux.setAttribute("data-iu-silver-p0-ready", "1");
+    } catch (_) {}
+  }
+
   function ensure() {
     try {
       if (window.__iuSilverP0EngineReady) return Promise.resolve();
       if (typeof window.iuSilverCalendarEngine === "object" && window.iuSilverCalendarEngine && typeof window.iuSilverCalendarEngine.processUserTurn === "function") {
-        window.__iuSilverP0EngineReady = 1;
+        markReady();
         return Promise.resolve();
       }
     } catch (_) {}
     if (p) return p;
     p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1a-20260728")
       .then(function () {
-        try {
-          window.__iuSilverP0EngineReady = 1;
-        } catch (_) {}
+        markReady();
       })
       .catch(function (e) {
         p = null;
@@ -43768,11 +43784,92 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.iuEnsureSilverP0Engine = ensure;
   } catch (_) {}
 
+  /* IU_SILVER_HOME_PREFIX_FIRST_TAP_HOLD_V1:
+     Preferred: viewport/narrow prefetch so buttons are ready before first tap.
+     Fallback: optimistic prefix apply + single pending finalize (no lost tap, no double fire). */
+  var SILVER_P0_PREFETCH_SEL =
+    "#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend, #iuSilverHomeInputUx, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+  var SILVER_P0_CLICK_HOLD_SEL =
+    "#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+
+  function narrowComposer() {
+    try {
+      return window.matchMedia("(max-width: 1024px)").matches;
+    } catch (_) {
+      return (window.innerWidth || 0) <= 1024;
+    }
+  }
+
+  function cancelPendingTap() {
+    pendingGen += 1;
+    pendingTap = null;
+  }
+
+  function applyOptimisticPrefix(key) {
+    var text = PREFIX_TEXT[key];
+    var inp = document.getElementById("iuSilverHomeInput");
+    var wrap = document.querySelector(".iuSilverHomeInputFieldWrap[data-iu-silver-home-input-field]");
+    if (!inp || !text) return false;
+    try {
+      inp.value = text;
+    } catch (_) {}
+    try {
+      if (wrap) {
+        wrap.classList.remove("iuSilverHomeInputFieldWrap--empty");
+        wrap.classList.remove("iuSilverHomeInputFieldWrap--template");
+        wrap.classList.add("iuSilverHomeInputFieldWrap--compose");
+      }
+    } catch (_) {}
+    try {
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (ux) ux.setAttribute("aria-hidden", "true");
+    } catch (_) {}
+    try {
+      inp.focus();
+    } catch (_) {}
+    try {
+      var pos = text.length;
+      inp.setSelectionRange(pos, pos);
+    } catch (_) {}
+    try {
+      window.__iuSilverPrefixOptimisticCount = (window.__iuSilverPrefixOptimisticCount || 0) + 1;
+      window.__iuSilverPrefixOptimisticLast = key;
+    } catch (_) {}
+    return true;
+  }
+
+  function finalizePendingTap(gen) {
+    var pending = pendingTap;
+    if (!pending || pending.gen !== gen) return;
+    pendingTap = null;
+    var el = pending.el;
+    if (!el || !el.isConnected) return;
+    if (pending.kind === "prefix") {
+      /* Optimistic UI already applied; only sync engine-side helpers once. */
+      try {
+        if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
+      try {
+        window.__iuSilverPrefixFinalizeCount = (window.__iuSilverPrefixFinalizeCount || 0) + 1;
+      } catch (_) {}
+      return;
+    }
+    try {
+      el.removeAttribute("aria-busy");
+    } catch (_) {}
+    try {
+      el.click();
+    } catch (_) {}
+  }
+
   function shouldPrefetch(t) {
     try {
       if (!t || !t.closest) return false;
       /* Narrow: do not prefetch on whole Silver slot (weather/cards) — that pulls 1.55MB during Lighthouse. */
-      if (t.closest("#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend")) return true;
+      if (t.closest(SILVER_P0_PREFETCH_SEL)) return true;
       if (t.closest("#iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
       return false;
     } catch (_) {
@@ -43786,28 +43883,104 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
   }
 
+  function maybePrefetchVisibleHomeUx() {
+    try {
+      if (!narrowComposer()) return;
+      if (window.__iuSilverP0EngineReady) return;
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (!ux) return;
+      var st = window.getComputedStyle ? getComputedStyle(ux) : null;
+      if (st && (st.display === "none" || st.visibility === "hidden")) return;
+      var r = ux.getBoundingClientRect ? ux.getBoundingClientRect() : null;
+      if (!r || r.width < 8 || r.height < 8) return;
+      if (r.bottom < 0 || r.top > (window.innerHeight || 0) + 8) return;
+      void ensure();
+    } catch (_) {}
+  }
+
+  function armViewportPrefetch() {
+    try {
+      if (!narrowComposer()) return;
+      maybePrefetchVisibleHomeUx();
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (!ux || ux.__iuSilverP0ViewportPrefetch) return;
+      ux.__iuSilverP0ViewportPrefetch = 1;
+      if (typeof IntersectionObserver === "function") {
+        var io = new IntersectionObserver(
+          function (entries) {
+            try {
+              for (var i = 0; i < entries.length; i++) {
+                if (entries[i] && entries[i].isIntersecting) {
+                  void ensure();
+                  break;
+                }
+              }
+            } catch (_) {}
+          },
+          { root: null, threshold: 0.01 }
+        );
+        io.observe(ux);
+      }
+    } catch (_) {}
+  }
+
   try {
     document.addEventListener("pointerdown", onPrefetchEvent, true);
     document.addEventListener("focusin", onPrefetchEvent, true);
   } catch (_) {}
 
-  /* No idle auto-import; no document keydown prefetch (avoids LH TBT from engine parse). */
+  /* Preferred path: prefetch when home UX is visible on mobile/tablet (not whole Silver weather slot). */
+  try {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", armViewportPrefetch);
+    } else {
+      armViewportPrefetch();
+    }
+  } catch (_) {}
+  try {
+    window.addEventListener("pageshow", function () {
+      cancelPendingTap();
+      armViewportPrefetch();
+      maybePrefetchVisibleHomeUx();
+    });
+  } catch (_) {}
+  try {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        armViewportPrefetch();
+        maybePrefetchVisibleHomeUx();
+      }
+    });
+  } catch (_) {}
 
-  /* First submit before engine lands: hold the event, load, re-click. */
+  /* Fallback: first interaction before engine lands — optimistic UI + single finalize. */
   try {
     document.addEventListener(
       "click",
       function (e) {
         try {
           if (window.__iuSilverP0EngineReady) return;
-          var t = e.target && e.target.closest ? e.target.closest("#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend") : null;
+          var t = e.target && e.target.closest ? e.target.closest(SILVER_P0_CLICK_HOLD_SEL) : null;
           if (!t) return;
           e.preventDefault();
           e.stopImmediatePropagation();
-          ensure().then(function () {
+          var prefixKey = "";
+          try {
+            prefixKey = String(t.getAttribute("data-iu-silver-home-prefix") || "");
+          } catch (_) {}
+          var kind = prefixKey ? "prefix" : "reclick";
+          if (kind === "prefix") {
+            applyOptimisticPrefix(prefixKey);
+          } else {
             try {
-              t.click();
+              t.setAttribute("aria-busy", "true");
             } catch (_) {}
+          }
+          pendingGen += 1;
+          var gen = pendingGen;
+          pendingTap = { el: t, kind: kind, key: prefixKey, gen: gen };
+          ensure().then(function () {
+            finalizePendingTap(gen);
           });
         } catch (_) {}
       },
