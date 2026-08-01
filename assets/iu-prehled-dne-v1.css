@@ -450,6 +450,33 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   grid-template-columns: none !important;
 }
 
+/* Banner + settings CTA as one flush visual unit (no flex gap between them). */
+.iuPd__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.iuPd__top {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+.iuPd__top > .iuPdBtn {
+  margin: 0;
+}
+
 /* InfoUzel day-overview banner (middle feed, above settings CTA) */
 .iuPd__banner {
   width: 100%;
@@ -470,6 +497,10 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   height: auto;
   object-fit: contain;
   aspect-ratio: 1661 / 616;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  border: 0;
 }
 
 /* Hide legacy commercial article timeline on cutover (P┼Öehled dne is the product). */
