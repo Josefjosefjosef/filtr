@@ -70,14 +70,23 @@ const item = {
   firstSeenByInfoUzel: "2026-07-31T09:49:00.000Z",
   sortAt: "2026-07-31T11:29:00+02:00",
   updatedAt: "2026-07-31T09:49:00.000Z",
-  capV2: { badgeActive: true, onset: "2026-07-31T11:25:00+02:00", sent: "2026-07-31T11:29:00+02:00" },
+  capV2: {
+    badgeActive: true,
+    msgType: "Update",
+    onset: "2026-07-31T11:25:00+02:00",
+    sent: "2026-07-31T11:29:00+02:00",
+  },
 };
 
 const t = IU.getEffectiveTimelinePresentation(item, Date.parse("2026-07-31T12:00:00+02:00"));
 ok("active", t.isActiveWarning === true, String(t.isActiveWarning));
 ok("primary_1125", t.primaryTime === "11:25", String(t.primaryTime));
 ok("not_sent_1129", t.primaryTime !== "11:29", String(t.primaryTime));
-ok("issued_secondary", /vydáno\s*11:29/.test(String(t.secondaryIssuedLabel || "")), String(t.secondaryIssuedLabel));
+ok(
+  "issued_secondary",
+  /Aktualizováno\s*11:29/.test(String(t.secondaryIssuedLabel || "")),
+  String(t.secondaryIssuedLabel)
+);
 ok("not_ingest_0949", !/9:49|09:49|11:49/.test([t.primaryTime, t.secondaryIssuedLabel, t.primaryDate].join(" ")), "ingest");
 
 const drought = {
@@ -90,14 +99,14 @@ const drought = {
   validTo: null,
   untilRevoked: true,
   firstSeenByInfoUzel: "2026-07-31T11:00:00.000Z",
-  capV2: { badgeActive: true, untilRevoked: true },
+  capV2: { badgeActive: true, msgType: "Alert", untilRevoked: true },
 };
 const d = IU.getEffectiveTimelinePresentation(drought, Date.parse("2026-07-31T12:00:00+02:00"));
 ok("open_ended_rolled", d.isRolledActiveWarning === true, String(d.isRolledActiveWarning));
-ok("open_ended_issued_day", /28\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
-ok("open_ended_platnost", d.secondaryValidFromLabel === "platnost od", String(d.secondaryValidFromLabel));
+ok("open_ended_issued_day", /Vydáno\s*28\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
+ok("open_ended_platnost", d.secondaryValidFromLabel === "Platí od", String(d.secondaryValidFromLabel));
 ok("open_ended_vf_time", d.secondaryValidFromTime === "14:00", String(d.secondaryValidFromTime));
-ok("open_ended_not_sync_day_as_issued", !/vydáno\s*31\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
+ok("open_ended_not_sync_day_as_issued", !/31\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
 
 if (fails.length) {
   console.error("IU_CHMI_SOURCE_TIME_NOT_INGEST=FAIL");
