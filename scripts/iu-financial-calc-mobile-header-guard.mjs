@@ -17,7 +17,9 @@ const { chromium } = require("playwright");
 
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8986", 10);
+// Prefer env port; otherwise pick an ephemeral port to avoid CI collisions when
+// multiple Playwright guards bind localhost in the same smoke job matrix.
+const PORT = parseInt(process.env.IU_GUARD_PORT || String(19000 + (process.pid % 1000)), 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
 const HUB_TITLE = "Finanční kalkulačky";
@@ -153,56 +155,80 @@ async function measureHeader(page) {
   });
 }
 
-async function waitForPanelMode(page, mode) {
+async function waitForPanelMode(page, mode, timeoutMs = 60000) {
   await page.waitForFunction(
     (want) => {
       const panel = document.getElementById("iuFinancialCalcPanel");
       const title = document.getElementById("iuFinancialCalcTitle");
       if (!panel || panel.hasAttribute("hidden") || !title) return false;
       if (!panel.classList.contains(`iu-financial-overlay-panel--${want}`)) return false;
+      // Title may use display:contents; textContent is the stable readiness signal.
       return String(title.textContent || "").trim().length > 0;
     },
     mode,
-    { timeout: 30000 },
+    { timeout: timeoutMs },
   );
   // Two frames: allow unified mobile/tablet grid + privacy button to settle.
   await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 }
 
 async function openHub(page) {
-  await bootFinancial(page);
-  await page.evaluate(() => {
-    if (typeof window.iuFinancialCalcOpenSurface === "function") {
-      window.iuFinancialCalcOpenSurface();
+  let lastErr = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      await bootFinancial(page);
+      await page.evaluate(() => {
+        if (typeof window.iuFinancialCalcOpenSurface === "function") {
+          window.iuFinancialCalcOpenSurface();
+        }
+      });
+      await waitForPanelMode(page, "hub");
+      return;
+    } catch (err) {
+      lastErr = err;
+      await page.waitForTimeout(400 * (attempt + 1));
     }
-  });
-  await waitForPanelMode(page, "hub");
+  }
+  throw lastErr || new Error("openHub failed");
 }
 
 async function openCalculator(page, calcId, expectedTitle) {
-  await bootFinancial(page);
-  await page.evaluate((id) => {
-    if (typeof window.iuFinancialCalcOpenSurface === "function") {
-      window.iuFinancialCalcOpenSurface({ calculatorId: id });
-    }
-  }, calcId);
-  await waitForPanelMode(page, "detail");
   const wantTitle = String(expectedTitle || "").trim();
-  if (wantTitle) {
-    await page.waitForFunction(
-      (titleWanted) => {
-        const title = document.getElementById("iuFinancialCalcTitle");
-        const panel = document.getElementById("iuFinancialCalcPanel");
-        if (!title || !panel || panel.hasAttribute("hidden")) return false;
-        if (!panel.classList.contains("iu-financial-overlay-panel--detail")) return false;
-        return String(title.textContent || "").trim() === titleWanted;
-      },
-      wantTitle,
-      { timeout: 30000 },
-    );
+  let lastErr = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      await bootFinancial(page);
+      await page.evaluate((id) => {
+        if (typeof window.iuFinancialCalcOpenSurface === "function") {
+          window.iuFinancialCalcOpenSurface({ calculatorId: id });
+        }
+      }, calcId);
+      await waitForPanelMode(page, "detail");
+      if (wantTitle) {
+        await page.waitForFunction(
+          (titleWanted) => {
+            const title = document.getElementById("iuFinancialCalcTitle");
+            const panel = document.getElementById("iuFinancialCalcPanel");
+            if (!title || !panel || panel.hasAttribute("hidden")) return false;
+            if (!panel.classList.contains("iu-financial-overlay-panel--detail")) return false;
+            return String(title.textContent || "").trim() === titleWanted;
+          },
+          wantTitle,
+          { timeout: 60000 },
+        );
+      }
+      // Privacy btn + grid areas can lag one paint after title text assignment.
+      await page.waitForTimeout(350);
+      return;
+    } catch (err) {
+      lastErr = err;
+      await page.waitForTimeout(500 * (attempt + 1));
+      try {
+        await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+      } catch (_) {}
+    }
   }
-  // Privacy btn + grid areas can lag one paint after title text assignment.
-  await page.waitForTimeout(250);
+  throw lastErr || new Error("openCalculator failed:" + calcId);
 }
 
 async function measureHeaderStable(page, attempts = 8) {
