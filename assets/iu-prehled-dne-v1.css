@@ -334,6 +334,73 @@
   box-shadow: 0 4px 14px rgba(35, 45, 120, 0.06);
   padding: 12px 12px 10px;
   min-width: 0;
+  position: relative;
+}
+
+/* Clickable CZ silhouette — accent blue only, no button chrome. */
+.iuPdCard__czMap,
+.iuPrehledDne__czMap {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--iu-pd-accent);
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.92;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iuPrehledDne__czMapSvg {
+  display: block;
+  width: 28px;
+  height: auto;
+  pointer-events: none;
+}
+
+.iuPdCard__czMap:hover,
+.iuPrehledDne__czMap:hover {
+  opacity: 1;
+  filter: brightness(1.08);
+}
+
+.iuPdCard__czMap:active,
+.iuPrehledDne__czMap:active {
+  opacity: 0.72;
+  filter: none;
+}
+
+.iuPdCard__czMap:focus,
+.iuPrehledDne__czMap:focus {
+  outline: none;
+}
+
+.iuPdCard__czMap:focus-visible,
+.iuPrehledDne__czMap:focus-visible {
+  outline: 2px solid var(--iu-pd-accent-2);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__warnBadge,
+.iuPrehledDne__card--hasCzMap .iuPdCard__warnBadge {
+  max-width: calc(100% - 48px);
+}
+
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__cardTitle,
+.iuPrehledDne__card--hasCzMap .iuPdCard__title {
+  padding-right: 44px;
 }
 
 .iuPrehledDne__cardTitle {
