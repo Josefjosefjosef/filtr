@@ -2,8 +2,8 @@
 "use strict";
 
 /**
- * Static contract: lazy Silver P0 boot must prefetch + click-hold prefix/quick-action buttons
- * so the first mobile/tablet tap is never a no-op.
+ * Static contract: Silver P0 deferred boot must viewport-prefetch on mobile/tablet,
+ * optimistically apply prefix UI, and finalize a single pending tap (no lost/double fire).
  * Run: node scripts/silver-home-prefix-first-tap-static-guard-v1.cjs
  */
 
@@ -20,10 +20,7 @@ function main() {
   const boot = start >= 0 && end > start ? src.slice(start, end) : "";
 
   const checks = [
-    {
-      id: "marker_present",
-      pass: src.indexOf(MARKER) >= 0,
-    },
+    { id: "marker_present", pass: src.indexOf(MARKER) >= 0 },
     {
       id: "prefetch_sel_includes_home_prefix",
       pass: /SILVER_P0_PREFETCH_SEL\s*=\s*[\s\S]*?\[data-iu-silver-home-prefix\]/.test(boot),
@@ -31,10 +28,6 @@ function main() {
     {
       id: "prefetch_sel_includes_home_quick_action",
       pass: /SILVER_P0_PREFETCH_SEL\s*=\s*[\s\S]*?\[data-iu-silver-home-quick-action\]/.test(boot),
-    },
-    {
-      id: "prefetch_sel_includes_home_ux",
-      pass: /SILVER_P0_PREFETCH_SEL\s*=\s*[\s\S]*?#iuSilverHomeInputUx/.test(boot),
     },
     {
       id: "click_hold_sel_includes_home_prefix",
@@ -45,16 +38,36 @@ function main() {
       pass: /SILVER_P0_CLICK_HOLD_SEL\s*=\s*[\s\S]*?\[data-iu-silver-home-quick-action\]/.test(boot),
     },
     {
-      id: "click_hold_uses_sel_var",
-      pass: /e\.target\.closest\(SILVER_P0_CLICK_HOLD_SEL\)/.test(boot),
+      id: "viewport_prefetch_armed",
+      pass: /function armViewportPrefetch\(/.test(boot) && /IntersectionObserver/.test(boot),
     },
     {
-      id: "click_hold_reclick_after_ensure",
-      pass: /ensure\(\)\.then\(function\s*\(\)\s*\{\s*try\s*\{\s*t\.click\(\);/.test(boot),
+      id: "pageshow_visibility_prefetch",
+      pass: /addEventListener\(\s*"pageshow"/.test(boot) && /visibilitychange/.test(boot),
+    },
+    {
+      id: "optimistic_prefix_apply",
+      pass: /function applyOptimisticPrefix\(/.test(boot) && /__iuSilverPrefixOptimisticCount/.test(boot),
+    },
+    {
+      id: "single_pending_finalize",
+      pass: /function finalizePendingTap\(/.test(boot) && /pendingGen/.test(boot) && /cancelPendingTap/.test(boot),
+    },
+    {
+      id: "prefix_finalize_no_reclick",
+      pass: /pending\.kind === "prefix"/.test(boot) && /__iuSilverSyncHomeUxEmptyState/.test(boot),
+    },
+    {
+      id: "reclick_path_for_non_prefix",
+      pass: /kind === "prefix" \? "prefix" : "reclick"/.test(boot) || /kind = prefixKey \? "prefix" : "reclick"/.test(boot),
     },
     {
       id: "pointerdown_prefetch_registered",
       pass: /addEventListener\(\s*"pointerdown"\s*,\s*onPrefetchEvent\s*,\s*true\s*\)/.test(boot),
+    },
+    {
+      id: "ready_marker_attr",
+      pass: /data-iu-silver-p0-ready/.test(boot),
     },
   ];
 
