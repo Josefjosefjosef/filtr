@@ -1,17 +1,17 @@
 {
-  "freezeId": "homecard-cta-flush-v1-20260801",
+  "freezeId": "homecard-cta-square-v1-20260801",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-01T11:15:00Z",
-  "note": "Freeze bump: Prehled dne banner + settings CTA flush (zero seam hero wrapper)",
+  "updatedAt": "2026-08-01T12:40:00Z",
+  "note": "Freeze bump: Prehled dne hero block layout + square-top CTA + contract guards",
   "files": {
-    "projects/index.html": "a2ee1718c58e490aae8c73a0708f11c1e104ae04559ac55e3211c9a64a762ce0",
+    "projects/index.html": "d3ceb62b1dd4d28eecfedc4c2aa4e6f1e0f5d5ca98a07c4d96e57708b00d4cc3",
     "assets/app.css": "5f4442f5fec55cf6ec94b2dbcdf469247b8b7fedc0b1629df148e6d9373a6963",
     "assets/app.js": "23b5c4b9eee014c10349fc701302d46bf1ab8b57a44e50b7feb9ee454e48db36",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "451d23b801c680341290d1e598092567d03345bd5e3bd397096cd988ae4ebdf5",
+    "sw.js": "86b151e0a38a37a059b09741921e9c4ada502795a85b8c8b15b1cf5655121380",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-01-homecard-cta-flush-v1\"",
+      "CACHE_VERSION = \"2026-08-01-homecard-cta-square-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",

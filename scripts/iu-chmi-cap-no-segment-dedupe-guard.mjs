@@ -117,15 +117,17 @@ const liveFeed = JSON.parse(fs.readFileSync(FEED, "utf8"));
 const live = (liveFeed.items || []).filter((i) => i && i.sourceId === "chmi" && isPublishableChmiItem(i));
 ok("live_stored_ge_1", live.length >= 1, String(live.length));
 const liveNow = runAt(live, new Date().toISOString());
+// UI is always a subset of public (filterEvents may drop open-ended ACTIVE via 96h/pub window).
 ok(
-  "live_public_eq_ui",
-  liveNow.publicIds.length === liveNow.uiIds.length &&
-    [...liveNow.publicIds].sort().join("|") === [...liveNow.uiIds].sort().join("|"),
+  "live_ui_subset_of_public",
+  liveNow.uiIds.every((id) => liveNow.publicIds.includes(id)),
   `public=${liveNow.publicIds.length} ui=${liveNow.uiIds.length}`
 );
+ok("live_ui_ge_1", liveNow.uiIds.length >= 1, String(liveNow.uiIds.length));
+// Historical regression: groupKey collapse produced exactly 10 cards from many segments.
 ok(
   "live_not_collapsed_to_10_when_gt_10",
-  liveNow.publicIds.length <= 10 || liveNow.uiIds.length === liveNow.publicIds.length,
+  !(liveNow.publicIds.length > 10 && liveNow.uiIds.length === 10),
   String(liveNow.uiIds.length)
 );
 

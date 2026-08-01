@@ -22,7 +22,8 @@
 // 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
 // 2026-07-30: Prehled dne banner + HomeCard FOUC fix — bust shell so cutover-first HTML/CSS reach clients
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
-const CACHE_VERSION = "2026-08-01-homecard-cta-flush-v1";
+// 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
+const CACHE_VERSION = "2026-08-01-homecard-cta-square-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

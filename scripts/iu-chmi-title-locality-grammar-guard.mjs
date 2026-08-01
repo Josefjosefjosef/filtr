@@ -22,8 +22,8 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "info-system-v6-homecard-cta-flush-20260801";
-const SW_VER = "2026-08-01-homecard-cta-flush-v1";
+const CACHE_BUST = "info-system-v6-homecard-cta-square-20260801";
+const SW_VER = "2026-08-01-homecard-cta-square-v1";
 
 const fails = [];
 function ok(id, cond, detail) {

@@ -450,20 +450,26 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   grid-template-columns: none !important;
 }
 
-/* Banner + settings CTA as one flush visual unit (no flex gap between them). */
+/* Banner + settings CTA as one flush visual unit (no flex gap between them).
+   Use block layout (not nested flex) so width:100% + aspect-ratio images cannot
+   collapse to 0 height inside a flex formatting context on mobile WebKit. */
 .iuPd__hero {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: block;
   margin: 0;
   padding: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  overflow: visible;
+  line-height: normal;
+  font-size: inherit;
+  visibility: visible;
+  content-visibility: visible;
 }
 
 .iuPd__top {
+  display: block;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -479,15 +485,19 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
 
 /* InfoUzel day-overview banner (middle feed, above settings CTA) */
 .iuPd__banner {
+  display: block;
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
   line-height: 0;
   box-sizing: border-box;
+  overflow: visible;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
+  visibility: visible;
+  opacity: 1;
 }
 
 .iuPd__bannerImg {
@@ -495,12 +505,22 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   width: 100%;
   max-width: 100%;
   height: auto;
+  min-height: 48px;
   object-fit: contain;
   aspect-ratio: 1661 / 616;
   margin: 0;
   padding: 0;
-  vertical-align: top;
   border: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Flush join: square top edge against banner; keep rounded bottom ends. */
+.iuPd__hero .iuPdBtn--settings {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 999px;
+  border-bottom-right-radius: 999px;
 }
 
 /* Hide legacy commercial article timeline on cutover (P┼Öehled dne is the product). */
@@ -838,6 +858,7 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   border-color: #15803d;
   color: #fff;
 }
+/* Hero CTA top radius is forced square in .iuPd__hero .iuPdBtn--settings above. */
 .iuPdBtn--settings:hover,
 .iuPdBtn--settings:focus-visible {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
