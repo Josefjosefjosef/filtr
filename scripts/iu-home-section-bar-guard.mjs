@@ -58,7 +58,7 @@ function staticGate() {
   );
   must(!/body:not\(\.iu-home\)\s+\.iuHomeSectionBar/.test(index), "static:no_iu_home_gate");
   must(/function homeSectionBarHtml\(/.test(ui), "static:ui_helper");
-  must(/homeSectionBarHtml\("MŮJ PŘEHLED DNE"\)/.test(ui), "static:ui_shell_bar");
+  must(/homeSectionBarHtml\("MŮJ PŘEHLED DNE",\s*"muj-prehled-dne"\)/.test(ui), "static:ui_shell_bar");
   must(/iuHomeSectionUnit--info/.test(mobileCss), "static:mobile_unit_css");
   must(/@media \(min-width:\s*1025px\)[\s\S]*\.iuHomeSectionBar/.test(index), "static:pc_hide");
 }
@@ -291,6 +291,40 @@ async function runPlaywright() {
               prefix + ":parcel_top_flush:" + m.parcelBarTopFlush
             );
             must(m.widthParcel != null && m.widthParcel <= 2, prefix + ":width_parcel:" + m.widthParcel);
+          }
+        }
+
+        // Dark/evening: same brand blue + white text, no light seams on bar itself.
+        if (vp.name === "mobile" || vp.name === "tablet") {
+          await page.evaluate(() => {
+            const root = document.documentElement;
+            root.setAttribute("data-iu-daypart", "evening");
+            root.setAttribute("data-iu-silver-welcome-paint", "evening");
+            ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"].forEach((c) =>
+              root.classList.remove(c)
+            );
+            root.classList.add("iu-time-evening");
+          });
+          await page.waitForTimeout(200);
+          const night = await measureBars(page);
+          const nightActive = vp.expectParcel ? [night.info, night.parcel, night.pd] : [night.info, night.pd];
+          if (nightActive.every(Boolean)) {
+            must(
+              nightActive.every((b) => b.bg === nightActive[0].bg),
+              prefix + ":evening_bg_equal"
+            );
+            must(nearBlue(parseRgb(nightActive[0].bg)), prefix + ":evening_bg_blue:" + nightActive[0].bg);
+            must(
+              nightActive.every((b) => {
+                const rgb = parseRgb(b.color);
+                return rgb && rgb.r >= 240 && rgb.g >= 240 && rgb.b >= 240;
+              }),
+              prefix + ":evening_text_white"
+            );
+            must(night.gapInfo != null && Math.abs(night.gapInfo) <= 0.5, prefix + ":evening_gap_info:" + night.gapInfo);
+            must(night.gapPd != null && Math.abs(night.gapPd) <= 0.5, prefix + ":evening_gap_pd:" + night.gapPd);
+          } else {
+            fails.push(prefix + ":evening_bars_missing");
           }
         }
 

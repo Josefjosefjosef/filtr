@@ -968,9 +968,10 @@ function bannerHtml() {
   );
 }
 
-function homeSectionBarHtml(label) {
+function homeSectionBarHtml(label, barId) {
+  const id = String(barId || "1");
   return (
-    `<div class="iuHomeSectionBar" data-iu-home-section-bar="1" aria-hidden="true">` +
+    `<div class="iuHomeSectionBar" data-iu-home-section-bar="${id}" aria-hidden="true">` +
     String(label || "") +
     `</div>`
   );
@@ -981,7 +982,7 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
-    homeSectionBarHtml("MŮJ PŘEHLED DNE") +
+    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
     `<div class="iuPd__top">` +
@@ -1569,7 +1570,7 @@ async function boot() {
   root.innerHTML =
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
-    homeSectionBarHtml("MŮJ PŘEHLED DNE") +
+    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
     `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
