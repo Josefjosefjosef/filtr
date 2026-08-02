@@ -6,8 +6,33 @@ const { devices } = require("playwright");
 const DEFAULT_URL = "http://127.0.0.1:8080/projects/";
 const FAST_REACTION_MAX_MS = 250;
 const STRESS_ENGINE_DELAY_MS = 2000;
-const STRESS_OPTIMISTIC_MAX_MS = 250;
+/**
+ * Stress timing contract (in-page pointerdown → optimistic value):
+ * - Soft limit applies to the median of cold samples (product “snappy” bar).
+ * - Hard ceiling catches systematic slowness / broken optimistic path.
+ * - Adaptive sampling absorbs a single CI scheduler outlier without masking
+ *   real failures (functional checks always fail-fast).
+ *
+ * Legacy single-sample Playwright Date.now() metric (STRESS_OPTIMISTIC_MAX_MS)
+ * inflated ~150ms+ via IPC/polling and flaked at 282–294ms in CI while the
+ * in-page reaction stayed ~20–50ms. Kept as alias of the soft limit for logs.
+ */
+const STRESS_OPTIMISTIC_SOFT_MS = 250;
+const STRESS_OPTIMISTIC_HARD_MS = 1000;
+const STRESS_OPTIMISTIC_MAX_MS = STRESS_OPTIMISTIC_SOFT_MS;
+const STRESS_TIMING_SAMPLES_MAX = 3;
 const STRESS_FINAL_MAX_MS = 4500;
+
+function timingStats(msArr) {
+  const a = (msArr || []).map((n) => Number(n)).filter((n) => Number.isFinite(n) && n >= 0).sort((x, y) => x - y);
+  const n = a.length;
+  if (!n) {
+    return { n: 0, min: null, median: null, p90: null, max: null, samples: [] };
+  }
+  const pct = (p) => a[Math.min(n - 1, Math.max(0, Math.ceil((p / 100) * n) - 1))];
+  const median = n % 2 ? a[(n - 1) >> 1] : Math.round((a[n / 2 - 1] + a[n / 2]) / 2);
+  return { n, min: a[0], median, p90: pct(90), max: a[n - 1], samples: a.slice() };
+}
 
 const PREFIX_CASES = [
   { key: "calendar", expected: "Do kalendáře ", label: "Do kalendáře" },
@@ -246,7 +271,10 @@ module.exports = {
   DEFAULT_URL,
   FAST_REACTION_MAX_MS,
   STRESS_ENGINE_DELAY_MS,
+  STRESS_OPTIMISTIC_SOFT_MS,
+  STRESS_OPTIMISTIC_HARD_MS,
   STRESS_OPTIMISTIC_MAX_MS,
+  STRESS_TIMING_SAMPLES_MAX,
   STRESS_FINAL_MAX_MS,
   PREFIX_CASES,
   VIEWPORTS,
@@ -264,4 +292,5 @@ module.exports = {
   readCounters,
   firstTapPrefixMeasured,
   firstTapPrefixPlaywright,
+  timingStats,
 };
