@@ -977,6 +977,11 @@ function homeSectionBarHtml(label, barId) {
   );
 }
 
+/** Green hero CTA under banner — label centered, › as navigation affordance (right). */
+function settingsCtaInnerHtml() {
+  return `<span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span>`;
+}
+
 function homeShellHtml(listHtml, countLabel, moreHtml) {
   const mode = state.viewMode;
   return (
@@ -986,7 +991,9 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
     `<div class="iuPd__top">` +
-    `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings" data-testid="prehled-dne-settings-cta">Můj přehled / Nastavení</button>` +
+    `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings" data-testid="prehled-dne-settings-cta">` +
+    settingsCtaInnerHtml() +
+    `</button>` +
     `</div>` +
     `</div>` +
     `</div>` +
@@ -1573,7 +1580,9 @@ async function boot() {
     homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
-    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
+    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">` +
+    settingsCtaInnerHtml() +
+    `</div></div>` +
     `</div>` +
     `</div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
