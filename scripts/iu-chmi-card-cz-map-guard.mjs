@@ -88,8 +88,11 @@ function staticGate() {
   ok("css_focus_no_rect_outline", /\.iuPrehledDne__czMap:focus-visible[\s\S]*?outline:\s*none/.test(css), "focus outline");
   ok("css_focus_silhouette", /focus-visible[\s\S]*?drop-shadow/.test(css), "focus glow");
 
-  ok("index_css_bust", /iu-prehled-dne-v1\.css\?v=chmi-cz-map-click-v4-/.test(index), "css ver");
-  ok("index_js_bust", /iu-prehled-dne-ui-v1\.js\?v=chmi-cz-map-click-v4-/.test(index), "js ver");
+  // Keep in lockstep with assets/iu-prehled-dne-ui-v1.js CACHE_BUST (CZ map + current PD UI).
+  const CACHE_BUST = "future-validfrom-red-dark-v1-20260802";
+  ok("index_css_bust", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "css ver");
+  ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "js ver");
+  ok("ui_cache_bust", ui.includes('CACHE_BUST = "' + CACHE_BUST + '"') || ui.includes(CACHE_BUST), "ui ver");
   ok(
     "css_map_scoped_to_chmi_card",
     /\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMap\s*\{/.test(css) &&

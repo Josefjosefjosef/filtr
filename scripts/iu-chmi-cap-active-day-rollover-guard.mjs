@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "chmi-cz-map-click-v4-20260801";
+const CACHE_BUST = "future-validfrom-red-dark-v1-20260802";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -134,6 +134,7 @@ function staticGate() {
   ok("ui_issued_split", /iuPrehledDne__issuedWord/.test(ui) && /iuPrehledDne__issuedDate/.test(ui), "issued split");
   ok("ui_valid_from", /iuPrehledDne__validFrom/.test(ui), "validFrom ui");
   ok("ui_valid_from_word", /Platí od|platnost od/.test(ui) || /secondaryValidFromLabel/.test(ui), "validFrom label");
+  ok("ui_future_class", /is-futureWarning/.test(ui) && /timeline\.isFutureWarning/.test(ui), "future class");
   ok("ui_issued_aktualizovano", /Aktualizováno|aktualizováno/i.test(ui), "aktualizovano parse");
   ok("ui_midnight_timer", /scheduleTimelineBoundaryRefresh/.test(ui), "timer");
   ok("ui_visibility", /visibilitychange/.test(ui), "vis");
@@ -141,6 +142,11 @@ function staticGate() {
   ok("ui_rejects_cap_xml_click", /Never open CAP XML/.test(ui), "xml");
   ok("css_issued", /\.iuPrehledDne__issued/.test(css), "css issued");
   ok("css_valid_from", /\.iuPrehledDne__validFrom/.test(css), "css validFrom");
+  ok("css_future_red", /\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css) && /#dc2626/.test(css), "future red");
+  ok("css_future_red_parts", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromDate/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromTime/.test(css), "future red parts");
+  ok("css_evening_timeline", /html\.iu-time-evening\s+\.iuPrehledDne__axis::before/.test(css), "evening axis");
+  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPdToggle/.test(css), "evening toggle");
+  ok("css_evening_card", /html\.iu-time-evening\s+\.iuPrehledDne__card/.test(css), "evening card");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
   ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust index");

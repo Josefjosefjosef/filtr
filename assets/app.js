@@ -10340,6 +10340,8 @@ function buildVideoAsArticleCard(it) {
         };
         const addCls = map[k];
         if (addCls) rootEl.classList.add(addCls);
+        /* Keep paint attr in lockstep with visual class (PC evening→afternoon remap). */
+        try{ rootEl.setAttribute("data-iu-silver-welcome-paint", k); }catch{}
       }catch{}
     }
     function applyVariantClass(daypart){
