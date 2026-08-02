@@ -11,9 +11,9 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
+const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802";
 const JS_BUSTS = [
-  "ds-mobile-overlay-nav-flush-v1-20260713",
+  "bottom-nav-keyboard-hide-v1-20260802",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707",
   "legal-docs-hub-header-single-row-v1-20260707",
@@ -41,12 +41,16 @@ function staticGate() {
 
   const checks = [
     {
-      id: "bottom_nav_pin_init",
-      pass: /function iuMojeSluzbyFormBottomNavKeyboardPinInit\(\)/.test(app),
+      id: "bottom_nav_keyboard_hide_init",
+      pass: /function iuMobileBottomNavKeyboardHideInit\(\)/.test(app),
     },
     {
-      id: "bottom_nav_pin_scheduled",
-      pass: /iuMojeSluzbyFormBottomNavKeyboardPinInit\(\)/.test(app),
+      id: "bottom_nav_keyboard_hide_scheduled",
+      pass: /iuMobileBottomNavKeyboardHideInit\(\)/.test(app),
+    },
+    {
+      id: "bottom_nav_pin_alias",
+      pass: /function iuMojeSluzbyFormBottomNavKeyboardPinInit\(\)/.test(app),
     },
     {
       id: "ds_add_no_input_focus",

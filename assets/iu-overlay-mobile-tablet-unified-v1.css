@@ -22,6 +22,34 @@
     --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
 
+  /* P0: keyboard open — hide bottom nav + collapse reserved band so overlays/content reclaim space. */
+  html.iu-keyboard-open {
+    --iu-mobile-bottom-nav-h: 0px;
+    --iu-mobile-bottom-safe: 0px;
+    --iu-mobile-bottom-nav-total-h: 0px;
+    --bottom-nav-height: 0px;
+    --iu-mobile-bottom-nav-safe-space: 0px;
+    --iu-tool-overlay-panel-bottom: 0px;
+    --iu-calendar-action-bar-nav-gap: 0px;
+  }
+
+  html.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav,
+  body.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+    -webkit-transform: none !important;
+    transform: none !important;
+  }
+
   /* —— Part 0: Banka / Bakaláři / Zdravotní pojišťovna / Datové schránky — flush top, no bleed —— */
   body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen)
     #iuQuickFeed:is(.iu-banking-quickfeed-root, .iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root):not([hidden]) {

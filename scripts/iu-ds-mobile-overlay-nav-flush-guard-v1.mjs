@@ -19,7 +19,7 @@ const RESTORE = path.join(REPO, "assets", "iu-mindmenu-bottom-nav-restore-v1.css
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8899", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713";
+const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
