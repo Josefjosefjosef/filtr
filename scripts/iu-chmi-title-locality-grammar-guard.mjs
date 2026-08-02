@@ -22,7 +22,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "cz-map-vis-80pct-v1-20260802";
+const CACHE_BUST = "obec-orp-filter-v1-20260802";
 const SW_VER = "2026-08-01-homecard-cta-square-v1";
 
 const fails = [];

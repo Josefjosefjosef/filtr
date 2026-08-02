@@ -3,8 +3,12 @@
  * Backend prepares datasets; frontend is local-first and never fetches source sites.
  * V4 data model kept; V5 forces chronological feed + prefs/views migration.
  */
-const IU_INFO_SYSTEM_VERSION = "5.0.0";
+const IU_INFO_SYSTEM_VERSION = "5.0.1";
 const LS_SCHEMA_VERSION = 6;
+/** Max concrete obce/města selectable in locality filter (not unique ORP count). */
+const MAX_CITY_LOCALITIES = 20;
+/** CHMI CAP Praha alias observed in geocodes (1100) vs ČSÚ CISORP (1000). */
+const ORP_CODE_ALIASES = { "1100": "1000" };
 const LS_SCHEMA = "iu.infoEvents.schema.v1";
 const LS_READ = "iu.infoEvents.read.v1";
 const LS_SAVED = "iu.infoEvents.saved.v1";
@@ -244,7 +248,10 @@ function sanitizeUserPrefs(raw) {
   // Always chronological (Krok 14)
   merged.sortMode = "nejnovejsi";
   if (!Array.isArray(merged.localities)) merged.localities = [];
+  merged.localities = normalizeLocalitiesList(merged.localities);
   merged.localityQuery = String(merged.localityQuery || "");
+  const cities = merged.localities.filter((loc) => loc && String(loc.level || "") === "mesto");
+  if (cities.length) merged.homeObec = String(cities[0].name || merged.homeObec || "");
   return merged;
 }
 
@@ -731,6 +738,75 @@ function setScrollState(state) {
   writeJsonObj(LS_SCROLL, state || { viewId: "", y: 0 });
 }
 
+function normalizeOrpCode(raw) {
+  let code = String(raw || "")
+    .trim()
+    .replace(/^orp:/i, "");
+  if (!code) return "";
+  if (ORP_CODE_ALIASES[code]) code = ORP_CODE_ALIASES[code];
+  return code;
+}
+
+/**
+ * Normalize localities: stable city order, dedupe by obec id, cap at MAX_CITY_LOCALITIES.
+ * Does not invent ORP mapping for unknown obce.
+ */
+function normalizeLocalitiesList(raw) {
+  const out = [];
+  const seenCityIds = new Set();
+  const seenCityNames = new Set();
+  const seenKraj = new Set();
+  const seenOkres = new Set();
+  let cityCount = 0;
+  for (const loc of raw || []) {
+    if (loc == null) continue;
+    if (typeof loc === "string") {
+      const name = String(loc).trim();
+      if (!name) continue;
+      const key = foldLocName(name);
+      if (!key || seenCityNames.has(key) || cityCount >= MAX_CITY_LOCALITIES) continue;
+      seenCityNames.add(key);
+      out.push({ name, level: "mesto" });
+      cityCount += 1;
+      continue;
+    }
+    const name = String(loc.name || "").trim();
+    if (!name) continue;
+    const level = String(loc.level || "mesto").toLowerCase();
+    if (level === "kraj") {
+      const key = foldLocName(name);
+      if (seenKraj.has(key)) continue;
+      seenKraj.add(key);
+      out.push({ name, level: "kraj" });
+      continue;
+    }
+    if (level === "okres") {
+      const key = foldLocName(name);
+      if (seenOkres.has(key)) continue;
+      seenOkres.add(key);
+      out.push({ name, level: "okres" });
+      continue;
+    }
+    if (cityCount >= MAX_CITY_LOCALITIES) continue;
+    const id = String(loc.id || loc.obecId || "").trim();
+    const orpCode = normalizeOrpCode(loc.orpCode || loc.orp || "");
+    if (id) {
+      if (seenCityIds.has(id)) continue;
+      seenCityIds.add(id);
+    } else {
+      const key = foldLocName(name);
+      if (seenCityNames.has(key)) continue;
+      seenCityNames.add(key);
+    }
+    const entry = { name, level: "mesto" };
+    if (id) entry.id = id;
+    if (orpCode) entry.orpCode = orpCode;
+    out.push(entry);
+    cityCount += 1;
+  }
+  return out;
+}
+
 function regionNeedlesFromPrefs(f) {
   const out = [];
   for (const x of [f.homeKraj, f.homeOkres, f.homeObec]) {
@@ -782,16 +858,34 @@ function regionMatches(ev, needles) {
 
 function localitySuggest(query, localities) {
   const q = String(query || "").trim().toLowerCase();
-  if (!q || q.length < 2) return [];
+  const qFold = foldLocName(q);
+  if (!qFold || qFold.length < 2) return [];
   const list = Array.isArray(localities) ? localities : [];
   const out = [];
   for (const loc of list) {
-    const name = String(loc && (loc.name || loc.label || loc) ? loc.name || loc.label || loc : "").toLowerCase();
+    if (!loc) continue;
+    const name = String(loc.name || loc.label || loc.n || (typeof loc === "string" ? loc : "")).trim();
     if (!name) continue;
-    if (name.includes(q)) {
-      out.push(typeof loc === "string" ? { name: loc } : loc);
-      if (out.length >= 10) break;
+    const nameFold = foldLocName(name);
+    const okFold = foldLocName(loc.okresName || loc.ok || "");
+    if (!nameFold.includes(qFold) && !okFold.includes(qFold)) continue;
+    const entry =
+      typeof loc === "string"
+        ? { name: loc, level: "mesto" }
+        : {
+            name,
+            level: "mesto",
+            id: loc.id || loc.obecId || "",
+            orpCode: normalizeOrpCode(loc.orpCode || loc.orp || ""),
+            orpName: loc.orpName || loc.orpN || "",
+            okresName: loc.okresName || loc.ok || "",
+            label: loc.label || "",
+          };
+    if (!entry.label) {
+      entry.label = entry.okresName ? name + " (" + entry.okresName + ")" : name;
     }
+    out.push(entry);
+    if (out.length >= 10) break;
   }
   return out;
 }
@@ -828,17 +922,47 @@ function uniqStableNames(list) {
 
 /**
  * Parse active locality filter from prefs (cities / okres / kraj).
- * Does not mutate prefs.
+ * Cities keep selection order + optional id/orpCode. Does not mutate prefs.
  */
 function parseActiveLocationFilter(filter) {
   const f = filter || {};
   const cities = [];
   const okresy = [];
   const kraje = [];
+  const seenCityIds = new Set();
+  const seenCityNames = new Set();
+  const pushCity = (raw) => {
+    if (raw == null) return;
+    if (typeof raw === "string") {
+      const name = String(raw).trim();
+      if (!name) return;
+      const key = foldLocName(name);
+      if (seenCityNames.has(key) || cities.length >= MAX_CITY_LOCALITIES) return;
+      seenCityNames.add(key);
+      cities.push({ name });
+      return;
+    }
+    const name = String(raw.name || "").trim();
+    if (!name) return;
+    const id = String(raw.id || raw.obecId || "").trim();
+    const orpCode = normalizeOrpCode(raw.orpCode || raw.orp || "");
+    if (id) {
+      if (seenCityIds.has(id) || cities.length >= MAX_CITY_LOCALITIES) return;
+      seenCityIds.add(id);
+    } else {
+      const key = foldLocName(name);
+      if (seenCityNames.has(key) || cities.length >= MAX_CITY_LOCALITIES) return;
+      seenCityNames.add(key);
+    }
+    const entry = { name };
+    if (id) entry.id = id;
+    if (orpCode) entry.orpCode = orpCode;
+    cities.push(entry);
+  };
   for (const loc of f.localities || []) {
     if (!loc) continue;
     if (typeof loc === "string") {
-      cities.push(loc);
+      pushCity(loc);
       continue;
     }
     const name = String(loc.name || "").trim();
@@ -846,14 +970,14 @@ function parseActiveLocationFilter(filter) {
     const level = String(loc.level || "").toLowerCase();
     if (level === "kraj") kraje.push(name);
     else if (level === "okres") okresy.push(name);
-    else cities.push(name);
+    else pushCity(loc);
   }
-  if (f.homeObec) cities.push(String(f.homeObec));
+  if (f.homeObec) pushCity(String(f.homeObec));
   if (f.homeOkres) okresy.push(String(f.homeOkres));
   if (f.homeKraj) kraje.push(String(f.homeKraj));
   const query = String(f.localityQuery || "").trim();
   return {
-    cities: uniqStableNames(cities),
+    cities,
     okresy: uniqStableNames(okresy),
     kraje: uniqStableNames(kraje),
     query,
@@ -867,6 +991,61 @@ function isWholeCrLocationFilter(active) {
 function warningGeoLinks(ev) {
   const links = ev && ev.capV2 && ev.capV2.geo && Array.isArray(ev.capV2.geo.links) ? ev.capV2.geo.links : [];
   return links.filter(Boolean);
+}
+
+function warningOrpCodeSet(ev) {
+  const out = new Set();
+  const region = ev && ev.region ? ev.region : null;
+  if (region) {
+    for (const raw of region.orpCodes || []) {
+      const c = normalizeOrpCode(raw);
+      if (c) out.add(c);
+    }
+    for (const raw of region.orpIds || []) {
+      const c = normalizeOrpCode(raw);
+      if (c) out.add(c);
+    }
+  }
+  for (const link of warningGeoLinks(ev)) {
+    const c = normalizeOrpCode((link && (link.orpCode || link.orpId)) || "");
+    if (c) out.add(c);
+  }
+  return out;
+}
+
+function uniqueSelectedOrpCodes(cities) {
+  const out = [];
+  const seen = new Set();
+  for (const city of cities || []) {
+    const c = normalizeOrpCode(city && city.orpCode);
+    if (!c || seen.has(c)) continue;
+    seen.add(c);
+    out.push(c);
+  }
+  return out;
+}
+
+function cityMatchesWarning(city, warning, links, orpSet) {
+  if (!city) return false;
+  const code = normalizeOrpCode(city.orpCode);
+  if (code) {
+    if (orpSet.has(code)) return true;
+    return false;
+  }
+  const name = String(city.name || "").trim();
+  if (!name) return false;
+  // Legacy / ORP-seat name only — never invent obec→ORP from free text.
+  return (links || []).some((l) => locNamesEqual(l.orpName, name));
+}
+
+function relevantSelectedCities(warning, active) {
+  const links = warningGeoLinks(warning);
+  const orpSet = warningOrpCodeSet(warning);
+  const out = [];
+  for (const city of (active && active.cities) || []) {
+    if (cityMatchesWarning(city, warning, links, orpSet)) out.push(city);
+  }
+  return out;
 }
 
 function sortLinksByOrpName(links) {
@@ -884,15 +1063,77 @@ function linkMatchesNeedle(link, needle) {
   );
 }
 
+function cityNameOf(city) {
+  if (!city) return "";
+  if (typeof city === "string") return String(city).trim();
+  return String(city.name || "").trim();
+}
+
 function intersectWarningLinks(links, active) {
   if (isWholeCrLocationFilter(active)) return links.slice();
+  const orpFromCities = new Set(uniqueSelectedOrpCodes(active.cities));
   return links.filter((link) => {
-    if (active.cities.some((c) => locNamesEqual(link.orpName, c) || locNamesEqual(link.okresName, c))) return true;
+    const linkCode = normalizeOrpCode((link && (link.orpCode || link.orpId)) || "");
+    if (linkCode && orpFromCities.has(linkCode)) return true;
+    if (
+      (active.cities || []).some((c) => {
+        const name = cityNameOf(c);
+        return name && (locNamesEqual(link.orpName, name) || locNamesEqual(link.okresName, name));
+      })
+    ) {
+      return true;
+    }
     if (active.okresy.some((o) => locNamesEqual(link.okresName, o) || locNamesEqual(link.orpName, o))) return true;
     if (active.kraje.some((k) => locNamesEqual(link.krajName, k))) return true;
     if (active.query && linkMatchesNeedle(link, active.query)) return true;
     return false;
   });
+}
+
+/**
+ * Location filter match for feed cards.
+ * City obec → ORP code intersection; never false-positive unmapped villages via text.
+ */
+function eventMatchesLocationFilter(ev, filter) {
+  const f = filter || {};
+  const active = parseActiveLocationFilter(f);
+  const needles = regionNeedlesFromPrefs(f);
+  if (isWholeCrLocationFilter(active) && !needles.length) return true;
+
+  const links = warningGeoLinks(ev);
+  const orpSet = warningOrpCodeSet(ev);
+  const hasStructuredGeo = orpSet.size > 0 || links.length > 0;
+
+  if (active.cities.length) {
+    for (const city of active.cities) {
+      if (cityMatchesWarning(city, ev, links, orpSet)) return true;
+    }
+  }
+  if (active.okresy.length || active.kraje.length || active.query) {
+    if (links.length && intersectWarningLinks(links, { ...active, cities: [] }).length) return true;
+    const textNeedles = [...active.okresy, ...active.kraje, active.query]
+      .filter(Boolean)
+      .map((s) => String(s).toLowerCase());
+    if (textNeedles.length && regionMatches(ev, textNeedles)) return true;
+  }
+  if (!active.cities.length && needles.length && regionMatches(ev, needles)) return true;
+
+  const mappedCities = active.cities.filter((c) => normalizeOrpCode(c.orpCode));
+  if (mappedCities.length && hasStructuredGeo) {
+    try {
+      const missing = active.cities.filter((c) => !normalizeOrpCode(c.orpCode));
+      for (const c of missing) {
+        console.warn("[IU] obec_without_orp_mapping", {
+          id: c.id || "",
+          name: c.name || "",
+          reason: "missing_orp_code",
+        });
+      }
+    } catch (_) {}
+    return false;
+  }
+  if (needles.length) return regionMatches(ev, needles);
+  return true;
 }
 
 /** Czech inflection for “N dalších oblastí” (public unit = unique ORP). */
@@ -919,8 +1160,9 @@ function pickPrimaryLocalityName(links, active) {
   if (!sorted.length) return "";
 
   for (const city of active.cities || []) {
-    const hit = sorted.find((l) => locNamesEqual(l.orpName, city));
-    if (hit) return String(city);
+    const name = cityNameOf(city);
+    const hit = sorted.find((l) => locNamesEqual(l.orpName, name));
+    if (hit) return name;
   }
   for (const okres of active.okresy || []) {
     const center = sorted.find((l) => locNamesEqual(l.okresName, okres) && locNamesEqual(l.orpName, okres));
@@ -964,17 +1206,17 @@ function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
     return globalSummary;
   }
 
-  const onlySingleCity =
-    active.cities.length === 1 && !active.okresy.length && !active.kraje.length && !active.query;
-  const onlyCities =
-    active.cities.length > 0 && !active.okresy.length && !active.kraje.length && !active.query;
+  const relevantCities = relevantSelectedCities(warning, active);
+  if (relevantCities.length) {
+    // Presentation only: all relevant selected obce in selection order.
+    // Extra count stays global unique-ORP remainder (not recalculated from obec count).
+    const primary = relevantCities.map((c) => cityNameOf(c)).filter(Boolean).join(", ");
+    if (!primary) return "";
+    return formatLocationLabel(primary, Math.max(0, links.length - 1), "legacyMulti");
+  }
 
-  if (onlySingleCity) {
-    const city = active.cities[0];
-    const hit = links.some((l) => locNamesEqual(l.orpName, city));
-    if (!hit) return "";
-    // Approved: city-first, remaining count may still reflect the whole warning.
-    return formatLocationLabel(city, links.length - 1, "legacyMulti");
+  if (active.cities.length && !active.okresy.length && !active.kraje.length && !active.query) {
+    return "";
   }
 
   const scoped = intersectWarningLinks(links, active);
@@ -982,7 +1224,7 @@ function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
 
   const primary = pickPrimaryLocalityName(scoped, active);
   if (!primary) return "";
-  return formatLocationLabel(primary, scoped.length - 1, onlyCities ? "legacyMulti" : "czech");
+  return formatLocationLabel(primary, scoped.length - 1, "czech");
 }
 
 /**
@@ -1565,10 +1807,17 @@ function filterEvents(events, filters, opts) {
       const inst = institutionOf(ev).toLowerCase();
       if (!instNeedles.some((x) => inst.includes(x) || x.includes(inst))) continue;
     }
-    if (f.myRegionOnly && homeNeedles.length && !regionMatches(ev, homeNeedles)) continue;
-    if (f.localityQuery || (f.localities && f.localities.length)) {
-      const needles = regionNeedlesFromPrefs(f);
-      if (needles.length && !regionMatches(ev, needles)) continue;
+    if (
+      f.myRegionOnly ||
+      f.localityQuery ||
+      (f.localities && f.localities.length) ||
+      f.homeObec ||
+      f.homeOkres ||
+      f.homeKraj
+    ) {
+      if (!eventMatchesLocationFilter(ev, f)) continue;
+    } else if (homeNeedles.length && f.favoritesOnly) {
+      // favorites path still uses regionMatches below
     }
     // Public feed: active + published-future CHMI CAP warnings (no ended/Cancel/expired).
     if (isChmiCapWarning(ev) && !isPublicFeedChmiWarning(ev, now)) continue;
@@ -1754,6 +2003,12 @@ const IUInfoSystem = {
   getFilteredWarningLocationLabel,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
+  eventMatchesLocationFilter,
+  normalizeLocalitiesList,
+  normalizeOrpCode,
+  warningOrpCodeSet,
+  relevantSelectedCities,
+  MAX_CITY_LOCALITIES,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,
@@ -1818,6 +2073,12 @@ export {
   getFilteredWarningLocationLabel,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
+  eventMatchesLocationFilter,
+  normalizeLocalitiesList,
+  normalizeOrpCode,
+  warningOrpCodeSet,
+  relevantSelectedCities,
+  MAX_CITY_LOCALITIES,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,

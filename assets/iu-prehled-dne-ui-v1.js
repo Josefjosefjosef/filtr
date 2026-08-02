@@ -29,10 +29,13 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=cz-map-vis-80pct-v1-20260802";
+  MAX_CITY_LOCALITIES,
+} from "./iu-info-system-core-v1.js?v=obec-orp-filter-v1-20260802";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "cz-map-vis-80pct-v1-20260802";
+const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CITY_LIMIT_MSG =
+  "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
 let czMapSpritePromise = null;
 const NONE_SENTINEL = "__none__";
@@ -603,22 +606,106 @@ function checkRow(name, value, label, checked, attrs, indeterminate) {
 }
 
 function asLocList(draft, level) {
+  if (level === "mesto") return asCityEntries(draft).map((c) => c.name);
   const out = [];
   for (const loc of draft.localities || []) {
     if (!loc) continue;
-    if (typeof loc === "string") {
-      if (level === "mesto") out.push(loc);
-      continue;
-    }
+    if (typeof loc === "string") continue;
     if (String(loc.level || "") === level && loc.name) out.push(String(loc.name));
   }
   if (level === "kraj" && draft.homeKraj) out.push(String(draft.homeKraj));
   if (level === "okres" && draft.homeOkres) out.push(String(draft.homeOkres));
-  if (level === "mesto" && draft.homeObec) out.push(String(draft.homeObec));
   return Array.from(new Set(out));
 }
 
+function asCityEntries(draft) {
+  const out = [];
+  const seenIds = new Set();
+  const seenNames = new Set();
+  for (const loc of draft.localities || []) {
+    if (!loc) continue;
+    if (typeof loc === "string") {
+      const name = String(loc).trim();
+      if (!name) continue;
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+      out.push({ name, level: "mesto" });
+      continue;
+    }
+    const level = String(loc.level || "mesto").toLowerCase();
+    if (level === "kraj" || level === "okres") continue;
+    const name = String(loc.name || "").trim();
+    if (!name) continue;
+    const id = String(loc.id || "").trim();
+    if (id) {
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+    } else {
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+    }
+    const entry = { name, level: "mesto" };
+    if (id) entry.id = id;
+    if (loc.orpCode) entry.orpCode = String(loc.orpCode);
+    out.push(entry);
+  }
+  if (draft.homeObec && !out.length) {
+    out.push({ name: String(draft.homeObec), level: "mesto" });
+  }
+  return out.slice(0, MAX_CITY_LOCALITIES || 20);
+}
+
+function setCityList(draft, cities) {
+  const others = (draft.localities || []).filter((loc) => {
+    if (!loc || typeof loc === "string") return false;
+    const level = String(loc.level || "").toLowerCase();
+    return level === "kraj" || level === "okres";
+  });
+  const next = [];
+  const seenIds = new Set();
+  const seenNames = new Set();
+  for (const c of cities || []) {
+    if (!c) continue;
+    const name = String(typeof c === "string" ? c : c.name || "").trim();
+    if (!name) continue;
+    const id = String((typeof c === "object" && c.id) || "").trim();
+    const orpCode = String((typeof c === "object" && (c.orpCode || c.orp)) || "").trim();
+    if (id) {
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+    } else {
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+    }
+    if (next.length >= (MAX_CITY_LOCALITIES || 20)) break;
+    const entry = { name, level: "mesto" };
+    if (id) entry.id = id;
+    if (orpCode) entry.orpCode = orpCode;
+    next.push(entry);
+  }
+  draft.localities = others.concat(next);
+  draft.homeObec = next[0] ? next[0].name : "";
+  draft.myRegionOnly =
+    next.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
+  if (!next.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length) {
+    draft.myRegionOnly = false;
+    draft.homeKraj = draft.homeKraj || "";
+    draft.homeOkres = draft.homeOkres || "";
+    draft.homeObec = "";
+  }
+}
+
 function setLocList(draft, level, names) {
+  if (level === "mesto") {
+    setCityList(
+      draft,
+      (names || []).map((n) => (typeof n === "string" ? { name: n, level: "mesto" } : n))
+    );
+    return;
+  }
   const others = (draft.localities || []).filter((loc) => {
     if (!loc || typeof loc === "string") return level !== "mesto";
     return String(loc.level || "") !== level;
@@ -627,17 +714,13 @@ function setLocList(draft, level, names) {
   draft.localities = others.concat(next);
   if (level === "kraj") {
     draft.homeKraj = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "okres").length > 0 || asLocList(draft, "mesto").length > 0;
+    draft.myRegionOnly = names.length > 0 || asLocList(draft, "okres").length > 0 || asCityEntries(draft).length > 0;
   }
   if (level === "okres") {
     draft.homeOkres = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "mesto").length > 0;
+    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asCityEntries(draft).length > 0;
   }
-  if (level === "mesto") {
-    draft.homeObec = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
-  }
-  if (!names.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length && !asLocList(draft, "mesto").length) {
+  if (!names.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length && !asCityEntries(draft).length) {
     draft.myRegionOnly = false;
     draft.homeKraj = "";
     draft.homeOkres = "";
@@ -778,7 +861,7 @@ function renderLocalityBody(draft) {
     !draft.localityQuery;
   const selKraje = asLocList(draft, "kraj");
   const selOkresy = asLocList(draft, "okres");
-  const selCities = asLocList(draft, "mesto");
+  const selCities = asCityEntries(draft);
   const okresOptions = [];
   for (const k of selKraje.length ? selKraje : []) {
     for (const o of CZ_OKRESY[k] || []) okresOptions.push({ kraj: k, okres: o });
@@ -805,12 +888,20 @@ function renderLocalityBody(draft) {
     `<input class="iuPdInput" type="search" autocomplete="off" placeholder="Začněte psát (např. pra)" value="${esc(state.cityQuery)}" data-act="city-q" />` +
     (state.citySuggest.length
       ? `<ul class="iuPdSuggest">${state.citySuggest
-          .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
+          .map((s) => {
+            const label = s.label || s.name;
+            return (
+              `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
+            );
+          })
           .join("")}</ul>`
       : "") +
     (selCities.length
       ? `<div class="iuPdChips">${selCities
-          .map((c) => `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c)}">${esc(c)} ×</button>`)
+          .map(
+            (c) =>
+              `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c.name)}" data-id="${esc(c.id || "")}">${esc(c.name)} ×</button>`
+          )
           .join("")}</div>`
       : "") +
     `</div>`
@@ -1226,18 +1317,30 @@ async function ensureLocalities() {
     const res = await fetch(base + "cz_localities_picker.json", { credentials: "same-origin" });
     if (!res.ok) throw new Error("loc");
     const json = await res.json();
-    const items = (json.items || []).map((it) => ({
-      name: String((it.a && it.a[0]) || it.n || "").trim() || String(it.n || ""),
-      level: "mesto",
-    }));
-    state.localitiesCache = items.filter((x) => x.name);
+    const items = (json.items || []).map((it) => {
+      const name = String((it.a && it.a[0]) || it.n || "").trim() || String(it.n || "");
+      const id = String(it.id || "").trim();
+      const orpCode = String(it.orp || it.orpCode || "").trim();
+      const okresName = String(it.ok || it.okresName || "").trim();
+      const orpName = String(it.orpN || it.orpName || "").trim();
+      return {
+        name,
+        id,
+        orpCode,
+        orpName,
+        okresName,
+        level: "mesto",
+        label: okresName ? name + " (" + okresName + ")" : name,
+      };
+    });
+    state.localitiesCache = items.filter((x) => x.name && x.id && x.orpCode);
   } catch (_) {
     state.localitiesCache = [
-      { name: "Praha", level: "mesto" },
-      { name: "Brno", level: "mesto" },
-      { name: "Ostrava", level: "mesto" },
-      { name: "Plzeň", level: "mesto" },
-      { name: "Liberec", level: "mesto" },
+      { name: "Praha", id: "554782", orpCode: "1000", level: "mesto", label: "Praha" },
+      { name: "Brno", id: "582786", orpCode: "6203", level: "mesto", label: "Brno" },
+      { name: "Ostrava", id: "554821", orpCode: "8119", level: "mesto", label: "Ostrava" },
+      { name: "Plzeň", id: "554791", orpCode: "3209", level: "mesto", label: "Plzeň" },
+      { name: "Liberec", id: "563889", orpCode: "5105", level: "mesto", label: "Liberec" },
     ];
   }
   return state.localitiesCache;
@@ -1332,10 +1435,27 @@ function wire() {
       return;
     }
     if (act === "city-add") {
-      const name = t.getAttribute("data-name");
-      const cities = asLocList(state.draft, "mesto");
-      if (name && !cities.includes(name)) cities.push(name);
-      setLocList(state.draft, "mesto", cities);
+      const name = String(t.getAttribute("data-name") || "").trim();
+      const id = String(t.getAttribute("data-id") || "").trim();
+      const orpCode = String(t.getAttribute("data-orp") || "").trim();
+      const cities = asCityEntries(state.draft);
+      const exists = cities.some((c) => (id && c.id === id) || (!id && c.name === name));
+      if (name && !exists) {
+        if (cities.length >= (MAX_CITY_LOCALITIES || 20)) {
+          showSaveError(CITY_LIMIT_MSG);
+          const scrollEl = document.getElementById("iuPdSettingsScroll");
+          const prev = scrollEl ? scrollEl.scrollTop : 0;
+          paintSettingsOnly({ resetSettingsScroll: false });
+          wire();
+          restoreSettingsScroll(prev);
+          return;
+        }
+        const entry = { name, level: "mesto" };
+        if (id) entry.id = id;
+        if (orpCode) entry.orpCode = orpCode;
+        cities.push(entry);
+        setCityList(state.draft, cities);
+      }
       state.cityQuery = "";
       state.citySuggest = [];
       const scrollEl = document.getElementById("iuPdSettingsScroll");
@@ -1347,11 +1467,14 @@ function wire() {
       return;
     }
     if (act === "city-remove") {
-      const name = t.getAttribute("data-name");
-      setLocList(
+      const name = String(t.getAttribute("data-name") || "").trim();
+      const id = String(t.getAttribute("data-id") || "").trim();
+      setCityList(
         state.draft,
-        "mesto",
-        asLocList(state.draft, "mesto").filter((x) => x !== name)
+        asCityEntries(state.draft).filter((c) => {
+          if (id) return c.id !== id;
+          return c.name !== name;
+        })
       );
       const scrollEl = document.getElementById("iuPdSettingsScroll");
       const prev = scrollEl ? scrollEl.scrollTop : 0;
@@ -1379,7 +1502,12 @@ function wire() {
     if (input) input.value = state.cityQuery;
     if (state.citySuggest.length) {
       const html = `<ul class="iuPdSuggest">${state.citySuggest
-        .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
+        .map((s) => {
+          const label = s.label || s.name;
+          return (
+            `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
+          );
+        })
         .join("")}</ul>`;
       if (box) box.outerHTML = html;
       else if (input) input.insertAdjacentHTML("afterend", html);
