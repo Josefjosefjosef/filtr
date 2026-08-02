@@ -659,7 +659,8 @@ font-src 'self' data:;
     <style id="iuFeedNewsSplitCss">
       /*
        * FINÁLNÍ společný komponent — sekční oddělovníky mobil/tablet (≤1024px):
-       * SLEDOVÁNÍ ZÁSILEK | AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ | DALŠÍ UŽITEČNÝ OBSAH
+       * AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ | DALŠÍ UŽITEČNÝ OBSAH
+       * (SLEDOVÁNÍ ZÁSILEK → .iuHomeSectionBar napojený na kartu)
        * Vzhled + spacing (25px nad / 10px pod) měnit POUZE zde — ne per-karta / per-sekce.
        */
       @media (max-width: 1024px) {
@@ -784,6 +785,104 @@ font-src 'self' data:;
       }
       @media (min-width: 1025px) {
         .iuFeedNewsSplit {
+          display: none !important;
+        }
+      }
+    </style>
+    <style id="iuHomeSectionBarCss">
+      /*
+       * Jednotný horní modrý proužek hlavních home sekcí (mobil/tablet ≤1024).
+       * Stejná třída .iuHomeSectionBar — výška/barva/font/radius měnit POUZE zde.
+       */
+      @media (max-width: 1024px) {
+        .iuHomeSectionBar {
+          --iu-home-section-bar-h: 42px;
+          --iu-home-section-bar-radius: 14px;
+          --iu-home-section-bar-bg: var(--iu-brand-blue, #003CFF);
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          height: var(--iu-home-section-bar-h);
+          min-height: var(--iu-home-section-bar-h);
+          max-height: var(--iu-home-section-bar-h);
+          margin: 0;
+          padding: 0 14px;
+          border: 0;
+          border-radius: var(--iu-home-section-bar-radius) var(--iu-home-section-bar-radius) 0 0;
+          background: var(--iu-home-section-bar-bg);
+          color: #fff;
+          font-size: 0.95rem;
+          font-weight: 600;
+          line-height: 1.2;
+          letter-spacing: 0.04em;
+          text-align: center;
+          text-transform: uppercase;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          pointer-events: none;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        /* Nezávislé na body.iu-home: na 901–1024 hub přepíná topic a iu-home padá, sekce ale zůstávají. */
+        body.iu-mobileMainVisible .iuHomeSectionBar,
+        body.iu-mobileGateOverlayOpen .iuHomeSectionBar,
+        body[data-iu-fc="0"] .iuHomeSectionBar {
+          display: none !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info {
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          margin: 16px 0;
+          padding: 0 10px;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info #iuMobileInfoPanelMount {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info .iuMobileInfoPanel.iuDesktopInfoPanel,
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info .iuMobileInfoPanelReserve {
+          border-top-left-radius: 0 !important;
+          border-top-right-radius: 0 !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch:has(> .iuHomeSectionBar) {
+          border-top-left-radius: 14px;
+          border-top-right-radius: 14px;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch > .iuHomeSectionBar {
+          --iu-home-section-bar-pad-x: var(--iuSilverStackPadX, 12px);
+          box-sizing: border-box;
+          width: calc(100% + (2 * var(--iu-home-section-bar-pad-x)));
+          max-width: none;
+          margin: -10px calc(-1 * var(--iu-home-section-bar-pad-x)) 10px;
+          position: relative;
+          z-index: 1;
+        }
+        .iuHomeSectionStack {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        .iuHomeSectionStack > .iuHomeSectionBar,
+        .iuHomeSectionStack > .iuPd__hero {
+          margin: 0;
+        }
+      }
+      @media (min-width: 1025px) {
+        .iuHomeSectionBar,
+        .iuHomeSectionUnit--info > .iuHomeSectionBar {
           display: none !important;
         }
       }
@@ -2046,7 +2145,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" />
     <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
     <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-divider-spacing-8-4-20260628" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-section-bar-evening-accent-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
@@ -2056,7 +2155,7 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-tool-window-shell-v1.css?v=pc-topbar-height-unify-v1-20260716" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
-    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
+    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=home-section-bar-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-myinfouzel-premium-overlay.css?v=mindmenu-mailbox-gear-track-v1-20260707" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
@@ -2646,17 +2745,14 @@ font-src 'self' data:;
                           </div>
                         </div>
                         </div>
-                        <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
-                          <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
-                        </div>
-                        <div id="iuFeedNewsSplitParcel" class="iuFeedNewsSplit iuFeedNewsSplit--parcel" aria-hidden="true">
-                          <div class="iuFeedNewsSplit__row">
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                            <span class="iuFeedNewsSplit__capsule">SLEDOVÁNÍ ZÁSILEK</span>
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                        <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="rychly-prehled" aria-hidden="true">RYCHLÝ PŘEHLED</div>
+                          <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
+                            <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
                           </div>
                         </div>
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="sledovani-zasilek" aria-hidden="true">SLEDOVÁNÍ ZÁSILEK</div>
                           <div class="iuSilverParcelWatch__hero">
                             <div class="iuSilverParcelWatch__content">
                               <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
@@ -2687,12 +2783,15 @@ font-src 'self' data:;
                             <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
                               <div id="iuPrehledDneRoot" class="iuPrehledDneRoot" data-iu-prehled-dne-root="1">
                                 <section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">
+                                  <div class="iuHomeSectionStack" data-iu-home-section-stack="pd">
+                                  <div class="iuHomeSectionBar" data-iu-home-section-bar="muj-prehled-dne" aria-hidden="true">MŮJ PŘEHLED DNE</div>
                                   <div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">
                                   <div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">
                                     <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="high" loading="eager" />
                                   </div>
                                   <div class="iuPd__top">
                                     <div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none" aria-hidden="true">Můj přehled / Nastavení</div>
+                                  </div>
                                   </div>
                                   </div>
                                   <div class="iuPd__show">
