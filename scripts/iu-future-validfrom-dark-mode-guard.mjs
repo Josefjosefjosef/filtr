@@ -100,7 +100,11 @@ function staticGate() {
   ok("ui_future_class_bind", /is-futureWarning/.test(ui) && /timeline\.isFutureWarning/.test(ui), "bind");
   ok("ui_valid_from_markup", /iuPrehledDne__validFromWord/.test(ui) && /iuPrehledDne__validFromDate/.test(ui) && /iuPrehledDne__validFromTime/.test(ui), "markup");
   ok("ui_boundary_refresh", /scheduleTimelineBoundaryRefresh/.test(ui) && /visibilitychange/.test(ui) && /pageshow/.test(ui), "auto");
+  ok("ui_timer_clears_before_reschedule", /clearTimeout\(state\.timelineBoundaryTimer\)/.test(ui) && /state\.timelineBoundaryTimer\s*=\s*setTimeout/.test(ui), "timer clear");
+  ok("ui_no_timeline_setInterval", !/setInterval\s*\(\s*\(\)\s*=>\s*\{[\s\S]{0,80}paint\(/.test(ui), "no interval paint");
+  ok("ui_listeners_once", /if\s*\(\s*state\.timelineListenersBound\s*\)\s*return/.test(ui), "listeners once");
   ok("ui_no_manual_theme_toggle", !/toggleFuture|manualFuture|forceFutureRed/.test(ui), "manual");
+  ok("freeze_manifest_bumped", /future-validfrom-red-dark-v1-20260802/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
 
   ok("css_future_red_block", /\.iuPrehledDne__item\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css), "red block");
   ok("css_future_red_word", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css), "red word");
@@ -146,6 +150,18 @@ function unitGate(IU) {
 
   const boundary = IU.nextTimelineBoundaryMs([future], before);
   ok("unit_boundary_onset", boundary === Date.parse("2026-08-02T16:00:00+02:00"), String(boundary));
+
+  // Deterministic class decision mirrors UI template (no real wait).
+  const clsBefore = pre.isFutureWarning ? " is-futureWarning" : "";
+  const clsAfter = post.isFutureWarning ? " is-futureWarning" : "";
+  ok("unit_class_before", clsBefore === " is-futureWarning", clsBefore);
+  ok("unit_class_after_cleared", clsAfter === "", JSON.stringify(clsAfter));
+  ok("unit_at_onset_active", IU.getChmiWarningLifecycleStatus(future, Date.parse("2026-08-02T16:00:00+02:00")) === "ACTIVE", "onset");
+  ok(
+    "unit_at_onset_not_future",
+    IU.getEffectiveTimelinePresentation(future, Date.parse("2026-08-02T16:00:00+02:00")).isFutureWarning === false,
+    "onset future flag"
+  );
 
   // Rolled ACTIVE may still show Platí od — must NOT be treated as future.
   const rolled = warning({
