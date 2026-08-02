@@ -383,6 +383,8 @@
  * Fill color MUST use the same token chain as .iuPrehledDne__dot background:
  *   var(--iu-pd-dot, var(--iu-pd-accent))
  * Invisible hit target wraps the silhouette (variant B); min 44×44.
+ * Visible SVG is exactly 80% of the previously approved widths
+ * (72→57.6 / 80→64 / 84→67.2). Hit box stays at the prior size for tap comfort.
  * Aspect 100/57.48 ≈ 1.74 (true CZ proportions; no stretch).
  * Selectors intentionally require .iuPrehledDne__card--hasCzMap so these
  * rules cannot affect hero, banner, CTA, ZOBRAZIT, filters, calendar, or other SVGs.
@@ -397,6 +399,7 @@
   display: inline-flex;
   align-items: flex-start;
   justify-content: flex-end;
+  /* Hit target kept at prior approved size (not reduced with the silhouette). */
   width: 72px;
   height: 44px;
   margin: 0;
@@ -414,7 +417,7 @@
 
 .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
   display: block;
-  width: 72px;
+  width: 57.6px; /* visible = 80% of prior approved 72 → 57.6 */
   height: auto;
   aspect-ratio: 100 / 57.48;
   max-width: none;
@@ -435,7 +438,7 @@
   }
 
   .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
-    width: 80px;
+    width: 64px; /* visible = 80% of prior approved 80 → 64 */
   }
 }
 
@@ -447,7 +450,7 @@
   }
 
   .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
-    width: 84px;
+    width: 67.2px; /* visible = 80% of prior approved 84 → 67.2 */
   }
 }
 

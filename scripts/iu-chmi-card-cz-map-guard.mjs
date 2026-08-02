@@ -78,18 +78,30 @@ function staticGate() {
   ok("css_map_absolute_tr", /\.iuPrehledDne__czMap[\s\S]*?position:\s*absolute[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "abs TR");
   ok("css_equal_inset_values", /\.iuPrehledDne__czMap[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "12/12");
   ok("css_hit_min_44", /\.iuPrehledDne__czMap[\s\S]*?height:\s*44px/.test(css), "hit min");
-  ok("css_svg_mobile", /\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*72px/.test(css), "svg m");
-  ok("css_svg_tablet", /@media \(min-width:\s*768px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*80px/.test(css), "svg t");
-  ok("css_svg_desktop", /@media \(min-width:\s*1024px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*84px/.test(css), "svg d");
+  // Hit box kept at prior approved sizes; visible SVG is exactly 80% of those widths.
+  ok("css_hit_mobile_w", /\.iuPrehledDne__czMap[\s\S]*?width:\s*72px/.test(css), "hit m");
+  ok("css_hit_tablet_w", /@media \(min-width:\s*768px\)[\s\S]*?\.iuPrehledDne__czMap[\s\S]*?width:\s*80px/.test(css), "hit t");
+  ok("css_hit_desktop_w", /@media \(min-width:\s*1024px\)[\s\S]*?\.iuPrehledDne__czMap[\s\S]*?width:\s*84px/.test(css), "hit d");
+  ok("css_svg_mobile", /\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*57\.6px/.test(css), "svg m 80%");
+  ok("css_svg_tablet", /@media \(min-width:\s*768px\)[\s\S]*?\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*64px/.test(css), "svg t 80%");
+  ok("css_svg_desktop", /@media \(min-width:\s*1024px\)[\s\S]*?\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*67\.2px/.test(css), "svg d 80%");
+  ok("css_svg_not_prior_72", !/\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*72px/.test(css), "no prior svg 72");
+  ok("css_svg_not_prior_80", !/\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*80px/.test(css), "no prior svg 80");
+  ok("css_svg_not_prior_84", !/\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*84px/.test(css), "no prior svg 84");
   ok("css_aspect_ratio", /aspect-ratio:\s*100\s*\/\s*57\.48/.test(css), "aspect");
   ok("css_svg_height_auto", /\.iuPrehledDne__czMapSvg\s*\{[\s\S]*?height:\s*auto/.test(css), "height auto");
   ok("css_flex_head", /\.iuPrehledDne__cardHead[\s\S]*?display:\s*flex/.test(css), "flex");
   ok("css_title_pad_reserve", /\.iuPrehledDne__card--hasCzMap[\s\S]*?padding-right:\s*80px/.test(css), "pad");
   ok("css_focus_no_rect_outline", /\.iuPrehledDne__czMap:focus-visible[\s\S]*?outline:\s*none/.test(css), "focus outline");
   ok("css_focus_silhouette", /focus-visible[\s\S]*?drop-shadow/.test(css), "focus glow");
+  ok("css_size_80pct_contract_note", /80% of the previously approved|visible = 80%/i.test(css), "80pct note");
+  // Contract: new visible width = prior approved * 0.8 (locked constants).
+  ok("css_size_80pct_math_m", Math.abs(57.6 - 72 * 0.8) < 0.001, "72*0.8");
+  ok("css_size_80pct_math_t", Math.abs(64 - 80 * 0.8) < 0.001, "80*0.8");
+  ok("css_size_80pct_math_d", Math.abs(67.2 - 84 * 0.8) < 0.001, "84*0.8");
 
   // Keep in lockstep with assets/iu-prehled-dne-ui-v1.js CACHE_BUST (CZ map + current PD UI).
-  const CACHE_BUST = "future-validfrom-red-dark-v1-20260802";
+  const CACHE_BUST = "cz-map-vis-80pct-v1-20260802";
   ok("index_css_bust", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "css ver");
   ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "js ver");
   ok("ui_cache_bust", ui.includes('CACHE_BUST = "' + CACHE_BUST + '"') || ui.includes(CACHE_BUST), "ui ver");
@@ -136,7 +148,7 @@ const long =
   "Velmi dlouhý název výstrahy o mimořádných povětrnostních podmínkách zahrnující vichřici, nárazy větru a riziko pádu stromů v několika krajích České republiky včetně Prahy a Středočeského kraje";
 function mapLink(url) {
   return '<a class="iuPdCard__czMap iuPrehledDne__czMap" href="'+url+'" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ">'
-    + '<svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="72" height="41" aria-hidden="true" focusable="false">'
+    + '<svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false">'
     + '<use href="#iu-cz-map"></use></svg></a>';
 }
 function card(opts) {
@@ -314,7 +326,10 @@ async function viewportCheck(page, label, size) {
     if (map) map.blur();
   });
 
-  const expectedSvgW = size.width < 768 ? 72 : size.width < 1024 ? 80 : 84;
+  // Prior approved visible widths (before 20% reduction) and current (= prior * 0.8).
+  const priorSvgW = size.width < 768 ? 72 : size.width < 1024 ? 80 : 84;
+  const expectedSvgW = priorSvgW * 0.8;
+  const expectedHitW = priorSvgW;
   const expectedAspect = 100 / 57.48;
   sizeReport.push({
     label,
@@ -326,7 +341,10 @@ async function viewportCheck(page, label, size) {
     aspect: Number(metrics.aspect.toFixed(3)),
     topInset: Number(metrics.topInset.toFixed(2)),
     rightInset: Number(metrics.rightInset.toFixed(2)),
+    priorSvgW,
     expectedSvgW,
+    expectedHitW,
+    sizeFactor: 0.8,
   });
 
   ok(label + "_cap_maps", metrics.capMapCount === 3, String(metrics.capMapCount));
@@ -348,8 +366,10 @@ async function viewportCheck(page, label, size) {
   ok(label + "_no_box_shadow", !metrics.shadow || metrics.shadow === "none", metrics.shadow);
   ok(label + "_color_matches_dot", metrics.colorMatch === true, metrics.mapColor + "|" + metrics.dotBg);
   ok(label + "_hit_min_44", metrics.hitW >= 43.5 && metrics.hitH >= 43.5, metrics.hitW + "x" + metrics.hitH);
-  ok(label + "_svg_size", Math.abs(metrics.svgW - expectedSvgW) <= 1.5, metrics.svgW + "!=" + expectedSvgW);
-  ok(label + "_svg_recognizable", metrics.svgH >= 38, String(metrics.svgH));
+  ok(label + "_hit_keeps_prior_w", Math.abs(metrics.hitW - expectedHitW) <= 1.5, metrics.hitW + "!=" + expectedHitW);
+  ok(label + "_svg_size_80pct", Math.abs(metrics.svgW - expectedSvgW) <= 1.5, metrics.svgW + "!=" + expectedSvgW);
+  ok(label + "_svg_smaller_than_prior", metrics.svgW < priorSvgW - 5, metrics.svgW + " vs prior " + priorSvgW);
+  ok(label + "_svg_recognizable", metrics.svgH >= 30, String(metrics.svgH));
   ok(label + "_aspect_ok", Math.abs(metrics.aspect - expectedAspect) <= 0.08, String(metrics.aspect));
   ok(label + "_not_stretched_wide", metrics.aspect < 2.2, String(metrics.aspect));
   ok(label + "_equal_inset", metrics.insetDelta <= 1.5, metrics.topInset + "|" + metrics.rightInset);
@@ -426,6 +446,8 @@ async function main() {
   console.log("SIZE_REPORT=" + JSON.stringify(sizeReport));
   console.log("SIZE_REPORT_FILE=" + reportPath);
   console.log("CLICK_MODEL=B_invisible_hit_around_silhouette_min44");
+  console.log("VISIBLE_SIZE_FACTOR=0.8");
+  console.log("PRIOR_SVG_W=72/80/84 HIT_KEPT VISIBLE=57.6/64/67.2");
   console.log("ASPECT=100/57.48≈1.74");
   console.log("PLACEMENT=absolute_top_right_equal_inset");
   console.log("COLOR_TOKEN=var(--iu-pd-dot, var(--iu-pd-accent))");
