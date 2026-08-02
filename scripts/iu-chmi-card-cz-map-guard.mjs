@@ -41,8 +41,13 @@ function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
 
   ok("map_file_symbol", /id="iu-cz-map"/.test(map), "symbol");
-  ok("map_file_path", /<path[^>]*\sd="M98\.08/.test(map), "ne path");
+  ok("map_file_path", /<path[^>]*\sd="M100\.00/.test(map), "ne path");
   ok("map_file_points", (map.match(/L[\d.]+/g) || []).length >= 180, "detail");
+  ok("map_viewbox_aspect", /viewBox="0 0 100 57\.48"/.test(map), "vb");
+  const vb = map.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
+  const vbAspect = vb ? Number(vb[1]) / Number(vb[2]) : 0;
+  ok("map_aspect_cz", vbAspect > 1.68 && vbAspect < 1.82, String(vbAspect));
+  ok("map_aspect_corrected_note", /Aspect-corrected|1\.74/i.test(map), "aspect note");
   ok("map_license_note", /Natural Earth/i.test(map) && /public domain/i.test(map), "license");
   ok("map_generalized_note", /1:50m|generalized/i.test(map), "scale");
   ok("map_currentColor", /fill="currentColor"/.test(map), "currentColor");
@@ -70,17 +75,27 @@ function staticGate() {
   ok("css_no_map_hardcoded_hex", !/\.iuPrehledDne__czMap[\s\S]{0,500}color:\s*#5b6cff/i.test(css), "no hex");
   ok("css_no_bg", /\.iuPrehledDne__czMap[\s\S]*?background:\s*transparent/.test(css), "bg");
   ok("css_no_border", /\.iuPrehledDne__czMap[\s\S]*?border:\s*0/.test(css), "border");
-  ok("css_hit_44", /\.iuPrehledDne__czMap[\s\S]*?width:\s*44px[\s\S]*?height:\s*44px/.test(css), "hit");
-  ok("css_svg_mobile", /\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*36px/.test(css), "svg m");
-  ok("css_svg_tablet", /@media \(min-width:\s*768px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*40px/.test(css), "svg t");
-  ok("css_svg_desktop", /@media \(min-width:\s*1024px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*42px/.test(css), "svg d");
+  ok("css_map_absolute_tr", /\.iuPrehledDne__czMap[\s\S]*?position:\s*absolute[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "abs TR");
+  ok("css_equal_inset_values", /\.iuPrehledDne__czMap[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "12/12");
+  ok("css_hit_min_44", /\.iuPrehledDne__czMap[\s\S]*?height:\s*44px/.test(css), "hit min");
+  ok("css_svg_mobile", /\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*72px/.test(css), "svg m");
+  ok("css_svg_tablet", /@media \(min-width:\s*768px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*80px/.test(css), "svg t");
+  ok("css_svg_desktop", /@media \(min-width:\s*1024px\)[\s\S]*?\.iuPrehledDne__czMapSvg[\s\S]*?width:\s*84px/.test(css), "svg d");
+  ok("css_aspect_ratio", /aspect-ratio:\s*100\s*\/\s*57\.48/.test(css), "aspect");
+  ok("css_svg_height_auto", /\.iuPrehledDne__czMapSvg\s*\{[\s\S]*?height:\s*auto/.test(css), "height auto");
   ok("css_flex_head", /\.iuPrehledDne__cardHead[\s\S]*?display:\s*flex/.test(css), "flex");
-  ok("css_no_title_pad_reserve", !/\.iuPrehledDne__card--hasCzMap[\s\S]{0,200}padding-right:\s*44px/.test(css), "no pad");
+  ok("css_title_pad_reserve", /\.iuPrehledDne__card--hasCzMap[\s\S]*?padding-right:\s*80px/.test(css), "pad");
   ok("css_focus_no_rect_outline", /\.iuPrehledDne__czMap:focus-visible[\s\S]*?outline:\s*none/.test(css), "focus outline");
   ok("css_focus_silhouette", /focus-visible[\s\S]*?drop-shadow/.test(css), "focus glow");
 
-  ok("index_css_bust", /iu-prehled-dne-v1\.css\?v=chmi-cz-map-click-v2-/.test(index), "css ver");
-  ok("index_js_bust", /iu-prehled-dne-ui-v1\.js\?v=chmi-cz-map-click-v2-/.test(index), "js ver");
+  ok("index_css_bust", /iu-prehled-dne-v1\.css\?v=chmi-cz-map-click-v4-/.test(index), "css ver");
+  ok("index_js_bust", /iu-prehled-dne-ui-v1\.js\?v=chmi-cz-map-click-v4-/.test(index), "js ver");
+  ok(
+    "css_map_scoped_to_chmi_card",
+    /\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMap\s*\{/.test(css) &&
+      /\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMapSvg\s*\{/.test(css),
+    "scoped"
+  );
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -118,7 +133,7 @@ const long =
   "Velmi dlouhý název výstrahy o mimořádných povětrnostních podmínkách zahrnující vichřici, nárazy větru a riziko pádu stromů v několika krajích České republiky včetně Prahy a Středočeského kraje";
 function mapLink(url) {
   return '<a class="iuPdCard__czMap iuPrehledDne__czMap" href="'+url+'" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ">'
-    + '<svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 36.51" width="36" height="13" aria-hidden="true" focusable="false">'
+    + '<svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="72" height="41" aria-hidden="true" focusable="false">'
     + '<use href="#iu-cz-map"></use></svg></a>';
 }
 function card(opts) {
@@ -225,6 +240,9 @@ async function viewportCheck(page, label, size) {
     const colorMatch =
       Math.abs(mrR - drR) <= 3 && Math.abs(mrG - drG) <= 3 && Math.abs(mrB - drB) <= 3;
 
+    const topInset = sr.top - cr.top;
+    const rightInset = cr.right - sr.right;
+    const aspect = sr.height > 0 ? sr.width / sr.height : 0;
     return {
       mapHref: map.getAttribute("href") || "",
       titleHref: title.getAttribute("href") || "",
@@ -251,6 +269,10 @@ async function viewportCheck(page, label, size) {
       hitH: mr.height,
       svgW: sr.width,
       svgH: sr.height,
+      aspect,
+      topInset,
+      rightInset,
+      insetDelta: Math.abs(topInset - rightInset),
       cardH: cr.height,
       longCardH: longCard.querySelector(".iuPrehledDne__card").getBoundingClientRect().height,
       pos: cs.position,
@@ -261,7 +283,9 @@ async function viewportCheck(page, label, size) {
   const shotPath = path.join(SHOT_DIR, "cz-map-" + label + "-" + size.width + ".png");
   await page.locator(".iuPrehledDne__timeline").screenshot({ path: shotPath });
   const mapShot = path.join(SHOT_DIR, "cz-map-hit-" + label + "-" + size.width + ".png");
-  await page.locator(".iuPrehledDne__cardHead").first().screenshot({ path: mapShot });
+  await page.locator(".iuPrehledDne__card--hasCzMap").first().screenshot({ path: mapShot });
+  const longShot = path.join(SHOT_DIR, "cz-map-long-" + label + "-" + size.width + ".png");
+  await page.locator(".iuPrehledDne__card--hasCzMap").nth(1).screenshot({ path: longShot });
 
   // Keyboard focus-visible: silhouette glow, no rectangular outline.
   await page.locator(".iuPrehledDne__czMap").first().focus();
@@ -280,12 +304,15 @@ async function viewportCheck(page, label, size) {
       focusVisible: map.matches(":focus-visible"),
     };
   });
+  const focusShot = path.join(SHOT_DIR, "cz-map-focus-" + label + "-" + size.width + ".png");
+  await page.locator(".iuPrehledDne__card--hasCzMap").first().screenshot({ path: focusShot });
   await page.evaluate(() => {
     const map = document.querySelector(".iuPrehledDne__czMap");
     if (map) map.blur();
   });
 
-  const expectedSvgW = size.width < 768 ? 36 : size.width < 1024 ? 40 : 42;
+  const expectedSvgW = size.width < 768 ? 72 : size.width < 1024 ? 80 : 84;
+  const expectedAspect = 100 / 57.48;
   sizeReport.push({
     label,
     viewport: size.width + "x" + size.height,
@@ -293,6 +320,9 @@ async function viewportCheck(page, label, size) {
     svgH: Number(metrics.svgH.toFixed(1)),
     hitW: Number(metrics.hitW.toFixed(1)),
     hitH: Number(metrics.hitH.toFixed(1)),
+    aspect: Number(metrics.aspect.toFixed(3)),
+    topInset: Number(metrics.topInset.toFixed(2)),
+    rightInset: Number(metrics.rightInset.toFixed(2)),
     expectedSvgW,
   });
 
@@ -316,11 +346,15 @@ async function viewportCheck(page, label, size) {
   ok(label + "_color_matches_dot", metrics.colorMatch === true, metrics.mapColor + "|" + metrics.dotBg);
   ok(label + "_hit_min_44", metrics.hitW >= 43.5 && metrics.hitH >= 43.5, metrics.hitW + "x" + metrics.hitH);
   ok(label + "_svg_size", Math.abs(metrics.svgW - expectedSvgW) <= 1.5, metrics.svgW + "!=" + expectedSvgW);
-  ok(label + "_svg_recognizable", metrics.svgH >= 12, String(metrics.svgH));
+  ok(label + "_svg_recognizable", metrics.svgH >= 38, String(metrics.svgH));
+  ok(label + "_aspect_ok", Math.abs(metrics.aspect - expectedAspect) <= 0.08, String(metrics.aspect));
+  ok(label + "_not_stretched_wide", metrics.aspect < 2.2, String(metrics.aspect));
+  ok(label + "_equal_inset", metrics.insetDelta <= 1.5, metrics.topInset + "|" + metrics.rightInset);
+  ok(label + "_pos_absolute", metrics.pos === "absolute", metrics.pos);
   ok(label + "_focus_no_rect", focusMetrics.focusOutlineNone === true, "outline");
   ok(label + "_focus_glow", focusMetrics.focusGlow === true || focusMetrics.focusVisible === true, JSON.stringify(focusMetrics));
-  // Narrow phones wrap long titles taller (Linux CI fonts taller than Windows).
-  const longHMax = size.width <= 360 ? 640 : 560;
+  // Narrow phones wrap long titles taller (Linux CI fonts + TR map padding-right ~80px).
+  const longHMax = size.width <= 360 ? 760 : size.width < 768 ? 620 : 560;
   ok(label + "_long_title_ok", metrics.longCardH > 60 && metrics.longCardH < longHMax, String(metrics.longCardH));
 
   const useHref = await page.locator(".iuPrehledDne__czMapSvg use").first().getAttribute("href");
@@ -332,8 +366,30 @@ async function viewportCheck(page, label, size) {
   ok(label + "_painted", painted === true, "use paint");
   ok(label + "_screenshot", fs.existsSync(shotPath) && fs.statSync(shotPath).size > 800, shotPath);
   ok(label + "_map_shot", fs.existsSync(mapShot) && fs.statSync(mapShot).size > 400, mapShot);
+  ok(label + "_long_shot", fs.existsSync(longShot) && fs.statSync(longShot).size > 400, longShot);
+  ok(label + "_focus_shot", fs.existsSync(focusShot) && fs.statSync(focusShot).size > 400, focusShot);
+
+  // One real click → new tab (same portal URL as title); only on mobile390 to keep runtime low.
+  if (label === "mobile390") {
+    const context = page.context();
+    const before = context.pages().length;
+    const popupPromise = context.waitForEvent("page", { timeout: 5000 }).catch(() => null);
+    await page.locator(".iuPrehledDne__czMap").first().click({ force: true });
+    const popup = await popupPromise;
+    let clickUrl = "";
+    if (popup) {
+      await popup.waitForLoadState("domcontentloaded").catch(() => {});
+      clickUrl = popup.url();
+      await popup.close().catch(() => {});
+    }
+    ok(label + "_click_new_tab", !!popup && context.pages().length === before, "pages");
+    ok(label + "_click_same_url", clickUrl === metrics.mapHref || /vystrahy-cr\.chmi\.cz/i.test(clickUrl), clickUrl);
+  }
+
   console.log("SHOT " + shotPath);
   console.log("SHOT_HIT " + mapShot);
+  console.log("SHOT_LONG " + longShot);
+  console.log("SHOT_FOCUS " + focusShot);
 }
 
 async function main() {
@@ -359,10 +415,16 @@ async function main() {
     if (serverProc) serverProc.kill("SIGTERM");
   }
 
+  fs.mkdirSync(SHOT_DIR, { recursive: true });
+  const reportPath = path.join(SHOT_DIR, "size-report.json");
+  fs.writeFileSync(reportPath, JSON.stringify(sizeReport, null, 2));
   console.log("IU_CHMI_CARD_CZ_MAP_GUARD");
   console.log("SHOT_DIR=" + SHOT_DIR);
   console.log("SIZE_REPORT=" + JSON.stringify(sizeReport));
-  console.log("CLICK_MODEL=B_invisible_44x44_hit_around_silhouette");
+  console.log("SIZE_REPORT_FILE=" + reportPath);
+  console.log("CLICK_MODEL=B_invisible_hit_around_silhouette_min44");
+  console.log("ASPECT=100/57.48≈1.74");
+  console.log("PLACEMENT=absolute_top_right_equal_inset");
   console.log("COLOR_TOKEN=var(--iu-pd-dot, var(--iu-pd-accent))");
   console.log("FAIL_COUNT=" + fails.length);
   for (const f of fails) console.log("FAIL " + f);

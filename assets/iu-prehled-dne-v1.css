@@ -337,7 +337,7 @@
   position: relative;
 }
 
-/* Card head: title/badge column + CZ map (flex, no absolute overlay). */
+/* Card head: title/badge column; CZ map is absolutely pinned to card TR. */
 .iuPrehledDne__cardHead {
   display: flex;
   align-items: flex-start;
@@ -350,22 +350,44 @@
   min-width: 0;
 }
 
+/* Reserve space so title/badge never sit under the TR map (≈ SVG width + gap). */
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+  padding-right: 80px;
+}
+
+@media (min-width: 768px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 88px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 92px;
+  }
+}
+
 /*
- * Clickable CZ silhouette.
+ * Clickable CZ silhouette — scoped ONLY to CHMI cards with a map.
+ * Top-right of card, equal inset from top & right (card padding 12px).
  * Fill color MUST use the same token chain as .iuPrehledDne__dot background:
  *   var(--iu-pd-dot, var(--iu-pd-accent))
- * Invisible hit target is larger than the visible SVG (variant B).
+ * Invisible hit target wraps the silhouette (variant B); min 44×44.
+ * Aspect 100/57.48 ≈ 1.74 (true CZ proportions; no stretch).
+ * Selectors intentionally require .iuPrehledDne__card--hasCzMap so these
+ * rules cannot affect hero, banner, CTA, ZOBRAZIT, filters, calendar, or other SVGs.
  */
-.iuPdCard__czMap,
-.iuPrehledDne__czMap {
-  position: relative;
-  flex: 0 0 auto;
-  align-self: flex-start;
-  z-index: 1;
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+  position: absolute;
+  /* Equal inset from card top & right — same value as .iuPrehledDne__card padding. */
+  top: 12px;
+  right: 12px;
+  z-index: 2;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 72px;
   height: 44px;
   margin: 0;
   padding: 0;
@@ -380,57 +402,72 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.iuPrehledDne__czMapSvg {
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
   display: block;
-  width: 36px;
+  width: 72px;
   height: auto;
-  aspect-ratio: 100 / 36.51;
-  max-width: 100%;
+  aspect-ratio: 100 / 57.48;
+  max-width: none;
+  flex: 0 0 auto;
   pointer-events: none;
   overflow: visible;
   color: inherit;
   fill: currentColor;
+  /* Never stretch — preserve SVG viewBox proportions. */
+  object-fit: contain;
 }
 
 @media (min-width: 768px) {
-  .iuPrehledDne__czMapSvg {
-    width: 40px;
+  .iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+    width: 80px;
+    height: 46px;
+  }
+
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
+    width: 80px;
   }
 }
 
 @media (min-width: 1024px) {
-  .iuPrehledDne__czMapSvg {
-    width: 42px;
+  .iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+    width: 84px;
+    height: 49px;
+  }
+
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
+    width: 84px;
   }
 }
 
-.iuPdCard__czMap:hover,
-.iuPrehledDne__czMap:hover {
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:hover,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:hover {
   opacity: 1;
   filter: brightness(1.08);
 }
 
-.iuPdCard__czMap:active,
-.iuPrehledDne__czMap:active {
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:active,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:active {
   opacity: 0.72;
   filter: none;
 }
 
-.iuPdCard__czMap:focus,
-.iuPrehledDne__czMap:focus {
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus {
   outline: none;
 }
 
 /* Focus on the silhouette itself — no rectangular button chrome. */
-.iuPdCard__czMap:focus-visible,
-.iuPrehledDne__czMap:focus-visible {
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus-visible,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus-visible {
   outline: none;
   opacity: 1;
   filter: none;
 }
 
-.iuPdCard__czMap:focus-visible .iuPrehledDne__czMapSvg,
-.iuPrehledDne__czMap:focus-visible .iuPrehledDne__czMapSvg {
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus-visible .iuPrehledDne__czMapSvg,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus-visible .iuPrehledDne__czMapSvg {
   filter:
     drop-shadow(0 0 0.5px currentColor)
     drop-shadow(0 0 2.5px color-mix(in srgb, currentColor 70%, transparent))

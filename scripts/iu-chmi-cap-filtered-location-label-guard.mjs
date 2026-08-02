@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "chmi-cz-map-click-v2-20260801";
+const CACHE_BUST = "chmi-cz-map-click-v4-20260801";
 
 const fails = [];
 function ok(id, cond, detail) {
