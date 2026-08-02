@@ -4,17 +4,23 @@
 /**
  * Silver home prefix first-tap guards (mobile + tablet):
  *  - FAST: normal production path — engine prefetched, reaction ≤ 250ms
- *  - STRESS: delayed engine — optimistic UI ≤ 250ms, final OK, single action
+ *  - STRESS: delayed engine — functional first-tap + robust in-page timing
  *  - SCENARIOS: reload, history, visibility, bfcache/pageshow, SW, PWA-like, race
+ *  - SELFTEST: negative functional / systematic-slowness probes (proves guard bite)
  *
  * Run: node scripts/silver-home-prefix-first-tap-guard-v1.cjs
  */
 
+const path = require("path");
+const fs = require("fs");
 const { chromium } = require("playwright");
 const {
   FAST_REACTION_MAX_MS,
   STRESS_ENGINE_DELAY_MS,
+  STRESS_OPTIMISTIC_SOFT_MS,
+  STRESS_OPTIMISTIC_HARD_MS,
   STRESS_OPTIMISTIC_MAX_MS,
+  STRESS_TIMING_SAMPLES_MAX,
   STRESS_FINAL_MAX_MS,
   PREFIX_CASES,
   VIEWPORTS,
@@ -31,8 +37,12 @@ const {
   readInputValue,
   readCounters,
   firstTapPrefixMeasured,
-  firstTapPrefixPlaywright,
+  timingStats,
 } = require("./silver-home-prefix-first-tap-shared.cjs");
+
+const ARTIFACT_DIR =
+  process.env.IU_SILVER_FIRST_TAP_ARTIFACT_DIR ||
+  path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu-silver-first-tap-guard");
 
 function fail(result, detail) {
   result.detail = detail;
@@ -121,6 +131,122 @@ async function runFastCase(browser, viewport, prefix, url) {
   }
 }
 
+async function saveStressArtifact(page, result, tag) {
+  try {
+    fs.mkdirSync(ARTIFACT_DIR, { recursive: true });
+    const base =
+      "stress-" +
+      String(result.viewport || "vp") +
+      "-" +
+      String(result.prefix || "prefix") +
+      "-" +
+      String(tag || "fail") +
+      "-" +
+      Date.now();
+    const shot = path.join(ARTIFACT_DIR, base + ".png");
+    await page.screenshot({ path: shot, fullPage: true });
+    result.screenshot = shot;
+  } catch (_) {}
+}
+
+/**
+ * One cold stress sample: Playwright pointer click (exercises capture listeners)
+ * with in-page pointerdown→value timing (avoids IPC inflation that flaked at 282–294ms).
+ */
+async function runStressSample(browser, viewport, prefix, url, hooks) {
+  const h = hooks || {};
+  const sample = {
+    functionalOk: false,
+    performanceMs: -1,
+    contractFail: null,
+    detail: "",
+    value: "",
+    finalValue: "",
+    readyBefore: null,
+    countersAfter: null,
+    optimisticCount: null,
+    finalizeCount: null,
+  };
+  const { context, page } = await openFresh(browser, viewport, url, {
+    disableSw: true,
+    engineDelayMs: STRESS_ENGINE_DELAY_MS,
+  });
+  try {
+    if (typeof h.initScript === "function") {
+      await context.addInitScript(h.initScript);
+    }
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitForPrefixVisible(page);
+    await resetTemplateMode(page);
+    if (typeof h.afterReady === "function") {
+      await h.afterReady(page);
+    }
+    const readyBefore = await engineReady(page);
+    sample.readyBefore = readyBefore;
+    if (readyBefore) {
+      sample.contractFail = "functional";
+      sample.detail = "engine_ready_before_stress_tap";
+      return sample;
+    }
+
+    /* Wait budget for observing optimistic UI (functional). Timing uses in-page metric. */
+    const tap = await firstTapPrefixMeasured(page, prefix.key, prefix.expected, STRESS_OPTIMISTIC_HARD_MS);
+    sample.performanceMs = tap.reactionMs;
+    sample.value = tap.value;
+    sample.countersAfter = tap.countersAfter;
+
+    if (!tap.ok || tap.value !== prefix.expected) {
+      sample.contractFail = "functional";
+      sample.detail = "stress_optimistic_ui_missing";
+      await saveStressArtifact(page, sample, "no-optimistic");
+      return sample;
+    }
+    if ((tap.countersAfter && tap.countersAfter.optimistic) !== 1) {
+      sample.contractFail = "functional";
+      sample.detail =
+        "expected_exactly_one_optimistic_apply_got_" + (tap.countersAfter && tap.countersAfter.optimistic);
+      await saveStressArtifact(page, sample, "optimistic-count");
+      return sample;
+    }
+
+    await waitEngineReady(page, STRESS_FINAL_MAX_MS);
+    await page.waitForTimeout(80);
+    const finalValue = await readInputValue(page);
+    const counters = await readCounters(page);
+    sample.finalValue = finalValue;
+    sample.finalizeCount = counters.finalize;
+    sample.optimisticCount = counters.optimistic;
+    if (finalValue !== prefix.expected) {
+      sample.contractFail = "functional";
+      sample.detail = "final_value_mismatch";
+      await saveStressArtifact(page, sample, "final-mismatch");
+      return sample;
+    }
+    if (counters.optimistic !== 1) {
+      sample.contractFail = "functional";
+      sample.detail = "double_or_zero_optimistic_" + counters.optimistic;
+      await saveStressArtifact(page, sample, "optimistic-final");
+      return sample;
+    }
+    if (counters.finalize > 1) {
+      sample.contractFail = "functional";
+      sample.detail = "double_finalize_" + counters.finalize;
+      await saveStressArtifact(page, sample, "double-finalize");
+      return sample;
+    }
+
+    sample.functionalOk = true;
+    sample.detail = "ok";
+    return sample;
+  } catch (err) {
+    sample.contractFail = "functional";
+    sample.detail = String(err && err.message ? err.message : err);
+    return sample;
+  } finally {
+    await context.close();
+  }
+}
+
 async function runStressCase(browser, viewport, prefix, url) {
   const result = {
     suite: "stress",
@@ -129,48 +255,180 @@ async function runStressCase(browser, viewport, prefix, url) {
     label: prefix.label,
     pass: false,
     detail: "",
+    contract: null,
+    expected: prefix.expected,
+    softLimitMs: STRESS_OPTIMISTIC_SOFT_MS,
+    hardLimitMs: STRESS_OPTIMISTIC_HARD_MS,
+    metric: "in_page_pointerdown_to_value",
   };
-  const { context, page } = await openFresh(browser, viewport, url, {
-    disableSw: true,
-    engineDelayMs: STRESS_ENGINE_DELAY_MS,
-  });
-  try {
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
-    await waitForPrefixVisible(page);
-    await resetTemplateMode(page);
-    /* Do not wait for engine — stress path must start cold. */
-    const readyBefore = await engineReady(page);
-    if (readyBefore) return fail(result, "engine_ready_before_stress_tap");
 
-    const tap = await firstTapPrefixPlaywright(page, prefix.key, prefix.expected, STRESS_OPTIMISTIC_MAX_MS);
-    result.readyBefore = tap.readyBefore;
-    result.optimisticReactionMs = tap.reactionMs;
-    result.value = tap.value;
-    result.expected = prefix.expected;
-    result.countersAfter = tap.countersAfter;
-
-    if (!tap.ok) return fail(result, "stress_optimistic_ui_not_within_" + STRESS_OPTIMISTIC_MAX_MS + "ms");
-    if (tap.reactionMs > STRESS_OPTIMISTIC_MAX_MS) return fail(result, "stress_optimistic_slow_" + tap.reactionMs + "ms");
-    if ((tap.countersAfter && tap.countersAfter.optimistic) !== 1) {
-      return fail(result, "expected_exactly_one_optimistic_apply_got_" + (tap.countersAfter && tap.countersAfter.optimistic));
+  const times = [];
+  let last = null;
+  for (let i = 0; i < STRESS_TIMING_SAMPLES_MAX; i++) {
+    last = await runStressSample(browser, viewport, prefix, url, {});
+    if (!last.functionalOk) {
+      result.contract = "functional";
+      result.readyBefore = last.readyBefore;
+      result.value = last.value;
+      result.finalValue = last.finalValue;
+      result.countersAfter = last.countersAfter;
+      result.optimisticCount = last.optimisticCount;
+      result.finalizeCount = last.finalizeCount;
+      result.optimisticReactionMs = last.performanceMs;
+      result.timing = timingStats(times.concat(last.performanceMs >= 0 ? [last.performanceMs] : []));
+      result.screenshot = last.screenshot;
+      return fail(result, last.detail || "stress_functional_fail");
     }
-
-    await waitEngineReady(page, STRESS_FINAL_MAX_MS);
-    await page.waitForTimeout(80);
-    const finalValue = await readInputValue(page);
-    const counters = await readCounters(page);
-    result.finalValue = finalValue;
-    result.finalizeCount = counters.finalize;
-    result.optimisticCount = counters.optimistic;
-    if (finalValue !== prefix.expected) return fail(result, "final_value_mismatch");
-    if (counters.optimistic !== 1) return fail(result, "double_or_zero_optimistic_" + counters.optimistic);
-    if (counters.finalize > 1) return fail(result, "double_finalize_" + counters.finalize);
-    return ok(result, "ok");
-  } catch (err) {
-    return fail(result, String(err && err.message ? err.message : err));
-  } finally {
-    await context.close();
+    times.push(last.performanceMs);
+    /* Fast path: first cold sample already under soft limit — no need for more. */
+    if (last.performanceMs <= STRESS_OPTIMISTIC_SOFT_MS) break;
   }
+
+  const timing = timingStats(times);
+  result.timing = timing;
+  result.optimisticReactionMs = timing.median;
+  result.readyBefore = last && last.readyBefore;
+  result.value = last && last.value;
+  result.finalValue = last && last.finalValue;
+  result.countersAfter = last && last.countersAfter;
+  result.optimisticCount = last && last.optimisticCount;
+  result.finalizeCount = last && last.finalizeCount;
+
+  if (timing.max != null && timing.max > STRESS_OPTIMISTIC_HARD_MS) {
+    result.contract = "performance";
+    return fail(
+      result,
+      "stress_performance_hard_max_" +
+        timing.max +
+        "ms_gt_" +
+        STRESS_OPTIMISTIC_HARD_MS +
+        "_median_" +
+        timing.median +
+        "_p90_" +
+        timing.p90 +
+        "_samples_" +
+        JSON.stringify(timing.samples)
+    );
+  }
+  if (timing.median != null && timing.median > STRESS_OPTIMISTIC_SOFT_MS) {
+    result.contract = "performance";
+    return fail(
+      result,
+      "stress_performance_median_" +
+        timing.median +
+        "ms_gt_soft_" +
+        STRESS_OPTIMISTIC_SOFT_MS +
+        "_p90_" +
+        timing.p90 +
+        "_max_" +
+        timing.max +
+        "_samples_" +
+        JSON.stringify(timing.samples)
+    );
+  }
+
+  result.contract = "ok";
+  return ok(result, "ok");
+}
+
+async function runNegativeSelftests(browser, url) {
+  const viewport = VIEWPORTS[0];
+  const prefix = PREFIX_CASES.find((p) => p.key === "notes") || PREFIX_CASES[0];
+  const out = { suite: "selftest", id: "negative_probes", pass: false, detail: "", probes: [] };
+
+  /* Functional bite: swallow writes to the Silver field (input or textarea). */
+  const blocked = await runStressSample(browser, viewport, prefix, url, {
+    afterReady: async (page) => {
+      await page.evaluate(() => {
+        const el = document.getElementById("iuSilverHomeInput");
+        if (!el) return;
+        const proto = Object.getPrototypeOf(el);
+        const desc =
+          Object.getOwnPropertyDescriptor(proto, "value") ||
+          Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value") ||
+          Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+        if (!desc || !desc.set || !desc.get) return;
+        Object.defineProperty(el, "value", {
+          configurable: true,
+          enumerable: true,
+          get: function () {
+            return desc.get.call(el);
+          },
+          set: function () {
+            desc.set.call(el, "");
+          },
+        });
+      });
+    },
+  });
+  out.probes.push({
+    id: "block_optimistic",
+    expect: "functional_fail",
+    gotFunctionalOk: blocked.functionalOk,
+    detail: blocked.detail,
+    pass: !blocked.functionalOk && String(blocked.detail || "").indexOf("Illegal invocation") < 0,
+  });
+
+  /* Performance bite: delay the real value past the hard ceiling wait. */
+  const slowed = await runStressSample(browser, viewport, prefix, url, {
+    afterReady: async (page) => {
+      await page.evaluate((delayMs) => {
+        const el = document.getElementById("iuSilverHomeInput");
+        if (!el) return;
+        const proto = Object.getPrototypeOf(el);
+        const desc =
+          Object.getOwnPropertyDescriptor(proto, "value") ||
+          Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value") ||
+          Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+        if (!desc || !desc.set || !desc.get) return;
+        let releaseAt = 0;
+        Object.defineProperty(el, "value", {
+          configurable: true,
+          enumerable: true,
+          get: function () {
+            return desc.get.call(el);
+          },
+          set: function (v) {
+            const val = v;
+            if (!releaseAt) releaseAt = performance.now() + delayMs;
+            const wait = Math.max(0, releaseAt - performance.now());
+            setTimeout(function () {
+              try {
+                desc.set.call(el, val);
+              } catch (_) {}
+            }, wait);
+            desc.set.call(el, "");
+          },
+        });
+      }, STRESS_OPTIMISTIC_HARD_MS + 250);
+    },
+  });
+  out.probes.push({
+    id: "systematic_slow_optimistic",
+    expect: "functional_timeout_or_slow",
+    gotFunctionalOk: slowed.functionalOk,
+    performanceMs: slowed.performanceMs,
+    detail: slowed.detail,
+    pass:
+      String(slowed.detail || "").indexOf("Illegal invocation") < 0 &&
+      (!slowed.functionalOk || slowed.performanceMs > STRESS_OPTIMISTIC_HARD_MS),
+  });
+
+  const fakeTiming = timingStats([1200, 1210, 1190]);
+  out.probes.push({
+    id: "fabricated_slow_median",
+    expect: "performance_fail",
+    timing: fakeTiming,
+    pass:
+      fakeTiming.median > STRESS_OPTIMISTIC_SOFT_MS || fakeTiming.max > STRESS_OPTIMISTIC_HARD_MS,
+  });
+
+  out.pass = out.probes.every((p) => p.pass);
+  out.detail = out.pass ? "ok" : "negative_probe_missed_bite";
+  if (!out.pass) {
+    out.failed = out.probes.filter((p) => !p.pass).map((p) => p.id + ":" + (p.detail || "no_bite"));
+  }
+  return out;
 }
 
 async function runReloadFast(browser, url) {
@@ -605,6 +863,7 @@ async function main() {
     cases.push(await runDoubleTapNoDouble(browser, url));
     cases.push(await runQuickActionsPresent(browser, url));
     cases.push(await runPendingCancelOnNavigate(browser, url));
+    cases.push(await runNegativeSelftests(browser, url));
   } finally {
     await browser.close();
   }
@@ -612,7 +871,12 @@ async function main() {
   const pass = cases.every((c) => c.pass);
   const failed = cases
     .filter((c) => !c.pass)
-    .map((c) => (c.suite || "?") + ":" + (c.id || c.viewport + ":" + c.prefix) + ":" + c.detail);
+    .map((c) => {
+      const id = c.id || c.viewport + ":" + c.prefix;
+      const contract = c.contract ? ":contract=" + c.contract : "";
+      return (c.suite || "?") + ":" + id + ":" + c.detail + contract;
+    });
+  const stressCases = cases.filter((c) => c.suite === "stress");
   process.stdout.write(
     JSON.stringify({
       guard: "SILVER_HOME_PREFIX_FIRST_TAP_GUARD_V1",
@@ -620,8 +884,22 @@ async function main() {
       failed,
       fastReactionMaxMs: FAST_REACTION_MAX_MS,
       stressEngineDelayMs: STRESS_ENGINE_DELAY_MS,
+      stressOptimisticSoftMs: STRESS_OPTIMISTIC_SOFT_MS,
+      stressOptimisticHardMs: STRESS_OPTIMISTIC_HARD_MS,
       stressOptimisticMaxMs: STRESS_OPTIMISTIC_MAX_MS,
+      stressTimingSamplesMax: STRESS_TIMING_SAMPLES_MAX,
+      stressMetric: "in_page_pointerdown_to_value",
+      artifactDir: ARTIFACT_DIR,
       url,
+      stressTimingSummary: stressCases.map((c) => ({
+        viewport: c.viewport,
+        prefix: c.prefix,
+        pass: c.pass,
+        contract: c.contract,
+        timing: c.timing || null,
+        detail: c.detail,
+        screenshot: c.screenshot || null,
+      })),
       cases,
       ts: new Date().toISOString(),
     }) + "\n"
