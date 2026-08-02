@@ -530,6 +530,13 @@ font-src 'self' data:;
         #silver-slot #iuMobileGateTabs,#iuMobileSilverSlot #silver-slot #iuMobileGateTabs{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;pointer-events:none!important}
         #iuSilverHeroInputHost #iuMobileGateTabs,#iuSilverHeroInputHost .iu-mobileSilverFloatMount{display:none!important;visibility:hidden!important;pointer-events:none!important}
         #iuMobileBottomNav.iu-mobileBottomNav{display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:10025;box-sizing:border-box;align-items:stretch;justify-content:space-evenly;gap:0;min-height:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px);padding:8px max(6px,env(safe-area-inset-left,0px)) calc(10px + var(--iu-mobile-bottom-safe) + 6px) max(6px,env(safe-area-inset-right,0px));margin:0;border-top:1px solid rgba(148,163,184,.28);background:linear-gradient(180deg,#0f172a 0%,#020617 100%);box-shadow:0 -6px 24px rgba(0,0,0,.35);-webkit-transform:translateZ(0);transform:translateZ(0)}
+        /* P0: systémová klávesnice — skryj spodní nav + uvolni nav-reserved prostor (safe-area env zachována). */
+        html.iu-keyboard-open{
+          --iu-mobile-bottom-nav-h:0px;
+          --bottom-nav-height:0px;
+          --iu-mobile-bottom-nav-safe-space:0px
+        }
+        html.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav,body.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav{display:none!important;visibility:hidden!important;pointer-events:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;margin:0!important;border:0!important;overflow:hidden!important;box-shadow:none!important;-webkit-transform:none!important;transform:none!important}
         html[data-iu-silver-welcome-paint="evening"] #iuMobileBottomNav.iu-mobileBottomNav{border-top:1px solid rgba(255,255,255,.08)!important;background:rgba(3,8,18,.92)!important;box-shadow:0 -8px 28px rgba(0,0,0,.4)!important;-webkit-backdrop-filter:blur(14px)!important;backdrop-filter:blur(14px)!important}
         #iuMobileBottomNav .iu-mobileBottomNav__btn{flex:1 1 0;min-width:0;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:48px;padding:8px 4px 10px;margin:0;border:0;border-radius:12px;background:transparent;color:rgba(226,232,240,.92);font-size:10px;font-weight:600;line-height:1.15;cursor:pointer;-webkit-tap-highlight-color:transparent;appearance:none;-webkit-appearance:none;box-sizing:border-box}
         #iuMobileBottomNav .iu-mobileBottomNav__btn:active{color:#fff;background:rgba(255,255,255,.06)}
@@ -2143,8 +2150,8 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-form-premium.css?v=form-premium-v4-mobile-card-content-20260704" />
     <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-overlay-header-v73-20260701" />
     <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" />
-    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
-    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
+    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802" />
+    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-section-bar-evening-accent-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
@@ -5828,7 +5835,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802"></script>
     <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=obec-orp-filter-v1-20260802"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
