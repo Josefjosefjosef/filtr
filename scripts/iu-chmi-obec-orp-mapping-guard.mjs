@@ -65,11 +65,21 @@ function loadIU() {
 function dataGate() {
   const picker = JSON.parse(fs.readFileSync(PICKER, "utf8"));
   const geo = JSON.parse(fs.readFileSync(GEO, "utf8"));
-  const regOrp = geo.units.filter((u) => u.type === "orp").map((u) => String(u.code));
+  const regOrpUnits = geo.units.filter((u) => u.type === "orp");
+  const regOrp = regOrpUnits.map((u) => String(u.code));
   const regSet = new Set(regOrp);
+  const standardOrp = regOrp.filter((c) => c !== "1000");
+  const prahaUnits = regOrpUnits.filter((u) => String(u.code) === "1000");
   ok("picker_version3", Number(picker.version) >= 3, String(picker.version));
   ok("items_array", Array.isArray(picker.items), "items");
-  ok("orp_count_206", regOrp.length === 206, String(regOrp.length));
+  // Exact CISORP model used by CHMI CAP:
+  // 205 standard správní obvody ORP + 1 technical Praha code 1000 = 206 technical codes.
+  ok("tech_codes_206", regOrp.length === 206 && regSet.size === 206, String(regOrp.length) + "/" + regSet.size);
+  ok("standard_orp_205", standardOrp.length === 205, String(standardOrp.length));
+  ok("praha_single_unit", prahaUnits.length === 1 && prahaUnits[0].name === "Praha", JSON.stringify(prahaUnits));
+  ok("praha_not_in_standard", !standardOrp.includes("1000"), "1000_in_standard");
+  ok("alias_1100_to_1000", String((geo.aliases || {})["1100"]) === "1000", JSON.stringify(geo.aliases));
+  ok("alias_1100_not_registry_unit", !regSet.has("1100"), "1100_present");
 
   const ids = new Set();
   const covered = new Set();
@@ -87,20 +97,33 @@ function dataGate() {
     if (!regSet.has(orp)) bad.push("unknown_orp:" + id + "->" + orp);
     covered.add(orp);
   }
-  ok("obce_count", (picker.items || []).length >= 6200, String((picker.items || []).length));
+  ok("obce_exact_6258", (picker.items || []).length === 6258, String((picker.items || []).length));
   ok("all_obce_valid", bad.length === 0, bad.slice(0, 15).join("|"));
   const missing = regOrp.filter((c) => !covered.has(c));
-  ok("all_orp_covered", missing.length === 0, missing.join(","));
+  ok("all_tech_codes_covered", missing.length === 0, missing.join(","));
+  ok("standard_205_covered", standardOrp.every((c) => covered.has(c)), "missing_standard");
+  ok("praha_code_covered", covered.has("1000"), "praha_uncovered");
   ok("counts_match", Number(picker.counts && picker.counts.orp) === covered.size, JSON.stringify(picker.counts));
+  // CISOB (43) = obce + vojenské újezdy; known újezd seats must remain mapped.
+  const libava = (picker.items || []).find((x) => x.id === "503941" && x.n === "Libavá");
+  const boletice = (picker.items || []).find((x) => x.id === "545422" && x.n === "Boletice");
+  ok("military_libava_mapped", !!(libava && libava.orp), JSON.stringify(libava || null));
+  ok("military_boletice_mapped", !!(boletice && boletice.orp), JSON.stringify(boletice || null));
 
   const nupaky = (picker.items || []).find((x) => x.n === "Nupaky");
   ok("nupaky_orp_ricany", !!(nupaky && nupaky.orp === "2122"), JSON.stringify(nupaky || null));
   const cestlice = (picker.items || []).find((x) => x.n === "Čestlice");
   ok("cestlice_same_orp", !!(cestlice && cestlice.orp === "2122"), JSON.stringify(cestlice || null));
+  const pruhonice = (picker.items || []).find((x) => x.n === "Průhonice");
+  ok("pruhonice_orp_cernosice", !!(pruhonice && pruhonice.orp === "2105"), JSON.stringify(pruhonice || null));
+  ok("pruhonice_not_same_as_nupaky", !!(pruhonice && nupaky && pruhonice.orp !== nupaky.orp), "same_orp_wrong");
   const praha = (picker.items || []).find((x) => x.n === "Praha");
   ok("praha_orp", !!(praha && praha.orp === "1000"), JSON.stringify(praha || null));
   const brno = (picker.items || []).find((x) => x.n === "Brno");
   ok("brno_is_orp_seat", !!(brno && brno.orp === "6203" && brno.orpN === "Brno"), JSON.stringify(brno || null));
+  const benesov = (picker.items || []).filter((x) => x.n === "Benešov");
+  ok("same_name_distinct_ids", benesov.length >= 2 && new Set(benesov.map((x) => x.id)).size === benesov.length, JSON.stringify(benesov));
+  ok("same_name_distinct_orp_possible", new Set(benesov.map((x) => x.orp)).size >= 2, JSON.stringify(benesov.map((x) => x.orp)));
 
   const build = fs.readFileSync(BUILD, "utf8");
   ok("build_uses_cisob", /kodcis=43/.test(build), "cisob");
@@ -279,6 +302,81 @@ function unitGate(IU) {
 
   const alias = IU.normalizeOrpCode("1100");
   ok("praha_alias", alias === "1000", alias);
+
+  // Praha alias must not double-count ORP remainder when CAP emits 1100 + 1000.
+  const prahaWarn = {
+    id: "ie-chmi-v2-praha",
+    title: "Sucho — Praha",
+    sourceId: "chmi",
+    status: "aktivni",
+    validFrom: new Date(Date.now() - 3600000).toISOString(),
+    validTo: new Date(Date.now() + 48 * 3600000).toISOString(),
+    publishedAtSource: new Date(Date.now() - 3600000).toISOString(),
+    region: {
+      name: "Praha",
+      summary: "Praha",
+      orpCodes: ["1000", "1100"],
+      orpIds: ["orp:1000", "orp:1100"],
+      orpNames: ["Praha", "Praha"],
+    },
+    capV2: {
+      badgeActive: true,
+      geo: {
+        links: [
+          { orpCode: "1000", orpId: "orp:1000", orpName: "Praha", okresName: "Hlavní město Praha", krajName: "Hlavní město Praha" },
+          { orpCode: "1100", orpId: "orp:1100", orpName: "Praha", okresName: "Hlavní město Praha", krajName: "Hlavní město Praha" },
+        ],
+      },
+    },
+  };
+  const prahaCodes = IU.warningOrpCodeSet(prahaWarn);
+  ok("praha_alias_dedupe_set", prahaCodes.size === 1 && prahaCodes.has("1000"), [...prahaCodes].join(","));
+  const prahaKept = IU.filterEvents(
+    [prahaWarn],
+    { localities: [{ name: "Praha", id: "554782", orpCode: "1000", level: "mesto" }] },
+    { skipMemo: true }
+  );
+  ok("praha_filter_once", prahaKept.length === 1, String(prahaKept.length));
+
+  // 20 relevant obce in one title (selection order preserved).
+  const twenty = Array.from({ length: 20 }, (_, i) => ({
+    name: "Obec" + String(i + 1).padStart(2, "0"),
+    id: String(40000 + i),
+    orpCode: i % 2 === 0 ? "2122" : "2105",
+    level: "mesto",
+  }));
+  const title20 = IU.getFilteredWarningLocationLabel(a, { localities: twenty });
+  const expected20 = twenty.map((x) => x.name).join(", ") + " a dalších 84 oblastí";
+  ok("title_all_20_names", title20 === expected20, title20.slice(0, 120));
+  ok("title_20_order_stable", title20.startsWith("Obec01, Obec02, Obec03"), title20.slice(0, 40));
+
+  // Migration: 25 + duplicate + invalid → first 20 unique valid by order.
+  const migrated = IU.normalizeLocalitiesList([
+    { name: "A", id: "1", orpCode: "2122", level: "mesto" },
+    { name: "A-dup", id: "1", orpCode: "2122", level: "mesto" },
+    { name: "", id: "bad", orpCode: "2122", level: "mesto" },
+    ...Array.from({ length: 24 }, (_, i) => ({
+      name: "M" + i,
+      id: String(50000 + i),
+      orpCode: "2122",
+      level: "mesto",
+    })),
+  ]);
+  ok("migrate_len_20", migrated.length === 20, String(migrated.length));
+  ok("migrate_first_is_A", migrated[0].id === "1" && migrated[0].name === "A", JSON.stringify(migrated[0]));
+  ok("migrate_no_dup_id", new Set(migrated.map((x) => x.id)).size === 20, "dups");
+
+  // Isolation: two independent preference objects do not leak titles into shared warning.
+  const snapShared = JSON.stringify(a);
+  const labelUserA = IU.getFilteredWarningLocationLabel(a, {
+    localities: [{ name: "Nupaky", id: "564907", orpCode: "2122", level: "mesto" }],
+  });
+  const labelUserB = IU.getFilteredWarningLocationLabel(a, {
+    localities: [{ name: "Brno", id: "582786", orpCode: "6203", level: "mesto" }],
+  });
+  ok("isolation_a_nupaky", labelUserA.startsWith("Nupaky"), labelUserA);
+  ok("isolation_b_empty_for_brno_on_a", labelUserB === "", labelUserB);
+  ok("isolation_no_shared_mutation", JSON.stringify(a) === snapShared, "mutated");
 }
 
 function main() {
@@ -296,8 +394,11 @@ function main() {
   console.log("[iu-chmi-obec-orp-mapping-guard] OK");
   console.log(
     JSON.stringify({
-      obce: JSON.parse(fs.readFileSync(PICKER, "utf8")).items.length,
-      orp: 206,
+      obce: 6258,
+      standardOrp: 205,
+      technicalCodes: 206,
+      prahaCode: "1000",
+      prahaAlias: "1100->1000",
       maxCities: 20,
     })
   );
