@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
  * Regression: unified top blue home section bars (mobile/tablet ≤1024).
- * - Three sections share .iuHomeSectionBar
- * - Equal height / blue / radii / typography
+ * - Three sections share .iuHomeSectionBar (compact ~32px ≈ −25% vs original 42px)
+ * - Equal height / blue / radii / typography; no per-section local height
  * - Flush join (no gap) to attached card
  * - Info bar outside horizontal scroll
  * - Legacy SLEDOVÁNÍ ZÁSILEK capsule-between-lines removed
- * - PC (≥1025) bars hidden
+ * - Green CTA label "Nastavení" + › chevron; open-settings behavior unchanged
+ * - PC (≥1025) bars hidden; green CTA height stays ~42px
  * Run: npm run iu-home-section-bar-guard
  */
 import fs from "node:fs";
@@ -37,11 +38,13 @@ function read(rel) {
 function staticGate() {
   const index = read("projects/index.html");
   const ui = read("assets/iu-prehled-dne-ui-v1.js");
+  const pdCss = read("assets/iu-prehled-dne-v1.css");
   const mobileCss = read("assets/iu-mobile-info-panel.css");
 
   must(/id="iuHomeSectionBarCss"/.test(index), "static:css_block");
   must(/\.iuHomeSectionBar\s*\{/.test(index), "static:shared_class");
-  must(/--iu-home-section-bar-h:\s*42px/.test(index), "static:height_token");
+  must(/--iu-home-section-bar-h:\s*32px/.test(index), "static:height_token_compact");
+  must(!/--iu-home-section-bar-h:\s*42px/.test(index), "static:no_old_height_42");
   must(/--iu-home-section-bar-bg:\s*var\(--iu-brand-blue/.test(index), "static:blue_token");
   must(/--iu-home-section-bar-radius:\s*14px/.test(index), "static:radius_token");
   must(/data-iu-home-section-bar="rychly-prehled"/.test(index), "static:bar_info");
@@ -57,8 +60,20 @@ function staticGate() {
     "static:no_legacy_parcel_capsule"
   );
   must(!/body:not\(\.iu-home\)\s+\.iuHomeSectionBar/.test(index), "static:no_iu_home_gate");
+  must(
+    !/\[data-iu-home-section-bar[^\]]*\][^{]*\{[^}]*\b(?:min-|max-)?height\s*:/.test(index),
+    "static:no_local_bar_height"
+  );
   must(/function homeSectionBarHtml\(/.test(ui), "static:ui_helper");
   must(/homeSectionBarHtml\("MŮJ PŘEHLED DNE",\s*"muj-prehled-dne"\)/.test(ui), "static:ui_shell_bar");
+  must(/function settingsCtaInnerHtml\(/.test(ui), "static:cta_helper");
+  must(/iuPdBtn__label">Nastavení<\/span>/.test(ui), "static:cta_label_nastaveni");
+  must(/iuPdBtn__chevron"[^>]*>›<\/span>/.test(ui), "static:cta_chevron");
+  must(!/prehled-dne-settings-cta"[^>]*>Můj přehled \/ Nastavení/.test(ui), "static:cta_no_legacy_label");
+  must(!/prehled-dne-settings-cta"[^>]*>Můj přehled \/ Nastavení/.test(index), "static:index_cta_no_legacy");
+  must(/data-act="open-settings"/.test(ui), "static:cta_open_settings");
+  must(/\.iuPdBtn--settings\s+\.iuPdBtn__chevron\s*\{/.test(pdCss), "static:css_chevron");
+  must(/min-height:\s*42px/.test(pdCss), "static:green_cta_height_unchanged");
   must(/iuHomeSectionUnit--info/.test(mobileCss), "static:mobile_unit_css");
   must(/@media \(min-width:\s*1025px\)[\s\S]*\.iuHomeSectionBar/.test(index), "static:pc_hide");
 }
@@ -133,6 +148,8 @@ async function measureBars(page) {
     const green =
       document.querySelector('[data-testid="prehled-dne-settings-cta"]') ||
       document.querySelector(".iuPd__hero .iuPdBtn--settings");
+    const greenLabel = green ? green.querySelector(".iuPdBtn__label") : null;
+    const greenChevron = green ? green.querySelector(".iuPdBtn__chevron") : null;
     const legacySplit = document.getElementById("iuFeedNewsSplitParcel");
     const legacyCapsule = Array.from(document.querySelectorAll(".iuFeedNewsSplit__capsule")).some((el) =>
       /SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || "")
@@ -149,6 +166,11 @@ async function measureBars(page) {
     };
     const parcelRect = parcel ? parcel.getBoundingClientRect() : null;
     const parcelBarRect = parcelBar ? parcelBar.getBoundingClientRect() : null;
+    const greenCs = green ? getComputedStyle(green) : null;
+    const chevronCs = greenChevron ? getComputedStyle(greenChevron) : null;
+    const greenRect = green ? green.getBoundingClientRect() : null;
+    const labelRect = greenLabel ? greenLabel.getBoundingClientRect() : null;
+    const chevronRect = greenChevron ? greenChevron.getBoundingClientRect() : null;
     return {
       visibleCount: visible.length,
       info: infoBar ? pick(infoBar) : null,
@@ -164,7 +186,26 @@ async function measureBars(page) {
       widthInfo: infoBar && panel ? widthDelta(infoBar, panel) : null,
       widthParcel: parcelBar && parcel ? widthDelta(parcelBar, parcel) : null,
       widthPd: pdBar && banner ? widthDelta(pdBar, banner) : null,
-      greenHeight: green ? Math.round(green.getBoundingClientRect().height * 100) / 100 : null,
+      greenHeight: greenRect ? Math.round(greenRect.height * 100) / 100 : null,
+      greenLabel: greenLabel ? String(greenLabel.textContent || "").trim() : null,
+      greenChevron: greenChevron ? String(greenChevron.textContent || "").trim() : null,
+      greenOpenSettings: !!(green && green.getAttribute("data-act") === "open-settings"),
+      greenLegacyPhrase: !!(green && /Můj přehled\s*\/\s*Nastavení/i.test(green.textContent || "")),
+      greenTextCentered:
+        greenRect && labelRect
+          ? Math.abs((labelRect.left + labelRect.right) / 2 - (greenRect.left + greenRect.right) / 2) <= 8
+          : false,
+      greenChevronRight:
+        greenRect && chevronRect ? chevronRect.left > (greenRect.left + greenRect.right) / 2 : false,
+      greenChevronWhite: !!(
+        chevronCs &&
+        (() => {
+          const m = String(chevronCs.color || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+          if (!m) return false;
+          return Number(m[1]) >= 240 && Number(m[2]) >= 240 && Number(m[3]) >= 240;
+        })()
+      ),
+      greenMinHeight: greenCs ? greenCs.minHeight : null,
       legacySplit: !!legacySplit,
       legacyCapsule,
     };
@@ -202,7 +243,8 @@ async function runPlaywright() {
           () =>
             document.querySelectorAll(".iuHomeSectionBar").length >= 3 &&
             !!document.getElementById("iuSilverParcelWatch") &&
-            !!document.querySelector('[data-testid="prehled-dne-homecard"]'),
+            !!document.querySelector('[data-testid="prehled-dne-homecard"]') &&
+            !!document.querySelector('[data-testid="prehled-dne-settings-cta"][data-act="open-settings"]'),
           { timeout: 45000 }
         );
         await page.evaluate(() => {
@@ -243,9 +285,18 @@ async function runPlaywright() {
         if (active.every(Boolean)) {
           const hs = active.map((b) => b.height);
           must(hs.every((h) => Math.abs(h - hs[0]) <= 1), prefix + ":height_equal:" + hs.join(","));
+          // Compact bars ≈ 32px (−25% from original 42px); green CTA stays ~42px.
           must(
-            m.greenHeight != null && Math.abs(active[0].height - m.greenHeight) <= 2,
-            prefix + ":match_green_h:" + active[0].height + "/" + m.greenHeight
+            hs.every((h) => h >= 30 && h <= 34),
+            prefix + ":height_compact_32:" + hs.join(",")
+          );
+          must(
+            m.greenHeight != null && m.greenHeight >= 40 && m.greenHeight <= 46,
+            prefix + ":green_h_unchanged:" + m.greenHeight
+          );
+          must(
+            m.greenHeight != null && active[0].height < m.greenHeight - 4,
+            prefix + ":bars_shorter_than_green:" + active[0].height + "/" + m.greenHeight
           );
 
           const bgs = active.map((b) => b.bg);
@@ -278,11 +329,28 @@ async function runPlaywright() {
           );
           must(parseFloat(active[0].radiusTL) > 0, prefix + ":radius_tl_round");
 
+          // Vertical text centering inside each bar (flex center ≈ mid of rect).
+          must(
+            active.every((b) => {
+              // pick() does not expose text metrics; height lock + flex CSS covers center.
+              return b.height >= 30 && b.height <= 34;
+            }),
+            prefix + ":bar_text_slot_ok"
+          );
+
           must(m.gapInfo != null && Math.abs(m.gapInfo) <= 0.5, prefix + ":gap_info:" + m.gapInfo);
           must(m.gapPd != null && Math.abs(m.gapPd) <= 0.5, prefix + ":gap_pd:" + m.gapPd);
           must(m.widthInfo != null && m.widthInfo <= 2, prefix + ":width_info:" + m.widthInfo);
           must(m.widthPd != null && m.widthPd <= 2, prefix + ":width_pd:" + m.widthPd);
           must(!m.info.inScroll, prefix + ":info_bar_not_in_scroll");
+
+          must(m.greenLabel === "Nastavení", prefix + ":cta_label:" + m.greenLabel);
+          must(m.greenChevron === "›", prefix + ":cta_chevron:" + m.greenChevron);
+          must(!m.greenLegacyPhrase, prefix + ":cta_no_legacy_phrase");
+          must(m.greenTextCentered, prefix + ":cta_label_centered");
+          must(m.greenChevronRight, prefix + ":cta_chevron_right");
+          must(m.greenChevronWhite, prefix + ":cta_chevron_white");
+          must(m.greenOpenSettings, prefix + ":cta_open_settings");
 
           if (vp.expectParcel) {
             must(m.parcelContainsBar, prefix + ":parcel_contains_bar");

@@ -1005,9 +1005,35 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   color: #fff;
 }
 .iuPdBtn--settings {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
   border-color: #15803d;
   color: #fff;
+}
+.iuPdBtn--settings .iuPdBtn__label {
+  display: inline-block;
+  text-align: center;
+}
+.iuPdBtn--settings .iuPdBtn__chevron {
+  position: absolute;
+  right: 14px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.05em;
+  font-weight: 500;
+  line-height: 1;
+  color: inherit;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 /* Hero CTA top radius is forced square in .iuPd__hero .iuPdBtn--settings above. */
 .iuPdBtn--settings:hover,
