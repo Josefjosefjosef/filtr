@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "home-section-bar-v1-20260802";
+const CACHE_BUST = "obec-orp-filter-v1-20260802";
 const fails = [];
 
 function must(cond, id) {
