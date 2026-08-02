@@ -29,10 +29,10 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=future-validfrom-red-dark-v1-20260802";
+} from "./iu-info-system-core-v1.js?v=cz-map-vis-80pct-v1-20260802";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "future-validfrom-red-dark-v1-20260802";
+const CACHE_BUST = "cz-map-vis-80pct-v1-20260802";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
 let czMapSpritePromise = null;
 const NONE_SENTINEL = "__none__";
@@ -528,7 +528,7 @@ function renderItem(ev) {
   // Color comes from inherited --iu-pd-dot (same token as timeline dot fill).
   const czMapMarkup =
     ev && ev.capV2 && url
-      ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="72" height="41" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
+      ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
       : "";
   const warnBadge = capActive
     ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
