@@ -22,10 +22,10 @@
     --iu-tool-overlay-panel-bottom: var(--bottom-nav-height);
   }
 
-  /* P0: keyboard open — hide bottom nav + collapse reserved band so overlays/content reclaim space. */
+  /* P0: keyboard open — hide bottom nav + collapse nav-reserved band.
+     Keep --iu-mobile-bottom-safe as env(safe-area-inset-bottom) for non-nav consumers. */
   html.iu-keyboard-open {
     --iu-mobile-bottom-nav-h: 0px;
-    --iu-mobile-bottom-safe: 0px;
     --iu-mobile-bottom-nav-total-h: 0px;
     --bottom-nav-height: 0px;
     --iu-mobile-bottom-nav-safe-space: 0px;

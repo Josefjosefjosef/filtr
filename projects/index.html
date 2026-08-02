@@ -530,10 +530,9 @@ font-src 'self' data:;
         #silver-slot #iuMobileGateTabs,#iuMobileSilverSlot #silver-slot #iuMobileGateTabs{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;pointer-events:none!important}
         #iuSilverHeroInputHost #iuMobileGateTabs,#iuSilverHeroInputHost .iu-mobileSilverFloatMount{display:none!important;visibility:hidden!important;pointer-events:none!important}
         #iuMobileBottomNav.iu-mobileBottomNav{display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:10025;box-sizing:border-box;align-items:stretch;justify-content:space-evenly;gap:0;min-height:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px);padding:8px max(6px,env(safe-area-inset-left,0px)) calc(10px + var(--iu-mobile-bottom-safe) + 6px) max(6px,env(safe-area-inset-right,0px));margin:0;border-top:1px solid rgba(148,163,184,.28);background:linear-gradient(180deg,#0f172a 0%,#020617 100%);box-shadow:0 -6px 24px rgba(0,0,0,.35);-webkit-transform:translateZ(0);transform:translateZ(0)}
-        /* P0: systémová klávesnice — skryj spodní nav + uvolni reserved prostor (bez prázdné mezery). */
+        /* P0: systémová klávesnice — skryj spodní nav + uvolni nav-reserved prostor (safe-area env zachována). */
         html.iu-keyboard-open{
           --iu-mobile-bottom-nav-h:0px;
-          --iu-mobile-bottom-safe:0px;
           --bottom-nav-height:0px;
           --iu-mobile-bottom-nav-safe-space:0px
         }

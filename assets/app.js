@@ -18106,7 +18106,8 @@ function buildVideoAsArticleCard(it) {
 
   /**
    * P0 Mobile/tablet (≤1024px): systémové skrytí #iuMobileBottomNav při otevřené
-   * systémové klávesnici (visualViewport gap + focus na editovatelný prvek).
+   * systémové klávesnici. Signál = focus na textový prvek + zmenšení visualViewport
+   * (případně VirtualKeyboard geometry). Samotný focus nestačí; gap bez focusu nestačí.
    * Uvolní --bottom-nav-height / safe-space přes html.iu-keyboard-open. Desktop beze změny.
    */
   function iuMobileBottomNavKeyboardHideInit() {
@@ -18121,14 +18122,18 @@ function buildVideoAsArticleCard(it) {
     var open = false;
     var focusEditable = false;
     var blurTimer = 0;
-    var KEYBOARD_GAP_WITH_FOCUS = 80;
-    var KEYBOARD_GAP_HARD = 180;
+    var vkHeight = 0;
+    var KEYBOARD_GAP_MIN = 100;
 
     function isEditableEl(el) {
       try {
         if (!el || el.nodeType !== 1) return false;
         var tag = String(el.tagName || "").toUpperCase();
-        if (tag === "TEXTAREA" || tag === "SELECT") return true;
+        if (tag === "SELECT" || tag === "BUTTON" || tag === "OPTION") return false;
+        if (tag === "TEXTAREA") {
+          if (el.disabled || el.readOnly) return false;
+          return true;
+        }
         if (tag === "INPUT") {
           var type = String(el.type || "text").toLowerCase();
           if (
@@ -18145,12 +18150,15 @@ function buildVideoAsArticleCard(it) {
           ) {
             return false;
           }
-          if (el.disabled) return false;
+          /* date/time pickery často neotevřou soft keyboard — vyžadují i viewport gap. */
+          if (el.disabled || el.readOnly) return false;
+          var inputMode = String(el.getAttribute("inputmode") || "").toLowerCase();
+          if (inputMode === "none") return false;
           return true;
         }
         if (el.isContentEditable) return true;
         var role = el.getAttribute && String(el.getAttribute("role") || "");
-        if (role === "textbox" || role === "searchbox" || role === "combobox") return true;
+        if (role === "textbox" || role === "searchbox") return true;
         return false;
       } catch (_) {
         return false;
@@ -18160,20 +18168,21 @@ function buildVideoAsArticleCard(it) {
     function keyboardGap() {
       try {
         var vv = window.visualViewport;
-        if (!vv) return 0;
-        return Math.max(0, (window.innerHeight || 0) - vv.height - (vv.offsetTop || 0));
+        if (!vv) return Math.max(0, vkHeight);
+        var gap = Math.max(0, (window.innerHeight || 0) - vv.height - (vv.offsetTop || 0));
+        return Math.max(gap, vkHeight);
       } catch (_) {
-        return 0;
+        return Math.max(0, vkHeight);
       }
     }
 
     function shouldHide() {
       try {
         if (mqTablet && !mqTablet.matches) return false;
-        var gap = keyboardGap();
-        if (focusEditable && gap > KEYBOARD_GAP_WITH_FOCUS) return true;
-        if (gap > KEYBOARD_GAP_HARD) return true;
-        return false;
+        /* Focus bez gap (hardwarová klávesnice / picker) → navigaci neskryvat.
+           Gap bez focusu (resize desktopového okna ≤1024) → neskryvat. */
+        if (!focusEditable) return false;
+        return keyboardGap() > KEYBOARD_GAP_MIN;
       } catch (_) {
         return false;
       }
@@ -18244,15 +18253,18 @@ function buildVideoAsArticleCard(it) {
     function onFocusOut() {
       try {
         if (blurTimer) clearTimeout(blurTimer);
+        /* Delší debounce: focusout→focusin mezi poli + asynchronní VV resize (iOS). */
         blurTimer = setTimeout(function () {
           blurTimer = 0;
           try {
-            focusEditable = isEditableEl(document.activeElement);
+            var ae = document.activeElement;
+            if (ae && ae.isConnected === false) ae = null;
+            focusEditable = isEditableEl(ae);
           } catch (_) {
             focusEditable = false;
           }
           scheduleHide();
-        }, 80);
+        }, 160);
       } catch (_) {
         focusEditable = false;
         scheduleHide();
@@ -18267,6 +18279,20 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
+      var vk = navigator.virtualKeyboard;
+      if (vk && typeof vk.addEventListener === "function") {
+        vk.addEventListener("geometrychange", function () {
+          try {
+            var rect = vk.boundingRect || {};
+            vkHeight = Math.max(0, Number(rect.height) || 0);
+          } catch (_) {
+            vkHeight = 0;
+          }
+          scheduleHide();
+        });
+      }
+    } catch (_) {}
+    try {
       window.addEventListener("resize", scheduleHide, { passive: true });
       window.addEventListener("orientationchange", scheduleHide, { passive: true });
       document.addEventListener("focusin", onFocusIn, true);
@@ -18277,6 +18303,9 @@ function buildVideoAsArticleCard(it) {
           try {
             if (!document.hidden) {
               focusEditable = isEditableEl(document.activeElement);
+              scheduleHide();
+            } else {
+              /* Při odchodu do pozadí nenechat zaseknutý open stav po návratu bez klávesnice. */
               scheduleHide();
             }
           } catch (_) {}
@@ -18289,6 +18318,15 @@ function buildVideoAsArticleCard(it) {
           try {
             focusEditable = isEditableEl(document.activeElement);
             scheduleHide();
+          } catch (_) {}
+        },
+        { passive: true }
+      );
+      window.addEventListener(
+        "pagehide",
+        function () {
+          try {
+            applyOpen(false);
           } catch (_) {}
         },
         { passive: true }

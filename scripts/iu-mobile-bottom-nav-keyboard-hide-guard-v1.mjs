@@ -39,30 +39,17 @@ function staticGate() {
   })();
 
   const checks = [
-    {
-      id: "hide_init_fn",
-      pass: /function iuMobileBottomNavKeyboardHideInit\(\)/.test(app),
-    },
-    {
-      id: "hide_init_boot",
-      pass: /iuMobileBottomNavKeyboardHideInit\(\)/.test(app),
-    },
-    {
-      id: "hide_sets_iu_keyboard_open",
-      pass: /classList\.add\("iu-keyboard-open"\)/.test(hideChunk),
-    },
-    {
-      id: "hide_uses_visual_viewport",
-      pass: /visualViewport/.test(hideChunk),
-    },
-    {
-      id: "hide_max_width_1024",
-      pass: /max-width:\s*1024px/.test(hideChunk),
-    },
-    {
-      id: "hide_no_translate_pin",
-      pass: !/translate3d\(0,\s*"\s*\+\s*gap/.test(hideChunk),
-    },
+    { id: "hide_init_fn", pass: /function iuMobileBottomNavKeyboardHideInit\(\)/.test(app) },
+    { id: "hide_init_boot", pass: /iuMobileBottomNavKeyboardHideInit\(\)/.test(app) },
+    { id: "hide_sets_iu_keyboard_open", pass: /classList\.add\("iu-keyboard-open"\)/.test(hideChunk) },
+    { id: "hide_uses_visual_viewport", pass: /visualViewport/.test(hideChunk) },
+    { id: "hide_max_width_1024", pass: /max-width:\s*1024px/.test(hideChunk) },
+    { id: "hide_requires_focus_and_gap", pass: /focusEditable/.test(hideChunk) && /KEYBOARD_GAP_MIN/.test(hideChunk) },
+    { id: "hide_no_gap_only_hard", pass: !/KEYBOARD_GAP_HARD/.test(hideChunk) },
+    { id: "hide_excludes_select", pass: /tag === "SELECT"/.test(hideChunk) },
+    { id: "hide_excludes_readonly", pass: /readOnly/.test(hideChunk) },
+    { id: "hide_idempotent_guard", pass: /__iuMobileBottomNavKeyboardHideInit/.test(hideChunk) },
+    { id: "hide_no_translate_pin", pass: !/translate3d\(0,\s*"\s*\+\s*gap/.test(hideChunk) },
     {
       id: "alias_pin_calls_hide",
       pass: /function iuMojeSluzbyFormBottomNavKeyboardPinInit\(\)\s*\{\s*iuMobileBottomNavKeyboardHideInit\(\);\s*\}/.test(
@@ -72,6 +59,12 @@ function staticGate() {
     {
       id: "unified_keyboard_open_vars",
       pass: /html\.iu-keyboard-open\s*\{[\s\S]*--bottom-nav-height:\s*0px/.test(unified),
+    },
+    {
+      id: "unified_keeps_safe_var_env",
+      pass:
+        /--iu-mobile-bottom-safe:\s*env\(safe-area-inset-bottom/.test(unified) &&
+        !/html\.iu-keyboard-open\s*\{[\s\S]*--iu-mobile-bottom-safe:\s*0px/.test(unified),
     },
     {
       id: "unified_keyboard_open_nav_display_none",
@@ -117,16 +110,55 @@ function waitForPort(host, port, timeoutMs) {
   });
 }
 
-async function measureKeyboardState(page, forceOpen) {
-  return page.evaluate((open) => {
+async function installVvMock(page) {
+  await page.addInitScript(() => {
+    const state = { heightFactor: 1, offsetTop: 0 };
+    const listeners = { resize: new Set(), scroll: new Set() };
+    const vv = {
+      get width() {
+        return window.innerWidth;
+      },
+      get height() {
+        return Math.max(1, Math.round(window.innerHeight * state.heightFactor));
+      },
+      get offsetTop() {
+        return state.offsetTop;
+      },
+      get offsetLeft() {
+        return 0;
+      },
+      get scale() {
+        return 1;
+      },
+      addEventListener(type, fn) {
+        if (listeners[type]) listeners[type].add(fn);
+      },
+      removeEventListener(type, fn) {
+        if (listeners[type]) listeners[type].delete(fn);
+      },
+      __iuSetKeyboard(open) {
+        state.heightFactor = open ? 0.55 : 1;
+        state.offsetTop = 0;
+        listeners.resize.forEach((fn) => {
+          try {
+            fn();
+          } catch (_) {}
+        });
+      },
+    };
+    Object.defineProperty(window, "visualViewport", {
+      configurable: true,
+      get() {
+        return vv;
+      },
+    });
+    window.__iuMockKeyboard = (open) => vv.__iuSetKeyboard(!!open);
+  });
+}
+
+async function readNavState(page) {
+  return page.evaluate(() => {
     const root = document.documentElement;
-    if (open) {
-      root.classList.add("iu-keyboard-open");
-      document.body.classList.add("iu-keyboard-open");
-    } else {
-      root.classList.remove("iu-keyboard-open");
-      document.body.classList.remove("iu-keyboard-open");
-    }
     const nav = document.getElementById("iuMobileBottomNav");
     const cs = nav ? getComputedStyle(nav) : null;
     const rootCs = getComputedStyle(root);
@@ -135,11 +167,30 @@ async function measureKeyboardState(page, forceOpen) {
       hasClass: root.classList.contains("iu-keyboard-open"),
       display: cs ? cs.display : "missing",
       visibility: cs ? cs.visibility : "missing",
+      pointerEvents: cs ? cs.pointerEvents : "missing",
       height: rect ? Math.round(rect.height) : -1,
       bottomNavHeight: String(rootCs.getPropertyValue("--bottom-nav-height") || "").trim(),
       safeSpace: String(rootCs.getPropertyValue("--iu-mobile-bottom-nav-safe-space") || "").trim(),
+      safeVar: String(rootCs.getPropertyValue("--iu-mobile-bottom-safe") || "").trim(),
     };
-  }, forceOpen);
+  });
+}
+
+async function ensureProbeInputs(page) {
+  await page.evaluate(() => {
+    let host = document.getElementById("iuKbHideGuardHost");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "iuKbHideGuardHost";
+      host.style.cssText = "position:fixed;left:8px;top:8px;z-index:20000;display:flex;gap:8px;";
+      host.innerHTML =
+        '<input id="iuKbHideA" type="text" autocomplete="off" />' +
+        '<input id="iuKbHideB" type="text" autocomplete="off" />' +
+        '<input id="iuKbHideRo" type="text" readonly value="ro" />' +
+        '<input id="iuKbHideCb" type="checkbox" />';
+      document.body.appendChild(host);
+    }
+  });
 }
 
 async function runViewport(browser, vp) {
@@ -150,34 +201,101 @@ async function runViewport(browser, vp) {
   });
   const page = await context.newPage();
   try {
+    await installVvMock(page);
     await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
     await page.waitForSelector("#iuMobileBottomNav", { timeout: 15000 });
-    await page.waitForTimeout(400);
+    await page.waitForFunction(() => typeof window.__iuMockKeyboard === "function", { timeout: 15000 });
+    await page.waitForTimeout(500);
+    await ensureProbeInputs(page);
 
-    const closed = await measureKeyboardState(page, false);
-    const open = await measureKeyboardState(page, true);
-    const restored = await measureKeyboardState(page, false);
+    const idle = await readNavState(page);
 
-    const closedOk =
-      closed.display !== "none" && closed.height > 40 && !/^0px$/.test(closed.bottomNavHeight);
+    await page.focus("#iuKbHideA");
+    await page.waitForTimeout(80);
+    const focusOnly = await readNavState(page);
+
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(120);
+    const open = await readNavState(page);
+
+    const blinkSamples = [];
+    await page.focus("#iuKbHideB");
+    for (let i = 0; i < 8; i++) {
+      await page.waitForTimeout(30);
+      blinkSamples.push(await readNavState(page));
+    }
+    const noBlink = blinkSamples.every((s) => s.hasClass === true && s.display === "none");
+
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.evaluate(() => {
+      const el = document.activeElement;
+      if (el && typeof el.blur === "function") el.blur();
+    });
+    await page.waitForTimeout(220);
+    const restored = await readNavState(page);
+
+    await page.focus("#iuKbHideRo");
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(120);
+    const readonlyOpen = await readNavState(page);
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.evaluate(() => {
+      const el = document.activeElement;
+      if (el && typeof el.blur === "function") el.blur();
+    });
+    await page.waitForTimeout(220);
+
+    await page.focus("#iuKbHideCb");
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(120);
+    const checkboxOpen = await readNavState(page);
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.evaluate(() => {
+      const el = document.activeElement;
+      if (el && typeof el.blur === "function") el.blur();
+    });
+    await page.waitForTimeout(220);
+
+    await page.evaluate(() => {
+      window.__iuMobileBottomNavKeyboardHideInit = 0;
+      if (typeof iuMobileBottomNavKeyboardHideInit === "function") {
+        /* not global */
+      }
+    });
+    await page.evaluate(() => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+
+    const idleOk =
+      idle.display !== "none" && idle.height > 40 && !/^0px$/.test(idle.bottomNavHeight);
+    const focusOnlyOk = focusOnly.hasClass === false && focusOnly.display !== "none";
     const openOk =
       open.hasClass === true &&
       open.display === "none" &&
+      open.pointerEvents === "none" &&
       open.height === 0 &&
-      (/^0px$/.test(open.bottomNavHeight) || open.bottomNavHeight === "0");
+      (/^0px$/.test(open.bottomNavHeight) || open.bottomNavHeight === "0") &&
+      (/^0px$/.test(open.safeSpace) || open.safeSpace === "0");
     const restoredOk =
       restored.hasClass === false &&
       restored.display !== "none" &&
       restored.height > 40 &&
       !/^0px$/.test(restored.bottomNavHeight);
+    const readonlyOk = readonlyOpen.hasClass === false;
+    const checkboxOk = checkboxOpen.hasClass === false;
 
     return {
       viewport: vp.name,
-      pass: closedOk && openOk && restoredOk,
-      closedOk,
+      pass: idleOk && focusOnlyOk && openOk && restoredOk && noBlink && readonlyOk && checkboxOk,
+      idleOk,
+      focusOnlyOk,
       openOk,
       restoredOk,
-      closed,
+      noBlink,
+      readonlyOk,
+      checkboxOk,
+      idle,
+      focusOnly,
       open,
       restored,
     };
@@ -192,19 +310,40 @@ async function runDesktop(browser) {
   });
   const page = await context.newPage();
   try {
+    await installVvMock(page);
     await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
-    const desk = await page.evaluate(() => {
-      const nav = document.getElementById("iuMobileBottomNav");
-      const before = nav ? getComputedStyle(nav).display : "missing";
-      document.documentElement.classList.add("iu-keyboard-open");
-      const after = nav ? getComputedStyle(nav).display : "missing";
-      document.documentElement.classList.remove("iu-keyboard-open");
-      return { beforeDisplay: before, afterDisplay: after };
-    });
+    await ensureProbeInputs(page);
+    await page.focus("#iuKbHideA");
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(150);
+    const desk = await readNavState(page);
     return {
       viewport: "DESKTOP",
-      pass: desk.beforeDisplay === "none" && desk.afterDisplay === "none",
+      pass: desk.hasClass === false && desk.display === "none",
       desk,
+    };
+  } finally {
+    await context.close();
+  }
+}
+
+async function runDesktopNarrowFalsePositive(browser) {
+  const context = await bootstrapGuardContext(browser, {
+    viewport: { width: 900, height: 700 },
+  });
+  const page = await context.newPage();
+  try {
+    await installVvMock(page);
+    await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
+    await page.waitForTimeout(400);
+    /* Gap bez focusu nesmí skrýt nav. */
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(150);
+    const gapOnly = await readNavState(page);
+    return {
+      viewport: "NARROW_GAP_ONLY",
+      pass: gapOnly.hasClass === false && gapOnly.display !== "none" && gapOnly.height > 40,
+      gapOnly,
     };
   } finally {
     await context.close();
@@ -255,6 +394,7 @@ async function main() {
       results.push(await runViewport(browser, vp));
     }
     results.push(await runDesktop(browser));
+    results.push(await runDesktopNarrowFalsePositive(browser));
   } finally {
     await browser.close();
     server.close();
