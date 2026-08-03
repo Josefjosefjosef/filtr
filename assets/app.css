@@ -23042,25 +23042,12 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   overflow:visible!important;
 }
 
-.iu-mmArticleActionsSections{
-  margin-top:14px;
-  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
-}
-.iu-mmArticleActionsSubtitle{
-  margin:10px 0 6px;
-  font-size:13px;
-  font-weight:700;
-  color:inherit;
-}
-.iu-mmArticleActionsPanel .iuMyInfoUzelList{
-  gap:8px;
-}
-.iu-mmArticleActionsPanel .iuMyInfoUzelItem{
-  background:transparent;
-  border-color:rgba(255,255,255,.14);
-}
-.iu-mmArticleActionsBlock--last{
-  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);
+.iu-mmArticleActionsSections,
+.iu-mmArticleActionsSubtitle,
+.iu-mmArticleActionsPanel,
+.iu-mmArticleActionsBlock--last,
+#iuMmArticleActionsSections{
+  display:none!important;
 }
 
 #feed.iuTimelineFeed .iuTimelineAction--follow{
@@ -23171,79 +23158,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
   #feed.iuTimelineFeed article.iuTimelineItem--video .iuTimelineVideoIcon{
     color:var(--iu-brand-blue);
   }
-  #iuMindMenuView .iu-mmArticleActionsSections,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections{
-    margin-top:18px;
-    margin-left:0;
-    margin-right:0;
-    width:100%;
-    max-width:100%;
-    box-sizing:border-box;
-    padding:14px 4px calc(env(safe-area-inset-bottom,0px) + 14px);
-    border-top:1px solid rgba(148,163,184,.16);
-    background:linear-gradient(165deg,rgba(240,247,255,.96) 0%,rgba(245,243,255,.92) 52%,rgba(236,252,251,.94) 100%);
-    border:1px solid rgba(0,60,255,.08);
-    border-radius:14px;
-    box-shadow:0 8px 24px rgba(11,42,74,.06),inset 0 1px 0 rgba(255,255,255,.72);
-  }
-  #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__nav,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__nav{margin-top:4px}
-  #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__tab,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iuMmManageTabs__tab{font-size:11px;padding:7px 8px}
-  #iuMindMenuView .iu-mmArticleActionsSections .iu-mmSectionTitle,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSections .iu-mmSectionTitle{
-    color:#0B2A4A;
-    font-size:15px;
-    font-weight:800;
-    letter-spacing:-0.01em;
-  }
-  #iuMindMenuView .iu-mmArticleActionsSubtitle,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSubtitle{
-    color:#334155;
-    font-weight:700;
-    font-size:14px;
-    letter-spacing:-0.01em;
-  }
-  #iuMindMenuView .iu-mmArticleActionsSubtitle--saved,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSubtitle--saved{
-    color:#F59E0B;
-  }
-  #iuMindMenuView .iu-mmArticleActionsSubtitle--followed,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSubtitle--followed{
-    color:#003CFF;
-  }
-  #iuMindMenuView .iu-mmArticleActionsSubtitle--hidden,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsSubtitle--hidden{
-    color:#DC2626;
-  }
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItem,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItem{
-    background:rgba(255,255,255,.78);
-    border:1px solid rgba(148,163,184,.18);
-    border-radius:12px;
-    box-shadow:0 2px 8px rgba(11,42,74,.04);
-  }
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemLink,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemLink{
-    color:#0B2A4A;
-  }
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemMeta,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemMeta,
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelEmpty,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelEmpty{
-    color:#64748B;
-  }
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn{
-    border:1px solid rgba(0,60,255,.22);
-    background:rgba(255,255,255,.92);
-    color:#0B2A4A;
-    border-radius:8px;
-  }
-  #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn:hover,
-  #iuMobileGatePanelTools #iuMindMenuView .iu-mmArticleActionsPanel .iuMyInfoUzelItemBtn:hover{
-    background:rgba(0,60,255,.08);
-  }
 }
 
 @media (max-width:1024px){
@@ -23316,7 +23230,6 @@ header#topbarWrap.topbar-new.iuTopbar.iuTopbarPaint .iuBrand:hover .iuBrand__cz{
 .mindMenu section.iu-mmQuickLinks .iu-mmSectionHead{width:100%;margin-top:18px}
 .mindMenu section.iu-mmQuickLinks .iu-quicktools-settings-trigger{flex:0 0 auto;margin-left:8px}
 @media (max-width:1024px){
-  #iuMobileGatePanelTools .mindMenu .iu-mmArticleActionsSections,#iuMindMenuView .iu-mmArticleActionsSections{padding:14px 4px calc(env(safe-area-inset-bottom,0px) + 14px)!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important}
   #iuMobileGatePanelTools .mindMenu,#iuMobileGatePanelTools .mindMenu-scroll-wrapper{width:100%!important;max-width:100%!important}
 }
 @media (hover:hover) and (pointer:fine){

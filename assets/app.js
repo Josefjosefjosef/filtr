@@ -8205,19 +8205,7 @@ try {
 
   function iuArticleActionsRefreshManagePanels() {
     try {
-      iuArticleActionsEnsureMindMenuSections();
-      const overlay = document.getElementById("iuMyInfoUzelOverlay");
-      if (overlay) {
-        iuArticleActionsRenderManageList("saved", overlay.querySelector("[data-iu-manage-panel='saved']"));
-        iuArticleActionsRenderManageList("followed", overlay.querySelector("[data-iu-manage-panel='followed']"));
-        iuArticleActionsRenderManageList("hidden", overlay.querySelector("[data-iu-manage-panel='hidden']"));
-      }
-      const mmSaved = document.getElementById("iuMmSavedArticlesPanel");
-      const mmFollowed = document.getElementById("iuMmFollowedTopicsPanel");
-      const mmHidden = document.getElementById("iuMmHiddenArticlesPanel");
-      if (mmSaved) iuArticleActionsRenderManageList("saved", mmSaved);
-      if (mmFollowed) iuArticleActionsRenderManageList("followed", mmFollowed);
-      if (mmHidden) iuArticleActionsRenderManageList("hidden", mmHidden);
+      iuArticleActionsRemoveMindMenuArticleSections();
       iuArticleActionsSyncFeedStates(document.getElementById("feed"));
     } catch (_) {}
   }
@@ -8305,7 +8293,7 @@ try {
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow")) {
+      if (existing && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow") && !existing.querySelector(".iuMyInfoUzelDashboard__col--saved") && !existing.querySelector("[data-iu-manage-tabs]")) {
         iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
         return;
       }
@@ -8336,58 +8324,16 @@ try {
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--tools">
                 <div id="iuMyInfoUzelToolsHost" class="iuMyInfoUzelToolsHost"></div>
               </div>
-              <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--saved">
-                <div class="iuMmManageTabs" data-iu-manage-tabs>
-                  <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
-                    <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-                    <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
-                  </div>
-                  <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
-                    <div data-iu-manage-panel="saved"></div>
-                  </div>
-                  <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
-                    <div data-iu-manage-panel="hidden"></div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       `.trim();
       document.body.appendChild(overlay);
       iuQuickToolsBindToolsHostGearOnce(overlay.querySelector("#iuMyInfoUzelToolsHost"));
-      const manageTabs = overlay.querySelector("[data-iu-manage-tabs]");
-      if (manageTabs) iuArticleActionsInitManageTabs(manageTabs);
       overlay.addEventListener("click", (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
         if (t.closest("[data-iu-myinfouzel-close]")) iuArticleActionsCloseOverlay();
-        const manageBtn = t.closest("[data-iu-manage-action]");
-        if (manageBtn) {
-          const action = manageBtn.getAttribute("data-iu-manage-action");
-          if (action === "unsave") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            const list = iuArticleActionsGetSavedList().filter(
-              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-            );
-            iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
-            iuArticleActionsRefreshManagePanels();
-          } else if (action === "unfollow") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            const list = iuArticleActionsGetFollowedList().filter(
-              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-            );
-            iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
-            iuArticleActionsRefreshManagePanels();
-          } else if (action === "restore") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            iuArticleActionsRemoveHidden(id);
-            iuArticleActionsRefreshManagePanels();
-            try {
-              if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
-            } catch (_) {}
-          }
-        }
       });
     } catch (_) {}
   }
@@ -8520,69 +8466,11 @@ try {
     }
   } catch (_) {}
 
-  function iuArticleActionsEnsureMindMenuSections() {
+  function iuArticleActionsRemoveMindMenuArticleSections() {
     try {
-      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
-      const existingSections = mindMenu && mindMenu.querySelector("#iuMmArticleActionsSections");
-      if (existingSections) {
-        if (existingSections.querySelector("[data-iu-manage-tabs]")) return;
-        existingSections.remove();
-      }
-      if (!mindMenu) return;
-      const wrap = document.createElement("section");
-      wrap.id = "iuMmArticleActionsSections";
-      wrap.className = "iu-mmArticleActionsSections";
-      wrap.setAttribute("aria-label", "Moje články a témata");
-      wrap.innerHTML = `
-        <div class="iu-mmSectionHead">
-          <div class="iu-mmSectionTitle">Moje články</div>
-          <div class="iu-mmSectionLine" aria-hidden="true"></div>
-        </div>
-        <div class="iuMmManageTabs iuMmManageTabs--mobile" data-iu-manage-tabs>
-          <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
-            <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-            <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
-          </div>
-          <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
-            <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-          </div>
-          <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
-            <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-          </div>
-        </div>
-      `.trim();
-      mindMenu.appendChild(wrap);
-      const mmTabs = wrap.querySelector("[data-iu-manage-tabs]");
-      if (mmTabs) iuArticleActionsInitManageTabs(mmTabs);
-      wrap.addEventListener("click", (e) => {
-        const t = e.target;
-        if (!(t instanceof Element)) return;
-        const manageBtn = t.closest("[data-iu-manage-action]");
-        if (!manageBtn) return;
-        const action = manageBtn.getAttribute("data-iu-manage-action");
-        if (action === "unsave") {
-          const id = manageBtn.getAttribute("data-iu-article-id");
-          const list = iuArticleActionsGetSavedList().filter(
-            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-          );
-          iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
-          iuArticleActionsRefreshManagePanels();
-        } else if (action === "unfollow") {
-          const id = manageBtn.getAttribute("data-iu-article-id");
-          const list = iuArticleActionsGetFollowedList().filter(
-            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-          );
-          iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
-          iuArticleActionsRefreshManagePanels();
-        } else if (action === "restore") {
-          iuArticleActionsRemoveHidden(manageBtn.getAttribute("data-iu-article-id"));
-          iuArticleActionsRefreshManagePanels();
-          try {
-            if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
-          } catch (_) {}
-        }
+      document.querySelectorAll("#iuMmArticleActionsSections, .iu-mmArticleActionsSections, .iuMyInfoUzelDashboard__col--saved").forEach((el) => {
+        try { el.remove(); } catch (_) {}
       });
-      iuArticleActionsRefreshManagePanels();
     } catch (_) {}
   }
 
@@ -8678,7 +8566,7 @@ try {
       if (window.__iuArticleActionsInit) return;
       window.__iuArticleActionsInit = 1;
       iuArticleActionsEnsureOverlay();
-      iuArticleActionsEnsureMindMenuSections();
+      iuArticleActionsRemoveMindMenuArticleSections();
       iuArticleActionsEnsureDesktopButton();
       iuArticleActionsRefreshManagePanels();
       try {

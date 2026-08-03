@@ -118,7 +118,7 @@
 
   .iuMyInfoUzelDashboard {
     display: grid;
-    grid-template-columns: minmax(300px, 38fr) minmax(220px, 31fr) minmax(220px, 31fr);
+    grid-template-columns: minmax(300px, 38fr) minmax(440px, 62fr);
     gap: 12px 16px;
     align-items: start;
     min-width: 0;
@@ -151,22 +151,6 @@
     padding: 14px 14px 16px;
   }
 
-  .iuMyInfoUzelDashboard__col--saved {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: linear-gradient(180deg, rgba(252, 252, 252, 0.98) 0%, rgba(255, 255, 255, 0.94) 100%);
-    border: 1px solid rgba(0, 60, 255, 0.08);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.82),
-      0 2px 12px rgba(11, 42, 74, 0.04);
-    padding: 14px 14px 16px;
-  }
-
-  .iuMyInfoUzelDashboard__col--saved .iuMyInfoUzelSection {
-    margin-bottom: 0;
-  }
-
   .iuMyInfoUzelMindMenuHost .mindMenu,
   .iuMyInfoUzelMindMenuHost #iuMindMenuView {
     display: flex;
@@ -175,7 +159,6 @@
     min-width: 0;
   }
 
-  .iuMyInfoUzelMindMenuHost #iuMmArticleActionsSections,
   .iuMyInfoUzelMindMenuHost section.iu-mmQuickLinks {
     display: none !important;
   }
@@ -539,38 +522,6 @@
   body.iu-myinfouzel-open.iu-quicktools-settings-mobile-open {
     overflow: hidden !important;
   }
-
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 10px;
-  }
-
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab {
-    flex: 1 1 auto;
-    min-width: 0;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    background: rgba(255, 255, 255, 0.92);
-    color: #334155;
-    border-radius: var(--iu-miu-radius);
-    padding: 8px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
-  }
-
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab.is-active {
-    color: #0b2a4a;
-    border-color: rgba(0, 60, 255, 0.22);
-    background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(255, 255, 255, 0.96));
-    box-shadow: 0 2px 8px rgba(11, 42, 74, 0.08);
-  }
-
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--saved.is-active { border-color: rgba(245, 158, 11, 0.34); }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--followed.is-active { border-color: rgba(0, 60, 255, 0.28); }
-  .iuMyInfoUzelDashboard__col--saved .iuMmManageTabs__tab--hidden.is-active { border-color: rgba(220, 38, 38, 0.26); }
 
   .iuMyInfoUzelOverlay .iuMyInfoUzelList {
     gap: 14px;
