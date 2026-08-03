@@ -30,10 +30,10 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=obec-orp-filter-v1-20260802";
+} from "./iu-info-system-core-v1.js?v=chmi-locality-filter-vse-v1-20260803";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -350,41 +350,16 @@ function prefsForMode(prefs, mode) {
   base.unreadOnly = false;
   base.savedOnly = false;
   if (mode === "all") {
-    return {
-      sections: [],
-      eventTypes: [],
-      sourceGroups: [],
-      sourceIds: [],
-      orgTypes: [],
-      lanes: [],
-      connectorTypes: [],
-      statuses: [],
-      regionLevels: [],
-      institutions: [],
-      favoriteSourceIds: [],
-      favoriteLanes: [],
-      favoriteRegions: [],
-      favoriteInstitutions: [],
-      homeKraj: "",
-      homeOkres: "",
-      homeObec: "",
-      regionalDoprava: false,
-      regionalKrize: false,
-      regionalZdravi: false,
-      myRegionOnly: false,
-      localityQuery: "",
-      localities: [],
-      searchQuery: "",
-      sortMode: "nejnovejsi",
-      timeRangeHours: 0,
-      importanceMin: 0,
-      activeOnly: false,
-      newOnly: false,
-      unreadOnly: false,
-      savedOnly: false,
-      favoritesOnly: false,
-      activeViewId: "",
-    };
+    // Temporary locality bypass only — never mutate stored prefs / localStorage.
+    // Topics, sources and other settings stay; cards behave as if no locality was selected.
+    base.localityQuery = "";
+    base.localities = [];
+    base.homeKraj = "";
+    base.homeOkres = "";
+    base.homeObec = "";
+    base.myRegionOnly = false;
+    base.favoriteRegions = [];
+    return base;
   }
   if (mode === "saved") {
     base.savedOnly = true;
@@ -397,11 +372,16 @@ function prefsForMode(prefs, mode) {
   return base;
 }
 
+/** Effective prefs for the current view (includes temporary Vše locality bypass). */
+function effectivePrefs() {
+  const prefs = state.prefs || getPrefs();
+  return prefsForMode(prefs, state.viewMode);
+}
+
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
-  const prefs = state.prefs || getPrefs();
+  const f = effectivePrefs();
   const mode = state.viewMode;
-  const f = prefsForMode(prefs, mode);
   const opts = {
     index: state.index,
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
@@ -468,7 +448,7 @@ function renderItem(ev) {
   const forced = chmiPublicDetailUrl(ev);
   // CHMI: never fall back to XML / specialized publisher web — portal only.
   const url = ev && ev.capV2 ? safeHttpUrl(forced) : safeHttpUrl(forced || ev.url || ev.originalUrl);
-  const locationFilter = state.prefs || getPrefs();
+  const locationFilter = effectivePrefs();
   const title = displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
   const srcPill = ev.capV2
@@ -508,7 +488,16 @@ function renderItem(ev) {
       : `<div class="iuPrehledDne__issued">${esc(issued)}</div>`;
   }
   let timeValidFrom = "";
-  if (timeline.secondaryValidFromLabel && (timeline.secondaryValidFromDate || timeline.secondaryValidFromTime)) {
+  if (timeline.isFutureWarning && timeline.secondaryValidFromLabel) {
+    // One red sentence for future CAP only (date + time + hod. already in label).
+    timeValidFrom =
+      `<div class="iuPrehledDne__validFrom iuPrehledDne__validFrom--futureSentence">` +
+      `<span class="iuPrehledDne__validFromWord">${esc(timeline.secondaryValidFromLabel)}</span>` +
+      `</div>`;
+  } else if (
+    timeline.secondaryValidFromLabel &&
+    (timeline.secondaryValidFromDate || timeline.secondaryValidFromTime)
+  ) {
     timeValidFrom =
       `<div class="iuPrehledDne__validFrom">` +
       `<span class="iuPrehledDne__validFromWord">${esc(timeline.secondaryValidFromLabel)}</span>` +
@@ -1415,6 +1404,8 @@ function wire() {
     if (act === "mode") {
       const m = t.getAttribute("data-mode");
       if (m === "all") {
+        // Toggle: 1st click → temporary locality bypass; 2nd click → restore saved filter (home).
+        // Never writes localities to localStorage / prefs.
         state.viewMode = state.viewMode === "all" ? "home" : "all";
       } else {
         state.viewMode = m;

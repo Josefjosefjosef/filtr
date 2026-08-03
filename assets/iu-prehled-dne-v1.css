@@ -266,7 +266,7 @@
   opacity: 0.92;
 }
 
-/* FUTURE CHMI: whole „Platí od“ block (label + date + time) is red until onset. */
+/* FUTURE CHMI: whole „Výstraha ČHMÚ platí od … hod.“ sentence is red until onset. */
 .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFrom,
 .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromWord,
 .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromDate,
@@ -274,6 +274,17 @@
   color: #dc2626;
   opacity: 1;
   font-weight: 650;
+}
+.iuPrehledDne__validFrom--futureSentence {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  text-align: right;
+  max-width: 11.5rem;
+}
+.iuPrehledDne__validFrom--futureSentence .iuPrehledDne__validFromWord {
+  display: inline;
+  white-space: normal;
 }
 
 .iuPrehledDne__rel {

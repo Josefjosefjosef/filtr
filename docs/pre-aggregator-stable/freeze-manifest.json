@@ -1,17 +1,17 @@
 {
-  "freezeId": "silver-date-time-fit-v2-20260803",
+  "freezeId": "chmi-locality-filter-vse-v1-20260803",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-03T16:00:00Z",
-  "note": "Freeze bump: Silver date/time fit v2 — path-bust premium-draft CSS + SW shell + overflow clip for iOS WebKit.",
+  "updatedAt": "2026-08-03T18:30:00Z",
+  "note": "Freeze bump: CHMI locality filter+title unify, future sentence „platí od … hod.“, Vše locality bypass, SW/cache bust.",
   "files": {
-    "projects/index.html": "0479852a35b444a148179628b03ba4f8fad9fd7a78138312566a044e265b7b43",
+    "projects/index.html": "2fb4e85cc891ef924a6c880d87d34783469b579a8be0442c54e750380b6d8298",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
     "assets/app.js": "25318e8630cd62ad2737c0588f582aad764d7905d6292653c07d5dbf0d07e725",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "ff33bcb9f46bcc853ff5b3df3625f81abc4bc2ca0eeefef3bb20a53edd572ed7",
+    "sw.js": "61df68abb29beca9072fbf224a46a744032e8d114eed9f054531f6f84128fa84",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-03-date-time-fit-v2\"",
+      "CACHE_VERSION = \"2026-08-03-chmi-filter-vse-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",

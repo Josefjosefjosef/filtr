@@ -19,7 +19,7 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const PICKER = path.join(ROOT, "projects", "data", "cz_localities_picker.json");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "data", "geo-registry.json");
 const BUILD = path.join(ROOT, "scripts", "build-cz-localities-picker.mjs");
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -251,7 +251,7 @@ function unitGate(IU) {
   };
   const labelA = IU.getFilteredWarningLocationLabel(a, multiSel);
   const labelB = IU.getFilteredWarningLocationLabel(b, multiSel);
-  ok("card_a_nupaky_pruhonice", labelA === "Nupaky, Průhonice a dalších 84 oblastí", labelA);
+  ok("card_a_nupaky_pruhonice", labelA === "Nupaky, Průhonice a dalších 83 oblastí", labelA);
   ok("card_a_no_brno", !/Brno/.test(labelA), labelA);
   ok("card_b_brno_only", labelB === "Brno a dalších 84 oblastí", labelB);
   ok("card_b_no_nupaky", !/Nupaky|Průhonice/.test(labelB), labelB);
@@ -346,7 +346,8 @@ function unitGate(IU) {
     level: "mesto",
   }));
   const title20 = IU.getFilteredWarningLocationLabel(a, { localities: twenty });
-  const expected20 = twenty.map((x) => x.name).join(", ") + " a dalších 84 oblastí";
+  // 20 obce across 2 unique ORPs ⇒ remainder = 85 links − 2 ORPs = 83
+  const expected20 = twenty.map((x) => x.name).join(", ") + " a dalších 83 oblastí";
   ok("title_all_20_names", title20 === expected20, title20.slice(0, 120));
   ok("title_20_order_stable", title20.startsWith("Obec01, Obec02, Obec03"), title20.slice(0, 40));
 

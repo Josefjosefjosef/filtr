@@ -17,7 +17,7 @@ const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
 const FEED = path.join(ROOT, "projects", "data", "info_events", "feed.json");
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -157,10 +157,10 @@ const alertItem = baseItem({
 const aRolled = IU.getEffectiveTimelinePresentation(alertItem, nowActive);
 ok("alert_rolled_word", /^Vydáno\s/.test(String(aRolled.secondaryIssuedLabel || "")), String(aRolled.secondaryIssuedLabel));
 ok("alert_rolled_day", /29\.\s*7/.test(String(aRolled.secondaryIssuedLabel || "")), String(aRolled.secondaryIssuedLabel));
-ok("alert_plati_od", aRolled.secondaryValidFromLabel === "Platí od", String(aRolled.secondaryValidFromLabel));
-ok("alert_vf_time", aRolled.secondaryValidFromTime === "10:40", String(aRolled.secondaryValidFromTime));
+ok("alert_no_future_sentence", !aRolled.secondaryValidFromLabel, String(aRolled.secondaryValidFromLabel));
+ok("alert_no_vf_split", aRolled.secondaryValidFromTime == null && aRolled.secondaryValidFromDate == null, "split");
 
-// 2) Alert → Update (rolled day): Aktualizováno + last Update sent day; Platí od = segment start
+// 2) Alert → Update (rolled day): Aktualizováno + last Update sent day; no future-only Platí od sentence
 const updateItem = baseItem({
   publishedAtSource: "2026-07-31T11:29:00+02:00",
   publishedAt: "2026-07-31T11:29:00+02:00",
@@ -176,9 +176,8 @@ const nowRolled = Date.parse("2026-08-01T12:00:00+02:00");
 const u = IU.getEffectiveTimelinePresentation(updateItem, nowRolled);
 ok("update_word", /^Aktualizováno\s/.test(String(u.secondaryIssuedLabel || "")), String(u.secondaryIssuedLabel));
 ok("update_day", /31\.\s*7/.test(String(u.secondaryIssuedLabel || "")), String(u.secondaryIssuedLabel));
-ok("update_plati_od", u.secondaryValidFromLabel === "Platí od", String(u.secondaryValidFromLabel));
-ok("update_vf_date", /29\.\s*7/.test(String(u.secondaryValidFromDate || "")), String(u.secondaryValidFromDate));
-ok("update_vf_time", u.secondaryValidFromTime === "10:40", String(u.secondaryValidFromTime));
+ok("update_no_future_sentence", !u.secondaryValidFromLabel, String(u.secondaryValidFromLabel));
+ok("update_no_vf_split", u.secondaryValidFromDate == null && u.secondaryValidFromTime == null, "split");
 ok("update_not_vydano", !/Vydáno/i.test(String(u.secondaryIssuedLabel || "")), String(u.secondaryIssuedLabel));
 
 // Same calendar day as Update sent: secondary shows Update clock; primary carries validFrom
@@ -206,8 +205,8 @@ const update2 = baseItem({
 const u2 = IU.getEffectiveTimelinePresentation(update2, Date.parse("2026-08-02T12:00:00+02:00"));
 ok("update2_word", /^Aktualizováno\s/.test(String(u2.secondaryIssuedLabel || "")), String(u2.secondaryIssuedLabel));
 ok("update2_day", /1\.\s*8/.test(String(u2.secondaryIssuedLabel || "")), String(u2.secondaryIssuedLabel));
-ok("update2_vf_stable", u2.secondaryValidFromTime === "10:40", String(u2.secondaryValidFromTime));
-ok("update2_vf_date_stable", /29\.\s*7/.test(String(u2.secondaryValidFromDate || "")), String(u2.secondaryValidFromDate));
+ok("update2_no_future_sentence", !u2.secondaryValidFromLabel, String(u2.secondaryValidFromLabel));
+ok("update2_no_vf_split", u2.secondaryValidFromTime == null && u2.secondaryValidFromDate == null, "split");
 
 // 4) New lifecycle segment: labels follow new chain, not previous segment
 const newSeg = baseItem({
@@ -244,8 +243,9 @@ const fut = baseItem({
 });
 const fBefore = IU.getEffectiveTimelinePresentation(fut, Date.parse("2026-07-31T12:00:00+02:00"));
 const fAfter = IU.getEffectiveTimelinePresentation(fut, Date.parse("2026-07-31T15:00:00+02:00"));
-ok("future_plati_od", fBefore.secondaryValidFromLabel === "Platí od", String(fBefore.secondaryValidFromLabel));
-ok("future_vf_1400", fBefore.secondaryValidFromTime === "14:00", String(fBefore.secondaryValidFromTime));
+ok("future_plati_od", fBefore.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 31. 7. 14:00 hod.", String(fBefore.secondaryValidFromLabel));
+ok("future_vf_1400", fBefore.secondaryValidFromTime == null && fBefore.secondaryValidFromDate == null, "split");
+ok("active_clears_future_sentence", !fAfter.secondaryValidFromLabel, String(fAfter.secondaryValidFromLabel));
 ok("active_primary_onset", fAfter.primaryTime === "14:00", String(fAfter.primaryTime));
 ok(
   "active_aktualizovano_sent",
@@ -293,7 +293,7 @@ const shuffled = {
 };
 const sh = IU.getEffectiveTimelinePresentation(shuffled, nowRolled);
 ok("shuffle_same_label", sh.secondaryIssuedLabel === u.secondaryIssuedLabel, String(sh.secondaryIssuedLabel));
-ok("shuffle_same_vf", sh.secondaryValidFromTime === u.secondaryValidFromTime, String(sh.secondaryValidFromTime));
+ok("shuffle_same_vf", sh.secondaryValidFromLabel === u.secondaryValidFromLabel, String(sh.secondaryValidFromLabel));
 
 // 8) Duplicate delivery of same revision — same result
 const dup1 = IU.getEffectiveTimelinePresentation(deepClone(updateItem), nowRolled);

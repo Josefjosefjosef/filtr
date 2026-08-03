@@ -22,7 +22,7 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const PARCEL_CSS = path.join(ROOT, "assets", "iu-silver-parcel-dashboard.css");
 const APP_JS = path.join(ROOT, "assets", "app.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -92,19 +92,20 @@ function warning(overrides) {
 
 function staticGate() {
   const ui = fs.readFileSync(UI, "utf8");
+  const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.js"), "utf8");
   const css = fs.readFileSync(CSS, "utf8");
   const parcel = fs.readFileSync(PARCEL_CSS, "utf8");
   const app = fs.readFileSync(APP_JS, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
 
   ok("ui_future_class_bind", /is-futureWarning/.test(ui) && /timeline\.isFutureWarning/.test(ui), "bind");
-  ok("ui_valid_from_markup", /iuPrehledDne__validFromWord/.test(ui) && /iuPrehledDne__validFromDate/.test(ui) && /iuPrehledDne__validFromTime/.test(ui), "markup");
+  ok("ui_future_sentence_markup", /validFrom--futureSentence/.test(ui) && /Výstraha ČHMÚ platí od/.test(core), "sentence");
   ok("ui_boundary_refresh", /scheduleTimelineBoundaryRefresh/.test(ui) && /visibilitychange/.test(ui) && /pageshow/.test(ui), "auto");
   ok("ui_timer_clears_before_reschedule", /clearTimeout\(state\.timelineBoundaryTimer\)/.test(ui) && /state\.timelineBoundaryTimer\s*=\s*setTimeout/.test(ui), "timer clear");
   ok("ui_no_timeline_setInterval", !/setInterval\s*\(\s*\(\)\s*=>\s*\{[\s\S]{0,80}paint\(/.test(ui), "no interval paint");
   ok("ui_listeners_once", /if\s*\(\s*state\.timelineListenersBound\s*\)\s*return/.test(ui), "listeners once");
   ok("ui_no_manual_theme_toggle", !/toggleFuture|manualFuture|forceFutureRed/.test(ui), "manual");
-  ok("freeze_manifest_bumped", /obec-orp-filter-v1-20260802/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
+  ok("freeze_manifest_bumped", /chmi-locality-filter-vse-v1-20260803/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
 
   ok("css_future_red_block", /\.iuPrehledDne__item\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css), "red block");
   ok("css_future_red_word", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css), "red word");
@@ -140,9 +141,13 @@ function unitGate(IU) {
 
   const pre = IU.getEffectiveTimelinePresentation(future, before);
   ok("unit_pre_future", pre.isFutureWarning === true && pre.isActiveWarning === false, "flags");
-  ok("unit_pre_label", pre.secondaryValidFromLabel === "Platí od", String(pre.secondaryValidFromLabel));
-  ok("unit_pre_date", !!pre.secondaryValidFromDate, String(pre.secondaryValidFromDate));
-  ok("unit_pre_time", pre.secondaryValidFromTime === "16:00", String(pre.secondaryValidFromTime));
+  ok(
+    "unit_pre_sentence",
+    pre.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 2. 8. 16:00 hod.",
+    String(pre.secondaryValidFromLabel)
+  );
+  ok("unit_pre_no_split_date", pre.secondaryValidFromDate == null, String(pre.secondaryValidFromDate));
+  ok("unit_pre_no_split_time", pre.secondaryValidFromTime == null, String(pre.secondaryValidFromTime));
 
   const post = IU.getEffectiveTimelinePresentation(future, after);
   ok("unit_post_active", post.isActiveWarning === true && post.isFutureWarning === false, "after onset");
@@ -163,7 +168,7 @@ function unitGate(IU) {
     "onset future flag"
   );
 
-  // Rolled ACTIVE may still show Platí od — must NOT be treated as future.
+  // Rolled ACTIVE must NEVER show the future-only sentence.
   const rolled = warning({
     id: "ie-chmi-v2-rolled",
     publishedAtSource: "2026-08-01T10:00:00+02:00",
@@ -174,6 +179,7 @@ function unitGate(IU) {
   const rolledSnap = IU.getEffectiveTimelinePresentation(rolled, before);
   ok("unit_rolled_active", rolledSnap.isActiveWarning === true, "rolled active");
   ok("unit_rolled_not_future", rolledSnap.isFutureWarning === false, "rolled not future");
+  ok("unit_rolled_no_future_sentence", !rolledSnap.secondaryValidFromLabel, String(rolledSnap.secondaryValidFromLabel));
 }
 
 function main() {

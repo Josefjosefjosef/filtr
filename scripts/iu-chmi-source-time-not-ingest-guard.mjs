@@ -104,8 +104,8 @@ const drought = {
 const d = IU.getEffectiveTimelinePresentation(drought, Date.parse("2026-07-31T12:00:00+02:00"));
 ok("open_ended_rolled", d.isRolledActiveWarning === true, String(d.isRolledActiveWarning));
 ok("open_ended_issued_day", /Vydáno\s*28\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
-ok("open_ended_platnost", d.secondaryValidFromLabel === "Platí od", String(d.secondaryValidFromLabel));
-ok("open_ended_vf_time", d.secondaryValidFromTime === "14:00", String(d.secondaryValidFromTime));
+ok("open_ended_no_future_sentence", !d.secondaryValidFromLabel, String(d.secondaryValidFromLabel));
+ok("open_ended_no_vf_split", d.secondaryValidFromTime == null && d.secondaryValidFromDate == null, "split");
 ok("open_ended_not_sync_day_as_issued", !/31\.\s*7/.test(String(d.secondaryIssuedLabel || "")), String(d.secondaryIssuedLabel));
 
 if (fails.length) {
