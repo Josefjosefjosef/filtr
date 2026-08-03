@@ -39,6 +39,7 @@ import {
   emptyTmcStore,
   tmcPublicMeta,
 } from "./ndic-datex-v1/tmc-table.mjs";
+import { parseTmcTableFromDownload } from "./ndic-datex-v1/tmc-zip.mjs";
 import { isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { assertAllowedPullUrl } from "./ndic-datex-v1/config.mjs";
 
@@ -112,7 +113,7 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
       headers: {
         "User-Agent": config.userAgent,
         Authorization: `Basic ${token}`,
-        Accept: "application/json, text/plain, */*",
+        Accept: "application/zip, application/json, text/plain, */*",
       },
       redirect: "error",
     });
@@ -125,8 +126,13 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
       diagnostics.tmc = { ok: false, reason: "http_" + res.status, meta: tmcPublicMeta(tmcStore) };
       return tmcStore;
     }
-    const body = await res.text();
-    const table = parseTmcTablePayload(body);
+    const ab = await res.arrayBuffer();
+    const bodyBuf = Buffer.from(ab);
+    if (bodyBuf.length > config.limits.maxResponseBytes) {
+      diagnostics.tmc = { ok: false, reason: "tmc_body_too_large", meta: tmcPublicMeta(tmcStore) };
+      return tmcStore;
+    }
+    const table = parseTmcTableFromDownload(bodyBuf, { limits: config.limits });
     const act = activateTmcTable(tmcStore, table, {
       countryCode: config.tmcCountryCode,
       tableNumber: config.tmcLocationTableNumber,

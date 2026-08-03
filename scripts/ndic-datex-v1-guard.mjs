@@ -19,6 +19,11 @@ import {
   emptyTmcStore,
   tmcPublicMeta,
 } from "./ndic-datex-v1/tmc-table.mjs";
+import {
+  buildStoredZip,
+  parseTmcTableFromDownload,
+  safeUnzipEntries,
+} from "./ndic-datex-v1/tmc-zip.mjs";
 import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
 import { situationToFeedItem, situationsToFeedItems, mergeNdicRevisions, isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { createFixtureDiscovery, createAuthenticatedPullDiscovery } from "./ndic-datex-v1/discovery-adapter.mjs";
@@ -341,6 +346,55 @@ async function discoveryChecks() {
   activateTmcTable(store, parseTmcTablePayload(readJson("tmc-table-cc2-ltn25.json")));
   const pub = JSON.stringify(tmcPublicMeta(store));
   ok("public_meta_no_lcd_dump", !/"101"/.test(pub) && !/Brno-centrum/.test(pub), pub);
+}
+
+// --- TMC ZIP (fixture) + bomb / path guards ---
+{
+  const json = read("tmc-table-cc2-ltn25.json");
+  const zip = buildStoredZip([{ name: "tmc-table.json", data: json }]);
+  const fromZip = parseTmcTableFromDownload(zip);
+  ok("tmc_zip_json_roundtrip", validateTmcTable(fromZip).ok === true, "zip-json");
+  ok("tmc_zip_points", Object.keys(fromZip.points || {}).length >= 3, String(Object.keys(fromZip.points || {}).length));
+
+  let bomb = false;
+  try {
+    // Claim huge uncompressed size vs tiny payload
+    const evil = Buffer.from(zip);
+    // local header uncomp size at offset 22
+    evil.writeUInt32LE(0x3fffffff, 22);
+    safeUnzipEntries(evil);
+  } catch (e) {
+    bomb = e && (e.code === "TMC_ZIP_RATIO" || e.code === "TMC_ZIP_ENTRY_TOO_LARGE" || e.code === "TMC_ZIP_BOMB");
+  }
+  ok("tmc_zip_bomb_reject", bomb, "bomb");
+
+  let trav = false;
+  try {
+    const bad = buildStoredZip([{ name: "../evil.json", data: "{}" }]);
+    safeUnzipEntries(bad);
+  } catch (e) {
+    trav = e && e.code === "TMC_ZIP_BAD_PATH";
+  }
+  ok("tmc_zip_path_traversal_reject", trav, "path");
+}
+
+// --- secret contract names (static; never read secret values) ---
+{
+  const cfgSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1", "config.mjs"), "utf8");
+  const wfSrc = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "update-ndic-datex-v1.yml"), "utf8");
+  const syncSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1-prod-sync.mjs"), "utf8");
+  const datexNames = ["IU_NDIC_PULL_URL", "IU_NDIC_PULL_USER", "IU_NDIC_PULL_PASS", "IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID"];
+  const tmcNames = ["IU_NDIC_TMC_PULL_URL", "IU_NDIC_TMC_PULL_USER", "IU_NDIC_TMC_PULL_PASS"];
+  for (const n of datexNames) {
+    ok("secret_contract_datex_" + n, cfgSrc.includes(n) && wfSrc.includes(n), n);
+  }
+  for (const n of tmcNames) {
+    ok("secret_contract_tmc_" + n, cfgSrc.includes(n) && wfSrc.includes(n), n);
+  }
+  ok("secret_contract_tmc_optional_fallback", /IU_NDIC_TMC_PULL_USER \|\| pullUser/.test(cfgSrc), "fallback");
+  ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
+  ok("prod_sync_uses_zip_parser", /parseTmcTableFromDownload/.test(syncSrc), "zip-parser");
+  ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
 }
 
 // --- empty / damaged docs ---

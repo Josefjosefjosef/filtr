@@ -6,9 +6,9 @@
  *   IU_NDIC_PULL_URL          — authenticated PULL endpoint (subscription-specific)
  *   IU_NDIC_PULL_USER         — Basic Auth user (subscription-generated)
  *   IU_NDIC_PULL_PASS         — Basic Auth password
- *   IU_NDIC_TMC_PULL_URL      — authenticated TMC table PULL endpoint
- *   IU_NDIC_TMC_PULL_USER     — optional (defaults to PULL_USER)
- *   IU_NDIC_TMC_PULL_PASS     — optional (defaults to PULL_PASS)
+ *   IU_NDIC_TMC_PULL_URL      — authenticated TMC v11.0 PULL URL (separate subscription)
+ *   IU_NDIC_TMC_PULL_USER     — optional (defaults to IU_NDIC_PULL_USER)
+ *   IU_NDIC_TMC_PULL_PASS     — optional (defaults to IU_NDIC_PULL_PASS)
  *   IU_NDIC_SYNC_INTERVAL_MIN — default 5 (DATEX traffic snapshot cadence)
  *
  * MobilityData subscriber id (ops only, never logged to client):
