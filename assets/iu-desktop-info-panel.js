@@ -20,6 +20,8 @@ let lastSourceBtn = null;
 let gapObserver = null;
 let panelItemsMap = {};
 let activeRender = null;
+let pendingRenderOptions = null;
+let bodyContextObserver = null;
 
 function esc(s) {
   return String(s || "")
@@ -50,18 +52,47 @@ function isDesktopPanelContext() {
   }
 }
 
-function isMobileTabletPanelContext() {
+/** ≤1024 + mount exists — paint target even when CSS gates temporarily hide the unit. */
+function isMobileTabletViewport() {
   try {
     if (typeof window.matchMedia !== "function") return false;
     if (!window.matchMedia("(max-width: 1024px)").matches) return false;
-    const body = document.body;
-    if (!body) return false;
-    if (body.classList.contains("iu-mobileMainVisible")) return false;
-    if (body.classList.contains("iu-mobileGateOverlayOpen")) return false;
-    if (body.getAttribute("data-iu-fc") === "0") return false;
     return Boolean(document.getElementById(MOBILE_MOUNT_ID));
   } catch (_) {
     return false;
+  }
+}
+
+function isMobileTabletGateBlocking() {
+  try {
+    const body = document.body;
+    if (!body) return true;
+    if (body.classList.contains("iu-mobileMainVisible")) return true;
+    if (body.classList.contains("iu-mobileGateOverlayOpen")) return true;
+    if (body.getAttribute("data-iu-fc") === "0") return true;
+    return false;
+  } catch (_) {
+    return true;
+  }
+}
+
+function isMobileTabletPanelContext() {
+  try {
+    return isMobileTabletViewport() && !isMobileTabletGateBlocking();
+  } catch (_) {
+    return false;
+  }
+}
+
+function mobileMountNeedsPaint(mount) {
+  try {
+    if (!mount || !mount.isConnected) return true;
+    if (mount.hidden || mount.hasAttribute("hidden")) return true;
+    if (!mount.querySelector("#" + MOBILE_PANEL_ID)) return true;
+    if (!mount.querySelector(".iuDesktopInfoPanel__segment")) return true;
+    return false;
+  } catch (_) {
+    return true;
   }
 }
 
@@ -489,10 +520,20 @@ function syncTopGap() {
 }
 
 async function renderPanel(options) {
-  if (activeRender) return activeRender;
-  activeRender = renderPanelInner(options).finally(() => {
-    activeRender = null;
-  });
+  if (activeRender) {
+    pendingRenderOptions = options && typeof options === "object" ? options : {};
+    return activeRender;
+  }
+  activeRender = renderPanelInner(options)
+    .catch(() => {})
+    .finally(() => {
+      activeRender = null;
+      if (pendingRenderOptions !== null) {
+        const next = pendingRenderOptions;
+        pendingRenderOptions = null;
+        renderPanel(next).catch(() => {});
+      }
+    });
   return activeRender;
 }
 
@@ -500,15 +541,18 @@ async function renderPanelInner(options) {
   const desktopMount = document.getElementById(MOUNT_ID);
   const mobileMount = document.getElementById(MOBILE_MOUNT_ID);
   const desktopActive = isDesktopPanelContext();
-  const mobileActive = isMobileTabletPanelContext();
+  const mobileViewport = isMobileTabletViewport();
 
   if (desktopMount && !desktopActive) {
     hideInfoPanelMount(desktopMount);
   }
-  if (mobileMount && !mobileActive) {
+  /* P0: do NOT wipe mobile mount for transient CSS gates (iu-mobileMainVisible /
+     iu-mobileGateOverlayOpen / data-iu-fc=0). Title is outside the mount; wiping
+     left "RYCHLÝ PŘEHLED" visible with empty content. CSS already hides the unit. */
+  if (mobileMount && !mobileViewport) {
     hideInfoPanelMount(mobileMount);
   }
-  if (!desktopActive && !mobileActive) return;
+  if (!desktopActive && !mobileViewport) return;
 
   if (desktopActive && desktopMount) {
     applyCachedMindMenuGap();
@@ -521,7 +565,7 @@ async function renderPanelInner(options) {
     initGapSync();
   }
 
-  if (mobileActive && mobileMount) {
+  if (mobileViewport && mobileMount) {
     mobileMount.hidden = false;
     mobileMount.removeAttribute("hidden");
     mobileMount.removeAttribute("aria-hidden");
@@ -545,7 +589,17 @@ async function renderPanelInner(options) {
 
   const items = await loadInfoPanelItems(options);
 
-  if (desktopActive && desktopMount && desktopMount.isConnected) {
+  const desktopActiveAfter = isDesktopPanelContext();
+  const mobileViewportAfter = isMobileTabletViewport();
+
+  if (desktopMount && !desktopActiveAfter) {
+    hideInfoPanelMount(desktopMount);
+  }
+  if (mobileMount && !mobileViewportAfter) {
+    hideInfoPanelMount(mobileMount);
+  }
+
+  if (desktopActiveAfter && desktopMount && desktopMount.isConnected) {
     desktopMount.innerHTML = buildPanelHtml(items, { showNav: true, panelId: PANEL_ID });
     syncPanelLayoutGaps();
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -558,7 +612,10 @@ async function renderPanelInner(options) {
     }
   }
 
-  if (mobileActive && mobileMount && mobileMount.isConnected) {
+  if (mobileViewportAfter && mobileMount && mobileMount.isConnected) {
+    mobileMount.hidden = false;
+    mobileMount.removeAttribute("hidden");
+    mobileMount.removeAttribute("aria-hidden");
     mobileMount.innerHTML = buildPanelHtml(items, {
       showNav: false,
       panelId: MOBILE_PANEL_ID,
@@ -584,9 +641,22 @@ function initInfoPanel() {
 
   let lastPanelRefreshAt = 0;
   const PANEL_REFRESH_MIN_MS = 5 * 60 * 1000;
+  let contextRerunRaf = 0;
 
   const run = (options) => {
     renderPanel(options).catch(() => {});
+  };
+
+  const ensureMobilePanelContent = (options) => {
+    try {
+      if (!isMobileTabletViewport()) return false;
+      const mount = document.getElementById(MOBILE_MOUNT_ID);
+      if (!mobileMountNeedsPaint(mount)) return false;
+      run(options || { forceReload: true });
+      return true;
+    } catch (_) {
+      return false;
+    }
   };
 
   const schedulePanelRefresh = (force) => {
@@ -596,12 +666,24 @@ function initInfoPanel() {
     run({ forceReload: true });
   };
 
+  const onHomeContextMaybeChanged = () => {
+    if (contextRerunRaf) return;
+    contextRerunRaf = requestAnimationFrame(() => {
+      contextRerunRaf = 0;
+      try {
+        if (ensureMobilePanelContent({ forceReload: false })) return;
+        if (isDesktopPanelContext()) run();
+      } catch (_) {}
+    });
+  };
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => run(), { once: true });
   } else {
     run();
   }
   setTimeout(() => run(), 120);
+  setTimeout(() => ensureMobilePanelContent({ forceReload: false }), 400);
 
   try {
     window.addEventListener("online", () => schedulePanelRefresh(true));
@@ -609,8 +691,30 @@ function initInfoPanel() {
 
   try {
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") schedulePanelRefresh(false);
+      if (document.visibilityState !== "visible") return;
+      if (ensureMobilePanelContent({ forceReload: true })) return;
+      schedulePanelRefresh(false);
     });
+  } catch (_) {}
+
+  try {
+    window.addEventListener("pageshow", (ev) => {
+      if (ev && ev.persisted) {
+        run({ forceReload: true });
+        return;
+      }
+      ensureMobilePanelContent({ forceReload: true });
+    });
+  } catch (_) {}
+
+  try {
+    if (typeof MutationObserver === "function" && document.body) {
+      bodyContextObserver = new MutationObserver(onHomeContextMaybeChanged);
+      bodyContextObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ["class", "data-iu-fc"],
+      });
+    }
   } catch (_) {}
 
   try {
@@ -629,6 +733,10 @@ function initInfoPanel() {
 
   window.addEventListener("iu:desktop-home-grid", run);
   document.addEventListener("iu:info-center-mounted", run);
+
+  try {
+    window.__iuInfoPanelEnsureMobileContent = () => ensureMobilePanelContent({ forceReload: true });
+  } catch (_) {}
 }
 
 initInfoPanel();

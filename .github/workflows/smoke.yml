@@ -189,6 +189,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-info-panel-mobile-polish-guard
 
+      - name: Rychly prehled horizontal content persist guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-rychly-prehled-horizontal-content-guard
+
       - name: Home section blue bars guard (mobile/tablet unified headers)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-home-section-bar-guard
