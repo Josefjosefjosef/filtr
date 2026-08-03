@@ -99,8 +99,9 @@ export function getNdicDatexV1Config(env = process.env) {
   const tmcUrl = String(e.IU_NDIC_TMC_PULL_URL || "").trim();
   const pullUser = String(e.IU_NDIC_PULL_USER || "").trim();
   const pullPass = String(e.IU_NDIC_PULL_PASS || "");
+  // GitHub Actions injects empty string for unset optional secrets — treat "" as missing.
   const tmcUser = String(e.IU_NDIC_TMC_PULL_USER || pullUser).trim();
-  const tmcPass = e.IU_NDIC_TMC_PULL_PASS != null ? String(e.IU_NDIC_TMC_PULL_PASS) : pullPass;
+  const tmcPass = String(e.IU_NDIC_TMC_PULL_PASS || pullPass);
 
   return {
     mode,

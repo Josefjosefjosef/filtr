@@ -392,6 +392,28 @@ async function discoveryChecks() {
     ok("secret_contract_tmc_" + n, cfgSrc.includes(n) && wfSrc.includes(n), n);
   }
   ok("secret_contract_tmc_optional_fallback", /IU_NDIC_TMC_PULL_USER \|\| pullUser/.test(cfgSrc), "fallback");
+  ok(
+    "secret_contract_tmc_empty_pass_falls_back",
+    /IU_NDIC_TMC_PULL_PASS \|\| pullPass/.test(cfgSrc),
+    "empty-pass-fallback"
+  );
+  {
+    const fb = getNdicDatexV1Config({
+      IU_NDIC_PULL_URL: "https://mobilitydata.rsd.cz/datex",
+      IU_NDIC_PULL_USER: "datex-user",
+      IU_NDIC_PULL_PASS: "datex-pass",
+      IU_NDIC_TMC_PULL_URL: "https://mobilitydata.rsd.cz/tmc",
+      IU_NDIC_TMC_PULL_USER: "",
+      IU_NDIC_TMC_PULL_PASS: "",
+    });
+    ok(
+      "tmc_empty_optional_secrets_use_datex_auth",
+      fb.hasTmcCredentials === true &&
+        fb.tmcPullUser === "datex-user" &&
+        fb.tmcPullPass === "datex-pass",
+      "gha-empty-string"
+    );
+  }
   ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
   ok("prod_sync_uses_zip_parser", /parseTmcTableFromDownload/.test(syncSrc), "zip-parser");
   ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
