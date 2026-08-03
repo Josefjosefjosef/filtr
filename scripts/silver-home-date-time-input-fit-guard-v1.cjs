@@ -478,18 +478,28 @@ async function preparePage(browserType) {
   return { browser, context, page };
 }
 
+function isTargetCrash(err) {
+  const t = String(err && err.message ? err.message : err || "");
+  return /Target crashed|Target closed|has been closed|Browser closed/i.test(t);
+}
+
 async function dismissLocalDataProtection(page) {
-  await page.evaluate(() => {
-    try {
-      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
-      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
-    } catch (_) {}
-    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => {
-      if (el && el.parentNode) el.parentNode.removeChild(el);
+  try {
+    await page.evaluate(() => {
+      try {
+        localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+        localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+      } catch (_) {}
+      document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      });
+      document.documentElement.classList.remove("iu-ldp-dialog-open");
+      if (document.body) document.body.classList.remove("iu-ldp-dialog-open");
     });
-    document.documentElement.classList.remove("iu-ldp-dialog-open");
-    if (document.body) document.body.classList.remove("iu-ldp-dialog-open");
-  });
+  } catch (err) {
+    if (!isTargetCrash(err)) throw err;
+    throw err;
+  }
 }
 
 async function gotoHome(page, vp, colorScheme) {
@@ -517,7 +527,7 @@ async function gotoHome(page, vp, colorScheme) {
   return () => appErrors;
 }
 
-async function runEngine(browserType, engineName) {
+async function runEngineOnce(browserType, engineName) {
   const { browser, page } = await preparePage(browserType);
   const vps = viewportsForEngine();
   const viewportResults = [];
@@ -608,6 +618,26 @@ async function runEngine(browserType, engineName) {
     viewports: viewportResults,
     scenario,
   };
+}
+
+async function runEngine(browserType, engineName) {
+  const maxAttempts = engineName === "webkit" ? 2 : 1;
+  let lastErr = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await runEngineOnce(browserType, engineName);
+    } catch (err) {
+      lastErr = err;
+      if (attempt < maxAttempts && isTargetCrash(err)) {
+        process.stdout.write(
+          "ENGINE_RETRY " + engineName + " attempt=" + attempt + " reason=target_crash\n"
+        );
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
 }
 
 function assertCssSourceContract() {
