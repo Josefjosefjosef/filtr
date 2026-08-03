@@ -157,6 +157,12 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
     scroll-padding-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)) !important;
     box-sizing: border-box !important;
   }
+  /* Flow wrapper must grow with live grid content so panel padding-bottom is in scrollHeight. */
+  #iuMobileGatePanelTools #iuMobileMindMenuFlow{
+    height: auto !important;
+    overflow: visible !important;
+    flex: 0 0 auto !important;
+  }
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
