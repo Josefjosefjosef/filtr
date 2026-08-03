@@ -666,13 +666,15 @@ function initInfoPanel() {
     run({ forceReload: true });
   };
 
+  /* Body class / data-iu-fc flips are CSS gates for the mobile unit only.
+     Never re-run the desktop panel from this observer — daypart / theme class
+     churn would rebuild PC panel mid-frame and break Prehled dne hero CTA seams. */
   const onHomeContextMaybeChanged = () => {
     if (contextRerunRaf) return;
     contextRerunRaf = requestAnimationFrame(() => {
       contextRerunRaf = 0;
       try {
-        if (ensureMobilePanelContent({ forceReload: false })) return;
-        if (isDesktopPanelContext()) run();
+        ensureMobilePanelContent({ forceReload: false });
       } catch (_) {}
     });
   };
@@ -692,13 +694,17 @@ function initInfoPanel() {
   try {
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") return;
-      if (ensureMobilePanelContent({ forceReload: true })) return;
+      if (isMobileTabletViewport()) {
+        ensureMobilePanelContent({ forceReload: true });
+        return;
+      }
       schedulePanelRefresh(false);
     });
   } catch (_) {}
 
   try {
     window.addEventListener("pageshow", (ev) => {
+      if (!isMobileTabletViewport()) return;
       if (ev && ev.persisted) {
         run({ forceReload: true });
         return;
