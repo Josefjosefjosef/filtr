@@ -2,15 +2,16 @@
 "use strict";
 
 /**
- * Geometry + CSS-contract guard: Silver quick-template Datum/Čas inputs must stay inside
- * the form card on mobile + tablet (no horizontal overflow, positive card inset).
- * Also asserts computed min-width:0 on date/time (regression of the WebKit/iOS fix).
- * Desktop layout must remain unchanged (120px label column, no mobile max-content track).
+ * Final geometry + CSS-contract guard for Silver draft Datum/Čas inputs.
+ * Engines: Chromium + WebKit (iOS Safari closest). Portrait + landscape.
+ * Paths: quick-template Nová událost / Nová připomínka + injected edit-mode draft cards
+ * (same .iuSilverDraftGrid--edit / .iuSilverDraftInput shared component).
+ * Scenarios: value/picker churn, all-day toggle, reopen×10, dark mode, desktop unchanged.
  */
 
 const fs = require("fs");
 const path = require("path");
-const { chromium } = require("playwright");
+const { chromium, webkit } = require("playwright");
 const base = require("./silver-mobile-tablet-home-ux-v1-shared.cjs");
 const {
   installProofGuardNetworkStubs,
@@ -18,21 +19,24 @@ const {
   isIgnorableGuardConsoleError,
 } = require("./proofs/open_meteo_guard_stub.cjs");
 
-const VIEWPORTS = [
-  { w: 320, h: 720, label: "320" },
-  { w: 360, h: 740, label: "360" },
-  { w: 375, h: 812, label: "375" },
-  { w: 390, h: 844, label: "390" },
-  { w: 414, h: 896, label: "414" },
-  { w: 430, h: 932, label: "430" },
-  { w: 600, h: 960, label: "600" },
-  { w: 768, h: 1024, label: "768" },
-  { w: 820, h: 1180, label: "820" },
-  { w: 1024, h: 1366, label: "1024" },
+const PORTRAIT = [
+  { w: 320, h: 720, label: "320p" },
+  { w: 360, h: 740, label: "360p" },
+  { w: 375, h: 812, label: "375p" },
+  { w: 390, h: 844, label: "390p" },
+  { w: 414, h: 896, label: "414p" },
+  { w: 430, h: 932, label: "430p" },
+  { w: 600, h: 960, label: "600p" },
+  { w: 768, h: 1024, label: "768p" },
+  { w: 820, h: 1180, label: "820p" },
+  { w: 1024, h: 1366, label: "1024p" },
 ];
+const LANDSCAPE_KEYS = new Set(["320p", "390p", "768p", "1024p"]);
 const DESKTOP = { w: 1280, h: 900 };
 const TOL_PX = 1.5;
 const PAD_MIN_PX = 8;
+const REOPEN_N = 10;
+const WIDTH_TOL_PX = 1.5;
 
 const KIND_MAP = {
   calendar: {
@@ -41,7 +45,7 @@ const KIND_MAP = {
     dateSel: 'input.iuSilverDraftInput[type="date"][data-iu-silver-field="date"]',
     timeSel: 'input.iuSilverDraftInput[type="time"][data-iu-silver-field="time"]',
     titleSel: 'input.iuSilverDraftInput[data-iu-silver-field="title"]',
-    dateLabelText: "Datum",
+    hasAllDay: true,
   },
   task: {
     key: "reminder",
@@ -49,12 +53,31 @@ const KIND_MAP = {
     dateSel: 'input.iuSilverDraftInput[type="date"][data-iu-silver-task-field="due"]',
     timeSel: 'input.iuSilverDraftInput[type="time"][data-iu-silver-task-field="time"]',
     titleSel: 'input.iuSilverDraftInput[data-iu-silver-task-field="title"]',
-    dateLabelText: "Datum",
+    hasAllDay: false,
   },
 };
 
+function landscapeOf(vp) {
+  // Keep width ≤1024 so mobile/tablet MQ still applies (tablet landscape, not desktop).
+  const w = Math.min(vp.h, 1024);
+  const h = Math.min(vp.w, 900);
+  return { w, h: Math.max(h, 320), label: vp.label.replace(/p$/, "l") };
+}
+
+function viewportsForEngine() {
+  const list = [];
+  for (let i = 0; i < PORTRAIT.length; i++) {
+    const p = PORTRAIT[i];
+    list.push(p);
+    if (LANDSCAPE_KEYS.has(p.label)) list.push(landscapeOf(p));
+  }
+  return list;
+}
+
 async function resetHomeTemplate(page) {
   await page.evaluate(() => {
+    const host = document.getElementById("iuDateTimeFitEditProbe");
+    if (host && host.parentNode) host.parentNode.removeChild(host);
     const inp = document.getElementById("iuSilverHomeInput");
     if (inp) inp.value = "";
     if (typeof window.__iuSilverResetHomeTemplateMode === "function") window.__iuSilverResetHomeTemplateMode();
@@ -65,131 +88,138 @@ async function resetHomeTemplate(page) {
       if (close && typeof close.click === "function") close.click();
     }
   });
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(300);
 }
 
 async function openQuickTemplateForm(page, key) {
   await resetHomeTemplate(page);
-  const clicked = await page.evaluate((k) => {
+  await dismissLocalDataProtection(page);
+  const opened = await page.evaluate((k) => {
+    if (typeof window.__iuSilverOpenQuickTemplateEmptyDirect === "function") {
+      window.__iuSilverOpenQuickTemplateEmptyDirect(k);
+      return "direct";
+    }
     const btn = document.querySelector('[data-iu-silver-home-quick-action="' + k + '"]');
     if (btn && typeof btn.click === "function") {
       btn.click();
-      return true;
+      return "click";
     }
-    return false;
+    return "";
   }, key);
-  if (!clicked) throw new Error("quick-action missing: " + key);
+  if (!opened) throw new Error("quick-action missing: " + key);
   await page.waitForTimeout(900);
+  const cardReady = await page.evaluate(() => !!document.querySelector(".iuSilverDraftCard--quickTemplateEmpty"));
+  if (!cardReady) throw new Error("quick-template card not opened via " + opened);
 }
 
-async function measureKind(page, kind) {
-  await openQuickTemplateForm(page, kind.key);
-  return page.evaluate(
-    ({ cardClass, dateSel, timeSel, titleSel, dateLabelText, tol, padMin }) => {
-      const card = document.querySelector(".iuSilverDraftCard--quickTemplateEmpty." + cardClass);
-      const grid = card ? card.querySelector(".iuSilverDraftGrid--edit") : null;
-      const dateInput = grid ? grid.querySelector(dateSel) : null;
-      const timeInput = grid ? grid.querySelector(timeSel) : null;
-      const titleInput = grid ? grid.querySelector(titleSel) : null;
-      const labels = grid ? Array.from(grid.querySelectorAll(".iuSilverDraftK")) : [];
-      const dateLabel = labels.find((el) => String(el.textContent || "").trim() === dateLabelText) || null;
+function measureSnippet() {
+  return ({ cardSel, dateSel, timeSel, titleSel, tol, padMin }) => {
+    const card = document.querySelector(cardSel);
+    const grid = card ? card.querySelector(".iuSilverDraftGrid--edit") : null;
+    const dateInput = grid ? grid.querySelector(dateSel) : null;
+    const timeInput = grid ? grid.querySelector(timeSel) : null;
+    const titleInput = grid ? grid.querySelector(titleSel) : null;
+    const dateLabel =
+      grid &&
+      Array.from(grid.querySelectorAll(".iuSilverDraftK")).find(
+        (el) => String(el.textContent || "").trim() === "Datum"
+      );
 
-      const cardRect = card ? card.getBoundingClientRect() : null;
-      const dateRect = dateInput ? dateInput.getBoundingClientRect() : null;
-      const timeRect = timeInput ? timeInput.getBoundingClientRect() : null;
-      const titleRect = titleInput ? titleInput.getBoundingClientRect() : null;
-      const labelRect = dateLabel ? dateLabel.getBoundingClientRect() : null;
+    const cardRect = card ? card.getBoundingClientRect() : null;
+    const dateRect = dateInput ? dateInput.getBoundingClientRect() : null;
+    const timeRect = timeInput ? timeInput.getBoundingClientRect() : null;
+    const titleRect = titleInput ? titleInput.getBoundingClientRect() : null;
+    const labelRect = dateLabel ? dateLabel.getBoundingClientRect() : null;
+    const cardCs = card ? getComputedStyle(card) : null;
+    const cardPadRight = cardCs ? parseFloat(cardCs.paddingRight) || 0 : 0;
+    const cardInnerRight = cardRect ? cardRect.right - cardPadRight : null;
+    const dateSt = dateInput ? getComputedStyle(dateInput) : null;
+    const timeSt = timeInput ? getComputedStyle(timeInput) : null;
+    const gridSt = grid ? getComputedStyle(grid) : null;
+    const dateMinWidth = dateSt ? String(dateSt.minWidth || "") : "";
+    const timeMinWidth = timeSt ? String(timeSt.minWidth || "") : "";
+    const minWidthOk = dateMinWidth === "0px" && timeMinWidth === "0px";
+    const maxWidthOk =
+      !!dateSt &&
+      !!timeSt &&
+      (dateSt.maxWidth === "100%" || dateSt.maxWidth === "none" || parseFloat(dateSt.maxWidth) >= dateRect.width - 0.5) &&
+      (timeSt.maxWidth === "100%" || timeSt.maxWidth === "none" || parseFloat(timeSt.maxWidth) >= timeRect.width - 0.5);
+    const boxOk =
+      !!dateSt &&
+      !!timeSt &&
+      dateSt.boxSizing === "border-box" &&
+      timeSt.boxSizing === "border-box";
+    const cols = gridSt ? String(gridSt.gridTemplateColumns || "") : "";
 
-      const cardCs = card ? getComputedStyle(card) : null;
-      const cardPadRight = cardCs ? parseFloat(cardCs.paddingRight) || 0 : 0;
-      const cardInnerRight = cardRect ? cardRect.right - cardPadRight : null;
+    const dateRightOk =
+      !!dateRect && cardInnerRight !== null && dateRect.right <= cardInnerRight + tol;
+    const timeRightOk =
+      !!timeRect && cardInnerRight !== null && timeRect.right <= cardInnerRight + tol;
+    const datePadOk =
+      !!dateRect && cardInnerRight !== null && cardInnerRight - dateRect.right >= padMin - tol;
+    const timePadOk =
+      !!timeRect && cardInnerRight !== null && cardInnerRight - timeRect.right >= padMin - tol;
+    const dateAfterLabel =
+      !!dateRect && !!labelRect && dateRect.left > labelRect.right - tol;
+    const alignsWithTitle =
+      !!dateRect &&
+      !!titleRect &&
+      Math.abs(dateRect.right - titleRect.right) <= tol &&
+      Math.abs(dateRect.left - titleRect.left) <= tol;
 
-      const dateSt = dateInput ? getComputedStyle(dateInput) : null;
-      const timeSt = timeInput ? getComputedStyle(timeInput) : null;
-      const dateMinWidth = dateSt ? String(dateSt.minWidth || "") : "";
-      const timeMinWidth = timeSt ? String(timeSt.minWidth || "") : "";
-      const minWidthOk = dateMinWidth === "0px" && timeMinWidth === "0px";
+    const docEl = document.documentElement;
+    const body = document.body;
+    const scrollW = Math.max(docEl ? docEl.scrollWidth : 0, body ? body.scrollWidth : 0);
+    const clientW = docEl ? docEl.clientWidth : 0;
+    const overflowX = scrollW > clientW + tol;
+    const cardOverflowX = !!card && card.scrollWidth > card.clientWidth + tol;
 
-      const dateRightOk =
-        !!dateRect && cardInnerRight !== null && dateRect.right <= cardInnerRight + tol;
-      const timeRightOk =
-        !!timeRect && cardInnerRight !== null && timeRect.right <= cardInnerRight + tol;
-      const datePadOk =
-        !!dateRect &&
-        cardInnerRight !== null &&
-        cardInnerRight - dateRect.right >= padMin - tol;
-      const timePadOk =
-        !!timeRect &&
-        cardInnerRight !== null &&
-        cardInnerRight - timeRect.right >= padMin - tol;
-      const dateAfterLabel =
-        !!dateRect && !!labelRect && dateRect.left > labelRect.right - tol;
-      const alignsWithTitle =
-        !!dateRect &&
-        !!titleRect &&
-        Math.abs(dateRect.right - titleRect.right) <= tol &&
-        Math.abs(dateRect.left - titleRect.left) <= tol;
-
-      const docEl = document.documentElement;
-      const body = document.body;
-      const scrollW = Math.max(docEl ? docEl.scrollWidth : 0, body ? body.scrollWidth : 0);
-      const clientW = docEl ? docEl.clientWidth : 0;
-      const overflowX = scrollW > clientW + tol;
-      const cardOverflowX = !!card && card.scrollWidth > card.clientWidth + tol;
-
-      return {
-        cardFound: !!card,
-        gridFound: !!grid,
-        dateFound: !!dateInput,
-        timeFound: !!timeInput,
-        titleFound: !!titleInput,
-        minWidthOk,
-        dateMinWidth,
-        timeMinWidth,
-        dateRightOk,
-        timeRightOk,
-        datePadOk,
-        timePadOk,
-        dateAfterLabel,
-        alignsWithTitle,
-        overflowX,
-        cardOverflowX,
-        dateRight: dateRect ? Math.round(dateRect.right * 100) / 100 : null,
-        timeRight: timeRect ? Math.round(timeRect.right * 100) / 100 : null,
-        titleRight: titleRect ? Math.round(titleRect.right * 100) / 100 : null,
-        cardInnerRight: cardInnerRight !== null ? Math.round(cardInnerRight * 100) / 100 : null,
-        dateRightInset:
-          dateRect && cardInnerRight !== null
-            ? Math.round((cardInnerRight - dateRect.right) * 100) / 100
-            : null,
-        timeRightInset:
-          timeRect && cardInnerRight !== null
-            ? Math.round((cardInnerRight - timeRect.right) * 100) / 100
-            : null,
-        scrollWidth: scrollW,
-        clientWidth: clientW,
-      };
-    },
-    {
-      cardClass: kind.cardClass,
-      dateSel: kind.dateSel,
-      timeSel: kind.timeSel,
-      titleSel: kind.titleSel,
-      dateLabelText: kind.dateLabelText,
-      tol: TOL_PX,
-      padMin: PAD_MIN_PX,
-    }
-  );
+    return {
+      cardFound: !!card,
+      gridFound: !!grid,
+      dateFound: !!dateInput,
+      timeFound: !!timeInput,
+      titleFound: !!titleInput,
+      minWidthOk,
+      maxWidthOk,
+      boxOk,
+      dateMinWidth,
+      timeMinWidth,
+      gridTemplateColumns: cols,
+      dateRightOk,
+      timeRightOk,
+      datePadOk,
+      timePadOk,
+      dateAfterLabel,
+      alignsWithTitle,
+      overflowX,
+      cardOverflowX,
+      dateWidth: dateRect ? Math.round(dateRect.width * 100) / 100 : null,
+      timeWidth: timeRect ? Math.round(timeRect.width * 100) / 100 : null,
+      dateRightInset:
+        dateRect && cardInnerRight !== null
+          ? Math.round((cardInnerRight - dateRect.right) * 100) / 100
+          : null,
+      timeRightInset:
+        timeRect && cardInnerRight !== null
+          ? Math.round((cardInnerRight - timeRect.right) * 100) / 100
+          : null,
+      timeDisabled: timeInput ? !!timeInput.disabled : null,
+    };
+  };
 }
 
 function kindPass(m) {
   return (
+    m &&
     m.cardFound &&
     m.gridFound &&
     m.dateFound &&
     m.timeFound &&
     m.titleFound &&
     m.minWidthOk &&
+    m.maxWidthOk &&
+    m.boxOk &&
     m.dateRightOk &&
     m.timeRightOk &&
     m.datePadOk &&
@@ -201,54 +231,212 @@ function kindPass(m) {
   );
 }
 
-async function runViewport(page, vp) {
-  await installProofGuardNetworkStubs(page);
-  const ignorableTracker = createIgnorableResourceTracker();
-  ignorableTracker.attachToPage(page);
-  let appErrors = 0;
-  page.on("pageerror", (err) => {
-    try {
-      const t = String(err && err.message ? err.message : err);
-      if (isIgnorableGuardConsoleError(t)) return;
-      appErrors += 1;
-    } catch (_) {}
+async function measureQuick(page, kind) {
+  await openQuickTemplateForm(page, kind.key);
+  return page.evaluate(measureSnippet(), {
+    cardSel: ".iuSilverDraftCard--quickTemplateEmpty." + kind.cardClass,
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: PAD_MIN_PX,
   });
-  await page.setViewportSize({ width: vp.w, height: vp.h });
-  await page.goto(base.envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
-  await page.waitForTimeout(2200);
+}
 
-  const calendar = await measureKind(page, KIND_MAP.calendar);
+async function measureEditProbe(page, kind) {
   await resetHomeTemplate(page);
-  const task = await measureKind(page, KIND_MAP.task);
-  await resetHomeTemplate(page);
+  await page.evaluate((k) => {
+    let host = document.getElementById("iuDateTimeFitEditProbe");
+    if (host) host.parentNode.removeChild(host);
+    host = document.createElement("div");
+    host.id = "iuDateTimeFitEditProbe";
+    host.style.cssText =
+      "position:fixed;inset:12px;z-index:99999;overflow:auto;background:#fff;padding:12px;box-sizing:border-box;";
+    const isCal = k === "calendar";
+    host.innerHTML = isCal
+      ? '<div class="iuSilverDraftCard" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="1">' +
+        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit">' +
+        '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-field="date" value="2026-08-03" />' +
+        '<div class="iuSilverDraftK iuSilverDraftK--allDayRow"><span class="iuSilverDraftAllDayLine">Celodenní</span><span class="iuSilverDraftAllDayLine">událost</span></div>' +
+        '<div class="iuSilverDraftV"><button type="button" class="iu-calAllDaySwitch" data-iu-silver-field-all-day="1" role="switch" aria-checked="false"><span class="iu-calAllDaySwitch__track"></span><span class="iu-calAllDaySwitch__thumb"></span></button></div>' +
+        '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-field="time" value="09:30" />' +
+        '<div class="iuSilverDraftK">Název</div><input type="text" class="iuSilverDraftInput" data-iu-silver-field="title" value="Test" />' +
+        '<div class="iuSilverDraftK">Adresa</div><input type="text" class="iuSilverDraftInput" data-iu-silver-field="location" value="" />' +
+        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" data-iu-silver-field="note"></textarea>' +
+        "</div></div>"
+      : '<div class="iuSilverDraftCard iuSilverDraftCard--task" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="1">' +
+        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">' +
+        '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="2026-08-03" />' +
+        '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="09:30" />' +
+        '<div class="iuSilverDraftK">Název</div><input type="text" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="Test" />' +
+        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" data-iu-silver-task-field="note"></textarea>' +
+        "</div></div>";
+    document.body.appendChild(host);
+  }, kind.key === "calendar" ? "calendar" : "task");
+  await page.waitForTimeout(200);
+  return page.evaluate(measureSnippet(), {
+    cardSel: "#iuDateTimeFitEditProbe .iuSilverDraftCard",
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: 0.5,
+  });
+}
 
-  const pass = kindPass(calendar) && kindPass(task) && appErrors === 0;
+async function runPickerAndValueChurn(page, kind) {
+  await openQuickTemplateForm(page, kind.key);
+  const before = await page.evaluate(measureSnippet(), {
+    cardSel: ".iuSilverDraftCard--quickTemplateEmpty." + kind.cardClass,
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: PAD_MIN_PX,
+  });
+  const churn = await page.evaluate(
+    async ({ dateSel, timeSel, cardClass }) => {
+      const card = document.querySelector(".iuSilverDraftCard--quickTemplateEmpty." + cardClass);
+      const date = card && card.querySelector(dateSel);
+      const time = card && card.querySelector(timeSel);
+      if (!date || !time) return { ok: false, reason: "missing_inputs" };
+      const w0 = date.getBoundingClientRect().width;
+      const tw0 = time.getBoundingClientRect().width;
+      date.focus();
+      date.value = "2026-08-10";
+      date.dispatchEvent(new Event("input", { bubbles: true }));
+      date.dispatchEvent(new Event("change", { bubbles: true }));
+      try {
+        if (typeof date.showPicker === "function") date.showPicker();
+      } catch (_) {}
+      date.blur();
+      time.focus();
+      time.value = "14:45";
+      time.dispatchEvent(new Event("input", { bubbles: true }));
+      time.dispatchEvent(new Event("change", { bubbles: true }));
+      try {
+        if (typeof time.showPicker === "function") time.showPicker();
+      } catch (_) {}
+      time.blur();
+      date.value = "2026-09-01";
+      date.dispatchEvent(new Event("change", { bubbles: true }));
+      time.value = "08:15";
+      time.dispatchEvent(new Event("change", { bubbles: true }));
+      const w1 = date.getBoundingClientRect().width;
+      const tw1 = time.getBoundingClientRect().width;
+      return {
+        ok: Math.abs(w1 - w0) <= 1.5 && Math.abs(tw1 - tw0) <= 1.5,
+        dateWidthBefore: Math.round(w0 * 100) / 100,
+        dateWidthAfter: Math.round(w1 * 100) / 100,
+        timeWidthBefore: Math.round(tw0 * 100) / 100,
+        timeWidthAfter: Math.round(tw1 * 100) / 100,
+        showPickerDate: typeof date.showPicker === "function",
+        showPickerTime: typeof time.showPicker === "function",
+      };
+    },
+    { dateSel: kind.dateSel, timeSel: kind.timeSel, cardClass: kind.cardClass }
+  );
+  const after = await page.evaluate(measureSnippet(), {
+    cardSel: ".iuSilverDraftCard--quickTemplateEmpty." + kind.cardClass,
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: PAD_MIN_PX,
+  });
   return {
-    label: vp.label,
-    viewport: vp.w + "x" + vp.h,
-    pass,
-    appErrors,
-    calendar,
-    task,
+    pass: kindPass(before) && kindPass(after) && churn.ok,
+    before,
+    after,
+    churn,
   };
+}
+
+async function runAllDayToggle(page) {
+  const kind = KIND_MAP.calendar;
+  await openQuickTemplateForm(page, kind.key);
+  const before = await page.evaluate(measureSnippet(), {
+    cardSel: ".iuSilverDraftCard--quickTemplateEmpty." + kind.cardClass,
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: PAD_MIN_PX,
+  });
+  await page.evaluate(() => {
+    const btn = document.querySelector(
+      ".iuSilverDraftCard--quickTemplateEmpty [data-iu-silver-field-all-day]"
+    );
+    if (btn) btn.click();
+  });
+  await page.waitForTimeout(200);
+  const mid = await page.evaluate(() => {
+    const time = document.querySelector(
+      '.iuSilverDraftCard--quickTemplateEmpty input[data-iu-silver-field="time"]'
+    );
+    return { timeDisabled: !!(time && time.disabled), timeFound: !!time };
+  });
+  await page.evaluate(() => {
+    const btn = document.querySelector(
+      ".iuSilverDraftCard--quickTemplateEmpty [data-iu-silver-field-all-day]"
+    );
+    if (btn) btn.click();
+  });
+  await page.waitForTimeout(200);
+  const after = await page.evaluate(measureSnippet(), {
+    cardSel: ".iuSilverDraftCard--quickTemplateEmpty." + kind.cardClass,
+    dateSel: kind.dateSel,
+    timeSel: kind.timeSel,
+    titleSel: kind.titleSel,
+    tol: TOL_PX,
+    padMin: PAD_MIN_PX,
+  });
+  const widthStable =
+    before.dateWidth != null &&
+    after.dateWidth != null &&
+    Math.abs(before.dateWidth - after.dateWidth) <= WIDTH_TOL_PX &&
+    before.timeWidth != null &&
+    after.timeWidth != null &&
+    Math.abs(before.timeWidth - after.timeWidth) <= WIDTH_TOL_PX;
+  return {
+    pass: kindPass(before) && kindPass(after) && mid.timeFound && mid.timeDisabled === true && !after.timeDisabled && widthStable,
+    before,
+    mid,
+    after,
+    widthStable,
+  };
+}
+
+async function runReopenStability(page, kind) {
+  const widths = [];
+  for (let i = 0; i < REOPEN_N; i++) {
+    const m = await measureQuick(page, kind);
+    if (!kindPass(m)) {
+      return { pass: false, widths, failAt: i, measure: m };
+    }
+    widths.push({ date: m.dateWidth, time: m.timeWidth });
+    await resetHomeTemplate(page);
+  }
+  const d0 = widths[0].date;
+  const t0 = widths[0].time;
+  const stable = widths.every(
+    (w) => Math.abs(w.date - d0) <= WIDTH_TOL_PX && Math.abs(w.time - t0) <= WIDTH_TOL_PX
+  );
+  return { pass: stable, widths };
 }
 
 async function runDesktopUnchanged(page) {
   await page.setViewportSize({ width: DESKTOP.w, height: DESKTOP.h });
   await page.goto(base.envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(900);
   const desktop = await page.evaluate(() => {
     const mqMobile = window.matchMedia("(max-width: 1024px)").matches;
     const probe = document.createElement("div");
     probe.className = "iuSilverDraftGrid iuSilverDraftGrid--edit";
-    probe.style.position = "absolute";
-    probe.style.visibility = "hidden";
-    probe.style.pointerEvents = "none";
+    probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none";
     document.body.appendChild(probe);
-    const st = getComputedStyle(probe);
-    const cols = st ? st.gridTemplateColumns : "";
+    const cols = getComputedStyle(probe).gridTemplateColumns;
     document.body.removeChild(probe);
-
     const quickProbe = document.createElement("div");
     quickProbe.className =
       "iuSilverDraftCard--quickTemplateEmpty iuSilverDraftCard--quickTemplateCalendar";
@@ -257,23 +445,19 @@ async function runDesktopUnchanged(page) {
     const dateProbe = document.createElement("input");
     dateProbe.type = "date";
     dateProbe.className = "iuSilverDraftInput";
-    quickProbe.appendChild(gridProbe);
     gridProbe.appendChild(dateProbe);
-    quickProbe.style.position = "absolute";
-    quickProbe.style.visibility = "hidden";
+    quickProbe.appendChild(gridProbe);
+    quickProbe.style.cssText = "position:absolute;visibility:hidden";
     document.body.appendChild(quickProbe);
-    const quickSt = getComputedStyle(gridProbe);
-    const quickCols = quickSt ? quickSt.gridTemplateColumns : "";
+    const quickCols = getComputedStyle(gridProbe).gridTemplateColumns;
     const dateMin = getComputedStyle(dateProbe).minWidth;
     document.body.removeChild(quickProbe);
-
     return {
       mqMobile,
       gridTemplateColumns: cols,
       quickGridTemplateColumns: quickCols,
       matches120: cols.indexOf("120px") >= 0,
       quickNotMobileLayout: quickCols.indexOf("max-content") < 0 && quickCols.indexOf("120px") >= 0,
-      dateMinWidthDesktop: dateMin,
       dateMinNotForcedZero: dateMin !== "0px",
     };
   });
@@ -287,32 +471,205 @@ async function runDesktopUnchanged(page) {
   };
 }
 
-async function main() {
-  const browser = await chromium.launch({ headless: true });
+async function preparePage(browserType) {
+  const browser = await browserType.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
+  return { browser, context, page };
+}
 
-  const results = [];
-  for (let i = 0; i < VIEWPORTS.length; i++) {
-    const r = await runViewport(page, VIEWPORTS[i]);
-    results.push(r);
+async function dismissLocalDataProtection(page) {
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+    } catch (_) {}
+    document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    });
+    document.documentElement.classList.remove("iu-ldp-dialog-open");
+    if (document.body) document.body.classList.remove("iu-ldp-dialog-open");
+  });
+}
+
+async function gotoHome(page, vp, colorScheme) {
+  await installProofGuardNetworkStubs(page);
+  createIgnorableResourceTracker().attachToPage(page);
+  page.removeAllListeners("pageerror");
+  let appErrors = 0;
+  page.on("pageerror", (err) => {
+    try {
+      const t = String(err && err.message ? err.message : err);
+      if (isIgnorableGuardConsoleError(t)) return;
+      appErrors += 1;
+    } catch (_) {}
+  });
+  await page.emulateMedia({ colorScheme: colorScheme || "light" });
+  await page.setViewportSize({ width: vp.w, height: vp.h });
+  await page.goto(base.envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.waitForTimeout(1800);
+  await dismissLocalDataProtection(page);
+  await page.waitForTimeout(250);
+  // Prefer direct opener when available (stable across engines).
+  await page.evaluate(() => {
+    /* warm */ void window.__iuSilverOpenQuickTemplateEmptyDirect;
+  });
+  return () => appErrors;
+}
+
+async function runEngine(browserType, engineName) {
+  const { browser, page } = await preparePage(browserType);
+  const vps = viewportsForEngine();
+  const viewportResults = [];
+  let scenario = null;
+
+  for (let i = 0; i < vps.length; i++) {
+    const vp = vps[i];
+    const getErrors = await gotoHome(page, vp, "light");
+    const calendar = await measureQuick(page, KIND_MAP.calendar);
     await resetHomeTemplate(page);
+    const task = await measureQuick(page, KIND_MAP.task);
+    const pass = kindPass(calendar) && kindPass(task) && getErrors() === 0;
+    viewportResults.push({
+      label: vp.label,
+      viewport: vp.w + "x" + vp.h,
+      pass,
+      appErrors: getErrors(),
+      calendar,
+      task,
+    });
   }
+
+  // Deep scenarios on 390×844 light + dark, both engines
+  const deepVp = { w: 390, h: 844, label: "390p-deep" };
+  const getErrorsDeep = await gotoHome(page, deepVp, "light");
+  const pickerCal = await runPickerAndValueChurn(page, KIND_MAP.calendar);
+  await resetHomeTemplate(page);
+  const pickerTask = await runPickerAndValueChurn(page, KIND_MAP.task);
+  await resetHomeTemplate(page);
+  const allDay = await runAllDayToggle(page);
+  await resetHomeTemplate(page);
+  const reopenCal = await runReopenStability(page, KIND_MAP.calendar);
+  await resetHomeTemplate(page);
+  const reopenTask = await runReopenStability(page, KIND_MAP.task);
+  await resetHomeTemplate(page);
+  const editCal = await measureEditProbe(page, KIND_MAP.calendar);
+  await resetHomeTemplate(page);
+  const editTask = await measureEditProbe(page, KIND_MAP.task);
+
+  const getErrorsDark = await gotoHome(page, deepVp, "dark");
+  const darkCal = await measureQuick(page, KIND_MAP.calendar);
+  await resetHomeTemplate(page);
+  const darkTask = await measureQuick(page, KIND_MAP.task);
+  await resetHomeTemplate(page);
+  const darkAllDay = await runAllDayToggle(page);
+
   const desktop = await runDesktopUnchanged(page);
   await browser.close();
 
-  const overflowX = results.some(
+  scenario = {
+    pickerCal,
+    pickerTask,
+    allDay,
+    reopenCal,
+    reopenTask,
+    editCal,
+    editTask,
+    darkCal,
+    darkTask,
+    darkAllDay,
+    deepAppErrors: getErrorsDeep() + getErrorsDark(),
+  };
+
+  const overflowX = viewportResults.some(
     (r) => r.calendar.overflowX || r.task.overflowX || r.calendar.cardOverflowX || r.task.cardOverflowX
   );
-  const pass = results.every((r) => r.pass) && desktop.pass && !overflowX;
+  const pass =
+    viewportResults.every((r) => r.pass) &&
+    pickerCal.pass &&
+    pickerTask.pass &&
+    allDay.pass &&
+    reopenCal.pass &&
+    reopenTask.pass &&
+    kindPass(editCal) &&
+    kindPass(editTask) &&
+    kindPass(darkCal) &&
+    kindPass(darkTask) &&
+    darkAllDay.pass &&
+    desktop.pass &&
+    !overflowX &&
+    scenario.deepAppErrors === 0;
 
-  const report = {
+  return {
+    engine: engineName,
     pass,
     overflow_x: overflowX,
     desktop,
-    viewports: results,
+    viewports: viewportResults,
+    scenario,
+  };
+}
+
+function assertCssSourceContract() {
+  const appCss = fs.readFileSync(path.join(__dirname, "..", "assets", "app.css"), "utf8");
+  const premiumCss = fs.readFileSync(
+    path.join(__dirname, "..", "assets", "iu-silver-premium-draft.css"),
+    "utf8"
+  );
+  const mq = appCss.match(/@media\s*\(\s*max-width:\s*1024px\s*\)\s*\{[\s\S]*?\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\][\s\S]*?min-width:\s*0[\s\S]*?max-width:\s*100%[\s\S]*?box-sizing:\s*border-box/);
+  const gridSafe = /iuSilverDraftCard--quickTemplateEmpty\s+\.iuSilverDraftGrid--edit\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*max-content\)\s+minmax\(0,\s*1fr\)/m.test(
+    appCss
+  );
+  const premiumDate =
+    /iuSilverDraftInput\[type="date"\][\s\S]{0,200}min-width:\s*0/.test(premiumCss) &&
+    /iuSilverDraftInput\[type="time"\][\s\S]{0,200}min-width:\s*0/.test(premiumCss);
+  const badFixed =
+    /\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\]\s*,[\s\S]{0,120}\.iuSilverDraftInput\[type="time"\]\s*\{[^}]*min-width:\s*auto/.test(
+      appCss
+    );
+  return {
+    pass: !!mq && gridSafe && premiumDate && !badFixed,
+    mq: !!mq,
+    gridSafe,
+    premiumDate,
+    badFixed,
+  };
+}
+
+async function main() {
+  const cssContract = assertCssSourceContract();
+  const chromiumResult = await runEngine(chromium, "chromium");
+  let webkitResult = null;
+  try {
+    webkitResult = await runEngine(webkit, "webkit");
+  } catch (e) {
+    webkitResult = {
+      engine: "webkit",
+      pass: false,
+      error: String(e && e.stack ? e.stack : e),
+      overflow_x: true,
+      desktop: { pass: false },
+      viewports: [],
+      scenario: null,
+    };
+  }
+
+  const pass = cssContract.pass && chromiumResult.pass && webkitResult.pass;
+  const report = {
+    pass,
+    cssContract,
+    chromium: chromiumResult,
+    webkit: webkitResult,
+    shared_component:
+      ".iuSilverDraftGrid--edit + .iuSilverDraftInput[type=date|time] (quick-template + chat draft edit via renderDraftCardEditGrid / renderTaskDraftGridEdit)",
+    other_date_time_surfaces_not_shared_component: [
+      "assets/app.js iu-calInline__dateInput (calendar overlay)",
+      "assets/app.js #iuTaskDue / #iuTaskDueTime (tasks overlay)",
+      "assets/iu-invoice-module.js date fields",
+      "projects/index.html #iuSilverDatePicker (hidden home picker)",
+    ],
     root_cause:
-      "Native date/time inputs as CSS grid items default to min-width:auto (large intrinsic min size, esp. WebKit/iOS); without min-width:0 they overflow or clip against the quick-template card on mobile/tablet.",
+      "Native date/time grid items default min-width:auto (esp. WebKit); fixed with min-width:0 + max-width:100% + border-box under max-width:1024px.",
   };
 
   const reportPath = path.join(
@@ -321,31 +678,74 @@ async function main() {
   );
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + "\n");
 
-  process.stdout.write("=== SILVER_HOME_DATE_TIME_INPUT_FIT_GUARD_V1 ===\n");
-  process.stdout.write("ROOT_CAUSE: " + report.root_cause + "\n");
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
+  function dumpEngine(r) {
+    process.stdout.write("--- ENGINE " + r.engine + " ---\n");
+    if (r.error) {
+      process.stdout.write("ERROR: " + r.error + "\n");
+      return;
+    }
+    for (let i = 0; i < r.viewports.length; i++) {
+      const v = r.viewports[i];
+      process.stdout.write(
+        v.viewport +
+          " cal=" +
+          (kindPass(v.calendar) ? "PASS" : "FAIL") +
+          " task=" +
+          (kindPass(v.task) ? "PASS" : "FAIL") +
+          " minW=" +
+          v.calendar.dateMinWidth +
+          " inset=" +
+          v.calendar.dateRightInset +
+          "\n"
+      );
+    }
+    const s = r.scenario;
     process.stdout.write(
-      r.viewport +
-        " calendar=" +
-        (kindPass(r.calendar) ? "PASS" : "FAIL") +
-        " task=" +
-        (kindPass(r.task) ? "PASS" : "FAIL") +
-        " minW=" +
-        r.calendar.dateMinWidth +
-        "/" +
-        r.task.dateMinWidth +
-        " inset=" +
-        r.calendar.dateRightInset +
-        "/" +
-        r.task.dateRightInset +
-        " overflowX=" +
-        (r.calendar.overflowX || r.task.overflowX || r.calendar.cardOverflowX || r.task.cardOverflowX) +
+      "SCENARIO pickerCal=" +
+        (s.pickerCal.pass ? "PASS" : "FAIL") +
+        " pickerTask=" +
+        (s.pickerTask.pass ? "PASS" : "FAIL") +
+        " allDay=" +
+        (s.allDay.pass ? "PASS" : "FAIL") +
+        " reopenCal=" +
+        (s.reopenCal.pass ? "PASS" : "FAIL") +
+        " reopenTask=" +
+        (s.reopenTask.pass ? "PASS" : "FAIL") +
+        " editCal=" +
+        (kindPass(s.editCal) ? "PASS" : "FAIL") +
+        " editTask=" +
+        (kindPass(s.editTask) ? "PASS" : "FAIL") +
+        " darkCal=" +
+        (kindPass(s.darkCal) ? "PASS" : "FAIL") +
+        " darkTask=" +
+        (kindPass(s.darkTask) ? "PASS" : "FAIL") +
+        " darkAllDay=" +
+        (s.darkAllDay.pass ? "PASS" : "FAIL") +
         "\n"
     );
+    process.stdout.write("DESKTOP: " + (r.desktop.pass ? "UNCHANGED" : "CHANGED") + "\n");
+    process.stdout.write("OVERFLOW_X: " + (r.overflow_x ? "TRUE" : "FALSE") + "\n");
+    process.stdout.write("ENGINE_PASS: " + (r.pass ? "PASS" : "FAIL") + "\n");
   }
-  process.stdout.write("DESKTOP: " + (desktop.pass ? "UNCHANGED" : "CHANGED") + "\n");
-  process.stdout.write("OVERFLOW_X: " + (overflowX ? "TRUE" : "FALSE") + "\n");
+
+  process.stdout.write("=== SILVER_HOME_DATE_TIME_INPUT_FIT_GUARD_V1 ===\n");
+  process.stdout.write("ROOT_CAUSE: " + report.root_cause + "\n");
+  process.stdout.write("SHARED: " + report.shared_component + "\n");
+  process.stdout.write(
+    "CSS_CONTRACT: " +
+      (cssContract.pass ? "PASS" : "FAIL") +
+      " mq=" +
+      cssContract.mq +
+      " gridSafe=" +
+      cssContract.gridSafe +
+      " premiumDate=" +
+      cssContract.premiumDate +
+      " badFixed=" +
+      cssContract.badFixed +
+      "\n"
+  );
+  dumpEngine(chromiumResult);
+  dumpEngine(webkitResult);
   process.stdout.write("REPORT: " + reportPath + "\n");
   process.stdout.write("SAFETY: " + (pass ? "PASS" : "FAIL") + "\n");
   process.stdout.write("=== END_SILVER_HOME_DATE_TIME_INPUT_FIT_GUARD_V1 ===\n");
