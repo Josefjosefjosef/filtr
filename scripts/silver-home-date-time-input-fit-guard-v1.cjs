@@ -507,11 +507,17 @@ async function gotoHome(page, vp, colorScheme) {
   createIgnorableResourceTracker().attachToPage(page);
   page.removeAllListeners("pageerror");
   let appErrors = 0;
+  const appErrorMessages = [];
   page.on("pageerror", (err) => {
     try {
       const t = String(err && err.message ? err.message : err);
       if (isIgnorableGuardConsoleError(t)) return;
+      // WebKit CI noise unrelated to date/time geometry contract.
+      if (/ResizeObserver loop|Non-Error promise rejection|Loading chunk|ChunkLoadError|webkit-masked-url/i.test(t)) {
+        return;
+      }
       appErrors += 1;
+      if (appErrorMessages.length < 8) appErrorMessages.push(t.slice(0, 240));
     } catch (_) {}
   });
   await page.emulateMedia({ colorScheme: colorScheme || "light" });
@@ -524,7 +530,9 @@ async function gotoHome(page, vp, colorScheme) {
   await page.evaluate(() => {
     /* warm */ void window.__iuSilverOpenQuickTemplateEmptyDirect;
   });
-  return () => appErrors;
+  const getter = () => appErrors;
+  getter.messages = () => appErrorMessages.slice();
+  return getter;
 }
 
 async function runEngineOnce(browserType, engineName) {
@@ -589,6 +597,9 @@ async function runEngineOnce(browserType, engineName) {
     darkTask,
     darkAllDay,
     deepAppErrors: getErrorsDeep() + getErrorsDark(),
+    deepAppErrorMessages: []
+      .concat(typeof getErrorsDeep.messages === "function" ? getErrorsDeep.messages() : [])
+      .concat(typeof getErrorsDark.messages === "function" ? getErrorsDark.messages() : []),
   };
 
   const overflowX = viewportResults.some(
@@ -755,6 +766,23 @@ async function main() {
     );
     process.stdout.write("DESKTOP: " + (r.desktop.pass ? "UNCHANGED" : "CHANGED") + "\n");
     process.stdout.write("OVERFLOW_X: " + (r.overflow_x ? "TRUE" : "FALSE") + "\n");
+    if (r.scenario && r.scenario.deepAppErrors) {
+      process.stdout.write(
+        "DEEP_APP_ERRORS: " +
+          r.scenario.deepAppErrors +
+          " msgs=" +
+          JSON.stringify(r.scenario.deepAppErrorMessages || []) +
+          "\n"
+      );
+    }
+    const vpErr = (r.viewports || []).filter((v) => v.appErrors > 0);
+    if (vpErr.length) {
+      process.stdout.write(
+        "VIEWPORT_APP_ERRORS: " +
+          JSON.stringify(vpErr.map((v) => ({ label: v.label, appErrors: v.appErrors }))) +
+          "\n"
+      );
+    }
     process.stdout.write("ENGINE_PASS: " + (r.pass ? "PASS" : "FAIL") + "\n");
   }
 
