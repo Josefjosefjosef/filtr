@@ -1,10 +1,8 @@
 name: NDIC DATEX v1 shadow probe
 
-# Controlled one-shot real shadow diagnostics on the feature branch only.
+# Dispatcher on default branch (GitHub requires workflow_dispatch YAML on main).
+# Checks out code_ref (NDIC feature branch) and runs isolated shadow probe only.
 # NEVER use active. NEVER commit. NEVER upload raw payloads.
-# Secrets: IU_NDIC_PULL_URL/USER/PASS, IU_NDIC_TMC_PULL_URL,
-#   optional IU_NDIC_TMC_PULL_USER/PASS (default = DATEX auth),
-#   optional IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID (presence only).
 
 on:
   workflow_dispatch:
@@ -16,6 +14,10 @@ on:
         options:
           - shadow
         default: shadow
+      code_ref:
+        description: "Git ref containing NDIC probe implementation"
+        required: true
+        default: feat/ndic-datex-v1-integration
 
 concurrency:
   group: ndic-datex-v1-shadow-probe
@@ -36,6 +38,7 @@ jobs:
           submodules: false
           lfs: false
           persist-credentials: false
+          ref: ${{ github.event.inputs.code_ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -53,6 +56,8 @@ jobs:
             exit 1
           fi
           echo "MODE_OK=shadow"
+          echo "CODE_REF=${{ github.event.inputs.code_ref }}"
+          echo "CODE_SHA=$(git rev-parse HEAD)"
 
       - name: Fixture guards (no network)
         run: |
@@ -76,9 +81,7 @@ jobs:
           set -euo pipefail
           mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
           mkdir -p "$RUNNER_TEMP/ndic-shadow-report"
-          # Aggregate JSON only — script never prints secrets/raw bodies.
           node scripts/ndic-datex-v1-shadow-probe.mjs > "$RUNNER_TEMP/ndic-shadow-report/shadow-report.json"
-          # Fail job if probe reports ok=false (still keep report for summary).
           node -e "const r=require(process.env.RUNNER_TEMP+'/ndic-shadow-report/shadow-report.json'); if(!r.ok) process.exit(2);"
 
       - name: Job summary (aggregate only)
@@ -92,6 +95,9 @@ jobs:
           fi
           {
             echo "## NDIC shadow probe (aggregate)"
+            echo ""
+            echo "- code_ref: \`${{ github.event.inputs.code_ref }}\`"
+            echo "- code_sha: \`$(git rev-parse HEAD)\`"
             echo ""
             echo '```json'
             cat "$REPORT"
