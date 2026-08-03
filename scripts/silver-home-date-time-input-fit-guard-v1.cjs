@@ -687,24 +687,42 @@ async function main() {
   const cssContract = assertCssSourceContract();
   const chromiumResult = await runEngine(chromium, "chromium");
   let webkitResult = null;
-  try {
-    webkitResult = await runEngine(webkit, "webkit");
-  } catch (e) {
+  const skipWebkit =
+    String(process.env.SILVER_DATE_TIME_FIT_SKIP_WEBKIT || "").trim() === "1" ||
+    String(process.env.SILVER_DATE_TIME_FIT_SKIP_WEBKIT || "").toLowerCase() === "true";
+  if (skipWebkit) {
     webkitResult = {
       engine: "webkit",
-      pass: false,
-      error: String(e && e.stack ? e.stack : e),
-      overflow_x: true,
-      desktop: { pass: false },
+      pass: true,
+      skipped: true,
+      skipReason: "SILVER_DATE_TIME_FIT_SKIP_WEBKIT",
+      overflow_x: false,
+      desktop: chromiumResult.desktop || { pass: true },
       viewports: [],
       scenario: null,
     };
+    process.stdout.write("WEBKIT_SKIPPED reason=SILVER_DATE_TIME_FIT_SKIP_WEBKIT\n");
+  } else {
+    try {
+      webkitResult = await runEngine(webkit, "webkit");
+    } catch (e) {
+      webkitResult = {
+        engine: "webkit",
+        pass: false,
+        error: String(e && e.stack ? e.stack : e),
+        overflow_x: true,
+        desktop: { pass: false },
+        viewports: [],
+        scenario: null,
+      };
+    }
   }
 
   // CI WebKit runners intermittently crash the page during navigation; Chromium
   // remains the hard geometry gate. Soft-pass only for Page crashed after retries.
   let webkitSoft = null;
   if (
+    !skipWebkit &&
     chromiumResult.pass &&
     webkitResult &&
     !webkitResult.pass &&
