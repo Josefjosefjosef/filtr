@@ -207,12 +207,29 @@
     column-gap:10px;
     gap:11px 10px;
   }
-  /* Mirror app.css: date/time must shrink inside the 1fr track on mobile/tablet. */
-  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
-  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
+  /* Mirror app.css: safe tracks on quick-template; date/time shrink for all draft cards. */
+  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit{
+    grid-template-columns:minmax(0,max-content) minmax(0,1fr);
     width:100%;
     max-width:100%;
     min-width:0;
     box-sizing:border-box;
+    overflow-x:hidden;
+  }
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    overflow-x:hidden;
+    justify-self:stretch;
+  }
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-date-and-time-value,
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-date-and-time-value{
+    min-width:0;
+    max-width:100%;
   }
 }
