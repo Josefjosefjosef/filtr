@@ -98,6 +98,29 @@ async function fetchOnce(url, user, pass, accept, label) {
   }
 }
 
+function safeFetchErrorMeta(err) {
+  const name = err && err.name != null ? String(err.name) : "";
+  const codeRaw = err && err.code != null ? err.code : null;
+  const code = codeRaw != null && String(codeRaw) !== "" ? String(codeRaw) : "";
+  const msg = err && err.message != null ? String(err.message) : "";
+  // Never include URL / credentials from messages — keep short class tokens only.
+  const transient =
+    name === "AbortError" ||
+    code === "ABORT_ERR" ||
+    code === "UND_ERR_CONNECT_TIMEOUT" ||
+    code === "UND_ERR_HEADERS_TIMEOUT" ||
+    code === "UND_ERR_BODY_TIMEOUT" ||
+    /abort|timeout|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed/i.test(
+      [name, code, msg].join(" ")
+    );
+  const errorCode = code || name || "FETCH_ERROR";
+  return {
+    errorCode: errorCode.slice(0, 64),
+    errorClass: transient ? "transient" : "fatal",
+    transient,
+  };
+}
+
 async function fetchWithOneRetry(url, user, pass, accept, label) {
   let lastErr = null;
   for (let i = 0; i <= MAX_RETRIES; i++) {
@@ -105,12 +128,8 @@ async function fetchWithOneRetry(url, user, pass, accept, label) {
       return await fetchOnce(url, user, pass, accept, label);
     } catch (e) {
       lastErr = e;
-      const code = String(e && e.code) || "";
-      const msg = String(e && e.message) || "";
-      const transient =
-        code === "ABORT_ERR" ||
-        /abort|timeout|ECONNRESET|ETIMEDOUT|fetch failed/i.test(msg + code);
-      if (!transient || i === MAX_RETRIES) {
+      const meta = safeFetchErrorMeta(e);
+      if (!meta.transient || i === MAX_RETRIES) {
         return {
           ok: false,
           status: 0,
@@ -118,12 +137,13 @@ async function fetchWithOneRetry(url, user, pass, accept, label) {
           bytes: 0,
           buf: Buffer.alloc(0),
           label,
-          errorCode: code || "FETCH_ERROR",
-          errorClass: transient ? "transient" : "fatal",
+          errorCode: meta.errorCode,
+          errorClass: meta.errorClass,
         };
       }
     }
   }
+  const meta = safeFetchErrorMeta(lastErr);
   return {
     ok: false,
     status: 0,
@@ -131,8 +151,15 @@ async function fetchWithOneRetry(url, user, pass, accept, label) {
     bytes: 0,
     buf: Buffer.alloc(0),
     label,
-    errorCode: String(lastErr && lastErr.code) || "FETCH_ERROR",
+    errorCode: meta.errorCode,
+    errorClass: meta.errorClass,
   };
+}
+
+function authAcceptedFromStatus(status) {
+  if (!status || status <= 0) return "UNVERIFIED";
+  if (status === 401 || status === 403) return false;
+  return true;
 }
 
 function looksLikeHtml(buf) {
@@ -557,9 +584,11 @@ export async function runShadowProbe(opts = {}) {
     } else {
       report.tmc = {
         downloadSuccess: false,
-        authenticationAccepted: tmcRes.status !== 401 && tmcRes.status !== 403,
+        authenticationAccepted: authAcceptedFromStatus(tmcRes.status),
+        sameCredentialsAsDatex: !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS,
         httpStatus: tmcRes.status,
         errorCode: tmcRes.errorCode || null,
+        errorClass: tmcRes.errorClass || null,
         importerCompatible: false,
       };
     }
@@ -569,12 +598,14 @@ export async function runShadowProbe(opts = {}) {
       report.datex.httpStatus = datexRes.status;
       report.datex.contentType = datexRes.contentType;
       report.datex.bytes = datexRes.bytes;
+      report.datex.authenticationAccepted = authAcceptedFromStatus(datexRes.status);
     } else {
       report.datex = {
         downloadSuccess: false,
-        authenticationAccepted: datexRes.status !== 401 && datexRes.status !== 403,
+        authenticationAccepted: authAcceptedFromStatus(datexRes.status),
         httpStatus: datexRes.status,
         errorCode: datexRes.errorCode || null,
+        errorClass: datexRes.errorClass || null,
         parserCompatible: false,
       };
     }
