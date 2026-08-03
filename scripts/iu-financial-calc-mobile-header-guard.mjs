@@ -231,12 +231,12 @@ async function openCalculator(page, calcId, expectedTitle) {
   throw lastErr || new Error("openCalculator failed:" + calcId);
 }
 
-async function measureHeaderStable(page, attempts = 8) {
+async function measureHeaderStable(page, attempts = 16) {
   let last = null;
   for (let i = 0; i < attempts; i++) {
     last = await measureHeader(page);
     if (last && last.header && last.title) return last;
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(200);
   }
   return last;
 }

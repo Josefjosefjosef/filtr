@@ -94,22 +94,35 @@ async function resetHomeTemplate(page) {
 async function openQuickTemplateForm(page, key) {
   await resetHomeTemplate(page);
   await dismissLocalDataProtection(page);
+  // Prefer the same visible quick-action button a user taps (not only the test helper).
   const opened = await page.evaluate((k) => {
+    const btn = document.querySelector('[data-iu-silver-home-quick-action="' + k + '"]');
+    if (btn && typeof btn.click === "function") {
+      const r = btn.getBoundingClientRect();
+      const visible = r.width > 2 && r.height > 2 && window.getComputedStyle(btn).visibility !== "hidden";
+      if (visible) {
+        btn.click();
+        return "click";
+      }
+    }
     if (typeof window.__iuSilverOpenQuickTemplateEmptyDirect === "function") {
       window.__iuSilverOpenQuickTemplateEmptyDirect(k);
       return "direct";
-    }
-    const btn = document.querySelector('[data-iu-silver-home-quick-action="' + k + '"]');
-    if (btn && typeof btn.click === "function") {
-      btn.click();
-      return "click";
     }
     return "";
   }, key);
   if (!opened) throw new Error("quick-action missing: " + key);
   await page.waitForTimeout(900);
-  const cardReady = await page.evaluate(() => !!document.querySelector(".iuSilverDraftCard--quickTemplateEmpty"));
-  if (!cardReady) throw new Error("quick-template card not opened via " + opened);
+  await dismissLocalDataProtection(page);
+  const cardReady = await page.evaluate(() => {
+    const card = document.querySelector(".iuSilverDraftCard--quickTemplateEmpty");
+    if (!card) return false;
+    const r = card.getBoundingClientRect();
+    const st = window.getComputedStyle(card);
+    if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity) === 0) return false;
+    return r.width > 8 && r.height > 8;
+  });
+  if (!cardReady) throw new Error("quick-template card not visible via " + opened);
 }
 
 function measureSnippet() {
@@ -132,6 +145,10 @@ function measureSnippet() {
     const labelRect = dateLabel ? dateLabel.getBoundingClientRect() : null;
     const cardCs = card ? getComputedStyle(card) : null;
     const cardPadRight = cardCs ? parseFloat(cardCs.paddingRight) || 0 : 0;
+    const gridCsPad = grid ? getComputedStyle(grid) : null;
+    const gridPadRight = gridCsPad ? parseFloat(gridCsPad.paddingRight) || 0 : 0;
+    // Colored card inner edge = card border box minus card padding. Grid padding is the
+    // visual inset inside the card; require inputs stay left of card inner edge with ≥padMin.
     const cardInnerRight = cardRect ? cardRect.right - cardPadRight : null;
     const dateSt = dateInput ? getComputedStyle(dateInput) : null;
     const timeSt = timeInput ? getComputedStyle(timeInput) : null;
@@ -150,6 +167,15 @@ function measureSnippet() {
       dateSt.boxSizing === "border-box" &&
       timeSt.boxSizing === "border-box";
     const cols = gridSt ? String(gridSt.gridTemplateColumns || "") : "";
+    const visibleOk =
+      !!dateRect &&
+      !!timeRect &&
+      dateRect.width > 8 &&
+      timeRect.width > 8 &&
+      dateRect.height > 8 &&
+      timeRect.height > 8 &&
+      !!cardRect &&
+      cardRect.width > 8;
 
     const dateRightOk =
       !!dateRect && cardInnerRight !== null && dateRect.right <= cardInnerRight + tol;
@@ -180,12 +206,14 @@ function measureSnippet() {
       dateFound: !!dateInput,
       timeFound: !!timeInput,
       titleFound: !!titleInput,
+      visibleOk,
       minWidthOk,
       maxWidthOk,
       boxOk,
       dateMinWidth,
       timeMinWidth,
       gridTemplateColumns: cols,
+      gridPadRight,
       dateRightOk,
       timeRightOk,
       datePadOk,
@@ -217,6 +245,7 @@ function kindPass(m) {
     m.dateFound &&
     m.timeFound &&
     m.titleFound &&
+    m.visibleOk &&
     m.minWidthOk &&
     m.maxWidthOk &&
     m.boxOk &&
@@ -254,7 +283,7 @@ async function measureEditProbe(page, kind) {
       "position:fixed;inset:12px;z-index:99999;overflow:auto;background:#fff;padding:12px;box-sizing:border-box;";
     const isCal = k === "calendar";
     host.innerHTML = isCal
-      ? '<div class="iuSilverDraftCard" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="1">' +
+      ? '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty iuSilverDraftCard--quickTemplateCalendar" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="1">' +
         '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit">' +
         '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-field="date" value="2026-08-03" />' +
         '<div class="iuSilverDraftK iuSilverDraftK--allDayRow"><span class="iuSilverDraftAllDayLine">Celodenní</span><span class="iuSilverDraftAllDayLine">událost</span></div>' +
@@ -264,7 +293,7 @@ async function measureEditProbe(page, kind) {
         '<div class="iuSilverDraftK">Adresa</div><input type="text" class="iuSilverDraftInput" data-iu-silver-field="location" value="" />' +
         '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" data-iu-silver-field="note"></textarea>' +
         "</div></div>"
-      : '<div class="iuSilverDraftCard iuSilverDraftCard--task" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="1">' +
+      : '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty iuSilverDraftCard--quickTemplateTask" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="1">' +
         '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">' +
         '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="2026-08-03" />' +
         '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="09:30" />' +
@@ -280,7 +309,7 @@ async function measureEditProbe(page, kind) {
     timeSel: kind.timeSel,
     titleSel: kind.titleSel,
     tol: TOL_PX,
-    padMin: 0.5,
+    padMin: PAD_MIN_PX,
   });
 }
 
