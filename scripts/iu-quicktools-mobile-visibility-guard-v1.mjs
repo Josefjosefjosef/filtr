@@ -52,7 +52,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /quicktools-fixed-width-v5-20260714/.test(index),
+      pass: /custom-buttons-dynamic-height-wrap-v1-20260803/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);

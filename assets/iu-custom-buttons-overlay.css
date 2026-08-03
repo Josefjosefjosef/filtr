@@ -151,6 +151,18 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
 }
 
 @media (max-width: 1024px){
+  /* MindMenu / tools gate: keep scroll end above fixed bottom nav via shared nav-height var. */
+  body.iu-mobileGateOverlayOpen #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
+    padding-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)) !important;
+    scroll-padding-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)) !important;
+    box-sizing: border-box !important;
+  }
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
+    scroll-margin-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px));
+  }
+
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,
@@ -158,29 +170,53 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
   body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid{
     gap: 10px 12px !important;
     min-height: 0 !important;
+    /* Per-row equal heights from taller tile; rows stay independent. */
+    align-items: stretch !important;
+    grid-auto-rows: auto !important;
   }
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
-    height: 96px !important;
+    /* Keep current short-label size as minimum; grow with wrapped label. */
+    height: auto !important;
     min-height: 96px !important;
-    max-height: 96px !important;
+    max-height: none !important;
+    align-self: stretch !important;
   }
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
   #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink,
   body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > :is(a,button).iuTileLink{
+    /* Fill stretched grid cell; content defines natural height (no % height trap). */
+    height: auto !important;
+    min-height: 96px !important;
     max-height: none !important;
+    flex: 1 1 auto !important;
+    align-self: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileText,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileText,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileText,
   #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
-  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText{
+  #iuMyInfoUzelToolsHost section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileText,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile > .iuTileText,
+  body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink > .iuTileText,
+  body .accordionCol .mindMenu .iu-mmQuickGrid .iuTileText{
     width: 100% !important;
+    max-width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
@@ -188,11 +224,35 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0 14px !important;
+    padding: 10px 14px !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    -webkit-box-orient: unset !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    hyphens: auto !important;
+  }
+
+  /* Management list: long title/URL must not expand viewport horizontally. */
+  #iuCustomButtonsList .iu-custom-buttons-item{
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #iuCustomButtonsList .iu-custom-buttons-item-title,
+  #iuCustomButtonsList .iu-custom-buttons-item-url{
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
   }
 }
 

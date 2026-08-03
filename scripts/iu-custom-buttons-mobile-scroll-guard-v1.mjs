@@ -45,7 +45,15 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /quicktools-fixed-width-v5-20260714/.test(index),
+      pass: /custom-buttons-dynamic-height-wrap-v1-20260803/.test(index),
+    },
+    {
+      id: "tile_min_height_not_fixed_max",
+      pass: /min-height:\s*96px\s*!important/.test(custom) && /max-height:\s*none\s*!important/.test(custom) && !/max-height:\s*96px\s*!important/.test(custom),
+    },
+    {
+      id: "tile_text_wrap_anywhere",
+      pass: /overflow-wrap:\s*anywhere\s*!important/.test(custom) && /-webkit-line-clamp:\s*unset\s*!important/.test(custom),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
