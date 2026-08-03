@@ -23,7 +23,8 @@
   }
 
   /* P0: keyboard open — hide bottom nav + collapse nav-reserved band.
-     Keep --iu-mobile-bottom-safe as env(safe-area-inset-bottom) for non-nav consumers. */
+     Keep --iu-mobile-bottom-safe as env(safe-area-inset-bottom) for non-nav consumers.
+     Beat overlay restore rules that set pointer-events:auto on #iuMobileBottomNav. */
   html.iu-keyboard-open {
     --iu-mobile-bottom-nav-h: 0px;
     --iu-mobile-bottom-nav-total-h: 0px;
@@ -34,6 +35,8 @@
   }
 
   html.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav,
+  html.iu-keyboard-open body #iuMobileBottomNav.iu-mobileBottomNav,
+  html.iu-keyboard-open body.iu-mobileGateOverlayOpen #iuMobileBottomNav.iu-mobileBottomNav,
   body.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav {
     display: none !important;
     visibility: hidden !important;

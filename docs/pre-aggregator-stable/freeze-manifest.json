@@ -1,17 +1,17 @@
 {
-  "freezeId": "rychly-prehled-horizontal-persist-v1-20260803",
+  "freezeId": "kb-hide-v2-real-device-20260803",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-03T12:00:00Z",
-  "note": "Freeze bump: Rychlý přehled mobile/tablet horizontal content persist (no wipe on transient CSS gates).",
+  "updatedAt": "2026-08-03T14:00:00Z",
+  "note": "Freeze bump: mobile/tablet bottom-nav hide on soft keyboard v2 (iOS Safari zero-gap + touch fallback).",
   "files": {
-    "projects/index.html": "7892cdef91c8f1e6f020f928acfa32a16ae009248d76a35b9006e4c87ea8e1a8",
+    "projects/index.html": "2e147e9b53a19aa1360d50bcce0912f98688ec82ae605b2fce172bb998a94d0c",
     "assets/app.css": "440195a7aa95f2f4980c9eae417508c3a5b4ca21fba1b2ec1e6dd5cf8cd7bc2c",
-    "assets/app.js": "a70fe834808196134f14d9042b110685c5465b92bccd6d9118ebbb0587cd36cc",
+    "assets/app.js": "25318e8630cd62ad2737c0588f582aad764d7905d6292653c07d5dbf0d07e725",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "86b151e0a38a37a059b09741921e9c4ada502795a85b8c8b15b1cf5655121380",
+    "sw.js": "37ef204e10192d3709e7e512881fb2a56aec89722b8c5ce4372f50413b663e0a",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-01-homecard-cta-square-v1\"",
+      "CACHE_VERSION = \"2026-08-03-kb-hide-v2\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",

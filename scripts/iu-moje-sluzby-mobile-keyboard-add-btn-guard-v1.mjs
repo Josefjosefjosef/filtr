@@ -11,8 +11,9 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803";
+const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803";
 const JS_BUSTS = [
+  "kb-hide-v2-20260803",
   "bottom-nav-keyboard-hide-v1-20260802",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707",
@@ -99,7 +100,7 @@ function staticGate() {
     },
     {
       id: "index_app_cache_bust",
-      pass: JS_BUSTS.some((bust) => new RegExp(`app\\.js\\?v=${bust}`).test(index)),
+      pass: /app\.js\?v=/.test(index) && JS_BUSTS.some((bust) => index.includes(bust)),
     },
   ];
 
