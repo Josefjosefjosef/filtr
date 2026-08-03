@@ -212,7 +212,28 @@
     overscroll-behavior-y: contain;
   }
 
-  /* Datovka: přebít iuDsInjectMobileTabletCssOnce (inset:0 + 100dvh) — panel končí nad spodní lištou */
+  /* 901–1024: spodní nav je skrytá — Datovka nesmí rezervovat nav band (mezera = ztmavený MindMenu). */
+  @media (min-width: 901px) {
+    body.iu-modal-open.iu-ds-overlay-open {
+      --iu-tool-overlay-panel-bottom: 0px;
+    }
+  }
+
+  /* Datovka: výška jen top+bottom (žádný 100vh/dvh/svh cap) — iOS address bar jinak nechává pruh stránky. */
+  body.iu-modal-open.iu-ds-overlay-open #iuDsOverlay.iu-ds-overlay:not([hidden]) {
+    position: fixed !important;
+    inset: auto !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--iu-tool-overlay-panel-bottom) !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    z-index: 10039 !important;
+  }
+
   body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]) {
     position: fixed !important;
     top: 0 !important;
@@ -223,7 +244,7 @@
     max-width: none !important;
     transform: none !important;
     height: auto !important;
-    max-height: calc(100dvh - var(--iu-tool-overlay-panel-bottom)) !important;
+    max-height: none !important;
     min-height: 0 !important;
     padding-bottom: 0 !important;
     scroll-padding-bottom: var(--iu-ds-scroll-bottom-clearance) !important;
@@ -867,11 +888,16 @@
     display: none !important;
   }
 
-  /* Part 10: Datovka / Bakaláři / ZP — klávesnice + sjednocené „+ Přidat další“ */
-  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]),
+  /* Part 10: Bakaláři / ZP — svh cap (Datovka záměrně mimo: top+bottom only, viz výše). */
   body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen, .iu-mobileGateOverlayOpen)
     #iuQuickFeed:is(.iu-bakalari-quickfeed-root, .iu-pojistovna-quickfeed-root):not([hidden]) {
     max-height: calc(100svh - var(--iu-tool-overlay-panel-bottom)) !important;
+  }
+
+  /* Datovka: přebít Part 2 max-height (100dvh) — výšku drží výhradně top+bottom. */
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open="1"]:not([hidden]),
+  body.iu-modal-open.iu-ds-overlay-open #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    max-height: none !important;
   }
 
   #iuDsPanel .iu-ds-add,

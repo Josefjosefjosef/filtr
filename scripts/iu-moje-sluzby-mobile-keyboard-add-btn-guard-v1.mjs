@@ -11,7 +11,7 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802";
+const CSS_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803";
 const JS_BUSTS = [
   "bottom-nav-keyboard-hide-v1-20260802",
   "ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707",
@@ -83,7 +83,7 @@ function staticGate() {
     },
     {
       id: "part10_unified_add_btn",
-      pass: /Part 10: Datovka \/ Bakaláři \/ ZP/.test(unified),
+      pass: /Part 10: Bakaláři \/ ZP|Part 10: Datovka \/ Bakaláři \/ ZP/.test(unified),
     },
     {
       id: "part10_full_width_add",
