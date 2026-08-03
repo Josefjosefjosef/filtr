@@ -243,7 +243,8 @@
     "iu-info-panel-mobile-polish-guard": "node scripts/iu-info-panel-mobile-polish-guard-v1.mjs",
     "feed-classification-audit": "node scripts/audit-feed-classification.mjs",
     "test:feed-classification": "python scripts/test_iu_feed_classification.py",
-    "validate:feed-classification": "python scripts/validate_feed_classification.py --skip-missing --enrich"
+    "validate:feed-classification": "python scripts/validate_feed_classification.py --skip-missing --enrich",
+    "iu-rychly-prehled-horizontal-content-guard": "node scripts/iu-rychly-prehled-horizontal-content-guard-v1.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
