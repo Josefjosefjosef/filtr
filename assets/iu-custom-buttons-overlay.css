@@ -151,16 +151,16 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
 }
 
 @media (max-width: 1024px){
-  /* MindMenu / tools gate: keep scroll end above fixed bottom nav via shared safe-space var. */
+  /* MindMenu / tools gate: keep scroll end above fixed bottom nav via shared nav-height var. */
   body.iu-mobileGateOverlayOpen #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 40px)) !important;
-    scroll-padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 40px)) !important;
+    padding-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)) !important;
+    scroll-padding-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px)) !important;
     box-sizing: border-box !important;
   }
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMobileGatePanelTools.accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile,
   #iuMindMenuView section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid > .iuTile{
-    scroll-margin-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 40px));
+    scroll-margin-bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px));
   }
 
   #iuMobileGatePanelTools section.iu-mmQuickLinks:not(.iu-mojeSluzby) > .iu-mmQuickGrid,

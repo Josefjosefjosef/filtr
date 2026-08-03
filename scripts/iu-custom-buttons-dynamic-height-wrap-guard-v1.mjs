@@ -53,7 +53,7 @@ function staticGate() {
   ok("word_break", /word-break:\s*break-word\s*!important/.test(custom));
   ok("clamp_unset", /-webkit-line-clamp:\s*unset\s*!important/.test(custom));
   ok("align_stretch", /align-items:\s*stretch\s*!important/.test(custom));
-  ok("safe_space_padding", /--iu-mobile-bottom-nav-safe-space/.test(custom));
+  ok("safe_space_padding", /--bottom-nav-height/.test(custom) && /scroll-margin-bottom/.test(custom));
   ok("pc_64_unchanged", /body\s+\.accordionCol\s+\.mindMenu\s+\.iu-mmQuickGrid\s*>\s*\.iuTile\{[\s\S]*?height:\s*64px\s*!important/.test(app));
   return { pass: fails.length === 0, fails };
 }
