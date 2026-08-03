@@ -1,0 +1,120 @@
+name: NDIC DATEX v1 shadow probe
+
+# Dispatcher on default branch (GitHub requires workflow_dispatch YAML on main).
+# Checks out code_ref (NDIC feature branch) and runs isolated shadow probe only.
+# NEVER use active. NEVER commit. NEVER upload raw payloads.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Must be shadow (active is rejected)"
+        required: true
+        type: choice
+        options:
+          - shadow
+        default: shadow
+      code_ref:
+        description: "Git ref containing NDIC probe implementation"
+        required: true
+        default: feat/ndic-datex-v1-integration
+
+concurrency:
+  group: ndic-datex-v1-shadow-probe
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  shadow-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+          ref: ${{ github.event.inputs.code_ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Reject non-shadow modes
+        env:
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+        run: |
+          set -euo pipefail
+          mode="$(printf '%s' "${INPUT_MODE:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          if [ "$mode" != "shadow" ]; then
+            echo "REFUSING_NON_SHADOW_MODE"
+            exit 1
+          fi
+          echo "MODE_OK=shadow"
+          echo "CODE_REF=${{ github.event.inputs.code_ref }}"
+          echo "CODE_SHA=$(git rev-parse HEAD)"
+
+      - name: Fixture guards (no network)
+        run: |
+          set -euo pipefail
+          npm run iu-ndic-datex-v1-guard
+          npm run iu-ndic-datex-v1-exposure-guard
+
+      - name: Real shadow probe (isolated temp only)
+        id: probe
+        env:
+          IU_NDIC_DATEX_V1_MODE: shadow
+          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
+          IU_NDIC_SHADOW_WORK_DIR: ${{ runner.temp }}/ndic-shadow-work
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
+          mkdir -p "$RUNNER_TEMP/ndic-shadow-report"
+          node scripts/ndic-datex-v1-shadow-probe.mjs > "$RUNNER_TEMP/ndic-shadow-report/shadow-report.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/ndic-shadow-report/shadow-report.json'); if(!r.ok) process.exit(2);"
+
+      - name: Job summary (aggregate only)
+        if: always()
+        run: |
+          set -euo pipefail
+          REPORT="$RUNNER_TEMP/ndic-shadow-report/shadow-report.json"
+          if [ ! -f "$REPORT" ]; then
+            echo "NO_REPORT" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          {
+            echo "## NDIC shadow probe (aggregate)"
+            echo ""
+            echo "- code_ref: \`${{ github.event.inputs.code_ref }}\`"
+            echo "- code_sha: \`$(git rev-parse HEAD)\`"
+            echo ""
+            echo '```json'
+            cat "$REPORT"
+            echo ""
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload sanitized report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ndic-shadow-probe-report
+          path: ${{ runner.temp }}/ndic-shadow-report/shadow-report.json
+          retention-days: 1
+          if-no-files-found: ignore
+
+      - name: Wipe temp workdir
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -rf "${{ runner.temp }}/ndic-shadow-work" || true
