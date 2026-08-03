@@ -25,6 +25,8 @@ const BASE = USE_LOCAL_SERVER
 
 const PLACEHOLDER = "Napiš Silverovi nebo hledej na internetu…";
 const ACTION_ORDER = ["silver", "google", "seznam", "youtube", "googlemaps", "mapycz"];
+/* Required AI transparency label. Do not remove without legal/product review. */
+const SILVER_ACTION_LABEL = "Silver — AI asistent";
 
 function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
@@ -40,6 +42,12 @@ function staticGate() {
     {
       id: "menu_html",
       pass: /id="iuSilverHomeDesktopActionMenu"/.test(index) && index.includes("Vyhledat na Googlu"),
+    },
+    {
+      id: "silver_ai_label",
+      pass:
+        index.includes(">" + SILVER_ACTION_LABEL + "</span>") &&
+        /data-iu-silver-desktop-action="silver"[\s\S]{0,220}Silver — AI asistent/.test(index),
     },
     {
       id: "menu_css_pc_only",
@@ -351,6 +359,13 @@ async function runPcProof(browser) {
   const arrowMenuOpen = !state.menuHidden && !!state.menuHitTest?.ok;
   const orderOk = JSON.stringify(state.itemActions) === JSON.stringify(ACTION_ORDER);
   const placeholderOk = state.placeholderDesktop === PLACEHOLDER || state.placeholder === PLACEHOLDER;
+  const silverLabel = await page.evaluate(() => {
+    const el = document.querySelector(
+      '[data-iu-silver-desktop-action="silver"] .iuSilverHomeDesktopActionMenuItemLabel'
+    );
+    return el ? String(el.textContent || "").trim() : "";
+  });
+  const silverLabelOk = silverLabel === SILVER_ACTION_LABEL;
 
   const openResult = await page.evaluate(() => {
     return new Promise((resolve) => {
@@ -390,6 +405,7 @@ async function runPcProof(browser) {
     escapeClosed &&
     arrowMenuOpen &&
     orderOk &&
+    silverLabelOk &&
     state.menuHidden &&
     /google\.com\/search/.test(openResult.url) &&
     openResult.target === "_blank";
@@ -403,6 +419,8 @@ async function runPcProof(browser) {
     escapeClosed,
     arrowMenuOpen,
     orderOk,
+    silverLabelOk,
+    silverLabel,
     openResult,
     preSubmit,
     menuHitTest: state.menuHitTest,

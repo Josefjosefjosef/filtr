@@ -113,6 +113,7 @@ font-src 'self' data:;
         #iuSilverHeroPremium .iu-silver-trust{display:none!important}
         #iuSilverHeroPremium .silver-speech-row,
         #iuSilverHeroPremium .silver-privacy-line{display:none!important}
+        #iuSilverHeroPremium .iu-silver-ai-badge[data-iu-silver-ai-badge]{display:none!important}
       }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
@@ -211,6 +212,8 @@ font-src 'self' data:;
         #iuSilverWelcomeStack.silver-welcome-stack--evening{background:radial-gradient(ellipse 95% 70% at 0% -5%,rgba(56,189,248,.11) 0%,transparent 48%),radial-gradient(ellipse 90% 75% at 105% 108%,rgba(124,58,246,.1) 0%,transparent 52%),linear-gradient(180deg,#07101f 0%,#0b1430 44%,#111827 100%)!important}
         #iuSilverHeroPremium{position:relative;z-index:1;width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;min-height:0!important;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 6px;margin:12px 10px 0 10px;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 85% 65% at 18% 22%,rgba(0,92,255,.30) 0%,transparent 52%),radial-gradient(ellipse 70% 55% at 92% 8%,rgba(15,45,110,.32) 0%,transparent 48%),radial-gradient(ellipse 60% 50% at 50% 100%,rgba(0,40,90,.40) 0%,transparent 55%),linear-gradient(135deg,#0a1628 0%,#0f2547 38%,#12356e 72%,#1a4a8f 100%);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.35)}
         #iuSilverHeroPremium::before,#iuSilverHeroPremium::after{content:none!important;display:none!important}
+        /* Required AI transparency label. Do not remove without legal/product review. */
+        #iuSilverHeroPremium .iu-silver-ai-badge[data-iu-silver-ai-badge]{position:absolute;top:8px;right:10px;z-index:4;display:inline-block;margin:0;padding:2px 7px;border-radius:999px;border:1px solid rgba(191,219,254,.38);background:rgba(15,23,42,.42);color:rgba(241,245,249,.96);font-size:clamp(9.5px,2.4vw,11px);font-weight:650;letter-spacing:.01em;line-height:1.2;white-space:nowrap;pointer-events:none;user-select:none;box-sizing:border-box;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis}
         .iu-hero-silver-premiumInner{position:relative;z-index:2;width:100%;max-width:100%;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:0!important}
         .iu-hero-silver-premiumMain{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
         .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:stretch;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0;container-type:inline-size}
@@ -1298,6 +1301,12 @@ font-src 'self' data:;
         body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItemLabel{
           flex: 1 1 auto;
           min-width: 0;
+        }
+        /* Required AI transparency label. Do not remove without legal/product review. */
+        body.iu-desktop-silver-composer-topbar [data-iu-silver-desktop-action="silver"] .iuSilverHomeDesktopActionMenuItemLabel{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       .iuSilverHomeInputUx,
@@ -2649,6 +2658,8 @@ font-src 'self' data:;
                         })();
                         </script>
                         <section id="iuSilverHeroPremium" class="iu-hero-silver-premium iu-silver-hero-card--p0-mobile iu-silver-hero-vertical-gap-p0" aria-label="Silver" data-iu-silver-hero-premium>
+                          <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                          <span class="iu-silver-ai-badge" data-iu-silver-ai-badge="1">AI asistent</span>
                           <div class="iu-hero-silver-premiumInner">
                             <div class="iu-hero-silver-premiumMain">
                               <div class="iu-hero-topRow">
@@ -2851,7 +2862,8 @@ font-src 'self' data:;
                                           </div>
                                           <textarea id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" rows="1" inputmode="text" autocomplete="off" maxlength="450" placeholder="" aria-label="Dej mi pokyn" data-iu-silver-home-input="1" data-iu-silver-home-placeholder-desktop="Napiš Silverovi nebo hledej na internetu…"></textarea>
                                           <div id="iuSilverHomeDesktopActionMenu" class="iuSilverHomeDesktopActionMenu" hidden role="menu" aria-label="Akce pro zadaný text">
-                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="silver"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🤖</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Silver</span></button>
+                                            <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="silver"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🤖</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Silver — AI asistent</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="google"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔍</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Googlu</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="seznam"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔎</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Seznamu</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="youtube"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">▶️</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na YouTube</span></button>
@@ -6446,7 +6458,8 @@ font-src 'self' data:;
             </span>
             <div class="iuSilverChatHeaderText">
               <h2 class="iuSilverChatTitle" id="iuSilverChatTitle">Silver</h2>
-              <p class="iuSilverChatSubtitle">Osobní asistent</p>
+              <!-- Required AI transparency label. Do not remove without legal/product review. -->
+              <p class="iuSilverChatSubtitle">AI asistent</p>
             </div>
           </div>
           <button type="button" class="iuSilverChatClose" id="iuSilverChatClose" data-iu-silver-chat-close="1" aria-label="Zavřít chat Silver">×</button>
@@ -6500,7 +6513,8 @@ font-src 'self' data:;
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="silver">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🤖</span>
-                <span class="iuInfoCenter__tileLabel">O Silverovi / osobní asistent</span>
+                <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                <span class="iuInfoCenter__tileLabel">O Silverovi / AI asistent</span>
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="cookies">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🍪</span>
@@ -6591,10 +6605,12 @@ font-src 'self' data:;
           <article id="iuInfoCenterDetailAbout" class="iuInfoCenter__detail" data-iu-info-section="about" hidden>
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">InfoUzel.cz je český přehledový web a sada praktických nástrojů v jednom — bez nutnosti registrace. Kombinuje lokální osobní nástroje s automaticky agregovaným obsahem z veřejných zdrojů.</p>
+              <!-- Required AI transparency note. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__p" data-iu-info-ai-graphics-note="1">Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence, například pro AI asistenta Silver a při tvorbě nebo úpravě některých ilustračních grafických prvků webu.</p>
               <h3 class="iuInfoCenter__h3">Hlavní části webu</h3>
               <ul class="iuInfoCenter__moduleList">
                 <li class="iuInfoCenter__moduleItem"><strong>Homepage</strong> — úvodní rozcestník, souhrn dne a rychlý přístup k modulům.<br><span class="iuInfoCenter__moduleTag">Orientační informace · kombinace lokálních a externích dat</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — osobní asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — AI asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Kalendář</strong> — osobní události, připomínky a plánování.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data v zařízení</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Úkoly</strong> — seznam úkolů s termíny a prioritami.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Poznámky</strong> — textové záznamy s vyhledáváním a tagy.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
@@ -6646,7 +6662,8 @@ font-src 'self' data:;
 
           <article id="iuInfoCenterDetailSilver" class="iuInfoCenter__detail" data-iu-info-section="silver" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">Silver je osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.</p>
+              <!-- Required AI transparency label. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__lead" data-iu-info-silver-lead="1">Silver je AI osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.</p>
               <h3 class="iuInfoCenter__h3">Co Silver umí</h3>
               <ul class="iuInfoCenter__ul">
                 <li>navrhnout a uložit událost do kalendáře</li>
@@ -6663,8 +6680,9 @@ font-src 'self' data:;
               </div>
               <p class="iuInfoCenter__p">Některé části webu nebo doplňkové funkce mohou používat externí služby — například předpověď počasí (Open-Meteo podle zvolené polohy), videa (YouTube) nebo odkazy na mapy a dopravce. Tyto požadavky směřují k příslušným poskytovatelům.</p>
               <p class="iuInfoCenter__p">Do webu byste neměli vkládat údaje, které nechcete uchovávat v prohlížeči nebo zařízení.</p>
-              <h3 class="iuInfoCenter__h3">Orientační charakter odpovědí</h3>
-              <p class="iuInfoCenter__p">Odpovědi Silvera mohou být orientační. U důležitých informací vždy ověřte údaje z nezávislého nebo odborného zdroje. Při zdravotních, právních, finančních nebo krizových situacích kontaktujte odborníka nebo příslušnou službu.</p>
+              <h3 class="iuInfoCenter__h3">Umělá inteligence a omezení</h3>
+              <!-- Required AI transparency disclaimer. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__p" data-iu-info-silver-ai-disclaimer="1">Silver využívá umělou inteligenci. Jeho návrhy a odpovědi jsou vytvářeny automaticky a mohou obsahovat nepřesnosti. Důležité informace si proto vždy ověřte z nezávislého nebo odborného zdroje. Při zdravotních, právních, finančních nebo krizových situacích kontaktujte odborníka nebo příslušnou službu.</p>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>Silver není:</strong> právník, advokát, lékař, finanční poradce, krizová služba ani náhrada odborné pomoci. V urgentní situaci volejte <strong>155</strong> (zdravotní), <strong>158</strong> (policie) nebo <strong>112</strong>.
               </div>
