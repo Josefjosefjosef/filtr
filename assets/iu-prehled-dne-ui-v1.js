@@ -29,11 +29,40 @@ import {
   migrateChmiCapV2UserStates,
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
-} from "./iu-info-system-core-v1.js?v=info-system-v6-chmi-issued-updated-20260801";
+  MAX_CITY_LOCALITIES,
+} from "./iu-info-system-core-v1.js?v=chmi-locality-filter-vse-v1-20260803";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "info-system-v6-ndic-datex-v1-20260801";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803-ndic-datex-v1-20260803";
+const CITY_LIMIT_MSG =
+  "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
+const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
+let czMapSpritePromise = null;
 const NONE_SENTINEL = "__none__";
+
+/** Inject shared Czechia silhouette sprite once (local #iu-cz-map for all cards). */
+function ensureCzMapSprite() {
+  if (typeof document === "undefined") return Promise.resolve();
+  if (document.getElementById(CZ_MAP_SPRITE_ID)) return Promise.resolve();
+  if (czMapSpritePromise) return czMapSpritePromise;
+  const holder = document.createElement("div");
+  holder.id = CZ_MAP_SPRITE_ID;
+  holder.hidden = true;
+  holder.setAttribute("aria-hidden", "true");
+  document.documentElement.appendChild(holder);
+  czMapSpritePromise = fetch("/assets/icons/iu-cz-map.svg?v=" + CACHE_BUST, { credentials: "same-origin" })
+    .then((r) => {
+      if (!r.ok) throw new Error("cz-map-svg");
+      return r.text();
+    })
+    .then((txt) => {
+      holder.innerHTML = txt;
+    })
+    .catch(() => {
+      czMapSpritePromise = null;
+    });
+  return czMapSpritePromise;
+}
 const SECTION_ORDER = ["temata", "zdroje", "lokalita"];
 const SECTION_LABELS = {
   temata: "Témata",
@@ -322,41 +351,16 @@ function prefsForMode(prefs, mode) {
   base.unreadOnly = false;
   base.savedOnly = false;
   if (mode === "all") {
-    return {
-      sections: [],
-      eventTypes: [],
-      sourceGroups: [],
-      sourceIds: [],
-      orgTypes: [],
-      lanes: [],
-      connectorTypes: [],
-      statuses: [],
-      regionLevels: [],
-      institutions: [],
-      favoriteSourceIds: [],
-      favoriteLanes: [],
-      favoriteRegions: [],
-      favoriteInstitutions: [],
-      homeKraj: "",
-      homeOkres: "",
-      homeObec: "",
-      regionalDoprava: false,
-      regionalKrize: false,
-      regionalZdravi: false,
-      myRegionOnly: false,
-      localityQuery: "",
-      localities: [],
-      searchQuery: "",
-      sortMode: "nejnovejsi",
-      timeRangeHours: 0,
-      importanceMin: 0,
-      activeOnly: false,
-      newOnly: false,
-      unreadOnly: false,
-      savedOnly: false,
-      favoritesOnly: false,
-      activeViewId: "",
-    };
+    // Temporary locality bypass only — never mutate stored prefs / localStorage.
+    // Topics, sources and other settings stay; cards behave as if no locality was selected.
+    base.localityQuery = "";
+    base.localities = [];
+    base.homeKraj = "";
+    base.homeOkres = "";
+    base.homeObec = "";
+    base.myRegionOnly = false;
+    base.favoriteRegions = [];
+    return base;
   }
   if (mode === "saved") {
     base.savedOnly = true;
@@ -369,11 +373,16 @@ function prefsForMode(prefs, mode) {
   return base;
 }
 
+/** Effective prefs for the current view (includes temporary Vše locality bypass). */
+function effectivePrefs() {
+  const prefs = state.prefs || getPrefs();
+  return prefsForMode(prefs, state.viewMode);
+}
+
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
-  const prefs = state.prefs || getPrefs();
+  const f = effectivePrefs();
   const mode = state.viewMode;
-  const f = prefsForMode(prefs, mode);
   const opts = {
     index: state.index,
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
@@ -440,7 +449,7 @@ function renderItem(ev) {
   const forced = chmiPublicDetailUrl(ev);
   // CHMI: never fall back to XML / specialized publisher web — portal only.
   const url = ev && ev.capV2 ? safeHttpUrl(forced) : safeHttpUrl(forced || ev.url || ev.originalUrl);
-  const locationFilter = state.prefs || getPrefs();
+  const locationFilter = effectivePrefs();
   const title = displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
   const isNdic =
@@ -486,7 +495,16 @@ function renderItem(ev) {
       : `<div class="iuPrehledDne__issued">${esc(issued)}</div>`;
   }
   let timeValidFrom = "";
-  if (timeline.secondaryValidFromLabel && (timeline.secondaryValidFromDate || timeline.secondaryValidFromTime)) {
+  if (timeline.isFutureWarning && timeline.secondaryValidFromLabel) {
+    // One red sentence for future CAP only (date + time + hod. already in label).
+    timeValidFrom =
+      `<div class="iuPrehledDne__validFrom iuPrehledDne__validFrom--futureSentence">` +
+      `<span class="iuPrehledDne__validFromWord">${esc(timeline.secondaryValidFromLabel)}</span>` +
+      `</div>`;
+  } else if (
+    timeline.secondaryValidFromLabel &&
+    (timeline.secondaryValidFromDate || timeline.secondaryValidFromTime)
+  ) {
     timeValidFrom =
       `<div class="iuPrehledDne__validFrom">` +
       `<span class="iuPrehledDne__validFromWord">${esc(timeline.secondaryValidFromLabel)}</span>` +
@@ -505,8 +523,28 @@ function renderItem(ev) {
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
+  // Shared CZ silhouette — same href + data-act as title (no second URL logic).
+  // Color comes from inherited --iu-pd-dot (same token as timeline dot fill).
+  const czMapMarkup =
+    ev && ev.capV2 && url
+      ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
+      : "";
+  const warnBadge = capActive
+    ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
+    : capEnded
+      ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
+      : "";
+  const cardHead = czMapMarkup
+    ? `<div class="iuPrehledDne__cardHead">` +
+      `<div class="iuPrehledDne__cardHeadMain">` +
+      warnBadge +
+      titleMarkup +
+      `</div>` +
+      czMapMarkup +
+      `</div>`
+    : warnBadge + titleMarkup;
   return (
-    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
+    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
     `<div class="iuPdCard__time iuPrehledDne__time">${timePrimary}</div>` +
     timeSub +
@@ -515,13 +553,8 @@ function renderItem(ev) {
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
     `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
-    `<article class="iuPrehledDne__card iuPdCard__body">` +
-    (capActive
-      ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
-      : capEnded
-        ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
-        : "") +
-    titleMarkup +
+    `<article class="iuPrehledDne__card iuPdCard__body${czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""}">` +
+    cardHead +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
     (srcPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(srcPill)}</span>` : "") +
     activePill +
@@ -569,22 +602,106 @@ function checkRow(name, value, label, checked, attrs, indeterminate) {
 }
 
 function asLocList(draft, level) {
+  if (level === "mesto") return asCityEntries(draft).map((c) => c.name);
   const out = [];
   for (const loc of draft.localities || []) {
     if (!loc) continue;
-    if (typeof loc === "string") {
-      if (level === "mesto") out.push(loc);
-      continue;
-    }
+    if (typeof loc === "string") continue;
     if (String(loc.level || "") === level && loc.name) out.push(String(loc.name));
   }
   if (level === "kraj" && draft.homeKraj) out.push(String(draft.homeKraj));
   if (level === "okres" && draft.homeOkres) out.push(String(draft.homeOkres));
-  if (level === "mesto" && draft.homeObec) out.push(String(draft.homeObec));
   return Array.from(new Set(out));
 }
 
+function asCityEntries(draft) {
+  const out = [];
+  const seenIds = new Set();
+  const seenNames = new Set();
+  for (const loc of draft.localities || []) {
+    if (!loc) continue;
+    if (typeof loc === "string") {
+      const name = String(loc).trim();
+      if (!name) continue;
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+      out.push({ name, level: "mesto" });
+      continue;
+    }
+    const level = String(loc.level || "mesto").toLowerCase();
+    if (level === "kraj" || level === "okres") continue;
+    const name = String(loc.name || "").trim();
+    if (!name) continue;
+    const id = String(loc.id || "").trim();
+    if (id) {
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+    } else {
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+    }
+    const entry = { name, level: "mesto" };
+    if (id) entry.id = id;
+    if (loc.orpCode) entry.orpCode = String(loc.orpCode);
+    out.push(entry);
+  }
+  if (draft.homeObec && !out.length) {
+    out.push({ name: String(draft.homeObec), level: "mesto" });
+  }
+  return out.slice(0, MAX_CITY_LOCALITIES || 20);
+}
+
+function setCityList(draft, cities) {
+  const others = (draft.localities || []).filter((loc) => {
+    if (!loc || typeof loc === "string") return false;
+    const level = String(loc.level || "").toLowerCase();
+    return level === "kraj" || level === "okres";
+  });
+  const next = [];
+  const seenIds = new Set();
+  const seenNames = new Set();
+  for (const c of cities || []) {
+    if (!c) continue;
+    const name = String(typeof c === "string" ? c : c.name || "").trim();
+    if (!name) continue;
+    const id = String((typeof c === "object" && c.id) || "").trim();
+    const orpCode = String((typeof c === "object" && (c.orpCode || c.orp)) || "").trim();
+    if (id) {
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+    } else {
+      const key = name.toLowerCase();
+      if (seenNames.has(key)) continue;
+      seenNames.add(key);
+    }
+    if (next.length >= (MAX_CITY_LOCALITIES || 20)) break;
+    const entry = { name, level: "mesto" };
+    if (id) entry.id = id;
+    if (orpCode) entry.orpCode = orpCode;
+    next.push(entry);
+  }
+  draft.localities = others.concat(next);
+  draft.homeObec = next[0] ? next[0].name : "";
+  draft.myRegionOnly =
+    next.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
+  if (!next.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length) {
+    draft.myRegionOnly = false;
+    draft.homeKraj = draft.homeKraj || "";
+    draft.homeOkres = draft.homeOkres || "";
+    draft.homeObec = "";
+  }
+}
+
 function setLocList(draft, level, names) {
+  if (level === "mesto") {
+    setCityList(
+      draft,
+      (names || []).map((n) => (typeof n === "string" ? { name: n, level: "mesto" } : n))
+    );
+    return;
+  }
   const others = (draft.localities || []).filter((loc) => {
     if (!loc || typeof loc === "string") return level !== "mesto";
     return String(loc.level || "") !== level;
@@ -593,17 +710,13 @@ function setLocList(draft, level, names) {
   draft.localities = others.concat(next);
   if (level === "kraj") {
     draft.homeKraj = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "okres").length > 0 || asLocList(draft, "mesto").length > 0;
+    draft.myRegionOnly = names.length > 0 || asLocList(draft, "okres").length > 0 || asCityEntries(draft).length > 0;
   }
   if (level === "okres") {
     draft.homeOkres = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "mesto").length > 0;
+    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asCityEntries(draft).length > 0;
   }
-  if (level === "mesto") {
-    draft.homeObec = names[0] || "";
-    draft.myRegionOnly = names.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
-  }
-  if (!names.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length && !asLocList(draft, "mesto").length) {
+  if (!names.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length && !asCityEntries(draft).length) {
     draft.myRegionOnly = false;
     draft.homeKraj = "";
     draft.homeOkres = "";
@@ -744,7 +857,7 @@ function renderLocalityBody(draft) {
     !draft.localityQuery;
   const selKraje = asLocList(draft, "kraj");
   const selOkresy = asLocList(draft, "okres");
-  const selCities = asLocList(draft, "mesto");
+  const selCities = asCityEntries(draft);
   const okresOptions = [];
   for (const k of selKraje.length ? selKraje : []) {
     for (const o of CZ_OKRESY[k] || []) okresOptions.push({ kraj: k, okres: o });
@@ -771,12 +884,20 @@ function renderLocalityBody(draft) {
     `<input class="iuPdInput" type="search" autocomplete="off" placeholder="Začněte psát (např. pra)" value="${esc(state.cityQuery)}" data-act="city-q" />` +
     (state.citySuggest.length
       ? `<ul class="iuPdSuggest">${state.citySuggest
-          .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
+          .map((s) => {
+            const label = s.label || s.name;
+            return (
+              `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
+            );
+          })
           .join("")}</ul>`
       : "") +
     (selCities.length
       ? `<div class="iuPdChips">${selCities
-          .map((c) => `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c)}">${esc(c)} ×</button>`)
+          .map(
+            (c) =>
+              `<button type="button" class="iuPdChip" data-act="city-remove" data-name="${esc(c.name)}" data-id="${esc(c.id || "")}">${esc(c.name)} ×</button>`
+          )
           .join("")}</div>`
       : "") +
     `</div>`
@@ -835,7 +956,7 @@ function renderSettingsOverlay() {
 
 function bannerHtml() {
   return (
-    `<div class="iuPd__banner" data-iu-pd-banner="1">` +
+    `<div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">` +
     `<img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" ` +
     `alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" ` +
     `decoding="async" fetchpriority="high" loading="eager" />` +
@@ -843,13 +964,34 @@ function bannerHtml() {
   );
 }
 
+function homeSectionBarHtml(label, barId) {
+  const id = String(barId || "1");
+  return (
+    `<div class="iuHomeSectionBar" data-iu-home-section-bar="${id}" aria-hidden="true">` +
+    String(label || "") +
+    `</div>`
+  );
+}
+
+/** Green hero CTA under banner — label centered, › as navigation affordance (right). */
+function settingsCtaInnerHtml() {
+  return `<span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span>`;
+}
+
 function homeShellHtml(listHtml, countLabel, moreHtml) {
   const mode = state.viewMode;
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+    `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
+    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
+    `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
     `<div class="iuPd__top">` +
-    `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings">Můj přehled / Nastavení</button>` +
+    `<button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings" data-testid="prehled-dne-settings-cta">` +
+    settingsCtaInnerHtml() +
+    `</button>` +
+    `</div>` +
+    `</div>` +
     `</div>` +
     `<div class="iuPd__show">` +
     `<div class="iuPd__label">Zobrazit</div>` +
@@ -927,6 +1069,7 @@ function restoreSettingsScroll(y) {
 function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
+  void ensureCzMapSprite();
   const list = filteredList();
   const pageItems = list.slice(0, state.page * PAGE_SIZE);
   const count = root.querySelector("#iuPdCount");
@@ -1189,18 +1332,30 @@ async function ensureLocalities() {
     const res = await fetch(base + "cz_localities_picker.json", { credentials: "same-origin" });
     if (!res.ok) throw new Error("loc");
     const json = await res.json();
-    const items = (json.items || []).map((it) => ({
-      name: String((it.a && it.a[0]) || it.n || "").trim() || String(it.n || ""),
-      level: "mesto",
-    }));
-    state.localitiesCache = items.filter((x) => x.name);
+    const items = (json.items || []).map((it) => {
+      const name = String((it.a && it.a[0]) || it.n || "").trim() || String(it.n || "");
+      const id = String(it.id || "").trim();
+      const orpCode = String(it.orp || it.orpCode || "").trim();
+      const okresName = String(it.ok || it.okresName || "").trim();
+      const orpName = String(it.orpN || it.orpName || "").trim();
+      return {
+        name,
+        id,
+        orpCode,
+        orpName,
+        okresName,
+        level: "mesto",
+        label: okresName ? name + " (" + okresName + ")" : name,
+      };
+    });
+    state.localitiesCache = items.filter((x) => x.name && x.id && x.orpCode);
   } catch (_) {
     state.localitiesCache = [
-      { name: "Praha", level: "mesto" },
-      { name: "Brno", level: "mesto" },
-      { name: "Ostrava", level: "mesto" },
-      { name: "Plzeň", level: "mesto" },
-      { name: "Liberec", level: "mesto" },
+      { name: "Praha", id: "554782", orpCode: "1000", level: "mesto", label: "Praha" },
+      { name: "Brno", id: "582786", orpCode: "6203", level: "mesto", label: "Brno" },
+      { name: "Ostrava", id: "554821", orpCode: "8119", level: "mesto", label: "Ostrava" },
+      { name: "Plzeň", id: "554791", orpCode: "3209", level: "mesto", label: "Plzeň" },
+      { name: "Liberec", id: "563889", orpCode: "5105", level: "mesto", label: "Liberec" },
     ];
   }
   return state.localitiesCache;
@@ -1256,6 +1411,8 @@ function wire() {
     if (act === "mode") {
       const m = t.getAttribute("data-mode");
       if (m === "all") {
+        // Toggle: 1st click → temporary locality bypass; 2nd click → restore saved filter (home).
+        // Never writes localities to localStorage / prefs.
         state.viewMode = state.viewMode === "all" ? "home" : "all";
       } else {
         state.viewMode = m;
@@ -1295,10 +1452,27 @@ function wire() {
       return;
     }
     if (act === "city-add") {
-      const name = t.getAttribute("data-name");
-      const cities = asLocList(state.draft, "mesto");
-      if (name && !cities.includes(name)) cities.push(name);
-      setLocList(state.draft, "mesto", cities);
+      const name = String(t.getAttribute("data-name") || "").trim();
+      const id = String(t.getAttribute("data-id") || "").trim();
+      const orpCode = String(t.getAttribute("data-orp") || "").trim();
+      const cities = asCityEntries(state.draft);
+      const exists = cities.some((c) => (id && c.id === id) || (!id && c.name === name));
+      if (name && !exists) {
+        if (cities.length >= (MAX_CITY_LOCALITIES || 20)) {
+          showSaveError(CITY_LIMIT_MSG);
+          const scrollEl = document.getElementById("iuPdSettingsScroll");
+          const prev = scrollEl ? scrollEl.scrollTop : 0;
+          paintSettingsOnly({ resetSettingsScroll: false });
+          wire();
+          restoreSettingsScroll(prev);
+          return;
+        }
+        const entry = { name, level: "mesto" };
+        if (id) entry.id = id;
+        if (orpCode) entry.orpCode = orpCode;
+        cities.push(entry);
+        setCityList(state.draft, cities);
+      }
       state.cityQuery = "";
       state.citySuggest = [];
       const scrollEl = document.getElementById("iuPdSettingsScroll");
@@ -1310,11 +1484,14 @@ function wire() {
       return;
     }
     if (act === "city-remove") {
-      const name = t.getAttribute("data-name");
-      setLocList(
+      const name = String(t.getAttribute("data-name") || "").trim();
+      const id = String(t.getAttribute("data-id") || "").trim();
+      setCityList(
         state.draft,
-        "mesto",
-        asLocList(state.draft, "mesto").filter((x) => x !== name)
+        asCityEntries(state.draft).filter((c) => {
+          if (id) return c.id !== id;
+          return c.name !== name;
+        })
       );
       const scrollEl = document.getElementById("iuPdSettingsScroll");
       const prev = scrollEl ? scrollEl.scrollTop : 0;
@@ -1342,7 +1519,12 @@ function wire() {
     if (input) input.value = state.cityQuery;
     if (state.citySuggest.length) {
       const html = `<ul class="iuPdSuggest">${state.citySuggest
-        .map((s) => `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}">${esc(s.name)}</button></li>`)
+        .map((s) => {
+          const label = s.label || s.name;
+          return (
+            `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
+          );
+        })
         .join("")}</ul>`;
       if (box) box.outerHTML = html;
       else if (input) input.insertAdjacentHTML("afterend", html);
@@ -1387,12 +1569,20 @@ async function boot() {
   if (infoSystemQueryMode() === "off") return;
   migrateLocalStateOnce();
   applyCutoverDom();
+  void ensureCzMapSprite();
   const root = ensureRoot();
   if (!root) return;
   root.innerHTML =
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+    `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
+    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
+    `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
-    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" style="opacity:0.35;pointer-events:none">Můj přehled / Nastavení</div></div>` +
+    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">` +
+    settingsCtaInnerHtml() +
+    `</div></div>` +
+    `</div>` +
+    `</div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
     `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
     `</div></div>` +

@@ -46,9 +46,14 @@ function staticGate() {
   must(!/id="iuFeedNewsSplit"[^>]*>[\s\S]*AKTUÁLNÍ ČLÁNKY/.test(index), "index:no_static_media_split");
   must(/function bannerHtml\(/.test(ui), "ui:bannerHtml");
   must(/bannerHtml\(\)/.test(ui) && /homeShellHtml/.test(ui), "ui:banner_in_shell");
+  must(/iuPd__hero/.test(ui) && /data-iu-pd-hero/.test(ui), "ui:hero_wrapper");
+  must(/data-iu-pd-hero/.test(index), "index:hero_wrapper");
+  must(/data-testid="prehled-dne-hero"/.test(ui) && /data-testid="prehled-dne-homecard"/.test(ui), "ui:testids");
+  must(/\.iuPd__hero\s*\{[\s\S]*?display:\s*block/.test(css), "css:hero_display_block");
+  must(/\.iuPd__hero\s+\.iuPdBtn--settings\s*\{[\s\S]*?border-top-left-radius:\s*0/.test(css), "css:cta_top_square");
   must(/\.iuPd__bannerImg/.test(css) && /aspect-ratio:\s*1661\s*\/\s*616/.test(css), "css:banner_aspect");
   must(/object-fit:\s*contain/.test(css), "css:banner_contain");
-  must(/2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw), "sw:cache_version");
+  must(/2026-08-03-kb-nav-instant-restore-v1|2026-08-01-homecard-cta-square-v1|2026-08-01-homecard-cta-flush-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw), "sw:cache_version");
   const appJs = fs.readFileSync(path.join(ROOT, "assets", "app.js"), "utf8");
   must(/function iuLegacyHomeCardsWanted/.test(appJs), "app:legacy_wanted");
   must(/function iuLegacyHomeCardsEnsureShell/.test(appJs), "app:legacy_ensure_shell");
@@ -168,10 +173,17 @@ async function runPlaywright() {
         const info = document.getElementById("iuDesktopInfoPanelMount");
         const banner = document.querySelector("[data-iu-pd-banner='1']");
         const btn = document.querySelector('[data-act="open-settings"]');
+        const hero = document.querySelector("[data-iu-pd-hero='1']");
         const img = banner && banner.querySelector("img");
         const precedes = (a, b) => !!(a && b && a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
         const overflowX = document.documentElement.scrollWidth > document.documentElement.clientWidth + 1;
         const imgCs = img ? getComputedStyle(img) : null;
+        const heroCs = hero ? getComputedStyle(hero) : null;
+        const btnCs = btn ? getComputedStyle(btn) : null;
+        const bannerRect = banner ? banner.getBoundingClientRect() : null;
+        const btnRect = btn ? btn.getBoundingClientRect() : null;
+        const seamGap =
+          bannerRect && btnRect ? Math.round((btnRect.top - bannerRect.bottom) * 100) / 100 : null;
         const parcelVisible = !!(
           parcel &&
           parcel.closest("#iuSilverWelcomeStack") &&
@@ -180,6 +192,11 @@ async function runPlaywright() {
         );
         return {
           bannerCount: document.querySelectorAll("[data-iu-pd-banner='1']").length,
+          heroCount: document.querySelectorAll("[data-iu-pd-hero='1']").length,
+          heroDisplay: heroCs ? heroCs.display : "",
+          seamGap,
+          btnTL: btnCs ? btnCs.borderTopLeftRadius : "",
+          btnTR: btnCs ? btnCs.borderTopRightRadius : "",
           parcelVisible,
           parcelBeforeBanner: precedes(parcel, banner),
           infoBeforeBanner: precedes(info, banner),
@@ -197,6 +214,13 @@ async function runPlaywright() {
       });
 
       if (layout.bannerCount !== 1) pwFails.push(vp.name + ":banner_count:" + layout.bannerCount);
+      if (layout.heroCount !== 1) pwFails.push(vp.name + ":hero_count:" + layout.heroCount);
+      if (layout.heroDisplay !== "block") pwFails.push(vp.name + ":hero_display:" + layout.heroDisplay);
+      if (layout.seamGap == null || layout.seamGap > 0.5 || layout.seamGap < -0.5) {
+        pwFails.push(vp.name + ":banner_btn_seam:" + layout.seamGap);
+      }
+      if (layout.btnTL !== "0px") pwFails.push(vp.name + ":btn_tl_radius:" + layout.btnTL);
+      if (layout.btnTR !== "0px") pwFails.push(vp.name + ":btn_tr_radius:" + layout.btnTR);
       if (layout.parcelVisible && !layout.parcelBeforeBanner) pwFails.push(vp.name + ":order_parcel_banner");
       if (!layout.infoBeforeBanner) pwFails.push(vp.name + ":order_info_banner");
       if (!layout.bannerBeforeBtn) pwFails.push(vp.name + ":order_banner_btn");

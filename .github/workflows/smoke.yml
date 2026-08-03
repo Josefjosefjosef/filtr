@@ -189,6 +189,14 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-info-panel-mobile-polish-guard
 
+      - name: Rychly prehled horizontal content persist guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-rychly-prehled-horizontal-content-guard
+
+      - name: Home section blue bars guard (mobile/tablet unified headers)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-home-section-bar-guard
+
       - name: Article entrypoint parity guard (chunked loading V1)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.quicktools_fixed_width_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run article-entrypoint-parity-guard
@@ -208,6 +216,14 @@ jobs:
       - name: Prehled dne settings v6 guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-prehled-dne-settings-v6-guard
+
+      - name: Prehled dne banner FOUC / placement guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-prehled-dne-banner-homecard-fouc-guard
+
+      - name: Prehled dne hero contract guard (banner+CTA seam/radius/visibility)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-prehled-dne-hero-contract-guard
 
       - name: Info events legal whitelist guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
@@ -233,9 +249,36 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-cap-badge-title-guard
 
+      - name: CHMI card CZ map click guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        env:
+          IU_CZ_MAP_SHOT_DIR: ${{ github.workspace }}/iu-chmi-cz-map-visual-proof
+        run: npm run iu-chmi-card-cz-map-guard
+
+      - name: Upload CHMI CZ map visual proof
+        if: always() && steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-chmi-cz-map-visual-proof
+          path: iu-chmi-cz-map-visual-proof/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: CHMI CAP filtered location label guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-cap-filtered-location-label-guard
+
+      - name: CHMI locality filter + Vše + future sentence guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-locality-filter-vse-guard
+
+      - name: CHMI obec→ORP mapping guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-obec-orp-mapping-guard
+
+      - name: CHMI obec→ORP UI viewport guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-obec-orp-ui-viewport-guard
 
       - name: CHMI CAP active-day rollover guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
@@ -333,6 +376,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-desktop-partner-banners-removed-guard
 
+      - name: MindMenu articles section removed guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-mindmenu-articles-section-removed-guard
+
       - name: Financial calc mobile header guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-financial-calc-mobile-header-guard
@@ -369,6 +416,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-custom-buttons-mobile-scroll-guard
 
+      - name: Custom buttons dynamic height + wrap guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-custom-buttons-dynamic-height-wrap-guard
+
       - name: Quicktools mobile visibility guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-quicktools-mobile-visibility-guard
@@ -384,6 +435,10 @@ jobs:
       - name: Silver PC top input action menu guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-silver-pc-top-input-action-menu-guard
+
+      - name: Silver AI transparency labels guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-silver-ai-transparency-guard
 
       - name: Quicktools custom buttons reset sync guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
@@ -424,6 +479,19 @@ jobs:
       - name: Mobile form card + datovka safe-area guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run silver-mobile-form-card-ds-safe-area-guard
+
+      - name: Silver home prefix first-tap guard (mobile/tablet cold open)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run silver-home-prefix-first-tap-guard-checkout
+
+      - name: Silver home date/time input fit guard (mobile/tablet geometry)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 12
+        env:
+          # CI WebKit runners hang/crash intermittently; Chromium remains the hard geometry gate.
+          # Local package script still runs Chromium+WebKit by default.
+          SILVER_DATE_TIME_FIT_SKIP_WEBKIT: "1"
+        run: npm run silver-home-date-time-input-fit-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

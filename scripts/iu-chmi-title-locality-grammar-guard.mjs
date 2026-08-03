@@ -22,8 +22,8 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
-const SW_VER = "2026-07-31-chmi-smog-onset-split-v1";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
+const SW_VER = "2026-08-03-kb-nav-instant-restore-v1";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -209,7 +209,7 @@ ok(
   "6orp_extra5"
 );
 
-// same-day FUTURE platnost od shows date + time
+// FUTURE platnost: single red sentence „Výstraha ČHMÚ platí od … hod.“ (no split date/time)
 const future = {
   id: "ie-chmi-v2-future-same",
   sourceId: "chmi",
@@ -221,9 +221,9 @@ const future = {
   validTo: "2026-08-01T00:00:00+02:00",
 };
 const t = IU.getEffectiveTimelinePresentation(future, Date.parse("2026-07-31T12:00:00+02:00"));
-ok("future_same_day_label", t.secondaryValidFromLabel === "Platí od", String(t.secondaryValidFromLabel));
-ok("future_same_day_date", String(t.secondaryValidFromDate || "") === "31. 7.", String(t.secondaryValidFromDate));
-ok("future_same_day_time", t.secondaryValidFromTime === "16:00", String(t.secondaryValidFromTime));
+ok("future_same_day_label", t.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 31. 7. 16:00 hod.", String(t.secondaryValidFromLabel));
+ok("future_same_day_date", t.secondaryValidFromDate == null, String(t.secondaryValidFromDate));
+ok("future_same_day_time", t.secondaryValidFromTime == null, String(t.secondaryValidFromTime));
 
 const futureNext = {
   ...future,
@@ -232,8 +232,9 @@ const futureNext = {
   validTo: "2026-08-02T00:00:00+02:00",
 };
 const tn = IU.getEffectiveTimelinePresentation(futureNext, Date.parse("2026-07-31T12:00:00+02:00"));
-ok("future_next_day_date", /1\.\s*8/.test(String(tn.secondaryValidFromDate || "")), String(tn.secondaryValidFromDate));
-ok("future_next_day_time", tn.secondaryValidFromTime === "12:00", String(tn.secondaryValidFromTime));
+ok("future_next_day_label", tn.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 1. 8. 12:00 hod.", String(tn.secondaryValidFromLabel));
+ok("future_next_day_date", tn.secondaryValidFromDate == null, String(tn.secondaryValidFromDate));
+ok("future_next_day_time", tn.secondaryValidFromTime == null, String(tn.secondaryValidFromTime));
 
 if (fails.length) {
   console.error("IU_CHMI_TITLE_LOCALITY_GRAMMAR=FAIL");

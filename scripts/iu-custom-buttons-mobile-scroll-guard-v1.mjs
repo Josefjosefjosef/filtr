@@ -45,7 +45,15 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /quicktools-fixed-width-v5-20260714/.test(index),
+      pass: /custom-buttons-dynamic-height-wrap-v1-20260803/.test(index),
+    },
+    {
+      id: "tile_min_height_not_fixed_max",
+      pass: /min-height:\s*96px\s*!important/.test(custom) && /max-height:\s*none\s*!important/.test(custom) && !/max-height:\s*96px\s*!important/.test(custom),
+    },
+    {
+      id: "tile_text_wrap_anywhere",
+      pass: /overflow-wrap:\s*anywhere\s*!important/.test(custom) && /-webkit-line-clamp:\s*unset\s*!important/.test(custom),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -100,7 +108,28 @@ async function openViaGate(page) {
   await page.waitForTimeout(800);
 }
 
+async function ensureKeyboardClosedNavVisible(page) {
+  await page.evaluate(() => {
+    try {
+      const ae = document.activeElement;
+      if (ae && typeof ae.blur === "function") ae.blur();
+    } catch (_) {}
+    try {
+      document.documentElement.classList.remove("iu-keyboard-open");
+      if (document.body) document.body.classList.remove("iu-keyboard-open");
+    } catch (_) {}
+  });
+  await page.waitForTimeout(220);
+  await page.waitForFunction(() => {
+    const nav = document.getElementById("iuMobileBottomNav");
+    if (!nav) return false;
+    const cs = getComputedStyle(nav);
+    return cs.display !== "none" && nav.getBoundingClientRect().height > 40;
+  }, { timeout: 5000 });
+}
+
 async function measureScroll(page) {
+  await ensureKeyboardClosedNavVisible(page);
   return page.evaluate(async () => {
     const nav = document.getElementById("iuMobileBottomNav");
     const scrollHost = document.getElementById("iuCustomButtonsScrollHost");

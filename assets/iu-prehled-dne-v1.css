@@ -266,6 +266,27 @@
   opacity: 0.92;
 }
 
+/* FUTURE CHMI: whole „Výstraha ČHMÚ platí od … hod.“ sentence is red until onset. */
+.iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFrom,
+.iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromWord,
+.iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromDate,
+.iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromTime {
+  color: #dc2626;
+  opacity: 1;
+  font-weight: 650;
+}
+.iuPrehledDne__validFrom--futureSentence {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  text-align: right;
+  max-width: 11.5rem;
+}
+.iuPrehledDne__validFrom--futureSentence .iuPrehledDne__validFromWord {
+  display: inline;
+  white-space: normal;
+}
+
 .iuPrehledDne__rel {
   font-size: 0.72rem;
   color: var(--iu-pd-muted);
@@ -334,6 +355,147 @@
   box-shadow: 0 4px 14px rgba(35, 45, 120, 0.06);
   padding: 12px 12px 10px;
   min-width: 0;
+  position: relative;
+}
+
+/* Card head: title/badge column; CZ map is absolutely pinned to card TR. */
+.iuPrehledDne__cardHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.iuPrehledDne__cardHeadMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Reserve space so title/badge never sit under the TR map (≈ SVG width + gap). */
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+  padding-right: 80px;
+}
+
+@media (min-width: 768px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 88px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__cardHeadMain {
+    padding-right: 92px;
+  }
+}
+
+/*
+ * Clickable CZ silhouette — scoped ONLY to CHMI cards with a map.
+ * Top-right of card, equal inset from top & right (card padding 12px).
+ * Fill color MUST use the same token chain as .iuPrehledDne__dot background:
+ *   var(--iu-pd-dot, var(--iu-pd-accent))
+ * Invisible hit target wraps the silhouette (variant B); min 44×44.
+ * Visible SVG is exactly 80% of the previously approved widths
+ * (72→57.6 / 80→64 / 84→67.2). Hit box stays at the prior size for tap comfort.
+ * Aspect 100/57.48 ≈ 1.74 (true CZ proportions; no stretch).
+ * Selectors intentionally require .iuPrehledDne__card--hasCzMap so these
+ * rules cannot affect hero, banner, CTA, ZOBRAZIT, filters, calendar, or other SVGs.
+ */
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+  position: absolute;
+  /* Equal inset from card top & right — same value as .iuPrehledDne__card padding. */
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  /* Hit target kept at prior approved size (not reduced with the silhouette). */
+  width: 72px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--iu-pd-dot, var(--iu-pd-accent));
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.92;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
+  display: block;
+  width: 57.6px; /* visible = 80% of prior approved 72 → 57.6 */
+  height: auto;
+  aspect-ratio: 100 / 57.48;
+  max-width: none;
+  flex: 0 0 auto;
+  pointer-events: none;
+  overflow: visible;
+  color: inherit;
+  fill: currentColor;
+  /* Never stretch — preserve SVG viewBox proportions. */
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+    width: 80px;
+    height: 46px;
+  }
+
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
+    width: 64px; /* visible = 80% of prior approved 80 → 64 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .iuPrehledDne__card--hasCzMap .iuPdCard__czMap,
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap {
+    width: 84px;
+    height: 49px;
+  }
+
+  .iuPrehledDne__card--hasCzMap .iuPrehledDne__czMapSvg {
+    width: 67.2px; /* visible = 80% of prior approved 84 → 67.2 */
+  }
+}
+
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:hover,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:hover {
+  opacity: 1;
+  filter: brightness(1.08);
+}
+
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:active,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:active {
+  opacity: 0.72;
+  filter: none;
+}
+
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus {
+  outline: none;
+}
+
+/* Focus on the silhouette itself — no rectangular button chrome. */
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus-visible,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus-visible {
+  outline: none;
+  opacity: 1;
+  filter: none;
+}
+
+.iuPrehledDne__card--hasCzMap .iuPdCard__czMap:focus-visible .iuPrehledDne__czMapSvg,
+.iuPrehledDne__card--hasCzMap .iuPrehledDne__czMap:focus-visible .iuPrehledDne__czMapSvg {
+  filter:
+    drop-shadow(0 0 0.5px currentColor)
+    drop-shadow(0 0 2.5px color-mix(in srgb, currentColor 70%, transparent))
+    brightness(1.12);
 }
 
 .iuPrehledDne__cardTitle {
@@ -450,17 +612,54 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   grid-template-columns: none !important;
 }
 
+/* Banner + settings CTA as one flush visual unit (no flex gap between them).
+   Use block layout (not nested flex) so width:100% + aspect-ratio images cannot
+   collapse to 0 height inside a flex formatting context on mobile WebKit. */
+.iuPd__hero {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  line-height: normal;
+  font-size: inherit;
+  visibility: visible;
+  content-visibility: visible;
+}
+
+.iuPd__top {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+.iuPd__top > .iuPdBtn {
+  margin: 0;
+}
+
 /* InfoUzel day-overview banner (middle feed, above settings CTA) */
 .iuPd__banner {
+  display: block;
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
   line-height: 0;
   box-sizing: border-box;
+  overflow: visible;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
+  visibility: visible;
+  opacity: 1;
 }
 
 .iuPd__bannerImg {
@@ -468,8 +667,22 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   width: 100%;
   max-width: 100%;
   height: auto;
+  min-height: 48px;
   object-fit: contain;
   aspect-ratio: 1661 / 616;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Flush join: square top edge against banner; keep rounded bottom ends. */
+.iuPd__hero .iuPdBtn--settings {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 999px;
+  border-bottom-right-radius: 999px;
 }
 
 /* Hide legacy commercial article timeline on cutover (P┼Öehled dne is the product). */
@@ -803,10 +1016,37 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   color: #fff;
 }
 .iuPdBtn--settings {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
   border-color: #15803d;
   color: #fff;
 }
+.iuPdBtn--settings .iuPdBtn__label {
+  display: inline-block;
+  text-align: center;
+}
+.iuPdBtn--settings .iuPdBtn__chevron {
+  position: absolute;
+  right: 14px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.05em;
+  font-weight: 500;
+  line-height: 1;
+  color: inherit;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Hero CTA top radius is forced square in .iuPd__hero .iuPdBtn--settings above. */
 .iuPdBtn--settings:hover,
 .iuPdBtn--settings:focus-visible {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
@@ -858,9 +1098,14 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   font-size: 0.92rem;
   color: var(--iu-pd-text);
 }
-.iuPdCard__title {
+.iuPdCard__title,
+.iuPrehledDne__cardTitle {
   display: block; color: var(--iu-pd-text); text-decoration: none;
   font-weight: 700; font-size: 1.02rem; line-height: 1.35; margin-bottom: 6px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .iuPdCard__title:hover { color: var(--iu-pd-accent-2); }
 .iuPdCard__meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
@@ -1084,4 +1329,153 @@ html.iu-pd-settings-open #iuSilverTallScrollViewport {
 }
 @media (min-width: 1400px) {
   .iuPdSettings__panel { width: min(1360px, 96vw); }
+}
+
+/*
+ * Mobile/tablet Dark Mode (evening paint).
+ * Scoped to html.iu-time-evening — on PC (≥901px) evening remaps to afternoon,
+ * so these rules never apply on desktop nav layout.
+ */
+html.iu-time-evening {
+  --iu-pd-card: #182235;
+  --iu-pd-text: rgba(248, 250, 255, 0.96);
+  --iu-pd-muted: rgba(203, 213, 225, 0.88);
+  --iu-pd-line: rgba(148, 163, 184, 0.28);
+  --iu-pd-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --iu-pd-accent: #818cf8;
+  --iu-pd-accent-2: #93c5fd;
+}
+
+html.iu-time-evening .iuPrehledDne,
+html.iu-time-evening .iuPd {
+  color: var(--iu-pd-text);
+}
+
+html.iu-time-evening .iuPd__label,
+html.iu-time-evening .iuPd__count,
+html.iu-time-evening .iuPdMuted,
+html.iu-time-evening .iuPdEmpty,
+html.iu-time-evening .iuPrehledDne__rel,
+html.iu-time-evening .iuPrehledDne__timeSub,
+html.iu-time-evening .iuPrehledDne__issued,
+html.iu-time-evening .iuPrehledDne__validFrom,
+html.iu-time-evening .iuPdCard__time {
+  color: var(--iu-pd-muted);
+}
+
+html.iu-time-evening .iuPrehledDne__item .iuPdCard__time.iuPrehledDne__time,
+html.iu-time-evening .iuPrehledDne__time,
+html.iu-time-evening .iuPdCard__title,
+html.iu-time-evening .iuPrehledDne__cardTitle {
+  color: var(--iu-pd-text);
+}
+
+html.iu-time-evening .iuPdCard__title:hover,
+html.iu-time-evening .iuPrehledDne__cardTitle:hover {
+  color: #bfdbfe;
+}
+
+/* Left timeline axis + markers */
+html.iu-time-evening .iuPrehledDne__axis::before {
+  background: rgba(148, 163, 184, 0.45);
+}
+html.iu-time-evening .iuPrehledDne__dot {
+  border-color: #0b1430;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--iu-pd-dot, var(--iu-pd-accent)) 55%, transparent);
+}
+
+/* Feed cards */
+html.iu-time-evening .iuPrehledDne__card,
+html.iu-time-evening .iuPrehledDne__panel {
+  background: var(--iu-pd-card);
+  border-color: var(--iu-pd-line);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+}
+
+html.iu-time-evening .iuPdCard__pill {
+  color: rgba(226, 232, 240, 0.9);
+  background: rgba(148, 163, 184, 0.18);
+}
+html.iu-time-evening .iuPdCard__pill--imp {
+  color: #fdba74;
+  background: rgba(251, 146, 60, 0.22);
+}
+html.iu-time-evening .iuPdCard__pill--active {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.22);
+}
+html.iu-time-evening .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended),
+html.iu-time-evening .iuPrehledDne__warnBadge:not(.iuPdCard__warnBadge--ended) {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.45);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+html.iu-time-evening .iuPdCard__warnBadge--ended {
+  color: rgba(226, 232, 240, 0.85);
+  background: rgba(100, 116, 139, 0.28);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+/* Filter toggles: Vše / Uložené / Nepřečtené / Skryté */
+html.iu-time-evening .iuPdToggle,
+html.iu-time-evening .iuPdBtn,
+html.iu-time-evening .iuPdChip,
+html.iu-time-evening .iuPdIconBtn {
+  background: rgba(15, 23, 42, 0.72);
+  border-color: rgba(148, 163, 184, 0.42);
+  color: rgba(241, 245, 249, 0.96);
+}
+html.iu-time-evening .iuPdToggle.is-active,
+html.iu-time-evening .iuPdBtn--primary {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+html.iu-time-evening .iuPdBtn--ghost {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(148, 163, 184, 0.38);
+  color: rgba(241, 245, 249, 0.94);
+}
+html.iu-time-evening .iuPdBtn--ghost.is-on {
+  border-color: rgba(96, 165, 250, 0.55);
+  color: #bfdbfe;
+  background: rgba(37, 99, 235, 0.28);
+}
+html.iu-time-evening .iuPdBtn--settings {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  border-color: #15803d;
+  color: #fff;
+}
+html.iu-time-evening .iuPrehledDne__more button {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(129, 140, 248, 0.45);
+  color: #bfdbfe;
+}
+
+/* FUTURE red must stay red in evening */
+html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFrom,
+html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromWord,
+html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromDate,
+html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromTime {
+  color: #f87171;
+}
+
+html.iu-time-evening .iuPdSettings__panel {
+  background: #111827;
+  color: var(--iu-pd-text);
+}
+html.iu-time-evening .iuPdSettings__head,
+html.iu-time-evening .iuPdSettings__rail,
+html.iu-time-evening .iuPdAcc__toggle {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: var(--iu-pd-line);
+  color: var(--iu-pd-text);
+}
+html.iu-time-evening .iuPdInput,
+html.iu-time-evening .iuPrehledDne__input,
+html.iu-time-evening .iuPrehledDne__select,
+html.iu-time-evening .iuPdSuggest button {
+  background: #1e293b;
+  border-color: var(--iu-pd-line);
+  color: var(--iu-pd-text);
 }

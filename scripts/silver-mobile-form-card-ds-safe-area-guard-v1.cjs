@@ -30,7 +30,7 @@ const REQUIRED = [
   {
     id: "app_js_ds_inject_no_full_viewport_panel",
     file: APP,
-    pattern: /iuDsInjectMobileTabletCssOnce[\s\S]*bottom:var\(--bottom-nav-height/,
+    pattern: /iuDsInjectMobileTabletCssOnce[\s\S]*bottom:var\(--iu-tool-overlay-panel-bottom/,
     antiPattern: /iuDsInjectMobileTabletCssOnce[\s\S]*#iuDsPanel\.iu-ds-panel\.iuSectionDS\[data-open=\\"1\\"\][\s\S]*inset:0!important;left:0!important;transform:none!important;display:block!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;/,
   },
   {

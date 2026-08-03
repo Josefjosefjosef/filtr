@@ -362,6 +362,21 @@ async function main() {
     viewport: { width: VIEWPORTS[0][0], height: VIEWPORTS[0][1] },
     serviceWorkers: "block"
   });
+  await context.addInitScript(() => {
+    const base = new Date(2026, 5, 15, 14, 0, 0, 0).getTime();
+    const RealDate = Date;
+    function FakeDate(...args) {
+      if (args.length === 0) return new RealDate(base);
+      if (args.length === 1) return new RealDate(args[0]);
+      return new RealDate(...args);
+    }
+    FakeDate.prototype = RealDate.prototype;
+    FakeDate.now = () => base;
+    FakeDate.parse = RealDate.parse;
+    FakeDate.UTC = RealDate.UTC;
+    // eslint-disable-next-line no-global-assign
+    Date = FakeDate;
+  });
   const page = await context.newPage();
   await installProofGuardNetworkStubs(page);
   const consoleErrors = [];
@@ -460,6 +475,31 @@ async function main() {
       );
       scenariosPass = A && B && C && D && E;
     }
+
+    // Pin afternoon immediately before accent audit: evening CSS forces
+    // `.iuCalendarSummary__label { color:#6ee7b7 !important }` on mobile/tablet.
+    await page.evaluate(() => {
+      const root = document.documentElement;
+      root.setAttribute("data-iu-daypart", "afternoon");
+      root.setAttribute("data-iu-silver-welcome-paint", "afternoon");
+      ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"].forEach((c) =>
+        root.classList.remove(c)
+      );
+      root.classList.add("iu-time-afternoon");
+      try {
+        if (typeof window.iuSilverWelcomeRefresh === "function") {
+          window.iuSilverWelcomeRefresh({ hour: 14 });
+        }
+      } catch (_) {}
+      // Re-assert after refresh (welcome refresh may re-derive daypart from wall clock).
+      root.setAttribute("data-iu-daypart", "afternoon");
+      root.setAttribute("data-iu-silver-welcome-paint", "afternoon");
+      ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"].forEach((c) =>
+        root.classList.remove(c)
+      );
+      root.classList.add("iu-time-afternoon");
+    });
+    await page.waitForTimeout(150);
 
     const accentAudit = await auditCalendarAccentUi(page);
     await waitLayoutStable(page);

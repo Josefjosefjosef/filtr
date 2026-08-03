@@ -113,6 +113,7 @@ font-src 'self' data:;
         #iuSilverHeroPremium .iu-silver-trust{display:none!important}
         #iuSilverHeroPremium .silver-speech-row,
         #iuSilverHeroPremium .silver-privacy-line{display:none!important}
+        #iuSilverHeroPremium .iu-silver-ai-badge[data-iu-silver-ai-badge]{display:none!important}
       }
       /* pointer-events: diag overlays must not steal clicks */
       body::before, body::after, html::before, html::after { pointer-events: none !important; }
@@ -211,6 +212,8 @@ font-src 'self' data:;
         #iuSilverWelcomeStack.silver-welcome-stack--evening{background:radial-gradient(ellipse 95% 70% at 0% -5%,rgba(56,189,248,.11) 0%,transparent 48%),radial-gradient(ellipse 90% 75% at 105% 108%,rgba(124,58,246,.1) 0%,transparent 52%),linear-gradient(180deg,#07101f 0%,#0b1430 44%,#111827 100%)!important}
         #iuSilverHeroPremium{position:relative;z-index:1;width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;min-height:0!important;box-sizing:border-box;padding:12px var(--iuSilverStackPadX,12px) 6px;margin:12px 10px 0 10px;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;background:radial-gradient(ellipse 85% 65% at 18% 22%,rgba(0,92,255,.30) 0%,transparent 52%),radial-gradient(ellipse 70% 55% at 92% 8%,rgba(15,45,110,.32) 0%,transparent 48%),radial-gradient(ellipse 60% 50% at 50% 100%,rgba(0,40,90,.40) 0%,transparent 55%),linear-gradient(135deg,#0a1628 0%,#0f2547 38%,#12356e 72%,#1a4a8f 100%);box-shadow:0 0 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.35)}
         #iuSilverHeroPremium::before,#iuSilverHeroPremium::after{content:none!important;display:none!important}
+        /* Required AI transparency label. Do not remove without legal/product review. */
+        #iuSilverHeroPremium .iu-silver-ai-badge[data-iu-silver-ai-badge]{position:absolute;top:8px;right:10px;z-index:4;display:inline-block;margin:0;padding:2px 7px;border-radius:999px;border:1px solid rgba(191,219,254,.38);background:rgba(15,23,42,.42);color:rgba(241,245,249,.96);font-size:clamp(9.5px,2.4vw,11px);font-weight:650;letter-spacing:.01em;line-height:1.2;white-space:nowrap;pointer-events:none;user-select:none;box-sizing:border-box;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis}
         .iu-hero-silver-premiumInner{position:relative;z-index:2;width:100%;max-width:100%;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:stretch;gap:0!important}
         .iu-hero-silver-premiumMain{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0!important;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0}
         .iu-hero-topRow{display:grid;grid-template-columns:minmax(112px,42%) 1fr;align-items:stretch;gap:12px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;margin:0;padding:0;container-type:inline-size}
@@ -419,7 +422,7 @@ font-src 'self' data:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 #iuSilverCalendarSummaryLine1Rest,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-row--1 #iuSilverTasksSummaryLine1Rest{grid-column:1 / -1!important;grid-row:2!important;display:block!important;font-size:10.5px!important;line-height:1.2!important;font-weight:500!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-text--line2{font-size:10.5px!important;line-height:1.2!important;font-weight:500!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{margin-top:0!important;margin-bottom:0!important;padding:2px 0 0!important;border-top:1px solid rgba(15,23,42,.16)!important;gap:2px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important}
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{border-top-color:rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .silver-calendar-summary-line2block,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .silver-calendar-summary-line2block{border-top-color:rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main{gap:3px!important;align-items:center!important;padding-right:0!important;margin-bottom:0!important;padding-bottom:0!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-iconCal{width:20px!important;height:20px!important;margin-top:0!important;opacity:.92}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-line2main .silver-calendar-summary-svg{width:20px!important;height:20px!important}
@@ -429,8 +432,16 @@ font-src 'self' data:;
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button],:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]{transition:none!important;-webkit-tap-highlight-color:transparent!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:linear-gradient(155deg,rgba(55,48,120,.55) 0%,rgba(24,28,52,.78) 100%)!important;transform:none!important;opacity:1!important;box-shadow:none!important;border-color:rgba(167,139,250,.28)!important;outline:none!important}
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:linear-gradient(155deg,rgba(22,78,99,.55) 0%,rgba(15,40,52,.78) 100%)!important;transform:none!important;opacity:1!important;box-shadow:none!important;border-color:rgba(45,212,191,.25)!important;outline:none!important}
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(100,200,190,.14)!important}
-        :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:hover,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:active,:is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-welcome-stack--evening #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(150,140,210,.16)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:hover,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:active,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(100,200,190,.14)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:hover,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:active,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.silver-calendar-summary-card[role=button]:focus-visible{background:rgba(8,15,32,.72)!important;border-color:rgba(150,140,210,.16)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.iu-mini-overview-card--calendar,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.iu-mini-overview-card--tasks{background:rgba(8,15,32,.72)!important;box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.06)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard.iu-mini-overview-card--calendar{border:1px solid rgba(100,200,190,.14)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard.iu-mini-overview-card--tasks{border:1px solid rgba(150,140,210,.16)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-text,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-text--line2,html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet .silver-calendar-summary-iconCal{color:rgba(240,248,255,.94)!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .iuCalendarSummary__label{color:#6ee7b7!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .iuTasksLabel{color:#c4b5fd!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverCalendarSummaryCard .iu-info-card__emph{color:#86efac!important}
+        html.iu-time-evening :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet #iuSilverTasksSummaryCard .iu-info-card__emph{color:#ddd6fe!important}
         #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly{display:none}
         #iuSilverHeroPremium .iu-hero-quickBtnIcon--mobileTabletOnly svg{display:block;width:18px;height:18px}
         #iuSilverCalendarSummaryCard .silver-calendar-summary-iconPoint--desktopOnly{display:none!important}
@@ -522,6 +533,13 @@ font-src 'self' data:;
         #silver-slot #iuMobileGateTabs,#iuMobileSilverSlot #silver-slot #iuMobileGateTabs{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;pointer-events:none!important}
         #iuSilverHeroInputHost #iuMobileGateTabs,#iuSilverHeroInputHost .iu-mobileSilverFloatMount{display:none!important;visibility:hidden!important;pointer-events:none!important}
         #iuMobileBottomNav.iu-mobileBottomNav{display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:10025;box-sizing:border-box;align-items:stretch;justify-content:space-evenly;gap:0;min-height:calc(var(--iu-mobile-bottom-nav-h) + var(--iu-mobile-bottom-safe) + 12px);padding:8px max(6px,env(safe-area-inset-left,0px)) calc(10px + var(--iu-mobile-bottom-safe) + 6px) max(6px,env(safe-area-inset-right,0px));margin:0;border-top:1px solid rgba(148,163,184,.28);background:linear-gradient(180deg,#0f172a 0%,#020617 100%);box-shadow:0 -6px 24px rgba(0,0,0,.35);-webkit-transform:translateZ(0);transform:translateZ(0)}
+        /* P0: systémová klávesnice — skryj spodní nav + uvolni nav-reserved prostor (safe-area env zachována). */
+        html.iu-keyboard-open{
+          --iu-mobile-bottom-nav-h:0px;
+          --bottom-nav-height:0px;
+          --iu-mobile-bottom-nav-safe-space:0px
+        }
+        html.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav,html.iu-keyboard-open body #iuMobileBottomNav.iu-mobileBottomNav,html.iu-keyboard-open body.iu-mobileGateOverlayOpen #iuMobileBottomNav.iu-mobileBottomNav,body.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav{display:none!important;visibility:hidden!important;pointer-events:none!important;height:0!important;min-height:0!important;max-height:0!important;padding:0!important;margin:0!important;border:0!important;overflow:hidden!important;box-shadow:none!important;-webkit-transform:none!important;transform:none!important}
         html[data-iu-silver-welcome-paint="evening"] #iuMobileBottomNav.iu-mobileBottomNav{border-top:1px solid rgba(255,255,255,.08)!important;background:rgba(3,8,18,.92)!important;box-shadow:0 -8px 28px rgba(0,0,0,.4)!important;-webkit-backdrop-filter:blur(14px)!important;backdrop-filter:blur(14px)!important}
         #iuMobileBottomNav .iu-mobileBottomNav__btn{flex:1 1 0;min-width:0;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:48px;padding:8px 4px 10px;margin:0;border:0;border-radius:12px;background:transparent;color:rgba(226,232,240,.92);font-size:10px;font-weight:600;line-height:1.15;cursor:pointer;-webkit-tap-highlight-color:transparent;appearance:none;-webkit-appearance:none;box-sizing:border-box}
         #iuMobileBottomNav .iu-mobileBottomNav__btn:active{color:#fff;background:rgba(255,255,255,.06)}
@@ -592,15 +610,19 @@ font-src 'self' data:;
         display:block!important;
         grid-template-columns:none!important
       }
-      .iuPd__banner{width:100%;max-width:100%;margin:0;padding:0;line-height:0;box-sizing:border-box}
-      .iuPd__bannerImg{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;aspect-ratio:1661/616}
+      .iuPd__hero{display:block;margin:0;padding:0;width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow:visible;visibility:visible;content-visibility:visible}
+      .iuPd__top{display:block;margin:0;padding:0;width:100%;max-width:100%;min-width:0;box-sizing:border-box;line-height:normal}
+      .iuPd__top>.iuPdBtn{margin:0}
+      .iuPd__banner{display:block;width:100%;max-width:100%;margin:0;padding:0;line-height:0;box-sizing:border-box;overflow:visible;visibility:visible;opacity:1}
+      .iuPd__bannerImg{display:block;width:100%;max-width:100%;height:auto;min-height:48px;object-fit:contain;aspect-ratio:1661/616;margin:0;padding:0;border:0;visibility:visible;opacity:1}
+      .iuPd__hero .iuPdBtn--settings{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:999px;border-bottom-right-radius:999px}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)" />
     <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.png" type="image/png" fetchpriority="high" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716" />
+    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -637,7 +659,7 @@ font-src 'self' data:;
         .layout{grid-template-columns:var(--iuLeftRailW) minmax(0,min(720px,1fr)) var(--iu-right-rail-width,360px)!important}
       }
     </style>
-    <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-note-text-gap-20260626" />
+    <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-date-time-fit-v2-20260803" />
     <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <link rel="stylesheet" href="/assets/iu-tasks-premium.css?v=mobile-tablet-tasks-filter-layout-v1-20260711" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
@@ -647,7 +669,8 @@ font-src 'self' data:;
     <style id="iuFeedNewsSplitCss">
       /*
        * FINÁLNÍ společný komponent — sekční oddělovníky mobil/tablet (≤1024px):
-       * SLEDOVÁNÍ ZÁSILEK | AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ | DALŠÍ UŽITEČNÝ OBSAH
+       * AKTUÁLNÍ ČLÁNKY OVĚŘENÝCH MÉDIÍ | DALŠÍ UŽITEČNÝ OBSAH
+       * (SLEDOVÁNÍ ZÁSILEK → .iuHomeSectionBar napojený na kartu)
        * Vzhled + spacing (25px nad / 10px pod) měnit POUZE zde — ne per-karta / per-sekce.
        */
       @media (max-width: 1024px) {
@@ -772,6 +795,104 @@ font-src 'self' data:;
       }
       @media (min-width: 1025px) {
         .iuFeedNewsSplit {
+          display: none !important;
+        }
+      }
+    </style>
+    <style id="iuHomeSectionBarCss">
+      /*
+       * Jednotný horní modrý proužek hlavních home sekcí (mobil/tablet ≤1024).
+       * Stejná třída .iuHomeSectionBar — výška/barva/font/radius měnit POUZE zde.
+       */
+      @media (max-width: 1024px) {
+        .iuHomeSectionBar {
+          --iu-home-section-bar-h: 32px;
+          --iu-home-section-bar-radius: 14px;
+          --iu-home-section-bar-bg: var(--iu-brand-blue, #003CFF);
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          height: var(--iu-home-section-bar-h);
+          min-height: var(--iu-home-section-bar-h);
+          max-height: var(--iu-home-section-bar-h);
+          margin: 0;
+          padding: 0 14px;
+          border: 0;
+          border-radius: var(--iu-home-section-bar-radius) var(--iu-home-section-bar-radius) 0 0;
+          background: var(--iu-home-section-bar-bg);
+          color: #fff;
+          font-size: 0.9rem;
+          font-weight: 600;
+          line-height: 1.1;
+          letter-spacing: 0.04em;
+          text-align: center;
+          text-transform: uppercase;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          pointer-events: none;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        /* Nezávislé na body.iu-home: na 901–1024 hub přepíná topic a iu-home padá, sekce ale zůstávají. */
+        body.iu-mobileMainVisible .iuHomeSectionBar,
+        body.iu-mobileGateOverlayOpen .iuHomeSectionBar,
+        body[data-iu-fc="0"] .iuHomeSectionBar {
+          display: none !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info {
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          margin: 16px 0;
+          padding: 0 10px;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info #iuMobileInfoPanelMount {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info .iuMobileInfoPanel.iuDesktopInfoPanel,
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info .iuMobileInfoPanelReserve {
+          border-top-left-radius: 0 !important;
+          border-top-right-radius: 0 !important;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch:has(> .iuHomeSectionBar) {
+          border-top-left-radius: 14px;
+          border-top-right-radius: 14px;
+        }
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch > .iuHomeSectionBar {
+          --iu-home-section-bar-pad-x: var(--iuSilverStackPadX, 12px);
+          box-sizing: border-box;
+          width: calc(100% + (2 * var(--iu-home-section-bar-pad-x)));
+          max-width: none;
+          margin: -10px calc(-1 * var(--iu-home-section-bar-pad-x)) 10px;
+          position: relative;
+          z-index: 1;
+        }
+        .iuHomeSectionStack {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        .iuHomeSectionStack > .iuHomeSectionBar,
+        .iuHomeSectionStack > .iuPd__hero {
+          margin: 0;
+        }
+      }
+      @media (min-width: 1025px) {
+        .iuHomeSectionBar,
+        .iuHomeSectionUnit--info > .iuHomeSectionBar {
           display: none !important;
         }
       }
@@ -1180,6 +1301,12 @@ font-src 'self' data:;
         body.iu-desktop-silver-composer-topbar .iuSilverHomeDesktopActionMenuItemLabel{
           flex: 1 1 auto;
           min-width: 0;
+        }
+        /* Required AI transparency label. Do not remove without legal/product review. */
+        body.iu-desktop-silver-composer-topbar [data-iu-silver-desktop-action="silver"] .iuSilverHomeDesktopActionMenuItemLabel{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       .iuSilverHomeInputUx,
@@ -2026,26 +2153,26 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-legal-documents-mobile-template-v1.css?v=legal-docs-mobile-template-v1-20260713" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-ai-overlay.css?v=ai-asistenti-premium-20260628" />
     <link rel="stylesheet" href="/assets/iu-invoice-overlay.css?v=invoice-preview-pc-v1-20260708" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-custom-buttons-overlay.css?v=quicktools-fixed-width-v5-20260714" />
+    <link rel="stylesheet" href="/assets/iu-custom-buttons-overlay.css?v=custom-buttons-dynamic-height-wrap-v1-20260803" />
     <link rel="stylesheet" href="/assets/iu-parcel-overlay.css?v=prod1549parcel-universal-box-ui" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-banking-premium.css?v=prod1551banking-premium-ui" />
     <link rel="stylesheet" href="/assets/iu-form-premium.css?v=form-premium-v4-mobile-card-content-20260704" />
     <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-overlay-header-v73-20260701" />
     <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" />
-    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
-    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-divider-spacing-8-4-20260628" />
+    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803" />
+    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-section-bar-evening-accent-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" />
     <link rel="stylesheet" href="/assets/iu-desktop-parcel-watch-overlay.css?v=pr5907-desktop-parcel-premium-20260619" />
-    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=pc-svatek-label-pill-gap-4px-20260713" />
-    <link rel="stylesheet" href="/assets/iu-prehled-dne-v1.css?v=info-system-v6-chmi-issued-updated-20260801" />
+    <link rel="stylesheet" href="/assets/iu-desktop-home-premium.css?v=pc-svatek-label-pill-gap-4px-20260713-mindmenu-articles-removed-v1-20260803" />
+    <link rel="stylesheet" href="/assets/iu-prehled-dne-v1.css?v=chmi-locality-filter-vse-v1-20260803" />
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" />
     <link rel="stylesheet" href="/assets/iu-desktop-tool-window-shell-v1.css?v=pc-topbar-height-unify-v1-20260716" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" />
-    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=info-panel-polish-v1-20260705" />
-    <link rel="stylesheet" href="/assets/iu-myinfouzel-premium-overlay.css?v=mindmenu-mailbox-gear-track-v1-20260707" />
+    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=home-section-bar-v1-20260802" />
+    <link rel="stylesheet" href="/assets/iu-myinfouzel-premium-overlay.css?v=mindmenu-mailbox-gear-track-v1-20260707-mindmenu-articles-removed-v1-20260803" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
       @media (max-width: 1023px) {
@@ -2531,6 +2658,8 @@ font-src 'self' data:;
                         })();
                         </script>
                         <section id="iuSilverHeroPremium" class="iu-hero-silver-premium iu-silver-hero-card--p0-mobile iu-silver-hero-vertical-gap-p0" aria-label="Silver" data-iu-silver-hero-premium>
+                          <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                          <span class="iu-silver-ai-badge" data-iu-silver-ai-badge="1">AI asistent</span>
                           <div class="iu-hero-silver-premiumInner">
                             <div class="iu-hero-silver-premiumMain">
                               <div class="iu-hero-topRow">
@@ -2634,17 +2763,14 @@ font-src 'self' data:;
                           </div>
                         </div>
                         </div>
-                        <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
-                          <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
-                        </div>
-                        <div id="iuFeedNewsSplitParcel" class="iuFeedNewsSplit iuFeedNewsSplit--parcel" aria-hidden="true">
-                          <div class="iuFeedNewsSplit__row">
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
-                            <span class="iuFeedNewsSplit__capsule">SLEDOVÁNÍ ZÁSILEK</span>
-                            <span class="iuFeedNewsSplit__line" aria-hidden="true"></span>
+                        <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="rychly-prehled" aria-hidden="true">RYCHLÝ PŘEHLED</div>
+                          <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
+                            <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
                           </div>
                         </div>
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="sledovani-zasilek" aria-hidden="true">SLEDOVÁNÍ ZÁSILEK</div>
                           <div class="iuSilverParcelWatch__hero">
                             <div class="iuSilverParcelWatch__content">
                               <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
@@ -2675,11 +2801,16 @@ font-src 'self' data:;
                             <div class="iuSilverTallScrollViewport" id="iuSilverTallScrollViewport" tabindex="0">
                               <div id="iuPrehledDneRoot" class="iuPrehledDneRoot" data-iu-prehled-dne-root="1">
                                 <section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">
-                                  <div class="iuPd__banner" data-iu-pd-banner="1">
+                                  <div class="iuHomeSectionStack" data-iu-home-section-stack="pd">
+                                  <div class="iuHomeSectionBar" data-iu-home-section-bar="muj-prehled-dne" aria-hidden="true">MŮJ PŘEHLED DNE</div>
+                                  <div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">
+                                  <div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">
                                     <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="high" loading="eager" />
                                   </div>
                                   <div class="iuPd__top">
-                                    <div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" style="opacity:0.35;pointer-events:none" aria-hidden="true">Můj přehled / Nastavení</div>
+                                    <div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none" aria-hidden="true"><span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span></div>
+                                  </div>
+                                  </div>
                                   </div>
                                   <div class="iuPd__show">
                                     <div class="iuPd__label">Zobrazit</div>
@@ -2731,7 +2862,8 @@ font-src 'self' data:;
                                           </div>
                                           <textarea id="iuSilverHomeInput" class="silver-input iuSilverHomeInput" rows="1" inputmode="text" autocomplete="off" maxlength="450" placeholder="" aria-label="Dej mi pokyn" data-iu-silver-home-input="1" data-iu-silver-home-placeholder-desktop="Napiš Silverovi nebo hledej na internetu…"></textarea>
                                           <div id="iuSilverHomeDesktopActionMenu" class="iuSilverHomeDesktopActionMenu" hidden role="menu" aria-label="Akce pro zadaný text">
-                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="silver"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🤖</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Silver</span></button>
+                                            <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                                            <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="silver"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🤖</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Silver — AI asistent</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="google"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔍</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Googlu</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="seznam"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">🔎</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na Seznamu</span></button>
                                             <button type="button" class="iuSilverHomeDesktopActionMenuItem" role="menuitem" data-iu-silver-desktop-action="youtube"><span class="iuSilverHomeDesktopActionMenuItemGlyph" aria-hidden="true">▶️</span><span class="iuSilverHomeDesktopActionMenuItemLabel">Vyhledat na YouTube</span></button>
@@ -5715,12 +5847,12 @@ font-src 'self' data:;
     <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716"></script>
-    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=info-system-v6-chmi-issued-updated-20260801"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803"></script>
+    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=chmi-locality-filter-vse-v1-20260803"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
     <script defer src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
-    <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-mpsv-audit-v1-20260716"></script>
+    <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-mpsv-audit-v1-20260716-rychly-prehled-horizontal-persist-v1-20260803"></script>
     <script>
     (function iuOverlayCssDeferGuard(){
       "use strict";
@@ -6326,7 +6458,8 @@ font-src 'self' data:;
             </span>
             <div class="iuSilverChatHeaderText">
               <h2 class="iuSilverChatTitle" id="iuSilverChatTitle">Silver</h2>
-              <p class="iuSilverChatSubtitle">Osobní asistent</p>
+              <!-- Required AI transparency label. Do not remove without legal/product review. -->
+              <p class="iuSilverChatSubtitle">AI asistent</p>
             </div>
           </div>
           <button type="button" class="iuSilverChatClose" id="iuSilverChatClose" data-iu-silver-chat-close="1" aria-label="Zavřít chat Silver">×</button>
@@ -6380,7 +6513,8 @@ font-src 'self' data:;
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="silver">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🤖</span>
-                <span class="iuInfoCenter__tileLabel">O Silverovi / osobní asistent</span>
+                <!-- Required AI transparency label. Do not remove without legal/product review. -->
+                <span class="iuInfoCenter__tileLabel">O Silverovi / AI asistent</span>
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="cookies">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🍪</span>
@@ -6471,10 +6605,12 @@ font-src 'self' data:;
           <article id="iuInfoCenterDetailAbout" class="iuInfoCenter__detail" data-iu-info-section="about" hidden>
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">InfoUzel.cz je český přehledový web a sada praktických nástrojů v jednom — bez nutnosti registrace. Kombinuje lokální osobní nástroje s automaticky agregovaným obsahem z veřejných zdrojů.</p>
+              <!-- Required AI transparency note. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__p" data-iu-info-ai-graphics-note="1">Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence, například pro AI asistenta Silver a při tvorbě nebo úpravě některých ilustračních grafických prvků webu.</p>
               <h3 class="iuInfoCenter__h3">Hlavní části webu</h3>
               <ul class="iuInfoCenter__moduleList">
                 <li class="iuInfoCenter__moduleItem"><strong>Homepage</strong> — úvodní rozcestník, souhrn dne a rychlý přístup k modulům.<br><span class="iuInfoCenter__moduleTag">Orientační informace · kombinace lokálních a externích dat</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — osobní asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — AI asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Kalendář</strong> — osobní události, připomínky a plánování.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data v zařízení</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Úkoly</strong> — seznam úkolů s termíny a prioritami.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Poznámky</strong> — textové záznamy s vyhledáváním a tagy.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
@@ -6526,7 +6662,8 @@ font-src 'self' data:;
 
           <article id="iuInfoCenterDetailSilver" class="iuInfoCenter__detail" data-iu-info-section="silver" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">Silver je osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.</p>
+              <!-- Required AI transparency label. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__lead" data-iu-info-silver-lead="1">Silver je AI osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.</p>
               <h3 class="iuInfoCenter__h3">Co Silver umí</h3>
               <ul class="iuInfoCenter__ul">
                 <li>navrhnout a uložit událost do kalendáře</li>
@@ -6543,8 +6680,9 @@ font-src 'self' data:;
               </div>
               <p class="iuInfoCenter__p">Některé části webu nebo doplňkové funkce mohou používat externí služby — například předpověď počasí (Open-Meteo podle zvolené polohy), videa (YouTube) nebo odkazy na mapy a dopravce. Tyto požadavky směřují k příslušným poskytovatelům.</p>
               <p class="iuInfoCenter__p">Do webu byste neměli vkládat údaje, které nechcete uchovávat v prohlížeči nebo zařízení.</p>
-              <h3 class="iuInfoCenter__h3">Orientační charakter odpovědí</h3>
-              <p class="iuInfoCenter__p">Odpovědi Silvera mohou být orientační. U důležitých informací vždy ověřte údaje z nezávislého nebo odborného zdroje. Při zdravotních, právních, finančních nebo krizových situacích kontaktujte odborníka nebo příslušnou službu.</p>
+              <h3 class="iuInfoCenter__h3">Umělá inteligence a omezení</h3>
+              <!-- Required AI transparency disclaimer. Do not remove without legal/product review. -->
+              <p class="iuInfoCenter__p" data-iu-info-silver-ai-disclaimer="1">Silver využívá umělou inteligenci. Jeho návrhy a odpovědi jsou vytvářeny automaticky a mohou obsahovat nepřesnosti. Důležité informace si proto vždy ověřte z nezávislého nebo odborného zdroje. Při zdravotních, právních, finančních nebo krizových situacích kontaktujte odborníka nebo příslušnou službu.</p>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>Silver není:</strong> právník, advokát, lékař, finanční poradce, krizová služba ani náhrada odborné pomoci. V urgentní situaci volejte <strong>155</strong> (zdravotní), <strong>158</strong> (policie) nebo <strong>112</strong>.
               </div>

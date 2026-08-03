@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "info-system-v6-chmi-issued-updated-20260801";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -61,54 +61,88 @@ function loadIU() {
 function sampleWarning() {
   const links = [
     {
+      orpCode: "1000",
+      orpId: "orp:1000",
       orpName: "Praha",
       okresName: "Hlavní město Praha",
       krajName: "Hlavní město Praha",
     },
     {
+      orpCode: "2101",
+      orpId: "orp:2101",
       orpName: "Benešov",
       okresName: "Benešov",
       krajName: "Středočeský kraj",
     },
     {
+      orpCode: "2108",
+      orpId: "orp:2108",
       orpName: "Kladno",
       okresName: "Kladno",
       krajName: "Středočeský kraj",
     },
     {
+      orpCode: "2103",
+      orpId: "orp:2103",
       orpName: "Beroun",
       okresName: "Beroun",
       krajName: "Středočeský kraj",
     },
     {
+      orpCode: "5205",
+      orpId: "orp:5205",
       orpName: "Hradec Králové",
       okresName: "Hradec Králové",
       krajName: "Královéhradecký kraj",
     },
     {
+      orpCode: "6203",
+      orpId: "orp:6203",
       orpName: "Brno",
       okresName: "Brno-město",
       krajName: "Jihomoravský kraj",
     },
     {
+      orpCode: "4213",
+      orpId: "orp:4213",
       orpName: "Rumburk",
       okresName: "Děčín",
       krajName: "Ústecký kraj",
     },
     {
+      orpCode: "2117",
+      orpId: "orp:2117",
       orpName: "Vlašim",
       okresName: "Benešov",
       krajName: "Středočeský kraj",
     },
     {
+      orpCode: "2118",
+      orpId: "orp:2118",
       orpName: "Votice",
       okresName: "Benešov",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpCode: "2122",
+      orpId: "orp:2122",
+      orpName: "Říčany",
+      okresName: "Praha-východ",
+      krajName: "Středočeský kraj",
+    },
+    {
+      orpCode: "2105",
+      orpId: "orp:2105",
+      orpName: "Černošice",
+      okresName: "Praha-západ",
       krajName: "Středočeský kraj",
     },
   ];
   // pad to mimic multi-area count for city-mode remainder
   while (links.length < 192) {
     links.push({
+      orpCode: String(9000 + links.length),
+      orpId: "orp:" + String(9000 + links.length),
       orpName: "Oblast" + links.length,
       okresName: "OkresX",
       krajName: "Jihočeský kraj",
@@ -137,6 +171,8 @@ function sampleWarning() {
       summary: "Praha a dalších 191 oblastí",
       extraAreaCount: 191,
       orpNames: links.map((l) => l.orpName),
+      orpCodes: links.map((l) => l.orpCode),
+      orpIds: links.map((l) => l.orpId),
       krajNames: [...new Set(links.map((l) => l.krajName))],
       okresNames: [...new Set(links.map((l) => l.okresName))],
     },
@@ -186,9 +222,9 @@ function unitGate(IU) {
   });
   ok("kraj_not_global_191", !/191/.test(stc), stc);
   const stcExtra = (stc.match(/(\d+)/) || [])[1];
-  ok("kraj_extra_in_kraj", Number(stcExtra) === 4 || Number(stcExtra) === 5, stc);
-  // Benešov, Beroun, Kladno, Vlašim, Votice = 5 → extra 4
-  ok("kraj_primary_in_stc", /Benešov|Beroun|Kladno|Vlašim|Votice/.test(stc), stc);
+  // Středočeský sample links: Benešov, Kladno, Beroun, Vlašim, Votice, Říčany, Černošice = 7 → extra 6
+  ok("kraj_extra_in_kraj", Number(stcExtra) === 6, stc);
+  ok("kraj_primary_in_stc", /Benešov|Beroun|Kladno|Vlašim|Votice|Říčany|Černošice/.test(stc), stc);
   ok("kraj_no_zero", !/dalších 0/.test(stc) && !/další 0/.test(stc), stc);
 
   const okres = IU.getFilteredWarningLocationLabel(warning, {
@@ -236,33 +272,90 @@ function unitGate(IU) {
 
   const multi = IU.getFilteredWarningLocationLabel(warning, {
     localities: [
-      { name: "Hradec Králové", level: "mesto" },
-      { name: "Brno", level: "mesto" },
-      { name: "Rumburk", level: "mesto" },
+      { name: "Hradec Králové", level: "mesto", orpCode: "5205" },
+      { name: "Brno", level: "mesto", orpCode: "6203" },
+      { name: "Rumburk", level: "mesto", orpCode: "4213" },
     ],
   });
-  ok("multi_starts_hk", multi.startsWith("Hradec Králové"), multi);
-  ok("multi_intersection_extra", /a 2 další oblasti/.test(multi), multi);
+  ok("multi_all_relevant_names", multi.startsWith("Hradec Králové, Brno, Rumburk"), multi);
+  ok("multi_remainder_unique_orp", /a dalších 189 oblastí/.test(multi), multi);
+
+  const nupaky = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [{ name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" }],
+  });
+  ok("village_via_orp", nupaky.startsWith("Nupaky"), nupaky);
+  ok("village_keeps_191", /a dalších 191 oblastí/.test(nupaky), nupaky);
+
+  const sameOrp = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" },
+      { name: "Čestlice", level: "mesto", id: "538141", orpCode: "2122" },
+    ],
+  });
+  ok("same_orp_both_names", sameOrp.startsWith("Nupaky, Čestlice"), sameOrp);
+  ok("same_orp_global_extra", /a dalších 191 oblastí/.test(sameOrp), sameOrp);
+
+  const dupNames = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Praha", level: "mesto", orpCode: "1000" },
+      { name: "Praha", level: "mesto", orpCode: "1000" },
+      { name: "praha", level: "mesto", orpCode: "1000" },
+    ],
+  });
+  ok("title_dedupe_praha", dupNames === "Praha a dalších 191 oblastí" || /^Praha a dalších 191/.test(dupNames), dupNames);
+  ok("title_no_double_praha", !/Praha,\s*Praha/.test(dupNames), dupNames);
+
+  const outsideMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [{ name: "Cheb", level: "mesto", orpCode: "4102" }],
+  });
+  ok("match_fn_outside_false", outsideMatch === false, String(outsideMatch));
+  const insideMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [{ name: "Nupaky", level: "mesto", orpCode: "2122" }],
+  });
+  ok("match_fn_inside_true", insideMatch === true, String(insideMatch));
+  const orMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [
+      { name: "Cheb", level: "mesto", orpCode: "4102" },
+      { name: "Brno", level: "mesto", orpCode: "6203" },
+    ],
+  });
+  ok("match_fn_or_true", orMatch === true, String(orMatch));
+
+  const partial = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" },
+      { name: "Brno", level: "mesto", id: "582786", orpCode: "6203" },
+      { name: "Cheb", level: "mesto", id: "554499", orpCode: "4102" },
+    ],
+  });
+  ok("partial_order", partial.startsWith("Nupaky, Brno"), partial);
+  ok("partial_excludes_cheb", !/Cheb/.test(partial), partial);
 
   ok("no_mutate", JSON.stringify(warning) === snapshot, "mutated");
 
   const filtered = IU.filterEvents(
     [warning],
-    { localities: [{ name: "Cheb", level: "mesto" }], localityQuery: "" },
+    { localities: [{ name: "Cheb", level: "mesto", orpCode: "4102" }], localityQuery: "" },
     { skipMemo: true }
   );
   ok("filter_hides_outside", filtered.length === 0, String(filtered.length));
 
   const kept = IU.filterEvents(
     [warning],
-    { localities: [{ name: "Hradec Králové", level: "mesto" }] },
+    { localities: [{ name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" }] },
     { skipMemo: true }
   );
-  ok("filter_keeps_hk", kept.length === 1, String(kept.length));
+  ok("filter_keeps_village_via_orp", kept.length === 1, String(kept.length));
   ok("filter_url_intact", kept[0] && kept[0].url === "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_loc.xml?hid=loc-test", kept[0] && kept[0].url);
 
   const base = IU.eventTitleBaseWithoutLocality(warning);
   ok("title_base_event", base === "Vysoké teploty", base);
+
+  const norm = IU.normalizeLocalitiesList(
+    Array.from({ length: 25 }, (_, i) => ({ name: "Obec" + i, id: String(1000 + i), orpCode: "2122", level: "mesto" }))
+  );
+  ok("limit_20", norm.filter((x) => x.level === "mesto").length === 20, String(norm.length));
+  ok("max_const", IU.MAX_CITY_LOCALITIES === 20, String(IU.MAX_CITY_LOCALITIES));
 }
 
 function main() {

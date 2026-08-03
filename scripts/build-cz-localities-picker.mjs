@@ -1,24 +1,33 @@
-#!/usr/bin/env node
 /**
- * Reproducible build: GeoNames Czechia populated places -> projects/data/cz_localities_picker.json
+ * Build official CZ obec picker with obec→ORP (CISORP) mapping.
  *
- * Source: https://download.geonames.org/export/dump/CZ.zip (CC BY 4.0)
- * Admin labels: admin1CodesASCII.txt (same license bundle)
+ * Sources (downloaded at build time into %TEMP%):
+ *   ČSÚ CISOB (43): obce a vojenské újezdy
+ *   ČSÚ vazba CISORP→CISOB (cisvaz=43_1182): obce spadající pod SO ORP
+ *   ČÚZK UI_OBEC / UI_OKRES: okres names for duplicate-name disambiguation
+ *   scripts/chmi-cap-v2/data/geo-registry.json: authoritative CISORP codes for CAP
  *
  * Run: node scripts/build-cz-localities-picker.mjs
- * Requires: network, tar (bsdtar) for unzip, Node 18+
+ * Requires: network, Node 18+
  */
-import fs from "fs";
-import https from "https";
-import os from "os";
-import path from "path";
-import { fileURLToPath } from "url";
-import { execFileSync } from "child_process";
+import fs from "node:fs";
+import https from "node:https";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const OUT = path.join(ROOT, "projects/data/cz_localities_picker.json");
-const MAX_ROWS = 14000;
+const GEO_REG = path.join(ROOT, "scripts/chmi-cap-v2/data/geo-registry.json");
+
+const CISOB_URL =
+  "https://apl2.czso.cz/iSMS/do_cis_export?kodcis=43&typdat=0&cisjaz=203&format=2";
+const VAZBA_URL =
+  "https://apl2.czso.cz/iSMS/do_cis_export?kodcis=65&typdat=1&cisvaz=43_1182&cisjaz=203&format=2";
+const UI_OBEC_URL = "https://services.cuzk.cz/sestavy/cis/UI_OBEC.zip";
+const UI_OKRES_URL = "https://services.cuzk.cz/sestavy/cis/UI_OKRES.zip";
 
 function download(url, dest) {
   return new Promise((resolve, reject) => {
@@ -29,7 +38,7 @@ function download(url, dest) {
           f.close();
           try {
             fs.unlinkSync(dest);
-          } catch {}
+          } catch (_) {}
           return download(res.headers.location, dest).then(resolve).catch(reject);
         }
         if (res.statusCode !== 200) {
@@ -44,94 +53,206 @@ function download(url, dest) {
   });
 }
 
-function featureType(code, pop) {
-  const c = String(code || "");
-  if (c === "PPLC" || c === "PPLA" || pop >= 50000) return "city";
-  if (c === "PPLA2" || c === "PPLA3" || c === "PPLA4" || pop >= 3500) return "town";
-  if (pop >= 500) return "obec";
-  return "vesnice";
+function parseCsv(text) {
+  const lines = String(text || "")
+    .replace(/^\uFEFF/, "")
+    .trim()
+    .split(/\r?\n/);
+  if (!lines.length) return [];
+  const headers = splitCsvLine(lines[0]).map((h) => h.replace(/^"|"$/g, ""));
+  return lines
+    .slice(1)
+    .filter(Boolean)
+    .map((line) => {
+      const cols = splitCsvLine(line).map((c) => c.replace(/^"|"$/g, ""));
+      const row = {};
+      headers.forEach((h, i) => {
+        row[h] = cols[i] ?? "";
+      });
+      return row;
+    });
 }
 
-function priorityFromPop(pop, code) {
-  const p = Number(pop) || 0;
-  if (code === "PPLC") return 100;
-  let base = 5;
-  if (p > 0) base = Math.min(99, Math.round(6 + Math.log10(p + 1) * 24));
-  return base;
+function splitCsvLine(line) {
+  const out = [];
+  let cur = "";
+  let q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (q && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else q = !q;
+      continue;
+    }
+    if ((ch === "," || ch === ";") && !q) {
+      out.push(cur);
+      cur = "";
+      continue;
+    }
+    cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+function decodeCp1250(buf) {
+  return new TextDecoder("windows-1250").decode(buf);
+}
+
+function unzip(zipPath, destDir) {
+  fs.mkdirSync(destDir, { recursive: true });
+  execFileSync("tar", ["-xf", zipPath, "-C", destDir], { stdio: "inherit" });
+}
+
+function findCsv(dir) {
+  const stack = [dir];
+  while (stack.length) {
+    const cur = stack.pop();
+    for (const name of fs.readdirSync(cur)) {
+      const p = path.join(cur, name);
+      const st = fs.statSync(p);
+      if (st.isDirectory()) stack.push(p);
+      else if (/\.csv$/i.test(name)) return p;
+    }
+  }
+  throw new Error("csv_not_found:" + dir);
+}
+
+function fold(s) {
+  return String(s || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 async function main() {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "czgn-"));
-  const zipPath = path.join(tmp, "CZ.zip");
-  const adminPath = path.join(tmp, "admin1CodesASCII.txt");
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cz-obec-orp-"));
+  const cisobPath = path.join(tmp, "cisob43.csv");
+  const vazPath = path.join(tmp, "vaz_65_43.csv");
+  const obecZip = path.join(tmp, "UI_OBEC.zip");
+  const okresZip = path.join(tmp, "UI_OKRES.zip");
 
-  await download("https://download.geonames.org/export/dump/CZ.zip", zipPath);
-  await download("https://download.geonames.org/export/dump/admin1CodesASCII.txt", adminPath);
+  await download(CISOB_URL, cisobPath);
+  await download(VAZBA_URL, vazPath);
+  await download(UI_OBEC_URL, obecZip);
+  await download(UI_OKRES_URL, okresZip);
 
-  execFileSync("tar", ["-xf", zipPath, "-C", tmp], { stdio: "inherit" });
-  const czPath = path.join(tmp, "CZ.txt");
+  const obecDir = path.join(tmp, "ui_obec");
+  const okresDir = path.join(tmp, "ui_okres");
+  unzip(obecZip, obecDir);
+  unzip(okresZip, okresDir);
 
-  const admin1 = new Map();
-  const adminText = fs.readFileSync(adminPath, "utf8");
-  for (const line of adminText.split(/\r?\n/)) {
-    if (!line || line.startsWith("#")) continue;
-    const p = line.split("\t");
-    if (p[0] && p[0].startsWith("CZ.")) admin1.set(p[0], String(p[1] || "").trim());
+  const uiObec = parseCsv(decodeCp1250(fs.readFileSync(findCsv(obecDir))));
+  const uiOkres = parseCsv(decodeCp1250(fs.readFileSync(findCsv(okresDir))));
+  const okresNameByKod = new Map(uiOkres.map((r) => [String(r.KOD), String(r.NAZEV || "").trim()]));
+  const obecOkresByKod = new Map(
+    uiObec.map((r) => [String(r.KOD), okresNameByKod.get(String(r.OKRES_KOD)) || ""])
+  );
+
+  const cisobRows = parseCsv(fs.readFileSync(cisobPath, "utf8"));
+  const obecNameById = new Map();
+  for (const row of cisobRows) {
+    const id = String(row.chodnota || "").trim();
+    const name = String(row.text || row.zkrtext || "").trim();
+    const validTo = String(row.admnepo || "");
+    if (!id || !name) continue;
+    if (validTo && !validTo.startsWith("9999")) continue;
+    obecNameById.set(id, name);
   }
 
-  const rows = [];
-  const czRaw = fs.readFileSync(czPath, "utf8");
-  for (const line of czRaw.split(/\r?\n/)) {
-    if (!line) continue;
-    const f = line.split("\t");
-    if (f.length < 15) continue;
-    if (f[6] !== "P") continue;
-    if (!/^PPL/.test(f[7] || "")) continue;
-    const name = String(f[1] || "").trim();
-    const lat = Number(f[4]);
-    const lon = Number(f[5]);
-    if (!name || !Number.isFinite(lat) || !Number.isFinite(lon)) continue;
-    const pop = parseInt(f[14], 10) || 0;
-    const ac = String(f[10] || "").trim();
-    const regKey = ac ? `CZ.${ac}` : "";
-    const region = admin1.get(regKey) || "";
-    const code = f[7];
-    const pr = priorityFromPop(pop, code);
-    const t = featureType(code, pop);
-    rows.push({ n: name, r: region, lat, lon, p: pr, t, pop, code });
+  const vazRows = parseCsv(fs.readFileSync(vazPath, "utf8"));
+  const byObec = new Map();
+  for (const row of vazRows) {
+    const orp = String(row.chodnota1 || "").trim();
+    const orpName = String(row.text1 || "").trim();
+    const obecId = String(row.chodnota2 || "").trim();
+    const obecName = String(row.text2 || obecNameById.get(obecId) || "").trim();
+    if (!orp || !obecId || !obecName) continue;
+    if (byObec.has(obecId)) {
+      const prev = byObec.get(obecId);
+      if (prev.orp !== orp) {
+        throw new Error("conflict_obec_multi_orp:" + obecId + ":" + prev.orp + ":" + orp);
+      }
+      continue;
+    }
+    byObec.set(obecId, { id: obecId, n: obecName, orp, orpN: orpName });
   }
 
-  rows.sort((a, b) => b.pop - a.pop || a.n.localeCompare(b.n));
-  const top = rows.slice(0, MAX_ROWS);
-  const items = top.map((x) => ({
-    n: x.n,
-    r: x.r,
-    lat: x.lat,
-    lon: x.lon,
-    p: x.p,
-    t: x.t,
-    fc: x.code,
-  }));
+  const geo = JSON.parse(fs.readFileSync(GEO_REG, "utf8"));
+  const regOrpCodes = new Set(geo.units.filter((u) => u.type === "orp").map((u) => String(u.code)));
+  const orpNameByCode = new Map(
+    geo.units.filter((u) => u.type === "orp").map((u) => [String(u.code), String(u.name)])
+  );
 
-  for (const it of items) {
-    if (it.n === "Prague") it.a = ["Praha"];
-    if (it.n === "Pilsen") it.a = ["Plzeň"];
+  const missingOrp = [];
+  for (const code of regOrpCodes) {
+    let hit = false;
+    for (const row of byObec.values()) {
+      if (row.orp === code) {
+        hit = true;
+        break;
+      }
+    }
+    if (!hit) missingOrp.push(code);
+  }
+  if (missingOrp.length) {
+    throw new Error("orp_without_obce:" + missingOrp.join(","));
+  }
+
+  const badOrp = [];
+  const items = [];
+  for (const row of byObec.values()) {
+    if (!regOrpCodes.has(row.orp)) {
+      badOrp.push(row.id + "->" + row.orp);
+      continue;
+    }
+    const ok = obecOkresByKod.get(row.id) || "";
+    const isSeat = fold(row.n) === fold(row.orpN || orpNameByCode.get(row.orp) || "");
+    items.push({
+      id: row.id,
+      n: row.n,
+      orp: row.orp,
+      orpN: row.orpN || orpNameByCode.get(row.orp) || "",
+      ok,
+      p: isSeat ? 90 : 40,
+      t: isSeat ? "city" : "obec",
+    });
+  }
+  if (badOrp.length) {
+    throw new Error("obec_unknown_orp:" + badOrp.slice(0, 20).join(","));
+  }
+
+  items.sort(
+    (a, b) =>
+      b.p - a.p || a.n.localeCompare(b.n, "cs", { sensitivity: "base" }) || a.id.localeCompare(b.id)
+  );
+
+  const coveredOrp = new Set(items.map((x) => x.orp));
+  if (coveredOrp.size !== regOrpCodes.size) {
+    throw new Error("orp_coverage_mismatch:" + coveredOrp.size + "/" + regOrpCodes.size);
   }
 
   const json = {
-    version: 2,
+    version: 3,
     source:
-      "GeoNames CZ dump (https://download.geonames.org/export/dump/CZ.zip), CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/ — attribution required in-app for derivative datasets.",
+      "ČSÚ CISOB (43) + vazba CISORP→CISOB (cisvaz=43_1182) + ČÚZK UI_OBEC/UI_OKRES; ORP codes aligned to scripts/chmi-cap-v2/data/geo-registry.json (CISORP).",
     sourceDetail:
-      "Built by scripts/build-cz-localities-picker.mjs: feature class P, feature codes PPL*; admin1 names from admin1CodesASCII.txt; sorted by population desc; capped at " +
-      MAX_ROWS +
-      " rows.",
+      "Built by scripts/build-cz-localities-picker.mjs. Stable ids = ČSÚ chodnota obce (RÚIAN obec kod). orp = CISORP code used by CHMI CAP.",
+    counts: {
+      obce: items.length,
+      orp: coveredOrp.size,
+      expectedOrp: regOrpCodes.size,
+    },
     items,
   };
 
   fs.writeFileSync(OUT, JSON.stringify(json), "utf8");
   const st = fs.statSync(OUT);
-  console.log("OK", OUT, "items", items.length, "bytes", st.size);
+  console.log("OK", OUT, "obce", items.length, "orp", coveredOrp.size, "bytes", st.size);
 }
 
 main().catch((e) => {

@@ -8205,19 +8205,7 @@ try {
 
   function iuArticleActionsRefreshManagePanels() {
     try {
-      iuArticleActionsEnsureMindMenuSections();
-      const overlay = document.getElementById("iuMyInfoUzelOverlay");
-      if (overlay) {
-        iuArticleActionsRenderManageList("saved", overlay.querySelector("[data-iu-manage-panel='saved']"));
-        iuArticleActionsRenderManageList("followed", overlay.querySelector("[data-iu-manage-panel='followed']"));
-        iuArticleActionsRenderManageList("hidden", overlay.querySelector("[data-iu-manage-panel='hidden']"));
-      }
-      const mmSaved = document.getElementById("iuMmSavedArticlesPanel");
-      const mmFollowed = document.getElementById("iuMmFollowedTopicsPanel");
-      const mmHidden = document.getElementById("iuMmHiddenArticlesPanel");
-      if (mmSaved) iuArticleActionsRenderManageList("saved", mmSaved);
-      if (mmFollowed) iuArticleActionsRenderManageList("followed", mmFollowed);
-      if (mmHidden) iuArticleActionsRenderManageList("hidden", mmHidden);
+      iuArticleActionsRemoveMindMenuArticleSections();
       iuArticleActionsSyncFeedStates(document.getElementById("feed"));
     } catch (_) {}
   }
@@ -8305,7 +8293,7 @@ try {
   function iuArticleActionsEnsureOverlay() {
     try {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
-      if (existing && existing.querySelector("[data-iu-manage-tabs]") && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow")) {
+      if (existing && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow") && !existing.querySelector(".iuMyInfoUzelDashboard__col--saved") && !existing.querySelector("[data-iu-manage-tabs]")) {
         iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
         return;
       }
@@ -8336,58 +8324,16 @@ try {
               <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--tools">
                 <div id="iuMyInfoUzelToolsHost" class="iuMyInfoUzelToolsHost"></div>
               </div>
-              <div class="iuMyInfoUzelDashboard__col iuMyInfoUzelDashboard__col--saved">
-                <div class="iuMmManageTabs" data-iu-manage-tabs>
-                  <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
-                    <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-                    <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
-                  </div>
-                  <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
-                    <div data-iu-manage-panel="saved"></div>
-                  </div>
-                  <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
-                    <div data-iu-manage-panel="hidden"></div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       `.trim();
       document.body.appendChild(overlay);
       iuQuickToolsBindToolsHostGearOnce(overlay.querySelector("#iuMyInfoUzelToolsHost"));
-      const manageTabs = overlay.querySelector("[data-iu-manage-tabs]");
-      if (manageTabs) iuArticleActionsInitManageTabs(manageTabs);
       overlay.addEventListener("click", (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
         if (t.closest("[data-iu-myinfouzel-close]")) iuArticleActionsCloseOverlay();
-        const manageBtn = t.closest("[data-iu-manage-action]");
-        if (manageBtn) {
-          const action = manageBtn.getAttribute("data-iu-manage-action");
-          if (action === "unsave") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            const list = iuArticleActionsGetSavedList().filter(
-              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-            );
-            iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
-            iuArticleActionsRefreshManagePanels();
-          } else if (action === "unfollow") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            const list = iuArticleActionsGetFollowedList().filter(
-              (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-            );
-            iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
-            iuArticleActionsRefreshManagePanels();
-          } else if (action === "restore") {
-            const id = manageBtn.getAttribute("data-iu-article-id");
-            iuArticleActionsRemoveHidden(id);
-            iuArticleActionsRefreshManagePanels();
-            try {
-              if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
-            } catch (_) {}
-          }
-        }
       });
     } catch (_) {}
   }
@@ -8520,69 +8466,11 @@ try {
     }
   } catch (_) {}
 
-  function iuArticleActionsEnsureMindMenuSections() {
+  function iuArticleActionsRemoveMindMenuArticleSections() {
     try {
-      const mindMenu = document.getElementById("iuMindMenuView") || document.querySelector(".mindMenu");
-      const existingSections = mindMenu && mindMenu.querySelector("#iuMmArticleActionsSections");
-      if (existingSections) {
-        if (existingSections.querySelector("[data-iu-manage-tabs]")) return;
-        existingSections.remove();
-      }
-      if (!mindMenu) return;
-      const wrap = document.createElement("section");
-      wrap.id = "iuMmArticleActionsSections";
-      wrap.className = "iu-mmArticleActionsSections";
-      wrap.setAttribute("aria-label", "Moje články a témata");
-      wrap.innerHTML = `
-        <div class="iu-mmSectionHead">
-          <div class="iu-mmSectionTitle">Moje články</div>
-          <div class="iu-mmSectionLine" aria-hidden="true"></div>
-        </div>
-        <div class="iuMmManageTabs iuMmManageTabs--mobile" data-iu-manage-tabs>
-          <div class="iuMmManageTabs__nav" role="tablist" aria-label="Moje články">
-            <button type="button" class="iuMmManageTabs__tab is-active iuMmManageTabs__tab--saved" role="tab" data-iu-manage-tab="saved" aria-selected="true">Uložené články</button>
-            <button type="button" class="iuMmManageTabs__tab iuMmManageTabs__tab--hidden" role="tab" data-iu-manage-tab="hidden" aria-selected="false">Skryté články</button>
-          </div>
-          <div class="iuMmManageTabs__panel is-active iuMmManageTabs__panel--saved" data-iu-manage-panel-wrap="saved" role="tabpanel">
-            <div id="iuMmSavedArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-          </div>
-          <div class="iuMmManageTabs__panel iuMmManageTabs__panel--hidden" data-iu-manage-panel-wrap="hidden" role="tabpanel" hidden>
-            <div id="iuMmHiddenArticlesPanel" class="iu-mmArticleActionsPanel"></div>
-          </div>
-        </div>
-      `.trim();
-      mindMenu.appendChild(wrap);
-      const mmTabs = wrap.querySelector("[data-iu-manage-tabs]");
-      if (mmTabs) iuArticleActionsInitManageTabs(mmTabs);
-      wrap.addEventListener("click", (e) => {
-        const t = e.target;
-        if (!(t instanceof Element)) return;
-        const manageBtn = t.closest("[data-iu-manage-action]");
-        if (!manageBtn) return;
-        const action = manageBtn.getAttribute("data-iu-manage-action");
-        if (action === "unsave") {
-          const id = manageBtn.getAttribute("data-iu-article-id");
-          const list = iuArticleActionsGetSavedList().filter(
-            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-          );
-          iuArticleActionsWriteJson(IU_SAVED_ARTICLES_KEY, list);
-          iuArticleActionsRefreshManagePanels();
-        } else if (action === "unfollow") {
-          const id = manageBtn.getAttribute("data-iu-article-id");
-          const list = iuArticleActionsGetFollowedList().filter(
-            (row) => String(row?.articleId || row?.url || "").trim() !== String(id || "").trim()
-          );
-          iuArticleActionsWriteJson(IU_FOLLOWED_TOPICS_KEY, list);
-          iuArticleActionsRefreshManagePanels();
-        } else if (action === "restore") {
-          iuArticleActionsRemoveHidden(manageBtn.getAttribute("data-iu-article-id"));
-          iuArticleActionsRefreshManagePanels();
-          try {
-            if (typeof applyFilter === "function") applyFilter({ resetPage: false, render: true });
-          } catch (_) {}
-        }
+      document.querySelectorAll("#iuMmArticleActionsSections, .iu-mmArticleActionsSections, .iuMyInfoUzelDashboard__col--saved").forEach((el) => {
+        try { el.remove(); } catch (_) {}
       });
-      iuArticleActionsRefreshManagePanels();
     } catch (_) {}
   }
 
@@ -8678,7 +8566,7 @@ try {
       if (window.__iuArticleActionsInit) return;
       window.__iuArticleActionsInit = 1;
       iuArticleActionsEnsureOverlay();
-      iuArticleActionsEnsureMindMenuSections();
+      iuArticleActionsRemoveMindMenuArticleSections();
       iuArticleActionsEnsureDesktopButton();
       iuArticleActionsRefreshManagePanels();
       try {
@@ -10340,6 +10228,8 @@ function buildVideoAsArticleCard(it) {
         };
         const addCls = map[k];
         if (addCls) rootEl.classList.add(addCls);
+        /* Keep paint attr in lockstep with visual class (PC evening→afternoon remap). */
+        try{ rootEl.setAttribute("data-iu-silver-welcome-paint", k); }catch{}
       }catch{}
     }
     function applyVariantClass(daypart){
@@ -18103,108 +17993,645 @@ function buildVideoAsArticleCard(it) {
   }
 
   /**
-   * P0 Mobile/tablet (≤1024px): Datovka / Bakaláři / ZP — při otevřené klávesnici drží
-   * #iuMobileBottomNav na spodní hraně layout viewportu (visualViewport resize ji jinak posune nahoru).
+   * P0 Mobile/tablet (≤1024px): systémové skrytí #iuMobileBottomNav při soft keyboard.
+   *
+   * #8461 používalo (innerHeight - visualViewport.height) > 100. Na reálném iOS Safari
+   * často innerHeight i VV výška klesají společně → gap≈0 a třída iu-keyboard-open se
+   * nepřidá (nadpis navigace zůstane nad klávesnicí). Guard #8461 mockoval ideální VV
+   * (innerHeight konstantní) → falešné PASS.
+   *
+   * Detekce v2:
+   *  1) stabilní baseline výšky bez klávesnice vs aktuální visualViewport
+   *  2) VirtualKeyboard geometry (Chrome)
+   *  3) touch/coarse fallback: focus na textové pole → hide i bez spolehlivého gapu
+   * Desktop beze změny. Gap bez focusu neskryje navigaci.
    */
-  function iuMojeSluzbyFormBottomNavKeyboardPinInit() {
+  function iuMobileBottomNavKeyboardHideInit() {
     try {
-      if (window.__iuMojeSluzbyFormBottomNavKeyboardPinInit) return;
-      window.__iuMojeSluzbyFormBottomNavKeyboardPinInit = 1;
+      if (window.__iuMobileBottomNavKeyboardHideInit) return;
+      window.__iuMobileBottomNavKeyboardHideInit = 1;
     } catch (_) {}
     var mqTablet = null;
+    var mqCoarse = null;
     try {
       mqTablet = window.matchMedia && window.matchMedia("(max-width: 1024px)");
     } catch (_) {}
-    function isScopeActive() {
+    try {
+      mqCoarse =
+        window.matchMedia &&
+        window.matchMedia("(hover: none) and (pointer: coarse)");
+    } catch (_) {}
+    var open = false;
+    var focusEditable = false;
+    var focusTextKeyboardLikely = false;
+    var blurTimer = 0;
+    var graceTimer = 0;
+    var vkHeight = 0;
+    var stableViewportH = 0;
+    /* Geometric evidence that soft keyboard is (or was) open. Focus alone must NOT
+       keep nav hidden after VV/VK returns to closed (iOS dismiss-without-blur). */
+    var geomKeyboardOpen = false;
+    /* Short opening grace: hide before VV resize arrives after focusin. */
+    var focusOpenGraceUntil = 0;
+    var FOCUS_OPEN_GRACE_MS = 420;
+    var BLUR_HANDOFF_MS = 70;
+    var scrollSnap = null;
+    var userScrolledWhileKb = false;
+    var KEYBOARD_GAP_ABS_MIN = 72;
+    var KEYBOARD_GAP_PCT = 0.12;
+
+    function isExcludedInputType(type) {
+      return (
+        type === "button" ||
+        type === "checkbox" ||
+        type === "radio" ||
+        type === "file" ||
+        type === "submit" ||
+        type === "reset" ||
+        type === "image" ||
+        type === "range" ||
+        type === "color" ||
+        type === "hidden"
+      );
+    }
+
+    function isPickerInputType(type) {
+      return (
+        type === "date" ||
+        type === "time" ||
+        type === "datetime-local" ||
+        type === "month" ||
+        type === "week"
+      );
+    }
+
+    function isEditableEl(el) {
       try {
-        if (mqTablet && !mqTablet.matches) return false;
-        var body = document.body;
-        if (!body) return false;
-        if (body.classList.contains("iu-ds-overlay-open")) return true;
-        if (
-          !body.classList.contains("iu-quickFeedOpen") &&
-          !body.classList.contains("iu-mobileGateToolsQuickOpen") &&
-          !body.classList.contains("iu-quickFeedMojeFullscreen")
-        ) {
-          return false;
+        if (!el || el.nodeType !== 1) return false;
+        var tag = String(el.tagName || "").toUpperCase();
+        if (tag === "SELECT" || tag === "BUTTON" || tag === "OPTION") return false;
+        if (tag === "TEXTAREA") {
+          if (el.disabled || el.readOnly) return false;
+          return true;
         }
-        var qf = document.getElementById("iuQuickFeed");
-        if (!qf || qf.hidden) return false;
-        return (
-          qf.classList.contains("iu-bakalari-quickfeed-root") ||
-          qf.classList.contains("iu-pojistovna-quickfeed-root")
-        );
+        if (tag === "INPUT") {
+          var type = String(el.type || "text").toLowerCase();
+          if (isExcludedInputType(type)) return false;
+          if (el.disabled || el.readOnly) return false;
+          var inputMode = String(el.getAttribute("inputmode") || "").toLowerCase();
+          if (inputMode === "none") return false;
+          return true;
+        }
+        if (el.isContentEditable) return true;
+        var role = el.getAttribute && String(el.getAttribute("role") || "");
+        if (role === "textbox" || role === "searchbox") return true;
+        return false;
       } catch (_) {
         return false;
       }
     }
-    function syncPin() {
+
+    /** Soft-keyboard likely: text/search/email/… — not native date/time pickers. */
+    function isTextKeyboardLikelyEl(el) {
+      try {
+        if (!isEditableEl(el)) return false;
+        var tag = String(el.tagName || "").toUpperCase();
+        if (tag === "TEXTAREA") return true;
+        if (tag === "INPUT") {
+          var type = String(el.type || "text").toLowerCase();
+          if (isPickerInputType(type)) return false;
+          return true;
+        }
+        if (el.isContentEditable) return true;
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function currentVvHeight() {
+      try {
+        var vv = window.visualViewport;
+        if (vv && typeof vv.height === "number" && vv.height > 0) return vv.height;
+      } catch (_) {}
+      return Math.max(0, window.innerHeight || 0);
+    }
+
+    function refreshStableViewport() {
+      try {
+        /* Allow baseline refresh when keyboard is geometrically closed even if an
+           input stays focused (iOS dismiss-without-blur). */
+        if (geomKeyboardOpen || (open && keyboardGap() > adaptiveGapMin())) return;
+        var h = currentVvHeight();
+        var ih = Math.max(0, window.innerHeight || 0);
+        var sh = 0;
+        try {
+          sh = Math.max(0, (window.screen && window.screen.height) || 0);
+        } catch (_) {}
+        var candidate = Math.max(h, ih);
+        /* Prefer larger "closed keyboard" samples; ignore tiny transient dips. */
+        if (!stableViewportH || candidate > stableViewportH + 8) {
+          stableViewportH = candidate;
+        } else if (candidate > stableViewportH * 0.92) {
+          stableViewportH = Math.max(stableViewportH, candidate);
+        }
+        if (!stableViewportH && sh) stableViewportH = sh;
+      } catch (_) {}
+    }
+
+    function adaptiveGapMin() {
+      var base = stableViewportH || currentVvHeight() || window.innerHeight || 640;
+      return Math.max(KEYBOARD_GAP_ABS_MIN, Math.round(base * KEYBOARD_GAP_PCT));
+    }
+
+    function keyboardGap() {
+      try {
+        var vv = window.visualViewport;
+        var vvH = vv && typeof vv.height === "number" ? vv.height : 0;
+        var vvTop = vv && typeof vv.offsetTop === "number" ? vv.offsetTop : 0;
+        var ih = Math.max(0, window.innerHeight || 0);
+        var gapInner = vvH > 0 ? Math.max(0, ih - vvH - vvTop) : 0;
+        var gapStable =
+          vvH > 0 && stableViewportH > 0
+            ? Math.max(0, stableViewportH - vvH - vvTop)
+            : 0;
+        return Math.max(gapInner, gapStable, vkHeight);
+      } catch (_) {
+        return Math.max(0, vkHeight);
+      }
+    }
+
+    function isTouchCoarseMobile() {
+      try {
+        if (mqTablet && !mqTablet.matches) return false;
+        if (mqCoarse && mqCoarse.matches) return true;
+        if (typeof navigator !== "undefined" && navigator.maxTouchPoints > 0) {
+          return !!(mqTablet && mqTablet.matches);
+        }
+        return false;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function layoutShrink() {
+      try {
+        var ih = Math.max(0, window.innerHeight || 0);
+        if (!stableViewportH || !ih) return 0;
+        return Math.max(0, stableViewportH - ih);
+      } catch (_) {
+        return 0;
+      }
+    }
+
+    function isGeomKeyboardOpenNow() {
+      try {
+        if (vkHeight > 40) return true;
+        var min = adaptiveGapMin();
+        if (keyboardGap() > min) return true;
+        /* iOS: layout viewport often shrinks with the keyboard while VV gap ≈ 0. */
+        if (layoutShrink() > min) return true;
+        return false;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function shouldHide() {
+      try {
+        if (mqTablet && !mqTablet.matches) return false;
+
+        var geomNow = isGeomKeyboardOpenNow();
+        if (geomNow) {
+          geomKeyboardOpen = true;
+          /* Hide only while an editable field is involved (gap alone must not hide). */
+          return !!focusEditable;
+        }
+
+        /* Viewport/VK says closed → always restore, even if input still focused. */
+        if (geomKeyboardOpen) {
+          geomKeyboardOpen = false;
+          focusOpenGraceUntil = 0;
+          return false;
+        }
+
+        /* Opening grace: hide briefly after text focus before VV/VK evidence arrives.
+           Must NOT permanently hide for the whole focus lifetime. */
+        if (
+          focusEditable &&
+          focusTextKeyboardLikely &&
+          isTouchCoarseMobile() &&
+          Date.now() < focusOpenGraceUntil
+        ) {
+          return true;
+        }
+        return false;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function clearNavPinTransform() {
       try {
         var nav = document.getElementById("iuMobileBottomNav");
         if (!nav) return;
-        if (!isScopeActive()) {
-          nav.style.removeProperty("transform");
-          nav.style.removeProperty("-webkit-transform");
+        nav.style.removeProperty("transform");
+        nav.style.removeProperty("-webkit-transform");
+        nav.style.removeProperty("display");
+        nav.style.removeProperty("visibility");
+        nav.style.removeProperty("pointer-events");
+      } catch (_) {}
+    }
+
+    function overlayScrollHosts() {
+      var ids = [
+        "iuCustomButtonsScrollHost",
+        "iuInvoiceScrollHost",
+        "iuLegalDocsScrollHost",
+        "iuFinancialCalcScrollHost",
+        "iuMobileGatePanelTools",
+        "iuMobileGatePanelNav",
+        "iuDsBody",
+      ];
+      var out = [];
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (!el) continue;
+        try {
+          var st = getComputedStyle(el);
+          if (st && (st.overflowY === "auto" || st.overflowY === "scroll")) {
+            out.push(el);
+          }
+        } catch (_) {}
+      }
+      try {
+        document.querySelectorAll(".iu-tasksOverlay__scroll, .iu-notesOverlay__scroll, .iu-calendarOverlay__scroll").forEach(function (el) {
+          if (el) out.push(el);
+        });
+      } catch (_) {}
+      return out;
+    }
+
+    function captureScrollSnap() {
+      try {
+        var hosts = overlayScrollHosts();
+        var tops = [];
+        for (var i = 0; i < hosts.length; i++) {
+          tops.push({ el: hosts[i], top: hosts[i].scrollTop || 0 });
+        }
+        scrollSnap = {
+          y: window.scrollY || window.pageYOffset || 0,
+          tops: tops,
+        };
+        userScrolledWhileKb = false;
+      } catch (_) {
+        scrollSnap = null;
+        userScrolledWhileKb = false;
+      }
+    }
+
+    function restoreScrollIfNeeded() {
+      try {
+        if (!scrollSnap || userScrolledWhileKb) {
+          scrollSnap = null;
           return;
         }
-        var vv = window.visualViewport;
-        if (!vv) return;
-        var gap = Math.max(0, (window.innerHeight || 0) - vv.height - (vv.offsetTop || 0));
-        if (gap > 8) {
-          var ty = "translate3d(0," + gap + "px,0)";
-          nav.style.transform = ty;
-          nav.style.webkitTransform = ty;
-        } else {
-          nav.style.removeProperty("transform");
-          nav.style.removeProperty("-webkit-transform");
+        var snap = scrollSnap;
+        scrollSnap = null;
+        var apply = function () {
+          try {
+            window.scrollTo(0, snap.y);
+          } catch (_) {}
+          try {
+            for (var i = 0; i < snap.tops.length; i++) {
+              var item = snap.tops[i];
+              if (item && item.el && item.el.isConnected) {
+                item.el.scrollTop = item.top;
+              }
+            }
+          } catch (_) {}
+        };
+        try {
+          window.requestAnimationFrame(apply);
+        } catch (_) {
+          apply();
+        }
+      } catch (_) {
+        scrollSnap = null;
+      }
+    }
+
+    function markUserScrollWhileKb() {
+      if (open) userScrolledWhileKb = true;
+    }
+
+    function applyOpen(next) {
+      try {
+        if (open === next) {
+          if (next) clearNavPinTransform();
+          return;
+        }
+        var wasOpen = open;
+        open = next;
+        var root = document.documentElement;
+        if (root) {
+          if (next) root.classList.add("iu-keyboard-open");
+          else root.classList.remove("iu-keyboard-open");
+        }
+        var body = document.body;
+        if (body) {
+          if (next) body.classList.add("iu-keyboard-open");
+          else body.classList.remove("iu-keyboard-open");
+        }
+        clearNavPinTransform();
+        if (next && !wasOpen) {
+          captureScrollSnap();
+        }
+        if (!next) {
+          focusOpenGraceUntil = 0;
+          geomKeyboardOpen = false;
+          try {
+            if (graceTimer) {
+              clearTimeout(graceTimer);
+              graceTimer = 0;
+            }
+          } catch (_) {}
+          refreshStableViewport();
+          restoreScrollIfNeeded();
         }
       } catch (_) {}
     }
+
+    function syncHide() {
+      applyOpen(shouldHide());
+    }
+
     var scheduled = 0;
-    function schedulePin() {
+    function scheduleHide() {
       if (scheduled) return;
       scheduled = 1;
       try {
         window.requestAnimationFrame(function () {
           scheduled = 0;
-          syncPin();
+          syncHide();
         });
       } catch (_) {
         scheduled = 0;
-        syncPin();
+        syncHide();
       }
     }
+
+    /** Immediate sync (no debounce) — used when VV/VK proves keyboard closed. */
+    function syncHideNow() {
+      try {
+        if (blurTimer) {
+          clearTimeout(blurTimer);
+          blurTimer = 0;
+        }
+        if (graceTimer) {
+          clearTimeout(graceTimer);
+          graceTimer = 0;
+        }
+      } catch (_) {}
+      syncHide();
+    }
+
+    function readFocusState(el) {
+      focusEditable = isEditableEl(el);
+      focusTextKeyboardLikely = isTextKeyboardLikelyEl(el);
+    }
+
+    function onFocusIn(ev) {
+      try {
+        if (blurTimer) {
+          clearTimeout(blurTimer);
+          blurTimer = 0;
+        }
+        readFocusState(ev && ev.target);
+        if (focusEditable && focusTextKeyboardLikely && isTouchCoarseMobile()) {
+          focusOpenGraceUntil = Date.now() + FOCUS_OPEN_GRACE_MS;
+          try {
+            if (graceTimer) clearTimeout(graceTimer);
+            /* Re-evaluate after opening grace — do not leave nav stuck if VV never arrives. */
+            graceTimer = setTimeout(function () {
+              graceTimer = 0;
+              scheduleHide();
+            }, FOCUS_OPEN_GRACE_MS + 16);
+          } catch (_) {}
+        }
+      } catch (_) {
+        focusEditable = false;
+        focusTextKeyboardLikely = false;
+      }
+      scheduleHide();
+    }
+
+    function onFocusOut() {
+      try {
+        if (blurTimer) clearTimeout(blurTimer);
+        /* Short handoff only: focusout→focusin between fields must not blink nav.
+           Real keyboard close is driven by VV/VK geometry (syncHideNow), not this timer. */
+        blurTimer = setTimeout(function () {
+          blurTimer = 0;
+          try {
+            var ae = document.activeElement;
+            if (ae && ae.isConnected === false) ae = null;
+            readFocusState(ae);
+            if (!focusEditable) focusOpenGraceUntil = 0;
+          } catch (_) {
+            focusEditable = false;
+            focusTextKeyboardLikely = false;
+            focusOpenGraceUntil = 0;
+          }
+          scheduleHide();
+        }, BLUR_HANDOFF_MS);
+      } catch (_) {
+        focusEditable = false;
+        focusTextKeyboardLikely = false;
+        focusOpenGraceUntil = 0;
+        scheduleHide();
+      }
+    }
+
     try {
       var vv0 = window.visualViewport;
       if (vv0 && typeof vv0.addEventListener === "function") {
-        vv0.addEventListener("resize", schedulePin, { passive: true });
-        vv0.addEventListener("scroll", schedulePin, { passive: true });
+        vv0.addEventListener(
+          "resize",
+          function () {
+            var geomNow = isGeomKeyboardOpenNow();
+            if (geomNow) {
+              geomKeyboardOpen = true;
+              focusOpenGraceUntil = 0;
+            } else if (geomKeyboardOpen || open) {
+              /* Keyboard closed (possibly while input still focused) → restore now. */
+              geomKeyboardOpen = false;
+              focusOpenGraceUntil = 0;
+              refreshStableViewport();
+              syncHideNow();
+              return;
+            } else {
+              refreshStableViewport();
+            }
+            scheduleHide();
+          },
+          { passive: true }
+        );
+        vv0.addEventListener("scroll", scheduleHide, { passive: true });
       }
     } catch (_) {}
     try {
-      window.addEventListener("resize", schedulePin, { passive: true });
-      window.addEventListener("orientationchange", schedulePin, { passive: true });
-      document.addEventListener("focusin", schedulePin, { passive: true });
-      document.addEventListener("focusout", schedulePin, { passive: true });
+      var vk = navigator.virtualKeyboard;
+      if (vk && typeof vk.addEventListener === "function") {
+        try {
+          if ("overlaysContent" in vk) vk.overlaysContent = true;
+        } catch (_) {}
+        vk.addEventListener("geometrychange", function () {
+          try {
+            var rect = vk.boundingRect || {};
+            vkHeight = Math.max(0, Number(rect.height) || 0);
+          } catch (_) {
+            vkHeight = 0;
+          }
+          if (vkHeight > 40) {
+            geomKeyboardOpen = true;
+            focusOpenGraceUntil = 0;
+            scheduleHide();
+          } else if (geomKeyboardOpen || open) {
+            geomKeyboardOpen = false;
+            focusOpenGraceUntil = 0;
+            refreshStableViewport();
+            syncHideNow();
+          } else {
+            scheduleHide();
+          }
+        });
+      }
+    } catch (_) {}
+    try {
+      window.addEventListener(
+        "resize",
+        function () {
+          if (!isGeomKeyboardOpenNow() && (geomKeyboardOpen || open)) {
+            geomKeyboardOpen = false;
+            focusOpenGraceUntil = 0;
+            refreshStableViewport();
+            syncHideNow();
+            return;
+          }
+          refreshStableViewport();
+          scheduleHide();
+        },
+        { passive: true }
+      );
+      window.addEventListener(
+        "orientationchange",
+        function () {
+          stableViewportH = 0;
+          geomKeyboardOpen = false;
+          focusOpenGraceUntil = 0;
+          setTimeout(function () {
+            refreshStableViewport();
+            syncHideNow();
+          }, 280);
+        },
+        { passive: true }
+      );
+      document.addEventListener("focusin", onFocusIn, true);
+      document.addEventListener("focusout", onFocusOut, true);
+      document.addEventListener("touchmove", markUserScrollWhileKb, { passive: true, capture: true });
+      document.addEventListener("wheel", markUserScrollWhileKb, { passive: true, capture: true });
+      document.addEventListener(
+        "visibilitychange",
+        function () {
+          try {
+            if (!document.hidden) {
+              readFocusState(document.activeElement);
+              refreshStableViewport();
+              scheduleHide();
+            } else {
+              scheduleHide();
+            }
+          } catch (_) {}
+        },
+        { passive: true }
+      );
+      window.addEventListener(
+        "pageshow",
+        function () {
+          try {
+            readFocusState(document.activeElement);
+            refreshStableViewport();
+            scheduleHide();
+          } catch (_) {}
+        },
+        { passive: true }
+      );
+      window.addEventListener(
+        "pagehide",
+        function () {
+          try {
+            applyOpen(false);
+          } catch (_) {}
+        },
+        { passive: true }
+      );
     } catch (_) {}
     try {
       if (mqTablet && typeof mqTablet.addEventListener === "function") {
-        mqTablet.addEventListener("change", schedulePin);
+        mqTablet.addEventListener("change", function () {
+          if (mqTablet && !mqTablet.matches) applyOpen(false);
+          else scheduleHide();
+        });
       }
     } catch (_) {}
     try {
-      var mo = new MutationObserver(schedulePin);
-      mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-      var qf0 = document.getElementById("iuQuickFeed");
-      if (qf0) {
-        mo.observe(qf0, { attributes: true, attributeFilter: ["class", "hidden"] });
-      }
-      var dsPanel = document.getElementById("iuDsPanel");
-      if (dsPanel) {
-        mo.observe(dsPanel, { attributes: true, attributeFilter: ["data-open", "hidden"] });
+      /* Optional debug: ?iuKbNavDebug=1 — no input values logged. */
+      if (/[?&]iuKbNavDebug=1(?:&|$)/.test(String(location.search || ""))) {
+        window.__iuKbNavDebugDump = function () {
+          try {
+            var nav = document.getElementById("iuMobileBottomNav");
+            var cs = nav ? getComputedStyle(nav) : null;
+            var ae = document.activeElement;
+            return {
+              focusEditable: focusEditable,
+              focusTextKeyboardLikely: focusTextKeyboardLikely,
+              open: open,
+              geomKeyboardOpen: geomKeyboardOpen,
+              focusOpenGraceUntil: focusOpenGraceUntil,
+              graceLeft: Math.max(0, focusOpenGraceUntil - Date.now()),
+              gap: keyboardGap(),
+              gapMin: adaptiveGapMin(),
+              stableViewportH: stableViewportH,
+              vvH: currentVvHeight(),
+              innerH: window.innerHeight || 0,
+              offsetTop:
+                (window.visualViewport && window.visualViewport.offsetTop) || 0,
+              coarse: isTouchCoarseMobile(),
+              mq1024: !!(mqTablet && mqTablet.matches),
+              activeTag: ae ? String(ae.tagName || "") : "",
+              activeType: ae && ae.type ? String(ae.type) : "",
+              classHtml: document.documentElement.classList.contains("iu-keyboard-open"),
+              classBody: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
+              navDisplay: cs ? cs.display : "missing",
+              userScrolledWhileKb: userScrolledWhileKb,
+            };
+          } catch (err) {
+            return { error: String(err && err.message) };
+          }
+        };
       }
     } catch (_) {}
-    schedulePin();
+    try {
+      readFocusState(document.activeElement);
+    } catch (_) {}
+    refreshStableViewport();
+    scheduleHide();
+  }
+
+  /** Alias: dřívější Moje služby pin — nahrazeno systémovým hide. */
+  function iuMojeSluzbyFormBottomNavKeyboardPinInit() {
+    iuMobileBottomNavKeyboardHideInit();
   }
 
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
@@ -27184,7 +27611,7 @@ function buildVideoAsArticleCard(it) {
       iuMobileBottomNavInit();
     } catch (_) {}
     try {
-      iuMojeSluzbyFormBottomNavKeyboardPinInit();
+      iuMobileBottomNavKeyboardHideInit();
     } catch (_) {}
     try {
       iuWebNavDetailBackBarHostInstall();
@@ -32124,8 +32551,8 @@ function buildVideoAsArticleCard(it) {
     s.id = "iuDsMobileTabletCss";
     s.textContent =
       "@media (max-width:1024px){" +
-      "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;position:fixed!important;inset:0!important;width:100%!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;box-sizing:border-box!important}" +
-      "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:var(--iu-mobile-bottom-nav-safe-space,var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px)))!important;transform:none!important;display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:calc(100dvh - var(--iu-mobile-bottom-nav-safe-space,var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px))))!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;scroll-padding-bottom:calc(var(--iu-tool-overlay-bottom-gap,15px) + env(safe-area-inset-bottom,0px))!important;z-index:10040!important;border-radius:0!important;box-shadow:none!important}" +
+      "body.iu-modal-open #iuDsOverlay.iu-ds-overlay:not([hidden]){z-index:10039!important;position:fixed!important;inset:auto!important;top:0!important;left:0!important;right:0!important;bottom:var(--iu-tool-overlay-panel-bottom,var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px)))!important;width:100%!important;height:auto!important;max-height:none!important;box-sizing:border-box!important}" +
+      "body.iu-modal-open #iuDsPanel.iu-ds-panel.iuSectionDS[data-open=\"1\"]:not([hidden]){position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:var(--iu-tool-overlay-panel-bottom,var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px)))!important;transform:none!important;display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;padding:0!important;margin:0!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;scroll-padding-bottom:calc(var(--iu-tool-overlay-bottom-gap,15px) + env(safe-area-inset-bottom,0px))!important;z-index:10040!important;border-radius:0!important;box-shadow:none!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-modal{display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelHeader{border-top-left-radius:0!important;border-top-right-radius:0!important}" +
       "#iuDsPanel.iu-ds-panel .iu-ds-panelBody,#iuDsPanel.iu-ds-panel .iu-datovka-scroll-host{overflow:visible!important;min-height:0!important;touch-action:pan-y!important;padding-bottom:calc(var(--iu-tool-overlay-bottom-gap,15px) + env(safe-area-inset-bottom,0px))!important;scroll-padding-bottom:calc(var(--iu-tool-overlay-bottom-gap,15px) + env(safe-area-inset-bottom,0px))!important;box-sizing:border-box!important}" +
@@ -43736,20 +44163,36 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 (function iuBootDeferredSilverP0Engine() {
   "use strict";
   var p = null;
+  var pendingTap = null;
+  var pendingGen = 0;
+  var PREFIX_TEXT = {
+    calendar: "Do kalendáře ",
+    reminder: "Připomeň mi ",
+    notes: "Do poznámek ",
+  };
+
+  function markReady() {
+    try {
+      window.__iuSilverP0EngineReady = 1;
+    } catch (_) {}
+    try {
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (ux) ux.setAttribute("data-iu-silver-p0-ready", "1");
+    } catch (_) {}
+  }
+
   function ensure() {
     try {
       if (window.__iuSilverP0EngineReady) return Promise.resolve();
       if (typeof window.iuSilverCalendarEngine === "object" && window.iuSilverCalendarEngine && typeof window.iuSilverCalendarEngine.processUserTurn === "function") {
-        window.__iuSilverP0EngineReady = 1;
+        markReady();
         return Promise.resolve();
       }
     } catch (_) {}
     if (p) return p;
     p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1a-20260728")
       .then(function () {
-        try {
-          window.__iuSilverP0EngineReady = 1;
-        } catch (_) {}
+        markReady();
       })
       .catch(function (e) {
         p = null;
@@ -43768,11 +44211,92 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     window.iuEnsureSilverP0Engine = ensure;
   } catch (_) {}
 
+  /* IU_SILVER_HOME_PREFIX_FIRST_TAP_HOLD_V1:
+     Preferred: viewport/narrow prefetch so buttons are ready before first tap.
+     Fallback: optimistic prefix apply + single pending finalize (no lost tap, no double fire). */
+  var SILVER_P0_PREFETCH_SEL =
+    "#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend, #iuSilverHomeInputUx, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+  var SILVER_P0_CLICK_HOLD_SEL =
+    "#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend, [data-iu-silver-home-prefix], [data-iu-silver-home-quick-action]";
+
+  function narrowComposer() {
+    try {
+      return window.matchMedia("(max-width: 1024px)").matches;
+    } catch (_) {
+      return (window.innerWidth || 0) <= 1024;
+    }
+  }
+
+  function cancelPendingTap() {
+    pendingGen += 1;
+    pendingTap = null;
+  }
+
+  function applyOptimisticPrefix(key) {
+    var text = PREFIX_TEXT[key];
+    var inp = document.getElementById("iuSilverHomeInput");
+    var wrap = document.querySelector(".iuSilverHomeInputFieldWrap[data-iu-silver-home-input-field]");
+    if (!inp || !text) return false;
+    try {
+      inp.value = text;
+    } catch (_) {}
+    try {
+      if (wrap) {
+        wrap.classList.remove("iuSilverHomeInputFieldWrap--empty");
+        wrap.classList.remove("iuSilverHomeInputFieldWrap--template");
+        wrap.classList.add("iuSilverHomeInputFieldWrap--compose");
+      }
+    } catch (_) {}
+    try {
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (ux) ux.setAttribute("aria-hidden", "true");
+    } catch (_) {}
+    try {
+      inp.focus();
+    } catch (_) {}
+    try {
+      var pos = text.length;
+      inp.setSelectionRange(pos, pos);
+    } catch (_) {}
+    try {
+      window.__iuSilverPrefixOptimisticCount = (window.__iuSilverPrefixOptimisticCount || 0) + 1;
+      window.__iuSilverPrefixOptimisticLast = key;
+    } catch (_) {}
+    return true;
+  }
+
+  function finalizePendingTap(gen) {
+    var pending = pendingTap;
+    if (!pending || pending.gen !== gen) return;
+    pendingTap = null;
+    var el = pending.el;
+    if (!el || !el.isConnected) return;
+    if (pending.kind === "prefix") {
+      /* Optimistic UI already applied; only sync engine-side helpers once. */
+      try {
+        if (typeof window.__iuSilverSyncHomeUxEmptyState === "function") window.__iuSilverSyncHomeUxEmptyState();
+      } catch (_) {}
+      try {
+        if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
+      } catch (_) {}
+      try {
+        window.__iuSilverPrefixFinalizeCount = (window.__iuSilverPrefixFinalizeCount || 0) + 1;
+      } catch (_) {}
+      return;
+    }
+    try {
+      el.removeAttribute("aria-busy");
+    } catch (_) {}
+    try {
+      el.click();
+    } catch (_) {}
+  }
+
   function shouldPrefetch(t) {
     try {
       if (!t || !t.closest) return false;
       /* Narrow: do not prefetch on whole Silver slot (weather/cards) — that pulls 1.55MB during Lighthouse. */
-      if (t.closest("#iuSilverHomeInput, #iuSilverHomeSend, #iuSilverComposerInput, #iuSilverComposerSend, .iuSilverHomeInput, .iuSilverHomeSend")) return true;
+      if (t.closest(SILVER_P0_PREFETCH_SEL)) return true;
       if (t.closest("#iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
       return false;
     } catch (_) {
@@ -43786,28 +44310,104 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
   }
 
+  function maybePrefetchVisibleHomeUx() {
+    try {
+      if (!narrowComposer()) return;
+      if (window.__iuSilverP0EngineReady) return;
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (!ux) return;
+      var st = window.getComputedStyle ? getComputedStyle(ux) : null;
+      if (st && (st.display === "none" || st.visibility === "hidden")) return;
+      var r = ux.getBoundingClientRect ? ux.getBoundingClientRect() : null;
+      if (!r || r.width < 8 || r.height < 8) return;
+      if (r.bottom < 0 || r.top > (window.innerHeight || 0) + 8) return;
+      void ensure();
+    } catch (_) {}
+  }
+
+  function armViewportPrefetch() {
+    try {
+      if (!narrowComposer()) return;
+      maybePrefetchVisibleHomeUx();
+      var ux = document.getElementById("iuSilverHomeInputUx");
+      if (!ux || ux.__iuSilverP0ViewportPrefetch) return;
+      ux.__iuSilverP0ViewportPrefetch = 1;
+      if (typeof IntersectionObserver === "function") {
+        var io = new IntersectionObserver(
+          function (entries) {
+            try {
+              for (var i = 0; i < entries.length; i++) {
+                if (entries[i] && entries[i].isIntersecting) {
+                  void ensure();
+                  break;
+                }
+              }
+            } catch (_) {}
+          },
+          { root: null, threshold: 0.01 }
+        );
+        io.observe(ux);
+      }
+    } catch (_) {}
+  }
+
   try {
     document.addEventListener("pointerdown", onPrefetchEvent, true);
     document.addEventListener("focusin", onPrefetchEvent, true);
   } catch (_) {}
 
-  /* No idle auto-import; no document keydown prefetch (avoids LH TBT from engine parse). */
+  /* Preferred path: prefetch when home UX is visible on mobile/tablet (not whole Silver weather slot). */
+  try {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", armViewportPrefetch);
+    } else {
+      armViewportPrefetch();
+    }
+  } catch (_) {}
+  try {
+    window.addEventListener("pageshow", function () {
+      cancelPendingTap();
+      armViewportPrefetch();
+      maybePrefetchVisibleHomeUx();
+    });
+  } catch (_) {}
+  try {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible") {
+        armViewportPrefetch();
+        maybePrefetchVisibleHomeUx();
+      }
+    });
+  } catch (_) {}
 
-  /* First submit before engine lands: hold the event, load, re-click. */
+  /* Fallback: first interaction before engine lands — optimistic UI + single finalize. */
   try {
     document.addEventListener(
       "click",
       function (e) {
         try {
           if (window.__iuSilverP0EngineReady) return;
-          var t = e.target && e.target.closest ? e.target.closest("#iuSilverHomeSend, #iuSilverComposerSend, .iuSilverHomeSend") : null;
+          var t = e.target && e.target.closest ? e.target.closest(SILVER_P0_CLICK_HOLD_SEL) : null;
           if (!t) return;
           e.preventDefault();
           e.stopImmediatePropagation();
-          ensure().then(function () {
+          var prefixKey = "";
+          try {
+            prefixKey = String(t.getAttribute("data-iu-silver-home-prefix") || "");
+          } catch (_) {}
+          var kind = prefixKey ? "prefix" : "reclick";
+          if (kind === "prefix") {
+            applyOptimisticPrefix(prefixKey);
+          } else {
             try {
-              t.click();
+              t.setAttribute("aria-busy", "true");
             } catch (_) {}
+          }
+          pendingGen += 1;
+          var gen = pendingGen;
+          pendingTap = { el: t, kind: kind, key: prefixKey, gen: gen };
+          ensure().then(function () {
+            finalizePendingTap(gen);
           });
         } catch (_) {}
       },
