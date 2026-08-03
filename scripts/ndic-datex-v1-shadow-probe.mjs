@@ -40,8 +40,10 @@ import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
+/** Single-shot diagnostic timeout (no automatic retries in this probe). */
 const FETCH_TIMEOUT_MS = 45000;
-const MAX_RETRIES = 1;
+
+/** @typedef {'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'} FailureCategory */
 
 function ensureWorkDir() {
   const base =
@@ -66,12 +68,77 @@ function sourceLabel(kind) {
   return kind === "tmc" ? "TMC_SOURCE" : "DATEX_SOURCE";
 }
 
-async function fetchOnce(url, user, pass, accept, label) {
-  assertAllowedPullUrl(url);
+/**
+ * Classify a fetch failure into safe aggregate categories (A–L).
+ * Never returns URL / host / path / credentials from the error.
+ * @param {unknown} err
+ * @param {string} phase
+ * @returns {{ failureCategory: FailureCategory, errorCode: string, errorClass: string, beforeHttpResponse: boolean }}
+ */
+export function classifyNetworkFailure(err, phase) {
+  const name = err && err.name != null ? String(err.name) : "";
+  const codeRaw = err && err.code != null ? err.code : null;
+  const code = codeRaw != null && String(codeRaw) !== "" ? String(codeRaw) : "";
+  const msg = err && err.message != null ? String(err.message) : "";
+  const blob = [name, code, msg].join(" ");
+
+  let failureCategory /** @type {FailureCategory} */ = "L";
+  if (code === "PULL_URL_HOST_DENIED" || code === "PULL_URL_NOT_HTTPS" || code === "PULL_URL_INVALID" || code === "PULL_URL_EMBEDDED_CREDS") {
+    failureCategory = "H";
+  } else if (/ENOTFOUND|EAI_AGAIN|getaddrinfo/i.test(blob)) {
+    failureCategory = "A";
+  } else if (/ECONNREFUSED/i.test(blob)) {
+    failureCategory = "B";
+  } else if (/ECONNRESET/i.test(blob)) {
+    failureCategory = "B";
+  } else if (/CERT_|UNABLE_TO_VERIFY|ERR_TLS|SSL|certificate/i.test(blob)) {
+    failureCategory = "C";
+  } else if (code === "UND_ERR_CONNECT_TIMEOUT" || (phase === "connect_or_headers" && /ConnectTimeout/i.test(blob))) {
+    failureCategory = "D";
+  } else if (code === "UND_ERR_HEADERS_TIMEOUT" || /HeadersTimeout/i.test(blob)) {
+    failureCategory = "E";
+  } else if (code === "UND_ERR_BODY_TIMEOUT" || phase === "response_body") {
+    if (name === "AbortError" || /abort|timeout/i.test(blob)) failureCategory = "F";
+    else failureCategory = "L";
+  } else if (/redirect/i.test(blob) || code === "UND_ERR_RESPONSE_REDIRECT") {
+    failureCategory = "G";
+  } else if (name === "AbortError" || code === "ABORT_ERR" || /aborted|timeout|ETIMEDOUT/i.test(blob)) {
+    // Single AbortController covers connect+headers; do not invent E vs D.
+    failureCategory = phase === "response_body" ? "F" : "D";
+  } else if (/fetch failed/i.test(blob)) {
+    failureCategory = "L";
+  }
+
+  const errorCode = (code || name || "FETCH_ERROR").slice(0, 64);
+  const beforeHttpResponse = phase !== "response_body" && phase !== "http_status";
+  const errorClass =
+    failureCategory === "H" || failureCategory === "G"
+      ? "fatal"
+      : /^(A|B|C|D|E|F|L)$/.test(failureCategory)
+        ? "transient_or_network"
+        : "fatal";
+  return { failureCategory, errorCode, errorClass, beforeHttpResponse };
+}
+
+function isSharedNetworkFailure(res) {
+  if (!res || res.ok) return false;
+  if (res.status > 0) return false;
+  const cat = String(res.failureCategory || "");
+  return ["A", "B", "C", "D", "E", "L"].includes(cat);
+}
+
+/**
+ * Single-shot authenticated GET (no retries). Aggregate-safe diagnostics only.
+ */
+async function fetchOnceNoRetry(url, user, pass, accept, label) {
+  const started = Date.now();
+  let phase = "ssrf_allowlist";
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
-  const token = Buffer.from(`${user}:${pass}`, "utf8").toString("base64");
   try {
+    assertAllowedPullUrl(url);
+    phase = "connect_or_headers";
+    const token = Buffer.from(`${user}:${pass}`, "utf8").toString("base64");
     const res = await fetch(url, {
       method: "GET",
       redirect: "error",
@@ -82,84 +149,104 @@ async function fetchOnce(url, user, pass, accept, label) {
         "User-Agent": "InfoUzel-NDIC-ShadowProbe/1.0 (+https://infouzel.cz/)",
       },
     });
+    phase = "http_status";
+    const status = res.status;
+    const ct = String(res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+    if (status === 401 || status === 403) {
+      return {
+        ok: false,
+        status,
+        contentType: ct || "unknown",
+        bytes: 0,
+        buf: Buffer.alloc(0),
+        label,
+        elapsedMs: Date.now() - started,
+        failurePhase: "http_status",
+        failureCategory: /** @type {FailureCategory} */ ("J"),
+        errorCode: "HTTP_" + status,
+        errorClass: "auth_rejected",
+        beforeHttpResponse: false,
+        redirectCount: 0,
+      };
+    }
+    phase = "response_body";
     const ab = await res.arrayBuffer();
     const buf = Buffer.from(ab);
-    const ct = String(res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+    const maxBytes = 32 * 1024 * 1024;
+    if (buf.length > maxBytes) {
+      return {
+        ok: false,
+        status,
+        contentType: ct || "unknown",
+        bytes: buf.length,
+        buf: Buffer.alloc(0),
+        label,
+        elapsedMs: Date.now() - started,
+        failurePhase: "response_body",
+        failureCategory: /** @type {FailureCategory} */ ("K"),
+        errorCode: "RESPONSE_TOO_LARGE",
+        errorClass: "fatal",
+        beforeHttpResponse: false,
+        redirectCount: 0,
+      };
+    }
+    const httpOk = status >= 200 && status < 300;
     return {
-      ok: res.status >= 200 && res.status < 300,
-      status: res.status,
+      ok: httpOk,
+      status,
       contentType: ct || "unknown",
       bytes: buf.length,
-      buf,
+      buf: httpOk ? buf : Buffer.alloc(0),
       label,
+      elapsedMs: Date.now() - started,
+      failurePhase: httpOk ? null : "http_status",
+      failureCategory: httpOk ? null : /** @type {FailureCategory} */ ("I"),
+      errorCode: httpOk ? null : "HTTP_" + status,
+      errorClass: httpOk ? null : "http_error",
+      beforeHttpResponse: false,
+      redirectCount: 0,
+    };
+  } catch (e) {
+    const meta = classifyNetworkFailure(e, phase);
+    return {
+      ok: false,
+      status: 0,
+      contentType: "error",
+      bytes: 0,
+      buf: Buffer.alloc(0),
+      label,
+      elapsedMs: Date.now() - started,
+      failurePhase: phase,
+      failureCategory: meta.failureCategory,
+      errorCode: meta.errorCode,
+      errorClass: meta.errorClass,
+      beforeHttpResponse: meta.beforeHttpResponse,
+      redirectCount: 0,
     };
   } finally {
     clearTimeout(timer);
   }
 }
 
-function safeFetchErrorMeta(err) {
-  const name = err && err.name != null ? String(err.name) : "";
-  const codeRaw = err && err.code != null ? err.code : null;
-  const code = codeRaw != null && String(codeRaw) !== "" ? String(codeRaw) : "";
-  const msg = err && err.message != null ? String(err.message) : "";
-  // Never include URL / credentials from messages — keep short class tokens only.
-  const transient =
-    name === "AbortError" ||
-    code === "ABORT_ERR" ||
-    code === "UND_ERR_CONNECT_TIMEOUT" ||
-    code === "UND_ERR_HEADERS_TIMEOUT" ||
-    code === "UND_ERR_BODY_TIMEOUT" ||
-    /abort|timeout|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed/i.test(
-      [name, code, msg].join(" ")
-    );
-  const errorCode = code || name || "FETCH_ERROR";
-  return {
-    errorCode: errorCode.slice(0, 64),
-    errorClass: transient ? "transient" : "fatal",
-    transient,
-  };
-}
-
-async function fetchWithOneRetry(url, user, pass, accept, label) {
-  let lastErr = null;
-  for (let i = 0; i <= MAX_RETRIES; i++) {
-    try {
-      return await fetchOnce(url, user, pass, accept, label);
-    } catch (e) {
-      lastErr = e;
-      const meta = safeFetchErrorMeta(e);
-      if (!meta.transient || i === MAX_RETRIES) {
-        return {
-          ok: false,
-          status: 0,
-          contentType: "error",
-          bytes: 0,
-          buf: Buffer.alloc(0),
-          label,
-          errorCode: meta.errorCode,
-          errorClass: meta.errorClass,
-        };
-      }
-    }
-  }
-  const meta = safeFetchErrorMeta(lastErr);
-  return {
-    ok: false,
-    status: 0,
-    contentType: "error",
-    bytes: 0,
-    buf: Buffer.alloc(0),
-    label,
-    errorCode: meta.errorCode,
-    errorClass: meta.errorClass,
-  };
-}
-
 function authAcceptedFromStatus(status) {
   if (!status || status <= 0) return "UNVERIFIED";
   if (status === 401 || status === 403) return false;
   return true;
+}
+
+function attachFetchDiag(target, res) {
+  target.httpStatus = res.status;
+  target.contentType = res.contentType;
+  target.bytes = res.bytes;
+  target.elapsedMs = res.elapsedMs;
+  target.failurePhase = res.failurePhase;
+  target.failureCategory = res.failureCategory;
+  target.errorCode = res.errorCode;
+  target.errorClass = res.errorClass;
+  target.beforeHttpResponse = res.beforeHttpResponse;
+  target.redirectCount = res.redirectCount;
+  target.sourceLabel = res.label;
+  return target;
 }
 
 function looksLikeHtml(buf) {
@@ -527,9 +614,22 @@ export async function runShadowProbe(opts = {}) {
     sources: {
       datex: sourceLabel("datex"),
       tmc: sourceLabel("tmc"),
-      // never include real URL — only redacted form for ops debugging of host
-      datexHostRedacted: config.pullUrl ? redactUrl(config.pullUrl) : null,
-      tmcHostRedacted: config.tmcPullUrl ? redactUrl(config.tmcPullUrl) : null,
+    },
+    tmcSkippedDueToSharedNetworkFailure: false,
+    datexRequestAttempted: false,
+    tmcRequestAttempted: false,
+    preflight: {
+      nodeVersion: process.versions.node,
+      fetchAvailable: typeof fetch === "function",
+      abortControllerAvailable: typeof AbortController === "function",
+      fetchTimeoutMs: FETCH_TIMEOUT_MS,
+      proxyEnvPresentByName: {
+        HTTP_PROXY: Boolean(process.env.HTTP_PROXY || process.env.http_proxy),
+        HTTPS_PROXY: Boolean(process.env.HTTPS_PROXY || process.env.https_proxy),
+        ALL_PROXY: Boolean(process.env.ALL_PROXY || process.env.all_proxy),
+        NO_PROXY: Boolean(process.env.NO_PROXY || process.env.no_proxy),
+      },
+      // values intentionally omitted
     },
   };
 
@@ -546,68 +646,83 @@ export async function runShadowProbe(opts = {}) {
       return report;
     }
 
-    const datexRes = await fetchWithOneRetry(
+    report.datexRequestAttempted = true;
+    const datexRes = await fetchOnceNoRetry(
       config.pullUrl,
       config.pullUser,
       config.pullPass,
       "application/xml, text/xml, application/zip, */*;q=0.1",
       sourceLabel("datex")
     );
-    const datexPath = path.join(workDir, "datex.bin");
-    fs.writeFileSync(datexPath, datexRes.buf);
-    rawPaths.push(datexPath);
-
-    const tmcRes = await fetchWithOneRetry(
-      config.tmcPullUrl,
-      config.tmcPullUser,
-      config.tmcPullPass,
-      "application/zip, application/json, text/plain, */*",
-      sourceLabel("tmc")
-    );
-    const tmcPath = path.join(workDir, "tmc.bin");
-    fs.writeFileSync(tmcPath, tmcRes.buf);
-    rawPaths.push(tmcPath);
 
     let tmcTable = null;
-    if (tmcRes.ok && tmcRes.buf.length) {
-      report.tmc = summarizeTmc(tmcRes.buf, config);
-      report.tmc.httpStatus = tmcRes.status;
-      report.tmc.contentType = tmcRes.contentType;
-      report.tmc.bytes = tmcRes.bytes;
-      if (report.tmc.importerCompatible) {
-        try {
-          tmcTable = parseTmcTableFromDownload(tmcRes.buf, { limits: config.limits });
-        } catch (_) {
-          tmcTable = null;
-        }
-      }
-    } else {
+    let tmcRes = null;
+
+    if (isSharedNetworkFailure(datexRes)) {
+      report.tmcSkippedDueToSharedNetworkFailure = true;
+      report.tmcRequestAttempted = false;
       report.tmc = {
         downloadSuccess: false,
-        authenticationAccepted: authAcceptedFromStatus(tmcRes.status),
+        skipped: true,
+        skipReason: "shared_network_failure",
+        authenticationAccepted: "UNVERIFIED",
         sameCredentialsAsDatex: !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS,
-        httpStatus: tmcRes.status,
-        errorCode: tmcRes.errorCode || null,
-        errorClass: tmcRes.errorClass || null,
         importerCompatible: false,
+        sourceLabel: sourceLabel("tmc"),
       };
+    } else {
+      report.tmcRequestAttempted = true;
+      tmcRes = await fetchOnceNoRetry(
+        config.tmcPullUrl,
+        config.tmcPullUser,
+        config.tmcPullPass,
+        "application/zip, application/json, text/plain, */*",
+        sourceLabel("tmc")
+      );
+      if (tmcRes.ok && tmcRes.buf.length) {
+        const tmcPath = path.join(workDir, "tmc.bin");
+        fs.writeFileSync(tmcPath, tmcRes.buf);
+        rawPaths.push(tmcPath);
+        report.tmc = attachFetchDiag(summarizeTmc(tmcRes.buf, config), tmcRes);
+        report.tmc.authenticationAccepted = authAcceptedFromStatus(tmcRes.status);
+        report.tmc.sameCredentialsAsDatex =
+          !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS;
+        if (report.tmc.importerCompatible) {
+          try {
+            tmcTable = parseTmcTableFromDownload(tmcRes.buf, { limits: config.limits });
+          } catch (_) {
+            tmcTable = null;
+          }
+        }
+      } else {
+        report.tmc = attachFetchDiag(
+          {
+            downloadSuccess: false,
+            authenticationAccepted: authAcceptedFromStatus(tmcRes.status),
+            sameCredentialsAsDatex:
+              !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS,
+            importerCompatible: false,
+          },
+          tmcRes
+        );
+      }
     }
 
     if (datexRes.ok && datexRes.buf.length) {
-      report.datex = summarizeDatex(datexRes.buf, config, tmcTable);
-      report.datex.httpStatus = datexRes.status;
-      report.datex.contentType = datexRes.contentType;
-      report.datex.bytes = datexRes.bytes;
+      const datexPath = path.join(workDir, "datex.bin");
+      fs.writeFileSync(datexPath, datexRes.buf);
+      rawPaths.push(datexPath);
+      report.datex = attachFetchDiag(summarizeDatex(datexRes.buf, config, tmcTable), datexRes);
       report.datex.authenticationAccepted = authAcceptedFromStatus(datexRes.status);
     } else {
-      report.datex = {
-        downloadSuccess: false,
-        authenticationAccepted: authAcceptedFromStatus(datexRes.status),
-        httpStatus: datexRes.status,
-        errorCode: datexRes.errorCode || null,
-        errorClass: datexRes.errorClass || null,
-        parserCompatible: false,
-      };
+      report.datex = attachFetchDiag(
+        {
+          downloadSuccess: false,
+          authenticationAccepted: authAcceptedFromStatus(datexRes.status),
+          parserCompatible: false,
+        },
+        datexRes
+      );
     }
 
     report.mapping = {
@@ -627,7 +742,11 @@ export async function runShadowProbe(opts = {}) {
         report.tmc &&
         report.tmc.downloadSuccess
     );
-    report.reason = report.ok ? "shadow_probe_complete" : "shadow_probe_partial_or_failed";
+    report.reason = report.ok
+      ? "shadow_probe_complete"
+      : report.tmcSkippedDueToSharedNetworkFailure
+        ? "datex_shared_network_failure_tmc_skipped"
+        : "shadow_probe_partial_or_failed";
     report.tmcPublicMeta = tmcTable ? tmcPublicMeta({ active: tmcTable }) : { active: false };
     return report;
   } finally {
@@ -646,6 +765,35 @@ if (isMain) {
   runShadowProbe()
     .then((report) => {
       // Aggregate-only stdout — never raw payloads
+      const datexSafe = report.datex
+        ? {
+            downloadSuccess: report.datex.downloadSuccess,
+            authenticationAccepted: report.datex.authenticationAccepted,
+            responseFormat: report.datex.responseFormat,
+            datexVersion: report.datex.datexVersion,
+            namespace: report.datex.namespace,
+            situationRecords: report.datex.situationRecords,
+            normalized: report.datex.normalized,
+            rejected: report.datex.rejected,
+            categories: report.datex.categories,
+            lifecycle: report.datex.lifecycle,
+            withGeometry: report.datex.withGeometry,
+            withTmcRef: report.datex.withTmcRef,
+            parserCompatible: report.datex.parserCompatible,
+            xxeProtectionVerified: report.datex.xxeProtectionVerified,
+            httpStatus: report.datex.httpStatus,
+            contentType: report.datex.contentType,
+            elapsedMs: report.datex.elapsedMs,
+            failurePhase: report.datex.failurePhase,
+            failureCategory: report.datex.failureCategory,
+            errorCode: report.datex.errorCode,
+            errorClass: report.datex.errorClass,
+            beforeHttpResponse: report.datex.beforeHttpResponse,
+            redirectCount: report.datex.redirectCount,
+            sourceLabel: "DATEX_SOURCE",
+            rawDataExposed: false,
+          }
+        : null;
       const safe = {
         ok: report.ok,
         reason: report.reason,
@@ -653,9 +801,15 @@ if (isMain) {
         startedAt: report.startedAt,
         finishedAt: report.finishedAt,
         secretsPresentByName: report.secretsPresentByName,
-        datex: report.datex,
+        datexRequestAttempted: report.datexRequestAttempted,
+        tmcRequestAttempted: report.tmcRequestAttempted,
+        tmcSkippedDueToSharedNetworkFailure: report.tmcSkippedDueToSharedNetworkFailure,
+        preflight: report.preflight,
+        datex: datexSafe,
         tmc: report.tmc && {
           downloadSuccess: report.tmc.downloadSuccess,
+          skipped: report.tmc.skipped || false,
+          skipReason: report.tmc.skipReason || null,
           authenticationAccepted: report.tmc.authenticationAccepted,
           sameCredentialsAsDatex: report.tmc.sameCredentialsAsDatex,
           responseFormat: report.tmc.responseFormat,
@@ -677,7 +831,15 @@ if (isMain) {
           publicReconstructionPossible: false,
           httpStatus: report.tmc.httpStatus,
           contentType: report.tmc.contentType,
+          elapsedMs: report.tmc.elapsedMs,
+          failurePhase: report.tmc.failurePhase,
+          failureCategory: report.tmc.failureCategory,
+          errorCode: report.tmc.errorCode,
+          errorClass: report.tmc.errorClass,
+          beforeHttpResponse: report.tmc.beforeHttpResponse,
+          redirectCount: report.tmc.redirectCount,
           rejectCode: report.tmc.rejectCode || null,
+          sourceLabel: "TMC_SOURCE",
         },
         mapping: report.mapping,
         lifecycle: report.lifecycle,
@@ -692,12 +854,13 @@ if (isMain) {
       if (!report.ok) process.exitCode = 1;
     })
     .catch((e) => {
+      const code = e && e.code != null ? String(e.code) : "";
       console.log(
         JSON.stringify(
           {
             ok: false,
             reason: "probe_exception",
-            errorCode: String(e && e.code) || "EXCEPTION",
+            errorCode: code || "EXCEPTION",
             // never dump stack with env/url
           },
           null,

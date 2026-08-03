@@ -27,6 +27,7 @@ import {
 import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
 import { situationToFeedItem, situationsToFeedItems, mergeNdicRevisions, isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { createFixtureDiscovery, createAuthenticatedPullDiscovery } from "./ndic-datex-v1/discovery-adapter.mjs";
+import { classifyNetworkFailure } from "./ndic-datex-v1-shadow-probe.mjs";
 import {
   processAndGate,
   tryAcquireLock,
@@ -422,6 +423,9 @@ async function discoveryChecks() {
   ok("shadow_probe_requires_shadow", /mode !== "shadow"/.test(probeSrc), "probe-mode");
   ok("shadow_probe_no_feed_write", !/feed\.json/.test(probeSrc), "probe-no-feed");
   ok("shadow_probe_wipes_workdir", /wipeDir|rmSync/.test(probeSrc), "probe-wipe");
+  ok("shadow_probe_no_fetch_retry", /fetchOnceNoRetry/.test(probeSrc) && !/MAX_RETRIES/.test(probeSrc), "no-retry");
+  ok("shadow_probe_tmc_skip_shared_net", /tmcSkippedDueToSharedNetworkFailure|shared_network_failure/.test(probeSrc), "tmc-skip");
+  ok("shadow_probe_no_host_in_report", !/datexHostRedacted|tmcHostRedacted/.test(probeSrc), "no-host");
   const shadowWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "ndic-datex-v1-shadow-probe.yml"), "utf8");
   ok("shadow_wf_no_schedule", !/schedule:/.test(shadowWf), "no-cron");
   ok("shadow_wf_choice_shadow_only", /options:[\s\S]*-\s*shadow/.test(shadowWf) && !/-\s*active/.test(shadowWf), "choice");
@@ -431,6 +435,25 @@ async function discoveryChecks() {
   ok("update_wf_no_schedule", !/schedule:/.test(updateWf), "update-no-cron");
   ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
   ok("update_wf_commit_active_only", /mode == 'active'/.test(updateWf), "commit-active-only");
+}
+
+// --- shadow probe network classification (no network) ---
+{
+  const dns = classifyNetworkFailure(Object.assign(new Error("getaddrinfo ENOTFOUND"), { code: "ENOTFOUND" }), "connect_or_headers");
+  ok("classify_dns_A", dns.failureCategory === "A", "dns");
+  const refused = classifyNetworkFailure(Object.assign(new Error("connect ECONNREFUSED"), { code: "ECONNREFUSED" }), "connect_or_headers");
+  ok("classify_tcp_B", refused.failureCategory === "B", "refused");
+  const tls = classifyNetworkFailure(Object.assign(new Error("certificate verify failed"), { code: "UNABLE_TO_VERIFY_LEAF_SIGNATURE" }), "connect_or_headers");
+  ok("classify_tls_C", tls.failureCategory === "C", "tls");
+  const abortConnect = classifyNetworkFailure(Object.assign(new Error("This operation was aborted"), { name: "AbortError" }), "connect_or_headers");
+  ok("classify_timeout_D", abortConnect.failureCategory === "D", "abort-connect");
+  const abortBody = classifyNetworkFailure(Object.assign(new Error("This operation was aborted"), { name: "AbortError" }), "response_body");
+  ok("classify_timeout_F", abortBody.failureCategory === "F", "abort-body");
+  const redir = classifyNetworkFailure(new Error("unexpected redirect"), "connect_or_headers");
+  ok("classify_redirect_G", redir.failureCategory === "G", "redirect");
+  const ssrf = classifyNetworkFailure(Object.assign(new Error("host denied"), { code: "PULL_URL_HOST_DENIED" }), "ssrf_allowlist");
+  ok("classify_ssrf_H", ssrf.failureCategory === "H", "ssrf");
+  ok("classify_no_url_leak", !/mobilitydata|https?:\/\//i.test(JSON.stringify(dns)), "no-url");
 }
 
 // --- empty / damaged docs ---
