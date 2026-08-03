@@ -5,7 +5,12 @@ name: Update NDIC DATEX v1
 #   IU_NDIC_TMC_PULL_URL (+ optional TMC user/pass falling back to DATEX),
 #   optional IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID (ops only).
 # Phase-2 note: periodic schedule is intentionally disabled until explicit ops approval.
-# Controlled real shadow diagnostics use workflow "NDIC DATEX v1 shadow probe".
+# Controlled real shadow diagnostics use workflow "NDIC DATEX v1 shadow probe"
+# on the dedicated Czech runner labels (self-hosted+Linux+X64+ndic-cz-egress).
+#
+# This publish-capable workflow MUST stay on ubuntu-latest in this phase
+# (must NOT use self-hosted / ndic-cz-egress) until a separate hardened
+# active-publish contract is approved. Default mode remains off.
 
 on:
   workflow_dispatch:
@@ -36,6 +41,7 @@ env:
 
 jobs:
   sync:
+    # Intentionally GitHub-hosted — do not retarget to ndic-cz-egress here.
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
