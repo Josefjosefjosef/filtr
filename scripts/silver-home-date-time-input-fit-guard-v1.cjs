@@ -765,6 +765,11 @@ async function main() {
 
   function dumpEngine(r) {
     process.stdout.write("--- ENGINE " + r.engine + " ---\n");
+    if (r.skipped) {
+      process.stdout.write("SKIPPED: " + String(r.skipReason || "1") + "\n");
+      process.stdout.write("ENGINE_PASS: " + (r.pass ? "PASS" : "FAIL") + "\n");
+      return;
+    }
     if (r.error) {
       process.stdout.write("ERROR: " + r.error + "\n");
       return;
@@ -785,6 +790,13 @@ async function main() {
       );
     }
     const s = r.scenario;
+    if (!s) {
+      process.stdout.write("SCENARIO: n/a\n");
+      process.stdout.write("DESKTOP: " + (r.desktop && r.desktop.pass ? "UNCHANGED" : "CHANGED") + "\n");
+      process.stdout.write("OVERFLOW_X: " + (r.overflow_x ? "TRUE" : "FALSE") + "\n");
+      process.stdout.write("ENGINE_PASS: " + (r.pass ? "PASS" : "FAIL") + "\n");
+      return;
+    }
     process.stdout.write(
       "SCENARIO pickerCal=" +
         (s.pickerCal.pass ? "PASS" : "FAIL") +
