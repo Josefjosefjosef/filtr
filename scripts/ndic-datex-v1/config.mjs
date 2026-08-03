@@ -7,8 +7,8 @@
  *   IU_NDIC_PULL_USER         — Basic Auth user (subscription-generated)
  *   IU_NDIC_PULL_PASS         — Basic Auth password
  *   IU_NDIC_TMC_PULL_URL      — authenticated TMC v11.0 PULL URL (separate subscription)
- *   IU_NDIC_TMC_PULL_USER     — optional (defaults to IU_NDIC_PULL_USER)
- *   IU_NDIC_TMC_PULL_PASS     — optional (defaults to IU_NDIC_PULL_PASS)
+ *   IU_NDIC_TMC_PULL_USER     — primary TMC Basic Auth user (empty → fallback IU_NDIC_PULL_USER)
+ *   IU_NDIC_TMC_PULL_PASS     — primary TMC Basic Auth password (empty → fallback IU_NDIC_PULL_PASS)
  *   IU_NDIC_SYNC_INTERVAL_MIN — default 5 (DATEX traffic snapshot cadence)
  *
  * MobilityData subscriber id (ops only, never logged to client):
@@ -99,9 +99,19 @@ export function getNdicDatexV1Config(env = process.env) {
   const tmcUrl = String(e.IU_NDIC_TMC_PULL_URL || "").trim();
   const pullUser = String(e.IU_NDIC_PULL_USER || "").trim();
   const pullPass = String(e.IU_NDIC_PULL_PASS || "");
-  // GitHub Actions injects empty string for unset optional secrets — treat "" as missing.
-  const tmcUser = String(e.IU_NDIC_TMC_PULL_USER || pullUser).trim();
-  const tmcPass = String(e.IU_NDIC_TMC_PULL_PASS || pullPass);
+  // Primary: dedicated TMC secrets. Empty string (e.g. unset GHA secret) → DATEX fallback.
+  // Never compare secret values; never log lengths or prefixes.
+  const tmcUserDedicated = String(e.IU_NDIC_TMC_PULL_USER || "").trim();
+  const tmcPassDedicatedPresent =
+    e.IU_NDIC_TMC_PULL_PASS != null && String(e.IU_NDIC_TMC_PULL_PASS) !== "";
+  const tmcPassDedicated = tmcPassDedicatedPresent ? String(e.IU_NDIC_TMC_PULL_PASS) : "";
+  const tmcUsesDedicatedUser = tmcUserDedicated.length > 0;
+  const tmcUsesDedicatedPass = tmcPassDedicatedPresent;
+  const tmcUser = tmcUsesDedicatedUser ? tmcUserDedicated : pullUser;
+  const tmcPass = tmcUsesDedicatedPass ? tmcPassDedicated : pullPass;
+  let tmcAuthSource = "datex_fallback";
+  if (tmcUsesDedicatedUser && tmcUsesDedicatedPass) tmcAuthSource = "dedicated";
+  else if (tmcUsesDedicatedUser || tmcUsesDedicatedPass) tmcAuthSource = "partial_dedicated_with_fallback";
 
   return {
     mode,
@@ -123,6 +133,9 @@ export function getNdicDatexV1Config(env = process.env) {
     tmcPullUrl: tmcUrl,
     tmcPullUser: tmcUser,
     tmcPullPass: tmcPass,
+    tmcAuthSource,
+    tmcAuthContract: tmcAuthSource === "dedicated" ? "DEDICATED" : "FALLBACK_ENABLED",
+    tmcDatexAuthFallbackEnabled: tmcAuthSource !== "dedicated",
     hasPullCredentials: Boolean(pullUrl && pullUser && pullPass),
     hasTmcCredentials: Boolean(tmcUrl && tmcUser && tmcPass),
     userAgent: NDIC_SYNC_UA,

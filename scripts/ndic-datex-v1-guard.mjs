@@ -23,7 +23,12 @@ import {
   buildStoredZip,
   parseTmcTableFromDownload,
   safeUnzipEntries,
+  safeGunzip,
+  unwrapTmcTransportLayers,
+  isGzipMagic,
+  isZipMagic,
 } from "./ndic-datex-v1/tmc-zip.mjs";
+import zlib from "zlib";
 import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
 import { situationToFeedItem, situationsToFeedItems, mergeNdicRevisions, isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { createFixtureDiscovery, createAuthenticatedPullDiscovery } from "./ndic-datex-v1/discovery-adapter.mjs";
@@ -349,19 +354,62 @@ async function discoveryChecks() {
   ok("public_meta_no_lcd_dump", !/"101"/.test(pub) && !/Brno-centrum/.test(pub), pub);
 }
 
-// --- TMC ZIP (fixture) + bomb / path guards ---
+// --- TMC ZIP / GZIP (synthetic fixtures only) + bomb / path guards ---
 {
   const json = read("tmc-table-cc2-ltn25.json");
+  const plain = parseTmcTableFromDownload(Buffer.from(json, "utf8"));
+  ok("tmc_plain_json", validateTmcTable(plain).ok === true, "plain");
+
   const zip = buildStoredZip([{ name: "tmc-table.json", data: json }]);
   const fromZip = parseTmcTableFromDownload(zip);
   ok("tmc_zip_json_roundtrip", validateTmcTable(fromZip).ok === true, "zip-json");
   ok("tmc_zip_points", Object.keys(fromZip.points || {}).length >= 3, String(Object.keys(fromZip.points || {}).length));
 
+  const gzipPlain = zlib.gzipSync(Buffer.from(json, "utf8"));
+  ok("tmc_gzip_magic", isGzipMagic(gzipPlain) === true, "gzip-magic");
+  const fromGzip = parseTmcTableFromDownload(gzipPlain);
+  ok("tmc_gzip_json_roundtrip", validateTmcTable(fromGzip).ok === true, "gzip-json");
+
+  const gzipZip = zlib.gzipSync(zip);
+  const fromGzipZip = parseTmcTableFromDownload(gzipZip);
+  ok("tmc_gzip_containing_zip", validateTmcTable(fromGzipZip).ok === true, "gzip-zip");
+
+  const alreadyDecoded = unwrapTmcTransportLayers(zip, { contentEncoding: "gzip" });
+  ok(
+    "tmc_http_gzip_already_decoded_no_double",
+    alreadyDecoded.skippedDoubleGzip === true && isZipMagic(alreadyDecoded.body),
+    "no-double"
+  );
+  const fromClaimedGzip = parseTmcTableFromDownload(zip, { contentEncoding: "gzip" });
+  ok("tmc_content_encoding_gzip_decoded_body", validateTmcTable(fromClaimedGzip).ok === true, "ce-gzip");
+
+  let corruptGzip = false;
+  try {
+    safeGunzip(Buffer.from([0x1f, 0x8b, 0x00, 0x00, 0xff]));
+  } catch (e) {
+    corruptGzip = e && (e.code === "TMC_GZIP_CORRUPT" || e.code === "TMC_GZIP_BOMB");
+  }
+  ok("tmc_gzip_corrupt_reject", corruptGzip, "gzip-corrupt");
+
+  let corruptZip = false;
+  try {
+    safeUnzipEntries(Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00]));
+  } catch (e) {
+    corruptZip = e && (e.code === "TMC_ZIP_TRUNCATED" || e.code === "TMC_ZIP_NO_ENTRIES" || e.code === "TMC_ZIP_MAGIC");
+  }
+  ok("tmc_zip_corrupt_reject", corruptZip, "zip-corrupt");
+
+  let unknownSig = false;
+  try {
+    parseTmcTableFromDownload(Buffer.from([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07]));
+  } catch (e) {
+    unknownSig = e && e.code === "TMC_UNKNOWN_SIGNATURE";
+  }
+  ok("tmc_unknown_signature_reject", unknownSig, "unknown");
+
   let bomb = false;
   try {
-    // Claim huge uncompressed size vs tiny payload
     const evil = Buffer.from(zip);
-    // local header uncomp size at offset 22
     evil.writeUInt32LE(0x3fffffff, 22);
     safeUnzipEntries(evil);
   } catch (e) {
@@ -377,6 +425,56 @@ async function discoveryChecks() {
     trav = e && e.code === "TMC_ZIP_BAD_PATH";
   }
   ok("tmc_zip_path_traversal_reject", trav, "path");
+
+  let absPath = false;
+  try {
+    safeUnzipEntries(buildStoredZip([{ name: "/abs/evil.json", data: "{}" }]));
+  } catch (e) {
+    absPath = e && e.code === "TMC_ZIP_BAD_PATH";
+  }
+  ok("tmc_zip_absolute_path_reject", absPath, "abs");
+
+  let nested = false;
+  try {
+    const inner = buildStoredZip([{ name: "a.json", data: "{}" }]);
+    safeUnzipEntries(buildStoredZip([{ name: "nested.zip", data: inner }]));
+  } catch (e) {
+    nested = e && e.code === "TMC_ZIP_NESTED";
+  }
+  ok("tmc_zip_nested_archive_reject", nested, "nested");
+
+  let tooMany = false;
+  try {
+    const files = [];
+    for (let i = 0; i < 70; i++) files.push({ name: "f" + i + ".json", data: "{}" });
+    safeUnzipEntries(buildStoredZip(files));
+  } catch (e) {
+    tooMany = e && e.code === "TMC_ZIP_TOO_MANY";
+  }
+  ok("tmc_zip_too_many_entries", tooMany, "too-many");
+
+  let gzipBomb = false;
+  try {
+    // Highly compressible payload exceeding maxGzipOutput when limited tiny
+    const big = Buffer.alloc(256 * 1024, 0);
+    const gz = zlib.gzipSync(big);
+    safeGunzip(gz, { maxOutput: 1024 });
+  } catch (e) {
+    gzipBomb = e && (e.code === "TMC_GZIP_BOMB" || e.code === "TMC_GZIP_CORRUPT");
+  }
+  ok("tmc_gzip_bomb_reject", gzipBomb, "gzip-bomb");
+
+  // Atomic / last-good
+  {
+    const store = emptyTmcStore();
+    const good = parseTmcTablePayload(readJson("tmc-table-cc2-ltn25.json"));
+    activateTmcTable(store, good);
+    const badAct = activateTmcTable(store, { version: "bad", countryCode: 2, tableNumber: 25, points: {} });
+    ok("tmc_incomplete_table_rejected", badAct.ok === false, "incomplete");
+    ok("tmc_last_good_preserved", store.active && store.active.version === good.version, "last-good");
+    const rb = rollbackTmcTable(store);
+    ok("tmc_rollback_api", rb.ok === true || store.lastGood != null || store.active != null, "rollback");
+  }
 }
 
 // --- secret contract names (static; never read secret values) ---
@@ -392,12 +490,7 @@ async function discoveryChecks() {
   for (const n of tmcNames) {
     ok("secret_contract_tmc_" + n, cfgSrc.includes(n) && wfSrc.includes(n), n);
   }
-  ok("secret_contract_tmc_optional_fallback", /IU_NDIC_TMC_PULL_USER \|\| pullUser/.test(cfgSrc), "fallback");
-  ok(
-    "secret_contract_tmc_empty_pass_falls_back",
-    /IU_NDIC_TMC_PULL_PASS \|\| pullPass/.test(cfgSrc),
-    "empty-pass-fallback"
-  );
+  ok("secret_contract_tmc_dedicated_primary", /tmcAuthSource|tmcAuthContract/.test(cfgSrc), "dedicated");
   {
     const fb = getNdicDatexV1Config({
       IU_NDIC_PULL_URL: "https://mobilitydata.rsd.cz/datex",
@@ -410,13 +503,32 @@ async function discoveryChecks() {
     ok(
       "tmc_empty_optional_secrets_use_datex_auth",
       fb.hasTmcCredentials === true &&
+        fb.tmcAuthSource === "datex_fallback" &&
         fb.tmcPullUser === "datex-user" &&
         fb.tmcPullPass === "datex-pass",
       "gha-empty-string"
     );
+    const ded = getNdicDatexV1Config({
+      IU_NDIC_PULL_URL: "https://mobilitydata.rsd.cz/datex",
+      IU_NDIC_PULL_USER: "datex-user",
+      IU_NDIC_PULL_PASS: "datex-pass",
+      IU_NDIC_TMC_PULL_URL: "https://mobilitydata.rsd.cz/tmc",
+      IU_NDIC_TMC_PULL_USER: "tmc-user",
+      IU_NDIC_TMC_PULL_PASS: "tmc-pass",
+    });
+    ok(
+      "tmc_dedicated_auth_preferred",
+      ded.tmcAuthSource === "dedicated" &&
+        ded.tmcAuthContract === "DEDICATED" &&
+        ded.tmcPullUser === "tmc-user" &&
+        ded.tmcPullPass === "tmc-pass" &&
+        ded.tmcDatexAuthFallbackEnabled === false,
+      "dedicated-primary"
+    );
   }
   ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
   ok("prod_sync_uses_zip_parser", /parseTmcTableFromDownload/.test(syncSrc), "zip-parser");
+  ok("prod_sync_passes_content_encoding", /contentEncoding/.test(syncSrc), "content-encoding");
   ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
   ok("shadow_isolated_helper", /isShadowIsolated|IU_NDIC_SHADOW_ISOLATED/.test(syncSrc), "isolated");
   const probeSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1-shadow-probe.mjs"), "utf8");

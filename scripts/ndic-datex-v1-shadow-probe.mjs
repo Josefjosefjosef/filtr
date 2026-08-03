@@ -30,6 +30,9 @@ import {
 import {
   safeUnzipEntries,
   parseTmcTableFromDownload,
+  unwrapTmcTransportLayers,
+  isGzipMagic,
+  isZipMagic,
   DEFAULT_ZIP_LIMITS,
 } from "./ndic-datex-v1/tmc-zip.mjs";
 import {
@@ -422,12 +425,33 @@ function summarizeTmc(buf, config) {
     return out;
   }
 
-  if (looksLikeZip(buf)) {
+  let working = buf;
+  let transportLayers = [];
+  try {
+    const unwrapped = unwrapTmcTransportLayers(buf, { limits: DEFAULT_ZIP_LIMITS });
+    working = unwrapped.body;
+    transportLayers = unwrapped.layers;
+    out.transportLayers = transportLayers;
+    out.skippedDoubleGzip = unwrapped.skippedDoubleGzip === true;
+  } catch (e) {
+    out.importerCompatible = false;
+    out.rejectCode = String(e && e.code) || "TMC_TRANSPORT_REJECT";
+    if (e && (e.code === "TMC_GZIP_BOMB" || e.code === "TMC_GZIP_CORRUPT")) {
+      out.zipBombVerified = true;
+    }
+    return out;
+  }
+
+  if (isGzipMagic(buf) || transportLayers.some((l) => /gzip/i.test(l))) {
+    out.responseFormat = isZipMagic(working) ? "gzip-zip" : "gzip";
+  }
+
+  if (isZipMagic(working) || looksLikeZip(working)) {
     out.zipDetected = true;
-    out.responseFormat = "zip";
+    if (!out.responseFormat || out.responseFormat === "unknown") out.responseFormat = "zip";
     let entries;
     try {
-      entries = safeUnzipEntries(buf, {
+      entries = safeUnzipEntries(working, {
         limits: {
           ...DEFAULT_ZIP_LIMITS,
           maxUncompressedTotal: Math.min(DEFAULT_ZIP_LIMITS.maxUncompressedTotal, config.limits.maxResponseBytes),
@@ -437,7 +461,9 @@ function summarizeTmc(buf, config) {
       out.importerCompatible = false;
       out.rejectCode = String(e && e.code) || "ZIP_REJECT";
       if (e && e.code === "TMC_ZIP_BAD_PATH") out.zipSlipVerified = true;
-      if (e && (e.code === "TMC_ZIP_BOMB" || e.code === "TMC_ZIP_RATIO")) out.zipBombVerified = true;
+      if (e && (e.code === "TMC_ZIP_BOMB" || e.code === "TMC_ZIP_RATIO" || e.code === "TMC_GZIP_BOMB")) {
+        out.zipBombVerified = true;
+      }
       return out;
     }
     out.fileCount = entries.length;
@@ -445,7 +471,6 @@ function summarizeTmc(buf, config) {
     for (const e of entries) {
       const ext = extOf(e.name);
       out.fileExtSummary[ext] = (out.fileExtSummary[ext] || 0) + 1;
-      // Detect binary DAT heuristically without dumping content
       if (ext === "dat" || ext === "bin") {
         const sample = e.data.slice(0, 64);
         const printable = sample.filter((b) => b >= 32 && b < 127).length;
@@ -490,14 +515,13 @@ function summarizeTmc(buf, config) {
         out.rejectCode = "TMC_BINARY_DAT_UNSUPPORTED";
       }
     }
-  } else if (looksLikeXml(buf) || looksLikeHtml(buf)) {
-    out.responseFormat = looksLikeHtml(buf) ? "html" : "xml";
+  } else if (looksLikeXml(working) || looksLikeHtml(working)) {
+    out.responseFormat = looksLikeHtml(working) ? "html" : "xml";
     out.importerCompatible = false;
   } else {
-    // try JSON/text
-    out.responseFormat = "text_or_json";
+    out.responseFormat = out.responseFormat || "text_or_json";
     try {
-      const table = parseTmcTableFromDownload(buf, { limits: config.limits });
+      const table = parseTmcTableFromDownload(working, { limits: config.limits });
       const v = validateTmcTable(table, {
         countryCode: config.tmcCountryCode,
         tableNumber: config.tmcLocationTableNumber,
@@ -666,7 +690,7 @@ export async function runShadowProbe(opts = {}) {
         skipped: true,
         skipReason: "shared_network_failure",
         authenticationAccepted: "UNVERIFIED",
-        sameCredentialsAsDatex: !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS,
+        sameCredentialsAsDatex: config.tmcAuthSource === "datex_fallback",
         importerCompatible: false,
         sourceLabel: sourceLabel("tmc"),
       };
@@ -685,8 +709,7 @@ export async function runShadowProbe(opts = {}) {
         rawPaths.push(tmcPath);
         report.tmc = attachFetchDiag(summarizeTmc(tmcRes.buf, config), tmcRes);
         report.tmc.authenticationAccepted = authAcceptedFromStatus(tmcRes.status);
-        report.tmc.sameCredentialsAsDatex =
-          !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS;
+        report.tmc.sameCredentialsAsDatex = config.tmcAuthSource === "datex_fallback";
         if (report.tmc.importerCompatible) {
           try {
             tmcTable = parseTmcTableFromDownload(tmcRes.buf, { limits: config.limits });
@@ -699,8 +722,7 @@ export async function runShadowProbe(opts = {}) {
           {
             downloadSuccess: false,
             authenticationAccepted: authAcceptedFromStatus(tmcRes.status),
-            sameCredentialsAsDatex:
-              !process.env.IU_NDIC_TMC_PULL_USER && !process.env.IU_NDIC_TMC_PULL_PASS,
+            sameCredentialsAsDatex: config.tmcAuthSource === "datex_fallback",
             importerCompatible: false,
           },
           tmcRes

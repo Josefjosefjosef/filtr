@@ -148,12 +148,21 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
       diagnostics.tmc = { ok: false, reason: "tmc_body_too_large", meta: tmcPublicMeta(tmcStore) };
       return tmcStore;
     }
-    const table = parseTmcTableFromDownload(bodyBuf, { limits: config.limits });
+    const contentEncoding = String(res.headers.get("content-encoding") || "");
+    const table = parseTmcTableFromDownload(bodyBuf, {
+      limits: config.limits,
+      contentEncoding,
+    });
     const act = activateTmcTable(tmcStore, table, {
       countryCode: config.tmcCountryCode,
       tableNumber: config.tmcLocationTableNumber,
     });
-    diagnostics.tmc = { ok: act.ok, reason: act.reason, meta: tmcPublicMeta(tmcStore) };
+    diagnostics.tmc = {
+      ok: act.ok,
+      reason: act.reason,
+      authSource: config.tmcAuthSource,
+      meta: tmcPublicMeta(tmcStore),
+    };
     return tmcStore;
   } catch (e) {
     diagnostics.tmc = {
