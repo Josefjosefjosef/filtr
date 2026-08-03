@@ -25,7 +25,7 @@ const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803";
 const JS_BUST_TOKEN = "kb-hide-v2-20260803";
-const SW_VER = "2026-08-03-date-time-fit-v2";
+const SW_VER = "2026-08-03-chmi-filter-vse-v1";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },

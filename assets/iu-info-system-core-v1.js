@@ -1069,6 +1069,94 @@ function cityNameOf(city) {
   return String(city.name || "").trim();
 }
 
+/**
+ * Single source of truth: selected localities that actually apply to this warning.
+ * Used for BOTH card visibility and title locality text (OR across selections).
+ *
+ * @returns {{
+ *   match: boolean,
+ *   wholeCr: boolean,
+ *   names: string[],
+ *   cities: object[],
+ *   scopedLinks: object[],
+ *   extraAreas: number
+ * }}
+ */
+function resolveWarningLocalityMatch(warning, activeLocationFilter) {
+  const active = parseActiveLocationFilter(activeLocationFilter);
+  const links = warningGeoLinks(warning);
+  const orpSet = warningOrpCodeSet(warning);
+  const hasStructuredGeo = orpSet.size > 0 || links.length > 0;
+
+  if (isWholeCrLocationFilter(active)) {
+    return {
+      match: true,
+      wholeCr: true,
+      names: [],
+      cities: [],
+      scopedLinks: links.slice(),
+      extraAreas: 0,
+    };
+  }
+
+  const matchedCities = [];
+  const seenCity = new Set();
+  for (const city of active.cities || []) {
+    if (!cityMatchesWarning(city, warning, links, orpSet)) continue;
+    const name = cityNameOf(city);
+    const key = foldLocName(name);
+    if (!name || seenCity.has(key)) continue;
+    seenCity.add(key);
+    matchedCities.push(city);
+  }
+
+  const scopedLinks = intersectWarningLinks(links, active);
+  const names = uniqStableNames(matchedCities.map(cityNameOf));
+
+  // Prefer structured geo when CAP links/ORP codes exist — never invent a hit from free text.
+  let match = matchedCities.length > 0;
+  if (!match && (active.okresy.length || active.kraje.length || active.query)) {
+    if (scopedLinks.length) match = true;
+    else if (!hasStructuredGeo) {
+      const textNeedles = [...active.okresy, ...active.kraje, active.query]
+        .filter(Boolean)
+        .map((s) => String(s).toLowerCase());
+      if (textNeedles.length && regionMatches(warning, textNeedles)) match = true;
+    }
+  }
+
+  if (!match && !matchedCities.length && !active.okresy.length && !active.kraje.length && !active.query) {
+    match = false;
+  }
+
+  // Title primary names: selected matching obce first; else primary ORP from scoped links.
+  let titleNames = names.slice();
+  if (!titleNames.length && scopedLinks.length) {
+    const primary = pickPrimaryLocalityName(scopedLinks, active);
+    if (primary) titleNames = [primary];
+  }
+  titleNames = uniqStableNames(titleNames);
+
+  let extra = 0;
+  if (match) {
+    if (matchedCities.length) {
+      const selOrps = uniqueSelectedOrpCodes(matchedCities).length || matchedCities.length;
+      extra = Math.max(0, links.length - selOrps);
+    } else if (scopedLinks.length) {
+      extra = Math.max(0, scopedLinks.length - 1);
+    }
+  }
+
+  return {
+    match,
+    wholeCr: false,
+    names: titleNames,
+    cities: matchedCities,
+    scopedLinks,
+    extraAreas: extra,
+  };
+}
+
 function intersectWarningLinks(links, active) {
   if (isWholeCrLocationFilter(active)) return links.slice();
   const orpFromCities = new Set(uniqueSelectedOrpCodes(active.cities));
@@ -1092,48 +1180,10 @@ function intersectWarningLinks(links, active) {
 
 /**
  * Location filter match for feed cards.
- * City obec → ORP code intersection; never false-positive unmapped villages via text.
+ * Single source of truth shared with title locality text (resolveWarningLocalityMatch).
  */
 function eventMatchesLocationFilter(ev, filter) {
-  const f = filter || {};
-  const active = parseActiveLocationFilter(f);
-  const needles = regionNeedlesFromPrefs(f);
-  if (isWholeCrLocationFilter(active) && !needles.length) return true;
-
-  const links = warningGeoLinks(ev);
-  const orpSet = warningOrpCodeSet(ev);
-  const hasStructuredGeo = orpSet.size > 0 || links.length > 0;
-
-  if (active.cities.length) {
-    for (const city of active.cities) {
-      if (cityMatchesWarning(city, ev, links, orpSet)) return true;
-    }
-  }
-  if (active.okresy.length || active.kraje.length || active.query) {
-    if (links.length && intersectWarningLinks(links, { ...active, cities: [] }).length) return true;
-    const textNeedles = [...active.okresy, ...active.kraje, active.query]
-      .filter(Boolean)
-      .map((s) => String(s).toLowerCase());
-    if (textNeedles.length && regionMatches(ev, textNeedles)) return true;
-  }
-  if (!active.cities.length && needles.length && regionMatches(ev, needles)) return true;
-
-  const mappedCities = active.cities.filter((c) => normalizeOrpCode(c.orpCode));
-  if (mappedCities.length && hasStructuredGeo) {
-    try {
-      const missing = active.cities.filter((c) => !normalizeOrpCode(c.orpCode));
-      for (const c of missing) {
-        console.warn("[IU] obec_without_orp_mapping", {
-          id: c.id || "",
-          name: c.name || "",
-          reason: "missing_orp_code",
-        });
-      }
-    } catch (_) {}
-    return false;
-  }
-  if (needles.length) return regionMatches(ev, needles);
-  return true;
+  return !!resolveWarningLocalityMatch(ev, filter).match;
 }
 
 /** Czech inflection for “N dalších oblastí” (public unit = unique ORP). */
@@ -1196,35 +1246,20 @@ function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
   const region = warning && warning.region ? warning.region : null;
   const globalSummary =
     region && (region.summary || region.name) ? String(region.summary || region.name).trim() : "";
-  const active = parseActiveLocationFilter(activeLocationFilter);
+  const resolved = resolveWarningLocalityMatch(warning, activeLocationFilter);
 
-  if (isWholeCrLocationFilter(active)) return globalSummary;
+  if (resolved.wholeCr) return globalSummary;
+  if (!resolved.match) return "";
 
   const links = warningGeoLinks(warning);
-  if (!links.length) {
-    // Non-CAP or incomplete geo: keep legacy summary (filter already gates visibility).
+  if (!links.length && !resolved.names.length) {
+    // Non-CAP or incomplete geo: keep legacy summary only when the filter already matched.
     return globalSummary;
   }
 
-  const relevantCities = relevantSelectedCities(warning, active);
-  if (relevantCities.length) {
-    // Presentation only: all relevant selected obce in selection order.
-    // Extra count stays global unique-ORP remainder (not recalculated from obec count).
-    const primary = relevantCities.map((c) => cityNameOf(c)).filter(Boolean).join(", ");
-    if (!primary) return "";
-    return formatLocationLabel(primary, Math.max(0, links.length - 1), "legacyMulti");
-  }
-
-  if (active.cities.length && !active.okresy.length && !active.kraje.length && !active.query) {
-    return "";
-  }
-
-  const scoped = intersectWarningLinks(links, active);
-  if (!scoped.length) return "";
-
-  const primary = pickPrimaryLocalityName(scoped, active);
-  if (!primary) return "";
-  return formatLocationLabel(primary, scoped.length - 1, "czech");
+  const names = uniqStableNames(resolved.names || []);
+  if (!names.length) return "";
+  return formatLocationLabel(names.join(", "), resolved.extraAreas || 0, "legacyMulti");
 }
 
 /**
@@ -1493,10 +1528,13 @@ function getEffectiveTimelinePresentation(item, nowMs) {
   if (isFutureWarning) {
     primaryTime = formatPragueTime(publishedMs);
     const parts = chmiValidFromDisplayParts(item);
-    if (parts) {
-      secondaryValidFromLabel = "Platí od";
-      secondaryValidFromDate = parts.date;
-      secondaryValidFromTime = parts.time;
+    if (parts && parts.date) {
+      const timePart = parts.time || "00:00";
+      // Single red sentence for not-yet-active CAP warnings only.
+      secondaryValidFromLabel =
+        "Výstraha ČHMÚ platí od " + parts.date + " " + timePart + " hod.";
+      secondaryValidFromDate = null;
+      secondaryValidFromTime = null;
     }
   } else if (isActiveWarning && hasOfficialValidFrom) {
     // Primary public clock = official onset / Platí od (e.g. 11:25, not CAP sent 11:29).
@@ -1508,12 +1546,7 @@ function getEffectiveTimelinePresentation(item, nowMs) {
       !!publishedMs && Math.abs(publishedMs - validFromMs) >= 60 * 1000;
     if (isRolledActiveWarning) {
       secondaryIssuedLabel = formatChmiSecondaryIssuedLabel(item, publishedMs, true);
-      const parts = chmiValidFromDisplayParts(item);
-      if (parts) {
-        secondaryValidFromLabel = "Platí od";
-        secondaryValidFromDate = parts.date;
-        secondaryValidFromTime = parts.time;
-      }
+      // Active warnings must never show the future-only „Výstraha ČHMÚ platí od … hod.“ line.
     } else if (issuedDiffers) {
       secondaryIssuedLabel = formatChmiSecondaryIssuedLabel(item, publishedMs, false);
     }
@@ -2001,6 +2034,7 @@ const IUInfoSystem = {
   dedupeCluster,
   localitySuggest,
   getFilteredWarningLocationLabel,
+  resolveWarningLocalityMatch,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   eventMatchesLocationFilter,
@@ -2008,6 +2042,7 @@ const IUInfoSystem = {
   normalizeOrpCode,
   warningOrpCodeSet,
   relevantSelectedCities,
+  uniqStableNames,
   MAX_CITY_LOCALITIES,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,
@@ -2071,6 +2106,7 @@ export {
   dedupeCluster,
   localitySuggest,
   getFilteredWarningLocationLabel,
+  resolveWarningLocalityMatch,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   eventMatchesLocationFilter,
@@ -2078,6 +2114,7 @@ export {
   normalizeOrpCode,
   warningOrpCodeSet,
   relevantSelectedCities,
+  uniqStableNames,
   MAX_CITY_LOCALITIES,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,

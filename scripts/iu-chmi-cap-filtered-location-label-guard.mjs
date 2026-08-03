@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -278,7 +278,7 @@ function unitGate(IU) {
     ],
   });
   ok("multi_all_relevant_names", multi.startsWith("Hradec Králové, Brno, Rumburk"), multi);
-  ok("multi_keeps_global_remainder", /a dalších 191 oblastí/.test(multi), multi);
+  ok("multi_remainder_unique_orp", /a dalších 189 oblastí/.test(multi), multi);
 
   const nupaky = IU.getFilteredWarningLocationLabel(warning, {
     localities: [{ name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" }],
@@ -294,6 +294,32 @@ function unitGate(IU) {
   });
   ok("same_orp_both_names", sameOrp.startsWith("Nupaky, Čestlice"), sameOrp);
   ok("same_orp_global_extra", /a dalších 191 oblastí/.test(sameOrp), sameOrp);
+
+  const dupNames = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Praha", level: "mesto", orpCode: "1000" },
+      { name: "Praha", level: "mesto", orpCode: "1000" },
+      { name: "praha", level: "mesto", orpCode: "1000" },
+    ],
+  });
+  ok("title_dedupe_praha", dupNames === "Praha a dalších 191 oblastí" || /^Praha a dalších 191/.test(dupNames), dupNames);
+  ok("title_no_double_praha", !/Praha,\s*Praha/.test(dupNames), dupNames);
+
+  const outsideMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [{ name: "Cheb", level: "mesto", orpCode: "4102" }],
+  });
+  ok("match_fn_outside_false", outsideMatch === false, String(outsideMatch));
+  const insideMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [{ name: "Nupaky", level: "mesto", orpCode: "2122" }],
+  });
+  ok("match_fn_inside_true", insideMatch === true, String(insideMatch));
+  const orMatch = IU.eventMatchesLocationFilter(warning, {
+    localities: [
+      { name: "Cheb", level: "mesto", orpCode: "4102" },
+      { name: "Brno", level: "mesto", orpCode: "6203" },
+    ],
+  });
+  ok("match_fn_or_true", orMatch === true, String(orMatch));
 
   const partial = IU.getFilteredWarningLocationLabel(warning, {
     localities: [

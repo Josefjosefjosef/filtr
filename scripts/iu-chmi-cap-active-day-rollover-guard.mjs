@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "obec-orp-filter-v1-20260802";
+const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -281,9 +281,9 @@ function unitGate(IU) {
   ok("H_before_inactive", h12.isActiveWarning === false, String(h12.isActiveWarning));
   ok("H_before_future", h12.isFutureWarning === true, String(h12.isFutureWarning));
   ok("H_before_not_rolled", h12.isRolledActiveWarning === false, String(h12.isRolledActiveWarning));
-  ok("H_valid_from_label", h12.secondaryValidFromLabel === "Platí od", String(h12.secondaryValidFromLabel));
-  ok("H_valid_from_same_day_date", String(h12.secondaryValidFromDate || "") === "30. 7.", String(h12.secondaryValidFromDate));
-  ok("H_valid_from_same_day_time", h12.secondaryValidFromTime === "14:00", String(h12.secondaryValidFromTime));
+  ok("H_valid_from_label", h12.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 30. 7. 14:00 hod.", String(h12.secondaryValidFromLabel));
+  ok("H_valid_from_same_day_date", h12.secondaryValidFromDate == null, String(h12.secondaryValidFromDate));
+  ok("H_valid_from_same_day_time", h12.secondaryValidFromTime == null, String(h12.secondaryValidFromTime));
   ok("H_after_active", h15.isActiveWarning === true, String(h15.isActiveWarning));
   ok("H_after_not_future", h15.isFutureWarning === false, String(h15.isFutureWarning));
   // ACTIVE primary clock = official validFrom (14:00), not CAP sent (08:00).
@@ -326,10 +326,11 @@ function unitGate(IU) {
   });
   const hn = IU.getEffectiveTimelinePresentation(futureNext, Date.parse("2026-07-30T14:00:00+02:00"));
   ok("H2_future", hn.isFutureWarning === true && hn.isActiveWarning === false, "flags");
-  ok("H2_valid_from_date", /31\.\s*7/.test(String(hn.secondaryValidFromDate || "")), String(hn.secondaryValidFromDate));
-  ok("H2_valid_from_time", hn.secondaryValidFromTime === "12:00", String(hn.secondaryValidFromTime));
+  ok("H2_valid_from_label", hn.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 31. 7. 12:00 hod.", String(hn.secondaryValidFromLabel));
+  ok("H2_valid_from_date", hn.secondaryValidFromDate == null, String(hn.secondaryValidFromDate));
+  ok("H2_valid_from_time", hn.secondaryValidFromTime == null, String(hn.secondaryValidFromTime));
 
-  // H3: future with date-only validFrom — no invented clock time
+  // H3: future with date-only validFrom — default clock to 00:00 hod. in the sentence
   const futureDateOnly = warning({
     id: "ie-chmi-v2-future-date",
     publishedAtSource: "2026-07-30T08:00:00+02:00",
@@ -339,8 +340,9 @@ function unitGate(IU) {
   });
   const hd = IU.getEffectiveTimelinePresentation(futureDateOnly, Date.parse("2026-07-30T12:00:00+02:00"));
   ok("H3_future", hd.isFutureWarning === true, String(hd.isFutureWarning));
-  ok("H3_date", /31\.\s*7/.test(String(hd.secondaryValidFromDate || "")), String(hd.secondaryValidFromDate));
-  ok("H3_no_time", !hd.secondaryValidFromTime, String(hd.secondaryValidFromTime));
+  ok("H3_label", hd.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 31. 7. 00:00 hod.", String(hd.secondaryValidFromLabel));
+  ok("H3_date", hd.secondaryValidFromDate == null, String(hd.secondaryValidFromDate));
+  ok("H3_no_time", hd.secondaryValidFromTime == null, String(hd.secondaryValidFromTime));
 
   // H4: future without reliable validFrom — may stay in feed, no platnost od
   const futureNoVf = warning({
