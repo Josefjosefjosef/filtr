@@ -55,6 +55,22 @@ const TMC_STORE_FILE = path.join(
   process.env.IU_NDIC_TMC_STORE_PATH || path.join(REPO, ".cache", "ndic-datex-v1", "tmc_store.json")
 );
 
+function isShadowIsolated() {
+  return String(process.env.IU_NDIC_SHADOW_ISOLATED || "") === "1";
+}
+
+function statePaths() {
+  if (!isShadowIsolated()) {
+    return { stateFile: STATE_FILE, diagFile: DIAG_FILE, tmcMetaFile: TMC_META_FILE };
+  }
+  const base = process.env.IU_NDIC_SHADOW_WORK_DIR || process.env.RUNNER_TEMP || path.join(REPO, ".cache", "ndic-shadow");
+  return {
+    stateFile: path.join(base, "sync_state.json"),
+    diagFile: path.join(base, "diagnostics.json"),
+    tmcMetaFile: path.join(base, "tmc_meta.json"),
+  };
+}
+
 function readJson(p, fallback) {
   try {
     return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -89,8 +105,8 @@ function assertMonitoringMergeSafe(monitoring) {
   }
 }
 
-function loadState() {
-  return readJson(STATE_FILE, {
+function loadState(stateFile) {
+  return readJson(stateFile || STATE_FILE, {
     sync: createSyncState("ndic://datex-pull"),
     lock: createLockState(),
     lastRun: null,
@@ -152,16 +168,17 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
 export async function runNdicDatexV1Sync(opts = {}) {
   const config = opts.config || getNdicDatexV1Config(process.env);
   const started = new Date().toISOString();
+  const paths = statePaths();
 
   if (config.mode === "off") {
     return { ok: true, skipped: true, reason: "mode_off", mode: "off" };
   }
 
-  const state = opts.state || loadState();
+  const state = opts.state || loadState(paths.stateFile);
   const lockTry = tryAcquireLock(state.lock, { ttlMs: opts.ttlMs || 8 * 60 * 1000 });
   if (!lockTry.ok) {
     state.sync.status = "locked";
-    writeJson(STATE_FILE, state);
+    writeJson(paths.stateFile, state);
     return { ok: false, reason: "locked", mode: config.mode };
   }
 
@@ -202,7 +219,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
       tmcStore = await maybeRefreshTmc(config, tmcStore, diagnostics);
     }
     writeJson(TMC_STORE_FILE, tmcStore);
-    writeJson(TMC_META_FILE, tmcPublicMeta(tmcStore));
+    writeJson(paths.tmcMetaFile, tmcPublicMeta(tmcStore));
 
     const discoveryKind =
       opts.fixtureFiles || process.env.IU_NDIC_DISCOVERY === "fixture"
@@ -220,7 +237,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
     if (discovery.type === "noop") {
       diagnostics.status = "failed";
       diagnostics.error = "credentials_missing";
-      writeJson(DIAG_FILE, diagnostics);
+      writeJson(paths.diagFile, diagnostics);
       return {
         ok: false,
         reason: "credentials_missing",
@@ -251,31 +268,33 @@ export async function runNdicDatexV1Sync(opts = {}) {
     if (cond.action === "not_modified" || cond.action === "hash_unchanged") {
       diagnostics.status = "healthy";
       diagnostics.publish = { publish: false, reason: cond.action };
-      const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
-      if (monitoring.datasetAges) {
-        assertMonitoringMergeSafe(monitoring);
-        monitoring.ndicDatexV1 = {
-          ...(monitoring.ndicDatexV1 || {}),
-          mode: config.mode,
-          lastRunAt: started,
-          lastSuccessAt: state.sync.last_success_at,
-          status: "not_modified",
-          tmc: tmcPublicMeta(tmcStore),
-          activeCount: prevNdic.filter(isPublishableNdicItem).length,
-        };
-        writeJson(path.join(DIR, "monitoring.json"), monitoring);
+      if (!isShadowIsolated()) {
+        const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
+        if (monitoring.datasetAges) {
+          assertMonitoringMergeSafe(monitoring);
+          monitoring.ndicDatexV1 = {
+            ...(monitoring.ndicDatexV1 || {}),
+            mode: config.mode,
+            lastRunAt: started,
+            lastSuccessAt: state.sync.last_success_at,
+            status: "not_modified",
+            tmc: tmcPublicMeta(tmcStore),
+            activeCount: prevNdic.filter(isPublishableNdicItem).length,
+          };
+          writeJson(path.join(DIR, "monitoring.json"), monitoring);
+        }
       }
       state.lastRun = { at: started, action: cond.action };
-      writeJson(STATE_FILE, state);
-      writeJson(DIAG_FILE, diagnostics);
+      writeJson(paths.stateFile, state);
+      writeJson(paths.diagFile, diagnostics);
       return { ok: true, reason: cond.action, mode: config.mode, diagnostics };
     }
 
     if (cond.action !== "process") {
       diagnostics.status = state.sync.status || "failed";
       diagnostics.error = state.sync.last_error || cond.action;
-      writeJson(STATE_FILE, state);
-      writeJson(DIAG_FILE, diagnostics);
+      writeJson(paths.stateFile, state);
+      writeJson(paths.diagFile, diagnostics);
       return { ok: false, reason: cond.action, mode: config.mode, diagnostics };
     }
 
@@ -301,8 +320,8 @@ export async function runNdicDatexV1Sync(opts = {}) {
       diagnostics.status = "quarantined";
       diagnostics.error = "publish_gate:" + result.gate.reason;
       // Fail-closed: do not publish
-      writeJson(STATE_FILE, state);
-      writeJson(DIAG_FILE, diagnostics);
+      writeJson(paths.stateFile, state);
+      writeJson(paths.diagFile, diagnostics);
       return { ok: false, reason: "publish_gate", mode: config.mode, diagnostics };
     }
 
@@ -331,7 +350,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
       alarms: sanity.alarms,
     };
 
-    if (decision.publish && candidateItems) {
+    if (decision.publish && candidateItems && !isShadowIsolated()) {
       const nextFeed = {
         ...prevFeed,
         generatedAt: started,
@@ -347,17 +366,23 @@ export async function runNdicDatexV1Sync(opts = {}) {
         const merged = others.concat(feedItems);
         writeJson(lanePath, { ...lane, generatedAt: started, itemCount: merged.length, items: merged });
       }
-    } else if (shouldRunShadow(config) || config.mode === "shadow") {
+    } else if ((shouldRunShadow(config) || config.mode === "shadow") && process.env.IU_NDIC_SHADOW_ISOLATED !== "1") {
+      /* Non-isolated legacy shadow dump — still not published; never commit this path in CI. */
       writeJson(path.join(STATE_DIR, "shadow_feed.json"), {
         generatedAt: started,
         mode: "shadow",
-        items: feedItems,
+        itemCount: feedItems.length,
         stats: result.stats,
+        /* omit full items when isolated; keep count-only for safety in future */
+        items: feedItems,
       });
+    } else if (config.mode === "shadow" && process.env.IU_NDIC_SHADOW_ISOLATED === "1") {
+      diagnostics.shadowIsolated = true;
+      diagnostics.shadowItemCount = feedItems.length;
     }
 
     const monitoring = readJson(path.join(DIR, "monitoring.json"), {});
-    if (monitoring.datasetAges) {
+    if (monitoring.datasetAges && process.env.IU_NDIC_SHADOW_ISOLATED !== "1") {
       assertMonitoringMergeSafe(monitoring);
       monitoring.ndicDatexV1 = {
         mode: config.mode,
@@ -380,8 +405,8 @@ export async function runNdicDatexV1Sync(opts = {}) {
     }
 
     state.lastRun = { at: started, action: decision.publish ? "published" : decision.reason };
-    writeJson(STATE_FILE, state);
-    writeJson(DIAG_FILE, diagnostics);
+    writeJson(paths.stateFile, state);
+    writeJson(paths.diagFile, diagnostics);
     return {
       ok: true,
       mode: config.mode,
@@ -393,12 +418,12 @@ export async function runNdicDatexV1Sync(opts = {}) {
     diagnostics.status = "failed";
     diagnostics.error = String(e && e.code) || String(e && e.message) || "error";
     state.sync.consecutive_errors = (state.sync.consecutive_errors || 0) + 1;
-    writeJson(STATE_FILE, state);
-    writeJson(DIAG_FILE, diagnostics);
+    writeJson(paths.stateFile, state);
+    writeJson(paths.diagFile, diagnostics);
     return { ok: false, reason: diagnostics.error, mode: config.mode, diagnostics };
   } finally {
     releaseLock(state.lock, lockTry.runId);
-    writeJson(STATE_FILE, state);
+    writeJson(paths.stateFile, state);
   }
 }
 

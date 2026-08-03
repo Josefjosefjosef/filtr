@@ -395,6 +395,20 @@ async function discoveryChecks() {
   ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
   ok("prod_sync_uses_zip_parser", /parseTmcTableFromDownload/.test(syncSrc), "zip-parser");
   ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
+  ok("shadow_isolated_helper", /isShadowIsolated|IU_NDIC_SHADOW_ISOLATED/.test(syncSrc), "isolated");
+  const probeSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1-shadow-probe.mjs"), "utf8");
+  ok("shadow_probe_requires_shadow", /mode !== "shadow"/.test(probeSrc), "probe-mode");
+  ok("shadow_probe_no_feed_write", !/feed\.json/.test(probeSrc), "probe-no-feed");
+  ok("shadow_probe_wipes_workdir", /wipeDir|rmSync/.test(probeSrc), "probe-wipe");
+  const shadowWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "ndic-datex-v1-shadow-probe.yml"), "utf8");
+  ok("shadow_wf_no_schedule", !/schedule:/.test(shadowWf), "no-cron");
+  ok("shadow_wf_choice_shadow_only", /options:[\s\S]*-\s*shadow/.test(shadowWf) && !/-\s*active/.test(shadowWf), "choice");
+  ok("shadow_wf_retention_1d", /retention-days:\s*1/.test(shadowWf), "retention");
+  ok("shadow_wf_contents_read", /contents:\s*read/.test(shadowWf), "perms");
+  const updateWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "update-ndic-datex-v1.yml"), "utf8");
+  ok("update_wf_no_schedule", !/schedule:/.test(updateWf), "update-no-cron");
+  ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
+  ok("update_wf_commit_active_only", /mode == 'active'/.test(updateWf), "commit-active-only");
 }
 
 // --- empty / damaged docs ---
