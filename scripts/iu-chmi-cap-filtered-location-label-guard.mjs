@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
+const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -220,11 +220,11 @@ function unitGate(IU) {
     localities: [{ name: "Středočeský kraj", level: "kraj" }],
     homeKraj: "Středočeský kraj",
   });
-  ok("kraj_not_global_191", !/191/.test(stc), stc);
-  const stcExtra = (stc.match(/(\d+)/) || [])[1];
-  // Středočeský sample links: Benešov, Kladno, Beroun, Vlašim, Votice, Říčany, Černošice = 7 → extra 6
-  ok("kraj_extra_in_kraj", Number(stcExtra) === 6, stc);
-  ok("kraj_primary_in_stc", /Benešov|Beroun|Kladno|Vlašim|Votice|Říčany|Černošice/.test(stc), stc);
+  // Title must use the user-selected kraj name (never a CAP ORP fallback like Benešov).
+  ok("kraj_uses_selected_name", stc.startsWith("Středočeský kraj"), stc);
+  ok("kraj_no_orp_fallback", !/Benešov|Beroun|Kladno|Vlašim|Votice|Říčany|Černošice/.test(stc), stc);
+  // 7 Středočeský ORPs represented → remaining unique ORPs in warning = 192 - 7 = 185
+  ok("kraj_extra_unique_orp", /a dalších 185 oblastí/.test(stc), stc);
   ok("kraj_no_zero", !/dalších 0/.test(stc) && !/další 0/.test(stc), stc);
 
   const okres = IU.getFilteredWarningLocationLabel(warning, {
@@ -232,7 +232,8 @@ function unitGate(IU) {
     homeOkres: "Benešov",
   });
   ok("okres_starts_benesov", okres.startsWith("Benešov"), okres);
-  ok("okres_extra_2", /a 2 další oblasti/.test(okres), okres);
+  // Benešov okres: Benešov + Vlašim + Votice = 3 ORPs → 192 - 3 = 189
+  ok("okres_extra_unique_orp", /a dalších 189 oblastí/.test(okres), okres);
 
   const praha = IU.getFilteredWarningLocationLabel(warning, {
     localities: [{ name: "Praha", level: "mesto" }],
@@ -268,7 +269,17 @@ function unitGate(IU) {
   const one = IU.getFilteredWarningLocationLabel(single, {
     localities: [{ name: "Středočeský kraj", level: "kraj" }],
   });
-  ok("single_no_extra", one === "Kladno", one);
+  ok("single_no_extra", one === "Středočeský kraj", one);
+
+  const prahaNupaky = IU.getFilteredWarningLocationLabel(warning, {
+    localities: [
+      { name: "Hlavní město Praha", level: "kraj" },
+      { name: "Nupaky", level: "mesto", id: "564907", orpCode: "2122" },
+    ],
+  });
+  ok("combo_praha_nupaky_both", prahaNupaky.startsWith("Praha, Nupaky"), prahaNupaky);
+  ok("combo_praha_nupaky_extra", /a dalších 190 oblastí/.test(prahaNupaky), prahaNupaky);
+  ok("combo_no_horsovsky", !/Horšovský Týn/.test(prahaNupaky), prahaNupaky);
 
   const multi = IU.getFilteredWarningLocationLabel(warning, {
     localities: [

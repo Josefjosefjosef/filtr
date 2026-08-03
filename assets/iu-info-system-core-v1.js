@@ -1069,9 +1069,148 @@ function cityNameOf(city) {
   return String(city.name || "").trim();
 }
 
+/** Short public labels for kraj checkbox names (title only). */
+const KRAJ_TITLE_DISPLAY = {
+  "hlavni mesto praha": "Praha",
+};
+
+function displayNameForSelectedLocation(type, name) {
+  const raw = String(name || "").trim();
+  if (!raw) return "";
+  if (type === "kraj") {
+    const short = KRAJ_TITLE_DISPLAY[foldLocName(raw)];
+    if (short) return short;
+  }
+  return raw;
+}
+
+function locationFilterDiagEnabled() {
+  try {
+    if (typeof process !== "undefined" && process && process.env) {
+      if (process.env.IU_CHMI_LOC_DIAG === "1") return true;
+      if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") return true;
+    }
+  } catch (_) {}
+  try {
+    const host = String((typeof location !== "undefined" && location && location.hostname) || "");
+    if (host === "localhost" || host === "127.0.0.1") return true;
+  } catch (_) {}
+  return false;
+}
+
+/**
+ * Ordered unified user selections (kraje + okresy + obce) from the same prefs source.
+ * Preserves localities[] order; legacy home* fields append only when missing.
+ */
+function listSelectedLocationEntries(filter) {
+  const f = filter || {};
+  const out = [];
+  const seen = new Set();
+  let cityCount = 0;
+  const push = (type, raw) => {
+    const name = String(typeof raw === "string" ? raw : (raw && raw.name) || "").trim();
+    if (!name) return;
+    const id = String((raw && typeof raw === "object" && (raw.id || raw.obecId)) || "").trim();
+    const key = type + ":" + (id || foldLocName(name));
+    if (seen.has(key)) return;
+    if (type === "city") {
+      if (cityCount >= MAX_CITY_LOCALITIES) return;
+      cityCount += 1;
+    }
+    seen.add(key);
+    const entry = {
+      type,
+      name,
+      displayName: displayNameForSelectedLocation(type, name),
+      selectionOrder: out.length,
+    };
+    if (id) entry.id = id;
+    const orpCode = normalizeOrpCode(raw && typeof raw === "object" ? raw.orpCode || raw.orp || "" : "");
+    if (orpCode) entry.orpCode = orpCode;
+    out.push(entry);
+  };
+
+  for (const loc of f.localities || []) {
+    if (!loc) continue;
+    if (typeof loc === "string") {
+      push("city", loc);
+      continue;
+    }
+    const level = String(loc.level || "mesto").toLowerCase();
+    if (level === "kraj") push("kraj", loc);
+    else if (level === "okres") push("okres", loc);
+    else push("city", loc);
+  }
+  if (f.homeKraj) push("kraj", String(f.homeKraj));
+  if (f.homeOkres) push("okres", String(f.homeOkres));
+  if (f.homeObec) push("city", String(f.homeObec));
+  return out;
+}
+
+/** Stable ORP identity for remainder math (code preferred; name fallback when CAP omits code). */
+function linkOrpIdentity(link) {
+  if (!link) return "";
+  const c = normalizeOrpCode(link.orpCode || link.orpId || "");
+  if (c) return c;
+  const nameKey = foldLocName(link.orpName);
+  return nameKey ? "name:" + nameKey : "";
+}
+
+/** ORP identities inside this warning represented by one user selection. */
+function selectionRepresentedOrpCodes(selection, links, orpSet) {
+  const out = new Set();
+  if (!selection) return out;
+  if (selection.type === "city") {
+    const code = normalizeOrpCode(selection.orpCode);
+    if (code) {
+      if (orpSet.has(code)) out.add(code);
+      return out;
+    }
+    const name = String(selection.name || "").trim();
+    if (!name) return out;
+    for (const link of links || []) {
+      if (!locNamesEqual(link && link.orpName, name)) continue;
+      const id = linkOrpIdentity(link);
+      if (id) out.add(id);
+    }
+    return out;
+  }
+  if (selection.type === "okres") {
+    for (const link of links || []) {
+      if (!link) continue;
+      if (!(locNamesEqual(link.okresName, selection.name) || locNamesEqual(link.orpName, selection.name))) continue;
+      const id = linkOrpIdentity(link);
+      if (id) out.add(id);
+    }
+    return out;
+  }
+  if (selection.type === "kraj") {
+    for (const link of links || []) {
+      if (!link) continue;
+      if (!locNamesEqual(link.krajName, selection.name)) continue;
+      const id = linkOrpIdentity(link);
+      if (id) out.add(id);
+    }
+    return out;
+  }
+  return out;
+}
+
+function warningUniqueOrpCount(orpSet, links) {
+  const ids = new Set();
+  for (const link of links || []) {
+    const id = linkOrpIdentity(link);
+    if (id) ids.add(id);
+  }
+  if (ids.size) return ids.size;
+  if (orpSet && orpSet.size) return orpSet.size;
+  return 0;
+}
+
 /**
  * Single source of truth: selected localities that actually apply to this warning.
  * Used for BOTH card visibility and title locality text (OR across selections).
+ * Filtered titles may only use current user selection display names (never CAP ORP fallback).
  *
  * @returns {{
  *   match: boolean,
@@ -1079,7 +1218,8 @@ function cityNameOf(city) {
  *   names: string[],
  *   cities: object[],
  *   scopedLinks: object[],
- *   extraAreas: number
+ *   extraAreas: number,
+ *   matchingSelections: object[]
  * }}
  */
 function resolveWarningLocalityMatch(warning, activeLocationFilter) {
@@ -1087,6 +1227,7 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
   const links = warningGeoLinks(warning);
   const orpSet = warningOrpCodeSet(warning);
   const hasStructuredGeo = orpSet.size > 0 || links.length > 0;
+  const selections = listSelectedLocationEntries(activeLocationFilter);
 
   if (isWholeCrLocationFilter(active)) {
     return {
@@ -1096,56 +1237,73 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
       cities: [],
       scopedLinks: links.slice(),
       extraAreas: 0,
+      matchingSelections: [],
     };
   }
 
-  const matchedCities = [];
-  const seenCity = new Set();
-  for (const city of active.cities || []) {
-    if (!cityMatchesWarning(city, warning, links, orpSet)) continue;
-    const name = cityNameOf(city);
-    const key = foldLocName(name);
-    if (!name || seenCity.has(key)) continue;
-    seenCity.add(key);
-    matchedCities.push(city);
+  const matchingSelections = [];
+  const representedOrps = new Set();
+  for (const sel of selections) {
+    const orps = selectionRepresentedOrpCodes(sel, links, orpSet);
+    if (!orps.size) continue;
+    matchingSelections.push(sel);
+    for (const code of orps) representedOrps.add(code);
   }
 
   const scopedLinks = intersectWarningLinks(links, active);
-  const names = uniqStableNames(matchedCities.map(cityNameOf));
 
-  // Prefer structured geo when CAP links/ORP codes exist — never invent a hit from free text.
-  let match = matchedCities.length > 0;
-  if (!match && (active.okresy.length || active.kraje.length || active.query)) {
-    if (scopedLinks.length) match = true;
-    else if (!hasStructuredGeo) {
-      const textNeedles = [...active.okresy, ...active.kraje, active.query]
-        .filter(Boolean)
-        .map((s) => String(s).toLowerCase());
-      if (textNeedles.length && regionMatches(warning, textNeedles)) match = true;
+  let queryMatched = false;
+  if (!matchingSelections.length && active.query) {
+    if (scopedLinks.length) {
+      queryMatched = true;
+      for (const link of scopedLinks) {
+        const c = normalizeOrpCode((link && (link.orpCode || link.orpId)) || "");
+        if (c) representedOrps.add(c);
+      }
+    } else if (!hasStructuredGeo && regionMatches(warning, [String(active.query).toLowerCase()])) {
+      queryMatched = true;
     }
   }
 
-  if (!match && !matchedCities.length && !active.okresy.length && !active.kraje.length && !active.query) {
+  // Structured geo missing: allow kraj/okres text hit, but title still uses user selection names only.
+  if (!matchingSelections.length && !queryMatched && !hasStructuredGeo) {
+    const textNeedles = [...active.okresy, ...active.kraje].filter(Boolean).map((s) => String(s).toLowerCase());
+    if (textNeedles.length && regionMatches(warning, textNeedles)) {
+      for (const sel of selections) {
+        if (sel.type !== "kraj" && sel.type !== "okres") continue;
+        if (regionMatches(warning, [String(sel.name).toLowerCase()])) matchingSelections.push(sel);
+      }
+    }
+  }
+
+  let match = matchingSelections.length > 0 || queryMatched;
+  const titleNames = uniqStableNames(
+    matchingSelections.map((s) => s.displayName).concat(queryMatched && active.query ? [active.query] : [])
+  );
+
+  if (match && !titleNames.length) {
+    if (locationFilterDiagEnabled()) {
+      try {
+        console.error("CHMU location filter inconsistency", {
+          warningId: warning && warning.id ? String(warning.id) : "",
+          selectedLocationIds: selections.map((s) => s.type + ":" + (s.id || s.name)),
+          warningOrpIds: Array.from(orpSet),
+        });
+      } catch (_) {}
+    }
     match = false;
   }
 
-  // Title primary names: selected matching obce first; else primary ORP from scoped links.
-  let titleNames = names.slice();
-  if (!titleNames.length && scopedLinks.length) {
-    const primary = pickPrimaryLocalityName(scopedLinks, active);
-    if (primary) titleNames = [primary];
-  }
-  titleNames = uniqStableNames(titleNames);
-
-  let extra = 0;
-  if (match) {
-    if (matchedCities.length) {
-      const selOrps = uniqueSelectedOrpCodes(matchedCities).length || matchedCities.length;
-      extra = Math.max(0, links.length - selOrps);
-    } else if (scopedLinks.length) {
-      extra = Math.max(0, scopedLinks.length - 1);
-    }
-  }
+  const warningOrps = warningUniqueOrpCount(orpSet, links);
+  const extra = match ? Math.max(0, warningOrps - representedOrps.size) : 0;
+  const matchedCities = matchingSelections
+    .filter((s) => s.type === "city")
+    .map((s) => {
+      const entry = { name: s.name };
+      if (s.id) entry.id = s.id;
+      if (s.orpCode) entry.orpCode = s.orpCode;
+      return entry;
+    });
 
   return {
     match,
@@ -1154,6 +1312,7 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
     cities: matchedCities,
     scopedLinks,
     extraAreas: extra,
+    matchingSelections,
   };
 }
 
@@ -1195,6 +1354,14 @@ function formatExtraAreasPhrase(extra) {
   return "a dalších " + n + " oblastí";
 }
 
+function formatSelectedLocationNames(names) {
+  const list = uniqStableNames(names);
+  if (!list.length) return "";
+  if (list.length === 1) return list[0];
+  if (list.length === 2) return list[0] + " a " + list[1];
+  return list.slice(0, -1).join(", ") + " a " + list[list.length - 1];
+}
+
 function formatLocationLabel(primary, extra, style) {
   const name = String(primary || "").trim();
   if (!name) return "";
@@ -1205,38 +1372,19 @@ function formatLocationLabel(primary, extra, style) {
   return name + " " + formatExtraAreasPhrase(n);
 }
 
-function pickPrimaryLocalityName(links, active) {
-  const sorted = sortLinksByOrpName(links);
-  if (!sorted.length) return "";
-
-  for (const city of active.cities || []) {
-    const name = cityNameOf(city);
-    const hit = sorted.find((l) => locNamesEqual(l.orpName, name));
-    if (hit) return name;
-  }
-  for (const okres of active.okresy || []) {
-    const center = sorted.find((l) => locNamesEqual(l.okresName, okres) && locNamesEqual(l.orpName, okres));
-    if (center) return String(center.orpName || okres);
-    const any = sorted.find((l) => locNamesEqual(l.okresName, okres));
-    if (any) return String(any.orpName || okres);
-  }
-  for (const kraj of active.kraje || []) {
-    const inKraj = sorted.filter((l) => locNamesEqual(l.krajName, kraj));
-    if (inKraj.length) return String(inKraj[0].orpName || kraj);
-  }
-  if (active.query) {
-    const qHit = sorted.find((l) => linkMatchesNeedle(l, active.query));
-    if (qHit) {
-      if (locNamesEqual(qHit.orpName, active.query)) return String(qHit.orpName);
-      return String(qHit.orpName || active.query);
-    }
-  }
-  return String(sorted[0].orpName || "");
+function formatLocationLabelFromNames(names, extra) {
+  const list = uniqStableNames(names);
+  if (!list.length) return "";
+  const n = Number(extra) || 0;
+  if (n <= 0) return formatSelectedLocationNames(list);
+  // With remainder phrase, join selected names by commas; "a" belongs to “a dalších…”.
+  return list.join(", ") + " " + formatExtraAreasPhrase(n);
 }
 
 /**
  * Display-only geographic label for a CAP warning card, derived from warning + active filter.
  * Never mutates the warning object. Empty string ⇒ no locality text (caller may hide meta pill).
+ * Active filter: only current user selection names (never CAP/source ORP fallback).
  *
  * @param {object} warning feed event
  * @param {object} activeLocationFilter prefs / draft filter
@@ -1251,21 +1399,12 @@ function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
   if (resolved.wholeCr) return globalSummary;
   if (!resolved.match) return "";
 
-  const links = warningGeoLinks(warning);
-  if (!links.length && !resolved.names.length) {
-    // Non-CAP or incomplete geo: keep legacy summary only when the filter already matched.
-    return globalSummary;
-  }
-
   const names = uniqStableNames(resolved.names || []);
   if (!names.length) return "";
-  return formatLocationLabel(names.join(", "), resolved.extraAreas || 0, "legacyMulti");
+  return formatLocationLabelFromNames(names, resolved.extraAreas || 0);
 }
 
-/**
- * Event title without baked-in global locality summary (display helper).
- * Does not mutate the event.
- */
+
 function eventTitleBaseWithoutLocality(ev) {
   let raw = String((ev && ev.title) || "").trim();
   if (!raw) return "Bez názvu";

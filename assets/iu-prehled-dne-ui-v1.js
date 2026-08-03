@@ -30,10 +30,10 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=chmi-locality-filter-vse-v1-20260803";
+} from "./iu-info-system-core-v1.js?v=chmi-combined-locality-filter-v1-20260803";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
+const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -647,12 +647,7 @@ function asCityEntries(draft) {
 }
 
 function setCityList(draft, cities) {
-  const others = (draft.localities || []).filter((loc) => {
-    if (!loc || typeof loc === "string") return false;
-    const level = String(loc.level || "").toLowerCase();
-    return level === "kraj" || level === "okres";
-  });
-  const next = [];
+  const desired = [];
   const seenIds = new Set();
   const seenNames = new Set();
   for (const c of cities || []) {
@@ -669,17 +664,51 @@ function setCityList(draft, cities) {
       if (seenNames.has(key)) continue;
       seenNames.add(key);
     }
-    if (next.length >= (MAX_CITY_LOCALITIES || 20)) break;
+    if (desired.length >= (MAX_CITY_LOCALITIES || 20)) break;
     const entry = { name, level: "mesto" };
     if (id) entry.id = id;
     if (orpCode) entry.orpCode = orpCode;
-    next.push(entry);
+    desired.push(entry);
   }
-  draft.localities = others.concat(next);
-  draft.homeObec = next[0] ? next[0].name : "";
+  const desiredByKey = new Map();
+  for (const entry of desired) {
+    desiredByKey.set(entry.id ? "id:" + entry.id : "n:" + entry.name.toLowerCase(), entry);
+  }
+  const next = [];
+  const placed = new Set();
+  for (const loc of draft.localities || []) {
+    if (!loc) continue;
+    if (typeof loc === "string") {
+      const key = "n:" + String(loc).trim().toLowerCase();
+      if (desiredByKey.has(key) && !placed.has(key)) {
+        next.push(desiredByKey.get(key));
+        placed.add(key);
+      }
+      continue;
+    }
+    const level = String(loc.level || "mesto").toLowerCase();
+    if (level === "kraj" || level === "okres") {
+      next.push(loc);
+      continue;
+    }
+    const id = String(loc.id || "").trim();
+    const key = id ? "id:" + id : "n:" + String(loc.name || "").trim().toLowerCase();
+    if (desiredByKey.has(key) && !placed.has(key)) {
+      next.push(desiredByKey.get(key));
+      placed.add(key);
+    }
+  }
+  for (const entry of desired) {
+    const key = entry.id ? "id:" + entry.id : "n:" + entry.name.toLowerCase();
+    if (placed.has(key)) continue;
+    next.push(entry);
+    placed.add(key);
+  }
+  draft.localities = next;
+  draft.homeObec = desired[0] ? desired[0].name : "";
   draft.myRegionOnly =
-    next.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
-  if (!next.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length) {
+    desired.length > 0 || asLocList(draft, "kraj").length > 0 || asLocList(draft, "okres").length > 0;
+  if (!desired.length && !asLocList(draft, "kraj").length && !asLocList(draft, "okres").length) {
     draft.myRegionOnly = false;
     draft.homeKraj = draft.homeKraj || "";
     draft.homeOkres = draft.homeOkres || "";
@@ -695,12 +724,43 @@ function setLocList(draft, level, names) {
     );
     return;
   }
-  const others = (draft.localities || []).filter((loc) => {
-    if (!loc || typeof loc === "string") return level !== "mesto";
-    return String(loc.level || "") !== level;
-  });
-  const next = names.map((n) => ({ name: n, level }));
-  draft.localities = others.concat(next);
+  const wanted = [];
+  const seen = new Set();
+  for (const n of names || []) {
+    const name = String(n || "").trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    wanted.push({ name, level });
+  }
+  const wantedKeys = new Set(wanted.map((w) => w.name.toLowerCase()));
+  const next = [];
+  const placed = new Set();
+  for (const loc of draft.localities || []) {
+    if (!loc || typeof loc === "string") {
+      if (typeof loc === "string" && level === "mesto") continue;
+      if (typeof loc === "string") next.push(loc);
+      continue;
+    }
+    const locLevel = String(loc.level || "").toLowerCase();
+    if (locLevel !== level) {
+      next.push(loc);
+      continue;
+    }
+    const key = String(loc.name || "").trim().toLowerCase();
+    if (wantedKeys.has(key) && !placed.has(key)) {
+      next.push({ name: String(loc.name).trim(), level });
+      placed.add(key);
+    }
+  }
+  for (const w of wanted) {
+    const key = w.name.toLowerCase();
+    if (placed.has(key)) continue;
+    next.push(w);
+    placed.add(key);
+  }
+  draft.localities = next;
   if (level === "kraj") {
     draft.homeKraj = names[0] || "";
     draft.myRegionOnly = names.length > 0 || asLocList(draft, "okres").length > 0 || asCityEntries(draft).length > 0;
