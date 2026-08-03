@@ -480,7 +480,9 @@ async function preparePage(browserType) {
 
 function isTargetCrash(err) {
   const t = String(err && err.message ? err.message : err || "");
-  return /Target crashed|Target closed|has been closed|Browser closed/i.test(t);
+  return /Target crashed|Page crashed|page\.goto: Page crashed|Target closed|has been closed|Browser closed/i.test(
+    t
+  );
 }
 
 async function dismissLocalDataProtection(page) {
@@ -632,7 +634,7 @@ async function runEngineOnce(browserType, engineName) {
 }
 
 async function runEngine(browserType, engineName) {
-  const maxAttempts = engineName === "webkit" ? 2 : 1;
+  const maxAttempts = engineName === "webkit" ? 3 : 1;
   let lastErr = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
