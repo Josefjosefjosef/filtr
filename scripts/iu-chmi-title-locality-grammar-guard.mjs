@@ -23,7 +23,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "chmi-locality-filter-vse-v1-20260803";
-const SW_VER = "2026-08-03-chmi-filter-vse-v1";
+const SW_VER = "2026-08-03-kb-nav-instant-restore-v1";
 
 const fails = [];
 function ok(id, cond, detail) {

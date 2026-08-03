@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
  * P0: mobil/tablet — #iuMobileBottomNav skrytá při soft keyboard.
- * v2: iOS Safari často dává gap≈0 (innerHeight klesá s VV) → #8461 falešné PASS.
- * Guard musí pokrýt VV gap větev I touch/coarse fallback bez gapu.
+ * v3: okamžitá obnova po zavření VV i bez blur (iOS); focus fallback jen opening grace.
  * Run: npm run iu-mobile-bottom-nav-keyboard-hide-guard
  */
 import fs from "node:fs";
@@ -23,9 +22,9 @@ const SW = path.join(REPO, "sw.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CSS_BUST =
-  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803";
-const JS_BUST_TOKEN = "kb-hide-v2-20260803";
-const SW_VER = "2026-08-03-chmi-filter-vse-v1";
+  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803";
+const JS_BUST_TOKEN = "kb-restore-v3-20260803";
+const SW_VER = "2026-08-03-kb-nav-instant-restore-v1";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
@@ -52,6 +51,12 @@ function staticGate() {
     { id: "hide_adaptive_gap", pass: /adaptiveGapMin|KEYBOARD_GAP_PCT/.test(hideChunk) },
     { id: "hide_touch_coarse_fallback", pass: /isTouchCoarseMobile|pointer:\s*coarse/.test(hideChunk) },
     { id: "hide_text_keyboard_likely", pass: /focusTextKeyboardLikely|isTextKeyboardLikelyEl/.test(hideChunk) },
+    { id: "hide_opening_grace", pass: /FOCUS_OPEN_GRACE_MS|focusOpenGraceUntil/.test(hideChunk) },
+    { id: "hide_geom_keyboard_open", pass: /geomKeyboardOpen|isGeomKeyboardOpenNow/.test(hideChunk) },
+    { id: "hide_sync_hide_now", pass: /syncHideNow/.test(hideChunk) },
+    { id: "hide_blur_handoff_short", pass: /BLUR_HANDOFF_MS\s*=\s*70/.test(hideChunk) },
+    { id: "hide_no_permanent_focus_only", pass: !/if \(focusTextKeyboardLikely && isTouchCoarseMobile\(\)\) return true;/.test(hideChunk) },
+    { id: "hide_scroll_snap", pass: /captureScrollSnap|restoreScrollIfNeeded|userScrolledWhileKb/.test(hideChunk) },
     { id: "hide_no_fixed_gap_100_only", pass: !/KEYBOARD_GAP_MIN\s*=\s*100/.test(hideChunk) },
     { id: "hide_max_width_1024", pass: /max-width:\s*1024px/.test(hideChunk) },
     { id: "hide_excludes_select", pass: /tag === "SELECT"/.test(hideChunk) },
@@ -196,6 +201,7 @@ async function readNavState(page) {
     const cs = nav ? getComputedStyle(nav) : null;
     const rootCs = getComputedStyle(root);
     const rect = nav ? nav.getBoundingClientRect() : null;
+    const ae = document.activeElement;
     return {
       hasClass: root.classList.contains("iu-keyboard-open"),
       bodyClass: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
@@ -207,6 +213,8 @@ async function readNavState(page) {
       safeSpace: String(rootCs.getPropertyValue("--iu-mobile-bottom-nav-safe-space") || "").trim(),
       safeVar: String(rootCs.getPropertyValue("--iu-mobile-bottom-safe") || "").trim(),
       navId: nav ? nav.id : null,
+      activeId: ae && ae.id ? String(ae.id) : "",
+      scrollY: window.scrollY || window.pageYOffset || 0,
     };
   });
 }
@@ -231,7 +239,8 @@ async function ensureProbeInputs(page) {
     if (!host) {
       host = document.createElement("div");
       host.id = "iuKbHideGuardHost";
-      host.style.cssText = "position:fixed;left:8px;top:8px;z-index:20000;display:flex;gap:8px;flex-wrap:wrap;";
+      host.style.cssText =
+        "position:fixed;left:8px;top:8px;z-index:20000;display:flex;gap:8px;flex-wrap:wrap;";
       host.innerHTML =
         '<input id="iuKbHideA" type="text" autocomplete="off" />' +
         '<input id="iuKbHideB" type="text" autocomplete="off" />' +
@@ -239,7 +248,9 @@ async function ensureProbeInputs(page) {
         '<input id="iuKbHideCb" type="checkbox" />' +
         '<input id="iuKbHideFile" type="file" />' +
         '<input id="iuKbHideNone" type="text" inputmode="none" />' +
-        '<input id="iuKbHideDate" type="date" />';
+        '<input id="iuKbHideDate" type="date" />' +
+        '<div id="iuCustomButtonsScrollHost" style="position:fixed;left:8px;top:120px;width:280px;height:160px;overflow:auto;z-index:20000;background:#fff;border:1px solid #ccc;">' +
+        '<div style="height:800px;padding:8px;">overlay scroll probe</div></div>';
       document.body.appendChild(host);
     }
   });
@@ -250,7 +261,7 @@ async function blurActive(page) {
     const el = document.activeElement;
     if (el && typeof el.blur === "function") el.blur();
   });
-  await page.waitForTimeout(220);
+  await page.waitForTimeout(100);
 }
 
 async function runViewport(browser, vp) {
@@ -269,88 +280,157 @@ async function runViewport(browser, vp) {
     await ensureProbeInputs(page);
 
     const idle = await readNavState(page);
+    const scrollBefore = idle.scrollY;
 
-    /* A: standard VV gap + focus */
+    /* A: standard VV gap + focus → hide */
     await page.focus("#iuKbHideA");
     await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(80);
     const scenarioA = await readNavState(page);
 
-    /* E: switch fields — no blink */
+    /* D: switch fields — no blink */
     const blinkSamples = [];
     await page.focus("#iuKbHideB");
     for (let i = 0; i < 8; i++) {
-      await page.waitForTimeout(30);
+      await page.waitForTimeout(25);
       blinkSamples.push(await readNavState(page));
     }
     const noBlink = blinkSamples.every((s) => isHidden(s));
 
+    /* C: close with blur */
+    const tBlur0 = Date.now();
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
-    const restored = await readNavState(page);
+    const restoredBlur = await readNavState(page);
+    const restoreBlurMs = Date.now() - tBlur0;
 
-    /* B: iOS zero-gap + text focus → still hide via coarse/touch fallback */
+    /* B: close WITHOUT blur — input stays focused, VV returns → instant restore */
+    await page.focus("#iuKbHideA");
+    await page.type("#iuKbHideA", "x");
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(80);
+    const openBeforeCloseNoBlur = await readNavState(page);
+    const tClose0 = Date.now();
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.waitForTimeout(50);
+    const closeNoBlur = await readNavState(page);
+    const restoreNoBlurMs = Date.now() - tClose0;
+    const stillFocused = closeNoBlur.activeId === "iuKbHideA";
+    const formValueOk = await page.evaluate(() => {
+      const el = document.getElementById("iuKbHideA");
+      return !!(el && el.value && el.value.indexOf("x") >= 0);
+    });
+
+    /* Opening grace (iosZeroGap within grace) → hide without VV gap */
+    await blurActive(page);
     await page.focus("#iuKbHideA");
     await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(140);
-    const scenarioB = await readNavState(page);
+    await page.waitForTimeout(100);
+    const openingGrace = await readNavState(page);
 
+    /* After grace without geom evidence → must NOT stay stuck hidden */
+    await page.waitForTimeout(450);
+    const graceExpired = await readNavState(page);
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
-    /* C: gap without focus — must NOT hide */
+    /* Gap without focus — must NOT hide */
     await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(120);
-    const scenarioC = await readNavState(page);
-    await page.evaluate(() => window.__iuMockKeyboard(false));
     await page.waitForTimeout(80);
+    const gapOnly = await readNavState(page);
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.waitForTimeout(50);
 
-    /* D: unsupported inputs */
+    /* Unsupported inputs */
     await page.focus("#iuKbHideRo");
     await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(80);
     const readonlyOpen = await readNavState(page);
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
     await page.focus("#iuKbHideCb");
     await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(80);
     const checkboxOpen = await readNavState(page);
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
     await page.focus("#iuKbHideFile");
     await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(80);
     const fileOpen = await readNavState(page);
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
     await page.focus("#iuKbHideNone");
     await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(80);
     const inputModeNone = await readNavState(page);
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
-    /* H: idempotent re-init flag already set — second call no-op; listeners not multiplied */
-    const flagOk = await page.evaluate(() => window.__iuMobileBottomNavKeyboardHideInit === 1);
+    /* G: overlay scroll preserved across open/close without user scroll */
+    await page.evaluate(() => {
+      const ov = document.getElementById("iuCustomButtonsScrollHost");
+      if (ov) ov.scrollTop = 220;
+    });
+    const overlayBefore = await page.evaluate(() => {
+      const ov = document.getElementById("iuCustomButtonsScrollHost");
+      return ov ? ov.scrollTop : -1;
+    });
+    await page.focus("#iuKbHideA");
+    await page.evaluate(() => window.__iuMockKeyboard(true));
+    await page.waitForTimeout(60);
+    await page.evaluate(() => window.__iuMockKeyboard(false));
+    await page.waitForTimeout(80);
+    const overlayAfter = await page.evaluate(() => {
+      const ov = document.getElementById("iuCustomButtonsScrollHost");
+      return ov ? ov.scrollTop : -1;
+    });
+    await blurActive(page);
 
-    /* Real selector */
+    /* H: ten open/type/close cycles — no stuck class */
+    let tenOk = true;
+    for (let i = 0; i < 10; i++) {
+      await page.focus("#iuKbHideA");
+      await page.evaluate(() => window.__iuMockKeyboard(true));
+      await page.waitForTimeout(40);
+      const mid = await readNavState(page);
+      if (!isHidden(mid)) tenOk = false;
+      await page.evaluate(() => window.__iuMockKeyboard(false));
+      await page.waitForTimeout(40);
+      const end = await readNavState(page);
+      if (!isVisible(end)) tenOk = false;
+    }
+    await blurActive(page);
+
+    const flagOk = await page.evaluate(() => window.__iuMobileBottomNavKeyboardHideInit === 1);
     const selectorOk = idle.navId === "iuMobileBottomNav";
+    const scrollPreserved = Math.abs((await readNavState(page)).scrollY - scrollBefore) <= 2;
 
     const pass =
       isVisible(idle) &&
       isHidden(scenarioA) &&
-      isHidden(scenarioB) &&
-      isVisible(scenarioC) &&
-      isVisible(restored) &&
+      isHidden(openBeforeCloseNoBlur) &&
+      isVisible(closeNoBlur) &&
+      stillFocused &&
+      formValueOk &&
+      restoreNoBlurMs <= 200 &&
+      isVisible(restoredBlur) &&
+      restoreBlurMs <= 350 &&
+      isHidden(openingGrace) &&
+      isVisible(graceExpired) &&
+      isVisible(gapOnly) &&
       noBlink &&
       !readonlyOpen.hasClass &&
       !checkboxOpen.hasClass &&
       !fileOpen.hasClass &&
       !inputModeNone.hasClass &&
+      overlayBefore === 220 &&
+      Math.abs(overlayAfter - overlayBefore) <= 2 &&
+      tenOk &&
+      scrollPreserved &&
       flagOk &&
       selectorOk;
 
@@ -358,11 +438,20 @@ async function runViewport(browser, vp) {
       viewport: vp.name,
       pass,
       idleOk: isVisible(idle),
-      scenarioA: isHidden(scenarioA),
-      scenarioB_iosZeroGap: isHidden(scenarioB),
-      scenarioC_gapOnly: isVisible(scenarioC),
-      restoredOk: isVisible(restored),
-      noBlink,
+      scenarioA_open: isHidden(scenarioA),
+      scenarioB_closeNoBlur: isVisible(closeNoBlur) && stillFocused,
+      restoreNoBlurMs,
+      scenarioC_closeWithBlur: isVisible(restoredBlur),
+      restoreBlurMs,
+      scenarioD_noBlink: noBlink,
+      openingGraceOk: isHidden(openingGrace),
+      graceExpiredNotStuck: isVisible(graceExpired),
+      gapOnlyOk: isVisible(gapOnly),
+      formStateOk: formValueOk,
+      overlayScrollOk: Math.abs(overlayAfter - overlayBefore) <= 2,
+      tenCyclesOk: tenOk,
+      scrollPreserved,
+      restoreDelayOk: restoreNoBlurMs <= 200,
       readonlyOk: !readonlyOpen.hasClass,
       checkboxOk: !checkboxOpen.hasClass,
       fileOk: !fileOpen.hasClass,

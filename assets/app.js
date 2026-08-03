@@ -18025,8 +18025,18 @@ function buildVideoAsArticleCard(it) {
     var focusEditable = false;
     var focusTextKeyboardLikely = false;
     var blurTimer = 0;
+    var graceTimer = 0;
     var vkHeight = 0;
     var stableViewportH = 0;
+    /* Geometric evidence that soft keyboard is (or was) open. Focus alone must NOT
+       keep nav hidden after VV/VK returns to closed (iOS dismiss-without-blur). */
+    var geomKeyboardOpen = false;
+    /* Short opening grace: hide before VV resize arrives after focusin. */
+    var focusOpenGraceUntil = 0;
+    var FOCUS_OPEN_GRACE_MS = 420;
+    var BLUR_HANDOFF_MS = 70;
+    var scrollSnap = null;
+    var userScrolledWhileKb = false;
     var KEYBOARD_GAP_ABS_MIN = 72;
     var KEYBOARD_GAP_PCT = 0.12;
 
@@ -18109,7 +18119,9 @@ function buildVideoAsArticleCard(it) {
 
     function refreshStableViewport() {
       try {
-        if (open || focusEditable) return;
+        /* Allow baseline refresh when keyboard is geometrically closed even if an
+           input stays focused (iOS dismiss-without-blur). */
+        if (geomKeyboardOpen || (open && keyboardGap() > adaptiveGapMin())) return;
         var h = currentVvHeight();
         var ih = Math.max(0, window.innerHeight || 0);
         var sh = 0;
@@ -18162,15 +18174,57 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
+    function layoutShrink() {
+      try {
+        var ih = Math.max(0, window.innerHeight || 0);
+        if (!stableViewportH || !ih) return 0;
+        return Math.max(0, stableViewportH - ih);
+      } catch (_) {
+        return 0;
+      }
+    }
+
+    function isGeomKeyboardOpenNow() {
+      try {
+        if (vkHeight > 40) return true;
+        var min = adaptiveGapMin();
+        if (keyboardGap() > min) return true;
+        /* iOS: layout viewport often shrinks with the keyboard while VV gap ≈ 0. */
+        if (layoutShrink() > min) return true;
+        return false;
+      } catch (_) {
+        return false;
+      }
+    }
+
     function shouldHide() {
       try {
         if (mqTablet && !mqTablet.matches) return false;
-        if (!focusEditable) return false;
-        var gap = keyboardGap();
-        if (gap > adaptiveGapMin()) return true;
-        /* iOS Safari fallback: VV gap often ~0 while soft keyboard is open.
-           On coarse/touch ≤1024 hide for text fields on focus (not pickers). */
-        if (focusTextKeyboardLikely && isTouchCoarseMobile()) return true;
+
+        var geomNow = isGeomKeyboardOpenNow();
+        if (geomNow) {
+          geomKeyboardOpen = true;
+          /* Hide only while an editable field is involved (gap alone must not hide). */
+          return !!focusEditable;
+        }
+
+        /* Viewport/VK says closed → always restore, even if input still focused. */
+        if (geomKeyboardOpen) {
+          geomKeyboardOpen = false;
+          focusOpenGraceUntil = 0;
+          return false;
+        }
+
+        /* Opening grace: hide briefly after text focus before VV/VK evidence arrives.
+           Must NOT permanently hide for the whole focus lifetime. */
+        if (
+          focusEditable &&
+          focusTextKeyboardLikely &&
+          isTouchCoarseMobile() &&
+          Date.now() < focusOpenGraceUntil
+        ) {
+          return true;
+        }
         return false;
       } catch (_) {
         return false;
@@ -18189,12 +18243,95 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
     }
 
+    function overlayScrollHosts() {
+      var ids = [
+        "iuCustomButtonsScrollHost",
+        "iuInvoiceScrollHost",
+        "iuLegalDocsScrollHost",
+        "iuFinancialCalcScrollHost",
+        "iuMobileGatePanelTools",
+        "iuMobileGatePanelNav",
+        "iuDsBody",
+      ];
+      var out = [];
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (!el) continue;
+        try {
+          var st = getComputedStyle(el);
+          if (st && (st.overflowY === "auto" || st.overflowY === "scroll")) {
+            out.push(el);
+          }
+        } catch (_) {}
+      }
+      try {
+        document.querySelectorAll(".iu-tasksOverlay__scroll, .iu-notesOverlay__scroll, .iu-calendarOverlay__scroll").forEach(function (el) {
+          if (el) out.push(el);
+        });
+      } catch (_) {}
+      return out;
+    }
+
+    function captureScrollSnap() {
+      try {
+        var hosts = overlayScrollHosts();
+        var tops = [];
+        for (var i = 0; i < hosts.length; i++) {
+          tops.push({ el: hosts[i], top: hosts[i].scrollTop || 0 });
+        }
+        scrollSnap = {
+          y: window.scrollY || window.pageYOffset || 0,
+          tops: tops,
+        };
+        userScrolledWhileKb = false;
+      } catch (_) {
+        scrollSnap = null;
+        userScrolledWhileKb = false;
+      }
+    }
+
+    function restoreScrollIfNeeded() {
+      try {
+        if (!scrollSnap || userScrolledWhileKb) {
+          scrollSnap = null;
+          return;
+        }
+        var snap = scrollSnap;
+        scrollSnap = null;
+        var apply = function () {
+          try {
+            window.scrollTo(0, snap.y);
+          } catch (_) {}
+          try {
+            for (var i = 0; i < snap.tops.length; i++) {
+              var item = snap.tops[i];
+              if (item && item.el && item.el.isConnected) {
+                item.el.scrollTop = item.top;
+              }
+            }
+          } catch (_) {}
+        };
+        try {
+          window.requestAnimationFrame(apply);
+        } catch (_) {
+          apply();
+        }
+      } catch (_) {
+        scrollSnap = null;
+      }
+    }
+
+    function markUserScrollWhileKb() {
+      if (open) userScrolledWhileKb = true;
+    }
+
     function applyOpen(next) {
       try {
         if (open === next) {
           if (next) clearNavPinTransform();
           return;
         }
+        var wasOpen = open;
         open = next;
         var root = document.documentElement;
         if (root) {
@@ -18207,7 +18344,21 @@ function buildVideoAsArticleCard(it) {
           else body.classList.remove("iu-keyboard-open");
         }
         clearNavPinTransform();
-        if (!next) refreshStableViewport();
+        if (next && !wasOpen) {
+          captureScrollSnap();
+        }
+        if (!next) {
+          focusOpenGraceUntil = 0;
+          geomKeyboardOpen = false;
+          try {
+            if (graceTimer) {
+              clearTimeout(graceTimer);
+              graceTimer = 0;
+            }
+          } catch (_) {}
+          refreshStableViewport();
+          restoreScrollIfNeeded();
+        }
       } catch (_) {}
     }
 
@@ -18230,6 +18381,21 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
+    /** Immediate sync (no debounce) — used when VV/VK proves keyboard closed. */
+    function syncHideNow() {
+      try {
+        if (blurTimer) {
+          clearTimeout(blurTimer);
+          blurTimer = 0;
+        }
+        if (graceTimer) {
+          clearTimeout(graceTimer);
+          graceTimer = 0;
+        }
+      } catch (_) {}
+      syncHide();
+    }
+
     function readFocusState(el) {
       focusEditable = isEditableEl(el);
       focusTextKeyboardLikely = isTextKeyboardLikelyEl(el);
@@ -18242,6 +18408,17 @@ function buildVideoAsArticleCard(it) {
           blurTimer = 0;
         }
         readFocusState(ev && ev.target);
+        if (focusEditable && focusTextKeyboardLikely && isTouchCoarseMobile()) {
+          focusOpenGraceUntil = Date.now() + FOCUS_OPEN_GRACE_MS;
+          try {
+            if (graceTimer) clearTimeout(graceTimer);
+            /* Re-evaluate after opening grace — do not leave nav stuck if VV never arrives. */
+            graceTimer = setTimeout(function () {
+              graceTimer = 0;
+              scheduleHide();
+            }, FOCUS_OPEN_GRACE_MS + 16);
+          } catch (_) {}
+        }
       } catch (_) {
         focusEditable = false;
         focusTextKeyboardLikely = false;
@@ -18252,22 +18429,26 @@ function buildVideoAsArticleCard(it) {
     function onFocusOut() {
       try {
         if (blurTimer) clearTimeout(blurTimer);
-        /* Debounce: focusout→focusin mezi poli + asynchronní VV resize (iOS). */
+        /* Short handoff only: focusout→focusin between fields must not blink nav.
+           Real keyboard close is driven by VV/VK geometry (syncHideNow), not this timer. */
         blurTimer = setTimeout(function () {
           blurTimer = 0;
           try {
             var ae = document.activeElement;
             if (ae && ae.isConnected === false) ae = null;
             readFocusState(ae);
+            if (!focusEditable) focusOpenGraceUntil = 0;
           } catch (_) {
             focusEditable = false;
             focusTextKeyboardLikely = false;
+            focusOpenGraceUntil = 0;
           }
           scheduleHide();
-        }, 180);
+        }, BLUR_HANDOFF_MS);
       } catch (_) {
         focusEditable = false;
         focusTextKeyboardLikely = false;
+        focusOpenGraceUntil = 0;
         scheduleHide();
       }
     }
@@ -18278,7 +18459,20 @@ function buildVideoAsArticleCard(it) {
         vv0.addEventListener(
           "resize",
           function () {
-            refreshStableViewport();
+            var geomNow = isGeomKeyboardOpenNow();
+            if (geomNow) {
+              geomKeyboardOpen = true;
+              focusOpenGraceUntil = 0;
+            } else if (geomKeyboardOpen || open) {
+              /* Keyboard closed (possibly while input still focused) → restore now. */
+              geomKeyboardOpen = false;
+              focusOpenGraceUntil = 0;
+              refreshStableViewport();
+              syncHideNow();
+              return;
+            } else {
+              refreshStableViewport();
+            }
             scheduleHide();
           },
           { passive: true }
@@ -18299,7 +18493,18 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {
             vkHeight = 0;
           }
-          scheduleHide();
+          if (vkHeight > 40) {
+            geomKeyboardOpen = true;
+            focusOpenGraceUntil = 0;
+            scheduleHide();
+          } else if (geomKeyboardOpen || open) {
+            geomKeyboardOpen = false;
+            focusOpenGraceUntil = 0;
+            refreshStableViewport();
+            syncHideNow();
+          } else {
+            scheduleHide();
+          }
         });
       }
     } catch (_) {}
@@ -18307,6 +18512,13 @@ function buildVideoAsArticleCard(it) {
       window.addEventListener(
         "resize",
         function () {
+          if (!isGeomKeyboardOpenNow() && (geomKeyboardOpen || open)) {
+            geomKeyboardOpen = false;
+            focusOpenGraceUntil = 0;
+            refreshStableViewport();
+            syncHideNow();
+            return;
+          }
           refreshStableViewport();
           scheduleHide();
         },
@@ -18316,15 +18528,19 @@ function buildVideoAsArticleCard(it) {
         "orientationchange",
         function () {
           stableViewportH = 0;
+          geomKeyboardOpen = false;
+          focusOpenGraceUntil = 0;
           setTimeout(function () {
             refreshStableViewport();
-            scheduleHide();
+            syncHideNow();
           }, 280);
         },
         { passive: true }
       );
       document.addEventListener("focusin", onFocusIn, true);
       document.addEventListener("focusout", onFocusOut, true);
+      document.addEventListener("touchmove", markUserScrollWhileKb, { passive: true, capture: true });
+      document.addEventListener("wheel", markUserScrollWhileKb, { passive: true, capture: true });
       document.addEventListener(
         "visibilitychange",
         function () {
@@ -18381,6 +18597,9 @@ function buildVideoAsArticleCard(it) {
               focusEditable: focusEditable,
               focusTextKeyboardLikely: focusTextKeyboardLikely,
               open: open,
+              geomKeyboardOpen: geomKeyboardOpen,
+              focusOpenGraceUntil: focusOpenGraceUntil,
+              graceLeft: Math.max(0, focusOpenGraceUntil - Date.now()),
               gap: keyboardGap(),
               gapMin: adaptiveGapMin(),
               stableViewportH: stableViewportH,
@@ -18395,6 +18614,7 @@ function buildVideoAsArticleCard(it) {
               classHtml: document.documentElement.classList.contains("iu-keyboard-open"),
               classBody: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
               navDisplay: cs ? cs.display : "missing",
+              userScrolledWhileKb: userScrolledWhileKb,
             };
           } catch (err) {
             return { error: String(err && err.message) };

@@ -1,17 +1,17 @@
 {
-  "freezeId": "custom-buttons-dynamic-height-wrap-v1-20260803",
+  "freezeId": "kb-nav-instant-restore-v3-20260803",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-03T19:50:00Z",
-  "note": "Freeze bump: custom-buttons-dynamic-height-wrap-v1-20260803 (also retains chmi-locality-filter-vse-v1-20260803 markers).",
+  "updatedAt": "2026-08-03T20:40:00Z",
+  "note": "Freeze bump: kb-nav-instant-restore-v3-20260803 (instant bottom-nav restore after keyboard close).",
   "files": {
-    "projects/index.html": "825ff7dcde6f4e92ab75d2d68e2cd20976849177e00fb7cf3b3ad3d58ee16fee",
+    "projects/index.html": "bf4f897f79e0f55cd881d97c6db8df28497133e71d30d95e368487a4ccbe3b63",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
-    "assets/app.js": "25318e8630cd62ad2737c0588f582aad764d7905d6292653c07d5dbf0d07e725",
+    "assets/app.js": "c5f21e5ba4d320e4c321268f3b91f2e0cde913a30caf872a71e7b6c2e215f9c9",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "61df68abb29beca9072fbf224a46a744032e8d114eed9f054531f6f84128fa84",
+    "sw.js": "40bef710c194050450889a56ea978e5b3b5f3f4d93ea3ca3cf5f5eb828328702",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-03-chmi-filter-vse-v1\"",
+      "CACHE_VERSION = \"2026-08-03-kb-nav-instant-restore-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
