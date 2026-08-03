@@ -203,8 +203,16 @@
   .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatHeaderBrand{grid-column:1;grid-row:1;justify-self:start;min-width:0}
   /* Nová poznámka: label „Text“ + 10px mezera k textarea; pravá hrana beze změny. */
   .iuSilverDraftCard--quickTemplateNote .iuSilverDraftGrid--note{
-    grid-template-columns:max-content minmax(0,1fr);
+    grid-template-columns:minmax(0,max-content) minmax(0,1fr);
     column-gap:10px;
     gap:11px 10px;
+  }
+  /* Mirror app.css: date/time must shrink inside the 1fr track on mobile/tablet. */
+  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
+  .iuSilverDraftCard--quickTemplateEmpty .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
   }
 }

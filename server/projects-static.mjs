@@ -42,8 +42,16 @@ http
     if (data) {
       let ct = mime(u.pathname);
       if (!path.extname(u.pathname) || u.pathname.endsWith("/")) ct = "text/html; charset=utf-8";
+      let body = data;
+      // Local HTTP proofs: CSP upgrade-insecure-requests breaks WebKit (forces https://127.0.0.1).
+      if (ct.indexOf("text/html") === 0) {
+        body = Buffer.from(
+          String(data).replace(/upgrade-insecure-requests;?/gi, ""),
+          "utf8"
+        );
+      }
       res.writeHead(200, { "Content-Type": ct });
-      res.end(data);
+      res.end(body);
     } else {
       res.writeHead(404);
       res.end("Not found");
