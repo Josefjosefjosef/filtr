@@ -17993,10 +17993,18 @@ function buildVideoAsArticleCard(it) {
   }
 
   /**
-   * P0 Mobile/tablet (≤1024px): systémové skrytí #iuMobileBottomNav při otevřené
-   * systémové klávesnici. Signál = focus na textový prvek + zmenšení visualViewport
-   * (případně VirtualKeyboard geometry). Samotný focus nestačí; gap bez focusu nestačí.
-   * Uvolní --bottom-nav-height / safe-space přes html.iu-keyboard-open. Desktop beze změny.
+   * P0 Mobile/tablet (≤1024px): systémové skrytí #iuMobileBottomNav při soft keyboard.
+   *
+   * #8461 používalo (innerHeight - visualViewport.height) > 100. Na reálném iOS Safari
+   * často innerHeight i VV výška klesají společně → gap≈0 a třída iu-keyboard-open se
+   * nepřidá (nadpis navigace zůstane nad klávesnicí). Guard #8461 mockoval ideální VV
+   * (innerHeight konstantní) → falešné PASS.
+   *
+   * Detekce v2:
+   *  1) stabilní baseline výšky bez klávesnice vs aktuální visualViewport
+   *  2) VirtualKeyboard geometry (Chrome)
+   *  3) touch/coarse fallback: focus na textové pole → hide i bez spolehlivého gapu
+   * Desktop beze změny. Gap bez focusu neskryje navigaci.
    */
   function iuMobileBottomNavKeyboardHideInit() {
     try {
@@ -18004,14 +18012,48 @@ function buildVideoAsArticleCard(it) {
       window.__iuMobileBottomNavKeyboardHideInit = 1;
     } catch (_) {}
     var mqTablet = null;
+    var mqCoarse = null;
     try {
       mqTablet = window.matchMedia && window.matchMedia("(max-width: 1024px)");
     } catch (_) {}
+    try {
+      mqCoarse =
+        window.matchMedia &&
+        window.matchMedia("(hover: none) and (pointer: coarse)");
+    } catch (_) {}
     var open = false;
     var focusEditable = false;
+    var focusTextKeyboardLikely = false;
     var blurTimer = 0;
     var vkHeight = 0;
-    var KEYBOARD_GAP_MIN = 100;
+    var stableViewportH = 0;
+    var KEYBOARD_GAP_ABS_MIN = 72;
+    var KEYBOARD_GAP_PCT = 0.12;
+
+    function isExcludedInputType(type) {
+      return (
+        type === "button" ||
+        type === "checkbox" ||
+        type === "radio" ||
+        type === "file" ||
+        type === "submit" ||
+        type === "reset" ||
+        type === "image" ||
+        type === "range" ||
+        type === "color" ||
+        type === "hidden"
+      );
+    }
+
+    function isPickerInputType(type) {
+      return (
+        type === "date" ||
+        type === "time" ||
+        type === "datetime-local" ||
+        type === "month" ||
+        type === "week"
+      );
+    }
 
     function isEditableEl(el) {
       try {
@@ -18024,21 +18066,7 @@ function buildVideoAsArticleCard(it) {
         }
         if (tag === "INPUT") {
           var type = String(el.type || "text").toLowerCase();
-          if (
-            type === "button" ||
-            type === "checkbox" ||
-            type === "radio" ||
-            type === "file" ||
-            type === "submit" ||
-            type === "reset" ||
-            type === "image" ||
-            type === "range" ||
-            type === "color" ||
-            type === "hidden"
-          ) {
-            return false;
-          }
-          /* date/time pickery často neotevřou soft keyboard — vyžadují i viewport gap. */
+          if (isExcludedInputType(type)) return false;
           if (el.disabled || el.readOnly) return false;
           var inputMode = String(el.getAttribute("inputmode") || "").toLowerCase();
           if (inputMode === "none") return false;
@@ -18053,24 +18081,97 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
+    /** Soft-keyboard likely: text/search/email/… — not native date/time pickers. */
+    function isTextKeyboardLikelyEl(el) {
+      try {
+        if (!isEditableEl(el)) return false;
+        var tag = String(el.tagName || "").toUpperCase();
+        if (tag === "TEXTAREA") return true;
+        if (tag === "INPUT") {
+          var type = String(el.type || "text").toLowerCase();
+          if (isPickerInputType(type)) return false;
+          return true;
+        }
+        if (el.isContentEditable) return true;
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function currentVvHeight() {
+      try {
+        var vv = window.visualViewport;
+        if (vv && typeof vv.height === "number" && vv.height > 0) return vv.height;
+      } catch (_) {}
+      return Math.max(0, window.innerHeight || 0);
+    }
+
+    function refreshStableViewport() {
+      try {
+        if (open || focusEditable) return;
+        var h = currentVvHeight();
+        var ih = Math.max(0, window.innerHeight || 0);
+        var sh = 0;
+        try {
+          sh = Math.max(0, (window.screen && window.screen.height) || 0);
+        } catch (_) {}
+        var candidate = Math.max(h, ih);
+        /* Prefer larger "closed keyboard" samples; ignore tiny transient dips. */
+        if (!stableViewportH || candidate > stableViewportH + 8) {
+          stableViewportH = candidate;
+        } else if (candidate > stableViewportH * 0.92) {
+          stableViewportH = Math.max(stableViewportH, candidate);
+        }
+        if (!stableViewportH && sh) stableViewportH = sh;
+      } catch (_) {}
+    }
+
+    function adaptiveGapMin() {
+      var base = stableViewportH || currentVvHeight() || window.innerHeight || 640;
+      return Math.max(KEYBOARD_GAP_ABS_MIN, Math.round(base * KEYBOARD_GAP_PCT));
+    }
+
     function keyboardGap() {
       try {
         var vv = window.visualViewport;
-        if (!vv) return Math.max(0, vkHeight);
-        var gap = Math.max(0, (window.innerHeight || 0) - vv.height - (vv.offsetTop || 0));
-        return Math.max(gap, vkHeight);
+        var vvH = vv && typeof vv.height === "number" ? vv.height : 0;
+        var vvTop = vv && typeof vv.offsetTop === "number" ? vv.offsetTop : 0;
+        var ih = Math.max(0, window.innerHeight || 0);
+        var gapInner = vvH > 0 ? Math.max(0, ih - vvH - vvTop) : 0;
+        var gapStable =
+          vvH > 0 && stableViewportH > 0
+            ? Math.max(0, stableViewportH - vvH - vvTop)
+            : 0;
+        return Math.max(gapInner, gapStable, vkHeight);
       } catch (_) {
         return Math.max(0, vkHeight);
+      }
+    }
+
+    function isTouchCoarseMobile() {
+      try {
+        if (mqTablet && !mqTablet.matches) return false;
+        if (mqCoarse && mqCoarse.matches) return true;
+        if (typeof navigator !== "undefined" && navigator.maxTouchPoints > 0) {
+          return !!(mqTablet && mqTablet.matches);
+        }
+        return false;
+      } catch (_) {
+        return false;
       }
     }
 
     function shouldHide() {
       try {
         if (mqTablet && !mqTablet.matches) return false;
-        /* Focus bez gap (hardwarová klávesnice / picker) → navigaci neskryvat.
-           Gap bez focusu (resize desktopového okna ≤1024) → neskryvat. */
         if (!focusEditable) return false;
-        return keyboardGap() > KEYBOARD_GAP_MIN;
+        var gap = keyboardGap();
+        if (gap > adaptiveGapMin()) return true;
+        /* iOS Safari fallback: VV gap often ~0 while soft keyboard is open.
+           On coarse/touch ≤1024 hide for text fields on focus (not pickers). */
+        if (focusTextKeyboardLikely && isTouchCoarseMobile()) return true;
+        return false;
       } catch (_) {
         return false;
       }
@@ -18082,6 +18183,9 @@ function buildVideoAsArticleCard(it) {
         if (!nav) return;
         nav.style.removeProperty("transform");
         nav.style.removeProperty("-webkit-transform");
+        nav.style.removeProperty("display");
+        nav.style.removeProperty("visibility");
+        nav.style.removeProperty("pointer-events");
       } catch (_) {}
     }
 
@@ -18103,6 +18207,7 @@ function buildVideoAsArticleCard(it) {
           else body.classList.remove("iu-keyboard-open");
         }
         clearNavPinTransform();
+        if (!next) refreshStableViewport();
       } catch (_) {}
     }
 
@@ -18125,15 +18230,21 @@ function buildVideoAsArticleCard(it) {
       }
     }
 
+    function readFocusState(el) {
+      focusEditable = isEditableEl(el);
+      focusTextKeyboardLikely = isTextKeyboardLikelyEl(el);
+    }
+
     function onFocusIn(ev) {
       try {
         if (blurTimer) {
           clearTimeout(blurTimer);
           blurTimer = 0;
         }
-        focusEditable = isEditableEl(ev && ev.target);
+        readFocusState(ev && ev.target);
       } catch (_) {
         focusEditable = false;
+        focusTextKeyboardLikely = false;
       }
       scheduleHide();
     }
@@ -18141,20 +18252,22 @@ function buildVideoAsArticleCard(it) {
     function onFocusOut() {
       try {
         if (blurTimer) clearTimeout(blurTimer);
-        /* Delší debounce: focusout→focusin mezi poli + asynchronní VV resize (iOS). */
+        /* Debounce: focusout→focusin mezi poli + asynchronní VV resize (iOS). */
         blurTimer = setTimeout(function () {
           blurTimer = 0;
           try {
             var ae = document.activeElement;
             if (ae && ae.isConnected === false) ae = null;
-            focusEditable = isEditableEl(ae);
+            readFocusState(ae);
           } catch (_) {
             focusEditable = false;
+            focusTextKeyboardLikely = false;
           }
           scheduleHide();
-        }, 160);
+        }, 180);
       } catch (_) {
         focusEditable = false;
+        focusTextKeyboardLikely = false;
         scheduleHide();
       }
     }
@@ -18162,13 +18275,23 @@ function buildVideoAsArticleCard(it) {
     try {
       var vv0 = window.visualViewport;
       if (vv0 && typeof vv0.addEventListener === "function") {
-        vv0.addEventListener("resize", scheduleHide, { passive: true });
+        vv0.addEventListener(
+          "resize",
+          function () {
+            refreshStableViewport();
+            scheduleHide();
+          },
+          { passive: true }
+        );
         vv0.addEventListener("scroll", scheduleHide, { passive: true });
       }
     } catch (_) {}
     try {
       var vk = navigator.virtualKeyboard;
       if (vk && typeof vk.addEventListener === "function") {
+        try {
+          if ("overlaysContent" in vk) vk.overlaysContent = true;
+        } catch (_) {}
         vk.addEventListener("geometrychange", function () {
           try {
             var rect = vk.boundingRect || {};
@@ -18181,8 +18304,25 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
-      window.addEventListener("resize", scheduleHide, { passive: true });
-      window.addEventListener("orientationchange", scheduleHide, { passive: true });
+      window.addEventListener(
+        "resize",
+        function () {
+          refreshStableViewport();
+          scheduleHide();
+        },
+        { passive: true }
+      );
+      window.addEventListener(
+        "orientationchange",
+        function () {
+          stableViewportH = 0;
+          setTimeout(function () {
+            refreshStableViewport();
+            scheduleHide();
+          }, 280);
+        },
+        { passive: true }
+      );
       document.addEventListener("focusin", onFocusIn, true);
       document.addEventListener("focusout", onFocusOut, true);
       document.addEventListener(
@@ -18190,10 +18330,10 @@ function buildVideoAsArticleCard(it) {
         function () {
           try {
             if (!document.hidden) {
-              focusEditable = isEditableEl(document.activeElement);
+              readFocusState(document.activeElement);
+              refreshStableViewport();
               scheduleHide();
             } else {
-              /* Při odchodu do pozadí nenechat zaseknutý open stav po návratu bez klávesnice. */
               scheduleHide();
             }
           } catch (_) {}
@@ -18204,7 +18344,8 @@ function buildVideoAsArticleCard(it) {
         "pageshow",
         function () {
           try {
-            focusEditable = isEditableEl(document.activeElement);
+            readFocusState(document.activeElement);
+            refreshStableViewport();
             scheduleHide();
           } catch (_) {}
         },
@@ -18229,8 +18370,42 @@ function buildVideoAsArticleCard(it) {
       }
     } catch (_) {}
     try {
-      focusEditable = isEditableEl(document.activeElement);
+      /* Optional debug: ?iuKbNavDebug=1 — no input values logged. */
+      if (/[?&]iuKbNavDebug=1(?:&|$)/.test(String(location.search || ""))) {
+        window.__iuKbNavDebugDump = function () {
+          try {
+            var nav = document.getElementById("iuMobileBottomNav");
+            var cs = nav ? getComputedStyle(nav) : null;
+            var ae = document.activeElement;
+            return {
+              focusEditable: focusEditable,
+              focusTextKeyboardLikely: focusTextKeyboardLikely,
+              open: open,
+              gap: keyboardGap(),
+              gapMin: adaptiveGapMin(),
+              stableViewportH: stableViewportH,
+              vvH: currentVvHeight(),
+              innerH: window.innerHeight || 0,
+              offsetTop:
+                (window.visualViewport && window.visualViewport.offsetTop) || 0,
+              coarse: isTouchCoarseMobile(),
+              mq1024: !!(mqTablet && mqTablet.matches),
+              activeTag: ae ? String(ae.tagName || "") : "",
+              activeType: ae && ae.type ? String(ae.type) : "",
+              classHtml: document.documentElement.classList.contains("iu-keyboard-open"),
+              classBody: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
+              navDisplay: cs ? cs.display : "missing",
+            };
+          } catch (err) {
+            return { error: String(err && err.message) };
+          }
+        };
+      }
     } catch (_) {}
+    try {
+      readFocusState(document.activeElement);
+    } catch (_) {}
+    refreshStableViewport();
     scheduleHide();
   }
 

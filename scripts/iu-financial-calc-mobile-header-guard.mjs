@@ -21,7 +21,7 @@ const INDEX = path.join(REPO, "projects", "index.html");
 // multiple Playwright guards bind localhost in the same smoke job matrix.
 const PORT = parseInt(process.env.IU_GUARD_PORT || String(19000 + (process.pid % 1000)), 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803";
+const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803";
 const HUB_TITLE = "Finanční kalkulačky";
 
 const LONG_CALCS = [

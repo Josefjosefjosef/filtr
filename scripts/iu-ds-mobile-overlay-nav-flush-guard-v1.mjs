@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Datová schránka — mobil/tablet: spodní hrana panelu musí navazovat na horní hranu spodní navigace (bez mezery).
  * Také: max-height none (top+bottom only), žádný page bleed pod panelem, 901–1024 bez nav insetu.
@@ -22,7 +22,7 @@ const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8899", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CACHE_BUST =
-  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803";
+  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844, expectNav: true },

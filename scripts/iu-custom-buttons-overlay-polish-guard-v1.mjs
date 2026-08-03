@@ -139,12 +139,37 @@ async function runViewport(browser, vp) {
   let homeOk = true;
 
   if (isMobileTablet) {
+    /* Touch keyboard-hide may conceal #iuMobileBottomNav while an overlay input is focused. */
+    await page.evaluate(() => {
+      try {
+        const ae = document.activeElement;
+        if (ae && typeof ae.blur === "function") ae.blur();
+      } catch (_) {}
+      try {
+        document.documentElement.classList.remove("iu-keyboard-open");
+        if (document.body) document.body.classList.remove("iu-keyboard-open");
+      } catch (_) {}
+    });
+    await page.waitForTimeout(220);
+    await page.waitForSelector('#iuMobileBottomNav[class*="iu-mobileBottomNav"]', { state: "visible", timeout: 5000 });
     await page.click('[data-iu-bottom-nav="back"]');
     await page.waitForTimeout(500);
     const afterBack = await readOverlayState(page);
     backOk = !afterBack.panelOpen && !afterBack.backdropOpen && !afterBack.bodyClass;
 
     await openCustomButtonsOverlay(page);
+    await page.evaluate(() => {
+      try {
+        const ae = document.activeElement;
+        if (ae && typeof ae.blur === "function") ae.blur();
+      } catch (_) {}
+      try {
+        document.documentElement.classList.remove("iu-keyboard-open");
+        if (document.body) document.body.classList.remove("iu-keyboard-open");
+      } catch (_) {}
+    });
+    await page.waitForTimeout(220);
+    await page.waitForSelector('#iuMobileBottomNav', { state: "visible", timeout: 5000 });
     await page.click('[data-iu-bottom-nav="home"]');
     await page.waitForTimeout(700);
     const afterHome = await readOverlayState(page);

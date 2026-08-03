@@ -100,7 +100,28 @@ async function openViaGate(page) {
   await page.waitForTimeout(800);
 }
 
+async function ensureKeyboardClosedNavVisible(page) {
+  await page.evaluate(() => {
+    try {
+      const ae = document.activeElement;
+      if (ae && typeof ae.blur === "function") ae.blur();
+    } catch (_) {}
+    try {
+      document.documentElement.classList.remove("iu-keyboard-open");
+      if (document.body) document.body.classList.remove("iu-keyboard-open");
+    } catch (_) {}
+  });
+  await page.waitForTimeout(220);
+  await page.waitForFunction(() => {
+    const nav = document.getElementById("iuMobileBottomNav");
+    if (!nav) return false;
+    const cs = getComputedStyle(nav);
+    return cs.display !== "none" && nav.getBoundingClientRect().height > 40;
+  }, { timeout: 5000 });
+}
+
 async function measureScroll(page) {
+  await ensureKeyboardClosedNavVisible(page);
   return page.evaluate(async () => {
     const nav = document.getElementById("iuMobileBottomNav");
     const scrollHost = document.getElementById("iuCustomButtonsScrollHost");
