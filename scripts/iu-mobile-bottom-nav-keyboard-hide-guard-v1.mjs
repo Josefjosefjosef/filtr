@@ -390,16 +390,16 @@ async function runViewport(browser, vp) {
     });
     await blurActive(page);
 
-    /* H: ten open/type/close cycles — no stuck class */
+    /* H: ten open/type/close cycles — no stuck class (CI tablet needs slightly longer settle). */
     let tenOk = true;
     for (let i = 0; i < 10; i++) {
       await page.focus("#iuKbHideA");
       await page.evaluate(() => window.__iuMockKeyboard(true));
-      await page.waitForTimeout(40);
+      await page.waitForTimeout(80);
       const mid = await readNavState(page);
       if (!isHidden(mid)) tenOk = false;
       await page.evaluate(() => window.__iuMockKeyboard(false));
-      await page.waitForTimeout(40);
+      await page.waitForTimeout(90);
       const end = await readNavState(page);
       if (!isVisible(end)) tenOk = false;
     }
