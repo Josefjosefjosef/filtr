@@ -89,6 +89,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: node scripts/run_silver_layout_guard_against_checkout.cjs
 
+      - name: Silver speech bubble stable privacy + 4px down-shift guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run silver-bubble-stable-privacy-guard-checkout
+
       - name: Weather outside-temp emphasis guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run weather-emphasis-guard
