@@ -272,8 +272,6 @@ async function runSmoke() {
       `${BASE}/`,
       `${BASE}/?section=media`,
       `${BASE}/?debug=1`,
-      // Legacy hub path must still serve the app from git source (prod deploy redirects /projects/ → /).
-      `${BASE}/projects/?section=media`,
     ];
 
     for (const url of urls) {
@@ -281,6 +279,10 @@ async function runSmoke() {
       // Playwright may return null when navigation commits without a main-frame Response (client redirect / race).
       const st = res ? res.status() : null;
       if (st !== null && st >= 400) fail(`HTTP ${st} for ${url}`);
+      const pathNow = new URL(page.url()).pathname;
+      if (pathNow.startsWith("/projects")) {
+        fail(`Hub URL must not stay on /projects/: ${page.url()}`);
+      }
       // Prod hub is site root — wait for app shell.
       if (url === `${BASE}/`) {
         try {
@@ -292,6 +294,19 @@ async function runSmoke() {
         }
       }
       await page.waitForTimeout(500);
+    }
+
+    // Legacy /projects/ must server-redirect (or resolve) to root hub — never remain on /projects/.
+    {
+      const legacy = `${BASE}/projects/?section=media`;
+      const res = await gotoDomContentLoaded(page, legacy);
+      const st = res ? res.status() : null;
+      if (st !== null && st >= 400) fail(`HTTP ${st} for ${legacy}`);
+      const pathNow = new URL(page.url()).pathname;
+      if (pathNow.startsWith("/projects")) {
+        fail(`Legacy /projects/ still serving hub: ${page.url()}`);
+      }
+      await page.waitForTimeout(300);
     }
 
     // Click test on /?section=media

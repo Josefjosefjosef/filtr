@@ -1,5 +1,6 @@
 $ErrorActionPreference='Stop'
 
+# P0: root must stay on https://infouzel.cz/ — never /projects/
 $port=9222
 $cb=[int][double]::Parse((Get-Date -UFormat %s))
 $url="https://infouzel.cz/?nosw=1&cb=$cb"
@@ -73,19 +74,26 @@ try{
 (async () => {
   await new Promise(r => setTimeout(r, 800));
   const href = String(location.href || "");
+  const path = String(location.pathname || "");
   const txt = (document.body && document.body.innerText) ? document.body.innerText : "";
-  return { href, bodyTextLen: txt.trim().length };
+  return { href, path, bodyTextLen: txt.trim().length };
 })();
 '@
 
   $out = Eval 1 $expr
   $out | ConvertTo-Json -Compress
 
-  if($out.href -notmatch '/projects/'){
-    throw "ROOT redirect gate failed: href=$($out.href)"
+  if($out.path -ne '/'){
+    throw "ROOT gate failed: expected pathname=/ got path=$($out.path) href=$($out.href)"
+  }
+  if($out.href -match '/projects/'){
+    throw "ROOT gate failed: href contains /projects/: $($out.href)"
+  }
+  if([int]$out.bodyTextLen -lt 20){
+    throw "ROOT gate failed: empty/broken body len=$($out.bodyTextLen)"
   }
 
-  "OK: root redirect target=/projects/"
+  "OK: root stays on / (no /projects/)"
 }finally{
   try{ $ws.CloseAsync([System.Net.WebSockets.WebSocketCloseStatus]::NormalClosure,'bye',$ct).Wait(1000) | Out-Null }catch{}
   try{ Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }catch{}

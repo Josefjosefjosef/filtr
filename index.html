@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>infoUzel.cz</title>
+  <link rel="canonical" href="https://infouzel.cz/" />
+  <meta name="robots" content="noindex,nofollow" />
 
   <style>
     html, body {
@@ -12,36 +14,38 @@
       width: 100%;
       height: 100%;
       background: #0B1F33;
-      color: transparent;
-      font-size: 0;
-      line-height: 0;
-      overflow: hidden;
+      color: #e2e8f0;
+      font: 16px/1.45 system-ui, sans-serif;
     }
-    /* pojistka: i kdyby se někdo pokusil něco vložit */
-    body * { display: none !important; }
+    main {
+      max-width: 36rem;
+      margin: 20vh auto 0;
+      padding: 0 1.25rem;
+      text-align: center;
+    }
+    a { color: #93c5fd; }
   </style>
 
   <script>
     (function () {
       try {
-        var p = String(location.pathname || "").replace(/\\/g, "/");
-        /* Fallback only when GitHub Pages deploy transform is absent.
-           Production artifact replaces this file with projects/index.html (app at /).
-           In raw git checkout, send users to /projects/ where the app shell still lives. */
-        var target = "/projects/";
-        if (p === target || p.indexOf("/projects/") === 0) return;
-        var suffix = String(location.search || "") + String(location.hash || "");
         var host = String(location.hostname || "").toLowerCase();
+        var suffix = String(location.search || "") + String(location.hash || "");
+        /* P0: NEVER navigate apex/www users to /projects/.
+           Production Pages publish overwrites this file with projects/index.html (full app at /).
+           This checkout/fallback shim must not resurrect the legacy hub path. */
         if (host === "www.infouzel.cz") {
-          location.replace("https://infouzel.cz/projects/" + suffix);
+          location.replace("https://infouzel.cz/" + suffix);
           return;
         }
-        location.replace(target + suffix);
       } catch (e) {}
     })();
   </script>
 </head>
 <body>
-  <noscript></noscript>
+  <main>
+    <p>infoUzel.cz</p>
+    <p>Načítá se produkční aplikace na <a href="https://infouzel.cz/">https://infouzel.cz/</a>.</p>
+  </main>
 </body>
 </html>
