@@ -23,6 +23,15 @@ export const INSPECTION_MAX_TEXT_LINES = 8;
 export const INSPECTION_CPG_MAX_BYTES = 64;
 export const INSPECTION_HEADER_MAX_BYTES = 1024;
 export const INSPECTION_TIMEOUT_MS = 120_000;
+export const INSPECTION_MAX_PEEK_ENTRIES = 64;
+export const INSPECTION_MAX_TOTAL_PEEK_BYTES = 2 * 1024 * 1024;
+
+const LOCAL_SIG = 0x04034b50;
+const CENTRAL_SIG = 0x02014b50;
+const EOCD_SIG = 0x06054b50;
+
+const PEEK_EXTS = new Set(["dat", "txt", "csv", "cpg", "dbf", "shp", "shx", "db", "sqlite", "sqlite3"]);
+const NESTED_ARCHIVE_EXTS = new Set(["zip", "7z", "rar", "gz", "tgz", "bz2"]);
 
 export const INSPECTION_REJECT = Object.freeze({
   PATH_INVALID: "TMC_INSPECTION_PATH_INVALID",
@@ -708,6 +717,273 @@ function failReport(code, severity, centralMeta) {
   };
 }
 
+function peekBudgetForExt(ext) {
+  if (ext === "cpg") return INSPECTION_CPG_MAX_BYTES;
+  if (ext === "dbf" || ext === "shp" || ext === "shx") return INSPECTION_HEADER_MAX_BYTES;
+  if (ext === "db" || ext === "sqlite" || ext === "sqlite3") return 16;
+  return INSPECTION_TEXT_PEEK_BYTES;
+}
+
+/**
+ * Collect allowlisted peek targets from ZIP central directory (roles only; no report names).
+ * @param {string} zipPath
+ * @param {object} [lim]
+ */
+export function collectInspectionPeekTargets(zipPath, lim = {}) {
+  const limits = { maxEntries: 5000, maxNameLen: 256, maxPathDepth: 8, ...lim };
+  const st = fs.statSync(zipPath);
+  const targets = [];
+  const ignoredCategoryCounts = Object.create(null);
+  const fd = fs.openSync(zipPath, "r");
+  try {
+    const tailLen = Math.min(st.size, 65536 + 22);
+    const tail = Buffer.alloc(tailLen);
+    fs.readSync(fd, tail, 0, tailLen, st.size - tailLen);
+    let eocd = -1;
+    for (let i = tail.length - 22; i >= 0; i--) {
+      if (tail.readUInt32LE(i) === EOCD_SIG) {
+        eocd = i;
+        break;
+      }
+    }
+    if (eocd < 0) {
+      return { ok: false, rejectCode: INSPECTION_REJECT.FORMAT_UNVERIFIED, targets: [], ignoredCategoryCounts };
+    }
+    const totalEntries = tail.readUInt16LE(eocd + 10);
+    const cdSize = tail.readUInt32LE(eocd + 12);
+    const cdOffset = tail.readUInt32LE(eocd + 16);
+    if (totalEntries === 0xffff || cdSize === 0xffffffff || cdOffset === 0xffffffff) {
+      return { ok: false, rejectCode: INSPECTION_REJECT.FORMAT_UNVERIFIED, targets: [], ignoredCategoryCounts };
+    }
+    if (cdOffset + cdSize > st.size) {
+      return { ok: false, rejectCode: INSPECTION_REJECT.PATH_INVALID, targets: [], ignoredCategoryCounts };
+    }
+    const cd = Buffer.alloc(cdSize);
+    fs.readSync(fd, cd, 0, cdSize, cdOffset);
+    let off = 0;
+    while (off + 46 <= cd.length && targets.length < INSPECTION_MAX_PEEK_ENTRIES) {
+      if (cd.readUInt32LE(off) !== CENTRAL_SIG) {
+        off += 1;
+        continue;
+      }
+      const flags = cd.readUInt16LE(off + 8);
+      const method = cd.readUInt16LE(off + 10);
+      const comp = cd.readUInt32LE(off + 20);
+      const uncomp = cd.readUInt32LE(off + 24);
+      const nameLen = cd.readUInt16LE(off + 28);
+      const extraLen = cd.readUInt16LE(off + 30);
+      const commentLen = cd.readUInt16LE(off + 32);
+      const externalAttrs = cd.readUInt32LE(off + 38);
+      const localOffset = cd.readUInt32LE(off + 42);
+      let nameRaw = "";
+      try {
+        nameRaw = cd.slice(off + 46, off + 46 + nameLen).toString("utf8");
+      } catch (_) {
+        return { ok: false, rejectCode: INSPECTION_REJECT.PATH_INVALID, targets: [], ignoredCategoryCounts };
+      }
+      const classified = classifyZipPath(nameRaw, {
+        maxDepth: limits.maxPathDepth,
+        maxNameLen: limits.maxNameLen,
+      });
+      const role = classified.ok ? classifyEntryRole(classified.path) : "ignored_other";
+      const ext = classified.ok
+        ? (String(classified.path).toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || ""
+        : "";
+      nameRaw = "";
+      off += 46 + nameLen + extraLen + commentLen;
+
+      if (!classified.ok) {
+        bump(ignoredCategoryCounts, "path_reject");
+        continue;
+      }
+      if (classified.isDirectory) continue;
+      if (NESTED_ARCHIVE_EXTS.has(ext)) {
+        bump(ignoredCategoryCounts, "nested_archive");
+        continue;
+      }
+      if (!PEEK_EXTS.has(ext)) {
+        bump(ignoredCategoryCounts, role === "ignored_other" ? "ignored_other" : role);
+        continue;
+      }
+      if (flags & 0x1) {
+        bump(ignoredCategoryCounts, "encrypted");
+        continue;
+      }
+      if (method !== 0 && method !== 8) {
+        bump(ignoredCategoryCounts, "unsupported_compression");
+        continue;
+      }
+      const mode = (externalAttrs >>> 16) & 0xffff;
+      if ((mode & 0xf000) === 0xa000) {
+        bump(ignoredCategoryCounts, "symlink");
+        continue;
+      }
+      targets.push({
+        role,
+        ext,
+        method,
+        flags,
+        comp,
+        uncomp,
+        localOffset,
+      });
+    }
+    return { ok: true, rejectCode: null, targets, ignoredCategoryCounts };
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+/**
+ * Peek at most maxOut uncompressed bytes from a ZIP entry (store or deflate).
+ * @param {number} fd
+ * @param {{ localOffset: number, method: number, comp: number, uncomp: number }} target
+ * @param {number} maxOut
+ */
+export function peekZipEntryBytes(fd, target, maxOut) {
+  const max = Math.max(1, Math.min(maxOut, INSPECTION_TEXT_PEEK_BYTES));
+  const lh = Buffer.alloc(30);
+  const n = fs.readSync(fd, lh, 0, 30, target.localOffset);
+  if (n < 30 || lh.readUInt32LE(0) !== LOCAL_SIG) {
+    throw Object.assign(new Error("bad_local_header"), { code: INSPECTION_REJECT.FORMAT_UNVERIFIED });
+  }
+  const nameLen = lh.readUInt16LE(26);
+  const extraLen = lh.readUInt16LE(28);
+  if (nameLen > 512 || extraLen > INSPECTION_HEADER_MAX_BYTES) {
+    throw Object.assign(new Error("header_too_large"), { code: INSPECTION_REJECT.ENTRY_TOO_LARGE });
+  }
+  const dataStart = target.localOffset + 30 + nameLen + extraLen;
+  const method = target.method;
+  if (method === 0) {
+    const want = Math.min(max, target.uncomp || max);
+    const buf = Buffer.alloc(want);
+    const got = fs.readSync(fd, buf, 0, want, dataStart);
+    return buf.slice(0, got);
+  }
+  if (method === 8) {
+    const compWant = Math.min(target.comp || max * 4, max * 8 + 256);
+    const compBuf = Buffer.alloc(compWant);
+    const got = fs.readSync(fd, compBuf, 0, compWant, dataStart);
+    try {
+      return zlib.inflateRawSync(compBuf.slice(0, got), { maxOutputLength: max });
+    } catch (e) {
+      throw Object.assign(new Error("inflate_peek_failed"), {
+        code: INSPECTION_REJECT.READ_LIMIT,
+        cause: e,
+      });
+    }
+  }
+  throw Object.assign(new Error("unsupported_method"), { code: INSPECTION_REJECT.ENTRY_NOT_ALLOWED });
+}
+
+/**
+ * Live/offline ZIP format inspection from on-disk archive (peek only).
+ * Never activates importer/resolver/publish. Never embeds raw rows or basenames.
+ * @param {string} zipPath
+ * @param {{ workDir?: string, timeoutMs?: number, startedAt?: number }} [opts]
+ */
+export function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
+  const started = opts.startedAt || Date.now();
+  const timeoutMs = opts.timeoutMs != null ? opts.timeoutMs : INSPECTION_TIMEOUT_MS;
+  const workDir = opts.workDir || path.dirname(zipPath);
+
+  let central;
+  try {
+    central = inspectZipFileCentral(zipPath);
+  } catch (_) {
+    return failReport(INSPECTION_REJECT.PATH_INVALID, "archive_reject", null);
+  }
+
+  if (central.entrySizeRejectCategory || central.pathRejectCategory) {
+    const report = failReport(
+      central.pathRejectCategory
+        ? INSPECTION_REJECT.PATH_INVALID
+        : INSPECTION_REJECT.ENTRY_TOO_LARGE,
+      "archive_reject",
+      central
+    );
+    report.centralDirectory = {
+      fileEntryCount: central.fileEntryCount,
+      datFileCount: central.datFileCount,
+      txtFileCount: central.txtFileCount,
+      fileExtSummary: central.fileExtSummary,
+      candidateLayers: central.candidateLayers,
+    };
+    report.workDirCategory = categorizePath(workDir);
+    return report;
+  }
+
+  const collected = collectInspectionPeekTargets(zipPath);
+  if (!collected.ok) {
+    return failReport(collected.rejectCode || INSPECTION_REJECT.FORMAT_UNVERIFIED, "archive_reject", central);
+  }
+
+  const entries = [];
+  let totalPeek = 0;
+  const fd = fs.openSync(zipPath, "r");
+  try {
+    for (const t of collected.targets) {
+      if (Date.now() - started > timeoutMs) {
+        return failReport(INSPECTION_REJECT.TIMEOUT, "timeout", central);
+      }
+      const budget = peekBudgetForExt(t.ext);
+      if (totalPeek + budget > INSPECTION_MAX_TOTAL_PEEK_BYTES) {
+        return failReport(INSPECTION_REJECT.MEMORY_LIMIT, "archive_reject", central);
+      }
+      try {
+        const buf = peekZipEntryBytes(fd, t, budget);
+        totalPeek += buf.length;
+        entries.push({ role: t.role, ext: t.ext, buf });
+      } catch (e) {
+        const code = e && e.code ? String(e.code) : INSPECTION_REJECT.READ_LIMIT;
+        if (code === INSPECTION_REJECT.ENTRY_TOO_LARGE || code === INSPECTION_REJECT.MEMORY_LIMIT) {
+          return failReport(code, "archive_reject", central);
+        }
+        // record/layer soft skip
+        entries.push({ role: t.role, ext: t.ext, buf: Buffer.alloc(0) });
+      }
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+
+  const report = inspectFormatFromEntryPeeks(entries, {
+    centralMeta: central,
+    startedAt: started,
+    timeoutMs,
+  });
+  report.candidateEvidenceSource = entries.length
+    ? "content_peek"
+    : report.candidateEvidenceSource || "central_directory";
+  if (report.candidateEvidenceSource === "content_peek") {
+    report.candidateFormatConfidence = "content_peek_limited";
+  }
+  report.authoritativeFormat = "UNVERIFIED";
+  report.authoritativeFormatVerified = false;
+  report.liveNetworkInspection = false;
+  report.ignoredCategoryCounts = collected.ignoredCategoryCounts;
+  report.peekEntryCount = entries.length;
+  report.peekTotalBytes = totalPeek;
+  report.centralDirectory = {
+    fileEntryCount: central.fileEntryCount,
+    datFileCount: central.datFileCount,
+    txtFileCount: central.txtFileCount,
+    fileExtSummary: central.fileExtSummary,
+    candidateLayers: central.candidateLayers,
+  };
+  report.workDirCategory = categorizePath(workDir);
+  report.importerActivated = false;
+  report.resolverActivated = false;
+  report.publishActivated = false;
+  report.productionWrite = false;
+  try {
+    assertReportPathSafe(report);
+  } catch (_) {
+    return failReport(INSPECTION_REJECT.INTERNAL_ERROR, "internal_failure", central);
+  }
+  return report;
+}
+
 /**
  * Refuse test providers / env activation for real inspection entrypoints.
  * @param {NodeJS.ProcessEnv} [env]
@@ -727,6 +1003,13 @@ export function assertInspectionProductionSafe(env = process.env, opts = {}) {
     throw Object.assign(new Error("REFUSING_TEST_INSPECTION_ENV"), {
       code: "REFUSING_TEST_INSPECTION_ENV",
     });
+  }
+  for (const a of process.argv.slice(2)) {
+    if (/^--(fixture|fake|test-provider|zip-path)=/i.test(a) || /^--(fixture|fake|test-provider)$/i.test(a)) {
+      throw Object.assign(new Error("REFUSING_TEST_INSPECTION_CLI"), {
+        code: "REFUSING_TEST_INSPECTION_CLI",
+      });
+    }
   }
 }
 

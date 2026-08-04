@@ -2,7 +2,7 @@
  * NDIC DATEX II v1 — config + kill switch.
  *
  * Server/CI env only (never frontend / localStorage / public JSON):
- *   IU_NDIC_DATEX_V1_MODE=off|shadow|active
+ *   IU_NDIC_DATEX_V1_MODE=off|shadow|active|format_inspection
  *   IU_NDIC_PULL_URL          — authenticated PULL endpoint (subscription-specific)
  *   IU_NDIC_PULL_USER         — Basic Auth user (subscription-generated)
  *   IU_NDIC_PULL_PASS         — Basic Auth password
@@ -88,7 +88,7 @@ export const DEFAULT_SANITY = Object.freeze({
   emptySnapshotFail: true,
 });
 
-/** @typedef {'off'|'shadow'|'active'} NdicDatexV1Mode */
+/** @typedef {'off'|'shadow'|'active'|'format_inspection'} NdicDatexV1Mode */
 
 /**
  * @param {NodeJS.ProcessEnv|Record<string,string|undefined>} [env]
@@ -101,7 +101,9 @@ export function getNdicDatexV1Config(env = process.env) {
     else if (String(e.IU_NDIC_DATEX_V1_SHADOW || "").toLowerCase() === "true") mode = "shadow";
     else mode = "off";
   }
-  if (mode !== "off" && mode !== "shadow" && mode !== "active") mode = "off";
+  if (mode !== "off" && mode !== "shadow" && mode !== "active" && mode !== "format_inspection") {
+    mode = "off";
+  }
 
   const n = (key, fallback) => {
     const v = Number(e[key]);
@@ -143,6 +145,7 @@ export function getNdicDatexV1Config(env = process.env) {
     mode,
     enabled: mode === "active",
     shadow: mode === "shadow",
+    formatInspection: mode === "format_inspection",
     limits,
     backoffMinutes: DEFAULT_BACKOFF_MINUTES.slice(),
     syncIntervalMin: n("IU_NDIC_SYNC_INTERVAL_MIN", DEFAULT_SYNC_INTERVAL_MIN),
@@ -182,6 +185,11 @@ export function shouldPublishNdic(config) {
 
 export function shouldRunShadow(config) {
   return config && (config.mode === "shadow" || config.mode === "active");
+}
+
+/** Format inspection never publishes and never runs importer/resolver. */
+export function shouldRunFormatInspection(config) {
+  return config && config.mode === "format_inspection";
 }
 
 /**

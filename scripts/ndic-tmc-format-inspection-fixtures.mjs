@@ -12,6 +12,7 @@ import {
   inspectShpHeader,
   inspectSqliteHeader,
   inspectFormatFromEntryPeeks,
+  inspectTmcZipFormatFromFile,
   serializeInspectionReport,
   classifyEntryRole,
   assertInspectionProductionSafe,
@@ -28,6 +29,9 @@ import {
   redactAbsolutePaths,
 } from "./ndic-datex-v1/tmc-path-redaction.mjs";
 import { selectAuthoritativeFormat, TMC_FORMAT } from "./ndic-datex-v1/tmc-archive-stream.mjs";
+import { buildStoredZip } from "./ndic-datex-v1/tmc-zip.mjs";
+import { getNdicDatexV1Config } from "./ndic-datex-v1/config.mjs";
+import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -277,6 +281,78 @@ function shpHeaderSynthetic(opts = {}) {
   ok("central_unverified", c.authoritativeFormatVerified === false, "v");
 }
 
+// --- ZIP file peek inspection (synthetic store ZIP; no network) ---
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-insp-zip-"));
+  const zipPath = path.join(dir, "synth.zip");
+  fs.writeFileSync(
+    zipPath,
+    buildStoredZip([
+      { name: "POINTS.DAT", data: "CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n" },
+      { name: "NAMES.DAT", data: "CID;TABCD;NID;NAME\n11;25;1;FakeName\n" },
+      { name: "readme.PDF", data: "%PDF-fake" },
+      { name: "nested.zip", data: "PK\x03\x04fake" },
+    ])
+  );
+  const report = inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
+  const blob = JSON.stringify(report);
+  ok("zip_insp_okish", report.mode === INSPECTION_MODE, report.mode);
+  ok("zip_insp_auth_unverified", report.authoritativeFormat === "UNVERIFIED", report.authoritativeFormat);
+  ok("zip_insp_verified_false", report.authoritativeFormatVerified === false, "vf");
+  ok("zip_insp_cid", report.cid11Detected === true, "cid");
+  ok("zip_insp_tab", report.tabcd25Detected === true, "tab");
+  ok("zip_insp_evidence", report.candidateEvidenceSource === "content_peek", report.candidateEvidenceSource);
+  ok("zip_insp_no_fakename", !/FakeName/.test(blob), "name");
+  ok("zip_insp_no_points_basename", !/POINTS\.DAT/.test(blob), "base");
+  ok("zip_insp_no_importer", report.importerActivated === false, "imp");
+  ok("zip_insp_nested_ignored", (report.ignoredCategoryCounts || {}).nested_archive >= 1, "nested");
+  ok("cfg_format_mode", getNdicDatexV1Config({ IU_NDIC_DATEX_V1_MODE: "format_inspection" }).formatInspection === true, "cfg");
+  let idBlocked = false;
+  try {
+    assertNdicCzechEgressRunnerOrThrow({
+      IU_NDIC_DATEX_V1_MODE: "format_inspection",
+      RUNNER_ENVIRONMENT: "github-hosted",
+    });
+  } catch (e) {
+    idBlocked = e && e.code === "REFUSING_GITHUB_HOSTED";
+  }
+  ok("identity_blocks_format_inspection_hosted", idBlocked, "id");
+  let cliBlocked = false;
+  try {
+    process.argv.push("--fixture");
+    assertInspectionProductionSafe({});
+  } catch (e) {
+    cliBlocked = e && e.code === "REFUSING_TEST_INSPECTION_CLI";
+  } finally {
+    const idx = process.argv.indexOf("--fixture");
+    if (idx >= 0) process.argv.splice(idx, 1);
+  }
+  ok("cli_refuse_fixture", cliBlocked, "cli");
+  try {
+    fs.rmSync(dir, { recursive: true, force: true });
+  } catch (_) {}
+}
+
+// --- memory bound via many peeks ---
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-insp-mem-"));
+  const zipPath = path.join(dir, "mem.zip");
+  const files = [];
+  for (let i = 0; i < 40; i++) {
+    files.push({ name: "POINTS" + i + ".DAT", data: "CID;TABCD\n11;25\n" + "x".repeat(3000) });
+  }
+  fs.writeFileSync(zipPath, buildStoredZip(files));
+  const report = inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
+  ok(
+    "mem_bound_or_ok",
+    report.rejectCode === INSPECTION_REJECT.MEMORY_LIMIT || report.peekTotalBytes <= 2 * 1024 * 1024,
+    String(report.rejectCode || report.peekTotalBytes)
+  );
+  try {
+    fs.rmSync(dir, { recursive: true, force: true });
+  } catch (_) {}
+}
+
 if (fails.length) {
   console.error("[ndic-tmc-format-inspection-fixtures] FAIL " + fails.length);
   for (const f of fails) console.error(" - " + f);
@@ -287,6 +363,7 @@ console.log(
     ok: true,
     mode: INSPECTION_MODE,
     reportMaxBytes: INSPECTION_REPORT_MAX_BYTES,
+    liveZipInspectApi: true,
     node: process.version,
   })
 );

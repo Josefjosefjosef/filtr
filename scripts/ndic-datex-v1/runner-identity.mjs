@@ -27,7 +27,11 @@ export function assertNdicCzechEgressRunnerOrThrow(env = process.env, opts = {})
       String(e.IU_NDIC_TMC_PULL_PASS || "").trim() ||
       String(e.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID || "").trim()
   );
-  const networkIntended = mode === "shadow" || mode === "active" || hasPullSecretNamePresent;
+  const networkIntended =
+    mode === "shadow" ||
+    mode === "active" ||
+    mode === "format_inspection" ||
+    hasPullSecretNamePresent;
   if (!networkIntended) {
     return { ok: true, skipped: true };
   }

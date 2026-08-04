@@ -46,6 +46,7 @@ const NDIC_CAPABILITY_PATTERNS = [
   /ndic-datex-v1-prod-sync\.mjs/,
   /ndic-datex-v1-shadow-run\.mjs/,
   /ndic-datex-v1-shadow-probe\.mjs/,
+  /ndic-datex-v1-tmc-format-inspection-run\.mjs/,
   /mobilitydata\.rsd\.cz/,
   /Authorization:\s*`Basic/,
   /Authorization:\s*Basic/,
@@ -351,14 +352,28 @@ function main() {
       ok("inspect_dispatch", /workflow_dispatch\s*:/.test(src), "dispatch");
       ok("inspect_mode_only", /format_inspection/.test(src) && !/options:[\s\S]*?-\s*active/.test(src), "mode");
       ok("inspect_no_ubuntu", !/ubuntu-latest/.test(src), "ubuntu");
-      ok("inspect_no_secrets", !/secrets\.IU_NDIC_/.test(src), "secrets");
+      ok("inspect_has_tmc_secrets", /secrets\.IU_NDIC_TMC_PULL_URL/.test(src), "tmc-secrets");
+      ok("inspect_no_datex_pull_url", !/secrets\.IU_NDIC_PULL_URL/.test(src), "no-datex-url");
       ok("inspect_no_importer_run", !/ndic-datex-v1-prod-sync|importerActivated:\s*true/.test(src), "imp");
       ok("inspect_node_24", /node-version:\s*["']?24["']?/.test(src), "node24");
       ok("inspect_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "fx");
       ok("inspect_fixture_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "arch");
       ok("inspect_fixture_disk", /iu-ndic-disk-preflight-fixtures/.test(src), "disk");
       ok("inspect_offline_ready", /--offline-ready/.test(src), "ready");
+      ok(
+        "inspect_live_run",
+        /node scripts\/ndic-datex-v1-tmc-format-inspection-run\.mjs\s*$/m.test(src),
+        "live"
+      );
+      ok("inspect_fixtures_before_live", /Fixture guards[\s\S]*Live TMC format inspection/.test(src), "order");
+      ok("inspect_artifact_sanitised", /ndic-tmc-format-inspection-report/.test(src), "art");
+      ok("inspect_report_size_gate", /65536/.test(src), "size");
+      ok("inspect_wipe", /Wipe temp workdir/.test(src), "wipe");
       ok("inspect_runs_on_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
+      ok("inspect_refuse_github_hosted", /REFUSING_GITHUB_HOSTED/.test(analysis.raw), "refuse");
+      ok("inspect_runner_name", /infouzel-ndic-cz-vps4204/.test(analysis.raw), "name");
+      ok("inspect_upload_artifact_v7", /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a/.test(src), "artifact");
+      ok("inspect_not_run_on_fixture_fail", /LIVE_FORMAT_INSPECTION=NOT_RUN/.test(src), "notrun");
     }
 
     if (file === "update-ndic-datex-v1.yml") {
