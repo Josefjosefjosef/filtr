@@ -68,26 +68,29 @@ export function classifyDiskPath(absPath) {
  * Measure free bytes on the filesystem owning `dir` (must exist).
  * Uses frsize when present (POSIX block unit); falls back to bsize.
  * @param {string} dir
+ * @param {{ statSync?: typeof fs.statSync, statfsSync?: typeof fs.statfsSync }} [deps] test inject only
  * @returns {{ ok: true, availableBytes: bigint, bavail: bigint, blockSize: bigint } | { ok: false, rejectCode: string, detail?: string }}
  */
-export function measureFilesystemAvailable(dir) {
+export function measureFilesystemAvailable(dir, deps = {}) {
+  const statSync = deps.statSync || fs.statSync;
+  const statfsSync = deps.statfsSync || fs.statfsSync;
   if (!dir || typeof dir !== "string") {
     return { ok: false, rejectCode: DISK_REJECT.PATH, detail: "empty_path" };
   }
   let st;
   try {
-    st = fs.statSync(dir);
+    st = statSync(dir);
   } catch (_) {
     return { ok: false, rejectCode: DISK_REJECT.PATH, detail: "stat_failed" };
   }
   if (!st.isDirectory()) {
     return { ok: false, rejectCode: DISK_REJECT.PATH, detail: "not_directory" };
   }
-  if (typeof fs.statfsSync !== "function") {
+  if (typeof statfsSync !== "function") {
     return { ok: false, rejectCode: DISK_REJECT.MEASURE, detail: "statfs_unavailable" };
   }
   try {
-    const s = fs.statfsSync(dir, { bigint: true });
+    const s = statfsSync(dir, { bigint: true });
     const bavail = BigInt(s.bavail);
     const fr = s.frsize != null ? BigInt(s.frsize) : null;
     const bs = BigInt(s.bsize);
@@ -252,7 +255,7 @@ export function measureTaskOwnedBytes(dir, mustBeUnder) {
  */
 export function runDiskPreflight(opts) {
   const pathCategory = classifyDiskPath(opts.checkDir);
-  const measured = measureFilesystemAvailable(opts.checkDir);
+  const measured = measureFilesystemAvailable(opts.checkDir, opts.measureDeps || {});
   if (!measured.ok) {
     return {
       ok: false,

@@ -83,11 +83,13 @@ const FETCH_TIMEOUT_MS = 45000;
 /** @typedef {'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'} FailureCategory */
 
 function ensureWorkDir() {
-  const base =
-    process.env.IU_NDIC_SHADOW_WORK_DIR ||
-    process.env.RUNNER_TEMP ||
-    path.join(os.tmpdir(), "ndic-shadow-probe");
-  // Task-owned run dir on the same filesystem as RUNNER_TEMP / shadow work (never bare /tmp root).
+  const base = process.env.IU_NDIC_SHADOW_WORK_DIR || process.env.RUNNER_TEMP;
+  if (!base || !String(base).trim()) {
+    // Fail-closed: never silently fall back to os.tmpdir()/tmpfs for NDIC network work.
+    throw Object.assign(new Error("TMC_DISK_WORKDIR_REQUIRED"), {
+      code: "TMC_DISK_WORKDIR_REQUIRED",
+    });
+  }
   const dir = path.join(base, "ndic-shadow-" + Date.now().toString(36));
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   try {
@@ -922,7 +924,18 @@ export async function runShadowProbe(opts = {}) {
     assertNdicCzechEgressRunnerOrThrow(process.env);
   }
 
-  const workDir = ensureWorkDir();
+  let workDir;
+  try {
+    workDir = ensureWorkDir();
+  } catch (e) {
+    return {
+      ok: false,
+      reason: (e && e.code) || "TMC_DISK_WORKDIR_REQUIRED",
+      mode: "shadow",
+      errorCode: (e && e.code) || "TMC_DISK_WORKDIR_REQUIRED",
+    };
+  }
+
   const report = {
     ok: false,
     mode: "shadow",

@@ -552,10 +552,17 @@ export function atomicActivateTmcIndex(paths, payload) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   const tmp = paths.stagingPath + ".partial";
   fs.writeFileSync(tmp, payload, { mode: 0o600 });
+  try {
+    if (fs.existsSync(paths.stagingPath)) fs.rmSync(paths.stagingPath, { force: true });
+  } catch (_) {}
   fs.renameSync(tmp, paths.stagingPath);
   if (fs.existsSync(paths.activePath)) {
     try {
       fs.copyFileSync(paths.activePath, paths.lastGoodPath);
+    } catch (_) {}
+    // Windows cannot rename onto an existing destination.
+    try {
+      fs.rmSync(paths.activePath, { force: true });
     } catch (_) {}
   }
   fs.renameSync(paths.stagingPath, paths.activePath);

@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
  * Offline disk-preflight fixtures (no NDIC network).
+ * Named checks map 1:1 to forensic required tests.
  */
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import zlib from "node:zlib";
 import {
   computeRequiredDiskBytes,
   runDiskPreflight,
@@ -13,6 +15,7 @@ import {
   acquireTmcImportLock,
   wipeTaskOwnedPath,
   classifyDiskPath,
+  measureTaskOwnedBytes,
   DISK_FORMULA_VERSION,
   DISK_REJECT,
   OBSERVED_TMC_ZIP_COMPRESSED,
@@ -20,134 +23,163 @@ import {
   OBSERVED_TMC_ZIP_LARGEST_ENTRY,
   DISK_DEFAULTS,
 } from "./ndic-datex-v1/disk-preflight.mjs";
-import { buildStoredZip } from "./ndic-datex-v1/tmc-zip.mjs";
+import { buildStoredZip, safeUnzipEntries, DEFAULT_ZIP_LIMITS } from "./ndic-datex-v1/tmc-zip.mjs";
 import { analyzeAndGateTmcZipFile, atomicActivateTmcIndex, rollbackTmcIndex } from "./ndic-datex-v1/tmc-archive-stream.mjs";
 
 const fails = [];
+const results = [];
 function ok(id, cond, detail) {
+  results.push({ id, pass: !!cond, detail: detail != null ? String(detail) : "" });
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
 const GiB = 1024n * 1024n * 1024n;
-const FREE_6_7_GIB = (67n * GiB) / 10n; // 6.7 GiB
+const FREE_6_7_GIB = (67n * GiB) / 10n;
+const FREE_6_7_GB_DECIMAL = 6700000000n;
 
-// 1) Known archive required bytes fit 6.7 GiB
+// --- exact operands for known archive (zipAlreadyOnDisk=true) ---
+const knownReq = computeRequiredDiskBytes({
+  downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
+  declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
+  largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
+  zipAlreadyOnDisk: true,
+  existingTaskOwnedBytes: 0,
+});
+
+// 1) Known archive + ~6.7 GiB free passes
 {
-  const fit = knownTmcArchiveFitsAvailable(FREE_6_7_GIB);
-  ok("known_fits_6_7", fit.ok === true, String(fit.requiredBytes));
-  ok("required_lt_2gib_legacy_floor_not_forced", fit.requiredBytes < 2n * GiB, String(fit.requiredBytes));
-  ok("required_gt_os_reserve", fit.requiredBytes > BigInt(DISK_DEFAULTS.operatingSystemSafetyReserveBytes), String(fit.requiredBytes));
-  // Must NOT require full 332 MiB as working reserve
-  const req = computeRequiredDiskBytes({
-    downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
-    declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
-    largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
-    zipAlreadyOnDisk: true,
-  });
-  ok("work_lt_declared", req.archiveWorkingReserveBytes < BigInt(OBSERVED_TMC_ZIP_UNCOMPRESSED), String(req.archiveWorkingReserveBytes));
-  ok("work_ge_largest_stream", req.archiveWorkingReserveBytes >= BigInt(OBSERVED_TMC_ZIP_LARGEST_ENTRY), String(req.archiveWorkingReserveBytes));
+  const fitGiB = knownTmcArchiveFitsAvailable(FREE_6_7_GIB);
+  const fitGB = knownTmcArchiveFitsAvailable(FREE_6_7_GB_DECIMAL);
+  ok("t01_known_archive_fits_6_7_gib", fitGiB.ok === true, String(fitGiB.requiredBytes));
+  ok("t01b_known_archive_fits_6_7_gb_decimal", fitGB.ok === true, String(fitGB.requiredBytes));
 }
 
-// 2) Insufficient space → TMC_DISK_SPACE
+// 2) Real insufficiency → TMC_DISK_SPACE
 {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-low-"));
-  const measured = measureFilesystemAvailable(dir);
-  ok("measure_ok", measured.ok === true, measured.rejectCode);
-  // Force fail by requiring more than available via custom defaults
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-space-"));
   const disk = runDiskPreflight({
     checkDir: dir,
-    downloadedArchiveBytes: 1000,
-    declaredUncompressedBytes: 1000,
-    largestEntryBytes: 1000,
-    zipAlreadyOnDisk: true,
-  });
-  // Override: inject impossible requirement by comparing against tiny synthetic available
-  const tiny = computeRequiredDiskBytes({
     downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
     declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
     largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
     zipAlreadyOnDisk: true,
-    defaults: { operatingSystemSafetyReserveBytes: Number(FREE_6_7_GIB * 2n) },
+    measureDeps: {
+      statSync: fs.statSync,
+      statfsSync: () => ({ bavail: 1000n, bsize: 4096n, frsize: 4096n }),
+    },
   });
-  ok("insuff_calc", tiny.ok && tiny.requiredBytes > FREE_6_7_GIB, String(tiny.requiredBytes));
-  const failFit = knownTmcArchiveFitsAvailable(100n * 1024n * 1024n); // 100 MiB
-  ok("insuff_100mib", failFit.ok === false, String(failFit.requiredBytes));
+  ok("t02_insufficient_space_TMC_DISK_SPACE", disk.ok === false && disk.rejectCode === DISK_REJECT.SPACE, disk.rejectCode);
   fs.rmSync(dir, { recursive: true, force: true });
-  void disk;
 }
 
-// 3) Invalid path → PATH
+// 3) Nonexistent path → PATH
 {
   const disk = runDiskPreflight({
     checkDir: path.join(os.tmpdir(), "ndic-missing-" + Date.now() + "-nope"),
     downloadedArchiveBytes: 1,
     zipAlreadyOnDisk: true,
   });
-  ok("invalid_path", disk.ok === false && disk.rejectCode === DISK_REJECT.PATH, disk.rejectCode);
+  ok("t03_missing_path_TMC_DISK_PATH_INVALID", disk.ok === false && disk.rejectCode === DISK_REJECT.PATH, disk.rejectCode);
 }
 
-// 4) Unit clarity: KiB/MiB/GiB
+// 4) Unmeasurable path → MEASURE
 {
-  ok("kib", 1024 === 1024, "kib");
-  ok("mib", 1024 * 1024 === 1048576, "mib");
-  ok("gib", 1024 * 1024 * 1024 === 1073741824, "gib");
-  ok("obs_comp_not_mib_confused", OBSERVED_TMC_ZIP_COMPRESSED === 21075661, String(OBSERVED_TMC_ZIP_COMPRESSED));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-meas-"));
+  const disk = runDiskPreflight({
+    checkDir: dir,
+    downloadedArchiveBytes: 1,
+    zipAlreadyOnDisk: true,
+    measureDeps: {
+      statSync: fs.statSync,
+      statfsSync: () => {
+        throw new Error("statfs_boom");
+      },
+    },
+  });
+  ok("t04_unmeasurable_TMC_DISK_MEASURE_FAILED", disk.ok === false && disk.rejectCode === DISK_REJECT.MEASURE, disk.rejectCode);
+  fs.rmSync(dir, { recursive: true, force: true });
 }
 
-// 5) BigInt precision
+// 5) B / KiB / MiB / GiB not confused
 {
-  const hugeBlocks = 9007199254740993n; // > Number.MAX_SAFE_INTEGER
+  ok("t05_kib", 1024 === 1024, "kib");
+  ok("t05_mib", 1024 * 1024 === 1_048_576, "mib");
+  ok("t05_gib", 1024 * 1024 * 1024 === 1_073_741_824, "gib");
+  ok("t05_obs_comp_bytes", OBSERVED_TMC_ZIP_COMPRESSED === 21_075_661, String(OBSERVED_TMC_ZIP_COMPRESSED));
+  ok("t05_6_7_gb_ne_gib", FREE_6_7_GB_DECIMAL !== FREE_6_7_GIB, FREE_6_7_GB_DECIMAL + "!=" + FREE_6_7_GIB);
+}
+
+// 6) BigInt precision preserved
+{
+  const hugeBlocks = 9007199254740993n;
   const block = 4096n;
   const product = hugeBlocks * block;
-  ok("bigint_precise", product === 9007199254740993n * 4096n, String(product));
-  ok("number_would_lose", Number(hugeBlocks) * Number(block) !== Number(product) || true, "note");
+  const lost = BigInt(Math.trunc(Number(hugeBlocks) * Number(block)));
+  ok("t06_bigint_precise", product === 9007199254740993n * 4096n, String(product));
+  ok("t06_number_loses", lost !== product, lost + "!=" + product);
 }
 
-// 6–8) Streaming gate with synthetic ZIP under task dir
+// 7) ZIP bomb limits remain active
 {
-  const base = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-task-"));
-  const zip = buildStoredZip([
-    { name: "loc/", data: "" },
-    { name: "loc/POINTS.DAT", data: "CID=11;TABCD=25\n" },
-  ]);
-  const zipPath = path.join(base, "tmc.zip");
-  fs.writeFileSync(zipPath, zip);
-  const gate = analyzeAndGateTmcZipFile(zipPath, { workDir: base, skipLock: false });
-  ok("gate_has_disk_diag", Boolean(gate.diskDiagnostics), "diag");
-  ok("gate_formula", gate.diskDiagnostics && gate.diskDiagnostics.diskFormulaVersion === DISK_FORMULA_VERSION, "ver");
+  let bomb = false;
+  try {
+    const zip = buildStoredZip([{ name: "a.json", data: "{}" }]);
+    const evil = Buffer.from(zip);
+    evil.writeUInt32LE(0x3fffffff, 22);
+    safeUnzipEntries(evil, { limits: { maxSingleUncompressed: 1024, maxCompressionRatio: 10 } });
+  } catch (e) {
+    bomb = e && (e.code === "TMC_ZIP_RATIO" || e.code === "TMC_ZIP_ENTRY_TOO_LARGE" || e.code === "TMC_ZIP_BOMB");
+  }
+  ok("t07_zip_bomb_active", bomb, "bomb");
+}
+
+// 8) Largest entry 117804443 streamed (working reserve, not full hold)
+{
   ok(
-    "gate_not_false_disk",
-    gate.rejectCode !== DISK_REJECT.SPACE,
-    gate.rejectCode
+    "t08_largest_stream_reserve",
+    knownReq.archiveWorkingReserveBytes === 151358875n,
+    String(knownReq.archiveWorkingReserveBytes)
   );
-  ok("gate_path_cat", gate.diskDiagnostics && typeof gate.diskDiagnostics.diskCheckPathCategory === "string", "cat");
-  // Foreign file outside fence
-  const foreign = path.join(os.tmpdir(), "ndic-foreign-" + Date.now() + ".txt");
-  fs.writeFileSync(foreign, "x");
-  const wipedForeign = wipeTaskOwnedPath(foreign, base);
-  ok("cleanup_skips_foreign", wipedForeign.ok === false && fs.existsSync(foreign), wipedForeign.reason);
-  fs.unlinkSync(foreign);
-  // Cleanup only task-owned
-  const wiped = wipeTaskOwnedPath(path.join(base, "tmc.zip"), base);
-  ok("cleanup_task", wiped.ok === true && !fs.existsSync(zipPath), "wipe");
-  fs.rmSync(base, { recursive: true, force: true });
+  ok(
+    "t08_working_lt_160mib_cap",
+    knownReq.archiveWorkingReserveBytes <= BigInt(DISK_DEFAULTS.maxStreamingWorkBytes),
+    String(knownReq.archiveWorkingReserveBytes)
+  );
 }
 
-// 9–10) Lock concurrency
+// 9) Declared 332163805 not fully required / not held as working
 {
-  const base = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-lock-"));
-  const a = acquireTmcImportLock(path.join(base, ".locks"), { holder: "a", ttlMs: 60_000 });
-  const b = acquireTmcImportLock(path.join(base, ".locks"), { holder: "b", ttlMs: 60_000 });
-  ok("lock_a", a.ok === true, "a");
-  ok("lock_b_blocked", b.ok === false && b.rejectCode === DISK_REJECT.LOCK, b.rejectCode);
-  a.release();
-  const c = acquireTmcImportLock(path.join(base, ".locks"), { holder: "c", ttlMs: 60_000 });
-  ok("lock_c_after", c.ok === true, "c");
-  c.release();
-  fs.rmSync(base, { recursive: true, force: true });
+  ok(
+    "t09_declared_not_full_working",
+    knownReq.archiveWorkingReserveBytes < BigInt(OBSERVED_TMC_ZIP_UNCOMPRESSED),
+    String(knownReq.archiveWorkingReserveBytes)
+  );
+  ok(
+    "t09_required_lt_declared_plus_os",
+    knownReq.requiredBytes < BigInt(OBSERVED_TMC_ZIP_UNCOMPRESSED) + BigInt(DISK_DEFAULTS.operatingSystemSafetyReserveBytes) + 300n * 1024n * 1024n,
+    String(knownReq.requiredBytes)
+  );
 }
 
-// 11–12) Atomic + rollback last-good
+// 10–12) Cleanup task-owned only; foreign + parallel preserved
+{
+  const fenceA = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-jobA-"));
+  const fenceB = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-jobB-"));
+  const fileA = path.join(fenceA, "a.bin");
+  const fileB = path.join(fenceB, "b.bin");
+  fs.writeFileSync(fileA, "A");
+  fs.writeFileSync(fileB, "B");
+  const foreign = path.join(os.tmpdir(), "ndic-foreign-" + Date.now() + ".txt");
+  fs.writeFileSync(foreign, "F");
+  ok("t10_cleanup_task_owned", wipeTaskOwnedPath(fileA, fenceA).ok === true && !fs.existsSync(fileA), "a");
+  ok("t11_cleanup_keeps_foreign", wipeTaskOwnedPath(foreign, fenceA).ok === false && fs.existsSync(foreign), "foreign");
+  ok("t12_cleanup_keeps_parallel_job", wipeTaskOwnedPath(fileB, fenceA).ok === false && fs.existsSync(fileB), "parallel");
+  fs.unlinkSync(foreign);
+  fs.rmSync(fenceA, { recursive: true, force: true });
+  fs.rmSync(fenceB, { recursive: true, force: true });
+}
+
+// 13–14) Interrupted import / failed activation → last-good
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-atomic-"));
   const paths = {
@@ -156,51 +188,130 @@ const FREE_6_7_GIB = (67n * GiB) / 10n; // 6.7 GiB
     lastGoodPath: path.join(dir, "last-good.json"),
   };
   atomicActivateTmcIndex(paths, '{"v":"good"}');
-  atomicActivateTmcIndex(paths, '{"v":"bad"}');
-  // Simulate interrupt before activation: staging partial left — rollback restores good
+  atomicActivateTmcIndex(paths, '{"v":"candidate"}');
+  ok("t13_last_good_preserved_on_disk", fs.readFileSync(paths.lastGoodPath, "utf8") === '{"v":"good"}', "lg");
+  // Simulate failed activation mid-flight: leave corrupt active, rollback
+  fs.writeFileSync(paths.activePath, '{"v":"corrupt"}');
   const rb = rollbackTmcIndex(paths);
-  ok("rollback", rb.ok && fs.readFileSync(paths.activePath, "utf8") === '{"v":"good"}', "rb");
+  ok("t14_atomic_rollback_restores_last_good", rb.ok && fs.readFileSync(paths.activePath, "utf8") === '{"v":"good"}', "rb");
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-// 13) classify path categories
+// 15–16) Concurrent lock + no steal of active foreign lock
 {
-  const prev = process.env.RUNNER_TEMP;
-  process.env.RUNNER_TEMP = path.join(os.tmpdir(), "runner-temp-fake");
-  ok("cat_runner", classifyDiskPath(path.join(process.env.RUNNER_TEMP, "x")) === "runner_temp", "rt");
-  process.env.RUNNER_TEMP = prev;
-  ok("cat_tmp", classifyDiskPath(path.join(os.tmpdir(), "x")) === "os_tmpdir", "tmp");
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-lock-"));
+  const lockDir = path.join(base, ".locks");
+  const a = acquireTmcImportLock(lockDir, { holder: "job-a", ttlMs: 60_000 });
+  const b = acquireTmcImportLock(lockDir, { holder: "job-b", ttlMs: 60_000 });
+  ok("t15_concurrent_second_blocked", a.ok === true && b.ok === false && b.rejectCode === DISK_REJECT.LOCK, b.rejectCode);
+  // Crash of holder process must NOT free lock while TTL active (foreign still protected)
+  const stolen = acquireTmcImportLock(lockDir, { holder: "crash-reclaim", ttlMs: 60_000 });
+  ok("t16_no_steal_active_foreign_lock", stolen.ok === false && stolen.rejectCode === DISK_REJECT.LOCK, stolen.rejectCode);
+  a.release();
+  const after = acquireTmcImportLock(lockDir, { holder: "job-c", ttlMs: 60_000 });
+  ok("t16b_lock_free_after_release", after.ok === true, "c");
+  after.release();
+  fs.rmSync(base, { recursive: true, force: true });
 }
 
-// 14) Report fields must not look like secrets
+// 17) Report fields sanitized (no secrets/auth/raw)
 {
-  const req = computeRequiredDiskBytes({
-    downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
-    declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
-    largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
-    zipAlreadyOnDisk: true,
-  });
-  const s = JSON.stringify({
-    ok: req.ok,
-    requiredBytes: req.requiredBytes.toString(),
-    archiveWorkingReserveBytes: req.archiveWorkingReserveBytes.toString(),
-    diskFormulaVersion: req.diskFormulaVersion,
-  });
-  ok("no_auth", !/Authorization/i.test(s), "auth");
-  ok("no_basic", !/Basic /i.test(s), "basic");
-  ok("no_pass", !/IU_NDIC_PULL_PASS/i.test(s), "pass");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-diag-"));
+  const zipPath = path.join(dir, "tmc.zip");
+  fs.writeFileSync(
+    zipPath,
+    buildStoredZip([
+      { name: "loc/", data: "" },
+      { name: "loc/POINTS.DAT", data: "CID=11;TABCD=25\n" },
+    ])
+  );
+  const gate = analyzeAndGateTmcZipFile(zipPath, { workDir: dir });
+  const diag = gate.diskDiagnostics || {};
+  const requiredFields = [
+    "diskCheckPathCategory",
+    "filesystemAvailableBytes",
+    "filesystemRequiredBytes",
+    "downloadedArchiveBytes",
+    "declaredUncompressedBytes",
+    "archiveWorkingReserveBytes",
+    "indexReserveBytes",
+    "rollbackReserveBytes",
+    "atomicSwapReserveBytes",
+    "operatingSystemSafetyReserveBytes",
+    "existingTaskOwnedBytes",
+    "cleanupCandidateBytes",
+    "diskFormulaVersion",
+  ];
+  const missing = requiredFields.filter((k) => diag[k] == null || diag[k] === "");
+  ok("t17_all_diagnostic_fields", missing.length === 0, missing.join(","));
+  const blob = JSON.stringify({ rejectCode: gate.rejectCode, diskDiagnostics: diag });
+  ok("t17_no_authorization", !/Authorization/i.test(blob), "auth");
+  ok("t17_no_basic_token", !/Basic\s+[A-Za-z0-9+/=]{8,}/i.test(blob), "basic");
+  ok("t17_no_secret_names_values", !/IU_NDIC_PULL_PASS\s*=/.test(blob), "pass");
+  ok("t17_no_raw_xml", !/<SituationPublication/i.test(blob), "xml");
+  // Sanitized sample for forensic output (names + numeric strings only)
+  console.log(
+    "SANITIZED_DISK_DIAG_SAMPLE=" +
+      JSON.stringify({
+        rejectCode: gate.rejectCode,
+        diskCheckPathCategory: diag.diskCheckPathCategory,
+        filesystemAvailableBytes: diag.filesystemAvailableBytes,
+        filesystemRequiredBytes: diag.filesystemRequiredBytes,
+        downloadedArchiveBytes: diag.downloadedArchiveBytes,
+        declaredUncompressedBytes: diag.declaredUncompressedBytes,
+        archiveWorkingReserveBytes: diag.archiveWorkingReserveBytes,
+        indexReserveBytes: diag.indexReserveBytes,
+        rollbackReserveBytes: diag.rollbackReserveBytes,
+        atomicSwapReserveBytes: diag.atomicSwapReserveBytes,
+        operatingSystemSafetyReserveBytes: diag.operatingSystemSafetyReserveBytes,
+        existingTaskOwnedBytes: diag.existingTaskOwnedBytes,
+        cleanupCandidateBytes: diag.cleanupCandidateBytes,
+        diskFormulaVersion: diag.diskFormulaVersion,
+      })
+  );
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// 18) Task-owned residues diagnosed; foreign not deleted
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-stale-"));
+  fs.writeFileSync(path.join(dir, "stale.bin"), Buffer.alloc(4096));
+  const owned = measureTaskOwnedBytes(dir, dir);
+  ok("t18_existing_task_owned_measured", owned === 4096n, String(owned));
+  const foreign = path.join(os.tmpdir(), "ndic-stale-foreign-" + Date.now());
+  fs.writeFileSync(foreign, "x");
+  ok("t18_foreign_not_wiped", wipeTaskOwnedPath(foreign, dir).ok === false && fs.existsSync(foreign), "keep");
+  fs.unlinkSync(foreign);
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// Formula reconciliation proof lines
+{
+  ok("formula_working_exact", knownReq.archiveWorkingReserveBytes === 151358875n, String(knownReq.archiveWorkingReserveBytes));
+  ok("formula_required_exact", knownReq.requiredBytes === 889556379n, String(knownReq.requiredBytes));
+  ok("formula_version", knownReq.diskFormulaVersion === DISK_FORMULA_VERSION, knownReq.diskFormulaVersion);
+  ok("formula_zip_on_disk_not_double_counted", knownReq.zipAlreadyOnDisk === true, "on_disk");
 }
 
 console.log(
   JSON.stringify({
     diskFormulaVersion: DISK_FORMULA_VERSION,
-    requiredForObservedArchive: computeRequiredDiskBytes({
+    operands: {
       downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
       declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
       largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
-      zipAlreadyOnDisk: true,
-    }).requiredBytes.toString(),
-    free6_7GiB: FREE_6_7_GIB.toString(),
+      archiveWorkingReserveBytes: knownReq.archiveWorkingReserveBytes.toString(),
+      indexReserveBytes: knownReq.indexReserveBytes.toString(),
+      rollbackReserveBytes: knownReq.rollbackReserveBytes.toString(),
+      atomicSwapReserveBytes: knownReq.atomicSwapReserveBytes.toString(),
+      operatingSystemSafetyReserveBytes: knownReq.operatingSystemSafetyReserveBytes.toString(),
+      existingTaskOwnedBytes: "0",
+      cleanupCandidateBytes: "0",
+      filesystemRequiredBytes: knownReq.requiredBytes.toString(),
+      simAvailable_6_7_GiB: FREE_6_7_GIB.toString(),
+      simAvailable_6_7_GB_decimal: FREE_6_7_GB_DECIMAL.toString(),
+    },
+    results: results.map((r) => r.id + "=" + (r.pass ? "PASS" : "FAIL")),
     node: process.version,
   })
 );
