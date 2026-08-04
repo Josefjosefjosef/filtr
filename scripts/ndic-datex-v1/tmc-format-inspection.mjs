@@ -15,6 +15,21 @@ import {
   assertReportPathSafe,
   containsForbiddenPathLeak,
 } from "./tmc-path-redaction.mjs";
+import {
+  SP08001_EXCHANGE_FORMAT_VERSION,
+  SP08001_STANDARD_TABLE_COUNT,
+  SP08001_PHYSICAL,
+  resolveSp08001TableCodeFromBasename,
+} from "./tmc-sp08001-contract.mjs";
+import {
+  assessSp08001ContentContract,
+  detectDatEncodingFromBytes,
+  ENCODING_LAYER,
+  parseSp08001HeaderLine,
+  resolveEncodingLayers,
+  splitSp08001Fields,
+  sp08001PhysicalContract,
+} from "./tmc-sp08001-header.mjs";
 
 export const INSPECTION_MODE = "format_inspection";
 export const INSPECTION_REPORT_MAX_BYTES = 64 * 1024;
@@ -147,6 +162,23 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "filesystemAvailableBytes",
   "filesystemRequiredBytes",
   "note",
+  "authoritativeLayer",
+  "exchangeFormatContractVersion",
+  "tableContractCount",
+  "contentVerifiedTableCount",
+  "delimiterNormalized",
+  "headerState",
+  "fieldCountAggregate",
+  "requiredTablesPresent",
+  "optionalTablesPresent",
+  "unknownSupplementaryTables",
+  "cidMatchState",
+  "tabcdMatchState",
+  "coordinateSource",
+  "relationshipIntegrity",
+  "encodingDatLayer",
+  "encodingCpgLayer",
+  "encodingFalseConflictAvoided",
 ]);
 
 export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
@@ -207,49 +239,77 @@ export function extCategoryOf(ext) {
   return "other";
 }
 
+const ROLE_TO_SP08001_TABLE = Object.freeze({
+  points: "POINTS",
+  names: "NAMES",
+  roads: "ROADS",
+  segments: "SEGMENTS",
+});
+
+const SP08001_CODE_TO_ROLE = Object.freeze({
+  POINTS: "points",
+  NAMES: "names",
+  ROADS: "roads",
+  SEGMENTS: "segments",
+  POFFSETS: "offsets",
+  SOFFSETS: "offsets",
+  ADMINISTRATIVEAREA: "administrative",
+  OTHERAREAS: "areas",
+  LOCATIONCODES: "locations",
+  INTERSECTIONS: "locations",
+  JUNCTIONS: "locations",
+  LOCATIONDATASETS: "metadata",
+  COUNTRIES: "metadata",
+  CLASSES: "metadata",
+  TYPES: "metadata",
+  SUBTYPES: "metadata",
+  LANGUAGES: "metadata",
+  EUROROADNO: "metadata",
+  NAMETRANSLATIONS: "metadata",
+  SUBTYPETRANSLATION: "metadata",
+  ERNO_BELONGS_TO_CO: "metadata",
+  ROAD_NETWORK_LEVEL_TYPES: "metadata",
+  SEG_HAS_ERNO: "metadata",
+  DLRS: "metadata",
+  DLR_DESC: "metadata",
+  README: "metadata",
+});
+
 /**
- * Content contract for required singleton roles (no filenames, no raw values).
+ * Content contract for required singleton roles via SP08001 exact headers (no raw values).
+ * Filename hints never content-verify. Archive-level 11/25 alone never verifies a table.
  * @param {string} role
  * @param {object} peek from inspectTextPeek
- * @returns {{ headerContractMatch: boolean, cidMatch: boolean, tabcdMatch: boolean, contentVerified: boolean, evidenceLevel: string }}
+ * @param {{ tableCode?: string, expectedCid?: number, expectedTabcd?: number }} [opts]
  */
-export function assessSingletonContentContract(role, peek) {
+export function assessSingletonContentContract(role, peek, opts = {}) {
+  const tableCode = opts.tableCode || ROLE_TO_SP08001_TABLE[role] || null;
+  if (tableCode) {
+    const a = assessSp08001ContentContract(tableCode, peek, opts);
+    return {
+      headerContractMatch: a.headerContractMatch,
+      cidMatch: a.cidMatch,
+      tabcdMatch: a.tabcdMatch,
+      contentVerified: a.contentVerified,
+      evidenceLevel: a.evidenceLevel,
+      headerState: a.headerState,
+      tableCode: a.tableCode,
+      delimiter: a.delimiter,
+      fieldCount: a.fieldCount,
+    };
+  }
   const p = peek || {};
-  const hdr = p.headerRoleCounts || {};
-  let headerContractMatch = false;
-  if (role === "points") {
-    headerContractMatch = Boolean(
-      (hdr.cid_field && hdr.tabcd_field && (hdr.latitude_field || hdr.longitude_field || hdr.location_code_field)) ||
-        (p.positional && p.cid11Seen && p.tabcd25Seen && p.candidateCoordinateColumns)
-    );
-  } else if (role === "names") {
-    headerContractMatch = Boolean(hdr.name_reference_field || (hdr.cid_field && hdr.tabcd_field && p.hasHeader));
-  } else if (role === "roads") {
-    headerContractMatch = Boolean(hdr.road_field || (hdr.cid_field && hdr.tabcd_field && hdr.name_reference_field));
-  } else if (role === "segments") {
-    headerContractMatch = Boolean(
-      hdr.parent_field ||
-        hdr.next_field ||
-        hdr.previous_field ||
-        (p.candidateRelationshipColumns && hdr.cid_field)
-    );
-  }
-  const cidMatch = p.cid11Seen === true && (hdr.cid_field > 0 || p.cidEvidence === "header_column" || p.cidUnambiguous);
-  const tabcdMatch =
-    p.tabcd25Seen === true && (hdr.tabcd_field > 0 || p.tabcdEvidence === "header_column" || p.tabcdUnambiguous);
-  // Content-verified singleton: header contract + CID/TABCD when those fields exist in the table.
-  let contentVerified = false;
-  if (headerContractMatch) {
-    if (role === "points" || role === "names" || role === "roads" || role === "segments") {
-      const needsCidTab = Boolean(hdr.cid_field || hdr.tabcd_field);
-      contentVerified = needsCidTab ? cidMatch && tabcdMatch : headerContractMatch;
-    }
-  }
   let evidenceLevel = ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
-  if (contentVerified) evidenceLevel = ROLE_EVIDENCE_LEVEL.CONTENT_VERIFIED;
-  else if (headerContractMatch) evidenceLevel = ROLE_EVIDENCE_LEVEL.HEADER_CONTRACT;
-  else if (p.hasHeader || p.positional) evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
-  return { headerContractMatch, cidMatch, tabcdMatch, contentVerified, evidenceLevel };
+  if (p.hasHeader || p.positional) evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+  return {
+    headerContractMatch: false,
+    cidMatch: false,
+    tabcdMatch: false,
+    contentVerified: false,
+    evidenceLevel,
+    headerState: "UNVERIFIED",
+    tableCode: null,
+  };
 }
 
 function emptyRoleMap() {
@@ -379,8 +439,10 @@ const CPG_NORMALIZE = Object.freeze({
 });
 
 export function classifyEntryRole(entryPath) {
-  const base = path.basename(String(entryPath || "")).replace(/\.[^.]+$/, "");
-  const ext = (String(entryPath || "").toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
+  const full = String(entryPath || "");
+  const baseWithExt = path.basename(full);
+  const base = baseWithExt.replace(/\.[^.]+$/, "");
+  const ext = (full.toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
   if (ext === "pdf" || ext === "html" || ext === "htm") return "documentation";
   if (ext === "png" || ext === "jpg" || ext === "jpeg" || ext === "gif") return "image";
   if (ext === "kml") return "ignored_other";
@@ -388,6 +450,9 @@ export function classifyEntryRole(entryPath) {
   if (ext === "shp" || ext === "shx" || ext === "prj" || ext === "sbn" || ext === "sbx") return "shp_layer";
   if (ext === "db" || ext === "sqlite" || ext === "sqlite3") return "sqlite_candidate";
   if (ext === "cpg") return "encoding_cpg";
+  // Prefer exact SP08001 export names over broad basename heuristics.
+  const spCode = resolveSp08001TableCodeFromBasename(baseWithExt);
+  if (spCode && SP08001_CODE_TO_ROLE[spCode]) return SP08001_CODE_TO_ROLE[spCode];
   for (const [re, role] of ROLE_PATTERNS) {
     if (re.test(base)) return role;
   }
@@ -479,11 +544,13 @@ export function inspectTextPeek(buf) {
     textBinary: isMostlyText(buf) ? "text" : "binary",
     bom: detectBom(buf),
     encodingCandidate: "UNKNOWN",
+    encodingLayer: ENCODING_LAYER.DAT_DETECTED,
     lineEnding: "unknown",
     delimiter: "unknown",
     quoteStyle: "none",
     escapeStyle: "unknown",
     hasHeader: false,
+    headerCodes: [],
     fieldCount: 0,
     headerFieldCount: 0,
     firstDataFieldCount: 0,
@@ -504,18 +571,25 @@ export function inspectTextPeek(buf) {
   };
   if (out.textBinary !== "text") return out;
 
+  const detected = detectDatEncodingFromBytes(buf);
+  out.encodingCandidate =
+    detected.encoding === "ASCII_OR_UTF8"
+      ? "ASCII_OR_UTF8"
+      : detected.encoding === "NON_UTF8"
+        ? "NON_UTF8"
+        : detected.encoding;
+  out.bomPresent = detected.bom === true;
+
   let start = 0;
   if (out.bom === "utf8") start = 3;
   else if (out.bom === "utf16le" || out.bom === "utf16be") start = 2;
 
-  // Prefer UTF-8 decode; binary-safe fallback latin1 for structure only (values never emitted).
+  // Decode for structure only. Do NOT auto-label as UTF-8 solely because decode succeeded.
   let text;
-  try {
-    text = buf.slice(start, Math.min(buf.length, INSPECTION_TEXT_PEEK_BYTES)).toString("utf8");
-    out.encodingCandidate = out.bom === "utf8" ? "UTF-8" : "UTF-8";
-  } catch (_) {
+  if (detected.encoding === "NON_UTF8") {
     text = buf.slice(start, Math.min(buf.length, INSPECTION_TEXT_PEEK_BYTES)).toString("latin1");
-    out.encodingCandidate = "UNKNOWN";
+  } else {
+    text = buf.slice(start, Math.min(buf.length, INSPECTION_TEXT_PEEK_BYTES)).toString("utf8");
   }
 
   if (/\r\n/.test(text)) out.lineEnding = "crlf";
@@ -529,10 +603,13 @@ export function inspectTextPeek(buf) {
   if (!lines.length) return out;
 
   out.delimiter = detectDelimiter(lines[0]);
-  const fieldRows = lines.map((l) => splitFields(l, out.delimiter));
+  const fieldRows = lines.map((l) =>
+    out.delimiter === "semicolon" ? splitSp08001Fields(l) : splitFields(l, out.delimiter)
+  );
   out.maxFieldCountInSample = Math.max(...fieldRows.map((r) => r.length));
   const first = fieldRows[0];
-  out.hasHeader = looksLikeHeader(first);
+  const headerParse = out.delimiter === "semicolon" ? parseSp08001HeaderLine(lines[0]) : { ok: false };
+  out.hasHeader = headerParse.ok === true || looksLikeHeader(first);
   out.positional = !out.hasHeader;
   out.headerFieldCount = out.hasHeader ? first.length : 0;
   out.fieldCount = first.length;
@@ -540,7 +617,10 @@ export function inspectTextPeek(buf) {
   out.consistentFieldCount = fieldRows.every((r) => r.length === first.length);
 
   if (out.hasHeader) {
-    for (const f of first) bump(out.headerRoleCounts, normalizeHeaderRole(f));
+    out.headerCodes = headerParse.ok
+      ? headerParse.codes
+      : first.map((f) => String(f || "").trim().toUpperCase());
+    for (const f of out.headerCodes) bump(out.headerRoleCounts, normalizeHeaderRole(f));
     if (out.headerRoleCounts.latitude_field || out.headerRoleCounts.longitude_field) {
       out.candidateCoordinateColumns = true;
     }
@@ -564,17 +644,23 @@ export function inspectTextPeek(buf) {
   }
 
   // CID/TABCD detection without emitting values: scan tokens as numbers only for exact 11/25 in likely columns.
-  for (const row of fieldRows) {
+  for (let li = 0; li < fieldRows.length; li++) {
+    const row = fieldRows[li];
     for (let i = 0; i < row.length; i++) {
-      const cell = String(row[i]).trim();
-      if (cell === "11") {
+      const tok = String(row[i] || "").trim();
+      if (tok === "11") {
         out.cid11Seen = true;
-        out.cidEvidence = out.hasHeader && i < first.length && normalizeHeaderRole(first[i]) === "cid_field" ? "header_column" : "data_token";
+        out.cidEvidence =
+          out.hasHeader && i < first.length && normalizeHeaderRole(first[i]) === "cid_field"
+            ? "header_column"
+            : "data_token";
       }
-      if (cell === "25") {
+      if (tok === "25") {
         out.tabcd25Seen = true;
         out.tabcdEvidence =
-          out.hasHeader && i < first.length && normalizeHeaderRole(first[i]) === "tabcd_field" ? "header_column" : "data_token";
+          out.hasHeader && i < first.length && normalizeHeaderRole(first[i]) === "tabcd_field"
+            ? "header_column"
+            : "data_token";
       }
     }
   }
@@ -587,9 +673,8 @@ export function inspectTextPeek(buf) {
       out.tabcdEvidence = out.tabcdEvidence === "none" ? "header_name" : out.tabcdEvidence;
     }
   }
-  out.cidUnambiguous = out.cid11Seen === true && out.cidEvidence !== "none";
-  out.tabcdUnambiguous = out.tabcd25Seen === true && out.tabcdEvidence !== "none";
-
+  out.cidUnambiguous = out.cid11Seen && out.cidEvidence !== "none";
+  out.tabcdUnambiguous = out.tabcd25Seen && out.tabcdEvidence !== "none";
   return out;
 }
 
@@ -1034,15 +1119,29 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   let cidMismatch = false;
   let tabcdMismatch = false;
   let peeks = { cidOk: false, coordsFromDat: false, coordsFromShp: false };
-  const encodings = new Set();
+  const encodingLayers = [];
   let sqlite = null;
+  let delimiterVotes = Object.create(null);
+  let headerStateVotes = Object.create(null);
+  let fieldCountSum = 0;
+  let fieldCountN = 0;
+  let contentVerifiedTableCount = 0;
+  const verifiedTableCodes = new Set();
+  let requiredTablesPresent = 0;
+  let optionalTablesPresent = 0;
+  let unknownSupplementaryTables = 0;
 
   for (const ent of entries) {
     if (Date.now() - started > timeoutMs) {
       return failReport(INSPECTION_REJECT.TIMEOUT, "timeout", opts.centralMeta);
     }
-    let role = ent.role || classifyEntryRole("x." + (ent.ext || "dat"));
+    let role = ent.role || classifyEntryRole(ent.name || "x." + (ent.ext || "dat"));
     if (!STRUCTURAL_ROLE_ALLOWLIST.includes(role)) role = "ignored_other";
+    const tableCode =
+      ent.tableCode ||
+      resolveSp08001TableCodeFromBasename(path.basename(String(ent.name || ""))) ||
+      ROLE_TO_SP08001_TABLE[role] ||
+      null;
     bump(roleCounts, role);
     bump(roleCandidateCounts, role);
     sizeByRole[role] = (sizeByRole[role] || 0) + (ent.buf ? ent.buf.length : 0);
@@ -1055,7 +1154,7 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
 
     if (ext === "cpg") {
       const c = inspectCpgPeek(ent.buf);
-      encodings.add(c.encodingNormalized);
+      encodingLayers.push({ layer: ENCODING_LAYER.CPG_SHP_DBF, encoding: c.encodingNormalized });
       evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
       bump(roleEvidenceLevelCounts, evidenceLevel);
       continue;
@@ -1090,16 +1189,46 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       }
       if (peek.tabcd25Seen) tabcd25 = true;
       if (peek.candidateCoordinateColumns) peeks.coordsFromDat = true;
-      if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN") encodings.add(peek.encodingCandidate);
+      if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN") {
+        encodingLayers.push({ layer: ENCODING_LAYER.DAT_DETECTED, encoding: peek.encodingCandidate });
+      }
+      if (peek.delimiter && peek.delimiter !== "unknown") bump(delimiterVotes, peek.delimiter);
+      if (peek.hasHeader) bump(headerStateVotes, "PRESENT");
+      else if (peek.positional) bump(headerStateVotes, "ABSENT");
+      if (peek.fieldCount > 0) {
+        fieldCountSum += peek.fieldCount;
+        fieldCountN += 1;
+      }
+
+      if (tableCode === "README") {
+        // README is ASCII meta — do not treat as UTF-8 DAT auto-label
+        encodingLayers.push({ layer: ENCODING_LAYER.README_DECLARED, encoding: "ASCII" });
+      }
 
       if (REQUIRED_SINGLETON_ROLES.includes(role)) {
-        const assessed = assessSingletonContentContract(role, peek);
+        const assessed = assessSingletonContentContract(role, peek, { tableCode });
         evidenceLevel = assessed.evidenceLevel;
         if (assessed.headerContractMatch) bump(roleHeaderContractMatchCounts, role);
+        // CID/TABCD match only counts when those columns exist in the matched table contract.
         if (assessed.cidMatch) bump(roleCidMatchCounts, role);
         if (assessed.tabcdMatch) bump(roleTabcdMatchCounts, role);
-        if (assessed.contentVerified) bump(roleContentVerifiedCounts, role);
+        if (assessed.contentVerified) {
+          bump(roleContentVerifiedCounts, role);
+          if (tableCode) verifiedTableCodes.add(tableCode);
+        }
+      } else if (tableCode) {
+        const assessed = assessSp08001ContentContract(tableCode, peek);
+        evidenceLevel =
+          assessed.evidenceLevel === "content_verified"
+            ? ROLE_EVIDENCE_LEVEL.CONTENT_VERIFIED
+            : assessed.evidenceLevel === "header_contract"
+              ? ROLE_EVIDENCE_LEVEL.HEADER_CONTRACT
+              : peek.hasHeader || peek.positional
+                ? ROLE_EVIDENCE_LEVEL.METADATA_ONLY
+                : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
+        if (assessed.contentVerified) verifiedTableCodes.add(tableCode);
       } else {
+        unknownSupplementaryTables += 1;
         evidenceLevel =
           peek.hasHeader || peek.positional ? ROLE_EVIDENCE_LEVEL.METADATA_ONLY : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
       }
@@ -1109,10 +1238,29 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     bump(roleEvidenceLevelCounts, evidenceLevel);
   }
 
-  if (encodings.has("UNKNOWN") && encodings.size > 1) encodings.delete("UNKNOWN");
-  let encodingNorm = "UNKNOWN";
-  if (encodings.size === 1) encodingNorm = [...encodings][0];
-  else if (encodings.size > 1) encodingNorm = "CONFLICT";
+  contentVerifiedTableCount = verifiedTableCodes.size;
+  const encResolved = resolveEncodingLayers(encodingLayers);
+  let encodingNorm = encResolved.datEncoding || "UNKNOWN";
+  if (encodingNorm === "UNVERIFIED") encodingNorm = "UNKNOWN";
+
+  let delimiterNormalized = "UNVERIFIED";
+  {
+    const keys = Object.keys(delimiterVotes);
+    if (keys.length === 1) delimiterNormalized = keys[0];
+    else if (keys.length > 1) delimiterNormalized = "CONFLICT";
+  }
+  let headerState = "UNVERIFIED";
+  {
+    const keys = Object.keys(headerStateVotes);
+    if (keys.length === 1) headerState = keys[0] === "PRESENT" ? "PRESENT" : "ABSENT";
+    else if (keys.includes("PRESENT") && keys.includes("ABSENT")) headerState = "MIXED";
+  }
+  const fieldCountAggregate = fieldCountN ? Math.round(fieldCountSum / fieldCountN) : 0;
+
+  for (const role of REQUIRED_SINGLETON_ROLES) {
+    if ((roleCandidateCounts[role] || 0) > 0) requiredTablesPresent += 1;
+  }
+  optionalTablesPresent = Math.max(0, Object.keys(roleCandidateCounts).length - requiredTablesPresent);
 
   const central = opts.centralMeta || {};
   const candidate = buildCandidateFormatFromCentral({
@@ -1169,6 +1317,19 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       ? "archive_reject"
       : "insufficient_evidence";
 
+  const cidMatchState =
+    (roleCidMatchCounts.points || 0) + (roleCidMatchCounts.names || 0) + (roleCidMatchCounts.roads || 0) + (roleCidMatchCounts.segments || 0) > 0
+      ? "MATCHED_IN_CONTRACT"
+      : cid11
+        ? "TOKEN_ONLY_UNVERIFIED"
+        : "NOT_SEEN";
+  const tabcdMatchState =
+    (roleTabcdMatchCounts.points || 0) + (roleTabcdMatchCounts.names || 0) + (roleTabcdMatchCounts.roads || 0) + (roleTabcdMatchCounts.segments || 0) > 0
+      ? "MATCHED_IN_CONTRACT"
+      : tabcd25
+        ? "TOKEN_ONLY_UNVERIFIED"
+        : "NOT_SEEN";
+
   const report = {
     ok: rejectCode == null,
     mode: INSPECTION_MODE,
@@ -1203,6 +1364,23 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     publishActivated: false,
     productionWrite: false,
     reportTruncated: false,
+    authoritativeLayer: SP08001_PHYSICAL.authoritativeLayer,
+    exchangeFormatContractVersion: SP08001_EXCHANGE_FORMAT_VERSION,
+    tableContractCount: SP08001_STANDARD_TABLE_COUNT,
+    contentVerifiedTableCount,
+    delimiterNormalized,
+    headerState,
+    fieldCountAggregate,
+    requiredTablesPresent,
+    optionalTablesPresent,
+    unknownSupplementaryTables,
+    cidMatchState,
+    tabcdMatchState,
+    coordinateSource: peeks.coordsFromDat ? "points_dat" : peeks.coordsFromShp ? "shp_companion" : "UNVERIFIED",
+    relationshipIntegrity: "UNVERIFIED",
+    encodingDatLayer: encodingNorm,
+    encodingCpgLayer: encResolved.cpgEncoding,
+    encodingFalseConflictAvoided: encResolved.falseConflictAvoided === true,
   };
   return finalizeInspectionOutcome(report);
 }

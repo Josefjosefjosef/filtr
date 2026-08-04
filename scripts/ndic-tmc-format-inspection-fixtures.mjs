@@ -49,6 +49,10 @@ import { buildStoredZip, DEFAULT_ZIP_LIMITS } from "./ndic-datex-v1/tmc-zip.mjs"
 import { getNdicDatexV1Config } from "./ndic-datex-v1/config.mjs";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 import {
+  buildSyntheticSp08001Dat,
+  syntheticPointsRow,
+} from "./ndic-datex-v1/tmc-sp08001-header.mjs";
+import {
   assertInspectionCleanupTarget,
   wipeInspectionTaskDir,
   CLEANUP_REJECT,
@@ -250,8 +254,8 @@ function shpHeaderSynthetic(opts = {}) {
   ok("dup_filename_auth", filenameOnly.authoritativeFormatVerified === false, "auth");
 
   const contentConflict = inspectFormatFromEntryPeeks([
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;2;15;51\n") },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow({ LCD: "900001" })]) },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow({ LCD: "900002" })]) },
   ]);
   ok("dup_content_reject", contentConflict.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, contentConflict.rejectCode);
   ok("dup_content_outcome", contentConflict.inspectionOutcome === INSPECTION_OUTCOME.EXPECTED_REJECT, contentConflict.inspectionOutcome);
@@ -568,7 +572,7 @@ function shpHeaderSynthetic(opts = {}) {
   ok("multi_ext_extcats", multiExt.roleExtensionCategoryCounts.points.dat === 1 && multiExt.roleExtensionCategoryCounts.points.txt === 1, "e");
 
   const oneVerified = inspectFormatFromEntryPeeks([
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow()]) },
     { role: "points", ext: "dat", buf: Buffer.from("hint-only\n") },
   ]);
   ok("one_verified_not_dup", oneVerified.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, oneVerified.rejectCode);
@@ -579,16 +583,16 @@ function shpHeaderSynthetic(opts = {}) {
     { role: "shp_layer", ext: "shp", buf: shpHeaderSynthetic() },
     { role: "shp_layer", ext: "shx", buf: shpHeaderSynthetic() },
     { role: "dbf_layer", ext: "dbf", buf: dbfHeaderSynthetic(["LCD", "NAME"]) },
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow()]) },
   ]);
   ok("geo_no_dup", geo.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, geo.rejectCode);
   ok("geo_auth_unverified", geo.authoritativeFormatVerified === false, "av");
 
   const namesLang = inspectFormatFromEntryPeeks([
-    { role: "names", ext: "dat", buf: Buffer.from("NAME\nx\n") },
-    { role: "names", ext: "dat", buf: Buffer.from("NAME\ny\n") },
+    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "1", "Zkusebni Lhota", ""]]) },
+    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "2", "Synteticka silnice", ""]]) },
   ]);
-  // NAME header → content-verified names without CID → two verified → conflict
+  // Two content-verified NAMES → conflict
   ok("names_conflict_or_warn", namesLang.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE || namesLang.multipleCandidateRoleCount >= 1, "nl");
 
   const ser = serializeInspectionReport(multiExt);
@@ -644,14 +648,15 @@ function shpHeaderSynthetic(opts = {}) {
 
   const assessed = assessSingletonContentContract(
     "points",
-    inspectTextPeek(Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n"))
+    inspectTextPeek(buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow()])),
+    { tableCode: "POINTS" }
   );
   ok("singleton_contract", assessed.contentVerified === true && assessed.headerContractMatch === true, "sc");
 
   // expected reject + safe serialize (artifact pathway)
   const conflict = inspectFormatFromEntryPeeks([
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;2;15;51\n") },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow({ LCD: "900001" })]) },
+    { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow({ LCD: "900002" })]) },
   ]);
   const conflictSer = serializeInspectionReport(conflict);
   ok("expected_reject_serializes", conflictSer.object.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, "ers");
