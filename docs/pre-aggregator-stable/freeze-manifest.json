@@ -1,29 +1,29 @@
 {
-  "freezeId": "root-hub-no-projects-v1-20260804",
+  "freezeId": "bottom-nav-unify-stable-v1-20260804",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-04T02:40:00Z",
-  "note": "Freeze bump: root-hub-no-projects-v1-20260804 (canonical hub https://infouzel.cz/; forbid /projects/ as app hub; SW cache bump).",
+  "updatedAt": "2026-08-04T04:55:00Z",
+  "note": "Freeze bump: bottom-nav-unify-stable-v1-20260804 (shared mobile/tablet #iuMobileBottomNav measure + LDP/iCentrum clearance; SW cache bump).",
   "files": {
-    "projects/index.html": "4afeb4c094108923523824988820ebaaf062c0d2656b8d04a6288c29bcbed20f",
+    "projects/index.html": "8b2978e60ff33f6a78ac7bfa7aa2eb0c054a203df86fc6e1ce56c5837815f246",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
-    "assets/app.js": "7e412919ede385cc1d738abe89d95ada46b7a92d6d74f6ccfc6b2425698cafef",
+    "assets/app.js": "6bf0c4e1bc62ea86ea2e1fb2f470a2c438dff86c5dc347993b418406d59e0e10",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "09a8d437cfd401dafdf157bfc7e6dd1d530dd88caa827ad063b4467f0d81bc33",
+    "sw.js": "e3ef77083ff0808acf465bde19ab42d40cc0ba10debf12976ebad0d34eb90d07",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "ab0b92b94c1d2f22897943881671c635f1a1bc79b2c130ad1b0436c80e8d3730",
     "assets/iu-user-data-backup-core.js": "8f4cd93fed8399fd24cb670fd992c5fd230155fb26ec4c835c333e477840fb32",
-    "assets/iu-local-data-protection.js": "5b987dde54cd5def0593b7ab5ca23234c51fdfda9f274fd5278fd2d1ca99e02b",
+    "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
     "assets/iu-tasks-premium.css": "dc6ac1e6f121de57ad701b4bb6c06fac706fb619e70a9ea7169206727e6cf7eb"
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-04-root-hub-no-projects-v1\"",
+      "CACHE_VERSION = \"2026-08-04-bottom-nav-unify-stable-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -35,7 +35,8 @@
     ],
     "projects/index.html": [
       "chmi-region-cards-split-v1-20260804",
-      "custom-buttons-dynamic-bottom-clearance-v1-20260804"
+      "custom-buttons-dynamic-bottom-clearance-v1-20260804",
+      "bottom-nav-unify-v1-20260804"
     ]
   }
 }

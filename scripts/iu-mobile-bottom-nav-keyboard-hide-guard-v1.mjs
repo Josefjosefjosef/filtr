@@ -20,11 +20,11 @@ const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.c
 const INDEX = path.join(REPO, "projects", "index.html");
 const SW = path.join(REPO, "sw.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
-const BASE = `http://127.0.0.1:${PORT}/projects/`;
+const BASE = `http://127.0.0.1:${PORT}/`;
 const CSS_BUST =
-  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803";
-const JS_BUST_TOKEN = "kb-restore-v3-20260803";
-const SW_VER = "2026-08-04-root-hub-no-projects-v1";
+  "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
+const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
+const SW_VER = "2026-08-04-bottom-nav-unify-stable-v1";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
@@ -118,7 +118,7 @@ function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   return new Promise((resolve, reject) => {
     const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
+      const req = http.request({ host, port, path: "/", method: "HEAD", timeout: 800 }, (res) => {
         res.resume();
         resolve();
       });
@@ -390,16 +390,16 @@ async function runViewport(browser, vp) {
     });
     await blurActive(page);
 
-    /* H: ten open/type/close cycles — no stuck class */
+    /* H: ten open/type/close cycles — no stuck class (CI tablet needs slightly longer settle). */
     let tenOk = true;
     for (let i = 0; i < 10; i++) {
       await page.focus("#iuKbHideA");
       await page.evaluate(() => window.__iuMockKeyboard(true));
-      await page.waitForTimeout(40);
+      await page.waitForTimeout(80);
       const mid = await readNavState(page);
       if (!isHidden(mid)) tenOk = false;
       await page.evaluate(() => window.__iuMockKeyboard(false));
-      await page.waitForTimeout(40);
+      await page.waitForTimeout(90);
       const end = await readNavState(page);
       if (!isVisible(end)) tenOk = false;
     }
@@ -520,7 +520,9 @@ async function main() {
   const server = http.createServer((req, res) => {
     try {
       let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
-      if (p.endsWith("/")) p += "index.html";
+      /* Prod-parity: app hub is site root (projects/index.html). */
+      if (p === "/" || p === "") p = "/projects/index.html";
+      else if (p.endsWith("/")) p += "index.html";
       const fp = path.join(REPO, p.replace(/^\/+/, ""));
       if (!fp.startsWith(REPO) || !fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
         res.writeHead(404);

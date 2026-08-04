@@ -19,7 +19,7 @@ const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.c
 const INDEX = path.join(REPO, "projects", "index.html");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8897", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803";
+const CACHE_BUST = "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const HUB_TITLE = "Vzory smluv a plné moci";
 
 const LONG_DOCS = [

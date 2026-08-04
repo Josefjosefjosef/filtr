@@ -48,7 +48,8 @@ const CONTENT_TYPES = {
 
 function resolveFile(urlPath) {
   let rel = urlPath.replace(/^\/+/, "");
-  if (rel === "") rel = "index.html";
+  /* Prod-parity: public hub is site root (/). Pages publish serves projects/index.html at /. */
+  if (rel === "" || rel === "index.html") rel = path.join("projects", "index.html");
   if (rel === "manifest.json") rel = path.join("projects", "manifest.json");
   if (rel === "icons" || rel.startsWith("icons" + path.sep) || rel.startsWith("icons/")) {
     rel = path.join("projects", rel.replace(/\//g, path.sep));
@@ -113,7 +114,7 @@ function clsInitScript() {
 
 /** Append iuInfoSystem=off so legacy media rail/feed remain measurable under cutover. */
 function withLegacyMediaParams(urlPath) {
-  const p = String(urlPath || "/projects/");
+  const p = String(urlPath || "/");
   if (/[?&]iuInfoSystem=/.test(p)) return p;
   return p + (p.indexOf("?") >= 0 ? "&" : "?") + "iuInfoSystem=off";
 }
