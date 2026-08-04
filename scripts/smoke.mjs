@@ -91,7 +91,21 @@ function serveFile(urlPath) {
 function startServer() {
   return new Promise((resolve) => {
     server = http.createServer((req, res) => {
-      const urlPath = req.url?.split("?")[0] || "/";
+      const raw = String(req.url || "/");
+      const u = new URL(raw, "http://127.0.0.1");
+      const p = u.pathname || "/";
+      // Mirror prod: /projects HTML hub → 301 / (keep data + version.json).
+      if (
+        (p === "/projects" || p === "/projects/" || p.startsWith("/projects/")) &&
+        p !== "/projects/version.json" &&
+        !p.startsWith("/projects/data/")
+      ) {
+        const rest = p === "/projects" || p === "/projects/" ? "/" : "/" + p.slice("/projects/".length);
+        res.writeHead(301, { Location: rest + (u.search || "") });
+        res.end();
+        return;
+      }
+      const urlPath = p;
       const data = serveFile(urlPath);
       if (data) {
         const ext = path.extname(urlPath);
