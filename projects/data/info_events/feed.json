@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
-  "generatedAt": "2026-08-04T14:27:42.336Z",
+  "generatedAt": "2026-08-04T14:44:22.462Z",
   "connector": "iu-info-events-refresh",
   "architecture": "v2-pipeline",
-  "itemCount": 30,
+  "itemCount": 29,
   "maxAgeHours": 96,
   "activeWindowHours": 96,
   "onlyGroup": null,
@@ -13769,284 +13769,6 @@
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-3993f76dd6974c91",
-      "title": "Velmi silné bouřky — Beroun a dalších 7 oblastí",
-      "description": "Severně a severozápadně od Plzně se vyskytují velmi silné bouřky postupující zvolna k severovýchodu, doprovázené kroupami o průměru kolem 3 cm a nárazy větru kolem 20 m/s (70 km/h). Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
-      "instruction": "Dbát na bezpečnost zejména s ohledem na nebezpečí zásahu bleskem a úrazu kroupami a padajícími a poletujícími předměty, zejména větvemi. Pokud možno vyhledat úkryt v budově opatřené hromosvodem. V přírodě se schovat v hustém lese nebo nižším porostu, nezůstávat ve vodě, na kopcích, v blízkosti železných konstrukcí, osamocených stromů ani pod skalními převisy. Zajistit okna, dveře, skleníky, volně položené předměty apod. Být připraven na možné výpadky elektřiny. Při řízení vozidla v bouřce snížit rychlost jízdy a jet velmi opatrně, sledovat dopravní zpravodajství. Nevstupovat a nevjíždět do proudící vody a zatopených míst. Sledovat vývoj a postup bouřek na výstupu z meteorologických radarů v mobilní aplikaci ČHMÚ nebo na webových stránkách www.chmi.cz. Riziko vzniku lokálního zatopení nebo přívalové povodně v členitějším reliéfu sledovat v aplikaci Indikátor přívalových povodní (FFI): https://produkty.chmi.cz/ffi.",
-      "sourceId": "chmi",
-      "sourceLabel": "ČHMÚ",
-      "sourceGroup": "pocasi",
-      "url": "https://vystrahy-cr.chmi.cz/",
-      "originalUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-      "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041412.xml?hid=3993f76dd6974c91",
-      "urlKind": "cap_public_web",
-      "listingUrl": "https://vystrahy-cr.chmi.cz/",
-      "sectionId": "pocasi",
-      "subsectionId": "vystrahy",
-      "eventType": "mimoradne",
-      "status": "aktivni",
-      "lifecycle": "prave-probihajici",
-      "publishable": true,
-      "untilRevoked": false,
-      "importance": 4,
-      "impact": 4,
-      "region": {
-        "level": "multi",
-        "name": "Beroun",
-        "summary": "Beroun a dalších 7 oblastí",
-        "extraAreaCount": 7,
-        "orpId": "orp:2102",
-        "orpCode": "2102",
-        "orpName": "Beroun",
-        "okresId": "okres:CZ0202",
-        "okresName": "Beroun",
-        "krajId": "kraj:CZ020",
-        "krajName": "Středočeský kraj",
-        "orpIds": [
-          "orp:2102",
-          "orp:2105",
-          "orp:2107",
-          "orp:2108",
-          "orp:2120",
-          "orp:3201",
-          "orp:3207",
-          "orp:3211"
-        ],
-        "orpCodes": [
-          "2102",
-          "2105",
-          "2107",
-          "2108",
-          "2120",
-          "3201",
-          "3207",
-          "3211"
-        ],
-        "orpNames": [
-          "Beroun",
-          "Černošice",
-          "Dobříš",
-          "Hořovice",
-          "Příbram",
-          "Blovice",
-          "Nepomuk",
-          "Rokycany"
-        ],
-        "okresIds": [
-          "okres:CZ0202",
-          "okres:CZ020A",
-          "okres:CZ020B",
-          "okres:CZ0324",
-          "okres:CZ0326"
-        ],
-        "okresNames": [
-          "Beroun",
-          "Praha-západ",
-          "Příbram",
-          "Plzeň-jih",
-          "Rokycany"
-        ],
-        "krajIds": [
-          "kraj:CZ020",
-          "kraj:CZ032"
-        ],
-        "krajNames": [
-          "Středočeský kraj",
-          "Plzeňský kraj"
-        ],
-        "areaDescs": [
-          "Středočeský kraj (Beroun, Černošice, Dobříš, Hořovice, Příbram)",
-          "Plzeňský kraj (Blovice, Nepomuk, Rokycany)"
-        ],
-        "assignmentSource": "cisorp",
-        "precise": true
-      },
-      "lane": "pocasi",
-      "connectorType": "opendata",
-      "orgType": "meteo",
-      "publishedAtSource": "2026-08-04T16:12:13+02:00",
-      "publishedAt": "2026-08-04T16:12:13+02:00",
-      "updatedAt": "2026-08-04T14:27:42.336Z",
-      "validFrom": "2026-08-04T16:10:46+02:00",
-      "validTo": "2026-08-04T16:30:00+02:00",
-      "resolvedAt": null,
-      "groupKey": "2026-08-04:velmi-silne-bourky-hpps-ix-2-sivs-ix",
-      "tags": [
-        "cap",
-        "vystraha",
-        "cap-v2"
-      ],
-      "links": [],
-      "legal": {
-        "providerId": "chmi",
-        "datasetId": "chmi-opendata-national-hydromet-db",
-        "distributionId": "chmi-opendata-portal-primary",
-        "legalRecordVersion": "2026-07-20.phase2.1",
-        "approvalStatus": "APPROVED_CC_BY",
-        "attributionTemplateId": "attr-open-data-by-v1",
-        "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-04T14:27:42.336Z",
-        "sourceUrl": "https://vystrahy-cr.chmi.cz/",
-        "modifications": [
-          "normalized-metadata-link-only"
-        ],
-        "fieldAllowlist": [
-          "id",
-          "sourceId",
-          "title",
-          "url",
-          "originalUrl",
-          "publishedAt",
-          "sourceLabel",
-          "region",
-          "importance",
-          "eventType",
-          "sectionId"
-        ]
-      },
-      "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260804141213.XOCZ50_OKPR_000296|2026-08-04T16:12:13+02:00",
-        "alert_thread_id": "thread:f2a7d8e867fc20e4",
-        "hazard_instance_id": "haz:3993f76dd6974c91",
-        "msgType": "Update",
-        "change_type": "new",
-        "event": "Velmi silné bouřky",
-        "severity": "Severe",
-        "urgency": "Immediate",
-        "certainty": "Observed",
-        "badgeActive": true,
-        "temporalState": "active",
-        "temporalReason": "in_force",
-        "publishable": true,
-        "untilRevoked": false,
-        "openEnded": false,
-        "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041412.xml?hid=3993f76dd6974c91",
-        "publicUrl": "https://vystrahy-cr.chmi.cz/",
-        "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-        "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-        "listingUrl": "https://vystrahy-cr.chmi.cz/",
-        "urlKind": "cap_public_web",
-        "expiresSource": "cap",
-        "geo": {
-          "links": [
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:2102",
-              "orpCode": "2102",
-              "orpName": "Beroun",
-              "okresId": "okres:CZ0202",
-              "okresName": "Beroun",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:2105",
-              "orpCode": "2105",
-              "orpName": "Černošice",
-              "okresId": "okres:CZ020A",
-              "okresName": "Praha-západ",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:2107",
-              "orpCode": "2107",
-              "orpName": "Dobříš",
-              "okresId": "okres:CZ020B",
-              "okresName": "Příbram",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:2108",
-              "orpCode": "2108",
-              "orpName": "Hořovice",
-              "okresId": "okres:CZ0202",
-              "okresName": "Beroun",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:2120",
-              "orpCode": "2120",
-              "orpName": "Příbram",
-              "okresId": "okres:CZ020B",
-              "okresName": "Příbram",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:3201",
-              "orpCode": "3201",
-              "orpName": "Blovice",
-              "okresId": "okres:CZ0324",
-              "okresName": "Plzeň-jih",
-              "krajId": "kraj:CZ032",
-              "krajName": "Plzeňský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:3207",
-              "orpCode": "3207",
-              "orpName": "Nepomuk",
-              "okresId": "okres:CZ0324",
-              "okresName": "Plzeň-jih",
-              "krajId": "kraj:CZ032",
-              "krajName": "Plzeňský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:3993f76dd6974c91",
-              "orpId": "orp:3211",
-              "orpCode": "3211",
-              "orpName": "Rokycany",
-              "okresId": "okres:CZ0326",
-              "okresName": "Rokycany",
-              "krajId": "kraj:CZ032",
-              "krajName": "Plzeňský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            }
-          ],
-          "quarantine": [],
-          "totalAreas": 2,
-          "mappedAreas": 8,
-          "unmappedAreas": 0,
-          "mappingCoveragePercent": 100
-        },
-        "searchText": "vystraha chmu velmi silne bourky beroun a dalsich 7 oblasti velmi silne bourky velmi silne bourky severne a severozapadne od plzne se vyskytuji velmi silne bourky postupujici zvolna k severovychodu doprovazene kroupami o prumeru kolem 3 cm a narazy vetru kolem 20 m s 70 km h lokalni skody na majetku a komplikace zejmena v energetice doprave a zemedelstvi vyraznejsi skody vetrem lamani a vyvraceni stromu poskozeni budov majetku a energeticke infrastruktury vypadky v dodavkach elektriny komplikace v doprave v dusledku poryvu vetru a padu vetvi a stromu na dopravni cesty cetne skody na vegetaci budovach a majetku pripadne i riziko mensiho urazu vetsimi kroupami riziko urazu nebo pozaru po zasahu bleskem dbat na bezpecnost zejmena s ohledem na nebezpeci zasahu bleskem a urazu kroupami a padajicimi a poletujicimi predmety zejmena vetvemi pokud mozno vyhledat ukryt v budove opatrene hromosvodem v prirode se schovat v hustem lese nebo nizsim porostu nezustavat ve vode na kopcich v blizkosti zeleznych konstrukci osamocenych stromu ani pod skalnimi previsy zajistit okna dvere skleniky volne polozene predmety apod byt pripraven na mozne vypadky elektriny pri rizeni vozidla v bource snizit rychlost jizdy a jet velmi opatrne sledovat dopravni zpravodajstvi nevstupovat a nevjizdet do proudici vody a zatopenych mist sledovat vyvoj a postup bourek na vystupu z meteorologickych radaru v mobilni aplikaci chmu nebo na webovych strankach www chmi cz riziko vzniku lokalniho zatopeni nebo privalove povodne v clenitejsim reliefu sledovat v aplikaci indikator privalovych povodni ffi https produkty chmi cz ffi beroun a dalsich 7 oblasti beroun cernosice dobris horovice pribram blovice nepomuk rokycany beroun praha zapad pribram plzen jih rokycany stredocesky kraj plzensky kraj stredocesky kraj beroun cernosice dobris horovice pribram plzensky kraj blovice nepomuk rokycany chmu cesky hydrometeorologicky ustav severe immediate observed",
-        "significantUnreadReset": true
-      },
-      "firstSeenByInfoUzel": "2026-08-04T14:27:42.336Z",
-      "lastProcessedAt": "2026-08-04T14:27:42.336Z",
-      "sortAt": "2026-08-04T16:12:13+02:00",
-      "timeSource": "cap_sent",
-      "timeConfidence": "high",
-      "isNewCapture": true
-    },
-    {
       "id": "ie-chmi-v2-0c493356ca13458b",
       "title": "Velmi silné bouřky — Beroun a dalších 7 oblastí",
       "description": "Riziko velmi silných bouřek doprovázených zejména nárazy větru 70 - 100 km/h, kroupami kolem 2 cm a přívalovými srážkami. Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Možnost rychlého odtoku z povrchu a lokálního zatopení. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
@@ -14065,8 +13787,8 @@
       "sectionId": "pocasi",
       "subsectionId": "vystrahy",
       "eventType": "mimoradne",
-      "status": "naplanovano",
-      "lifecycle": "naplanovano",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
       "publishable": true,
       "untilRevoked": false,
       "importance": 4,
@@ -14195,9 +13917,9 @@
         "severity": "Severe",
         "urgency": "Immediate",
         "certainty": "Likely",
-        "badgeActive": false,
-        "temporalState": "scheduled",
-        "temporalReason": "before_validFrom",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force",
         "publishable": true,
         "untilRevoked": false,
         "openEnded": false,
@@ -21635,10 +21357,7 @@
         },
         "searchText": "riziko pozaru ceska trebova a dalsich 49 oblasti ceska trebova hlinsko holice chrudim kraliky lanskroun litomysl moravska trebova pardubice policka prelouc svitavy usti nad orlici vysoke myto zamberk hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk sumperk unicov zabreh bilovec bohumin bruntal cesky tesin frenstat pod radhostem frydek mistek frydlant nad ostravici havirov hlucin jablunkov karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava rymarov trinec vitkov pardubicky kraj olomoucky kraj moravskoslezsky kraj riziko pozaru praha a dalsich 123 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice cesky krumlov dacice jindrichuv hradec kaplice milevsko pisek prachatice sobeslav strakonice tabor trhove sviny trebon tyn nad vltavou vimperk vodnany as cheb karlovy vary kraslice marianske lazne ostrov sokolov bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jicin nova paka novy bydzov bystrice nad pernstejnem havlickuv brod humpolec chotebor jihlava nove mesto na morave pacov pelhrimov svetla nad sazavou telc velke mezirici zdar nad sazavou blansko boskovice brno bucovice ivancice kurim rosice slavkov u brna slapanice tisnov vyskov zidlochovice bystrice pod hostynem holesov kromeriz luhacovice otrokovice roznov pod radhostem uherske hradiste uhersky brod valasske klobouky valasske mezirici vizovice vsetin zlin blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov hlavni mesto praha stredocesky kraj jihocesky kraj karlovarsky kraj ustecky kraj liberecky kraj kralovehradecky kraj kraj vysocina jihomoravsky kraj zlinsky kraj plzensky kraj praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice cesky krumlov dacice jindrichuv hradec kaplice milevsko pisek prachatice sobeslav strakonice tabor trhove sviny trebon tyn nad vltavou vimperk vodnany as cheb karlovy vary kraslice marianske lazne ostrov sokolov bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jicin nova paka novy bydzov bystrice nad pernstejnem havlickuv brod humpolec chotebor jihlava nove mesto na morave pacov pelhrimov svetla nad sazavou telc velke mezirici zdar nad sazavou blansko boskovice brno bucovice ivancice kurim rosice slavkov u brna slapanice tisnov vyskov zidlochovice bystrice pod hostynem holesov kromeriz luhacovice otrokovice roznov pod radhostem uherske hradiste uhersky brod valasske klobouky valasske mezirici vizovice vsetin zlin blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov ceska trebova hlinsko holice chrudim kraliky lanskroun litomysl moravska trebova pardubice policka prelouc svitavy usti nad orlici vysoke myto zamberk hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk sumperk unicov zabreh bilovec bohumin bruntal cesky tesin frenstat pod radhostem frydek mistek frydlant nad ostravici havirov hlucin jablunkov karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava rymarov trinec vitkov hlavni mesto praha stredocesky kraj jihocesky kraj karlovarsky kraj ustecky kraj liberecky kraj kralovehradecky kraj kraj vysocina jihomoravsky kraj zlinsky kraj plzensky kraj pardubicky kraj olomoucky kraj moravskoslezsky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-8527df5398c2f683"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T14:27:42.336Z",
@@ -21987,10 +21706,7 @@
         },
         "searchText": "vysoke riziko pozaru moravske budejovice a dalsich 11 oblasti moravske budejovice namest nad oslavou trebic breclav hodonin hustopece kyjov mikulov moravsky krumlov pohorelice veseli nad moravou znojmo kraj vysocina jihomoravsky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-8f63c6c0b17027a3"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T14:27:42.336Z",
@@ -22153,10 +21869,7 @@
         },
         "searchText": "smogova situace troposfericky ozon o praha praha hlavni mesto praha",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-f3b095dbf42aa904"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T14:27:42.336Z",
@@ -23156,10 +22869,7 @@
         },
         "searchText": "smogova situace troposfericky ozon o stredocesky kraj 26 orp benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice stredocesky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-4ccf2baceef771c5"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T12:34:59.051Z",
       "lastProcessedAt": "2026-08-04T14:27:42.336Z",
