@@ -7,6 +7,7 @@
  * peeks allowlisted entries; writes sanitised report ≤64 KiB; never importer/publish.
  *
  * Never logs URL, Authorization, secrets, raw rows, basenames, or absolute paths.
+ * Stdout is a minimal envelope only — never the full report.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -34,6 +35,10 @@ import {
   PATH_CATEGORY,
   categorizePath,
   INSPECTION_REJECT,
+  INSPECTION_OUTCOME,
+  REPORT_SAFETY,
+  buildStdoutEnvelope,
+  finalizeInspectionOutcome,
 } from "./ndic-datex-v1/tmc-format-inspection.mjs";
 
 const offlineReady = process.argv.includes("--offline-ready");
@@ -54,13 +59,64 @@ function wipeTree(p) {
   } catch (_) {}
 }
 
+/**
+ * Validate+serialize report; write JSON + readiness marker when safe.
+ * @returns {{ outFile: string|null, bytes: number, truncated: boolean, outDir: string, reportSafety: string, sanitizedReady: boolean }}
+ */
 function writeReport(work, report) {
   const outDir = path.join(work, "ndic-inspect-report");
   fs.mkdirSync(outDir, { recursive: true, mode: 0o700 });
-  const { json, truncated, bytes } = serializeInspectionReport(report);
-  const outFile = path.join(outDir, "inspection-report.json");
-  fs.writeFileSync(outFile, json, { mode: 0o600 });
-  return { outFile, bytes, truncated, outDir };
+  const markerPath = path.join(outDir, "sanitized_report_ready.marker");
+  try {
+    fs.unlinkSync(markerPath);
+  } catch (_) {}
+  try {
+    const finalized = finalizeInspectionOutcome({ ...report });
+    const { json, truncated, bytes, object } = serializeInspectionReport(finalized);
+    const outFile = path.join(outDir, "inspection-report.json");
+    fs.writeFileSync(outFile, json, { mode: 0o600 });
+    object.reportSafety = REPORT_SAFETY.PASSED;
+    const reserialized = serializeInspectionReport(object);
+    fs.writeFileSync(outFile, reserialized.json, { mode: 0o600 });
+    fs.writeFileSync(markerPath, "true\n", { mode: 0o600 });
+    return {
+      outFile,
+      bytes: reserialized.bytes,
+      truncated: reserialized.truncated || truncated,
+      outDir,
+      reportSafety: REPORT_SAFETY.PASSED,
+      sanitizedReady: true,
+      object: reserialized.object,
+    };
+  } catch (e) {
+    try {
+      fs.unlinkSync(path.join(outDir, "inspection-report.json"));
+    } catch (_) {}
+    try {
+      fs.unlinkSync(markerPath);
+    } catch (_) {}
+    return {
+      outFile: null,
+      bytes: 0,
+      truncated: false,
+      outDir,
+      reportSafety: REPORT_SAFETY.FAILED,
+      sanitizedReady: false,
+      errorCode: e && e.code ? String(e.code) : INSPECTION_REJECT.INTERNAL_ERROR,
+      object: null,
+    };
+  }
+}
+
+function emitEnvelope(fields) {
+  console.log(JSON.stringify(buildStdoutEnvelope(fields)));
+}
+
+function exitForOutcome(outcome, reportSafety) {
+  if (outcome === INSPECTION_OUTCOME.SUCCESS && reportSafety === REPORT_SAFETY.PASSED) return 0;
+  if (outcome === INSPECTION_OUTCOME.SECURITY_FAILURE || outcome === INSPECTION_OUTCOME.TECHNICAL_FAILURE) return 1;
+  // expected_reject / insufficient_evidence → fail-closed but report may still be safe
+  return 2;
 }
 
 try {
@@ -98,7 +154,7 @@ if (offlineReady) {
       process.exit(1);
     }
   }
-  const report = {
+  const report = finalizeInspectionOutcome({
     ok: true,
     mode: INSPECTION_MODE,
     offlineReady: true,
@@ -113,25 +169,34 @@ if (offlineReady) {
     authoritativeFormatVerified: false,
     workDirCategory: categorizePath(work),
     note: "offline_fixtures_only",
-  };
+    rejectCode: null,
+    severity: "insufficient_evidence",
+  });
+  // Offline stub is intentionally insufficient_evidence (authoritative unverified).
+  report.inspectionOutcome = INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE;
+  report.ok = true; // offline-ready probe itself succeeded
   const written = writeReport(work, report);
-  console.log(
-    JSON.stringify({
-      ok: true,
-      mode: INSPECTION_MODE,
-      offlineReady: true,
-      livePathImplemented: true,
-      liveNetworkInspection: false,
-      reportBytes: written.bytes,
-      reportTruncated: written.truncated,
-      workDirCategory: report.workDirCategory,
-      pathCategoryEnum: PATH_CATEGORY,
-    })
-  );
-  process.exit(0);
+  emitEnvelope({
+    ok: true,
+    mode: INSPECTION_MODE,
+    inspectionOutcome: INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE,
+    reportSafety: written.reportSafety,
+    rejectCode: null,
+    reportBytes: written.bytes,
+    reportTruncated: written.truncated,
+    workDirCategory: report.workDirCategory,
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+    importerActivated: false,
+    resolverActivated: false,
+    publishActivated: false,
+    productionWrite: false,
+    sanitized_report_ready: written.sanitizedReady,
+  });
+  process.exit(written.sanitizedReady ? 0 : 1);
 }
 
-// --- Live path (no network in this task run; code path must be complete) ---
+// --- Live path ---
 try {
   assertNdicCzechEgressRunnerOrThrow(process.env);
 } catch (e) {
@@ -176,13 +241,14 @@ try {
     clearTimeout(timer);
   }
 
-  if (res.status === 401 || res.status === 403) {
-    const report = {
+  function finishReject(rejectCode, extra = {}) {
+    const report = finalizeInspectionOutcome({
       ok: false,
       mode: INSPECTION_MODE,
-      rejectCode: "TMC_AUTH_REJECTED",
+      rejectCode,
       severity: "archive_reject",
       liveNetworkInspection: true,
+      livePathImplemented: true,
       importerActivated: false,
       resolverActivated: false,
       publishActivated: false,
@@ -190,10 +256,31 @@ try {
       authoritativeFormat: "UNVERIFIED",
       authoritativeFormatVerified: false,
       workDirCategory: categorizePath(work),
-    };
-    writeReport(work, report);
-    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: "TMC_AUTH_REJECTED" }));
-    process.exit(2);
+      ...extra,
+    });
+    const written = writeReport(work, report);
+    emitEnvelope({
+      ok: false,
+      mode: INSPECTION_MODE,
+      inspectionOutcome: report.inspectionOutcome,
+      reportSafety: written.reportSafety,
+      rejectCode,
+      reportBytes: written.bytes,
+      reportTruncated: written.truncated,
+      workDirCategory: report.workDirCategory,
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+      sanitized_report_ready: written.sanitizedReady,
+    });
+    return exitForOutcome(report.inspectionOutcome, written.reportSafety);
+  }
+
+  if (res.status === 401 || res.status === 403) {
+    process.exit(finishReject("TMC_AUTH_REJECTED"));
   }
 
   const ct = String(res.headers.get("content-type") || "")
@@ -201,23 +288,7 @@ try {
     .trim()
     .toLowerCase();
   if (!ALLOWED_TMC_CONTENT_TYPES.has(ct)) {
-    const report = {
-      ok: false,
-      mode: INSPECTION_MODE,
-      rejectCode: "TMC_CONTENT_TYPE_REJECTED",
-      severity: "archive_reject",
-      liveNetworkInspection: true,
-      importerActivated: false,
-      resolverActivated: false,
-      publishActivated: false,
-      productionWrite: false,
-      authoritativeFormat: "UNVERIFIED",
-      authoritativeFormatVerified: false,
-      workDirCategory: categorizePath(work),
-    };
-    writeReport(work, report);
-    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: "TMC_CONTENT_TYPE_REJECTED" }));
-    process.exit(2);
+    process.exit(finishReject("TMC_CONTENT_TYPE_REJECTED"));
   }
 
   const temp = createBoundedTempPath("ndic-inspect-tmc-", { baseDir: work });
@@ -231,43 +302,11 @@ try {
     });
   } catch (e) {
     const code = e && e.code === "RESPONSE_TOO_LARGE" ? "TMC_RESPONSE_TOO_LARGE" : INSPECTION_REJECT.INTERNAL_ERROR;
-    const report = {
-      ok: false,
-      mode: INSPECTION_MODE,
-      rejectCode: code,
-      severity: "archive_reject",
-      liveNetworkInspection: true,
-      importerActivated: false,
-      resolverActivated: false,
-      publishActivated: false,
-      productionWrite: false,
-      authoritativeFormat: "UNVERIFIED",
-      authoritativeFormatVerified: false,
-      workDirCategory: categorizePath(work),
-    };
-    writeReport(work, report);
-    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: code }));
-    process.exit(2);
+    process.exit(finishReject(code));
   }
 
   if (!(res.status >= 200 && res.status < 300)) {
-    const report = {
-      ok: false,
-      mode: INSPECTION_MODE,
-      rejectCode: "TMC_HTTP_" + res.status,
-      severity: "archive_reject",
-      liveNetworkInspection: true,
-      importerActivated: false,
-      resolverActivated: false,
-      publishActivated: false,
-      productionWrite: false,
-      authoritativeFormat: "UNVERIFIED",
-      authoritativeFormatVerified: false,
-      workDirCategory: categorizePath(work),
-    };
-    writeReport(work, report);
-    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: report.rejectCode }));
-    process.exit(2);
+    process.exit(finishReject("TMC_HTTP_" + res.status));
   }
 
   const central = inspectZipFileCentral(temp.file);
@@ -281,26 +320,13 @@ try {
     existingTaskOwnedBytes,
   });
   if (!disk.ok) {
-    const report = {
-      ok: false,
-      mode: INSPECTION_MODE,
-      rejectCode: disk.rejectCode || "TMC_DISK_SPACE",
-      severity: "archive_reject",
-      liveNetworkInspection: true,
-      diskCheckPathCategory: disk.diskCheckPathCategory,
-      filesystemAvailableBytes: disk.filesystemAvailableBytes,
-      filesystemRequiredBytes: disk.filesystemRequiredBytes,
-      importerActivated: false,
-      resolverActivated: false,
-      publishActivated: false,
-      productionWrite: false,
-      authoritativeFormat: "UNVERIFIED",
-      authoritativeFormatVerified: false,
-      workDirCategory: categorizePath(work),
-    };
-    writeReport(work, report);
-    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: report.rejectCode }));
-    process.exit(2);
+    process.exit(
+      finishReject(disk.rejectCode || "TMC_DISK_SPACE", {
+        diskCheckPathCategory: disk.diskCheckPathCategory,
+        filesystemAvailableBytes: disk.filesystemAvailableBytes,
+        filesystemRequiredBytes: disk.filesystemRequiredBytes,
+      })
+    );
   }
 
   const report = inspectTmcZipFormatFromFile(temp.file, { workDir: work });
@@ -315,34 +341,36 @@ try {
   report.productionWrite = false;
   report.authoritativeFormat = "UNVERIFIED";
   report.authoritativeFormatVerified = false;
+  finalizeInspectionOutcome(report);
 
   const written = writeReport(work, report);
-  console.log(
-    JSON.stringify({
-      ok: report.ok === true,
-      mode: INSPECTION_MODE,
-      offlineReady: false,
-      livePathImplemented: true,
-      liveNetworkInspection: true,
-      reportBytes: written.bytes,
-      reportTruncated: written.truncated,
-      workDirCategory: report.workDirCategory,
-      rejectCode: report.rejectCode || null,
-      authoritativeFormat: "UNVERIFIED",
-      authoritativeFormatVerified: false,
-      importerActivated: false,
-      publishActivated: false,
-    })
-  );
-  exitCode = report.ok === true ? 0 : 2;
+  emitEnvelope({
+    ok: report.ok === true,
+    mode: INSPECTION_MODE,
+    inspectionOutcome: report.inspectionOutcome,
+    reportSafety: written.reportSafety,
+    rejectCode: report.rejectCode || null,
+    reportBytes: written.bytes,
+    reportTruncated: written.truncated,
+    workDirCategory: report.workDirCategory,
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+    importerActivated: false,
+    resolverActivated: false,
+    publishActivated: false,
+    productionWrite: false,
+    sanitized_report_ready: written.sanitizedReady,
+  });
+  exitCode = exitForOutcome(report.inspectionOutcome, written.reportSafety);
 } catch (e) {
   const code = String((e && e.code) || INSPECTION_REJECT.INTERNAL_ERROR);
   try {
-    writeReport(work, {
+    const report = finalizeInspectionOutcome({
       ok: false,
       mode: INSPECTION_MODE,
       rejectCode: code,
       severity: "internal_failure",
+      inspectionOutcome: INSPECTION_OUTCOME.TECHNICAL_FAILURE,
       liveNetworkInspection: true,
       importerActivated: false,
       resolverActivated: false,
@@ -352,12 +380,31 @@ try {
       authoritativeFormatVerified: false,
       workDirCategory: categorizePath(work),
     });
-  } catch (_) {}
-  console.error(code);
+    report.inspectionOutcome = INSPECTION_OUTCOME.TECHNICAL_FAILURE;
+    const written = writeReport(work, report);
+    emitEnvelope({
+      ok: false,
+      mode: INSPECTION_MODE,
+      inspectionOutcome: INSPECTION_OUTCOME.TECHNICAL_FAILURE,
+      reportSafety: written.reportSafety,
+      rejectCode: code,
+      reportBytes: written.bytes,
+      reportTruncated: written.truncated,
+      workDirCategory: report.workDirCategory,
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+      sanitized_report_ready: written.sanitizedReady,
+    });
+  } catch (_) {
+    console.error(code);
+  }
   exitCode = 1;
 } finally {
   wipeTree(tempDir);
-  // Never leave ZIP under work; report dir kept for artifact upload then wiped by workflow.
   try {
     for (const name of fs.readdirSync(work)) {
       if (name === "ndic-inspect-report") continue;

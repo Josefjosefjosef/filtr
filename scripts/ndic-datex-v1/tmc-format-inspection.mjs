@@ -28,6 +28,71 @@ export const INSPECTION_SQLITE_MAGIC_BYTES = 16;
 export const INSPECTION_MAX_PEEK_ENTRIES = 64;
 export const INSPECTION_MAX_TOTAL_PEEK_BYTES = 2 * 1024 * 1024;
 
+export const INSPECTION_OUTCOME = Object.freeze({
+  SUCCESS: "success",
+  INSUFFICIENT_EVIDENCE: "insufficient_evidence",
+  EXPECTED_REJECT: "expected_reject",
+  TECHNICAL_FAILURE: "technical_failure",
+  SECURITY_FAILURE: "security_failure",
+});
+
+export const REPORT_SAFETY = Object.freeze({
+  PASSED: "passed",
+  FAILED: "failed",
+  NOT_CREATED: "not_created",
+});
+
+export const INSPECTION_WARNING = Object.freeze({
+  MULTIPLE_ROLE_CANDIDATES: "TMC_INSPECTION_MULTIPLE_ROLE_CANDIDATES",
+  FORMAT_EVIDENCE_INSUFFICIENT: "TMC_INSPECTION_FORMAT_EVIDENCE_INSUFFICIENT",
+  READ_LIMIT: "TMC_INSPECTION_READ_LIMIT",
+  SQLITE_UNVERIFIED: "TMC_INSPECTION_SQLITE_UNVERIFIED",
+});
+
+/** Broad structural roles that may have multiple candidates without fatal reject. */
+export const REQUIRED_SINGLETON_ROLES = Object.freeze(["points", "names", "roads", "segments"]);
+
+export const STRUCTURAL_ROLE_ALLOWLIST = Object.freeze([
+  "points",
+  "names",
+  "roads",
+  "segments",
+  "locations",
+  "offsets",
+  "areas",
+  "administrative",
+  "coordinates",
+  "metadata",
+  "documentation",
+  "image",
+  "ignored_other",
+  "dbf_layer",
+  "shp_layer",
+  "sqlite_candidate",
+  "encoding_cpg",
+  "unknown_dat",
+  "unknown_txt",
+]);
+
+export const ROLE_EVIDENCE_LEVEL = Object.freeze({
+  FILENAME_HINT: "filename_hint",
+  METADATA_ONLY: "metadata_only",
+  HEADER_CONTRACT: "header_contract",
+  CONTENT_VERIFIED: "content_verified",
+});
+
+export const EXT_CATEGORY_ALLOWLIST = Object.freeze([
+  "dat",
+  "txt",
+  "csv",
+  "cpg",
+  "dbf",
+  "shp",
+  "shx",
+  "sqlite",
+  "other",
+]);
+
 /** Allowlisted top-level keys for sanitised inspection reports (upload gate). */
 export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "ok",
@@ -35,6 +100,8 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "severity",
   "rejectCode",
   "warnings",
+  "inspectionOutcome",
+  "reportSafety",
   "candidateFormat",
   "candidateFormatConfidence",
   "candidateEvidenceSource",
@@ -47,6 +114,17 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "encodingNormalized",
   "structuralRoleCounts",
   "structuralRoleBytes",
+  "roleCandidateCounts",
+  "roleEvidenceLevelCounts",
+  "roleContentVerifiedCounts",
+  "roleHeaderContractMatchCounts",
+  "roleCidMatchCounts",
+  "roleTabcdMatchCounts",
+  "roleConflictCounts",
+  "roleExtensionCategoryCounts",
+  "duplicateRequiredRoleCount",
+  "multipleCandidateRoleCount",
+  "unresolvedRoleCount",
   "sourceAuthority",
   "sqlite",
   "importerActivated",
@@ -69,6 +147,24 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "filesystemAvailableBytes",
   "filesystemRequiredBytes",
   "note",
+]);
+
+export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
+  "ok",
+  "mode",
+  "inspectionOutcome",
+  "reportSafety",
+  "rejectCode",
+  "reportBytes",
+  "reportTruncated",
+  "workDirCategory",
+  "authoritativeFormat",
+  "authoritativeFormatVerified",
+  "importerActivated",
+  "resolverActivated",
+  "publishActivated",
+  "productionWrite",
+  "sanitized_report_ready",
 ]);
 
 
@@ -95,7 +191,147 @@ export const INSPECTION_REJECT = Object.freeze({
   TIMEOUT: "TMC_INSPECTION_TIMEOUT",
   REPORT_LIMIT: "TMC_INSPECTION_REPORT_LIMIT",
   INTERNAL_ERROR: "TMC_INSPECTION_INTERNAL_ERROR",
+  FORMAT_EVIDENCE_INSUFFICIENT: "TMC_INSPECTION_FORMAT_EVIDENCE_INSUFFICIENT",
 });
+
+export function extCategoryOf(ext) {
+  const e = String(ext || "").toLowerCase();
+  if (e === "dat") return "dat";
+  if (e === "txt") return "txt";
+  if (e === "csv") return "csv";
+  if (e === "cpg") return "cpg";
+  if (e === "dbf") return "dbf";
+  if (e === "shp") return "shp";
+  if (e === "shx") return "shx";
+  if (e === "db" || e === "sqlite" || e === "sqlite3") return "sqlite";
+  return "other";
+}
+
+/**
+ * Content contract for required singleton roles (no filenames, no raw values).
+ * @param {string} role
+ * @param {object} peek from inspectTextPeek
+ * @returns {{ headerContractMatch: boolean, cidMatch: boolean, tabcdMatch: boolean, contentVerified: boolean, evidenceLevel: string }}
+ */
+export function assessSingletonContentContract(role, peek) {
+  const p = peek || {};
+  const hdr = p.headerRoleCounts || {};
+  let headerContractMatch = false;
+  if (role === "points") {
+    headerContractMatch = Boolean(
+      (hdr.cid_field && hdr.tabcd_field && (hdr.latitude_field || hdr.longitude_field || hdr.location_code_field)) ||
+        (p.positional && p.cid11Seen && p.tabcd25Seen && p.candidateCoordinateColumns)
+    );
+  } else if (role === "names") {
+    headerContractMatch = Boolean(hdr.name_reference_field || (hdr.cid_field && hdr.tabcd_field && p.hasHeader));
+  } else if (role === "roads") {
+    headerContractMatch = Boolean(hdr.road_field || (hdr.cid_field && hdr.tabcd_field && hdr.name_reference_field));
+  } else if (role === "segments") {
+    headerContractMatch = Boolean(
+      hdr.parent_field ||
+        hdr.next_field ||
+        hdr.previous_field ||
+        (p.candidateRelationshipColumns && hdr.cid_field)
+    );
+  }
+  const cidMatch = p.cid11Seen === true && (hdr.cid_field > 0 || p.cidEvidence === "header_column" || p.cidUnambiguous);
+  const tabcdMatch =
+    p.tabcd25Seen === true && (hdr.tabcd_field > 0 || p.tabcdEvidence === "header_column" || p.tabcdUnambiguous);
+  // Content-verified singleton: header contract + CID/TABCD when those fields exist in the table.
+  let contentVerified = false;
+  if (headerContractMatch) {
+    if (role === "points" || role === "names" || role === "roads" || role === "segments") {
+      const needsCidTab = Boolean(hdr.cid_field || hdr.tabcd_field);
+      contentVerified = needsCidTab ? cidMatch && tabcdMatch : headerContractMatch;
+    }
+  }
+  let evidenceLevel = ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
+  if (contentVerified) evidenceLevel = ROLE_EVIDENCE_LEVEL.CONTENT_VERIFIED;
+  else if (headerContractMatch) evidenceLevel = ROLE_EVIDENCE_LEVEL.HEADER_CONTRACT;
+  else if (p.hasHeader || p.positional) evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+  return { headerContractMatch, cidMatch, tabcdMatch, contentVerified, evidenceLevel };
+}
+
+function emptyRoleMap() {
+  return Object.create(null);
+}
+
+function sanitizeRoleCountMap(map) {
+  const out = Object.create(null);
+  for (const [k, v] of Object.entries(map || {})) {
+    if (!STRUCTURAL_ROLE_ALLOWLIST.includes(k)) {
+      throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_ROLE"), {
+        code: "TMC_INSPECTION_REPORT_UNKNOWN_ROLE",
+        key: k,
+      });
+    }
+    const n = Number(v);
+    if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+      throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+        code: "TMC_INSPECTION_REPORT_SCHEMA",
+        key: k,
+      });
+    }
+    out[k] = n;
+  }
+  return out;
+}
+
+/**
+ * Minimal stdout envelope (never the full report).
+ * @param {object} fields
+ */
+export function buildStdoutEnvelope(fields) {
+  const out = {};
+  for (const key of STDOUT_ENVELOPE_ALLOWED_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(fields, key)) out[key] = fields[key];
+  }
+  out.mode = INSPECTION_MODE;
+  out.authoritativeFormat = "UNVERIFIED";
+  out.authoritativeFormatVerified = false;
+  out.importerActivated = false;
+  out.resolverActivated = false;
+  out.publishActivated = false;
+  out.productionWrite = false;
+  return out;
+}
+
+/**
+ * Derive inspectionOutcome from a built report (mutates report fields).
+ * @param {object} report
+ */
+export function finalizeInspectionOutcome(report) {
+  const r = report || {};
+  r.authoritativeFormat = "UNVERIFIED";
+  r.authoritativeFormatVerified = false;
+  r.importerActivated = false;
+  r.resolverActivated = false;
+  r.publishActivated = false;
+  r.productionWrite = false;
+  if (r.rejectCode) {
+    r.inspectionOutcome = INSPECTION_OUTCOME.EXPECTED_REJECT;
+    r.ok = false;
+    if (!r.severity) r.severity = "archive_reject";
+  } else if (r.authoritativeFormatVerified === true) {
+    // unreachable by design while verified is forced false
+    r.inspectionOutcome = INSPECTION_OUTCOME.SUCCESS;
+    r.ok = true;
+    r.severity = "ok";
+  } else {
+    r.inspectionOutcome = INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE;
+    r.ok = false;
+    r.severity = r.severity || "insufficient_evidence";
+    const hasWarn = Array.isArray(r.warnings) && r.warnings.some((w) => w && w.code === INSPECTION_WARNING.FORMAT_EVIDENCE_INSUFFICIENT);
+    if (!hasWarn) {
+      if (!Array.isArray(r.warnings)) r.warnings = [];
+      r.warnings.push({
+        code: INSPECTION_WARNING.FORMAT_EVIDENCE_INSUFFICIENT,
+        severity: "insufficient_evidence",
+      });
+    }
+  }
+  return r;
+}
 
 /** Allowlisted structural basename roles (never emit original names). */
 const ROLE_PATTERNS = [
@@ -547,6 +783,107 @@ export function validateInspectionReportObject(report) {
     }
     out[key] = report[key];
   }
+  const roleMaps = [
+    "structuralRoleCounts",
+    "structuralRoleBytes",
+    "roleCandidateCounts",
+    "roleContentVerifiedCounts",
+    "roleHeaderContractMatchCounts",
+    "roleCidMatchCounts",
+    "roleTabcdMatchCounts",
+    "roleConflictCounts",
+  ];
+  for (const rk of roleMaps) {
+    if (out[rk] != null) out[rk] = sanitizeRoleCountMap(out[rk]);
+  }
+  if (out.roleEvidenceLevelCounts != null) {
+    const allowed = new Set(Object.values(ROLE_EVIDENCE_LEVEL));
+    const cleaned = Object.create(null);
+    for (const [k, v] of Object.entries(out.roleEvidenceLevelCounts)) {
+      if (!allowed.has(k)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_ROLE"), {
+          code: "TMC_INSPECTION_REPORT_UNKNOWN_ROLE",
+          key: k,
+        });
+      }
+      const n = Number(v);
+      if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA" });
+      }
+      cleaned[k] = n;
+    }
+    out.roleEvidenceLevelCounts = cleaned;
+  }
+  if (out.roleExtensionCategoryCounts != null) {
+    const cleaned = Object.create(null);
+    for (const [role, cats] of Object.entries(out.roleExtensionCategoryCounts)) {
+      if (!STRUCTURAL_ROLE_ALLOWLIST.includes(role)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_ROLE"), {
+          code: "TMC_INSPECTION_REPORT_UNKNOWN_ROLE",
+          key: role,
+        });
+      }
+      cleaned[role] = Object.create(null);
+      for (const [cat, v] of Object.entries(cats || {})) {
+        if (!EXT_CATEGORY_ALLOWLIST.includes(cat)) {
+          throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_ROLE"), {
+            code: "TMC_INSPECTION_REPORT_UNKNOWN_ROLE",
+            key: cat,
+          });
+        }
+        const n = Number(v);
+        if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+          throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA" });
+        }
+        cleaned[role][cat] = n;
+      }
+    }
+    out.roleExtensionCategoryCounts = cleaned;
+  }
+  if (out.rejectCode != null) {
+    const allowedRejects = new Set([...Object.values(INSPECTION_REJECT), "TMC_AUTH_REJECTED", "TMC_CONTENT_TYPE_REJECTED", "TMC_RESPONSE_TOO_LARGE"]);
+    if (typeof out.rejectCode === "string" && /^TMC_HTTP_\d+$/.test(out.rejectCode)) {
+      // allow
+    } else if (!allowedRejects.has(out.rejectCode)) {
+      throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+        code: "TMC_INSPECTION_REPORT_SCHEMA",
+        key: "rejectCode",
+      });
+    }
+  }
+  if (out.inspectionOutcome != null && !Object.values(INSPECTION_OUTCOME).includes(out.inspectionOutcome)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+      code: "TMC_INSPECTION_REPORT_SCHEMA",
+      key: "inspectionOutcome",
+    });
+  }
+  if (out.reportSafety != null && !Object.values(REPORT_SAFETY).includes(out.reportSafety)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+      code: "TMC_INSPECTION_REPORT_SCHEMA",
+      key: "reportSafety",
+    });
+  }
+  if (Array.isArray(out.warnings)) {
+    for (const w of out.warnings) {
+      if (!w || typeof w !== "object") {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA" });
+      }
+      const code = w.code;
+      const allowedWarn = new Set([...Object.values(INSPECTION_WARNING), ...Object.values(INSPECTION_REJECT)]);
+      if (!allowedWarn.has(code)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+          code: "TMC_INSPECTION_REPORT_SCHEMA",
+          key: "warnings",
+        });
+      }
+      if (w.role != null && !STRUCTURAL_ROLE_ALLOWLIST.includes(w.role)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_ROLE"), {
+          code: "TMC_INSPECTION_REPORT_UNKNOWN_ROLE",
+          key: w.role,
+        });
+      }
+    }
+  }
   const blob = JSON.stringify(out);
   if (containsForbiddenPathLeak(blob)) {
     throw Object.assign(new Error("TMC_INSPECTION_REPORT_PATH_LEAK"), {
@@ -591,6 +928,8 @@ export function serializeInspectionReport(report, maxBytes = INSPECTION_REPORT_M
     mode: INSPECTION_MODE,
     rejectCode: validated.rejectCode || INSPECTION_REJECT.REPORT_LIMIT,
     severity: validated.severity || "archive_reject",
+    inspectionOutcome: validated.inspectionOutcome || INSPECTION_OUTCOME.EXPECTED_REJECT,
+    reportSafety: validated.reportSafety || REPORT_SAFETY.PASSED,
     reportTruncated: true,
     candidateFormat: validated.candidateFormat || null,
     candidateFormatConfidence: validated.candidateFormatConfidence || null,
@@ -671,6 +1010,8 @@ export function buildSourceAuthorityBoard(roleAgg, peeks) {
 
 /**
  * Inspect synthetic or extracted entry buffers (fixtures / controlled peeks).
+ * Candidate broad roles may have multiple entries (warning only).
+ * Fatal DUPLICATE_REQUIRED_ROLE only when ≥2 content-verified singleton contracts collide.
  * @param {{ role: string, ext: string, buf: Buffer, schemaHints?: object }[]} entries
  * @param {{ centralMeta?: object, startedAt?: number, timeoutMs?: number }} [opts]
  */
@@ -678,8 +1019,16 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   const started = opts.startedAt || Date.now();
   const timeoutMs = opts.timeoutMs != null ? opts.timeoutMs : INSPECTION_TIMEOUT_MS;
   const warnings = [];
-  const roleCounts = Object.create(null);
-  const sizeByRole = Object.create(null);
+  const roleCounts = emptyRoleMap();
+  const sizeByRole = emptyRoleMap();
+  const roleCandidateCounts = emptyRoleMap();
+  const roleEvidenceLevelCounts = emptyRoleMap();
+  const roleContentVerifiedCounts = emptyRoleMap();
+  const roleHeaderContractMatchCounts = emptyRoleMap();
+  const roleCidMatchCounts = emptyRoleMap();
+  const roleTabcdMatchCounts = emptyRoleMap();
+  const roleConflictCounts = emptyRoleMap();
+  const roleExtensionCategoryCounts = emptyRoleMap();
   let cid11 = false;
   let tabcd25 = false;
   let cidMismatch = false;
@@ -687,44 +1036,52 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   let peeks = { cidOk: false, coordsFromDat: false, coordsFromShp: false };
   const encodings = new Set();
   let sqlite = null;
-  let duplicateRequired = false;
-  const requiredSeen = Object.create(null);
 
   for (const ent of entries) {
     if (Date.now() - started > timeoutMs) {
       return failReport(INSPECTION_REJECT.TIMEOUT, "timeout", opts.centralMeta);
     }
-    const role = ent.role || classifyEntryRole("x." + (ent.ext || "dat"));
+    let role = ent.role || classifyEntryRole("x." + (ent.ext || "dat"));
+    if (!STRUCTURAL_ROLE_ALLOWLIST.includes(role)) role = "ignored_other";
     bump(roleCounts, role);
+    bump(roleCandidateCounts, role);
     sizeByRole[role] = (sizeByRole[role] || 0) + (ent.buf ? ent.buf.length : 0);
-
-    if (["points", "names", "roads", "segments"].includes(role)) {
-      if (requiredSeen[role]) duplicateRequired = true;
-      requiredSeen[role] = true;
-    }
+    const extCat = extCategoryOf(ent.ext);
+    if (!roleExtensionCategoryCounts[role]) roleExtensionCategoryCounts[role] = Object.create(null);
+    bump(roleExtensionCategoryCounts[role], extCat);
 
     const ext = String(ent.ext || "").toLowerCase();
+    let evidenceLevel = ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
+
     if (ext === "cpg") {
       const c = inspectCpgPeek(ent.buf);
       encodings.add(c.encodingNormalized);
+      evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+      bump(roleEvidenceLevelCounts, evidenceLevel);
       continue;
     }
     if (ext === "dbf") {
       inspectDbfHeader(ent.buf);
+      evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+      bump(roleEvidenceLevelCounts, evidenceLevel);
       continue;
     }
     if (ext === "shp" || ext === "shx") {
       const sh = inspectShpHeader(ent.buf, ext);
       if (sh.validHeader && sh.boundingBoxCountryCheck === "plausible_czech_extent") peeks.coordsFromShp = true;
+      evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+      bump(roleEvidenceLevelCounts, evidenceLevel);
       continue;
     }
     if (ext === "db" || ext === "sqlite" || ext === "sqlite3") {
       sqlite = inspectSqliteHeader(ent.buf, ent.schemaHints || null);
+      evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+      bump(roleEvidenceLevelCounts, evidenceLevel);
       continue;
     }
     if (ext === "dat" || ext === "txt" || ext === "csv") {
       if (ent.buf && ent.buf.length > INSPECTION_TEXT_PEEK_BYTES) {
-        warnings.push({ code: INSPECTION_REJECT.READ_LIMIT, severity: "warning" });
+        warnings.push({ code: INSPECTION_WARNING.READ_LIMIT, severity: "warning" });
       }
       const peek = inspectTextPeek(ent.buf ? ent.buf.slice(0, INSPECTION_TEXT_PEEK_BYTES) : Buffer.alloc(0));
       if (peek.cid11Seen) {
@@ -732,13 +1089,24 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
         peeks.cidOk = peek.cidUnambiguous;
       }
       if (peek.tabcd25Seen) tabcd25 = true;
-      // Wrong CID/TABCD: numeric 12 or 26 etc. — detect via hasHeader cid field with non-11
-      if (peek.hasHeader && peek.headerRoleCounts.cid_field && !peek.cid11Seen) {
-        // header present but no 11 in sample → insufficient, not necessarily mismatch
-      }
       if (peek.candidateCoordinateColumns) peeks.coordsFromDat = true;
       if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN") encodings.add(peek.encodingCandidate);
+
+      if (REQUIRED_SINGLETON_ROLES.includes(role)) {
+        const assessed = assessSingletonContentContract(role, peek);
+        evidenceLevel = assessed.evidenceLevel;
+        if (assessed.headerContractMatch) bump(roleHeaderContractMatchCounts, role);
+        if (assessed.cidMatch) bump(roleCidMatchCounts, role);
+        if (assessed.tabcdMatch) bump(roleTabcdMatchCounts, role);
+        if (assessed.contentVerified) bump(roleContentVerifiedCounts, role);
+      } else {
+        evidenceLevel =
+          peek.hasHeader || peek.positional ? ROLE_EVIDENCE_LEVEL.METADATA_ONLY : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
+      }
+      bump(roleEvidenceLevelCounts, evidenceLevel);
+      continue;
     }
+    bump(roleEvidenceLevelCounts, evidenceLevel);
   }
 
   if (encodings.has("UNKNOWN") && encodings.size > 1) encodings.delete("UNKNOWN");
@@ -754,27 +1122,52 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     candidateLayers: central.candidateLayers || { tisaNameHint: roleCounts.points ? 1 : 0 },
   });
 
-  // Authoritative remains UNVERIFIED unless full contract: CID+TABCD+points role+consistent text structure
-  let authoritativeFormat = "UNVERIFIED";
-  let authoritativeFormatVerified = false;
-  // Content peeks alone never flip verified in this module without explicit contract completeness.
-  // (Importer still blocked; inspection only gathers evidence.)
+  // Authoritative remains UNVERIFIED unless full contract completeness (never auto-select among candidates).
+  const authoritativeFormat = "UNVERIFIED";
+  const authoritativeFormatVerified = false;
+
+  let duplicateRequired = false;
+  let duplicateRequiredRoleCount = 0;
+  let multipleCandidateRoleCount = 0;
+  let unresolvedRoleCount = 0;
+
+  for (const role of REQUIRED_SINGLETON_ROLES) {
+    const candidates = roleCandidateCounts[role] || 0;
+    const contentVerified = roleContentVerifiedCounts[role] || 0;
+    if (contentVerified >= 2) {
+      duplicateRequired = true;
+      duplicateRequiredRoleCount += 1;
+      bump(roleConflictCounts, role, contentVerified);
+    } else if (candidates > 1) {
+      multipleCandidateRoleCount += 1;
+      warnings.push({
+        code: INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES,
+        severity: "insufficient_evidence",
+        role,
+        candidateCount: candidates,
+        contentVerifiedCount: contentVerified,
+      });
+      unresolvedRoleCount += 1;
+    } else if (candidates === 1 && contentVerified < 1) {
+      unresolvedRoleCount += 1;
+    }
+  }
 
   const board = buildSourceAuthorityBoard(roleCounts, peeks);
-  const severity = duplicateRequired
-    ? "archive_reject"
-    : cidMismatch || tabcdMismatch
-      ? "archive_reject"
-      : "insufficient_evidence";
 
   let rejectCode = null;
   if (duplicateRequired) rejectCode = INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE;
   else if (cidMismatch) rejectCode = INSPECTION_REJECT.CID_MISMATCH;
   else if (tabcdMismatch) rejectCode = INSPECTION_REJECT.TABCD_MISMATCH;
   else if (sqlite && !sqlite.sqliteVerified && roleCounts.sqlite_candidate) {
-    rejectCode = null; // DB_FORMAT_UNVERIFIED is informational
-    warnings.push({ code: INSPECTION_REJECT.SQLITE_UNVERIFIED, severity: "insufficient_evidence" });
+    warnings.push({ code: INSPECTION_WARNING.SQLITE_UNVERIFIED, severity: "insufficient_evidence" });
   }
+
+  const severity = duplicateRequired
+    ? "archive_reject"
+    : cidMismatch || tabcdMismatch
+      ? "archive_reject"
+      : "insufficient_evidence";
 
   const report = {
     ok: rejectCode == null,
@@ -792,6 +1185,17 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     encodingNormalized: encodingNorm,
     structuralRoleCounts: roleCounts,
     structuralRoleBytes: sizeByRole,
+    roleCandidateCounts,
+    roleEvidenceLevelCounts,
+    roleContentVerifiedCounts,
+    roleHeaderContractMatchCounts,
+    roleCidMatchCounts,
+    roleTabcdMatchCounts,
+    roleConflictCounts,
+    roleExtensionCategoryCounts,
+    duplicateRequiredRoleCount,
+    multipleCandidateRoleCount,
+    unresolvedRoleCount,
     sourceAuthority: board,
     sqlite,
     importerActivated: false,
@@ -800,11 +1204,11 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     productionWrite: false,
     reportTruncated: false,
   };
-  return report;
+  return finalizeInspectionOutcome(report);
 }
 
 function failReport(code, severity, centralMeta) {
-  return {
+  return finalizeInspectionOutcome({
     ok: false,
     mode: INSPECTION_MODE,
     severity,
@@ -816,7 +1220,7 @@ function failReport(code, severity, centralMeta) {
     resolverActivated: false,
     publishActivated: false,
     productionWrite: false,
-  };
+  });
 }
 
 function peekBudgetForExt(ext) {

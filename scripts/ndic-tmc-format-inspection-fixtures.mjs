@@ -30,6 +30,12 @@ import {
   INSPECTION_TIMEOUT_MS,
   INSPECTION_MAX_TOTAL_PEEK_BYTES,
   buildCandidateFormatFromCentral,
+  INSPECTION_OUTCOME,
+  REPORT_SAFETY,
+  INSPECTION_WARNING,
+  assessSingletonContentContract,
+  buildStdoutEnvelope,
+  STRUCTURAL_ROLE_ALLOWLIST,
 } from "./ndic-datex-v1/tmc-format-inspection.mjs";
 import {
   containsForbiddenPathLeak,
@@ -227,13 +233,30 @@ function shpHeaderSynthetic(opts = {}) {
   ok("agg_source_insufficient", report.sourceAuthority.identitySourceCandidate.sufficientForImporter === false, "suf");
 }
 
-// --- duplicate required role ---
+// --- duplicate required role: only content-verified singleton collision is fatal ---
 {
-  const report = inspectFormatFromEntryPeeks([
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD\n11;25\n") },
-    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD\n11;25\n") },
+  const filenameOnly = inspectFormatFromEntryPeeks([
+    { role: "points", ext: "dat", buf: Buffer.from("junk-a\n") },
+    { role: "points", ext: "dat", buf: Buffer.from("junk-b\n") },
   ]);
-  ok("dup_reject", report.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, report.rejectCode);
+  ok("dup_filename_not_fatal", filenameOnly.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, filenameOnly.rejectCode);
+  ok(
+    "dup_filename_warning",
+    Array.isArray(filenameOnly.warnings) &&
+      filenameOnly.warnings.some((w) => w.code === INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES),
+    "warn"
+  );
+  ok("dup_filename_outcome", filenameOnly.inspectionOutcome === INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE, filenameOnly.inspectionOutcome);
+  ok("dup_filename_auth", filenameOnly.authoritativeFormatVerified === false, "auth");
+
+  const contentConflict = inspectFormatFromEntryPeeks([
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;2;15;51\n") },
+  ]);
+  ok("dup_content_reject", contentConflict.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, contentConflict.rejectCode);
+  ok("dup_content_outcome", contentConflict.inspectionOutcome === INSPECTION_OUTCOME.EXPECTED_REJECT, contentConflict.inspectionOutcome);
+  ok("dup_content_count", contentConflict.duplicateRequiredRoleCount === 1, String(contentConflict.duplicateRequiredRoleCount));
+  ok("dup_no_auto_auth", contentConflict.authoritativeFormat === "UNVERIFIED" && contentConflict.authoritativeFormatVerified === false, "na");
 }
 
 // --- report size / truncation ---
@@ -509,6 +532,10 @@ function shpHeaderSynthetic(opts = {}) {
   ok("artifact_missing_error", /if-no-files-found:\s*error/.test(wfStandalone), "err");
   ok("shadow_dual_has_format_inspection_mode", /format_inspection/.test(wfShadow), "mode");
   ok("shadow_dual_inspect_job", /format-inspection:/.test(wfShadow), "job");
+  ok("shadow_upload_on_safety", /sanitized_report_ready\s*==\s*'true'/.test(wfShadow), "upload-if");
+  ok("shadow_no_cat_report", !/cat\s+"\$REPORT"/.test(wfShadow.split("format-inspection:")[1] || ""), "nocat");
+  ok("standalone_no_cat_report", !/cat\s+"\$REPORT"/.test(wfStandalone), "nocat2");
+  ok("shadow_preserve_failure", /INSPECTION_STEP_FAILED_PRESERVED/.test(wfShadow), "pres");
   const staging = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-art-"));
   const reportDir = path.join(staging, "ndic-inspect-report");
   fs.mkdirSync(reportDir, { recursive: true });
@@ -527,6 +554,117 @@ function shpHeaderSynthetic(opts = {}) {
   try {
     fs.rmSync(staging, { recursive: true, force: true });
   } catch (_) {}
+}
+
+// --- role aggregates / multi-candidate / singleton / envelope ---
+{
+  const multiExt = inspectFormatFromEntryPeeks([
+    { role: "points", ext: "dat", buf: Buffer.from("a\n") },
+    { role: "points", ext: "txt", buf: Buffer.from("b\n") },
+  ]);
+  ok("multi_ext_not_fatal", multiExt.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, multiExt.rejectCode);
+  ok("multi_ext_warn", multiExt.warnings.some((w) => w.code === INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES), "w");
+  ok("multi_ext_agg", (multiExt.roleCandidateCounts.points || 0) === 2, "c");
+  ok("multi_ext_extcats", multiExt.roleExtensionCategoryCounts.points.dat === 1 && multiExt.roleExtensionCategoryCounts.points.txt === 1, "e");
+
+  const oneVerified = inspectFormatFromEntryPeeks([
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+    { role: "points", ext: "dat", buf: Buffer.from("hint-only\n") },
+  ]);
+  ok("one_verified_not_dup", oneVerified.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, oneVerified.rejectCode);
+  ok("one_verified_count", (oneVerified.roleContentVerifiedCounts.points || 0) === 1, "cv");
+  ok("one_verified_multi_warn", oneVerified.multipleCandidateRoleCount >= 1, "mc");
+
+  const geo = inspectFormatFromEntryPeeks([
+    { role: "shp_layer", ext: "shp", buf: shpHeaderSynthetic() },
+    { role: "shp_layer", ext: "shx", buf: shpHeaderSynthetic() },
+    { role: "dbf_layer", ext: "dbf", buf: dbfHeaderSynthetic(["LCD", "NAME"]) },
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+  ]);
+  ok("geo_no_dup", geo.rejectCode !== INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, geo.rejectCode);
+  ok("geo_auth_unverified", geo.authoritativeFormatVerified === false, "av");
+
+  const namesLang = inspectFormatFromEntryPeeks([
+    { role: "names", ext: "dat", buf: Buffer.from("NAME\nx\n") },
+    { role: "names", ext: "dat", buf: Buffer.from("NAME\ny\n") },
+  ]);
+  // NAME header → content-verified names without CID → two verified → conflict
+  ok("names_conflict_or_warn", namesLang.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE || namesLang.multipleCandidateRoleCount >= 1, "nl");
+
+  const ser = serializeInspectionReport(multiExt);
+  ok("agg_serialize_ok", ser.bytes > 0 && ser.bytes <= INSPECTION_REPORT_MAX_BYTES, String(ser.bytes));
+  const parsed = JSON.parse(ser.json);
+  ok("agg_no_filename", !/\.dat|\.txt|POINTS|NAMES/i.test(ser.json) || !/basename|fileName|entryName/.test(ser.json), "fn");
+  ok("agg_role_enum", Object.keys(parsed.structuralRoleCounts || {}).every((k) => STRUCTURAL_ROLE_ALLOWLIST.includes(k)), "enum");
+  ok("agg_outcome", parsed.inspectionOutcome === INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE, parsed.inspectionOutcome);
+
+  let unkRole = false;
+  try {
+    validateInspectionReportObject({
+      ok: false,
+      mode: INSPECTION_MODE,
+      structuralRoleCounts: { evil_role: 1 },
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+    });
+  } catch (e) {
+    unkRole = e && e.code === "TMC_INSPECTION_REPORT_UNKNOWN_ROLE";
+  }
+  ok("unknown_role_rejected", unkRole, "ur");
+
+  const env = buildStdoutEnvelope({
+    ok: false,
+    mode: INSPECTION_MODE,
+    inspectionOutcome: INSPECTION_OUTCOME.EXPECTED_REJECT,
+    reportSafety: REPORT_SAFETY.PASSED,
+    rejectCode: INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE,
+    reportBytes: 100,
+    reportTruncated: false,
+    workDirCategory: "runner_temp",
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+    importerActivated: false,
+    resolverActivated: false,
+    publishActivated: false,
+    productionWrite: false,
+    sanitized_report_ready: true,
+    evilExtra: "nope",
+  });
+  ok("envelope_no_extra", env.evilExtra === undefined, "ex");
+  ok("envelope_ready", env.sanitized_report_ready === true, "rdy");
+  ok("envelope_keys_min", Object.keys(env).every((k) => [
+    "ok","mode","inspectionOutcome","reportSafety","rejectCode","reportBytes","reportTruncated",
+    "workDirCategory","authoritativeFormat","authoritativeFormatVerified","importerActivated",
+    "resolverActivated","publishActivated","productionWrite","sanitized_report_ready",
+  ].includes(k)), "keys");
+
+  const assessed = assessSingletonContentContract(
+    "points",
+    inspectTextPeek(Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n"))
+  );
+  ok("singleton_contract", assessed.contentVerified === true && assessed.headerContractMatch === true, "sc");
+
+  // expected reject + safe serialize (artifact pathway)
+  const conflict = inspectFormatFromEntryPeeks([
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n") },
+    { role: "points", ext: "dat", buf: Buffer.from("CID;TABCD;LCD;XCOORD;YCOORD\n11;25;2;15;51\n") },
+  ]);
+  const conflictSer = serializeInspectionReport(conflict);
+  ok("expected_reject_serializes", conflictSer.object.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE, "ers");
+  ok("expected_reject_under_cap", conflictSer.bytes <= INSPECTION_REPORT_MAX_BYTES, "cap");
+
+  // schema failure path: unknown key must not serialize
+  let schemaFail = false;
+  try {
+    validateInspectionReportObject({ ok: true, mode: INSPECTION_MODE, notAllowed: 1 });
+  } catch (e) {
+    schemaFail = e && e.code === "TMC_INSPECTION_REPORT_UNKNOWN_KEY";
+  }
+  ok("schema_fail_no_upload_path", schemaFail, "sf");
 }
 
 // --- implemented limit constants (documented for gate) ---

@@ -418,7 +418,9 @@ function main() {
       ok("inspect_artifact_exact_file", /path:\s*\$\{\{\s*runner\.temp\s*\}\}\/ndic-inspect-report\/inspection-report\.json/.test(src), "exact");
       ok("inspect_artifact_no_glob", !/path:[\s\S]*\*/.test(src.split("Upload sanitised")[1] || ""), "noglob");
       ok("inspect_artifact_fail_missing", /if-no-files-found:\s*error/.test(src), "missing");
-      ok("inspect_artifact_success_only", /Upload sanitised[\s\S]*if:\s*success\(\)/.test(src), "succ");
+      ok("inspect_artifact_success_only", /Upload sanitised[\s\S]*sanitized_report_ready/.test(src), "succ");
+      ok("inspect_no_cat_full_report", !/cat\s+"\$REPORT"/.test(src), "nocat");
+      ok("inspect_preserve_failure", /INSPECTION_STEP_FAILED_PRESERVED/.test(src), "pres");
       ok("inspect_report_size_gate", /65536/.test(src), "size");
       ok("inspect_wipe_fenced", /ndic-datex-v1-tmc-inspection-cleanup-run/.test(src), "wipe");
       ok("inspect_runs_on_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
