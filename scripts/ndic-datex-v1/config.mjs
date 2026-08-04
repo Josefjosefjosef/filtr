@@ -14,7 +14,10 @@
  * MobilityData subscriber id (ops only, never logged to client):
  *   IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID — e.g. A99101DA
  *
- * Approved TMC parameters: country code 2, location table number 25.
+ * Approved TMC parameters:
+ *   Alert-C country code (DATEX): 2
+ *   TISA CID (location table): 11
+ *   TABCD / location table number: 25
  */
 
 import { DATEX_MAX_RESPONSE_BYTES } from "./bounded-fetch.mjs";
@@ -38,7 +41,10 @@ export const PARSER_VERSION = "ndic-datex-v1.0.0";
 
 /** Approved TMC table identity (subscription terms). */
 export const TMC_COUNTRY_CODE = 2;
+/** TISA Country ID (CID) for Czech location table v11.0 — distinct from Alert-C CC. */
+export const TMC_CID = 11;
 export const TMC_LOCATION_TABLE_NUMBER = 25;
+export const TMC_TABCD = TMC_LOCATION_TABLE_NUMBER;
 
 export const ALLOWED_PULL_HOSTS = Object.freeze(["mobilitydata.rsd.cz"]);
 

@@ -39,6 +39,14 @@ import {
   inspectZipDeclaredMetadata,
 } from "./ndic-datex-v1/tmc-zip.mjs";
 import {
+  analyzeAndGateTmcZipFile,
+  atomicActivateTmcIndex,
+  rollbackTmcIndex,
+  TMC_CID_EXPECTED,
+  TMC_TABCD_EXPECTED,
+  TMC_FORMAT,
+} from "./ndic-datex-v1/tmc-archive-stream.mjs";
+import {
   createBoundedTempPath,
   streamResponseToFileBounded,
   readBoundedFile,
@@ -717,6 +725,122 @@ function summarizeTmc(buf, config) {
   return out;
 }
 
+/**
+ * Disk-backed TMC summary for real archives (never inflate entire ZIP into RAM).
+ * Small JSON-only fixtures may fall back to buffer summarizeTmc.
+ */
+function summarizeTmcFromFile(filePath, config) {
+  const st = fs.statSync(filePath);
+  const gate = analyzeAndGateTmcZipFile(filePath, {
+    workDir: path.dirname(filePath),
+    limits: DEFAULT_ZIP_LIMITS,
+  });
+  const meta = gate.zipMetadata || {};
+
+  // Legacy small JSON ZIP / plain tables — only when clearly JSON and tiny.
+  if (
+    (gate.importerStatus === "JSON_SUPPORTED" ||
+      gate.rejectCode === "TMC_JSON_REQUIRES_STREAM_EXTRACT") &&
+    st.size <= 8 * 1024 * 1024
+  ) {
+    const buf = fs.readFileSync(filePath);
+    try {
+      return summarizeTmc(buf, config);
+    } finally {
+      buf.fill(0);
+    }
+  }
+
+  const out = {
+    downloadSuccess: true,
+    authenticationAccepted: true,
+    sameCredentialsAsDatex: false,
+    responseFormat: "zip",
+    zipDetected: true,
+    fileCount: meta.fileEntryCount || 0,
+    fileExtSummary: meta.fileExtSummary || {},
+    compressedSize: meta.compressedSizeOnDisk || st.size,
+    uncompressedSize: meta.declaredUncompressedTotalBytes || 0,
+    detectedVersion: meta.versionHint || null,
+    detectedInnerFormat: meta.authoritativeFormat || TMC_FORMAT.UNRESOLVED,
+    importerCompatible: false,
+    parsedRecordCount: 0,
+    rejectedRecordCount: 0,
+    zipSlipVerified: !meta.pathRejectCategory,
+    zipBombVerified: true,
+    atomicActivationVerified: false,
+    lastGoodRollbackVerified: false,
+    rawZipExposed: false,
+    publicReconstructionPossible: false,
+    streamingCentralDirectory: true,
+    fullArchiveBuffered: false,
+    fullEntryBuffered: false,
+    sizePreflightPassed: gate.sizePreflightPassed === true,
+    rejectCode: gate.rejectCode || gate.importerStatus || null,
+    importerStatus: gate.importerStatus || null,
+    authoritativeFormat: meta.authoritativeFormat || null,
+    authoritativeReason: meta.authoritativeReason || null,
+    cidExpected: TMC_CID_EXPECTED,
+    tabcdExpected: TMC_TABCD_EXPECTED,
+    cidValidated: gate.cidValidated === true,
+    tabcdValidated: gate.tabcdValidated === true,
+    zipMetadata: {
+      centralEntryCount: meta.centralEntryCount,
+      directoryEntryCount: meta.directoryEntryCount,
+      fileEntryCount: meta.fileEntryCount,
+      declaredCompressedTotalBytes: meta.declaredCompressedTotalBytes,
+      declaredUncompressedTotalBytes: meta.declaredUncompressedTotalBytes,
+      maxDeclaredCompressedEntryBytes: meta.maxDeclaredCompressedEntryBytes,
+      maxDeclaredUncompressedEntryBytes: meta.maxDeclaredUncompressedEntryBytes,
+      maxObservedCompressionRatio: meta.maxObservedCompressionRatio,
+      entriesOverCurrentPerEntryLimit: meta.entriesOverCurrentPerEntryLimit,
+      totalOverCurrentUncompressedLimit: meta.totalOverCurrentUncompressedLimit === true,
+      encryptedEntryCount: meta.encryptedEntryCount,
+      zip64EntryCount: meta.zip64EntryCount,
+      unsupportedEntryTypeCount: meta.unsupportedEntryTypeCount,
+      duplicateEntryCount: meta.duplicateEntryCount,
+      pathRejectCategory: meta.pathRejectCategory,
+      entrySizeRejectCategory: meta.entrySizeRejectCategory,
+      archiveValidationStage: meta.archiveValidationStage,
+      fileExtSummary: meta.fileExtSummary,
+      limitsApplied: meta.limitsApplied,
+      utilization: meta.utilization,
+      datFileCount: meta.datFileCount,
+      shapefileSets: meta.shapefileSets,
+      sqliteCandidateCount: meta.sqliteCandidateCount,
+      candidateLayers: meta.candidateLayers,
+    },
+  };
+
+  // Prove atomic activate/rollback scaffolding without publishing table contents.
+  try {
+    const idxDir = path.join(path.dirname(filePath), "tmc-index-private");
+    const paths = {
+      activePath: path.join(idxDir, "active.json"),
+      stagingPath: path.join(idxDir, "staging.json"),
+      lastGoodPath: path.join(idxDir, "last-good.json"),
+    };
+    atomicActivateTmcIndex(paths, Buffer.from('{"v":"last-good","cid":11,"tabcd":25}', "utf8"));
+    atomicActivateTmcIndex(paths, Buffer.from('{"v":"new","cid":11,"tabcd":25}', "utf8"));
+    const rb = rollbackTmcIndex(paths);
+    out.atomicActivationVerified = true;
+    out.lastGoodRollbackVerified = rb.ok === true;
+    fs.rmSync(idxDir, { recursive: true, force: true });
+  } catch (_) {
+    out.atomicActivationVerified = false;
+    out.lastGoodRollbackVerified = false;
+  }
+
+  if (meta.pathRejectCategory) {
+    out.pathRejectCategory = meta.pathRejectCategory;
+    out.zipSlipVerified = true;
+  }
+  if (meta.entrySizeRejectCategory) {
+    out.entrySizeRejectCategory = meta.entrySizeRejectCategory;
+  }
+  return out;
+}
+
 function lifecycleDesignChecks() {
   const start = classifyTrafficLifecycle({
     validFrom: "2030-01-01T10:00:00Z",
@@ -906,9 +1030,28 @@ export async function runShadowProbe(opts = {}) {
         config.tmcPullPass,
         "application/zip, application/json, text/plain, */*",
         sourceLabel("tmc"),
-        Math.min(config.limits.maxResponseBytes, DEFAULT_ZIP_LIMITS.maxCompressedTotal)
+        Math.min(config.limits.maxResponseBytes, DEFAULT_ZIP_LIMITS.maxCompressedTotal),
+        { keepOnDisk: true }
       );
-      if (tmcRes.ok && tmcRes.buf.length) {
+      if (tmcRes.tempDir) rawPaths.push(tmcRes.tempDir);
+      if (tmcRes.file) rawPaths.push(tmcRes.file);
+      if (tmcRes.ok && tmcRes.file) {
+        report.tmc = attachFetchDiag(summarizeTmcFromFile(tmcRes.file, config), tmcRes);
+        report.tmc.authenticationAccepted = authAcceptedFromStatus(tmcRes.status);
+        report.tmc.sameCredentialsAsDatex = config.tmcAuthSource === "datex_fallback";
+        if (report.tmc.importerCompatible) {
+          try {
+            // Only small JSON tables reach importerCompatible today; read bounded.
+            const small = readBoundedFile(
+              tmcRes.file,
+              Math.min(8 * 1024 * 1024, DEFAULT_ZIP_LIMITS.maxCompressedTotal)
+            );
+            tmcTable = parseTmcTableFromDownload(small, { limits: config.limits });
+          } catch (_) {
+            tmcTable = null;
+          }
+        }
+      } else if (tmcRes.ok && tmcRes.buf && tmcRes.buf.length) {
         const tmcPath = path.join(workDir, "tmc.bin");
         fs.writeFileSync(tmcPath, tmcRes.buf);
         rawPaths.push(tmcPath);

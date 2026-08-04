@@ -196,11 +196,68 @@ function main() {
   ok("no_foreign_self_hosted", foreignSelfHosted === 0, String(foreignSelfHosted));
   ok("no_foreign_ndic_label", foreignNdicLabel === 0, String(foreignNdicLabel));
 
+  // Hardened identity / routing contract for the approved NDIC shadow workflow
+  {
+    const shadowPath = path.join(WF_DIR, "ndic-datex-v1-shadow-probe.yml");
+    ok("shadow_workflow_present", fs.existsSync(shadowPath), "missing");
+    if (fs.existsSync(shadowPath)) {
+      const raw = fs.readFileSync(shadowPath, "utf8");
+      const src = stripComments(raw);
+      const preflightIdx = raw.indexOf("Preflight runner identity");
+      const checkoutIdx = raw.indexOf("actions/checkout@");
+      const secretsIdx = raw.search(/secrets\.IU_NDIC_/);
+      const probeIdx = raw.indexOf("Real shadow probe");
+      ok("preflight_before_checkout", preflightIdx >= 0 && checkoutIdx > preflightIdx, "order");
+      ok("preflight_before_secrets", preflightIdx >= 0 && secretsIdx > preflightIdx, "secrets_order");
+      ok("preflight_before_network_probe", preflightIdx >= 0 && probeIdx > preflightIdx, "probe_order");
+      ok("preflight_requires_self_hosted_env", /RUNNER_ENVIRONMENT/.test(raw) && /!= "self-hosted"/.test(raw), "env");
+      ok("preflight_requires_runner_name", /infouzel-ndic-cz-vps4204/.test(raw) && /REFUSING_UNEXPECTED_RUNNER_NAME/.test(raw), "name");
+      ok("preflight_requires_linux", /REFUSING_UNEXPECTED_OS/.test(raw) && /RUNNER_OS/.test(raw), "os");
+      ok("preflight_requires_x64", /REFUSING_UNEXPECTED_ARCH/.test(raw) && /RUNNER_ARCH/.test(raw), "arch");
+      ok("preflight_refuse_home_runner_path", /REFUSING_GITHUB_HOSTED_PATH/.test(raw) && /\/home\/runner/.test(raw), "path");
+      ok("preflight_disk_2gib", /2097152/.test(raw) && /REFUSING_LOW_DISK/.test(raw), "disk");
+      ok("runs_on_static_four_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
+      ok("runs_on_no_expression", !/runs-on:[^\n]*\$\{\{/.test(src), "dyn_runs_on");
+      ok("runs_on_no_matrix", !/strategy:\s*\n[\s\S]*?matrix:/.test(src) || !/runs-on:[^\n]*matrix/.test(src), "matrix");
+      ok("no_ubuntu_latest_anywhere", !/ubuntu-latest/.test(src), "ubuntu");
+      ok("no_github_hosted_label", !/-\s*ubuntu-/.test(src) && !/runs-on:\s*ubuntu/.test(src), "gh_hosted");
+      // Only one runs-on block in the shadow workflow
+      const blocks = extractRunsOnBlocks(src);
+      ok("shadow_single_runs_on", blocks.length === 1, String(blocks.length));
+      ok("shadow_runs_on_exact", blocks.length === 1 && hasAllRequired(blocks[0].labels) && blocks[0].labels.length === 4, (blocks[0] && blocks[0].labels.join("+")) || "none");
+    }
+  }
+
   // Secret name contract in scripts (names only)
   const configSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "config.mjs"), "utf8");
   ok("config_mode_default_off", /mode = "off"/.test(configSrc) || /else mode = "off"/.test(configSrc), "default");
   ok("config_datex_secret_names", /IU_NDIC_PULL_URL/.test(configSrc) && /IU_NDIC_PULL_USER/.test(configSrc) && /IU_NDIC_PULL_PASS/.test(configSrc), "datex_cfg");
   ok("config_tmc_secret_names", /IU_NDIC_TMC_PULL_URL/.test(configSrc), "tmc_cfg");
+  ok("config_tmc_cid_11", /TMC_CID\s*=\s*11/.test(configSrc), "cid");
+  ok("config_tmc_tabcd_25", /TMC_LOCATION_TABLE_NUMBER\s*=\s*25/.test(configSrc), "tabcd");
+
+  // Disk-backed TMC archive stream module must exist and refuse full-buffer inflate of huge entries
+  {
+    const streamPath = path.join(ROOT, "scripts", "ndic-datex-v1", "tmc-archive-stream.mjs");
+    const zipPath = path.join(ROOT, "scripts", "ndic-datex-v1", "tmc-zip.mjs");
+    ok("tmc_archive_stream_present", fs.existsSync(streamPath), "missing");
+    ok("tmc_zip_limits_present", fs.existsSync(zipPath), "missing");
+    if (fs.existsSync(zipPath)) {
+      const z = fs.readFileSync(zipPath, "utf8");
+      ok("tmc_stream_limits_150", /maxSingleUncompressed:\s*150\s*\*\s*1024\s*\*\s*1024/.test(z), "per_entry");
+      ok("tmc_stream_limits_420", /maxUncompressedTotal:\s*420\s*\*\s*1024\s*\*\s*1024/.test(z), "total");
+      ok("tmc_stream_limits_48", /maxCompressedTotal:\s*48\s*\*\s*1024\s*\*\s*1024/.test(z), "comp");
+      ok("tmc_stream_entries_256", /maxEntries:\s*256/.test(z), "entries");
+    }
+    if (fs.existsSync(streamPath)) {
+      const s = fs.readFileSync(streamPath, "utf8");
+      ok("tmc_stream_importer_not_impl", /TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED/.test(s), "fail_closed");
+      ok("tmc_stream_prefer_tisa", /TISA_DAT_CSV/.test(s) && /preferred_over_shp_sqlite|tisa_like_present/.test(s), "prefer");
+      ok("tmc_stream_atomic", /atomicActivateTmcIndex/.test(s) && /rollbackTmcIndex/.test(s), "atomic");
+      ok("tmc_stream_no_arraybuffer_concat", !/arrayBuffer\s*\(/.test(s) && !/Buffer\.concat\(/.test(s), "no_concat");
+      ok("tmc_stream_disk_central", /inspectZipFileCentral/.test(s), "central");
+    }
+  }
 
   if (fails.length) {
     console.error("[ndic-self-hosted-runner-contract-guard] FAIL");
@@ -215,6 +272,7 @@ function main() {
       approvedWorkflows: [...APPROVED_NDIC_SELF_HOSTED],
       foreignSelfHosted,
       foreignNdicLabel,
+      expectedRunnerName: "infouzel-ndic-cz-vps4204",
     })
   );
 }

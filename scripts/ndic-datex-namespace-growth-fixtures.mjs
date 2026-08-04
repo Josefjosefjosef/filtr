@@ -168,9 +168,17 @@ const baseXml = fs.readFileSync(FIX, "utf8");
 
 // --- TMC ZIP metadata / size limits ---
 {
-  ok("tmc_prev_32", TMC_ZIP_LIMITS_PREV.maxSingleUncompressed === 32 * 1024 * 1024, "prev");
-  ok("tmc_new_64", DEFAULT_ZIP_LIMITS.maxSingleUncompressed === 64 * 1024 * 1024, "new");
-  ok("tmc_total_96", DEFAULT_ZIP_LIMITS.maxUncompressedTotal === 96 * 1024 * 1024, "tot");
+  ok("tmc_prev_64", TMC_ZIP_LIMITS_PREV.maxSingleUncompressed === 64 * 1024 * 1024, "prev");
+  ok("tmc_new_150", DEFAULT_ZIP_LIMITS.maxSingleUncompressed === 150 * 1024 * 1024, "new");
+  ok("tmc_total_420", DEFAULT_ZIP_LIMITS.maxUncompressedTotal === 420 * 1024 * 1024, "tot");
+  ok("tmc_comp_48", DEFAULT_ZIP_LIMITS.maxCompressedTotal === 48 * 1024 * 1024, "comp");
+  ok("tmc_ratio_80", DEFAULT_ZIP_LIMITS.maxCompressionRatio === 80, "ratio");
+  ok("tmc_entries_256", DEFAULT_ZIP_LIMITS.maxEntries === 256, "entries");
+  ok("tmc_covers_observed_117", DEFAULT_ZIP_LIMITS.maxSingleUncompressed > 117804443, "entry_obs");
+  ok("tmc_covers_observed_332", DEFAULT_ZIP_LIMITS.maxUncompressedTotal > 332163805, "tot_obs");
+  ok("tmc_covers_observed_21", DEFAULT_ZIP_LIMITS.maxCompressedTotal > 21075661, "comp_obs");
+  ok("tmc_covers_ratio_45", DEFAULT_ZIP_LIMITS.maxCompressionRatio > 45.87, "ratio_obs");
+  ok("tmc_covers_entries_97", DEFAULT_ZIP_LIMITS.maxEntries > 97, "entries_obs");
 
   const small = buildStoredZip([{ name: "POINTS.CSV", data: "a;b\n1;2\n" }]);
   const meta = inspectZipDeclaredMetadata(small);

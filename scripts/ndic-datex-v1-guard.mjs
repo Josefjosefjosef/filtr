@@ -535,7 +535,7 @@ async function discoveryChecks() {
   try {
     const files = [];
     for (let i = 0; i < 70; i++) files.push({ name: "f" + i + ".json", data: "{}" });
-    safeUnzipEntries(buildStoredZip(files));
+    safeUnzipEntries(buildStoredZip(files), { limits: { maxEntries: 64 } });
   } catch (e) {
     tooMany = e && e.code === "TMC_ZIP_TOO_MANY";
   }

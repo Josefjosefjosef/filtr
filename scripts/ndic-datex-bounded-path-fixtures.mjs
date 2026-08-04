@@ -220,8 +220,13 @@ async function streamCase(name, body, headers, maxBytes, expectOk) {
   ok("path_empty", classifyZipPath("").category === TMC_PATH_REJECT.EMPTY, "empty");
   ok(
     "path_depth",
-    classifyZipPath("a/b/c/d/e/f/g/h/i.csv").category === TMC_PATH_REJECT.DEPTH_EXCEEDED,
+    classifyZipPath("a/b/c/d/e/f/g/h/i/j/k/l/m.csv").category === TMC_PATH_REJECT.DEPTH_EXCEEDED,
     "depth"
+  );
+  ok(
+    "path_depth_custom",
+    classifyZipPath("a/b/c/d/e/f/g/h/i.csv", { maxDepth: 8 }).category === TMC_PATH_REJECT.DEPTH_EXCEEDED,
+    "depth8"
   );
   ok(
     "path_too_long",

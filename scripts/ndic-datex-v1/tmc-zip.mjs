@@ -13,28 +13,33 @@ const LOCAL_SIG = 0x04034b50;
 const CENTRAL_SIG = 0x02014b50;
 
 export const DEFAULT_ZIP_LIMITS = Object.freeze({
-  maxEntries: 64,
   /**
-   * Shadow #6: compressed archive ≈ 21_075_661 B; reject TMC_ZIP_ENTRY_TOO_LARGE
-   * proved at least one declared uncompressed entry > 32 MiB. Raise per-entry and
-   * total ceilings while keeping finite bomb guards (ratio + compressed + totals).
+   * Shadow #8 observed: ~21.1 MiB compressed / ~332.2 MiB declared uncompressed /
+   * largest entry ~117.8 MiB / ratio ~45.87 / 97 central entries.
+   * Caps keep ~25–35% reserve above those values while remaining bomb-closed.
    */
-  maxUncompressedTotal: 96 * 1024 * 1024,
-  maxSingleUncompressed: 64 * 1024 * 1024,
-  /** Headroom above observed ~21 MiB download (was 32 MiB). */
-  maxCompressedTotal: 40 * 1024 * 1024,
-  maxCompressionRatio: 100,
+  maxEntries: 256,
+  maxUncompressedTotal: 420 * 1024 * 1024,
+  maxSingleUncompressed: 150 * 1024 * 1024,
+  maxCompressedTotal: 48 * 1024 * 1024,
+  maxCompressionRatio: 80,
   maxNameLen: 240,
-  maxPathDepth: 8,
+  maxPathDepth: 12,
   maxGzipLayers: 2,
-  maxGzipOutput: 96 * 1024 * 1024,
+  maxGzipOutput: 420 * 1024 * 1024,
+  maxImportMs: 300_000,
+  maxWorkDirBytes: 900 * 1024 * 1024,
+  minFreeDiskBytes: 2 * 1024 * 1024 * 1024,
+  warnThresholds: Object.freeze([0.7, 0.85, 0.95]),
 });
 
-/** Previous per-entry / total caps (regression docs / diagnostics). */
+/** Previous per-entry / total caps (shadow #6–#7 era; regression docs). */
 export const TMC_ZIP_LIMITS_PREV = Object.freeze({
-  maxSingleUncompressed: 32 * 1024 * 1024,
-  maxUncompressedTotal: 48 * 1024 * 1024,
-  maxCompressedTotal: 32 * 1024 * 1024,
+  maxSingleUncompressed: 64 * 1024 * 1024,
+  maxUncompressedTotal: 96 * 1024 * 1024,
+  maxCompressedTotal: 40 * 1024 * 1024,
+  maxEntries: 64,
+  maxPathDepth: 8,
 });
 
 export function isGzipMagic(buf) {

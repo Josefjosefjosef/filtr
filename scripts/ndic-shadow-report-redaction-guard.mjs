@@ -100,6 +100,7 @@ ok("probe_truthful_gate", /parserCompatible/.test(probeSrc) && /situationRecords
 ok("probe_structure_diag", /scanDatexStructure|rootNamespaceUri|parserCompatibilityReason|parseDatexFileStreaming/.test(probeSrc), "struct");
 ok("probe_zip_metadata", /inspectZipDeclaredMetadata|zipMetadata|entrySizeRejectCategory/.test(probeSrc), "zipmeta");
 ok("probe_streaming_parse", /parseDatexFileStreaming|streamingParse|keepOnDisk/.test(probeSrc), "stream-parse");
+ok("probe_tmc_from_file", /summarizeTmcFromFile|analyzeAndGateTmcZipFile/.test(probeSrc), "tmc-disk");
 ok("probe_no_full_xml_toString_hotpath", !/summarizeDatexFromFile[\s\S]{0,200}buf\.toString\("utf8"\)/.test(probeSrc), "no-tostring");
 
 const FORBIDDEN_VALUE_RE =

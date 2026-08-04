@@ -57,14 +57,42 @@ jobs:
       - ndic-cz-egress
     timeout-minutes: 15
     steps:
+      # MUST stay first: no checkout, no secrets, no network before identity PASS.
       - name: Preflight runner identity (fail-closed)
         run: |
           set -euo pipefail
-          # Never enable shell xtrace in secret-bearing jobs.
-          if [ "${RUNNER_ENVIRONMENT:-}" = "github-hosted" ]; then
+          # Never enable shell xtrace (no env/secret dumps).
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
             echo "REFUSING_GITHUB_HOSTED"
             exit 1
           fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ]; then
+            echo "REFUSING_UNEXPECTED_OS"
+            exit 1
+          fi
+          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_ARCH"
+            exit 1
+          fi
+          ws="${GITHUB_WORKSPACE:-}"
+          cwd="$(pwd)"
+          case "${ws}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          case "${cwd}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
           if [ "$(id -u)" -eq 0 ]; then
             echo "REFUSING_ROOT_RUNNER"
             exit 1
@@ -76,15 +104,17 @@ jobs:
             fi
           fi
           umask 077
-          # ~54MB DATEX + ~21MB TMC + headroom; require >= 512MB free.
+          # DATEX ~65MB + TMC ~21MB + ~332MB work + last-good + atomic reserve on 10GB VPS.
+          # Require >= 2GiB free before any NDIC contact.
           avail_kb="$(df -Pk . | awk 'NR==2 {print $4}')"
-          if [ -z "${avail_kb}" ] || [ "${avail_kb}" -lt 524288 ]; then
+          if [ -z "${avail_kb}" ] || [ "${avail_kb}" -lt 2097152 ]; then
             echo "REFUSING_LOW_DISK"
             exit 1
           fi
           echo "RUNNER_PREFLIGHT_OK"
           echo "RUNNER_USER=$(id -un)"
-          echo "RUNNER_ENVIRONMENT=${RUNNER_ENVIRONMENT:-unknown}"
+          echo "RUNNER_NAME_OK=1"
+          echo "RUNNER_ENVIRONMENT=self-hosted"
           echo "DISK_AVAIL_KB=${avail_kb}"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
