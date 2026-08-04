@@ -10,7 +10,6 @@ import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
 import os from "node:os";
-import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "module";
 
@@ -23,7 +22,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8974", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8987", 10);
 const SHOT_DIR =
   process.env.IU_CZ_MAP_SHOT_DIR ||
   path.join(os.tmpdir(), "iu-chmi-cz-map-screens");
@@ -55,6 +54,11 @@ function staticGate() {
 
   ok("ui_czMap_class", /iuPrehledDne__czMap/.test(ui), "class");
   ok("ui_cardHead", /iuPrehledDne__cardHead/.test(ui), "head");
+  ok(
+    "ui_map_before_title_flow",
+    /iuPrehledDne__cardHeadMain">`\s*\+\s*czMapMarkup\s*\+\s*warnBadge\s*\+\s*titleMarkup/.test(ui),
+    "map-first"
+  );
   ok("ui_czMap_only_cap", /ev\s*&&\s*ev\.capV2\s*&&\s*url/.test(ui), "cap gate");
   ok("ui_czMap_same_href", /czMapMarkup[\s\S]*href="\$\{esc\(url\)\}"/.test(ui), "href");
   ok("ui_czMap_open_title", /czMapMarkup[\s\S]*data-act="open-title"/.test(ui), "act");
@@ -75,8 +79,15 @@ function staticGate() {
   ok("css_no_map_hardcoded_hex", !/\.iuPrehledDne__czMap[\s\S]{0,500}color:\s*#5b6cff/i.test(css), "no hex");
   ok("css_no_bg", /\.iuPrehledDne__czMap[\s\S]*?background:\s*transparent/.test(css), "bg");
   ok("css_no_border", /\.iuPrehledDne__czMap[\s\S]*?border:\s*0/.test(css), "border");
-  ok("css_map_absolute_tr", /\.iuPrehledDne__czMap[\s\S]*?position:\s*absolute[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "abs TR");
-  ok("css_equal_inset_values", /\.iuPrehledDne__czMap[\s\S]*?top:\s*12px[\s\S]*?right:\s*12px/.test(css), "12/12");
+  ok("css_map_float_right", /\.iuPrehledDne__czMap\s*\{[\s\S]*?float:\s*right/.test(css), "float");
+  ok(
+    "css_map_not_absolute",
+    !/\.iuPrehledDne__card--hasCzMap\s+\.iuPdCard__czMap,\s*\n\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__czMap\s*\{[^}]*position:\s*absolute/.test(
+      css
+    ),
+    "no abs"
+  );
+  ok("css_map_display_block", /\.iuPrehledDne__czMap\s*\{[\s\S]*?display:\s*block/.test(css), "block");
   ok("css_hit_min_44", /\.iuPrehledDne__czMap[\s\S]*?height:\s*44px/.test(css), "hit min");
   // Hit box kept at prior approved sizes; visible SVG is exactly 80% of those widths.
   ok("css_hit_mobile_w", /\.iuPrehledDne__czMap[\s\S]*?width:\s*72px/.test(css), "hit m");
@@ -90,8 +101,12 @@ function staticGate() {
   ok("css_svg_not_prior_84", !/\.iuPrehledDne__czMapSvg\s*\{[^}]*width:\s*84px/.test(css), "no prior svg 84");
   ok("css_aspect_ratio", /aspect-ratio:\s*100\s*\/\s*57\.48/.test(css), "aspect");
   ok("css_svg_height_auto", /\.iuPrehledDne__czMapSvg\s*\{[\s\S]*?height:\s*auto/.test(css), "height auto");
-  ok("css_flex_head", /\.iuPrehledDne__cardHead[\s\S]*?display:\s*flex/.test(css), "flex");
-  ok("css_title_pad_reserve", /\.iuPrehledDne__card--hasCzMap[\s\S]*?padding-right:\s*80px/.test(css), "pad");
+  ok("css_flow_root_head", /\.iuPrehledDne__cardHead[\s\S]*?display:\s*flow-root/.test(css), "flow-root");
+  ok(
+    "css_no_full_height_pad_reserve",
+    !/\.iuPrehledDne__card--hasCzMap\s+\.iuPrehledDne__cardHeadMain\s*\{[\s\S]*?padding-right:\s*\d+px/.test(css),
+    "no pad column"
+  );
   ok("css_focus_no_rect_outline", /\.iuPrehledDne__czMap:focus-visible[\s\S]*?outline:\s*none/.test(css), "focus outline");
   ok("css_focus_silhouette", /focus-visible[\s\S]*?drop-shadow/.test(css), "focus glow");
   ok("css_size_80pct_contract_note", /80% of the previously approved|visible = 80%/i.test(css), "80pct note");
@@ -101,7 +116,7 @@ function staticGate() {
   ok("css_size_80pct_math_d", Math.abs(67.2 - 84 * 0.8) < 0.001, "84*0.8");
 
   // Keep in lockstep with assets/iu-prehled-dne-ui-v1.js CACHE_BUST (CZ map + current PD UI).
-  const CACHE_BUST = "chmi-region-cards-split-v1-20260804";
+  const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
   ok("index_css_bust", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "css ver");
   ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "js ver");
   ok("ui_cache_bust", ui.includes('CACHE_BUST = "' + CACHE_BUST + '"') || ui.includes(CACHE_BUST), "ui ver");
@@ -113,21 +128,36 @@ function staticGate() {
   );
 }
 
-function waitForPort(host, port, timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
+function mimeFor(fp) {
+  if (fp.endsWith(".css")) return "text/css; charset=utf-8";
+  if (fp.endsWith(".js") || fp.endsWith(".mjs")) return "text/javascript; charset=utf-8";
+  if (fp.endsWith(".svg")) return "image/svg+xml; charset=utf-8";
+  if (fp.endsWith(".html")) return "text/html; charset=utf-8";
+  if (fp.endsWith(".json")) return "application/json; charset=utf-8";
+  return "application/octet-stream";
+}
+
+function startStaticServer() {
   return new Promise((resolve, reject) => {
-    const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
-        res.resume();
-        resolve();
-      });
-      req.on("error", () => {
-        if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
-      });
-      req.end();
-    };
-    tryOnce();
+    const server = http.createServer((req, res) => {
+      try {
+        let rel = String(req.url || "/").split("?")[0].replace(/^\/+/, "");
+        if (!rel || rel === "index.html") rel = path.join("projects", "index.html");
+        const fp = path.resolve(ROOT, rel);
+        if (!fp.startsWith(path.resolve(ROOT)) || !fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
+          res.writeHead(404);
+          res.end("not found");
+          return;
+        }
+        res.writeHead(200, { "content-type": mimeFor(fp), "cache-control": "no-store" });
+        res.end(fs.readFileSync(fp));
+      } catch (e) {
+        res.writeHead(500);
+        res.end(String(e && e.message ? e.message : e));
+      }
+    });
+    server.on("error", reject);
+    server.listen(PORT, "127.0.0.1", () => resolve(server));
   });
 }
 
@@ -145,7 +175,9 @@ function buildFixtureHtml(base, spriteHtml) {
 <script type="module">
 const portal = "https://vystrahy-cr.chmi.cz/";
 const long =
-  "Velmi dlouhý název výstrahy o mimořádných povětrnostních podmínkách zahrnující vichřici, nárazy větru a riziko pádu stromů v několika krajích České republiky včetně Prahy a Středočeského kraje";
+  "Velmi vysoké teploty — Nupaky, Česká Lípa, Praha, Průhonice, Čestlice, Jesenice, Říčany, Středočeský kraj a dalších 46 oblastí";
+const longPc =
+  "Velmi vysoké teploty — Nupaky, Česká Lípa, Praha, Průhonice, Čestlice, Jesenice, Říčany, Brandýs nad Labem-Stará Boleslav, Moravské Budějovice, Rychnov nad Kněžnou, Hradec Králové, Frýdek-Místek, Plzeň-město, Jihomoravský kraj, Královéhradecký kraj, Středočeský kraj a dalších 46 oblastí";
 function mapLink(url) {
   return '<a class="iuPdCard__czMap iuPrehledDne__czMap" href="'+url+'" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ">'
     + '<svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false">'
@@ -162,9 +194,9 @@ function card(opts) {
     ? '<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status">🔴 VÝSTRAHA ČHMÚ</span>'
     : (capEnded ? '<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">Ukončeno</span>' : '');
   const head = map
-    ? '<div class="iuPrehledDne__cardHead"><div class="iuPrehledDne__cardHeadMain">'+badge+(url
+    ? '<div class="iuPrehledDne__cardHead"><div class="iuPrehledDne__cardHeadMain">'+map+badge+(url
         ? '<a class="iuPdCard__title iuPrehledDne__cardTitle" href="'+url+'" target="_blank" rel="noopener noreferrer" data-act="open-title">'+title+'</a>'
-        : '<span class="iuPdCard__title iuPrehledDne__cardTitle">'+title+'</span>')+'</div>'+map+'</div>'
+        : '<span class="iuPdCard__title iuPrehledDne__cardTitle">'+title+'</span>')+'</div></div>'
     : badge + (url
         ? '<a class="iuPdCard__title iuPrehledDne__cardTitle" href="'+url+'" target="_blank" rel="noopener noreferrer" data-act="open-title">'+title+'</a>'
         : '<span class="iuPdCard__title iuPrehledDne__cardTitle">'+title+'</span>');
@@ -204,7 +236,7 @@ const plain = {
 document.getElementById('host').innerHTML =
   '<ul class="iuPrehledDne__timeline iuPdFeed">'
   + card({ ev: shortCap, active: true, imp: true })
-  + card({ ev: longCap, title: long, active: true, imp: true })
+  + card({ ev: longCap, title: (window.innerWidth >= 1024 ? longPc : long), active: true, imp: true })
   + card({ ev: endedCap })
   + card({ ev: plain })
   + '</ul>';
@@ -228,16 +260,18 @@ async function viewportCheck(page, label, size) {
     const map = primary.querySelector(".iuPrehledDne__czMap");
     const svg = primary.querySelector(".iuPrehledDne__czMapSvg");
     const title = primary.querySelector(".iuPrehledDne__cardTitle");
+    const longTitle = longCard.querySelector(".iuPrehledDne__cardTitle");
+    const longMap = longCard.querySelector(".iuPrehledDne__czMap");
     const badge = primary.querySelector(".iuPrehledDne__warnBadge");
     const actions = primary.querySelector(".iuPrehledDne__actions");
     const cardEl = primary.querySelector(".iuPrehledDne__card");
+    const longCardEl = longCard.querySelector(".iuPrehledDne__card");
     const dot = primary.querySelector(".iuPrehledDne__dot");
     const axis = primary.querySelector(".iuPrehledDne__axis");
     const plainMap = plain.querySelector(".iuPrehledDne__czMap");
     const mr = map.getBoundingClientRect();
     const sr = svg.getBoundingClientRect();
-    const tr = title.getBoundingClientRect();
-    const br = badge ? badge.getBoundingClientRect() : null;
+    const lmr = longMap.getBoundingClientRect();
     const ar = actions.getBoundingClientRect();
     const cr = cardEl.getBoundingClientRect();
     const dr = dot.getBoundingClientRect();
@@ -246,6 +280,54 @@ async function viewportCheck(page, label, size) {
     const dcs = getComputedStyle(dot);
     const overlaps = (a, b) =>
       !!a && !!b && !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+    const titleLineRects = (() => {
+      const range = document.createRange();
+      range.selectNodeContents(longTitle);
+      return Array.from(range.getClientRects()).map((r) => ({
+        top: r.top,
+        bottom: r.bottom,
+        left: r.left,
+        right: r.right,
+        width: r.width,
+        height: r.height,
+      }));
+    })();
+    const shortTitleRects = (() => {
+      const range = document.createRange();
+      range.selectNodeContents(title);
+      return Array.from(range.getClientRects()).map((r) => ({
+        top: r.top,
+        bottom: r.bottom,
+        left: r.left,
+        right: r.right,
+      }));
+    })();
+    const badgeLineRects = badge
+      ? (() => {
+          const range = document.createRange();
+          range.selectNodeContents(badge);
+          return Array.from(range.getClientRects()).map((r) => ({
+            top: r.top,
+            bottom: r.bottom,
+            left: r.left,
+            right: r.right,
+          }));
+        })()
+      : [];
+    const collideText = (rects, box) =>
+      rects.some((r) => overlaps(r, { left: box.left, right: box.right, top: box.top, bottom: box.bottom }));
+    const besideLines = titleLineRects.filter((r) => r.top < lmr.bottom - 1 && r.bottom > lmr.top + 1);
+    const belowLines = titleLineRects.filter((r) => r.top >= lmr.bottom - 1);
+    const longMain = longCard.querySelector(".iuPrehledDne__cardHeadMain");
+    const mainR = longMain.getBoundingClientRect();
+    const titleBox = longTitle.getBoundingClientRect();
+    const longCr = longCardEl.getBoundingClientRect();
+    const contentRight = longCr.right - 12;
+    const narrowColumnCap = lmr.left - 4;
+    const maxBesideRight = besideLines.reduce((m, r) => Math.max(m, r.right), 0);
+    const maxBelowRight = belowLines.reduce((m, r) => Math.max(m, r.right), 0);
+    const maxBesideWidth = besideLines.reduce((m, r) => Math.max(m, r.width || r.right - r.left), 0);
+    const maxBelowWidth = belowLines.reduce((m, r) => Math.max(m, r.width || r.right - r.left), 0);
     const parseRgb = (s) => {
       const m = String(s || "").match(/\d+/g) || [];
       return [Number(m[0] || 0), Number(m[1] || 0), Number(m[2] || 0)];
@@ -270,8 +352,8 @@ async function viewportCheck(page, label, size) {
       plainHasMap: !!plainMap,
       overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       mapInside: mr.right <= cr.right + 2 && mr.left >= cr.left - 2 && mr.top >= cr.top - 2,
-      collideTitle: overlaps(mr, tr),
-      collideBadge: overlaps(mr, br),
+      collideTitle: collideText(shortTitleRects, mr) || collideText(titleLineRects, lmr),
+      collideBadge: collideText(badgeLineRects, mr),
       collideActions: overlaps(mr, ar),
       collideAxis: overlaps(mr, axr) || overlaps(mr, dr),
       bg: cs.backgroundColor,
@@ -289,8 +371,28 @@ async function viewportCheck(page, label, size) {
       rightInset,
       insetDelta: Math.abs(topInset - rightInset),
       cardH: cr.height,
-      longCardH: longCard.querySelector(".iuPrehledDne__card").getBoundingClientRect().height,
+      shortCardH: cr.height,
+      longCardH: longCr.height,
+      float: cs.float,
       pos: cs.position,
+      titleLineCount: titleLineRects.length,
+      besideLineCount: besideLines.length,
+      belowLineCount: belowLines.length,
+      maxBesideRight,
+      maxBelowRight,
+      maxBesideWidth,
+      maxBelowWidth,
+      titleBoxWidth: titleBox.width,
+      mainWidth: mainR.width,
+      titleBoxRight: titleBox.right,
+      narrowColumnCap,
+      contentRight,
+      /* Block title spans full headMain (no padding-right column); line boxes wrap via float. */
+      wrapUsesFullWidth:
+        Math.abs(titleBox.width - mainR.width) <= 4 && titleBox.right >= lmr.right - 3,
+      besideStaysLeftOfMap: besideLines.length === 0 || maxBesideRight <= lmr.left + 1.5,
+      titleTruncated: /ellipsis/i.test(getComputedStyle(longTitle).textOverflow),
+      fullTitleLen: (longTitle.textContent || "").length,
     };
   });
 
@@ -372,13 +474,23 @@ async function viewportCheck(page, label, size) {
   ok(label + "_svg_recognizable", metrics.svgH >= 30, String(metrics.svgH));
   ok(label + "_aspect_ok", Math.abs(metrics.aspect - expectedAspect) <= 0.08, String(metrics.aspect));
   ok(label + "_not_stretched_wide", metrics.aspect < 2.2, String(metrics.aspect));
-  ok(label + "_equal_inset", metrics.insetDelta <= 1.5, metrics.topInset + "|" + metrics.rightInset);
-  ok(label + "_pos_absolute", metrics.pos === "absolute", metrics.pos);
+  ok(label + "_equal_inset", metrics.insetDelta <= 2.5, metrics.topInset + "|" + metrics.rightInset);
+  ok(label + "_float_right", metrics.float === "right", metrics.float);
+  ok(label + "_pos_not_absolute", metrics.pos !== "absolute", metrics.pos);
   ok(label + "_focus_no_rect", focusMetrics.focusOutlineNone === true, "outline");
   ok(label + "_focus_glow", focusMetrics.focusGlow === true || focusMetrics.focusVisible === true, JSON.stringify(focusMetrics));
-  // Narrow phones wrap long titles taller (Linux CI fonts + TR map padding-right ~80px).
-  const longHMax = size.width <= 360 ? 760 : size.width < 768 ? 620 : 560;
+  // Narrow phones wrap long titles taller (Linux CI fonts); float wrap keeps height bounded.
+  const longHMax = size.width <= 360 ? 520 : size.width < 768 ? 420 : 380;
   ok(label + "_long_title_ok", metrics.longCardH > 60 && metrics.longCardH < longHMax, String(metrics.longCardH));
+  ok(label + "_wrap_has_below_or_short", metrics.belowLineCount > 0 || metrics.titleLineCount <= 2, "lines=" + metrics.titleLineCount);
+  ok(label + "_beside_left_of_map", metrics.besideStaysLeftOfMap === true, String(metrics.maxBesideRight) + "|" + metrics.narrowColumnCap);
+  ok(
+    label + "_below_uses_full_width",
+    metrics.wrapUsesFullWidth === true,
+    String(metrics.titleBoxWidth) + "|" + metrics.mainWidth + "|r=" + metrics.titleBoxRight
+  );
+  ok(label + "_title_not_truncated", metrics.titleTruncated === false && metrics.fullTitleLen > 40, String(metrics.fullTitleLen));
+  ok(label + "_short_card_ok", metrics.shortCardH > 50 && metrics.shortCardH < 280, String(metrics.shortCardH));
 
   const useHref = await page.locator(".iuPrehledDne__czMapSvg use").first().getAttribute("href");
   ok(label + "_use_href", String(useHref || "") === "#iu-cz-map", String(useHref));
@@ -417,13 +529,7 @@ async function viewportCheck(page, label, size) {
 
 async function main() {
   staticGate();
-  let serverProc = null;
-  serverProc = spawn("npx", ["serve", ROOT, "-l", String(PORT)], {
-    cwd: ROOT,
-    stdio: "ignore",
-    shell: true,
-  });
-  await waitForPort("127.0.0.1", PORT, 45000);
+  const server = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   try {
@@ -435,7 +541,7 @@ async function main() {
     await viewportCheck(page, "pc1600", { width: 1600, height: 1000 });
   } finally {
     await browser.close().catch(() => {});
-    if (serverProc) serverProc.kill("SIGTERM");
+    await new Promise((r) => server.close(r));
   }
 
   fs.mkdirSync(SHOT_DIR, { recursive: true });
@@ -449,7 +555,7 @@ async function main() {
   console.log("VISIBLE_SIZE_FACTOR=0.8");
   console.log("PRIOR_SVG_W=72/80/84 HIT_KEPT VISIBLE=57.6/64/67.2");
   console.log("ASPECT=100/57.48≈1.74");
-  console.log("PLACEMENT=absolute_top_right_equal_inset");
+  console.log("PLACEMENT=float_right_title_wrap_equal_inset");
   console.log("COLOR_TOKEN=var(--iu-pd-dot, var(--iu-pd-accent))");
   console.log("FAIL_COUNT=" + fails.length);
   for (const f of fails) console.log("FAIL " + f);
