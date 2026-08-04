@@ -1,6 +1,6 @@
 {
-  "runId": "db9d4f76954de2a2",
-  "started": "2026-08-04T17:49:42.786Z",
+  "runId": "54b556ae226747a9",
+  "started": "2026-08-04T18:06:07.073Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,7 +37,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 32,
+      "logicalAlerts": 28,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -52,13 +52,13 @@
         "Vysoké riziko požárů",
         "Smogová situace - troposférický ozón O3"
       ],
-      "totalAreas": 356,
-      "mappedAreas": 1143,
+      "totalAreas": 348,
+      "mappedAreas": 1099,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 25,
+      "publishedActive": 21,
       "publishedScheduled": 7,
-      "publishableCount": 32,
+      "publishableCount": 28,
       "productStreams": [
         "50",
         "70"
@@ -66,7 +66,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 6,
+      "expiredCount": 10,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -75,8 +75,8 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 31,
-    "after": 32,
+    "before": 27,
+    "after": 28,
     "ledgerKeys": 5,
     "ledgerFingerprint": "25949c83cabfeda1",
     "history": {
@@ -320,18 +320,18 @@
   },
   "temporalCounts": {
     "totalItems": 37,
-    "activeCount": 24,
+    "activeCount": 20,
     "scheduledCount": 7,
-    "expiredCount": 6,
+    "expiredCount": 10,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 32,
-    "visibleCount": 32
+    "publishableCount": 28,
+    "visibleCount": 28
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 32,
+    "logicalAlerts": 28,
     "uniqueEvents": [
       "Velmi vysoké teploty",
       "Vysoké teploty",
@@ -346,13 +346,13 @@
       "Vysoké riziko požárů",
       "Smogová situace - troposférický ozón O3"
     ],
-    "totalAreas": 356,
-    "mappedAreas": 1143,
+    "totalAreas": 348,
+    "mappedAreas": 1099,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 25,
+    "publishedActive": 21,
     "publishedScheduled": 7,
-    "publishableCount": 32,
+    "publishableCount": 28,
     "productStreams": [
       "50",
       "70"
@@ -360,7 +360,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 6,
+    "expiredCount": 10,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -368,7 +368,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 1143,
+    "headAreas": 1099,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -376,6 +376,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-04T17:49:49.079Z",
-  "runMs": 6293
+  "finished": "2026-08-04T18:06:14.067Z",
+  "runMs": 6994
 }

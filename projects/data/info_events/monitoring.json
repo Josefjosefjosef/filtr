@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-04T17:49:42.786Z",
-    "lastSuccessAt": "2026-08-04T17:49:45.841Z",
+    "lastRunAt": "2026-08-04T18:06:07.073Z",
+    "lastSuccessAt": "2026-08-04T18:06:10.596Z",
     "lastChangedAt": "2026-08-04T16:21:34.935Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,13 +423,13 @@
     "lastModified": "Tue, 04 Aug 2026 15:56:29 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 24,
+    "activeCount": 20,
     "scheduledCount": 7,
-    "expiredCount": 6,
+    "expiredCount": 10,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 32,
-    "visibleCount": 32,
+    "publishableCount": 28,
+    "visibleCount": 28,
     "totalItems": 37,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -452,7 +452,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 32,
+      "logicalAlerts": 28,
       "uniqueEvents": [
         "Velmi vysoké teploty",
         "Vysoké teploty",
@@ -467,13 +467,13 @@
         "Vysoké riziko požárů",
         "Smogová situace - troposférický ozón O3"
       ],
-      "totalAreas": 356,
-      "mappedAreas": 1143,
+      "totalAreas": 348,
+      "mappedAreas": 1099,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 25,
+      "publishedActive": 21,
       "publishedScheduled": 7,
-      "publishableCount": 32,
+      "publishableCount": 28,
       "productStreams": [
         "50",
         "70"
@@ -481,7 +481,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 6,
+      "expiredCount": 10,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -490,19 +490,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6292,
+    "runMs": 6994,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-04T17:49:42.786Z",
+    "lastSnapshotAt": "2026-08-04T18:06:07.073Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-04T16:21:31.621Z",
       "officialLatestSentAt": "2026-08-04T17:55:56+02:00",
       "officialLatestValidFrom": "2026-08-06T00:00:00+02:00",
-      "discoveredAt": "2026-08-04T17:49:42.786Z",
-      "fetchedAt": "2026-08-04T17:49:42.786Z",
-      "transformedAt": "2026-08-04T17:49:49.078Z",
-      "validatedAt": "2026-08-04T17:49:49.078Z",
-      "publishedAt": "2026-08-04T17:49:42.786Z",
+      "discoveredAt": "2026-08-04T18:06:07.073Z",
+      "fetchedAt": "2026-08-04T18:06:07.073Z",
+      "transformedAt": "2026-08-04T18:06:14.067Z",
+      "validatedAt": "2026-08-04T18:06:14.067Z",
+      "publishedAt": "2026-08-04T18:06:07.073Z",
       "endToEndLagMs": 1535621
     },
     "audit": {
@@ -528,7 +528,7 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 32,
+          "logicalAlerts": 28,
           "uniqueEvents": [
             "Velmi vysoké teploty",
             "Vysoké teploty",
@@ -543,13 +543,13 @@
             "Vysoké riziko požárů",
             "Smogová situace - troposférický ozón O3"
           ],
-          "totalAreas": 356,
-          "mappedAreas": 1143,
+          "totalAreas": 348,
+          "mappedAreas": 1099,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 25,
+          "publishedActive": 21,
           "publishedScheduled": 7,
-          "publishableCount": 32,
+          "publishableCount": 28,
           "productStreams": [
             "50",
             "70"
@@ -557,7 +557,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 0,
-          "expiredCount": 6,
+          "expiredCount": 10,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -566,6 +566,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-04T18:06:07.073Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6994,
+        "error": null,
+        "activeCount": 20,
+        "scheduledCount": 7,
+        "publishableCount": 28
+      },
       {
         "at": "2026-08-04T17:49:42.786Z",
         "status": "not_modified",
@@ -1078,17 +1089,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7704,
-        "error": null,
-        "activeCount": 16,
-        "scheduledCount": 11,
-        "publishableCount": 28
-      },
-      {
-        "at": "2026-08-04T09:55:51.917Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6928,
         "error": null,
         "activeCount": 16,
         "scheduledCount": 11,
