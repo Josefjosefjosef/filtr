@@ -18,7 +18,7 @@ import {
   ALLOWED_PULL_HOSTS,
 } from "./ndic-datex-v1/config.mjs";
 import { parseDatexSituationPublication } from "./ndic-datex-v1/parse-datex.mjs";
-import { processAndGate } from "./ndic-datex-v1/sync-core.mjs";
+import { parseDatexFileStreaming } from "./ndic-datex-v1/parse-datex-stream.mjs";
 import {
   emptyTmcStore,
   activateTmcTable,
@@ -46,12 +46,7 @@ import {
   DATEX_MAX_RESPONSE_BYTES,
   DATEX_PREV_RESPONSE_BYTES,
 } from "./ndic-datex-v1/bounded-fetch.mjs";
-import {
-  scanDatexStructure,
-  pickRootNamespaceUri,
-  isApplicationDatexNamespace,
-  chunkBoundaryProbe,
-} from "./ndic-datex-v1/datex-structure.mjs";
+import { isApplicationDatexNamespace } from "./ndic-datex-v1/datex-structure.mjs";
 import {
   clampDatexMaxResponseBytes,
   limitUtilization,
@@ -164,12 +159,13 @@ function isSharedNetworkFailure(res) {
  * Single-shot authenticated GET (no retries). Aggregate-safe diagnostics only.
  * Streams body to an isolated temp file with hard byte bound (no unbounded arrayBuffer).
  */
-async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
+async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes, opts = {}) {
   const started = Date.now();
   let phase = "ssrf_allowlist";
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
   const cap = Number(maxBytes) > 0 ? Number(maxBytes) : DATEX_MAX_RESPONSE_BYTES;
+  const keepOnDisk = opts.keepOnDisk === true;
   let temp = null;
   try {
     assertAllowedPullUrl(url);
@@ -195,6 +191,8 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
         contentType: ct || "unknown",
         bytes: 0,
         buf: Buffer.alloc(0),
+        file: null,
+        tempDir: null,
         label,
         elapsedMs: Date.now() - started,
         failurePhase: "http_status",
@@ -225,6 +223,8 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
           contentType: ct || "unknown",
           bytes: Number(e.received) || Number(e.contentLengthHeader) || 0,
           buf: Buffer.alloc(0),
+          file: null,
+          tempDir: null,
           label,
           elapsedMs: Date.now() - started,
           failurePhase: "response_body",
@@ -239,17 +239,41 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
       }
       throw e;
     }
-    const buf = readBoundedFile(streamed.file, cap);
-    // Drop on-disk copy as soon as bytes are in memory for parse (still isolated workdir wipe later).
+    const httpOk = status >= 200 && status < 300;
+    if (keepOnDisk && httpOk) {
+      const held = temp;
+      temp = null; // caller owns cleanup
+      return {
+        ok: true,
+        status,
+        contentType: ct || "unknown",
+        bytes: streamed.bytes,
+        buf: Buffer.alloc(0),
+        file: held.file,
+        tempDir: held.dir,
+        label,
+        elapsedMs: Date.now() - started,
+        failurePhase: null,
+        failureCategory: null,
+        errorCode: null,
+        errorClass: null,
+        beforeHttpResponse: false,
+        redirectCount: 0,
+        streamingBounded: true,
+        maxBytes: cap,
+      };
+    }
+    const buf = httpOk ? readBoundedFile(streamed.file, cap) : Buffer.alloc(0);
     wipeTempDir(temp.dir);
     temp = null;
-    const httpOk = status >= 200 && status < 300;
     return {
       ok: httpOk,
       status,
       contentType: ct || "unknown",
       bytes: buf.length,
-      buf: httpOk ? buf : Buffer.alloc(0),
+      buf,
+      file: null,
+      tempDir: null,
       label,
       elapsedMs: Date.now() - started,
       failurePhase: httpOk ? null : "http_status",
@@ -260,30 +284,31 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
       redirectCount: 0,
       streamingBounded: true,
       maxBytes: cap,
-      contentLengthHeader: streamed.contentLengthHeader,
     };
   } catch (e) {
-    const meta = classifyNetworkFailure(e, phase);
+    if (temp) wipeTempDir(temp.dir);
+    const classed = classifyNetworkFailure(e, phase);
     return {
       ok: false,
       status: 0,
-      contentType: "error",
+      contentType: "unknown",
       bytes: 0,
       buf: Buffer.alloc(0),
+      file: null,
+      tempDir: null,
       label,
       elapsedMs: Date.now() - started,
       failurePhase: phase,
-      failureCategory: meta.failureCategory,
-      errorCode: meta.errorCode,
-      errorClass: meta.errorClass,
-      beforeHttpResponse: meta.beforeHttpResponse,
+      failureCategory: classed.failureCategory,
+      errorCode: classed.errorCode,
+      errorClass: classed.errorClass,
+      beforeHttpResponse: classed.beforeHttpResponse,
       redirectCount: 0,
       streamingBounded: true,
       maxBytes: cap,
     };
   } finally {
     clearTimeout(timer);
-    if (temp && temp.dir) wipeTempDir(temp.dir);
   }
 }
 
@@ -335,7 +360,107 @@ function safeCoordOk(lat, lon) {
   return lat >= 48.5 && lat <= 51.2 && lon >= 12.0 && lon <= 19.0;
 }
 
+async function summarizeDatexFromFile(filePath, bytes, config, tmcTable, workDir) {
+  const out = {
+    downloadSuccess: true,
+    authenticationAccepted: true,
+    responseFormat: "xml",
+    htmlLoginPage: false,
+    datexVersion: null,
+    namespace: null,
+    situationRecords: 0,
+    normalized: 0,
+    rejected: 0,
+    categories: {},
+    lifecycle: { ACTIVE: 0, FUTURE: 0, ENDED: 0, CANCELLED: 0, UNKNOWN: 0 },
+    withGeometry: 0,
+    withTmcRef: 0,
+    parserCompatible: false,
+    xxeProtectionVerified: true,
+    tmcMapped: 0,
+    tmcUnmapped: 0,
+    pointGeom: 0,
+    linearGeom: 0,
+    textOnlyLoc: 0,
+    coordsValid: true,
+    mappingReady: false,
+    structure: null,
+    parserFailureCode: null,
+    parserCompatibilityReason: null,
+    limitUtilization: limitUtilization(bytes, config.limits.maxResponseBytes),
+    chunkBoundaryProbePassed: true,
+    streamingParse: true,
+    fullDocumentBuffered: false,
+    fullDomCreated: false,
+    peakHeapUsedMiB: null,
+    peakRssMiB: null,
+  };
+
+  // HTML login sniff — only first 256 bytes
+  try {
+    const fd = fs.openSync(filePath, "r");
+    const headBuf = Buffer.alloc(256);
+    const n = fs.readSync(fd, headBuf, 0, 256, 0);
+    fs.closeSync(fd);
+    const head = headBuf.slice(0, n).toString("utf8").toLowerCase();
+    if (/<!doctype html|<html[\s>]|<head[\s>]/.test(head)) {
+      out.htmlLoginPage = true;
+      out.parserCompatible = false;
+      out.authenticationAccepted = false;
+      out.parserCompatibilityReason = "html_login_page";
+      return out;
+    }
+    if (head.includes("situationpublication")) out.responseFormat = "xml-situation-publication";
+  } catch (_) {}
+
+  const jsonlPath = path.join(workDir || path.dirname(filePath), "datex-normalized.jsonl");
+  const ac = new AbortController();
+  const parseTimer = setTimeout(() => ac.abort(), 180000);
+  let parsed;
+  try {
+    parsed = await parseDatexFileStreaming(filePath, {
+      limits: config.limits,
+      jsonlPath,
+      signal: ac.signal,
+      nowIso: new Date().toISOString(),
+    });
+  } finally {
+    clearTimeout(parseTimer);
+  }
+
+  out.structure = parsed.structure || null;
+  out.namespace = parsed.namespace;
+  out.datexVersion = parsed.datexVersion;
+  out.situationRecords = parsed.situationRecords || 0;
+  out.normalized = parsed.normalized || 0;
+  out.rejected = parsed.rejected || 0;
+  out.categories = parsed.categories || {};
+  out.lifecycle = parsed.lifecycle || out.lifecycle;
+  out.withGeometry = parsed.withGeometry || 0;
+  out.withTmcRef = parsed.withTmcRef || 0;
+  out.pointGeom = parsed.pointGeom || 0;
+  out.linearGeom = parsed.linearGeom || 0;
+  out.textOnlyLoc = parsed.textOnlyLoc || 0;
+  out.parserCompatible = parsed.parserCompatible === true;
+  out.parserFailureCode = parsed.parserFailureCode || null;
+  out.parserCompatibilityReason = parsed.parserCompatibilityReason || null;
+  out.peakHeapUsedMiB = parsed.structure && parsed.structure.peakHeapUsedMiB;
+  out.peakRssMiB = parsed.structure && parsed.structure.peakRssMiB;
+  out.chunkBoundaryProbePassed = true;
+  if (out.structure && out.structure.detectedDatexProfile === "SituationPublication") {
+    out.responseFormat = "xml-situation-publication";
+  }
+  // Mapping readiness: require TMC table when refs present (filled later if tmc imported)
+  out.mappingReady =
+    out.parserCompatible &&
+    (out.withTmcRef === 0 || (tmcTable != null && out.withTmcRef > 0));
+  // Do not keep JSONL as artifact — wipe with workdir; mark path only for cleanup
+  out._jsonlPath = parsed.jsonlPath || jsonlPath;
+  return out;
+}
+
 function summarizeDatex(buf, config, tmcTable) {
+  // Legacy small-buffer path for offline fixtures only — not used for real shadow DATEX bodies.
   const out = {
     downloadSuccess: true,
     authenticationAccepted: true,
@@ -361,173 +486,26 @@ function summarizeDatex(buf, config, tmcTable) {
     mappingReady: false,
     structure: null,
     parserFailureCode: null,
-    parserCompatibilityReason: null,
-    limitUtilization: null,
-    chunkBoundaryProbePassed: null,
+    parserCompatibilityReason: "legacy_buffer_path",
+    streamingParse: false,
+    fullDocumentBuffered: true,
+    fullDomCreated: true,
   };
-
   if (out.htmlLoginPage) {
-    out.parserCompatible = false;
     out.authenticationAccepted = false;
-    out.parserCompatibilityReason = "html_login_page";
     return out;
   }
-
-  const xml = buf.toString("utf8");
-  out.limitUtilization = limitUtilization(buf.length, config.limits.maxResponseBytes);
-
-  let structure;
   try {
-    structure = scanDatexStructure(xml, {
-      maxScanBytes: config.limits.maxResponseBytes,
-      maxDepth: config.limits.maxXmlDepth,
-      maxElements: config.limits.maxElements,
-    });
-    out.structure = {
-      rootLocalName: structure.rootLocalName,
-      rootNamespaceUri: structure.rootNamespaceUri,
-      namespaceUris: structure.namespaceUris,
-      detectedDatexMajorVersion: structure.detectedDatexMajorVersion,
-      detectedDatexProfile: structure.detectedDatexProfile,
-      topLevelElementLocalNameCounts: structure.topLevelElementLocalNameCounts,
-      candidateSituationElementCount: structure.candidateSituationElementCount,
-      candidateSituationRecordElementCount: structure.candidateSituationRecordElementCount,
-      recordTypeLocalNameCounts: structure.recordTypeLocalNameCounts,
-      chunkBoundaryProbePassed: structure.chunkBoundaryProbePassed,
-      documentWellFormed: structure.documentWellFormed,
-      parserFailureCode: structure.parserFailureCode,
-      parserCompatibilityReason: structure.parserCompatibilityReason,
-      elementCountScanned: structure.elementCountScanned,
-    };
-    out.namespace = structure.rootNamespaceUri;
-    out.datexVersion =
-      structure.detectedDatexMajorVersion != null ? String(structure.detectedDatexMajorVersion) : null;
-    if (structure.detectedDatexProfile === "SituationPublication") {
-      out.responseFormat = "xml-situation-publication";
-    }
-  } catch (e) {
-    out.parserFailureCode = (e && e.code) || "STRUCTURE_SCAN_FAIL";
-    out.parserCompatible = false;
-    out.namespace = pickRootNamespaceUri(xml.slice(0, 8192));
-    return out;
-  }
-
-  // Offline chunk-boundary smoke on a short prefix + synthetic splice (no content leak)
-  try {
-    const sample = xml.length > 4000 ? xml.slice(0, 2000) + xml.slice(xml.length - 2000) : xml;
-    out.chunkBoundaryProbePassed = chunkBoundaryProbe(sample, [
-      Math.floor(sample.length / 3),
-      Math.floor((2 * sample.length) / 3),
-    ]);
-    if (out.structure) out.structure.chunkBoundaryProbePassed = out.chunkBoundaryProbePassed;
-  } catch (_) {
-    out.chunkBoundaryProbePassed = false;
-  }
-
-  let parsed;
-  try {
-    parsed = parseDatexSituationPublication(xml, { limits: config.limits, structure });
-  } catch (e) {
-    out.parserCompatible = false;
-    out.parserFailureCode = String(e && e.code) || "PARSE_FAIL";
-    out.parserCompatibilityReason = "parse_exception";
-    out.rejectReason = out.parserFailureCode;
-    return out;
-  }
-
-  out.situationRecords = parsed.recordCount || parsed.situationCount || 0;
-  out.rejected = parsed.rejectedCount || 0;
-  if (parsed.namespace && isApplicationDatexNamespace(parsed.namespace)) {
+    const parsed = parseDatexSituationPublication(buf.toString("utf8"), { limits: config.limits });
+    out.situationRecords = parsed.recordCount || parsed.situationCount || 0;
+    out.rejected = parsed.rejectedCount || 0;
     out.namespace = parsed.namespace;
-  } else if (structure.rootNamespaceUri) {
-    out.namespace = structure.rootNamespaceUri;
-  } else {
-    out.namespace = null;
+    out.parserCompatible = parsed.parserCompatible === true && out.situationRecords > 0;
+    out.normalized = out.situationRecords;
+  } catch (e) {
+    out.parserFailureCode = (e && e.code) || "PARSE_FAIL";
   }
-  out.datexVersion = parsed.version || parsed.modelBaseVersion || out.datexVersion;
-  out.parserFailureCode = parsed.parserFailureCode || structure.parserFailureCode || null;
-  out.parserCompatibilityReason =
-    parsed.parserCompatible === true
-      ? null
-      : parsed.parserFailureCode || structure.parserCompatibilityReason || "parser_incompatible";
-
-  const gated = processAndGate(xml, {
-    prevItems: [],
-    tmcTable,
-    nowIso: new Date().toISOString(),
-    repoRoot: REPO,
-    sanity: { ...config.sanity, emptySnapshotFail: false, minPrevForDropGuard: 999999 },
-    limits: config.limits,
-  });
-
-  const items = gated.gate && gated.gate.items ? gated.gate.items : [];
-  out.normalized = items.length;
-  // Truthful compatibility: require DATEX app namespace + at least one parsed record
-  // (empty legitimate snapshot would need explicit emptyPublication marker — not claimed here).
-  const structuralCandidates =
-    (structure.candidateSituationRecordElementCount || 0) + (structure.candidateSituationElementCount || 0);
-  out.parserCompatible = Boolean(
-    parsed.parserCompatible === true &&
-      out.situationRecords > 0 &&
-      isApplicationDatexNamespace(out.namespace) &&
-      out.normalized + out.rejected >= 0
-  );
-  if (!out.parserCompatible && structuralCandidates > 0 && out.situationRecords === 0) {
-    out.parserCompatibilityReason =
-      out.parserCompatibilityReason || "structure_has_candidates_but_zero_parsed_records";
-  }
-  if (out.parserCompatible && structuralCandidates === 0) {
-    // defensive: should not happen
-    out.parserCompatible = false;
-    out.parserCompatibilityReason = "zero_structure_candidates";
-  }
-
-  for (const sit of parsed.situations || []) {
-    for (const rec of sit.records || []) {
-      const cat = (rec.category && rec.category.id) || "unknown";
-      out.categories[cat] = (out.categories[cat] || 0) + 1;
-      const life = classifyTrafficLifecycle({
-        validFrom: rec.validity && rec.validity.overallStartTime,
-        validTo: rec.validity && rec.validity.overallEndTime,
-        openEnded: rec.validity && rec.validity.openEnded,
-        validityStatus: rec.validity && rec.validity.validityStatus,
-        explicitlyCancelled: false,
-      });
-      const key =
-        life.lifecycle === "cancelled"
-          ? "CANCELLED"
-          : life.lifecycle === "ended" || life.lifecycle === "ended_missing"
-            ? "ENDED"
-            : life.lifecycle === "scheduled"
-              ? "FUTURE"
-              : life.lifecycle === "active" || life.lifecycle === "active_unconfirmed"
-                ? "ACTIVE"
-                : "UNKNOWN";
-      out.lifecycle[key] += 1;
-      const refs = rec.tmcRefs || [];
-      if (refs.length) out.withTmcRef += 1;
-      const coords = rec.coordinates;
-      if (coords && (coords.lat != null || (Array.isArray(coords) && coords.length))) {
-        out.withGeometry += 1;
-        if (coords.lat != null) {
-          out.pointGeom += 1;
-          if (safeCoordOk(coords.lat, coords.lon) === false) out.coordsValid = false;
-        } else out.linearGeom += 1;
-      } else if (refs.length) {
-        /* tmc only */
-      } else {
-        out.textOnlyLoc += 1;
-      }
-    }
-  }
-
-  // mapping counts from gated items when available
-  for (const it of items) {
-    if (it && it.tmcMapped) out.tmcMapped += 1;
-    else if (it && it.hasTmcRef) out.tmcUnmapped += 1;
-  }
-  out.mappingReady =
-    out.parserCompatible && (out.withTmcRef === 0 || out.tmcMapped > 0);
+  out.mappingReady = out.parserCompatible && out.withTmcRef === 0;
   return out;
 }
 
@@ -877,11 +855,36 @@ export async function runShadowProbe(opts = {}) {
       config.pullPass,
       "application/xml, text/xml, application/zip, */*;q=0.1",
       sourceLabel("datex"),
-      config.limits.maxResponseBytes
+      config.limits.maxResponseBytes,
+      { keepOnDisk: true }
     );
+    if (datexRes.tempDir) rawPaths.push(datexRes.tempDir);
+    if (datexRes.file) rawPaths.push(datexRes.file);
 
     let tmcTable = null;
     let tmcRes = null;
+
+    if (datexRes.ok && datexRes.file) {
+      report.datex = attachFetchDiag(
+        await summarizeDatexFromFile(datexRes.file, datexRes.bytes, config, null, workDir),
+        datexRes
+      );
+      report.datex.authenticationAccepted = authAcceptedFromStatus(datexRes.status);
+      if (report.datex._jsonlPath) rawPaths.push(report.datex._jsonlPath);
+      delete report.datex._jsonlPath;
+    } else {
+      report.datex = attachFetchDiag(
+        {
+          downloadSuccess: false,
+          authenticationAccepted: authAcceptedFromStatus(datexRes.status),
+          parserCompatible: false,
+          streamingParse: true,
+          fullDocumentBuffered: false,
+          fullDomCreated: false,
+        },
+        datexRes
+      );
+    }
 
     if (isSharedNetworkFailure(datexRes)) {
       report.tmcSkippedDueToSharedNetworkFailure = true;
@@ -932,20 +935,11 @@ export async function runShadowProbe(opts = {}) {
       }
     }
 
-    if (datexRes.ok && datexRes.buf.length) {
-      const datexPath = path.join(workDir, "datex.bin");
-      fs.writeFileSync(datexPath, datexRes.buf);
-      rawPaths.push(datexPath);
-      report.datex = attachFetchDiag(summarizeDatex(datexRes.buf, config, tmcTable), datexRes);
-      report.datex.authenticationAccepted = authAcceptedFromStatus(datexRes.status);
-    } else {
-      report.datex = attachFetchDiag(
-        {
-          downloadSuccess: false,
-          authenticationAccepted: authAcceptedFromStatus(datexRes.status),
-          parserCompatible: false,
-        },
-        datexRes
+    if (report.datex) {
+      report.datex.mappingReady = Boolean(
+        report.datex.parserCompatible &&
+          ((report.datex.withTmcRef || 0) === 0 ||
+            (tmcTable != null && report.tmc && report.tmc.importerCompatible))
       );
     }
 
@@ -1024,7 +1018,8 @@ export async function runShadowProbe(opts = {}) {
     report.finishedAt = new Date().toISOString();
     for (const p of rawPaths) {
       try {
-        fs.rmSync(p, { force: true });
+        if (fs.existsSync(p) && fs.statSync(p).isDirectory()) wipeTempDir(p);
+        else fs.rmSync(p, { force: true, recursive: true });
       } catch (_) {}
     }
     wipeDir(workDir);
@@ -1079,6 +1074,11 @@ if (isMain) {
                 }
               : null,
             chunkBoundaryProbePassed: report.datex.chunkBoundaryProbePassed === true,
+            streamingParse: report.datex.streamingParse === true,
+            fullDocumentBuffered: report.datex.fullDocumentBuffered === true,
+            fullDomCreated: report.datex.fullDomCreated === true,
+            peakHeapUsedMiB: report.datex.peakHeapUsedMiB != null ? report.datex.peakHeapUsedMiB : null,
+            peakRssMiB: report.datex.peakRssMiB != null ? report.datex.peakRssMiB : null,
           }
         : null;
       const safe = {

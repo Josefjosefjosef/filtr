@@ -152,8 +152,8 @@ jobs:
           umask 077
           mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
           mkdir -p "$RUNNER_TEMP/ndic-shadow-report"
-          # Aggregate JSON only — script must never print secrets / raw XML / raw ZIP.
-          node scripts/ndic-datex-v1-shadow-probe.mjs > "$RUNNER_TEMP/ndic-shadow-report/shadow-report.json"
+          # Aggregate JSON only — wrapper catches OOM/SIGKILL and writes minimal fallback.
+          node scripts/ndic-datex-v1-shadow-run.mjs "$RUNNER_TEMP/ndic-shadow-report/shadow-report.json"
           node -e "const r=require(process.env.RUNNER_TEMP+'/ndic-shadow-report/shadow-report.json'); if(!r.ok) process.exit(2);"
 
       - name: Job summary (aggregate only)
