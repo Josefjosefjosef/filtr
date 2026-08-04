@@ -44,7 +44,85 @@ export const DISK_REJECT = Object.freeze({
   ZIP_LIMIT: "TMC_DISK_ZIP_LIMIT",
   STALE_TASK: "TMC_DISK_STALE_TASK_OWNED",
   LOCK: "TMC_DISK_LOCK_HELD",
+  TEST_PROVIDER: "REFUSING_TEST_DISK_PROVIDER_IN_SHADOW",
 });
+
+/**
+ * Env keys that must NEVER select a fake disk provider.
+ * Production/shadow measure path never reads these; if set, entrypoints fail closed.
+ */
+export const FORBIDDEN_TEST_DISK_ENV_KEYS = Object.freeze([
+  "IU_NDIC_TEST_DISK_AVAILABLE_BYTES",
+  "IU_NDIC_DISK_STATS_PROVIDER",
+  "IU_NDIC_FAKE_DISK_FREE",
+  "IU_NDIC_TEST_STATFS",
+]);
+
+/**
+ * Fail closed if a forbidden test-disk env key is present.
+ * Does not invent free space; blocks accidental/malicious activation.
+ * @param {NodeJS.ProcessEnv} [env]
+ */
+export function assertNoTestDiskProviderEnv(env = process.env) {
+  for (const k of FORBIDDEN_TEST_DISK_ENV_KEYS) {
+    const v = env[k];
+    if (v != null && String(v).trim() !== "") {
+      throw Object.assign(new Error("REFUSING_TEST_DISK_PROVIDER_ENV"), {
+        code: "REFUSING_TEST_DISK_PROVIDER_ENV",
+        keyName: k,
+      });
+    }
+  }
+}
+
+/**
+ * TEST-ONLY: build measureDeps returning an exact BigInt availableBytes string path.
+ * Must be passed via direct API (`opts.measureDeps`) from offline fixtures only.
+ * Never selected from workflow inputs, env, or production config.
+ *
+ * @param {{ availableBytes: bigint|number|string, blockSize?: bigint|number, statSync?: typeof fs.statSync }} opts
+ * @returns {{ __ndicTestDiskStatsProvider: true, statSync: Function, statfsSync: Function }}
+ */
+export function createTestDiskStatsProvider(opts) {
+  if (!opts || opts.availableBytes == null) {
+    throw new Error("test_disk_available_required");
+  }
+  const availableBytes =
+    typeof opts.availableBytes === "bigint" ? opts.availableBytes : BigInt(String(opts.availableBytes));
+  if (availableBytes < 0n) throw new Error("test_disk_negative");
+  // blockSize=1 → bavail*blockSize equals availableBytes exactly (no precision loss).
+  const blockSize =
+    opts.blockSize != null
+      ? typeof opts.blockSize === "bigint"
+        ? opts.blockSize
+        : BigInt(String(opts.blockSize))
+      : 1n;
+  if (blockSize <= 0n) throw new Error("test_disk_block");
+  if (availableBytes % blockSize !== 0n) throw new Error("test_disk_not_divisible");
+  const bavail = availableBytes / blockSize;
+  return {
+    __ndicTestDiskStatsProvider: true,
+    statSync: opts.statSync || fs.statSync,
+    statfsSync: () => ({ bavail, bsize: blockSize, frsize: blockSize }),
+  };
+}
+
+/**
+ * Refuse test disk provider while NDIC mode is shadow/active (production path).
+ * Offline fixtures run without IU_NDIC_DATEX_V1_MODE=shadow/active.
+ * @param {object} measureDeps
+ * @param {NodeJS.ProcessEnv} [env]
+ */
+export function refuseTestDiskProviderInShadow(measureDeps, env = process.env) {
+  if (!measureDeps || measureDeps.__ndicTestDiskStatsProvider !== true) return null;
+  const mode = String(env.IU_NDIC_DATEX_V1_MODE || "")
+    .trim()
+    .toLowerCase();
+  if (mode === "shadow" || mode === "active") {
+    return DISK_REJECT.TEST_PROVIDER;
+  }
+  return null;
+}
 
 /**
  * @param {string} absPath
@@ -67,11 +145,16 @@ export function classifyDiskPath(absPath) {
 /**
  * Measure free bytes on the filesystem owning `dir` (must exist).
  * Uses frsize when present (POSIX block unit); falls back to bsize.
+ * Production default: real fs.statfsSync. Never reads FORBIDDEN_TEST_DISK_ENV_KEYS.
  * @param {string} dir
- * @param {{ statSync?: typeof fs.statSync, statfsSync?: typeof fs.statfsSync }} [deps] test inject only
+ * @param {{ statSync?: typeof fs.statSync, statfsSync?: typeof fs.statfsSync, __ndicTestDiskStatsProvider?: boolean }} [deps] test inject only
  * @returns {{ ok: true, availableBytes: bigint, bavail: bigint, blockSize: bigint } | { ok: false, rejectCode: string, detail?: string }}
  */
 export function measureFilesystemAvailable(dir, deps = {}) {
+  const refused = refuseTestDiskProviderInShadow(deps);
+  if (refused) {
+    return { ok: false, rejectCode: refused, detail: "test_provider_blocked" };
+  }
   const statSync = deps.statSync || fs.statSync;
   const statfsSync = deps.statfsSync || fs.statfsSync;
   if (!dir || typeof dir !== "string") {
@@ -251,11 +334,13 @@ export function measureTaskOwnedBytes(dir, mustBeUnder) {
  *   existingTaskOwnedBytes?: number|bigint,
  *   cleanupCandidateBytes?: number|bigint,
  *   zipLimitExceeded?: boolean,
+ *   measureDeps?: object,
  * }} opts
  */
 export function runDiskPreflight(opts) {
   const pathCategory = classifyDiskPath(opts.checkDir);
-  const measured = measureFilesystemAvailable(opts.checkDir, opts.measureDeps || {});
+  const measureDeps = opts.measureDeps || {};
+  const measured = measureFilesystemAvailable(opts.checkDir, measureDeps);
   if (!measured.ok) {
     return {
       ok: false,

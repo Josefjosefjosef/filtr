@@ -73,6 +73,9 @@ import {
   classifyTrafficLifecycle,
   classifyChangeSignificance,
 } from "./ndic-datex-v1/lifecycle.mjs";
+import {
+  assertNoTestDiskProviderEnv,
+} from "./ndic-datex-v1/disk-preflight.mjs";
 import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -82,10 +85,50 @@ const FETCH_TIMEOUT_MS = 45000;
 
 /** @typedef {'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'} FailureCategory */
 
+/** @param {boolean} ran @param {boolean} passed */
+function phaseTri(ran, passed) {
+  if (!ran) return "NOT_RUN";
+  return passed ? "PASS" : "FAIL";
+}
+
+/**
+ * Attach PASS/FAIL/NOT_RUN for phases that may be skipped by earlier failure.
+ * Never invent FAIL for a phase that never executed.
+ * @param {object} report
+ */
+function attachPhaseResults(report) {
+  const datexObj = report.datex;
+  const tmcObj = report.tmc;
+  const datexParsed = datexObj != null && datexObj.downloadSuccess === true;
+  const tmcDiskSeen =
+    tmcObj != null &&
+    (tmcObj.diskDiagnostics != null ||
+      (tmcObj.rejectCode != null && String(tmcObj.rejectCode).startsWith("TMC_DISK_")));
+  report.phases = {
+    datexFetch: phaseTri(report.datexRequestAttempted === true, !!(datexObj && datexObj.downloadSuccess)),
+    datexXxeProtection: phaseTri(datexParsed, !!(datexObj && datexObj.xxeProtectionVerified === true)),
+    datexChunkBoundary: phaseTri(datexParsed, !!(datexObj && datexObj.chunkBoundaryProbePassed === true)),
+    tmcFetch: phaseTri(
+      report.tmcRequestAttempted === true,
+      !!(tmcObj && (tmcObj.downloadSuccess === true || tmcObj.skipped === true))
+    ),
+    tmcDiskPreflight: phaseTri(
+      tmcDiskSeen,
+      !!(
+        tmcObj &&
+        tmcObj.diskDiagnostics &&
+        (tmcObj.diskPreflightPassed === true || tmcObj.diskDiagnostics.rejectCode == null)
+      )
+    ),
+  };
+  return report;
+}
+
 function ensureWorkDir() {
+  assertNoTestDiskProviderEnv(process.env);
   const base = process.env.IU_NDIC_SHADOW_WORK_DIR || process.env.RUNNER_TEMP;
   if (!base || !String(base).trim()) {
-    // Fail-closed: never silently fall back to os.tmpdir()/tmpfs for NDIC network work.
+    // Fail-closed: never silently fall back to host OS temp / tmpfs for NDIC network work.
     throw Object.assign(new Error("TMC_DISK_WORKDIR_REQUIRED"), {
       code: "TMC_DISK_WORKDIR_REQUIRED",
     });
@@ -906,17 +949,30 @@ function wipeDir(dir) {
 }
 
 export async function runShadowProbe(opts = {}) {
+  assertNoTestDiskProviderEnv(process.env);
   const config = opts.config || getNdicDatexV1Config(process.env);
   if (config.mode !== "shadow") {
-    return {
+    return attachPhaseResults({
       ok: false,
       reason: "mode_not_shadow",
       mode: config.mode,
+      datex: null,
+      tmc: null,
+      datexRequestAttempted: false,
+      tmcRequestAttempted: false,
       report: { error: "probe_requires_mode_shadow" },
-    };
+    });
   }
   if (String(process.env.IU_NDIC_DATEX_V1_MODE || "").trim().toLowerCase() === "active") {
-    return { ok: false, reason: "active_forbidden", mode: "active" };
+    return attachPhaseResults({
+      ok: false,
+      reason: "active_forbidden",
+      mode: "active",
+      datex: null,
+      tmc: null,
+      datexRequestAttempted: false,
+      tmcRequestAttempted: false,
+    });
   }
 
   // Blocks main→ubuntu dispatch that only checkouts feature code_ref.
@@ -928,12 +984,16 @@ export async function runShadowProbe(opts = {}) {
   try {
     workDir = ensureWorkDir();
   } catch (e) {
-    return {
+    return attachPhaseResults({
       ok: false,
       reason: (e && e.code) || "TMC_DISK_WORKDIR_REQUIRED",
       mode: "shadow",
       errorCode: (e && e.code) || "TMC_DISK_WORKDIR_REQUIRED",
-    };
+      datex: null,
+      tmc: null,
+      datexRequestAttempted: false,
+      tmcRequestAttempted: false,
+    });
   }
 
   const report = {
@@ -1190,6 +1250,7 @@ export async function runShadowProbe(opts = {}) {
     return report;
   } finally {
     report.finishedAt = new Date().toISOString();
+    attachPhaseResults(report);
     for (const p of rawPaths) {
       try {
         if (fs.existsSync(p) && fs.statSync(p).isDirectory()) wipeTempDir(p);
@@ -1318,6 +1379,25 @@ if (isMain) {
           streamingBounded: report.tmc.streamingBounded === true,
           maxBytes: report.tmc.maxBytes != null ? report.tmc.maxBytes : null,
           sourceLabel: "TMC_SOURCE",
+          diskDiagnostics: report.tmc.diskDiagnostics
+            ? {
+                diskCheckPathCategory: report.tmc.diskDiagnostics.diskCheckPathCategory,
+                filesystemAvailableBytes: report.tmc.diskDiagnostics.filesystemAvailableBytes,
+                filesystemRequiredBytes: report.tmc.diskDiagnostics.filesystemRequiredBytes,
+                downloadedArchiveBytes: report.tmc.diskDiagnostics.downloadedArchiveBytes,
+                declaredUncompressedBytes: report.tmc.diskDiagnostics.declaredUncompressedBytes,
+                archiveWorkingReserveBytes: report.tmc.diskDiagnostics.archiveWorkingReserveBytes,
+                indexReserveBytes: report.tmc.diskDiagnostics.indexReserveBytes,
+                rollbackReserveBytes: report.tmc.diskDiagnostics.rollbackReserveBytes,
+                atomicSwapReserveBytes: report.tmc.diskDiagnostics.atomicSwapReserveBytes,
+                operatingSystemSafetyReserveBytes: report.tmc.diskDiagnostics.operatingSystemSafetyReserveBytes,
+                existingTaskOwnedBytes: report.tmc.diskDiagnostics.existingTaskOwnedBytes,
+                cleanupCandidateBytes: report.tmc.diskDiagnostics.cleanupCandidateBytes,
+                diskFormulaVersion: report.tmc.diskDiagnostics.diskFormulaVersion,
+                rejectCode: report.tmc.diskDiagnostics.rejectCode || null,
+              }
+            : null,
+          diskPreflightPassed: report.tmc.diskPreflightPassed === true,
         },
         mapping: report.mapping,
         lifecycle: report.lifecycle,
@@ -1327,6 +1407,13 @@ if (isMain) {
           tmc: "TMC_SOURCE",
         },
         tmcPublicMeta: report.tmcPublicMeta,
+        phases: report.phases || {
+          datexFetch: "NOT_RUN",
+          datexXxeProtection: "NOT_RUN",
+          datexChunkBoundary: "NOT_RUN",
+          tmcFetch: "NOT_RUN",
+          tmcDiskPreflight: "NOT_RUN",
+        },
       };
       console.log(JSON.stringify(safe, null, 2));
       if (!report.ok) process.exitCode = 1;

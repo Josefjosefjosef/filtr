@@ -37,6 +37,7 @@ const ALLOWED_TOP = [
   "tmcPublicMeta",
   "errorCode",
   "gate",
+  "phases",
 ];
 
 /** Keys that must never appear (actual secret/payload carriers — not boolean *Displayed flags) */
@@ -101,6 +102,9 @@ ok("probe_structure_diag", /scanDatexStructure|rootNamespaceUri|parserCompatibil
 ok("probe_zip_metadata", /inspectZipDeclaredMetadata|zipMetadata|entrySizeRejectCategory/.test(probeSrc), "zipmeta");
 ok("probe_streaming_parse", /parseDatexFileStreaming|streamingParse|keepOnDisk/.test(probeSrc), "stream-parse");
 ok("probe_tmc_from_file", /summarizeTmcFromFile|analyzeAndGateTmcZipFile/.test(probeSrc), "tmc-disk");
+ok("probe_phase_tri_state", /phaseTri|NOT_RUN/.test(probeSrc) && /attachPhaseResults/.test(probeSrc), "phases");
+ok("probe_no_test_disk_env_activation", /assertNoTestDiskProviderEnv/.test(probeSrc), "disk-env");
+ok("probe_no_create_test_disk_provider", !/createTestDiskStatsProvider/.test(probeSrc), "no-test-provider");
 ok("probe_no_full_xml_toString_hotpath", !/summarizeDatexFromFile[\s\S]{0,200}buf\.toString\("utf8"\)/.test(probeSrc), "no-tostring");
 
 const FORBIDDEN_VALUE_RE =
@@ -135,6 +139,13 @@ const sample = {
   tmcRequestAttempted: false,
   tmcSkippedDueToSharedNetworkFailure: false,
   preflight: { ok: true },
+  phases: {
+    datexFetch: "NOT_RUN",
+    datexXxeProtection: "NOT_RUN",
+    datexChunkBoundary: "NOT_RUN",
+    tmcFetch: "NOT_RUN",
+    tmcDiskPreflight: "NOT_RUN",
+  },
   datex: {
     downloadSuccess: false,
     authenticationAccepted: false,

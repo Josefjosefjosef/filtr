@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Offline disk-preflight fixtures (no NDIC network).
- * Named checks map 1:1 to forensic required tests.
+ * Capacity-dependent checks use createTestDiskStatsProvider (API inject only).
+ * One real-statfs integration test remains host-capacity-agnostic.
  */
 import fs from "node:fs";
 import os from "node:os";
@@ -16,12 +17,16 @@ import {
   wipeTaskOwnedPath,
   classifyDiskPath,
   measureTaskOwnedBytes,
+  createTestDiskStatsProvider,
+  assertNoTestDiskProviderEnv,
+  refuseTestDiskProviderInShadow,
   DISK_FORMULA_VERSION,
   DISK_REJECT,
   OBSERVED_TMC_ZIP_COMPRESSED,
   OBSERVED_TMC_ZIP_UNCOMPRESSED,
   OBSERVED_TMC_ZIP_LARGEST_ENTRY,
   DISK_DEFAULTS,
+  FORBIDDEN_TEST_DISK_ENV_KEYS,
 } from "./ndic-datex-v1/disk-preflight.mjs";
 import { buildStoredZip, safeUnzipEntries, DEFAULT_ZIP_LIMITS } from "./ndic-datex-v1/tmc-zip.mjs";
 import { analyzeAndGateTmcZipFile, atomicActivateTmcIndex, rollbackTmcIndex } from "./ndic-datex-v1/tmc-archive-stream.mjs";
@@ -36,6 +41,10 @@ function ok(id, cond, detail) {
 const GiB = 1024n * 1024n * 1024n;
 const FREE_6_7_GIB = (67n * GiB) / 10n;
 const FREE_6_7_GB_DECIMAL = 6700000000n;
+/** Controlled ample free space for deterministic “pass disk then later reject” paths. */
+const CONTROLLED_AMPLE_BYTES = 10n * GiB;
+/** Controlled scarce free space for TMC_DISK_SPACE. */
+const CONTROLLED_SCARCE_BYTES = 1000n * 4096n; // 4_096_000
 
 // --- exact operands for known archive (zipAlreadyOnDisk=true) ---
 const knownReq = computeRequiredDiskBytes({
@@ -46,7 +55,39 @@ const knownReq = computeRequiredDiskBytes({
   existingTaskOwnedBytes: 0,
 });
 
-// 1) Known archive + ~6.7 GiB free passes
+// 0) Env must not activate test provider; forbidden keys empty in this process
+{
+  let threw = false;
+  try {
+    assertNoTestDiskProviderEnv(process.env);
+  } catch (_) {
+    threw = true;
+  }
+  ok("t00_no_forbidden_test_disk_env", threw === false, "env");
+  const fakeEnv = { IU_NDIC_TEST_DISK_AVAILABLE_BYTES: "999" };
+  let blocked = false;
+  try {
+    assertNoTestDiskProviderEnv(fakeEnv);
+  } catch (e) {
+    blocked = e && e.code === "REFUSING_TEST_DISK_PROVIDER_ENV";
+  }
+  ok("t00_forbidden_env_fail_closed", blocked, "refuse");
+  ok(
+    "t00_shadow_refuses_test_provider",
+    refuseTestDiskProviderInShadow(createTestDiskStatsProvider({ availableBytes: 1n }), {
+      IU_NDIC_DATEX_V1_MODE: "shadow",
+    }) === DISK_REJECT.TEST_PROVIDER,
+    "shadow"
+  );
+  ok(
+    "t00_fixture_mode_allows_provider",
+    refuseTestDiskProviderInShadow(createTestDiskStatsProvider({ availableBytes: 1n }), {}) === null,
+    "fixture"
+  );
+  ok("t00_forbidden_keys_listed", FORBIDDEN_TEST_DISK_ENV_KEYS.length >= 3, String(FORBIDDEN_TEST_DISK_ENV_KEYS.length));
+}
+
+// 1) Known archive + ~6.7 GiB / 6.7 GB free passes (pure arithmetic, no host fs)
 {
   const fitGiB = knownTmcArchiveFitsAvailable(FREE_6_7_GIB);
   const fitGB = knownTmcArchiveFitsAvailable(FREE_6_7_GB_DECIMAL);
@@ -54,7 +95,27 @@ const knownReq = computeRequiredDiskBytes({
   ok("t01b_known_archive_fits_6_7_gb_decimal", fitGB.ok === true, String(fitGB.requiredBytes));
 }
 
-// 2) Real insufficiency → TMC_DISK_SPACE
+// 1c) Controlled ample space → disk preflight ok (deterministic)
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-ok-"));
+  const disk = runDiskPreflight({
+    checkDir: dir,
+    downloadedArchiveBytes: OBSERVED_TMC_ZIP_COMPRESSED,
+    declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
+    largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
+    zipAlreadyOnDisk: true,
+    measureDeps: createTestDiskStatsProvider({ availableBytes: CONTROLLED_AMPLE_BYTES }),
+  });
+  ok("t01c_controlled_ample_passes", disk.ok === true, disk.rejectCode);
+  ok(
+    "t01c_available_exact",
+    disk.filesystemAvailableBytes === CONTROLLED_AMPLE_BYTES.toString(),
+    String(disk.filesystemAvailableBytes)
+  );
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// 2) Controlled insufficiency → TMC_DISK_SPACE
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-disk-space-"));
   const disk = runDiskPreflight({
@@ -63,27 +124,25 @@ const knownReq = computeRequiredDiskBytes({
     declaredUncompressedBytes: OBSERVED_TMC_ZIP_UNCOMPRESSED,
     largestEntryBytes: OBSERVED_TMC_ZIP_LARGEST_ENTRY,
     zipAlreadyOnDisk: true,
-    measureDeps: {
-      statSync: fs.statSync,
-      statfsSync: () => ({ bavail: 1000n, bsize: 4096n, frsize: 4096n }),
-    },
+    measureDeps: createTestDiskStatsProvider({ availableBytes: CONTROLLED_SCARCE_BYTES, blockSize: 4096n }),
   });
   ok("t02_insufficient_space_TMC_DISK_SPACE", disk.ok === false && disk.rejectCode === DISK_REJECT.SPACE, disk.rejectCode);
   ok(
     "t02_available_bytes_exact_string",
-    typeof disk.filesystemAvailableBytes === "string" && /^\d+$/.test(disk.filesystemAvailableBytes),
+    disk.filesystemAvailableBytes === CONTROLLED_SCARCE_BYTES.toString(),
     String(disk.filesystemAvailableBytes)
   );
   ok("t02_available_not_number_type", typeof disk.filesystemAvailableBytes !== "number", typeof disk.filesystemAvailableBytes);
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-// 3) Nonexistent path → PATH
+// 3) Nonexistent path → PATH (no capacity dependency)
 {
   const disk = runDiskPreflight({
     checkDir: path.join(os.tmpdir(), "ndic-missing-" + Date.now() + "-nope"),
     downloadedArchiveBytes: 1,
     zipAlreadyOnDisk: true,
+    measureDeps: createTestDiskStatsProvider({ availableBytes: CONTROLLED_AMPLE_BYTES }),
   });
   ok("t03_missing_path_TMC_DISK_PATH_INVALID", disk.ok === false && disk.rejectCode === DISK_REJECT.PATH, disk.rejectCode);
   ok("t03_no_fake_available_bytes", disk.filesystemAvailableBytes === null, String(disk.filesystemAvailableBytes));
@@ -127,6 +186,8 @@ const knownReq = computeRequiredDiskBytes({
   const lost = BigInt(Math.trunc(Number(hugeBlocks) * Number(block)));
   ok("t06_bigint_precise", product === 9007199254740993n * 4096n, String(product));
   ok("t06_number_loses", lost !== product, lost + "!=" + product);
+  const measured = measureFilesystemAvailable(os.tmpdir(), createTestDiskStatsProvider({ availableBytes: product }));
+  ok("t06_provider_preserves_huge", measured.ok && measured.availableBytes === product, String(measured.availableBytes));
 }
 
 // 7) ZIP bomb limits remain active
@@ -166,7 +227,8 @@ const knownReq = computeRequiredDiskBytes({
   );
   ok(
     "t09_required_lt_declared_plus_os",
-    knownReq.requiredBytes < BigInt(OBSERVED_TMC_ZIP_UNCOMPRESSED) + BigInt(DISK_DEFAULTS.operatingSystemSafetyReserveBytes) + 300n * 1024n * 1024n,
+    knownReq.requiredBytes <
+      BigInt(OBSERVED_TMC_ZIP_UNCOMPRESSED) + BigInt(DISK_DEFAULTS.operatingSystemSafetyReserveBytes) + 300n * 1024n * 1024n,
     String(knownReq.requiredBytes)
   );
 }
@@ -200,7 +262,6 @@ const knownReq = computeRequiredDiskBytes({
   atomicActivateTmcIndex(paths, '{"v":"good"}');
   atomicActivateTmcIndex(paths, '{"v":"candidate"}');
   ok("t13_last_good_preserved_on_disk", fs.readFileSync(paths.lastGoodPath, "utf8") === '{"v":"good"}', "lg");
-  // Simulate failed activation mid-flight: leave corrupt active, rollback
   fs.writeFileSync(paths.activePath, '{"v":"corrupt"}');
   const rb = rollbackTmcIndex(paths);
   ok("t14_atomic_rollback_restores_last_good", rb.ok && fs.readFileSync(paths.activePath, "utf8") === '{"v":"good"}', "rb");
@@ -214,7 +275,6 @@ const knownReq = computeRequiredDiskBytes({
   const a = acquireTmcImportLock(lockDir, { holder: "job-a", ttlMs: 60_000 });
   const b = acquireTmcImportLock(lockDir, { holder: "job-b", ttlMs: 60_000 });
   ok("t15_concurrent_second_blocked", a.ok === true && b.ok === false && b.rejectCode === DISK_REJECT.LOCK, b.rejectCode);
-  // Crash of holder process must NOT free lock while TTL active (foreign still protected)
   const stolen = acquireTmcImportLock(lockDir, { holder: "crash-reclaim", ttlMs: 60_000 });
   ok("t16_no_steal_active_foreign_lock", stolen.ok === false && stolen.rejectCode === DISK_REJECT.LOCK, stolen.rejectCode);
   a.release();
@@ -224,7 +284,7 @@ const knownReq = computeRequiredDiskBytes({
   fs.rmSync(base, { recursive: true, force: true });
 }
 
-// 17) Report fields sanitized (no secrets/auth/raw)
+// 17) Controlled ample disk → later importer reject preserves diagnostics
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-diag-"));
   const zipPath = path.join(dir, "tmc.zip");
@@ -235,7 +295,8 @@ const knownReq = computeRequiredDiskBytes({
       { name: "loc/POINTS.DAT", data: "CID=11;TABCD=25\n" },
     ])
   );
-  const gate = analyzeAndGateTmcZipFile(zipPath, { workDir: dir });
+  const measureDeps = createTestDiskStatsProvider({ availableBytes: CONTROLLED_AMPLE_BYTES });
+  const gate = analyzeAndGateTmcZipFile(zipPath, { workDir: dir, measureDeps });
   const diag = gate.diskDiagnostics || {};
   const requiredFields = [
     "diskCheckPathCategory",
@@ -256,22 +317,27 @@ const knownReq = computeRequiredDiskBytes({
   ok("t17_all_diagnostic_fields", missing.length === 0, missing.join(","));
   ok(
     "t17_available_bytes_exact_digit_string",
-    typeof diag.filesystemAvailableBytes === "string" && /^\d+$/.test(diag.filesystemAvailableBytes),
+    diag.filesystemAvailableBytes === CONTROLLED_AMPLE_BYTES.toString(),
     String(diag.filesystemAvailableBytes)
+  );
+  ok(
+    "t17_required_bytes_preserved",
+    typeof diag.filesystemRequiredBytes === "string" && /^\d+$/.test(diag.filesystemRequiredBytes),
+    String(diag.filesystemRequiredBytes)
   );
   ok(
     "t17_preserved_after_tmc_importer_reject",
     gate.rejectCode === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED" &&
-      typeof diag.filesystemAvailableBytes === "string" &&
-      /^\d+$/.test(diag.filesystemAvailableBytes),
+      diag.filesystemAvailableBytes === CONTROLLED_AMPLE_BYTES.toString(),
     gate.rejectCode + ":" + diag.filesystemAvailableBytes
   );
+  ok("t17_disk_preflight_passed", gate.diskPreflightPassed === true, String(gate.diskPreflightPassed));
   const blob = JSON.stringify({ rejectCode: gate.rejectCode, diskDiagnostics: diag });
   ok("t17_no_authorization", !/Authorization/i.test(blob), "auth");
   ok("t17_no_basic_token", !/Basic\s+[A-Za-z0-9+/=]{8,}/i.test(blob), "basic");
   ok("t17_no_secret_names_values", !/IU_NDIC_PULL_PASS\s*=/.test(blob), "pass");
   ok("t17_no_raw_xml", !/<SituationPublication/i.test(blob), "xml");
-  // Sanitized sample for forensic output (names + numeric strings only)
+  ok("t17_no_sensitive_abs_path", !/[A-Za-z]:\\\\Users\\\\|\/home\/(?!runner)/.test(blob), "path");
   console.log(
     "SANITIZED_DISK_DIAG_SAMPLE=" +
       JSON.stringify({
@@ -294,18 +360,19 @@ const knownReq = computeRequiredDiskBytes({
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-// 19) After successful measure, arithmetic reject still keeps available bytes (no fake 0)
+// 19) After successful controlled measure, arithmetic reject keeps available bytes
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-arith-"));
   const disk = runDiskPreflight({
     checkDir: dir,
     downloadedArchiveBytes: -1n,
     zipAlreadyOnDisk: true,
+    measureDeps: createTestDiskStatsProvider({ availableBytes: CONTROLLED_AMPLE_BYTES }),
   });
   ok("t19_arithmetic_after_measure", disk.ok === false && disk.rejectCode === DISK_REJECT.ARITHMETIC, disk.rejectCode);
   ok(
     "t19_available_preserved_digit_string",
-    typeof disk.filesystemAvailableBytes === "string" && /^\d+$/.test(disk.filesystemAvailableBytes),
+    disk.filesystemAvailableBytes === CONTROLLED_AMPLE_BYTES.toString(),
     String(disk.filesystemAvailableBytes)
   );
   fs.rmSync(dir, { recursive: true, force: true });
@@ -322,6 +389,42 @@ const knownReq = computeRequiredDiskBytes({
   ok("t18_foreign_not_wiped", wipeTaskOwnedPath(foreign, dir).ok === false && fs.existsSync(foreign), "keep");
   fs.unlinkSync(foreign);
   fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// 20) Real host statfs integration — capacity-agnostic (no expected free size)
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-real-statfs-"));
+  const measured = measureFilesystemAvailable(dir);
+  ok(
+    "t20_real_measure_ok_or_measure_failed",
+    measured.ok === true || measured.rejectCode === DISK_REJECT.MEASURE,
+    measured.ok ? "ok" : measured.rejectCode
+  );
+  if (measured.ok) {
+    ok("t20_available_nonneg", measured.availableBytes >= 0n, String(measured.availableBytes));
+    ok(
+      "t20_available_digit_string",
+      /^\d+$/.test(measured.availableBytes.toString()),
+      measured.availableBytes.toString()
+    );
+    const cat = classifyDiskPath(dir);
+    ok("t20_path_category_known", typeof cat === "string" && cat.length > 0, cat);
+  }
+  // Must not claim a specific host capacity
+  ok("t20_no_fixed_capacity_assertion", true, "host_agnostic");
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// Reserves unchanged (production defaults)
+{
+  ok("reserves_index_64mib", DISK_DEFAULTS.indexReserveBytes === 64 * 1024 * 1024, String(DISK_DEFAULTS.indexReserveBytes));
+  ok("reserves_rollback_64mib", DISK_DEFAULTS.rollbackReserveBytes === 64 * 1024 * 1024, String(DISK_DEFAULTS.rollbackReserveBytes));
+  ok("reserves_atomic_64mib", DISK_DEFAULTS.atomicSwapReserveBytes === 64 * 1024 * 1024, String(DISK_DEFAULTS.atomicSwapReserveBytes));
+  ok(
+    "reserves_os_512mib",
+    DISK_DEFAULTS.operatingSystemSafetyReserveBytes === 512 * 1024 * 1024,
+    String(DISK_DEFAULTS.operatingSystemSafetyReserveBytes)
+  );
 }
 
 // Formula reconciliation proof lines
@@ -349,6 +452,7 @@ console.log(
       filesystemRequiredBytes: knownReq.requiredBytes.toString(),
       simAvailable_6_7_GiB: FREE_6_7_GIB.toString(),
       simAvailable_6_7_GB_decimal: FREE_6_7_GB_DECIMAL.toString(),
+      controlledAmpleBytes: CONTROLLED_AMPLE_BYTES.toString(),
     },
     results: results.map((r) => r.id + "=" + (r.pass ? "PASS" : "FAIL")),
     node: process.version,

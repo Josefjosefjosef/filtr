@@ -43,6 +43,7 @@ import { parseTmcTableFromDownload } from "./ndic-datex-v1/tmc-zip.mjs";
 import { isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { assertAllowedPullUrl } from "./ndic-datex-v1/config.mjs";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
+import { assertNoTestDiskProviderEnv } from "./ndic-datex-v1/disk-preflight.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -185,6 +186,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
   if (opts.skipRunnerIdentityCheck !== true) {
     assertNdicCzechEgressRunnerOrThrow(process.env);
   }
+  assertNoTestDiskProviderEnv(process.env);
 
   if (config.mode === "off") {
     return { ok: true, skipped: true, reason: "mode_off", mode: "off" };

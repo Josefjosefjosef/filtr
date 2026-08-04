@@ -382,9 +382,32 @@ function main() {
       ok("disk_prefers_frsize", /frsize/.test(d), "frsize");
       ok("disk_no_flat_2gib_only", !/free\s*<\s*lim\.minFreeDiskBytes/.test(d), "flat");
       ok("disk_task_owned", /IU_NDIC_SHADOW_WORK_DIR|RUNNER_TEMP/.test(d), "task");
+      ok("disk_test_provider_api_only", /createTestDiskStatsProvider/.test(d), "provider");
+      ok("disk_forbidden_test_env", /FORBIDDEN_TEST_DISK_ENV_KEYS/.test(d), "envkeys");
+      ok("disk_refuse_provider_in_shadow", /refuseTestDiskProviderInShadow|REFUSING_TEST_DISK_PROVIDER_IN_SHADOW/.test(d), "refuse");
+      ok("disk_reserves_index_64", /indexReserveBytes:\s*64\s*\*\s*1024\s*\*\s*1024/.test(d), "idx");
+      ok("disk_reserves_os_512", /operatingSystemSafetyReserveBytes:\s*512\s*\*\s*1024\s*\*\s*1024/.test(d), "os");
     }
     const bounded = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "bounded-fetch.mjs"), "utf8");
     ok("bounded_prefers_runner_temp", /IU_NDIC_SHADOW_WORK_DIR/.test(bounded) && /RUNNER_TEMP/.test(bounded), "base");
+    const probe = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-shadow-probe.mjs"), "utf8");
+    const run = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-shadow-run.mjs"), "utf8");
+    const sync = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-prod-sync.mjs"), "utf8");
+    ok("probe_no_test_disk_provider_call", !/createTestDiskStatsProvider/.test(probe), "probe-provider");
+    ok("run_no_test_disk_provider_call", !/createTestDiskStatsProvider/.test(run), "run-provider");
+    ok("sync_no_test_disk_provider_call", !/createTestDiskStatsProvider/.test(sync), "sync-provider");
+    ok("probe_asserts_no_test_disk_env", /assertNoTestDiskProviderEnv/.test(probe), "probe-env");
+    ok("run_asserts_no_test_disk_env", /assertNoTestDiskProviderEnv/.test(run), "run-env");
+    ok("sync_asserts_no_test_disk_env", /assertNoTestDiskProviderEnv/.test(sync), "sync-env");
+    ok("probe_no_measureDeps_from_env", !/measureDeps:\s*process\.env|IU_NDIC_TEST_DISK/.test(probe), "measure-env");
+    ok("probe_workdir_no_ostmp_fallback", /TMC_DISK_WORKDIR_REQUIRED/.test(probe) && !/ensureWorkDir[\s\S]{0,400}os\.tmpdir\(\)/.test(probe), "no-tmp");
+    // Workflow must not expose test disk inputs
+    for (const file of Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS)) {
+      const abs = path.join(WF_DIR, file);
+      if (!fs.existsSync(abs)) continue;
+      const raw = fs.readFileSync(abs, "utf8");
+      ok("wf_no_test_disk_input_" + file, !/test.?disk|fake.?disk|IU_NDIC_TEST_DISK/i.test(raw), "input");
+    }
   }
 
   ok("at_least_one_ndic_self_hosted", ndicSelfHostedJobs >= 1, String(ndicSelfHostedJobs));

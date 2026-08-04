@@ -391,7 +391,9 @@ export function peekSqliteMagic(zipPath, localHeaderOffset, nameLen, extraLen) {
  * Does not implement full TISA .DAT parse yet (requires confirmed sample layout).
  *
  * @param {string} zipPath
- * @param {{ limits?: object, workDir?: string, signal?: AbortSignal, skipLock?: boolean }} [opts]
+ * @param {{ limits?: object, workDir?: string, signal?: AbortSignal, skipLock?: boolean, measureDeps?: object }} [opts]
+ *   measureDeps — TEST-ONLY inject for offline fixtures (createTestDiskStatsProvider).
+ *   Production/shadow must omit it so real fs.statfs is used.
  */
 export function analyzeAndGateTmcZipFile(zipPath, opts = {}) {
   const lim = { ...TMC_ZIP_LIMITS_V11, ...(opts.limits || {}) };
@@ -448,6 +450,8 @@ export function analyzeAndGateTmcZipFile(zipPath, opts = {}) {
       largestEntryBytes: meta.maxDeclaredUncompressedEntryBytes || 0,
       zipAlreadyOnDisk: true,
       existingTaskOwnedBytes,
+      // Direct API only — never from env/workflow (shadow omits → real statfs).
+      measureDeps: opts.measureDeps,
     });
     meta.diskDiagnostics = {
       diskCheckPathCategory: disk.diskCheckPathCategory,

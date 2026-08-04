@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
+import { assertNoTestDiskProviderEnv } from "./ndic-datex-v1/disk-preflight.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const reportPath =
@@ -18,6 +19,7 @@ const reportPath =
 fs.mkdirSync(path.dirname(reportPath), { recursive: true, mode: 0o700 });
 
 try {
+  assertNoTestDiskProviderEnv(process.env);
   assertNdicCzechEgressRunnerOrThrow(process.env);
 } catch (e) {
   const code = (e && e.code) || "REFUSING_GITHUB_HOSTED";
@@ -29,7 +31,18 @@ try {
         mode: "shadow",
         reason: code,
         errorCode: code,
-        githubHostedNdicAccessBlocked: true,
+        githubHostedNdicAccessBlocked: code !== "REFUSING_TEST_DISK_PROVIDER_ENV",
+        datexRequestAttempted: false,
+        tmcRequestAttempted: false,
+        datex: null,
+        tmc: null,
+        phases: {
+          datexFetch: "NOT_RUN",
+          datexXxeProtection: "NOT_RUN",
+          datexChunkBoundary: "NOT_RUN",
+          tmcFetch: "NOT_RUN",
+          tmcDiskPreflight: "NOT_RUN",
+        },
       },
       null,
       2
@@ -48,6 +61,17 @@ function writeFallback(exitCode, signal) {
     processSignal: signal || null,
     failureCategory: signal === "SIGKILL" || exitCode === 134 || exitCode === 137 ? "RESOURCE_LIMIT" : "PROCESS_FAILURE",
     cleanupAttempted: true,
+    datexRequestAttempted: false,
+    tmcRequestAttempted: false,
+    datex: null,
+    tmc: null,
+    phases: {
+      datexFetch: "NOT_RUN",
+      datexXxeProtection: "NOT_RUN",
+      datexChunkBoundary: "NOT_RUN",
+      tmcFetch: "NOT_RUN",
+      tmcDiskPreflight: "NOT_RUN",
+    },
   };
   fs.writeFileSync(reportPath, JSON.stringify(body, null, 2), { mode: 0o600 });
 }

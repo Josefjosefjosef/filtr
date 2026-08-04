@@ -19,11 +19,15 @@ import {
   TMC_CID_EXPECTED,
   TMC_TABCD_EXPECTED,
 } from "./ndic-datex-v1/tmc-archive-stream.mjs";
+import { createTestDiskStatsProvider } from "./ndic-datex-v1/disk-preflight.mjs";
 
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
+
+/** Deterministic ample free space — never depends on host /tmp capacity. */
+const AMPLE = createTestDiskStatsProvider({ availableBytes: 10n * 1024n * 1024n * 1024n });
 
 function writeTempZip(name, files) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-tmc-fx-"));
@@ -61,7 +65,7 @@ function wipe(dir) {
   ok("dirs_ok", meta.directoryEntryCount >= 1 && meta.fileEntryCount === 2, JSON.stringify(meta));
   ok("dirs_dat", meta.datFileCount === 1, String(meta.datFileCount));
   ok("auth_tisa", meta.authoritativeFormat === TMC_FORMAT.TISA_DAT_CSV, meta.authoritativeFormat);
-  const gate = analyzeAndGateTmcZipFile(file, { workDir: dir });
+  const gate = analyzeAndGateTmcZipFile(file, { workDir: dir, measureDeps: AMPLE });
   ok(
     "importer_not_impl",
     gate.rejectCode === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
