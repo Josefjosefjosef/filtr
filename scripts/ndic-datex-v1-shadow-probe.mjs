@@ -17,6 +17,7 @@ import {
   assertAllowedPullUrl,
   ALLOWED_PULL_HOSTS,
 } from "./ndic-datex-v1/config.mjs";
+import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 import { parseDatexSituationPublication } from "./ndic-datex-v1/parse-datex.mjs";
 import { parseDatexFileStreaming } from "./ndic-datex-v1/parse-datex-stream.mjs";
 import {
@@ -902,6 +903,11 @@ export async function runShadowProbe(opts = {}) {
   }
   if (String(process.env.IU_NDIC_DATEX_V1_MODE || "").trim().toLowerCase() === "active") {
     return { ok: false, reason: "active_forbidden", mode: "active" };
+  }
+
+  // Blocks main→ubuntu dispatch that only checkouts feature code_ref.
+  if (opts.skipRunnerIdentityCheck !== true) {
+    assertNdicCzechEgressRunnerOrThrow(process.env);
   }
 
   const workDir = ensureWorkDir();

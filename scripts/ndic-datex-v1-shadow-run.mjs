@@ -7,6 +7,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const reportPath =
@@ -15,6 +16,28 @@ const reportPath =
   path.join(process.env.RUNNER_TEMP || process.env.TEMP || "/tmp", "ndic-shadow-report", "shadow-report.json");
 
 fs.mkdirSync(path.dirname(reportPath), { recursive: true, mode: 0o700 });
+
+try {
+  assertNdicCzechEgressRunnerOrThrow(process.env);
+} catch (e) {
+  const code = (e && e.code) || "REFUSING_GITHUB_HOSTED";
+  fs.writeFileSync(
+    reportPath,
+    JSON.stringify(
+      {
+        ok: false,
+        mode: "shadow",
+        reason: code,
+        errorCode: code,
+        githubHostedNdicAccessBlocked: true,
+      },
+      null,
+      2
+    ),
+    { mode: 0o600 }
+  );
+  process.exit(1);
+}
 
 function writeFallback(exitCode, signal) {
   const body = {

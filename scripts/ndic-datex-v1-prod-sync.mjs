@@ -42,6 +42,7 @@ import {
 import { parseTmcTableFromDownload } from "./ndic-datex-v1/tmc-zip.mjs";
 import { isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { assertAllowedPullUrl } from "./ndic-datex-v1/config.mjs";
+import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -178,6 +179,12 @@ export async function runNdicDatexV1Sync(opts = {}) {
   const config = opts.config || getNdicDatexV1Config(process.env);
   const started = new Date().toISOString();
   const paths = statePaths();
+
+  // Defense-in-depth: even if a GitHub-hosted workflow injects secrets + checkouts
+  // feature code, refuse before Authorization / mobilitydata contact.
+  if (opts.skipRunnerIdentityCheck !== true) {
+    assertNdicCzechEgressRunnerOrThrow(process.env);
+  }
 
   if (config.mode === "off") {
     return { ok: true, skipped: true, reason: "mode_off", mode: "off" };

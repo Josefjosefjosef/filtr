@@ -6,8 +6,10 @@ name: NDIC DATEX v1 shadow probe
 # FIRST SHADOW DISPATCH (mandatory):
 # 1) Actions → "NDIC DATEX v1 shadow probe"
 # 2) "Use workflow from" MUST be: feat/ndic-datex-v1-integration
-#    (main still has an older ubuntu-latest dispatcher; do NOT use main for self-hosted)
+#    (main may still have an older ubuntu-latest dispatcher; do NOT use main)
 # 3) Inputs: mode=shadow, code_ref=feat/ndic-datex-v1-integration
+# Defense: even if main ubuntu checkouts this code_ref, runner-identity.mjs
+# refuses GitHub-hosted /home/runner before any NDIC network call.
 #
 # Security contract (public repo):
 # - Trigger: workflow_dispatch ONLY (no pull_request / pull_request_target / workflow_run / schedule)

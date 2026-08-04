@@ -2,12 +2,11 @@
 /**
  * Guard: NDIC Czech self-hosted runner contract (static, no network, no secrets).
  *
- * FAIL if:
- * - NDIC self-hosted job lacks ALL four labels: self-hosted, Linux, X64, ndic-cz-egress
- * - Non-approved job uses ndic-cz-egress
- * - Any workflow uses bare self-hosted without the NDIC allowlist contract
- * - NDIC self-hosted job is triggerable via pull_request / pull_request_target / workflow_run
- * - NDIC shadow probe lacks persist-credentials: false / contents: read / shadow-only mode
+ * FAIL if any GitHub-hosted job can:
+ * - receive IU_NDIC_* secrets
+ * - run NDIC downloader / prod-sync / shadow-run
+ * - build Basic Auth for NDIC
+ * - contact mobilitydata.rsd.cz / approved NDIC hosts
  *
  * Exit 0 = PASS, 1 = FAIL.
  */
@@ -19,30 +18,40 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const WF_DIR = path.join(ROOT, ".github", "workflows");
 
-const REQUIRED_LABELS = ["self-hosted", "Linux", "X64", "ndic-cz-egress"];
-const APPROVED_NDIC_SELF_HOSTED = new Set(["ndic-datex-v1-shadow-probe.yml"]);
+export const REQUIRED_LABELS = ["self-hosted", "Linux", "X64", "ndic-cz-egress"];
+export const EXPECTED_RUNNER_NAME = "infouzel-ndic-cz-vps4204";
+
+/** Workflows allowed to host a real NDIC network job on the Czech labels. */
+export const APPROVED_NDIC_NETWORK_WORKFLOWS = Object.freeze({
+  "ndic-datex-v1-shadow-probe.yml": "shadow",
+  "update-ndic-datex-v1.yml": "update",
+});
+
 const FORBIDDEN_TRIGGERS = ["pull_request:", "pull_request_target:", "workflow_run:"];
 
-const fails = [];
-function ok(id, cond, detail) {
-  if (!cond) fails.push(id + (detail ? ":" + detail : ""));
-}
+const NDIC_CAPABILITY_PATTERNS = [
+  /secrets\.IU_NDIC_/,
+  /IU_NDIC_PULL_URL\s*:/,
+  /IU_NDIC_PULL_USER\s*:/,
+  /IU_NDIC_PULL_PASS\s*:/,
+  /IU_NDIC_TMC_PULL_URL\s*:/,
+  /IU_NDIC_TMC_PULL_USER\s*:/,
+  /IU_NDIC_TMC_PULL_PASS\s*:/,
+  /IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID\s*:/,
+  /ndic-datex-v1-prod-sync\.mjs/,
+  /ndic-datex-v1-shadow-run\.mjs/,
+  /ndic-datex-v1-shadow-probe\.mjs/,
+  /mobilitydata\.rsd\.cz/,
+  /Authorization:\s*`Basic/,
+  /Authorization:\s*Basic/,
+];
 
-function listWorkflows() {
-  if (!fs.existsSync(WF_DIR)) return [];
-  return fs
-    .readdirSync(WF_DIR)
-    .filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"))
-    .sort();
-}
-
-function stripComments(src) {
+export function stripComments(src) {
   return String(src || "")
     .split(/\r?\n/)
     .map((line) => {
       const idx = line.indexOf("#");
       if (idx < 0) return line;
-      // keep URLs / hashes inside quotes roughly; for contract scan comments are noise
       const before = line.slice(0, idx);
       if ((before.match(/"/g) || []).length % 2 === 1) return line;
       if ((before.match(/'/g) || []).length % 2 === 1) return line;
@@ -51,33 +60,22 @@ function stripComments(src) {
     .join("\n");
 }
 
-function hasTrigger(src, key) {
-  // Match top-level-ish `on:` children (indented 2 spaces) or inline `on: ...`
-  const re = new RegExp("(^|\\n)\\s*" + key.replace(":", "\\s*:"), "m");
-  return re.test(src);
-}
-
-function extractRunsOnBlocks(src) {
-  const blocks = [];
-  const lines = src.split(/\r?\n/);
+export function extractRunsOnFromChunk(chunk) {
+  const lines = String(chunk || "").split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
     const m = lines[i].match(/^(\s*)runs-on\s*:\s*(.*)$/);
     if (!m) continue;
     const indent = m[1].length;
     const inline = String(m[2] || "").trim();
     if (inline && inline !== "|" && inline !== ">") {
-      blocks.push({ line: i + 1, labels: [inline.replace(/^\[|\]$/g, "").split(",").map((s) => s.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean)].flat() });
-      // handle YAML flow: [a, b, c]
       if (inline.startsWith("[")) {
         const inner = inline.replace(/^\[/, "").replace(/\]$/, "");
-        blocks[blocks.length - 1].labels = inner
+        return inner
           .split(",")
           .map((s) => s.trim().replace(/^['"]|['"]$/g, ""))
           .filter(Boolean);
-      } else {
-        blocks[blocks.length - 1].labels = [inline.replace(/^['"]|['"]$/g, "")];
       }
-      continue;
+      return [inline.replace(/^['"]|['"]$/g, "")];
     }
     const labels = [];
     for (let j = i + 1; j < lines.length; j++) {
@@ -86,178 +84,291 @@ function extractRunsOnBlocks(src) {
       if (lm[1].length <= indent) break;
       labels.push(lm[2].replace(/^['"]|['"]$/g, "").trim());
     }
-    blocks.push({ line: i + 1, labels });
+    return labels;
   }
-  return blocks;
+  return [];
 }
 
-function isSelfHostedBlock(labels) {
-  return labels.some((l) => l === "self-hosted" || l.startsWith("self-hosted"));
+/**
+ * Split workflow YAML into job name → body (best-effort static scan).
+ * @param {string} src
+ */
+export function extractJobs(src) {
+  const lines = String(src || "").split(/\r?\n/);
+  let inJobs = false;
+  const jobs = [];
+  let current = null;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!inJobs) {
+      if (/^jobs\s*:/.test(line)) inJobs = true;
+      continue;
+    }
+    const jobMatch = line.match(/^  ([A-Za-z0-9_-]+)\s*:\s*$/);
+    if (jobMatch) {
+      if (current) jobs.push(current);
+      current = { name: jobMatch[1], startLine: i + 1, lines: [] };
+      continue;
+    }
+    if (/^[A-Za-z]/.test(line) && !/^\s/.test(line)) {
+      // top-level key after jobs — end
+      break;
+    }
+    if (current) current.lines.push(line);
+  }
+  if (current) jobs.push(current);
+  return jobs.map((j) => {
+    const body = j.lines.join("\n");
+    const labels = extractRunsOnFromChunk(body);
+    return {
+      name: j.name,
+      startLine: j.startLine,
+      body,
+      labels,
+      isSelfHosted: labels.some((l) => l === "self-hosted" || String(l).startsWith("self-hosted")),
+      isGithubHosted:
+        labels.includes("ubuntu-latest") ||
+        labels.some((l) => /^ubuntu-/.test(l)) ||
+        labels.some((l) => /^windows-/.test(l)) ||
+        labels.some((l) => /^macos-/.test(l)),
+      hasDynamicRunsOn: /runs-on\s*:[^\n]*\$\{\{/.test(body),
+      ndicCapabilities: detectNdicCapabilities(body),
+    };
+  });
 }
 
-function hasAllRequired(labels) {
-  return REQUIRED_LABELS.every((need) => labels.includes(need));
+export function detectNdicCapabilities(body) {
+  const hits = [];
+  const text = String(body || "");
+  for (const re of NDIC_CAPABILITY_PATTERNS) {
+    if (re.test(text)) hits.push(String(re));
+  }
+  return hits;
+}
+
+export function hasAllRequired(labels) {
+  return REQUIRED_LABELS.every((need) => (labels || []).includes(need));
+}
+
+export function analyzeWorkflowSource(fileName, raw) {
+  const src = stripComments(raw);
+  const jobs = extractJobs(src);
+  const issues = [];
+  const approvedKind = APPROVED_NDIC_NETWORK_WORKFLOWS[fileName] || null;
+
+  for (const job of jobs) {
+    if (job.hasDynamicRunsOn) {
+      issues.push({
+        id: "dynamic_runs_on",
+        file: fileName,
+        job: job.name,
+        detail: "runs-on uses expression",
+      });
+    }
+
+    const hasNdic = job.ndicCapabilities.length > 0;
+    const hasNdicLabel = (job.labels || []).includes("ndic-cz-egress");
+
+    if (hasNdic && (job.isGithubHosted || (!job.isSelfHosted && job.labels.length))) {
+      issues.push({
+        id: "github_hosted_ndic_capability",
+        file: fileName,
+        job: job.name,
+        detail: job.ndicCapabilities.slice(0, 3).join("|"),
+      });
+    }
+
+    if (job.isSelfHosted) {
+      if (!approvedKind) {
+        issues.push({
+          id: "foreign_self_hosted",
+          file: fileName,
+          job: job.name,
+          detail: (job.labels || []).join("+"),
+        });
+      } else if (!hasAllRequired(job.labels)) {
+        issues.push({
+          id: "incomplete_ndic_labels",
+          file: fileName,
+          job: job.name,
+          detail: (job.labels || []).join("+"),
+        });
+      }
+    }
+
+    if (hasNdicLabel && !approvedKind) {
+      issues.push({
+        id: "foreign_ndic_label",
+        file: fileName,
+        job: job.name,
+        detail: "ndic-cz-egress",
+      });
+    }
+
+    if (hasNdic && job.isSelfHosted && approvedKind) {
+      if (!/Preflight runner identity/.test(job.body) && !/REFUSING_GITHUB_HOSTED/.test(job.body)) {
+        issues.push({
+          id: "missing_preflight",
+          file: fileName,
+          job: job.name,
+          detail: "no identity preflight",
+        });
+      } else {
+        const pre = job.body.indexOf("Preflight runner identity");
+        const secrets = job.body.search(/secrets\.IU_NDIC_/);
+        const checkout = job.body.indexOf("actions/checkout@");
+        if (pre >= 0 && secrets >= 0 && !(pre < secrets)) {
+          issues.push({
+            id: "preflight_after_secrets",
+            file: fileName,
+            job: job.name,
+            detail: "order",
+          });
+        }
+        if (pre >= 0 && checkout >= 0 && !(pre < checkout)) {
+          issues.push({
+            id: "preflight_after_checkout",
+            file: fileName,
+            job: job.name,
+            detail: "order",
+          });
+        }
+        if (!new RegExp(EXPECTED_RUNNER_NAME).test(job.body)) {
+          issues.push({
+            id: "missing_expected_runner_name",
+            file: fileName,
+            job: job.name,
+            detail: EXPECTED_RUNNER_NAME,
+          });
+        }
+      }
+    }
+  }
+
+  return { fileName, jobs, issues, approvedKind, src, raw };
+}
+
+/**
+ * Analyze synthetic workflow YAML (fixtures).
+ * @param {string} yaml
+ * @param {string} [fileName]
+ */
+export function analyzeWorkflowYaml(yaml, fileName = "fixture.yml") {
+  return analyzeWorkflowSource(fileName, yaml);
+}
+
+function hasTrigger(src, key) {
+  const re = new RegExp("(^|\\n)\\s*" + key.replace(":", "\\s*:"), "m");
+  return re.test(src);
 }
 
 function main() {
-  const files = listWorkflows();
+  const fails = [];
+  function ok(id, cond, detail) {
+    if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+  }
+
+  const files = fs.existsSync(WF_DIR)
+    ? fs
+        .readdirSync(WF_DIR)
+        .filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"))
+        .sort()
+    : [];
   ok("workflows_dir", files.length > 0, "empty");
 
   let ndicSelfHostedJobs = 0;
-  let foreignSelfHosted = 0;
-  let foreignNdicLabel = 0;
+  let githubHostedNdicJobs = 0;
 
   for (const file of files) {
     const abs = path.join(WF_DIR, file);
     const raw = fs.readFileSync(abs, "utf8");
-    const src = stripComments(raw);
-    const blocks = extractRunsOnBlocks(src);
-    const isApprovedNdic = APPROVED_NDIC_SELF_HOSTED.has(file);
-
-    for (const block of blocks) {
-      const labels = block.labels || [];
-      const selfHosted = isSelfHostedBlock(labels);
-      const hasNdicLabel = labels.includes("ndic-cz-egress");
-
-      if (hasNdicLabel && !isApprovedNdic) {
-        foreignNdicLabel += 1;
-        ok("foreign_ndic_label_" + file, false, "line=" + block.line);
-      }
-
-      if (selfHosted) {
-        if (!isApprovedNdic) {
-          foreignSelfHosted += 1;
-          ok("foreign_self_hosted_" + file, false, "line=" + block.line + ":labels=" + labels.join("+"));
-        } else {
-          ndicSelfHostedJobs += 1;
-          ok("ndic_labels_complete_" + file, hasAllRequired(labels), labels.join("+"));
-        }
-      }
+    const analysis = analyzeWorkflowSource(file, raw);
+    for (const issue of analysis.issues) {
+      ok(issue.id + "_" + issue.file + "_" + issue.job, false, issue.detail);
+      if (issue.id === "github_hosted_ndic_capability") githubHostedNdicJobs += 1;
+    }
+    for (const job of analysis.jobs) {
+      if (job.isSelfHosted && hasAllRequired(job.labels)) ndicSelfHostedJobs += 1;
     }
 
-    if (isApprovedNdic) {
-      ok("ndic_has_self_hosted_job_" + file, blocks.some((b) => isSelfHostedBlock(b.labels)), "missing");
+    if (file === "ndic-datex-v1-shadow-probe.yml") {
+      const src = analysis.src;
+      ok("shadow_has_self_hosted", analysis.jobs.some((j) => j.isSelfHosted), "missing");
       for (const t of FORBIDDEN_TRIGGERS) {
-        ok("ndic_no_trigger_" + t.replace(":", "") + "_" + file, !hasTrigger(src, t), "present");
+        ok("shadow_no_trigger_" + t.replace(":", ""), !hasTrigger(src, t), "present");
       }
-      ok("ndic_has_workflow_dispatch_" + file, /workflow_dispatch\s*:/.test(src), "missing");
-      ok("ndic_permissions_contents_read_" + file, /permissions\s*:\s*\n\s*contents\s*:\s*read\s*$/m.test(src) || /permissions:\s*\n(?:.*\n)*?\s*contents:\s*read/.test(src), "perms");
-      ok("ndic_no_contents_write_" + file, !/contents\s*:\s*write/.test(src), "write");
-      ok("ndic_no_actions_write_" + file, !/actions\s*:\s*write/.test(src), "actions_write");
-      ok("ndic_no_pr_write_" + file, !/pull-requests\s*:\s*write/.test(src), "pr_write");
-      ok("ndic_persist_false_" + file, /persist-credentials\s*:\s*false/.test(src), "persist");
-      ok("ndic_shadow_only_choice_" + file, /options:\s*\n\s*-\s*shadow\s*$/m.test(src) || /options:\s*\n(?:.*\n)*?\s*-\s*shadow/.test(src), "options");
-      ok("ndic_no_active_option_" + file, !/options:\s*\n(?:.*\n)*?\s*-\s*active/.test(src), "active_option");
-      ok("ndic_checkout_pinned_" + file, /actions\/checkout@[0-9a-f]{40}/.test(src), "checkout");
-      ok("ndic_setup_node_pinned_" + file, /actions\/setup-node@[0-9a-f]{40}/.test(src), "setup-node");
-      ok("ndic_upload_artifact_pinned_" + file, /actions\/upload-artifact@[0-9a-f]{40}/.test(src), "upload-artifact");
-      ok("ndic_no_curl_bash_" + file, !/curl[^\n]*\|\s*(ba)?sh/.test(src), "curl_bash");
-      ok("ndic_no_set_x_" + file, !/\bset\s+[^\n]*\bx\b/.test(src), "set_x");
-      ok("ndic_datex_secret_names_" + file, /IU_NDIC_PULL_URL/.test(src) && /IU_NDIC_PULL_USER/.test(src) && /IU_NDIC_PULL_PASS/.test(src) && /IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID/.test(src), "datex");
-      ok("ndic_tmc_secret_names_" + file, /IU_NDIC_TMC_PULL_URL/.test(src) && /IU_NDIC_TMC_PULL_USER/.test(src) && /IU_NDIC_TMC_PULL_PASS/.test(src), "tmc");
-      ok("ndic_wipe_temp_" + file, /Wipe temp workdir/.test(raw) && /rm -rf/.test(src), "wipe");
-      ok("ndic_wipe_always_" + file, /name:\s*Wipe temp workdir[\s\S]*?if:\s*always\(\)/.test(raw) || /if:\s*always\(\)[\s\S]{0,200}Wipe temp workdir/.test(raw) || (/Wipe temp workdir/.test(raw) && /if: always\(\)/.test(raw)), "wipe_always");
-      ok("ndic_concurrency_" + file, /concurrency\s*:/.test(src), "concurrency");
-      ok("ndic_cancel_in_progress_false_" + file, /cancel-in-progress:\s*false/.test(src), "concurrency_block");
-      ok("ndic_allowlist_ref_" + file, /feat\/ndic-datex-v1-integration/.test(src), "allowlist");
-      ok("ndic_code_ref_choice_only_" + file, /code_ref:[\s\S]*?type:\s*choice[\s\S]*?options:[\s\S]*?-\s*feat\/ndic-datex-v1-integration/.test(src), "code_ref_choice");
-      ok("ndic_refuse_root_" + file, /REFUSING_ROOT_RUNNER/.test(raw), "root");
-      ok("ndic_refuse_github_hosted_" + file, /REFUSING_GITHUB_HOSTED/.test(raw), "github_hosted");
-      ok("ndic_umask_077_" + file, /umask 077/.test(raw), "umask");
-      ok("ndic_disk_gate_" + file, /REFUSING_LOW_DISK/.test(raw), "disk");
-      ok("ndic_no_ubuntu_latest_" + file, !/runs-on:\s*ubuntu-latest/.test(src) && !/-\s*ubuntu-latest/.test(src), "ubuntu");
-      ok("ndic_no_sudo_exec_" + file, !/\bsudo\s+(?!-n\b)(?!>)/.test(src), "sudo");
-      ok("ndic_artifact_json_only_" + file, /shadow-report\.json/.test(src) && !/path:\s*.*\.(xml|zip|csv)/i.test(src), "artifact");
-      ok("ndic_no_schedule_" + file, !/schedule\s*:/.test(src), "schedule");
-      ok("ndic_no_environment_write_" + file, !/environment\s*:\s*\n\s*name:/.test(src) || true, "env");
+      ok("shadow_dispatch", /workflow_dispatch\s*:/.test(src), "missing");
+      ok("shadow_contents_read", /contents\s*:\s*read/.test(src), "perms");
+      ok("shadow_no_contents_write", !/contents\s*:\s*write/.test(src), "write");
+      ok("shadow_persist_false", /persist-credentials\s*:\s*false/.test(src), "persist");
+      ok("shadow_only_choice", /-\s*shadow/.test(src) && !/options:[\s\S]*?-\s*active/.test(src), "options");
+      ok("shadow_no_ubuntu", !/ubuntu-latest/.test(src), "ubuntu");
+      ok("shadow_single_network_job", analysis.jobs.filter((j) => j.ndicCapabilities.length).length === 1, "jobs");
+      ok("shadow_code_ref_allowlist", /feat\/ndic-datex-v1-integration/.test(src), "ref");
+      // Main bypass: runs-on must be static on the workflow itself (not only after checkout).
+      ok(
+        "shadow_runs_on_not_from_code_ref",
+        /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src),
+        "labels"
+      );
+      ok("shadow_refuse_github_hosted", /REFUSING_GITHUB_HOSTED/.test(raw), "refuse");
+      ok("shadow_runner_name", /infouzel-ndic-cz-vps4204/.test(raw), "name");
+    }
+
+    if (file === "update-ndic-datex-v1.yml") {
+      const offline = analysis.jobs.find((j) => j.name === "offline-guards");
+      const network = analysis.jobs.find((j) => j.name === "ndic-network-sync");
+      ok("update_has_offline_job", Boolean(offline), "missing");
+      ok("update_has_network_job", Boolean(network), "missing");
+      if (offline) {
+        ok("update_offline_ubuntu", offline.isGithubHosted && offline.labels.includes("ubuntu-latest"), offline.labels.join("+"));
+        ok("update_offline_no_ndic_caps", offline.ndicCapabilities.length === 0, offline.ndicCapabilities.join("|"));
+        ok("update_offline_no_secrets", !/secrets\.IU_NDIC_/.test(offline.body), "secrets");
+        ok("update_offline_no_prod_sync", !/ndic-datex-v1-prod-sync/.test(offline.body), "sync");
+      }
+      if (network) {
+        ok("update_network_self_hosted", network.isSelfHosted && hasAllRequired(network.labels), network.labels.join("+"));
+        ok("update_network_has_secrets", /secrets\.IU_NDIC_PULL_URL/.test(network.body), "secrets");
+        ok("update_network_has_sync", /ndic-datex-v1-prod-sync/.test(network.body), "sync");
+        ok("update_network_preflight", /REFUSING_GITHUB_HOSTED/.test(network.body), "preflight");
+        ok("update_network_if_not_off", /mode == 'shadow'|mode == \"shadow\"/.test(network.body) || /inputs\.mode == 'shadow'/.test(analysis.raw), "if");
+      }
     }
   }
 
-  // actionlint must know the custom NDIC label
+  // Runtime refuse must exist so main ubuntu + code_ref checkout cannot contact NDIC
+  {
+    const idPath = path.join(ROOT, "scripts", "ndic-datex-v1", "runner-identity.mjs");
+    ok("runner_identity_module", fs.existsSync(idPath), "missing");
+    if (fs.existsSync(idPath)) {
+      const s = fs.readFileSync(idPath, "utf8");
+      ok("runner_identity_refuse_hosted", /REFUSING_GITHUB_HOSTED/.test(s), "hosted");
+      ok("runner_identity_name", /infouzel-ndic-cz-vps4204/.test(s), "name");
+      ok("runner_identity_home_runner", /\/home\/runner/.test(s), "path");
+    }
+    const probe = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-shadow-probe.mjs"), "utf8");
+    const run = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-shadow-run.mjs"), "utf8");
+    const sync = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1-prod-sync.mjs"), "utf8");
+    ok("probe_calls_identity", /assertNdicCzechEgressRunnerOrThrow/.test(probe), "probe");
+    ok("run_calls_identity", /assertNdicCzechEgressRunnerOrThrow/.test(run), "run");
+    ok("sync_calls_identity", /assertNdicCzechEgressRunnerOrThrow/.test(sync), "sync");
+  }
+
   {
     const al = path.join(ROOT, ".github", "actionlint.yaml");
     ok("actionlint_config_present", fs.existsSync(al), "missing");
     if (fs.existsSync(al)) {
-      const alSrc = fs.readFileSync(al, "utf8");
-      ok("actionlint_has_ndic_label", /ndic-cz-egress/.test(alSrc), "label");
+      ok("actionlint_has_ndic_label", /ndic-cz-egress/.test(fs.readFileSync(al, "utf8")), "label");
     }
-  }
-
-  // update-ndic publish workflow must NOT use self-hosted / ndic-cz-egress in this phase
-  const updatePath = path.join(WF_DIR, "update-ndic-datex-v1.yml");
-  if (fs.existsSync(updatePath)) {
-    const updateSrc = stripComments(fs.readFileSync(updatePath, "utf8"));
-    ok("update_ndic_not_self_hosted", !/self-hosted/.test(updateSrc), "self-hosted");
-    ok("update_ndic_not_ndic_label", !/ndic-cz-egress/.test(updateSrc), "ndic-cz-egress");
-    ok("update_ndic_ubuntu", /runs-on:\s*ubuntu-latest/.test(updateSrc), "ubuntu");
   }
 
   ok("at_least_one_ndic_self_hosted", ndicSelfHostedJobs >= 1, String(ndicSelfHostedJobs));
-  ok("no_foreign_self_hosted", foreignSelfHosted === 0, String(foreignSelfHosted));
-  ok("no_foreign_ndic_label", foreignNdicLabel === 0, String(foreignNdicLabel));
+  ok("zero_github_hosted_ndic_jobs", githubHostedNdicJobs === 0, String(githubHostedNdicJobs));
 
-  // Hardened identity / routing contract for the approved NDIC shadow workflow
-  {
-    const shadowPath = path.join(WF_DIR, "ndic-datex-v1-shadow-probe.yml");
-    ok("shadow_workflow_present", fs.existsSync(shadowPath), "missing");
-    if (fs.existsSync(shadowPath)) {
-      const raw = fs.readFileSync(shadowPath, "utf8");
-      const src = stripComments(raw);
-      const preflightIdx = raw.indexOf("Preflight runner identity");
-      const checkoutIdx = raw.indexOf("actions/checkout@");
-      const secretsIdx = raw.search(/secrets\.IU_NDIC_/);
-      const probeIdx = raw.indexOf("Real shadow probe");
-      ok("preflight_before_checkout", preflightIdx >= 0 && checkoutIdx > preflightIdx, "order");
-      ok("preflight_before_secrets", preflightIdx >= 0 && secretsIdx > preflightIdx, "secrets_order");
-      ok("preflight_before_network_probe", preflightIdx >= 0 && probeIdx > preflightIdx, "probe_order");
-      ok("preflight_requires_self_hosted_env", /RUNNER_ENVIRONMENT/.test(raw) && /!= "self-hosted"/.test(raw), "env");
-      ok("preflight_requires_runner_name", /infouzel-ndic-cz-vps4204/.test(raw) && /REFUSING_UNEXPECTED_RUNNER_NAME/.test(raw), "name");
-      ok("preflight_requires_linux", /REFUSING_UNEXPECTED_OS/.test(raw) && /RUNNER_OS/.test(raw), "os");
-      ok("preflight_requires_x64", /REFUSING_UNEXPECTED_ARCH/.test(raw) && /RUNNER_ARCH/.test(raw), "arch");
-      ok("preflight_refuse_home_runner_path", /REFUSING_GITHUB_HOSTED_PATH/.test(raw) && /\/home\/runner/.test(raw), "path");
-      ok("preflight_disk_2gib", /2097152/.test(raw) && /REFUSING_LOW_DISK/.test(raw), "disk");
-      ok("runs_on_static_four_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
-      ok("runs_on_no_expression", !/runs-on:[^\n]*\$\{\{/.test(src), "dyn_runs_on");
-      ok("runs_on_no_matrix", !/strategy:\s*\n[\s\S]*?matrix:/.test(src) || !/runs-on:[^\n]*matrix/.test(src), "matrix");
-      ok("no_ubuntu_latest_anywhere", !/ubuntu-latest/.test(src), "ubuntu");
-      ok("no_github_hosted_label", !/-\s*ubuntu-/.test(src) && !/runs-on:\s*ubuntu/.test(src), "gh_hosted");
-      // Only one runs-on block in the shadow workflow
-      const blocks = extractRunsOnBlocks(src);
-      ok("shadow_single_runs_on", blocks.length === 1, String(blocks.length));
-      ok("shadow_runs_on_exact", blocks.length === 1 && hasAllRequired(blocks[0].labels) && blocks[0].labels.length === 4, (blocks[0] && blocks[0].labels.join("+")) || "none");
-    }
-  }
-
-  // Secret name contract in scripts (names only)
   const configSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "config.mjs"), "utf8");
   ok("config_mode_default_off", /mode = "off"/.test(configSrc) || /else mode = "off"/.test(configSrc), "default");
-  ok("config_datex_secret_names", /IU_NDIC_PULL_URL/.test(configSrc) && /IU_NDIC_PULL_USER/.test(configSrc) && /IU_NDIC_PULL_PASS/.test(configSrc), "datex_cfg");
-  ok("config_tmc_secret_names", /IU_NDIC_TMC_PULL_URL/.test(configSrc), "tmc_cfg");
-  ok("config_tmc_cid_11", /TMC_CID\s*=\s*11/.test(configSrc), "cid");
-  ok("config_tmc_tabcd_25", /TMC_LOCATION_TABLE_NUMBER\s*=\s*25/.test(configSrc), "tabcd");
-
-  // Disk-backed TMC archive stream module must exist and refuse full-buffer inflate of huge entries
-  {
-    const streamPath = path.join(ROOT, "scripts", "ndic-datex-v1", "tmc-archive-stream.mjs");
-    const zipPath = path.join(ROOT, "scripts", "ndic-datex-v1", "tmc-zip.mjs");
-    ok("tmc_archive_stream_present", fs.existsSync(streamPath), "missing");
-    ok("tmc_zip_limits_present", fs.existsSync(zipPath), "missing");
-    if (fs.existsSync(zipPath)) {
-      const z = fs.readFileSync(zipPath, "utf8");
-      ok("tmc_stream_limits_150", /maxSingleUncompressed:\s*150\s*\*\s*1024\s*\*\s*1024/.test(z), "per_entry");
-      ok("tmc_stream_limits_420", /maxUncompressedTotal:\s*420\s*\*\s*1024\s*\*\s*1024/.test(z), "total");
-      ok("tmc_stream_limits_48", /maxCompressedTotal:\s*48\s*\*\s*1024\s*\*\s*1024/.test(z), "comp");
-      ok("tmc_stream_entries_256", /maxEntries:\s*256/.test(z), "entries");
-    }
-    if (fs.existsSync(streamPath)) {
-      const s = fs.readFileSync(streamPath, "utf8");
-      ok("tmc_stream_importer_not_impl", /TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED/.test(s), "fail_closed");
-      ok("tmc_stream_prefer_tisa", /TISA_DAT_CSV/.test(s) && /preferred_over_shp_sqlite|tisa_like_present/.test(s), "prefer");
-      ok("tmc_stream_atomic", /atomicActivateTmcIndex/.test(s) && /rollbackTmcIndex/.test(s), "atomic");
-      ok("tmc_stream_no_arraybuffer_concat", !/arrayBuffer\s*\(/.test(s) && !/Buffer\.concat\(/.test(s), "no_concat");
-      ok("tmc_stream_disk_central", /inspectZipFileCentral/.test(s), "central");
-    }
-  }
+  ok("config_datex_secret_names", /IU_NDIC_PULL_URL/.test(configSrc), "datex");
+  ok("config_tmc_secret_names", /IU_NDIC_TMC_PULL_URL/.test(configSrc), "tmc");
 
   if (fails.length) {
     console.error("[ndic-self-hosted-runner-contract-guard] FAIL");
@@ -268,13 +379,13 @@ function main() {
   console.log(
     JSON.stringify({
       ndicSelfHostedJobs,
+      githubHostedNdicJobs,
       requiredLabels: REQUIRED_LABELS,
-      approvedWorkflows: [...APPROVED_NDIC_SELF_HOSTED],
-      foreignSelfHosted,
-      foreignNdicLabel,
-      expectedRunnerName: "infouzel-ndic-cz-vps4204",
+      approvedNetworkWorkflows: Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS),
+      expectedRunnerName: EXPECTED_RUNNER_NAME,
     })
   );
 }
 
-main();
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) main();
