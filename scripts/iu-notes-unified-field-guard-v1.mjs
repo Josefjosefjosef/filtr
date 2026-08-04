@@ -2,7 +2,7 @@
 /**
  * Guard: Notes unified single field (title+content merge, Silver save, card preview).
  * Run: npm run iu-notes-unified-field-guard
- * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/projects/ npm run iu-notes-unified-field-guard
+ * Prod: IU_GUARD_BASE_URL=https://infouzel.cz/ npm run iu-notes-unified-field-guard
  */
 import { createRequire } from "module";
 import { spawn } from "child_process";
@@ -18,7 +18,7 @@ const { chromium } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8925", 10);
 const BASE = process.env.IU_GUARD_BASE_URL
   ? String(process.env.IU_GUARD_BASE_URL).replace(/\/?$/, "/")
-  : `http://127.0.0.1:${PORT}/projects/`;
+  : `http://127.0.0.1:${PORT}/`;
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 const STORE_KEY = "iu.notes.store.v1";
 
@@ -199,7 +199,7 @@ async function main() {
     await new Promise((resolve, reject) => {
       const deadline = Date.now() + 30000;
       const tick = () => {
-        const req = http.get(`http://127.0.0.1:${PORT}/projects/`, (res) => {
+        const req = http.get(`http://127.0.0.1:${PORT}/`, (res) => {
           res.resume();
           if (res.statusCode && res.statusCode >= 200 && res.statusCode < 500) resolve();
           else if (Date.now() >= deadline) reject(new Error("server not ready"));

@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 /**
  * Local static server for repo root (Playwright / guard proofs).
- * Mirrors production hub contract:
- *   - app at /
- *   - /projects HTML hub → 301 to /
- *   - /projects/data/* + /projects/version.json passthrough
+ * Serves app shell at `/` (and still at `/projects/` for older local guards).
+ * Data stays under /projects/data/*. Production uses CF 301 for /projects HTML.
  */
 import http from "http";
 import fs from "fs";
@@ -23,27 +21,13 @@ function mime(f) {
   return "application/octet-stream";
 }
 
-function legacyProjectsRedirect(pathname, search) {
-  const p = String(pathname || "");
-  if (p === "/projects/data" || p.startsWith("/projects/data/")) return null;
-  if (p === "/projects/version.json") return null;
-  if (!(p === "/projects" || p === "/projects/" || p.startsWith("/projects/"))) return null;
-  let rest = p === "/projects" || p === "/projects/" ? "/" : "/" + p.slice("/projects/".length);
-  if (rest.length > 1 && rest.endsWith("/")) {
-    // keep trailing slash for directory-like pages
-  } else if (rest === "") {
-    rest = "/";
-  }
-  return rest + (search || "");
-}
-
 function serveStatic(urlPath) {
   let u = urlPath.split("?")[0];
   try {
     u = decodeURIComponent(u);
   } catch (_) {}
   // Hub is site root. Local checkout stores SPA under projects/index.html.
-  if (u === "/") u = "/projects/index.html";
+  if (u === "/" || u === "/projects" || u === "/projects/") u = "/projects/index.html";
   // Local checkout mirrors Pages publish: root PWA assets live under projects/.
   if (u === "/manifest.json") u = "/projects/manifest.json";
   if (u.startsWith("/icons/")) u = "/projects/icons/" + u.slice("/icons/".length);
@@ -58,12 +42,6 @@ const port = parseInt(process.env.PORT || "8890", 10);
 http
   .createServer((req, res) => {
     const u = new URL(req.url || "/", "http://127.0.0.1");
-    const redir = legacyProjectsRedirect(u.pathname, u.search);
-    if (redir) {
-      res.writeHead(301, { Location: redir });
-      res.end();
-      return;
-    }
     const data = serveStatic(u.pathname);
     if (data) {
       let ct = mime(u.pathname);
