@@ -3,13 +3,20 @@ name: NDIC DATEX v1 shadow probe
 # Dedicated Czech egress shadow probe (label: ndic-cz-egress).
 # Prepared ONLY — do not enable the runner service or dispatch until ops approval.
 #
+# FIRST SHADOW DISPATCH (mandatory):
+# 1) Actions → "NDIC DATEX v1 shadow probe"
+# 2) "Use workflow from" MUST be: feat/ndic-datex-v1-integration
+#    (main still has an older ubuntu-latest dispatcher; do NOT use main for self-hosted)
+# 3) Inputs: mode=shadow, code_ref=feat/ndic-datex-v1-integration
+#
 # Security contract (public repo):
-# - Trigger: workflow_dispatch ONLY (no pull_request / pull_request_target / workflow_run)
+# - Trigger: workflow_dispatch ONLY (no pull_request / pull_request_target / workflow_run / schedule)
 # - runs-on MUST include all four labels: self-hosted, Linux, X64, ndic-cz-egress
 # - permissions: contents: read
 # - checkout: persist-credentials: false; allowlisted code_ref only
 # - mode: shadow only (active rejected)
 # - Never commit / push / deploy / upload raw DATEX|TMC payloads
+# - Refuse github-hosted runners even if labels are mis-edited later
 
 on:
   workflow_dispatch:
@@ -54,6 +61,10 @@ jobs:
         run: |
           set -euo pipefail
           # Never enable shell xtrace in secret-bearing jobs.
+          if [ "${RUNNER_ENVIRONMENT:-}" = "github-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
           if [ "$(id -u)" -eq 0 ]; then
             echo "REFUSING_ROOT_RUNNER"
             exit 1
@@ -73,6 +84,7 @@ jobs:
           fi
           echo "RUNNER_PREFLIGHT_OK"
           echo "RUNNER_USER=$(id -un)"
+          echo "RUNNER_ENVIRONMENT=${RUNNER_ENVIRONMENT:-unknown}"
           echo "DISK_AVAIL_KB=${avail_kb}"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

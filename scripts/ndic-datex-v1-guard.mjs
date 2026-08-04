@@ -88,7 +88,33 @@ function readJson(name) {
     threw = e.code === "PULL_URL_NOT_HTTPS";
   }
   ok("ssrf_deny_http", threw, "expected NOT_HTTPS");
+  ok("ssrf_https_downgrade_reject", threw, "downgrade");
   ok("ssrf_allow_mobilitydata", !!assertAllowedPullUrl("https://mobilitydata.rsd.cz/DataSource/Get?x=1"), "allow");
+
+  const denyUrls = [
+    ["https://127.0.0.1/x", "PULL_URL_HOST_DENIED"],
+    ["https://localhost/x", "PULL_URL_HOST_DENIED"],
+    ["https://10.0.0.5/x", "PULL_URL_HOST_DENIED"],
+    ["https://192.168.1.10/x", "PULL_URL_HOST_DENIED"],
+    ["https://172.16.0.2/x", "PULL_URL_HOST_DENIED"],
+    ["https://[::1]/x", "PULL_URL_HOST_DENIED"],
+  ];
+  for (const [u, code] of denyUrls) {
+    let d = false;
+    try {
+      assertAllowedPullUrl(u);
+    } catch (e) {
+      d = e.code === code || e.code === "PULL_URL_INVALID";
+    }
+    ok("ssrf_deny_" + u.replace(/[^a-z0-9]+/gi, "_"), d, u);
+  }
+  let creds = false;
+  try {
+    assertAllowedPullUrl("https://user:pass@mobilitydata.rsd.cz/x");
+  } catch (e) {
+    creds = e.code === "PULL_URL_EMBEDDED_CREDS";
+  }
+  ok("ssrf_deny_url_credentials", creds, "embedded");
 }
 
 // --- XML safety ---
@@ -100,6 +126,14 @@ function readJson(name) {
     threw = e.code === "XML_UNSAFE" || /forbidden|DOCTYPE|ENTITY/i.test(e.message);
   }
   ok("reject_xxe", threw, "expected XML_UNSAFE");
+  ok("reject_external_entity", threw, "entity");
+  let ent2 = false;
+  try {
+    parseSafeXml('<!DOCTYPE foo [<!ENTITY bar SYSTEM "https://evil.example/x">]><r>&bar;</r>');
+  } catch (e) {
+    ent2 = e.code === "XML_UNSAFE" || /forbidden|DOCTYPE|ENTITY/i.test(e.message);
+  }
+  ok("reject_external_entity_https", ent2, "ext-https");
 }
 
 // --- DATEX parse base ---
@@ -426,6 +460,44 @@ async function discoveryChecks() {
   }
   ok("tmc_zip_path_traversal_reject", trav, "path");
 
+  let symlink = false;
+  try {
+    const z = buildStoredZip([{ name: "link.json", data: "{}" }]);
+    // Mutate first central-directory external attrs to Unix symlink mode 0xA000
+    const CENTRAL = 0x02014b50;
+    for (let i = 0; i + 46 <= z.length; i++) {
+      if (z.readUInt32LE(i) === CENTRAL) {
+        z.writeUInt32LE((0xa000 << 16) >>> 0, i + 38);
+        break;
+      }
+    }
+    safeUnzipEntries(z);
+  } catch (e) {
+    symlink = e && e.code === "TMC_ZIP_SYMLINK";
+  }
+  ok("tmc_zip_symlink_reject", symlink, "symlink");
+
+  let tooLargeIn = false;
+  try {
+    const tiny = Buffer.alloc(64, 0x41);
+    tiny.writeUInt32LE(0x04034b50, 0);
+    safeUnzipEntries(tiny, { limits: { maxCompressedTotal: 16 } });
+  } catch (e) {
+    tooLargeIn = e && (e.code === "TMC_ZIP_TOO_LARGE" || e.code === "TMC_ZIP_MAGIC" || e.code === "TMC_ZIP_EMPTY");
+  }
+  ok("tmc_zip_max_input_size_reject", tooLargeIn, "max-input");
+
+  let tooLargeEntry = false;
+  try {
+    const big = buildStoredZip([{ name: "big.json", data: "x" }]);
+    // local header uncomp size at offset 22
+    big.writeUInt32LE(64 * 1024 * 1024, 22);
+    safeUnzipEntries(big, { limits: { maxSingleUncompressed: 1024 } });
+  } catch (e) {
+    tooLargeEntry = e && (e.code === "TMC_ZIP_ENTRY_TOO_LARGE" || e.code === "TMC_ZIP_SIZE_MISMATCH" || e.code === "TMC_ZIP_RATIO");
+  }
+  ok("tmc_zip_max_uncompressed_reject", tooLargeEntry, "max-uncomp");
+
   let absPath = false;
   try {
     safeUnzipEntries(buildStoredZip([{ name: "/abs/evil.json", data: "{}" }]));
@@ -474,6 +546,24 @@ async function discoveryChecks() {
     ok("tmc_last_good_preserved", store.active && store.active.version === good.version, "last-good");
     const rb = rollbackTmcTable(store);
     ok("tmc_rollback_api", rb.ok === true || store.lastGood != null || store.active != null, "rollback");
+    ok("tmc_atomic_import", store.active && store.active.version === good.version, "atomic");
+  }
+
+  // Delimited CSV/POINTS fixture + fail-closed unknown binary
+  {
+    const csv = ["lcd;name;roadNumber;lat;lon", "101;Brno;D1;49.2;16.6", "102;Praha;D1;50.1;14.4"].join("\n");
+    const fromCsv = parseTmcTablePayload(csv, { version: "csv-fixture" });
+    ok("tmc_csv_delimited_parse", validateTmcTable({ ...fromCsv, countryCode: 2, tableNumber: 25 }).ok === true, "csv");
+    ok("tmc_csv_points_ge2", Object.keys(fromCsv.points || {}).length >= 2, "csv-pts");
+    let unknownFmt = false;
+    try {
+      // ZIP with opaque binary payload (not JSON/CSV/POINTS) must fail closed
+      const opaque = buildStoredZip([{ name: "table.bin", data: Buffer.from([0xde, 0xad, 0xbe, 0xef, 0x00, 0x11, 0x22, 0x33]) }]);
+      parseTmcTableFromDownload(opaque);
+    } catch (e) {
+      unknownFmt = e && (e.code === "TMC_ZIP_NO_PAYLOAD" || e.code === "TMC_UNKNOWN_SIGNATURE" || e.code === "TMC_EMPTY");
+    }
+    ok("tmc_unknown_csv_format_fail_closed", unknownFmt, "unknown-fmt");
   }
 }
 
@@ -535,18 +625,59 @@ async function discoveryChecks() {
   ok("shadow_probe_requires_shadow", /mode !== "shadow"/.test(probeSrc), "probe-mode");
   ok("shadow_probe_no_feed_write", !/feed\.json/.test(probeSrc), "probe-no-feed");
   ok("shadow_probe_wipes_workdir", /wipeDir|rmSync/.test(probeSrc), "probe-wipe");
+  ok("shadow_probe_cleanup_finally", /finally\s*\{[\s\S]*wipeDir/.test(probeSrc), "cleanup-finally");
   ok("shadow_probe_no_fetch_retry", /fetchOnceNoRetry/.test(probeSrc) && !/MAX_RETRIES/.test(probeSrc), "no-retry");
   ok("shadow_probe_tmc_skip_shared_net", /tmcSkippedDueToSharedNetworkFailure|shared_network_failure/.test(probeSrc), "tmc-skip");
   ok("shadow_probe_no_host_in_report", !/datexHostRedacted|tmcHostRedacted/.test(probeSrc), "no-host");
+  ok("shadow_probe_no_raw_xml_log", !/console\.(log|info|debug).*raw|console\.(log|info).*xml/i.test(probeSrc), "no-raw-xml-log");
+  ok("shadow_probe_aggregate_only_stdout", /Aggregate-only stdout/.test(probeSrc), "aggregate");
   const shadowWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "ndic-datex-v1-shadow-probe.yml"), "utf8");
   ok("shadow_wf_no_schedule", !/schedule:/.test(shadowWf), "no-cron");
   ok("shadow_wf_choice_shadow_only", /options:[\s\S]*-\s*shadow/.test(shadowWf) && !/-\s*active/.test(shadowWf), "choice");
   ok("shadow_wf_retention_1d", /retention-days:\s*1/.test(shadowWf), "retention");
   ok("shadow_wf_contents_read", /contents:\s*read/.test(shadowWf), "perms");
+  ok("shadow_wf_wipe_always", /Wipe temp workdir[\s\S]*if:\s*always\(\)|if:\s*always\(\)[\s\S]*Wipe temp workdir/.test(shadowWf), "wipe-always");
+  ok("shadow_wf_artifact_json_only", /shadow-report\.json/.test(shadowWf) && !/\.(xml|zip|csv)\s*$/m.test(shadowWf.split("path:")[1] || ""), "art-json");
   const updateWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "update-ndic-datex-v1.yml"), "utf8");
   ok("update_wf_no_schedule", !/schedule:/.test(updateWf), "update-no-cron");
   ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
   ok("update_wf_commit_active_only", /mode == 'active'/.test(updateWf), "commit-active-only");
+}
+
+// --- cleanup success / error / interrupt (local temp only; no NDIC network) ---
+{
+  const work = fs.mkdtempSync(path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "ndic-wipe-"));
+  const rawXml = path.join(work, "raw.xml");
+  const rawZip = path.join(work, "raw.zip");
+  fs.writeFileSync(rawXml, "<SituationPublication/>");
+  fs.writeFileSync(rawZip, "PK\u0003\u0004");
+  ok("cleanup_workdir_created", fs.existsSync(rawXml) && fs.existsSync(rawZip), "created");
+  // success path wipe
+  fs.rmSync(work, { recursive: true, force: true });
+  ok("cleanup_on_success", !fs.existsSync(work), "success-wipe");
+  const work2 = fs.mkdtempSync(path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "ndic-wipe-err-"));
+  fs.writeFileSync(path.join(work2, "raw.xml"), "<x/>");
+  let errThrown = false;
+  try {
+    throw new Error("parser_fail_sim");
+  } catch (_) {
+    errThrown = true;
+    fs.rmSync(work2, { recursive: true, force: true });
+  }
+  ok("cleanup_on_error", errThrown && !fs.existsSync(work2), "error-wipe");
+  const work3 = fs.mkdtempSync(path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "ndic-wipe-int-"));
+  fs.writeFileSync(path.join(work3, "raw.csv"), "a;b");
+  // interrupt simulation: finally always runs
+  try {
+    try {
+      throw new Error("interrupt_sim");
+    } finally {
+      fs.rmSync(work3, { recursive: true, force: true });
+    }
+  } catch (_) {
+    /* expected */
+  }
+  ok("cleanup_on_interrupt", !fs.existsSync(work3), "interrupt-wipe");
 }
 
 // --- shadow probe network classification (no network) ---

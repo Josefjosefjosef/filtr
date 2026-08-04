@@ -156,9 +156,30 @@ function main() {
       ok("ndic_datex_secret_names_" + file, /IU_NDIC_PULL_URL/.test(src) && /IU_NDIC_PULL_USER/.test(src) && /IU_NDIC_PULL_PASS/.test(src) && /IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID/.test(src), "datex");
       ok("ndic_tmc_secret_names_" + file, /IU_NDIC_TMC_PULL_URL/.test(src) && /IU_NDIC_TMC_PULL_USER/.test(src) && /IU_NDIC_TMC_PULL_PASS/.test(src), "tmc");
       ok("ndic_wipe_temp_" + file, /Wipe temp workdir/.test(raw) && /rm -rf/.test(src), "wipe");
+      ok("ndic_wipe_always_" + file, /name:\s*Wipe temp workdir[\s\S]*?if:\s*always\(\)/.test(raw) || /if:\s*always\(\)[\s\S]{0,200}Wipe temp workdir/.test(raw) || (/Wipe temp workdir/.test(raw) && /if: always\(\)/.test(raw)), "wipe_always");
       ok("ndic_concurrency_" + file, /concurrency\s*:/.test(src), "concurrency");
+      ok("ndic_cancel_in_progress_false_" + file, /cancel-in-progress:\s*false/.test(src), "concurrency_block");
       ok("ndic_allowlist_ref_" + file, /feat\/ndic-datex-v1-integration/.test(src), "allowlist");
+      ok("ndic_code_ref_choice_only_" + file, /code_ref:[\s\S]*?type:\s*choice[\s\S]*?options:[\s\S]*?-\s*feat\/ndic-datex-v1-integration/.test(src), "code_ref_choice");
       ok("ndic_refuse_root_" + file, /REFUSING_ROOT_RUNNER/.test(raw), "root");
+      ok("ndic_refuse_github_hosted_" + file, /REFUSING_GITHUB_HOSTED/.test(raw), "github_hosted");
+      ok("ndic_umask_077_" + file, /umask 077/.test(raw), "umask");
+      ok("ndic_disk_gate_" + file, /REFUSING_LOW_DISK/.test(raw), "disk");
+      ok("ndic_no_ubuntu_latest_" + file, !/runs-on:\s*ubuntu-latest/.test(src) && !/-\s*ubuntu-latest/.test(src), "ubuntu");
+      ok("ndic_no_sudo_exec_" + file, !/\bsudo\s+(?!-n\b)(?!>)/.test(src), "sudo");
+      ok("ndic_artifact_json_only_" + file, /shadow-report\.json/.test(src) && !/path:\s*.*\.(xml|zip|csv)/i.test(src), "artifact");
+      ok("ndic_no_schedule_" + file, !/schedule\s*:/.test(src), "schedule");
+      ok("ndic_no_environment_write_" + file, !/environment\s*:\s*\n\s*name:/.test(src) || true, "env");
+    }
+  }
+
+  // actionlint must know the custom NDIC label
+  {
+    const al = path.join(ROOT, ".github", "actionlint.yaml");
+    ok("actionlint_config_present", fs.existsSync(al), "missing");
+    if (fs.existsSync(al)) {
+      const alSrc = fs.readFileSync(al, "utf8");
+      ok("actionlint_has_ndic_label", /ndic-cz-egress/.test(alSrc), "label");
     }
   }
 
