@@ -17,8 +17,11 @@ import {
   unhideItem,
   isRead,
   isSaved,
+  isHidden,
   localitySuggest,
   getFilteredWarningLocationLabel,
+  expandChmiLocalityPresentationCards,
+  chmiPresentationSourceId,
   eventTitleBaseWithoutLocality,
   getEffectiveTimelinePresentation,
   nextTimelineBoundaryMs,
@@ -30,10 +33,10 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=chmi-combined-locality-filter-v1-20260803";
+} from "./iu-info-system-core-v1.js?v=chmi-region-cards-split-v1-20260804";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
+const CACHE_BUST = "chmi-region-cards-split-v1-20260804";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -382,12 +385,37 @@ function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
   const f = effectivePrefs();
   const mode = state.viewMode;
+  // Defer saved/hidden/unread to presentation ids after 1→N CHMI locality expand.
+  const filterPrefs = Object.assign({}, f, { savedOnly: false, unreadOnly: false });
   const opts = {
     index: state.index,
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
-    hiddenMode: mode === "hidden" ? "only" : "exclude",
+    hiddenMode: "include",
   };
-  return filterEvents(items, f, opts);
+  let list = filterEvents(items, filterPrefs, opts);
+  list = expandChmiLocalityPresentationCards(list, f);
+  list = list.filter((ev) => {
+    const id = String((ev && ev.id) || "");
+    const src = chmiPresentationSourceId(ev) || id;
+    const hid = isHidden(id) || (src && src !== id && isHidden(src));
+    if (mode === "hidden") return hid;
+    return !hid;
+  });
+  if (mode === "saved") {
+    list = list.filter((ev) => {
+      const id = String((ev && ev.id) || "");
+      const src = chmiPresentationSourceId(ev) || id;
+      return isSaved(id) || (src && src !== id && isSaved(src));
+    });
+  }
+  if (mode === "unread") {
+    list = list.filter((ev) => {
+      const id = String((ev && ev.id) || "");
+      const src = chmiPresentationSourceId(ev) || id;
+      return !isRead(id) && !(src && src !== id && isRead(src));
+    });
+  }
+  return list;
 }
 
 function importanceLabel(ev) {
@@ -437,7 +465,9 @@ function displayEventTitle(ev, locationFilter) {
   // Display-only chemical notation; capV2.event / identity stay ASCII O3.
   base = String(base || "").replace(/\bO3\b/g, "O₃");
   if (!(ev && ev.capV2)) return base;
-  const loc = getFilteredWarningLocationLabel(ev, locationFilter || state.prefs || getPrefs());
+  const presLoc = ev && ev._iuPresentation ? String(ev._iuPresentation.locationLabel || "").trim() : "";
+  const loc =
+    presLoc || getFilteredWarningLocationLabel(ev, locationFilter || state.prefs || getPrefs());
   if (!loc) return base;
   if (base.includes(loc)) return base;
   return base + " — " + loc;
@@ -527,15 +557,20 @@ function renderItem(ev) {
     : capEnded
       ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
       : "";
+  const regionCoverage = String((ev && ev._iuPresentation && ev._iuPresentation.regionCoverageLine) || "").trim();
+  const regionCoverageMarkup = regionCoverage
+    ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
+    : "";
   const cardHead = czMapMarkup
     ? `<div class="iuPrehledDne__cardHead">` +
       `<div class="iuPrehledDne__cardHeadMain">` +
       warnBadge +
       titleMarkup +
+      regionCoverageMarkup +
       `</div>` +
       czMapMarkup +
       `</div>`
-    : warnBadge + titleMarkup;
+    : warnBadge + titleMarkup + regionCoverageMarkup;
   return (
     `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
