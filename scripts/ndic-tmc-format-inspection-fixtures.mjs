@@ -332,13 +332,13 @@ function shpHeaderSynthetic(opts = {}) {
   fs.writeFileSync(
     zipPath,
     buildStoredZip([
-      { name: "POINTS.DAT", data: "CID;TABCD;LCD;XCOORD;YCOORD\n11;25;1;14;50\n" },
-      { name: "NAMES.DAT", data: "CID;TABCD;NID;NAME\n11;25;1;FakeName\n" },
+      { name: "POINTS.DAT", data: "CID;TABCD;LCD;XCOORD;YCOORD\r\n11;25;1;14;50\r\n" },
+      { name: "NAMES.DAT", data: "CID;TABCD;NID;NAME\r\n11;25;1;FakeName\r\n" },
       { name: "readme.PDF", data: "%PDF-fake" },
       { name: "nested.zip", data: "PK\x03\x04fake" },
     ])
   );
-  const report = inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
+  const report = await inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
   const blob = JSON.stringify(report);
   ok("zip_insp_okish", report.mode === INSPECTION_MODE, report.mode);
   ok("zip_insp_auth_unverified", report.authoritativeFormat === "UNVERIFIED", report.authoritativeFormat);
@@ -350,6 +350,8 @@ function shpHeaderSynthetic(opts = {}) {
   ok("zip_insp_no_points_basename", !/POINTS\.DAT/.test(blob), "base");
   ok("zip_insp_no_importer", report.importerActivated === false, "imp");
   ok("zip_insp_nested_ignored", (report.ignoredCategoryCounts || {}).nested_archive >= 1, "nested");
+  ok("zip_insp_reject_code", report.rejectCode === INSPECTION_REJECT.FORMAT_EVIDENCE_INSUFFICIENT, report.rejectCode);
+  ok("zip_insp_tablecode_mapped", (report.tableCodeMappedCount || 0) >= 1, String(report.tableCodeMappedCount));
   ok("cfg_format_mode", getNdicDatexV1Config({ IU_NDIC_DATEX_V1_MODE: "format_inspection" }).formatInspection === true, "cfg");
   let idBlocked = false;
   try {
@@ -383,13 +385,15 @@ function shpHeaderSynthetic(opts = {}) {
   const zipPath = path.join(dir, "mem.zip");
   const files = [];
   for (let i = 0; i < 40; i++) {
-    files.push({ name: "POINTS" + i + ".DAT", data: "CID;TABCD\n11;25\n" + "x".repeat(3000) });
+    files.push({ name: "POINTS" + i + ".DAT", data: "CID;TABCD\r\n11;25\r\n" + "x".repeat(3000) });
   }
   fs.writeFileSync(zipPath, buildStoredZip(files));
-  const report = inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
+  const report = await inspectTmcZipFormatFromFile(zipPath, { workDir: dir });
   ok(
     "mem_bound_or_ok",
-    report.rejectCode === INSPECTION_REJECT.MEMORY_LIMIT || report.peekTotalBytes <= 2 * 1024 * 1024,
+    report.rejectCode === INSPECTION_REJECT.MEMORY_LIMIT ||
+      report.rejectCode === INSPECTION_REJECT.FORMAT_EVIDENCE_INSUFFICIENT ||
+      report.peekTotalBytes <= 2 * 1024 * 1024,
     String(report.rejectCode || report.peekTotalBytes)
   );
   try {

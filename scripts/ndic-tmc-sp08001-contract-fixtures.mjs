@@ -137,7 +137,12 @@ const twoFile = inspectFormatFromEntryPeeks([
   { role: "points", ext: "dat", name: "POINTS.TXT", buf: Buffer.from("also;not\r\n") },
 ]);
 ok("multi_candidate_warn", twoFile.multipleCandidateRoleCount === 1, String(twoFile.multipleCandidateRoleCount));
-ok("multi_not_fatal", twoFile.rejectCode == null, twoFile.rejectCode);
+ok(
+  "multi_not_fatal",
+  twoFile.rejectCode === "TMC_INSPECTION_FORMAT_EVIDENCE_INSUFFICIENT" &&
+    twoFile.inspectionOutcome === "insufficient_evidence",
+  twoFile.rejectCode
+);
 
 const conflict = inspectFormatFromEntryPeeks([
   { role: "points", tableCode: "POINTS", ext: "dat", buf: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow({ LCD: "900001" })]) },

@@ -5,7 +5,6 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
 import { inspectZipFileCentral, TMC_FORMAT, TMC_CID_EXPECTED, TMC_TABCD_EXPECTED } from "./tmc-archive-stream.mjs";
 import { classifyZipPath, TMC_PATH_REJECT } from "./tmc-zip.mjs";
 import { assertNoTestDiskProviderEnv, classifyDiskPath } from "./disk-preflight.mjs";
@@ -19,6 +18,7 @@ import {
   SP08001_EXCHANGE_FORMAT_VERSION,
   SP08001_STANDARD_TABLE_COUNT,
   SP08001_PHYSICAL,
+  SP08001_TABLE_CODES,
   resolveSp08001TableCodeFromBasename,
 } from "./tmc-sp08001-contract.mjs";
 import {
@@ -30,18 +30,40 @@ import {
   splitSp08001Fields,
   sp08001PhysicalContract,
 } from "./tmc-sp08001-header.mjs";
+import {
+  PEEK_STATUS,
+  PEEK_COMPRESSED_READ_CHUNK,
+  PEEK_INFLATE_HIGH_WATER,
+  peekZipEntryBytesStreaming,
+  extractFirstLogicalHeaderLine,
+} from "./tmc-zip-entry-peek.mjs";
 
 export const INSPECTION_MODE = "format_inspection";
+export const REPORT_SCHEMA_VERSION = "tmc-format-inspection-report-v2";
+export const INSPECTION_VERSION = "sp08001-v2.6-stream-peek-1";
 export const INSPECTION_REPORT_MAX_BYTES = 64 * 1024;
 export const INSPECTION_TEXT_PEEK_BYTES = 4 * 1024;
 export const INSPECTION_MAX_TEXT_LINES = 8;
 export const INSPECTION_CPG_MAX_BYTES = 64;
 export const INSPECTION_HEADER_MAX_BYTES = 1024;
+export const INSPECTION_HEADER_FIELD_LIMIT = 64;
 export const INSPECTION_TIMEOUT_MS = 120_000;
 export const INSPECTION_SHP_HEADER_BYTES = 100;
 export const INSPECTION_SQLITE_MAGIC_BYTES = 16;
 export const INSPECTION_MAX_PEEK_ENTRIES = 64;
 export const INSPECTION_MAX_TOTAL_PEEK_BYTES = 2 * 1024 * 1024;
+/** Sequential peeks only — never concurrent inflate of multiple entries. */
+export const INSPECTION_PEEK_CONCURRENCY = 1;
+
+export const REJECT_PHASE = Object.freeze({
+  FORMAT_CONTRACT_VERIFICATION: "format_contract_verification",
+  ARCHIVE_REJECT: "archive_reject",
+  SECURITY: "security",
+  INTERNAL: "internal",
+  NOT_APPLICABLE: "not_applicable",
+});
+
+export { PEEK_STATUS, PEEK_COMPRESSED_READ_CHUNK, PEEK_INFLATE_HIGH_WATER, extractFirstLogicalHeaderLine };
 
 export const INSPECTION_OUTCOME = Object.freeze({
   SUCCESS: "success",
@@ -179,6 +201,18 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "encodingDatLayer",
   "encodingCpgLayer",
   "encodingFalseConflictAvoided",
+  "reportSchemaVersion",
+  "inspectionVersion",
+  "rejectPhase",
+  "softEmptyPeekCount",
+  "decompressionErrorCount",
+  "truncatedPeekCount",
+  "completeHeaderCount",
+  "tableCodeMappedCount",
+  "tableCodeUnknownCount",
+  "peekStatusCounts",
+  "readmeEncodingState",
+  "metadataFileCount",
 ]);
 
 export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
@@ -226,6 +260,24 @@ export const INSPECTION_REJECT = Object.freeze({
   FORMAT_EVIDENCE_INSUFFICIENT: "TMC_INSPECTION_FORMAT_EVIDENCE_INSUFFICIENT",
 });
 
+const HARD_ARCHIVE_REJECTS = new Set([
+  INSPECTION_REJECT.PATH_INVALID,
+  INSPECTION_REJECT.ENTRY_NOT_ALLOWED,
+  INSPECTION_REJECT.ENTRY_TOO_LARGE,
+  INSPECTION_REJECT.CID_MISMATCH,
+  INSPECTION_REJECT.TABCD_MISMATCH,
+  INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE,
+  INSPECTION_REJECT.SOURCE_CONFLICT,
+  INSPECTION_REJECT.MEMORY_LIMIT,
+  INSPECTION_REJECT.TIMEOUT,
+  INSPECTION_REJECT.REPORT_LIMIT,
+  INSPECTION_REJECT.INTERNAL_ERROR,
+  INSPECTION_REJECT.ENCODING_UNVERIFIED,
+  INSPECTION_REJECT.FORMAT_UNVERIFIED,
+  INSPECTION_REJECT.SQLITE_UNVERIFIED,
+  INSPECTION_REJECT.READ_LIMIT,
+]);
+
 export function extCategoryOf(ext) {
   const e = String(ext || "").toLowerCase();
   if (e === "dat") return "dat";
@@ -239,7 +291,11 @@ export function extCategoryOf(ext) {
   return "other";
 }
 
-const ROLE_TO_SP08001_TABLE = Object.freeze({
+/**
+ * Non-authoritative broad-role → table hint only. Must NEVER confirm content_verified
+ * or supply tableCode for SP08001 matcher. Opaque tableCode comes solely from basename resolve.
+ */
+export const ROLE_TO_SP08001_TABLE_HINT = Object.freeze({
   points: "POINTS",
   names: "NAMES",
   roads: "ROADS",
@@ -283,7 +339,10 @@ const SP08001_CODE_TO_ROLE = Object.freeze({
  * @param {{ tableCode?: string, expectedCid?: number, expectedTabcd?: number }} [opts]
  */
 export function assessSingletonContentContract(role, peek, opts = {}) {
-  const tableCode = opts.tableCode || ROLE_TO_SP08001_TABLE[role] || null;
+  // Authoritative tableCode must be opaque allowlisted enum from basename resolve — never broad-role fallback.
+  const rawCode = opts.tableCode || null;
+  const tableCode =
+    rawCode && SP08001_TABLE_CODES.includes(rawCode) ? rawCode : null;
   if (tableCode) {
     const a = assessSp08001ContentContract(tableCode, peek, opts);
     return {
@@ -309,6 +368,7 @@ export function assessSingletonContentContract(role, peek, opts = {}) {
     evidenceLevel,
     headerState: "UNVERIFIED",
     tableCode: null,
+    broadRoleHint: ROLE_TO_SP08001_TABLE_HINT[role] || null,
   };
 }
 
@@ -362,26 +422,41 @@ export function buildStdoutEnvelope(fields) {
  */
 export function finalizeInspectionOutcome(report) {
   const r = report || {};
+  r.reportSchemaVersion = r.reportSchemaVersion || REPORT_SCHEMA_VERSION;
+  r.inspectionVersion = r.inspectionVersion || INSPECTION_VERSION;
   r.authoritativeFormat = "UNVERIFIED";
   r.authoritativeFormatVerified = false;
   r.importerActivated = false;
   r.resolverActivated = false;
   r.publishActivated = false;
   r.productionWrite = false;
-  if (r.rejectCode) {
+  const hard =
+    r.rejectCode &&
+    r.rejectCode !== INSPECTION_REJECT.FORMAT_EVIDENCE_INSUFFICIENT &&
+    (HARD_ARCHIVE_REJECTS.has(r.rejectCode) ||
+      (typeof r.rejectCode === "string" && /^TMC_HTTP_\d+$/.test(r.rejectCode)) ||
+      r.rejectCode === "TMC_AUTH_REJECTED" ||
+      r.rejectCode === "TMC_CONTENT_TYPE_REJECTED" ||
+      r.rejectCode === "TMC_RESPONSE_TOO_LARGE");
+  if (hard) {
     r.inspectionOutcome = INSPECTION_OUTCOME.EXPECTED_REJECT;
     r.ok = false;
     if (!r.severity) r.severity = "archive_reject";
+    if (!r.rejectPhase) r.rejectPhase = REJECT_PHASE.ARCHIVE_REJECT;
   } else if (r.authoritativeFormatVerified === true) {
-    // unreachable by design while verified is forced false
     r.inspectionOutcome = INSPECTION_OUTCOME.SUCCESS;
     r.ok = true;
     r.severity = "ok";
+    r.rejectPhase = REJECT_PHASE.NOT_APPLICABLE;
   } else {
     r.inspectionOutcome = INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE;
     r.ok = false;
     r.severity = r.severity || "insufficient_evidence";
-    const hasWarn = Array.isArray(r.warnings) && r.warnings.some((w) => w && w.code === INSPECTION_WARNING.FORMAT_EVIDENCE_INSUFFICIENT);
+    r.rejectCode = INSPECTION_REJECT.FORMAT_EVIDENCE_INSUFFICIENT;
+    r.rejectPhase = REJECT_PHASE.FORMAT_CONTRACT_VERIFICATION;
+    const hasWarn =
+      Array.isArray(r.warnings) &&
+      r.warnings.some((w) => w && w.code === INSPECTION_WARNING.FORMAT_EVIDENCE_INSUFFICIENT);
     if (!hasWarn) {
       if (!Array.isArray(r.warnings)) r.warnings = [];
       r.warnings.push({
@@ -942,6 +1017,18 @@ export function validateInspectionReportObject(report) {
       key: "inspectionOutcome",
     });
   }
+  if (out.rejectPhase != null && !Object.values(REJECT_PHASE).includes(out.rejectPhase)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+      code: "TMC_INSPECTION_REPORT_SCHEMA",
+      key: "rejectPhase",
+    });
+  }
+  if (out.reportSchemaVersion != null && typeof out.reportSchemaVersion !== "string") {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+      code: "TMC_INSPECTION_REPORT_SCHEMA",
+      key: "reportSchemaVersion",
+    });
+  }
   if (out.reportSafety != null && !Object.values(REPORT_SAFETY).includes(out.reportSafety)) {
     throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
       code: "TMC_INSPECTION_REPORT_SCHEMA",
@@ -1138,10 +1225,7 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     let role = ent.role || classifyEntryRole(ent.name || "x." + (ent.ext || "dat"));
     if (!STRUCTURAL_ROLE_ALLOWLIST.includes(role)) role = "ignored_other";
     const tableCode =
-      ent.tableCode ||
-      resolveSp08001TableCodeFromBasename(path.basename(String(ent.name || ""))) ||
-      ROLE_TO_SP08001_TABLE[role] ||
-      null;
+      ent.tableCode && SP08001_TABLE_CODES.includes(ent.tableCode) ? ent.tableCode : null;
     bump(roleCounts, role);
     bump(roleCandidateCounts, role);
     sizeByRole[role] = (sizeByRole[role] || 0) + (ent.buf ? ent.buf.length : 0);
@@ -1201,8 +1285,12 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       }
 
       if (tableCode === "README") {
-        // README is ASCII meta — do not treat as UTF-8 DAT auto-label
+        // README bootstrap: SP08001 declares README as ASCII meta; DAT default UTF-8 after README present.
         encodingLayers.push({ layer: ENCODING_LAYER.README_DECLARED, encoding: "ASCII" });
+        encodingLayers.push({
+          layer: ENCODING_LAYER.DAT_DECLARED,
+          encoding: SP08001_PHYSICAL.defaultEncoding || "UTF-8",
+        });
       }
 
       if (REQUIRED_SINGLETON_ROLES.includes(role)) {
@@ -1374,6 +1462,10 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     requiredTablesPresent,
     optionalTablesPresent,
     unknownSupplementaryTables,
+    metadataFileCount: (roleCandidateCounts.metadata || 0) > 0 || verifiedTableCodes.has("README") ? 1 : 0,
+    readmeEncodingState: encResolved.layerStatus
+      ? encResolved.layerStatus[ENCODING_LAYER.README_DECLARED] || "ABSENT"
+      : "ABSENT",
     cidMatchState,
     tabcdMatchState,
     coordinateSource: peeks.coordsFromDat ? "points_dat" : peeks.coordsFromShp ? "shp_companion" : "UNVERIFIED",
@@ -1409,7 +1501,8 @@ function peekBudgetForExt(ext) {
 }
 
 /**
- * Collect allowlisted peek targets from ZIP central directory (roles only; no report names).
+ * Collect allowlisted peek targets. Derives opaque SP08001 tableCode from basename
+ * BEFORE discarding the path. Targets never retain filename/path.
  * @param {string} zipPath
  * @param {object} [lim]
  */
@@ -1418,6 +1511,8 @@ export function collectInspectionPeekTargets(zipPath, lim = {}) {
   const st = fs.statSync(zipPath);
   const targets = [];
   const ignoredCategoryCounts = Object.create(null);
+  let tableCodeMappedCount = 0;
+  let tableCodeUnknownCount = 0;
   const fd = fs.openSync(zipPath, "r");
   try {
     const tailLen = Math.min(st.size, 65536 + 22);
@@ -1469,9 +1564,22 @@ export function collectInspectionPeekTargets(zipPath, lim = {}) {
         maxDepth: limits.maxPathDepth,
         maxNameLen: limits.maxNameLen,
       });
-      const role = classified.ok ? classifyEntryRole(classified.path) : "ignored_other";
+      const entryPath = classified.ok ? classified.path : "";
+      const baseWithExt = entryPath ? path.basename(entryPath) : "";
+      // Opaque tableCode BEFORE redacting basename from further pipeline.
+      let tableCode = baseWithExt ? resolveSp08001TableCodeFromBasename(baseWithExt) : null;
+      if (tableCode && !SP08001_TABLE_CODES.includes(tableCode) && tableCode !== "README") {
+        tableCode = null;
+      }
+      if (tableCode === "README" || (tableCode && SP08001_TABLE_CODES.includes(tableCode))) {
+        tableCodeMappedCount += 1;
+      } else if (classified.ok && !classified.isDirectory) {
+        const extProbe = (String(entryPath).toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || "";
+        if (extProbe === "dat" || extProbe === "txt" || extProbe === "csv") tableCodeUnknownCount += 1;
+      }
+      const role = classified.ok ? classifyEntryRole(entryPath) : "ignored_other";
       const ext = classified.ok
-        ? (String(classified.path).toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || ""
+        ? (String(entryPath).toLowerCase().match(/\.([a-z0-9]+)$/) || [])[1] || ""
         : "";
       nameRaw = "";
       off += 46 + nameLen + extraLen + commentLen;
@@ -1510,66 +1618,42 @@ export function collectInspectionPeekTargets(zipPath, lim = {}) {
         comp,
         uncomp,
         localOffset,
+        tableCode: tableCode || null,
       });
     }
-    return { ok: true, rejectCode: null, targets, ignoredCategoryCounts };
+    return {
+      ok: true,
+      rejectCode: null,
+      targets,
+      ignoredCategoryCounts,
+      tableCodeMappedCount,
+      tableCodeUnknownCount,
+    };
   } finally {
     fs.closeSync(fd);
   }
 }
 
 /**
- * Peek at most maxOut uncompressed bytes from a ZIP entry (store or deflate).
- * @param {number} fd
- * @param {{ localOffset: number, method: number, comp: number, uncomp: number }} target
- * @param {number} maxOut
+ * @deprecated Do not use for live peek — retained name only to fail closed if called.
  */
-export function peekZipEntryBytes(fd, target, maxOut) {
-  const max = Math.max(1, Math.min(maxOut, INSPECTION_TEXT_PEEK_BYTES));
-  const lh = Buffer.alloc(30);
-  const n = fs.readSync(fd, lh, 0, 30, target.localOffset);
-  if (n < 30 || lh.readUInt32LE(0) !== LOCAL_SIG) {
-    throw Object.assign(new Error("bad_local_header"), { code: INSPECTION_REJECT.FORMAT_UNVERIFIED });
-  }
-  const nameLen = lh.readUInt16LE(26);
-  const extraLen = lh.readUInt16LE(28);
-  if (nameLen > 512 || extraLen > INSPECTION_HEADER_MAX_BYTES) {
-    throw Object.assign(new Error("header_too_large"), { code: INSPECTION_REJECT.ENTRY_TOO_LARGE });
-  }
-  const dataStart = target.localOffset + 30 + nameLen + extraLen;
-  const method = target.method;
-  if (method === 0) {
-    const want = Math.min(max, target.uncomp || max);
-    const buf = Buffer.alloc(want);
-    const got = fs.readSync(fd, buf, 0, want, dataStart);
-    return buf.slice(0, got);
-  }
-  if (method === 8) {
-    const compWant = Math.min(target.comp || max * 4, max * 8 + 256);
-    const compBuf = Buffer.alloc(compWant);
-    const got = fs.readSync(fd, compBuf, 0, compWant, dataStart);
-    try {
-      return zlib.inflateRawSync(compBuf.slice(0, got), { maxOutputLength: max });
-    } catch (e) {
-      throw Object.assign(new Error("inflate_peek_failed"), {
-        code: INSPECTION_REJECT.READ_LIMIT,
-        cause: e,
-      });
-    }
-  }
-  throw Object.assign(new Error("unsupported_method"), { code: INSPECTION_REJECT.ENTRY_NOT_ALLOWED });
+export function peekZipEntryBytes() {
+  throw Object.assign(new Error("REFUSING_SYNC_INFLATE_PEEK"), {
+    code: INSPECTION_REJECT.INTERNAL_ERROR,
+  });
 }
 
 /**
- * Live/offline ZIP format inspection from on-disk archive (peek only).
+ * Live/offline ZIP format inspection from on-disk archive (streaming peek only).
  * Never activates importer/resolver/publish. Never embeds raw rows or basenames.
  * @param {string} zipPath
- * @param {{ workDir?: string, timeoutMs?: number, startedAt?: number }} [opts]
+ * @param {{ workDir?: string, timeoutMs?: number, startedAt?: number, signal?: AbortSignal }} [opts]
  */
-export function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
+export async function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
   const started = opts.startedAt || Date.now();
   const timeoutMs = opts.timeoutMs != null ? opts.timeoutMs : INSPECTION_TIMEOUT_MS;
   const workDir = opts.workDir || path.dirname(zipPath);
+  const signal = opts.signal || null;
 
   let central;
   try {
@@ -1604,31 +1688,61 @@ export function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
 
   const entries = [];
   let totalPeek = 0;
-  const fd = fs.openSync(zipPath, "r");
-  try {
-    for (const t of collected.targets) {
-      if (Date.now() - started > timeoutMs) {
-        return failReport(INSPECTION_REJECT.TIMEOUT, "timeout", central);
-      }
-      const budget = peekBudgetForExt(t.ext);
-      if (totalPeek + budget > INSPECTION_MAX_TOTAL_PEEK_BYTES) {
-        return failReport(INSPECTION_REJECT.MEMORY_LIMIT, "archive_reject", central);
-      }
-      try {
-        const buf = peekZipEntryBytes(fd, t, budget);
-        totalPeek += buf.length;
-        entries.push({ role: t.role, ext: t.ext, buf });
-      } catch (e) {
-        const code = e && e.code ? String(e.code) : INSPECTION_REJECT.READ_LIMIT;
-        if (code === INSPECTION_REJECT.ENTRY_TOO_LARGE || code === INSPECTION_REJECT.MEMORY_LIMIT) {
-          return failReport(code, "archive_reject", central);
-        }
-        // record/layer soft skip
-        entries.push({ role: t.role, ext: t.ext, buf: Buffer.alloc(0) });
-      }
+  const peekStatusCounts = Object.create(null);
+  let softEmptyPeekCount = 0;
+  let decompressionErrorCount = 0;
+  let truncatedPeekCount = 0;
+  let completeHeaderCount = 0;
+
+  // Sequential only (INSPECTION_PEEK_CONCURRENCY === 1).
+  for (const t of collected.targets) {
+    if (Date.now() - started > timeoutMs || (signal && signal.aborted)) {
+      return failReport(INSPECTION_REJECT.TIMEOUT, "timeout", central);
     }
-  } finally {
-    fs.closeSync(fd);
+    const budget = peekBudgetForExt(t.ext);
+    if (totalPeek + budget > INSPECTION_MAX_TOTAL_PEEK_BYTES) {
+      return failReport(INSPECTION_REJECT.MEMORY_LIMIT, "archive_reject", central);
+    }
+    const peeked = await peekZipEntryBytesStreaming(zipPath, t, budget, {
+      timeoutMs,
+      startedAt: started,
+      signal,
+    });
+    bump(peekStatusCounts, peeked.status);
+    if (peeked.status === PEEK_STATUS.EMPTY_ENTRY) softEmptyPeekCount += 1;
+    if (peeked.status === PEEK_STATUS.DECOMPRESSION_ERROR) decompressionErrorCount += 1;
+    if (peeked.status === PEEK_STATUS.TRUNCATED_AT_LIMIT) truncatedPeekCount += 1;
+    if (
+      peeked.status === PEEK_STATUS.DECOMPRESSION_ERROR ||
+      peeked.status === PEEK_STATUS.STRUCTURAL_ERROR ||
+      peeked.status === PEEK_STATUS.UNSUPPORTED_METHOD ||
+      peeked.status === PEEK_STATUS.ENCRYPTED_REJECTED ||
+      peeked.status === PEEK_STATUS.TIMEOUT
+    ) {
+      // Distinguished failure — do not disguise as empty success.
+      entries.push({
+        role: t.role,
+        ext: t.ext,
+        tableCode: t.tableCode || null,
+        buf: Buffer.alloc(0),
+        peekStatus: peeked.status,
+      });
+      continue;
+    }
+    totalPeek += peeked.buf.length;
+    const hdr = extractFirstLogicalHeaderLine(peeked.buf, {
+      maxHeaderBytes: INSPECTION_HEADER_MAX_BYTES,
+      maxFields: INSPECTION_HEADER_FIELD_LIMIT,
+    });
+    if (hdr.complete === true) completeHeaderCount += 1;
+    entries.push({
+      role: t.role,
+      ext: t.ext,
+      tableCode: t.tableCode || null,
+      buf: peeked.buf,
+      peekStatus: peeked.status,
+      headerLineStatus: hdr.status,
+    });
   }
 
   const report = inspectFormatFromEntryPeeks(entries, {
@@ -1648,6 +1762,13 @@ export function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
   report.ignoredCategoryCounts = collected.ignoredCategoryCounts;
   report.peekEntryCount = entries.length;
   report.peekTotalBytes = totalPeek;
+  report.softEmptyPeekCount = softEmptyPeekCount;
+  report.decompressionErrorCount = decompressionErrorCount;
+  report.truncatedPeekCount = truncatedPeekCount;
+  report.completeHeaderCount = completeHeaderCount;
+  report.tableCodeMappedCount = collected.tableCodeMappedCount || 0;
+  report.tableCodeUnknownCount = collected.tableCodeUnknownCount || 0;
+  report.peekStatusCounts = peekStatusCounts;
   report.centralDirectory = {
     fileEntryCount: central.fileEntryCount,
     datFileCount: central.datFileCount,
@@ -1665,7 +1786,7 @@ export function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
   } catch (_) {
     return failReport(INSPECTION_REJECT.INTERNAL_ERROR, "internal_failure", central);
   }
-  return report;
+  return finalizeInspectionOutcome(report);
 }
 
 /**

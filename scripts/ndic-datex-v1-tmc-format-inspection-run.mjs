@@ -329,7 +329,10 @@ try {
     );
   }
 
-  const report = inspectTmcZipFormatFromFile(temp.file, { workDir: work });
+  const report = await inspectTmcZipFormatFromFile(temp.file, {
+    workDir: work,
+    signal: ctrl.signal,
+  });
   report.liveNetworkInspection = true;
   report.livePathImplemented = true;
   report.downloadSuccess = true;

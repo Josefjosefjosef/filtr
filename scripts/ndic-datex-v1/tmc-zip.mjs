@@ -732,6 +732,71 @@ export function buildStoredZip(files) {
   return Buffer.concat([...chunks, centralBuf, end]);
 }
 
+/**
+ * Build a minimal DEFLATE (method 8) ZIP for fixtures/tests.
+ * `inflatePad` appends NUL-free padding (0x41) after `data` before compress so
+ * declared uncompressed size can exceed peek budgets without huge source fixtures.
+ * @param {{ name: string, data: Buffer|string, inflatePad?: number }[]} files
+ */
+export function buildDeflatedZip(files) {
+  const chunks = [];
+  const centrals = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = Buffer.from(String(f.name), "utf8");
+    const head = Buffer.isBuffer(f.data) ? f.data : Buffer.from(String(f.data), "utf8");
+    const pad = Math.max(0, Math.floor(Number(f.inflatePad) || 0));
+    const raw = pad > 0 ? Buffer.concat([head, Buffer.alloc(pad, 0x41)]) : head;
+    const compressed = zlib.deflateRawSync(raw);
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(LOCAL_SIG, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0, 6);
+    local.writeUInt16LE(0, 8);
+    local.writeUInt16LE(8, 10); // DEFLATE
+    local.writeUInt16LE(0, 12);
+    local.writeUInt32LE(0, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(raw.length, 22);
+    local.writeUInt16LE(name.length, 26);
+    local.writeUInt16LE(0, 28);
+    chunks.push(local, name, compressed);
+
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(CENTRAL_SIG, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0, 8);
+    central.writeUInt16LE(8, 10);
+    central.writeUInt16LE(0, 12);
+    central.writeUInt16LE(0, 14);
+    central.writeUInt32LE(0, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(raw.length, 24);
+    central.writeUInt16LE(name.length, 28);
+    central.writeUInt16LE(0, 30);
+    central.writeUInt16LE(0, 32);
+    central.writeUInt16LE(0, 34);
+    central.writeUInt16LE(0, 36);
+    central.writeUInt32LE(0, 38);
+    central.writeUInt32LE(offset, 42);
+    centrals.push(central, name);
+    offset += 30 + name.length + compressed.length;
+  }
+  const centralStart = offset;
+  const centralBuf = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0, 4);
+  end.writeUInt16LE(0, 6);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(centralBuf.length, 12);
+  end.writeUInt32LE(centralStart, 16);
+  end.writeUInt16LE(0, 20);
+  return Buffer.concat([...chunks, centralBuf, end]);
+}
+
 function parseFromZipEntries(entries, opts) {
   const jsonCandidates = entries.filter(
     (e) => /\.json$/i.test(e.name) || /^\s*\{/.test(e.data.toString("utf8").slice(0, 32))

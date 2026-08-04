@@ -372,10 +372,17 @@ function main() {
       ok("shadow_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(raw), "unsecure");
       ok("shadow_fixture_disk_preflight", /iu-ndic-disk-preflight-fixtures/.test(src), "disk-fx");
       ok("shadow_fixture_tmc_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "tmc-fx");
+      ok("shadow_fixture_sp08001", /iu-ndic-tmc-sp08001-contract-fixtures/.test(src), "sp08001-fx");
+      ok("shadow_fixture_stream_peek", /iu-ndic-tmc-stream-peek-fixtures/.test(src), "peek-fx");
       ok("shadow_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "insp-fx");
       ok("shadow_fixture_mode_contract", /iu-ndic-shadow-probe-mode-contract-fixtures/.test(src), "mode-fx");
       ok("shadow_fixture_redaction", /iu-ndic-shadow-report-redaction-guard/.test(src), "redact-fx");
       ok("shadow_fixture_before_probe", /Fixture guards[\s\S]*iu-ndic-tmc-archive-stream-fixtures[\s\S]*Real shadow probe/.test(src), "order");
+      ok(
+        "shadow_sp08001_before_live",
+        /iu-ndic-tmc-sp08001-contract-fixtures[\s\S]*Live TMC format inspection|iu-ndic-tmc-sp08001-contract-fixtures[\s\S]*Real shadow probe/.test(src),
+        "sp-order"
+      );
       ok("shadow_inspect_no_datex_url", inspectJob && !/secrets\.IU_NDIC_PULL_URL/.test(inspectJob.body), "no-datex");
       ok("shadow_inspect_tmc_only_run", inspectJob && /ndic-datex-v1-tmc-format-inspection-run\.mjs/.test(inspectJob.body), "insp-run");
       ok("shadow_inspect_no_shadow_run", inspectJob && !/ndic-datex-v1-shadow-run\.mjs/.test(inspectJob.body), "no-sh-run");
@@ -402,6 +409,8 @@ function main() {
       ok("inspect_no_importer_run", !/ndic-datex-v1-prod-sync|importerActivated:\s*true/.test(src), "imp");
       ok("inspect_node_24", /node-version:\s*["']?24["']?/.test(src), "node24");
       ok("inspect_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "fx");
+      ok("inspect_fixture_sp08001", /iu-ndic-tmc-sp08001-contract-fixtures/.test(src), "sp08001");
+      ok("inspect_fixture_stream_peek", /iu-ndic-tmc-stream-peek-fixtures/.test(src), "peek");
       ok("inspect_fixture_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "arch");
       ok("inspect_fixture_disk", /iu-ndic-disk-preflight-fixtures/.test(src), "disk");
       ok("inspect_offline_ready", /--offline-ready/.test(src), "ready");
@@ -411,6 +420,7 @@ function main() {
         "live"
       );
       ok("inspect_fixtures_before_live", /Fixture guards[\s\S]*Live TMC format inspection/.test(src), "order");
+      ok("inspect_sp08001_before_live", /iu-ndic-tmc-sp08001-contract-fixtures[\s\S]*Live TMC format inspection/.test(src), "sp-ord");
       ok("inspect_mode_before_checkout", /Enforce allowlisted mode and ref \(before checkout\)[\s\S]*actions\/checkout@/.test(src), "mode-order");
       ok("inspect_identity_before_checkout", /Preflight runner identity[\s\S]*actions\/checkout@/.test(src), "id-order");
       ok("inspect_head_before_live", /REFUSING_UNEXPECTED_HEAD[\s\S]*Live TMC format inspection/.test(src), "head");
