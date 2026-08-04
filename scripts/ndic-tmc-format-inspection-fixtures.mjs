@@ -228,7 +228,7 @@ function shpHeaderSynthetic(opts = {}) {
 // --- path redaction ---
 {
   ok("path_posix_leak", containsForbiddenPathLeak("/home/runner/work/a") === true, "posix");
-  ok("path_win_leak", containsForbiddenPathLeak("C:\\Users\\spedk\\Temp\\x") === true, "win");
+  ok("path_win_leak", containsForbiddenPathLeak("C:\\Users\\alice\\Temp\\x") === true, "win");
   ok("path_safe_cat", categorizePath(process.env.TEMP || os.tmpdir()) === PATH_CATEGORY.OS_TMPDIR || categorizePath(process.env.TEMP || os.tmpdir()) === PATH_CATEGORY.UNKNOWN_SANITIZED, "cat");
   const red = redactAbsolutePaths("err at C:\\Users\\alice\\AppData\\x and /home/bob/y");
   ok("path_redacted", !/alice|bob|Users/.test(red) || red.includes(PATH_CATEGORY.UNKNOWN_SANITIZED), red);
