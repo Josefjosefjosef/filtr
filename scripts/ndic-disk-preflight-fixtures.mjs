@@ -69,6 +69,12 @@ const knownReq = computeRequiredDiskBytes({
     },
   });
   ok("t02_insufficient_space_TMC_DISK_SPACE", disk.ok === false && disk.rejectCode === DISK_REJECT.SPACE, disk.rejectCode);
+  ok(
+    "t02_available_bytes_exact_string",
+    typeof disk.filesystemAvailableBytes === "string" && /^\d+$/.test(disk.filesystemAvailableBytes),
+    String(disk.filesystemAvailableBytes)
+  );
+  ok("t02_available_not_number_type", typeof disk.filesystemAvailableBytes !== "number", typeof disk.filesystemAvailableBytes);
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
@@ -80,6 +86,8 @@ const knownReq = computeRequiredDiskBytes({
     zipAlreadyOnDisk: true,
   });
   ok("t03_missing_path_TMC_DISK_PATH_INVALID", disk.ok === false && disk.rejectCode === DISK_REJECT.PATH, disk.rejectCode);
+  ok("t03_no_fake_available_bytes", disk.filesystemAvailableBytes === null, String(disk.filesystemAvailableBytes));
+  ok("t03_no_fake_zero_string", disk.filesystemAvailableBytes !== "0", String(disk.filesystemAvailableBytes));
 }
 
 // 4) Unmeasurable path → MEASURE
@@ -97,6 +105,8 @@ const knownReq = computeRequiredDiskBytes({
     },
   });
   ok("t04_unmeasurable_TMC_DISK_MEASURE_FAILED", disk.ok === false && disk.rejectCode === DISK_REJECT.MEASURE, disk.rejectCode);
+  ok("t04_no_fake_available_bytes", disk.filesystemAvailableBytes === null, String(disk.filesystemAvailableBytes));
+  ok("t04_no_fake_zero_string", disk.filesystemAvailableBytes !== "0", String(disk.filesystemAvailableBytes));
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
@@ -244,6 +254,18 @@ const knownReq = computeRequiredDiskBytes({
   ];
   const missing = requiredFields.filter((k) => diag[k] == null || diag[k] === "");
   ok("t17_all_diagnostic_fields", missing.length === 0, missing.join(","));
+  ok(
+    "t17_available_bytes_exact_digit_string",
+    typeof diag.filesystemAvailableBytes === "string" && /^\d+$/.test(diag.filesystemAvailableBytes),
+    String(diag.filesystemAvailableBytes)
+  );
+  ok(
+    "t17_preserved_after_tmc_importer_reject",
+    gate.rejectCode === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED" &&
+      typeof diag.filesystemAvailableBytes === "string" &&
+      /^\d+$/.test(diag.filesystemAvailableBytes),
+    gate.rejectCode + ":" + diag.filesystemAvailableBytes
+  );
   const blob = JSON.stringify({ rejectCode: gate.rejectCode, diskDiagnostics: diag });
   ok("t17_no_authorization", !/Authorization/i.test(blob), "auth");
   ok("t17_no_basic_token", !/Basic\s+[A-Za-z0-9+/=]{8,}/i.test(blob), "basic");
@@ -268,6 +290,23 @@ const knownReq = computeRequiredDiskBytes({
         cleanupCandidateBytes: diag.cleanupCandidateBytes,
         diskFormulaVersion: diag.diskFormulaVersion,
       })
+  );
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+
+// 19) After successful measure, arithmetic reject still keeps available bytes (no fake 0)
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-arith-"));
+  const disk = runDiskPreflight({
+    checkDir: dir,
+    downloadedArchiveBytes: -1n,
+    zipAlreadyOnDisk: true,
+  });
+  ok("t19_arithmetic_after_measure", disk.ok === false && disk.rejectCode === DISK_REJECT.ARITHMETIC, disk.rejectCode);
+  ok(
+    "t19_available_preserved_digit_string",
+    typeof disk.filesystemAvailableBytes === "string" && /^\d+$/.test(disk.filesystemAvailableBytes),
+    String(disk.filesystemAvailableBytes)
   );
   fs.rmSync(dir, { recursive: true, force: true });
 }

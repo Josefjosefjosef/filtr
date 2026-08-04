@@ -290,6 +290,9 @@ export function runDiskPreflight(opts) {
       rejectCode: req.rejectCode || DISK_REJECT.ARITHMETIC,
       diskCheckPathCategory: pathCategory,
       diskFormulaVersion: DISK_FORMULA_VERSION,
+      // Disk was measured successfully — never invent 0; preserve exact byte string.
+      filesystemAvailableBytes: measured.availableBytes.toString(),
+      filesystemRequiredBytes: null,
     };
   }
 
