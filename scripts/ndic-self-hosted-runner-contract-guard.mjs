@@ -318,6 +318,10 @@ function main() {
       ok("shadow_setup_node_v7", /actions\/setup-node@820762786026740c76f36085b0efc47a31fe5020/.test(src), "setup");
       ok("shadow_upload_artifact_v7", /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a/.test(src), "artifact");
       ok("shadow_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(raw), "unsecure");
+      ok("shadow_fixture_disk_preflight", /iu-ndic-disk-preflight-fixtures/.test(src), "disk-fx");
+      ok("shadow_fixture_tmc_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "tmc-fx");
+      ok("shadow_fixture_redaction", /iu-ndic-shadow-report-redaction-guard/.test(src), "redact-fx");
+      ok("shadow_fixture_before_probe", /Fixture guards[\s\S]*iu-ndic-tmc-archive-stream-fixtures[\s\S]*Real shadow probe/.test(src), "order");
     }
 
     if (file === "update-ndic-datex-v1.yml") {
