@@ -1074,6 +1074,27 @@ const KRAJ_TITLE_DISPLAY = {
   "hlavni mesto praha": "Praha",
 };
 
+/**
+ * Official ORP counts per kraj (ČSÚ CISORP / geo-registry walk ORP→okres→kraj).
+ * Denominator for “X z Y ORP v kraji” on region presentation cards.
+ */
+const KRAJ_ORP_TOTALS_BY_FOLD = {
+  "hlavni mesto praha": 1,
+  "stredocesky kraj": 26,
+  "jihocesky kraj": 17,
+  "plzensky kraj": 15,
+  "karlovarsky kraj": 7,
+  "ustecky kraj": 16,
+  "liberecky kraj": 10,
+  "kralovehradecky kraj": 15,
+  "pardubicky kraj": 15,
+  "kraj vysocina": 15,
+  "jihomoravsky kraj": 21,
+  "olomoucky kraj": 13,
+  "zlinsky kraj": 13,
+  "moravskoslezsky kraj": 22,
+};
+
 function displayNameForSelectedLocation(type, name) {
   const raw = String(name || "").trim();
   if (!raw) return "";
@@ -1082,6 +1103,51 @@ function displayNameForSelectedLocation(type, name) {
     if (short) return short;
   }
   return raw;
+}
+
+function isPragueKrajSelection(sel) {
+  if (!sel || sel.type !== "kraj") return false;
+  const folded = foldLocName(sel.name);
+  return folded === "hlavni mesto praha" || folded === "praha";
+}
+
+/** Ordinary kraj (not Praha) — gets its own presentation card. */
+function isOrdinaryKrajSelection(sel) {
+  return !!(sel && sel.type === "kraj" && !isPragueKrajSelection(sel));
+}
+
+/** Cities, obce, okresy, and Praha stay on the shared localities card. */
+function isLocalityCardSelection(sel) {
+  if (!sel) return false;
+  if (sel.type === "city" || sel.type === "okres") return true;
+  return isPragueKrajSelection(sel);
+}
+
+function krajOrpTotalForName(name) {
+  const n = KRAJ_ORP_TOTALS_BY_FOLD[foldLocName(name)];
+  return Number(n) > 0 ? Number(n) : 0;
+}
+
+function formatRegionOrpCoveragePhrase(hit, total) {
+  const h = Math.max(0, Number(hit) || 0);
+  const t = Math.max(0, Number(total) || 0);
+  if (h <= 0 || t <= 0) return "";
+  if (h >= t) return "Platí pro celý kraj – všech " + t + " ORP";
+  return "Platí pro " + h + " z " + t + " ORP v kraji";
+}
+
+function regionOrpCoverageForSelection(warning, regionSel) {
+  const links = warningGeoLinks(warning);
+  const orpSet = warningOrpCodeSet(warning);
+  const hitSet = selectionRepresentedOrpCodes(regionSel, links, orpSet);
+  const total = krajOrpTotalForName(regionSel && regionSel.name);
+  const hitRaw = hitSet.size;
+  const hit = total > 0 ? Math.min(hitRaw, total) : hitRaw;
+  return {
+    hit,
+    total,
+    phrase: formatRegionOrpCoveragePhrase(hit, total),
+  };
 }
 
 function locationFilterDiagEnabled() {
@@ -1277,11 +1343,19 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
   }
 
   let match = matchingSelections.length > 0 || queryMatched;
+  const localSelections = matchingSelections.filter(isLocalityCardSelection);
+  const regionSelections = matchingSelections.filter(isOrdinaryKrajSelection);
+
+  // Shared localities card: cities / obce / okresy / Praha only (never ordinary kraje).
+  const localRepresentedOrps = new Set();
+  for (const sel of localSelections) {
+    for (const code of selectionRepresentedOrpCodes(sel, links, orpSet)) localRepresentedOrps.add(code);
+  }
   const titleNames = uniqStableNames(
-    matchingSelections.map((s) => s.displayName).concat(queryMatched && active.query ? [active.query] : [])
+    localSelections.map((s) => s.displayName).concat(queryMatched && active.query ? [active.query] : [])
   );
 
-  if (match && !titleNames.length) {
+  if (match && !titleNames.length && !regionSelections.length && !queryMatched) {
     if (locationFilterDiagEnabled()) {
       try {
         console.error("CHMU location filter inconsistency", {
@@ -1295,7 +1369,11 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
   }
 
   const warningOrps = warningUniqueOrpCount(orpSet, links);
-  const extra = match ? Math.max(0, warningOrps - representedOrps.size) : 0;
+  // Remainder for the shared localities card must NOT subtract whole selected kraje.
+  const extra =
+    match && (localSelections.length || queryMatched)
+      ? Math.max(0, warningOrps - localRepresentedOrps.size)
+      : 0;
   const matchedCities = matchingSelections
     .filter((s) => s.type === "city")
     .map((s) => {
@@ -1313,6 +1391,10 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
     scopedLinks,
     extraAreas: extra,
     matchingSelections,
+    localSelections,
+    regionSelections,
+    // Legacy total (all matching selections) — kept for diagnostics only.
+    allRepresentedOrpCount: representedOrps.size,
   };
 }
 
@@ -1385,12 +1467,16 @@ function formatLocationLabelFromNames(names, extra) {
  * Display-only geographic label for a CAP warning card, derived from warning + active filter.
  * Never mutates the warning object. Empty string ⇒ no locality text (caller may hide meta pill).
  * Active filter: only current user selection names (never CAP/source ORP fallback).
+ * Ordinary kraje are omitted (they become separate presentation cards via expand).
  *
  * @param {object} warning feed event
  * @param {object} activeLocationFilter prefs / draft filter
  * @returns {string}
  */
 function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
+  if (warning && warning._iuPresentation && warning._iuPresentation.locationLabel) {
+    return String(warning._iuPresentation.locationLabel || "");
+  }
   const region = warning && warning.region ? warning.region : null;
   const globalSummary =
     region && (region.summary || region.name) ? String(region.summary || region.name).trim() : "";
@@ -1402,6 +1488,94 @@ function getFilteredWarningLocationLabel(warning, activeLocationFilter) {
   const names = uniqStableNames(resolved.names || []);
   if (!names.length) return "";
   return formatLocationLabelFromNames(names, resolved.extraAreas || 0);
+}
+
+/**
+ * Expand one CHMI warning into presentation cards:
+ * - at most one shared localities card (cities / obce / okresy / Praha)
+ * - one card per matching ordinary kraj with hit ORPs > 0
+ */
+function buildChmiLocalityPresentationCards(warning, activeLocationFilter) {
+  if (!warning) return [];
+  if (!isChmiCapWarning(warning)) return [warning];
+  if (warning._iuPresentation) return [warning];
+
+  const active = parseActiveLocationFilter(activeLocationFilter);
+  if (isWholeCrLocationFilter(active)) return [warning];
+
+  const resolved = resolveWarningLocalityMatch(warning, activeLocationFilter);
+  if (!resolved.match) return [];
+  if (resolved.wholeCr) return [warning];
+
+  const localSelections = resolved.localSelections || [];
+  const regionSelections = resolved.regionSelections || [];
+  const baseId = String(warning.id || "");
+  if (!baseId) return [warning];
+
+  // Query-only / unstructured match: keep single card (no kraj split metadata).
+  if (!localSelections.length && !regionSelections.length) return [warning];
+
+  const out = [];
+  if (localSelections.length || (resolved.names && resolved.names.length)) {
+    const locationLabel = formatLocationLabelFromNames(resolved.names || [], resolved.extraAreas || 0);
+    if (locationLabel) {
+      out.push(
+        Object.assign({}, warning, {
+          id: baseId + "::p:local",
+          _iuSourceWarningId: baseId,
+          _iuPresentation: {
+            kind: "localities",
+            locationLabel,
+            regionCoverageLine: "",
+          },
+        })
+      );
+    }
+  }
+
+  for (const regionSel of regionSelections) {
+    const cov = regionOrpCoverageForSelection(warning, regionSel);
+    if (!(cov.hit > 0) || !cov.phrase) continue;
+    const regionLabel = String(regionSel.displayName || regionSel.name || "").trim();
+    if (!regionLabel) continue;
+    const krajKey = foldLocName(regionSel.name).replace(/\s+/g, "-") || "kraj";
+    out.push(
+      Object.assign({}, warning, {
+        id: baseId + "::p:kraj:" + krajKey,
+        _iuSourceWarningId: baseId,
+        _iuPresentation: {
+          kind: "region",
+          regionName: regionLabel,
+          locationLabel: regionLabel,
+          regionCoverageLine: cov.phrase,
+          regionOrpHit: cov.hit,
+          regionOrpTotal: cov.total,
+        },
+      })
+    );
+  }
+
+  return out.length ? out : [];
+}
+
+function expandChmiLocalityPresentationCards(events, activeLocationFilter) {
+  const out = [];
+  for (const ev of events || []) {
+    if (!ev) continue;
+    if (!isChmiCapWarning(ev) || (ev && ev._iuPresentation)) {
+      out.push(ev);
+      continue;
+    }
+    const cards = buildChmiLocalityPresentationCards(ev, activeLocationFilter);
+    if (!cards.length) continue;
+    for (const card of cards) out.push(card);
+  }
+  return out;
+}
+
+function chmiPresentationSourceId(ev) {
+  if (!ev) return "";
+  return String(ev._iuSourceWarningId || ev.id || "");
 }
 
 
@@ -2174,6 +2348,15 @@ const IUInfoSystem = {
   localitySuggest,
   getFilteredWarningLocationLabel,
   resolveWarningLocalityMatch,
+  buildChmiLocalityPresentationCards,
+  expandChmiLocalityPresentationCards,
+  chmiPresentationSourceId,
+  regionOrpCoverageForSelection,
+  formatRegionOrpCoveragePhrase,
+  krajOrpTotalForName,
+  isPragueKrajSelection,
+  isOrdinaryKrajSelection,
+  isLocalityCardSelection,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   eventMatchesLocationFilter,
@@ -2183,6 +2366,7 @@ const IUInfoSystem = {
   relevantSelectedCities,
   uniqStableNames,
   MAX_CITY_LOCALITIES,
+  KRAJ_ORP_TOTALS_BY_FOLD,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,
@@ -2246,6 +2430,15 @@ export {
   localitySuggest,
   getFilteredWarningLocationLabel,
   resolveWarningLocalityMatch,
+  buildChmiLocalityPresentationCards,
+  expandChmiLocalityPresentationCards,
+  chmiPresentationSourceId,
+  regionOrpCoverageForSelection,
+  formatRegionOrpCoveragePhrase,
+  krajOrpTotalForName,
+  isPragueKrajSelection,
+  isOrdinaryKrajSelection,
+  isLocalityCardSelection,
   eventTitleBaseWithoutLocality,
   parseActiveLocationFilter,
   eventMatchesLocationFilter,
@@ -2255,6 +2448,7 @@ export {
   relevantSelectedCities,
   uniqStableNames,
   MAX_CITY_LOCALITIES,
+  KRAJ_ORP_TOTALS_BY_FOLD,
   getEffectiveTimelinePresentation,
   getChmiWarningLifecycleStatus,
   isCurrentlyActiveChmiWarning,

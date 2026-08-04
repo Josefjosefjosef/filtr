@@ -2,6 +2,7 @@
 /**
  * Vlastní tlačítka (MindMenu grid) — mobile/tablet:
  * - last tile above bottom nav (dynamic count)
+ * - live add without reload must grow scrollHeight / clear under-nav
  * - long labels wrap inside tile (incl. no-space strings)
  * - equal height within a grid row; independent rows may differ
  * - PC (≥1025) keeps fixed 64px tile contract
@@ -20,9 +21,10 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const CUSTOM = path.join(REPO, "assets", "iu-custom-buttons-overlay.css");
+const APP_JS = path.join(REPO, "assets", "app.js");
 const APP_CSS = path.join(REPO, "assets", "app.css");
 const INDEX = path.join(REPO, "projects", "index.html");
-const CACHE_BUST = "custom-buttons-dynamic-height-wrap-v1-20260803";
+const CACHE_BUST = "custom-buttons-dynamic-bottom-clearance-v1-20260804";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8902", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 
@@ -32,12 +34,14 @@ const NOSPACE = "H".repeat(220);
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
+  { name: "MOBILE_LG", width: 430, height: 932 },
   { name: "TABLET", width: 768, height: 1024 },
 ];
 
 function staticGate() {
   const custom = fs.readFileSync(CUSTOM, "utf8");
   const app = fs.readFileSync(APP_CSS, "utf8");
+  const appJs = fs.readFileSync(APP_JS, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
   const fails = [];
   const ok = (id, cond) => {
@@ -45,6 +49,7 @@ function staticGate() {
   };
 
   ok("cache_bust_index", index.includes("iu-custom-buttons-overlay.css?v=" + CACHE_BUST));
+  ok("cache_bust_appjs", index.includes(CACHE_BUST) && /app\.js\?v=/.test(index));
   ok("mq_mobile_tablet_only", /@media\s*\(max-width:\s*1024px\)/.test(custom));
   ok("min_height_96", /min-height:\s*96px\s*!important/.test(custom));
   ok("no_fixed_max_96", !/max-height:\s*96px\s*!important/.test(custom));
@@ -54,6 +59,9 @@ function staticGate() {
   ok("clamp_unset", /-webkit-line-clamp:\s*unset\s*!important/.test(custom));
   ok("align_stretch", /align-items:\s*stretch\s*!important/.test(custom));
   ok("safe_space_padding", /--bottom-nav-height/.test(custom) && /scroll-margin-bottom/.test(custom));
+  ok("flow_grows_with_content", /#iuMobileGatePanelTools #iuMobileMindMenuFlow\{[\s\S]*?height:\s*auto\s*!important/.test(custom));
+  ok("sync_flow_height_fn", /function iuQuickToolsSyncMobileMindMenuFlowHeight\s*\(/.test(appJs));
+  ok("apply_config_calls_sync", /iuQuickToolsApplyConfig[\s\S]*iuQuickToolsSyncMobileMindMenuFlowHeight/.test(appJs));
   ok("pc_64_unchanged", /body\s+\.accordionCol\s+\.mindMenu\s+\.iu-mmQuickGrid\s*>\s*\.iuTile\{[\s\S]*?height:\s*64px\s*!important/.test(app));
   return { pass: fails.length === 0, fails };
 }
@@ -130,13 +138,18 @@ function makeButtons(scenario) {
 }
 
 async function openToolsGate(page) {
-  /* Tools tab toggles closed when already active (history/hash restore after reload). */
+  /* Prefer gate API — tab click toggles closed when tools is already active. */
   await page.evaluate(() => {
-    const tab = document.getElementById("iuMobileGateTabTools");
+    const wrap = document.getElementById("iuMobileGateWrap");
     const panel = document.getElementById("iuMobileGatePanelTools");
-    if (!tab) return;
-    if (panel && !panel.hidden) return;
-    tab.click();
+    const grid = panel && panel.querySelector(".iu-mmQuickGrid");
+    if (panel && !panel.hidden && grid) return;
+    if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
+      wrap.__iuMobileGateSetTab("tools");
+      return;
+    }
+    const tab = document.getElementById("iuMobileGateTabTools");
+    if (tab) tab.click();
   });
   await page.waitForTimeout(500);
   await page.waitForSelector("#iuMobileGatePanelTools .iu-mmQuickGrid", { timeout: 15000 });
@@ -292,6 +305,110 @@ async function runViewport(browser, vp, scenario) {
   return { viewport: vp.name, scenario, ...m };
 }
 
+async function liveApplyCount(page, count) {
+  return page.evaluate(
+    ({ n, long, nospace, order }) => {
+      const buttons = [];
+      for (let i = 0; i < n; i++) {
+        let label = "Live " + (i + 1);
+        if (i === n - 1) label = nospace;
+        else if (i === n - 2) label = long;
+        else if (i % 4 === 0) label = long;
+        buttons.push({
+          id: "cb_live_" + i,
+          label,
+          url: "https://example.com/live/" + i,
+          color: "#2563EB",
+        });
+      }
+      const ids = buttons.map((b) => b.id);
+      const fullOrder = order.slice(0, -1).concat(ids).concat(["pridat_tlacitko"]);
+      const cfg = { version: 2, order: fullOrder, visible: fullOrder.slice(), customButtons: buttons };
+      localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
+      const panel = document.getElementById("iuMobileGatePanelTools");
+      const beforeScrollH = panel ? panel.scrollHeight : 0;
+      if (typeof window.iuQuickToolsApplyConfig === "function") window.iuQuickToolsApplyConfig(cfg);
+      const afterScrollH = panel ? panel.scrollHeight : 0;
+      const flow = document.getElementById("iuMobileMindMenuFlow");
+      const mind = flow && flow.querySelector(".mindMenu");
+      return {
+        beforeScrollH,
+        afterScrollH,
+        customCount: buttons.length,
+        flowMinH: flow ? flow.style.minHeight : null,
+        flowH: flow ? flow.offsetHeight : null,
+        mindH: mind ? mind.offsetHeight : null,
+      };
+    },
+    { n: count, long: LONG, nospace: NOSPACE, order: DEFAULT_ORDER }
+  );
+}
+
+async function runLiveAddViewport(browser, vp) {
+  const context = await bootstrapGuardContext(browser, {
+    viewport: { width: vp.width, height: vp.height },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
+  await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
+  await page.waitForTimeout(1500);
+  await openToolsGate(page);
+  const steps = {};
+  let prevScrollH = 0;
+  for (const n of [1, 5, 20]) {
+    const applied = await liveApplyCount(page, n);
+    await page.waitForTimeout(300);
+    const m = await measureGrid(page);
+    steps["n_" + n] = { applied, measure: m };
+    if (n > 1 && applied.afterScrollH <= prevScrollH) {
+      steps["n_" + n].scrollGrew = false;
+    } else {
+      steps["n_" + n].scrollGrew = applied.afterScrollH >= prevScrollH;
+    }
+    prevScrollH = applied.afterScrollH;
+  }
+  // mutate without reload: edit + remove + add
+  await page.evaluate((long) => {
+    const cfg = JSON.parse(localStorage.getItem("infouzel_quicktools"));
+    cfg.customButtons[0].label = long + " " + long;
+    cfg.customButtons = cfg.customButtons.slice(0, 18);
+    const keep = new Set(cfg.customButtons.map((b) => b.id).concat(["pridat_tlacitko"]));
+    cfg.order = cfg.order.filter((id) => keep.has(id) || !String(id).startsWith("cb_"));
+    cfg.customButtons.push({
+      id: "cb_live_extra",
+      label: "Extra po odstraneni",
+      url: "https://example.com/extra",
+      color: "#DC2626",
+    });
+    const pridat = cfg.order.indexOf("pridat_tlacitko");
+    if (pridat >= 0) cfg.order.splice(pridat, 0, "cb_live_extra");
+    else cfg.order.push("cb_live_extra");
+    cfg.visible = cfg.order.slice();
+    localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
+    window.iuQuickToolsApplyConfig(cfg);
+  }, LONG);
+  await page.waitForTimeout(300);
+  steps.afterMutate = await measureGrid(page);
+
+  // orientation swap within mobile/tablet band (≤900 keep gate chrome; ≤1023 keep MindMenu in tools)
+  const landW = Math.min(900, Math.max(600, vp.width));
+  const landH = Math.min(500, Math.max(360, Math.round(vp.height * 0.45)));
+  await page.setViewportSize({ width: landW, height: landH });
+  await page.waitForTimeout(400);
+  await openToolsGate(page);
+  steps.landscape = await measureGrid(page);
+  await page.setViewportSize({ width: vp.width, height: vp.height });
+  await page.waitForTimeout(400);
+  await openToolsGate(page);
+  steps.portraitBack = await measureGrid(page);
+
+  await page.evaluate(() => localStorage.removeItem("infouzel_quicktools"));
+  await context.close();
+  return { viewport: vp.name, scenario: "live_add", steps };
+}
+
 async function main() {
   const staticResult = staticGate();
   if (!staticResult.pass) {
@@ -333,10 +450,12 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const results = [];
+  const liveResults = [];
   for (const vp of VIEWPORTS) {
     results.push(await runViewport(browser, vp, "wrap"));
     results.push(await runViewport(browser, vp, "dense"));
     results.push(await runViewport(browser, vp, "small"));
+    liveResults.push(await runLiveAddViewport(browser, vp));
   }
   const desktop = await measureDesktopUnchanged(browser);
   await browser.close();
@@ -369,6 +488,26 @@ async function main() {
       if (r.docOverflowX) fails.push(r.viewport + "/small:h_overflow");
     }
   }
+  for (const lr of liveResults) {
+    for (const key of ["n_1", "n_5", "n_20", "afterMutate", "landscape", "portraitBack"]) {
+      const step = lr.steps[key];
+      const m = step && step.measure ? step.measure : step;
+      if (!m) {
+        fails.push(lr.viewport + "/live_add/" + key + ":missing");
+        continue;
+      }
+      if (!(m.gap != null && m.gap >= 0)) {
+        fails.push(lr.viewport + "/live_add/" + key + ":last_under_nav:" + m.gap);
+      }
+      if (m.docOverflowX) fails.push(lr.viewport + "/live_add/" + key + ":h_overflow");
+      if (key === "n_20" && !(m.customCount >= 18)) {
+        fails.push(lr.viewport + "/live_add/" + key + ":too_few:" + m.customCount);
+      }
+      if (key === "n_20" && step.applied && !(step.applied.mindH > 0 && step.applied.flowH >= step.applied.mindH - 2)) {
+        fails.push(lr.viewport + "/live_add/" + key + ":flow_not_synced:" + JSON.stringify(step.applied));
+      }
+    }
+  }
   if (!desktop.found) fails.push("desktop:tile_missing");
   else {
     // PC contract is enforced by static app.css 64px rules; DOM tile may be a non-quicktools control.
@@ -385,6 +524,7 @@ async function main() {
         static: staticResult,
         desktop,
         viewports: results,
+        liveAdd: liveResults,
       },
       null,
       2

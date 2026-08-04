@@ -2,6 +2,13 @@
    Desktop (min-width: 1025px) beze změny. */
 
 @media (max-width: 1024px) {
+  /* LDP consent modal: keep shared bottom nav above dimmed band (see iu-local-data-protection.js). */
+  html.iu-ldp-dialog-open #iuMobileBottomNav.iu-mobileBottomNav,
+  body.iu-ldp-dialog-open #iuMobileBottomNav.iu-mobileBottomNav {
+    z-index: 10200 !important;
+    pointer-events: auto !important;
+  }
+
   body.iu-mobileGateOverlayOpen #iuMobileBottomNav.iu-mobileBottomNav {
     z-index: 10200 !important;
     pointer-events: auto !important;

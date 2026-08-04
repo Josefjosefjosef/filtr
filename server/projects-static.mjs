@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Local static server for repo root (Playwright / guard proofs).
- * Serves /projects/ and assets with correct JSON MIME for SW compatibility.
+ * Serves app shell at `/` (and still at `/projects/` for older local guards).
+ * Data stays under /projects/data/*. Production uses CF 301 for /projects HTML.
  */
 import http from "http";
 import fs from "fs";
@@ -25,10 +26,13 @@ function serveStatic(urlPath) {
   try {
     u = decodeURIComponent(u);
   } catch (_) {}
+  // Hub is site root. Local checkout stores SPA under projects/index.html.
   if (u === "/" || u === "/projects" || u === "/projects/") u = "/projects/index.html";
   // Local checkout mirrors Pages publish: root PWA assets live under projects/.
   if (u === "/manifest.json") u = "/projects/manifest.json";
   if (u.startsWith("/icons/")) u = "/projects/icons/" + u.slice("/icons/".length);
+  if (u === "/statistiky" || u === "/statistiky/") u = "/projects/statistiky/index.html";
+  if (u === "/zdroje-a-licence" || u === "/zdroje-a-licence/") u = "/projects/zdroje-a-licence/index.html";
   const fp = path.resolve(path.join(ROOT, u.replace(/^\//, "").split("/").join(path.sep)));
   if (!fp.startsWith(path.resolve(ROOT)) || !fs.existsSync(fp) || fs.statSync(fp).isDirectory()) return null;
   return fs.readFileSync(fp);
@@ -45,10 +49,7 @@ http
       let body = data;
       // Local HTTP proofs: CSP upgrade-insecure-requests breaks WebKit (forces https://127.0.0.1).
       if (ct.indexOf("text/html") === 0) {
-        body = Buffer.from(
-          String(data).replace(/upgrade-insecure-requests;?/gi, ""),
-          "utf8"
-        );
+        body = Buffer.from(String(data).replace(/upgrade-insecure-requests;?/gi, ""), "utf8");
       }
       res.writeHead(200, { "Content-Type": ct });
       res.end(body);
@@ -58,5 +59,5 @@ http
     }
   })
   .listen(port, "127.0.0.1", () => {
-    console.error("static http://127.0.0.1:" + port + "/projects/");
+    console.error("static http://127.0.0.1:" + port + "/");
   });

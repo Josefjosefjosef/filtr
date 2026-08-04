@@ -89,6 +89,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: node scripts/run_silver_layout_guard_against_checkout.cjs
 
+      - name: Silver speech bubble stable privacy + 4px down-shift guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run silver-bubble-stable-privacy-guard-checkout
+
       - name: Weather outside-temp emphasis guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run weather-emphasis-guard
@@ -276,6 +280,18 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-combined-locality-filter-guard
 
+      - name: CHMI region cards split guard (ordinary kraje separate, Praha in shared card)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-region-cards-split-guard
+
+      - name: Root routing prod guard (hub stays on /, /projects/ is 301 only)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-root-routing-prod-guard
+
+      - name: Forbidden /projects/ hub reference guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-projects-forbidden-hub-guard
+
       - name: CHMI locality filter + Vše + future sentence guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-chmi-locality-filter-vse-guard
@@ -371,6 +387,16 @@ jobs:
       - name: MindMenu bottom nav restore guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mindmenu-bottom-nav-restore-guard
+
+      - name: Mobile/tablet bottom nav unify guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 15
+        run: npm run iu-mobile-tablet-bottom-nav-unify-guard
+
+      - name: Mobile bottom nav keyboard hide guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 12
+        run: npm run iu-mobile-bottom-nav-keyboard-hide-guard
 
       - name: MindMenu overlay bottom gap unified guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

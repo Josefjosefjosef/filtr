@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
+const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -207,7 +207,7 @@ function unitGate(IU) {
   ok("16_7_both_names", sameOrp.startsWith("Nupaky, Průhonice"), sameOrp);
   ok("16_7_extra_once", /a dalších 72 oblastí/.test(sameOrp), sameOrp);
 
-  // 16.8 kraj + obec overlapping territory
+  // 16.8 kraj + obec: shared label is localities-only; kraj becomes a separate presentation card
   const selStcNup = {
     localities: [
       { name: "Středočeský kraj", level: "kraj" },
@@ -215,9 +215,18 @@ function unitGate(IU) {
     ],
   };
   const labelStc = IU.getFilteredWarningLocationLabel(warning, selStcNup);
-  ok("16_8_both", /Středočeský kraj/.test(labelStc) && /Nupaky/.test(labelStc), labelStc);
-  // Středočeský in sample: Říčany(2122) + Český Brod(2115) = 2 ORPs; Nupaky overlaps 2122 → represented 2 → extra 71
-  ok("16_8_no_double_orp", /a dalších 71 oblastí/.test(labelStc), labelStc);
+  ok("16_8_local_only_nupaky", /^Nupaky\b/.test(labelStc) && !/Středočeský kraj/.test(labelStc), labelStc);
+  // Nupaky represents 1 ORP → extra 72
+  ok("16_8_local_extra_no_kraj_subtract", /a dalších 72 oblastí/.test(labelStc), labelStc);
+  const cardsStc = IU.buildChmiLocalityPresentationCards
+    ? IU.buildChmiLocalityPresentationCards(warning, selStcNup)
+    : [];
+  ok("16_8_split_cards", cardsStc.length === 2, String(cardsStc.length));
+  ok(
+    "16_8_region_card",
+    cardsStc.some((c) => c._iuPresentation && c._iuPresentation.kind === "region" && /Středočeský/.test(c._iuPresentation.locationLabel)),
+    "region"
+  );
 
   // 16.9 removal: old locality gone from title after prefs change
   const withHors = {

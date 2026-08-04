@@ -33,7 +33,7 @@ async function domCheck(browser, baseUrl, vp) {
   const page = await ctx.newPage();
   try {
     await shared.preparePage(page);
-    await page.goto(baseUrl + "/projects/", { waitUntil: "domcontentloaded", timeout: 90000 });
+    await page.goto(baseUrl + "/", { waitUntil: "domcontentloaded", timeout: 90000 });
     await page.waitForTimeout(2600);
     const m = await page.evaluate(({ line1, line2 }) => {
       const el1 = document.querySelector("[data-iu-silver-privacy-line]");

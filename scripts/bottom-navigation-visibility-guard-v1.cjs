@@ -15,9 +15,9 @@ const REPORT = "scripts/bottom-navigation-visibility-guard-v1-report.json";
 const TOLERANCE_PX = 2;
 
 const SCREENS = [
-  { id: "home", path: shared.withLegacyMediaParams("/projects/") },
-  { id: "media_zpravy", path: shared.withLegacyMediaParams("/projects/?section=media&topic=zpravy") },
-  { id: "media_sport", path: shared.withLegacyMediaParams("/projects/?section=media&topic=sport") },
+  { id: "home", path: shared.withLegacyMediaParams("/") },
+  { id: "media_zpravy", path: shared.withLegacyMediaParams("/?section=media&topic=zpravy") },
+  { id: "media_sport", path: shared.withLegacyMediaParams("/?section=media&topic=sport") },
 ];
 
 const VIEWPORTS = [

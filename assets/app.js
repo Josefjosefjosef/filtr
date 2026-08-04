@@ -16640,7 +16640,9 @@ function buildVideoAsArticleCard(it) {
           mindMenuFlow.style.maxWidth = "100%";
           mindMenuFlow.style.minWidth = "0";
           var mindMenu = document.querySelector(".mindMenu");
-          if (mindMenu && !mindMenuFlow.style.minHeight) {
+          if (mindMenu) {
+            /* Keep in sync with live custom-button grid growth (do not freeze first-open height). */
+            mindMenuFlow.style.minHeight = "";
             var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
             if (reserveH > 0) mindMenuFlow.style.minHeight = reserveH + "px";
           }
@@ -16932,8 +16934,9 @@ function buildVideoAsArticleCard(it) {
   } catch (_) {}
 
   /**
-   * P0: tvrdý návrat na čistý /projects/ hub — stejný stav jako po browser Back z ?section=…
+   * P0: tvrdý návrat na čistý public hub (/) — stejný stav jako po browser Back z ?section=…
    * (replaceState + applySectionFromURL, bez čekání na popstate). Voláno z Domů a z gate Zpět (nav větev).
+   * Legacy /projects/ hub path remains accepted by iuIsProjectsRoute (prod redirects to /).
    */
   function iuProjectsHubNavigateHardResetFromHomeOrBack() {
     try {
@@ -17710,6 +17713,32 @@ function buildVideoAsArticleCard(it) {
     return false;
   }
 
+  /** Dismiss LDP dialog via its cancel/close control (keeps promise teardown intact). */
+  function dismissOpenLdpDialogForBottomNav() {
+    try {
+      var active = document.querySelector('.iu-ldp-backdrop[data-iu-ldp-active="1"]');
+      if (!active) return false;
+      var cancel = active.querySelector(".iu-ldp-btn--ghost");
+      if (cancel && typeof cancel.click === "function") {
+        cancel.click();
+        return true;
+      }
+      var closeBtn = active.querySelector(".iu-ldp-btn--secondary");
+      if (closeBtn && typeof closeBtn.click === "function") {
+        closeBtn.click();
+        return true;
+      }
+      if (
+        window.iuLocalDataProtection &&
+        typeof window.iuLocalDataProtection.purgeLdpBackdrops === "function"
+      ) {
+        window.iuLocalDataProtection.purgeLdpBackdrops();
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   /**
    * P0 Mobile/tablet: spodní „Zpět“ — nejdřív zavře otevřený overlay (stejně jako horní křížek / zavírací tlačítka),
    * pak teprve běžná navigace (gate / mainBack / history).
@@ -17744,6 +17773,9 @@ function buildVideoAsArticleCard(it) {
       } catch (_) {}
       return false;
     }
+    try {
+      if (dismissOpenLdpDialogForBottomNav()) return true;
+    } catch (_) {}
     try {
       var vm = document.getElementById("iuVideoModal");
       if (iuElIsVisiblyOpen(vm) && tryClick(".iuVideoModalClose", vm)) return true;
@@ -17854,6 +17886,9 @@ function buildVideoAsArticleCard(it) {
               } catch (_) {}
             }
             if (k === "home") {
+              try {
+                dismissOpenLdpDialogForBottomNav();
+              } catch (_) {}
               try {
                 iuMindMenuCloseToolOverlaysIfOpen();
               } catch (_) {}
@@ -18632,6 +18667,115 @@ function buildVideoAsArticleCard(it) {
   /** Alias: dřívější Moje služby pin — nahrazeno systémovým hide. */
   function iuMojeSluzbyFormBottomNavKeyboardPinInit() {
     iuMobileBottomNavKeyboardHideInit();
+  }
+
+  /**
+   * P0 Mobile/tablet: single source of truth for bottom-nav reserved height.
+   * Measure live #iuMobileBottomNav box and publish CSS vars used by overlays/content clearance.
+   * Clears inline vars while keyboard-open so stylesheet keyboard collapse (0px) wins.
+   */
+  function iuMobileBottomNavMeasureInit() {
+    try {
+      if (window.__iuMobileBottomNavMeasureInit) return;
+      window.__iuMobileBottomNavMeasureInit = 1;
+    } catch (_) {}
+    var mq = null;
+    try {
+      mq = window.matchMedia && window.matchMedia("(max-width: 1024px)");
+    } catch (_) {}
+    var scheduled = 0;
+
+    function clearMeasuredVars() {
+      try {
+        var root = document.documentElement;
+        if (!root || !root.style) return;
+        root.style.removeProperty("--iu-mobile-bottom-nav-measured-h");
+        root.style.removeProperty("--iu-mobile-bottom-nav-total-h");
+        root.style.removeProperty("--bottom-nav-height");
+        root.style.removeProperty("--iu-mobile-bottom-nav-safe-space");
+        root.style.removeProperty("--iu-tool-overlay-panel-bottom");
+      } catch (_) {}
+    }
+
+    function applyMeasure() {
+      try {
+        var root = document.documentElement;
+        if (!root) return;
+        if (mq && !mq.matches) {
+          clearMeasuredVars();
+          return;
+        }
+        if (root.classList.contains("iu-keyboard-open")) {
+          clearMeasuredVars();
+          return;
+        }
+        var nav = document.getElementById("iuMobileBottomNav");
+        if (!nav) return;
+        var cs = getComputedStyle(nav);
+        if (cs.display === "none" || cs.visibility === "hidden") return;
+        var r = nav.getBoundingClientRect();
+        var h = Math.round(r.height || 0);
+        if (!(h > 24)) return;
+        /* Match historic content buffer (+40px) above live nav height. */
+        var safe = h + 40;
+        root.style.setProperty("--iu-mobile-bottom-nav-measured-h", h + "px");
+        root.style.setProperty("--iu-mobile-bottom-nav-total-h", h + "px");
+        root.style.setProperty("--bottom-nav-height", h + "px");
+        root.style.setProperty("--iu-tool-overlay-panel-bottom", h + "px");
+        root.style.setProperty("--iu-mobile-bottom-nav-safe-space", safe + "px");
+      } catch (_) {}
+    }
+
+    function scheduleMeasure() {
+      if (scheduled) return;
+      scheduled = 1;
+      try {
+        window.requestAnimationFrame(function () {
+          scheduled = 0;
+          applyMeasure();
+        });
+      } catch (_) {
+        scheduled = 0;
+        applyMeasure();
+      }
+    }
+
+    try {
+      var navEl = document.getElementById("iuMobileBottomNav");
+      if (navEl && typeof ResizeObserver !== "undefined") {
+        var ro = new ResizeObserver(function () {
+          scheduleMeasure();
+        });
+        ro.observe(navEl);
+      }
+    } catch (_) {}
+    try {
+      if (mq && mq.addEventListener) mq.addEventListener("change", scheduleMeasure);
+      else if (mq && mq.addListener) mq.addListener(scheduleMeasure);
+    } catch (_) {}
+    try {
+      window.addEventListener("orientationchange", scheduleMeasure, { passive: true });
+      window.addEventListener("resize", scheduleMeasure, { passive: true });
+    } catch (_) {}
+    try {
+      var lastKb = false;
+      var mo = new MutationObserver(function () {
+        var kb = false;
+        try {
+          kb = document.documentElement.classList.contains("iu-keyboard-open");
+        } catch (_) {}
+        if (kb !== lastKb) {
+          lastKb = kb;
+          scheduleMeasure();
+        }
+      });
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    } catch (_) {}
+    scheduleMeasure();
+    try {
+      window.setTimeout(scheduleMeasure, 400);
+      window.setTimeout(scheduleMeasure, 1200);
+    } catch (_) {}
   }
 
   /** P0 Mobile layout: reorder — on mobile use gate (Silver first + 2-tab); on desktop restore. */
@@ -26623,6 +26767,7 @@ function buildVideoAsArticleCard(it) {
         iuQuickToolsGetAllGrids().forEach(function (grid) {
           iuQuickToolsLockGridLayout(grid);
         });
+        try { iuQuickToolsSyncMobileMindMenuFlowHeight(); } catch (_) {}
       };
       window.requestAnimationFrame(function () {
         window.requestAnimationFrame(lockAll);
@@ -26657,6 +26802,22 @@ function buildVideoAsArticleCard(it) {
     iuQuickToolsLockGridLayout(grid);
   }
 
+  function iuQuickToolsSyncMobileMindMenuFlowHeight() {
+    try {
+      if (!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches)) return;
+      var flow = document.getElementById("iuMobileMindMenuFlow");
+      if (!flow) return;
+      var mind = flow.querySelector(".mindMenu");
+      if (!mind) return;
+      /* Stale inline minHeight (set on first MindMenu open) freezes the flex child
+         below real content height after live custom-button adds. Scroll host then
+         omits padding-bottom from scrollHeight and last tiles sit under bottom nav. */
+      flow.style.minHeight = "";
+      var h = Math.ceil(mind.getBoundingClientRect().height || mind.offsetHeight || 0);
+      if (h > 0) flow.style.minHeight = h + "px";
+    } catch (_) {}
+  }
+
   function iuQuickToolsApplyConfig(cfgOverride) {
     const grids = iuQuickToolsGetAllGrids();
     if (!grids.length) return;
@@ -26672,6 +26833,13 @@ function buildVideoAsArticleCard(it) {
     });
     iuQuickToolsScheduleLockAll();
     iuQuickToolsEnsureGridResizeObserver();
+    try {
+      iuQuickToolsSyncMobileMindMenuFlowHeight();
+      window.requestAnimationFrame(function () {
+        iuQuickToolsSyncMobileMindMenuFlowHeight();
+        window.requestAnimationFrame(iuQuickToolsSyncMobileMindMenuFlowHeight);
+      });
+    } catch (_) {}
   }
 
   function iuQuickToolsSettingsOpen() {
@@ -27612,6 +27780,9 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     try {
       iuMobileBottomNavKeyboardHideInit();
+    } catch (_) {}
+    try {
+      iuMobileBottomNavMeasureInit();
     } catch (_) {}
     try {
       iuWebNavDetailBackBarHostInstall();
