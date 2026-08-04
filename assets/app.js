@@ -16640,7 +16640,9 @@ function buildVideoAsArticleCard(it) {
           mindMenuFlow.style.maxWidth = "100%";
           mindMenuFlow.style.minWidth = "0";
           var mindMenu = document.querySelector(".mindMenu");
-          if (mindMenu && !mindMenuFlow.style.minHeight) {
+          if (mindMenu) {
+            /* Keep in sync with live custom-button grid growth (do not freeze first-open height). */
+            mindMenuFlow.style.minHeight = "";
             var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
             if (reserveH > 0) mindMenuFlow.style.minHeight = reserveH + "px";
           }
@@ -26623,6 +26625,7 @@ function buildVideoAsArticleCard(it) {
         iuQuickToolsGetAllGrids().forEach(function (grid) {
           iuQuickToolsLockGridLayout(grid);
         });
+        try { iuQuickToolsSyncMobileMindMenuFlowHeight(); } catch (_) {}
       };
       window.requestAnimationFrame(function () {
         window.requestAnimationFrame(lockAll);
@@ -26657,6 +26660,22 @@ function buildVideoAsArticleCard(it) {
     iuQuickToolsLockGridLayout(grid);
   }
 
+  function iuQuickToolsSyncMobileMindMenuFlowHeight() {
+    try {
+      if (!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches)) return;
+      var flow = document.getElementById("iuMobileMindMenuFlow");
+      if (!flow) return;
+      var mind = flow.querySelector(".mindMenu");
+      if (!mind) return;
+      /* Stale inline minHeight (set on first MindMenu open) freezes the flex child
+         below real content height after live custom-button adds. Scroll host then
+         omits padding-bottom from scrollHeight and last tiles sit under bottom nav. */
+      flow.style.minHeight = "";
+      var h = Math.ceil(mind.getBoundingClientRect().height || mind.offsetHeight || 0);
+      if (h > 0) flow.style.minHeight = h + "px";
+    } catch (_) {}
+  }
+
   function iuQuickToolsApplyConfig(cfgOverride) {
     const grids = iuQuickToolsGetAllGrids();
     if (!grids.length) return;
@@ -26672,6 +26691,13 @@ function buildVideoAsArticleCard(it) {
     });
     iuQuickToolsScheduleLockAll();
     iuQuickToolsEnsureGridResizeObserver();
+    try {
+      iuQuickToolsSyncMobileMindMenuFlowHeight();
+      window.requestAnimationFrame(function () {
+        iuQuickToolsSyncMobileMindMenuFlowHeight();
+        window.requestAnimationFrame(iuQuickToolsSyncMobileMindMenuFlowHeight);
+      });
+    } catch (_) {}
   }
 
   function iuQuickToolsSettingsOpen() {

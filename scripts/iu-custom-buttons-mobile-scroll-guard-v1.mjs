@@ -45,7 +45,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /custom-buttons-dynamic-height-wrap-v1-20260803/.test(index),
+      pass: /custom-buttons-dynamic-bottom-clearance-v1-20260804/.test(index),
     },
     {
       id: "tile_min_height_not_fixed_max",
