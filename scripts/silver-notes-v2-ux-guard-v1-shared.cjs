@@ -10,7 +10,7 @@ const {
   isIgnorableGuardConsoleError,
 } = require("./proofs/open_meteo_guard_stub.cjs");
 
-const DEFAULT_URL = "https://infouzel.cz/projects/?section=media";
+const DEFAULT_URL = "https://infouzel.cz/?section=media";
 const STORE_KEY = "iu.notes.store.v1";
 const MIN_DISTANCE_PX = 16;
 const MIN_HEADER_GAP_PX = 14;

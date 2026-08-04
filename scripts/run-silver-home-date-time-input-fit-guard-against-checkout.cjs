@@ -10,7 +10,8 @@ const { spawn, spawnSync } = require("child_process");
 const http = require("http");
 
 const PORT = Number(process.env.SILVER_DATE_TIME_FIT_GUARD_LOCAL_PORT || 8093);
-const GUARD_URL = `http://127.0.0.1:${PORT}/projects/`;
+// Local static maps `/` → projects/index.html; never use /projects/ as the hub URL.
+const GUARD_URL = `http://127.0.0.1:${PORT}/`;
 const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static.mjs");
 
 function waitForServer(maxMs) {

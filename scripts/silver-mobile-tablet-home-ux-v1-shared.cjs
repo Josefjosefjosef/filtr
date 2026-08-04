@@ -10,7 +10,7 @@ const {
   isIgnorableGuardConsoleError,
 } = require("./proofs/open_meteo_guard_stub.cjs");
 
-const DEFAULT_URL = "https://infouzel.cz/projects/";
+const DEFAULT_URL = "https://infouzel.cz/";
 const CLS_CAP = 0.02;
 
 const PREFIX_KEYS = ["calendar", "reminder", "notes"];
@@ -22,7 +22,12 @@ const PREFIX_EXPECTED = {
 
 function envUrl() {
   const u = String(process.env.SILVER_HOME_UX_GUARD_URL || process.env.SILVER_LAYOUT_GUARD_URL || DEFAULT_URL).trim();
-  return u || DEFAULT_URL;
+  const resolved = u || DEFAULT_URL;
+  // P0: production hub proofs must never target /projects/ (legacy path is redirect-only).
+  if (/infouzel\.cz\/projects\/?/i.test(resolved) && !/\/projects\/data\//i.test(resolved)) {
+    throw new Error("FORBIDDEN_PROD_HUB_URL:" + resolved + " use https://infouzel.cz/");
+  }
+  return resolved;
 }
 
 async function installClsObserver(context) {

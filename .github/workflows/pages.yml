@@ -105,20 +105,35 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Post-deploy proof (best-effort)
-        continue-on-error: true
+      - name: Post-deploy proof (root hub + legacy /projects/ redirect)
+        # Fail the job if root leaves / or /projects/ still serves the SPA hub.
         shell: bash
         run: |
           set -euo pipefail
-          BASE_URL="${{ steps.deployment.outputs.page_url }}"
+          BASE_URL="https://infouzel.cz"
           echo "Base URL: ${BASE_URL}"
-          curl -sL "${BASE_URL}" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
-          # Root PWA assets (manifest/icons) must exist without /projects/.
-          curl -sI "${BASE_URL}manifest.json" | head -n 5 || true
-          curl -sI "${BASE_URL}icons/favicon-32.png" | head -n 5 || true
-          # Legacy hub: client shim until CF Worker 301 is live (GH Pages has no native 301).
-          curl -sL "${BASE_URL}projects/" | grep -oE "/assets/app\\.[a-f0-9]+\\.(css|js)" | head -n 5 || true
-          curl -sL "${BASE_URL}" | grep -E 'href="/projects/(manifest|icons)' && echo "FAIL public projects PWA href" && exit 1 || echo "OK_NO_PROJECTS_PWA_HREF"
+          code=$(curl -sS -o /tmp/iu_root_body.html -w "%{http_code}" --max-redirs 0 "${BASE_URL}/")
+          echo "root_status=$code"
+          test "$code" = "200"
+          curl -sSI --max-redirs 0 "${BASE_URL}/" | tee /tmp/iu_root_headers.txt | head -n 20
+          if grep -Eiq 'location:.*\/projects\/' /tmp/iu_root_headers.txt; then
+            echo "FAIL root Location points to /projects/"
+            exit 1
+          fi
+          if grep -E 'location\.(replace|assign)\([^)]*/projects/' /tmp/iu_root_body.html; then
+            echo "FAIL root HTML client-redirects to /projects/"
+            exit 1
+          fi
+          grep -E 'href="/projects/(manifest|icons)' /tmp/iu_root_body.html && echo "FAIL public projects PWA href" && exit 1 || echo "OK_NO_PROJECTS_PWA_HREF"
+          pcode=$(curl -sS -o /dev/null -w "%{http_code}" --max-redirs 0 "${BASE_URL}/projects/")
+          ploc=$(curl -sSI --max-redirs 0 "${BASE_URL}/projects/" | tr -d '\r' | awk 'tolower($1)=="location:"{print $2; exit}')
+          echo "projects_status=$pcode location=$ploc"
+          test "$pcode" = "301" -o "$pcode" = "308"
+          echo "$ploc" | grep -Eq '^https://infouzel\.cz/?(\?|$)'
+          curl -sS "${BASE_URL}/manifest.json" | tee /tmp/iu_manifest.json >/dev/null
+          grep -E '"start_url"[[:space:]]*:[[:space:]]*"/"' /tmp/iu_manifest.json
+          grep -E '"scope"[[:space:]]*:[[:space:]]*"/"' /tmp/iu_manifest.json
+          echo "POST_DEPLOY_ROOT_GATE=PASS"
 
       - name: Pages deploy telemetry (summary)
         if: always()
