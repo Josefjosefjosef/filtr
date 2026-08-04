@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
-  "generatedAt": "2026-08-04T16:21:31.621Z",
+  "generatedAt": "2026-08-04T16:38:08.740Z",
   "connector": "iu-info-events-refresh",
   "architecture": "v2-pipeline",
-  "itemCount": 38,
+  "itemCount": 36,
   "maxAgeHours": 96,
   "activeWindowHours": 96,
   "onlyGroup": null,
@@ -13833,333 +13833,6 @@
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-e5ef4de53c8a0069",
-      "title": "Velmi silné bouřky — Brandýs nad Labem-Stará Boleslav a dalších 10 oblastí",
-      "description": "V severozápadní polovině Čech se místy tvoří bouřky i velmi silné, postupující dále k severu, doprovázené nárazy větru kolem 20 m/s (80 km/h) a kroupami o průměru kolem 3 cm. Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
-      "instruction": "Dbát na bezpečnost zejména s ohledem na nebezpečí zásahu bleskem a úrazu kroupami a padajícími a poletujícími předměty, zejména větvemi. Pokud možno vyhledat úkryt v budově opatřené hromosvodem. V přírodě se schovat v hustém lese nebo nižším porostu, nezůstávat ve vodě, na kopcích, v blízkosti železných konstrukcí, osamocených stromů ani pod skalními převisy. Zajistit okna, dveře, skleníky, volně položené předměty apod. Být připraven na možné výpadky elektřiny. Při řízení vozidla v bouřce snížit rychlost jízdy a jet velmi opatrně, sledovat dopravní zpravodajství. Nevstupovat a nevjíždět do proudící vody a zatopených míst. Sledovat vývoj a postup bouřek na výstupu z meteorologických radarů v mobilní aplikaci ČHMÚ nebo na webových stránkách www.chmi.cz. Riziko vzniku lokálního zatopení nebo přívalové povodně v členitějším reliéfu sledovat v aplikaci Indikátor přívalových povodní (FFI): https://produkty.chmi.cz/ffi.",
-      "sourceId": "chmi",
-      "sourceLabel": "ČHMÚ",
-      "sourceGroup": "pocasi",
-      "url": "https://vystrahy-cr.chmi.cz/",
-      "originalUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-      "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041555.xml?hid=e5ef4de53c8a0069",
-      "urlKind": "cap_public_web",
-      "listingUrl": "https://vystrahy-cr.chmi.cz/",
-      "sectionId": "pocasi",
-      "subsectionId": "vystrahy",
-      "eventType": "mimoradne",
-      "status": "aktivni",
-      "lifecycle": "prave-probihajici",
-      "publishable": true,
-      "untilRevoked": false,
-      "importance": 4,
-      "impact": 4,
-      "region": {
-        "level": "multi",
-        "name": "Brandýs nad Labem-Stará Boleslav",
-        "summary": "Brandýs nad Labem-Stará Boleslav a dalších 10 oblastí",
-        "extraAreaCount": 10,
-        "orpId": "orp:2103",
-        "orpCode": "2103",
-        "orpName": "Brandýs nad Labem-Stará Boleslav",
-        "okresId": "okres:CZ0209",
-        "okresName": "Praha-východ",
-        "krajId": "kraj:CZ020",
-        "krajName": "Středočeský kraj",
-        "orpIds": [
-          "orp:2103",
-          "orp:2114",
-          "orp:2115",
-          "orp:2116",
-          "orp:2117",
-          "orp:2121",
-          "orp:2124",
-          "orp:4205",
-          "orp:4207",
-          "orp:4208",
-          "orp:4211"
-        ],
-        "orpCodes": [
-          "2103",
-          "2114",
-          "2115",
-          "2116",
-          "2117",
-          "2121",
-          "2124",
-          "4205",
-          "4207",
-          "4208",
-          "4211"
-        ],
-        "orpNames": [
-          "Brandýs nad Labem-Stará Boleslav",
-          "Mělník",
-          "Mladá Boleslav",
-          "Mnichovo Hradiště",
-          "Neratovice",
-          "Rakovník",
-          "Slaný",
-          "Litoměřice",
-          "Louny",
-          "Lovosice",
-          "Roudnice nad Labem"
-        ],
-        "okresIds": [
-          "okres:CZ0209",
-          "okres:CZ0206",
-          "okres:CZ0207",
-          "okres:CZ020C",
-          "okres:CZ0203",
-          "okres:CZ0423",
-          "okres:CZ0424"
-        ],
-        "okresNames": [
-          "Praha-východ",
-          "Mělník",
-          "Mladá Boleslav",
-          "Rakovník",
-          "Kladno",
-          "Litoměřice",
-          "Louny"
-        ],
-        "krajIds": [
-          "kraj:CZ020",
-          "kraj:CZ042"
-        ],
-        "krajNames": [
-          "Středočeský kraj",
-          "Ústecký kraj"
-        ],
-        "areaDescs": [
-          "Středočeský kraj (Brandýs nad Labem-Stará Boleslav, Mělník, Mladá Boleslav, Mnichovo Hradiště, Neratovice, Rakovník, Slaný)",
-          "Ústecký kraj (Litoměřice, Louny, Lovosice, Roudnice nad Labem)"
-        ],
-        "assignmentSource": "cisorp",
-        "precise": true
-      },
-      "lane": "pocasi",
-      "connectorType": "opendata",
-      "orgType": "meteo",
-      "publishedAtSource": "2026-08-04T17:55:56+02:00",
-      "publishedAt": "2026-08-04T17:55:56+02:00",
-      "updatedAt": "2026-08-04T16:21:31.621Z",
-      "validFrom": "2026-08-04T17:54:12+02:00",
-      "validTo": "2026-08-04T18:30:00+02:00",
-      "resolvedAt": null,
-      "groupKey": "2026-08-04:velmi-silne-bourky-hpps-ix-2-sivs-ix",
-      "tags": [
-        "cap",
-        "vystraha",
-        "cap-v2"
-      ],
-      "links": [],
-      "legal": {
-        "providerId": "chmi",
-        "datasetId": "chmi-opendata-national-hydromet-db",
-        "distributionId": "chmi-opendata-portal-primary",
-        "legalRecordVersion": "2026-07-20.phase2.1",
-        "approvalStatus": "APPROVED_CC_BY",
-        "attributionTemplateId": "attr-open-data-by-v1",
-        "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-04T16:21:31.621Z",
-        "sourceUrl": "https://vystrahy-cr.chmi.cz/",
-        "modifications": [
-          "normalized-metadata-link-only"
-        ],
-        "fieldAllowlist": [
-          "id",
-          "sourceId",
-          "title",
-          "url",
-          "originalUrl",
-          "publishedAt",
-          "sourceLabel",
-          "region",
-          "importance",
-          "eventType",
-          "sectionId"
-        ]
-      },
-      "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260804155556.XOCZ50_OKPR_000298|2026-08-04T17:55:56+02:00",
-        "alert_thread_id": "thread:018232ddc7197453",
-        "hazard_instance_id": "haz:e5ef4de53c8a0069",
-        "msgType": "Update",
-        "change_type": "new",
-        "event": "Velmi silné bouřky",
-        "severity": "Severe",
-        "urgency": "Immediate",
-        "certainty": "Observed",
-        "badgeActive": true,
-        "temporalState": "active",
-        "temporalReason": "in_force",
-        "publishable": true,
-        "untilRevoked": false,
-        "openEnded": false,
-        "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041555.xml?hid=e5ef4de53c8a0069",
-        "publicUrl": "https://vystrahy-cr.chmi.cz/",
-        "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-        "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-        "listingUrl": "https://vystrahy-cr.chmi.cz/",
-        "urlKind": "cap_public_web",
-        "expiresSource": "cap",
-        "geo": {
-          "links": [
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2103",
-              "orpCode": "2103",
-              "orpName": "Brandýs nad Labem-Stará Boleslav",
-              "okresId": "okres:CZ0209",
-              "okresName": "Praha-východ",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2114",
-              "orpCode": "2114",
-              "orpName": "Mělník",
-              "okresId": "okres:CZ0206",
-              "okresName": "Mělník",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2115",
-              "orpCode": "2115",
-              "orpName": "Mladá Boleslav",
-              "okresId": "okres:CZ0207",
-              "okresName": "Mladá Boleslav",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2116",
-              "orpCode": "2116",
-              "orpName": "Mnichovo Hradiště",
-              "okresId": "okres:CZ0207",
-              "okresName": "Mladá Boleslav",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2117",
-              "orpCode": "2117",
-              "orpName": "Neratovice",
-              "okresId": "okres:CZ0206",
-              "okresName": "Mělník",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2121",
-              "orpCode": "2121",
-              "orpName": "Rakovník",
-              "okresId": "okres:CZ020C",
-              "okresName": "Rakovník",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:2124",
-              "orpCode": "2124",
-              "orpName": "Slaný",
-              "okresId": "okres:CZ0203",
-              "okresName": "Kladno",
-              "krajId": "kraj:CZ020",
-              "krajName": "Středočeský kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:4205",
-              "orpCode": "4205",
-              "orpName": "Litoměřice",
-              "okresId": "okres:CZ0423",
-              "okresName": "Litoměřice",
-              "krajId": "kraj:CZ042",
-              "krajName": "Ústecký kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:4207",
-              "orpCode": "4207",
-              "orpName": "Louny",
-              "okresId": "okres:CZ0424",
-              "okresName": "Louny",
-              "krajId": "kraj:CZ042",
-              "krajName": "Ústecký kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:4208",
-              "orpCode": "4208",
-              "orpName": "Lovosice",
-              "okresId": "okres:CZ0423",
-              "okresName": "Litoměřice",
-              "krajId": "kraj:CZ042",
-              "krajName": "Ústecký kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            },
-            {
-              "hazard_instance_id": "haz:e5ef4de53c8a0069",
-              "orpId": "orp:4211",
-              "orpCode": "4211",
-              "orpName": "Roudnice nad Labem",
-              "okresId": "okres:CZ0423",
-              "okresName": "Litoměřice",
-              "krajId": "kraj:CZ042",
-              "krajName": "Ústecký kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            }
-          ],
-          "quarantine": [],
-          "totalAreas": 2,
-          "mappedAreas": 11,
-          "unmappedAreas": 0,
-          "mappingCoveragePercent": 100
-        },
-        "searchText": "vystraha chmu velmi silne bourky brandys nad labem stara boleslav a dalsich 10 oblasti velmi silne bourky velmi silne bourky v severozapadni polovine cech se misty tvori bourky i velmi silne postupujici dale k severu doprovazene narazy vetru kolem 20 m s 80 km h a kroupami o prumeru kolem 3 cm lokalni skody na majetku a komplikace zejmena v energetice doprave a zemedelstvi vyraznejsi skody vetrem lamani a vyvraceni stromu poskozeni budov majetku a energeticke infrastruktury vypadky v dodavkach elektriny komplikace v doprave v dusledku poryvu vetru a padu vetvi a stromu na dopravni cesty cetne skody na vegetaci budovach a majetku pripadne i riziko mensiho urazu vetsimi kroupami riziko urazu nebo pozaru po zasahu bleskem dbat na bezpecnost zejmena s ohledem na nebezpeci zasahu bleskem a urazu kroupami a padajicimi a poletujicimi predmety zejmena vetvemi pokud mozno vyhledat ukryt v budove opatrene hromosvodem v prirode se schovat v hustem lese nebo nizsim porostu nezustavat ve vode na kopcich v blizkosti zeleznych konstrukci osamocenych stromu ani pod skalnimi previsy zajistit okna dvere skleniky volne polozene predmety apod byt pripraven na mozne vypadky elektriny pri rizeni vozidla v bource snizit rychlost jizdy a jet velmi opatrne sledovat dopravni zpravodajstvi nevstupovat a nevjizdet do proudici vody a zatopenych mist sledovat vyvoj a postup bourek na vystupu z meteorologickych radaru v mobilni aplikaci chmu nebo na webovych strankach www chmi cz riziko vzniku lokalniho zatopeni nebo privalove povodne v clenitejsim reliefu sledovat v aplikaci indikator privalovych povodni ffi https produkty chmi cz ffi brandys nad labem stara boleslav a dalsich 10 oblasti brandys nad labem stara boleslav melnik mlada boleslav mnichovo hradiste neratovice rakovnik slany litomerice louny lovosice roudnice nad labem praha vychod melnik mlada boleslav rakovnik kladno litomerice louny stredocesky kraj ustecky kraj stredocesky kraj brandys nad labem stara boleslav melnik mlada boleslav mnichovo hradiste neratovice rakovnik slany ustecky kraj litomerice louny lovosice roudnice nad labem chmu cesky hydrometeorologicky ustav severe immediate observed",
-        "significantUnreadReset": true
-      },
-      "firstSeenByInfoUzel": "2026-08-04T16:21:31.621Z",
-      "lastProcessedAt": "2026-08-04T16:21:31.621Z",
-      "sortAt": "2026-08-04T17:55:56+02:00",
-      "timeSource": "cap_sent",
-      "timeConfidence": "high",
-      "isNewCapture": true
-    },
-    {
       "id": "ie-chmi-v2-a63dcb647b1daa02",
       "title": "Velmi silné bouřky — Středočeský kraj (4 ORP)",
       "description": "Riziko velmi silných bouřek doprovázených zejména nárazy větru 70 - 100 km/h, kroupami kolem 2 cm a přívalovými srážkami. Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Možnost rychlého odtoku z povrchu a lokálního zatopení. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
@@ -14178,8 +13851,8 @@
       "sectionId": "pocasi",
       "subsectionId": "vystrahy",
       "eventType": "mimoradne",
-      "status": "naplanovano",
-      "lifecycle": "naplanovano",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
       "publishable": true,
       "untilRevoked": false,
       "importance": 4,
@@ -14289,9 +13962,9 @@
         "severity": "Severe",
         "urgency": "Expected",
         "certainty": "Likely",
-        "badgeActive": false,
-        "temporalState": "scheduled",
-        "temporalReason": "before_validFrom",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force",
         "publishable": true,
         "untilRevoked": false,
         "openEnded": false,
@@ -14799,8 +14472,8 @@
       "sectionId": "pocasi",
       "subsectionId": "vystrahy",
       "eventType": "mimoradne",
-      "status": "naplanovano",
-      "lifecycle": "naplanovano",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
       "publishable": true,
       "untilRevoked": false,
       "importance": 3,
@@ -14902,9 +14575,9 @@
         "severity": "Moderate",
         "urgency": "Expected",
         "certainty": "Likely",
-        "badgeActive": false,
-        "temporalState": "scheduled",
-        "temporalReason": "before_validFrom",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force",
         "publishable": true,
         "untilRevoked": false,
         "openEnded": false,
@@ -16325,168 +15998,6 @@
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-6300dc098200f569",
-      "title": "Velmi silné bouřky — Česká Lípa",
-      "description": "Bouřky i velmi silné postupují do severních Čech a jsou doprovázené nárazy větru kolem 20 m/s (80 km/h) a kroupami kolem 2 cm. Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
-      "instruction": "Dbát na bezpečnost zejména s ohledem na nebezpečí zásahu bleskem a úrazu kroupami a padajícími a poletujícími předměty, zejména větvemi. Pokud možno vyhledat úkryt v budově opatřené hromosvodem. V přírodě se schovat v hustém lese nebo nižším porostu, nezůstávat ve vodě, na kopcích, v blízkosti železných konstrukcí, osamocených stromů ani pod skalními převisy. Zajistit okna, dveře, skleníky, volně položené předměty apod. Být připraven na možné výpadky elektřiny. Při řízení vozidla v bouřce snížit rychlost jízdy a jet velmi opatrně, sledovat dopravní zpravodajství. Nevstupovat a nevjíždět do proudící vody a zatopených míst. Sledovat vývoj a postup bouřek na výstupu z meteorologických radarů v mobilní aplikaci ČHMÚ nebo na webových stránkách www.chmi.cz. Riziko vzniku lokálního zatopení nebo přívalové povodně v členitějším reliéfu sledovat v aplikaci Indikátor přívalových povodní (FFI): https://produkty.chmi.cz/ffi.",
-      "sourceId": "chmi",
-      "sourceLabel": "ČHMÚ",
-      "sourceGroup": "pocasi",
-      "url": "https://vystrahy-cr.chmi.cz/",
-      "originalUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicUrl": "https://vystrahy-cr.chmi.cz/",
-      "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-      "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041555.xml?hid=6300dc098200f569",
-      "urlKind": "cap_public_web",
-      "listingUrl": "https://vystrahy-cr.chmi.cz/",
-      "sectionId": "pocasi",
-      "subsectionId": "vystrahy",
-      "eventType": "mimoradne",
-      "status": "aktivni",
-      "lifecycle": "prave-probihajici",
-      "publishable": true,
-      "untilRevoked": false,
-      "importance": 4,
-      "impact": 4,
-      "region": {
-        "level": "orp",
-        "name": "Česká Lípa",
-        "summary": "Česká Lípa",
-        "extraAreaCount": 0,
-        "orpId": "orp:5101",
-        "orpCode": "5101",
-        "orpName": "Česká Lípa",
-        "okresId": "okres:CZ0511",
-        "okresName": "Česká Lípa",
-        "krajId": "kraj:CZ051",
-        "krajName": "Liberecký kraj",
-        "orpIds": [
-          "orp:5101"
-        ],
-        "orpCodes": [
-          "5101"
-        ],
-        "orpNames": [
-          "Česká Lípa"
-        ],
-        "okresIds": [
-          "okres:CZ0511"
-        ],
-        "okresNames": [
-          "Česká Lípa"
-        ],
-        "krajIds": [
-          "kraj:CZ051"
-        ],
-        "krajNames": [
-          "Liberecký kraj"
-        ],
-        "areaDescs": [
-          "Liberecký kraj (Česká Lípa)"
-        ],
-        "assignmentSource": "cisorp",
-        "precise": true
-      },
-      "lane": "pocasi",
-      "connectorType": "opendata",
-      "orgType": "meteo",
-      "publishedAtSource": "2026-08-04T17:55:56+02:00",
-      "publishedAt": "2026-08-04T17:55:56+02:00",
-      "updatedAt": "2026-08-04T16:21:31.621Z",
-      "validFrom": "2026-08-04T17:54:12+02:00",
-      "validTo": "2026-08-04T18:30:00+02:00",
-      "resolvedAt": null,
-      "groupKey": "2026-08-04:velmi-silne-bourky-hpps-ix-2-sivs-ix",
-      "tags": [
-        "cap",
-        "vystraha",
-        "cap-v2"
-      ],
-      "links": [],
-      "legal": {
-        "providerId": "chmi",
-        "datasetId": "chmi-opendata-national-hydromet-db",
-        "distributionId": "chmi-opendata-portal-primary",
-        "legalRecordVersion": "2026-07-20.phase2.1",
-        "approvalStatus": "APPROVED_CC_BY",
-        "attributionTemplateId": "attr-open-data-by-v1",
-        "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-04T16:21:31.621Z",
-        "sourceUrl": "https://vystrahy-cr.chmi.cz/",
-        "modifications": [
-          "normalized-metadata-link-only"
-        ],
-        "fieldAllowlist": [
-          "id",
-          "sourceId",
-          "title",
-          "url",
-          "originalUrl",
-          "publishedAt",
-          "sourceLabel",
-          "region",
-          "importance",
-          "eventType",
-          "sectionId"
-        ]
-      },
-      "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260804155556.XOCZ50_OKPR_000298|2026-08-04T17:55:56+02:00",
-        "alert_thread_id": "thread:018232ddc7197453",
-        "hazard_instance_id": "haz:6300dc098200f569",
-        "msgType": "Update",
-        "change_type": "new",
-        "event": "Velmi silné bouřky",
-        "severity": "Severe",
-        "urgency": "Immediate",
-        "certainty": "Observed",
-        "badgeActive": true,
-        "temporalState": "active",
-        "temporalReason": "in_force",
-        "publishable": true,
-        "untilRevoked": false,
-        "openEnded": false,
-        "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041555.xml?hid=6300dc098200f569",
-        "publicUrl": "https://vystrahy-cr.chmi.cz/",
-        "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
-        "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-        "listingUrl": "https://vystrahy-cr.chmi.cz/",
-        "urlKind": "cap_public_web",
-        "expiresSource": "cap",
-        "geo": {
-          "links": [
-            {
-              "hazard_instance_id": "haz:6300dc098200f569",
-              "orpId": "orp:5101",
-              "orpCode": "5101",
-              "orpName": "Česká Lípa",
-              "okresId": "okres:CZ0511",
-              "okresName": "Česká Lípa",
-              "krajId": "kraj:CZ051",
-              "krajName": "Liberecký kraj",
-              "assignmentSource": "cisorp",
-              "precise": true
-            }
-          ],
-          "quarantine": [],
-          "totalAreas": 1,
-          "mappedAreas": 1,
-          "unmappedAreas": 0,
-          "mappingCoveragePercent": 100
-        },
-        "searchText": "vystraha chmu velmi silne bourky ceska lipa velmi silne bourky velmi silne bourky bourky i velmi silne postupuji do severnich cech a jsou doprovazene narazy vetru kolem 20 m s 80 km h a kroupami kolem 2 cm lokalni skody na majetku a komplikace zejmena v energetice doprave a zemedelstvi vyraznejsi skody vetrem lamani a vyvraceni stromu poskozeni budov majetku a energeticke infrastruktury vypadky v dodavkach elektriny komplikace v doprave v dusledku poryvu vetru a padu vetvi a stromu na dopravni cesty cetne skody na vegetaci budovach a majetku pripadne i riziko mensiho urazu vetsimi kroupami riziko urazu nebo pozaru po zasahu bleskem dbat na bezpecnost zejmena s ohledem na nebezpeci zasahu bleskem a urazu kroupami a padajicimi a poletujicimi predmety zejmena vetvemi pokud mozno vyhledat ukryt v budove opatrene hromosvodem v prirode se schovat v hustem lese nebo nizsim porostu nezustavat ve vode na kopcich v blizkosti zeleznych konstrukci osamocenych stromu ani pod skalnimi previsy zajistit okna dvere skleniky volne polozene predmety apod byt pripraven na mozne vypadky elektriny pri rizeni vozidla v bource snizit rychlost jizdy a jet velmi opatrne sledovat dopravni zpravodajstvi nevstupovat a nevjizdet do proudici vody a zatopenych mist sledovat vyvoj a postup bourek na vystupu z meteorologickych radaru v mobilni aplikaci chmu nebo na webovych strankach www chmi cz riziko vzniku lokalniho zatopeni nebo privalove povodne v clenitejsim reliefu sledovat v aplikaci indikator privalovych povodni ffi https produkty chmi cz ffi ceska lipa ceska lipa ceska lipa liberecky kraj liberecky kraj ceska lipa chmu cesky hydrometeorologicky ustav severe immediate observed",
-        "significantUnreadReset": true
-      },
-      "firstSeenByInfoUzel": "2026-08-04T16:21:31.621Z",
-      "lastProcessedAt": "2026-08-04T16:21:31.621Z",
-      "sortAt": "2026-08-04T17:55:56+02:00",
-      "timeSource": "cap_sent",
-      "timeConfidence": "high",
-      "isNewCapture": true
-    },
-    {
       "id": "ie-chmi-v2-056b6b91154d1cf0",
       "title": "Velmi silné bouřky — Česká Lípa",
       "description": "Bouřky i velmi silné postupují do severních Čech a jsou doprovázené nárazy větru kolem 20 m/s (80 km/h) a kroupami kolem 2 cm. Lokální škody na majetku a komplikace zejména v energetice, dopravě a zemědělství. Výraznější škody větrem, lámání a vyvracení stromů, poškození budov, majetku a energetické infrastruktury, výpadky v dodávkách elektřiny. Komplikace v dopravě v důsledku poryvů větru a pádu větví a stromů na dopravní cesty. Četné škody na vegetaci, budovách a majetku, případně i riziko menšího úrazu většími kroupami. Riziko úrazu nebo požáru po zásahu bleskem.",
@@ -16505,8 +16016,8 @@
       "sectionId": "pocasi",
       "subsectionId": "vystrahy",
       "eventType": "mimoradne",
-      "status": "naplanovano",
-      "lifecycle": "naplanovano",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
       "publishable": true,
       "untilRevoked": false,
       "importance": 4,
@@ -16603,9 +16114,9 @@
         "severity": "Severe",
         "urgency": "Expected",
         "certainty": "Observed",
-        "badgeActive": false,
-        "temporalState": "scheduled",
-        "temporalReason": "before_validFrom",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force",
         "publishable": true,
         "untilRevoked": false,
         "openEnded": false,
@@ -23267,10 +22778,7 @@
         },
         "searchText": "riziko pozaru ceska trebova a dalsich 49 oblasti ceska trebova hlinsko holice chrudim kraliky lanskroun litomysl moravska trebova pardubice policka prelouc svitavy usti nad orlici vysoke myto zamberk hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk sumperk unicov zabreh bilovec bohumin bruntal cesky tesin frenstat pod radhostem frydek mistek frydlant nad ostravici havirov hlucin jablunkov karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava rymarov trinec vitkov pardubicky kraj olomoucky kraj moravskoslezsky kraj riziko pozaru praha a dalsich 123 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice cesky krumlov dacice jindrichuv hradec kaplice milevsko pisek prachatice sobeslav strakonice tabor trhove sviny trebon tyn nad vltavou vimperk vodnany as cheb karlovy vary kraslice marianske lazne ostrov sokolov bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jicin nova paka novy bydzov bystrice nad pernstejnem havlickuv brod humpolec chotebor jihlava nove mesto na morave pacov pelhrimov svetla nad sazavou telc velke mezirici zdar nad sazavou blansko boskovice brno bucovice ivancice kurim rosice slavkov u brna slapanice tisnov vyskov zidlochovice bystrice pod hostynem holesov kromeriz luhacovice otrokovice roznov pod radhostem uherske hradiste uhersky brod valasske klobouky valasske mezirici vizovice vsetin zlin blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov hlavni mesto praha stredocesky kraj jihocesky kraj karlovarsky kraj ustecky kraj liberecky kraj kralovehradecky kraj kraj vysocina jihomoravsky kraj zlinsky kraj plzensky kraj praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice cesky krumlov dacice jindrichuv hradec kaplice milevsko pisek prachatice sobeslav strakonice tabor trhove sviny trebon tyn nad vltavou vimperk vodnany as cheb karlovy vary kraslice marianske lazne ostrov sokolov bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jicin nova paka novy bydzov bystrice nad pernstejnem havlickuv brod humpolec chotebor jihlava nove mesto na morave pacov pelhrimov svetla nad sazavou telc velke mezirici zdar nad sazavou blansko boskovice brno bucovice ivancice kurim rosice slavkov u brna slapanice tisnov vyskov zidlochovice bystrice pod hostynem holesov kromeriz luhacovice otrokovice roznov pod radhostem uherske hradiste uhersky brod valasske klobouky valasske mezirici vizovice vsetin zlin blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov ceska trebova hlinsko holice chrudim kraliky lanskroun litomysl moravska trebova pardubice policka prelouc svitavy usti nad orlici vysoke myto zamberk hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk sumperk unicov zabreh bilovec bohumin bruntal cesky tesin frenstat pod radhostem frydek mistek frydlant nad ostravici havirov hlucin jablunkov karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava rymarov trinec vitkov hlavni mesto praha stredocesky kraj jihocesky kraj karlovarsky kraj ustecky kraj liberecky kraj kralovehradecky kraj kraj vysocina jihomoravsky kraj zlinsky kraj plzensky kraj pardubicky kraj olomoucky kraj moravskoslezsky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-cd6160d26ab6c1f6"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T16:21:31.621Z",
@@ -23619,10 +23127,7 @@
         },
         "searchText": "vysoke riziko pozaru moravske budejovice a dalsich 11 oblasti moravske budejovice namest nad oslavou trebic breclav hodonin hustopece kyjov mikulov moravsky krumlov pohorelice veseli nad moravou znojmo kraj vysocina jihomoravsky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-3ec2274846896397"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T16:21:31.621Z",
@@ -23785,10 +23290,7 @@
         },
         "searchText": "smogova situace troposfericky ozon o praha praha hlavni mesto praha",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-cc8c869386d2fa64"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T11:35:14.937Z",
       "lastProcessedAt": "2026-08-04T16:21:31.621Z",
@@ -24203,10 +23705,7 @@
         },
         "searchText": "smogova situace troposfericky ozon o ustecky kraj 16 orp bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem rumburk teplice usti nad labem varnsdorf zatec ustecky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-1487d5118635a60c"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T14:27:42.336Z",
       "lastProcessedAt": "2026-08-04T16:21:31.621Z",
@@ -24791,10 +24290,7 @@
         },
         "searchText": "smogova situace troposfericky ozon o stredocesky kraj 26 orp benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice stredocesky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true,
-        "supersedesIds": [
-          "ie-chmi-v2-d37f9244258fefad"
-        ]
+        "onsetSplit": true
       },
       "firstSeenByInfoUzel": "2026-08-04T12:34:59.051Z",
       "lastProcessedAt": "2026-08-04T16:21:31.621Z",
