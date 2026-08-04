@@ -14,11 +14,21 @@ import {
   inspectFormatFromEntryPeeks,
   inspectTmcZipFormatFromFile,
   serializeInspectionReport,
+  validateInspectionReportObject,
   classifyEntryRole,
   assertInspectionProductionSafe,
   INSPECTION_REJECT,
   INSPECTION_REPORT_MAX_BYTES,
+  INSPECTION_REPORT_ALLOWED_KEYS,
   INSPECTION_MODE,
+  INSPECTION_TEXT_PEEK_BYTES,
+  INSPECTION_MAX_TEXT_LINES,
+  INSPECTION_CPG_MAX_BYTES,
+  INSPECTION_HEADER_MAX_BYTES,
+  INSPECTION_SHP_HEADER_BYTES,
+  INSPECTION_SQLITE_MAGIC_BYTES,
+  INSPECTION_TIMEOUT_MS,
+  INSPECTION_MAX_TOTAL_PEEK_BYTES,
   buildCandidateFormatFromCentral,
 } from "./ndic-datex-v1/tmc-format-inspection.mjs";
 import {
@@ -29,9 +39,16 @@ import {
   redactAbsolutePaths,
 } from "./ndic-datex-v1/tmc-path-redaction.mjs";
 import { selectAuthoritativeFormat, TMC_FORMAT } from "./ndic-datex-v1/tmc-archive-stream.mjs";
-import { buildStoredZip } from "./ndic-datex-v1/tmc-zip.mjs";
+import { buildStoredZip, DEFAULT_ZIP_LIMITS } from "./ndic-datex-v1/tmc-zip.mjs";
 import { getNdicDatexV1Config } from "./ndic-datex-v1/config.mjs";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
+import {
+  assertInspectionCleanupTarget,
+  wipeInspectionTaskDir,
+  CLEANUP_REJECT,
+  ALLOWED_TASK_DIR_NAMES,
+} from "./ndic-datex-v1/tmc-inspection-cleanup.mjs";
+import { fileURLToPath } from "node:url";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -222,7 +239,7 @@ function shpHeaderSynthetic(opts = {}) {
 // --- report size / truncation ---
 {
   const huge = inspectFormatFromEntryPeeks([{ role: "points", ext: "dat", buf: Buffer.from("CID;TABCD\n11;25\n") }]);
-  huge.pad = "x".repeat(70_000);
+  huge.note = "x".repeat(70_000);
   const ser = serializeInspectionReport(huge, INSPECTION_REPORT_MAX_BYTES);
   ok("report_trunc", ser.truncated === true, "tr");
   ok("report_under_cap", ser.bytes <= INSPECTION_REPORT_MAX_BYTES, String(ser.bytes));
@@ -353,6 +370,170 @@ function shpHeaderSynthetic(opts = {}) {
   } catch (_) {}
 }
 
+// --- report schema allowlist + leak rejection ---
+{
+  ok("report_key_count", INSPECTION_REPORT_ALLOWED_KEYS.length >= 20, String(INSPECTION_REPORT_ALLOWED_KEYS.length));
+  const good = validateInspectionReportObject({
+    ok: true,
+    mode: INSPECTION_MODE,
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+    importerActivated: false,
+    resolverActivated: false,
+    publishActivated: false,
+    productionWrite: false,
+  });
+  ok("report_validate_ok", good.mode === INSPECTION_MODE, "v");
+  let unk = false;
+  try {
+    validateInspectionReportObject({ ok: true, mode: INSPECTION_MODE, evilKey: "x" });
+  } catch (e) {
+    unk = e && e.code === "TMC_INSPECTION_REPORT_UNKNOWN_KEY";
+  }
+  ok("report_unknown_key", unk, "unk");
+  let pathLeak = false;
+  try {
+    validateInspectionReportObject({
+      ok: false,
+      mode: INSPECTION_MODE,
+      note: "see /home/bob/secret",
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+    });
+  } catch (e) {
+    pathLeak = e && e.code === "TMC_INSPECTION_REPORT_PATH_LEAK";
+  }
+  ok("report_path_leak", pathLeak, "pl");
+  let urlLeak = false;
+  try {
+    validateInspectionReportObject({
+      ok: false,
+      mode: INSPECTION_MODE,
+      note: "https://mobilitydata.rsd.cz/x",
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+    });
+  } catch (e) {
+    urlLeak = e && e.code === "TMC_INSPECTION_REPORT_SECRET_LEAK";
+  }
+  ok("report_url_leak", urlLeak, "url");
+  const ser = serializeInspectionReport(good);
+  ok("report_reserialize", ser.object && ser.object.productionWrite === false, "rs");
+}
+
+// --- cleanup fence ---
+{
+  const runnerTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-rt-"));
+  const work = path.join(runnerTemp, "ndic-inspect-work");
+  fs.mkdirSync(work, { recursive: true });
+  fs.writeFileSync(path.join(work, "body.zip"), "PK");
+  ok("cleanup_ok", wipeInspectionTaskDir(work, { runnerTemp }).wiped === true, "wipe");
+  ok("cleanup_gone", !fs.existsSync(work), "gone");
+  let empty = false;
+  try {
+    assertInspectionCleanupTarget("", { runnerTemp });
+  } catch (e) {
+    empty = e && e.code === CLEANUP_REJECT.EMPTY;
+  }
+  ok("cleanup_empty", empty, "e");
+  let root = false;
+  try {
+    assertInspectionCleanupTarget("/", { runnerTemp });
+  } catch (e) {
+    root = e && e.code === CLEANUP_REJECT.ROOT;
+  }
+  ok("cleanup_root", root, "r");
+  let rtRoot = false;
+  try {
+    assertInspectionCleanupTarget(runnerTemp, { runnerTemp });
+  } catch (e) {
+    rtRoot = e && e.code === CLEANUP_REJECT.RUNNER_TEMP_ROOT;
+  }
+  ok("cleanup_rt_root", rtRoot, "rt");
+  let foreign = false;
+  try {
+    assertInspectionCleanupTarget(path.join(os.tmpdir(), "other-job"), { runnerTemp });
+  } catch (e) {
+    foreign = e && (e.code === CLEANUP_REJECT.FOREIGN || e.code === CLEANUP_REJECT.FENCE);
+  }
+  ok("cleanup_foreign", foreign, "f");
+  let home = false;
+  try {
+    assertInspectionCleanupTarget(path.resolve(runnerTemp), {
+      runnerTemp: path.join(runnerTemp, "nested-rt"),
+      home: runnerTemp,
+    });
+  } catch (e) {
+    home =
+      e &&
+      (e.code === CLEANUP_REJECT.HOME ||
+        e.code === CLEANUP_REJECT.FOREIGN ||
+        e.code === CLEANUP_REJECT.RUNNER_TEMP_ROOT);
+  }
+  ok("cleanup_home", home, "h");
+  ok("cleanup_allow_names", ALLOWED_TASK_DIR_NAMES.includes("ndic-inspect-report"), "names");
+  try {
+    fs.rmSync(runnerTemp, { recursive: true, force: true });
+  } catch (_) {}
+}
+
+// --- artifact exact single-file contract (workflow static + neighbor exclusion) ---
+{
+  const wf = fs.readFileSync(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".github", "workflows", "ndic-datex-v1-tmc-format-inspection.yml"),
+    "utf8"
+  );
+  ok(
+    "artifact_exact_path",
+    /path:\s*\$\{\{\s*runner\.temp\s*\}\}[/\\]ndic-inspect-report[/\\]inspection-report\.json/.test(wf),
+    "path"
+  );
+  ok("artifact_no_dir_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(wf), "dir");
+  ok("artifact_missing_error", /if-no-files-found:\s*error/.test(wf), "err");
+  const staging = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-art-"));
+  const reportDir = path.join(staging, "ndic-inspect-report");
+  fs.mkdirSync(reportDir, { recursive: true });
+  fs.writeFileSync(path.join(reportDir, "inspection-report.json"), "{\"ok\":true}");
+  fs.writeFileSync(path.join(reportDir, "evil.zip"), "PK\u0003\u0004");
+  fs.writeFileSync(path.join(reportDir, "neighbor.txt"), "x");
+  const onlyJson = fs
+    .readdirSync(reportDir)
+    .filter((n) => n === "inspection-report.json");
+  ok("artifact_neighbor_excluded_by_exact_name", onlyJson.length === 1 && !onlyJson.includes("evil.zip"), "nbr");
+  // Simulate workflow find-delete neighbors
+  for (const n of fs.readdirSync(reportDir)) {
+    if (n !== "inspection-report.json") fs.unlinkSync(path.join(reportDir, n));
+  }
+  ok("artifact_after_prune", fs.readdirSync(reportDir).join(",") === "inspection-report.json", "prune");
+  try {
+    fs.rmSync(staging, { recursive: true, force: true });
+  } catch (_) {}
+}
+
+// --- implemented limit constants (documented for gate) ---
+{
+  ok("lim_dat_peek", INSPECTION_TEXT_PEEK_BYTES === 4096, String(INSPECTION_TEXT_PEEK_BYTES));
+  ok("lim_lines", INSPECTION_MAX_TEXT_LINES === 8, String(INSPECTION_MAX_TEXT_LINES));
+  ok("lim_cpg", INSPECTION_CPG_MAX_BYTES === 64, String(INSPECTION_CPG_MAX_BYTES));
+  ok("lim_hdr", INSPECTION_HEADER_MAX_BYTES === 1024, String(INSPECTION_HEADER_MAX_BYTES));
+  ok("lim_shp", INSPECTION_SHP_HEADER_BYTES === 100, String(INSPECTION_SHP_HEADER_BYTES));
+  ok("lim_sqlite", INSPECTION_SQLITE_MAGIC_BYTES === 16, String(INSPECTION_SQLITE_MAGIC_BYTES));
+  ok("lim_timeout", INSPECTION_TIMEOUT_MS === 120000, String(INSPECTION_TIMEOUT_MS));
+  ok("lim_mem", INSPECTION_MAX_TOTAL_PEEK_BYTES === 2 * 1024 * 1024, String(INSPECTION_MAX_TOTAL_PEEK_BYTES));
+  ok("lim_zip_entries", DEFAULT_ZIP_LIMITS.maxEntries === 256, String(DEFAULT_ZIP_LIMITS.maxEntries));
+  ok("lim_zip_single", DEFAULT_ZIP_LIMITS.maxSingleUncompressed === 150 * 1024 * 1024, "single");
+  ok("lim_zip_total", DEFAULT_ZIP_LIMITS.maxUncompressedTotal === 420 * 1024 * 1024, "total");
+  ok("lim_zip_ratio", DEFAULT_ZIP_LIMITS.maxCompressionRatio === 80, "ratio");
+}
+
 if (fails.length) {
   console.error("[ndic-tmc-format-inspection-fixtures] FAIL " + fails.length);
   for (const f of fails) console.error(" - " + f);
@@ -363,6 +544,7 @@ console.log(
     ok: true,
     mode: INSPECTION_MODE,
     reportMaxBytes: INSPECTION_REPORT_MAX_BYTES,
+    reportAllowedKeys: INSPECTION_REPORT_ALLOWED_KEYS.length,
     liveZipInspectApi: true,
     node: process.version,
   })

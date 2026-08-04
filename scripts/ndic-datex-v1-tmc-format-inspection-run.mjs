@@ -38,6 +38,14 @@ import {
 
 const offlineReady = process.argv.includes("--offline-ready");
 const FETCH_TIMEOUT_MS = 120_000;
+const ALLOWED_TMC_CONTENT_TYPES = new Set([
+  "application/zip",
+  "application/octet-stream",
+  "application/x-zip-compressed",
+  "binary/octet-stream",
+  "",
+  "unknown",
+]);
 
 function wipeTree(p) {
   if (!p) return;
@@ -185,6 +193,30 @@ try {
     };
     writeReport(work, report);
     console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: "TMC_AUTH_REJECTED" }));
+    process.exit(2);
+  }
+
+  const ct = String(res.headers.get("content-type") || "")
+    .split(";")[0]
+    .trim()
+    .toLowerCase();
+  if (!ALLOWED_TMC_CONTENT_TYPES.has(ct)) {
+    const report = {
+      ok: false,
+      mode: INSPECTION_MODE,
+      rejectCode: "TMC_CONTENT_TYPE_REJECTED",
+      severity: "archive_reject",
+      liveNetworkInspection: true,
+      importerActivated: false,
+      resolverActivated: false,
+      publishActivated: false,
+      productionWrite: false,
+      authoritativeFormat: "UNVERIFIED",
+      authoritativeFormatVerified: false,
+      workDirCategory: categorizePath(work),
+    };
+    writeReport(work, report);
+    console.log(JSON.stringify({ ok: false, mode: INSPECTION_MODE, rejectCode: "TMC_CONTENT_TYPE_REJECTED" }));
     process.exit(2);
   }
 

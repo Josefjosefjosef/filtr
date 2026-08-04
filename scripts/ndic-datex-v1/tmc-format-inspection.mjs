@@ -23,8 +23,54 @@ export const INSPECTION_MAX_TEXT_LINES = 8;
 export const INSPECTION_CPG_MAX_BYTES = 64;
 export const INSPECTION_HEADER_MAX_BYTES = 1024;
 export const INSPECTION_TIMEOUT_MS = 120_000;
+export const INSPECTION_SHP_HEADER_BYTES = 100;
+export const INSPECTION_SQLITE_MAGIC_BYTES = 16;
 export const INSPECTION_MAX_PEEK_ENTRIES = 64;
 export const INSPECTION_MAX_TOTAL_PEEK_BYTES = 2 * 1024 * 1024;
+
+/** Allowlisted top-level keys for sanitised inspection reports (upload gate). */
+export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
+  "ok",
+  "mode",
+  "severity",
+  "rejectCode",
+  "warnings",
+  "candidateFormat",
+  "candidateFormatConfidence",
+  "candidateEvidenceSource",
+  "authoritativeFormat",
+  "authoritativeFormatVerified",
+  "cidExpected",
+  "tabcdExpected",
+  "cid11Detected",
+  "tabcd25Detected",
+  "encodingNormalized",
+  "structuralRoleCounts",
+  "structuralRoleBytes",
+  "sourceAuthority",
+  "sqlite",
+  "importerActivated",
+  "resolverActivated",
+  "publishActivated",
+  "productionWrite",
+  "reportTruncated",
+  "liveNetworkInspection",
+  "livePathImplemented",
+  "offlineReady",
+  "ignoredCategoryCounts",
+  "peekEntryCount",
+  "peekTotalBytes",
+  "centralDirectory",
+  "workDirCategory",
+  "downloadSuccess",
+  "downloadedBytes",
+  "diskPreflightPassed",
+  "diskCheckPathCategory",
+  "filesystemAvailableBytes",
+  "filesystemRequiredBytes",
+  "note",
+]);
+
 
 const LOCAL_SIG = 0x04034b50;
 const CENTRAL_SIG = 0x02014b50;
@@ -393,7 +439,7 @@ export function inspectShpHeader(buf, kind = "shp") {
     hasM: false,
     kind,
   };
-  if (!buf || buf.length < 100) return out;
+  if (!buf || buf.length < INSPECTION_SHP_HEADER_BYTES) return out;
   if (buf.readInt32BE(0) !== 9994) return out;
   out.fileLengthWords = buf.readInt32BE(24);
   const shapeType = buf.readInt32LE(32);
@@ -482,32 +528,85 @@ export function inspectSqliteHeader(headerBuf, schemaHints = null) {
 }
 
 /**
- * Cap JSON report to max bytes on field boundaries.
+ * Strip unknown keys, reject path/url/secret-like string leaks, reserialize.
+ * @param {object} report
+ */
+export function validateInspectionReportObject(report) {
+  if (!report || typeof report !== "object" || Array.isArray(report)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+      code: "TMC_INSPECTION_REPORT_SCHEMA",
+    });
+  }
+  const out = {};
+  for (const key of Object.keys(report)) {
+    if (!INSPECTION_REPORT_ALLOWED_KEYS.includes(key)) {
+      throw Object.assign(new Error("TMC_INSPECTION_REPORT_UNKNOWN_KEY"), {
+        code: "TMC_INSPECTION_REPORT_UNKNOWN_KEY",
+        key,
+      });
+    }
+    out[key] = report[key];
+  }
+  const blob = JSON.stringify(out);
+  if (containsForbiddenPathLeak(blob)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_PATH_LEAK"), {
+      code: "TMC_INSPECTION_REPORT_PATH_LEAK",
+    });
+  }
+  if (/https?:\/\//i.test(blob) || /Authorization/i.test(blob) || /Basic\s+[A-Za-z0-9+/=]{8,}/i.test(blob)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SECRET_LEAK"), {
+      code: "TMC_INSPECTION_REPORT_SECRET_LEAK",
+    });
+  }
+  if (/CREATE\s+TABLE|SELECT\s+\*|INSERT\s+INTO/i.test(blob)) {
+    throw Object.assign(new Error("TMC_INSPECTION_REPORT_SQL_LEAK"), {
+      code: "TMC_INSPECTION_REPORT_SQL_LEAK",
+    });
+  }
+  // Force immutable safety flags
+  out.mode = INSPECTION_MODE;
+  out.authoritativeFormat = "UNVERIFIED";
+  out.authoritativeFormatVerified = false;
+  out.importerActivated = false;
+  out.resolverActivated = false;
+  out.publishActivated = false;
+  out.productionWrite = false;
+  return out;
+}
+
+/**
+ * Cap JSON report to max bytes on field boundaries; always validate+reserialize first.
  * @param {object} report
  * @param {number} [maxBytes]
  */
 export function serializeInspectionReport(report, maxBytes = INSPECTION_REPORT_MAX_BYTES) {
-  assertReportPathSafe(report);
-  let json = JSON.stringify(report);
+  const validated = validateInspectionReportObject(report);
+  assertReportPathSafe(validated);
+  let json = JSON.stringify(validated);
   if (Buffer.byteLength(json, "utf8") <= maxBytes) {
-    return { json, truncated: false, bytes: Buffer.byteLength(json, "utf8") };
+    return { json, truncated: false, bytes: Buffer.byteLength(json, "utf8"), object: validated };
   }
   const slim = {
-    ok: report.ok === true,
+    ok: validated.ok === true,
     mode: INSPECTION_MODE,
-    rejectCode: report.rejectCode || INSPECTION_REJECT.REPORT_LIMIT,
-    severity: report.severity || "archive_reject",
+    rejectCode: validated.rejectCode || INSPECTION_REJECT.REPORT_LIMIT,
+    severity: validated.severity || "archive_reject",
     reportTruncated: true,
-    candidateFormat: report.candidateFormat || null,
-    candidateFormatConfidence: report.candidateFormatConfidence || null,
-    candidateEvidenceSource: report.candidateEvidenceSource || null,
-    authoritativeFormat: report.authoritativeFormat || "UNVERIFIED",
+    candidateFormat: validated.candidateFormat || null,
+    candidateFormatConfidence: validated.candidateFormatConfidence || null,
+    candidateEvidenceSource: validated.candidateEvidenceSource || null,
+    authoritativeFormat: "UNVERIFIED",
     authoritativeFormatVerified: false,
-    workDirCategory: report.workDirCategory || PATH_CATEGORY.UNKNOWN_SANITIZED,
+    workDirCategory: validated.workDirCategory || PATH_CATEGORY.UNKNOWN_SANITIZED,
     cidExpected: TMC_CID_EXPECTED,
     tabcdExpected: TMC_TABCD_EXPECTED,
+    importerActivated: false,
+    resolverActivated: false,
+    publishActivated: false,
+    productionWrite: false,
   };
-  json = JSON.stringify(slim);
+  const slimValidated = validateInspectionReportObject(slim);
+  json = JSON.stringify(slimValidated);
   if (Buffer.byteLength(json, "utf8") > maxBytes) {
     json = JSON.stringify({
       ok: false,
@@ -516,9 +615,12 @@ export function serializeInspectionReport(report, maxBytes = INSPECTION_REPORT_M
       reportTruncated: true,
       authoritativeFormat: "UNVERIFIED",
       authoritativeFormatVerified: false,
+      importerActivated: false,
+      publishActivated: false,
+      productionWrite: false,
     });
   }
-  return { json, truncated: true, bytes: Buffer.byteLength(json, "utf8") };
+  return { json, truncated: true, bytes: Buffer.byteLength(json, "utf8"), object: slimValidated };
 }
 
 /**

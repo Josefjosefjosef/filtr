@@ -366,14 +366,25 @@ function main() {
         "live"
       );
       ok("inspect_fixtures_before_live", /Fixture guards[\s\S]*Live TMC format inspection/.test(src), "order");
+      ok("inspect_mode_before_checkout", /Enforce allowlisted mode and ref \(before checkout\)[\s\S]*actions\/checkout@/.test(src), "mode-order");
+      ok("inspect_identity_before_checkout", /Preflight runner identity[\s\S]*actions\/checkout@/.test(src), "id-order");
+      ok("inspect_head_before_live", /REFUSING_UNEXPECTED_HEAD[\s\S]*Live TMC format inspection/.test(src), "head");
       ok("inspect_artifact_sanitised", /ndic-tmc-format-inspection-report/.test(src), "art");
+      ok("inspect_artifact_exact_file", /path:\s*\$\{\{\s*runner\.temp\s*\}\}\/ndic-inspect-report\/inspection-report\.json/.test(src), "exact");
+      ok("inspect_artifact_no_glob", !/path:[\s\S]*\*/.test(src.split("Upload sanitised")[1] || ""), "noglob");
+      ok("inspect_artifact_fail_missing", /if-no-files-found:\s*error/.test(src), "missing");
+      ok("inspect_artifact_success_only", /Upload sanitised[\s\S]*if:\s*success\(\)/.test(src), "succ");
       ok("inspect_report_size_gate", /65536/.test(src), "size");
-      ok("inspect_wipe", /Wipe temp workdir/.test(src), "wipe");
+      ok("inspect_wipe_fenced", /ndic-datex-v1-tmc-inspection-cleanup-run/.test(src), "wipe");
       ok("inspect_runs_on_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
       ok("inspect_refuse_github_hosted", /REFUSING_GITHUB_HOSTED/.test(analysis.raw), "refuse");
       ok("inspect_runner_name", /infouzel-ndic-cz-vps4204/.test(analysis.raw), "name");
       ok("inspect_upload_artifact_v7", /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a/.test(src), "artifact");
       ok("inspect_not_run_on_fixture_fail", /LIVE_FORMAT_INSPECTION=NOT_RUN/.test(src), "notrun");
+      ok("inspect_no_schedule", !hasTrigger(src, "schedule:"), "sched");
+      ok("inspect_no_push", !hasTrigger(src, "push:"), "push");
+      ok("inspect_no_pr", !hasTrigger(src, "pull_request:"), "pr");
+      ok("inspect_cancel_false", /cancel-in-progress:\s*false/.test(src), "cancel");
     }
 
     if (file === "update-ndic-datex-v1.yml") {

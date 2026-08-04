@@ -1,7 +1,8 @@
 name: NDIC TMC v11 format inspection
 
-# Live format-inspection path is implemented on feat/ndic-datex-v1-integration.
-# Do NOT enable the runner or dispatch until ops approval after joint review.
+# Live format-inspection path on feat/ndic-datex-v1-integration.
+# Dispatch ONLY with: gh workflow run --ref feat/ndic-datex-v1-integration
+# Do NOT enable runner until ops approval after joint review.
 #
 # Purpose: sanitised aggregate format evidence for Czech TMC ZIP (peek only).
 # Does NOT run importer, resolver, publish, or production writes.
@@ -9,10 +10,11 @@ name: NDIC TMC v11 format inspection
 # Security:
 # - workflow_dispatch ONLY
 # - runs-on: self-hosted + Linux + X64 + ndic-cz-egress
-# - identity preflight before checkout/secrets/network
+# - identity + mode/ref BEFORE checkout/secrets/network
+# - HEAD must equal github.sha before live/secrets
 # - offline fixtures must PASS before any network step
-# - artifact: sanitised JSON ≤64 KiB only (no ZIP, no raw rows)
-# - TMC secrets only (no DATEX pull URL → no DATEX fetch)
+# - artifact: single sanitised JSON ≤64 KiB (no ZIP)
+# - TMC secrets only (no DATEX pull URL)
 
 on:
   workflow_dispatch:
@@ -78,16 +80,7 @@ jobs:
           umask 077
           echo "RUNNER_PREFLIGHT_OK"
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 1
-          fetch-tags: false
-          submodules: false
-          lfs: false
-          persist-credentials: false
-          ref: ${{ github.event.inputs.code_ref }}
-
-      - name: Enforce allowlisted inputs
+      - name: Enforce allowlisted mode and ref (before checkout)
         env:
           INPUT_REF: ${{ github.event.inputs.code_ref }}
           INPUT_MODE: ${{ github.event.inputs.mode }}
@@ -103,7 +96,27 @@ jobs:
             exit 1
           fi
           echo "MODE_OK=format_inspection"
-          echo "CODE_SHA=$(git rev-parse HEAD)"
+          echo "REF_OK=feat/ndic-datex-v1-integration"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+          ref: ${{ github.event.inputs.code_ref }}
+
+      - name: Enforce HEAD matches workflow ref tip (before secrets/network)
+        run: |
+          set -euo pipefail
+          HEAD="$(git rev-parse HEAD)"
+          EXPECTED="${{ github.sha }}"
+          if [ "$HEAD" != "$EXPECTED" ]; then
+            echo "REFUSING_UNEXPECTED_HEAD"
+            exit 1
+          fi
+          echo "HEAD_OK=${HEAD}"
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -163,7 +176,8 @@ jobs:
             echo "INSPECTION_REPORT_OVERSIZE"
             exit 1
           fi
-          # Fail-closed: never leave ZIP artifacts beside the report.
+          # Fail-closed: never leave ZIP / neighbors in the artifact staging dir.
+          find "$RUNNER_TEMP/ndic-inspect-report" -type f ! -name 'inspection-report.json' -delete || true
           find "$IU_NDIC_SHADOW_WORK_DIR" -type f ! -name 'inspection-report.json' -delete || true
 
       - name: Mark live NOT_RUN when fixtures failed
@@ -199,18 +213,20 @@ jobs:
           fi
 
       - name: Upload sanitised inspection report artifact
-        if: always()
+        if: success()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ndic-tmc-format-inspection-report
           path: ${{ runner.temp }}/ndic-inspect-report/inspection-report.json
           retention-days: 1
-          if-no-files-found: ignore
+          if-no-files-found: error
 
-      - name: Wipe temp workdir
+      - name: Wipe temp workdir (fenced)
         if: always()
         run: |
           set -euo pipefail
-          rm -rf "${{ runner.temp }}/ndic-inspect-work" || true
-          rm -rf "${{ runner.temp }}/ndic-inspect-work-offline" || true
-          rm -rf "${{ runner.temp }}/ndic-inspect-report" || true
+          if [ -f scripts/ndic-datex-v1-tmc-inspection-cleanup-run.mjs ]; then
+            node scripts/ndic-datex-v1-tmc-inspection-cleanup-run.mjs
+          else
+            echo "CLEANUP_SKIPPED_NO_CHECKOUT"
+          fi
