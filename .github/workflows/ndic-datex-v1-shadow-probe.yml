@@ -1,34 +1,40 @@
 name: NDIC DATEX v1 shadow probe
 
-# Dedicated Czech egress shadow probe (label: ndic-cz-egress).
+# Dedicated Czech egress probe (label: ndic-cz-egress).
 # Prepared ONLY — do not enable the runner service or dispatch until ops approval.
 #
-# FIRST SHADOW DISPATCH (mandatory):
+# DISPATCH (mandatory):
 # 1) Actions → "NDIC DATEX v1 shadow probe"
 # 2) "Use workflow from" MUST be: feat/ndic-datex-v1-integration
-#    (main may still have an older ubuntu-latest dispatcher; do NOT use main)
-# 3) Inputs: mode=shadow, code_ref=feat/ndic-datex-v1-integration
+#    (main still has an older ubuntu-latest dispatcher; do NOT use main for live NDIC)
+# 3) Inputs:
+#    - mode=shadow              → existing DATEX+TMC shadow probe (unchanged contract)
+#    - mode=format_inspection   → TMC-only format inspection (no DATEX / importer / publish)
+#    - code_ref=feat/ndic-datex-v1-integration
 # Defense: even if main ubuntu checkouts this code_ref, runner-identity.mjs
 # refuses GitHub-hosted /home/runner before any NDIC network call.
+# format_inspection cannot be selected from main workflow YAML (shadow-only choice there).
 #
 # Security contract (public repo):
 # - Trigger: workflow_dispatch ONLY (no pull_request / pull_request_target / workflow_run / schedule)
-# - runs-on MUST include all four labels: self-hosted, Linux, X64, ndic-cz-egress
+# - Network jobs runs-on MUST include: self-hosted, Linux, X64, ndic-cz-egress
 # - permissions: contents: read
 # - checkout: persist-credentials: false; allowlisted code_ref only
-# - mode: shadow only (active rejected)
+# - modes: shadow | format_inspection only (active / publish / import rejected fail-closed)
 # - Never commit / push / deploy / upload raw DATEX|TMC payloads
 # - Refuse github-hosted runners even if labels are mis-edited later
+# - Shadow and format_inspection are mutually exclusive (separate jobs + if conditions)
 
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Must be shadow (active is rejected)"
+        description: "Explicit mode: shadow (DATEX+TMC probe) or format_inspection (TMC peek only)"
         required: true
         type: choice
         options:
           - shadow
+          - format_inspection
         default: shadow
       code_ref:
         description: "Allowlisted git ref containing NDIC probe implementation"
@@ -46,12 +52,48 @@ permissions:
   contents: read
 
 jobs:
-  shadow-probe:
-    # Defense-in-depth: refuse forks / non-dispatch even if triggers are edited later.
+  # Fail-closed before any self-hosted / secrets / network job.
+  # GitHub-hosted; no IU_NDIC_* secrets; no NDIC contact.
+  mode-validate:
     if: >
       github.event_name == 'workflow_dispatch'
       && github.repository == 'Josefjosefjosef/filtr'
       && github.event.pull_request == null
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail-closed mode and code_ref gate
+        env:
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+          INPUT_REF: ${{ github.event.inputs.code_ref }}
+        run: |
+          set -euo pipefail
+          mode="$(printf '%s' "${INPUT_MODE:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          case "${mode}" in
+            shadow|format_inspection) ;;
+            *)
+              echo "REFUSING_UNKNOWN_MODE"
+              exit 1
+              ;;
+          esac
+          case "${INPUT_REF}" in
+            feat/ndic-datex-v1-integration) ;;
+            *)
+              echo "REFUSING_NON_ALLOWLISTED_CODE_REF"
+              exit 1
+              ;;
+          esac
+          echo "MODE_VALIDATE_OK=${mode}"
+          echo "CODE_REF_OK=${INPUT_REF}"
+
+  shadow-probe:
+    needs: mode-validate
+    # Defense-in-depth: refuse forks / non-dispatch; shadow path only.
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.repository == 'Josefjosefjosef/filtr'
+      && github.event.pull_request == null
+      && github.event.inputs.mode == 'shadow'
     runs-on:
       - self-hosted
       - Linux
@@ -170,6 +212,7 @@ jobs:
           npm run iu-ndic-disk-preflight-fixtures
           npm run iu-ndic-tmc-archive-stream-fixtures
           npm run iu-ndic-tmc-format-inspection-fixtures
+          npm run iu-ndic-shadow-probe-mode-contract-fixtures
           npm run iu-ndic-shadow-report-redaction-guard
 
       - name: Real shadow probe (isolated temp only)
@@ -230,3 +273,226 @@ jobs:
           set -euo pipefail
           rm -rf "${{ runner.temp }}/ndic-shadow-work" || true
           rm -rf "${{ runner.temp }}/ndic-shadow-report" || true
+
+  format-inspection:
+    needs: mode-validate
+    # TMC-only format inspection via registered shadow workflow path.
+    # Requires feature workflow ref (not main) + explicit format_inspection mode.
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.repository == 'Josefjosefjosef/filtr'
+      && github.event.pull_request == null
+      && github.event.inputs.mode == 'format_inspection'
+      && github.ref_name == 'feat/ndic-datex-v1-integration'
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 15
+    steps:
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ] || [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_PLATFORM"
+            exit 1
+          fi
+          case "${GITHUB_WORKSPACE:-}" in
+            /home/runner|/home/runner/*) echo "REFUSING_GITHUB_HOSTED_PATH"; exit 1 ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          umask 077
+          echo "RUNNER_PREFLIGHT_OK"
+
+      - name: Enforce allowlisted mode and ref (before checkout)
+        env:
+          INPUT_REF: ${{ github.event.inputs.code_ref }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ "${REF_NAME}" != "feat/ndic-datex-v1-integration" ]; then
+            echo "REFUSING_NON_FEATURE_WORKFLOW_REF"
+            exit 1
+          fi
+          case "${INPUT_REF}" in
+            feat/ndic-datex-v1-integration) ;;
+            *) echo "REFUSING_NON_ALLOWLISTED_CODE_REF"; exit 1 ;;
+          esac
+          mode="$(printf '%s' "${INPUT_MODE:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          if [ "$mode" != "format_inspection" ]; then
+            echo "REFUSING_NON_INSPECTION_MODE"
+            exit 1
+          fi
+          echo "MODE_OK=format_inspection"
+          echo "REF_OK=feat/ndic-datex-v1-integration"
+          echo "DATEX_PHASE=NOT_RUN"
+          echo "REGULAR_SHADOW_PROBE=NOT_RUN"
+          echo "TMC_IMPORTER_PHASE=NOT_RUN"
+          echo "TMC_RESOLVER_PHASE=NOT_RUN"
+          echo "PUBLISH_PHASE=NOT_RUN"
+          echo "ACTIVE_INDEX_WRITE=NO"
+          echo "LAST_GOOD_WRITE=NO"
+          echo "PRODUCTION_WRITE=NO"
+          echo "PRODUCTION_DEPLOY=NO"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+          ref: ${{ github.event.inputs.code_ref }}
+
+      - name: Enforce HEAD matches workflow ref tip (before secrets/network)
+        run: |
+          set -euo pipefail
+          HEAD="$(git rev-parse HEAD)"
+          EXPECTED="${{ github.sha }}"
+          if [ "$HEAD" != "$EXPECTED" ]; then
+            echo "REFUSING_UNEXPECTED_HEAD"
+            exit 1
+          fi
+          echo "HEAD_OK=${HEAD}"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Fixture guards (no network)
+        id: fixtures
+        run: |
+          set -euo pipefail
+          umask 077
+          npm run iu-ndic-datex-v1-guard
+          npm run iu-ndic-datex-v1-exposure-guard
+          npm run iu-ndic-self-hosted-runner-contract-guard
+          npm run iu-ndic-github-hosted-access-fixtures
+          npm run iu-ndic-disk-preflight-fixtures
+          npm run iu-ndic-tmc-archive-stream-fixtures
+          npm run iu-ndic-tmc-format-inspection-fixtures
+          npm run iu-ndic-shadow-probe-mode-contract-fixtures
+          npm run iu-ndic-shadow-report-redaction-guard
+
+      - name: Inspection library offline-ready (no network)
+        if: success()
+        env:
+          IU_NDIC_DATEX_V1_MODE: format_inspection
+          IU_NDIC_SHADOW_WORK_DIR: ${{ runner.temp }}/ndic-inspect-work-offline
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
+          node scripts/ndic-datex-v1-tmc-format-inspection-run.mjs --offline-ready
+          rm -rf "$IU_NDIC_SHADOW_WORK_DIR" || true
+
+      - name: Live TMC format inspection (sanitised report only)
+        id: live
+        if: success()
+        env:
+          IU_NDIC_DATEX_V1_MODE: format_inspection
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+          IU_NDIC_SHADOW_WORK_DIR: ${{ runner.temp }}/ndic-inspect-work
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
+          mkdir -p "$RUNNER_TEMP/ndic-inspect-report"
+          node scripts/ndic-datex-v1-tmc-format-inspection-run.mjs
+          if [ ! -f "$IU_NDIC_SHADOW_WORK_DIR/ndic-inspect-report/inspection-report.json" ]; then
+            echo "INSPECTION_REPORT_MISSING"
+            exit 1
+          fi
+          cp "$IU_NDIC_SHADOW_WORK_DIR/ndic-inspect-report/inspection-report.json" \
+            "$RUNNER_TEMP/ndic-inspect-report/inspection-report.json"
+          BYTES=$(wc -c < "$RUNNER_TEMP/ndic-inspect-report/inspection-report.json" | tr -d ' ')
+          if [ "$BYTES" -gt 65536 ]; then
+            echo "INSPECTION_REPORT_OVERSIZE"
+            exit 1
+          fi
+          # Fail-closed: never leave ZIP / neighbors in the artifact staging dir.
+          find "$RUNNER_TEMP/ndic-inspect-report" -type f ! -name 'inspection-report.json' -delete || true
+          find "$IU_NDIC_SHADOW_WORK_DIR" -type f ! -name 'inspection-report.json' -delete || true
+
+      - name: Mark live NOT_RUN when fixtures failed
+        if: failure() && steps.fixtures.outcome == 'failure'
+        run: |
+          echo "LIVE_FORMAT_INSPECTION=NOT_RUN"
+          echo "FIXTURE_GUARDS=FAIL"
+          echo "DATEX_PHASE=NOT_RUN"
+          echo "REGULAR_SHADOW_PROBE=NOT_RUN"
+          echo "TMC_IMPORTER_PHASE=NOT_RUN"
+          echo "TMC_RESOLVER_PHASE=NOT_RUN"
+          echo "PUBLISH_PHASE=NOT_RUN"
+          echo "ACTIVE_INDEX_WRITE=NO"
+          echo "LAST_GOOD_WRITE=NO"
+          echo "PRODUCTION_WRITE=NO"
+          echo "PRODUCTION_DEPLOY=NO"
+          exit 1
+
+      - name: Job summary (aggregate only)
+        if: always()
+        run: |
+          set -euo pipefail
+          REPORT="$RUNNER_TEMP/ndic-inspect-report/inspection-report.json"
+          {
+            echo "## NDIC TMC format inspection via shadow workflow (aggregate)"
+            echo ""
+            echo "- code_ref: \`${{ github.event.inputs.code_ref }}\`"
+            echo "- code_sha: \`$(git rev-parse HEAD 2>/dev/null || echo unknown)\`"
+            echo "- runner_labels: self-hosted+Linux+X64+ndic-cz-egress"
+            echo "- live_step: ${{ steps.live.outcome || 'NOT_RUN' }}"
+            echo "- DATEX_PHASE=NOT_RUN"
+            echo "- REGULAR_SHADOW_PROBE=NOT_RUN"
+            echo "- TMC_IMPORTER_PHASE=NOT_RUN"
+            echo "- TMC_RESOLVER_PHASE=NOT_RUN"
+            echo "- PUBLISH_PHASE=NOT_RUN"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "$REPORT" ]; then
+            {
+              echo '```json'
+              cat "$REPORT"
+              echo ""
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "NO_SANITISED_REPORT" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload sanitised inspection report artifact
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-tmc-format-inspection-report
+          path: ${{ runner.temp }}/ndic-inspect-report/inspection-report.json
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Wipe temp workdir (fenced)
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ -f scripts/ndic-datex-v1-tmc-inspection-cleanup-run.mjs ]; then
+            node scripts/ndic-datex-v1-tmc-inspection-cleanup-run.mjs
+          else
+            echo "CLEANUP_SKIPPED_NO_CHECKOUT"
+          fi

@@ -314,6 +314,9 @@ function main() {
 
     if (file === "ndic-datex-v1-shadow-probe.yml") {
       const src = analysis.src;
+      const shadowJob = analysis.jobs.find((j) => j.name === "shadow-probe");
+      const inspectJob = analysis.jobs.find((j) => j.name === "format-inspection");
+      const validateJob = analysis.jobs.find((j) => j.name === "mode-validate");
       ok("shadow_has_self_hosted", analysis.jobs.some((j) => j.isSelfHosted), "missing");
       for (const t of FORBIDDEN_TRIGGERS) {
         ok("shadow_no_trigger_" + t.replace(":", ""), !hasTrigger(src, t), "present");
@@ -322,9 +325,37 @@ function main() {
       ok("shadow_contents_read", /contents\s*:\s*read/.test(src), "perms");
       ok("shadow_no_contents_write", !/contents\s*:\s*write/.test(src), "write");
       ok("shadow_persist_false", /persist-credentials\s*:\s*false/.test(src), "persist");
-      ok("shadow_only_choice", /-\s*shadow/.test(src) && !/options:[\s\S]*?-\s*active/.test(src), "options");
-      ok("shadow_no_ubuntu", !/ubuntu-latest/.test(src), "ubuntu");
-      ok("shadow_single_network_job", analysis.jobs.filter((j) => j.ndicCapabilities.length).length === 1, "jobs");
+      ok(
+        "shadow_choice_shadow_and_inspection",
+        /-\s*shadow/.test(src) && /-\s*format_inspection/.test(src) && !/options:[\s\S]*?-\s*active/.test(src),
+        "options"
+      );
+      ok("shadow_default_not_inspection", /default:\s*shadow\b/.test(src) && !/default:\s*format_inspection\b/.test(src), "def");
+      // mode-validate may use ubuntu-latest (no secrets); network jobs must not.
+      ok("shadow_validate_ubuntu", Boolean(validateJob) && validateJob.isGithubHosted, "validate");
+      ok("shadow_validate_no_secrets", validateJob && !/secrets\.IU_NDIC_/.test(validateJob.body), "val-sec");
+      ok("shadow_validate_unknown_fail", validateJob && /REFUSING_UNKNOWN_MODE/.test(validateJob.body), "unk");
+      ok(
+        "shadow_network_jobs_no_ubuntu",
+        shadowJob && !/ubuntu-latest/.test(shadowJob.body) && inspectJob && !/ubuntu-latest/.test(inspectJob.body),
+        "ubuntu"
+      );
+      ok(
+        "shadow_two_network_jobs",
+        analysis.jobs.filter((j) => j.ndicCapabilities.length).length === 2,
+        "jobs"
+      );
+      ok("shadow_mutex_shadow_if", shadowJob && /inputs\.mode\s*==\s*'shadow'/.test(shadowJob.body), "if-sh");
+      ok(
+        "shadow_mutex_inspect_if",
+        inspectJob && /inputs\.mode\s*==\s*'format_inspection'/.test(inspectJob.body),
+        "if-fi"
+      );
+      ok(
+        "shadow_inspect_requires_feature_ref",
+        inspectJob && /ref_name\s*==\s*'feat\/ndic-datex-v1-integration'/.test(inspectJob.body),
+        "refname"
+      );
       ok("shadow_code_ref_allowlist", /feat\/ndic-datex-v1-integration/.test(src), "ref");
       // Main bypass: runs-on must be static on the workflow itself (not only after checkout).
       ok(
@@ -342,8 +373,22 @@ function main() {
       ok("shadow_fixture_disk_preflight", /iu-ndic-disk-preflight-fixtures/.test(src), "disk-fx");
       ok("shadow_fixture_tmc_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "tmc-fx");
       ok("shadow_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "insp-fx");
+      ok("shadow_fixture_mode_contract", /iu-ndic-shadow-probe-mode-contract-fixtures/.test(src), "mode-fx");
       ok("shadow_fixture_redaction", /iu-ndic-shadow-report-redaction-guard/.test(src), "redact-fx");
       ok("shadow_fixture_before_probe", /Fixture guards[\s\S]*iu-ndic-tmc-archive-stream-fixtures[\s\S]*Real shadow probe/.test(src), "order");
+      ok("shadow_inspect_no_datex_url", inspectJob && !/secrets\.IU_NDIC_PULL_URL/.test(inspectJob.body), "no-datex");
+      ok("shadow_inspect_tmc_only_run", inspectJob && /ndic-datex-v1-tmc-format-inspection-run\.mjs/.test(inspectJob.body), "insp-run");
+      ok("shadow_inspect_no_shadow_run", inspectJob && !/ndic-datex-v1-shadow-run\.mjs/.test(inspectJob.body), "no-sh-run");
+      ok("shadow_job_has_shadow_run", shadowJob && /ndic-datex-v1-shadow-run\.mjs/.test(shadowJob.body), "sh-run");
+      ok("shadow_job_no_inspection_run", shadowJob && !/ndic-datex-v1-tmc-format-inspection-run\.mjs/.test(shadowJob.body), "sh-no-insp");
+      ok("shadow_inspect_head_gate", inspectJob && /REFUSING_UNEXPECTED_HEAD/.test(inspectJob.body), "head");
+      ok("shadow_inspect_mode_before_checkout", inspectJob && /before checkout[\s\S]*actions\/checkout@/.test(inspectJob.body), "mode-ord");
+      ok(
+        "shadow_inspect_artifact_exact",
+        inspectJob &&
+          /path:\s*\$\{\{\s*runner\.temp\s*\}\}\/ndic-inspect-report\/inspection-report\.json/.test(inspectJob.body),
+        "art"
+      );
     }
 
     if (file === "ndic-datex-v1-tmc-format-inspection.yml") {

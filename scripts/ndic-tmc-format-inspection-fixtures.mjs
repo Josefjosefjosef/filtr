@@ -485,19 +485,30 @@ function shpHeaderSynthetic(opts = {}) {
   } catch (_) {}
 }
 
-// --- artifact exact single-file contract (workflow static + neighbor exclusion) ---
+// --- artifact exact single-file contract (standalone + registered shadow dual-mode) ---
 {
-  const wf = fs.readFileSync(
+  const wfStandalone = fs.readFileSync(
     path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".github", "workflows", "ndic-datex-v1-tmc-format-inspection.yml"),
     "utf8"
   );
-  ok(
-    "artifact_exact_path",
-    /path:\s*\$\{\{\s*runner\.temp\s*\}\}[/\\]ndic-inspect-report[/\\]inspection-report\.json/.test(wf),
-    "path"
+  const wfShadow = fs.readFileSync(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".github", "workflows", "ndic-datex-v1-shadow-probe.yml"),
+    "utf8"
   );
-  ok("artifact_no_dir_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(wf), "dir");
-  ok("artifact_missing_error", /if-no-files-found:\s*error/.test(wf), "err");
+  for (const [label, wf] of [
+    ["standalone", wfStandalone],
+    ["shadow_dual", wfShadow],
+  ]) {
+    ok(
+      "artifact_exact_path_" + label,
+      /path:\s*\$\{\{\s*runner\.temp\s*\}\}[/\\]ndic-inspect-report[/\\]inspection-report\.json/.test(wf),
+      "path"
+    );
+  }
+  ok("artifact_no_dir_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(wfStandalone), "dir");
+  ok("artifact_missing_error", /if-no-files-found:\s*error/.test(wfStandalone), "err");
+  ok("shadow_dual_has_format_inspection_mode", /format_inspection/.test(wfShadow), "mode");
+  ok("shadow_dual_inspect_job", /format-inspection:/.test(wfShadow), "job");
   const staging = fs.mkdtempSync(path.join(os.tmpdir(), "ndic-art-"));
   const reportDir = path.join(staging, "ndic-inspect-report");
   fs.mkdirSync(reportDir, { recursive: true });

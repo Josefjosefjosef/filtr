@@ -649,7 +649,13 @@ async function discoveryChecks() {
   ok("shadow_probe_aggregate_only_stdout", /Aggregate-only stdout/.test(probeSrc), "aggregate");
   const shadowWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "ndic-datex-v1-shadow-probe.yml"), "utf8");
   ok("shadow_wf_no_schedule", !/schedule:/.test(shadowWf), "no-cron");
-  ok("shadow_wf_choice_shadow_only", /options:[\s\S]*-\s*shadow/.test(shadowWf) && !/-\s*active/.test(shadowWf), "choice");
+  ok(
+    "shadow_wf_choice_shadow_and_inspection",
+    /options:[\s\S]*-\s*shadow/.test(shadowWf) &&
+      /-\s*format_inspection/.test(shadowWf) &&
+      !/-\s*active/.test(shadowWf),
+    "choice"
+  );
   ok("shadow_wf_retention_1d", /retention-days:\s*1/.test(shadowWf), "retention");
   ok("shadow_wf_contents_read", /contents:\s*read/.test(shadowWf), "perms");
   ok("shadow_wf_wipe_always", /Wipe temp workdir[\s\S]*if:\s*always\(\)|if:\s*always\(\)[\s\S]*Wipe temp workdir/.test(shadowWf), "wipe-always");
