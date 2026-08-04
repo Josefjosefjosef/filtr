@@ -15,7 +15,12 @@
   }
   .iuInfoCenterV2 .iuTopbarInfoOverlay__backdrop{
     position: fixed;
-    inset: 0;
+    inset: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Leave the shared bottom nav uncovered (nav stacks above at z-index 10025). */
+    bottom: var(--bottom-nav-height, calc(56px + env(safe-area-inset-bottom, 0px) + 48px));
   }
   .iuInfoCenterV2 .iuTopbarInfoOverlay__panel{
     position: fixed;

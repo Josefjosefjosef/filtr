@@ -177,7 +177,17 @@ function injectDialogStyles() {
     ".iu-ldp-btn--primary{background:#16964E;border-color:#16964E;color:#fff;font-weight:650}" +
     ".iu-ldp-btn--secondary{background:#fff;border-color:rgba(15,23,42,.18);color:#0f172a}" +
     ".iu-ldp-btn--ghost{background:transparent;border-color:transparent;color:#64748b;font-size:13px}" +
-    "@media(min-width:520px){.iu-ldp-dialog__actions{flex-direction:row;flex-wrap:wrap;justify-content:flex-end}.iu-ldp-btn{width:auto;min-width:140px;flex:0 1 auto}}";
+    "@media(min-width:520px){.iu-ldp-dialog__actions{flex-direction:row;flex-wrap:wrap;justify-content:flex-end}.iu-ldp-btn{width:auto;min-width:140px;flex:0 1 auto}}" +
+    /* Mobile/tablet: LDP must not cover #iuMobileBottomNav (Domů/Menu/Silver/MindMenu/Zpět stay clickable). */
+    "@media(max-width:1024px){" +
+    ".iu-ldp-backdrop{inset:auto!important;top:0!important;left:0!important;right:0!important;" +
+    "bottom:var(--bottom-nav-height,calc(56px + env(safe-area-inset-bottom,0px) + 48px))!important;" +
+    "z-index:10190!important;padding-bottom:max(12px,env(safe-area-inset-bottom,0px))!important}" +
+    "html.iu-ldp-dialog-open #iuMobileBottomNav.iu-mobileBottomNav," +
+    "body.iu-ldp-dialog-open #iuMobileBottomNav.iu-mobileBottomNav{" +
+    "z-index:10200!important;pointer-events:auto!important}" +
+    ".iu-ldp-dialog{max-height:min(78dvh,720px)}" +
+    "}";
   const el = document.createElement("style");
   el.setAttribute("data-iu-local-data-protection", "1");
   el.textContent = css;
