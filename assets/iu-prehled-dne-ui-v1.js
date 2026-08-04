@@ -33,10 +33,10 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=chmi-region-cards-split-v1-20260804";
+} from "./iu-info-system-core-v1.js?v=chmi-title-map-float-wrap-v1-20260804";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-region-cards-split-v1-20260804";
+const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -561,14 +561,15 @@ function renderItem(ev) {
   const regionCoverageMarkup = regionCoverage
     ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
     : "";
+  /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it. */
   const cardHead = czMapMarkup
     ? `<div class="iuPrehledDne__cardHead">` +
       `<div class="iuPrehledDne__cardHeadMain">` +
+      czMapMarkup +
       warnBadge +
       titleMarkup +
       regionCoverageMarkup +
       `</div>` +
-      czMapMarkup +
       `</div>`
     : warnBadge + titleMarkup + regionCoverageMarkup;
   return (
