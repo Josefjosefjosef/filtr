@@ -86,7 +86,12 @@ async function main() {
     const consoleErrors = [];
     const pageErrors = [];
     page.on("console", (m) => {
-      if (m.type() === "error") consoleErrors.push(m.text());
+      if (m.type() !== "error") return;
+      const t = String(m.text() || "");
+      // Third-party CF beacon blocked by CSP is expected / not an app regression.
+      if (/cloudflareinsights\.com\/beacon/i.test(t)) return;
+      if (/Content Security Policy directive/i.test(t) && /cloudflareinsights/i.test(t)) return;
+      consoleErrors.push(t);
     });
     page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
 
