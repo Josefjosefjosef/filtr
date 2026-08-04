@@ -21,6 +21,9 @@ import {
   ALLOWED_EMPTY_TABLES,
   serializeInspectionReport,
   validateInspectionReportObject,
+  buildStdoutEnvelope,
+  REPORT_SAFETY,
+  INSPECTION_TABLE_CANDIDATE_COUNT_MAX,
 } from "./ndic-datex-v1/tmc-format-inspection.mjs";
 import {
   buildSyntheticSp08001Dat,
@@ -420,6 +423,153 @@ function fullStandardEntries(overrides = {}) {
   ok("report_unknown_key", unknownRejected === true, "uk");
   const over = serializeInspectionReport(report, 200);
   ok("report_oversize", over.truncated === true, "os");
+
+  function assertSchemaReject(label, mutate, expectKey) {
+    const base = JSON.parse(JSON.stringify(ser.object));
+    mutate(base);
+    let rejected = false;
+    let rejectCode = null;
+    let rejectKey = null;
+    let validated = null;
+    try {
+      validated = validateInspectionReportObject(base);
+    } catch (e) {
+      rejected = true;
+      rejectCode = e && e.code ? String(e.code) : String(e && e.message);
+      rejectKey = e && e.key != null ? String(e.key) : null;
+    }
+    let serializeBlocked = false;
+    try {
+      serializeInspectionReport(base);
+    } catch (_) {
+      serializeBlocked = true;
+    }
+    const envelope = buildStdoutEnvelope({
+      ok: false,
+      reportSafety: REPORT_SAFETY.FAILED,
+      sanitized_report_ready: false,
+      formatConfirmed: false,
+      authoritativeFormatVerified: false,
+    });
+    const envBlob = JSON.stringify(envelope);
+    ok(label + "_rejected", rejected === true, rejectCode);
+    ok(label + "_schema_code", /TMC_INSPECTION_REPORT_SCHEMA|TMC_INSPECTION_REPORT_UNKNOWN/.test(String(rejectCode)), rejectCode);
+    if (expectKey) ok(label + "_key", rejectKey === expectKey, rejectKey);
+    ok(label + "_no_validated_object", validated == null, "val");
+    ok(label + "_serialize_blocked", serializeBlocked === true, "ser");
+    ok(label + "_safety_not_passed", envelope.reportSafety !== REPORT_SAFETY.PASSED, envelope.reportSafety);
+    ok(label + "_ready_false", envelope.sanitized_report_ready === false, "rdy");
+    ok(label + "_artifact_blocked", serializeBlocked === true && envelope.sanitized_report_ready !== true, "art");
+    ok(label + "_stdout_safe", !/SYNTH_ENUM_NOT_IN_ALLOWLIST_V3|-1|1025|Infinity|NaN|"1\.5"|"3"/.test(envBlob), envBlob);
+    return { rejected, rejectCode, rejectKey };
+  }
+
+  // Unknown tableState enum — production validator, fail-closed
+  {
+    const r = assertSchemaReject(
+      "unknown_enum",
+      (base) => {
+        if (!Array.isArray(base.tableAssessments) || !base.tableAssessments[0]) {
+          base.tableAssessments = [
+            {
+              tableCode: "POINTS",
+              state: "SYNTH_ENUM_NOT_IN_ALLOWLIST_V3",
+              candidateCount: 1,
+              headerMatched: false,
+              schemaVerified: false,
+              limitedContentVerified: false,
+            },
+          ];
+        } else {
+          base.tableAssessments[0].state = "SYNTH_ENUM_NOT_IN_ALLOWLIST_V3";
+        }
+      },
+      "tableState"
+    );
+    ok("unknown_enum_not_coerced", r.rejected === true, "coerce");
+  }
+
+  // Negative bounded integer
+  {
+    assertSchemaReject(
+      "negative_int",
+      (base) => {
+        if (!Array.isArray(base.tableAssessments) || !base.tableAssessments[0]) {
+          base.tableAssessments = [
+            {
+              tableCode: "POINTS",
+              state: TABLE_STATE.schema_and_limited_content_verified,
+              candidateCount: -1,
+              headerMatched: true,
+              schemaVerified: true,
+              limitedContentVerified: true,
+            },
+          ];
+        } else {
+          base.tableAssessments[0].candidateCount = -1;
+        }
+      },
+      "candidateCount"
+    );
+  }
+
+  // Integer upper bound + invalid numeric shapes
+  {
+    ok("integer_max_bound", INSPECTION_TABLE_CANDIDATE_COUNT_MAX === 1024, String(INSPECTION_TABLE_CANDIDATE_COUNT_MAX));
+    const atMax = JSON.parse(JSON.stringify(ser.object));
+    atMax.tableAssessments[0].candidateCount = INSPECTION_TABLE_CANDIDATE_COUNT_MAX;
+    let atMaxOk = false;
+    try {
+      validateInspectionReportObject(atMax);
+      atMaxOk = true;
+    } catch (_) {
+      atMaxOk = false;
+    }
+    ok("integer_at_max_accepted", atMaxOk === true, "max");
+
+    assertSchemaReject(
+      "integer_above_max",
+      (base) => {
+        base.tableAssessments[0].candidateCount = INSPECTION_TABLE_CANDIDATE_COUNT_MAX + 1;
+      },
+      "candidateCount"
+    );
+    assertSchemaReject(
+      "max_safe_integer",
+      (base) => {
+        base.tableAssessments[0].candidateCount = Number.MAX_SAFE_INTEGER;
+      },
+      "candidateCount"
+    );
+    assertSchemaReject(
+      "infinity",
+      (base) => {
+        base.tableAssessments[0].candidateCount = Infinity;
+      },
+      "candidateCount"
+    );
+    assertSchemaReject(
+      "nan",
+      (base) => {
+        base.tableAssessments[0].candidateCount = NaN;
+      },
+      "candidateCount"
+    );
+    assertSchemaReject(
+      "decimal",
+      (base) => {
+        base.tableAssessments[0].candidateCount = 1.5;
+      },
+      "candidateCount"
+    );
+    assertSchemaReject(
+      "numeric_string",
+      (base) => {
+        base.tableAssessments[0].candidateCount = "3";
+      },
+      "candidateCount"
+    );
+  }
 }
 
 // Redaction: tableAssessments only safe fields

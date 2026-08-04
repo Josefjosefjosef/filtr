@@ -76,6 +76,8 @@ export {
   ALLOWED_EMPTY_TABLES,
 };
 export const INSPECTION_REPORT_MAX_BYTES = 64 * 1024;
+/** Closed upper bound for per-table candidateCount in report v3. */
+export const INSPECTION_TABLE_CANDIDATE_COUNT_MAX = 1024;
 export const INSPECTION_TEXT_PEEK_BYTES = 4 * 1024;
 export const INSPECTION_MAX_TEXT_LINES = 8;
 export const INSPECTION_CPG_MAX_BYTES = 64;
@@ -1200,13 +1202,19 @@ export function validateInspectionReportObject(report) {
           key: "tableState",
         });
       }
-      const candidateCount = Number(a.candidateCount);
-      if (!Number.isInteger(candidateCount) || candidateCount < 0 || candidateCount > 1024) {
+      // Strict number (reject numeric strings, NaN, Infinity, decimals).
+      if (
+        typeof a.candidateCount !== "number" ||
+        !Number.isInteger(a.candidateCount) ||
+        a.candidateCount < 0 ||
+        a.candidateCount > INSPECTION_TABLE_CANDIDATE_COUNT_MAX
+      ) {
         throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
           code: "TMC_INSPECTION_REPORT_SCHEMA",
           key: "candidateCount",
         });
       }
+      const candidateCount = a.candidateCount;
       return {
         tableCode: a.tableCode,
         state,
