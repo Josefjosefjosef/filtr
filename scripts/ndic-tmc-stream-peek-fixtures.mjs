@@ -61,7 +61,7 @@ async function main() {
   ok("header_max", INSPECTION_HEADER_MAX_BYTES === 1024, "hm");
   ok("header_fields", INSPECTION_HEADER_FIELD_LIMIT === 64, "hf");
   ok("schema_ver", REPORT_SCHEMA_VERSION === "tmc-format-inspection-report-v2", REPORT_SCHEMA_VERSION);
-  ok("insp_ver", INSPECTION_VERSION === "sp08001-v2.6-stream-peek-1", INSPECTION_VERSION);
+  ok("insp_ver", INSPECTION_VERSION === "sp08001-v2.6-auth-promotion-1", INSPECTION_VERSION);
 
   // A + F: LARGE_DEFLATED_ENTRY_STREAM_PEEK + intentional truncation
   {
@@ -266,7 +266,7 @@ async function main() {
     ]);
     ok("encoding_cpg_windows", report.encodingCpgLayer === "WINDOWS-1250", report.encodingCpgLayer);
     ok("encoding_false_conflict_avoided_or_dat_ok", report.encodingFalseConflictAvoided === true || report.encodingDatLayer !== "CONFLICT", String(report.encodingDatLayer));
-    ok("readme_encoding_state", report.readmeEncodingState === "ASCII" || report.readmeEncodingState === "ABSENT", report.readmeEncodingState);
+    ok("readme_encoding_state", report.readmeEncodingState === "ASCII", report.readmeEncodingState);
   }
 
   // K: reject code on insufficient_evidence

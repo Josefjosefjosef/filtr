@@ -87,7 +87,25 @@ export function wipeInspectionTaskDir(targetPath, ctx = {}) {
   if (Date.now() - started > timeoutMs) {
     throw Object.assign(new Error("TMC_CLEANUP_TIMEOUT"), { code: "TMC_CLEANUP_TIMEOUT" });
   }
-  if (!fs.existsSync(resolved)) return { ok: true, wiped: false, pathCategory: "task_temp" };
+  const name = path.basename(resolved);
+  if (!fs.existsSync(resolved)) {
+    return {
+      ok: true,
+      wiped: false,
+      pathCategory: "task_temp",
+      taskDirName: name,
+      absentAfter: true,
+      attestedAbsent: true,
+    };
+  }
   fs.rmSync(resolved, { recursive: true, force: true });
-  return { ok: true, wiped: true, pathCategory: "task_temp" };
+  const absentAfter = !fs.existsSync(resolved);
+  return {
+    ok: true,
+    wiped: true,
+    pathCategory: "task_temp",
+    taskDirName: name,
+    absentAfter,
+    attestedAbsent: absentAfter === true,
+  };
 }

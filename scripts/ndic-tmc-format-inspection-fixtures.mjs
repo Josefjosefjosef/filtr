@@ -646,7 +646,8 @@ function shpHeaderSynthetic(opts = {}) {
   ok("envelope_ready", env.sanitized_report_ready === true, "rdy");
   ok("envelope_keys_min", Object.keys(env).every((k) => [
     "ok","mode","inspectionOutcome","reportSafety","rejectCode","reportBytes","reportTruncated",
-    "workDirCategory","authoritativeFormat","authoritativeFormatVerified","importerActivated",
+    "workDirCategory","authoritativeFormat","authoritativeFormatVerified","formatConfirmed",
+    "datasetIntegrityState","importerActivated",
     "resolverActivated","publishActivated","productionWrite","sanitized_report_ready",
   ].includes(k)), "keys");
 

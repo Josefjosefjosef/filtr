@@ -374,6 +374,7 @@ function main() {
       ok("shadow_fixture_tmc_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "tmc-fx");
       ok("shadow_fixture_sp08001", /iu-ndic-tmc-sp08001-contract-fixtures/.test(src), "sp08001-fx");
       ok("shadow_fixture_stream_peek", /iu-ndic-tmc-stream-peek-fixtures/.test(src), "peek-fx");
+      ok("shadow_fixture_format_promotion", /iu-ndic-tmc-sp08001-format-promotion-fixtures/.test(src), "promo-fx");
       ok("shadow_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "insp-fx");
       ok("shadow_fixture_mode_contract", /iu-ndic-shadow-probe-mode-contract-fixtures/.test(src), "mode-fx");
       ok("shadow_fixture_redaction", /iu-ndic-shadow-report-redaction-guard/.test(src), "redact-fx");
@@ -411,6 +412,7 @@ function main() {
       ok("inspect_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "fx");
       ok("inspect_fixture_sp08001", /iu-ndic-tmc-sp08001-contract-fixtures/.test(src), "sp08001");
       ok("inspect_fixture_stream_peek", /iu-ndic-tmc-stream-peek-fixtures/.test(src), "peek");
+      ok("inspect_fixture_format_promotion", /iu-ndic-tmc-sp08001-format-promotion-fixtures/.test(src), "promo");
       ok("inspect_fixture_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "arch");
       ok("inspect_fixture_disk", /iu-ndic-disk-preflight-fixtures/.test(src), "disk");
       ok("inspect_offline_ready", /--offline-ready/.test(src), "ready");

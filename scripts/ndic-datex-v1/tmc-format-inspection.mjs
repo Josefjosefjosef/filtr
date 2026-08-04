@@ -37,10 +37,29 @@ import {
   peekZipEntryBytesStreaming,
   extractFirstLogicalHeaderLine,
 } from "./tmc-zip-entry-peek.mjs";
+import {
+  DATASET_INTEGRITY_STATE,
+  REQUIRED_FOR_FORMAT_IDENTIFICATION,
+  evaluateFormatContractPromotion,
+  emptyTableAssessment,
+  HEADER_MATCH_STATE,
+  CONTENT_VERIFIED_STATE,
+  TABLE_MISMATCH_REASON,
+  classifySp08001TableAssessmentClass,
+  COMPANION_NON_AUTHORITATIVE,
+} from "./tmc-sp08001-format-promotion.mjs";
 
 export const INSPECTION_MODE = "format_inspection";
 export const REPORT_SCHEMA_VERSION = "tmc-format-inspection-report-v2";
-export const INSPECTION_VERSION = "sp08001-v2.6-stream-peek-1";
+export const INSPECTION_VERSION = "sp08001-v2.6-auth-promotion-1";
+export {
+  DATASET_INTEGRITY_STATE,
+  REQUIRED_FOR_FORMAT_IDENTIFICATION,
+  evaluateFormatContractPromotion,
+  HEADER_MATCH_STATE,
+  CONTENT_VERIFIED_STATE,
+  TABLE_MISMATCH_REASON,
+};
 export const INSPECTION_REPORT_MAX_BYTES = 64 * 1024;
 export const INSPECTION_TEXT_PEEK_BYTES = 4 * 1024;
 export const INSPECTION_MAX_TEXT_LINES = 8;
@@ -213,6 +232,15 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "peekStatusCounts",
   "readmeEncodingState",
   "metadataFileCount",
+  "formatConfirmed",
+  "datasetIntegrityState",
+  "promotionBlockers",
+  "tableAssessments",
+  "tableCodeConflictCount",
+  "opaqueTableCodeVerifiedCount",
+  "standardTableHeaderMatchCount",
+  "identificationTablesPresentCount",
+  "identificationTablesVerifiedCount",
 ]);
 
 export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
@@ -226,6 +254,8 @@ export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
   "workDirCategory",
   "authoritativeFormat",
   "authoritativeFormatVerified",
+  "formatConfirmed",
+  "datasetIntegrityState",
   "importerActivated",
   "resolverActivated",
   "publishActivated",
@@ -407,8 +437,10 @@ export function buildStdoutEnvelope(fields) {
     if (Object.prototype.hasOwnProperty.call(fields, key)) out[key] = fields[key];
   }
   out.mode = INSPECTION_MODE;
-  out.authoritativeFormat = "UNVERIFIED";
-  out.authoritativeFormatVerified = false;
+  out.authoritativeFormat = fields.authoritativeFormat === "TISA_DAT_CSV" ? "TISA_DAT_CSV" : "UNVERIFIED";
+  out.authoritativeFormatVerified = fields.authoritativeFormatVerified === true;
+  out.formatConfirmed = fields.formatConfirmed === true;
+  out.datasetIntegrityState = DATASET_INTEGRITY_STATE.NOT_TESTED;
   out.importerActivated = false;
   out.resolverActivated = false;
   out.publishActivated = false;
@@ -424,12 +456,15 @@ export function finalizeInspectionOutcome(report) {
   const r = report || {};
   r.reportSchemaVersion = r.reportSchemaVersion || REPORT_SCHEMA_VERSION;
   r.inspectionVersion = r.inspectionVersion || INSPECTION_VERSION;
-  r.authoritativeFormat = "UNVERIFIED";
-  r.authoritativeFormatVerified = false;
   r.importerActivated = false;
   r.resolverActivated = false;
   r.publishActivated = false;
   r.productionWrite = false;
+  // Dataset integrity is never claimed by format inspection (no full-table import).
+  r.datasetIntegrityState = DATASET_INTEGRITY_STATE.NOT_TESTED;
+  // relationshipIntegrity must not block format confirmation.
+  if (r.relationshipIntegrity == null) r.relationshipIntegrity = "UNVERIFIED";
+
   const hard =
     r.rejectCode &&
     r.rejectCode !== INSPECTION_REJECT.FORMAT_EVIDENCE_INSUFFICIENT &&
@@ -439,16 +474,23 @@ export function finalizeInspectionOutcome(report) {
       r.rejectCode === "TMC_CONTENT_TYPE_REJECTED" ||
       r.rejectCode === "TMC_RESPONSE_TOO_LARGE");
   if (hard) {
+    r.formatConfirmed = false;
+    r.authoritativeFormat = "UNVERIFIED";
+    r.authoritativeFormatVerified = false;
     r.inspectionOutcome = INSPECTION_OUTCOME.EXPECTED_REJECT;
     r.ok = false;
     if (!r.severity) r.severity = "archive_reject";
     if (!r.rejectPhase) r.rejectPhase = REJECT_PHASE.ARCHIVE_REJECT;
-  } else if (r.authoritativeFormatVerified === true) {
+  } else if (r.formatConfirmed === true && r.authoritativeFormatVerified === true) {
     r.inspectionOutcome = INSPECTION_OUTCOME.SUCCESS;
     r.ok = true;
     r.severity = "ok";
+    r.rejectCode = null;
     r.rejectPhase = REJECT_PHASE.NOT_APPLICABLE;
   } else {
+    r.formatConfirmed = false;
+    r.authoritativeFormat = "UNVERIFIED";
+    r.authoritativeFormatVerified = false;
     r.inspectionOutcome = INSPECTION_OUTCOME.INSUFFICIENT_EVIDENCE;
     r.ok = false;
     r.severity = r.severity || "insufficient_evidence";
@@ -1072,14 +1114,49 @@ export function validateInspectionReportObject(report) {
       code: "TMC_INSPECTION_REPORT_SQL_LEAK",
     });
   }
-  // Force immutable safety flags
+  // Preserve promotion result; never force false here (finalize already decided).
   out.mode = INSPECTION_MODE;
-  out.authoritativeFormat = "UNVERIFIED";
-  out.authoritativeFormatVerified = false;
+  if (out.formatConfirmed === true && out.authoritativeFormatVerified === true) {
+    out.authoritativeFormat = out.authoritativeFormat || "TISA_DAT_CSV";
+    out.authoritativeFormatVerified = true;
+    out.formatConfirmed = true;
+  } else {
+    out.formatConfirmed = false;
+    out.authoritativeFormat = "UNVERIFIED";
+    out.authoritativeFormatVerified = false;
+  }
+  out.datasetIntegrityState = DATASET_INTEGRITY_STATE.NOT_TESTED;
   out.importerActivated = false;
   out.resolverActivated = false;
   out.publishActivated = false;
   out.productionWrite = false;
+  if (Array.isArray(out.tableAssessments)) {
+    const allowedCodes = new Set([...SP08001_TABLE_CODES, "README"]);
+    const allowedHdr = new Set(Object.values(HEADER_MATCH_STATE));
+    const allowedCv = new Set(Object.values(CONTENT_VERIFIED_STATE));
+    const allowedReason = new Set(Object.values(TABLE_MISMATCH_REASON));
+    out.tableAssessments = out.tableAssessments.map((a) => {
+      if (!a || typeof a !== "object") {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableAssessments" });
+      }
+      if (!allowedCodes.has(a.tableCode)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableCode" });
+      }
+      if (!allowedHdr.has(a.headerMatchState) || !allowedCv.has(a.contentVerifiedState) || !allowedReason.has(a.mismatchReason)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableAssessmentEnum" });
+      }
+      return {
+        tableCode: a.tableCode,
+        assessmentClass: a.assessmentClass,
+        headerMatchState: a.headerMatchState,
+        contentVerifiedState: a.contentVerifiedState,
+        mismatchReason: a.mismatchReason,
+      };
+    });
+  }
+  if (Array.isArray(out.promotionBlockers)) {
+    out.promotionBlockers = out.promotionBlockers.filter((x) => typeof x === "string" && /^[a-z0-9_]{1,64}$/.test(x)).slice(0, 32);
+  }
   return out;
 }
 
@@ -1182,10 +1259,11 @@ export function buildSourceAuthorityBoard(roleAgg, peeks) {
 
 /**
  * Inspect synthetic or extracted entry buffers (fixtures / controlled peeks).
- * Candidate broad roles may have multiple entries (warning only).
- * Fatal DUPLICATE_REQUIRED_ROLE only when ≥2 content-verified singleton contracts collide.
- * @param {{ role: string, ext: string, buf: Buffer, schemaHints?: object }[]} entries
- * @param {{ centralMeta?: object, startedAt?: number, timeoutMs?: number }} [opts]
+ * Opaque SP08001 tableCode is authoritative for format confirmation.
+ * Broad roles are informational; companions never authorize DAT.
+ * Fatal DUPLICATE_REQUIRED_ROLE when ≥2 content-verified instances share the same tableCode.
+ * @param {{ role: string, ext: string, buf: Buffer, schemaHints?: object, tableCode?: string }[]} entries
+ * @param {{ centralMeta?: object, startedAt?: number, timeoutMs?: number, decompressionErrorCount?: number }} [opts]
  */
 export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   const started = opts.startedAt || Date.now();
@@ -1214,9 +1292,20 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   let fieldCountN = 0;
   let contentVerifiedTableCount = 0;
   const verifiedTableCodes = new Set();
+  const headerMatchedTableCodes = new Set();
+  const tableCodeCvCounts = Object.create(null);
+  const tableAssessmentsMap = Object.create(null);
   let requiredTablesPresent = 0;
   let optionalTablesPresent = 0;
   let unknownSupplementaryTables = 0;
+
+  function upsertAssessment(tableCode, patch) {
+    if (!tableCode) return;
+    if (!tableAssessmentsMap[tableCode]) {
+      tableAssessmentsMap[tableCode] = emptyTableAssessment(tableCode);
+    }
+    Object.assign(tableAssessmentsMap[tableCode], patch);
+  }
 
   for (const ent of entries) {
     if (Date.now() - started > timeoutMs) {
@@ -1224,8 +1313,11 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     }
     let role = ent.role || classifyEntryRole(ent.name || "x." + (ent.ext || "dat"));
     if (!STRUCTURAL_ROLE_ALLOWLIST.includes(role)) role = "ignored_other";
+    // README is metadata (not in SP08001_TABLE_CODES) but must keep opaque code for encoding bootstrap.
     const tableCode =
-      ent.tableCode && SP08001_TABLE_CODES.includes(ent.tableCode) ? ent.tableCode : null;
+      ent.tableCode === "README" || (ent.tableCode && SP08001_TABLE_CODES.includes(ent.tableCode))
+        ? ent.tableCode
+        : null;
     bump(roleCounts, role);
     bump(roleCandidateCounts, role);
     sizeByRole[role] = (sizeByRole[role] || 0) + (ent.buf ? ent.buf.length : 0);
@@ -1273,7 +1365,8 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       }
       if (peek.tabcd25Seen) tabcd25 = true;
       if (peek.candidateCoordinateColumns) peeks.coordsFromDat = true;
-      if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN") {
+      // README meta must not vote as DAT_DETECTED (SP08001 README is ASCII; DAT default is separate).
+      if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN" && tableCode !== "README") {
         encodingLayers.push({ layer: ENCODING_LAYER.DAT_DETECTED, encoding: peek.encodingCandidate });
       }
       if (peek.delimiter && peek.delimiter !== "unknown") bump(delimiterVotes, peek.delimiter);
@@ -1285,26 +1378,17 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       }
 
       if (tableCode === "README") {
-        // README bootstrap: SP08001 declares README as ASCII meta; DAT default UTF-8 after README present.
         encodingLayers.push({ layer: ENCODING_LAYER.README_DECLARED, encoding: "ASCII" });
         encodingLayers.push({
           layer: ENCODING_LAYER.DAT_DECLARED,
           encoding: SP08001_PHYSICAL.defaultEncoding || "UTF-8",
         });
+        evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
+        bump(roleEvidenceLevelCounts, evidenceLevel);
+        continue;
       }
 
-      if (REQUIRED_SINGLETON_ROLES.includes(role)) {
-        const assessed = assessSingletonContentContract(role, peek, { tableCode });
-        evidenceLevel = assessed.evidenceLevel;
-        if (assessed.headerContractMatch) bump(roleHeaderContractMatchCounts, role);
-        // CID/TABCD match only counts when those columns exist in the matched table contract.
-        if (assessed.cidMatch) bump(roleCidMatchCounts, role);
-        if (assessed.tabcdMatch) bump(roleTabcdMatchCounts, role);
-        if (assessed.contentVerified) {
-          bump(roleContentVerifiedCounts, role);
-          if (tableCode) verifiedTableCodes.add(tableCode);
-        }
-      } else if (tableCode) {
+      if (tableCode && SP08001_TABLE_CODES.includes(tableCode)) {
         const assessed = assessSp08001ContentContract(tableCode, peek);
         evidenceLevel =
           assessed.evidenceLevel === "content_verified"
@@ -1314,7 +1398,46 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
               : peek.hasHeader || peek.positional
                 ? ROLE_EVIDENCE_LEVEL.METADATA_ONLY
                 : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
-        if (assessed.contentVerified) verifiedTableCodes.add(tableCode);
+        let headerMatchState = HEADER_MATCH_STATE.ABSENT;
+        let mismatchReason = TABLE_MISMATCH_REASON.EMPTY_HEADER;
+        if (assessed.headerContractMatch) {
+          headerMatchState = HEADER_MATCH_STATE.MATCH;
+          mismatchReason = TABLE_MISMATCH_REASON.NONE;
+          headerMatchedTableCodes.add(tableCode);
+        } else if (peek.hasHeader) {
+          headerMatchState = HEADER_MATCH_STATE.MISMATCH;
+          mismatchReason =
+            assessed.mismatchReason === "field_count"
+              ? TABLE_MISMATCH_REASON.FIELD_COUNT
+              : assessed.mismatchReason === "column_order_or_code"
+                ? TABLE_MISMATCH_REASON.COLUMN_ORDER_OR_CODE
+                : assessed.mismatchReason === "unknown_table"
+                  ? TABLE_MISMATCH_REASON.UNKNOWN_TABLE
+                  : TABLE_MISMATCH_REASON.COLUMN_ORDER_OR_CODE;
+        }
+        const cvState = assessed.contentVerified
+          ? CONTENT_VERIFIED_STATE.YES
+          : CONTENT_VERIFIED_STATE.NO;
+        upsertAssessment(tableCode, {
+          headerMatchState,
+          contentVerifiedState: cvState,
+          mismatchReason,
+          assessmentClass: classifySp08001TableAssessmentClass(tableCode),
+        });
+        if (REQUIRED_SINGLETON_ROLES.includes(role)) {
+          if (assessed.headerContractMatch) bump(roleHeaderContractMatchCounts, role);
+          if (assessed.cidMatch) bump(roleCidMatchCounts, role);
+          if (assessed.tabcdMatch) bump(roleTabcdMatchCounts, role);
+          if (assessed.contentVerified) bump(roleContentVerifiedCounts, role);
+        }
+        if (assessed.contentVerified) {
+          verifiedTableCodes.add(tableCode);
+          tableCodeCvCounts[tableCode] = (tableCodeCvCounts[tableCode] || 0) + 1;
+        }
+      } else if (REQUIRED_SINGLETON_ROLES.includes(role)) {
+        const assessed = assessSingletonContentContract(role, peek, { tableCode: null });
+        evidenceLevel = assessed.evidenceLevel;
+        unknownSupplementaryTables += 1;
       } else {
         unknownSupplementaryTables += 1;
         evidenceLevel =
@@ -1358,23 +1481,39 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     candidateLayers: central.candidateLayers || { tisaNameHint: roleCounts.points ? 1 : 0 },
   });
 
-  // Authoritative remains UNVERIFIED unless full contract completeness (never auto-select among candidates).
-  const authoritativeFormat = "UNVERIFIED";
-  const authoritativeFormatVerified = false;
-
   let duplicateRequired = false;
   let duplicateRequiredRoleCount = 0;
   let multipleCandidateRoleCount = 0;
   let unresolvedRoleCount = 0;
+  let tableCodeConflictCount = 0;
+
+  for (const [code, n] of Object.entries(tableCodeCvCounts)) {
+    if (n >= 2) {
+      duplicateRequired = true;
+      duplicateRequiredRoleCount += 1;
+      tableCodeConflictCount += 1;
+      const roleHint = SP08001_CODE_TO_ROLE[code];
+      if (roleHint) bump(roleConflictCounts, roleHint, n);
+    }
+  }
 
   for (const role of REQUIRED_SINGLETON_ROLES) {
     const candidates = roleCandidateCounts[role] || 0;
     const contentVerified = roleContentVerifiedCounts[role] || 0;
-    if (contentVerified >= 2) {
-      duplicateRequired = true;
-      duplicateRequiredRoleCount += 1;
-      bump(roleConflictCounts, role, contentVerified);
-    } else if (candidates > 1) {
+    if (contentVerified >= 1) {
+      if (candidates > 1) {
+        multipleCandidateRoleCount += 1;
+        warnings.push({
+          code: INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES,
+          severity: "warning",
+          role,
+          candidateCount: candidates,
+          contentVerifiedCount: contentVerified,
+        });
+      }
+      continue;
+    }
+    if (candidates > 1) {
       multipleCandidateRoleCount += 1;
       warnings.push({
         code: INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES,
@@ -1387,6 +1526,39 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     } else if (candidates === 1 && contentVerified < 1) {
       unresolvedRoleCount += 1;
     }
+  }
+
+  for (const code of REQUIRED_FOR_FORMAT_IDENTIFICATION) {
+    if (!tableAssessmentsMap[code]) {
+      upsertAssessment(code, {
+        headerMatchState: HEADER_MATCH_STATE.NOT_ASSESSED,
+        contentVerifiedState: CONTENT_VERIFIED_STATE.NO,
+        mismatchReason: TABLE_MISMATCH_REASON.ABSENT_FROM_ARCHIVE,
+      });
+    }
+  }
+  const tableAssessments = Object.keys(tableAssessmentsMap)
+    .sort()
+    .map((k) => tableAssessmentsMap[k]);
+
+  let cidState = "NOT_SEEN";
+  let tabcdState = "NOT_SEEN";
+  {
+    let cidContract = false;
+    let tabcdContract = false;
+    for (const a of tableAssessments) {
+      if (a.contentVerifiedState !== CONTENT_VERIFIED_STATE.YES) continue;
+      if (["POINTS", "NAMES", "COUNTRIES", "LOCATIONDATASETS", "ROADS", "SEGMENTS"].includes(a.tableCode)) {
+        cidContract = true;
+      }
+      if (["POINTS", "LOCATIONDATASETS", "ROADS", "SEGMENTS"].includes(a.tableCode)) {
+        tabcdContract = true;
+      }
+    }
+    if (cidContract) cidState = "MATCHED_IN_CONTRACT";
+    else if (cid11) cidState = "TOKEN_ONLY_UNVERIFIED";
+    if (tabcdContract) tabcdState = "MATCHED_IN_CONTRACT";
+    else if (tabcd25) tabcdState = "TOKEN_ONLY_UNVERIFIED";
   }
 
   const board = buildSourceAuthorityBoard(roleCounts, peeks);
@@ -1405,28 +1577,57 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       ? "archive_reject"
       : "insufficient_evidence";
 
-  const cidMatchState =
-    (roleCidMatchCounts.points || 0) + (roleCidMatchCounts.names || 0) + (roleCidMatchCounts.roads || 0) + (roleCidMatchCounts.segments || 0) > 0
-      ? "MATCHED_IN_CONTRACT"
-      : cid11
-        ? "TOKEN_ONLY_UNVERIFIED"
-        : "NOT_SEEN";
-  const tabcdMatchState =
-    (roleTabcdMatchCounts.points || 0) + (roleTabcdMatchCounts.names || 0) + (roleTabcdMatchCounts.roads || 0) + (roleTabcdMatchCounts.segments || 0) > 0
-      ? "MATCHED_IN_CONTRACT"
-      : tabcd25
-        ? "TOKEN_ONLY_UNVERIFIED"
-        : "NOT_SEEN";
+  const readmeEncodingState = encResolved.layerStatus
+    ? encResolved.layerStatus[ENCODING_LAYER.README_DECLARED] || "ABSENT"
+    : "ABSENT";
+
+  const promotion = evaluateFormatContractPromotion({
+    tableAssessments,
+    exchangeFormatContractVersion: SP08001_EXCHANGE_FORMAT_VERSION,
+    authoritativeLayer: SP08001_PHYSICAL.authoritativeLayer,
+    delimiterNormalized,
+    decompressionErrorCount: opts.decompressionErrorCount || 0,
+    tableCodeConflictCount,
+    readmeEncodingState,
+    encodingDatLayer: encodingNorm,
+    cidMatchState: cidState,
+    tabcdMatchState: tabcdState,
+  });
+
+  const formatConfirmed = !duplicateRequired && promotion.formatConfirmed === true;
+  const authoritativeFormat = formatConfirmed ? SP08001_PHYSICAL.authoritativeLayer : "UNVERIFIED";
+  const authoritativeFormatVerified = formatConfirmed;
+
+  let identificationTablesPresentCount = 0;
+  let identificationTablesVerifiedCount = 0;
+  for (const code of REQUIRED_FOR_FORMAT_IDENTIFICATION) {
+    const a = tableAssessmentsMap[code];
+    if (a && a.mismatchReason !== TABLE_MISMATCH_REASON.ABSENT_FROM_ARCHIVE) {
+      identificationTablesPresentCount += 1;
+    }
+    if (a && a.contentVerifiedState === CONTENT_VERIFIED_STATE.YES) {
+      identificationTablesVerifiedCount += 1;
+    }
+  }
 
   const report = {
-    ok: rejectCode == null,
+    ok: rejectCode == null && formatConfirmed,
     mode: INSPECTION_MODE,
-    severity,
-    rejectCode,
+    severity: formatConfirmed && !duplicateRequired ? "ok" : severity,
+    rejectCode: formatConfirmed && !duplicateRequired ? null : rejectCode,
     warnings,
     ...candidate,
     authoritativeFormat,
     authoritativeFormatVerified,
+    formatConfirmed,
+    datasetIntegrityState: DATASET_INTEGRITY_STATE.NOT_TESTED,
+    promotionBlockers: promotion.promotionBlockers,
+    tableAssessments,
+    tableCodeConflictCount,
+    opaqueTableCodeVerifiedCount: contentVerifiedTableCount,
+    standardTableHeaderMatchCount: headerMatchedTableCodes.size,
+    identificationTablesPresentCount,
+    identificationTablesVerifiedCount,
     cidExpected: TMC_CID_EXPECTED,
     tabcdExpected: TMC_TABCD_EXPECTED,
     cid11Detected: cid11,
@@ -1462,12 +1663,10 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     requiredTablesPresent,
     optionalTablesPresent,
     unknownSupplementaryTables,
-    metadataFileCount: (roleCandidateCounts.metadata || 0) > 0 || verifiedTableCodes.has("README") ? 1 : 0,
-    readmeEncodingState: encResolved.layerStatus
-      ? encResolved.layerStatus[ENCODING_LAYER.README_DECLARED] || "ABSENT"
-      : "ABSENT",
-    cidMatchState,
-    tabcdMatchState,
+    metadataFileCount: (roleCandidateCounts.metadata || 0) > 0 ? 1 : 0,
+    readmeEncodingState,
+    cidMatchState: cidState,
+    tabcdMatchState: tabcdState,
     coordinateSource: peeks.coordsFromDat ? "points_dat" : peeks.coordsFromShp ? "shp_companion" : "UNVERIFIED",
     relationshipIntegrity: "UNVERIFIED",
     encodingDatLayer: encodingNorm,
@@ -1476,6 +1675,7 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   };
   return finalizeInspectionOutcome(report);
 }
+
 
 function failReport(code, severity, centralMeta) {
   return finalizeInspectionOutcome({
@@ -1749,6 +1949,7 @@ export async function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
     centralMeta: central,
     startedAt: started,
     timeoutMs,
+    decompressionErrorCount,
   });
   report.candidateEvidenceSource = entries.length
     ? "content_peek"
@@ -1756,8 +1957,7 @@ export async function inspectTmcZipFormatFromFile(zipPath, opts = {}) {
   if (report.candidateEvidenceSource === "content_peek") {
     report.candidateFormatConfidence = "content_peek_limited";
   }
-  report.authoritativeFormat = "UNVERIFIED";
-  report.authoritativeFormatVerified = false;
+  // Do not clobber formatConfirmed / authoritativeFormatVerified from promotion.
   report.liveNetworkInspection = false;
   report.ignoredCategoryCounts = collected.ignoredCategoryCounts;
   report.peekEntryCount = entries.length;

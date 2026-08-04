@@ -239,6 +239,23 @@ export function assessSp08001ContentContract(tableCode, peek, opts = {}) {
 /**
  * Merge encoding candidates by layer — CONFLICT only within same authoritative layer.
  */
+/**
+ * Collapse soft DAT detections so ASCII_OR_UTF8 + UTF-8 do not become a false CONFLICT.
+ * NON_UTF8 vs UTF-8 remains a real CONFLICT. CPG never enters this set.
+ */
+function collapseDatDetectedSet(set) {
+  const vals = [...set];
+  if (vals.length <= 1) return set;
+  const hasUtf8 = vals.includes("UTF-8");
+  const hasSoft = vals.includes("ASCII_OR_UTF8");
+  const hasNon = vals.includes("NON_UTF8");
+  const others = vals.filter((v) => v !== "UTF-8" && v !== "ASCII_OR_UTF8" && v !== "NON_UTF8");
+  if (others.length) return set;
+  if (hasNon && (hasUtf8 || hasSoft)) return new Set(["NON_UTF8", hasUtf8 ? "UTF-8" : "ASCII_OR_UTF8"]);
+  if (hasUtf8 && hasSoft) return new Set(["UTF-8"]);
+  return set;
+}
+
 export function resolveEncodingLayers(layers) {
   const byLayer = {
     [ENCODING_LAYER.DAT_DECLARED]: new Set(),
@@ -249,10 +266,22 @@ export function resolveEncodingLayers(layers) {
   };
   for (const item of layers || []) {
     const layer = item.layer || ENCODING_LAYER.OTHER;
+    // Companion .cpg must never enter DAT_* layers (SP08001 authoritativeLayer = TISA_DAT_CSV).
+    if (layer === ENCODING_LAYER.CPG_SHP_DBF) {
+      const enc = normalizeSp08001EncodingToken(item.encoding);
+      if (enc && enc !== "UNKNOWN") byLayer[ENCODING_LAYER.CPG_SHP_DBF].add(enc);
+      continue;
+    }
+    if (layer === ENCODING_LAYER.DAT_DETECTED || layer === ENCODING_LAYER.DAT_DECLARED || layer === ENCODING_LAYER.README_DECLARED) {
+      const enc = normalizeSp08001EncodingToken(item.encoding);
+      if (enc && enc !== "UNKNOWN") byLayer[layer].add(enc);
+      continue;
+    }
     const enc = normalizeSp08001EncodingToken(item.encoding);
-    if (!byLayer[layer]) byLayer[layer] = new Set();
-    if (enc && enc !== "UNKNOWN") byLayer[layer].add(enc);
+    if (enc && enc !== "UNKNOWN") byLayer[ENCODING_LAYER.OTHER].add(enc);
   }
+  byLayer[ENCODING_LAYER.DAT_DETECTED] = collapseDatDetectedSet(byLayer[ENCODING_LAYER.DAT_DETECTED]);
+
   const layerStatus = {};
   for (const [layer, set] of Object.entries(byLayer)) {
     const vals = [...set];
@@ -260,13 +289,10 @@ export function resolveEncodingLayers(layers) {
     else if (vals.length === 1) layerStatus[layer] = vals[0];
     else layerStatus[layer] = "CONFLICT";
   }
-  // Authoritative DAT encoding preference: README declared > DAT declared > DAT detected
+  // Authoritative DAT encoding preference: DAT declared (from README characterEncoding)
+  // then DAT detected. README_DECLARED describes README file charset (ASCII) — not DAT bytes.
   let datEncoding = "UNKNOWN";
-  for (const key of [
-    ENCODING_LAYER.README_DECLARED,
-    ENCODING_LAYER.DAT_DECLARED,
-    ENCODING_LAYER.DAT_DETECTED,
-  ]) {
+  for (const key of [ENCODING_LAYER.DAT_DECLARED, ENCODING_LAYER.DAT_DETECTED]) {
     const v = layerStatus[key];
     if (v && v !== "ABSENT" && v !== "CONFLICT") {
       datEncoding = v;
@@ -277,13 +303,20 @@ export function resolveEncodingLayers(layers) {
       break;
     }
   }
-  // ASCII_OR_UTF8 soft detection promotes to UTF-8 only when README/default says UTF-8
+  // ASCII_OR_UTF8 soft detection promotes to UTF-8 when declared/default says UTF-8
   if (datEncoding === "ASCII_OR_UTF8") {
-    if (layerStatus[ENCODING_LAYER.README_DECLARED] === "UTF-8" || SP08001_PHYSICAL.defaultEncoding === "UTF-8") {
+    if (
+      layerStatus[ENCODING_LAYER.DAT_DECLARED] === "UTF-8" ||
+      SP08001_PHYSICAL.defaultEncoding === "UTF-8"
+    ) {
       datEncoding = "UTF-8";
     } else {
       datEncoding = "UNVERIFIED";
     }
+  }
+  // If detect-layer CONFLICT but DAT_DECLARED is clear UTF-8, prefer declared (SP08001 README source).
+  if (datEncoding === "CONFLICT" && layerStatus[ENCODING_LAYER.DAT_DECLARED] === "UTF-8") {
+    datEncoding = "UTF-8";
   }
   return {
     datEncoding,
@@ -367,6 +400,33 @@ export function syntheticPointsRow(overrides = {}) {
   };
   Object.assign(base, overrides);
   return listRequiredSp08001Header("POINTS").map((c) => base[c] ?? "");
+}
+
+/**
+ * Minimal fictional row for any SP08001 table (synthetic only).
+ * Fills CID=11 / TABCD=25 where those columns exist; other required cells get safe placeholders.
+ */
+export function syntheticSp08001Row(tableCode, overrides = {}) {
+  const header = listRequiredSp08001Header(tableCode);
+  if (!header.length) throw new Error("unknown_table");
+  const base = Object.create(null);
+  for (const c of header) {
+    if (c === "CID") base[c] = "11";
+    else if (c === "TABCD") base[c] = "25";
+    else if (c === "CLASS") base[c] = "P";
+    else if (c === "XCOORD") base[c] = "+09999999";
+    else if (c === "YCOORD") base[c] = "+9999999";
+    else if (c === "NAME" || c === "CNAME" || c === "DCOMMENT" || c === "VERSIONDESCRIPTION" || c === "NCOMMENT")
+      base[c] = "X";
+    else if (c === "VERSION") base[c] = "1";
+    else if (c.endsWith("ID") || c.endsWith("LCD") || c === "LID" || c === "NID" || c === "TCD" || c === "STCD")
+      base[c] = "1";
+    else if (c === "ECC") base[c] = "E";
+    else if (c === "CCD") base[c] = "CZ";
+    else base[c] = "";
+  }
+  Object.assign(base, overrides);
+  return header.map((c) => base[c] ?? "");
 }
 
 export function sp08001PhysicalContract() {
