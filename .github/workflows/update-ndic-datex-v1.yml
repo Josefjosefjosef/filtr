@@ -50,9 +50,9 @@ jobs:
           lfs: false
           persist-credentials: false
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: NDIC DATEX v1 guard (fixtures)
         run: npm run iu-ndic-datex-v1-guard
@@ -65,6 +65,9 @@ jobs:
 
       - name: NDIC github-hosted access fixtures
         run: npm run iu-ndic-github-hosted-access-fixtures
+
+      - name: NDIC disk preflight fixtures
+        run: npm run iu-ndic-disk-preflight-fixtures
 
       - name: Resolve mode (fail-closed, no secrets)
         id: mode
@@ -157,9 +160,9 @@ jobs:
           lfs: false
           persist-credentials: true
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Sync NDIC DATEX v1
         id: sync

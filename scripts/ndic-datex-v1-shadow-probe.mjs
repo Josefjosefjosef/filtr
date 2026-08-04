@@ -87,8 +87,12 @@ function ensureWorkDir() {
     process.env.IU_NDIC_SHADOW_WORK_DIR ||
     process.env.RUNNER_TEMP ||
     path.join(os.tmpdir(), "ndic-shadow-probe");
+  // Task-owned run dir on the same filesystem as RUNNER_TEMP / shadow work (never bare /tmp root).
   const dir = path.join(base, "ndic-shadow-" + Date.now().toString(36));
-  fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+  try {
+    fs.chmodSync(dir, 0o700);
+  } catch (_) {}
   return dir;
 }
 
@@ -175,6 +179,7 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes, opts =
   const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
   const cap = Number(maxBytes) > 0 ? Number(maxBytes) : DATEX_MAX_RESPONSE_BYTES;
   const keepOnDisk = opts.keepOnDisk === true;
+  const tempBaseDir = opts.tempBaseDir || process.env.IU_NDIC_SHADOW_WORK_DIR || process.env.RUNNER_TEMP || null;
   let temp = null;
   try {
     assertAllowedPullUrl(url);
@@ -215,7 +220,7 @@ async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes, opts =
       };
     }
     phase = "response_body";
-    temp = createBoundedTempPath("ndic-fetch-");
+    temp = createBoundedTempPath("ndic-fetch-", tempBaseDir ? { baseDir: tempBaseDir } : {});
     let streamed;
     try {
       streamed = await streamResponseToFileBounded(res, {
@@ -732,11 +737,13 @@ function summarizeTmc(buf, config) {
  */
 function summarizeTmcFromFile(filePath, config) {
   const st = fs.statSync(filePath);
+  const workDir = path.dirname(filePath);
   const gate = analyzeAndGateTmcZipFile(filePath, {
-    workDir: path.dirname(filePath),
+    workDir,
     limits: DEFAULT_ZIP_LIMITS,
   });
   const meta = gate.zipMetadata || {};
+  const diskDiagnostics = gate.diskDiagnostics || meta.diskDiagnostics || null;
 
   // Legacy small JSON ZIP / plain tables — only when clearly JSON and tiny.
   if (
@@ -746,7 +753,9 @@ function summarizeTmcFromFile(filePath, config) {
   ) {
     const buf = fs.readFileSync(filePath);
     try {
-      return summarizeTmc(buf, config);
+      const out = summarizeTmc(buf, config);
+      if (diskDiagnostics) out.diskDiagnostics = diskDiagnostics;
+      return out;
     } finally {
       buf.fill(0);
     }
@@ -777,6 +786,7 @@ function summarizeTmcFromFile(filePath, config) {
     fullArchiveBuffered: false,
     fullEntryBuffered: false,
     sizePreflightPassed: gate.sizePreflightPassed === true,
+    diskPreflightPassed: gate.diskPreflightPassed === true,
     rejectCode: gate.rejectCode || gate.importerStatus || null,
     importerStatus: gate.importerStatus || null,
     authoritativeFormat: meta.authoritativeFormat || null,
@@ -785,6 +795,8 @@ function summarizeTmcFromFile(filePath, config) {
     tabcdExpected: TMC_TABCD_EXPECTED,
     cidValidated: gate.cidValidated === true,
     tabcdValidated: gate.tabcdValidated === true,
+    diskDiagnostics,
+    diskCheckPathCategory: diskDiagnostics && diskDiagnostics.diskCheckPathCategory,
     zipMetadata: {
       centralEntryCount: meta.centralEntryCount,
       directoryEntryCount: meta.directoryEntryCount,
@@ -986,7 +998,7 @@ export async function runShadowProbe(opts = {}) {
       "application/xml, text/xml, application/zip, */*;q=0.1",
       sourceLabel("datex"),
       config.limits.maxResponseBytes,
-      { keepOnDisk: true }
+      { keepOnDisk: true, tempBaseDir: workDir }
     );
     if (datexRes.tempDir) rawPaths.push(datexRes.tempDir);
     if (datexRes.file) rawPaths.push(datexRes.file);
@@ -1037,7 +1049,7 @@ export async function runShadowProbe(opts = {}) {
         "application/zip, application/json, text/plain, */*",
         sourceLabel("tmc"),
         Math.min(config.limits.maxResponseBytes, DEFAULT_ZIP_LIMITS.maxCompressedTotal),
-        { keepOnDisk: true }
+        { keepOnDisk: true, tempBaseDir: workDir }
       );
       if (tmcRes.tempDir) rawPaths.push(tmcRes.tempDir);
       if (tmcRes.file) rawPaths.push(tmcRes.file);

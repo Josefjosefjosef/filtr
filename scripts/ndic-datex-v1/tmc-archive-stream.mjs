@@ -7,6 +7,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { TMC_CID, TMC_LOCATION_TABLE_NUMBER } from "./config.mjs";
 import { TMC_PATH_REJECT, classifyZipPath, DEFAULT_ZIP_LIMITS } from "./tmc-zip.mjs";
+import {
+  runDiskPreflight,
+  acquireTmcImportLock,
+  measureTaskOwnedBytes,
+  DISK_FORMULA_VERSION,
+  DISK_REJECT,
+} from "./disk-preflight.mjs";
 
 /** Observed shadow #8 (~21.1 MiB / 332 MiB / 117.8 MiB / ratio 45.87 / 97 entries). */
 export const TMC_ZIP_LIMITS_V11 = Object.freeze({
@@ -20,6 +27,8 @@ export const TMC_ZIP_LIMITS_V11 = Object.freeze({
   maxImportMs: DEFAULT_ZIP_LIMITS.maxImportMs,
   maxWorkDirBytes: DEFAULT_ZIP_LIMITS.maxWorkDirBytes,
   minFreeDiskBytes: DEFAULT_ZIP_LIMITS.minFreeDiskBytes,
+  // Legacy flat floor kept for docs; preflight now uses tmc-disk-v2 requiredBytes.
+  legacyFlatMinFreeDiskBytes: 2 * 1024 * 1024 * 1024,
   warnThresholds: DEFAULT_ZIP_LIMITS.warnThresholds,
   prevMaxSingleUncompressed: 64 * 1024 * 1024,
   prevMaxUncompressedTotal: 96 * 1024 * 1024,
@@ -382,86 +391,155 @@ export function peekSqliteMagic(zipPath, localHeaderOffset, nameLen, extraLen) {
  * Does not implement full TISA .DAT parse yet (requires confirmed sample layout).
  *
  * @param {string} zipPath
- * @param {{ limits?: object, workDir?: string, signal?: AbortSignal }} [opts]
+ * @param {{ limits?: object, workDir?: string, signal?: AbortSignal, skipLock?: boolean }} [opts]
  */
 export function analyzeAndGateTmcZipFile(zipPath, opts = {}) {
   const lim = { ...TMC_ZIP_LIMITS_V11, ...(opts.limits || {}) };
   const started = Date.now();
-  const free = tryDiskFree(opts.workDir || path.dirname(zipPath));
-  if (free != null && free < lim.minFreeDiskBytes) {
-    return {
-      ok: false,
-      rejectCode: "TMC_DISK_SPACE",
-      importerCompatible: false,
-      zipMetadata: { archiveValidationStage: "disk_preflight", freeBytes: free },
-      importerStatus: "TMC_DISK_SPACE",
-    };
-  }
+  const workDir = opts.workDir || path.dirname(zipPath);
+  let lock = null;
+  const releaseLock = () => {
+    if (lock && typeof lock.release === "function") {
+      try {
+        lock.release();
+      } catch (_) {}
+    }
+  };
 
-  const meta = inspectZipFileCentral(zipPath, lim);
-  const decision = selectAuthoritativeFormat(meta);
-  meta.authoritativeFormat = decision.format;
-  meta.authoritativeReason = decision.reason;
+  try {
+    if (opts.skipLock !== true) {
+      lock = acquireTmcImportLock(path.join(workDir, ".locks"));
+      if (!lock.ok) {
+        return {
+          ok: false,
+          rejectCode: lock.rejectCode || DISK_REJECT.LOCK,
+          importerCompatible: false,
+          zipMetadata: {
+            archiveValidationStage: "lock",
+            diskFormulaVersion: DISK_FORMULA_VERSION,
+          },
+          importerStatus: lock.rejectCode || DISK_REJECT.LOCK,
+          elapsedMs: Date.now() - started,
+        };
+      }
+    }
 
-  if (meta.entrySizeRejectCategory) {
-    return {
-      ok: false,
-      rejectCode: meta.entrySizeRejectCategory,
-      importerCompatible: false,
-      zipMetadata: meta,
-      importerStatus: meta.entrySizeRejectCategory,
-      elapsedMs: Date.now() - started,
+    let zipSize = 0;
+    try {
+      zipSize = fs.statSync(zipPath).size;
+    } catch (_) {
+      return {
+        ok: false,
+        rejectCode: DISK_REJECT.PATH,
+        importerCompatible: false,
+        zipMetadata: { archiveValidationStage: "zip_stat", diskFormulaVersion: DISK_FORMULA_VERSION },
+        importerStatus: DISK_REJECT.PATH,
+        elapsedMs: Date.now() - started,
+      };
+    }
+
+    // Central directory first (cheap) so requiredBytes uses declared sizes — still before inflate.
+    const meta = inspectZipFileCentral(zipPath, lim);
+    const existingTaskOwnedBytes = measureTaskOwnedBytes(workDir, workDir);
+    const disk = runDiskPreflight({
+      checkDir: workDir,
+      downloadedArchiveBytes: zipSize,
+      declaredUncompressedBytes: meta.declaredUncompressedTotalBytes || 0,
+      largestEntryBytes: meta.maxDeclaredUncompressedEntryBytes || 0,
+      zipAlreadyOnDisk: true,
+      existingTaskOwnedBytes,
+    });
+    meta.diskDiagnostics = {
+      diskCheckPathCategory: disk.diskCheckPathCategory,
+      filesystemAvailableBytes: disk.filesystemAvailableBytes,
+      filesystemRequiredBytes: disk.filesystemRequiredBytes,
+      downloadedArchiveBytes: disk.downloadedArchiveBytes,
+      declaredUncompressedBytes: disk.declaredUncompressedBytes,
+      archiveWorkingReserveBytes: disk.archiveWorkingReserveBytes,
+      indexReserveBytes: disk.indexReserveBytes,
+      rollbackReserveBytes: disk.rollbackReserveBytes,
+      atomicSwapReserveBytes: disk.atomicSwapReserveBytes,
+      operatingSystemSafetyReserveBytes: disk.operatingSystemSafetyReserveBytes,
+      existingTaskOwnedBytes: disk.existingTaskOwnedBytes,
+      cleanupCandidateBytes: disk.cleanupCandidateBytes,
+      diskFormulaVersion: disk.diskFormulaVersion || DISK_FORMULA_VERSION,
+      rejectCode: disk.rejectCode || null,
+      legacyFlatMinFreeDiskBytes: lim.legacyFlatMinFreeDiskBytes || lim.minFreeDiskBytes,
     };
-  }
-  if (meta.pathRejectCategory) {
+
+    if (!disk.ok) {
+      meta.archiveValidationStage = "disk_preflight";
+      return {
+        ok: false,
+        rejectCode: disk.rejectCode || DISK_REJECT.SPACE,
+        importerCompatible: false,
+        zipMetadata: meta,
+        importerStatus: disk.rejectCode || DISK_REJECT.SPACE,
+        diskDiagnostics: meta.diskDiagnostics,
+        elapsedMs: Date.now() - started,
+      };
+    }
+
+    const decision = selectAuthoritativeFormat(meta);
+    meta.authoritativeFormat = decision.format;
+    meta.authoritativeReason = decision.reason;
+
+    if (meta.entrySizeRejectCategory) {
+      return {
+        ok: false,
+        rejectCode: meta.entrySizeRejectCategory,
+        importerCompatible: false,
+        zipMetadata: meta,
+        importerStatus: meta.entrySizeRejectCategory,
+        diskDiagnostics: meta.diskDiagnostics,
+        elapsedMs: Date.now() - started,
+      };
+    }
+    if (meta.pathRejectCategory) {
+      return {
+        ok: false,
+        rejectCode: "TMC_ZIP_BAD_PATH",
+        pathRejectCategory: meta.pathRejectCategory,
+        importerCompatible: false,
+        zipMetadata: meta,
+        importerStatus: "TMC_ZIP_BAD_PATH",
+        diskDiagnostics: meta.diskDiagnostics,
+        elapsedMs: Date.now() - started,
+      };
+    }
+    if (decision.importerStatus === "JSON_SUPPORTED") {
+      return {
+        ok: false,
+        rejectCode: "TMC_JSON_REQUIRES_STREAM_EXTRACT",
+        importerCompatible: false,
+        zipMetadata: meta,
+        importerStatus: decision.importerStatus,
+        diskDiagnostics: meta.diskDiagnostics,
+        elapsedMs: Date.now() - started,
+      };
+    }
+
     return {
       ok: false,
-      rejectCode: "TMC_ZIP_BAD_PATH",
-      pathRejectCategory: meta.pathRejectCategory,
-      importerCompatible: false,
-      zipMetadata: meta,
-      importerStatus: "TMC_ZIP_BAD_PATH",
-      elapsedMs: Date.now() - started,
-    };
-  }
-  if (decision.importerStatus === "JSON_SUPPORTED") {
-    return {
-      ok: false,
-      rejectCode: "TMC_JSON_REQUIRES_STREAM_EXTRACT",
+      rejectCode: decision.importerStatus || "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
       importerCompatible: false,
       zipMetadata: meta,
       importerStatus: decision.importerStatus,
+      cidExpected: TMC_CID_EXPECTED,
+      tabcdExpected: TMC_TABCD_EXPECTED,
+      cidValidated: false,
+      tabcdValidated: false,
+      sizePreflightPassed: true,
+      diskPreflightPassed: true,
+      streamingReady: true,
+      atomicImportReady: true,
+      rollbackReady: true,
+      diskDiagnostics: meta.diskDiagnostics,
       elapsedMs: Date.now() - started,
     };
+  } finally {
+    releaseLock();
   }
-
-  // Size preflight passed for real archive; authoritative TISA importer not yet implemented offline.
-  return {
-    ok: false,
-    rejectCode: decision.importerStatus || "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
-    importerCompatible: false,
-    zipMetadata: meta,
-    importerStatus: decision.importerStatus,
-    cidExpected: TMC_CID_EXPECTED,
-    tabcdExpected: TMC_TABCD_EXPECTED,
-    cidValidated: false,
-    tabcdValidated: false,
-    sizePreflightPassed: true,
-    streamingReady: true,
-    atomicImportReady: true,
-    rollbackReady: true,
-    elapsedMs: Date.now() - started,
-  };
-}
-
-function tryDiskFree(dir) {
-  try {
-    if (typeof fs.statfsSync === "function") {
-      const s = fs.statfsSync(dir);
-      return Number(s.bavail) * Number(s.bsize);
-    }
-  } catch (_) {}
-  return null;
 }
 
 /**

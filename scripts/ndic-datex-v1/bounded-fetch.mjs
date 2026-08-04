@@ -29,10 +29,23 @@ export const DATEX_PREV_RESPONSE_BYTES = 32 * 1024 * 1024;
 /**
  * @param {number} maxBytes
  * @param {string} [prefix]
+ * @param {{ baseDir?: string }} [opts] — when set, temp lives under task-owned base (not os.tmpdir()).
  */
-export function createBoundedTempPath(prefix = "ndic-body-") {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-  return { dir, file: path.join(dir, "body.bin") };
+export function createBoundedTempPath(prefix = "ndic-body-", opts = {}) {
+  const base =
+    (opts && opts.baseDir) ||
+    process.env.IU_NDIC_SHADOW_WORK_DIR ||
+    process.env.RUNNER_TEMP ||
+    null;
+  const parent = base ? base : os.tmpdir();
+  if (base) {
+    fs.mkdirSync(base, { recursive: true, mode: 0o700 });
+  }
+  const dir = fs.mkdtempSync(path.join(parent, prefix));
+  try {
+    fs.chmodSync(dir, 0o700);
+  } catch (_) {}
+  return { dir, file: path.join(dir, "body.bin"), baseDir: parent };
 }
 
 /**

@@ -313,6 +313,11 @@ function main() {
       );
       ok("shadow_refuse_github_hosted", /REFUSING_GITHUB_HOSTED/.test(raw), "refuse");
       ok("shadow_runner_name", /infouzel-ndic-cz-vps4204/.test(raw), "name");
+      ok("shadow_node_24", /node-version:\s*["']?24["']?/.test(src), "node24");
+      ok("shadow_no_node_20", !/node-version:\s*["']?20["']?/.test(src), "node20");
+      ok("shadow_setup_node_v7", /actions\/setup-node@820762786026740c76f36085b0efc47a31fe5020/.test(src), "setup");
+      ok("shadow_upload_artifact_v7", /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a/.test(src), "artifact");
+      ok("shadow_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(raw), "unsecure");
     }
 
     if (file === "update-ndic-datex-v1.yml") {
@@ -320,6 +325,10 @@ function main() {
       const network = analysis.jobs.find((j) => j.name === "ndic-network-sync");
       ok("update_has_offline_job", Boolean(offline), "missing");
       ok("update_has_network_job", Boolean(network), "missing");
+      ok("update_node_24", /node-version:\s*["']?24["']?/.test(analysis.src), "node24");
+      ok("update_no_node_20", !/node-version:\s*["']?20["']?/.test(analysis.src), "node20");
+      ok("update_setup_node_v7", /actions\/setup-node@820762786026740c76f36085b0efc47a31fe5020/.test(analysis.src), "setup");
+      ok("update_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(analysis.raw), "unsecure");
       if (offline) {
         ok("update_offline_ubuntu", offline.isGithubHosted && offline.labels.includes("ubuntu-latest"), offline.labels.join("+"));
         ok("update_offline_no_ndic_caps", offline.ndicCapabilities.length === 0, offline.ndicCapabilities.join("|"));
@@ -362,8 +371,39 @@ function main() {
     }
   }
 
+  // Disk preflight module (shadow #9 root-cause fix)
+  {
+    const diskPath = path.join(ROOT, "scripts", "ndic-datex-v1", "disk-preflight.mjs");
+    ok("disk_preflight_present", fs.existsSync(diskPath), "missing");
+    if (fs.existsSync(diskPath)) {
+      const d = fs.readFileSync(diskPath, "utf8");
+      ok("disk_formula_v2", /tmc-disk-v2/.test(d), "ver");
+      ok("disk_uses_bigint", /bigint:\s*true/.test(d) || /BigInt/.test(d), "bigint");
+      ok("disk_prefers_frsize", /frsize/.test(d), "frsize");
+      ok("disk_no_flat_2gib_only", !/free\s*<\s*lim\.minFreeDiskBytes/.test(d), "flat");
+      ok("disk_task_owned", /IU_NDIC_SHADOW_WORK_DIR|RUNNER_TEMP/.test(d), "task");
+    }
+    const bounded = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "bounded-fetch.mjs"), "utf8");
+    ok("bounded_prefers_runner_temp", /IU_NDIC_SHADOW_WORK_DIR/.test(bounded) && /RUNNER_TEMP/.test(bounded), "base");
+  }
+
   ok("at_least_one_ndic_self_hosted", ndicSelfHostedJobs >= 1, String(ndicSelfHostedJobs));
   ok("zero_github_hosted_ndic_jobs", githubHostedNdicJobs === 0, String(githubHostedNdicJobs));
+
+  // Reject Node 20/21/22/23 in NDIC workflows
+  for (const file of Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS)) {
+    const abs = path.join(WF_DIR, file);
+    if (!fs.existsSync(abs)) continue;
+    const raw = fs.readFileSync(abs, "utf8");
+    ok("ndic_wf_node24_" + file, /node-version:\s*["']?24["']?/.test(raw), "need24");
+    for (const bad of ["20", "21", "22", "23"]) {
+      ok(
+        "ndic_wf_no_node_" + bad + "_" + file,
+        !new RegExp("node-version:\\s*[\"']?" + bad + "[\"']?").test(raw),
+        "bad"
+      );
+    }
+  }
 
   const configSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "config.mjs"), "utf8");
   ok("config_mode_default_off", /mode = "off"/.test(configSrc) || /else mode = "off"/.test(configSrc), "default");
