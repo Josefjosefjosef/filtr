@@ -17,6 +17,8 @@
  * Approved TMC parameters: country code 2, location table number 25.
  */
 
+import { DATEX_MAX_RESPONSE_BYTES } from "./bounded-fetch.mjs";
+
 export const NDIC_PUBLIC_PORTAL_URL = "https://www.dopravniinfo.cz/";
 export const NDIC_REGISTRY_COMMON_PULL =
   "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/";
@@ -40,7 +42,11 @@ export const TMC_LOCATION_TABLE_NUMBER = 25;
 export const ALLOWED_PULL_HOSTS = Object.freeze(["mobilitydata.rsd.cz"]);
 
 export const DEFAULT_LIMITS = Object.freeze({
-  maxResponseBytes: 32 * 1024 * 1024,
+  /**
+   * HTTP body ceiling (DATEX XML / shared pull). See DATEX_MAX_RESPONSE_BYTES docs
+   * in bounded-fetch.mjs (80 MiB; previous shadow hard-cap was 32 MiB).
+   */
+  maxResponseBytes: DATEX_MAX_RESPONSE_BYTES,
   maxXmlDepth: 60,
   maxElements: 500000,
   maxTextFieldChars: 12000,

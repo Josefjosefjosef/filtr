@@ -69,7 +69,32 @@ const FORBIDDEN_KEYS = new Set([
   "token",
   "secretValue",
   "subscriberId",
+  "entryName",
+  "fileName",
+  "pathName",
+  "zipEntryName",
 ]);
+
+const ALLOWED_PATH_REJECT = new Set([
+  "TMC_PATH_ABSOLUTE",
+  "TMC_PATH_PARENT_TRAVERSAL",
+  "TMC_PATH_BACKSLASH",
+  "TMC_PATH_CONTROL_CHAR",
+  "TMC_PATH_EMPTY",
+  "TMC_PATH_DIRECTORY_ENTRY",
+  "TMC_PATH_DRIVE_PREFIX",
+  "TMC_PATH_NORMALIZATION_CHANGED",
+  "TMC_PATH_DUPLICATE",
+  "TMC_PATH_TOO_LONG",
+  "TMC_PATH_DEPTH_EXCEEDED",
+  "TMC_PATH_UNSUPPORTED_ENCODING",
+  "TMC_PATH_OTHER",
+  null,
+]);
+
+ok("probe_has_path_reject_contract", /pathRejectCategory/.test(probeSrc), "path");
+ok("probe_streaming_bounded", /streamingBounded|streamResponseToFileBounded/.test(probeSrc), "stream");
+ok("probe_no_raw_entry_name_log", !/console\.(log|info).*entryName|console\.(log|info).*nameRaw/.test(probeSrc), "name");
 
 const FORBIDDEN_VALUE_RE =
   /https?:\/\/[^\s"]+|Authorization\s*:\s*\S+|Basic\s+[A-Za-z0-9+/=]{12,}|<SituationPublication[\s>]|IU_NDIC_PULL_PASS\s*=/i;
@@ -129,6 +154,9 @@ const sample = {
     redirectCount: 0,
     sourceLabel: "DATEX_SOURCE",
     rawDataExposed: false,
+    streamingBounded: true,
+    maxBytes: 83886080,
+    limitPreviousBytes: 33554432,
   },
   tmc: {
     downloadSuccess: false,
@@ -163,6 +191,19 @@ const sample = {
     beforeHttpResponse: false,
     redirectCount: 0,
     rejectCode: null,
+    pathRejectCategory: "TMC_PATH_OTHER",
+    pathDiagnostics: {
+      pathRejectCategory: "TMC_PATH_OTHER",
+      pathRejectCounts: { TMC_PATH_OTHER: 1 },
+      isDirectoryEntry: false,
+      directoryEntryCount: 0,
+      fileEntryCount: 0,
+      centralEntryCount: 0,
+      fileExtSummary: {},
+      safeDirectoryEntriesAllowed: true,
+    },
+    streamingBounded: true,
+    maxBytes: 33554432,
     sourceLabel: "TMC_SOURCE",
   },
   mapping: {
@@ -211,6 +252,11 @@ for (const k of Object.keys(sample)) {
   ok("top_allowed_" + k, ALLOWED_TOP.includes(k), k);
 }
 walk(sample, "");
+ok(
+  "path_reject_enum_allowed",
+  ALLOWED_PATH_REJECT.has(sample.tmc.pathRejectCategory),
+  sample.tmc.pathRejectCategory
+);
 
 let caught = false;
 try {

@@ -109,14 +109,163 @@ export function unwrapTmcTransportLayers(buf, opts = {}) {
   return { body, layers, skippedDoubleGzip };
 }
 
-function normalizeZipPath(nameRaw, maxDepth) {
-  const n = String(nameRaw || "").replace(/\\/g, "/");
-  if (!n || n.includes("\0")) return null;
-  if (n.startsWith("/") || /^[a-zA-Z]:/.test(n)) return null;
-  const parts = n.split("/");
-  if (parts.some((p) => p === ".." || p === "")) return null;
-  if (parts.length > maxDepth) return null;
-  return parts.join("/");
+/** Sanitized path-reject categories (never include raw entry names). */
+export const TMC_PATH_REJECT = Object.freeze({
+  ABSOLUTE: "TMC_PATH_ABSOLUTE",
+  PARENT_TRAVERSAL: "TMC_PATH_PARENT_TRAVERSAL",
+  BACKSLASH: "TMC_PATH_BACKSLASH",
+  CONTROL_CHAR: "TMC_PATH_CONTROL_CHAR",
+  EMPTY: "TMC_PATH_EMPTY",
+  DIRECTORY_ENTRY: "TMC_PATH_DIRECTORY_ENTRY",
+  DRIVE_PREFIX: "TMC_PATH_DRIVE_PREFIX",
+  NORMALIZATION_CHANGED: "TMC_PATH_NORMALIZATION_CHANGED",
+  DUPLICATE: "TMC_PATH_DUPLICATE",
+  TOO_LONG: "TMC_PATH_TOO_LONG",
+  DEPTH_EXCEEDED: "TMC_PATH_DEPTH_EXCEEDED",
+  UNSUPPORTED_ENCODING: "TMC_PATH_UNSUPPORTED_ENCODING",
+  OTHER: "TMC_PATH_OTHER",
+});
+
+/**
+ * Classify / normalize a ZIP entry name without echoing the raw name.
+ * Safe relative directory entries (trailing `/`) are allowed as non-extracted
+ * markers — TISA location-table ZIPs commonly include them.
+ *
+ * @param {string} nameRaw
+ * @param {{ maxDepth?: number, maxNameLen?: number }} [opts]
+ */
+export function classifyZipPath(nameRaw, opts = {}) {
+  const maxDepth = opts.maxDepth != null ? opts.maxDepth : DEFAULT_ZIP_LIMITS.maxPathDepth;
+  const maxNameLen = opts.maxNameLen != null ? opts.maxNameLen : DEFAULT_ZIP_LIMITS.maxNameLen;
+  if (nameRaw == null || typeof nameRaw !== "string") {
+    return {
+      ok: false,
+      isDirectory: false,
+      path: null,
+      category: nameRaw == null ? TMC_PATH_REJECT.EMPTY : TMC_PATH_REJECT.UNSUPPORTED_ENCODING,
+      hadBackslash: false,
+    };
+  }
+  const hadBackslash = nameRaw.includes("\\");
+  // ZIP AppNote uses `/`; bare `\` is rejected (no silent rewrite that hides traversal).
+  if (hadBackslash) {
+    return {
+      ok: false,
+      isDirectory: false,
+      path: null,
+      category: TMC_PATH_REJECT.BACKSLASH,
+      hadBackslash: true,
+    };
+  }
+  if (!nameRaw) {
+    return { ok: false, isDirectory: false, path: null, category: TMC_PATH_REJECT.EMPTY, hadBackslash: false };
+  }
+  if (nameRaw.length > maxNameLen) {
+    return {
+      ok: false,
+      isDirectory: false,
+      path: null,
+      category: TMC_PATH_REJECT.TOO_LONG,
+      hadBackslash: false,
+    };
+  }
+  for (let i = 0; i < nameRaw.length; i++) {
+    const c = nameRaw.charCodeAt(i);
+    if (c === 0 || c < 0x20) {
+      return {
+        ok: false,
+        isDirectory: false,
+        path: null,
+        category: TMC_PATH_REJECT.CONTROL_CHAR,
+        hadBackslash: false,
+      };
+    }
+  }
+  if (nameRaw.startsWith("/")) {
+    return {
+      ok: false,
+      isDirectory: false,
+      path: null,
+      category: TMC_PATH_REJECT.ABSOLUTE,
+      hadBackslash: false,
+    };
+  }
+  if (/^[a-zA-Z]:/.test(nameRaw)) {
+    return {
+      ok: false,
+      isDirectory: false,
+      path: null,
+      category: TMC_PATH_REJECT.DRIVE_PREFIX,
+      hadBackslash: false,
+    };
+  }
+
+  const isDirectory = nameRaw.endsWith("/");
+  const trimmed = isDirectory ? nameRaw.slice(0, -1) : nameRaw;
+  if (!trimmed) {
+    return {
+      ok: false,
+      isDirectory: true,
+      path: null,
+      category: TMC_PATH_REJECT.ABSOLUTE,
+      hadBackslash: false,
+    };
+  }
+  const parts = trimmed.split("/");
+  if (parts.some((p) => p === "..")) {
+    return {
+      ok: false,
+      isDirectory,
+      path: null,
+      category: TMC_PATH_REJECT.PARENT_TRAVERSAL,
+      hadBackslash: false,
+    };
+  }
+  if (parts.some((p) => p === "")) {
+    return {
+      ok: false,
+      isDirectory,
+      path: null,
+      category: TMC_PATH_REJECT.OTHER,
+      hadBackslash: false,
+    };
+  }
+  if (parts.length > maxDepth) {
+    return {
+      ok: false,
+      isDirectory,
+      path: null,
+      category: TMC_PATH_REJECT.DEPTH_EXCEEDED,
+      hadBackslash: false,
+    };
+  }
+  const normalized = parts.join("/");
+  try {
+    if (normalized.normalize("NFC") !== normalized) {
+      return {
+        ok: false,
+        isDirectory,
+        path: null,
+        category: TMC_PATH_REJECT.NORMALIZATION_CHANGED,
+        hadBackslash: false,
+      };
+    }
+  } catch (_) {
+    return {
+      ok: false,
+      isDirectory,
+      path: null,
+      category: TMC_PATH_REJECT.UNSUPPORTED_ENCODING,
+      hadBackslash: false,
+    };
+  }
+  return {
+    ok: true,
+    isDirectory,
+    path: normalized,
+    category: isDirectory ? TMC_PATH_REJECT.DIRECTORY_ENTRY : null,
+    hadBackslash: false,
+  };
 }
 
 function assertNoSymlinksInCentral(buf) {
@@ -147,7 +296,7 @@ function assertNoSymlinksInCentral(buf) {
 /**
  * @param {Buffer} buf
  * @param {{ limits?: Partial<typeof DEFAULT_ZIP_LIMITS> }} [opts]
- * @returns {{ name: string, data: Buffer }[]}
+ * @returns {{ name: string, data: Buffer }[] & { diagnostics?: object }}
  */
 export function safeUnzipEntries(buf, opts = {}) {
   const limits = { ...DEFAULT_ZIP_LIMITS, ...(opts.limits || {}) };
@@ -166,11 +315,38 @@ export function safeUnzipEntries(buf, opts = {}) {
   const out = [];
   let offset = 0;
   let uncompressedTotal = 0;
+  let centralEntryCount = 0;
+  let directoryEntryCount = 0;
+  const pathRejectCounts = Object.create(null);
+  const seen = new Set();
+  const seenFold = new Set();
+  const fileExtSummary = Object.create(null);
+
+  // Count central-directory entries for sanitized diagnostics (no names).
+  {
+    let cOff = 0;
+    while (cOff + 46 <= buf.length) {
+      const sig = buf.readUInt32LE(cOff);
+      if (sig !== CENTRAL_SIG) {
+        cOff += 1;
+        continue;
+      }
+      centralEntryCount += 1;
+      const nameLen = buf.readUInt16LE(cOff + 28);
+      const extraLen = buf.readUInt16LE(cOff + 30);
+      const commentLen = buf.readUInt16LE(cOff + 32);
+      cOff += 46 + nameLen + extraLen + commentLen;
+    }
+  }
+
+  function bumpReject(cat) {
+    pathRejectCounts[cat] = (pathRejectCounts[cat] || 0) + 1;
+  }
 
   while (offset + 30 <= buf.length) {
     const sig = buf.readUInt32LE(offset);
     if (sig !== LOCAL_SIG) break;
-    if (out.length >= limits.maxEntries) {
+    if (out.length + directoryEntryCount >= limits.maxEntries) {
       throw Object.assign(new Error("tmc_zip_too_many_entries"), { code: "TMC_ZIP_TOO_MANY" });
     }
     const method = buf.readUInt16LE(offset + 8);
@@ -184,15 +360,86 @@ export function safeUnzipEntries(buf, opts = {}) {
     if (nameLen > limits.maxNameLen || dataStart + compSize > buf.length) {
       throw Object.assign(new Error("tmc_zip_truncated"), { code: "TMC_ZIP_TRUNCATED" });
     }
-    // Encrypted entries (bit 0)
     if (flags & 0x1) {
       throw Object.assign(new Error("tmc_zip_encrypted"), { code: "TMC_ZIP_ENCRYPTED" });
     }
-    const nameRaw = buf.slice(nameStart, nameStart + nameLen).toString("utf8");
-    const name = normalizeZipPath(nameRaw, limits.maxPathDepth);
-    if (!name) {
-      throw Object.assign(new Error("tmc_zip_bad_path"), { code: "TMC_ZIP_BAD_PATH" });
+    let nameRaw;
+    try {
+      nameRaw = buf.slice(nameStart, nameStart + nameLen).toString("utf8");
+    } catch (_) {
+      const err = Object.assign(new Error("tmc_zip_bad_path"), {
+        code: "TMC_ZIP_BAD_PATH",
+        pathRejectCategory: TMC_PATH_REJECT.UNSUPPORTED_ENCODING,
+      });
+      bumpReject(TMC_PATH_REJECT.UNSUPPORTED_ENCODING);
+      throw err;
     }
+    const classified = classifyZipPath(nameRaw, {
+      maxDepth: limits.maxPathDepth,
+      maxNameLen: limits.maxNameLen,
+    });
+    if (!classified.ok) {
+      const err = Object.assign(new Error("tmc_zip_bad_path"), {
+        code: "TMC_ZIP_BAD_PATH",
+        pathRejectCategory: classified.category || TMC_PATH_REJECT.OTHER,
+        isDirectoryEntry: classified.isDirectory === true,
+        pathDiagnostics: {
+          pathRejectCategory: classified.category || TMC_PATH_REJECT.OTHER,
+          pathRejectCounts: {
+            ...(pathRejectCounts || {}),
+            [classified.category || TMC_PATH_REJECT.OTHER]:
+              (pathRejectCounts[classified.category || TMC_PATH_REJECT.OTHER] || 0) + 1,
+          },
+          isDirectoryEntry: classified.isDirectory === true,
+          directoryEntryCount,
+          fileEntryCount: out.length,
+          centralEntryCount,
+          fileExtSummary,
+          safeDirectoryEntriesAllowed: true,
+        },
+      });
+      bumpReject(classified.category || TMC_PATH_REJECT.OTHER);
+      throw err;
+    }
+
+    // Safe directory entries: skip extraction, do not count as file payload.
+    if (classified.isDirectory) {
+      directoryEntryCount += 1;
+      if (uncompSize !== 0 || compSize !== 0) {
+        // Directory with payload is unexpected — fail closed.
+        const err = Object.assign(new Error("tmc_zip_bad_path"), {
+          code: "TMC_ZIP_BAD_PATH",
+          pathRejectCategory: TMC_PATH_REJECT.OTHER,
+          isDirectoryEntry: true,
+        });
+        bumpReject(TMC_PATH_REJECT.OTHER);
+        throw err;
+      }
+      offset = dataStart + compSize;
+      continue;
+    }
+
+    const name = classified.path;
+    if (seen.has(name)) {
+      const err = Object.assign(new Error("tmc_zip_bad_path"), {
+        code: "TMC_ZIP_BAD_PATH",
+        pathRejectCategory: TMC_PATH_REJECT.DUPLICATE,
+      });
+      bumpReject(TMC_PATH_REJECT.DUPLICATE);
+      throw err;
+    }
+    const fold = name.toLowerCase();
+    if (seenFold.has(fold)) {
+      const err = Object.assign(new Error("tmc_zip_bad_path"), {
+        code: "TMC_ZIP_BAD_PATH",
+        pathRejectCategory: TMC_PATH_REJECT.DUPLICATE,
+      });
+      bumpReject(TMC_PATH_REJECT.DUPLICATE);
+      throw err;
+    }
+    seen.add(name);
+    seenFold.add(fold);
+
     if (uncompSize > limits.maxSingleUncompressed) {
       throw Object.assign(new Error("tmc_zip_entry_too_large"), { code: "TMC_ZIP_ENTRY_TOO_LARGE" });
     }
@@ -218,17 +465,36 @@ export function safeUnzipEntries(buf, opts = {}) {
         throw Object.assign(new Error("tmc_zip_size_mismatch"), { code: "TMC_ZIP_SIZE_MISMATCH" });
       }
     }
-    // Nested archives not allowed inside ZIP
     if (isZipMagic(data) || isGzipMagic(data)) {
       throw Object.assign(new Error("tmc_zip_nested_archive"), { code: "TMC_ZIP_NESTED" });
     }
+    const ext = String(name).toLowerCase().match(/\.([a-z0-9]+)$/);
+    const extKey = ext ? ext[1] : "none";
+    fileExtSummary[extKey] = (fileExtSummary[extKey] || 0) + 1;
     out.push({ name, data });
     offset = dataStart + compSize;
   }
 
   if (!out.length) {
-    throw Object.assign(new Error("tmc_zip_no_entries"), { code: "TMC_ZIP_NO_ENTRIES" });
+    throw Object.assign(new Error("tmc_zip_no_entries"), {
+      code: "TMC_ZIP_NO_ENTRIES",
+      pathDiagnostics: {
+        centralEntryCount,
+        directoryEntryCount,
+        fileEntryCount: 0,
+        pathRejectCounts,
+        fileExtSummary,
+      },
+    });
   }
+  out.diagnostics = {
+    centralEntryCount: centralEntryCount || out.length + directoryEntryCount,
+    directoryEntryCount,
+    fileEntryCount: out.length,
+    pathRejectCounts,
+    fileExtSummary,
+    safeDirectoryEntriesAllowed: true,
+  };
   return out;
 }
 

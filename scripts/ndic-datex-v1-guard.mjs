@@ -452,13 +452,29 @@ async function discoveryChecks() {
   ok("tmc_zip_bomb_reject", bomb, "bomb");
 
   let trav = false;
+  let travCat = null;
   try {
     const bad = buildStoredZip([{ name: "../evil.json", data: "{}" }]);
     safeUnzipEntries(bad);
   } catch (e) {
     trav = e && e.code === "TMC_ZIP_BAD_PATH";
+    travCat = e && e.pathRejectCategory;
   }
   ok("tmc_zip_path_traversal_reject", trav, "path");
+  ok("tmc_zip_path_traversal_category", travCat === "TMC_PATH_PARENT_TRAVERSAL", travCat);
+
+  let dirOk = false;
+  try {
+    const withDir = buildStoredZip([
+      { name: "loc/", data: Buffer.alloc(0) },
+      { name: "loc/POINTS.DAT", data: Buffer.from("a,b\n1,2\n", "utf8") },
+    ]);
+    const out = safeUnzipEntries(withDir);
+    dirOk = out.length === 1 && out.diagnostics && out.diagnostics.directoryEntryCount === 1;
+  } catch (_e) {
+    dirOk = false;
+  }
+  ok("tmc_zip_safe_directory_entry_ok", dirOk, "dir");
 
   let symlink = false;
   try {

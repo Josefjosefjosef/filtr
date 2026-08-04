@@ -34,7 +34,16 @@ import {
   isGzipMagic,
   isZipMagic,
   DEFAULT_ZIP_LIMITS,
+  TMC_PATH_REJECT,
 } from "./ndic-datex-v1/tmc-zip.mjs";
+import {
+  createBoundedTempPath,
+  streamResponseToFileBounded,
+  readBoundedFile,
+  wipeTempDir,
+  DATEX_MAX_RESPONSE_BYTES,
+  DATEX_PREV_RESPONSE_BYTES,
+} from "./ndic-datex-v1/bounded-fetch.mjs";
 import {
   classifyTrafficLifecycle,
   classifyChangeSignificance,
@@ -132,12 +141,15 @@ function isSharedNetworkFailure(res) {
 
 /**
  * Single-shot authenticated GET (no retries). Aggregate-safe diagnostics only.
+ * Streams body to an isolated temp file with hard byte bound (no unbounded arrayBuffer).
  */
-async function fetchOnceNoRetry(url, user, pass, accept, label) {
+async function fetchOnceNoRetry(url, user, pass, accept, label, maxBytes) {
   const started = Date.now();
   let phase = "ssrf_allowlist";
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  const cap = Number(maxBytes) > 0 ? Number(maxBytes) : DATEX_MAX_RESPONSE_BYTES;
+  let temp = null;
   try {
     assertAllowedPullUrl(url);
     phase = "connect_or_headers";
@@ -170,29 +182,46 @@ async function fetchOnceNoRetry(url, user, pass, accept, label) {
         errorClass: "auth_rejected",
         beforeHttpResponse: false,
         redirectCount: 0,
+        streamingBounded: true,
+        maxBytes: cap,
       };
     }
     phase = "response_body";
-    const ab = await res.arrayBuffer();
-    const buf = Buffer.from(ab);
-    const maxBytes = 32 * 1024 * 1024;
-    if (buf.length > maxBytes) {
-      return {
-        ok: false,
-        status,
-        contentType: ct || "unknown",
-        bytes: buf.length,
-        buf: Buffer.alloc(0),
-        label,
-        elapsedMs: Date.now() - started,
-        failurePhase: "response_body",
-        failureCategory: /** @type {FailureCategory} */ ("K"),
-        errorCode: "RESPONSE_TOO_LARGE",
-        errorClass: "fatal",
-        beforeHttpResponse: false,
-        redirectCount: 0,
-      };
+    temp = createBoundedTempPath("ndic-fetch-");
+    let streamed;
+    try {
+      streamed = await streamResponseToFileBounded(res, {
+        maxBytes: cap,
+        destFile: temp.file,
+        signal: ctrl.signal,
+      });
+    } catch (e) {
+      const code = e && e.code != null ? String(e.code) : "";
+      if (code === "RESPONSE_TOO_LARGE") {
+        return {
+          ok: false,
+          status,
+          contentType: ct || "unknown",
+          bytes: Number(e.received) || Number(e.contentLengthHeader) || 0,
+          buf: Buffer.alloc(0),
+          label,
+          elapsedMs: Date.now() - started,
+          failurePhase: "response_body",
+          failureCategory: /** @type {FailureCategory} */ ("K"),
+          errorCode: "RESPONSE_TOO_LARGE",
+          errorClass: "fatal",
+          beforeHttpResponse: false,
+          redirectCount: 0,
+          streamingBounded: true,
+          maxBytes: cap,
+        };
+      }
+      throw e;
     }
+    const buf = readBoundedFile(streamed.file, cap);
+    // Drop on-disk copy as soon as bytes are in memory for parse (still isolated workdir wipe later).
+    wipeTempDir(temp.dir);
+    temp = null;
     const httpOk = status >= 200 && status < 300;
     return {
       ok: httpOk,
@@ -208,6 +237,9 @@ async function fetchOnceNoRetry(url, user, pass, accept, label) {
       errorClass: httpOk ? null : "http_error",
       beforeHttpResponse: false,
       redirectCount: 0,
+      streamingBounded: true,
+      maxBytes: cap,
+      contentLengthHeader: streamed.contentLengthHeader,
     };
   } catch (e) {
     const meta = classifyNetworkFailure(e, phase);
@@ -225,9 +257,12 @@ async function fetchOnceNoRetry(url, user, pass, accept, label) {
       errorClass: meta.errorClass,
       beforeHttpResponse: meta.beforeHttpResponse,
       redirectCount: 0,
+      streamingBounded: true,
+      maxBytes: cap,
     };
   } finally {
     clearTimeout(timer);
+    if (temp && temp.dir) wipeTempDir(temp.dir);
   }
 }
 
@@ -249,6 +284,8 @@ function attachFetchDiag(target, res) {
   target.beforeHttpResponse = res.beforeHttpResponse;
   target.redirectCount = res.redirectCount;
   target.sourceLabel = res.label;
+  target.streamingBounded = res.streamingBounded === true;
+  target.maxBytes = res.maxBytes != null ? res.maxBytes : null;
   return target;
 }
 
@@ -457,10 +494,37 @@ function summarizeTmc(buf, config) {
           maxUncompressedTotal: Math.min(DEFAULT_ZIP_LIMITS.maxUncompressedTotal, config.limits.maxResponseBytes),
         },
       });
+      if (entries.diagnostics) {
+        out.pathDiagnostics = {
+          centralEntryCount: entries.diagnostics.centralEntryCount,
+          directoryEntryCount: entries.diagnostics.directoryEntryCount,
+          fileEntryCount: entries.diagnostics.fileEntryCount,
+          pathRejectCounts: entries.diagnostics.pathRejectCounts,
+          fileExtSummary: entries.diagnostics.fileExtSummary,
+          safeDirectoryEntriesAllowed: true,
+        };
+      }
     } catch (e) {
       out.importerCompatible = false;
       out.rejectCode = String(e && e.code) || "ZIP_REJECT";
-      if (e && e.code === "TMC_ZIP_BAD_PATH") out.zipSlipVerified = true;
+      if (e && e.code === "TMC_ZIP_BAD_PATH") {
+        out.zipSlipVerified = true;
+        out.pathRejectCategory = e.pathRejectCategory || TMC_PATH_REJECT.OTHER;
+        out.isDirectoryEntry = e.isDirectoryEntry === true;
+        out.pathDiagnostics = {
+          pathRejectCategory: out.pathRejectCategory,
+          pathRejectCounts: { [out.pathRejectCategory]: 1 },
+          isDirectoryEntry: out.isDirectoryEntry,
+          safeDirectoryEntriesAllowed: true,
+        };
+      }
+      if (e && e.pathDiagnostics) {
+        out.pathDiagnostics = {
+          ...(out.pathDiagnostics || {}),
+          ...e.pathDiagnostics,
+          pathRejectCategory: out.pathRejectCategory || null,
+        };
+      }
       if (e && (e.code === "TMC_ZIP_BOMB" || e.code === "TMC_ZIP_RATIO" || e.code === "TMC_GZIP_BOMB")) {
         out.zipBombVerified = true;
       }
@@ -676,7 +740,8 @@ export async function runShadowProbe(opts = {}) {
       config.pullUser,
       config.pullPass,
       "application/xml, text/xml, application/zip, */*;q=0.1",
-      sourceLabel("datex")
+      sourceLabel("datex"),
+      config.limits.maxResponseBytes
     );
 
     let tmcTable = null;
@@ -701,7 +766,8 @@ export async function runShadowProbe(opts = {}) {
         config.tmcPullUser,
         config.tmcPullPass,
         "application/zip, application/json, text/plain, */*",
-        sourceLabel("tmc")
+        sourceLabel("tmc"),
+        Math.min(config.limits.maxResponseBytes, DEFAULT_ZIP_LIMITS.maxCompressedTotal)
       );
       if (tmcRes.ok && tmcRes.buf.length) {
         const tmcPath = path.join(workDir, "tmc.bin");
@@ -814,6 +880,9 @@ if (isMain) {
             redirectCount: report.datex.redirectCount,
             sourceLabel: "DATEX_SOURCE",
             rawDataExposed: false,
+            streamingBounded: report.datex.streamingBounded === true,
+            maxBytes: report.datex.maxBytes != null ? report.datex.maxBytes : null,
+            limitPreviousBytes: DATEX_PREV_RESPONSE_BYTES,
           }
         : null;
       const safe = {
@@ -861,6 +930,21 @@ if (isMain) {
           beforeHttpResponse: report.tmc.beforeHttpResponse,
           redirectCount: report.tmc.redirectCount,
           rejectCode: report.tmc.rejectCode || null,
+          pathRejectCategory: report.tmc.pathRejectCategory || null,
+          pathDiagnostics: report.tmc.pathDiagnostics
+            ? {
+                pathRejectCategory: report.tmc.pathDiagnostics.pathRejectCategory || null,
+                pathRejectCounts: report.tmc.pathDiagnostics.pathRejectCounts || {},
+                isDirectoryEntry: report.tmc.pathDiagnostics.isDirectoryEntry === true,
+                directoryEntryCount: report.tmc.pathDiagnostics.directoryEntryCount || 0,
+                fileEntryCount: report.tmc.pathDiagnostics.fileEntryCount || 0,
+                centralEntryCount: report.tmc.pathDiagnostics.centralEntryCount || 0,
+                fileExtSummary: report.tmc.pathDiagnostics.fileExtSummary || {},
+                safeDirectoryEntriesAllowed: true,
+              }
+            : null,
+          streamingBounded: report.tmc.streamingBounded === true,
+          maxBytes: report.tmc.maxBytes != null ? report.tmc.maxBytes : null,
           sourceLabel: "TMC_SOURCE",
         },
         mapping: report.mapping,
