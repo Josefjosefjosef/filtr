@@ -1,0 +1,48 @@
+name: NDIC TMC v11 format inspection
+
+# DEFAULT-BRANCH REGISTRATION STUB ONLY
+# - Registers this workflow path/name on main so workflow_dispatch is discoverable.
+# - Contains NO NDIC access, NO secrets, NO Czech egress labels, NO checkout/actions.
+# - Dispatch with ref=main MUST always fail-closed (this job exits non-zero).
+# - Approved live inspection MUST use an explicit feature ref after separate audit;
+#   do NOT copy the live implementation into this stub without a security review.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Registration stub: default fails closed; format_inspection is feature-only"
+        required: true
+        type: choice
+        options:
+          - default
+          - format_inspection
+        default: default
+      code_ref:
+        description: "Registration stub: default fails closed; feature ref is for feature workflow only"
+        required: true
+        type: choice
+        options:
+          - default
+          - feat/ndic-datex-v1-integration
+        default: default
+
+permissions: {}
+
+concurrency:
+  group: ndic-datex-v1-tmc-format-inspection-main-stub
+  cancel-in-progress: false
+
+jobs:
+  registration-stub-fail-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Inert default-branch stub (always fail-closed)
+        run: |
+          set -euo pipefail
+          echo "DEFAULT_BRANCH_REGISTRATION_STUB"
+          echo "INERT_NO_NDIC_ACCESS"
+          echo "LIVE_INSPECTION_REQUIRES_APPROVED_FEATURE_REF"
+          echo "REFUSING_MAIN_STUB_EXECUTION"
+          exit 1
