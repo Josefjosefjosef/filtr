@@ -1,0 +1,139 @@
+name: NDIC TMC v11 format inspection
+
+# Prepared ONLY — do not enable the runner or dispatch until ops approval.
+# Use workflow from: feat/ndic-datex-v1-integration (never main dispatcher).
+#
+# Purpose: sanitised aggregate format evidence for Czech TMC ZIP.
+# Does NOT run importer, resolver, publish, or production writes.
+#
+# Security:
+# - workflow_dispatch ONLY
+# - runs-on: self-hosted + Linux + X64 + ndic-cz-egress
+# - identity preflight before checkout/secrets/network
+# - artifact: sanitised JSON ≤64 KiB only (no ZIP, no raw rows)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Must be format_inspection"
+        required: true
+        type: choice
+        options:
+          - format_inspection
+        default: format_inspection
+      code_ref:
+        description: "Allowlisted git ref"
+        required: true
+        type: choice
+        options:
+          - feat/ndic-datex-v1-integration
+        default: feat/ndic-datex-v1-integration
+
+concurrency:
+  group: ndic-datex-v1-tmc-format-inspection
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  format-inspection:
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.repository == 'Josefjosefjosef/filtr'
+      && github.event.pull_request == null
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 15
+    steps:
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ] || [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_PLATFORM"
+            exit 1
+          fi
+          case "${GITHUB_WORKSPACE:-}" in
+            /home/runner|/home/runner/*) echo "REFUSING_GITHUB_HOSTED_PATH"; exit 1 ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          umask 077
+          echo "RUNNER_PREFLIGHT_OK"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+          ref: ${{ github.event.inputs.code_ref }}
+
+      - name: Enforce allowlisted inputs
+        env:
+          INPUT_REF: ${{ github.event.inputs.code_ref }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+        run: |
+          set -euo pipefail
+          case "${INPUT_REF}" in
+            feat/ndic-datex-v1-integration) ;;
+            *) echo "REFUSING_NON_ALLOWLISTED_CODE_REF"; exit 1 ;;
+          esac
+          mode="$(printf '%s' "${INPUT_MODE:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          if [ "$mode" != "format_inspection" ]; then
+            echo "REFUSING_NON_INSPECTION_MODE"
+            exit 1
+          fi
+          echo "MODE_OK=format_inspection"
+          echo "CODE_SHA=$(git rev-parse HEAD)"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Fixture guards (no network)
+        run: |
+          set -euo pipefail
+          umask 077
+          npm run iu-ndic-datex-v1-guard
+          npm run iu-ndic-datex-v1-exposure-guard
+          npm run iu-ndic-self-hosted-runner-contract-guard
+          npm run iu-ndic-github-hosted-access-fixtures
+          npm run iu-ndic-disk-preflight-fixtures
+          npm run iu-ndic-tmc-archive-stream-fixtures
+          npm run iu-ndic-tmc-format-inspection-fixtures
+          npm run iu-ndic-shadow-report-redaction-guard
+
+      - name: Inspection library ready check (no network)
+        env:
+          IU_NDIC_DATEX_V1_MODE: format_inspection
+          IU_NDIC_SHADOW_WORK_DIR: ${{ runner.temp }}/ndic-inspect-work
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$IU_NDIC_SHADOW_WORK_DIR"
+          node scripts/ndic-datex-v1-tmc-format-inspection-run.mjs --offline-ready
+          rm -rf "$IU_NDIC_SHADOW_WORK_DIR" || true
+
+      - name: Wipe temp workdir
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -rf "${{ runner.temp }}/ndic-inspect-work" || true
+          rm -rf "${{ runner.temp }}/ndic-inspect-report" || true

@@ -64,7 +64,10 @@ function wipe(dir) {
   const meta = inspectZipFileCentral(file);
   ok("dirs_ok", meta.directoryEntryCount >= 1 && meta.fileEntryCount === 2, JSON.stringify(meta));
   ok("dirs_dat", meta.datFileCount === 1, String(meta.datFileCount));
-  ok("auth_tisa", meta.authoritativeFormat === TMC_FORMAT.TISA_DAT_CSV, meta.authoritativeFormat);
+  ok("auth_tisa_candidate", meta.candidateFormat === TMC_FORMAT.TISA_DAT_CSV, meta.candidateFormat);
+  ok("auth_unverified", meta.authoritativeFormat === "UNVERIFIED", meta.authoritativeFormat);
+  ok("auth_not_verified_flag", meta.authoritativeFormatVerified === false, String(meta.authoritativeFormatVerified));
+  ok("auth_confidence_metadata", meta.candidateFormatConfidence === "metadata_only", meta.candidateFormatConfidence);
   const gate = analyzeAndGateTmcZipFile(file, { workDir: dir, measureDeps: AMPLE });
   ok(
     "importer_not_impl",
@@ -87,7 +90,8 @@ function wipe(dir) {
     fileExtSummary: { shp: 6, dbf: 6, dat: 5, txt: 1 },
     candidateLayers: { tisaNameHint: 2 },
   });
-  ok("prefer_tisa", decision.format === TMC_FORMAT.TISA_DAT_CSV, decision.format);
+  ok("prefer_tisa", decision.candidateFormat === TMC_FORMAT.TISA_DAT_CSV, decision.candidateFormat);
+  ok("prefer_unverified", decision.authoritativeFormatVerified === false, "verified");
   ok(
     "prefer_status",
     decision.importerStatus === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
@@ -191,7 +195,8 @@ function wipe(dir) {
   const meta = inspectZipFileCentral(file);
   const after = process.memoryUsage();
   const heapDelta = after.heapUsed - before.heapUsed;
-  ok("mem_auth", meta.authoritativeFormat === TMC_FORMAT.TISA_DAT_CSV, meta.authoritativeFormat);
+  ok("mem_auth_candidate", meta.candidateFormat === TMC_FORMAT.TISA_DAT_CSV, meta.candidateFormat);
+  ok("mem_auth_unverified", meta.authoritativeFormat === "UNVERIFIED", meta.authoritativeFormat);
   ok("mem_heap_not_linear", heapDelta < 2 * 1024 * 1024, "heapDelta=" + heapDelta);
   ok("mem_rss_reported", typeof after.rss === "number" && after.rss > 0, String(after.rss));
   ok("mem_external_reported", typeof after.external === "number", String(after.external));

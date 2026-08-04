@@ -27,6 +27,11 @@ export const APPROVED_NDIC_NETWORK_WORKFLOWS = Object.freeze({
   "update-ndic-datex-v1.yml": "update",
 });
 
+/** Workflows allowed for TMC format inspection (self-hosted CZ; no importer/publish). */
+export const APPROVED_NDIC_INSPECTION_WORKFLOWS = Object.freeze({
+  "ndic-datex-v1-tmc-format-inspection.yml": "format_inspection",
+});
+
 const FORBIDDEN_TRIGGERS = ["pull_request:", "pull_request_target:", "workflow_run:"];
 
 const NDIC_CAPABILITY_PATTERNS = [
@@ -154,7 +159,9 @@ export function analyzeWorkflowSource(fileName, raw) {
   const src = stripComments(raw);
   const jobs = extractJobs(src);
   const issues = [];
-  const approvedKind = APPROVED_NDIC_NETWORK_WORKFLOWS[fileName] || null;
+  const approvedNetworkKind = APPROVED_NDIC_NETWORK_WORKFLOWS[fileName] || null;
+  const approvedInspectionKind = APPROVED_NDIC_INSPECTION_WORKFLOWS[fileName] || null;
+  const approvedKind = approvedNetworkKind || approvedInspectionKind || null;
 
   for (const job of jobs) {
     if (job.hasDynamicRunsOn) {
@@ -205,7 +212,11 @@ export function analyzeWorkflowSource(fileName, raw) {
       });
     }
 
-    if (hasNdic && job.isSelfHosted && approvedKind) {
+    // Network jobs with NDIC caps, and all approved inspection jobs, need identity preflight.
+    const needsPreflight =
+      (hasNdic && job.isSelfHosted && approvedNetworkKind) ||
+      (job.isSelfHosted && approvedInspectionKind);
+    if (needsPreflight) {
       if (!/Preflight runner identity/.test(job.body) && !/REFUSING_GITHUB_HOSTED/.test(job.body)) {
         issues.push({
           id: "missing_preflight",
@@ -245,7 +256,16 @@ export function analyzeWorkflowSource(fileName, raw) {
     }
   }
 
-  return { fileName, jobs, issues, approvedKind, src, raw };
+  return {
+    fileName,
+    jobs,
+    issues,
+    approvedKind,
+    approvedNetworkKind,
+    approvedInspectionKind,
+    src,
+    raw,
+  };
 }
 
 /**
@@ -320,8 +340,25 @@ function main() {
       ok("shadow_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(raw), "unsecure");
       ok("shadow_fixture_disk_preflight", /iu-ndic-disk-preflight-fixtures/.test(src), "disk-fx");
       ok("shadow_fixture_tmc_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "tmc-fx");
+      ok("shadow_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "insp-fx");
       ok("shadow_fixture_redaction", /iu-ndic-shadow-report-redaction-guard/.test(src), "redact-fx");
       ok("shadow_fixture_before_probe", /Fixture guards[\s\S]*iu-ndic-tmc-archive-stream-fixtures[\s\S]*Real shadow probe/.test(src), "order");
+    }
+
+    if (file === "ndic-datex-v1-tmc-format-inspection.yml") {
+      const src = analysis.src;
+      ok("inspect_self_hosted", analysis.jobs.some((j) => j.isSelfHosted), "sh");
+      ok("inspect_dispatch", /workflow_dispatch\s*:/.test(src), "dispatch");
+      ok("inspect_mode_only", /format_inspection/.test(src) && !/options:[\s\S]*?-\s*active/.test(src), "mode");
+      ok("inspect_no_ubuntu", !/ubuntu-latest/.test(src), "ubuntu");
+      ok("inspect_no_secrets", !/secrets\.IU_NDIC_/.test(src), "secrets");
+      ok("inspect_no_importer_run", !/ndic-datex-v1-prod-sync|importerActivated:\s*true/.test(src), "imp");
+      ok("inspect_node_24", /node-version:\s*["']?24["']?/.test(src), "node24");
+      ok("inspect_fixture_inspection", /iu-ndic-tmc-format-inspection-fixtures/.test(src), "fx");
+      ok("inspect_fixture_archive", /iu-ndic-tmc-archive-stream-fixtures/.test(src), "arch");
+      ok("inspect_fixture_disk", /iu-ndic-disk-preflight-fixtures/.test(src), "disk");
+      ok("inspect_offline_ready", /--offline-ready/.test(src), "ready");
+      ok("inspect_runs_on_labels", /runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(src), "labels");
     }
 
     if (file === "update-ndic-datex-v1.yml") {
@@ -405,20 +442,17 @@ function main() {
     ok("sync_asserts_no_test_disk_env", /assertNoTestDiskProviderEnv/.test(sync), "sync-env");
     ok("probe_no_measureDeps_from_env", !/measureDeps:\s*process\.env|IU_NDIC_TEST_DISK/.test(probe), "measure-env");
     ok("probe_workdir_no_ostmp_fallback", /TMC_DISK_WORKDIR_REQUIRED/.test(probe) && !/ensureWorkDir[\s\S]{0,400}os\.tmpdir\(\)/.test(probe), "no-tmp");
-    // Workflow must not expose test disk inputs
-    for (const file of Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS)) {
-      const abs = path.join(WF_DIR, file);
-      if (!fs.existsSync(abs)) continue;
-      const raw = fs.readFileSync(abs, "utf8");
-      ok("wf_no_test_disk_input_" + file, !/test.?disk|fake.?disk|IU_NDIC_TEST_DISK/i.test(raw), "input");
-    }
   }
 
   ok("at_least_one_ndic_self_hosted", ndicSelfHostedJobs >= 1, String(ndicSelfHostedJobs));
   ok("zero_github_hosted_ndic_jobs", githubHostedNdicJobs === 0, String(githubHostedNdicJobs));
 
-  // Reject Node 20/21/22/23 in NDIC workflows
-  for (const file of Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS)) {
+  // Reject Node 20/21/22/23 in NDIC network + inspection workflows
+  const approvedWfFiles = [
+    ...Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS),
+    ...Object.keys(APPROVED_NDIC_INSPECTION_WORKFLOWS),
+  ];
+  for (const file of approvedWfFiles) {
     const abs = path.join(WF_DIR, file);
     if (!fs.existsSync(abs)) continue;
     const raw = fs.readFileSync(abs, "utf8");
@@ -430,6 +464,7 @@ function main() {
         "bad"
       );
     }
+    ok("wf_no_test_disk_input_" + file, !/test.?disk|fake.?disk|IU_NDIC_TEST_DISK/i.test(raw), "input");
   }
 
   const configSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "config.mjs"), "utf8");
@@ -449,6 +484,7 @@ function main() {
       githubHostedNdicJobs,
       requiredLabels: REQUIRED_LABELS,
       approvedNetworkWorkflows: Object.keys(APPROVED_NDIC_NETWORK_WORKFLOWS),
+      approvedInspectionWorkflows: Object.keys(APPROVED_NDIC_INSPECTION_WORKFLOWS),
       expectedRunnerName: EXPECTED_RUNNER_NAME,
     })
   );

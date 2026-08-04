@@ -169,6 +169,7 @@ jobs:
           npm run iu-ndic-github-hosted-access-fixtures
           npm run iu-ndic-disk-preflight-fixtures
           npm run iu-ndic-tmc-archive-stream-fixtures
+          npm run iu-ndic-tmc-format-inspection-fixtures
           npm run iu-ndic-shadow-report-redaction-guard
 
       - name: Real shadow probe (isolated temp only)

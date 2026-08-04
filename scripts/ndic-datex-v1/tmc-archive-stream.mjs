@@ -111,7 +111,11 @@ export function inspectZipFileCentral(filePath, limits = {}) {
       uncompressedWarnPct: [],
       perEntryWarnPct: [],
     },
-    authoritativeFormat: TMC_FORMAT.UNRESOLVED,
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+    candidateFormat: TMC_FORMAT.UNRESOLVED,
+    candidateFormatConfidence: "metadata_only",
+    candidateEvidenceSource: "central_directory",
     authoritativeReason: null,
     cidDetected: null,
     tabcdDetected: null,
@@ -279,9 +283,15 @@ export function inspectZipFileCentral(filePath, limits = {}) {
       meta.entrySizeRejectCategory = meta.entrySizeRejectCategory || "TMC_ZIP_ENCRYPTED";
     }
 
-    // Deterministic authoritative format selection (no content read yet)
+    // Deterministic candidate format selection (no content read yet)
     const decision = selectAuthoritativeFormat(meta);
-    meta.authoritativeFormat = decision.format;
+    meta.authoritativeFormat = decision.authoritativeFormat || "UNVERIFIED";
+    meta.authoritativeFormatVerified = decision.authoritativeFormatVerified === true;
+    meta.candidateFormat = decision.candidateFormat || decision.format;
+    meta.candidateFormatConfidence = decision.candidateFormatConfidence || "metadata_only";
+    meta.candidateEvidenceSource = decision.candidateEvidenceSource || "central_directory";
+    // Legacy field retained as candidate alias for older fixtures (not verified content).
+    meta.formatCandidateLegacy = decision.format;
     meta.authoritativeReason = decision.reason;
     meta.cidDetected = decision.cid;
     meta.tabcdDetected = decision.tabcd;
@@ -293,7 +303,8 @@ export function inspectZipFileCentral(filePath, limits = {}) {
 }
 
 /**
- * Prefer official TISA exchange layer over convenient SHP/SQLite.
+ * Prefer official TISA exchange layer over convenient SHP/SQLite (metadata-only).
+ * Does NOT claim authoritativeFormatVerified — content inspection required.
  * @param {object} meta
  */
 export function selectAuthoritativeFormat(meta) {
@@ -307,61 +318,70 @@ export function selectAuthoritativeFormat(meta) {
   const hasSqlite = (meta.sqliteCandidateCount || 0) > 0;
   const hasJson = (meta.jsonCandidateCount || 0) > 0;
 
+  const base = {
+    cid: null,
+    tabcd: null,
+    candidateFormatConfidence: "metadata_only",
+    candidateEvidenceSource: "central_directory",
+    authoritativeFormat: "UNVERIFIED",
+    authoritativeFormatVerified: false,
+  };
+
   if (hasTisaLike && (hasShp || hasSqlite)) {
     return {
+      ...base,
       format: TMC_FORMAT.TISA_DAT_CSV,
+      candidateFormat: TMC_FORMAT.TISA_DAT_CSV,
       reason: "tisa_like_present_preferred_over_shp_sqlite",
-      cid: null,
-      tabcd: null,
       versionHint: "v11.0_candidate",
       importerStatus: "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
     };
   }
   if (hasTisaLike) {
     return {
+      ...base,
       format: TMC_FORMAT.TISA_DAT_CSV,
+      candidateFormat: TMC_FORMAT.TISA_DAT_CSV,
       reason: "tisa_dat_txt_csv_candidates",
-      cid: null,
-      tabcd: null,
       versionHint: "v11.0_candidate",
       importerStatus: "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
     };
   }
   if (hasJson && !hasShp && !hasSqlite) {
     return {
+      ...base,
       format: TMC_FORMAT.JSON_TABLE,
+      candidateFormat: TMC_FORMAT.JSON_TABLE,
       reason: "json_only_archive",
-      cid: null,
-      tabcd: null,
       versionHint: null,
       importerStatus: "JSON_SUPPORTED",
     };
   }
   if (hasShp && !hasTisaLike) {
     return {
+      ...base,
       format: TMC_FORMAT.SHAPEFILE_SET,
+      candidateFormat: TMC_FORMAT.SHAPEFILE_SET,
       reason: "shapefile_without_tisa_layer",
-      cid: null,
-      tabcd: null,
       versionHint: null,
       importerStatus: "TMC_AUTHORITATIVE_FORMAT_AMBIGUOUS_SHP_ONLY",
     };
   }
   if (hasSqlite && !hasTisaLike) {
     return {
+      ...base,
       format: TMC_FORMAT.SQLITE_DB,
+      candidateFormat: TMC_FORMAT.SQLITE_DB,
       reason: "sqlite_without_tisa_layer",
-      cid: null,
-      tabcd: null,
       versionHint: null,
       importerStatus: "TMC_AUTHORITATIVE_FORMAT_AMBIGUOUS_DB_ONLY",
     };
   }
   return {
+    ...base,
     format: TMC_FORMAT.UNRESOLVED,
+    candidateFormat: TMC_FORMAT.UNRESOLVED,
     reason: "no_authoritative_layer",
-    cid: null,
-    tabcd: null,
     versionHint: null,
     importerStatus: "TMC_AUTHORITATIVE_FORMAT_UNRESOLVED",
   };
@@ -485,8 +505,13 @@ export function analyzeAndGateTmcZipFile(zipPath, opts = {}) {
     }
 
     const decision = selectAuthoritativeFormat(meta);
-    meta.authoritativeFormat = decision.format;
+    meta.candidateFormat = decision.candidateFormat || decision.format;
+    meta.candidateFormatConfidence = decision.candidateFormatConfidence || "metadata_only";
+    meta.candidateEvidenceSource = decision.candidateEvidenceSource || "central_directory";
+    meta.authoritativeFormat = decision.authoritativeFormat || "UNVERIFIED";
+    meta.authoritativeFormatVerified = false;
     meta.authoritativeReason = decision.reason;
+    meta.formatCandidateLegacy = decision.format;
 
     if (meta.entrySizeRejectCategory) {
       return {
