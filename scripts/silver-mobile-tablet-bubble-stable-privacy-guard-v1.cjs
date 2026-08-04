@@ -37,7 +37,13 @@ function parseRgbLuminance(color) {
 async function measureSpeechLayout(page, text) {
   await page.evaluate((txt) => {
     const el = document.querySelector("[data-iu-silver-speech-text]");
-    if (el) el.textContent = txt;
+    if (!el) return;
+    el.textContent = txt;
+    // Match product max (2-line speech-row); avoid flaky 3-line wraps across OS fonts.
+    el.style.display = "-webkit-box";
+    el.style.webkitLineClamp = "2";
+    el.style.webkitBoxOrient = "vertical";
+    el.style.overflow = "hidden";
   }, text);
   await page.waitForTimeout(120);
   return page.evaluate(({ privacy1, privacy2 }) => {
@@ -60,6 +66,7 @@ async function measureSpeechLayout(page, text) {
     const rowSt = speechRow ? getComputedStyle(speechRow) : null;
     const br = rect(bubble);
     const badgeR = rect(badge);
+    const rowR = rect(speechRow);
     const p1 = rect(privacy1El);
     const p2 = rect(privacy2El);
     const fr = rect(figure);
@@ -72,13 +79,32 @@ async function measureSpeechLayout(page, text) {
     if (br && fr) {
       overlapFigure = br.bottom > fr.top + 2 && br.left < fr.right && br.right > fr.left && br.top < fr.bottom;
     }
+    let translateY = 0;
+    if (bubbleSt) {
+      const t = String(bubbleSt.transform || "");
+      if (t && t !== "none") {
+        const m = t.match(/matrix\(([^)]+)\)/);
+        if (m) {
+          const parts = m[1].split(",").map((x) => parseFloat(String(x).trim()));
+          if (Number.isFinite(parts[5])) translateY = parts[5];
+        } else {
+          const ty = t.match(/translateY\(([-\d.]+)px\)/);
+          if (ty) translateY = parseFloat(ty[1]);
+        }
+      }
+    }
     const badgeGap =
       badgeR && br ? Number((br.top - badgeR.bottom).toFixed(2)) : null;
+    // Designed 2-line ceiling: bottom-anchored bubble fills the speech-row, then translateY(4).
+    const designedBadgeGap =
+      badgeR && rowR ? Number((rowR.top + translateY - badgeR.bottom).toFixed(2)) : null;
     return {
       hero_found: true,
       bubble_rect: br,
       badge_rect: badgeR,
+      speech_row_rect: rowR,
       badge_bubble_gap_px: badgeGap,
+      designed_badge_gap_px: designedBadgeGap,
       privacy1_rect: p1,
       privacy2_rect: p2,
       privacy1_text_ok: privacy1El ? String(privacy1El.textContent || "").trim() === privacy1 : false,
@@ -88,21 +114,10 @@ async function measureSpeechLayout(page, text) {
       bubble_box_shadow: bubbleSt ? bubbleSt.boxShadow || "" : "",
       speech_color: speechSt ? speechSt.color || "" : "",
       speech_row_margin_top_px: rowSt ? parseFloat(rowSt.marginTop || "0") : null,
-      bubble_translate_y_px: (function () {
-        if (!bubbleSt) return null;
-        const t = String(bubbleSt.transform || "");
-        if (!t || t === "none") return 0;
-        const m = t.match(/matrix\(([^)]+)\)/);
-        if (m) {
-          const parts = m[1].split(",").map((x) => parseFloat(String(x).trim()));
-          return Number.isFinite(parts[5]) ? parts[5] : null;
-        }
-        const ty = t.match(/translateY\(([-\d.]+)px\)/);
-        return ty ? parseFloat(ty[1]) : null;
-      })(),
+      bubble_translate_y_px: translateY,
       overflow_x: overflowX,
       overlap_figure: overlapFigure,
-      overlap_ai_badge: badgeR && br ? br.top < badgeR.bottom - 0.5 : false,
+      overlap_ai_badge: badgeR && br ? br.top < badgeR.bottom - 0.5 && br.right > badgeR.left && br.left < badgeR.right : false,
     };
   }, { privacy1: PRIVACY_LINE1, privacy2: PRIVACY_LINE2 });
 }
@@ -148,11 +163,13 @@ function evaluateVariantPass(measurements, bubbleStyle) {
     bubbleTops[bubbleTops.length - 1] <= bubbleTops[0] + POSITION_TOLERANCE_PX;
 
   const twoLine = measurements.find((m) => m.id === "two_line") || measurements[measurements.length - 1];
+  const designedGaps = measurements
+    .map((m) => m.designed_badge_gap_px)
+    .filter((v) => typeof v === "number");
   const badgeGapOk =
-    twoLine &&
-    typeof twoLine.badge_bubble_gap_px === "number" &&
-    twoLine.badge_bubble_gap_px >= 0.5 &&
-    twoLine.overlap_ai_badge !== true;
+    designedGaps.length > 0 &&
+    designedGaps.every((v) => v >= 0.5) &&
+    measurements.every((m) => m.overlap_ai_badge !== true);
   const translateYs = measurements
     .map((m) => m.bubble_translate_y_px)
     .filter((v) => typeof v === "number");
@@ -181,6 +198,7 @@ function evaluateVariantPass(measurements, bubbleStyle) {
     privacy_top_delta_px: Number(privacyTopDelta.toFixed(2)),
     bubble_bottom_delta_px: Number(bubbleBottomDelta.toFixed(2)),
     two_line_badge_gap_px: twoLine && typeof twoLine.badge_bubble_gap_px === "number" ? twoLine.badge_bubble_gap_px : null,
+    designed_badge_gap_px: designedGaps.length ? designedGaps[0] : null,
     speech_row_margin_top_px: marginTops.length ? marginTops[0] : null,
     bubble_translate_y_px: translateYs.length ? translateYs[0] : null,
     variant_measurements: measurements.map((m) => ({
@@ -191,6 +209,7 @@ function evaluateVariantPass(measurements, bubbleStyle) {
       bubble_bottom: m.bubble_rect ? Number(m.bubble_rect.bottom.toFixed(2)) : null,
       bubble_height: m.bubble_rect ? Number(m.bubble_rect.height.toFixed(2)) : null,
       badge_gap: typeof m.badge_bubble_gap_px === "number" ? m.badge_bubble_gap_px : null,
+      designed_badge_gap: typeof m.designed_badge_gap_px === "number" ? m.designed_badge_gap_px : null,
       translate_y: typeof m.bubble_translate_y_px === "number" ? m.bubble_translate_y_px : null,
     })),
   };
