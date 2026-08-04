@@ -22,7 +22,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
+const CACHE_BUST = "chmi-region-cards-split-v1-20260804";
 const SW_VER = "2026-08-03-kb-nav-instant-restore-v1";
 
 const fails = [];

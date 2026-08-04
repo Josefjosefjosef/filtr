@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "chmi-combined-locality-filter-v1-20260803";
+const CACHE_BUST = "chmi-region-cards-split-v1-20260804";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -216,16 +216,33 @@ function unitGate(IU) {
   ok("city_not_praha_first", !hk.startsWith("Praha"), hk);
   ok("city_keeps_global_remainder", /a dalších 191 oblastí/.test(hk), hk);
 
-  const stc = IU.getFilteredWarningLocationLabel(warning, {
+  const stcFilter = {
     localities: [{ name: "Středočeský kraj", level: "kraj" }],
     homeKraj: "Středočeský kraj",
-  });
-  // Title must use the user-selected kraj name (never a CAP ORP fallback like Benešov).
-  ok("kraj_uses_selected_name", stc.startsWith("Středočeský kraj"), stc);
-  ok("kraj_no_orp_fallback", !/Benešov|Beroun|Kladno|Vlašim|Votice|Říčany|Černošice/.test(stc), stc);
-  // 7 Středočeský ORPs represented → remaining unique ORPs in warning = 192 - 7 = 185
-  ok("kraj_extra_unique_orp", /a dalších 185 oblastí/.test(stc), stc);
-  ok("kraj_no_zero", !/dalších 0/.test(stc) && !/další 0/.test(stc), stc);
+  };
+  const stc = IU.getFilteredWarningLocationLabel(warning, stcFilter);
+  // Ordinary kraj is no longer in the shared localities label (separate region card).
+  ok("kraj_shared_label_empty", stc === "", stc);
+  const stcCards = IU.buildChmiLocalityPresentationCards
+    ? IU.buildChmiLocalityPresentationCards(warning, stcFilter)
+    : [];
+  ok("kraj_region_card", stcCards.length === 1 && stcCards[0]._iuPresentation.kind === "region", String(stcCards.length));
+  ok(
+    "kraj_uses_selected_name",
+    stcCards[0] && stcCards[0]._iuPresentation.locationLabel === "Středočeský kraj",
+    stcCards[0] && stcCards[0]._iuPresentation.locationLabel
+  );
+  ok(
+    "kraj_no_orp_fallback",
+    stcCards[0] && !/Benešov|Beroun|Kladno|Vlašim|Votice|Říčany|Černošice/.test(stcCards[0]._iuPresentation.locationLabel),
+    stcCards[0] && stcCards[0]._iuPresentation.locationLabel
+  );
+  ok(
+    "kraj_coverage_line",
+    stcCards[0] && /ORP/.test(stcCards[0]._iuPresentation.regionCoverageLine || ""),
+    stcCards[0] && stcCards[0]._iuPresentation.regionCoverageLine
+  );
+  ok("kraj_no_zero", stcCards[0] && !/0 z /.test(stcCards[0]._iuPresentation.regionCoverageLine || ""), "zero");
 
   const okres = IU.getFilteredWarningLocationLabel(warning, {
     localities: [{ name: "Benešov", level: "okres" }],
@@ -257,19 +274,30 @@ function unitGate(IU) {
   ok("outside_empty", outside === "", outside);
 
   const single = {
-    id: "one",
+    id: "ie-chmi-v2-one",
+    sourceId: "chmi",
     title: "Sucho — Kladno",
     region: { summary: "Kladno", name: "Kladno" },
     capV2: {
       geo: {
-        links: [{ orpName: "Kladno", okresName: "Kladno", krajName: "Středočeský kraj" }],
+        links: [{ orpName: "Kladno", okresName: "Kladno", krajName: "Středočeský kraj", orpCode: "2108", orpId: "orp:2108" }],
       },
     },
   };
-  const one = IU.getFilteredWarningLocationLabel(single, {
-    localities: [{ name: "Středočeský kraj", level: "kraj" }],
-  });
-  ok("single_no_extra", one === "Středočeský kraj", one);
+  const singleFilter = { localities: [{ name: "Středočeský kraj", level: "kraj" }] };
+  const one = IU.getFilteredWarningLocationLabel(single, singleFilter);
+  // Ordinary kraj is a region card now — shared localities label stays empty.
+  ok("single_no_extra", one === "", one);
+  const singleCards = IU.buildChmiLocalityPresentationCards
+    ? IU.buildChmiLocalityPresentationCards(single, singleFilter)
+    : [];
+  ok(
+    "single_region_card",
+    singleCards.length === 1 &&
+      singleCards[0]._iuPresentation.kind === "region" &&
+      singleCards[0]._iuPresentation.locationLabel === "Středočeský kraj",
+    singleCards[0] && singleCards[0]._iuPresentation.locationLabel
+  );
 
   const prahaNupaky = IU.getFilteredWarningLocationLabel(warning, {
     localities: [
