@@ -504,6 +504,8 @@ jobs:
 
       - name: Wipe temp workdir (fenced)
         if: always()
+        env:
+          NDIC_INSPECTION_REPORT_HANDED_OFF: "1"
         run: |
           set -euo pipefail
           if [ -f scripts/ndic-datex-v1-tmc-inspection-cleanup-run.mjs ]; then

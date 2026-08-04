@@ -60,8 +60,8 @@ async function main() {
   ok("comp_chunk_bounded", PEEK_COMPRESSED_READ_CHUNK === 64 * 1024, "cc");
   ok("header_max", INSPECTION_HEADER_MAX_BYTES === 1024, "hm");
   ok("header_fields", INSPECTION_HEADER_FIELD_LIMIT === 64, "hf");
-  ok("schema_ver", REPORT_SCHEMA_VERSION === "tmc-format-inspection-report-v2", REPORT_SCHEMA_VERSION);
-  ok("insp_ver", INSPECTION_VERSION === "sp08001-v2.6-auth-promotion-1", INSPECTION_VERSION);
+  ok("schema_ver", REPORT_SCHEMA_VERSION === "tmc-format-inspection-report-v3", REPORT_SCHEMA_VERSION);
+  ok("insp_ver", INSPECTION_VERSION === "sp08001-v2.6-table4-2-complete-schema-1", INSPECTION_VERSION);
 
   // A + F: LARGE_DEFLATED_ENTRY_STREAM_PEEK + intentional truncation
   {

@@ -22,10 +22,30 @@ import {
   resolveSp08001TableCodeFromBasename,
 } from "./tmc-sp08001-contract.mjs";
 import {
+  DATASET_INTEGRITY_STATE,
+  REQUIRED_FOR_FORMAT_IDENTIFICATION,
+  REQUIRED_STANDARD_TABLES,
+  PROMOTION_POLICY_VERSION,
+  TABLE_STATE,
+  README_PARSE_STATE,
+  DAT_ENCODING_SOURCE,
+  evaluateFormatContractPromotion,
+  emptyTableAssessment,
+  buildTableAssessmentReportRow,
+  HEADER_MATCH_STATE,
+  CONTENT_VERIFIED_STATE,
+  TABLE_MISMATCH_REASON,
+  classifySp08001TableAssessmentClass,
+  COMPANION_NON_AUTHORITATIVE,
+  ALLOWED_EMPTY_TABLES,
+  isAllowedEmptyTable,
+} from "./tmc-sp08001-format-promotion.mjs";
+import {
   assessSp08001ContentContract,
   detectDatEncodingFromBytes,
   ENCODING_LAYER,
   parseSp08001HeaderLine,
+  parseReadmeDatStructural,
   resolveEncodingLayers,
   splitSp08001Fields,
   sp08001PhysicalContract,
@@ -37,28 +57,23 @@ import {
   peekZipEntryBytesStreaming,
   extractFirstLogicalHeaderLine,
 } from "./tmc-zip-entry-peek.mjs";
-import {
-  DATASET_INTEGRITY_STATE,
-  REQUIRED_FOR_FORMAT_IDENTIFICATION,
-  evaluateFormatContractPromotion,
-  emptyTableAssessment,
-  HEADER_MATCH_STATE,
-  CONTENT_VERIFIED_STATE,
-  TABLE_MISMATCH_REASON,
-  classifySp08001TableAssessmentClass,
-  COMPANION_NON_AUTHORITATIVE,
-} from "./tmc-sp08001-format-promotion.mjs";
 
 export const INSPECTION_MODE = "format_inspection";
-export const REPORT_SCHEMA_VERSION = "tmc-format-inspection-report-v2";
-export const INSPECTION_VERSION = "sp08001-v2.6-auth-promotion-1";
+export const REPORT_SCHEMA_VERSION = "tmc-format-inspection-report-v3";
+export const INSPECTION_VERSION = "sp08001-v2.6-table4-2-complete-schema-1";
 export {
   DATASET_INTEGRITY_STATE,
   REQUIRED_FOR_FORMAT_IDENTIFICATION,
+  REQUIRED_STANDARD_TABLES,
+  PROMOTION_POLICY_VERSION,
+  TABLE_STATE,
+  README_PARSE_STATE,
+  DAT_ENCODING_SOURCE,
   evaluateFormatContractPromotion,
   HEADER_MATCH_STATE,
   CONTENT_VERIFIED_STATE,
   TABLE_MISMATCH_REASON,
+  ALLOWED_EMPTY_TABLES,
 };
 export const INSPECTION_REPORT_MAX_BYTES = 64 * 1024;
 export const INSPECTION_TEXT_PEEK_BYTES = 4 * 1024;
@@ -231,16 +246,41 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "tableCodeUnknownCount",
   "peekStatusCounts",
   "readmeEncodingState",
+  "readmeParseState",
+  "readmeMappedCount",
+  "datEncodingSource",
+  "datDecodeSuccessCount",
+  "datDecodeFailureCount",
+  "companionEncodingIgnoredForDatCount",
   "metadataFileCount",
   "formatConfirmed",
+  "formatContractConfirmed",
   "datasetIntegrityState",
+  "importerIntegrityRequired",
+  "importerIntegrityConfirmed",
+  "promotionPolicyVersion",
   "promotionBlockers",
   "tableAssessments",
   "tableCodeConflictCount",
+  "exactTableCodeResolvedCount",
+  "exactTableCodeConflictCount",
+  "broadCandidateSupersededCount",
+  "unresolvedExactTableCount",
+  "missingRequiredStandardTableCount",
+  "schemaVerifiedEmptyTableCount",
+  "schemaVerifiedTableCount",
+  "limitedContentVerifiedTableCount",
   "opaqueTableCodeVerifiedCount",
   "standardTableHeaderMatchCount",
   "identificationTablesPresentCount",
   "identificationTablesVerifiedCount",
+  "cleanupAttestation",
+  "cleanupScriptExecuted",
+  "taskWorkdirRemoved",
+  "taskZipRemoved",
+  "stagingRemoved",
+  "reportHandedOffBeforeCleanup",
+  "foreignPathTouched",
 ]);
 
 export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
@@ -255,7 +295,9 @@ export const STDOUT_ENVELOPE_ALLOWED_KEYS = Object.freeze([
   "authoritativeFormat",
   "authoritativeFormatVerified",
   "formatConfirmed",
+  "formatContractConfirmed",
   "datasetIntegrityState",
+  "promotionPolicyVersion",
   "importerActivated",
   "resolverActivated",
   "publishActivated",
@@ -456,6 +498,7 @@ export function finalizeInspectionOutcome(report) {
   const r = report || {};
   r.reportSchemaVersion = r.reportSchemaVersion || REPORT_SCHEMA_VERSION;
   r.inspectionVersion = r.inspectionVersion || INSPECTION_VERSION;
+  r.promotionPolicyVersion = r.promotionPolicyVersion || PROMOTION_POLICY_VERSION;
   r.importerActivated = false;
   r.resolverActivated = false;
   r.publishActivated = false;
@@ -727,10 +770,14 @@ export function inspectTextPeek(buf) {
   const first = fieldRows[0];
   const headerParse = out.delimiter === "semicolon" ? parseSp08001HeaderLine(lines[0]) : { ok: false };
   out.hasHeader = headerParse.ok === true || looksLikeHeader(first);
+  out.headerParseReason = headerParse.ok ? null : headerParse.reason || null;
   out.positional = !out.hasHeader;
   out.headerFieldCount = out.hasHeader ? first.length : 0;
   out.fieldCount = first.length;
-  out.firstDataFieldCount = out.hasHeader && fieldRows[1] ? fieldRows[1].length : first.length;
+  out.dataRowCount = out.hasHeader ? Math.max(0, fieldRows.length - 1) : 0;
+  out.firstDataFieldCount = out.hasHeader && fieldRows[1] ? fieldRows[1].length : 0;
+  out.hasDataRow = out.dataRowCount > 0;
+  out.byteLength = buf ? buf.length : 0;
   out.consistentFieldCount = fieldRows.every((r) => r.length === first.length);
 
   if (out.hasHeader) {
@@ -1131,26 +1178,42 @@ export function validateInspectionReportObject(report) {
   out.publishActivated = false;
   out.productionWrite = false;
   if (Array.isArray(out.tableAssessments)) {
-    const allowedCodes = new Set([...SP08001_TABLE_CODES, "README"]);
-    const allowedHdr = new Set(Object.values(HEADER_MATCH_STATE));
-    const allowedCv = new Set(Object.values(CONTENT_VERIFIED_STATE));
-    const allowedReason = new Set(Object.values(TABLE_MISMATCH_REASON));
+    const allowedCodes = new Set([...SP08001_TABLE_CODES]);
+    const allowedStates = new Set(Object.values(TABLE_STATE));
     out.tableAssessments = out.tableAssessments.map((a) => {
       if (!a || typeof a !== "object") {
-        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableAssessments" });
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+          code: "TMC_INSPECTION_REPORT_SCHEMA",
+          key: "tableAssessments",
+        });
       }
       if (!allowedCodes.has(a.tableCode)) {
-        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableCode" });
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+          code: "TMC_INSPECTION_REPORT_SCHEMA",
+          key: "tableCode",
+        });
       }
-      if (!allowedHdr.has(a.headerMatchState) || !allowedCv.has(a.contentVerifiedState) || !allowedReason.has(a.mismatchReason)) {
-        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), { code: "TMC_INSPECTION_REPORT_SCHEMA", key: "tableAssessmentEnum" });
+      const state = a.state;
+      if (!allowedStates.has(state)) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+          code: "TMC_INSPECTION_REPORT_SCHEMA",
+          key: "tableState",
+        });
+      }
+      const candidateCount = Number(a.candidateCount);
+      if (!Number.isInteger(candidateCount) || candidateCount < 0 || candidateCount > 1024) {
+        throw Object.assign(new Error("TMC_INSPECTION_REPORT_SCHEMA"), {
+          code: "TMC_INSPECTION_REPORT_SCHEMA",
+          key: "candidateCount",
+        });
       }
       return {
         tableCode: a.tableCode,
-        assessmentClass: a.assessmentClass,
-        headerMatchState: a.headerMatchState,
-        contentVerifiedState: a.contentVerifiedState,
-        mismatchReason: a.mismatchReason,
+        state,
+        candidateCount,
+        headerMatched: a.headerMatched === true,
+        schemaVerified: a.schemaVerified === true,
+        limitedContentVerified: a.limitedContentVerified === true,
       };
     });
   }
@@ -1294,10 +1357,16 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   const verifiedTableCodes = new Set();
   const headerMatchedTableCodes = new Set();
   const tableCodeCvCounts = Object.create(null);
+  const tableCodePresenceCounts = Object.create(null);
   const tableAssessmentsMap = Object.create(null);
   let requiredTablesPresent = 0;
   let optionalTablesPresent = 0;
   let unknownSupplementaryTables = 0;
+  let readmeMappedCount = 0;
+  let readmeParseState = null;
+  let datDecodeSuccessCount = 0;
+  let datDecodeFailureCount = 0;
+  let broadCandidateSupersededCount = 0;
 
   function upsertAssessment(tableCode, patch) {
     if (!tableCode) return;
@@ -1378,18 +1447,34 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
       }
 
       if (tableCode === "README") {
+        const rm = parseReadmeDatStructural(ent.buf || Buffer.alloc(0));
+        readmeMappedCount = rm.readmeMapped ? 1 : 0;
+        readmeParseState = rm.readmeParseState;
         encodingLayers.push({ layer: ENCODING_LAYER.README_DECLARED, encoding: "ASCII" });
-        encodingLayers.push({
-          layer: ENCODING_LAYER.DAT_DECLARED,
-          encoding: SP08001_PHYSICAL.defaultEncoding || "UTF-8",
-        });
+        if (rm.datEncodingSource === DAT_ENCODING_SOURCE.readme_declared && rm.declaredEncodingNormalized) {
+          encodingLayers.push({
+            layer: ENCODING_LAYER.DAT_DECLARED,
+            encoding: rm.declaredEncodingNormalized,
+          });
+        } else if (rm.datEncodingSource === DAT_ENCODING_SOURCE.sp08001_default) {
+          encodingLayers.push({
+            layer: ENCODING_LAYER.DAT_DECLARED,
+            encoding: SP08001_PHYSICAL.defaultEncoding || "UTF-8",
+          });
+        }
         evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
         bump(roleEvidenceLevelCounts, evidenceLevel);
         continue;
       }
 
       if (tableCode && SP08001_TABLE_CODES.includes(tableCode)) {
-        const assessed = assessSp08001ContentContract(tableCode, peek);
+        tableCodePresenceCounts[tableCode] = (tableCodePresenceCounts[tableCode] || 0) + 1;
+        const assessed = assessSp08001ContentContract(tableCode, peek, {
+          buf: ent.buf,
+          byteLength: ent.buf ? ent.buf.length : 0,
+        });
+        if (peek.encodingCandidate === "NON_UTF8") datDecodeFailureCount += 1;
+        else if (peek.encodingCandidate && peek.encodingCandidate !== "UNKNOWN") datDecodeSuccessCount += 1;
         evidenceLevel =
           assessed.evidenceLevel === "content_verified"
             ? ROLE_EVIDENCE_LEVEL.CONTENT_VERIFIED
@@ -1398,39 +1483,25 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
               : peek.hasHeader || peek.positional
                 ? ROLE_EVIDENCE_LEVEL.METADATA_ONLY
                 : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
-        let headerMatchState = HEADER_MATCH_STATE.ABSENT;
-        let mismatchReason = TABLE_MISMATCH_REASON.EMPTY_HEADER;
-        if (assessed.headerContractMatch) {
-          headerMatchState = HEADER_MATCH_STATE.MATCH;
-          mismatchReason = TABLE_MISMATCH_REASON.NONE;
-          headerMatchedTableCodes.add(tableCode);
-        } else if (peek.hasHeader) {
-          headerMatchState = HEADER_MATCH_STATE.MISMATCH;
-          mismatchReason =
-            assessed.mismatchReason === "field_count"
-              ? TABLE_MISMATCH_REASON.FIELD_COUNT
-              : assessed.mismatchReason === "column_order_or_code"
-                ? TABLE_MISMATCH_REASON.COLUMN_ORDER_OR_CODE
-                : assessed.mismatchReason === "unknown_table"
-                  ? TABLE_MISMATCH_REASON.UNKNOWN_TABLE
-                  : TABLE_MISMATCH_REASON.COLUMN_ORDER_OR_CODE;
-        }
-        const cvState = assessed.contentVerified
-          ? CONTENT_VERIFIED_STATE.YES
-          : CONTENT_VERIFIED_STATE.NO;
+        const state = assessed.tableState || TABLE_STATE.missing_complete_header;
+        const row = buildTableAssessmentReportRow(tableCode, state, tableCodePresenceCounts[tableCode]);
         upsertAssessment(tableCode, {
-          headerMatchState,
-          contentVerifiedState: cvState,
-          mismatchReason,
+          ...row,
+          headerMatchState: row.headerMatched ? HEADER_MATCH_STATE.MATCH : HEADER_MATCH_STATE.MISMATCH,
+          contentVerifiedState: row.limitedContentVerified
+            ? CONTENT_VERIFIED_STATE.YES
+            : CONTENT_VERIFIED_STATE.NO,
+          mismatchReason: assessed.mismatchReason || TABLE_MISMATCH_REASON.EMPTY_HEADER,
           assessmentClass: classifySp08001TableAssessmentClass(tableCode),
         });
+        if (row.headerMatched) headerMatchedTableCodes.add(tableCode);
         if (REQUIRED_SINGLETON_ROLES.includes(role)) {
           if (assessed.headerContractMatch) bump(roleHeaderContractMatchCounts, role);
           if (assessed.cidMatch) bump(roleCidMatchCounts, role);
           if (assessed.tabcdMatch) bump(roleTabcdMatchCounts, role);
           if (assessed.contentVerified) bump(roleContentVerifiedCounts, role);
         }
-        if (assessed.contentVerified) {
+        if (assessed.contentVerified || state === TABLE_STATE.schema_and_limited_content_verified) {
           verifiedTableCodes.add(tableCode);
           tableCodeCvCounts[tableCode] = (tableCodeCvCounts[tableCode] || 0) + 1;
         }
@@ -1453,6 +1524,15 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   const encResolved = resolveEncodingLayers(encodingLayers);
   let encodingNorm = encResolved.datEncoding || "UNKNOWN";
   if (encodingNorm === "UNVERIFIED") encodingNorm = "UNKNOWN";
+  const datEncodingSource =
+    encResolved.datEncodingSource === "readme_declared"
+      ? DAT_ENCODING_SOURCE.readme_declared
+      : encResolved.datEncodingSource === "sp08001_default"
+        ? DAT_ENCODING_SOURCE.sp08001_default
+        : DAT_ENCODING_SOURCE.unresolved;
+  if (readmeParseState == null) {
+    readmeParseState = README_PARSE_STATE.missing_fail_closed;
+  }
 
   let delimiterNormalized = "UNVERIFIED";
   {
@@ -1486,12 +1566,28 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   let multipleCandidateRoleCount = 0;
   let unresolvedRoleCount = 0;
   let tableCodeConflictCount = 0;
+  let exactTableCodeConflictCount = 0;
 
-  for (const [code, n] of Object.entries(tableCodeCvCounts)) {
+  for (const [code, n] of Object.entries(tableCodePresenceCounts)) {
     if (n >= 2) {
       duplicateRequired = true;
       duplicateRequiredRoleCount += 1;
       tableCodeConflictCount += 1;
+      exactTableCodeConflictCount += 1;
+      const prev = tableAssessmentsMap[code];
+      upsertAssessment(code, {
+        ...buildTableAssessmentReportRow(code, TABLE_STATE.duplicate_exact_tablecode, n),
+        headerMatchState: HEADER_MATCH_STATE.MISMATCH,
+        contentVerifiedState: CONTENT_VERIFIED_STATE.NO,
+        mismatchReason: TABLE_MISMATCH_REASON.COLUMN_ORDER_OR_CODE,
+        assessmentClass: classifySp08001TableAssessmentClass(code),
+        ...(prev || {}),
+        state: TABLE_STATE.duplicate_exact_tablecode,
+        candidateCount: n,
+        headerMatched: false,
+        schemaVerified: false,
+        limitedContentVerified: false,
+      });
       const roleHint = SP08001_CODE_TO_ROLE[code];
       if (roleHint) bump(roleConflictCounts, roleHint, n);
     }
@@ -1503,6 +1599,7 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     if (contentVerified >= 1) {
       if (candidates > 1) {
         multipleCandidateRoleCount += 1;
+        broadCandidateSupersededCount += 1;
         warnings.push({
           code: INSPECTION_WARNING.MULTIPLE_ROLE_CANDIDATES,
           severity: "warning",
@@ -1528,18 +1625,22 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     }
   }
 
-  for (const code of REQUIRED_FOR_FORMAT_IDENTIFICATION) {
+  for (const code of REQUIRED_STANDARD_TABLES) {
     if (!tableAssessmentsMap[code]) {
-      upsertAssessment(code, {
-        headerMatchState: HEADER_MATCH_STATE.NOT_ASSESSED,
-        contentVerifiedState: CONTENT_VERIFIED_STATE.NO,
-        mismatchReason: TABLE_MISMATCH_REASON.ABSENT_FROM_ARCHIVE,
-      });
+      upsertAssessment(code, emptyTableAssessment(code, { state: TABLE_STATE.missing_required_file }));
     }
   }
   const tableAssessments = Object.keys(tableAssessmentsMap)
+    .filter((k) => SP08001_TABLE_CODES.includes(k))
     .sort()
-    .map((k) => tableAssessmentsMap[k]);
+    .map((k) => {
+      const a = tableAssessmentsMap[k];
+      return buildTableAssessmentReportRow(
+        k,
+        a.state || TABLE_STATE.missing_required_file,
+        a.candidateCount || tableCodePresenceCounts[k] || 0
+      );
+    });
 
   let cidState = "NOT_SEEN";
   let tabcdState = "NOT_SEEN";
@@ -1547,11 +1648,14 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     let cidContract = false;
     let tabcdContract = false;
     for (const a of tableAssessments) {
-      if (a.contentVerifiedState !== CONTENT_VERIFIED_STATE.YES) continue;
-      if (["POINTS", "NAMES", "COUNTRIES", "LOCATIONDATASETS", "ROADS", "SEGMENTS"].includes(a.tableCode)) {
+      if (a.state !== TABLE_STATE.schema_and_limited_content_verified) continue;
+      const table = SP08001_TABLE_CODES.includes(a.tableCode);
+      if (!table) continue;
+      // Contract match via limited content on tables that carry CID/TABCD.
+      if (["POINTS", "NAMES", "COUNTRIES", "LOCATIONDATASETS", "ROADS", "SEGMENTS", "ADMINISTRATIVEAREA"].includes(a.tableCode)) {
         cidContract = true;
       }
-      if (["POINTS", "LOCATIONDATASETS", "ROADS", "SEGMENTS"].includes(a.tableCode)) {
+      if (["POINTS", "LOCATIONDATASETS", "ROADS", "SEGMENTS", "ADMINISTRATIVEAREA"].includes(a.tableCode)) {
         tabcdContract = true;
       }
     }
@@ -1587,8 +1691,10 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     authoritativeLayer: SP08001_PHYSICAL.authoritativeLayer,
     delimiterNormalized,
     decompressionErrorCount: opts.decompressionErrorCount || 0,
+    exactTableCodeConflictCount,
     tableCodeConflictCount,
-    readmeEncodingState,
+    readmeParseState,
+    datEncodingSource,
     encodingDatLayer: encodingNorm,
     cidMatchState: cidState,
     tabcdMatchState: tabcdState,
@@ -1598,17 +1704,11 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   const authoritativeFormat = formatConfirmed ? SP08001_PHYSICAL.authoritativeLayer : "UNVERIFIED";
   const authoritativeFormatVerified = formatConfirmed;
 
-  let identificationTablesPresentCount = 0;
-  let identificationTablesVerifiedCount = 0;
-  for (const code of REQUIRED_FOR_FORMAT_IDENTIFICATION) {
-    const a = tableAssessmentsMap[code];
-    if (a && a.mismatchReason !== TABLE_MISMATCH_REASON.ABSENT_FROM_ARCHIVE) {
-      identificationTablesPresentCount += 1;
-    }
-    if (a && a.contentVerifiedState === CONTENT_VERIFIED_STATE.YES) {
-      identificationTablesVerifiedCount += 1;
-    }
-  }
+  const exactTableCodeResolvedCount = tableAssessments.filter(
+    (a) =>
+      a.state === TABLE_STATE.schema_and_limited_content_verified ||
+      a.state === TABLE_STATE.schema_verified_empty
+  ).length;
 
   const report = {
     ok: rejectCode == null && formatConfirmed,
@@ -1620,14 +1720,26 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     authoritativeFormat,
     authoritativeFormatVerified,
     formatConfirmed,
+    formatContractConfirmed: formatConfirmed,
     datasetIntegrityState: DATASET_INTEGRITY_STATE.NOT_TESTED,
+    importerIntegrityRequired: true,
+    importerIntegrityConfirmed: false,
+    promotionPolicyVersion: PROMOTION_POLICY_VERSION,
     promotionBlockers: promotion.promotionBlockers,
     tableAssessments,
     tableCodeConflictCount,
+    exactTableCodeResolvedCount,
+    exactTableCodeConflictCount,
+    broadCandidateSupersededCount,
+    unresolvedExactTableCount: promotion.unresolvedExactTableCount,
+    missingRequiredStandardTableCount: promotion.missingRequiredStandardTableCount,
+    schemaVerifiedEmptyTableCount: promotion.schemaVerifiedEmptyTableCount,
+    schemaVerifiedTableCount: promotion.schemaVerifiedTableCount,
+    limitedContentVerifiedTableCount: promotion.limitedContentVerifiedTableCount,
     opaqueTableCodeVerifiedCount: contentVerifiedTableCount,
     standardTableHeaderMatchCount: headerMatchedTableCodes.size,
-    identificationTablesPresentCount,
-    identificationTablesVerifiedCount,
+    identificationTablesPresentCount: exactTableCodeResolvedCount,
+    identificationTablesVerifiedCount: promotion.limitedContentVerifiedTableCount,
     cidExpected: TMC_CID_EXPECTED,
     tabcdExpected: TMC_TABCD_EXPECTED,
     cid11Detected: cid11,
@@ -1663,8 +1775,14 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     requiredTablesPresent,
     optionalTablesPresent,
     unknownSupplementaryTables,
-    metadataFileCount: (roleCandidateCounts.metadata || 0) > 0 ? 1 : 0,
+    metadataFileCount: readmeMappedCount > 0 ? 1 : 0,
     readmeEncodingState,
+    readmeParseState,
+    readmeMappedCount,
+    datEncodingSource,
+    datDecodeSuccessCount,
+    datDecodeFailureCount,
+    companionEncodingIgnoredForDatCount: encResolved.companionEncodingIgnoredForDatCount || 0,
     cidMatchState: cidState,
     tabcdMatchState: tabcdState,
     coordinateSource: peeks.coordsFromDat ? "points_dat" : peeks.coordsFromShp ? "shp_companion" : "UNVERIFIED",

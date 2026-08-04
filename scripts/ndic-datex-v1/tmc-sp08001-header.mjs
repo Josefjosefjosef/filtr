@@ -10,6 +10,15 @@ import {
   getSp08001Table,
   resolveSp08001TableCodeFromBasename,
 } from "./tmc-sp08001-contract.mjs";
+import {
+  TABLE_STATE,
+  FILE_PRESENCE_CLASS,
+  README_PARSE_STATE,
+  DAT_ENCODING_SOURCE,
+  classifyHeaderMismatchState,
+  deriveTableState,
+  isAllowedEmptyTable,
+} from "./tmc-sp08001-format-promotion.mjs";
 
 export const SP08001_DELIMITER = "semicolon";
 export const SP08001_HEADER_STATE = Object.freeze({
@@ -120,58 +129,155 @@ export function parseSp08001HeaderLine(rawLine) {
 
 /**
  * Exact header contract match against SP08001 table definition.
+ * Emits closed TABLE_STATE mismatch enums — never raw header strings.
  */
-export function matchSp08001Header(tableCode, headerCodes) {
+export function matchSp08001Header(tableCode, headerCodes, parseReason) {
   const table = getSp08001Table(tableCode);
   if (!table) {
     return {
       matched: false,
       headerState: SP08001_HEADER_STATE.PRESENT_MISMATCH,
       reason: "unknown_table",
+      tableState: TABLE_STATE.missing_complete_header,
       expectedCount: 0,
       actualCount: (headerCodes || []).length,
     };
   }
   const expected = table.headerCodes;
   const actual = (headerCodes || []).map((c) => String(c).toUpperCase());
-  if (actual.length !== expected.length) {
+  const mismatchState = classifyHeaderMismatchState(expected, actual, parseReason);
+  if (mismatchState) {
+    const reason =
+      mismatchState === TABLE_STATE.field_count_mismatch
+        ? "field_count"
+        : mismatchState === TABLE_STATE.field_order_mismatch
+          ? "column_order_or_code"
+          : mismatchState === TABLE_STATE.missing_required_field
+            ? "missing_required_field"
+            : mismatchState === TABLE_STATE.unexpected_field
+              ? "unexpected_field"
+              : mismatchState === TABLE_STATE.duplicate_field
+                ? "duplicate_column"
+                : "column_order_or_code";
     return {
       matched: false,
       headerState: SP08001_HEADER_STATE.PRESENT_MISMATCH,
-      reason: "field_count",
+      reason,
+      tableState: mismatchState,
       expectedCount: expected.length,
       actualCount: actual.length,
     };
-  }
-  for (let i = 0; i < expected.length; i++) {
-    if (actual[i] !== expected[i]) {
-      return {
-        matched: false,
-        headerState: SP08001_HEADER_STATE.PRESENT_MISMATCH,
-        reason: "column_order_or_code",
-        expectedCount: expected.length,
-        actualCount: actual.length,
-        mismatchIndex: i,
-      };
-    }
   }
   return {
     matched: true,
     headerState: SP08001_HEADER_STATE.PRESENT_MATCH,
     reason: null,
+    tableState: TABLE_STATE.exact_header_match,
     expectedCount: expected.length,
     actualCount: actual.length,
   };
 }
 
 /**
+ * Classify DAT buffer presence without leaking content.
+ * @param {Buffer|null|undefined} buf
+ * @param {{ hasHeader?: boolean, firstDataFieldCount?: number, dataRowCount?: number }} peek
+ */
+export function classifyDatFilePresence(buf, peek = {}) {
+  const b = Buffer.isBuffer(buf) ? buf : Buffer.alloc(0);
+  if (b.length === 0) return FILE_PRESENCE_CLASS.ZERO_BYTE_FILE;
+  if (peek.hasHeader === true) {
+    if ((peek.firstDataFieldCount || 0) > 0 || (peek.dataRowCount || 0) > 0) {
+      return FILE_PRESENCE_CLASS.HEADER_AND_ROWS;
+    }
+    return FILE_PRESENCE_CLASS.HEADER_ONLY;
+  }
+  // Non-empty but no parseable header
+  return FILE_PRESENCE_CLASS.HEADER_ONLY;
+}
+
+/**
+ * Parse README.DAT metadata structurally (ASCII). Never returns publisher/raw values.
+ * @param {Buffer} buf
+ */
+export function parseReadmeDatStructural(buf) {
+  const b = Buffer.isBuffer(buf) ? buf : Buffer.alloc(0);
+  if (!b.length) {
+    return {
+      readmeParseState: README_PARSE_STATE.missing_fail_closed,
+      datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
+      declaredEncodingNormalized: null,
+      readmeMapped: false,
+    };
+  }
+  let text;
+  try {
+    // README must be ASCII per SP08001; reject non-ASCII bytes for decode_error.
+    for (let i = 0; i < Math.min(b.length, 4096); i++) {
+      if (b[i] > 0x7f) {
+        return {
+          readmeParseState: README_PARSE_STATE.decode_error,
+          datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
+          declaredEncodingNormalized: null,
+          readmeMapped: true,
+        };
+      }
+    }
+    text = b.toString("ascii");
+  } catch {
+    return {
+      readmeParseState: README_PARSE_STATE.decode_error,
+      datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
+      declaredEncodingNormalized: null,
+      readmeMapped: true,
+    };
+  }
+  const lines = text.split(/\r?\n/).map((l) => l.replace(/\r$/, ""));
+  // Required meta fields: 7 lines (alert…exchangeFormatMinor). characterEncoding is line index 4.
+  if (lines.filter((l) => l.length > 0).length < 5) {
+    return {
+      readmeParseState: README_PARSE_STATE.structural_mismatch,
+      datEncodingSource: DAT_ENCODING_SOURCE.sp08001_default,
+      declaredEncodingNormalized: null,
+      readmeMapped: true,
+    };
+  }
+  const encRaw = String(lines[4] || "").trim();
+  if (!encRaw) {
+    return {
+      readmeParseState: README_PARSE_STATE.mapped_default_encoding,
+      datEncodingSource: DAT_ENCODING_SOURCE.sp08001_default,
+      declaredEncodingNormalized: SP08001_PHYSICAL.defaultEncoding,
+      readmeMapped: true,
+    };
+  }
+  const enc = normalizeSp08001EncodingToken(encRaw);
+  if (enc === "UNKNOWN") {
+    return {
+      readmeParseState: README_PARSE_STATE.mapped_invalid_encoding,
+      datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
+      declaredEncodingNormalized: null,
+      readmeMapped: true,
+    };
+  }
+  return {
+    readmeParseState: README_PARSE_STATE.mapped_and_parsed,
+    datEncodingSource: DAT_ENCODING_SOURCE.readme_declared,
+    declaredEncodingNormalized: enc,
+    readmeMapped: true,
+  };
+}
+
+/**
  * Content-verify a synthetic/live text peek against SP08001 for a resolved table code.
  * CID/TABCD validated only when those columns exist in the table contract.
+ * Emits closed TABLE_STATE — never raw headers or cell values.
  */
 export function assessSp08001ContentContract(tableCode, peek, opts = {}) {
   const expectedCid = opts.expectedCid != null ? Number(opts.expectedCid) : 11;
   const expectedTabcd = opts.expectedTabcd != null ? Number(opts.expectedTabcd) : 25;
   const table = getSp08001Table(tableCode);
+  const byteLength = opts.byteLength != null ? opts.byteLength : peek && peek.byteLength != null ? peek.byteLength : 0;
   if (!table) {
     return {
       tableCode: tableCode || null,
@@ -182,10 +288,40 @@ export function assessSp08001ContentContract(tableCode, peek, opts = {}) {
       cidMatch: false,
       tabcdMatch: false,
       delimiter: SP08001_DELIMITER,
+      tableState: TABLE_STATE.missing_complete_header,
+      filePresenceClass: FILE_PRESENCE_CLASS.MISSING_FILE,
+      hasLimitedDataRow: false,
     };
   }
   const p = peek || {};
+  if (byteLength === 0 || (Buffer.isBuffer(opts.buf) && opts.buf.length === 0)) {
+    const state = deriveTableState({
+      present: true,
+      byteLength: 0,
+      tableCode,
+    });
+    return {
+      tableCode,
+      headerContractMatch: false,
+      contentVerified: false,
+      evidenceLevel: "metadata_only",
+      headerState: SP08001_HEADER_STATE.ABSENT,
+      cidMatch: false,
+      tabcdMatch: false,
+      delimiter: SP08001_DELIMITER,
+      tableState: state,
+      filePresenceClass: FILE_PRESENCE_CLASS.ZERO_BYTE_FILE,
+      hasLimitedDataRow: false,
+      mismatchReason: "empty_header",
+    };
+  }
   if (!p.hasHeader || !Array.isArray(p.headerCodes) || p.headerCodes.length === 0) {
+    const state = deriveTableState({
+      present: true,
+      byteLength: byteLength || 1,
+      hasCompleteHeader: false,
+      tableCode,
+    });
     return {
       tableCode,
       headerContractMatch: false,
@@ -195,42 +331,81 @@ export function assessSp08001ContentContract(tableCode, peek, opts = {}) {
       cidMatch: false,
       tabcdMatch: false,
       delimiter: p.delimiter === "semicolon" ? SP08001_DELIMITER : p.delimiter || "unknown",
+      tableState: state,
+      filePresenceClass: classifyDatFilePresence(opts.buf, p),
+      hasLimitedDataRow: false,
+      mismatchReason: "empty_header",
     };
   }
-  const match = matchSp08001Header(tableCode, p.headerCodes);
+  const match = matchSp08001Header(tableCode, p.headerCodes, p.headerParseReason);
   const hasCidCol = table.headerCodes.includes("CID");
   const hasTabcdCol = table.headerCodes.includes("TABCD");
-  let cidMatch = false;
-  let tabcdMatch = false;
+  let cidMatch = true;
+  let tabcdMatch = true;
   if (hasCidCol) {
     cidMatch = p.cidValueSeen === expectedCid || p.cid11Seen === true;
   }
   if (hasTabcdCol) {
     tabcdMatch = p.tabcdValueSeen === expectedTabcd || p.tabcd25Seen === true;
   }
-  let contentVerified = false;
-  if (match.matched) {
-    if (hasCidCol || hasTabcdCol) {
-      contentVerified = (!hasCidCol || cidMatch) && (!hasTabcdCol || tabcdMatch);
-    } else {
-      contentVerified = true;
+  const hasLimitedDataRow =
+    (p.firstDataFieldCount || 0) > 0 || (p.dataRowCount || 0) > 0 || p.hasDataRow === true;
+  const delimiterOk = p.delimiter === "semicolon" || p.delimiter === SP08001_DELIMITER || match.matched;
+  const newlineOk =
+    p.lineEnding == null ||
+    p.lineEnding === "unknown" ||
+    p.lineEnding === "crlf" ||
+    p.lineEnding === "CRLF";
+  let encodingOk = true;
+  if (p.encodingCandidate === "UNKNOWN" && opts.requireEncoding === true) encodingOk = false;
+
+  let tableState;
+  if (!match.matched) {
+    tableState = match.tableState || TABLE_STATE.field_order_mismatch;
+  } else {
+    tableState = deriveTableState({
+      present: true,
+      byteLength: byteLength || 1,
+      hasCompleteHeader: true,
+      headerMatched: true,
+      delimiterOk,
+      newlineOk,
+      encodingOk,
+      decodeOk: p.encodingCandidate !== "NON_UTF8" || opts.allowNonUtf8 === true,
+      cidOk: !hasCidCol || cidMatch || !hasLimitedDataRow,
+      tabcdOk: !hasTabcdCol || tabcdMatch || !hasLimitedDataRow,
+      hasLimitedDataRow,
+      tableCode,
+    });
+    // Header-only allowed empty: CID/TABCD not required in data rows.
+    if (match.matched && !hasLimitedDataRow && isAllowedEmptyTable(tableCode)) {
+      tableState = TABLE_STATE.schema_verified_empty;
     }
   }
+
+  let contentVerified = tableState === TABLE_STATE.schema_and_limited_content_verified;
   let evidenceLevel = "metadata_only";
   if (contentVerified) evidenceLevel = "content_verified";
   else if (match.matched) evidenceLevel = "header_contract";
+
   return {
     tableCode,
     headerContractMatch: match.matched,
     contentVerified,
     evidenceLevel,
     headerState: match.headerState,
-    cidMatch,
-    tabcdMatch,
+    cidMatch: hasCidCol ? cidMatch : false,
+    tabcdMatch: hasTabcdCol ? tabcdMatch : false,
     delimiter: p.delimiter === "semicolon" || match.matched ? SP08001_DELIMITER : p.delimiter || "unknown",
     fieldCount: match.actualCount,
     expectedFieldCount: match.expectedCount,
     mismatchReason: match.reason,
+    tableState,
+    filePresenceClass: classifyDatFilePresence(opts.buf || Buffer.alloc(byteLength || 1), {
+      ...p,
+      hasHeader: match.matched || p.hasHeader,
+    }),
+    hasLimitedDataRow,
     exchangeFormatContractVersion: SP08001_EXCHANGE_FORMAT_VERSION,
     specId: SP08001_SPEC_ID,
   };
@@ -320,8 +495,18 @@ export function resolveEncodingLayers(layers) {
   }
   return {
     datEncoding,
+    datEncodingSource:
+      layerStatus[ENCODING_LAYER.DAT_DECLARED] &&
+      layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "ABSENT" &&
+      layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "CONFLICT"
+        ? "readme_declared"
+        : datEncoding !== "UNKNOWN" && datEncoding !== "CONFLICT" && datEncoding !== "UNVERIFIED"
+          ? "sp08001_default"
+          : "unresolved",
     cpgEncoding: layerStatus[ENCODING_LAYER.CPG_SHP_DBF],
     layerStatus,
+    companionEncodingIgnoredForDatCount:
+      layerStatus[ENCODING_LAYER.CPG_SHP_DBF] !== "ABSENT" ? 1 : 0,
     falseConflictAvoided:
       layerStatus[ENCODING_LAYER.CPG_SHP_DBF] !== "ABSENT" &&
       datEncoding !== "CONFLICT" &&
