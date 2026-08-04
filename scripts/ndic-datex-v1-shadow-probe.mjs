@@ -35,6 +35,8 @@ import {
   isZipMagic,
   DEFAULT_ZIP_LIMITS,
   TMC_PATH_REJECT,
+  TMC_ZIP_LIMITS_PREV,
+  inspectZipDeclaredMetadata,
 } from "./ndic-datex-v1/tmc-zip.mjs";
 import {
   createBoundedTempPath,
@@ -44,6 +46,25 @@ import {
   DATEX_MAX_RESPONSE_BYTES,
   DATEX_PREV_RESPONSE_BYTES,
 } from "./ndic-datex-v1/bounded-fetch.mjs";
+import {
+  scanDatexStructure,
+  pickRootNamespaceUri,
+  isApplicationDatexNamespace,
+  chunkBoundaryProbe,
+} from "./ndic-datex-v1/datex-structure.mjs";
+import {
+  clampDatexMaxResponseBytes,
+  limitUtilization,
+  createLifecycleTracker,
+  noteFetchSuccess,
+  noteParseSuccess,
+  noteFailure,
+  isRetryableShadowError,
+  RETRY_POLICY,
+  DATEX_LIMIT_MIN_BYTES,
+  DATEX_LIMIT_MAX_BYTES,
+  DATEX_LIMIT_DEFAULT_BYTES,
+} from "./ndic-datex-v1/growth-health.mjs";
 import {
   classifyTrafficLifecycle,
   classifyChangeSignificance,
@@ -338,37 +359,99 @@ function summarizeDatex(buf, config, tmcTable) {
     textOnlyLoc: 0,
     coordsValid: true,
     mappingReady: false,
+    structure: null,
+    parserFailureCode: null,
+    parserCompatibilityReason: null,
+    limitUtilization: null,
+    chunkBoundaryProbePassed: null,
   };
 
   if (out.htmlLoginPage) {
     out.parserCompatible = false;
     out.authenticationAccepted = false;
+    out.parserCompatibilityReason = "html_login_page";
     return out;
   }
 
-  const head = buf.slice(0, 4096).toString("utf8");
-  const nsM = head.match(/\bxmlns(?::[A-Za-z0-9]+)?="([^"]+)"/);
-  if (nsM) out.namespace = nsM[1].slice(0, 120);
-  const verM = head.match(/modelBaseVersion="([^"]+)"/) || head.match(/version="([^"]+)"/);
-  if (verM) out.datexVersion = verM[1].slice(0, 40);
-  if (/SituationPublication/i.test(head)) out.responseFormat = "xml-situation-publication";
+  const xml = buf.toString("utf8");
+  out.limitUtilization = limitUtilization(buf.length, config.limits.maxResponseBytes);
+
+  let structure;
+  try {
+    structure = scanDatexStructure(xml, {
+      maxScanBytes: config.limits.maxResponseBytes,
+      maxDepth: config.limits.maxXmlDepth,
+      maxElements: config.limits.maxElements,
+    });
+    out.structure = {
+      rootLocalName: structure.rootLocalName,
+      rootNamespaceUri: structure.rootNamespaceUri,
+      namespaceUris: structure.namespaceUris,
+      detectedDatexMajorVersion: structure.detectedDatexMajorVersion,
+      detectedDatexProfile: structure.detectedDatexProfile,
+      topLevelElementLocalNameCounts: structure.topLevelElementLocalNameCounts,
+      candidateSituationElementCount: structure.candidateSituationElementCount,
+      candidateSituationRecordElementCount: structure.candidateSituationRecordElementCount,
+      recordTypeLocalNameCounts: structure.recordTypeLocalNameCounts,
+      chunkBoundaryProbePassed: structure.chunkBoundaryProbePassed,
+      documentWellFormed: structure.documentWellFormed,
+      parserFailureCode: structure.parserFailureCode,
+      parserCompatibilityReason: structure.parserCompatibilityReason,
+      elementCountScanned: structure.elementCountScanned,
+    };
+    out.namespace = structure.rootNamespaceUri;
+    out.datexVersion =
+      structure.detectedDatexMajorVersion != null ? String(structure.detectedDatexMajorVersion) : null;
+    if (structure.detectedDatexProfile === "SituationPublication") {
+      out.responseFormat = "xml-situation-publication";
+    }
+  } catch (e) {
+    out.parserFailureCode = (e && e.code) || "STRUCTURE_SCAN_FAIL";
+    out.parserCompatible = false;
+    out.namespace = pickRootNamespaceUri(xml.slice(0, 8192));
+    return out;
+  }
+
+  // Offline chunk-boundary smoke on a short prefix + synthetic splice (no content leak)
+  try {
+    const sample = xml.length > 4000 ? xml.slice(0, 2000) + xml.slice(xml.length - 2000) : xml;
+    out.chunkBoundaryProbePassed = chunkBoundaryProbe(sample, [
+      Math.floor(sample.length / 3),
+      Math.floor((2 * sample.length) / 3),
+    ]);
+    if (out.structure) out.structure.chunkBoundaryProbePassed = out.chunkBoundaryProbePassed;
+  } catch (_) {
+    out.chunkBoundaryProbePassed = false;
+  }
 
   let parsed;
   try {
-    parsed = parseDatexSituationPublication(buf.toString("utf8"), { limits: config.limits });
+    parsed = parseDatexSituationPublication(xml, { limits: config.limits, structure });
   } catch (e) {
     out.parserCompatible = false;
-    out.rejectReason = String(e && e.code) || "PARSE_FAIL";
+    out.parserFailureCode = String(e && e.code) || "PARSE_FAIL";
+    out.parserCompatibilityReason = "parse_exception";
+    out.rejectReason = out.parserFailureCode;
     return out;
   }
 
-  out.situationRecords = parsed.situationCount || 0;
+  out.situationRecords = parsed.recordCount || parsed.situationCount || 0;
   out.rejected = parsed.rejectedCount || 0;
-  out.namespace = parsed.namespace || null;
-  out.datexVersion = parsed.version || parsed.modelBaseVersion || null;
-  if (!out.datexVersion && parsed.rootLocalName) out.datexVersion = "datex2-detected";
+  if (parsed.namespace && isApplicationDatexNamespace(parsed.namespace)) {
+    out.namespace = parsed.namespace;
+  } else if (structure.rootNamespaceUri) {
+    out.namespace = structure.rootNamespaceUri;
+  } else {
+    out.namespace = null;
+  }
+  out.datexVersion = parsed.version || parsed.modelBaseVersion || out.datexVersion;
+  out.parserFailureCode = parsed.parserFailureCode || structure.parserFailureCode || null;
+  out.parserCompatibilityReason =
+    parsed.parserCompatible === true
+      ? null
+      : parsed.parserFailureCode || structure.parserCompatibilityReason || "parser_incompatible";
 
-  const gated = processAndGate(buf.toString("utf8"), {
+  const gated = processAndGate(xml, {
     prevItems: [],
     tmcTable,
     nowIso: new Date().toISOString(),
@@ -379,7 +462,25 @@ function summarizeDatex(buf, config, tmcTable) {
 
   const items = gated.gate && gated.gate.items ? gated.gate.items : [];
   out.normalized = items.length;
-  out.parserCompatible = Boolean(parsed.ok !== false && out.situationRecords >= 0);
+  // Truthful compatibility: require DATEX app namespace + at least one parsed record
+  // (empty legitimate snapshot would need explicit emptyPublication marker — not claimed here).
+  const structuralCandidates =
+    (structure.candidateSituationRecordElementCount || 0) + (structure.candidateSituationElementCount || 0);
+  out.parserCompatible = Boolean(
+    parsed.parserCompatible === true &&
+      out.situationRecords > 0 &&
+      isApplicationDatexNamespace(out.namespace) &&
+      out.normalized + out.rejected >= 0
+  );
+  if (!out.parserCompatible && structuralCandidates > 0 && out.situationRecords === 0) {
+    out.parserCompatibilityReason =
+      out.parserCompatibilityReason || "structure_has_candidates_but_zero_parsed_records";
+  }
+  if (out.parserCompatible && structuralCandidates === 0) {
+    // defensive: should not happen
+    out.parserCompatible = false;
+    out.parserCompatibilityReason = "zero_structure_candidates";
+  }
 
   for (const sit of parsed.situations || []) {
     for (const rec of sit.records || []) {
@@ -417,17 +518,16 @@ function summarizeDatex(buf, config, tmcTable) {
       } else {
         out.textOnlyLoc += 1;
       }
-      if (tmcTable) {
-        const loc = localizeFromTmc(refs, tmcTable, { coordinates: coords });
-        if (loc && loc.trust && loc.trust !== "national_fallback" && loc.locationLabel) out.tmcMapped += 1;
-        else if (refs.length) out.tmcUnmapped += 1;
-      } else if (refs.length) {
-        out.tmcUnmapped += 1;
-      }
     }
   }
 
-  out.mappingReady = out.withTmcRef > 0 && out.tmcMapped > 0;
+  // mapping counts from gated items when available
+  for (const it of items) {
+    if (it && it.tmcMapped) out.tmcMapped += 1;
+    else if (it && it.hasTmcRef) out.tmcUnmapped += 1;
+  }
+  out.mappingReady =
+    out.parserCompatible && (out.withTmcRef === 0 || out.tmcMapped > 0);
   return out;
 }
 
@@ -486,6 +586,33 @@ function summarizeTmc(buf, config) {
   if (isZipMagic(working) || looksLikeZip(working)) {
     out.zipDetected = true;
     if (!out.responseFormat || out.responseFormat === "unknown") out.responseFormat = "zip";
+    const zipMeta = inspectZipDeclaredMetadata(working, {
+      limits: {
+        ...DEFAULT_ZIP_LIMITS,
+        maxUncompressedTotal: Math.min(DEFAULT_ZIP_LIMITS.maxUncompressedTotal, config.limits.maxResponseBytes),
+      },
+    });
+    out.zipMetadata = {
+      centralEntryCount: zipMeta.centralEntryCount,
+      directoryEntryCount: zipMeta.directoryEntryCount,
+      fileEntryCount: zipMeta.fileEntryCount,
+      declaredCompressedTotalBytes: zipMeta.declaredCompressedTotalBytes,
+      declaredUncompressedTotalBytes: zipMeta.declaredUncompressedTotalBytes,
+      maxDeclaredCompressedEntryBytes: zipMeta.maxDeclaredCompressedEntryBytes,
+      maxDeclaredUncompressedEntryBytes: zipMeta.maxDeclaredUncompressedEntryBytes,
+      maxObservedCompressionRatio: zipMeta.maxObservedCompressionRatio,
+      entriesOverCurrentPerEntryLimit: zipMeta.entriesOverCurrentPerEntryLimit,
+      totalOverCurrentUncompressedLimit: zipMeta.totalOverCurrentUncompressedLimit === true,
+      encryptedEntryCount: zipMeta.encryptedEntryCount,
+      zip64EntryCount: zipMeta.zip64EntryCount,
+      unsupportedEntryTypeCount: zipMeta.unsupportedEntryTypeCount,
+      duplicateEntryCount: zipMeta.duplicateEntryCount,
+      pathRejectCategory: zipMeta.pathRejectCategory,
+      entrySizeRejectCategory: zipMeta.entrySizeRejectCategory,
+      archiveValidationStage: zipMeta.archiveValidationStage,
+      fileExtSummary: zipMeta.fileExtSummary,
+      limitsApplied: zipMeta.limitsApplied,
+    };
     let entries;
     try {
       entries = safeUnzipEntries(working, {
@@ -507,6 +634,15 @@ function summarizeTmc(buf, config) {
     } catch (e) {
       out.importerCompatible = false;
       out.rejectCode = String(e && e.code) || "ZIP_REJECT";
+      if (e && e.code === "TMC_ZIP_ENTRY_TOO_LARGE") {
+        out.entrySizeRejectCategory = e.entrySizeRejectCategory || "TMC_SIZE_PER_ENTRY";
+        out.zipMetadata = {
+          ...out.zipMetadata,
+          ...(e.zipMetadata || e.pathDiagnostics || {}),
+          entrySizeRejectCategory: out.entrySizeRejectCategory,
+          archiveValidationStage: "inflate_per_entry_limit",
+        };
+      }
       if (e && e.code === "TMC_ZIP_BAD_PATH") {
         out.zipSlipVerified = true;
         out.pathRejectCategory = e.pathRejectCategory || TMC_PATH_REJECT.OTHER;
@@ -821,20 +957,67 @@ export async function runShadowProbe(opts = {}) {
       linearGeom: report.datex && report.datex.linearGeom != null ? report.datex.linearGeom : 0,
       textOnlyLoc: report.datex && report.datex.textOnlyLoc != null ? report.datex.textOnlyLoc : 0,
       coordsValid: report.datex ? report.datex.coordsValid !== false : false,
-      mappingReady: Boolean(report.datex && report.datex.mappingReady),
+      mappingReady: Boolean(
+        report.datex &&
+          report.datex.parserCompatible &&
+          ((report.datex.withTmcRef || 0) === 0 ||
+            (report.datex.mappingReady && report.tmc && report.tmc.importerCompatible))
+      ),
     };
 
-    report.ok = Boolean(
+    const datexOk = Boolean(
       report.datex &&
         report.datex.downloadSuccess &&
-        report.tmc &&
-        report.tmc.downloadSuccess
+        report.datex.authenticationAccepted &&
+        report.datex.parserCompatible &&
+        report.datex.situationRecords > 0
     );
+    const tmcOk = Boolean(
+      report.tmc &&
+        report.tmc.downloadSuccess &&
+        report.tmc.authenticationAccepted &&
+        report.tmc.importerCompatible &&
+        report.tmc.parsedRecordCount > 0 &&
+        report.tmc.zipSlipVerified !== false &&
+        report.tmc.zipBombVerified !== false
+    );
+    const securityOk = Boolean(
+      report.security &&
+        report.security.secretValuesDisplayed === false &&
+        report.security.rawResponseBodyDisplayed === false &&
+        report.security.productionStorageWrite === false &&
+        report.security.publicFeedWrite === false &&
+        report.security.productionDeploy === false
+    );
+    const mappingOk = Boolean(report.mapping && report.mapping.mappingReady);
+    report.ok = Boolean(datexOk && tmcOk && securityOk && mappingOk);
     report.reason = report.ok
       ? "shadow_probe_complete"
       : report.tmcSkippedDueToSharedNetworkFailure
         ? "datex_shared_network_failure_tmc_skipped"
-        : "shadow_probe_partial_or_failed";
+        : !datexOk
+          ? "shadow_datex_parser_or_auth_failed"
+          : !tmcOk
+            ? "shadow_tmc_importer_or_auth_failed"
+            : !mappingOk
+              ? "shadow_mapping_not_ready"
+              : "shadow_probe_partial_or_failed";
+    report.gate = {
+      downloadAuthSuccess: Boolean(
+        report.datex &&
+          report.datex.downloadSuccess &&
+          report.datex.authenticationAccepted &&
+          report.tmc &&
+          report.tmc.downloadSuccess &&
+          report.tmc.authenticationAccepted
+      ),
+      transportSuccess: Boolean(report.datex && report.datex.downloadSuccess && report.tmc && report.tmc.downloadSuccess),
+      securityValidationSuccess: securityOk,
+      parserCompatible: Boolean(report.datex && report.datex.parserCompatible),
+      semanticValidation: Boolean(datexOk && tmcOk),
+      mappingReady: mappingOk,
+      publishReady: false,
+    };
     report.tmcPublicMeta = tmcTable ? tmcPublicMeta({ active: tmcTable }) : { active: false };
     return report;
   } finally {
@@ -883,6 +1066,19 @@ if (isMain) {
             streamingBounded: report.datex.streamingBounded === true,
             maxBytes: report.datex.maxBytes != null ? report.datex.maxBytes : null,
             limitPreviousBytes: DATEX_PREV_RESPONSE_BYTES,
+            structure: report.datex.structure || null,
+            parserFailureCode: report.datex.parserFailureCode || null,
+            parserCompatibilityReason: report.datex.parserCompatibilityReason || null,
+            limitUtilization: report.datex.limitUtilization
+              ? {
+                  receivedBytes: report.datex.limitUtilization.receivedBytes,
+                  maxBytes: report.datex.limitUtilization.maxBytes,
+                  utilizationPercent: report.datex.limitUtilization.utilizationPercent,
+                  warningThresholdsHit: report.datex.limitUtilization.warningThresholdsHit,
+                  atLimit: report.datex.limitUtilization.atLimit === true,
+                }
+              : null,
+            chunkBoundaryProbePassed: report.datex.chunkBoundaryProbePassed === true,
           }
         : null;
       const safe = {
@@ -897,6 +1093,7 @@ if (isMain) {
         tmcSkippedDueToSharedNetworkFailure: report.tmcSkippedDueToSharedNetworkFailure,
         preflight: report.preflight,
         datex: datexSafe,
+        gate: report.gate || null,
         tmc: report.tmc && {
           downloadSuccess: report.tmc.downloadSuccess,
           skipped: report.tmc.skipped || false,
@@ -914,6 +1111,21 @@ if (isMain) {
           importerCompatible: report.tmc.importerCompatible,
           parsedRecordCount: report.tmc.parsedRecordCount,
           rejectedRecordCount: report.tmc.rejectedRecordCount,
+          rejectCode: report.tmc.rejectCode || null,
+          pathRejectCategory: report.tmc.pathRejectCategory || null,
+          entrySizeRejectCategory: report.tmc.entrySizeRejectCategory || null,
+          zipMetadata: report.tmc.zipMetadata || null,
+          pathDiagnostics: report.tmc.pathDiagnostics
+            ? {
+                pathRejectCategory: report.tmc.pathDiagnostics.pathRejectCategory || null,
+                pathRejectCounts: report.tmc.pathDiagnostics.pathRejectCounts || {},
+                isDirectoryEntry: report.tmc.pathDiagnostics.isDirectoryEntry === true,
+                directoryEntryCount: report.tmc.pathDiagnostics.directoryEntryCount || 0,
+                fileEntryCount: report.tmc.pathDiagnostics.fileEntryCount || 0,
+                centralEntryCount: report.tmc.pathDiagnostics.centralEntryCount || 0,
+                fileExtSummary: report.tmc.pathDiagnostics.fileExtSummary || {},
+              }
+            : null,
           zipSlipVerified: report.tmc.zipSlipVerified,
           zipBombVerified: report.tmc.zipBombVerified,
           atomicActivationVerified: report.tmc.atomicActivationVerified,
@@ -929,20 +1141,6 @@ if (isMain) {
           errorClass: report.tmc.errorClass,
           beforeHttpResponse: report.tmc.beforeHttpResponse,
           redirectCount: report.tmc.redirectCount,
-          rejectCode: report.tmc.rejectCode || null,
-          pathRejectCategory: report.tmc.pathRejectCategory || null,
-          pathDiagnostics: report.tmc.pathDiagnostics
-            ? {
-                pathRejectCategory: report.tmc.pathDiagnostics.pathRejectCategory || null,
-                pathRejectCounts: report.tmc.pathDiagnostics.pathRejectCounts || {},
-                isDirectoryEntry: report.tmc.pathDiagnostics.isDirectoryEntry === true,
-                directoryEntryCount: report.tmc.pathDiagnostics.directoryEntryCount || 0,
-                fileEntryCount: report.tmc.pathDiagnostics.fileEntryCount || 0,
-                centralEntryCount: report.tmc.pathDiagnostics.centralEntryCount || 0,
-                fileExtSummary: report.tmc.pathDiagnostics.fileExtSummary || {},
-                safeDirectoryEntriesAllowed: true,
-              }
-            : null,
           streamingBounded: report.tmc.streamingBounded === true,
           maxBytes: report.tmc.maxBytes != null ? report.tmc.maxBytes : null,
           sourceLabel: "TMC_SOURCE",

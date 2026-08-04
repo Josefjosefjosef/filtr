@@ -14,14 +14,27 @@ const CENTRAL_SIG = 0x02014b50;
 
 export const DEFAULT_ZIP_LIMITS = Object.freeze({
   maxEntries: 64,
-  maxUncompressedTotal: 48 * 1024 * 1024,
-  maxSingleUncompressed: 32 * 1024 * 1024,
-  maxCompressedTotal: 32 * 1024 * 1024,
+  /**
+   * Shadow #6: compressed archive ≈ 21_075_661 B; reject TMC_ZIP_ENTRY_TOO_LARGE
+   * proved at least one declared uncompressed entry > 32 MiB. Raise per-entry and
+   * total ceilings while keeping finite bomb guards (ratio + compressed + totals).
+   */
+  maxUncompressedTotal: 96 * 1024 * 1024,
+  maxSingleUncompressed: 64 * 1024 * 1024,
+  /** Headroom above observed ~21 MiB download (was 32 MiB). */
+  maxCompressedTotal: 40 * 1024 * 1024,
   maxCompressionRatio: 100,
   maxNameLen: 240,
   maxPathDepth: 8,
   maxGzipLayers: 2,
-  maxGzipOutput: 48 * 1024 * 1024,
+  maxGzipOutput: 96 * 1024 * 1024,
+});
+
+/** Previous per-entry / total caps (regression docs / diagnostics). */
+export const TMC_ZIP_LIMITS_PREV = Object.freeze({
+  maxSingleUncompressed: 32 * 1024 * 1024,
+  maxUncompressedTotal: 48 * 1024 * 1024,
+  maxCompressedTotal: 32 * 1024 * 1024,
 });
 
 export function isGzipMagic(buf) {
@@ -268,6 +281,156 @@ export function classifyZipPath(nameRaw, opts = {}) {
   };
 }
 
+/**
+ * Aggregate ZIP size/path metadata from local headers without decompressing payloads
+ * and without retaining entry names.
+ * @param {Buffer} buf
+ * @param {{ limits?: Partial<typeof DEFAULT_ZIP_LIMITS> }} [opts]
+ */
+export function inspectZipDeclaredMetadata(buf, opts = {}) {
+  const limits = { ...DEFAULT_ZIP_LIMITS, ...(opts.limits || {}) };
+  const meta = {
+    centralEntryCount: 0,
+    directoryEntryCount: 0,
+    fileEntryCount: 0,
+    declaredCompressedTotalBytes: 0,
+    declaredUncompressedTotalBytes: 0,
+    maxDeclaredCompressedEntryBytes: 0,
+    maxDeclaredUncompressedEntryBytes: 0,
+    maxObservedCompressionRatio: 0,
+    entriesOverCurrentPerEntryLimit: 0,
+    totalOverCurrentUncompressedLimit: false,
+    encryptedEntryCount: 0,
+    zip64EntryCount: 0,
+    unsupportedEntryTypeCount: 0,
+    duplicateEntryCount: 0,
+    pathRejectCategory: null,
+    pathRejectCounts: Object.create(null),
+    entrySizeRejectCategory: null,
+    archiveValidationStage: "central_declared",
+    fileExtSummary: Object.create(null),
+    limitsApplied: {
+      maxSingleUncompressed: limits.maxSingleUncompressed,
+      maxUncompressedTotal: limits.maxUncompressedTotal,
+      maxCompressedTotal: limits.maxCompressedTotal,
+      maxCompressionRatio: limits.maxCompressionRatio,
+      prevMaxSingleUncompressed: TMC_ZIP_LIMITS_PREV.maxSingleUncompressed,
+    },
+  };
+  if (!Buffer.isBuffer(buf) || buf.length < 4) {
+    meta.archiveValidationStage = "empty";
+    return meta;
+  }
+  if (buf.length > limits.maxCompressedTotal) {
+    meta.archiveValidationStage = "compressed_total_exceeded";
+    meta.entrySizeRejectCategory = "TMC_SIZE_COMPRESSED_TOTAL";
+    return meta;
+  }
+
+  let cOff = 0;
+  while (cOff + 46 <= buf.length) {
+    const sig = buf.readUInt32LE(cOff);
+    if (sig !== CENTRAL_SIG) {
+      cOff += 1;
+      continue;
+    }
+    meta.centralEntryCount += 1;
+    const nameLen = buf.readUInt16LE(cOff + 28);
+    const extraLen = buf.readUInt16LE(cOff + 30);
+    const commentLen = buf.readUInt16LE(cOff + 32);
+    const flags = buf.readUInt16LE(cOff + 8);
+    if (flags & 0x1) meta.encryptedEntryCount += 1;
+    const comp = buf.readUInt32LE(cOff + 20);
+    const uncomp = buf.readUInt32LE(cOff + 24);
+    if (comp === 0xffffffff || uncomp === 0xffffffff) meta.zip64EntryCount += 1;
+    cOff += 46 + nameLen + extraLen + commentLen;
+  }
+
+  const seen = new Set();
+  const seenFold = new Set();
+  let offset = 0;
+  while (offset + 30 <= buf.length) {
+    const sig = buf.readUInt32LE(offset);
+    if (sig !== LOCAL_SIG) break;
+    const method = buf.readUInt16LE(offset + 8);
+    const flags = buf.readUInt16LE(offset + 6);
+    const compSize = buf.readUInt32LE(offset + 18);
+    const uncompSize = buf.readUInt32LE(offset + 22);
+    const nameLen = buf.readUInt16LE(offset + 26);
+    const extraLen = buf.readUInt16LE(offset + 28);
+    const nameStart = offset + 30;
+    const dataStart = nameStart + nameLen + extraLen;
+    if (nameLen > limits.maxNameLen || dataStart > buf.length) {
+      meta.archiveValidationStage = "truncated";
+      break;
+    }
+    if (flags & 0x1) meta.encryptedEntryCount += 1;
+    if (compSize === 0xffffffff || uncompSize === 0xffffffff) meta.zip64EntryCount += 1;
+    if (method !== 0 && method !== 8) meta.unsupportedEntryTypeCount += 1;
+
+    let nameRaw = "";
+    try {
+      nameRaw = buf.slice(nameStart, nameStart + nameLen).toString("utf8");
+    } catch (_) {
+      meta.pathRejectCategory = TMC_PATH_REJECT.UNSUPPORTED_ENCODING;
+      meta.pathRejectCounts[TMC_PATH_REJECT.UNSUPPORTED_ENCODING] =
+        (meta.pathRejectCounts[TMC_PATH_REJECT.UNSUPPORTED_ENCODING] || 0) + 1;
+      break;
+    }
+    const classified = classifyZipPath(nameRaw, {
+      maxDepth: limits.maxPathDepth,
+      maxNameLen: limits.maxNameLen,
+    });
+    // Drop name immediately — only keep aggregates
+    nameRaw = "";
+    if (!classified.ok) {
+      meta.pathRejectCategory = classified.category || TMC_PATH_REJECT.OTHER;
+      meta.pathRejectCounts[meta.pathRejectCategory] =
+        (meta.pathRejectCounts[meta.pathRejectCategory] || 0) + 1;
+      meta.archiveValidationStage = "path_reject";
+      break;
+    }
+    if (classified.isDirectory) {
+      meta.directoryEntryCount += 1;
+      offset = dataStart + compSize;
+      continue;
+    }
+    meta.fileEntryCount += 1;
+    meta.declaredCompressedTotalBytes += compSize;
+    meta.declaredUncompressedTotalBytes += uncompSize;
+    if (compSize > meta.maxDeclaredCompressedEntryBytes) meta.maxDeclaredCompressedEntryBytes = compSize;
+    if (uncompSize > meta.maxDeclaredUncompressedEntryBytes) meta.maxDeclaredUncompressedEntryBytes = uncompSize;
+    if (compSize > 0) {
+      const ratio = uncompSize / compSize;
+      if (ratio > meta.maxObservedCompressionRatio) meta.maxObservedCompressionRatio = Math.round(ratio * 100) / 100;
+    }
+    if (uncompSize > limits.maxSingleUncompressed) {
+      meta.entriesOverCurrentPerEntryLimit += 1;
+      meta.entrySizeRejectCategory = "TMC_SIZE_PER_ENTRY";
+    }
+    const pathKey = classified.path;
+    if (seen.has(pathKey) || seenFold.has(pathKey.toLowerCase())) {
+      meta.duplicateEntryCount += 1;
+    } else {
+      seen.add(pathKey);
+      seenFold.add(pathKey.toLowerCase());
+    }
+    const ext = String(pathKey).toLowerCase().match(/\.([a-z0-9]+)$/);
+    const extKey = ext ? ext[1] : "none";
+    meta.fileExtSummary[extKey] = (meta.fileExtSummary[extKey] || 0) + 1;
+    offset = dataStart + Math.min(compSize, Math.max(0, buf.length - dataStart));
+  }
+
+  if (meta.declaredUncompressedTotalBytes > limits.maxUncompressedTotal) {
+    meta.totalOverCurrentUncompressedLimit = true;
+    if (!meta.entrySizeRejectCategory) meta.entrySizeRejectCategory = "TMC_SIZE_TOTAL_UNCOMPRESSED";
+  }
+  if (meta.entriesOverCurrentPerEntryLimit > 0 && !meta.entrySizeRejectCategory) {
+    meta.entrySizeRejectCategory = "TMC_SIZE_PER_ENTRY";
+  }
+  return meta;
+}
+
 function assertNoSymlinksInCentral(buf) {
   // Unix symlink mode in external attrs high 16 bits: 0120000 (0o120000) → 0xA000
   let offset = 0;
@@ -441,7 +604,13 @@ export function safeUnzipEntries(buf, opts = {}) {
     seenFold.add(fold);
 
     if (uncompSize > limits.maxSingleUncompressed) {
-      throw Object.assign(new Error("tmc_zip_entry_too_large"), { code: "TMC_ZIP_ENTRY_TOO_LARGE" });
+      const meta = inspectZipDeclaredMetadata(buf, { limits });
+      throw Object.assign(new Error("tmc_zip_entry_too_large"), {
+        code: "TMC_ZIP_ENTRY_TOO_LARGE",
+        entrySizeRejectCategory: "TMC_SIZE_PER_ENTRY",
+        pathDiagnostics: meta,
+        zipMetadata: meta,
+      });
     }
     if (compSize > 0 && uncompSize / compSize > limits.maxCompressionRatio) {
       throw Object.assign(new Error("tmc_zip_ratio"), { code: "TMC_ZIP_RATIO" });

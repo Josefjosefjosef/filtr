@@ -18,6 +18,7 @@
  */
 
 import { DATEX_MAX_RESPONSE_BYTES } from "./bounded-fetch.mjs";
+import { clampDatexMaxResponseBytes, DATEX_LIMIT_DEFAULT_BYTES } from "./growth-health.mjs";
 
 export const NDIC_PUBLIC_PORTAL_URL = "https://www.dopravniinfo.cz/";
 export const NDIC_REGISTRY_COMMON_PULL =
@@ -44,11 +45,16 @@ export const ALLOWED_PULL_HOSTS = Object.freeze(["mobilitydata.rsd.cz"]);
 export const DEFAULT_LIMITS = Object.freeze({
   /**
    * HTTP body ceiling (DATEX XML / shared pull). See DATEX_MAX_RESPONSE_BYTES docs
-   * in bounded-fetch.mjs (80 MiB; previous shadow hard-cap was 32 MiB).
+   * in bounded-fetch.mjs (default 80 MiB; clamp 16–96 MiB via IU_NDIC_MAX_BYTES).
+   * Previous shadow hard-cap was 32 MiB.
    */
-  maxResponseBytes: DATEX_MAX_RESPONSE_BYTES,
+  maxResponseBytes: DATEX_LIMIT_DEFAULT_BYTES || DATEX_MAX_RESPONSE_BYTES,
   maxXmlDepth: 60,
-  maxElements: 500000,
+  /**
+   * Raised after shadow #6 (~56 MiB SituationPublication): 500k was insufficient
+   * for full DOM of national snapshot; still finite for 1 GiB VPS with streaming download.
+   */
+  maxElements: 1_500_000,
   maxTextFieldChars: 12000,
   maxSituations: 20000,
   maxRecordsPerSituation: 50,
@@ -97,7 +103,15 @@ export function getNdicDatexV1Config(env = process.env) {
   };
 
   const limits = { ...DEFAULT_LIMITS };
-  limits.maxResponseBytes = n("IU_NDIC_MAX_BYTES", limits.maxResponseBytes);
+  const clamped = clampDatexMaxResponseBytes(e.IU_NDIC_MAX_BYTES, limits.maxResponseBytes);
+  limits.maxResponseBytes = clamped.value;
+  limits.maxResponseBytesClamp = {
+    ok: clamped.ok === true,
+    errorCode: clamped.errorCode || null,
+    minBytes: 16 * 1024 * 1024,
+    maxBytes: 96 * 1024 * 1024,
+    defaultBytes: DATEX_LIMIT_DEFAULT_BYTES,
+  };
   limits.maxXmlDepth = n("IU_NDIC_MAX_DEPTH", limits.maxXmlDepth);
   limits.maxElements = n("IU_NDIC_MAX_ELEMENTS", limits.maxElements);
 

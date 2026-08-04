@@ -36,6 +36,7 @@ const ALLOWED_TOP = [
   "sources",
   "tmcPublicMeta",
   "errorCode",
+  "gate",
 ];
 
 /** Keys that must never appear (actual secret/payload carriers — not boolean *Displayed flags) */
@@ -95,6 +96,9 @@ const ALLOWED_PATH_REJECT = new Set([
 ok("probe_has_path_reject_contract", /pathRejectCategory/.test(probeSrc), "path");
 ok("probe_streaming_bounded", /streamingBounded|streamResponseToFileBounded/.test(probeSrc), "stream");
 ok("probe_no_raw_entry_name_log", !/console\.(log|info).*entryName|console\.(log|info).*nameRaw/.test(probeSrc), "name");
+ok("probe_truthful_gate", /parserCompatible/.test(probeSrc) && /situationRecords\s*>\s*0/.test(probeSrc), "gate");
+ok("probe_structure_diag", /scanDatexStructure|rootNamespaceUri|parserCompatibilityReason/.test(probeSrc), "struct");
+ok("probe_zip_metadata", /inspectZipDeclaredMetadata|zipMetadata|entrySizeRejectCategory/.test(probeSrc), "zipmeta");
 
 const FORBIDDEN_VALUE_RE =
   /https?:\/\/[^\s"]+|Authorization\s*:\s*\S+|Basic\s+[A-Za-z0-9+/=]{12,}|<SituationPublication[\s>]|IU_NDIC_PULL_PASS\s*=/i;

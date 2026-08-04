@@ -222,7 +222,48 @@ function parseRecord(recNode, limits) {
  */
 export function parseDatexSituationPublication(xml, opts = {}) {
   const limits = { ...DEFAULT_LIMITS, ...(opts.limits || {}) };
-  const root = parseSafeXml(xml, limits);
+  const structure =
+    opts.structure ||
+    (opts.skipStructureScan
+      ? null
+      : (() => {
+          try {
+            // lazy import avoided — caller may pass structure
+            return null;
+          } catch {
+            return null;
+          }
+        })());
+
+  let root;
+  try {
+    root = parseSafeXml(xml, limits);
+  } catch (e) {
+    return {
+      ok: false,
+      publicationTime: null,
+      situations: [],
+      rejected: [],
+      situationCount: 0,
+      rejectedCount: 0,
+      recordCount: 0,
+      namespace: null,
+      rootLocalName: null,
+      modelBaseVersion: null,
+      version: null,
+      parserFailureCode: (e && e.code) || "XML_PARSE",
+      parserCompatible: false,
+      structure: structure || null,
+    };
+  }
+
+  const rootNs =
+    (root.attrs && (root.attrs.xmlns || root.attrs.Xmlns)) ||
+    pickApplicationNsFromAttrs(root.attrs) ||
+    null;
+  const modelBaseVersion =
+    (root.attrs && (root.attrs.modelBaseVersion || root.attrs.modelbaseversion)) || null;
+
   const situations = descendantsNamed(root, "situation", limits.maxSituations);
   const publicationTime =
     parseIso(childText(root, "publicationTime")) ||
@@ -233,6 +274,7 @@ export function parseDatexSituationPublication(xml, opts = {}) {
 
   const out = [];
   const rejected = [];
+  let recordCount = 0;
   for (const sit of situations) {
     if (out.length >= limits.maxSituations) {
       rejected.push({ reason: "max_situations", id: attrOf(sit, "id") });
@@ -272,6 +314,7 @@ export function parseDatexSituationPublication(xml, opts = {}) {
       }
     }
     if (!parsedRecords.length) continue;
+    recordCount += parsedRecords.length;
     out.push({
       situationId,
       situationVersion,
@@ -280,12 +323,46 @@ export function parseDatexSituationPublication(xml, opts = {}) {
     });
   }
 
+  const appNs = rootNs && isApplicationDatexNs(rootNs) ? rootNs : null;
+  const compatible =
+    Boolean(appNs) &&
+    out.length > 0 &&
+    recordCount > 0 &&
+    (modelBaseVersion == null || String(modelBaseVersion).startsWith("2"));
+
   return {
-    ok: true,
+    ok: compatible,
     publicationTime,
     situations: out,
     rejected,
     situationCount: out.length,
     rejectedCount: rejected.length,
+    recordCount,
+    namespace: appNs,
+    rootLocalName: root.name || null,
+    modelBaseVersion,
+    version: modelBaseVersion,
+    parserFailureCode: compatible
+      ? null
+      : !appNs
+        ? "NAMESPACE_NOT_DATEX"
+        : out.length === 0
+          ? "NO_SITUATION_RECORDS"
+          : "PARSER_INCOMPATIBLE",
+    parserCompatible: compatible,
+    structure: structure || null,
   };
+}
+
+function isApplicationDatexNs(uri) {
+  return /^https?:\/\/datex2\.eu\/schema\//i.test(String(uri || ""));
+}
+
+function pickApplicationNsFromAttrs(attrs) {
+  if (!attrs) return null;
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "xsi" || /schema-instance/i.test(String(v))) continue;
+    if (isApplicationDatexNs(v)) return String(v).slice(0, 120);
+  }
+  return null;
 }

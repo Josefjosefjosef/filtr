@@ -717,20 +717,22 @@ async function discoveryChecks() {
 
 // --- empty / damaged docs ---
 {
-  let emptyThrew = false;
+  let emptyOk = false;
   try {
-    parseDatexSituationPublication("");
+    const empty = parseDatexSituationPublication("");
+    emptyOk = empty && empty.ok === false && (empty.parserFailureCode === "XML_EMPTY" || empty.parserCompatible === false);
   } catch (e) {
-    emptyThrew = e.code === "XML_EMPTY" || /empty/i.test(e.message);
+    emptyOk = e.code === "XML_EMPTY" || /empty/i.test(e.message);
   }
-  ok("empty_xml_reject", emptyThrew, "empty");
-  let badThrew = false;
+  ok("empty_xml_reject", emptyOk, "empty");
+  let badOk = false;
   try {
-    parseDatexSituationPublication("<not-closed");
+    const bad = parseDatexSituationPublication("<not-closed");
+    badOk = bad && bad.ok === false;
   } catch (_) {
-    badThrew = true;
+    badOk = true;
   }
-  ok("damaged_xml_reject", badThrew, "damaged");
+  ok("damaged_xml_reject", badOk, "damaged");
 }
 
 await discoveryChecks();
