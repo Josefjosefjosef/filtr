@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-05T17:57:47.235Z",
-    "lastSuccessAt": "2026-08-05T17:57:49.975Z",
+    "lastRunAt": "2026-08-05T18:01:57.009Z",
+    "lastSuccessAt": "2026-08-05T18:02:01.059Z",
     "lastChangedAt": "2026-08-05T17:51:02.826Z",
     "lastError": null,
     "status": "not_modified",
@@ -424,12 +424,12 @@
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 18,
-    "scheduledCount": 7,
-    "expiredCount": 1,
+    "scheduledCount": 6,
+    "expiredCount": 2,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 24,
-    "visibleCount": 24,
+    "publishableCount": 23,
+    "visibleCount": 23,
     "totalItems": 26,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -452,7 +452,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 24,
+      "logicalAlerts": 23,
       "uniqueEvents": [
         "Vysoké teploty",
         "Velmi vysoké teploty",
@@ -466,13 +466,13 @@
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 305,
-      "mappedAreas": 1155,
+      "totalAreas": 304,
+      "mappedAreas": 1154,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 17,
-      "publishedScheduled": 7,
-      "publishableCount": 24,
+      "publishedScheduled": 6,
+      "publishableCount": 23,
       "productStreams": [
         "50",
         "70"
@@ -480,7 +480,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 1,
+      "expiredCount": 2,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -489,19 +489,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6478,
+    "runMs": 6787,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-05T17:57:47.235Z",
+    "lastSnapshotAt": "2026-08-05T18:01:57.009Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-05T17:50:59.532Z",
       "officialLatestSentAt": "2026-08-05T19:27:34+02:00",
       "officialLatestValidFrom": "2026-08-06T05:00:00+02:00",
-      "discoveredAt": "2026-08-05T17:57:47.235Z",
-      "fetchedAt": "2026-08-05T17:57:47.235Z",
-      "transformedAt": "2026-08-05T17:57:53.714Z",
-      "validatedAt": "2026-08-05T17:57:53.714Z",
-      "publishedAt": "2026-08-05T17:57:47.235Z",
+      "discoveredAt": "2026-08-05T18:01:57.009Z",
+      "fetchedAt": "2026-08-05T18:01:57.009Z",
+      "transformedAt": "2026-08-05T18:02:03.796Z",
+      "validatedAt": "2026-08-05T18:02:03.796Z",
+      "publishedAt": "2026-08-05T18:01:57.009Z",
       "endToEndLagMs": 1405532
     },
     "audit": {
@@ -527,7 +527,7 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 24,
+          "logicalAlerts": 23,
           "uniqueEvents": [
             "Vysoké teploty",
             "Velmi vysoké teploty",
@@ -541,13 +541,13 @@
             "Riziko požárů",
             "Vysoké riziko požárů"
           ],
-          "totalAreas": 305,
-          "mappedAreas": 1155,
+          "totalAreas": 304,
+          "mappedAreas": 1154,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
           "publishedActive": 17,
-          "publishedScheduled": 7,
-          "publishableCount": 24,
+          "publishedScheduled": 6,
+          "publishableCount": 23,
           "productStreams": [
             "50",
             "70"
@@ -555,7 +555,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 0,
-          "expiredCount": 1,
+          "expiredCount": 2,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -564,6 +564,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-05T18:01:57.009Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6787,
+        "error": null,
+        "activeCount": 18,
+        "scheduledCount": 6,
+        "publishableCount": 23
+      },
       {
         "at": "2026-08-05T17:57:47.235Z",
         "status": "not_modified",
@@ -1076,17 +1087,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6656,
-        "error": null,
-        "activeCount": 14,
-        "scheduledCount": 4,
-        "publishableCount": 17
-      },
-      {
-        "at": "2026-08-05T14:00:26.412Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6682,
         "error": null,
         "activeCount": 14,
         "scheduledCount": 4,
