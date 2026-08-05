@@ -10,6 +10,14 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import {
+  RESTORE_DEADLINE_MS,
+  HIDE_DEADLINE_MS,
+  DETECT_DEADLINE_MS,
+  waitForNavPredicate,
+  inPageWaitNav,
+  assertKeyboardHideIdle,
+} from "./guards/iu-mobile-kb-hide-wait.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -19,12 +27,16 @@ const APP = path.join(REPO, "assets", "app.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
 const SW = path.join(REPO, "sw.js");
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8898", 10);
-const BASE = `http://127.0.0.1:${PORT}/`;
+/* 0 = ephemeral free port (avoids EADDRINUSE under process stress). */
+let PORT = parseInt(process.env.IU_GUARD_PORT || "0", 10);
+if (!Number.isFinite(PORT) || PORT < 0) PORT = 0;
+let BASE = "";
 const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
 const SW_VER = "2026-08-04-bottom-nav-unify-stable-v1";
+/* Must match assets/app.js FOCUS_OPEN_GRACE_MS — do not change product grace. */
+const FOCUS_OPEN_GRACE_MS = 420;
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
@@ -191,6 +203,10 @@ async function installVvMock(page) {
       },
     });
     window.__iuMockKeyboard = (mode) => vv.__iuSetKeyboard(mode);
+    window.__iuVvListenerCounts = () => ({
+      resize: listeners.resize.size,
+      scroll: listeners.scroll.size,
+    });
   });
 }
 
@@ -284,8 +300,11 @@ async function runViewport(browser, vp) {
 
     /* A: standard VV gap + focus → hide */
     await page.focus("#iuKbHideA");
-    await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(80);
+    await inPageWaitNav(page, {
+      expectHidden: true,
+      deadlineMs: HIDE_DEADLINE_MS,
+      action: "open",
+    });
     const scenarioA = await readNavState(page);
 
     /* D: switch fields — no blink */
@@ -297,49 +316,126 @@ async function runViewport(browser, vp) {
     }
     const noBlink = blinkSamples.every((s) => isHidden(s));
 
-    /* C: close with blur */
-    const tBlur0 = Date.now();
-    await page.evaluate(() => window.__iuMockKeyboard(false));
-    await blurActive(page);
+    /* C: close with blur — in-page restore timing (≤350ms assert). */
+    const restoredBlurWait = await page.evaluate(async () => {
+      const readVisible = () => {
+        const root = document.documentElement;
+        const nav = document.getElementById("iuMobileBottomNav");
+        const cs = nav ? getComputedStyle(nav) : null;
+        const rect = nav ? nav.getBoundingClientRect() : null;
+        const hasClass = root.classList.contains("iu-keyboard-open");
+        const height = rect ? Math.round(rect.height) : -1;
+        const display = cs ? cs.display : "missing";
+        return hasClass === false && display !== "none" && height > 40;
+      };
+      window.__iuMockKeyboard(false);
+      const el = document.activeElement;
+      if (el && typeof el.blur === "function") el.blur();
+      const t0 = performance.now();
+      while (performance.now() - t0 <= 350) {
+        if (readVisible()) return { ok: true, elapsedMs: performance.now() - t0 };
+        await new Promise((r) => requestAnimationFrame(() => r(true)));
+      }
+      return { ok: false, elapsedMs: performance.now() - t0 };
+    });
     const restoredBlur = await readNavState(page);
-    const restoreBlurMs = Date.now() - tBlur0;
+    const restoreBlurMs = restoredBlurWait.elapsedMs;
 
     /* B: close WITHOUT blur — input stays focused, VV returns → instant restore */
     await page.focus("#iuKbHideA");
     await page.type("#iuKbHideA", "x");
-    await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(80);
+    const openBeforeWait = await inPageWaitNav(page, {
+      expectHidden: true,
+      deadlineMs: HIDE_DEADLINE_MS,
+      action: "open",
+    });
     const openBeforeCloseNoBlur = await readNavState(page);
-    const tClose0 = Date.now();
-    await page.evaluate(() => window.__iuMockKeyboard(false));
-    await page.waitForTimeout(50);
+    const closeWait = await inPageWaitNav(page, {
+      expectHidden: false,
+      deadlineMs: RESTORE_DEADLINE_MS,
+      action: "close",
+    });
     const closeNoBlur = await readNavState(page);
-    const restoreNoBlurMs = Date.now() - tClose0;
+    const restoreNoBlurMs = closeWait.elapsedMs;
     const stillFocused = closeNoBlur.activeId === "iuKbHideA";
     const formValueOk = await page.evaluate(() => {
       const el = document.getElementById("iuKbHideA");
       return !!(el && el.value && el.value.indexOf("x") >= 0);
     });
+    const restoreNoBlurWithinDeadline =
+      closeWait.ok === true &&
+      openBeforeWait.ok === true &&
+      restoreNoBlurMs <= RESTORE_DEADLINE_MS;
 
-    /* Opening grace (iosZeroGap within grace) → hide without VV gap */
+    /* Opening grace (iosZeroGap within grace) → hide without VV gap.
+       Focus + mock MUST be same turn: a later iosZeroGap resize while open===true
+       clears focusOpenGraceUntil (product keyboard-closed path) and races the assert. */
     await blurActive(page);
-    await page.focus("#iuKbHideA");
-    await page.evaluate(() => window.__iuMockKeyboard("iosZeroGap"));
-    await page.waitForTimeout(100);
+    const tGrace0 = Date.now();
+    const openingGraceWait = await page.evaluate(async (graceMs) => {
+      const el = document.getElementById("iuKbHideA");
+      if (el) el.focus();
+      window.__iuMockKeyboard("iosZeroGap");
+      const readHidden = () => {
+        const root = document.documentElement;
+        const nav = document.getElementById("iuMobileBottomNav");
+        const cs = nav ? getComputedStyle(nav) : null;
+        const rect = nav ? nav.getBoundingClientRect() : null;
+        const rootCs = getComputedStyle(root);
+        const hasClass = root.classList.contains("iu-keyboard-open");
+        const height = rect ? Math.round(rect.height) : -1;
+        const display = cs ? cs.display : "missing";
+        const pointerEvents = cs ? cs.pointerEvents : "missing";
+        const bottomNavHeight = String(rootCs.getPropertyValue("--bottom-nav-height") || "").trim();
+        return (
+          hasClass === true &&
+          display === "none" &&
+          pointerEvents === "none" &&
+          height === 0 &&
+          (/^0px$/.test(bottomNavHeight) || bottomNavHeight === "0")
+        );
+      };
+      const t0 = performance.now();
+      const deadline = Math.max(80, graceMs - 80);
+      while (performance.now() - t0 <= deadline) {
+        if (readHidden()) return { ok: true, elapsedMs: performance.now() - t0 };
+        await new Promise((r) => requestAnimationFrame(() => r(true)));
+      }
+      return { ok: false, elapsedMs: performance.now() - t0 };
+    }, FOCUS_OPEN_GRACE_MS);
     const openingGrace = await readNavState(page);
 
     /* After grace without geom evidence → must NOT stay stuck hidden */
-    await page.waitForTimeout(450);
-    const graceExpired = await readNavState(page);
+    const graceEndAt = tGrace0 + FOCUS_OPEN_GRACE_MS + 48;
+    const remainAfterGrace = Math.max(0, graceEndAt - Date.now());
+    if (remainAfterGrace > 0) await page.waitForTimeout(remainAfterGrace);
+    const graceExpiredWait = await waitForNavPredicate(page, isVisible, DETECT_DEADLINE_MS, () =>
+      readNavState(page)
+    );
+    const graceExpired = graceExpiredWait.state || (await readNavState(page));
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
     /* Gap without focus — must NOT hide */
+    await page.evaluate(() => {
+      ["iuKbHideA", "iuKbHideB", "iuKbHideRo", "iuKbHideNone"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && typeof el.blur === "function") el.blur();
+      });
+      window.__iuMockKeyboard(false);
+    });
+    await page.waitForTimeout(90);
+    await waitForNavPredicate(page, isVisible, RESTORE_DEADLINE_MS, () => readNavState(page));
     await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(80);
-    const gapOnly = await readNavState(page);
+    let gapOnlyOk = true;
+    let gapOnly = await readNavState(page);
+    for (let i = 0; i < 8; i++) {
+      await page.waitForTimeout(25);
+      gapOnly = await readNavState(page);
+      if (!isVisible(gapOnly)) gapOnlyOk = false;
+    }
     await page.evaluate(() => window.__iuMockKeyboard(false));
-    await page.waitForTimeout(50);
+    await waitForNavPredicate(page, isVisible, RESTORE_DEADLINE_MS, () => readNavState(page));
 
     /* Unsupported inputs */
     await page.focus("#iuKbHideRo");
@@ -380,29 +476,79 @@ async function runViewport(browser, vp) {
       return ov ? ov.scrollTop : -1;
     });
     await page.focus("#iuKbHideA");
-    await page.evaluate(() => window.__iuMockKeyboard(true));
-    await page.waitForTimeout(60);
-    await page.evaluate(() => window.__iuMockKeyboard(false));
-    await page.waitForTimeout(80);
+    await inPageWaitNav(page, {
+      expectHidden: true,
+      deadlineMs: HIDE_DEADLINE_MS,
+      action: "open",
+    });
+    await inPageWaitNav(page, {
+      expectHidden: false,
+      deadlineMs: RESTORE_DEADLINE_MS,
+      action: "close",
+    });
     const overlayAfter = await page.evaluate(() => {
       const ov = document.getElementById("iuCustomButtonsScrollHost");
       return ov ? ov.scrollTop : -1;
     });
     await blurActive(page);
 
-    /* H: ten open/type/close cycles — no stuck class (CI tablet needs slightly longer settle). */
+    /* H: ten open/close cycles — condition wait (DETECT budget; product 200ms is scenario B). */
     let tenOk = true;
+    let pendingTimerCheckOk = true;
+    let listenerCleanupOk = true;
+    let tenReason = "ok";
+    const listenerBaseline = await page.evaluate(() =>
+      typeof window.__iuVvListenerCounts === "function" ? window.__iuVvListenerCounts() : null
+    );
     for (let i = 0; i < 10; i++) {
+      const before = await readNavState(page);
+      if (!isVisible(before)) {
+        tenOk = false;
+        tenReason = "dirty_start";
+        break;
+      }
       await page.focus("#iuKbHideA");
       await page.evaluate(() => window.__iuMockKeyboard(true));
-      await page.waitForTimeout(80);
-      const mid = await readNavState(page);
-      if (!isHidden(mid)) tenOk = false;
+      const midWait = await waitForNavPredicate(page, isHidden, DETECT_DEADLINE_MS, () =>
+        readNavState(page)
+      );
+      if (!midWait.ok) {
+        tenOk = false;
+        tenReason = "hide_timeout";
+        break;
+      }
       await page.evaluate(() => window.__iuMockKeyboard(false));
-      await page.waitForTimeout(90);
-      const end = await readNavState(page);
-      if (!isVisible(end)) tenOk = false;
+      const endWait = await waitForNavPredicate(page, isVisible, DETECT_DEADLINE_MS, () =>
+        readNavState(page)
+      );
+      if (!endWait.ok) {
+        tenOk = false;
+        tenReason = "restore_timeout";
+        break;
+      }
+      const idleCheck = await assertKeyboardHideIdle(page, () => readNavState(page), isVisible);
+      if (!idleCheck.ok) {
+        tenOk = false;
+        pendingTimerCheckOk = false;
+        tenReason = "pending_class";
+        break;
+      }
+      const listenerNow = await page.evaluate(() =>
+        typeof window.__iuVvListenerCounts === "function" ? window.__iuVvListenerCounts() : null
+      );
+      if (
+        !listenerBaseline ||
+        !listenerNow ||
+        listenerNow.resize !== listenerBaseline.resize ||
+        listenerNow.scroll !== listenerBaseline.scroll
+      ) {
+        tenOk = false;
+        listenerCleanupOk = false;
+        tenReason = "listener_drift";
+        break;
+      }
     }
+    const tenResult = { ok: tenOk, reason: tenReason };
     await blurActive(page);
 
     const flagOk = await page.evaluate(() => window.__iuMobileBottomNavKeyboardHideInit === 1);
@@ -416,12 +562,12 @@ async function runViewport(browser, vp) {
       isVisible(closeNoBlur) &&
       stillFocused &&
       formValueOk &&
-      restoreNoBlurMs <= 200 &&
+      restoreNoBlurWithinDeadline &&
       isVisible(restoredBlur) &&
       restoreBlurMs <= 350 &&
       isHidden(openingGrace) &&
       isVisible(graceExpired) &&
-      isVisible(gapOnly) &&
+      gapOnlyOk &&
       noBlink &&
       !readonlyOpen.hasClass &&
       !checkboxOpen.hasClass &&
@@ -446,12 +592,15 @@ async function runViewport(browser, vp) {
       scenarioD_noBlink: noBlink,
       openingGraceOk: isHidden(openingGrace),
       graceExpiredNotStuck: isVisible(graceExpired),
-      gapOnlyOk: isVisible(gapOnly),
+      gapOnlyOk,
       formStateOk: formValueOk,
       overlayScrollOk: Math.abs(overlayAfter - overlayBefore) <= 2,
       tenCyclesOk: tenOk,
+      tenCyclesReason: tenResult.reason || null,
+      pendingTimerCheckOk,
+      listenerCleanupOk,
       scrollPreserved,
-      restoreDelayOk: restoreNoBlurMs <= 200,
+      restoreDelayOk: restoreNoBlurWithinDeadline,
       readonlyOk: !readonlyOpen.hasClass,
       checkboxOk: !checkboxOpen.hasClass,
       fileOk: !fileOpen.hasClass,
@@ -545,17 +694,33 @@ async function main() {
     }
   });
 
-  await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(PORT > 0 ? PORT : 0, "127.0.0.1", resolve);
+  });
+  PORT = server.address().port;
+  BASE = `http://127.0.0.1:${PORT}/`;
   await waitForPort("127.0.0.1", PORT, 10000);
 
   const browser = await chromium.launch({ headless: true });
   const results = [];
+  const only = String(process.env.IU_KB_HIDE_ONLY || "ALL").toUpperCase();
   try {
-    for (const vp of VIEWPORTS) {
-      results.push(await runViewport(browser, vp));
+    if (only === "ALL" || only === "MOBILE" || only === "TABLET") {
+      for (const vp of VIEWPORTS) {
+        if (only !== "ALL" && only !== vp.name) continue;
+        results.push(await runViewport(browser, vp));
+      }
     }
-    results.push(await runDesktop(browser));
-    results.push(await runDesktopNarrowFalsePositive(browser));
+    if (only === "ALL" || only === "DESKTOP") {
+      results.push(await runDesktop(browser));
+    }
+    if (only === "ALL" || only === "NARROW" || only === "NARROW_GAP_ONLY") {
+      results.push(await runDesktopNarrowFalsePositive(browser));
+    }
+    if (!results.length) {
+      throw new Error("IU_KB_HIDE_ONLY empty selection: " + only);
+    }
   } finally {
     await browser.close();
     server.close();
