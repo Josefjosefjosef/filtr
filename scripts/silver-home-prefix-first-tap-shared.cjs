@@ -168,61 +168,131 @@ async function readCounters(page) {
 }
 
 /**
- * Real Playwright pointer path + in-page pointerdown timestamp → value match
- * (avoids IPC inflation for the reaction metric).
+ * Real Playwright pointer path + fully in-page reaction metric.
+ *
+ * Start: performance.now() on capture-phase pointerdown (prefix control).
+ * End: performance.now() on first in-page observation that input value === expected,
+ * armed BEFORE click() and recorded via rAF (so Playwright click() IPC return
+ * cannot inflate reactionMs).
  */
 async function firstTapPrefixMeasured(page, key, expected, maxWaitMs) {
   await dismissOverlays(page);
   const readyBefore = await engineReady(page);
   const countersBefore = await readCounters(page);
-  await page.evaluate(() => {
-    window.__iuSilverTapT0 = 0;
-    if (window.__iuSilverTapPdArm) return;
-    window.__iuSilverTapPdArm = 1;
-    document.addEventListener(
-      "pointerdown",
-      function (e) {
-        try {
-          const t = e && e.target && e.target.closest ? e.target.closest("[data-iu-silver-home-prefix]") : null;
-          if (!t) return;
-          if (!window.__iuSilverTapT0) window.__iuSilverTapT0 = performance.now();
-        } catch (_) {}
-      },
-      true
-    );
-  });
-  await page.evaluate(() => {
-    window.__iuSilverTapT0 = 0;
-  });
-  await page.locator(prefixSel(key)).click({ timeout: 10000, force: false });
-  const result = await page.evaluate(
-    async ({ exp, maxWait }) => {
-      const inp = document.getElementById("iuSilverHomeInput");
-      if (!inp) return { ok: false, detail: "missing_input", reactionMs: -1, value: "" };
-      const t0 = window.__iuSilverTapT0 || performance.now();
-      const deadline = performance.now() + maxWait;
-      let value = String(inp.value || "");
-      while (performance.now() < deadline) {
-        value = String(inp.value || "");
-        if (value === exp) {
-          return {
-            ok: true,
-            value,
-            reactionMs: Math.round(performance.now() - t0),
-            detail: "ok",
-          };
+
+  await page.evaluate(
+    ({ exp, maxWait }) => {
+      window.__iuSilverTapArmActive = true;
+      window.__iuSilverTapExpected = exp;
+      window.__iuSilverTapMaxWait = maxWait;
+      window.__iuSilverTapT0 = 0;
+      window.__iuSilverTapMatchedAt = 0;
+      window.__iuSilverTapMatchedValue = "";
+      window.__iuSilverTapRaf = 0;
+      window.__iuSilverPlaywrightClickReturnAt = 0;
+
+      function stopRaf() {
+        if (window.__iuSilverTapRaf) {
+          cancelAnimationFrame(window.__iuSilverTapRaf);
+          window.__iuSilverTapRaf = 0;
         }
-        await new Promise((r) => setTimeout(r, 8));
       }
-      return {
-        ok: false,
-        value,
-        reactionMs: Math.round(performance.now() - t0),
-        detail: "timeout",
-      };
+
+      function noteMatch(value, at) {
+        if (window.__iuSilverTapMatchedAt) return;
+        window.__iuSilverTapMatchedAt = at;
+        window.__iuSilverTapMatchedValue = value;
+        stopRaf();
+      }
+
+      function pollMatch() {
+        if (!window.__iuSilverTapArmActive || !window.__iuSilverTapT0) return;
+        if (window.__iuSilverTapMatchedAt) return;
+        const inp = document.getElementById("iuSilverHomeInput");
+        const value = inp ? String(inp.value || "") : "";
+        const now = performance.now();
+        if (value === window.__iuSilverTapExpected) {
+          noteMatch(value, now);
+          return;
+        }
+        if (now - window.__iuSilverTapT0 <= window.__iuSilverTapMaxWait) {
+          window.__iuSilverTapRaf = requestAnimationFrame(pollMatch);
+        }
+      }
+
+      if (!window.__iuSilverTapPdArm) {
+        window.__iuSilverTapPdArm = 1;
+        document.addEventListener(
+          "pointerdown",
+          function (e) {
+            try {
+              if (!window.__iuSilverTapArmActive) return;
+              const t =
+                e && e.target && e.target.closest
+                  ? e.target.closest("[data-iu-silver-home-prefix]")
+                  : null;
+              if (!t) return;
+              if (!window.__iuSilverTapT0) {
+                window.__iuSilverTapT0 = performance.now();
+                window.__iuSilverTapRaf = requestAnimationFrame(pollMatch);
+              }
+            } catch (_) {}
+          },
+          true
+        );
+      }
     },
     { exp: expected, maxWait: maxWaitMs }
   );
+
+  await page.locator(prefixSel(key)).click({ timeout: 10000, force: false });
+
+  await page.evaluate(() => {
+    window.__iuSilverPlaywrightClickReturnAt = performance.now();
+  });
+
+  try {
+    await page.waitForFunction(
+      (maxWait) => {
+        if (window.__iuSilverTapMatchedAt) return true;
+        if (!window.__iuSilverTapT0) return false;
+        return performance.now() - window.__iuSilverTapT0 > maxWait + 30;
+      },
+      maxWaitMs,
+      { timeout: Math.max(5000, maxWaitMs + 5000) }
+    );
+  } catch (_) {}
+
+  const result = await page.evaluate(() => {
+    window.__iuSilverTapArmActive = false;
+    if (window.__iuSilverTapRaf) {
+      cancelAnimationFrame(window.__iuSilverTapRaf);
+      window.__iuSilverTapRaf = 0;
+    }
+    const t0 = Number(window.__iuSilverTapT0 || 0);
+    const matchedAt = Number(window.__iuSilverTapMatchedAt || 0);
+    const clickReturnAt = Number(window.__iuSilverPlaywrightClickReturnAt || 0);
+    const inp = document.getElementById("iuSilverHomeInput");
+    const value =
+      window.__iuSilverTapMatchedValue || (inp ? String(inp.value || "") : "");
+    const expected = String(window.__iuSilverTapExpected || "");
+    const inPageReactionMs = t0 && matchedAt ? Math.round(matchedAt - t0) : -1;
+    const clickReturnLagMs = t0 && clickReturnAt ? Math.round(clickReturnAt - t0) : -1;
+    const ok = matchedAt > 0 && value === expected;
+    return {
+      ok,
+      value,
+      expected,
+      reactionMs: inPageReactionMs,
+      inPageReactionMs,
+      pointerdownAt: t0,
+      valueMatchedAt: matchedAt,
+      playwrightClickReturnAt: clickReturnAt,
+      clickReturnLagMs,
+      detail: ok ? "ok" : matchedAt ? "value_mismatch" : "timeout",
+    };
+  });
+
   const readyAfter = await engineReady(page);
   const countersAfter = await readCounters(page);
   return {
