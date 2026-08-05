@@ -1,6 +1,6 @@
 {
-  "runId": "69b894ecb5fbdd2a",
-  "started": "2026-08-05T18:59:10.603Z",
+  "runId": "5958ffe4731121ce",
+  "started": "2026-08-05T19:02:29.775Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,7 +37,7 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 22,
+      "logicalAlerts": 21,
       "uniqueEvents": [
         "Vysoké teploty",
         "Velmi vysoké teploty",
@@ -45,19 +45,18 @@
         "Velmi silná zátěž teplem",
         "Silná zátěž teplem",
         "Silné bouřky",
-        "Velmi silné bouřky",
         "Stav sucha",
         "Hydrologické sucho",
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 303,
-      "mappedAreas": 1153,
+      "totalAreas": 301,
+      "mappedAreas": 1146,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 17,
-      "publishedScheduled": 5,
-      "publishableCount": 22,
+      "publishedScheduled": 4,
+      "publishableCount": 21,
       "productStreams": [
         "50",
         "70"
@@ -65,7 +64,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 3,
+      "expiredCount": 4,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -74,8 +73,8 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 23,
-    "after": 22,
+    "before": 22,
+    "after": 21,
     "ledgerKeys": 4,
     "ledgerFingerprint": "b4c27e97704adeed",
     "history": {
@@ -320,17 +319,17 @@
   "temporalCounts": {
     "totalItems": 26,
     "activeCount": 18,
-    "scheduledCount": 5,
-    "expiredCount": 3,
+    "scheduledCount": 4,
+    "expiredCount": 4,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 22,
-    "visibleCount": 22
+    "publishableCount": 21,
+    "visibleCount": 21
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 22,
+    "logicalAlerts": 21,
     "uniqueEvents": [
       "Vysoké teploty",
       "Velmi vysoké teploty",
@@ -338,19 +337,18 @@
       "Velmi silná zátěž teplem",
       "Silná zátěž teplem",
       "Silné bouřky",
-      "Velmi silné bouřky",
       "Stav sucha",
       "Hydrologické sucho",
       "Riziko požárů",
       "Vysoké riziko požárů"
     ],
-    "totalAreas": 303,
-    "mappedAreas": 1153,
+    "totalAreas": 301,
+    "mappedAreas": 1146,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
     "publishedActive": 17,
-    "publishedScheduled": 5,
-    "publishableCount": 22,
+    "publishedScheduled": 4,
+    "publishableCount": 21,
     "productStreams": [
       "50",
       "70"
@@ -358,7 +356,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 3,
+    "expiredCount": 4,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -366,7 +364,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 1153,
+    "headAreas": 1146,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -374,6 +372,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-05T18:59:17.381Z",
-  "runMs": 6778
+  "finished": "2026-08-05T19:02:37.037Z",
+  "runMs": 7261
 }
