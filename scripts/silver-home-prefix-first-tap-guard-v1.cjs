@@ -117,12 +117,39 @@ async function runFastCase(browser, viewport, prefix, url) {
     if (!readyBefore) return fail(result, "prefetch_did_not_ready_engine_before_tap");
     const tap = await firstTapPrefixMeasured(page, prefix.key, prefix.expected, FAST_REACTION_MAX_MS);
     result.readyBefore = tap.readyBefore;
-    result.reactionMs = tap.reactionMs;
+    result.reactionMs = tap.inPageReactionMs != null ? tap.inPageReactionMs : tap.reactionMs;
+    result.inPageReactionMs = tap.inPageReactionMs;
+    result.pointerdownAt = tap.pointerdownAt;
+    result.valueMatchedAt = tap.valueMatchedAt;
+    result.playwrightClickReturnAt = tap.playwrightClickReturnAt;
+    result.clickReturnLagMs = tap.clickReturnLagMs;
     result.value = tap.value;
     result.expected = prefix.expected;
-    if (!tap.ok) return fail(result, "fast_tap_timeout");
+    result.functionalOk = !!(tap.ok && tap.value === prefix.expected);
+    result.timingOk =
+      typeof result.reactionMs === "number" &&
+      result.reactionMs >= 0 &&
+      result.reactionMs <= FAST_REACTION_MAX_MS;
+    process.stdout.write(
+      JSON.stringify({
+        diag: "FAST_TAP",
+        viewport: viewport.id,
+        prefix: prefix.key,
+        pointerdownAt: result.pointerdownAt,
+        valueMatchedAt: result.valueMatchedAt,
+        inPageReactionMs: result.inPageReactionMs,
+        playwrightClickReturnAt: result.playwrightClickReturnAt,
+        clickReturnLagMs: result.clickReturnLagMs,
+        functionalOk: result.functionalOk,
+        timingOk: result.timingOk,
+      }) + "\n"
+    );
+    if (!tap.ok && tap.detail === "timeout") return fail(result, "fast_tap_timeout");
     if (tap.value !== prefix.expected) return fail(result, "value_mismatch");
-    if (tap.reactionMs > FAST_REACTION_MAX_MS) return fail(result, "slow_reaction_" + tap.reactionMs + "ms");
+    if (!result.functionalOk) return fail(result, "functional_fail");
+    if (result.reactionMs > FAST_REACTION_MAX_MS) {
+      return fail(result, "slow_reaction_" + result.reactionMs + "ms");
+    }
     return ok(result, "ok");
   } catch (err) {
     return fail(result, String(err && err.message ? err.message : err));
@@ -798,6 +825,163 @@ async function runQuickActionsPresent(browser, url) {
   }
 }
 
+async function runMeasurementIntegritySelftests(browser) {
+  const result = {
+    suite: "selftest",
+    id: "in_page_measurement_integrity",
+    pass: false,
+    detail: "",
+    probes: [],
+  };
+  const html =
+    "<!doctype html><html><body>" +
+    '<input id="iuSilverHomeInput" />' +
+    '<div id="iuSilverHomeInputUx">' +
+    '<button type="button" data-iu-silver-home-prefix="calendar">Do kalendáře</button>' +
+    "</div>" +
+    "<script>" +
+    "(function () {" +
+    "  window.__iuProbeTapCount = 0;" +
+    "  window.__iuProbeTimer = 0;" +
+    "  window.__iuProbeGen = 0;" +
+    "  document.querySelector('[data-iu-silver-home-prefix=\"calendar\"]').addEventListener('pointerdown', function () {" +
+    "    window.__iuProbeTapCount = Number(window.__iuProbeTapCount || 0) + 1;" +
+    "    if (window.__iuProbeTimer) { clearTimeout(window.__iuProbeTimer); window.__iuProbeTimer = 0; }" +
+    "    if (window.__iuProbeNoOp) return;" +
+    "    if (window.__iuProbeSecondTapOnly && window.__iuProbeTapCount < 2) return;" +
+    "    var delay = Number(window.__iuProbeDelayMs || 15);" +
+    "    var val = String(window.__iuProbeValue || 'Do kalendáře ');" +
+    "    var gen = Number(window.__iuProbeGen || 0);" +
+    "    window.__iuProbeTimer = setTimeout(function () {" +
+    "      if (gen !== Number(window.__iuProbeGen || 0)) return;" +
+    "      document.getElementById('iuSilverHomeInput').value = val;" +
+    "      window.__iuProbeTimer = 0;" +
+    "    }, delay);" +
+    "  }, true);" +
+    "})();" +
+    "</script></body></html>";
+
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  async function resetProbe(opts) {
+    await page.evaluate((o) => {
+      window.__iuProbeGen = Number(window.__iuProbeGen || 0) + 1;
+      if (window.__iuProbeTimer) {
+        clearTimeout(window.__iuProbeTimer);
+        window.__iuProbeTimer = 0;
+      }
+      window.__iuProbeTapCount = 0;
+      window.__iuProbeNoOp = !!o.noOp;
+      window.__iuProbeSecondTapOnly = !!o.secondTapOnly;
+      window.__iuProbeDelayMs = Number(o.delayMs || 15);
+      window.__iuProbeValue = String(o.value == null ? "Do kalendáře " : o.value);
+      const inp = document.getElementById("iuSilverHomeInput");
+      if (inp) inp.value = "";
+    }, opts || {});
+  }
+  try {
+    await page.setContent(html, { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => {
+      window.__iuSilverP0EngineReady = true;
+    });
+
+    /* Probe 1: delayed Playwright click return must not inflate in-page reaction. */
+    await resetProbe({ noOp: false, secondTapOnly: false, delayMs: 15, value: "Do kalendáře " });
+    const realLocator = page.locator.bind(page);
+    page.locator = function (sel) {
+      const l = realLocator(sel);
+      if (String(sel).indexOf("data-iu-silver-home-prefix") >= 0) {
+        const real = l.click.bind(l);
+        l.click = async function (opts) {
+          await real(opts);
+          await new Promise((r) => setTimeout(r, 320));
+        };
+      }
+      return l;
+    };
+    const tap1 = await firstTapPrefixMeasured(page, "calendar", "Do kalendáře ", FAST_REACTION_MAX_MS);
+    page.locator = realLocator;
+    const p1 =
+      tap1.ok &&
+      tap1.inPageReactionMs >= 0 &&
+      tap1.inPageReactionMs <= 120 &&
+      tap1.clickReturnLagMs >= 250;
+    result.probes.push({
+      id: "delayed_click_return_excluded",
+      expect: "inPage_le_120_and_clickLag_ge_250",
+      pass: !!p1,
+      inPageReactionMs: tap1.inPageReactionMs,
+      clickReturnLagMs: tap1.clickReturnLagMs,
+    });
+
+    /* Probe 2: true slow in-page reaction (>250) must FAIL timing. */
+    await resetProbe({ noOp: false, secondTapOnly: false, delayMs: 320, value: "Do kalendáře " });
+    const tap2 = await firstTapPrefixMeasured(page, "calendar", "Do kalendáře ", FAST_REACTION_MAX_MS);
+    const p2 = !tap2.ok || tap2.inPageReactionMs > FAST_REACTION_MAX_MS;
+    result.probes.push({
+      id: "true_slow_reaction_fails",
+      expect: "timeout_or_gt_250",
+      pass: !!p2,
+      ok: tap2.ok,
+      inPageReactionMs: tap2.inPageReactionMs,
+      detail: tap2.detail,
+    });
+
+    /* Probe 3: missing first tap / no value change → fail. */
+    await resetProbe({ noOp: true, secondTapOnly: false, delayMs: 15, value: "Do kalendáře " });
+    const tap3 = await firstTapPrefixMeasured(page, "calendar", "Do kalendáře ", FAST_REACTION_MAX_MS);
+    const p3 = !tap3.ok;
+    result.probes.push({
+      id: "missing_first_tap_value",
+      expect: "functional_fail",
+      pass: !!p3,
+      ok: tap3.ok,
+      detail: tap3.detail,
+    });
+
+    /* Probe 4: wrong prefix value → fail. */
+    await resetProbe({ noOp: false, secondTapOnly: false, delayMs: 15, value: "Připomeň mi " });
+    const tap4 = await firstTapPrefixMeasured(page, "calendar", "Do kalendáře ", FAST_REACTION_MAX_MS);
+    const p4 = !tap4.ok || tap4.value !== "Do kalendáře ";
+    result.probes.push({
+      id: "wrong_prefix_value",
+      expect: "functional_fail",
+      pass: !!p4,
+      ok: tap4.ok,
+      value: tap4.value,
+    });
+
+    /* Probe 5: second tap required (first tap no-op) → fail within budget. */
+    await resetProbe({ noOp: false, secondTapOnly: true, delayMs: 15, value: "Do kalendáře " });
+    const tap5 = await firstTapPrefixMeasured(page, "calendar", "Do kalendáře ", FAST_REACTION_MAX_MS);
+    const p5 = !tap5.ok;
+    result.probes.push({
+      id: "second_tap_required",
+      expect: "functional_fail_on_first",
+      pass: !!p5,
+      ok: tap5.ok,
+      detail: tap5.detail,
+    });
+
+    const all = result.probes.every((p) => p.pass);
+    if (!all) {
+      return fail(
+        result,
+        "probes_failed_" +
+          result.probes
+            .filter((p) => !p.pass)
+            .map((p) => p.id)
+            .join(",")
+      );
+    }
+    return ok(result, "ok");
+  } catch (err) {
+    return fail(result, String(err && err.message ? err.message : err));
+  } finally {
+    await context.close();
+  }
+}
+
 async function runPendingCancelOnNavigate(browser, url) {
   const result = { suite: "scenario", id: "pending_cancel_on_pageshow_mobile", pass: false, detail: "" };
   const { context, page } = await openFresh(browser, VIEWPORTS[0], url, {
@@ -863,6 +1047,7 @@ async function main() {
     cases.push(await runDoubleTapNoDouble(browser, url));
     cases.push(await runQuickActionsPresent(browser, url));
     cases.push(await runPendingCancelOnNavigate(browser, url));
+    cases.push(await runMeasurementIntegritySelftests(browser));
     cases.push(await runNegativeSelftests(browser, url));
   } finally {
     await browser.close();
@@ -888,7 +1073,7 @@ async function main() {
       stressOptimisticHardMs: STRESS_OPTIMISTIC_HARD_MS,
       stressOptimisticMaxMs: STRESS_OPTIMISTIC_MAX_MS,
       stressTimingSamplesMax: STRESS_TIMING_SAMPLES_MAX,
-      stressMetric: "in_page_pointerdown_to_value",
+      stressMetric: "in_page_pointerdown_to_value_matched_before_click_return",
       artifactDir: ARTIFACT_DIR,
       url,
       stressTimingSummary: stressCases.map((c) => ({
