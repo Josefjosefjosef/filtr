@@ -60,7 +60,7 @@ import {
 
 export const INSPECTION_MODE = "format_inspection";
 export const REPORT_SCHEMA_VERSION = "tmc-format-inspection-report-v3";
-export const INSPECTION_VERSION = "sp08001-v2.6-table4-2-complete-schema-1";
+export const INSPECTION_VERSION = "sp08001-v2.6-table4-2-complete-schema-2";
 export {
   DATASET_INTEGRITY_STATE,
   REQUIRED_FOR_FORMAT_IDENTIFICATION,
@@ -250,6 +250,9 @@ export const INSPECTION_REPORT_ALLOWED_KEYS = Object.freeze([
   "readmeEncodingState",
   "readmeParseState",
   "readmeMappedCount",
+  "readmeBomPresent",
+  "readmeNonEmptyLineCount",
+  "readmeMetaFieldObservedCount",
   "datEncodingSource",
   "datDecodeSuccessCount",
   "datDecodeFailureCount",
@@ -1215,7 +1218,9 @@ export function validateInspectionReportObject(report) {
         });
       }
       const candidateCount = a.candidateCount;
-      return {
+      const safeInt = (v, max = 512) =>
+        typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= max ? v : null;
+      const outRow = {
         tableCode: a.tableCode,
         state,
         candidateCount,
@@ -1223,11 +1228,29 @@ export function validateInspectionReportObject(report) {
         schemaVerified: a.schemaVerified === true,
         limitedContentVerified: a.limitedContentVerified === true,
       };
+      // Count-only schema diagnostics — never field names, values, paths, or licensed rows.
+      const expectedFieldCount = safeInt(a.expectedFieldCount);
+      const actualFieldCount = safeInt(a.actualFieldCount);
+      const unexpectedFieldCount = safeInt(a.unexpectedFieldCount);
+      const missingRequiredFieldCount = safeInt(a.missingRequiredFieldCount);
+      if (expectedFieldCount != null) outRow.expectedFieldCount = expectedFieldCount;
+      if (actualFieldCount != null) outRow.actualFieldCount = actualFieldCount;
+      if (unexpectedFieldCount != null) outRow.unexpectedFieldCount = unexpectedFieldCount;
+      if (missingRequiredFieldCount != null) outRow.missingRequiredFieldCount = missingRequiredFieldCount;
+      if (
+        typeof a.filePresenceClass === "string" &&
+        /^(ZERO_BYTE_FILE|HEADER_ONLY|HEADER_AND_ROWS)$/.test(a.filePresenceClass)
+      ) {
+        outRow.filePresenceClass = a.filePresenceClass;
+      }
+      return outRow;
     });
   }
   if (Array.isArray(out.promotionBlockers)) {
     out.promotionBlockers = out.promotionBlockers.filter((x) => typeof x === "string" && /^[a-z0-9_]{1,64}$/.test(x)).slice(0, 32);
   }
+  // Validated allowlisted report with no path/secret leaks ⇒ reportSafety=passed.
+  if (out.reportSafety == null) out.reportSafety = REPORT_SAFETY.PASSED;
   return out;
 }
 
@@ -1372,6 +1395,9 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
   let unknownSupplementaryTables = 0;
   let readmeMappedCount = 0;
   let readmeParseState = null;
+  let readmeBomPresent = false;
+  let readmeNonEmptyLineCount = 0;
+  let readmeMetaFieldObservedCount = 0;
   let datDecodeSuccessCount = 0;
   let datDecodeFailureCount = 0;
   let broadCandidateSupersededCount = 0;
@@ -1458,16 +1484,23 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
         const rm = parseReadmeDatStructural(ent.buf || Buffer.alloc(0));
         readmeMappedCount = rm.readmeMapped ? 1 : 0;
         readmeParseState = rm.readmeParseState;
+        readmeBomPresent = rm.readmeBomPresent === true;
+        readmeNonEmptyLineCount =
+          typeof rm.readmeNonEmptyLineCount === "number" ? rm.readmeNonEmptyLineCount : 0;
+        readmeMetaFieldObservedCount =
+          typeof rm.readmeMetaFieldObservedCount === "number" ? rm.readmeMetaFieldObservedCount : 0;
         encodingLayers.push({ layer: ENCODING_LAYER.README_DECLARED, encoding: "ASCII" });
         if (rm.datEncodingSource === DAT_ENCODING_SOURCE.readme_declared && rm.declaredEncodingNormalized) {
           encodingLayers.push({
             layer: ENCODING_LAYER.DAT_DECLARED,
             encoding: rm.declaredEncodingNormalized,
+            source: "readme_declared",
           });
         } else if (rm.datEncodingSource === DAT_ENCODING_SOURCE.sp08001_default) {
           encodingLayers.push({
             layer: ENCODING_LAYER.DAT_DECLARED,
             encoding: SP08001_PHYSICAL.defaultEncoding || "UTF-8",
+            source: "sp08001_default",
           });
         }
         evidenceLevel = ROLE_EVIDENCE_LEVEL.METADATA_ONLY;
@@ -1493,6 +1526,27 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
                 : ROLE_EVIDENCE_LEVEL.FILENAME_HINT;
         const state = assessed.tableState || TABLE_STATE.missing_complete_header;
         const row = buildTableAssessmentReportRow(tableCode, state, tableCodePresenceCounts[tableCode]);
+        const expectedFieldCount =
+          typeof assessed.expectedFieldCount === "number" ? assessed.expectedFieldCount : null;
+        const actualFieldCount =
+          typeof assessed.actualFieldCount === "number"
+            ? assessed.actualFieldCount
+            : typeof assessed.fieldCount === "number"
+              ? assessed.fieldCount
+              : null;
+        let unexpectedFieldCount = 0;
+        let missingRequiredFieldCount = 0;
+        if (
+          expectedFieldCount != null &&
+          actualFieldCount != null &&
+          state === TABLE_STATE.unexpected_field &&
+          actualFieldCount > expectedFieldCount
+        ) {
+          unexpectedFieldCount = actualFieldCount - expectedFieldCount;
+        }
+        if (state === TABLE_STATE.missing_required_field && expectedFieldCount != null && actualFieldCount != null) {
+          missingRequiredFieldCount = Math.max(0, expectedFieldCount - actualFieldCount);
+        }
         upsertAssessment(tableCode, {
           ...row,
           headerMatchState: row.headerMatched ? HEADER_MATCH_STATE.MATCH : HEADER_MATCH_STATE.MISMATCH,
@@ -1501,6 +1555,11 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
             : CONTENT_VERIFIED_STATE.NO,
           mismatchReason: assessed.mismatchReason || TABLE_MISMATCH_REASON.EMPTY_HEADER,
           assessmentClass: classifySp08001TableAssessmentClass(tableCode),
+          expectedFieldCount,
+          actualFieldCount,
+          unexpectedFieldCount,
+          missingRequiredFieldCount,
+          filePresenceClass: assessed.filePresenceClass || null,
         });
         if (row.headerMatched) headerMatchedTableCodes.add(tableCode);
         if (REQUIRED_SINGLETON_ROLES.includes(role)) {
@@ -1643,11 +1702,20 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     .sort()
     .map((k) => {
       const a = tableAssessmentsMap[k];
-      return buildTableAssessmentReportRow(
+      const row = buildTableAssessmentReportRow(
         k,
         a.state || TABLE_STATE.missing_required_file,
         a.candidateCount || tableCodePresenceCounts[k] || 0
       );
+      // Preserve count-only schema diagnostics (no field names/values).
+      if (typeof a.expectedFieldCount === "number") row.expectedFieldCount = a.expectedFieldCount;
+      if (typeof a.actualFieldCount === "number") row.actualFieldCount = a.actualFieldCount;
+      if (typeof a.unexpectedFieldCount === "number") row.unexpectedFieldCount = a.unexpectedFieldCount;
+      if (typeof a.missingRequiredFieldCount === "number") {
+        row.missingRequiredFieldCount = a.missingRequiredFieldCount;
+      }
+      if (typeof a.filePresenceClass === "string") row.filePresenceClass = a.filePresenceClass;
+      return row;
     });
 
   let cidState = "NOT_SEEN";
@@ -1787,6 +1855,9 @@ export function inspectFormatFromEntryPeeks(entries, opts = {}) {
     readmeEncodingState,
     readmeParseState,
     readmeMappedCount,
+    readmeBomPresent,
+    readmeNonEmptyLineCount,
+    readmeMetaFieldObservedCount,
     datEncodingSource,
     datDecodeSuccessCount,
     datDecodeFailureCount,

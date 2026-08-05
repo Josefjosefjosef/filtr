@@ -478,12 +478,20 @@ export const SP08001_TABLES = Object.freeze({
         "code": "LANGUAGE",
         "type": "CHAR(25)",
         "optional": false
+      },
+      {
+        "sort": 4,
+        "code": "REPRESENTATION",
+        "type": "CHAR(4)",
+        "optional": true,
+        "note": "SP08001 Table 4-15 — optional when one representation per language"
       }
     ],
     "headerCodes": [
       "CID",
       "LID",
-      "LANGUAGE"
+      "LANGUAGE",
+      "REPRESENTATION"
     ]
   },
   "LOCATIONCODES": {
@@ -604,6 +612,13 @@ export const SP08001_TABLES = Object.freeze({
         "code": "NCOMMENT",
         "type": "CHAR(100)",
         "optional": true
+      },
+      {
+        "sort": 6,
+        "code": "OFFICIALNAME",
+        "type": "NUMERIC(1)",
+        "optional": true,
+        "note": "SP08001 Table 4-18 — optional [0/1]"
       }
     ],
     "headerCodes": [
@@ -611,7 +626,8 @@ export const SP08001_TABLES = Object.freeze({
       "LID",
       "NID",
       "NAME",
-      "NCOMMENT"
+      "NCOMMENT",
+      "OFFICIALNAME"
     ]
   },
   "NAMETRANSLATIONS": {
@@ -643,13 +659,21 @@ export const SP08001_TABLES = Object.freeze({
         "code": "NTRANSLATION",
         "type": "CHAR(100)",
         "optional": false
+      },
+      {
+        "sort": 5,
+        "code": "OFFICIALNAME",
+        "type": "NUMERIC(1)",
+        "optional": true,
+        "note": "SP08001 Table 4-19 — optional [0/1]"
       }
     ],
     "headerCodes": [
       "CID",
       "LID",
       "NID",
-      "NTRANSLATION"
+      "NTRANSLATION",
+      "OFFICIALNAME"
     ]
   },
   "OTHERAREAS": {

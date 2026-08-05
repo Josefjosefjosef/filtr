@@ -100,7 +100,7 @@ function fullStandardEntries(overrides = {}) {
 }
 
 {
-  ok("policy_version", PROMOTION_POLICY_VERSION === "sp08001-v2.6-table4-2-complete-schema-1", PROMOTION_POLICY_VERSION);
+  ok("policy_version", PROMOTION_POLICY_VERSION === "sp08001-v2.6-table4-2-complete-schema-2", PROMOTION_POLICY_VERSION);
   ok("insp_ver", INSPECTION_VERSION === PROMOTION_POLICY_VERSION, INSPECTION_VERSION);
   ok("schema_v3", REPORT_SCHEMA_VERSION === "tmc-format-inspection-report-v3", REPORT_SCHEMA_VERSION);
   ok("standard_25", SP08001_STANDARD_TABLE_COUNT === 25 && REQUIRED_STANDARD_TABLES.length === 25, String(REQUIRED_STANDARD_TABLES.length));
@@ -108,6 +108,20 @@ function fullStandardEntries(overrides = {}) {
   ok("metadata_file_count_policy", 1 === 1, "readme");
   ok("allowed_empty_dlrs", isAllowedEmptyTable("DLRS"), "dlrs");
   ok("allowed_empty_dlr_desc", isAllowedEmptyTable("DLR_DESC"), "dlrd");
+  ok("allowed_empty_euroroadno", isAllowedEmptyTable("EUROROADNO"), "erno");
+  ok("allowed_empty_junctions", isAllowedEmptyTable("JUNCTIONS"), "junc");
+  ok("allowed_empty_otherareas", isAllowedEmptyTable("OTHERAREAS"), "oa");
+  ok("road_network_levels_not_blind_empty", isAllowedEmptyTable("ROAD_NETWORK_LEVEL_TYPES") === false, "rnlt");
+  ok(
+    "languages_contract_sp08001_table_4_15",
+    getSp08001Table("LANGUAGES").headerCodes.join(",") === "CID,LID,LANGUAGE,REPRESENTATION",
+    getSp08001Table("LANGUAGES").headerCodes.join(",")
+  );
+  ok(
+    "nametranslations_contract_sp08001_table_4_19",
+    getSp08001Table("NAMETRANSLATIONS").headerCodes.join(",") === "CID,LID,NID,NTRANSLATION,OFFICIALNAME",
+    getSp08001Table("NAMETRANSLATIONS").headerCodes.join(",")
+  );
 }
 
 // Promotion success — full Table 4-2 schema
@@ -232,19 +246,23 @@ function fullStandardEntries(overrides = {}) {
   ok("broad_does_not_force_fail_when_exact_ok", report.formatConfirmed === true || report.exactTableCodeResolvedCount === 25, JSON.stringify(report.promotionBlockers));
 }
 
-// NAMES mismatch enums
+// NAMES mismatch enums (SP08001 Table 4-18 includes optional OFFICIALNAME)
 {
   const hdr = getSp08001Table("NAMES").headerCodes;
-  ok("names_contract_unchanged", hdr.join(",") === "CID,LID,NID,NAME,NCOMMENT", hdr.join(","));
+  ok("names_contract_sp08001_table_4_18", hdr.join(",") === "CID,LID,NID,NAME,NCOMMENT,OFFICIALNAME", hdr.join(","));
   const exact = matchSp08001Header("NAMES", hdr);
   ok("names_exact_match", exact.matched === true, "em");
   const fc = matchSp08001Header("NAMES", ["CID", "LID"]);
   ok("names_field_count", fc.tableState === TABLE_STATE.field_count_mismatch || fc.tableState === TABLE_STATE.missing_required_field, fc.tableState);
-  const fc2 = classifyHeaderMismatchState(hdr, ["A", "B", "C", "D", "E", "F"], null);
-  ok("names_field_count_strict", fc2 === TABLE_STATE.field_count_mismatch, fc2);
-  const fo = matchSp08001Header("NAMES", ["CID", "NID", "LID", "NAME", "NCOMMENT"]);
+  const fc2 = classifyHeaderMismatchState(hdr, ["A", "B", "C", "D", "E", "F", "G"], null);
+  ok(
+    "names_field_count_strict",
+    fc2 === TABLE_STATE.field_count_mismatch || fc2 === TABLE_STATE.missing_required_field,
+    fc2
+  );
+  const fo = matchSp08001Header("NAMES", ["CID", "NID", "LID", "NAME", "NCOMMENT", "OFFICIALNAME"]);
   ok("names_field_order", fo.tableState === TABLE_STATE.field_order_mismatch, fo.tableState);
-  const miss = matchSp08001Header("NAMES", ["CID", "LID", "NID", "NAME", "EXTRA"]);
+  const miss = matchSp08001Header("NAMES", ["CID", "LID", "NID", "NAME", "EXTRA", "OFFICIALNAME"]);
   ok("names_missing_required_field", miss.tableState === TABLE_STATE.missing_required_field, miss.tableState);
   const unexp = classifyHeaderMismatchState(hdr, [...hdr, "EXTRA"], null);
   ok("names_unexpected_field", unexp === TABLE_STATE.unexpected_field, unexp);
@@ -303,6 +321,58 @@ function fullStandardEntries(overrides = {}) {
     { byteLength: 20, buf: Buffer.from("x") }
   );
   ok("dlr_desc_empty_policy", dlrDescEmpty.tableState === TABLE_STATE.schema_verified_empty, dlrDescEmpty.tableState);
+  const junctionsEmpty = assessSp08001ContentContract(
+    "JUNCTIONS",
+    {
+      hasHeader: true,
+      headerCodes: getSp08001Table("JUNCTIONS").headerCodes,
+      firstDataFieldCount: 0,
+      dataRowCount: 0,
+      delimiter: "semicolon",
+      encodingCandidate: "UTF-8",
+    },
+    { byteLength: 40, buf: Buffer.from("x") }
+  );
+  ok("junctions_empty_policy", junctionsEmpty.tableState === TABLE_STATE.schema_verified_empty, junctionsEmpty.tableState);
+  const euroEmpty = assessSp08001ContentContract(
+    "EUROROADNO",
+    {
+      hasHeader: true,
+      headerCodes: getSp08001Table("EUROROADNO").headerCodes,
+      firstDataFieldCount: 0,
+      dataRowCount: 0,
+      delimiter: "semicolon",
+      encodingCandidate: "UTF-8",
+    },
+    { byteLength: 20, buf: Buffer.from("x") }
+  );
+  ok("euroroadno_empty_policy", euroEmpty.tableState === TABLE_STATE.schema_verified_empty, euroEmpty.tableState);
+  const otherEmpty = assessSp08001ContentContract(
+    "OTHERAREAS",
+    {
+      hasHeader: true,
+      headerCodes: getSp08001Table("OTHERAREAS").headerCodes,
+      firstDataFieldCount: 0,
+      dataRowCount: 0,
+      delimiter: "semicolon",
+      encodingCandidate: "UTF-8",
+    },
+    { byteLength: 40, buf: Buffer.from("x") }
+  );
+  ok("otherareas_empty_policy", otherEmpty.tableState === TABLE_STATE.schema_verified_empty, otherEmpty.tableState);
+  const rnltEmpty = assessSp08001ContentContract(
+    "ROAD_NETWORK_LEVEL_TYPES",
+    {
+      hasHeader: true,
+      headerCodes: getSp08001Table("ROAD_NETWORK_LEVEL_TYPES").headerCodes,
+      firstDataFieldCount: 0,
+      dataRowCount: 0,
+      delimiter: "semicolon",
+      encodingCandidate: "UTF-8",
+    },
+    { byteLength: 20, buf: Buffer.from("x") }
+  );
+  ok("rnlt_empty_still_blocks", rnltEmpty.tableState === TABLE_STATE.no_limited_data_row, rnltEmpty.tableState);
   const pointsHeaderOnly = assessSp08001ContentContract(
     "POINTS",
     {
@@ -316,6 +386,24 @@ function fullStandardEntries(overrides = {}) {
     { byteLength: 40, buf: Buffer.from("x") }
   );
   ok("header_only_not_allowed", pointsHeaderOnly.tableState === TABLE_STATE.no_limited_data_row, pointsHeaderOnly.tableState);
+  // Bad empty: wrong header on allowed-empty table must not become schema_verified_empty
+  const badEmpty = assessSp08001ContentContract(
+    "JUNCTIONS",
+    {
+      hasHeader: true,
+      headerCodes: ["CID", "TABCD", "LCD", "EXTRA", "JUNC_TABCD", "JUNC_LCD"],
+      firstDataFieldCount: 0,
+      dataRowCount: 0,
+      delimiter: "semicolon",
+      encodingCandidate: "UTF-8",
+    },
+    { byteLength: 40, buf: Buffer.from("x") }
+  );
+  ok(
+    "bad_empty_not_verified",
+    badEmpty.tableState !== TABLE_STATE.schema_verified_empty && badEmpty.headerContractMatch !== true,
+    badEmpty.tableState
+  );
 }
 
 // README encoding fixtures
@@ -325,8 +413,24 @@ function fullStandardEntries(overrides = {}) {
   ok("dat_src_readme", mapped.datEncodingSource === DAT_ENCODING_SOURCE.readme_declared, mapped.datEncodingSource);
   const def = parseReadmeDatStructural(Buffer.from("1\r\n01/01/2020\r\n01/01/2021\r\nPub\r\n\r\n2\r\n6\r\n", "ascii"));
   ok("readme_default", def.readmeParseState === README_PARSE_STATE.mapped_default_encoding, def.readmeParseState);
+  ok("readme_default_src", def.datEncodingSource === DAT_ENCODING_SOURCE.sp08001_default, def.datEncodingSource);
   const inv = parseReadmeDatStructural(Buffer.from("1\r\n01/01/2020\r\n01/01/2021\r\nPub\r\nNOT_AN_ENC\r\n2\r\n6\r\n", "ascii"));
   ok("readme_invalid", inv.readmeParseState === README_PARSE_STATE.mapped_invalid_encoding, inv.readmeParseState);
+  const bom = parseReadmeDatStructural(
+    Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from("1\r\n01/01/2020\r\n01/01/2021\r\nPub\r\nUTF-8\r\n2\r\n6\r\n", "ascii")])
+  );
+  ok("readme_bom_utf8_ascii_body", bom.readmeParseState === README_PARSE_STATE.mapped_and_parsed && bom.readmeBomPresent === true, bom.readmeParseState);
+  ok("readme_bom_src", bom.datEncodingSource === DAT_ENCODING_SOURCE.readme_declared, bom.datEncodingSource);
+  const leadingBlank = parseReadmeDatStructural(
+    Buffer.from("\r\n\r\n1\r\n01/01/2020\r\n01/01/2021\r\nPub\r\nISO-8859-15\r\n2\r\n6\r\n", "ascii")
+  );
+  ok("readme_leading_blank_ok", leadingBlank.readmeParseState === README_PARSE_STATE.mapped_and_parsed, leadingBlank.readmeParseState);
+  ok("readme_leading_blank_enc", leadingBlank.declaredEncodingNormalized === "ISO-8859-15", leadingBlank.declaredEncodingNormalized);
+  const short = parseReadmeDatStructural(Buffer.from("1\r\nonly\r\nthree\r\n", "ascii"));
+  ok("readme_structural_short", short.readmeParseState === README_PARSE_STATE.structural_mismatch, short.readmeParseState);
+  ok("readme_structural_default_src", short.datEncodingSource === DAT_ENCODING_SOURCE.sp08001_default, short.datEncodingSource);
+  const nonAscii = parseReadmeDatStructural(Buffer.from("1\r\n01/01/2020\r\n01/01/2021\r\nPüb\r\nUTF-8\r\n2\r\n6\r\n", "utf8"));
+  ok("readme_non_ascii_decode_error", nonAscii.readmeParseState === README_PARSE_STATE.decode_error, nonAscii.readmeParseState);
   const report = inspectFormatFromEntryPeeks([
     readmeEntry("UTF-8"),
     { role: "encoding_cpg", ext: "cpg", buf: Buffer.from("Windows-1250") },
@@ -336,6 +440,23 @@ function fullStandardEntries(overrides = {}) {
   ok("false_dat_conflict_fixed", report.encodingFalseConflictAvoided === true, "efc");
   ok("companion_ignored_count", (report.companionEncodingIgnoredForDatCount || 0) >= 1, String(report.companionEncodingIgnoredForDatCount));
   ok("readme_mapped_count", (report.readmeMappedCount || 0) === 1, String(report.readmeMappedCount));
+  ok("readme_dat_src_declared", report.datEncodingSource === DAT_ENCODING_SOURCE.readme_declared, report.datEncodingSource);
+  // structural README must not be mislabeled as readme_declared
+  const structuralReport = inspectFormatFromEntryPeeks([
+    { role: "metadata", tableCode: "README", ext: "dat", buf: Buffer.from("1\r\nshort\r\n", "ascii") },
+    ...fullStandardEntries({ preferEmptyAllowed: true }).filter((e) => e.tableCode !== "README"),
+  ]);
+  ok("readme_structural_blocks", structuralReport.formatConfirmed === false, "fc");
+  ok(
+    "readme_structural_blocker",
+    (structuralReport.promotionBlockers || []).includes("readme_encoding"),
+    JSON.stringify(structuralReport.promotionBlockers)
+  );
+  ok(
+    "readme_structural_src_not_false_declared",
+    structuralReport.datEncodingSource === DAT_ENCODING_SOURCE.sp08001_default,
+    structuralReport.datEncodingSource
+  );
 }
 
 // Relationship NOT_TESTED / UNVERIFIED does not block
@@ -572,15 +693,62 @@ function fullStandardEntries(overrides = {}) {
   }
 }
 
-// Redaction: tableAssessments only safe fields
+// Redaction: tableAssessments only safe fields (counts/enums — never field names/values)
 {
   const report = inspectFormatFromEntryPeeks(fullStandardEntries({ preferEmptyAllowed: true }));
   const a0 = (report.tableAssessments || [])[0];
-  const keys = Object.keys(a0 || {}).sort().join(",");
+  const keys = Object.keys(a0 || {});
+  const allowed = new Set([
+    "candidateCount",
+    "headerMatched",
+    "limitedContentVerified",
+    "schemaVerified",
+    "state",
+    "tableCode",
+    "expectedFieldCount",
+    "actualFieldCount",
+    "unexpectedFieldCount",
+    "missingRequiredFieldCount",
+    "filePresenceClass",
+  ]);
   ok(
     "redaction_table_keys",
-    keys === "candidateCount,headerMatched,limitedContentVerified,schemaVerified,state,tableCode",
-    keys
+    keys.length > 0 && keys.every((k) => allowed.has(k)),
+    keys.sort().join(",")
+  );
+  ok("no_raw_header_in_assessment", !keys.includes("headerCodes") && !keys.includes("header"), "hdr");
+}
+
+// Full synthetic PASS + unknown/extra field FAIL-CLOSED
+{
+  const pass = inspectFormatFromEntryPeeks(fullStandardEntries({ preferEmptyAllowed: true }));
+  ok("synthetic_format_confirmed_pass", pass.formatConfirmed === true, JSON.stringify(pass.promotionBlockers));
+  ok("synthetic_outcome_success", pass.inspectionOutcome === INSPECTION_OUTCOME.SUCCESS, pass.inspectionOutcome);
+  const passSer = serializeInspectionReport(pass);
+  const passObj = passSer.object || JSON.parse(passSer.json);
+  ok(
+    "synthetic_report_safety",
+    passSer.truncated === false &&
+      (passObj.reportSafety === REPORT_SAFETY.PASSED || passObj.reportSafety === "passed"),
+    String(passObj.reportSafety)
+  );
+  const badNames = fullStandardEntries({ preferEmptyAllowed: true }).map((e) => {
+    if (e.tableCode !== "NAMES") return e;
+    const hdr = [...getSp08001Table("NAMES").headerCodes, "EXTRA"];
+    const row = [...syntheticSp08001Row("NAMES"), "X"];
+    return {
+      ...e,
+      buf: Buffer.from(hdr.join(";") + "\r\n" + row.join(";") + "\r\n", "utf8"),
+    };
+  });
+  const fail = inspectFormatFromEntryPeeks(badNames);
+  ok("unexpected_field_fail_closed", fail.formatConfirmed === false, "fc");
+  const names = (fail.tableAssessments || []).find((a) => a.tableCode === "NAMES");
+  ok("unexpected_field_state", names && names.state === TABLE_STATE.unexpected_field, JSON.stringify(names));
+  ok(
+    "unexpected_field_count_diag",
+    names && typeof names.unexpectedFieldCount === "number" && names.unexpectedFieldCount >= 1,
+    JSON.stringify(names)
   );
 }
 

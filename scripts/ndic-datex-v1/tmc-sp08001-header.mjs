@@ -198,57 +198,79 @@ export function classifyDatFilePresence(buf, peek = {}) {
 
 /**
  * Parse README.DAT metadata structurally (ASCII). Never returns publisher/raw values.
+ * Tolerates UTF-8 BOM before an otherwise ASCII body (SP08001 bomRule = UNDEFINED).
+ * Meta fields are taken from non-empty lines in Table 4-3 order; blank lines ignored.
+ * Never replaces undecodable bytes — non-ASCII body ⇒ decode_error (fail-closed).
  * @param {Buffer} buf
  */
 export function parseReadmeDatStructural(buf) {
-  const b = Buffer.isBuffer(buf) ? buf : Buffer.alloc(0);
-  if (!b.length) {
+  const raw = Buffer.isBuffer(buf) ? buf : Buffer.alloc(0);
+  if (!raw.length) {
     return {
       readmeParseState: README_PARSE_STATE.missing_fail_closed,
       datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
       declaredEncodingNormalized: null,
       readmeMapped: false,
+      readmeBomPresent: false,
+      readmeNonEmptyLineCount: 0,
+      readmeMetaFieldObservedCount: 0,
     };
   }
-  let text;
-  try {
-    // README must be ASCII per SP08001; reject non-ASCII bytes for decode_error.
-    for (let i = 0; i < Math.min(b.length, 4096); i++) {
-      if (b[i] > 0x7f) {
-        return {
-          readmeParseState: README_PARSE_STATE.decode_error,
-          datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
-          declaredEncodingNormalized: null,
-          readmeMapped: true,
-        };
-      }
+  let bomPresent = false;
+  let b = raw;
+  if (b.length >= 3 && b[0] === 0xef && b[1] === 0xbb && b[2] === 0xbf) {
+    bomPresent = true;
+    b = b.subarray(3);
+  }
+  // README must be ASCII per SP08001; reject non-ASCII bytes for decode_error.
+  // Do not use replacement decoding — any byte > 0x7f is fail-closed.
+  for (let i = 0; i < Math.min(b.length, 8192); i++) {
+    if (b[i] > 0x7f) {
+      return {
+        readmeParseState: README_PARSE_STATE.decode_error,
+        datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
+        declaredEncodingNormalized: null,
+        readmeMapped: true,
+        readmeBomPresent: bomPresent,
+        readmeNonEmptyLineCount: 0,
+        readmeMetaFieldObservedCount: 0,
+      };
     }
-    text = b.toString("ascii");
-  } catch {
-    return {
-      readmeParseState: README_PARSE_STATE.decode_error,
-      datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
-      declaredEncodingNormalized: null,
-      readmeMapped: true,
-    };
   }
+  const text = b.toString("ascii");
   const lines = text.split(/\r?\n/).map((l) => l.replace(/\r$/, ""));
-  // Required meta fields: 7 lines (alert…exchangeFormatMinor). characterEncoding is line index 4.
-  if (lines.filter((l) => l.length > 0).length < 5) {
+  const nonEmptyCount = lines.filter((l) => String(l || "").trim().length > 0).length;
+  // Skip leading blank lines, then read Table 4-3 meta as 7 consecutive slots
+  // (empty characterEncoding slot at index 4 remains distinguishable → SP08001 default).
+  let start = 0;
+  while (start < lines.length && String(lines[start] || "").trim().length === 0) start += 1;
+  const meta = [];
+  for (let i = 0; i < 7; i++) {
+    meta.push(start + i < lines.length ? String(lines[start + i] || "") : "");
+  }
+  // Need alert..encoding window present; fewer than 5 non-empty lines overall ⇒ structural_mismatch.
+  if (nonEmptyCount < 5 || start >= lines.length) {
     return {
       readmeParseState: README_PARSE_STATE.structural_mismatch,
       datEncodingSource: DAT_ENCODING_SOURCE.sp08001_default,
       declaredEncodingNormalized: null,
       readmeMapped: true,
+      readmeBomPresent: bomPresent,
+      readmeNonEmptyLineCount: nonEmptyCount,
+      readmeMetaFieldObservedCount: meta.filter((l) => String(l || "").trim().length > 0).length,
     };
   }
-  const encRaw = String(lines[4] || "").trim();
+  const encRaw = String(meta[4] || "").trim();
+  const metaObserved = meta.filter((l) => String(l || "").trim().length > 0).length;
   if (!encRaw) {
     return {
       readmeParseState: README_PARSE_STATE.mapped_default_encoding,
       datEncodingSource: DAT_ENCODING_SOURCE.sp08001_default,
       declaredEncodingNormalized: SP08001_PHYSICAL.defaultEncoding,
       readmeMapped: true,
+      readmeBomPresent: bomPresent,
+      readmeNonEmptyLineCount: nonEmptyCount,
+      readmeMetaFieldObservedCount: metaObserved,
     };
   }
   const enc = normalizeSp08001EncodingToken(encRaw);
@@ -258,6 +280,9 @@ export function parseReadmeDatStructural(buf) {
       datEncodingSource: DAT_ENCODING_SOURCE.unresolved,
       declaredEncodingNormalized: null,
       readmeMapped: true,
+      readmeBomPresent: bomPresent,
+      readmeNonEmptyLineCount: nonEmptyCount,
+      readmeMetaFieldObservedCount: metaObserved,
     };
   }
   return {
@@ -265,6 +290,9 @@ export function parseReadmeDatStructural(buf) {
     datEncodingSource: DAT_ENCODING_SOURCE.readme_declared,
     declaredEncodingNormalized: enc,
     readmeMapped: true,
+    readmeBomPresent: bomPresent,
+    readmeNonEmptyLineCount: nonEmptyCount,
+    readmeMetaFieldObservedCount: metaObserved,
   };
 }
 
@@ -493,16 +521,31 @@ export function resolveEncodingLayers(layers) {
   if (datEncoding === "CONFLICT" && layerStatus[ENCODING_LAYER.DAT_DECLARED] === "UTF-8") {
     datEncoding = "UTF-8";
   }
+  // Prefer explicit source tags from layer items (readme_declared vs sp08001_default).
+  // Never label a SP08001 default fallback as readme_declared.
+  let declaredSourceTag = null;
+  for (const item of layers || []) {
+    if (item.layer !== ENCODING_LAYER.DAT_DECLARED) continue;
+    if (item.source === "readme_declared" || item.source === "sp08001_default") {
+      declaredSourceTag = item.source;
+      break;
+    }
+  }
+  const datEncodingSource =
+    declaredSourceTag === "readme_declared"
+      ? "readme_declared"
+      : declaredSourceTag === "sp08001_default"
+        ? "sp08001_default"
+        : layerStatus[ENCODING_LAYER.DAT_DECLARED] &&
+            layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "ABSENT" &&
+            layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "CONFLICT"
+          ? "readme_declared"
+          : datEncoding !== "UNKNOWN" && datEncoding !== "CONFLICT" && datEncoding !== "UNVERIFIED"
+            ? "sp08001_default"
+            : "unresolved";
   return {
     datEncoding,
-    datEncodingSource:
-      layerStatus[ENCODING_LAYER.DAT_DECLARED] &&
-      layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "ABSENT" &&
-      layerStatus[ENCODING_LAYER.DAT_DECLARED] !== "CONFLICT"
-        ? "readme_declared"
-        : datEncoding !== "UNKNOWN" && datEncoding !== "CONFLICT" && datEncoding !== "UNVERIFIED"
-          ? "sp08001_default"
-          : "unresolved",
+    datEncodingSource,
     cpgEncoding: layerStatus[ENCODING_LAYER.CPG_SHP_DBF],
     layerStatus,
     companionEncodingIgnoredForDatCount:
@@ -601,9 +644,18 @@ export function syntheticSp08001Row(tableCode, overrides = {}) {
     else if (c === "CLASS") base[c] = "P";
     else if (c === "XCOORD") base[c] = "+09999999";
     else if (c === "YCOORD") base[c] = "+9999999";
-    else if (c === "NAME" || c === "CNAME" || c === "DCOMMENT" || c === "VERSIONDESCRIPTION" || c === "NCOMMENT")
+    else if (
+      c === "NAME" ||
+      c === "CNAME" ||
+      c === "DCOMMENT" ||
+      c === "VERSIONDESCRIPTION" ||
+      c === "NCOMMENT" ||
+      c === "NTRANSLATION" ||
+      c === "LANGUAGE"
+    )
       base[c] = "X";
     else if (c === "VERSION") base[c] = "1";
+    else if (c === "REPRESENTATION" || c === "OFFICIALNAME") base[c] = "";
     else if (c.endsWith("ID") || c.endsWith("LCD") || c === "LID" || c === "NID" || c === "TCD" || c === "STCD")
       base[c] = "1";
     else if (c === "ECC") base[c] = "E";

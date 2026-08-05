@@ -158,7 +158,7 @@ ok(
   "cid"
 );
 
-const namesBuf = buildSyntheticSp08001Dat("NAMES", [["11", "1", "1", "Zkusebni Lhota", ""]]);
+const namesBuf = buildSyntheticSp08001Dat("NAMES", [["11", "1", "1", "SyntheticName", "", ""]]);
 ok(
   "names_verified",
   assessSp08001ContentContract("NAMES", inspectTextPeek(namesBuf)).contentVerified === true,

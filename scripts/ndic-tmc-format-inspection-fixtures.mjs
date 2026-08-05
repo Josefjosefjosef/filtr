@@ -593,8 +593,8 @@ function shpHeaderSynthetic(opts = {}) {
   ok("geo_auth_unverified", geo.authoritativeFormatVerified === false, "av");
 
   const namesLang = inspectFormatFromEntryPeeks([
-    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "1", "Zkusebni Lhota", ""]]) },
-    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "2", "Synteticka silnice", ""]]) },
+    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "1", "SyntheticNameA", "", ""]]) },
+    { role: "names", tableCode: "NAMES", ext: "dat", buf: buildSyntheticSp08001Dat("NAMES", [["11", "1", "2", "SyntheticNameB", "", ""]]) },
   ]);
   // Two content-verified NAMES → conflict
   ok("names_conflict_or_warn", namesLang.rejectCode === INSPECTION_REJECT.DUPLICATE_REQUIRED_ROLE || namesLang.multipleCandidateRoleCount >= 1, "nl");

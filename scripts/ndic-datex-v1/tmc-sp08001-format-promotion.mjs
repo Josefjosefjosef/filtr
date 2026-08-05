@@ -12,7 +12,7 @@ import {
   getSp08001Table,
 } from "./tmc-sp08001-contract.mjs";
 
-export const PROMOTION_POLICY_VERSION = "sp08001-v2.6-table4-2-complete-schema-1";
+export const PROMOTION_POLICY_VERSION = "sp08001-v2.6-table4-2-complete-schema-2";
 
 export const FORMAT_CONTRACT_STATE = Object.freeze({
   FORMAT_CONTRACT_CONFIRMED: "FORMAT_CONTRACT_CONFIRMED",
@@ -83,9 +83,12 @@ export const FILE_PRESENCE_CLASS = Object.freeze({
 });
 
 /**
- * SP08001 §§4.4.5–4.4.6 and optional translation/euroroad link tables may have
- * zero data rows while still exporting the schema header (HEADER_ONLY → schema_verified_empty).
+ * SP08001 §§4.4.5–4.4.6 and tables that may legitimately export HEADER_ONLY
+ * (zero data rows) while still exporting the full schema header
+ * (HEADER_ONLY → schema_verified_empty).
  * Absence of the whole export file is NOT allowed (Table 4-2 complete schema).
+ * ROAD_NETWORK_LEVEL_TYPES stays excluded: ROADS.PES_LEV is mandatory, so an
+ * empty levels table would weaken relationship evidence (keep fail-closed).
  */
 export const ALLOWED_EMPTY_TABLES = Object.freeze([
   "DLRS", // SP08001 §4.4.6 — diversion may have zero data rows
@@ -94,6 +97,9 @@ export const ALLOWED_EMPTY_TABLES = Object.freeze([
   "SUBTYPETRANSLATION", // SP08001 Table 4-2 — optional translation rows
   "ERNO_BELONGS_TO_CO", // SP08001 Table 4-2 — may have zero Euroroad country links
   "SEG_HAS_ERNO", // SP08001 Table 4-2 — may have zero Euroroad segment links
+  "EUROROADNO", // SP08001 §4.4.8 — European road numbers used in dataset (zero used ⇒ zero rows)
+  "JUNCTIONS", // SP08001 §4.4.10 — only for P5.8 Isolated parking POIs; otherwise HEADER_ONLY
+  "OTHERAREAS", // SP08001 §4.4.16 — other areas present in dataset (none ⇒ zero rows)
 ]);
 
 /** @deprecated alias — empty-row policy only; never means missing file */
