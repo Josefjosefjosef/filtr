@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-05T15:18:20.441Z",
-    "lastSuccessAt": "2026-08-05T15:18:23.904Z",
-    "lastChangedAt": "2026-08-05T15:06:36.991Z",
+    "lastRunAt": "2026-08-05T15:21:59.882Z",
+    "lastSuccessAt": "2026-08-05T15:22:04.102Z",
+    "lastChangedAt": "2026-08-05T15:22:03.303Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a735138-1ec7d6\"",
-    "lastModified": "Wed, 05 Aug 2026 15:05:28 GMT",
+    "etag": "\"6a7354bf-1ec847\"",
+    "lastModified": "Wed, 05 Aug 2026 15:20:31 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 15,
@@ -433,11 +433,11 @@
     "totalItems": 20,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 42,
       "logicalAlerts": 19,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -484,34 +484,34 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-08-05T17:04:49+02:00",
+    "lastCapSent": "2026-08-05T17:19:50+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7004,
+    "runMs": 7966,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-05T15:18:20.441Z",
+    "lastSnapshotAt": "2026-08-05T15:21:59.882Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-08-05T15:06:33.523Z",
-      "officialLatestSentAt": "2026-08-05T17:04:49+02:00",
+      "officialFirstSeenAt": "2026-08-05T15:21:59.882Z",
+      "officialLatestSentAt": "2026-08-05T17:19:50+02:00",
       "officialLatestValidFrom": "2026-08-06T05:00:00+02:00",
-      "discoveredAt": "2026-08-05T15:18:20.441Z",
-      "fetchedAt": "2026-08-05T15:18:20.441Z",
-      "transformedAt": "2026-08-05T15:18:27.445Z",
-      "validatedAt": "2026-08-05T15:18:27.445Z",
-      "publishedAt": "2026-08-05T15:18:20.441Z",
-      "endToEndLagMs": 104523
+      "discoveredAt": "2026-08-05T15:21:59.882Z",
+      "fetchedAt": "2026-08-05T15:21:59.882Z",
+      "transformedAt": "2026-08-05T15:22:07.848Z",
+      "validatedAt": "2026-08-05T15:22:07.848Z",
+      "publishedAt": "2026-08-05T15:21:59.882Z",
+      "endToEndLagMs": 129882
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051504.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051519.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_041200.xml",
@@ -525,8 +525,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 42,
           "logicalAlerts": 19,
           "uniqueEvents": [
             "Vysoké teploty",
@@ -561,9 +561,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-08-05T15:21:59.882Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7966,
+        "error": null,
+        "activeCount": 15,
+        "scheduledCount": 5,
+        "publishableCount": 19
+      },
       {
         "at": "2026-08-05T15:18:20.441Z",
         "status": "not_modified",
@@ -1076,17 +1100,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7263,
-        "error": null,
-        "activeCount": 14,
-        "scheduledCount": 5,
-        "publishableCount": 20
-      },
-      {
-        "at": "2026-08-05T12:13:48.130Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6197,
         "error": null,
         "activeCount": 14,
         "scheduledCount": 5,

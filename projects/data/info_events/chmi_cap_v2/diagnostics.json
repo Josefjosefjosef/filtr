@@ -1,6 +1,6 @@
 {
-  "runId": "e6493cbe3489a5c2",
-  "started": "2026-08-05T15:18:20.441Z",
+  "runId": "ca50951782877ccd",
+  "started": "2026-08-05T15:21:59.882Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,11 +16,11 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051504.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051519.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_041200.xml",
@@ -30,13 +30,26 @@
       "cacheHit": true
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 1,
+    "valid": 1,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 1,
+    "status": "healthy",
+    "alert": 0,
+    "update": 1,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 42,
       "logicalAlerts": 19,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -71,7 +84,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
   "onsetSplit": {
     "before": 20,
@@ -98,7 +111,6 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_141200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_211200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011534.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011552.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011641.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011813.xml",
@@ -114,10 +126,11 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_041555.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050900.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051351.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051504.xml"
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051504.xml",
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051519.xml"
       ],
       "recentCount": 32,
-      "refCount": 0,
+      "refCount": 2,
       "window": 16
     },
     "chainSteps": [
@@ -210,12 +223,6 @@
         "msgType": "Update",
         "openEndedCount": 3,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_281200.xml"
-      },
-      {
-        "sent": "2026-08-01T17:34:16+02:00",
-        "msgType": "Update",
-        "openEndedCount": 7,
-        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_011534.xml"
       },
       {
         "sent": "2026-08-01T17:52:40+02:00",
@@ -312,6 +319,12 @@
         "msgType": "Update",
         "openEndedCount": 3,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051504.xml"
+      },
+      {
+        "sent": "2026-08-05T17:19:50+02:00",
+        "msgType": "Update",
+        "openEndedCount": 3,
+        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_051519.xml"
       }
     ],
     "fixtureSeed": false,
@@ -328,8 +341,8 @@
     "visibleCount": 19
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
+    "capMessages": 1,
+    "infoBlocks": 42,
     "logicalAlerts": 19,
     "uniqueEvents": [
       "Vysoké teploty",
@@ -374,6 +387,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-05T15:18:27.445Z",
-  "runMs": 7004
+  "finished": "2026-08-05T15:22:07.849Z",
+  "runMs": 7967
 }
