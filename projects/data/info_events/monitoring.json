@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-05T02:18:58.660Z",
-    "lastSuccessAt": "2026-08-05T02:19:02.589Z",
+    "lastRunAt": "2026-08-05T02:35:08.648Z",
+    "lastSuccessAt": "2026-08-05T02:35:12.567Z",
     "lastChangedAt": "2026-08-04T16:21:34.935Z",
     "lastError": null,
     "status": "not_modified",
@@ -488,19 +488,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7485,
+    "runMs": 7406,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-05T02:18:58.660Z",
+    "lastSnapshotAt": "2026-08-05T02:35:08.648Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-04T16:21:31.621Z",
       "officialLatestSentAt": "2026-08-04T17:55:56+02:00",
       "officialLatestValidFrom": "2026-08-06T00:00:00+02:00",
-      "discoveredAt": "2026-08-05T02:18:58.660Z",
-      "fetchedAt": "2026-08-05T02:18:58.660Z",
-      "transformedAt": "2026-08-05T02:19:06.145Z",
-      "validatedAt": "2026-08-05T02:19:06.145Z",
-      "publishedAt": "2026-08-05T02:18:58.660Z",
+      "discoveredAt": "2026-08-05T02:35:08.648Z",
+      "fetchedAt": "2026-08-05T02:35:08.648Z",
+      "transformedAt": "2026-08-05T02:35:16.055Z",
+      "validatedAt": "2026-08-05T02:35:16.055Z",
+      "publishedAt": "2026-08-05T02:35:08.648Z",
       "endToEndLagMs": 1535621
     },
     "audit": {
@@ -562,6 +562,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-05T02:35:08.648Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7406,
+        "error": null,
+        "activeCount": 17,
+        "scheduledCount": 3,
+        "publishableCount": 21
+      },
       {
         "at": "2026-08-05T02:18:58.660Z",
         "status": "not_modified",
@@ -1078,17 +1089,6 @@
         "activeCount": 24,
         "scheduledCount": 9,
         "publishableCount": 34
-      },
-      {
-        "at": "2026-08-04T16:57:04.787Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5550,
-        "error": null,
-        "activeCount": 23,
-        "scheduledCount": 12,
-        "publishableCount": 36
       }
     ]
   }
