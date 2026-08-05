@@ -3,11 +3,12 @@
 
 /**
  * Silver home prefix first-tap guards (mobile + tablet):
- *  - FAST: normal production path — engine prefetched, reaction ≤ 250ms
- *  - STRESS: delayed engine — functional first-tap + robust in-page timing
+ *  - FAST: cold-open production path — engine prefetched, reaction ≤ 250ms
+ *  - STRESS: delayed engine — functional first-tap + fixed 5-sample true median
  *  - SCENARIOS: reload, history, visibility, bfcache/pageshow, SW, PWA-like, race
  *  - SELFTEST: negative functional / systematic-slowness probes (proves guard bite)
  *
+ * Timing: browser performance.now() click→value (not pointerdown→Playwright IPC).
  * Run: node scripts/silver-home-prefix-first-tap-guard-v1.cjs
  */
 
@@ -30,6 +31,7 @@ const {
   prepareContext,
   dismissOverlays,
   installEngineDelay,
+  installEngineGate,
   waitForPrefixVisible,
   resetTemplateMode,
   engineReady,
@@ -38,6 +40,7 @@ const {
   readCounters,
   firstTapPrefixMeasured,
   timingStats,
+  evaluateStressSamples,
 } = require("./silver-home-prefix-first-tap-shared.cjs");
 
 const ARTIFACT_DIR =
@@ -91,10 +94,13 @@ async function openFresh(browser, viewport, url, opts) {
     });
   }
   const page = await context.newPage();
-  if (opts && opts.engineDelayMs) {
+  let releaseEngineGate = null;
+  if (opts && opts.engineGate) {
+    releaseEngineGate = await installEngineGate(page);
+  } else if (opts && opts.engineDelayMs) {
     await installEngineDelay(page, opts.engineDelayMs);
   }
-  return { context, page };
+  return { context, page, releaseEngineGate };
 }
 
 async function runFastCase(browser, viewport, prefix, url) {
@@ -150,8 +156,8 @@ async function saveStressArtifact(page, result, tag) {
 }
 
 /**
- * One cold stress sample: Playwright pointer click (exercises capture listeners)
- * with in-page pointerdown→value timing (avoids IPC inflation that flaked at 282–294ms).
+ * One cold stress sample: engine gated until after first tap + in-page click→value timing
+ * (performance.now in browser context; excludes Playwright IPC / Node scheduling).
  */
 async function runStressSample(browser, viewport, prefix, url, hooks) {
   const h = hooks || {};
@@ -167,9 +173,9 @@ async function runStressSample(browser, viewport, prefix, url, hooks) {
     optimisticCount: null,
     finalizeCount: null,
   };
-  const { context, page } = await openFresh(browser, viewport, url, {
+  const { context, page, releaseEngineGate } = await openFresh(browser, viewport, url, {
     disableSw: true,
-    engineDelayMs: STRESS_ENGINE_DELAY_MS,
+    engineGate: true,
   });
   try {
     if (typeof h.initScript === "function") {
@@ -195,6 +201,12 @@ async function runStressSample(browser, viewport, prefix, url, hooks) {
     sample.value = tap.value;
     sample.countersAfter = tap.countersAfter;
 
+    if (tap.readyAtClick) {
+      sample.contractFail = "functional";
+      sample.detail = "engine_ready_at_click";
+      await saveStressArtifact(page, sample, "ready-at-click");
+      return sample;
+    }
     if (!tap.ok || tap.value !== prefix.expected) {
       sample.contractFail = "functional";
       sample.detail = "stress_optimistic_ui_missing";
@@ -209,6 +221,7 @@ async function runStressSample(browser, viewport, prefix, url, hooks) {
       return sample;
     }
 
+    if (typeof releaseEngineGate === "function") releaseEngineGate();
     await waitEngineReady(page, STRESS_FINAL_MAX_MS);
     await page.waitForTimeout(80);
     const finalValue = await readInputValue(page);
@@ -243,6 +256,9 @@ async function runStressSample(browser, viewport, prefix, url, hooks) {
     sample.detail = String(err && err.message ? err.message : err);
     return sample;
   } finally {
+    try {
+      if (typeof releaseEngineGate === "function") releaseEngineGate();
+    } catch (_) {}
     await context.close();
   }
 }
@@ -259,11 +275,12 @@ async function runStressCase(browser, viewport, prefix, url) {
     expected: prefix.expected,
     softLimitMs: STRESS_OPTIMISTIC_SOFT_MS,
     hardLimitMs: STRESS_OPTIMISTIC_HARD_MS,
-    metric: "in_page_pointerdown_to_value",
+    metric: "in_page_click_to_value",
   };
 
   const times = [];
   let last = null;
+  /* Fixed odd sample count — never early-exit based on interim results. */
   for (let i = 0; i < STRESS_TIMING_SAMPLES_MAX; i++) {
     last = await runStressSample(browser, viewport, prefix, url, {});
     if (!last.functionalOk) {
@@ -280,11 +297,10 @@ async function runStressCase(browser, viewport, prefix, url) {
       return fail(result, last.detail || "stress_functional_fail");
     }
     times.push(last.performanceMs);
-    /* Fast path: first cold sample already under soft limit — no need for more. */
-    if (last.performanceMs <= STRESS_OPTIMISTIC_SOFT_MS) break;
   }
 
-  const timing = timingStats(times);
+  const evaln = evaluateStressSamples(times, STRESS_OPTIMISTIC_SOFT_MS, STRESS_OPTIMISTIC_HARD_MS);
+  const timing = evaln.timing || timingStats(times);
   result.timing = timing;
   result.optimisticReactionMs = timing.median;
   result.readyBefore = last && last.readyBefore;
@@ -294,7 +310,7 @@ async function runStressCase(browser, viewport, prefix, url) {
   result.optimisticCount = last && last.optimisticCount;
   result.finalizeCount = last && last.finalizeCount;
 
-  if (timing.max != null && timing.max > STRESS_OPTIMISTIC_HARD_MS) {
+  if (!evaln.pass && evaln.contract === "performance_hard") {
     result.contract = "performance";
     return fail(
       result,
@@ -310,7 +326,7 @@ async function runStressCase(browser, viewport, prefix, url) {
         JSON.stringify(timing.samples)
     );
   }
-  if (timing.median != null && timing.median > STRESS_OPTIMISTIC_SOFT_MS) {
+  if (!evaln.pass && evaln.contract === "performance_soft") {
     result.contract = "performance";
     return fail(
       result,
@@ -325,6 +341,10 @@ async function runStressCase(browser, viewport, prefix, url) {
         "_samples_" +
         JSON.stringify(timing.samples)
     );
+  }
+  if (!evaln.pass) {
+    result.contract = "performance";
+    return fail(result, evaln.detail || "stress_performance_fail");
   }
 
   result.contract = "ok";
@@ -414,13 +434,13 @@ async function runNegativeSelftests(browser, url) {
       (!slowed.functionalOk || slowed.performanceMs > STRESS_OPTIMISTIC_HARD_MS),
   });
 
-  const fakeTiming = timingStats([1200, 1210, 1190]);
+  const fakeEval = evaluateStressSamples([200, 240, 1200, 1210, 1190], STRESS_OPTIMISTIC_SOFT_MS, STRESS_OPTIMISTIC_HARD_MS);
   out.probes.push({
     id: "fabricated_slow_median",
     expect: "performance_fail",
-    timing: fakeTiming,
-    pass:
-      fakeTiming.median > STRESS_OPTIMISTIC_SOFT_MS || fakeTiming.max > STRESS_OPTIMISTIC_HARD_MS,
+    timing: fakeEval.timing,
+    contract: fakeEval.contract,
+    pass: fakeEval.pass === false && (fakeEval.contract === "performance_hard" || fakeEval.contract === "performance_soft"),
   });
 
   out.pass = out.probes.every((p) => p.pass);
@@ -888,7 +908,8 @@ async function main() {
       stressOptimisticHardMs: STRESS_OPTIMISTIC_HARD_MS,
       stressOptimisticMaxMs: STRESS_OPTIMISTIC_MAX_MS,
       stressTimingSamplesMax: STRESS_TIMING_SAMPLES_MAX,
-      stressMetric: "in_page_pointerdown_to_value",
+      stressMetric: "in_page_click_to_value",
+      stressEngineGate: true,
       artifactDir: ARTIFACT_DIR,
       url,
       stressTimingSummary: stressCases.map((c) => ({
