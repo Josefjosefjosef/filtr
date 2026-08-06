@@ -3,11 +3,16 @@ name: Update NDIC DATEX v1
 # Kill switch: IU_NDIC_DATEX_V1_MODE=off|shadow|active (default off).
 # Real NDIC network access is FORBIDDEN on GitHub-hosted runners.
 #
-# Job split:
-#   offline-guards  — ubuntu-latest, fixtures only, NO IU_NDIC_* secrets, NO downloader
-#   ndic-network-sync — self-hosted+Linux+X64+ndic-cz-egress only (shadow|active)
+# TWO-PHASE STAGING (fail-closed):
+#   1) NDIC staging preflight (ubuntu-latest, no secrets, no NDIC network)
+#      -> publishes HEAD-bound short-lived attestation
+#   2) This workflow (network-only on self-hosted+Linux+X64+ndic-cz-egress)
+#      -> requires valid preflight attestation for exact github.sha
+#      -> operator starts VPS runner ONLY after preflight PASS
 #
-# Controlled diagnostics also use "NDIC DATEX v1 shadow probe" on the same Czech labels.
+# This workflow intentionally has NO ubuntu-latest job so authorized staging
+# no longer depends on GitHub-hosted runner queue / timeout-minutes while the
+# VPS egress runner is online.
 
 on:
   workflow_dispatch:
@@ -21,6 +26,11 @@ on:
           - shadow
           - active
         default: off
+      preflight_attestation_id:
+        description: "Optional exact preflight attestation id (aid=...); empty accepts newest valid for HEAD"
+        required: false
+        type: string
+        default: ""
 
 # Staging (off|shadow) MUST NOT share the CHMI/info-events pending slot.
 # GitHub still cancels prior pending runs in a group even when cancel-in-progress is false.
@@ -40,54 +50,7 @@ env:
   PR_TITLE: "chore(data): refresh NDIC DATEX v1 snapshot"
 
 jobs:
-  offline-guards:
-    # GitHub-hosted OK: offline fixtures only. Must never receive IU_NDIC_* secrets.
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 1
-          fetch-tags: false
-          submodules: false
-          lfs: false
-          persist-credentials: false
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "24"
-
-      - name: NDIC DATEX v1 guard (fixtures)
-        run: npm run iu-ndic-datex-v1-guard
-
-      - name: NDIC exposure guard
-        run: npm run iu-ndic-datex-v1-exposure-guard
-
-      - name: NDIC self-hosted runner contract guard
-        run: npm run iu-ndic-self-hosted-runner-contract-guard
-
-      - name: NDIC github-hosted access fixtures
-        run: npm run iu-ndic-github-hosted-access-fixtures
-
-      - name: NDIC disk preflight fixtures
-        run: npm run iu-ndic-disk-preflight-fixtures
-
-      - name: Resolve mode (fail-closed, no secrets)
-        id: mode
-        env:
-          INPUT_MODE: ${{ github.event.inputs.mode }}
-        run: |
-          set -euo pipefail
-          mode="$(printf '%s' "${INPUT_MODE:-off}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
-          case "$mode" in
-            off|shadow|active) ;;
-            *) echo "INVALID_MODE"; exit 1 ;;
-          esac
-          echo "mode=$mode" >> "$GITHUB_OUTPUT"
-          echo "RESOLVED_MODE=$mode"
-
   ndic-network-sync:
-    needs: offline-guards
     if: >
       github.event_name == 'workflow_dispatch'
       && github.repository == 'Josefjosefjosef/filtr'
@@ -166,6 +129,15 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
+
+      - name: Verify staging preflight attestation (fail-closed, before NDIC secrets)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_NDIC_PREFLIGHT_EXPECTED_HEAD: ${{ github.sha }}
+          IU_NDIC_PREFLIGHT_ATTESTATION_ID: ${{ github.event.inputs.preflight_attestation_id }}
+        run: |
+          set -euo pipefail
+          node scripts/ndic-verify-preflight-attestation.mjs
 
       - name: Sync NDIC DATEX v1
         id: sync
