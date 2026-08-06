@@ -58,4 +58,4 @@ npm run iu-ndic-traffic-event-aggregation-meta-fixtures
 
 Public API, traffic cards, production publication, UI, NDIC network, real archives.
 
-See also: `docs/ndic-datex-tmc-basic-resolver.md`, `docs/ndic-tmc-basic-importer-v11.md`.
+See also: `docs/ndic-datex-tmc-basic-resolver.md`, `docs/ndic-tmc-basic-importer-v11.md`, `docs/ndic-traffic-publication-feed-card-layer.md`.
