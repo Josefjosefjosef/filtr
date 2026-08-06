@@ -327,7 +327,7 @@ const knownReq = computeRequiredDiskBytes({
   );
   ok(
     "t17_preserved_after_tmc_importer_reject",
-    gate.rejectCode === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED" &&
+    gate.rejectCode === "TMC_BASIC_IMPORT_REQUIRED" &&
       diag.filesystemAvailableBytes === CONTROLLED_AMPLE_BYTES.toString(),
     gate.rejectCode + ":" + diag.filesystemAvailableBytes
   );

@@ -334,7 +334,7 @@ export function selectAuthoritativeFormat(meta) {
       candidateFormat: TMC_FORMAT.TISA_DAT_CSV,
       reason: "tisa_like_present_preferred_over_shp_sqlite",
       versionHint: "v11.0_candidate",
-      importerStatus: "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
+      importerStatus: "BASIC_IMPORTER_READY",
     };
   }
   if (hasTisaLike) {
@@ -344,7 +344,7 @@ export function selectAuthoritativeFormat(meta) {
       candidateFormat: TMC_FORMAT.TISA_DAT_CSV,
       reason: "tisa_dat_txt_csv_candidates",
       versionHint: "v11.0_candidate",
-      importerStatus: "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
+      importerStatus: "BASIC_IMPORTER_READY",
     };
   }
   if (hasJson && !hasShp && !hasSqlite) {
@@ -548,9 +548,36 @@ export function analyzeAndGateTmcZipFile(zipPath, opts = {}) {
       };
     }
 
+    // Basic TMC v11 importer is implemented. Sync gate only advertises readiness;
+    // full content import runs via importBasicTmcArchive (async, streaming).
+    const isTisa =
+      decision.format === TMC_FORMAT.TISA_DAT_CSV || decision.candidateFormat === TMC_FORMAT.TISA_DAT_CSV;
+    if (isTisa) {
+      return {
+        ok: false,
+        rejectCode: "TMC_BASIC_IMPORT_REQUIRED",
+        importerCompatible: true,
+        zipMetadata: meta,
+        importerStatus: "BASIC_IMPORTER_READY",
+        basicImporterEntrypoint: "importBasicTmcArchive",
+        cidExpected: TMC_CID_EXPECTED,
+        tabcdExpected: TMC_TABCD_EXPECTED,
+        cidValidated: false,
+        tabcdValidated: false,
+        sizePreflightPassed: true,
+        diskPreflightPassed: true,
+        streamingReady: true,
+        atomicImportReady: true,
+        rollbackReady: true,
+        advancedRelationshipsEnabled: false,
+        diskDiagnostics: meta.diskDiagnostics,
+        elapsedMs: Date.now() - started,
+      };
+    }
+
     return {
       ok: false,
-      rejectCode: decision.importerStatus || "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
+      rejectCode: decision.importerStatus || "TMC_AUTHORITATIVE_FORMAT_UNRESOLVED",
       importerCompatible: false,
       zipMetadata: meta,
       importerStatus: decision.importerStatus,

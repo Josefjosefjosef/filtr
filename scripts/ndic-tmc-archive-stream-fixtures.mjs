@@ -70,9 +70,9 @@ function wipe(dir) {
   ok("auth_confidence_metadata", meta.candidateFormatConfidence === "metadata_only", meta.candidateFormatConfidence);
   const gate = analyzeAndGateTmcZipFile(file, { workDir: dir, measureDeps: AMPLE });
   ok(
-    "importer_not_impl",
-    gate.rejectCode === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
-    gate.rejectCode
+    "basic_importer_ready",
+    gate.rejectCode === "TMC_BASIC_IMPORT_REQUIRED" && gate.importerStatus === "BASIC_IMPORTER_READY",
+    gate.rejectCode + "/" + gate.importerStatus
   );
   ok("size_preflight", gate.sizePreflightPassed === true, "size");
   ok("no_names_in_meta", !JSON.stringify(meta).includes("POINTS.DAT"), "name_leak");
@@ -94,7 +94,7 @@ function wipe(dir) {
   ok("prefer_unverified", decision.authoritativeFormatVerified === false, "verified");
   ok(
     "prefer_status",
-    decision.importerStatus === "TMC_AUTHORITATIVE_FORMAT_DETECTED_BUT_IMPORTER_NOT_IMPLEMENTED",
+    decision.importerStatus === "BASIC_IMPORTER_READY",
     decision.importerStatus
   );
 }

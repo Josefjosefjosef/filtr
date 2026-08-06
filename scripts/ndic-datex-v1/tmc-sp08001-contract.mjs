@@ -1481,6 +1481,8 @@ export function resolveSp08001TableCodeFromBasename(basename) {
     if (String(t.importOrder) === noExt) return code;
   }
   if (noExt === "README") return "README";
+  // Observed short export basename for ROAD_NETWORK_LEVEL_TYPES (RNLT) — opaque mapping only.
+  if (noExt === "RNLT") return "ROAD_NETWORK_LEVEL_TYPES";
   return null;
 }
 

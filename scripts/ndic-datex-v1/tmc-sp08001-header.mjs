@@ -600,7 +600,7 @@ export function syntheticPointsRow(overrides = {}) {
   const base = {
     CID: "11",
     TABCD: "25",
-    LCD: "900001",
+    LCD: "10001",
     CLASS: "P",
     TCD: "1",
     STCD: "0",
@@ -635,12 +635,14 @@ export function syntheticPointsRow(overrides = {}) {
  * Fills CID=11 / TABCD=25 where those columns exist; other required cells get safe placeholders.
  */
 export function syntheticSp08001Row(tableCode, overrides = {}) {
+  const table = getSp08001Table(tableCode);
   const header = listRequiredSp08001Header(tableCode);
-  if (!header.length) throw new Error("unknown_table");
+  if (!header.length || !table) throw new Error("unknown_table");
   const base = Object.create(null);
-  for (const c of header) {
+  for (const col of table.columns) {
+    const c = col.code;
     if (c === "CID") base[c] = "11";
-    else if (c === "TABCD") base[c] = "25";
+    else if (c === "TABCD" || c === "INT_TABCD") base[c] = "25";
     else if (c === "CLASS") base[c] = "P";
     else if (c === "XCOORD") base[c] = "+09999999";
     else if (c === "YCOORD") base[c] = "+9999999";
@@ -651,16 +653,29 @@ export function syntheticSp08001Row(tableCode, overrides = {}) {
       c === "VERSIONDESCRIPTION" ||
       c === "NCOMMENT" ||
       c === "NTRANSLATION" ||
-      c === "LANGUAGE"
+      c === "LANGUAGE" ||
+      c === "TDESC" ||
+      c === "PES_LEV_DESC"
     )
       base[c] = "X";
-    else if (c === "VERSION") base[c] = "1";
+    else if (c === "VERSION") base[c] = "11";
     else if (c === "REPRESENTATION" || c === "OFFICIALNAME") base[c] = "";
-    else if (c.endsWith("ID") || c.endsWith("LCD") || c === "LID" || c === "NID" || c === "TCD" || c === "STCD")
-      base[c] = "1";
     else if (c === "ECC") base[c] = "E";
-    else if (c === "CCD") base[c] = "CZ";
-    else base[c] = "";
+    else if (c === "CCD") base[c] = "C";
+    else if (c === "PES_LEV") base[c] = "";
+    else if (/^NUMERIC/i.test(col.type)) {
+      // Stay within documented digit width when present
+      const m = /^NUMERIC\((\d+)\)$/i.exec(col.type);
+      const width = m ? Number(m[1]) : 5;
+      base[c] = "1".padStart(Math.min(width, 5), "0").slice(-Math.min(width, 5)) || "1";
+      if (width === 1) base[c] = "1";
+      else base[c] = "1";
+    } else if (/^CHAR\((\d+)\)$/i.test(col.type)) {
+      const width = Number(RegExp.$1);
+      base[c] = col.optional ? "" : "X".slice(0, Math.max(1, width));
+    } else {
+      base[c] = col.optional ? "" : "1";
+    }
   }
   Object.assign(base, overrides);
   return header.map((c) => base[c] ?? "");
