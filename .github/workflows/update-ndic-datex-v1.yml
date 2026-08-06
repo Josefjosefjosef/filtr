@@ -1,0 +1,223 @@
+name: Update NDIC DATEX v1
+
+# Kill switch: IU_NDIC_DATEX_V1_MODE=off|shadow|active (default off).
+# Real NDIC network access is FORBIDDEN on GitHub-hosted runners.
+#
+# Job split:
+#   offline-guards  — ubuntu-latest, fixtures only, NO IU_NDIC_* secrets, NO downloader
+#   ndic-network-sync — self-hosted+Linux+X64+ndic-cz-egress only (shadow|active)
+#
+# Controlled diagnostics also use "NDIC DATEX v1 shadow probe" on the same Czech labels.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "off | shadow | active (active publishes; use with extreme care)"
+        required: true
+        type: choice
+        options:
+          - off
+          - shadow
+          - active
+        default: off
+
+concurrency:
+  group: info-events-data-writers
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  statuses: write
+
+env:
+  AUTOMATION_BRANCH: automation/update-ndic-datex-v1
+  PR_TITLE: "chore(data): refresh NDIC DATEX v1 snapshot"
+
+jobs:
+  offline-guards:
+    # GitHub-hosted OK: offline fixtures only. Must never receive IU_NDIC_* secrets.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: NDIC DATEX v1 guard (fixtures)
+        run: npm run iu-ndic-datex-v1-guard
+
+      - name: NDIC exposure guard
+        run: npm run iu-ndic-datex-v1-exposure-guard
+
+      - name: NDIC self-hosted runner contract guard
+        run: npm run iu-ndic-self-hosted-runner-contract-guard
+
+      - name: NDIC github-hosted access fixtures
+        run: npm run iu-ndic-github-hosted-access-fixtures
+
+      - name: NDIC disk preflight fixtures
+        run: npm run iu-ndic-disk-preflight-fixtures
+
+      - name: Resolve mode (fail-closed, no secrets)
+        id: mode
+        env:
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+        run: |
+          set -euo pipefail
+          mode="$(printf '%s' "${INPUT_MODE:-off}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          case "$mode" in
+            off|shadow|active) ;;
+            *) echo "INVALID_MODE"; exit 1 ;;
+          esac
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "RESOLVED_MODE=$mode"
+
+  ndic-network-sync:
+    needs: offline-guards
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.repository == 'Josefjosefjosef/filtr'
+      && (github.event.inputs.mode == 'shadow' || github.event.inputs.mode == 'active')
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 20
+    steps:
+      # MUST stay first: no checkout, no secrets, no network before identity PASS.
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ]; then
+            echo "REFUSING_UNEXPECTED_OS"
+            exit 1
+          fi
+          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_ARCH"
+            exit 1
+          fi
+          ws="${GITHUB_WORKSPACE:-}"
+          cwd="$(pwd)"
+          case "${ws}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          case "${cwd}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          if command -v sudo >/dev/null 2>&1; then
+            if sudo -n true >/dev/null 2>&1; then
+              echo "REFUSING_PASSWORDLESS_SUDO"
+              exit 1
+            fi
+          fi
+          umask 077
+          avail_kb="$(df -Pk . | awk 'NR==2 {print $4}')"
+          if [ -z "${avail_kb}" ] || [ "${avail_kb}" -lt 2097152 ]; then
+            echo "REFUSING_LOW_DISK"
+            exit 1
+          fi
+          echo "RUNNER_PREFLIGHT_OK"
+          echo "RUNNER_NAME_OK=1"
+          echo "RUNNER_ENVIRONMENT=self-hosted"
+          echo "DISK_AVAIL_KB=${avail_kb}"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Sync NDIC DATEX v1
+        id: sync
+        env:
+          IU_NDIC_DATEX_V1_MODE: ${{ github.event.inputs.mode }}
+          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
+          IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
+          IU_NDIC_SHADOW_ISOLATED: ${{ github.event.inputs.mode == 'shadow' && '1' || '0' }}
+        run: |
+          set -euo pipefail
+          umask 077
+          node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
+
+      - name: Commit data if changed (active publish only)
+        id: commit_push
+        if: github.event.inputs.mode == 'active'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/data/info_events/feed.json \
+                  projects/data/info_events/lanes/doprava.json \
+                  projects/data/info_events/monitoring.json \
+                  projects/data/info_events/ndic_datex_v1/sync_state.json \
+                  projects/data/info_events/ndic_datex_v1/diagnostics.json \
+                  projects/data/info_events/ndic_datex_v1/tmc_meta.json \
+                  2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "NO_CHANGES"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          git checkout -B "$BRANCH"
+          git commit -m "${{ env.PR_TITLE }}"
+          git push -u origin "$BRANCH" --force
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open or refresh data PR
+        if: github.event.inputs.mode == 'active' && steps.commit_push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
+            echo "PR exists"
+          else
+            gh pr create --base main --head "$BRANCH" --title "${{ env.PR_TITLE }}" --body "Automated NDIC DATEX v1 data refresh."
+          fi
