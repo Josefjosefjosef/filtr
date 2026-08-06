@@ -449,25 +449,45 @@ function main() {
     if (file === "update-ndic-datex-v1.yml") {
       const offline = analysis.jobs.find((j) => j.name === "offline-guards");
       const network = analysis.jobs.find((j) => j.name === "ndic-network-sync");
-      ok("update_has_offline_job", Boolean(offline), "missing");
+      // Two-phase staging: GitHub-hosted guards live in ndic-datex-v1-staging-preflight.yml.
+      // Network workflow must NOT wait on ubuntu-latest (incident 31118898675).
+      ok("update_no_offline_guards_job", !offline, offline ? "present" : "ok");
       ok("update_has_network_job", Boolean(network), "missing");
+      ok("update_no_ubuntu_latest", !/ubuntu-latest/.test(analysis.src), "ubuntu");
       ok("update_node_24", /node-version:\s*["']?24["']?/.test(analysis.src), "node24");
       ok("update_no_node_20", !/node-version:\s*["']?20["']?/.test(analysis.src), "node20");
       ok("update_setup_node_v7", /actions\/setup-node@820762786026740c76f36085b0efc47a31fe5020/.test(analysis.src), "setup");
       ok("update_no_unsecure_node_env", !/ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION/.test(analysis.raw), "unsecure");
-      if (offline) {
-        ok("update_offline_ubuntu", offline.isGithubHosted && offline.labels.includes("ubuntu-latest"), offline.labels.join("+"));
-        ok("update_offline_no_ndic_caps", offline.ndicCapabilities.length === 0, offline.ndicCapabilities.join("|"));
-        ok("update_offline_no_secrets", !/secrets\.IU_NDIC_/.test(offline.body), "secrets");
-        ok("update_offline_no_prod_sync", !/ndic-datex-v1-prod-sync/.test(offline.body), "sync");
-      }
+      ok(
+        "update_requires_preflight_attestation",
+        /ndic-verify-preflight-attestation\.mjs/.test(analysis.src),
+        "verify"
+      );
       if (network) {
         ok("update_network_self_hosted", network.isSelfHosted && hasAllRequired(network.labels), network.labels.join("+"));
         ok("update_network_has_secrets", /secrets\.IU_NDIC_PULL_URL/.test(network.body), "secrets");
         ok("update_network_has_sync", /ndic-datex-v1-prod-sync/.test(network.body), "sync");
         ok("update_network_preflight", /REFUSING_GITHUB_HOSTED/.test(network.body), "preflight");
         ok("update_network_if_not_off", /mode == 'shadow'|mode == \"shadow\"/.test(network.body) || /inputs\.mode == 'shadow'/.test(analysis.raw), "if");
+        ok(
+          "update_verify_before_secrets",
+          /ndic-verify-preflight-attestation\.mjs[\s\S]*secrets\.IU_NDIC_PULL_URL/.test(network.body),
+          "order"
+        );
       }
+    }
+
+    if (file === "ndic-datex-v1-staging-preflight.yml") {
+      const src = analysis.src;
+      ok("pf_dispatch_only", /workflow_dispatch\s*:/.test(src), "dispatch");
+      ok("pf_ubuntu", /ubuntu-latest/.test(src), "ubuntu");
+      ok("pf_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(src), "secrets");
+      ok("pf_no_prod_sync", !/ndic-datex-v1-prod-sync\.mjs/.test(src), "sync");
+      ok("pf_publish_attestation", /ndic-publish-preflight-attestation\.mjs/.test(src), "publish");
+      ok("pf_no_workflow_run", !hasTrigger(src, "workflow_run:"), "wfrun");
+      ok("pf_no_schedule", !hasTrigger(src, "schedule:"), "sched");
+      ok("pf_no_push", !hasTrigger(src, "push:"), "push");
+      ok("pf_cancel_false", /cancel-in-progress:\s*false/.test(src), "cancel");
     }
   }
 
