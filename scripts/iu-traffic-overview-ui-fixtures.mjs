@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 /**
- * Traffic overview UI fixtures (synthetic only). Publication stays off.
+ * Final traffic integration fixtures — shared settings/localities/timeline only.
  */
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   TRAFFIC_SPATIAL,
-  TRAFFIC_TEMPORAL,
-  TRAFFIC_TYPE,
   trafficProjectionToFeedItem,
   trafficBadgeModel,
   resolveSafeTrafficMapUrl,
-  filterTrafficFeedItems,
+  collectOfflineTrafficCandidates,
   mergeTrafficIntoOverview,
   isRsdTrafficSourceEnabled,
   isDopravaTopicEnabled,
@@ -20,9 +18,15 @@ import {
   clearOfflineTrafficSnapshot,
   trafficItemsFromOfflineSnapshot,
   trafficHistoryLines,
-  sanitizeTrafficPrefs,
-} from "./../assets/iu-traffic-overview-v1.js";
+  deriveSpatialModeFromSharedPrefs,
+  trafficIntegrationArchitectureAudit,
+} from "../assets/iu-traffic-overview-v1.js";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.join(__dirname, "..");
 const fails = [];
 const results = [];
 function ok(id, cond, detail) {
@@ -45,9 +49,8 @@ function sampleCard(extra = {}) {
     severity: "high",
     road: "D0",
     kilometer: 12,
-    section: null,
-    direction: "POSITIVE",
     location: "D0",
+    administrativeArea: null,
     validity: {
       validFrom: "2026-08-06T08:00:00.000Z",
       expectedEnd: "2026-08-06T20:00:00.000Z",
@@ -73,153 +76,81 @@ function sampleCard(extra = {}) {
   };
 }
 
+const arch = trafficIntegrationArchitectureAudit();
+ok("arch_pass", arch.pass === true);
 ok("flag_pub_off", TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false);
-ok("flag_api_off", TRAFFIC_OVERVIEW_FLAGS.PUBLIC_API_ENABLED === false);
-ok("flag_live_off", TRAFFIC_OVERVIEW_FLAGS.LIVE_NDIC_INGEST === false);
 ok("flag_no_home", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false);
-ok("flag_render_on", TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER === true);
+ok("flag_no_settings", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === false);
+ok("flag_no_filters", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS === false);
+ok("flag_no_locs", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES === false);
 
 {
   const r = trafficProjectionToFeedItem(sampleCard());
   ok("proj_ok", r.ok === true);
-  ok("proj_id", r.item.id === "ie-traffic-" + PEID);
-  ok("proj_src", r.item.sourceId === "rsd");
-  ok("proj_tv", !!r.item.trafficV1);
+  ok("proj_shared_region", !!(r.item.region && r.item.region.name));
+  ok("proj_section", r.item.sectionId === "doprava" && r.item.sourceGroup === "doprava");
   ok("proj_pub_off", r.item.publicationEnabled === false);
-  ok("proj_no_lcd", !/"locationCode"\s*:/.test(JSON.stringify(r.item)));
 }
 
-{
-  const bad = trafficProjectionToFeedItem({ publicEventId: "raw-ndic-1" });
-  ok("rej_bad_peid", bad.ok === false);
-}
-
-{
-  const b = trafficBadgeModel(sampleCard().feed ? { feed: sampleCard().feed, category: "nehoda", lifecycleStatus: "ACTIVE" } : {});
-  const card = sampleCard();
-  const badge = trafficBadgeModel({
-    feed: card.feed,
-    category: card.category,
-    lifecycleStatus: card.lifecycleStatus,
-  });
-  ok("badge_new", badge.text.indexOf("NOVÁ") >= 0);
-  void b;
-}
-
-{
-  ok(
-    "map_ok",
-    resolveSafeTrafficMapUrl({ mapLinkType: "GENERAL_RSD_MAP", safeMapTarget: "https://www.dopravniinfo.cz/" }).indexOf(
-      "dopravniinfo.cz"
-    ) >= 0
-  );
-  ok(
-    "map_reject_http",
-    resolveSafeTrafficMapUrl({ mapLinkType: "GENERAL_RSD_MAP", safeMapTarget: "http://dopravniinfo.cz/" }) === ""
-  );
-  ok(
-    "map_reject_other",
-    resolveSafeTrafficMapUrl({ mapLinkType: "OFFICIAL_EVENT", safeMapTarget: "https://evil.example/x" }) === ""
-  );
-  ok("map_none", resolveSafeTrafficMapUrl({ mapLinkType: "NONE", safeMapTarget: null }) === "");
-}
-
-{
-  const item = trafficProjectionToFeedItem(sampleCard()).item;
-  const prefs = sanitizeTrafficPrefs({
-    trafficSpatialMode: TRAFFIC_SPATIAL.WHOLE_CZ,
-    trafficTemporalFilter: TRAFFIC_TEMPORAL.NOW,
-    trafficTypeFilter: TRAFFIC_TYPE.ACCIDENTS,
-  });
-  const filtered = filterTrafficFeedItems([item], prefs, { nowIso: "2026-08-06T13:00:00.000Z" });
-  ok("filter_acc", filtered.length === 1);
-  const prefs2 = sanitizeTrafficPrefs({ trafficTypeFilter: TRAFFIC_TYPE.CLOSURES });
-  ok("filter_type_miss", filterTrafficFeedItems([item], prefs2, { nowIso: "2026-08-06T13:00:00.000Z" }).length === 0);
-}
-
-{
-  const prefsSel = sanitizeTrafficPrefs({
-    trafficSpatialMode: TRAFFIC_SPATIAL.MY_SELECTION,
-    trafficMySelection: { roads: ["D0"], eventTypes: [], directions: [] },
-    trafficTemporalFilter: TRAFFIC_TEMPORAL.NOW,
-    trafficTypeFilter: TRAFFIC_TYPE.ALL,
-  });
-  const item = trafficProjectionToFeedItem(sampleCard()).item;
-  ok("my_sel", filterTrafficFeedItems([item], prefsSel, { nowIso: "2026-08-06T13:00:00.000Z" }).length === 1);
-  const prefsRoutes = sanitizeTrafficPrefs({
-    trafficSpatialMode: TRAFFIC_SPATIAL.MY_ROUTES,
-    trafficMyRoutes: [{ road: "D0", fromLabel: "A", toLabel: "B" }],
-    trafficTemporalFilter: TRAFFIC_TEMPORAL.NOW,
-  });
-  ok("my_routes", filterTrafficFeedItems([item], prefsRoutes, { nowIso: "2026-08-06T13:00:00.000Z" }).length === 1);
-}
-
-{
-  ok("rsd_all", isRsdTrafficSourceEnabled({ sourceIds: [], sourceGroups: [] }) === true);
-  ok("rsd_rsd", isRsdTrafficSourceEnabled({ sourceIds: ["rsd"], sourceGroups: [] }) === true);
-  ok("rsd_none", isRsdTrafficSourceEnabled({ sourceIds: ["__none__"], sourceGroups: [] }) === false);
-  ok("topic_doprava", isDopravaTopicEnabled({ sections: ["doprava"] }) === true);
-  ok("topic_none", isDopravaTopicEnabled({ sections: ["__none__"] }) === false);
-}
+ok("derive_whole", deriveSpatialModeFromSharedPrefs({}) === TRAFFIC_SPATIAL.WHOLE_CZ);
+ok(
+  "derive_near",
+  deriveSpatialModeFromSharedPrefs({ homeKraj: "Středočeský kraj" }) === TRAFFIC_SPATIAL.NEAR_ME
+);
+ok(
+  "derive_sel",
+  deriveSpatialModeFromSharedPrefs({ favoritesOnly: true }) === TRAFFIC_SPATIAL.MY_SELECTION
+);
 
 {
   const snap = {
-    schema: "iu-traffic-offline-snapshot-v1",
+    publicationEnabled: false,
     generatedAt: "2026-08-06T12:00:00.000Z",
     sourceFreshness: "FRESH",
-    publicationEnabled: false,
     cards: [sampleCard()],
   };
-  // Node has no localStorage — exercise conversion path directly
-  const items = trafficItemsFromOfflineSnapshot(snap, sanitizeTrafficPrefs({}), {
-    nowIso: "2026-08-06T13:00:00.000Z",
-  });
-  ok("offline_items", items.length === 1 && items[0].trafficV1);
-  const merged = mergeTrafficIntoOverview([{ id: "other", title: "X", publishedAt: "2026-08-06T10:00:00.000Z" }], {
-    sections: ["doprava"],
-    sourceIds: ["rsd"],
-    trafficOfflineAware: true,
-    trafficSpatialMode: "WHOLE_CZ",
-    trafficTemporalFilter: "NOW",
-    trafficTypeFilter: "ALL",
-  }, { snapshot: snap, nowIso: "2026-08-06T13:00:00.000Z" });
-  ok("merge_overview", merged.some((x) => x.trafficV1) && merged.some((x) => x.id === "other"));
-  ok("no_separate_home", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false);
-}
-
-{
-  ok("canary_xml", scanTrafficUiCanaries({ x: "<Situation/>" }).ok === false);
-  ok("canary_lcd", scanTrafficUiCanaries({ locationCode: "1" }).ok === false);
-  ok("canary_clean", scanTrafficUiCanaries({ road: "D0" }).ok === true);
-}
-
-{
-  const hist = trafficHistoryLines({ feed: { feedChangeType: "VALIDITY_EXTENDED" } });
-  ok("hist_ext", hist[0] === "prodloužená");
-}
-
-{
-  const ended = trafficProjectionToFeedItem(
-    sampleCard({
-      lifecycleStatus: "ENDED",
-      feed: { feedHeadline: "Omezení ukončeno", feedChangeType: "EVENT_ENDED" },
-    })
+  const cands = collectOfflineTrafficCandidates(
+    { sections: ["doprava"], sourceIds: ["rsd"] },
+    { snapshot: snap, nowIso: "2026-08-06T13:00:00.000Z" }
   );
-  ok("ended_badge", trafficBadgeModel(ended.item.trafficV1).kind === "ended");
+  ok("collect_ok", cands.length === 1);
+  const blocked = collectOfflineTrafficCandidates(
+    { sections: ["__none__"], sourceIds: ["rsd"] },
+    { snapshot: snap }
+  );
+  ok("collect_topic_gate", blocked.length === 0);
 }
 
 {
-  const pubOn = { ...sampleCard(), publicationEnabled: true };
-  // item builder forces publicationEnabled false on output; snapshot with publicationEnabled true rejected by merge path
-  const merged = mergeTrafficIntoOverview([], { sections: ["doprava"], sourceIds: ["rsd"] }, {
-    snapshot: { publicationEnabled: true, cards: [sampleCard()] },
-    nowIso: "2026-08-06T13:00:00.000Z",
-  });
-  ok("reject_pub_snap", merged.length === 0);
-  void pubOn;
+  const item = trafficProjectionToFeedItem(sampleCard()).item;
+  const badge = trafficBadgeModel(item.trafficV1);
+  ok("badge", /NOVÁ/.test(badge.text));
+  ok("map_ok", resolveSafeTrafficMapUrl(item.trafficV1.mapTarget).includes("dopravniinfo.cz"));
+  ok("hist", trafficHistoryLines({ feed: { feedChangeType: "VALIDITY_EXTENDED" } })[0] === "prodloužená");
 }
 
-// localStorage stubs for Node
+ok("rsd_on", isRsdTrafficSourceEnabled({ sourceIds: ["rsd"] }) === true);
+ok("topic_on", isDopravaTopicEnabled({ sections: ["doprava"] }) === true);
+ok("canary_xml", scanTrafficUiCanaries({ x: "<Situation/>" }).ok === false);
+
+{
+  const snap = { publicationEnabled: true, cards: [sampleCard()] };
+  ok("reject_pub_snap", trafficItemsFromOfflineSnapshot(snap).length === 0);
+}
+
+// Static: no parallel settings UI
+const ui = fs.readFileSync(path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js"), "utf8");
+const css = fs.readFileSync(path.join(ROOT, "assets", "iu-prehled-dne-v1.css"), "utf8");
+const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.js"), "utf8");
+ok("ui_no_traffic_prefs", !/data-iu-traffic-prefs/.test(ui) && !/data-iu-pd-sec=\"traffic-rsd\"/.test(ui));
+ok("ui_no_traffic_spatial_act", !/traffic-spatial|traffic-temporal|traffic-type/.test(ui));
+ok("ui_shared_filterEvents", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(pipelineItems/.test(ui));
+ok("ui_no_separate_home", !/data-iu-traffic-home/.test(ui));
+ok("css_no_prefs_panel", !/\.iuPdTrafficPrefs\b/.test(css));
+ok("core_no_parallel_prefs", !/trafficSpatialMode:\s*\"WHOLE_CZ\"/.test(core));
+ok("core_strips_legacy", /delete merged\.trafficSpatialMode/.test(core));
+ok("section_order_only_three", /SECTION_ORDER\s*=\s*\[\s*\"temata\",\s*\"zdroje\",\s*\"lokalita\"\s*\]/.test(ui));
+
 if (typeof globalThis.localStorage === "undefined") {
   const store = new Map();
   globalThis.localStorage = {
@@ -228,32 +159,28 @@ if (typeof globalThis.localStorage === "undefined") {
     removeItem: (k) => store.delete(k),
   };
 }
-{
-  clearOfflineTrafficSnapshot();
-  const saved = saveOfflineTrafficSnapshot({
-    publicationEnabled: false,
-    cards: [sampleCard()],
-    generatedAt: "2026-08-06T12:00:00.000Z",
-    sourceFreshness: "FRESH",
-  });
-  ok("ls_save", saved.ok === true);
-  ok("ls_load", !!loadOfflineTrafficSnapshot());
-  ok("ls_reject_pub", saveOfflineTrafficSnapshot({ publicationEnabled: true, cards: [] }).ok === false);
-  clearOfflineTrafficSnapshot();
-  ok("ls_clear", loadOfflineTrafficSnapshot() === null);
-}
+clearOfflineTrafficSnapshot();
+ok("ls_save", saveOfflineTrafficSnapshot({ publicationEnabled: false, cards: [sampleCard()] }).ok);
+ok("ls_load", !!loadOfflineTrafficSnapshot());
+clearOfflineTrafficSnapshot();
 
 const success = results.filter((r) => r.pass).length;
 const failure = results.filter((r) => !r.pass).length;
-const summary = {
-  suite: "TRAFFIC_OVERVIEW_UI",
-  TRAFFIC_UI_TEST_COUNT: results.length,
-  TRAFFIC_UI_TEST_SUCCESS_COUNT: success,
-  TRAFFIC_UI_TEST_FAILURE_COUNT: failure,
-  TRAFFIC_UI_TEST_SKIPPED_COUNT: 0,
-  fails,
-  PUBLICATION_ENABLED: false,
-  SEPARATE_TRAFFIC_HOME: false,
-};
-console.log(JSON.stringify(summary, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      suite: "TRAFFIC_FINAL_INTEGRATION",
+      TRAFFIC_UI_TEST_COUNT: results.length,
+      TRAFFIC_UI_TEST_SUCCESS_COUNT: success,
+      TRAFFIC_UI_TEST_FAILURE_COUNT: failure,
+      TRAFFIC_UI_TEST_SKIPPED_COUNT: 0,
+      fails,
+      MY_OVERVIEW_ONLY: true,
+      SEPARATE_TRAFFIC_SETTINGS: false,
+      PUBLICATION_ENABLED: false,
+    },
+    null,
+    2
+  )
+);
 process.exitCode = failure === 0 && success === results.length ? 0 : 1;

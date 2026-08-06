@@ -1,7 +1,12 @@
 /**
  * Traffic overview bridge for Můj přehled dne (InfoUzel.cz).
- * Renders allowlisted trafficV1 card payloads from audited publication projections.
- * Does NOT enable live publication, public API, NDIC ingest, or a separate Doprava home.
+ *
+ * Architecture rules (final integration):
+ * - NO separate traffic home / settings / filters / localities UI
+ * - Shared settings rails only: Témata → Doprava, Zdroje → ŘSD/NDIC, Lokalita
+ * - Shared filterEvents + shared locality model + shared timeline
+ * - Traffic feed is INTERNAL (ordering/badges/history), never a separate screen
+ * - PUBLICATION_ENABLED / live NDIC remain false
  */
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
@@ -9,9 +14,13 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   LIVE_NDIC_INGEST: false,
   TRAFFIC_CARDS_RENDER: true,
   SEPARATE_TRAFFIC_HOME: false,
+  SEPARATE_TRAFFIC_SETTINGS: false,
+  SEPARATE_TRAFFIC_FILTERS: false,
+  SEPARATE_TRAFFIC_LOCALITIES: false,
   PRODUCTION_DEPLOY: false,
 });
 
+/** Internal publication-layer enums (not separate UI). Mapped via shared prefs. */
 export const TRAFFIC_SPATIAL = Object.freeze({
   MY_SELECTION: "MY_SELECTION",
   MY_ROUTES: "MY_ROUTES",
@@ -81,63 +90,24 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "sourceUpdatedAt",
 ]);
 
-export function defaultTrafficPrefs() {
-  return {
-    trafficSpatialMode: TRAFFIC_SPATIAL.WHOLE_CZ,
-    trafficTemporalFilter: TRAFFIC_TEMPORAL.NOW,
-    trafficTypeFilter: TRAFFIC_TYPE.ALL,
-    trafficMySelection: { roads: [], eventTypes: [], directions: [] },
-    trafficMyRoutes: [],
-    trafficNearHashes: [],
-    trafficCustomFrom: "",
-    trafficCustomTo: "",
-    trafficOfflineAware: true,
-  };
-}
-
-export function sanitizeTrafficPrefs(raw) {
-  const d = defaultTrafficPrefs();
-  const r = raw && typeof raw === "object" ? raw : {};
-  const spatial = String(r.trafficSpatialMode || d.trafficSpatialMode);
-  d.trafficSpatialMode = Object.values(TRAFFIC_SPATIAL).includes(spatial) ? spatial : TRAFFIC_SPATIAL.WHOLE_CZ;
-  const temporal = String(r.trafficTemporalFilter || d.trafficTemporalFilter);
-  d.trafficTemporalFilter = Object.values(TRAFFIC_TEMPORAL).includes(temporal) ? temporal : TRAFFIC_TEMPORAL.NOW;
-  const type = String(r.trafficTypeFilter || d.trafficTypeFilter);
-  d.trafficTypeFilter = Object.values(TRAFFIC_TYPE).includes(type) ? type : TRAFFIC_TYPE.ALL;
-  d.trafficMySelection =
-    r.trafficMySelection && typeof r.trafficMySelection === "object"
-      ? {
-          roads: Array.isArray(r.trafficMySelection.roads)
-            ? r.trafficMySelection.roads.map(String).slice(0, 40)
-            : [],
-          eventTypes: Array.isArray(r.trafficMySelection.eventTypes)
-            ? r.trafficMySelection.eventTypes.map(String).slice(0, 20)
-            : [],
-          directions: Array.isArray(r.trafficMySelection.directions)
-            ? r.trafficMySelection.directions.map(String).slice(0, 10)
-            : [],
-        }
-      : d.trafficMySelection;
-  d.trafficMyRoutes = Array.isArray(r.trafficMyRoutes)
-    ? r.trafficMyRoutes
-        .filter((x) => x && typeof x === "object")
-        .slice(0, 20)
-        .map((route) => ({
-          road: String(route.road || "").slice(0, 32),
-          fromLabel: String(route.fromLabel || "").slice(0, 80),
-          toLabel: String(route.toLabel || "").slice(0, 80),
-          direction: String(route.direction || "").slice(0, 32),
-          plannedDay: String(route.plannedDay || "").slice(0, 32),
-          plannedTime: String(route.plannedTime || "").slice(0, 16),
-        }))
-    : [];
-  d.trafficNearHashes = Array.isArray(r.trafficNearHashes)
-    ? r.trafficNearHashes.map(String).slice(0, 64)
-    : [];
-  d.trafficCustomFrom = String(r.trafficCustomFrom || "").slice(0, 40);
-  d.trafficCustomTo = String(r.trafficCustomTo || "").slice(0, 40);
-  d.trafficOfflineAware = r.trafficOfflineAware !== false;
-  return d;
+/**
+ * Map shared InfoUzel prefs → internal spatial mode (no parallel settings store).
+ * WHOLE_CZ = no locality restriction in shared Lokalita rail.
+ * NEAR_ME / selection = shared localities / home / favorites regions.
+ * MY_SELECTION = favoritesOnly or favoriteSourceIds including rsd/ndic.
+ */
+export function deriveSpatialModeFromSharedPrefs(prefs) {
+  const f = prefs || {};
+  if (f.favoritesOnly === true) return TRAFFIC_SPATIAL.MY_SELECTION;
+  const hasLoc =
+    !!f.myRegionOnly ||
+    !!(f.localities && f.localities.length) ||
+    !!f.homeKraj ||
+    !!f.homeOkres ||
+    !!f.homeObec ||
+    !!f.localityQuery;
+  if (hasLoc) return TRAFFIC_SPATIAL.NEAR_ME;
+  return TRAFFIC_SPATIAL.WHOLE_CZ;
 }
 
 export function scanTrafficUiCanaries(obj) {
@@ -158,10 +128,14 @@ function clip(s, n) {
 
 /**
  * Map audited card/projection → overview feed item with trafficV1.
+ * Region fields use the SHARED locality shape so filterEvents applies.
  */
 export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) {
     return { ok: false, rejectCode: "PUBLICATION_MUST_STAY_OFF" };
+  }
+  if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === true) {
+    return { ok: false, rejectCode: "SEPARATE_TRAFFIC_SETTINGS_FORBIDDEN" };
   }
   if (!cardOrProj || typeof cardOrProj !== "object") {
     return { ok: false, rejectCode: "INVALID_INPUT" };
@@ -181,6 +155,11 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     expectedEnd: c.expectedEnd || null,
     actualEnd: c.actualEnd || null,
   };
+  const admin = c.administrativeArea != null ? c.administrativeArea : null;
+  const locLabel =
+    c.location != null ? c.location : c.locationLabel != null ? c.locationLabel : null;
+  const road = c.road != null ? c.road : c.roadNumber != null ? c.roadNumber : null;
+
   const trafficV1 = {
     publicEventId,
     lifecycleStatus: c.lifecycleStatus || null,
@@ -188,11 +167,11 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     eventType: c.eventType || c.category || null,
     category: c.category || c.eventCategory || c.eventType || null,
     severity: c.severity || null,
-    road: c.road != null ? c.road : c.roadNumber != null ? c.roadNumber : null,
+    road,
     kilometer: c.kilometer != null ? c.kilometer : null,
     section: c.section != null ? c.section : c.sectionLabel != null ? c.sectionLabel : null,
     direction: c.direction != null ? c.direction : null,
-    location: c.location != null ? c.location : c.locationLabel != null ? c.locationLabel : null,
+    location: locLabel,
     validity,
     impact: c.impact != null ? c.impact : c.impactSummary != null ? c.impactSummary : null,
     freshness: c.freshness != null ? c.freshness : c.freshnessStatus != null ? c.freshnessStatus : null,
@@ -236,23 +215,36 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   if (life === "CANCELLED") status = "zruseno";
   if (life === "FUTURE") status = "naplanovano";
 
+  const regionName = String(locLabel || admin || road || "").trim();
   const item = {
     id: "ie-traffic-" + publicEventId,
     sourceId: "rsd",
     sourceLabel: "ŘSD/NDIC",
+    sourceGroup: "doprava",
     adapterOwner: "iu-traffic-overview-v1",
     sectionId: "doprava",
     lane: "doprava",
     eventType: "doprava",
+    orgType: "transport",
     title: headline,
     summary: clip(trafficV1.impact, 280) || "",
     url: mapUrl || "",
     originalUrl: mapUrl || "",
     publishedAt: trafficV1.lastMeaningfulChangeAt || trafficV1.downloadedAt || opts.nowIso || null,
     publishedAtSource: trafficV1.sourceUpdatedAt || null,
+    validFrom: validity.validFrom || null,
+    validTo: validity.expectedEnd || validity.actualEnd || null,
     status,
     importance,
-    region: trafficV1.location ? { summary: String(trafficV1.location) } : null,
+    // Shared locality shape — same keys ČHMÚ / future institutions use
+    region: regionName
+      ? {
+          name: regionName,
+          summary: regionName,
+          krajName: admin ? String(admin) : null,
+          level: admin ? "kraj" : "cr",
+        }
+      : { name: "", summary: "", level: "cr" },
     trafficV1,
     publishable: false,
     publicationEnabled: false,
@@ -274,7 +266,6 @@ export function resolveSafeTrafficMapUrl(mapTarget) {
     const u = new URL(raw);
     if (u.protocol !== "https:") return "";
     const host = u.hostname.replace(/^www\./, "").toLowerCase();
-    // Allow only official ŘSD / NDIC traffic-info host
     if (host !== "dopravniinfo.cz" && !host.endsWith(".dopravniinfo.cz")) return "";
     return u.toString();
   } catch (_) {
@@ -313,145 +304,12 @@ export function trafficBadgeModel(trafficV1) {
   return { kind: "info", text: "DOPRAVA ŘSD", aria: "Dopravní informace ŘSD" };
 }
 
-function startOfDayUtc(ms) {
-  const d = new Date(ms);
-  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-}
-
-function overlapsWindow(fromMs, toMs, winStart, winEnd) {
-  const start = Number.isFinite(fromMs) ? fromMs : -Infinity;
-  const end = Number.isFinite(toMs) ? toMs : Infinity;
-  return start <= winEnd && end >= winStart;
-}
-
-export function matchesTrafficTemporal(item, filter, opts = {}) {
-  const tv = item && item.trafficV1;
-  if (!tv) return false;
-  const nowMs = Date.parse(opts.nowIso || new Date().toISOString());
-  const from = tv.validity && tv.validity.validFrom ? Date.parse(tv.validity.validFrom) : NaN;
-  const to = tv.validity && tv.validity.expectedEnd ? Date.parse(tv.validity.expectedEnd) : NaN;
-  switch (filter) {
-    case TRAFFIC_TEMPORAL.NOW: {
-      const start = Number.isFinite(from) ? from : -Infinity;
-      const end = Number.isFinite(to) ? to : Infinity;
-      return start <= nowMs && end >= nowMs;
-    }
-    case TRAFFIC_TEMPORAL.TODAY: {
-      const s = startOfDayUtc(nowMs);
-      return overlapsWindow(from, to, s, s + 86400000 - 1);
-    }
-    case TRAFFIC_TEMPORAL.TOMORROW: {
-      const s = startOfDayUtc(nowMs) + 86400000;
-      return overlapsWindow(from, to, s, s + 86400000 - 1);
-    }
-    case TRAFFIC_TEMPORAL.WEEKEND: {
-      const day = new Date(nowMs).getUTCDay();
-      const toSat = (6 - day + 7) % 7;
-      const sat =
-        startOfDayUtc(nowMs) +
-        (day === 0 || day === 6 ? (day === 6 ? 0 : -86400000) : toSat * 86400000);
-      return overlapsWindow(from, to, sat, sat + 2 * 86400000 - 1);
-    }
-    case TRAFFIC_TEMPORAL.CUSTOM_DATETIME: {
-      const cs = Date.parse(opts.customFrom || "");
-      const ce = Date.parse(opts.customTo || "");
-      if (!Number.isFinite(cs) || !Number.isFinite(ce)) return false;
-      return overlapsWindow(from, to, cs, ce);
-    }
-    default:
-      return false;
-  }
-}
-
-export function matchesTrafficType(item, typeFilter) {
-  const tv = item && item.trafficV1;
-  if (!tv) return false;
-  const t = typeFilter || TRAFFIC_TYPE.ALL;
-  if (t === TRAFFIC_TYPE.ALL) return true;
-  const cat = String(tv.category || tv.eventType || "").toLowerCase();
-  const life = tv.lifecycleStatus;
-  const sev = String(tv.severity || "").toLowerCase();
-  switch (t) {
-    case TRAFFIC_TYPE.CLOSURES:
-      return /uzavir|closure/.test(cat);
-    case TRAFFIC_TYPE.RESTRICTIONS:
-      return /omezen|restrict/.test(cat);
-    case TRAFFIC_TYPE.ACCIDENTS:
-      return /nehod|accident/.test(cat);
-    case TRAFFIC_TYPE.ROADWORKS:
-      return /prace|roadwork|works/.test(cat);
-    case TRAFFIC_TYPE.QUEUES:
-      return /kolon|queue|congest/.test(cat);
-    case TRAFFIC_TYPE.ROAD_AND_WEATHER:
-      return /pocasi|weather|vozov/.test(cat);
-    case TRAFFIC_TYPE.FUTURE:
-      return life === "FUTURE";
-    case TRAFFIC_TYPE.ENDED:
-      return life === "ENDED" || life === "CANCELLED";
-    case TRAFFIC_TYPE.SEVERE:
-      return sev === "high" || sev === "severe";
-    default:
-      return false;
-  }
-}
-
-export function matchesTrafficSpatial(item, prefs) {
-  const tv = item && item.trafficV1;
-  if (!tv) return false;
-  const mode = (prefs && prefs.trafficSpatialMode) || TRAFFIC_SPATIAL.WHOLE_CZ;
-  if (mode === TRAFFIC_SPATIAL.WHOLE_CZ) return true;
-  if (mode === TRAFFIC_SPATIAL.MY_SELECTION) {
-    const roads = new Set(((prefs.trafficMySelection && prefs.trafficMySelection.roads) || []).map(String));
-    if (!roads.size) return false;
-    return tv.road != null && roads.has(String(tv.road));
-  }
-  if (mode === TRAFFIC_SPATIAL.MY_ROUTES) {
-    const routes = prefs.trafficMyRoutes || [];
-    if (!routes.length) return false;
-    return routes.some((r) => r && r.road && tv.road != null && String(r.road) === String(tv.road));
-  }
-  if (mode === TRAFFIC_SPATIAL.NEAR_ME) {
-    const hashes = new Set((prefs.trafficNearHashes || []).map(String));
-    const mine = (tv._nearHashes || item._nearHashes || []).map(String);
-    if (!hashes.size || !mine.length) return false;
-    return mine.some((h) => hashes.has(h));
-  }
-  return false;
-}
-
-export function filterTrafficFeedItems(items, prefs, opts = {}) {
-  const list = Array.isArray(items) ? items : [];
-  const p = sanitizeTrafficPrefs(prefs || {});
-  const out = [];
-  for (const it of list) {
-    if (!it || !it.trafficV1) continue;
-    if (it.publicationEnabled === true) continue;
-    if (!matchesTrafficSpatial(it, p)) continue;
-    if (!matchesTrafficTemporal(it, p.trafficTemporalFilter, {
-      nowIso: opts.nowIso,
-      customFrom: p.trafficCustomFrom,
-      customTo: p.trafficCustomTo,
-    })) {
-      continue;
-    }
-    if (!matchesTrafficType(it, p.trafficTypeFilter)) continue;
-    out.push(it);
-  }
-  out.sort((a, b) => {
-    const ta = Date.parse((a.trafficV1 && a.trafficV1.lastMeaningfulChangeAt) || a.publishedAt || "") || 0;
-    const tb = Date.parse((b.trafficV1 && b.trafficV1.lastMeaningfulChangeAt) || b.publishedAt || "") || 0;
-    if (tb !== ta) return tb - ta;
-    return String(a.id || "").localeCompare(String(b.id || ""));
-  });
-  return out;
-}
-
 export function isRsdTrafficSourceEnabled(prefs) {
   const f = prefs || {};
   const ids = f.sourceIds || [];
   const groups = f.sourceGroups || [];
   if (ids.length === 1 && ids[0] === "__none__") return false;
-  if (!ids.length && !groups.length) return true; // "all sources"
+  if (!ids.length && !groups.length) return true;
   if (ids.includes("rsd") || ids.includes("ndic")) return true;
   if (groups.includes("doprava") || groups.includes("ndic")) return true;
   return false;
@@ -464,9 +322,6 @@ export function isDopravaTopicEnabled(prefs) {
   return secs.includes("doprava");
 }
 
-/**
- * Load offline snapshot from localStorage (publication projections only).
- */
 export function loadOfflineTrafficSnapshot() {
   if (typeof localStorage === "undefined") return null;
   try {
@@ -505,9 +360,9 @@ export function clearOfflineTrafficSnapshot() {
 }
 
 /**
- * Build overview traffic items from offline snapshot cards/projections.
+ * Convert offline snapshot → feed items (no parallel filtering — caller uses filterEvents).
  */
-export function trafficItemsFromOfflineSnapshot(snapshot, prefs, opts = {}) {
+export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
   if (!snapshot || snapshot.publicationEnabled === true) return [];
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return [];
   const cards = Array.isArray(snapshot.cards) && snapshot.cards.length
@@ -520,44 +375,43 @@ export function trafficItemsFromOfflineSnapshot(snapshot, prefs, opts = {}) {
     const r = trafficProjectionToFeedItem(c, opts);
     if (r.ok) built.push(r.item);
   }
-  return filterTrafficFeedItems(built, prefs, opts);
+  return built;
 }
 
 /**
- * Merge traffic items into overview list without creating a separate home.
+ * Collect offline traffic candidates for the shared overview pipeline.
+ * Does NOT apply a second filter system — only topic/source gate + conversion.
+ */
+export function collectOfflineTrafficCandidates(prefs, opts = {}) {
+  if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === true) return [];
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER !== true) return [];
+  if (!isDopravaTopicEnabled(prefs) || !isRsdTrafficSourceEnabled(prefs)) return [];
+  return trafficItemsFromOfflineSnapshot(opts.snapshot || loadOfflineTrafficSnapshot(), opts);
+}
+
+/**
+ * Merge unique traffic candidates into a list already processed by shared filterEvents.
+ * Prefer items that already passed shared filters; do not re-apply parallel traffic filters.
  */
 export function mergeTrafficIntoOverview(baseItems, prefs, opts = {}) {
   const base = Array.isArray(baseItems) ? baseItems.slice() : [];
   if (!isDopravaTopicEnabled(prefs) || !isRsdTrafficSourceEnabled(prefs)) {
     return base.filter((x) => !(x && x.trafficV1));
   }
-  const fromFeed = base.filter((x) => x && x.trafficV1);
-  const fromOffline =
-    prefs && prefs.trafficOfflineAware === false
-      ? []
-      : trafficItemsFromOfflineSnapshot(opts.snapshot || loadOfflineTrafficSnapshot(), prefs, opts);
+  const candidates = Array.isArray(opts.filteredTrafficItems)
+    ? opts.filteredTrafficItems
+    : collectOfflineTrafficCandidates(prefs, opts);
   const byId = new Map();
-  for (const it of fromFeed) byId.set(String(it.id), it);
-  for (const it of fromOffline) {
-    if (!byId.has(String(it.id))) byId.set(String(it.id), it);
+  for (const it of base) {
+    if (it) byId.set(String(it.id), it);
   }
-  const traffic = filterTrafficFeedItems(Array.from(byId.values()), prefs, opts);
-  const nonTraffic = base.filter((x) => !(x && x.trafficV1));
-  // Interleave by publishedAt / lastMeaningfulChangeAt with other cards
-  const merged = nonTraffic.concat(traffic);
-  merged.sort((a, b) => {
-    const ta =
-      Date.parse(
-        (a.trafficV1 && a.trafficV1.lastMeaningfulChangeAt) || a.publishedAt || a.publishedAtSource || ""
-      ) || 0;
-    const tb =
-      Date.parse(
-        (b.trafficV1 && b.trafficV1.lastMeaningfulChangeAt) || b.publishedAt || b.publishedAtSource || ""
-      ) || 0;
-    if (tb !== ta) return tb - ta;
-    return String(a.id || "").localeCompare(String(b.id || ""));
-  });
-  return merged;
+  for (const it of candidates) {
+    if (!it || !it.trafficV1) continue;
+    if (it.publicationEnabled === true) continue;
+    const id = String(it.id);
+    if (!byId.has(id)) byId.set(id, it);
+  }
+  return Array.from(byId.values());
 }
 
 export function trafficFreshnessBanner(snapshot) {
@@ -594,4 +448,26 @@ export function trafficHistoryLines(trafficV1) {
   };
   const label = map[change];
   return label ? [label] : [];
+}
+
+/** Architecture self-check used by fixtures/meta. */
+export function trafficIntegrationArchitectureAudit() {
+  return {
+    SEPARATE_TRAFFIC_HOME: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME,
+    SEPARATE_TRAFFIC_SETTINGS: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS,
+    SEPARATE_TRAFFIC_FILTERS: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS,
+    SEPARATE_TRAFFIC_LOCALITIES: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES,
+    PUBLICATION_ENABLED: TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED,
+    LIVE_NDIC_INGEST: TRAFFIC_OVERVIEW_FLAGS.LIVE_NDIC_INGEST,
+    SHARED_SETTINGS: true,
+    SHARED_LOCALITY_MODEL: true,
+    SHARED_TIMELINE: true,
+    TRAFFIC_FEED_INTERNAL_ONLY: true,
+    pass:
+      TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false &&
+      TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === false &&
+      TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS === false &&
+      TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES === false &&
+      TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false,
+  };
 }

@@ -36,12 +36,9 @@ import {
 } from "./iu-info-system-core-v1.js?v=traffic-overview-rsd-prehled-v1-20260806";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
-  TRAFFIC_SPATIAL,
-  TRAFFIC_TEMPORAL,
-  TRAFFIC_TYPE,
   trafficBadgeModel,
   resolveSafeTrafficMapUrl,
-  mergeTrafficIntoOverview,
+  collectOfflineTrafficCandidates,
   isRsdTrafficSourceEnabled,
   trafficFreshnessBanner,
   trafficHistoryLines,
@@ -406,15 +403,20 @@ function filteredList() {
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
     hiddenMode: "include",
   };
-  let list = filterEvents(items, filterPrefs, opts);
-  list = expandChmiLocalityPresentationCards(list, f);
-  // Traffic cards from audited projections / offline snapshot — no separate Doprava home.
+  // Shared pipeline: offline traffic candidates enter the SAME filterEvents as ČHMÚ.
+  let pipelineItems = items;
   if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false && TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER) {
-    list = mergeTrafficIntoOverview(list, f, {
+    const offline = collectOfflineTrafficCandidates(f, {
       snapshot: loadOfflineTrafficSnapshot(),
       nowIso: new Date().toISOString(),
     });
+    if (offline.length) {
+      const seen = new Set(items.map((x) => String((x && x.id) || "")));
+      pipelineItems = items.concat(offline.filter((x) => x && !seen.has(String(x.id))));
+    }
   }
+  let list = filterEvents(pipelineItems, filterPrefs, opts);
+  list = expandChmiLocalityPresentationCards(list, f);
   list = list.filter((ev) => {
     const id = String((ev && ev.id) || "");
     const src = chmiPresentationSourceId(ev) || id;
@@ -1001,95 +1003,12 @@ function renderSourcesBody(draft) {
     })
     .join("");
 
-  const rsdOn = isRsdTrafficSourceEnabled(draft);
-  const trafficPrefsHtml = rsdOn
-    ? `<div class="iuPdTrafficPrefs" data-iu-pd-sec="traffic-rsd" data-iu-traffic-prefs="1">` +
-      `<div class="iuPdSubhead">Ředitelství silnic a dálnic — lokalita dopravy</div>` +
-      `<div class="iuPdChecks">` +
-      checkRow(
-        "traffic-spatial",
-        TRAFFIC_SPATIAL.MY_SELECTION,
-        "Můj výběr",
-        draft.trafficSpatialMode === TRAFFIC_SPATIAL.MY_SELECTION,
-        'data-draft-act="traffic-spatial" data-id="MY_SELECTION"'
-      ) +
-      checkRow(
-        "traffic-spatial",
-        TRAFFIC_SPATIAL.MY_ROUTES,
-        "Moje trasy",
-        draft.trafficSpatialMode === TRAFFIC_SPATIAL.MY_ROUTES,
-        'data-draft-act="traffic-spatial" data-id="MY_ROUTES"'
-      ) +
-      checkRow(
-        "traffic-spatial",
-        TRAFFIC_SPATIAL.NEAR_ME,
-        "V mém okolí",
-        draft.trafficSpatialMode === TRAFFIC_SPATIAL.NEAR_ME,
-        'data-draft-act="traffic-spatial" data-id="NEAR_ME"'
-      ) +
-      checkRow(
-        "traffic-spatial",
-        TRAFFIC_SPATIAL.WHOLE_CZ,
-        "Celá ČR",
-        !draft.trafficSpatialMode || draft.trafficSpatialMode === TRAFFIC_SPATIAL.WHOLE_CZ,
-        'data-draft-act="traffic-spatial" data-id="WHOLE_CZ"'
-      ) +
-      `</div>` +
-      `<div class="iuPdSubhead">Čas dopravy</div>` +
-      `<div class="iuPdChecks iuPdChecks--grid">` +
-      [
-        [TRAFFIC_TEMPORAL.NOW, "Teď"],
-        [TRAFFIC_TEMPORAL.TODAY, "Dnes"],
-        [TRAFFIC_TEMPORAL.TOMORROW, "Zítra"],
-        [TRAFFIC_TEMPORAL.WEEKEND, "Víkend"],
-        [TRAFFIC_TEMPORAL.CUSTOM_DATETIME, "Vlastní datum a čas"],
-      ]
-        .map(([id, label]) =>
-          checkRow(
-            "traffic-temporal",
-            id,
-            label,
-            draft.trafficTemporalFilter === id,
-            `data-draft-act="traffic-temporal" data-id="${esc(id)}"`
-          )
-        )
-        .join("") +
-      `</div>` +
-      `<div class="iuPdSubhead">Typ dopravy</div>` +
-      `<div class="iuPdChecks iuPdChecks--grid">` +
-      [
-        [TRAFFIC_TYPE.ALL, "Vše"],
-        [TRAFFIC_TYPE.ACCIDENTS, "Nehody"],
-        [TRAFFIC_TYPE.CLOSURES, "Uzavírky"],
-        [TRAFFIC_TYPE.RESTRICTIONS, "Omezení"],
-        [TRAFFIC_TYPE.QUEUES, "Kolony"],
-        [TRAFFIC_TYPE.ROADWORKS, "Práce"],
-        [TRAFFIC_TYPE.ROAD_AND_WEATHER, "Počasí"],
-        [TRAFFIC_TYPE.FUTURE, "Budoucí"],
-        [TRAFFIC_TYPE.ENDED, "Ukončené"],
-        [TRAFFIC_TYPE.SEVERE, "Závažné"],
-      ]
-        .map(([id, label]) =>
-          checkRow(
-            "traffic-type",
-            id,
-            label,
-            draft.trafficTypeFilter === id,
-            `data-draft-act="traffic-type" data-id="${esc(id)}"`
-          )
-        )
-        .join("") +
-      `</div>` +
-      `<p class="iuPdMuted">Publikace NDIC zůstává vypnutá. Karty vycházejí jen z auditovaných projekcí / offline snapshotu.</p>` +
-      `</div>`
-    : "";
-
+  // ŘSD/NDIC uses the SAME Zdroje + Lokalita rails — no parallel traffic settings panel.
   return (
     `<div class="iuPdChecks" data-iu-pd-sec="zdroje">` +
     checkRow("source-all", "all", "Vše", all, 'data-draft-act="sources-all"', partial) +
     groupsHtml +
     (standHtml ? `<div class="iuPdSubhead">Samostatné instituce</div>${standHtml}` : "") +
-    trafficPrefsHtml +
     `</div>`
   );
 }
@@ -1569,12 +1488,6 @@ function syncDraftFromEvent(ev) {
     let okresy = asLocList(draft, "okres");
     okresy = checked ? Array.from(new Set(okresy.concat(id))) : okresy.filter((x) => x !== id);
     setLocList(draft, "okres", okresy);
-  } else if (act === "traffic-spatial") {
-    draft.trafficSpatialMode = checked ? id : TRAFFIC_SPATIAL.WHOLE_CZ;
-  } else if (act === "traffic-temporal") {
-    draft.trafficTemporalFilter = checked ? id : TRAFFIC_TEMPORAL.NOW;
-  } else if (act === "traffic-type") {
-    draft.trafficTypeFilter = checked ? id : TRAFFIC_TYPE.ALL;
   }
 
   const scrollEl = document.getElementById("iuPdSettingsScroll");

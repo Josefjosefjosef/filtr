@@ -149,7 +149,9 @@ Live publication, public API, NDIC runners and production deploy remain disabled
 
 ## Related UI (Můj přehled dne)
 
-Traffic cards render **inside** Můj přehled dne via `assets/iu-traffic-overview-v1.js` (same timeline/actions as ČHMÚ). There is **no** separate Doprava home or standalone feed page. Offline snapshot + ŘSD prefs connect to existing settings rails. `PUBLICATION_ENABLED` remains `false`.
+Traffic cards render **only** inside Můj přehled dne via `assets/iu-traffic-overview-v1.js`, using the **same** settings rails (Témata / Zdroje a instituce / Lokalita), the **same** `filterEvents` pipeline, the **same** locality list, and the **same** timeline as ČHMÚ.
+
+There is **no** separate Doprava home, traffic settings panel, traffic filter UI, or second locality database. `PUBLICATION_ENABLED` remains `false`.
 
 ## Tests
 

@@ -207,16 +207,6 @@ function defaultPrefs() {
     savedOnly: false,
     favoritesOnly: false,
     activeViewId: "",
-    // Traffic / ŘSD prefs (local-only; publication stays off)
-    trafficSpatialMode: "WHOLE_CZ",
-    trafficTemporalFilter: "NOW",
-    trafficTypeFilter: "ALL",
-    trafficMySelection: { roads: [], eventTypes: [], directions: [] },
-    trafficMyRoutes: [],
-    trafficNearHashes: [],
-    trafficCustomFrom: "",
-    trafficCustomTo: "",
-    trafficOfflineAware: true,
   };
 }
 
@@ -262,63 +252,16 @@ function sanitizeUserPrefs(raw) {
   merged.localityQuery = String(merged.localityQuery || "");
   const cities = merged.localities.filter((loc) => loc && String(loc.level || "") === "mesto");
   if (cities.length) merged.homeObec = String(cities[0].name || merged.homeObec || "");
-  const spatialOk = ["MY_SELECTION", "MY_ROUTES", "NEAR_ME", "WHOLE_CZ"];
-  const temporalOk = ["NOW", "TODAY", "TOMORROW", "WEEKEND", "CUSTOM_DATETIME"];
-  const typeOk = [
-    "ALL",
-    "CLOSURES",
-    "RESTRICTIONS",
-    "ACCIDENTS",
-    "ROADWORKS",
-    "QUEUES",
-    "ROAD_AND_WEATHER",
-    "FUTURE",
-    "ENDED",
-    "SEVERE",
-  ];
-  merged.trafficSpatialMode = spatialOk.includes(String(merged.trafficSpatialMode || ""))
-    ? String(merged.trafficSpatialMode)
-    : "WHOLE_CZ";
-  merged.trafficTemporalFilter = temporalOk.includes(String(merged.trafficTemporalFilter || ""))
-    ? String(merged.trafficTemporalFilter)
-    : "NOW";
-  merged.trafficTypeFilter = typeOk.includes(String(merged.trafficTypeFilter || ""))
-    ? String(merged.trafficTypeFilter)
-    : "ALL";
-  if (!merged.trafficMySelection || typeof merged.trafficMySelection !== "object") {
-    merged.trafficMySelection = { roads: [], eventTypes: [], directions: [] };
-  } else {
-    merged.trafficMySelection = {
-      roads: Array.isArray(merged.trafficMySelection.roads)
-        ? merged.trafficMySelection.roads.map(String).slice(0, 40)
-        : [],
-      eventTypes: Array.isArray(merged.trafficMySelection.eventTypes)
-        ? merged.trafficMySelection.eventTypes.map(String).slice(0, 20)
-        : [],
-      directions: Array.isArray(merged.trafficMySelection.directions)
-        ? merged.trafficMySelection.directions.map(String).slice(0, 10)
-        : [],
-    };
-  }
-  merged.trafficMyRoutes = Array.isArray(merged.trafficMyRoutes)
-    ? merged.trafficMyRoutes
-        .filter((x) => x && typeof x === "object")
-        .slice(0, 20)
-        .map((route) => ({
-          road: String(route.road || "").slice(0, 32),
-          fromLabel: String(route.fromLabel || "").slice(0, 80),
-          toLabel: String(route.toLabel || "").slice(0, 80),
-          direction: String(route.direction || "").slice(0, 32),
-          plannedDay: String(route.plannedDay || "").slice(0, 32),
-          plannedTime: String(route.plannedTime || "").slice(0, 16),
-        }))
-    : [];
-  merged.trafficNearHashes = Array.isArray(merged.trafficNearHashes)
-    ? merged.trafficNearHashes.map(String).slice(0, 64)
-    : [];
-  merged.trafficCustomFrom = String(merged.trafficCustomFrom || "").slice(0, 40);
-  merged.trafficCustomTo = String(merged.trafficCustomTo || "").slice(0, 40);
-  merged.trafficOfflineAware = merged.trafficOfflineAware !== false;
+  // Strip legacy parallel traffic prefs (final integration: shared settings only).
+  delete merged.trafficSpatialMode;
+  delete merged.trafficTemporalFilter;
+  delete merged.trafficTypeFilter;
+  delete merged.trafficMySelection;
+  delete merged.trafficMyRoutes;
+  delete merged.trafficNearHashes;
+  delete merged.trafficCustomFrom;
+  delete merged.trafficCustomTo;
+  delete merged.trafficOfflineAware;
   return merged;
 }
 
@@ -549,15 +492,6 @@ function filterFingerprint(prefs) {
     savedOnly: f.savedOnly,
     favoritesOnly: f.favoritesOnly,
     searchQuery: f.searchQuery,
-    trafficSpatialMode: f.trafficSpatialMode,
-    trafficTemporalFilter: f.trafficTemporalFilter,
-    trafficTypeFilter: f.trafficTypeFilter,
-    trafficMySelection: f.trafficMySelection,
-    trafficMyRoutes: f.trafficMyRoutes,
-    trafficNearHashes: f.trafficNearHashes,
-    trafficCustomFrom: f.trafficCustomFrom,
-    trafficCustomTo: f.trafficCustomTo,
-    trafficOfflineAware: f.trafficOfflineAware,
   });
 }
 
