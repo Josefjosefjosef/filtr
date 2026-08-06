@@ -1,0 +1,108 @@
+/**
+ * Offline normalized traffic-event aggregation constants (InfoUzel.cz internal).
+ * Publication and traffic cards remain disabled.
+ */
+export const AGGREGATION_FEATURE_FLAGS = Object.freeze({
+  PUBLICATION_ENABLED: false,
+  TRAFFIC_CARDS_ENABLED: false,
+  PUBLIC_API_ENABLED: false,
+  FUZZY_MATCHING_ENABLED: false,
+  GEOCODING_ENABLED: false,
+  HEURISTIC_INFERENCE_ENABLED: false,
+  UNPROVEN_FIELDS_INFERRED: false,
+  KILOMETER_ESTIMATION_ENABLED: false,
+  COORDINATE_INTERPOLATION_ENABLED: false,
+});
+
+export const EVENT_CHANGE_KIND = Object.freeze({
+  NEW_EVENT: "NEW_EVENT",
+  EVENT_UPDATED: "EVENT_UPDATED",
+  DIRECTION_CHANGED: "DIRECTION_CHANGED",
+  ROAD_CHANGED: "ROAD_CHANGED",
+  SEGMENT_CHANGED: "SEGMENT_CHANGED",
+  START_TIME_CHANGED: "START_TIME_CHANGED",
+  END_TIME_CHANGED: "END_TIME_CHANGED",
+  SEVERITY_CHANGED: "SEVERITY_CHANGED",
+  DESCRIPTION_CHANGED: "DESCRIPTION_CHANGED",
+  LOCATION_ADDED: "LOCATION_ADDED",
+  LOCATION_REMOVED: "LOCATION_REMOVED",
+  STATUS_ENDED: "STATUS_ENDED",
+  STATUS_CANCELLED: "STATUS_CANCELLED",
+  NO_CHANGE: "NO_CHANGE",
+  CONFLICT_UNMERGED: "CONFLICT_UNMERGED",
+});
+
+export const FEED_SIGNAL = Object.freeze({
+  NEW_ACCIDENT: "NEW_ACCIDENT",
+  CLOSURE_EXTENDED: "CLOSURE_EXTENDED",
+  RESTRICTION_ENDED: "RESTRICTION_ENDED",
+  NEW_ROADWORKS: "NEW_ROADWORKS",
+  WEATHER_CHANGE: "WEATHER_CHANGE",
+  GENERIC_UPDATE: "GENERIC_UPDATE",
+  GENERIC_NEW: "GENERIC_NEW",
+  GENERIC_ENDED: "GENERIC_ENDED",
+  UNSIGNALED: "UNSIGNALED",
+});
+
+export const SPATIAL_FILTER = Object.freeze({
+  MY_SELECTION: "MY_SELECTION",
+  MY_ROUTES: "MY_ROUTES",
+  NEAR_ME: "NEAR_ME",
+  WHOLE_CZ: "WHOLE_CZ",
+});
+
+export const TEMPORAL_FILTER = Object.freeze({
+  NOW: "NOW",
+  TODAY: "TODAY",
+  TOMORROW: "TOMORROW",
+  WEEKEND: "WEEKEND",
+  CUSTOM_RANGE: "CUSTOM_RANGE",
+});
+
+export const AGGREGATION_ERROR = Object.freeze({
+  AGG_INPUT_INVALID: "AGG_INPUT_INVALID",
+  AGG_IDENTITY_MISSING: "AGG_IDENTITY_MISSING",
+  AGG_LOCATION_NOT_RESOLVED_BASIC: "AGG_LOCATION_NOT_RESOLVED_BASIC",
+  AGG_LOCATION_CONFLICT: "AGG_LOCATION_CONFLICT",
+  AGG_DIRECTION_CONFLICT: "AGG_DIRECTION_CONFLICT",
+  AGG_SEGMENT_CONFLICT: "AGG_SEGMENT_CONFLICT",
+  AGG_DUPLICATE_IDENTITY: "AGG_DUPLICATE_IDENTITY",
+  AGG_PUBLICATION_DISABLED: "AGG_PUBLICATION_DISABLED",
+  AGG_UNPROVEN_FIELD_BLOCKED: "AGG_UNPROVEN_FIELD_BLOCKED",
+  AGG_INTERNAL_SAFE_FAILURE: "AGG_INTERNAL_SAFE_FAILURE",
+  AGG_BATCH_TOO_LARGE: "AGG_BATCH_TOO_LARGE",
+  AGG_MEMORY_LIMIT: "AGG_MEMORY_LIMIT",
+  AGG_STAGING_FAILED: "AGG_STAGING_FAILED",
+  AGG_CLEANUP_FAILED: "AGG_CLEANUP_FAILED",
+});
+
+export const PUBLICATION_FIELD_ALLOWLIST = Object.freeze([
+  "eventIdHash",
+  "status",
+  "severityCategory",
+  "severitySeverity",
+  "titleSafe",
+  "summarySafe",
+  "validFrom",
+  "validTo",
+  "lastMeaningfulChangeAt",
+  "freshness",
+  "roadNumber",
+  "direction",
+  "administrativeArea",
+  "coordinates",
+  "kilometer",
+  "sourceLabel",
+  "attribution",
+  "locationCount",
+  "feedSignal",
+]);
+
+export function provenanceField(value, source, sourceUpdatedAt, validationStatus) {
+  return Object.freeze({
+    value: value === undefined ? null : value,
+    source: source || null,
+    sourceUpdatedAt: sourceUpdatedAt || null,
+    validationStatus: validationStatus || "unchecked",
+  });
+}
