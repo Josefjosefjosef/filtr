@@ -258,7 +258,9 @@
     "feed-classification-audit": "node scripts/audit-feed-classification.mjs",
     "test:feed-classification": "python scripts/test_iu_feed_classification.py",
     "validate:feed-classification": "python scripts/validate_feed_classification.py --skip-missing --enrich",
-    "iu-rychly-prehled-horizontal-content-guard": "node scripts/iu-rychly-prehled-horizontal-content-guard-v1.mjs"
+    "iu-rychly-prehled-horizontal-content-guard": "node scripts/iu-rychly-prehled-horizontal-content-guard-v1.mjs",
+    "iu-ndic-datex-v1-concurrency-fixtures": "node scripts/ndic-datex-v1-concurrency-fixtures.mjs",
+    "iu-ndic-datex-v1-concurrency-meta-fixtures": "node scripts/ndic-datex-v1-concurrency-meta-fixtures.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
