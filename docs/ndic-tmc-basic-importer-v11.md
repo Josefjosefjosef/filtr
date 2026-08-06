@@ -78,7 +78,7 @@ Synthetic fixtures only. Real NDIC archives must not be used as fixtures.
 
 ## Out of scope
 
-- DATEX → TMC resolver
+- DATEX → TMC resolver → see `docs/ndic-datex-tmc-basic-resolver.md`
 - Traffic cards / public API / production publication
 - NDIC network download / runner / workflow dispatch
 - Advanced RNLT / PES_LEV relationship graphs
