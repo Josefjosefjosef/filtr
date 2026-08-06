@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-06T09:16:08.041Z",
-    "lastSuccessAt": "2026-08-06T09:16:13.073Z",
+    "lastRunAt": "2026-08-06T09:32:45.554Z",
+    "lastSuccessAt": "2026-08-06T09:32:49.774Z",
     "lastChangedAt": "2026-08-06T09:16:12.045Z",
     "lastError": null,
     "status": "not_modified",
@@ -433,11 +433,11 @@
     "totalItems": 12,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 1,
+    "updateCount": 0,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 35,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 8,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -486,19 +486,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 8932,
+    "runMs": 14047,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-06T09:16:08.041Z",
+    "lastSnapshotAt": "2026-08-06T09:32:45.554Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-06T09:16:08.041Z",
       "officialLatestSentAt": "2026-08-06T11:14:37+02:00",
       "officialLatestValidFrom": "2026-08-06T11:10:58+02:00",
-      "discoveredAt": "2026-08-06T09:16:08.041Z",
-      "fetchedAt": "2026-08-06T09:16:08.041Z",
-      "transformedAt": "2026-08-06T09:16:16.973Z",
-      "validatedAt": "2026-08-06T09:16:16.973Z",
-      "publishedAt": "2026-08-06T09:16:08.041Z",
+      "discoveredAt": "2026-08-06T09:32:45.554Z",
+      "fetchedAt": "2026-08-06T09:32:45.554Z",
+      "transformedAt": "2026-08-06T09:32:59.602Z",
+      "validatedAt": "2026-08-06T09:32:59.602Z",
+      "publishedAt": "2026-08-06T09:32:45.554Z",
       "endToEndLagMs": 91041
     },
     "audit": {
@@ -506,9 +506,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060914.xml",
           "productKey": "50",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_041200.xml",
@@ -522,8 +522,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 35,
+          "capMessages": null,
+          "infoBlocks": null,
           "logicalAlerts": 8,
           "uniqueEvents": [
             "Vysoké teploty",
@@ -555,22 +555,20 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 0,
-        "update": 1,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-06T09:32:45.554Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 14047,
+        "error": null,
+        "activeCount": 9,
+        "scheduledCount": 0,
+        "publishableCount": 8
+      },
       {
         "at": "2026-08-06T09:16:08.041Z",
         "status": "not_modified",
@@ -1083,17 +1081,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6702,
-        "error": null,
-        "activeCount": 11,
-        "scheduledCount": 1,
-        "publishableCount": 11
-      },
-      {
-        "at": "2026-08-05T23:53:00.110Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 7412,
         "error": null,
         "activeCount": 11,
         "scheduledCount": 1,
