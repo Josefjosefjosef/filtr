@@ -22,8 +22,11 @@ on:
           - active
         default: off
 
+# Staging (off|shadow) MUST NOT share the CHMI/info-events pending slot.
+# GitHub still cancels prior pending runs in a group even when cancel-in-progress is false.
+# Active mode alone joins the shared production writer lock (same feed/monitoring targets).
 concurrency:
-  group: info-events-data-writers
+  group: ${{ inputs.mode == 'active' && 'info-events-data-writers' || 'ndic-datex-v1-internal-staging' }}
   cancel-in-progress: false
 
 permissions:
