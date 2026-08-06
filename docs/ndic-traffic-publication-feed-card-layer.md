@@ -145,13 +145,19 @@ Any hit → `PUBLICATION_SECURITY_CANARY_DETECTED` and snapshot failure.
 
 ## Why publication stays disabled
 
-This layer prepares audited projections for a future UI task. Live publication, public API, traffic UI, NDIC runners and production deploy remain out of scope until a separate end-to-end production-readiness audit passes.
+Live publication, public API, NDIC runners and production deploy remain disabled until a separate end-to-end production-readiness audit passes.
+
+## Related UI (Můj přehled dne)
+
+Traffic cards render **inside** Můj přehled dne via `assets/iu-traffic-overview-v1.js` (same timeline/actions as ČHMÚ). There is **no** separate Doprava home or standalone feed page. Offline snapshot + ŘSD prefs connect to existing settings rails. `PUBLICATION_ENABLED` remains `false`.
 
 ## Tests
 
 ```text
 npm run iu-ndic-traffic-publication-fixtures
 npm run iu-ndic-traffic-publication-meta-fixtures
+npm run iu-traffic-overview-ui-fixtures
+npm run iu-traffic-overview-ui-meta-fixtures
 ```
 
 Synthetic fixtures only. Node.js 24.

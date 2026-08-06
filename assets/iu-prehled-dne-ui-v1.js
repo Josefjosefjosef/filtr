@@ -33,10 +33,23 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=chmi-title-map-float-wrap-v1-20260804";
+} from "./iu-info-system-core-v1.js?v=traffic-overview-rsd-prehled-v1-20260806";
+import {
+  TRAFFIC_OVERVIEW_FLAGS,
+  TRAFFIC_SPATIAL,
+  TRAFFIC_TEMPORAL,
+  TRAFFIC_TYPE,
+  trafficBadgeModel,
+  resolveSafeTrafficMapUrl,
+  mergeTrafficIntoOverview,
+  isRsdTrafficSourceEnabled,
+  trafficFreshnessBanner,
+  trafficHistoryLines,
+  loadOfflineTrafficSnapshot,
+} from "./iu-traffic-overview-v1.js?v=traffic-overview-rsd-prehled-v1-20260806";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
+const CACHE_BUST = "traffic-overview-rsd-prehled-v1-20260806";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -91,7 +104,7 @@ const SOURCE_GROUPS = [
   { id: "policie", label: "Policie", groups: ["policie"] },
   { id: "hzs", label: "HZS", groups: ["hzs"] },
   { id: "chmi", label: "ČHMÚ", groups: ["pocasi"], sourceIds: ["chmi"] },
-  { id: "ndic", label: "NDIC", groups: ["doprava"], sourceIds: ["ndic"] },
+  { id: "ndic", label: "NDIC / ŘSD", groups: ["doprava"], sourceIds: ["ndic", "rsd"] },
   { id: "verejnopravni-media", label: "Veřejnoprávní média", groups: ["verejnopravni-media"] },
 ];
 
@@ -395,6 +408,13 @@ function filteredList() {
   };
   let list = filterEvents(items, filterPrefs, opts);
   list = expandChmiLocalityPresentationCards(list, f);
+  // Traffic cards from audited projections / offline snapshot — no separate Doprava home.
+  if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false && TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER) {
+    list = mergeTrafficIntoOverview(list, f, {
+      snapshot: loadOfflineTrafficSnapshot(),
+      nowIso: new Date().toISOString(),
+    });
+  }
   list = list.filter((ev) => {
     const id = String((ev && ev.id) || "");
     const src = chmiPresentationSourceId(ev) || id;
@@ -476,29 +496,42 @@ function displayEventTitle(ev, locationFilter) {
 
 function renderItem(ev) {
   const id = String(ev.id || "");
+  const isTraffic = !!(ev && ev.trafficV1);
   const forced = chmiPublicDetailUrl(ev);
+  const trafficMapUrl = isTraffic ? resolveSafeTrafficMapUrl(ev.trafficV1.mapTarget) : "";
   // CHMI: never fall back to XML / specialized publisher web — portal only.
-  const url = ev && ev.capV2 ? safeHttpUrl(forced) : safeHttpUrl(forced || ev.url || ev.originalUrl);
+  // Traffic: only allowlisted mapTarget URLs (never heuristic internal IDs).
+  const url = isTraffic
+    ? safeHttpUrl(trafficMapUrl)
+    : ev && ev.capV2
+      ? safeHttpUrl(forced)
+      : safeHttpUrl(forced || ev.url || ev.originalUrl);
   const locationFilter = effectivePrefs();
-  const title = displayEventTitle(ev, locationFilter);
+  const title = isTraffic
+    ? String((ev.trafficV1.feed && ev.trafficV1.feed.feedHeadline) || ev.title || "Dopravní událost")
+    : displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
   const isNdic =
     String(ev.sourceId || "") === "ndic" ||
     String(ev.adapterOwner || "") === "ndic-datex-v1" ||
     !!(ev && ev.ndicV1);
-  const srcPill = ev.capV2
-    ? srcRaw
-      ? "Zdroj: " + srcRaw
-      : "Zdroj: ČHMÚ"
-    : isNdic
-      ? "Zdroj: NDIC"
-      : srcRaw;
+  const srcPill = isTraffic
+    ? "Zdroj: ŘSD/NDIC"
+    : ev.capV2
+      ? srcRaw
+        ? "Zdroj: " + srcRaw
+        : "Zdroj: ČHMÚ"
+      : isNdic
+        ? "Zdroj: NDIC"
+        : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
-  const region = ev.capV2
-    ? String(regionFiltered || "")
-    : ev.region && (ev.region.summary || ev.region.name)
-      ? String(ev.region.summary || ev.region.name)
-      : "";
+  const region = isTraffic
+    ? String((ev.trafficV1 && (ev.trafficV1.location || ev.trafficV1.road)) || "")
+    : ev.capV2
+      ? String(regionFiltered || "")
+      : ev.region && (ev.region.summary || ev.region.name)
+        ? String(ev.region.summary || ev.region.name)
+        : "";
   // Hide locality meta pill when the same text is already in the title (CAP cards).
   const regionPill = region && title.indexOf(region) === -1 ? region : "";
   const imp = importanceLabel(ev);
@@ -509,6 +542,8 @@ function renderItem(ev) {
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
+  const trafficBadge = isTraffic ? trafficBadgeModel(ev.trafficV1) : null;
+  const trafficActive = isTraffic && ev.trafficV1.lifecycleStatus === "ACTIVE";
   const timeline = getEffectiveTimelinePresentation(ev, Date.now());
   const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
   const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
@@ -549,7 +584,9 @@ function renderItem(ev) {
   // Green AKTIVNÍ pill follows live lifecycle (ACTIVE only), not badgeActive (active+future warn cards).
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
-    : "";
+    : trafficActive
+      ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Aktivní dopravní událost">AKTIVNÍ DOPRAVA</span>`
+      : "";
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
@@ -558,16 +595,41 @@ function renderItem(ev) {
   const czMapMarkup =
     ev && ev.capV2 && url
       ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
-      : "";
+      : isTraffic && url
+        ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít mapu ŘSD"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
+        : isTraffic
+          ? `<span class="iuPdCard__czMap iuPrehledDne__czMap iuPdCard__czMap--static" aria-hidden="true"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" focusable="false"><use href="#iu-cz-map"></use></svg></span>`
+          : "";
   const warnBadge = capActive
     ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
     : capEnded
       ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
-      : "";
+      : trafficBadge
+        ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge iuPdCard__warnBadge--traffic iuPdCard__warnBadge--${esc(
+            trafficBadge.kind
+          )}" role="status" aria-label="${esc(trafficBadge.aria)}">${esc(trafficBadge.text)}</span>`
+        : "";
   const regionCoverage = String((ev && ev._iuPresentation && ev._iuPresentation.regionCoverageLine) || "").trim();
   const regionCoverageMarkup = regionCoverage
     ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
     : "";
+  let trafficMetaExtra = "";
+  if (isTraffic) {
+    const tv = ev.trafficV1;
+    const bits = [];
+    if (tv.road) bits.push(String(tv.road));
+    if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
+    if (tv.section) bits.push(String(tv.section));
+    if (tv.direction) bits.push(String(tv.direction));
+    if (tv.impact) bits.push(String(tv.impact));
+    if (tv.freshness) bits.push("Čerstvost: " + String(tv.freshness));
+    if (tv.changeTimeSource === "DOWNLOAD_FALLBACK") bits.push("čas změny: fallback stažení");
+    const hist = trafficHistoryLines(tv);
+    if (hist.length) bits.push("Historie: " + hist.join(", "));
+    trafficMetaExtra = bits
+      .map((b) => `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(b)}</span>`)
+      .join("");
+  }
   /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it. */
   const cardHead = czMapMarkup
     ? `<div class="iuPrehledDne__cardHead">` +
@@ -580,7 +642,9 @@ function renderItem(ev) {
       `</div>`
     : warnBadge + titleMarkup + regionCoverageMarkup;
   return (
-    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
+    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}${
+      isTraffic ? " iuPdCard--traffic" : ""
+    }" data-id="${esc(id)}"${isTraffic ? ' data-iu-traffic="1"' : ""} style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
     `<div class="iuPdCard__time iuPrehledDne__time">${timePrimary}</div>` +
     timeSub +
@@ -588,7 +652,9 @@ function renderItem(ev) {
     timeValidFrom +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
-    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
+    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${
+      alert || capActive || (trafficBadge && trafficBadge.kind === "new") ? " iuPrehledDne__dot--alert" : ""
+    }"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""}">` +
     cardHead +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
@@ -596,6 +662,7 @@ function renderItem(ev) {
     activePill +
     (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
     (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
+    trafficMetaExtra +
     `</div>` +
     `<div class="iuPdCard__actions iuPrehledDne__actions">` +
     (hiddenMode
@@ -934,11 +1001,95 @@ function renderSourcesBody(draft) {
     })
     .join("");
 
+  const rsdOn = isRsdTrafficSourceEnabled(draft);
+  const trafficPrefsHtml = rsdOn
+    ? `<div class="iuPdTrafficPrefs" data-iu-pd-sec="traffic-rsd" data-iu-traffic-prefs="1">` +
+      `<div class="iuPdSubhead">Ředitelství silnic a dálnic — lokalita dopravy</div>` +
+      `<div class="iuPdChecks">` +
+      checkRow(
+        "traffic-spatial",
+        TRAFFIC_SPATIAL.MY_SELECTION,
+        "Můj výběr",
+        draft.trafficSpatialMode === TRAFFIC_SPATIAL.MY_SELECTION,
+        'data-draft-act="traffic-spatial" data-id="MY_SELECTION"'
+      ) +
+      checkRow(
+        "traffic-spatial",
+        TRAFFIC_SPATIAL.MY_ROUTES,
+        "Moje trasy",
+        draft.trafficSpatialMode === TRAFFIC_SPATIAL.MY_ROUTES,
+        'data-draft-act="traffic-spatial" data-id="MY_ROUTES"'
+      ) +
+      checkRow(
+        "traffic-spatial",
+        TRAFFIC_SPATIAL.NEAR_ME,
+        "V mém okolí",
+        draft.trafficSpatialMode === TRAFFIC_SPATIAL.NEAR_ME,
+        'data-draft-act="traffic-spatial" data-id="NEAR_ME"'
+      ) +
+      checkRow(
+        "traffic-spatial",
+        TRAFFIC_SPATIAL.WHOLE_CZ,
+        "Celá ČR",
+        !draft.trafficSpatialMode || draft.trafficSpatialMode === TRAFFIC_SPATIAL.WHOLE_CZ,
+        'data-draft-act="traffic-spatial" data-id="WHOLE_CZ"'
+      ) +
+      `</div>` +
+      `<div class="iuPdSubhead">Čas dopravy</div>` +
+      `<div class="iuPdChecks iuPdChecks--grid">` +
+      [
+        [TRAFFIC_TEMPORAL.NOW, "Teď"],
+        [TRAFFIC_TEMPORAL.TODAY, "Dnes"],
+        [TRAFFIC_TEMPORAL.TOMORROW, "Zítra"],
+        [TRAFFIC_TEMPORAL.WEEKEND, "Víkend"],
+        [TRAFFIC_TEMPORAL.CUSTOM_DATETIME, "Vlastní datum a čas"],
+      ]
+        .map(([id, label]) =>
+          checkRow(
+            "traffic-temporal",
+            id,
+            label,
+            draft.trafficTemporalFilter === id,
+            `data-draft-act="traffic-temporal" data-id="${esc(id)}"`
+          )
+        )
+        .join("") +
+      `</div>` +
+      `<div class="iuPdSubhead">Typ dopravy</div>` +
+      `<div class="iuPdChecks iuPdChecks--grid">` +
+      [
+        [TRAFFIC_TYPE.ALL, "Vše"],
+        [TRAFFIC_TYPE.ACCIDENTS, "Nehody"],
+        [TRAFFIC_TYPE.CLOSURES, "Uzavírky"],
+        [TRAFFIC_TYPE.RESTRICTIONS, "Omezení"],
+        [TRAFFIC_TYPE.QUEUES, "Kolony"],
+        [TRAFFIC_TYPE.ROADWORKS, "Práce"],
+        [TRAFFIC_TYPE.ROAD_AND_WEATHER, "Počasí"],
+        [TRAFFIC_TYPE.FUTURE, "Budoucí"],
+        [TRAFFIC_TYPE.ENDED, "Ukončené"],
+        [TRAFFIC_TYPE.SEVERE, "Závažné"],
+      ]
+        .map(([id, label]) =>
+          checkRow(
+            "traffic-type",
+            id,
+            label,
+            draft.trafficTypeFilter === id,
+            `data-draft-act="traffic-type" data-id="${esc(id)}"`
+          )
+        )
+        .join("") +
+      `</div>` +
+      `<p class="iuPdMuted">Publikace NDIC zůstává vypnutá. Karty vycházejí jen z auditovaných projekcí / offline snapshotu.</p>` +
+      `</div>`
+    : "";
+
   return (
     `<div class="iuPdChecks" data-iu-pd-sec="zdroje">` +
     checkRow("source-all", "all", "Vše", all, 'data-draft-act="sources-all"', partial) +
     groupsHtml +
     (standHtml ? `<div class="iuPdSubhead">Samostatné instituce</div>${standHtml}` : "") +
+    trafficPrefsHtml +
     `</div>`
   );
 }
@@ -1076,6 +1227,12 @@ function settingsCtaInnerHtml() {
 
 function homeShellHtml(listHtml, countLabel, moreHtml) {
   const mode = state.viewMode;
+  const offlineSnap = loadOfflineTrafficSnapshot();
+  const fresh = trafficFreshnessBanner(offlineSnap);
+  const trafficOfflineBanner =
+    fresh && isRsdTrafficSourceEnabled(effectivePrefs())
+      ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
+      : "";
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
@@ -1098,6 +1255,7 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
+    trafficOfflineBanner +
     `<ul class="iuPdFeed iuPrehledDne__timeline" id="iuPrehledDneTimeline">${listHtml}</ul>` +
     `<div id="iuPdMoreWrap">${moreHtml}</div>` +
     `</section>`
@@ -1411,6 +1569,12 @@ function syncDraftFromEvent(ev) {
     let okresy = asLocList(draft, "okres");
     okresy = checked ? Array.from(new Set(okresy.concat(id))) : okresy.filter((x) => x !== id);
     setLocList(draft, "okres", okresy);
+  } else if (act === "traffic-spatial") {
+    draft.trafficSpatialMode = checked ? id : TRAFFIC_SPATIAL.WHOLE_CZ;
+  } else if (act === "traffic-temporal") {
+    draft.trafficTemporalFilter = checked ? id : TRAFFIC_TEMPORAL.NOW;
+  } else if (act === "traffic-type") {
+    draft.trafficTypeFilter = checked ? id : TRAFFIC_TYPE.ALL;
   }
 
   const scrollEl = document.getElementById("iuPdSettingsScroll");

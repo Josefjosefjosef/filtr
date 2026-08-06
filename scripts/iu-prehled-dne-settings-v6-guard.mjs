@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
+const CACHE_BUST = "traffic-overview-rsd-prehled-v1-20260806";
 const fails = [];
 
 function must(cond, id) {
@@ -65,7 +65,7 @@ function staticGate() {
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-08-04-bottom-nav-unify-stable-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(/2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
