@@ -98,7 +98,7 @@ async function run() {
   {
     const { dir, file } = writeZip("unk.zip", buildSyntheticBasicTmcZipBuffer({ extraUnknownDat: true }));
     const r = await importBasicTmcArchive(file, { workDir: path.join(dir, "w"), measureDeps: AMPLE, skipArchiveHash: true });
-    ok("unknown_table", r.ok === false && r.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT, r.rejectCode);
+    ok("unknown_table_ignored_not_fatal", r.ok === true && (r.ignoredNonStandardCount || 0) >= 1, r.rejectCode || r.ignoredNonStandardCount);
     wipe(dir);
   }
 

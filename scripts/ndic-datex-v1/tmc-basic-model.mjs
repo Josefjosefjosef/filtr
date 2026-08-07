@@ -39,6 +39,8 @@ export function emptyMetrics() {
     archiveEntryCount: 0,
     datEntryCount: 0,
     standardTableCount: 0,
+    ignoredNonStandardCount: 0,
+    ignoredNonStandardExtCounts: Object.create(null),
     parsedRowCount: 0,
     acceptedRowCount: 0,
     rejectedRowCount: 0,

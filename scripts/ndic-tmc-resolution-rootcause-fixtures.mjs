@@ -21,7 +21,10 @@ import {
   parseSp08001Coordinate,
   buildTmcResolverTableFromSp08001Accepted,
 } from "./ndic-datex-v1/tmc-resolver-table-bridge.mjs";
+import { classifyManifest } from "./ndic-datex-v1/tmc-basic-importer.mjs";
 import { OBSERVED_TMC_ZIP_UNCOMPRESSED, OBSERVED_TMC_ZIP_LARGEST_ENTRY } from "./ndic-datex-v1/disk-preflight.mjs";
+import { TMC_IMPORTER_ERROR } from "./ndic-datex-v1/tmc-importer-errors.mjs";
+import { SP08001_TABLE_CODES } from "./ndic-datex-v1/tmc-sp08001-contract.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fails = [];
@@ -172,6 +175,67 @@ const AMPLE = {
   ok("rc5_allowlist_reason", /"TMC_REASON"/.test(c));
   ok("rc5_allowlist_active", /"TMC_ACTIVE"/.test(c));
   ok("rc5_allowlist_points", /"TMC_POINT_COUNT"/.test(c));
+  ok("rc5_allowlist_ignored", /"TMC_NONSTANDARD_IGNORED_COUNT"/.test(c));
+}
+
+// --- Cycle 6: classifyManifest ignores non-SP08001 sidecars (root cause of run 31154704577) ---
+{
+  const forensic = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        process.env.TEMP || os.tmpdir(),
+        "iu_ndic_forensic_31154704577",
+        "ndic-shadow-forensic-31154704577-64fd72caa801335b6500587906703166979d7839",
+        "ndic-shadow-forensic-summary.json"
+      ),
+      "utf8"
+    )
+  );
+  ok("rc6_forensic_reason_unknown_table", forensic.TMC_REASON === "TMC_UNKNOWN_TABLE_PRESENT");
+  ok("rc6_forensic_archive_false", forensic.TMC_ARCHIVE_USED === false);
+  ok("rc6_forensic_points_zero", forensic.TMC_POINT_COUNT === 0);
+
+  const std = SP08001_TABLE_CODES.map((code) => ({ tableCode: code, ext: "dat", role: "standard" }));
+  std.push({ tableCode: "README", ext: "dat", role: "metadata" });
+  const withLicense = [
+    ...std,
+    { tableCode: null, ext: "txt", role: "unknown_txt" },
+    { tableCode: null, ext: "dat", role: "unknown_dat" },
+    { tableCode: null, ext: "csv", role: "unknown_txt" },
+    { tableCode: null, ext: "shp", role: "shp_layer" },
+  ];
+  const m = classifyManifest(withLicense);
+  ok("rc6_classify_ok_with_sidecars", m.ok === true, m.rejectCode);
+  ok("rc6_ignored_count", m.ignoredNonStandardCount === 3, m.ignoredNonStandardCount);
+  ok("rc6_shp_not_counted", (m.ignoredNonStandardExtCounts && m.ignoredNonStandardExtCounts.shp) == null);
+  ok("rc6_txt_counted", m.ignoredNonStandardExtCounts.txt === 1);
+  ok("rc6_dat_counted", m.ignoredNonStandardExtCounts.dat === 1);
+  ok("rc6_csv_counted", m.ignoredNonStandardExtCounts.csv === 1);
+
+  const missingPts = classifyManifest([
+    ...std.filter((t) => t.tableCode !== "POINTS"),
+    { tableCode: null, ext: "txt", role: "unknown_txt" },
+  ]);
+  ok(
+    "rc6_missing_points_still_fails",
+    missingPts.ok === false && missingPts.rejectCode === TMC_IMPORTER_ERROR.TMC_REQUIRED_TABLE_MISSING,
+    missingPts.rejectCode
+  );
+
+  const buf = buildSyntheticBasicTmcZipBuffer({ extraUnknownDat: true });
+  const work = fs.mkdtempSync(path.join(os.tmpdir(), "iu-tmc-rc6-"));
+  const loaded = await loadTmcTableFromDownload(buf, {
+    workDir: work,
+    skipArchiveHash: true,
+    limits: { ...DEFAULT_ZIP_LIMITS },
+  });
+  ok("rc6_load_with_unknown_ok", loaded.ok === true, loaded.rejectCode);
+  ok("rc6_ignored_propagated", (loaded.ignoredNonStandardCount || 0) >= 1, loaded.ignoredNonStandardCount);
+  const store = emptyTmcStore();
+  const act = activateTmcTable(store, loaded.table, {});
+  ok("rc6_activate_with_unknown", act.ok === true, act.reason);
+  const loc = localizeFromTmc([{ locationCode: 10001, countryCode: 2, tableNumber: 25 }], store.active, {});
+  ok("rc6_localize_after_ignore", loc.trust === "tmc" && loc.tmcOk >= 1);
 }
 
 if (fails.length) {

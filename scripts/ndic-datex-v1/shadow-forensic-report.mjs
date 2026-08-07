@@ -340,6 +340,9 @@ export function buildShadowForensicBundle(ctx = {}) {
         ctx.diagnostics.tmc.meta.pointCount) ||
         0
     ),
+    TMC_NONSTANDARD_IGNORED_COUNT: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.ignoredNonStandardCount) || 0
+    ),
     TMC_RESOLVER_VERSION: clip(PARSER_VERSION, 64) || "unknown",
     LOADED_EVENTS: loaded,
     ACTIVE_EVENTS: m.active,
@@ -514,6 +517,7 @@ export function printShadowForensicStdout(summary, validationReport) {
     "TMC_REASON=" + (summary && summary.TMC_REASON),
     "TMC_ACTIVE=" + (summary && summary.TMC_ACTIVE ? "true" : "false"),
     "TMC_POINT_COUNT=" + (summary && summary.TMC_POINT_COUNT),
+    "TMC_NONSTANDARD_IGNORED_COUNT=" + (summary && summary.TMC_NONSTANDARD_IGNORED_COUNT),
     "RESOLVED_OTHER_VALID_LOCATION=" + (summary && summary.RESOLVED_OTHER_VALID_LOCATION),
     "UNRESOLVED_TOTAL=" + (summary && summary.UNRESOLVED_TOTAL),
     "UNRESOLVED_TMC_REFERENCE=" + (summary && summary.UNRESOLVED_TMC_REFERENCE),

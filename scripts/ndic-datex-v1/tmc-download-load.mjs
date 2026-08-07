@@ -111,6 +111,7 @@ export async function loadTmcTableFromDownload(input, opts = {}) {
         table: imported.resolverTable,
         source: "sp08001_basic",
         importerStatus: imported.importerStatus,
+        ignoredNonStandardCount: imported.ignoredNonStandardCount || 0,
       };
     }
 

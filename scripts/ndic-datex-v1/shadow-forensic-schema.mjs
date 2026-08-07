@@ -78,6 +78,7 @@ export function validateForensicSummary(summary) {
   }
   if (typeof summary.TMC_ACTIVE !== "boolean") fails.push("TMC_ACTIVE");
   if (!isNonNegInt(summary.TMC_POINT_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_POINT_COUNT");
+  if (!isNonNegInt(summary.TMC_NONSTANDARD_IGNORED_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_NONSTANDARD_IGNORED_COUNT");
   if (typeof summary.TMC_RESOLVER_VERSION !== "string" || summary.TMC_RESOLVER_VERSION.length > 64) fails.push("TMC_RESOLVER_VERSION");
 
   const intFields = [

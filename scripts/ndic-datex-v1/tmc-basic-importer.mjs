@@ -146,14 +146,23 @@ export function tmcArchivePreflight(zipPath, lim) {
 
 /**
  * Classify DAT targets into standard tables + README metadata.
+ *
+ * Unmapped .dat/.txt/.csv are treated as supplementary_non_authoritative
+ * (aligned with SP08001 format-promotion): counted + ignored, never imported,
+ * never activate resolver rows from them. Missing required SP08001 tables still fail-closed.
+ * Shapefile/sqlite/cpg peeks have no tableCode and are skipped without counting as tables.
  */
 export function classifyManifest(targets) {
   const byCode = Object.create(null);
-  const unknownDat = [];
+  const ignoredNonStandard = [];
+  const ignoredNonStandardExtCounts = Object.create(null);
   let readme = null;
   for (const t of targets || []) {
     if (!t.tableCode) {
-      if (t.ext === "dat" || t.ext === "txt" || t.ext === "csv") unknownDat.push(t);
+      if (t.ext === "dat" || t.ext === "txt" || t.ext === "csv") {
+        ignoredNonStandard.push({ ext: String(t.ext), role: String(t.role || "unknown") });
+        ignoredNonStandardExtCounts[t.ext] = (ignoredNonStandardExtCounts[t.ext] || 0) + 1;
+      }
       continue;
     }
     if (t.tableCode === "README") {
@@ -166,9 +175,6 @@ export function classifyManifest(targets) {
     }
     byCode[t.tableCode] = t;
   }
-  if (unknownDat.length > 0) {
-    return { ok: false, rejectCode: TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT };
-  }
   const missing = [];
   for (const code of SP08001_TABLE_CODES) {
     if (!byCode[code]) missing.push(code);
@@ -180,6 +186,8 @@ export function classifyManifest(targets) {
     ok: true,
     byCode,
     readme,
+    ignoredNonStandardCount: ignoredNonStandard.length,
+    ignoredNonStandardExtCounts,
     standardTableCount: SP08001_STANDARD_TABLE_COUNT,
     role: {
       README: "METADATA_ONLY",
@@ -373,6 +381,8 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
     const manifest = classifyManifest(collected.targets);
     if (!manifest.ok) return fail(manifest.rejectCode);
     metrics.standardTableCount = manifest.standardTableCount;
+    metrics.ignoredNonStandardCount = manifest.ignoredNonStandardCount || 0;
+    metrics.ignoredNonStandardExtCounts = manifest.ignoredNonStandardExtCounts || {};
 
     const tableStore = Object.create(null);
     let languagesExtensionFieldPresent = false;
@@ -668,6 +678,7 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
       indexDirCategory: "task_owned",
       ...(opts.returnInternalPaths === true ? { _internalIndexPaths: paths } : {}),
       ...(resolverTable ? { resolverTable } : {}),
+      ignoredNonStandardCount: metrics.ignoredNonStandardCount || 0,
       tableCounts: Object.fromEntries(Object.keys(publicTables).map((k) => [k, publicTables[k].rowCount])),
       diskFormulaVersion: DISK_FORMULA_VERSION,
       authoritativeFormatVerified: true,

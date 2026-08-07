@@ -224,6 +224,7 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
       ok: act.ok,
       reason: act.ok ? act.reason || "activated" : act.reason || "activate_failed",
       source: loaded.source,
+      ignoredNonStandardCount: Number(loaded.ignoredNonStandardCount) || 0,
       authSource: config.tmcAuthSource,
       meta: tmcPublicMeta(tmcStore),
     };
