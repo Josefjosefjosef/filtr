@@ -7,11 +7,13 @@ import { provenanceField } from "./ndic-datex-v1/traffic-event-aggregation-const
 import { DIRECTION } from "./ndic-datex-v1/datex-tmc-resolver-constants.mjs";
 import {
   classifyLocationPresentation,
+  classifyFeedItemPresentationForensics,
   buildLocationDisclosureCs,
   assertFailClosedBucketsNeverInventGeo,
   LOCATION_PRESENTATION_LEVEL,
   SUBJECT_SCOPE_KIND,
   ROUTE_MATCH_MODE,
+  FORENSIC_MAP_LINK_TYPE,
 } from "./ndic-datex-v1/traffic-location-presentation-policy.mjs";
 import { buildTrafficPublicationProjection } from "./ndic-datex-v1/traffic-publication-projection.mjs";
 import { buildTrafficCardProjection } from "./ndic-datex-v1/traffic-card-projection.mjs";
@@ -175,6 +177,37 @@ function baseEvent(extra = {}) {
   ok("mut_no_trust_assign", !/localizationTrust\s*=/.test(src));
   ok("mut_no_geocode", !/geocode\(|fuzzy.?match|map.?match|\bfuzzy\b/i.test(srcClean));
   ok("mut_no_pub_on", !/PUBLICATION_ENABLED\s*:\s*true/.test(src));
+}
+
+// Feed-item forensic counters (count-only; no TRUST_AFTER alias in summary keys)
+{
+  const preciseItem = {
+    localizationTrust: "openlr",
+    ndicV1: { forensic: { trustAfterResolver: "openlr" } },
+  };
+  const scopedItem = {
+    localizationTrust: "text",
+    roadNumber: "D1",
+    ndicV1: { forensic: {} },
+  };
+  const generalItem = {
+    localizationTrust: "national_fallback",
+    ndicV1: { forensic: {} },
+  };
+  const p1 = classifyFeedItemPresentationForensics(preciseItem);
+  ok("feed_precise", p1.locationPresentationLevel === "PRECISE");
+  ok("feed_precise_map", p1.mapLinkType === FORENSIC_MAP_LINK_TYPE.VERIFIED_LOCATION);
+  const p2 = classifyFeedItemPresentationForensics(scopedItem);
+  ok("feed_scoped", p2.locationPresentationLevel === "SCOPED");
+  ok("feed_scoped_map", p2.mapLinkType === FORENSIC_MAP_LINK_TYPE.GENERAL_RSD_FALLBACK);
+  const p3 = classifyFeedItemPresentationForensics(generalItem);
+  ok("feed_general", p3.locationPresentationLevel === "GENERAL");
+  ok("feed_general_map", p3.mapLinkType === FORENSIC_MAP_LINK_TYPE.GENERAL_RSD_FALLBACK);
+  const direct = classifyFeedItemPresentationForensics({
+    localizationTrust: "national_fallback",
+    url: "https://www.dopravniinfo.cz/event/abc",
+  });
+  ok("feed_direct_event", direct.mapLinkType === FORENSIC_MAP_LINK_TYPE.DIRECT_EVENT);
 }
 
 if (fails.length) {

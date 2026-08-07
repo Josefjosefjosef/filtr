@@ -34,6 +34,11 @@ import {
   validateValidationReport,
   scanForensicCanaries,
 } from "./shadow-forensic-schema.mjs";
+import {
+  classifyFeedItemPresentationForensics,
+  LOCATION_PRESENTATION_LEVEL,
+  FORENSIC_MAP_LINK_TYPE,
+} from "./traffic-location-presentation-policy.mjs";
 import { PARSER_VERSION } from "./config.mjs";
 import { SP08001_TABLE_CODES } from "./tmc-sp08001-contract.mjs";
 
@@ -295,6 +300,20 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     outcomeValidNoGeom: 0,
     outcomeFailClosed: 0,
   };
+  const locationPresentation = {
+    PRECISE: 0,
+    SCOPED: 0,
+    GENERAL: 0,
+    NONE: 0,
+    total: 0,
+  };
+  const mapLinkInventory = {
+    DIRECT_EVENT: 0,
+    VERIFIED_LOCATION: 0,
+    GENERAL_RSD_FALLBACK: 0,
+    NONE: 0,
+    total: 0,
+  };
 
   function bumpRootMap(map, name) {
     const key = String(name || "")
@@ -311,6 +330,22 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     else if (st === "naplanovano") future += 1;
     else if (st === "ukonceno") ended += 1;
     else if (st === "zruseno") cancelled += 1;
+
+    const presentationForensic = classifyFeedItemPresentationForensics(it);
+    const pLevel = String(presentationForensic.locationPresentationLevel || LOCATION_PRESENTATION_LEVEL.NONE);
+    if (Object.prototype.hasOwnProperty.call(locationPresentation, pLevel)) {
+      locationPresentation[pLevel] += 1;
+    } else {
+      locationPresentation.NONE += 1;
+    }
+    locationPresentation.total += 1;
+    const mType = String(presentationForensic.mapLinkType || FORENSIC_MAP_LINK_TYPE.NONE);
+    if (Object.prototype.hasOwnProperty.call(mapLinkInventory, mType)) {
+      mapLinkInventory[mType] += 1;
+    } else {
+      mapLinkInventory.NONE += 1;
+    }
+    mapLinkInventory.total += 1;
 
     const trust = String((it && it.localizationTrust) || "");
     const tmcOk = it && it.ndicV1 && Number(it.ndicV1.tmcOk) > 0;
@@ -589,6 +624,8 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
       digestRows: predefinedRefDigestRows,
     },
     lcdCodesOnly,
+    locationPresentation,
+    mapLinkInventory,
   };
 }
 
@@ -911,6 +948,16 @@ export function buildShadowForensicBundle(ctx = {}) {
     LCD_CODES_ONLY_HISTORICAL_OR_FOREIGN_REFERENCE: m.lcdCodesOnly.outcomeHistoricalForeign,
     LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY: m.lcdCodesOnly.outcomeValidNoGeom,
     LCD_CODES_ONLY_CORRECT_FAIL_CLOSED: m.lcdCodesOnly.outcomeFailClosed,
+    LOCATION_PRESENTATION_PRECISE: m.locationPresentation.PRECISE,
+    LOCATION_PRESENTATION_SCOPED: m.locationPresentation.SCOPED,
+    LOCATION_PRESENTATION_GENERAL: m.locationPresentation.GENERAL,
+    LOCATION_PRESENTATION_NONE: m.locationPresentation.NONE,
+    LOCATION_PRESENTATION_TOTAL: m.locationPresentation.total,
+    MAP_LINK_TYPE_DIRECT_EVENT: m.mapLinkInventory.DIRECT_EVENT,
+    MAP_LINK_TYPE_VERIFIED_LOCATION: m.mapLinkInventory.VERIFIED_LOCATION,
+    MAP_LINK_TYPE_GENERAL_RSD_FALLBACK: m.mapLinkInventory.GENERAL_RSD_FALLBACK,
+    MAP_LINK_TYPE_NONE: m.mapLinkInventory.NONE,
+    MAP_LINK_TOTAL: m.mapLinkInventory.total,
     SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION: m.supplementaryClass.verifiable_standard,
     SUPPLEMENTARY_TEXT_ONLY: m.supplementaryClass.text_only,
     SUPPLEMENTARY_INCOMPLETE: m.supplementaryClass.incomplete,
@@ -1195,6 +1242,16 @@ export function printShadowForensicStdout(summary, validationReport) {
       "LCD_CODES_ONLY_HISTORICAL_OR_FOREIGN_REFERENCE",
       "LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY",
       "LCD_CODES_ONLY_CORRECT_FAIL_CLOSED",
+      "LOCATION_PRESENTATION_PRECISE",
+      "LOCATION_PRESENTATION_SCOPED",
+      "LOCATION_PRESENTATION_GENERAL",
+      "LOCATION_PRESENTATION_NONE",
+      "LOCATION_PRESENTATION_TOTAL",
+      "MAP_LINK_TYPE_DIRECT_EVENT",
+      "MAP_LINK_TYPE_VERIFIED_LOCATION",
+      "MAP_LINK_TYPE_GENERAL_RSD_FALLBACK",
+      "MAP_LINK_TYPE_NONE",
+      "MAP_LINK_TOTAL",
       "SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION",
       "SUPPLEMENTARY_TEXT_ONLY",
       "SUPPLEMENTARY_INCOMPLETE",

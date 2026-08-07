@@ -212,3 +212,112 @@ export function assertFailClosedBucketsNeverInventGeo(presentation) {
   }
   return true;
 }
+
+/** Forensic map-link inventory labels (count-only; no URLs). */
+export const FORENSIC_MAP_LINK_TYPE = Object.freeze({
+  DIRECT_EVENT: "DIRECT_EVENT",
+  VERIFIED_LOCATION: "VERIFIED_LOCATION",
+  GENERAL_RSD_FALLBACK: "GENERAL_RSD_FALLBACK",
+  NONE: "NONE",
+});
+
+/**
+ * Count-only presentation + map-link classification for a normalized NDIC feed item.
+ * Forensic-only — does not change trust/resolver/publication.
+ * Prefers forensic.locationPresentationLevel / mapLinkType when already attached.
+ *
+ * @param {object|null|undefined} item
+ */
+export function classifyFeedItemPresentationForensics(item) {
+  const it = item && typeof item === "object" ? item : {};
+  const forensic = (it.ndicV1 && it.ndicV1.forensic) || {};
+
+  let level = forensic.locationPresentationLevel
+    ? String(forensic.locationPresentationLevel)
+    : null;
+  if (
+    level !== LOCATION_PRESENTATION_LEVEL.PRECISE &&
+    level !== LOCATION_PRESENTATION_LEVEL.SCOPED &&
+    level !== LOCATION_PRESENTATION_LEVEL.GENERAL &&
+    level !== LOCATION_PRESENTATION_LEVEL.NONE
+  ) {
+    level = null;
+  }
+
+  const trust = String(
+    it.localizationTrust || forensic.trustAfterResolver || forensic.trustBeforeResolver || ""
+  ).toLowerCase();
+
+  if (!level) {
+    if (trust === "tmc" || trust === "openlr" || trust === "coordinates") {
+      level = LOCATION_PRESENTATION_LEVEL.PRECISE;
+    } else if (trust === "text") {
+      level = LOCATION_PRESENTATION_LEVEL.SCOPED;
+    } else {
+      const roadRaw =
+        it.roadNumber != null
+          ? String(it.roadNumber).trim()
+          : it.ndicV1 && it.ndicV1.roadNumber != null
+            ? String(it.ndicV1.roadNumber).trim()
+            : "";
+      // Subject-scope road without verified precise trust → SCOPED (never invents coords).
+      if (roadRaw && roadRaw !== "0" && !/^neznám/i.test(roadRaw)) {
+        level = LOCATION_PRESENTATION_LEVEL.SCOPED;
+      } else if (trust === "national_fallback" || trust === "none" || trust === "") {
+        level = LOCATION_PRESENTATION_LEVEL.GENERAL;
+      } else {
+        level = LOCATION_PRESENTATION_LEVEL.NONE;
+      }
+    }
+  }
+
+  let mapLinkType = forensic.mapLinkTypeForensic
+    ? String(forensic.mapLinkTypeForensic)
+    : forensic.mapLinkType
+      ? String(forensic.mapLinkType)
+      : null;
+  if (
+    mapLinkType !== FORENSIC_MAP_LINK_TYPE.DIRECT_EVENT &&
+    mapLinkType !== FORENSIC_MAP_LINK_TYPE.VERIFIED_LOCATION &&
+    mapLinkType !== FORENSIC_MAP_LINK_TYPE.GENERAL_RSD_FALLBACK &&
+    mapLinkType !== FORENSIC_MAP_LINK_TYPE.NONE
+  ) {
+    if (mapLinkType === "OFFICIAL_EVENT") mapLinkType = FORENSIC_MAP_LINK_TYPE.DIRECT_EVENT;
+    else if (mapLinkType === "VERIFIED_LOCATION") mapLinkType = FORENSIC_MAP_LINK_TYPE.VERIFIED_LOCATION;
+    else if (mapLinkType === "GENERAL_RSD_MAP") mapLinkType = FORENSIC_MAP_LINK_TYPE.GENERAL_RSD_FALLBACK;
+    else if (mapLinkType === "NONE") mapLinkType = FORENSIC_MAP_LINK_TYPE.NONE;
+    else mapLinkType = null;
+  }
+
+  if (!mapLinkType) {
+    const url = String(it.url || it.originalUrl || "").trim();
+    let officialEvent = false;
+    try {
+      if (url) {
+        const u = new URL(url);
+        const host = u.hostname.replace(/^www\./, "").toLowerCase();
+        if (
+          (host === "dopravniinfo.cz" || host.endsWith(".dopravniinfo.cz")) &&
+          /\/event\//i.test(u.pathname)
+        ) {
+          officialEvent = true;
+        }
+      }
+    } catch (_) {
+      officialEvent = false;
+    }
+    if (officialEvent) mapLinkType = FORENSIC_MAP_LINK_TYPE.DIRECT_EVENT;
+    else if (level === LOCATION_PRESENTATION_LEVEL.PRECISE) {
+      mapLinkType = FORENSIC_MAP_LINK_TYPE.VERIFIED_LOCATION;
+    } else if (level === LOCATION_PRESENTATION_LEVEL.NONE && !url) {
+      mapLinkType = FORENSIC_MAP_LINK_TYPE.NONE;
+    } else {
+      mapLinkType = FORENSIC_MAP_LINK_TYPE.GENERAL_RSD_FALLBACK;
+    }
+  }
+
+  return Object.freeze({
+    locationPresentationLevel: level,
+    mapLinkType,
+  });
+}

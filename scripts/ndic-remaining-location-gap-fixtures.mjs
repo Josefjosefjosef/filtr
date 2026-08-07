@@ -376,6 +376,27 @@ ok("agg_unbound", bundle.summary.LCD_CODES_ONLY_UNBOUND === 1);
 ok("agg_valid_no_geom", bundle.summary.LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY === 1);
 ok("agg_fail_closed", bundle.summary.LCD_CODES_ONLY_CORRECT_FAIL_CLOSED === 1);
 ok("agg_coords_zero", bundle.summary.LCD_CODES_ONLY_HAS_COORDINATES === 0);
+ok(
+  "presentation_total_eq_items",
+  bundle.summary.LOCATION_PRESENTATION_TOTAL === fakeItems.length &&
+    bundle.summary.MAP_LINK_TOTAL === fakeItems.length
+);
+ok(
+  "presentation_sum",
+  bundle.summary.LOCATION_PRESENTATION_PRECISE +
+    bundle.summary.LOCATION_PRESENTATION_SCOPED +
+    bundle.summary.LOCATION_PRESENTATION_GENERAL +
+    bundle.summary.LOCATION_PRESENTATION_NONE ===
+    bundle.summary.LOCATION_PRESENTATION_TOTAL
+);
+ok(
+  "map_link_sum",
+  bundle.summary.MAP_LINK_TYPE_DIRECT_EVENT +
+    bundle.summary.MAP_LINK_TYPE_VERIFIED_LOCATION +
+    bundle.summary.MAP_LINK_TYPE_GENERAL_RSD_FALLBACK +
+    bundle.summary.MAP_LINK_TYPE_NONE ===
+    bundle.summary.MAP_LINK_TOTAL
+);
 
 if (fails.length) {
   console.error("NDIC_REMAINING_LOCATION_GAP_FIXTURES_FAIL");
@@ -391,6 +412,8 @@ console.log(
     CYCLE3_ROOT_INVENTORY: "YES",
     CYCLE4B_PREDEFINED_REF_DIGEST: "YES",
     CYCLE5_LOCATIONCODES_ONLY_FORENSIC: "YES",
+    LOCATION_PRESENTATION_COUNTERS: "YES",
+    MAP_LINK_COUNTERS: "YES",
     COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF: "NO",
     PARSER_BUSINESS_LOGIC_UPDATED: "NO",
     RESOLVER_UPDATED: "NO",
