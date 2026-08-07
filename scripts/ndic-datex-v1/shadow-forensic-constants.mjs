@@ -5,6 +5,7 @@
 
 export const MAX_CARD_PREVIEW_ITEMS = 20;
 export const MAX_RETAINED_IGNORED_ENTRY_METADATA = 100;
+export const MAX_RETAINED_UNKNOWN_ENTRY_METADATA = 100;
 export const FORENSIC_SCHEMA = "iu-ndic-shadow-forensic-summary-v2";
 export const CARD_PREVIEW_SCHEMA = "iu-ndic-shadow-card-preview-v1";
 export const VALIDATION_REPORT_SCHEMA = "iu-ndic-shadow-validation-report-v2";
@@ -60,11 +61,20 @@ export const FORENSIC_SUMMARY_ALLOWLIST = Object.freeze([
   "TMC_UNKNOWN_REQUIRED_COUNT",
   "TMC_UNKNOWN_NONCLASSIFIED_COUNT",
   "TMC_REJECTED_UNSAFE_COUNT",
+  "TMC_UNKNOWN_NONCLASSIFIED_RETAINED_COUNT",
+  "TMC_UNKNOWN_REQUIRED_RETAINED_COUNT",
+  "TMC_REJECTED_UNSAFE_RETAINED_COUNT",
   "TMC_CID",
   "TMC_TABCD",
   "TMC_RESOLVER_TABLE_ACTIVATED",
   "TMC_IGNORED_ENTRIES",
   "TMC_IGNORED_ENTRIES_TRUNCATED",
+  "TMC_UNKNOWN_NONCLASSIFIED_ENTRIES",
+  "TMC_UNKNOWN_NONCLASSIFIED_ENTRIES_TRUNCATED",
+  "TMC_UNKNOWN_REQUIRED_ENTRIES",
+  "TMC_UNKNOWN_REQUIRED_ENTRIES_TRUNCATED",
+  "TMC_REJECTED_UNSAFE_ENTRIES",
+  "TMC_REJECTED_UNSAFE_ENTRIES_TRUNCATED",
   "TMC_RESOLVER_VERSION",
   "LOADED_EVENTS",
   "ACTIVE_EVENTS",
@@ -187,14 +197,39 @@ export const HTTP_STATUS_CLASS = Object.freeze({
   unknown: "unknown",
 });
 
-/** Bounded redacted metadata for documented non-resolution sidecars only. */
-export const IGNORED_ENTRY_META_ALLOWLIST = Object.freeze([
+/** Bounded redacted metadata for ignored / unknown / rejected entries. */
+export const ENTRY_META_ALLOWLIST = Object.freeze([
   "basenameDigest",
   "extension",
   "classification",
   "reasonCode",
   "resolutionRequired",
   "authoritative",
+  "entryOrdinal",
+  "tableCode",
+]);
+
+/** @deprecated alias */
+export const IGNORED_ENTRY_META_ALLOWLIST = ENTRY_META_ALLOWLIST;
+
+export const ENTRY_CLASSIFICATION_ENUM = Object.freeze([
+  "AUTHORITATIVE_SP08001_REQUIRED",
+  "AUTHORITATIVE_SP08001_OPTIONAL",
+  "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+  "UNKNOWN_RESOLUTION_RELEVANT",
+  "UNKNOWN_NON_CLASSIFIED",
+  "REJECTED_UNSAFE",
+]);
+
+export const ENTRY_REASON_ENUM = Object.freeze([
+  "PATH_REJECT",
+  "SP08001_README_METADATA",
+  "SP08001_STANDARD_OPTIONAL_ROWS",
+  "SP08001_STANDARD_REQUIRED",
+  "COMPANION_NON_AUTHORITATIVE",
+  "UNMAPPED_TEXT_TABLE_EXTENSION",
+  "UNSAFE_OR_UNSUPPORTED_ENTRY",
+  "MISSING_TABLE_CODE_AFTER_CLASS",
 ]);
 
 /** Trust values that may project precise public geo fields. */

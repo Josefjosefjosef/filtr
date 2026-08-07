@@ -338,7 +338,15 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
         rejectedUnsafeCount: manifest.rejectedUnsafeCount || 0,
         ignoredNonStandardCount: manifest.ignoredNonStandardCount || 0,
         ignoredEntries: (manifest.ignoredEntries || []).slice(0, 100),
-        unknownEntries: (manifest.unknownEntries || []).slice(0, 100),
+        unknownNonclassifiedEntries: (manifest.unknownNonclassifiedEntries || []).slice(0, 100),
+        unknownRequiredEntries: (manifest.unknownRequiredEntries || []).slice(0, 100),
+        rejectedUnsafeEntries: (manifest.rejectedUnsafeEntries || []).slice(0, 100),
+        // legacy alias for older callers
+        unknownEntries: [
+          ...(manifest.unknownNonclassifiedEntries || []),
+          ...(manifest.unknownRequiredEntries || []),
+          ...(manifest.rejectedUnsafeEntries || []),
+        ].slice(0, 100),
         requiredTableCountExpected: manifest.requiredTableCountExpected || SP08001_STANDARD_TABLE_COUNT,
         requiredTableCountFound: manifest.requiredTableCountFound || 0,
         requiredTableSetComplete: false,

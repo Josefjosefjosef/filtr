@@ -214,7 +214,15 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
         reason: String(loaded.rejectCode || loaded.reason || "tmc_load_failed"),
         ignoredNonStandardCount: Number(loaded.ignoredNonStandardCount) || 0,
         ignoredEntries: Array.isArray(loaded.ignoredEntries) ? loaded.ignoredEntries.slice(0, 100) : [],
-        unknownEntries: Array.isArray(loaded.unknownEntries) ? loaded.unknownEntries.slice(0, 100) : [],
+        unknownNonclassifiedEntries: Array.isArray(loaded.unknownNonclassifiedEntries)
+          ? loaded.unknownNonclassifiedEntries.slice(0, 100)
+          : [],
+        unknownRequiredEntries: Array.isArray(loaded.unknownRequiredEntries)
+          ? loaded.unknownRequiredEntries.slice(0, 100)
+          : [],
+        rejectedUnsafeEntries: Array.isArray(loaded.rejectedUnsafeEntries)
+          ? loaded.rejectedUnsafeEntries.slice(0, 100)
+          : [],
         unknownNonclassifiedCount: Number(loaded.unknownNonclassifiedCount) || 0,
         unknownRequiredCount: Number(loaded.unknownRequiredCount) || 0,
         rejectedUnsafeCount: Number(loaded.rejectedUnsafeCount) || 0,
@@ -237,6 +245,9 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
       source: loaded.source,
       ignoredNonStandardCount: Number(loaded.ignoredNonStandardCount) || 0,
       ignoredEntries: Array.isArray(loaded.ignoredEntries) ? loaded.ignoredEntries.slice(0, 100) : [],
+      unknownNonclassifiedEntries: [],
+      unknownRequiredEntries: [],
+      rejectedUnsafeEntries: [],
       unknownNonclassifiedCount: Number(loaded.unknownNonclassifiedCount) || 0,
       unknownRequiredCount: Number(loaded.unknownRequiredCount) || 0,
       rejectedUnsafeCount: Number(loaded.rejectedUnsafeCount) || 0,

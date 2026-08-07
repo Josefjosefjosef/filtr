@@ -8,6 +8,7 @@
  *     Companions never authorize DAT / never resolve locations.
  *
  * Unmapped .dat/.txt/.csv are UNKNOWN_NON_CLASSIFIED → fail-closed (never broad-ignored).
+ * Fail paths retain bounded redacted digests for unknown/rejected entries (no raw names).
  */
 import crypto from "node:crypto";
 import {
@@ -32,7 +33,19 @@ export const TMC_ENTRY_CLASS = Object.freeze({
   REJECTED_UNSAFE: "REJECTED_UNSAFE",
 });
 
+export const TMC_ENTRY_REASON = Object.freeze({
+  PATH_REJECT: "PATH_REJECT",
+  SP08001_README_METADATA: "SP08001_README_METADATA",
+  SP08001_STANDARD_OPTIONAL_ROWS: "SP08001_STANDARD_OPTIONAL_ROWS",
+  SP08001_STANDARD_REQUIRED: "SP08001_STANDARD_REQUIRED",
+  COMPANION_NON_AUTHORITATIVE: "COMPANION_NON_AUTHORITATIVE",
+  UNMAPPED_TEXT_TABLE_EXTENSION: "UNMAPPED_TEXT_TABLE_EXTENSION",
+  UNSAFE_OR_UNSUPPORTED_ENTRY: "UNSAFE_OR_UNSUPPORTED_ENTRY",
+  MISSING_TABLE_CODE_AFTER_CLASS: "MISSING_TABLE_CODE_AFTER_CLASS",
+});
+
 export const MAX_RETAINED_IGNORED_ENTRY_METADATA = 100;
+export const MAX_RETAINED_UNKNOWN_ENTRY_METADATA = 100;
 
 /** Opaque digest of basename (uppercased) — never retain raw licensed names in forensics. */
 export function opaqueBasenameDigest(basename) {
@@ -49,7 +62,7 @@ export function classifyManifestEntry(t) {
   if (!t || t.pathReject === true) {
     return {
       classification: TMC_ENTRY_CLASS.REJECTED_UNSAFE,
-      reasonCode: "PATH_REJECT",
+      reasonCode: TMC_ENTRY_REASON.PATH_REJECT,
       resolutionRequired: false,
       authoritative: false,
       mayIgnore: false,
@@ -62,7 +75,7 @@ export function classifyManifestEntry(t) {
   if (code === "README") {
     return {
       classification: TMC_ENTRY_CLASS.AUTHORITATIVE_SP08001_REQUIRED,
-      reasonCode: "SP08001_README_METADATA",
+      reasonCode: TMC_ENTRY_REASON.SP08001_README_METADATA,
       resolutionRequired: false,
       authoritative: true,
       mayIgnore: false,
@@ -76,7 +89,9 @@ export function classifyManifestEntry(t) {
       classification: optionalRows
         ? TMC_ENTRY_CLASS.AUTHORITATIVE_SP08001_OPTIONAL
         : TMC_ENTRY_CLASS.AUTHORITATIVE_SP08001_REQUIRED,
-      reasonCode: optionalRows ? "SP08001_STANDARD_OPTIONAL_ROWS" : "SP08001_STANDARD_REQUIRED",
+      reasonCode: optionalRows
+        ? TMC_ENTRY_REASON.SP08001_STANDARD_OPTIONAL_ROWS
+        : TMC_ENTRY_REASON.SP08001_STANDARD_REQUIRED,
       resolutionRequired: true,
       authoritative: true,
       mayIgnore: false,
@@ -93,7 +108,7 @@ export function classifyManifestEntry(t) {
     if (companionExtOk) {
       return {
         classification: TMC_ENTRY_CLASS.DOCUMENTED_NON_RESOLUTION_SIDECAR,
-        reasonCode: "COMPANION_NON_AUTHORITATIVE",
+        reasonCode: TMC_ENTRY_REASON.COMPANION_NON_AUTHORITATIVE,
         resolutionRequired: false,
         authoritative: false,
         mayIgnore: true,
@@ -107,7 +122,7 @@ export function classifyManifestEntry(t) {
   if (ext === "dat" || ext === "txt" || ext === "csv") {
     return {
       classification: TMC_ENTRY_CLASS.UNKNOWN_NON_CLASSIFIED,
-      reasonCode: "UNMAPPED_TEXT_TABLE_EXTENSION",
+      reasonCode: TMC_ENTRY_REASON.UNMAPPED_TEXT_TABLE_EXTENSION,
       resolutionRequired: false,
       authoritative: false,
       mayIgnore: false,
@@ -115,10 +130,9 @@ export function classifyManifestEntry(t) {
     };
   }
 
-  // Non-peek / non-text companions already filtered; treat residual as unsafe if present.
   return {
     classification: TMC_ENTRY_CLASS.REJECTED_UNSAFE,
-    reasonCode: "UNSAFE_OR_UNSUPPORTED_ENTRY",
+    reasonCode: TMC_ENTRY_REASON.UNSAFE_OR_UNSUPPORTED_ENTRY,
     resolutionRequired: false,
     authoritative: false,
     mayIgnore: false,
@@ -126,82 +140,137 @@ export function classifyManifestEntry(t) {
   };
 }
 
+function pushBoundedMeta(arr, entry, max) {
+  if (arr.length < max) arr.push(entry);
+}
+
+function buildEntryMeta(t, cls, entryOrdinal) {
+  const digest =
+    t.basenameDigest && /^[a-f0-9]{16}$/.test(String(t.basenameDigest))
+      ? String(t.basenameDigest)
+      : null;
+  const meta = {
+    basenameDigest: digest,
+    extension: String(t.ext || "").slice(0, 16),
+    classification: cls.classification,
+    reasonCode: cls.reasonCode,
+    resolutionRequired: cls.resolutionRequired === true,
+    authoritative: cls.authoritative === true,
+    entryOrdinal: Number.isInteger(entryOrdinal) && entryOrdinal >= 0 ? entryOrdinal : 0,
+  };
+  // Opaque allowlisted tableCode only (never raw licensed basenames).
+  if (t.tableCode === "README" || (t.tableCode && SP08001_TABLE_CODES.includes(t.tableCode))) {
+    meta.tableCode = String(t.tableCode);
+  }
+  return meta;
+}
+
+function requiredCountsFromByCode(byCode) {
+  let found = 0;
+  for (const code of REQUIRED_FOR_DATASET_IMPORT) {
+    if (byCode[code]) found += 1;
+  }
+  return {
+    requiredTableCountExpected: REQUIRED_FOR_DATASET_IMPORT.length,
+    requiredTableCountFound: found,
+    requiredTableSetComplete: found === REQUIRED_FOR_DATASET_IMPORT.length,
+    requiredTableSetValid: false,
+  };
+}
+
 /**
  * @param {object[]} targets
  * @returns {{ ok: boolean, rejectCode?: string, ... }}
  */
-function pushBoundedMeta(arr, entry) {
-  if (arr.length < MAX_RETAINED_IGNORED_ENTRY_METADATA) arr.push(entry);
-}
-
 export function classifyManifest(targets) {
   const byCode = Object.create(null);
   const ignoredEntries = [];
-  const unknownEntries = [];
+  const unknownNonclassifiedEntries = [];
+  const unknownRequiredEntries = [];
+  const rejectedUnsafeEntries = [];
   const ignoredNonStandardExtCounts = Object.create(null);
   let readme = null;
   let unknownNonclassifiedCount = 0;
   let unknownRequiredCount = 0;
   let rejectedUnsafeCount = 0;
   let documentedSidecarCount = 0;
+  let entryOrdinal = 0;
 
   for (const t of targets || []) {
+    const ordinal = entryOrdinal++;
     const cls = classifyManifestEntry(t);
-    const digest =
-      t.basenameDigest && /^[a-f0-9]{16}$/.test(String(t.basenameDigest))
-        ? String(t.basenameDigest)
-        : null;
-    const metaBase = {
-      basenameDigest: digest,
-      extension: String(t.ext || "").slice(0, 16),
-      classification: cls.classification,
-      reasonCode: cls.reasonCode,
-      resolutionRequired: cls.resolutionRequired === true,
-      authoritative: cls.authoritative === true,
-    };
+    const meta = buildEntryMeta(t, cls, ordinal);
 
     if (cls.classification === TMC_ENTRY_CLASS.REJECTED_UNSAFE) {
       rejectedUnsafeCount += 1;
-      pushBoundedMeta(unknownEntries, metaBase);
+      pushBoundedMeta(rejectedUnsafeEntries, meta, MAX_RETAINED_UNKNOWN_ENTRY_METADATA);
+      const req = requiredCountsFromByCode(byCode);
       return {
         ok: false,
         rejectCode: TMC_IMPORTER_ERROR.TMC_ARCHIVE_INVALID,
         rejectedUnsafeCount,
         unknownNonclassifiedCount,
         unknownRequiredCount,
-        unknownEntries,
+        unknownNonclassifiedEntries,
+        unknownRequiredEntries,
+        rejectedUnsafeEntries,
+        ignoredEntries,
+        ignoredNonStandardCount: documentedSidecarCount,
+        ...req,
+        requiredTableSetComplete: false,
+        requiredTableSetValid: false,
       };
     }
 
     if (cls.classification === TMC_ENTRY_CLASS.UNKNOWN_NON_CLASSIFIED) {
       unknownNonclassifiedCount += 1;
-      pushBoundedMeta(unknownEntries, metaBase);
+      pushBoundedMeta(unknownNonclassifiedEntries, meta, MAX_RETAINED_UNKNOWN_ENTRY_METADATA);
       continue;
     }
 
     if (cls.classification === TMC_ENTRY_CLASS.UNKNOWN_RESOLUTION_RELEVANT) {
       unknownRequiredCount += 1;
-      pushBoundedMeta(unknownEntries, { ...metaBase, resolutionRequired: true });
+      pushBoundedMeta(
+        unknownRequiredEntries,
+        { ...meta, resolutionRequired: true },
+        MAX_RETAINED_UNKNOWN_ENTRY_METADATA
+      );
       continue;
     }
 
     if (cls.classification === TMC_ENTRY_CLASS.DOCUMENTED_NON_RESOLUTION_SIDECAR) {
       documentedSidecarCount += 1;
       if (t.ext) ignoredNonStandardExtCounts[t.ext] = (ignoredNonStandardExtCounts[t.ext] || 0) + 1;
-      pushBoundedMeta(ignoredEntries, {
-        basenameDigest: digest,
-        extension: String(t.ext || "").slice(0, 16),
-        classification: cls.classification,
-        reasonCode: cls.reasonCode,
-        resolutionRequired: false,
-        authoritative: false,
-      });
+      pushBoundedMeta(
+        ignoredEntries,
+        {
+          basenameDigest: meta.basenameDigest,
+          extension: meta.extension,
+          classification: meta.classification,
+          reasonCode: meta.reasonCode,
+          resolutionRequired: false,
+          authoritative: false,
+          entryOrdinal: meta.entryOrdinal,
+        },
+        MAX_RETAINED_IGNORED_ENTRY_METADATA
+      );
       continue;
     }
 
     // Authoritative SP08001 / README
     if (!t.tableCode) {
       unknownNonclassifiedCount += 1;
+      pushBoundedMeta(
+        unknownNonclassifiedEntries,
+        {
+          ...meta,
+          classification: TMC_ENTRY_CLASS.UNKNOWN_NON_CLASSIFIED,
+          reasonCode: TMC_ENTRY_REASON.MISSING_TABLE_CODE_AFTER_CLASS,
+          resolutionRequired: false,
+          authoritative: false,
+        },
+        MAX_RETAINED_UNKNOWN_ENTRY_METADATA
+      );
       continue;
     }
     if (t.tableCode === "README") {
@@ -215,15 +284,23 @@ export function classifyManifest(targets) {
     byCode[t.tableCode] = t;
   }
 
+  const req = requiredCountsFromByCode(byCode);
+
   if (unknownRequiredCount > 0) {
     return {
       ok: false,
       rejectCode: TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT,
       unknownRequiredCount,
       unknownNonclassifiedCount,
-      unknownEntries,
+      rejectedUnsafeCount,
+      unknownNonclassifiedEntries,
+      unknownRequiredEntries,
+      rejectedUnsafeEntries,
       ignoredEntries,
       ignoredNonStandardCount: documentedSidecarCount,
+      ...req,
+      requiredTableSetComplete: false,
+      requiredTableSetValid: false,
     };
   }
   if (unknownNonclassifiedCount > 0) {
@@ -232,23 +309,25 @@ export function classifyManifest(targets) {
       rejectCode: TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT,
       unknownNonclassifiedCount,
       unknownRequiredCount: 0,
-      unknownEntries,
+      rejectedUnsafeCount,
+      unknownNonclassifiedEntries,
+      unknownRequiredEntries,
+      rejectedUnsafeEntries,
       ignoredEntries,
       ignoredNonStandardCount: documentedSidecarCount,
+      ...req,
+      requiredTableSetComplete: false,
+      requiredTableSetValid: false,
     };
   }
 
-  const missing = [];
-  for (const code of REQUIRED_FOR_DATASET_IMPORT) {
-    if (!byCode[code]) missing.push(code);
-  }
-  if (missing.length) {
+  if (!req.requiredTableSetComplete) {
     return {
       ok: false,
       rejectCode: TMC_IMPORTER_ERROR.TMC_REQUIRED_TABLE_MISSING,
-      missingCount: missing.length,
-      requiredTableCountExpected: REQUIRED_FOR_DATASET_IMPORT.length,
-      requiredTableCountFound: REQUIRED_FOR_DATASET_IMPORT.length - missing.length,
+      missingCount: req.requiredTableCountExpected - req.requiredTableCountFound,
+      ...req,
+      requiredTableSetValid: false,
     };
   }
 
@@ -263,9 +342,12 @@ export function classifyManifest(targets) {
     unknownNonclassifiedCount: 0,
     unknownRequiredCount: 0,
     rejectedUnsafeCount: 0,
+    unknownNonclassifiedEntries: [],
+    unknownRequiredEntries: [],
+    rejectedUnsafeEntries: [],
     documentedSidecarCount,
-    requiredTableCountExpected: REQUIRED_FOR_DATASET_IMPORT.length,
-    requiredTableCountFound: REQUIRED_FOR_DATASET_IMPORT.length,
+    requiredTableCountExpected: req.requiredTableCountExpected,
+    requiredTableCountFound: req.requiredTableCountFound,
     requiredTableSetComplete: true,
     requiredTableSetValid: true,
     standardTableCount: SP08001_STANDARD_TABLE_COUNT,
@@ -284,7 +366,6 @@ export function classifyManifest(targets) {
 /** Mutation-guard: ensure classifier is not a broad extension ignore. */
 export function assertNoBroadExtensionIgnore(sourceText) {
   const src = String(sourceText || "");
-  // Forbidden patterns: ignore-all by extension without SP08001/companion gate
   if (/if\s*\(\s*t\.ext\s*===\s*["']dat["'][\s\S]{0,80}ignoredNonStandard\.push/.test(src)) {
     return { ok: false, reason: "broad_dat_ignore" };
   }

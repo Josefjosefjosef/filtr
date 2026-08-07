@@ -209,6 +209,16 @@ const AMPLE = {
   const mFail = classifyManifest(withUnknown);
   ok("rc6_unknown_text_fail_closed", mFail.ok === false && mFail.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT);
   ok("rc6_unknown_nonclassified", (mFail.unknownNonclassifiedCount || 0) === 3, mFail.unknownNonclassifiedCount);
+  ok(
+    "rc6_unknown_entries_retained",
+    Array.isArray(mFail.unknownNonclassifiedEntries) && mFail.unknownNonclassifiedEntries.length === 3
+  );
+  ok(
+    "rc6_unknown_digests",
+    mFail.unknownNonclassifiedEntries.every((e) => /^[a-f0-9]{16}$/.test(e.basenameDigest))
+  );
+  ok("rc6_required_found_on_fail", mFail.requiredTableCountFound === 25, mFail.requiredTableCountFound);
+  ok("rc6_prior_unknown_entries_absent_in_summary", forensic.TMC_UNKNOWN_NONCLASSIFIED_ENTRIES == null);
 
   const withShp = [...std, { tableCode: null, ext: "shp", role: "shp_layer", basenameDigest: "dddddddddddddddd" }];
   const mOk = classifyManifest(withShp);

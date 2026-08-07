@@ -20,6 +20,10 @@ import {
   FORENSIC_VALIDATION_FILE,
   MAX_CARD_PREVIEW_ITEMS,
   MAX_DATEX_BYTES_READ,
+  MAX_RETAINED_IGNORED_ENTRY_METADATA,
+  MAX_RETAINED_UNKNOWN_ENTRY_METADATA,
+  ENTRY_CLASSIFICATION_ENUM,
+  ENTRY_REASON_ENUM,
   CARD_PREVIEW_ALLOWLIST,
   HTTP_STATUS_CLASS,
   VERIFIED_LOCATION_TRUST,
@@ -31,12 +35,44 @@ import {
   scanForensicCanaries,
 } from "./shadow-forensic-schema.mjs";
 import { PARSER_VERSION } from "./config.mjs";
+import { SP08001_TABLE_CODES } from "./tmc-sp08001-contract.mjs";
 
 function clip(s, n) {
   if (s == null || s === "") return null;
   const t = String(s).trim();
   if (!t) return null;
   return t.length > n ? t.slice(0, n) : t;
+}
+
+/** Redact entry metadata for forensic retention (no raw basenames/paths/content). */
+export function sanitizeForensicEntryMeta(e, indexFallback = 0) {
+  const classification = String((e && e.classification) || "");
+  const reasonCode = String((e && e.reasonCode) || "");
+  const out = {
+    basenameDigest:
+      e && typeof e.basenameDigest === "string" && /^[a-f0-9]{16}$/.test(e.basenameDigest)
+        ? e.basenameDigest
+        : null,
+    extension: String((e && e.extension) || "").slice(0, 16).toLowerCase().replace(/[^a-z0-9]/g, ""),
+    classification: ENTRY_CLASSIFICATION_ENUM.includes(classification)
+      ? classification
+      : "REJECTED_UNSAFE",
+    reasonCode: ENTRY_REASON_ENUM.includes(reasonCode) ? reasonCode : "UNSAFE_OR_UNSUPPORTED_ENTRY",
+    resolutionRequired: e && e.resolutionRequired === true,
+    authoritative: e && e.authoritative === true,
+    entryOrdinal:
+      e && Number.isInteger(e.entryOrdinal) && e.entryOrdinal >= 0 ? e.entryOrdinal : indexFallback,
+  };
+  const tc = e && e.tableCode != null ? String(e.tableCode) : null;
+  if (tc === "README" || (tc && SP08001_TABLE_CODES.includes(tc))) {
+    out.tableCode = tc;
+  }
+  return out;
+}
+
+function sanitizeEntryList(raw, max) {
+  if (!Array.isArray(raw)) return [];
+  return raw.slice(0, max).map((e, i) => sanitizeForensicEntryMeta(e, i));
 }
 
 function normalizeIso(s, fallback) {
@@ -297,6 +333,27 @@ export function buildShadowForensicBundle(ctx = {}) {
   let datexBytes = Number.isFinite(ctx.datexBytesRead) ? Math.max(0, Math.floor(ctx.datexBytesRead)) : 0;
   if (datexBytes > MAX_DATEX_BYTES_READ) datexBytes = MAX_DATEX_BYTES_READ;
 
+  const tmcDiag = (ctx.diagnostics && ctx.diagnostics.tmc) || {};
+  const ignoredEntries = sanitizeEntryList(tmcDiag.ignoredEntries, MAX_RETAINED_IGNORED_ENTRY_METADATA).map(
+    (e) => ({ ...e, resolutionRequired: false, authoritative: false })
+  );
+  const unknownNonclassifiedEntries = sanitizeEntryList(
+    tmcDiag.unknownNonclassifiedEntries,
+    MAX_RETAINED_UNKNOWN_ENTRY_METADATA
+  );
+  const unknownRequiredEntries = sanitizeEntryList(
+    tmcDiag.unknownRequiredEntries,
+    MAX_RETAINED_UNKNOWN_ENTRY_METADATA
+  );
+  const rejectedUnsafeEntries = sanitizeEntryList(
+    tmcDiag.rejectedUnsafeEntries,
+    MAX_RETAINED_UNKNOWN_ENTRY_METADATA
+  );
+  const ignoredTotal = Number(tmcDiag.ignoredNonStandardCount) || 0;
+  const unknownNonTotal = Number(tmcDiag.unknownNonclassifiedCount) || 0;
+  const unknownReqTotal = Number(tmcDiag.unknownRequiredCount) || 0;
+  const rejectedTotal = Number(tmcDiag.rejectedUnsafeCount) || 0;
+
   const cardProjectionPass = true; // set after validateCardPreview
   const cardLocationPass = evaluateCardLocationValidation(previewSource, previewItems);
   const cardEligPass = evaluateCardPublicationEligibility(previewSource, previewItems, m.pubEligible);
@@ -364,40 +421,28 @@ export function buildShadowForensicBundle(ctx = {}) {
     TMC_REJECTED_UNSAFE_COUNT: Number(
       (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.rejectedUnsafeCount) || 0
     ),
+    TMC_UNKNOWN_NONCLASSIFIED_RETAINED_COUNT: unknownNonclassifiedEntries.length,
+    TMC_UNKNOWN_REQUIRED_RETAINED_COUNT: unknownRequiredEntries.length,
+    TMC_REJECTED_UNSAFE_RETAINED_COUNT: rejectedUnsafeEntries.length,
     TMC_CID: (() => {
-      const v = ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.cid;
+      const v = tmcDiag.cid;
       return Number.isInteger(v) ? v : null;
     })(),
     TMC_TABCD: (() => {
-      const v = ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.tabcd;
+      const v = tmcDiag.tabcd;
       return Number.isInteger(v) ? v : null;
     })(),
-    TMC_RESOLVER_TABLE_ACTIVATED: Boolean(
-      ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.resolverTableActivated === true
-    ),
-    TMC_IGNORED_ENTRIES: (() => {
-      const raw =
-        (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.ignoredEntries) || [];
-      if (!Array.isArray(raw)) return [];
-      return raw.slice(0, 100).map((e) => ({
-        basenameDigest:
-          e && typeof e.basenameDigest === "string" && /^[a-f0-9]{16}$/.test(e.basenameDigest)
-            ? e.basenameDigest
-            : null,
-        extension: String((e && e.extension) || "").slice(0, 16),
-        classification: String((e && e.classification) || "").slice(0, 64),
-        reasonCode: String((e && e.reasonCode) || "").slice(0, 64),
-        resolutionRequired: false,
-        authoritative: false,
-      }));
-    })(),
+    TMC_RESOLVER_TABLE_ACTIVATED: Boolean(tmcDiag.resolverTableActivated === true),
+    TMC_IGNORED_ENTRIES: ignoredEntries,
     TMC_IGNORED_ENTRIES_TRUNCATED: Boolean(
-      ctx.diagnostics &&
-        ctx.diagnostics.tmc &&
-        (ctx.diagnostics.tmc.ignoredEntriesTruncated === true ||
-          (Number(ctx.diagnostics.tmc.ignoredNonStandardCount) || 0) >
-            ((ctx.diagnostics.tmc.ignoredEntries && ctx.diagnostics.tmc.ignoredEntries.length) || 0))
+      tmcDiag.ignoredEntriesTruncated === true || ignoredTotal > ignoredEntries.length
     ),
+    TMC_UNKNOWN_NONCLASSIFIED_ENTRIES: unknownNonclassifiedEntries,
+    TMC_UNKNOWN_NONCLASSIFIED_ENTRIES_TRUNCATED: Boolean(unknownNonTotal > unknownNonclassifiedEntries.length),
+    TMC_UNKNOWN_REQUIRED_ENTRIES: unknownRequiredEntries,
+    TMC_UNKNOWN_REQUIRED_ENTRIES_TRUNCATED: Boolean(unknownReqTotal > unknownRequiredEntries.length),
+    TMC_REJECTED_UNSAFE_ENTRIES: rejectedUnsafeEntries,
+    TMC_REJECTED_UNSAFE_ENTRIES_TRUNCATED: Boolean(rejectedTotal > rejectedUnsafeEntries.length),
     TMC_RESOLVER_VERSION: clip(PARSER_VERSION, 64) || "unknown",
     LOADED_EVENTS: loaded,
     ACTIVE_EVENTS: m.active,
@@ -579,6 +624,10 @@ export function printShadowForensicStdout(summary, validationReport) {
     "TMC_UNKNOWN_REQUIRED_COUNT=" + (summary && summary.TMC_UNKNOWN_REQUIRED_COUNT),
     "TMC_UNKNOWN_NONCLASSIFIED_COUNT=" + (summary && summary.TMC_UNKNOWN_NONCLASSIFIED_COUNT),
     "TMC_REJECTED_UNSAFE_COUNT=" + (summary && summary.TMC_REJECTED_UNSAFE_COUNT),
+    "TMC_UNKNOWN_NONCLASSIFIED_RETAINED_COUNT=" +
+      (summary && summary.TMC_UNKNOWN_NONCLASSIFIED_RETAINED_COUNT),
+    "TMC_UNKNOWN_REQUIRED_RETAINED_COUNT=" + (summary && summary.TMC_UNKNOWN_REQUIRED_RETAINED_COUNT),
+    "TMC_REJECTED_UNSAFE_RETAINED_COUNT=" + (summary && summary.TMC_REJECTED_UNSAFE_RETAINED_COUNT),
     "TMC_CID=" + (summary && summary.TMC_CID),
     "TMC_TABCD=" + (summary && summary.TMC_TABCD),
     "TMC_RESOLVER_TABLE_ACTIVATED=" +
