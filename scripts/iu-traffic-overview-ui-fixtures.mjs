@@ -79,6 +79,8 @@ function sampleCard(extra = {}) {
 const arch = trafficIntegrationArchitectureAudit();
 ok("arch_pass", arch.pass === true);
 ok("flag_pub_off", TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false);
+ok("flag_ui_on", TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true);
+ok("flag_cards_render", TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER === true);
 ok("flag_no_home", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false);
 ok("flag_no_settings", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === false);
 ok("flag_no_filters", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS === false);
@@ -190,8 +192,54 @@ if (typeof globalThis.localStorage === "undefined") {
   };
 }
 clearOfflineTrafficSnapshot();
-ok("ls_save", saveOfflineTrafficSnapshot({ publicationEnabled: false, cards: [sampleCard()] }).ok);
+ok("ls_save", saveOfflineTrafficSnapshot({ publicationEnabled: false, trafficUiEnabled: true, cards: [sampleCard()] }).ok);
 ok("ls_load", !!loadOfflineTrafficSnapshot());
+{
+  const precise = sampleCard({
+    preciseLocationVerified: true,
+    locationPresentationLevel: "PRECISE",
+    kilometer: 12,
+    direction: "positive",
+    mapTarget: { mapLinkType: "VERIFIED_LOCATION", safeMapTarget: "https://www.dopravniinfo.cz/" },
+  });
+  const r = trafficProjectionToFeedItem(precise);
+  ok("precise_ui_ok", r.ok === true);
+  ok("precise_ui_km", r.item.trafficV1.kilometer === 12);
+  ok("precise_ui_dir", r.item.trafficV1.direction === "positive");
+}
+{
+  const general = sampleCard({
+    preciseLocationVerified: false,
+    subjectScopeVerified: false,
+    locationPresentationLevel: "GENERAL",
+    kilometer: 99,
+    direction: "positive",
+    locationDisclosureCs: "Přesná poloha není v oficiálních datech k dispozici.",
+    mapTarget: { mapLinkType: "GENERAL_RSD_MAP", safeMapTarget: "https://www.dopravniinfo.cz/" },
+  });
+  const r = trafficProjectionToFeedItem(general);
+  ok("general_ui_ok", r.ok === true);
+  ok("general_ui_no_km", r.item.trafficV1.kilometer == null);
+  ok("general_ui_no_dir", r.item.trafficV1.direction == null);
+  ok("general_ui_map", resolveSafeTrafficMapUrl(r.item.trafficV1.mapTarget).includes("dopravniinfo.cz"));
+}
+{
+  const prefs = { sections: ["doprava"], sourceIds: ["rsd", "ndic"] };
+  const snap = {
+    publicationEnabled: false,
+    trafficUiEnabled: true,
+    cards: [
+      sampleCard({ locationPresentationLevel: "PRECISE", preciseLocationVerified: true }),
+      sampleCard({
+        publicEventId: "iu-te-" + "b".repeat(32),
+        locationPresentationLevel: "GENERAL",
+        preciseLocationVerified: false,
+      }),
+    ],
+  };
+  const cands = collectOfflineTrafficCandidates(prefs, { snapshot: snap });
+  ok("collect_ui_on", cands.length === 2);
+}
 clearOfflineTrafficSnapshot();
 
 const success = results.filter((r) => r.pass).length;
@@ -208,6 +256,8 @@ console.log(
       MY_OVERVIEW_ONLY: true,
       SEPARATE_TRAFFIC_SETTINGS: false,
       PUBLICATION_ENABLED: false,
+      TRAFFIC_UI_ENABLED: true,
+      FEATURE_FLAG_DISABLE_READY: true,
     },
     null,
     2

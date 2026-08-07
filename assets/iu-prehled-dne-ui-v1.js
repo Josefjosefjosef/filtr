@@ -33,7 +33,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=traffic-overview-rsd-prehled-v1-20260806";
+} from "./iu-info-system-core-v1.js?v=traffic-ui-activation-v1-20260807";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -43,10 +43,11 @@ import {
   trafficFreshnessBanner,
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
-} from "./iu-traffic-overview-v1.js?v=traffic-overview-rsd-prehled-v1-20260806";
+  fetchHostedTrafficOfflineSnapshot,
+} from "./iu-traffic-overview-v1.js?v=traffic-ui-activation-v1-20260807";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-overview-rsd-prehled-v1-20260806";
+const CACHE_BUST = "traffic-ui-activation-v1-20260807";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1790,6 +1791,11 @@ async function boot() {
     const data = await loadInfoSystemData({});
     if (bootAbort && bootAbort.signal.aborted) return;
     state.data = data;
+    try {
+      if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
+        await fetchHostedTrafficOfflineSnapshot({ persist: true });
+      }
+    } catch (_) {}
     try {
       migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
     } catch (_) {}

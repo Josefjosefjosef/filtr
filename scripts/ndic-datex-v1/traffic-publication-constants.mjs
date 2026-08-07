@@ -1,11 +1,12 @@
 /**
  * Offline traffic publication-layer constants.
- * PUBLICATION_ENABLED / PUBLIC_API / TRAFFIC_UI remain false.
+ * PUBLICATION_ENABLED / PUBLIC_API stay false (inverted kill switches).
+ * TRAFFIC_UI_ENABLED is the single staged-rollout feature flag for cards in Můj přehled dne.
  */
 export const PUBLICATION_LAYER_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
-  TRAFFIC_UI_ENABLED: false,
+  TRAFFIC_UI_ENABLED: true,
   TRAFFIC_CARDS_LIVE_ENABLED: false,
   DELAY_ESTIMATION_ENABLED: false,
   TRAVEL_TIME_ESTIMATION_ENABLED: false,

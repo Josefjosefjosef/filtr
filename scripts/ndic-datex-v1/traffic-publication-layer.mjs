@@ -278,7 +278,7 @@ export function runTrafficPublicationLayer(aggregatedEvents, opts = {}) {
     activated: false,
     publicationEnabled: false,
     publicApiEnabled: false,
-    trafficUiEnabled: false,
+    trafficUiEnabled: PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true,
     metrics: Object.freeze(metrics),
   };
 }

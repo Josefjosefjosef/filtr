@@ -58,6 +58,8 @@ import {
   COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF,
 } from "./ndic-datex-v1/predefined-location-ref-forensics.mjs";
 import { parseSafeXml, attrOf, descendantsNamed } from "./ndic-datex-v1/safe-xml.mjs";
+import { persistTrafficUiOfflineSnapshot } from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
+import { PUBLICATION_LAYER_FLAGS } from "./ndic-datex-v1/traffic-publication-constants.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -635,6 +637,20 @@ export async function runNdicDatexV1Sync(opts = {}) {
         const others = (lane.items || []).filter((i) => !isNdicItem(i));
         const merged = others.concat(feedItems);
         writeJson(lanePath, { ...lane, generatedAt: started, itemCount: merged.length, items: merged });
+      }
+      if (PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true) {
+        const uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
+          repoRoot: REPO,
+          nowIso: started,
+          sourceFreshness: "FRESH",
+        });
+        diagnostics.trafficUiSnapshot = {
+          ok: uiSnap.ok === true,
+          rejectCode: uiSnap.rejectCode || null,
+          cardCount: uiSnap.cardCount || 0,
+          trafficUiEnabled: uiSnap.trafficUiEnabled === true,
+          publicationEnabled: false,
+        };
       }
     } else if ((shouldRunShadow(config) || config.mode === "shadow") && process.env.IU_NDIC_SHADOW_ISOLATED !== "1") {
       /* Non-isolated legacy shadow dump — still not published; never commit this path in CI. */

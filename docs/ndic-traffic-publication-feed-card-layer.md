@@ -2,13 +2,16 @@
 
 Offline layer that turns **normalized aggregated traffic events** into allowlisted **publication projections**, an internal **Dopravní feed**, **traffic card** projections, filter indexes and an **offline snapshot**.
 
-Activation remains off:
+Activation (staged rollout):
 
 ```text
 PUBLICATION_ENABLED=NO
 PUBLIC_API_ENABLED=NO
-TRAFFIC_UI_ENABLED=NO
+TRAFFIC_UI_ENABLED=YES
 ```
+
+`PUBLICATION_ENABLED` / `PUBLIC_API_ENABLED` remain inverted kill switches (must stay `false`).
+`TRAFFIC_UI_ENABLED` is the single feature flag for traffic cards in Můj přehled dne — flip to `false` for instant rollback.
 
 ## Entrypoint
 
@@ -164,15 +167,15 @@ Uses internal aggregation identity → stable `publicEventId`. Publication layer
 
 Any hit → `PUBLICATION_SECURITY_CANARY_DETECTED` and snapshot failure.
 
-## Why publication stays disabled
+## Why PUBLICATION_ENABLED stays false
 
-Live publication, public API, NDIC runners and production deploy remain disabled until a separate end-to-end production-readiness audit passes.
+`PUBLICATION_ENABLED=true` is an inverted kill switch (fail-closed). Live public API and NDIC production deploy remain behind separate operator gates. Traffic cards use the offline snapshot path with `publicationEnabled=false` on every card while `TRAFFIC_UI_ENABLED=true`.
 
 ## Related UI (Můj přehled dne)
 
 Traffic cards render **only** inside Můj přehled dne via `assets/iu-traffic-overview-v1.js`, using the **same** settings rails (Témata / Zdroje a instituce / Lokalita), the **same** `filterEvents` pipeline, the **same** locality list, and the **same** timeline as ČHMÚ.
 
-There is **no** separate Doprava home, traffic settings panel, traffic filter UI, or second locality database. `PUBLICATION_ENABLED` remains `false`.
+There is **no** separate Doprava home, traffic settings panel, traffic filter UI, or second locality database. Hosted snapshot: `projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json`.
 
 ## Tests
 

@@ -54,7 +54,7 @@ function baseEvent(extra = {}) {
 
 ok("mut_pub_off", PUBLICATION_LAYER_FLAGS.PUBLICATION_ENABLED === false);
 ok("mut_api_off", PUBLICATION_LAYER_FLAGS.PUBLIC_API_ENABLED === false);
-ok("mut_ui_off", PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === false);
+ok("mut_ui_on", PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true);
 ok("mut_delay_off", PUBLICATION_LAYER_FLAGS.DELAY_ESTIMATION_ENABLED === false);
 ok("mut_fuzzy_off", PUBLICATION_LAYER_FLAGS.FUZZY_DEDUPLICATION_ENABLED === false);
 ok("mut_heur_map_off", PUBLICATION_LAYER_FLAGS.HEURISTIC_MAP_LINK_ENABLED === false);
@@ -208,9 +208,9 @@ ok("mut_maxlen", SCHEMA_CONTRACT.maxLengthImpact === 280 && SCHEMA_CONTRACT.maxL
 // publication / api flags remain false on outputs
 {
   const feed = buildPublicationTrafficFeed([]);
-  ok("mut_feed_flags", feed.publicationEnabled === false && feed.trafficUiEnabled === false);
+  ok("mut_feed_flags", feed.publicationEnabled === false && feed.trafficUiEnabled === true);
   const layer = runTrafficPublicationLayer([baseEvent({ eventId: "mu-out" })]);
-  ok("mut_layer_flags", layer.publicationEnabled === false && layer.publicApiEnabled === false && layer.trafficUiEnabled === false);
+  ok("mut_layer_flags", layer.publicationEnabled === false && layer.publicApiEnabled === false && layer.trafficUiEnabled === true);
 }
 
 // hardcoded PASS must not exist as forced true

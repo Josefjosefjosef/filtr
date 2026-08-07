@@ -6,12 +6,14 @@
  * - Shared settings rails only: Témata → Doprava, Zdroje → ŘSD/NDIC, Lokalita
  * - Shared filterEvents + shared locality model + shared timeline
  * - Traffic feed is INTERNAL (ordering/badges/history), never a separate screen
- * - PUBLICATION_ENABLED / live NDIC remain false
+ * - PUBLICATION_ENABLED / live NDIC remain false (inverted kill switches)
+ * - TRAFFIC_UI_ENABLED is the single feature flag; flip to false for instant rollback
  */
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
   LIVE_NDIC_INGEST: false,
+  TRAFFIC_UI_ENABLED: true,
   TRAFFIC_CARDS_RENDER: true,
   SEPARATE_TRAFFIC_HOME: false,
   SEPARATE_TRAFFIC_SETTINGS: false,
@@ -19,6 +21,10 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   SEPARATE_TRAFFIC_LOCALITIES: false,
   PRODUCTION_DEPLOY: false,
 });
+
+/** Hosted offline snapshot (fail-closed if missing / poison). */
+export const TRAFFIC_UI_SNAPSHOT_URL =
+  "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
 
 /** Internal publication-layer enums (not separate UI). Mapped via shared prefs. */
 export const TRAFFIC_SPATIAL = Object.freeze({
@@ -342,22 +348,56 @@ export function isDopravaTopicEnabled(prefs) {
   return secs.includes("doprava");
 }
 
+function acceptTrafficSnapshot(parsed) {
+  if (!parsed || typeof parsed !== "object") return null;
+  if (parsed.publicationEnabled === true) return null;
+  if (parsed.trafficUiEnabled === false) return null;
+  const canary = scanTrafficUiCanaries(parsed);
+  if (!canary.ok) return null;
+  return parsed;
+}
+
 export function loadOfflineTrafficSnapshot() {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   if (typeof localStorage === "undefined") return null;
   try {
     const raw = localStorage.getItem(LS_OFFLINE_SNAPSHOT);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed || parsed.publicationEnabled === true) return null;
-    const canary = scanTrafficUiCanaries(parsed);
-    if (!canary.ok) return null;
-    return parsed;
+    return acceptTrafficSnapshot(JSON.parse(raw));
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * Fetch hosted offline snapshot when TRAFFIC_UI_ENABLED. Never follows redirect off-origin.
+ * Returns null on any failure (fail-closed).
+ */
+export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
+  if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return null;
+  const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
+  if (typeof fetch !== "function") return null;
+  try {
+    const res = await fetch(url, {
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+    if (!res || !res.ok) return null;
+    const parsed = await res.json();
+    const snap = acceptTrafficSnapshot(parsed);
+    if (!snap) return null;
+    if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
+    return snap;
   } catch (_) {
     return null;
   }
 }
 
 export function saveOfflineTrafficSnapshot(snapshot) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) {
+    return { ok: false, rejectCode: "TRAFFIC_UI_DISABLED" };
+  }
   if (typeof localStorage === "undefined") return { ok: false };
   if (!snapshot || snapshot.publicationEnabled === true) {
     return { ok: false, rejectCode: "PUBLICATION_MUST_STAY_OFF" };
@@ -403,8 +443,10 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
  * Does NOT apply a second filter system — only topic/source gate + conversion.
  */
 export function collectOfflineTrafficCandidates(prefs, opts = {}) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return [];
   if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === true) return [];
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER !== true) return [];
+  if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return [];
   if (!isDopravaTopicEnabled(prefs) || !isRsdTrafficSourceEnabled(prefs)) return [];
   return trafficItemsFromOfflineSnapshot(opts.snapshot || loadOfflineTrafficSnapshot(), opts);
 }
@@ -478,16 +520,19 @@ export function trafficIntegrationArchitectureAudit() {
     SEPARATE_TRAFFIC_FILTERS: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS,
     SEPARATE_TRAFFIC_LOCALITIES: TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES,
     PUBLICATION_ENABLED: TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED,
+    TRAFFIC_UI_ENABLED: TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED,
     LIVE_NDIC_INGEST: TRAFFIC_OVERVIEW_FLAGS.LIVE_NDIC_INGEST,
     SHARED_SETTINGS: true,
     SHARED_LOCALITY_MODEL: true,
     SHARED_TIMELINE: true,
     TRAFFIC_FEED_INTERNAL_ONLY: true,
+    FEATURE_FLAG_DISABLE_READY: true,
     pass:
       TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false &&
       TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === false &&
       TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS === false &&
       TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES === false &&
-      TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false,
+      TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false &&
+      TRAFFIC_OVERVIEW_FLAGS.LIVE_NDIC_INGEST === false,
   };
 }

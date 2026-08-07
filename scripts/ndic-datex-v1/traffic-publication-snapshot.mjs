@@ -39,7 +39,7 @@ export function buildOfflinePublicationSnapshot(payload, opts = {}) {
     dataAge: payload.dataAge || null,
     publicationEnabled: false,
     publicApiEnabled: false,
-    trafficUiEnabled: false,
+    trafficUiEnabled: PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true,
     projections: payload.projections || [],
     feed: payload.feed || null,
     cards: payload.cards || [],

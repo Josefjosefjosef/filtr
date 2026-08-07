@@ -119,7 +119,7 @@ function assertNoLeak(obj, prefix) {
 async function run() {
   ok("flag_pub_off", PUBLICATION_LAYER_FLAGS.PUBLICATION_ENABLED === false);
   ok("flag_api_off", PUBLICATION_LAYER_FLAGS.PUBLIC_API_ENABLED === false);
-  ok("flag_ui_off", PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === false);
+  ok("flag_ui_on", PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true);
   ok("flag_delay_est_off", PUBLICATION_LAYER_FLAGS.DELAY_ESTIMATION_ENABLED === false);
   ok("flag_fuzzy_off", PUBLICATION_LAYER_FLAGS.FUZZY_DEDUPLICATION_ENABLED === false);
   ok("flag_heur_map_off", PUBLICATION_LAYER_FLAGS.HEURISTIC_MAP_LINK_ENABLED === false);
@@ -791,7 +791,7 @@ async function run() {
     fails,
     PUBLICATION_ENABLED: false,
     PUBLIC_API_ENABLED: false,
-    TRAFFIC_UI_ENABLED: false,
+    TRAFFIC_UI_ENABLED: true,
     ONLY_RESOLVED_BASIC_LOCATION_PUBLISHABLE: true,
   };
   console.log(JSON.stringify(summary, null, 2));

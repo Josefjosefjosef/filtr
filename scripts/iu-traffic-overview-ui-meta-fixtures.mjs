@@ -29,6 +29,7 @@ function ok(id, cond, detail) {
 const arch = trafficIntegrationArchitectureAudit();
 ok("mut_arch", arch.pass === true);
 ok("mut_pub", TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === false);
+ok("mut_ui_on", TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true);
 ok("mut_home", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false);
 ok("mut_settings", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_SETTINGS === false);
 ok("mut_filters", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_FILTERS === false);
@@ -62,6 +63,7 @@ const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.j
 ok("mut_ui_no_parallel_panel", !/iuPdTrafficPrefs|data-iu-traffic-prefs|traffic-rsd/.test(ui));
 ok("mut_ui_no_parallel_acts", !/data-draft-act=\"traffic-/.test(ui));
 ok("mut_ui_shared_pipeline", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(pipelineItems/.test(ui));
+ok("mut_ui_fetches_snapshot", /fetchHostedTrafficOfflineSnapshot/.test(ui));
 ok("mut_ui_three_rails", /SECTION_ORDER/.test(ui) && /temata/.test(ui) && /zdroje/.test(ui) && /lokalita/.test(ui));
 ok("mut_css_no_prefs", !/\.iuPdTrafficPrefs\b/.test(css));
 ok("mut_core_strips", /delete merged\.trafficSpatialMode/.test(core));
