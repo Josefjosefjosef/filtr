@@ -227,6 +227,48 @@ ok(
   }).ok
 );
 
+// Product offline suite must gate POINTS empty-field + basic-importer fixtures (fail-closed).
+const SUITE_JS = path.join(ROOT, "scripts", "ndic-staging-preflight-suite.mjs");
+const PKG_JSON = path.join(ROOT, "package.json");
+const suiteSrc = fs.readFileSync(SUITE_JS, "utf8");
+const pkg = JSON.parse(fs.readFileSync(PKG_JSON, "utf8"));
+const pkgScripts = pkg.scripts || {};
+
+ok(
+  "suite_requires_points_empty_field_policy_fixtures",
+  /iu-ndic-tmc-points-empty-field-policy-fixtures/.test(suiteSrc)
+);
+ok(
+  "suite_requires_tmc_basic_importer_fixtures",
+  /iu-ndic-tmc-basic-importer-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_points_empty_field_policy_fixtures",
+  Boolean(pkgScripts["iu-ndic-tmc-points-empty-field-policy-fixtures"])
+);
+ok(
+  "pkg_has_tmc_basic_importer_fixtures",
+  Boolean(pkgScripts["iu-ndic-tmc-basic-importer-fixtures"])
+);
+ok(
+  "preflight_wf_runs_product_suite",
+  /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
+);
+
+function suiteMustKeepPointsFixtures(id, mutateFn) {
+  const mutated = mutateFn(suiteSrc);
+  const stillHasPolicy = /iu-ndic-tmc-points-empty-field-policy-fixtures/.test(mutated);
+  const stillHasImporter = /iu-ndic-tmc-basic-importer-fixtures/.test(mutated);
+  ok(id, !(stillHasPolicy && stillHasImporter), "FALSE_GREEN_SUITE_STILL_HAS_POINTS");
+}
+
+suiteMustKeepPointsFixtures("meta_remove_points_policy_from_suite_must_fail", (s) =>
+  s.replace(/iu-ndic-tmc-points-empty-field-policy-fixtures/g, "iu-ndic-tmc-points-empty-field-policy-REMOVED")
+);
+suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (s) =>
+  s.replace(/iu-ndic-tmc-basic-importer-fixtures/g, "iu-ndic-tmc-basic-importer-REMOVED")
+);
+
 const report = { ok: fails.length === 0, failCount: fails.length, fails };
 console.log(JSON.stringify(report, null, 2));
 if (fails.length) process.exit(1);
