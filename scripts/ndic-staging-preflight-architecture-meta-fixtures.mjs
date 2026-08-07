@@ -277,6 +277,14 @@ ok(
   Boolean(pkgScripts["iu-ndic-remaining-location-gap-fixtures"])
 );
 ok(
+  "suite_requires_traffic_ui_snapshot_persist_fixtures",
+  /iu-ndic-traffic-ui-snapshot-persist-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_traffic_ui_snapshot_persist_fixtures",
+  Boolean(pkgScripts["iu-ndic-traffic-ui-snapshot-persist-fixtures"])
+);
+ok(
   "preflight_wf_runs_product_suite",
   /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
 );
@@ -318,6 +326,28 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
     "meta_remove_remaining_gap_from_suite_must_fail",
     !/iu-ndic-remaining-location-gap-fixtures/.test(mutated),
     "FALSE_GREEN_SUITE_STILL_HAS_REMAINING_GAP"
+  );
+}
+{
+  const mutated = suiteSrc.replace(
+    /iu-ndic-traffic-ui-snapshot-persist-fixtures/g,
+    "iu-ndic-traffic-ui-snapshot-persist-REMOVED"
+  );
+  ok(
+    "meta_remove_traffic_ui_snapshot_persist_from_suite_must_fail",
+    !/iu-ndic-traffic-ui-snapshot-persist-fixtures/.test(mutated),
+    "FALSE_GREEN_SUITE_STILL_HAS_TRAFFIC_UI_SNAPSHOT_PERSIST"
+  );
+}
+{
+  const renamed = suiteSrc.replace(
+    /iu-ndic-traffic-ui-snapshot-persist-fixtures/g,
+    "iu-ndic-traffic-ui-snapshot-persist-renamed"
+  );
+  ok(
+    "meta_rename_traffic_ui_snapshot_persist_from_suite_must_fail",
+    !/iu-ndic-traffic-ui-snapshot-persist-fixtures/.test(renamed),
+    "FALSE_GREEN_SUITE_STILL_HAS_CANONICAL_PERSIST_NAME"
   );
 }
 
