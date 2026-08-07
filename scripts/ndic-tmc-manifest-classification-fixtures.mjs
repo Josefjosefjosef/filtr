@@ -91,6 +91,75 @@ async function writeAndImport(opts) {
   ok("A_SIDECAR_IGNORED", (r.ignoredNonStandardCount || 0) >= 1);
 }
 
+// --- Scenario A2: SP08001 DAT + exact LT CZE v11 Tab.8 TXT working format (Variant C) ---
+{
+  const txtNames = [
+    "ltcze11_0_points.txt",
+    "ltcze11_0_segments.txt",
+    "ltcze11_0_roads.txt",
+    "ltcze11_0_admins.txt",
+  ];
+  const txtTargets = txtNames.map((n) => ({
+    tableCode: null,
+    ext: "txt",
+    role: "unknown_txt",
+    basenameDigest: opaqueBasenameDigest(n),
+  }));
+  const m = classifyManifest([...stdTargets(), ...txtTargets]);
+  ok("A2_txt_working_ok", m.ok === true, m.rejectCode);
+  ok("A2_txt_ignored_4", m.ignoredNonStandardCount === 4, String(m.ignoredNonStandardCount));
+  ok("A2_unknown_0", m.unknownNonclassifiedCount === 0);
+  ok(
+    "A2_reason_documented",
+    (m.ignoredEntries || []).every((e) => e.reasonCode === "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT")
+  );
+  ok(
+    "A2_digest_admins",
+    opaqueBasenameDigest("ltcze11_0_admins.txt") === "1e443f07a4225490"
+  );
+  ok(
+    "A2_digest_points",
+    opaqueBasenameDigest("ltcze11_0_points.txt") === "654c2cd13ecc4532"
+  );
+  ok(
+    "A2_digest_roads",
+    opaqueBasenameDigest("ltcze11_0_roads.txt") === "94b4b2463977ebc5"
+  );
+  ok(
+    "A2_digest_segments",
+    opaqueBasenameDigest("ltcze11_0_segments.txt") === "f2a8960a5959d746"
+  );
+  const one = classifyManifestEntry(txtTargets[0]);
+  ok("A2_mayIgnore", one.mayIgnore === true);
+  ok("A2_not_authoritative", one.authoritative === false);
+  ok("A2_resolution_not_required", one.resolutionRequired === false);
+  ok("A2_doc_ref", one.docReference === "ltcze11_0_technicka_dokumentace.pdf:5.2/Tab.8");
+}
+
+// --- Scenario A3: other .txt / same ext different basename / missing digest → fail-closed ---
+{
+  const mOther = classifyManifest([
+    ...stdTargets(),
+    { tableCode: null, ext: "txt", role: "unknown_txt", basenameDigest: opaqueBasenameDigest("OTHER.TXT") },
+  ]);
+  ok("A3_other_txt_fail", mOther.ok === false && mOther.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT);
+  const mLicense = classifyManifest([
+    ...stdTargets(),
+    { tableCode: null, ext: "txt", role: "unknown_txt", basenameDigest: opaqueBasenameDigest("LICENSE.TXT") },
+  ]);
+  ok("A3_license_txt_fail", mLicense.ok === false);
+  const mNoDig = classifyManifest([
+    ...stdTargets(),
+    { tableCode: null, ext: "txt", role: "unknown_txt", basenameDigest: null },
+  ]);
+  ok("A3_txt_without_digest_fail", mNoDig.ok === false);
+  const mWrongVer = classifyManifest([
+    ...stdTargets(),
+    { tableCode: null, ext: "txt", role: "unknown_txt", basenameDigest: opaqueBasenameDigest("ltcze80_points.txt") },
+  ]);
+  ok("A3_v8_basename_not_auto_accepted", mWrongVer.ok === false);
+}
+
 // --- Scenario B: unknown resolver-relevant (unmapped .dat treated unknown_non_classified) ---
 {
   const m = classifyManifest([
@@ -310,6 +379,9 @@ async function writeAndImport(opts) {
   ok("meta_no_wildcard_star", !/\.dat\s*\|\s*\.txt\s*\|\s*\.csv[\s\S]{0,40}mayIgnore\s*:\s*true/.test(clfSrc));
   ok("meta_required_loop", /REQUIRED_FOR_DATASET_IMPORT/.test(clfSrc));
   ok("meta_unknown_entries_arrays", /unknownNonclassifiedEntries/.test(clfSrc));
+  ok("meta_tab8_exact_list", /LTCZE11_0_POINTS\.TXT/.test(clfSrc) && /DOCUMENTED_LT_CZE_V11_TXT_DIGESTS/.test(clfSrc));
+  ok("meta_tab8_doc_reference", /ltcze11_0_technicka_dokumentace\.pdf:5\.2\/Tab\.8/.test(clfSrc));
+  ok("meta_no_broad_txt_mayIgnore_without_digest_set", assertNoBroadExtensionIgnore(clfSrc).ok === true);
 
   const schemaSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "shadow-forensic-schema.mjs"), "utf8");
   ok("meta_schema_ignored_entries", /TMC_IGNORED_ENTRIES/.test(schemaSrc));
