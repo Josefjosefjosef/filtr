@@ -62,6 +62,7 @@ export function extractLocationPresenceFlags(locNode) {
   const flags = {
     hasAlertCPoint: false,
     hasAlertCLinear: false,
+    hasAlertCArea: false,
     hasSpecificLocation: false,
     hasPointCoordinates: false,
     pointCoordinatesValid: false,
@@ -76,11 +77,19 @@ export function extractLocationPresenceFlags(locNode) {
     hasGmlPolygon: false,
     hasNetworkLocation: false,
     hasSupplementaryPositionalDescription: false,
+    hasTpegLocation: false,
+    hasItinerary: false,
+    hasUnrecognizedLocationProfile: false,
+    groupOfLocationsEmpty: false,
   };
-  if (!locNode) return flags;
+  if (!locNode) {
+    flags.groupOfLocationsEmpty = true;
+    return flags;
+  }
 
   flags.hasAlertCPoint = hasExact(locNode, "alertCPoint");
   flags.hasAlertCLinear = hasExact(locNode, "alertCLinear");
+  flags.hasAlertCArea = hasExact(locNode, "alertCArea");
   flags.hasSpecificLocation = hasExact(locNode, "specificLocation");
   flags.hasPointCoordinates = hasExact(locNode, "pointCoordinates");
   flags.hasNetworkLocation = hasExact(locNode, "networkLocation");
@@ -91,19 +100,86 @@ export function extractLocationPresenceFlags(locNode) {
   flags.hasGmlLineString = hasExact(locNode, "LineString");
   flags.hasGmlPolygon = hasExact(locNode, "Polygon");
   flags.hasGmlPoint = hasExact(locNode, "Point");
+  flags.hasTpegLocation =
+    hasExact(locNode, "tpegPointLocation") ||
+    hasExact(locNode, "tpegLinearLocation") ||
+    hasExact(locNode, "tpegAreaLocation") ||
+    hasExact(locNode, "tpegFramedPoint");
+  flags.hasItinerary = hasExact(locNode, "itinerary") || hasExact(locNode, "itineraryByReference");
 
-  // OpenLR: any element local-name containing "openlr" (DATEX II variants).
+  const kids = Array.isArray(locNode.children) ? locNode.children : [];
+  flags.groupOfLocationsEmpty = kids.length === 0;
+
+  // OpenLR + unrecognized DATEX location-family names (forensic only).
   walkNames(locNode, 8000, (name) => {
-    if (!name.includes("openlr")) return;
-    flags.hasOpenLR = true;
-    if (/linear|line.*location/.test(name)) flags.hasOpenlrLine = true;
-    if (/point.*location|point.*along|poi/.test(name)) flags.hasOpenlrPoint = true;
-    if (/geo.*coordinate/.test(name)) flags.hasOpenlrGeo = true;
-    if (/circle|rectangle|grid|polygon|closed/.test(name)) flags.hasOpenlrArea = true;
-    if (/binary|asbinary/.test(name)) flags.hasOpenlrBinary = true;
+    if (name.includes("openlr")) {
+      flags.hasOpenLR = true;
+      if (/linear|line.*location/.test(name)) flags.hasOpenlrLine = true;
+      if (/point.*location|point.*along|poi/.test(name)) flags.hasOpenlrPoint = true;
+      if (/geo.*coordinate/.test(name)) flags.hasOpenlrGeo = true;
+      if (/circle|rectangle|grid|polygon|closed/.test(name)) flags.hasOpenlrArea = true;
+      if (/binary|asbinary/.test(name)) flags.hasOpenlrBinary = true;
+      return;
+    }
+    if (
+      /^(groupoflocations|alertc|specificlocation|pointcoordinates|networklocation|supplementary|gml|linestring|polygon|point|openlr)/.test(
+        name
+      )
+    ) {
+      return;
+    }
+    if (/location|tpeg|itinerary|area|linear|point/.test(name) && name.length > 3) {
+      flags.hasUnrecognizedLocationProfile = true;
+    }
   });
 
-return flags;
+  return flags;
+}
+
+/** Anonymous LCD miss class — never returns raw LCD. */
+export const LCD_MISS_CLASS = Object.freeze({
+  POINT: "point_in_lt",
+  SEGMENT: "segment_in_lt",
+  AREA: "area_in_lt",
+  IN_CODES_ONLY: "in_codes_only",
+  ORPHAN_NOT_IN_LT: "orphan_not_in_lt",
+});
+
+/**
+ * @param {object|null|undefined} table
+ * @param {unknown} locationCode
+ */
+export function classifyLcdMissClass(table, locationCode) {
+  const key = locationCode != null ? String(locationCode) : "";
+  if (!key) return LCD_MISS_CLASS.ORPHAN_NOT_IN_LT;
+  const side = table && table.forensicLcdClass && typeof table.forensicLcdClass === "object"
+    ? table.forensicLcdClass
+    : null;
+  const cls = side ? side[key] : null;
+  if (cls === "P") return LCD_MISS_CLASS.POINT;
+  if (cls === "L") return LCD_MISS_CLASS.SEGMENT;
+  if (cls === "A") return LCD_MISS_CLASS.AREA;
+  const codes = table && table.forensicLocationCodes;
+  if (codes && typeof codes.has === "function" && codes.has(key)) return LCD_MISS_CLASS.IN_CODES_ONLY;
+  return LCD_MISS_CLASS.ORPHAN_NOT_IN_LT;
+}
+
+export const NO_SIGNAL_SUBTYPE = Object.freeze({
+  EMPTY_GROUP: "empty_group_of_locations",
+  UNRECOGNIZED_PROFILE: "unrecognized_location_profile",
+  OTHER: "other_no_signal",
+});
+
+/**
+ * @param {object} presence
+ */
+export function chooseNoSignalSubtype(presence) {
+  const p = presence || {};
+  if (p.hasAlertCArea || p.hasTpegLocation || p.hasItinerary || p.hasUnrecognizedLocationProfile) {
+    return NO_SIGNAL_SUBTYPE.UNRECOGNIZED_PROFILE;
+  }
+  if (p.groupOfLocationsEmpty) return NO_SIGNAL_SUBTYPE.EMPTY_GROUP;
+  return NO_SIGNAL_SUBTYPE.OTHER;
 }
 
 /**

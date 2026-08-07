@@ -18,6 +18,7 @@ import {
   buildCoordinateProbe,
 } from "./location-forensic-probe.mjs";
 import { extractOpenlrFromLoc } from "./openlr-datex-extract.mjs";
+import { extractSupplementaryPositional } from "./supplementary-location.mjs";
 
 function clip(s, max) {
   const t = String(s || "").replace(/\s+/g, " ").trim();
@@ -125,14 +126,33 @@ function extractCoordinates(locNode) {
 }
 
 function extractRoad(locNode, recordNode) {
-  const roadNumber =
+  // Prefer direct children, then documented nested roadInformation / supplementary fields.
+  let roadNumber =
     clip(childText(locNode, "roadNumber"), 40) ||
     clip(childText(recordNode, "roadNumber"), 40) ||
     "";
-  const roadName =
+  let roadName =
     clip(childText(locNode, "roadName"), 120) ||
     clip(childText(recordNode, "roadName"), 120) ||
     "";
+  if (!roadNumber && locNode) {
+    for (const n of descendantsNamed(locNode, "roadNumber", 8)) {
+      const t = clip(n.text, 40) || clip(childText(n, "value"), 40);
+      if (t) {
+        roadNumber = t;
+        break;
+      }
+    }
+  }
+  if (!roadName && locNode) {
+    for (const n of descendantsNamed(locNode, "roadName", 8)) {
+      const t = clip(n.text, 120) || clip(childText(n, "value"), 120);
+      if (t) {
+        roadName = t;
+        break;
+      }
+    }
+  }
   return { roadNumber, roadName };
 }
 
@@ -197,7 +217,10 @@ function parseRecord(recNode, limits) {
   const openlrExtract = extractOpenlrFromLoc(locNode);
   Object.assign(locationPresence, openlrExtract.presenceFlags);
   if (coordinateProbe.valid) locationPresence.pointCoordinatesValid = true;
+  const supplementary = extractSupplementaryPositional(locNode);
   const road = extractRoad(locNode, recNode);
+  if (!road.roadNumber && supplementary.roadNumber) road.roadNumber = supplementary.roadNumber;
+  if (!road.roadName && supplementary.roadName) road.roadName = supplementary.roadName;
   const texts = extractTexts(recNode, limits.maxTextFieldChars);
 
   const severity = clip(
@@ -214,6 +237,7 @@ function parseRecord(recNode, limits) {
     locationPresence,
     coordinateProbe,
     openlrExtract,
+    supplementary,
     createdAt: parseIso(childText(recNode, "situationRecordCreationTime")),
     versionTime: parseIso(childText(recNode, "situationRecordVersionTime")),
     firstSupplierVersionTime: parseIso(childText(recNode, "situationRecordFirstSupplierVersionTime")),

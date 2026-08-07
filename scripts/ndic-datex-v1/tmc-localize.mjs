@@ -9,6 +9,7 @@ import { lookupTmcPoint } from "./tmc-table.mjs";
 import {
   TMC_MISS_REASON,
   classifyLcdMiss,
+  classifyLcdMissClass,
   choosePrimaryTmcMissReason,
 } from "./location-forensic-probe.mjs";
 
@@ -50,6 +51,8 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
   /** @type {string[]} */
   const missReasons = [];
   /** @type {string[]} */
+  const missClasses = [];
+  /** @type {string[]} */
   const refKindsSeen = [];
 
   if (ctx.roadNumber) roads.add(ctx.roadNumber);
@@ -81,6 +84,7 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
     if (!pt) {
       tmcMiss += 1;
       missReasons.push(classifyLcdMiss(table, ref.locationCode, refKind));
+      missClasses.push(classifyLcdMissClass(table, ref.locationCode));
       continue;
     }
     tmcOk += 1;
@@ -94,6 +98,10 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
       const pt2 = lookupTmcPoint(table, ref.secondaryLocationCode);
       if (pt2 && pt2.name) names.push(String(pt2.name));
       if (pt2 && pt2.roadNumber) roads.add(String(pt2.roadNumber));
+      if (!pt2) {
+        // Secondary miss is forensic-only: primary already resolved.
+        missClasses.push(classifyLcdMissClass(table, ref.secondaryLocationCode));
+      }
     }
   }
 
@@ -149,6 +157,7 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
   }
 
   const primaryMissReason = missReasons.length ? choosePrimaryTmcMissReason(missReasons) : null;
+  const primaryMissClass = missClasses.length ? missClasses[0] : null;
   let tmcLocationClass = "unknown";
   if (primaryMissReason === TMC_MISS_REASON.POINT_LOOKUP_MISS) tmcLocationClass = "point";
   else if (primaryMissReason === TMC_MISS_REASON.SEGMENT_LOOKUP_MISS) tmcLocationClass = "segment";
@@ -172,6 +181,8 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
     forensic: {
       tmcMissReason: primaryMissReason,
       tmcMissReasons: missReasons.slice(0, 8),
+      tmcMissClass: primaryMissClass,
+      tmcMissClasses: missClasses.slice(0, 8),
       tmcReferenceKind,
       tmcLocationClass,
       trustBeforeResolver: trustBefore,

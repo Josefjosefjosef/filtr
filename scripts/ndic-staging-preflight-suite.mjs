@@ -25,6 +25,7 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-shadow-forensic-retention-fixtures",
   "iu-ndic-location-forensic-probe-fixtures",
   "iu-ndic-openlr-fixtures",
+  "iu-ndic-remaining-location-gap-fixtures",
 ];
 
 const present = REQUIRED_WHEN_ANY_PRODUCT.filter((s) => Boolean(scripts[s]));

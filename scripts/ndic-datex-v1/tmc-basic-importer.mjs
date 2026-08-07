@@ -625,6 +625,7 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
         segments: (tableStore.SEGMENTS && tableStore.SEGMENTS._accepted) || [],
         areas: (tableStore.OTHERAREAS && tableStore.OTHERAREAS._accepted) || [],
         adminAreas: (tableStore.ADMINISTRATIVEAREA && tableStore.ADMINISTRATIVEAREA._accepted) || [],
+        locationCodes: (tableStore.LOCATIONCODES && tableStore.LOCATIONCODES._accepted) || [],
         tableVersion: TMC_TABLE_VERSION_EXPECTED,
         countryCode: opts.countryCode,
         tableNumber: opts.tableNumber,

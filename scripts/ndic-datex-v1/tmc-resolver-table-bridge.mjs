@@ -24,6 +24,10 @@ export function parseSp08001Coordinate(raw) {
  *   points?: object[],
  *   roads?: object[],
  *   names?: object[],
+ *   segments?: object[],
+ *   areas?: object[],
+ *   adminAreas?: object[],
+ *   locationCodes?: object[],
  *   tableVersion?: string|number,
  *   countryCode?: number,
  *   tableNumber?: number,
@@ -93,6 +97,14 @@ export function buildTmcResolverTableFromSp08001Accepted(input = {}) {
     forensicLcdClass[String(row.LCD)] = "P";
   }
 
+  /** Forensic-only LOCATIONCODES membership (no raw LCD published). */
+  const forensicLocationCodes = new Set();
+  for (const row of input.locationCodes || []) {
+    if (!row || row.LCD == null) continue;
+    forensicLocationCodes.add(String(row.LCD));
+  }
+  for (const key of Object.keys(forensicLcdClass)) forensicLocationCodes.add(key);
+
   const table = parseTmcTablePayload({
     version: String(input.tableVersion != null ? input.tableVersion : "unknown"),
     countryCode: input.countryCode != null ? Number(input.countryCode) : TMC_COUNTRY_CODE,
@@ -100,5 +112,6 @@ export function buildTmcResolverTableFromSp08001Accepted(input = {}) {
     points,
   });
   table.forensicLcdClass = forensicLcdClass;
+  table.forensicLocationCodes = forensicLocationCodes;
   return table;
 }

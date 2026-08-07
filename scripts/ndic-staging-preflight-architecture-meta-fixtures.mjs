@@ -269,6 +269,14 @@ ok(
 ok("suite_requires_openlr_fixtures", /iu-ndic-openlr-fixtures/.test(suiteSrc));
 ok("pkg_has_openlr_fixtures", Boolean(pkgScripts["iu-ndic-openlr-fixtures"]));
 ok(
+  "suite_requires_remaining_location_gap_fixtures",
+  /iu-ndic-remaining-location-gap-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_remaining_location_gap_fixtures",
+  Boolean(pkgScripts["iu-ndic-remaining-location-gap-fixtures"])
+);
+ok(
   "preflight_wf_runs_product_suite",
   /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
 );
@@ -300,6 +308,17 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
 {
   const mutated = suiteSrc.replace(/iu-ndic-openlr-fixtures/g, "iu-ndic-openlr-REMOVED");
   ok("meta_remove_openlr_from_suite_must_fail", !/iu-ndic-openlr-fixtures/.test(mutated), "FALSE_GREEN_SUITE_STILL_HAS_OPENLR");
+}
+{
+  const mutated = suiteSrc.replace(
+    /iu-ndic-remaining-location-gap-fixtures/g,
+    "iu-ndic-remaining-location-gap-REMOVED"
+  );
+  ok(
+    "meta_remove_remaining_gap_from_suite_must_fail",
+    !/iu-ndic-remaining-location-gap-fixtures/.test(mutated),
+    "FALSE_GREEN_SUITE_STILL_HAS_REMAINING_GAP"
+  );
 }
 
 const report = { ok: fails.length === 0, failCount: fails.length, fails };

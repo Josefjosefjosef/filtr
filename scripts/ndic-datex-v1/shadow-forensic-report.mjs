@@ -209,7 +209,7 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     hasSupplementaryPositionalDescription: 0,
   };
   const trustBefore = { tmc: 0, text: 0, national_fallback: 0, none: 0 };
-  const trustAfter = { coordinates: 0, tmc: 0, text: 0, national_fallback: 0, none: 0 };
+  const trustAfter = { coordinates: 0, openlr: 0, tmc: 0, text: 0, national_fallback: 0, none: 0 };
   const tmcReferenceKinds = { point: 0, linear: 0, other: 0 };
   const tmcLocationClasses = { point: 0, segment: 0, area: 0, unknown: 0 };
   let coordinatePresent = 0;
@@ -221,6 +221,27 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     input: 0, resolved: 0, ambiguous: 0, invalid: 0, unsupported: 0, referenceDataMissing: 0, decodeFailed: 0,
     eligible: 0, blocked: 0, line: 0, point: 0, geo: 0, area: 0, binary: 0, other: 0, xml: 0,
   };
+  const lcdMissClass = {
+    point_in_lt: 0,
+    segment_in_lt: 0,
+    area_in_lt: 0,
+    in_codes_only: 0,
+    orphan_not_in_lt: 0,
+  };
+  const supplementaryClass = {
+    verifiable_standard: 0,
+    text_only: 0,
+    incomplete: 0,
+  };
+  const noSignalSubtype = {
+    empty_group_of_locations: 0,
+    unrecognized_location_profile: 0,
+    other_no_signal: 0,
+  };
+  let locHasAlertCArea = 0;
+  let locHasTpeg = 0;
+  let locHasItinerary = 0;
+  let locUnrecognized = 0;
 
   for (const it of allItems) {
     const st = String((it && it.status) || "");
@@ -272,6 +293,11 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     }
     if (tmcOk || tmcMiss) resolverAttempted += 1;
 
+    if (forensic.hasAlertCArea === true) locHasAlertCArea += 1;
+    if (forensic.hasTpegLocation === true) locHasTpeg += 1;
+    if (forensic.hasItinerary === true) locHasItinerary += 1;
+    if (forensic.hasUnrecognizedLocationProfile === true) locUnrecognized += 1;
+
     if (trust === "openlr") resolvedOpenlr += 1;
     else if (trust === "tmc" || tmcOk) resolvedBasic += 1;
     else if (trust === "coordinates") resolvedOther += 1;
@@ -282,11 +308,25 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
         const reason = String(forensic.tmcMissReason || "");
         if (Object.prototype.hasOwnProperty.call(tmcMissReasons, reason)) tmcMissReasons[reason] += 1;
         else tmcMissReasons.other += 1;
+        const missClass = String(forensic.tmcMissClass || "");
+        if (Object.prototype.hasOwnProperty.call(lcdMissClass, missClass)) lcdMissClass[missClass] += 1;
+        else lcdMissClass.orphan_not_in_lt += 1;
       } else {
         unresolvedMissing += 1;
         const profile = String(forensic.locationProfileBucket || "");
         if (Object.prototype.hasOwnProperty.call(locationProfiles, profile)) locationProfiles[profile] += 1;
         else locationProfiles.no_localization_signal += 1;
+        if (profile === "supplementary_positional_description") {
+          const sc = String((forensic.supplementary && forensic.supplementary.classification) || "");
+          if (sc === "SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION") supplementaryClass.verifiable_standard += 1;
+          else if (sc === "SUPPLEMENTARY_TEXT_ONLY") supplementaryClass.text_only += 1;
+          else supplementaryClass.incomplete += 1;
+        }
+        if (profile === "no_localization_signal") {
+          const st = String(forensic.noSignalSubtype || "other_no_signal");
+          if (Object.prototype.hasOwnProperty.call(noSignalSubtype, st)) noSignalSubtype[st] += 1;
+          else noSignalSubtype.other_no_signal += 1;
+        }
       }
     }
 
@@ -382,6 +422,13 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     tmcReferenceKinds,
     tmcLocationClasses,
     openlr,
+    lcdMissClass,
+    supplementaryClass,
+    noSignalSubtype,
+    locHasAlertCArea,
+    locHasTpeg,
+    locHasItinerary,
+    locUnrecognized,
   };
 }
 
@@ -663,6 +710,7 @@ export function buildShadowForensicBundle(ctx = {}) {
     TRUST_BEFORE_NATIONAL_FALLBACK: m.trustBefore.national_fallback,
     TRUST_BEFORE_NONE: m.trustBefore.none,
     TRUST_AFTER_COORDINATES: m.trustAfter.coordinates,
+    TRUST_AFTER_OPENLR: m.trustAfter.openlr,
     TRUST_AFTER_TMC: m.trustAfter.tmc,
     TRUST_AFTER_TEXT: m.trustAfter.text,
     TRUST_AFTER_NATIONAL_FALLBACK: m.trustAfter.national_fallback,
@@ -674,6 +722,21 @@ export function buildShadowForensicBundle(ctx = {}) {
     TMC_LOCATION_CLASS_SEGMENT: m.tmcLocationClasses.segment,
     TMC_LOCATION_CLASS_AREA: m.tmcLocationClasses.area,
     TMC_LOCATION_CLASS_UNKNOWN: m.tmcLocationClasses.unknown,
+    TMC_LCD_MISS_POINT_IN_LT: m.lcdMissClass.point_in_lt,
+    TMC_LCD_MISS_SEGMENT_IN_LT: m.lcdMissClass.segment_in_lt,
+    TMC_LCD_MISS_AREA_IN_LT: m.lcdMissClass.area_in_lt,
+    TMC_LCD_MISS_IN_CODES_ONLY: m.lcdMissClass.in_codes_only,
+    TMC_LCD_MISS_ORPHAN_NOT_IN_LT: m.lcdMissClass.orphan_not_in_lt,
+    SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION: m.supplementaryClass.verifiable_standard,
+    SUPPLEMENTARY_TEXT_ONLY: m.supplementaryClass.text_only,
+    SUPPLEMENTARY_INCOMPLETE: m.supplementaryClass.incomplete,
+    NO_SIGNAL_EMPTY_GROUP: m.noSignalSubtype.empty_group_of_locations,
+    NO_SIGNAL_UNRECOGNIZED_PROFILE: m.noSignalSubtype.unrecognized_location_profile,
+    NO_SIGNAL_OTHER: m.noSignalSubtype.other_no_signal,
+    LOC_HAS_ALERTC_AREA: m.locHasAlertCArea,
+    LOC_HAS_TPEG: m.locHasTpeg,
+    LOC_HAS_ITINERARY: m.locHasItinerary,
+    LOC_HAS_UNRECOGNIZED_LOCATION_PROFILE: m.locUnrecognized,
     OPENLR_INPUT_TOTAL: m.openlr.input,
     OPENLR_RESOLVED_TOTAL: m.openlr.resolved,
     OPENLR_AMBIGUOUS_TOTAL: m.openlr.ambiguous,
@@ -801,6 +864,7 @@ export function printShadowForensicStdout(summary, validationReport) {
     "FUTURE_EVENTS=" + (summary && summary.FUTURE_EVENTS),
     "ENDED_EVENTS=" + (summary && summary.ENDED_EVENTS),
     "RESOLVED_BASIC=" + (summary && summary.RESOLVED_BASIC),
+    "RESOLVED_OPENLR=" + (summary && summary.RESOLVED_OPENLR),
     "TMC_ARCHIVE_USED=" + (summary && summary.TMC_ARCHIVE_USED ? "true" : "false"),
     "TMC_REASON=" + (summary && summary.TMC_REASON),
     "TMC_ACTIVE=" + (summary && summary.TMC_ACTIVE ? "true" : "false"),
@@ -879,6 +943,31 @@ export function printShadowForensicStdout(summary, validationReport) {
       "TMC_LOCATION_CLASS_SEGMENT",
       "TMC_LOCATION_CLASS_AREA",
       "TMC_LOCATION_CLASS_UNKNOWN",
+      "TMC_LCD_MISS_POINT_IN_LT",
+      "TMC_LCD_MISS_SEGMENT_IN_LT",
+      "TMC_LCD_MISS_AREA_IN_LT",
+      "TMC_LCD_MISS_IN_CODES_ONLY",
+      "TMC_LCD_MISS_ORPHAN_NOT_IN_LT",
+      "SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION",
+      "SUPPLEMENTARY_TEXT_ONLY",
+      "SUPPLEMENTARY_INCOMPLETE",
+      "NO_SIGNAL_EMPTY_GROUP",
+      "NO_SIGNAL_UNRECOGNIZED_PROFILE",
+      "NO_SIGNAL_OTHER",
+      "LOC_HAS_ALERTC_AREA",
+      "LOC_HAS_TPEG",
+      "LOC_HAS_ITINERARY",
+      "LOC_HAS_UNRECOGNIZED_LOCATION_PROFILE",
+      "OPENLR_INPUT_TOTAL",
+      "OPENLR_RESOLVED_TOTAL",
+      "OPENLR_AMBIGUOUS_TOTAL",
+      "OPENLR_INVALID_TOTAL",
+      "OPENLR_UNSUPPORTED_TOTAL",
+      "OPENLR_REFERENCE_DATA_MISSING_TOTAL",
+      "OPENLR_DECODE_FAILED_TOTAL",
+      "OPENLR_PUBLICATION_ELIGIBLE_TOTAL",
+      "OPENLR_PUBLICATION_BLOCKED_TOTAL",
+      "TRUST_AFTER_OPENLR",
     ].map((key) => key + "=" + (summary && summary[key])),
     "PUBLICATION_PROJECTIONS_TOTAL=" + (summary && summary.PUBLICATION_PROJECTIONS_TOTAL),
     "PUBLICATION_ELIGIBLE_TOTAL=" + (summary && summary.PUBLICATION_ELIGIBLE_TOTAL),

@@ -14,9 +14,10 @@ import {
 import { buildSituationIdentity, contentFingerprint } from "./identity.mjs";
 import { classifyTrafficLifecycle, classifyChangeSignificance, compareRevisions } from "./lifecycle.mjs";
 import { localizeFromTmc } from "./tmc-localize.mjs";
-import { chooseLocationProfileBucket } from "./location-forensic-probe.mjs";
+import { chooseLocationProfileBucket, chooseNoSignalSubtype } from "./location-forensic-probe.mjs";
 import { resolveOpenlrLocation } from "./openlr-resolve.mjs";
 import { OPENLR_STATUS } from "./openlr-constants.mjs";
+import { SUPPLEMENTARY_CLASS } from "./supplementary-location.mjs";
 import { buildTrafficTitle, buildTrafficSummary } from "./title.mjs";
 import {
   attachLegalProvenance,
@@ -86,6 +87,9 @@ export function situationToFeedItem(situation, opts = {}) {
     presence.hasPointCoordinates = true;
   }
   const locationProfileBucket = chooseLocationProfileBucket(presence, loc.trust);
+  const supplementary = primary.supplementary || { present: false, classification: SUPPLEMENTARY_CLASS.ABSENT };
+  const noSignalSubtype =
+    locationProfileBucket === "no_localization_signal" ? chooseNoSignalSubtype(presence) : null;
   const forensic = {
     ...presence,
     locationProfileBucket,
@@ -95,6 +99,18 @@ export function situationToFeedItem(situation, opts = {}) {
       directionDocumented: openlr.directionDocumented, failureReason: openlr.failureReason,
       publicationEligible: openlr.publicationEligible,
     } : null,
+    supplementary: supplementary.present
+      ? {
+          classification: supplementary.classification,
+          hasRoadNumber: supplementary.hasRoadNumber === true,
+          hasRoadName: supplementary.hasRoadName === true,
+          hasCarriageway: supplementary.hasCarriageway === true,
+          hasNamedArea: supplementary.hasNamedArea === true,
+          hasLocationDescriptor: supplementary.hasLocationDescriptor === true,
+          hasLane: supplementary.hasLane === true,
+        }
+      : null,
+    noSignalSubtype,
     ...(loc.forensic || {}),
   };
   const life = classifyTrafficLifecycle({
