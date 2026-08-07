@@ -1,0 +1,106 @@
+name: NDIC staging preflight
+
+# Phase 1 of controlled NDIC staging:
+#   GitHub-hosted synthetic guards + HEAD-bound short-lived attestation.
+#   NO IU_NDIC_* secrets. NO NDIC network. NO publication.
+# Operator must finish this PASS for the exact HEAD BEFORE starting the VPS runner
+# and BEFORE authorizing update-ndic-datex-v1.yml (network-only).
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_head_sha:
+        description: "Exact 40-char HEAD SHA to bind (empty = github.sha of selected ref)"
+        required: false
+        type: string
+        default: ""
+      ttl_seconds:
+        description: "Attestation TTL seconds (300-86400)"
+        required: false
+        type: string
+        default: "7200"
+
+concurrency:
+  group: ndic-datex-v1-staging-preflight
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  statuses: write
+  actions: read
+  checks: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    # Queue wait is acceptable here: VPS runner stays offline during this phase.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Bind and verify expected HEAD
+        id: head
+        env:
+          INPUT_HEAD: ${{ github.event.inputs.expected_head_sha }}
+          GITHUB_SHA_VALUE: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          want="$(printf '%s' "${INPUT_HEAD:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+          got="$(printf '%s' "${GITHUB_SHA_VALUE}" | tr '[:upper:]' '[:lower:]')"
+          if [ -z "$want" ]; then
+            want="$got"
+          fi
+          if ! printf '%s' "$want" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "INVALID_EXPECTED_HEAD"
+            exit 1
+          fi
+          if [ "$want" != "$got" ]; then
+            echo "HEAD_BINDING_MISMATCH want=$want got=$got"
+            exit 1
+          fi
+          echo "head=$want" >> "$GITHUB_OUTPUT"
+          echo "PREFLIGHT_HEAD_SHA=$want"
+
+      - name: Architecture fixtures (two-phase)
+        run: npm run iu-ndic-staging-preflight-architecture-fixtures
+
+      - name: Attestation fixtures
+        run: npm run iu-ndic-staging-preflight-attestation-fixtures
+
+      - name: Architecture meta fixtures
+        run: npm run iu-ndic-staging-preflight-architecture-meta-fixtures
+
+      - name: Concurrency fixtures (if present on ref)
+        run: |
+          set -euo pipefail
+          if node -e "const p=require('./package.json'); process.exit(p.scripts['iu-ndic-datex-v1-concurrency-fixtures']?0:1)"; then
+            npm run iu-ndic-datex-v1-concurrency-fixtures
+            npm run iu-ndic-datex-v1-concurrency-meta-fixtures
+          else
+            echo "CONCURRENCY_FIXTURES_ABSENT"
+            exit 1
+          fi
+
+      - name: Product offline guards (required when scripts exist on ref)
+        run: |
+          set -euo pipefail
+          node scripts/ndic-staging-preflight-suite.mjs
+
+      - name: Publish HEAD-bound preflight attestation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_NDIC_PREFLIGHT_EXPECTED_HEAD: ${{ steps.head.outputs.head }}
+          IU_NDIC_PREFLIGHT_TTL_SECONDS: ${{ github.event.inputs.ttl_seconds }}
+        run: |
+          set -euo pipefail
+          node scripts/ndic-publish-preflight-attestation.mjs
