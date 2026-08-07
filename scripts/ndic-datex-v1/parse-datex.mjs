@@ -17,6 +17,10 @@ import {
   extractLocationPresenceFlags,
   buildCoordinateProbe,
 } from "./location-forensic-probe.mjs";
+import {
+  extractNoSignalRootInventory,
+  projectRootInventoryForensic,
+} from "./no-signal-root-forensics.mjs";
 import { extractOpenlrFromLoc } from "./openlr-datex-extract.mjs";
 import { extractSupplementaryPositional } from "./supplementary-location.mjs";
 
@@ -217,6 +221,8 @@ function parseRecord(recNode, limits) {
   const openlrExtract = extractOpenlrFromLoc(locNode);
   Object.assign(locationPresence, openlrExtract.presenceFlags);
   if (coordinateProbe.valid) locationPresence.pointCoordinatesValid = true;
+  // Cycle 3: anonymized root local-name inventory (names + class only).
+  const rootInventory = projectRootInventoryForensic(extractNoSignalRootInventory(locNode));
   const supplementary = extractSupplementaryPositional(locNode);
   const road = extractRoad(locNode, recNode);
   if (!road.roadNumber && supplementary.roadNumber) road.roadNumber = supplementary.roadNumber;
@@ -237,6 +243,7 @@ function parseRecord(recNode, limits) {
     locationPresence,
     coordinateProbe,
     openlrExtract,
+    rootInventory,
     supplementary,
     createdAt: parseIso(childText(recNode, "situationRecordCreationTime")),
     versionTime: parseIso(childText(recNode, "situationRecordVersionTime")),

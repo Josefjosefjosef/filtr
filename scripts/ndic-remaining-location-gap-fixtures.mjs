@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 /**
- * Offline fixtures for remaining location-gap forensics (Cycle 2: no-signal detector).
+ * Offline fixtures for remaining location-gap forensics
+ * (Cycle 2: no-signal detector; Cycle 3: anonymized root inventory).
  */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseSafeXml } from "./ndic-datex-v1/safe-xml.mjs";
 import {
   extractLocationPresenceFlags,
@@ -14,6 +18,11 @@ import {
   LCD_MISS_CLASS,
   NO_SIGNAL_SUBTYPE,
 } from "./ndic-datex-v1/location-forensic-probe.mjs";
+import {
+  extractNoSignalRootInventory,
+  classifyLocationRootNode,
+  VENDOR_EXTENSION_CLASS,
+} from "./ndic-datex-v1/no-signal-root-forensics.mjs";
 import {
   extractSupplementaryPositional,
   SUPPLEMENTARY_CLASS,
@@ -87,25 +96,82 @@ ok(
   "alertc_area_subtype",
   chooseNoSignalSubtype(areaFlags) === NO_SIGNAL_SUBTYPE.UNRECOGNIZED_STANDARD_PROFILE
 );
+const areaInv = extractNoSignalRootInventory(areaLoc);
+ok("alertc_area_root_name", areaInv.primaryStandardLocalName === "alertcarea");
+ok("alertc_area_standard_kind", areaInv.standardRoots[0].standardProfile === true);
 
 // DATEX linearLocation container without supported method inside
-const linearOnly = extractLocationPresenceFlags(
-  parseSafeXml("<groupOfLocations><linearLocation/></groupOfLocations>")
-);
+const linearNode = parseSafeXml("<groupOfLocations><linearLocation/></groupOfLocations>");
+const linearOnly = extractLocationPresenceFlags(linearNode);
 ok("linearlocation_standard_unrecognized", linearOnly.hasUnrecognizedStandardProfile === true);
 ok(
   "linearlocation_subtype",
   chooseNoSignalSubtype(linearOnly) === NO_SIGNAL_SUBTYPE.UNRECOGNIZED_STANDARD_PROFILE
 );
+ok(
+  "linearlocation_root_name",
+  extractNoSignalRootInventory(linearNode).primaryStandardLocalName === "linearlocation"
+);
+
+// pointLocation / areaLocation / itinerary / tpeg exact names
+for (const [xmlName, expected] of [
+  ["pointLocation", "pointlocation"],
+  ["areaLocation", "arealocation"],
+  ["itinerary", "itinerary"],
+  ["tpegPointLocation", "tpegpointlocation"],
+]) {
+  const n = parseSafeXml(`<groupOfLocations><${xmlName}/></groupOfLocations>`);
+  const inv = extractNoSignalRootInventory(n);
+  ok(`std_root_${expected}`, inv.primaryStandardLocalName === expected);
+  ok(
+    `std_subtype_${expected}`,
+    chooseNoSignalSubtype(extractLocationPresenceFlags(n)) ===
+      NO_SIGNAL_SUBTYPE.UNRECOGNIZED_STANDARD_PROFILE
+  );
+}
 
 // Vendor extension
-const vendor = extractLocationPresenceFlags(
-  parseSafeXml("<groupOfLocations><ndicCustomLocation/></groupOfLocations>")
-);
+const vendorNode = parseSafeXml("<groupOfLocations><ndicCustomLocation/></groupOfLocations>");
+const vendor = extractLocationPresenceFlags(vendorNode);
 ok("vendor_extension", vendor.hasUnrecognizedVendorExtension === true);
 ok(
   "vendor_subtype",
   chooseNoSignalSubtype(vendor) === NO_SIGNAL_SUBTYPE.UNRECOGNIZED_VENDOR_EXTENSION
+);
+const vendorInv = extractNoSignalRootInventory(vendorNode);
+ok("vendor_root_name", vendorInv.primaryVendorLocalName === "ndiccustomlocation");
+ok(
+  "vendor_ndic_class",
+  vendorInv.primaryVendorClass === VENDOR_EXTENSION_CLASS.NDIC_VENDOR_EXTENSION
+);
+
+// Known DATEX extension container (empty) — structure class
+const extNode = parseSafeXml("<groupOfLocations><groupOfLocationsExtension/></groupOfLocations>");
+const extClass = classifyLocationRootNode(extNode.children[0]);
+ok("datex_ext_localname", extClass.localName === "groupoflocationsextension");
+ok(
+  "datex_ext_class",
+  extClass.vendorClass === VENDOR_EXTENSION_CLASS.KNOWN_DATEX_EXTENSION_TYPE
+);
+
+// Extension with structured road inside
+const structExt = parseSafeXml(
+  "<groupOfLocations><fooBarExtension><roadInformation><roadNumber>D1</roadNumber></roadInformation></fooBarExtension></groupOfLocations>"
+);
+const structInv = extractNoSignalRootInventory(structExt);
+ok(
+  "struct_ext_class",
+  structInv.primaryVendorClass === VENDOR_EXTENSION_CLASS.STRUCTURED_LOCATION_EXTENSION
+);
+
+// Text-only extension
+const textExt = parseSafeXml(
+  "<groupOfLocations><bazExtension><locationDescriptor>x</locationDescriptor></bazExtension></groupOfLocations>"
+);
+ok(
+  "text_ext_class",
+  extractNoSignalRootInventory(textExt).primaryVendorClass ===
+    VENDOR_EXTENSION_CLASS.TEXT_ONLY_EXTENSION
 );
 
 // Non-location children only
@@ -129,18 +195,29 @@ ok(
   knownPlusMeta.hasAlertCPoint && !knownPlusMeta.hasUnrecognizedLocationProfile
 );
 
+// No raw / licensed payload in projected inventory
+ok("no_raw_xml_in_inventory", !JSON.stringify(areaInv).includes("<"));
+ok("no_lcd_in_inventory", !JSON.stringify(areaInv).includes("specificLocation"));
+
 // Mutation: restoring broad substring detector must fail gate
 function mutatedBroadUnrecognized(locNode) {
-  const flags = extractLocationPresenceFlags(locNode);
-  // Simulate old overbroad rule
+  extractLocationPresenceFlags(locNode);
   const xml = "<groupOfLocations><alertCLinear><namedArea/></alertCLinear></groupOfLocations>";
   const fake = extractLocationPresenceFlags(parseSafeXml(xml));
   const overbroadWouldFire = true; // namedArea matches /area/
   ok("mutation_old_rule_would_false_positive", overbroadWouldFire === true);
   ok("mutation_new_rule_blocks_false_positive", fake.hasUnrecognizedLocationProfile === false);
-  return flags;
 }
 mutatedBroadUnrecognized(emptyLoc);
+
+// Mutation: inventing trust from inventory must remain absent from this module
+const rootForensicSrc = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), "ndic-datex-v1", "no-signal-root-forensics.mjs"),
+  "utf8"
+);
+ok("mut_no_trust_assignment", !/localizationTrust\s*=/.test(rootForensicSrc));
+ok("mut_no_publication", !/PUBLICATION_ENABLED\s*=\s*true/.test(rootForensicSrc));
+ok("mut_no_heuristic_geocode", !/geocod|fuzzy|heuristic/i.test(rootForensicSrc));
 
 const table = {
   points: {},
@@ -168,6 +245,10 @@ console.log(
     passCount,
     failCount: 0,
     UNRECOGNIZED_DETECTOR_OVERBROAD: "NO",
+    CYCLE3_ROOT_INVENTORY: "YES",
+    PARSER_BUSINESS_LOGIC_UPDATED: "NO",
+    RESOLVER_UPDATED: "NO",
+    TRUST_UPDATED: "NO",
     TEST_RUNNER_FALSE_GREEN_POSSIBLE: "NO",
   })
 );

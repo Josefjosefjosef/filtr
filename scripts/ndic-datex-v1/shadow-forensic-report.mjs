@@ -251,6 +251,27 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
   let locHasTpeg = 0;
   let locHasItinerary = 0;
   let locUnrecognized = 0;
+  const standardRootCounts = new Map();
+  const vendorRootCounts = new Map();
+  const vendorClassCounts = {
+    KNOWN_DATEX_PROFILE_INSIDE_EXTENSION: 0,
+    KNOWN_DATEX_EXTENSION_TYPE: 0,
+    NDIC_VENDOR_EXTENSION: 0,
+    OTHER_VENDOR_EXTENSION: 0,
+    METADATA_ONLY_EXTENSION: 0,
+    STRUCTURED_LOCATION_EXTENSION: 0,
+    TEXT_ONLY_EXTENSION: 0,
+    UNKNOWN_EXTENSION: 0,
+  };
+
+  function bumpRootMap(map, name) {
+    const key = String(name || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, "")
+      .slice(0, 80);
+    const safe = key || "unknown_root";
+    map.set(safe, (map.get(safe) || 0) + 1);
+  }
 
   for (const it of allItems) {
     const st = String((it && it.status) || "");
@@ -339,6 +360,23 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
           } else if (st === "unrecognized_standard_profile" || st === "unrecognized_location_profile") {
             noSignalSubtype.unrecognized_standard_profile += 1;
             noSignalSubtype.unrecognized_location_profile += 1;
+            const ri = forensic.rootInventory || {};
+            const names =
+              Array.isArray(ri.standardRootNames) && ri.standardRootNames.length
+                ? ri.standardRootNames
+                : [ri.primaryStandardLocalName || "unknown_root"];
+            bumpRootMap(standardRootCounts, names[0]);
+          } else if (st === "unrecognized_vendor_extension") {
+            noSignalSubtype.unrecognized_vendor_extension += 1;
+            const ri = forensic.rootInventory || {};
+            const names =
+              Array.isArray(ri.vendorRootNames) && ri.vendorRootNames.length
+                ? ri.vendorRootNames
+                : [ri.primaryVendorLocalName || "unknown_root"];
+            bumpRootMap(vendorRootCounts, names[0]);
+            const vc = String(ri.primaryVendorClass || "UNKNOWN_EXTENSION");
+            if (Object.prototype.hasOwnProperty.call(vendorClassCounts, vc)) vendorClassCounts[vc] += 1;
+            else vendorClassCounts.UNKNOWN_EXTENSION += 1;
           } else if (Object.prototype.hasOwnProperty.call(noSignalSubtype, st)) {
             noSignalSubtype[st] += 1;
           } else {
@@ -398,6 +436,20 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     else pubBlocked += 1;
   }
 
+  function inventoryFromMap(map, max = 64) {
+    const rows = [...map.entries()]
+      .map(([localName, count]) => ({ localName, count }))
+      .sort((a, b) => b.count - a.count || a.localName.localeCompare(b.localName));
+    return {
+      rows: rows.slice(0, max),
+      truncated: rows.length > max,
+      sum: [...map.values()].reduce((a, b) => a + b, 0),
+    };
+  }
+  const standardRootInventory = inventoryFromMap(standardRootCounts);
+  const vendorRootInventory = inventoryFromMap(vendorRootCounts);
+  const vendorClassTotal = Object.values(vendorClassCounts).reduce((a, b) => a + b, 0);
+
   return {
     active,
     future,
@@ -447,6 +499,10 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     locHasTpeg,
     locHasItinerary,
     locUnrecognized,
+    standardRootInventory,
+    vendorRootInventory,
+    vendorClassCounts,
+    vendorClassTotal,
   };
 }
 
@@ -763,6 +819,22 @@ export function buildShadowForensicBundle(ctx = {}) {
     LOC_HAS_TPEG: m.locHasTpeg,
     LOC_HAS_ITINERARY: m.locHasItinerary,
     LOC_HAS_UNRECOGNIZED_LOCATION_PROFILE: m.locUnrecognized,
+    STANDARD_ROOT_INVENTORY: m.standardRootInventory.rows,
+    STANDARD_ROOT_INVENTORY_TRUNCATED: m.standardRootInventory.truncated,
+    STANDARD_ROOT_INVENTORY_SUM: m.standardRootInventory.sum,
+    VENDOR_ROOT_INVENTORY: m.vendorRootInventory.rows,
+    VENDOR_ROOT_INVENTORY_TRUNCATED: m.vendorRootInventory.truncated,
+    VENDOR_ROOT_INVENTORY_SUM: m.vendorRootInventory.sum,
+    VENDOR_CLASS_KNOWN_DATEX_PROFILE_INSIDE_EXTENSION:
+      m.vendorClassCounts.KNOWN_DATEX_PROFILE_INSIDE_EXTENSION,
+    VENDOR_CLASS_KNOWN_DATEX_EXTENSION_TYPE: m.vendorClassCounts.KNOWN_DATEX_EXTENSION_TYPE,
+    VENDOR_CLASS_NDIC_VENDOR_EXTENSION: m.vendorClassCounts.NDIC_VENDOR_EXTENSION,
+    VENDOR_CLASS_OTHER_VENDOR_EXTENSION: m.vendorClassCounts.OTHER_VENDOR_EXTENSION,
+    VENDOR_CLASS_METADATA_ONLY_EXTENSION: m.vendorClassCounts.METADATA_ONLY_EXTENSION,
+    VENDOR_CLASS_STRUCTURED_LOCATION_EXTENSION: m.vendorClassCounts.STRUCTURED_LOCATION_EXTENSION,
+    VENDOR_CLASS_TEXT_ONLY_EXTENSION: m.vendorClassCounts.TEXT_ONLY_EXTENSION,
+    VENDOR_CLASS_UNKNOWN_EXTENSION: m.vendorClassCounts.UNKNOWN_EXTENSION,
+    VENDOR_CLASS_TOTAL: m.vendorClassTotal,
     OPENLR_INPUT_TOTAL: m.openlr.input,
     OPENLR_RESOLVED_TOTAL: m.openlr.resolved,
     OPENLR_AMBIGUOUS_TOTAL: m.openlr.ambiguous,
@@ -992,6 +1064,17 @@ export function printShadowForensicStdout(summary, validationReport) {
       "LOC_HAS_TPEG",
       "LOC_HAS_ITINERARY",
       "LOC_HAS_UNRECOGNIZED_LOCATION_PROFILE",
+      "STANDARD_ROOT_INVENTORY_SUM",
+      "VENDOR_ROOT_INVENTORY_SUM",
+      "VENDOR_CLASS_KNOWN_DATEX_PROFILE_INSIDE_EXTENSION",
+      "VENDOR_CLASS_KNOWN_DATEX_EXTENSION_TYPE",
+      "VENDOR_CLASS_NDIC_VENDOR_EXTENSION",
+      "VENDOR_CLASS_OTHER_VENDOR_EXTENSION",
+      "VENDOR_CLASS_METADATA_ONLY_EXTENSION",
+      "VENDOR_CLASS_STRUCTURED_LOCATION_EXTENSION",
+      "VENDOR_CLASS_TEXT_ONLY_EXTENSION",
+      "VENDOR_CLASS_UNKNOWN_EXTENSION",
+      "VENDOR_CLASS_TOTAL",
       "OPENLR_INPUT_TOTAL",
       "OPENLR_RESOLVED_TOTAL",
       "OPENLR_AMBIGUOUS_TOTAL",

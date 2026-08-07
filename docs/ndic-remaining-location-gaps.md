@@ -46,3 +46,37 @@ Fix (instrumentation only):
 
 Out of scope for this cycle: LOCATIONCODES-only LCD (42), supplementary (41),
 OpenLR, publication, trust changes.
+
+## Cycle 3 — anonymized root inventory (6 + 413)
+
+Goal: exact local-name inventory for
+`NO_SIGNAL_UNRECOGNIZED_STANDARD_PROFILE` (6) and
+`NO_SIGNAL_UNRECOGNIZED_VENDOR_EXTENSION` (413) from shadow `31198098934`.
+No resolver / trust / publication changes.
+
+Retained forensic fields (count-only):
+
+- `STANDARD_ROOT_INVENTORY[]` — `{ localName, count }` (sum must equal 6 on feed)
+- `VENDOR_ROOT_INVENTORY[]` — `{ localName, count }` (sum must equal 413 on feed)
+- `VENDOR_CLASS_*` — classification totals (sum must equal 413)
+
+### Documentation references (authoritative)
+
+| Profile / root | STANDARD_OR_VENDOR | LOCATION_SEMANTICS | Docs |
+| --- | --- | --- | --- |
+| `alertCArea` | STANDARD | Alert-C area LCD | https://docs.datex2.eu/levels/mastering/location/alertc/ |
+| `linearLocation` | STANDARD | DATEX linear container (needs nested method) | https://docs.datex2.eu/levels/mastering/location/ |
+| `pointLocation` | STANDARD | DATEX point container | https://docs.datex2.eu/levels/mastering/location/ |
+| `areaLocation` | STANDARD | DATEX area container | https://docs.datex2.eu/levels/mastering/location/ |
+| `tpegPointLocation` / `tpegLinearLocation` / `tpegAreaLocation` / `tpegFramedPoint` | STANDARD | TPEG location package | DATEX II Location referencing / TPEG |
+| `itinerary` / `itineraryByReference` | STANDARD | multi-point itinerary | DATEX II Location |
+| `groupOfLocationsExtension` / `locationExtension` | STANDARD extension type | DATEX extension wrapper | DATEX II Location package XSD |
+| NDIC / ŘSD `ndic*` / `rsd*` / `cze*` roots | VENDOR | vendor-specific | NDIC DATEX profile (ŘSD) |
+
+### Safety policy for next cycle (not implemented here)
+
+- SAFE_TO_IMPLEMENT only if documentation + current local reference data suffice
+  **without** heuristic / fuzzy / geocode.
+- LOCATIONCODES-only LCD and incomplete supplementary remain fail-closed.
+- Exact 6 standard names and 413 vendor class split are confirmed only by the
+  authorized Cycle 3 network shadow (inventory counters).
