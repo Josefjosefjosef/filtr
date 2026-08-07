@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-07T04:31:50.255Z",
-    "lastSuccessAt": "2026-08-07T04:31:53.309Z",
+    "lastRunAt": "2026-08-07T05:14:45.436Z",
+    "lastSuccessAt": "2026-08-07T05:14:48.219Z",
     "lastChangedAt": "2026-08-06T09:16:12.045Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,13 +423,13 @@
     "lastModified": "Thu, 06 Aug 2026 09:15:31 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 6,
+    "activeCount": 5,
     "scheduledCount": 0,
-    "expiredCount": 3,
+    "expiredCount": 4,
     "cancelledCount": 0,
     "invalidCount": 3,
-    "publishableCount": 5,
-    "visibleCount": 5,
+    "publishableCount": 4,
+    "visibleCount": 4,
     "totalItems": 12,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -452,21 +452,20 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 5,
+      "logicalAlerts": 4,
       "uniqueEvents": [
-        "Extrémní zátěž teplem",
         "Stav sucha",
         "Hydrologické sucho",
         "Riziko požárů",
         "Vysoké riziko požárů"
       ],
-      "totalAreas": 215,
-      "mappedAreas": 397,
+      "totalAreas": 213,
+      "mappedAreas": 381,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 5,
+      "publishedActive": 4,
       "publishedScheduled": 0,
-      "publishableCount": 5,
+      "publishableCount": 4,
       "productStreams": [
         "50",
         "70"
@@ -474,7 +473,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 3,
-      "expiredCount": 3,
+      "expiredCount": 4,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -483,20 +482,20 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6618,
+    "runMs": 6204,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-07T04:31:50.255Z",
+    "lastSnapshotAt": "2026-08-07T05:14:45.436Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-08-06T09:16:08.041Z",
+      "officialFirstSeenAt": "2026-08-04T11:35:14.937Z",
       "officialLatestSentAt": "2026-08-06T11:14:37+02:00",
-      "officialLatestValidFrom": "2026-08-06T11:10:58+02:00",
-      "discoveredAt": "2026-08-07T04:31:50.255Z",
-      "fetchedAt": "2026-08-07T04:31:50.255Z",
-      "transformedAt": "2026-08-07T04:31:56.873Z",
-      "validatedAt": "2026-08-07T04:31:56.873Z",
-      "publishedAt": "2026-08-07T04:31:50.255Z",
-      "endToEndLagMs": 91041
+      "officialLatestValidFrom": "2026-08-04T14:00:00+02:00",
+      "discoveredAt": "2026-08-07T05:14:45.436Z",
+      "fetchedAt": "2026-08-07T05:14:45.436Z",
+      "transformedAt": "2026-08-07T05:14:51.640Z",
+      "validatedAt": "2026-08-07T05:14:51.640Z",
+      "publishedAt": "2026-08-07T05:14:45.436Z",
+      "endToEndLagMs": null
     },
     "audit": {
       "http": [
@@ -521,21 +520,20 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 5,
+          "logicalAlerts": 4,
           "uniqueEvents": [
-            "Extrémní zátěž teplem",
             "Stav sucha",
             "Hydrologické sucho",
             "Riziko požárů",
             "Vysoké riziko požárů"
           ],
-          "totalAreas": 215,
-          "mappedAreas": 397,
+          "totalAreas": 213,
+          "mappedAreas": 381,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 5,
+          "publishedActive": 4,
           "publishedScheduled": 0,
-          "publishableCount": 5,
+          "publishableCount": 4,
           "productStreams": [
             "50",
             "70"
@@ -543,7 +541,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 3,
-          "expiredCount": 3,
+          "expiredCount": 4,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -552,6 +550,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-07T05:14:45.436Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6204,
+        "error": null,
+        "activeCount": 5,
+        "scheduledCount": 0,
+        "publishableCount": 4
+      },
       {
         "at": "2026-08-07T04:31:50.255Z",
         "status": "not_modified",
@@ -1064,17 +1073,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6662,
-        "error": null,
-        "activeCount": 9,
-        "scheduledCount": 0,
-        "publishableCount": 8
-      },
-      {
-        "at": "2026-08-06T13:57:37.060Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 7208,
         "error": null,
         "activeCount": 9,
         "scheduledCount": 0,
