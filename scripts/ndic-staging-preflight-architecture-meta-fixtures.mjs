@@ -138,6 +138,28 @@ mutateMustFail(
   }
 );
 
+mutateMustFail(
+  "meta_remove_shadow_forensic_artifact",
+  netSrc,
+  (s) => s.replace(/Upload redacted shadow forensic artifacts[\s\S]*?retention-days:\s*1\n/, ""),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_upload_entire_runner_temp",
+  netSrc,
+  (s) =>
+    s.replace(
+      /path: \|\n\s+\$\{\{\s*runner\.temp\s*\}\}\/ndic-shadow-forensic\/ndic-shadow-forensic-summary\.json\n\s+\$\{\{\s*runner\.temp\s*\}\}\/ndic-shadow-forensic\/ndic-shadow-card-preview\.json\n\s+\$\{\{\s*runner\.temp\s*\}\}\/ndic-shadow-forensic\/ndic-shadow-validation-report\.json/,
+      "path: ${{ runner.temp }}"
+    ),
+  (m) => {
+    const base = assertNetworkWorkflowArchitecture(m);
+    const fullTemp = /path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(m);
+    return { ok: base.ok && !fullTemp, fails: fullTemp ? ["full_temp_upload"] : base.fails };
+  }
+);
+
 // Attestation binding mutations
 const HEAD = "f".repeat(40);
 const NOW = Date.parse("2026-08-06T12:00:00.000Z");

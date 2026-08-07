@@ -44,6 +44,12 @@ import { isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { assertAllowedPullUrl } from "./ndic-datex-v1/config.mjs";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
 import { assertNoTestDiskProviderEnv } from "./ndic-datex-v1/disk-preflight.mjs";
+import {
+  buildShadowForensicBundle,
+  resolveForensicDir,
+  writeShadowForensicBundle,
+  printShadowForensicStdout,
+} from "./ndic-datex-v1/shadow-forensic-report.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -93,6 +99,45 @@ function isNdicItem(item) {
   if (String(item.adapterOwner || "") === NDIC_ADAPTER_OWNER) return true;
   if (String(item.sourceId || "") === NDIC_SOURCE_ID) return true;
   return false;
+}
+
+/**
+ * Isolated shadow only: write redacted forensic artifacts + safe stdout metrics.
+ * Never retains raw DATEX/TMC/auth. Never commits to repo.
+ */
+function attachShadowForensicRetention(ret, ctx = {}) {
+  if (!ret || ret.mode !== "shadow" || !isShadowIsolated()) return ret;
+  const finishedAt = new Date().toISOString();
+  const bundle = buildShadowForensicBundle({
+    ok: Boolean(ret.ok),
+    reason: ret.reason || (ret.ok ? "ok" : "failed"),
+    mode: ret.mode,
+    published: Boolean(ret.published),
+    diagnostics: ret.diagnostics || ctx.diagnostics,
+    stats: ret.stats || ctx.stats,
+    result: ctx.result,
+    gateItems: ctx.gateItems,
+    startedAt: (ret.diagnostics && ret.diagnostics.started) || ctx.startedAt,
+    finishedAt,
+    headSha: ctx.headSha,
+    runId: ctx.runId || (ret.diagnostics && ret.diagnostics.runId),
+    shadowIsolated: true,
+    datexBytesRead: ctx.datexBytesRead,
+    datexHttpStatus: ctx.datexHttpStatus,
+    datexContentTypeValid: ctx.datexContentTypeValid,
+    geocodingUsed: false,
+  });
+  const dir = resolveForensicDir(ctx.forensicDir);
+  writeShadowForensicBundle(dir, bundle);
+  printShadowForensicStdout(bundle.summary);
+  return {
+    ...ret,
+    forensic: {
+      ok: bundle.ok,
+      dirName: path.basename(dir),
+      retentionPass: bundle.validationReport.FORENSIC_RETENTION_PASS === true,
+    },
+  };
 }
 
 function assertMonitoringMergeSafe(monitoring) {
@@ -305,7 +350,17 @@ export async function runNdicDatexV1Sync(opts = {}) {
       state.lastRun = { at: started, action: cond.action };
       writeJson(paths.stateFile, state);
       writeJson(paths.diagFile, diagnostics);
-      return { ok: true, reason: cond.action, mode: config.mode, diagnostics };
+      return attachShadowForensicRetention(
+        { ok: true, reason: cond.action, mode: config.mode, diagnostics, published: false },
+        {
+          result: { parsed: { ok: true, situationCount: 0, rejectedCount: 0 }, stats: {}, quarantine: [], gate: { items: [], gateOk: true }, all: [] },
+          gateItems: [],
+          startedAt: started,
+          datexBytesRead: 0,
+          datexHttpStatus: resp.status,
+          datexContentTypeValid: true,
+        }
+      );
     }
 
     if (cond.action !== "process") {
@@ -313,7 +368,10 @@ export async function runNdicDatexV1Sync(opts = {}) {
       diagnostics.error = state.sync.last_error || cond.action;
       writeJson(paths.stateFile, state);
       writeJson(paths.diagFile, diagnostics);
-      return { ok: false, reason: cond.action, mode: config.mode, diagnostics };
+      return attachShadowForensicRetention(
+        { ok: false, reason: cond.action, mode: config.mode, diagnostics, published: false },
+        { startedAt: started, datexHttpStatus: resp.status }
+      );
     }
 
     const body = cond.body;
@@ -340,7 +398,17 @@ export async function runNdicDatexV1Sync(opts = {}) {
       // Fail-closed: do not publish
       writeJson(paths.stateFile, state);
       writeJson(paths.diagFile, diagnostics);
-      return { ok: false, reason: "publish_gate", mode: config.mode, diagnostics };
+      return attachShadowForensicRetention(
+        { ok: false, reason: "publish_gate", mode: config.mode, diagnostics },
+        {
+          result,
+          gateItems: [],
+          startedAt: started,
+          datexBytesRead: typeof body === "string" ? Buffer.byteLength(body, "utf8") : 0,
+          datexHttpStatus: resp.status,
+          datexContentTypeValid: true,
+        }
+      );
     }
 
     const feedItems = result.gate.items;
@@ -366,6 +434,12 @@ export async function runNdicDatexV1Sync(opts = {}) {
       reason: decision.reason,
       stats: result.stats,
       alarms: sanity.alarms,
+    };
+
+    const datexBytesRead = typeof body === "string" ? Buffer.byteLength(body, "utf8") : Buffer.isBuffer(body) ? body.length : 0;
+    diagnostics.forensicMeta = {
+      datexBytesRead,
+      datexHttpStatus: resp.status,
     };
 
     if (decision.publish && candidateItems && !isShadowIsolated()) {
@@ -425,20 +499,33 @@ export async function runNdicDatexV1Sync(opts = {}) {
     state.lastRun = { at: started, action: decision.publish ? "published" : decision.reason };
     writeJson(paths.stateFile, state);
     writeJson(paths.diagFile, diagnostics);
-    return {
-      ok: true,
-      mode: config.mode,
-      published: Boolean(decision.publish),
-      diagnostics,
-      stats: result.stats,
-    };
+    return attachShadowForensicRetention(
+      {
+        ok: true,
+        mode: config.mode,
+        published: Boolean(decision.publish),
+        diagnostics,
+        stats: result.stats,
+      },
+      {
+        result,
+        gateItems: feedItems,
+        startedAt: started,
+        datexBytesRead,
+        datexHttpStatus: resp.status,
+        datexContentTypeValid: true,
+      }
+    );
   } catch (e) {
     diagnostics.status = "failed";
     diagnostics.error = String(e && e.code) || String(e && e.message) || "error";
     state.sync.consecutive_errors = (state.sync.consecutive_errors || 0) + 1;
     writeJson(paths.stateFile, state);
     writeJson(paths.diagFile, diagnostics);
-    return { ok: false, reason: diagnostics.error, mode: config.mode, diagnostics };
+    return attachShadowForensicRetention(
+      { ok: false, reason: diagnostics.error, mode: config.mode, diagnostics },
+      { startedAt: started }
+    );
   } finally {
     releaseLock(state.lock, lockTry.runId);
     writeJson(paths.stateFile, state);
@@ -449,10 +536,22 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   runNdicDatexV1Sync()
     .then((r) => {
-      console.log(JSON.stringify({ ok: r.ok, reason: r.reason, mode: r.mode, published: r.published, blocked: r.blocked || null }, null, 2));
+      const out = {
+        ok: r.ok,
+        reason: r.reason,
+        mode: r.mode,
+        published: r.published,
+        blocked: r.blocked || null,
+        forensicRetention: r.forensic ? r.forensic.retentionPass : null,
+      };
+      console.log(JSON.stringify(out, null, 2));
       if (!r.ok && r.reason !== "credentials_missing" && r.reason !== "mode_off") process.exitCode = 1;
       // credentials_missing in shadow/off-default CI is non-fatal when mode=off; when mode!=off exit 1
       if (r.reason === "credentials_missing" && r.mode !== "off") process.exitCode = 1;
+      // Isolated shadow must produce forensic retention (fail-closed if missing/invalid)
+      if (r.mode === "shadow" && isShadowIsolated() && r.ok && (!r.forensic || r.forensic.retentionPass !== true)) {
+        process.exitCode = 1;
+      }
     })
     .catch((e) => {
       console.error(String(e && e.stack || e));

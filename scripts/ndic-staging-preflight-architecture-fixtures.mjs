@@ -78,6 +78,11 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("net_identity_before_checkout", /Preflight runner identity/.test(net));
   check("net_secrets_present_on_network_only", /secrets\.IU_NDIC_PULL_URL/.test(net));
   check("net_no_always_bypass", !/if:\s*always\(\)/.test(net));
+  check("net_shadow_forensic_dir_env", /IU_NDIC_FORENSIC_DIR/.test(net));
+  check("net_shadow_forensic_artifact_upload", /ndic-shadow-forensic-summary\.json/.test(net));
+  check("net_shadow_forensic_retention_1d", /retention-days:\s*1/.test(net));
+  check("net_shadow_forensic_no_full_temp_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(net));
+  check("net_shadow_forensic_mode_guard", /github\.event\.inputs\.mode\s*==\s*'shadow'/.test(net));
 
   return { ok: localFails.length === 0, fails: localFails };
 }

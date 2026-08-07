@@ -152,10 +152,25 @@ jobs:
           IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
           IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
           IU_NDIC_SHADOW_ISOLATED: ${{ github.event.inputs.mode == 'shadow' && '1' || '0' }}
+          IU_NDIC_FORENSIC_DIR: ${{ runner.temp }}/ndic-shadow-forensic
+          IU_NDIC_FORENSIC_HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           umask 077
           node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
+
+      - name: Upload redacted shadow forensic artifacts
+        if: github.event.inputs.mode == 'shadow'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-shadow-forensic-${{ github.run_id }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-forensic-summary.json
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-card-preview.json
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-validation-report.json
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
 
       - name: Commit data if changed (active publish only)
         id: commit_push
