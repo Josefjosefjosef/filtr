@@ -172,6 +172,16 @@ export function buildSyntheticBasicTmcZipFiles(opts = {}) {
   if (opts.extraUnknownDat) {
     files.push({ name: "UNKNOWN_EXTRA.DAT", data: Buffer.from("A;B\r\n1;2\r\n", "utf8") });
   }
+  if (opts.extraDocumentedShpCompanion) {
+    // Minimal shapefile companion bytes (non-authoritative; never parsed as SP08001 DAT).
+    files.push({ name: "LOCATIONS.SHP", data: Buffer.from([0, 0, 0x27, 0x0a, 0, 0, 0, 0]) });
+  }
+  if (opts.extraUnknownTxt) {
+    files.push({ name: "LICENSE.TXT", data: Buffer.from("synthetic\r\n", "utf8") });
+  }
+  if (opts.extraUnknownCsv) {
+    files.push({ name: "EXTRA.CSV", data: Buffer.from("a,b\r\n1,2\r\n", "utf8") });
+  }
   if (opts.duplicateEntry) {
     files.push({ name: "POINTS.DAT", data: buildSyntheticSp08001Dat("POINTS", [syntheticPointsRow()]) });
   }

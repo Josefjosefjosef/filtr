@@ -94,11 +94,59 @@ async function run() {
     wipe(dir);
   }
 
-  // 3 unknown table
+  // 3 unknown unmapped .DAT → fail-closed (no broad extension ignore)
   {
     const { dir, file } = writeZip("unk.zip", buildSyntheticBasicTmcZipBuffer({ extraUnknownDat: true }));
     const r = await importBasicTmcArchive(file, { workDir: path.join(dir, "w"), measureDeps: AMPLE, skipArchiveHash: true });
-    ok("unknown_table_ignored_not_fatal", r.ok === true && (r.ignoredNonStandardCount || 0) >= 1, r.rejectCode || r.ignoredNonStandardCount);
+    ok(
+      "unknown_table_fail_closed",
+      r.ok === false && r.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT,
+      r.rejectCode
+    );
+    ok("unknown_nonclassified_count", (r.unknownNonclassifiedCount || 0) >= 1, r.unknownNonclassifiedCount);
+    wipe(dir);
+  }
+
+  // 3b documented shapefile companion → ignore + import pass
+  {
+    const { dir, file } = writeZip(
+      "shp.zip",
+      buildSyntheticBasicTmcZipBuffer({ extraDocumentedShpCompanion: true, emptyRnlt: true, allPesLevEmpty: true })
+    );
+    const r = await importBasicTmcArchive(file, { workDir: path.join(dir, "w"), measureDeps: AMPLE, skipArchiveHash: true });
+    ok("documented_sidecar_ok", r.ok === true, r.rejectCode);
+    ok("documented_sidecar_ignored", (r.ignoredNonStandardCount || 0) >= 1, r.ignoredNonStandardCount);
+    ok(
+      "documented_sidecar_reason",
+      Array.isArray(r.ignoredEntries) &&
+        r.ignoredEntries.some((e) => e.reasonCode === "COMPANION_NON_AUTHORITATIVE" && e.resolutionRequired === false),
+      JSON.stringify(r.ignoredEntries)
+    );
+    ok("required_set_complete", r.requiredTableSetComplete === true);
+    wipe(dir);
+  }
+
+  // 3c unknown .txt without documented classification → fail-closed
+  {
+    const { dir, file } = writeZip("unktxt.zip", buildSyntheticBasicTmcZipBuffer({ extraUnknownTxt: true }));
+    const r = await importBasicTmcArchive(file, { workDir: path.join(dir, "w"), measureDeps: AMPLE, skipArchiveHash: true });
+    ok(
+      "unknown_txt_fail_closed",
+      r.ok === false && r.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT,
+      r.rejectCode
+    );
+    wipe(dir);
+  }
+
+  // 3d unknown .csv → fail-closed
+  {
+    const { dir, file } = writeZip("unkcsv.zip", buildSyntheticBasicTmcZipBuffer({ extraUnknownCsv: true }));
+    const r = await importBasicTmcArchive(file, { workDir: path.join(dir, "w"), measureDeps: AMPLE, skipArchiveHash: true });
+    ok(
+      "unknown_csv_fail_closed",
+      r.ok === false && r.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT,
+      r.rejectCode
+    );
     wipe(dir);
   }
 

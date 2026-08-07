@@ -21,6 +21,7 @@ import {
   SP08001_TABLE_CODES,
   resolveSp08001TableCodeFromBasename,
 } from "./tmc-sp08001-contract.mjs";
+import { opaqueBasenameDigest } from "./tmc-manifest-classification.mjs";
 import {
   DATASET_INTEGRITY_STATE,
   REQUIRED_FOR_FORMAT_IDENTIFICATION,
@@ -2016,6 +2017,8 @@ export function collectInspectionPeekTargets(zipPath, lim = {}) {
         uncomp,
         localOffset,
         tableCode: tableCode || null,
+        // Opaque digest only — never retain licensed basename strings past this point.
+        basenameDigest: baseWithExt ? opaqueBasenameDigest(baseWithExt) : null,
       });
     }
     return {

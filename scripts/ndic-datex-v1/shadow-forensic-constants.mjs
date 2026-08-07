@@ -4,6 +4,7 @@
  */
 
 export const MAX_CARD_PREVIEW_ITEMS = 20;
+export const MAX_RETAINED_IGNORED_ENTRY_METADATA = 100;
 export const FORENSIC_SCHEMA = "iu-ndic-shadow-forensic-summary-v2";
 export const CARD_PREVIEW_SCHEMA = "iu-ndic-shadow-card-preview-v1";
 export const VALIDATION_REPORT_SCHEMA = "iu-ndic-shadow-validation-report-v2";
@@ -52,6 +53,18 @@ export const FORENSIC_SUMMARY_ALLOWLIST = Object.freeze([
   "TMC_ACTIVE",
   "TMC_POINT_COUNT",
   "TMC_NONSTANDARD_IGNORED_COUNT",
+  "TMC_REQUIRED_TABLE_COUNT_EXPECTED",
+  "TMC_REQUIRED_TABLE_COUNT_FOUND",
+  "TMC_REQUIRED_TABLE_SET_COMPLETE",
+  "TMC_REQUIRED_TABLE_SET_VALID",
+  "TMC_UNKNOWN_REQUIRED_COUNT",
+  "TMC_UNKNOWN_NONCLASSIFIED_COUNT",
+  "TMC_REJECTED_UNSAFE_COUNT",
+  "TMC_CID",
+  "TMC_TABCD",
+  "TMC_RESOLVER_TABLE_ACTIVATED",
+  "TMC_IGNORED_ENTRIES",
+  "TMC_IGNORED_ENTRIES_TRUNCATED",
   "TMC_RESOLVER_VERSION",
   "LOADED_EVENTS",
   "ACTIVE_EVENTS",
@@ -124,6 +137,10 @@ export const FORBIDDEN_FORENSIC_KEYS = Object.freeze([
   "rawBody",
   "rawCsv",
   "rawZip",
+  "basename",
+  "entryPath",
+  "entryName",
+  "fileName",
   "password",
   "passwd",
   "pullPass",
@@ -169,6 +186,16 @@ export const HTTP_STATUS_CLASS = Object.freeze({
   none: "none",
   unknown: "unknown",
 });
+
+/** Bounded redacted metadata for documented non-resolution sidecars only. */
+export const IGNORED_ENTRY_META_ALLOWLIST = Object.freeze([
+  "basenameDigest",
+  "extension",
+  "classification",
+  "reasonCode",
+  "resolutionRequired",
+  "authoritative",
+]);
 
 /** Trust values that may project precise public geo fields. */
 export const VERIFIED_LOCATION_TRUST = Object.freeze(["tmc", "coordinates"]);

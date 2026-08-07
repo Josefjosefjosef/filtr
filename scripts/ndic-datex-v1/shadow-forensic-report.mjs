@@ -343,6 +343,61 @@ export function buildShadowForensicBundle(ctx = {}) {
     TMC_NONSTANDARD_IGNORED_COUNT: Number(
       (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.ignoredNonStandardCount) || 0
     ),
+    TMC_REQUIRED_TABLE_COUNT_EXPECTED: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.requiredTableCountExpected) || 0
+    ),
+    TMC_REQUIRED_TABLE_COUNT_FOUND: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.requiredTableCountFound) || 0
+    ),
+    TMC_REQUIRED_TABLE_SET_COMPLETE: Boolean(
+      ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.requiredTableSetComplete === true
+    ),
+    TMC_REQUIRED_TABLE_SET_VALID: Boolean(
+      ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.requiredTableSetValid === true
+    ),
+    TMC_UNKNOWN_REQUIRED_COUNT: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.unknownRequiredCount) || 0
+    ),
+    TMC_UNKNOWN_NONCLASSIFIED_COUNT: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.unknownNonclassifiedCount) || 0
+    ),
+    TMC_REJECTED_UNSAFE_COUNT: Number(
+      (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.rejectedUnsafeCount) || 0
+    ),
+    TMC_CID: (() => {
+      const v = ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.cid;
+      return Number.isInteger(v) ? v : null;
+    })(),
+    TMC_TABCD: (() => {
+      const v = ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.tabcd;
+      return Number.isInteger(v) ? v : null;
+    })(),
+    TMC_RESOLVER_TABLE_ACTIVATED: Boolean(
+      ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.resolverTableActivated === true
+    ),
+    TMC_IGNORED_ENTRIES: (() => {
+      const raw =
+        (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.ignoredEntries) || [];
+      if (!Array.isArray(raw)) return [];
+      return raw.slice(0, 100).map((e) => ({
+        basenameDigest:
+          e && typeof e.basenameDigest === "string" && /^[a-f0-9]{16}$/.test(e.basenameDigest)
+            ? e.basenameDigest
+            : null,
+        extension: String((e && e.extension) || "").slice(0, 16),
+        classification: String((e && e.classification) || "").slice(0, 64),
+        reasonCode: String((e && e.reasonCode) || "").slice(0, 64),
+        resolutionRequired: false,
+        authoritative: false,
+      }));
+    })(),
+    TMC_IGNORED_ENTRIES_TRUNCATED: Boolean(
+      ctx.diagnostics &&
+        ctx.diagnostics.tmc &&
+        (ctx.diagnostics.tmc.ignoredEntriesTruncated === true ||
+          (Number(ctx.diagnostics.tmc.ignoredNonStandardCount) || 0) >
+            ((ctx.diagnostics.tmc.ignoredEntries && ctx.diagnostics.tmc.ignoredEntries.length) || 0))
+    ),
     TMC_RESOLVER_VERSION: clip(PARSER_VERSION, 64) || "unknown",
     LOADED_EVENTS: loaded,
     ACTIVE_EVENTS: m.active,
@@ -518,6 +573,16 @@ export function printShadowForensicStdout(summary, validationReport) {
     "TMC_ACTIVE=" + (summary && summary.TMC_ACTIVE ? "true" : "false"),
     "TMC_POINT_COUNT=" + (summary && summary.TMC_POINT_COUNT),
     "TMC_NONSTANDARD_IGNORED_COUNT=" + (summary && summary.TMC_NONSTANDARD_IGNORED_COUNT),
+    "TMC_REQUIRED_TABLE_SET_COMPLETE=" +
+      (summary && summary.TMC_REQUIRED_TABLE_SET_COMPLETE ? "true" : "false"),
+    "TMC_REQUIRED_TABLE_SET_VALID=" + (summary && summary.TMC_REQUIRED_TABLE_SET_VALID ? "true" : "false"),
+    "TMC_UNKNOWN_REQUIRED_COUNT=" + (summary && summary.TMC_UNKNOWN_REQUIRED_COUNT),
+    "TMC_UNKNOWN_NONCLASSIFIED_COUNT=" + (summary && summary.TMC_UNKNOWN_NONCLASSIFIED_COUNT),
+    "TMC_REJECTED_UNSAFE_COUNT=" + (summary && summary.TMC_REJECTED_UNSAFE_COUNT),
+    "TMC_CID=" + (summary && summary.TMC_CID),
+    "TMC_TABCD=" + (summary && summary.TMC_TABCD),
+    "TMC_RESOLVER_TABLE_ACTIVATED=" +
+      (summary && summary.TMC_RESOLVER_TABLE_ACTIVATED ? "true" : "false"),
     "RESOLVED_OTHER_VALID_LOCATION=" + (summary && summary.RESOLVED_OTHER_VALID_LOCATION),
     "UNRESOLVED_TOTAL=" + (summary && summary.UNRESOLVED_TOTAL),
     "UNRESOLVED_TMC_REFERENCE=" + (summary && summary.UNRESOLVED_TMC_REFERENCE),

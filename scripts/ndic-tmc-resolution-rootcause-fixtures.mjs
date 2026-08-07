@@ -178,7 +178,7 @@ const AMPLE = {
   ok("rc5_allowlist_ignored", /"TMC_NONSTANDARD_IGNORED_COUNT"/.test(c));
 }
 
-// --- Cycle 6: classifyManifest ignores non-SP08001 sidecars (root cause of run 31154704577) ---
+// --- Cycle 6: fail-closed on unmapped text tables; documented companions only ---
 {
   const forensic = JSON.parse(
     fs.readFileSync(
@@ -194,27 +194,33 @@ const AMPLE = {
   ok("rc6_forensic_reason_unknown_table", forensic.TMC_REASON === "TMC_UNKNOWN_TABLE_PRESENT");
   ok("rc6_forensic_archive_false", forensic.TMC_ARCHIVE_USED === false);
   ok("rc6_forensic_points_zero", forensic.TMC_POINT_COUNT === 0);
+  ok("rc6_prior_basename_not_retained", forensic.UNKNOWN_TABLE_BASENAME == null);
+  ok("rc6_prior_path_not_retained", forensic.UNKNOWN_TABLE_ENTRY_PATH == null);
 
   const std = SP08001_TABLE_CODES.map((code) => ({ tableCode: code, ext: "dat", role: "standard" }));
   std.push({ tableCode: "README", ext: "dat", role: "metadata" });
-  const withLicense = [
+
+  const withUnknown = [
     ...std,
-    { tableCode: null, ext: "txt", role: "unknown_txt" },
-    { tableCode: null, ext: "dat", role: "unknown_dat" },
-    { tableCode: null, ext: "csv", role: "unknown_txt" },
-    { tableCode: null, ext: "shp", role: "shp_layer" },
+    { tableCode: null, ext: "txt", role: "unknown_txt", basenameDigest: "aaaaaaaaaaaaaaaa" },
+    { tableCode: null, ext: "dat", role: "unknown_dat", basenameDigest: "bbbbbbbbbbbbbbbb" },
+    { tableCode: null, ext: "csv", role: "unknown_txt", basenameDigest: "cccccccccccccccc" },
   ];
-  const m = classifyManifest(withLicense);
-  ok("rc6_classify_ok_with_sidecars", m.ok === true, m.rejectCode);
-  ok("rc6_ignored_count", m.ignoredNonStandardCount === 3, m.ignoredNonStandardCount);
-  ok("rc6_shp_not_counted", (m.ignoredNonStandardExtCounts && m.ignoredNonStandardExtCounts.shp) == null);
-  ok("rc6_txt_counted", m.ignoredNonStandardExtCounts.txt === 1);
-  ok("rc6_dat_counted", m.ignoredNonStandardExtCounts.dat === 1);
-  ok("rc6_csv_counted", m.ignoredNonStandardExtCounts.csv === 1);
+  const mFail = classifyManifest(withUnknown);
+  ok("rc6_unknown_text_fail_closed", mFail.ok === false && mFail.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT);
+  ok("rc6_unknown_nonclassified", (mFail.unknownNonclassifiedCount || 0) === 3, mFail.unknownNonclassifiedCount);
+
+  const withShp = [...std, { tableCode: null, ext: "shp", role: "shp_layer", basenameDigest: "dddddddddddddddd" }];
+  const mOk = classifyManifest(withShp);
+  ok("rc6_documented_shp_ok", mOk.ok === true, mOk.rejectCode);
+  ok("rc6_shp_ignored_count", mOk.ignoredNonStandardCount === 1, mOk.ignoredNonStandardCount);
+  ok("rc6_shp_reason", mOk.ignoredEntries[0].reasonCode === "COMPANION_NON_AUTHORITATIVE");
+  ok("rc6_shp_not_resolution_required", mOk.ignoredEntries[0].resolutionRequired === false);
+  ok("rc6_required_complete", mOk.requiredTableSetComplete === true);
 
   const missingPts = classifyManifest([
     ...std.filter((t) => t.tableCode !== "POINTS"),
-    { tableCode: null, ext: "txt", role: "unknown_txt" },
+    { tableCode: null, ext: "shp", role: "shp_layer" },
   ]);
   ok(
     "rc6_missing_points_still_fails",
@@ -222,20 +228,33 @@ const AMPLE = {
     missingPts.rejectCode
   );
 
-  const buf = buildSyntheticBasicTmcZipBuffer({ extraUnknownDat: true });
-  const work = fs.mkdtempSync(path.join(os.tmpdir(), "iu-tmc-rc6-"));
-  const loaded = await loadTmcTableFromDownload(buf, {
-    workDir: work,
+  const bufFail = buildSyntheticBasicTmcZipBuffer({ extraUnknownDat: true });
+  const workFail = fs.mkdtempSync(path.join(os.tmpdir(), "iu-tmc-rc6f-"));
+  const loadedFail = await loadTmcTableFromDownload(bufFail, {
+    workDir: workFail,
     skipArchiveHash: true,
     limits: { ...DEFAULT_ZIP_LIMITS },
   });
-  ok("rc6_load_with_unknown_ok", loaded.ok === true, loaded.rejectCode);
-  ok("rc6_ignored_propagated", (loaded.ignoredNonStandardCount || 0) >= 1, loaded.ignoredNonStandardCount);
+  ok("rc6_load_unknown_fails", loadedFail.ok === false && loadedFail.rejectCode === TMC_IMPORTER_ERROR.TMC_UNKNOWN_TABLE_PRESENT);
+
+  const bufOk = buildSyntheticBasicTmcZipBuffer({
+    extraDocumentedShpCompanion: true,
+    emptyRnlt: true,
+    allPesLevEmpty: true,
+  });
+  const workOk = fs.mkdtempSync(path.join(os.tmpdir(), "iu-tmc-rc6o-"));
+  const loadedOk = await loadTmcTableFromDownload(bufOk, {
+    workDir: workOk,
+    skipArchiveHash: true,
+    limits: { ...DEFAULT_ZIP_LIMITS },
+  });
+  ok("rc6_load_documented_sidecar_ok", loadedOk.ok === true, loadedOk.rejectCode);
+  ok("rc6_ignored_propagated", (loadedOk.ignoredNonStandardCount || 0) >= 1, loadedOk.ignoredNonStandardCount);
   const store = emptyTmcStore();
-  const act = activateTmcTable(store, loaded.table, {});
-  ok("rc6_activate_with_unknown", act.ok === true, act.reason);
+  const act = activateTmcTable(store, loadedOk.table, {});
+  ok("rc6_activate_with_sidecar", act.ok === true, act.reason);
   const loc = localizeFromTmc([{ locationCode: 10001, countryCode: 2, tableNumber: 25 }], store.active, {});
-  ok("rc6_localize_after_ignore", loc.trust === "tmc" && loc.tmcOk >= 1);
+  ok("rc6_localize_after_sidecar", loc.trust === "tmc" && loc.tmcOk >= 1);
 }
 
 if (fails.length) {

@@ -104,7 +104,21 @@ export async function loadTmcTableFromDownload(input, opts = {}) {
       });
       if (!imported.ok || !imported.resolverTable) {
         const code = String(imported.rejectCode || imported.importerStatus || "TMC_BASIC_IMPORT_FAILED");
-        return { ok: false, rejectCode: code, reason: code };
+        return {
+          ok: false,
+          rejectCode: code,
+          reason: code,
+          ignoredNonStandardCount: imported.ignoredNonStandardCount || 0,
+          ignoredEntries: imported.ignoredEntries || [],
+          unknownEntries: imported.unknownEntries || [],
+          unknownNonclassifiedCount: imported.unknownNonclassifiedCount || 0,
+          unknownRequiredCount: imported.unknownRequiredCount || 0,
+          rejectedUnsafeCount: imported.rejectedUnsafeCount || 0,
+          requiredTableCountExpected: imported.requiredTableCountExpected || 0,
+          requiredTableCountFound: imported.requiredTableCountFound || 0,
+          requiredTableSetComplete: imported.requiredTableSetComplete === true,
+          requiredTableSetValid: imported.requiredTableSetValid === true,
+        };
       }
       return {
         ok: true,
@@ -112,6 +126,17 @@ export async function loadTmcTableFromDownload(input, opts = {}) {
         source: "sp08001_basic",
         importerStatus: imported.importerStatus,
         ignoredNonStandardCount: imported.ignoredNonStandardCount || 0,
+        ignoredEntries: imported.ignoredEntries || [],
+        unknownNonclassifiedCount: 0,
+        unknownRequiredCount: 0,
+        rejectedUnsafeCount: 0,
+        requiredTableCountExpected: imported.requiredTableCountExpected || 0,
+        requiredTableCountFound: imported.requiredTableCountFound || 0,
+        requiredTableSetComplete: imported.requiredTableSetComplete === true,
+        requiredTableSetValid: imported.requiredTableSetValid === true,
+        cid: imported.cid,
+        tabcd: imported.tabcd,
+        tableVersion: imported.tableVersion,
       };
     }
 

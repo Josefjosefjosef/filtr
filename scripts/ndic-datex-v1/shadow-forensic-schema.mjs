@@ -12,6 +12,8 @@ import {
   MAX_CARD_PREVIEW_ITEMS,
   MAX_DATEX_BYTES_READ,
   MAX_EVENT_COUNT,
+  MAX_RETAINED_IGNORED_ENTRY_METADATA,
+  IGNORED_ENTRY_META_ALLOWLIST,
   HTTP_STATUS_CLASS,
 } from "./shadow-forensic-constants.mjs";
 
@@ -79,6 +81,45 @@ export function validateForensicSummary(summary) {
   if (typeof summary.TMC_ACTIVE !== "boolean") fails.push("TMC_ACTIVE");
   if (!isNonNegInt(summary.TMC_POINT_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_POINT_COUNT");
   if (!isNonNegInt(summary.TMC_NONSTANDARD_IGNORED_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_NONSTANDARD_IGNORED_COUNT");
+  if (!isNonNegInt(summary.TMC_REQUIRED_TABLE_COUNT_EXPECTED, MAX_EVENT_COUNT)) fails.push("TMC_REQUIRED_TABLE_COUNT_EXPECTED");
+  if (!isNonNegInt(summary.TMC_REQUIRED_TABLE_COUNT_FOUND, MAX_EVENT_COUNT)) fails.push("TMC_REQUIRED_TABLE_COUNT_FOUND");
+  if (typeof summary.TMC_REQUIRED_TABLE_SET_COMPLETE !== "boolean") fails.push("TMC_REQUIRED_TABLE_SET_COMPLETE");
+  if (typeof summary.TMC_REQUIRED_TABLE_SET_VALID !== "boolean") fails.push("TMC_REQUIRED_TABLE_SET_VALID");
+  if (!isNonNegInt(summary.TMC_UNKNOWN_REQUIRED_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_UNKNOWN_REQUIRED_COUNT");
+  if (!isNonNegInt(summary.TMC_UNKNOWN_NONCLASSIFIED_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_UNKNOWN_NONCLASSIFIED_COUNT");
+  if (!isNonNegInt(summary.TMC_REJECTED_UNSAFE_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_REJECTED_UNSAFE_COUNT");
+  if (!(summary.TMC_CID === null || (Number.isInteger(summary.TMC_CID) && summary.TMC_CID >= 0 && summary.TMC_CID <= 999))) {
+    fails.push("TMC_CID");
+  }
+  if (!(summary.TMC_TABCD === null || (Number.isInteger(summary.TMC_TABCD) && summary.TMC_TABCD >= 0 && summary.TMC_TABCD <= 999))) {
+    fails.push("TMC_TABCD");
+  }
+  if (typeof summary.TMC_RESOLVER_TABLE_ACTIVATED !== "boolean") fails.push("TMC_RESOLVER_TABLE_ACTIVATED");
+  if (typeof summary.TMC_IGNORED_ENTRIES_TRUNCATED !== "boolean") fails.push("TMC_IGNORED_ENTRIES_TRUNCATED");
+  if (!Array.isArray(summary.TMC_IGNORED_ENTRIES)) {
+    fails.push("TMC_IGNORED_ENTRIES");
+  } else if (summary.TMC_IGNORED_ENTRIES.length > MAX_RETAINED_IGNORED_ENTRY_METADATA) {
+    fails.push("TMC_IGNORED_ENTRIES_OVERFLOW");
+  } else {
+    for (let i = 0; i < summary.TMC_IGNORED_ENTRIES.length; i++) {
+      const e = summary.TMC_IGNORED_ENTRIES[i];
+      if (!e || typeof e !== "object" || Array.isArray(e)) {
+        fails.push("TMC_IGNORED_ENTRIES[" + i + "]");
+        continue;
+      }
+      for (const k of Object.keys(e)) {
+        if (!IGNORED_ENTRY_META_ALLOWLIST.includes(k)) fails.push("TMC_IGNORED_ENTRIES_extra:" + k);
+      }
+      if (!(e.basenameDigest === null || (typeof e.basenameDigest === "string" && /^[a-f0-9]{16}$/.test(e.basenameDigest)))) {
+        fails.push("TMC_IGNORED_ENTRIES_digest");
+      }
+      if (typeof e.extension !== "string" || e.extension.length > 16) fails.push("TMC_IGNORED_ENTRIES_ext");
+      if (typeof e.classification !== "string" || e.classification.length > 64) fails.push("TMC_IGNORED_ENTRIES_class");
+      if (typeof e.reasonCode !== "string" || e.reasonCode.length > 64) fails.push("TMC_IGNORED_ENTRIES_reason");
+      if (e.resolutionRequired !== false) fails.push("TMC_IGNORED_ENTRIES_resolutionRequired");
+      if (e.authoritative !== false) fails.push("TMC_IGNORED_ENTRIES_authoritative");
+    }
+  }
   if (typeof summary.TMC_RESOLVER_VERSION !== "string" || summary.TMC_RESOLVER_VERSION.length > 64) fails.push("TMC_RESOLVER_VERSION");
 
   const intFields = [
