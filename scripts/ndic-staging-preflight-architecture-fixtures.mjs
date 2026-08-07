@@ -77,12 +77,21 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("net_verify_preflight_step", /ndic-verify-preflight-attestation\.mjs/.test(net));
   check("net_identity_before_checkout", /Preflight runner identity/.test(net));
   check("net_secrets_present_on_network_only", /secrets\.IU_NDIC_PULL_URL/.test(net));
-  check("net_no_always_bypass", !/if:\s*always\(\)/.test(net));
+  // Job-level if: always() is forbidden; forensic upload may use always()&&shadow only.
+  const beforeUpload = net.split("Upload redacted shadow forensic artifacts")[0] || net;
+  check("net_no_job_level_always_bypass", !/if:\s*always\(\)/.test(beforeUpload) && !/if:\s*\$\{\{\s*always\(\)\s*\}\}/.test(beforeUpload));
   check("net_shadow_forensic_dir_env", /IU_NDIC_FORENSIC_DIR/.test(net));
   check("net_shadow_forensic_artifact_upload", /ndic-shadow-forensic-summary\.json/.test(net));
   check("net_shadow_forensic_retention_1d", /retention-days:\s*1/.test(net));
   check("net_shadow_forensic_no_full_temp_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(net));
   check("net_shadow_forensic_mode_guard", /github\.event\.inputs\.mode\s*==\s*'shadow'/.test(net));
+  check(
+    "net_shadow_forensic_upload_on_failure",
+    /if:\s*\$\{\{\s*always\(\)\s*&&\s*github\.event\.inputs\.mode\s*==\s*'shadow'\s*\}\}/.test(net)
+  );
+  check("net_shadow_forensic_if_no_files_error", /if-no-files-found:\s*error/.test(net));
+  check("net_shadow_forensic_explicit_allowlist_only", /ndic-shadow-forensic\/ndic-shadow-forensic-summary\.json/.test(net));
+  check("net_no_continue_on_error_in_job", !/continue-on-error:\s*true/.test(net));
 
   return { ok: localFails.length === 0, fails: localFails };
 }

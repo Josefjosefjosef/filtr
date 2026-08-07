@@ -129,7 +129,7 @@ function attachShadowForensicRetention(ret, ctx = {}) {
   });
   const dir = resolveForensicDir(ctx.forensicDir);
   writeShadowForensicBundle(dir, bundle);
-  printShadowForensicStdout(bundle.summary);
+  printShadowForensicStdout(bundle.summary, bundle.validationReport);
   return {
     ...ret,
     forensic: {

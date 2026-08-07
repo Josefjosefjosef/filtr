@@ -159,8 +159,10 @@ jobs:
           umask 077
           node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
 
+      # Retain allowlisted forensic JSON even when Sync exits non-zero (fail-closed).
+      # Job conclusion stays failure if Sync failed; upload must not flip the job green.
       - name: Upload redacted shadow forensic artifacts
-        if: github.event.inputs.mode == 'shadow'
+        if: ${{ always() && github.event.inputs.mode == 'shadow' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ndic-shadow-forensic-${{ github.run_id }}-${{ github.sha }}

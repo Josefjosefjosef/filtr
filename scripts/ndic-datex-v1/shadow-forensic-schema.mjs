@@ -10,6 +10,8 @@ import {
   FORBIDDEN_FORENSIC_KEYS,
   FORBIDDEN_VALUE_RE,
   MAX_CARD_PREVIEW_ITEMS,
+  MAX_DATEX_BYTES_READ,
+  MAX_EVENT_COUNT,
   HTTP_STATUS_CLASS,
 } from "./shadow-forensic-constants.mjs";
 
@@ -21,8 +23,8 @@ function isSha40(s) {
   return typeof s === "string" && /^[0-9a-f]{40}$/.test(s);
 }
 
-function isNonNegInt(n) {
-  return Number.isInteger(n) && n >= 0 && n <= 50_000_000;
+function isNonNegInt(n, max = MAX_EVENT_COUNT) {
+  return Number.isInteger(n) && n >= 0 && n <= max;
 }
 
 function walkForbiddenKeys(obj, path, fails) {
@@ -37,6 +39,10 @@ function walkForbiddenKeys(obj, path, fails) {
     if (typeof v === "string" && FORBIDDEN_VALUE_RE.test(v)) fails.push("forbidden_value:" + p);
     if (typeof v === "object" && v) walkForbiddenKeys(v, p, fails);
   }
+}
+
+function assertInvariant(cond, code, fails) {
+  if (!cond) fails.push(code);
 }
 
 /**
@@ -63,7 +69,7 @@ export function validateForensicSummary(summary) {
   if (typeof summary.REASON !== "string" || summary.REASON.length > 120) fails.push("REASON");
   if (!Object.values(HTTP_STATUS_CLASS).includes(summary.DATEX_HTTP_STATUS_CLASS)) fails.push("DATEX_HTTP_STATUS_CLASS");
   if (typeof summary.DATEX_CONTENT_TYPE_VALID !== "boolean") fails.push("DATEX_CONTENT_TYPE_VALID");
-  if (!isNonNegInt(summary.DATEX_BYTES_READ)) fails.push("DATEX_BYTES_READ");
+  if (!isNonNegInt(summary.DATEX_BYTES_READ, MAX_DATEX_BYTES_READ)) fails.push("DATEX_BYTES_READ");
   if (typeof summary.DATEX_XML_PARSE_PASS !== "boolean") fails.push("DATEX_XML_PARSE_PASS");
   if (typeof summary.TMC_ARCHIVE_USED !== "boolean") fails.push("TMC_ARCHIVE_USED");
   if (typeof summary.TMC_VERSION !== "string" || summary.TMC_VERSION.length > 64) fails.push("TMC_VERSION");
@@ -97,22 +103,120 @@ export function validateForensicSummary(summary) {
     "UNVERIFIED_KM_PUBLISHED",
     "UNVERIFIED_DIRECTION_PUBLISHED",
     "UNVERIFIED_LOCATION_PUBLISHED",
+    "PUBLICATION_PROJECTIONS_TOTAL",
+    "PUBLICATION_ELIGIBLE_TOTAL",
+    "PUBLICATION_BLOCKED_TOTAL",
+    "PUBLICATION_BLOCKED_LOCATION",
+    "PUBLICATION_BLOCKED_KM",
+    "PUBLICATION_BLOCKED_DIRECTION",
+    "PUBLICATION_BLOCKED_PROVENANCE",
+    "PUBLICATION_WITH_LOCATION",
+    "PUBLICATION_WITHOUT_LOCATION",
+    "PUBLICATION_WITH_KM",
+    "PUBLICATION_WITHOUT_KM",
+    "PUBLICATION_WITH_DIRECTION",
+    "PUBLICATION_WITHOUT_DIRECTION",
+    "RESOLVER_INPUT_TOTAL",
+    "RESOLVER_ATTEMPTED_TOTAL",
+    "RESOLVED_OTHER_VALID_LOCATION",
+    "UNRESOLVED_TOTAL",
+    "UNRESOLVED_TMC_REFERENCE",
+    "UNRESOLVED_MISSING_REFERENCE",
+    "UNRESOLVED_INVALID_REFERENCE",
+    "FEED_INTERNAL_ITEMS",
+    "FEED_PUBLICATION_ELIGIBLE_ITEMS",
+    "FEED_PUBLICATION_BLOCKED_ITEMS",
   ];
   for (const f of intFields) {
     if (!isNonNegInt(summary[f])) fails.push(f);
   }
-  if (typeof summary.CARD_VALIDATION_PASS !== "boolean") fails.push("CARD_VALIDATION_PASS");
+
+  for (const b of [
+    "CARD_VALIDATION_PASS",
+    "CARD_PROJECTION_VALIDATION_PASS",
+    "CARD_PUBLICATION_ELIGIBILITY_PASS",
+    "CARD_LOCATION_VALIDATION_PASS",
+    "SHADOW_ISOLATED",
+    "GEOCODING_USED",
+  ]) {
+    if (typeof summary[b] !== "boolean") fails.push(b);
+  }
   if (summary.FUZZY_MATCH_USED !== false) fails.push("FUZZY_MATCH_USED_must_be_false");
-  if (typeof summary.GEOCODING_USED !== "boolean") fails.push("GEOCODING_USED");
   if (summary.HEURISTIC_LOCATION_USED !== false) fails.push("HEURISTIC_LOCATION_USED_must_be_false");
   if (summary.PUBLICATION_ENABLED !== false) fails.push("PUBLICATION_ENABLED_must_be_false");
   if (summary.PUBLISHED !== false) fails.push("PUBLISHED_must_be_false");
-  if (typeof summary.SHADOW_ISOLATED !== "boolean") fails.push("SHADOW_ISOLATED");
   if (summary.MAX_CARD_PREVIEW_ITEMS !== MAX_CARD_PREVIEW_ITEMS) fails.push("MAX_CARD_PREVIEW_ITEMS");
   if (summary.CARD_PREVIEW_COUNT > MAX_CARD_PREVIEW_ITEMS) fails.push("CARD_PREVIEW_COUNT_exceeds_max");
   if (summary.UNVERIFIED_KM_PUBLISHED !== 0) fails.push("UNVERIFIED_KM_PUBLISHED_nonzero");
   if (summary.UNVERIFIED_DIRECTION_PUBLISHED !== 0) fails.push("UNVERIFIED_DIRECTION_PUBLISHED_nonzero");
   if (summary.UNVERIFIED_LOCATION_PUBLISHED !== 0) fails.push("UNVERIFIED_LOCATION_PUBLISHED_nonzero");
+
+  // Cross-field invariants (fail-closed publication semantics)
+  assertInvariant(
+    summary.PUBLICATION_ELIGIBLE_TOTAL + summary.PUBLICATION_BLOCKED_TOTAL === summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_publication_eligible_plus_blocked",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_ITEMS === summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_publication_items_equals_projections",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_WITH_LOCATION + summary.PUBLICATION_WITHOUT_LOCATION === summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_publication_location_split",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_WITH_KM + summary.PUBLICATION_WITHOUT_KM === summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_publication_km_split",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_WITH_DIRECTION + summary.PUBLICATION_WITHOUT_DIRECTION === summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_publication_direction_split",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_WITH_LOCATION <= summary.PUBLICATION_PROJECTIONS_TOTAL,
+    "invariant_with_location_lte_total",
+    fails
+  );
+  assertInvariant(
+    summary.PUBLICATION_ELIGIBLE_TOTAL <= summary.PUBLICATION_WITH_LOCATION,
+    "invariant_eligible_requires_verified_location",
+    fails
+  );
+  assertInvariant(
+    summary.FEED_INTERNAL_ITEMS === summary.FEED_ITEMS,
+    "invariant_feed_internal_equals_feed_items",
+    fails
+  );
+  assertInvariant(
+    summary.FEED_PUBLICATION_ELIGIBLE_ITEMS + summary.FEED_PUBLICATION_BLOCKED_ITEMS === summary.FEED_INTERNAL_ITEMS,
+    "invariant_feed_eligible_plus_blocked",
+    fails
+  );
+  assertInvariant(
+    summary.RESOLVED_BASIC + summary.RESOLVED_OTHER_VALID_LOCATION + summary.UNRESOLVED_TOTAL === summary.RESOLVER_INPUT_TOTAL,
+    "invariant_resolver_partition",
+    fails
+  );
+  assertInvariant(summary.UNRESOLVED === summary.UNRESOLVED_TOTAL, "invariant_unresolved_alias", fails);
+  assertInvariant(
+    summary.UNRESOLVED_TMC_REFERENCE + summary.UNRESOLVED_MISSING_REFERENCE + summary.UNRESOLVED_INVALID_REFERENCE <=
+      summary.UNRESOLVED_TOTAL,
+    "invariant_unresolved_subcats",
+    fails
+  );
+  assertInvariant(
+    summary.CARD_VALIDATION_PASS ===
+      (summary.CARD_PROJECTION_VALIDATION_PASS &&
+        summary.CARD_PUBLICATION_ELIGIBILITY_PASS &&
+        summary.CARD_LOCATION_VALIDATION_PASS),
+    "invariant_card_validation_composite",
+    fails
+  );
 
   walkForbiddenKeys(summary, "", fails);
   return { ok: fails.length === 0, fails };
@@ -200,12 +304,10 @@ export function validateValidationReport(report) {
 
 /**
  * Canary: fail on any forbidden key/value in forensic bundle.
+ * Walk only — do not JSON.stringify (avoids cross-field false positives on key names).
  */
 export function scanForensicCanaries(bundle) {
   const fails = [];
   walkForbiddenKeys(bundle, "bundle", fails);
-  const raw = JSON.stringify(bundle);
-  if (FORBIDDEN_VALUE_RE.test(raw)) fails.push("bundle_serialized_forbidden_value");
-  if (/additionalProperties\s*:\s*true/i.test(raw)) fails.push("additionalProperties_true");
   return { ok: fails.length === 0, fails };
 }

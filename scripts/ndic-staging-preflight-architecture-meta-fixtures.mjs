@@ -133,8 +133,10 @@ mutateMustFail(
     ),
   (m) => {
     const base = assertNetworkWorkflowArchitecture(m);
-    const always = /if:\s*always\(\)/.test(stripComments(m));
-    return { ok: base.ok && !always, fails: always ? ["always_present"] : base.fails };
+    const jobChunkText = (m.match(/(?:^|\n)( {2}ndic-network-sync:\n(?: {4}.*\n|\n)*)/) || [])[1] || "";
+    const beforeUpload = jobChunkText.split("Upload redacted shadow forensic artifacts")[0] || jobChunkText;
+    const jobAlways = /if:\s*always\(\)/.test(beforeUpload);
+    return { ok: base.ok && !jobAlways, fails: jobAlways ? ["job_always_present"] : base.fails };
   }
 );
 
@@ -142,6 +144,17 @@ mutateMustFail(
   "meta_remove_shadow_forensic_artifact",
   netSrc,
   (s) => s.replace(/Upload redacted shadow forensic artifacts[\s\S]*?retention-days:\s*1\n/, ""),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_forensic_upload_without_always",
+  netSrc,
+  (s) =>
+    s.replace(
+      /if: \$\{\{ always\(\) && github\.event\.inputs\.mode == 'shadow' \}\}/,
+      "if: github.event.inputs.mode == 'shadow'"
+    ),
   assertNetworkWorkflowArchitecture
 );
 
