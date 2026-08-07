@@ -941,7 +941,8 @@ export const SP08001_TABLES = Object.freeze({
         "sort": 25,
         "code": "INTERRUPTSROAD",
         "type": "NUMERIC(5)",
-        "optional": false
+        "optional": false,
+        "note": "SP08001 Table 4-22 Optional=No. LT CZE v11.0 §2.5/Tab.5 (cert 2025-060-CZ): empty = not applicable (no interruption); filled only when interruption is coded. Importer allows empty via documented semantic-null policy for POINTS only."
       },
       {
         "sort": 26,

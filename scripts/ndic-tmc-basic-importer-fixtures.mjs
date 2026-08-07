@@ -630,6 +630,46 @@ async function run() {
     wipe(dir);
   }
 
+  // LT CZE v11: empty POINTS.INTERRUPTSROAD is documented semantic-null (Tab.5) → accept
+  {
+    const { dir, file } = writeZip(
+      "empty-ir.zip",
+      buildSyntheticBasicTmcZipBuffer({ emptyRnlt: true, allPesLevEmpty: true, pointsEmptyInterruptsRoad: true })
+    );
+    const r = await importBasicTmcArchive(file, {
+      workDir: path.join(dir, "w"),
+      measureDeps: AMPLE,
+      skipArchiveHash: true,
+      returnResolverTable: true,
+    });
+    ok("points_empty_interruptsroad_ok", r.ok === true, r.rejectCode);
+    ok(
+      "points_empty_interruptsroad_activated",
+      r.ok === true && r.resolverTable && Object.keys(r.resolverTable.points || {}).length === 2,
+      r.rejectCode
+    );
+    wipe(dir);
+  }
+
+  // LT CZE v11 Tab.6: empty INPOS is NOT documented (only 0|1) → reject row / fail closed
+  {
+    const { dir, file } = writeZip(
+      "empty-inpos.zip",
+      buildSyntheticBasicTmcZipBuffer({ emptyRnlt: true, allPesLevEmpty: true, pointsEmptyInpos: true })
+    );
+    const r = await importBasicTmcArchive(file, {
+      workDir: path.join(dir, "w"),
+      measureDeps: AMPLE,
+      skipArchiveHash: true,
+      returnResolverTable: true,
+    });
+    // One of two POINTS rows has empty INPOS → soft-reject that row; other may remain.
+    // If both would be invalid or relationships fail, import may fail — either way empty INPOS must not inflate index via bypass.
+    const pts = r.ok && r.resolverTable ? Object.keys(r.resolverTable.points || {}).length : 0;
+    ok("points_empty_inpos_not_both_accepted", !(r.ok === true && pts === 2), "pts=" + pts + " code=" + r.rejectCode);
+    wipe(dir);
+  }
+
   const pass = results.filter((x) => x.pass).length;
   const failN = results.filter((x) => !x.pass).length;
   const summary = {

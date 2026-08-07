@@ -37,6 +37,7 @@ import { collectInspectionPeekTargets } from "./tmc-format-inspection.mjs";
 import { peekZipEntryBytesStreaming, PEEK_STATUS } from "./tmc-zip-entry-peek.mjs";
 import { buildTmcResolverTableFromSp08001Accepted } from "./tmc-resolver-table-bridge.mjs";
 import { classifyManifest as classifyManifestEntries } from "./tmc-manifest-classification.mjs";
+import { isDocumentedSemanticNullEmpty } from "./tmc-points-empty-field-policy.mjs";
 import {
   SP08001_TABLE_CODES,
   SP08001_STANDARD_TABLE_COUNT,
@@ -180,8 +181,9 @@ function validateTableRows(tableCode, headerCodes, rowObjs) {
     for (const col of table.columns) {
       const v = row[col.code];
       const check = validateFieldType(col.type, v, col.optional);
-      // PES_LEV special: empty → null allowed even if optional:false (documented-but-unproven mandatory)
-      if (col.code === "PES_LEV" && check.empty) {
+      // Documented semantic-null empties only (PES_LEV; POINTS.INTERRUPTSROAD per LT CZE v11 §2.5).
+      // Not a broad allowEmptyMandatory — topology flags INPOS/… stay fail-closed on empty.
+      if (check.empty && isDocumentedSemanticNullEmpty(tableCode, col.code)) {
         continue;
       }
       if (!check.ok) {

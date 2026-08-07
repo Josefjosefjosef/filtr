@@ -71,6 +71,38 @@ export function buildSyntheticBasicTmcZipFiles(opts = {}) {
     } else if (code === "POINTS") {
       let p1 = syntheticPointsRow({ CID: cid, TABCD: tabcd, LCD: "10001", SEG_LCD: "", ROA_LCD: "", POL_LCD: "" });
       let p2 = syntheticPointsRow({ CID: cid, TABCD: tabcd, LCD: "10002", SEG_LCD: "", ROA_LCD: "", POL_LCD: "" });
+      if (opts.pointsEmptyInterruptsRoad) {
+        p1 = syntheticPointsRow({
+          CID: cid,
+          TABCD: tabcd,
+          LCD: "10001",
+          SEG_LCD: "",
+          ROA_LCD: "",
+          POL_LCD: "",
+          INTERRUPTSROAD: "",
+        });
+        p2 = syntheticPointsRow({
+          CID: cid,
+          TABCD: tabcd,
+          LCD: "10002",
+          SEG_LCD: "",
+          ROA_LCD: "",
+          POL_LCD: "",
+          INTERRUPTSROAD: "",
+        });
+      }
+      if (opts.pointsEmptyInpos) {
+        p1 = syntheticPointsRow({
+          CID: cid,
+          TABCD: tabcd,
+          LCD: "10001",
+          SEG_LCD: "",
+          ROA_LCD: "",
+          POL_LCD: "",
+          INPOS: "",
+          INTERRUPTSROAD: opts.pointsEmptyInterruptsRoad ? "" : "0",
+        });
+      }
       if (opts.selfReference) {
         p1 = syntheticPointsRow({ CID: cid, TABCD: tabcd, LCD: "10001", SEG_LCD: "10001" });
       }
