@@ -189,6 +189,7 @@ jobs:
                   projects/data/info_events/ndic_datex_v1/sync_state.json \
                   projects/data/info_events/ndic_datex_v1/diagnostics.json \
                   projects/data/info_events/ndic_datex_v1/tmc_meta.json \
+                  projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json \
                   2>/dev/null || true
           if git diff --cached --quiet; then
             echo "NO_CHANGES"
@@ -201,15 +202,16 @@ jobs:
           git push -u origin "$BRANCH" --force
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
+      # Portable: Node + GitHub REST (no gh CLI dependency on self-hosted VPS).
       - name: Open or refresh data PR
         if: github.event.inputs.mode == 'active' && steps.commit_push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
+          PR_TITLE: ${{ env.PR_TITLE }}
+          PR_BODY: "Automated NDIC DATEX v1 data refresh."
+          PR_BASE: main
         run: |
           set -euo pipefail
-          BRANCH="${{ env.AUTOMATION_BRANCH }}"
-          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
-            echo "PR exists"
-          else
-            gh pr create --base main --head "$BRANCH" --title "${{ env.PR_TITLE }}" --body "Automated NDIC DATEX v1 data refresh."
-          fi
+          node scripts/ndic-open-or-refresh-data-pr.mjs

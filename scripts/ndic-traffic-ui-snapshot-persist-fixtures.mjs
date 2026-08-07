@@ -15,6 +15,17 @@ import {
   trafficUiSnapshotPaths,
 } from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
 import { PUBLICATION_LAYER_FLAGS } from "./ndic-datex-v1/traffic-publication-constants.mjs";
+import {
+  buildOfflinePublicationSnapshot,
+  compactTrafficUiSnapshotPayload,
+  measureSnapshotSizeBreakdown,
+  DEFAULT_MAX_SNAPSHOT_BYTES,
+} from "./ndic-datex-v1/traffic-publication-snapshot.mjs";
+import {
+  countActivePublicationSafetyCounters,
+  countUnverifiedPublishedFromCards,
+} from "./ndic-datex-v1/active-publication-safety-counters.mjs";
+import { runTrafficPublicationLayer } from "./ndic-datex-v1/traffic-publication-layer.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -223,6 +234,160 @@ ok(
   );
 }
 
+// 10) Compact UI snapshot drops duplicate stacks; provenance emptied
+{
+  const events = [pe, ge].filter(Boolean);
+  const full = runTrafficPublicationLayer(events, {
+    nowIso: "2026-08-07T12:00:00.000Z",
+    sourceFreshness: "FRESH",
+    uiCompact: false,
+    maxSnapshotBytes: 64 * 1024 * 1024,
+  });
+  const compact = runTrafficPublicationLayer(events, {
+    nowIso: "2026-08-07T12:00:00.000Z",
+    sourceFreshness: "FRESH",
+    uiCompact: true,
+    maxSnapshotBytes: 64 * 1024 * 1024,
+  });
+  ok("compact_layer_ok", full.ok === true && compact.ok === true);
+  ok(
+    "compact_omits_projection_payload",
+    Array.isArray(compact.snapshot.projections) && compact.snapshot.projections.length === 0
+  );
+  ok(
+    "compact_omits_history_payload",
+    Array.isArray(compact.snapshot.historyItems) && compact.snapshot.historyItems.length === 0
+  );
+  ok(
+    "compact_omits_filter_indexes",
+    compact.snapshot.filterIndexes &&
+      Object.keys(compact.snapshot.filterIndexes).length === 0
+  );
+  ok(
+    "compact_keeps_cards",
+    Array.isArray(compact.snapshot.cards) && compact.snapshot.cards.length >= 1
+  );
+  ok(
+    "compact_smaller_than_full",
+    (compact.snapshotBytes || 0) < (full.snapshotBytes || 0)
+  );
+  const bd = measureSnapshotSizeBreakdown(compact.snapshot);
+  ok("size_breakdown_ok", bd.ok === true && bd.FULL_SNAPSHOT === compact.snapshotBytes);
+  ok("default_limit_8mib", DEFAULT_MAX_SNAPSHOT_BYTES === 8 * 1024 * 1024);
+  const compactedPayload = compactTrafficUiSnapshotPayload({
+    projections: full.projections,
+    feed: full.feed,
+    cards: full.cards,
+    historyItems: full.historyItems,
+    filterIndexes: full.filterIndexes,
+    sourceFreshness: "FRESH",
+  });
+  ok(
+    "compact_helper_strips_provenance",
+    compactedPayload.cards.every((c) => c && c.fieldProvenance && Object.keys(c.fieldProvenance).length === 0)
+  );
+}
+
+// 11) SNAPSHOT_TOO_LARGE fixture — tiny maxBytes must fail closed (regression guard)
+{
+  const tiny = persistTrafficUiOfflineSnapshot([preciseItem, generalItem], {
+    repoRoot: tmpRoot,
+    relPath: path.join(tmpRoot, "too-large", "traffic_offline_snapshot.json"),
+    nowIso: "2026-08-07T12:00:00.000Z",
+    sourceFreshness: "FRESH",
+    maxSnapshotBytes: 64,
+  });
+  ok("SNAPSHOT_TOO_LARGE", tiny.ok === false && tiny.rejectCode === "PUB_SNAPSHOT_TOO_LARGE");
+  const direct = buildOfflinePublicationSnapshot(
+    {
+      projections: [],
+      feed: { schema: "iu-traffic-publication-feed-v1", itemCount: 0, items: [], publicationEnabled: false, trafficUiEnabled: true, builtAt: "2026-08-07T12:00:00.000Z" },
+      cards: [
+        {
+          schema: "iu-traffic-card-projection-v1",
+          publicEventId: "iu-te-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          publicationEnabled: false,
+          liveCardEnabled: false,
+          impact: "x".repeat(200),
+        },
+      ],
+      historyItems: [],
+      filterIndexes: {},
+      sourceFreshness: "FRESH",
+    },
+    { uiCompact: true, maxSnapshotBytes: 32, nowIso: "2026-08-07T12:00:00.000Z" }
+  );
+  ok(
+    "SNAPSHOT_TOO_LARGE_direct",
+    direct.ok === false &&
+      direct.rejectCode === "PUB_SNAPSHOT_TOO_LARGE" &&
+      direct.sizeBreakdown &&
+      direct.sizeBreakdown.ok === true
+  );
+}
+
+// 12) ACTIVE count-only unverified counters (shadow-equivalent fail-closed preview)
+{
+  const safe = countActivePublicationSafetyCounters([preciseItem, generalItem]);
+  ok("active_counters_shape", typeof safe.UNVERIFIED_LOCATION_PUBLISHED === "number");
+  ok("active_counters_all_zero_on_gate_items", safe.UNVERIFIED_LOCATION_PUBLISHED === 0);
+  ok("active_counters_km_zero_on_gate_safe_items", safe.UNVERIFIED_KM_PUBLISHED === 0);
+  ok("active_counters_dir_zero_on_gate_safe_items", safe.UNVERIFIED_DIRECTION_PUBLISHED === 0);
+  // Raw unverified geo on feed must NOT count as published (preview nulls them).
+  const rawUnverified = countActivePublicationSafetyCounters([
+    {
+      id: "bad-1",
+      localizationTrust: "national_fallback",
+      roadNumber: "D1",
+      km: 12,
+      direction: "positive",
+      region: { name: "Praha" },
+    },
+  ]);
+  ok(
+    "active_counters_fail_closed_no_raw_leak",
+    rawUnverified.UNVERIFIED_LOCATION_PUBLISHED === 0 &&
+      rawUnverified.UNVERIFIED_KM_PUBLISHED === 0 &&
+      rawUnverified.UNVERIFIED_DIRECTION_PUBLISHED === 0
+  );
+  // Card leak detector: incorrect UI card geo without precise verification.
+  const leak = countUnverifiedPublishedFromCards([
+    {
+      preciseLocationVerified: false,
+      road: "D1",
+      kilometer: 12,
+      direction: "positive",
+      location: "Praha",
+    },
+  ]);
+  ok("active_card_leak_location", leak.UNVERIFIED_LOCATION_PUBLISHED === 1);
+  ok("active_card_leak_km", leak.UNVERIFIED_KM_PUBLISHED === 1);
+  ok("active_card_leak_direction", leak.UNVERIFIED_DIRECTION_PUBLISHED === 1);
+  ok("active_counters_fuzzy_false", leak.FUZZY_MATCH_USED === false);
+  ok("active_counters_geocoding_false", leak.GEOCODING_USED === false);
+  ok("active_counters_heuristic_false", leak.HEURISTIC_LOCATION_USED === false);
+}
+
+// 13) Portable data-PR opener (no gh CLI)
+{
+  const openPrSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-open-or-refresh-data-pr.mjs"), "utf8");
+  const wfSrc = fs.readFileSync(
+    path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml"),
+    "utf8"
+  );
+  ok("data_pr_script_uses_fetch", /fetch\(/.test(openPrSrc) && /api\.github\.com/.test(openPrSrc));
+  ok("data_pr_script_no_gh_cli", !/\bgh\s+pr\b/.test(openPrSrc));
+  ok(
+    "workflow_uses_portable_data_pr",
+    /ndic-open-or-refresh-data-pr\.mjs/.test(wfSrc) && !/gh pr create/.test(wfSrc)
+  );
+  ok(
+    "workflow_commits_traffic_offline_snapshot",
+    /traffic_offline_snapshot\.json/.test(wfSrc)
+  );
+  ok("persist_defaults_ui_compact", /uiCompact:\s*opts\.uiCompact !== false/.test(persistSrc));
+}
+
 try {
   fs.rmSync(tmpRoot, { recursive: true, force: true });
 } catch (_) {}
@@ -244,6 +409,11 @@ console.log(
     TRAFFIC_SNAPSHOT_LAST_KNOWN_GOOD_PASS: "YES",
     TRAFFIC_SNAPSHOT_FAILURE_RECOVERY_PASS: "YES",
     TRAFFIC_SNAPSHOT_PARTIAL_EXPOSURE_POSSIBLE: "NO",
+    SNAPSHOT_TOO_LARGE_FIXTURE: "YES",
+    DATA_PR_OPEN_PORTABLE: "YES",
+    GH_CLI_REQUIRED: "NO",
+    ACTIVE_DIAGNOSTICS_UNVERIFIED_COUNTERS_ADDED: "YES",
+    UNVERIFIED_COUNTERS_COUNT_ONLY: "YES",
     PERSIST_FIXTURE_INCLUDED_IN_PREFLIGHT: "YES",
     PUBLICATION_HEALTH_PASS: true,
     TEST_RUNNER_FALSE_GREEN_POSSIBLE: "NO",

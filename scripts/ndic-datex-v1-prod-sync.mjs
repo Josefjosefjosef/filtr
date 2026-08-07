@@ -60,6 +60,7 @@ import {
 import { parseSafeXml, attrOf, descendantsNamed } from "./ndic-datex-v1/safe-xml.mjs";
 import { persistTrafficUiOfflineSnapshot } from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
 import { PUBLICATION_LAYER_FLAGS } from "./ndic-datex-v1/traffic-publication-constants.mjs";
+import { countActivePublicationSafetyCounters } from "./ndic-datex-v1/active-publication-safety-counters.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -638,6 +639,17 @@ export async function runNdicDatexV1Sync(opts = {}) {
         const merged = others.concat(feedItems);
         writeJson(lanePath, { ...lane, generatedAt: started, itemCount: merged.length, items: merged });
       }
+      // Count-only ACTIVE safety counters (same keys as shadow forensic; no payloads).
+      diagnostics.publicationSafety = countActivePublicationSafetyCounters(feedItems);
+      diagnostics.UNVERIFIED_LOCATION_PUBLISHED =
+        diagnostics.publicationSafety.UNVERIFIED_LOCATION_PUBLISHED;
+      diagnostics.UNVERIFIED_KM_PUBLISHED = diagnostics.publicationSafety.UNVERIFIED_KM_PUBLISHED;
+      diagnostics.UNVERIFIED_DIRECTION_PUBLISHED =
+        diagnostics.publicationSafety.UNVERIFIED_DIRECTION_PUBLISHED;
+      diagnostics.FUZZY_MATCH_USED = false;
+      diagnostics.GEOCODING_USED = false;
+      diagnostics.HEURISTIC_LOCATION_USED = false;
+
       if (PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true) {
         const uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
           repoRoot: REPO,
@@ -648,6 +660,22 @@ export async function runNdicDatexV1Sync(opts = {}) {
           ok: uiSnap.ok === true,
           rejectCode: uiSnap.rejectCode || null,
           cardCount: uiSnap.cardCount || 0,
+          bytes: uiSnap.bytes || 0,
+          uiCompact: uiSnap.uiCompact === true,
+          sizeBreakdown: uiSnap.sizeBreakdown
+            ? {
+                metadata: uiSnap.sizeBreakdown.metadata,
+                projections: uiSnap.sizeBreakdown.projections,
+                feed: uiSnap.sizeBreakdown.feed,
+                cards: uiSnap.sizeBreakdown.cards,
+                historyItems: uiSnap.sizeBreakdown.historyItems,
+                filterIndexes: uiSnap.sizeBreakdown.filterIndexes,
+                cardsProvenance: uiSnap.sizeBreakdown.cardsProvenance,
+                FULL_SNAPSHOT: uiSnap.sizeBreakdown.FULL_SNAPSHOT,
+                LIMIT_DEFAULT: uiSnap.sizeBreakdown.LIMIT_DEFAULT,
+                OVER_BY: uiSnap.sizeBreakdown.OVER_BY,
+              }
+            : null,
           trafficUiEnabled: uiSnap.trafficUiEnabled === true,
           publicationEnabled: false,
         };

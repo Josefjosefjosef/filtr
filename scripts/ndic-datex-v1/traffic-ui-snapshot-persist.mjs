@@ -238,12 +238,16 @@ export function persistTrafficUiOfflineSnapshot(feedItems, opts = {}) {
     sourceFreshness: opts.sourceFreshness || "FRESH",
     dataAge: opts.dataAge || null,
     maxSnapshotBytes: opts.maxSnapshotBytes,
+    // Compact cards-only body for hosted UI (drops duplicate projections/feed/history/indexes).
+    uiCompact: opts.uiCompact !== false,
   });
   if (!layer.ok || !layer.snapshot) {
     return {
       ok: false,
       rejectCode: layer.rejectCode || "PUB_LAYER_FAILED",
       writeSequence,
+      sizeBreakdown: layer.sizeBreakdown || null,
+      bytes: layer.bytes || 0,
     };
   }
 
@@ -395,7 +399,10 @@ export function persistTrafficUiOfflineSnapshot(feedItems, opts = {}) {
     ok: true,
     path: dest,
     lastGoodPath: fs.existsSync(lastGood) ? lastGood : null,
-    cardCount: (layer.cards || []).length,
+    cardCount: (layer.snapshot && layer.snapshot.cardCount) || (layer.cards || []).length,
+    bytes: layer.snapshotBytes || 0,
+    sizeBreakdown: layer.sizeBreakdown || null,
+    uiCompact: layer.uiCompact === true,
     trafficUiEnabled: layer.trafficUiEnabled === true,
     publicationEnabled: false,
     writeSequence,

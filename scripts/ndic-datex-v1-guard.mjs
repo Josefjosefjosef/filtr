@@ -665,6 +665,22 @@ async function discoveryChecks() {
   ok("update_wf_no_schedule", !/schedule:/.test(updateWf), "update-no-cron");
   ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
   ok("update_wf_commit_active_only", /mode == 'active'/.test(updateWf), "commit-active-only");
+  ok(
+    "update_wf_data_pr_portable_no_gh_cli",
+    /ndic-open-or-refresh-data-pr\.mjs/.test(updateWf) && !/gh pr create/.test(updateWf),
+    "portable-pr"
+  );
+  ok(
+    "update_wf_commits_traffic_offline_snapshot",
+    /traffic_offline_snapshot\.json/.test(updateWf),
+    "snapshot-commit"
+  );
+  ok(
+    "prod_sync_active_unverified_counters",
+    /countActivePublicationSafetyCounters/.test(syncSrc) &&
+      /UNVERIFIED_LOCATION_PUBLISHED/.test(syncSrc),
+    "active-counters"
+  );
 }
 
 // --- cleanup success / error / interrupt (local temp only; no NDIC network) ---

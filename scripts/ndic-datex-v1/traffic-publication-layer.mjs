@@ -240,6 +240,8 @@ export function runTrafficPublicationLayer(aggregatedEvents, opts = {}) {
       nowIso: opts.nowIso,
       maxSnapshotBytes: opts.maxSnapshotBytes,
       forcePartial: opts.forcePartial === true,
+      // Hosted Traffic UI snapshot must not re-serialize full projection/feed/history stacks.
+      uiCompact: opts.uiCompact === true,
     }
   );
 
@@ -251,6 +253,8 @@ export function runTrafficPublicationLayer(aggregatedEvents, opts = {}) {
       rejectCode: snap.rejectCode,
       hits: snap.hits,
       metrics,
+      sizeBreakdown: snap.sizeBreakdown || null,
+      bytes: snap.bytes || 0,
       publicationEnabled: false,
     };
   }
@@ -274,6 +278,8 @@ export function runTrafficPublicationLayer(aggregatedEvents, opts = {}) {
     filterIndexes,
     snapshot: snap.snapshot,
     snapshotBytes: snap.bytes,
+    sizeBreakdown: snap.sizeBreakdown || null,
+    uiCompact: snap.uiCompact === true,
     snapshotPathCategory: snap.pathCategory || null,
     activated: false,
     publicationEnabled: false,

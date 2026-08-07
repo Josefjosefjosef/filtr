@@ -11,6 +11,106 @@ import {
 import { scanPublicationCanaries } from "./traffic-publication-projection.mjs";
 
 export const SNAPSHOT_SCHEMA_VERSION = "iu-traffic-offline-snapshot-v1";
+export const DEFAULT_MAX_SNAPSHOT_BYTES = 8 * 1024 * 1024;
+
+function utf8Bytes(value) {
+  return Buffer.byteLength(JSON.stringify(value), "utf8");
+}
+
+/**
+ * Section byte breakdown for forensic size audits (no payloads retained).
+ */
+export function measureSnapshotSizeBreakdown(snapshot) {
+  if (!snapshot || typeof snapshot !== "object") {
+    return { ok: false, rejectCode: "SNAP_INVALID_OBJECT" };
+  }
+  const metadata = {
+    schema: snapshot.schema,
+    snapshotVersion: snapshot.snapshotVersion,
+    schemaVersion: snapshot.schemaVersion,
+    generatedAt: snapshot.generatedAt,
+    sourceFreshness: snapshot.sourceFreshness,
+    eventCount: snapshot.eventCount,
+    feedCount: snapshot.feedCount,
+    cardCount: snapshot.cardCount,
+    historyCount: snapshot.historyCount,
+    dataAge: snapshot.dataAge,
+    publicationEnabled: snapshot.publicationEnabled,
+    publicApiEnabled: snapshot.publicApiEnabled,
+    trafficUiEnabled: snapshot.trafficUiEnabled,
+  };
+  const sections = {
+    metadata: utf8Bytes(metadata),
+    projections: utf8Bytes(snapshot.projections || []),
+    feed: utf8Bytes(snapshot.feed || null),
+    cards: utf8Bytes(snapshot.cards || []),
+    historyItems: utf8Bytes(snapshot.historyItems || []),
+    filterIndexes: utf8Bytes(snapshot.filterIndexes || {}),
+  };
+  let cardsMapLink = 0;
+  let cardsText = 0;
+  let cardsProvenance = 0;
+  for (const c of snapshot.cards || []) {
+    if (!c || typeof c !== "object") continue;
+    cardsMapLink += utf8Bytes(c.mapTarget || null);
+    cardsText += utf8Bytes({
+      impact: c.impact,
+      location: c.location,
+      section: c.section,
+      road: c.road,
+      feed: c.feed,
+      locationDisclosureCs: c.locationDisclosureCs,
+    });
+    cardsProvenance += utf8Bytes(c.fieldProvenance || {});
+  }
+  const full = utf8Bytes(snapshot);
+  return {
+    ok: true,
+    ...sections,
+    cardsMapLink,
+    cardsText,
+    cardsProvenance,
+    duplicateStack: sections.projections + sections.feed + sections.cards,
+    FULL_SNAPSHOT: full,
+    LIMIT_DEFAULT: DEFAULT_MAX_SNAPSHOT_BYTES,
+    OVER_BY: Math.max(0, full - DEFAULT_MAX_SNAPSHOT_BYTES),
+  };
+}
+
+/**
+ * Compact UI-hosted snapshot: cards + metadata only.
+ * Drops duplicate projections/feed/history/filterIndexes and empty fieldProvenance.
+ * Does not change publication-layer projection/card builders.
+ */
+export function compactTrafficUiSnapshotPayload(payload, opts = {}) {
+  const cardsIn = Array.isArray(payload && payload.cards) ? payload.cards : [];
+  const cards = cardsIn.map((c) => {
+    if (!c || typeof c !== "object") return c;
+    // Keep schema-compatible empty provenance object (UI tolerates {}).
+    const next = { ...c, fieldProvenance: {} };
+    return next;
+  });
+  const nowIso = opts.nowIso || (payload && payload.generatedAt) || new Date().toISOString();
+  return {
+    sourceFreshness: (payload && payload.sourceFreshness) || "UNKNOWN",
+    dataAge: payload && payload.dataAge != null ? payload.dataAge : null,
+    // Counts reflect source layer; compact body omits duplicate arrays.
+    projections: [],
+    feed: {
+      schema: "iu-traffic-publication-feed-v1",
+      publicationEnabled: false,
+      trafficUiEnabled: PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true,
+      itemCount: 0,
+      items: [],
+      builtAt: nowIso,
+    },
+    cards,
+    historyItems: [],
+    filterIndexes: {},
+    eventCountHint:
+      payload && Array.isArray(payload.projections) ? payload.projections.length : cards.length,
+  };
+}
 
 /**
  * Finalize snapshot atomically under workDir. publicationEnabled always false.
@@ -26,25 +126,33 @@ export function buildOfflinePublicationSnapshot(payload, opts = {}) {
     return { ok: false, rejectCode: PUBLICATION_ERROR.PUB_INPUT_INVALID };
   }
 
+  const useCompact = opts.uiCompact === true;
+  const source = useCompact ? compactTrafficUiSnapshotPayload(payload, opts) : payload;
+  const cardCount = (source.cards || []).length;
+  const eventCount =
+    useCompact && source.eventCountHint != null
+      ? source.eventCountHint
+      : (source.projections || []).length;
+
   const snapshot = {
     schema: SNAPSHOT_SCHEMA_VERSION,
     snapshotVersion: opts.snapshotVersion || crypto.randomBytes(8).toString("hex"),
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
     generatedAt: opts.nowIso || new Date().toISOString(),
-    sourceFreshness: payload.sourceFreshness || "UNKNOWN",
-    eventCount: (payload.projections || []).length,
-    feedCount: payload.feed && payload.feed.itemCount != null ? payload.feed.itemCount : 0,
-    cardCount: (payload.cards || []).length,
-    historyCount: (payload.historyItems || []).length,
-    dataAge: payload.dataAge || null,
+    sourceFreshness: source.sourceFreshness || "UNKNOWN",
+    eventCount,
+    feedCount: source.feed && source.feed.itemCount != null ? source.feed.itemCount : 0,
+    cardCount,
+    historyCount: (source.historyItems || []).length,
+    dataAge: source.dataAge || null,
     publicationEnabled: false,
     publicApiEnabled: false,
     trafficUiEnabled: PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true,
-    projections: payload.projections || [],
-    feed: payload.feed || null,
-    cards: payload.cards || [],
-    historyItems: payload.historyItems || [],
-    filterIndexes: payload.filterIndexes || {},
+    projections: source.projections || [],
+    feed: source.feed || null,
+    cards: source.cards || [],
+    historyItems: source.historyItems || [],
+    filterIndexes: source.filterIndexes || {},
   };
 
   const canary = scanPublicationCanaries(snapshot);
@@ -53,16 +161,28 @@ export function buildOfflinePublicationSnapshot(payload, opts = {}) {
   }
 
   const body = Buffer.from(JSON.stringify(snapshot), "utf8");
-  const maxBytes = opts.maxSnapshotBytes != null ? opts.maxSnapshotBytes : 8 * 1024 * 1024;
+  const maxBytes =
+    opts.maxSnapshotBytes != null ? opts.maxSnapshotBytes : DEFAULT_MAX_SNAPSHOT_BYTES;
   if (body.length > maxBytes) {
-    return { ok: false, rejectCode: PUBLICATION_ERROR.PUB_SNAPSHOT_TOO_LARGE };
+    const breakdown = measureSnapshotSizeBreakdown(snapshot);
+    return {
+      ok: false,
+      rejectCode: PUBLICATION_ERROR.PUB_SNAPSHOT_TOO_LARGE,
+      bytes: body.length,
+      maxBytes,
+      sizeBreakdown: breakdown,
+    };
   }
+
+  const sizeBreakdown = measureSnapshotSizeBreakdown(snapshot);
 
   if (!opts.workDir) {
     return {
       ok: true,
       snapshot,
       bytes: body.length,
+      sizeBreakdown,
+      uiCompact: useCompact,
       activated: false,
       publicationEnabled: false,
     };
@@ -83,6 +203,8 @@ export function buildOfflinePublicationSnapshot(payload, opts = {}) {
     ok: true,
     snapshot,
     bytes: body.length,
+    sizeBreakdown,
+    uiCompact: useCompact,
     pathCategory: "task_owned",
     activated: false,
     publicationEnabled: false,
