@@ -36,22 +36,112 @@ export const LOCATION_PROFILE_BUCKET = Object.freeze({
   OTHER: "other",
 });
 
+/**
+ * No-signal forensic subtypes (only when locationProfileBucket=no_localization_signal).
+ * UNRECOGNIZED_* requires a real localization structure the parser cannot classify —
+ * never metadata under a known profile, never empty wrappers alone.
+ */
+export const NO_SIGNAL_SUBTYPE = Object.freeze({
+  EMPTY_LOCALIZATION: "empty_localization",
+  NO_LOCATION_ELEMENT: "no_location_element",
+  KNOWN_PROFILE_BUT_NO_USABLE_REFERENCE: "known_profile_but_no_usable_reference",
+  UNRECOGNIZED_STANDARD_PROFILE: "unrecognized_standard_profile",
+  UNRECOGNIZED_VENDOR_EXTENSION: "unrecognized_vendor_extension",
+  LOCATION_EXTENSION_ONLY: "location_extension_only",
+  TEXT_ONLY_LOCATION: "text_only_location",
+  STRUCTURED_BUT_INCOMPLETE: "structured_but_incomplete",
+  OTHER: "other_no_signal",
+  /** @deprecated alias kept for one-cycle schema continuity */
+  EMPTY_GROUP: "empty_localization",
+  UNRECOGNIZED_PROFILE: "unrecognized_standard_profile",
+});
+
+/** DATEX II standard location roots the current parser does not resolve. */
+const STANDARD_UNSUPPORTED_ROOTS = new Set([
+  "alertcarea",
+  "tpegpointlocation",
+  "tpeglinearlocation",
+  "tpegarealocation",
+  "tpegframedpoint",
+  "itinerary",
+  "itinerarybyreference",
+  "arealocation",
+  "linearlocation",
+  "pointlocation",
+  "locationbygeometry",
+  "locationbyreference",
+  "singlelocation",
+]);
+
+/** Non-method / metadata children that must never imply an unrecognized profile. */
+const NON_METHOD_ROOTS = new Set([
+  "groupoflocations",
+  "supplementarypositionaldescription",
+  "locationdescriptor",
+  "locationdescription",
+  "namedarea",
+  "roadinformation",
+  "roadnumber",
+  "roadname",
+  "carriageway",
+  "lane",
+  "lanes",
+  "lengthaffected",
+  "destination",
+  "directionrelative",
+  "alertcdirection",
+  "alertcdirectioncoded",
+  "offsetdistance",
+  "latitude",
+  "longitude",
+  "coordinatesfordisplay",
+]);
+
 function hasExact(node, name) {
   if (!node) return false;
   return descendantsNamed(node, name, 1).length > 0;
 }
 
-function walkNames(node, maxNodes, visit) {
-  if (!node) return;
-  let n = 0;
-  const stack = [node];
-  while (stack.length && n < maxNodes) {
-    const cur = stack.pop();
-    n += 1;
-    visit(String(cur && cur.name != null ? cur.name : "").toLowerCase());
-    const kids = (cur && cur.children) || [];
-    for (let i = kids.length - 1; i >= 0; i -= 1) stack.push(kids[i]);
-  }
+function localName(node) {
+  return String((node && node.name) || "").toLowerCase();
+}
+
+function isOpenlrName(name) {
+  return name.includes("openlr");
+}
+
+function isSupportedMethodName(name) {
+  if (!name) return false;
+  if (isOpenlrName(name)) return true;
+  return (
+    name === "alertcpoint" ||
+    name === "alertclinear" ||
+    name === "specificlocation" ||
+    name === "pointcoordinates" ||
+    name === "pointbycoordinates" ||
+    name === "networklocation" ||
+    name === "linestring" ||
+    name === "polygon" ||
+    name === "point" ||
+    name === "gml"
+  );
+}
+
+function isVendorExtensionName(name) {
+  return /^(ndic|rsd|cze|cz[_-]|ext[_-]|extension)/.test(name) || name.includes("extension");
+}
+
+function isLocationMethodLike(name) {
+  if (!name || NON_METHOD_ROOTS.has(name)) return false;
+  if (isSupportedMethodName(name)) return false;
+  if (STANDARD_UNSUPPORTED_ROOTS.has(name)) return true;
+  if (isVendorExtensionName(name)) return true;
+  // Strict: only explicit *Location / *Referencing method roots, not any "point/area" substring.
+  return (
+    /(locationreference|locationreferencing|arealocation|linearlocation|pointlocation|tpeg|itinerary|alertcarea)$/.test(
+      name
+    ) || /^(area|linear|point)location$/.test(name)
+  );
 }
 
 /**
@@ -79,8 +169,12 @@ export function extractLocationPresenceFlags(locNode) {
     hasSupplementaryPositionalDescription: false,
     hasTpegLocation: false,
     hasItinerary: false,
+    hasLocationExtension: false,
     hasUnrecognizedLocationProfile: false,
+    hasUnrecognizedStandardProfile: false,
+    hasUnrecognizedVendorExtension: false,
     groupOfLocationsEmpty: false,
+    hasNonLocationChildrenOnly: false,
   };
   if (!locNode) {
     flags.groupOfLocationsEmpty = true;
@@ -106,32 +200,84 @@ export function extractLocationPresenceFlags(locNode) {
     hasExact(locNode, "tpegAreaLocation") ||
     hasExact(locNode, "tpegFramedPoint");
   flags.hasItinerary = hasExact(locNode, "itinerary") || hasExact(locNode, "itineraryByReference");
+  flags.hasLocationExtension =
+    hasExact(locNode, "locationExtension") || hasExact(locNode, "groupOfLocationsExtension");
 
-  const kids = Array.isArray(locNode.children) ? locNode.children : [];
-  flags.groupOfLocationsEmpty = kids.length === 0;
-
-  // OpenLR + unrecognized DATEX location-family names (forensic only).
-  walkNames(locNode, 8000, (name) => {
-    if (name.includes("openlr")) {
+  // OpenLR presence (descendant names) — never marks unrecognized.
+  const stack = [locNode];
+  let n = 0;
+  while (stack.length && n < 8000) {
+    const cur = stack.pop();
+    n += 1;
+    const name = localName(cur);
+    if (isOpenlrName(name)) {
       flags.hasOpenLR = true;
       if (/linear|line.*location/.test(name)) flags.hasOpenlrLine = true;
       if (/point.*location|point.*along|poi/.test(name)) flags.hasOpenlrPoint = true;
       if (/geo.*coordinate/.test(name)) flags.hasOpenlrGeo = true;
       if (/circle|rectangle|grid|polygon|closed/.test(name)) flags.hasOpenlrArea = true;
       if (/binary|asbinary/.test(name)) flags.hasOpenlrBinary = true;
-      return;
     }
-    if (
-      /^(groupoflocations|alertc|specificlocation|pointcoordinates|networklocation|supplementary|gml|linestring|polygon|point|openlr)/.test(
-        name
-      )
-    ) {
-      return;
+    for (const child of cur.children || []) stack.push(child);
+  }
+
+  const kids = Array.isArray(locNode.children) ? locNode.children : [];
+  flags.groupOfLocationsEmpty = kids.length === 0;
+
+  const hasKnownSupported =
+    flags.hasAlertCPoint ||
+    flags.hasAlertCLinear ||
+    flags.hasOpenLR ||
+    flags.hasPointCoordinates ||
+    flags.hasNetworkLocation ||
+    flags.hasGmlPoint ||
+    flags.hasGmlLineString ||
+    flags.hasGmlPolygon ||
+    flags.hasSupplementaryPositionalDescription;
+  // Note: hasSpecificLocation alone is NOT enough — it also appears inside
+  // unsupported Alert-C Area / TPEG containers and must not suppress them.
+
+  // Unrecognized = real location METHOD root we do not classify — never when a known
+  // supported profile is already present (avoids metadata / wrapper false-positives).
+  if (!hasKnownSupported && !flags.groupOfLocationsEmpty) {
+    let methodLike = 0;
+    let nonMethod = 0;
+    for (const child of kids) {
+      const name = localName(child);
+      if (!name) continue;
+      if (NON_METHOD_ROOTS.has(name) || isSupportedMethodName(name)) {
+        nonMethod += 1;
+        continue;
+      }
+      if (STANDARD_UNSUPPORTED_ROOTS.has(name)) {
+        flags.hasUnrecognizedStandardProfile = true;
+        methodLike += 1;
+        continue;
+      }
+      if (name === "locationextension" || name === "groupoflocationsextension") {
+        flags.hasLocationExtension = true;
+        methodLike += 1;
+        continue;
+      }
+      if (isVendorExtensionName(name)) {
+        flags.hasUnrecognizedVendorExtension = true;
+        methodLike += 1;
+        continue;
+      }
+      if (isLocationMethodLike(name)) {
+        flags.hasUnrecognizedStandardProfile = true;
+        methodLike += 1;
+        continue;
+      }
+      nonMethod += 1;
     }
-    if (/location|tpeg|itinerary|area|linear|point/.test(name) && name.length > 3) {
-      flags.hasUnrecognizedLocationProfile = true;
+    if (flags.hasAlertCArea || flags.hasTpegLocation || flags.hasItinerary) {
+      flags.hasUnrecognizedStandardProfile = true;
     }
-  });
+    flags.hasUnrecognizedLocationProfile =
+      flags.hasUnrecognizedStandardProfile || flags.hasUnrecognizedVendorExtension;
+    flags.hasNonLocationChildrenOnly = methodLike === 0 && nonMethod > 0 && !flags.hasUnrecognizedLocationProfile;
+  }
 
   return flags;
 }
@@ -152,9 +298,10 @@ export const LCD_MISS_CLASS = Object.freeze({
 export function classifyLcdMissClass(table, locationCode) {
   const key = locationCode != null ? String(locationCode) : "";
   if (!key) return LCD_MISS_CLASS.ORPHAN_NOT_IN_LT;
-  const side = table && table.forensicLcdClass && typeof table.forensicLcdClass === "object"
-    ? table.forensicLcdClass
-    : null;
+  const side =
+    table && table.forensicLcdClass && typeof table.forensicLcdClass === "object"
+      ? table.forensicLcdClass
+      : null;
   const cls = side ? side[key] : null;
   if (cls === "P") return LCD_MISS_CLASS.POINT;
   if (cls === "L") return LCD_MISS_CLASS.SEGMENT;
@@ -164,21 +311,29 @@ export function classifyLcdMissClass(table, locationCode) {
   return LCD_MISS_CLASS.ORPHAN_NOT_IN_LT;
 }
 
-export const NO_SIGNAL_SUBTYPE = Object.freeze({
-  EMPTY_GROUP: "empty_group_of_locations",
-  UNRECOGNIZED_PROFILE: "unrecognized_location_profile",
-  OTHER: "other_no_signal",
-});
-
 /**
+ * Classify no-signal events only. Does not alter trust/resolver.
  * @param {object} presence
+ * @param {string} [trust]
  */
-export function chooseNoSignalSubtype(presence) {
+export function chooseNoSignalSubtype(presence, trust) {
   const p = presence || {};
-  if (p.hasAlertCArea || p.hasTpegLocation || p.hasItinerary || p.hasUnrecognizedLocationProfile) {
-    return NO_SIGNAL_SUBTYPE.UNRECOGNIZED_PROFILE;
+  if (p.groupOfLocationsEmpty === true) return NO_SIGNAL_SUBTYPE.EMPTY_LOCALIZATION;
+
+  if (p.hasLocationExtension && !p.hasUnrecognizedStandardProfile && !p.hasUnrecognizedVendorExtension) {
+    return NO_SIGNAL_SUBTYPE.LOCATION_EXTENSION_ONLY;
   }
-  if (p.groupOfLocationsEmpty) return NO_SIGNAL_SUBTYPE.EMPTY_GROUP;
+  if (p.hasUnrecognizedVendorExtension) return NO_SIGNAL_SUBTYPE.UNRECOGNIZED_VENDOR_EXTENSION;
+  if (
+    p.hasUnrecognizedStandardProfile ||
+    p.hasAlertCArea ||
+    p.hasTpegLocation ||
+    p.hasItinerary
+  ) {
+    return NO_SIGNAL_SUBTYPE.UNRECOGNIZED_STANDARD_PROFILE;
+  }
+  if (trust === "text") return NO_SIGNAL_SUBTYPE.TEXT_ONLY_LOCATION;
+  if (p.hasNonLocationChildrenOnly) return NO_SIGNAL_SUBTYPE.NO_LOCATION_ELEMENT;
   return NO_SIGNAL_SUBTYPE.OTHER;
 }
 
@@ -206,7 +361,6 @@ export function buildCoordinateProbe(locNode, extractedCoordinates) {
       }
     }
   }
-  // Business validity mirrors extractCoordinates success (identical acceptance rule).
   const valid = extractedCoordinates != null && validFromXml;
   return {
     present,
@@ -248,9 +402,10 @@ export function chooseLocationProfileBucket(presence, trust) {
  */
 export function classifyLcdMiss(table, locationCode, refKind) {
   const key = locationCode != null ? String(locationCode) : "";
-  const side = table && table.forensicLcdClass && typeof table.forensicLcdClass === "object"
-    ? table.forensicLcdClass
-    : null;
+  const side =
+    table && table.forensicLcdClass && typeof table.forensicLcdClass === "object"
+      ? table.forensicLcdClass
+      : null;
   const cls = key && side ? side[key] : null;
   if (cls === "L") return TMC_MISS_REASON.SEGMENT_LOOKUP_MISS;
   if (cls === "A") return TMC_MISS_REASON.AREA_LOOKUP_MISS;

@@ -89,7 +89,9 @@ export function situationToFeedItem(situation, opts = {}) {
   const locationProfileBucket = chooseLocationProfileBucket(presence, loc.trust);
   const supplementary = primary.supplementary || { present: false, classification: SUPPLEMENTARY_CLASS.ABSENT };
   const noSignalSubtype =
-    locationProfileBucket === "no_localization_signal" ? chooseNoSignalSubtype(presence) : null;
+    locationProfileBucket === "no_localization_signal"
+      ? chooseNoSignalSubtype(presence, loc.trust)
+      : null;
   const forensic = {
     ...presence,
     locationProfileBucket,

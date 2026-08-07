@@ -28,9 +28,21 @@ Authoritative sources used for this phase:
   classified as source-side incomplete/invalid, not invented geometry.
 - Segment/area name bridges must not set `tmcOk` without coordinates.
 
-## Forensic extensions in this cycle
+## Cycle 2 — no-signal unrecognized detector
 
-- Anonymous LCD miss class: `in_codes_only` | `orphan_not_in_lt` | P/L/A
-- Supplementary subtype: verifiable_standard | text_only | incomplete
-- No-signal subtype: empty_group | unrecognized_profile | other
-- Presence for `alertCArea` / TPEG / itinerary (unsupported until decoded)
+Root cause (proven on shadow `31196649894`): presence walk used a substring
+regex (`location|point|area|linear|…`) on every descendant name. That marked
+`LOC_HAS_UNRECOGNIZED≈3685` and forced all 432 no-signal events into
+`UNRECOGNIZED_PROFILE`, including events with known Alert-C / OpenLR /
+supplementary metadata children.
+
+Fix (instrumentation only):
+
+- Unrecognized applies only to **location method roots** that are DATEX
+  standard-but-unsupported or vendor extensions.
+- If any **known supported** profile is present, unrecognized stays false.
+- No-signal subtypes: empty / no_location_element / unrecognized_standard /
+  unrecognized_vendor / location_extension_only / other.
+
+Out of scope for this cycle: LOCATIONCODES-only LCD (42), supplementary (41),
+OpenLR, publication, trust changes.

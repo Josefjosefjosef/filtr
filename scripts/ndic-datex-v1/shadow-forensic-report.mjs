@@ -234,9 +234,18 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     incomplete: 0,
   };
   const noSignalSubtype = {
+    empty_localization: 0,
+    no_location_element: 0,
+    known_profile_but_no_usable_reference: 0,
+    unrecognized_standard_profile: 0,
+    unrecognized_vendor_extension: 0,
+    location_extension_only: 0,
+    text_only_location: 0,
+    structured_but_incomplete: 0,
+    other_no_signal: 0,
+    // legacy keys mapped during aggregation
     empty_group_of_locations: 0,
     unrecognized_location_profile: 0,
-    other_no_signal: 0,
   };
   let locHasAlertCArea = 0;
   let locHasTpeg = 0;
@@ -324,8 +333,17 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
         }
         if (profile === "no_localization_signal") {
           const st = String(forensic.noSignalSubtype || "other_no_signal");
-          if (Object.prototype.hasOwnProperty.call(noSignalSubtype, st)) noSignalSubtype[st] += 1;
-          else noSignalSubtype.other_no_signal += 1;
+          if (st === "empty_localization" || st === "empty_group_of_locations") {
+            noSignalSubtype.empty_localization += 1;
+            noSignalSubtype.empty_group_of_locations += 1;
+          } else if (st === "unrecognized_standard_profile" || st === "unrecognized_location_profile") {
+            noSignalSubtype.unrecognized_standard_profile += 1;
+            noSignalSubtype.unrecognized_location_profile += 1;
+          } else if (Object.prototype.hasOwnProperty.call(noSignalSubtype, st)) {
+            noSignalSubtype[st] += 1;
+          } else {
+            noSignalSubtype.other_no_signal += 1;
+          }
         }
       }
     }
@@ -730,8 +748,16 @@ export function buildShadowForensicBundle(ctx = {}) {
     SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION: m.supplementaryClass.verifiable_standard,
     SUPPLEMENTARY_TEXT_ONLY: m.supplementaryClass.text_only,
     SUPPLEMENTARY_INCOMPLETE: m.supplementaryClass.incomplete,
-    NO_SIGNAL_EMPTY_GROUP: m.noSignalSubtype.empty_group_of_locations,
-    NO_SIGNAL_UNRECOGNIZED_PROFILE: m.noSignalSubtype.unrecognized_location_profile,
+    NO_SIGNAL_EMPTY_GROUP: m.noSignalSubtype.empty_localization,
+    NO_SIGNAL_EMPTY_LOCALIZATION: m.noSignalSubtype.empty_localization,
+    NO_SIGNAL_NO_LOCATION_ELEMENT: m.noSignalSubtype.no_location_element,
+    NO_SIGNAL_KNOWN_PROFILE_BUT_NO_USABLE_REFERENCE: m.noSignalSubtype.known_profile_but_no_usable_reference,
+    NO_SIGNAL_UNRECOGNIZED_PROFILE: m.noSignalSubtype.unrecognized_standard_profile,
+    NO_SIGNAL_UNRECOGNIZED_STANDARD_PROFILE: m.noSignalSubtype.unrecognized_standard_profile,
+    NO_SIGNAL_UNRECOGNIZED_VENDOR_EXTENSION: m.noSignalSubtype.unrecognized_vendor_extension,
+    NO_SIGNAL_LOCATION_EXTENSION_ONLY: m.noSignalSubtype.location_extension_only,
+    NO_SIGNAL_TEXT_ONLY_LOCATION: m.noSignalSubtype.text_only_location,
+    NO_SIGNAL_STRUCTURED_BUT_INCOMPLETE: m.noSignalSubtype.structured_but_incomplete,
     NO_SIGNAL_OTHER: m.noSignalSubtype.other_no_signal,
     LOC_HAS_ALERTC_AREA: m.locHasAlertCArea,
     LOC_HAS_TPEG: m.locHasTpeg,
@@ -952,7 +978,15 @@ export function printShadowForensicStdout(summary, validationReport) {
       "SUPPLEMENTARY_TEXT_ONLY",
       "SUPPLEMENTARY_INCOMPLETE",
       "NO_SIGNAL_EMPTY_GROUP",
+      "NO_SIGNAL_EMPTY_LOCALIZATION",
+      "NO_SIGNAL_NO_LOCATION_ELEMENT",
+      "NO_SIGNAL_KNOWN_PROFILE_BUT_NO_USABLE_REFERENCE",
       "NO_SIGNAL_UNRECOGNIZED_PROFILE",
+      "NO_SIGNAL_UNRECOGNIZED_STANDARD_PROFILE",
+      "NO_SIGNAL_UNRECOGNIZED_VENDOR_EXTENSION",
+      "NO_SIGNAL_LOCATION_EXTENSION_ONLY",
+      "NO_SIGNAL_TEXT_ONLY_LOCATION",
+      "NO_SIGNAL_STRUCTURED_BUT_INCOMPLETE",
       "NO_SIGNAL_OTHER",
       "LOC_HAS_ALERTC_AREA",
       "LOC_HAS_TPEG",
