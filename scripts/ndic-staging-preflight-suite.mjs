@@ -26,6 +26,9 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-location-forensic-probe-fixtures",
   "iu-ndic-openlr-fixtures",
   "iu-ndic-remaining-location-gap-fixtures",
+  "iu-ndic-location-presentation-policy-fixtures",
+  "iu-ndic-traffic-publication-fixtures",
+  "iu-traffic-overview-ui-fixtures",
 ];
 
 const present = REQUIRED_WHEN_ANY_PRODUCT.filter((s) => Boolean(scripts[s]));

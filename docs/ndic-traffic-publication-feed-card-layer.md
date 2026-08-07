@@ -109,7 +109,28 @@ Only `PROVEN` when explicitly supplied from verified source opts. Estimation fla
 OFFICIAL_EVENT | VERIFIED_LOCATION | GENERAL_RSD_MAP | NONE
 ```
 
-No heuristic URL from internal IDs. Verified location does not emit raw coordinates into the projection.
+Priority: official event URL → verified precise location → general ŘSD map
+(for SCOPED / GENERAL / NONE). No heuristic URL from internal IDs. Verified
+location does not emit raw coordinates into the projection.
+
+## Location presentation levels (cards)
+
+Separates **subject scope** (“čeho se týká”) from **precise location**
+(“kde přesně”):
+
+| Level | Meaning |
+| --- | --- |
+| `PRECISE` | Verified geo (trust-backed publishable location) |
+| `SCOPED` | Verified road/admin subject without precise geometry |
+| `GENERAL` | Eligible event without usable subject scope |
+| `NONE` | No usable localization presentation |
+
+Cards without precise geometry **may still render** when publication
+eligibility holds. They must never invent km / direction / coordinates.
+`NEAR_ME` requires publishable location hashes (no text heuristics).
+`MY_ROUTES` may match scoped road as `SCOPE_ONLY` (must not claim precise hit).
+
+Policy module: `traffic-location-presentation-policy.mjs`.
 
 ## Freshness
 

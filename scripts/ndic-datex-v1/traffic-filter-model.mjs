@@ -68,6 +68,8 @@ export function matchesTemporalFilter(event, filter, opts = {}) {
 /**
  * Spatial filter prep — WHOLE_CZ always true when locationPublishable or not required.
  * MY_SELECTION / MY_ROUTES / NEAR_ME require explicit opaque allowlists (no geo heuristics).
+ * NEAR_ME requires precise publishable location hashes — never text/road heuristics.
+ * MY_ROUTES may match verified subject-scope road (SCOPE_ONLY) without claiming precise hit.
  */
 export function matchesSpatialFilter(event, filter, opts = {}) {
   switch (filter) {
@@ -78,14 +80,14 @@ export function matchesSpatialFilter(event, filter, opts = {}) {
       return set.has(event.eventIdHash);
     }
     case SPATIAL_FILTER.MY_ROUTES: {
-      // Opaque road-number allowlist only (already validated field)
+      // Opaque road-number allowlist only (already validated field) — no fuzzy/text match
       const roads = new Set(opts.routeRoadNumbers || []);
       const rn = event.fields && event.fields.roadNumber && event.fields.roadNumber.value;
       if (!rn || event.fields.roadNumber.validationStatus !== "validated") return false;
       return roads.has(String(rn));
     }
     case SPATIAL_FILTER.NEAR_ME: {
-      // Explicit opaque locationCodeHash allowlist only — no distance calc / geocoding
+      // Explicit opaque locationCodeHash allowlist only — no distance calc / geocoding / text
       const hashes = new Set(opts.nearLocationHashes || []);
       if (!event.locationPublishable) return false;
       return (event.locations || []).some(
@@ -95,6 +97,35 @@ export function matchesSpatialFilter(event, filter, opts = {}) {
     default:
       return false;
   }
+}
+
+/**
+ * Meta for UI copy: route match without pretending precise geometry hit.
+ */
+export function describeSpatialMatch(event, filter, opts = {}) {
+  const matched = matchesSpatialFilter(event, filter, opts);
+  if (!matched) {
+    return { matched: false, routeMatchMode: "NONE", nearMeEligible: false };
+  }
+  if (filter === SPATIAL_FILTER.NEAR_ME) {
+    return {
+      matched: true,
+      routeMatchMode: "NONE",
+      nearMeEligible: event.locationPublishable === true,
+    };
+  }
+  if (filter === SPATIAL_FILTER.MY_ROUTES) {
+    const precise = event.locationPublishable === true;
+    return {
+      matched: true,
+      routeMatchMode: precise ? "PRECISE_HIT" : "SCOPE_ONLY",
+      nearMeEligible: false,
+      scopeNoticeCs: precise
+        ? null
+        : "Událost se týká sledované komunikace, ale přesný úsek není v oficiálních datech znám.",
+    };
+  }
+  return { matched: true, routeMatchMode: "NONE", nearMeEligible: false };
 }
 
 export function applyTrafficFilters(events, opts = {}) {

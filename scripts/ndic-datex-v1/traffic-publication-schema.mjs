@@ -48,6 +48,17 @@ export function validateProjectionSchema(proj) {
   if (proj.publicationEnabled !== false) errors.push("publicationEnabled");
   if (proj.delayStatus && !MET.has(proj.delayStatus)) errors.push("delayStatus");
   if (typeof proj.fieldProvenance !== "object" || proj.fieldProvenance == null) errors.push("fieldProvenance");
+  if (proj.locationPresentationLevel != null) {
+    const levels = new Set(["PRECISE", "SCOPED", "GENERAL", "NONE"]);
+    if (!levels.has(proj.locationPresentationLevel)) errors.push("locationPresentationLevel");
+  }
+  if (proj.preciseLocationVerified === true && proj.kilometer === 0 && proj.roadNumber == null) {
+    // allow km 0 only with verified road context — otherwise suspicious
+  }
+  if (proj.preciseLocationVerified !== true) {
+    if (proj.kilometer != null) errors.push("unverified_km");
+    if (proj.direction != null) errors.push("unverified_direction");
+  }
   return { ok: errors.length === 0, errors };
 }
 

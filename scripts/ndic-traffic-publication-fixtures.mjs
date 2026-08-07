@@ -250,24 +250,35 @@ async function run() {
     ok("f12_ended_life", p.projection.lifecycleStatus === LIFECYCLE_STATUS.ENDED);
   }
 
-  // 13 unresolved location — no precise road
+  // 13 unresolved location — no precise geo; may still project without km/dir
   {
     const { event } = makeEvent({
       eventId: "unres",
       forceLocationPublishable: false,
       locationResolutionStatus: RESOLVER_STATUS.UNRESOLVED_MISSING_REFERENCE,
+      patchFields: {
+        roadNumber: provenanceField(null, "resolver", null, "not_available"),
+        direction: provenanceField(null, "resolver", null, "not_available"),
+        kilometer: provenanceField(null, "resolver", null, "not_available"),
+        coordinates: provenanceField(null, "resolver", null, "not_available"),
+        administrativeArea: provenanceField(null, "resolver", null, "not_available"),
+      },
     });
     const elig = evaluatePublicationEligibility(event, { requireLocation: true });
     ok("f13_unres_inelig", elig.eligibility === PUBLICATION_ELIGIBILITY.INELIGIBLE_UNRESOLVED_LOCATION);
     const elig2 = evaluatePublicationEligibility(event, {});
     ok("f13_unres_no_precise", elig2.locationPreciseAllowed === false);
     const p = buildTrafficPublicationProjection(event, {});
+    ok("f13_still_projectable", p.ok === true);
     if (p.ok) {
       ok("f13_no_road", p.projection.roadNumber == null);
       ok("f13_no_km", p.projection.kilometer == null);
-    } else {
-      ok("f13_no_road", true);
-      ok("f13_no_km", true);
+      ok(
+        "f13_presentation_general",
+        p.projection.locationPresentationLevel === "GENERAL" ||
+          p.projection.locationPresentationLevel === "NONE"
+      );
+      ok("f13_map_fallback", p.projection.mapLinkType === MAP_LINK_TYPE.GENERAL_RSD_MAP);
     }
   }
 
@@ -526,7 +537,12 @@ async function run() {
       }),
     });
     const p3 = buildTrafficPublicationProjection(e3);
-    ok("f40_map_general", p3.ok && p3.projection.mapLinkType === MAP_LINK_TYPE.GENERAL_RSD_MAP, p3.ok ? p3.projection.mapLinkType : p3.rejectCode);
+    // Precise location without deep-link coords → VERIFIED_LOCATION + general portal URL
+    ok(
+      "f40_map_verified_portal",
+      p3.ok && p3.projection.mapLinkType === MAP_LINK_TYPE.VERIFIED_LOCATION,
+      p3.ok ? p3.projection.mapLinkType : p3.rejectCode
+    );
 
     const { event: e4 } = makeEvent({ eventId: "map4", forceLocationPublishable: false });
     const p4 = buildTrafficPublicationProjection(e4, { allowGeneralMap: false });

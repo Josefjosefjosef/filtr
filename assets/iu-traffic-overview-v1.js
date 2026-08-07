@@ -88,6 +88,13 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "downloadedAt",
   "measurementTime",
   "sourceUpdatedAt",
+  "locationPresentationLevel",
+  "subjectScopeVerified",
+  "preciseLocationVerified",
+  "subjectScopeKind",
+  "subjectScopeLabel",
+  "locationDisclosureCs",
+  "routeMatchMode",
 ]);
 
 /**
@@ -159,6 +166,8 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   const locLabel =
     c.location != null ? c.location : c.locationLabel != null ? c.locationLabel : null;
   const road = c.road != null ? c.road : c.roadNumber != null ? c.roadNumber : null;
+  const precise = c.preciseLocationVerified === true;
+  const level = String(c.locationPresentationLevel || (precise ? "PRECISE" : "NONE"));
 
   const trafficV1 = {
     publicEventId,
@@ -167,10 +176,11 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     eventType: c.eventType || c.category || null,
     category: c.category || c.eventCategory || c.eventType || null,
     severity: c.severity || null,
-    road,
-    kilometer: c.kilometer != null ? c.kilometer : null,
-    section: c.section != null ? c.section : c.sectionLabel != null ? c.sectionLabel : null,
-    direction: c.direction != null ? c.direction : null,
+    road: road,
+    // Never surface km/dir/section unless precise location verified
+    kilometer: precise && c.kilometer != null ? c.kilometer : null,
+    section: precise && (c.section != null || c.sectionLabel != null) ? c.section || c.sectionLabel : null,
+    direction: precise && c.direction != null ? c.direction : null,
     location: locLabel,
     validity,
     impact: c.impact != null ? c.impact : c.impactSummary != null ? c.impactSummary : null,
@@ -191,6 +201,13 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     downloadedAt: c.downloadedAt || null,
     measurementTime: c.measurementTime || null,
     sourceUpdatedAt: c.sourceUpdatedAt || null,
+    locationPresentationLevel: level,
+    subjectScopeVerified: c.subjectScopeVerified === true,
+    preciseLocationVerified: precise,
+    subjectScopeKind: c.subjectScopeKind || null,
+    subjectScopeLabel: c.subjectScopeLabel || null,
+    locationDisclosureCs: c.locationDisclosureCs || null,
+    routeMatchMode: c.routeMatchMode || null,
     publicationEnabled: false,
   };
 
@@ -282,6 +299,9 @@ export function trafficBadgeModel(trafficV1) {
   }
   if (life === "CANCELLED" || change === "EVENT_CANCELLED") {
     return { kind: "ended", text: "Zrušeno", aria: "Zrušená dopravní událost" };
+  }
+  if (life === "FUTURE") {
+    return { kind: "future", text: "BUDOUCÍ", aria: "Budoucí dopravní událost" };
   }
   if (change === "VALIDITY_EXTENDED") {
     return { kind: "changed", text: "🟡 ZMĚNĚNÁ", aria: "Prodloužená dopravní událost" };

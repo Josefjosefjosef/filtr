@@ -20,6 +20,11 @@ import { evaluatePublicationEligibility } from "./traffic-publication-eligibilit
 import { buildPublicEventId } from "./traffic-public-event-id.mjs";
 import { DIRECTION, FRESHNESS } from "./datex-tmc-resolver-constants.mjs";
 import { EVENT_CHANGE_KIND } from "./traffic-event-aggregation-constants.mjs";
+import {
+  classifyLocationPresentation,
+  LOCATION_PRESENTATION_LEVEL,
+  SUBJECT_SCOPE_KIND,
+} from "./traffic-location-presentation-policy.mjs";
 
 const MAX_TEXT = 280;
 const MAX_LABEL = 120;
@@ -88,12 +93,19 @@ export function buildImpactSummary(event, feedChangeType) {
   return "Dopravní událost je evidována.";
 }
 
-export function buildFeedHeadline(feedChangeType, event, locationPrecise) {
+export function buildFeedHeadline(feedChangeType, event, locationPrecise, presentation = null) {
   const cat = String((fv(event, "trafficCategory") && fv(event, "trafficCategory").value) || "").toLowerCase();
   let road = null;
   if (locationPrecise) {
     const rn = fv(event, "roadNumber");
     if (rn && rn.validationStatus === "validated" && rn.value) road = String(rn.value);
+  } else if (
+    presentation &&
+    presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED &&
+    presentation.subjectScopeKind === SUBJECT_SCOPE_KIND.ROAD &&
+    presentation.subjectScopeLabel
+  ) {
+    road = String(presentation.subjectScopeLabel);
   }
   const loc = road ? ("na " + road) : "v evidované oblasti";
   if (feedChangeType === FEED_CHANGE_TYPE.EVENT_CREATED && /nehod|accident/.test(cat)) return clip("Nová nehoda " + loc, MAX_LABEL);
@@ -116,17 +128,18 @@ export function resolveMapTarget(event, locationPrecise, opts = {}) {
   if (locationPrecise) {
     const coords = fv(event, "coordinates");
     if (coords && coords.validationStatus === "validated" && coords.value && typeof coords.value.lat === "number") {
-      // Do not invent deep-link from internal id; only mark verified location availability
+      // Do not invent deep-link query params; verified location → official portal.
       return {
         mapLinkType: MAP_LINK_TYPE.VERIFIED_LOCATION,
         safeMapTarget: GENERAL_RSD_MAP_URL,
       };
     }
     return {
-      mapLinkType: MAP_LINK_TYPE.GENERAL_RSD_MAP,
+      mapLinkType: MAP_LINK_TYPE.VERIFIED_LOCATION,
       safeMapTarget: GENERAL_RSD_MAP_URL,
     };
   }
+  // SCOPED / GENERAL / NONE → general ŘSD map (never fake centering).
   if (opts.allowGeneralMap !== false) {
     return {
       mapLinkType: MAP_LINK_TYPE.GENERAL_RSD_MAP,
@@ -196,6 +209,7 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
   const changeStatus = deriveChangeStatus(feedChangeType);
   const publicEventId = buildPublicEventId(event.eventIdHash);
   const locationPrecise = elig.locationPreciseAllowed === true;
+  const presentation = classifyLocationPresentation(event, elig);
 
   const ts = event.sourceTimestamps || {};
   let lastMeaningful = fv(event, "lastMeaningfulChangeAt") && fv(event, "lastMeaningfulChangeAt").value;
@@ -221,14 +235,20 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     return p;
   };
 
+  // Precise geo fields only when precise; scoped may publish subject road/admin without km/dir.
   const roadNumber =
-    locationPrecise && fv(event, "roadNumber") && fv(event, "roadNumber").validationStatus === "validated"
+    presentation.showPreciseGeoFields && fv(event, "roadNumber") && fv(event, "roadNumber").validationStatus === "validated"
       ? putProv("roadNumber", fv(event, "roadNumber"), CONFIDENCE_CLASS.VERIFIED_RESOLVED_BASIC)
-      : null;
+      : presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED &&
+          presentation.subjectScopeKind === SUBJECT_SCOPE_KIND.ROAD &&
+          fv(event, "roadNumber") &&
+          fv(event, "roadNumber").validationStatus === "validated"
+        ? putProv("roadNumber", fv(event, "roadNumber"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
+        : null;
 
   const directionField = fv(event, "direction");
   const direction =
-    locationPrecise &&
+    presentation.showPreciseGeoFields &&
     directionField &&
     directionField.validationStatus === "validated" &&
     directionField.value !== DIRECTION.UNKNOWN &&
@@ -237,16 +257,25 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
       : null;
 
   const administrativeArea =
-    locationPrecise && fv(event, "administrativeArea") && fv(event, "administrativeArea").validationStatus === "validated"
+    presentation.showPreciseGeoFields &&
+    fv(event, "administrativeArea") &&
+    fv(event, "administrativeArea").validationStatus === "validated"
       ? putProv("administrativeArea", fv(event, "administrativeArea"), CONFIDENCE_CLASS.VERIFIED_RESOLVED_BASIC)
-      : null;
+      : presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED &&
+          presentation.subjectScopeKind === SUBJECT_SCOPE_KIND.ADMIN_AREA &&
+          fv(event, "administrativeArea") &&
+          fv(event, "administrativeArea").validationStatus === "validated"
+        ? putProv("administrativeArea", fv(event, "administrativeArea"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
+        : null;
 
-  // Coordinates: only when precise AND opts.includeCoordinates (default false for projection safety — map uses type)
+  // Coordinates: never emit into projection; map uses link type only
   let coordinatesPublished = false;
   void coordinatesPublished;
 
   const kilometer =
-    locationPrecise && fv(event, "kilometer") && fv(event, "kilometer").validationStatus === "validated"
+    presentation.showPreciseGeoFields &&
+    fv(event, "kilometer") &&
+    fv(event, "kilometer").validationStatus === "validated"
       ? putProv("kilometer", fv(event, "kilometer"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
       : null;
 
@@ -259,16 +288,17 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
 
   const map = resolveMapTarget(event, locationPrecise, opts);
   const impactSummary = buildImpactSummary(event, feedChangeType);
-  const feedHeadline = buildFeedHeadline(feedChangeType, event, locationPrecise);
+  const feedHeadline = buildFeedHeadline(feedChangeType, event, locationPrecise, presentation);
 
   putProv("status", fv(event, "status"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD);
   putProv("trafficCategory", fv(event, "trafficCategory"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD);
 
   const freshnessStatus = (fv(event, "freshness") && fv(event, "freshness").value) || FRESHNESS.UNKNOWN;
 
-  const locationLabel =
-    locationPrecise && roadNumber && roadNumber.value
-      ? clip(String(roadNumber.value), MAX_LABEL)
+  const locationLabel = presentation.showPreciseGeoFields
+    ? presentation.presentationRoad || presentation.presentationAdminArea
+    : presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED
+      ? presentation.subjectScopeLabel
       : null;
 
   const proj = {
@@ -282,7 +312,7 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     roadNumber: roadNumber ? roadNumber.value : null,
     roadName: null,
     kilometer: kilometer ? kilometer.value : null,
-    sectionLabel: opts.sectionLabel && locationPrecise ? clip(opts.sectionLabel, MAX_LABEL) : null,
+    sectionLabel: opts.sectionLabel && presentation.showPreciseGeoFields ? clip(opts.sectionLabel, MAX_LABEL) : null,
     direction: direction ? direction.value : null,
     locationLabel,
     administrativeArea: administrativeArea ? administrativeArea.value : null,
@@ -313,6 +343,13 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     fieldProvenance,
     publicationEligibility: elig.eligibility,
     publicationEnabled: false,
+    locationPresentationLevel: presentation.locationPresentationLevel,
+    subjectScopeVerified: presentation.subjectScopeVerified,
+    preciseLocationVerified: presentation.preciseLocationVerified,
+    subjectScopeKind: presentation.subjectScopeKind,
+    subjectScopeLabel: presentation.subjectScopeLabel,
+    locationDisclosureCs: presentation.locationDisclosureCs,
+    routeMatchMode: presentation.routeMatchMode,
   };
 
   // Reject invalid metric numbers

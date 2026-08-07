@@ -77,6 +77,26 @@ export const MAP_LINK_TYPE = Object.freeze({
   NONE: "NONE",
 });
 
+/** Presentation certainty — separate from resolver trust. */
+export const LOCATION_PRESENTATION_LEVEL = Object.freeze({
+  PRECISE: "PRECISE",
+  SCOPED: "SCOPED",
+  GENERAL: "GENERAL",
+  NONE: "NONE",
+});
+
+export const SUBJECT_SCOPE_KIND = Object.freeze({
+  ROAD: "ROAD",
+  ADMIN_AREA: "ADMIN_AREA",
+  NONE: "NONE",
+});
+
+export const ROUTE_MATCH_MODE = Object.freeze({
+  PRECISE_HIT: "PRECISE_HIT",
+  SCOPE_ONLY: "SCOPE_ONLY",
+  NONE: "NONE",
+});
+
 export const METRIC_STATUS = Object.freeze({
   PROVEN: "PROVEN",
   NOT_AVAILABLE: "NOT_AVAILABLE",
@@ -157,6 +177,13 @@ export const PUBLIC_PROJECTION_ALLOWLIST = Object.freeze([
   "fieldProvenance",
   "publicationEligibility",
   "publicationEnabled",
+  "locationPresentationLevel",
+  "subjectScopeVerified",
+  "preciseLocationVerified",
+  "subjectScopeKind",
+  "subjectScopeLabel",
+  "locationDisclosureCs",
+  "routeMatchMode",
 ]);
 
 export const FORBIDDEN_PUBLIC_SUBSTRINGS = Object.freeze([

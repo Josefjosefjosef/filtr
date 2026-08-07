@@ -528,7 +528,13 @@ function renderItem(ev) {
         : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
   const region = isTraffic
-    ? String((ev.trafficV1 && (ev.trafficV1.location || ev.trafficV1.road)) || "")
+    ? String(
+        (ev.trafficV1 &&
+          (ev.trafficV1.preciseLocationVerified
+            ? ev.trafficV1.location || ev.trafficV1.road
+            : ev.trafficV1.subjectScopeLabel || ev.trafficV1.road || "")) ||
+          ""
+      )
     : ev.capV2
       ? String(regionFiltered || "")
       : ev.region && (ev.region.summary || ev.region.name)
@@ -619,13 +625,23 @@ function renderItem(ev) {
   if (isTraffic) {
     const tv = ev.trafficV1;
     const bits = [];
-    if (tv.road) bits.push(String(tv.road));
-    if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
-    if (tv.section) bits.push(String(tv.section));
-    if (tv.direction) bits.push(String(tv.direction));
+    const precise = tv.preciseLocationVerified === true;
+    if (tv.locationDisclosureCs) {
+      bits.push(String(tv.locationDisclosureCs));
+    } else if (precise) {
+      if (tv.road) bits.push(String(tv.road));
+      if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
+      if (tv.section) bits.push(String(tv.section));
+      if (tv.direction) bits.push(String(tv.direction));
+    } else if (tv.road || tv.subjectScopeLabel) {
+      bits.push("Týká se komunikace " + String(tv.road || tv.subjectScopeLabel));
+    }
     if (tv.impact) bits.push(String(tv.impact));
     if (tv.freshness) bits.push("Čerstvost: " + String(tv.freshness));
     if (tv.changeTimeSource === "DOWNLOAD_FALLBACK") bits.push("čas změny: fallback stažení");
+    if (tv.routeMatchMode === "SCOPE_ONLY") {
+      bits.push("Událost se týká sledované komunikace, ale přesný úsek není v oficiálních datech znám.");
+    }
     const hist = trafficHistoryLines(tv);
     if (hist.length) bits.push("Historie: " + hist.join(", "));
     trafficMetaExtra = bits

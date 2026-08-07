@@ -41,6 +41,18 @@ export function buildTrafficCardProjection(publicationProjection) {
     publicationEligibility: p.publicationEligibility,
     publicationEnabled: false,
     liveCardEnabled: PUBLICATION_LAYER_FLAGS.TRAFFIC_CARDS_LIVE_ENABLED,
+    locationPresentationLevel: p.locationPresentationLevel || null,
+    subjectScopeVerified: p.subjectScopeVerified === true,
+    preciseLocationVerified: p.preciseLocationVerified === true,
+    subjectScopeKind: p.subjectScopeKind || null,
+    subjectScopeLabel: p.subjectScopeLabel || null,
+    locationDisclosureCs: p.locationDisclosureCs || null,
+    routeMatchMode: p.routeMatchMode || null,
+    lastMeaningfulChangeAt: p.lastMeaningfulChangeAt || null,
+    changeTimeSource: p.changeTimeSource || null,
+    downloadedAt: p.downloadedAt || null,
+    sourceUpdatedAt: p.sourceUpdatedAt || null,
+    measurementTime: p.measurementTime || null,
   });
   return { ok: true, card };
 }

@@ -92,6 +92,36 @@ ok("flag_no_locs", TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_LOCALITIES === false)
   ok("proj_pub_off", r.item.publicationEnabled === false);
 }
 
+{
+  const scoped = sampleCard({
+    kilometer: 12,
+    direction: "positive",
+    preciseLocationVerified: false,
+    subjectScopeVerified: true,
+    locationPresentationLevel: "SCOPED",
+    subjectScopeKind: "ROAD",
+    subjectScopeLabel: "D0",
+    locationDisclosureCs:
+      "Týká se komunikace D0. Přesná poloha není v oficiálních datech jednoznačně určena.",
+    routeMatchMode: "SCOPE_ONLY",
+  });
+  const r = trafficProjectionToFeedItem(scoped);
+  ok("scoped_ui_ok", r.ok === true);
+  ok("scoped_ui_no_km", r.item.trafficV1.kilometer == null);
+  ok("scoped_ui_no_dir", r.item.trafficV1.direction == null);
+  ok("scoped_ui_level", r.item.trafficV1.locationPresentationLevel === "SCOPED");
+  ok("scoped_ui_disclosure", /Týká se komunikace D0/.test(r.item.trafficV1.locationDisclosureCs || ""));
+  ok(
+    "scoped_map_general",
+    resolveSafeTrafficMapUrl(r.item.trafficV1.mapTarget).includes("dopravniinfo.cz")
+  );
+}
+
+{
+  const future = trafficBadgeModel({ lifecycleStatus: "FUTURE", feed: { feedChangeType: "EVENT_CREATED" } });
+  ok("badge_future", future.text === "BUDOUCÍ");
+}
+
 ok("derive_whole", deriveSpatialModeFromSharedPrefs({}) === TRAFFIC_SPATIAL.WHOLE_CZ);
 ok(
   "derive_near",
