@@ -15,8 +15,10 @@ import {
   MAX_RETAINED_IGNORED_ENTRY_METADATA,
   MAX_RETAINED_UNKNOWN_ENTRY_METADATA,
   MAX_ROOT_INVENTORY_ROWS,
+  MAX_PREDEFINED_REF_DIGEST_ROWS,
   ENTRY_META_ALLOWLIST,
   ROOT_INVENTORY_ROW_ALLOWLIST,
+  PREDEFINED_REF_DIGEST_ROW_ALLOWLIST,
   ENTRY_CLASSIFICATION_ENUM,
   ENTRY_REASON_ENUM,
   HTTP_STATUS_CLASS,
@@ -32,6 +34,31 @@ function isSha40(s) {
 
 function isNonNegInt(n, max = MAX_EVENT_COUNT) {
   return Number.isInteger(n) && n >= 0 && n <= max;
+}
+
+function validatePredefinedRefDigestArray(arr, prefix, maxItems, fails) {
+  if (!Array.isArray(arr)) {
+    fails.push(prefix + "_not_array");
+    return;
+  }
+  if (arr.length > maxItems) {
+    fails.push(prefix + "_OVERFLOW");
+    return;
+  }
+  for (let i = 0; i < arr.length; i++) {
+    const e = arr[i];
+    if (!e || typeof e !== "object" || Array.isArray(e)) {
+      fails.push(prefix + "[" + i + "]");
+      continue;
+    }
+    for (const k of Object.keys(e)) {
+      if (!PREDEFINED_REF_DIGEST_ROW_ALLOWLIST.includes(k)) fails.push(prefix + "_extra:" + k);
+    }
+    if (typeof e.digest !== "string" || !/^[a-f0-9]{16}$/.test(e.digest)) {
+      fails.push(prefix + "_digest");
+    }
+    if (!isNonNegInt(e.count)) fails.push(prefix + "_count");
+  }
 }
 
 function validateRootInventoryArray(arr, prefix, maxItems, fails) {
@@ -375,6 +402,17 @@ export function validateForensicSummary(summary) {
     "VENDOR_CLASS_TEXT_ONLY_EXTENSION",
     "VENDOR_CLASS_UNKNOWN_EXTENSION",
     "VENDOR_CLASS_TOTAL",
+    "PREDEFINED_REF_TOTAL",
+    "PREDEFINED_REF_HAS_ID",
+    "PREDEFINED_REF_HAS_VERSION",
+    "PREDEFINED_REF_HAS_SET_HINT",
+    "PLS_DATASETS_CHECKED_COUNT",
+    "PLS_MATCHED_TO_CATALOG",
+    "PLS_UNMATCHED_TO_CATALOG",
+    "PLS_MULTIPLE_CATALOG_MATCH",
+    "PLS_CATALOG_BINDING_PROVEN_TOTAL",
+    "PLS_LOCATION_RECORD_EXISTS_TOTAL",
+    "PLS_VERIFIED_LOCATION_POSSIBLE_TOTAL",
     "OPENLR_INPUT_TOTAL",
     "OPENLR_RESOLVED_TOTAL",
     "OPENLR_AMBIGUOUS_TOTAL",
@@ -403,6 +441,15 @@ export function validateForensicSummary(summary) {
   if (typeof summary.VENDOR_ROOT_INVENTORY_TRUNCATED !== "boolean") {
     fails.push("VENDOR_ROOT_INVENTORY_TRUNCATED");
   }
+  if (typeof summary.PREDEFINED_REF_DIGEST_INVENTORY_TRUNCATED !== "boolean") {
+    fails.push("PREDEFINED_REF_DIGEST_INVENTORY_TRUNCATED");
+  }
+  if (typeof summary.PLS_CATALOG_CHECK_PERFORMED !== "boolean") {
+    fails.push("PLS_CATALOG_CHECK_PERFORMED");
+  }
+  if (summary.COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF !== false) {
+    fails.push("COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF_must_be_false");
+  }
   validateRootInventoryArray(
     summary.STANDARD_ROOT_INVENTORY,
     "STANDARD_ROOT_INVENTORY",
@@ -413,6 +460,12 @@ export function validateForensicSummary(summary) {
     summary.VENDOR_ROOT_INVENTORY,
     "VENDOR_ROOT_INVENTORY",
     MAX_ROOT_INVENTORY_ROWS,
+    fails
+  );
+  validatePredefinedRefDigestArray(
+    summary.PREDEFINED_REF_DIGEST_INVENTORY,
+    "PREDEFINED_REF_DIGEST_INVENTORY",
+    MAX_PREDEFINED_REF_DIGEST_ROWS,
     fails
   );
   if (
@@ -435,6 +488,25 @@ export function validateForensicSummary(summary) {
     summary.VENDOR_CLASS_TOTAL !== summary.NO_SIGNAL_UNRECOGNIZED_VENDOR_EXTENSION
   ) {
     fails.push("VENDOR_CLASS_TOTAL_MISMATCH");
+  }
+  if (
+    Number.isInteger(summary.PREDEFINED_REF_TOTAL) &&
+    Number.isInteger(summary.PLS_MATCHED_TO_CATALOG) &&
+    Number.isInteger(summary.PLS_UNMATCHED_TO_CATALOG) &&
+    Number.isInteger(summary.PLS_MULTIPLE_CATALOG_MATCH) &&
+    summary.PLS_MATCHED_TO_CATALOG +
+      summary.PLS_UNMATCHED_TO_CATALOG +
+      summary.PLS_MULTIPLE_CATALOG_MATCH !==
+      summary.PREDEFINED_REF_TOTAL
+  ) {
+    fails.push("PLS_MATCH_SUM_MISMATCH");
+  }
+  if (
+    Number.isInteger(summary.PREDEFINED_REF_HAS_ID) &&
+    Number.isInteger(summary.PREDEFINED_REF_TOTAL) &&
+    summary.PREDEFINED_REF_HAS_ID > summary.PREDEFINED_REF_TOTAL
+  ) {
+    fails.push("PREDEFINED_REF_HAS_ID_OVERFLOW");
   }
 
   for (const b of [

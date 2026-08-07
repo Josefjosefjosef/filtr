@@ -60,6 +60,31 @@ Retained forensic fields (count-only):
 - `VENDOR_ROOT_INVENTORY[]` — `{ localName, count }` (sum must equal 413 on feed)
 - `VENDOR_CLASS_*` — classification totals (sum must equal 413)
 
+Shadow `31201488621` confirmed:
+
+- 6× `predefinedLocationReference`
+- 413× `linearExtension` (`TEXT_ONLY_EXTENSION`)
+
+## Cycle 4 / 4b — predefinedLocationReference binding
+
+Authoritative NDIC common traffic profile
+(`x-format:cz-ndic_d2-common-v1.1`,
+https://registr.dopravniinfo.cz/cs/docs/x-format/cz-ndic_d2-common-v1.1-cs.pdf):
+
+> Polohy … nelze připravit. Z toho důvodu nelze využít popis pomocí odkazu
+> na PrefefinedLocationPublication. … vždy vnořené popisy … Point nebo Linear.
+
+Therefore:
+
+- `COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF=false`
+- NDIC **does** publish separate PLS catalogs for status-oriented products
+  (FCD / traffic-status / weather), but they are **not** the related source of
+  `cz-ndic_d2-common-pull` (related = TMC LT v11 only).
+- Cycle 4b retains anonymized digests only (`PREDEFINED_REF_*`) and optional
+  in-memory PLS digest matching (`IU_NDIC_PLS_FORENSIC_URLS` / XML paths).
+- Even a digest hit cannot authorize trust/resolver for this publication
+  while the profile forbids PLS references.
+
 ### Documentation references (authoritative)
 
 | Profile / root | STANDARD_OR_VENDOR | LOCATION_SEMANTICS | Docs |
@@ -70,6 +95,7 @@ Retained forensic fields (count-only):
 | `areaLocation` | STANDARD | DATEX area container | https://docs.datex2.eu/levels/mastering/location/ |
 | `tpegPointLocation` / `tpegLinearLocation` / `tpegAreaLocation` / `tpegFramedPoint` | STANDARD | TPEG location package | DATEX II Location referencing / TPEG |
 | `itinerary` / `itineraryByReference` | STANDARD | multi-point itinerary | DATEX II Location |
+| `predefinedLocationReference` | STANDARD ref | requires PredefinedLocationsPublication | DATEX II + NDIC common profile forbids for SituationPublication common |
 | `groupOfLocationsExtension` / `locationExtension` | STANDARD extension type | DATEX extension wrapper | DATEX II Location package XSD |
 | NDIC / ŘSD `ndic*` / `rsd*` / `cze*` roots | VENDOR | vendor-specific | NDIC DATEX profile (ŘSD) |
 

@@ -114,6 +114,7 @@ export function situationToFeedItem(situation, opts = {}) {
       : null,
     noSignalSubtype,
     rootInventory: primary.rootInventory || null,
+    predefinedRef: primary.predefinedRef || null,
     ...(loc.forensic || {}),
   };
   const life = classifyTrafficLifecycle({

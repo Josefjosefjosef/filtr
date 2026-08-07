@@ -16,9 +16,13 @@ export const FORENSIC_CARD_PREVIEW_FILE = "ndic-shadow-card-preview.json";
 export const FORENSIC_VALIDATION_FILE = "ndic-shadow-validation-report.json";
 
 export const MAX_ROOT_INVENTORY_ROWS = 64;
+export const MAX_PREDEFINED_REF_DIGEST_ROWS = 32;
 
 /** Allowlist for count-only root inventory rows (local-name + count only). */
 export const ROOT_INVENTORY_ROW_ALLOWLIST = Object.freeze(["localName", "count"]);
+
+/** Allowlist for anonymized predefinedLocationReference digest rows. */
+export const PREDEFINED_REF_DIGEST_ROW_ALLOWLIST = Object.freeze(["digest", "count"]);
 
 /** Max DATEX body bytes accepted in forensic summary (real feeds exceed 50MiB). */
 export const MAX_DATEX_BYTES_READ = 512_000_000;
@@ -236,6 +240,21 @@ export const FORENSIC_SUMMARY_ALLOWLIST = Object.freeze([
   "VENDOR_CLASS_TEXT_ONLY_EXTENSION",
   "VENDOR_CLASS_UNKNOWN_EXTENSION",
   "VENDOR_CLASS_TOTAL",
+  "PREDEFINED_REF_TOTAL",
+  "PREDEFINED_REF_HAS_ID",
+  "PREDEFINED_REF_HAS_VERSION",
+  "PREDEFINED_REF_HAS_SET_HINT",
+  "PREDEFINED_REF_DIGEST_INVENTORY",
+  "PREDEFINED_REF_DIGEST_INVENTORY_TRUNCATED",
+  "PLS_CATALOG_CHECK_PERFORMED",
+  "PLS_DATASETS_CHECKED_COUNT",
+  "PLS_MATCHED_TO_CATALOG",
+  "PLS_UNMATCHED_TO_CATALOG",
+  "PLS_MULTIPLE_CATALOG_MATCH",
+  "PLS_CATALOG_BINDING_PROVEN_TOTAL",
+  "PLS_LOCATION_RECORD_EXISTS_TOTAL",
+  "PLS_VERIFIED_LOCATION_POSSIBLE_TOTAL",
+  "COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF",
   "OPENLR_INPUT_TOTAL",
   "OPENLR_RESOLVED_TOTAL",
   "OPENLR_AMBIGUOUS_TOTAL",

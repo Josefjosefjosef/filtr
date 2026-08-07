@@ -263,6 +263,13 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     TEXT_ONLY_EXTENSION: 0,
     UNKNOWN_EXTENSION: 0,
   };
+  const predefinedRef = {
+    total: 0,
+    hasId: 0,
+    hasVersion: 0,
+    hasSetHint: 0,
+    digests: new Map(),
+  };
 
   function bumpRootMap(map, name) {
     const key = String(name || "")
@@ -366,6 +373,20 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
                 ? ri.standardRootNames
                 : [ri.primaryStandardLocalName || "unknown_root"];
             bumpRootMap(standardRootCounts, names[0]);
+            const pref = forensic.predefinedRef || null;
+            const isPredef =
+              String(names[0] || "") === "predefinedlocationreference" ||
+              (pref && (pref.hasId === true || pref.count > 0));
+            if (isPredef) {
+              predefinedRef.total += 1;
+              if (pref && pref.hasId === true) predefinedRef.hasId += 1;
+              if (pref && pref.hasVersion === true) predefinedRef.hasVersion += 1;
+              if (pref && pref.hasSetHint === true) predefinedRef.hasSetHint += 1;
+              const dig = pref && typeof pref.idDigest === "string" ? pref.idDigest : "";
+              if (/^[a-f0-9]{16}$/.test(dig)) {
+                predefinedRef.digests.set(dig, (predefinedRef.digests.get(dig) || 0) + 1);
+              }
+            }
           } else if (st === "unrecognized_vendor_extension") {
             noSignalSubtype.unrecognized_vendor_extension += 1;
             const ri = forensic.rootInventory || {};
@@ -449,6 +470,10 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
   const standardRootInventory = inventoryFromMap(standardRootCounts);
   const vendorRootInventory = inventoryFromMap(vendorRootCounts);
   const vendorClassTotal = Object.values(vendorClassCounts).reduce((a, b) => a + b, 0);
+  const predefinedRefDigestRows = [...predefinedRef.digests.entries()]
+    .map(([digest, count]) => ({ digest, count }))
+    .sort((a, b) => b.count - a.count || a.digest.localeCompare(b.digest))
+    .slice(0, 32);
 
   return {
     active,
@@ -503,6 +528,13 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     vendorRootInventory,
     vendorClassCounts,
     vendorClassTotal,
+    predefinedRef: {
+      total: predefinedRef.total,
+      hasId: predefinedRef.hasId,
+      hasVersion: predefinedRef.hasVersion,
+      hasSetHint: predefinedRef.hasSetHint,
+      digestRows: predefinedRefDigestRows,
+    },
   };
 }
 
@@ -835,6 +867,22 @@ export function buildShadowForensicBundle(ctx = {}) {
     VENDOR_CLASS_TEXT_ONLY_EXTENSION: m.vendorClassCounts.TEXT_ONLY_EXTENSION,
     VENDOR_CLASS_UNKNOWN_EXTENSION: m.vendorClassCounts.UNKNOWN_EXTENSION,
     VENDOR_CLASS_TOTAL: m.vendorClassTotal,
+    PREDEFINED_REF_TOTAL: m.predefinedRef.total,
+    PREDEFINED_REF_HAS_ID: m.predefinedRef.hasId,
+    PREDEFINED_REF_HAS_VERSION: m.predefinedRef.hasVersion,
+    PREDEFINED_REF_HAS_SET_HINT: m.predefinedRef.hasSetHint,
+    PREDEFINED_REF_DIGEST_INVENTORY: m.predefinedRef.digestRows,
+    PREDEFINED_REF_DIGEST_INVENTORY_TRUNCATED: m.predefinedRef.digestRows.length >= 32,
+    PLS_CATALOG_CHECK_PERFORMED: Boolean(ctx.plsCatalogCheckPerformed),
+    PLS_DATASETS_CHECKED_COUNT: Number(ctx.plsDatasetsCheckedCount) || 0,
+    PLS_MATCHED_TO_CATALOG: Number(ctx.plsMatched) || 0,
+    PLS_UNMATCHED_TO_CATALOG:
+      Number.isFinite(ctx.plsUnmatched) ? Number(ctx.plsUnmatched) : m.predefinedRef.total,
+    PLS_MULTIPLE_CATALOG_MATCH: Number(ctx.plsMultiple) || 0,
+    PLS_CATALOG_BINDING_PROVEN_TOTAL: Number(ctx.plsCatalogBindingProven) || 0,
+    PLS_LOCATION_RECORD_EXISTS_TOTAL: Number(ctx.plsLocationRecordExists) || 0,
+    PLS_VERIFIED_LOCATION_POSSIBLE_TOTAL: Number(ctx.plsVerifiedLocationPossible) || 0,
+    COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF: false,
     OPENLR_INPUT_TOTAL: m.openlr.input,
     OPENLR_RESOLVED_TOTAL: m.openlr.resolved,
     OPENLR_AMBIGUOUS_TOTAL: m.openlr.ambiguous,
@@ -1075,6 +1123,17 @@ export function printShadowForensicStdout(summary, validationReport) {
       "VENDOR_CLASS_TEXT_ONLY_EXTENSION",
       "VENDOR_CLASS_UNKNOWN_EXTENSION",
       "VENDOR_CLASS_TOTAL",
+      "PREDEFINED_REF_TOTAL",
+      "PREDEFINED_REF_HAS_ID",
+      "PREDEFINED_REF_HAS_VERSION",
+      "PREDEFINED_REF_HAS_SET_HINT",
+      "PLS_DATASETS_CHECKED_COUNT",
+      "PLS_MATCHED_TO_CATALOG",
+      "PLS_UNMATCHED_TO_CATALOG",
+      "PLS_MULTIPLE_CATALOG_MATCH",
+      "PLS_CATALOG_BINDING_PROVEN_TOTAL",
+      "PLS_LOCATION_RECORD_EXISTS_TOTAL",
+      "PLS_VERIFIED_LOCATION_POSSIBLE_TOTAL",
       "OPENLR_INPUT_TOTAL",
       "OPENLR_RESOLVED_TOTAL",
       "OPENLR_AMBIGUOUS_TOTAL",

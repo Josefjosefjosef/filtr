@@ -51,6 +51,13 @@ import {
   writeShadowForensicBundle,
   printShadowForensicStdout,
 } from "./ndic-datex-v1/shadow-forensic-report.mjs";
+import {
+  buildPlsDigestIndexFromXml,
+  matchPredefinedRefsToPls,
+  DOCUMENTED_PLS_DATASETS,
+  COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF,
+} from "./ndic-datex-v1/predefined-location-ref-forensics.mjs";
+import { parseSafeXml, attrOf, descendantsNamed } from "./ndic-datex-v1/safe-xml.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
@@ -103,12 +110,114 @@ function isNdicItem(item) {
 }
 
 /**
+ * Optional forensic-only PLS catalog digest index (shadow). Never persists raw XML.
+ * URLs: IU_NDIC_PLS_FORENSIC_URLS=comma-separated HTTPS mobilitydata.rsd.cz pull URLs.
+ */
+async function maybeBuildPlsForensicIndexes(config, diagnostics) {
+  const raw = String(process.env.IU_NDIC_PLS_FORENSIC_URLS || "").trim();
+  const paths = String(process.env.IU_NDIC_PLS_FORENSIC_XML_PATHS || "").trim();
+  const indexes = [];
+  const checked = [];
+  diagnostics.plsForensic = {
+    documentedDatasets: DOCUMENTED_PLS_DATASETS.map((d) => d.name),
+    commonTrafficProfileAllowsPlsRef: COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF,
+    fetched: false,
+  };
+  if (paths) {
+    for (const p of paths.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 8)) {
+      try {
+        const xml = fs.readFileSync(p, "utf8");
+        const name = path.basename(p).slice(0, 64) || "pls_file";
+        const idx = buildPlsDigestIndexFromXml(xml, name, { parseSafeXml, attrOf, descendantsNamed });
+        indexes.push(idx);
+        checked.push({ name, locationCount: idx.locationCount, source: "file" });
+      } catch (e) {
+        checked.push({ name: path.basename(p), error: "pls_file_read_failed" });
+      }
+    }
+    diagnostics.plsForensic.fetched = indexes.length > 0;
+    diagnostics.plsForensic.checked = checked;
+    return indexes;
+  }
+  if (!raw) {
+    diagnostics.plsForensic.checked = DOCUMENTED_PLS_DATASETS.map((d) => ({
+      name: d.name,
+      source: "registry_docs_only",
+      locationCount: null,
+    }));
+    return indexes;
+  }
+  if (!config.hasCredentials) {
+    diagnostics.plsForensic.skipped = true;
+    diagnostics.plsForensic.reason = "no_datex_credentials";
+    return indexes;
+  }
+  const urls = raw.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 8);
+  const token = Buffer.from(`${config.pullUser}:${config.pullPass}`, "utf8").toString("base64");
+  for (let i = 0; i < urls.length; i += 1) {
+    const url = urls[i];
+    try {
+      assertAllowedPullUrl(url);
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "User-Agent": config.userAgent,
+          Authorization: `Basic ${token}`,
+          Accept: "application/xml, text/xml, */*",
+        },
+        redirect: "error",
+      });
+      if (res.status < 200 || res.status >= 300) {
+        checked.push({ name: "pls_url_" + i, error: "http_" + res.status });
+        continue;
+      }
+      const xml = await res.text();
+      const name = "pls_url_" + i;
+      const idx = buildPlsDigestIndexFromXml(xml, name, { parseSafeXml, attrOf, descendantsNamed });
+      indexes.push(idx);
+      checked.push({ name, locationCount: idx.locationCount, source: "url", httpStatus: res.status });
+    } catch (e) {
+      checked.push({ name: "pls_url_" + i, error: "pls_fetch_failed" });
+    }
+  }
+  diagnostics.plsForensic.fetched = indexes.length > 0;
+  diagnostics.plsForensic.checked = checked;
+  return indexes;
+}
+
+/**
  * Isolated shadow only: write redacted forensic artifacts + safe stdout metrics.
  * Never retains raw DATEX/TMC/auth. Never commits to repo.
  */
 function attachShadowForensicRetention(ret, ctx = {}) {
   if (!ret || ret.mode !== "shadow" || !isShadowIsolated()) return ret;
   const finishedAt = new Date().toISOString();
+  const gateItems = Array.isArray(ctx.gateItems) ? ctx.gateItems : [];
+  const refs = [];
+  for (const it of gateItems) {
+    const forensic = (it && it.ndicV1 && it.ndicV1.forensic) || {};
+    if (forensic.noSignalSubtype !== "unrecognized_standard_profile") continue;
+    const ri = forensic.rootInventory || {};
+    const pref = forensic.predefinedRef || null;
+    const name = String(ri.primaryStandardLocalName || "");
+    if (name !== "predefinedlocationreference" && !(pref && pref.hasId)) continue;
+    refs.push({
+      idDigest: pref && pref.idDigest ? pref.idDigest : "",
+      versionDigest: pref && pref.versionDigest ? pref.versionDigest : "",
+    });
+  }
+  const indexes = Array.isArray(ctx.plsIndexes) ? ctx.plsIndexes : [];
+  const checkPerformed = indexes.length > 0;
+  const match = checkPerformed
+    ? matchPredefinedRefsToPls(refs, indexes)
+    : {
+        matched: 0,
+        unmatched: refs.length,
+        multiple: 0,
+        catalogBindingProven: 0,
+        locationRecordExists: 0,
+        verifiedLocationPossible: 0,
+      };
   const bundle = buildShadowForensicBundle({
     ok: Boolean(ret.ok),
     reason: ret.reason || (ret.ok ? "ok" : "failed"),
@@ -127,6 +236,16 @@ function attachShadowForensicRetention(ret, ctx = {}) {
     datexHttpStatus: ctx.datexHttpStatus,
     datexContentTypeValid: ctx.datexContentTypeValid,
     geocodingUsed: false,
+    plsCatalogCheckPerformed: checkPerformed,
+    plsDatasetsCheckedCount: checkPerformed
+      ? indexes.length
+      : DOCUMENTED_PLS_DATASETS.length,
+    plsMatched: match.matched,
+    plsUnmatched: match.unmatched,
+    plsMultiple: match.multiple,
+    plsCatalogBindingProven: match.catalogBindingProven,
+    plsLocationRecordExists: match.locationRecordExists,
+    plsVerifiedLocationPossible: match.verifiedLocationPossible,
   });
   const dir = resolveForensicDir(ctx.forensicDir);
   writeShadowForensicBundle(dir, bundle);
@@ -336,6 +455,11 @@ export async function runNdicDatexV1Sync(opts = {}) {
     writeJson(TMC_STORE_FILE, tmcStore);
     writeJson(paths.tmcMetaFile, tmcPublicMeta(tmcStore));
 
+    let plsIndexes = [];
+    if (isShadowIsolated() && config.mode === "shadow") {
+      plsIndexes = await maybeBuildPlsForensicIndexes(config, diagnostics);
+    }
+
     const discoveryKind =
       opts.fixtureFiles || process.env.IU_NDIC_DISCOVERY === "fixture"
         ? "fixture"
@@ -411,6 +535,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
           datexBytesRead: 0,
           datexHttpStatus: resp.status,
           datexContentTypeValid: true,
+          plsIndexes,
         }
       );
     }
@@ -422,7 +547,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
       writeJson(paths.diagFile, diagnostics);
       return attachShadowForensicRetention(
         { ok: false, reason: cond.action, mode: config.mode, diagnostics, published: false },
-        { startedAt: started, datexHttpStatus: resp.status }
+        { startedAt: started, datexHttpStatus: resp.status, plsIndexes }
       );
     }
 
@@ -459,6 +584,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
           datexBytesRead: typeof body === "string" ? Buffer.byteLength(body, "utf8") : 0,
           datexHttpStatus: resp.status,
           datexContentTypeValid: true,
+          plsIndexes,
         }
       );
     }
@@ -566,6 +692,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
         datexBytesRead,
         datexHttpStatus: resp.status,
         datexContentTypeValid: true,
+        plsIndexes,
       }
     );
   } catch (e) {
@@ -576,7 +703,7 @@ export async function runNdicDatexV1Sync(opts = {}) {
     writeJson(paths.diagFile, diagnostics);
     return attachShadowForensicRetention(
       { ok: false, reason: diagnostics.error, mode: config.mode, diagnostics },
-      { startedAt: started }
+      { startedAt: started, plsIndexes: [] }
     );
   } finally {
     releaseLock(state.lock, lockTry.runId);

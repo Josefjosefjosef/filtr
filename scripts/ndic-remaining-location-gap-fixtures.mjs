@@ -24,6 +24,15 @@ import {
   VENDOR_EXTENSION_CLASS,
 } from "./ndic-datex-v1/no-signal-root-forensics.mjs";
 import {
+  digestPredefinedToken,
+  extractPredefinedRefForensics,
+  buildPlsDigestIndexFromXml,
+  matchPredefinedRefsToPls,
+  COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF,
+  DOCUMENTED_PLS_DATASETS,
+} from "./ndic-datex-v1/predefined-location-ref-forensics.mjs";
+import { attrOf, descendantsNamed } from "./ndic-datex-v1/safe-xml.mjs";
+import {
   extractSupplementaryPositional,
   SUPPLEMENTARY_CLASS,
 } from "./ndic-datex-v1/supplementary-location.mjs";
@@ -219,6 +228,48 @@ ok("mut_no_trust_assignment", !/localizationTrust\s*=/.test(rootForensicSrc));
 ok("mut_no_publication", !/PUBLICATION_ENABLED\s*=\s*true/.test(rootForensicSrc));
 ok("mut_no_heuristic_geocode", !/geocod|fuzzy|heuristic/i.test(rootForensicSrc));
 
+// Cycle 4b: predefinedLocationReference anonymized digests + PLS match fail-closed
+ok("common_profile_forbids_pls", COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF === false);
+ok("documented_pls_datasets", DOCUMENTED_PLS_DATASETS.length >= 3);
+const digA = digestPredefinedToken("dde51831-2f37-4f07-8429-286a9d08106c");
+const digB = digestPredefinedToken("dde51831-2f37-4f07-8429-286a9d08106c");
+ok("digest_deterministic", digA === digB && /^[a-f0-9]{16}$/.test(digA));
+ok("digest_no_raw", digA !== "dde51831-2f37-4f07-8429-286a9d08106c");
+const prefNode = parseSafeXml(
+  '<groupOfLocations><predefinedLocationReference id="dde51831-2f37-4f07-8429-286a9d08106c" version="1"/></groupOfLocations>'
+);
+const pref = extractPredefinedRefForensics(prefNode);
+ok("pref_has_id", pref.hasId === true && pref.idDigest === digA);
+ok("pref_has_version", pref.hasVersion === true);
+ok("pref_projection_no_raw_id", !JSON.stringify(pref).includes("dde51831"));
+
+const plsXml =
+  '<d2LogicalModel><payloadPublication><predefinedLocationContainer id="dde51831-2f37-4f07-8429-286a9d08106c" version="1"><location><alertCLinear/></location></predefinedLocationContainer><predefinedLocationContainer id="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" version="1"><location/></predefinedLocationContainer></payloadPublication></d2LogicalModel>';
+const plsIdx = buildPlsDigestIndexFromXml(plsXml, "fixture_pls", {
+  parseSafeXml,
+  attrOf,
+  descendantsNamed,
+});
+ok("pls_index_count", plsIdx.locationCount === 2);
+const matchHit = matchPredefinedRefsToPls([{ idDigest: digA }], [plsIdx]);
+ok("pls_match_count", matchHit.matched === 1 && matchHit.unmatched === 0);
+ok("pls_binding_not_proven_for_common", matchHit.catalogBindingProven === 0);
+ok("pls_verified_impossible_for_common", matchHit.verifiedLocationPossible === 0);
+const matchMiss = matchPredefinedRefsToPls([{ idDigest: digestPredefinedToken("no-such-id") }], [plsIdx]);
+ok("pls_unmatched", matchMiss.unmatched === 1);
+const dual = matchPredefinedRefsToPls(
+  [{ idDigest: digA }],
+  [plsIdx, buildPlsDigestIndexFromXml(plsXml, "fixture_pls_b", { parseSafeXml, attrOf, descendantsNamed })]
+);
+ok("pls_multiple_fail_closed", dual.multiple === 1 && dual.matched === 0);
+
+const prefSrc = fs.readFileSync(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), "ndic-datex-v1", "predefined-location-ref-forensics.mjs"),
+  "utf8"
+);
+ok("mut_pref_no_trust", !/localizationTrust\s*=/.test(prefSrc));
+ok("mut_pref_no_geocode", !/geocod|fuzzy|heuristic/i.test(prefSrc));
+
 const table = {
   points: {},
   forensicLcdClass: { "10": "L", "20": "A", "30": "P" },
@@ -246,6 +297,8 @@ console.log(
     failCount: 0,
     UNRECOGNIZED_DETECTOR_OVERBROAD: "NO",
     CYCLE3_ROOT_INVENTORY: "YES",
+    CYCLE4B_PREDEFINED_REF_DIGEST: "YES",
+    COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF: "NO",
     PARSER_BUSINESS_LOGIC_UPDATED: "NO",
     RESOLVER_UPDATED: "NO",
     TRUST_UPDATED: "NO",
