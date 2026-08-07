@@ -312,6 +312,89 @@ export function classifyLcdMissClass(table, locationCode) {
 }
 
 /**
+ * Forensic-only LOCATIONCODES_ONLY attribute inventory (booleans; never returns LCD).
+ * @param {object|null|undefined} table
+ * @param {unknown} locationCode
+ */
+export function classifyLcdCodesOnlyMeta(table, locationCode) {
+  const empty = {
+    hasParent: false,
+    hasNext: false,
+    hasPrev: false,
+    hasRoadNumber: false,
+    hasRoadName: false,
+    hasDirection: false,
+    hasAdminArea: false,
+    hasMunicipality: false,
+    hasCoordinates: false,
+    hasSegmentLink: false,
+    hasPointLink: false,
+    hasAreaLink: false,
+    hasOtherStandardLink: false,
+    hasAllocated: false,
+    allocatedKnown: false,
+    boundToRoadOnly: false,
+    unbound: true,
+  };
+  const key = locationCode != null ? String(locationCode) : "";
+  if (!key) return empty;
+  const missClass = classifyLcdMissClass(table, locationCode);
+  if (missClass !== LCD_MISS_CLASS.IN_CODES_ONLY) return empty;
+  const metaMap =
+    table && table.forensicLocationCodeMeta && typeof table.forensicLocationCodeMeta === "object"
+      ? table.forensicLocationCodeMeta
+      : null;
+  const m = metaMap ? metaMap[key] : null;
+  if (!m) {
+    return { ...empty, unbound: true };
+  }
+  const hasSegmentLink = m.referencedAsSeg === true;
+  const hasPointLink = m.referencedAsPol === true;
+  const hasAreaLink = false;
+  const hasOtherStandardLink = m.referencedAsOth === true || m.referencedAsRoa === true;
+  const boundToRoadOnly =
+    m.inRoads === true &&
+    m.hasCoordinates !== true &&
+    !hasSegmentLink &&
+    !hasPointLink;
+  // LOCATIONCODES.DAT has no PARENT/NEXT/PREV columns (SP08001 §4.4.12).
+  // POFFSETS next/prev apply only to POINTS LCDs — not available for codes-only.
+  return {
+    hasParent: false,
+    hasNext: false,
+    hasPrev: false,
+    hasRoadNumber: m.hasRoadNumberOnRoad === true,
+    hasRoadName: m.hasRoadNameOnRoad === true,
+    hasDirection: false,
+    hasAdminArea: m.hasAdminAreaOnRoad === true,
+    hasMunicipality: false,
+    hasCoordinates: m.hasCoordinates === true,
+    hasSegmentLink,
+    hasPointLink,
+    hasAreaLink,
+    hasOtherStandardLink,
+    hasAllocated: m.allocated === true,
+    allocatedKnown: m.allocatedKnown === true,
+    boundToRoadOnly,
+    unbound: !boundToRoadOnly && !hasSegmentLink && !hasPointLink && !hasOtherStandardLink,
+  };
+}
+
+/**
+ * Mutually exclusive Cycle-5 outcome for one LOCATIONCODES_ONLY miss.
+ * @param {ReturnType<typeof classifyLcdCodesOnlyMeta>} meta
+ */
+export function classifyLcdCodesOnlyOutcome(meta) {
+  const m = meta || {};
+  if (m.hasCoordinates === true) return "SAFE_RESOLVABLE_WITH_EXISTING_DATA";
+  if (m.allocatedKnown === true && m.hasAllocated !== true) return "INVALID_SOURCE_REFERENCE";
+  // ROADS row exists: official TMC object without X/Y — not inventable geometry.
+  if (m.boundToRoadOnly === true) return "VALID_BUT_NO_GEOMETRY";
+  // Index/allocation entry only (or cross-ref without self definition): fail-closed.
+  return "CORRECT_FAIL_CLOSED";
+}
+
+/**
  * Classify no-signal events only. Does not alter trust/resolver.
  * @param {object} presence
  * @param {string} [trust]

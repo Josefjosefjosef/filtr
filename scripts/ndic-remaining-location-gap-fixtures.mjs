@@ -12,6 +12,8 @@ import {
   chooseLocationProfileBucket,
   classifyLcdMiss,
   classifyLcdMissClass,
+  classifyLcdCodesOnlyMeta,
+  classifyLcdCodesOnlyOutcome,
   chooseNoSignalSubtype,
   TMC_MISS_REASON,
   LOCATION_PROFILE_BUCKET,
@@ -37,6 +39,8 @@ import {
   SUPPLEMENTARY_CLASS,
 } from "./ndic-datex-v1/supplementary-location.mjs";
 import { localizeFromTmc } from "./ndic-datex-v1/tmc-localize.mjs";
+import { buildTmcResolverTableFromSp08001Accepted } from "./ndic-datex-v1/tmc-resolver-table-bridge.mjs";
+import { buildShadowForensicBundle } from "./ndic-datex-v1/shadow-forensic-report.mjs";
 
 const fails = [];
 let passCount = 0;
@@ -285,6 +289,94 @@ ok(
     LCD_MISS_CLASS.ORPHAN_NOT_IN_LT
 );
 
+// Cycle 5: LOCATIONCODES_ONLY forensic meta (count-only; no raw LCD in projection)
+const bridge = buildTmcResolverTableFromSp08001Accepted({
+  points: [{ LCD: 1, XCOORD: "1400000", YCOORD: "5000000", ROA_LCD: 50 }],
+  roads: [{ LCD: 50, ROADNUMBER: "D1", POL_LCD: 9 }],
+  names: [],
+  segments: [],
+  areas: [],
+  adminAreas: [],
+  locationCodes: [
+    { LCD: 1, ALLOCATED: "1" },
+    { LCD: 50, ALLOCATED: "1" },
+    { LCD: 99, ALLOCATED: "1" },
+    { LCD: 88, ALLOCATED: "0" },
+  ],
+  tableVersion: "11.0",
+});
+ok("codes_only_road", classifyLcdMissClass(bridge, 50) === LCD_MISS_CLASS.IN_CODES_ONLY);
+ok("codes_only_unbound", classifyLcdMissClass(bridge, 99) === LCD_MISS_CLASS.IN_CODES_ONLY);
+const roadMeta = classifyLcdCodesOnlyMeta(bridge, 50);
+ok("road_bound_only", roadMeta.boundToRoadOnly === true && roadMeta.hasRoadNumber === true);
+ok("road_admin_link", roadMeta.hasAdminArea === true);
+ok("road_no_coords", roadMeta.hasCoordinates === false);
+ok("road_outcome_valid_no_geom", classifyLcdCodesOnlyOutcome(roadMeta) === "VALID_BUT_NO_GEOMETRY");
+const unboundMeta = classifyLcdCodesOnlyMeta(bridge, 99);
+ok("unbound_meta", unboundMeta.unbound === true && unboundMeta.hasAllocated === true);
+ok(
+  "unbound_outcome_fail_closed",
+  classifyLcdCodesOnlyOutcome(unboundMeta) === "CORRECT_FAIL_CLOSED"
+);
+const invalidMeta = classifyLcdCodesOnlyMeta(bridge, 88);
+ok(
+  "invalid_alloc_outcome",
+  classifyLcdCodesOnlyOutcome(invalidMeta) === "INVALID_SOURCE_REFERENCE"
+);
+const locRoad = localizeFromTmc([{ kind: "point", locationCode: 50 }], bridge, {});
+ok("localize_codes_only_class", locRoad.forensic.tmcMissClass === LCD_MISS_CLASS.IN_CODES_ONLY);
+ok("localize_codes_only_blob", locRoad.forensic.lcdCodesOnly && locRoad.forensic.lcdCodesOnly.boundToRoadOnly === true);
+ok("localize_no_raw_lcd", !JSON.stringify(locRoad.forensic.lcdCodesOnly).includes("50"));
+ok("localize_trust_not_tmc", locRoad.trust !== "tmc");
+
+const fakeItems = [
+  {
+    status: "aktivni",
+    localizationTrust: "national_fallback",
+    ndicV1: {
+      tmcOk: 0,
+      tmcMiss: 1,
+      forensic: {
+        tmcMissReason: "lcd_not_found",
+        tmcMissClass: "in_codes_only",
+        lcdCodesOnly: { ...roadMeta, outcome: "VALID_BUT_NO_GEOMETRY" },
+        trustBeforeResolver: "national_fallback",
+        trustAfterResolver: "national_fallback",
+        tmcReferenceKind: "point",
+        tmcLocationClass: "unknown",
+      },
+    },
+  },
+  {
+    status: "aktivni",
+    localizationTrust: "national_fallback",
+    ndicV1: {
+      tmcOk: 0,
+      tmcMiss: 1,
+      forensic: {
+        tmcMissReason: "lcd_not_found",
+        tmcMissClass: "in_codes_only",
+        lcdCodesOnly: { ...unboundMeta, outcome: "CORRECT_FAIL_CLOSED" },
+        trustBeforeResolver: "national_fallback",
+        trustAfterResolver: "national_fallback",
+        tmcReferenceKind: "point",
+        tmcLocationClass: "unknown",
+      },
+    },
+  },
+];
+const bundle = buildShadowForensicBundle({
+  items: fakeItems,
+  gateItems: fakeItems,
+  diagnostics: { tmc: { ok: true, meta: { active: true, version: "11.0", pointCount: 1 } } },
+});
+ok("agg_codes_only_total", bundle.summary.LCD_CODES_ONLY_TOTAL === 2);
+ok("agg_bound_road", bundle.summary.LCD_CODES_ONLY_BOUND_TO_ROAD_ONLY === 1);
+ok("agg_unbound", bundle.summary.LCD_CODES_ONLY_UNBOUND === 1);
+ok("agg_valid_no_geom", bundle.summary.LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY === 1);
+ok("agg_fail_closed", bundle.summary.LCD_CODES_ONLY_CORRECT_FAIL_CLOSED === 1);
+ok("agg_coords_zero", bundle.summary.LCD_CODES_ONLY_HAS_COORDINATES === 0);
+
 if (fails.length) {
   console.error("NDIC_REMAINING_LOCATION_GAP_FIXTURES_FAIL");
   fails.forEach((f) => console.error(f));
@@ -298,6 +390,7 @@ console.log(
     UNRECOGNIZED_DETECTOR_OVERBROAD: "NO",
     CYCLE3_ROOT_INVENTORY: "YES",
     CYCLE4B_PREDEFINED_REF_DIGEST: "YES",
+    CYCLE5_LOCATIONCODES_ONLY_FORENSIC: "YES",
     COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF: "NO",
     PARSER_BUSINESS_LOGIC_UPDATED: "NO",
     RESOLVER_UPDATED: "NO",

@@ -106,3 +106,28 @@ Therefore:
 - LOCATIONCODES-only LCD and incomplete supplementary remain fail-closed.
 - Exact 6 standard names and 413 vendor class split are confirmed only by the
   authorized Cycle 3 network shadow (inventory counters).
+
+## Cycle 5 — LOCATIONCODES_ONLY forensic audit (42)
+
+**Definition:** `classifyLcdMissClass` returns `in_codes_only` when LCD is in
+`table.forensicLocationCodes` (from SP08001 `LOCATIONCODES.DAT`) and is **not**
+in `forensicLcdClass` as P (POINTS), L (SEGMENTS), or A (OTHERAREAS /
+ADMINISTRATIVEAREA). Resolver `lookupTmcPoint` still misses (POINTS-only index).
+
+**LOCATIONCODES index (SP08001 §4.4.12):** columns `CID`, `TABCD`, `LCD`,
+`ALLOCATED` only. Semantics: location codes used in the dataset; `ALLOCATED=1`
+marks those in use. **No** PARENT/NEXT/PREV/coordinates/road fields on this table.
+
+**Geometry:** only POINTS carry `XCOORD`/`YCOORD`. ROADS have road number/name and
+optional `POL_LCD` (admin), no coordinates. INTERSECTIONS/JUNCTIONS are
+cross-reference tables without coordinates. POFFSETS next/prev apply to POINTS
+LCDs only — not to codes-only LCDs.
+
+**Forensic counters (anonymized, count-only):** `LCD_CODES_ONLY_*` HAS_* /
+BOUND_TO_ROAD_ONLY / UNBOUND / mutually exclusive outcomes. No raw LCD stored.
+
+**Policy:** no `trust=tmc` for these 42 until a documented geometry path exists.
+Road-only without coords ⇒ `VALID_BUT_NO_GEOMETRY` (still fail-closed for geo).
+Allocation-only / unbound ⇒ `CORRECT_FAIL_CLOSED`. `ALLOCATED=0` ⇒
+`INVALID_SOURCE_REFERENCE`. No heuristic / fuzzy / geocode / km invent.
+

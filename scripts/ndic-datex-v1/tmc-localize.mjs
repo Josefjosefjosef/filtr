@@ -8,8 +8,11 @@ import { TMC_COUNTRY_CODE, TMC_LOCATION_TABLE_NUMBER } from "./config.mjs";
 import { lookupTmcPoint } from "./tmc-table.mjs";
 import {
   TMC_MISS_REASON,
+  LCD_MISS_CLASS,
   classifyLcdMiss,
   classifyLcdMissClass,
+  classifyLcdCodesOnlyMeta,
+  classifyLcdCodesOnlyOutcome,
   choosePrimaryTmcMissReason,
 } from "./location-forensic-probe.mjs";
 
@@ -167,6 +170,19 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
   const tmcReferenceKind =
     refKindsSeen.includes("linear") ? "linear" : refKindsSeen.includes("point") ? "point" : kind || "unknown";
 
+  /** @type {object|null} */
+  let lcdCodesOnly = null;
+  if (primaryMissClass === LCD_MISS_CLASS.IN_CODES_ONLY && refs.length) {
+    const primaryRef = refs.find((r) => r && r.locationCode != null) || null;
+    if (primaryRef) {
+      const meta = classifyLcdCodesOnlyMeta(table, primaryRef.locationCode);
+      lcdCodesOnly = {
+        ...meta,
+        outcome: classifyLcdCodesOnlyOutcome(meta),
+      };
+    }
+  }
+
   return {
     locationLabel,
     direction,
@@ -187,6 +203,7 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
       tmcLocationClass,
       trustBeforeResolver: trustBefore,
       trustAfterResolver: trust,
+      ...(lcdCodesOnly ? { lcdCodesOnly } : {}),
     },
   };
 }

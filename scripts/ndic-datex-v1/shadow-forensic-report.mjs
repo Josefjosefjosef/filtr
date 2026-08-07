@@ -270,6 +270,31 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     hasSetHint: 0,
     digests: new Map(),
   };
+  const lcdCodesOnly = {
+    total: 0,
+    hasParent: 0,
+    hasNext: 0,
+    hasPrev: 0,
+    hasRoadNumber: 0,
+    hasRoadName: 0,
+    hasDirection: 0,
+    hasAdminArea: 0,
+    hasMunicipality: 0,
+    hasCoordinates: 0,
+    hasSegmentLink: 0,
+    hasPointLink: 0,
+    hasAreaLink: 0,
+    hasOtherStandardLink: 0,
+    hasAllocated: 0,
+    boundToRoadOnly: 0,
+    unbound: 0,
+    outcomeSafeExisting: 0,
+    outcomeSafeMissingRef: 0,
+    outcomeInvalid: 0,
+    outcomeHistoricalForeign: 0,
+    outcomeValidNoGeom: 0,
+    outcomeFailClosed: 0,
+  };
 
   function bumpRootMap(map, name) {
     const key = String(name || "")
@@ -348,6 +373,34 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
         const missClass = String(forensic.tmcMissClass || "");
         if (Object.prototype.hasOwnProperty.call(lcdMissClass, missClass)) lcdMissClass[missClass] += 1;
         else lcdMissClass.orphan_not_in_lt += 1;
+        if (missClass === "in_codes_only") {
+          const co = forensic.lcdCodesOnly || {};
+          lcdCodesOnly.total += 1;
+          if (co.hasParent === true) lcdCodesOnly.hasParent += 1;
+          if (co.hasNext === true) lcdCodesOnly.hasNext += 1;
+          if (co.hasPrev === true) lcdCodesOnly.hasPrev += 1;
+          if (co.hasRoadNumber === true) lcdCodesOnly.hasRoadNumber += 1;
+          if (co.hasRoadName === true) lcdCodesOnly.hasRoadName += 1;
+          if (co.hasDirection === true) lcdCodesOnly.hasDirection += 1;
+          if (co.hasAdminArea === true) lcdCodesOnly.hasAdminArea += 1;
+          if (co.hasMunicipality === true) lcdCodesOnly.hasMunicipality += 1;
+          if (co.hasCoordinates === true) lcdCodesOnly.hasCoordinates += 1;
+          if (co.hasSegmentLink === true) lcdCodesOnly.hasSegmentLink += 1;
+          if (co.hasPointLink === true) lcdCodesOnly.hasPointLink += 1;
+          if (co.hasAreaLink === true) lcdCodesOnly.hasAreaLink += 1;
+          if (co.hasOtherStandardLink === true) lcdCodesOnly.hasOtherStandardLink += 1;
+          if (co.hasAllocated === true) lcdCodesOnly.hasAllocated += 1;
+          if (co.boundToRoadOnly === true) lcdCodesOnly.boundToRoadOnly += 1;
+          if (co.unbound === true) lcdCodesOnly.unbound += 1;
+          const outcome = String(co.outcome || "CORRECT_FAIL_CLOSED");
+          if (outcome === "SAFE_RESOLVABLE_WITH_EXISTING_DATA") lcdCodesOnly.outcomeSafeExisting += 1;
+          else if (outcome === "SAFE_RESOLVABLE_WITH_MISSING_OFFICIAL_REFERENCE_DATA") {
+            lcdCodesOnly.outcomeSafeMissingRef += 1;
+          } else if (outcome === "INVALID_SOURCE_REFERENCE") lcdCodesOnly.outcomeInvalid += 1;
+          else if (outcome === "HISTORICAL_OR_FOREIGN_REFERENCE") lcdCodesOnly.outcomeHistoricalForeign += 1;
+          else if (outcome === "VALID_BUT_NO_GEOMETRY") lcdCodesOnly.outcomeValidNoGeom += 1;
+          else lcdCodesOnly.outcomeFailClosed += 1;
+        }
       } else {
         unresolvedMissing += 1;
         const profile = String(forensic.locationProfileBucket || "");
@@ -535,6 +588,7 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
       hasSetHint: predefinedRef.hasSetHint,
       digestRows: predefinedRefDigestRows,
     },
+    lcdCodesOnly,
   };
 }
 
@@ -833,6 +887,30 @@ export function buildShadowForensicBundle(ctx = {}) {
     TMC_LCD_MISS_AREA_IN_LT: m.lcdMissClass.area_in_lt,
     TMC_LCD_MISS_IN_CODES_ONLY: m.lcdMissClass.in_codes_only,
     TMC_LCD_MISS_ORPHAN_NOT_IN_LT: m.lcdMissClass.orphan_not_in_lt,
+    LCD_CODES_ONLY_TOTAL: m.lcdCodesOnly.total,
+    LCD_CODES_ONLY_HAS_PARENT: m.lcdCodesOnly.hasParent,
+    LCD_CODES_ONLY_HAS_NEXT: m.lcdCodesOnly.hasNext,
+    LCD_CODES_ONLY_HAS_PREV: m.lcdCodesOnly.hasPrev,
+    LCD_CODES_ONLY_HAS_ROAD_NUMBER: m.lcdCodesOnly.hasRoadNumber,
+    LCD_CODES_ONLY_HAS_ROAD_NAME: m.lcdCodesOnly.hasRoadName,
+    LCD_CODES_ONLY_HAS_DIRECTION: m.lcdCodesOnly.hasDirection,
+    LCD_CODES_ONLY_HAS_ADMIN_AREA: m.lcdCodesOnly.hasAdminArea,
+    LCD_CODES_ONLY_HAS_MUNICIPALITY: m.lcdCodesOnly.hasMunicipality,
+    LCD_CODES_ONLY_HAS_COORDINATES: m.lcdCodesOnly.hasCoordinates,
+    LCD_CODES_ONLY_HAS_SEGMENT_LINK: m.lcdCodesOnly.hasSegmentLink,
+    LCD_CODES_ONLY_HAS_POINT_LINK: m.lcdCodesOnly.hasPointLink,
+    LCD_CODES_ONLY_HAS_AREA_LINK: m.lcdCodesOnly.hasAreaLink,
+    LCD_CODES_ONLY_HAS_OTHER_STANDARD_LINK: m.lcdCodesOnly.hasOtherStandardLink,
+    LCD_CODES_ONLY_HAS_ALLOCATED: m.lcdCodesOnly.hasAllocated,
+    LCD_CODES_ONLY_BOUND_TO_ROAD_ONLY: m.lcdCodesOnly.boundToRoadOnly,
+    LCD_CODES_ONLY_UNBOUND: m.lcdCodesOnly.unbound,
+    LCD_CODES_ONLY_SAFE_RESOLVABLE_WITH_EXISTING_DATA: m.lcdCodesOnly.outcomeSafeExisting,
+    LCD_CODES_ONLY_SAFE_RESOLVABLE_WITH_MISSING_OFFICIAL_REFERENCE_DATA:
+      m.lcdCodesOnly.outcomeSafeMissingRef,
+    LCD_CODES_ONLY_INVALID_SOURCE_REFERENCE: m.lcdCodesOnly.outcomeInvalid,
+    LCD_CODES_ONLY_HISTORICAL_OR_FOREIGN_REFERENCE: m.lcdCodesOnly.outcomeHistoricalForeign,
+    LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY: m.lcdCodesOnly.outcomeValidNoGeom,
+    LCD_CODES_ONLY_CORRECT_FAIL_CLOSED: m.lcdCodesOnly.outcomeFailClosed,
     SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION: m.supplementaryClass.verifiable_standard,
     SUPPLEMENTARY_TEXT_ONLY: m.supplementaryClass.text_only,
     SUPPLEMENTARY_INCOMPLETE: m.supplementaryClass.incomplete,
@@ -1094,6 +1172,29 @@ export function printShadowForensicStdout(summary, validationReport) {
       "TMC_LCD_MISS_AREA_IN_LT",
       "TMC_LCD_MISS_IN_CODES_ONLY",
       "TMC_LCD_MISS_ORPHAN_NOT_IN_LT",
+      "LCD_CODES_ONLY_TOTAL",
+      "LCD_CODES_ONLY_HAS_PARENT",
+      "LCD_CODES_ONLY_HAS_NEXT",
+      "LCD_CODES_ONLY_HAS_PREV",
+      "LCD_CODES_ONLY_HAS_ROAD_NUMBER",
+      "LCD_CODES_ONLY_HAS_ROAD_NAME",
+      "LCD_CODES_ONLY_HAS_DIRECTION",
+      "LCD_CODES_ONLY_HAS_ADMIN_AREA",
+      "LCD_CODES_ONLY_HAS_MUNICIPALITY",
+      "LCD_CODES_ONLY_HAS_COORDINATES",
+      "LCD_CODES_ONLY_HAS_SEGMENT_LINK",
+      "LCD_CODES_ONLY_HAS_POINT_LINK",
+      "LCD_CODES_ONLY_HAS_AREA_LINK",
+      "LCD_CODES_ONLY_HAS_OTHER_STANDARD_LINK",
+      "LCD_CODES_ONLY_HAS_ALLOCATED",
+      "LCD_CODES_ONLY_BOUND_TO_ROAD_ONLY",
+      "LCD_CODES_ONLY_UNBOUND",
+      "LCD_CODES_ONLY_SAFE_RESOLVABLE_WITH_EXISTING_DATA",
+      "LCD_CODES_ONLY_SAFE_RESOLVABLE_WITH_MISSING_OFFICIAL_REFERENCE_DATA",
+      "LCD_CODES_ONLY_INVALID_SOURCE_REFERENCE",
+      "LCD_CODES_ONLY_HISTORICAL_OR_FOREIGN_REFERENCE",
+      "LCD_CODES_ONLY_VALID_BUT_NO_GEOMETRY",
+      "LCD_CODES_ONLY_CORRECT_FAIL_CLOSED",
       "SUPPLEMENTARY_VERIFIABLE_STANDARD_LOCATION",
       "SUPPLEMENTARY_TEXT_ONLY",
       "SUPPLEMENTARY_INCOMPLETE",

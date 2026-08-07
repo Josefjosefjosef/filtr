@@ -99,11 +99,91 @@ export function buildTmcResolverTableFromSp08001Accepted(input = {}) {
 
   /** Forensic-only LOCATIONCODES membership (no raw LCD published). */
   const forensicLocationCodes = new Set();
+  /** Forensic-only per-LCD meta for LOCATIONCODES_ONLY audits (booleans only). */
+  const forensicLocationCodeMeta = Object.create(null);
+
   for (const row of input.locationCodes || []) {
     if (!row || row.LCD == null) continue;
-    forensicLocationCodes.add(String(row.LCD));
+    const key = String(row.LCD);
+    forensicLocationCodes.add(key);
+    const allocRaw = row.ALLOCATED != null ? String(row.ALLOCATED).trim() : "";
+    forensicLocationCodeMeta[key] = {
+      inLocationCodes: true,
+      allocated: allocRaw === "1" || allocRaw.toLowerCase() === "true",
+      allocatedKnown: allocRaw !== "",
+      inRoads: false,
+      referencedAsRoa: false,
+      referencedAsPol: false,
+      referencedAsSeg: false,
+      referencedAsOth: false,
+      hasCoordinates: false,
+      hasRoadNumberOnRoad: false,
+      hasRoadNameOnRoad: false,
+      hasAdminAreaOnRoad: false,
+    };
   }
   for (const key of Object.keys(forensicLcdClass)) forensicLocationCodes.add(key);
+
+  for (const row of input.roads || []) {
+    if (!row || row.LCD == null) continue;
+    const key = String(row.LCD);
+    const meta = forensicLocationCodeMeta[key] || {
+      inLocationCodes: forensicLocationCodes.has(key),
+      allocated: false,
+      allocatedKnown: false,
+      inRoads: false,
+      referencedAsRoa: false,
+      referencedAsPol: false,
+      referencedAsSeg: false,
+      referencedAsOth: false,
+      hasCoordinates: false,
+      hasRoadNumberOnRoad: false,
+      hasRoadNameOnRoad: false,
+      hasAdminAreaOnRoad: false,
+    };
+    meta.inRoads = true;
+    if (row.ROADNUMBER && String(row.ROADNUMBER).trim()) meta.hasRoadNumberOnRoad = true;
+    const rnid = row.RNID != null && String(row.RNID).trim() !== "" ? String(row.RNID) : null;
+    if (rnid && namesById[rnid]) meta.hasRoadNameOnRoad = true;
+    if (row.POL_LCD != null && String(row.POL_LCD).trim() !== "") meta.hasAdminAreaOnRoad = true;
+    forensicLocationCodeMeta[key] = meta;
+  }
+
+  for (const row of input.points || []) {
+    if (!row || row.LCD == null) continue;
+    const selfKey = String(row.LCD);
+    const selfMeta = forensicLocationCodeMeta[selfKey];
+    if (selfMeta) {
+      const lon = parseSp08001Coordinate(row.XCOORD);
+      const lat = parseSp08001Coordinate(row.YCOORD);
+      if (lat != null && lon != null) selfMeta.hasCoordinates = true;
+    }
+    const markRef = (raw, field) => {
+      if (raw == null || String(raw).trim() === "") return;
+      const k = String(raw);
+      const m = forensicLocationCodeMeta[k];
+      if (!m) return;
+      m[field] = true;
+    };
+    markRef(row.ROA_LCD, "referencedAsRoa");
+    markRef(row.POL_LCD, "referencedAsPol");
+    markRef(row.SEG_LCD, "referencedAsSeg");
+    markRef(row.OTH_LCD, "referencedAsOth");
+  }
+
+  for (const row of input.segments || []) {
+    if (!row) continue;
+    const markRef = (raw, field) => {
+      if (raw == null || String(raw).trim() === "") return;
+      const k = String(raw);
+      const m = forensicLocationCodeMeta[k];
+      if (!m) return;
+      m[field] = true;
+    };
+    markRef(row.ROA_LCD, "referencedAsRoa");
+    markRef(row.POL_LCD, "referencedAsPol");
+    markRef(row.SEG_LCD, "referencedAsSeg");
+  }
 
   const table = parseTmcTablePayload({
     version: String(input.tableVersion != null ? input.tableVersion : "unknown"),
@@ -113,5 +193,6 @@ export function buildTmcResolverTableFromSp08001Accepted(input = {}) {
   });
   table.forensicLcdClass = forensicLcdClass;
   table.forensicLocationCodes = forensicLocationCodes;
+  table.forensicLocationCodeMeta = forensicLocationCodeMeta;
   return table;
 }
