@@ -266,6 +266,8 @@ ok(
   "pkg_has_location_forensic_probe_fixtures",
   Boolean(pkgScripts["iu-ndic-location-forensic-probe-fixtures"])
 );
+ok("suite_requires_openlr_fixtures", /iu-ndic-openlr-fixtures/.test(suiteSrc));
+ok("pkg_has_openlr_fixtures", Boolean(pkgScripts["iu-ndic-openlr-fixtures"]));
 ok(
   "preflight_wf_runs_product_suite",
   /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
@@ -294,6 +296,10 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
     !/iu-ndic-shadow-forensic-retention-fixtures/.test(mutated),
     "FALSE_GREEN_SUITE_STILL_HAS_FORENSIC"
   );
+}
+{
+  const mutated = suiteSrc.replace(/iu-ndic-openlr-fixtures/g, "iu-ndic-openlr-REMOVED");
+  ok("meta_remove_openlr_from_suite_must_fail", !/iu-ndic-openlr-fixtures/.test(mutated), "FALSE_GREEN_SUITE_STILL_HAS_OPENLR");
 }
 
 const report = { ok: fails.length === 0, failCount: fails.length, fails };

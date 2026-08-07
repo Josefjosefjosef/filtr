@@ -17,6 +17,7 @@ import {
   extractLocationPresenceFlags,
   buildCoordinateProbe,
 } from "./location-forensic-probe.mjs";
+import { extractOpenlrFromLoc } from "./openlr-datex-extract.mjs";
 
 function clip(s, max) {
   const t = String(s || "").replace(/\s+/g, " ").trim();
@@ -193,6 +194,8 @@ function parseRecord(recNode, limits) {
   // Forensic-only presence/coord probes — must not alter tmcRefs/coordinates.
   const locationPresence = extractLocationPresenceFlags(locNode);
   const coordinateProbe = buildCoordinateProbe(locNode, coordinates);
+  const openlrExtract = extractOpenlrFromLoc(locNode);
+  Object.assign(locationPresence, openlrExtract.presenceFlags);
   if (coordinateProbe.valid) locationPresence.pointCoordinatesValid = true;
   const road = extractRoad(locNode, recNode);
   const texts = extractTexts(recNode, limits.maxTextFieldChars);
@@ -210,6 +213,7 @@ function parseRecord(recNode, limits) {
     category: cat,
     locationPresence,
     coordinateProbe,
+    openlrExtract,
     createdAt: parseIso(childText(recNode, "situationRecordCreationTime")),
     versionTime: parseIso(childText(recNode, "situationRecordVersionTime")),
     firstSupplierVersionTime: parseIso(childText(recNode, "situationRecordFirstSupplierVersionTime")),

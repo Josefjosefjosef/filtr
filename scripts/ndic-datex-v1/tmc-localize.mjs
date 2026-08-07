@@ -1,6 +1,7 @@
 /**
  * Localize DATEX TMC refs using active internal table + optional geo-registry.
- * Hierarchy of trust: explicit coordinates > TMC point/linear > text road/name > national fallback.
+ * Hierarchy of trust: explicit coordinates > OpenLR (applied outside) > TMC
+ * point/linear > text road/name > national fallback.
  * Never invent a municipality assignment.
  */
 import { TMC_COUNTRY_CODE, TMC_LOCATION_TABLE_NUMBER } from "./config.mjs";

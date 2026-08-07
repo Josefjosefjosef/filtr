@@ -158,6 +158,7 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
   let ended = 0;
   let cancelled = 0;
   let resolvedBasic = 0;
+  let resolvedOpenlr = 0;
   let resolvedOther = 0;
   let unresolvedTotal = 0;
   let unresolvedTmc = 0;
@@ -216,6 +217,10 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
   let coordinateValid = 0;
   let coordinateVerifiedTrust = 0;
   let coordinateBlocked = 0;
+  const openlr = {
+    input: 0, resolved: 0, ambiguous: 0, invalid: 0, unsupported: 0, referenceDataMissing: 0, decodeFailed: 0,
+    eligible: 0, blocked: 0, line: 0, point: 0, geo: 0, area: 0, binary: 0, other: 0, xml: 0,
+  };
 
   for (const it of allItems) {
     const st = String((it && it.status) || "");
@@ -228,6 +233,20 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     const tmcOk = it && it.ndicV1 && Number(it.ndicV1.tmcOk) > 0;
     const tmcMiss = it && it.ndicV1 && Number(it.ndicV1.tmcMiss) > 0;
     const forensic = (it && it.ndicV1 && it.ndicV1.forensic) || {};
+    const openlrForensic = forensic.openlr || {};
+    if (forensic.hasOpenLR === true) {
+      openlr.input += 1;
+      if (forensic.hasOpenlrLine) openlr.line += 1;
+      else if (forensic.hasOpenlrPoint) openlr.point += 1;
+      else if (forensic.hasOpenlrGeo) openlr.geo += 1;
+      else if (forensic.hasOpenlrArea) openlr.area += 1;
+      else openlr.other += 1;
+      if (forensic.hasOpenlrBinary) openlr.binary += 1;
+      else openlr.xml += 1;
+      const status = String(openlrForensic.status || "");
+      if (status === "OPENLR_RESOLVED") { openlr.resolved += 1; if (openlrForensic.publicationEligible) openlr.eligible += 1; }
+      else { openlr.blocked += 1; if (status === "OPENLR_AMBIGUOUS") openlr.ambiguous += 1; else if (status === "OPENLR_INVALID") openlr.invalid += 1; else if (status === "OPENLR_UNSUPPORTED_TYPE") openlr.unsupported += 1; else if (status === "OPENLR_REFERENCE_DATA_MISSING") openlr.referenceDataMissing += 1; else openlr.decodeFailed += 1; }
+    }
     for (const field of Object.keys(presenceFields)) {
       if (forensic[field] === true) presenceFields[field] += 1;
     }
@@ -253,7 +272,8 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     }
     if (tmcOk || tmcMiss) resolverAttempted += 1;
 
-    if (trust === "tmc" || tmcOk) resolvedBasic += 1;
+    if (trust === "openlr") resolvedOpenlr += 1;
+    else if (trust === "tmc" || tmcOk) resolvedBasic += 1;
     else if (trust === "coordinates") resolvedOther += 1;
     else {
       unresolvedTotal += 1;
@@ -326,6 +346,7 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     ended,
     cancelled,
     resolvedBasic,
+    resolvedOpenlr,
     resolvedOther,
     unresolvedTotal,
     unresolvedTmc,
@@ -360,6 +381,7 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     trustAfter,
     tmcReferenceKinds,
     tmcLocationClasses,
+    openlr,
   };
 }
 
@@ -543,6 +565,7 @@ export function buildShadowForensicBundle(ctx = {}) {
     ENDED_EVENTS: m.ended,
     REJECTED_EVENTS: rejected,
     RESOLVED_BASIC: m.resolvedBasic,
+    RESOLVED_OPENLR: m.resolvedOpenlr,
     UNRESOLVED: m.unresolvedTotal,
     DUPLICATES_DETECTED: duplicatesDetected,
     DEDUPLICATED_EVENTS: deduplicated,
@@ -651,6 +674,23 @@ export function buildShadowForensicBundle(ctx = {}) {
     TMC_LOCATION_CLASS_SEGMENT: m.tmcLocationClasses.segment,
     TMC_LOCATION_CLASS_AREA: m.tmcLocationClasses.area,
     TMC_LOCATION_CLASS_UNKNOWN: m.tmcLocationClasses.unknown,
+    OPENLR_INPUT_TOTAL: m.openlr.input,
+    OPENLR_RESOLVED_TOTAL: m.openlr.resolved,
+    OPENLR_AMBIGUOUS_TOTAL: m.openlr.ambiguous,
+    OPENLR_INVALID_TOTAL: m.openlr.invalid,
+    OPENLR_UNSUPPORTED_TOTAL: m.openlr.unsupported,
+    OPENLR_REFERENCE_DATA_MISSING_TOTAL: m.openlr.referenceDataMissing,
+    OPENLR_DECODE_FAILED_TOTAL: m.openlr.decodeFailed,
+    OPENLR_PUBLICATION_ELIGIBLE_TOTAL: m.openlr.eligible,
+    OPENLR_PUBLICATION_BLOCKED_TOTAL: m.openlr.blocked,
+    OPENLR_TYPE_LINE: m.openlr.line,
+    OPENLR_TYPE_POINT: m.openlr.point,
+    OPENLR_TYPE_GEO: m.openlr.geo,
+    OPENLR_TYPE_AREA: m.openlr.area,
+    OPENLR_TYPE_BINARY: m.openlr.binary,
+    OPENLR_TYPE_OTHER: m.openlr.other,
+    OPENLR_ENCODING_XML: m.openlr.xml,
+    OPENLR_ENCODING_BINARY: m.openlr.binary,
     FEED_INTERNAL_ITEMS: gateItems.length,
     FEED_PUBLICATION_ELIGIBLE_ITEMS: m.pubEligible,
     FEED_PUBLICATION_BLOCKED_ITEMS: m.pubBlocked,

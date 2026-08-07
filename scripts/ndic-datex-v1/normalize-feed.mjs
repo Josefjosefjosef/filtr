@@ -15,6 +15,8 @@ import { buildSituationIdentity, contentFingerprint } from "./identity.mjs";
 import { classifyTrafficLifecycle, classifyChangeSignificance, compareRevisions } from "./lifecycle.mjs";
 import { localizeFromTmc } from "./tmc-localize.mjs";
 import { chooseLocationProfileBucket } from "./location-forensic-probe.mjs";
+import { resolveOpenlrLocation } from "./openlr-resolve.mjs";
+import { OPENLR_STATUS } from "./openlr-constants.mjs";
 import { buildTrafficTitle, buildTrafficSummary } from "./title.mjs";
 import {
   attachLegalProvenance,
@@ -43,12 +45,27 @@ export function situationToFeedItem(situation, opts = {}) {
   const identity = buildSituationIdentity(situation);
   const primary = (situation.records && situation.records[0]) || {};
   const validity = primary.validity || {};
-  const loc = localizeFromTmc(primary.tmcRefs || [], opts.tmcTable || null, {
+  let loc = localizeFromTmc(primary.tmcRefs || [], opts.tmcTable || null, {
     coordinates: primary.coordinates || null,
     roadNumber: primary.roadNumber,
     roadName: primary.roadName,
     geoRegistry: opts.geoRegistry || null,
   });
+  const openlr = primary.openlrExtract ? resolveOpenlrLocation(primary.openlrExtract) : null;
+  if (
+    openlr &&
+    openlr.status === OPENLR_STATUS.RESOLVED &&
+    ["text", "national_fallback", "none"].includes(loc.trust)
+  ) {
+    loc = {
+      ...loc,
+      lat: openlr.lat,
+      lon: openlr.lon,
+      trust: "openlr",
+      region: { ...loc.region, confidence: "openlr" },
+      forensic: { ...loc.forensic, trustAfterResolver: "openlr" },
+    };
+  }
 
   const presence = {
     hasAlertCPoint: false,
@@ -73,6 +90,11 @@ export function situationToFeedItem(situation, opts = {}) {
     ...presence,
     locationProfileBucket,
     coordinateProbe: primary.coordinateProbe || { present: false, parsed: false, valid: false },
+    openlr: openlr ? {
+      status: openlr.status, type: openlr.type, lrpCount: openlr.lrpCount,
+      directionDocumented: openlr.directionDocumented, failureReason: openlr.failureReason,
+      publicationEligible: openlr.publicationEligible,
+    } : null,
     ...(loc.forensic || {}),
   };
   const life = classifyTrafficLifecycle({
@@ -166,6 +188,7 @@ export function situationToFeedItem(situation, opts = {}) {
       tmcOk: loc.tmcOk,
       tmcMiss: loc.tmcMiss,
       trust: loc.trust,
+      openlrStatus: openlr ? openlr.status : null,
       forensic,
     },
   };

@@ -66,6 +66,11 @@ export function extractLocationPresenceFlags(locNode) {
     hasPointCoordinates: false,
     pointCoordinatesValid: false,
     hasOpenLR: false,
+    hasOpenlrLine: false,
+    hasOpenlrPoint: false,
+    hasOpenlrGeo: false,
+    hasOpenlrArea: false,
+    hasOpenlrBinary: false,
     hasGmlPoint: false,
     hasGmlLineString: false,
     hasGmlPolygon: false,
@@ -89,7 +94,13 @@ export function extractLocationPresenceFlags(locNode) {
 
   // OpenLR: any element local-name containing "openlr" (DATEX II variants).
   walkNames(locNode, 8000, (name) => {
-    if (name.includes("openlr")) flags.hasOpenLR = true;
+    if (!name.includes("openlr")) return;
+    flags.hasOpenLR = true;
+    if (/linear|line.*location/.test(name)) flags.hasOpenlrLine = true;
+    if (/point.*location|point.*along|poi/.test(name)) flags.hasOpenlrPoint = true;
+    if (/geo.*coordinate/.test(name)) flags.hasOpenlrGeo = true;
+    if (/circle|rectangle|grid|polygon|closed/.test(name)) flags.hasOpenlrArea = true;
+    if (/binary|asbinary/.test(name)) flags.hasOpenlrBinary = true;
   });
 
 return flags;

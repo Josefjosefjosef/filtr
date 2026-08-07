@@ -214,6 +214,7 @@ export function validateForensicSummary(summary) {
     "ENDED_EVENTS",
     "REJECTED_EVENTS",
     "RESOLVED_BASIC",
+    "RESOLVED_OPENLR",
     "UNRESOLVED",
     "DUPLICATES_DETECTED",
     "DEDUPLICATED_EVENTS",
@@ -312,6 +313,23 @@ export function validateForensicSummary(summary) {
     "TMC_LOCATION_CLASS_SEGMENT",
     "TMC_LOCATION_CLASS_AREA",
     "TMC_LOCATION_CLASS_UNKNOWN",
+    "OPENLR_INPUT_TOTAL",
+    "OPENLR_RESOLVED_TOTAL",
+    "OPENLR_AMBIGUOUS_TOTAL",
+    "OPENLR_INVALID_TOTAL",
+    "OPENLR_UNSUPPORTED_TOTAL",
+    "OPENLR_REFERENCE_DATA_MISSING_TOTAL",
+    "OPENLR_DECODE_FAILED_TOTAL",
+    "OPENLR_PUBLICATION_ELIGIBLE_TOTAL",
+    "OPENLR_PUBLICATION_BLOCKED_TOTAL",
+    "OPENLR_TYPE_LINE",
+    "OPENLR_TYPE_POINT",
+    "OPENLR_TYPE_GEO",
+    "OPENLR_TYPE_AREA",
+    "OPENLR_TYPE_BINARY",
+    "OPENLR_TYPE_OTHER",
+    "OPENLR_ENCODING_XML",
+    "OPENLR_ENCODING_BINARY",
   ];
   for (const f of intFields) {
     if (!isNonNegInt(summary[f])) fails.push(f);
@@ -384,7 +402,7 @@ export function validateForensicSummary(summary) {
     fails
   );
   assertInvariant(
-    summary.RESOLVED_BASIC + summary.RESOLVED_OTHER_VALID_LOCATION + summary.UNRESOLVED_TOTAL === summary.RESOLVER_INPUT_TOTAL,
+    summary.RESOLVED_BASIC + summary.RESOLVED_OPENLR + summary.RESOLVED_OTHER_VALID_LOCATION + summary.UNRESOLVED_TOTAL === summary.RESOLVER_INPUT_TOTAL,
     "invariant_resolver_partition",
     fails
   );
