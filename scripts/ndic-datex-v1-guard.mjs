@@ -671,6 +671,13 @@ async function discoveryChecks() {
     "portable-pr"
   );
   ok(
+    "data_pr_helper_exports_run_fn",
+    /export async function runOpenOrRefreshDataPr/.test(
+      fs.readFileSync(path.join(__dirname, "ndic-open-or-refresh-data-pr.mjs"), "utf8")
+    ),
+    "data-pr-export"
+  );
+  ok(
     "update_wf_commits_traffic_offline_snapshot",
     /traffic_offline_snapshot\.json/.test(updateWf),
     "snapshot-commit"

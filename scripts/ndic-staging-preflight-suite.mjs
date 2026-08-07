@@ -29,6 +29,7 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-location-presentation-policy-fixtures",
   "iu-ndic-traffic-publication-fixtures",
   "iu-ndic-traffic-ui-snapshot-persist-fixtures",
+  "iu-ndic-data-pr-rest-runtime-fixtures",
   "iu-traffic-overview-ui-fixtures",
 ];
 

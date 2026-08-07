@@ -375,11 +375,20 @@ ok(
     path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml"),
     "utf8"
   );
-  ok("data_pr_script_uses_fetch", /fetch\(/.test(openPrSrc) && /api\.github\.com/.test(openPrSrc));
+  ok(
+    "data_pr_script_uses_fetch",
+    (/fetchImpl\(/.test(openPrSrc) || /fetch\(/.test(openPrSrc)) && /api\.github\.com/.test(openPrSrc)
+  );
   ok("data_pr_script_no_gh_cli", !/\bgh\s+pr\b/.test(openPrSrc));
   ok(
     "workflow_uses_portable_data_pr",
     /ndic-open-or-refresh-data-pr\.mjs/.test(wfSrc) && !/gh pr create/.test(wfSrc)
+  );
+  ok(
+    "data_pr_runtime_fixtures_wired",
+    /iu-ndic-data-pr-rest-runtime-fixtures/.test(
+      fs.readFileSync(path.join(ROOT, "scripts", "ndic-staging-preflight-suite.mjs"), "utf8")
+    )
   );
   ok(
     "workflow_commits_traffic_offline_snapshot",

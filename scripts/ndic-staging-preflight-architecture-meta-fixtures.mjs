@@ -285,6 +285,14 @@ ok(
   Boolean(pkgScripts["iu-ndic-traffic-ui-snapshot-persist-fixtures"])
 );
 ok(
+  "suite_requires_data_pr_rest_runtime_fixtures",
+  /iu-ndic-data-pr-rest-runtime-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_data_pr_rest_runtime_fixtures",
+  Boolean(pkgScripts["iu-ndic-data-pr-rest-runtime-fixtures"])
+);
+ok(
   "preflight_wf_runs_product_suite",
   /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
 );
@@ -348,6 +356,53 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
     "meta_rename_traffic_ui_snapshot_persist_from_suite_must_fail",
     !/iu-ndic-traffic-ui-snapshot-persist-fixtures/.test(renamed),
     "FALSE_GREEN_SUITE_STILL_HAS_CANONICAL_PERSIST_NAME"
+  );
+}
+{
+  const mutated = suiteSrc.replace(
+    /iu-ndic-data-pr-rest-runtime-fixtures/g,
+    "iu-ndic-data-pr-rest-runtime-REMOVED"
+  );
+  ok(
+    "meta_remove_data_pr_rest_runtime_from_suite_must_fail",
+    !/iu-ndic-data-pr-rest-runtime-fixtures/.test(mutated),
+    "FALSE_GREEN_SUITE_STILL_HAS_DATA_PR_RUNTIME"
+  );
+}
+{
+  const renamed = suiteSrc.replace(
+    /iu-ndic-data-pr-rest-runtime-fixtures/g,
+    "iu-ndic-data-pr-rest-runtime-renamed"
+  );
+  ok(
+    "meta_rename_data_pr_rest_runtime_from_suite_must_fail",
+    !/iu-ndic-data-pr-rest-runtime-fixtures/.test(renamed),
+    "FALSE_GREEN_SUITE_STILL_HAS_CANONICAL_DATA_PR_RUNTIME_NAME"
+  );
+}
+// Fixture source must keep the three previously-missing gates + duplicate prevention.
+{
+  const fixSrc = fs.readFileSync(
+    path.join(ROOT, "scripts", "ndic-data-pr-rest-runtime-fixtures.mjs"),
+    "utf8"
+  );
+  ok("meta_data_pr_fixture_has_existing_pr_test", /DATA_PR_EXISTING_PR_REFRESH_PASS/.test(fixSrc));
+  ok("meta_data_pr_fixture_has_create_pr_test", /DATA_PR_NEW_PR_CREATE_PASS/.test(fixSrc));
+  ok("meta_data_pr_fixture_has_auth_fail_test", /DATA_PR_AUTH_FAILS_CLOSED/.test(fixSrc));
+  ok("meta_data_pr_fixture_has_duplicate_test", /DATA_PR_DUPLICATE_PR_POSSIBLE_NO/.test(fixSrc));
+  const removeExisting = fixSrc.replace(/DATA_PR_EXISTING_PR_REFRESH_PASS/g, "REMOVED_EXISTING");
+  ok(
+    "meta_remove_existing_pr_test_must_fail",
+    !/DATA_PR_EXISTING_PR_REFRESH_PASS/.test(removeExisting)
+  );
+  const removeCreate = fixSrc.replace(/DATA_PR_NEW_PR_CREATE_PASS/g, "REMOVED_CREATE");
+  ok("meta_remove_create_pr_test_must_fail", !/DATA_PR_NEW_PR_CREATE_PASS/.test(removeCreate));
+  const removeAuth = fixSrc.replace(/DATA_PR_AUTH_FAILS_CLOSED/g, "REMOVED_AUTH");
+  ok("meta_remove_auth_fail_test_must_fail", !/DATA_PR_AUTH_FAILS_CLOSED/.test(removeAuth));
+  const removeDup = fixSrc.replace(/DATA_PR_DUPLICATE_PR_POSSIBLE_NO/g, "REMOVED_DUP");
+  ok(
+    "meta_remove_duplicate_prevention_test_must_fail",
+    !/DATA_PR_DUPLICATE_PR_POSSIBLE_NO/.test(removeDup)
   );
 }
 
