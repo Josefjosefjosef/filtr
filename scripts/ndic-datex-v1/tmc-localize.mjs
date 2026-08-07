@@ -5,6 +5,11 @@
  */
 import { TMC_COUNTRY_CODE, TMC_LOCATION_TABLE_NUMBER } from "./config.mjs";
 import { lookupTmcPoint } from "./tmc-table.mjs";
+import {
+  TMC_MISS_REASON,
+  classifyLcdMiss,
+  choosePrimaryTmcMissReason,
+} from "./location-forensic-probe.mjs";
 
 const DIR_CS = Object.freeze({
   positive: "kladný směr",
@@ -41,21 +46,29 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
   let tmcOk = 0;
   let tmcMiss = 0;
   let trust = "none";
+  /** @type {string[]} */
+  const missReasons = [];
+  /** @type {string[]} */
+  const refKindsSeen = [];
 
   if (ctx.roadNumber) roads.add(ctx.roadNumber);
   if (ctx.roadName) roads.add(ctx.roadName);
 
   for (const ref of refs) {
     if (!ref || ref.locationCode == null) continue;
+    const refKind = String(ref.kind || "unknown");
+    refKindsSeen.push(refKind);
     const cc = ref.countryCode != null ? Number(ref.countryCode) : TMC_COUNTRY_CODE;
     const tn = ref.tableNumber != null ? Number(ref.tableNumber) : TMC_LOCATION_TABLE_NUMBER;
     // Accept missing CC/LTN on ref (inherit approved table); reject wrong table.
     if (ref.countryCode != null && cc !== TMC_COUNTRY_CODE) {
       tmcMiss += 1;
+      missReasons.push(TMC_MISS_REASON.CID_MISMATCH);
       continue;
     }
     if (ref.tableNumber != null && tn !== TMC_LOCATION_TABLE_NUMBER) {
       tmcMiss += 1;
+      missReasons.push(TMC_MISS_REASON.TABCD_MISMATCH);
       continue;
     }
     codes.push(Number(ref.locationCode));
@@ -66,6 +79,7 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
     const pt = lookupTmcPoint(table, ref.locationCode);
     if (!pt) {
       tmcMiss += 1;
+      missReasons.push(classifyLcdMiss(table, ref.locationCode, refKind));
       continue;
     }
     tmcOk += 1;
@@ -81,6 +95,12 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
       if (pt2 && pt2.roadNumber) roads.add(String(pt2.roadNumber));
     }
   }
+
+  // Forensic trust-before: ladder without coordinates override (does not change trust).
+  let trustBefore = "none";
+  if (tmcOk > 0) trustBefore = "tmc";
+  else if (roads.size || names.length) trustBefore = "text";
+  else trustBefore = "national_fallback";
 
   if (ctx.coordinates && ctx.coordinates.lat != null && ctx.coordinates.lon != null) {
     trust = "coordinates";
@@ -127,6 +147,16 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
     }
   }
 
+  const primaryMissReason = missReasons.length ? choosePrimaryTmcMissReason(missReasons) : null;
+  let tmcLocationClass = "unknown";
+  if (primaryMissReason === TMC_MISS_REASON.POINT_LOOKUP_MISS) tmcLocationClass = "point";
+  else if (primaryMissReason === TMC_MISS_REASON.SEGMENT_LOOKUP_MISS) tmcLocationClass = "segment";
+  else if (primaryMissReason === TMC_MISS_REASON.AREA_LOOKUP_MISS) tmcLocationClass = "area";
+  else if (tmcOk > 0) tmcLocationClass = "point";
+
+  const tmcReferenceKind =
+    refKindsSeen.includes("linear") ? "linear" : refKindsSeen.includes("point") ? "point" : kind || "unknown";
+
   return {
     locationLabel,
     direction,
@@ -138,5 +168,13 @@ export function localizeFromTmc(tmcRefs, table, ctx = {}) {
     tmcMiss,
     trust,
     roadNumber: roadList[0] || ctx.roadNumber || "",
+    forensic: {
+      tmcMissReason: primaryMissReason,
+      tmcMissReasons: missReasons.slice(0, 8),
+      tmcReferenceKind,
+      tmcLocationClass,
+      trustBeforeResolver: trustBefore,
+      trustAfterResolver: trust,
+    },
   };
 }

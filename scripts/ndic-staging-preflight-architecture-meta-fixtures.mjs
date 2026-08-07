@@ -251,6 +251,22 @@ ok(
   Boolean(pkgScripts["iu-ndic-tmc-basic-importer-fixtures"])
 );
 ok(
+  "suite_requires_shadow_forensic_retention_fixtures",
+  /iu-ndic-shadow-forensic-retention-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_shadow_forensic_retention_fixtures",
+  Boolean(pkgScripts["iu-ndic-shadow-forensic-retention-fixtures"])
+);
+ok(
+  "suite_requires_location_forensic_probe_fixtures",
+  /iu-ndic-location-forensic-probe-fixtures/.test(suiteSrc)
+);
+ok(
+  "pkg_has_location_forensic_probe_fixtures",
+  Boolean(pkgScripts["iu-ndic-location-forensic-probe-fixtures"])
+);
+ok(
   "preflight_wf_runs_product_suite",
   /ndic-staging-preflight-suite\.mjs/.test(pfSrc)
 );
@@ -268,6 +284,17 @@ suiteMustKeepPointsFixtures("meta_remove_points_policy_from_suite_must_fail", (s
 suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (s) =>
   s.replace(/iu-ndic-tmc-basic-importer-fixtures/g, "iu-ndic-tmc-basic-importer-REMOVED")
 );
+{
+  const mutated = suiteSrc.replace(
+    /iu-ndic-shadow-forensic-retention-fixtures/g,
+    "iu-ndic-shadow-forensic-retention-REMOVED"
+  );
+  ok(
+    "meta_remove_shadow_forensic_retention_from_suite_must_fail",
+    !/iu-ndic-shadow-forensic-retention-fixtures/.test(mutated),
+    "FALSE_GREEN_SUITE_STILL_HAS_FORENSIC"
+  );
+}
 
 const report = { ok: fails.length === 0, failCount: fails.length, fails };
 console.log(JSON.stringify(report, null, 2));

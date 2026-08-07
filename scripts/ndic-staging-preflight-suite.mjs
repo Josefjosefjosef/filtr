@@ -22,6 +22,8 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   // POINTS semantic-null / importer gates (fail-closed on feature refs)
   "iu-ndic-tmc-points-empty-field-policy-fixtures",
   "iu-ndic-tmc-basic-importer-fixtures",
+  "iu-ndic-shadow-forensic-retention-fixtures",
+  "iu-ndic-location-forensic-probe-fixtures",
 ];
 
 const present = REQUIRED_WHEN_ANY_PRODUCT.filter((s) => Boolean(scripts[s]));

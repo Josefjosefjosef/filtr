@@ -67,7 +67,30 @@ function itemResolved(overrides = {}) {
     attribution: "Zdroj: NDIC",
     publishedAtSource: "2026-08-07T04:00:00.000Z",
     lastUpdatedBySource: "2026-08-07T05:00:00.000Z",
-    ndicV1: { tmcOk: 1, tmcMiss: 0, trust: "tmc" },
+    ndicV1: {
+      tmcOk: 1,
+      tmcMiss: 0,
+      trust: "tmc",
+      forensic: {
+        hasAlertCPoint: true,
+        hasAlertCLinear: false,
+        hasSpecificLocation: true,
+        hasPointCoordinates: false,
+        hasOpenLR: false,
+        hasGmlPoint: false,
+        hasGmlLineString: false,
+        hasGmlPolygon: false,
+        hasNetworkLocation: false,
+        hasSupplementaryPositionalDescription: false,
+        coordinateProbe: { present: false, parsed: false, valid: false },
+        tmcMissReason: null,
+        locationProfileBucket: "tmc_specific_location",
+        trustBeforeResolver: "tmc",
+        trustAfterResolver: "tmc",
+        tmcReferenceKind: "point",
+        tmcLocationClass: "point",
+      },
+    },
     ...overrides,
   };
 }
@@ -89,7 +112,30 @@ function itemUnresolved(overrides = {}) {
     attribution: "Zdroj: NDIC",
     publishedAtSource: null,
     lastUpdatedBySource: "2026-08-07T05:00:00.000Z",
-    ndicV1: { tmcOk: 0, tmcMiss: 1, trust: "national_fallback" },
+    ndicV1: {
+      tmcOk: 0,
+      tmcMiss: 1,
+      trust: "national_fallback",
+      forensic: {
+        hasAlertCPoint: true,
+        hasAlertCLinear: false,
+        hasSpecificLocation: true,
+        hasPointCoordinates: false,
+        hasOpenLR: false,
+        hasGmlPoint: false,
+        hasGmlLineString: false,
+        hasGmlPolygon: false,
+        hasNetworkLocation: false,
+        hasSupplementaryPositionalDescription: false,
+        coordinateProbe: { present: false, parsed: false, valid: false },
+        tmcMissReason: "lcd_not_found",
+        locationProfileBucket: "alertc_point",
+        trustBeforeResolver: "national_fallback",
+        trustAfterResolver: "national_fallback",
+        tmcReferenceKind: "point",
+        tmcLocationClass: "unknown",
+      },
+    },
     ...overrides,
   };
 }
@@ -170,6 +216,7 @@ function buildCtx(items, extra = {}) {
   ok("B_publication_items_is_projection", bundle.summary.PUBLICATION_ITEMS === 1);
   ok("B_resolved_0", bundle.summary.RESOLVED_BASIC === 0);
   ok("B_unresolved_1", bundle.summary.UNRESOLVED_TOTAL === 1);
+  ok("B_tmc_miss_lcd_1", bundle.summary.UNRESOLVED_TMC_MISS_LCD_NOT_FOUND === 1);
   ok("B_card_geo_null", bundle.cardPreview.items[0].road === null && bundle.cardPreview.items[0].locality === null);
   ok("B_card_eligibility_pass", bundle.summary.CARD_PUBLICATION_ELIGIBILITY_PASS === true);
   ok("B_card_location_pass", bundle.summary.CARD_LOCATION_VALIDATION_PASS === true);
@@ -213,6 +260,39 @@ function buildCtx(items, extra = {}) {
   ok("mix_blocked_1", bundle.summary.PUBLICATION_BLOCKED_TOTAL === 1);
   ok("mix_feed_split", bundle.summary.FEED_PUBLICATION_ELIGIBLE_ITEMS + bundle.summary.FEED_PUBLICATION_BLOCKED_ITEMS === 2);
   ok("mix_resolver_partition", bundle.summary.RESOLVED_BASIC + bundle.summary.RESOLVED_OTHER_VALID_LOCATION + bundle.summary.UNRESOLVED_TOTAL === 2);
+  ok(
+    "mix_tmc_miss_reason_sum",
+    [
+      "UNRESOLVED_TMC_MISS_CID_MISMATCH",
+      "UNRESOLVED_TMC_MISS_TABCD_MISMATCH",
+      "UNRESOLVED_TMC_MISS_LCD_NOT_FOUND",
+      "UNRESOLVED_TMC_MISS_POINT_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_SEGMENT_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_AREA_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_REFERENCE_TYPE",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_DIRECTION",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_OFFSET",
+      "UNRESOLVED_TMC_MISS_OTHER",
+    ].reduce((sum, key) => sum + bundle.summary[key], 0) === bundle.summary.UNRESOLVED_TMC_REFERENCE
+  );
+  ok(
+    "mix_missing_profile_sum",
+    [
+      "UNRESOLVED_MISSING_PROFILE_ALERTC_POINT",
+      "UNRESOLVED_MISSING_PROFILE_ALERTC_LINEAR",
+      "UNRESOLVED_MISSING_PROFILE_TMC_SPECIFIC_LOCATION",
+      "UNRESOLVED_MISSING_PROFILE_POINT_COORDINATES",
+      "UNRESOLVED_MISSING_PROFILE_OPENLR",
+      "UNRESOLVED_MISSING_PROFILE_GML_POINT",
+      "UNRESOLVED_MISSING_PROFILE_GML_LINESTRING",
+      "UNRESOLVED_MISSING_PROFILE_GML_POLYGON",
+      "UNRESOLVED_MISSING_PROFILE_NETWORK_LOCATION",
+      "UNRESOLVED_MISSING_PROFILE_SUPPLEMENTARY_POSITIONAL_DESCRIPTION",
+      "UNRESOLVED_MISSING_PROFILE_TEXT_ONLY",
+      "UNRESOLVED_MISSING_PROFILE_NO_LOCALIZATION_SIGNAL",
+      "UNRESOLVED_MISSING_PROFILE_OTHER",
+    ].reduce((sum, key) => sum + bundle.summary[key], 0) === bundle.summary.UNRESOLVED_MISSING_REFERENCE
+  );
 }
 
 // write + reload independent reproduction
@@ -386,6 +466,14 @@ ok("forbidden_re_xml", FORBIDDEN_VALUE_RE.test("<SituationPublication xmlns"));
 ok("max_datex_bytes_gt_50m", MAX_DATEX_BYTES_READ > 50_000_000);
 
 ok("schema_json_exists", fs.existsSync(path.join(ROOT, "scripts", "ndic-datex-v1", "shadow-forensic-summary.schema.json")));
+{
+  const constantsSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "shadow-forensic-constants.mjs"), "utf8");
+  const normalizeSrc = fs.readFileSync(path.join(ROOT, "scripts", "ndic-datex-v1", "normalize-feed.mjs"), "utf8");
+  const probePath = path.join(ROOT, "scripts", "ndic-datex-v1", "location-forensic-probe.mjs");
+  ok("meta_allowlist_has_lcd_miss_key", /UNRESOLVED_TMC_MISS_LCD_NOT_FOUND/.test(constantsSrc));
+  ok("meta_probe_exists", fs.existsSync(probePath));
+  ok("meta_normalize_attaches_forensic", /ndicV1:[\s\S]{0,800}forensic/.test(normalizeSrc));
+}
 
 if (fails.length) {
   console.error("NDIC_SHADOW_FORENSIC_RETENTION_FAIL");

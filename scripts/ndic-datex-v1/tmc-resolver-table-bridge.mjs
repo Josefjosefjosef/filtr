@@ -74,10 +74,31 @@ export function buildTmcResolverTableFromSp08001Accepted(input = {}) {
     throw Object.assign(new Error("tmc_resolver_table_empty"), { code: "TMC_RESOLVER_TABLE_EMPTY" });
   }
 
-  return parseTmcTablePayload({
+  /** Forensic-only LCD class side-index (P/L/A). Never used by lookupTmcPoint. */
+  const forensicLcdClass = Object.create(null);
+  for (const row of input.segments || []) {
+    if (!row || row.LCD == null) continue;
+    forensicLcdClass[String(row.LCD)] = "L";
+  }
+  for (const row of input.areas || []) {
+    if (!row || row.LCD == null) continue;
+    forensicLcdClass[String(row.LCD)] = "A";
+  }
+  for (const row of input.adminAreas || []) {
+    if (!row || row.LCD == null) continue;
+    forensicLcdClass[String(row.LCD)] = "A";
+  }
+  for (const row of input.points || []) {
+    if (!row || row.LCD == null) continue;
+    forensicLcdClass[String(row.LCD)] = "P";
+  }
+
+  const table = parseTmcTablePayload({
     version: String(input.tableVersion != null ? input.tableVersion : "unknown"),
     countryCode: input.countryCode != null ? Number(input.countryCode) : TMC_COUNTRY_CODE,
     tableNumber: input.tableNumber != null ? Number(input.tableNumber) : TMC_LOCATION_TABLE_NUMBER,
     points,
   });
+  table.forensicLcdClass = forensicLcdClass;
+  return table;
 }

@@ -13,6 +13,10 @@ import {
   attrOf,
   localTypeName,
 } from "./safe-xml.mjs";
+import {
+  extractLocationPresenceFlags,
+  buildCoordinateProbe,
+} from "./location-forensic-probe.mjs";
 
 function clip(s, max) {
   const t = String(s || "").replace(/\s+/g, " ").trim();
@@ -186,6 +190,10 @@ function parseRecord(recNode, limits) {
   const locNode = locs[0] || firstChild(recNode, "groupOfLocations");
   const tmcRefs = extractTmcRefs(locNode, limits.maxLocationsPerRecord);
   const coordinates = extractCoordinates(locNode);
+  // Forensic-only presence/coord probes — must not alter tmcRefs/coordinates.
+  const locationPresence = extractLocationPresenceFlags(locNode);
+  const coordinateProbe = buildCoordinateProbe(locNode, coordinates);
+  if (coordinateProbe.valid) locationPresence.pointCoordinatesValid = true;
   const road = extractRoad(locNode, recNode);
   const texts = extractTexts(recNode, limits.maxTextFieldChars);
 
@@ -200,6 +208,8 @@ function parseRecord(recNode, limits) {
     recordVersion: version,
     recordType,
     category: cat,
+    locationPresence,
+    coordinateProbe,
     createdAt: parseIso(childText(recNode, "situationRecordCreationTime")),
     versionTime: parseIso(childText(recNode, "situationRecordVersionTime")),
     firstSupplierVersionTime: parseIso(childText(recNode, "situationRecordFirstSupplierVersionTime")),

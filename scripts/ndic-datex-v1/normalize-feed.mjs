@@ -14,6 +14,7 @@ import {
 import { buildSituationIdentity, contentFingerprint } from "./identity.mjs";
 import { classifyTrafficLifecycle, classifyChangeSignificance, compareRevisions } from "./lifecycle.mjs";
 import { localizeFromTmc } from "./tmc-localize.mjs";
+import { chooseLocationProfileBucket } from "./location-forensic-probe.mjs";
 import { buildTrafficTitle, buildTrafficSummary } from "./title.mjs";
 import {
   attachLegalProvenance,
@@ -49,6 +50,31 @@ export function situationToFeedItem(situation, opts = {}) {
     geoRegistry: opts.geoRegistry || null,
   });
 
+  const presence = {
+    hasAlertCPoint: false,
+    hasAlertCLinear: false,
+    hasSpecificLocation: false,
+    hasPointCoordinates: false,
+    pointCoordinatesValid: false,
+    hasOpenLR: false,
+    hasGmlPoint: false,
+    hasGmlLineString: false,
+    hasGmlPolygon: false,
+    hasNetworkLocation: false,
+    hasSupplementaryPositionalDescription: false,
+    ...(primary.locationPresence || {}),
+  };
+  if (primary.coordinateProbe && primary.coordinateProbe.valid) {
+    presence.pointCoordinatesValid = true;
+    presence.hasPointCoordinates = true;
+  }
+  const locationProfileBucket = chooseLocationProfileBucket(presence, loc.trust);
+  const forensic = {
+    ...presence,
+    locationProfileBucket,
+    coordinateProbe: primary.coordinateProbe || { present: false, parsed: false, valid: false },
+    ...(loc.forensic || {}),
+  };
   const life = classifyTrafficLifecycle({
     validFrom: validity.overallStartTime || primary.createdAt,
     validTo: validity.overallEndTime,
@@ -140,6 +166,7 @@ export function situationToFeedItem(situation, opts = {}) {
       tmcOk: loc.tmcOk,
       tmcMiss: loc.tmcMiss,
       trust: loc.trust,
+      forensic,
     },
   };
 

@@ -168,6 +168,54 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
   let provenanceMissing = 0;
   let sourceTimeValid = 0;
   let sourceTimeMissing = 0;
+  const tmcMissReasons = {
+    cid_mismatch: 0,
+    tabcd_mismatch: 0,
+    lcd_not_found: 0,
+    point_lookup_miss: 0,
+    segment_lookup_miss: 0,
+    area_lookup_miss: 0,
+    unsupported_reference_type: 0,
+    unsupported_direction: 0,
+    unsupported_offset: 0,
+    other: 0,
+  };
+  const locationProfiles = {
+    alertc_point: 0,
+    alertc_linear: 0,
+    tmc_specific_location: 0,
+    point_coordinates: 0,
+    openlr: 0,
+    gml_point: 0,
+    gml_linestring: 0,
+    gml_polygon: 0,
+    network_location: 0,
+    supplementary_positional_description: 0,
+    text_only: 0,
+    no_localization_signal: 0,
+    other: 0,
+  };
+  const presenceFields = {
+    hasAlertCPoint: 0,
+    hasAlertCLinear: 0,
+    hasSpecificLocation: 0,
+    hasPointCoordinates: 0,
+    hasOpenLR: 0,
+    hasGmlPoint: 0,
+    hasGmlLineString: 0,
+    hasGmlPolygon: 0,
+    hasNetworkLocation: 0,
+    hasSupplementaryPositionalDescription: 0,
+  };
+  const trustBefore = { tmc: 0, text: 0, national_fallback: 0, none: 0 };
+  const trustAfter = { coordinates: 0, tmc: 0, text: 0, national_fallback: 0, none: 0 };
+  const tmcReferenceKinds = { point: 0, linear: 0, other: 0 };
+  const tmcLocationClasses = { point: 0, segment: 0, area: 0, unknown: 0 };
+  let coordinatePresent = 0;
+  let coordinateParsed = 0;
+  let coordinateValid = 0;
+  let coordinateVerifiedTrust = 0;
+  let coordinateBlocked = 0;
 
   for (const it of allItems) {
     const st = String((it && it.status) || "");
@@ -179,14 +227,47 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     const trust = String((it && it.localizationTrust) || "");
     const tmcOk = it && it.ndicV1 && Number(it.ndicV1.tmcOk) > 0;
     const tmcMiss = it && it.ndicV1 && Number(it.ndicV1.tmcMiss) > 0;
+    const forensic = (it && it.ndicV1 && it.ndicV1.forensic) || {};
+    for (const field of Object.keys(presenceFields)) {
+      if (forensic[field] === true) presenceFields[field] += 1;
+    }
+    const coordinateProbe = forensic.coordinateProbe || {};
+    if (coordinateProbe.present === true) coordinatePresent += 1;
+    if (coordinateProbe.parsed === true) coordinateParsed += 1;
+    if (coordinateProbe.valid === true) coordinateValid += 1;
+    if (trust === "coordinates") coordinateVerifiedTrust += 1;
+    if (coordinateProbe.present === true && trust !== "coordinates") coordinateBlocked += 1;
+
+    const before = String(forensic.trustBeforeResolver || "");
+    if (Object.prototype.hasOwnProperty.call(trustBefore, before)) trustBefore[before] += 1;
+    const after = String(forensic.trustAfterResolver || "");
+    if (Object.prototype.hasOwnProperty.call(trustAfter, after)) trustAfter[after] += 1;
+    const referenceKind = String(forensic.tmcReferenceKind || "");
+    if (referenceKind === "point" || referenceKind === "linear") tmcReferenceKinds[referenceKind] += 1;
+    else tmcReferenceKinds.other += 1;
+    const locationClass = String(forensic.tmcLocationClass || "");
+    if (locationClass === "point" || locationClass === "segment" || locationClass === "area") {
+      tmcLocationClasses[locationClass] += 1;
+    } else {
+      tmcLocationClasses.unknown += 1;
+    }
     if (tmcOk || tmcMiss) resolverAttempted += 1;
 
     if (trust === "tmc" || tmcOk) resolvedBasic += 1;
     else if (trust === "coordinates") resolvedOther += 1;
     else {
       unresolvedTotal += 1;
-      if (tmcMiss && !tmcOk) unresolvedTmc += 1;
-      else unresolvedMissing += 1;
+      if (tmcMiss && !tmcOk) {
+        unresolvedTmc += 1;
+        const reason = String(forensic.tmcMissReason || "");
+        if (Object.prototype.hasOwnProperty.call(tmcMissReasons, reason)) tmcMissReasons[reason] += 1;
+        else tmcMissReasons.other += 1;
+      } else {
+        unresolvedMissing += 1;
+        const profile = String(forensic.locationProfileBucket || "");
+        if (Object.prototype.hasOwnProperty.call(locationProfiles, profile)) locationProfiles[profile] += 1;
+        else locationProfiles.no_localization_signal += 1;
+      }
     }
 
     if (hasProvenance(it)) provenanceValid += 1;
@@ -267,6 +348,18 @@ function computeResolverAndPublicationMetrics(allItems, gateItems) {
     withoutKm,
     withDirection,
     withoutDirection,
+    tmcMissReasons,
+    locationProfiles,
+    presenceFields,
+    coordinatePresent,
+    coordinateParsed,
+    coordinateValid,
+    coordinateVerifiedTrust,
+    coordinateBlocked,
+    trustBefore,
+    trustAfter,
+    tmcReferenceKinds,
+    tmcLocationClasses,
   };
 }
 
@@ -503,6 +596,61 @@ export function buildShadowForensicBundle(ctx = {}) {
     UNRESOLVED_TMC_REFERENCE: m.unresolvedTmc,
     UNRESOLVED_MISSING_REFERENCE: m.unresolvedMissing,
     UNRESOLVED_INVALID_REFERENCE: m.unresolvedInvalid,
+    UNRESOLVED_TMC_MISS_CID_MISMATCH: m.tmcMissReasons.cid_mismatch,
+    UNRESOLVED_TMC_MISS_TABCD_MISMATCH: m.tmcMissReasons.tabcd_mismatch,
+    UNRESOLVED_TMC_MISS_LCD_NOT_FOUND: m.tmcMissReasons.lcd_not_found,
+    UNRESOLVED_TMC_MISS_POINT_LOOKUP_MISS: m.tmcMissReasons.point_lookup_miss,
+    UNRESOLVED_TMC_MISS_SEGMENT_LOOKUP_MISS: m.tmcMissReasons.segment_lookup_miss,
+    UNRESOLVED_TMC_MISS_AREA_LOOKUP_MISS: m.tmcMissReasons.area_lookup_miss,
+    UNRESOLVED_TMC_MISS_UNSUPPORTED_REFERENCE_TYPE: m.tmcMissReasons.unsupported_reference_type,
+    UNRESOLVED_TMC_MISS_UNSUPPORTED_DIRECTION: m.tmcMissReasons.unsupported_direction,
+    UNRESOLVED_TMC_MISS_UNSUPPORTED_OFFSET: m.tmcMissReasons.unsupported_offset,
+    UNRESOLVED_TMC_MISS_OTHER: m.tmcMissReasons.other,
+    UNRESOLVED_MISSING_PROFILE_ALERTC_POINT: m.locationProfiles.alertc_point,
+    UNRESOLVED_MISSING_PROFILE_ALERTC_LINEAR: m.locationProfiles.alertc_linear,
+    UNRESOLVED_MISSING_PROFILE_TMC_SPECIFIC_LOCATION: m.locationProfiles.tmc_specific_location,
+    UNRESOLVED_MISSING_PROFILE_POINT_COORDINATES: m.locationProfiles.point_coordinates,
+    UNRESOLVED_MISSING_PROFILE_OPENLR: m.locationProfiles.openlr,
+    UNRESOLVED_MISSING_PROFILE_GML_POINT: m.locationProfiles.gml_point,
+    UNRESOLVED_MISSING_PROFILE_GML_LINESTRING: m.locationProfiles.gml_linestring,
+    UNRESOLVED_MISSING_PROFILE_GML_POLYGON: m.locationProfiles.gml_polygon,
+    UNRESOLVED_MISSING_PROFILE_NETWORK_LOCATION: m.locationProfiles.network_location,
+    UNRESOLVED_MISSING_PROFILE_SUPPLEMENTARY_POSITIONAL_DESCRIPTION:
+      m.locationProfiles.supplementary_positional_description,
+    UNRESOLVED_MISSING_PROFILE_TEXT_ONLY: m.locationProfiles.text_only,
+    UNRESOLVED_MISSING_PROFILE_NO_LOCALIZATION_SIGNAL: m.locationProfiles.no_localization_signal,
+    UNRESOLVED_MISSING_PROFILE_OTHER: m.locationProfiles.other,
+    LOC_HAS_ALERTC_POINT: m.presenceFields.hasAlertCPoint,
+    LOC_HAS_ALERTC_LINEAR: m.presenceFields.hasAlertCLinear,
+    LOC_HAS_SPECIFIC_LOCATION: m.presenceFields.hasSpecificLocation,
+    LOC_HAS_POINT_COORDINATES: m.presenceFields.hasPointCoordinates,
+    LOC_HAS_OPENLR: m.presenceFields.hasOpenLR,
+    LOC_HAS_GML_POINT: m.presenceFields.hasGmlPoint,
+    LOC_HAS_GML_LINESTRING: m.presenceFields.hasGmlLineString,
+    LOC_HAS_GML_POLYGON: m.presenceFields.hasGmlPolygon,
+    LOC_HAS_NETWORK_LOCATION: m.presenceFields.hasNetworkLocation,
+    LOC_HAS_SUPPLEMENTARY_POSITIONAL_DESCRIPTION: m.presenceFields.hasSupplementaryPositionalDescription,
+    POINT_COORDINATES_PRESENT_TOTAL: m.coordinatePresent,
+    POINT_COORDINATES_PARSED_TOTAL: m.coordinateParsed,
+    POINT_COORDINATES_VALID_TOTAL: m.coordinateValid,
+    POINT_COORDINATES_VERIFIED_TRUST_TOTAL: m.coordinateVerifiedTrust,
+    POINT_COORDINATES_BLOCKED_TOTAL: m.coordinateBlocked,
+    TRUST_BEFORE_TMC: m.trustBefore.tmc,
+    TRUST_BEFORE_TEXT: m.trustBefore.text,
+    TRUST_BEFORE_NATIONAL_FALLBACK: m.trustBefore.national_fallback,
+    TRUST_BEFORE_NONE: m.trustBefore.none,
+    TRUST_AFTER_COORDINATES: m.trustAfter.coordinates,
+    TRUST_AFTER_TMC: m.trustAfter.tmc,
+    TRUST_AFTER_TEXT: m.trustAfter.text,
+    TRUST_AFTER_NATIONAL_FALLBACK: m.trustAfter.national_fallback,
+    TRUST_AFTER_NONE: m.trustAfter.none,
+    TMC_REF_KIND_POINT: m.tmcReferenceKinds.point,
+    TMC_REF_KIND_LINEAR: m.tmcReferenceKinds.linear,
+    TMC_REF_KIND_OTHER: m.tmcReferenceKinds.other,
+    TMC_LOCATION_CLASS_POINT: m.tmcLocationClasses.point,
+    TMC_LOCATION_CLASS_SEGMENT: m.tmcLocationClasses.segment,
+    TMC_LOCATION_CLASS_AREA: m.tmcLocationClasses.area,
+    TMC_LOCATION_CLASS_UNKNOWN: m.tmcLocationClasses.unknown,
     FEED_INTERNAL_ITEMS: gateItems.length,
     FEED_PUBLICATION_ELIGIBLE_ITEMS: m.pubEligible,
     FEED_PUBLICATION_BLOCKED_ITEMS: m.pubBlocked,
@@ -636,6 +784,62 @@ export function printShadowForensicStdout(summary, validationReport) {
     "UNRESOLVED_TOTAL=" + (summary && summary.UNRESOLVED_TOTAL),
     "UNRESOLVED_TMC_REFERENCE=" + (summary && summary.UNRESOLVED_TMC_REFERENCE),
     "UNRESOLVED_MISSING_REFERENCE=" + (summary && summary.UNRESOLVED_MISSING_REFERENCE),
+    ...[
+      "UNRESOLVED_TMC_MISS_CID_MISMATCH",
+      "UNRESOLVED_TMC_MISS_TABCD_MISMATCH",
+      "UNRESOLVED_TMC_MISS_LCD_NOT_FOUND",
+      "UNRESOLVED_TMC_MISS_POINT_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_SEGMENT_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_AREA_LOOKUP_MISS",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_REFERENCE_TYPE",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_DIRECTION",
+      "UNRESOLVED_TMC_MISS_UNSUPPORTED_OFFSET",
+      "UNRESOLVED_TMC_MISS_OTHER",
+      "UNRESOLVED_MISSING_PROFILE_ALERTC_POINT",
+      "UNRESOLVED_MISSING_PROFILE_ALERTC_LINEAR",
+      "UNRESOLVED_MISSING_PROFILE_TMC_SPECIFIC_LOCATION",
+      "UNRESOLVED_MISSING_PROFILE_POINT_COORDINATES",
+      "UNRESOLVED_MISSING_PROFILE_OPENLR",
+      "UNRESOLVED_MISSING_PROFILE_GML_POINT",
+      "UNRESOLVED_MISSING_PROFILE_GML_LINESTRING",
+      "UNRESOLVED_MISSING_PROFILE_GML_POLYGON",
+      "UNRESOLVED_MISSING_PROFILE_NETWORK_LOCATION",
+      "UNRESOLVED_MISSING_PROFILE_SUPPLEMENTARY_POSITIONAL_DESCRIPTION",
+      "UNRESOLVED_MISSING_PROFILE_TEXT_ONLY",
+      "UNRESOLVED_MISSING_PROFILE_NO_LOCALIZATION_SIGNAL",
+      "UNRESOLVED_MISSING_PROFILE_OTHER",
+      "LOC_HAS_ALERTC_POINT",
+      "LOC_HAS_ALERTC_LINEAR",
+      "LOC_HAS_SPECIFIC_LOCATION",
+      "LOC_HAS_POINT_COORDINATES",
+      "LOC_HAS_OPENLR",
+      "LOC_HAS_GML_POINT",
+      "LOC_HAS_GML_LINESTRING",
+      "LOC_HAS_GML_POLYGON",
+      "LOC_HAS_NETWORK_LOCATION",
+      "LOC_HAS_SUPPLEMENTARY_POSITIONAL_DESCRIPTION",
+      "POINT_COORDINATES_PRESENT_TOTAL",
+      "POINT_COORDINATES_PARSED_TOTAL",
+      "POINT_COORDINATES_VALID_TOTAL",
+      "POINT_COORDINATES_VERIFIED_TRUST_TOTAL",
+      "POINT_COORDINATES_BLOCKED_TOTAL",
+      "TRUST_BEFORE_TMC",
+      "TRUST_BEFORE_TEXT",
+      "TRUST_BEFORE_NATIONAL_FALLBACK",
+      "TRUST_BEFORE_NONE",
+      "TRUST_AFTER_COORDINATES",
+      "TRUST_AFTER_TMC",
+      "TRUST_AFTER_TEXT",
+      "TRUST_AFTER_NATIONAL_FALLBACK",
+      "TRUST_AFTER_NONE",
+      "TMC_REF_KIND_POINT",
+      "TMC_REF_KIND_LINEAR",
+      "TMC_REF_KIND_OTHER",
+      "TMC_LOCATION_CLASS_POINT",
+      "TMC_LOCATION_CLASS_SEGMENT",
+      "TMC_LOCATION_CLASS_AREA",
+      "TMC_LOCATION_CLASS_UNKNOWN",
+    ].map((key) => key + "=" + (summary && summary[key])),
     "PUBLICATION_PROJECTIONS_TOTAL=" + (summary && summary.PUBLICATION_PROJECTIONS_TOTAL),
     "PUBLICATION_ELIGIBLE_TOTAL=" + (summary && summary.PUBLICATION_ELIGIBLE_TOTAL),
     "PUBLICATION_BLOCKED_TOTAL=" + (summary && summary.PUBLICATION_BLOCKED_TOTAL),
