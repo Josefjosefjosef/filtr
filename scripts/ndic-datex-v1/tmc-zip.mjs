@@ -6,7 +6,6 @@
  * Never logs Authorization / credentials / raw table contents.
  */
 import zlib from "zlib";
-import { DEFAULT_LIMITS } from "./config.mjs";
 import { parseTmcTablePayload } from "./tmc-table.mjs";
 
 const LOCAL_SIG = 0x04034b50;
@@ -825,22 +824,30 @@ function parseFromZipEntries(entries, opts) {
 }
 
 /**
+ * Merge caller zip limits onto DEFAULT_ZIP_LIMITS.
+ * DATEX maxResponseBytes must NEVER clamp TMC unzip / gzip ceilings
+ * (real NDIC TMC ~332 MiB declared uncompressed; DATEX body cap is ≤96 MiB).
+ * @param {{ limits?: object }} [opts]
+ */
+export function resolveTmcParseLimits(opts = {}) {
+  const limits = { ...DEFAULT_ZIP_LIMITS };
+  const incoming = opts.limits || {};
+  for (const key of Object.keys(DEFAULT_ZIP_LIMITS)) {
+    if (incoming[key] != null && Number.isFinite(Number(incoming[key])) && Number(incoming[key]) > 0) {
+      limits[key] = Number(incoming[key]);
+    }
+  }
+  return limits;
+}
+
+/**
  * Parse TMC table from download bytes (ZIP / GZIP / plain) with optional Content-Encoding hint.
+ * JSON / simple delimited only — SP08001 DAT archives use loadTmcTableFromDownload.
  * @param {Buffer|string} input
  * @param {{ version?: string, limits?: object, contentEncoding?: string }} [opts]
  */
 export function parseTmcTableFromDownload(input, opts = {}) {
-  const limits = {
-    ...DEFAULT_ZIP_LIMITS,
-    maxUncompressedTotal: Math.min(
-      DEFAULT_ZIP_LIMITS.maxUncompressedTotal,
-      (opts.limits && opts.limits.maxResponseBytes) || DEFAULT_LIMITS.maxResponseBytes
-    ),
-    maxGzipOutput: Math.min(
-      DEFAULT_ZIP_LIMITS.maxGzipOutput,
-      (opts.limits && opts.limits.maxResponseBytes) || DEFAULT_LIMITS.maxResponseBytes
-    ),
-  };
+  const limits = resolveTmcParseLimits(opts);
 
   let body;
   if (Buffer.isBuffer(input)) {

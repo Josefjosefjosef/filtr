@@ -35,6 +35,7 @@ import {
 } from "./disk-preflight.mjs";
 import { collectInspectionPeekTargets } from "./tmc-format-inspection.mjs";
 import { peekZipEntryBytesStreaming, PEEK_STATUS } from "./tmc-zip-entry-peek.mjs";
+import { buildTmcResolverTableFromSp08001Accepted } from "./tmc-resolver-table-bridge.mjs";
 import {
   SP08001_TABLE_CODES,
   SP08001_STANDARD_TABLE_COUNT,
@@ -383,7 +384,8 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
     let cidOk = false;
     let tabcdOk = false;
 
-    const maxPeek = opts.maxPeekBytes != null ? opts.maxPeekBytes : 2 * 1024 * 1024;
+    // Full entry read up to per-entry bomb cap (not a 2 MiB inspection peek).
+    const maxPeek = opts.maxPeekBytes != null ? opts.maxPeekBytes : lim.maxSingleUncompressed;
 
     for (const code of SP08001_TABLE_CODES) {
       const target = manifest.byCode[code];
@@ -624,6 +626,19 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
     metrics.peakHeapBytes = Math.max(metrics.peakHeapBytes, mu.heapUsed);
     metrics.peakRssBytes = Math.max(metrics.peakRssBytes, mu.rss);
 
+    /** @type {object|undefined} */
+    let resolverTable;
+    if (opts.returnResolverTable === true) {
+      resolverTable = buildTmcResolverTableFromSp08001Accepted({
+        points: tableStore.POINTS._accepted || [],
+        roads: tableStore.ROADS._accepted || [],
+        names: (tableStore.NAMES && tableStore.NAMES._accepted) || [],
+        tableVersion: TMC_TABLE_VERSION_EXPECTED,
+        countryCode: opts.countryCode,
+        tableNumber: opts.tableNumber,
+      });
+    }
+
     return {
       ok: true,
       rejectCode: null,
@@ -652,6 +667,7 @@ export async function importBasicTmcArchive(zipPath, opts = {}) {
       },
       indexDirCategory: "task_owned",
       ...(opts.returnInternalPaths === true ? { _internalIndexPaths: paths } : {}),
+      ...(resolverTable ? { resolverTable } : {}),
       tableCounts: Object.fromEntries(Object.keys(publicTables).map((k) => [k, publicTables[k].rowCount])),
       diskFormulaVersion: DISK_FORMULA_VERSION,
       authoritativeFormatVerified: true,

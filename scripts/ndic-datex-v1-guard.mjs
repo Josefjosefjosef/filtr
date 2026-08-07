@@ -633,7 +633,8 @@ async function discoveryChecks() {
     );
   }
   ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
-  ok("prod_sync_uses_zip_parser", /parseTmcTableFromDownload/.test(syncSrc), "zip-parser");
+  ok("prod_sync_uses_tmc_download_load", /loadTmcTableFromDownload/.test(syncSrc), "tmc-download-load");
+  ok("prod_sync_no_datex_clamp_on_tmc", !/parseTmcTableFromDownload\(bodyBuf/.test(syncSrc), "no-direct-zip-parse");
   ok("prod_sync_passes_content_encoding", /contentEncoding/.test(syncSrc), "content-encoding");
   ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
   ok("shadow_isolated_helper", /isShadowIsolated|IU_NDIC_SHADOW_ISOLATED/.test(syncSrc), "isolated");

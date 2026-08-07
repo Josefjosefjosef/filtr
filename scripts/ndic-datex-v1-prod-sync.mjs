@@ -39,7 +39,8 @@ import {
   emptyTmcStore,
   tmcPublicMeta,
 } from "./ndic-datex-v1/tmc-table.mjs";
-import { parseTmcTableFromDownload } from "./ndic-datex-v1/tmc-zip.mjs";
+import { DEFAULT_ZIP_LIMITS } from "./ndic-datex-v1/tmc-zip.mjs";
+import { loadTmcTableFromDownload } from "./ndic-datex-v1/tmc-download-load.mjs";
 import { isPublishableNdicItem } from "./ndic-datex-v1/normalize-feed.mjs";
 import { assertAllowedPullUrl } from "./ndic-datex-v1/config.mjs";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
@@ -191,22 +192,38 @@ async function maybeRefreshTmc(config, tmcStore, diagnostics) {
     }
     const ab = await res.arrayBuffer();
     const bodyBuf = Buffer.from(ab);
-    if (bodyBuf.length > config.limits.maxResponseBytes) {
+    // TMC compressed ceiling is independent of DATEX maxResponseBytes (≤96 MiB).
+    if (bodyBuf.length > DEFAULT_ZIP_LIMITS.maxCompressedTotal) {
       diagnostics.tmc = { ok: false, reason: "tmc_body_too_large", meta: tmcPublicMeta(tmcStore) };
       return tmcStore;
     }
     const contentEncoding = String(res.headers.get("content-encoding") || "");
-    const table = parseTmcTableFromDownload(bodyBuf, {
-      limits: config.limits,
+    const workDir = path.join(
+      path.dirname(TMC_STORE_FILE),
+      "tmc-dl-" + String(diagnostics.runId || "run").slice(0, 16)
+    );
+    const loaded = await loadTmcTableFromDownload(bodyBuf, {
       contentEncoding,
+      workDir,
+      countryCode: config.tmcCountryCode,
+      tableNumber: config.tmcLocationTableNumber,
     });
-    const act = activateTmcTable(tmcStore, table, {
+    if (!loaded.ok) {
+      diagnostics.tmc = {
+        ok: false,
+        reason: String(loaded.rejectCode || loaded.reason || "tmc_load_failed"),
+        meta: tmcPublicMeta(tmcStore),
+      };
+      return tmcStore;
+    }
+    const act = activateTmcTable(tmcStore, loaded.table, {
       countryCode: config.tmcCountryCode,
       tableNumber: config.tmcLocationTableNumber,
     });
     diagnostics.tmc = {
       ok: act.ok,
-      reason: act.reason,
+      reason: act.ok ? act.reason || "activated" : act.reason || "activate_failed",
+      source: loaded.source,
       authSource: config.tmcAuthSource,
       meta: tmcPublicMeta(tmcStore),
     };

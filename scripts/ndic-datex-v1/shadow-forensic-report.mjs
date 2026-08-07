@@ -323,6 +323,23 @@ export function buildShadowForensicBundle(ctx = {}) {
           "unknown",
         64
       ) || "unknown",
+    TMC_REASON: (() => {
+      const raw =
+        (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.reason) ||
+        (ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.ok === false ? "tmc_failed" : "none");
+      const s = String(raw).replace(/[^A-Za-z0-9._:-]/g, "_").slice(0, 80);
+      return s || "none";
+    })(),
+    TMC_ACTIVE: Boolean(
+      ctx.diagnostics && ctx.diagnostics.tmc && ctx.diagnostics.tmc.meta && ctx.diagnostics.tmc.meta.active
+    ),
+    TMC_POINT_COUNT: Number(
+      (ctx.diagnostics &&
+        ctx.diagnostics.tmc &&
+        ctx.diagnostics.tmc.meta &&
+        ctx.diagnostics.tmc.meta.pointCount) ||
+        0
+    ),
     TMC_RESOLVER_VERSION: clip(PARSER_VERSION, 64) || "unknown",
     LOADED_EVENTS: loaded,
     ACTIVE_EVENTS: m.active,
@@ -493,6 +510,10 @@ export function printShadowForensicStdout(summary, validationReport) {
     "FUTURE_EVENTS=" + (summary && summary.FUTURE_EVENTS),
     "ENDED_EVENTS=" + (summary && summary.ENDED_EVENTS),
     "RESOLVED_BASIC=" + (summary && summary.RESOLVED_BASIC),
+    "TMC_ARCHIVE_USED=" + (summary && summary.TMC_ARCHIVE_USED ? "true" : "false"),
+    "TMC_REASON=" + (summary && summary.TMC_REASON),
+    "TMC_ACTIVE=" + (summary && summary.TMC_ACTIVE ? "true" : "false"),
+    "TMC_POINT_COUNT=" + (summary && summary.TMC_POINT_COUNT),
     "RESOLVED_OTHER_VALID_LOCATION=" + (summary && summary.RESOLVED_OTHER_VALID_LOCATION),
     "UNRESOLVED_TOTAL=" + (summary && summary.UNRESOLVED_TOTAL),
     "UNRESOLVED_TMC_REFERENCE=" + (summary && summary.UNRESOLVED_TMC_REFERENCE),

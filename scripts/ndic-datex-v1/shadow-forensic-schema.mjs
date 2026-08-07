@@ -73,6 +73,11 @@ export function validateForensicSummary(summary) {
   if (typeof summary.DATEX_XML_PARSE_PASS !== "boolean") fails.push("DATEX_XML_PARSE_PASS");
   if (typeof summary.TMC_ARCHIVE_USED !== "boolean") fails.push("TMC_ARCHIVE_USED");
   if (typeof summary.TMC_VERSION !== "string" || summary.TMC_VERSION.length > 64) fails.push("TMC_VERSION");
+  if (typeof summary.TMC_REASON !== "string" || summary.TMC_REASON.length > 80 || !/^[A-Za-z0-9._:-]+$/.test(summary.TMC_REASON)) {
+    fails.push("TMC_REASON");
+  }
+  if (typeof summary.TMC_ACTIVE !== "boolean") fails.push("TMC_ACTIVE");
+  if (!isNonNegInt(summary.TMC_POINT_COUNT, MAX_EVENT_COUNT)) fails.push("TMC_POINT_COUNT");
   if (typeof summary.TMC_RESOLVER_VERSION !== "string" || summary.TMC_RESOLVER_VERSION.length > 64) fails.push("TMC_RESOLVER_VERSION");
 
   const intFields = [

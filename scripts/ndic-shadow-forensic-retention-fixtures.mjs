@@ -103,7 +103,7 @@ function buildCtx(items, extra = {}) {
     diagnostics: {
       runId: "abc123",
       started: "2026-08-07T05:10:20.000Z",
-      tmc: { ok: true, reason: "fixture", meta: { version: "tmc-v11-synthetic" } },
+      tmc: { ok: true, reason: "fixture", meta: { version: "tmc-v11-synthetic", active: true, pointCount: 2 } },
     },
     result: {
       parsed: { ok: true, situationCount: items.length, rejectedCount: 0 },
