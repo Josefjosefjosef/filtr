@@ -74,8 +74,8 @@ function expectedPaintFor(daypart, width) {
 /** Install before any page script so early daypart paint uses the pinned hour. */
 function installPinnedClockInitScript() {
   return ({ hour }) => {
-    const base = new Date(2026, 5, 15, hour, 0, 0, 0).getTime();
-    const RealDate = Date;
+    const RealDate = window.Date;
+    const base = new RealDate(2026, 5, 15, hour, 0, 0, 0).getTime();
     function FakeDate(...args) {
       if (args.length === 0) return new RealDate(base);
       if (args.length === 1) return new RealDate(args[0]);
@@ -85,8 +85,17 @@ function installPinnedClockInitScript() {
     FakeDate.now = () => base;
     FakeDate.parse = RealDate.parse;
     FakeDate.UTC = RealDate.UTC;
-    // eslint-disable-next-line no-global-assign
-    Date = FakeDate;
+    try {
+      Object.defineProperty(window, "Date", {
+        configurable: true,
+        writable: true,
+        value: FakeDate,
+      });
+    } catch (_) {
+      try {
+        window.Date = FakeDate;
+      } catch (_) {}
+    }
   };
 }
 
@@ -101,22 +110,36 @@ async function pinAndWaitDaypart(page, vp) {
   );
   await page.evaluate(
     ({ hour: h, daypart: dp, paint: p }) => {
+      const applyPin = () => {
+        try {
+          document.documentElement.setAttribute("data-iu-daypart", dp);
+          document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
+          const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
+          for (let i = 0; i < all.length; i++) document.documentElement.classList.remove(all[i]);
+          const map = {
+            morning: "iu-time-morning",
+            lateMorning: "iu-time-late-morning",
+            afternoon: "iu-time-afternoon",
+            evening: "iu-time-evening",
+          };
+          if (map[p]) document.documentElement.classList.add(map[p]);
+        } catch (_) {}
+      };
+      try {
+        window.__IU_HERO_CONTRACT_PIN__ = { hour: h, daypart: dp, paint: p };
+      } catch (_) {}
       try {
         window.iuSilverWelcomeRefresh({ hour: h });
       } catch (_) {}
+      applyPin();
+      // Welcome refresh may re-apply daypart on rAF after opts-dropping wrappers — pin again after paint.
       try {
-        document.documentElement.setAttribute("data-iu-daypart", dp);
-        document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
-        const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
-        for (let i = 0; i < all.length; i++) document.documentElement.classList.remove(all[i]);
-        const map = {
-          morning: "iu-time-morning",
-          lateMorning: "iu-time-late-morning",
-          afternoon: "iu-time-afternoon",
-          evening: "iu-time-evening",
-        };
-        if (map[p]) document.documentElement.classList.add(map[p]);
-      } catch (_) {}
+        requestAnimationFrame(() => {
+          requestAnimationFrame(applyPin);
+        });
+      } catch (_) {
+        applyPin();
+      }
     },
     { hour, daypart, paint }
   );
