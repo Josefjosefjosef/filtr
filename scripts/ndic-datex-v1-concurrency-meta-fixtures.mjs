@@ -12,6 +12,7 @@ import {
   resolveNdicConcurrencyGroup,
   workflowLevelHasSharedLock,
   jobHasGroup,
+  jobBlock,
 } from "./ndic-datex-v1-concurrency-fixtures.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,6 +56,16 @@ function main() {
     ok(
       "meta_remove_ndic_shared_lock_caught",
       !jobHasGroup(mutated, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP),
+      "caught"
+    );
+  }
+
+  // Mutation: remove queue:max (restores pending-replacement starvation)
+  {
+    const mutated = ndic.replace(/\n\s+queue:\s*max\b/, "");
+    ok(
+      "meta_remove_queue_max_caught",
+      !/queue:\s*max\b/.test(jobBlock(mutated, "ndic-shared-write")),
       "caught"
     );
   }

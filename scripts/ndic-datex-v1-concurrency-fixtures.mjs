@@ -119,6 +119,11 @@ function main() {
   ok("chmi_cancel_false", /cancel-in-progress:\s*false/.test(chmi), "chmi-cancel");
   ok("ie_cancel_false", /cancel-in-progress:\s*false/.test(ie), "ie-cancel");
 
+  // Incident 31250620970: queue:single pending replacement must not remain the product model.
+  ok("ndic_queue_max", /queue:\s*max\b/.test(jobBlock(ndic, "ndic-shared-write")), "ndic-q");
+  ok("chmi_queue_max", /queue:\s*max\b/.test(jobBlock(chmi, "shared-write")), "chmi-q");
+  ok("ie_queue_max", /queue:\s*max\b/.test(jobBlock(ie, "shared-write")), "ie-q");
+
   ok("mode_off_staging", resolveNdicConcurrencyGroup("off") === NDIC_STAGING_GROUP, "off");
   ok("mode_shadow_staging", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("mode_active_production", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
@@ -133,11 +138,16 @@ function main() {
   }
 
   {
+    // Legacy GitHub queue:single model — documents why pending writers were lost.
     const s0 = { running: "ndic-a", pending: null };
     const s1 = simulatePendingReplacement(s0, "ndic-b");
-    ok("two_ndic_pending_slot", s1.running === "ndic-a" && s1.pending === "ndic-b", "slot");
+    ok("legacy_single_pending_slot", s1.running === "ndic-a" && s1.pending === "ndic-b", "slot");
     const s2 = simulatePendingReplacement(s1, "ndic-c");
-    ok("two_ndic_replaces_pending", s2.pending === "ndic-c" && s2.cancelled.includes("ndic-b"), "repl");
+    ok(
+      "legacy_single_replaces_pending_is_dangerous",
+      s2.pending === "ndic-c" && s2.cancelled.includes("ndic-b"),
+      "legacy-danger"
+    );
   }
 
   ok("ndic_dispatch_only", /workflow_dispatch\s*:/.test(ndic) && !/^\s*schedule\s*:/m.test(ndic), "sched");

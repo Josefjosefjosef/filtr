@@ -20,6 +20,8 @@ while GitHub-hosted capacity was unavailable — unnecessary egress exposure win
 2. **Update NDIC DATEX v1** (`update-ndic-datex-v1.yml`)
    - `ndic-prep` (network/parse/candidate) on `self-hosted` + `Linux` + `X64` + `ndic-cz-egress`
    - `ndic-shared-write` (critical RMW/commit) on the **same** Czech labels under `info-events-data-writers`
+   - shared-write concurrency uses `queue: max` + `cancel-in-progress: false` so a pending writer is not
+     replaced by a newer CHMI/IE request (incident ACTIVE run `31250620970`)
    - **no** `ubuntu-latest` job in this workflow (no GitHub-hosted secrets/network/shared-write)
    - verifies valid preflight attestation for `github.sha` **before** NDIC secrets/sync
    - still refuses GitHub-hosted identity (`REFUSING_GITHUB_HOSTED`)

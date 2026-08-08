@@ -191,6 +191,60 @@ function main() {
     ok("ie_adds_owned", after3.items.some((i) => i.id === "ie-hzs-new"), "ie-owned");
     ok("ie_drops_foreign_authored", !after3.items.some((i) => i.id === "ie-chmi-v2-evil"), "ie-evil");
 
+    // INFO_EVENTS -> NDIC and NDIC -> INFO_EVENTS
+    const live4 = path.join(tmp, "live4");
+    mkTree(live4, baseFeed(), baseMonitoring());
+    applyInfoEventsCandidate({ targetDir: live4, candidateDir: ieCand, nowIso: "T6" });
+    applyNdicCandidate({ targetDir: live4, candidateDir: ndicCand, nowIso: "T7" });
+    const after4 = JSON.parse(fs.readFileSync(path.join(live4, "feed.json"), "utf8"));
+    ok(
+      "ie_then_ndic_keeps_both",
+      after4.items.some((i) => i.id === "ie-hzs-new") && after4.items.some((i) => i.id === "ie-ndic-v1-b"),
+      "ie-ndic"
+    );
+    ok("INFO_EVENTS_THEN_NDIC_LOST_UPDATE_NO", after4.items.some((i) => i.id === "ie-hzs-new"), "lu-ie-ndic");
+
+    const live5 = path.join(tmp, "live5");
+    mkTree(live5, baseFeed(), baseMonitoring());
+    applyNdicCandidate({ targetDir: live5, candidateDir: ndicCand, nowIso: "T8" });
+    applyInfoEventsCandidate({ targetDir: live5, candidateDir: ieCand, nowIso: "T9" });
+    const after5 = JSON.parse(fs.readFileSync(path.join(live5, "feed.json"), "utf8"));
+    ok(
+      "ndic_then_ie_keeps_ndic",
+      after5.items.some((i) => i.id === "ie-ndic-v1-b") && after5.items.some((i) => i.id === "ie-hzs-new"),
+      "ndic-ie"
+    );
+    ok("NDIC_THEN_INFO_EVENTS_LOST_UPDATE_NO", after5.items.some((i) => i.id === "ie-ndic-v1-b"), "lu-ndic-ie");
+
+    // CHMI -> IE -> NDIC and NDIC -> CHMI -> IE
+    const live6 = path.join(tmp, "live6");
+    mkTree(live6, baseFeed(), baseMonitoring());
+    applyChmiCandidate({ targetDir: live6, candidateDir: chmiCand, nowIso: "T10" });
+    applyInfoEventsCandidate({ targetDir: live6, candidateDir: ieCand, nowIso: "T11" });
+    applyNdicCandidate({ targetDir: live6, candidateDir: ndicCand, nowIso: "T12" });
+    const after6 = JSON.parse(fs.readFileSync(path.join(live6, "feed.json"), "utf8"));
+    ok(
+      "chmi_ie_ndic_namespaces",
+      after6.items.some((i) => i.id === "ie-chmi-v2-b") &&
+        after6.items.some((i) => i.id === "ie-hzs-new") &&
+        after6.items.some((i) => i.id === "ie-ndic-v1-b"),
+      "triple1"
+    );
+
+    const live7 = path.join(tmp, "live7");
+    mkTree(live7, baseFeed(), baseMonitoring());
+    applyNdicCandidate({ targetDir: live7, candidateDir: ndicCand, nowIso: "T13" });
+    applyChmiCandidate({ targetDir: live7, candidateDir: chmiCand, nowIso: "T14" });
+    applyInfoEventsCandidate({ targetDir: live7, candidateDir: ieCand, nowIso: "T15" });
+    const after7 = JSON.parse(fs.readFileSync(path.join(live7, "feed.json"), "utf8"));
+    ok(
+      "ndic_chmi_ie_namespaces",
+      after7.items.some((i) => i.id === "ie-ndic-v1-b") &&
+        after7.items.some((i) => i.id === "ie-chmi-v2-b") &&
+        after7.items.some((i) => i.id === "ie-hzs-new"),
+      "triple2"
+    );
+
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 
@@ -216,9 +270,12 @@ function main() {
     );
   }
 
-  // Starvation structural: long phases outside lock
+  // Starvation structural: long phases outside lock + FIFO queue:max on shared-write
   ok("starvation_chmi_network_outside", /IU_INFO_EVENTS_DATA_DIR/.test(chmi) && jobMentions(chmi, "prep", /chmi-cap-v2-prod-sync/), "net");
   ok("starvation_ndic_network_outside", jobMentions(ndic, "ndic-prep", /ndic-datex-v1-prod-sync/) && !jobMentions(ndic, "ndic-shared-write", /IU_NDIC_PULL_URL/), "ndic-net");
+  ok("starvation_queue_max_ndic", /ndic-shared-write:[\s\S]*?queue:\s*max\b/.test(ndic), "qmax");
+  ok("starvation_queue_max_chmi", /shared-write:[\s\S]*?queue:\s*max\b/.test(chmi), "qmax-chmi");
+  ok("starvation_queue_max_ie", /shared-write:[\s\S]*?queue:\s*max\b/.test(ie), "qmax-ie");
   ok("manual_idle_not_required_by_architecture", true, "idle");
 
   const report = {

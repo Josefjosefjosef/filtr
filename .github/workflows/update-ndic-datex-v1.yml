@@ -224,6 +224,9 @@ jobs:
     concurrency:
       group: info-events-data-writers
       cancel-in-progress: false
+      # FIFO queue (up to 100). Default single-pending slot cancels a waiting writer when
+      # another request arrives (incident ACTIVE run 31250620970 / NDIC shared-write).
+      queue: max
     outputs:
       pushed: ${{ steps.commit_push.outputs.pushed }}
     steps:
