@@ -1081,5 +1081,49 @@
         "publishableCount": 7
       }
     ]
+  },
+  "ndicDatexV1": {
+    "mode": "active",
+    "lastRunAt": "2026-08-08T18:48:50.514Z",
+    "lastSuccessAt": "2026-08-08T18:48:50.514Z",
+    "lastChangedAt": "2026-08-08T18:48:50.514Z",
+    "status": "healthy",
+    "httpStatus": 200,
+    "notModified": false,
+    "stats": {
+      "new": 3552,
+      "updated": 0,
+      "unchanged": 0,
+      "ended": 0,
+      "skippedOlder": 0,
+      "softMissing": 0
+    },
+    "quarantineCount": 2,
+    "rejectedCount": 0,
+    "activeCount": 3552,
+    "tmc": {
+      "active": true,
+      "version": "11",
+      "countryCode": 2,
+      "tableNumber": 25,
+      "pointCount": 33648,
+      "activatedAt": "2026-08-08T18:48:54.335Z",
+      "contentHash": "63ca4e0bd5c1"
+    },
+    "parserVersion": "ndic-datex-v1.0.0",
+    "publish": {
+      "publish": true,
+      "reason": "ok",
+      "stats": {
+        "new": 3552,
+        "updated": 0,
+        "unchanged": 0,
+        "ended": 0,
+        "skippedOlder": 0,
+        "softMissing": 0
+      },
+      "alarms": []
+    },
+    "alarms": []
   }
 }
