@@ -13,7 +13,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "traffic-ui-ls-mem-guard-v1-20260808";
+const CACHE_BUST = "traffic-ui-hero-cta-early-v1-20260808";
 
 const fails = [];
 function ok(id, cond, detail) {

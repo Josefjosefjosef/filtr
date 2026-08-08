@@ -1,17 +1,17 @@
 {
-  "freezeId": "traffic-ui-ls-mem-guard-v1-20260808",
+  "freezeId": "traffic-ui-hero-cta-early-v1-20260808",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-08T20:56:21.654Z",
-  "note": "Freeze bump: traffic snapshot memory-only for large payloads (no sync LS parse on reload).",
+  "updatedAt": "2026-08-08T21:15:15.727Z",
+  "note": "Freeze bump: interactive Prehled CTA before feed hydrate + bounded traffic cards.",
   "files": {
-    "projects/index.html": "8bd1d67bfd9055d20154f54cf56c1f8ecbcfd5cd9d18a4e7a232247890d0a6ab",
+    "projects/index.html": "0527563cf2354e4fac5b5d66fe3244545c250e74d16b4e95c7bbb0b99929e6c3",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
     "assets/app.js": "6bf0c4e1bc62ea86ea2e1fb2f470a2c438dff86c5dc347993b418406d59e0e10",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "2c2ce842c42cc7f52ba04436abd8dc476bbee2ee5a7693a0b1462b62ca154335",
+    "sw.js": "8d2f66a37c8d96aa790b1a453b40558beb393e89e6f00f5ceb704d29c94a79d6",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-08-traffic-ui-ls-mem-guard-v1\"",
+      "CACHE_VERSION = \"2026-08-08-traffic-ui-hero-cta-early-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -34,7 +34,7 @@
       "chmi-multibrowser-console-v1-20260731"
     ],
     "projects/index.html": [
-      "traffic-ui-ls-mem-guard-v1-20260808",
+      "traffic-ui-hero-cta-early-v1-20260808",
       "custom-buttons-dynamic-bottom-clearance-v1-20260804",
       "bottom-nav-unify-v1-20260804",
       "silver-speech-bubble-down-4px-v1-20260804"

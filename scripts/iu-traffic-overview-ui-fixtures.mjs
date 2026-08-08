@@ -4,6 +4,7 @@
  */
 import {
   TRAFFIC_OVERVIEW_FLAGS,
+  TRAFFIC_UI_INITIAL_CARD_CAP,
   TRAFFIC_SPATIAL,
   trafficProjectionToFeedItem,
   trafficBadgeModel,
@@ -239,6 +240,24 @@ ok("ls_load", !!loadOfflineTrafficSnapshot());
   };
   const cands = collectOfflineTrafficCandidates(prefs, { snapshot: snap });
   ok("collect_ui_on", cands.length === 2);
+}
+{
+  ok("initial_card_cap_defined", TRAFFIC_UI_INITIAL_CARD_CAP >= 20 && TRAFFIC_UI_INITIAL_CARD_CAP <= 500);
+  const many = {
+    publicationEnabled: false,
+    trafficUiEnabled: true,
+    cards: Array.from({ length: TRAFFIC_UI_INITIAL_CARD_CAP + 40 }, (_, i) =>
+      sampleCard({
+        publicEventId: "iu-te-" + String(i).padStart(32, "0"),
+        locationPresentationLevel: "GENERAL",
+        preciseLocationVerified: false,
+      })
+    ),
+  };
+  const built = trafficItemsFromOfflineSnapshot(many);
+  ok("initial_render_bounded", built.length === TRAFFIC_UI_INITIAL_CARD_CAP);
+  const uncapped = trafficItemsFromOfflineSnapshot(many, { maxCards: 10000 });
+  ok("max_cards_override", uncapped.length === many.cards.length);
 }
 clearOfflineTrafficSnapshot();
 

@@ -22,6 +22,9 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PRODUCTION_DEPLOY: false,
 });
 
+/** Cap sync card→feed conversion so overview paint stays bounded (full catalog stays on disk). */
+export const TRAFFIC_UI_INITIAL_CARD_CAP = 120;
+
 /** Hosted offline snapshot (fail-closed if missing / poison). */
 export const TRAFFIC_UI_SNAPSHOT_URL =
   "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
@@ -455,9 +458,11 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
     : Array.isArray(snapshot.projections)
       ? snapshot.projections
       : [];
+  const capRaw = opts.maxCards != null ? Number(opts.maxCards) : TRAFFIC_UI_INITIAL_CARD_CAP;
+  const cap = Number.isFinite(capRaw) && capRaw > 0 ? Math.floor(capRaw) : TRAFFIC_UI_INITIAL_CARD_CAP;
   const built = [];
-  for (const c of cards) {
-    const r = trafficProjectionToFeedItem(c, opts);
+  for (let i = 0; i < cards.length && built.length < cap; i++) {
+    const r = trafficProjectionToFeedItem(cards[i], opts);
     if (r.ok) built.push(r.item);
   }
   return built;

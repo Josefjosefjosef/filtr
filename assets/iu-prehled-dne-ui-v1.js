@@ -33,7 +33,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=traffic-ui-ls-mem-guard-v1-20260808";
+} from "./iu-info-system-core-v1.js?v=traffic-ui-hero-cta-early-v1-20260808";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -44,10 +44,10 @@ import {
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=traffic-ui-ls-mem-guard-v1-20260808";
+} from "./iu-traffic-overview-v1.js?v=traffic-ui-hero-cta-early-v1-20260808";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-ui-ls-mem-guard-v1-20260808";
+const CACHE_BUST = "traffic-ui-hero-cta-early-v1-20260808";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1762,15 +1762,18 @@ async function boot() {
   void ensureCzMapSprite();
   const root = ensureRoot();
   if (!root) return;
+  // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
+  // Hero contract + smoke navigations wait on [data-act="open-settings"], not aria-busy feed.
+  state.prefs = getPrefs();
   root.innerHTML =
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
     homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
-    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">` +
+    `<div class="iuPd__top"><button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings" data-testid="prehled-dne-settings-cta">` +
     settingsCtaInnerHtml() +
-    `</div></div>` +
+    `</button></div>` +
     `</div>` +
     `</div>` +
     `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
@@ -1778,6 +1781,9 @@ async function boot() {
     `</div></div>` +
     `<div class="iuPdFeed" aria-busy="true"></div>` +
     `</section>`;
+  try {
+    wire();
+  } catch (_) {}
   const bootAbort = typeof AbortController === "function" ? new AbortController() : null;
   const onPageHide = () => {
     try {
@@ -1852,14 +1858,19 @@ async function boot() {
       } catch (_) {}
     }
     // Background refresh: hydrate NDIC traffic cards after shell is interactive.
+    // Defer re-paint to a macrotask so fetch+json parse cannot starve navigations (smoke/layout).
     if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
       void fetchHostedTrafficOfflineSnapshot({ persist: true })
         .then(() => {
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!root.isConnected) return;
-          try {
-            paint();
-          } catch (_) {}
+          setTimeout(() => {
+            if (bootAbort && bootAbort.signal.aborted) return;
+            if (!root.isConnected) return;
+            try {
+              paint();
+            } catch (_) {}
+          }, 0);
         })
         .catch(() => {});
     }
