@@ -1796,120 +1796,120 @@ async function boot() {
   try {
     window.addEventListener("pagehide", onPageHide, { once: true });
   } catch (_) {}
-  try {
-    const data = await loadInfoSystemData({});
-    if (bootAbort && bootAbort.signal.aborted) return;
-    state.data = data;
+  // Do not await multi‑MB feed hydrate on the boot call stack — it starves other app
+  // modules (notes/weather/PWA guards) and CI navigations. Shell is already interactive.
+  void (async () => {
     try {
-      migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
-    } catch (_) {}
-    // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
-    try {
-      if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
-        const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
-          r.ok ? r.json() : null
-        );
-        const d = mon && mon.chmiCapV2;
-        if (d) {
-          const bar = document.createElement("pre");
-          bar.className = "iuPdDiag";
-          bar.setAttribute("data-iu-chmi-diag", "1");
-          bar.style.cssText = "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
-          bar.textContent = JSON.stringify(
-            {
-              mode: d.mode,
-              status: d.status,
-              lastRunAt: d.lastRunAt,
-              lastSuccessAt: d.lastSuccessAt,
-              lastSnapshotAt: d.lastSnapshotAt,
-              lastError: d.lastError,
-              active: d.activeCount,
-              cancelled: d.cancelledCount,
-              expired: d.expiredCount,
-              alert: d.alertCount,
-              update: d.updateCount,
-              cancelMsg: d.cancelMsgCount,
-              quarantine: d.quarantineCount,
-              discovery: d.discoveryType,
-              publish: d.publish,
-              runMs: d.runMs,
-              registry: d.registryVersion,
-              rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
-            },
-            null,
-            2
-          );
-          const host = root.querySelector(".iuPrehledDne") || root;
-          host.insertBefore(bar, host.firstChild);
-        }
-      }
-    } catch (_) {}
-    state.index = buildFeedIndex((data.feed && data.feed.items) || []);
-    state.prefs = getPrefs();
-    state.page = 1;
-    const scroll = getScrollState();
-    // First paint must not wait on the large traffic offline snapshot (can be multi‑MB).
-    // Interactive settings CTA / hero contract require the post-boot shell immediately.
-    paint();
-    wire();
-    bindTimelineLifecycleListeners();
-    scheduleTimelineBoundaryRefresh();
-    if (scroll && Number(scroll.y) > 0) {
+      const data = await loadInfoSystemData({});
+      if (bootAbort && bootAbort.signal.aborted) return;
+      state.data = data;
       try {
-        const vp = feedViewport();
-        if (vp) vp.scrollTop = Number(scroll.y);
+        migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
       } catch (_) {}
-    }
-    // Background refresh: hydrate NDIC traffic cards after shell is interactive.
-    // Defer re-paint to a macrotask so fetch+json parse cannot starve navigations (smoke/layout).
-    if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
-      void fetchHostedTrafficOfflineSnapshot({ persist: true })
-        .then(() => {
-          if (bootAbort && bootAbort.signal.aborted) return;
-          if (!root.isConnected) return;
-          setTimeout(() => {
-            if (bootAbort && bootAbort.signal.aborted) return;
-            if (!root.isConnected) return;
-            try {
-              paint();
-            } catch (_) {}
-          }, 0);
-        })
-        .catch(() => {});
-    }
-    window.addEventListener(
-      "beforeunload",
-      () => {
+      // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
+      try {
+        if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
+          const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
+            r.ok ? r.json() : null
+          );
+          const d = mon && mon.chmiCapV2;
+          if (d) {
+            const bar = document.createElement("pre");
+            bar.className = "iuPdDiag";
+            bar.setAttribute("data-iu-chmi-diag", "1");
+            bar.style.cssText =
+              "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
+            bar.textContent = JSON.stringify(
+              {
+                mode: d.mode,
+                status: d.status,
+                lastRunAt: d.lastRunAt,
+                lastSuccessAt: d.lastSuccessAt,
+                lastSnapshotAt: d.lastSnapshotAt,
+                lastError: d.lastError,
+                active: d.activeCount,
+                cancelled: d.cancelledCount,
+                expired: d.expiredCount,
+                alert: d.alertCount,
+                update: d.updateCount,
+                cancelMsg: d.cancelMsgCount,
+                quarantine: d.quarantineCount,
+                discovery: d.discoveryType,
+                publish: d.publish,
+                runMs: d.runMs,
+                registry: d.registryVersion,
+                rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
+              },
+              null,
+              2
+            );
+            const host = root.querySelector(".iuPrehledDne") || root;
+            host.insertBefore(bar, host.firstChild);
+          }
+        }
+      } catch (_) {}
+      state.index = buildFeedIndex((data.feed && data.feed.items) || []);
+      state.prefs = getPrefs();
+      state.page = 1;
+      const scroll = getScrollState();
+      paint();
+      wire();
+      bindTimelineLifecycleListeners();
+      scheduleTimelineBoundaryRefresh();
+      if (scroll && Number(scroll.y) > 0) {
         try {
           const vp = feedViewport();
-          setScrollState({ viewId: "prehled-v6", y: vp ? vp.scrollTop : 0 });
+          if (vp) vp.scrollTop = Number(scroll.y);
         } catch (_) {}
-      },
-      { once: true }
-    );
-  } catch (err) {
-    const stillMounted =
-      !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
-    if (!stillMounted || (bootAbort && bootAbort.signal.aborted)) return;
-    // Navigation abort often surfaces as TypeError Failed to fetch while root is still connected.
-    // Soft-degrade UI without console.error (smoke treats TypeError+error as hard fail).
-    if (isBootNetworkAbort(err)) {
-      root.innerHTML =
-        `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-        bannerHtml() +
-        `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
-      return;
+      }
+      if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
+        void fetchHostedTrafficOfflineSnapshot({ persist: true })
+          .then(() => {
+            if (bootAbort && bootAbort.signal.aborted) return;
+            if (!root.isConnected) return;
+            setTimeout(() => {
+              if (bootAbort && bootAbort.signal.aborted) return;
+              if (!root.isConnected) return;
+              try {
+                paint();
+              } catch (_) {}
+            }, 0);
+          })
+          .catch(() => {});
+      }
+      window.addEventListener(
+        "beforeunload",
+        () => {
+          try {
+            const vp = feedViewport();
+            setScrollState({ viewId: "prehled-v6", y: vp ? vp.scrollTop : 0 });
+          } catch (_) {}
+        },
+        { once: true }
+      );
+    } catch (err) {
+      const stillMounted =
+        !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
+      if (!stillMounted || (bootAbort && bootAbort.signal.aborted)) return;
+      if (isBootNetworkAbort(err)) {
+        try {
+          updateFeedDom();
+        } catch (_) {}
+        return;
+      }
+      try {
+        const feed = root.querySelector("#iuPrehledDneTimeline");
+        if (feed) {
+          feed.innerHTML = `<li class="iuPdEmpty iuPrehledDne__empty">Přehled dne se nepodařilo načíst.</li>`;
+        }
+      } catch (_) {}
+      console.error("[iu-prehled-dne]", err);
+    } finally {
+      try {
+        window.removeEventListener("pagehide", onPageHide);
+      } catch (_) {}
     }
-    root.innerHTML =
-      `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-      bannerHtml() +
-      `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
-    console.error("[iu-prehled-dne]", err);
-  } finally {
-    try {
-      window.removeEventListener("pagehide", onPageHide);
-    } catch (_) {}
-  }
+  })();
 }
 
 function mountPrehledDne() {
