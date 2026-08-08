@@ -30,6 +30,7 @@ export const NDIC_SHARED_WRITE_REQUIRED_RELS = Object.freeze([
 export const NDIC_SHARED_WRITE_OPTIONAL_RELS = Object.freeze([
   "projects/data/info_events/lanes/doprava.json",
   "projects/data/info_events/ndic_datex_v1/tmc_meta.json",
+  "projects/data/info_events/ndic_datex_v1/data_pr_finalization_binding.json",
 ]);
 
 export function assertRequiredOutputsExist(repoRoot, requiredRels = NDIC_SHARED_WRITE_REQUIRED_RELS) {

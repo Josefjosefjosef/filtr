@@ -677,6 +677,22 @@ async function discoveryChecks() {
     ),
     "data-pr-export"
   );
+  const finalizationProto = fs.readFileSync(
+    path.join(__dirname, "iu-data-pr-finalization-protocol.mjs"),
+    "utf8"
+  );
+  ok(
+    "data_pr_finalization_protocol_present",
+    /DATA_PR_FINALIZATION_PROTOCOL/.test(finalizationProto) &&
+      /evaluateBaseFreshness/.test(finalizationProto) &&
+      /REBASE_SHARED_NAMESPACES_FROM_CURRENT_MAIN/.test(finalizationProto),
+    "finalization-protocol"
+  );
+  ok(
+    "update_wf_records_data_pr_binding",
+    /iu-data-pr-finalization-protocol\.mjs record-binding/.test(updateWf),
+    "binding-record"
+  );
   ok(
     "update_wf_commits_traffic_offline_snapshot",
     /ndic-stage-shared-write-outputs\.mjs/.test(updateWf) &&

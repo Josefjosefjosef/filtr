@@ -465,6 +465,17 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
     "FALSE_GREEN_SUITE_STILL_HAS_CANONICAL_DATA_PR_RUNTIME_NAME"
   );
 }
+{
+  ok("meta_suite_wires_anti_loop_fixtures", /iu-data-pr-anti-loop-fixtures/.test(suiteSrc));
+  ok("meta_suite_wires_anti_loop_meta", /iu-data-pr-anti-loop-meta-fixtures/.test(suiteSrc));
+  ok("meta_suite_wires_base_freshness_guard", /iu-data-pr-base-freshness-guard/.test(suiteSrc));
+  const mutated = suiteSrc.replace(/iu-data-pr-anti-loop-fixtures/g, "iu-data-pr-anti-loop-REMOVED");
+  ok(
+    "meta_remove_anti_loop_from_suite_must_fail",
+    !/iu-data-pr-anti-loop-fixtures/.test(mutated),
+    "FALSE_GREEN_SUITE_STILL_HAS_ANTI_LOOP"
+  );
+}
 // Fixture source must keep the three previously-missing gates + duplicate prevention.
 {
   const fixSrc = fs.readFileSync(

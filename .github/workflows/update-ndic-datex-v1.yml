@@ -332,6 +332,21 @@ jobs:
             "${RUNNER_TEMP}/ndic-ie-candidate" \
             "ndic-main-data/projects/data/info_events"
 
+      # DATA_PR_FINALIZATION_PROTOCOL: bind DATA_PR_HEAD × BASE_MAIN_HEAD × SHARED_STATE_DIGEST
+      # (semantic namespace digests; merge-ready ≠ HEAD checks alone). Short critical section only.
+      - name: Record data PR finalization binding
+        run: |
+          set -euo pipefail
+          BASE_MAIN_SHA="$(git -C ndic-main-data rev-parse HEAD)"
+          export BASE_MAIN_SHA
+          export WRITER_RUN_ID="${GITHUB_RUN_ID}"
+          export GENERATED_BY_WRITER=ndic
+          node ndic-orch/scripts/iu-data-pr-finalization-protocol.mjs record-binding ndic-main-data
+          echo "DATA_PR_FINALIZATION_BINDING_RECORDED=YES"
+          echo "WHOLE_WORKFLOW_SHARED_LOCK=NO"
+          echo "NETWORK_PREP_INSIDE_SHARED_LOCK=NO"
+          echo "LONG_RUNNING_TESTS_INSIDE_SHARED_LOCK=NO"
+
       - name: Commit data if changed
         id: commit_push
         working-directory: ndic-main-data
