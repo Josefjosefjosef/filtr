@@ -129,6 +129,10 @@ function buildItem(entry, raw, nowIso, extra = {}) {
         ? "rss_pub_date"
         : "source_pub_date";
   }
+  // Never collapse Atom into rss_pub_date when adapter already labeled the field.
+  if (timeSourceHint === "rss_pub_date" && raw.feedFormat === "atom") {
+    timeSourceHint = "atom_published";
+  }
 
   const hasSourcePubDate = !!sourcePub;
   const validFrom = toIso(raw.validFrom) || null;
@@ -213,6 +217,7 @@ async function ingestFeedUrl(entry, feedUrl, nowIso, collected, report) {
       collected.push(item);
       kept += 1;
     }
+    const feedFormat = rawItems.some((x) => x && x.feedFormat === "atom") ? "atom" : "rss";
     report.push({
       id: entry.id,
       feedUrl,
@@ -222,7 +227,7 @@ async function ingestFeedUrl(entry, feedUrl, nowIso, collected, report) {
       raw: rawItems.length,
       ms: ms || Date.now() - t0,
       attempts,
-      mode: "rss",
+      mode: feedFormat,
     });
     return kept;
   } catch (e) {

@@ -49,7 +49,9 @@ jobs:
         run: node scripts/iu-info-events-refresh.mjs
 
       - name: Guard
-        run: node scripts/iu-info-system-v1-guard.mjs
+        run: |
+          node scripts/iu-info-system-v1-guard.mjs
+          node scripts/iu-info-events-atom-time-source-guard.mjs
 
       - name: Legal whitelist guard
         run: node scripts/iu-info-events-legal-whitelist-guard.mjs
