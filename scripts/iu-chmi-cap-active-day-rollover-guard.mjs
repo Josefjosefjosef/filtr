@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "traffic-overview-rsd-prehled-v1-20260806";
+const CACHE_BUST = "traffic-ui-activation-v1-20260807";
 
 const fails = [];
 function ok(id, cond, detail) {

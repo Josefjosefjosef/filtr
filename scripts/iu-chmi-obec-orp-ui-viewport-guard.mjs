@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const PORT = 8765 + Math.floor(Math.random() * 200);
 const BASE = "http://127.0.0.1:" + PORT + "/projects/";
-const CACHE_BUST = "traffic-overview-rsd-prehled-v1-20260806";
+const CACHE_BUST = "traffic-ui-activation-v1-20260807";
 
 const fails = [];
 function ok(id, cond, detail) {
