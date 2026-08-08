@@ -22,7 +22,7 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const PARCEL_CSS = path.join(ROOT, "assets", "iu-silver-parcel-dashboard.css");
 const APP_JS = path.join(ROOT, "assets", "app.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "traffic-ui-cls-stable-shell-v1-20260808";
+const CACHE_BUST = "traffic-ui-defer-feed-hydrate-v1-20260808";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -105,7 +105,7 @@ function staticGate() {
   ok("ui_no_timeline_setInterval", !/setInterval\s*\(\s*\(\)\s*=>\s*\{[\s\S]{0,80}paint\(/.test(ui), "no interval paint");
   ok("ui_listeners_once", /if\s*\(\s*state\.timelineListenersBound\s*\)\s*return/.test(ui), "listeners once");
   ok("ui_no_manual_theme_toggle", !/toggleFuture|manualFuture|forceFutureRed/.test(ui), "manual");
-  ok("freeze_manifest_bumped", /traffic-ui-cls-stable-shell-v1-20260808/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
+  ok("freeze_manifest_bumped", /traffic-ui-defer-feed-hydrate-v1-20260808/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
 
   ok("css_future_red_block", /\.iuPrehledDne__item\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css), "red block");
   ok("css_future_red_word", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css), "red word");
