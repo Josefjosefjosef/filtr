@@ -679,7 +679,11 @@ async function discoveryChecks() {
   );
   ok(
     "update_wf_commits_traffic_offline_snapshot",
-    /traffic_offline_snapshot\.json/.test(updateWf),
+    /ndic-stage-shared-write-outputs\.mjs/.test(updateWf) &&
+      /traffic_offline_snapshot\.json/.test(
+        fs.readFileSync(path.join(__dirname, "ndic-stage-shared-write-outputs.mjs"), "utf8")
+      ) &&
+      /ndic-assert-candidate-required-outputs\.mjs/.test(updateWf),
     "snapshot-commit"
   );
   ok(

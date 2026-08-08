@@ -392,7 +392,11 @@ ok(
   );
   ok(
     "workflow_commits_traffic_offline_snapshot",
-    /traffic_offline_snapshot\.json/.test(wfSrc)
+    /ndic-stage-shared-write-outputs\.mjs/.test(wfSrc) &&
+      /traffic_offline_snapshot\.json/.test(
+        fs.readFileSync(path.join(ROOT, "scripts", "ndic-stage-shared-write-outputs.mjs"), "utf8")
+      ) &&
+      /ndic-assert-candidate-required-outputs\.mjs/.test(wfSrc)
   );
   ok("persist_defaults_ui_compact", /uiCompact:\s*opts\.uiCompact !== false/.test(persistSrc));
 }

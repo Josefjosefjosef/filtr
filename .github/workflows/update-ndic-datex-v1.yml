@@ -198,6 +198,8 @@ jobs:
         run: |
           set -euo pipefail
           test -d "${RUNNER_TEMP}/ndic-ie-candidate"
+          # REQUIRED snapshot must be inside candidate before upload (ACTIVE 31257122613).
+          node scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
           echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Upload NDIC candidate
@@ -318,6 +320,11 @@ jobs:
           name: ndic-ie-candidate-${{ github.run_id }}
           path: ${{ runner.temp }}/ndic-ie-candidate
 
+      - name: Assert downloaded candidate REQUIRED outputs
+        run: |
+          set -euo pipefail
+          node ndic-orch/scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
+
       - name: Apply NDIC candidate (re-read live shared state)
         run: |
           set -euo pipefail
@@ -334,18 +341,28 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add projects/data/info_events/feed.json \
-                  projects/data/info_events/lanes/doprava.json \
-                  projects/data/info_events/monitoring.json \
-                  projects/data/info_events/ndic_datex_v1/sync_state.json \
-                  projects/data/info_events/ndic_datex_v1/diagnostics.json \
-                  projects/data/info_events/ndic_datex_v1/tmc_meta.json \
-                  projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json \
-                  2>/dev/null || true
-          if git diff --cached --quiet; then
+          # Per-path staging + REQUIRED fail-closed (no all-or-nothing git add || true).
+          set +e
+          stage_out="$(node ../ndic-orch/scripts/ndic-stage-shared-write-outputs.mjs --repo .)"
+          stage_code=$?
+          set -e
+          echo "$stage_out"
+          if [ "$stage_code" -eq 2 ]; then
+            echo "REQUIRED_OUTPUT_MISSING_FAIL_CLOSED"
+            exit 2
+          fi
+          if [ "$stage_code" -ne 0 ]; then
+            echo "STAGE_FAILED"
+            exit "$stage_code"
+          fi
+          if echo "$stage_out" | grep -q '"result":"NO_CHANGES"'; then
             echo "NO_CHANGES"
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
+          fi
+          if ! echo "$stage_out" | grep -q '"result":"STAGED"'; then
+            echo "UNEXPECTED_STAGE_RESULT"
+            exit 1
           fi
           git commit -m "${{ env.PR_TITLE }}"
           git push -u origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}" --force

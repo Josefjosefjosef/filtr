@@ -58,7 +58,10 @@ import {
   COMMON_TRAFFIC_PROFILE_ALLOWS_PLS_REF,
 } from "./ndic-datex-v1/predefined-location-ref-forensics.mjs";
 import { parseSafeXml, attrOf, descendantsNamed } from "./ndic-datex-v1/safe-xml.mjs";
-import { persistTrafficUiOfflineSnapshot } from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
+import {
+  persistTrafficUiOfflineSnapshot,
+  resolveTrafficUiSnapshotDestPath,
+} from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
 import { PUBLICATION_LAYER_FLAGS } from "./ndic-datex-v1/traffic-publication-constants.mjs";
 import { countActivePublicationSafetyCounters } from "./ndic-datex-v1/active-publication-safety-counters.mjs";
 
@@ -654,8 +657,17 @@ export async function runNdicDatexV1Sync(opts = {}) {
       diagnostics.HEURISTIC_LOCATION_USED = false;
 
       if (PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true) {
+        // Write into DIR (IU_INFO_EVENTS_DATA_DIR candidate sandbox when set), NOT only
+        // feature-checkout projects/data/... — otherwise candidate artifact lacks REQUIRED
+        // traffic_offline_snapshot.json and shared-write git add can false-NO_CHANGES
+        // (ACTIVE run 31257122613).
+        const snapshotDest = resolveTrafficUiSnapshotDestPath({
+          repoRoot: REPO,
+          infoEventsDir: DIR,
+        });
         const uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
           repoRoot: REPO,
+          relPath: snapshotDest,
           nowIso: started,
           sourceFreshness: "FRESH",
         });

@@ -30,6 +30,26 @@ export const TRAFFIC_UI_SNAPSHOT_REL = path.join(
   "traffic_offline_snapshot.json"
 );
 
+/** Filename under info_events/ndic_datex_v1/ (candidate or live shared state). */
+export const TRAFFIC_UI_SNAPSHOT_BASENAME = "traffic_offline_snapshot.json";
+
+/**
+ * Canonical dest for offline snapshot.
+ * When infoEventsDir is set (prep sandbox / IU_INFO_EVENTS_DATA_DIR), write into that tree
+ * so the candidate artifact includes the REQUIRED snapshot (ACTIVE incident 31257122613).
+ */
+export function resolveTrafficUiSnapshotDestPath({ repoRoot, infoEventsDir } = {}) {
+  if (infoEventsDir) {
+    return path.join(
+      path.resolve(infoEventsDir),
+      "ndic_datex_v1",
+      TRAFFIC_UI_SNAPSHOT_BASENAME
+    );
+  }
+  const root = repoRoot || process.cwd();
+  return path.join(path.resolve(root), TRAFFIC_UI_SNAPSHOT_REL);
+}
+
 export const TRAFFIC_UI_SNAPSHOT_LAST_GOOD_SUFFIX = ".last-good.json";
 export const TRAFFIC_UI_SNAPSHOT_TEMP_SUFFIX = ".new";
 

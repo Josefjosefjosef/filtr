@@ -145,6 +145,23 @@ export function assertNetworkWorkflowArchitecture(src) {
     "write_no_legacy_same_workspace_apply",
     !/node\s+scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
   );
+  // ACTIVE 31257122613: required snapshot in candidate + per-path staging (no all-or-nothing || true).
+  check(
+    "pack_asserts_candidate_required_outputs",
+    /ndic-assert-candidate-required-outputs\.mjs/.test(net)
+  );
+  check(
+    "write_asserts_downloaded_candidate_required",
+    /ndic-assert-candidate-required-outputs\.mjs/.test(write)
+  );
+  check(
+    "write_uses_stage_shared_write_outputs",
+    /ndic-stage-shared-write-outputs\.mjs/.test(write)
+  );
+  check(
+    "write_no_all_or_nothing_git_add_swallow",
+    !/git\s+add[\s\S]{0,400}2>\s*\/dev\/null\s*\|\|\s*true/.test(write)
+  );
 
   return { ok: localFails.length === 0, fails: localFails };
 }

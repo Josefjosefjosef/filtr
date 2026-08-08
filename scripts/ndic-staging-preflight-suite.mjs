@@ -34,6 +34,8 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-info-events-shared-writer-starvation-fixtures",
   "iu-ndic-shared-write-main-checkout-fixtures",
   "iu-ndic-shared-write-main-checkout-meta-fixtures",
+  "iu-ndic-active-commit-staging-fixtures",
+  "iu-ndic-active-commit-staging-meta-fixtures",
   "iu-traffic-overview-ui-fixtures",
 ];
 
