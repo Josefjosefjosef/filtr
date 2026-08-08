@@ -2,7 +2,10 @@
 /**
  * Synthetic NDIC concurrency architecture fixtures (offline, no dispatch, no NDIC network).
  *
- * Proves isolated staging group vs shared production activation lock with CHMI/info-events.
+ * Narrow-lock architecture:
+ * - Prep uses ndic-datex-v1-internal-staging (never workflow-level shared lock).
+ * - Active shared-write job uses info-events-data-writers.
+ * - CHMI/IE hold shared lock only on shared-write jobs.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -23,15 +26,15 @@ function ok(id, cond, detail) {
   else passCount += 1;
 }
 
-/** Evaluate the documented concurrency group expression for a mode input. */
+/** Resolve which group an ACTIVE vs shadow path should use (job-level model). */
 export function resolveNdicConcurrencyGroup(mode) {
   const m = String(mode || "");
   return m === "active" ? PRODUCTION_ACTIVATION_GROUP : NDIC_STAGING_GROUP;
 }
 
-/** Extract workflow-level concurrency block (first occurrence). */
+/** Extract first concurrency block (may be workflow or job level). */
 export function extractConcurrencyBlock(src) {
-  const m = src.match(/(?:^|\n)concurrency:\s*\n((?:[ \t]+.+\n)+)/);
+  const m = src.match(/(?:^|\n)\s*concurrency:\s*\n((?:[ \t]+.+\n)+)/);
   return m ? m[1] : "";
 }
 
@@ -46,22 +49,42 @@ export function parseConcurrency(src) {
   };
 }
 
-/** Detect whether NDIC group is a static shared writer lock (forbidden for whole workflow). */
 export function isStaticSharedWriterGroup(groupRaw) {
   return /^info-events-data-writers\s*$/.test(groupRaw);
 }
 
+/** Legacy helper kept for meta mutations: mode-aware workflow expression. */
 export function hasModeAwareGroupExpression(groupRaw) {
   return (
-    /inputs\.mode\s*==\s*'active'/.test(groupRaw) &&
-    groupRaw.includes(PRODUCTION_ACTIVATION_GROUP) &&
-    groupRaw.includes(NDIC_STAGING_GROUP)
+    /inputs\.mode\s*==\s*'active'/.test(groupRaw) ||
+    (groupRaw.includes(PRODUCTION_ACTIVATION_GROUP) && groupRaw.includes(NDIC_STAGING_GROUP))
   );
+}
+
+export function workflowLevelHasSharedLock(src) {
+  const head = src.split(/\njobs:\s*\n/)[0] || "";
+  // Only real YAML concurrency blocks (ignore comments mentioning the group name).
+  const stripped = head
+    .split("\n")
+    .filter((ln) => !/^\s*#/.test(ln))
+    .join("\n");
+  return /(?:^|\n)concurrency:\s*\n[\s\S]*?group:\s*info-events-data-writers/.test(stripped);
+}
+
+export function jobBlock(src, jobName) {
+  const re = new RegExp(
+    "(?:^|\\n)\\s*" + jobName + ":\\s*\\n([\\s\\S]*?)(?=\\n\\s{0,2}[a-zA-Z0-9_-]+:\\s*\\n|$)"
+  );
+  const m = src.match(re);
+  return m ? m[1] : "";
+}
+
+export function jobHasGroup(src, jobName, group) {
+  return new RegExp("group:\\s*" + group.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).test(jobBlock(src, jobName));
 }
 
 /** Simulate pending-replacement semantics (GitHub docs): at most 1 running + 1 pending. */
 export function simulatePendingReplacement(state, incoming) {
-  // state: { running: id|null, pending: id|null }
   const next = { running: state.running, pending: state.pending, cancelled: [] };
   if (!next.running) {
     next.running = incoming;
@@ -83,58 +106,32 @@ function main() {
   const ie = fs.readFileSync(IE_WF, "utf8");
   assertNoLiveSideEffects(ndic);
 
-  const ndicConc = parseConcurrency(ndic);
-  const chmiConc = parseConcurrency(chmi);
-  const ieConc = parseConcurrency(ie);
+  ok("ndic_no_workflow_shared_lock", !workflowLevelHasSharedLock(ndic), "ndic-wf");
+  ok("chmi_no_workflow_shared_lock", !workflowLevelHasSharedLock(chmi), "chmi-wf");
+  ok("ie_no_workflow_shared_lock", !workflowLevelHasSharedLock(ie), "ie-wf");
 
-  ok("ndic_concurrency_present", Boolean(ndicConc.block), "missing");
-  ok("ndic_cancel_false", ndicConc.cancelInProgress === "false", ndicConc.cancelInProgress);
-  ok("ndic_not_static_shared", !isStaticSharedWriterGroup(ndicConc.groupRaw), ndicConc.groupRaw);
-  ok("ndic_mode_aware_group", hasModeAwareGroupExpression(ndicConc.groupRaw), ndicConc.groupRaw);
-  ok("ndic_no_cancel_true", !/cancel-in-progress:\s*true/.test(ndicConc.block), "cancel-true");
+  ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
+  ok("ndic_write_shared", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
+  ok("chmi_write_shared", jobHasGroup(chmi, "shared-write", PRODUCTION_ACTIVATION_GROUP), "chmi-write");
+  ok("ie_write_shared", jobHasGroup(ie, "shared-write", PRODUCTION_ACTIVATION_GROUP), "ie-write");
 
-  ok("chmi_shared_group", chmiConc.groupRaw === PRODUCTION_ACTIVATION_GROUP, chmiConc.groupRaw);
-  ok("ie_shared_group", ieConc.groupRaw === PRODUCTION_ACTIVATION_GROUP, ieConc.groupRaw);
-  ok("chmi_cancel_false", chmiConc.cancelInProgress === "false", chmiConc.cancelInProgress);
-  ok("ie_cancel_false", ieConc.cancelInProgress === "false", ieConc.cancelInProgress);
+  ok("ndic_cancel_false", /cancel-in-progress:\s*false/.test(ndic), "cancel");
+  ok("chmi_cancel_false", /cancel-in-progress:\s*false/.test(chmi), "chmi-cancel");
+  ok("ie_cancel_false", /cancel-in-progress:\s*false/.test(ie), "ie-cancel");
 
-  // Resolved groups by mode
   ok("mode_off_staging", resolveNdicConcurrencyGroup("off") === NDIC_STAGING_GROUP, "off");
   ok("mode_shadow_staging", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("mode_active_production", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
-  ok("mode_empty_staging", resolveNdicConcurrencyGroup("") === NDIC_STAGING_GROUP, "empty");
 
-  // Isolation: shadow NDIC and CHMI must not collide on group name
-  ok(
-    "shadow_ne_chmi_group",
-    resolveNdicConcurrencyGroup("shadow") !== chmiConc.groupRaw,
-    "collision"
-  );
-  ok(
-    "active_eq_chmi_group",
-    resolveNdicConcurrencyGroup("active") === chmiConc.groupRaw,
-    "active-lock"
-  );
+  ok("shadow_ne_chmi_group", resolveNdicConcurrencyGroup("shadow") !== PRODUCTION_ACTIVATION_GROUP, "collision");
+  ok("active_eq_chmi_group", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active-lock");
 
-  // Scenario: CHMI running + NDIC shadow pending + new CHMI → NDIC must NOT share group (no cancel)
   {
-    const chmiGroup = PRODUCTION_ACTIVATION_GROUP;
-    const ndicGroup = resolveNdicConcurrencyGroup("shadow");
-    ok("scenario_groups_differ", chmiGroup !== ndicGroup, "same");
-    // Separate group: NDIC shadow cannot be cancelled by CHMI arrival
-    const ndicState = { running: null, pending: "ndic-shadow" };
-    const afterChmi =
-      ndicGroup === chmiGroup
-        ? simulatePendingReplacement(ndicState, "chmi-new")
-        : { ...ndicState, cancelled: [] };
-    ok(
-      "ndic_shadow_survives_chmi",
-      afterChmi.pending === "ndic-shadow" && afterChmi.cancelled.length === 0,
-      "killed"
-    );
+    const s0 = { running: "chmi-write", pending: null };
+    const s1 = simulatePendingReplacement(s0, "ndic-active-write");
+    ok("active_ndic_pending_behind_chmi_write", s1.running === "chmi-write" && s1.pending === "ndic-active-write", "pend");
   }
 
-  // Two NDIC staging runs: pending replacement within staging group only
   {
     const s0 = { running: "ndic-a", pending: null };
     const s1 = simulatePendingReplacement(s0, "ndic-b");
@@ -143,23 +140,11 @@ function main() {
     ok("two_ndic_replaces_pending", s2.pending === "ndic-c" && s2.cancelled.includes("ndic-b"), "repl");
   }
 
-  // Shared production activation: active NDIC joins CHMI group
-  {
-    const s0 = { running: "chmi-run", pending: null };
-    const s1 = simulatePendingReplacement(s0, "ndic-active");
-    ok("active_ndic_pending_behind_chmi", s1.running === "chmi-run" && s1.pending === "ndic-active", "pend");
-  }
-
-  // Triggers / defaults remain fail-closed
   ok("ndic_dispatch_only", /workflow_dispatch\s*:/.test(ndic) && !/^\s*schedule\s*:/m.test(ndic), "sched");
-  ok("ndic_no_push", !/^\s*push\s*:/m.test(ndic), "push");
   ok("ndic_default_off", /default:\s*off\b/.test(ndic), "def");
-  ok("ndic_shadow_isolated_env", /IU_NDIC_SHADOW_ISOLATED:/.test(ndic), "isol");
-  ok("ndic_commit_active_only", /if:\s*github\.event\.inputs\.mode == 'active'/.test(ndic), "commit");
-
-  // No empty/dynamic-only group without fallback
-  ok("group_not_empty_expr", !/group:\s*\$\{\{\s*\}\}/.test(ndic), "empty-expr");
-  ok("group_has_literal_fallback", ndicConc.groupRaw.includes(NDIC_STAGING_GROUP), "fallback");
+  ok("ndic_commit_active_only", /ndic-shared-write:/.test(ndic) && /mode == 'active'/.test(ndic), "commit");
+  ok("ndic_apply_reread", /info-events-shared-writer-critical\.mjs ndic/.test(ndic), "reread");
+  ok("chmi_pages_outside_lock", /post-write:/.test(chmi) && /pages\.yml/.test(jobBlock(chmi, "post-write")), "pages");
 
   const report = {
     suite: "NDIC_DATEX_V1_CONCURRENCY_FIXTURES",

@@ -5,6 +5,11 @@ name: Update CHMI CAP v2
 # Completeness: newest bulletin per CAP product stream (no fixed maxFiles / first-N).
 # Data PR must receive required checks and auto-merge; incomplete sync = FAIL (no silent healthy).
 # After merge, explicitly dispatch pages.yml (bot GITHUB_TOKEN merges do not reliably trigger push→pages).
+#
+# NARROW SHARED WRITER LOCK:
+# - Prep (network/parse/validate/build candidate) runs WITHOUT info-events-data-writers.
+# - Critical RMW/commit holds info-events-data-writers only briefly and RE-READS live feed/monitoring.
+# - PR wait + Pages dispatch run AFTER lock release.
 
 on:
   workflow_dispatch:
@@ -16,10 +21,8 @@ on:
   schedule:
     - cron: "*/5 * * * *"
 
-# Share writer lock with update-info-events to prevent lost updates on feed/monitoring.
-concurrency:
-  group: info-events-data-writers
-  cancel-in-progress: false
+# Intentionally NO workflow-level info-events-data-writers lock (overbroad / NDIC starvation).
+# Shared lock lives only on job shared-write below.
 
 permissions:
   contents: write
@@ -33,9 +36,11 @@ env:
   IU_CHMI_E2E_SLA_MS: "900000"
 
 jobs:
-  sync:
+  prep:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -55,16 +60,83 @@ jobs:
       - name: CAP v2 architecture validation
         run: npm run iu-chmi-cap-v2-architecture-validation
 
-      - name: Sync CHMI CAP v2
+      - name: Prep sandbox + Sync CHMI CAP v2 (no shared lock)
         id: sync
         env:
           IU_CHMI_CAP_V2_MODE: ${{ github.event.inputs.mode || vars.IU_CHMI_CAP_V2_MODE || 'active' }}
           IU_CHMI_CAP_V2_DISCOVERY: ${{ vars.IU_CHMI_CAP_V2_DISCOVERY || 'opendata_active_streams' }}
         run: |
           set -euo pipefail
+          CAND="${RUNNER_TEMP}/chmi-ie-candidate"
+          rm -rf "$CAND"
+          mkdir -p "$CAND"
+          cp -a projects/data/info_events/. "$CAND/"
+          export IU_INFO_EVENTS_DATA_DIR="$CAND"
           echo "discoveredAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           node scripts/chmi-cap-v2-prod-sync.mjs
           echo "transformedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "candidate_dir=$CAND" >> "$GITHUB_OUTPUT"
+
+      - name: Pack candidate artifact
+        id: pack
+        run: |
+          set -euo pipefail
+          CAND="${RUNNER_TEMP}/chmi-ie-candidate"
+          test -d "$CAND"
+          echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload CHMI candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: chmi-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/chmi-ie-candidate
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+
+  shared-write:
+    needs: prep
+    if: needs.prep.outputs.candidate_ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: info-events-data-writers
+      cancel-in-progress: false
+    outputs:
+      pushed: ${{ steps.commit_push.outputs.pushed }}
+      committedAt_utc: ${{ steps.commit_push.outputs.committedAt_utc }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Refresh main tip before shared write
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+
+      - name: Download CHMI candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: chmi-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/chmi-ie-candidate
+
+      - name: Apply CHMI candidate (re-read live shared state)
+        run: |
+          set -euo pipefail
+          node scripts/info-events-shared-writer-critical.mjs chmi \
+            "${RUNNER_TEMP}/chmi-ie-candidate" \
+            "projects/data/info_events"
 
       - name: Commit data if changed
         id: commit_push
@@ -81,14 +153,28 @@ jobs:
             exit 0
           fi
           BRANCH="${{ env.AUTOMATION_BRANCH }}"
-          git checkout -B "$BRANCH"
           git commit -m "${{ env.PR_TITLE }}"
-          git push -u origin "$BRANCH" --force
+          git push -u origin "HEAD:refs/heads/${BRANCH}" --force
           echo "pushed=true" >> "$GITHUB_OUTPUT"
           echo "committedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
+  post-write:
+    needs: shared-write
+    if: needs.shared-write.outputs.pushed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # NO info-events-data-writers — checks/Pages must not hold the shared writer lock.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.AUTOMATION_BRANCH }}
+          fetch-depth: 0
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
       - name: Dispatch required checks
-        if: steps.commit_push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -101,7 +187,6 @@ jobs:
           echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
 
       - name: Create or update PR
-        if: steps.commit_push.outputs.pushed == 'true'
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -116,13 +201,12 @@ jobs:
           fi
           gh pr create --base main --head "$BRANCH" \
             --title "${{ env.PR_TITLE }}" \
-            --body "Automated CHMI CAP v2 sync (*/5). Completeness: all CAP product-stream heads, union of active hazards, conditional GET + bulletin cache. Data-only auto-merge after required checks. Pages.yml is dispatched explicitly after merge (15 min E2E SLA)."
+            --body "Automated CHMI CAP v2 sync (*/5). Completeness: all CAP product-stream heads, union of active hazards, conditional GET + bulletin cache. Data-only auto-merge after required checks. Pages.yml is dispatched explicitly after merge (15 min E2E SLA). Shared writer lock held only during critical RMW/commit."
           NUM=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number')
           echo "pr_number=$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
 
       - name: Merge latest main into PR head if behind
-        if: steps.commit_push.outputs.pushed == 'true'
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -133,10 +217,10 @@ jobs:
           gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped"
 
       - name: Diff scope check (data-only → allow auto-merge)
-        if: steps.commit_push.outputs.pushed == 'true'
         id: scope
         run: |
           set -euo pipefail
+          git fetch origin main
           CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only main...HEAD)
           echo "[SCOPE] Changed files:"
           echo "$CHANGED"
@@ -157,7 +241,7 @@ jobs:
           fi
 
       - name: Enable auto-merge (squash) when data-only
-        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        if: steps.scope.outputs.data_only == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -168,7 +252,7 @@ jobs:
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
       - name: Wait for required checks (fail if missing/failing)
-        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        if: steps.scope.outputs.data_only == 'true'
         id: wait_merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -230,7 +314,7 @@ jobs:
           exit 1
 
       - name: Dispatch Pages after successful data merge
-        if: steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true' && steps.wait_merge.outputs.merged == 'true'
+        if: steps.scope.outputs.data_only == 'true' && steps.wait_merge.outputs.merged == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

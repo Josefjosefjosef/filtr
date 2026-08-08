@@ -64,7 +64,10 @@ import { countActivePublicationSafetyCounters } from "./ndic-datex-v1/active-pub
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
-const DIR = path.join(REPO, "projects", "data", "info_events");
+/** Optional prep sandbox for deferred shared-write (narrow lock). */
+const DIR = process.env.IU_INFO_EVENTS_DATA_DIR
+  ? path.resolve(process.env.IU_INFO_EVENTS_DATA_DIR)
+  : path.join(REPO, "projects", "data", "info_events");
 const STATE_DIR = path.join(DIR, "ndic_datex_v1");
 const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
 const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
