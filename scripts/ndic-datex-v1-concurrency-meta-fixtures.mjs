@@ -59,6 +59,35 @@ function main() {
     );
   }
 
+  // Mutation: move NDIC shared-write onto ubuntu-latest (must remain detectable)
+  {
+    const mutated = ndic.replace(
+      /ndic-shared-write:[\s\S]*?runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+      (block) =>
+        block.replace(
+          /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+          "runs-on: ubuntu-latest"
+        )
+    );
+    ok(
+      "meta_ndic_shared_write_on_ubuntu_caught",
+      /ndic-shared-write:[\s\S]*?runs-on:\s*ubuntu-latest/.test(mutated),
+      "caught"
+    );
+  }
+
+  // Mutation: NDIC secret on a GitHub-hosted fragment (must remain detectable)
+  {
+    const mutated =
+      ndic +
+      "\n  evil-hosted:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo ${{ secrets.IU_NDIC_PULL_URL }}\n";
+    ok(
+      "meta_ndic_secret_on_github_hosted_caught",
+      /ubuntu-latest[\s\S]{0,400}secrets\.IU_NDIC_PULL_URL/.test(mutated),
+      "caught"
+    );
+  }
+
   // Mutation: remove re-read apply
   {
     const mutated = ndic.replace(/info-events-shared-writer-critical\.mjs ndic/g, "echo NO_REREAD");

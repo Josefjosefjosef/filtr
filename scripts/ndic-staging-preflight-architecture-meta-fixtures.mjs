@@ -10,6 +10,9 @@ import {
   assertNetworkWorkflowArchitecture,
   assertPreflightWorkflowArchitecture,
   stripComments,
+  NDIC_NETWORK_JOB,
+  NDIC_SHARED_WRITE_JOB,
+  jobChunk,
 } from "./ndic-staging-preflight-architecture-fixtures.mjs";
 import {
   verifyAttestationStatus,
@@ -54,11 +57,93 @@ mutateMustFail(
 mutateMustFail(
   "meta_network_on_ubuntu",
   netSrc,
-  (s) =>
-    s.replace(
+  (s) => {
+    const prep = jobChunk(s, NDIC_NETWORK_JOB);
+    if (!prep) return s;
+    const mutatedPrep = prep.replace(
       /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
       "runs-on: ubuntu-latest"
+    );
+    return s.replace(prep, mutatedPrep);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_shared_write_on_ubuntu",
+  netSrc,
+  (s) => {
+    const write = jobChunk(s, NDIC_SHARED_WRITE_JOB);
+    if (!write) return s;
+    const mutatedWrite = write.replace(
+      /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+      "runs-on: ubuntu-latest"
+    );
+    return s.replace(write, mutatedWrite);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_github_hosted_gains_ndic_secret",
+  netSrc,
+  (s) => {
+    const write = jobChunk(s, NDIC_SHARED_WRITE_JOB);
+    if (!write) return s;
+    const mutatedWrite = write.replace(
+      /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+      "runs-on: ubuntu-latest"
+    ).replace(
+      /GH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/,
+      "GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}"
+    );
+    return s.replace(write, mutatedWrite);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_remove_ndic_cz_egress_label",
+  netSrc,
+  (s) => {
+    const prep = jobChunk(s, NDIC_NETWORK_JOB);
+    if (!prep) return s;
+    const mutatedPrep = prep.replace(/\n\s+- ndic-cz-egress/, "");
+    return s.replace(prep, mutatedPrep);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_remove_self_hosted_labels",
+  netSrc,
+  (s) => {
+    const prep = jobChunk(s, NDIC_NETWORK_JOB);
+    if (!prep) return s;
+    const mutatedPrep = prep.replace(
+      /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+      "runs-on:\n      - Linux\n      - X64"
+    );
+    return s.replace(prep, mutatedPrep);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_restore_whole_workflow_shared_lock",
+  netSrc,
+  (s) =>
+    s.replace(
+      /# Intentionally NO workflow-level info-events-data-writers\.\n/,
+      "concurrency:\n  group: info-events-data-writers\n  cancel-in-progress: false\n\n# Intentionally NO workflow-level info-events-data-writers.\n"
     ),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_remove_narrow_shared_write_job",
+  netSrc,
+  (s) => s.replace(new RegExp(`(?:^|\\n) {2}${NDIC_SHARED_WRITE_JOB}:\\n(?: {4}.*\\n|\\n)*`), "\n"),
   assertNetworkWorkflowArchitecture
 );
 
@@ -117,8 +202,8 @@ mutateMustFail(
   netSrc,
   (s) =>
     s.replace(
-      /ndic-network-sync:\n/,
-      "ndic-network-sync:\n    continue-on-error: true\n"
+      new RegExp(`${NDIC_NETWORK_JOB}:\\n`),
+      `${NDIC_NETWORK_JOB}:\n    continue-on-error: true\n`
     ),
   assertNetworkWorkflowArchitecture
 );
@@ -133,7 +218,7 @@ mutateMustFail(
     ),
   (m) => {
     const base = assertNetworkWorkflowArchitecture(m);
-    const jobChunkText = (m.match(/(?:^|\n)( {2}ndic-network-sync:\n(?: {4}.*\n|\n)*)/) || [])[1] || "";
+    const jobChunkText = jobChunk(m, NDIC_NETWORK_JOB);
     const beforeUpload = jobChunkText.split("Upload redacted shadow forensic artifacts")[0] || jobChunkText;
     const jobAlways = /if:\s*always\(\)/.test(beforeUpload);
     return { ok: base.ok && !jobAlways, fails: jobAlways ? ["job_always_present"] : base.fails };
@@ -406,6 +491,23 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
   );
 }
 
-const report = { ok: fails.length === 0, failCount: fails.length, fails };
+const netA = assertNetworkWorkflowArchitecture(netSrc);
+const writeChunk = jobChunk(netSrc, NDIC_SHARED_WRITE_JOB);
+const prepChunk = jobChunk(netSrc, NDIC_NETWORK_JOB);
+const report = {
+  ok: fails.length === 0,
+  failCount: fails.length,
+  fails,
+  NETWORK_ARCHITECTURE_META_GUARD_PASS: fails.every((f) => !String(f).startsWith("meta_")) && netA.ok ? "YES" : fails.length === 0 ? "YES" : "NO",
+  NETWORK_NO_UBUNTU_META_GUARD_PASS: !/ubuntu-latest/.test(stripComments(netSrc)) ? "YES" : "NO",
+  NDIC_SECRET_ISOLATION_META_GUARD_PASS: /secrets\.IU_NDIC_/.test(prepChunk) && !/secrets\.IU_NDIC_/.test(writeChunk) ? "YES" : "NO",
+  NDIC_SHARED_WRITE_RUNNER_META_GUARD_PASS:
+    /self-hosted/.test(writeChunk) && /ndic-cz-egress/.test(writeChunk) && !/ubuntu-latest/.test(writeChunk)
+      ? "YES"
+      : "NO",
+  TEST_RUNNER_FALSE_GREEN_POSSIBLE: fails.length ? "YES" : "NO",
+};
+// Meta guard PASS requires all mutation catches + baseline architecture PASS.
+report.NETWORK_ARCHITECTURE_META_GUARD_PASS = fails.length === 0 && netA.ok ? "YES" : "NO";
 console.log(JSON.stringify(report, null, 2));
 if (fails.length) process.exit(1);

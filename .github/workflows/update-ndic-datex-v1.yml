@@ -12,8 +12,9 @@ name: Update NDIC DATEX v1
 #
 # NARROW SHARED WRITER LOCK (active only):
 # - Network/parse/build candidate on VPS WITHOUT info-events-data-writers.
-# - Critical RMW/commit on ubuntu-latest UNDER info-events-data-writers with live re-read.
-# - Data PR outside the shared lock job's long waits (PR open is immediate after commit).
+# - Critical RMW/commit on the same Czech self-hosted runner UNDER info-events-data-writers
+#   with live re-read (NO ubuntu-latest / GitHub-hosted shared write).
+# - Data PR is immediate after commit (no Pages/required-check waits inside the lock).
 
 on:
   workflow_dispatch:
@@ -214,7 +215,11 @@ jobs:
     if: >
       github.event.inputs.mode == 'active'
       && needs.ndic-prep.outputs.candidate_ready == 'true'
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
     timeout-minutes: 15
     concurrency:
       group: info-events-data-writers
@@ -222,6 +227,48 @@ jobs:
     outputs:
       pushed: ${{ steps.commit_push.outputs.pushed }}
     steps:
+      # MUST stay first: no checkout before identity PASS (fail-closed on GitHub-hosted).
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ]; then
+            echo "REFUSING_UNEXPECTED_OS"
+            exit 1
+          fi
+          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_ARCH"
+            exit 1
+          fi
+          ws="${GITHUB_WORKSPACE:-}"
+          cwd="$(pwd)"
+          case "${ws}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          case "${cwd}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          umask 077
+          echo "RUNNER_PREFLIGHT_OK"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
@@ -286,7 +333,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
           PR_TITLE: ${{ env.PR_TITLE }}
-          PR_BODY: "Automated NDIC DATEX v1 data refresh. Shared writer lock held only during critical RMW/commit after live re-read."
+          PR_BODY: "Automated NDIC DATEX v1 data refresh. Shared writer lock held only during critical RMW/commit after live re-read on Czech self-hosted runner."
           PR_BASE: main
         run: |
           set -euo pipefail

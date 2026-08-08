@@ -47,6 +47,8 @@ const NDIC_CAPABILITY_PATTERNS = [
   /ndic-datex-v1-shadow-run\.mjs/,
   /ndic-datex-v1-shadow-probe\.mjs/,
   /ndic-datex-v1-tmc-format-inspection-run\.mjs/,
+  // NDIC shared-write critical section must never land on GitHub-hosted.
+  /info-events-shared-writer-critical\.mjs\s+ndic/,
   /mobilitydata\.rsd\.cz/,
   /Authorization:\s*`Basic/,
   /Authorization:\s*Basic/,
@@ -448,11 +450,13 @@ function main() {
 
     if (file === "update-ndic-datex-v1.yml") {
       const offline = analysis.jobs.find((j) => j.name === "offline-guards");
-      const network = analysis.jobs.find((j) => j.name === "ndic-network-sync");
+      const network = analysis.jobs.find((j) => j.name === "ndic-prep");
+      const sharedWrite = analysis.jobs.find((j) => j.name === "ndic-shared-write");
       // Two-phase staging: GitHub-hosted guards live in ndic-datex-v1-staging-preflight.yml.
-      // Network workflow must NOT wait on ubuntu-latest (incident 31118898675).
+      // Network + shared-write must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
       ok("update_no_offline_guards_job", !offline, offline ? "present" : "ok");
       ok("update_has_network_job", Boolean(network), "missing");
+      ok("update_has_shared_write_job", Boolean(sharedWrite), "missing");
       ok("update_no_ubuntu_latest", !/ubuntu-latest/.test(analysis.src), "ubuntu");
       ok("update_node_24", /node-version:\s*["']?24["']?/.test(analysis.src), "node24");
       ok("update_no_node_20", !/node-version:\s*["']?20["']?/.test(analysis.src), "node20");
@@ -474,6 +478,24 @@ function main() {
           /ndic-verify-preflight-attestation\.mjs[\s\S]*secrets\.IU_NDIC_PULL_URL/.test(network.body),
           "order"
         );
+        ok("update_network_no_shared_lock", !/group:\s*info-events-data-writers/.test(network.body), "prep-lock");
+      }
+      if (sharedWrite) {
+        ok(
+          "update_shared_write_self_hosted",
+          sharedWrite.isSelfHosted && hasAllRequired(sharedWrite.labels),
+          sharedWrite.labels.join("+")
+        );
+        ok("update_shared_write_no_secrets", !/secrets\.IU_NDIC_/.test(sharedWrite.body), "secrets");
+        ok("update_shared_write_no_sync", !/ndic-datex-v1-prod-sync/.test(sharedWrite.body), "sync");
+        ok("update_shared_write_has_lock", /group:\s*info-events-data-writers/.test(sharedWrite.body), "lock");
+        ok(
+          "update_shared_write_reread",
+          /info-events-shared-writer-critical\.mjs\s+ndic/.test(sharedWrite.body),
+          "reread"
+        );
+        ok("update_shared_write_preflight", /REFUSING_GITHUB_HOSTED/.test(sharedWrite.body), "preflight");
+        ok("update_shared_write_not_github_hosted", !sharedWrite.isGithubHosted, "hosted");
       }
     }
 
