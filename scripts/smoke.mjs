@@ -10,6 +10,14 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
+import {
+  installSmokeHeavyDataRouteStubs,
+  SMOKE_STUB_MARKERS,
+  validateSmokeFeedStubSchema,
+  validateSmokeTrafficStubSchema,
+  loadSmokeFeedStub,
+  loadSmokeTrafficStub,
+} from "./smoke-heavy-data-stubs.mjs";
 
 const require = createRequire(import.meta.url);
 const { installProofGuardNetworkStubs } = require("./proofs/open_meteo_guard_stub.cjs");
@@ -23,8 +31,15 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
 /** Hub at `/` must paint Silver shell before follow-up navigations. */
 const ROOT_HUB_READY_TIMEOUT_MS = 20000;
-/** `page.goto` — large `app.js` / client nav / multi‑MB data can delay `domcontentloaded` on cold runs. */
+/**
+ * `page.goto` headroom for cold app.js / client nav.
+ * NOTE: Variant B must NOT raise this further as a fix for multi‑MB feed stalls —
+ * heavy feed/snapshot are route-stubbed instead (see installSmokeHeavyDataRouteStubs).
+ */
 const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 60000;
+
+/** Live stats from Variant B heavy-data route stubs (filled in runSmoke). */
+let smokeHeavyStubStats = null;
 
 function mediaArticlesPublished() {
   try {
@@ -241,6 +256,63 @@ async function smokePrehledDneCutover(page) {
   if (!probe || !probe.ok) {
     fail(`Prehled dne cutover smoke failed: ${JSON.stringify(probe)}`);
   }
+
+  // Variant B anti-false-green: stubs must have been used and markers must appear in UI.
+  if (!smokeHeavyStubStats || !smokeHeavyStubStats.enabled) {
+    fail("SMOKE_HEAVY_DATA_STUBS_NOT_INSTALLED");
+  }
+  if (smokeHeavyStubStats.feedIntercepts < 1) {
+    fail(
+      "SMOKE_FEED_ROUTE_NOT_INTERCEPTED: cutover expected stubbed feed.json intercept (anti-false-green)"
+    );
+  }
+  if (!smokeHeavyStubStats.feedSchema || !smokeHeavyStubStats.feedSchema.ok) {
+    fail("SMOKE_FEED_FIXTURE_SCHEMA_INVALID:" + JSON.stringify(smokeHeavyStubStats.feedSchema));
+  }
+  if (!smokeHeavyStubStats.trafficSchema || !smokeHeavyStubStats.trafficSchema.ok) {
+    fail("SMOKE_TRAFFIC_FIXTURE_SCHEMA_INVALID:" + JSON.stringify(smokeHeavyStubStats.trafficSchema));
+  }
+  // Allow background traffic snapshot hydrate a beat after feed cards paint.
+  await page.waitForTimeout(1200);
+  const stubUi = await page.evaluate((markers) => {
+    const root = document.querySelector(".iuPrehledDne");
+    const text = root ? String(root.innerText || "") : "";
+    const html = root ? String(root.innerHTML || "") : "";
+    const blob = text + "\n" + html;
+    return {
+      feedMarker: blob.includes(markers.feedTitle) || blob.includes(markers.feedChmiTitle),
+      trafficMarker:
+        blob.includes(markers.trafficPreciseHeadline) ||
+        blob.includes(markers.trafficScopedHeadline) ||
+        blob.includes("SMOKE_STUB_TRAFFIC"),
+      textSample: text.slice(0, 400),
+    };
+  }, SMOKE_STUB_MARKERS);
+  if (!stubUi.feedMarker) {
+    fail("SMOKE_UI_DID_NOT_CONSUME_FEED_STUB:" + JSON.stringify(stubUi));
+  }
+  // Traffic markers are best-effort if topic/source prefs gate candidates; feed marker is mandatory.
+  if (smokeHeavyStubStats.trafficIntercepts < 1) {
+    // Snapshot fetch is background; wait once more then re-check intercept count.
+    await page.waitForTimeout(2000);
+  }
+  if (smokeHeavyStubStats.trafficIntercepts < 1) {
+    fail("SMOKE_TRAFFIC_SNAPSHOT_ROUTE_NOT_INTERCEPTED");
+  }
+  console.log(
+    JSON.stringify({
+      SMOKE_FEED_ROUTE_INTERCEPTED: "YES",
+      SMOKE_TRAFFIC_SNAPSHOT_ROUTE_INTERCEPTED: smokeHeavyStubStats.trafficIntercepts > 0 ? "YES" : "NO",
+      SMOKE_FEED_FIXTURE_SCHEMA_VALID: "YES",
+      SMOKE_TRAFFIC_FIXTURE_SCHEMA_VALID: "YES",
+      SMOKE_UI_CONSUMED_STUBBED_DATA: stubUi.feedMarker ? "YES" : "NO",
+      SMOKE_UI_TRAFFIC_MARKER: stubUi.trafficMarker ? "YES" : "NO",
+      feedIntercepts: smokeHeavyStubStats.feedIntercepts,
+      trafficIntercepts: smokeHeavyStubStats.trafficIntercepts,
+      feedStubBytes: smokeHeavyStubStats.feedBytesServed,
+      trafficStubBytes: smokeHeavyStubStats.trafficBytesServed,
+    })
+  );
 }
 
 /** Retries when client navigation races domcontentloaded (same-URL interrupt can recur on the retry goto). */
@@ -284,6 +356,18 @@ async function runSmoke() {
     });
     const page = await context.newPage();
     await installProofGuardNetworkStubs(page);
+
+    // Variant B: stub multi‑MB feed.json + traffic_offline_snapshot.json for all smoke navigations.
+    // Must install before first goto — default hub is cutover and would otherwise parse ~22MB feed.
+    {
+      const feedSchemaBoot = validateSmokeFeedStubSchema(loadSmokeFeedStub());
+      const trafficSchemaBoot = validateSmokeTrafficStubSchema(loadSmokeTrafficStub());
+      if (!feedSchemaBoot.ok) fail("SMOKE_FEED_STUB_SCHEMA_BOOT_FAIL:" + JSON.stringify(feedSchemaBoot.fails));
+      if (!trafficSchemaBoot.ok) {
+        fail("SMOKE_TRAFFIC_STUB_SCHEMA_BOOT_FAIL:" + JSON.stringify(trafficSchemaBoot.fails));
+      }
+      smokeHeavyStubStats = await installSmokeHeavyDataRouteStubs(page);
+    }
 
     page.on("pageerror", (err) => {
       fail(`pageerror: ${err.message}`);
