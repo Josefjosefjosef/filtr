@@ -139,25 +139,38 @@ async function pinAndWaitDaypart(page, vp) {
     },
     [hour, daypart, paint]
   );
-  // Allow one paint frame for any prior refresh rAF, then re-assert pin from Node side.
-  await page.waitForTimeout(50);
-  await page.evaluate(
-    ([dp, p]) => {
-      document.documentElement.setAttribute("data-iu-daypart", dp);
-      document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
-    },
-    [daypart, paint]
+  // Poll from Node (not page.waitForFunction args) — CI was timing out even after explicit setAttribute.
+  const deadline = Date.now() + 10000;
+  let last = { d: "", p: "" };
+  while (Date.now() < deadline) {
+    last = await page.evaluate(
+      ([dp, p]) => {
+        const root = document.documentElement;
+        root.setAttribute("data-iu-daypart", dp);
+        root.setAttribute("data-iu-silver-welcome-paint", p);
+        return {
+          d: root.getAttribute("data-iu-daypart") || "",
+          p: root.getAttribute("data-iu-silver-welcome-paint") || "",
+        };
+      },
+      [daypart, paint]
+    );
+    if (last.d === daypart && last.p === paint) {
+      await page.waitForTimeout(150);
+      return { hour, daypart, paint };
+    }
+    await page.waitForTimeout(100);
+  }
+  throw new Error(
+    "pinAndWaitDaypart mismatch want=" +
+      daypart +
+      "/" +
+      paint +
+      " got=" +
+      last.d +
+      "/" +
+      last.p
   );
-  await page.waitForFunction(
-    ([dp, p]) => {
-      const root = document.documentElement;
-      return root.getAttribute("data-iu-daypart") === dp && root.getAttribute("data-iu-silver-welcome-paint") === p;
-    },
-    [daypart, paint],
-    { timeout: 10000 }
-  );
-  await page.waitForTimeout(150);
-  return { hour, daypart, paint };
 }
 
 async function measureShowStripTheme(page) {
