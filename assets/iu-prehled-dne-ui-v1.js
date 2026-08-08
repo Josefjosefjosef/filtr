@@ -33,7 +33,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=traffic-ui-hero-cta-early-v1-20260808";
+} from "./iu-info-system-core-v1.js?v=traffic-ui-cls-stable-shell-v1-20260808";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -44,10 +44,10 @@ import {
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=traffic-ui-hero-cta-early-v1-20260808";
+} from "./iu-traffic-overview-v1.js?v=traffic-ui-cls-stable-shell-v1-20260808";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-ui-hero-cta-early-v1-20260808";
+const CACHE_BUST = "traffic-ui-cls-stable-shell-v1-20260808";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1292,7 +1292,21 @@ function paint(opts) {
     pageItems.length < list.length
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
       : "";
-  root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+  // Keep an existing hero shell (boot skeleton / prior paint) to avoid CLS from full innerHTML replace.
+  const heroReady = !!root.querySelector('[data-testid="prehled-dne-hero"] [data-act="open-settings"]');
+  const feedReady = !!root.querySelector("#iuPrehledDneTimeline");
+  if (heroReady && feedReady && !options.forceFullShell) {
+    updateFeedDom();
+    // Sync show-strip active mode without rebuilding hero.
+    try {
+      root.querySelectorAll(".iuPdToggle[data-act='mode']").forEach((btn) => {
+        const mode = btn.getAttribute("data-mode") || "";
+        btn.classList.toggle("is-active", mode === state.viewMode);
+      });
+    } catch (_) {}
+  } else {
+    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+  }
   applyIndeterminateFlags(root);
   if (state.settingsOpen) mountSettingsOverlay();
   else removeSettingsHost();
@@ -1763,24 +1777,13 @@ async function boot() {
   const root = ensureRoot();
   if (!root) return;
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
-  // Hero contract + smoke navigations wait on [data-act="open-settings"], not aria-busy feed.
+  // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = getPrefs();
-  root.innerHTML =
-    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-    `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
-    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
-    `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
-    bannerHtml() +
-    `<div class="iuPd__top"><button type="button" class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-act="open-settings" data-testid="prehled-dne-settings-cta">` +
-    settingsCtaInnerHtml() +
-    `</button></div>` +
-    `</div>` +
-    `</div>` +
-    `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
-    `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
-    `</div></div>` +
-    `<div class="iuPdFeed" aria-busy="true"></div>` +
-    `</section>`;
+  root.innerHTML = homeShellHtml(
+    `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
+    "Načítám…",
+    ""
+  );
   try {
     wire();
   } catch (_) {}
