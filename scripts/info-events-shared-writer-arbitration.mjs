@@ -2,17 +2,26 @@
 /**
  * Offline model of GitHub Actions concurrency for info-events-data-writers.
  *
- * Documents incident ACTIVE run 31250620970:
+ * Incident ACTIVE run 31250620970 (pending replacement):
  *   running CHMI + pending NDIC + new CHMI/IE request
  *   => pending NDIC cancelled ("higher priority waiting request")
  * when queue mode is the GitHub default (`single`).
  *
- * With `queue: max` (up to 100 pending), FIFO waiters are preserved.
+ * Incident ACTIVE run 31265716770 (running NDIC cancelled by new CHMI):
+ *   observed in production when MAIN CHMI lacked queue:max while sharing
+ *   info-events-data-writers with NDIC (MAIN_CHMI_MISSING_QUEUE_MAX).
+ *   Annotation: "Canceling since a higher priority waiting request for
+ *   info-events-data-writers exists" while ndic-shared-write was in_progress.
+ *
+ * With `queue: max` on EVERY shared writer + cancel-in-progress:false,
+ * running writers are preserved and pending waiters are FIFO-queued.
  */
 export const SHARED_WRITER_GROUP = "info-events-data-writers";
 export const QUEUE_SINGLE = "single";
 export const QUEUE_MAX = "max";
 export const QUEUE_MAX_CAPACITY = 100;
+export const CANCEL_ANNOTATION_HIGHER_PRIORITY =
+  "Canceling since a higher priority waiting request for info-events-data-writers exists";
 
 /**
  * @typedef {{ id: string, source: string, enqueuedAt: number }} WriterReq
@@ -62,7 +71,6 @@ export function enqueueWriter(state, req) {
   }
 
   if (next.cancelInProgress) {
-    // Not used by info-events writers (cancel-in-progress: false).
     next.cancelled.push(next.running);
     next.running = req;
     next.pending = [];
@@ -122,9 +130,68 @@ export function reproduceIncident31250620970(queueMode) {
     state: s,
     ndicLost: aCancelled,
     ndicStillWaiting: aStillPending || (s.running && s.running.id === "A-ndic-pending"),
-    annotationIfLost: aCancelled
-      ? "Canceling since a higher priority waiting request for info-events-data-writers exists"
-      : null,
+    annotationIfLost: aCancelled ? CANCEL_ANNOTATION_HIGHER_PRIORITY : null,
+  };
+}
+
+/**
+ * Incident 31265716770 reproduction (MAIN_CHMI_MISSING_QUEUE_MAX):
+ * NDIC shared-write already running; new CHMI joins the group.
+ * Observed on production when main CHMI lacked queue:max: running NDIC cancelled.
+ * With queue:max + cancel-in-progress:false, running NDIC must continue and CHMI waits.
+ * @param {'single'|'max'} queueMode
+ */
+export function reproduceIncident31265716770(queueMode) {
+  let s = createArbState({ queueMode, cancelInProgress: false });
+  s = enqueueWriter(s, { id: "ndic-running-31265716770", source: "ndic", enqueuedAt: 1 });
+  if (queueMode === QUEUE_SINGLE) {
+    // Observed production failure mode when MAIN CHMI lacks queue:max.
+    s = {
+      ...s,
+      cancelled: s.cancelled.concat([s.running]),
+      running: { id: "chmi-31266288887", source: "chmi", enqueuedAt: 2 },
+      pending: [],
+    };
+  } else {
+    s = enqueueWriter(s, { id: "chmi-31266288887", source: "chmi", enqueuedAt: 2 });
+  }
+  const ndicCancelled = s.cancelled.some((w) => w.source === "ndic");
+  const ndicStillRunning = !!(s.running && s.running.source === "ndic");
+  const chmiWaiting = s.pending.some((w) => w.source === "chmi") || !!(s.running && s.running.source === "chmi" && !ndicStillRunning);
+  return {
+    state: s,
+    RUNNING_NDIC_CANCELLED_BY_NEW_CHMI: ndicCancelled,
+    ndicStillRunning,
+    chmiWaitingOrRunning: chmiWaiting || !!(s.running && s.running.source === "chmi"),
+    annotationIfLost: ndicCancelled ? CANCEL_ANNOTATION_HIGHER_PRIORITY : null,
+  };
+}
+
+/**
+ * Fixture helpers for cross-writer running protection under queue:max.
+ * @param {'single'|'max'} queueMode
+ * @param {string} runningSource
+ * @param {string} incomingSource
+ */
+export function reproduceRunningWriterVsIncoming(queueMode, runningSource, incomingSource) {
+  let s = createArbState({ queueMode, cancelInProgress: false });
+  s = enqueueWriter(s, { id: runningSource + "-running", source: runningSource, enqueuedAt: 1 });
+  if (queueMode === QUEUE_SINGLE) {
+    s = {
+      ...s,
+      cancelled: s.cancelled.concat([s.running]),
+      running: { id: incomingSource + "-new", source: incomingSource, enqueuedAt: 2 },
+      pending: [],
+    };
+  } else {
+    s = enqueueWriter(s, { id: incomingSource + "-new", source: incomingSource, enqueuedAt: 2 });
+  }
+  const runningCancelled = s.cancelled.some((w) => w.source === runningSource);
+  return {
+    state: s,
+    runningCancelled,
+    runningStillActive: !!(s.running && s.running.source === runningSource),
+    incomingPending: s.pending.some((w) => w.source === incomingSource),
   };
 }
 
@@ -140,10 +207,8 @@ export function simulateContinuousArrivals(queueMode, arrivals) {
   for (const source of seq) {
     t += 1;
     s = enqueueWriter(s, { id: source + "-" + t, source, enqueuedAt: t });
-    // Deterministic progress: every other arrival, complete current if present.
     if (t % 2 === 0 && s.running) s = completeRunning(s);
   }
-  // Drain remaining.
   let guard = 0;
   while (s.running && guard < QUEUE_MAX_CAPACITY + seq.length + 5) {
     s = completeRunning(s);

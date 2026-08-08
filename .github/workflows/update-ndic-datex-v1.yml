@@ -275,8 +275,8 @@ jobs:
           echo "RUNNER_PREFLIGHT_OK"
 
       # TWO-SOURCE MODEL (incident ACTIVE run 31254863015):
-      # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD — helper scripts from workflow SHA
-      # B) SHARED_STATE_SOURCE=LATEST_MAIN — live info_events RMW/commit worktree
+      # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD â€” helper scripts from workflow SHA
+      # B) SHARED_STATE_SOURCE=LATEST_MAIN â€” live info_events RMW/commit worktree
       # Never overwrite feature helpers by checking out main into the same workspace.
       - name: Checkout feature HEAD orchestration code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

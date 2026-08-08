@@ -4,7 +4,7 @@ name: Update CHMI CAP v2
 # transform + data-only checks + auto-merge + Pages dispatch within 15 min E2E SLA).
 # Completeness: newest bulletin per CAP product stream (no fixed maxFiles / first-N).
 # Data PR must receive required checks and auto-merge; incomplete sync = FAIL (no silent healthy).
-# After merge, explicitly dispatch pages.yml (bot GITHUB_TOKEN merges do not reliably trigger push→pages).
+# After merge, explicitly dispatch pages.yml (bot GITHUB_TOKEN merges do not reliably trigger pushĂ˘â€ â€™pages).
 #
 # NARROW SHARED WRITER LOCK:
 # - Prep (network/parse/validate/build candidate) runs WITHOUT info-events-data-writers.
@@ -102,8 +102,9 @@ jobs:
     concurrency:
       group: info-events-data-writers
       cancel-in-progress: false
-      # FIFO queue (up to 100). Default single-pending slot cancels a waiting writer when
-      # another request arrives (incident ACTIVE run 31250620970 / NDIC shared-write).
+      # FIFO queue (up to 100). Required on EVERY shared writer (CHMI/IE/NDIC).
+      # Default single-pending cancels waiters (31250620970) and â€” when main CHMI lacked
+      # queue max â€” cancelled running NDIC shared-write (31265716770 / MAIN_CHMI_MISSING_QUEUE_MAX).
       queue: max
     outputs:
       pushed: ${{ steps.commit_push.outputs.pushed }}
@@ -166,7 +167,7 @@ jobs:
     if: needs.shared-write.outputs.pushed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # NO info-events-data-writers — checks/Pages must not hold the shared writer lock.
+    # NO info-events-data-writers Ă˘â‚¬â€ť checks/Pages must not hold the shared writer lock.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -219,7 +220,7 @@ jobs:
           [ -z "$NUM" ] && exit 0
           gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped"
 
-      - name: Diff scope check (data-only → allow auto-merge)
+      - name: Diff scope check (data-only Ă˘â€ â€™ allow auto-merge)
         id: scope
         run: |
           set -euo pipefail
@@ -237,10 +238,10 @@ jobs:
           done <<< "$CHANGED"
           if [ "$DATA_ONLY" = true ]; then
             echo "data_only=true" >> "$GITHUB_OUTPUT"
-            echo "[SCOPE] data-only — auto-merge allowed"
+            echo "[SCOPE] data-only Ă˘â‚¬â€ť auto-merge allowed"
           else
             echo "data_only=false" >> "$GITHUB_OUTPUT"
-            echo "[SCOPE] non-data change — auto-merge disabled"
+            echo "[SCOPE] non-data change Ă˘â‚¬â€ť auto-merge disabled"
           fi
 
       - name: Enable auto-merge (squash) when data-only
@@ -288,7 +289,7 @@ jobs:
               if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
             done
             if [ "$HAVE" -lt 3 ]; then
-              echo "[WAIT] required contexts starting ($HAVE/3) — sleeping"
+              echo "[WAIT] required contexts starting ($HAVE/3) Ă˘â‚¬â€ť sleeping"
               sleep 15
               continue
             fi
@@ -306,7 +307,7 @@ jobs:
                 fi
                 sleep 10
               done
-              echo "[WAIT] checks green but PR not merged yet — leaving auto-merge enabled"
+              echo "[WAIT] checks green but PR not merged yet Ă˘â‚¬â€ť leaving auto-merge enabled"
               echo "merged=false" >> "$GITHUB_OUTPUT"
               exit 0
             fi
