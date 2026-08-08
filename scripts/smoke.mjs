@@ -23,8 +23,8 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const PREVIEW_SELECTOR_TIMEOUT_MS = 30000;
 /** Hub at `/` must paint Silver shell before follow-up navigations. */
 const ROOT_HUB_READY_TIMEOUT_MS = 20000;
-/** `page.goto` — large `app.js` / client nav can delay `domcontentloaded` on cold runs (match preview-tier headroom). */
-const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 30000;
+/** `page.goto` — large `app.js` / client nav / multi‑MB data can delay `domcontentloaded` on cold runs. */
+const GOTO_DOM_CONTENT_LOADED_TIMEOUT_MS = 60000;
 
 function mediaArticlesPublished() {
   try {
@@ -51,8 +51,9 @@ function fail(msg) {
   console.error("[SMOKE FAIL]", msg);
 }
 
-// Minimal static server (0 extra deps)
-function serveFile(urlPath) {
+// Minimal static server (0 extra deps). Resolve path sync; read file async so multi‑MB
+// feed.json / traffic snapshots cannot starve concurrent HTML navigations on CI.
+function resolveServePath(urlPath) {
   let decodedPath = urlPath;
   try {
     decodedPath = decodeURIComponent(String(urlPath || "").split("?")[0]);
@@ -82,7 +83,8 @@ function serveFile(urlPath) {
     if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
       filePath = path.join(filePath, "index.html");
     }
-    return fs.readFileSync(filePath);
+    if (!fs.existsSync(filePath)) return null;
+    return filePath;
   } catch {
     return null;
   }
@@ -91,31 +93,48 @@ function serveFile(urlPath) {
 function startServer() {
   return new Promise((resolve) => {
     server = http.createServer((req, res) => {
-      const raw = String(req.url || "/");
-      const u = new URL(raw, "http://127.0.0.1");
-      const p = u.pathname || "/";
-      // Mirror prod: /projects HTML hub → 301 / (keep data + version.json).
-      if (
-        (p === "/projects" || p === "/projects/" || p.startsWith("/projects/")) &&
-        p !== "/projects/version.json" &&
-        !p.startsWith("/projects/data/")
-      ) {
-        const rest = p === "/projects" || p === "/projects/" ? "/" : "/" + p.slice("/projects/".length);
-        res.writeHead(301, { Location: rest + (u.search || "") });
-        res.end();
-        return;
-      }
-      const urlPath = p;
-      const data = serveFile(urlPath);
-      if (data) {
-        const ext = path.extname(urlPath);
-        const ct = ext === ".css" ? "text/css" : ext === ".js" ? "application/javascript" : ext === ".json" ? "application/json" : ext === ".ico" ? "image/x-icon" : "text/html";
-        res.writeHead(200, { "Content-Type": ct });
-        res.end(data);
-      } else {
-        res.writeHead(404);
-        res.end("Not found");
-      }
+      void (async () => {
+        try {
+          const raw = String(req.url || "/");
+          const u = new URL(raw, "http://127.0.0.1");
+          const p = u.pathname || "/";
+          // Mirror prod: /projects HTML hub → 301 / (keep data + version.json).
+          if (
+            (p === "/projects" || p === "/projects/" || p.startsWith("/projects/")) &&
+            p !== "/projects/version.json" &&
+            !p.startsWith("/projects/data/")
+          ) {
+            const rest = p === "/projects" || p === "/projects/" ? "/" : "/" + p.slice("/projects/".length);
+            res.writeHead(301, { Location: rest + (u.search || "") });
+            res.end();
+            return;
+          }
+          const urlPath = p;
+          const filePath = resolveServePath(urlPath);
+          if (!filePath) {
+            res.writeHead(404);
+            res.end("Not found");
+            return;
+          }
+          const data = await fs.promises.readFile(filePath);
+          const ext = path.extname(filePath);
+          const ct =
+            ext === ".css"
+              ? "text/css"
+              : ext === ".js"
+                ? "application/javascript"
+                : ext === ".json"
+                  ? "application/json"
+                  : ext === ".ico"
+                    ? "image/x-icon"
+                    : "text/html";
+          res.writeHead(200, { "Content-Type": ct });
+          res.end(data);
+        } catch (_) {
+          if (!res.headersSent) res.writeHead(404);
+          res.end("Not found");
+        }
+      })();
     });
     server.listen(PORT, "127.0.0.1", () => resolve());
   });
