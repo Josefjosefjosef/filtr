@@ -543,6 +543,25 @@ async function runPlaywright() {
       });
       await context.addInitScript(installPinnedClockInitScript(), { hour });
       const page = await bootstrapGuardPage(context);
+      // Hero contract is layout/daypart — stub multi‑MB production feeds so CI does not starve Playwright.
+      await page.route("**/projects/data/info_events/feed.json*", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ items: [], generationId: "hero-contract-stub" }),
+        })
+      );
+      await page.route("**/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json*", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            publicationEnabled: false,
+            trafficUiEnabled: true,
+            cards: [],
+          }),
+        })
+      );
       await page.goto(BASE + "&nosw=1", { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.waitForFunction(
         () => !!document.querySelector('[data-testid="prehled-dne-settings-cta"][data-act="open-settings"]'),

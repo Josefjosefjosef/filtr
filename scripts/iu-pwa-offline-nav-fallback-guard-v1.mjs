@@ -158,14 +158,34 @@ async function main() {
     if (onlineBack.ok || onlineBack.status === 200) passes.push("online_recovery_fetch");
     else failures.push({ test: "online_recovery_fetch", detail: onlineBack });
 
-    const cachesOk = await page.evaluate(async () => {
-      const keys = await caches.keys();
-      const hasOfflineDoc = keys.includes("iu-offline-doc-v1");
-      const versioned = keys.filter((k) => /^iu-(app|data)/.test(k));
-      return { hasOfflineDoc, versionedCount: versioned.length, keys };
-    });
-    if (cachesOk.hasOfflineDoc) passes.push("offline_doc_cache_present");
-    else failures.push({ test: "offline_doc_cache_present", detail: cachesOk });
+    // SW deploy reload can navigate the page when coming back online — retry cache probe.
+    let cachesOk = null;
+    for (let i = 0; i < 6; i++) {
+      try {
+        await page.waitForLoadState("domcontentloaded", { timeout: 15000 }).catch(() => {});
+        cachesOk = await page.evaluate(async () => {
+          const keys = await caches.keys();
+          const hasOfflineDoc = keys.includes("iu-offline-doc-v1");
+          const versioned = keys.filter((k) => /^iu-(app|data)/.test(k));
+          return { hasOfflineDoc, versionedCount: versioned.length, keys };
+        });
+        break;
+      } catch (e) {
+        if (i >= 5) {
+          failures.push({
+            test: "offline_doc_cache_present",
+            detail: { err: String((e && e.message) || e) },
+          });
+          cachesOk = null;
+          break;
+        }
+        await page.waitForTimeout(400);
+      }
+    }
+    if (cachesOk) {
+      if (cachesOk.hasOfflineDoc) passes.push("offline_doc_cache_present");
+      else failures.push({ test: "offline_doc_cache_present", detail: cachesOk });
+    }
   } finally {
     await browser.close();
     if (serverProc && !serverProc.killed) serverProc.kill("SIGTERM");
@@ -179,7 +199,7 @@ async function main() {
         origin: ORIGIN,
         passes,
         failures,
-        cacheVersion: "2026-08-06-traffic-overview-rsd-prehled-v1",
+        cacheVersion: "2026-08-08-traffic-ui-hero-cta-early-v1",
       },
       null,
       2
