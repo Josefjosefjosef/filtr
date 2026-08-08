@@ -1,0 +1,422 @@
+{
+  "runId": "b84d52df4db09ecb",
+  "started": "2026-08-08T18:48:50.514Z",
+  "mode": "active",
+  "discovery": {
+    "type": "authenticated_pull"
+  },
+  "http": [
+    {
+      "status": 200,
+      "name": "ndic-datex-common-pull"
+    }
+  ],
+  "parser": {
+    "situations": 3554,
+    "rejected": 0,
+    "quarantine": 2,
+    "stats": {
+      "new": 3552,
+      "updated": 0,
+      "unchanged": 0,
+      "ended": 0,
+      "skippedOlder": 0,
+      "softMissing": 0
+    }
+  },
+  "publish": {
+    "publish": true,
+    "reason": "ok",
+    "stats": {
+      "new": 3552,
+      "updated": 0,
+      "unchanged": 0,
+      "ended": 0,
+      "skippedOlder": 0,
+      "softMissing": 0
+    },
+    "alarms": []
+  },
+  "tmc": {
+    "ok": true,
+    "reason": "activated",
+    "source": "sp08001_basic",
+    "ignoredNonStandardCount": 33,
+    "ignoredEntries": [
+      {
+        "basenameDigest": "18ada4f2358f89b5",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 0
+      },
+      {
+        "basenameDigest": "c08c03f0e64bdf3b",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 1
+      },
+      {
+        "basenameDigest": "fcd42b01d747bab8",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 2
+      },
+      {
+        "basenameDigest": "89d4f5111f0cb523",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 3
+      },
+      {
+        "basenameDigest": "6c52534c5b983da7",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 4
+      },
+      {
+        "basenameDigest": "b3a84915f5226f5e",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 5
+      },
+      {
+        "basenameDigest": "876d2d506d7f82f8",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 6
+      },
+      {
+        "basenameDigest": "35498f98ea8cce60",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 7
+      },
+      {
+        "basenameDigest": "795c66f054d51752",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 8
+      },
+      {
+        "basenameDigest": "9ff948e584042e00",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 9
+      },
+      {
+        "basenameDigest": "471354edb2d7a952",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 10
+      },
+      {
+        "basenameDigest": "e79b301787c8b8d3",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 11
+      },
+      {
+        "basenameDigest": "67904b006c4dab66",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 12
+      },
+      {
+        "basenameDigest": "b4074f25a17a402d",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 13
+      },
+      {
+        "basenameDigest": "18ada4f2358f89b5",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 14
+      },
+      {
+        "basenameDigest": "c08c03f0e64bdf3b",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 15
+      },
+      {
+        "basenameDigest": "c311705ca29c5725",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 16
+      },
+      {
+        "basenameDigest": "a6fd78cc481ab91c",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 17
+      },
+      {
+        "basenameDigest": "1852322c79c5861f",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 18
+      },
+      {
+        "basenameDigest": "a3c2563ea4c761f7",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 19
+      },
+      {
+        "basenameDigest": "df509f4d98aef4b1",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 20
+      },
+      {
+        "basenameDigest": "1ccc794977a287f3",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 21
+      },
+      {
+        "basenameDigest": "df0c135fda388a00",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 22
+      },
+      {
+        "basenameDigest": "4486381a05a87db5",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 23
+      },
+      {
+        "basenameDigest": "955ea4ca4e1276c8",
+        "extension": "cpg",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 24
+      },
+      {
+        "basenameDigest": "7680632cd8e65664",
+        "extension": "dbf",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 25
+      },
+      {
+        "basenameDigest": "0d873d690aa16445",
+        "extension": "shp",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 26
+      },
+      {
+        "basenameDigest": "4bf904ec9906f629",
+        "extension": "shx",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 27
+      },
+      {
+        "basenameDigest": "1e443f07a4225490",
+        "extension": "txt",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 54
+      },
+      {
+        "basenameDigest": "654c2cd13ecc4532",
+        "extension": "txt",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 55
+      },
+      {
+        "basenameDigest": "94b4b2463977ebc5",
+        "extension": "txt",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 56
+      },
+      {
+        "basenameDigest": "f2a8960a5959d746",
+        "extension": "txt",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 57
+      },
+      {
+        "basenameDigest": "4a278bb3fc1dab70",
+        "extension": "db",
+        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
+        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
+        "resolutionRequired": false,
+        "authoritative": false,
+        "entryOrdinal": 58
+      }
+    ],
+    "unknownNonclassifiedEntries": [],
+    "unknownRequiredEntries": [],
+    "rejectedUnsafeEntries": [],
+    "unknownNonclassifiedCount": 0,
+    "unknownRequiredCount": 0,
+    "rejectedUnsafeCount": 0,
+    "requiredTableCountExpected": 25,
+    "requiredTableCountFound": 25,
+    "requiredTableSetComplete": true,
+    "requiredTableSetValid": true,
+    "resolverTableActivated": true,
+    "cid": 11,
+    "tabcd": 25,
+    "tableVersion": 11,
+    "authSource": "dedicated",
+    "meta": {
+      "active": true,
+      "version": "11",
+      "countryCode": 2,
+      "tableNumber": 25,
+      "pointCount": 33648,
+      "activatedAt": "2026-08-08T18:48:54.335Z",
+      "contentHash": "63ca4e0bd5c1"
+    }
+  },
+  "status": "healthy",
+  "error": null,
+  "secretsPresent": {
+    "pull": true,
+    "tmc": true,
+    "subscriberIdConfigured": true
+  },
+  "tmcHttp": {
+    "status": 200
+  },
+  "sanity": {
+    "ok": true,
+    "alarms": []
+  },
+  "forensicMeta": {
+    "datexBytesRead": 58457647,
+    "datexHttpStatus": 200
+  },
+  "publicationSafety": {
+    "UNVERIFIED_LOCATION_PUBLISHED": 0,
+    "UNVERIFIED_KM_PUBLISHED": 0,
+    "UNVERIFIED_DIRECTION_PUBLISHED": 0,
+    "FUZZY_MATCH_USED": false,
+    "GEOCODING_USED": false,
+    "HEURISTIC_LOCATION_USED": false
+  },
+  "UNVERIFIED_LOCATION_PUBLISHED": 0,
+  "UNVERIFIED_KM_PUBLISHED": 0,
+  "UNVERIFIED_DIRECTION_PUBLISHED": 0,
+  "FUZZY_MATCH_USED": false,
+  "GEOCODING_USED": false,
+  "HEURISTIC_LOCATION_USED": false,
+  "trafficUiSnapshot": {
+    "ok": true,
+    "rejectCode": null,
+    "cardCount": 3552,
+    "bytes": 4356824,
+    "uiCompact": true,
+    "sizeBreakdown": {
+      "metadata": 353,
+      "projections": 2,
+      "feed": 156,
+      "cards": 4356244,
+      "historyItems": 2,
+      "filterIndexes": 2,
+      "cardsProvenance": 7104,
+      "FULL_SNAPSHOT": 4356824,
+      "LIMIT_DEFAULT": 8388608,
+      "OVER_BY": 0
+    },
+    "trafficUiEnabled": true,
+    "publicationEnabled": false
+  }
+}

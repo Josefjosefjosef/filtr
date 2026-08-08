@@ -7,6 +7,11 @@ permissions:
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  # Same reliability pattern as smoke/repo-guard: pull_request webhooks can stall;
+  # push on fix/** posts check runs on the exact head SHA without workflow_dispatch.
+  push:
+    branches:
+      - "fix/**"
 
 concurrency:
   group: pr-health-audit-${{ github.event.pull_request.number || github.ref }}
@@ -20,7 +25,7 @@ jobs:
       - name: Checkout PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
 
       - name: Setup Python
