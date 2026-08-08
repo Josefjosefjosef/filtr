@@ -1,17 +1,17 @@
 {
-  "freezeId": "traffic-ui-activation-v1-20260807",
+  "freezeId": "traffic-ui-boot-nonblocking-v1-20260808",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-08T20:43:06.431Z",
-  "note": "Freeze bump: traffic-ui-activation-v1-20260807 (NDIC traffic cards in Prehled dne).",
+  "updatedAt": "2026-08-08T20:50:55.635Z",
+  "note": "Freeze bump: traffic UI boot non-blocking snapshot fetch.",
   "files": {
-    "projects/index.html": "ac64e159cd500298664792657dee0ba9b364891ddc80272fb58a03d6b8576560",
+    "projects/index.html": "591203c81499149ace86ecb50ed11704d76a1ef207f4008e55cfff36855b23fa",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
     "assets/app.js": "6bf0c4e1bc62ea86ea2e1fb2f470a2c438dff86c5dc347993b418406d59e0e10",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "64748b9c693faef3ccc4b7fa8a8f2a3b8e0c46dca3486ed6f1d4ebaa5eecd647",
+    "sw.js": "618b8ed9bb502af3db7586ecd9ecbb369152e6231d9e81c2b6dc22b8d85df2be",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-07-traffic-ui-activation-v1\"",
+      "CACHE_VERSION = \"2026-08-08-traffic-ui-boot-nonblocking-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -34,7 +34,7 @@
       "chmi-multibrowser-console-v1-20260731"
     ],
     "projects/index.html": [
-      "traffic-ui-activation-v1-20260807",
+      "traffic-ui-boot-nonblocking-v1-20260808",
       "custom-buttons-dynamic-bottom-clearance-v1-20260804",
       "bottom-nav-unify-v1-20260804",
       "silver-speech-bubble-down-4px-v1-20260804"

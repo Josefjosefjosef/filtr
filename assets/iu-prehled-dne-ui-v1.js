@@ -33,7 +33,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=traffic-ui-activation-v1-20260807";
+} from "./iu-info-system-core-v1.js?v=traffic-ui-boot-nonblocking-v1-20260808";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -44,10 +44,10 @@ import {
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=traffic-ui-activation-v1-20260807";
+} from "./iu-traffic-overview-v1.js?v=traffic-ui-boot-nonblocking-v1-20260808";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-ui-activation-v1-20260807";
+const CACHE_BUST = "traffic-ui-boot-nonblocking-v1-20260808";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1792,11 +1792,6 @@ async function boot() {
     if (bootAbort && bootAbort.signal.aborted) return;
     state.data = data;
     try {
-      if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
-        await fetchHostedTrafficOfflineSnapshot({ persist: true });
-      }
-    } catch (_) {}
-    try {
       migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
     } catch (_) {}
     // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
@@ -1844,6 +1839,8 @@ async function boot() {
     state.prefs = getPrefs();
     state.page = 1;
     const scroll = getScrollState();
+    // First paint must not wait on the large traffic offline snapshot (can be multi‑MB).
+    // Interactive settings CTA / hero contract require the post-boot shell immediately.
     paint();
     wire();
     bindTimelineLifecycleListeners();
@@ -1853,6 +1850,18 @@ async function boot() {
         const vp = feedViewport();
         if (vp) vp.scrollTop = Number(scroll.y);
       } catch (_) {}
+    }
+    // Background refresh: hydrate NDIC traffic cards after shell is interactive.
+    if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
+      void fetchHostedTrafficOfflineSnapshot({ persist: true })
+        .then(() => {
+          if (bootAbort && bootAbort.signal.aborted) return;
+          if (!root.isConnected) return;
+          try {
+            paint();
+          } catch (_) {}
+        })
+        .catch(() => {});
     }
     window.addEventListener(
       "beforeunload",

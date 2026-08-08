@@ -22,7 +22,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "traffic-ui-activation-v1-20260807";
+const CACHE_BUST = "traffic-ui-boot-nonblocking-v1-20260808";
 const SW_VER = "2026-08-06-traffic-overview-rsd-prehled-v1";
 
 const fails = [];
