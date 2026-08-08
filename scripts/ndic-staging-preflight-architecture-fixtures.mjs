@@ -130,6 +130,21 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("write_has_shared_lock", /group:\s*info-events-data-writers/.test(write));
   check("write_has_reread_apply", /info-events-shared-writer-critical\.mjs\s+ndic/.test(write));
   check("write_cancel_false", /cancel-in-progress:\s*false/.test(write));
+  // Two-source model (ACTIVE run 31254863015): feature orch + main data, never same-workspace overwrite.
+  check("write_feature_orch_path", /path:\s*ndic-orch\b/.test(write));
+  check("write_main_data_path", /path:\s*ndic-main-data\b/.test(write) && /ref:\s*main\b/.test(write));
+  check(
+    "write_helper_from_feature_orch",
+    /ndic-orch\/scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
+  );
+  check(
+    "write_target_main_shared_state",
+    /ndic-main-data\/projects\/data\/info_events/.test(write)
+  );
+  check(
+    "write_no_legacy_same_workspace_apply",
+    !/node\s+scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
+  );
 
   return { ok: localFails.length === 0, fails: localFails };
 }

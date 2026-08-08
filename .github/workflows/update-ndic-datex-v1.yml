@@ -272,9 +272,25 @@ jobs:
           umask 077
           echo "RUNNER_PREFLIGHT_OK"
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # TWO-SOURCE MODEL (incident ACTIVE run 31254863015):
+      # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD — helper scripts from workflow SHA
+      # B) SHARED_STATE_SOURCE=LATEST_MAIN — live info_events RMW/commit worktree
+      # Never overwrite feature helpers by checking out main into the same workspace.
+      - name: Checkout feature HEAD orchestration code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ndic-orch
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - name: Checkout latest main shared-state worktree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
+          path: ndic-main-data
           fetch-depth: 1
           fetch-tags: false
           submodules: false
@@ -285,11 +301,16 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Refresh main tip before shared write
+      - name: Refresh main tip before shared write (reread after acquire)
         run: |
           set -euo pipefail
-          git fetch origin main
-          git checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          test -f ndic-orch/scripts/info-events-shared-writer-critical.mjs
+          test -f ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
+          git -C ndic-main-data fetch origin main
+          git -C ndic-main-data checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          echo "ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD"
+          echo "SHARED_STATE_SOURCE=LATEST_MAIN"
+          echo "FEATURE_HELPER_AVAILABLE_DURING_MAIN_REREAD=YES"
 
       - name: Download NDIC candidate
         uses: actions/download-artifact@v4
@@ -300,12 +321,13 @@ jobs:
       - name: Apply NDIC candidate (re-read live shared state)
         run: |
           set -euo pipefail
-          node scripts/info-events-shared-writer-critical.mjs ndic \
+          node ndic-orch/scripts/info-events-shared-writer-critical.mjs ndic \
             "${RUNNER_TEMP}/ndic-ie-candidate" \
-            "projects/data/info_events"
+            "ndic-main-data/projects/data/info_events"
 
       - name: Commit data if changed
         id: commit_push
+        working-directory: ndic-main-data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -340,4 +362,4 @@ jobs:
           PR_BASE: main
         run: |
           set -euo pipefail
-          node scripts/ndic-open-or-refresh-data-pr.mjs
+          node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs

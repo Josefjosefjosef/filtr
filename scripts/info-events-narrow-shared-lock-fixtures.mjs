@@ -123,6 +123,14 @@ function main() {
   ok("chmi_apply_reread", /info-events-shared-writer-critical\.mjs chmi/.test(chmi), "apply");
   ok("ie_apply_reread", /info-events-shared-writer-critical\.mjs info-events/.test(ie), "ie-apply");
   ok("ndic_apply_reread", /info-events-shared-writer-critical\.mjs ndic/.test(ndic), "ndic-apply");
+  ok(
+    "ndic_two_source_orch_and_main",
+    /path:\s*ndic-orch\b/.test(ndic) &&
+      /path:\s*ndic-main-data\b/.test(ndic) &&
+      /ndic-orch\/scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(ndic) &&
+      /ndic-main-data\/projects\/data\/info_events/.test(ndic),
+    "two-source"
+  );
   ok("ndic_active_uses_shared_group", /group:\s*info-events-data-writers/.test(ndic), "ndic-active");
   ok("ndic_prep_staging_group", /group:\s*ndic-datex-v1-internal-staging/.test(ndic), "ndic-staging");
   ok("ndic_cancel_false", /cancel-in-progress:\s*false/.test(ndic), "cancel");

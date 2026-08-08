@@ -494,6 +494,15 @@ function main() {
           /info-events-shared-writer-critical\.mjs\s+ndic/.test(sharedWrite.body),
           "reread"
         );
+        ok(
+          "update_shared_write_two_source",
+          /path:\s*ndic-orch\b/.test(sharedWrite.body) &&
+            /path:\s*ndic-main-data\b/.test(sharedWrite.body) &&
+            /ndic-orch\/scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(
+              sharedWrite.body
+            ),
+          "two-source"
+        );
         ok("update_shared_write_preflight", /REFUSING_GITHUB_HOSTED/.test(sharedWrite.body), "preflight");
         ok("update_shared_write_not_github_hosted", !sharedWrite.isGithubHosted, "hosted");
       }

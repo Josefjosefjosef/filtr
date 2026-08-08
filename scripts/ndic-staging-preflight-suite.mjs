@@ -32,6 +32,8 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-data-pr-rest-runtime-fixtures",
   "iu-info-events-narrow-shared-lock-fixtures",
   "iu-info-events-shared-writer-starvation-fixtures",
+  "iu-ndic-shared-write-main-checkout-fixtures",
+  "iu-ndic-shared-write-main-checkout-meta-fixtures",
   "iu-traffic-overview-ui-fixtures",
 ];
 
