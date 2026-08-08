@@ -357,13 +357,27 @@ function acceptTrafficSnapshot(parsed) {
   return parsed;
 }
 
+/** In-memory snapshot cache (avoids sync JSON.parse of multi‑MB localStorage on boot/reload). */
+let _trafficSnapMem = null;
+const LS_SNAPSHOT_MAX_CHARS = 262144; // 256 KiB — larger payloads stay memory-only
+
 export function loadOfflineTrafficSnapshot() {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
+  if (_trafficSnapMem) return _trafficSnapMem;
   if (typeof localStorage === "undefined") return null;
   try {
     const raw = localStorage.getItem(LS_OFFLINE_SNAPSHOT);
     if (!raw) return null;
-    return acceptTrafficSnapshot(JSON.parse(raw));
+    // Oversized LS entries block the main thread on parse — fail closed + clear.
+    if (raw.length > LS_SNAPSHOT_MAX_CHARS) {
+      try {
+        localStorage.removeItem(LS_OFFLINE_SNAPSHOT);
+      } catch (_) {}
+      return null;
+    }
+    const snap = acceptTrafficSnapshot(JSON.parse(raw));
+    if (snap) _trafficSnapMem = snap;
+    return snap;
   } catch (_) {
     return null;
   }
@@ -387,6 +401,7 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
     const parsed = await res.json();
     const snap = acceptTrafficSnapshot(parsed);
     if (!snap) return null;
+    _trafficSnapMem = snap;
     if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
     return snap;
   } catch (_) {
@@ -398,21 +413,31 @@ export function saveOfflineTrafficSnapshot(snapshot) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) {
     return { ok: false, rejectCode: "TRAFFIC_UI_DISABLED" };
   }
-  if (typeof localStorage === "undefined") return { ok: false };
   if (!snapshot || snapshot.publicationEnabled === true) {
     return { ok: false, rejectCode: "PUBLICATION_MUST_STAY_OFF" };
   }
   const canary = scanTrafficUiCanaries(snapshot);
   if (!canary.ok) return { ok: false, rejectCode: "TRAFFIC_UI_SECURITY_CANARY_DETECTED", hits: canary.hits };
+  _trafficSnapMem = snapshot;
+  if (typeof localStorage === "undefined") return { ok: true, persist: "memory" };
   try {
-    localStorage.setItem(LS_OFFLINE_SNAPSHOT, JSON.stringify(snapshot));
-    return { ok: true };
+    const raw = JSON.stringify(snapshot);
+    // Multi‑MB snapshots must not land in localStorage (sync parse blocks boot/reload paint).
+    if (raw.length > LS_SNAPSHOT_MAX_CHARS) {
+      try {
+        localStorage.removeItem(LS_OFFLINE_SNAPSHOT);
+      } catch (_) {}
+      return { ok: true, persist: "memory" };
+    }
+    localStorage.setItem(LS_OFFLINE_SNAPSHOT, raw);
+    return { ok: true, persist: "localStorage" };
   } catch (_) {
-    return { ok: false, rejectCode: "STORAGE_FAILED" };
+    return { ok: true, persist: "memory", rejectCode: "STORAGE_FAILED" };
   }
 }
 
 export function clearOfflineTrafficSnapshot() {
+  _trafficSnapMem = null;
   if (typeof localStorage === "undefined") return;
   try {
     localStorage.removeItem(LS_OFFLINE_SNAPSHOT);
