@@ -109,46 +109,51 @@ async function pinAndWaitDaypart(page, vp) {
     { timeout: 45000 }
   );
   await page.evaluate(
-    ({ hour: h, daypart: dp, paint: p }) => {
+    ([h, dp, p]) => {
       const applyPin = () => {
-        try {
-          document.documentElement.setAttribute("data-iu-daypart", dp);
-          document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
-          const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
-          for (let i = 0; i < all.length; i++) document.documentElement.classList.remove(all[i]);
-          const map = {
-            morning: "iu-time-morning",
-            lateMorning: "iu-time-late-morning",
-            afternoon: "iu-time-afternoon",
-            evening: "iu-time-evening",
-          };
-          if (map[p]) document.documentElement.classList.add(map[p]);
-        } catch (_) {}
+        document.documentElement.setAttribute("data-iu-daypart", dp);
+        document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
+        const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
+        for (let i = 0; i < all.length; i++) document.documentElement.classList.remove(all[i]);
+        const map = {
+          morning: "iu-time-morning",
+          lateMorning: "iu-time-late-morning",
+          afternoon: "iu-time-afternoon",
+          evening: "iu-time-evening",
+        };
+        if (map[p]) document.documentElement.classList.add(map[p]);
       };
-      try {
-        window.__IU_HERO_CONTRACT_PIN__ = { hour: h, daypart: dp, paint: p };
-      } catch (_) {}
+      window.__IU_HERO_CONTRACT_PIN__ = { hour: h, daypart: dp, paint: p };
+      // Keep welcome refresh from fighting the contract pin (CI wall-clock can be evening UTC).
+      const prev = window.iuSilverWelcomeRefresh;
+      window.iuSilverWelcomeRefresh = function (opts) {
+        try {
+          if (typeof prev === "function") prev(opts && typeof opts === "object" ? opts : { hour: h });
+        } catch (_) {}
+        applyPin();
+      };
       try {
         window.iuSilverWelcomeRefresh({ hour: h });
       } catch (_) {}
       applyPin();
-      // Welcome refresh may re-apply daypart on rAF after opts-dropping wrappers — pin again after paint.
-      try {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(applyPin);
-        });
-      } catch (_) {
-        applyPin();
-      }
     },
-    { hour, daypart, paint }
+    [hour, daypart, paint]
+  );
+  // Allow one paint frame for any prior refresh rAF, then re-assert pin from Node side.
+  await page.waitForTimeout(50);
+  await page.evaluate(
+    ([dp, p]) => {
+      document.documentElement.setAttribute("data-iu-daypart", dp);
+      document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
+    },
+    [daypart, paint]
   );
   await page.waitForFunction(
-    ({ daypart: dp, paint: p }) => {
+    ([dp, p]) => {
       const root = document.documentElement;
       return root.getAttribute("data-iu-daypart") === dp && root.getAttribute("data-iu-silver-welcome-paint") === p;
     },
-    { daypart, paint },
+    [daypart, paint],
     { timeout: 10000 }
   );
   await page.waitForTimeout(150);
