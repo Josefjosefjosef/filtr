@@ -73,7 +73,12 @@ async function preparePage(page) {
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
     } catch (_) {}
   });
-  await page.goto(BASE, { waitUntil: "networkidle", timeout: 90000 });
+  // Keep info-system cutover off: this guard asserts network APIs, not feed hydrate.
+  // Default cutover + multi‑MB feed.json can starve deferred iu-network bootstrap on CI.
+  const url = BASE.includes("?")
+    ? BASE + "&iuInfoSystem=off&nosw=1"
+    : BASE + "?iuInfoSystem=off&nosw=1";
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForFunction(() => window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function", null, {
     timeout: 60000,
   });
