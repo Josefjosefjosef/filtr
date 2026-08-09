@@ -39,14 +39,20 @@ schedule (cron)                       workflow_dispatch (break-glass)
                         - verifies attestation for exact github.sha
                         - IU_NDIC_* secrets, NDIC network, builds candidate
                         - concurrency: ndic-datex-v1-internal-staging (cancel false)
-                                |  resolved_mode == 'active' && candidate_ready
+                                |  !cancelled() && prep.result == success
+                                |  && (dispatch+active || schedule)
                         ndic-shared-write                        (self-hosted CZ)
                         - concurrency: info-events-data-writers, queue: max
+                        - fail-closed candidate validation AFTER artifact download
                         - live re-read, commit, data PR
 ```
 
 `ndic-prep` uses `if: !cancelled() && ...` (never `always()`), so the dispatch path still
 runs while the two scheduled jobs are skipped, without swallowing their failures.
+
+`ndic-shared-write` job eligibility must **not** depend on `needs.ndic-prep.outputs.*`
+(canaries 31311789781 / 31313465533: prep success + candidate artifact + shared-write
+skipped). Candidate validity is step-level after download.
 
 ## Arming and disarming
 

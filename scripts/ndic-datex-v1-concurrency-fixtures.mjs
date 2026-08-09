@@ -189,7 +189,10 @@ function main() {
     "ndic_commit_active_only",
     /ndic-shared-write:/.test(ndic) &&
       /github\.event\.inputs\.mode == 'active'/.test(ndic) &&
-      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(ndic),
+      /needs\.ndic-prep\.result == 'success'/.test(ndic) &&
+      !/needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(
+        (ndic.split("ndic-shared-write:")[1] || "").split("runs-on:")[0] || ""
+      ),
     "commit"
   );
   ok("ndic_apply_reread", /info-events-shared-writer-critical\.mjs ndic/.test(ndic), "reread");

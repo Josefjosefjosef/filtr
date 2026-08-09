@@ -343,6 +343,7 @@ jobs:
           test -d "${RUNNER_TEMP}/ndic-ie-candidate"
           # REQUIRED snapshot must be inside candidate before upload (ACTIVE 31257122613).
           node scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
+          node scripts/ndic-write-candidate-producer-binding.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
           echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Upload NDIC candidate
@@ -357,12 +358,14 @@ jobs:
 
   ndic-shared-write:
     needs: ndic-prep
-    # Prefer event inputs/schedule for ACTIVE gate. Relying only on
-    # needs.ndic-prep.outputs.resolved_mode skipped shared-write on canary
-    # ACTIVE run 31311789781 after schedule jobs were skipped in the graph.
+    # Variant A (after ACTIVE canaries 31311789781 / 31313465533):
+    # Job eligibility uses only GitHub-native result/event gates.
+    # Do NOT gate on needs.ndic-prep.outputs.* — those outputs were not a reliable
+    # eligibility signal after skipped schedule jobs in the needs graph.
+    # Candidate existence/validity is fail-closed AFTER artifact download (step-level).
     if: >
-      needs.ndic-prep.result == 'success'
-      && needs.ndic-prep.outputs.candidate_ready == 'true'
+      !cancelled()
+      && needs.ndic-prep.result == 'success'
       && (
       (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'active')
       || (github.event_name == 'schedule')
@@ -470,10 +473,14 @@ jobs:
           name: ndic-ie-candidate-${{ github.run_id }}
           path: ${{ runner.temp }}/ndic-ie-candidate
 
-      - name: Assert downloaded candidate REQUIRED outputs
+      - name: Fail-closed validate downloaded candidate
+        env:
+          IU_NDIC_EXPECTED_PRODUCER_RUN_ID: ${{ github.run_id }}
+          IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: ${{ github.sha }}
+          IU_NDIC_EXPECTED_CANDIDATE_MODE: active
         run: |
           set -euo pipefail
-          node ndic-orch/scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
+          node ndic-orch/scripts/ndic-validate-shared-write-candidate.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
 
       - name: Apply NDIC candidate (re-read live shared state)
         run: |

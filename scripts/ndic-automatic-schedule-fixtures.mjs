@@ -99,7 +99,15 @@ export function assertAutomaticScheduleContract(src) {
     "write_dispatch_or_schedule_active_gate",
     /github\.event\.inputs\.mode == 'active'/.test(write) &&
       /github\.event_name == 'schedule'/.test(write) &&
-      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(write)
+      /needs\.ndic-prep\.result == 'success'/.test(write) &&
+      /!cancelled\(\)/.test(write) &&
+      !/needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(
+        write.split("runs-on:")[0] || write
+      )
+  );
+  check(
+    "write_validates_candidate_in_job",
+    /ndic-validate-shared-write-candidate\.mjs/.test(write)
   );
 
   check(

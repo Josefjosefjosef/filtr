@@ -1,0 +1,178 @@
+name: NDIC shared-write GHA semantics proof
+
+# No-secret, no-NDIC-network proof that a follow-up job STARTS after skipped
+# schedule-like dependencies when prep-like succeeds — without gating on
+# needs.*.outputs.candidate_ready (false-skip class from ACTIVE canaries
+# 31311789781 / 31313465533).
+#
+# Forbidden in this workflow:
+# - IU_NDIC_* secrets
+# - DATEX / TMC download
+# - shared info_events mutation
+# - Data PR / Pages publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: "positive_dispatch_skipped_deps | prep_fail"
+        required: true
+        type: choice
+        options:
+          - positive_dispatch_skipped_deps
+          - prep_fail
+        default: positive_dispatch_skipped_deps
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  schedule-like-gate:
+    # Mirrors schedule-gate: skipped on workflow_dispatch.
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Should never run on workflow_dispatch
+        run: |
+          echo "UNEXPECTED_SCHEDULE_LIKE_GATE_RUN"
+          exit 1
+
+  schedule-like-preflight:
+    needs: schedule-like-gate
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Should never run on workflow_dispatch
+        run: |
+          echo "UNEXPECTED_SCHEDULE_LIKE_PREFLIGHT_RUN"
+          exit 1
+
+  prep-like:
+    needs:
+      - schedule-like-gate
+      - schedule-like-preflight
+    # Same skipped-deps pattern as ndic-prep (!cancelled, never always).
+    if: >
+      !cancelled()
+      && github.repository == 'Josefjosefjosef/filtr'
+      && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
+      proof_marker: ${{ steps.pack.outputs.proof_marker }}
+    steps:
+      - name: Scenario control
+        id: ctrl
+        run: |
+          set -euo pipefail
+          echo "scenario=${{ github.event.inputs.scenario }}"
+          if [ "${{ github.event.inputs.scenario }}" = "prep_fail" ]; then
+            echo "PREP_LIKE_FORCED_FAILURE"
+            exit 1
+          fi
+          echo "PREP_LIKE_CONTINUE=1"
+
+      - name: Pack synthetic candidate artifact
+        id: pack
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/ndic-ie-candidate-proof"
+          marker="gha-sem-${GITHUB_RUN_ID}"
+          printf '%s\n' "$marker" > "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt"
+          echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
+          echo "proof_marker=${marker}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload synthetic candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-gha-semantics-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate-proof
+          if-no-files-found: error
+          retention-days: 1
+
+  # Fixed gate (Variant A): must RUN when prep succeeds after skipped deps.
+  followup-fixed:
+    needs: prep-like
+    if: >
+      !cancelled()
+      && needs.prep-like.result == 'success'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.scenario == 'positive_dispatch_skipped_deps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download synthetic candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: ndic-gha-semantics-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate-proof
+
+      - name: Assert candidate exists (step-level)
+        run: |
+          set -euo pipefail
+          test -f "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt"
+          marker="$(cat "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt")"
+          echo "FOLLOWUP_FIXED_STARTED=YES"
+          echo "FOLLOWUP_FIXED_MARKER=${marker}"
+          echo "REAL_GHA_MANUAL_SKIPPED_DEPENDENCIES=YES"
+          echo "REAL_GHA_PREP_RESULT=success"
+          echo "REAL_GHA_FOLLOWUP_RESULT=success"
+          echo "REAL_GHA_EXPECTED_FOLLOWUP_RESULT=success"
+          echo "REAL_GHA_SEMANTICS_MATCH_EXPECTATION=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_SECRET=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_NDIC_NETWORK=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_SHARED_MUTATION=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_PUBLICATION=YES"
+
+  # Legacy control: same graph, but eligibility still uses needs outputs.
+  # Observation-only: skipped conclusion does not fail the workflow.
+  followup-legacy-candidate-ready-gate:
+    needs: prep-like
+    if: >
+      needs.prep-like.result == 'success'
+      && needs.prep-like.outputs.candidate_ready == 'true'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.scenario == 'positive_dispatch_skipped_deps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Legacy gate entered
+        run: |
+          set -euo pipefail
+          echo "LEGACY_CANDIDATE_READY_GATE_STARTED=YES"
+          echo "LEGACY_NEEDS_OUTPUT_AVAILABLE=YES"
+
+  followup-must-not-run-on-prep-fail:
+    needs: prep-like
+    if: >
+      !cancelled()
+      && needs.prep-like.result == 'success'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.scenario == 'prep_fail'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Must never start when prep failed
+        run: |
+          echo "UNEXPECTED_FOLLOWUP_AFTER_PREP_FAIL"
+          exit 1
+
+  prep-fail-expectation:
+    needs: prep-like
+    if: >
+      always()
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.scenario == 'prep_fail'
+      && needs.prep-like.result == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Confirm follow-up did not start after prep failure
+        run: |
+          set -euo pipefail
+          echo "PREP_FAIL_SCENARIO_OK=YES"
+          echo "FOLLOWUP_AFTER_PREP_FAIL=NO"
