@@ -119,15 +119,35 @@ const missingEnv = {
   IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
 };
 const missing = validateSharedWriteCandidate(path.join(tmp, "missing"), missingEnv);
+ok(
+  "MISSING_ARTIFACT_SHARED_WRITE_JOB_STARTS",
+  sharedWriteJobWouldStart({
+    eventName: "workflow_dispatch",
+    mode: "active",
+    prepResult: "success",
+  }) === true
+);
 ok("MISSING_CANDIDATE_JOB_STARTED_MODEL", sharedWriteJobWouldStart({
   eventName: "workflow_dispatch",
   mode: "active",
   prepResult: "success",
 }) === true);
+ok("MISSING_ARTIFACT_DETECTED", missing.ok === false);
 ok("MISSING_CANDIDATE_FAIL_CLOSED", missing.ok === false);
+ok("MISSING_ARTIFACT_SHARED_MUTATION", missing.ok === false);
 ok("MISSING_CANDIDATE_SHARED_MUTATION", missing.ok === false);
+ok("MISSING_ARTIFACT_PUBLICATION", missing.ok === false);
 
-function writeMinimalCandidate(dir, { corruptSnapshot = false, badProducer = false } = {}) {
+function writeMinimalCandidate(
+  dir,
+  {
+    corruptSnapshot = false,
+    badProducer = false,
+    corruptManifest = false,
+    invalidSchema = false,
+    nonPublicSafe = false,
+  } = {}
+) {
   fs.mkdirSync(path.join(dir, "ndic_datex_v1"), { recursive: true });
   fs.writeFileSync(path.join(dir, "feed.json"), JSON.stringify({ items: [] }));
   fs.writeFileSync(path.join(dir, "monitoring.json"), JSON.stringify({}));
@@ -145,10 +165,12 @@ function writeMinimalCandidate(dir, { corruptSnapshot = false, badProducer = fal
     fs.writeFileSync(
       path.join(dir, "ndic_datex_v1", "traffic_offline_snapshot.json"),
       JSON.stringify({
-        schema: "iu-traffic-offline-snapshot-v1",
-        schemaVersion: "iu-traffic-offline-snapshot-v1",
-        publicationEnabled: false,
-        publicApiEnabled: false,
+        schema: invalidSchema ? "iu-traffic-offline-snapshot-WRONG" : "iu-traffic-offline-snapshot-v1",
+        schemaVersion: invalidSchema
+          ? "iu-traffic-offline-snapshot-WRONG"
+          : "iu-traffic-offline-snapshot-v1",
+        publicationEnabled: nonPublicSafe === true,
+        publicApiEnabled: nonPublicSafe === true,
         cards: [],
         projections: [],
         feed: { items: [] },
@@ -161,7 +183,9 @@ function writeMinimalCandidate(dir, { corruptSnapshot = false, badProducer = fal
     GITHUB_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
     NDIC_RESOLVED_MODE: "active",
   };
-  if (!badProducer) writeCandidateProducerBinding(dir, env);
+  if (corruptManifest) {
+    fs.writeFileSync(path.join(dir, "ndic_datex_v1", "candidate_producer.json"), "{not-json");
+  } else if (!badProducer) writeCandidateProducerBinding(dir, env);
   else {
     fs.writeFileSync(
       path.join(dir, "ndic_datex_v1", "candidate_producer.json"),
@@ -200,6 +224,41 @@ const badBind = validateSharedWriteCandidate(badBindDir, {
   IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
 });
 ok("BAD_PRODUCER_BINDING_FAIL_CLOSED", badBind.ok === false);
+ok("WRONG_PRODUCER_BINDING_DETECTED", badBind.ok === false);
+ok("WRONG_PRODUCER_SHARED_MUTATION", badBind.ok === false);
+ok("WRONG_PRODUCER_PUBLICATION", badBind.ok === false);
+
+const corruptManifestDir = path.join(tmp, "corrupt-manifest");
+writeMinimalCandidate(corruptManifestDir, { corruptManifest: true });
+const corruptManifest = validateSharedWriteCandidate(corruptManifestDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "31313465533",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("CORRUPT_MANIFEST_DETECTED", corruptManifest.ok === false);
+ok("CORRUPT_MANIFEST_SHARED_MUTATION", corruptManifest.ok === false);
+ok("CORRUPT_MANIFEST_PUBLICATION", corruptManifest.ok === false);
+
+const invalidSchemaDir = path.join(tmp, "invalid-schema");
+writeMinimalCandidate(invalidSchemaDir, { invalidSchema: true });
+const invalidSchema = validateSharedWriteCandidate(invalidSchemaDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "31313465533",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("INVALID_SCHEMA_FAILS_CLOSED", invalidSchema.ok === false);
+ok("INVALID_SCHEMA_SHARED_MUTATION", invalidSchema.ok === false);
+
+const nonPublicDir = path.join(tmp, "non-public");
+writeMinimalCandidate(nonPublicDir, { nonPublicSafe: true });
+const nonPublic = validateSharedWriteCandidate(nonPublicDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "31313465533",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("NON_PUBLIC_SAFE_CANDIDATE_FAILS_CLOSED", nonPublic.ok === false);
+ok("NON_PUBLIC_SAFE_SHARED_MUTATION", nonPublic.ok === false);
+ok("NON_PUBLIC_SAFE_PUBLICATION", nonPublic.ok === false);
 
 try {
   fs.rmSync(tmp, { recursive: true, force: true });
@@ -219,15 +278,31 @@ const report = {
   SHARED_WRITE_PREP_FAILURE_FIXTURE_PASS: fails.some((f) => f.startsWith("D_"))
     ? "NO"
     : "YES",
+  MISSING_ARTIFACT_SHARED_WRITE_JOB_STARTS: fails.some((f) =>
+    f.startsWith("MISSING_ARTIFACT_SHARED_WRITE_JOB_STARTS")
+  )
+    ? "NO"
+    : "YES",
+  MISSING_ARTIFACT_DETECTED: fails.some((f) => f.startsWith("MISSING_ARTIFACT_DETECTED"))
+    ? "NO"
+    : "YES",
   MISSING_CANDIDATE_JOB_STARTED: fails.some((f) => f.startsWith("MISSING_CANDIDATE_JOB_STARTED"))
     ? "NO"
     : "YES",
   MISSING_CANDIDATE_FAIL_CLOSED: fails.some((f) => f.startsWith("MISSING_CANDIDATE_FAIL_CLOSED"))
     ? "NO"
     : "YES",
+  MISSING_ARTIFACT_SHARED_MUTATION: fails.some((f) =>
+    f.startsWith("MISSING_ARTIFACT_SHARED_MUTATION")
+  )
+    ? "YES"
+    : "NO",
   MISSING_CANDIDATE_SHARED_MUTATION: fails.some((f) =>
     f.startsWith("MISSING_CANDIDATE_SHARED_MUTATION")
   )
+    ? "YES"
+    : "NO",
+  MISSING_ARTIFACT_PUBLICATION: fails.some((f) => f.startsWith("MISSING_ARTIFACT_PUBLICATION"))
     ? "YES"
     : "NO",
   CORRUPT_CANDIDATE_DETECTED: fails.some((f) => f.startsWith("CORRUPT_CANDIDATE_DETECTED"))
@@ -239,6 +314,36 @@ const report = {
     ? "YES"
     : "NO",
   CORRUPT_CANDIDATE_PUBLICATION: fails.some((f) => f.startsWith("CORRUPT_CANDIDATE_PUBLICATION"))
+    ? "YES"
+    : "NO",
+  CORRUPT_MANIFEST_DETECTED: fails.some((f) => f.startsWith("CORRUPT_MANIFEST_DETECTED"))
+    ? "NO"
+    : "YES",
+  CORRUPT_MANIFEST_SHARED_MUTATION: fails.some((f) =>
+    f.startsWith("CORRUPT_MANIFEST_SHARED_MUTATION")
+  )
+    ? "YES"
+    : "NO",
+  CORRUPT_MANIFEST_PUBLICATION: fails.some((f) => f.startsWith("CORRUPT_MANIFEST_PUBLICATION"))
+    ? "YES"
+    : "NO",
+  INVALID_SCHEMA_FAILS_CLOSED: fails.some((f) => f.startsWith("INVALID_SCHEMA_FAILS_CLOSED"))
+    ? "NO"
+    : "YES",
+  NON_PUBLIC_SAFE_CANDIDATE_FAILS_CLOSED: fails.some((f) =>
+    f.startsWith("NON_PUBLIC_SAFE_CANDIDATE_FAILS_CLOSED")
+  )
+    ? "NO"
+    : "YES",
+  WRONG_PRODUCER_BINDING_DETECTED: fails.some((f) =>
+    f.startsWith("WRONG_PRODUCER_BINDING_DETECTED")
+  )
+    ? "NO"
+    : "YES",
+  WRONG_PRODUCER_SHARED_MUTATION: fails.some((f) => f.startsWith("WRONG_PRODUCER_SHARED_MUTATION"))
+    ? "YES"
+    : "NO",
+  WRONG_PRODUCER_PUBLICATION: fails.some((f) => f.startsWith("WRONG_PRODUCER_PUBLICATION"))
     ? "YES"
     : "NO",
   SHARED_WRITE_MUTATION_TEST_PASS: fails.length === 0 ? "YES" : "NO",
