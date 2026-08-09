@@ -246,14 +246,42 @@ export function assertNetworkWorkflowArchitecture(src) {
     "write_no_legacy_same_workspace_apply",
     !/node\s+scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
   );
-  // ACTIVE 31257122613: required snapshot in candidate + per-path staging (no all-or-nothing || true).
+  // ACTIVE 31257122613: prep still packs with required-output assert before artifact upload.
   check(
     "pack_asserts_candidate_required_outputs",
     /ndic-assert-candidate-required-outputs\.mjs/.test(net)
   );
+  // After #9403: write job eligibility uses prep.result (not needs outputs); candidate
+  // validation is fail-closed inside the job after artifact download.
+  const writeIfRegion = (() => {
+    const idx = write.search(/\n\s*runs-on:/);
+    return stripComments(idx >= 0 ? write.slice(0, idx) : write);
+  })();
+  check("write_uses_cancelled_guard", /!cancelled\(\)/.test(writeIfRegion));
+  check(
+    "write_uses_prep_result_gate",
+    /needs\.ndic-prep\.result\s*==\s*'success'/.test(writeIfRegion)
+  );
+  check(
+    "write_no_candidate_ready_job_gate",
+    !/needs\.ndic-prep\.outputs\.candidate_ready/.test(writeIfRegion)
+  );
+  check(
+    "write_no_resolved_mode_job_gate",
+    !/needs\.ndic-prep\.outputs\.resolved_mode/.test(writeIfRegion)
+  );
+  check(
+    "write_no_prep_outputs_job_gate",
+    !/needs\.ndic-prep\.outputs\./.test(writeIfRegion)
+  );
+  check(
+    "write_download_candidate_artifact",
+    /download-artifact/.test(write) &&
+      /ndic-ie-candidate-\$\{\{\s*github\.run_id\s*\}\}/.test(write)
+  );
   check(
     "write_asserts_downloaded_candidate_required",
-    /ndic-assert-candidate-required-outputs\.mjs/.test(write)
+    /ndic-validate-shared-write-candidate\.mjs/.test(write)
   );
   check(
     "write_uses_stage_shared_write_outputs",
@@ -262,6 +290,11 @@ export function assertNetworkWorkflowArchitecture(src) {
   check(
     "write_no_all_or_nothing_git_add_swallow",
     !/git\s+add[\s\S]{0,400}2>\s*\/dev\/null\s*\|\|\s*true/.test(write)
+  );
+  // Old pack-time assert must NOT be the sole write-job eligibility/validation contract.
+  check(
+    "write_old_assert_not_required_as_active_architecture",
+    !/ndic-assert-candidate-required-outputs\.mjs/.test(write)
   );
 
   return { ok: localFails.length === 0, fails: localFails };
