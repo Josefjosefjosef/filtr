@@ -341,13 +341,23 @@ function main() {
 
   // ---- J) data PR contract stays single-branch, no duplicate PR references -------
   {
+    // Presence check (test -f) + exactly two node invocations:
+    // shared-write open/refresh + reconcile canonical ensure (never a second PR).
+    const prNodeCalls = (c.match(/node\s+ndic-orch\/scripts\/ndic-open-or-refresh-data-pr\.mjs/g) || [])
+      .length;
     const prRefs = (c.match(/ndic-open-or-refresh-data-pr\.mjs/g) || []).length;
-    ok("J_single_data_pr_helper_call", prRefs === 2, String(prRefs));
+    ok("J_single_data_pr_helper_call", prNodeCalls === 2 && prRefs === 3, String(prNodeCalls) + "/" + prRefs);
     ok("J_no_gh_pr_create", !/gh pr create/.test(c), "gh-cli");
     const branchRefs = new Set((c.match(/automation\/update-ndic-datex-v1/g) || []));
     ok("J_single_automation_branch", branchRefs.size === 1, String(branchRefs.size));
     ok("J_pr_only_in_shared_write", !/ndic-open-or-refresh-data-pr\.mjs/.test(prep), "prep-pr");
     ok("J_pr_after_push_only", /if:\s*steps\.commit_push\.outputs\.pushed == 'true'/.test(write), "guard");
+    const reconcile = jobChunk(raw, "ndic-reconcile-data-pr");
+    ok(
+      "J_reconcile_reuses_canonical_helper",
+      /ndic-open-or-refresh-data-pr\.mjs/.test(reconcile),
+      "reconcile-pr"
+    );
   }
 
   // ---- K) base freshness / finalization protocol survive the schedule ------------
