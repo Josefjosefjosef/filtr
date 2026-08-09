@@ -3,12 +3,20 @@ name: Update NDIC DATEX v1
 # Kill switch: IU_NDIC_DATEX_V1_MODE=off|shadow|active (default off).
 # Real NDIC network access is FORBIDDEN on GitHub-hosted runners.
 #
-# TWO-PHASE STAGING (fail-closed):
-#   1) NDIC staging preflight (ubuntu-latest, no secrets, no NDIC network)
-#      -> publishes HEAD-bound short-lived attestation
-#   2) This workflow network prep on self-hosted+Linux+X64+ndic-cz-egress
-#      -> requires valid preflight attestation for exact github.sha
-#      -> operator starts VPS runner ONLY after preflight PASS
+# TARGET_OPERATION_MODE=AUTOMATIC_SCHEDULED_NDIC_SYNC_WITH_CONTINUOUS_SELF_HOSTED_RUNNER
+#
+# SCHEDULED PATH (fail-closed, DISARMED by default):
+#   1) schedule-gate (ubuntu-latest, no secrets, no NDIC network)
+#      -> requires repository variable NDIC_AUTOMATION_ENABLED == 'true'
+#      -> skips with success when disarmed or another run of this workflow is in progress
+#   2) scheduled-preflight (ubuntu-latest, no secrets, no NDIC network)
+#      -> runs the same offline suite as the standalone "NDIC staging preflight"
+#      -> publishes the HEAD-bound short-lived attestation for github.sha in this run
+#   3) ndic-prep on self-hosted+Linux+X64+ndic-cz-egress
+#      -> verifies the attestation for the exact github.sha BEFORE NDIC secrets
+#
+# MANUAL BREAK-GLASS (unchanged): workflow_dispatch with mode off|shadow|active and an
+# optional attestation id published by the standalone "NDIC staging preflight" workflow.
 #
 # NARROW SHARED WRITER LOCK (active only):
 # - Network/parse/build candidate on VPS WITHOUT info-events-data-writers.
@@ -17,6 +25,10 @@ name: Update NDIC DATEX v1
 # - Data PR is immediate after commit (no Pages/required-check waits inside the lock).
 
 on:
+  schedule:
+    # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
+    # poll interval is documented, so stay well above any plausible rate limit.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -35,7 +47,10 @@ on:
         default: ""
 
 # Intentionally NO workflow-level info-events-data-writers.
-# Prep uses staging group; active shared-write job uses production writer group.
+# Intentionally NO workflow-level concurrency at all: a whole-run lock would queue the
+# schedule gate and defeat its early duplicate skip. Duplicate suppression is the
+# schedule-gate inflight probe plus ndic-datex-v1-internal-staging on the single NDIC
+# network job. Prep uses the staging group; active shared-write uses the writer group.
 
 permissions:
   contents: write
@@ -48,11 +63,120 @@ env:
   PR_TITLE: "chore(data): refresh NDIC DATEX v1 snapshot"
 
 jobs:
-  ndic-prep:
+  schedule-gate:
     if: >
-      github.event_name == 'workflow_dispatch'
+      github.event_name == 'schedule'
       && github.repository == 'Josefjosefjosef/filtr'
-      && (github.event.inputs.mode == 'shadow' || github.event.inputs.mode == 'active')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      armed: ${{ steps.gate.outputs.armed }}
+      proceed: ${{ steps.gate.outputs.proceed }}
+      skip_reason: ${{ steps.gate.outputs.skip_reason }}
+      resolved_mode: ${{ steps.gate.outputs.resolved_mode }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      # Arming variable is absent by default => scheduled automation stays disabled.
+      # Any evaluation error skips with success (fail-closed: no NDIC network).
+      - name: Evaluate arming variable and duplicate inflight guard
+        id: gate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_NDIC_AUTOMATION_ENABLED: ${{ vars.NDIC_AUTOMATION_ENABLED }}
+          IU_NDIC_SCHEDULE_EVENT_NAME: ${{ github.event_name }}
+          IU_NDIC_SCHEDULE_WORKFLOW_FILE: update-ndic-datex-v1.yml
+          IU_NDIC_SCHEDULE_SELF_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          node scripts/ndic-schedule-arming.mjs
+
+  scheduled-preflight:
+    needs: schedule-gate
+    if: >
+      github.event_name == 'schedule'
+      && needs.schedule-gate.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      attestation_id: ${{ steps.publish.outputs.PREFLIGHT_ATTESTATION_ID }}
+      head_sha: ${{ steps.publish.outputs.PREFLIGHT_HEAD_SHA }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Architecture fixtures (two-phase)
+        run: npm run iu-ndic-staging-preflight-architecture-fixtures
+
+      - name: Attestation fixtures
+        run: npm run iu-ndic-staging-preflight-attestation-fixtures
+
+      - name: Architecture meta fixtures
+        run: npm run iu-ndic-staging-preflight-architecture-meta-fixtures
+
+      - name: Automatic schedule fixtures
+        run: npm run iu-ndic-automatic-schedule-fixtures
+
+      - name: Automatic schedule meta fixtures
+        run: npm run iu-ndic-automatic-schedule-meta-fixtures
+
+      - name: Concurrency fixtures
+        run: |
+          set -euo pipefail
+          npm run iu-ndic-datex-v1-concurrency-fixtures
+          npm run iu-ndic-datex-v1-concurrency-meta-fixtures
+
+      - name: Product offline guards (required when scripts exist on ref)
+        run: |
+          set -euo pipefail
+          node scripts/ndic-staging-preflight-suite.mjs
+
+      - name: Publish HEAD-bound preflight attestation
+        id: publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_NDIC_PREFLIGHT_EXPECTED_HEAD: ${{ github.sha }}
+          IU_NDIC_PREFLIGHT_TTL_SECONDS: "1800"
+        run: |
+          set -euo pipefail
+          node scripts/ndic-publish-preflight-attestation.mjs
+
+  ndic-prep:
+    needs:
+      - schedule-gate
+      - scheduled-preflight
+    # !cancelled() (never always()) so the manual dispatch path still runs while the
+    # scheduled gate/preflight jobs are skipped, without bypassing their failures.
+    if: >
+      !cancelled()
+      && github.repository == 'Josefjosefjosef/filtr'
+      && (
+      (github.event_name == 'workflow_dispatch'
+      && (github.event.inputs.mode == 'shadow' || github.event.inputs.mode == 'active'))
+      || (github.event_name == 'schedule'
+      && needs.schedule-gate.result == 'success'
+      && needs.schedule-gate.outputs.proceed == 'true'
+      && needs.scheduled-preflight.result == 'success')
+      )
     runs-on:
       - self-hosted
       - Linux
@@ -62,9 +186,13 @@ jobs:
     concurrency:
       group: ndic-datex-v1-internal-staging
       cancel-in-progress: false
+    env:
+      # Scheduled runs are ACTIVE after an armed inline preflight PASS.
+      NDIC_RESOLVED_MODE: ${{ github.event_name == 'schedule' && 'active' || github.event.inputs.mode }}
     outputs:
       candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
       sync_ok: ${{ steps.sync.outputs.sync_ok }}
+      resolved_mode: ${{ steps.mode.outputs.resolved_mode }}
     steps:
       # MUST stay first: no checkout, no secrets, no network before identity PASS.
       - name: Preflight runner identity (fail-closed)
@@ -122,6 +250,21 @@ jobs:
           echo "RUNNER_ENVIRONMENT=self-hosted"
           echo "DISK_AVAIL_KB=${avail_kb}"
 
+      - name: Resolve NDIC mode (dispatch input or scheduled active)
+        id: mode
+        run: |
+          set -euo pipefail
+          case "${NDIC_RESOLVED_MODE:-}" in
+            shadow|active) ;;
+            *)
+              echo "REFUSING_UNKNOWN_MODE"
+              exit 1
+              ;;
+          esac
+          echo "resolved_mode=${NDIC_RESOLVED_MODE}" >> "$GITHUB_OUTPUT"
+          echo "NDIC_RESOLVED_MODE=${NDIC_RESOLVED_MODE}"
+          echo "NDIC_TRIGGER_EVENT=${{ github.event_name }}"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
@@ -138,7 +281,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IU_NDIC_PREFLIGHT_EXPECTED_HEAD: ${{ github.sha }}
-          IU_NDIC_PREFLIGHT_ATTESTATION_ID: ${{ github.event.inputs.preflight_attestation_id }}
+          IU_NDIC_PREFLIGHT_ATTESTATION_ID: ${{ github.event_name == 'schedule' && needs.scheduled-preflight.outputs.attestation_id || github.event.inputs.preflight_attestation_id }}
         run: |
           set -euo pipefail
           node scripts/ndic-verify-preflight-attestation.mjs
@@ -146,7 +289,7 @@ jobs:
       - name: Sync NDIC DATEX v1 (prep sandbox; no shared writer lock)
         id: sync
         env:
-          IU_NDIC_DATEX_V1_MODE: ${{ github.event.inputs.mode }}
+          IU_NDIC_DATEX_V1_MODE: ${{ env.NDIC_RESOLVED_MODE }}
           IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
           IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
           IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
@@ -155,13 +298,13 @@ jobs:
           IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
           IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
           IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
-          IU_NDIC_SHADOW_ISOLATED: ${{ github.event.inputs.mode == 'shadow' && '1' || '0' }}
+          IU_NDIC_SHADOW_ISOLATED: ${{ env.NDIC_RESOLVED_MODE == 'shadow' && '1' || '0' }}
           IU_NDIC_FORENSIC_DIR: ${{ runner.temp }}/ndic-shadow-forensic
           IU_NDIC_FORENSIC_HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           umask 077
-          if [ "${{ github.event.inputs.mode }}" = "active" ]; then
+          if [ "${NDIC_RESOLVED_MODE}" = "active" ]; then
             CAND="${RUNNER_TEMP}/ndic-ie-candidate"
             rm -rf "$CAND"
             mkdir -p "$CAND"
@@ -194,7 +337,7 @@ jobs:
 
       - name: Pack active candidate
         id: pack
-        if: github.event.inputs.mode == 'active' && steps.sync.outputs.sync_ok == 'true'
+        if: env.NDIC_RESOLVED_MODE == 'active' && steps.sync.outputs.sync_ok == 'true'
         run: |
           set -euo pipefail
           test -d "${RUNNER_TEMP}/ndic-ie-candidate"
@@ -203,7 +346,7 @@ jobs:
           echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Upload NDIC candidate
-        if: github.event.inputs.mode == 'active' && steps.pack.outputs.candidate_ready == 'true'
+        if: env.NDIC_RESOLVED_MODE == 'active' && steps.pack.outputs.candidate_ready == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ndic-ie-candidate-${{ github.run_id }}
@@ -215,7 +358,7 @@ jobs:
   ndic-shared-write:
     needs: ndic-prep
     if: >
-      github.event.inputs.mode == 'active'
+      needs.ndic-prep.outputs.resolved_mode == 'active'
       && needs.ndic-prep.outputs.candidate_ready == 'true'
     runs-on:
       - self-hosted

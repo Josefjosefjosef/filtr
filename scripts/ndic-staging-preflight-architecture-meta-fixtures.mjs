@@ -13,6 +13,7 @@ import {
   NDIC_NETWORK_JOB,
   NDIC_SHARED_WRITE_JOB,
   jobChunk,
+  withoutGithubHostedAllowedJobs,
 } from "./ndic-staging-preflight-architecture-fixtures.mjs";
 import {
   verifyAttestationStatus,
@@ -157,14 +158,32 @@ mutateMustFail(
 mutateMustFail(
   "meta_add_workflow_run_auto_network",
   netSrc,
-  (s) => s.replace(/on:\n\s+workflow_dispatch:/, "on:\n  workflow_run:\n    workflows: [\"NDIC staging preflight\"]\n    types: [completed]\n  workflow_dispatch:"),
+  (s) =>
+    s.replace(
+      /on:\n\s+schedule:/,
+      "on:\n  workflow_run:\n    workflows: [\"NDIC staging preflight\"]\n    types: [completed]\n  schedule:"
+    ),
   assertNetworkWorkflowArchitecture
 );
 
 mutateMustFail(
   "meta_add_push_trigger",
   netSrc,
-  (s) => s.replace(/on:\n\s+workflow_dispatch:/, "on:\n  push:\n  workflow_dispatch:"),
+  (s) => s.replace(/on:\n\s+schedule:/, "on:\n  push:\n  schedule:"),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_remove_schedule_trigger",
+  netSrc,
+  (s) => s.replace(/\n  schedule:\n(?:    .*\n)+/, "\n"),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_aggressive_cron_interval",
+  netSrc,
+  (s) => s.replace(/- cron: "7,22,37,52 \* \* \* \*"/, '- cron: "* * * * *"'),
   assertNetworkWorkflowArchitecture
 );
 
@@ -211,11 +230,7 @@ mutateMustFail(
 mutateMustFail(
   "meta_always_if_bypass",
   netSrc,
-  (s) =>
-    s.replace(
-      /if: >\n\s+github\.event_name == 'workflow_dispatch'/,
-      "if: always()"
-    ),
+  (s) => s.replace(/if: >\n\s+!cancelled\(\)/, "if: always()"),
   (m) => {
     const base = assertNetworkWorkflowArchitecture(m);
     const jobChunkText = jobChunk(m, NDIC_NETWORK_JOB);
@@ -510,7 +525,11 @@ const report = {
   failCount: fails.length,
   fails,
   NETWORK_ARCHITECTURE_META_GUARD_PASS: fails.every((f) => !String(f).startsWith("meta_")) && netA.ok ? "YES" : fails.length === 0 ? "YES" : "NO",
-  NETWORK_NO_UBUNTU_META_GUARD_PASS: !/ubuntu-latest/.test(stripComments(netSrc)) ? "YES" : "NO",
+  NETWORK_NO_UBUNTU_META_GUARD_PASS: !/ubuntu-latest/.test(
+    withoutGithubHostedAllowedJobs(stripComments(netSrc))
+  )
+    ? "YES"
+    : "NO",
   NDIC_SECRET_ISOLATION_META_GUARD_PASS: /secrets\.IU_NDIC_/.test(prepChunk) && !/secrets\.IU_NDIC_/.test(writeChunk) ? "YES" : "NO",
   NDIC_SHARED_WRITE_RUNNER_META_GUARD_PASS:
     /self-hosted/.test(writeChunk) && /ndic-cz-egress/.test(writeChunk) && !/ubuntu-latest/.test(writeChunk)

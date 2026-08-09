@@ -10,6 +10,16 @@ import {
   verifyAttestationStatus,
 } from "./ndic-staging-preflight-attestation.mjs";
 
+/**
+ * Workflow runs allowed to publish a preflight attestation.
+ * - "NDIC staging preflight": standalone phase-1 workflow (manual break-glass path).
+ * - "Update NDIC DATEX v1": inline scheduled preflight job publishing in the same run.
+ */
+export const ALLOWED_PREFLIGHT_WORKFLOW_NAMES = Object.freeze([
+  "NDIC staging preflight",
+  "Update NDIC DATEX v1",
+]);
+
 async function main() {
   const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
   const repo = process.env.GITHUB_REPOSITORY || "";
@@ -103,7 +113,7 @@ async function main() {
     const name = String(run.name || "");
     const conclusion = String(run.conclusion || "");
     const head = String(run.head_sha || "").toLowerCase();
-    if (name !== "NDIC staging preflight") {
+    if (!ALLOWED_PREFLIGHT_WORKFLOW_NAMES.includes(name)) {
       console.error("PREFLIGHT_WRONG_WORKFLOW", name);
       process.exit(1);
     }

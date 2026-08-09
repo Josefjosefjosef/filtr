@@ -1,5 +1,9 @@
 # NDIC staging two-phase preflight
 
+> This document describes the **manual break-glass** path. The unattended cron path
+> (arming variable, inline preflight, duplicate suppression, continuous runner) is
+> documented in [ndic-automatic-schedule-operation.md](./ndic-automatic-schedule-operation.md).
+
 ## Problem
 
 Incident run `31118898675` cancelled job `offline-guards` on `ubuntu-latest` with annotation:
@@ -22,8 +26,11 @@ while GitHub-hosted capacity was unavailable — unnecessary egress exposure win
    - `ndic-shared-write` (critical RMW/commit) on the **same** Czech labels under `info-events-data-writers`
    - shared-write concurrency uses `queue: max` + `cancel-in-progress: false` so a pending writer is not
      replaced by a newer CHMI/IE request (incident ACTIVE run `31250620970`)
-   - **no** `ubuntu-latest` job in this workflow (no GitHub-hosted secrets/network/shared-write)
-   - verifies valid preflight attestation for `github.sha` **before** NDIC secrets/sync
+   - `ubuntu-latest` only on the no-secret `schedule-gate` / `scheduled-preflight` jobs of the
+     automatic schedule; `ndic-prep` and `ndic-shared-write` stay Czech self-hosted
+     (no GitHub-hosted secrets/network/shared-write)
+   - verifies valid preflight attestation for `github.sha` **before** NDIC secrets/sync,
+     accepting the standalone preflight workflow or the inline scheduled preflight
    - still refuses GitHub-hosted identity (`REFUSING_GITHUB_HOSTED`)
 
 ## Operator sequence

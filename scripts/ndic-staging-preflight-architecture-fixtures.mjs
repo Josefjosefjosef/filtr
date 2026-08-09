@@ -26,6 +26,18 @@ const PF_WF = path.join(ROOT, ".github", "workflows", "ndic-datex-v1-staging-pre
 export const NDIC_NETWORK_JOB = "ndic-prep";
 /** Canonical NDIC critical shared-write job name. */
 export const NDIC_SHARED_WRITE_JOB = "ndic-shared-write";
+/** Scheduled arming gate job (GitHub-hosted, no secrets, no NDIC network). */
+export const NDIC_SCHEDULE_GATE_JOB = "schedule-gate";
+/** Inline scheduled preflight job (GitHub-hosted, no secrets, publishes attestation). */
+export const NDIC_SCHEDULED_PREFLIGHT_JOB = "scheduled-preflight";
+/** Only these jobs of the network workflow may run on GitHub-hosted runners. */
+export const GITHUB_HOSTED_ALLOWED_JOBS = Object.freeze([
+  NDIC_SCHEDULE_GATE_JOB,
+  NDIC_SCHEDULED_PREFLIGHT_JOB,
+  "resolve",
+]);
+/** Conservative staggered cadence (no authoritative NDIC minimum interval documented). */
+export const NDIC_SCHEDULE_CRON = "7,22,37,52 * * * *";
 
 const fails = [];
 let passCount = 0;
@@ -58,6 +70,33 @@ export function jobChunk(src, name) {
   return m ? m[1] : "";
 }
 
+/** Enumerate the top-level trigger keys declared under `on:`. */
+export function extractOnTriggers(src) {
+  const lines = stripComments(src).split(/\r?\n/);
+  const triggers = [];
+  let inOn = false;
+  for (const line of lines) {
+    if (!inOn) {
+      if (/^on:\s*$/.test(line)) inOn = true;
+      continue;
+    }
+    if (/^\S/.test(line)) break;
+    const m = line.match(/^ {2}([A-Za-z_][A-Za-z0-9_]*)\s*:/);
+    if (m) triggers.push(m[1]);
+  }
+  return triggers;
+}
+
+/** Source with the GitHub-hosted-allowed job chunks removed. */
+export function withoutGithubHostedAllowedJobs(src) {
+  let rest = src;
+  for (const job of GITHUB_HOSTED_ALLOWED_JOBS) {
+    const chunk = jobChunk(rest, job);
+    if (chunk) rest = rest.replace(chunk, "");
+  }
+  return rest;
+}
+
 function czechLabelsPresent(chunk) {
   return (
     /self-hosted/.test(chunk) &&
@@ -74,15 +113,27 @@ export function assertNetworkWorkflowArchitecture(src) {
     if (!cond) localFails.push(id + (detail != null ? ":" + String(detail) : ""));
   };
 
-  check("net_workflow_dispatch_only_trigger", /^on:\r?\n\s+workflow_dispatch:/m.test(src));
-  check("net_no_push_trigger", !/^push:/m.test(c));
-  check("net_no_schedule_trigger", !/^schedule:/m.test(c));
-  check("net_no_workflow_run_trigger", !/^workflow_run:/m.test(c));
+  // SAFE SCHEDULE CONTRACT: exactly schedule + workflow_dispatch, nothing else.
+  const triggers = extractOnTriggers(src);
+  check(
+    "net_triggers_exactly_schedule_and_dispatch",
+    triggers.slice().sort().join(",") === "schedule,workflow_dispatch",
+    triggers.join("+")
+  );
+  check("net_has_schedule_trigger", triggers.includes("schedule"));
+  check("net_has_workflow_dispatch_trigger", triggers.includes("workflow_dispatch"));
+  check("net_no_push_trigger", !triggers.includes("push"));
+  check("net_no_workflow_run_trigger", !triggers.includes("workflow_run"));
+  check("net_no_pull_request_trigger", !triggers.includes("pull_request"));
+  check(
+    "net_schedule_cron_conservative",
+    new RegExp(`-\\s*cron:\\s*["']${NDIC_SCHEDULE_CRON.replace(/\*/g, "\\*")}["']`).test(c)
+  );
   check("net_no_offline_guards_job", !hasJob(src, "offline-guards"));
   check("net_has_network_job", hasJob(src, NDIC_NETWORK_JOB));
   check("net_has_shared_write_job", hasJob(src, NDIC_SHARED_WRITE_JOB));
-  // Whole update workflow must stay off ubuntu-latest (incident 31118898675 + shared-write isolation).
-  check("net_no_ubuntu_latest", !/ubuntu-latest/.test(c));
+  // ubuntu-latest is allowed ONLY on the no-secret schedule gate / inline preflight jobs.
+  check("net_no_ubuntu_outside_schedule_jobs", !/ubuntu-latest/.test(withoutGithubHostedAllowedJobs(c)));
   check("net_no_needs_offline_guards", !/needs:\s*offline-guards/.test(c));
   check("net_no_continue_on_error", !/continue-on-error:\s*true/.test(c));
   check("net_no_workflow_level_shared_lock", !/^concurrency:\s*\n\s+group:\s*info-events-data-writers/m.test(c));
@@ -115,6 +166,56 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("net_shadow_forensic_if_no_files_error", /if-no-files-found:\s*error/.test(net));
   check("net_shadow_forensic_explicit_allowlist_only", /ndic-shadow-forensic\/ndic-shadow-forensic-summary\.json/.test(net));
   check("net_no_continue_on_error_in_job", !/continue-on-error:\s*true/.test(net));
+  // Scheduled runs must reach ACTIVE through a resolved mode, never through inputs.mode.
+  check("net_prep_resolves_mode", /NDIC_RESOLVED_MODE:\s*\$\{\{\s*github\.event_name == 'schedule'/.test(net));
+  check("net_prep_scheduled_mode_active", /github\.event_name == 'schedule' && 'active'/.test(net));
+  check("net_prep_exports_resolved_mode_output", /resolved_mode:\s*\$\{\{\s*steps\.mode\.outputs\.resolved_mode\s*\}\}/.test(net));
+  // Skipped scheduled jobs must not block the manual dispatch path, without always().
+  check("net_prep_if_uses_not_cancelled", /if:\s*>\s*\n\s+!cancelled\(\)/.test(net));
+  check("net_prep_needs_schedule_gate", /-\s*schedule-gate\b/.test(net));
+  check("net_prep_needs_scheduled_preflight", /-\s*scheduled-preflight\b/.test(net));
+  check("net_prep_dispatch_path_preserved", /github\.event_name == 'workflow_dispatch'/.test(net));
+  check("net_prep_schedule_path_requires_gate", /needs\.schedule-gate\.outputs\.proceed == 'true'/.test(net));
+  check(
+    "net_prep_schedule_path_requires_preflight_success",
+    /needs\.scheduled-preflight\.result == 'success'/.test(net)
+  );
+
+  const gate = jobChunk(src, NDIC_SCHEDULE_GATE_JOB);
+  check("gate_job_present_chunk", Boolean(gate));
+  check("gate_runs_ubuntu", /runs-on:\s*ubuntu-latest/.test(gate));
+  check("gate_schedule_only", /github\.event_name == 'schedule'/.test(gate));
+  check("gate_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(gate));
+  check("gate_no_prod_sync", !/ndic-datex-v1-prod-sync\.mjs/.test(gate));
+  check("gate_uses_arming_variable", /vars\.NDIC_AUTOMATION_ENABLED/.test(gate));
+  check("gate_runs_arming_script", /ndic-schedule-arming\.mjs/.test(gate));
+  check("gate_outputs_proceed", /proceed:\s*\$\{\{\s*steps\.gate\.outputs\.proceed\s*\}\}/.test(gate));
+  check("gate_outputs_skip_reason", /skip_reason:\s*\$\{\{\s*steps\.gate\.outputs\.skip_reason\s*\}\}/.test(gate));
+  check("gate_no_continue_on_error", !/continue-on-error:\s*true/.test(gate));
+
+  const spf = jobChunk(src, NDIC_SCHEDULED_PREFLIGHT_JOB);
+  check("spf_job_present_chunk", Boolean(spf));
+  check("spf_runs_ubuntu", /runs-on:\s*ubuntu-latest/.test(spf));
+  check("spf_needs_gate", /needs:\s*schedule-gate/.test(spf));
+  check("spf_requires_proceed", /needs\.schedule-gate\.outputs\.proceed == 'true'/.test(spf));
+  check("spf_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(spf));
+  check("spf_no_prod_sync", !/ndic-datex-v1-prod-sync\.mjs/.test(spf));
+  check("spf_no_shadow_run", !/ndic-datex-v1-shadow-run\.mjs/.test(spf));
+  check("spf_runs_product_suite", /ndic-staging-preflight-suite\.mjs/.test(spf));
+  check("spf_runs_architecture_fixtures", /iu-ndic-staging-preflight-architecture-fixtures/.test(spf));
+  check("spf_runs_attestation_fixtures", /iu-ndic-staging-preflight-attestation-fixtures/.test(spf));
+  check("spf_runs_schedule_fixtures", /iu-ndic-automatic-schedule-fixtures/.test(spf));
+  check("spf_publishes_attestation", /ndic-publish-preflight-attestation\.mjs/.test(spf));
+  check("spf_binds_head_sha", /IU_NDIC_PREFLIGHT_EXPECTED_HEAD:\s*\$\{\{\s*github\.sha\s*\}\}/.test(spf));
+  check("spf_no_continue_on_error", !/continue-on-error:\s*true/.test(spf));
+
+  // Duplicate-run guard: NDIC-only job-level orchestration group, never a whole-run lock
+  // (a whole-run lock would queue the schedule gate and defeat the early duplicate skip).
+  check(
+    "net_orchestration_lock_ndic_only",
+    /group:\s*ndic-datex-v1-internal-staging\s*\n\s+cancel-in-progress:\s*false/.test(net)
+  );
+  check("net_no_workflow_level_concurrency", !/^concurrency:\s*$/m.test(c.split(/\njobs:\s*\n/)[0] || ""));
 
   const write = jobChunk(src, NDIC_SHARED_WRITE_JOB);
   check("write_job_present_chunk", Boolean(write));
@@ -206,7 +307,10 @@ function main() {
   const pfA = assertPreflightWorkflowArchitecture(pfSrc);
   ok("preflight_architecture", pfA.ok, pfA.fails.join("|"));
   ok("offline_guard_queue_dependency_removed", !/offline-guards/.test(stripComments(netSrc)));
-  ok("network_no_ubuntu_queue", !/ubuntu-latest/.test(stripComments(netSrc)));
+  ok(
+    "network_no_ubuntu_queue",
+    !/ubuntu-latest/.test(withoutGithubHostedAllowedJobs(stripComments(netSrc)))
+  );
 
   // Attestation unit matrix
   const head = "b".repeat(40);
