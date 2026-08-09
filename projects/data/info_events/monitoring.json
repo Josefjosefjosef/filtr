@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-09T08:31:28.780Z",
-    "lastSuccessAt": "2026-08-09T08:31:32.708Z",
-    "lastChangedAt": "2026-08-08T08:57:51.893Z",
+    "lastRunAt": "2026-08-09T08:35:53.382Z",
+    "lastSuccessAt": "2026-08-09T08:35:57.489Z",
+    "lastChangedAt": "2026-08-09T08:35:56.652Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a76ee11-1df3c6\"",
-    "lastModified": "Sat, 08 Aug 2026 08:51:29 GMT",
+    "etag": "\"6a783b99-1c13d0\"",
+    "lastModified": "Sun, 09 Aug 2026 08:34:33 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -433,11 +433,11 @@
     "totalItems": 6,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 27,
       "logicalAlerts": 7,
       "uniqueEvents": [
         "Vysoké teploty",
@@ -460,8 +460,8 @@
         "Hydrologické sucho",
         "Riziko požárů"
       ],
-      "totalAreas": 215,
-      "mappedAreas": 584,
+      "totalAreas": 219,
+      "mappedAreas": 645,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 4,
@@ -478,34 +478,34 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-08-08T10:50:35+02:00",
+    "lastCapSent": "2026-08-09T10:33:52+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7682,
+    "runMs": 8215,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-09T08:31:28.780Z",
+    "lastSnapshotAt": "2026-08-09T08:35:53.382Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-08-08T08:57:47.538Z",
-      "officialLatestSentAt": "2026-08-08T10:50:35+02:00",
+      "officialFirstSeenAt": "2026-08-09T08:35:53.382Z",
+      "officialLatestSentAt": "2026-08-09T10:33:52+02:00",
       "officialLatestValidFrom": "2026-08-10T10:00:00+02:00",
-      "discoveredAt": "2026-08-09T08:31:28.780Z",
-      "fetchedAt": "2026-08-09T08:31:28.780Z",
-      "transformedAt": "2026-08-09T08:31:36.462Z",
-      "validatedAt": "2026-08-09T08:31:36.462Z",
-      "publishedAt": "2026-08-09T08:31:28.780Z",
-      "endToEndLagMs": 432538
+      "discoveredAt": "2026-08-09T08:35:53.382Z",
+      "fetchedAt": "2026-08-09T08:35:53.382Z",
+      "transformedAt": "2026-08-09T08:36:01.597Z",
+      "validatedAt": "2026-08-09T08:36:01.597Z",
+      "publishedAt": "2026-08-09T08:35:53.382Z",
+      "endToEndLagMs": 121382
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080850.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_090833.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_041200.xml",
@@ -519,8 +519,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 27,
           "logicalAlerts": 7,
           "uniqueEvents": [
             "Vysoké teploty",
@@ -529,8 +529,8 @@
             "Hydrologické sucho",
             "Riziko požárů"
           ],
-          "totalAreas": 215,
-          "mappedAreas": 584,
+          "totalAreas": 219,
+          "mappedAreas": 645,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
           "publishedActive": 4,
@@ -549,9 +549,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-08-09T08:35:53.382Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 8215,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 3,
+        "publishableCount": 7
+      },
       {
         "at": "2026-08-09T08:31:28.780Z",
         "status": "not_modified",
@@ -1064,17 +1088,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 4789,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 3,
-        "publishableCount": 7
-      },
-      {
-        "at": "2026-08-08T13:22:46.089Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6747,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 3,
