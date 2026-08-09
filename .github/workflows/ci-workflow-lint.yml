@@ -2,6 +2,16 @@
 
 on:
   workflow_dispatch:
+    inputs:
+      ndic_gha_semantics_proof:
+        description: "Run no-secret NDIC shared-write GHA semantics proof (no NDIC network)"
+        required: false
+        type: choice
+        options:
+          - "no"
+          - "positive_dispatch_skipped_deps"
+          - "prep_fail"
+        default: "no"
   schedule:
     - cron: "17 3 * * *"
   push:
@@ -11,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: ci-workflow-lint
@@ -18,6 +29,10 @@ concurrency:
 
 jobs:
   actionlint:
+    if: >
+      github.event_name != 'workflow_dispatch'
+      || github.event.inputs.ndic_gha_semantics_proof == 'no'
+      || github.event.inputs.ndic_gha_semantics_proof == ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,3 +70,163 @@ jobs:
           set -euo pipefail
           actionlint -color -ignore 'unexpected key "queue" for "concurrency" section'
 
+  # ---------------------------------------------------------------------------
+  # No-secret NDIC shared-write GHA semantics proof (hosted via this existing
+  # workflow so it can be dispatched from a PR branch before the dedicated
+  # workflow file lands on main).
+  # Forbidden: IU_NDIC secrets, DATEX/TMC download, shared mutation, Data PR.
+  # ---------------------------------------------------------------------------
+  schedule-like-gate:
+    # Always-false compound: must stay SKIPPED on workflow_dispatch proof runs
+    # (and must not fire on this workflow's own schedule/push triggers).
+    # Reproduces skipped schedule-gate nodes in the NDIC needs graph.
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof != 'no'
+      && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Should never run
+        run: |
+          echo "UNEXPECTED_SCHEDULE_LIKE_GATE_RUN"
+          exit 1
+
+  schedule-like-preflight:
+    needs: schedule-like-gate
+    if: >
+      github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof != 'no'
+      && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Should never run
+        run: |
+          echo "UNEXPECTED_SCHEDULE_LIKE_PREFLIGHT_RUN"
+          exit 1
+
+  prep-like:
+    needs:
+      - schedule-like-gate
+      - schedule-like-preflight
+    if: >
+      !cancelled()
+      && github.repository == 'Josefjosefjosef/filtr'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof != 'no'
+      && github.event.inputs.ndic_gha_semantics_proof != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
+      proof_marker: ${{ steps.pack.outputs.proof_marker }}
+    steps:
+      - name: Scenario control
+        id: ctrl
+        run: |
+          set -euo pipefail
+          echo "scenario=${{ github.event.inputs.ndic_gha_semantics_proof }}"
+          if [ "${{ github.event.inputs.ndic_gha_semantics_proof }}" = "prep_fail" ]; then
+            echo "PREP_LIKE_FORCED_FAILURE"
+            exit 1
+          fi
+          echo "PREP_LIKE_CONTINUE=1"
+
+      - name: Pack synthetic candidate artifact
+        id: pack
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/ndic-ie-candidate-proof"
+          marker="gha-sem-${GITHUB_RUN_ID}"
+          printf '%s\n' "$marker" > "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt"
+          echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
+          echo "proof_marker=${marker}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload synthetic candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-gha-semantics-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate-proof
+          if-no-files-found: error
+          retention-days: 1
+
+  followup-fixed:
+    needs: prep-like
+    if: >
+      !cancelled()
+      && needs.prep-like.result == 'success'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof == 'positive_dispatch_skipped_deps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download synthetic candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: ndic-gha-semantics-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate-proof
+
+      - name: Assert candidate exists (step-level)
+        run: |
+          set -euo pipefail
+          test -f "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt"
+          marker="$(cat "${RUNNER_TEMP}/ndic-ie-candidate-proof/marker.txt")"
+          echo "FOLLOWUP_FIXED_STARTED=YES"
+          echo "FOLLOWUP_FIXED_MARKER=${marker}"
+          echo "REAL_GHA_MANUAL_SKIPPED_DEPENDENCIES=YES"
+          echo "REAL_GHA_PREP_RESULT=success"
+          echo "REAL_GHA_FOLLOWUP_RESULT=success"
+          echo "REAL_GHA_EXPECTED_FOLLOWUP_RESULT=success"
+          echo "REAL_GHA_SEMANTICS_MATCH_EXPECTATION=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_SECRET=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_NDIC_NETWORK=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_SHARED_MUTATION=YES"
+          echo "REAL_GHA_SEMANTICS_PROOF_NO_PUBLICATION=YES"
+
+  followup-legacy-candidate-ready-gate:
+    needs: prep-like
+    if: >
+      needs.prep-like.result == 'success'
+      && needs.prep-like.outputs.candidate_ready == 'true'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof == 'positive_dispatch_skipped_deps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Legacy gate entered
+        run: |
+          set -euo pipefail
+          echo "LEGACY_CANDIDATE_READY_GATE_STARTED=YES"
+          echo "LEGACY_NEEDS_OUTPUT_AVAILABLE=YES"
+
+  followup-must-not-run-on-prep-fail:
+    needs: prep-like
+    if: >
+      !cancelled()
+      && needs.prep-like.result == 'success'
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof == 'prep_fail'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Must never start when prep failed
+        run: |
+          echo "UNEXPECTED_FOLLOWUP_AFTER_PREP_FAIL"
+          exit 1
+
+  prep-fail-expectation:
+    needs: prep-like
+    if: >
+      always()
+      && github.event_name == 'workflow_dispatch'
+      && github.event.inputs.ndic_gha_semantics_proof == 'prep_fail'
+      && needs.prep-like.result == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Confirm follow-up did not start after prep failure
+        run: |
+          set -euo pipefail
+          echo "PREP_FAIL_SCENARIO_OK=YES"
+          echo "FOLLOWUP_AFTER_PREP_FAIL=NO"

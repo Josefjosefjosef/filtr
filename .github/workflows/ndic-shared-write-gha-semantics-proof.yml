@@ -30,6 +30,7 @@ permissions:
 jobs:
   schedule-like-gate:
     # Mirrors schedule-gate: skipped on workflow_dispatch.
+    # Dedicated proof workflow has no schedule trigger; keep the same predicate.
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
