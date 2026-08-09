@@ -8,7 +8,9 @@
  * - Traffic feed is INTERNAL (ordering/badges/history), never a separate screen
  * - PUBLICATION_ENABLED / live NDIC remain false (inverted kill switches)
  * - TRAFFIC_UI_ENABLED is the single feature flag; flip to false for instant rollback
+ * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
+import { fetchTrafficSnapshotSlimOffMainThread } from "./iu-info-system-core-v1.js?v=heavy-feed-offmain-v1-20260809";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -396,12 +398,37 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
   if (typeof fetch !== "function") return null;
   try {
-    const res = await fetch(url, {
-      credentials: "same-origin",
-      cache: "no-store",
-    });
-    if (!res || !res.ok) return null;
-    const parsed = await res.json();
+    let parsed = null;
+    try {
+      parsed = await fetchTrafficSnapshotSlimOffMainThread(
+        url,
+        opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP,
+        opts.signal || null
+      );
+    } catch (_) {
+      parsed = null;
+    }
+    if (!parsed) {
+      // Last resort (Worker unavailable): still avoid keeping full history on the main heap.
+      const res = await fetch(url, {
+        credentials: "same-origin",
+        cache: "no-store",
+      });
+      if (!res || !res.ok) return null;
+      const full = await res.json();
+      const cards = Array.isArray(full.cards)
+        ? full.cards
+        : Array.isArray(full.projections)
+          ? full.projections
+          : [];
+      const cap = TRAFFIC_UI_INITIAL_CARD_CAP;
+      parsed = Object.assign({}, full, {
+        cards: cards.slice(0, cap),
+        historyItems: [],
+        historyCount: 0,
+        cardsCappedTo: cap,
+      });
+    }
     const snap = acceptTrafficSnapshot(parsed);
     if (!snap) return null;
     _trafficSnapMem = snap;

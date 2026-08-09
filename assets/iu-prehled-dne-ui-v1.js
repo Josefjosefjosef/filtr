@@ -33,7 +33,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=traffic-ui-defer-feed-hydrate-v1-20260808";
+} from "./iu-info-system-core-v1.js?v=heavy-feed-offmain-v1-20260809";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -44,10 +44,10 @@ import {
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=traffic-ui-defer-feed-hydrate-v1-20260808";
+} from "./iu-traffic-overview-v1.js?v=heavy-feed-offmain-v1-20260809";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-ui-defer-feed-hydrate-v1-20260808";
+const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1800,7 +1800,11 @@ async function boot() {
   // modules (notes/weather/PWA guards) and CI navigations. Shell is already interactive.
   void (async () => {
     try {
-      const data = await loadInfoSystemData({});
+      const data = await loadInfoSystemData({
+        signal: bootAbort ? bootAbort.signal : undefined,
+        // NDIC catalog is served via traffic_offline_snapshot.json (bounded convert).
+        omitFeedSourceIds: ["ndic"],
+      });
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = data;
       try {

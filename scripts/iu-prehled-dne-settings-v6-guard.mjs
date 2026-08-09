@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "traffic-ui-defer-feed-hydrate-v1-20260808";
+const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
 const fails = [];
 
 function must(cond, id) {
