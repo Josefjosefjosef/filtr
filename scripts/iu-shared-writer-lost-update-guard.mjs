@@ -12,6 +12,7 @@ import {
   resolveNdicConcurrencyGroup,
   workflowLevelHasSharedLock,
   jobHasGroup,
+  jobBlock,
 } from "./ndic-datex-v1-concurrency-fixtures.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -36,21 +37,41 @@ if (fs.existsSync(ndicPath)) {
   ok("ndic_no_workflow_level_shared_lock", !workflowLevelHasSharedLock(ndic), "ndicWf");
   ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
   ok("ndic_write_production", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
+  ok(
+    "ndic_reconcile_production",
+    jobHasGroup(ndic, "ndic-reconcile-data-pr", PRODUCTION_ACTIVATION_GROUP),
+    "reconcile"
+  );
   ok("ndic_cancel_false", /cancel-in-progress:\s*false/.test(ndic), "cancel");
   ok("ndic_shadow_isolated_group", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("ndic_active_shared_group", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
-  ok("ndic_write_not_ubuntu", !/ndic-shared-write:[\s\S]*?runs-on:\s*ubuntu-latest/.test(ndic), "ubuntu");
-  // Schedule arming/preflight may use ubuntu-latest; network + shared-write must not.
+  const writeJob = jobBlock(ndic, "ndic-shared-write");
+  const prepJob = jobBlock(ndic, "ndic-prep");
+  const reconcileJob = jobBlock(ndic, "ndic-reconcile-data-pr");
+  const postWriteJob = jobBlock(ndic, "ndic-post-write");
+  ok("ndic_write_not_ubuntu", Boolean(writeJob) && !/runs-on:\s*ubuntu-latest/.test(writeJob), "ubuntu");
+  // Schedule arming/preflight + post-write (checks only) may use ubuntu-latest;
+  // network + shared-write + reconcile must not.
   ok(
     "ndic_prep_not_ubuntu",
-    /ndic-prep:[\s\S]*?runs-on:\n\s+- self-hosted/.test(ndic) &&
-      !/ndic-prep:[\s\S]*?runs-on:\s*ubuntu-latest/.test(ndic),
+    /runs-on:\n\s+- self-hosted/.test(prepJob) && !/runs-on:\s*ubuntu-latest/.test(prepJob),
     "prepUbuntu"
+  );
+  ok(
+    "ndic_reconcile_not_ubuntu",
+    /runs-on:\n\s+- self-hosted/.test(reconcileJob) && !/runs-on:\s*ubuntu-latest/.test(reconcileJob),
+    "reconcileUbuntu"
+  );
+  ok(
+    "ndic_post_write_ubuntu_no_shared_lock",
+    /runs-on:\s*ubuntu-latest/.test(postWriteJob) &&
+      !/group:\s*info-events-data-writers/.test(postWriteJob),
+    "post"
   );
   const ubuntuJobs = [...ndic.matchAll(/(?:^|\n) {2}([A-Za-z0-9_-]+):\n(?: {4}.*\n)*? {4}runs-on:\s*ubuntu-latest/g)].map(
     (m) => m[1]
   );
-  const allowedUbuntu = new Set(["schedule-gate", "scheduled-preflight"]);
+  const allowedUbuntu = new Set(["schedule-gate", "scheduled-preflight", "ndic-post-write"]);
   ok(
     "ndic_ubuntu_only_schedule_jobs",
     ubuntuJobs.length > 0 && ubuntuJobs.every((n) => allowedUbuntu.has(n)),
