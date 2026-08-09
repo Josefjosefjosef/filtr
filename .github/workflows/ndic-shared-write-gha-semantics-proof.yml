@@ -1,109 +1,52 @@
-﻿name: CI - Workflow Lint
+name: NDIC shared-write GHA semantics proof
+
+# No-secret, no-NDIC-network proof that a follow-up job STARTS after skipped
+# schedule-like dependencies when prep-like succeeds — without gating on
+# needs.*.outputs.candidate_ready (false-skip class from ACTIVE canaries
+# 31311789781 / 31313465533).
+#
+# Forbidden in this workflow:
+# - IU_NDIC_* secrets
+# - DATEX / TMC download
+# - shared info_events mutation
+# - Data PR / Pages publication
 
 on:
   workflow_dispatch:
     inputs:
-      ndic_gha_semantics_proof:
-        description: "Run no-secret NDIC shared-write GHA semantics proof (no NDIC network)"
-        required: false
+      scenario:
+        description: "positive_dispatch_skipped_deps | prep_fail"
+        required: true
         type: choice
         options:
-          - "no"
-          - "positive_dispatch_skipped_deps"
-          - "prep_fail"
-        default: "no"
-  schedule:
-    - cron: "17 3 * * *"
-  push:
-    paths:
-      - ".github/workflows/**/*.yml"
-      - ".github/workflows/**/*.yaml"
+          - positive_dispatch_skipped_deps
+          - prep_fail
+        default: positive_dispatch_skipped_deps
 
 permissions:
   contents: read
   actions: write
 
-concurrency:
-  # Keep NDIC GHA semantics proof dispatches out of the lint concurrency group
-  # so they cannot cancel PR/push actionlint runs.
-  group: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ndic_gha_semantics_proof != 'no' && github.event.inputs.ndic_gha_semantics_proof != '' && format('ndic-gha-semantics-{0}', github.run_id) || 'ci-workflow-lint' }}
-  cancel-in-progress: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.ndic_gha_semantics_proof != 'no' && github.event.inputs.ndic_gha_semantics_proof != '') }}
-
 jobs:
-  actionlint:
-    if: >
-      github.event_name != 'workflow_dispatch'
-      || github.event.inputs.ndic_gha_semantics_proof == 'no'
-      || github.event.inputs.ndic_gha_semantics_proof == ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Anti-log scan (only forbidden tokens)
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          # Scan all workflow files EXCEPT this file itself
-          if grep -RIn --line-number --fixed-strings "GET required:" .github/workflows \
-             | grep -v "ci-workflow-lint.yml"; then
-            echo "FAIL: found forbidden token 'GET required:' in workflows"
-            exit 1
-          fi
-
-          if grep -RIn --line-number --fixed-strings "GET optional:" .github/workflows \
-             | grep -v "ci-workflow-lint.yml"; then
-            echo "FAIL: found forbidden token 'GET optional:' in workflows"
-            exit 1
-          fi
-
-      - name: Install actionlint (stable installer)
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
-          sudo mv ./actionlint /usr/local/bin/actionlint
-          actionlint -version
-
-      - name: Lint workflows
-        shell: bash
-        run: |
-          set -euo pipefail
-          actionlint -color -ignore 'unexpected key "queue" for "concurrency" section'
-
-  # ---------------------------------------------------------------------------
-  # No-secret NDIC shared-write GHA semantics proof (hosted via this existing
-  # workflow so it can be dispatched from a PR branch before the dedicated
-  # workflow file lands on main).
-  # Forbidden: IU_NDIC secrets, DATEX/TMC download, shared mutation, Data PR.
-  # ---------------------------------------------------------------------------
   schedule-like-gate:
-    # Always-false compound: must stay SKIPPED on workflow_dispatch proof runs
-    # (and must not fire on this workflow's own schedule/push triggers).
-    # Reproduces skipped schedule-gate nodes in the NDIC needs graph.
-    if: >
-      github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof != 'no'
-      && github.event_name == 'schedule'
+    # Mirrors schedule-gate: skipped on workflow_dispatch.
+    # Dedicated proof workflow has no schedule trigger; keep the same predicate.
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Should never run
+      - name: Should never run on workflow_dispatch
         run: |
           echo "UNEXPECTED_SCHEDULE_LIKE_GATE_RUN"
           exit 1
 
   schedule-like-preflight:
     needs: schedule-like-gate
-    if: >
-      github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof != 'no'
-      && github.event_name == 'schedule'
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Should never run
+      - name: Should never run on workflow_dispatch
         run: |
           echo "UNEXPECTED_SCHEDULE_LIKE_PREFLIGHT_RUN"
           exit 1
@@ -112,12 +55,11 @@ jobs:
     needs:
       - schedule-like-gate
       - schedule-like-preflight
+    # Same skipped-deps pattern as ndic-prep (!cancelled, never always).
     if: >
       !cancelled()
       && github.repository == 'Josefjosefjosef/filtr'
       && github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof != 'no'
-      && github.event.inputs.ndic_gha_semantics_proof != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -128,8 +70,8 @@ jobs:
         id: ctrl
         run: |
           set -euo pipefail
-          echo "scenario=${{ github.event.inputs.ndic_gha_semantics_proof }}"
-          if [ "${{ github.event.inputs.ndic_gha_semantics_proof }}" = "prep_fail" ]; then
+          echo "scenario=${{ github.event.inputs.scenario }}"
+          if [ "${{ github.event.inputs.scenario }}" = "prep_fail" ]; then
             echo "PREP_LIKE_FORCED_FAILURE"
             exit 1
           fi
@@ -153,13 +95,14 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  # Fixed gate (Variant A): must RUN when prep succeeds after skipped deps.
   followup-fixed:
     needs: prep-like
     if: >
       !cancelled()
       && needs.prep-like.result == 'success'
       && github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof == 'positive_dispatch_skipped_deps'
+      && github.event.inputs.scenario == 'positive_dispatch_skipped_deps'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -186,13 +129,15 @@ jobs:
           echo "REAL_GHA_SEMANTICS_PROOF_NO_SHARED_MUTATION=YES"
           echo "REAL_GHA_SEMANTICS_PROOF_NO_PUBLICATION=YES"
 
+  # Legacy control: same graph, but eligibility still uses needs outputs.
+  # Observation-only: skipped conclusion does not fail the workflow.
   followup-legacy-candidate-ready-gate:
     needs: prep-like
     if: >
       needs.prep-like.result == 'success'
       && needs.prep-like.outputs.candidate_ready == 'true'
       && github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof == 'positive_dispatch_skipped_deps'
+      && github.event.inputs.scenario == 'positive_dispatch_skipped_deps'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -208,7 +153,7 @@ jobs:
       !cancelled()
       && needs.prep-like.result == 'success'
       && github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof == 'prep_fail'
+      && github.event.inputs.scenario == 'prep_fail'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -222,7 +167,7 @@ jobs:
     if: >
       always()
       && github.event_name == 'workflow_dispatch'
-      && github.event.inputs.ndic_gha_semantics_proof == 'prep_fail'
+      && github.event.inputs.scenario == 'prep_fail'
       && needs.prep-like.result == 'failure'
     runs-on: ubuntu-latest
     timeout-minutes: 5

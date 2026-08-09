@@ -684,7 +684,14 @@ async function discoveryChecks() {
     "update_wf_commit_active_only",
     /ndic-shared-write:/.test(updateWf) &&
       /github\.event\.inputs\.mode == 'active'/.test(updateWf) &&
-      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(updateWf),
+      /needs\.ndic-prep\.result == 'success'/.test(updateWf) &&
+      /!cancelled\(\)/.test(
+        (updateWf.split("ndic-shared-write:")[1] || "").split("runs-on:")[0] || ""
+      ) &&
+      !/needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(
+        (updateWf.split("ndic-shared-write:")[1] || "").split("runs-on:")[0] || ""
+      ) &&
+      /ndic-validate-shared-write-candidate\.mjs/.test(updateWf),
     "commit-active-only"
   );
   ok(

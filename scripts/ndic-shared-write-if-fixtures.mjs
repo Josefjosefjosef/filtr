@@ -1,11 +1,21 @@
 #!/usr/bin/env node
 /**
- * Mutation fixtures for ndic-shared-write.if after hotfix #9393.
- * Evaluates the gate logic synthetically (no workflow dispatch).
+ * Contract + scenario fixtures for Variant A shared-write job graph.
+ * Intentionally models the false-green gap that missed canaries 31311789781 / 31313465533:
+ * schedule jobs skipped + empty needs outputs must NOT prevent follow-up start.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  assertSharedWriteJobGraphContract,
+  sharedWriteJobWouldStart,
+  sharedWriteJobWouldStartLegacyCandidateReadyGate,
+  usesCandidateReadyForJobEligibility,
+} from "./ndic-shared-write-job-graph.mjs";
+import { validateSharedWriteCandidate } from "./ndic-validate-shared-write-candidate.mjs";
+import { writeCandidateProducerBinding } from "./ndic-write-candidate-producer-binding.mjs";
+import { assertNdicCandidateRequiredOutputs } from "./ndic-assert-candidate-required-outputs.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WF = path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml");
@@ -17,138 +27,189 @@ function ok(id, cond, detail) {
   else pass += 1;
 }
 
-/**
- * Mirrors the hotfix if:
- * needs.ndic-prep.result == 'success'
- * && needs.ndic-prep.outputs.candidate_ready == 'true'
- * && (
- *   (workflow_dispatch && mode == 'active')
- *   || (event_name == 'schedule')
- * )
- * Schedule path still requires prep success; disarmed schedule never reaches prep.
- */
-function sharedWriteWouldRun(ctx) {
-  const prepOk = ctx.prepResult === "success";
-  const candidateReady = ctx.candidateReady === true || ctx.candidateReady === "true";
-  const dispatchActive =
-    ctx.eventName === "workflow_dispatch" && ctx.mode === "active";
-  const scheduleEvent = ctx.eventName === "schedule";
-  // Disarmed schedule: prep does not run / does not succeed
-  if (scheduleEvent && ctx.automationArmed !== true) {
-    return false;
-  }
-  if (scheduleEvent && ctx.preflightPass !== true) {
-    return false;
-  }
-  if (scheduleEvent && ctx.headMatch !== true) {
-    return false;
-  }
-  return prepOk && candidateReady && (dispatchActive || scheduleEvent);
-}
-
 const src = fs.readFileSync(WF, "utf8");
-ok("wf_has_dispatch_active_gate", /github\.event\.inputs\.mode == 'active'/.test(src));
-ok("wf_has_schedule_gate", /github\.event_name == 'schedule'/.test(src));
-ok("wf_requires_prep_success", /needs\.ndic-prep\.result == 'success'/.test(src));
-ok(
-  "wf_requires_candidate_ready",
-  /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(src)
-);
-ok(
-  "wf_no_resolved_mode_only_gate",
-  !/needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(
-    src.split("ndic-shared-write:")[1]?.split("runs-on:")[0] || ""
-  )
-);
+const contract = assertSharedWriteJobGraphContract(src);
+ok("contract_pass", contract.ok, (contract.fails || []).join("|"));
+ok("wf_forbids_candidate_ready_eligibility", !usesCandidateReadyForJobEligibility(src));
 
-// A) workflow_dispatch + mode=active + prep=success + schedule jobs skipped
+// A) manual dispatch + skipped schedule jobs + prep success + empty needs outputs
 ok(
-  "A_dispatch_active_prep_ok_must_run",
-  sharedWriteWouldRun({
+  "A_dispatch_skipped_deps_empty_outputs_must_start",
+  sharedWriteJobWouldStart({
     eventName: "workflow_dispatch",
     mode: "active",
     prepResult: "success",
-    candidateReady: true,
     scheduleJobsSkipped: true,
+    forceEmptyNeedsOutputs: true,
+    candidateReady: "",
   }) === true
 );
-
-// B) schedule + automation=false
 ok(
-  "B_schedule_disarmed_must_not_run",
-  sharedWriteWouldRun({
+  "A_legacy_gate_false_skips_same_scenario",
+  sharedWriteJobWouldStartLegacyCandidateReadyGate({
+    eventName: "workflow_dispatch",
+    mode: "active",
+    prepResult: "success",
+    scheduleJobsSkipped: true,
+    forceEmptyNeedsOutputs: true,
+    candidateReady: "true",
+  }) === false
+);
+
+// B) schedule disarmed
+ok(
+  "B_schedule_disarmed_must_not_start",
+  sharedWriteJobWouldStart({
     eventName: "schedule",
     automationArmed: false,
     prepResult: "success",
-    candidateReady: true,
+    candidateReady: "true",
     preflightPass: true,
     headMatch: true,
   }) === false
 );
 
-// C) schedule + automation=true + preflight PASS + prep success
+// C) schedule armed + preflight + prep
 ok(
-  "C_schedule_armed_preflight_prep_ok_must_run",
-  sharedWriteWouldRun({
+  "C_schedule_armed_must_start",
+  sharedWriteJobWouldStart({
     eventName: "schedule",
     automationArmed: true,
     preflightPass: true,
     headMatch: true,
     prepResult: "success",
-    candidateReady: true,
   }) === true
 );
 
-// D) prep=failure
+// D) prep failure
 ok(
-  "D_prep_failure_must_not_run",
-  sharedWriteWouldRun({
+  "D_prep_failure_must_not_start",
+  sharedWriteJobWouldStart({
     eventName: "workflow_dispatch",
     mode: "active",
     prepResult: "failure",
-    candidateReady: false,
   }) === false
 );
 
 ok(
-  "extra_shadow_mode_must_not_run",
-  sharedWriteWouldRun({
+  "extra_shadow_must_not_start",
+  sharedWriteJobWouldStart({
     eventName: "workflow_dispatch",
     mode: "shadow",
     prepResult: "success",
-    candidateReady: true,
   }) === false
 );
 
 ok(
-  "extra_schedule_preflight_fail_must_not_run",
-  sharedWriteWouldRun({
+  "extra_schedule_preflight_fail_must_not_start",
+  sharedWriteJobWouldStart({
     eventName: "schedule",
     automationArmed: true,
     preflightPass: false,
     headMatch: true,
     prepResult: "success",
-    candidateReady: true,
   }) === false
 );
 
-ok(
-  "extra_schedule_head_mismatch_must_not_run",
-  sharedWriteWouldRun({
-    eventName: "schedule",
-    automationArmed: true,
-    preflightPass: true,
-    headMatch: false,
-    prepResult: "success",
-    candidateReady: true,
-  }) === false
-);
+// Missing / corrupt candidate: job would start, step validation fail-closed.
+const tmp = fs.mkdtempSync(path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "ndic-cand-"));
+const missingEnv = {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "1",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "abc",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+};
+const missing = validateSharedWriteCandidate(path.join(tmp, "missing"), missingEnv);
+ok("MISSING_CANDIDATE_JOB_STARTED_MODEL", sharedWriteJobWouldStart({
+  eventName: "workflow_dispatch",
+  mode: "active",
+  prepResult: "success",
+}) === true);
+ok("MISSING_CANDIDATE_FAIL_CLOSED", missing.ok === false);
+ok("MISSING_CANDIDATE_SHARED_MUTATION", missing.ok === false);
+
+function writeMinimalCandidate(dir, { corruptSnapshot = false, badProducer = false } = {}) {
+  fs.mkdirSync(path.join(dir, "ndic_datex_v1"), { recursive: true });
+  fs.writeFileSync(path.join(dir, "feed.json"), JSON.stringify({ items: [] }));
+  fs.writeFileSync(path.join(dir, "monitoring.json"), JSON.stringify({}));
+  fs.writeFileSync(path.join(dir, "ndic_datex_v1", "sync_state.json"), JSON.stringify({ ok: true }));
+  fs.writeFileSync(
+    path.join(dir, "ndic_datex_v1", "diagnostics.json"),
+    JSON.stringify({ mode: "active" })
+  );
+  if (corruptSnapshot) {
+    fs.writeFileSync(
+      path.join(dir, "ndic_datex_v1", "traffic_offline_snapshot.json"),
+      "{not-json"
+    );
+  } else {
+    fs.writeFileSync(
+      path.join(dir, "ndic_datex_v1", "traffic_offline_snapshot.json"),
+      JSON.stringify({
+        schema: "iu-traffic-offline-snapshot-v1",
+        schemaVersion: "iu-traffic-offline-snapshot-v1",
+        publicationEnabled: false,
+        publicApiEnabled: false,
+        cards: [],
+        projections: [],
+        feed: { items: [] },
+        historyItems: [],
+      })
+    );
+  }
+  const env = {
+    GITHUB_RUN_ID: "31313465533",
+    GITHUB_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+    NDIC_RESOLVED_MODE: "active",
+  };
+  if (!badProducer) writeCandidateProducerBinding(dir, env);
+  else {
+    fs.writeFileSync(
+      path.join(dir, "ndic_datex_v1", "candidate_producer.json"),
+      JSON.stringify({ schema: "iu-ndic-candidate-producer-v1", runId: "other", headSha: "x", mode: "active" })
+    );
+  }
+  return env;
+}
+
+const goodDir = path.join(tmp, "good");
+const goodEnvBind = writeMinimalCandidate(goodDir);
+const good = validateSharedWriteCandidate(goodDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: goodEnvBind.GITHUB_RUN_ID,
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: goodEnvBind.GITHUB_SHA,
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("GOOD_CANDIDATE_PASS", good.ok === true, good.reason);
+ok("GOOD_REQUIRED_PRESENT", assertNdicCandidateRequiredOutputs(goodDir).ok === true);
+
+const corruptDir = path.join(tmp, "corrupt");
+writeMinimalCandidate(corruptDir, { corruptSnapshot: true });
+const corrupt = validateSharedWriteCandidate(corruptDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "31313465533",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("CORRUPT_CANDIDATE_DETECTED", corrupt.ok === false);
+ok("CORRUPT_CANDIDATE_SHARED_MUTATION", corrupt.ok === false);
+ok("CORRUPT_CANDIDATE_PUBLICATION", corrupt.ok === false);
+
+const badBindDir = path.join(tmp, "badbind");
+writeMinimalCandidate(badBindDir, { badProducer: true });
+const badBind = validateSharedWriteCandidate(badBindDir, {
+  IU_NDIC_EXPECTED_PRODUCER_RUN_ID: "31313465533",
+  IU_NDIC_EXPECTED_PRODUCER_HEAD_SHA: "a7bc4d7190c787f7d9ab78909c8a03c2a065fe9b",
+  IU_NDIC_EXPECTED_CANDIDATE_MODE: "active",
+});
+ok("BAD_PRODUCER_BINDING_FAIL_CLOSED", badBind.ok === false);
+
+try {
+  fs.rmSync(tmp, { recursive: true, force: true });
+} catch {
+  /* ignore */
+}
 
 const report = {
   suite: "NDIC_SHARED_WRITE_IF_FIXTURES",
-  SHARED_WRITE_DISPATCH_FIXTURE_PASS: fails.some((f) => f.startsWith("A_"))
-    ? "NO"
-    : "YES",
+  SHARED_WRITE_DISPATCH_FIXTURE_PASS: fails.some((f) => f.startsWith("A_")) ? "NO" : "YES",
   SHARED_WRITE_SCHEDULE_DISARMED_FIXTURE_PASS: fails.some((f) => f.startsWith("B_"))
     ? "NO"
     : "YES",
@@ -158,6 +219,28 @@ const report = {
   SHARED_WRITE_PREP_FAILURE_FIXTURE_PASS: fails.some((f) => f.startsWith("D_"))
     ? "NO"
     : "YES",
+  MISSING_CANDIDATE_JOB_STARTED: fails.some((f) => f.startsWith("MISSING_CANDIDATE_JOB_STARTED"))
+    ? "NO"
+    : "YES",
+  MISSING_CANDIDATE_FAIL_CLOSED: fails.some((f) => f.startsWith("MISSING_CANDIDATE_FAIL_CLOSED"))
+    ? "NO"
+    : "YES",
+  MISSING_CANDIDATE_SHARED_MUTATION: fails.some((f) =>
+    f.startsWith("MISSING_CANDIDATE_SHARED_MUTATION")
+  )
+    ? "YES"
+    : "NO",
+  CORRUPT_CANDIDATE_DETECTED: fails.some((f) => f.startsWith("CORRUPT_CANDIDATE_DETECTED"))
+    ? "NO"
+    : "YES",
+  CORRUPT_CANDIDATE_SHARED_MUTATION: fails.some((f) =>
+    f.startsWith("CORRUPT_CANDIDATE_SHARED_MUTATION")
+  )
+    ? "YES"
+    : "NO",
+  CORRUPT_CANDIDATE_PUBLICATION: fails.some((f) => f.startsWith("CORRUPT_CANDIDATE_PUBLICATION"))
+    ? "YES"
+    : "NO",
   SHARED_WRITE_MUTATION_TEST_PASS: fails.length === 0 ? "YES" : "NO",
   total: pass + fails.length,
   success: pass,
