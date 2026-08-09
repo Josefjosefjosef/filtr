@@ -101,8 +101,9 @@ ok(
   /ndic-shared-write:[\s\S]*?group:\s*info-events-data-writers/.test(ndicWf)
 );
 ok(
-  "wf_reconcile_has_narrow_lock",
-  /ndic-reconcile-data-pr:[\s\S]*?group:\s*info-events-data-writers/.test(ndicWf)
+  "wf_reconcile_inline_under_shared_write_lock",
+  /ndic-shared-write:[\s\S]*?ndic-data-pr-reconcile-against-main\.mjs/.test(ndicWf) &&
+    !/\n {2}ndic-reconcile-data-pr:/.test(ndicWf)
 );
 ok(
   "wf_post_write_no_shared_lock",
@@ -123,18 +124,12 @@ ok(
   /ndic-data-pr-reconcile-against-main\.mjs/.test(ndicWf)
 );
 ok(
-  "wf_reconcile_self_hosted_shared_write",
-  /ndic-reconcile-data-pr:[\s\S]*?runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(
-    ndicWf
-  ) && /NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf)
+  "wf_shared_write_reclaim_disk",
+  /Reclaim workspace disk before checkout/.test(ndicWf)
 );
 ok(
-  "wf_reconcile_no_secrets_network",
-  /NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf) &&
-    /NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf) &&
-    !/ndic-reconcile-data-pr:[\s\S]*?NDIC_.*PASSWORD|ndic-reconcile-data-pr:[\s\S]*?mobilitydata\.rsd\.cz/.test(
-      ndicWf
-    )
+  "wf_no_separate_reconcile_enospc_job",
+  !/\n {2}ndic-reconcile-data-pr:/.test(ndicWf)
 );
 ok(
   "stage_optional_binding",

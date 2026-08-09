@@ -454,10 +454,11 @@ function main() {
       const sharedWrite = analysis.jobs.find((j) => j.name === "ndic-shared-write");
       const scheduleGate = analysis.jobs.find((j) => j.name === "schedule-gate");
       const scheduledPreflight = analysis.jobs.find((j) => j.name === "scheduled-preflight");
-      const reconcile = analysis.jobs.find((j) => j.name === "ndic-reconcile-data-pr");
       const postWrite = analysis.jobs.find((j) => j.name === "ndic-post-write");
+      const separateReconcile = analysis.jobs.find((j) => j.name === "ndic-reconcile-data-pr");
       // Two-phase staging: GitHub-hosted guards live in ndic-datex-v1-staging-preflight.yml.
-      // Network + shared-write / reconcile must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
+      // Network + shared-write must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
+      // Bounded reconcile is inlined into shared-write (ENOSPC: no second full checkout job).
       // Allowed GitHub-hosted: schedule gate, inline preflight, and post-write (checks/auto-merge only).
       const githubHostedAllowed = new Set([
         "schedule-gate",
@@ -467,7 +468,7 @@ function main() {
       ok("update_no_offline_guards_job", !offline, offline ? "present" : "ok");
       ok("update_has_network_job", Boolean(network), "missing");
       ok("update_has_shared_write_job", Boolean(sharedWrite), "missing");
-      ok("update_has_reconcile_job", Boolean(reconcile), "missing");
+      ok("update_no_separate_reconcile_job", !separateReconcile, separateReconcile ? "present" : "ok");
       ok("update_has_post_write_job", Boolean(postWrite), "missing");
       ok("update_has_schedule_gate_job", Boolean(scheduleGate), "missing");
       ok("update_has_scheduled_preflight_job", Boolean(scheduledPreflight), "missing");
@@ -481,10 +482,17 @@ function main() {
           .map((j) => j.name)
           .join("+")
       );
-      if (reconcile) {
-        ok("update_reconcile_self_hosted", reconcile.isSelfHosted === true, "hosted");
-        ok("update_reconcile_no_secrets", !/secrets\.IU_NDIC_/.test(reconcile.body), "secrets");
-        ok("update_reconcile_no_sync", !/ndic-datex-v1-prod-sync/.test(reconcile.body), "sync");
+      if (sharedWrite) {
+        ok(
+          "update_shared_write_inline_reconcile",
+          /ndic-data-pr-reconcile-against-main\.mjs/.test(sharedWrite.body),
+          "reconcile"
+        );
+        ok(
+          "update_shared_write_reclaim_disk",
+          /Reclaim workspace disk before checkout/.test(sharedWrite.body),
+          "disk"
+        );
       }
       if (postWrite) {
         ok("update_post_write_github_hosted", postWrite.isGithubHosted === true, "hosted");

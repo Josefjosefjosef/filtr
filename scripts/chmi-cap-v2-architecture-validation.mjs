@@ -382,7 +382,7 @@ function listedForStreams(streamCount, filesPerStream = 3) {
                 event: `Jev ${product}`,
                 severity: f % 2 ? "Severe" : "Moderate",
                 orps: ["1000", "6203"],
-                expires: "2026-08-10T00:00:00+02:00",
+                expires: "2026-12-31T23:59:59+02:00",
               },
             ],
           }),
@@ -500,12 +500,12 @@ function listedForStreams(streamCount, filesPerStream = 3) {
   const a50 = makeCapXml({
     product: "50",
     seq: "X1",
-    infos: [{ event: "Jev A", severity: "Moderate", orps: ["1000"], expires: "2026-08-10T00:00:00+02:00" }],
+    infos: [{ event: "Jev A", severity: "Moderate", orps: ["1000"], expires: "2026-12-31T23:59:59+02:00" }],
   });
   const b70 = makeCapXml({
     product: "70",
     seq: "X1",
-    infos: [{ event: "Jev B", severity: "Severe", orps: ["6203"], expires: "2026-08-10T00:00:00+02:00" }],
+    infos: [{ event: "Jev B", severity: "Severe", orps: ["6203"], expires: "2026-12-31T23:59:59+02:00" }],
   });
   const multi = assembleActiveStateFromOrderedDocuments([
     { xml: a50, sourceUrl: "s50" },
@@ -538,7 +538,7 @@ function listedForStreams(streamCount, filesPerStream = 3) {
               event: `Jev ${product}`,
               severity: "Moderate",
               orps: ["1000", "6203"],
-              expires: "2026-08-10T00:00:00+02:00",
+              expires: "2026-12-31T23:59:59+02:00",
             },
           ],
         }),
