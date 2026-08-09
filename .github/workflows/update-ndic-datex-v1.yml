@@ -384,6 +384,7 @@ jobs:
       queue: max
     outputs:
       pushed: ${{ steps.commit_push.outputs.pushed }}
+      refresh_count: ${{ steps.reconcile.outputs.refresh_count }}
     steps:
       # MUST stay first: no checkout before identity PASS (fail-closed on GitHub-hosted).
       - name: Preflight runner identity (fail-closed)
@@ -426,6 +427,19 @@ jobs:
           fi
           umask 077
           echo "RUNNER_PREFLIGHT_OK"
+          echo "NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO"
+
+      # Recover from ENOSPC (incident schedule run 31338815059: full-history reconcile clone).
+      # Only wipe this job's prior checkout dirs + runner temp — never whole-disk /home.
+      - name: Reclaim workspace disk before checkout
+        run: |
+          set -euo pipefail
+          df -h / || true
+          rm -rf ndic-orch ndic-main-data 2>/dev/null || true
+          if [ -n "${RUNNER_TEMP:-}" ] && [ -d "${RUNNER_TEMP}" ]; then
+            find "${RUNNER_TEMP}" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+          fi
+          df -h / || true
 
       # TWO-SOURCE MODEL (incident ACTIVE run 31254863015):
       # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD â€” helper scripts from workflow SHA
@@ -461,7 +475,8 @@ jobs:
           set -euo pipefail
           test -f ndic-orch/scripts/info-events-shared-writer-critical.mjs
           test -f ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
-          git -C ndic-main-data fetch origin main
+          test -f ndic-orch/scripts/ndic-data-pr-reconcile-against-main.mjs
+          git -C ndic-main-data fetch origin main --depth=1
           git -C ndic-main-data checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
           echo "ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD"
           echo "SHARED_STATE_SOURCE=LATEST_MAIN"
@@ -553,104 +568,8 @@ jobs:
           set -euo pipefail
           node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
 
-  # Short critical section AFTER shared-write releases: if CHMI/IE advanced main,
-  # regenerate shared feed from latest main + this run's NDIC candidate (no ours/theirs).
-  # Holds info-events-data-writers only for reread/apply/commit/push — never for checks/wait.
-  ndic-reconcile-data-pr:
-    needs: ndic-shared-write
-    if: needs.ndic-shared-write.outputs.pushed == 'true'
-    # Shared-state mutation stays on Czech self-hosted (never GitHub-hosted shared write).
-    # Offline only: re-read main + apply already-built candidate (no DATEX/TMC/secrets).
-    runs-on:
-      - self-hosted
-      - Linux
-      - X64
-      - ndic-cz-egress
-    timeout-minutes: 10
-    concurrency:
-      group: info-events-data-writers
-      cancel-in-progress: false
-      queue: max
-    outputs:
-      refresh_count: ${{ steps.reconcile.outputs.refresh_count }}
-      pushed: ${{ steps.push.outputs.pushed }}
-    steps:
-      - name: Preflight runner identity (fail-closed)
-        run: |
-          set -euo pipefail
-          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
-          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
-            echo "REFUSING_GITHUB_HOSTED"
-            exit 1
-          fi
-          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
-            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
-            exit 1
-          fi
-          if [ "${RUNNER_OS:-}" != "Linux" ]; then
-            echo "REFUSING_UNEXPECTED_OS"
-            exit 1
-          fi
-          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
-            echo "REFUSING_UNEXPECTED_ARCH"
-            exit 1
-          fi
-          ws="${GITHUB_WORKSPACE:-}"
-          cwd="$(pwd)"
-          case "${ws}" in
-            /home/runner|/home/runner/*)
-              echo "REFUSING_GITHUB_HOSTED_PATH"
-              exit 1
-              ;;
-          esac
-          case "${cwd}" in
-            /home/runner|/home/runner/*)
-              echo "REFUSING_GITHUB_HOSTED_PATH"
-              exit 1
-              ;;
-          esac
-          if [ "$(id -u)" -eq 0 ]; then
-            echo "REFUSING_ROOT_RUNNER"
-            exit 1
-          fi
-          umask 077
-          echo "RUNNER_PREFLIGHT_OK"
-          echo "NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO"
-          echo "NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO"
-          echo "NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO"
-
-      - name: Checkout feature HEAD orchestration code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          path: ndic-orch
-          fetch-depth: 1
-          fetch-tags: false
-          submodules: false
-          lfs: false
-          persist-credentials: false
-
-      - name: Checkout latest main shared-state worktree
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: main
-          path: ndic-main-data
-          fetch-depth: 0
-          fetch-tags: false
-          submodules: false
-          lfs: false
-          persist-credentials: true
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "24"
-
-      - name: Download NDIC candidate
-        uses: actions/download-artifact@v4
-        with:
-          name: ndic-ie-candidate-${{ github.run_id }}
-          path: ${{ runner.temp }}/ndic-ie-candidate
-
-      - name: Bounded reconcile against current main
+      - name: Bounded reconcile against current main (same lock, shallow)
+        if: steps.commit_push.outputs.pushed == 'true'
         id: reconcile
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
@@ -658,8 +577,8 @@ jobs:
           PR_TITLE: ${{ env.PR_TITLE }}
         run: |
           set -euo pipefail
-          git -C ndic-main-data config user.name "github-actions[bot]"
-          git -C ndic-main-data config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Keep critical section short: reread main tip + namespace-merge NDIC candidate.
+          # No second self-hosted job / no full-history clone (ENOSPC run 31338815059).
           node ndic-orch/scripts/ndic-data-pr-reconcile-against-main.mjs \
             --repo ndic-main-data \
             --ndic-candidate "${RUNNER_TEMP}/ndic-ie-candidate" \
@@ -674,39 +593,24 @@ jobs:
           echo "DATA_PR_REFRESH_MAX=3"
           echo "UNBOUNDED_RETRY_POSSIBLE=NO"
           echo "GIT_OURS_THEIRS_USED=NO"
-          echo "NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO"
-          echo "NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO"
-          echo "NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO"
 
       - name: Push reconciled automation branch
-        id: push
+        if: steps.commit_push.outputs.pushed == 'true'
         working-directory: ndic-main-data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git push -u origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}" --force
-          echo "pushed=true" >> "$GITHUB_OUTPUT"
-
-      - name: Ensure canonical Data PR (no duplicate)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
-          PR_TITLE: ${{ env.PR_TITLE }}
-          PR_BODY: "Automated NDIC DATEX v1 data refresh. Canonical Data PR preserved across bounded shared-feed reconcile."
-          PR_BASE: main
-        run: |
-          set -euo pipefail
-          node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
           echo "CANONICAL_DATA_PR_PRESERVED=YES"
           echo "DUPLICATE_DATA_PR_CREATED=NO"
+
 
   # Outside shared writer lock (mirrors CHMI post-write):
   # workflow_dispatch required checks — avoids pull_request action_required gate for github-actions[bot].
   ndic-post-write:
-    needs: ndic-reconcile-data-pr
-    if: needs.ndic-reconcile-data-pr.result == 'success'
+    needs: ndic-shared-write
+    if: needs.ndic-shared-write.outputs.pushed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # NO info-events-data-writers — checks/Pages must not hold the shared writer lock.
@@ -714,7 +618,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.AUTOMATION_BRANCH }}
-          fetch-depth: 0
+          fetch-depth: 1
           fetch-tags: false
           submodules: false
           lfs: false

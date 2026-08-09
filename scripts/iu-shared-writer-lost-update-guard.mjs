@@ -38,8 +38,9 @@ if (fs.existsSync(ndicPath)) {
   ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
   ok("ndic_write_production", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
   ok(
-    "ndic_reconcile_production",
-    jobHasGroup(ndic, "ndic-reconcile-data-pr", PRODUCTION_ACTIVATION_GROUP),
+    "ndic_reconcile_inline",
+    /ndic-data-pr-reconcile-against-main\.mjs/.test(jobBlock(ndic, "ndic-shared-write")) &&
+      !/\n {2}ndic-reconcile-data-pr:/.test(ndic),
     "reconcile"
   );
   ok("ndic_cancel_false", /cancel-in-progress:\s*false/.test(ndic), "cancel");
@@ -47,20 +48,14 @@ if (fs.existsSync(ndicPath)) {
   ok("ndic_active_shared_group", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
   const writeJob = jobBlock(ndic, "ndic-shared-write");
   const prepJob = jobBlock(ndic, "ndic-prep");
-  const reconcileJob = jobBlock(ndic, "ndic-reconcile-data-pr");
   const postWriteJob = jobBlock(ndic, "ndic-post-write");
   ok("ndic_write_not_ubuntu", Boolean(writeJob) && !/runs-on:\s*ubuntu-latest/.test(writeJob), "ubuntu");
   // Schedule arming/preflight + post-write (checks only) may use ubuntu-latest;
-  // network + shared-write + reconcile must not.
+  // network + shared-write (incl. inline reconcile) must not.
   ok(
     "ndic_prep_not_ubuntu",
     /runs-on:\n\s+- self-hosted/.test(prepJob) && !/runs-on:\s*ubuntu-latest/.test(prepJob),
     "prepUbuntu"
-  );
-  ok(
-    "ndic_reconcile_not_ubuntu",
-    /runs-on:\n\s+- self-hosted/.test(reconcileJob) && !/runs-on:\s*ubuntu-latest/.test(reconcileJob),
-    "reconcileUbuntu"
   );
   ok(
     "ndic_post_write_ubuntu_no_shared_lock",

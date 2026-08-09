@@ -126,14 +126,12 @@ export function simulatePendingReplacement(state, incoming) {
 
 function assertNoLiveSideEffects(src) {
   // Explicit check/Pages dispatch belongs in ndic-post-write (CHMI mirror).
-  // Prep / shared-write / reconcile must never dispatch live workflows.
+  // Prep / shared-write must never dispatch live workflows.
   const prep = jobBlock(src, "ndic-prep");
   const write = jobBlock(src, "ndic-shared-write");
-  const reconcile = jobBlock(src, "ndic-reconcile-data-pr");
   const post = jobBlock(src, "ndic-post-write");
   ok("no_test_dispatch_in_prep", !/gh\s+workflow\s+run/.test(prep), "prep");
   ok("no_test_dispatch_in_shared_write", !/gh\s+workflow\s+run/.test(write), "write");
-  ok("no_test_dispatch_in_reconcile", !/gh\s+workflow\s+run/.test(reconcile), "reconcile");
   ok(
     "post_write_check_dispatch_allowed",
     /gh\s+workflow\s+run\s+smoke\.yml/.test(post) &&
@@ -157,8 +155,9 @@ function main() {
   ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
   ok("ndic_write_shared", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
   ok(
-    "ndic_reconcile_shared",
-    jobHasGroup(ndic, "ndic-reconcile-data-pr", PRODUCTION_ACTIVATION_GROUP),
+    "ndic_reconcile_inline",
+    /ndic-data-pr-reconcile-against-main\.mjs/.test(jobBlock(ndic, "ndic-shared-write")) &&
+      !/\n {2}ndic-reconcile-data-pr:/.test(ndic),
     "reconcile"
   );
   ok("chmi_write_shared", jobHasGroup(chmi, "shared-write", PRODUCTION_ACTIVATION_GROUP), "chmi-write");
@@ -170,11 +169,6 @@ function main() {
 
   // Incident 31250620970: queue:single pending replacement must not remain the product model.
   ok("ndic_queue_max", /queue:\s*max\b/.test(jobBlock(ndic, "ndic-shared-write")), "ndic-q");
-  ok(
-    "ndic_reconcile_queue_max",
-    /queue:\s*max\b/.test(jobBlock(ndic, "ndic-reconcile-data-pr")),
-    "ndic-reconcile-q"
-  );
   ok("chmi_queue_max", /queue:\s*max\b/.test(jobBlock(chmi, "shared-write")), "chmi-q");
   ok("ie_queue_max", /queue:\s*max\b/.test(jobBlock(ie, "shared-write")), "ie-q");
   ok(
