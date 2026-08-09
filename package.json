@@ -319,7 +319,8 @@
     "iu-data-pr-base-freshness-guard": "node scripts/iu-data-pr-base-freshness-guard.mjs --self-check",
     "iu-data-pr-safe-shared-namespace-refresh": "node scripts/iu-data-pr-safe-shared-namespace-refresh.mjs",
     "iu-data-pr-anti-loop-fixtures": "node scripts/iu-data-pr-anti-loop-fixtures.mjs",
-    "iu-data-pr-anti-loop-meta-fixtures": "node scripts/iu-data-pr-anti-loop-meta-fixtures.mjs"
+    "iu-data-pr-anti-loop-meta-fixtures": "node scripts/iu-data-pr-anti-loop-meta-fixtures.mjs",
+    "iu-ndic-shared-write-if-fixtures": "node scripts/ndic-shared-write-if-fixtures.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0",

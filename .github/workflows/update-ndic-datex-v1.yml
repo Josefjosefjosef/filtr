@@ -357,9 +357,16 @@ jobs:
 
   ndic-shared-write:
     needs: ndic-prep
+    # Prefer event inputs/schedule for ACTIVE gate. Relying only on
+    # needs.ndic-prep.outputs.resolved_mode skipped shared-write on canary
+    # ACTIVE run 31311789781 after schedule jobs were skipped in the graph.
     if: >
-      needs.ndic-prep.outputs.resolved_mode == 'active'
+      needs.ndic-prep.result == 'success'
       && needs.ndic-prep.outputs.candidate_ready == 'true'
+      && (
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'active')
+      || (github.event_name == 'schedule')
+      )
     runs-on:
       - self-hosted
       - Linux
