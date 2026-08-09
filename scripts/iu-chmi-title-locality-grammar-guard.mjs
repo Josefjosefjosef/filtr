@@ -23,7 +23,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "traffic-ui-defer-feed-hydrate-v1-20260808";
-const SW_VER = "2026-08-06-traffic-overview-rsd-prehled-v1";
+const SW_VER = "2026-08-08-traffic-ui-defer-feed-hydrate-v1";
 
 const fails = [];
 function ok(id, cond, detail) {
