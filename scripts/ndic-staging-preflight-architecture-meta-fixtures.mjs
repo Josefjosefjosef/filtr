@@ -16,6 +16,11 @@ import {
   withoutGithubHostedAllowedJobs,
 } from "./ndic-staging-preflight-architecture-fixtures.mjs";
 import {
+  sharedWriteIfRegion,
+  usesCandidateReadyForJobEligibility,
+  usesPrepResultForJobEligibility,
+} from "./ndic-shared-write-job-graph.mjs";
+import {
   verifyAttestationStatus,
   PREFLIGHT_STATUS_CONTEXT,
   buildAttestationDescription,
@@ -145,6 +150,63 @@ mutateMustFail(
   "meta_remove_narrow_shared_write_job",
   netSrc,
   (s) => s.replace(new RegExp(`(?:^|\\n) {2}${NDIC_SHARED_WRITE_JOB}:\\n(?: {4}.*\\n|\\n)*`), "\n"),
+  assertNetworkWorkflowArchitecture
+);
+
+// Post-#9403 contract: old candidate_ready job gate / missing prep.result / missing
+// in-job validator must FAIL architecture fixtures (not only shared-write-if meta).
+mutateMustFail(
+  "OLD_CANDIDATE_READY_JOB_GATE_MUTATION_DETECTED",
+  netSrc,
+  (s) => {
+    const region = sharedWriteIfRegion(s);
+    const injected = region.replace(
+      /needs\.ndic-prep\.result == 'success'\n/,
+      "needs.ndic-prep.result == 'success'\n      && needs.ndic-prep.outputs.candidate_ready == 'true'\n"
+    );
+    ok(
+      "mutation_injected_candidate_ready_for_arch",
+      usesCandidateReadyForJobEligibility(s.replace(region, injected))
+    );
+    return s.replace(region, injected);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "PREP_RESULT_GATE_REMOVAL_DETECTED",
+  netSrc,
+  (s) => {
+    const region = sharedWriteIfRegion(s);
+    const injected = region.replace(/\s*&& needs\.ndic-prep\.result == 'success'/, "");
+    ok(
+      "mutation_removed_prep_result_for_arch",
+      !usesPrepResultForJobEligibility(s.replace(region, injected))
+    );
+    return s.replace(region, injected);
+  },
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "CANDIDATE_VALIDATOR_REMOVAL_DETECTED",
+  netSrc,
+  (s) => s.replace(/ndic-validate-shared-write-candidate\.mjs/g, "echo-skip-validate.mjs"),
+  assertNetworkWorkflowArchitecture
+);
+
+mutateMustFail(
+  "meta_restore_old_write_assert_as_active_expectation",
+  netSrc,
+  (s) => {
+    const write = jobChunk(s, NDIC_SHARED_WRITE_JOB);
+    if (!write) return s;
+    const mutatedWrite = write.replace(
+      /ndic-validate-shared-write-candidate\.mjs/g,
+      "ndic-assert-candidate-required-outputs.mjs"
+    );
+    return s.replace(write, mutatedWrite);
+  },
   assertNetworkWorkflowArchitecture
 );
 
@@ -520,6 +582,9 @@ suiteMustKeepPointsFixtures("meta_remove_basic_importer_from_suite_must_fail", (
 const netA = assertNetworkWorkflowArchitecture(netSrc);
 const writeChunk = jobChunk(netSrc, NDIC_SHARED_WRITE_JOB);
 const prepChunk = jobChunk(netSrc, NDIC_NETWORK_JOB);
+function mutationCaught(id) {
+  return !fails.some((f) => String(f).startsWith(id));
+}
 const report = {
   ok: fails.length === 0,
   failCount: fails.length,
@@ -535,6 +600,40 @@ const report = {
     /self-hosted/.test(writeChunk) && /ndic-cz-egress/.test(writeChunk) && !/ubuntu-latest/.test(writeChunk)
       ? "YES"
       : "NO",
+  OLD_CANDIDATE_READY_JOB_GATE_MUTATION_DETECTED: mutationCaught(
+    "OLD_CANDIDATE_READY_JOB_GATE_MUTATION_DETECTED"
+  )
+    ? "YES"
+    : "NO",
+  PREP_RESULT_GATE_REMOVAL_DETECTED: mutationCaught("PREP_RESULT_GATE_REMOVAL_DETECTED")
+    ? "YES"
+    : "NO",
+  CANDIDATE_VALIDATOR_REMOVAL_DETECTED: mutationCaught("CANDIDATE_VALIDATOR_REMOVAL_DETECTED")
+    ? "YES"
+    : "NO",
+  OLD_ASSERT_REQUIRED_BY_ACTIVE_ARCHITECTURE: /ndic-assert-candidate-required-outputs\.mjs/.test(
+    writeChunk
+  )
+    ? "YES"
+    : "NO",
+  NEW_VALIDATOR_REQUIRED_BY_ACTIVE_ARCHITECTURE: /ndic-validate-shared-write-candidate\.mjs/.test(
+    writeChunk
+  )
+    ? "YES"
+    : "NO",
+  PREFLIGHT_EXPECTS_PREP_RESULT_GATE: /needs\.ndic-prep\.result\s*==\s*'success'/.test(
+    sharedWriteIfRegion(netSrc)
+  )
+    ? "YES"
+    : "NO",
+  PREFLIGHT_EXPECTS_CANDIDATE_READY_JOB_GATE: usesCandidateReadyForJobEligibility(netSrc)
+    ? "YES"
+    : "NO",
+  PREFLIGHT_EXPECTS_INTERNAL_CANDIDATE_VALIDATION: /ndic-validate-shared-write-candidate\.mjs/.test(
+    writeChunk
+  )
+    ? "YES"
+    : "NO",
   TEST_RUNNER_FALSE_GREEN_POSSIBLE: fails.length ? "YES" : "NO",
 };
 // Meta guard PASS requires all mutation catches + baseline architecture PASS.
