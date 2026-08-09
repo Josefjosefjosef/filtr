@@ -682,7 +682,9 @@ async function discoveryChecks() {
   ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
   ok(
     "update_wf_commit_active_only",
-    /needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(updateWf),
+    /ndic-shared-write:/.test(updateWf) &&
+      /github\.event\.inputs\.mode == 'active'/.test(updateWf) &&
+      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(updateWf),
     "commit-active-only"
   );
   ok(

@@ -95,7 +95,12 @@ export function assertAutomaticScheduleContract(src) {
 
   check("write_shared_lock", /group:\s*info-events-data-writers/.test(write));
   check("write_no_ubuntu", !/ubuntu-latest/.test(write));
-  check("write_resolved_mode_active", /needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(write));
+  check(
+    "write_dispatch_or_schedule_active_gate",
+    /github\.event\.inputs\.mode == 'active'/.test(write) &&
+      /github\.event_name == 'schedule'/.test(write) &&
+      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(write)
+  );
 
   check(
     "orchestration_group_cancel_false",

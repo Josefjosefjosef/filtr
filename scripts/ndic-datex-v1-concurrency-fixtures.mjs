@@ -188,7 +188,8 @@ function main() {
   ok(
     "ndic_commit_active_only",
     /ndic-shared-write:/.test(ndic) &&
-      /needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(ndic),
+      /github\.event\.inputs\.mode == 'active'/.test(ndic) &&
+      /needs\.ndic-prep\.outputs\.candidate_ready == 'true'/.test(ndic),
     "commit"
   );
   ok("ndic_apply_reread", /info-events-shared-writer-critical\.mjs ndic/.test(ndic), "reread");
