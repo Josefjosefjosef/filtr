@@ -211,10 +211,15 @@ function main() {
     const now = Date.parse("2026-08-09T08:00:00.000Z");
     const desc = buildAttestationDescription({
       headSha: head,
-      runId: "4242",
+      runId: "31323367965",
       expiresAtIso: computeExpiresAtIso(now, 1800),
-      attestationId: buildAttestationId(4242, "scheduled-preflight"),
+      attestationId: buildAttestationId("31323367965", "scheduled-preflight"),
     });
+    ok(
+      "E_status_description_within_github_limit",
+      desc.length <= 140,
+      String(desc.length)
+    );
     ok(
       "E_same_head_verifies",
       verifyAttestationStatus({

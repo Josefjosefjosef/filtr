@@ -7,6 +7,18 @@ export const PREFLIGHT_STATUS_CONTEXT = "ndic-staging-preflight";
 export const DEFAULT_TTL_SECONDS = 7200;
 export const MAX_TTL_SECONDS = 86400;
 export const MIN_TTL_SECONDS = 300;
+/** GitHub commit status `description` hard limit (REST statuses API). */
+export const GITHUB_COMMIT_STATUS_DESCRIPTION_MAX = 140;
+
+/**
+ * Compact ISO-8601 UTC (no milliseconds) — keeps attestation descriptions under 140 chars.
+ * @param {string|number|Date} value
+ */
+export function toCompactExpiresAtIso(value) {
+  const ms = typeof value === "number" ? value : Date.parse(String(value));
+  if (!Number.isFinite(ms) || Number.isNaN(ms)) throw new Error("INVALID_EXPIRES_AT");
+  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
 
 /**
  * @param {{ headSha: string, runId: string|number, expiresAtIso: string, attestationId: string }} p
@@ -14,13 +26,18 @@ export const MIN_TTL_SECONDS = 300;
 export function buildAttestationDescription(p) {
   const head = String(p.headSha || "").trim().toLowerCase();
   const runId = String(p.runId || "").trim();
-  const exp = String(p.expiresAtIso || "").trim();
+  const exp = toCompactExpiresAtIso(String(p.expiresAtIso || "").trim());
   const aid = String(p.attestationId || "").trim();
   if (!/^[0-9a-f]{40}$/.test(head)) throw new Error("INVALID_HEAD_SHA");
   if (!/^\d+$/.test(runId)) throw new Error("INVALID_RUN_ID");
   if (!aid) throw new Error("INVALID_ATTESTATION_ID");
-  if (!exp || Number.isNaN(Date.parse(exp))) throw new Error("INVALID_EXPIRES_AT");
-  return `pass=1|head=${head}|run=${runId}|exp=${exp}|aid=${aid}`;
+  const description = `pass=1|head=${head}|run=${runId}|exp=${exp}|aid=${aid}`;
+  if (description.length > GITHUB_COMMIT_STATUS_DESCRIPTION_MAX) {
+    throw new Error(
+      `DESCRIPTION_TOO_LONG:${description.length}>${GITHUB_COMMIT_STATUS_DESCRIPTION_MAX}`
+    );
+  }
+  return description;
 }
 
 /** @param {string} description */
@@ -88,11 +105,28 @@ export function computeExpiresAtIso(nowMs, ttlSeconds) {
   if (!Number.isFinite(ttl) || ttl < MIN_TTL_SECONDS || ttl > MAX_TTL_SECONDS) {
     throw new Error("INVALID_TTL");
   }
-  return new Date(nowMs + ttl * 1000).toISOString();
+  return toCompactExpiresAtIso(nowMs + ttl * 1000);
+}
+
+/**
+ * Short job slug so `aid=` fits GitHub's 140-char status description with full HEAD SHA.
+ * @param {string|number} jobId
+ */
+export function shortAttestationJobSlug(jobId) {
+  const raw = String(jobId || "0").trim() || "0";
+  if (raw === "scheduled-preflight") return "spf";
+  if (/^\d+$/.test(raw)) return raw;
+  // Keep stable, compact, description-safe slug (no pipes/= which break the encoding).
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 12);
+  return slug || "0";
 }
 
 export function buildAttestationId(runId, jobId) {
-  return `ndic-pf-${String(runId)}-${String(jobId || "0")}`;
+  return `ndic-pf-${String(runId)}-${shortAttestationJobSlug(jobId)}`;
 }
 
 function main() {
