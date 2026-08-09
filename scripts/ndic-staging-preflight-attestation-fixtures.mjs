@@ -4,6 +4,7 @@
  */
 import {
   PREFLIGHT_STATUS_CONTEXT,
+  GITHUB_COMMIT_STATUS_DESCRIPTION_MAX,
   buildAttestationDescription,
   parseAttestationDescription,
   verifyAttestationStatus,
@@ -122,6 +123,75 @@ try {
 ok("invalid_head_throws", threw);
 
 ok("ttl_default_sane", DEFAULT_TTL_SECONDS >= 300 && DEFAULT_TTL_SECONDS <= 86400);
+
+// GitHub commit status description max is 140. Autonomous schedule uses job
+// name "scheduled-preflight" + 11+ digit run ids; must stay under the hard cap.
+{
+  const scheduledDesc = buildAttestationDescription({
+    headSha: HEAD,
+    runId: "31323367965",
+    expiresAtIso: computeExpiresAtIso(NOW, 1800),
+    attestationId: buildAttestationId("31323367965", "scheduled-preflight"),
+  });
+  ok(
+    "github_status_description_max_scheduled",
+    scheduledDesc.length <= GITHUB_COMMIT_STATUS_DESCRIPTION_MAX,
+    String(scheduledDesc.length)
+  );
+  ok(
+    "scheduled_aid_uses_short_job_slug",
+    scheduledDesc.includes("aid=ndic-pf-31323367965-spf"),
+    scheduledDesc
+  );
+  const longRunDesc = buildAttestationDescription({
+    headSha: HEAD,
+    runId: "9999999999999999",
+    expiresAtIso: computeExpiresAtIso(NOW, 1800),
+    attestationId: buildAttestationId("9999999999999999", "scheduled-preflight"),
+  });
+  ok(
+    "github_status_description_max_long_run_id",
+    longRunDesc.length <= GITHUB_COMMIT_STATUS_DESCRIPTION_MAX,
+    String(longRunDesc.length)
+  );
+
+  // Exact boundary: a 140-char description must be accepted.
+  const padAid = "x".repeat(
+    GITHUB_COMMIT_STATUS_DESCRIPTION_MAX -
+      `pass=1|head=${HEAD}|run=1|exp=2026-08-06T12:30:00Z|aid=`.length
+  );
+  const boundaryDesc = buildAttestationDescription({
+    headSha: HEAD,
+    runId: "1",
+    expiresAtIso: "2026-08-06T12:30:00.000Z",
+    attestationId: padAid,
+  });
+  ok(
+    "github_status_description_boundary_140",
+    boundaryDesc.length === GITHUB_COMMIT_STATUS_DESCRIPTION_MAX,
+    String(boundaryDesc.length)
+  );
+
+  // Mutation >140 must be rejected by the hard guard (regression lock).
+  let overThrew = false;
+  let overMsg = "";
+  try {
+    buildAttestationDescription({
+      headSha: HEAD,
+      runId: "1",
+      expiresAtIso: "2026-08-06T12:30:00.000Z",
+      attestationId: padAid + "Y",
+    });
+  } catch (e) {
+    overThrew = true;
+    overMsg = String(e && e.message ? e.message : e);
+  }
+  ok(
+    "github_status_description_141_rejected",
+    overThrew && overMsg.startsWith("DESCRIPTION_TOO_LONG:"),
+    overMsg
+  );
+}
 
 const report = { ok: fails.length === 0, passCount, failCount: fails.length, fails };
 console.log(JSON.stringify(report, null, 2));
