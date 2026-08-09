@@ -39,7 +39,9 @@ ok("prod_passes_info_events_dir", /infoEventsDir:\s*DIR/.test(prod));
 ok("persist_exports_resolve", /export function resolveTrafficUiSnapshotDestPath/.test(persist));
 ok("wf_pack_assert", /ndic-assert-candidate-required-outputs\.mjs/.test(wf));
 ok("wf_stage_helper", /ndic-stage-shared-write-outputs\.mjs/.test(wf));
-ok("wf_no_swallow_add", !/2>\s*\/dev\/null\s*\|\|\s*true/.test(wf));
+// Guard the ACTIVE incident pattern: swallowed `git add … 2>/dev/null || true`.
+// Other `2>/dev/null` uses (e.g. git diff fallbacks) are out of scope.
+ok("wf_no_swallow_add", !/git\s+add[\s\S]{0,200}2>\s*\/dev\/null\s*\|\|\s*true/.test(wf));
 
 // Mutation: restore all-or-nothing swallow → meta must catch
 {

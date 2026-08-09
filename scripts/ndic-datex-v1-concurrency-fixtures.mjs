@@ -125,7 +125,22 @@ export function simulatePendingReplacement(state, incoming) {
 }
 
 function assertNoLiveSideEffects(src) {
-  ok("no_test_dispatch", !/gh\s+workflow\s+run/.test(src), "dispatch");
+  // Explicit check/Pages dispatch belongs in ndic-post-write (CHMI mirror).
+  // Prep / shared-write / reconcile must never dispatch live workflows.
+  const prep = jobBlock(src, "ndic-prep");
+  const write = jobBlock(src, "ndic-shared-write");
+  const reconcile = jobBlock(src, "ndic-reconcile-data-pr");
+  const post = jobBlock(src, "ndic-post-write");
+  ok("no_test_dispatch_in_prep", !/gh\s+workflow\s+run/.test(prep), "prep");
+  ok("no_test_dispatch_in_shared_write", !/gh\s+workflow\s+run/.test(write), "write");
+  ok("no_test_dispatch_in_reconcile", !/gh\s+workflow\s+run/.test(reconcile), "reconcile");
+  ok(
+    "post_write_check_dispatch_allowed",
+    /gh\s+workflow\s+run\s+smoke\.yml/.test(post) &&
+      /gh\s+workflow\s+run\s+layout-guard\.yml/.test(post) &&
+      /gh\s+workflow\s+run\s+repo-guard\.yml/.test(post),
+    "post"
+  );
   ok("fixture_file_offline_only", !/IU_NDIC_PULL_URL:\s*https:/.test(src), "secrets");
 }
 
@@ -141,6 +156,11 @@ function main() {
 
   ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
   ok("ndic_write_shared", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
+  ok(
+    "ndic_reconcile_shared",
+    jobHasGroup(ndic, "ndic-reconcile-data-pr", PRODUCTION_ACTIVATION_GROUP),
+    "reconcile"
+  );
   ok("chmi_write_shared", jobHasGroup(chmi, "shared-write", PRODUCTION_ACTIVATION_GROUP), "chmi-write");
   ok("ie_write_shared", jobHasGroup(ie, "shared-write", PRODUCTION_ACTIVATION_GROUP), "ie-write");
 
@@ -150,8 +170,20 @@ function main() {
 
   // Incident 31250620970: queue:single pending replacement must not remain the product model.
   ok("ndic_queue_max", /queue:\s*max\b/.test(jobBlock(ndic, "ndic-shared-write")), "ndic-q");
+  ok(
+    "ndic_reconcile_queue_max",
+    /queue:\s*max\b/.test(jobBlock(ndic, "ndic-reconcile-data-pr")),
+    "ndic-reconcile-q"
+  );
   ok("chmi_queue_max", /queue:\s*max\b/.test(jobBlock(chmi, "shared-write")), "chmi-q");
   ok("ie_queue_max", /queue:\s*max\b/.test(jobBlock(ie, "shared-write")), "ie-q");
+  ok(
+    "ndic_post_write_outside_lock",
+    /ndic-post-write:/.test(ndic) &&
+      !/group:\s*info-events-data-writers/.test(jobBlock(ndic, "ndic-post-write")) &&
+      /pages\.yml/.test(jobBlock(ndic, "ndic-post-write")),
+    "ndic-pages"
+  );
 
   ok("mode_off_staging", resolveNdicConcurrencyGroup("off") === NDIC_STAGING_GROUP, "off");
   ok("mode_shadow_staging", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");

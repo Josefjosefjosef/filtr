@@ -34,6 +34,8 @@ export const NDIC_SCHEDULED_PREFLIGHT_JOB = "scheduled-preflight";
 export const GITHUB_HOSTED_ALLOWED_JOBS = Object.freeze([
   NDIC_SCHEDULE_GATE_JOB,
   NDIC_SCHEDULED_PREFLIGHT_JOB,
+  // Checks/auto-merge/Pages only — no NDIC secrets, no shared feed mutation.
+  "ndic-post-write",
   "resolve",
 ]);
 /** Conservative staggered cadence (no authoritative NDIC minimum interval documented). */
@@ -231,6 +233,23 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("write_has_shared_lock", /group:\s*info-events-data-writers/.test(write));
   check("write_has_reread_apply", /info-events-shared-writer-critical\.mjs\s+ndic/.test(write));
   check("write_cancel_false", /cancel-in-progress:\s*false/.test(write));
+
+  const reconcile = jobChunk(src, "ndic-reconcile-data-pr");
+  check("reconcile_job_present", Boolean(reconcile));
+  check("reconcile_czech_labels", czechLabelsPresent(reconcile));
+  check("reconcile_no_ubuntu_latest", !/ubuntu-latest/.test(reconcile));
+  check("reconcile_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(reconcile));
+  check("reconcile_no_prod_sync", !/ndic-datex-v1-prod-sync\.mjs/.test(reconcile));
+  check("reconcile_has_shared_lock", /group:\s*info-events-data-writers/.test(reconcile));
+  check("reconcile_bounded_script", /ndic-data-pr-reconcile-against-main\.mjs/.test(reconcile));
+  check("reconcile_identity_before_checkout", /Preflight runner identity/.test(reconcile));
+
+  const postWrite = jobChunk(src, "ndic-post-write");
+  check("post_write_job_present", Boolean(postWrite));
+  check("post_write_runs_ubuntu", /runs-on:\s*ubuntu-latest/.test(postWrite));
+  check("post_write_no_shared_lock", !/group:\s*info-events-data-writers/.test(postWrite));
+  check("post_write_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(postWrite));
+  check("post_write_dispatches_checks", /gh workflow run smoke\.yml/.test(postWrite));
   // Two-source model (ACTIVE run 31254863015): feature orch + main data, never same-workspace overwrite.
   check("write_feature_orch_path", /path:\s*ndic-orch\b/.test(write));
   check("write_main_data_path", /path:\s*ndic-main-data\b/.test(write) && /ref:\s*main\b/.test(write));

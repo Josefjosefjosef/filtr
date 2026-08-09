@@ -454,24 +454,48 @@ function main() {
       const sharedWrite = analysis.jobs.find((j) => j.name === "ndic-shared-write");
       const scheduleGate = analysis.jobs.find((j) => j.name === "schedule-gate");
       const scheduledPreflight = analysis.jobs.find((j) => j.name === "scheduled-preflight");
+      const reconcile = analysis.jobs.find((j) => j.name === "ndic-reconcile-data-pr");
+      const postWrite = analysis.jobs.find((j) => j.name === "ndic-post-write");
       // Two-phase staging: GitHub-hosted guards live in ndic-datex-v1-staging-preflight.yml.
-      // Network + shared-write must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
-      // Only the no-secret schedule gate / inline preflight jobs may be GitHub-hosted.
+      // Network + shared-write / reconcile must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
+      // Allowed GitHub-hosted: schedule gate, inline preflight, and post-write (checks/auto-merge only).
+      const githubHostedAllowed = new Set([
+        "schedule-gate",
+        "scheduled-preflight",
+        "ndic-post-write",
+      ]);
       ok("update_no_offline_guards_job", !offline, offline ? "present" : "ok");
       ok("update_has_network_job", Boolean(network), "missing");
       ok("update_has_shared_write_job", Boolean(sharedWrite), "missing");
+      ok("update_has_reconcile_job", Boolean(reconcile), "missing");
+      ok("update_has_post_write_job", Boolean(postWrite), "missing");
       ok("update_has_schedule_gate_job", Boolean(scheduleGate), "missing");
       ok("update_has_scheduled_preflight_job", Boolean(scheduledPreflight), "missing");
       ok(
         "update_ubuntu_only_on_schedule_jobs",
         analysis.jobs
           .filter((j) => j.isGithubHosted)
-          .every((j) => j.name === "schedule-gate" || j.name === "scheduled-preflight"),
+          .every((j) => githubHostedAllowed.has(j.name)),
         analysis.jobs
           .filter((j) => j.isGithubHosted)
           .map((j) => j.name)
           .join("+")
       );
+      if (reconcile) {
+        ok("update_reconcile_self_hosted", reconcile.isSelfHosted === true, "hosted");
+        ok("update_reconcile_no_secrets", !/secrets\.IU_NDIC_/.test(reconcile.body), "secrets");
+        ok("update_reconcile_no_sync", !/ndic-datex-v1-prod-sync/.test(reconcile.body), "sync");
+      }
+      if (postWrite) {
+        ok("update_post_write_github_hosted", postWrite.isGithubHosted === true, "hosted");
+        ok("update_post_write_no_secrets", !/secrets\.IU_NDIC_/.test(postWrite.body), "secrets");
+        ok("update_post_write_no_sync", !/ndic-datex-v1-prod-sync/.test(postWrite.body), "sync");
+        ok(
+          "update_post_write_no_shared_lock",
+          !/group:\s*info-events-data-writers/.test(postWrite.body),
+          "lock"
+        );
+      }
       if (scheduleGate) {
         ok("update_schedule_gate_no_secrets", !/secrets\.IU_NDIC_/.test(scheduleGate.body), "secrets");
         ok("update_schedule_gate_arming", /vars\.NDIC_AUTOMATION_ENABLED/.test(scheduleGate.body), "arming");

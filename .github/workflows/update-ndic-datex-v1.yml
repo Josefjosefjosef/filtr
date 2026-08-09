@@ -547,8 +547,332 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
           PR_TITLE: ${{ env.PR_TITLE }}
-          PR_BODY: "Automated NDIC DATEX v1 data refresh. Shared writer lock held only during critical RMW/commit after live re-read on Czech self-hosted runner."
+          PR_BODY: "Automated NDIC DATEX v1 data refresh. Shared writer lock held only during critical RMW/commit after live re-read on Czech self-hosted runner. Canonical Data PR is reconciled against latest main (CHMI/IE namespaces preserved) then checks are dispatched via workflow_dispatch (no manual action_required gate)."
           PR_BASE: main
         run: |
           set -euo pipefail
           node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
+
+  # Short critical section AFTER shared-write releases: if CHMI/IE advanced main,
+  # regenerate shared feed from latest main + this run's NDIC candidate (no ours/theirs).
+  # Holds info-events-data-writers only for reread/apply/commit/push — never for checks/wait.
+  ndic-reconcile-data-pr:
+    needs: ndic-shared-write
+    if: needs.ndic-shared-write.outputs.pushed == 'true'
+    # Shared-state mutation stays on Czech self-hosted (never GitHub-hosted shared write).
+    # Offline only: re-read main + apply already-built candidate (no DATEX/TMC/secrets).
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 10
+    concurrency:
+      group: info-events-data-writers
+      cancel-in-progress: false
+      queue: max
+    outputs:
+      refresh_count: ${{ steps.reconcile.outputs.refresh_count }}
+      pushed: ${{ steps.push.outputs.pushed }}
+    steps:
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ]; then
+            echo "REFUSING_UNEXPECTED_OS"
+            exit 1
+          fi
+          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_ARCH"
+            exit 1
+          fi
+          ws="${GITHUB_WORKSPACE:-}"
+          cwd="$(pwd)"
+          case "${ws}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          case "${cwd}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          umask 077
+          echo "RUNNER_PREFLIGHT_OK"
+          echo "NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO"
+          echo "NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO"
+          echo "NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO"
+
+      - name: Checkout feature HEAD orchestration code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ndic-orch
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - name: Checkout latest main shared-state worktree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: ndic-main-data
+          fetch-depth: 0
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Download NDIC candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: ndic-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate
+
+      - name: Bounded reconcile against current main
+        id: reconcile
+        env:
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
+          PR_TITLE: ${{ env.PR_TITLE }}
+        run: |
+          set -euo pipefail
+          git -C ndic-main-data config user.name "github-actions[bot]"
+          git -C ndic-main-data config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node ndic-orch/scripts/ndic-data-pr-reconcile-against-main.mjs \
+            --repo ndic-main-data \
+            --ndic-candidate "${RUNNER_TEMP}/ndic-ie-candidate" \
+            --branch "${{ env.AUTOMATION_BRANCH }}" \
+            --max 3 \
+            --commit-message "${{ env.PR_TITLE }}" \
+            | tee "$RUNNER_TEMP/ndic-reconcile.json"
+          REFRESH_COUNT="$(node -e 'const fs=require("fs"); const j=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(j.refreshCount||0));' "$RUNNER_TEMP/ndic-reconcile.json")"
+          echo "refresh_count=${REFRESH_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "REREAD_CURRENT_SHARED_STATE_BEFORE_FINAL_COMMIT=YES"
+          echo "DATA_PR_REFRESH_BOUNDED=YES"
+          echo "DATA_PR_REFRESH_MAX=3"
+          echo "UNBOUNDED_RETRY_POSSIBLE=NO"
+          echo "GIT_OURS_THEIRS_USED=NO"
+          echo "NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO"
+          echo "NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO"
+          echo "NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO"
+
+      - name: Push reconciled automation branch
+        id: push
+        working-directory: ndic-main-data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git push -u origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}" --force
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure canonical Data PR (no duplicate)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
+          PR_TITLE: ${{ env.PR_TITLE }}
+          PR_BODY: "Automated NDIC DATEX v1 data refresh. Canonical Data PR preserved across bounded shared-feed reconcile."
+          PR_BASE: main
+        run: |
+          set -euo pipefail
+          node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
+          echo "CANONICAL_DATA_PR_PRESERVED=YES"
+          echo "DUPLICATE_DATA_PR_CREATED=NO"
+
+  # Outside shared writer lock (mirrors CHMI post-write):
+  # workflow_dispatch required checks — avoids pull_request action_required gate for github-actions[bot].
+  ndic-post-write:
+    needs: ndic-reconcile-data-pr
+    if: needs.ndic-reconcile-data-pr.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # NO info-events-data-writers — checks/Pages must not hold the shared writer lock.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.AUTOMATION_BRANCH }}
+          fetch-depth: 0
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - name: Dispatch required checks (workflow_dispatch; not pull_request approval gate)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          # GITHUB_TOKEN pushes do not start push-triggered workflows; pull_request runs
+          # from github-actions[bot] can sit in action_required. Mirror CHMI: explicit dispatch.
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+          echo "MANUAL_WORKFLOW_APPROVAL_USED=NO"
+
+      - name: Resolve canonical Data PR number
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ env.AUTOMATION_BRANCH }}"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number -q '.[0].number' || echo "")
+          if [ -z "$EXISTING" ]; then
+            echo "CANONICAL_DATA_PR_MISSING"
+            exit 1
+          fi
+          echo "pr_number=$EXISTING" >> "$GITHUB_OUTPUT"
+          echo "[PR] Canonical Data PR #$EXISTING"
+          echo "AUTONOMOUS_DATA_PR_DUPLICATE_CREATED=NO"
+
+      - name: Diff scope check (data-only → allow auto-merge)
+        id: scope
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only main...HEAD)
+          echo "[SCOPE] Changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/info_events/*) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" = true ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] data-only — auto-merge allowed"
+          else
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            echo "[SCOPE] non-data / unsafe drift — auto-merge disabled (fail-closed)"
+            exit 1
+          fi
+
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for PR #$NUM"
+
+      - name: Wait for required checks (fail if missing/failing)
+        if: steps.scope.outputs.data_only == 'true'
+        id: wait_merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[WAIT] PR #$NUM sha=$SHA"
+          REQUIRED='repo-guard smoke layout-guard'
+          for i in $(seq 1 48); do
+            MERGED=$(gh pr view "$NUM" --json state -q .state)
+            if [ "$MERGED" = "MERGED" ]; then
+              echo "[WAIT] PR already merged"
+              echo "merged=true" >> "$GITHUB_OUTPUT"
+              echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            MS=$(gh pr view "$NUM" --json mergeStateStatus -q .mergeStateStatus)
+            if [ "$MS" = "DIRTY" ] || [ "$MS" = "dirty" ]; then
+              echo "[WAIT] PR became DIRTY during checks — fail-closed for this run (next schedule reconcile)"
+              echo "FAILED_PHASE=DATA_PR_CONFLICT_DURING_CHECKS"
+              exit 1
+            fi
+            ROLLUP=$(gh pr view "$NUM" --json mergeStateStatus,statusCheckRollup -q '{m:.mergeStateStatus,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
+            echo "[WAIT] attempt=$i $ROLLUP"
+            FAIL=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "failure" or ((.conclusion // "")|ascii_downcase) == "cancelled" or ((.conclusion // "")|ascii_downcase) == "error")] | length')
+            if [ "$FAIL" != "0" ]; then
+              echo "[WAIT] required check failed"
+              gh pr checks "$NUM" || true
+              exit 1
+            fi
+            HAVE=0
+            for ctx in $REQUIRED; do
+              HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase))] | length')
+              if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
+            done
+            if [ "$HAVE" -lt 3 ]; then
+              echo "[WAIT] required contexts starting ($HAVE/3) — sleeping"
+              sleep 15
+              continue
+            fi
+            PENDING=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or ((.conclusion // "")|ascii_downcase) == "in_progress" or ((.conclusion // "")|ascii_downcase) == "queued" or ((.conclusion // "")|ascii_downcase) == "waiting" or ((.conclusion // "")|ascii_downcase) == "action_required")] | length')
+            if [ "$PENDING" != "0" ]; then
+              # action_required on pull_request-triggered runs must not block us if
+              # workflow_dispatch checks (same names) are green — prefer dispatch conclusions.
+              AR=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "action_required")] | length')
+              NON_AR_PENDING=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) != "action_required") | select(((.conclusion // "")|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or ((.conclusion // "")|ascii_downcase) == "in_progress" or ((.conclusion // "")|ascii_downcase) == "queued" or ((.conclusion // "")|ascii_downcase) == "waiting")] | length')
+              if [ "$AR" != "0" ] && [ "$NON_AR_PENDING" = "0" ]; then
+                echo "[WAIT] ignoring stale pull_request action_required; dispatch checks ready"
+              else
+                sleep 15
+                continue
+              fi
+            fi
+            if [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; then
+              echo "[WAIT] checks ready (mergeState=$MS)"
+              for _try in $(seq 1 12); do
+                ST=$(gh pr view "$NUM" --json state -q .state)
+                if [ "$ST" = "MERGED" ]; then
+                  echo "[WAIT] auto-merge completed (try=$_try)"
+                  echo "merged=true" >> "$GITHUB_OUTPUT"
+                  echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+                  exit 0
+                fi
+                sleep 10
+              done
+              echo "[WAIT] checks green but PR not merged yet — leaving auto-merge enabled"
+              echo "merged=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "[WAIT] timeout waiting for checks"
+          gh pr checks "$NUM" || true
+          exit 1
+
+      - name: Dispatch Pages after successful data merge
+        if: steps.scope.outputs.data_only == 'true' && steps.wait_merge.outputs.merged == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "[PAGES] publish_dispatch_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run pages.yml --ref main --repo "${{ github.repository }}"
+          echo "[PAGES] Dispatched pages.yml on main after NDIC data merge"
+          gh workflow run pages-publish-from-main-data.yml --ref main --repo "${{ github.repository }}" || true

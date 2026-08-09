@@ -35,6 +35,7 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-data-pr-rest-runtime-fixtures",
   "iu-data-pr-anti-loop-fixtures",
   "iu-data-pr-anti-loop-meta-fixtures",
+  "iu-ndic-data-pr-bounded-refresh-fixtures",
   "iu-data-pr-base-freshness-guard",
   "iu-info-events-narrow-shared-lock-fixtures",
   "iu-info-events-shared-writer-starvation-fixtures",

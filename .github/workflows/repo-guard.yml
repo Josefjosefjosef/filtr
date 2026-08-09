@@ -11,6 +11,7 @@ on:
       - automation/update-articles-data
       - automation/update-articles-fast-pool
       - automation/update-chmi-cap-v2
+      - automation/update-ndic-datex-v1
       - "fix/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
