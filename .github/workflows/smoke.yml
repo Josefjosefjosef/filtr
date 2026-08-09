@@ -15,6 +15,7 @@ on:
       - automation/update-articles-fast-pool
       - automation/update-info-panel-snapshot
       - automation/update-chmi-cap-v2
+      - automation/update-ndic-datex-v1
       # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
       - "fix/**"
   workflow_dispatch:

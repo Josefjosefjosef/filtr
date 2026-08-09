@@ -25,11 +25,20 @@ const NDIC_WF = path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.ym
 const CHMI_WF = path.join(ROOT, ".github", "workflows", "update-chmi-cap-v2.yml");
 const IE_WF = path.join(ROOT, ".github", "workflows", "update-info-events.yml");
 const STAGE = path.join(ROOT, "scripts", "ndic-stage-shared-write-outputs.mjs");
+const BOUNDED = path.join(ROOT, "scripts", "ndic-data-pr-bounded-refresh.mjs");
+const BOUNDED_FIX = path.join(ROOT, "scripts", "ndic-data-pr-bounded-refresh-fixtures.mjs");
+const RECONCILE = path.join(ROOT, "scripts", "ndic-data-pr-reconcile-against-main.mjs");
+const SMOKE_WF = path.join(ROOT, ".github", "workflows", "smoke.yml");
+const REPO_WF = path.join(ROOT, ".github", "workflows", "repo-guard.yml");
+const LAYOUT_WF = path.join(ROOT, ".github", "workflows", "layout-guard.yml");
 
 ok("file_protocol", fs.existsSync(PROTO));
 ok("file_guard", fs.existsSync(GUARD));
 ok("file_safe_refresh", fs.existsSync(SAFE));
 ok("file_fixtures", fs.existsSync(FIX));
+ok("file_bounded_refresh", fs.existsSync(BOUNDED));
+ok("file_bounded_fixtures", fs.existsSync(BOUNDED_FIX));
+ok("file_reconcile", fs.existsSync(RECONCILE));
 
 const proto = fs.readFileSync(PROTO, "utf8");
 const guard = fs.readFileSync(GUARD, "utf8");
@@ -92,8 +101,69 @@ ok(
   /ndic-shared-write:[\s\S]*?group:\s*info-events-data-writers/.test(ndicWf)
 );
 ok(
+  "wf_reconcile_has_narrow_lock",
+  /ndic-reconcile-data-pr:[\s\S]*?group:\s*info-events-data-writers/.test(ndicWf)
+);
+ok(
+  "wf_post_write_no_shared_lock",
+  /ndic-post-write:[\s\S]*?NO info-events-data-writers/.test(ndicWf)
+);
+ok(
+  "wf_post_write_dispatches_checks",
+  /ndic-post-write:[\s\S]*?gh workflow run smoke\.yml/.test(ndicWf) &&
+    /ndic-post-write:[\s\S]*?gh workflow run layout-guard\.yml/.test(ndicWf) &&
+    /ndic-post-write:[\s\S]*?gh workflow run repo-guard\.yml/.test(ndicWf)
+);
+ok(
+  "wf_post_write_auto_merge",
+  /ndic-post-write:[\s\S]*?gh pr merge .*--auto --squash/.test(ndicWf)
+);
+ok(
+  "wf_reconcile_uses_bounded_script",
+  /ndic-data-pr-reconcile-against-main\.mjs/.test(ndicWf)
+);
+ok(
+  "wf_reconcile_self_hosted_shared_write",
+  /ndic-reconcile-data-pr:[\s\S]*?runs-on:\s*\n\s*-\s*self-hosted\s*\n\s*-\s*Linux\s*\n\s*-\s*X64\s*\n\s*-\s*ndic-cz-egress/.test(
+    ndicWf
+  ) && /NDIC_SHARED_WRITE_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf)
+);
+ok(
+  "wf_reconcile_no_secrets_network",
+  /NDIC_NETWORK_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf) &&
+    /NDIC_SECRET_JOB_ON_GITHUB_HOSTED=NO/.test(ndicWf) &&
+    !/ndic-reconcile-data-pr:[\s\S]*?NDIC_.*PASSWORD|ndic-reconcile-data-pr:[\s\S]*?mobilitydata\.rsd\.cz/.test(
+      ndicWf
+    )
+);
+ok(
   "stage_optional_binding",
   /data_pr_finalization_binding\.json/.test(stage)
+);
+
+const smokeWf = fs.readFileSync(SMOKE_WF, "utf8");
+const repoWf = fs.readFileSync(REPO_WF, "utf8");
+const layoutWf = fs.readFileSync(LAYOUT_WF, "utf8");
+ok(
+  "allowlist_smoke_ndic_branch",
+  /automation\/update-ndic-datex-v1/.test(smokeWf)
+);
+ok(
+  "allowlist_repo_guard_ndic_branch",
+  /automation\/update-ndic-datex-v1/.test(repoWf)
+);
+ok(
+  "allowlist_layout_guard_ndic_branch",
+  /automation\/update-ndic-datex-v1/.test(layoutWf)
+);
+ok(
+  "pkg_bounded_refresh_fixtures",
+  Boolean(pkg.scripts && pkg.scripts["iu-ndic-data-pr-bounded-refresh-fixtures"])
+);
+ok("suite_wires_bounded_refresh", /iu-ndic-data-pr-bounded-refresh-fixtures/.test(suite));
+ok(
+  "bounded_refresh_max_3",
+  /DATA_PR_REFRESH_MAX\s*=\s*3/.test(fs.readFileSync(BOUNDED, "utf8"))
 );
 
 // Mutations: removing protocol pieces must be detectable
