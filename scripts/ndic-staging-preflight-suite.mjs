@@ -19,6 +19,9 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-self-hosted-runner-contract-guard",
   "iu-ndic-github-hosted-access-fixtures",
   "iu-ndic-disk-preflight-fixtures",
+  // Armed automatic schedule contract (arming gate, inline preflight, duplicate guard)
+  "iu-ndic-automatic-schedule-fixtures",
+  "iu-ndic-automatic-schedule-meta-fixtures",
   // POINTS semantic-null / importer gates (fail-closed on feature refs)
   "iu-ndic-tmc-points-empty-field-policy-fixtures",
   "iu-ndic-tmc-basic-importer-fixtures",

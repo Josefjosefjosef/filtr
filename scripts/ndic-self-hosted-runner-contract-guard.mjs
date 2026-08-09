@@ -452,12 +452,48 @@ function main() {
       const offline = analysis.jobs.find((j) => j.name === "offline-guards");
       const network = analysis.jobs.find((j) => j.name === "ndic-prep");
       const sharedWrite = analysis.jobs.find((j) => j.name === "ndic-shared-write");
+      const scheduleGate = analysis.jobs.find((j) => j.name === "schedule-gate");
+      const scheduledPreflight = analysis.jobs.find((j) => j.name === "scheduled-preflight");
       // Two-phase staging: GitHub-hosted guards live in ndic-datex-v1-staging-preflight.yml.
       // Network + shared-write must NOT use ubuntu-latest (incident 31118898675 + writer isolation).
+      // Only the no-secret schedule gate / inline preflight jobs may be GitHub-hosted.
       ok("update_no_offline_guards_job", !offline, offline ? "present" : "ok");
       ok("update_has_network_job", Boolean(network), "missing");
       ok("update_has_shared_write_job", Boolean(sharedWrite), "missing");
-      ok("update_no_ubuntu_latest", !/ubuntu-latest/.test(analysis.src), "ubuntu");
+      ok("update_has_schedule_gate_job", Boolean(scheduleGate), "missing");
+      ok("update_has_scheduled_preflight_job", Boolean(scheduledPreflight), "missing");
+      ok(
+        "update_ubuntu_only_on_schedule_jobs",
+        analysis.jobs
+          .filter((j) => j.isGithubHosted)
+          .every((j) => j.name === "schedule-gate" || j.name === "scheduled-preflight"),
+        analysis.jobs
+          .filter((j) => j.isGithubHosted)
+          .map((j) => j.name)
+          .join("+")
+      );
+      if (scheduleGate) {
+        ok("update_schedule_gate_no_secrets", !/secrets\.IU_NDIC_/.test(scheduleGate.body), "secrets");
+        ok("update_schedule_gate_arming", /vars\.NDIC_AUTOMATION_ENABLED/.test(scheduleGate.body), "arming");
+        ok("update_schedule_gate_inflight", /ndic-schedule-arming\.mjs/.test(scheduleGate.body), "inflight");
+      }
+      if (scheduledPreflight) {
+        ok(
+          "update_scheduled_preflight_no_secrets",
+          !/secrets\.IU_NDIC_/.test(scheduledPreflight.body),
+          "secrets"
+        );
+        ok(
+          "update_scheduled_preflight_no_sync",
+          !/ndic-datex-v1-prod-sync/.test(scheduledPreflight.body),
+          "sync"
+        );
+        ok(
+          "update_scheduled_preflight_publishes",
+          /ndic-publish-preflight-attestation\.mjs/.test(scheduledPreflight.body),
+          "publish"
+        );
+      }
       ok("update_node_24", /node-version:\s*["']?24["']?/.test(analysis.src), "node24");
       ok("update_no_node_20", !/node-version:\s*["']?20["']?/.test(analysis.src), "node20");
       ok("update_setup_node_v7", /actions\/setup-node@820762786026740c76f36085b0efc47a31fe5020/.test(analysis.src), "setup");

@@ -662,9 +662,29 @@ async function discoveryChecks() {
   ok("shadow_wf_wipe_always", /Wipe temp workdir[\s\S]*if:\s*always\(\)|if:\s*always\(\)[\s\S]*Wipe temp workdir/.test(shadowWf), "wipe-always");
   ok("shadow_wf_artifact_json_only", /shadow-report\.json/.test(shadowWf) && !/\.(xml|zip|csv)\s*$/m.test(shadowWf.split("path:")[1] || ""), "art-json");
   const updateWf = fs.readFileSync(path.join(__dirname, "..", ".github", "workflows", "update-ndic-datex-v1.yml"), "utf8");
-  ok("update_wf_no_schedule", !/schedule:/.test(updateWf), "update-no-cron");
+  // Automatic schedule is allowed only under the armed + inline-preflight contract.
+  ok(
+    "update_wf_safe_schedule_contract",
+    /\n {2}schedule:\s*\n/.test(updateWf) &&
+      /-\s*cron:\s*"7,22,37,52 \* \* \* \*"/.test(updateWf) &&
+      /vars\.NDIC_AUTOMATION_ENABLED/.test(updateWf) &&
+      /ndic-schedule-arming\.mjs/.test(updateWf) &&
+      /ndic-publish-preflight-attestation\.mjs/.test(updateWf) &&
+      /ndic-verify-preflight-attestation\.mjs/.test(updateWf),
+    "update-safe-schedule"
+  );
+  ok(
+    "update_wf_schedule_default_disarmed",
+    !/NDIC_AUTOMATION_ENABLED:\s*['"]?true/.test(updateWf),
+    "update-armed-in-wf"
+  );
+  ok("update_wf_manual_break_glass", /workflow_dispatch:/.test(updateWf), "update-dispatch");
   ok("update_wf_default_off", /default:\s*off/.test(updateWf), "update-default-off");
-  ok("update_wf_commit_active_only", /mode == 'active'/.test(updateWf), "commit-active-only");
+  ok(
+    "update_wf_commit_active_only",
+    /needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(updateWf),
+    "commit-active-only"
+  );
   ok(
     "update_wf_data_pr_portable_no_gh_cli",
     /ndic-open-or-refresh-data-pr\.mjs/.test(updateWf) && !/gh pr create/.test(updateWf),

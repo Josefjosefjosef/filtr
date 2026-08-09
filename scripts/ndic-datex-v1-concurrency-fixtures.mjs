@@ -18,6 +18,35 @@ const IE_WF = path.join(ROOT, ".github", "workflows", "update-info-events.yml");
 
 export const NDIC_STAGING_GROUP = "ndic-datex-v1-internal-staging";
 export const PRODUCTION_ACTIVATION_GROUP = "info-events-data-writers";
+/** NDIC-only serialisation of the single network job (never the shared CHMI/IE writer lock). */
+export const NDIC_ORCHESTRATION_GROUP = NDIC_STAGING_GROUP;
+
+/**
+ * Safe automatic schedule contract for the NDIC network workflow.
+ * Schedule is permitted only with arming variable + inline preflight + duplicate guard.
+ */
+export function assertSafeScheduleContract(src) {
+  const s = String(src || "");
+  const localFails = [];
+  const check = (id, cond) => {
+    if (!cond) localFails.push(id);
+  };
+  check("has_schedule_trigger", /\n {2}schedule:\s*\n/.test(s) && /-\s*cron:\s*"/.test(s));
+  check("has_workflow_dispatch", /workflow_dispatch\s*:/.test(s));
+  check("arming_variable_required", /vars\.NDIC_AUTOMATION_ENABLED/.test(s));
+  check("inline_preflight_job", /\n\s{2}scheduled-preflight:\s*\n/.test(s));
+  check("inline_preflight_publishes", /ndic-publish-preflight-attestation\.mjs/.test(s));
+  check("schedule_gate_job", /\n\s{2}schedule-gate:\s*\n/.test(s));
+  check("duplicate_inflight_guard", /ndic-schedule-arming\.mjs/.test(s));
+  check(
+    "ndic_orchestration_group",
+    new RegExp(`group:\\s*${NDIC_ORCHESTRATION_GROUP}\\s*\\n\\s+cancel-in-progress:\\s*false`).test(s)
+  );
+  check("no_workflow_level_shared_lock", !workflowLevelHasSharedLock(s));
+  check("no_whole_run_lock", !/^concurrency:\s*$/m.test(s.split(/\njobs:\s*\n/)[0] || ""));
+  check("prep_verifies_attestation", /ndic-verify-preflight-attestation\.mjs/.test(s));
+  return { ok: localFails.length === 0, fails: localFails };
+}
 
 const fails = [];
 let passCount = 0;
@@ -150,9 +179,18 @@ function main() {
     );
   }
 
-  ok("ndic_dispatch_only", /workflow_dispatch\s*:/.test(ndic) && !/^\s*schedule\s*:/m.test(ndic), "sched");
+  // SAFE SCHEDULE CONTRACT (replaces the former dispatch-only assertion):
+  // schedule is allowed, but only behind the arming variable + inline preflight,
+  // and duplicate runs are serialised by an NDIC-only orchestration group.
+  ok("ndic_safe_schedule_contract", assertSafeScheduleContract(ndic).ok, assertSafeScheduleContract(ndic).fails.join("|"));
+  ok("ndic_manual_break_glass_kept", /workflow_dispatch\s*:/.test(ndic), "dispatch");
   ok("ndic_default_off", /default:\s*off\b/.test(ndic), "def");
-  ok("ndic_commit_active_only", /ndic-shared-write:/.test(ndic) && /mode == 'active'/.test(ndic), "commit");
+  ok(
+    "ndic_commit_active_only",
+    /ndic-shared-write:/.test(ndic) &&
+      /needs\.ndic-prep\.outputs\.resolved_mode == 'active'/.test(ndic),
+    "commit"
+  );
   ok("ndic_apply_reread", /info-events-shared-writer-critical\.mjs ndic/.test(ndic), "reread");
   ok("chmi_pages_outside_lock", /post-write:/.test(chmi) && /pages\.yml/.test(jobBlock(chmi, "post-write")), "pages");
 
