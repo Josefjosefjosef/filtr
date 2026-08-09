@@ -40,7 +40,22 @@ if (fs.existsSync(ndicPath)) {
   ok("ndic_shadow_isolated_group", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("ndic_active_shared_group", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
   ok("ndic_write_not_ubuntu", !/ndic-shared-write:[\s\S]*?runs-on:\s*ubuntu-latest/.test(ndic), "ubuntu");
-  ok("ndic_no_ubuntu_latest_job", !/^\s*runs-on:\s*ubuntu-latest\s*$/m.test(ndic), "ubuntuJob");
+  // Schedule arming/preflight may use ubuntu-latest; network + shared-write must not.
+  ok(
+    "ndic_prep_not_ubuntu",
+    /ndic-prep:[\s\S]*?runs-on:\n\s+- self-hosted/.test(ndic) &&
+      !/ndic-prep:[\s\S]*?runs-on:\s*ubuntu-latest/.test(ndic),
+    "prepUbuntu"
+  );
+  const ubuntuJobs = [...ndic.matchAll(/(?:^|\n) {2}([A-Za-z0-9_-]+):\n(?: {4}.*\n)*? {4}runs-on:\s*ubuntu-latest/g)].map(
+    (m) => m[1]
+  );
+  const allowedUbuntu = new Set(["schedule-gate", "scheduled-preflight"]);
+  ok(
+    "ndic_ubuntu_only_schedule_jobs",
+    ubuntuJobs.length > 0 && ubuntuJobs.every((n) => allowedUbuntu.has(n)),
+    ubuntuJobs.join(",") || "none"
+  );
 }
 
 if (fails.length) {
