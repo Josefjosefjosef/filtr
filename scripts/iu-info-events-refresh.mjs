@@ -59,7 +59,10 @@ import {
 } from "./iu-info-events-legal-registry-lib.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DIR = path.join(REPO, "projects", "data", "info_events");
+/** Optional prep sandbox for deferred shared-write (narrow lock). */
+const DIR = process.env.IU_INFO_EVENTS_DATA_DIR
+  ? path.resolve(process.env.IU_INFO_EVENTS_DATA_DIR)
+  : path.join(REPO, "projects", "data", "info_events");
 
 const MAX_ITEMS = Number(process.env.IU_INFO_EVENTS_MAX_ITEMS || "300");
 const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "96");

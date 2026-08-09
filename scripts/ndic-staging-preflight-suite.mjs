@@ -19,6 +19,28 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-self-hosted-runner-contract-guard",
   "iu-ndic-github-hosted-access-fixtures",
   "iu-ndic-disk-preflight-fixtures",
+  // POINTS semantic-null / importer gates (fail-closed on feature refs)
+  "iu-ndic-tmc-points-empty-field-policy-fixtures",
+  "iu-ndic-tmc-basic-importer-fixtures",
+  "iu-ndic-shadow-forensic-retention-fixtures",
+  "iu-ndic-location-forensic-probe-fixtures",
+  "iu-ndic-openlr-fixtures",
+  "iu-ndic-remaining-location-gap-fixtures",
+  "iu-ndic-location-presentation-policy-fixtures",
+  "iu-ndic-traffic-publication-fixtures",
+  "iu-ndic-traffic-ui-snapshot-persist-fixtures",
+  "iu-ndic-data-pr-rest-runtime-fixtures",
+  "iu-data-pr-anti-loop-fixtures",
+  "iu-data-pr-anti-loop-meta-fixtures",
+  "iu-data-pr-base-freshness-guard",
+  "iu-info-events-narrow-shared-lock-fixtures",
+  "iu-info-events-shared-writer-starvation-fixtures",
+  "iu-info-events-shared-writer-starvation-meta-fixtures",
+  "iu-ndic-shared-write-main-checkout-fixtures",
+  "iu-ndic-shared-write-main-checkout-meta-fixtures",
+  "iu-ndic-active-commit-staging-fixtures",
+  "iu-ndic-active-commit-staging-meta-fixtures",
+  "iu-traffic-overview-ui-fixtures",
 ];
 
 const present = REQUIRED_WHEN_ANY_PRODUCT.filter((s) => Boolean(scripts[s]));

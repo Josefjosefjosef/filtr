@@ -150,8 +150,12 @@ async function testUnifiedFormUi(page, vp) {
       localStorage.setItem(key, JSON.stringify(payload));
     } catch (_) {}
   }, { key: STORE_KEY, payload: seedPayload });
-  await page.goto(BASE, { waitUntil: "networkidle", timeout: 90000 });
-  await page.waitForFunction(() => typeof window.iuNotesService?.openOverlay === "function", null, { timeout: 30000 });
+  // Notes overlay does not need info-system cutover; keep feed.json hydrate off on CI.
+  const url = BASE.includes("?")
+    ? BASE + "&iuInfoSystem=off&nosw=1"
+    : BASE + "?iuInfoSystem=off&nosw=1";
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.waitForFunction(() => typeof window.iuNotesService?.openOverlay === "function", null, { timeout: 60000 });
   await page.evaluate(() => {
     if (window.iuNotesService && typeof window.iuNotesService.openOverlay === "function") {
       window.iuNotesService.openOverlay();

@@ -6,13 +6,15 @@ name: Update NDIC DATEX v1
 # TWO-PHASE STAGING (fail-closed):
 #   1) NDIC staging preflight (ubuntu-latest, no secrets, no NDIC network)
 #      -> publishes HEAD-bound short-lived attestation
-#   2) This workflow (network-only on self-hosted+Linux+X64+ndic-cz-egress)
+#   2) This workflow network prep on self-hosted+Linux+X64+ndic-cz-egress
 #      -> requires valid preflight attestation for exact github.sha
 #      -> operator starts VPS runner ONLY after preflight PASS
 #
-# This workflow intentionally has NO ubuntu-latest job so authorized staging
-# no longer depends on GitHub-hosted runner queue / timeout-minutes while the
-# VPS egress runner is online.
+# NARROW SHARED WRITER LOCK (active only):
+# - Network/parse/build candidate on VPS WITHOUT info-events-data-writers.
+# - Critical RMW/commit on the same Czech self-hosted runner UNDER info-events-data-writers
+#   with live re-read (NO ubuntu-latest / GitHub-hosted shared write).
+# - Data PR is immediate after commit (no Pages/required-check waits inside the lock).
 
 on:
   workflow_dispatch:
@@ -32,12 +34,8 @@ on:
         type: string
         default: ""
 
-# Staging (off|shadow) MUST NOT share the CHMI/info-events pending slot.
-# GitHub still cancels prior pending runs in a group even when cancel-in-progress is false.
-# Active mode alone joins the shared production writer lock (same feed/monitoring targets).
-concurrency:
-  group: ${{ inputs.mode == 'active' && 'info-events-data-writers' || 'ndic-datex-v1-internal-staging' }}
-  cancel-in-progress: false
+# Intentionally NO workflow-level info-events-data-writers.
+# Prep uses staging group; active shared-write job uses production writer group.
 
 permissions:
   contents: write
@@ -50,7 +48,7 @@ env:
   PR_TITLE: "chore(data): refresh NDIC DATEX v1 snapshot"
 
 jobs:
-  ndic-network-sync:
+  ndic-prep:
     if: >
       github.event_name == 'workflow_dispatch'
       && github.repository == 'Josefjosefjosef/filtr'
@@ -61,6 +59,12 @@ jobs:
       - X64
       - ndic-cz-egress
     timeout-minutes: 20
+    concurrency:
+      group: ndic-datex-v1-internal-staging
+      cancel-in-progress: false
+    outputs:
+      candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
+      sync_ok: ${{ steps.sync.outputs.sync_ok }}
     steps:
       # MUST stay first: no checkout, no secrets, no network before identity PASS.
       - name: Preflight runner identity (fail-closed)
@@ -139,7 +143,7 @@ jobs:
           set -euo pipefail
           node scripts/ndic-verify-preflight-attestation.mjs
 
-      - name: Sync NDIC DATEX v1
+      - name: Sync NDIC DATEX v1 (prep sandbox; no shared writer lock)
         id: sync
         env:
           IU_NDIC_DATEX_V1_MODE: ${{ github.event.inputs.mode }}
@@ -152,47 +156,242 @@ jobs:
           IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
           IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
           IU_NDIC_SHADOW_ISOLATED: ${{ github.event.inputs.mode == 'shadow' && '1' || '0' }}
+          IU_NDIC_FORENSIC_DIR: ${{ runner.temp }}/ndic-shadow-forensic
+          IU_NDIC_FORENSIC_HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           umask 077
+          if [ "${{ github.event.inputs.mode }}" = "active" ]; then
+            CAND="${RUNNER_TEMP}/ndic-ie-candidate"
+            rm -rf "$CAND"
+            mkdir -p "$CAND"
+            cp -a projects/data/info_events/. "$CAND/"
+            export IU_INFO_EVENTS_DATA_DIR="$CAND"
+          fi
+          set +e
           node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
+          code=${PIPESTATUS[0]}
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "sync_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "sync_ok=false" >> "$GITHUB_OUTPUT"
+            exit "$code"
+          fi
 
-      - name: Commit data if changed (active publish only)
+      - name: Upload redacted shadow forensic artifacts
+        if: ${{ always() && github.event.inputs.mode == 'shadow' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-shadow-forensic-${{ github.run_id }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-forensic-summary.json
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-card-preview.json
+            ${{ runner.temp }}/ndic-shadow-forensic/ndic-shadow-validation-report.json
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+
+      - name: Pack active candidate
+        id: pack
+        if: github.event.inputs.mode == 'active' && steps.sync.outputs.sync_ok == 'true'
+        run: |
+          set -euo pipefail
+          test -d "${RUNNER_TEMP}/ndic-ie-candidate"
+          # REQUIRED snapshot must be inside candidate before upload (ACTIVE 31257122613).
+          node scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
+          echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload NDIC candidate
+        if: github.event.inputs.mode == 'active' && steps.pack.outputs.candidate_ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+
+  ndic-shared-write:
+    needs: ndic-prep
+    if: >
+      github.event.inputs.mode == 'active'
+      && needs.ndic-prep.outputs.candidate_ready == 'true'
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 15
+    concurrency:
+      group: info-events-data-writers
+      cancel-in-progress: false
+      # FIFO queue (up to 100). Default single-pending slot cancels a waiting writer when
+      # another request arrives (incident ACTIVE run 31250620970 / NDIC shared-write).
+      queue: max
+    outputs:
+      pushed: ${{ steps.commit_push.outputs.pushed }}
+    steps:
+      # MUST stay first: no checkout before identity PASS (fail-closed on GitHub-hosted).
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then
+            echo "REFUSING_GITHUB_HOSTED"
+            exit 1
+          fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then
+            echo "REFUSING_UNEXPECTED_RUNNER_NAME"
+            exit 1
+          fi
+          if [ "${RUNNER_OS:-}" != "Linux" ]; then
+            echo "REFUSING_UNEXPECTED_OS"
+            exit 1
+          fi
+          if [ "${RUNNER_ARCH:-}" != "X64" ]; then
+            echo "REFUSING_UNEXPECTED_ARCH"
+            exit 1
+          fi
+          ws="${GITHUB_WORKSPACE:-}"
+          cwd="$(pwd)"
+          case "${ws}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          case "${cwd}" in
+            /home/runner|/home/runner/*)
+              echo "REFUSING_GITHUB_HOSTED_PATH"
+              exit 1
+              ;;
+          esac
+          if [ "$(id -u)" -eq 0 ]; then
+            echo "REFUSING_ROOT_RUNNER"
+            exit 1
+          fi
+          umask 077
+          echo "RUNNER_PREFLIGHT_OK"
+
+      # TWO-SOURCE MODEL (incident ACTIVE run 31254863015):
+      # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD â€” helper scripts from workflow SHA
+      # B) SHARED_STATE_SOURCE=LATEST_MAIN â€” live info_events RMW/commit worktree
+      # Never overwrite feature helpers by checking out main into the same workspace.
+      - name: Checkout feature HEAD orchestration code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ndic-orch
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: false
+
+      - name: Checkout latest main shared-state worktree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: ndic-main-data
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Refresh main tip before shared write (reread after acquire)
+        run: |
+          set -euo pipefail
+          test -f ndic-orch/scripts/info-events-shared-writer-critical.mjs
+          test -f ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs
+          git -C ndic-main-data fetch origin main
+          git -C ndic-main-data checkout -B "${{ env.AUTOMATION_BRANCH }}" origin/main
+          echo "ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD"
+          echo "SHARED_STATE_SOURCE=LATEST_MAIN"
+          echo "FEATURE_HELPER_AVAILABLE_DURING_MAIN_REREAD=YES"
+
+      - name: Download NDIC candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: ndic-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-ie-candidate
+
+      - name: Assert downloaded candidate REQUIRED outputs
+        run: |
+          set -euo pipefail
+          node ndic-orch/scripts/ndic-assert-candidate-required-outputs.mjs "${RUNNER_TEMP}/ndic-ie-candidate"
+
+      - name: Apply NDIC candidate (re-read live shared state)
+        run: |
+          set -euo pipefail
+          node ndic-orch/scripts/info-events-shared-writer-critical.mjs ndic \
+            "${RUNNER_TEMP}/ndic-ie-candidate" \
+            "ndic-main-data/projects/data/info_events"
+
+      # DATA_PR_FINALIZATION_PROTOCOL: bind DATA_PR_HEAD × BASE_MAIN_HEAD × SHARED_STATE_DIGEST
+      # (semantic namespace digests; merge-ready ≠ HEAD checks alone). Short critical section only.
+      - name: Record data PR finalization binding
+        run: |
+          set -euo pipefail
+          BASE_MAIN_SHA="$(git -C ndic-main-data rev-parse HEAD)"
+          export BASE_MAIN_SHA
+          export WRITER_RUN_ID="${GITHUB_RUN_ID}"
+          export GENERATED_BY_WRITER=ndic
+          node ndic-orch/scripts/iu-data-pr-finalization-protocol.mjs record-binding ndic-main-data
+          echo "DATA_PR_FINALIZATION_BINDING_RECORDED=YES"
+          echo "WHOLE_WORKFLOW_SHARED_LOCK=NO"
+          echo "NETWORK_PREP_INSIDE_SHARED_LOCK=NO"
+          echo "LONG_RUNNING_TESTS_INSIDE_SHARED_LOCK=NO"
+
+      - name: Commit data if changed
         id: commit_push
-        if: github.event.inputs.mode == 'active'
+        working-directory: ndic-main-data
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add projects/data/info_events/feed.json \
-                  projects/data/info_events/lanes/doprava.json \
-                  projects/data/info_events/monitoring.json \
-                  projects/data/info_events/ndic_datex_v1/sync_state.json \
-                  projects/data/info_events/ndic_datex_v1/diagnostics.json \
-                  projects/data/info_events/ndic_datex_v1/tmc_meta.json \
-                  2>/dev/null || true
-          if git diff --cached --quiet; then
+          # Per-path staging + REQUIRED fail-closed (no all-or-nothing git add || true).
+          set +e
+          stage_out="$(node ../ndic-orch/scripts/ndic-stage-shared-write-outputs.mjs --repo .)"
+          stage_code=$?
+          set -e
+          echo "$stage_out"
+          if [ "$stage_code" -eq 2 ]; then
+            echo "REQUIRED_OUTPUT_MISSING_FAIL_CLOSED"
+            exit 2
+          fi
+          if [ "$stage_code" -ne 0 ]; then
+            echo "STAGE_FAILED"
+            exit "$stage_code"
+          fi
+          if echo "$stage_out" | grep -q '"result":"NO_CHANGES"'; then
             echo "NO_CHANGES"
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          BRANCH="${{ env.AUTOMATION_BRANCH }}"
-          git checkout -B "$BRANCH"
+          if ! echo "$stage_out" | grep -q '"result":"STAGED"'; then
+            echo "UNEXPECTED_STAGE_RESULT"
+            exit 1
+          fi
           git commit -m "${{ env.PR_TITLE }}"
-          git push -u origin "$BRANCH" --force
+          git push -u origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}" --force
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Open or refresh data PR
-        if: github.event.inputs.mode == 'active' && steps.commit_push.outputs.pushed == 'true'
+        if: steps.commit_push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AUTOMATION_BRANCH: ${{ env.AUTOMATION_BRANCH }}
+          PR_TITLE: ${{ env.PR_TITLE }}
+          PR_BODY: "Automated NDIC DATEX v1 data refresh. Shared writer lock held only during critical RMW/commit after live re-read on Czech self-hosted runner."
+          PR_BASE: main
         run: |
           set -euo pipefail
-          BRANCH="${{ env.AUTOMATION_BRANCH }}"
-          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
-            echo "PR exists"
-          else
-            gh pr create --base main --head "$BRANCH" --title "${{ env.PR_TITLE }}" --body "Automated NDIC DATEX v1 data refresh."
-          fi
+          node ndic-orch/scripts/ndic-open-or-refresh-data-pr.mjs

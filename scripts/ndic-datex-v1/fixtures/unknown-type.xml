@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d2LogicalModel xmlns="http://datex2.eu/schema/2/2_0" modelBaseVersion="2">
+  <payloadPublication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SituationPublication" lang="cs">
+    <publicationTime>2026-07-01T08:00:00+02:00</publicationTime>
+    <situation id="CZ-NDIC-FIX-UNK-009" version="1">
+      <situationRecord xsi:type="CompletelyNewFutureRecordType" id="CZ-NDIC-FIX-UNK-009-R1" version="1">
+        <situationRecordCreationTime>2026-07-01T08:00:00+02:00</situationRecordCreationTime>
+        <situationRecordVersionTime>2026-07-01T08:00:00+02:00</situationRecordVersionTime>
+        <validity>
+          <validityStatus>active</validityStatus>
+          <validityTimeSpecification>
+            <overallStartTime>2026-07-01T08:00:00+02:00</overallStartTime>
+          </validityTimeSpecification>
+        </validity>
+        <groupOfLocations></groupOfLocations>
+      </situationRecord>
+    </situation>
+  </payloadPublication>
+</d2LogicalModel>

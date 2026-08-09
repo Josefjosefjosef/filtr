@@ -77,6 +77,18 @@ async function prepareNotesSeed(page, mainCount, trashCount) {
   }, { key: STORE_KEY, pl: payload });
 }
 
+async function installHeavyInfoEventsStubs(page) {
+  /* Variant B: avoid multi‑MB feed.json main-thread stalls during Notes UX checks. */
+  const heavy = await import("./smoke-heavy-data-stubs.mjs");
+  const stats = await heavy.installSmokeHeavyDataRouteStubs(page);
+  if (!stats.feedSchema.ok || !stats.trafficSchema.ok) {
+    throw new Error(
+      "NOTES_V2_HEAVY_STUB_SCHEMA_INVALID:" +
+        JSON.stringify({ feed: stats.feedSchema.fails, traffic: stats.trafficSchema.fails })
+    );
+  }
+}
+
 async function loadNotesPage(page, mainCount) {
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForTimeout(mainCount >= 150 ? 3500 : 2200);
@@ -346,7 +358,21 @@ async function runEmptyTrashScope(page) {
     return !!(text && /trvale odstranit všechny poznámky v koši/i.test(String(text.textContent || "")));
   }, null, { timeout: 6000 }).catch(() => {});
   await page.locator("[data-iu-notes-confirm-yes]").click({ timeout: 5000 }).catch(() => {});
-  await page.waitForTimeout(500);
+  await page
+    .waitForFunction(
+      ({ key }) => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(key) || "{}");
+          const list = parsed.notes || [];
+          return list.filter((n) => !!n.deleted).length === 0;
+        } catch (_) {
+          return false;
+        }
+      },
+      { key: STORE_KEY },
+      { timeout: 10000 }
+    )
+    .catch(() => {});
   const scope = await page.evaluate(({ key, mainBeforeVal }) => {
     try {
       const parsed = JSON.parse(localStorage.getItem(key) || "{}");
@@ -370,7 +396,7 @@ async function runEmptyTrashScope(page) {
 
 async function runGuard() {
   const browser = await chromium.launch({ headless: true });
-  const ctx = await browser.newContext();
+  const ctx = await browser.newContext({ serviceWorkers: "block" });
   await ctx.addInitScript(() => {
     try {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
@@ -387,6 +413,7 @@ async function runGuard() {
       const page = await ctx.newPage();
       attachPageErrors(page, errState);
       await installProofGuardNetworkStubs(page);
+      await installHeavyInfoEventsStubs(page);
       createIgnorableResourceTracker().attachToPage(page);
       results.push(await runViewportChecks(page, VIEWPORTS[v], count));
       await page.close();
@@ -396,6 +423,7 @@ async function runGuard() {
   const scopePage = await ctx.newPage();
   attachPageErrors(scopePage, errState);
   await installProofGuardNetworkStubs(scopePage);
+  await installHeavyInfoEventsStubs(scopePage);
   createIgnorableResourceTracker().attachToPage(scopePage);
   const emptyTrashScope = await runEmptyTrashScope(scopePage);
   await scopePage.close();

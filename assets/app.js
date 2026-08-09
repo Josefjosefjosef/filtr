@@ -10426,9 +10426,9 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof window.iuArticleActionsEnsureDesktopButton === "function") {
         const prevRefresh = refresh;
-        refresh = function () {
+        refresh = function (opts) {
           try {
-            prevRefresh();
+            prevRefresh(opts);
           } catch (_) {}
           try {
             iuArticleActionsEnsureDesktopButton();

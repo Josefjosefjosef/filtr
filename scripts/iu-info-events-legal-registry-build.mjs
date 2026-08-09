@@ -31,6 +31,12 @@ const ATTR = {
     template:
       "Data: {institution} — {datasetLabel} ({licenseLabel}). Licence: {licenseUrl}. Zdroj: {sourceUrl}. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
   },
+  ndic: {
+    id: "attr-ndic-v1",
+    display: "item+sources-page",
+    template:
+      "Zdroj: NDIC. Zdrojem digitalizovaných informací o silničním provozu je NDIC. InfoUzel.cz je samostatná informační služba; nejde o partnerství ani oficiální službu ŘSD/NDIC. Surový feed a TMC tabulka nejsou veřejně redistribuovány.",
+  },
   media_pending: {
     id: "attr-media-pending-v1",
     display: "sources-page",
@@ -125,6 +131,113 @@ function baseRights(extra) {
     },
     extra || {}
   );
+}
+
+/**
+ * NDIC / ŘSD MobilityData — Contract and Free of charge (DATEX II + TMC LTN 25).
+ * Approved for InfoUzel.cz display; raw feed / full TMC redistribution forbidden.
+ * Do not store approval e-mails or signed PDFs in the repository.
+ */
+function ndicApproved(src) {
+  return baseRights({
+    status: "APPROVED_WITH_SPECIFIC_CONDITIONS",
+    licenseLabel: "Contract and Free of charge (NDIC / MobilityData)",
+    licenseUrl: "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/",
+    termsUrl: "https://mobilitydata.rsd.cz/",
+    catalogUrl: "https://registr.dopravniinfo.cz/cs/providers/cz-ndic/",
+    distributionUrl: "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/",
+    documentationUrl: "https://registr.dopravniinfo.cz/cs/protocols/cz-ndic_pull-v1.1/",
+    contact: "https://mobilitydata.rsd.cz/",
+    format: "DATEX II v2.3 SituationPublication + TMC location table (TISA 2.6)",
+    fetchMethod: "https-pull-basic-auth",
+    datasetId: "cz-ndic_d2-common-pull",
+    distributionId: "cz-ndic_pull-v1.1",
+    datasetLabel: "DATEX II — Běžné dopravní informace (snímek) + TMC lokační tabulka CC2/LTN25",
+    commercialUseAllowed: true,
+    adSupportedUseAllowed: true,
+    sponsoredContentContextAllowed: true,
+    affiliateContextAllowed: false,
+    automationAllowed: true,
+    storageAllowed: true,
+    cacheAllowed: true,
+    // Licence: no standalone redistribution of raw NDIC/TMC datasets
+    redistributionAllowed: false,
+    publicDisplayAllowed: true,
+    modificationAllowed: true,
+    normalizationAllowed: true,
+    metadataEnrichmentAllowed: true,
+    combinationAllowed: true,
+    aggregationAllowed: true,
+    derivativesAllowed: true,
+    crossSourceDisplayAllowed: true,
+    databaseCreationAllowed: true,
+    derivedDatabaseAllowed: true,
+    shareAlike: false,
+    odblOrShareAlikeRisk: false,
+    copyrightStatus: "contract-free-of-charge-ndic",
+    databaseRightsStatus: "covered-by-ndic-subscription-terms",
+    extractionAllowed: true,
+    reuseAllowed: true,
+    systematicExtractionAllowed: false,
+    archiveAllowed: true,
+    copyrightCleared: "yes-contract-ndic",
+    databaseRightsCleared: "yes-per-ndic-terms",
+    thirdPartyContentRisk: "low-official-traffic-fields",
+    personalDataRisk: "low-no-personal-fields-in-allowlist",
+    fieldAllowlist: LINK_ONLY_FIELDS.concat([
+      "summary",
+      "status",
+      "lifecycle",
+      "validFrom",
+      "validTo",
+      "roadNumber",
+      "direction",
+      "attribution",
+      "badge",
+    ]),
+    attributionTemplateId: "attr-ndic-v1",
+    productionSourceActive: true,
+    evidence: [
+      {
+        url: "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/",
+        kind: "national-traffic-registry-source",
+        checkedAt: NOW,
+        note: "Oficiální registr: DATEX II běžné dopravní informace, licence Contract and Free of charge",
+      },
+      {
+        url: "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_tmc-location-table-v11.0/",
+        kind: "national-traffic-registry-tmc",
+        checkedAt: NOW,
+        note: "TMC lokační tabulka (TABCD/LTN 25) — interní lokalizace, zákaz veřejné redistribuce tabulky",
+      },
+      {
+        url: "https://registr.dopravniinfo.cz/cs/protocols/cz-ndic_pull-v1.1/",
+        kind: "protocol-spec",
+        checkedAt: NOW,
+        note: "HTTP PULL v1.1 + Basic Auth + If-Modified-Since/ETag",
+      },
+      {
+        url: "https://mobilitydata.rsd.cz/",
+        kind: "subscription-portal",
+        checkedAt: NOW,
+        note: "MobilityData registr odběrů ŘSD/NDIC",
+      },
+    ],
+    conditionsEvidenceUrl: "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/",
+    specificConditions: [
+      "Povinná veřejná atribuce u každé dopravní položky: „Zdroj: NDIC“ (kde vhodné i plná formulace o digitalizovaných informacích NDIC).",
+      "Zákaz dojmu partnerství/garance ŘSD nebo NDIC vůči službě InfoUzel.cz.",
+      "Zákaz veřejné redistribuce surového DATEX/NDIC feedu a kompletní TMC lokační tabulky; data jen jako součást služby InfoUzel.",
+      "TMC tabulka (kód země 2, číslo tabulky 25) pouze interní lokalizace na serveru.",
+      "Kill switch IU_NDIC_DATEX_V1_MODE musí umožnit bezpečné vypnutí publikace bez mazání historie.",
+    ],
+    rationale:
+      "Schválený odběr digitalizovaných dopravních informací NDIC a TMC LTN 25 pro lokalizaci a zobrazení ve službě InfoUzel.cz (MobilityData). Licence Contract and Free of charge dle národního registru; redistribuce raw datasetu zakázána specifickými podmínkami.",
+    legalNotes:
+      "Nepublikovat přístupové údaje MobilityData. Nepřikládat schvalovací e-maily ani podepsané smlouvy do repozitáře ani do veřejné aplikace.",
+    technicalLimits: "HTTP PULL Basic Auth; conditional GET; sync interval konfigurovatelný (default 5 min).",
+    updatePeriodicityMin: 5,
+  });
 }
 
 /** ČHMÚ open data — CC BY 4.0 (documented on chmi.cz FAQ + opendata portal). */
@@ -335,7 +448,11 @@ const AUDIT = {
   svs: (s) => unclearLicense(s),
   szpi: (s) => unclearLicense(s),
   szu: (s) => unclearLicense(s),
-  rsd: (s) => unclearLicense(s, "ŘSD/dopravní info — chybí doložená open licence konkrétní RSS/API distribuce."),
+  rsd: (s) =>
+    unclearLicense(
+      s,
+      "ŘSD HTML web není schválený strojový kanál; dopravní data jdou přes NDIC DATEX II (zdroj ndic)."
+    ),
   szdc: (s) => unclearLicense(s),
   vlada: (s) => unclearLicense(s),
   avcr: (s) => unclearLicense(s),
@@ -347,7 +464,7 @@ const AUDIT = {
   "kraj-zlinsky": (s) => unclearLicense(s),
   ct24: (s) => reviewPublicMedia(s),
   irozhlas: (s) => reviewPublicMedia(s),
-  ndic: (s) => techReview(s, "NDIC konektor — nejdřív technický přístup, poté licence distribuce."),
+  ndic: (s) => ndicApproved(s),
   esbirka: (s) => techReview(s),
   "registr-smluv": (s) =>
     baseRights({

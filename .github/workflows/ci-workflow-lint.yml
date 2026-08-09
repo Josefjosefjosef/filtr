@@ -1,4 +1,4 @@
-name: CI - Workflow Lint
+﻿name: CI - Workflow Lint
 
 on:
   workflow_dispatch:
@@ -53,4 +53,5 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          actionlint -color
+          actionlint -color -ignore 'unexpected key "queue" for "concurrency" section'
+

@@ -95,3 +95,8 @@ node_modules/
 
 # CHMI CAP v2: local shadow-run audit dumps (written to %TEMP%; ignore if recreated under fixtures)
 scripts/fixtures/chmi-cap-v2/_shadow_out/*.json
+
+# NDIC DATEX v1: full TMC table + raw pull cache (licence — never publish / commit)
+.cache/ndic-datex-v1/
+projects/data/info_events/ndic_datex_v1/tmc_store.json
+projects/data/info_events/ndic_datex_v1/raw/

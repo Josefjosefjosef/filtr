@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const PORT = 8765 + Math.floor(Math.random() * 200);
 const BASE = "http://127.0.0.1:" + PORT + "/projects/";
-const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 
 const fails = [];
 function ok(id, cond, detail) {

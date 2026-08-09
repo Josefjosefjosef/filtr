@@ -118,11 +118,163 @@ async function fetchJson(url) {
   return res.json();
 }
 
+/** Shared worker for multi‑MB JSON parse (feed.json). Reused; requests keyed by requestId. */
+let _iuJsonParseWorker = null;
+let _iuJsonParseWorkerBroken = false;
+let _iuFeedLoadInflight = null;
+let _iuFeedLoadToken = 0;
+
+function iuJsonParseWorkerUrl() {
+  try {
+    return new URL("/assets/iu-json-parse-worker-v1.js", location.origin).href;
+  } catch (_) {
+    return "/assets/iu-json-parse-worker-v1.js";
+  }
+}
+
+function getIuJsonParseWorker() {
+  if (_iuJsonParseWorkerBroken) return null;
+  if (_iuJsonParseWorker) return _iuJsonParseWorker;
+  if (typeof Worker === "undefined") return null;
+  try {
+    _iuJsonParseWorker = new Worker(iuJsonParseWorkerUrl());
+    _iuJsonParseWorker.addEventListener("error", () => {
+      _iuJsonParseWorkerBroken = true;
+      try {
+        _iuJsonParseWorker.terminate();
+      } catch (_) {}
+      _iuJsonParseWorker = null;
+    });
+    return _iuJsonParseWorker;
+  } catch (_) {
+    _iuJsonParseWorkerBroken = true;
+    return null;
+  }
+}
+
+function stripFeedItemsBySourceId(data, omitSourceIds) {
+  if (!data || typeof data !== "object") return data;
+  const omit = Array.isArray(omitSourceIds) ? omitSourceIds.map(String) : [];
+  if (!omit.length || !Array.isArray(data.items)) return data;
+  const drop = new Set(omit);
+  const kept = [];
+  for (let i = 0; i < data.items.length; i++) {
+    const it = data.items[i];
+    const sid = String((it && it.sourceId) || "");
+    if (drop.has(sid)) continue;
+    kept.push(it);
+  }
+  data.items = kept;
+  data.itemCount = kept.length;
+  data.omittedSourceIds = omit.slice();
+  return data;
+}
+
+/**
+ * Fetch + JSON.parse off the UI thread when Worker is available.
+ * Always strips omitSourceIds before the result reaches callers (worker or sync fallback).
+ * Sync fallback still parses on main thread — only used if Worker cannot start.
+ */
+function postToIuJsonParseWorker(payload, signal) {
+  const worker = getIuJsonParseWorker();
+  if (!worker) return Promise.reject(new Error("worker_unavailable"));
+  const requestId = "iu-json-" + String(++_iuFeedLoadToken) + "-" + String(Date.now());
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let onAbort = null;
+    const cleanup = () => {
+      try {
+        worker.removeEventListener("message", onMsg);
+      } catch (_) {}
+      try {
+        worker.removeEventListener("error", onErr);
+      } catch (_) {}
+      if (signal && onAbort) {
+        try {
+          signal.removeEventListener("abort", onAbort);
+        } catch (_) {}
+      }
+    };
+    const finish = (fn, val) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      fn(val);
+    };
+    const onMsg = (ev) => {
+      const m = (ev && ev.data) || {};
+      if (String(m.requestId || "") !== requestId) return;
+      if (m.ok) finish(resolve, m.data);
+      else finish(reject, new Error(String(m.error || "worker_parse_failed")));
+    };
+    const onErr = () => {
+      _iuJsonParseWorkerBroken = true;
+      finish(reject, new Error("worker_runtime_error"));
+    };
+    onAbort = () => finish(reject, new DOMException("Aborted", "AbortError"));
+    if (signal) {
+      if (signal.aborted) {
+        onAbort();
+        return;
+      }
+      signal.addEventListener("abort", onAbort, { once: true });
+    }
+    worker.addEventListener("message", onMsg);
+    worker.addEventListener("error", onErr);
+    try {
+      worker.postMessage(Object.assign({}, payload, { requestId }));
+    } catch (err) {
+      finish(reject, err instanceof Error ? err : new Error(String(err)));
+    }
+  });
+}
+
+function fetchJsonFilteredOffMainThread(url, omitSourceIds, signal) {
+  const omit = Array.isArray(omitSourceIds) ? omitSourceIds.map(String) : [];
+  return postToIuJsonParseWorker(
+    {
+      type: "fetchJsonFilter",
+      url: String(url),
+      omitSourceIds: omit,
+    },
+    signal
+  ).catch((err) => {
+    if (err && err.name === "AbortError") throw err;
+    // Never JSON.parse multi‑MB feed.json on the UI thread as a Worker fallback.
+    // Fail-closed empty feed keeps boot interactive; UI shows no untrusted partial data.
+    if (omit.length > 0) {
+      return {
+        items: [],
+        itemCount: 0,
+        omittedSourceIds: omit.slice(),
+        parsedOffMainThread: false,
+        workerFallbackFailClosed: true,
+        error: String((err && err.message) || err || "worker_unavailable"),
+      };
+    }
+    return fetchJson(url).then((data) => stripFeedItemsBySourceId(data, omit));
+  });
+}
+
+/** Traffic snapshot: parse off-main, transfer only capped cards (no history dump). */
+function fetchTrafficSnapshotSlimOffMainThread(url, maxCards, signal) {
+  const cap = Number(maxCards) > 0 ? Math.floor(Number(maxCards)) : 120;
+  return postToIuJsonParseWorker(
+    {
+      type: "fetchTrafficSnapshotSlim",
+      url: String(url),
+      maxCards: cap,
+    },
+    signal
+  );
+}
+
 function eventSortAt(ev) {
   return ev && (ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt || "");
 }
 
-async function loadInfoSystemData(opts) {
+/** Small JSON only — safe to await before first interactive settings paint. */
+async function loadInfoSystemShellData(opts) {
   const o = opts || {};
   let manifest = null;
   let metadata = null;
@@ -136,21 +288,42 @@ async function loadInfoSystemData(opts) {
   } catch (_) {
     metadata = null;
   }
+  const settled = await Promise.all([
+    fetchJson(iuInfoDataUrl("taxonomy.json")).catch(() => null),
+    fetchJson(iuInfoDataUrl("source_registry.json")).catch(() => null),
+  ]);
+  return {
+    taxonomy: settled[0],
+    registry: settled[1],
+    metadata,
+    manifest,
+    feed: { items: [], itemCount: 0, shellOnly: true },
+    loadedAt: new Date().toISOString(),
+    feedLoad: {
+      omittedSourceIds: [],
+      trafficPrimarySource: "traffic_offline_snapshot",
+      parsedOffMainThread: false,
+      shellOnly: true,
+    },
+  };
+}
 
+async function loadInfoSystemFeedOnly(opts) {
+  const o = opts || {};
   const laneIds = Array.isArray(o.lanes) ? o.lanes.map(String) : [];
+  const manifest = o.manifest || null;
   const wantLanesOnly = laneIds.length > 0 && manifest;
-
-  const jobs = [
-    fetchJson(iuInfoDataUrl("taxonomy.json")),
-    fetchJson(iuInfoDataUrl("source_registry.json")),
-  ];
-  if (!wantLanesOnly) jobs.push(fetchJson(iuInfoDataUrl("feed.json")));
-
-  const settled = await Promise.all(jobs);
-  const taxonomy = settled[0];
-  const registry = settled[1];
-  let feed = wantLanesOnly ? { items: [], itemCount: 0 } : settled[2];
-
+  /**
+   * feed.json is ~22MB because it embeds the full NDIC catalog (thousands of items).
+   * Traffic UI already uses traffic_offline_snapshot.json as the public-safe source.
+   * Omit ndic from the shared feed load so boot never main-thread-parses multi‑MB NDIC JSON.
+   */
+  const omitFeedSourceIds =
+    o.omitFeedSourceIds != null
+      ? Array.isArray(o.omitFeedSourceIds)
+        ? o.omitFeedSourceIds.map(String)
+        : []
+      : ["ndic"];
   if (wantLanesOnly) {
     const parts = await Promise.all(
       laneIds.map((id) => fetchJson(iuInfoDataUrl(`lanes/${id}.json`)).catch(() => null))
@@ -159,16 +332,50 @@ async function loadInfoSystemData(opts) {
     for (const part of parts) {
       if (part && Array.isArray(part.items)) laneItems.push(...part.items);
     }
-    feed = Object.assign({}, feed, { items: laneItems, itemCount: laneItems.length, fromLanes: laneIds });
+    return {
+      items: laneItems,
+      itemCount: laneItems.length,
+      fromLanes: laneIds,
+      omittedSourceIds: [],
+      parsedOffMainThread: false,
+    };
   }
+  const feedUrl = iuInfoDataUrl("feed.json");
+  const feedKey = feedUrl + "|" + omitFeedSourceIds.slice().sort().join(",");
+  if (!_iuFeedLoadInflight || _iuFeedLoadInflight.key !== feedKey) {
+    const p = fetchJsonFilteredOffMainThread(feedUrl, omitFeedSourceIds, o.signal || null).finally(() => {
+      if (_iuFeedLoadInflight && _iuFeedLoadInflight.key === feedKey) _iuFeedLoadInflight = null;
+    });
+    _iuFeedLoadInflight = { key: feedKey, promise: p };
+  }
+  const feed = await _iuFeedLoadInflight.promise;
+  return feed;
+}
 
+async function loadInfoSystemData(opts) {
+  const o = opts || {};
+  if (o.shellOnly === true) return loadInfoSystemShellData(o);
+  const shell = await loadInfoSystemShellData(o);
+  if (o.skipFeed === true) return shell;
+  const feed = await loadInfoSystemFeedOnly({
+    signal: o.signal,
+    omitFeedSourceIds: o.omitFeedSourceIds,
+    lanes: o.lanes,
+    manifest: shell.manifest,
+  });
   return {
-    taxonomy,
-    registry,
-    metadata,
-    manifest,
+    taxonomy: shell.taxonomy,
+    registry: shell.registry,
+    metadata: shell.metadata,
+    manifest: shell.manifest,
     feed,
     loadedAt: new Date().toISOString(),
+    feedLoad: {
+      omittedSourceIds: (feed && feed.omittedSourceIds) || (Array.isArray(o.omitFeedSourceIds) ? o.omitFeedSourceIds : ["ndic"]),
+      trafficPrimarySource: "traffic_offline_snapshot",
+      parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
+      shellOnly: false,
+    },
   };
 }
 
@@ -252,6 +459,16 @@ function sanitizeUserPrefs(raw) {
   merged.localityQuery = String(merged.localityQuery || "");
   const cities = merged.localities.filter((loc) => loc && String(loc.level || "") === "mesto");
   if (cities.length) merged.homeObec = String(cities[0].name || merged.homeObec || "");
+  // Strip legacy parallel traffic prefs (final integration: shared settings only).
+  delete merged.trafficSpatialMode;
+  delete merged.trafficTemporalFilter;
+  delete merged.trafficTypeFilter;
+  delete merged.trafficMySelection;
+  delete merged.trafficMyRoutes;
+  delete merged.trafficNearHashes;
+  delete merged.trafficCustomFrom;
+  delete merged.trafficCustomTo;
+  delete merged.trafficOfflineAware;
   return merged;
 }
 
@@ -2342,6 +2559,10 @@ const IUInfoSystem = {
   isParallelMode,
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
+  fetchJsonFilteredOffMainThread,
+  fetchTrafficSnapshotSlimOffMainThread,
   filterEvents,
   buildFeedIndex,
   dedupeCluster,
@@ -2424,6 +2645,10 @@ export {
   isParallelMode,
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
+  fetchJsonFilteredOffMainThread,
+  fetchTrafficSnapshotSlimOffMainThread,
   filterEvents,
   buildFeedIndex,
   dedupeCluster,

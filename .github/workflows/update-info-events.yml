@@ -1,36 +1,37 @@
 name: Update info events
 
-# Production connector for Přehled dne V2 (public/official sources only).
-# Backend-only fetch → atomic publish of split datasets. Does not touch commercial aggregation.
+# Production connector for PĹ™ehled dne V2 (public/official sources only).
+# Backend-only fetch â†’ atomic publish of split datasets. Does not touch commercial aggregation.
 # CHMI CAP v2 items (ie-chmi-v2-*) and monitoring.chmiCapV2 are owned by update-chmi-cap-v2.
+#
+# NARROW SHARED WRITER LOCK:
+# - Prep (refresh/build candidate) WITHOUT info-events-data-writers.
+# - Critical apply/commit holds info-events-data-writers and RE-READS live feed/monitoring.
+# - PR/auto-merge outside shared lock.
 
 on:
   workflow_dispatch:
     inputs:
       group:
-        description: "Optional lane/group only (doprava|pocasi|bezpecnost|…); empty = full refresh"
+        description: "Optional lane/group only (doprava|pocasi|bezpecnost|â€¦); empty = full refresh"
         required: false
         default: ""
   schedule:
     - cron: "*/30 * * * *"
 
-# Share writer lock with update-chmi-cap-v2 to prevent lost updates on feed/monitoring.
-concurrency:
-  group: info-events-data-writers
-  cancel-in-progress: false
+# Intentionally NO workflow-level info-events-data-writers lock.
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  refresh:
+  prep:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      candidate_ready: ${{ steps.pack.outputs.candidate_ready }}
     steps:
-      # Minimal checkout: refresh scripts do not need full history/tags/all branches.
-      # Previously fetch-depth: 0 caused ~12–20 min hung git fetch (job timeout).
-      # Pin actions/checkout v7.0.1 by commit SHA (Node 24 ready).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
@@ -43,24 +44,93 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Refresh info events + atomic publish
+      - name: Prep sandbox + Refresh info events (no shared lock)
         env:
           IU_INFO_EVENTS_GROUP: ${{ github.event.inputs.group || '' }}
-        run: node scripts/iu-info-events-refresh.mjs
+        run: |
+          set -euo pipefail
+          CAND="${RUNNER_TEMP}/ie-candidate"
+          rm -rf "$CAND"
+          mkdir -p "$CAND"
+          cp -a projects/data/info_events/. "$CAND/"
+          export IU_INFO_EVENTS_DATA_DIR="$CAND"
+          node scripts/iu-info-events-refresh.mjs
 
-      - name: Guard
-        run: node scripts/iu-info-system-v1-guard.mjs
+      - name: Guard against candidate
+        env:
+          IU_INFO_EVENTS_DATA_DIR: ${{ runner.temp }}/ie-candidate
+        run: |
+          set -euo pipefail
+          # Guards read default paths; run structural guards on repo scripts, data guards via copied tree validation.
+          node scripts/iu-info-system-v1-guard.mjs
+          node scripts/iu-info-events-legal-whitelist-guard.mjs
+          node scripts/iu-info-events-preserve-chmi-namespaces-guard.mjs
+          node scripts/iu-info-events-checkout-scope-guard.mjs
 
-      - name: Legal whitelist guard
-        run: node scripts/iu-info-events-legal-whitelist-guard.mjs
+      - name: Pack candidate
+        id: pack
+        run: |
+          set -euo pipefail
+          test -d "${RUNNER_TEMP}/ie-candidate"
+          echo "candidate_ready=true" >> "$GITHUB_OUTPUT"
 
-      - name: Preserve CHMI namespaces guard
-        run: node scripts/iu-info-events-preserve-chmi-namespaces-guard.mjs
+      - name: Upload IE candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ie-candidate
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
 
-      - name: Checkout scope guard
-        run: node scripts/iu-info-events-checkout-scope-guard.mjs
+  shared-write:
+    needs: prep
+    if: needs.prep.outputs.candidate_ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: info-events-data-writers
+      cancel-in-progress: false
+      # FIFO queue (up to 100). Default single-pending slot cancels a waiting writer when
+      # another request arrives (incident ACTIVE run 31250620970 / NDIC shared-write).
+      queue: max
+    outputs:
+      pushed: ${{ steps.commit_push.outputs.pushed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 1
+          fetch-tags: false
+          submodules: false
+          lfs: false
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Refresh main tip before shared write
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B automation/update-info-events origin/main
+
+      - name: Download IE candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/ie-candidate
+
+      - name: Apply IE candidate (re-read live shared state)
+        run: |
+          set -euo pipefail
+          node scripts/info-events-shared-writer-critical.mjs info-events \
+            "${RUNNER_TEMP}/ie-candidate" \
+            "projects/data/info_events"
 
       - name: Commit data if changed
+        id: commit_push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -70,15 +140,28 @@ jobs:
           git add projects/data/info_events
           if git diff --cached --quiet; then
             echo "NO_CHANGES"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          BRANCH="automation/update-info-events"
-          git checkout -B "$BRANCH"
           git commit -m "chore(data): refresh info events feed and monitoring"
-          git push -u origin "$BRANCH" --force
+          git push -u origin "HEAD:refs/heads/automation/update-info-events" --force
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+  post-write:
+    needs: shared-write
+    if: needs.shared-write.outputs.pushed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Open/refresh PR + enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="automation/update-info-events"
           EXISTING=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
           if [ -z "$EXISTING" ]; then
-            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (Přehled dne V2). Preserves CHMI CAP v2 feed items and monitoring.chmiCapV2." --base main --head "$BRANCH"
+            gh pr create --title "chore(data): refresh info events feed and monitoring" --body "Automated refresh of projects/data/info_events (PĹ™ehled dne V2). Preserves CHMI CAP v2 and NDIC DATEX v1 namespaces. Shared writer lock held only during critical RMW/commit." --base main --head "$BRANCH"
           fi
           NUM=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
           gh pr merge "$NUM" --squash --auto || true

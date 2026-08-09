@@ -170,6 +170,19 @@ async function readCls(page) {
 
 async function runViewport(page, w, h) {
   await installProofGuardNetworkStubs(page);
+  /* Variant B extension: stub multi‑MB info_events feed + traffic snapshot so
+     Silver layout interactions are not blocked by synchronous JSON.parse. */
+  const heavyStubs = await import("./smoke-heavy-data-stubs.mjs");
+  const heavyStats = await heavyStubs.installSmokeHeavyDataRouteStubs(page);
+  if (!heavyStats.feedSchema.ok || !heavyStats.trafficSchema.ok) {
+    throw new Error(
+      "SILVER_LAYOUT_HEAVY_STUB_SCHEMA_INVALID:" +
+        JSON.stringify({
+          feed: heavyStats.feedSchema.fails,
+          traffic: heavyStats.trafficSchema.fails,
+        })
+    );
+  }
   const ignorableTracker = createIgnorableResourceTracker();
   ignorableTracker.attachToPage(page);
   await page.setViewportSize({ width: w, height: h });
@@ -301,7 +314,8 @@ async function runViewport(page, w, h) {
   let tasksOk = false;
   let notesOk = false;
   try {
-    await page.locator("#iuHeroQuickCal").scrollIntoViewIfNeeded();
+    /* Force-click only: scrollIntoViewIfNeeded stalls when Chromium main thread is
+       busy (multi‑MB feed.json parse). Stubs + force keep the calendar contract. */
     await page.click("#iuHeroQuickCal", { timeout: 15000, force: true });
     await page.waitForTimeout(600);
     calendarFlowOk = await page.evaluate(() => {
@@ -332,7 +346,6 @@ async function runViewport(page, w, h) {
     calendarFlowOk = false;
   }
   try {
-    await page.locator("#iuHeroQuickTasks").scrollIntoViewIfNeeded();
     await page.click("#iuHeroQuickTasks", { timeout: 15000, force: true });
     await page.waitForTimeout(350);
     tasksOk = true;
@@ -340,7 +353,6 @@ async function runViewport(page, w, h) {
     tasksOk = false;
   }
   try {
-    await page.locator("#iuHeroQuickNotes").scrollIntoViewIfNeeded();
     await page.click("#iuHeroQuickNotes", { timeout: 15000, force: true });
     await page.waitForTimeout(350);
     notesOk = true;

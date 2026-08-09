@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * Synthetic NDIC two-phase staging architecture fixtures (offline).
- * Proves ubuntu queue is removed from authorized network staging run.
+ * Proves:
+ * - network prep + shared write stay on Czech self-hosted (no ubuntu queue)
+ * - GitHub-hosted never receives IU_NDIC secrets / NDIC network / NDIC shared write
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -19,6 +21,11 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const NET_WF = path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml");
 const PF_WF = path.join(ROOT, ".github", "workflows", "ndic-datex-v1-staging-preflight.yml");
+
+/** Canonical NDIC network/prep job name after narrow shared-writer split. */
+export const NDIC_NETWORK_JOB = "ndic-prep";
+/** Canonical NDIC critical shared-write job name. */
+export const NDIC_SHARED_WRITE_JOB = "ndic-shared-write";
 
 const fails = [];
 let passCount = 0;
@@ -51,6 +58,15 @@ export function jobChunk(src, name) {
   return m ? m[1] : "";
 }
 
+function czechLabelsPresent(chunk) {
+  return (
+    /self-hosted/.test(chunk) &&
+    /Linux/.test(chunk) &&
+    /X64/.test(chunk) &&
+    /ndic-cz-egress/.test(chunk)
+  );
+}
+
 export function assertNetworkWorkflowArchitecture(src) {
   const c = stripComments(src);
   const localFails = [];
@@ -63,21 +79,89 @@ export function assertNetworkWorkflowArchitecture(src) {
   check("net_no_schedule_trigger", !/^schedule:/m.test(c));
   check("net_no_workflow_run_trigger", !/^workflow_run:/m.test(c));
   check("net_no_offline_guards_job", !hasJob(src, "offline-guards"));
-  check("net_has_network_job", hasJob(src, "ndic-network-sync"));
+  check("net_has_network_job", hasJob(src, NDIC_NETWORK_JOB));
+  check("net_has_shared_write_job", hasJob(src, NDIC_SHARED_WRITE_JOB));
+  // Whole update workflow must stay off ubuntu-latest (incident 31118898675 + shared-write isolation).
   check("net_no_ubuntu_latest", !/ubuntu-latest/.test(c));
   check("net_no_needs_offline_guards", !/needs:\s*offline-guards/.test(c));
   check("net_no_continue_on_error", !/continue-on-error:\s*true/.test(c));
+  check("net_no_workflow_level_shared_lock", !/^concurrency:\s*\n\s+group:\s*info-events-data-writers/m.test(c));
 
-  const net = jobChunk(src, "ndic-network-sync");
+  const net = jobChunk(src, NDIC_NETWORK_JOB);
   check("net_job_present_chunk", Boolean(net));
   check("net_runs_on_self_hosted", /self-hosted/.test(net));
   check("net_runs_on_linux", /Linux/.test(net));
   check("net_runs_on_x64", /X64/.test(net));
   check("net_runs_on_ndic_cz_egress", /ndic-cz-egress/.test(net));
+  check("net_czech_labels", czechLabelsPresent(net));
   check("net_verify_preflight_step", /ndic-verify-preflight-attestation\.mjs/.test(net));
   check("net_identity_before_checkout", /Preflight runner identity/.test(net));
   check("net_secrets_present_on_network_only", /secrets\.IU_NDIC_PULL_URL/.test(net));
-  check("net_no_always_bypass", !/if:\s*always\(\)/.test(net));
+  check("net_has_prod_sync", /ndic-datex-v1-prod-sync\.mjs/.test(net));
+  check("net_staging_concurrency", /group:\s*ndic-datex-v1-internal-staging/.test(net));
+  check("net_no_production_shared_lock", !/group:\s*info-events-data-writers/.test(net));
+  // Job-level if: always() is forbidden; forensic upload may use always()&&shadow only.
+  const beforeUpload = net.split("Upload redacted shadow forensic artifacts")[0] || net;
+  check("net_no_job_level_always_bypass", !/if:\s*always\(\)/.test(beforeUpload) && !/if:\s*\$\{\{\s*always\(\)\s*\}\}/.test(beforeUpload));
+  check("net_shadow_forensic_dir_env", /IU_NDIC_FORENSIC_DIR/.test(net));
+  check("net_shadow_forensic_artifact_upload", /ndic-shadow-forensic-summary\.json/.test(net));
+  check("net_shadow_forensic_retention_1d", /retention-days:\s*1/.test(net));
+  check("net_shadow_forensic_no_full_temp_upload", !/path:\s*\$\{\{\s*runner\.temp\s*\}\}\s*$/m.test(net));
+  check("net_shadow_forensic_mode_guard", /github\.event\.inputs\.mode\s*==\s*'shadow'/.test(net));
+  check(
+    "net_shadow_forensic_upload_on_failure",
+    /if:\s*\$\{\{\s*always\(\)\s*&&\s*github\.event\.inputs\.mode\s*==\s*'shadow'\s*\}\}/.test(net)
+  );
+  check("net_shadow_forensic_if_no_files_error", /if-no-files-found:\s*error/.test(net));
+  check("net_shadow_forensic_explicit_allowlist_only", /ndic-shadow-forensic\/ndic-shadow-forensic-summary\.json/.test(net));
+  check("net_no_continue_on_error_in_job", !/continue-on-error:\s*true/.test(net));
+
+  const write = jobChunk(src, NDIC_SHARED_WRITE_JOB);
+  check("write_job_present_chunk", Boolean(write));
+  check("write_runs_on_self_hosted", /self-hosted/.test(write));
+  check("write_runs_on_linux", /Linux/.test(write));
+  check("write_runs_on_x64", /X64/.test(write));
+  check("write_runs_on_ndic_cz_egress", /ndic-cz-egress/.test(write));
+  check("write_czech_labels", czechLabelsPresent(write));
+  check("write_no_ubuntu_latest", !/ubuntu-latest/.test(write));
+  check("write_identity_before_checkout", /Preflight runner identity/.test(write));
+  check("write_no_ndic_secrets", !/secrets\.IU_NDIC_/.test(write));
+  check("write_no_prod_sync", !/ndic-datex-v1-prod-sync\.mjs/.test(write));
+  check("write_has_shared_lock", /group:\s*info-events-data-writers/.test(write));
+  check("write_has_reread_apply", /info-events-shared-writer-critical\.mjs\s+ndic/.test(write));
+  check("write_cancel_false", /cancel-in-progress:\s*false/.test(write));
+  // Two-source model (ACTIVE run 31254863015): feature orch + main data, never same-workspace overwrite.
+  check("write_feature_orch_path", /path:\s*ndic-orch\b/.test(write));
+  check("write_main_data_path", /path:\s*ndic-main-data\b/.test(write) && /ref:\s*main\b/.test(write));
+  check(
+    "write_helper_from_feature_orch",
+    /ndic-orch\/scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
+  );
+  check(
+    "write_target_main_shared_state",
+    /ndic-main-data\/projects\/data\/info_events/.test(write)
+  );
+  check(
+    "write_no_legacy_same_workspace_apply",
+    !/node\s+scripts\/info-events-shared-writer-critical\.mjs\s+ndic/.test(write)
+  );
+  // ACTIVE 31257122613: required snapshot in candidate + per-path staging (no all-or-nothing || true).
+  check(
+    "pack_asserts_candidate_required_outputs",
+    /ndic-assert-candidate-required-outputs\.mjs/.test(net)
+  );
+  check(
+    "write_asserts_downloaded_candidate_required",
+    /ndic-assert-candidate-required-outputs\.mjs/.test(write)
+  );
+  check(
+    "write_uses_stage_shared_write_outputs",
+    /ndic-stage-shared-write-outputs\.mjs/.test(write)
+  );
+  check(
+    "write_no_all_or_nothing_git_add_swallow",
+    !/git\s+add[\s\S]{0,400}2>\s*\/dev\/null\s*\|\|\s*true/.test(write)
+  );
 
   return { ok: localFails.length === 0, fails: localFails };
 }

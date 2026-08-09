@@ -17,7 +17,7 @@ const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
 const FEED = path.join(ROOT, "projects", "data", "info_events", "feed.json");
-const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 
 const fails = [];
 function ok(id, cond, detail) {

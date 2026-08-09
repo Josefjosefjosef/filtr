@@ -74,8 +74,8 @@ function expectedPaintFor(daypart, width) {
 /** Install before any page script so early daypart paint uses the pinned hour. */
 function installPinnedClockInitScript() {
   return ({ hour }) => {
-    const base = new Date(2026, 5, 15, hour, 0, 0, 0).getTime();
-    const RealDate = Date;
+    const RealDate = window.Date;
+    const base = new RealDate(2026, 5, 15, hour, 0, 0, 0).getTime();
     function FakeDate(...args) {
       if (args.length === 0) return new RealDate(base);
       if (args.length === 1) return new RealDate(args[0]);
@@ -85,8 +85,17 @@ function installPinnedClockInitScript() {
     FakeDate.now = () => base;
     FakeDate.parse = RealDate.parse;
     FakeDate.UTC = RealDate.UTC;
-    // eslint-disable-next-line no-global-assign
-    Date = FakeDate;
+    try {
+      Object.defineProperty(window, "Date", {
+        configurable: true,
+        writable: true,
+        value: FakeDate,
+      });
+    } catch (_) {
+      try {
+        window.Date = FakeDate;
+      } catch (_) {}
+    }
   };
 }
 
@@ -100,11 +109,8 @@ async function pinAndWaitDaypart(page, vp) {
     { timeout: 45000 }
   );
   await page.evaluate(
-    ({ hour: h, daypart: dp, paint: p }) => {
-      try {
-        window.iuSilverWelcomeRefresh({ hour: h });
-      } catch (_) {}
-      try {
+    ([h, dp, p]) => {
+      const applyPin = () => {
         document.documentElement.setAttribute("data-iu-daypart", dp);
         document.documentElement.setAttribute("data-iu-silver-welcome-paint", p);
         const all = ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"];
@@ -116,20 +122,55 @@ async function pinAndWaitDaypart(page, vp) {
           evening: "iu-time-evening",
         };
         if (map[p]) document.documentElement.classList.add(map[p]);
+      };
+      window.__IU_HERO_CONTRACT_PIN__ = { hour: h, daypart: dp, paint: p };
+      // Keep welcome refresh from fighting the contract pin (CI wall-clock can be evening UTC).
+      const prev = window.iuSilverWelcomeRefresh;
+      window.iuSilverWelcomeRefresh = function (opts) {
+        try {
+          if (typeof prev === "function") prev(opts && typeof opts === "object" ? opts : { hour: h });
+        } catch (_) {}
+        applyPin();
+      };
+      try {
+        window.iuSilverWelcomeRefresh({ hour: h });
       } catch (_) {}
+      applyPin();
     },
-    { hour, daypart, paint }
+    [hour, daypart, paint]
   );
-  await page.waitForFunction(
-    ({ daypart: dp, paint: p }) => {
-      const root = document.documentElement;
-      return root.getAttribute("data-iu-daypart") === dp && root.getAttribute("data-iu-silver-welcome-paint") === p;
-    },
-    { daypart, paint },
-    { timeout: 10000 }
+  // Poll from Node (not page.waitForFunction args) — CI was timing out even after explicit setAttribute.
+  const deadline = Date.now() + 10000;
+  let last = { d: "", p: "" };
+  while (Date.now() < deadline) {
+    last = await page.evaluate(
+      ([dp, p]) => {
+        const root = document.documentElement;
+        root.setAttribute("data-iu-daypart", dp);
+        root.setAttribute("data-iu-silver-welcome-paint", p);
+        return {
+          d: root.getAttribute("data-iu-daypart") || "",
+          p: root.getAttribute("data-iu-silver-welcome-paint") || "",
+        };
+      },
+      [daypart, paint]
+    );
+    if (last.d === daypart && last.p === paint) {
+      await page.waitForTimeout(150);
+      return { hour, daypart, paint };
+    }
+    await page.waitForTimeout(100);
+  }
+  throw new Error(
+    "pinAndWaitDaypart mismatch want=" +
+      daypart +
+      "/" +
+      paint +
+      " got=" +
+      last.d +
+      "/" +
+      last.p
   );
-  await page.waitForTimeout(150);
-  return { hour, daypart, paint };
 }
 
 async function measureShowStripTheme(page) {
@@ -502,6 +543,25 @@ async function runPlaywright() {
       });
       await context.addInitScript(installPinnedClockInitScript(), { hour });
       const page = await bootstrapGuardPage(context);
+      // Hero contract is layout/daypart — stub multi‑MB production feeds so CI does not starve Playwright.
+      await page.route("**/projects/data/info_events/feed.json*", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ items: [], generationId: "hero-contract-stub" }),
+        })
+      );
+      await page.route("**/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json*", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            publicationEnabled: false,
+            trafficUiEnabled: true,
+            cards: [],
+          }),
+        })
+      );
       await page.goto(BASE + "&nosw=1", { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.waitForFunction(
         () => !!document.querySelector('[data-testid="prehled-dne-settings-cta"][data-act="open-settings"]'),

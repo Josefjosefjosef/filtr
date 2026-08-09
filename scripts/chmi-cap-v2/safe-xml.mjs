@@ -194,6 +194,7 @@ export function parseSafeXml(xml, limits = {}) {
 
 /** @param {XmlNode} node @param {string} name */
 export function childrenNamed(node, name) {
+  if (!node) return [];
   const n = String(name);
   return (node.children || []).filter((c) => c && c.name === n);
 }

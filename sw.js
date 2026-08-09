@@ -24,7 +24,7 @@
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-const CACHE_VERSION = "2026-08-04-bottom-nav-unify-stable-v1";
+const CACHE_VERSION = "2026-08-09-heavy-feed-shell-first-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -880,7 +880,9 @@ self.addEventListener("fetch", (event) => {
      iu-prehled-dne-ui-v1.js could keep serving old settings UI to installed PWAs. */
   if (
     path.includes("/assets/iu-prehled-dne-") ||
-    path.includes("/assets/iu-info-system-core-v1.js")
+    path.includes("/assets/iu-info-system-core-v1.js") ||
+    path.includes("/assets/iu-traffic-overview-v1.js") ||
+    path.includes("/assets/iu-json-parse-worker-v1.js")
   ) {
     event.respondWith(
       (async () => {

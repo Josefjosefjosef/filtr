@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-/** Guard: CHMI + info-events share production writer lock; NDIC staging is isolated. */
+/**
+ * Guard: CHMI + info-events + NDIC share production writer lock only on critical write jobs.
+ * NDIC prep stays on staging group; no workflow-level shared lock.
+ */
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import {
   NDIC_STAGING_GROUP,
   PRODUCTION_ACTIVATION_GROUP,
-  parseConcurrency,
-  isStaticSharedWriterGroup,
-  hasModeAwareGroupExpression,
   resolveNdicConcurrencyGroup,
+  workflowLevelHasSharedLock,
+  jobHasGroup,
 } from "./ndic-datex-v1-concurrency-fixtures.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -21,21 +23,24 @@ function ok(name, cond, detail) {
 const ie = fs.readFileSync(path.join(REPO, ".github/workflows/update-info-events.yml"), "utf8");
 const chmi = fs.readFileSync(path.join(REPO, ".github/workflows/update-chmi-cap-v2.yml"), "utf8");
 const ndicPath = path.join(REPO, ".github/workflows/update-ndic-datex-v1.yml");
+
 ok("ie_group", new RegExp("group:\\s*" + PRODUCTION_ACTIVATION_GROUP).test(ie), "ie");
 ok("chmi_group", new RegExp("group:\\s*" + PRODUCTION_ACTIVATION_GROUP).test(chmi), "chmi");
 ok("ie_no_cancel", /cancel-in-progress:\s*false/.test(ie), "ieCancel");
 ok("chmi_no_cancel", /cancel-in-progress:\s*false/.test(chmi), "chmiCancel");
+ok("ie_no_workflow_level_shared_lock", !workflowLevelHasSharedLock(ie), "ieWf");
+ok("chmi_no_workflow_level_shared_lock", !workflowLevelHasSharedLock(chmi), "chmiWf");
 
 if (fs.existsSync(ndicPath)) {
   const ndic = fs.readFileSync(ndicPath, "utf8");
-  const conc = parseConcurrency(ndic);
-  ok("ndic_not_static_shared_whole_wf", !isStaticSharedWriterGroup(conc.groupRaw), conc.groupRaw);
-  ok("ndic_mode_aware", hasModeAwareGroupExpression(conc.groupRaw), conc.groupRaw);
-  ok("ndic_staging_literal", conc.groupRaw.includes(NDIC_STAGING_GROUP), "staging");
-  ok("ndic_active_joins_production", conc.groupRaw.includes(PRODUCTION_ACTIVATION_GROUP), "prod");
-  ok("ndic_cancel_false", conc.cancelInProgress === "false", conc.cancelInProgress);
+  ok("ndic_no_workflow_level_shared_lock", !workflowLevelHasSharedLock(ndic), "ndicWf");
+  ok("ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
+  ok("ndic_write_production", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
+  ok("ndic_cancel_false", /cancel-in-progress:\s*false/.test(ndic), "cancel");
   ok("ndic_shadow_isolated_group", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("ndic_active_shared_group", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
+  ok("ndic_write_not_ubuntu", !/ndic-shared-write:[\s\S]*?runs-on:\s*ubuntu-latest/.test(ndic), "ubuntu");
+  ok("ndic_no_ubuntu_latest_job", !/^\s*runs-on:\s*ubuntu-latest\s*$/m.test(ndic), "ubuntuJob");
 }
 
 if (fails.length) {

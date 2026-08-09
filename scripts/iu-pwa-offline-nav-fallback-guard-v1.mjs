@@ -31,7 +31,7 @@ function auditStatic() {
   if (!sw.includes("offlineNavigationFallback")) fails.push("sw:missing offlineNavigationFallback");
   if (!sw.includes("OFFLINE_DOC_CACHE")) fails.push("sw:missing OFFLINE_DOC_CACHE");
   if (!sw.includes("HTML_LAST_GOOD_CACHE")) fails.push("sw:missing HTML_LAST_GOOD_CACHE");
-  if (!/2026-08-04-bottom-nav-unify-stable-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
+  if (!/2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-ls-mem-guard-v1|2026-08-08-traffic-ui-boot-nonblocking-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
   if (!sw.includes("iu-feed-offline-v2")) fails.push("sw:missing FEED_OFFLINE_CACHE v2 after media removal");
   if (!sw.includes("X-IU-Offline-Fallback")) fails.push("sw:missing offline fallback header marker");
   if (!offline.includes("Jste offline")) fails.push("offline.html:missing message");
@@ -158,14 +158,34 @@ async function main() {
     if (onlineBack.ok || onlineBack.status === 200) passes.push("online_recovery_fetch");
     else failures.push({ test: "online_recovery_fetch", detail: onlineBack });
 
-    const cachesOk = await page.evaluate(async () => {
-      const keys = await caches.keys();
-      const hasOfflineDoc = keys.includes("iu-offline-doc-v1");
-      const versioned = keys.filter((k) => /^iu-(app|data)/.test(k));
-      return { hasOfflineDoc, versionedCount: versioned.length, keys };
-    });
-    if (cachesOk.hasOfflineDoc) passes.push("offline_doc_cache_present");
-    else failures.push({ test: "offline_doc_cache_present", detail: cachesOk });
+    // SW deploy reload can navigate the page when coming back online — retry cache probe.
+    let cachesOk = null;
+    for (let i = 0; i < 6; i++) {
+      try {
+        await page.waitForLoadState("domcontentloaded", { timeout: 15000 }).catch(() => {});
+        cachesOk = await page.evaluate(async () => {
+          const keys = await caches.keys();
+          const hasOfflineDoc = keys.includes("iu-offline-doc-v1");
+          const versioned = keys.filter((k) => /^iu-(app|data)/.test(k));
+          return { hasOfflineDoc, versionedCount: versioned.length, keys };
+        });
+        break;
+      } catch (e) {
+        if (i >= 5) {
+          failures.push({
+            test: "offline_doc_cache_present",
+            detail: { err: String((e && e.message) || e) },
+          });
+          cachesOk = null;
+          break;
+        }
+        await page.waitForTimeout(400);
+      }
+    }
+    if (cachesOk) {
+      if (cachesOk.hasOfflineDoc) passes.push("offline_doc_cache_present");
+      else failures.push({ test: "offline_doc_cache_present", detail: cachesOk });
+    }
   } finally {
     await browser.close();
     if (serverProc && !serverProc.killed) serverProc.kill("SIGTERM");
@@ -179,7 +199,7 @@ async function main() {
         origin: ORIGIN,
         passes,
         failures,
-        cacheVersion: "2026-08-04-bottom-nav-unify-stable-v1",
+        cacheVersion: "2026-08-09-heavy-feed-shell-first-v1",
       },
       null,
       2

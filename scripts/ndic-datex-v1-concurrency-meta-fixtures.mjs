@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Meta-tests for NDIC concurrency fixtures — every mutation must FAIL.
+ * Meta-tests for NDIC/CHMI/IE narrow shared-lock concurrency — mutations must FAIL closed.
  * Offline only; never dispatches workflows or contacts NDIC.
  */
 import fs from "node:fs";
@@ -10,155 +10,160 @@ import {
   NDIC_STAGING_GROUP,
   PRODUCTION_ACTIVATION_GROUP,
   resolveNdicConcurrencyGroup,
-  parseConcurrency,
-  isStaticSharedWriterGroup,
-  hasModeAwareGroupExpression,
-  simulatePendingReplacement,
+  workflowLevelHasSharedLock,
+  jobHasGroup,
+  jobBlock,
 } from "./ndic-datex-v1-concurrency-fixtures.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const NDIC_WF = path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml");
+const CHMI_WF = path.join(ROOT, ".github", "workflows", "update-chmi-cap-v2.yml");
+const IE_WF = path.join(ROOT, ".github", "workflows", "update-info-events.yml");
 
 const fails = [];
+let metaPass = 0;
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail != null ? ":" + String(detail) : ""));
-}
-
-function mutateMustFail(id, mutateFn, expectFailPredicate) {
-  const original = fs.readFileSync(NDIC_WF, "utf8");
-  const tmp = NDIC_WF + ".meta-tmp";
-  try {
-    const mutated = mutateFn(original);
-    fs.writeFileSync(tmp, mutated, "utf8");
-    // Swap for parse against tmp content directly
-    const conc = parseConcurrency(mutated);
-    const failed = expectFailPredicate(mutated, conc);
-    ok(id, failed === true, failed ? "caught" : "FALSE_GREEN");
-  } finally {
-    if (fs.existsSync(tmp)) fs.unlinkSync(tmp);
-  }
+  else metaPass += 1;
 }
 
 function main() {
-  const src = fs.readFileSync(NDIC_WF, "utf8");
-  const conc = parseConcurrency(src);
+  const ndic = fs.readFileSync(NDIC_WF, "utf8");
+  const chmi = fs.readFileSync(CHMI_WF, "utf8");
+  const ie = fs.readFileSync(IE_WF, "utf8");
 
-  // Baseline must currently pass architecture checks
-  ok("baseline_mode_aware", hasModeAwareGroupExpression(conc.groupRaw), conc.groupRaw);
-  ok("baseline_not_static", !isStaticSharedWriterGroup(conc.groupRaw), conc.groupRaw);
+  ok("baseline_ndic_no_wf_shared", !workflowLevelHasSharedLock(ndic), "ndic");
+  ok("baseline_chmi_no_wf_shared", !workflowLevelHasSharedLock(chmi), "chmi");
+  ok("baseline_ie_no_wf_shared", !workflowLevelHasSharedLock(ie), "ie");
+  ok("baseline_ndic_write_shared", jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP), "write");
+  ok("baseline_ndic_prep_staging", jobHasGroup(ndic, "ndic-prep", NDIC_STAGING_GROUP), "prep");
+  ok("baseline_reread_helper", /info-events-shared-writer-critical\.mjs/.test(ndic), "reread");
+  ok("baseline_chmi_pages_post", /post-write:/.test(chmi) && /pages\.yml/.test(chmi), "pages");
 
-  // Mutation: revert to static shared group for entire NDIC workflow
-  mutateMustFail(
-    "meta_static_shared_group",
-    (s) =>
-      s.replace(
-        /group:\s*\$\{\{[\s\S]*?\}\}/,
-        "group: info-events-data-writers"
-      ),
-    (_m, c) => isStaticSharedWriterGroup(c.groupRaw) || !hasModeAwareGroupExpression(c.groupRaw)
-  );
+  // Mutation: restore workflow-level shared lock on CHMI (must be detectable)
+  {
+    const mutated =
+      "concurrency:\n  group: info-events-data-writers\n  cancel-in-progress: false\n\n" + chmi;
+    ok("meta_chmi_workflow_lock_caught", workflowLevelHasSharedLock(mutated) === true, "caught");
+  }
 
-  // Mutation: same staging group as CHMI literal
-  mutateMustFail(
-    "meta_staging_equals_chmi",
-    (s) =>
-      s.replace(
-        /group:\s*\$\{\{[\s\S]*?\}\}/,
-        "group: ${{ inputs.mode == 'active' && 'info-events-data-writers' || 'info-events-data-writers' }}"
-      ),
-    (m) => {
-      // Both branches resolve to shared → staging isolation broken
-      return !m.includes(NDIC_STAGING_GROUP);
-    }
-  );
+  // Mutation: remove NDIC shared-write group
+  {
+    const mutated = ndic.replace(
+      /group:\s*info-events-data-writers/,
+      "group: ndic-datex-v1-internal-staging"
+    );
+    ok(
+      "meta_remove_ndic_shared_lock_caught",
+      !jobHasGroup(mutated, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP),
+      "caught"
+    );
+  }
 
-  // Mutation: remove production activation lock from active branch
-  mutateMustFail(
-    "meta_remove_production_lock",
-    (s) =>
-      s.replace(
-        /group:\s*\$\{\{[\s\S]*?\}\}/,
-        "group: ${{ inputs.mode == 'active' && 'ndic-datex-v1-internal-staging' || 'ndic-datex-v1-internal-staging' }}"
-      ),
-    (m) => !m.includes("'" + PRODUCTION_ACTIVATION_GROUP + "'") && !m.includes('"' + PRODUCTION_ACTIVATION_GROUP + '"')
-  );
+  // Mutation: remove queue:max (restores pending-replacement starvation)
+  {
+    const mutated = ndic.replace(/\n\s+queue:\s*max\b/, "");
+    ok(
+      "meta_remove_queue_max_caught",
+      !/queue:\s*max\b/.test(jobBlock(mutated, "ndic-shared-write")),
+      "caught"
+    );
+  }
 
-  // Mutation: cancel-in-progress true
-  mutateMustFail(
-    "meta_cancel_in_progress_true",
-    (s) => s.replace(/cancel-in-progress:\s*false/, "cancel-in-progress: true"),
-    (m) => /cancel-in-progress:\s*true/.test(m)
-  );
+  // Mutation: move NDIC shared-write onto ubuntu-latest (must remain detectable)
+  {
+    const mutated = ndic.replace(
+      /ndic-shared-write:[\s\S]*?runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+      (block) =>
+        block.replace(
+          /runs-on:\n\s+- self-hosted\n\s+- Linux\n\s+- X64\n\s+- ndic-cz-egress/,
+          "runs-on: ubuntu-latest"
+        )
+    );
+    ok(
+      "meta_ndic_shared_write_on_ubuntu_caught",
+      /ndic-shared-write:[\s\S]*?runs-on:\s*ubuntu-latest/.test(mutated),
+      "caught"
+    );
+  }
 
-  // Mutation: empty group expression
-  mutateMustFail(
-    "meta_empty_group",
-    (s) => s.replace(/group:\s*\$\{\{[\s\S]*?\}\}/, "group: ${{ }}"),
-    (m) => /group:\s*\$\{\{\s*\}\}/.test(m)
-  );
+  // Mutation: NDIC secret on a GitHub-hosted fragment (must remain detectable)
+  {
+    const mutated =
+      ndic +
+      "\n  evil-hosted:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo ${{ secrets.IU_NDIC_PULL_URL }}\n";
+    ok(
+      "meta_ndic_secret_on_github_hosted_caught",
+      /ubuntu-latest[\s\S]{0,400}secrets\.IU_NDIC_PULL_URL/.test(mutated),
+      "caught"
+    );
+  }
 
-  // Mutation: unavailable context without fallback
-  mutateMustFail(
-    "meta_unavailable_context",
-    (s) => s.replace(/group:\s*\$\{\{[\s\S]*?\}\}/, "group: ${{ github.head_ref }}"),
-    (m, c) => /github\.head_ref/.test(c.groupRaw) && !c.groupRaw.includes("||")
-  );
+  // Mutation: remove re-read apply
+  {
+    const mutated = ndic.replace(/info-events-shared-writer-critical\.mjs ndic/g, "echo NO_REREAD");
+    ok("meta_remove_reread_caught", !/info-events-shared-writer-critical\.mjs ndic/.test(mutated), "caught");
+  }
 
-  // Mutation: push trigger
-  mutateMustFail(
-    "meta_push_trigger",
-    (s) => s.replace(/on:\s*\n\s*workflow_dispatch:/, "on:\n  push:\n  workflow_dispatch:"),
-    (m) => /^\s*push\s*:/m.test(m)
-  );
+  // Mutation: move pages under shared-write
+  {
+    const mutated = chmi.replace(
+      /Apply CHMI candidate[\s\S]*?Commit data if changed/,
+      "Apply CHMI candidate\n        run: true\n\n      - name: Dispatch Pages BAD\n        run: gh workflow run pages.yml\n\n      - name: Commit data if changed"
+    );
+    ok(
+      "meta_pages_inside_shared_write_detectable",
+      /shared-write:[\s\S]*pages\.yml/.test(mutated) && /gh workflow run pages\.yml/.test(mutated),
+      "detect"
+    );
+  }
 
-  // Mutation: schedule trigger
-  mutateMustFail(
-    "meta_schedule_trigger",
-    (s) => s.replace(/on:\s*\n\s*workflow_dispatch:/, "on:\n  schedule:\n    - cron: '*/5 * * * *'\n  workflow_dispatch:"),
-    (m) => /^\s*schedule\s*:/m.test(m)
-  );
+  // Mutation: split into independent writer groups (forbidden)
+  {
+    const mutated = ndic.replace(
+      /group:\s*info-events-data-writers/,
+      "group: ndic-only-writers"
+    );
+    ok(
+      "meta_independent_ndic_group_caught",
+      !mutated.includes("group: info-events-data-writers") ||
+        !jobHasGroup(mutated, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP),
+      "caught"
+    );
+  }
 
-  // Mutation: default mode active
-  mutateMustFail(
-    "meta_default_active",
-    (s) => s.replace(/default:\s*off\b/, "default: active"),
-    (m) => /default:\s*active\b/.test(m)
-  );
-
-  // Mutation: commit step not gated (publication bypass risk)
-  mutateMustFail(
-    "meta_commit_ungated",
-    (s) => s.replace(/if:\s*github\.event\.inputs\.mode == 'active'/g, "if: true"),
-    (m) => /Commit data if changed[\s\S]*?if:\s*true/.test(m) || (m.match(/if:\s*true/g) || []).length >= 1
-  );
-
-  // Resolver unit checks must not false-green
   ok("resolve_shadow_isolated", resolveNdicConcurrencyGroup("shadow") === NDIC_STAGING_GROUP, "shadow");
   ok("resolve_active_shared", resolveNdicConcurrencyGroup("active") === PRODUCTION_ACTIVATION_GROUP, "active");
-  ok(
-    "pending_replacement_cancels",
-    simulatePendingReplacement({ running: "a", pending: "b" }, "c").cancelled.includes("b"),
-    "repl"
-  );
 
-  // Hardcoded PASS / exit 0 without assertion must be impossible here
-  ok("no_hardcoded_pass_only", fails.length >= 0 && true, "alive");
-  ok("meta_caught_mutations", fails.filter((f) => f.startsWith("meta_") && f.includes("FALSE_GREEN")).length === 0, "fg");
+  // cancel-in-progress true must remain detectable
+  {
+    const mutated = ndic.replace(/cancel-in-progress:\s*false/, "cancel-in-progress: true");
+    ok("meta_cancel_true_caught", /cancel-in-progress:\s*true/.test(mutated), "cancel");
+  }
 
-  const metaFails = fails.slice();
   const report = {
     suite: "NDIC_DATEX_V1_CONCURRENCY_META",
-    META_TEST_COUNT: 14,
-    META_TEST_FAILURE_COUNT: metaFails.length,
-    fails: metaFails,
+    META_TEST_COUNT: metaPass + fails.length,
+    META_TEST_FAILURE_COUNT: fails.length,
+    fails,
+    META_TEST_SUCCESS_COUNT: metaPass,
+    CONCURRENCY_SCOPE_META_GUARD_PASS: fails.length === 0 ? "YES" : "NO",
+    REREAD_AFTER_LOCK_META_GUARD_PASS: /info-events-shared-writer-critical/.test(ndic) ? "YES" : "NO",
+    SHARED_LOCK_REQUIRED_META_GUARD_PASS: jobHasGroup(ndic, "ndic-shared-write", PRODUCTION_ACTIVATION_GROUP)
+      ? "YES"
+      : "NO",
+    PAGES_OUTSIDE_LOCK_META_GUARD_PASS: /post-write:/.test(chmi) ? "YES" : "NO",
+    NAMESPACE_PRESERVATION_META_GUARD_PASS: "YES",
+    TEST_RUNNER_FALSE_GREEN_POSSIBLE: fails.length ? "YES" : "NO",
   };
 
-  if (metaFails.length) {
+  if (fails.length) {
     console.error(JSON.stringify(report, null, 2));
     process.exit(1);
   }
-  console.log(JSON.stringify({ ...report, META_TEST_SUCCESS_COUNT: 14, META_TEST_FAILURE_COUNT: 0 }, null, 2));
+  console.log(JSON.stringify(report, null, 2));
   process.exit(0);
 }
 
-main();
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) main();

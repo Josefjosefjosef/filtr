@@ -7,6 +7,8 @@
 import {
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
   filterEvents,
   buildFeedIndex,
   getPrefs,
@@ -33,10 +35,21 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=chmi-title-map-float-wrap-v1-20260804";
+} from "./iu-info-system-core-v1.js?v=heavy-feed-shell-first-v1-20260809";
+import {
+  TRAFFIC_OVERVIEW_FLAGS,
+  trafficBadgeModel,
+  resolveSafeTrafficMapUrl,
+  collectOfflineTrafficCandidates,
+  isRsdTrafficSourceEnabled,
+  trafficFreshnessBanner,
+  trafficHistoryLines,
+  loadOfflineTrafficSnapshot,
+  fetchHostedTrafficOfflineSnapshot,
+} from "./iu-traffic-overview-v1.js?v=heavy-feed-shell-first-v1-20260809";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-title-map-float-wrap-v1-20260804";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -91,6 +104,7 @@ const SOURCE_GROUPS = [
   { id: "policie", label: "Policie", groups: ["policie"] },
   { id: "hzs", label: "HZS", groups: ["hzs"] },
   { id: "chmi", label: "ČHMÚ", groups: ["pocasi"], sourceIds: ["chmi"] },
+  { id: "ndic", label: "NDIC / ŘSD", groups: ["doprava"], sourceIds: ["ndic", "rsd"] },
   { id: "verejnopravni-media", label: "Veřejnoprávní média", groups: ["verejnopravni-media"] },
 ];
 
@@ -392,7 +406,19 @@ function filteredList() {
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
     hiddenMode: "include",
   };
-  let list = filterEvents(items, filterPrefs, opts);
+  // Shared pipeline: offline traffic candidates enter the SAME filterEvents as ČHMÚ.
+  let pipelineItems = items;
+  if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false && TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER) {
+    const offline = collectOfflineTrafficCandidates(f, {
+      snapshot: loadOfflineTrafficSnapshot(),
+      nowIso: new Date().toISOString(),
+    });
+    if (offline.length) {
+      const seen = new Set(items.map((x) => String((x && x.id) || "")));
+      pipelineItems = items.concat(offline.filter((x) => x && !seen.has(String(x.id))));
+    }
+  }
+  let list = filterEvents(pipelineItems, filterPrefs, opts);
   list = expandChmiLocalityPresentationCards(list, f);
   list = list.filter((ev) => {
     const id = String((ev && ev.id) || "");
@@ -475,23 +501,48 @@ function displayEventTitle(ev, locationFilter) {
 
 function renderItem(ev) {
   const id = String(ev.id || "");
+  const isTraffic = !!(ev && ev.trafficV1);
   const forced = chmiPublicDetailUrl(ev);
+  const trafficMapUrl = isTraffic ? resolveSafeTrafficMapUrl(ev.trafficV1.mapTarget) : "";
   // CHMI: never fall back to XML / specialized publisher web — portal only.
-  const url = ev && ev.capV2 ? safeHttpUrl(forced) : safeHttpUrl(forced || ev.url || ev.originalUrl);
+  // Traffic: only allowlisted mapTarget URLs (never heuristic internal IDs).
+  const url = isTraffic
+    ? safeHttpUrl(trafficMapUrl)
+    : ev && ev.capV2
+      ? safeHttpUrl(forced)
+      : safeHttpUrl(forced || ev.url || ev.originalUrl);
   const locationFilter = effectivePrefs();
-  const title = displayEventTitle(ev, locationFilter);
+  const title = isTraffic
+    ? String((ev.trafficV1.feed && ev.trafficV1.feed.feedHeadline) || ev.title || "Dopravní událost")
+    : displayEventTitle(ev, locationFilter);
   const srcRaw = String(ev.sourceLabel || ev.sourceId || "");
-  const srcPill = ev.capV2
-    ? srcRaw
-      ? "Zdroj: " + srcRaw
-      : "Zdroj: ČHMÚ"
-    : srcRaw;
+  const isNdic =
+    String(ev.sourceId || "") === "ndic" ||
+    String(ev.adapterOwner || "") === "ndic-datex-v1" ||
+    !!(ev && ev.ndicV1);
+  const srcPill = isTraffic
+    ? "Zdroj: ŘSD/NDIC"
+    : ev.capV2
+      ? srcRaw
+        ? "Zdroj: " + srcRaw
+        : "Zdroj: ČHMÚ"
+      : isNdic
+        ? "Zdroj: NDIC"
+        : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
-  const region = ev.capV2
-    ? String(regionFiltered || "")
-    : ev.region && (ev.region.summary || ev.region.name)
-      ? String(ev.region.summary || ev.region.name)
-      : "";
+  const region = isTraffic
+    ? String(
+        (ev.trafficV1 &&
+          (ev.trafficV1.preciseLocationVerified
+            ? ev.trafficV1.location || ev.trafficV1.road
+            : ev.trafficV1.subjectScopeLabel || ev.trafficV1.road || "")) ||
+          ""
+      )
+    : ev.capV2
+      ? String(regionFiltered || "")
+      : ev.region && (ev.region.summary || ev.region.name)
+        ? String(ev.region.summary || ev.region.name)
+        : "";
   // Hide locality meta pill when the same text is already in the title (CAP cards).
   const regionPill = region && title.indexOf(region) === -1 ? region : "";
   const imp = importanceLabel(ev);
@@ -502,6 +553,8 @@ function renderItem(ev) {
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
+  const trafficBadge = isTraffic ? trafficBadgeModel(ev.trafficV1) : null;
+  const trafficActive = isTraffic && ev.trafficV1.lifecycleStatus === "ACTIVE";
   const timeline = getEffectiveTimelinePresentation(ev, Date.now());
   const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
   const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
@@ -542,7 +595,9 @@ function renderItem(ev) {
   // Green AKTIVNÍ pill follows live lifecycle (ACTIVE only), not badgeActive (active+future warn cards).
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
-    : "";
+    : trafficActive
+      ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Aktivní dopravní událost">AKTIVNÍ DOPRAVA</span>`
+      : "";
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
@@ -551,16 +606,51 @@ function renderItem(ev) {
   const czMapMarkup =
     ev && ev.capV2 && url
       ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít ČHMÚ"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
-      : "";
+      : isTraffic && url
+        ? `<a class="iuPdCard__czMap iuPrehledDne__czMap" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title" aria-label="Otevřít mapu ŘSD"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" aria-hidden="true" focusable="false"><use href="#iu-cz-map"></use></svg></a>`
+        : isTraffic
+          ? `<span class="iuPdCard__czMap iuPrehledDne__czMap iuPdCard__czMap--static" aria-hidden="true"><svg class="iuPrehledDne__czMapSvg" viewBox="0 0 100 57.48" width="57.6" height="33.1" focusable="false"><use href="#iu-cz-map"></use></svg></span>`
+          : "";
   const warnBadge = capActive
     ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
     : capEnded
       ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
-      : "";
+      : trafficBadge
+        ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge iuPdCard__warnBadge--traffic iuPdCard__warnBadge--${esc(
+            trafficBadge.kind
+          )}" role="status" aria-label="${esc(trafficBadge.aria)}">${esc(trafficBadge.text)}</span>`
+        : "";
   const regionCoverage = String((ev && ev._iuPresentation && ev._iuPresentation.regionCoverageLine) || "").trim();
   const regionCoverageMarkup = regionCoverage
     ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
     : "";
+  let trafficMetaExtra = "";
+  if (isTraffic) {
+    const tv = ev.trafficV1;
+    const bits = [];
+    const precise = tv.preciseLocationVerified === true;
+    if (tv.locationDisclosureCs) {
+      bits.push(String(tv.locationDisclosureCs));
+    } else if (precise) {
+      if (tv.road) bits.push(String(tv.road));
+      if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
+      if (tv.section) bits.push(String(tv.section));
+      if (tv.direction) bits.push(String(tv.direction));
+    } else if (tv.road || tv.subjectScopeLabel) {
+      bits.push("Týká se komunikace " + String(tv.road || tv.subjectScopeLabel));
+    }
+    if (tv.impact) bits.push(String(tv.impact));
+    if (tv.freshness) bits.push("Čerstvost: " + String(tv.freshness));
+    if (tv.changeTimeSource === "DOWNLOAD_FALLBACK") bits.push("čas změny: fallback stažení");
+    if (tv.routeMatchMode === "SCOPE_ONLY") {
+      bits.push("Událost se týká sledované komunikace, ale přesný úsek není v oficiálních datech znám.");
+    }
+    const hist = trafficHistoryLines(tv);
+    if (hist.length) bits.push("Historie: " + hist.join(", "));
+    trafficMetaExtra = bits
+      .map((b) => `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(b)}</span>`)
+      .join("");
+  }
   /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it. */
   const cardHead = czMapMarkup
     ? `<div class="iuPrehledDne__cardHead">` +
@@ -573,7 +663,9 @@ function renderItem(ev) {
       `</div>`
     : warnBadge + titleMarkup + regionCoverageMarkup;
   return (
-    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}" data-id="${esc(id)}" style="--iu-pd-dot:${esc(color)}">` +
+    `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}${
+      isTraffic ? " iuPdCard--traffic" : ""
+    }" data-id="${esc(id)}"${isTraffic ? ' data-iu-traffic="1"' : ""} style="--iu-pd-dot:${esc(color)}">` +
     `<div class="iuPrehledDne__timeCol">` +
     `<div class="iuPdCard__time iuPrehledDne__time">${timePrimary}</div>` +
     timeSub +
@@ -581,7 +673,9 @@ function renderItem(ev) {
     timeValidFrom +
     `<div class="iuPrehledDne__readMark" aria-label="Přečteno">✓</div>` +
     `</div>` +
-    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${alert || capActive ? " iuPrehledDne__dot--alert" : ""}"></span></div>` +
+    `<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot${
+      alert || capActive || (trafficBadge && trafficBadge.kind === "new") ? " iuPrehledDne__dot--alert" : ""
+    }"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""}">` +
     cardHead +
     `<div class="iuPdCard__meta iuPrehledDne__meta">` +
@@ -589,6 +683,7 @@ function renderItem(ev) {
     activePill +
     (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
     (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
+    trafficMetaExtra +
     `</div>` +
     `<div class="iuPdCard__actions iuPrehledDne__actions">` +
     (hiddenMode
@@ -927,6 +1022,7 @@ function renderSourcesBody(draft) {
     })
     .join("");
 
+  // ŘSD/NDIC uses the SAME Zdroje + Lokalita rails — no parallel traffic settings panel.
   return (
     `<div class="iuPdChecks" data-iu-pd-sec="zdroje">` +
     checkRow("source-all", "all", "Vše", all, 'data-draft-act="sources-all"', partial) +
@@ -1069,6 +1165,12 @@ function settingsCtaInnerHtml() {
 
 function homeShellHtml(listHtml, countLabel, moreHtml) {
   const mode = state.viewMode;
+  const offlineSnap = loadOfflineTrafficSnapshot();
+  const fresh = trafficFreshnessBanner(offlineSnap);
+  const trafficOfflineBanner =
+    fresh && isRsdTrafficSourceEnabled(effectivePrefs())
+      ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
+      : "";
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
@@ -1091,6 +1193,7 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
+    trafficOfflineBanner +
     `<ul class="iuPdFeed iuPrehledDne__timeline" id="iuPrehledDneTimeline">${listHtml}</ul>` +
     `<div id="iuPdMoreWrap">${moreHtml}</div>` +
     `</section>`
@@ -1191,7 +1294,21 @@ function paint(opts) {
     pageItems.length < list.length
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
       : "";
-  root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+  // Keep an existing hero shell (boot skeleton / prior paint) to avoid CLS from full innerHTML replace.
+  const heroReady = !!root.querySelector('[data-testid="prehled-dne-hero"] [data-act="open-settings"]');
+  const feedReady = !!root.querySelector("#iuPrehledDneTimeline");
+  if (heroReady && feedReady && !options.forceFullShell) {
+    updateFeedDom();
+    // Sync show-strip active mode without rebuilding hero.
+    try {
+      root.querySelectorAll(".iuPdToggle[data-act='mode']").forEach((btn) => {
+        const mode = btn.getAttribute("data-mode") || "";
+        btn.classList.toggle("is-active", mode === state.viewMode);
+      });
+    } catch (_) {}
+  } else {
+    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+  }
   applyIndeterminateFlags(root);
   if (state.settingsOpen) mountSettingsOverlay();
   else removeSettingsHost();
@@ -1661,22 +1778,17 @@ async function boot() {
   void ensureCzMapSprite();
   const root = ensureRoot();
   if (!root) return;
-  root.innerHTML =
-    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-    `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
-    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
-    `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
-    bannerHtml() +
-    `<div class="iuPd__top"><div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none">` +
-    settingsCtaInnerHtml() +
-    `</div></div>` +
-    `</div>` +
-    `</div>` +
-    `<div class="iuPd__show"><div class="iuPd__label">Zobrazit</div><div class="iuPd__toggles" aria-hidden="true">` +
-    `<span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>` +
-    `</div></div>` +
-    `<div class="iuPdFeed" aria-busy="true"></div>` +
-    `</section>`;
+  // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
+  // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
+  state.prefs = getPrefs();
+  root.innerHTML = homeShellHtml(
+    `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
+    "Načítám…",
+    ""
+  );
+  try {
+    wire();
+  } catch (_) {}
   const bootAbort = typeof AbortController === "function" ? new AbortController() : null;
   const onPageHide = () => {
     try {
@@ -1686,101 +1798,159 @@ async function boot() {
   try {
     window.addEventListener("pagehide", onPageHide, { once: true });
   } catch (_) {}
-  try {
-    const data = await loadInfoSystemData({});
-    if (bootAbort && bootAbort.signal.aborted) return;
-    state.data = data;
+  // 1) Await small shell JSON (taxonomy/registry) so settings rails work immediately.
+  // 2) Hydrate multi‑MB feed off-main via Worker without blocking shell interactivity.
+  void (async () => {
     try {
-      migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
-    } catch (_) {}
-    // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
-    try {
-      if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
-        const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
-          r.ok ? r.json() : null
-        );
-        const d = mon && mon.chmiCapV2;
-        if (d) {
-          const bar = document.createElement("pre");
-          bar.className = "iuPdDiag";
-          bar.setAttribute("data-iu-chmi-diag", "1");
-          bar.style.cssText = "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
-          bar.textContent = JSON.stringify(
-            {
-              mode: d.mode,
-              status: d.status,
-              lastRunAt: d.lastRunAt,
-              lastSuccessAt: d.lastSuccessAt,
-              lastSnapshotAt: d.lastSnapshotAt,
-              lastError: d.lastError,
-              active: d.activeCount,
-              cancelled: d.cancelledCount,
-              expired: d.expiredCount,
-              alert: d.alertCount,
-              update: d.updateCount,
-              cancelMsg: d.cancelMsgCount,
-              quarantine: d.quarantineCount,
-              discovery: d.discoveryType,
-              publish: d.publish,
-              runMs: d.runMs,
-              registry: d.registryVersion,
-              rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
-            },
-            null,
-            2
-          );
-          const host = root.querySelector(".iuPrehledDne") || root;
-          host.insertBefore(bar, host.firstChild);
-        }
-      }
-    } catch (_) {}
-    state.index = buildFeedIndex((data.feed && data.feed.items) || []);
-    state.prefs = getPrefs();
-    state.page = 1;
-    const scroll = getScrollState();
-    paint();
-    wire();
-    bindTimelineLifecycleListeners();
-    scheduleTimelineBoundaryRefresh();
-    if (scroll && Number(scroll.y) > 0) {
+      const shell = await loadInfoSystemShellData({
+        signal: bootAbort ? bootAbort.signal : undefined,
+      });
+      if (bootAbort && bootAbort.signal.aborted) return;
+      state.data = shell;
+      state.prefs = getPrefs();
+      state.page = 1;
+      state.index = buildFeedIndex([]);
+      paint();
+      wire();
+      bindTimelineLifecycleListeners();
+      scheduleTimelineBoundaryRefresh();
       try {
-        const vp = feedViewport();
-        if (vp) vp.scrollTop = Number(scroll.y);
+        root.setAttribute("data-iu-pd-shell-ready", "1");
       } catch (_) {}
-    }
-    window.addEventListener(
-      "beforeunload",
-      () => {
+
+      const feed = await loadInfoSystemFeedOnly({
+        signal: bootAbort ? bootAbort.signal : undefined,
+        omitFeedSourceIds: ["ndic"],
+        manifest: shell.manifest,
+      });
+      if (bootAbort && bootAbort.signal.aborted) return;
+      state.data = Object.assign({}, shell, {
+        feed,
+        feedLoad: {
+          omittedSourceIds: (feed && feed.omittedSourceIds) || ["ndic"],
+          trafficPrimarySource: "traffic_offline_snapshot",
+          parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
+          shellOnly: false,
+        },
+        loadedAt: new Date().toISOString(),
+      });
+      try {
+        migrateChmiCapV2UserStates((feed && feed.items) || []);
+      } catch (_) {}
+      // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
+      try {
+        if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {
+          const mon = await fetch(iuInfoDataUrl("monitoring.json"), { cache: "no-store" }).then((r) =>
+            r.ok ? r.json() : null
+          );
+          const d = mon && mon.chmiCapV2;
+          if (d) {
+            const bar = document.createElement("pre");
+            bar.className = "iuPdDiag";
+            bar.setAttribute("data-iu-chmi-diag", "1");
+            bar.style.cssText =
+              "font:12px/1.4 ui-monospace,monospace;padding:8px 12px;margin:0;background:#0b1220;color:#cde;white-space:pre-wrap";
+            bar.textContent = JSON.stringify(
+              {
+                mode: d.mode,
+                status: d.status,
+                lastRunAt: d.lastRunAt,
+                lastSuccessAt: d.lastSuccessAt,
+                lastSnapshotAt: d.lastSnapshotAt,
+                lastError: d.lastError,
+                active: d.activeCount,
+                cancelled: d.cancelledCount,
+                expired: d.expiredCount,
+                alert: d.alertCount,
+                update: d.updateCount,
+                cancelMsg: d.cancelMsgCount,
+                quarantine: d.quarantineCount,
+                discovery: d.discoveryType,
+                publish: d.publish,
+                runMs: d.runMs,
+                registry: d.registryVersion,
+                rollbackFn: typeof rollbackChmiCapV2UserStates === "function",
+              },
+              null,
+              2
+            );
+            const host = root.querySelector(".iuPrehledDne") || root;
+            host.insertBefore(bar, host.firstChild);
+          }
+        }
+      } catch (_) {}
+      state.index = buildFeedIndex((feed && feed.items) || []);
+      const scroll = getScrollState();
+      // Avoid remounting an open settings overlay (race with Playwright section clicks).
+      if (state.settingsOpen) {
+        try {
+          updateFeedDom();
+        } catch (_) {
+          paint();
+          wire();
+        }
+      } else {
+        paint();
+        wire();
+      }
+      try {
+        root.setAttribute("data-iu-pd-feed-ready", "1");
+      } catch (_) {}
+      if (!state.settingsOpen && scroll && Number(scroll.y) > 0) {
         try {
           const vp = feedViewport();
-          setScrollState({ viewId: "prehled-v6", y: vp ? vp.scrollTop : 0 });
+          if (vp) vp.scrollTop = Number(scroll.y);
         } catch (_) {}
-      },
-      { once: true }
-    );
-  } catch (err) {
-    const stillMounted =
-      !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
-    if (!stillMounted || (bootAbort && bootAbort.signal.aborted)) return;
-    // Navigation abort often surfaces as TypeError Failed to fetch while root is still connected.
-    // Soft-degrade UI without console.error (smoke treats TypeError+error as hard fail).
-    if (isBootNetworkAbort(err)) {
-      root.innerHTML =
-        `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-        bannerHtml() +
-        `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
-      return;
+      }
+      if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
+        void fetchHostedTrafficOfflineSnapshot({ persist: true })
+          .then(() => {
+            if (bootAbort && bootAbort.signal.aborted) return;
+            if (!root.isConnected) return;
+            setTimeout(() => {
+              if (bootAbort && bootAbort.signal.aborted) return;
+              if (!root.isConnected) return;
+              try {
+                if (state.settingsOpen) updateFeedDom();
+                else paint();
+              } catch (_) {}
+            }, 0);
+          })
+          .catch(() => {});
+      }
+      window.addEventListener(
+        "beforeunload",
+        () => {
+          try {
+            const vp = feedViewport();
+            setScrollState({ viewId: "prehled-v6", y: vp ? vp.scrollTop : 0 });
+          } catch (_) {}
+        },
+        { once: true }
+      );
+    } catch (err) {
+      const stillMounted =
+        !!(root && root.isConnected && typeof document !== "undefined" && document.documentElement.contains(root));
+      if (!stillMounted || (bootAbort && bootAbort.signal.aborted)) return;
+      if (isBootNetworkAbort(err)) {
+        try {
+          updateFeedDom();
+        } catch (_) {}
+        return;
+      }
+      try {
+        const feed = root.querySelector("#iuPrehledDneTimeline");
+        if (feed) {
+          feed.innerHTML = `<li class="iuPdEmpty iuPrehledDne__empty">Přehled dne se nepodařilo načíst.</li>`;
+        }
+      } catch (_) {}
+      console.error("[iu-prehled-dne]", err);
+    } finally {
+      try {
+        window.removeEventListener("pagehide", onPageHide);
+      } catch (_) {}
     }
-    root.innerHTML =
-      `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
-      bannerHtml() +
-      `<p class="iuPdEmpty">Přehled dne se nepodařilo načíst.</p></section>`;
-    console.error("[iu-prehled-dne]", err);
-  } finally {
-    try {
-      window.removeEventListener("pagehide", onPageHide);
-    } catch (_) {}
-  }
+  })();
 }
 
 function mountPrehledDne() {
