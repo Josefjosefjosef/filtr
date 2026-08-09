@@ -24,8 +24,10 @@ permissions:
   actions: write
 
 concurrency:
-  group: ci-workflow-lint
-  cancel-in-progress: true
+  # Keep NDIC GHA semantics proof dispatches out of the lint concurrency group
+  # so they cannot cancel PR/push actionlint runs.
+  group: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ndic_gha_semantics_proof != 'no' && github.event.inputs.ndic_gha_semantics_proof != '' && format('ndic-gha-semantics-{0}', github.run_id) || 'ci-workflow-lint' }}
+  cancel-in-progress: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.ndic_gha_semantics_proof != 'no' && github.event.inputs.ndic_gha_semantics_proof != '') }}
 
 jobs:
   actionlint:
