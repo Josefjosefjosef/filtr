@@ -22,7 +22,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 const fails = [];
 
 function must(cond, id) {
@@ -55,6 +55,8 @@ function staticGate() {
   must(/standaloneSources/.test(ui), "ui:standalone_sources");
   must(/document\.body\.appendChild|mountSettingsOverlay/.test(ui), "ui:settings_body_portal");
   must(/SECTION_ORDER/.test(ui) && /temata/.test(ui) && /zdroje/.test(ui) && /lokalita/.test(ui), "ui:section_order");
+  must(/loadInfoSystemShellData/.test(ui) && /data-iu-pd-shell-ready/.test(ui), "ui:shell_first_boot");
+  must(/loadInfoSystemShellData/.test(core) && /loadInfoSystemFeedOnly/.test(core), "core:shell_feed_split");
   must(/iuPrehledDne__axis/.test(ui) && /iuPrehledDne__dot/.test(ui), "ui:timeline_axis_markup");
   must(/sectionColor|iu-pd-dot/.test(ui), "ui:timeline_dot_color");
   must(/iuPrehledDne__timeline/.test(ui), "ui:timeline_list");
@@ -65,7 +67,7 @@ function staticGate() {
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-08-09-heavy-feed-offmain-v1|2026-08-08-traffic-ui-defer-feed-hydrate-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(/2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-defer-feed-hydrate-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
@@ -186,7 +188,14 @@ async function runPlaywright() {
           window.IUInfoSystem.applyCutoverDom();
         }
       });
-      await page.waitForTimeout(200);
+      // Wait for taxonomy/registry shell — not multi‑MB feed — before settings section clicks.
+      await page.waitForFunction(
+        () => {
+          const root = document.getElementById("iuPrehledDneRoot");
+          return !!(root && root.getAttribute("data-iu-pd-shell-ready") === "1");
+        },
+        { timeout: 45000 }
+      );
 
       const green = await page.evaluate(() => {
         const btn = document.querySelector('[data-act="open-settings"]');

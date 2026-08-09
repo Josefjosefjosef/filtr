@@ -7,6 +7,8 @@
 import {
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
   filterEvents,
   buildFeedIndex,
   getPrefs,
@@ -33,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=heavy-feed-offmain-v1-20260809";
+} from "./iu-info-system-core-v1.js?v=heavy-feed-shell-first-v1-20260809";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -44,10 +46,10 @@ import {
   trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=heavy-feed-offmain-v1-20260809";
+} from "./iu-traffic-overview-v1.js?v=heavy-feed-shell-first-v1-20260809";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -1796,19 +1798,44 @@ async function boot() {
   try {
     window.addEventListener("pagehide", onPageHide, { once: true });
   } catch (_) {}
-  // Do not await multi‑MB feed hydrate on the boot call stack — it starves other app
-  // modules (notes/weather/PWA guards) and CI navigations. Shell is already interactive.
+  // 1) Await small shell JSON (taxonomy/registry) so settings rails work immediately.
+  // 2) Hydrate multi‑MB feed off-main via Worker without blocking shell interactivity.
   void (async () => {
     try {
-      const data = await loadInfoSystemData({
+      const shell = await loadInfoSystemShellData({
         signal: bootAbort ? bootAbort.signal : undefined,
-        // NDIC catalog is served via traffic_offline_snapshot.json (bounded convert).
-        omitFeedSourceIds: ["ndic"],
       });
       if (bootAbort && bootAbort.signal.aborted) return;
-      state.data = data;
+      state.data = shell;
+      state.prefs = getPrefs();
+      state.page = 1;
+      state.index = buildFeedIndex([]);
+      paint();
+      wire();
+      bindTimelineLifecycleListeners();
+      scheduleTimelineBoundaryRefresh();
       try {
-        migrateChmiCapV2UserStates((data.feed && data.feed.items) || []);
+        root.setAttribute("data-iu-pd-shell-ready", "1");
+      } catch (_) {}
+
+      const feed = await loadInfoSystemFeedOnly({
+        signal: bootAbort ? bootAbort.signal : undefined,
+        omitFeedSourceIds: ["ndic"],
+        manifest: shell.manifest,
+      });
+      if (bootAbort && bootAbort.signal.aborted) return;
+      state.data = Object.assign({}, shell, {
+        feed,
+        feedLoad: {
+          omittedSourceIds: (feed && feed.omittedSourceIds) || ["ndic"],
+          trafficPrimarySource: "traffic_offline_snapshot",
+          parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
+          shellOnly: false,
+        },
+        loadedAt: new Date().toISOString(),
+      });
+      try {
+        migrateChmiCapV2UserStates((feed && feed.items) || []);
       } catch (_) {}
       // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
       try {
@@ -1852,15 +1879,24 @@ async function boot() {
           }
         }
       } catch (_) {}
-      state.index = buildFeedIndex((data.feed && data.feed.items) || []);
-      state.prefs = getPrefs();
-      state.page = 1;
+      state.index = buildFeedIndex((feed && feed.items) || []);
       const scroll = getScrollState();
-      paint();
-      wire();
-      bindTimelineLifecycleListeners();
-      scheduleTimelineBoundaryRefresh();
-      if (scroll && Number(scroll.y) > 0) {
+      // Avoid remounting an open settings overlay (race with Playwright section clicks).
+      if (state.settingsOpen) {
+        try {
+          updateFeedDom();
+        } catch (_) {
+          paint();
+          wire();
+        }
+      } else {
+        paint();
+        wire();
+      }
+      try {
+        root.setAttribute("data-iu-pd-feed-ready", "1");
+      } catch (_) {}
+      if (!state.settingsOpen && scroll && Number(scroll.y) > 0) {
         try {
           const vp = feedViewport();
           if (vp) vp.scrollTop = Number(scroll.y);
@@ -1875,7 +1911,8 @@ async function boot() {
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
               try {
-                paint();
+                if (state.settingsOpen) updateFeedDom();
+                else paint();
               } catch (_) {}
             }, 0);
           })

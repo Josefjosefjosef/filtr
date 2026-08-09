@@ -22,8 +22,8 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
-const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
-const SW_VER = "2026-08-09-heavy-feed-offmain-v1";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const SW_VER = "2026-08-09-heavy-feed-shell-first-v1";
 
 const fails = [];
 function ok(id, cond, detail) {

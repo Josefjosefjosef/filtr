@@ -1,17 +1,17 @@
 {
-  "freezeId": "heavy-feed-offmain-v1-20260809",
+  "freezeId": "heavy-feed-shell-first-v1-20260809",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
   "updatedAt": "2026-08-09T01:25:00.000Z",
-  "note": "Freeze bump: off-main-thread parse of multi-MB feed/snapshot; NDIC omitted from shared feed boot.",
+  "note": "Freeze bump: shell-first boot (taxonomy/registry) before off-main feed hydrate; NDIC omitted from shared feed.",
   "files": {
-    "projects/index.html": "00ea87e91c11705e9d2b1f43200027245cda60485725321b8575cd7d16f27a05",
+    "projects/index.html": "6d84971b61020cf27951e84aa1440bdcc9e0ae38a6f43a7069ed5761bc9a521b",
     "assets/app.css": "213ffacbad9306fddef1eb2f6c1e217204c8f48fce0dac2559e65d371d72f5a3",
     "assets/app.js": "c3cb7a0d2a4c9668c10fefa325934eb6c1138f67c5c205847f6172269eb10456",
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "f97088b69dd86c11d6f42cc029466cfb171ec24c56884e4301c803a706cb2bdf",
+    "sw.js": "0edcd47cdee963cac4930d0f0880b1e406bc363a3d2d52c8373ce61903a450e7",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-09-heavy-feed-offmain-v1\"",
+      "CACHE_VERSION = \"2026-08-09-heavy-feed-shell-first-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -34,7 +34,7 @@
       "chmi-multibrowser-console-v1-20260731"
     ],
     "projects/index.html": [
-      "heavy-feed-offmain-v1-20260809",
+      "heavy-feed-shell-first-v1-20260809",
       "custom-buttons-dynamic-bottom-clearance-v1-20260804",
       "bottom-nav-unify-v1-20260804",
       "silver-speech-bubble-down-4px-v1-20260804"

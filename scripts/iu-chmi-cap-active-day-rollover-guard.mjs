@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "heavy-feed-offmain-v1-20260809";
+const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 
 const fails = [];
 function ok(id, cond, detail) {

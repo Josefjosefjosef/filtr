@@ -240,7 +240,18 @@ function fetchJsonFilteredOffMainThread(url, omitSourceIds, signal) {
     signal
   ).catch((err) => {
     if (err && err.name === "AbortError") throw err;
-    // Fail over to main-thread parse only when Worker cannot run.
+    // Never JSON.parse multi‑MB feed.json on the UI thread as a Worker fallback.
+    // Fail-closed empty feed keeps boot interactive; UI shows no untrusted partial data.
+    if (omit.length > 0) {
+      return {
+        items: [],
+        itemCount: 0,
+        omittedSourceIds: omit.slice(),
+        parsedOffMainThread: false,
+        workerFallbackFailClosed: true,
+        error: String((err && err.message) || err || "worker_unavailable"),
+      };
+    }
     return fetchJson(url).then((data) => stripFeedItemsBySourceId(data, omit));
   });
 }
@@ -262,7 +273,8 @@ function eventSortAt(ev) {
   return ev && (ev.sortAt || ev.publishedAtSource || ev.firstSeenByInfoUzel || ev.publishedAt || ev.updatedAt || "");
 }
 
-async function loadInfoSystemData(opts) {
+/** Small JSON only — safe to await before first interactive settings paint. */
+async function loadInfoSystemShellData(opts) {
   const o = opts || {};
   let manifest = null;
   let metadata = null;
@@ -276,41 +288,42 @@ async function loadInfoSystemData(opts) {
   } catch (_) {
     metadata = null;
   }
+  const settled = await Promise.all([
+    fetchJson(iuInfoDataUrl("taxonomy.json")).catch(() => null),
+    fetchJson(iuInfoDataUrl("source_registry.json")).catch(() => null),
+  ]);
+  return {
+    taxonomy: settled[0],
+    registry: settled[1],
+    metadata,
+    manifest,
+    feed: { items: [], itemCount: 0, shellOnly: true },
+    loadedAt: new Date().toISOString(),
+    feedLoad: {
+      omittedSourceIds: [],
+      trafficPrimarySource: "traffic_offline_snapshot",
+      parsedOffMainThread: false,
+      shellOnly: true,
+    },
+  };
+}
 
+async function loadInfoSystemFeedOnly(opts) {
+  const o = opts || {};
   const laneIds = Array.isArray(o.lanes) ? o.lanes.map(String) : [];
+  const manifest = o.manifest || null;
   const wantLanesOnly = laneIds.length > 0 && manifest;
-
-  const jobs = [
-    fetchJson(iuInfoDataUrl("taxonomy.json")),
-    fetchJson(iuInfoDataUrl("source_registry.json")),
-  ];
   /**
    * feed.json is ~22MB because it embeds the full NDIC catalog (thousands of items).
    * Traffic UI already uses traffic_offline_snapshot.json as the public-safe source.
    * Omit ndic from the shared feed load so boot never main-thread-parses multi‑MB NDIC JSON.
-   * Override with opts.omitFeedSourceIds (empty array keeps legacy full feed).
    */
   const omitFeedSourceIds =
     o.omitFeedSourceIds != null
-      ? (Array.isArray(o.omitFeedSourceIds) ? o.omitFeedSourceIds.map(String) : [])
+      ? Array.isArray(o.omitFeedSourceIds)
+        ? o.omitFeedSourceIds.map(String)
+        : []
       : ["ndic"];
-  const feedUrl = iuInfoDataUrl("feed.json");
-  if (!wantLanesOnly) {
-    const feedKey = feedUrl + "|" + omitFeedSourceIds.slice().sort().join(",");
-    if (!_iuFeedLoadInflight || _iuFeedLoadInflight.key !== feedKey) {
-      const p = fetchJsonFilteredOffMainThread(feedUrl, omitFeedSourceIds, o.signal || null).finally(() => {
-        if (_iuFeedLoadInflight && _iuFeedLoadInflight.key === feedKey) _iuFeedLoadInflight = null;
-      });
-      _iuFeedLoadInflight = { key: feedKey, promise: p };
-    }
-    jobs.push(_iuFeedLoadInflight.promise);
-  }
-
-  const settled = await Promise.all(jobs);
-  const taxonomy = settled[0];
-  const registry = settled[1];
-  let feed = wantLanesOnly ? { items: [], itemCount: 0 } : settled[2];
-
   if (wantLanesOnly) {
     const parts = await Promise.all(
       laneIds.map((id) => fetchJson(iuInfoDataUrl(`lanes/${id}.json`)).catch(() => null))
@@ -319,20 +332,49 @@ async function loadInfoSystemData(opts) {
     for (const part of parts) {
       if (part && Array.isArray(part.items)) laneItems.push(...part.items);
     }
-    feed = Object.assign({}, feed, { items: laneItems, itemCount: laneItems.length, fromLanes: laneIds });
+    return {
+      items: laneItems,
+      itemCount: laneItems.length,
+      fromLanes: laneIds,
+      omittedSourceIds: [],
+      parsedOffMainThread: false,
+    };
   }
+  const feedUrl = iuInfoDataUrl("feed.json");
+  const feedKey = feedUrl + "|" + omitFeedSourceIds.slice().sort().join(",");
+  if (!_iuFeedLoadInflight || _iuFeedLoadInflight.key !== feedKey) {
+    const p = fetchJsonFilteredOffMainThread(feedUrl, omitFeedSourceIds, o.signal || null).finally(() => {
+      if (_iuFeedLoadInflight && _iuFeedLoadInflight.key === feedKey) _iuFeedLoadInflight = null;
+    });
+    _iuFeedLoadInflight = { key: feedKey, promise: p };
+  }
+  const feed = await _iuFeedLoadInflight.promise;
+  return feed;
+}
 
+async function loadInfoSystemData(opts) {
+  const o = opts || {};
+  if (o.shellOnly === true) return loadInfoSystemShellData(o);
+  const shell = await loadInfoSystemShellData(o);
+  if (o.skipFeed === true) return shell;
+  const feed = await loadInfoSystemFeedOnly({
+    signal: o.signal,
+    omitFeedSourceIds: o.omitFeedSourceIds,
+    lanes: o.lanes,
+    manifest: shell.manifest,
+  });
   return {
-    taxonomy,
-    registry,
-    metadata,
-    manifest,
+    taxonomy: shell.taxonomy,
+    registry: shell.registry,
+    metadata: shell.metadata,
+    manifest: shell.manifest,
     feed,
     loadedAt: new Date().toISOString(),
     feedLoad: {
-      omittedSourceIds: wantLanesOnly ? [] : omitFeedSourceIds.slice(),
+      omittedSourceIds: (feed && feed.omittedSourceIds) || (Array.isArray(o.omitFeedSourceIds) ? o.omitFeedSourceIds : ["ndic"]),
       trafficPrimarySource: "traffic_offline_snapshot",
       parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
+      shellOnly: false,
     },
   };
 }
@@ -2517,6 +2559,8 @@ const IUInfoSystem = {
   isParallelMode,
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
   fetchJsonFilteredOffMainThread,
   fetchTrafficSnapshotSlimOffMainThread,
   filterEvents,
@@ -2601,6 +2645,8 @@ export {
   isParallelMode,
   applyCutoverDom,
   loadInfoSystemData,
+  loadInfoSystemShellData,
+  loadInfoSystemFeedOnly,
   fetchJsonFilteredOffMainThread,
   fetchTrafficSnapshotSlimOffMainThread,
   filterEvents,
