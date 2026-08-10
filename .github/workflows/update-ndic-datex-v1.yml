@@ -610,14 +610,14 @@ jobs:
             --repo ndic-main-data \
             --ndic-candidate "${RUNNER_TEMP}/ndic-ie-candidate" \
             --branch "${{ env.AUTOMATION_BRANCH }}" \
-            --max 5 \
+            --max 12 \
             --commit-message "${{ env.PR_TITLE }}" \
             | tee "$RUNNER_TEMP/ndic-reconcile.json"
           REFRESH_COUNT="$(node -e 'const fs=require("fs"); const j=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(j.refreshCount||0));' "$RUNNER_TEMP/ndic-reconcile.json")"
           echo "refresh_count=${REFRESH_COUNT}" >> "$GITHUB_OUTPUT"
           echo "REREAD_CURRENT_SHARED_STATE_BEFORE_FINAL_COMMIT=YES"
           echo "DATA_PR_REFRESH_BOUNDED=YES"
-          echo "DATA_PR_REFRESH_MAX=5"
+          echo "DATA_PR_REFRESH_MAX=12"
           echo "UNBOUNDED_RETRY_POSSIBLE=NO"
           echo "GIT_OURS_THEIRS_USED=NO"
 

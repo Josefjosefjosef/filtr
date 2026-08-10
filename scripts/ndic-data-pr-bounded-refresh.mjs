@@ -31,7 +31,7 @@ import {
 import { isChmiItem, isNdicItem, readJson } from "./info-events-shared-writer-critical.mjs";
 
 /** Hard cap — never unbounded retry. */
-export const DATA_PR_REFRESH_MAX = 5;
+export const DATA_PR_REFRESH_MAX = 12;
 
 export const DATA_PR_REFRESH_FLAGS = Object.freeze({
   DATA_PR_REFRESH_BOUNDED: "YES",

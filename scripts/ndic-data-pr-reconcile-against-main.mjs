@@ -10,7 +10,7 @@
  *   --repo <gitRoot>           worktree rooted at latest main tip (will be mutated)
  *   --ndic-candidate <dir>     approved candidate from this run
  *   --branch <name>            automation branch name (for logging)
- *   --max <n>                  bounded refresh attempts (default/cap 5)
+ *   --max <n>                  bounded refresh attempts (default/cap 12)
  *   --commit-message <msg>
  *
  * Outputs JSON to stdout; exit 0 on success (STAGED/NO_CHANGES/ALREADY_CLEAN),
@@ -116,7 +116,7 @@ async function main() {
       };
     },
     rereadAndApply: async ({ attempt }) => {
-      const fetch = git(args.repo, ["fetch", "origin", "main"]);
+      const fetch = git(args.repo, ["fetch", "origin", "main", "--depth=1"]);
       if (fetch.status !== 0) {
         return { ok: false, reason: "FETCH_MAIN_FAILED", detail: fetch.stderr };
       }
@@ -158,8 +158,9 @@ async function main() {
       return { ok: true, result: "COMMITTED", baseMainSha: lastBaseSha, applied };
     },
     isMergeClean: () => {
-      // Clean when HEAD contains origin/main (no behind) and working tree clean.
-      const fetch = git(args.repo, ["fetch", "origin", "main"]);
+      // Clean when HEAD is not behind origin/main and working tree clean.
+      // Keep this check cheap — CHMI data commits can advance main every few seconds.
+      const fetch = git(args.repo, ["fetch", "origin", "main", "--depth=1"]);
       if (fetch.status !== 0) return false;
       const behind = git(args.repo, ["rev-list", "--count", "HEAD..origin/main"]);
       const behindN = Number(String(behind.stdout || "1").trim());
