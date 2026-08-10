@@ -10,7 +10,7 @@
  *   --repo <gitRoot>           worktree rooted at latest main tip (will be mutated)
  *   --ndic-candidate <dir>     approved candidate from this run
  *   --branch <name>            automation branch name (for logging)
- *   --max <n>                  bounded refresh attempts (default/cap 3)
+ *   --max <n>                  bounded refresh attempts (default/cap 5)
  *   --commit-message <msg>
  *
  * Outputs JSON to stdout; exit 0 on success (STAGED/NO_CHANGES/ALREADY_CLEAN),
