@@ -19,7 +19,7 @@ on:
         required: false
         default: "active"
   schedule:
-    # schedule-reregister: 2026-08-10T17:40Z — after PR #9567 merge race window
+    # schedule-reregister: 2026-08-10T19:40Z — after PR #9595 merge window
     # (temporary workflow disable/enable). Comment-only rebind (do NOT disable/enable).
     - cron: "*/5 * * * *"
 

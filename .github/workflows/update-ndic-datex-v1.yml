@@ -28,9 +28,9 @@ on:
   schedule:
     # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
     # poll interval is documented, so stay well above any plausible rate limit.
-    # schedule-reregister: 2026-08-10T17:20Z — after PR #9567 merge race window
-    # (temporary workflow disable/enable killed schedule emission). Comment-only
-    # rebind (do NOT disable/enable). Prior: 2026-08-10T09:25Z tip-equality #9541.
+    # schedule-reregister: 2026-08-10T19:40Z — after PR #9595 full-description merge window
+    # (temporary workflow disable/enable). Comment-only rebind (do NOT disable/enable).
+    # Prior: 2026-08-10T17:20Z after #9567.
     - cron: "8,23,38,53 * * * *"
   workflow_dispatch:
     inputs:
