@@ -28,6 +28,7 @@ export function buildPublicationProjection(event) {
     trafficSeverity: f.trafficSeverity || null,
     titleSafe: f.titleSafe || null,
     summarySafe: f.summarySafe || null,
+    summaryFull: f.summaryFull || null,
     validFrom: f.validFrom || null,
     validTo: f.validTo || null,
     lastMeaningfulChangeAt: f.lastMeaningfulChangeAt || null,

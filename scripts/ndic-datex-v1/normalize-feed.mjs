@@ -18,7 +18,7 @@ import { chooseLocationProfileBucket, chooseNoSignalSubtype } from "./location-f
 import { resolveOpenlrLocation } from "./openlr-resolve.mjs";
 import { OPENLR_STATUS } from "./openlr-constants.mjs";
 import { SUPPLEMENTARY_CLASS } from "./supplementary-location.mjs";
-import { buildTrafficTitle, buildTrafficSummary } from "./title.mjs";
+import { buildTrafficTitle, buildTrafficSummary, sanitizeTrafficComment } from "./title.mjs";
 import {
   attachLegalProvenance,
   canPublishFromSource,
@@ -131,7 +131,9 @@ export function situationToFeedItem(situation, opts = {}) {
     locationLabel: loc.locationLabel,
     direction: loc.direction,
   });
-  const summary = buildTrafficSummary(primary.comment || primary.cause || "");
+  // Full source-backed comment first; short summary is derived for UI only.
+  const summaryFull = sanitizeTrafficComment(primary.comment || primary.cause || "");
+  const summary = buildTrafficSummary(summaryFull);
 
   // Fail-closed quarantine: unknown type without trustworthy base fields
   let quarantine = false;
@@ -162,6 +164,7 @@ export function situationToFeedItem(situation, opts = {}) {
     eventType: (primary.category && primary.category.category) || "doprava",
     title,
     summary,
+    summaryFull,
     url: NDIC_PUBLIC_PORTAL_URL,
     originalUrl: NDIC_PUBLIC_PORTAL_URL,
     publishedAt: primary.createdAt || situation.publicationTime || nowIso,
@@ -217,6 +220,7 @@ export function situationToFeedItem(situation, opts = {}) {
     category: item.eventType,
     title: item.title,
     summary: item.summary,
+    summaryFull: item.summaryFull,
     roadNumber: item.roadNumber,
     direction: item.direction,
     validFrom: item.validFrom,

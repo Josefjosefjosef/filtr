@@ -41,6 +41,7 @@ export function validateProjectionSchema(proj) {
   if (!FEED.has(proj.feedChangeType)) errors.push("feedChangeType");
   if (!MAP.has(proj.mapLinkType)) errors.push("mapLinkType");
   if (!isStrOrNull(proj.impactSummary, 280)) errors.push("impactSummary");
+  if (!isStrOrNull(proj.impactFull, 12000)) errors.push("impactFull");
   if (!isStrOrNull(proj.feedHeadline, 120)) errors.push("feedHeadline");
   if (!isIsoOrNull(proj.validFrom)) errors.push("validFrom");
   if (!isIsoOrNull(proj.expectedEnd)) errors.push("expectedEnd");
@@ -114,6 +115,7 @@ export function validatePublicationSchemas(bundle) {
 export const SCHEMA_CONTRACT = Object.freeze({
   additionalProperties: false,
   maxLengthImpact: 280,
+  maxLengthImpactFull: 12000,
   maxLengthHeadline: 120,
   publicEventIdPattern: "^iu-te-[a-f0-9]{32}$",
 });

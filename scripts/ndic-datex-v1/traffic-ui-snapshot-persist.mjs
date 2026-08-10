@@ -98,8 +98,12 @@ export function feedItemToPublicationEvent(item) {
       : null;
   const directionRaw = precise && item.direction != null ? item.direction : null;
   const direction = humanDirectionOrNull(directionRaw);
+  const summaryFullRaw = String(
+    item.summaryFull || item.commentFull || item.summary || item.description || ""
+  ).trim();
   const officialSummary = String(item.summary || item.description || "").trim();
-  const locBits = extractLocalityFromOfficialComment(officialSummary);
+  // Prefer untruncated source comment for locality extraction when available.
+  const locBits = extractLocalityFromOfficialComment(summaryFullRaw || officialSummary);
   const regionName =
     (item.region && (item.region.name || item.region.summary)) || item.locality || null;
   const adminLabel =
@@ -162,6 +166,7 @@ export function feedItemToPublicationEvent(item) {
         : prov(null, "feed", ts, "not_public"),
       titleSafe: prov(item.title || "Dopravní událost", "feed", ts),
       summarySafe: prov(officialSummary || "", "feed", ts),
+      summaryFull: prov(summaryFullRaw || officialSummary || "", "feed", ts),
       validFrom: prov(item.startsAt || item.validFrom || null, "feed", ts),
       validTo: prov(item.endsAt || item.validTo || null, "feed", ts),
       roadNumber: road ? prov(road, "feed", ts, "validated") : prov(null, "feed", ts, "not_public"),

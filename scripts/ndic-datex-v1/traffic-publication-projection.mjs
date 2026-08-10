@@ -33,9 +33,15 @@ import {
   illustrationKeyForEventType,
   roadClassLabelCs,
 } from "./traffic-card-content-v1.mjs";
+import { TRAFFIC_COMMENT_FULL_MAX, TRAFFIC_COMMENT_SUMMARY_MAX } from "./title.mjs";
 
-const MAX_TEXT = 280;
+/** Short presentation summary on the card face. */
+const MAX_SUMMARY = TRAFFIC_COMMENT_SUMMARY_MAX;
 const MAX_LABEL = 120;
+/** Full source-backed description — must not be reconstructed from MAX_SUMMARY. */
+const MAX_FULL = TRAFFIC_COMMENT_FULL_MAX;
+/** Short preview before "Více informací" (presentation only). */
+const IMPACT_SHORT_MAX = 160;
 
 function clip(s, n) {
   if (s == null) return null;
@@ -330,10 +336,14 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
   }
 
   const map = resolveMapTarget(event, locationPrecise, opts);
-  const officialSummary =
+  const summaryShort =
     (fv(event, "summarySafe") && fv(event, "summarySafe").value) || "";
+  const summaryFullRaw =
+    (fv(event, "summaryFull") && fv(event, "summaryFull").value) || "";
+  // impactFull must come from the fullest source text, never from the ≤280 summary alone.
+  const officialFull = String(summaryFullRaw || summaryShort || "").trim();
   const templateImpact = buildImpactSummary(event, feedChangeType);
-  const impactTexts = chooseImpactTexts(officialSummary, templateImpact, MAX_TEXT);
+  const impactTexts = chooseImpactTexts(officialFull, templateImpact, IMPACT_SHORT_MAX);
   const feedHeadline = buildFeedHeadline(feedChangeType, event, locationPrecise, presentation);
 
   putProv("status", fv(event, "status"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD);
@@ -349,7 +359,7 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
         ? presentation.subjectScopeLabel
         : null,
     roadNumber: roadNumber ? roadNumber.value : null,
-    summary: officialSummary,
+    summary: officialFull || summaryShort,
     subjectScopeLabel: presentation.subjectScopeLabel,
   });
 
@@ -388,8 +398,8 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     validFrom: validFromVal,
     expectedEnd: validToVal,
     actualEnd: lifecycleStatus === LIFECYCLE_STATUS.ENDED ? validToVal : null,
-    impactSummary: clip(impactTexts.impactShort, MAX_TEXT),
-    impactFull: impactTexts.impactFull ? clip(impactTexts.impactFull, 2000) : null,
+    impactSummary: clip(impactTexts.impactShort, MAX_SUMMARY),
+    impactFull: impactTexts.impactFull ? clip(impactTexts.impactFull, MAX_FULL) : null,
     impactSource: impactTexts.impactSource,
     validityLine,
     illustrationKey: illustrationKeyForEventType(eventTypeVal),
