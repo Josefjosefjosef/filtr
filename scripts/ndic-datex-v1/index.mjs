@@ -30,7 +30,7 @@ export {
   tmcPublicMeta,
 } from "./tmc-table.mjs";
 export { localizeFromTmc } from "./tmc-localize.mjs";
-export { buildTrafficTitle, buildTrafficSummary } from "./title.mjs";
+export { buildTrafficTitle, buildTrafficSummary, sanitizeTrafficComment, TRAFFIC_COMMENT_FULL_MAX, TRAFFIC_COMMENT_SUMMARY_MAX } from "./title.mjs";
 export {
   situationToFeedItem,
   situationsToFeedItems,

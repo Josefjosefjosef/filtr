@@ -9,6 +9,7 @@ import {
   provenanceField,
 } from "./traffic-event-aggregation-constants.mjs";
 import { RESOLVER_STATUS, DIRECTION, FRESHNESS } from "./datex-tmc-resolver-constants.mjs";
+import { TRAFFIC_COMMENT_FULL_MAX, TRAFFIC_COMMENT_SUMMARY_MAX } from "./title.mjs";
 
 export const NORMALIZED_EVENT_SCHEMA = "iu-normalized-traffic-event-v1";
 
@@ -127,10 +128,21 @@ export function buildNormalizedTrafficEvent(input, opts = {}) {
       input.titleSafe != null ? "validated" : "not_available"
     ),
     summarySafe: provenanceField(
-      input.summarySafe != null ? String(input.summarySafe).slice(0, 280) : null,
+      input.summarySafe != null
+        ? String(input.summarySafe).slice(0, TRAFFIC_COMMENT_SUMMARY_MAX)
+        : null,
       "datex_normalized",
       ts.datexUpdatedAt || null,
       input.summarySafe != null ? "validated" : "not_available"
+    ),
+    // Full source-backed comment — never derived from the 280-char summary.
+    summaryFull: provenanceField(
+      input.summaryFull != null
+        ? String(input.summaryFull).slice(0, TRAFFIC_COMMENT_FULL_MAX)
+        : null,
+      "datex_normalized",
+      ts.datexUpdatedAt || null,
+      input.summaryFull != null ? "validated" : "not_available"
     ),
     validFrom: provenanceField(input.validFrom || null, "datex", ts.datexUpdatedAt || null, input.validFrom ? "validated" : "not_available"),
     validTo: provenanceField(input.validTo || null, "datex", ts.datexUpdatedAt || null, input.validTo ? "validated" : "not_available"),

@@ -30,15 +30,34 @@ export function buildTrafficTitle(p = {}) {
   return type + " — " + bits.join(", ");
 }
 
+/** Parser / DATEX text-field ceiling — preserve full source up to this bound. */
+export const TRAFFIC_COMMENT_FULL_MAX = 12000;
+/** Short card/list summary length (presentation only; never feeds impactFull). */
+export const TRAFFIC_COMMENT_SUMMARY_MAX = 280;
+
 /**
- * Short factual summary from official comment (sanitized plain text).
+ * Sanitize official DATEX comment / cause as plain text WITHOUT presentation truncation.
+ * Strips HTML-like tags; collapses whitespace; caps only at TRAFFIC_COMMENT_FULL_MAX
+ * (same order as DEFAULT_LIMITS.maxTextFieldChars) — not the 280 summary limit.
  */
-export function buildTrafficSummary(comment, maxLen = 280) {
+export function sanitizeTrafficComment(comment, maxLen = TRAFFIC_COMMENT_FULL_MAX) {
   let t = clean(comment);
   if (!t) return "";
-  // Strip any HTML-like tags defensively
   t = t.replace(/<[^>]*>/g, " ");
   t = clean(t);
-  if (t.length > maxLen) t = t.slice(0, maxLen - 1).trim() + "…";
+  const cap = Number.isFinite(maxLen) && maxLen > 0 ? maxLen : TRAFFIC_COMMENT_FULL_MAX;
+  if (t.length > cap) t = t.slice(0, cap);
+  return t;
+}
+
+/**
+ * Short factual summary from official comment (sanitized plain text).
+ * Presentation-only — must NOT be used as the sole source for impactFull.
+ */
+export function buildTrafficSummary(comment, maxLen = TRAFFIC_COMMENT_SUMMARY_MAX) {
+  let t = sanitizeTrafficComment(comment, TRAFFIC_COMMENT_FULL_MAX);
+  if (!t) return "";
+  const cap = Number.isFinite(maxLen) && maxLen > 0 ? maxLen : TRAFFIC_COMMENT_SUMMARY_MAX;
+  if (t.length > cap) t = t.slice(0, cap - 1).trim() + "…";
   return t;
 }

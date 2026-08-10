@@ -60,6 +60,7 @@ ok("mut_fuzzy_off", PUBLICATION_LAYER_FLAGS.FUZZY_DEDUPLICATION_ENABLED === fals
 ok("mut_heur_map_off", PUBLICATION_LAYER_FLAGS.HEURISTIC_MAP_LINK_ENABLED === false);
 ok("mut_addl_props", SCHEMA_CONTRACT.additionalProperties === false);
 ok("mut_maxlen", SCHEMA_CONTRACT.maxLengthImpact === 280 && SCHEMA_CONTRACT.maxLengthHeadline === 120);
+ok("mut_maxlen_full", SCHEMA_CONTRACT.maxLengthImpactFull === 12000);
 
 // unresolved must not publish precise road when requireLocation
 {
@@ -137,12 +138,22 @@ ok("mut_maxlen", SCHEMA_CONTRACT.maxLengthImpact === 280 && SCHEMA_CONTRACT.maxL
 
 // feed must not pretend download time is change time without marker
 {
-  const ev = baseEvent({ eventId: "mu-dl" });
+  const ev = baseEvent({
+    eventId: "mu-dl",
+    sourceTimestamps: { datexDownloadedAt: "2026-08-06T11:00:00.000Z" },
+  });
   const patched = Object.freeze({
     ...ev,
+    sourceTimestamps: Object.freeze({
+      datexDownloadedAt: "2026-08-06T11:00:00.000Z",
+      datexUpdatedAt: null,
+      datexCreatedAt: null,
+      datexMeasuredAt: null,
+    }),
     fields: Object.freeze({
       ...ev.fields,
       lastMeaningfulChangeAt: provenanceField(null, null, null, "not_available"),
+      changeTimeSource: provenanceField(null, null, null, "not_available"),
     }),
   });
   const p = buildTrafficPublicationProjection(patched);

@@ -83,6 +83,7 @@ export const PUBLICATION_FIELD_ALLOWLIST = Object.freeze([
   "severitySeverity",
   "titleSafe",
   "summarySafe",
+  "summaryFull",
   "validFrom",
   "validTo",
   "lastMeaningfulChangeAt",

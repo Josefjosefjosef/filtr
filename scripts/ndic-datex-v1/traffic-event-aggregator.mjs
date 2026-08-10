@@ -159,6 +159,7 @@ export async function aggregateTrafficEvents(datexEvents, opts = {}) {
           status: raw.status,
           titleSafe: raw.titleSafe,
           summarySafe: raw.summarySafe,
+          summaryFull: raw.summaryFull,
           validFrom: raw.validFrom,
           validTo: raw.validTo,
           kilometer: raw.kilometer,
