@@ -1175,6 +1175,296 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdCard--traffic .iuPdCard__meta {
   row-gap: 6px;
 }
+.iuPdTrafficFilters {
+  margin: 0 0 12px;
+  padding: 10px 10px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(248, 250, 252, 0.9);
+}
+.iuPdTrafficFilters__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.iuPdTrafficFilters__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--iu-pd-muted);
+  min-width: 3.2rem;
+}
+.iuPdTrafficChip {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+}
+.iuPdTrafficChip.is-on,
+.iuPdChip.iuPdTrafficChip.is-on {
+  background: var(--iu-pd-accent-2);
+  border-color: var(--iu-pd-accent-2);
+  color: #fff;
+}
+.iuPdTrafficLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  opacity: 0.85;
+}
+.iuPdTrafficLegend__item {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+.iuPdRoadBadge,
+.iuPdTrafficLegend__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.iuPdRoadBadge {
+  min-height: 28px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  flex: 0 0 auto;
+}
+.iuPdRoadBadge--motorway,
+.iuPdTrafficLegend__item.iuPdRoadBadge--motorway {
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+.iuPdRoadBadge--class-i,
+.iuPdTrafficLegend__item.iuPdRoadBadge--class-i {
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(185, 28, 28, 0.35);
+}
+.iuPdRoadBadge--class-ii,
+.iuPdTrafficLegend__item.iuPdRoadBadge--class-ii {
+  color: #0f766e;
+  background: rgba(20, 184, 166, 0.14);
+  border-color: rgba(13, 148, 136, 0.35);
+}
+.iuPdRoadBadge--class-iii,
+.iuPdTrafficLegend__item.iuPdRoadBadge--class-iii {
+  color: #3f6212;
+  background: rgba(132, 204, 22, 0.16);
+  border-color: rgba(101, 163, 13, 0.35);
+}
+.iuPdRoadBadge--local,
+.iuPdRoadBadge--unknown,
+.iuPdTrafficLegend__item.iuPdRoadBadge--local {
+  color: #475569;
+  background: rgba(148, 163, 184, 0.16);
+  border-color: rgba(100, 116, 139, 0.32);
+}
+.iuPdTrafficHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 10px;
+}
+.iuPdTrafficHead .iuPdTraffic__locality {
+  margin-bottom: 0;
+  flex: 1 1 12rem;
+}
+.iuPdTrafficMain {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+.iuPdTrafficArt {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  background: linear-gradient(160deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 6px 14px rgba(15, 23, 42, 0.06);
+}
+.iuPdTrafficArt svg {
+  display: block;
+  width: 52px;
+  height: 52px;
+}
+.iuPdTrafficFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.iuPdTrafficFact {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 6px;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+.iuPdTrafficFact__k {
+  color: var(--iu-pd-muted);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+.iuPdTrafficFact__v {
+  color: var(--iu-pd-text);
+  overflow-wrap: anywhere;
+}
+.iuPdTrafficMore {
+  margin: 4px 0 8px;
+  font-size: 0.86rem;
+}
+.iuPdTrafficMore summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--iu-pd-accent-2);
+}
+.iuPdTrafficMore summary:focus-visible {
+  outline: 2px solid var(--iu-pd-accent-2);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.iuPdTrafficMore p {
+  margin: 6px 0 0;
+  color: var(--iu-pd-text);
+  line-height: 1.4;
+}
+.iuPdTrafficQuicks {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 8px 0;
+}
+.iuPdTrafficQuick {
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+.iuPdTrafficQuick__t {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--iu-pd-muted);
+  margin-bottom: 2px;
+}
+.iuPdTrafficQuick__b {
+  font-size: 0.86rem;
+  color: var(--iu-pd-text);
+  overflow-wrap: anywhere;
+}
+.iuPdTrafficSource {
+  font-size: 0.72rem;
+  color: var(--iu-pd-muted);
+  margin: 2px 0 6px;
+}
+.iuPdCard--traffic .iuPdCard__actions .iuPdBtn--primary {
+  min-width: 7.5rem;
+}
+.iuPdCard--traffic .iuPdBtn:focus-visible,
+.iuPdTrafficChip:focus-visible {
+  outline: 2px solid var(--iu-pd-accent-2);
+  outline-offset: 2px;
+}
+.iuPdFeed--trafficPad {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 640px) {
+  .iuPdTrafficQuicks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .iuPdTrafficMain {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .iuPdTrafficArt {
+    width: 72px;
+    height: 72px;
+  }
+  .iuPdTrafficArt svg {
+    width: 58px;
+    height: 58px;
+  }
+}
+@media (min-width: 900px) {
+  .iuPdTrafficQuicks {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+html.dark .iuPdTrafficFilters,
+html[data-theme="dark"] .iuPdTrafficFilters {
+  background: rgba(30, 41, 59, 0.72);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+html.dark .iuPdTrafficArt,
+html[data-theme="dark"] .iuPdTrafficArt {
+  color: #e2e8f0;
+  background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+html.dark .iuPdTrafficQuick,
+html[data-theme="dark"] .iuPdTrafficQuick {
+  background: rgba(51, 65, 85, 0.45);
+  border-color: rgba(148, 163, 184, 0.22);
+}
+html.dark .iuPdRoadBadge--motorway,
+html[data-theme="dark"] .iuPdRoadBadge--motorway,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--motorway,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--motorway {
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.28);
+}
+html.dark .iuPdRoadBadge--class-i,
+html[data-theme="dark"] .iuPdRoadBadge--class-i,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-i,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-i {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.28);
+}
+html.dark .iuPdRoadBadge--class-ii,
+html[data-theme="dark"] .iuPdRoadBadge--class-ii,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-ii,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-ii {
+  color: #5eead4;
+  background: rgba(20, 184, 166, 0.24);
+}
+html.dark .iuPdRoadBadge--class-iii,
+html[data-theme="dark"] .iuPdRoadBadge--class-iii,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-iii,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-iii {
+  color: #bef264;
+  background: rgba(132, 204, 22, 0.22);
+}
+html.dark .iuPdRoadBadge--local,
+html.dark .iuPdRoadBadge--unknown,
+html[data-theme="dark"] .iuPdRoadBadge--local,
+html[data-theme="dark"] .iuPdRoadBadge--unknown,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--local,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--local {
+  color: #cbd5e1;
+  background: rgba(100, 116, 139, 0.28);
+}
 html.dark .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended),
 html[data-theme="dark"] .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended) {
   color: #fecaca;

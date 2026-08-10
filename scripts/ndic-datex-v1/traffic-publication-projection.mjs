@@ -25,6 +25,14 @@ import {
   LOCATION_PRESENTATION_LEVEL,
   SUBJECT_SCOPE_KIND,
 } from "./traffic-location-presentation-policy.mjs";
+import {
+  chooseHumanLocality,
+  chooseImpactTexts,
+  formatValidityLineCs,
+  humanDirectionOrNull,
+  illustrationKeyForEventType,
+  roadClassLabelCs,
+} from "./traffic-card-content-v1.mjs";
 
 const MAX_TEXT = 280;
 const MAX_LABEL = 120;
@@ -213,10 +221,21 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
 
   const ts = event.sourceTimestamps || {};
   let lastMeaningful = fv(event, "lastMeaningfulChangeAt") && fv(event, "lastMeaningfulChangeAt").value;
-  let changeTimeSource = "EVENT_CHANGE";
+  let changeTimeSource =
+    (fv(event, "changeTimeSource") && fv(event, "changeTimeSource").value) || "EVENT_CHANGE";
+  let timelineField = (fv(event, "timelineField") && fv(event, "timelineField").value) || null;
   if (!lastMeaningful) {
-    lastMeaningful = ts.datexDownloadedAt || null;
-    changeTimeSource = lastMeaningful ? "DOWNLOAD_FALLBACK" : "UNKNOWN";
+    lastMeaningful = ts.datexUpdatedAt || ts.datexCreatedAt || ts.datexDownloadedAt || null;
+    if (ts.datexUpdatedAt) {
+      changeTimeSource = "EVENT_CHANGE";
+      timelineField = timelineField || "situationRecordVersionTime";
+    } else if (ts.datexCreatedAt) {
+      changeTimeSource = "EVENT_CHANGE";
+      timelineField = timelineField || "situationRecordCreationTime";
+    } else {
+      changeTimeSource = lastMeaningful ? "DOWNLOAD_FALLBACK" : "UNKNOWN";
+      timelineField = lastMeaningful ? "datexDownloadedAt" : null;
+    }
   }
 
   // Provenance map (only for included fields)
@@ -247,13 +266,35 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
         : null;
 
   const directionField = fv(event, "direction");
-  const direction =
+  const directionRaw =
     presentation.showPreciseGeoFields &&
     directionField &&
     directionField.validationStatus === "validated" &&
     directionField.value !== DIRECTION.UNKNOWN &&
     directionField.value !== DIRECTION.CONFLICT
-      ? putProv("direction", directionField, CONFIDENCE_CLASS.VERIFIED_RESOLVED_BASIC)
+      ? directionField.value
+      : null;
+  const directionHuman = humanDirectionOrNull(directionRaw);
+  const direction = directionHuman
+    ? putProv("direction", { ...directionField, value: directionHuman }, CONFIDENCE_CLASS.VERIFIED_RESOLVED_BASIC)
+    : null;
+
+  const roadClassField = fv(event, "roadClass");
+  const roadClass =
+    roadClassField && roadClassField.validationStatus === "validated" && roadClassField.value
+      ? putProv("roadClass", roadClassField, CONFIDENCE_CLASS.VERIFIED_DERIVED_DIFF)
+      : null;
+
+  const municipalityField = fv(event, "municipality");
+  const municipality =
+    municipalityField && municipalityField.validationStatus === "validated" && municipalityField.value
+      ? putProv("municipality", municipalityField, CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
+      : null;
+
+  const districtField = fv(event, "district");
+  const district =
+    districtField && districtField.validationStatus === "validated" && districtField.value
+      ? putProv("district", districtField, CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
       : null;
 
   const administrativeArea =
@@ -266,7 +307,9 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
           fv(event, "administrativeArea") &&
           fv(event, "administrativeArea").validationStatus === "validated"
         ? putProv("administrativeArea", fv(event, "administrativeArea"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
-        : null;
+        : municipality
+          ? municipality
+          : null;
 
   // Coordinates: never emit into projection; map uses link type only
   let coordinatesPublished = false;
@@ -287,43 +330,74 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
   }
 
   const map = resolveMapTarget(event, locationPrecise, opts);
-  const impactSummary = buildImpactSummary(event, feedChangeType);
+  const officialSummary =
+    (fv(event, "summarySafe") && fv(event, "summarySafe").value) || "";
+  const templateImpact = buildImpactSummary(event, feedChangeType);
+  const impactTexts = chooseImpactTexts(officialSummary, templateImpact, MAX_TEXT);
   const feedHeadline = buildFeedHeadline(feedChangeType, event, locationPrecise, presentation);
 
   putProv("status", fv(event, "status"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD);
   putProv("trafficCategory", fv(event, "trafficCategory"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD);
 
+  // Freshness may be UNKNOWN internally; UI must not print "Čerstvost: UNKNOWN".
   const freshnessStatus = (fv(event, "freshness") && fv(event, "freshness").value) || FRESHNESS.UNKNOWN;
 
-  const locationLabel = presentation.showPreciseGeoFields
-    ? presentation.presentationRoad || presentation.presentationAdminArea
-    : presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED
-      ? presentation.subjectScopeLabel
-      : null;
+  const humanLoc = chooseHumanLocality({
+    locationLabel: presentation.showPreciseGeoFields
+      ? presentation.presentationRoad || presentation.presentationAdminArea
+      : presentation.locationPresentationLevel === LOCATION_PRESENTATION_LEVEL.SCOPED
+        ? presentation.subjectScopeLabel
+        : null,
+    roadNumber: roadNumber ? roadNumber.value : null,
+    summary: officialSummary,
+    subjectScopeLabel: presentation.subjectScopeLabel,
+  });
+
+  const locationLabel = humanLoc;
+
+  const validFromVal = fv(event, "validFrom") ? fv(event, "validFrom").value : null;
+  const validToVal = fv(event, "validTo") ? fv(event, "validTo").value : null;
+  const validityLine = formatValidityLineCs(validFromVal, validToVal, false);
+  const eventTypeVal = fv(event, "trafficCategory") ? fv(event, "trafficCategory").value : null;
+  const identity = event.stableIdentity || {};
+  const delayAvailable = delayStatus === METRIC_STATUS.PROVEN && delayMinutes != null;
 
   const proj = {
     schema: "iu-traffic-publication-projection-v1",
     publicEventId,
     lifecycleStatus,
     changeStatus,
-    eventType: fv(event, "trafficCategory") ? fv(event, "trafficCategory").value : null,
-    eventCategory: fv(event, "trafficCategory") ? fv(event, "trafficCategory").value : null,
-    severity: fv(event, "trafficSeverity") ? fv(event, "trafficSeverity").value : null,
+    eventType: eventTypeVal,
+    eventCategory: eventTypeVal,
+    severity: fv(event, "severity") && fv(event, "severity").value
+      ? fv(event, "severity").value
+      : fv(event, "trafficSeverity")
+        ? fv(event, "trafficSeverity").value
+        : null,
     roadNumber: roadNumber ? roadNumber.value : null,
     roadName: null,
+    roadClass: roadClass ? roadClass.value : null,
+    roadClassLabel: roadClass ? roadClassLabelCs(roadClass.value) : null,
     kilometer: kilometer ? kilometer.value : null,
     sectionLabel: opts.sectionLabel && presentation.showPreciseGeoFields ? clip(opts.sectionLabel, MAX_LABEL) : null,
     direction: direction ? direction.value : null,
     locationLabel,
     administrativeArea: administrativeArea ? administrativeArea.value : null,
-    validFrom: fv(event, "validFrom") ? fv(event, "validFrom").value : null,
-    expectedEnd: fv(event, "validTo") ? fv(event, "validTo").value : null,
-    actualEnd: lifecycleStatus === LIFECYCLE_STATUS.ENDED ? fv(event, "validTo") && fv(event, "validTo").value : null,
-    impactSummary: clip(impactSummary, MAX_TEXT),
+    municipality: municipality ? municipality.value : null,
+    district: district ? district.value : null,
+    validFrom: validFromVal,
+    expectedEnd: validToVal,
+    actualEnd: lifecycleStatus === LIFECYCLE_STATUS.ENDED ? validToVal : null,
+    impactSummary: clip(impactTexts.impactShort, MAX_TEXT),
+    impactFull: impactTexts.impactFull ? clip(impactTexts.impactFull, 2000) : null,
+    impactSource: impactTexts.impactSource,
+    validityLine,
+    illustrationKey: illustrationKeyForEventType(eventTypeVal),
     lastMeaningfulChangeAt: lastMeaningful,
     changeTimeSource,
+    timelineField,
     measurementTime: ts.datexMeasuredAt || null,
-    sourceUpdatedAt: ts.datexUpdatedAt || null,
+    sourceUpdatedAt: ts.datexUpdatedAt || lastMeaningful || null,
     downloadedAt: ts.datexDownloadedAt || null,
     publishedSnapshotAt: null,
     freshnessStatus,
@@ -334,6 +408,7 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     feedChangeType,
     delayStatus,
     delayMinutes,
+    delayAvailable,
     queueLengthStatus: opts.queueProven === true ? METRIC_STATUS.PROVEN : METRIC_STATUS.NOT_AVAILABLE,
     queueLengthMeters: opts.queueProven === true && typeof opts.queueLengthMeters === "number" ? opts.queueLengthMeters : null,
     speedStatus: opts.speedProven === true ? METRIC_STATUS.PROVEN : METRIC_STATUS.NOT_AVAILABLE,
@@ -350,6 +425,8 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     subjectScopeLabel: presentation.subjectScopeLabel,
     locationDisclosureCs: presentation.locationDisclosureCs,
     routeMatchMode: presentation.routeMatchMode,
+    stableSituationId: identity.situationId || null,
+    stableRecordId: identity.recordId || null,
   };
 
   // Reject invalid metric numbers

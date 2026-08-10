@@ -61,6 +61,7 @@ export const TRAFFIC_TYPE = Object.freeze({
 });
 
 const LS_OFFLINE_SNAPSHOT = "iu.trafficOverview.offlineSnapshot.v1";
+export const LS_TRAFFIC_FOLLOW = "iu.trafficFollow.v1";
 const FORBIDDEN_NEEDLES = Object.freeze([
   "locationCode",
   "<Situation",
@@ -74,6 +75,39 @@ const FORBIDDEN_NEEDLES = Object.freeze([
   "/home/",
 ]);
 
+const TRAFFIC_UI_REGRESSION_NEEDLES = Object.freeze([
+  "Čerstvost: UNKNOWN",
+  "Historie: nová",
+  "směr záporný směr",
+  "směr kladný směr",
+  "záporný směr",
+  "kladný směr",
+]);
+
+const TECH_DIRECTION = /^(kladný směr|záporný směr|positive|negative|pos|neg)$/i;
+
+const EVENT_TYPE_LABEL_CS = Object.freeze({
+  nehoda: "Nehoda",
+  prekazka: "Překážka",
+  prace: "Práce na silnici",
+  uzavirka: "Uzávěrka",
+  kolona: "Kolona",
+  pozar: "Požár",
+  omezeni: "Omezení",
+  objizdka: "Objížďka",
+  sjizdnost: "Sjízdnost",
+  doprava: "Doprava",
+});
+
+const ROAD_CLASS_LABEL_CS = Object.freeze({
+  MOTORWAY: "Dálnice",
+  CLASS_I: "Silnice I. třídy",
+  CLASS_II: "Silnice II. třídy",
+  CLASS_III: "Silnice III. třídy",
+  LOCAL: "Místní komunikace",
+  UNKNOWN: "Komunikace",
+});
+
 const ALLOWED_CARD_KEYS = Object.freeze([
   "publicEventId",
   "lifecycleStatus",
@@ -82,12 +116,20 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "category",
   "severity",
   "road",
+  "roadClass",
+  "roadClassLabel",
   "kilometer",
   "section",
   "direction",
   "location",
+  "municipality",
+  "district",
   "validity",
+  "validityLine",
   "impact",
+  "impactFull",
+  "impactSource",
+  "illustrationKey",
   "freshness",
   "source",
   "mapTarget",
@@ -99,6 +141,11 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "downloadedAt",
   "measurementTime",
   "sourceUpdatedAt",
+  "timelineField",
+  "delayAvailable",
+  "delayMinutes",
+  "stableSituationId",
+  "stableRecordId",
   "locationPresentationLevel",
   "subjectScopeVerified",
   "preciseLocationVerified",
@@ -107,6 +154,64 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "locationDisclosureCs",
   "routeMatchMode",
 ]);
+
+function humanDirectionOrNull(raw) {
+  const d = String(raw || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!d) return null;
+  if (TECH_DIRECTION.test(d)) return null;
+  if (/^oba směry$/i.test(d)) return "oba směry";
+  if (/^[A-Za-zÁ-Žá-ž0-9 ./-]{2,40}$/.test(d)) return d;
+  return null;
+}
+
+function normalizeFreshness(raw) {
+  if (raw == null) return null;
+  const s = String(raw).trim();
+  if (!s || s.toUpperCase() === "UNKNOWN") return null;
+  return s;
+}
+
+function importanceFromSeverity(severity) {
+  if (severity == null || String(severity).trim() === "") return 0;
+  const s = String(severity).toLowerCase();
+  if (s === "high" || s === "severe") return 5;
+  if (s === "medium") return 4;
+  if (s === "low") return 2;
+  return 0;
+}
+
+function eventTypeLabelCs(eventType) {
+  const t = String(eventType || "")
+    .trim()
+    .toLowerCase();
+  return EVENT_TYPE_LABEL_CS[t] || "";
+}
+
+function readFollowStore() {
+  if (typeof localStorage === "undefined") return { items: {} };
+  try {
+    const raw = localStorage.getItem(LS_TRAFFIC_FOLLOW);
+    if (!raw) return { items: {} };
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return { items: {} };
+    const items = parsed.items && typeof parsed.items === "object" ? parsed.items : {};
+    return { items };
+  } catch (_) {
+    return { items: {} };
+  }
+}
+
+function writeFollowStore(store) {
+  if (typeof localStorage === "undefined") return false;
+  try {
+    localStorage.setItem(LS_TRAFFIC_FOLLOW, JSON.stringify({ items: store.items || {} }));
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 
 /**
  * Map shared InfoUzel prefs → internal spatial mode (no parallel settings store).
@@ -179,6 +284,16 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   const road = c.road != null ? c.road : c.roadNumber != null ? c.roadNumber : null;
   const precise = c.preciseLocationVerified === true;
   const level = String(c.locationPresentationLevel || (precise ? "PRECISE" : "NONE"));
+  const directionRaw = precise && c.direction != null ? c.direction : null;
+  const direction = humanDirectionOrNull(directionRaw);
+  const freshness = normalizeFreshness(
+    c.freshness != null ? c.freshness : c.freshnessStatus != null ? c.freshnessStatus : null
+  );
+  const delayAvailable = c.delayAvailable === true;
+  const delayMinutes =
+    delayAvailable && c.delayMinutes != null && Number.isFinite(Number(c.delayMinutes))
+      ? Number(c.delayMinutes)
+      : null;
 
   const trafficV1 = {
     publicEventId,
@@ -186,16 +301,24 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     changeStatus: c.changeStatus || null,
     eventType: c.eventType || c.category || null,
     category: c.category || c.eventCategory || c.eventType || null,
-    severity: c.severity || null,
+    severity: c.severity != null && String(c.severity).trim() !== "" ? c.severity : null,
     road: road,
+    roadClass: c.roadClass || null,
+    roadClassLabel: c.roadClassLabel || null,
     // Never surface km/dir/section unless precise location verified
     kilometer: precise && c.kilometer != null ? c.kilometer : null,
     section: precise && (c.section != null || c.sectionLabel != null) ? c.section || c.sectionLabel : null,
-    direction: precise && c.direction != null ? c.direction : null,
+    direction,
     location: locLabel,
+    municipality: c.municipality || null,
+    district: c.district || null,
     validity,
+    validityLine: c.validityLine || null,
     impact: c.impact != null ? c.impact : c.impactSummary != null ? c.impactSummary : null,
-    freshness: c.freshness != null ? c.freshness : c.freshnessStatus != null ? c.freshnessStatus : null,
+    impactFull: c.impactFull || null,
+    impactSource: c.impactSource || null,
+    illustrationKey: c.illustrationKey || null,
+    freshness,
     source: c.source != null ? c.source : c.sourceLabel != null ? c.sourceLabel : "ŘSD/NDIC",
     mapTarget: {
       mapLinkType: mapTarget.mapLinkType || "NONE",
@@ -212,6 +335,11 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     downloadedAt: c.downloadedAt || null,
     measurementTime: c.measurementTime || null,
     sourceUpdatedAt: c.sourceUpdatedAt || null,
+    timelineField: c.timelineField || null,
+    delayAvailable,
+    delayMinutes,
+    stableSituationId: c.stableSituationId || null,
+    stableRecordId: c.stableRecordId || null,
     locationPresentationLevel: level,
     subjectScopeVerified: c.subjectScopeVerified === true,
     preciseLocationVerified: precise,
@@ -235,8 +363,7 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
 
   const headline = clip(trafficV1.feed.feedHeadline || trafficV1.impact || "Dopravní událost", 120);
   const mapUrl = resolveSafeTrafficMapUrl(trafficV1.mapTarget);
-  const severity = String(trafficV1.severity || "").toLowerCase();
-  const importance = severity === "high" || severity === "severe" ? 5 : severity === "medium" ? 4 : 3;
+  const importance = importanceFromSeverity(trafficV1.severity);
   const life = trafficV1.lifecycleStatus;
   let status = "aktivni";
   if (life === "ENDED") status = "ukonceno";
@@ -244,6 +371,9 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   if (life === "FUTURE") status = "naplanovano";
 
   const regionName = String(locLabel || admin || road || "").trim();
+  const publishedAt = trafficV1.lastMeaningfulChangeAt || opts.nowIso || null;
+  const publishedAtSource =
+    trafficV1.sourceUpdatedAt || trafficV1.lastMeaningfulChangeAt || null;
   const item = {
     id: "ie-traffic-" + publicEventId,
     sourceId: "rsd",
@@ -258,8 +388,8 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     summary: clip(trafficV1.impact, 280) || "",
     url: mapUrl || "",
     originalUrl: mapUrl || "",
-    publishedAt: trafficV1.lastMeaningfulChangeAt || trafficV1.downloadedAt || opts.nowIso || null,
-    publishedAtSource: trafficV1.sourceUpdatedAt || null,
+    publishedAt,
+    publishedAtSource,
     validFrom: validity.validFrom || null,
     validTo: validity.expectedEnd || validity.actualEnd || null,
     status,
@@ -536,37 +666,168 @@ export function mergeTrafficIntoOverview(baseItems, prefs, opts = {}) {
 export function trafficFreshnessBanner(snapshot) {
   if (!snapshot) return null;
   const generatedAt = snapshot.generatedAt || null;
-  const freshness = snapshot.sourceFreshness || "UNKNOWN";
+  const freshnessRaw = snapshot.sourceFreshness || null;
+  const freshness = normalizeFreshness(freshnessRaw);
+  const freshnessPart = freshness ? " · čerstvost " + freshness : "";
   return {
     generatedAt,
     freshness,
     publicationEnabled: false,
-    label:
-      "Dopravní data (offline): " +
-      (generatedAt || "neznámý čas") +
-      " · čerstvost " +
-      freshness,
+    label: "Dopravní data (offline): " + (generatedAt || "neznámý čas") + freshnessPart,
   };
 }
 
-export function trafficHistoryLines(trafficV1) {
-  const change = String((trafficV1 && trafficV1.feed && trafficV1.feed.feedChangeType) || "");
-  const map = {
-    EVENT_CREATED: "nová",
-    EVENT_UPDATED: "změněná",
-    EVENT_ENDED: "ukončená",
-    EVENT_CANCELLED: "zrušená",
-    VALIDITY_EXTENDED: "prodloužená",
-    VALIDITY_SHORTENED: "zkrácená",
-    DIRECTION_CHANGED: "změna směru",
-    SECTION_CHANGED: "změna úseku",
-    ROAD_CHANGED: "změna silnice",
-    SEVERITY_CHANGED: "změna závažnosti",
-    IMPACT_CHANGED: "změna dopadu",
-    EVENT_REOPENED: "znovu aktivní",
+export function trafficHistoryLines(_trafficV1) {
+  return [];
+}
+
+export function scanTrafficUserTextRegressions(text) {
+  const s = String(text || "");
+  const hits = [];
+  for (const n of TRAFFIC_UI_REGRESSION_NEEDLES) {
+    if (s.includes(n)) hits.push(n);
+  }
+  if (/\bUNKNOWN\b/.test(s)) hits.push("UNKNOWN");
+  if (/\bNULL\b/.test(s)) hits.push("NULL");
+  if (/\bundefined\b/.test(s)) hits.push("undefined");
+  if (/\bN\/A\b/i.test(s)) hits.push("N/A");
+  return { ok: hits.length === 0, hits };
+}
+
+export function isTrafficFollowed(publicEventId) {
+  const id = String(publicEventId || "").trim();
+  if (!id) return false;
+  const store = readFollowStore();
+  return !!(store.items && store.items[id]);
+}
+
+export function listTrafficFollowed() {
+  const store = readFollowStore();
+  return Object.keys(store.items || {});
+}
+
+export function toggleTrafficFollow(publicEventId, snapshotMeta) {
+  const id = String(publicEventId || "").trim();
+  if (!/^iu-te-[a-f0-9]{32}$/.test(id)) {
+    return { ok: false, followed: false, rejectCode: "INVALID_PUBLIC_EVENT_ID" };
+  }
+  const store = readFollowStore();
+  const items = store.items || {};
+  if (items[id]) {
+    delete items[id];
+    writeFollowStore({ items });
+    return { ok: true, followed: false };
+  }
+  const meta = snapshotMeta && typeof snapshotMeta === "object" ? snapshotMeta : {};
+  items[id] = {
+    followedAt: new Date().toISOString(),
+    publicEventId: id,
+    road: meta.road || null,
+    eventType: meta.eventType || null,
+    history: [],
   };
-  const label = map[change];
-  return label ? [label] : [];
+  writeFollowStore({ items });
+  return { ok: true, followed: true };
+}
+
+export function appendTrafficFollowHistory(publicEventId, entry) {
+  const id = String(publicEventId || "").trim();
+  if (!id || !entry || typeof entry !== "object") {
+    return { ok: false, rejectCode: "INVALID_INPUT" };
+  }
+  const at = entry.at != null ? String(entry.at) : "";
+  const label = entry.label != null ? String(entry.label).trim() : "";
+  if (!at || !label) return { ok: false, rejectCode: "INVALID_ENTRY" };
+  const store = readFollowStore();
+  const items = store.items || {};
+  if (!items[id]) return { ok: false, rejectCode: "NOT_FOLLOWED" };
+  const hist = Array.isArray(items[id].history) ? items[id].history.slice() : [];
+  hist.push({ at, label });
+  if (hist.length > 40) hist.splice(0, hist.length - 40);
+  items[id] = Object.assign({}, items[id], { history: hist });
+  writeFollowStore({ items });
+  return { ok: true };
+}
+
+/**
+ * Structured view-model for redesigned traffic cards (no invented facts).
+ */
+export function buildTrafficCardViewModel(trafficV1) {
+  const tv = trafficV1 && typeof trafficV1 === "object" ? trafficV1 : {};
+  const badge = trafficBadgeModel(tv);
+  const change = String((tv.feed && tv.feed.feedChangeType) || "");
+  const showNew = change === "EVENT_CREATED";
+  const showActive = String(tv.lifecycleStatus || "") === "ACTIVE";
+  const road = tv.road != null ? String(tv.road) : "";
+  const roadClass = tv.roadClass || "UNKNOWN";
+  const roadClassLabel =
+    tv.roadClassLabel || ROAD_CLASS_LABEL_CS[roadClass] || ROAD_CLASS_LABEL_CS.UNKNOWN;
+  const eventType = tv.eventType || tv.category || null;
+  const eventTypeLabel = eventTypeLabelCs(eventType);
+  const locality =
+    (tv.municipality && String(tv.municipality).trim()) ||
+    (tv.location && String(tv.location).trim()) ||
+    (tv.subjectScopeLabel && String(tv.subjectScopeLabel).trim()) ||
+    road ||
+    "";
+  const dir = humanDirectionOrNull(tv.direction);
+  const precise = tv.preciseLocationVerified === true;
+  let communicationLine = "";
+  if (tv.locationDisclosureCs) {
+    communicationLine = String(tv.locationDisclosureCs);
+  } else if (precise) {
+    const bits = [];
+    if (road) bits.push(road);
+    if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
+    if (tv.section) bits.push(String(tv.section));
+    if (dir) bits.push(dir);
+    communicationLine = bits.join(" · ");
+  } else if (road || tv.subjectScopeLabel) {
+    communicationLine = "Týká se komunikace " + String(road || tv.subjectScopeLabel);
+  }
+  const impactShort = tv.impact != null ? String(tv.impact) : "";
+  const impactFull = tv.impactFull != null ? String(tv.impactFull) : "";
+  const eventLine = impactShort || eventTypeLabel || "";
+  const validityLine = tv.validityLine != null ? String(tv.validityLine) : "";
+  const illustrationKey = tv.illustrationKey || "neutral";
+  const mapUrl = resolveSafeTrafficMapUrl(tv.mapTarget);
+  const followId = String(tv.publicEventId || "").trim();
+  const sourceLabel = tv.source != null ? String(tv.source) : "ŘSD/NDIC";
+  const quickBlocks = [];
+  if (tv.municipality) {
+    quickBlocks.push({ key: "municipality", title: "Obec", body: String(tv.municipality) });
+  }
+  if (tv.district) {
+    quickBlocks.push({ key: "district", title: "Okres", body: String(tv.district) });
+  }
+  if (impactShort && /pruh|jízdní|omezen|uzavřen|snížen/i.test(impactShort)) {
+    quickBlocks.push({ key: "restriction", title: "Omezení", body: impactShort });
+  }
+  if (tv.delayAvailable === true && tv.delayMinutes != null) {
+    quickBlocks.push({
+      key: "delay",
+      title: "Zpoždění",
+      body: String(tv.delayMinutes) + " min",
+    });
+  }
+  return {
+    badge,
+    roadBadge: { road, roadClass, label: roadClassLabel },
+    locality,
+    eventTypeLabel,
+    communicationLine,
+    eventLine,
+    validityLine,
+    impactShort,
+    impactFull,
+    quickBlocks,
+    illustrationKey,
+    mapUrl,
+    followId,
+    sourceLabel,
+    showActive,
+    showNew,
+  };
 }
 
 /** Architecture self-check used by fixtures/meta. */

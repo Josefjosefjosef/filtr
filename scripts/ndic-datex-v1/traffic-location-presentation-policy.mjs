@@ -55,7 +55,10 @@ export function buildLocationDisclosureCs(level, scope, precise = {}) {
     if (precise.kilometer != null && Number.isFinite(Number(precise.kilometer))) {
       parts.push("km " + String(precise.kilometer));
     }
-    if (precise.direction) parts.push("směr " + String(precise.direction));
+    const dir = String(precise.direction || "").trim();
+    if (dir && !/^(kladný směr|záporný směr)$/i.test(dir)) {
+      parts.push("směr " + dir);
+    }
     if (parts.length) return clip(parts.join(" • "), MAX_LABEL);
     return "Poloha je v oficiálních datech ověřena.";
   }

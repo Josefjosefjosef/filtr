@@ -21,6 +21,12 @@ import { runTrafficPublicationLayer } from "./traffic-publication-layer.mjs";
 import { scanPublicationCanaries } from "./traffic-publication-projection.mjs";
 import { validatePublicationSchemas } from "./traffic-publication-schema.mjs";
 import { SNAPSHOT_SCHEMA_VERSION } from "./traffic-publication-snapshot.mjs";
+import {
+  classifyRoadNumber,
+  extractLocalityFromOfficialComment,
+  humanDirectionOrNull,
+  pickRsdTimelineTimestamp,
+} from "./traffic-card-content-v1.mjs";
 
 export const TRAFFIC_UI_SNAPSHOT_REL = path.join(
   "projects",
@@ -74,32 +80,49 @@ export function feedItemToPublicationEvent(item) {
   if (!id) return null;
   const trust = String(item.localizationTrust || "none");
   const precise = trust === "tmc" || trust === "openlr" || trust === "coordinates";
-  const ts =
-    item.lastChangedAt ||
-    item.updatedAt ||
-    item.publishedAt ||
-    item.publishedAtSource ||
-    null;
+  const timeline = pickRsdTimelineTimestamp({
+    versionTime: item.lastUpdatedBySource || item.versionTime || null,
+    creationTime: item.publishedAtSource || item.publishedAt || item.createdAt || null,
+    publicationTime: item.publicationTime || null,
+    downloadedAt: item.firstSeenByInfoUzel || item.downloadedAt || null,
+    allowDownloadFallback: true,
+  });
+  const ts = timeline.iso;
   const road = item.roadNumber || item.road || null;
+  const roadClass = road ? classifyRoadNumber(road) : "UNKNOWN";
   const km =
     precise && (item.km != null || item.kilometer != null)
       ? item.km != null
         ? item.km
         : item.kilometer
       : null;
-  const direction = precise && item.direction != null ? item.direction : null;
+  const directionRaw = precise && item.direction != null ? item.direction : null;
+  const direction = humanDirectionOrNull(directionRaw);
+  const officialSummary = String(item.summary || item.description || "").trim();
+  const locBits = extractLocalityFromOfficialComment(officialSummary);
+  const regionName =
+    (item.region && (item.region.name || item.region.summary)) || item.locality || null;
+  const adminLabel =
+    locBits.municipality ||
+    (regionName && !/^česká republika$/i.test(String(regionName)) ? regionName : null) ||
+    (locBits.district ? "okres " + locBits.district : null);
+  const sourceSeverity =
+    item.severity != null && String(item.severity).trim() !== ""
+      ? String(item.severity).trim()
+      : null;
+  const ndic = item.ndicV1 && typeof item.ndicV1 === "object" ? item.ndicV1 : {};
   const eventIdHash = opaqueHash("evt:" + id);
   const locations = [];
   if (precise && (road || (item.lat != null && item.lon != null))) {
     locations.push({
       inputReferenceType: trust === "openlr" ? "openlr" : "alert_c_point",
       direction: direction ? { value: direction } : null,
-      road: road ? { roadNumber: road } : null,
+      road: road ? { roadNumber: road, roadClass } : null,
       primaryLocation: null,
       secondaryLocation: null,
       coordinates:
         item.lat != null && item.lon != null ? { lat: item.lat, lon: item.lon } : null,
-      administrativeArea: item.region || item.locality || null,
+      administrativeArea: adminLabel || item.region || item.locality || null,
       kilometerStatus: km != null ? { value: km } : null,
       offsets: null,
       tmcImportRunId: null,
@@ -114,31 +137,54 @@ export function feedItemToPublicationEvent(item) {
       ? RESOLVER_STATUS.RESOLVED_BASIC
       : RESOLVER_STATUS.UNRESOLVED_MISSING_REFERENCE,
     locations: Object.freeze(locations),
+    sourceTimestamps: Object.freeze({
+      datexUpdatedAt: item.lastUpdatedBySource || null,
+      datexCreatedAt: item.publishedAtSource || item.publishedAt || null,
+      datexDownloadedAt: item.firstSeenByInfoUzel || null,
+      datexMeasuredAt: null,
+      timelineField: timeline.field,
+      timelineSemantics: timeline.semantics,
+    }),
+    stableIdentity: Object.freeze({
+      situationId: item.sourceSituationId || ndic.situationId || null,
+      recordId: ndic.recordId || null,
+      revisionKey: item.revisionKey || null,
+      feedItemId: id,
+    }),
     quarantine: item.quarantine === true,
     quarantineReason: item.quarantineReason || null,
     fields: Object.freeze({
       status: prov(item.status || "aktivni", "feed", ts),
       trafficCategory: prov(item.eventType || item.category || "ostatni", "feed", ts),
-      severity: prov(item.importance != null ? String(item.importance) : "medium", "feed", ts),
+      // Never invent severity — only persist when source provides it.
+      severity: sourceSeverity
+        ? prov(sourceSeverity, "feed", ts)
+        : prov(null, "feed", ts, "not_public"),
       titleSafe: prov(item.title || "Dopravní událost", "feed", ts),
-      summarySafe: prov(item.description || item.title || "", "feed", ts),
-      validFrom: prov(item.startsAt || item.validFrom || ts, "feed", ts),
+      summarySafe: prov(officialSummary || "", "feed", ts),
+      validFrom: prov(item.startsAt || item.validFrom || null, "feed", ts),
       validTo: prov(item.endsAt || item.validTo || null, "feed", ts),
-      roadNumber: precise && road ? prov(road, "feed", ts, "validated") : prov(null, "feed", ts, "not_public"),
-      direction:
-        precise && direction
-          ? prov(direction, "feed", ts, "validated")
-          : prov(null, "feed", ts, "not_public"),
+      roadNumber: road ? prov(road, "feed", ts, "validated") : prov(null, "feed", ts, "not_public"),
+      roadClass: road ? prov(roadClass, "feed", ts, "validated") : prov(null, "feed", ts, "not_public"),
+      direction: direction
+        ? prov(direction, "feed", ts, "validated")
+        : prov(null, "feed", ts, "not_public"),
       kilometer:
         precise && km != null
           ? prov(km, "feed", ts, "validated")
           : prov(null, "feed", ts, "not_public"),
-      administrativeArea: prov(
-        item.locality || (item.region && item.region.name) || null,
-        "feed",
-        ts
-      ),
+      administrativeArea: adminLabel
+        ? prov(adminLabel, "feed", ts, "validated")
+        : prov(null, "feed", ts, "not_public"),
+      district: locBits.district
+        ? prov(locBits.district, "feed", ts, "validated")
+        : prov(null, "feed", ts, "not_public"),
+      municipality: locBits.municipality
+        ? prov(locBits.municipality, "feed", ts, "validated")
+        : prov(null, "feed", ts, "not_public"),
       lastMeaningfulChangeAt: prov(ts, "feed", ts),
+      changeTimeSource: prov(timeline.changeTimeSource, "feed", ts),
+      timelineField: prov(timeline.field, "feed", ts),
     }),
   });
 }
