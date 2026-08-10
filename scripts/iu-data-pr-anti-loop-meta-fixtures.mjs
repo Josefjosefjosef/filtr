@@ -160,6 +160,19 @@ ok(
   "bounded_refresh_max_12",
   /DATA_PR_REFRESH_MAX\s*=\s*12/.test(fs.readFileSync(BOUNDED, "utf8"))
 );
+ok(
+  "reconcile_atomic_tip_equality",
+  /evaluateStableTipMergeClean/.test(fs.readFileSync(RECONCILE, "utf8")) &&
+    /ATOMIC_TIP_EQUALITY_CLEAN_CHECK/.test(fs.readFileSync(RECONCILE, "utf8"))
+);
+ok(
+  "pkg_reconcile_atomic_clean_fixtures",
+  Boolean(pkg.scripts && pkg.scripts["iu-ndic-data-pr-reconcile-atomic-clean-fixtures"])
+);
+ok(
+  "suite_wires_reconcile_atomic_clean",
+  /iu-ndic-data-pr-reconcile-atomic-clean-fixtures/.test(suite)
+);
 
 // Mutations: removing protocol pieces must be detectable
 {
