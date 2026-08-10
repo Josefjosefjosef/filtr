@@ -435,9 +435,11 @@ jobs:
         run: |
           set -euo pipefail
           df -h / || true
-          rm -rf ndic-orch ndic-main-data 2>/dev/null || true
+          # Explicit existence checks — never `cmd 2>/dev/null || true` (ACTIVE staging guard).
+          if [ -e ndic-orch ]; then rm -rf ndic-orch; fi
+          if [ -e ndic-main-data ]; then rm -rf ndic-main-data; fi
           if [ -n "${RUNNER_TEMP:-}" ] && [ -d "${RUNNER_TEMP}" ]; then
-            find "${RUNNER_TEMP}" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+            find "${RUNNER_TEMP}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
           fi
           df -h / || true
 

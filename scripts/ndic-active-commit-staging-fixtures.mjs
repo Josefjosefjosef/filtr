@@ -398,7 +398,11 @@ try {
   {
     const wf = fs.readFileSync(NDIC_WF, "utf8");
     ok("G_TWO_SOURCE_ARCHITECTURE", workflowUsesTwoSourceModel(wf));
-    ok("ALL_OR_NOTHING_GIT_ADD_REMOVED", !/2>\s*\/dev\/null\s*\|\|\s*true/.test(wf));
+    // Guard the ACTIVE incident pattern only (swallowed git add), not unrelated shell redirects.
+    ok(
+      "ALL_OR_NOTHING_GIT_ADD_REMOVED",
+      !/git\s+add[\s\S]{0,200}2>\s*\/dev\/null\s*\|\|\s*true/.test(wf)
+    );
     ok("WORKFLOW_USES_STAGE_HELPER", /ndic-stage-shared-write-outputs\.mjs/.test(wf));
     ok("WORKFLOW_USES_CANDIDATE_ASSERT", /ndic-assert-candidate-required-outputs\.mjs/.test(wf));
     ok(
