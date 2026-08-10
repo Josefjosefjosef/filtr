@@ -1,12 +1,12 @@
 {
   "version": "2.0.0",
   "lane": "pocasi",
-  "generatedAt": "2026-08-10T08:03:12.933Z",
-  "itemCount": 6,
+  "generatedAt": "2026-08-10T08:14:04.795Z",
+  "itemCount": 7,
   "items": [
     {
-      "id": "ie-chmi-v2-894380a0a900eba4",
-      "title": "Vysoké teploty — Praha a dalších 147 oblastí",
+      "id": "ie-chmi-v2-7ae3ae21ae90a86b",
+      "title": "Vysoké teploty — Praha a dalších 148 oblastí",
       "description": "Maximální teploty nad 32 °C. Možné komplikace zejména v dopravě, živočišné výrobě, energetice. Možné deformace kolejnic v kolejové dopravě, škody na méně kvalitních površích silnic, zejména exponovaných slunečnímu svitu. Nutnost intenzivního chlazení uzavřených hal (živočišná výroba, průmysl, logistika apod.). Vyšší zatížení energetické infrastruktury.",
       "instruction": "Prověřit funkčnost všech systémů chlazení, systémů záložních zdrojů energie u citlivých provozů. Při cestování sledovat aktuální situaci v dopravě.",
       "sourceId": "chmi",
@@ -17,7 +17,7 @@
       "publicUrl": "https://vystrahy-cr.chmi.cz/",
       "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
       "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=894380a0a900eba4",
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=7ae3ae21ae90a86b",
       "urlKind": "cap_public_web",
       "listingUrl": "https://vystrahy-cr.chmi.cz/",
       "sectionId": "pocasi",
@@ -32,8 +32,8 @@
       "region": {
         "level": "multi",
         "name": "Praha",
-        "summary": "Praha a dalších 147 oblastí",
-        "extraAreaCount": 147,
+        "summary": "Praha a dalších 148 oblastí",
+        "extraAreaCount": 148,
         "orpId": "orp:1000",
         "orpCode": "1000",
         "orpName": "Praha",
@@ -130,6 +130,7 @@
           "orp:3114",
           "orp:3115",
           "orp:3117",
+          "orp:3113",
           "orp:4102",
           "orp:4103",
           "orp:4105",
@@ -280,6 +281,7 @@
           "3114",
           "3115",
           "3117",
+          "3113",
           "4102",
           "4103",
           "4105",
@@ -430,6 +432,7 @@
           "Třeboň",
           "Týn nad Vltavou",
           "Vodňany",
+          "Trhové Sviny",
           "Cheb",
           "Karlovy Vary",
           "Mariánské Lázně",
@@ -665,7 +668,7 @@
           "Plzeňský kraj",
           "Ústecký kraj (Litoměřice, Louny, Lovosice, Roudnice nad Labem, Bílina, Děčín, Chomutov, Kadaň, Litvínov, Most, Podbořany, Teplice, Ústí nad Labem, Žatec)",
           "Jihomoravský kraj",
-          "Jihočeský kraj (Blatná, České Budějovice, Jindřichův Hradec, Milevsko, Písek, Soběslav, Strakonice, Tábor, Třeboň, Týn nad Vltavou, Vodňany)",
+          "Jihočeský kraj (Blatná, České Budějovice, Jindřichův Hradec, Milevsko, Písek, Soběslav, Strakonice, Tábor, Třeboň, Týn nad Vltavou, Vodňany, Trhové Sviny)",
           "Karlovarský kraj (Cheb, Karlovy Vary, Mariánské Lázně, Sokolov)",
           "Liberecký kraj (Česká Lípa)",
           "Královéhradecký kraj (Hořice, Hradec Králové, Jičín, Kostelec nad Orlicí, Nový Bydžov)",
@@ -681,10 +684,10 @@
       "lane": "pocasi",
       "connectorType": "opendata",
       "orgType": "meteo",
-      "publishedAtSource": "2026-08-10T09:05:02+02:00",
-      "publishedAt": "2026-08-10T09:05:02+02:00",
-      "updatedAt": "2026-08-10T07:07:38.160Z",
-      "validFrom": "2026-08-10T09:04:22+02:00",
+      "publishedAtSource": "2026-08-10T10:05:58+02:00",
+      "publishedAt": "2026-08-10T10:05:58+02:00",
+      "updatedAt": "2026-08-10T08:13:38.938Z",
+      "validFrom": "2026-08-10T10:04:45+02:00",
       "validTo": "2026-08-10T18:00:00+02:00",
       "resolvedAt": null,
       "groupKey": "2026-08-10:vysoke-teploty-sivs-i-1",
@@ -702,7 +705,7 @@
         "approvalStatus": "APPROVED_CC_BY",
         "attributionTemplateId": "attr-open-data-by-v1",
         "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-10T07:07:38.160Z",
+        "fetchedAt": "2026-08-10T08:13:38.938Z",
         "sourceUrl": "https://vystrahy-cr.chmi.cz/",
         "modifications": [
           "normalized-metadata-link-only"
@@ -722,9 +725,9 @@
         ]
       },
       "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810070502.XOCZ50_OKPR_000312|2026-08-10T09:05:02+02:00",
-        "alert_thread_id": "thread:038705d9d6f4cb69",
-        "hazard_instance_id": "haz:894380a0a900eba4",
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810080558.XOCZ50_OKPR_000313|2026-08-10T10:05:58+02:00",
+        "alert_thread_id": "thread:7e4c0abcc6bca92d",
+        "hazard_instance_id": "haz:7ae3ae21ae90a86b",
         "msgType": "Update",
         "change_type": "new",
         "event": "Vysoké teploty",
@@ -738,7 +741,7 @@
         "untilRevoked": false,
         "openEnded": false,
         "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=894380a0a900eba4",
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=7ae3ae21ae90a86b",
         "publicUrl": "https://vystrahy-cr.chmi.cz/",
         "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
         "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
@@ -748,7 +751,7 @@
         "geo": {
           "links": [
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:1000",
               "orpCode": "1000",
               "orpName": "Praha",
@@ -760,7 +763,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2101",
               "orpCode": "2101",
               "orpName": "Benešov",
@@ -772,7 +775,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2102",
               "orpCode": "2102",
               "orpName": "Beroun",
@@ -784,7 +787,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2103",
               "orpCode": "2103",
               "orpName": "Brandýs nad Labem-Stará Boleslav",
@@ -796,7 +799,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2104",
               "orpCode": "2104",
               "orpName": "Čáslav",
@@ -808,7 +811,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2105",
               "orpCode": "2105",
               "orpName": "Černošice",
@@ -820,7 +823,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2106",
               "orpCode": "2106",
               "orpName": "Český Brod",
@@ -832,7 +835,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2107",
               "orpCode": "2107",
               "orpName": "Dobříš",
@@ -844,7 +847,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2108",
               "orpCode": "2108",
               "orpName": "Hořovice",
@@ -856,7 +859,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2109",
               "orpCode": "2109",
               "orpName": "Kladno",
@@ -868,7 +871,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2110",
               "orpCode": "2110",
               "orpName": "Kolín",
@@ -880,7 +883,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2111",
               "orpCode": "2111",
               "orpName": "Kralupy nad Vltavou",
@@ -892,7 +895,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2112",
               "orpCode": "2112",
               "orpName": "Kutná Hora",
@@ -904,7 +907,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2113",
               "orpCode": "2113",
               "orpName": "Lysá nad Labem",
@@ -916,7 +919,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2114",
               "orpCode": "2114",
               "orpName": "Mělník",
@@ -928,7 +931,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2115",
               "orpCode": "2115",
               "orpName": "Mladá Boleslav",
@@ -940,7 +943,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2116",
               "orpCode": "2116",
               "orpName": "Mnichovo Hradiště",
@@ -952,7 +955,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2117",
               "orpCode": "2117",
               "orpName": "Neratovice",
@@ -964,7 +967,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2118",
               "orpCode": "2118",
               "orpName": "Nymburk",
@@ -976,7 +979,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2119",
               "orpCode": "2119",
               "orpName": "Poděbrady",
@@ -988,7 +991,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2120",
               "orpCode": "2120",
               "orpName": "Příbram",
@@ -1000,7 +1003,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2121",
               "orpCode": "2121",
               "orpName": "Rakovník",
@@ -1012,7 +1015,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2122",
               "orpCode": "2122",
               "orpName": "Říčany",
@@ -1024,7 +1027,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2123",
               "orpCode": "2123",
               "orpName": "Sedlčany",
@@ -1036,7 +1039,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2124",
               "orpCode": "2124",
               "orpName": "Slaný",
@@ -1048,7 +1051,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2125",
               "orpCode": "2125",
               "orpName": "Vlašim",
@@ -1060,7 +1063,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:2126",
               "orpCode": "2126",
               "orpName": "Votice",
@@ -1072,7 +1075,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3201",
               "orpCode": "3201",
               "orpName": "Blovice",
@@ -1084,7 +1087,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3202",
               "orpCode": "3202",
               "orpName": "Domažlice",
@@ -1096,7 +1099,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3203",
               "orpCode": "3203",
               "orpName": "Horažďovice",
@@ -1108,7 +1111,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3204",
               "orpCode": "3204",
               "orpName": "Horšovský Týn",
@@ -1120,7 +1123,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3205",
               "orpCode": "3205",
               "orpName": "Klatovy",
@@ -1132,7 +1135,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3206",
               "orpCode": "3206",
               "orpName": "Kralovice",
@@ -1144,7 +1147,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3207",
               "orpCode": "3207",
               "orpName": "Nepomuk",
@@ -1156,7 +1159,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3208",
               "orpCode": "3208",
               "orpName": "Nýřany",
@@ -1168,7 +1171,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3209",
               "orpCode": "3209",
               "orpName": "Plzeň",
@@ -1180,7 +1183,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3210",
               "orpCode": "3210",
               "orpName": "Přeštice",
@@ -1192,7 +1195,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3211",
               "orpCode": "3211",
               "orpName": "Rokycany",
@@ -1204,7 +1207,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3212",
               "orpCode": "3212",
               "orpName": "Stod",
@@ -1216,7 +1219,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3213",
               "orpCode": "3213",
               "orpName": "Stříbro",
@@ -1228,7 +1231,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3214",
               "orpCode": "3214",
               "orpName": "Sušice",
@@ -1240,7 +1243,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3215",
               "orpCode": "3215",
               "orpName": "Tachov",
@@ -1252,7 +1255,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4205",
               "orpCode": "4205",
               "orpName": "Litoměřice",
@@ -1264,7 +1267,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4207",
               "orpCode": "4207",
               "orpName": "Louny",
@@ -1276,7 +1279,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4208",
               "orpCode": "4208",
               "orpName": "Lovosice",
@@ -1288,7 +1291,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4211",
               "orpCode": "4211",
               "orpName": "Roudnice nad Labem",
@@ -1300,7 +1303,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4201",
               "orpCode": "4201",
               "orpName": "Bílina",
@@ -1312,7 +1315,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4202",
               "orpCode": "4202",
               "orpName": "Děčín",
@@ -1324,7 +1327,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4203",
               "orpCode": "4203",
               "orpName": "Chomutov",
@@ -1336,7 +1339,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4204",
               "orpCode": "4204",
               "orpName": "Kadaň",
@@ -1348,7 +1351,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4206",
               "orpCode": "4206",
               "orpName": "Litvínov",
@@ -1360,7 +1363,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4209",
               "orpCode": "4209",
               "orpName": "Most",
@@ -1372,7 +1375,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4210",
               "orpCode": "4210",
               "orpName": "Podbořany",
@@ -1384,7 +1387,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4213",
               "orpCode": "4213",
               "orpName": "Teplice",
@@ -1396,7 +1399,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4214",
               "orpCode": "4214",
               "orpName": "Ústí nad Labem",
@@ -1408,7 +1411,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4216",
               "orpCode": "4216",
               "orpName": "Žatec",
@@ -1420,7 +1423,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6201",
               "orpCode": "6201",
               "orpName": "Blansko",
@@ -1432,7 +1435,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6202",
               "orpCode": "6202",
               "orpName": "Boskovice",
@@ -1444,7 +1447,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6203",
               "orpCode": "6203",
               "orpName": "Brno",
@@ -1456,7 +1459,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6204",
               "orpCode": "6204",
               "orpName": "Břeclav",
@@ -1468,7 +1471,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6205",
               "orpCode": "6205",
               "orpName": "Bučovice",
@@ -1480,7 +1483,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6206",
               "orpCode": "6206",
               "orpName": "Hodonín",
@@ -1492,7 +1495,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6207",
               "orpCode": "6207",
               "orpName": "Hustopeče",
@@ -1504,7 +1507,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6208",
               "orpCode": "6208",
               "orpName": "Ivančice",
@@ -1516,7 +1519,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6209",
               "orpCode": "6209",
               "orpName": "Kuřim",
@@ -1528,7 +1531,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6210",
               "orpCode": "6210",
               "orpName": "Kyjov",
@@ -1540,7 +1543,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6211",
               "orpCode": "6211",
               "orpName": "Mikulov",
@@ -1552,7 +1555,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6212",
               "orpCode": "6212",
               "orpName": "Moravský Krumlov",
@@ -1564,7 +1567,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6213",
               "orpCode": "6213",
               "orpName": "Pohořelice",
@@ -1576,7 +1579,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6214",
               "orpCode": "6214",
               "orpName": "Rosice",
@@ -1588,7 +1591,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6215",
               "orpCode": "6215",
               "orpName": "Slavkov u Brna",
@@ -1600,7 +1603,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6216",
               "orpCode": "6216",
               "orpName": "Šlapanice",
@@ -1612,7 +1615,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6217",
               "orpCode": "6217",
               "orpName": "Tišnov",
@@ -1624,7 +1627,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6218",
               "orpCode": "6218",
               "orpName": "Veselí nad Moravou",
@@ -1636,7 +1639,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6219",
               "orpCode": "6219",
               "orpName": "Vyškov",
@@ -1648,7 +1651,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6220",
               "orpCode": "6220",
               "orpName": "Znojmo",
@@ -1660,7 +1663,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6221",
               "orpCode": "6221",
               "orpName": "Židlochovice",
@@ -1672,7 +1675,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3101",
               "orpCode": "3101",
               "orpName": "Blatná",
@@ -1684,7 +1687,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3102",
               "orpCode": "3102",
               "orpName": "České Budějovice",
@@ -1696,7 +1699,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3105",
               "orpCode": "3105",
               "orpName": "Jindřichův Hradec",
@@ -1708,7 +1711,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3107",
               "orpCode": "3107",
               "orpName": "Milevsko",
@@ -1720,7 +1723,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3108",
               "orpCode": "3108",
               "orpName": "Písek",
@@ -1732,7 +1735,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3110",
               "orpCode": "3110",
               "orpName": "Soběslav",
@@ -1744,7 +1747,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3111",
               "orpCode": "3111",
               "orpName": "Strakonice",
@@ -1756,7 +1759,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3112",
               "orpCode": "3112",
               "orpName": "Tábor",
@@ -1768,7 +1771,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3114",
               "orpCode": "3114",
               "orpName": "Třeboň",
@@ -1780,7 +1783,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3115",
               "orpCode": "3115",
               "orpName": "Týn nad Vltavou",
@@ -1792,7 +1795,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:3117",
               "orpCode": "3117",
               "orpName": "Vodňany",
@@ -1804,7 +1807,19 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
+              "orpId": "orp:3113",
+              "orpCode": "3113",
+              "orpName": "Trhové Sviny",
+              "okresId": "okres:CZ0311",
+              "okresName": "České Budějovice",
+              "krajId": "kraj:CZ031",
+              "krajName": "Jihočeský kraj",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4102",
               "orpCode": "4102",
               "orpName": "Cheb",
@@ -1816,7 +1831,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4103",
               "orpCode": "4103",
               "orpName": "Karlovy Vary",
@@ -1828,7 +1843,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4105",
               "orpCode": "4105",
               "orpName": "Mariánské Lázně",
@@ -1840,7 +1855,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:4107",
               "orpCode": "4107",
               "orpName": "Sokolov",
@@ -1852,7 +1867,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5101",
               "orpCode": "5101",
               "orpName": "Česká Lípa",
@@ -1864,7 +1879,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5204",
               "orpCode": "5204",
               "orpName": "Hořice",
@@ -1876,7 +1891,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5205",
               "orpCode": "5205",
               "orpName": "Hradec Králové",
@@ -1888,7 +1903,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5207",
               "orpCode": "5207",
               "orpName": "Jičín",
@@ -1900,7 +1915,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5208",
               "orpCode": "5208",
               "orpName": "Kostelec nad Orlicí",
@@ -1912,7 +1927,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5212",
               "orpCode": "5212",
               "orpName": "Nový Bydžov",
@@ -1924,7 +1939,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5303",
               "orpCode": "5303",
               "orpName": "Holice",
@@ -1936,7 +1951,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5304",
               "orpCode": "5304",
               "orpName": "Chrudim",
@@ -1948,7 +1963,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5307",
               "orpCode": "5307",
               "orpName": "Litomyšl",
@@ -1960,7 +1975,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5309",
               "orpCode": "5309",
               "orpName": "Pardubice",
@@ -1972,7 +1987,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5311",
               "orpCode": "5311",
               "orpName": "Přelouč",
@@ -1984,7 +1999,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5313",
               "orpCode": "5313",
               "orpName": "Ústí nad Orlicí",
@@ -1996,7 +2011,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:5314",
               "orpCode": "5314",
               "orpName": "Vysoké Mýto",
@@ -2008,7 +2023,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6102",
               "orpCode": "6102",
               "orpName": "Havlíčkův Brod",
@@ -2020,7 +2035,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6103",
               "orpCode": "6103",
               "orpName": "Humpolec",
@@ -2032,7 +2047,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6104",
               "orpCode": "6104",
               "orpName": "Chotěboř",
@@ -2044,7 +2059,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6106",
               "orpCode": "6106",
               "orpName": "Moravské Budějovice",
@@ -2056,7 +2071,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6107",
               "orpCode": "6107",
               "orpName": "Náměšť nad Oslavou",
@@ -2068,7 +2083,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6109",
               "orpCode": "6109",
               "orpName": "Pacov",
@@ -2080,7 +2095,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6111",
               "orpCode": "6111",
               "orpName": "Světlá nad Sázavou",
@@ -2092,7 +2107,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6113",
               "orpCode": "6113",
               "orpName": "Třebíč",
@@ -2104,7 +2119,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:6114",
               "orpCode": "6114",
               "orpName": "Velké Meziříčí",
@@ -2116,7 +2131,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7101",
               "orpCode": "7101",
               "orpName": "Hranice",
@@ -2128,7 +2143,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7103",
               "orpCode": "7103",
               "orpName": "Konice",
@@ -2140,7 +2155,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7104",
               "orpCode": "7104",
               "orpName": "Lipník nad Bečvou",
@@ -2152,7 +2167,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7105",
               "orpCode": "7105",
               "orpName": "Litovel",
@@ -2164,7 +2179,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7106",
               "orpCode": "7106",
               "orpName": "Mohelnice",
@@ -2176,7 +2191,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7107",
               "orpCode": "7107",
               "orpName": "Olomouc",
@@ -2188,7 +2203,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7108",
               "orpCode": "7108",
               "orpName": "Prostějov",
@@ -2200,7 +2215,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7109",
               "orpCode": "7109",
               "orpName": "Přerov",
@@ -2212,7 +2227,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7110",
               "orpCode": "7110",
               "orpName": "Šternberk",
@@ -2224,7 +2239,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7112",
               "orpCode": "7112",
               "orpName": "Uničov",
@@ -2236,7 +2251,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7113",
               "orpCode": "7113",
               "orpName": "Zábřeh",
@@ -2248,7 +2263,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7201",
               "orpCode": "7201",
               "orpName": "Bystřice pod Hostýnem",
@@ -2260,7 +2275,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7202",
               "orpCode": "7202",
               "orpName": "Holešov",
@@ -2272,7 +2287,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7203",
               "orpCode": "7203",
               "orpName": "Kroměříž",
@@ -2284,7 +2299,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7204",
               "orpCode": "7204",
               "orpName": "Luhačovice",
@@ -2296,7 +2311,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7205",
               "orpCode": "7205",
               "orpName": "Otrokovice",
@@ -2308,7 +2323,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7207",
               "orpCode": "7207",
               "orpName": "Uherské Hradiště",
@@ -2320,7 +2335,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7208",
               "orpCode": "7208",
               "orpName": "Uherský Brod",
@@ -2332,7 +2347,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7211",
               "orpCode": "7211",
               "orpName": "Vizovice",
@@ -2344,7 +2359,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:7213",
               "orpCode": "7213",
               "orpName": "Zlín",
@@ -2356,7 +2371,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8101",
               "orpCode": "8101",
               "orpName": "Bílovec",
@@ -2368,7 +2383,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8102",
               "orpCode": "8102",
               "orpName": "Bohumín",
@@ -2380,7 +2395,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8104",
               "orpCode": "8104",
               "orpName": "Český Těšín",
@@ -2392,7 +2407,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8106",
               "orpCode": "8106",
               "orpName": "Frýdek-Místek",
@@ -2404,7 +2419,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8108",
               "orpCode": "8108",
               "orpName": "Havířov",
@@ -2416,7 +2431,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8109",
               "orpCode": "8109",
               "orpName": "Hlučín",
@@ -2428,7 +2443,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8111",
               "orpCode": "8111",
               "orpName": "Karviná",
@@ -2440,7 +2455,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8112",
               "orpCode": "8112",
               "orpName": "Kopřivnice",
@@ -2452,7 +2467,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8113",
               "orpCode": "8113",
               "orpName": "Kravaře",
@@ -2464,7 +2479,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8115",
               "orpCode": "8115",
               "orpName": "Nový Jičín",
@@ -2476,7 +2491,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8116",
               "orpCode": "8116",
               "orpName": "Odry",
@@ -2488,7 +2503,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8117",
               "orpCode": "8117",
               "orpName": "Opava",
@@ -2500,7 +2515,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8118",
               "orpCode": "8118",
               "orpName": "Orlová",
@@ -2512,7 +2527,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:894380a0a900eba4",
+              "hazard_instance_id": "haz:7ae3ae21ae90a86b",
               "orpId": "orp:8119",
               "orpCode": "8119",
               "orpName": "Ostrava",
@@ -2526,23 +2541,23 @@
           ],
           "quarantine": [],
           "totalAreas": 14,
-          "mappedAreas": 148,
+          "mappedAreas": 149,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100
         },
-        "searchText": "vystraha chmu vysoke teploty praha a dalsich 147 oblasti vysoke teploty vysoke teploty maximalni teploty nad 32 c mozne komplikace zejmena v doprave zivocisne vyrobe energetice mozne deformace kolejnic v kolejove doprave skody na mene kvalitnich povrsich silnic zejmena exponovanych slunecnimu svitu nutnost intenzivniho chlazeni uzavrenych hal zivocisna vyroba prumysl logistika apod vyssi zatizeni energeticke infrastruktury proverit funkcnost vsech systemu chlazeni systemu zaloznich zdroju energie u citlivych provozu pri cestovani sledovat aktualni situaci v doprave praha a dalsich 147 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov litomerice louny lovosice roudnice nad labem bilina decin chomutov kadan litvinov most podborany teplice usti nad labem zatec blansko boskovice brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice tisnov veseli nad moravou vyskov znojmo zidlochovice blatna ceske budejovice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany cheb karlovy vary marianske lazne sokolov ceska lipa horice hradec kralove jicin kostelec nad orlici novy bydzov holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic velke mezirici hranice konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zabreh bystrice pod hostynem holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod vizovice zlin bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare novy jicin odry opava orlova ostrava hlavni mesto praha benesov beroun praha vychod kutna hora praha zapad kolin pribram kladno melnik nymburk mlada boleslav rakovnik plzen jih domazlice klatovy plzen sever plzen mesto rokycany tachov litomerice louny teplice decin chomutov most usti nad labem blansko brno mesto breclav vyskov hodonin brno venkov znojmo strakonice ceske budejovice jindrichuv hradec pisek tabor cheb karlovy vary sokolov ceska lipa jicin hradec kralove rychnov nad kneznou pardubice chrudim svitavy usti nad orlici havlickuv brod pelhrimov trebic zdar nad sazavou prerov prostejov olomouc sumperk kromeriz zlin uherske hradiste novy jicin karvina frydek mistek opava ostrava mesto hlavni mesto praha stredocesky kraj plzensky kraj ustecky kraj jihomoravsky kraj jihocesky kraj karlovarsky kraj liberecky kraj kralovehradecky kraj pardubicky kraj kraj vysocina olomoucky kraj zlinsky kraj moravskoslezsky kraj hlavni mesto praha stredocesky kraj plzensky kraj ustecky kraj litomerice louny lovosice roudnice nad labem bilina decin chomutov kadan litvinov most podborany teplice usti nad labem zatec jihomoravsky kraj jihocesky kraj blatna ceske budejovice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany karlovarsky kraj cheb karlovy vary marianske lazne sokolov liberecky kraj ceska lipa kralovehradecky kraj horice hradec kralove jicin kostelec nad orlici novy bydzov pardubicky kraj holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto kraj vysocina havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic velke mezirici olomoucky kraj hranice konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zabreh zlinsky kraj bystrice pod hostynem holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod vizovice zlin moravskoslezsky kraj bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare novy jicin odry opava orlova ostrava chmu cesky hydrometeorologicky ustav moderate immediate likely",
+        "searchText": "vystraha chmu vysoke teploty praha a dalsich 148 oblasti vysoke teploty vysoke teploty maximalni teploty nad 32 c mozne komplikace zejmena v doprave zivocisne vyrobe energetice mozne deformace kolejnic v kolejove doprave skody na mene kvalitnich povrsich silnic zejmena exponovanych slunecnimu svitu nutnost intenzivniho chlazeni uzavrenych hal zivocisna vyroba prumysl logistika apod vyssi zatizeni energeticke infrastruktury proverit funkcnost vsech systemu chlazeni systemu zaloznich zdroju energie u citlivych provozu pri cestovani sledovat aktualni situaci v doprave praha a dalsich 148 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blovice domazlice horazdovice horsovsky tyn klatovy kralovice nepomuk nyrany plzen prestice rokycany stod stribro susice tachov litomerice louny lovosice roudnice nad labem bilina decin chomutov kadan litvinov most podborany teplice usti nad labem zatec blansko boskovice brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice tisnov veseli nad moravou vyskov znojmo zidlochovice blatna ceske budejovice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany trhove sviny cheb karlovy vary marianske lazne sokolov ceska lipa horice hradec kralove jicin kostelec nad orlici novy bydzov holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic velke mezirici hranice konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zabreh bystrice pod hostynem holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod vizovice zlin bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare novy jicin odry opava orlova ostrava hlavni mesto praha benesov beroun praha vychod kutna hora praha zapad kolin pribram kladno melnik nymburk mlada boleslav rakovnik plzen jih domazlice klatovy plzen sever plzen mesto rokycany tachov litomerice louny teplice decin chomutov most usti nad labem blansko brno mesto breclav vyskov hodonin brno venkov znojmo strakonice ceske budejovice jindrichuv hradec pisek tabor cheb karlovy vary sokolov ceska lipa jicin hradec kralove rychnov nad kneznou pardubice chrudim svitavy usti nad orlici havlickuv brod pelhrimov trebic zdar nad sazavou prerov prostejov olomouc sumperk kromeriz zlin uherske hradiste novy jicin karvina frydek mistek opava ostrava mesto hlavni mesto praha stredocesky kraj plzensky kraj ustecky kraj jihomoravsky kraj jihocesky kraj karlovarsky kraj liberecky kraj kralovehradecky kraj pardubicky kraj kraj vysocina olomoucky kraj zlinsky kraj moravskoslezsky kraj hlavni mesto praha stredocesky kraj plzensky kraj ustecky kraj litomerice louny lovosice roudnice nad labem bilina decin chomutov kadan litvinov most podborany teplice usti nad labem zatec jihomoravsky kraj jihocesky kraj blatna ceske budejovice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany trhove sviny karlovarsky kraj cheb karlovy vary marianske lazne sokolov liberecky kraj ceska lipa kralovehradecky kraj horice hradec kralove jicin kostelec nad orlici novy bydzov pardubicky kraj holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto kraj vysocina havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic velke mezirici olomoucky kraj hranice konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zabreh zlinsky kraj bystrice pod hostynem holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod vizovice zlin moravskoslezsky kraj bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare novy jicin odry opava orlova ostrava chmu cesky hydrometeorologicky ustav moderate immediate likely",
         "significantUnreadReset": true
       },
-      "firstSeenByInfoUzel": "2026-08-10T07:07:38.160Z",
-      "lastProcessedAt": "2026-08-10T07:07:38.160Z",
-      "sortAt": "2026-08-10T09:05:02+02:00",
+      "firstSeenByInfoUzel": "2026-08-10T08:13:38.938Z",
+      "lastProcessedAt": "2026-08-10T08:13:38.938Z",
+      "sortAt": "2026-08-10T10:05:58+02:00",
       "timeSource": "cap_sent",
       "timeConfidence": "high",
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-a8d34f21370f771b",
-      "title": "Silná zátěž teplem — Praha a dalších 140 oblastí",
+      "id": "ie-chmi-v2-9f8b15f316273771",
+      "title": "Silná zátěž teplem — Praha a dalších 143 oblastí",
       "description": "Očekáváme silnou zátěž teplem. Riziko přehřátí a dehydratace. Zvýšená zátěž zdravotnického systému (praktičtí lékaři, zdravotnická záchranná služba) a sociálních služeb (zejména péče o seniory a dlouhodobě nemocné).",
       "instruction": "Držet se ve stínu, dodržovat pitný režim se zvýšeným přísunem nealkoholických nápojů, plánovat zvýšenou zátěž (fyzickou/psychickou) na chladnější části dne. V případě zdravotních problémů vyhledat lékařskou pomoc. Nenechávat děti nebo i zvířata v zaparkovaných automobilech. Nastavovat klimatizace v místnostech nebo autech tak, aby nebyl organismus vystaven příliš velkému tepelnému šoku při přechodech ven nebo dovnitř, tzn. rozdíl mezi vnitřní a venkovní teplotou by neměl přesahovat 5 až 8 °C.",
       "sourceId": "chmi",
@@ -2553,7 +2568,7 @@
       "publicUrl": "https://vystrahy-cr.chmi.cz/",
       "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
       "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=a8d34f21370f771b",
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=9f8b15f316273771",
       "urlKind": "cap_public_web",
       "listingUrl": "https://vystrahy-cr.chmi.cz/",
       "sectionId": "pocasi",
@@ -2568,8 +2583,8 @@
       "region": {
         "level": "multi",
         "name": "Praha",
-        "summary": "Praha a dalších 140 oblastí",
-        "extraAreaCount": 140,
+        "summary": "Praha a dalších 143 oblastí",
+        "extraAreaCount": 143,
         "orpId": "orp:1000",
         "orpCode": "1000",
         "orpName": "Praha",
@@ -2617,6 +2632,7 @@
           "orp:3114",
           "orp:3115",
           "orp:3117",
+          "orp:3113",
           "orp:3201",
           "orp:3203",
           "orp:3204",
@@ -2628,6 +2644,8 @@
           "orp:3211",
           "orp:3212",
           "orp:3213",
+          "orp:3202",
+          "orp:3205",
           "orp:4201",
           "orp:4202",
           "orp:4203",
@@ -2760,6 +2778,7 @@
           "3114",
           "3115",
           "3117",
+          "3113",
           "3201",
           "3203",
           "3204",
@@ -2771,6 +2790,8 @@
           "3211",
           "3212",
           "3213",
+          "3202",
+          "3205",
           "4201",
           "4202",
           "4203",
@@ -2903,6 +2924,7 @@
           "Třeboň",
           "Týn nad Vltavou",
           "Vodňany",
+          "Trhové Sviny",
           "Blovice",
           "Horažďovice",
           "Horšovský Týn",
@@ -2914,6 +2936,8 @@
           "Rokycany",
           "Stod",
           "Stříbro",
+          "Domažlice",
+          "Klatovy",
           "Bílina",
           "Děčín",
           "Chomutov",
@@ -3173,8 +3197,8 @@
         "areaDescs": [
           "Hlavní město Praha",
           "Středočeský kraj",
-          "Jihočeský kraj (Blatná, České Budějovice, Dačice, Jindřichův Hradec, Milevsko, Písek, Soběslav, Strakonice, Tábor, Třeboň, Týn nad Vltavou, Vodňany)",
-          "Plzeňský kraj (Blovice, Horažďovice, Horšovský Týn, Kralovice, Nepomuk, Nýřany, Plzeň, Přeštice, Rokycany, Stod, Stříbro)",
+          "Jihočeský kraj (Blatná, České Budějovice, Dačice, Jindřichův Hradec, Milevsko, Písek, Soběslav, Strakonice, Tábor, Třeboň, Týn nad Vltavou, Vodňany, Trhové Sviny)",
+          "Plzeňský kraj (Blovice, Horažďovice, Horšovský Týn, Kralovice, Nepomuk, Nýřany, Plzeň, Přeštice, Rokycany, Stod, Stříbro, Domažlice, Klatovy)",
           "Ústecký kraj (Bílina, Děčín, Chomutov, Kadaň, Litoměřice, Litvínov, Louny, Lovosice, Most, Podbořany, Roudnice nad Labem, Teplice, Ústí nad Labem, Žatec)",
           "Liberecký kraj (Česká Lípa)",
           "Královéhradecký kraj (Dvůr Králové nad Labem, Hořice, Hradec Králové, Jaroměř, Jičín, Kostelec nad Orlicí, Nová Paka, Nový Bydžov)",
@@ -3191,10 +3215,10 @@
       "lane": "pocasi",
       "connectorType": "opendata",
       "orgType": "meteo",
-      "publishedAtSource": "2026-08-10T09:05:02+02:00",
-      "publishedAt": "2026-08-10T09:05:02+02:00",
-      "updatedAt": "2026-08-10T07:07:38.160Z",
-      "validFrom": "2026-08-10T10:00:00+02:00",
+      "publishedAtSource": "2026-08-10T10:05:58+02:00",
+      "publishedAt": "2026-08-10T10:05:58+02:00",
+      "updatedAt": "2026-08-10T08:13:38.938Z",
+      "validFrom": "2026-08-10T10:04:45+02:00",
       "validTo": "2026-08-10T18:00:00+02:00",
       "resolvedAt": null,
       "groupKey": "2026-08-10:silna-zatez-teplem-sivs-iii-1",
@@ -3212,7 +3236,7 @@
         "approvalStatus": "APPROVED_CC_BY",
         "attributionTemplateId": "attr-open-data-by-v1",
         "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-10T07:07:38.160Z",
+        "fetchedAt": "2026-08-10T08:13:38.938Z",
         "sourceUrl": "https://vystrahy-cr.chmi.cz/",
         "modifications": [
           "normalized-metadata-link-only"
@@ -3232,14 +3256,14 @@
         ]
       },
       "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810070502.XOCZ50_OKPR_000312|2026-08-10T09:05:02+02:00",
-        "alert_thread_id": "thread:038705d9d6f4cb69",
-        "hazard_instance_id": "haz:a8d34f21370f771b",
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810080558.XOCZ50_OKPR_000313|2026-08-10T10:05:58+02:00",
+        "alert_thread_id": "thread:7e4c0abcc6bca92d",
+        "hazard_instance_id": "haz:9f8b15f316273771",
         "msgType": "Update",
         "change_type": "new",
         "event": "Silná zátěž teplem",
         "severity": "Moderate",
-        "urgency": "Expected",
+        "urgency": "Immediate",
         "certainty": "Likely",
         "badgeActive": true,
         "temporalState": "active",
@@ -3248,7 +3272,7 @@
         "untilRevoked": false,
         "openEnded": false,
         "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=a8d34f21370f771b",
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=9f8b15f316273771",
         "publicUrl": "https://vystrahy-cr.chmi.cz/",
         "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
         "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
@@ -3258,7 +3282,7 @@
         "geo": {
           "links": [
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:1000",
               "orpCode": "1000",
               "orpName": "Praha",
@@ -3270,7 +3294,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2101",
               "orpCode": "2101",
               "orpName": "Benešov",
@@ -3282,7 +3306,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2102",
               "orpCode": "2102",
               "orpName": "Beroun",
@@ -3294,7 +3318,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2103",
               "orpCode": "2103",
               "orpName": "Brandýs nad Labem-Stará Boleslav",
@@ -3306,7 +3330,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2104",
               "orpCode": "2104",
               "orpName": "Čáslav",
@@ -3318,7 +3342,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2105",
               "orpCode": "2105",
               "orpName": "Černošice",
@@ -3330,7 +3354,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2106",
               "orpCode": "2106",
               "orpName": "Český Brod",
@@ -3342,7 +3366,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2107",
               "orpCode": "2107",
               "orpName": "Dobříš",
@@ -3354,7 +3378,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2108",
               "orpCode": "2108",
               "orpName": "Hořovice",
@@ -3366,7 +3390,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2109",
               "orpCode": "2109",
               "orpName": "Kladno",
@@ -3378,7 +3402,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2110",
               "orpCode": "2110",
               "orpName": "Kolín",
@@ -3390,7 +3414,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2111",
               "orpCode": "2111",
               "orpName": "Kralupy nad Vltavou",
@@ -3402,7 +3426,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2112",
               "orpCode": "2112",
               "orpName": "Kutná Hora",
@@ -3414,7 +3438,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2113",
               "orpCode": "2113",
               "orpName": "Lysá nad Labem",
@@ -3426,7 +3450,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2114",
               "orpCode": "2114",
               "orpName": "Mělník",
@@ -3438,7 +3462,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2115",
               "orpCode": "2115",
               "orpName": "Mladá Boleslav",
@@ -3450,7 +3474,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2116",
               "orpCode": "2116",
               "orpName": "Mnichovo Hradiště",
@@ -3462,7 +3486,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2117",
               "orpCode": "2117",
               "orpName": "Neratovice",
@@ -3474,7 +3498,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2118",
               "orpCode": "2118",
               "orpName": "Nymburk",
@@ -3486,7 +3510,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2119",
               "orpCode": "2119",
               "orpName": "Poděbrady",
@@ -3498,7 +3522,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2120",
               "orpCode": "2120",
               "orpName": "Příbram",
@@ -3510,7 +3534,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2121",
               "orpCode": "2121",
               "orpName": "Rakovník",
@@ -3522,7 +3546,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2122",
               "orpCode": "2122",
               "orpName": "Říčany",
@@ -3534,7 +3558,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2123",
               "orpCode": "2123",
               "orpName": "Sedlčany",
@@ -3546,7 +3570,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2124",
               "orpCode": "2124",
               "orpName": "Slaný",
@@ -3558,7 +3582,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2125",
               "orpCode": "2125",
               "orpName": "Vlašim",
@@ -3570,7 +3594,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:2126",
               "orpCode": "2126",
               "orpName": "Votice",
@@ -3582,7 +3606,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3101",
               "orpCode": "3101",
               "orpName": "Blatná",
@@ -3594,7 +3618,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3102",
               "orpCode": "3102",
               "orpName": "České Budějovice",
@@ -3606,7 +3630,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3104",
               "orpCode": "3104",
               "orpName": "Dačice",
@@ -3618,7 +3642,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3105",
               "orpCode": "3105",
               "orpName": "Jindřichův Hradec",
@@ -3630,7 +3654,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3107",
               "orpCode": "3107",
               "orpName": "Milevsko",
@@ -3642,7 +3666,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3108",
               "orpCode": "3108",
               "orpName": "Písek",
@@ -3654,7 +3678,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3110",
               "orpCode": "3110",
               "orpName": "Soběslav",
@@ -3666,7 +3690,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3111",
               "orpCode": "3111",
               "orpName": "Strakonice",
@@ -3678,7 +3702,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3112",
               "orpCode": "3112",
               "orpName": "Tábor",
@@ -3690,7 +3714,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3114",
               "orpCode": "3114",
               "orpName": "Třeboň",
@@ -3702,7 +3726,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3115",
               "orpCode": "3115",
               "orpName": "Týn nad Vltavou",
@@ -3714,7 +3738,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3117",
               "orpCode": "3117",
               "orpName": "Vodňany",
@@ -3726,7 +3750,19 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
+              "orpId": "orp:3113",
+              "orpCode": "3113",
+              "orpName": "Trhové Sviny",
+              "okresId": "okres:CZ0311",
+              "okresName": "České Budějovice",
+              "krajId": "kraj:CZ031",
+              "krajName": "Jihočeský kraj",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3201",
               "orpCode": "3201",
               "orpName": "Blovice",
@@ -3738,7 +3774,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3203",
               "orpCode": "3203",
               "orpName": "Horažďovice",
@@ -3750,7 +3786,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3204",
               "orpCode": "3204",
               "orpName": "Horšovský Týn",
@@ -3762,7 +3798,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3206",
               "orpCode": "3206",
               "orpName": "Kralovice",
@@ -3774,7 +3810,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3207",
               "orpCode": "3207",
               "orpName": "Nepomuk",
@@ -3786,7 +3822,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3208",
               "orpCode": "3208",
               "orpName": "Nýřany",
@@ -3798,7 +3834,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3209",
               "orpCode": "3209",
               "orpName": "Plzeň",
@@ -3810,7 +3846,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3210",
               "orpCode": "3210",
               "orpName": "Přeštice",
@@ -3822,7 +3858,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3211",
               "orpCode": "3211",
               "orpName": "Rokycany",
@@ -3834,7 +3870,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3212",
               "orpCode": "3212",
               "orpName": "Stod",
@@ -3846,7 +3882,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:3213",
               "orpCode": "3213",
               "orpName": "Stříbro",
@@ -3858,7 +3894,31 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
+              "orpId": "orp:3202",
+              "orpCode": "3202",
+              "orpName": "Domažlice",
+              "okresId": "okres:CZ0321",
+              "okresName": "Domažlice",
+              "krajId": "kraj:CZ032",
+              "krajName": "Plzeňský kraj",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:9f8b15f316273771",
+              "orpId": "orp:3205",
+              "orpCode": "3205",
+              "orpName": "Klatovy",
+              "okresId": "okres:CZ0322",
+              "okresName": "Klatovy",
+              "krajId": "kraj:CZ032",
+              "krajName": "Plzeňský kraj",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4201",
               "orpCode": "4201",
               "orpName": "Bílina",
@@ -3870,7 +3930,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4202",
               "orpCode": "4202",
               "orpName": "Děčín",
@@ -3882,7 +3942,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4203",
               "orpCode": "4203",
               "orpName": "Chomutov",
@@ -3894,7 +3954,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4204",
               "orpCode": "4204",
               "orpName": "Kadaň",
@@ -3906,7 +3966,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4205",
               "orpCode": "4205",
               "orpName": "Litoměřice",
@@ -3918,7 +3978,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4206",
               "orpCode": "4206",
               "orpName": "Litvínov",
@@ -3930,7 +3990,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4207",
               "orpCode": "4207",
               "orpName": "Louny",
@@ -3942,7 +4002,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4208",
               "orpCode": "4208",
               "orpName": "Lovosice",
@@ -3954,7 +4014,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4209",
               "orpCode": "4209",
               "orpName": "Most",
@@ -3966,7 +4026,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4210",
               "orpCode": "4210",
               "orpName": "Podbořany",
@@ -3978,7 +4038,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4211",
               "orpCode": "4211",
               "orpName": "Roudnice nad Labem",
@@ -3990,7 +4050,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4213",
               "orpCode": "4213",
               "orpName": "Teplice",
@@ -4002,7 +4062,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4214",
               "orpCode": "4214",
               "orpName": "Ústí nad Labem",
@@ -4014,7 +4074,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:4216",
               "orpCode": "4216",
               "orpName": "Žatec",
@@ -4026,7 +4086,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5101",
               "orpCode": "5101",
               "orpName": "Česká Lípa",
@@ -4038,7 +4098,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5203",
               "orpCode": "5203",
               "orpName": "Dvůr Králové nad Labem",
@@ -4050,7 +4110,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5204",
               "orpCode": "5204",
               "orpName": "Hořice",
@@ -4062,7 +4122,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5205",
               "orpCode": "5205",
               "orpName": "Hradec Králové",
@@ -4074,7 +4134,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5206",
               "orpCode": "5206",
               "orpName": "Jaroměř",
@@ -4086,7 +4146,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5207",
               "orpCode": "5207",
               "orpName": "Jičín",
@@ -4098,7 +4158,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5208",
               "orpCode": "5208",
               "orpName": "Kostelec nad Orlicí",
@@ -4110,7 +4170,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5210",
               "orpCode": "5210",
               "orpName": "Nová Paka",
@@ -4122,7 +4182,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5212",
               "orpCode": "5212",
               "orpName": "Nový Bydžov",
@@ -4134,7 +4194,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5303",
               "orpCode": "5303",
               "orpName": "Holice",
@@ -4146,7 +4206,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5304",
               "orpCode": "5304",
               "orpName": "Chrudim",
@@ -4158,7 +4218,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5307",
               "orpCode": "5307",
               "orpName": "Litomyšl",
@@ -4170,7 +4230,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5309",
               "orpCode": "5309",
               "orpName": "Pardubice",
@@ -4182,7 +4242,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5311",
               "orpCode": "5311",
               "orpName": "Přelouč",
@@ -4194,7 +4254,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5313",
               "orpCode": "5313",
               "orpName": "Ústí nad Orlicí",
@@ -4206,7 +4266,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:5314",
               "orpCode": "5314",
               "orpName": "Vysoké Mýto",
@@ -4218,7 +4278,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6102",
               "orpCode": "6102",
               "orpName": "Havlíčkův Brod",
@@ -4230,7 +4290,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6103",
               "orpCode": "6103",
               "orpName": "Humpolec",
@@ -4242,7 +4302,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6104",
               "orpCode": "6104",
               "orpName": "Chotěboř",
@@ -4254,7 +4314,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6106",
               "orpCode": "6106",
               "orpName": "Moravské Budějovice",
@@ -4266,7 +4326,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6107",
               "orpCode": "6107",
               "orpName": "Náměšť nad Oslavou",
@@ -4278,7 +4338,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6109",
               "orpCode": "6109",
               "orpName": "Pacov",
@@ -4290,7 +4350,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6111",
               "orpCode": "6111",
               "orpName": "Světlá nad Sázavou",
@@ -4302,7 +4362,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6113",
               "orpCode": "6113",
               "orpName": "Třebíč",
@@ -4314,7 +4374,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6203",
               "orpCode": "6203",
               "orpName": "Brno",
@@ -4326,7 +4386,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6204",
               "orpCode": "6204",
               "orpName": "Břeclav",
@@ -4338,7 +4398,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6205",
               "orpCode": "6205",
               "orpName": "Bučovice",
@@ -4350,7 +4410,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6206",
               "orpCode": "6206",
               "orpName": "Hodonín",
@@ -4362,7 +4422,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6207",
               "orpCode": "6207",
               "orpName": "Hustopeče",
@@ -4374,7 +4434,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6208",
               "orpCode": "6208",
               "orpName": "Ivančice",
@@ -4386,7 +4446,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6209",
               "orpCode": "6209",
               "orpName": "Kuřim",
@@ -4398,7 +4458,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6210",
               "orpCode": "6210",
               "orpName": "Kyjov",
@@ -4410,7 +4470,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6211",
               "orpCode": "6211",
               "orpName": "Mikulov",
@@ -4422,7 +4482,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6212",
               "orpCode": "6212",
               "orpName": "Moravský Krumlov",
@@ -4434,7 +4494,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6213",
               "orpCode": "6213",
               "orpName": "Pohořelice",
@@ -4446,7 +4506,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6214",
               "orpCode": "6214",
               "orpName": "Rosice",
@@ -4458,7 +4518,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6215",
               "orpCode": "6215",
               "orpName": "Slavkov u Brna",
@@ -4470,7 +4530,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6216",
               "orpCode": "6216",
               "orpName": "Šlapanice",
@@ -4482,7 +4542,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6218",
               "orpCode": "6218",
               "orpName": "Veselí nad Moravou",
@@ -4494,7 +4554,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6219",
               "orpCode": "6219",
               "orpName": "Vyškov",
@@ -4506,7 +4566,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6220",
               "orpCode": "6220",
               "orpName": "Znojmo",
@@ -4518,7 +4578,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:6221",
               "orpCode": "6221",
               "orpName": "Židlochovice",
@@ -4530,7 +4590,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7101",
               "orpCode": "7101",
               "orpName": "Hranice",
@@ -4542,7 +4602,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7102",
               "orpCode": "7102",
               "orpName": "Jeseník",
@@ -4554,7 +4614,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7103",
               "orpCode": "7103",
               "orpName": "Konice",
@@ -4566,7 +4626,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7104",
               "orpCode": "7104",
               "orpName": "Lipník nad Bečvou",
@@ -4578,7 +4638,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7105",
               "orpCode": "7105",
               "orpName": "Litovel",
@@ -4590,7 +4650,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7106",
               "orpCode": "7106",
               "orpName": "Mohelnice",
@@ -4602,7 +4662,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7107",
               "orpCode": "7107",
               "orpName": "Olomouc",
@@ -4614,7 +4674,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7108",
               "orpCode": "7108",
               "orpName": "Prostějov",
@@ -4626,7 +4686,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7109",
               "orpCode": "7109",
               "orpName": "Přerov",
@@ -4638,7 +4698,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7110",
               "orpCode": "7110",
               "orpName": "Šternberk",
@@ -4650,7 +4710,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7112",
               "orpCode": "7112",
               "orpName": "Uničov",
@@ -4662,7 +4722,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7202",
               "orpCode": "7202",
               "orpName": "Holešov",
@@ -4674,7 +4734,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7203",
               "orpCode": "7203",
               "orpName": "Kroměříž",
@@ -4686,7 +4746,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7204",
               "orpCode": "7204",
               "orpName": "Luhačovice",
@@ -4698,7 +4758,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7205",
               "orpCode": "7205",
               "orpName": "Otrokovice",
@@ -4710,7 +4770,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7207",
               "orpCode": "7207",
               "orpName": "Uherské Hradiště",
@@ -4722,7 +4782,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7208",
               "orpCode": "7208",
               "orpName": "Uherský Brod",
@@ -4734,7 +4794,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:7213",
               "orpCode": "7213",
               "orpName": "Zlín",
@@ -4746,7 +4806,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8101",
               "orpCode": "8101",
               "orpName": "Bílovec",
@@ -4758,7 +4818,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8102",
               "orpCode": "8102",
               "orpName": "Bohumín",
@@ -4770,7 +4830,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8104",
               "orpCode": "8104",
               "orpName": "Český Těšín",
@@ -4782,7 +4842,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8106",
               "orpCode": "8106",
               "orpName": "Frýdek-Místek",
@@ -4794,7 +4854,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8108",
               "orpCode": "8108",
               "orpName": "Havířov",
@@ -4806,7 +4866,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8109",
               "orpCode": "8109",
               "orpName": "Hlučín",
@@ -4818,7 +4878,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8111",
               "orpCode": "8111",
               "orpName": "Karviná",
@@ -4830,7 +4890,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8112",
               "orpCode": "8112",
               "orpName": "Kopřivnice",
@@ -4842,7 +4902,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8113",
               "orpCode": "8113",
               "orpName": "Kravaře",
@@ -4854,7 +4914,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8114",
               "orpCode": "8114",
               "orpName": "Krnov",
@@ -4866,7 +4926,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8115",
               "orpCode": "8115",
               "orpName": "Nový Jičín",
@@ -4878,7 +4938,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8116",
               "orpCode": "8116",
               "orpName": "Odry",
@@ -4890,7 +4950,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8117",
               "orpCode": "8117",
               "orpName": "Opava",
@@ -4902,7 +4962,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8118",
               "orpCode": "8118",
               "orpName": "Orlová",
@@ -4914,7 +4974,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8119",
               "orpCode": "8119",
               "orpName": "Ostrava",
@@ -4926,7 +4986,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8121",
               "orpCode": "8121",
               "orpName": "Třinec",
@@ -4938,7 +4998,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:a8d34f21370f771b",
+              "hazard_instance_id": "haz:9f8b15f316273771",
               "orpId": "orp:8122",
               "orpCode": "8122",
               "orpName": "Vítkov",
@@ -4952,16 +5012,16 @@
           ],
           "quarantine": [],
           "totalAreas": 13,
-          "mappedAreas": 141,
+          "mappedAreas": 144,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100
         },
-        "searchText": "vystraha chmu silna zatez teplem praha a dalsich 140 oblasti silna zatez teplem silna zatez teplem ocekavame silnou zatez teplem riziko prehrati a dehydratace zvysena zatez zdravotnickeho systemu prakticti lekari zdravotnicka zachranna sluzba a socialnich sluzeb zejmena pece o seniory a dlouhodobe nemocne drzet se ve stinu dodrzovat pitny rezim se zvysenym prisunem nealkoholickych napoju planovat zvysenou zatez fyzickou psychickou na chladnejsi casti dne v pripade zdravotnich problemu vyhledat lekarskou pomoc nenechavat deti nebo i zvirata v zaparkovanych automobilech nastavovat klimatizace v mistnostech nebo autech tak aby nebyl organismus vystaven prilis velkemu tepelnemu soku pri prechodech ven nebo dovnitr tzn rozdil mezi vnitrni a venkovni teplotou by nemel presahovat 5 az 8 c praha a dalsich 140 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice dacice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany blovice horazdovice horsovsky tyn kralovice nepomuk nyrany plzen prestice rokycany stod stribro bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jaromer jicin kostelec nad orlici nova paka novy bydzov holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice veseli nad moravou vyskov znojmo zidlochovice hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod zlin bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava trinec vitkov hlavni mesto praha benesov beroun praha vychod kutna hora praha zapad kolin pribram kladno melnik nymburk mlada boleslav rakovnik strakonice ceske budejovice jindrichuv hradec pisek tabor plzen jih klatovy domazlice plzen sever plzen mesto rokycany tachov teplice decin chomutov litomerice most louny usti nad labem ceska lipa trutnov jicin hradec kralove nachod rychnov nad kneznou pardubice chrudim svitavy usti nad orlici havlickuv brod pelhrimov trebic brno mesto breclav vyskov hodonin brno venkov znojmo prerov jesenik prostejov olomouc sumperk kromeriz zlin uherske hradiste novy jicin karvina frydek mistek opava bruntal ostrava mesto hlavni mesto praha stredocesky kraj jihocesky kraj plzensky kraj ustecky kraj liberecky kraj kralovehradecky kraj pardubicky kraj kraj vysocina jihomoravsky kraj olomoucky kraj zlinsky kraj moravskoslezsky kraj hlavni mesto praha stredocesky kraj jihocesky kraj blatna ceske budejovice dacice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany plzensky kraj blovice horazdovice horsovsky tyn kralovice nepomuk nyrany plzen prestice rokycany stod stribro ustecky kraj bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec liberecky kraj ceska lipa kralovehradecky kraj dvur kralove nad labem horice hradec kralove jaromer jicin kostelec nad orlici nova paka novy bydzov pardubicky kraj holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto kraj vysocina havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic jihomoravsky kraj brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice veseli nad moravou vyskov znojmo zidlochovice olomoucky kraj hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zlinsky kraj holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod zlin moravskoslezsky kraj bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava trinec vitkov chmu cesky hydrometeorologicky ustav moderate expected likely",
+        "searchText": "vystraha chmu silna zatez teplem praha a dalsich 143 oblasti silna zatez teplem silna zatez teplem ocekavame silnou zatez teplem riziko prehrati a dehydratace zvysena zatez zdravotnickeho systemu prakticti lekari zdravotnicka zachranna sluzba a socialnich sluzeb zejmena pece o seniory a dlouhodobe nemocne drzet se ve stinu dodrzovat pitny rezim se zvysenym prisunem nealkoholickych napoju planovat zvysenou zatez fyzickou psychickou na chladnejsi casti dne v pripade zdravotnich problemu vyhledat lekarskou pomoc nenechavat deti nebo i zvirata v zaparkovanych automobilech nastavovat klimatizace v mistnostech nebo autech tak aby nebyl organismus vystaven prilis velkemu tepelnemu soku pri prechodech ven nebo dovnitr tzn rozdil mezi vnitrni a venkovni teplotou by nemel presahovat 5 az 8 c praha a dalsich 143 oblasti praha benesov beroun brandys nad labem stara boleslav caslav cernosice cesky brod dobris horovice kladno kolin kralupy nad vltavou kutna hora lysa nad labem melnik mlada boleslav mnichovo hradiste neratovice nymburk podebrady pribram rakovnik ricany sedlcany slany vlasim votice blatna ceske budejovice dacice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany trhove sviny blovice horazdovice horsovsky tyn kralovice nepomuk nyrany plzen prestice rokycany stod stribro domazlice klatovy bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec ceska lipa dvur kralove nad labem horice hradec kralove jaromer jicin kostelec nad orlici nova paka novy bydzov holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice veseli nad moravou vyskov znojmo zidlochovice hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod zlin bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava trinec vitkov hlavni mesto praha benesov beroun praha vychod kutna hora praha zapad kolin pribram kladno melnik nymburk mlada boleslav rakovnik strakonice ceske budejovice jindrichuv hradec pisek tabor plzen jih klatovy domazlice plzen sever plzen mesto rokycany tachov teplice decin chomutov litomerice most louny usti nad labem ceska lipa trutnov jicin hradec kralove nachod rychnov nad kneznou pardubice chrudim svitavy usti nad orlici havlickuv brod pelhrimov trebic brno mesto breclav vyskov hodonin brno venkov znojmo prerov jesenik prostejov olomouc sumperk kromeriz zlin uherske hradiste novy jicin karvina frydek mistek opava bruntal ostrava mesto hlavni mesto praha stredocesky kraj jihocesky kraj plzensky kraj ustecky kraj liberecky kraj kralovehradecky kraj pardubicky kraj kraj vysocina jihomoravsky kraj olomoucky kraj zlinsky kraj moravskoslezsky kraj hlavni mesto praha stredocesky kraj jihocesky kraj blatna ceske budejovice dacice jindrichuv hradec milevsko pisek sobeslav strakonice tabor trebon tyn nad vltavou vodnany trhove sviny plzensky kraj blovice horazdovice horsovsky tyn kralovice nepomuk nyrany plzen prestice rokycany stod stribro domazlice klatovy ustecky kraj bilina decin chomutov kadan litomerice litvinov louny lovosice most podborany roudnice nad labem teplice usti nad labem zatec liberecky kraj ceska lipa kralovehradecky kraj dvur kralove nad labem horice hradec kralove jaromer jicin kostelec nad orlici nova paka novy bydzov pardubicky kraj holice chrudim litomysl pardubice prelouc usti nad orlici vysoke myto kraj vysocina havlickuv brod humpolec chotebor moravske budejovice namest nad oslavou pacov svetla nad sazavou trebic jihomoravsky kraj brno breclav bucovice hodonin hustopece ivancice kurim kyjov mikulov moravsky krumlov pohorelice rosice slavkov u brna slapanice veseli nad moravou vyskov znojmo zidlochovice olomoucky kraj hranice jesenik konice lipnik nad becvou litovel mohelnice olomouc prostejov prerov sternberk unicov zlinsky kraj holesov kromeriz luhacovice otrokovice uherske hradiste uhersky brod zlin moravskoslezsky kraj bilovec bohumin cesky tesin frydek mistek havirov hlucin karvina koprivnice kravare krnov novy jicin odry opava orlova ostrava trinec vitkov chmu cesky hydrometeorologicky ustav moderate immediate likely",
         "significantUnreadReset": true
       },
-      "firstSeenByInfoUzel": "2026-08-10T07:07:38.160Z",
-      "lastProcessedAt": "2026-08-10T07:07:38.160Z",
-      "sortAt": "2026-08-10T09:05:02+02:00",
+      "firstSeenByInfoUzel": "2026-08-10T08:13:38.938Z",
+      "lastProcessedAt": "2026-08-10T08:13:38.938Z",
+      "sortAt": "2026-08-10T10:05:58+02:00",
       "timeSource": "cap_sent",
       "timeConfidence": "high",
       "isNewCapture": true
@@ -8449,7 +8509,7 @@
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-ae002e3b8fb2c5a1",
+      "id": "ie-chmi-v2-b171dff179a0d049",
       "title": "Riziko požárů — Praha a dalších 151 oblastí",
       "description": "Zvýšené riziko vzniku a šíření požárů v důsledku déletrvajícího sucha. Možný vznik a šíření závažného požáru s následnými škodami. Možné škody na ekosystémech, majetku, v lesním hospodářství, zemědělství apod. Riziko zranění osob. Zhoršení kvality ovzduší způsobující respirační problémy a další zdravotní komplikace u nemocných osob.",
       "instruction": "V přírodě nerozdělávat oheň, nevypalovat trávu, nekouřit a neodhazovat cigaretové nedopalky na zem. Nepoužívat přenosné vařiče či jiné zdroje otevřeného ohně. Řídit se místními vyhláškami a zákazy, které k suchu a riziku požárů mohou být vydány. Věnovat zvýšenou pozornost jak při používání zemědělské techniky, tak v okolí železničních tratí, kde vlivem jisker od kol a brzd může dojít k zapálení porostu.",
@@ -8461,7 +8521,7 @@
       "publicUrl": "https://vystrahy-cr.chmi.cz/",
       "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
       "publisherWebUrl": null,
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=4e2d81104062f262",
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
       "urlKind": "cap_public_web",
       "listingUrl": "https://vystrahy-cr.chmi.cz/",
       "sectionId": "pocasi",
@@ -9263,10 +9323,10 @@
       "lane": "pocasi",
       "connectorType": "opendata",
       "orgType": "meteo",
-      "publishedAtSource": "2026-08-10T09:05:02+02:00",
-      "publishedAt": "2026-08-10T09:05:02+02:00",
-      "updatedAt": "2026-08-10T07:07:38.160Z",
-      "validFrom": "2026-08-04T16:48:53+02:00",
+      "publishedAtSource": "2026-08-10T10:05:58+02:00",
+      "publishedAt": "2026-08-10T10:05:58+02:00",
+      "updatedAt": "2026-08-10T08:13:38.938Z",
+      "validFrom": "2026-08-04T17:54:12+02:00",
       "validTo": null,
       "resolvedAt": null,
       "groupKey": "2026-08-10:riziko-pozaru-sivs-xii-1",
@@ -9284,7 +9344,7 @@
         "approvalStatus": "APPROVED_CC_BY",
         "attributionTemplateId": "attr-open-data-by-v1",
         "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-10T07:07:38.160Z",
+        "fetchedAt": "2026-08-10T08:13:38.938Z",
         "sourceUrl": "https://vystrahy-cr.chmi.cz/",
         "modifications": [
           "normalized-metadata-link-only"
@@ -9304,9 +9364,9 @@
         ]
       },
       "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810070502.XOCZ50_OKPR_000312|2026-08-10T09:05:02+02:00",
-        "alert_thread_id": "thread:038705d9d6f4cb69",
-        "hazard_instance_id": "haz:ae002e3b8fb2c5a1",
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810080558.XOCZ50_OKPR_000313|2026-08-10T10:05:58+02:00",
+        "alert_thread_id": "thread:7e4c0abcc6bca92d",
+        "hazard_instance_id": "haz:b171dff179a0d049",
         "msgType": "Update",
         "change_type": "new",
         "event": "Riziko požárů",
@@ -9320,7 +9380,7 @@
         "untilRevoked": true,
         "openEnded": true,
         "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=4e2d81104062f262",
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
         "publicUrl": "https://vystrahy-cr.chmi.cz/",
         "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
         "publisherWebUrl": null,
@@ -9330,7 +9390,7 @@
         "geo": {
           "links": [
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:1000",
               "orpCode": "1000",
               "orpName": "Praha",
@@ -9342,7 +9402,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2101",
               "orpCode": "2101",
               "orpName": "Benešov",
@@ -9354,7 +9414,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2102",
               "orpCode": "2102",
               "orpName": "Beroun",
@@ -9366,7 +9426,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2103",
               "orpCode": "2103",
               "orpName": "Brandýs nad Labem-Stará Boleslav",
@@ -9378,7 +9438,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2104",
               "orpCode": "2104",
               "orpName": "Čáslav",
@@ -9390,7 +9450,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2105",
               "orpCode": "2105",
               "orpName": "Černošice",
@@ -9402,7 +9462,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2106",
               "orpCode": "2106",
               "orpName": "Český Brod",
@@ -9414,7 +9474,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2107",
               "orpCode": "2107",
               "orpName": "Dobříš",
@@ -9426,7 +9486,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2108",
               "orpCode": "2108",
               "orpName": "Hořovice",
@@ -9438,7 +9498,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2109",
               "orpCode": "2109",
               "orpName": "Kladno",
@@ -9450,7 +9510,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2110",
               "orpCode": "2110",
               "orpName": "Kolín",
@@ -9462,7 +9522,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2111",
               "orpCode": "2111",
               "orpName": "Kralupy nad Vltavou",
@@ -9474,7 +9534,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2112",
               "orpCode": "2112",
               "orpName": "Kutná Hora",
@@ -9486,7 +9546,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2113",
               "orpCode": "2113",
               "orpName": "Lysá nad Labem",
@@ -9498,7 +9558,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2114",
               "orpCode": "2114",
               "orpName": "Mělník",
@@ -9510,7 +9570,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2115",
               "orpCode": "2115",
               "orpName": "Mladá Boleslav",
@@ -9522,7 +9582,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2116",
               "orpCode": "2116",
               "orpName": "Mnichovo Hradiště",
@@ -9534,7 +9594,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2117",
               "orpCode": "2117",
               "orpName": "Neratovice",
@@ -9546,7 +9606,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2118",
               "orpCode": "2118",
               "orpName": "Nymburk",
@@ -9558,7 +9618,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2119",
               "orpCode": "2119",
               "orpName": "Poděbrady",
@@ -9570,7 +9630,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2120",
               "orpCode": "2120",
               "orpName": "Příbram",
@@ -9582,7 +9642,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2121",
               "orpCode": "2121",
               "orpName": "Rakovník",
@@ -9594,7 +9654,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2122",
               "orpCode": "2122",
               "orpName": "Říčany",
@@ -9606,7 +9666,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2123",
               "orpCode": "2123",
               "orpName": "Sedlčany",
@@ -9618,7 +9678,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2124",
               "orpCode": "2124",
               "orpName": "Slaný",
@@ -9630,7 +9690,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2125",
               "orpCode": "2125",
               "orpName": "Vlašim",
@@ -9642,7 +9702,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:2126",
               "orpCode": "2126",
               "orpName": "Votice",
@@ -9654,7 +9714,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3101",
               "orpCode": "3101",
               "orpName": "Blatná",
@@ -9666,7 +9726,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3107",
               "orpCode": "3107",
               "orpName": "Milevsko",
@@ -9678,7 +9738,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3108",
               "orpCode": "3108",
               "orpName": "Písek",
@@ -9690,7 +9750,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3111",
               "orpCode": "3111",
               "orpName": "Strakonice",
@@ -9702,7 +9762,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3112",
               "orpCode": "3112",
               "orpName": "Tábor",
@@ -9714,7 +9774,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3116",
               "orpCode": "3116",
               "orpName": "Vimperk",
@@ -9726,7 +9786,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3117",
               "orpCode": "3117",
               "orpName": "Vodňany",
@@ -9738,7 +9798,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3201",
               "orpCode": "3201",
               "orpName": "Blovice",
@@ -9750,7 +9810,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3202",
               "orpCode": "3202",
               "orpName": "Domažlice",
@@ -9762,7 +9822,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3203",
               "orpCode": "3203",
               "orpName": "Horažďovice",
@@ -9774,7 +9834,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3204",
               "orpCode": "3204",
               "orpName": "Horšovský Týn",
@@ -9786,7 +9846,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3205",
               "orpCode": "3205",
               "orpName": "Klatovy",
@@ -9798,7 +9858,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3206",
               "orpCode": "3206",
               "orpName": "Kralovice",
@@ -9810,7 +9870,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3207",
               "orpCode": "3207",
               "orpName": "Nepomuk",
@@ -9822,7 +9882,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3208",
               "orpCode": "3208",
               "orpName": "Nýřany",
@@ -9834,7 +9894,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3209",
               "orpCode": "3209",
               "orpName": "Plzeň",
@@ -9846,7 +9906,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3210",
               "orpCode": "3210",
               "orpName": "Přeštice",
@@ -9858,7 +9918,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3211",
               "orpCode": "3211",
               "orpName": "Rokycany",
@@ -9870,7 +9930,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3212",
               "orpCode": "3212",
               "orpName": "Stod",
@@ -9882,7 +9942,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3213",
               "orpCode": "3213",
               "orpName": "Stříbro",
@@ -9894,7 +9954,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3214",
               "orpCode": "3214",
               "orpName": "Sušice",
@@ -9906,7 +9966,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:3215",
               "orpCode": "3215",
               "orpName": "Tachov",
@@ -9918,7 +9978,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4101",
               "orpCode": "4101",
               "orpName": "Aš",
@@ -9930,7 +9990,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4102",
               "orpCode": "4102",
               "orpName": "Cheb",
@@ -9942,7 +10002,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4103",
               "orpCode": "4103",
               "orpName": "Karlovy Vary",
@@ -9954,7 +10014,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4104",
               "orpCode": "4104",
               "orpName": "Kraslice",
@@ -9966,7 +10026,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4105",
               "orpCode": "4105",
               "orpName": "Mariánské Lázně",
@@ -9978,7 +10038,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4106",
               "orpCode": "4106",
               "orpName": "Ostrov",
@@ -9990,7 +10050,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4107",
               "orpCode": "4107",
               "orpName": "Sokolov",
@@ -10002,7 +10062,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4201",
               "orpCode": "4201",
               "orpName": "Bílina",
@@ -10014,7 +10074,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4202",
               "orpCode": "4202",
               "orpName": "Děčín",
@@ -10026,7 +10086,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4203",
               "orpCode": "4203",
               "orpName": "Chomutov",
@@ -10038,7 +10098,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4204",
               "orpCode": "4204",
               "orpName": "Kadaň",
@@ -10050,7 +10110,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4205",
               "orpCode": "4205",
               "orpName": "Litoměřice",
@@ -10062,7 +10122,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4206",
               "orpCode": "4206",
               "orpName": "Litvínov",
@@ -10074,7 +10134,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4207",
               "orpCode": "4207",
               "orpName": "Louny",
@@ -10086,7 +10146,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4208",
               "orpCode": "4208",
               "orpName": "Lovosice",
@@ -10098,7 +10158,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4209",
               "orpCode": "4209",
               "orpName": "Most",
@@ -10110,7 +10170,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4210",
               "orpCode": "4210",
               "orpName": "Podbořany",
@@ -10122,7 +10182,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4211",
               "orpCode": "4211",
               "orpName": "Roudnice nad Labem",
@@ -10134,7 +10194,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4213",
               "orpCode": "4213",
               "orpName": "Teplice",
@@ -10146,7 +10206,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4214",
               "orpCode": "4214",
               "orpName": "Ústí nad Labem",
@@ -10158,7 +10218,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:4216",
               "orpCode": "4216",
               "orpName": "Žatec",
@@ -10170,7 +10230,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5101",
               "orpCode": "5101",
               "orpName": "Česká Lípa",
@@ -10182,7 +10242,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5203",
               "orpCode": "5203",
               "orpName": "Dvůr Králové nad Labem",
@@ -10194,7 +10254,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5204",
               "orpCode": "5204",
               "orpName": "Hořice",
@@ -10206,7 +10266,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5205",
               "orpCode": "5205",
               "orpName": "Hradec Králové",
@@ -10218,7 +10278,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5207",
               "orpCode": "5207",
               "orpName": "Jičín",
@@ -10230,7 +10290,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5210",
               "orpCode": "5210",
               "orpName": "Nová Paka",
@@ -10242,7 +10302,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5212",
               "orpCode": "5212",
               "orpName": "Nový Bydžov",
@@ -10254,7 +10314,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5301",
               "orpCode": "5301",
               "orpName": "Česká Třebová",
@@ -10266,7 +10326,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5302",
               "orpCode": "5302",
               "orpName": "Hlinsko",
@@ -10278,7 +10338,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5303",
               "orpCode": "5303",
               "orpName": "Holice",
@@ -10290,7 +10350,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5304",
               "orpCode": "5304",
               "orpName": "Chrudim",
@@ -10302,7 +10362,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5305",
               "orpCode": "5305",
               "orpName": "Králíky",
@@ -10314,7 +10374,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5306",
               "orpCode": "5306",
               "orpName": "Lanškroun",
@@ -10326,7 +10386,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5307",
               "orpCode": "5307",
               "orpName": "Litomyšl",
@@ -10338,7 +10398,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5308",
               "orpCode": "5308",
               "orpName": "Moravská Třebová",
@@ -10350,7 +10410,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5309",
               "orpCode": "5309",
               "orpName": "Pardubice",
@@ -10362,7 +10422,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5310",
               "orpCode": "5310",
               "orpName": "Polička",
@@ -10374,7 +10434,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5311",
               "orpCode": "5311",
               "orpName": "Přelouč",
@@ -10386,7 +10446,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5312",
               "orpCode": "5312",
               "orpName": "Svitavy",
@@ -10398,7 +10458,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5313",
               "orpCode": "5313",
               "orpName": "Ústí nad Orlicí",
@@ -10410,7 +10470,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5314",
               "orpCode": "5314",
               "orpName": "Vysoké Mýto",
@@ -10422,7 +10482,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:5315",
               "orpCode": "5315",
               "orpName": "Žamberk",
@@ -10434,7 +10494,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6201",
               "orpCode": "6201",
               "orpName": "Blansko",
@@ -10446,7 +10506,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6202",
               "orpCode": "6202",
               "orpName": "Boskovice",
@@ -10458,7 +10518,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6203",
               "orpCode": "6203",
               "orpName": "Brno",
@@ -10470,7 +10530,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6205",
               "orpCode": "6205",
               "orpName": "Bučovice",
@@ -10482,7 +10542,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6208",
               "orpCode": "6208",
               "orpName": "Ivančice",
@@ -10494,7 +10554,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6209",
               "orpCode": "6209",
               "orpName": "Kuřim",
@@ -10506,7 +10566,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6214",
               "orpCode": "6214",
               "orpName": "Rosice",
@@ -10518,7 +10578,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6215",
               "orpCode": "6215",
               "orpName": "Slavkov u Brna",
@@ -10530,7 +10590,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6216",
               "orpCode": "6216",
               "orpName": "Šlapanice",
@@ -10542,7 +10602,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6217",
               "orpCode": "6217",
               "orpName": "Tišnov",
@@ -10554,7 +10614,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6219",
               "orpCode": "6219",
               "orpName": "Vyškov",
@@ -10566,7 +10626,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6221",
               "orpCode": "6221",
               "orpName": "Židlochovice",
@@ -10578,7 +10638,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7101",
               "orpCode": "7101",
               "orpName": "Hranice",
@@ -10590,7 +10650,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7102",
               "orpCode": "7102",
               "orpName": "Jeseník",
@@ -10602,7 +10662,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7103",
               "orpCode": "7103",
               "orpName": "Konice",
@@ -10614,7 +10674,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7104",
               "orpCode": "7104",
               "orpName": "Lipník nad Bečvou",
@@ -10626,7 +10686,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7105",
               "orpCode": "7105",
               "orpName": "Litovel",
@@ -10638,7 +10698,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7106",
               "orpCode": "7106",
               "orpName": "Mohelnice",
@@ -10650,7 +10710,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7107",
               "orpCode": "7107",
               "orpName": "Olomouc",
@@ -10662,7 +10722,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7108",
               "orpCode": "7108",
               "orpName": "Prostějov",
@@ -10674,7 +10734,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7109",
               "orpCode": "7109",
               "orpName": "Přerov",
@@ -10686,7 +10746,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7110",
               "orpCode": "7110",
               "orpName": "Šternberk",
@@ -10698,7 +10758,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7111",
               "orpCode": "7111",
               "orpName": "Šumperk",
@@ -10710,7 +10770,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7112",
               "orpCode": "7112",
               "orpName": "Uničov",
@@ -10722,7 +10782,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7113",
               "orpCode": "7113",
               "orpName": "Zábřeh",
@@ -10734,7 +10794,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7201",
               "orpCode": "7201",
               "orpName": "Bystřice pod Hostýnem",
@@ -10746,7 +10806,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7202",
               "orpCode": "7202",
               "orpName": "Holešov",
@@ -10758,7 +10818,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7203",
               "orpCode": "7203",
               "orpName": "Kroměříž",
@@ -10770,7 +10830,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7204",
               "orpCode": "7204",
               "orpName": "Luhačovice",
@@ -10782,7 +10842,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7205",
               "orpCode": "7205",
               "orpName": "Otrokovice",
@@ -10794,7 +10854,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7206",
               "orpCode": "7206",
               "orpName": "Rožnov pod Radhoštěm",
@@ -10806,7 +10866,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7207",
               "orpCode": "7207",
               "orpName": "Uherské Hradiště",
@@ -10818,7 +10878,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7208",
               "orpCode": "7208",
               "orpName": "Uherský Brod",
@@ -10830,7 +10890,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7209",
               "orpCode": "7209",
               "orpName": "Valašské Klobouky",
@@ -10842,7 +10902,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7210",
               "orpCode": "7210",
               "orpName": "Valašské Meziříčí",
@@ -10854,7 +10914,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7211",
               "orpCode": "7211",
               "orpName": "Vizovice",
@@ -10866,7 +10926,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7212",
               "orpCode": "7212",
               "orpName": "Vsetín",
@@ -10878,7 +10938,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:7213",
               "orpCode": "7213",
               "orpName": "Zlín",
@@ -10890,7 +10950,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8101",
               "orpCode": "8101",
               "orpName": "Bílovec",
@@ -10902,7 +10962,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8102",
               "orpCode": "8102",
               "orpName": "Bohumín",
@@ -10914,7 +10974,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8103",
               "orpCode": "8103",
               "orpName": "Bruntál",
@@ -10926,7 +10986,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8104",
               "orpCode": "8104",
               "orpName": "Český Těšín",
@@ -10938,7 +10998,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8105",
               "orpCode": "8105",
               "orpName": "Frenštát pod Radhoštěm",
@@ -10950,7 +11010,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8106",
               "orpCode": "8106",
               "orpName": "Frýdek-Místek",
@@ -10962,7 +11022,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8107",
               "orpCode": "8107",
               "orpName": "Frýdlant nad Ostravicí",
@@ -10974,7 +11034,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8108",
               "orpCode": "8108",
               "orpName": "Havířov",
@@ -10986,7 +11046,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8109",
               "orpCode": "8109",
               "orpName": "Hlučín",
@@ -10998,7 +11058,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8110",
               "orpCode": "8110",
               "orpName": "Jablunkov",
@@ -11010,7 +11070,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8111",
               "orpCode": "8111",
               "orpName": "Karviná",
@@ -11022,7 +11082,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8112",
               "orpCode": "8112",
               "orpName": "Kopřivnice",
@@ -11034,7 +11094,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8113",
               "orpCode": "8113",
               "orpName": "Kravaře",
@@ -11046,7 +11106,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8114",
               "orpCode": "8114",
               "orpName": "Krnov",
@@ -11058,7 +11118,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8115",
               "orpCode": "8115",
               "orpName": "Nový Jičín",
@@ -11070,7 +11130,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8116",
               "orpCode": "8116",
               "orpName": "Odry",
@@ -11082,7 +11142,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8117",
               "orpCode": "8117",
               "orpName": "Opava",
@@ -11094,7 +11154,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8118",
               "orpCode": "8118",
               "orpName": "Orlová",
@@ -11106,7 +11166,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8119",
               "orpCode": "8119",
               "orpName": "Ostrava",
@@ -11118,7 +11178,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8120",
               "orpCode": "8120",
               "orpName": "Rýmařov",
@@ -11130,7 +11190,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8121",
               "orpCode": "8121",
               "orpName": "Třinec",
@@ -11142,7 +11202,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:8122",
               "orpCode": "8122",
               "orpName": "Vítkov",
@@ -11164,15 +11224,15 @@
         "significantUnreadReset": true,
         "onsetSplit": true
       },
-      "firstSeenByInfoUzel": "2026-08-10T07:07:38.160Z",
-      "lastProcessedAt": "2026-08-10T07:07:38.160Z",
-      "sortAt": "2026-08-10T09:05:02+02:00",
+      "firstSeenByInfoUzel": "2026-08-10T08:13:38.938Z",
+      "lastProcessedAt": "2026-08-10T08:13:38.938Z",
+      "sortAt": "2026-08-10T10:05:58+02:00",
       "timeSource": "cap_sent",
       "timeConfidence": "high",
       "isNewCapture": true
     },
     {
-      "id": "ie-chmi-v2-811dd32db0bf0bca",
+      "id": "ie-chmi-v2-4313a1a9b9a5ebd0",
       "title": "Riziko požárů — Jihomoravský kraj (9 ORP)",
       "description": "Zvýšené riziko vzniku a šíření požárů v důsledku déletrvajícího sucha. Možný vznik a šíření závažného požáru s následnými škodami. Možné škody na ekosystémech, majetku, v lesním hospodářství, zemědělství apod. Riziko zranění osob. Zhoršení kvality ovzduší způsobující respirační problémy a další zdravotní komplikace u nemocných osob.",
       "instruction": "V přírodě nerozdělávat oheň, nevypalovat trávu, nekouřit a neodhazovat cigaretové nedopalky na zem. Nepoužívat přenosné vařiče či jiné zdroje otevřeného ohně. Řídit se místními vyhláškami a zákazy, které k suchu a riziku požárů mohou být vydány. Věnovat zvýšenou pozornost jak při používání zemědělské techniky, tak v okolí železničních tratí, kde vlivem jisker od kol a brzd může dojít k zapálení porostu.",
@@ -11184,7 +11244,7 @@
       "publicUrl": "https://vystrahy-cr.chmi.cz/",
       "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
       "publisherWebUrl": null,
-      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=4e2d81104062f262",
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
       "urlKind": "cap_public_web",
       "listingUrl": "https://vystrahy-cr.chmi.cz/",
       "sectionId": "pocasi",
@@ -11276,9 +11336,9 @@
       "lane": "pocasi",
       "connectorType": "opendata",
       "orgType": "meteo",
-      "publishedAtSource": "2026-08-10T09:05:02+02:00",
-      "publishedAt": "2026-08-10T09:05:02+02:00",
-      "updatedAt": "2026-08-10T07:07:38.160Z",
+      "publishedAtSource": "2026-08-10T10:05:58+02:00",
+      "publishedAt": "2026-08-10T10:05:58+02:00",
+      "updatedAt": "2026-08-10T08:13:38.938Z",
       "validFrom": "2026-08-07T10:28:50+02:00",
       "validTo": null,
       "resolvedAt": null,
@@ -11297,7 +11357,7 @@
         "approvalStatus": "APPROVED_CC_BY",
         "attributionTemplateId": "attr-open-data-by-v1",
         "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
-        "fetchedAt": "2026-08-10T07:07:38.160Z",
+        "fetchedAt": "2026-08-10T08:13:38.938Z",
         "sourceUrl": "https://vystrahy-cr.chmi.cz/",
         "modifications": [
           "normalized-metadata-link-only"
@@ -11317,9 +11377,9 @@
         ]
       },
       "capV2": {
-        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810070502.XOCZ50_OKPR_000312|2026-08-10T09:05:02+02:00",
-        "alert_thread_id": "thread:038705d9d6f4cb69",
-        "hazard_instance_id": "haz:811dd32db0bf0bca",
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810080558.XOCZ50_OKPR_000313|2026-08-10T10:05:58+02:00",
+        "alert_thread_id": "thread:7e4c0abcc6bca92d",
+        "hazard_instance_id": "haz:4313a1a9b9a5ebd0",
         "msgType": "Update",
         "change_type": "new",
         "event": "Riziko požárů",
@@ -11333,7 +11393,7 @@
         "untilRevoked": true,
         "openEnded": true,
         "productExcluded": false,
-        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100705.xml?hid=4e2d81104062f262",
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
         "publicUrl": "https://vystrahy-cr.chmi.cz/",
         "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
         "publisherWebUrl": null,
@@ -11343,7 +11403,7 @@
         "geo": {
           "links": [
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6204",
               "orpCode": "6204",
               "orpName": "Břeclav",
@@ -11355,7 +11415,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6206",
               "orpCode": "6206",
               "orpName": "Hodonín",
@@ -11367,7 +11427,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6207",
               "orpCode": "6207",
               "orpName": "Hustopeče",
@@ -11379,7 +11439,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6210",
               "orpCode": "6210",
               "orpName": "Kyjov",
@@ -11391,7 +11451,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6211",
               "orpCode": "6211",
               "orpName": "Mikulov",
@@ -11403,7 +11463,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6212",
               "orpCode": "6212",
               "orpName": "Moravský Krumlov",
@@ -11415,7 +11475,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6213",
               "orpCode": "6213",
               "orpName": "Pohořelice",
@@ -11427,7 +11487,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6218",
               "orpCode": "6218",
               "orpName": "Veselí nad Moravou",
@@ -11439,7 +11499,7 @@
               "precise": true
             },
             {
-              "hazard_instance_id": "haz:4e2d81104062f262",
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
               "orpId": "orp:6220",
               "orpCode": "6220",
               "orpName": "Znojmo",
@@ -11459,11 +11519,409 @@
         },
         "searchText": "riziko pozaru jihomoravsky kraj 9 orp breclav hodonin hustopece kyjov mikulov moravsky krumlov pohorelice veseli nad moravou znojmo jihomoravsky kraj",
         "significantUnreadReset": true,
-        "onsetSplit": true
+        "onsetSplit": true,
+        "supersedesIds": [
+          "ie-chmi-v2-811dd32db0bf0bca"
+        ]
       },
       "firstSeenByInfoUzel": "2026-08-07T08:51:21.884Z",
-      "lastProcessedAt": "2026-08-10T07:07:38.160Z",
-      "sortAt": "2026-08-10T09:05:02+02:00",
+      "lastProcessedAt": "2026-08-10T08:13:38.938Z",
+      "sortAt": "2026-08-10T10:05:58+02:00",
+      "timeSource": "cap_sent",
+      "timeConfidence": "high",
+      "isNewCapture": true
+    },
+    {
+      "id": "ie-chmi-v2-2b7a73576d144f1c",
+      "title": "Riziko požárů — Kraj Vysočina (15 ORP)",
+      "description": "Zvýšené riziko vzniku a šíření požárů v důsledku déletrvajícího sucha. Možný vznik a šíření závažného požáru s následnými škodami. Možné škody na ekosystémech, majetku, v lesním hospodářství, zemědělství apod. Riziko zranění osob. Zhoršení kvality ovzduší způsobující respirační problémy a další zdravotní komplikace u nemocných osob.",
+      "instruction": "V přírodě nerozdělávat oheň, nevypalovat trávu, nekouřit a neodhazovat cigaretové nedopalky na zem. Nepoužívat přenosné vařiče či jiné zdroje otevřeného ohně. Řídit se místními vyhláškami a zákazy, které k suchu a riziku požárů mohou být vydány. Věnovat zvýšenou pozornost jak při používání zemědělské techniky, tak v okolí železničních tratí, kde vlivem jisker od kol a brzd může dojít k zapálení porostu.",
+      "sourceId": "chmi",
+      "sourceLabel": "ČHMÚ",
+      "sourceGroup": "pocasi",
+      "url": "https://vystrahy-cr.chmi.cz/",
+      "originalUrl": "https://vystrahy-cr.chmi.cz/",
+      "publicUrl": "https://vystrahy-cr.chmi.cz/",
+      "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
+      "publisherWebUrl": null,
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
+      "urlKind": "cap_public_web",
+      "listingUrl": "https://vystrahy-cr.chmi.cz/",
+      "sectionId": "pocasi",
+      "subsectionId": "vystrahy",
+      "eventType": "mimoradne",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
+      "publishable": true,
+      "untilRevoked": true,
+      "importance": 3,
+      "impact": 3,
+      "region": {
+        "level": "kraj",
+        "name": "Kraj Vysočina",
+        "summary": "Kraj Vysočina (15 ORP)",
+        "extraAreaCount": 14,
+        "orpId": "orp:1000",
+        "orpCode": "1000",
+        "orpName": "Praha",
+        "okresId": "okres:CZ0100",
+        "okresName": "Hlavní město Praha",
+        "krajId": "kraj:CZ010",
+        "krajName": "Hlavní město Praha",
+        "orpIds": [
+          "orp:6101",
+          "orp:6102",
+          "orp:6103",
+          "orp:6104",
+          "orp:6105",
+          "orp:6106",
+          "orp:6107",
+          "orp:6108",
+          "orp:6109",
+          "orp:6110",
+          "orp:6111",
+          "orp:6112",
+          "orp:6113",
+          "orp:6114",
+          "orp:6115"
+        ],
+        "orpCodes": [
+          "6101",
+          "6102",
+          "6103",
+          "6104",
+          "6105",
+          "6106",
+          "6107",
+          "6108",
+          "6109",
+          "6110",
+          "6111",
+          "6112",
+          "6113",
+          "6114",
+          "6115"
+        ],
+        "orpNames": [
+          "Bystřice nad Pernštejnem",
+          "Havlíčkův Brod",
+          "Humpolec",
+          "Chotěboř",
+          "Jihlava",
+          "Moravské Budějovice",
+          "Náměšť nad Oslavou",
+          "Nové Město na Moravě",
+          "Pacov",
+          "Pelhřimov",
+          "Světlá nad Sázavou",
+          "Telč",
+          "Třebíč",
+          "Velké Meziříčí",
+          "Žďár nad Sázavou"
+        ],
+        "okresIds": [
+          "okres:CZ0635",
+          "okres:CZ0631",
+          "okres:CZ0633",
+          "okres:CZ0632",
+          "okres:CZ0634"
+        ],
+        "okresNames": [
+          "Žďár nad Sázavou",
+          "Havlíčkův Brod",
+          "Pelhřimov",
+          "Jihlava",
+          "Třebíč"
+        ],
+        "krajIds": [
+          "kraj:CZ063"
+        ],
+        "krajNames": [
+          "Kraj Vysočina"
+        ],
+        "areaDescs": [
+          "Bystřice nad Pernštejnem",
+          "Havlíčkův Brod",
+          "Humpolec",
+          "Chotěboř",
+          "Jihlava",
+          "Moravské Budějovice",
+          "Náměšť nad Oslavou",
+          "Nové Město na Moravě",
+          "Pacov",
+          "Pelhřimov",
+          "Světlá nad Sázavou",
+          "Telč",
+          "Třebíč",
+          "Velké Meziříčí",
+          "Žďár nad Sázavou"
+        ],
+        "assignmentSource": "cisorp",
+        "precise": true
+      },
+      "lane": "pocasi",
+      "connectorType": "opendata",
+      "orgType": "meteo",
+      "publishedAtSource": "2026-08-10T10:05:58+02:00",
+      "publishedAt": "2026-08-10T10:05:58+02:00",
+      "updatedAt": "2026-08-10T08:13:38.938Z",
+      "validFrom": "2026-08-10T10:04:45+02:00",
+      "validTo": null,
+      "resolvedAt": null,
+      "groupKey": "2026-08-10:riziko-pozaru-sivs-xii-1",
+      "tags": [
+        "cap",
+        "vystraha",
+        "cap-v2"
+      ],
+      "links": [],
+      "legal": {
+        "providerId": "chmi",
+        "datasetId": "chmi-opendata-national-hydromet-db",
+        "distributionId": "chmi-opendata-portal-primary",
+        "legalRecordVersion": "2026-07-20.phase2.1",
+        "approvalStatus": "APPROVED_CC_BY",
+        "attributionTemplateId": "attr-open-data-by-v1",
+        "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
+        "fetchedAt": "2026-08-10T08:13:38.938Z",
+        "sourceUrl": "https://vystrahy-cr.chmi.cz/",
+        "modifications": [
+          "normalized-metadata-link-only"
+        ],
+        "fieldAllowlist": [
+          "id",
+          "sourceId",
+          "title",
+          "url",
+          "originalUrl",
+          "publishedAt",
+          "sourceLabel",
+          "region",
+          "importance",
+          "eventType",
+          "sectionId"
+        ]
+      },
+      "capV2": {
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260810080558.XOCZ50_OKPR_000313|2026-08-10T10:05:58+02:00",
+        "alert_thread_id": "thread:7e4c0abcc6bca92d",
+        "hazard_instance_id": "haz:2b7a73576d144f1c",
+        "msgType": "Update",
+        "change_type": "new",
+        "event": "Riziko požárů",
+        "severity": "Moderate",
+        "urgency": "Immediate",
+        "certainty": "Likely",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force_until_revoked",
+        "publishable": true,
+        "untilRevoked": true,
+        "openEnded": true,
+        "productExcluded": false,
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_100805.xml?hid=059e2e9da6a3974f",
+        "publicUrl": "https://vystrahy-cr.chmi.cz/",
+        "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
+        "publisherWebUrl": null,
+        "listingUrl": "https://vystrahy-cr.chmi.cz/",
+        "urlKind": "cap_public_web",
+        "expiresSource": "until_revoked",
+        "geo": {
+          "links": [
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6101",
+              "orpCode": "6101",
+              "orpName": "Bystřice nad Pernštejnem",
+              "okresId": "okres:CZ0635",
+              "okresName": "Žďár nad Sázavou",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6102",
+              "orpCode": "6102",
+              "orpName": "Havlíčkův Brod",
+              "okresId": "okres:CZ0631",
+              "okresName": "Havlíčkův Brod",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6103",
+              "orpCode": "6103",
+              "orpName": "Humpolec",
+              "okresId": "okres:CZ0633",
+              "okresName": "Pelhřimov",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6104",
+              "orpCode": "6104",
+              "orpName": "Chotěboř",
+              "okresId": "okres:CZ0631",
+              "okresName": "Havlíčkův Brod",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6105",
+              "orpCode": "6105",
+              "orpName": "Jihlava",
+              "okresId": "okres:CZ0632",
+              "okresName": "Jihlava",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6106",
+              "orpCode": "6106",
+              "orpName": "Moravské Budějovice",
+              "okresId": "okres:CZ0634",
+              "okresName": "Třebíč",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6107",
+              "orpCode": "6107",
+              "orpName": "Náměšť nad Oslavou",
+              "okresId": "okres:CZ0634",
+              "okresName": "Třebíč",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6108",
+              "orpCode": "6108",
+              "orpName": "Nové Město na Moravě",
+              "okresId": "okres:CZ0635",
+              "okresName": "Žďár nad Sázavou",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6109",
+              "orpCode": "6109",
+              "orpName": "Pacov",
+              "okresId": "okres:CZ0633",
+              "okresName": "Pelhřimov",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6110",
+              "orpCode": "6110",
+              "orpName": "Pelhřimov",
+              "okresId": "okres:CZ0633",
+              "okresName": "Pelhřimov",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6111",
+              "orpCode": "6111",
+              "orpName": "Světlá nad Sázavou",
+              "okresId": "okres:CZ0631",
+              "okresName": "Havlíčkův Brod",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6112",
+              "orpCode": "6112",
+              "orpName": "Telč",
+              "okresId": "okres:CZ0632",
+              "okresName": "Jihlava",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6113",
+              "orpCode": "6113",
+              "orpName": "Třebíč",
+              "okresId": "okres:CZ0634",
+              "okresName": "Třebíč",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6114",
+              "orpCode": "6114",
+              "orpName": "Velké Meziříčí",
+              "okresId": "okres:CZ0635",
+              "okresName": "Žďár nad Sázavou",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            },
+            {
+              "hazard_instance_id": "haz:059e2e9da6a3974f",
+              "orpId": "orp:6115",
+              "orpCode": "6115",
+              "orpName": "Žďár nad Sázavou",
+              "okresId": "okres:CZ0635",
+              "okresName": "Žďár nad Sázavou",
+              "krajId": "kraj:CZ063",
+              "krajName": "Kraj Vysočina",
+              "assignmentSource": "cisorp",
+              "precise": true
+            }
+          ],
+          "quarantine": [],
+          "totalAreas": 15,
+          "mappedAreas": 15,
+          "unmappedAreas": 0,
+          "mappingCoveragePercent": 100
+        },
+        "searchText": "riziko pozaru kraj vysocina 15 orp bystrice nad pernstejnem havlickuv brod humpolec chotebor jihlava moravske budejovice namest nad oslavou nove mesto na morave pacov pelhrimov svetla nad sazavou telc trebic velke mezirici zdar nad sazavou kraj vysocina",
+        "significantUnreadReset": true,
+        "onsetSplit": true
+      },
+      "firstSeenByInfoUzel": "2026-08-10T08:13:38.938Z",
+      "lastProcessedAt": "2026-08-10T08:13:38.938Z",
+      "sortAt": "2026-08-10T10:05:58+02:00",
       "timeSource": "cap_sent",
       "timeConfidence": "high",
       "isNewCapture": true
