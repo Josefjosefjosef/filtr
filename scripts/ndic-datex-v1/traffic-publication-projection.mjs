@@ -340,8 +340,12 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     (fv(event, "summarySafe") && fv(event, "summarySafe").value) || "";
   const summaryFullRaw =
     (fv(event, "summaryFull") && fv(event, "summaryFull").value) || "";
-  // impactFull must come from the fullest source text, never from the ≤280 summary alone.
-  const officialFull = String(summaryFullRaw || summaryShort || "").trim();
+  // Never reconstruct impactFull from a presentation summary that already ends with
+  // our truncation ellipsis (…); that would pretend a clipped summary is the source full text.
+  const summaryShortLooksTruncated = /…$|\.\.\.$/.test(String(summaryShort));
+  const officialFull = String(
+    summaryFullRaw || (!summaryShortLooksTruncated ? summaryShort : "") || ""
+  ).trim();
   const templateImpact = buildImpactSummary(event, feedChangeType);
   const impactTexts = chooseImpactTexts(officialFull, templateImpact, IMPACT_SHORT_MAX);
   const feedHeadline = buildFeedHeadline(feedChangeType, event, locationPrecise, presentation);
