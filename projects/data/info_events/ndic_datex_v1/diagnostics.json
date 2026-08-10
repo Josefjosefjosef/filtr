@@ -1,6 +1,6 @@
 {
-  "runId": "51954a652e939ff2",
-  "started": "2026-08-10T15:09:07.281Z",
+  "runId": "3b5d4bd680763fb6",
+  "started": "2026-08-10T16:59:57.999Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,14 +12,14 @@
     }
   ],
   "parser": {
-    "situations": 3614,
+    "situations": 3572,
     "rejected": 0,
-    "quarantine": 16,
+    "quarantine": 3,
     "stats": {
-      "new": 56,
-      "updated": 32,
-      "unchanged": 3510,
-      "ended": 108,
+      "new": 43,
+      "updated": 27,
+      "unchanged": 3499,
+      "ended": 72,
       "skippedOlder": 0,
       "softMissing": 9
     }
@@ -28,10 +28,10 @@
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 56,
-      "updated": 32,
-      "unchanged": 3510,
-      "ended": 108,
+      "new": 43,
+      "updated": 27,
+      "unchanged": 3499,
+      "ended": 72,
       "skippedOlder": 0,
       "softMissing": 9
     },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T15:09:11.162Z",
+      "activatedAt": "2026-08-10T17:00:02.102Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 59926189,
+    "datexBytesRead": 59500661,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3607,
-    "bytes": 4422201,
+    "cardCount": 3578,
+    "bytes": 6945725,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 4421621,
+      "cards": 6945145,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7214,
-      "FULL_SNAPSHOT": 4422201,
+      "cardsProvenance": 7156,
+      "FULL_SNAPSHOT": 6945725,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
