@@ -80,6 +80,13 @@ export function assertAutomaticScheduleContract(src) {
   check("scheduled_preflight_runs_suite", /ndic-staging-preflight-suite\.mjs/.test(spf));
   check("scheduled_preflight_no_secrets", !/secrets\.IU_NDIC_/.test(spf));
   check("scheduled_preflight_binds_head", /IU_NDIC_PREFLIGHT_EXPECTED_HEAD:\s*\$\{\{\s*github\.sha\s*\}\}/.test(spf));
+  check(
+    "scheduled_preflight_ttl_covers_runner_queue",
+    /IU_NDIC_PREFLIGHT_TTL_SECONDS:\s*"7200"/.test(spf)
+  );
+  check("prep_bounded_disk_cleanup", /ndic-runner-disk-cleanup\.mjs/.test(prep));
+  check("write_bounded_disk_cleanup", /ndic-runner-disk-cleanup\.mjs/.test(write));
+  check("write_low_disk_or_reclaim", /REFUSING_LOW_DISK|Reclaim workspace disk/.test(write) || /REFUSING_LOW_DISK/.test(prep));
 
   check("prep_requires_gate_proceed", /needs\.schedule-gate\.outputs\.proceed == 'true'/.test(prep));
   check("prep_requires_preflight_success", /needs\.scheduled-preflight\.result == 'success'/.test(prep));

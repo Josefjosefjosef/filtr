@@ -74,11 +74,21 @@ mutateMustFail("meta_scheduled_preflight_gains_ndic_secrets", (s) => {
   return s.replace(
     spf,
     spf.replace(
-      /IU_NDIC_PREFLIGHT_TTL_SECONDS: "1800"/,
-      'IU_NDIC_PREFLIGHT_TTL_SECONDS: "1800"\n          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}'
+      /IU_NDIC_PREFLIGHT_TTL_SECONDS: "7200"/,
+      'IU_NDIC_PREFLIGHT_TTL_SECONDS: "7200"\n          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}'
     )
   );
 });
+
+// 7b) Short TTL would expire while self-hosted prep is queued (incident 31344963532).
+mutateMustFail("meta_scheduled_preflight_ttl_too_short", (s) =>
+  s.replace(/IU_NDIC_PREFLIGHT_TTL_SECONDS: "7200"/, 'IU_NDIC_PREFLIGHT_TTL_SECONDS: "1800"')
+);
+
+// 7c) Remove bounded disk cleanup from prep.
+mutateMustFail("meta_remove_prep_disk_cleanup", (s) =>
+  s.replace(/node scripts\/ndic-runner-disk-cleanup\.mjs/g, "echo SKIPPED_CLEANUP")
+);
 
 // 8) Let prep run even when the inline preflight failed.
 mutateMustFail("meta_prep_ignores_preflight_failure", (s) =>

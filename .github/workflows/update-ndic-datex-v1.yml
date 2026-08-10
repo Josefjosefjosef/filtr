@@ -28,6 +28,9 @@ on:
   schedule:
     # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
     # poll interval is documented, so stay well above any plausible rate limit.
+    # schedule-reregister: 2026-08-10 — force Actions to rebind cron after
+    # prolonged self-hosted offline queue + consecutive schedule failures
+    # stopped emitting new event=schedule runs while other repo schedules continued.
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
@@ -139,6 +142,9 @@ jobs:
       - name: Automatic schedule meta fixtures
         run: npm run iu-ndic-automatic-schedule-meta-fixtures
 
+      - name: Runner disk cleanup fixtures
+        run: npm run iu-ndic-runner-disk-cleanup-fixtures
+
       - name: Concurrency fixtures
         run: |
           set -euo pipefail
@@ -155,7 +161,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IU_NDIC_PREFLIGHT_EXPECTED_HEAD: ${{ github.sha }}
-          IU_NDIC_PREFLIGHT_TTL_SECONDS: "1800"
+          # 7200s covers self-hosted queue wait when runner briefly offline
+          # (incident schedule 31344963532: TTL 1800 expired after ~42m queue).
+          IU_NDIC_PREFLIGHT_TTL_SECONDS: "7200"
         run: |
           set -euo pipefail
           node scripts/ndic-publish-preflight-attestation.mjs
@@ -356,6 +364,18 @@ jobs:
           retention-days: 1
           compression-level: 6
 
+      - name: Bounded NDIC disk cleanup (prep post)
+        if: always()
+        env:
+          IU_NDIC_CLEANUP_RUN_ID: ${{ github.run_id }}
+          IU_NDIC_CLEANUP_ORPHAN_AGE_SECONDS: "7200"
+          IU_NDIC_CLEANUP_WIPE_RUNNER_TEMP_NDIC: "1"
+        run: |
+          set -euo pipefail
+          df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_BYTES="$1}'
+          node scripts/ndic-runner-disk-cleanup.mjs
+          df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_AFTER_CLEANUP_BYTES="$1}'
+
   ndic-shared-write:
     needs: ndic-prep
     # Variant A (after ACTIVE canaries 31311789781 / 31313465533):
@@ -434,6 +454,7 @@ jobs:
       - name: Reclaim workspace disk before checkout
         run: |
           set -euo pipefail
+          echo "DISK_BEFORE_BYTES=$(df -B1 --output=avail / | tail -n1)"
           df -h / || true
           # Explicit existence checks — never `cmd 2>/dev/null || true` (ACTIVE staging guard).
           if [ -e ndic-orch ]; then rm -rf ndic-orch; fi
@@ -441,7 +462,12 @@ jobs:
           if [ -n "${RUNNER_TEMP:-}" ] && [ -d "${RUNNER_TEMP}" ]; then
             find "${RUNNER_TEMP}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
           fi
+          # Age-gated orphan Git temporary packs left by interrupted clones (ENOSPC root cause).
+          if [ -n "${GITHUB_WORKSPACE:-}" ] && [ -d "${GITHUB_WORKSPACE}" ]; then
+            find "${GITHUB_WORKSPACE}" -path '*/.git/objects/pack/tmp_pack_*' -type f -mmin +120 -print -delete
+          fi
           df -h / || true
+          echo "DISK_AFTER_RECLAIM_BYTES=$(df -B1 --output=avail / | tail -n1)"
 
       # TWO-SOURCE MODEL (incident ACTIVE run 31254863015):
       # A) ORCHESTRATION_CODE_SOURCE=FEATURE_HEAD â€” helper scripts from workflow SHA
@@ -606,6 +632,27 @@ jobs:
           git push -u origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}" --force
           echo "CANONICAL_DATA_PR_PRESERVED=YES"
           echo "DUPLICATE_DATA_PR_CREATED=NO"
+
+      - name: Bounded NDIC disk cleanup (shared-write post)
+        if: always()
+        env:
+          IU_NDIC_CLEANUP_RUN_ID: ${{ github.run_id }}
+          IU_NDIC_CLEANUP_ORPHAN_AGE_SECONDS: "7200"
+          IU_NDIC_CLEANUP_WIPE_WORKTREES: "1"
+          IU_NDIC_CLEANUP_WIPE_RUNNER_TEMP_NDIC: "1"
+        run: |
+          set -euo pipefail
+          df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_BYTES="$1}'
+          SCRIPT="ndic-orch/scripts/ndic-runner-disk-cleanup.mjs"
+          if [ ! -f "$SCRIPT" ]; then SCRIPT="scripts/ndic-runner-disk-cleanup.mjs"; fi
+          if [ -f "$SCRIPT" ]; then
+            node "$SCRIPT"
+          else
+            echo "CLEANUP_SCRIPT_MISSING — falling back to allowlisted worktree wipe"
+            if [ -e ndic-orch ]; then rm -rf ndic-orch; fi
+            if [ -e ndic-main-data ]; then rm -rf ndic-main-data; fi
+          fi
+          df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_AFTER_CLEANUP_BYTES="$1}'
 
 
   # Outside shared writer lock (mirrors CHMI post-write):
