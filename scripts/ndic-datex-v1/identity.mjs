@@ -54,6 +54,9 @@ export function contentFingerprint(normalized) {
     normalized.subtype || "",
     normalized.title || "",
     normalized.summary || "",
+    // Full source comment must participate in change detection so merge backfills
+    // summaryFull after presentation-only summary (≤280) was introduced.
+    normalized.summaryFull || "",
     normalized.roadNumber || "",
     normalized.direction || "",
     normalized.validFrom || "",

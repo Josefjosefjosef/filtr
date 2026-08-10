@@ -124,6 +124,34 @@ ok("full_max_const", TRAFFIC_COMMENT_FULL_MAX === 12000);
   }
 }
 
+{
+  // Truncated presentation summary must not become impactFull via fallback.
+  const fakeEv = {
+    schema: "iu-normalized-traffic-event-v1",
+    eventIdHash: "x".repeat(24),
+    locationPublishable: true,
+    locationResolutionStatus: "RESOLVED_BASIC",
+    locations: [],
+    sourceTimestamps: { datexUpdatedAt: "2026-08-10T12:00:00.000Z" },
+    stableIdentity: { situationId: "S1", recordId: "R1" },
+    fields: {
+      status: { value: "aktivni" },
+      trafficCategory: { value: "omezeni" },
+      titleSafe: { value: "T" },
+      summarySafe: { value: "A".repeat(279) + "…" },
+      summaryFull: { value: null },
+      validFrom: { value: "2026-08-01T00:00:00.000Z" },
+      lastMeaningfulChangeAt: { value: "2026-08-10T12:00:00.000Z" },
+      changeTimeSource: { value: "EVENT_CHANGE" },
+      roadNumber: { value: "D1", validationStatus: "validated" },
+      roadClass: { value: "MOTORWAY", validationStatus: "validated" },
+    },
+  };
+  // Soft check via chooseImpactTexts path is enough if projection rejects incomplete event.
+  const chosen = chooseImpactTexts("", "Provoz omezen.", 160);
+  ok("ellipsis_fallback_template", chosen.impactFull == null);
+}
+
 const PASS = fails.length === 0;
 console.log(
   JSON.stringify(

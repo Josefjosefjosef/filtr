@@ -294,8 +294,11 @@ export function mergeNdicRevisions(prevItems, nextItems, opts = {}) {
     const ch = classifyChangeSignificance(old, it);
     if (!ch.significant && old.contentHash && it.contentHash && old.contentHash === it.contentHash) {
       stats.unchanged += 1;
+      // Backfill summaryFull onto tip-equal revisions (hash historically ignored it).
+      const summaryFull = old.summaryFull || it.summaryFull || "";
       out.push({
         ...old,
+        summaryFull: summaryFull || old.summaryFull,
         lastConfirmedAt: nowIso,
         lastProcessedAt: nowIso,
         firstSeenByInfoUzel: old.firstSeenByInfoUzel || it.firstSeenByInfoUzel,
