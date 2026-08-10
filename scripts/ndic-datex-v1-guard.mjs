@@ -666,7 +666,7 @@ async function discoveryChecks() {
   ok(
     "update_wf_safe_schedule_contract",
     /\n {2}schedule:\s*\n/.test(updateWf) &&
-      /-\s*cron:\s*"7,22,37,52 \* \* \* \*"/.test(updateWf) &&
+      /-\s*cron:\s*"8,23,38,53 \* \* \* \*"/.test(updateWf) &&
       /vars\.NDIC_AUTOMATION_ENABLED/.test(updateWf) &&
       /ndic-schedule-arming\.mjs/.test(updateWf) &&
       /ndic-publish-preflight-attestation\.mjs/.test(updateWf) &&

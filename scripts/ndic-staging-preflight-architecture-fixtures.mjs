@@ -39,7 +39,7 @@ export const GITHUB_HOSTED_ALLOWED_JOBS = Object.freeze([
   "resolve",
 ]);
 /** Conservative staggered cadence (no authoritative NDIC minimum interval documented). */
-export const NDIC_SCHEDULE_CRON = "7,22,37,52 * * * *";
+export const NDIC_SCHEDULE_CRON = "8,23,38,53 * * * *";
 
 const fails = [];
 let passCount = 0;

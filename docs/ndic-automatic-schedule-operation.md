@@ -11,7 +11,7 @@ NDIC network through an inline preflight in the same run.
 | Aspect | Value |
 | --- | --- |
 | Workflow | `.github/workflows/update-ndic-datex-v1.yml` |
-| Cron | `7,22,37,52 * * * *` (staggered 15-minute cadence) |
+| Cron | `8,23,38,53 * * * *` (staggered 15-minute cadence) |
 | Arming | repository variable `NDIC_AUTOMATION_ENABLED` must be exactly `true` |
 | Scheduled mode | `active` (only after an armed preflight PASS) |
 | Runner | continuous self-hosted `infouzel-ndic-cz-vps4204` (`self-hosted+Linux+X64+ndic-cz-egress`) |
