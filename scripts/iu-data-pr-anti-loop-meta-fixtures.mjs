@@ -120,6 +120,15 @@ ok(
   /ndic-post-write:[\s\S]*?gh pr merge .*--auto --squash/.test(ndicWf)
 );
 ok(
+  "wf_post_write_scope_via_gh_pr_diff",
+  /ndic-post-write:[\s\S]*?gh pr diff "\$NUM" --name-only/.test(ndicWf) &&
+    !/ndic-post-write:[\s\S]*?git fetch origin main\n/.test(ndicWf)
+);
+ok(
+  "wf_post_write_timeout_allows_checks_wait",
+  /ndic-post-write:[\s\S]*?timeout-minutes:\s*45/.test(ndicWf)
+);
+ok(
   "wf_reconcile_uses_bounded_script",
   /ndic-data-pr-reconcile-against-main\.mjs/.test(ndicWf)
 );

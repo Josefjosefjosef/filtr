@@ -661,7 +661,7 @@ jobs:
     needs: ndic-shared-write
     if: needs.ndic-shared-write.outputs.pushed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     # NO info-events-data-writers — checks/Pages must not hold the shared writer lock.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -706,10 +706,15 @@ jobs:
 
       - name: Diff scope check (data-only → allow auto-merge)
         id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git fetch origin main
-          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only main...HEAD)
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          # Avoid `git fetch origin main` on shallow automation checkout — can hang until
+          # job timeout negotiating a huge pack (schedule 31380918663: 20m cancel).
+          # PR file list via API is authoritative for data-only scope.
+          CHANGED=$(gh pr diff "$NUM" --name-only)
           echo "[SCOPE] Changed files:"
           echo "$CHANGED"
           DATA_ONLY=true
@@ -723,6 +728,7 @@ jobs:
           if [ "$DATA_ONLY" = true ]; then
             echo "data_only=true" >> "$GITHUB_OUTPUT"
             echo "[SCOPE] data-only — auto-merge allowed"
+            echo "POSTWRITE_SCOPE_VIA_GH_PR_DIFF=YES"
           else
             echo "data_only=false" >> "$GITHUB_OUTPUT"
             echo "[SCOPE] non-data / unsafe drift — auto-merge disabled (fail-closed)"
