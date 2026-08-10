@@ -28,9 +28,8 @@ on:
   schedule:
     # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
     # poll interval is documented, so stay well above any plausible rate limit.
-    # schedule-reregister: 2026-08-10 — force Actions to rebind cron after
-    # prolonged self-hosted offline queue + consecutive schedule failures
-    # stopped emitting new event=schedule runs while other repo schedules continued.
+    # schedule-reregister: 2026-08-10T04:05Z — rebind after accidental workflow
+    # disable/enable cleared schedule emission while other repo crons continued.
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
@@ -611,14 +610,14 @@ jobs:
             --repo ndic-main-data \
             --ndic-candidate "${RUNNER_TEMP}/ndic-ie-candidate" \
             --branch "${{ env.AUTOMATION_BRANCH }}" \
-            --max 3 \
+            --max 5 \
             --commit-message "${{ env.PR_TITLE }}" \
             | tee "$RUNNER_TEMP/ndic-reconcile.json"
           REFRESH_COUNT="$(node -e 'const fs=require("fs"); const j=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(String(j.refreshCount||0));' "$RUNNER_TEMP/ndic-reconcile.json")"
           echo "refresh_count=${REFRESH_COUNT}" >> "$GITHUB_OUTPUT"
           echo "REREAD_CURRENT_SHARED_STATE_BEFORE_FINAL_COMMIT=YES"
           echo "DATA_PR_REFRESH_BOUNDED=YES"
-          echo "DATA_PR_REFRESH_MAX=3"
+          echo "DATA_PR_REFRESH_MAX=5"
           echo "UNBOUNDED_RETRY_POSSIBLE=NO"
           echo "GIT_OURS_THEIRS_USED=NO"
 
