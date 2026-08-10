@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-10T13:26:42.179Z",
-    "lastSuccessAt": "2026-08-10T13:26:46.411Z",
+    "lastRunAt": "2026-08-10T13:52:09.430Z",
+    "lastSuccessAt": "2026-08-10T13:52:12.651Z",
     "lastChangedAt": "2026-08-10T08:13:41.902Z",
     "lastError": null,
     "status": "not_modified",
@@ -483,19 +483,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7706,
+    "runMs": 6734,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-10T13:26:42.179Z",
+    "lastSnapshotAt": "2026-08-10T13:52:09.430Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-10T08:13:38.938Z",
       "officialLatestSentAt": "2026-08-10T10:05:58+02:00",
       "officialLatestValidFrom": "2026-08-10T10:04:45+02:00",
-      "discoveredAt": "2026-08-10T13:26:42.179Z",
-      "fetchedAt": "2026-08-10T13:26:42.179Z",
-      "transformedAt": "2026-08-10T13:26:49.885Z",
-      "validatedAt": "2026-08-10T13:26:49.885Z",
-      "publishedAt": "2026-08-10T13:26:42.179Z",
+      "discoveredAt": "2026-08-10T13:52:09.430Z",
+      "fetchedAt": "2026-08-10T13:52:09.430Z",
+      "transformedAt": "2026-08-10T13:52:16.164Z",
+      "validatedAt": "2026-08-10T13:52:16.164Z",
+      "publishedAt": "2026-08-10T13:52:09.430Z",
       "endToEndLagMs": 460938
     },
     "audit": {
@@ -552,6 +552,39 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-10T13:52:09.430Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6734,
+        "error": null,
+        "activeCount": 5,
+        "scheduledCount": 0,
+        "publishableCount": 7
+      },
+      {
+        "at": "2026-08-10T13:48:09.148Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7245,
+        "error": null,
+        "activeCount": 5,
+        "scheduledCount": 0,
+        "publishableCount": 7
+      },
+      {
+        "at": "2026-08-10T13:35:11.434Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6963,
+        "error": null,
+        "activeCount": 5,
+        "scheduledCount": 0,
+        "publishableCount": 7
+      },
       {
         "at": "2026-08-10T13:26:42.179Z",
         "status": "not_modified",
@@ -1046,68 +1079,35 @@
         "activeCount": 5,
         "scheduledCount": 1,
         "publishableCount": 7
-      },
-      {
-        "at": "2026-08-10T03:38:18.276Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6863,
-        "error": null,
-        "activeCount": 5,
-        "scheduledCount": 1,
-        "publishableCount": 7
-      },
-      {
-        "at": "2026-08-10T03:28:50.448Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6807,
-        "error": null,
-        "activeCount": 5,
-        "scheduledCount": 1,
-        "publishableCount": 7
-      },
-      {
-        "at": "2026-08-10T03:21:42.824Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6905,
-        "error": null,
-        "activeCount": 5,
-        "scheduledCount": 1,
-        "publishableCount": 7
       }
     ]
   },
   "ndicDatexV1": {
     "mode": "active",
-    "lastRunAt": "2026-08-10T12:27:04.140Z",
-    "lastSuccessAt": "2026-08-10T12:27:04.140Z",
-    "lastChangedAt": "2026-08-10T12:27:04.140Z",
+    "lastRunAt": "2026-08-10T13:59:16.665Z",
+    "lastSuccessAt": "2026-08-10T13:59:16.665Z",
+    "lastChangedAt": "2026-08-10T13:59:16.665Z",
     "status": "healthy",
     "httpStatus": 200,
     "notModified": false,
     "stats": {
-      "new": 274,
-      "updated": 280,
-      "unchanged": 3080,
-      "ended": 174,
+      "new": 95,
+      "updated": 37,
+      "unchanged": 3514,
+      "ended": 73,
       "skippedOlder": 0,
-      "softMissing": 3
+      "softMissing": 13
     },
-    "quarantineCount": 23,
+    "quarantineCount": 14,
     "rejectedCount": 0,
-    "activeCount": 3637,
+    "activeCount": 3659,
     "tmc": {
       "active": true,
       "version": "11",
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T12:27:08.152Z",
+      "activatedAt": "2026-08-10T13:59:20.895Z",
       "contentHash": "63ca4e0bd5c1"
     },
     "parserVersion": "ndic-datex-v1.0.0",
@@ -1115,12 +1115,12 @@
       "publish": true,
       "reason": "ok",
       "stats": {
-        "new": 274,
-        "updated": 280,
-        "unchanged": 3080,
-        "ended": 174,
+        "new": 95,
+        "updated": 37,
+        "unchanged": 3514,
+        "ended": 73,
         "skippedOlder": 0,
-        "softMissing": 3
+        "softMissing": 13
       },
       "alarms": []
     },
