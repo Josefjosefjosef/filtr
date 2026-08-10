@@ -1,6 +1,6 @@
 {
-  "runId": "868e8c8848a410ae",
-  "started": "2026-08-10T17:55:51.866Z",
+  "runId": "002b043675b9e6f8",
+  "started": "2026-08-10T20:21:30.999Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3559,
+    "situations": 3548,
     "rejected": 0,
-    "quarantine": 6,
+    "quarantine": 2,
     "stats": {
-      "new": 17,
-      "updated": 27,
-      "unchanged": 3509,
-      "ended": 38,
+      "new": 28,
+      "updated": 23,
+      "unchanged": 3495,
+      "ended": 34,
       "skippedOlder": 0,
-      "softMissing": 4
+      "softMissing": 5
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 17,
-      "updated": 27,
-      "unchanged": 3509,
-      "ended": 38,
+      "new": 28,
+      "updated": 23,
+      "unchanged": 3495,
+      "ended": 34,
       "skippedOlder": 0,
-      "softMissing": 4
+      "softMissing": 5
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T17:55:56.058Z",
+      "activatedAt": "2026-08-10T20:21:34.609Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 59044991,
+    "datexBytesRead": 59215865,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3557,
-    "bytes": 6908219,
+    "cardCount": 3551,
+    "bytes": 7459256,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 6907639,
+      "cards": 7458676,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7114,
-      "FULL_SNAPSHOT": 6908219,
+      "cardsProvenance": 7102,
+      "FULL_SNAPSHOT": 7459256,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
