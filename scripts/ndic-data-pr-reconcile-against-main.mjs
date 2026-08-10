@@ -71,39 +71,54 @@ function changedPathsVsMain(repo) {
     .filter(Boolean);
 }
 
-function headMatchesTreeAfterApply(repo) {
-  const st = git(repo, ["status", "--porcelain"]);
-  return rStatusClean(st);
+function indexCleanAfterCommit(repo) {
+  // Only the index matters for pushability. Full porcelain clean is too strict:
+  // NDIC apply may leave unstaged allowlist-excluded files (e.g. extra ndic_datex_v1/*
+  // copied from candidate) which must not burn DATA_PR_REFRESH_MAX on a stable tip
+  // (schedule run 31376486873 after tip-equality fix #9541).
+  const cached = git(repo, ["diff", "--cached", "--quiet"]);
+  return cached.status === 0;
 }
 
-function rStatusClean(st) {
-  return st.status === 0 && String(st.stdout || "").trim() === "";
+function porcelainSummary(repo, maxLines = 12) {
+  const st = git(repo, ["status", "--porcelain"]);
+  if (st.status !== 0) return "STATUS_FAILED";
+  return String(st.stdout || "")
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, maxLines)
+    .join("|");
 }
 
 /**
  * Deterministic merge-clean check after bounded apply.
  *
- * Shallow `fetch --depth=1` + `rev-list HEAD..origin/main` / `merge-base --is-ancestor`
- * can false-negative (treat clean tip as unclean → burn DATA_PR_REFRESH_MAX).
- * Prefer tip-equality vs the base we just applied onto + local parent/HEAD topology.
+ * Shallow `fetch --depth=1` + `rev-list` / `merge-base` false-negatives are avoided
+ * via tip-equality. Full porcelain clean is also avoided: unstaged allowlist leftovers
+ * after a successful commit on a stable tip are not a rebase signal.
  *
  * tip === baseSha:
  *   - HEAD === tip → NO_CHANGES / already at tip → clean
  *   - HEAD^ === tip → just committed NDIC on that tip → clean
  * tip !== baseSha:
  *   - main advanced → unclean (caller re-applies; no force-push)
+ *
+ * opts.indexClean (preferred) or opts.workingTreeClean (legacy alias for fixtures).
  */
 export function evaluateStableTipMergeClean(opts = {}) {
   const tipSha = String(opts.tipSha || "").trim();
   const baseSha = String(opts.baseSha || "").trim();
   const headSha = String(opts.headSha || "").trim();
   const parentSha = String(opts.parentSha || "").trim();
-  const workingTreeClean = opts.workingTreeClean === true;
+  const indexClean =
+    opts.indexClean === true ||
+    (opts.indexClean == null && opts.workingTreeClean === true);
   if (!tipSha || !baseSha || !headSha) {
     return { clean: false, reason: "MISSING_SHA" };
   }
-  if (!workingTreeClean) {
-    return { clean: false, reason: "DIRTY_WORKTREE" };
+  if (!indexClean) {
+    return { clean: false, reason: "DIRTY_INDEX" };
   }
   if (tipSha !== baseSha) {
     return { clean: false, reason: "TIP_MOVED", tipSha, baseSha };
@@ -200,8 +215,9 @@ async function main() {
       return { ok: true, result: "COMMITTED", baseMainSha: lastBaseSha, applied };
     },
     isMergeClean: () => {
-      // Tip-equality clean check — do not use shallow rev-list / merge-base
-      // (false unclean → DATA_PR_REFRESH_LIMIT_EXCEEDED with stable tip; run 31369423212).
+      // Tip-equality + index-clean (not full porcelain). Incident 31376486873:
+      // stable main tip still burned max=12 because unstaged allowlist leftovers
+      // made porcelain dirty after a successful commit.
       const fetch = git(args.repo, ["fetch", "origin", "main", "--depth=1"]);
       if (fetch.status !== 0) return false;
       const tipSha = String(git(args.repo, ["rev-parse", "origin/main"]).stdout || "").trim();
@@ -215,12 +231,18 @@ async function main() {
         baseSha: lastBaseSha,
         headSha,
         parentSha,
-        workingTreeClean: headMatchesTreeAfterApply(args.repo),
+        indexClean: indexCleanAfterCommit(args.repo),
       });
       if (verdict.clean) return true;
+      const forensic = {
+        MERGE_CLEAN_VERDICT: verdict.reason,
+        tipSha,
+        baseSha: lastBaseSha,
+        headSha,
+        parentSha,
+        porcelain: porcelainSummary(args.repo),
+      };
       if (verdict.reason === "TIP_MOVED") {
-        // Always re-apply when tip moved (preserve foreign commits; no force-push).
-        // IE-touch is logged for forensics only.
         const names = git(args.repo, [
           "diff",
           "--name-only",
@@ -230,17 +252,12 @@ async function main() {
           .split(/\r?\n/)
           .map((s) => s.trim())
           .filter(Boolean);
-        console.error(
-          JSON.stringify({
-            CHMI_MAIN_TIP_RACE_VS_BOUNDED_RECONCILE: tipMoveTouchesInfoEvents(paths)
-              ? "IE_TOUCHED"
-              : "NON_IE_OR_UNKNOWN",
-            tipSha,
-            baseSha: lastBaseSha,
-            changedPathCount: paths.length,
-          })
-        );
+        forensic.CHMI_MAIN_TIP_RACE_VS_BOUNDED_RECONCILE = tipMoveTouchesInfoEvents(paths)
+          ? "IE_TOUCHED"
+          : "NON_IE_OR_UNKNOWN";
+        forensic.changedPathCount = paths.length;
       }
+      console.error(JSON.stringify(forensic));
       return false;
     },
   });
@@ -256,6 +273,7 @@ async function main() {
     MERGE_CLEAN: result.MERGE_CLEAN,
     FAIL_CLOSED: result.ok ? "NO" : "YES",
     ATOMIC_TIP_EQUALITY_CLEAN_CHECK: "YES",
+    ATOMIC_INDEX_CLEAN_NOT_PORCELAIN: "YES",
   };
   console.log(JSON.stringify(out));
   if (!result.ok) process.exit(2);
