@@ -28,8 +28,9 @@ on:
   schedule:
     # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
     # poll interval is documented, so stay well above any plausible rate limit.
-    # schedule-reregister: 2026-08-10T04:45Z — new cron minutes after disable/enable
-    # cleared schedule emission (do NOT disable this workflow to "fix" cron).
+    # schedule-reregister: 2026-08-10T09:25Z — tip-equality reconcile (#9541) on main;
+    # GitHub stopped emitting NDIC event=schedule after consecutive failures while
+    # other repo schedules still fire. Comment-only rebind (do NOT disable/enable).
     - cron: "8,23,38,53 * * * *"
   workflow_dispatch:
     inputs:
