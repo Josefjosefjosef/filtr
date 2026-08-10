@@ -1,6 +1,6 @@
 {
-  "runId": "3b5d4bd680763fb6",
-  "started": "2026-08-10T16:59:57.999Z",
+  "runId": "868e8c8848a410ae",
+  "started": "2026-08-10T17:55:51.866Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3572,
+    "situations": 3559,
     "rejected": 0,
-    "quarantine": 3,
+    "quarantine": 6,
     "stats": {
-      "new": 43,
+      "new": 17,
       "updated": 27,
-      "unchanged": 3499,
-      "ended": 72,
+      "unchanged": 3509,
+      "ended": 38,
       "skippedOlder": 0,
-      "softMissing": 9
+      "softMissing": 4
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 43,
+      "new": 17,
       "updated": 27,
-      "unchanged": 3499,
-      "ended": 72,
+      "unchanged": 3509,
+      "ended": 38,
       "skippedOlder": 0,
-      "softMissing": 9
+      "softMissing": 4
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T17:00:02.102Z",
+      "activatedAt": "2026-08-10T17:55:56.058Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 59500661,
+    "datexBytesRead": 59044991,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3578,
-    "bytes": 6945725,
+    "cardCount": 3557,
+    "bytes": 6908219,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 6945145,
+      "cards": 6907639,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7156,
-      "FULL_SNAPSHOT": 6945725,
+      "cardsProvenance": 7114,
+      "FULL_SNAPSHOT": 6908219,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
