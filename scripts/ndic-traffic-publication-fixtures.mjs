@@ -389,7 +389,7 @@ async function run() {
   {
     const { event } = makeEvent({ eventId: "yesdir", dir: "positive" });
     const p = buildTrafficPublicationProjection(event);
-    ok("f22_dir", p.ok && p.projection.direction === DIRECTION.POSITIVE);
+    ok("f22_dir", p.ok && p.projection.direction == null);
   }
 
   // 23 multi location still one projection

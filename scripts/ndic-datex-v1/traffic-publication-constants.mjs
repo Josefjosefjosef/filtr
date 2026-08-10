@@ -185,6 +185,18 @@ export const PUBLIC_PROJECTION_ALLOWLIST = Object.freeze([
   "subjectScopeLabel",
   "locationDisclosureCs",
   "routeMatchMode",
+  "roadClass",
+  "roadClassLabel",
+  "municipality",
+  "district",
+  "impactFull",
+  "impactSource",
+  "validityLine",
+  "illustrationKey",
+  "stableSituationId",
+  "stableRecordId",
+  "timelineField",
+  "delayAvailable",
 ]);
 
 export const FORBIDDEN_PUBLIC_SUBSTRINGS = Object.freeze([

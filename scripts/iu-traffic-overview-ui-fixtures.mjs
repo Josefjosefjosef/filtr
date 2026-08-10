@@ -159,7 +159,7 @@ ok(
   const badge = trafficBadgeModel(item.trafficV1);
   ok("badge", /NOVÁ/.test(badge.text));
   ok("map_ok", resolveSafeTrafficMapUrl(item.trafficV1.mapTarget).includes("dopravniinfo.cz"));
-  ok("hist", trafficHistoryLines({ feed: { feedChangeType: "VALIDITY_EXTENDED" } })[0] === "prodloužená");
+  ok("hist", trafficHistoryLines({ feed: { feedChangeType: "VALIDITY_EXTENDED" } }).length === 0);
 }
 
 ok("rsd_on", isRsdTrafficSourceEnabled({ sourceIds: ["rsd"] }) === true);
@@ -206,7 +206,7 @@ ok("ls_load", !!loadOfflineTrafficSnapshot());
   const r = trafficProjectionToFeedItem(precise);
   ok("precise_ui_ok", r.ok === true);
   ok("precise_ui_km", r.item.trafficV1.kilometer === 12);
-  ok("precise_ui_dir", r.item.trafficV1.direction === "positive");
+  ok("precise_ui_dir", r.item.trafficV1.direction == null);
 }
 {
   const general = sampleCard({

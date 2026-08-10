@@ -42,14 +42,21 @@ import {
   resolveSafeTrafficMapUrl,
   collectOfflineTrafficCandidates,
   isRsdTrafficSourceEnabled,
+  isDopravaTopicEnabled,
   trafficFreshnessBanner,
-  trafficHistoryLines,
   loadOfflineTrafficSnapshot,
   fetchHostedTrafficOfflineSnapshot,
-} from "./iu-traffic-overview-v1.js?v=heavy-feed-shell-first-v1-20260809";
+  buildTrafficCardViewModel,
+  isTrafficFollowed,
+  toggleTrafficFollow,
+} from "./iu-traffic-overview-v1.js?v=traffic-content-tuning-v1-20260810";
+import {
+  trafficEventIllustrationSvg,
+  ROAD_BADGE_CLASS,
+} from "./iu-traffic-event-art-v1.js?v=traffic-content-tuning-v1-20260810";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const CACHE_BUST = "traffic-content-tuning-v1-20260810";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -176,6 +183,14 @@ const state = {
   persistSeq: 0,
   timelineBoundaryTimer: null,
   timelineListenersBound: false,
+  /** Client-side traffic chips (not SEPARATE_TRAFFIC_FILTERS). */
+  trafficFilters: {
+    eventTypes: [],
+    roadClasses: [],
+    roads: [],
+    followedOnly: false,
+    activeOnly: false,
+  },
 };
 
 function esc(s) {
@@ -395,6 +410,131 @@ function effectivePrefs() {
   return prefsForMode(prefs, state.viewMode);
 }
 
+function matchesTrafficClientFilters(ev, tf) {
+  if (!(ev && ev.trafficV1)) return true;
+  const tv = ev.trafficV1;
+  if (tf.followedOnly) {
+    if (!isTrafficFollowed(tv.publicEventId)) return false;
+  }
+  if (tf.activeOnly) {
+    if (String(tv.lifecycleStatus || "") !== "ACTIVE") return false;
+  }
+  if (tf.eventTypes && tf.eventTypes.length) {
+    const et = String(tv.eventType || tv.category || "").toLowerCase();
+    if (!tf.eventTypes.includes(et)) return false;
+  }
+  if (tf.roadClasses && tf.roadClasses.length) {
+    const rc = String(tv.roadClass || "UNKNOWN");
+    if (!tf.roadClasses.includes(rc)) return false;
+  }
+  if (tf.roads && tf.roads.length) {
+    const road = String(tv.road || "").toUpperCase();
+    if (!tf.roads.map((r) => String(r).toUpperCase()).includes(road)) return false;
+  }
+  return true;
+}
+
+function applyTrafficClientFilters(list) {
+  const tf = state.trafficFilters || {};
+  const active =
+    (tf.eventTypes && tf.eventTypes.length) ||
+    (tf.roadClasses && tf.roadClasses.length) ||
+    (tf.roads && tf.roads.length) ||
+    tf.followedOnly ||
+    tf.activeOnly;
+  if (!active) return list;
+  return list.filter((ev) => {
+    if (!(ev && ev.trafficV1)) return true;
+    return matchesTrafficClientFilters(ev, tf);
+  });
+}
+
+function toggleTrafficFilterValue(arr, value) {
+  const list = Array.isArray(arr) ? arr.slice() : [];
+  const v = String(value || "");
+  const idx = list.indexOf(v);
+  if (idx >= 0) list.splice(idx, 1);
+  else list.push(v);
+  return list;
+}
+
+function collectVisibleTrafficRoadPicks(items) {
+  const counts = new Map();
+  for (const ev of items || []) {
+    if (!(ev && ev.trafficV1 && ev.trafficV1.road)) continue;
+    const r = String(ev.trafficV1.road).trim().toUpperCase();
+    if (!r) continue;
+    counts.set(r, (counts.get(r) || 0) + 1);
+  }
+  return Array.from(counts.keys())
+    .sort((a, b) => (counts.get(b) || 0) - (counts.get(a) || 0) || a.localeCompare(b))
+    .slice(0, 8);
+}
+
+function shouldShowTrafficFilterBar(list) {
+  const prefs = effectivePrefs();
+  if (isDopravaTopicEnabled(prefs) && isRsdTrafficSourceEnabled(prefs)) return true;
+  return (list || []).some((ev) => ev && ev.trafficV1);
+}
+
+function trafficFilterBarHtml(list) {
+  if (!shouldShowTrafficFilterBar(list)) return "";
+  const tf = state.trafficFilters || {};
+  const types = [
+    { id: "nehoda", label: "Nehoda" },
+    { id: "prace", label: "Práce" },
+    { id: "omezeni", label: "Omezení" },
+    { id: "prekazka", label: "Překážka" },
+    { id: "kolona", label: "Kolona" },
+  ];
+  const classes = [
+    { id: "MOTORWAY", label: "Dálnice" },
+    { id: "CLASS_I", label: "I. tř." },
+    { id: "CLASS_II", label: "II. tř." },
+    { id: "CLASS_III", label: "III. tř." },
+    { id: "LOCAL", label: "Místní" },
+  ];
+  const roads = collectVisibleTrafficRoadPicks(list);
+  const chip = (kind, value, label, on) =>
+    `<button type="button" class="iuPdChip iuPdTrafficChip${on ? " is-on" : ""}" data-act="tf-filter" data-tf-kind="${esc(
+      kind
+    )}" data-tf-value="${esc(value)}">${esc(label)}</button>`;
+  const typeChips = types
+    .map((t) => chip("event", t.id, t.label, (tf.eventTypes || []).includes(t.id)))
+    .join("");
+  const classChips = classes
+    .map((c) => chip("roadClass", c.id, c.label, (tf.roadClasses || []).includes(c.id)))
+    .join("");
+  const roadChips = roads
+    .map((r) => chip("road", r, r, (tf.roads || []).map((x) => String(x).toUpperCase()).includes(r)))
+    .join("");
+  return (
+    `<div class="iuPdTrafficFilters" data-iu-traffic-filters="1">` +
+    `<div class="iuPdTrafficFilters__row">` +
+    `<span class="iuPdTrafficFilters__label">Typ</span>${typeChips}` +
+    `</div>` +
+    `<div class="iuPdTrafficFilters__row">` +
+    `<span class="iuPdTrafficFilters__label">Třída</span>${classChips}` +
+    `</div>` +
+    (roadChips
+      ? `<div class="iuPdTrafficFilters__row"><span class="iuPdTrafficFilters__label">Silnice</span>${roadChips}</div>`
+      : "") +
+    `<div class="iuPdTrafficFilters__row">` +
+    `<span class="iuPdTrafficFilters__label">Stav</span>` +
+    chip("followed", "1", "Sledované", !!tf.followedOnly) +
+    chip("active", "1", "Aktivní", !!tf.activeOnly) +
+    `</div>` +
+    `<div class="iuPdTrafficLegend" aria-hidden="true">` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--motorway">Dálnice</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-i">I.</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-ii">II.</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-iii">III.</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--local">Místní</span>` +
+    `</div>` +
+    `</div>`
+  );
+}
+
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
   const f = effectivePrefs();
@@ -441,6 +581,7 @@ function filteredList() {
       return !isRead(id) && !(src && src !== id && isRead(src));
     });
   }
+  list = applyTrafficClientFilters(list);
   return list;
 }
 
@@ -499,6 +640,93 @@ function displayEventTitle(ev, locationFilter) {
   return base + " — " + loc;
 }
 
+function renderTrafficCardBody(ev, url, czMapMarkup) {
+  const vm = buildTrafficCardViewModel(ev.trafficV1);
+  const badge = vm.badge;
+  const warnBadge = badge
+    ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge iuPdCard__warnBadge--traffic iuPdCard__warnBadge--${esc(
+        badge.kind
+      )}" role="status" aria-label="${esc(badge.aria)}">${esc(badge.text)}</span>`
+    : "";
+  const roadMod =
+    ROAD_BADGE_CLASS[vm.roadBadge.roadClass] || ROAD_BADGE_CLASS.UNKNOWN || "unknown";
+  const roadBadge = vm.roadBadge.road
+    ? `<span class="iuPdRoadBadge iuPdRoadBadge--${esc(roadMod)}" title="${esc(
+        vm.roadBadge.label
+      )}">${esc(vm.roadBadge.road)}</span>`
+    : "";
+  const localityTitle = vm.locality
+    ? url
+      ? `<a class="iuPdCard__title iuPrehledDne__cardTitle iuPdTraffic__locality" href="${esc(
+          url
+        )}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(vm.locality)}</a>`
+      : `<span class="iuPdCard__title iuPrehledDne__cardTitle iuPdTraffic__locality" data-act="open-title">${esc(
+          vm.locality
+        )}</span>`
+    : "";
+  const art = trafficEventIllustrationSvg(vm.illustrationKey);
+  const facts = [];
+  if (vm.communicationLine) {
+    facts.push(
+      `<div class="iuPdTrafficFact"><span class="iuPdTrafficFact__k">Komunikace</span><span class="iuPdTrafficFact__v">${esc(
+        vm.communicationLine
+      )}</span></div>`
+    );
+  }
+  if (vm.eventLine) {
+    facts.push(
+      `<div class="iuPdTrafficFact"><span class="iuPdTrafficFact__k">Událost</span><span class="iuPdTrafficFact__v">${esc(
+        vm.eventLine
+      )}</span></div>`
+    );
+  }
+  if (vm.validityLine) {
+    facts.push(
+      `<div class="iuPdTrafficFact"><span class="iuPdTrafficFact__k">Platnost</span><span class="iuPdTrafficFact__v">${esc(
+        vm.validityLine
+      )}</span></div>`
+    );
+  }
+  if (vm.eventTypeLabel) {
+    facts.push(
+      `<div class="iuPdTrafficFact"><span class="iuPdTrafficFact__k">Typ</span><span class="iuPdTrafficFact__v">${esc(
+        vm.eventTypeLabel
+      )}</span></div>`
+    );
+  }
+  const more =
+    vm.impactFull && vm.impactFull !== vm.impactShort
+      ? `<details class="iuPdTrafficMore"><summary>Více informací</summary><p>${esc(
+          vm.impactFull
+        )}</p></details>`
+      : "";
+  const blocks = (vm.quickBlocks || [])
+    .map(
+      (b) =>
+        `<div class="iuPdTrafficQuick" data-qk="${esc(b.key)}"><div class="iuPdTrafficQuick__t">${esc(
+          b.title
+        )}</div><div class="iuPdTrafficQuick__b">${esc(b.body)}</div></div>`
+    )
+    .join("");
+  const source =
+    vm.sourceLabel
+      ? `<div class="iuPdTrafficSource">Zdroj: ${esc(vm.sourceLabel)}</div>`
+      : "";
+  return (
+    (czMapMarkup
+      ? `<div class="iuPrehledDne__cardHead"><div class="iuPrehledDne__cardHeadMain">${czMapMarkup}${warnBadge}</div></div>`
+      : warnBadge) +
+    `<div class="iuPdTrafficHead">${roadBadge}${localityTitle}</div>` +
+    `<div class="iuPdTrafficMain">` +
+    `<div class="iuPdTrafficArt" data-ill="${esc(vm.illustrationKey)}">${art}</div>` +
+    `<div class="iuPdTrafficFacts">${facts.join("")}</div>` +
+    `</div>` +
+    more +
+    (blocks ? `<div class="iuPdTrafficQuicks">${blocks}</div>` : "") +
+    source
+  );
+}
+
 function renderItem(ev) {
   const id = String(ev.id || "");
   const isTraffic = !!(ev && ev.trafficV1);
@@ -521,7 +749,7 @@ function renderItem(ev) {
     String(ev.adapterOwner || "") === "ndic-datex-v1" ||
     !!(ev && ev.ndicV1);
   const srcPill = isTraffic
-    ? "Zdroj: ŘSD/NDIC"
+    ? ""
     : ev.capV2
       ? srcRaw
         ? "Zdroj: " + srcRaw
@@ -531,13 +759,7 @@ function renderItem(ev) {
         : srcRaw;
   const regionFiltered = getFilteredWarningLocationLabel(ev, locationFilter);
   const region = isTraffic
-    ? String(
-        (ev.trafficV1 &&
-          (ev.trafficV1.preciseLocationVerified
-            ? ev.trafficV1.location || ev.trafficV1.road
-            : ev.trafficV1.subjectScopeLabel || ev.trafficV1.road || "")) ||
-          ""
-      )
+    ? ""
     : ev.capV2
       ? String(regionFiltered || "")
       : ev.region && (ev.region.summary || ev.region.name)
@@ -545,7 +767,7 @@ function renderItem(ev) {
         : "";
   // Hide locality meta pill when the same text is already in the title (CAP cards).
   const regionPill = region && title.indexOf(region) === -1 ? region : "";
-  const imp = importanceLabel(ev);
+  const imp = isTraffic ? "" : importanceLabel(ev);
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
   const read = isRead(id);
@@ -554,7 +776,7 @@ function renderItem(ev) {
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
   const trafficBadge = isTraffic ? trafficBadgeModel(ev.trafficV1) : null;
-  const trafficActive = isTraffic && ev.trafficV1.lifecycleStatus === "ACTIVE";
+  const trafficFollowed = isTraffic ? isTrafficFollowed(ev.trafficV1.publicEventId) : false;
   const timeline = getEffectiveTimelinePresentation(ev, Date.now());
   const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
   const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
@@ -595,9 +817,7 @@ function renderItem(ev) {
   // Green AKTIVNÍ pill follows live lifecycle (ACTIVE only), not badgeActive (active+future warn cards).
   const activePill = timeline.isActiveWarning
     ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Právě platná výstraha">AKTIVNÍ VÝSTRAHA</span>`
-    : trafficActive
-      ? `<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill" role="status" aria-label="Aktivní dopravní událost">AKTIVNÍ DOPRAVA</span>`
-      : "";
+    : "";
   const titleMarkup = url
     ? `<a class="iuPdCard__title iuPrehledDne__cardTitle" href="${esc(url)}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(title)}</a>`
     : `<span class="iuPdCard__title iuPrehledDne__cardTitle" data-act="open-title">${esc(title)}</span>`;
@@ -615,7 +835,7 @@ function renderItem(ev) {
     ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge" role="status" aria-label="Výstraha ČHMÚ">🔴 VÝSTRAHA ČHMÚ</span>`
     : capEnded
       ? `<span class="iuPdCard__warnBadge iuPdCard__warnBadge--ended iuPrehledDne__warnBadge" role="status">${esc(ev.status === "zruseno" ? "Zrušeno" : "Ukončeno")}</span>`
-      : trafficBadge
+      : !isTraffic && trafficBadge
         ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge iuPdCard__warnBadge--traffic iuPdCard__warnBadge--${esc(
             trafficBadge.kind
           )}" role="status" aria-label="${esc(trafficBadge.aria)}">${esc(trafficBadge.text)}</span>`
@@ -624,33 +844,6 @@ function renderItem(ev) {
   const regionCoverageMarkup = regionCoverage
     ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
     : "";
-  let trafficMetaExtra = "";
-  if (isTraffic) {
-    const tv = ev.trafficV1;
-    const bits = [];
-    const precise = tv.preciseLocationVerified === true;
-    if (tv.locationDisclosureCs) {
-      bits.push(String(tv.locationDisclosureCs));
-    } else if (precise) {
-      if (tv.road) bits.push(String(tv.road));
-      if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
-      if (tv.section) bits.push(String(tv.section));
-      if (tv.direction) bits.push(String(tv.direction));
-    } else if (tv.road || tv.subjectScopeLabel) {
-      bits.push("Týká se komunikace " + String(tv.road || tv.subjectScopeLabel));
-    }
-    if (tv.impact) bits.push(String(tv.impact));
-    if (tv.freshness) bits.push("Čerstvost: " + String(tv.freshness));
-    if (tv.changeTimeSource === "DOWNLOAD_FALLBACK") bits.push("čas změny: fallback stažení");
-    if (tv.routeMatchMode === "SCOPE_ONLY") {
-      bits.push("Událost se týká sledované komunikace, ale přesný úsek není v oficiálních datech znám.");
-    }
-    const hist = trafficHistoryLines(tv);
-    if (hist.length) bits.push("Historie: " + hist.join(", "));
-    trafficMetaExtra = bits
-      .map((b) => `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(b)}</span>`)
-      .join("");
-  }
   /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it. */
   const cardHead = czMapMarkup
     ? `<div class="iuPrehledDne__cardHead">` +
@@ -662,6 +855,21 @@ function renderItem(ev) {
       `</div>` +
       `</div>`
     : warnBadge + titleMarkup + regionCoverageMarkup;
+  const trafficBody = isTraffic ? renderTrafficCardBody(ev, url, czMapMarkup) : "";
+  const followId = isTraffic ? String(ev.trafficV1.publicEventId || "") : "";
+  const actions = hiddenMode
+    ? `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="unhide" data-id="${esc(id)}">Obnovit</button>`
+    : isTraffic
+      ? `<button type="button" class="iuPdBtn iuPdBtn--primary${
+          trafficFollowed ? " is-on" : ""
+        }" data-act="traffic-follow" data-id="${esc(id)}" data-peid="${esc(followId)}">${
+          trafficFollowed ? "Sleduji" : "Sledovat"
+        }</button>` +
+        `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide" data-id="${esc(id)}">Skrýt</button>`
+      : `<button type="button" class="iuPdBtn iuPdBtn--ghost${saved ? " is-on" : ""}" data-act="save" data-id="${esc(
+          id
+        )}">${saved ? "Uloženo" : "Uložit"}</button>` +
+        `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide" data-id="${esc(id)}">Skrýt</button>`;
   return (
     `<li class="iuPdCard iuPrehledDne__item${read ? " is-read" : ""}${timeline.isFutureWarning ? " is-futureWarning" : ""}${
       isTraffic ? " iuPdCard--traffic" : ""
@@ -677,20 +885,16 @@ function renderItem(ev) {
       alert || capActive || (trafficBadge && trafficBadge.kind === "new") ? " iuPrehledDne__dot--alert" : ""
     }"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""}">` +
-    cardHead +
-    `<div class="iuPdCard__meta iuPrehledDne__meta">` +
-    (srcPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(srcPill)}</span>` : "") +
-    activePill +
-    (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
-    (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
-    trafficMetaExtra +
-    `</div>` +
-    `<div class="iuPdCard__actions iuPrehledDne__actions">` +
-    (hiddenMode
-      ? `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="unhide" data-id="${esc(id)}">Obnovit</button>`
-      : `<button type="button" class="iuPdBtn iuPdBtn--ghost${saved ? " is-on" : ""}" data-act="save" data-id="${esc(id)}">${saved ? "Uloženo" : "Uložit"}</button>` +
-        `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide" data-id="${esc(id)}">Skrýt</button>`) +
-    `</div></article></li>`
+    (isTraffic
+      ? trafficBody
+      : cardHead +
+        `<div class="iuPdCard__meta iuPrehledDne__meta">` +
+        (srcPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(srcPill)}</span>` : "") +
+        activePill +
+        (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
+        (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
+        `</div>`) +
+    `<div class="iuPdCard__actions iuPrehledDne__actions">${actions}</div></article></li>`
   );
 }
 
@@ -1163,7 +1367,7 @@ function settingsCtaInnerHtml() {
   return `<span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span>`;
 }
 
-function homeShellHtml(listHtml, countLabel, moreHtml) {
+function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
   const mode = state.viewMode;
   const offlineSnap = loadOfflineTrafficSnapshot();
   const fresh = trafficFreshnessBanner(offlineSnap);
@@ -1171,8 +1375,10 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     fresh && isRsdTrafficSourceEnabled(effectivePrefs())
       ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
       : "";
+  const filterBar = trafficFilterBarHtml(listForFilters || []);
+  const hasTraffic = (listForFilters || []).some((ev) => ev && ev.trafficV1);
   return (
-    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean">` +
+    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean"${hasTraffic ? ' data-iu-has-traffic="1"' : ""}>` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
     homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
@@ -1194,7 +1400,8 @@ function homeShellHtml(listHtml, countLabel, moreHtml) {
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
     trafficOfflineBanner +
-    `<ul class="iuPdFeed iuPrehledDne__timeline" id="iuPrehledDneTimeline">${listHtml}</ul>` +
+    filterBar +
+    `<ul class="iuPdFeed iuPrehledDne__timeline${hasTraffic ? " iuPdFeed--trafficPad" : ""}" id="iuPrehledDneTimeline">${listHtml}</ul>` +
     `<div id="iuPdMoreWrap">${moreHtml}</div>` +
     `</section>`
   );
@@ -1272,12 +1479,22 @@ function updateFeedDom() {
     feed.innerHTML = pageItems.length
       ? pageItems.map(renderItem).join("")
       : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
+    const hasTraffic = pageItems.some((ev) => ev && ev.trafficV1);
+    feed.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
   }
   if (moreWrap) {
     moreWrap.innerHTML =
       pageItems.length < list.length
         ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
         : "";
+  }
+  const existingFilters = root.querySelector("[data-iu-traffic-filters]");
+  const bar = trafficFilterBarHtml(list);
+  if (bar) {
+    if (existingFilters) existingFilters.outerHTML = bar;
+    else if (count) count.insertAdjacentHTML("afterend", bar);
+  } else if (existingFilters) {
+    existingFilters.remove();
   }
 }
 
@@ -1307,7 +1524,7 @@ function paint(opts) {
       });
     } catch (_) {}
   } else {
-    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml);
+    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml, list);
   }
   applyIndeterminateFlags(root);
   if (state.settingsOpen) mountSettingsOverlay();
@@ -1641,6 +1858,43 @@ function wire() {
     }
     if (act === "save") {
       toggleSaved(t.getAttribute("data-id"));
+      paint();
+      wire();
+      return;
+    }
+    if (act === "traffic-follow") {
+      const peid = String(t.getAttribute("data-peid") || "").trim();
+      const card = t.closest("[data-id]");
+      let meta = {};
+      if (card) {
+        const item = ((state.data && state.data.feed && state.data.feed.items) || []).find(
+          (x) => x && String(x.id) === String(card.getAttribute("data-id"))
+        );
+        const tv = (item && item.trafficV1) || null;
+        if (tv) meta = { road: tv.road || null, eventType: tv.eventType || tv.category || null };
+      }
+      if (peid) toggleTrafficFollow(peid, meta);
+      paint();
+      wire();
+      return;
+    }
+    if (act === "tf-filter") {
+      const kind = String(t.getAttribute("data-tf-kind") || "");
+      const value = String(t.getAttribute("data-tf-value") || "");
+      const tf = state.trafficFilters || {
+        eventTypes: [],
+        roadClasses: [],
+        roads: [],
+        followedOnly: false,
+        activeOnly: false,
+      };
+      if (kind === "event") tf.eventTypes = toggleTrafficFilterValue(tf.eventTypes, value);
+      else if (kind === "roadClass") tf.roadClasses = toggleTrafficFilterValue(tf.roadClasses, value);
+      else if (kind === "road") tf.roads = toggleTrafficFilterValue(tf.roads, value);
+      else if (kind === "followed") tf.followedOnly = !tf.followedOnly;
+      else if (kind === "active") tf.activeOnly = !tf.activeOnly;
+      state.trafficFilters = tf;
+      state.page = 1;
       paint();
       wire();
       return;
