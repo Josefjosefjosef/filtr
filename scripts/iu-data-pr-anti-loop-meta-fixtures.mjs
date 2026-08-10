@@ -157,8 +157,8 @@ ok(
 );
 ok("suite_wires_bounded_refresh", /iu-ndic-data-pr-bounded-refresh-fixtures/.test(suite));
 ok(
-  "bounded_refresh_max_3",
-  /DATA_PR_REFRESH_MAX\s*=\s*3/.test(fs.readFileSync(BOUNDED, "utf8"))
+  "bounded_refresh_max_5",
+  /DATA_PR_REFRESH_MAX\s*=\s*5/.test(fs.readFileSync(BOUNDED, "utf8"))
 );
 
 // Mutations: removing protocol pieces must be detectable
