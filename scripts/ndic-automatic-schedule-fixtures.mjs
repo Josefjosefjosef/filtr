@@ -36,7 +36,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const NET_WF = path.join(ROOT, ".github", "workflows", "update-ndic-datex-v1.yml");
 const VERIFY_JS = path.join(ROOT, "scripts", "ndic-verify-preflight-attestation.mjs");
 
-export const CONSERVATIVE_CRON = "7,22,37,52 * * * *";
+export const CONSERVATIVE_CRON = "8,23,38,53 * * * *";
 
 const fails = [];
 let passCount = 0;

@@ -101,7 +101,7 @@ try {
   );
   ok("E_cleanup_script_invoked", /ndic-runner-disk-cleanup\.mjs/.test(wf));
   ok("E_ttl_at_least_7200", /IU_NDIC_PREFLIGHT_TTL_SECONDS:\s*"7200"/.test(wf));
-  ok("E_schedule_cron_present", /cron:\s*"7,22,37,52 \* \* \* \*"/.test(wf));
+  ok("E_schedule_cron_present", /cron:\s*"8,23,38,53 \* \* \* \*"/.test(wf));
   ok("E_low_disk_refuse_present", /REFUSING_LOW_DISK/.test(wf));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });

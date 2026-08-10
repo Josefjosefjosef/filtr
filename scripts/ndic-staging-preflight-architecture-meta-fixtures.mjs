@@ -245,7 +245,7 @@ mutateMustFail(
 mutateMustFail(
   "meta_aggressive_cron_interval",
   netSrc,
-  (s) => s.replace(/- cron: "7,22,37,52 \* \* \* \*"/, '- cron: "* * * * *"'),
+  (s) => s.replace(/- cron: "8,23,38,53 \* \* \* \*"/, '- cron: "* * * * *"'),
   assertNetworkWorkflowArchitecture
 );
 
