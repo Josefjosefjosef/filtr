@@ -2,8 +2,9 @@
 /**
  * Atomic tip-equality merge-clean fixtures (CHMI_MAIN_TIP_RACE_VS_BOUNDED_RECONCILE).
  *
- * Guards against shallow rev-list / merge-base false unclean that exhausts
- * DATA_PR_REFRESH_MAX while origin/main tip is stable (schedule run 31369423212).
+ * Guards against:
+ * - shallow rev-list / merge-base false unclean (schedule 31369423212)
+ * - full porcelain dirty from allowlist leftovers burning max=12 on stable tip (31376486873)
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -33,7 +34,7 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     baseSha: tip,
     headSha: tip,
     parentSha: "",
-    workingTreeClean: true,
+    indexClean: true,
   });
   ok("stable_tip_no_changes_clean", v.clean === true && v.reason === "HEAD_EQUALS_STABLE_TIP");
 }
@@ -43,9 +44,34 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     baseSha: tip,
     headSha: ndic,
     parentSha: tip,
-    workingTreeClean: true,
+    indexClean: true,
   });
   ok("stable_tip_committed_clean", v.clean === true && v.reason === "PARENT_EQUALS_STABLE_TIP");
+}
+{
+  // Unstaged allowlist leftovers must NOT block clean when index is clean (31376486873).
+  const v = evaluateStableTipMergeClean({
+    tipSha: tip,
+    baseSha: tip,
+    headSha: ndic,
+    parentSha: tip,
+    indexClean: true,
+    workingTreeClean: false,
+  });
+  ok(
+    "unstaged_dirt_ignored_when_index_clean",
+    v.clean === true && v.reason === "PARENT_EQUALS_STABLE_TIP"
+  );
+}
+{
+  const v = evaluateStableTipMergeClean({
+    tipSha: tip,
+    baseSha: tip,
+    headSha: ndic,
+    parentSha: tip,
+    indexClean: false,
+  });
+  ok("dirty_index_unclean", v.clean === false && v.reason === "DIRTY_INDEX");
 }
 {
   const v = evaluateStableTipMergeClean({
@@ -55,7 +81,7 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     parentSha: tip,
     workingTreeClean: false,
   });
-  ok("dirty_worktree_unclean", v.clean === false && v.reason === "DIRTY_WORKTREE");
+  ok("legacy_workingTreeClean_false_unclean", v.clean === false && v.reason === "DIRTY_INDEX");
 }
 {
   const v = evaluateStableTipMergeClean({
@@ -63,7 +89,7 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     baseSha: tip,
     headSha: ndic,
     parentSha: tip,
-    workingTreeClean: true,
+    indexClean: true,
   });
   ok("tip_moved_unclean", v.clean === false && v.reason === "TIP_MOVED");
 }
@@ -73,7 +99,7 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     baseSha: tip,
     headSha: ndic,
     parentSha: moved,
-    workingTreeClean: true,
+    indexClean: true,
   });
   ok("orphan_head_unclean", v.clean === false && v.reason === "HEAD_NOT_BASED_ON_TIP");
 }
@@ -82,7 +108,7 @@ const moved = "cccccccccccccccccccccccccccccccccccccccc";
     tipSha: "",
     baseSha: tip,
     headSha: tip,
-    workingTreeClean: true,
+    indexClean: true,
   });
   ok("missing_sha_unclean", v.clean === false && v.reason === "MISSING_SHA");
 }
@@ -107,6 +133,10 @@ ok(
   !/behind\.stdout \|\| "1"/.test(src) && !/rev-list", "--count", "HEAD\.\.origin\/main"/.test(src)
 );
 ok("source_flags_atomic", /ATOMIC_TIP_EQUALITY_CLEAN_CHECK:\s*"YES"/.test(src));
+ok("source_flags_index_not_porcelain", /ATOMIC_INDEX_CLEAN_NOT_PORCELAIN:\s*"YES"/.test(src));
+ok("source_uses_index_clean", /indexCleanAfterCommit/.test(src));
+ok("source_no_porcelain_gate", !/workingTreeClean:\s*headMatchesTreeAfterApply/.test(src));
+ok("source_forensic_verdict_log", /MERGE_CLEAN_VERDICT/.test(src));
 ok(
   "source_forensic_tip_race_log",
   /CHMI_MAIN_TIP_RACE_VS_BOUNDED_RECONCILE/.test(src)

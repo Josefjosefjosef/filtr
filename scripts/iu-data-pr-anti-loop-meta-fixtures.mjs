@@ -163,7 +163,8 @@ ok(
 ok(
   "reconcile_atomic_tip_equality",
   /evaluateStableTipMergeClean/.test(fs.readFileSync(RECONCILE, "utf8")) &&
-    /ATOMIC_TIP_EQUALITY_CLEAN_CHECK/.test(fs.readFileSync(RECONCILE, "utf8"))
+    /ATOMIC_TIP_EQUALITY_CLEAN_CHECK/.test(fs.readFileSync(RECONCILE, "utf8")) &&
+    /ATOMIC_INDEX_CLEAN_NOT_PORCELAIN/.test(fs.readFileSync(RECONCILE, "utf8"))
 );
 ok(
   "pkg_reconcile_atomic_clean_fixtures",
