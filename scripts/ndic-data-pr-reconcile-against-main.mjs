@@ -71,11 +71,6 @@ function changedPathsVsMain(repo) {
     .filter(Boolean);
 }
 
-function mainIsAncestorOfHead(repo) {
-  const r = git(repo, ["merge-base", "--is-ancestor", "origin/main", "HEAD"]);
-  return r.status === 0;
-}
-
 function headMatchesTreeAfterApply(repo) {
   const st = git(repo, ["status", "--porcelain"]);
   return rStatusClean(st);
@@ -83,6 +78,53 @@ function headMatchesTreeAfterApply(repo) {
 
 function rStatusClean(st) {
   return st.status === 0 && String(st.stdout || "").trim() === "";
+}
+
+/**
+ * Deterministic merge-clean check after bounded apply.
+ *
+ * Shallow `fetch --depth=1` + `rev-list HEAD..origin/main` / `merge-base --is-ancestor`
+ * can false-negative (treat clean tip as unclean → burn DATA_PR_REFRESH_MAX).
+ * Prefer tip-equality vs the base we just applied onto + local parent/HEAD topology.
+ *
+ * tip === baseSha:
+ *   - HEAD === tip → NO_CHANGES / already at tip → clean
+ *   - HEAD^ === tip → just committed NDIC on that tip → clean
+ * tip !== baseSha:
+ *   - main advanced → unclean (caller re-applies; no force-push)
+ */
+export function evaluateStableTipMergeClean(opts = {}) {
+  const tipSha = String(opts.tipSha || "").trim();
+  const baseSha = String(opts.baseSha || "").trim();
+  const headSha = String(opts.headSha || "").trim();
+  const parentSha = String(opts.parentSha || "").trim();
+  const workingTreeClean = opts.workingTreeClean === true;
+  if (!tipSha || !baseSha || !headSha) {
+    return { clean: false, reason: "MISSING_SHA" };
+  }
+  if (!workingTreeClean) {
+    return { clean: false, reason: "DIRTY_WORKTREE" };
+  }
+  if (tipSha !== baseSha) {
+    return { clean: false, reason: "TIP_MOVED", tipSha, baseSha };
+  }
+  if (headSha === tipSha) {
+    return { clean: true, reason: "HEAD_EQUALS_STABLE_TIP" };
+  }
+  if (parentSha && parentSha === tipSha) {
+    return { clean: true, reason: "PARENT_EQUALS_STABLE_TIP" };
+  }
+  return { clean: false, reason: "HEAD_NOT_BASED_ON_TIP", tipSha, headSha, parentSha };
+}
+
+/** True when tip drift includes info_events paths (must re-apply NDIC). */
+export function tipMoveTouchesInfoEvents(changedPaths) {
+  const paths = Array.isArray(changedPaths) ? changedPaths : [];
+  return paths.some((p) =>
+    String(p || "")
+      .replace(/\\/g, "/")
+      .startsWith("projects/data/info_events/")
+  );
 }
 
 async function main() {
@@ -158,14 +200,48 @@ async function main() {
       return { ok: true, result: "COMMITTED", baseMainSha: lastBaseSha, applied };
     },
     isMergeClean: () => {
-      // Clean when HEAD is not behind origin/main and working tree clean.
-      // Keep this check cheap — CHMI data commits can advance main every few seconds.
+      // Tip-equality clean check — do not use shallow rev-list / merge-base
+      // (false unclean → DATA_PR_REFRESH_LIMIT_EXCEEDED with stable tip; run 31369423212).
       const fetch = git(args.repo, ["fetch", "origin", "main", "--depth=1"]);
       if (fetch.status !== 0) return false;
-      const behind = git(args.repo, ["rev-list", "--count", "HEAD..origin/main"]);
-      const behindN = Number(String(behind.stdout || "1").trim());
-      if (!Number.isFinite(behindN) || behindN > 0) return false;
-      return mainIsAncestorOfHead(args.repo) && headMatchesTreeAfterApply(args.repo);
+      const tipSha = String(git(args.repo, ["rev-parse", "origin/main"]).stdout || "").trim();
+      const headSha = String(git(args.repo, ["rev-parse", "HEAD"]).stdout || "").trim();
+      let parentSha = "";
+      if (headSha && tipSha && headSha !== tipSha) {
+        parentSha = String(git(args.repo, ["rev-parse", "HEAD^"]).stdout || "").trim();
+      }
+      const verdict = evaluateStableTipMergeClean({
+        tipSha,
+        baseSha: lastBaseSha,
+        headSha,
+        parentSha,
+        workingTreeClean: headMatchesTreeAfterApply(args.repo),
+      });
+      if (verdict.clean) return true;
+      if (verdict.reason === "TIP_MOVED") {
+        // Always re-apply when tip moved (preserve foreign commits; no force-push).
+        // IE-touch is logged for forensics only.
+        const names = git(args.repo, [
+          "diff",
+          "--name-only",
+          lastBaseSha + ".." + tipSha,
+        ]);
+        const paths = String(names.stdout || "")
+          .split(/\r?\n/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+        console.error(
+          JSON.stringify({
+            CHMI_MAIN_TIP_RACE_VS_BOUNDED_RECONCILE: tipMoveTouchesInfoEvents(paths)
+              ? "IE_TOUCHED"
+              : "NON_IE_OR_UNKNOWN",
+            tipSha,
+            baseSha: lastBaseSha,
+            changedPathCount: paths.length,
+          })
+        );
+      }
+      return false;
     },
   });
 
@@ -179,6 +255,7 @@ async function main() {
     ...DATA_PR_REFRESH_FLAGS,
     MERGE_CLEAN: result.MERGE_CLEAN,
     FAIL_CLOSED: result.ok ? "NO" : "YES",
+    ATOMIC_TIP_EQUALITY_CLEAN_CHECK: "YES",
   };
   console.log(JSON.stringify(out));
   if (!result.ok) process.exit(2);
