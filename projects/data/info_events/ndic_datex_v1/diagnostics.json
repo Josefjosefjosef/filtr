@@ -1,6 +1,6 @@
 {
-  "runId": "002b043675b9e6f8",
-  "started": "2026-08-10T20:21:30.999Z",
+  "runId": "821fab089f0a7b0c",
+  "started": "2026-08-10T23:56:23.471Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3548,
+    "situations": 3512,
     "rejected": 0,
-    "quarantine": 2,
+    "quarantine": 1,
     "stats": {
-      "new": 28,
-      "updated": 23,
-      "unchanged": 3495,
-      "ended": 34,
+      "new": 21,
+      "updated": 3490,
+      "unchanged": 0,
+      "ended": 60,
       "skippedOlder": 0,
-      "softMissing": 5
+      "softMissing": 1
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 28,
-      "updated": 23,
-      "unchanged": 3495,
-      "ended": 34,
+      "new": 21,
+      "updated": 3490,
+      "unchanged": 0,
+      "ended": 60,
       "skippedOlder": 0,
-      "softMissing": 5
+      "softMissing": 1
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T20:21:34.609Z",
+      "activatedAt": "2026-08-10T23:56:27.262Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 59215865,
+    "datexBytesRead": 58689803,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3551,
-    "bytes": 7459256,
+    "cardCount": 3512,
+    "bytes": 7761309,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 7458676,
+      "cards": 7760729,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7102,
-      "FULL_SNAPSHOT": 7459256,
+      "cardsProvenance": 7024,
+      "FULL_SNAPSHOT": 7761309,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
