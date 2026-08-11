@@ -1,6 +1,6 @@
 {
-  "runId": "1bf47102f2252c88",
-  "started": "2026-08-11T06:13:04.886Z",
+  "runId": "f665fd906865ed5e",
+  "started": "2026-08-11T10:37:03.432Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3693,
+    "situations": 3759,
     "rejected": 0,
-    "quarantine": 16,
+    "quarantine": 17,
     "stats": {
-      "new": 95,
-      "updated": 116,
-      "unchanged": 3466,
-      "ended": 22,
+      "new": 149,
+      "updated": 194,
+      "unchanged": 3399,
+      "ended": 85,
       "skippedOlder": 0,
-      "softMissing": 6
+      "softMissing": 5
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 95,
-      "updated": 116,
-      "unchanged": 3466,
-      "ended": 22,
+      "new": 149,
+      "updated": 194,
+      "unchanged": 3399,
+      "ended": 85,
       "skippedOlder": 0,
-      "softMissing": 6
+      "softMissing": 5
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-11T06:13:09.229Z",
+      "activatedAt": "2026-08-11T10:37:08.975Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 64990426,
+    "datexBytesRead": 67210166,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3683,
-    "bytes": 8094709,
+    "cardCount": 3747,
+    "bytes": 8212685,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 8094129,
+      "cards": 8212105,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7366,
-      "FULL_SNAPSHOT": 8094709,
+      "cardsProvenance": 7494,
+      "FULL_SNAPSHOT": 8212685,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
