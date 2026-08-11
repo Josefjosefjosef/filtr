@@ -47,8 +47,18 @@ cp "$ROOT/deploy/ndic-live-60s/ndic-datex-live.timer" "$UNIT_DIR/ndic-datex-live
 
 install_cron_fallback() {
   echo "TIMER_BACKEND=cron"
+  local wrapper="$LIVE_REPO/deploy/ndic-live-60s/cron-tick.sh"
+  if [ ! -f "$wrapper" ]; then
+    wrapper="$ROOT/deploy/ndic-live-60s/cron-tick.sh"
+  fi
+  chmod +x "$wrapper" || true
+  # Copy wrapper next to env for stable path even if repo moves mid-tick.
+  local stable="$HOME/infouzel-ndic-live/cron-tick.sh"
+  mkdir -p "$(dirname "$stable")"
+  cp "$wrapper" "$stable"
+  chmod +x "$stable"
   local line
-  line="* * * * * . $ENV_FILE; cd $LIVE_REPO && /usr/bin/flock -n $HOME/.cache/infouzel-ndic-live/cron.lock /usr/bin/node scripts/ndic-datex-v1-live-60s-run.mjs >>$HOME/.cache/infouzel-ndic-live/cron.log 2>&1 $CRON_MARKER"
+  line="* * * * * /usr/bin/flock -n $HOME/.cache/infouzel-ndic-live/cron.lock $stable >>$HOME/.cache/infouzel-ndic-live/cron.log 2>&1 $CRON_MARKER"
   local tmp
   tmp="$(mktemp)"
   crontab -l 2>/dev/null | grep -v "$CRON_MARKER" >"$tmp" || true
@@ -56,8 +66,9 @@ install_cron_fallback() {
   crontab "$tmp"
   rm -f "$tmp"
   echo "CRON_INSTALLED=YES"
+  echo "CRON_WRAPPER=$stable"
   echo "UNITS_INSTALLED=CRON_FALLBACK"
-  echo "NOTE=systemd --user unavailable; cron * * * * * + flock (start-of-minute approx)"
+  echo "NOTE=systemd --user unavailable; cron * * * * * + flock (approx start-of-minute)"
 }
 
 ensure_user_systemd_ok() {
