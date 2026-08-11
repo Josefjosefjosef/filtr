@@ -250,6 +250,21 @@ async function run() {
     ok("f12_ended_life", p.projection.lifecycleStatus === LIFECYCLE_STATUS.ENDED);
   }
 
+  // 12b ended via validTo < now (status still aktivni)
+  {
+    const { event } = makeEvent({
+      eventId: "end-by-validto",
+      status: "aktivni",
+      validFrom: "2026-08-06T08:00:00.000Z",
+      validTo: "2026-08-06T12:00:00.000Z",
+    });
+    const p = buildTrafficPublicationProjection(event, {
+      diff: { changeKinds: [EVENT_CHANGE_KIND.NEW_EVENT] },
+      nowIso: "2026-08-06T13:00:00.000Z",
+    });
+    ok("f12b_ended_by_validTo", p.ok && p.projection.lifecycleStatus === LIFECYCLE_STATUS.ENDED);
+  }
+
   // 13 unresolved location — no precise geo; may still project without km/dir
   {
     const { event } = makeEvent({
