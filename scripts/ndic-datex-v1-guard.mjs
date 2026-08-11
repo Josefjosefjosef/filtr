@@ -633,9 +633,19 @@ async function discoveryChecks() {
     );
   }
   ok("default_mode_off", getNdicDatexV1Config({}).mode === "off", "mode");
-  ok("prod_sync_uses_tmc_download_load", /loadTmcTableFromDownload/.test(syncSrc), "tmc-download-load");
+  // Live DATEX path must NOT download/import TMC; maintenance owns loadTmcTableFromDownload.
+  ok(
+    "prod_sync_no_live_tmc_download_load",
+    !/loadTmcTableFromDownload/.test(syncSrc) && /requireValidPersistentTmcForLive/.test(syncSrc),
+    "tmc-lkg-live"
+  );
   ok("prod_sync_no_datex_clamp_on_tmc", !/parseTmcTableFromDownload\(bodyBuf/.test(syncSrc), "no-direct-zip-parse");
-  ok("prod_sync_passes_content_encoding", /contentEncoding/.test(syncSrc), "content-encoding");
+  const maintSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1", "tmc-maintenance.mjs"), "utf8");
+  ok(
+    "tmc_maintenance_uses_download_load",
+    /loadTmcTableFromDownload/.test(maintSrc) && /contentEncoding/.test(maintSrc),
+    "tmc-maint-encoding"
+  );
   ok("no_authorization_console", !/console\.(log|info|debug|error).*Authorization/i.test(syncSrc), "no-auth-log");
   ok("shadow_isolated_helper", /isShadowIsolated|IU_NDIC_SHADOW_ISOLATED/.test(syncSrc), "isolated");
   const probeSrc = fs.readFileSync(path.join(__dirname, "ndic-datex-v1-shadow-probe.mjs"), "utf8");
