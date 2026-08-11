@@ -85,38 +85,39 @@ jobs:
           export IU_NDIC_LIVE_PUBLISH_URL="https://infouzel.cz/projects/data/info_events/ndic_datex_v1/__iu_live_publish"
 
           if [ "$ACTION" = "install-units" ]; then
-            sudo bash deploy/ndic-live-60s/install.sh
-            # Ensure env has pull credentials from Actions secrets without printing them
-            ENV_FILE=/etc/infouzel/ndic-live-60s.env
-            sudo touch "$ENV_FILE"
-            sudo chmod 600 "$ENV_FILE"
-            # Rewrite non-secret keys; secrets appended via sudo tee carefully
+            bash deploy/ndic-live-60s/install.sh
+            ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
+            mkdir -p "$(dirname "$ENV_FILE")"
             {
               echo "IU_NDIC_LIVE_MODE=shadow"
               echo "IU_NDIC_DATEX_V1_MODE=active"
               echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT"
               echo "IU_NDIC_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
               echo "IU_NDIC_LIVE_PUBLISH_URL=$IU_NDIC_LIVE_PUBLISH_URL"
-            } | sudo tee "$ENV_FILE" >/dev/null
+            } > "$ENV_FILE"
+            chmod 600 "$ENV_FILE"
             if [ -n "${IU_NDIC_PULL_URL:-}" ]; then
-              printf 'IU_NDIC_PULL_URL=%s\n' "$IU_NDIC_PULL_URL" | sudo tee -a "$ENV_FILE" >/dev/null
-              printf 'IU_NDIC_PULL_USER=%s\n' "$IU_NDIC_PULL_USER" | sudo tee -a "$ENV_FILE" >/dev/null
-              printf 'IU_NDIC_PULL_PASS=%s\n' "$IU_NDIC_PULL_PASS" | sudo tee -a "$ENV_FILE" >/dev/null
+              {
+                printf 'IU_NDIC_PULL_URL=%s\n' "$IU_NDIC_PULL_URL"
+                printf 'IU_NDIC_PULL_USER=%s\n' "$IU_NDIC_PULL_USER"
+                printf 'IU_NDIC_PULL_PASS=%s\n' "$IU_NDIC_PULL_PASS"
+              } >> "$ENV_FILE"
             fi
             if [ -n "${IU_NDIC_LIVE_PUBLISH_TOKEN:-}" ]; then
-              printf 'IU_NDIC_LIVE_PUBLISH_TOKEN=%s\n' "$IU_NDIC_LIVE_PUBLISH_TOKEN" | sudo tee -a "$ENV_FILE" >/dev/null
+              printf 'IU_NDIC_LIVE_PUBLISH_TOKEN=%s\n' "$IU_NDIC_LIVE_PUBLISH_TOKEN" >> "$ENV_FILE"
             fi
-            sudo systemctl restart ndic-datex-live.timer || sudo systemctl start ndic-datex-live.timer
-            systemctl is-enabled ndic-datex-live.timer
-            systemctl is-active ndic-datex-live.timer || true
+            systemctl --user daemon-reload
+            systemctl --user restart ndic-datex-live.timer || systemctl --user start ndic-datex-live.timer
+            systemctl --user is-enabled ndic-datex-live.timer
+            systemctl --user is-active ndic-datex-live.timer || true
             echo "INSTALL_PASS=YES"
             exit 0
           fi
 
           if [ "$ACTION" = "status" ]; then
-            systemctl status ndic-datex-live.timer --no-pager || true
-            systemctl status ndic-datex-live.service --no-pager || true
-            systemctl list-timers 'ndic-datex-live*' --no-pager || true
+            systemctl --user status ndic-datex-live.timer --no-pager || true
+            systemctl --user status ndic-datex-live.service --no-pager || true
+            systemctl --user list-timers 'ndic-datex-live*' --no-pager || true
             if [ -f "$LIVE_ROOT/health.json" ]; then
               echo "HEALTH_JSON<<EOF"
               cat "$LIVE_ROOT/health.json"
@@ -187,25 +188,25 @@ jobs:
           fi
 
           if [ "$ACTION" = "cutover-active" ]; then
-            ENV_FILE=/etc/infouzel/ndic-live-60s.env
+            ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             if [ ! -f "$ENV_FILE" ]; then echo "MISSING_ENV_FILE"; exit 1; fi
-            sudo sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=active/' "$ENV_FILE"
-            sudo systemctl restart ndic-datex-live.timer
-            sudo systemctl start ndic-datex-live.service || true
+            sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=active/' "$ENV_FILE"
+            systemctl --user restart ndic-datex-live.timer || true
+            systemctl --user start ndic-datex-live.service || true
             export IU_NDIC_LIVE_MODE=active
             export IU_NDIC_DATEX_V1_MODE=active
             node scripts/ndic-datex-v1-live-60s-run.mjs | tee "$RUNNER_TEMP/cutover-tick.json"
             echo "CUTOVER_ACTIVE_REQUESTED=YES"
-            echo "NOTE=Set Worker var LIVE_TRAFFIC_ENABLED=true via deploy workflow for R2 serve"
+            echo "NOTE=Set Worker var LIVE_TRAFFIC_ENABLED=true via deploy for R2 serve"
             exit 0
           fi
 
           if [ "$ACTION" = "rollback-shadow" ]; then
-            ENV_FILE=/etc/infouzel/ndic-live-60s.env
+            ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             if [ -f "$ENV_FILE" ]; then
-              sudo sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=shadow/' "$ENV_FILE"
+              sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=shadow/' "$ENV_FILE"
             fi
-            sudo systemctl restart ndic-datex-live.timer || true
+            systemctl --user restart ndic-datex-live.timer || true
             echo "ROLLBACK_TO_SHADOW=YES"
             echo "LIVE_PUBLICATION_ROLLBACK_READY=YES"
             exit 0
