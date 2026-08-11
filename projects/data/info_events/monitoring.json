@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-11T05:00:58.773Z",
-    "lastSuccessAt": "2026-08-11T05:01:01.911Z",
+    "lastRunAt": "2026-08-11T06:05:17.685Z",
+    "lastSuccessAt": "2026-08-11T06:05:21.936Z",
     "lastChangedAt": "2026-08-10T08:13:41.902Z",
     "lastError": null,
     "status": "not_modified",
@@ -481,19 +481,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6774,
+    "runMs": 7716,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-11T05:00:58.773Z",
+    "lastSnapshotAt": "2026-08-11T06:05:17.685Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-10T08:13:38.938Z",
       "officialLatestSentAt": "2026-08-10T10:05:58+02:00",
       "officialLatestValidFrom": "2026-08-10T10:04:45+02:00",
-      "discoveredAt": "2026-08-11T05:00:58.773Z",
-      "fetchedAt": "2026-08-11T05:00:58.773Z",
-      "transformedAt": "2026-08-11T05:01:05.548Z",
-      "validatedAt": "2026-08-11T05:01:05.548Z",
-      "publishedAt": "2026-08-11T05:00:58.773Z",
+      "discoveredAt": "2026-08-11T06:05:17.685Z",
+      "fetchedAt": "2026-08-11T06:05:17.685Z",
+      "transformedAt": "2026-08-11T06:05:25.402Z",
+      "validatedAt": "2026-08-11T06:05:25.402Z",
+      "publishedAt": "2026-08-11T06:05:17.685Z",
       "endToEndLagMs": 460938
     },
     "audit": {
@@ -548,6 +548,28 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-11T06:05:17.685Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7716,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 5
+      },
+      {
+        "at": "2026-08-11T05:43:47.228Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7120,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 5
+      },
       {
         "at": "2026-08-11T05:00:58.773Z",
         "status": "not_modified",
@@ -1053,57 +1075,35 @@
         "activeCount": 5,
         "scheduledCount": 0,
         "publishableCount": 7
-      },
-      {
-        "at": "2026-08-10T11:02:02.162Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6424,
-        "error": null,
-        "activeCount": 5,
-        "scheduledCount": 0,
-        "publishableCount": 7
-      },
-      {
-        "at": "2026-08-10T10:13:02.674Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6450,
-        "error": null,
-        "activeCount": 5,
-        "scheduledCount": 0,
-        "publishableCount": 7
       }
     ]
   },
   "ndicDatexV1": {
     "mode": "active",
-    "lastRunAt": "2026-08-11T05:20:46.058Z",
-    "lastSuccessAt": "2026-08-11T05:20:46.058Z",
-    "lastChangedAt": "2026-08-11T05:20:46.058Z",
+    "lastRunAt": "2026-08-11T06:13:04.886Z",
+    "lastSuccessAt": "2026-08-11T06:13:04.886Z",
+    "lastChangedAt": "2026-08-11T06:13:04.886Z",
     "status": "healthy",
     "httpStatus": 200,
     "notModified": false,
     "stats": {
-      "new": 100,
-      "updated": 55,
-      "unchanged": 3449,
-      "ended": 20,
+      "new": 95,
+      "updated": 116,
+      "unchanged": 3466,
+      "ended": 22,
       "skippedOlder": 0,
       "softMissing": 6
     },
-    "quarantineCount": 19,
+    "quarantineCount": 16,
     "rejectedCount": 0,
-    "activeCount": 3610,
+    "activeCount": 3683,
     "tmc": {
       "active": true,
       "version": "11",
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-11T05:20:50.434Z",
+      "activatedAt": "2026-08-11T06:13:09.229Z",
       "contentHash": "63ca4e0bd5c1"
     },
     "parserVersion": "ndic-datex-v1.0.0",
@@ -1111,10 +1111,10 @@
       "publish": true,
       "reason": "ok",
       "stats": {
-        "new": 100,
-        "updated": 55,
-        "unchanged": 3449,
-        "ended": 20,
+        "new": 95,
+        "updated": 116,
+        "unchanged": 3466,
+        "ended": 22,
         "skippedOlder": 0,
         "softMissing": 6
       },
