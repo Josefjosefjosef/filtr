@@ -14,7 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertNdicCzechEgressRunnerOrThrow } from "./ndic-datex-v1/runner-identity.mjs";
-import { runNdicDatexV1Sync } from "./ndic-datex-v1-prod-sync.mjs";
+import { runNdicDatexV1Sync, statePaths } from "./ndic-datex-v1-prod-sync.mjs";
 import { tryAcquireLiveLock, defaultLiveLockPath } from "./ndic-datex-v1/live-lock.mjs";
 import {
   defaultLiveRoot,
@@ -38,7 +38,11 @@ function liveMode(env = process.env) {
 }
 
 function ensureWorkDir(root) {
-  const work = path.join(root, "work", "info_events");
+  // Prefer explicit env (cron-tick sets this before node starts).
+  const work = process.env.IU_INFO_EVENTS_DATA_DIR
+    ? path.resolve(process.env.IU_INFO_EVENTS_DATA_DIR)
+    : path.join(root, "work", "info_events");
+  process.env.IU_INFO_EVENTS_DATA_DIR = work;
   fs.mkdirSync(path.join(work, "ndic_datex_v1"), { recursive: true });
   fs.mkdirSync(path.join(work, "lanes"), { recursive: true });
   // Seed from repo Pages data if empty (baseline for anomaly + prev NDIC items)
@@ -55,7 +59,74 @@ function ensureWorkDir(root) {
       fs.copyFileSync(src, dst);
     }
   }
+  // One-time migration: if live work state lacks Last-Modified but git-clone state has it, copy LM/bodyHash.
+  migrateConditionalStateFromRepoClone(work);
   return work;
+}
+
+function migrateConditionalStateFromRepoClone(work) {
+  try {
+    const liveStatePath = path.join(work, "ndic_datex_v1/sync_state.json");
+    const repoStatePath = path.join(REPO, "projects/data/info_events/ndic_datex_v1/sync_state.json");
+    const live = fs.existsSync(liveStatePath) ? JSON.parse(fs.readFileSync(liveStatePath, "utf8")) : null;
+    const repo = fs.existsSync(repoStatePath) ? JSON.parse(fs.readFileSync(repoStatePath, "utf8")) : null;
+    if (!repo || !repo.sync || !repo.sync.lastModified) return;
+    const repoLmMs = Date.parse(String(repo.sync.lastModified));
+    const liveLm = live && live.sync && live.sync.lastModified;
+    const liveLmMs = liveLm ? Date.parse(String(liveLm)) : 0;
+    const repoNewer =
+      Number.isFinite(repoLmMs) && (!Number.isFinite(liveLmMs) || repoLmMs > liveLmMs || !liveLm);
+    if (!repoNewer) return;
+    const next = live && typeof live === "object" ? live : { sync: {}, lock: { locked: false }, lastRun: null };
+    next.sync = next.sync || {};
+    next.sync.lastModified = repo.sync.lastModified;
+    if (repo.sync.bodyHash) next.sync.bodyHash = repo.sync.bodyHash;
+    if (repo.sync.etag != null) next.sync.etag = repo.sync.etag;
+    fs.mkdirSync(path.dirname(liveStatePath), { recursive: true });
+    const tmp = liveStatePath + ".tmp";
+    fs.writeFileSync(tmp, JSON.stringify(next, null, 2) + "\n", "utf8");
+    fs.renameSync(tmp, liveStatePath);
+  } catch {
+    /* ignore migration errors */
+  }
+}
+
+function classifyHttp200Reason({ ifModifiedSinceSent, requestIms, responseLm }) {
+  if (!ifModifiedSinceSent) return "CONDITIONAL_STATE_MISSING_OR_WRONG";
+  if (responseLm && requestIms && String(responseLm) !== String(requestIms)) {
+    const a = Date.parse(String(responseLm));
+    const b = Date.parse(String(requestIms));
+    if (Number.isFinite(a) && Number.isFinite(b) && a > b) return "SOURCE_CHANGED";
+    if (String(responseLm) !== String(requestIms)) return "SOURCE_CHANGED";
+  }
+  return "SERVER_200_WITH_SAME_OR_MISSING_LM";
+}
+
+function attachConditionalForensics(out, { workDir, obs, httpStatus, syncResult, stateBeforeLm }) {
+  const paths = statePaths(process.env);
+  const cond = (obs && obs.conditional) || {};
+  const responseLm = (obs && obs.DATEX_RESPONSE_LAST_MODIFIED) || readSyncLastModified(workDir);
+  const requestIms = (obs && obs.DATEX_REQUEST_IF_MODIFIED_SINCE) || stateBeforeLm || null;
+  const ifModifiedSinceSent =
+    (cond && cond.DATEX_REQUEST_IF_MODIFIED_SINCE_SENT === "YES") || Boolean(requestIms);
+  out.CONDITIONAL_STATE_FILE = paths.stateFile;
+  out.REQUEST_IF_MODIFIED_SINCE = requestIms;
+  out.RESPONSE_LAST_MODIFIED = responseLm;
+  out.IF_MODIFIED_SINCE_SENT = ifModifiedSinceSent ? "YES" : "NO";
+  out.PERSISTED_LAST_MODIFIED = readSyncLastModified(workDir);
+  if (httpStatus === 200) {
+    out.HTTP_200_REASON = classifyHttp200Reason({
+      ifModifiedSinceSent,
+      requestIms,
+      responseLm,
+    });
+  }
+  if (httpStatus === 304 || syncResult.reason === "not_modified" || syncResult.reason === "hash_unchanged") {
+    out.HTTP_304_PARSE_SKIPPED = "YES";
+    out.HTTP_304_RESOLVER_SKIPPED = "YES";
+    out.HTTP_304_PUBLICATION_SKIPPED = "YES";
+  }
+  return out;
 }
 
 async function main() {
@@ -105,13 +176,16 @@ async function main() {
       process.env.IU_NDIC_TMC_LKG_ROOT ||
       path.join(process.env.HOME || "", ".cache", "infouzel-ndic-tmc-lkg");
 
+    const stateBeforeLm = readSyncLastModified(workDir);
     const syncResult = await runNdicDatexV1Sync();
     const diag = syncResult.diagnostics || {};
     const obs = diag.observability || {};
     const httpStatus = obs.DATEX_HTTP_STATUS != null ? obs.DATEX_HTTP_STATUS : null;
     health.LAST_HTTP_STATUS = httpStatus;
     health.LAST_SUCCESSFUL_SOURCE_CHECK_AT = startedAt;
-    health.CURRENT_SOURCE_LAST_MODIFIED = (diag && readSyncLastModified(workDir)) || health.CURRENT_SOURCE_LAST_MODIFIED;
+    health.CURRENT_SOURCE_LAST_MODIFIED = readSyncLastModified(workDir) || health.CURRENT_SOURCE_LAST_MODIFIED;
+    health.LAST_CONDITIONAL_STATE_WRITE_AT = new Date().toISOString();
+    health.LAST_IF_MODIFIED_SINCE_SENT = obs.DATEX_REQUEST_IF_MODIFIED_SINCE || stateBeforeLm || null;
     if (httpStatus === 304 || syncResult.reason === "not_modified" || syncResult.reason === "hash_unchanged") {
       health.LAST_304_AT = startedAt;
       health.CONSECUTIVE_FAILURES = 0;
@@ -130,6 +204,7 @@ async function main() {
         HEADERS_RECEIVED_AT: obs.DATEX_HEADERS_RECEIVED_AT || null,
         DOWNLOAD_FINISHED_AT: obs.DATEX_DOWNLOAD_FINISHED_AT || null,
       });
+      attachConditionalForensics(out, { workDir, obs, httpStatus, syncResult, stateBeforeLm });
       console.log(JSON.stringify(out));
       return;
     }
@@ -238,6 +313,7 @@ async function main() {
       syncOk: syncResult.ok,
       publishedSync: Boolean(syncResult.published),
     });
+    attachConditionalForensics(out, { workDir, obs, httpStatus, syncResult, stateBeforeLm });
     if (!pub.ok) {
       out.ok = false;
       process.exitCode = 1;

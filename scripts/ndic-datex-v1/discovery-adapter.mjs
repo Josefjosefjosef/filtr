@@ -137,6 +137,8 @@ export function createAuthenticatedPullDiscovery(opts = {}) {
           totalDurationMs: Math.max(0, downloadFinishedMono - requestStartedMono),
           ifNoneMatchSent,
           ifModifiedSinceSent,
+          ifModifiedSinceValue: ifModifiedSinceSent ? String(conditional.lastModified) : null,
+          responseLastModified: headerMap["last-modified"] || headerMap["Last-Modified"] || null,
           bytesRead,
           contentLengthHeader:
             headerMap["content-length"] != null && Number.isFinite(Number(headerMap["content-length"]))

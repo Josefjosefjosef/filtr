@@ -77,28 +77,40 @@ import { countActivePublicationSafetyCounters } from "./ndic-datex-v1/active-pub
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
-/** Optional prep sandbox for deferred shared-write (narrow lock). */
-const DIR = process.env.IU_INFO_EVENTS_DATA_DIR
-  ? path.resolve(process.env.IU_INFO_EVENTS_DATA_DIR)
-  : path.join(REPO, "projects", "data", "info_events");
-const STATE_DIR = path.join(DIR, "ndic_datex_v1");
-const STATE_FILE = path.join(STATE_DIR, "sync_state.json");
-const DIAG_FILE = path.join(STATE_DIR, "diagnostics.json");
-const TMC_META_FILE = path.join(STATE_DIR, "tmc_meta.json");
 // Full TMC points must NEVER be committed / published on Pages (licence).
 // Persistent LKG root (NOT runner.temp). Live DATEX is read-only against this store.
 const TMC_LKG_ROOT = defaultTmcLkgRoot(process.env);
 
-function isShadowIsolated() {
-  return String(process.env.IU_NDIC_SHADOW_ISOLATED || "") === "1";
+function isShadowIsolated(env = process.env) {
+  return String(env.IU_NDIC_SHADOW_ISOLATED || "") === "1";
 }
 
-function statePaths() {
-  if (!isShadowIsolated()) {
-    return { stateFile: STATE_FILE, diagFile: DIAG_FILE, tmcMetaFile: TMC_META_FILE };
+/**
+ * Resolve info-events + conditional state paths at CALL TIME (not module load).
+ * Critical for live-60s: IU_INFO_EVENTS_DATA_DIR is set in main() after imports.
+ * Live cron must persist conditional state under IU_NDIC_LIVE_ROOT/work (not git clone).
+ */
+export function resolveInfoEventsDir(env = process.env) {
+  if (env.IU_INFO_EVENTS_DATA_DIR) return path.resolve(String(env.IU_INFO_EVENTS_DATA_DIR));
+  return path.join(REPO, "projects", "data", "info_events");
+}
+
+export function statePaths(env = process.env) {
+  const dir = resolveInfoEventsDir(env);
+  const stateDir = path.join(dir, "ndic_datex_v1");
+  if (!isShadowIsolated(env)) {
+    return {
+      dir,
+      stateDir,
+      stateFile: path.join(stateDir, "sync_state.json"),
+      diagFile: path.join(stateDir, "diagnostics.json"),
+      tmcMetaFile: path.join(stateDir, "tmc_meta.json"),
+    };
   }
-  const base = process.env.IU_NDIC_SHADOW_WORK_DIR || process.env.RUNNER_TEMP || path.join(REPO, ".cache", "ndic-shadow");
+  const base = env.IU_NDIC_SHADOW_WORK_DIR || env.RUNNER_TEMP || path.join(REPO, ".cache", "ndic-shadow");
   return {
+    dir,
+    stateDir: base,
     stateFile: path.join(base, "sync_state.json"),
     diagFile: path.join(base, "diagnostics.json"),
     tmcMetaFile: path.join(base, "tmc_meta.json"),
@@ -291,7 +303,7 @@ function assertMonitoringMergeSafe(monitoring) {
 }
 
 function loadState(stateFile) {
-  return readJson(stateFile || STATE_FILE, {
+  return readJson(stateFile || statePaths().stateFile, {
     sync: createSyncState("ndic://datex-pull"),
     lock: createLockState(),
     lastRun: null,
@@ -309,7 +321,9 @@ function assertLivePathDoesNotRefreshTmc() {
 export async function runNdicDatexV1Sync(opts = {}) {
   const config = opts.config || getNdicDatexV1Config(process.env);
   const started = new Date().toISOString();
-  const paths = statePaths();
+  const paths = statePaths(process.env);
+  const DIR = paths.dir;
+  const STATE_DIR = paths.stateDir;
 
   // Defense-in-depth: even if a GitHub-hosted workflow injects secrets + checkouts
   // feature code, refuse before Authorization / mobilitydata contact.
@@ -506,6 +520,8 @@ export async function runNdicDatexV1Sync(opts = {}) {
       DATEX_HTTP_STATUS: resp.status,
       DATEX_CONTENT_LENGTH: obsNet.contentLengthHeader != null ? obsNet.contentLengthHeader : condMetrics.DATEX_RESPONSE_CONTENT_LENGTH,
       DATEX_BYTES_READ: condMetrics.DATEX_BYTES_READ,
+      DATEX_REQUEST_IF_MODIFIED_SINCE: obsNet.ifModifiedSinceValue || state.sync.lastModified || null,
+      DATEX_RESPONSE_LAST_MODIFIED: obsNet.responseLastModified || null,
       conditional: condMetrics,
       TMC_LIVE_DOWNLOAD: "NO",
       TMC_LIVE_IMPORT: "NO",
