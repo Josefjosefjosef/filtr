@@ -24,6 +24,7 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-automatic-schedule-meta-fixtures",
   // DATEX conditional observability + persistent TMC LKG (fail-closed on feature refs)
   "iu-ndic-datex-obs-tmc-lkg-fixtures",
+  "iu-ndic-live-60s-fixtures",
   // POINTS semantic-null / importer gates (fail-closed on feature refs)
   "iu-ndic-tmc-points-empty-field-policy-fixtures",
   "iu-ndic-tmc-basic-importer-fixtures",

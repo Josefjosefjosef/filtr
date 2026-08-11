@@ -58,11 +58,29 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+          LIVE_PUBLISH_TOKEN: ${{ secrets.LIVE_TRAFFIC_PUBLISH_TOKEN }}
+          LIVE_TRAFFIC_ENABLED: ${{ vars.NDIC_LIVE_60S_AUTHORITATIVE || 'false' }}
         run: |
           set -euo pipefail
           if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
             echo "ERROR: CLOUDFLARE_API_TOKEN repo secret missing"
             exit 1
+          fi
+          # Ensure R2 bucket exists (idempotent)
+          if npx wrangler r2 bucket list 2>/dev/null | grep -q "iu-ndic-traffic-live"; then
+            echo "R2_BUCKET_EXISTS=iu-ndic-traffic-live"
+          else
+            npx wrangler r2 bucket create iu-ndic-traffic-live
+            echo "R2_BUCKET_CREATED=iu-ndic-traffic-live"
+          fi
+          # Live serve flag stays in wrangler.toml [vars] LIVE_TRAFFIC_ENABLED (default false).
+          # Cutover flips that var via PR; publish token is the Worker secret.
+          echo "LIVE_TRAFFIC_ENABLED_TOML_DEFAULT=false_until_cutover_commit"
+          if [ -n "${LIVE_PUBLISH_TOKEN:-}" ]; then
+            printf '%s' "$LIVE_PUBLISH_TOKEN" | npx wrangler secret put LIVE_PUBLISH_TOKEN
+            echo "LIVE_PUBLISH_TOKEN_SET=YES"
+          else
+            echo "LIVE_PUBLISH_TOKEN_SET=NO"
           fi
           npx wrangler deploy
 

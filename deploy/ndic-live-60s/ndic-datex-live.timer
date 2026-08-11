@@ -1,0 +1,15 @@
+[Unit]
+Description=InfoUzel NDIC DATEX 60s live timer (start-to-start)
+Requires=ndic-datex-live.service
+
+[Timer]
+# Start-to-start: fire at second 00 of every minute regardless of prior duration.
+OnCalendar=*-*-* *:*:00
+AccuracySec=1s
+Persistent=false
+Unit=ndic-datex-live.service
+# If previous oneshot still running, do not queue a backlog of stale ticks.
+RandomizedDelaySec=0
+
+[Install]
+WantedBy=timers.target
