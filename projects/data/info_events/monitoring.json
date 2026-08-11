@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-11T15:42:19.221Z",
-    "lastSuccessAt": "2026-08-11T15:42:22.287Z",
+    "lastRunAt": "2026-08-11T17:44:28.443Z",
+    "lastSuccessAt": "2026-08-11T17:44:31.687Z",
     "lastChangedAt": "2026-08-11T13:46:08.794Z",
     "lastError": null,
     "status": "not_modified",
@@ -481,19 +481,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6385,
+    "runMs": 6581,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-11T15:42:19.221Z",
+    "lastSnapshotAt": "2026-08-11T17:44:28.443Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-11T13:46:05.143Z",
       "officialLatestSentAt": "2026-08-11T14:00:00+02:00",
       "officialLatestValidFrom": "2026-08-11T14:00:00+02:00",
-      "discoveredAt": "2026-08-11T15:42:19.221Z",
-      "fetchedAt": "2026-08-11T15:42:19.221Z",
-      "transformedAt": "2026-08-11T15:42:25.606Z",
-      "validatedAt": "2026-08-11T15:42:25.606Z",
-      "publishedAt": "2026-08-11T15:42:19.221Z",
+      "discoveredAt": "2026-08-11T17:44:28.443Z",
+      "fetchedAt": "2026-08-11T17:44:28.443Z",
+      "transformedAt": "2026-08-11T17:44:35.025Z",
+      "validatedAt": "2026-08-11T17:44:35.025Z",
+      "publishedAt": "2026-08-11T17:44:28.443Z",
       "endToEndLagMs": 6365143
     },
     "audit": {
@@ -548,6 +548,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-11T17:44:28.443Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6581,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 5
+      },
       {
         "at": "2026-08-11T15:42:19.221Z",
         "status": "not_modified",
@@ -1064,39 +1075,28 @@
         "activeCount": 3,
         "scheduledCount": 0,
         "publishableCount": 5
-      },
-      {
-        "at": "2026-08-10T20:04:02.902Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6185,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 5
       }
     ]
   },
   "ndicDatexV1": {
     "mode": "active",
-    "lastRunAt": "2026-08-11T17:28:42.148Z",
-    "lastSuccessAt": "2026-08-11T17:28:42.148Z",
-    "lastChangedAt": "2026-08-11T17:28:42.148Z",
+    "lastRunAt": "2026-08-11T18:09:48.732Z",
+    "lastSuccessAt": "2026-08-11T18:09:48.732Z",
+    "lastChangedAt": "2026-08-11T18:09:48.732Z",
     "status": "healthy",
     "httpStatus": 200,
     "notModified": false,
     "stats": {
-      "new": 32,
-      "updated": 33,
-      "unchanged": 3534,
-      "ended": 85,
+      "new": 11,
+      "updated": 28,
+      "unchanged": 3551,
+      "ended": 20,
       "skippedOlder": 0,
       "softMissing": 2
     },
-    "quarantineCount": 4,
+    "quarantineCount": 5,
     "rejectedCount": 0,
-    "activeCount": 3601,
+    "activeCount": 3592,
     "tmc": {
       "active": true,
       "version": "11",
@@ -1111,10 +1111,10 @@
       "publish": true,
       "reason": "ok",
       "stats": {
-        "new": 32,
-        "updated": 33,
-        "unchanged": 3534,
-        "ended": 85,
+        "new": 11,
+        "updated": 28,
+        "unchanged": 3551,
+        "ended": 20,
         "skippedOlder": 0,
         "softMissing": 2
       },
