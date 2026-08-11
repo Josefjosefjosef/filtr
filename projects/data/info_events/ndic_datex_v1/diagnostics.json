@@ -1,6 +1,6 @@
 {
-  "runId": "28324a768fb97b27",
-  "started": "2026-08-11T14:00:52.159Z",
+  "runId": "94cbbf2bd8a64d45",
+  "started": "2026-08-11T15:08:41.138Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3689,
+    "situations": 3660,
     "rejected": 0,
-    "quarantine": 21,
+    "quarantine": 16,
     "stats": {
-      "new": 130,
-      "updated": 76,
-      "unchanged": 3462,
-      "ended": 200,
+      "new": 44,
+      "updated": 40,
+      "unchanged": 3560,
+      "ended": 67,
       "skippedOlder": 0,
-      "softMissing": 9
+      "softMissing": 10
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 130,
-      "updated": 76,
-      "unchanged": 3462,
-      "ended": 200,
+      "new": 44,
+      "updated": 40,
+      "unchanged": 3560,
+      "ended": 67,
       "skippedOlder": 0,
-      "softMissing": 9
+      "softMissing": 10
     },
     "alarms": []
   },
@@ -70,14 +70,14 @@
   },
   "observability": {
     "schema": "iu-ndic-phase-observability-v1",
-    "DATEX_REQUEST_STARTED_AT": "2026-08-11T14:00:52.490Z",
-    "DATEX_HEADERS_RECEIVED_AT": "2026-08-11T14:00:52.791Z",
-    "DATEX_DOWNLOAD_FINISHED_AT": "2026-08-11T14:00:53.654Z",
-    "DATEX_REQUEST_DURATION_MS": 302,
-    "DATEX_DOWNLOAD_DURATION_MS": 879,
+    "DATEX_REQUEST_STARTED_AT": "2026-08-11T15:08:41.454Z",
+    "DATEX_HEADERS_RECEIVED_AT": "2026-08-11T15:08:41.761Z",
+    "DATEX_DOWNLOAD_FINISHED_AT": "2026-08-11T15:08:42.514Z",
+    "DATEX_REQUEST_DURATION_MS": 307,
+    "DATEX_DOWNLOAD_DURATION_MS": 754,
     "DATEX_HTTP_STATUS": 200,
-    "DATEX_CONTENT_LENGTH": 2653057,
-    "DATEX_BYTES_READ": 61824093,
+    "DATEX_CONTENT_LENGTH": 2599453,
+    "DATEX_BYTES_READ": 60471178,
     "conditional": {
       "DATEX_REQUEST_IF_MODIFIED_SINCE_SENT": "YES",
       "DATEX_REQUEST_IF_NONE_MATCH_SENT": "NO",
@@ -85,47 +85,47 @@
       "DATEX_RESPONSE_LAST_MODIFIED_PRESENT": "YES",
       "DATEX_RESPONSE_ETAG_PRESENT": "NO",
       "DATEX_RESPONSE_ETAG_HASH": null,
-      "DATEX_RESPONSE_CONTENT_LENGTH": 2653057,
+      "DATEX_RESPONSE_CONTENT_LENGTH": 2599453,
       "DATEX_NOT_MODIFIED": "NO",
-      "DATEX_BYTES_READ": 61824093
+      "DATEX_BYTES_READ": 60471178
     },
     "TMC_LIVE_DOWNLOAD": "NO",
     "TMC_LIVE_IMPORT": "NO",
     "TMC_STORE_BYTES": 32938816,
     "phases": {
       "DATEX_REQUEST": {
-        "startedAt": "2026-08-11T14:00:52.489Z",
-        "finishedAt": "2026-08-11T14:00:53.725Z",
-        "durationMs": 1236
+        "startedAt": "2026-08-11T15:08:41.454Z",
+        "finishedAt": "2026-08-11T15:08:42.565Z",
+        "durationMs": 1111
       },
       "DATEX_DOWNLOAD": {
-        "startedAt": "2026-08-11T14:00:53.725Z",
-        "finishedAt": "2026-08-11T14:00:53.725Z",
+        "startedAt": "2026-08-11T15:08:42.565Z",
+        "finishedAt": "2026-08-11T15:08:42.565Z",
         "durationMs": 0
       },
       "DATEX_PARSE": {
-        "startedAt": "2026-08-11T14:00:54.438Z",
-        "finishedAt": "2026-08-11T14:01:09.025Z",
-        "durationMs": 14587
+        "startedAt": "2026-08-11T15:08:43.263Z",
+        "finishedAt": "2026-08-11T15:08:57.824Z",
+        "durationMs": 14561
       },
       "RESOLVER": {
-        "startedAt": "2026-08-11T14:00:54.438Z",
-        "finishedAt": "2026-08-11T14:01:09.026Z",
-        "durationMs": 14587
+        "startedAt": "2026-08-11T15:08:43.264Z",
+        "finishedAt": "2026-08-11T15:08:57.824Z",
+        "durationMs": 14561
       },
       "CANDIDATE": {
-        "startedAt": "2026-08-11T14:00:54.438Z",
-        "finishedAt": "2026-08-11T14:01:09.026Z",
-        "durationMs": 14587
+        "startedAt": "2026-08-11T15:08:43.264Z",
+        "finishedAt": "2026-08-11T15:08:57.824Z",
+        "durationMs": 14561
       }
     },
     "DATEX_ETAG_PERSISTED": "NO",
     "DATEX_LAST_MODIFIED_PERSISTED": "YES",
-    "DATEX_PARSE_STARTED_AT": "2026-08-11T14:00:54.438Z",
-    "DATEX_PARSE_FINISHED_AT": "2026-08-11T14:01:09.025Z",
-    "DATEX_PARSE_DURATION_MS": 14587,
-    "RESOLVER_DURATION_MS": 14587,
-    "CANDIDATE_READY_AT": "2026-08-11T14:01:09.026Z"
+    "DATEX_PARSE_STARTED_AT": "2026-08-11T15:08:43.263Z",
+    "DATEX_PARSE_FINISHED_AT": "2026-08-11T15:08:57.824Z",
+    "DATEX_PARSE_DURATION_MS": 14561,
+    "RESOLVER_DURATION_MS": 14561,
+    "CANDIDATE_READY_AT": "2026-08-11T15:08:57.824Z"
   },
   "datexTmcCompatibility": {
     "ok": true,
@@ -149,7 +149,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 61824093,
+    "datexBytesRead": 60471178,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -169,18 +169,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3677,
-    "bytes": 8076568,
+    "cardCount": 3654,
+    "bytes": 8031865,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 8075988,
+      "cards": 8031285,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7354,
-      "FULL_SNAPSHOT": 8076568,
+      "cardsProvenance": 7308,
+      "FULL_SNAPSHOT": 8031865,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
