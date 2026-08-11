@@ -15,8 +15,7 @@ const { chromium } = require("playwright");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const PORT = 8765 + Math.floor(Math.random() * 200);
-const BASE = "http://127.0.0.1:" + PORT + "/projects/";
+/* Ephemeral port (0): avoids EADDRINUSE when prior smoke guards leave fixed ports bound. */
 const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
 
 const fails = [];
@@ -34,7 +33,7 @@ function contentType(p) {
 }
 
 function startServer() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       try {
         let urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
@@ -53,7 +52,12 @@ function startServer() {
         res.end("err");
       }
     });
-    server.listen(PORT, "127.0.0.1", () => resolve(server));
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const addr = server.address();
+      const port = typeof addr === "object" && addr ? addr.port : 0;
+      resolve({ server, port });
+    });
   });
 }
 
@@ -91,8 +95,9 @@ function staticGate() {
 
 async function run() {
   staticGate();
-  const server = await startServer();
-  await waitForPort("127.0.0.1", PORT, 10000);
+  const { server, port } = await startServer();
+  const base = "http://127.0.0.1:" + port + "/projects/";
+  await waitForPort("127.0.0.1", port, 10000);
   const browser = await chromium.launch({ headless: true });
   const viewports = [
     { name: "mobile", width: 390, height: 844 },
@@ -110,7 +115,7 @@ async function run() {
         viewport: { width: vp.width, height: vp.height },
       });
       const page = await bootstrapGuardPage(context);
-      await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
+      await page.goto(base, { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.evaluate(() => {
         try {
           window.__IU_INFO_SYSTEM_CUTOVER__ = true;
