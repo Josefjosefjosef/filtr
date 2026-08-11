@@ -294,6 +294,25 @@ jobs:
           set -euo pipefail
           node scripts/ndic-verify-preflight-attestation.mjs
 
+      # Persistent TMC LKG lives on the Czech VPS home cache — never under runner.temp.
+      # Live DATEX sync is read-only against this store (no TMC download/import).
+      - name: Ensure persistent TMC LKG (bootstrap only if missing)
+        env:
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          export IU_NDIC_TMC_LKG_ROOT="${HOME}/.cache/infouzel-ndic-tmc-lkg"
+          mkdir -p "$IU_NDIC_TMC_LKG_ROOT"
+          echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT" >> "$GITHUB_ENV"
+          node scripts/ndic-tmc-maintenance-run.mjs --mode bootstrap-if-missing | tee "$RUNNER_TEMP/ndic-tmc-bootstrap.json"
+          echo "TMC_LIVE_DOWNLOAD_IN_DATEX_PATH=NO"
+          echo "TMC_BOOTSTRAP_IF_MISSING=YES"
+
       - name: Sync NDIC DATEX v1 (prep sandbox; no shared writer lock)
         id: sync
         env:
@@ -301,17 +320,15 @@ jobs:
           IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
           IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
           IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
-          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
-          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
-          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
           IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID: ${{ secrets.IU_NDIC_MOBILITYDATA_SUBSCRIBER_ID }}
-          IU_NDIC_TMC_STORE_PATH: ${{ runner.temp }}/ndic-tmc-store.json
+          # TMC pull secrets intentionally omitted from live DATEX sync env.
           IU_NDIC_SHADOW_ISOLATED: ${{ env.NDIC_RESOLVED_MODE == 'shadow' && '1' || '0' }}
           IU_NDIC_FORENSIC_DIR: ${{ runner.temp }}/ndic-shadow-forensic
           IU_NDIC_FORENSIC_HEAD_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           umask 077
+          export IU_NDIC_TMC_LKG_ROOT="${IU_NDIC_TMC_LKG_ROOT:-$HOME/.cache/infouzel-ndic-tmc-lkg}"
           if [ "${NDIC_RESOLVED_MODE}" = "active" ]; then
             CAND="${RUNNER_TEMP}/ndic-ie-candidate"
             rm -rf "$CAND"
@@ -323,6 +340,11 @@ jobs:
           node scripts/ndic-datex-v1-prod-sync.mjs | tee "$RUNNER_TEMP/ndic-sync-out.json"
           code=${PIPESTATUS[0]}
           set -e
+          # Gate: live path must not have downloaded TMC
+          if grep -q '"liveDownload": true' "$RUNNER_TEMP/ndic-sync-out.json"; then
+            echo "REFUSING_LIVE_TMC_DOWNLOAD"
+            exit 1
+          fi
           if [ "$code" -eq 0 ]; then
             echo "sync_ok=true" >> "$GITHUB_OUTPUT"
           else

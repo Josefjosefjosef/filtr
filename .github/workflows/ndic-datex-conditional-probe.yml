@@ -1,0 +1,73 @@
+name: NDIC DATEX conditional probe
+
+# Authorized bounded conditional DATEX probe on Czech VPS only.
+# Does NOT change production interval. Does NOT publish.
+
+on:
+  workflow_dispatch:
+    inputs:
+      wait_ms:
+        description: "Wait between request A and B (ms, min 60000)"
+        required: false
+        default: "60000"
+      max_attempts:
+        description: "Max conditional B attempts (1-3)"
+        required: false
+        default: "2"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: ndic-datex-conditional-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'Josefjosefjosef/filtr'
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 20
+    steps:
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then echo "REFUSING_GITHUB_HOSTED"; exit 1; fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then echo "REFUSING_UNEXPECTED_RUNNER_NAME"; exit 1; fi
+          echo "RUNNER_PREFLIGHT_OK"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Conditional DATEX probe
+        env:
+          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+          IU_NDIC_CONDITIONAL_PROBE_WAIT_MS: ${{ github.event.inputs.wait_ms }}
+          IU_NDIC_CONDITIONAL_PROBE_MAX_ATTEMPTS: ${{ github.event.inputs.max_attempts }}
+        run: |
+          set -euo pipefail
+          umask 077
+          node scripts/ndic-datex-conditional-probe.mjs | tee "$RUNNER_TEMP/ndic-conditional-probe.json"
+
+      - name: Upload redacted probe result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ndic-conditional-probe-${{ github.run_id }}
+          path: ${{ runner.temp }}/ndic-conditional-probe.json
+          if-no-files-found: warn
+          retention-days: 7

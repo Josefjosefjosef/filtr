@@ -1,0 +1,76 @@
+name: NDIC TMC maintenance (LKG)
+
+# Sparse TMC version check / bootstrap maintenance — NOT part of DATEX live hot path.
+# Default: quarterly. Manual dispatch for bootstrap/check/rollback.
+
+on:
+  schedule:
+    # 03:17 UTC on the 1st day of Jan/Apr/Jul/Oct
+    - cron: "17 3 1 1,4,7,10 *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "bootstrap-if-missing | check | bootstrap | rollback"
+        required: true
+        type: choice
+        options:
+          - bootstrap-if-missing
+          - check
+          - bootstrap
+          - rollback
+        default: check
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: ndic-tmc-maintenance
+  cancel-in-progress: false
+
+jobs:
+  tmc-maintenance:
+    if: github.repository == 'Josefjosefjosef/filtr'
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - ndic-cz-egress
+    timeout-minutes: 30
+    steps:
+      - name: Preflight runner identity (fail-closed)
+        run: |
+          set -euo pipefail
+          EXPECTED_NAME="infouzel-ndic-cz-vps4204"
+          if [ "${RUNNER_ENVIRONMENT:-}" != "self-hosted" ]; then echo "REFUSING_GITHUB_HOSTED"; exit 1; fi
+          if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then echo "REFUSING_UNEXPECTED_RUNNER_NAME"; exit 1; fi
+          echo "RUNNER_PREFLIGHT_OK"
+          echo "TMC_VERSION_CHECK_NOT_IN_1MIN_PATH=YES"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          fetch-tags: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Run TMC maintenance
+        env:
+          IU_NDIC_TMC_PULL_URL: ${{ secrets.IU_NDIC_TMC_PULL_URL }}
+          IU_NDIC_TMC_PULL_USER: ${{ secrets.IU_NDIC_TMC_PULL_USER }}
+          IU_NDIC_TMC_PULL_PASS: ${{ secrets.IU_NDIC_TMC_PULL_PASS }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          export IU_NDIC_TMC_LKG_ROOT="${HOME}/.cache/infouzel-ndic-tmc-lkg"
+          mkdir -p "$IU_NDIC_TMC_LKG_ROOT"
+          MODE="${{ github.event_name == 'schedule' && 'check' || github.event.inputs.mode }}"
+          echo "TMC_MAINTENANCE_MODE=$MODE"
+          echo "TMC_MAINTENANCE_FREQUENCY=quarterly"
+          node scripts/ndic-tmc-maintenance-run.mjs --mode "$MODE" | tee "$RUNNER_TEMP/ndic-tmc-maintenance.json"
+          df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_BYTES="$1}'
