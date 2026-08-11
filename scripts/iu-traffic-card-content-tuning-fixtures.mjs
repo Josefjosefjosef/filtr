@@ -156,6 +156,8 @@ function sampleCard(extra = {}) {
   ok("vm_event_label", vm.eventTypeLabel === "Nehoda");
   ok("vm_no_delay", !(vm.quickBlocks || []).some((b) => b.key === "delay"));
   ok("vm_muni_block", (vm.quickBlocks || []).some((b) => b.key === "municipality"));
+  ok("vm_locality_compact", vm.localityLine === "Mirošovice · okres Praha-východ");
+  ok("vm_no_active_traffic_badge", !(vm.badge && /AKTIVNÍ DOPRAVA/i.test(vm.badge.text || "")));
   ok("vm_follow_id", vm.followId === PEID);
 
   const html =
@@ -177,7 +179,12 @@ function sampleCard(extra = {}) {
   );
   const vm = buildTrafficCardViewModel(r.item.trafficV1);
   ok("delay_absent_no_block", !(vm.quickBlocks || []).some((b) => b.key === "delay"));
-  ok("restriction_block", (vm.quickBlocks || []).some((b) => b.key === "restriction"));
+  // Restriction must not re-clone the same lead text into a second "Omezení" box.
+  ok(
+    "restriction_no_duplicate_lead",
+    !(vm.quickBlocks || []).some((b) => b.key === "restriction" && b.body === vm.leadText)
+  );
+  ok("lead_uses_short_comment", vm.leadText === "Omezení jednoho jízdního pruhu.");
 }
 
 {
@@ -213,6 +220,80 @@ ok("badge_map", ROAD_BADGE_CLASS.MOTORWAY === "motorway" && ROAD_BADGE_CLASS.CLA
 {
   const r = trafficProjectionToFeedItem(sampleCard({ severity: "high" }));
   ok("sev_importance", r.item.importance === 5);
+}
+
+{
+  const r = trafficProjectionToFeedItem(
+    sampleCard({
+      feed: { feedHeadline: "x", feedChangeType: "" },
+      lifecycleStatus: "ACTIVE",
+      changeStatus: "UNCHANGED",
+    })
+  );
+  const vm = buildTrafficCardViewModel(r.item.trafficV1);
+  ok("no_active_doprava_badge", vm.badge == null);
+  ok(
+    "no_active_doprava_text",
+    !JSON.stringify(vm.badge || {}).includes("AKTIVNÍ DOPRAVA")
+  );
+}
+
+{
+  const short = trafficProjectionToFeedItem(
+    sampleCard({
+      impact: "Krátký popis události.",
+      impactFull: null,
+      municipality: "Solnice",
+      district: null,
+      direction: null,
+    })
+  );
+  const vm = buildTrafficCardViewModel(short.item.trafficV1);
+  ok("short_no_more", vm.showMore === false);
+  ok("short_locality_no_district", vm.localityLine === "Solnice");
+  ok("short_no_direction_row", !(vm.detailRows || []).some((d) => d.key === "direction"));
+}
+
+{
+  const longBody =
+    "silnice III/43327, v katastru obce Kojetín, okr. Přerov, uzavřeno, stavební práce, " +
+    "Od 01.10.2025 7:00 Do 31.12.2026 23:59, úplná uzavírka krajské silnice III/43327 Kojetín " +
+    "v rámci stavby Modernizace trati. Objížďka přes silnici I/47. Vydal: Magistrát města Přerova. " +
+    "Další upřesnění trasy a omezení provozu pro nákladní dopravu je uvedeno v oficiálním textu ŘSD.";
+  ok("long_body_gt_280", longBody.length > 280);
+  const long = trafficProjectionToFeedItem(
+    sampleCard({
+      impact: longBody.slice(0, 160),
+      impactFull: longBody,
+      road: "III/43327",
+      roadClass: "CLASS_III",
+      municipality: "Kojetín",
+      district: "Přerov",
+      eventType: "uzavirka",
+      category: "uzavirka",
+    })
+  );
+  const vm = buildTrafficCardViewModel(long.item.trafficV1);
+  ok("long_show_more", vm.showMore === true);
+  ok("long_full_preserved", vm.impactFull === longBody && vm.impactFull.length === longBody.length);
+  ok("long_full_ne_short", vm.impactFull !== vm.leadText);
+  ok("long_no_unknown_dir", JSON.stringify(vm.detailRows || []).indexOf("UNKNOWN") < 0);
+  ok("road_badge_class_iii", vm.roadBadge.roadClass === "CLASS_III");
+}
+
+{
+  const unknownRoad = trafficProjectionToFeedItem(
+    sampleCard({
+      road: null,
+      roadClass: "UNKNOWN",
+      roadClassLabel: "Komunikace",
+      municipality: null,
+      district: null,
+    })
+  );
+  const vm = buildTrafficCardViewModel(unknownRoad.item.trafficV1);
+  ok("unknown_road_neutral", !vm.roadBadge.road);
+  ok("missing_muni_no_empty_locality_row", !(vm.detailRows || []).some((d) => d.key === "locality" && !d.value));
 }
 
 const success = results.filter((r) => r.pass).length;
