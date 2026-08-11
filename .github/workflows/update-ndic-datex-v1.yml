@@ -28,9 +28,9 @@ on:
   schedule:
     # Conservative staggered 15-minute cadence. No authoritative NDIC minimum
     # poll interval is documented, so stay well above any plausible rate limit.
-    # schedule-reregister: 2026-08-10T23:15Z — after PR #9602 summaryFull merge-backfill window
-    # (temporary workflow disable/enable). Comment-only rebind (do NOT disable/enable).
-    # Prior: 2026-08-10T19:40Z after #9595; 2026-08-10T17:20Z after #9567.
+    # schedule-reregister: 2026-08-11T14:00Z — after PR #9656 merge (persistent TMC LKG path).
+    # Comment-only rebind (do NOT disable/enable). Prior: 2026-08-10T23:15Z after #9602;
+    # 2026-08-10T19:40Z after #9595; 2026-08-10T17:20Z after #9567.
     - cron: "8,23,38,53 * * * *"
   workflow_dispatch:
     inputs:
