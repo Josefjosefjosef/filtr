@@ -47,8 +47,29 @@ cp "$ROOT/deploy/ndic-live-60s/ndic-datex-live.timer" "$UNIT_DIR/ndic-datex-live
 
 install_cron_fallback() {
   echo "TIMER_BACKEND=cron"
+  local wrapper_src="$LIVE_REPO/deploy/ndic-live-60s/cron-tick.sh"
+  if [ ! -f "$wrapper_src" ]; then
+    wrapper_src="$ROOT/deploy/ndic-live-60s/cron-tick.sh"
+  fi
+  local node_bin
+  node_bin="$(command -v node || true)"
+  if [ -z "$node_bin" ] || [ ! -x "$node_bin" ]; then
+    echo "NODE_BIN_MISSING_FOR_CRON"
+    exit 1
+  fi
+  echo "NODE_BIN=$node_bin"
+  local stable="$HOME/infouzel-ndic-live/cron-tick.sh"
+  mkdir -p "$(dirname "$stable")"
+  sed "s|__IU_NODE_BIN__|$node_bin|g" "$wrapper_src" >"$stable"
+  chmod +x "$stable"
+  # Verify node binary is durable and executable outside the install shell.
+  if ! "$node_bin" -e "process.stdout.write('NODE_OK')"; then
+    echo "CRON_NODE_SMOKE=FAIL"
+    exit 1
+  fi
+  echo "CRON_NODE_SMOKE=PASS"
   local line
-  line="* * * * * . $ENV_FILE; cd $LIVE_REPO && /usr/bin/flock -n $HOME/.cache/infouzel-ndic-live/cron.lock /usr/bin/node scripts/ndic-datex-v1-live-60s-run.mjs >>$HOME/.cache/infouzel-ndic-live/cron.log 2>&1 $CRON_MARKER"
+  line="* * * * * /usr/bin/flock -n $HOME/.cache/infouzel-ndic-live/cron.lock $stable >>$HOME/.cache/infouzel-ndic-live/cron.log 2>&1 $CRON_MARKER"
   local tmp
   tmp="$(mktemp)"
   crontab -l 2>/dev/null | grep -v "$CRON_MARKER" >"$tmp" || true
@@ -56,8 +77,9 @@ install_cron_fallback() {
   crontab "$tmp"
   rm -f "$tmp"
   echo "CRON_INSTALLED=YES"
+  echo "CRON_WRAPPER=$stable"
   echo "UNITS_INSTALLED=CRON_FALLBACK"
-  echo "NOTE=systemd --user unavailable; cron * * * * * + flock (start-of-minute approx)"
+  echo "NOTE=systemd --user unavailable; cron * * * * * + flock (approx start-of-minute)"
 }
 
 ensure_user_systemd_ok() {

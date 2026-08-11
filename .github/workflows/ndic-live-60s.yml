@@ -92,12 +92,22 @@ jobs:
           if [ "$ACTION" = "install-units" ]; then
             ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             mkdir -p "$(dirname "$ENV_FILE")"
+            PREV_MODE="shadow"
+            if [ -f "$ENV_FILE" ]; then
+              PREV_MODE=$(grep -E '^IU_NDIC_LIVE_MODE=' "$ENV_FILE" | head -n1 | cut -d= -f2- || echo shadow)
+            fi
+            if [ -z "$PREV_MODE" ]; then PREV_MODE=shadow; fi
             {
-              echo "IU_NDIC_LIVE_MODE=shadow"
+              echo "IU_NDIC_LIVE_MODE=$PREV_MODE"
               echo "IU_NDIC_DATEX_V1_MODE=active"
               echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT"
               echo "IU_NDIC_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
               echo "IU_NDIC_LIVE_PUBLISH_URL=$IU_NDIC_LIVE_PUBLISH_URL"
+              # Cron/systemd have no GHA runner env — pin Czech VPS identity for fail-closed assert.
+              echo "RUNNER_ENVIRONMENT=self-hosted"
+              echo "RUNNER_NAME=infouzel-ndic-cz-vps4204"
+              echo "RUNNER_OS=Linux"
+              echo "RUNNER_ARCH=X64"
             } > "$ENV_FILE"
             chmod 600 "$ENV_FILE"
             if [ -n "${IU_NDIC_PULL_URL:-}" ]; then
@@ -112,6 +122,7 @@ jobs:
             fi
             bash deploy/ndic-live-60s/install.sh
             echo "INSTALL_PASS=YES"
+            echo "PRESERVED_LIVE_MODE=$PREV_MODE"
             exit 0
           fi
 
@@ -122,6 +133,13 @@ jobs:
             else
               echo "SYSTEMD_USER_STATUS=unavailable"
               crontab -l 2>/dev/null | grep -F 'iu-ndic-live-60s' || echo "CRON_LINE=missing"
+              if [ -f "$LIVE_ROOT/cron.log" ]; then
+                echo "CRON_LOG_TAIL<<EOF"
+                tail -n 40 "$LIVE_ROOT/cron.log" || true
+                echo "EOF"
+              else
+                echo "CRON_LOG=missing"
+              fi
             fi
             if [ -f "$LIVE_ROOT/health.json" ]; then
               echo "HEALTH_JSON<<EOF"
