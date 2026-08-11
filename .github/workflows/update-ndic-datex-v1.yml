@@ -23,6 +23,12 @@ name: Update NDIC DATEX v1
 # - Critical RMW/commit on the same Czech self-hosted runner UNDER info-events-data-writers
 #   with live re-read (NO ubuntu-latest / GitHub-hosted shared write).
 # - Data PR is immediate after commit (no Pages/required-check waits inside the lock).
+#
+# LIVE 60s AUTHORITATIVE PATH (Phase 3):
+# - When repository variable NDIC_LIVE_60S_AUTHORITATIVE == 'true', the VPS systemd
+#   60s writer is the SINGLE production writer for traffic_offline_snapshot (R2 via Worker).
+# - This GitHub workflow remains BACKUP_OR_RECONCILIATION only (git/Pages audit trail).
+# - It must NEVER write the R2 live store. LIVE_AUTHORITATIVE_WRITE=NO for this workflow.
 
 on:
   schedule:

@@ -1,0 +1,27 @@
+[Unit]
+Description=InfoUzel NDIC DATEX 60s live tick (oneshot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=github-runner
+Group=github-runner
+WorkingDirectory=/home/github-runner/infouzel-ndic-live/repo
+EnvironmentFile=-/etc/infouzel/ndic-live-60s.env
+# Fail-closed defaults if env file missing keys
+Environment=IU_NDIC_LIVE_MODE=shadow
+Environment=IU_NDIC_DATEX_V1_MODE=active
+Environment=IU_NDIC_TMC_LKG_ROOT=/home/github-runner/.cache/infouzel-ndic-tmc-lkg
+Environment=IU_NDIC_LIVE_ROOT=/home/github-runner/.cache/infouzel-ndic-live
+ExecStart=/usr/bin/node scripts/ndic-datex-v1-live-60s-run.mjs
+Nice=5
+# Bound runtime so a hung tick cannot block forever
+TimeoutStartSec=240
+# Journal retention handled by journald rate limits / SystemMaxUse
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ndic-datex-live
+
+[Install]
+WantedBy=multi-user.target

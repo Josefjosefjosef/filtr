@@ -27,6 +27,7 @@ export const APPROVED_NDIC_NETWORK_WORKFLOWS = Object.freeze({
   "update-ndic-datex-v1.yml": "update",
   "ndic-datex-conditional-probe.yml": "conditional_probe",
   "ndic-tmc-maintenance.yml": "tmc_maintenance",
+  "ndic-live-60s.yml": "live_60s",
 });
 
 /** Workflows allowed for TMC format inspection (self-hosted CZ; no importer/publish). */

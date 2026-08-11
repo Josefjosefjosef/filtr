@@ -1,6 +1,5 @@
 # Permanent redirects for legacy /projects/* public HTML/PWA paths → root.
-# Does NOT redirect /projects/data/* or /projects/version.json (stable data contract).
-# Deploy after Pages publishes /icons and /manifest.json.
+# Live NDIC traffic snapshot overlay via R2 when LIVE_TRAFFIC_ENABLED=true.
 name = "infouzel-site-redirects"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
@@ -14,6 +13,13 @@ zone_name = "infouzel.cz"
 [[routes]]
 pattern = "www.infouzel.cz/projects*"
 zone_name = "infouzel.cz"
+
+[vars]
+LIVE_TRAFFIC_ENABLED = "false"
+
+[[r2_buckets]]
+binding = "TRAFFIC_LIVE"
+bucket_name = "iu-ndic-traffic-live"
 
 [observability]
 enabled = true
