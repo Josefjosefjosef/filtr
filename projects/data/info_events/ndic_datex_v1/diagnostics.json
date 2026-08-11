@@ -1,6 +1,6 @@
 {
-  "runId": "821fab089f0a7b0c",
-  "started": "2026-08-10T23:56:23.471Z",
+  "runId": "d14b86d66e9eb3cc",
+  "started": "2026-08-11T02:24:32.087Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3512,
+    "situations": 3514,
     "rejected": 0,
-    "quarantine": 1,
+    "quarantine": 4,
     "stats": {
-      "new": 21,
-      "updated": 3490,
-      "unchanged": 0,
-      "ended": 60,
+      "new": 8,
+      "updated": 24,
+      "unchanged": 3478,
+      "ended": 6,
       "skippedOlder": 0,
-      "softMissing": 1
+      "softMissing": 4
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 21,
-      "updated": 3490,
-      "unchanged": 0,
-      "ended": 60,
+      "new": 8,
+      "updated": 24,
+      "unchanged": 3478,
+      "ended": 6,
       "skippedOlder": 0,
-      "softMissing": 1
+      "softMissing": 4
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-10T23:56:27.262Z",
+      "activatedAt": "2026-08-11T02:24:35.749Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 58689803,
+    "datexBytesRead": 58593886,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3512,
-    "bytes": 7761309,
+    "cardCount": 3514,
+    "bytes": 7764487,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 7760729,
+      "cards": 7763907,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7024,
-      "FULL_SNAPSHOT": 7761309,
+      "cardsProvenance": 7028,
+      "FULL_SNAPSHOT": 7764487,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
