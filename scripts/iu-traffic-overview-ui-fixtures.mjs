@@ -184,7 +184,7 @@ const css = fs.readFileSync(path.join(ROOT, "assets", "iu-prehled-dne-v1.css"), 
 const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.js"), "utf8");
 ok("ui_no_traffic_prefs", !/data-iu-traffic-prefs/.test(ui) && !/data-iu-pd-sec=\"traffic-rsd\"/.test(ui));
 ok("ui_no_traffic_spatial_act", !/traffic-spatial|traffic-temporal|traffic-type/.test(ui));
-ok("ui_shared_filterEvents", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(pipelineItems/.test(ui));
+ok("ui_shared_filterEvents", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(items/.test(ui) && /filterOfflineTrafficCandidatesForOverview/.test(ui) && /mergeChmiAndTrafficTimeline/.test(ui));
 ok("ui_no_separate_home", !/data-iu-traffic-home/.test(ui));
 ok("css_no_prefs_panel", !/\.iuPdTrafficPrefs\b/.test(css));
 ok("core_no_parallel_prefs", !/trafficSpatialMode:\s*\"WHOLE_CZ\"/.test(core));

@@ -62,7 +62,7 @@ const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.j
 
 ok("mut_ui_no_parallel_panel", !/iuPdTrafficPrefs|data-iu-traffic-prefs|traffic-rsd/.test(ui));
 ok("mut_ui_no_parallel_acts", !/data-draft-act=\"traffic-/.test(ui));
-ok("mut_ui_shared_pipeline", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(pipelineItems/.test(ui));
+ok("mut_ui_shared_pipeline", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(items/.test(ui) && /filterOfflineTrafficCandidatesForOverview/.test(ui));
 ok("mut_ui_fetches_snapshot", /fetchHostedTrafficOfflineSnapshot/.test(ui));
 ok("mut_ui_three_rails", /SECTION_ORDER/.test(ui) && /temata/.test(ui) && /zdroje/.test(ui) && /lokalita/.test(ui));
 ok("mut_css_no_prefs", !/\.iuPdTrafficPrefs\b/.test(css));

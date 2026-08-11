@@ -10,7 +10,7 @@
  * - TRAFFIC_UI_ENABLED is the single feature flag; flip to false for instant rollback
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
-import { fetchTrafficSnapshotSlimOffMainThread } from "./iu-info-system-core-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
+import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -539,7 +539,71 @@ function acceptTrafficSnapshot(parsed) {
 
 /** In-memory snapshot cache (avoids sync JSON.parse of multi‑MB localStorage on boot/reload). */
 let _trafficSnapMem = null;
+/** Converted feed-item cache — full catalog must not re-project on every filteredList()/paint. */
+let _trafficFeedItemsCache = { key: "", items: null };
+let _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
 const LS_SNAPSHOT_MAX_CHARS = 262144; // 256 KiB — larger payloads stay memory-only
+
+function trafficFeedItemsCacheKey(snapshot, opts, cardLen, cap) {
+  return [
+    String((snapshot && snapshot.generatedAt) || ""),
+    String((snapshot && snapshot.snapshotVersion) || ""),
+    String(cardLen),
+    String(cap == null ? "all" : cap),
+  ].join("|");
+}
+
+function invalidateTrafficFeedItemsCache() {
+  _trafficFeedItemsCache = { key: "", items: null };
+  _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
+}
+
+/** Locality-aware traffic filter that preserves catalog order (newest publication first). */
+export function filterOfflineTrafficCandidatesForOverview(items, prefs) {
+  const listIn = Array.isArray(items) ? items : [];
+  const f = prefs || {};
+  const locActive = !!(
+    f.myRegionOnly ||
+    f.localityQuery ||
+    (f.localities && f.localities.length) ||
+    f.homeObec ||
+    f.homeOkres ||
+    f.homeKraj
+  );
+  const key =
+    String(listIn.length) +
+    "|" +
+    (locActive ? "1" : "0") +
+    "|" +
+    String(f.myRegionOnly ? 1 : 0) +
+    "|" +
+    String(f.localityQuery || "") +
+    "|" +
+    String(f.homeObec || "") +
+    "|" +
+    String(f.homeOkres || "") +
+    "|" +
+    String(f.homeKraj || "") +
+    "|" +
+    (Array.isArray(f.localities) ? f.localities.join(",") : "");
+  if (
+    _trafficOverviewFilterCache.itemsRef === listIn &&
+    _trafficOverviewFilterCache.key === key &&
+    Array.isArray(_trafficOverviewFilterCache.items)
+  ) {
+    return _trafficOverviewFilterCache.items;
+  }
+  let out = listIn;
+  if (locActive) {
+    out = [];
+    for (let i = 0; i < listIn.length; i++) {
+      const ev = listIn[i];
+      if (ev && eventMatchesLocationFilter(ev, f)) out.push(ev);
+    }
+  }
+  _trafficOverviewFilterCache = { key: key, items: out, itemsRef: listIn };
+  return out;
+}
 
 export function loadOfflineTrafficSnapshot() {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
@@ -609,6 +673,7 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
     }
     const snap = acceptTrafficSnapshot(parsed);
     if (!snap) return null;
+    invalidateTrafficFeedItemsCache();
     _trafficSnapMem = snap;
     if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
     return snap;
@@ -626,6 +691,7 @@ export function saveOfflineTrafficSnapshot(snapshot) {
   }
   const canary = scanTrafficUiCanaries(snapshot);
   if (!canary.ok) return { ok: false, rejectCode: "TRAFFIC_UI_SECURITY_CANARY_DETECTED", hits: canary.hits };
+  invalidateTrafficFeedItemsCache();
   _trafficSnapMem = snapshot;
   if (typeof localStorage === "undefined") return { ok: true, persist: "memory" };
   try {
@@ -645,6 +711,7 @@ export function saveOfflineTrafficSnapshot(snapshot) {
 }
 
 export function clearOfflineTrafficSnapshot() {
+  invalidateTrafficFeedItemsCache();
   _trafficSnapMem = null;
   if (typeof localStorage === "undefined") return;
   try {
@@ -663,14 +730,19 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
     : Array.isArray(snapshot.projections)
       ? snapshot.projections
       : [];
-  const ordered = orderTrafficCardsNewestFirst(cards);
   const cap = resolveTrafficCardCap(opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP);
+  const cacheKey = trafficFeedItemsCacheKey(snapshot, opts, cards.length, cap);
+  if (_trafficFeedItemsCache.key === cacheKey && Array.isArray(_trafficFeedItemsCache.items)) {
+    return _trafficFeedItemsCache.items;
+  }
+  const ordered = orderTrafficCardsNewestFirst(cards);
   const built = [];
   for (let i = 0; i < ordered.length; i++) {
     if (cap != null && built.length >= cap) break;
     const r = trafficProjectionToFeedItem(ordered[i], opts);
     if (r.ok) built.push(r.item);
   }
+  _trafficFeedItemsCache = { key: cacheKey, items: built };
   return built;
 }
 
