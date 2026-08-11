@@ -97,9 +97,11 @@ jobs:
             } > "$ENV_FILE"
             chmod 600 "$ENV_FILE"
             if [ -n "${IU_NDIC_PULL_URL:-}" ]; then
-              printf 'IU_NDIC_PULL_URL=%s\n' "$IU_NDIC_PULL_URL" >> "$ENV_FILE"
-              printf 'IU_NDIC_PULL_USER=%s\n' "$IU_NDIC_PULL_USER" >> "$ENV_FILE"
-              printf 'IU_NDIC_PULL_PASS=%s\n' "$IU_NDIC_PULL_PASS" >> "$ENV_FILE"
+              {
+                printf 'IU_NDIC_PULL_URL=%s\n' "$IU_NDIC_PULL_URL"
+                printf 'IU_NDIC_PULL_USER=%s\n' "$IU_NDIC_PULL_USER"
+                printf 'IU_NDIC_PULL_PASS=%s\n' "$IU_NDIC_PULL_PASS"
+              } >> "$ENV_FILE"
             fi
             if [ -n "${IU_NDIC_LIVE_PUBLISH_TOKEN:-}" ]; then
               printf 'IU_NDIC_LIVE_PUBLISH_TOKEN=%s\n' "$IU_NDIC_LIVE_PUBLISH_TOKEN" >> "$ENV_FILE"
