@@ -1,6 +1,6 @@
 {
-  "runId": "f665fd906865ed5e",
-  "started": "2026-08-11T10:37:03.432Z",
+  "runId": "28324a768fb97b27",
+  "started": "2026-08-11T14:00:52.159Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,376 +12,144 @@
     }
   ],
   "parser": {
-    "situations": 3759,
+    "situations": 3689,
     "rejected": 0,
-    "quarantine": 17,
+    "quarantine": 21,
     "stats": {
-      "new": 149,
-      "updated": 194,
-      "unchanged": 3399,
-      "ended": 85,
+      "new": 130,
+      "updated": 76,
+      "unchanged": 3462,
+      "ended": 200,
       "skippedOlder": 0,
-      "softMissing": 5
+      "softMissing": 9
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 149,
-      "updated": 194,
-      "unchanged": 3399,
-      "ended": 85,
+      "new": 130,
+      "updated": 76,
+      "unchanged": 3462,
+      "ended": 200,
       "skippedOlder": 0,
-      "softMissing": 5
+      "softMissing": 9
     },
     "alarms": []
   },
   "tmc": {
     "ok": true,
-    "reason": "activated",
-    "source": "sp08001_basic",
-    "ignoredNonStandardCount": 33,
-    "ignoredEntries": [
-      {
-        "basenameDigest": "18ada4f2358f89b5",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 0
-      },
-      {
-        "basenameDigest": "c08c03f0e64bdf3b",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 1
-      },
-      {
-        "basenameDigest": "fcd42b01d747bab8",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 2
-      },
-      {
-        "basenameDigest": "89d4f5111f0cb523",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 3
-      },
-      {
-        "basenameDigest": "6c52534c5b983da7",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 4
-      },
-      {
-        "basenameDigest": "b3a84915f5226f5e",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 5
-      },
-      {
-        "basenameDigest": "876d2d506d7f82f8",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 6
-      },
-      {
-        "basenameDigest": "35498f98ea8cce60",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 7
-      },
-      {
-        "basenameDigest": "795c66f054d51752",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 8
-      },
-      {
-        "basenameDigest": "9ff948e584042e00",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 9
-      },
-      {
-        "basenameDigest": "471354edb2d7a952",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 10
-      },
-      {
-        "basenameDigest": "e79b301787c8b8d3",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 11
-      },
-      {
-        "basenameDigest": "67904b006c4dab66",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 12
-      },
-      {
-        "basenameDigest": "b4074f25a17a402d",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 13
-      },
-      {
-        "basenameDigest": "18ada4f2358f89b5",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 14
-      },
-      {
-        "basenameDigest": "c08c03f0e64bdf3b",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 15
-      },
-      {
-        "basenameDigest": "c311705ca29c5725",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 16
-      },
-      {
-        "basenameDigest": "a6fd78cc481ab91c",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 17
-      },
-      {
-        "basenameDigest": "1852322c79c5861f",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 18
-      },
-      {
-        "basenameDigest": "a3c2563ea4c761f7",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 19
-      },
-      {
-        "basenameDigest": "df509f4d98aef4b1",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 20
-      },
-      {
-        "basenameDigest": "1ccc794977a287f3",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 21
-      },
-      {
-        "basenameDigest": "df0c135fda388a00",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 22
-      },
-      {
-        "basenameDigest": "4486381a05a87db5",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 23
-      },
-      {
-        "basenameDigest": "955ea4ca4e1276c8",
-        "extension": "cpg",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 24
-      },
-      {
-        "basenameDigest": "7680632cd8e65664",
-        "extension": "dbf",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 25
-      },
-      {
-        "basenameDigest": "0d873d690aa16445",
-        "extension": "shp",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 26
-      },
-      {
-        "basenameDigest": "4bf904ec9906f629",
-        "extension": "shx",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 27
-      },
-      {
-        "basenameDigest": "1e443f07a4225490",
-        "extension": "txt",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 54
-      },
-      {
-        "basenameDigest": "654c2cd13ecc4532",
-        "extension": "txt",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 55
-      },
-      {
-        "basenameDigest": "94b4b2463977ebc5",
-        "extension": "txt",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 56
-      },
-      {
-        "basenameDigest": "f2a8960a5959d746",
-        "extension": "txt",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "DOCUMENTED_LT_CZE_TXT_WORKING_FORMAT",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 57
-      },
-      {
-        "basenameDigest": "4a278bb3fc1dab70",
-        "extension": "db",
-        "classification": "DOCUMENTED_NON_RESOLUTION_SIDECAR",
-        "reasonCode": "COMPANION_NON_AUTHORITATIVE",
-        "resolutionRequired": false,
-        "authoritative": false,
-        "entryOrdinal": 58
-      }
-    ],
-    "unknownNonclassifiedEntries": [],
-    "unknownRequiredEntries": [],
-    "rejectedUnsafeEntries": [],
-    "unknownNonclassifiedCount": 0,
-    "unknownRequiredCount": 0,
-    "rejectedUnsafeCount": 0,
-    "requiredTableCountExpected": 25,
-    "requiredTableCountFound": 25,
-    "requiredTableSetComplete": true,
-    "requiredTableSetValid": true,
-    "resolverTableActivated": true,
-    "cid": 11,
-    "tabcd": 25,
-    "tableVersion": 11,
-    "authSource": "dedicated",
+    "reason": "persistent_lkg",
+    "liveDownload": false,
+    "liveImport": false,
+    "persistent": true,
     "meta": {
       "active": true,
       "version": "11",
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-11T10:37:08.975Z",
+      "activatedAt": "2026-08-11T12:48:10.449Z",
       "contentHash": "63ca4e0bd5c1"
+    },
+    "storeBytes": 32938816,
+    "manifest": {
+      "activeVersion": "11",
+      "previousVersion": null,
+      "lastVersionCheckAt": "2026-08-11T12:48:06.519Z",
+      "lastSuccessfulCutoverAt": "2026-08-11T12:48:11.068Z",
+      "newVersionAvailable": false
     }
   },
   "status": "healthy",
   "error": null,
   "secretsPresent": {
     "pull": true,
-    "tmc": true,
+    "tmc": false,
     "subscriberIdConfigured": true
   },
-  "tmcHttp": {
-    "status": 200
+  "observability": {
+    "schema": "iu-ndic-phase-observability-v1",
+    "DATEX_REQUEST_STARTED_AT": "2026-08-11T14:00:52.490Z",
+    "DATEX_HEADERS_RECEIVED_AT": "2026-08-11T14:00:52.791Z",
+    "DATEX_DOWNLOAD_FINISHED_AT": "2026-08-11T14:00:53.654Z",
+    "DATEX_REQUEST_DURATION_MS": 302,
+    "DATEX_DOWNLOAD_DURATION_MS": 879,
+    "DATEX_HTTP_STATUS": 200,
+    "DATEX_CONTENT_LENGTH": 2653057,
+    "DATEX_BYTES_READ": 61824093,
+    "conditional": {
+      "DATEX_REQUEST_IF_MODIFIED_SINCE_SENT": "YES",
+      "DATEX_REQUEST_IF_NONE_MATCH_SENT": "NO",
+      "DATEX_RESPONSE_STATUS": 200,
+      "DATEX_RESPONSE_LAST_MODIFIED_PRESENT": "YES",
+      "DATEX_RESPONSE_ETAG_PRESENT": "NO",
+      "DATEX_RESPONSE_ETAG_HASH": null,
+      "DATEX_RESPONSE_CONTENT_LENGTH": 2653057,
+      "DATEX_NOT_MODIFIED": "NO",
+      "DATEX_BYTES_READ": 61824093
+    },
+    "TMC_LIVE_DOWNLOAD": "NO",
+    "TMC_LIVE_IMPORT": "NO",
+    "TMC_STORE_BYTES": 32938816,
+    "phases": {
+      "DATEX_REQUEST": {
+        "startedAt": "2026-08-11T14:00:52.489Z",
+        "finishedAt": "2026-08-11T14:00:53.725Z",
+        "durationMs": 1236
+      },
+      "DATEX_DOWNLOAD": {
+        "startedAt": "2026-08-11T14:00:53.725Z",
+        "finishedAt": "2026-08-11T14:00:53.725Z",
+        "durationMs": 0
+      },
+      "DATEX_PARSE": {
+        "startedAt": "2026-08-11T14:00:54.438Z",
+        "finishedAt": "2026-08-11T14:01:09.025Z",
+        "durationMs": 14587
+      },
+      "RESOLVER": {
+        "startedAt": "2026-08-11T14:00:54.438Z",
+        "finishedAt": "2026-08-11T14:01:09.026Z",
+        "durationMs": 14587
+      },
+      "CANDIDATE": {
+        "startedAt": "2026-08-11T14:00:54.438Z",
+        "finishedAt": "2026-08-11T14:01:09.026Z",
+        "durationMs": 14587
+      }
+    },
+    "DATEX_ETAG_PERSISTED": "NO",
+    "DATEX_LAST_MODIFIED_PERSISTED": "YES",
+    "DATEX_PARSE_STARTED_AT": "2026-08-11T14:00:54.438Z",
+    "DATEX_PARSE_FINISHED_AT": "2026-08-11T14:01:09.025Z",
+    "DATEX_PARSE_DURATION_MS": 14587,
+    "RESOLVER_DURATION_MS": 14587,
+    "CANDIDATE_READY_AT": "2026-08-11T14:01:09.026Z"
+  },
+  "datexTmcCompatibility": {
+    "ok": true,
+    "code": null,
+    "mismatchCc": 0,
+    "mismatchLtn": 0,
+    "mismatchVersion": 0,
+    "newVersionHint": 0,
+    "seenVersions": [],
+    "NEW_TMC_REFERENCE_DETECTED": "NO",
+    "activeVersion": "11",
+    "wantCc": 2,
+    "wantLtn": 25,
+    "TMC_DUAL_VERSION_REQUIRED": "NO",
+    "distinctTableNumbers": [],
+    "distinctTableVersions": [],
+    "evidence": "SINGLE_TABLE_IDENTITY_IN_SAMPLE"
   },
   "sanity": {
     "ok": true,
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 67210166,
+    "datexBytesRead": 61824093,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +169,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3747,
-    "bytes": 8212685,
+    "cardCount": 3677,
+    "bytes": 8076568,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 8212105,
+      "cards": 8075988,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7494,
-      "FULL_SNAPSHOT": 8212685,
+      "cardsProvenance": 7354,
+      "FULL_SNAPSHOT": 8076568,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
