@@ -15,7 +15,8 @@ pattern = "www.infouzel.cz/projects*"
 zone_name = "infouzel.cz"
 
 [vars]
-LIVE_TRAFFIC_ENABLED = "false"
+# Cutover: R2 is authoritative for traffic_offline_snapshot when true (Pages fallback if R2 empty).
+LIVE_TRAFFIC_ENABLED = "true"
 
 [[r2_buckets]]
 binding = "TRAFFIC_LIVE"
