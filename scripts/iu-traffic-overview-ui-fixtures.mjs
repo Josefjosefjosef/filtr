@@ -5,9 +5,11 @@
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   TRAFFIC_UI_INITIAL_CARD_CAP,
+  TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS,
   TRAFFIC_SPATIAL,
   trafficProjectionToFeedItem,
   trafficBadgeModel,
+  isTrafficNewBadgeEligible,
   resolveSafeTrafficMapUrl,
   collectOfflineTrafficCandidates,
   mergeTrafficIntoOverview,
@@ -41,6 +43,10 @@ function ok(id, cond, detail) {
 const PEID = "iu-te-" + "a".repeat(32);
 
 function sampleCard(extra = {}) {
+  const now = Date.now();
+  const recent = new Date(now - 60 * 60 * 1000).toISOString();
+  const validFrom = new Date(now - 2 * 60 * 60 * 1000).toISOString();
+  const validTo = new Date(now + 8 * 60 * 60 * 1000).toISOString();
   return {
     publicEventId: PEID,
     lifecycleStatus: "ACTIVE",
@@ -53,8 +59,8 @@ function sampleCard(extra = {}) {
     location: "D0",
     administrativeArea: null,
     validity: {
-      validFrom: "2026-08-06T08:00:00.000Z",
-      expectedEnd: "2026-08-06T20:00:00.000Z",
+      validFrom,
+      expectedEnd: validTo,
       actualEnd: null,
     },
     impact: "Na místě je evidována nehoda.",
@@ -71,8 +77,9 @@ function sampleCard(extra = {}) {
     fieldProvenance: {},
     publicationEligibility: "ELIGIBLE_FOR_PUBLICATION",
     changeTimeSource: "EVENT_CHANGE",
-    lastMeaningfulChangeAt: "2026-08-06T12:00:00.000Z",
-    downloadedAt: "2026-08-06T11:00:00.000Z",
+    lastMeaningfulChangeAt: recent,
+    downloadedAt: recent,
+    sourceUpdatedAt: recent,
     ...extra,
   };
 }
@@ -177,7 +184,7 @@ const css = fs.readFileSync(path.join(ROOT, "assets", "iu-prehled-dne-v1.css"), 
 const core = fs.readFileSync(path.join(ROOT, "assets", "iu-info-system-core-v1.js"), "utf8");
 ok("ui_no_traffic_prefs", !/data-iu-traffic-prefs/.test(ui) && !/data-iu-pd-sec=\"traffic-rsd\"/.test(ui));
 ok("ui_no_traffic_spatial_act", !/traffic-spatial|traffic-temporal|traffic-type/.test(ui));
-ok("ui_shared_filterEvents", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(pipelineItems/.test(ui));
+ok("ui_shared_filterEvents", /collectOfflineTrafficCandidates/.test(ui) && /filterEvents\(items/.test(ui) && /filterOfflineTrafficCandidatesForOverview/.test(ui) && /mergeChmiAndTrafficTimeline/.test(ui));
 ok("ui_no_separate_home", !/data-iu-traffic-home/.test(ui));
 ok("css_no_prefs_panel", !/\.iuPdTrafficPrefs\b/.test(css));
 ok("core_no_parallel_prefs", !/trafficSpatialMode:\s*\"WHOLE_CZ\"/.test(core));
@@ -242,22 +249,41 @@ ok("ls_load", !!loadOfflineTrafficSnapshot());
   ok("collect_ui_on", cands.length === 2);
 }
 {
-  ok("initial_card_cap_defined", TRAFFIC_UI_INITIAL_CARD_CAP >= 20 && TRAFFIC_UI_INITIAL_CARD_CAP <= 500);
+  ok("initial_card_cap_unlimited_default", TRAFFIC_UI_INITIAL_CARD_CAP === 0);
+  ok("new_badge_max_age_defined", TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS >= 24 * 60 * 60 * 1000);
   const many = {
     publicationEnabled: false,
     trafficUiEnabled: true,
-    cards: Array.from({ length: TRAFFIC_UI_INITIAL_CARD_CAP + 40 }, (_, i) =>
+    cards: Array.from({ length: 160 }, (_, i) =>
       sampleCard({
         publicEventId: "iu-te-" + String(i).padStart(32, "0"),
         locationPresentationLevel: "GENERAL",
         preciseLocationVerified: false,
+        lastMeaningfulChangeAt: new Date(Date.now() - i * 60000).toISOString(),
       })
     ),
   };
   const built = trafficItemsFromOfflineSnapshot(many);
-  ok("initial_render_bounded", built.length === TRAFFIC_UI_INITIAL_CARD_CAP);
+  ok("full_dataset_no_silent_truncation", built.length === many.cards.length);
+  const capped = trafficItemsFromOfflineSnapshot(many, { maxCards: 120 });
+  ok("optional_hard_cap_still_works", capped.length === 120);
   const uncapped = trafficItemsFromOfflineSnapshot(many, { maxCards: 10000 });
   ok("max_cards_override", uncapped.length === many.cards.length);
+  ok(
+    "catalog_sorted_newest_first",
+    built[0].trafficV1.lastMeaningfulChangeAt >= built[built.length - 1].trafficV1.lastMeaningfulChangeAt
+  );
+  const oldActive = trafficBadgeModel({
+    lifecycleStatus: "ACTIVE",
+    category: "nehoda",
+    feed: { feedChangeType: "EVENT_CREATED" },
+    lastMeaningfulChangeAt: "2025-10-01T07:00:00.000Z",
+  });
+  ok("active_old_record_not_automatically_new", oldActive == null);
+  ok(
+    "new_badge_recent_ok",
+    isTrafficNewBadgeEligible({ lastMeaningfulChangeAt: new Date().toISOString() }) === true
+  );
 }
 clearOfflineTrafficSnapshot();
 

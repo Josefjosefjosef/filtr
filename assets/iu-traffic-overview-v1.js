@@ -10,7 +10,7 @@
  * - TRAFFIC_UI_ENABLED is the single feature flag; flip to false for instant rollback
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
-import { fetchTrafficSnapshotSlimOffMainThread } from "./iu-info-system-core-v1.js?v=heavy-feed-shell-first-v1-20260809";
+import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -24,8 +24,52 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PRODUCTION_DEPLOY: false,
 });
 
-/** Cap sync card→feed conversion so overview paint stays bounded (full catalog stays on disk). */
-export const TRAFFIC_UI_INITIAL_CARD_CAP = 120;
+/**
+ * Catalog card limit for offline snapshot → feed conversion.
+ * 0 / non-positive = no silent truncation (full catalog available; DOM bounded by shared PAGE_SIZE).
+ * Positive values remain available for tests/debug hard-caps only.
+ */
+export const TRAFFIC_UI_INITIAL_CARD_CAP = 0;
+
+/** NOVÁ badge: only when source publication/version time is within this age (not merely ACTIVE). */
+export const TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS = 72 * 60 * 60 * 1000;
+
+/** Resolve optional hard cap; null means unlimited catalog availability. */
+export function resolveTrafficCardCap(maxCardsOpt) {
+  const raw = maxCardsOpt != null ? Number(maxCardsOpt) : TRAFFIC_UI_INITIAL_CARD_CAP;
+  if (!Number.isFinite(raw) || raw <= 0) return null;
+  return Math.floor(raw);
+}
+
+function trafficCardSortMs(card) {
+  const iso = String(
+    (card && (card.lastMeaningfulChangeAt || card.sourceUpdatedAt || card.downloadedAt)) || ""
+  );
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? t : 0;
+}
+
+/** Newest publication/version first — deterministic before any optional windowing. */
+export function orderTrafficCardsNewestFirst(cards) {
+  const list = Array.isArray(cards) ? cards.slice() : [];
+  list.sort((a, b) => {
+    const d = trafficCardSortMs(b) - trafficCardSortMs(a);
+    if (d !== 0) return d;
+    return String((a && a.publicEventId) || "").localeCompare(String((b && b.publicEventId) || ""));
+  });
+  return list;
+}
+
+export function isTrafficNewBadgeEligible(trafficV1, nowMs) {
+  const now = Number.isFinite(nowMs) ? nowMs : Date.now();
+  const iso = String(
+    (trafficV1 && (trafficV1.lastMeaningfulChangeAt || trafficV1.sourceUpdatedAt)) || ""
+  );
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return false;
+  const age = now - t;
+  return age >= 0 && age <= TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS;
+}
 
 /** Hosted offline snapshot (fail-closed if missing / poison). */
 export const TRAFFIC_UI_SNAPSHOT_URL =
@@ -432,10 +476,11 @@ export function resolveSafeTrafficMapUrl(mapTarget) {
   }
 }
 
-export function trafficBadgeModel(trafficV1) {
+export function trafficBadgeModel(trafficV1, opts) {
   const change = String((trafficV1 && trafficV1.feed && trafficV1.feed.feedChangeType) || "");
   const cat = String((trafficV1 && (trafficV1.category || trafficV1.eventType)) || "").toLowerCase();
   const life = String((trafficV1 && trafficV1.lifecycleStatus) || "");
+  const nowMs = opts && Number.isFinite(opts.nowMs) ? opts.nowMs : Date.now();
   if (life === "ENDED" || change === "EVENT_ENDED") {
     return { kind: "ended", text: "🟢 UKONČENÁ", aria: "Ukončená dopravní událost" };
   }
@@ -451,13 +496,14 @@ export function trafficBadgeModel(trafficV1) {
   if (change === "VALIDITY_SHORTENED" || change === "EVENT_UPDATED" || change.indexOf("CHANGED") >= 0) {
     return { kind: "changed", text: "🟡 ZMĚNĚNÁ", aria: "Změněná dopravní událost" };
   }
-  if (change === "EVENT_CREATED" && /pocasi|weather/.test(cat)) {
-    return { kind: "warn", text: "⚠️ NOVÁ", aria: "Nová dopravní událost — počasí" };
-  }
-  if (change === "EVENT_CREATED" && /prace|roadwork|works/.test(cat)) {
-    return { kind: "new-works", text: "🔵 NOVÁ", aria: "Nové práce na silnici" };
-  }
   if (change === "EVENT_CREATED") {
+    if (!isTrafficNewBadgeEligible(trafficV1, nowMs)) return null;
+    if (/pocasi|weather/.test(cat)) {
+      return { kind: "warn", text: "⚠️ NOVÁ", aria: "Nová dopravní událost — počasí" };
+    }
+    if (/prace|roadwork|works/.test(cat)) {
+      return { kind: "new-works", text: "🔵 NOVÁ", aria: "Nové práce na silnici" };
+    }
     return { kind: "new", text: "🔴 NOVÁ", aria: "Nová dopravní událost" };
   }
   // No redundant "AKTIVNÍ DOPRAVA" / "DOPRAVA ŘSD" — traffic context is already clear.
@@ -493,7 +539,71 @@ function acceptTrafficSnapshot(parsed) {
 
 /** In-memory snapshot cache (avoids sync JSON.parse of multi‑MB localStorage on boot/reload). */
 let _trafficSnapMem = null;
+/** Converted feed-item cache — full catalog must not re-project on every filteredList()/paint. */
+let _trafficFeedItemsCache = { key: "", items: null };
+let _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
 const LS_SNAPSHOT_MAX_CHARS = 262144; // 256 KiB — larger payloads stay memory-only
+
+function trafficFeedItemsCacheKey(snapshot, opts, cardLen, cap) {
+  return [
+    String((snapshot && snapshot.generatedAt) || ""),
+    String((snapshot && snapshot.snapshotVersion) || ""),
+    String(cardLen),
+    String(cap == null ? "all" : cap),
+  ].join("|");
+}
+
+function invalidateTrafficFeedItemsCache() {
+  _trafficFeedItemsCache = { key: "", items: null };
+  _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
+}
+
+/** Locality-aware traffic filter that preserves catalog order (newest publication first). */
+export function filterOfflineTrafficCandidatesForOverview(items, prefs) {
+  const listIn = Array.isArray(items) ? items : [];
+  const f = prefs || {};
+  const locActive = !!(
+    f.myRegionOnly ||
+    f.localityQuery ||
+    (f.localities && f.localities.length) ||
+    f.homeObec ||
+    f.homeOkres ||
+    f.homeKraj
+  );
+  const key =
+    String(listIn.length) +
+    "|" +
+    (locActive ? "1" : "0") +
+    "|" +
+    String(f.myRegionOnly ? 1 : 0) +
+    "|" +
+    String(f.localityQuery || "") +
+    "|" +
+    String(f.homeObec || "") +
+    "|" +
+    String(f.homeOkres || "") +
+    "|" +
+    String(f.homeKraj || "") +
+    "|" +
+    (Array.isArray(f.localities) ? f.localities.join(",") : "");
+  if (
+    _trafficOverviewFilterCache.itemsRef === listIn &&
+    _trafficOverviewFilterCache.key === key &&
+    Array.isArray(_trafficOverviewFilterCache.items)
+  ) {
+    return _trafficOverviewFilterCache.items;
+  }
+  let out = listIn;
+  if (locActive) {
+    out = [];
+    for (let i = 0; i < listIn.length; i++) {
+      const ev = listIn[i];
+      if (ev && eventMatchesLocationFilter(ev, f)) out.push(ev);
+    }
+  }
+  _trafficOverviewFilterCache = { key: key, items: out, itemsRef: listIn };
+  return out;
+}
 
 export function loadOfflineTrafficSnapshot() {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
@@ -538,7 +648,7 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
       parsed = null;
     }
     if (!parsed) {
-      // Last resort (Worker unavailable): still avoid keeping full history on the main heap.
+      // Last resort (Worker unavailable): drop history; keep full card catalog (DOM paginated).
       const res = await fetch(url, {
         credentials: "same-origin",
         cache: "no-store",
@@ -550,16 +660,20 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
         : Array.isArray(full.projections)
           ? full.projections
           : [];
-      const cap = TRAFFIC_UI_INITIAL_CARD_CAP;
+      const ordered = orderTrafficCardsNewestFirst(cards);
+      const cap = resolveTrafficCardCap(opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP);
+      const kept = cap == null ? ordered : ordered.slice(0, cap);
       parsed = Object.assign({}, full, {
-        cards: cards.slice(0, cap),
+        cards: kept,
         historyItems: [],
         historyCount: 0,
         cardsCappedTo: cap,
+        cardCount: full.cardCount != null ? full.cardCount : cards.length,
       });
     }
     const snap = acceptTrafficSnapshot(parsed);
     if (!snap) return null;
+    invalidateTrafficFeedItemsCache();
     _trafficSnapMem = snap;
     if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
     return snap;
@@ -577,6 +691,7 @@ export function saveOfflineTrafficSnapshot(snapshot) {
   }
   const canary = scanTrafficUiCanaries(snapshot);
   if (!canary.ok) return { ok: false, rejectCode: "TRAFFIC_UI_SECURITY_CANARY_DETECTED", hits: canary.hits };
+  invalidateTrafficFeedItemsCache();
   _trafficSnapMem = snapshot;
   if (typeof localStorage === "undefined") return { ok: true, persist: "memory" };
   try {
@@ -596,6 +711,7 @@ export function saveOfflineTrafficSnapshot(snapshot) {
 }
 
 export function clearOfflineTrafficSnapshot() {
+  invalidateTrafficFeedItemsCache();
   _trafficSnapMem = null;
   if (typeof localStorage === "undefined") return;
   try {
@@ -614,13 +730,19 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
     : Array.isArray(snapshot.projections)
       ? snapshot.projections
       : [];
-  const capRaw = opts.maxCards != null ? Number(opts.maxCards) : TRAFFIC_UI_INITIAL_CARD_CAP;
-  const cap = Number.isFinite(capRaw) && capRaw > 0 ? Math.floor(capRaw) : TRAFFIC_UI_INITIAL_CARD_CAP;
+  const cap = resolveTrafficCardCap(opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP);
+  const cacheKey = trafficFeedItemsCacheKey(snapshot, opts, cards.length, cap);
+  if (_trafficFeedItemsCache.key === cacheKey && Array.isArray(_trafficFeedItemsCache.items)) {
+    return _trafficFeedItemsCache.items;
+  }
+  const ordered = orderTrafficCardsNewestFirst(cards);
   const built = [];
-  for (let i = 0; i < cards.length && built.length < cap; i++) {
-    const r = trafficProjectionToFeedItem(cards[i], opts);
+  for (let i = 0; i < ordered.length; i++) {
+    if (cap != null && built.length >= cap) break;
+    const r = trafficProjectionToFeedItem(ordered[i], opts);
     if (r.ok) built.push(r.item);
   }
+  _trafficFeedItemsCache = { key: cacheKey, items: built };
   return built;
 }
 

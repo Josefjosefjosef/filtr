@@ -126,9 +126,9 @@ let _iuFeedLoadToken = 0;
 
 function iuJsonParseWorkerUrl() {
   try {
-    return new URL("/assets/iu-json-parse-worker-v1.js", location.origin).href;
+    return new URL("/assets/iu-json-parse-worker-v1.js?v=ndic-catalog-cap-fix-v1-20260811", location.origin).href;
   } catch (_) {
-    return "/assets/iu-json-parse-worker-v1.js";
+    return "/assets/iu-json-parse-worker-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
   }
 }
 
@@ -256,9 +256,10 @@ function fetchJsonFilteredOffMainThread(url, omitSourceIds, signal) {
   });
 }
 
-/** Traffic snapshot: parse off-main, transfer only capped cards (no history dump). */
+/** Traffic snapshot: parse off-main, transfer cards (history dropped). maxCards<=0 = full catalog. */
 function fetchTrafficSnapshotSlimOffMainThread(url, maxCards, signal) {
-  const cap = Number(maxCards) > 0 ? Math.floor(Number(maxCards)) : 120;
+  const n = Number(maxCards);
+  const cap = Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
   return postToIuJsonParseWorker(
     {
       type: "fetchTrafficSnapshotSlim",

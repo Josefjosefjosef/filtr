@@ -49,7 +49,8 @@ import {
   buildTrafficCardViewModel,
   isTrafficFollowed,
   toggleTrafficFollow,
-} from "./iu-traffic-overview-v1.js?v=traffic-card-final-redesign-v1-20260811";
+  filterOfflineTrafficCandidatesForOverview,
+} from "./iu-traffic-overview-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
 import {
   trafficEventIllustrationSvg,
   ROAD_BADGE_CLASS,
@@ -535,6 +536,38 @@ function trafficFilterBarHtml(list) {
   );
 }
 
+function mergeChmiAndTrafficTimeline(chmiList, trafficList) {
+  const chmi = Array.isArray(chmiList) ? chmiList : [];
+  const traffic = Array.isArray(trafficList) ? trafficList : [];
+  if (!traffic.length) return chmi;
+  if (!chmi.length) return traffic;
+  const nowMs = Date.now();
+  const merged = traffic.slice();
+  for (let i = 0; i < chmi.length; i++) {
+    const ev = chmi[i];
+    if (!ev) continue;
+    const pres = getEffectiveTimelinePresentation(ev, nowMs);
+    const ms = (pres && pres.timelineMs) || 0;
+    let lo = 0;
+    let hi = merged.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      const other = merged[mid];
+      let oms = 0;
+      if (other && other.trafficV1) {
+        oms = Date.parse(String(other.publishedAt || other.publishedAtSource || "")) || 0;
+      } else {
+        const op = getEffectiveTimelinePresentation(other, nowMs);
+        oms = (op && op.timelineMs) || 0;
+      }
+      if (oms >= ms) lo = mid + 1;
+      else hi = mid;
+    }
+    merged.splice(lo, 0, ev);
+  }
+  return merged;
+}
+
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
   const f = effectivePrefs();
@@ -546,19 +579,21 @@ function filteredList() {
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
     hiddenMode: "include",
   };
-  // Shared pipeline: offline traffic candidates enter the SAME filterEvents as ČHMÚ.
-  let pipelineItems = items;
+  // Keep CHMI/shared feed on the memoized filterEvents path (stable items ref).
+  // NDIC offline catalog is filtered separately — never concat into filterEvents (O(n log n) sort on 3k+ cards blocks UI).
+  let list = filterEvents(items, filterPrefs, opts);
   if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false && TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER) {
     const offline = collectOfflineTrafficCandidates(f, {
       snapshot: loadOfflineTrafficSnapshot(),
       nowIso: new Date().toISOString(),
     });
     if (offline.length) {
-      const seen = new Set(items.map((x) => String((x && x.id) || "")));
-      pipelineItems = items.concat(offline.filter((x) => x && !seen.has(String(x.id))));
+      const trafficList = filterOfflineTrafficCandidatesForOverview(offline, filterPrefs);
+      const seen = new Set(list.map((x) => String((x && x.id) || "")));
+      const uniqueTraffic = trafficList.filter((x) => x && !seen.has(String(x.id)));
+      list = mergeChmiAndTrafficTimeline(list, uniqueTraffic);
     }
   }
-  let list = filterEvents(pipelineItems, filterPrefs, opts);
   list = expandChmiLocalityPresentationCards(list, f);
   list = list.filter((ev) => {
     const id = String((ev && ev.id) || "");
