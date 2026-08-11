@@ -84,8 +84,12 @@ jobs:
           export IU_NDIC_TMC_LKG_ROOT="${HOME}/.cache/infouzel-ndic-tmc-lkg"
           export IU_NDIC_LIVE_PUBLISH_URL="https://infouzel.cz/projects/data/info_events/ndic_datex_v1/__iu_live_publish"
 
+          # Non-interactive runners often lack a user session bus.
+          uid="$(id -u)"
+          export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/${uid}}"
+          export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=${XDG_RUNTIME_DIR}/bus}"
+
           if [ "$ACTION" = "install-units" ]; then
-            bash deploy/ndic-live-60s/install.sh
             ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             mkdir -p "$(dirname "$ENV_FILE")"
             {
@@ -106,18 +110,19 @@ jobs:
             if [ -n "${IU_NDIC_LIVE_PUBLISH_TOKEN:-}" ]; then
               printf 'IU_NDIC_LIVE_PUBLISH_TOKEN=%s\n' "$IU_NDIC_LIVE_PUBLISH_TOKEN" >> "$ENV_FILE"
             fi
-            systemctl --user daemon-reload
-            systemctl --user restart ndic-datex-live.timer || systemctl --user start ndic-datex-live.timer
-            systemctl --user is-enabled ndic-datex-live.timer
-            systemctl --user is-active ndic-datex-live.timer || true
+            bash deploy/ndic-live-60s/install.sh
             echo "INSTALL_PASS=YES"
             exit 0
           fi
 
           if [ "$ACTION" = "status" ]; then
-            systemctl --user status ndic-datex-live.timer --no-pager || true
-            systemctl --user status ndic-datex-live.service --no-pager || true
-            systemctl --user list-timers 'ndic-datex-live*' --no-pager || true
+            if systemctl --user status ndic-datex-live.timer --no-pager 2>/dev/null; then
+              systemctl --user status ndic-datex-live.service --no-pager || true
+              systemctl --user list-timers 'ndic-datex-live*' --no-pager || true
+            else
+              echo "SYSTEMD_USER_STATUS=unavailable"
+              crontab -l 2>/dev/null | grep -F 'iu-ndic-live-60s' || echo "CRON_LINE=missing"
+            fi
             if [ -f "$LIVE_ROOT/health.json" ]; then
               echo "HEALTH_JSON<<EOF"
               cat "$LIVE_ROOT/health.json"
@@ -191,13 +196,17 @@ jobs:
             ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             if [ ! -f "$ENV_FILE" ]; then echo "MISSING_ENV_FILE"; exit 1; fi
             sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=active/' "$ENV_FILE"
-            systemctl --user restart ndic-datex-live.timer || true
-            systemctl --user start ndic-datex-live.service || true
+            systemctl --user restart ndic-datex-live.timer 2>/dev/null || true
+            systemctl --user start ndic-datex-live.service 2>/dev/null || true
+            set -a
+            # shellcheck disable=SC1090
+            . "$ENV_FILE"
+            set +a
             export IU_NDIC_LIVE_MODE=active
             export IU_NDIC_DATEX_V1_MODE=active
             node scripts/ndic-datex-v1-live-60s-run.mjs | tee "$RUNNER_TEMP/cutover-tick.json"
             echo "CUTOVER_ACTIVE_REQUESTED=YES"
-            echo "NOTE=Set Worker var LIVE_TRAFFIC_ENABLED=true via deploy for R2 serve"
+            echo "NOTE=Require Worker LIVE_TRAFFIC_ENABLED=true for R2 user-visible serve"
             exit 0
           fi
 
@@ -206,7 +215,7 @@ jobs:
             if [ -f "$ENV_FILE" ]; then
               sed -i 's/^IU_NDIC_LIVE_MODE=.*/IU_NDIC_LIVE_MODE=shadow/' "$ENV_FILE"
             fi
-            systemctl --user restart ndic-datex-live.timer || true
+            systemctl --user restart ndic-datex-live.timer 2>/dev/null || true
             echo "ROLLBACK_TO_SHADOW=YES"
             echo "LIVE_PUBLICATION_ROLLBACK_READY=YES"
             exit 0

@@ -103,11 +103,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IU_NDIC_AUTOMATION_ENABLED: ${{ vars.NDIC_AUTOMATION_ENABLED }}
+          IU_NDIC_LIVE_60S_AUTHORITATIVE: ${{ vars.NDIC_LIVE_60S_AUTHORITATIVE }}
           IU_NDIC_SCHEDULE_EVENT_NAME: ${{ github.event_name }}
           IU_NDIC_SCHEDULE_WORKFLOW_FILE: update-ndic-datex-v1.yml
           IU_NDIC_SCHEDULE_SELF_RUN_ID: ${{ github.run_id }}
         run: |
           set -euo pipefail
+          if [ "${IU_NDIC_LIVE_60S_AUTHORITATIVE:-}" = "true" ]; then
+            echo "LIVE_AUTHORITATIVE_WRITE=NO"
+            echo "OLD_15MIN_WORKFLOW_NEW_ROLE=BACKUP_OR_RECONCILIATION"
+            echo "SINGLE_PRODUCTION_WRITER=VPS_60S_R2"
+          else
+            echo "LIVE_AUTHORITATIVE_WRITE=YES_VIA_GIT_PAGES"
+          fi
           node scripts/ndic-schedule-arming.mjs
 
   scheduled-preflight:

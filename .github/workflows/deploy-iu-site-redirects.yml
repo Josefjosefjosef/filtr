@@ -77,7 +77,7 @@ jobs:
               echo "R2_BUCKET_CREATE_FAILED=continue_deploy_may_fail_without_bucket"
             fi
           fi
-          echo "LIVE_TRAFFIC_ENABLED_TOML_DEFAULT=false_until_cutover_commit"
+          echo "LIVE_TRAFFIC_ENABLED_TOML=$(grep -E 'LIVE_TRAFFIC_ENABLED' wrangler.toml | head -n1 || true)"
           if [ -n "${LIVE_PUBLISH_TOKEN:-}" ]; then
             printf '%s' "$LIVE_PUBLISH_TOKEN" | npx wrangler secret put LIVE_PUBLISH_TOKEN
             echo "LIVE_PUBLISH_TOKEN_SET=YES"
