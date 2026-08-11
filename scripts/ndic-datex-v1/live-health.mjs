@@ -48,6 +48,8 @@ export function emptyHealth() {
     ACTIVE_TMC_VERSION: null,
     CONSECUTIVE_FAILURES: 0,
     LAST_ERROR: null,
+    LAST_CONDITIONAL_STATE_WRITE_AT: null,
+    LAST_IF_MODIFIED_SINCE_SENT: null,
     STALE_THRESHOLD_MS: 15 * 60 * 1000,
   };
 }

@@ -171,6 +171,31 @@ async function main() {
   });
   check("unchanged_skip", pub4.UNCHANGED_CONTENT_PUBLICATION_SKIPPED === "YES");
 
+  // Conditional state path resolves at call-time (not module import time)
+  const { statePaths } = await import("./ndic-datex-v1-prod-sync.mjs");
+  const liveWork = path.join(tmp, "work", "info_events");
+  process.env.IU_INFO_EVENTS_DATA_DIR = liveWork;
+  const p1 = statePaths(process.env);
+  check("state_path_uses_live_work", p1.stateFile.replace(/\\/g, "/").includes("/work/info_events/ndic_datex_v1/sync_state.json"));
+  fs.mkdirSync(path.dirname(p1.stateFile), { recursive: true });
+  const atomicState = {
+    sync: {
+      lastModified: "Tue, 11 Aug 2026 12:00:00 GMT",
+      bodyHash: "deadbeef",
+      etag: null,
+    },
+  };
+  const tmpState = p1.stateFile + ".tmp";
+  fs.writeFileSync(tmpState, JSON.stringify(atomicState, null, 2) + "\n", "utf8");
+  fs.renameSync(tmpState, p1.stateFile);
+  const loaded = JSON.parse(fs.readFileSync(p1.stateFile, "utf8"));
+  check("conditional_state_atomic_persist", loaded.sync.lastModified === "Tue, 11 Aug 2026 12:00:00 GMT");
+  // Simulate second independent invocation reading same path
+  const p2 = statePaths({ ...process.env, IU_INFO_EVENTS_DATA_DIR: liveWork });
+  check("conditional_state_survives_invocation", p2.stateFile === p1.stateFile);
+  const loaded2 = JSON.parse(fs.readFileSync(p2.stateFile, "utf8"));
+  check("conditional_state_same_lm", loaded2.sync.lastModified === "Tue, 11 Aug 2026 12:00:00 GMT");
+
   try {
     fs.rmSync(tmp, { recursive: true, force: true });
   } catch {
@@ -184,9 +209,10 @@ async function main() {
   console.log(
     JSON.stringify({
       ok: true,
-      passCount: 20,
+      passCount: 24,
       schema: "iu-ndic-live-60s-fixtures-v1",
       MAX_CONCURRENT_LIVE_DATEX_PROCESSORS: 1,
+      PERSISTENT_CONDITIONAL_STATE_PASS: "YES",
     })
   );
 }

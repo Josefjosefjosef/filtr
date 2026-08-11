@@ -102,6 +102,7 @@ jobs:
               echo "IU_NDIC_DATEX_V1_MODE=active"
               echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT"
               echo "IU_NDIC_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
+              echo "IU_INFO_EVENTS_DATA_DIR=$IU_NDIC_LIVE_ROOT/work/info_events"
               echo "IU_NDIC_LIVE_PUBLISH_URL=$IU_NDIC_LIVE_PUBLISH_URL"
               # Cron/systemd have no GHA runner env — pin Czech VPS identity for fail-closed assert.
               echo "RUNNER_ENVIRONMENT=self-hosted"
@@ -147,6 +148,13 @@ jobs:
               echo "EOF"
             else
               echo "HEALTH_JSON=missing"
+            fi
+            STATE_FILE="$LIVE_ROOT/work/info_events/ndic_datex_v1/sync_state.json"
+            echo "CONDITIONAL_STATE_FILE=$STATE_FILE"
+            if [ -f "$STATE_FILE" ]; then
+              S="$STATE_FILE" node -e 'const fs=require("fs"); const s=JSON.parse(fs.readFileSync(process.env.S,"utf8")); const sy=s.sync||{}; console.log("PERSISTED_LAST_MODIFIED="+(sy.lastModified||"")); console.log("PERSISTED_BODY_HASH_PREFIX="+String(sy.bodyHash||"").slice(0,12)); console.log("LAST_HTTP_STATUS_IN_STATE="+(sy.last_http_status||""));'
+            else
+              echo "CONDITIONAL_STATE=missing"
             fi
             df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_BYTES="$1}'
             exit 0
