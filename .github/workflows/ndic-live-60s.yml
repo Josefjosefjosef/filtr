@@ -92,8 +92,13 @@ jobs:
           if [ "$ACTION" = "install-units" ]; then
             ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
             mkdir -p "$(dirname "$ENV_FILE")"
+            PREV_MODE="shadow"
+            if [ -f "$ENV_FILE" ]; then
+              PREV_MODE=$(grep -E '^IU_NDIC_LIVE_MODE=' "$ENV_FILE" | head -n1 | cut -d= -f2- || echo shadow)
+            fi
+            if [ -z "$PREV_MODE" ]; then PREV_MODE=shadow; fi
             {
-              echo "IU_NDIC_LIVE_MODE=shadow"
+              echo "IU_NDIC_LIVE_MODE=$PREV_MODE"
               echo "IU_NDIC_DATEX_V1_MODE=active"
               echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT"
               echo "IU_NDIC_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
@@ -112,6 +117,7 @@ jobs:
             fi
             bash deploy/ndic-live-60s/install.sh
             echo "INSTALL_PASS=YES"
+            echo "PRESERVED_LIVE_MODE=$PREV_MODE"
             exit 0
           fi
 
