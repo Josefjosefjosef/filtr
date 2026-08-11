@@ -1,6 +1,6 @@
 {
-  "runId": "d14b86d66e9eb3cc",
-  "started": "2026-08-11T02:24:32.087Z",
+  "runId": "202bac07e9906a10",
+  "started": "2026-08-11T04:05:31.227Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3514,
+    "situations": 3531,
     "rejected": 0,
-    "quarantine": 4,
+    "quarantine": 7,
     "stats": {
-      "new": 8,
-      "updated": 24,
-      "unchanged": 3478,
-      "ended": 6,
+      "new": 33,
+      "updated": 34,
+      "unchanged": 3457,
+      "ended": 17,
       "skippedOlder": 0,
-      "softMissing": 4
+      "softMissing": 6
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 8,
-      "updated": 24,
-      "unchanged": 3478,
-      "ended": 6,
+      "new": 33,
+      "updated": 34,
+      "unchanged": 3457,
+      "ended": 17,
       "skippedOlder": 0,
-      "softMissing": 4
+      "softMissing": 6
     },
     "alarms": []
   },
@@ -362,7 +362,7 @@
       "countryCode": 2,
       "tableNumber": 25,
       "pointCount": 33648,
-      "activatedAt": "2026-08-11T02:24:35.749Z",
+      "activatedAt": "2026-08-11T04:05:34.927Z",
       "contentHash": "63ca4e0bd5c1"
     }
   },
@@ -381,7 +381,7 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 58593886,
+    "datexBytesRead": 58808895,
     "datexHttpStatus": 200
   },
   "publicationSafety": {
@@ -401,18 +401,18 @@
   "trafficUiSnapshot": {
     "ok": true,
     "rejectCode": null,
-    "cardCount": 3514,
-    "bytes": 7764487,
+    "cardCount": 3530,
+    "bytes": 7790874,
     "uiCompact": true,
     "sizeBreakdown": {
       "metadata": 353,
       "projections": 2,
       "feed": 156,
-      "cards": 7763907,
+      "cards": 7790294,
       "historyItems": 2,
       "filterIndexes": 2,
-      "cardsProvenance": 7028,
-      "FULL_SNAPSHOT": 7764487,
+      "cardsProvenance": 7060,
+      "FULL_SNAPSHOT": 7790874,
       "LIMIT_DEFAULT": 8388608,
       "OVER_BY": 0
     },
