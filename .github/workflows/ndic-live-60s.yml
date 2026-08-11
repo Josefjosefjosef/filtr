@@ -103,6 +103,11 @@ jobs:
               echo "IU_NDIC_TMC_LKG_ROOT=$IU_NDIC_TMC_LKG_ROOT"
               echo "IU_NDIC_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
               echo "IU_NDIC_LIVE_PUBLISH_URL=$IU_NDIC_LIVE_PUBLISH_URL"
+              # Cron/systemd have no GHA runner env — pin Czech VPS identity for fail-closed assert.
+              echo "RUNNER_ENVIRONMENT=self-hosted"
+              echo "RUNNER_NAME=infouzel-ndic-cz-vps4204"
+              echo "RUNNER_OS=Linux"
+              echo "RUNNER_ARCH=X64"
             } > "$ENV_FILE"
             chmod 600 "$ENV_FILE"
             if [ -n "${IU_NDIC_PULL_URL:-}" ]; then
