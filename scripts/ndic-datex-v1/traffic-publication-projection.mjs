@@ -77,8 +77,15 @@ export function deriveLifecycleStatus(event, nowIso) {
   const status = fv(event, "status") && fv(event, "status").value;
   if (status === "zruseno") return LIFECYCLE_STATUS.CANCELLED;
   if (status === "ukonceno") return LIFECYCLE_STATUS.ENDED;
-  const from = fv(event, "validFrom") && fv(event, "validFrom").value;
   const now = Date.parse(nowIso || new Date().toISOString());
+  const to =
+    (fv(event, "validTo") && fv(event, "validTo").value) ||
+    (fv(event, "expectedEnd") && fv(event, "expectedEnd").value) ||
+    null;
+  const toMs = to ? Date.parse(to) : NaN;
+  // Align with classifyTrafficLifecycle: validity end strictly before now ⇒ ENDED.
+  if (Number.isFinite(toMs) && toMs < now) return LIFECYCLE_STATUS.ENDED;
+  const from = fv(event, "validFrom") && fv(event, "validFrom").value;
   if (from && Date.parse(from) > now) return LIFECYCLE_STATUS.FUTURE;
   return LIFECYCLE_STATUS.ACTIVE;
 }

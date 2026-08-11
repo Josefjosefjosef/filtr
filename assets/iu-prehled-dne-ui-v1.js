@@ -50,7 +50,7 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
+} from "./iu-traffic-overview-v1.js?v=ndic-lifecycle-overview-ended-v1-20260811";
 import {
   trafficEventIllustrationSvg,
   ROAD_BADGE_CLASS,
@@ -588,7 +588,9 @@ function filteredList() {
       nowIso: new Date().toISOString(),
     });
     if (offline.length) {
-      const trafficList = filterOfflineTrafficCandidatesForOverview(offline, filterPrefs);
+      const trafficList = filterOfflineTrafficCandidatesForOverview(offline, filterPrefs, {
+        nowMs: Date.now(),
+      });
       const seen = new Set(list.map((x) => String((x && x.id) || "")));
       const uniqueTraffic = trafficList.filter((x) => x && !seen.has(String(x.id)));
       list = mergeChmiAndTrafficTimeline(list, uniqueTraffic);

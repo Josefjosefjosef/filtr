@@ -71,6 +71,62 @@ export function isTrafficNewBadgeEligible(trafficV1, nowMs) {
   return age >= 0 && age <= TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS;
 }
 
+function trafficValidityEndMs(trafficV1) {
+  const v = trafficV1 && trafficV1.validity;
+  const iso = String(
+    (v && (v.actualEnd || v.expectedEnd || v.validTo)) ||
+      (trafficV1 && trafficV1.validTo) ||
+      ""
+  );
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? t : NaN;
+}
+
+function trafficValidityStartMs(trafficV1) {
+  const v = trafficV1 && trafficV1.validity;
+  const iso = String((v && v.validFrom) || (trafficV1 && trafficV1.validFrom) || "");
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? t : NaN;
+}
+
+/**
+ * Runtime lifecycle for main overview (snapshot labels can lag between NDIC syncs).
+ * Boundary: validTo < now ⇒ ENDED (same as classifyTrafficLifecycle).
+ */
+export function resolveTrafficOverviewLifecycle(trafficV1, nowMs) {
+  const now = Number.isFinite(nowMs) ? nowMs : Date.now();
+  if (!trafficV1 || typeof trafficV1 !== "object") return "UNKNOWN";
+  const labeled = String(trafficV1.lifecycleStatus || "");
+  const change = String((trafficV1.feed && trafficV1.feed.feedChangeType) || "");
+  const status = String(trafficV1.status || "").toLowerCase();
+  if (
+    labeled === "CANCELLED" ||
+    change === "EVENT_CANCELLED" ||
+    status === "zruseno" ||
+    status === "zrušeno"
+  ) {
+    return "CANCELLED";
+  }
+  if (labeled === "ENDED" || change === "EVENT_ENDED" || status === "ukonceno" || status === "ukončeno") {
+    return "ENDED";
+  }
+  const endMs = trafficValidityEndMs(trafficV1);
+  if (Number.isFinite(endMs) && endMs < now) return "ENDED";
+  const fromMs = trafficValidityStartMs(trafficV1);
+  if (Number.isFinite(fromMs) && fromMs > now) return "FUTURE";
+  if (labeled === "FUTURE") return "FUTURE";
+  if (labeled === "ACTIVE") return "ACTIVE";
+  if (labeled) return "UNKNOWN";
+  if (Number.isFinite(fromMs) || Number.isFinite(endMs)) return "ACTIVE";
+  return "UNKNOWN";
+}
+
+/** Main traffic overview = ACTIVE + FUTURE only (ENDED/CANCELLED/UNKNOWN excluded). */
+export function isTrafficMainOverviewVisible(trafficV1, nowMs) {
+  const life = resolveTrafficOverviewLifecycle(trafficV1, nowMs);
+  return life === "ACTIVE" || life === "FUTURE";
+}
+
 /** Hosted offline snapshot (fail-closed if missing / poison). */
 export const TRAFFIC_UI_SNAPSHOT_URL =
   "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
@@ -558,10 +614,12 @@ function invalidateTrafficFeedItemsCache() {
   _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
 }
 
-/** Locality-aware traffic filter that preserves catalog order (newest publication first). */
-export function filterOfflineTrafficCandidatesForOverview(items, prefs) {
+/** Locality + lifecycle filter for main overview (ACTIVE/FUTURE only; preserves newest-first order). */
+export function filterOfflineTrafficCandidatesForOverview(items, prefs, opts) {
   const listIn = Array.isArray(items) ? items : [];
   const f = prefs || {};
+  const nowMs = opts && Number.isFinite(opts.nowMs) ? opts.nowMs : Date.now();
+  const nowBucket = Math.floor(nowMs / 60000);
   const locActive = !!(
     f.myRegionOnly ||
     f.localityQuery ||
@@ -572,6 +630,8 @@ export function filterOfflineTrafficCandidatesForOverview(items, prefs) {
   );
   const key =
     String(listIn.length) +
+    "|" +
+    String(nowBucket) +
     "|" +
     (locActive ? "1" : "0") +
     "|" +
@@ -593,13 +653,14 @@ export function filterOfflineTrafficCandidatesForOverview(items, prefs) {
   ) {
     return _trafficOverviewFilterCache.items;
   }
-  let out = listIn;
-  if (locActive) {
-    out = [];
-    for (let i = 0; i < listIn.length; i++) {
-      const ev = listIn[i];
-      if (ev && eventMatchesLocationFilter(ev, f)) out.push(ev);
-    }
+  const out = [];
+  for (let i = 0; i < listIn.length; i++) {
+    const ev = listIn[i];
+    if (!ev) continue;
+    const tv = ev.trafficV1 || ev;
+    if (!isTrafficMainOverviewVisible(tv, nowMs)) continue;
+    if (locActive && !eventMatchesLocationFilter(ev, f)) continue;
+    out.push(ev);
   }
   _trafficOverviewFilterCache = { key: key, items: out, itemsRef: listIn };
   return out;
