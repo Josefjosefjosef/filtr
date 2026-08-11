@@ -26,15 +26,30 @@ function omitItemsBySourceId(data, omitSourceIds) {
   return data;
 }
 
-/** Slim traffic snapshot for main-thread transfer (drop history; cap cards). */
+/** Slim traffic snapshot for main-thread transfer (drop history; optional card cap). */
 function slimTrafficSnapshot(data, maxCards) {
   if (!data || typeof data !== "object") return data;
-  const cap = Number(maxCards) > 0 ? Math.floor(Number(maxCards)) : 120;
+  const n = Number(maxCards);
+  const cap = Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
   const cards = Array.isArray(data.cards)
     ? data.cards
     : Array.isArray(data.projections)
       ? data.projections
       : [];
+  function cardSortMs(card) {
+    const iso = String(
+      (card && (card.lastMeaningfulChangeAt || card.sourceUpdatedAt || card.downloadedAt)) || ""
+    );
+    const t = Date.parse(iso);
+    return Number.isFinite(t) ? t : 0;
+  }
+  const ordered = cards.slice();
+  ordered.sort(function (a, b) {
+    const d = cardSortMs(b) - cardSortMs(a);
+    if (d !== 0) return d;
+    return String((a && a.publicEventId) || "").localeCompare(String((b && b.publicEventId) || ""));
+  });
+  const kept = cap == null ? ordered : ordered.slice(0, cap);
   const slim = {
     schema: data.schema || null,
     snapshotVersion: data.snapshotVersion || null,
@@ -47,7 +62,7 @@ function slimTrafficSnapshot(data, maxCards) {
     publicationEnabled: data.publicationEnabled === true,
     publicApiEnabled: data.publicApiEnabled === true,
     trafficUiEnabled: data.trafficUiEnabled !== false,
-    cards: cards.slice(0, cap),
+    cards: kept,
     historyItems: [],
     historyCount: 0,
     parsedOffMainThread: true,

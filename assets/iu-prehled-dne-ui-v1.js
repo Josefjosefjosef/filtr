@@ -35,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=heavy-feed-shell-first-v1-20260809";
+} from "./iu-info-system-core-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -49,7 +49,7 @@ import {
   buildTrafficCardViewModel,
   isTrafficFollowed,
   toggleTrafficFollow,
-} from "./iu-traffic-overview-v1.js?v=traffic-card-final-redesign-v1-20260811";
+} from "./iu-traffic-overview-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
 import {
   trafficEventIllustrationSvg,
   ROAD_BADGE_CLASS,
