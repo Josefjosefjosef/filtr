@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
+} from "./iu-traffic-overview-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-urban-tunnel-registry-v1-20260813";
+const CACHE_BUST = "ndic-outside-city-tunnel-header-v1-20260813";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -686,8 +686,32 @@ function renderTrafficCardBody(ev, url) {
     ROAD_BADGE_CLASS[vm.roadBadge.roadClass] ||
     ROAD_BADGE_CLASS.UNKNOWN ||
     "unknown";
+  const outsideCityTunnelMode = !!(
+    vm.outsideCityTunnelMode ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.outsideCityTunnelMode)
+  );
+  const tunnelObjectIconSrc =
+    vm.tunnelObjectIcon ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.tunnelObjectIcon) ||
+    "";
+  const tunnelObjectIconAlt =
+    vm.tunnelObjectIconAlt ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.tunnelObjectIconAlt) ||
+    "Tunel";
+  const tunnelObjectIcon =
+    outsideCityTunnelMode && tunnelObjectIconSrc
+      ? `<img class="iuPdTrafficRoadSign iuPdTunnelObjectSign" src="${esc(
+          tunnelObjectIconSrc
+        )}" alt="${esc(tunnelObjectIconAlt)}" width="28" height="28" loading="lazy" decoding="async" data-iu-tunnel-object="1" />`
+      : "";
   const roadTypeIcon =
-    vm.roadBadge && vm.roadBadge.roadTypeIcon
+    !outsideCityTunnelMode && vm.roadBadge && vm.roadBadge.roadTypeIcon
       ? `<img class="iuPdTrafficRoadSign" src="${esc(vm.roadBadge.roadTypeIcon)}" alt="${esc(
           vm.roadBadge.roadTypeIconAlt || ""
         )}" width="28" height="28" loading="lazy" decoding="async" />`
@@ -703,18 +727,20 @@ function renderTrafficCardBody(ev, url) {
       vm.presentation.communication &&
       vm.presentation.communication.municipalitySignLabel) ||
     "";
-  const muniSign = muniLabel
-    ? `<span class="iuPdMuniSign" data-iu-muni-sign="1">${esc(muniLabel)}</span>`
-    : "";
+  const muniSign =
+    !outsideCityTunnelMode && muniLabel
+      ? `<span class="iuPdMuniSign" data-iu-muni-sign="1">${esc(muniLabel)}</span>`
+      : "";
   const nearPrefix =
     vm.nearMunicipalityPrefix ||
     (vm.presentation &&
       vm.presentation.communication &&
       vm.presentation.communication.nearMunicipalityPrefix) ||
     "";
-  const nearBit = nearPrefix
-    ? `<span class="iuPdTrafficComm__beside iuPdTrafficComm__nearMuni">${esc(nearPrefix)}</span>`
-    : "";
+  const nearBit =
+    !outsideCityTunnelMode && nearPrefix
+      ? `<span class="iuPdTrafficComm__beside iuPdTrafficComm__nearMuni">${esc(nearPrefix)}</span>`
+      : "";
   const beside =
     vm.besideLocality ||
     (vm.presentation &&
@@ -722,7 +748,9 @@ function renderTrafficCardBody(ev, url) {
       vm.presentation.communication.besideLocality) ||
     "";
   const besideBit = beside
-    ? `<span class="iuPdTrafficComm__beside">${esc(beside)}</span>`
+    ? `<span class="iuPdTrafficComm__beside${
+        outsideCityTunnelMode ? " iuPdTrafficComm__tunnelName" : ""
+      }">${esc(beside)}</span>`
     : "";
   const districtBeside =
     vm.districtBeside ||
@@ -756,6 +784,7 @@ function renderTrafficCardBody(ev, url) {
   const fallbackNorm = fallbackPlaceRaw.toLowerCase().replace(/\s+/g, " ");
   const localityFallback =
     !isParking &&
+    !outsideCityTunnelMode &&
     !muniSign &&
     !vm.roadBadge.road &&
     !beside &&
@@ -768,13 +797,17 @@ function renderTrafficCardBody(ev, url) {
   // TMC/locality beside must not override this header (kept in detail LOKALITA).
   const roadThenNearMuni = !!(nearPrefix && muniSign && roadBadge);
   const nearMuniOnly = !!(nearPrefix && muniSign && !roadBadge);
+  // Outside-city tunnel: ICON → tunnel name → road badge (existing road badge system).
+  const outsideTunnelHeader = !!(outsideCityTunnelMode && tunnelObjectIcon && besideBit);
   const commBits = roadThenNearMuni
     ? roadTypeIcon + roadBadge + nearBit + muniSign + districtBit + dirBit
     : nearMuniOnly
       ? nearBit + muniSign + districtBit + dirBit
-      : smvFirst
-        ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
-        : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
+      : outsideTunnelHeader
+        ? tunnelObjectIcon + besideBit + roadBadge + districtBit + dirBit
+        : smvFirst
+          ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
+          : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";

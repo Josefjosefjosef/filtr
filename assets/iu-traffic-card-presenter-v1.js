@@ -15,8 +15,9 @@ import {
 } from "./iu-parking-registry-v1.js?v=ndic-parking-hl-nadrazi-muni-v1-20260812";
 import {
   matchTunnelRegistry,
+  matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
 
 export {
   matchParkingRegistry,
@@ -29,16 +30,22 @@ export {
 
 export {
   matchTunnelRegistry,
+  matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
   TUNNEL_REGISTRY,
+  OUTSIDE_CITY_TUNNEL_REGISTRY,
+  OUTSIDE_CITY_TUNNEL_SOURCE,
   TUNNEL_REGISTRY_VERSION,
   normalizeTunnelAliasKey,
   isAmbiguousTunnelName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
+  isAmbiguousOutsideCityTunnelName,
+} from "./iu-tunnel-registry-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
   MOTOR_VEHICLES: "/assets/images/traffic-road-motor-vehicles.png",
+  /** Location/object marker for outside-city tunnels — not an event-type icon. */
+  TUNNEL_OBJECT: "/assets/images/traffic-road-tunnel.png",
   TRAFFIC_JAM: "/assets/images/traffic-event-traffic-jam.png",
   ACCIDENT: "/assets/images/traffic-event-accident.png",
   ROADWORKS: "/assets/images/traffic-event-roadworks.png",
@@ -1902,6 +1909,99 @@ export function resolveTunnelRegistryEnrichment(input = {}, factsIn = null) {
   };
 }
 
+function normalizeRoadNumberKey(raw) {
+  return String(raw || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .replace(/^DÁLNICE/, "D");
+}
+
+/**
+ * Provenance for outside-city tunnel road badge.
+ * Live NDIC/event road wins over registry; never invent when both empty; conflict → event.
+ * @param {string|null|undefined} eventRoad
+ * @param {string|null|undefined} registryRoad
+ * @returns {{ road: string|null, conflict: boolean, usedRegistryRoad: boolean }}
+ */
+export function resolveOutsideCityTunnelRoad(eventRoad, registryRoad) {
+  const ev = clean(eventRoad);
+  const reg = clean(registryRoad);
+  if (ev && reg && normalizeRoadNumberKey(ev) !== normalizeRoadNumberKey(reg)) {
+    return { road: ev, conflict: true, usedRegistryRoad: false };
+  }
+  if (ev) return { road: ev, conflict: false, usedRegistryRoad: false };
+  if (reg) return { road: reg, conflict: false, usedRegistryRoad: true };
+  return { road: null, conflict: false, usedRegistryRoad: false };
+}
+
+/**
+ * Outside-city tunnel enrichment for header: icon + name + optional road.
+ * Urban registry match always wins (city mode preserved). Fail-closed on ambiguity.
+ * Never overrides dynamic NDIC situation / validity / lane facts.
+ *
+ * @returns {{
+ *  entry: object,
+ *  displayName: string,
+ *  tunnelObjectIcon: string,
+ *  road: string|null,
+ *  roadConflict: boolean,
+ *  usedRegistryRoad: boolean,
+ *  outsideCityTunnelMode: true,
+ * }|null}
+ */
+export function resolveOutsideCityTunnelEnrichment(input = {}, factsIn = null) {
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const named =
+    (facts.namedObject && facts.namedObjectKind === LOCATION_KIND.TUNNEL
+      ? facts.namedObject
+      : null) ||
+    (classifyLocationKindFromName(input.location) === LOCATION_KIND.TUNNEL
+      ? streetBareName(input.location)
+      : null);
+
+  // City / urban tunnel layer has absolute precedence.
+  const urban = matchTunnelRegistry({
+    ...input,
+    namedObject: named || facts.namedObject || null,
+    tunnelName: named || null,
+    location: input.location,
+    impact: input.impact,
+    impactFull: input.impactFull,
+    summary: input.summary,
+    summaryFull: input.summaryFull,
+  });
+  if (urban && urban.urban === true) return null;
+
+  const entry = matchOutsideCityTunnelRegistry({
+    ...input,
+    namedObject: named || facts.namedObject || null,
+    tunnelName: named || null,
+    location: input.location,
+    impact: input.impact,
+    impactFull: input.impactFull,
+    summary: input.summary,
+    summaryFull: input.summaryFull,
+  });
+  if (!entry || entry.urban !== false) return null;
+
+  const eventRoad = resolvePresentationRoadNumber(input, facts);
+  const picked = resolveOutsideCityTunnelRoad(eventRoad, entry.roadNumber);
+  const displayName = resolveTunnelDisplayName(
+    entry,
+    named || facts.namedObject || input.location
+  );
+  return {
+    entry,
+    displayName,
+    tunnelObjectIcon: TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT,
+    road: picked.road,
+    roadConflict: picked.conflict,
+    usedRegistryRoad: picked.usedRegistryRoad,
+    outsideCityTunnelMode: true,
+  };
+}
+
 /**
  * Municipality/city name for the Czech entrance-style signboard.
  * Never invents Praha/Jižní spojka; never treats street or city-part as municipality.
@@ -1961,8 +2061,8 @@ export function resolveMunicipalitySignName(input = {}) {
  */
 export function buildLocalityHeaderModel(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
-  const road = resolvePresentationRoadNumber(input, facts);
-  const municipalitySign = resolveMunicipalitySignName(input);
+  let road = resolvePresentationRoadNumber(input, facts);
+  let municipalitySign = resolveMunicipalitySignName(input);
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
   const district = clean(input.district) || facts.district || "";
@@ -1976,6 +2076,17 @@ export function buildLocalityHeaderModel(input = {}) {
   if (tunnelEnrich && tunnelEnrich.displayName) {
     namedObject = tunnelEnrich.displayName;
     namedObjectKind = LOCATION_KIND.TUNNEL;
+  }
+  const outsideTunnel = resolveOutsideCityTunnelEnrichment(input, facts);
+  if (outsideTunnel && outsideTunnel.displayName) {
+    namedObject = outsideTunnel.displayName;
+    namedObjectKind = LOCATION_KIND.TUNNEL;
+    // Outside-city mode: never force a white municipality entrance sign.
+    municipalitySign = null;
+    if (!road && outsideTunnel.road) road = outsideTunnel.road;
+    else if (outsideTunnel.road && !outsideTunnel.roadConflict) {
+      // Keep event road; registry only fills gaps (already applied above).
+    }
   }
   const nearMunicipality =
     facts.municipalityRelation === "u_obce" && !!municipalitySign;
@@ -2009,6 +2120,10 @@ export function buildLocalityHeaderModel(input = {}) {
   } else if (nearMunicipality) {
     // road + "u obce" + white municipality sign — TMC/locality must not override header.
     locationKind = LOCATION_KIND.MUNICIPALITY;
+  } else if (outsideTunnel && outsideTunnel.displayName) {
+    // Outside-city: [tunnel icon] + name + [road badge] — icon rendered in UI layer.
+    besideLocality = outsideTunnel.displayName;
+    locationKind = LOCATION_KIND.TUNNEL;
   } else if (namedObject && !resolveRoadDisplayName(road)) {
     // Named tunnel/bridge/square beats generic locationLabel (e.g. Letná).
     // Urban tunnels: [MĚSTO] + tunnel name (municipalitySign from NDIC or tunnel registry).
@@ -2042,15 +2157,17 @@ export function buildLocalityHeaderModel(input = {}) {
     districtBeside = "okres " + district;
   }
 
-  const cityPartRow = cityPart && !samePlaceName(cityPart, municipalitySign)
-    ? "městská část: " + cityPart
-    : null;
+  const cityPartRow =
+    !outsideTunnel && cityPart && !samePlaceName(cityPart, municipalitySign)
+      ? "městská část: " + cityPart
+      : null;
 
   return {
     municipalitySign,
     municipalitySignLabel: municipalitySign ? municipalitySign.toUpperCase() : null,
     municipalityRelation: facts.municipalityRelation || null,
-    nearMunicipalityPrefix: facts.municipalityRelation === "u_obce" ? "u obce" : null,
+    nearMunicipalityPrefix:
+      !outsideTunnel && facts.municipalityRelation === "u_obce" ? "u obce" : null,
     besideLocality: besideLocality || null,
     streetLabel: streetLabel || null,
     districtBeside: districtBeside || null,
@@ -2059,7 +2176,7 @@ export function buildLocalityHeaderModel(input = {}) {
     namedObject: namedObject || null,
     namedObjectKind: namedObjectKind || null,
     locationKind,
-    cityPart: cityPart || null,
+    cityPart: outsideTunnel ? null : cityPart || null,
     cityPartRow,
     district: district || null,
     parkingName,
@@ -2069,6 +2186,12 @@ export function buildLocalityHeaderModel(input = {}) {
       facts.parkingOccupancyPercent != null ? facts.parkingOccupancyPercent : null,
     parkingRegistryId: registry ? registry.parkingId : null,
     parkingRegistryMatch: !!registry,
+    outsideCityTunnelMode: !!(outsideTunnel && outsideTunnel.outsideCityTunnelMode),
+    tunnelObjectIcon: outsideTunnel ? outsideTunnel.tunnelObjectIcon : null,
+    tunnelObjectIconAlt: outsideTunnel ? "Tunel" : null,
+    outsideCityTunnelRoad: outsideTunnel ? outsideTunnel.road || null : null,
+    outsideCityTunnelRoadConflict: !!(outsideTunnel && outsideTunnel.roadConflict),
+    outsideCityTunnelUsedRegistryRoad: !!(outsideTunnel && outsideTunnel.usedRegistryRoad),
   };
 }
 
@@ -2213,9 +2336,23 @@ export function buildPlaceAndDirectionLine(input = {}) {
 
 export function buildCommunicationLine(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
-  const roadResolved = resolvePresentationRoadNumber(input, facts);
-  const roadPres = classifyRoadPresentation(roadResolved || input.road, input);
   const hdr = buildLocalityHeaderModel(input);
+  const eventRoad = resolvePresentationRoadNumber(input, facts);
+  const roadResolved =
+    eventRoad ||
+    (hdr.outsideCityTunnelMode ? hdr.outsideCityTunnelRoad : null) ||
+    null;
+  let roadPres = classifyRoadPresentation(roadResolved || input.road, input);
+  // Outside-city tunnel header uses tunnel object icon — not motorway/SMV road-type icon.
+  if (hdr.outsideCityTunnelMode) {
+    roadPres = {
+      ...roadPres,
+      roadTypeIcon: null,
+      roadTypeIconAlt: "",
+      showMotorwayIcon: false,
+      showMotorVehiclesIcon: false,
+    };
+  }
   const head = buildHeadLocalityLabel(input);
   const dir = clean(input.direction) || facts.directionHuman || null;
   return {
@@ -2246,7 +2383,15 @@ export function buildCommunicationLine(input = {}) {
     parkingStatusLabel: hdr.parkingStatusLabel || null,
     parkingRegistryId: hdr.parkingRegistryId || null,
     parkingRegistryMatch: hdr.parkingRegistryMatch === true,
-    roadTypeIconFirst: roadPres.showMotorVehiclesIcon === true && roadPres.showMotorwayIcon !== true,
+    roadTypeIconFirst:
+      !hdr.outsideCityTunnelMode &&
+      roadPres.showMotorVehiclesIcon === true &&
+      roadPres.showMotorwayIcon !== true,
+    outsideCityTunnelMode: hdr.outsideCityTunnelMode === true,
+    tunnelObjectIcon: hdr.tunnelObjectIcon || null,
+    tunnelObjectIconAlt: hdr.tunnelObjectIconAlt || null,
+    outsideCityTunnelRoadConflict: hdr.outsideCityTunnelRoadConflict === true,
+    outsideCityTunnelUsedRegistryRoad: hdr.outsideCityTunnelUsedRegistryRoad === true,
   };
 }
 
@@ -2441,16 +2586,10 @@ export function buildTrafficExpandedDetail(input = {}) {
 
 export function buildTrafficCardPresentation(trafficV1) {
   const tv = trafficV1 && typeof trafficV1 === "object" ? trafficV1 : {};
-  const factsForRoad = parseOfficialCommentFacts(sourceBlob(tv));
-  const roadResolved = resolvePresentationRoadNumber(tv, factsForRoad);
-  const roadPres = classifyRoadPresentation(roadResolved || tv.road, {
-    motorVehicleRoadConfirmed: tv.motorVehicleRoadConfirmed === true,
-    isMotorVehicleRoad: tv.isMotorVehicleRoad === true,
-    motorVehicleRoadStatus: tv.motorVehicleRoadStatus,
-    roadFacilityType: tv.roadFacilityType,
-  });
   const event = classifyEventPresentation(tv);
+  // Communication owns road provenance (incl. outside-city tunnel registry fill).
   const communication = buildCommunicationLine(tv);
+  const roadPres = communication.roadPresentation || classifyRoadPresentation(tv.road, tv);
   const placeLineRaw = buildPlaceAndDirectionLine(tv);
   // Parking: name lives on the municipality/beside row — hide duplicate MÍSTO block.
   const placeLine =

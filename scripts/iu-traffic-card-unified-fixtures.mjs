@@ -20,6 +20,7 @@ import {
   buildPlaceAndDirectionLine,
   buildHeadLocalityLabel,
   buildLocalityHeaderModel,
+  buildCommunicationLine,
   resolveMunicipalitySignName,
   resolveRoadDisplayName,
   preferFullerMunicipalityName,
@@ -49,7 +50,12 @@ import {
   extractRoadNumberFromOfficialComment,
   resolvePresentationRoadNumber,
   matchTunnelRegistry,
+  matchOutsideCityTunnelRegistry,
   resolveTunnelRegistryEnrichment,
+  resolveOutsideCityTunnelEnrichment,
+  resolveOutsideCityTunnelRoad,
+  OUTSIDE_CITY_TUNNEL_REGISTRY,
+  OUTSIDE_CITY_TUNNEL_SOURCE,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -2496,6 +2502,166 @@ ok(
   );
 }
 
+// --- Outside-city tunnel registry: [tunnel icon] + name + [road] ---
+{
+  ok(
+    "OUTSIDE_CITY_TUNNEL_REGISTRY_PRESENT",
+    Array.isArray(OUTSIDE_CITY_TUNNEL_REGISTRY) &&
+      OUTSIDE_CITY_TUNNEL_REGISTRY.length >= 4 &&
+      !!OUTSIDE_CITY_TUNNEL_SOURCE &&
+      /rsd/i.test(String(OUTSIDE_CITY_TUNNEL_SOURCE.url || ""))
+  );
+  ok(
+    "TUNNEL_ASSET_FOUND",
+    fs.existsSync(path.join(root, "assets/images/traffic-road-tunnel.png")) &&
+      TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT === "/assets/images/traffic-road-tunnel.png"
+  );
+
+  const panImpact = "Tunel Panenská, jízdní pruh uzavřen, pravidelná údržba";
+  const panInput = {
+    location: "Tunel Panenská",
+    eventType: "omezeni",
+    impact: panImpact,
+    impactFull: panImpact,
+  };
+  const panMatch = matchOutsideCityTunnelRegistry({
+    namedObject: "Tunel Panenská",
+    impact: panImpact,
+  });
+  const panEnrich = resolveOutsideCityTunnelEnrichment(panInput);
+  const panHdr = buildLocalityHeaderModel(panInput);
+  const panComm = buildCommunicationLine(panInput);
+  const panPres = buildTrafficCardPresentation(panInput);
+  const panVm = buildTrafficCardViewModel({
+    ...panInput,
+    publicEventId: PEID,
+    road: "",
+    impact: panImpact,
+    impactFull: panImpact,
+  });
+  ok(
+    "OUTSIDE_CITY_TUNNEL_DETECTED",
+    panMatch &&
+      panMatch.tunnelId === "cz-tunnel-panenska" &&
+      panEnrich &&
+      panEnrich.outsideCityTunnelMode === true &&
+      panHdr.outsideCityTunnelMode === true
+  );
+  ok(
+    "OUTSIDE_CITY_TUNNEL_HEADER",
+    panHdr.besideLocality === "Tunel Panenská" &&
+      panHdr.municipalitySign == null &&
+      panHdr.municipalitySignLabel == null &&
+      panHdr.tunnelObjectIcon === TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+      panComm.roadPresentation.road === "D8" &&
+      panComm.roadPresentation.roadTypeIcon == null &&
+      panComm.outsideCityTunnelMode === true
+  );
+  ok(
+    "OUTSIDE_CITY_HEADER_ORDER_ICON_TUNNEL_ROAD",
+    /outsideTunnelHeader/.test(uiSrc) &&
+      /tunnelObjectIcon \+ besideBit \+ roadBadge/.test(uiSrc.replace(/\s+/g, " ")) &&
+      panVm.outsideCityTunnelMode === true &&
+      panVm.tunnelObjectIcon === TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+      panVm.besideLocality === "Tunel Panenská" &&
+      panVm.roadBadge &&
+      panVm.roadBadge.road === "D8"
+  );
+  ok(
+    "OUTSIDE_CITY_EVENT_ICON_NOT_REPLACED",
+    panPres.event &&
+      panPres.event.asset &&
+      panPres.event.asset !== TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+      panVm.eventSignSrc !== TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT
+  );
+  ok(
+    "MUNICIPALITY_SIGN_NOT_FORCED",
+    panHdr.municipalitySign == null && panVm.municipalitySign == null
+  );
+
+  // City tunnel must remain city mode (no outside-city tunnel icon).
+  const bubCity = buildLocalityHeaderModel({
+    location: "Tunel Bubeneč",
+    impact: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+    impactFull: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+    eventType: "omezeni",
+  });
+  const bubOutside = resolveOutsideCityTunnelEnrichment({
+    location: "Tunel Bubeneč",
+    impact: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+    impactFull: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+  });
+  ok(
+    "CITY_TUNNEL_REMAINS_CITY_MODE",
+    bubOutside == null &&
+      bubCity.outsideCityTunnelMode !== true &&
+      bubCity.municipalitySignLabel === "PRAHA" &&
+      bubCity.besideLocality === "Tunel Bubeneč" &&
+      bubCity.tunnelObjectIcon == null
+  );
+
+  // Unknown road: neither event nor registry → no fabrication.
+  const noRoad = resolveOutsideCityTunnelRoad(null, null);
+  const emptyRoad = resolveOutsideCityTunnelRoad("", "");
+  ok(
+    "UNKNOWN_ROAD_NO_FABRICATION",
+    noRoad.road == null &&
+      emptyRoad.road == null &&
+      noRoad.usedRegistryRoad === false &&
+      // Outside header branch still renders icon+name when roadBadge is empty (no invented road).
+      /tunnelObjectIcon \+ besideBit \+ roadBadge/.test(uiSrc.replace(/\s+/g, " "))
+  );
+
+  // NDIC event road wins over registry on conflict.
+  const conflictEnrich = resolveOutsideCityTunnelEnrichment({
+    location: "Tunel Panenská",
+    road: "D5",
+    impact: "Tunel Panenská, omezení",
+    impactFull: "Tunel Panenská, omezení",
+  });
+  ok(
+    "CURRENT_NDIC_EVENT_DATA_PRIORITY",
+    conflictEnrich &&
+      conflictEnrich.road === "D5" &&
+      conflictEnrich.roadConflict === true &&
+      conflictEnrich.usedRegistryRoad === false
+  );
+
+  // Ambiguous generic "tunel" mention — fail closed.
+  const ambMatch = matchOutsideCityTunnelRegistry({
+    impact: "v tunelu probíhá údržba, jízdní pruh uzavřen",
+    impactFull: "v tunelu probíhá údržba, jízdní pruh uzavřen",
+  });
+  const ambEnrich = resolveOutsideCityTunnelEnrichment({
+    impact: "v tunelu probíhá údržba, jízdní pruh uzavřen",
+    impactFull: "v tunelu probíhá údržba, jízdní pruh uzavřen",
+  });
+  const barePlace = matchOutsideCityTunnelRegistry({
+    namedObject: "Panenská",
+    impact: "Panenská, omezení",
+  });
+  ok(
+    "AMBIGUOUS_TUNNEL_REFERENCE_FAIL_CLOSED",
+    ambMatch == null && ambEnrich == null && barePlace == null
+  );
+
+  ok(
+    "OUTSIDE_CITY_LAYOUT_WRAP",
+    /\.iuPdTrafficComm__tunnelName/.test(cssSrc) &&
+      /overflow-wrap:\s*anywhere/.test(cssSrc) &&
+      !/\.iuPdTrafficComm__tunnelName[^{]*{[^}]*text-overflow:\s*ellipsis/i.test(cssSrc)
+  );
+
+  ok(
+    "OUTSIDE_CITY_TUNNEL_SUITE_PASS",
+    panHdr.outsideCityTunnelMode === true &&
+      panHdr.besideLocality === "Tunel Panenská" &&
+      panComm.roadPresentation.road === "D8" &&
+      bubCity.municipalitySignLabel === "PRAHA" &&
+      ambEnrich == null
+  );
+}
+
 // --- Parking municipality registry + title single-render (2026-08-12) ---
 {
   function headerParts(pres) {
@@ -3011,6 +3177,19 @@ console.log(
           "URBAN_TUNNEL_U_OBCE_REGRESSION",
           "URBAN_TUNNEL_MULTIWORD_MUNI_REGRESSION",
           "URBAN_TUNNEL_REGISTRY_SUITE_PASS",
+          "OUTSIDE_CITY_TUNNEL_REGISTRY_PRESENT",
+          "TUNNEL_ASSET_FOUND",
+          "OUTSIDE_CITY_TUNNEL_DETECTED",
+          "OUTSIDE_CITY_TUNNEL_HEADER",
+          "OUTSIDE_CITY_HEADER_ORDER_ICON_TUNNEL_ROAD",
+          "OUTSIDE_CITY_EVENT_ICON_NOT_REPLACED",
+          "MUNICIPALITY_SIGN_NOT_FORCED",
+          "CITY_TUNNEL_REMAINS_CITY_MODE",
+          "UNKNOWN_ROAD_NO_FABRICATION",
+          "CURRENT_NDIC_EVENT_DATA_PRIORITY",
+          "AMBIGUOUS_TUNNEL_REFERENCE_FAIL_CLOSED",
+          "OUTSIDE_CITY_LAYOUT_WRAP",
+          "OUTSIDE_CITY_TUNNEL_SUITE_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];

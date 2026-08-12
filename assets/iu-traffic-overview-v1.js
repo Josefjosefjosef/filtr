@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -1030,6 +1030,12 @@ export function buildTrafficCardViewModel(trafficV1) {
     (presentation.communication && presentation.communication.nearMunicipalityPrefix) || null;
   const besideLocality =
     (presentation.communication && presentation.communication.besideLocality) || null;
+  const outsideCityTunnelMode =
+    !!(presentation.communication && presentation.communication.outsideCityTunnelMode);
+  const tunnelObjectIcon =
+    (presentation.communication && presentation.communication.tunnelObjectIcon) || null;
+  const tunnelObjectIconAlt =
+    (presentation.communication && presentation.communication.tunnelObjectIconAlt) || null;
   const districtBeside =
     (presentation.communication && presentation.communication.districtBeside) || null;
   const cityPartRow =
@@ -1129,6 +1135,9 @@ export function buildTrafficCardViewModel(trafficV1) {
     municipalitySignLabel,
     nearMunicipalityPrefix,
     besideLocality,
+    outsideCityTunnelMode,
+    tunnelObjectIcon,
+    tunnelObjectIconAlt,
     districtBeside,
     cityPartRow,
     parkingStatusLabel,
