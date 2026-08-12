@@ -45,6 +45,9 @@ import {
   isFullScopeClosure,
   isSingleLaneRestriction,
   isShoulderOrVergeRestriction,
+  looksLikeSegmentOrAreaLabel,
+  extractRoadNumberFromOfficialComment,
+  resolvePresentationRoadNumber,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -736,11 +739,106 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   );
 
   const uiSrc = fs.readFileSync(path.join(root, "assets/iu-prehled-dne-ui-v1.js"), "utf8");
+  const roadThenNearBranch = (uiSrc.match(
+    /const commBits = roadThenNearMuni\s*\n\s*\?([^\n]+)/
+  ) || [, ""])[1];
   ok(
     "U_OBCE_UI_ORDER_PASS",
     /roadThenNearMuni/.test(uiSrc) &&
       /nearMunicipalityPrefix/.test(uiSrc) &&
-      /roadBadge \+ nearBit \+ muniSign/.test(uiSrc)
+      /nearMuniOnly/.test(uiSrc) &&
+      /roadBadge \+ nearBit \+ muniSign/.test(uiSrc) &&
+      /roadBadge \+ nearBit \+ muniSign/.test(roadThenNearBranch) &&
+      !/besideBit/.test(roadThenNearBranch)
+  );
+
+  // Real Police / silnice 150 — TMC locality must not override near-municipality header.
+  const policeImpact =
+    "Od 12.8.2026 23:30 do 13.8.2026 01:35; na silnici 150 u obce Police okres Vsetín, poblíž fotbalového hřiště; zvěř na vozovce; sjízdné se zvýšenou opatrností";
+  const policeInput = {
+    road: "",
+    location: "Branky – Police-jih",
+    municipality: "Branky – Police-jih",
+    district: "Vsetín",
+    eventType: "prekazka",
+    impact: policeImpact,
+    impactFull: policeImpact,
+  };
+  const policeFacts = parseOfficialCommentFacts(policeImpact);
+  const policeHdr = buildLocalityHeaderModel(policeInput);
+  const policeCard = buildTrafficCardPresentation(policeInput);
+  const policeLocRow = (policeCard.expanded.rows || []).find((r) => r && r.key === "location");
+  ok(
+    "U_OBCE_POLICE_PARSE_PASS",
+    policeFacts.city === "Police" &&
+      policeFacts.municipalityRelation === "u_obce" &&
+      extractRoadNumberFromOfficialComment(policeImpact) === "150" &&
+      resolvePresentationRoadNumber(policeInput, policeFacts) === "150"
+  );
+  ok(
+    "U_OBCE_POLICE_HEADER_PASS",
+    policeHdr.municipalitySignLabel === "POLICE" &&
+      policeHdr.nearMunicipalityPrefix === "u obce" &&
+      policeHdr.besideLocality == null &&
+      policeCard.communication.roadPresentation.road === "150" &&
+      policeCard.communication.municipalitySignLabel === "POLICE" &&
+      policeCard.communication.nearMunicipalityPrefix === "u obce" &&
+      policeCard.communication.besideLocality == null
+  );
+  ok(
+    "U_OBCE_POLICE_LOCALITY_PRESERVED_PASS",
+    policeLocRow &&
+      policeLocRow.value === "Branky – Police-jih" &&
+      looksLikeSegmentOrAreaLabel("Branky – Police-jih") === true
+  );
+  ok(
+    "U_OBCE_LOCALITY_DOES_NOT_OVERRIDE_HEADER_PASS",
+    policeHdr.municipalitySignLabel !== "BRANKY – POLICE-JIH" &&
+      policeHdr.besideLocality !== "Branky – Police-jih" &&
+      resolveMunicipalitySignName(policeInput) === "Police"
+  );
+
+  const studenecWithLoc = buildLocalityHeaderModel({
+    road: "23",
+    location: "Studenec-sever",
+    impact: "na silnici 23 u obce Studenec okres Třebíč; uzavřeno",
+    impactFull: "na silnici 23 u obce Studenec okres Třebíč; uzavřeno",
+  });
+  ok(
+    "U_OBCE_STUDENEC_HEADER_STILL_PASS",
+    studenecWithLoc.municipalitySignLabel === "STUDENEC" &&
+      studenecWithLoc.nearMunicipalityPrefix === "u obce" &&
+      studenecWithLoc.besideLocality == null
+  );
+
+  const multiRoad = buildLocalityHeaderModel({
+    road: "",
+    impact: "na silnici 34 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+    impactFull: "na silnici 34 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+  });
+  const multiRoadCard = buildTrafficCardPresentation({
+    road: "",
+    impact: "na silnici 34 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+    impactFull: "na silnici 34 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+  });
+  ok(
+    "U_OBCE_MULTIWORD_WITH_ROAD_EXTRACT_PASS",
+    multiRoad.municipalitySignLabel === "NOVÉ MĚSTO NA MORAVĚ" &&
+      multiRoad.nearMunicipalityPrefix === "u obce" &&
+      multiRoadCard.communication.roadPresentation.road === "34" &&
+      multiRoad.municipalitySignLabel !== "NOVÉ"
+  );
+
+  const budejovice = buildLocalityHeaderModel({
+    road: "150",
+    impact: "na silnici 150 u obce České Budějovice okres České Budějovice; omezení",
+    impactFull: "na silnici 150 u obce České Budějovice okres České Budějovice; omezení",
+  });
+  ok(
+    "U_OBCE_CESKE_BUDEJOVICE_PASS",
+    budejovice.municipalitySignLabel === "ČESKÉ BUDĚJOVICE" &&
+      budejovice.nearMunicipalityPrefix === "u obce" &&
+      budejovice.municipalitySignLabel !== "ČESKÉ"
   );
 }
 
@@ -2744,6 +2842,13 @@ console.log(
           "U_OBCE_NO_DIVERSION_TOWN",
           "U_OBCE_MULTIWORD_PASS",
           "U_OBCE_UI_ORDER_PASS",
+          "U_OBCE_POLICE_PARSE_PASS",
+          "U_OBCE_POLICE_HEADER_PASS",
+          "U_OBCE_POLICE_LOCALITY_PRESERVED_PASS",
+          "U_OBCE_LOCALITY_DOES_NOT_OVERRIDE_HEADER_PASS",
+          "U_OBCE_STUDENEC_HEADER_STILL_PASS",
+          "U_OBCE_MULTIWORD_WITH_ROAD_EXTRACT_PASS",
+          "U_OBCE_CESKE_BUDEJOVICE_PASS",
           "MRAZOVKA_TUNNEL_PARSE_PASS",
           "MRAZOVKA_HEADER_PASS",
           "MRAZOVKA_PLACE_PASS",
