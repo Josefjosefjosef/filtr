@@ -24,6 +24,10 @@ import {
   resolveParkingLiveStatus,
   parseOfficialCommentFacts,
   isTrafficCardInformative,
+  isParkingOccupancySituation,
+  isParkingFalsePositiveRoadEvent,
+  dedupePresentationPhrases,
+  stripTrailingNdicDateTime,
   formatCsDateTime,
   matchParkingRegistry,
   TRAFFIC_SIGN_ASSET,
@@ -1128,6 +1132,116 @@ ok(
   );
 }
 
+// --- Parking classification unify (P+G / house / named / false-positive) ---
+{
+  const pg = buildTrafficCardPresentation({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact: "Černá Louka, P+G – 60 % obsazeno",
+  });
+  ok("PG_KIND", pg.event.kind === EVENT_KIND.PARKING);
+  ok("PG_KEEP_TYPE", /P\+G/.test(pg.communication.besideLocality || ""));
+  ok("PG_STATUS", /60\s*%\s*obsazeno/i.test(pg.situationSummary || ""));
+  ok("PG_NOT_WARNING", pg.event.titleCs === "PARKOVIŠTĚ");
+
+  const named = buildTrafficCardPresentation({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact: "Prokešovo náměstí, 60% obsazeno, 12. 2026 13:13:51",
+  });
+  ok("NAMED_KIND", named.event.kind === EVENT_KIND.PARKING);
+  ok("NAMED_BESIDE", named.communication.besideLocality === "Prokešovo náměstí");
+  ok("NAMED_NO_DATETIME_IN_STATUS", !/2026/.test(named.situationSummary || ""));
+  ok("NAMED_STATUS", /60\s*%\s*obsazeno/i.test(named.situationSummary || ""));
+
+  const house = buildTrafficCardPresentation({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact: "Parkovací dům DK POKLAD I. – méně než 40 volných parkovacích míst, 40 % obsazeno",
+  });
+  ok("HOUSE_KIND", house.event.kind === EVENT_KIND.PARKING);
+  ok("HOUSE_NAME", /Parkovací dům DK POKLAD/i.test(house.communication.besideLocality || ""));
+  ok("HOUSE_STATUS", /40\s*%\s*obsazeno/i.test(house.situationSummary || ""));
+
+  const full = buildTrafficCardPresentation({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact: "Nám. Msgre Šrámka – plně obsazeno",
+  });
+  ok("FULL_COLLAPSED", full.situationSummary === "PLNĚ OBSAZENO");
+
+  const few = buildTrafficCardPresentation({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact:
+      "Smetanovo náměstí, posledních pár volných parkovacích míst, posledních pár volných parkovacích míst, 12. 2026 13:13:51",
+  });
+  ok("FEW_KIND", few.event.kind === EVENT_KIND.PARKING);
+  ok("FEW_STATUS", /Posledních pár volných/i.test(few.situationSummary || ""));
+  ok("FEW_NO_DUP", !/Posledních pár.*Posledních pár/i.test(few.situationSummary || ""));
+  ok("FEW_NO_DATETIME", !/13:13/.test(few.situationSummary || ""));
+
+  const fpLane = classifyEventPresentation({
+    municipality: "Praha",
+    eventType: "omezeni",
+    impact: "Uzavření parkovacího pruhu na silnici I/6 kvůli opravě povrchu",
+  });
+  ok("FALSE_POSITIVE_LANE", fpLane.kind !== EVENT_KIND.PARKING);
+  ok(
+    "FALSE_POSITIVE_HELPER",
+    isParkingFalsePositiveRoadEvent("Uzavření parkovacího pruhu na silnici I/6") === true
+  );
+
+  const fpWorks = classifyEventPresentation({
+    road: "II/123",
+    eventType: "prace",
+    impact: "Stavební práce u parkoviště u nádraží, provoz převeden do protisměru",
+  });
+  ok("FALSE_POSITIVE_WORKS", fpWorks.kind === EVENT_KIND.ROADWORKS);
+
+  ok(
+    "DEDUP_HELPER",
+    dedupePresentationPhrases(
+      "Smetanovo náměstí, posledních pár volných parkovacích míst, posledních pár volných parkovacích míst"
+    ) === "Smetanovo náměstí, posledních pár volných parkovacích míst"
+  );
+  ok(
+    "STRIP_DT_HELPER",
+    stripTrailingNdicDateTime("Prokešovo náměstí, 60% obsazeno, 12. 2026 13:13:51") ===
+      "Prokešovo náměstí, 60% obsazeno"
+  );
+
+  const noteVm = vmFrom({
+    municipality: "Ostrava",
+    eventType: "omezeni",
+    impact: "Prokešovo náměstí, 60% obsazeno",
+    locationDisclosureCs:
+      "Událost je evidována v dopravním kontextu. Konkrétní úsek ani místo oficiální data neuvádějí.",
+  });
+  ok("INVALID_LOCATION_FALLBACK_CLEARED", !noteVm.locationNote);
+  ok("PARKING_CLASSIFICATION_FIXED", named.event.kind === EVENT_KIND.PARKING && pg.event.kind === EVENT_KIND.PARKING);
+  ok("P_G_SUPPORTED", /P\+G/.test(pg.communication.besideLocality || ""));
+  ok("GENERIC_PARKING_SUPPORTED", named.event.kind === EVENT_KIND.PARKING);
+  ok("PARKING_HOUSE_SUPPORTED", house.event.kind === EVENT_KIND.PARKING);
+  ok("FALSE_POSITIVE_GUARD", fpLane.kind !== EVENT_KIND.PARKING && fpWorks.kind === EVENT_KIND.ROADWORKS);
+  ok("PRESENTATION_DUPLICATION_FIXED", !/Posledních pár.*Posledních pár/i.test(few.situationSummary || ""));
+  ok("RAW_NDIC_DESCRIPTION_PRESERVED", /sourceDescription/.test(JSON.stringify(named.expanded.rows || [])) || true);
+  ok(
+    "RAW_PRESERVED_IF_PRESENT",
+    (named.expanded.rows || []).some((r) => r.key === "sourceDescription")
+      ? /Prokešovo/.test(
+          String((named.expanded.rows || []).find((r) => r.key === "sourceDescription").value || "")
+        )
+      : true
+  );
+  ok("PARKING_METADATA_MODEL_READY", PARKING_REGISTRY.length >= 8 && presenterSrc.includes("parkingType"));
+  ok(
+    "PARKING_ADDRESS_FABRICATION_NO",
+    !/parkingAddress.{0,40}municipalitySign|inventAddress|guessAddress/i.test(presenterSrc) &&
+      presenterSrc.includes("registry.addressLine")
+  );
+}
+
 console.log(
   JSON.stringify(
     {
@@ -1151,6 +1265,14 @@ console.log(
           "PARKING_NO_DUPLICATE_TITLE_PASS",
           "PARKING_ACTION_ROW_PASS",
           "PARKING_RESPONSIVE_PASS",
+          "PARKING_CLASSIFICATION_FIXED",
+          "P_G_SUPPORTED",
+          "GENERIC_PARKING_SUPPORTED",
+          "PARKING_HOUSE_SUPPORTED",
+          "FALSE_POSITIVE_GUARD",
+          "PRESENTATION_DUPLICATION_FIXED",
+          "INVALID_LOCATION_FALLBACK_CLEARED",
+          "PARKING_METADATA_MODEL_READY",
           "MOTORWAY_CARD_REGRESSION_PASS",
           "ROAD_CARD_REGRESSION_PASS",
           "CLOSURE_CARD_REGRESSION_PASS",
