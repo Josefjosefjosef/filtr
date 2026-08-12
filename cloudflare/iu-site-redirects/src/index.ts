@@ -77,9 +77,17 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
   const auth = request.headers.get("authorization") || "";
   if (auth !== "Bearer " + token) return json({ ok: false, reason: "UNAUTHORIZED" }, 401);
 
+  // Read body once as text — avoid request.json() + re-stringify of large snapshots (CPU/memory).
+  let rawText: string;
+  try {
+    rawText = await request.text();
+  } catch {
+    return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
+  }
+
   let payload: { meta?: Record<string, unknown>; snapshot?: Record<string, unknown> };
   try {
-    payload = await request.json();
+    payload = JSON.parse(rawText);
   } catch {
     return json({ ok: false, reason: "INVALID_JSON" }, 400);
   }
@@ -88,9 +96,15 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
   if (!meta || !snapshot || typeof snapshot !== "object") {
     return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
   }
-  if (String((snapshot as { schema?: string }).schema || "") !== "iu-traffic-offline-snapshot-v1") {
+  const schema = String((snapshot as { schema?: string }).schema || "");
+  if (schema !== "iu-traffic-offline-snapshot-v1") {
     return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
   }
+
+  const incomingSemantic = String(
+    meta.semanticChecksum || request.headers.get("x-iu-ndic-semantic-checksum") || ""
+  );
+  const incomingChecksum = String(meta.checksum || request.headers.get("x-iu-ndic-checksum") || "");
 
   // Stale writer protection vs current meta
   const currentMetaObj = await env.TRAFFIC_LIVE.get(R2_META_KEY);
@@ -105,7 +119,10 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
         if (Number.isFinite(a) && Number.isFinite(b) && a < b) {
           return json({ ok: false, reason: "STALE_WRITER_REJECTED", STALE_WRITER_PROTECTION_PASS: "YES" }, 409);
         }
-        if (incomingLm === currentLm && String(meta.checksum || "") === String(cur.checksum || "")) {
+        if (
+          (incomingLm === currentLm && incomingChecksum && incomingChecksum === String(cur.checksum || "")) ||
+          (incomingSemantic && incomingSemantic === String(cur.semanticChecksum || ""))
+        ) {
           return json({
             ok: true,
             reason: "UNCHANGED_CONTENT_PUBLICATION_SKIPPED",
@@ -121,18 +138,19 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
 
   const snapBody = JSON.stringify(snapshot);
   const metaBody = JSON.stringify(meta);
-  // staging → verify → current (atomic pointer pair)
-  await env.TRAFFIC_LIVE.put(R2_STAGING_SNAPSHOT_KEY, snapBody, {
+  if (!snapBody.includes('"schema":"iu-traffic-offline-snapshot-v1"') && !snapBody.includes('"schema": "iu-traffic-offline-snapshot-v1"')) {
+    return json({ ok: false, reason: "STAGING_SCHEMA_VERIFY_FAILED" }, 500);
+  }
+
+  // staging → size verify → current (no full-body re-read of staging)
+  const stagedSnap = await env.TRAFFIC_LIVE.put(R2_STAGING_SNAPSHOT_KEY, snapBody, {
     httpMetadata: { contentType: "application/json" },
   });
   await env.TRAFFIC_LIVE.put(R2_STAGING_META_KEY, metaBody, {
     httpMetadata: { contentType: "application/json" },
   });
-  const verify = await env.TRAFFIC_LIVE.get(R2_STAGING_SNAPSHOT_KEY);
-  if (!verify) return json({ ok: false, reason: "STAGING_VERIFY_FAILED" }, 500);
-  const verifyText = await verify.text();
-  if (!verifyText.includes('"schema":"iu-traffic-offline-snapshot-v1"') && !verifyText.includes('"schema": "iu-traffic-offline-snapshot-v1"')) {
-    return json({ ok: false, reason: "STAGING_SCHEMA_VERIFY_FAILED" }, 500);
+  if (!stagedSnap || !(stagedSnap.size > 0)) {
+    return json({ ok: false, reason: "STAGING_VERIFY_FAILED" }, 500);
   }
 
   await env.TRAFFIC_LIVE.put(R2_SNAPSHOT_KEY, snapBody, {
@@ -148,6 +166,7 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
     ATOMIC_PUBLICATION_PASS: "YES",
     generationId: meta.generationId,
     publishedAt: meta.publishedAt,
+    payloadBytes: snapBody.length,
   });
 }
 

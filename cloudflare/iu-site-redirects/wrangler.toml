@@ -22,5 +22,10 @@ LIVE_TRAFFIC_ENABLED = "true"
 binding = "TRAFFIC_LIVE"
 bucket_name = "iu-ndic-traffic-live"
 
+# Large live-publish JSON.parse + R2 puts need more than default CPU headroom.
+# Official Workers Paid default is 30s; empty-body 503s were observed under burst.
+[limits]
+cpu_ms = 60000
+
 [observability]
 enabled = true

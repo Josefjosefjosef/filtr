@@ -24,7 +24,9 @@ function mockR2(initial: Record<string, string> = {}) {
       };
     },
     async put(key: string, value: string) {
-      store.set(key, typeof value === "string" ? value : String(value));
+      const s = typeof value === "string" ? value : String(value);
+      store.set(key, s);
+      return { size: s.length, key };
     },
     _store: store,
   } as unknown as R2Bucket;
@@ -131,6 +133,46 @@ describe("iu-site-redirects", () => {
     const j = await ok.json();
     expect(j.ok).toBe(true);
     expect(j.ATOMIC_PUBLICATION_PASS).toBe("YES");
+  });
+
+  it("skips publish when semantic checksum matches current", async () => {
+    const r2 = mockR2({
+      "current/meta.json": JSON.stringify({
+        generationId: "gen_cur",
+        sourceLastModified: "Tue, 11 Aug 2026 12:00:00 GMT",
+        checksum: "body1",
+        semanticChecksum: "sem_same",
+      }),
+      "current/traffic_offline_snapshot.json": JSON.stringify({
+        schema: "iu-traffic-offline-snapshot-v1",
+        cards: [],
+      }),
+    });
+    const env = { LIVE_TRAFFIC_ENABLED: "true", LIVE_PUBLISH_TOKEN: "secret", TRAFFIC_LIVE: r2 };
+    const res = await worker.fetch(
+      req(PUB, {
+        method: "POST",
+        headers: {
+          authorization: "Bearer secret",
+          "content-type": "application/json",
+          "x-iu-ndic-semantic-checksum": "sem_same",
+        },
+        body: JSON.stringify({
+          meta: {
+            generationId: "gen_new",
+            sourceLastModified: "Tue, 11 Aug 2026 12:05:00 GMT",
+            checksum: "body2",
+            semanticChecksum: "sem_same",
+          },
+          snapshot: { schema: "iu-traffic-offline-snapshot-v1", cards: [{ id: "x" }] },
+        }),
+      }),
+      env
+    );
+    expect(res.status).toBe(200);
+    const j = await res.json();
+    expect(j.UNCHANGED_CONTENT_PUBLICATION_SKIPPED).toBe("YES");
+    expect(j.generationId).toBe("gen_cur");
   });
 
   it("rejects stale writer publish", async () => {
