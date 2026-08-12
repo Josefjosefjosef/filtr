@@ -21,6 +21,7 @@ import {
   buildHeadLocalityLabel,
   buildLocalityHeaderModel,
   resolveMunicipalitySignName,
+  resolveRoadDisplayName,
   resolveParkingLiveStatus,
   parseOfficialCommentFacts,
   isTrafficCardInformative,
@@ -399,7 +400,134 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   const place = buildPlaceAndDirectionLine({ road: "D0", eventType: "kolona", impact });
   ok("d0_place_km", /km 16,1–18,1/.test(place));
   ok("d0_place_dir", /Ruzyně/.test(place));
+  ok("d0_place_has_display_name", /Pražský okruh/.test(place));
   ok("d0_no_invent_js", !/Jižní spojka/i.test(place + buildHeadLocalityLabel({ road: "D0", impact }).head));
+}
+
+// --- D0 Pražský okruh + silný provoz ≠ kolona (global road display name) ---
+{
+  const impact = "D0, km 3 až 2.5, ve směru D1, silný provoz";
+  const input = {
+    road: "D0",
+    roadClass: "MOTORWAY",
+    roadClassLabel: "Dálnice",
+    location: "D0",
+    eventType: "kolona",
+    illustrationKey: "kolona",
+    impact,
+    impactFull: impact,
+  };
+  const roadPres = classifyRoadPresentation("D0");
+  const ev = classifyEventPresentation(input);
+  const hdr = buildLocalityHeaderModel(input);
+  const place = buildPlaceAndDirectionLine(input);
+  const detail = buildTrafficExpandedDetail(input);
+  const vm = vmFrom(input);
+  const roadNameRow = (detail.rows || []).find((r) => r.key === "roadName");
+  const locRow = (detail.rows || []).find((r) => r.key === "location");
+  const sourceFull = detail.sourceFull || "";
+  const sourceRow = (detail.rows || []).find((r) => r.key === "sourceDescription");
+
+  ok("D0_DISPLAY_NAME", resolveRoadDisplayName("D0") === "Pražský okruh");
+  ok("D0_GLOBAL_RULE_IMPLEMENTED", roadPres.roadDisplayName === "Pražský okruh");
+  ok(
+    "D0_TOP_ROW_PASS",
+    roadPres.road === "D0" &&
+      hdr.besideLocality === "Pražský okruh" &&
+      hdr.municipalitySign == null
+  );
+  ok(
+    "D0_PLACE_AND_DIRECTION_PASS",
+    place === "D0 · Pražský okruh · km 3–2,5 · směr D1"
+  );
+  ok(
+    "D0_DETAIL_ROAD_NAME_PASS",
+    roadNameRow &&
+      roadNameRow.label === "Název komunikace" &&
+      roadNameRow.value === "Pražský okruh"
+  );
+  ok("D0_FALSE_LOCALITY_REMOVED", !locRow);
+  ok(
+    "STRONG_TRAFFIC_FALSE_QUEUE_FIXED",
+    ev.kind === EVENT_KIND.HEAVY_TRAFFIC &&
+      ev.titleCs === "SILNÝ PROVOZ" &&
+      ev.titleCs !== "KOLONA" &&
+      vm.eventTypeLabel === "SILNÝ PROVOZ"
+  );
+  ok(
+    "STRONG_TRAFFIC_ICON_JAM",
+    ev.asset === TRAFFIC_SIGN_ASSET.TRAFFIC_JAM &&
+      vm.eventSignSrc === TRAFFIC_SIGN_ASSET.TRAFFIC_JAM
+  );
+  ok(
+    "RAW_NDIC_DESCRIPTION_UNCHANGED",
+    sourceFull.includes("silný provoz") &&
+      !/Pražský okruh/.test(sourceFull) &&
+      sourceFull.includes("D0, km 3 až 2.5") &&
+      sourceRow &&
+      sourceRow.value === sourceFull
+  );
+  ok("D0_REGRESSION_PASS", place.includes("Pražský okruh") && ev.titleCs === "SILNÝ PROVOZ");
+
+  // B) skutečná kolona
+  const bEv = classifyEventPresentation({
+    road: "D0",
+    eventType: "kolona",
+    impact: "D0, km 10, ve směru D1, tvoří se kolona, kolona 1 km",
+  });
+  ok("REAL_QUEUE_STILL_WORKS", bEv.kind === EVENT_KIND.QUEUE && bEv.titleCs === "KOLONA");
+
+  // C) nehoda + silný provoz
+  const cImpact = "D0, km 5, ve směru D1, nehoda, silný provoz, 1 havarované vozidlo";
+  const cEv = classifyEventPresentation({
+    road: "D0",
+    eventType: "kolona",
+    impact: cImpact,
+  });
+  const cSum = buildTrafficSituationSummary({
+    road: "D0",
+    eventType: "kolona",
+    impact: cImpact,
+  });
+  ok(
+    "ACCIDENT_PRIORITY_OVER_STRONG_TRAFFIC_PASS",
+    cEv.kind === EVENT_KIND.ACCIDENT &&
+      cEv.titleCs === "NEHODA" &&
+      /Silný provoz/i.test(cSum)
+  );
+
+  // D) nehoda + kolona
+  const dImpact = "D0, km 8, ve směru D1, nehoda, tvoří se kolona";
+  const dEv = classifyEventPresentation({
+    road: "D0",
+    eventType: "kolona",
+    impact: dImpact,
+  });
+  const dSum = buildTrafficSituationSummary({
+    road: "D0",
+    eventType: "kolona",
+    impact: dImpact,
+  });
+  ok(
+    "ACCIDENT_PRIORITY_OVER_QUEUE_PASS",
+    dEv.kind === EVENT_KIND.ACCIDENT &&
+      dEv.titleCs === "NEHODA" &&
+      dEv.kind !== EVENT_KIND.QUEUE &&
+      /kolon/i.test(dSum)
+  );
+
+  // E) ostatní dálnice bez Pražský okruh
+  const otherRoads = ["D1", "D2", "D3", "D5", "D8", "D10", "D11", "D35"];
+  let otherOk = true;
+  for (const r of otherRoads) {
+    const p = buildPlaceAndDirectionLine({
+      road: r,
+      impact: r + ", km 10, silný provoz",
+    });
+    const dn = resolveRoadDisplayName(r);
+    if (dn != null || /Pražský okruh/.test(p)) otherOk = false;
+  }
+  ok("OTHER_MOTORWAYS_REGRESSION_PASS", otherOk);
 }
 
 // --- Hornopolní locality hierarchy ---
@@ -2054,6 +2182,19 @@ console.log(
           "STREET_CARD_REGRESSION_PASS",
           "TRAFFIC_CARD_SUITE_PASS",
           "TRAFFIC_CARD_REGRESSION_PASS",
+          "D0_DISPLAY_NAME",
+          "D0_GLOBAL_RULE_IMPLEMENTED",
+          "D0_TOP_ROW_PASS",
+          "D0_PLACE_AND_DIRECTION_PASS",
+          "D0_DETAIL_ROAD_NAME_PASS",
+          "D0_FALSE_LOCALITY_REMOVED",
+          "STRONG_TRAFFIC_FALSE_QUEUE_FIXED",
+          "REAL_QUEUE_STILL_WORKS",
+          "ACCIDENT_PRIORITY_OVER_STRONG_TRAFFIC_PASS",
+          "ACCIDENT_PRIORITY_OVER_QUEUE_PASS",
+          "RAW_NDIC_DESCRIPTION_UNCHANGED",
+          "D0_REGRESSION_PASS",
+          "OTHER_MOTORWAYS_REGRESSION_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
