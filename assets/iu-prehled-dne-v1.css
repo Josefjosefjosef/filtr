@@ -1233,41 +1233,42 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdRoadBadge {
   min-height: 28px;
   padding: 3px 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.85rem;
   border: 1px solid transparent;
   flex: 0 0 auto;
 }
+/* Czech number plates: dálnice = red, silnice = blue, E-tah = green */
 .iuPdRoadBadge--motorway,
 .iuPdTrafficLegend__item.iuPdRoadBadge--motorway {
-  color: #1d4ed8;
-  background: rgba(37, 99, 235, 0.14);
-  border-color: rgba(37, 99, 235, 0.35);
+  color: #fff;
+  background: #c8102e;
+  border-color: #9f0c24;
 }
+.iuPdRoadBadge--road,
 .iuPdRoadBadge--class-i,
-.iuPdTrafficLegend__item.iuPdRoadBadge--class-i {
-  color: #b91c1c;
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(185, 28, 28, 0.35);
-}
 .iuPdRoadBadge--class-ii,
-.iuPdTrafficLegend__item.iuPdRoadBadge--class-ii {
-  color: #0f766e;
-  background: rgba(20, 184, 166, 0.14);
-  border-color: rgba(13, 148, 136, 0.35);
-}
 .iuPdRoadBadge--class-iii,
+.iuPdTrafficLegend__item.iuPdRoadBadge--road,
+.iuPdTrafficLegend__item.iuPdRoadBadge--class-i,
+.iuPdTrafficLegend__item.iuPdRoadBadge--class-ii,
 .iuPdTrafficLegend__item.iuPdRoadBadge--class-iii {
-  color: #3f6212;
-  background: rgba(132, 204, 22, 0.16);
-  border-color: rgba(101, 163, 13, 0.35);
+  color: #fff;
+  background: #003399;
+  border-color: #002266;
+}
+.iuPdRoadBadge--e-road,
+.iuPdTrafficLegend__item.iuPdRoadBadge--e-road {
+  color: #fff;
+  background: #1b7a3d;
+  border-color: #145c2e;
 }
 .iuPdRoadBadge--local,
 .iuPdRoadBadge--unknown,
 .iuPdTrafficLegend__item.iuPdRoadBadge--local {
-  color: #475569;
-  background: rgba(148, 163, 184, 0.16);
-  border-color: rgba(100, 116, 139, 0.32);
+  color: #0f172a;
+  background: #f8fafc;
+  border-color: rgba(100, 116, 139, 0.45);
 }
 .iuPdTrafficCard {
   display: flex;
@@ -1283,6 +1284,13 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   gap: 8px;
   min-width: 0;
 }
+.iuPdTrafficTop__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .iuPdTrafficTop__badge {
   flex: 1 1 auto;
   min-width: 0;
@@ -1293,12 +1301,89 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdTrafficTop__map .iuPdCard__czMap,
 .iuPdTrafficTop__map .iuPrehledDne__czMap {
   float: none;
-  width: 52px;
-  height: 30px;
+  width: 64px;
+  height: 37px;
   margin: 0;
+  /* Map pin / silhouette uses same token as timeline dot */
+  color: var(--iu-pd-dot, var(--iu-pd-accent));
 }
 .iuPdTrafficTop__map .iuPrehledDne__czMapSvg {
-  width: 41.6px;
+  width: 57.6px;
+  height: 33.1px;
+  fill: currentColor;
+  display: block;
+}
+.iuPdTrafficComm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.iuPdTrafficRoadSign {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+}
+.iuPdTrafficComm__dir,
+.iuPdTrafficComm__place,
+.iuPdTrafficComm__street {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--iu-pd-text);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.iuPdTrafficEventRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+.iuPdTrafficEventSign {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+  /* Keep authentic traffic-sign colors (no dark-mode recolor). */
+  filter: none;
+}
+.iuPdTrafficEventTitle {
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: var(--iu-pd-text);
+  /* Short event titles must stay readable — never break mid-glyph. */
+  overflow-wrap: normal;
+  word-break: normal;
+  min-width: 0;
+}
+.iuPdTrafficBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
+.iuPdTrafficBlock__h {
+  color: var(--iu-pd-muted);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.iuPdTrafficBlock__v {
+  color: var(--iu-pd-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 .iuPdTrafficHead {
   display: flex;
@@ -1430,6 +1515,32 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   white-space: pre-wrap;
   max-width: 100%;
 }
+.iuPdTrafficMore__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+.iuPdTrafficMore__row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.iuPdTrafficMore__k {
+  color: var(--iu-pd-muted);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.iuPdTrafficMore__v {
+  color: var(--iu-pd-text);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 .iuPdTrafficNote {
   margin: 0;
   font-size: 0.74rem;
@@ -1519,29 +1630,31 @@ html.dark .iuPdRoadBadge--motorway,
 html[data-theme="dark"] .iuPdRoadBadge--motorway,
 html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--motorway,
 html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--motorway {
-  color: #93c5fd;
-  background: rgba(37, 99, 235, 0.28);
+  color: #fff;
+  background: #c8102e;
+  border-color: #9f0c24;
 }
+html.dark .iuPdRoadBadge--road,
 html.dark .iuPdRoadBadge--class-i,
-html[data-theme="dark"] .iuPdRoadBadge--class-i,
-html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-i,
-html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-i {
-  color: #fca5a5;
-  background: rgba(239, 68, 68, 0.28);
-}
 html.dark .iuPdRoadBadge--class-ii,
-html[data-theme="dark"] .iuPdRoadBadge--class-ii,
-html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-ii,
-html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-ii {
-  color: #5eead4;
-  background: rgba(20, 184, 166, 0.24);
-}
 html.dark .iuPdRoadBadge--class-iii,
+html[data-theme="dark"] .iuPdRoadBadge--road,
+html[data-theme="dark"] .iuPdRoadBadge--class-i,
+html[data-theme="dark"] .iuPdRoadBadge--class-ii,
 html[data-theme="dark"] .iuPdRoadBadge--class-iii,
-html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--class-iii,
-html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--class-iii {
-  color: #bef264;
-  background: rgba(132, 204, 22, 0.22);
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--road,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--road {
+  color: #fff;
+  background: #003399;
+  border-color: #002266;
+}
+html.dark .iuPdRoadBadge--e-road,
+html[data-theme="dark"] .iuPdRoadBadge--e-road,
+html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--e-road,
+html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--e-road {
+  color: #fff;
+  background: #1b7a3d;
+  border-color: #145c2e;
 }
 html.dark .iuPdRoadBadge--local,
 html.dark .iuPdRoadBadge--unknown,
@@ -1549,8 +1662,21 @@ html[data-theme="dark"] .iuPdRoadBadge--local,
 html[data-theme="dark"] .iuPdRoadBadge--unknown,
 html.dark .iuPdTrafficLegend__item.iuPdRoadBadge--local,
 html[data-theme="dark"] .iuPdTrafficLegend__item.iuPdRoadBadge--local {
-  color: #cbd5e1;
+  color: #e2e8f0;
   background: rgba(100, 116, 139, 0.28);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+html.dark .iuPdTrafficBlock__v,
+html[data-theme="dark"] .iuPdTrafficBlock__v,
+html.dark .iuPdTrafficEventTitle,
+html[data-theme="dark"] .iuPdTrafficEventTitle,
+html.dark .iuPdTrafficComm__dir,
+html[data-theme="dark"] .iuPdTrafficComm__dir,
+html.dark .iuPdTrafficComm__place,
+html[data-theme="dark"] .iuPdTrafficComm__place,
+html.dark .iuPdTrafficMore__v,
+html[data-theme="dark"] .iuPdTrafficMore__v {
+  color: #e2e8f0;
 }
 html.dark .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended),
 html[data-theme="dark"] .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended) {

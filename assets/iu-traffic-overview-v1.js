@@ -11,6 +11,11 @@
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
 import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=ndic-catalog-cap-fix-v1-20260811";
+import {
+  buildTrafficCardPresentation,
+  expandTrafficAbbreviationsCs,
+  TRAFFIC_MAP_DOT_CSS_VAR,
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -204,6 +209,7 @@ const ROAD_CLASS_LABEL_CS = Object.freeze({
   CLASS_I: "Silnice I. třídy",
   CLASS_II: "Silnice II. třídy",
   CLASS_III: "Silnice III. třídy",
+  E_ROAD: "Evropský tah",
   LOCAL: "Místní komunikace",
   UNKNOWN: "Komunikace",
 });
@@ -253,6 +259,15 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "subjectScopeLabel",
   "locationDisclosureCs",
   "routeMatchMode",
+  "parkingAvailableSpaces",
+  "parkingCapacity",
+  "parkingOccupancy",
+  "freeSpaces",
+  "motorVehicleRoadConfirmed",
+  "isMotorVehicleRoad",
+  "roadFacilityType",
+  "queueLengthKm",
+  "queueLengthMeters",
 ]);
 
 function humanDirectionOrNull(raw) {
@@ -448,6 +463,20 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     subjectScopeLabel: c.subjectScopeLabel || null,
     locationDisclosureCs: c.locationDisclosureCs || null,
     routeMatchMode: c.routeMatchMode || null,
+    parkingAvailableSpaces:
+      c.parkingAvailableSpaces != null
+        ? c.parkingAvailableSpaces
+        : c.freeSpaces != null
+          ? c.freeSpaces
+          : null,
+    parkingCapacity: c.parkingCapacity != null ? c.parkingCapacity : null,
+    parkingOccupancy: c.parkingOccupancy != null ? c.parkingOccupancy : null,
+    freeSpaces: c.freeSpaces != null ? c.freeSpaces : null,
+    motorVehicleRoadConfirmed: c.motorVehicleRoadConfirmed === true,
+    isMotorVehicleRoad: c.isMotorVehicleRoad === true,
+    roadFacilityType: c.roadFacilityType || null,
+    queueLengthKm: c.queueLengthKm != null ? c.queueLengthKm : null,
+    queueLengthMeters: c.queueLengthMeters != null ? c.queueLengthMeters : null,
     publicationEnabled: false,
   };
 
@@ -552,16 +581,8 @@ export function trafficBadgeModel(trafficV1, opts) {
   if (change === "VALIDITY_SHORTENED" || change === "EVENT_UPDATED" || change.indexOf("CHANGED") >= 0) {
     return { kind: "changed", text: "🟡 ZMĚNĚNÁ", aria: "Změněná dopravní událost" };
   }
-  if (change === "EVENT_CREATED") {
-    if (!isTrafficNewBadgeEligible(trafficV1, nowMs)) return null;
-    if (/pocasi|weather/.test(cat)) {
-      return { kind: "warn", text: "⚠️ NOVÁ", aria: "Nová dopravní událost — počasí" };
-    }
-    if (/prace|roadwork|works/.test(cat)) {
-      return { kind: "new-works", text: "🔵 NOVÁ", aria: "Nové práce na silnici" };
-    }
-    return { kind: "new", text: "🔴 NOVÁ", aria: "Nová dopravní událost" };
-  }
+  // NOVÁ badge removed for ordinary active traffic cards (EVENT_CREATED → no badge).
+  // FUTURE / ENDED / ZMĚNĚNÁ remain available above.
   // No redundant "AKTIVNÍ DOPRAVA" / "DOPRAVA ŘSD" — traffic context is already clear.
   return null;
 }
@@ -984,12 +1005,14 @@ export function buildTrafficCardViewModel(trafficV1) {
   const change = String((tv.feed && tv.feed.feedChangeType) || "");
   const showNew = change === "EVENT_CREATED";
   const showActive = String(tv.lifecycleStatus || "") === "ACTIVE";
-  const road = tv.road != null ? String(tv.road) : "";
-  const roadClass = tv.roadClass || "UNKNOWN";
+  const presentation = buildTrafficCardPresentation(tv);
+  const roadPres = presentation.roadPresentation;
+  const road = roadPres.road || (tv.road != null ? String(tv.road) : "");
+  const roadClass = roadPres.roadClass || tv.roadClass || "UNKNOWN";
   const roadClassLabel =
     tv.roadClassLabel || ROAD_CLASS_LABEL_CS[roadClass] || ROAD_CLASS_LABEL_CS.UNKNOWN;
   const eventType = tv.eventType || tv.category || null;
-  const eventTypeLabel = eventTypeLabelCs(eventType);
+  const eventTypeLabel = presentation.event.titleCs || eventTypeLabelCs(eventType);
   const municipality = tv.municipality != null ? String(tv.municipality).trim() : "";
   const district = tv.district != null ? String(tv.district).trim() : "";
   const locality =
@@ -997,6 +1020,7 @@ export function buildTrafficCardViewModel(trafficV1) {
     (tv.location && String(tv.location).trim()) ||
     (tv.subjectScopeLabel && String(tv.subjectScopeLabel).trim()) ||
     road ||
+    presentation.communication.localityFallback ||
     "";
   const localityLine = compactLocalityLine(municipality, district);
   const dir = humanDirectionOrNull(tv.direction);
@@ -1005,34 +1029,19 @@ export function buildTrafficCardViewModel(trafficV1) {
     tv.locationDisclosureCs != null && String(tv.locationDisclosureCs).trim()
       ? String(tv.locationDisclosureCs).trim()
       : "";
-  let communicationLine = "";
-  if (precise) {
-    const bits = [];
-    if (road) bits.push(road);
-    if (tv.kilometer != null) bits.push("km " + String(tv.kilometer));
-    if (tv.section) bits.push(String(tv.section));
-    if (dir) bits.push(dir);
-    communicationLine = bits.join(" · ");
-  } else if (road || tv.subjectScopeLabel) {
-    communicationLine = String(road || tv.subjectScopeLabel);
-  }
+  const communicationLine = presentation.placeLine || "";
   const impactShort = tv.impact != null ? String(tv.impact) : "";
-  const impactFull = tv.impactFull != null ? String(tv.impactFull) : "";
-  const leadText = buildTrafficLeadText({
-    eventTypeLabel,
-    road,
-    municipality,
-    impactShort,
-  });
+  const impactFullRaw = tv.impactFull != null ? String(tv.impactFull) : "";
+  const impactFull = impactFullRaw || impactShort;
+  const leadText = presentation.situationSummary;
   const eventLine = leadText || eventTypeLabel || "";
-  const validityLine = tv.validityLine != null ? String(tv.validityLine) : "";
-  const illustrationKey = tv.illustrationKey || "neutral";
+  const validityLine = presentation.validityLine || (tv.validityLine != null ? String(tv.validityLine) : "");
+  const illustrationKey = presentation.event.illustrationKey || tv.illustrationKey || "neutral";
   const mapUrl = resolveSafeTrafficMapUrl(tv.mapTarget);
   const followId = String(tv.publicEventId || "").trim();
-  const sourceLabel = tv.source != null ? String(tv.source) : "ŘSD/NDIC";
-  const showMore = fullTextAddsDetail(leadText, impactFull);
+  const sourceLabel = presentation.sourceLabel || "ŘSD/NDIC";
+  const showMore = presentation.showMore && !!(impactFull || (presentation.expanded.rows || []).length);
 
-  // Compact structured rows — never emit empty / UNKNOWN / N/A placeholders.
   const detailRows = [];
   if (road) detailRows.push({ key: "road", label: "Komunikace", value: road });
   if (localityLine) detailRows.push({ key: "locality", label: "Lokalita", value: localityLine });
@@ -1040,7 +1049,6 @@ export function buildTrafficCardViewModel(trafficV1) {
   if (eventTypeLabel) detailRows.push({ key: "event", label: "Událost", value: eventTypeLabel });
   if (validityLine) detailRows.push({ key: "validity", label: "Platnost", value: validityLine });
 
-  // Legacy quickBlocks: keep municipality marker for fixtures; no duplicate Obce/Okres boxes / restriction clone.
   const quickBlocks = [];
   if (municipality) {
     quickBlocks.push({ key: "municipality", title: "Lokalita", body: localityLine || municipality });
@@ -1053,39 +1061,55 @@ export function buildTrafficCardViewModel(trafficV1) {
     });
   }
 
-  const headlineBits = [];
-  if (eventTypeLabel) headlineBits.push(eventTypeLabel);
-  if (road && (!eventTypeLabel || !String(eventTypeLabel).includes(road))) {
-    headlineBits.push(road);
-  }
-  const headline = headlineBits.join(" · ");
+  const headline = eventTypeLabel || "";
+  const directionArrow = dir ? "→ směr " + dir : "";
 
   return {
     badge,
-    roadBadge: { road, roadClass, label: roadClassLabel },
+    roadBadge: {
+      road,
+      roadClass,
+      label: roadClassLabel,
+      numberBadge: roadPres.numberBadge,
+      roadTypeIcon: roadPres.roadTypeIcon,
+      roadTypeIconAlt: roadPres.roadTypeIconAlt || "",
+      showMotorwayIcon: roadPres.showMotorwayIcon === true,
+      showMotorVehiclesIcon: roadPres.showMotorVehiclesIcon === true,
+    },
     locality,
     localityLine,
     municipality,
     district,
     direction: dir,
+    directionArrow,
     eventTypeLabel,
+    eventKind: presentation.event.kind,
+    eventSignSrc: presentation.event.asset,
     communicationLine,
+    placeLine: presentation.placeLine,
+    placeLabel: presentation.placeLabel,
+    situationLabel: presentation.situationLabel,
+    situationSummary: presentation.situationSummary,
     locationNote,
     eventLine,
     leadText,
     headline,
     detailRows,
+    expandedRows: presentation.expanded.rows || [],
     validityLine,
     impactShort,
-    impactFull,
+    impactFull: expandTrafficAbbreviationsCs(impactFull),
+    impactFullRaw,
     showMore,
     quickBlocks,
     illustrationKey,
     mapUrl,
+    mapDotCssVar: TRAFFIC_MAP_DOT_CSS_VAR,
     followId,
     sourceLabel,
     showActive,
     showNew,
+    presentation,
   };
 }
 

@@ -8,6 +8,7 @@ export const ROAD_CLASS = Object.freeze({
   CLASS_I: "CLASS_I",
   CLASS_II: "CLASS_II",
   CLASS_III: "CLASS_III",
+  E_ROAD: "E_ROAD",
   LOCAL: "LOCAL",
   UNKNOWN: "UNKNOWN",
 });
@@ -17,6 +18,7 @@ export const ROAD_CLASS_LABEL_CS = Object.freeze({
   CLASS_I: "Silnice I. třídy",
   CLASS_II: "Silnice II. třídy",
   CLASS_III: "Silnice III. třídy",
+  E_ROAD: "Evropský tah",
   LOCAL: "Místní komunikace",
   UNKNOWN: "Komunikace",
 });
@@ -51,6 +53,7 @@ function clean(s) {
 export function classifyRoadNumber(roadNumber) {
   const r = clean(roadNumber);
   if (!r) return ROAD_CLASS.UNKNOWN;
+  if (/^E\d+[A-Za-z]?$/i.test(r) || /^E\s*\d+/i.test(r)) return ROAD_CLASS.E_ROAD;
   if (/^D\d+[A-Za-z]?$/i.test(r) || /^Dálnice\s*D?\d+/i.test(r)) return ROAD_CLASS.MOTORWAY;
   if (/^III\/\d+/i.test(r)) return ROAD_CLASS.CLASS_III;
   if (/^II\/\d+/i.test(r)) return ROAD_CLASS.CLASS_II;
@@ -253,13 +256,12 @@ export function formatValidityLineCs(validFrom, validTo, openEnded) {
   const day = fmtDay.format(fromMs);
   const t0 = fmtTime.format(fromMs);
   if (openEnded || !Number.isFinite(toMs)) {
-    return day + " od " + t0;
+    return day + " · od " + t0;
   }
-  const sameDay =
-    fmtDay.format(fromMs) === fmtDay.format(toMs);
+  const sameDay = fmtDay.format(fromMs) === fmtDay.format(toMs);
   const t1 = fmtTime.format(toMs);
-  if (sameDay) return day + " od " + t0 + " do " + t1;
-  return day + " " + t0 + " – " + fmtDay.format(toMs) + " " + t1;
+  if (sameDay) return day + " · " + t0 + "–" + t1;
+  return "od " + day + " " + t0 + " do " + fmtDay.format(toMs) + " " + t1;
 }
 
 /**

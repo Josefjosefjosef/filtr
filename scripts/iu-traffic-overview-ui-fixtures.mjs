@@ -164,7 +164,7 @@ ok(
 {
   const item = trafficProjectionToFeedItem(sampleCard()).item;
   const badge = trafficBadgeModel(item.trafficV1);
-  ok("badge", /NOVÁ/.test(badge.text));
+  ok("badge_new_removed", badge == null);
   ok("map_ok", resolveSafeTrafficMapUrl(item.trafficV1.mapTarget).includes("dopravniinfo.cz"));
   ok("hist", trafficHistoryLines({ feed: { feedChangeType: "VALIDITY_EXTENDED" } }).length === 0);
 }
