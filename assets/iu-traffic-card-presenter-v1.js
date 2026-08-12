@@ -13,6 +13,10 @@ import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
 } from "./iu-parking-registry-v1.js?v=ndic-parking-hl-nadrazi-muni-v1-20260812";
+import {
+  matchTunnelRegistry,
+  resolveTunnelDisplayName,
+} from "./iu-tunnel-registry-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
 
 export {
   matchParkingRegistry,
@@ -22,6 +26,15 @@ export {
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
 } from "./iu-parking-registry-v1.js?v=ndic-parking-hl-nadrazi-muni-v1-20260812";
+
+export {
+  matchTunnelRegistry,
+  resolveTunnelDisplayName,
+  TUNNEL_REGISTRY,
+  TUNNEL_REGISTRY_VERSION,
+  normalizeTunnelAliasKey,
+  isAmbiguousTunnelName,
+} from "./iu-tunnel-registry-v1.js?v=ndic-urban-tunnel-registry-v1-20260813";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -1827,9 +1840,72 @@ function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityP
 }
 
 /**
+ * Urban tunnel registry enrichment — never overrides a conflicting official municipality.
+ * @returns {{
+ *  entry: object,
+ *  municipality: string|null,
+ *  displayName: string|null,
+ *  conflict: boolean,
+ *  usedRegistryMunicipality: boolean,
+ * }|null}
+ */
+export function resolveTunnelRegistryEnrichment(input = {}, factsIn = null) {
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const named =
+    (facts.namedObject && facts.namedObjectKind === LOCATION_KIND.TUNNEL
+      ? facts.namedObject
+      : null) ||
+    (classifyLocationKindFromName(input.location) === LOCATION_KIND.TUNNEL
+      ? streetBareName(input.location)
+      : null);
+  const entry = matchTunnelRegistry({
+    ...input,
+    namedObject: named || facts.namedObject || null,
+    tunnelName: named || null,
+    location: input.location,
+    impact: input.impact,
+    impactFull: input.impactFull,
+    summary: input.summary,
+    summaryFull: input.summaryFull,
+  });
+  if (!entry || entry.urban !== true) return null;
+
+  const officialRaw =
+    resolveMunicipalityCandidate(
+      input.municipality,
+      facts.city,
+      sourceBlob(input),
+      facts.cityPart || input.cityPart,
+      facts.municipalityRelation
+    ) || "";
+  const official = clean(officialRaw);
+  const registryMuni = clean(entry.municipality);
+  let conflict = false;
+  let municipality = null;
+  let usedRegistryMunicipality = false;
+  if (official && registryMuni && !samePlaceName(official, registryMuni)) {
+    conflict = true;
+    municipality = official; // official structured/comment wins; never silent overwrite
+  } else if (official) {
+    municipality = official;
+  } else if (registryMuni) {
+    municipality = registryMuni;
+    usedRegistryMunicipality = true;
+  }
+  const displayName = resolveTunnelDisplayName(entry, named || facts.namedObject || input.location);
+  return {
+    entry,
+    municipality,
+    displayName,
+    conflict,
+    usedRegistryMunicipality,
+  };
+}
+
+/**
  * Municipality/city name for the Czech entrance-style signboard.
  * Never invents Praha/Jižní spojka; never treats street or city-part as municipality.
- * Parking: after live NDIC fields, may enrich from verified parking registry match only.
+ * Parking / urban tunnels: after live NDIC fields, may enrich from verified registries only.
  */
 export function resolveMunicipalitySignName(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
@@ -1857,6 +1933,13 @@ export function resolveMunicipalitySignName(input = {}) {
       parkingName: facts.parkingName || input.parkingName,
     });
     if (reg && reg.municipality) city = clean(reg.municipality);
+  }
+  if (!city) {
+    const tun = resolveTunnelRegistryEnrichment(input, facts);
+    // Only enrich when no official municipality and no conflict path.
+    if (tun && tun.usedRegistryMunicipality && tun.municipality && !tun.conflict) {
+      city = clean(tun.municipality);
+    }
   }
   if (!city) return null;
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
@@ -1887,8 +1970,13 @@ export function buildLocalityHeaderModel(input = {}) {
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
     cityPart = clean(input.municipality);
   }
-  const namedObject = facts.namedObject ? streetBareName(facts.namedObject) : null;
-  const namedObjectKind = facts.namedObjectKind || null;
+  let namedObject = facts.namedObject ? streetBareName(facts.namedObject) : null;
+  let namedObjectKind = facts.namedObjectKind || null;
+  const tunnelEnrich = resolveTunnelRegistryEnrichment(input, facts);
+  if (tunnelEnrich && tunnelEnrich.displayName) {
+    namedObject = tunnelEnrich.displayName;
+    namedObjectKind = LOCATION_KIND.TUNNEL;
+  }
   const nearMunicipality =
     facts.municipalityRelation === "u_obce" && !!municipalitySign;
   const registry = matchParkingRegistry({
@@ -1923,6 +2011,7 @@ export function buildLocalityHeaderModel(input = {}) {
     locationKind = LOCATION_KIND.MUNICIPALITY;
   } else if (namedObject && !resolveRoadDisplayName(road)) {
     // Named tunnel/bridge/square beats generic locationLabel (e.g. Letná).
+    // Urban tunnels: [MĚSTO] + tunnel name (municipalitySign from NDIC or tunnel registry).
     // Road aliases (D0 → Pražský okruh) keep the communication display name instead.
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);

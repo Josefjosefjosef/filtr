@@ -48,6 +48,8 @@ import {
   looksLikeSegmentOrAreaLabel,
   extractRoadNumberFromOfficialComment,
   resolvePresentationRoadNumber,
+  matchTunnelRegistry,
+  resolveTunnelRegistryEnrichment,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -2362,6 +2364,138 @@ ok(
   );
 }
 
+// --- Urban tunnel registry: [MĚSTO] + tunnel name (enrichment, fail-closed) ---
+{
+  ok(
+    "URBAN_TUNNEL_REGISTRY_FILE_PRESENT",
+    fs.existsSync(path.join(root, "assets/iu-tunnel-registry-v1.js"))
+  );
+
+  const bubImpact = "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen";
+  const bubInput = {
+    location: "Tunel Bubeneč",
+    eventType: "omezeni",
+    impact: bubImpact,
+    impactFull: bubImpact,
+  };
+  const bubHdr = buildLocalityHeaderModel(bubInput);
+  const bubEnrich = resolveTunnelRegistryEnrichment(bubInput);
+  ok(
+    "URBAN_TUNNEL_BUBENEC_MATCH",
+    matchTunnelRegistry({ namedObject: "Tunel Bubeneč" })?.tunnelId ===
+      "praha-tunnel-bubenec" &&
+      bubEnrich &&
+      bubEnrich.usedRegistryMunicipality === true &&
+      bubEnrich.conflict === false
+  );
+  ok(
+    "URBAN_TUNNEL_BUBENEC_HEADER",
+    bubHdr.municipalitySignLabel === "PRAHA" &&
+      bubHdr.besideLocality === "Tunel Bubeneč" &&
+      bubHdr.streetLabel == null &&
+      !/PRAHA 7|BUBENEČ$/i.test(bubHdr.municipalitySignLabel || "")
+  );
+  ok(
+    "URBAN_TUNNEL_BUBENEC_NO_CITYPART_INVENTION",
+    bubHdr.cityPartRow == null
+  );
+
+  const mrazUrban = buildLocalityHeaderModel({
+    municipality: "Praha",
+    cityPart: "Praha 5",
+    impact: "ulice Tunel Mrázovka, Praha 5, Praha, tunel uzavřen, pravidelná údržba",
+    impactFull: "ulice Tunel Mrázovka, Praha 5, Praha, tunel uzavřen, pravidelná údržba",
+    eventType: "omezeni",
+  });
+  ok(
+    "URBAN_TUNNEL_MRAZOVKA_HEADER",
+    mrazUrban.municipalitySignLabel === "PRAHA" &&
+      mrazUrban.besideLocality === "Tunel Mrázovka" &&
+      /městská část:\s*Praha 5/i.test(mrazUrban.cityPartRow || "")
+  );
+
+  const unknownTun = buildLocalityHeaderModel({
+    impact: "Tunel Neznámý Testovice, jízdní pruh uzavřen",
+    impactFull: "Tunel Neznámý Testovice, jízdní pruh uzavřen",
+    eventType: "omezeni",
+  });
+  ok(
+    "URBAN_TUNNEL_UNKNOWN_FAIL_CLOSED",
+    matchTunnelRegistry({
+      namedObject: "Tunel Neznámý Testovice",
+      impact: "Tunel Neznámý Testovice, jízdní pruh uzavřen",
+    }) == null &&
+      unknownTun.municipalitySign == null &&
+      unknownTun.besideLocality === "Tunel Neznámý Testovice"
+  );
+
+  const conflictTun = resolveTunnelRegistryEnrichment({
+    municipality: "Ostrava",
+    impact: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+    impactFull: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+  });
+  const conflictHdr = buildLocalityHeaderModel({
+    municipality: "Ostrava",
+    impact: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+    impactFull: "Tunel Bubeneč, jižní tubus B, jízdní pruh uzavřen",
+  });
+  ok(
+    "URBAN_TUNNEL_OFFICIAL_PRECEDENCE",
+    conflictTun &&
+      conflictTun.conflict === true &&
+      conflictTun.usedRegistryMunicipality === false &&
+      conflictHdr.municipalitySignLabel === "OSTRAVA" &&
+      conflictHdr.municipalitySignLabel !== "PRAHA"
+  );
+
+  ok(
+    "URBAN_TUNNEL_NO_FUZZY_BARE_PLACE",
+    matchTunnelRegistry({ namedObject: "Bubeneč", impact: "Bubeneč, omezení" }) ==
+      null &&
+      matchTunnelRegistry({ namedObject: "Mrázovka", impact: "Mrázovka, omezení" }) ==
+        null
+  );
+
+  const policeStill = buildLocalityHeaderModel({
+    road: "",
+    location: "Branky – Police-jih",
+    municipality: "Branky – Police-jih",
+    district: "Vsetín",
+    impact:
+      "na silnici 150 u obce Police okres Vsetín, poblíž fotbalového hřiště",
+    impactFull:
+      "na silnici 150 u obce Police okres Vsetín, poblíž fotbalového hřiště",
+  });
+  ok(
+    "URBAN_TUNNEL_U_OBCE_REGRESSION",
+    policeStill.municipalitySignLabel === "POLICE" &&
+      policeStill.nearMunicipalityPrefix === "u obce" &&
+      policeStill.besideLocality == null
+  );
+
+  const multiMuni = resolveMunicipalitySignName({
+    municipality: "České",
+    impact: "v obci České Budějovice, okr. České Budějovice, omezení",
+    impactFull: "v obci České Budějovice, okr. České Budějovice, omezení",
+  });
+  ok(
+    "URBAN_TUNNEL_MULTIWORD_MUNI_REGRESSION",
+    multiMuni === "České Budějovice" ||
+      resolveMunicipalitySignName({
+        impact: "na silnici 34 u obce České Budějovice okres České Budějovice",
+        impactFull: "na silnici 34 u obce České Budějovice okres České Budějovice",
+      }) === "České Budějovice"
+  );
+
+  ok(
+    "URBAN_TUNNEL_REGISTRY_SUITE_PASS",
+    bubHdr.municipalitySignLabel === "PRAHA" &&
+      mrazUrban.municipalitySignLabel === "PRAHA" &&
+      unknownTun.municipalitySign == null &&
+      conflictTun.conflict === true
+  );
+}
+
 // --- Parking municipality registry + title single-render (2026-08-12) ---
 {
   function headerParts(pres) {
@@ -2866,6 +3000,17 @@ console.log(
           "TUNNEL_FULL_CLOSURE_NOT_LANE_REGRESSION_PASS",
           "TUNNEL_ULICE_PREFIX_STRIP_PASS",
           "TUNNEL_SEMANTICS_SUITE_PASS",
+          "URBAN_TUNNEL_REGISTRY_FILE_PRESENT",
+          "URBAN_TUNNEL_BUBENEC_MATCH",
+          "URBAN_TUNNEL_BUBENEC_HEADER",
+          "URBAN_TUNNEL_BUBENEC_NO_CITYPART_INVENTION",
+          "URBAN_TUNNEL_MRAZOVKA_HEADER",
+          "URBAN_TUNNEL_UNKNOWN_FAIL_CLOSED",
+          "URBAN_TUNNEL_OFFICIAL_PRECEDENCE",
+          "URBAN_TUNNEL_NO_FUZZY_BARE_PLACE",
+          "URBAN_TUNNEL_U_OBCE_REGRESSION",
+          "URBAN_TUNNEL_MULTIWORD_MUNI_REGRESSION",
+          "URBAN_TUNNEL_REGISTRY_SUITE_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
