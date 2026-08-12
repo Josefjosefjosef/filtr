@@ -34,6 +34,10 @@ import {
   analyzeRestrictionScope,
   analyzePrimaryCause,
   analyzeTrafficCondition,
+  extractNamedTransportObject,
+  resolveConfirmedStreet,
+  classifyLocationKindFromName,
+  looksLikeStreetName,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -41,6 +45,7 @@ import {
   RESTRICTION_SCOPE,
   PRIMARY_CAUSE,
   TRAFFIC_CONDITION,
+  LOCATION_KIND,
 } from "../assets/iu-traffic-card-presenter-v1.js";
 import {
   PARKING_REGISTRY,
@@ -787,7 +792,11 @@ ok(
     impact: "práce na silnici",
   });
   ok("street_without_safe_muni", streetOnly.municipalitySign == null);
-  ok("street_without_safe_muni_beside", /ulice:\s*Hornopolní/.test(streetOnly.besideLocality || ""));
+  // Without "ulice:" evidence, morphology alone must NOT invent "ulice: …".
+  ok(
+    "street_without_safe_muni_beside",
+    streetOnly.besideLocality === "Hornopolní" && streetOnly.streetLabel == null
+  );
 
   const obecRoad = buildLocalityHeaderModel({
     municipality: "Třinec",
@@ -1426,6 +1435,184 @@ ok(
   );
 }
 
+// --- Named object vs fabricated street (Bubenečský tunel / Letná) ---
+{
+  const bubImpact =
+    "Bubenečský tunel, Praha 7, Praha, nehoda, neprůjezdný pravý jízdní pruh, od 12.8.2026 16:46 do 12.8.2026 19:46, 1x DOD, směr Barrandovský most, porouchané vozidlo, Zdroj: TSK Praha / DIC";
+  const bubInput = {
+    municipality: "Praha",
+    location: "Letná",
+    eventType: "nehoda",
+    impact: bubImpact,
+    impactFull: bubImpact,
+  };
+  const bubFacts = parseOfficialCommentFacts(bubImpact);
+  const bubHdr = buildLocalityHeaderModel(bubInput);
+  const bubPres = buildTrafficCardPresentation(bubInput);
+
+  ok(
+    "BUBENECSKY_TUNNEL_LIVE_FIXTURE_PASS",
+    bubFacts.namedObject === "Bubenečský tunel" &&
+      bubFacts.namedObjectKind === LOCATION_KIND.TUNNEL &&
+      bubFacts.city === "Praha" &&
+      bubFacts.cityPart === "Praha 7" &&
+      resolveConfirmedStreet(bubInput, bubFacts) == null &&
+      bubHdr.besideLocality === "Bubenečský tunel" &&
+      bubHdr.streetLabel == null &&
+      bubHdr.municipalitySignLabel === "PRAHA" &&
+      /městská část:\s*Praha 7/i.test(bubHdr.cityPartRow || "") &&
+      !/ulice:\s*Letná/i.test(bubHdr.besideLocality || "") &&
+      bubPres.event.kind === EVENT_KIND.ACCIDENT
+  );
+  ok(
+    "NO_FABRICATED_STREET_PASS",
+    !/ulice:\s*Letná/i.test(bubHdr.besideLocality || "") &&
+      resolveConfirmedStreet({ location: "Letná", municipality: "Praha" }) == null &&
+      looksLikeStreetName("Letná") === true
+  );
+  ok(
+    "NO_STREET_FROM_GENERIC_LOCALITY_PASS",
+    buildLocalityHeaderModel({
+      municipality: "Praha",
+      location: "Letná",
+      eventType: "omezeni",
+      impact: "omezení dopravy",
+    }).streetLabel == null &&
+      !/^ulice:/i.test(
+        buildLocalityHeaderModel({
+          municipality: "Praha",
+          location: "Letná",
+          eventType: "omezeni",
+          impact: "omezení dopravy",
+        }).besideLocality || ""
+      )
+  );
+  ok(
+    "NO_STREET_FROM_CITYPART_PASS",
+    resolveConfirmedStreet({
+      municipality: "Praha",
+      location: "Praha 7",
+      cityPart: "Praha 7",
+      impact: "Praha 7, Praha, omezení",
+    }) == null &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        location: "Praha 7",
+        impact: "Praha 7, Praha, omezení",
+      }).streetLabel == null
+  );
+  ok(
+    "NO_STREET_FROM_TMC_LABEL_PASS",
+    resolveConfirmedStreet({
+      location: "Letná",
+      streetHint: "Letná",
+      municipality: "Praha",
+      impact: "Bubenečský tunel, Praha 7, Praha, nehoda",
+    }) == null
+  );
+  ok(
+    "NO_STREET_FROM_NAMED_OBJECT_PASS",
+    !/^ulice:/i.test(bubHdr.besideLocality || "") &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        impact: "Bubenečský tunel, Praha, nehoda",
+      }).streetLabel == null
+  );
+  ok(
+    "NAMED_OBJECT_PRIORITY_OVER_GENERIC_LOCALITY_PASS",
+    bubHdr.namedObject === "Bubenečský tunel" &&
+      bubHdr.besideLocality === "Bubenečský tunel" &&
+      bubHdr.besideLocality !== "Letná" &&
+      !(bubPres.expanded.rows || []).some(
+        (r) => r && r.key === "location" && /Letná/i.test(String(r.value || ""))
+      ) &&
+      (bubPres.expanded.rows || []).some(
+        (r) => r && r.key === "location" && /Bubenečský tunel/i.test(String(r.value || ""))
+      )
+  );
+  ok(
+    "TUNNEL_LOCATION_PRIORITY_PASS",
+    extractNamedTransportObject("Bubenečský tunel, Praha").kind === LOCATION_KIND.TUNNEL &&
+      classifyLocationKindFromName("Tunel Blanka") === LOCATION_KIND.TUNNEL &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        location: "Dejvice",
+        impact: "Strahovský tunel, Praha 6, Praha, práce na silnici",
+      }).besideLocality === "Strahovský tunel"
+  );
+  ok(
+    "BRIDGE_LOCATION_PRIORITY_PASS",
+    extractNamedTransportObject("Barrandovský most, Praha 5, Praha, omezení").kind ===
+      LOCATION_KIND.BRIDGE &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        location: "Hlubočepy",
+        impact: "Barrandovský most, Praha 5, Praha, omezení",
+      }).besideLocality === "Barrandovský most" &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        location: "Hlubočepy",
+        impact: "Barrandovský most, Praha 5, Praha, omezení",
+      }).streetLabel == null
+  );
+  ok(
+    "SQUARE_NOT_STREET_PASS",
+    classifyLocationKindFromName("Prokešovo náměstí") === LOCATION_KIND.SQUARE &&
+      looksLikeStreetName("Prokešovo náměstí") === false &&
+      !/^ulice:/i.test(
+        buildLocalityHeaderModel({
+          municipality: "Ostrava",
+          location: "Prokešovo náměstí",
+          eventType: "omezeni",
+          impact: "Prokešovo náměstí, Ostrava, omezení",
+        }).besideLocality || ""
+      )
+  );
+  ok(
+    "MUNICIPALITY_REMAINS_PRIMARY_SIGN_PASS",
+    bubHdr.municipalitySignLabel === "PRAHA" && bubHdr.municipalitySignLabel !== "PRAHA 7"
+  );
+  ok(
+    "CITYPART_REMAINS_SECONDARY_PASS",
+    bubHdr.cityPart === "Praha 7" && /městská část:\s*Praha 7/i.test(bubHdr.cityPartRow || "")
+  );
+  ok(
+    "NO_STREET_LABEL_WITHOUT_STREET_EVIDENCE_PASS",
+    !/^ulice:/i.test(bubHdr.besideLocality || "") &&
+      buildLocalityHeaderModel({
+        municipality: "Praha",
+        impact: "Bubenečský tunel, Praha, nehoda",
+      }).streetLabel == null
+  );
+  ok(
+    "RAW_NDIC_DESCRIPTION_PRESERVED_PASS",
+    (bubPres.expanded.rows || []).some(
+      (r) =>
+        r &&
+        r.key === "sourceDescription" &&
+        /Bubenečský tunel/i.test(String(r.value || "")) &&
+        /porouchané vozidlo/i.test(String(r.value || ""))
+    )
+  );
+  ok(
+    "STREET_CARD_REGRESSION_PASS",
+    buildLocalityHeaderModel({
+      municipality: "Ostrava",
+      location: "Hornopolní",
+      eventType: "prace",
+      impact:
+        "ulice Hornopolní, Moravská Ostrava a Přívoz, Ostrava, práce na inženýrských sítích",
+    }).besideLocality === "ulice: Hornopolní"
+  );
+  ok("ACCIDENT_CARD_REGRESSION_PASS", bubPres.event.kind === EVENT_KIND.ACCIDENT);
+
+  // Parking house named object must not become street
+  ok(
+    "PARKING_HOUSE_NOT_STREET",
+    classifyLocationKindFromName("Parkovací dům DK POKLAD I.") === LOCATION_KIND.PARKING
+  );
+}
+
 // --- Parking municipality registry + title single-render (2026-08-12) ---
 {
   function headerParts(pres) {
@@ -1818,6 +2005,20 @@ console.log(
           "KM_ORDER_PRESERVED_PASS",
           "FUTURE_LIFECYCLE_TYPE_INDEPENDENT_PASS",
           "RAW_NDIC_DESCRIPTION_PRESERVED_PASS",
+          "BUBENECSKY_TUNNEL_LIVE_FIXTURE_PASS",
+          "NO_FABRICATED_STREET_PASS",
+          "NO_STREET_FROM_GENERIC_LOCALITY_PASS",
+          "NO_STREET_FROM_CITYPART_PASS",
+          "NO_STREET_FROM_TMC_LABEL_PASS",
+          "NO_STREET_FROM_NAMED_OBJECT_PASS",
+          "NAMED_OBJECT_PRIORITY_OVER_GENERIC_LOCALITY_PASS",
+          "TUNNEL_LOCATION_PRIORITY_PASS",
+          "BRIDGE_LOCATION_PRIORITY_PASS",
+          "SQUARE_NOT_STREET_PASS",
+          "MUNICIPALITY_REMAINS_PRIMARY_SIGN_PASS",
+          "CITYPART_REMAINS_SECONDARY_PASS",
+          "NO_STREET_LABEL_WITHOUT_STREET_EVIDENCE_PASS",
+          "STREET_CARD_REGRESSION_PASS",
           "TRAFFIC_CARD_SUITE_PASS",
           "TRAFFIC_CARD_REGRESSION_PASS",
         ].map((id) => {
