@@ -1333,12 +1333,20 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdTrafficComm__street,
 .iuPdTrafficComm__head,
 .iuPdTrafficComm__beside,
-.iuPdTrafficComm__district {
+.iuPdTrafficComm__district,
+.iuPdTrafficComm__cityPart {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--iu-pd-text);
   overflow-wrap: anywhere;
   min-width: 0;
+}
+.iuPdTrafficComm__cityPart {
+  width: 100%;
+  font-size: 0.82rem;
+  font-weight: 650;
+  opacity: 0.92;
+  margin-top: 2px;
 }
 .iuPdTrafficComm__sep {
   opacity: 0.55;
@@ -1591,6 +1599,47 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 }
 .iuPdCard--traffic .iuPdCard__actions .iuPdBtn--primary {
   min-width: 7.5rem;
+  color: #ffffff !important;
+  background: #2563eb;
+  border-color: #1d4ed8;
+  font-weight: 700;
+}
+.iuPdCard--traffic .iuPdCard__actions .iuPdBtn--primary.is-on {
+  background: #1d4ed8;
+  border-color: #1e40af;
+  color: #ffffff !important;
+}
+.iuPdCard--traffic .iuPdCard__actions.iuPdCard__actions--traffic,
+.iuPdCard--traffic .iuPrehledDne__actions.iuPdCard__actions--traffic {
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+.iuPdCard--traffic .iuPdCard__actionsMap {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+.iuPdCard--traffic .iuPdCard__actionsMap .iuPdCard__czMap,
+.iuPdCard--traffic .iuPdCard__actionsMap .iuPrehledDne__czMap {
+  float: none;
+  width: 48px;
+  height: 28px;
+  margin: 0;
+  color: var(--iu-pd-dot, var(--iu-pd-accent));
+}
+.iuPdCard--traffic .iuPdCard__actionsMap .iuPrehledDne__czMapSvg {
+  width: 43.2px;
+  height: 24.8px;
+  fill: currentColor;
+  display: block;
+}
+/* Traffic map no longer lives in the top-right header. */
+.iuPdCard--traffic .iuPdTrafficTop__map {
+  display: none !important;
 }
 .iuPdCard--traffic .iuPdBtn:focus-visible,
 .iuPdTrafficChip:focus-visible {
@@ -1716,9 +1765,17 @@ html.dark .iuPdTrafficComm__beside,
 html[data-theme="dark"] .iuPdTrafficComm__beside,
 html.dark .iuPdTrafficComm__district,
 html[data-theme="dark"] .iuPdTrafficComm__district,
+html.dark .iuPdTrafficComm__cityPart,
+html[data-theme="dark"] .iuPdTrafficComm__cityPart,
 html.dark .iuPdTrafficMore__v,
 html[data-theme="dark"] .iuPdTrafficMore__v {
   color: #e2e8f0;
+}
+html.dark .iuPdCard--traffic .iuPdCard__actions .iuPdBtn--primary,
+html[data-theme="dark"] .iuPdCard--traffic .iuPdCard__actions .iuPdBtn--primary {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #ffffff !important;
 }
 /* Municipality board stays a physical white CZ sign in dark mode. */
 html.dark .iuPdMuniSign,

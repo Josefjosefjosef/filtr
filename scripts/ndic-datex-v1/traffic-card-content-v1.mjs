@@ -96,8 +96,10 @@ export function extractLocalityFromOfficialComment(summary) {
   let district = null;
   let streetHint = null;
 
-  const mObec = s.match(/(?:v\s+katastru\s+obce|obec)\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)/u);
-  if (mObec) municipality = clean(mObec[1]);
+  const mObci = s.match(
+    /(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+(?:nad|pod|u)\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)/u
+  );
+  if (mObci) municipality = clean(mObci[1]);
 
   if (!municipality) {
     // ", Postřelmov, okr. Šumperk"
@@ -108,7 +110,8 @@ export function extractLocalityFromOfficialComment(summary) {
   const mOkr = s.match(/okr\.\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)/u);
   if (mOkr) district = clean(mOkr[1]);
 
-  const mStreet = s.match(/ulice\s+([^,;]{2,60})/i);
+  const mStreet =
+    s.match(/\bv\s+ulici\s+([^,;]{2,60})/i) || s.match(/\bulice:?\s+([^,;]{2,60})/i);
   if (mStreet) streetHint = clean(mStreet[1]);
 
   return { municipality, district, streetHint };
@@ -116,22 +119,27 @@ export function extractLocalityFromOfficialComment(summary) {
 
 /**
  * Prefer human locality over national fallback labels.
+ * Never promotes a street name into the card locality/municipality slot.
  * @param {{ locationLabel?: string|null, roadNumber?: string|null, summary?: string|null, subjectScopeLabel?: string|null }} p
  */
 export function chooseHumanLocality(p = {}) {
   const fromComment = extractLocalityFromOfficialComment(p.summary);
   if (fromComment.municipality) return fromComment.municipality;
-  if (fromComment.streetHint) return fromComment.streetHint;
 
   const loc = clean(p.locationLabel);
-  if (loc && !BAD_LOCALITY.test(loc) && loc !== clean(p.roadNumber)) return loc;
+  const road = clean(p.roadNumber);
+  if (loc && !BAD_LOCALITY.test(loc) && loc !== road) {
+    // Fail-closed: street-like tokens are not municipalities.
+    if (!/(ská|cká|ovská|ová|ova|ná|ní)$/i.test(loc) || /\s/.test(loc)) {
+      if (!/^(náměstí|nábřeží)\b/i.test(loc) && !/\btřída\b/i.test(loc)) return loc;
+    }
+  }
 
   const scope = clean(p.subjectScopeLabel);
-  if (scope && !BAD_LOCALITY.test(scope) && scope !== clean(p.roadNumber)) return scope;
+  if (scope && !BAD_LOCALITY.test(scope) && scope !== road) return scope;
 
   if (fromComment.district) return "okres " + fromComment.district;
 
-  const road = clean(p.roadNumber);
   if (road) return road;
   return null;
 }

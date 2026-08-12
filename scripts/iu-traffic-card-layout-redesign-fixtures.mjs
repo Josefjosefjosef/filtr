@@ -76,6 +76,9 @@ ok("ui_no_dangerously", !uiSrc.includes("dangerouslySetInnerHTML"));
 ok("ui_follow_only_traffic", /traffic-follow/.test(uiSrc) && /Sledovat/.test(uiSrc));
 ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
 ok("ui_zobrazit_vice", uiSrc.includes("Zobrazit více"));
+ok("ui_traffic_map_bottom", uiSrc.includes("iuPdCard__actionsMap"));
+ok("ui_traffic_map_not_top", !uiSrc.includes('iuPdTrafficTop__map">${czMapMarkup}'));
+ok("css_traffic_actions_map", cssSrc.includes(".iuPdCard__actionsMap"));
 
 {
   const active = trafficBadgeModel({

@@ -135,6 +135,48 @@ export function expandTrafficAbbreviationsCs(text) {
   return s;
 }
 
+function streetBareName(raw) {
+  return clean(raw)
+    .replace(/^ulice:?\s+/i, "")
+    .replace(/^v\s+ulici\s+/i, "");
+}
+
+/** Heuristic: street-like tokens must never become the white municipality board. */
+export function looksLikeStreetName(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  if (/^(náměstí|nábřeží)\b/i.test(t)) return true;
+  if (/\btřída\b/i.test(t)) return true;
+  if (/^praha\s+\d/i.test(t)) return false;
+  if (/\s/.test(t)) {
+    if (/\ba\b/i.test(t)) return false;
+    return /(ská|cká|ovská)(?:\s|$)/i.test(t);
+  }
+  return /(ská|cká|ovská|ová|ova|ná|ní)$/i.test(t);
+}
+
+function looksLikeRoadNumberToken(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  return /^(?:[DIE]\s*)?\d+[A-Za-z]?$/i.test(t) || /^(?:I{1,3}|D|E|R)\/\d+/i.test(t);
+}
+
+function splitStreetList(raw) {
+  return String(raw || "")
+    .split(/\s*,\s*/)
+    .map(streetBareName)
+    .filter(Boolean);
+}
+
+function formatParkingStatusLabel(facts) {
+  if (!facts) return null;
+  if (facts.parkingFullyOccupied) return "PLNĚ OBSAZENO";
+  if (facts.parkingOccupancyPercent != null && Number.isFinite(facts.parkingOccupancyPercent)) {
+    return String(facts.parkingOccupancyPercent) + " % OBSAZENO";
+  }
+  return null;
+}
+
 /**
  * Extract only facts that appear in trusted NDIC publicComment / impact text.
  */
@@ -146,11 +188,14 @@ export function parseOfficialCommentFacts(rawText) {
     kilometerLabel: null,
     directionHuman: null,
     street: null,
+    streetMulti: false,
     city: null,
     cityPart: null,
     district: null,
     parkingName: null,
+    parkingCity: null,
     parkingOccupancyPercent: null,
+    parkingFullyOccupied: false,
     parkingFreeUpperBound: null,
     queueLengthKm: null,
     situationPhrases: [],
@@ -183,29 +228,78 @@ export function parseOfficialCommentFacts(rawText) {
     if (d && !/^(kladný|záporný)\s+směr$/i.test(d)) out.directionHuman = d;
   }
 
-  const street = text.match(/\bulice\s+([^,;]{2,80})/i);
-  if (street) out.street = clean(street[1]);
+  const mObci = text.match(
+    /\b[Vv]\s+(?:katastru\s+obce|obci)\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+(?:nad|pod|u)\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)/u
+  );
+  if (mObci) out.city = clean(mObci[1]);
 
-  const okr = text.match(/\bokr\.\s*([^,;]{2,60})/i);
+  const streetIn =
+    text.match(/\bv\s+ulici\s+([^,;]{2,80})/i) || text.match(/\bulice:?\s+([^,;]{2,80})/i);
+  if (streetIn) {
+    let sn = streetBareName(streetIn[1]);
+    sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
+    sn = clean(sn.split(/\s+okres\b/i)[0]);
+    if (sn) out.street = sn;
+  }
+
+  const okr = text.match(/\bokr\.\s*([^,;]{2,60})/i) || text.match(/\bokres\s+([^,;]{2,60})/i);
   if (okr) out.district = clean(okr[1]);
 
-  // "ulice X, CityPart, City," pattern (Hornopolní)
+  // Multi-street lists: never pick one street as the whole-event locality.
+  const multiStreetBlob = text.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
+  if (multiStreetBlob) {
+    const parts = splitStreetList(multiStreetBlob[1]);
+    const streetish = parts.filter((p) => looksLikeStreetName(p) || /náměstí/i.test(p));
+    if (streetish.length >= 2 && streetish.length >= Math.ceil(parts.length * 0.6)) {
+      out.streetMulti = true;
+      out.street = null;
+    }
+  }
+
+  // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is not another street.
   const locTrip = text.match(
-    /\bulice\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\b/u
+    /\bulice:?\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\b/u
   );
-  if (locTrip) {
-    out.street = clean(locTrip[1]);
-    out.cityPart = clean(locTrip[2]);
-    out.city = clean(locTrip[3]);
-  } else {
+  if (locTrip && !out.streetMulti) {
+    const s0 = streetBareName(locTrip[1]);
+    const s1 = clean(locTrip[2]);
+    const s2 = clean(locTrip[3]);
+    const cityOk = s2 && !looksLikeStreetName(s2) && !looksLikeRoadNumberToken(s2);
+    const midOk = s1 && (!looksLikeStreetName(s1) || /\s/.test(s1));
+    if (cityOk && midOk) {
+      out.street = s0;
+      out.cityPart = s1;
+      if (!out.city) out.city = s2;
+    }
+  }
+
+  if (!out.city) {
     const cityHint = text.match(
       /,\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,\s*okr\./u
     );
-    if (cityHint) out.city = clean(cityHint[1]);
+    if (cityHint && !looksLikeStreetName(cityHint[1])) out.city = clean(cityHint[1]);
   }
 
-  const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,60})/i);
-  if (pr) out.parkingName = "P+R " + clean(pr[1]);
+  // "Praha 4, Praha" / "Praha 13, Praha"
+  const prahaPart = text.match(/\b(Praha\s+\d+[a-zA-Z]?)\s*,\s*Praha\b/u);
+  if (prahaPart) {
+    out.cityPart = clean(prahaPart[1]);
+    if (!out.city) out.city = "Praha";
+  }
+
+  const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,80})/i);
+  if (pr) {
+    let prName = clean(pr[1]);
+    const citySuffix = prName.match(
+      /\s+(Praha|Brno|Ostrava|Plzeň|Olomouc|Liberec|Pardubice|Zlín|Kladno|Havířov|Opava|Frýdek-Místek|České Budějovice|Hradec Králové|Ústí nad Labem)$/i
+    );
+    if (citySuffix) {
+      out.parkingCity = clean(citySuffix[1]);
+      prName = clean(prName.slice(0, citySuffix.index));
+    }
+    out.parkingName = "P+R " + prName;
+  }
+  if (/\bplně\s+obsazeno\b/i.test(text)) out.parkingFullyOccupied = true;
   const occ = text.match(/(\d{1,3})\s*%\s*obsazeno/i);
   if (occ) out.parkingOccupancyPercent = Number(occ[1]);
   const freeBound = text.match(/méně než\s+(\d+)\s+volných/i);
@@ -336,7 +430,9 @@ export function classifyEventPresentation(input = {}) {
     parkingFields
   ) {
     const meta = { ...EVENT_KIND_META[EVENT_KIND.PARKING] };
-    if (facts.parkingName) meta.titleCs = "PARKOVIŠTĚ – " + facts.parkingName.toUpperCase();
+    const status = formatParkingStatusLabel(facts);
+    if (status) meta.titleCs = "PARKOVIŠTĚ — " + status;
+    else meta.titleCs = "PARKOVIŠTĚ";
     return { kind: EVENT_KIND.PARKING, ...meta, facts };
   }
 
@@ -525,10 +621,6 @@ export function buildTrafficSituationSummary(input = {}) {
   return "Dopravní omezení.";
 }
 
-function streetBareName(raw) {
-  return clean(raw).replace(/^ulice\s+/i, "");
-}
-
 function samePlaceName(a, b) {
   const x = clean(a).toLowerCase();
   const y = clean(b).toLowerCase();
@@ -543,19 +635,25 @@ export function resolveMunicipalitySignName(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const structured = clean(input.municipality);
   const fromComment = clean(facts.city);
+  const parkingCity = clean(facts.parkingCity);
   const street = streetBareName(facts.street || input.streetHint || input.street);
   const cityPart = clean(facts.cityPart || input.cityPart);
 
-  let city = structured || fromComment || "";
+  let city = structured || fromComment || parkingCity || "";
   if (!city) return null;
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
+  if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
+  if (looksLikeRoadNumberToken(city)) return null;
+  if (!structured && looksLikeStreetName(city)) return null;
   if (street && samePlaceName(city, street)) return null;
   if (cityPart && samePlaceName(city, cityPart)) return null;
+  if (facts.streetMulti && looksLikeStreetName(city)) return null;
   return city;
 }
 
 /**
  * Locality header parts: [municipality sign] [road] [street/beside].
+ * Preferred order: municipality → road number → "ulice: …" (SMV icon is first in UI when confirmed).
  */
 export function buildLocalityHeaderModel(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
@@ -565,19 +663,43 @@ export function buildLocalityHeaderModel(input = {}) {
   const location = clean(input.location);
   const district = clean(input.district) || facts.district || "";
   const cityPart = clean(facts.cityPart || input.cityPart);
+  const parkingName = facts.parkingName || null;
+  const parkingStatusLabel = formatParkingStatusLabel(facts);
+  const streetMulti = facts.streetMulti === true;
 
   let besideLocality = "";
-  if (street) besideLocality = street;
-  else if (
+  let streetLabel = null;
+  if (parkingName) {
+    besideLocality = parkingName;
+  } else if (streetMulti) {
+    besideLocality = "více ulic";
+    streetLabel = "více ulic";
+  } else if (street) {
+    streetLabel = "ulice: " + street;
+    besideLocality = streetLabel;
+  } else if (
     location &&
     !samePlaceName(location, municipalitySign) &&
     location !== road &&
+    !looksLikeRoadNumberToken(location) &&
     !/^d\d/i.test(location) &&
     !/^p\s*\+\s*r\b/i.test(location) &&
-    !samePlaceName(location, cityPart)
+    !samePlaceName(location, cityPart) &&
+    !looksLikeStreetName(location)
   ) {
-    // Short location label (e.g. Hornopolní) when it is not the city itself.
     besideLocality = location;
+  } else if (
+    location &&
+    !samePlaceName(location, municipalitySign) &&
+    location !== road &&
+    !looksLikeRoadNumberToken(location) &&
+    !/^d\d/i.test(location) &&
+    !/^p\s*\+\s*r\b/i.test(location) &&
+    !samePlaceName(location, cityPart) &&
+    looksLikeStreetName(location)
+  ) {
+    streetLabel = "ulice: " + streetBareName(location);
+    besideLocality = streetLabel;
   }
 
   let districtBeside = "";
@@ -585,15 +707,26 @@ export function buildLocalityHeaderModel(input = {}) {
     districtBeside = "okres " + district;
   }
 
+  const cityPartRow = cityPart && !samePlaceName(cityPart, municipalitySign)
+    ? "městská část: " + cityPart
+    : null;
+
   return {
     municipalitySign,
     municipalitySignLabel: municipalitySign ? municipalitySign.toUpperCase() : null,
     besideLocality: besideLocality || null,
+    streetLabel: streetLabel || null,
     districtBeside: districtBeside || null,
     street: street || null,
+    streetMulti,
     cityPart: cityPart || null,
+    cityPartRow,
     district: district || null,
-    parkingName: facts.parkingName || null,
+    parkingName,
+    parkingStatusLabel,
+    parkingFullyOccupied: facts.parkingFullyOccupied === true,
+    parkingOccupancyPercent:
+      facts.parkingOccupancyPercent != null ? facts.parkingOccupancyPercent : null,
   };
 }
 
@@ -615,9 +748,18 @@ export function buildHeadLocalityLabel(input = {}) {
     return { head: facts.parkingName, subtitle: place || null };
   }
 
-  if (hdr.municipalitySign && hdr.besideLocality) {
+  const streetHead = hdr.street ? hdr.street.toUpperCase() : null;
+  if (hdr.municipalitySign && streetHead) {
     return {
-      head: hdr.municipalitySignLabel + " — " + hdr.besideLocality.toUpperCase(),
+      head: hdr.municipalitySignLabel + " — " + streetHead,
+      subtitle: null,
+      municipalitySign: hdr.municipalitySign,
+      besideLocality: hdr.besideLocality,
+    };
+  }
+  if (hdr.municipalitySign && hdr.besideLocality && !hdr.street) {
+    return {
+      head: hdr.municipalitySignLabel + " — " + String(hdr.besideLocality).toUpperCase(),
       subtitle: null,
       municipalitySign: hdr.municipalitySign,
       besideLocality: hdr.besideLocality,
@@ -710,9 +852,15 @@ export function buildCommunicationLine(input = {}) {
     municipalitySign: hdr.municipalitySign,
     municipalitySignLabel: hdr.municipalitySignLabel,
     besideLocality: hdr.besideLocality,
+    streetLabel: hdr.streetLabel,
     districtBeside: hdr.districtBeside,
     street: hdr.street || null,
+    streetMulti: hdr.streetMulti === true,
+    cityPart: hdr.cityPart || null,
+    cityPartRow: hdr.cityPartRow || null,
     parkingName: facts.parkingName || null,
+    parkingStatusLabel: hdr.parkingStatusLabel || null,
+    roadTypeIconFirst: roadPres.showMotorVehiclesIcon === true && roadPres.showMotorwayIcon !== true,
   };
 }
 
@@ -760,7 +908,9 @@ export function buildTrafficExpandedDetail(input = {}) {
   push("district", "Okres", input.district || facts.district);
   push("location", "Lokalita", input.location);
   if (facts.parkingName) push("parkingName", "Parkoviště", facts.parkingName);
-  if (facts.parkingOccupancyPercent != null) {
+  const parkingStatus = formatParkingStatusLabel(facts);
+  if (parkingStatus) push("parkingStatus", "Obsazenost", parkingStatus);
+  else if (facts.parkingOccupancyPercent != null) {
     push("parkingOccupancy", "Obsazenost", facts.parkingOccupancyPercent + " %");
   }
   if (facts.parkingFreeUpperBound != null) {
@@ -824,8 +974,11 @@ export function buildTrafficCardPresentation(trafficV1) {
   const hasPublicOaLeak = /\bOA\b/.test(situationSummary);
 
   let eventTitle = event.titleCs;
-  if (event.kind === EVENT_KIND.PARKING && communication.parkingName) {
-    eventTitle = "PARKOVIŠTĚ – " + String(communication.parkingName).toUpperCase();
+  if (event.kind === EVENT_KIND.PARKING) {
+    const status =
+      (communication && communication.parkingStatusLabel) ||
+      formatParkingStatusLabel(event.facts || {});
+    eventTitle = status ? "PARKOVIŠTĚ — " + status : "PARKOVIŠTĚ";
   }
 
   return {
