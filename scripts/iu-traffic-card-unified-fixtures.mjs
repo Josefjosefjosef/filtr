@@ -643,6 +643,103 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   );
 }
 
+// --- "u obce X" localization (road + near municipality, not diversion towns) ---
+{
+  const studenecImpact =
+    "na silnici 23 u obce Studenec okres Třebíč; odklon s řízením provozu pro nákladní automobily přes Pozďatín pro ostatní dopravu přes Studenec Okarec; vozovka uzavřena v obou směrech; velký požár; v blízkosti pozemní komunikace probíhají hasební práce na přilehlém lesním porostu, uzavřeno pro HZS techniku.";
+  const studenecInput = {
+    road: "23",
+    roadClass: "CLASS_I",
+    roadClassLabel: "Silnice I. třídy",
+    district: "Třebíč",
+    eventType: "uzavirka",
+    impact: studenecImpact,
+    impactFull: studenecImpact,
+  };
+  const facts = parseOfficialCommentFacts(studenecImpact);
+  const hdr = buildLocalityHeaderModel(studenecInput);
+  const place = buildPlaceAndDirectionLine(studenecInput);
+  const detail = buildTrafficExpandedDetail(studenecInput);
+  const comm = buildTrafficCardPresentation(studenecInput).communication;
+  const obecRow = (detail.rows || []).find((r) => r.key === "municipality");
+  const okresRow = (detail.rows || []).find((r) => r.key === "district");
+
+  ok("U_OBCE_PARSE_STUDENEC", facts.city === "Studenec" && facts.municipalityRelation === "u_obce");
+  ok(
+    "U_OBCE_HEADER_PASS",
+    hdr.municipalitySignLabel === "STUDENEC" &&
+      hdr.nearMunicipalityPrefix === "u obce" &&
+      comm.nearMunicipalityPrefix === "u obce"
+  );
+  ok(
+    "U_OBCE_PLACE_PASS",
+    place === "23 · u obce Studenec · okres Třebíč"
+  );
+  ok(
+    "U_OBCE_DETAIL_OBEC_PASS",
+    obecRow && obecRow.value === "Studenec" && okresRow && /Třebíč/i.test(okresRow.value)
+  );
+  ok(
+    "U_OBCE_NO_DIVERSION_TOWN",
+    hdr.municipalitySign !== "Pozďatín" &&
+      hdr.municipalitySign !== "Okarec" &&
+      !/Pozďatín|Okarec/i.test(place)
+  );
+  ok(
+    "U_OBCE_NOT_DISTRICT_AS_MUNI",
+    hdr.municipalitySignLabel !== "TŘEBÍČ" && hdr.municipalitySign !== "Třebíč"
+  );
+  ok(
+    "U_OBCE_NO_V_BLIZKOSTI_REWRITE",
+    !/v blízkosti|poblíž/i.test(place) &&
+      /u obce Studenec/.test(place)
+  );
+
+  const multi = buildLocalityHeaderModel({
+    road: "I/38",
+    impact: "na silnici I/38 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+  });
+  const multiPlace = buildPlaceAndDirectionLine({
+    road: "I/38",
+    impact: "na silnici I/38 u obce Nové Město na Moravě okres Žďár nad Sázavou; uzavřeno",
+  });
+  ok(
+    "U_OBCE_MULTIWORD_PASS",
+    multi.municipalitySignLabel === "NOVÉ MĚSTO NA MORAVĚ" &&
+      /u obce Nové Město na Moravě/.test(multiPlace) &&
+      multi.municipalitySignLabel !== "NOVÉ"
+  );
+
+  // Existing urban / motorway headers must keep prior shapes.
+  const praha = buildLocalityHeaderModel({
+    municipality: "Praha",
+    location: "Komořanská",
+    impact: "v ulici Komořanská v obci Praha; uzavřeno",
+  });
+  ok(
+    "U_OBCE_NO_REGRESS_URBAN",
+    praha.municipalitySignLabel === "PRAHA" &&
+      praha.nearMunicipalityPrefix == null &&
+      /ulice:\s*Komořanská/i.test(praha.besideLocality || "")
+  );
+  const d0 = buildLocalityHeaderModel({
+    road: "D0",
+    impact: "D0, km 10, ve směru D1, silný provoz",
+  });
+  ok(
+    "U_OBCE_NO_REGRESS_D0",
+    d0.besideLocality === "Pražský okruh" && d0.nearMunicipalityPrefix == null
+  );
+
+  const uiSrc = fs.readFileSync(path.join(root, "assets/iu-prehled-dne-ui-v1.js"), "utf8");
+  ok(
+    "U_OBCE_UI_ORDER_PASS",
+    /roadThenNearMuni/.test(uiSrc) &&
+      /nearMunicipalityPrefix/.test(uiSrc) &&
+      /roadBadge \+ nearBit \+ muniSign/.test(uiSrc)
+  );
+}
+
 // --- Rich DOPRAVNÍ SITUACE (source-grounded multi-fact summary) ---
 {
   const komor = buildTrafficSituationSummary({
@@ -2472,6 +2569,13 @@ console.log(
           "MUNI_SIGN_RECOVERS_TRUNCATED_STRUCTURED",
           "MUNI_SIGN_MULTIWORD_SUITE_PASS",
           "MUNI_SIGN_LAYOUT_WRAP_PASS",
+          "U_OBCE_PARSE_STUDENEC",
+          "U_OBCE_HEADER_PASS",
+          "U_OBCE_PLACE_PASS",
+          "U_OBCE_DETAIL_OBEC_PASS",
+          "U_OBCE_NO_DIVERSION_TOWN",
+          "U_OBCE_MULTIWORD_PASS",
+          "U_OBCE_UI_ORDER_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
