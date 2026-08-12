@@ -12,7 +12,7 @@
 import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812b";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-muni-registry-v1-20260812";
 
 export {
   matchParkingRegistry,
@@ -21,7 +21,7 @@ export {
   PARKING_REGISTRY_VERSION,
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812b";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-muni-registry-v1-20260812";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -1157,13 +1157,12 @@ export function buildCommunicationLine(input = {}) {
   return {
     roadPresentation: roadPres,
     direction: dir,
+    // Never mirror parkingName (or any beside text) into localityFallback — that caused
+    // "P+R Zličín / P+R Zličín" when municipality sign was missing.
     localityFallback:
-      !roadPres.road && !hdr.municipalitySign
-        ? head.head
-        : !roadPres.road && hdr.municipalitySign
-          ? null
-          : null,
-    headLocality: roadPres.road && !hdr.municipalitySign ? head.head : null,
+      !roadPres.road && !hdr.municipalitySign && !hdr.besideLocality ? head.head : null,
+    headLocality:
+      roadPres.road && !hdr.municipalitySign && !hdr.besideLocality ? head.head : null,
     municipalitySign: hdr.municipalitySign,
     municipalitySignLabel: hdr.municipalitySignLabel,
     besideLocality: hdr.besideLocality,
@@ -1262,10 +1261,15 @@ export function buildTrafficExpandedDetail(input = {}) {
   if (registry && registry.parkAndRide === true) {
     push("parkingType", "Typ parkoviště", "P+R (Park and Ride)");
     push("parkingPrExplanation", "O P+R", PARK_AND_RIDE_EXPLANATION_CS);
-  } else if (facts.parkingType === "P+G") {
+  } else if ((registry && registry.parkingType === "P+G") || facts.parkingType === "P+G") {
     push("parkingType", "Typ parkoviště", "P+G");
-  } else if (facts.parkingType === "PARKING_HOUSE") {
+  } else if (
+    (registry && registry.parkingType === "PARKING_HOUSE") ||
+    facts.parkingType === "PARKING_HOUSE"
+  ) {
     push("parkingType", "Typ parkoviště", "Parkovací dům");
+  } else if (registry && registry.parkingType === "PUBLIC_PARKING") {
+    push("parkingType", "Typ parkoviště", "Veřejné parkoviště");
   } else if (facts.parkingType === "P+R") {
     push("parkingType", "Typ parkoviště", "P+R (Park and Ride)");
   }

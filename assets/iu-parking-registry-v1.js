@@ -220,11 +220,89 @@ export const PARKING_REGISTRY = Object.freeze([
     coordinates: null,
     parkingType: "P+R",
     parkAndRide: true,
+    shortExplanation: null,
     aliases: Object.freeze(["p+r zlicin 2", "pr zlicin 2", "zlicin 2"]),
     sources: Object.freeze([
       {
         label: "Parking.praha.eu — P+R Zličín 2 (TSK / hl. m. Praha)",
         url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/zlicin-2/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  // NDIC often emits bare "P+R Zličín" (not 1/2). Municipality is safe; address is not —
+  // fail-closed: no street/address until NDIC distinguishes the lot.
+  Object.freeze({
+    parkingId: "praha-pr-zlicin",
+    canonicalName: "P+R Zličín",
+    municipality: "Praha",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "P+R",
+    parkAndRide: true,
+    shortExplanation: null,
+    aliases: Object.freeze(["p+r zlicin", "pr zlicin", "zlicin"]),
+    sources: Object.freeze([
+      {
+        label: "Parking.praha.eu — P+R Zličín 1 (TSK / hl. m. Praha)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/zlicin-1/",
+      },
+      {
+        label: "Parking.praha.eu — P+R Zličín 2 (TSK / hl. m. Praha)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/zlicin-2/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "praha-pr-skalka-1",
+    canonicalName: "P+R Skalka",
+    municipality: "Praha",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "P+R",
+    parkAndRide: true,
+    shortExplanation: null,
+    // NDIC "P+R Skalka" ↔ parking.praha.eu Skalka 1 (distinct from Skalka II / Skalka 2).
+    aliases: Object.freeze(["p+r skalka", "pr skalka", "skalka", "p+r skalka 1", "skalka 1"]),
+    sources: Object.freeze([
+      {
+        label: "Parking.praha.eu — P+R Skalka 1 (TSK / hl. m. Praha)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/skalka-1/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "praha-pr-skalka-2",
+    canonicalName: "P+R Skalka II",
+    municipality: "Praha",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "P+R",
+    parkAndRide: true,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "p+r skalka 2",
+      "p+r skalka ii",
+      "pr skalka 2",
+      "pr skalka ii",
+      "skalka 2",
+      "skalka ii",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Parking.praha.eu — P+R Skalka 2 (TSK / hl. m. Praha)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/skalka-2/",
       },
     ]),
     lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
@@ -241,6 +319,7 @@ export const PARKING_REGISTRY = Object.freeze([
     coordinates: null,
     parkingType: "P+R",
     parkAndRide: true,
+    shortExplanation: null,
     aliases: Object.freeze([
       "p+r kongresove centrum",
       "p+r kongresove centrum praha",
@@ -252,6 +331,173 @@ export const PARKING_REGISTRY = Object.freeze([
       {
         label: "Kongresové centrum Praha, a.s. — Parkování P+R",
         url: "https://www.praguecc.cz/cs/parkovani-pr",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  // --- Ostrava (Ostravské komunikace, a.s. / SMO operated list) ---
+  Object.freeze({
+    parkingId: "ostrava-smetanovo-namesti",
+    canonicalName: "Smetanovo náměstí",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze(["smetanovo namesti"]),
+    sources: Object.freeze([
+      {
+        label: "Ostravské komunikace, a.s. — Provozovaná parkoviště",
+        url: "https://www.okas.cz/hlavni-cinnosti/parkovani.html",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-podebradova",
+    canonicalName: "Poděbradova",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: "Poděbradova",
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze(["podebradova"]),
+    sources: Object.freeze([
+      {
+        label: "Ostravské komunikace, a.s. — Provozovaná parkoviště",
+        url: "https://www.okas.cz/hlavni-cinnosti/parkovani.html",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-nam-msgre-sramka",
+    canonicalName: "Nám. Msgre Šrámka",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "nam msgre sramka",
+      "namesti msgre sramka",
+      "msgre sramka",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Ostravské komunikace, a.s. — Provozovaná parkoviště",
+        url: "https://www.okas.cz/hlavni-cinnosti/parkovani.html",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-pod-ostravskou-univerzitou",
+    canonicalName: "pod Ostravskou univerzitou",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "pod ostravskou univerzitou",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Ostravské komunikace, a.s. — Provozovaná parkoviště",
+        url: "https://www.okas.cz/hlavni-cinnosti/parkovani.html",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-dk-poklad-1",
+    canonicalName: "Parkovací dům DK POKLAD I.",
+    municipality: "Ostrava",
+    cityPart: "Poruba",
+    street: "Matěje Kopeckého",
+    addressLine: "Matěje Kopeckého × Komenského, Ostrava-Poruba",
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PARKING_HOUSE",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "parkovaci dum dk poklad i",
+      "parkovaci dum dk poklad 1",
+      "dk poklad i",
+      "dk poklad 1",
+      "poklad i",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Ostravské komunikace, a.s. — Provozovaná parkoviště",
+        url: "https://www.okas.cz/hlavni-cinnosti/parkovani.html",
+      },
+      {
+        label: "DK Poklad Ostrava — Parkování u Pokladu",
+        url: "https://dkpoklad.cz/novinky/parkovani-u-pokladu/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-prokesovo-namesti",
+    canonicalName: "Prokešovo náměstí",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze(["prokesovo namesti"]),
+    sources: Object.freeze([
+      {
+        label: "Garáže Ostrava, a.s. — Prokešovo náměstí",
+        url: "http://www.garaze-ostrava.cz/?page_id=5",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "ostrava-cerna-louka-pg",
+    canonicalName: "Černá Louka P+G",
+    municipality: "Ostrava",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "P+G",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "cerna louka p+g",
+      "p+g cerna louka",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Statutární město Ostrava — Výstaviště Černá louka",
+        url: "https://ostrava.cz/cs/turista/sluzby/incentiva-konference/vystaviste-cerna-louka",
       },
     ]),
     lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
@@ -356,8 +602,15 @@ export function matchParkingRegistry(input = {}) {
 export function isAmbiguousParkingName(name) {
   const key = normalizeParkingAliasKey(name);
   if (!key) return false;
-  // Bare "zlicin" / "cerny most" collide across multiple registry rows.
-  if (key === "zlicin" || key === "p+r zlicin" || key === "pr zlicin") return true;
+  // Bare "Černý Most" collides across Garáže Černý Most vs Černý Most 2 — no municipality-only row.
   if (key === "cerny most" || key === "p+r cerny most" || key === "pr cerny most") return true;
   return false;
+}
+
+/**
+ * True when registry match is municipality-safe but facility address is intentionally withheld
+ * (e.g. NDIC "P+R Zličín" without distinguishing lot 1 vs 2).
+ */
+export function isMunicipalityOnlyParkingMatch(entry) {
+  return !!(entry && entry.addressLine == null && entry.parkingId === "praha-pr-zlicin");
 }

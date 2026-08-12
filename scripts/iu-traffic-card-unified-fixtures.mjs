@@ -940,7 +940,7 @@ ok(
       vSuffixCity.communication.municipalitySignLabel === "PRAHA" &&
       vNoSuffixFull.communication.municipalitySignLabel === "PRAHA" &&
       vNoRegistry.communication.municipalitySign == null &&
-      vAmbiguousZlicin.communication.municipalitySign == null
+      vAmbiguousZlicin.communication.municipalitySignLabel === "PRAHA"
   );
   ok(
     "PARKING_MUNICIPALITY_RESOLUTION_PASS",
@@ -955,7 +955,15 @@ ok(
       resolveMunicipalitySignName({
         impact: "P+R Zličín, 50% obsazeno",
         eventType: "doprava",
-      }) == null
+      }) === "Praha" &&
+      resolveMunicipalitySignName({
+        impact: "P+R Skalka, 80% obsazeno",
+        eventType: "doprava",
+      }) === "Praha" &&
+      resolveMunicipalitySignName({
+        impact: "Prokešovo náměstí, 50% obsazeno",
+        eventType: "doprava",
+      }) === "Ostrava"
   );
 
   ok(
@@ -964,16 +972,18 @@ ok(
       matchParkingRegistry({ impact: "P+R Kongresové centrum Praha" })?.parkingId ===
         "praha-pr-kongresove-centrum" &&
       matchParkingRegistry({ impact: "P+R Černý Most II" })?.parkingId === "praha-pr-cerny-most-2" &&
+      matchParkingRegistry({ impact: "P+R Zličín" })?.parkingId === "praha-pr-zlicin" &&
+      matchParkingRegistry({ impact: "P+R Skalka" })?.parkingId === "praha-pr-skalka-1" &&
+      matchParkingRegistry({ impact: "P+R Skalka II" })?.parkingId === "praha-pr-skalka-2" &&
       vRegistryEnrich.expanded.parkingRegistry?.parkingId === "praha-pr-rajska-zahrada" &&
       vCernyIi.communication.besideLocality === "P+R Černý Most 2"
   );
   ok(
     "PARKING_REGISTRY_NO_FALSE_MATCH_PASS",
-    matchParkingRegistry({ impact: "P+R Zličín" }) == null &&
-      matchParkingRegistry({ impact: "P+R Černý Most" }) == null &&
+    matchParkingRegistry({ impact: "P+R Černý Most" }) == null &&
       matchParkingRegistry({ impact: "P+R Testoviště Nové" }) == null &&
-      isAmbiguousParkingName("P+R Zličín") === true &&
-      vAmbiguousZlicin.expanded.parkingRegistry == null &&
+      isAmbiguousParkingName("P+R Černý Most") === true &&
+      isAmbiguousParkingName("P+R Zličín") === false &&
       vCernyBare.expanded.parkingRegistry == null &&
       vNoRegistry.expanded.parkingRegistry == null
   );
@@ -1073,6 +1083,19 @@ ok(
       mwVm.eventKind === EVENT_KIND.ACCIDENT &&
       /NEHODA/i.test(mwVm.eventTypeLabel || "")
   );
+  ok("ACCIDENT_CARD_REGRESSION_PASS", mwVm.eventKind === EVENT_KIND.ACCIDENT);
+
+  const obstaclePres = buildTrafficCardPresentation({
+    road: "II/123",
+    municipality: "Tábor",
+    eventType: "prekazka",
+    impact: "překážka na vozovce, provoz převeden do protisměru",
+  });
+  ok(
+    "OBSTACLE_CARD_REGRESSION_PASS",
+    obstaclePres.event.kind !== EVENT_KIND.PARKING &&
+      obstaclePres.communication.municipalitySignLabel === "TÁBOR"
+  );
 
   const roadVm = vmFrom({
     road: "II/291",
@@ -1117,7 +1140,8 @@ ok(
   const suiteOk =
     vNoMuniField.communication.municipalitySignLabel === "PRAHA" &&
     vFullOnly.situationSummary === "PLNĚ OBSAZENO" &&
-    matchParkingRegistry({ impact: "P+R Zličín" }) == null &&
+    matchParkingRegistry({ impact: "P+R Zličín" })?.parkingId === "praha-pr-zlicin" &&
+    matchParkingRegistry({ impact: "P+R Černý Most" }) == null &&
     mwVm.eventKind === EVENT_KIND.ACCIDENT &&
     !!roadVm.placeLine &&
     closureVm.eventKind === EVENT_KIND.CLOSURE &&
@@ -1130,6 +1154,195 @@ ok(
       closureVm.eventKind === EVENT_KIND.CLOSURE &&
       smvPres.roadPresentation.showMotorVehiclesIcon === true
   );
+}
+
+// --- Parking municipality registry + title single-render (2026-08-12) ---
+{
+  function headerParts(pres) {
+    const muni = String(pres.communication.municipalitySignLabel || "").trim();
+    const beside = String(pres.communication.besideLocality || "").trim();
+    const fallback = String(pres.communication.localityFallback || "").trim();
+    const head = String(pres.communication.headLocality || "").trim();
+    return { muni, beside, fallback, head };
+  }
+  function titleOnce(pres) {
+    const h = headerParts(pres);
+    if (!h.beside) return false;
+    // Name must not also appear as localityFallback / headLocality.
+    if (h.fallback && h.fallback.toLowerCase() === h.beside.toLowerCase()) return false;
+    if (h.head && h.head.toLowerCase() === h.beside.toLowerCase()) return false;
+    return true;
+  }
+
+  const liveNames = [
+    "P+R Zličín",
+    "P+R Kongresové centrum",
+    "P+R Kotlářka",
+    "P+R Opatov",
+    "P+R Rajská zahrada",
+    "P+R Holešovice",
+    "P+R Skalka",
+    "P+R Skalka II",
+    "Smetanovo náměstí",
+    "pod Ostravskou univerzitou",
+    "Parkovací dům DK POKLAD I.",
+    "Nám. Msgre Šrámka",
+    "Prokešovo náměstí",
+    "Poděbradova",
+    "Hlavní nádraží - jižní přednádraží",
+  ];
+
+  const zlicin = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "P+R Zličín, 70% obsazeno, méně než 30 volných parkovacích míst",
+  });
+  const skalka = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "P+R Skalka, 80% obsazeno, méně než 30 volných parkovacích míst",
+  });
+  const skalka2 = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "P+R Skalka II, 60% obsazeno, méně než 30 volných parkovacích míst",
+  });
+  const prokes = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Prokešovo náměstí, 50% obsazeno, 12.08.2026 17:40:51",
+  });
+  const poklad = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Parkovací dům DK POKLAD I., méně než 50 volných parkovacích míst, 40% obsazeno",
+  });
+  const hlNadrazi = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Hlavní nádraží - jižní přednádraží, 10% obsazeno, méně než 20 volných parkovacích míst",
+  });
+  const unknownPark = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Nové parkoviště XYZ, 40% obsazeno",
+  });
+  const pgLive = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Černá Louka, P+G, 40% obsazeno, 12.08.2026 17:38:51",
+  });
+
+  ok("PARKING_TITLE_SINGLE_RENDER_PASS", titleOnce(zlicin) && titleOnce(skalka) && titleOnce(prokes) && titleOnce(unknownPark));
+  ok(
+    "PARKING_TITLE_NO_DUPLICATE_WITHOUT_MUNICIPALITY_PASS",
+    titleOnce(unknownPark) &&
+      titleOnce(hlNadrazi) &&
+      !headerParts(unknownPark).fallback &&
+      headerParts(unknownPark).beside === "Nové parkoviště XYZ"
+  );
+
+  ok(
+    "PARKING_MUNICIPALITY_REGISTRY_PASS",
+    zlicin.communication.municipalitySignLabel === "PRAHA" &&
+      skalka.communication.municipalitySignLabel === "PRAHA" &&
+      skalka2.communication.municipalitySignLabel === "PRAHA" &&
+      prokes.communication.municipalitySignLabel === "OSTRAVA" &&
+      poklad.communication.municipalitySignLabel === "OSTRAVA" &&
+      pgLive.communication.municipalitySignLabel === "OSTRAVA"
+  );
+  ok(
+    "PARKING_MUNICIPALITY_NO_GUESS_PASS",
+    hlNadrazi.communication.municipalitySign == null &&
+      unknownPark.communication.municipalitySign == null
+  );
+
+  const inventoryIds = new Set(
+    [
+      "praha-pr-zlicin",
+      "praha-pr-skalka-1",
+      "praha-pr-skalka-2",
+      "praha-pr-kongresove-centrum",
+      "praha-pr-kotlarka",
+      "praha-pr-opatov",
+      "praha-pr-rajska-zahrada",
+      "praha-pr-holesovice",
+      "ostrava-smetanovo-namesti",
+      "ostrava-pod-ostravskou-univerzitou",
+      "ostrava-dk-poklad-1",
+      "ostrava-nam-msgre-sramka",
+      "ostrava-prokesovo-namesti",
+      "ostrava-podebradova",
+      "ostrava-cerna-louka-pg",
+    ].filter((id) => PARKING_REGISTRY.some((e) => e.parkingId === id))
+  );
+  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 15 && PARKING_REGISTRY.length >= 20);
+
+  ok(
+    "PARKING_REGISTRY_EXACT_ALIAS_PASS",
+    matchParkingRegistry({ parkingName: "P+R Skalka" })?.parkingId === "praha-pr-skalka-1" &&
+      matchParkingRegistry({ parkingName: "P+R Skalka II" })?.parkingId === "praha-pr-skalka-2" &&
+      matchParkingRegistry({ parkingName: "P+R Zličín" })?.parkingId === "praha-pr-zlicin" &&
+      matchParkingRegistry({ parkingName: "Prokešovo náměstí" })?.parkingId ===
+        "ostrava-prokesovo-namesti"
+  );
+  ok(
+    "PARKING_SKALKA_SKALKA_II_DISTINCT_PASS",
+    matchParkingRegistry({ parkingName: "P+R Skalka" })?.parkingId !==
+      matchParkingRegistry({ parkingName: "P+R Skalka II" })?.parkingId &&
+      skalka.communication.besideLocality === "P+R Skalka" &&
+      /Skalka II/i.test(skalka2.communication.besideLocality || "")
+  );
+
+  const zAddr = (zlicin.expanded.rows || []).find((r) => r && r.key === "parkingAddress");
+  const pAddr = (poklad.expanded.rows || []).find((r) => r && r.key === "parkingAddress");
+  const hAddr = (hlNadrazi.expanded.rows || []).find((r) => r && r.key === "parkingAddress");
+  ok(
+    "PARKING_ADDRESS_VERIFIED_ONLY_PASS",
+    !zAddr &&
+      !!pAddr &&
+      /Matěje Kopeckého/i.test(String(pAddr.value || "")) &&
+      !hAddr
+  );
+
+  const cityPartRow = (poklad.expanded.rows || []).find((r) => r && r.key === "cityPart");
+  ok(
+    "PARKING_CITYPART_SECONDARY_PASS",
+    poklad.communication.municipalitySignLabel === "OSTRAVA" &&
+      /Poruba/i.test(String(cityPartRow?.value || "")) &&
+      poklad.communication.municipalitySignLabel !== "PORUBA"
+  );
+
+  const zPr = (zlicin.expanded.rows || []).find((r) => r && r.key === "parkingPrExplanation");
+  const pPr = (poklad.expanded.rows || []).find((r) => r && r.key === "parkingPrExplanation");
+  const pgPr = (pgLive.expanded.rows || []).find((r) => r && r.key === "parkingPrExplanation");
+  ok("PARKING_PR_EXPLANATION_PASS", /Park and Ride/i.test(String(zPr?.value || "")));
+  ok("PARKING_NON_PR_NO_PR_EXPLANATION_PASS", !pPr && !pgPr);
+
+  ok(
+    "PARKING_LIVE_STATUS_UNCHANGED_PASS",
+    /70\s*%\s*obsazeno/i.test(zlicin.situationSummary || "") &&
+      /méně než\s*30/i.test(zlicin.situationSummary || "") &&
+      /50\s*%\s*obsazeno/i.test(prokes.situationSummary || "")
+  );
+  ok(
+    "PARKING_RAW_NDIC_PRESERVED_PASS",
+    (prokes.expanded.rows || []).some(
+      (r) =>
+        r &&
+        r.key === "sourceDescription" &&
+        /Prokešovo náměstí,\s*50%\s*obsazeno/i.test(String(r.value || ""))
+    )
+  );
+
+  // Inventory audit for report (live names covered by registry or intentionally unmatched).
+  let covered = 0;
+  for (const n of liveNames) {
+    const m = matchParkingRegistry({
+      parkingName: n,
+      impact: n + ", 50% obsazeno",
+    });
+    if (n.startsWith("Hlavní nádraží")) {
+      ok("HLAVNI_NADRAZI_NO_GUESS", m == null);
+      continue;
+    }
+    if (m && m.municipality) covered++;
+  }
+  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 14);
+
+  void liveNames;
 }
 
 // --- Parking classification unify (P+G / house / named / false-positive) ---
@@ -1279,11 +1492,23 @@ console.log(
           "PARKING_REGISTRY_NO_FALSE_MATCH_PASS",
           "PARKING_ADDRESS_ENRICHMENT_PASS",
           "PARKING_PR_EXPLANATION_PASS",
+          "PARKING_NON_PR_NO_PR_EXPLANATION_PASS",
           "PARKING_LIVE_STATUS_PRIORITY_PASS",
           "PARKING_FULL_STATUS_VISIBLE_COLLAPSED_PASS",
           "PARKING_UNKNOWN_STATUS_FALLBACK_PASS",
           "PARKING_NO_FAKE_OCCUPANCY_PASS",
           "PARKING_NO_DUPLICATE_TITLE_PASS",
+          "PARKING_TITLE_SINGLE_RENDER_PASS",
+          "PARKING_TITLE_NO_DUPLICATE_WITHOUT_MUNICIPALITY_PASS",
+          "PARKING_MUNICIPALITY_REGISTRY_PASS",
+          "PARKING_MUNICIPALITY_NO_GUESS_PASS",
+          "PARKING_REGISTRY_INVENTORY_PASS",
+          "PARKING_REGISTRY_EXACT_ALIAS_PASS",
+          "PARKING_SKALKA_SKALKA_II_DISTINCT_PASS",
+          "PARKING_ADDRESS_VERIFIED_ONLY_PASS",
+          "PARKING_CITYPART_SECONDARY_PASS",
+          "PARKING_LIVE_STATUS_UNCHANGED_PASS",
+          "PARKING_RAW_NDIC_PRESERVED_PASS",
           "PARKING_ACTION_ROW_PASS",
           "PARKING_RESPONSIVE_PASS",
           "PARKING_CLASSIFICATION_FIXED",
@@ -1297,6 +1522,8 @@ console.log(
           "MOTORWAY_CARD_REGRESSION_PASS",
           "ROAD_CARD_REGRESSION_PASS",
           "CLOSURE_CARD_REGRESSION_PASS",
+          "ACCIDENT_CARD_REGRESSION_PASS",
+          "OBSTACLE_CARD_REGRESSION_PASS",
           "SMV_REGRESSION_PASS",
           "TRAFFIC_CARD_SUITE_PASS",
           "TRAFFIC_CARD_REGRESSION_PASS",
