@@ -4,7 +4,24 @@
  *
  * Official NDIC publicComment often carries km/směr/ulice/P+R while structured
  * card fields are null — parse only substrings present in that trusted text.
+ *
+ * Parking static context (municipality/address/P+R type) may be enriched from the
+ * verified parking registry — never overrides live NDIC occupancy/status.
  */
+
+import {
+  matchParkingRegistry,
+  PARK_AND_RIDE_EXPLANATION_CS,
+} from "./iu-parking-registry-v1.js?v=ndic-parking-registry-v1-20260812";
+
+export {
+  matchParkingRegistry,
+  PARK_AND_RIDE_EXPLANATION_CS,
+  PARKING_REGISTRY,
+  PARKING_REGISTRY_VERSION,
+  normalizeParkingAliasKey,
+  isAmbiguousParkingName,
+} from "./iu-parking-registry-v1.js?v=ndic-parking-registry-v1-20260812";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -175,6 +192,99 @@ function formatParkingStatusLabel(facts) {
     return String(facts.parkingOccupancyPercent) + " % OBSAZENO";
   }
   return null;
+}
+
+function structuredParkingFullyOccupied(input = {}) {
+  const occ = input.parkingOccupancy;
+  if (occ == null) return false;
+  if (typeof occ === "string") {
+    const s = clean(occ);
+    if (/^(full|fully[_\s-]?occupied|pln[eě]\s*obsazeno|occupied)$/i.test(s)) return true;
+  }
+  if (Number(occ) === 100 && Number.isFinite(Number(occ))) return true;
+  const free =
+    input.parkingAvailableSpaces != null
+      ? Number(input.parkingAvailableSpaces)
+      : input.freeSpaces != null
+        ? Number(input.freeSpaces)
+        : null;
+  if (Number(occ) === 100 && free === 0) return true;
+  return false;
+}
+
+/**
+ * Single occupancy resolver for collapsed + expanded parking UI.
+ * Priority: percent(+free bound) → explicit fully occupied → structured free count → fallback.
+ * Never invents occupancy.
+ */
+export function resolveParkingLiveStatus(input = {}, factsIn = null) {
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const fully =
+    facts.parkingFullyOccupied === true || structuredParkingFullyOccupied(input) === true;
+
+  if (facts.parkingOccupancyPercent != null && Number.isFinite(facts.parkingOccupancyPercent)) {
+    const bits = [facts.parkingOccupancyPercent + " % obsazeno"];
+    if (facts.parkingFreeUpperBound != null) {
+      bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
+    }
+    return {
+      collapsedText: finalizeSentences(bits),
+      statusLabel: formatParkingStatusLabel({
+        ...facts,
+        parkingFullyOccupied: false,
+        parkingOccupancyPercent: facts.parkingOccupancyPercent,
+      }),
+      freeUpperBound: facts.parkingFreeUpperBound,
+      kind: "percent",
+      known: true,
+    };
+  }
+
+  if (fully) {
+    return {
+      collapsedText: "PLNĚ OBSAZENO",
+      statusLabel: "PLNĚ OBSAZENO",
+      freeUpperBound: facts.parkingFreeUpperBound,
+      kind: "full",
+      known: true,
+    };
+  }
+
+  if (facts.parkingFreeUpperBound != null) {
+    const text =
+      "Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst.";
+    return {
+      collapsedText: text,
+      statusLabel: null,
+      freeUpperBound: facts.parkingFreeUpperBound,
+      kind: "free_bound",
+      known: true,
+    };
+  }
+
+  const freeRaw =
+    input.parkingAvailableSpaces != null
+      ? input.parkingAvailableSpaces
+      : input.freeSpaces != null
+        ? input.freeSpaces
+        : null;
+  if (freeRaw != null && Number.isFinite(Number(freeRaw))) {
+    return {
+      collapsedText: "Volných míst: " + String(Number(freeRaw)),
+      statusLabel: null,
+      freeUpperBound: null,
+      kind: "free_count",
+      known: true,
+    };
+  }
+
+  return {
+    collapsedText: "Informace o obsazenosti parkoviště.",
+    statusLabel: null,
+    freeUpperBound: null,
+    kind: "unknown",
+    known: false,
+  };
 }
 
 /**
@@ -522,23 +632,7 @@ export function buildTrafficSituationSummary(input = {}) {
   const source = expandTrafficAbbreviationsCs(raw);
 
   if (event.kind === EVENT_KIND.PARKING) {
-    const bits = [];
-    if (facts.parkingFullyOccupied) {
-      bits.push("Plně obsazeno");
-    } else {
-      if (facts.parkingOccupancyPercent != null) {
-        bits.push(facts.parkingOccupancyPercent + " % obsazeno");
-      }
-      if (facts.parkingFreeUpperBound != null) {
-        bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
-      } else if (input.parkingAvailableSpaces != null || input.freeSpaces != null) {
-        const free =
-          input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces;
-        if (Number.isFinite(Number(free))) return "Volných míst: " + String(Number(free));
-      }
-    }
-    if (bits.length) return finalizeSentences(bits);
-    return "Informace o obsazenosti parkoviště.";
+    return resolveParkingLiveStatus(input, facts).collapsedText;
   }
 
   if (event.kind === EVENT_KIND.QUEUE) {
@@ -636,6 +730,7 @@ function samePlaceName(a, b) {
 /**
  * Municipality/city name for the Czech entrance-style signboard.
  * Never invents Praha/Jižní spojka; never treats street or city-part as municipality.
+ * Parking: after live NDIC fields, may enrich from verified parking registry match only.
  */
 export function resolveMunicipalitySignName(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
@@ -646,6 +741,13 @@ export function resolveMunicipalitySignName(input = {}) {
   const cityPart = clean(facts.cityPart || input.cityPart);
 
   let city = structured || fromComment || parkingCity || "";
+  if (!city) {
+    const reg = matchParkingRegistry({
+      ...input,
+      parkingName: facts.parkingName || input.parkingName,
+    });
+    if (reg && reg.municipality) city = clean(reg.municipality);
+  }
   if (!city) return null;
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
@@ -669,8 +771,14 @@ export function buildLocalityHeaderModel(input = {}) {
   const location = clean(input.location);
   const district = clean(input.district) || facts.district || "";
   const cityPart = clean(facts.cityPart || input.cityPart);
-  const parkingName = facts.parkingName || null;
-  const parkingStatusLabel = formatParkingStatusLabel(facts);
+  const registry = matchParkingRegistry({
+    ...input,
+    parkingName: facts.parkingName || input.parkingName,
+  });
+  const parkingName =
+    (registry && registry.canonicalName) || facts.parkingName || null;
+  const liveStatus = resolveParkingLiveStatus(input, facts);
+  const parkingStatusLabel = liveStatus.statusLabel || formatParkingStatusLabel(facts);
   const streetMulti = facts.streetMulti === true;
 
   let besideLocality = "";
@@ -730,9 +838,11 @@ export function buildLocalityHeaderModel(input = {}) {
     district: district || null,
     parkingName,
     parkingStatusLabel,
-    parkingFullyOccupied: facts.parkingFullyOccupied === true,
+    parkingFullyOccupied: liveStatus.kind === "full",
     parkingOccupancyPercent:
       facts.parkingOccupancyPercent != null ? facts.parkingOccupancyPercent : null,
+    parkingRegistryId: registry ? registry.parkingId : null,
+    parkingRegistryMatch: !!registry,
   };
 }
 
@@ -864,8 +974,10 @@ export function buildCommunicationLine(input = {}) {
     streetMulti: hdr.streetMulti === true,
     cityPart: hdr.cityPart || null,
     cityPartRow: hdr.cityPartRow || null,
-    parkingName: facts.parkingName || null,
+    parkingName: hdr.parkingName || facts.parkingName || null,
     parkingStatusLabel: hdr.parkingStatusLabel || null,
+    parkingRegistryId: hdr.parkingRegistryId || null,
+    parkingRegistryMatch: hdr.parkingRegistryMatch === true,
     roadTypeIconFirst: roadPres.showMotorVehiclesIcon === true && roadPres.showMotorwayIcon !== true,
   };
 }
@@ -902,6 +1014,11 @@ export function buildTrafficExpandedDetail(input = {}) {
 
   const event = classifyEventPresentation(input);
   const facts = event.facts || parseOfficialCommentFacts(sourceBlob(input));
+  const registry = matchParkingRegistry({
+    ...input,
+    parkingName: facts.parkingName || input.parkingName,
+  });
+  const liveStatus = resolveParkingLiveStatus(input, facts);
 
   // Skip redundant "Typ (zdroj)" when it only repeats the card title kind.
   push("road", "Komunikace", input.road);
@@ -909,16 +1026,26 @@ export function buildTrafficExpandedDetail(input = {}) {
   push("kilometer", "Kilometráž", facts.kilometerLabel || input.kilometer);
   push("direction", "Směr", clean(input.direction) || facts.directionHuman);
   push("street", "Ulice", facts.street || input.streetHint || input.street);
-  push("municipality", "Obec", input.municipality || facts.city);
-  push("cityPart", "Městská část", facts.cityPart);
+  push(
+    "municipality",
+    "Obec",
+    input.municipality || facts.city || (registry ? registry.municipality : null)
+  );
+  push("cityPart", "Městská část", facts.cityPart || (registry ? registry.cityPart : null));
   push("district", "Okres", input.district || facts.district);
   push("location", "Lokalita", input.location);
-  if (facts.parkingName) push("parkingName", "Parkoviště", facts.parkingName);
-  const parkingStatus = formatParkingStatusLabel(facts);
-  if (parkingStatus) push("parkingStatus", "Obsazenost", parkingStatus);
-  else if (facts.parkingOccupancyPercent != null) {
+  const parkingDisplayName =
+    (registry && registry.canonicalName) || facts.parkingName || null;
+  if (parkingDisplayName) push("parkingName", "Parkoviště", parkingDisplayName);
+
+  if (liveStatus.kind === "full") {
+    push("parkingStatus", "Obsazenost", "PLNĚ OBSAZENO");
+  } else if (facts.parkingOccupancyPercent != null) {
     push("parkingOccupancy", "Obsazenost", facts.parkingOccupancyPercent + " %");
+  } else if (liveStatus.statusLabel) {
+    push("parkingStatus", "Obsazenost", liveStatus.statusLabel);
   }
+
   if (facts.parkingFreeUpperBound != null) {
     push("parkingFree", "Volná místa", "méně než " + facts.parkingFreeUpperBound);
   } else {
@@ -928,6 +1055,16 @@ export function buildTrafficExpandedDetail(input = {}) {
       input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces
     );
   }
+
+  // Registry enrichment only — separate from NDIC source description.
+  if (registry && registry.addressLine) {
+    push("parkingAddress", "Adresa", registry.addressLine);
+  }
+  if (registry && registry.parkAndRide) {
+    push("parkingType", "Typ parkoviště", "P+R (Park and Ride)");
+    push("parkingPrExplanation", "O P+R", PARK_AND_RIDE_EXPLANATION_CS);
+  }
+
   const qKm = facts.queueLengthKm != null ? facts.queueLengthKm : input.queueLengthKm;
   if (qKm != null) push("queueLength", "Délka kolony", String(qKm).replace(".", ",") + " km");
   push("delay", "Očekávané zdržení", input.delayMinutes != null ? String(input.delayMinutes) + " min" : null);
@@ -956,7 +1093,22 @@ export function buildTrafficExpandedDetail(input = {}) {
     });
   }
 
-  return { event, rows, sourceFull, facts };
+  return {
+    event,
+    rows,
+    sourceFull,
+    facts,
+    parkingRegistry: registry
+      ? {
+          parkingId: registry.parkingId,
+          canonicalName: registry.canonicalName,
+          addressLine: registry.addressLine,
+          parkAndRide: registry.parkAndRide === true,
+          provenance: "parking-registry-v1",
+        }
+      : null,
+    parkingLiveStatus: liveStatus,
+  };
 }
 
 export function buildTrafficCardPresentation(trafficV1) {
