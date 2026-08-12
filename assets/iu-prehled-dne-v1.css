@@ -1357,7 +1357,9 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   letter-spacing: 0.02em;
   line-height: 1.25;
   color: var(--iu-pd-text);
-  overflow-wrap: anywhere;
+  /* Short event titles must stay readable — never break mid-glyph. */
+  overflow-wrap: normal;
+  word-break: normal;
   min-width: 0;
 }
 .iuPdTrafficBlock {
@@ -1378,8 +1380,8 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   color: var(--iu-pd-text);
   font-size: 0.9rem;
   line-height: 1.4;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 .iuPdTrafficHead {
   display: flex;

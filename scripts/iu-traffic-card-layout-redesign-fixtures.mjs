@@ -94,7 +94,7 @@ ok("ui_zobrazit_vice", uiSrc.includes("Zobrazit více"));
     category: "nehoda",
     lastMeaningfulChangeAt: new Date().toISOString(),
   });
-  ok("badge_new_kept", neu && neu.text.indexOf("NOVÁ") >= 0);
+  ok("badge_new_removed", neu == null);
 }
 
 {

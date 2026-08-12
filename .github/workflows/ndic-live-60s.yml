@@ -136,7 +136,7 @@ jobs:
               crontab -l 2>/dev/null | grep -F 'iu-ndic-live-60s' || echo "CRON_LINE=missing"
               if [ -f "$LIVE_ROOT/cron.log" ]; then
                 echo "CRON_LOG_TAIL<<EOF"
-                tail -n 120 "$LIVE_ROOT/cron.log" || true
+                tail -n 40 "$LIVE_ROOT/cron.log" || true
                 echo "EOF"
               else
                 echo "CRON_LOG=missing"

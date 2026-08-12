@@ -954,7 +954,7 @@ function renderItem(ev) {
       alert || capActive || (trafficBadge && trafficBadge.kind === "new") ? " iuPrehledDne__dot--alert" : ""
     }"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${
-      !isTraffic && czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""
+      czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""
     }${isTraffic ? " iuPdCard__body--traffic" : ""}">` +
     (isTraffic
       ? trafficBody

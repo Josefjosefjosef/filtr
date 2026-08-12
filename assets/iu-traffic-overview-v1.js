@@ -259,6 +259,15 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "subjectScopeLabel",
   "locationDisclosureCs",
   "routeMatchMode",
+  "parkingAvailableSpaces",
+  "parkingCapacity",
+  "parkingOccupancy",
+  "freeSpaces",
+  "motorVehicleRoadConfirmed",
+  "isMotorVehicleRoad",
+  "roadFacilityType",
+  "queueLengthKm",
+  "queueLengthMeters",
 ]);
 
 function humanDirectionOrNull(raw) {
@@ -454,6 +463,20 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     subjectScopeLabel: c.subjectScopeLabel || null,
     locationDisclosureCs: c.locationDisclosureCs || null,
     routeMatchMode: c.routeMatchMode || null,
+    parkingAvailableSpaces:
+      c.parkingAvailableSpaces != null
+        ? c.parkingAvailableSpaces
+        : c.freeSpaces != null
+          ? c.freeSpaces
+          : null,
+    parkingCapacity: c.parkingCapacity != null ? c.parkingCapacity : null,
+    parkingOccupancy: c.parkingOccupancy != null ? c.parkingOccupancy : null,
+    freeSpaces: c.freeSpaces != null ? c.freeSpaces : null,
+    motorVehicleRoadConfirmed: c.motorVehicleRoadConfirmed === true,
+    isMotorVehicleRoad: c.isMotorVehicleRoad === true,
+    roadFacilityType: c.roadFacilityType || null,
+    queueLengthKm: c.queueLengthKm != null ? c.queueLengthKm : null,
+    queueLengthMeters: c.queueLengthMeters != null ? c.queueLengthMeters : null,
     publicationEnabled: false,
   };
 
@@ -558,16 +581,8 @@ export function trafficBadgeModel(trafficV1, opts) {
   if (change === "VALIDITY_SHORTENED" || change === "EVENT_UPDATED" || change.indexOf("CHANGED") >= 0) {
     return { kind: "changed", text: "🟡 ZMĚNĚNÁ", aria: "Změněná dopravní událost" };
   }
-  if (change === "EVENT_CREATED") {
-    if (!isTrafficNewBadgeEligible(trafficV1, nowMs)) return null;
-    if (/pocasi|weather/.test(cat)) {
-      return { kind: "warn", text: "⚠️ NOVÁ", aria: "Nová dopravní událost — počasí" };
-    }
-    if (/prace|roadwork|works/.test(cat)) {
-      return { kind: "new-works", text: "🔵 NOVÁ", aria: "Nové práce na silnici" };
-    }
-    return { kind: "new", text: "🔴 NOVÁ", aria: "Nová dopravní událost" };
-  }
+  // NOVÁ badge removed for ordinary active traffic cards (EVENT_CREATED → no badge).
+  // FUTURE / ENDED / ZMĚNĚNÁ remain available above.
   // No redundant "AKTIVNÍ DOPRAVA" / "DOPRAVA ŘSD" — traffic context is already clear.
   return null;
 }

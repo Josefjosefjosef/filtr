@@ -233,8 +233,8 @@ export function classifyEventPresentation(input = {}) {
   // Priority 3: strong closure cues in source text only (never invent scope).
   if (
     /\búpln[áa]\s+uzavírk/i.test(blob) ||
-    /\buzavírka\b/i.test(blob) ||
-    /\buzavřeno\b/i.test(blob) ||
+    /\buzavírk/i.test(blob) ||
+    /\buzavř/i.test(blob) ||
     /\bneprůjezdn/i.test(blob)
   ) {
     // Prefer closure when text is explicit; keep roadworks if type is prace (handled above).
