@@ -221,7 +221,7 @@ for (const rel of [
   );
   ok(
     "sum_accident_with_data",
-    /osobní automobily/.test(
+    /osobní(?:ch)?\s+automobil/i.test(
       buildTrafficSituationSummary({
         eventType: "nehoda",
         impact: "nehoda; 2× OA; neprůjezdný levý jízdní pruh",
@@ -551,6 +551,151 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     mostHdr.besideLocality === "Pražský okruh" &&
       /^D0 · Pražský okruh/.test(mostPlace) &&
       mostPlace !== "most"
+  );
+}
+
+// --- Rich DOPRAVNÍ SITUACE (source-grounded multi-fact summary) ---
+{
+  const komor = buildTrafficSituationSummary({
+    eventType: "uzavirka",
+    impact:
+      "Od 12.8.2026 18:45 do 21:50; v ulici Komořanská v obci Praha okres území Hlavního města Prahy; uzavřeno, mimořádná událost; na místě složky IZS.",
+  });
+  ok(
+    "SIT_CLOSURE_EXTRAORDINARY_IZS_PASS",
+    komor === "Silnice je uzavřena. Mimořádná událost. Na místě složky IZS."
+  );
+  ok(
+    "SIT_CLOSURE_KEEPS_KIND_UZAVIRKA",
+    classifyEventPresentation({
+      eventType: "uzavirka",
+      impact: "uzavřeno, mimořádná událost; na místě složky IZS.",
+    }).titleCs === "UZAVÍRKA"
+  );
+
+  const a2 = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; 2 osobní automobily; neprůjezdný pravý jízdní pruh",
+  });
+  ok(
+    "SIT_ACCIDENT_TWO_CARS_RIGHT_LANE_PASS",
+    a2 === "Nehoda dvou osobních automobilů. Pravý jízdní pruh je neprůjezdný."
+  );
+
+  const aQ = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; 2 osobní automobily; neprůjezdný levý jízdní pruh; tvoří se kolona",
+  });
+  ok(
+    "SIT_ACCIDENT_LANE_QUEUE_PASS",
+    aQ ===
+      "Nehoda dvou osobních automobilů. Levý jízdní pruh je neprůjezdný. Tvoří se kolona."
+  );
+
+  const heavyOnly = buildTrafficSituationSummary({
+    eventType: "kolona",
+    impact: "silný provoz",
+  });
+  ok("SIT_HEAVY_ONLY_PASS", heavyOnly === "Silný provoz.");
+  ok("SIT_HEAVY_NOT_QUEUE_PASS", !/kolona/i.test(heavyOnly));
+
+  const heavyLen = buildTrafficSituationSummary({
+    eventType: "kolona",
+    impact: "silný provoz 1 km",
+  });
+  ok("SIT_HEAVY_LENGTH_PASS", heavyLen === "Silný provoz v délce 1 km.");
+
+  const works = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact: "práce na silnici; levý jízdní pruh uzavřen",
+  });
+  ok(
+    "SIT_ROADWORKS_LANE_PASS",
+    works === "Práce na silnici. Levý jízdní pruh je uzavřen."
+  );
+
+  const broken = buildTrafficSituationSummary({
+    eventType: "prekazka",
+    impact:
+      "porouchané vozidlo; neprůjezdná zpevněná krajnice; průjezd se zvýšenou opatrností",
+  });
+  ok(
+    "SIT_BROKEN_SHOULDER_CARE_PASS",
+    broken ===
+      "Porouchané vozidlo. Zpevněná krajnice je neprůjezdná. Průjezd se zvýšenou opatrností."
+  );
+
+  const careOnly = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact: "průjezd se zvýšenou opatrností",
+  });
+  ok(
+    "SIT_PASS_WITH_CARE_PASS",
+    /Průjezd se zvýšenou opatrností/.test(careOnly)
+  );
+
+  const roadOnly = buildTrafficSituationSummary({
+    eventType: "uzavirka",
+    impact: "uzavřeno",
+  });
+  ok("SIT_ROAD_CLOSED_ONLY_PASS", roadOnly === "Silnice je uzavřena.");
+
+  const laneOnly = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact: "pravý jízdní pruh uzavřen",
+  });
+  ok(
+    "SIT_LANE_NOT_FULL_ROAD_PASS",
+    /Pravý jízdní pruh je uzavřen/.test(laneOnly) && !/Silnice je uzavřena/.test(laneOnly)
+  );
+
+  const shoulderOnly = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact: "zpevněná krajnice uzavřena",
+  });
+  ok(
+    "SIT_SHOULDER_NOT_FULL_ROAD_PASS",
+    /Zpevněná krajnice je uzavřena|Uzavřený odstavný pruh/.test(shoulderOnly) &&
+      !/Silnice je uzavřena/.test(shoulderOnly)
+  );
+
+  const extraordinary = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact: "mimořádná událost",
+  });
+  ok(
+    "SIT_EXTRAORDINARY_NOT_ACCIDENT_PASS",
+    /Mimořádná událost/.test(extraordinary) && !/Nehoda/.test(extraordinary)
+  );
+
+  const noQueue = buildTrafficSituationSummary({
+    eventType: "kolona",
+    impact: "silný provoz, zdržení",
+  });
+  ok("SIT_NO_INVENTED_QUEUE_PASS", !/kolona/i.test(noQueue));
+
+  const noAccident = buildTrafficSituationSummary({
+    eventType: "uzavirka",
+    impact: "uzavřeno, mimořádná událost",
+  });
+  ok("SIT_NO_INVENTED_ACCIDENT_PASS", !/Nehoda/.test(noAccident));
+
+  const dup = buildTrafficSituationSummary({
+    eventType: "uzavirka",
+    impact: "uzavřeno; silnice je uzavřena; komunikace je uzavřena",
+  });
+  ok(
+    "SIT_NO_CLOSURE_DUPLICATE_PASS",
+    dup === "Silnice je uzavřena." ||
+      (dup.match(/uzavřen/gi) || []).length <= 1
+  );
+
+  ok(
+    "SIT_RICH_SUMMARY_SUITE_PASS",
+    komor.includes("IZS") &&
+      a2.includes("Pravý") &&
+      heavyOnly === "Silný provoz." &&
+      !/kolona/i.test(heavyOnly)
   );
 }
 
@@ -2220,6 +2365,19 @@ console.log(
           "D0_REGRESSION_PASS",
           "OTHER_MOTORWAYS_REGRESSION_PASS",
           "D0_BARE_MOST_NOT_OVERRIDE_PASS",
+          "SIT_CLOSURE_EXTRAORDINARY_IZS_PASS",
+          "SIT_ACCIDENT_TWO_CARS_RIGHT_LANE_PASS",
+          "SIT_ACCIDENT_LANE_QUEUE_PASS",
+          "SIT_HEAVY_ONLY_PASS",
+          "SIT_HEAVY_LENGTH_PASS",
+          "SIT_ROADWORKS_LANE_PASS",
+          "SIT_BROKEN_SHOULDER_CARE_PASS",
+          "SIT_LANE_NOT_FULL_ROAD_PASS",
+          "SIT_SHOULDER_NOT_FULL_ROAD_PASS",
+          "SIT_NO_INVENTED_QUEUE_PASS",
+          "SIT_NO_INVENTED_ACCIDENT_PASS",
+          "SIT_NO_CLOSURE_DUPLICATE_PASS",
+          "SIT_RICH_SUMMARY_SUITE_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
