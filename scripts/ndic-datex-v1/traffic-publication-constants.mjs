@@ -197,6 +197,11 @@ export const PUBLIC_PROJECTION_ALLOWLIST = Object.freeze([
   "stableRecordId",
   "timelineField",
   "delayAvailable",
+  "isMotorVehicleRoad",
+  "motorVehicleRoadConfirmed",
+  "motorVehicleRoadStatus",
+  "motorVehicleRoadSource",
+  "roadFacilityType",
 ]);
 
 export const FORBIDDEN_PUBLIC_SUBSTRINGS = Object.freeze([

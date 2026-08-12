@@ -251,6 +251,7 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
   const motorVehicleConfirmed =
     opts.motorVehicleRoadConfirmed === true ||
     opts.isMotorVehicleRoad === true ||
+    String(opts.motorVehicleRoadStatus || "").toLowerCase() === "true" ||
     String(opts.roadFacilityType || "").toUpperCase() === "MOTOR_VEHICLE_ROAD";
 
   if (!road) {
@@ -807,6 +808,7 @@ export function buildTrafficCardPresentation(trafficV1) {
   const roadPres = classifyRoadPresentation(tv.road, {
     motorVehicleRoadConfirmed: tv.motorVehicleRoadConfirmed === true,
     isMotorVehicleRoad: tv.isMotorVehicleRoad === true,
+    motorVehicleRoadStatus: tv.motorVehicleRoadStatus,
     roadFacilityType: tv.roadFacilityType,
   });
   const event = classifyEventPresentation(tv);

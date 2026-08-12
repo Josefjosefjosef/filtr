@@ -34,10 +34,30 @@ import {
   roadClassLabelCs,
 } from "./traffic-card-content-v1.mjs";
 import { TRAFFIC_COMMENT_FULL_MAX, TRAFFIC_COMMENT_SUMMARY_MAX } from "./title.mjs";
+import {
+  loadSmvReferenceFromRepo,
+  smvDecisionForPublication,
+  SMV_STATUS,
+  SMV_SOURCE,
+} from "./smv-uls-resolver.mjs";
 
 /** Short presentation summary on the card face. */
 const MAX_SUMMARY = TRAFFIC_COMMENT_SUMMARY_MAX;
 const MAX_LABEL = 120;
+
+let _smvRefCache = { loaded: false, ref: null };
+
+function getSmvReference() {
+  if (_smvRefCache.loaded) return _smvRefCache.ref;
+  const hit = loadSmvReferenceFromRepo(process.cwd());
+  _smvRefCache = { loaded: true, ref: hit.ref };
+  return _smvRefCache.ref;
+}
+
+/** Test-only: inject or clear SMV reference cache. */
+export function __setSmvReferenceForTests(ref) {
+  _smvRefCache = { loaded: true, ref: ref || null };
+}
 /** Full source-backed description — must not be reconstructed from MAX_SUMMARY. */
 const MAX_FULL = TRAFFIC_COMMENT_FULL_MAX;
 /** Short preview before "Více informací" (presentation only). */
@@ -324,7 +344,8 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
           ? municipality
           : null;
 
-  // Coordinates: never emit into projection; map uses link type only
+  // Coordinates: never emit into projection; map uses link type only.
+  // SMV resolution may use validated coords internally, then discard them.
   let coordinatesPublished = false;
   void coordinatesPublished;
 
@@ -334,6 +355,29 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     fv(event, "kilometer").validationStatus === "validated"
       ? putProv("kilometer", fv(event, "kilometer"), CONFIDENCE_CLASS.VERIFIED_SOURCE_FIELD)
       : null;
+
+  const coordField = fv(event, "coordinates");
+  const coordVal =
+    coordField &&
+    coordField.validationStatus === "validated" &&
+    coordField.value &&
+    typeof coordField.value.lat === "number" &&
+    typeof coordField.value.lon === "number"
+      ? coordField.value
+      : null;
+  const smvDecision = smvDecisionForPublication(
+    {
+      road: roadNumber ? roadNumber.value : null,
+      kilometer: kilometer ? kilometer.value : null,
+      lat: coordVal ? coordVal.lat : null,
+      lon: coordVal ? coordVal.lon : null,
+      motorVehicleRoadConfirmed: opts.motorVehicleRoadConfirmed,
+      isMotorVehicleRoad: opts.isMotorVehicleRoad,
+      roadFacilityType: opts.roadFacilityType,
+      motorVehicleRoadStatus: opts.motorVehicleRoadStatus,
+    },
+    getSmvReference()
+  );
 
   // Metric fields — never estimate
   const delayStatus = opts.delayProven === true ? METRIC_STATUS.PROVEN : METRIC_STATUS.NOT_AVAILABLE;
@@ -448,6 +492,11 @@ export function buildTrafficPublicationProjection(event, opts = {}) {
     routeMatchMode: presentation.routeMatchMode,
     stableSituationId: identity.situationId || null,
     stableRecordId: identity.recordId || null,
+    isMotorVehicleRoad: smvDecision.isMotorVehicleRoad === true,
+    motorVehicleRoadConfirmed: smvDecision.motorVehicleRoadConfirmed === true,
+    motorVehicleRoadStatus: smvDecision.motorVehicleRoadStatus || SMV_STATUS.UNKNOWN,
+    motorVehicleRoadSource: smvDecision.motorVehicleRoadSource || SMV_SOURCE.NONE,
+    roadFacilityType: smvDecision.roadFacilityType,
   };
 
   // Reject invalid metric numbers

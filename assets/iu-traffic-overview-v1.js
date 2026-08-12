@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-municipality-signboard-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -266,6 +266,8 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "freeSpaces",
   "motorVehicleRoadConfirmed",
   "isMotorVehicleRoad",
+  "motorVehicleRoadStatus",
+  "motorVehicleRoadSource",
   "roadFacilityType",
   "queueLengthKm",
   "queueLengthMeters",
@@ -475,6 +477,8 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     freeSpaces: c.freeSpaces != null ? c.freeSpaces : null,
     motorVehicleRoadConfirmed: c.motorVehicleRoadConfirmed === true,
     isMotorVehicleRoad: c.isMotorVehicleRoad === true,
+    motorVehicleRoadStatus: c.motorVehicleRoadStatus || null,
+    motorVehicleRoadSource: c.motorVehicleRoadSource || null,
     roadFacilityType: c.roadFacilityType || null,
     queueLengthKm: c.queueLengthKm != null ? c.queueLengthKm : null,
     queueLengthMeters: c.queueLengthMeters != null ? c.queueLengthMeters : null,

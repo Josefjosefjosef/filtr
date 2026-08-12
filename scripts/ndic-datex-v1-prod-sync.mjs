@@ -74,12 +74,37 @@ import {
 } from "./ndic-datex-v1/traffic-ui-snapshot-persist.mjs";
 import { PUBLICATION_LAYER_FLAGS } from "./ndic-datex-v1/traffic-publication-constants.mjs";
 import { countActivePublicationSafetyCounters } from "./ndic-datex-v1/active-publication-safety-counters.mjs";
+import { spawnSync } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
 // Full TMC points must NEVER be committed / published on Pages (licence).
 // Persistent LKG root (NOT runner.temp). Live DATEX is read-only against this store.
 const TMC_LKG_ROOT = defaultTmcLkgRoot(process.env);
+
+function ensureSmvUlsReferenceBestEffort() {
+  try {
+    const script = path.join(REPO, "scripts", "ndic-datex-v1", "smv-uls-reference-build.mjs");
+    const r = spawnSync(process.execPath, [script], {
+      cwd: REPO,
+      encoding: "utf8",
+      timeout: 90000,
+    });
+    let parsed = null;
+    try {
+      parsed = JSON.parse(String(r.stdout || "").trim().split("\n").pop() || "{}");
+    } catch {
+      parsed = null;
+    }
+    return {
+      ok: r.status === 0,
+      status: r.status,
+      result: parsed,
+    };
+  } catch (err) {
+    return { ok: false, error: String(err && err.message ? err.message : err) };
+  }
+}
 
 function isShadowIsolated(env = process.env) {
   return String(env.IU_NDIC_SHADOW_ISOLATED || "") === "1";
@@ -737,6 +762,8 @@ export async function runNdicDatexV1Sync(opts = {}) {
           repoRoot: REPO,
           infoEventsDir: DIR,
         });
+        // Offline SMV ULS reference refresh (fail-closed keeps last-good; never blocks sync).
+        diagnostics.smvUlsReference = ensureSmvUlsReferenceBestEffort();
         const uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
           repoRoot: REPO,
           relPath: snapshotDest,

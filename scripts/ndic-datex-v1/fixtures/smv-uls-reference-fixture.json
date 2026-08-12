@@ -1,0 +1,46 @@
+{
+  "schema": "iu-smv-uls-reference-v1",
+  "source": "fixture",
+  "layerId": 5,
+  "layerName": "Silnice pro motorová vozidla",
+  "crs": "EPSG:4326",
+  "fetchedAt": "2026-08-12T00:00:00.000Z",
+  "featureCount": 2,
+  "contentHash": "fixture",
+  "segments": [
+    {
+      "id": "FIX-SMV-11-A",
+      "road": "11",
+      "roadRaw": "11",
+      "fromM": 260000,
+      "toM": 262000,
+      "lenM": 2000,
+      "admin": "CZ0806",
+      "bbox": [18.2, 49.8, 18.25, 49.82],
+      "paths": [
+        [
+          [18.21, 49.805],
+          [18.22, 49.808],
+          [18.23, 49.81]
+        ]
+      ]
+    },
+    {
+      "id": "FIX-SMV-35-A",
+      "road": "35",
+      "roadRaw": "35",
+      "fromM": 20000,
+      "toM": 22000,
+      "lenM": 2000,
+      "admin": "CZ0533",
+      "bbox": [16.45, 49.75, 16.5, 49.78],
+      "paths": [
+        [
+          [16.46, 49.76],
+          [16.47, 49.765],
+          [16.48, 49.77]
+        ]
+      ]
+    }
+  ]
+}

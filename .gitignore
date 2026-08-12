@@ -99,6 +99,10 @@ scripts/fixtures/chmi-cap-v2/_shadow_out/*.json
 # NDIC DATEX v1: full TMC table + raw pull cache (licence — never publish / commit)
 .cache/ndic-datex-v1/
 projects/data/info_events/ndic_datex_v1/tmc_store.json
+# ŘSD ULS SMV geometry reference (generated offline; not committed)
+projects/data/info_events/ndic_datex_v1/smv_uls_reference_v1.json
+projects/data/info_events/ndic_datex_v1/smv_uls_reference_v1.json.last-good
+projects/data/info_events/ndic_datex_v1/smv_uls_reference_v1.json.new
 # Persistent TMC LKG must never be committed (licensed points).
 .cache/ndic-datex-v1/tmc-lkg/
 projects/data/info_events/ndic_datex_v1/raw/
