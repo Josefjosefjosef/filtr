@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-municipality-signboard-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -1018,13 +1018,22 @@ export function buildTrafficCardViewModel(trafficV1) {
   const eventTypeLabel = presentation.event.titleCs || eventTypeLabelCs(eventType);
   const municipality = tv.municipality != null ? String(tv.municipality).trim() : "";
   const district = tv.district != null ? String(tv.district).trim() : "";
+  const municipalitySign =
+    (presentation.communication && presentation.communication.municipalitySign) || null;
+  const municipalitySignLabel =
+    (presentation.communication && presentation.communication.municipalitySignLabel) || null;
+  const besideLocality =
+    (presentation.communication && presentation.communication.besideLocality) || null;
+  const districtBeside =
+    (presentation.communication && presentation.communication.districtBeside) || null;
   const headLocality =
     (presentation.communication && presentation.communication.headLocality) ||
     presentation.communication.localityFallback ||
     "";
   const locality =
-    headLocality ||
+    municipalitySign ||
     municipality ||
+    headLocality ||
     (tv.location && String(tv.location).trim()) ||
     (tv.subjectScopeLabel && String(tv.subjectScopeLabel).trim()) ||
     road ||
@@ -1090,6 +1099,10 @@ export function buildTrafficCardViewModel(trafficV1) {
     },
     locality,
     headLocality,
+    municipalitySign,
+    municipalitySignLabel,
+    besideLocality,
+    districtBeside,
     localityLine,
     municipality,
     district,

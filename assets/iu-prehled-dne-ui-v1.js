@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
-import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-municipality-signboard-v1-20260812";
+import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-municipality-signboard-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-traffic-card-info-logic-v1-20260812";
+const CACHE_BUST = "ndic-municipality-signboard-v1-20260812";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -697,31 +697,43 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
         vm.roadBadge.label
       )}">${esc(vm.roadBadge.road)}</span>`
     : "";
+  const muniLabel =
+    vm.municipalitySignLabel ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.municipalitySignLabel) ||
+    "";
+  const muniSign = muniLabel
+    ? `<span class="iuPdMuniSign" data-iu-muni-sign="1">${esc(muniLabel)}</span>`
+    : "";
+  const beside =
+    vm.besideLocality ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.besideLocality) ||
+    "";
+  const besideBit = beside
+    ? `<span class="iuPdTrafficComm__beside">${esc(beside)}</span>`
+    : "";
+  const districtBeside =
+    vm.districtBeside ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.districtBeside) ||
+    "";
+  const districtBit = districtBeside
+    ? `<span class="iuPdTrafficComm__district">${esc(districtBeside)}</span>`
+    : "";
   const dirBit = vm.direction
     ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
-  const headLocality =
-    vm.headLocality ||
-    (vm.presentation &&
-      vm.presentation.communication &&
-      vm.presentation.communication.headLocality) ||
-    "";
-  const headLocalityBit =
-    vm.roadBadge.road && headLocality
-      ? `<span class="iuPdTrafficComm__head">${esc(headLocality)}</span>`
-      : "";
+  // Fallback only when neither municipality sign nor road badge carries the place.
   const localityFallback =
-    !vm.roadBadge.road && (headLocality || vm.locality || vm.localityLine)
-      ? `<span class="iuPdTrafficComm__place">${esc(headLocality || vm.locality || vm.localityLine)}</span>`
-      : "";
-  // Street is shown under MÍSTO block — avoid duplicate next to road badge when headLocality covers it.
-  const streetBit =
-    !headLocalityBit &&
-    vm.presentation &&
-    vm.presentation.communication &&
-    vm.presentation.communication.street
-      ? `<span class="iuPdTrafficComm__street">ulice ${esc(
-          vm.presentation.communication.street
+    !muniSign &&
+    !vm.roadBadge.road &&
+    (vm.headLocality || vm.locality || vm.localityLine)
+      ? `<span class="iuPdTrafficComm__place">${esc(
+          vm.headLocality || vm.locality || vm.localityLine
         )}</span>`
       : "";
   const eventSign = vm.eventSignSrc
@@ -782,12 +794,13 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
     `<div class="iuPdTrafficTop__main">` +
     (warnBadge ? `<div class="iuPdTrafficTop__badge">${warnBadge}</div>` : "") +
     `<div class="iuPdTrafficComm">` +
+    muniSign +
     roadTypeIcon +
     roadBadge +
-    (headLocalityBit ? `<span class="iuPdTrafficComm__sep" aria-hidden="true">—</span>` + headLocalityBit : "") +
+    besideBit +
+    districtBit +
     dirBit +
     localityFallback +
-    streetBit +
     `</div>` +
     `</div>` +
     (czMapMarkup ? `<div class="iuPdTrafficTop__map">${czMapMarkup}</div>` : "") +
