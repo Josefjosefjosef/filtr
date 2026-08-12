@@ -217,18 +217,18 @@ export function parseOfficialCommentFacts(rawText) {
   const phraseRes = [
     /práce na inženýrských sítích/i,
     /provoz převeden do protisměru/i,
-    /zúžení vozovky na [^,;.]{3,40}/i,
-    /neprůjezdn[ýáé]\s+[^,;.]{3,40}/i,
+    /zúžení vozovky na [^,;]{3,40}/i,
+    /neprůjezdn[ýáé]\s+[^,;]{3,40}/i,
     /silný provoz/i,
-    /pozor!\s*tvoří se kolona[^,;.]{0,40}/i,
-    /tvoří se kolona[^,;.]{0,40}/i,
+    /pozor!\s*tvoří se kolona[^,;]{0,40}/i,
+    /tvoří se kolona[^,;]{0,40}/i,
     /kolona\s+\d+(?:[.,]\d+)?\s*km/i,
-    /úplná uzavírka[^,;.]{0,60}/i,
-    /uzavřen[ýáo]\s+[^,;.]{3,40}/i,
-    /oprava povrchu[^,;.]{0,40}/i,
+    /úplná uzavírka(?:\s+ul\.)?[^,;]{0,60}/i,
+    /uzavřen[ýáo]\s+[^,;]{3,40}/i,
+    /oprava povrchu[^,;]{0,40}/i,
     /stavební práce/i,
     /práce na silnici/i,
-    /havárie[^,;.]{0,40}/i,
+    /havárie[^,;]{0,40}/i,
     /porouchané vozidlo/i,
     /průjezd se zvýšenou opatrností/i,
   ];
@@ -498,7 +498,10 @@ export function buildTrafficSituationSummary(input = {}) {
   if (event.kind === EVENT_KIND.CLOSURE) {
     if (/\búpln[áa]\s+uzavírk/i.test(source)) {
       const road = clean(input.road);
-      return road ? "Úplná uzavírka silnice " + road + "." : "Úplná uzavírka komunikace.";
+      if (road) return "Úplná uzavírka silnice " + road + ".";
+      const ul = source.match(/úplná uzavírka\s+ul\.\s*([^,;]{2,60})/i);
+      if (ul) return "Úplná uzavírka ulice " + clean(ul[1]) + ".";
+      return "Úplná uzavírka komunikace.";
     }
     if (/\boba směry\b/i.test(source)) return "Silnice je uzavřena v obou směrech.";
     const bits = [];
@@ -574,6 +577,13 @@ export function buildPlaceAndDirectionLine(input = {}) {
   const district = clean(input.district) || facts.district || "";
   const street = facts.street || clean(input.streetHint || input.street) || "";
   const location = clean(input.location);
+
+  if (facts.parkingName) {
+    const bits = [facts.parkingName];
+    if (muni) bits.push(muni);
+    else if (location && !/^p\+r/i.test(location)) bits.push(location);
+    return bits.join(" · ");
+  }
 
   if (street && (muni || facts.cityPart)) {
     const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
