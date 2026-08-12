@@ -12,7 +12,7 @@
 import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-registry-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812";
 
 export {
   matchParkingRegistry,
@@ -21,7 +21,7 @@ export {
   PARKING_REGISTRY_VERSION,
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-registry-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -214,8 +214,8 @@ function structuredParkingFullyOccupied(input = {}) {
 
 /**
  * Single occupancy resolver for collapsed + expanded parking UI.
- * Priority: percent(+free bound) → explicit fully occupied → structured free count → fallback.
- * Never invents occupancy.
+ * Priority: percent(+free bound) → few spaces left → explicit fully occupied → structured free → fallback.
+ * Never invents occupancy. Never appends datetime into status text.
  */
 export function resolveParkingLiveStatus(input = {}, factsIn = null) {
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
@@ -226,6 +226,8 @@ export function resolveParkingLiveStatus(input = {}, factsIn = null) {
     const bits = [facts.parkingOccupancyPercent + " % obsazeno"];
     if (facts.parkingFreeUpperBound != null) {
       bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
+    } else if (facts.parkingFewSpacesLeft) {
+      bits.push("Posledních pár volných parkovacích míst");
     }
     return {
       collapsedText: finalizeSentences(bits),
@@ -236,6 +238,16 @@ export function resolveParkingLiveStatus(input = {}, factsIn = null) {
       }),
       freeUpperBound: facts.parkingFreeUpperBound,
       kind: "percent",
+      known: true,
+    };
+  }
+
+  if (facts.parkingFewSpacesLeft) {
+    return {
+      collapsedText: "Posledních pár volných parkovacích míst.",
+      statusLabel: null,
+      freeUpperBound: facts.parkingFreeUpperBound,
+      kind: "few_left",
       known: true,
     };
   }
@@ -287,6 +299,118 @@ export function resolveParkingLiveStatus(input = {}, factsIn = null) {
   };
 }
 
+const PARKING_CITY_SUFFIX_RE =
+  /\s+(Praha|Brno|Ostrava|Plzeň|Olomouc|Liberec|Pardubice|Zlín|Kladno|Havířov|Opava|Frýdek-Místek|České Budějovice|Hradec Králové|Ústí nad Labem)$/i;
+
+const PARKING_OCCUPANCY_CLAUSE_RE =
+  /(?:\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných|posledních\s+pár\s+volných)/i;
+
+/** Trailing NDIC clock / validity stamp often glued into publicComment. */
+const TRAILING_NDIC_DATETIME_RE =
+  /(?:,?\s*)?(?:\d{1,2}\.\s*)?(?:\d{1,2}\.\s*)?\d{4}\s+\d{1,2}:\d{2}(?::\d{2})?\s*$/;
+
+/**
+ * Collapse consecutive exact duplicate comma/segment phrases in presentation text.
+ * Does not rewrite authoritative raw source storage — presentation only.
+ */
+export function dedupePresentationPhrases(raw) {
+  const text = clean(raw);
+  if (!text) return "";
+  const parts = text
+    .split(/\s*,\s*/)
+    .map((p) => clean(p))
+    .filter(Boolean);
+  const out = [];
+  let prevKey = "";
+  for (const p of parts) {
+    const key = p.toLowerCase().replace(/\s+/g, " ");
+    if (key && key === prevKey) continue;
+    out.push(p);
+    prevKey = key;
+  }
+  return out.join(", ");
+}
+
+export function stripTrailingNdicDateTime(raw) {
+  let s = clean(raw);
+  if (!s) return "";
+  s = s.replace(TRAILING_NDIC_DATETIME_RE, "");
+  return clean(s.replace(/[,\s]+$/g, ""));
+}
+
+function stripOccupancyAndMetaTail(nameRaw) {
+  let n = clean(nameRaw);
+  if (!n) return "";
+  n = stripTrailingNdicDateTime(n);
+  n = n.replace(/\s*[,–—-]\s*$/g, "");
+  n = n.replace(
+    /\s*[,–—-]?\s*(?:\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných(?:\s+parkovacích\s+míst)?|posledních\s+pár\s+volných(?:\s+parkovacích\s+míst)?)\s*$/i,
+    ""
+  );
+  return clean(n);
+}
+
+/**
+ * True when text is primarily a road/restriction event that merely mentions parking.
+ */
+export function isParkingFalsePositiveRoadEvent(rawText, input = {}) {
+  const text = clean(rawText);
+  if (!text) return false;
+  const type = clean(input.eventType || input.category).toLowerCase();
+  if (type === "nehoda" || type === "prace" || type === "uzavirka" || type === "kolona") {
+    // Strong typed road events win unless the blob is clearly occupancy-only.
+    if (!PARKING_OCCUPANCY_CLAUSE_RE.test(text) && !/\bP\s*\+\s*[RG]\b/i.test(text)) return true;
+  }
+  if (/\bparkovací(?:ho)?\s+pruhu?\b/i.test(text)) return true;
+  if (/\b(uzavřen[íýáo]|uzavírk).{0,40}parkovac/i.test(text)) return true;
+  if (/\b(stavební práce|práce na silnici|oprava povrchu|práce na inženýrských).{0,60}parkovišt/i.test(text)) {
+    return true;
+  }
+  if (/\bparkovišt.{0,40}(uzavřen|neprůjezdn|objížďk)/i.test(text)) return true;
+  if (/\bnehoda\b/i.test(text) && !PARKING_OCCUPANCY_CLAUSE_RE.test(text)) return true;
+  if (/\búpln[áa]\s+uzavírk/i.test(text) && !PARKING_OCCUPANCY_CLAUSE_RE.test(text)) return true;
+  return false;
+}
+
+/**
+ * Deterministic parking-occupancy situation detector (not keyword-only).
+ */
+export function isParkingOccupancySituation(input = {}, factsIn = null) {
+  const blob = sourceBlob(input);
+  const facts = factsIn || parseOfficialCommentFacts(blob);
+  if (isParkingFalsePositiveRoadEvent(blob, input)) return false;
+
+  const type = clean(input.eventType || input.category).toLowerCase();
+  const illustrationKey = clean(input.illustrationKey).toLowerCase();
+  if (type === "parkoviste" || type === "parking" || illustrationKey === "parking") return true;
+
+  if (
+    input.parkingAvailableSpaces != null ||
+    input.parkingCapacity != null ||
+    input.freeSpaces != null ||
+    input.parkingOccupancy != null
+  ) {
+    return true;
+  }
+
+  const hasOcc =
+    facts.parkingOccupancyPercent != null ||
+    facts.parkingFullyOccupied === true ||
+    facts.parkingFreeUpperBound != null ||
+    facts.parkingFewSpacesLeft === true ||
+    PARKING_OCCUPANCY_CLAUSE_RE.test(blob);
+
+  if (facts.parkingName) return true;
+  if (/\bP\s*\+\s*[RG]\b/i.test(blob)) return true;
+  if (/\bparkovací\s+dům\b/i.test(blob) && hasOcc) return true;
+  if (/\bparkovišt/i.test(blob) && hasOcc) return true;
+  // Named place + occupancy clause (e.g. "Prokešovo náměstí, 60% obsazeno") without road event language.
+  if (hasOcc && !/\b(silnice|dálnice|km\s+\d|ve směru|uzavírk|kolona|nehoda|objížďk)\b/i.test(blob)) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Extract only facts that appear in trusted NDIC publicComment / impact text.
  */
@@ -304,9 +428,11 @@ export function parseOfficialCommentFacts(rawText) {
     district: null,
     parkingName: null,
     parkingCity: null,
+    parkingType: null,
     parkingOccupancyPercent: null,
     parkingFullyOccupied: false,
     parkingFreeUpperBound: null,
+    parkingFewSpacesLeft: false,
     queueLengthKm: null,
     situationPhrases: [],
     isEmptyTemplate: false,
@@ -397,23 +523,85 @@ export function parseOfficialCommentFacts(rawText) {
     if (!out.city) out.city = "Praha";
   }
 
+  // --- Parking facility + occupancy (P+R / P+G / house / named place) ---
   const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,80})/i);
   if (pr) {
-    let prName = clean(pr[1]);
-    const citySuffix = prName.match(
-      /\s+(Praha|Brno|Ostrava|Plzeň|Olomouc|Liberec|Pardubice|Zlín|Kladno|Havířov|Opava|Frýdek-Místek|České Budějovice|Hradec Králové|Ústí nad Labem)$/i
-    );
+    let prName = stripOccupancyAndMetaTail(pr[1]);
+    const citySuffix = prName.match(PARKING_CITY_SUFFIX_RE);
     if (citySuffix) {
       out.parkingCity = clean(citySuffix[1]);
       prName = clean(prName.slice(0, citySuffix.index));
     }
-    out.parkingName = "P+R " + prName;
+    if (prName) {
+      out.parkingName = "P+R " + prName;
+      out.parkingType = "P+R";
+    }
   }
+
+  if (!out.parkingName) {
+    // Prefer "Name, P+G" — avoid \\b before Czech letters (JS \\b is ASCII-word only).
+    const pgBefore =
+      text.match(/([A-ZÁ-Ž0-9][^,;]{1,58}?)\s*,\s*P\s*\+\s*G\b/iu) ||
+      text.match(/([A-ZÁ-Ž0-9][^,;]{1,58}?)\s+P\s*\+\s*G\b/iu);
+    const pgAfter = text.match(/\bP\s*\+\s*G\s+([0-9A-ZÁ-Ž][^,;–—-]{1,80})/iu);
+    if (pgBefore) {
+      let n = stripOccupancyAndMetaTail(pgBefore[1]);
+      if (n && !/^p\s*\+\s*[rg]$/i.test(n)) {
+        out.parkingName = n + " P+G";
+        out.parkingType = "P+G";
+      }
+    } else if (pgAfter) {
+      let n = stripOccupancyAndMetaTail(pgAfter[1]);
+      const citySuffix = n.match(PARKING_CITY_SUFFIX_RE);
+      if (citySuffix) {
+        out.parkingCity = clean(citySuffix[1]);
+        n = clean(n.slice(0, citySuffix.index));
+      }
+      if (n) {
+        out.parkingName = n + " P+G";
+        out.parkingType = "P+G";
+      }
+    }
+  }
+
+  if (!out.parkingName) {
+    const house = text.match(/\bParkovací\s+dům\s+([^,;]{2,80})/i);
+    if (house) {
+      let n = stripOccupancyAndMetaTail(house[1]);
+      if (n) {
+        out.parkingName = "Parkovací dům " + n;
+        out.parkingType = "PARKING_HOUSE";
+      }
+    }
+  }
+
   if (/\bplně\s+obsazeno\b/i.test(text)) out.parkingFullyOccupied = true;
   const occ = text.match(/(\d{1,3})\s*%\s*obsazeno/i);
   if (occ) out.parkingOccupancyPercent = Number(occ[1]);
   const freeBound = text.match(/méně než\s+(\d+)\s+volných/i);
   if (freeBound) out.parkingFreeUpperBound = Number(freeBound[1]);
+  if (/posledních\s+pár\s+volných/i.test(text)) out.parkingFewSpacesLeft = true;
+
+  if (!out.parkingName && PARKING_OCCUPANCY_CLAUSE_RE.test(text)) {
+    // "Prokešovo náměstí, 60% obsazeno" / "Smetanovo náměstí – posledních pár…"
+    const named = text.match(
+      /^(.{2,80}?)(?:\s*[,–—-]\s*|\s+)(?=\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných|posledních\s+pár\s+volných)/i
+    );
+    if (named) {
+      let n = stripOccupancyAndMetaTail(named[1]);
+      n = n.replace(/\s*,\s*P\s*\+\s*[RG]\s*$/i, "");
+      if (
+        n &&
+        n.length >= 2 &&
+        !/^(od|do|vydal|aktualizováno)$/i.test(n) &&
+        !looksLikeRoadNumberToken(n) &&
+        !/^km\b/i.test(n)
+      ) {
+        out.parkingName = n;
+        if (!out.parkingType) out.parkingType = "NAMED_PARKING";
+      }
+    }
+  }
 
   const q = text.match(/\bkolona\s+(\d+(?:[.,]\d+)?)\s*km\b/i);
   if (q) out.queueLengthKm = Number(String(q[1]).replace(",", "."));
@@ -524,22 +712,10 @@ export function classifyEventPresentation(input = {}) {
   const illustrationKey = clean(input.illustrationKey).toLowerCase();
   const blob = sourceBlob(input);
   const facts = parseOfficialCommentFacts(blob);
-  const parkingFields =
-    input.parkingAvailableSpaces != null ||
-    input.parkingCapacity != null ||
-    input.freeSpaces != null ||
-    input.parkingOccupancy != null ||
-    !!facts.parkingName ||
-    /p\s*\+\s*r\b/i.test(blob) ||
-    /\bparkovišt/i.test(blob);
 
-  if (
-    type === "parkoviste" ||
-    type === "parking" ||
-    illustrationKey === "parking" ||
-    parkingFields
-  ) {
-    // Collapsed UI shows status beside the P sign — keep title kind-only (no duplicate).
+  // Parking occupancy / facility status — before generic omezeni/warning fallback.
+  // False-positive road events that only mention parking are excluded inside the helper.
+  if (isParkingOccupancySituation(input, facts)) {
     const meta = { ...EVENT_KIND_META[EVENT_KIND.PARKING] };
     meta.titleCs = "PARKOVIŠTĚ";
     return { kind: EVENT_KIND.PARKING, ...meta, facts };
@@ -1060,9 +1236,15 @@ export function buildTrafficExpandedDetail(input = {}) {
   if (registry && registry.addressLine) {
     push("parkingAddress", "Adresa", registry.addressLine);
   }
-  if (registry && registry.parkAndRide) {
+  if (registry && registry.parkAndRide === true) {
     push("parkingType", "Typ parkoviště", "P+R (Park and Ride)");
     push("parkingPrExplanation", "O P+R", PARK_AND_RIDE_EXPLANATION_CS);
+  } else if (facts.parkingType === "P+G") {
+    push("parkingType", "Typ parkoviště", "P+G");
+  } else if (facts.parkingType === "PARKING_HOUSE") {
+    push("parkingType", "Typ parkoviště", "Parkovací dům");
+  } else if (facts.parkingType === "P+R") {
+    push("parkingType", "Typ parkoviště", "P+R (Park and Ride)");
   }
 
   const qKm = facts.queueLengthKm != null ? facts.queueLengthKm : input.queueLengthKm;

@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-parking-registry-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-parking-classify-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -1051,10 +1051,26 @@ export function buildTrafficCardViewModel(trafficV1) {
     humanDirectionOrNull(tv.direction) ||
     (presentation.communication && presentation.communication.direction) ||
     null;
-  const locationNote =
+  let locationNote =
     tv.locationDisclosureCs != null && String(tv.locationDisclosureCs).trim()
       ? String(tv.locationDisclosureCs).trim()
       : "";
+  // Parking facility cards are localized by municipality/name — do not show
+  // road-TMC "unknown segment" GENERAL fallback that contradicts the header.
+  if (
+    presentation.event &&
+    presentation.event.kind === "parking" &&
+    (municipalitySign ||
+      besideLocality ||
+      (presentation.communication && presentation.communication.parkingName))
+  ) {
+    if (
+      /Konkrétní úsek ani místo/i.test(locationNote) ||
+      /nespojují s jednoznačně určitelnou lokalitou/i.test(locationNote)
+    ) {
+      locationNote = "";
+    }
+  }
   const communicationLine = presentation.placeLine || "";
   const impactShort = tv.impact != null ? String(tv.impact) : "";
   const impactFullRaw = tv.impactFull != null ? String(tv.impactFull) : "";
