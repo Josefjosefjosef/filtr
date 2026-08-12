@@ -429,10 +429,9 @@ export function classifyEventPresentation(input = {}) {
     illustrationKey === "parking" ||
     parkingFields
   ) {
+    // Collapsed UI shows status beside the P sign — keep title kind-only (no duplicate).
     const meta = { ...EVENT_KIND_META[EVENT_KIND.PARKING] };
-    const status = formatParkingStatusLabel(facts);
-    if (status) meta.titleCs = "PARKOVIŠTĚ — " + status;
-    else meta.titleCs = "PARKOVIŠTĚ";
+    meta.titleCs = "PARKOVIŠTĚ";
     return { kind: EVENT_KIND.PARKING, ...meta, facts };
   }
 
@@ -524,12 +523,19 @@ export function buildTrafficSituationSummary(input = {}) {
 
   if (event.kind === EVENT_KIND.PARKING) {
     const bits = [];
-    if (facts.parkingOccupancyPercent != null) bits.push(facts.parkingOccupancyPercent + " % obsazeno");
-    if (facts.parkingFreeUpperBound != null) {
-      bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
-    } else if (input.parkingAvailableSpaces != null || input.freeSpaces != null) {
-      const free = input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces;
-      if (Number.isFinite(Number(free))) return "Volných míst: " + String(Number(free));
+    if (facts.parkingFullyOccupied) {
+      bits.push("Plně obsazeno");
+    } else {
+      if (facts.parkingOccupancyPercent != null) {
+        bits.push(facts.parkingOccupancyPercent + " % obsazeno");
+      }
+      if (facts.parkingFreeUpperBound != null) {
+        bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
+      } else if (input.parkingAvailableSpaces != null || input.freeSpaces != null) {
+        const free =
+          input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces;
+        if (Number.isFinite(Number(free))) return "Volných míst: " + String(Number(free));
+      }
     }
     if (bits.length) return finalizeSentences(bits);
     return "Informace o obsazenosti parkoviště.";
@@ -964,22 +970,18 @@ export function buildTrafficCardPresentation(trafficV1) {
   const event = classifyEventPresentation(tv);
   const communication = buildCommunicationLine(tv);
   const placeLineRaw = buildPlaceAndDirectionLine(tv);
-  const placeLine = placeLineWithoutDuplicateMunicipality(
-    placeLineRaw,
-    communication.municipalitySign
-  );
+  // Parking: name lives on the municipality/beside row — hide duplicate MÍSTO block.
+  const placeLine =
+    event.kind === EVENT_KIND.PARKING
+      ? ""
+      : placeLineWithoutDuplicateMunicipality(placeLineRaw, communication.municipalitySign);
   const situationSummary = buildTrafficSituationSummary(tv);
   const expanded = buildTrafficExpandedDetail(tv);
   const informative = isTrafficCardInformative(tv);
   const hasPublicOaLeak = /\bOA\b/.test(situationSummary);
 
-  let eventTitle = event.titleCs;
-  if (event.kind === EVENT_KIND.PARKING) {
-    const status =
-      (communication && communication.parkingStatusLabel) ||
-      formatParkingStatusLabel(event.facts || {});
-    eventTitle = status ? "PARKOVIŠTĚ — " + status : "PARKOVIŠTĚ";
-  }
+  // Parking collapsed UI uses situation stack beside P; title stays kind-only.
+  const eventTitle = event.titleCs;
 
   return {
     roadPresentation: roadPres,

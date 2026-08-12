@@ -752,23 +752,36 @@ function renderTrafficCardBody(ev, url) {
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";
-  const eventTitle = vm.eventTypeLabel
-    ? `<span class="iuPdTrafficEventTitle">${esc(vm.eventTypeLabel)}</span>`
-    : "";
-  const placeLine = vm.placeLine || vm.communicationLine || "";
-  const placeBlock = placeLine
-    ? `<div class="iuPdTrafficBlock" data-tk="place">` +
-      `<div class="iuPdTrafficBlock__h">${esc(vm.placeLabel || "Místo")}</div>` +
-      `<div class="iuPdTrafficBlock__v">${esc(placeLine)}</div>` +
-      `</div>`
-    : "";
+  const isParking = String(vm.eventKind || "") === "parking";
   const situation = vm.situationSummary || vm.leadText || "";
-  const situationBlock = situation
-    ? `<div class="iuPdTrafficBlock" data-tk="situation">` +
-      `<div class="iuPdTrafficBlock__h">${esc(vm.situationLabel || "Dopravní situace")}</div>` +
-      `<div class="iuPdTrafficBlock__v">${esc(situation)}</div>` +
-      `</div>`
-    : "";
+  // Parking: status stack beside P (no duplicate PARKOVIŠTĚ — … title).
+  const eventTitle =
+    !isParking && vm.eventTypeLabel
+      ? `<span class="iuPdTrafficEventTitle">${esc(vm.eventTypeLabel)}</span>`
+      : "";
+  const parkingStatusStack =
+    isParking && situation
+      ? `<div class="iuPdTrafficEventStack" data-tk="parking-status">` +
+        `<div class="iuPdTrafficEventStack__h">${esc(vm.situationLabel || "Stav parkoviště")}</div>` +
+        `<div class="iuPdTrafficEventStack__v">${esc(situation)}</div>` +
+        `</div>`
+      : "";
+  const placeLine = vm.placeLine || vm.communicationLine || "";
+  // Parking name is already on the first row beside municipality sign — skip MÍSTO.
+  const placeBlock =
+    !isParking && placeLine
+      ? `<div class="iuPdTrafficBlock" data-tk="place">` +
+        `<div class="iuPdTrafficBlock__h">${esc(vm.placeLabel || "Místo")}</div>` +
+        `<div class="iuPdTrafficBlock__v">${esc(placeLine)}</div>` +
+        `</div>`
+      : "";
+  const situationBlock =
+    !isParking && situation
+      ? `<div class="iuPdTrafficBlock" data-tk="situation">` +
+        `<div class="iuPdTrafficBlock__h">${esc(vm.situationLabel || "Dopravní situace")}</div>` +
+        `<div class="iuPdTrafficBlock__v">${esc(situation)}</div>` +
+        `</div>`
+      : "";
   const validityBlock = vm.validityLine
     ? `<div class="iuPdTrafficBlock" data-tk="validity">` +
       `<div class="iuPdTrafficBlock__h">Platnost</div>` +
@@ -802,7 +815,7 @@ function renderTrafficCardBody(ev, url) {
     ? `<div class="iuPdTrafficSource">Zdroj: ${esc(vm.sourceLabel)}</div>`
     : "";
   return (
-    `<div class="iuPdTrafficCard" data-iu-traffic-unified="1">` +
+    `<div class="iuPdTrafficCard" data-iu-traffic-unified="1"${isParking ? ' data-iu-parking="1"' : ""}>` +
     `<div class="iuPdTrafficTop">` +
     `<div class="iuPdTrafficTop__main">` +
     (warnBadge ? `<div class="iuPdTrafficTop__badge">${warnBadge}</div>` : "") +
@@ -814,7 +827,7 @@ function renderTrafficCardBody(ev, url) {
     `</div>` +
     `<div class="iuPdTrafficEventRow" data-kind="${esc(vm.eventKind || "")}">` +
     eventSign +
-    eventTitle +
+    (isParking ? parkingStatusStack : eventTitle) +
     `</div>` +
     placeBlock +
     situationBlock +
