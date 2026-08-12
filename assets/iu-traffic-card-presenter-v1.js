@@ -12,7 +12,7 @@
 import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812b";
 
 export {
   matchParkingRegistry,
@@ -21,7 +21,7 @@ export {
   PARKING_REGISTRY_VERSION,
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-parking-classify-v1-20260812b";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -357,18 +357,30 @@ export function isParkingFalsePositiveRoadEvent(rawText, input = {}) {
   const text = clean(rawText);
   if (!text) return false;
   const type = clean(input.eventType || input.category).toLowerCase();
+  const hasOccClause = PARKING_OCCUPANCY_CLAUSE_RE.test(text);
   if (type === "nehoda" || type === "prace" || type === "uzavirka" || type === "kolona") {
     // Strong typed road events win unless the blob is clearly occupancy-only.
-    if (!PARKING_OCCUPANCY_CLAUSE_RE.test(text) && !/\bP\s*\+\s*[RG]\b/i.test(text)) return true;
+    if (!hasOccClause && !/\bP\s*\+\s*[RG]\b/i.test(text)) return true;
   }
   if (/\bparkovací(?:ho)?\s+pruhu?\b/i.test(text)) return true;
-  if (/\b(uzavřen[íýáo]|uzavírk).{0,40}parkovac/i.test(text)) return true;
-  if (/\b(stavební práce|práce na silnici|oprava povrchu|práce na inženýrských).{0,60}parkovišt/i.test(text)) {
+  // Closure / works near a parking facility (name alone is not occupancy status).
+  if (
+    !hasOccClause &&
+    /\bparkovac/i.test(text) &&
+    /\b(uzavřen[íýáo]|uzavírk|neprůjezdn|objížďk|stavební práce|práce na silnici|oprava povrchu)\b/i.test(text)
+  ) {
     return true;
   }
-  if (/\bparkovišt.{0,40}(uzavřen|neprůjezdn|objížďk)/i.test(text)) return true;
-  if (/\bnehoda\b/i.test(text) && !PARKING_OCCUPANCY_CLAUSE_RE.test(text)) return true;
-  if (/\búpln[áa]\s+uzavírk/i.test(text) && !PARKING_OCCUPANCY_CLAUSE_RE.test(text)) return true;
+  if (/\b(uzavřen[íýáo]|uzavírk).{0,40}parkovac/i.test(text) && !hasOccClause) return true;
+  if (
+    /\b(stavební práce|práce na silnici|oprava povrchu|práce na inženýrských).{0,60}parkovišt/i.test(text) &&
+    !hasOccClause
+  ) {
+    return true;
+  }
+  if (/\bparkovišt.{0,40}(uzavřen|neprůjezdn|objížďk)/i.test(text) && !hasOccClause) return true;
+  if (/\bnehoda\b/i.test(text) && !hasOccClause) return true;
+  if (/\búpln[áa]\s+uzavírk/i.test(text) && !hasOccClause) return true;
   return false;
 }
 
@@ -400,8 +412,13 @@ export function isParkingOccupancySituation(input = {}, factsIn = null) {
     facts.parkingFewSpacesLeft === true ||
     PARKING_OCCUPANCY_CLAUSE_RE.test(blob);
 
-  if (facts.parkingName) return true;
-  if (/\bP\s*\+\s*[RG]\b/i.test(blob)) return true;
+  // P+R / P+G facility status from NDIC (often occupancy-bearing; type marker is authoritative).
+  if (/\bP\s*\+\s*[RG]\b/i.test(blob) || facts.parkingType === "P+R" || facts.parkingType === "P+G") {
+    return true;
+  }
+  // Named facility / parking house only with occupancy (or structured parking fields above).
+  // Bare "Parkovací dům … uzavírka" must stay a road event — see false-positive guard.
+  if (facts.parkingName && hasOcc) return true;
   if (/\bparkovací\s+dům\b/i.test(blob) && hasOcc) return true;
   if (/\bparkovišt/i.test(blob) && hasOcc) return true;
   // Named place + occupancy clause (e.g. "Prokešovo náměstí, 60% obsazeno") without road event language.
