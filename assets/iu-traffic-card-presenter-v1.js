@@ -223,6 +223,11 @@ function streetBareName(raw) {
     .replace(/^v\s+ulici\s+/i, "");
 }
 
+/** Praha 1–22 (and lettered variants) are city parts, never the municipality. */
+export function isPrahaCityPartName(raw) {
+  return /^praha\s+\d+[a-zA-Z]?$/i.test(clean(raw));
+}
+
 /**
  * Morphology heuristic for rejecting municipality-board candidates.
  * NEVER alone sufficient to invent a street ("ulice: …").
@@ -236,7 +241,7 @@ export function looksLikeStreetName(raw) {
     return false;
   }
   if (/\btřída\b/i.test(t)) return true;
-  if (/^praha\s+\d/i.test(t)) return false;
+  if (isPrahaCityPartName(t)) return false;
   if (/\s/.test(t)) {
     if (/\ba\b/i.test(t)) return false;
     return /(ská|cká|ovská)(?:\s|$)/i.test(t);
@@ -248,10 +253,23 @@ export function looksLikeStreetName(raw) {
 export function looksLikeNonMunicipalityPlace(raw) {
   const t = clean(raw);
   if (!t) return false;
+  if (isPrahaCityPartName(t)) return true;
   if (/náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům/i.test(t)) {
     return true;
   }
   return looksLikeStreetName(t);
+}
+
+/** Named non-street transport object kinds that must never become Ulice. */
+function isNamedNonStreetKind(kind) {
+  return (
+    kind === LOCATION_KIND.TUNNEL ||
+    kind === LOCATION_KIND.BRIDGE ||
+    kind === LOCATION_KIND.SQUARE ||
+    kind === LOCATION_KIND.INTERSECTION ||
+    kind === LOCATION_KIND.STATION ||
+    kind === LOCATION_KIND.PARKING
+  );
 }
 
 /**
@@ -325,11 +343,13 @@ export function extractNamedTransportObject(rawText) {
   if (!text) return null;
 
   // Prefer the leading clause before municipality / city-part list.
-  const lead = clean(text.split(/[,;]/)[0] || "");
+  // NDIC may prefix tunnels as "ulice Tunel X" / "ulice Brusnický tunel" — strip that.
+  const leadRaw = clean(text.split(/[,;]/)[0] || "");
+  const lead = streetBareName(leadRaw);
   if (
     lead &&
     !looksLikeRoadNumberToken(lead) &&
-    !/^praha\s+\d/i.test(lead) &&
+    !isPrahaCityPartName(lead) &&
     !/^od\s+\d/i.test(lead) &&
     /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům/i.test(lead)
   ) {
@@ -342,7 +362,7 @@ export function extractNamedTransportObject(rawText) {
     scan.match(/\b([A-ZÁ-Ž][\p{L}\-]*(?:\s+[A-ZÁ-Ž][\p{L}\-]*){0,3}\s+[Tt]unel)\b/u) ||
     scan.match(/\b([Tt]unel\s+[A-ZÁ-Ž][\p{L}0-9\-]+)\b/u);
   if (tunnel) {
-    const name = clean(tunnel[1]);
+    const name = streetBareName(tunnel[1]);
     return { name, kind: LOCATION_KIND.TUNNEL };
   }
   const bridge = scan.match(
@@ -369,34 +389,44 @@ export function extractNamedTransportObject(rawText) {
  */
 export function resolveConfirmedStreet(input = {}, factsIn = null) {
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
-  if (facts.street) return streetBareName(facts.street);
   if (facts.streetMulti) return null;
+
+  const named = facts.namedObject
+    ? { name: facts.namedObject, kind: facts.namedObjectKind }
+    : extractNamedTransportObject(sourceBlob(input));
+
+  if (facts.street) {
+    const fromFacts = streetBareName(facts.street);
+    if (!fromFacts) return null;
+    // "ulice Tunel …" / tunnel morphology must never become Ulice.
+    if (named && samePlaceName(fromFacts, named.name) && isNamedNonStreetKind(named.kind)) {
+      return null;
+    }
+    const kind = classifyLocationKindFromName(fromFacts);
+    if (isNamedNonStreetKind(kind)) return null;
+    return fromFacts;
+  }
 
   const structured = streetBareName(input.streetHint || input.street);
   if (!structured) return null;
   const location = clean(input.location);
   // Never treat generic locationLabel / TMC area as street.
   if (location && samePlaceName(structured, location)) return null;
-  const named = facts.namedObject || extractNamedTransportObject(sourceBlob(input));
   if (named && samePlaceName(structured, named.name)) return null;
   if (looksLikeNonMunicipalityPlace(structured) && !/\btřída\b/i.test(structured)) {
     // Structured value that is clearly a named non-street object.
     const kind = classifyLocationKindFromName(structured);
-    if (
-      kind === LOCATION_KIND.TUNNEL ||
-      kind === LOCATION_KIND.BRIDGE ||
-      kind === LOCATION_KIND.SQUARE ||
-      kind === LOCATION_KIND.INTERSECTION ||
-      kind === LOCATION_KIND.STATION ||
-      kind === LOCATION_KIND.PARKING
-    ) {
-      return null;
-    }
+    if (isNamedNonStreetKind(kind)) return null;
   }
   // Accept structured street only when comment contains street evidence markers,
   // or when structured is distinct from location and has street morphology + no named object.
   const blob = sourceBlob(input);
-  if (/\bulice:?\s+/i.test(blob) || /\bv\s+ulici\s+/i.test(blob)) return structured;
+  if (/\bulice:?\s+/i.test(blob) || /\bv\s+ulici\s+/i.test(blob)) {
+    // Source may say "ulice Tunel X" while the object is a tunnel — reject.
+    if (isNamedNonStreetKind(classifyLocationKindFromName(structured))) return null;
+    if (named && isNamedNonStreetKind(named.kind)) return null;
+    return structured;
+  }
   return null;
 }
 
@@ -712,7 +742,7 @@ export function parseOfficialCommentFacts(rawText) {
 
   const named = extractNamedTransportObject(text);
   if (named) {
-    out.namedObject = named.name;
+    out.namedObject = streetBareName(named.name);
     out.namedObjectKind = named.kind;
     out.locationKind = named.kind;
   }
@@ -767,7 +797,19 @@ export function parseOfficialCommentFacts(rawText) {
     let sn = streetBareName(streetIn[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
     sn = clean(sn.split(/\s+okres\b/i)[0]);
-    if (sn) out.street = sn;
+    if (sn) {
+      const snKind = classifyLocationKindFromName(sn);
+      if (isNamedNonStreetKind(snKind)) {
+        // Source said "ulice …" but the token is a tunnel/bridge/etc.
+        if (!out.namedObject || /^ulice\b/i.test(out.namedObject)) {
+          out.namedObject = sn;
+          out.namedObjectKind = snKind;
+          out.locationKind = snKind;
+        }
+      } else {
+        out.street = sn;
+      }
+    }
   }
 
   const okr = text.match(/\bokr\.\s*([^,;]{2,60})/i) || text.match(/\bokres\s+([^,;]{2,60})/i);
@@ -785,19 +827,42 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is a real municipality.
+  // Also covers "ulice Tunel X, Praha 5, Praha" where X is a named tunnel (not a street).
   const locTrip = text.match(
     /\bulice:?\s+([^,;]+),\s*([^,;]+),\s*([^,;]+?)(?=\s*,|\s*$)/u
   );
   if (locTrip && !out.streetMulti) {
     const s0 = streetBareName(locTrip[1]);
     const s1 = clean(locTrip[2]);
-    const s2 = normalizeExtractedMunicipalityName(locTrip[3]);
-    const cityOk = !!s2;
-    const midOk = s1 && (!looksLikeStreetName(s1) || /\s/.test(s1));
-    if (cityOk && midOk) {
-      out.street = s0;
-      out.cityPart = s1;
-      if (!out.city) out.city = s2;
+    const s2raw = clean(locTrip[3]);
+    const s2 = normalizeExtractedMunicipalityName(s2raw);
+    const s0Kind = classifyLocationKindFromName(s0);
+    const midIsPrahaPart = isPrahaCityPartName(s1);
+    const midOk = s1 && (midIsPrahaPart || !looksLikeStreetName(s1) || /\s/.test(s1));
+    if (s0 && midOk && (s2 || /^praha$/i.test(s2raw) || isPrahaCityPartName(s2raw))) {
+      if (isNamedNonStreetKind(s0Kind)) {
+        if (!out.namedObject || /^ulice\b/i.test(out.namedObject)) {
+          out.namedObject = s0;
+          out.namedObjectKind = s0Kind;
+          out.locationKind = s0Kind;
+        }
+        out.street = null;
+      } else if (s2) {
+        out.street = s0;
+      }
+      if (midIsPrahaPart) {
+        if (!out.cityPart) out.cityPart = s1;
+      } else if (s2 && !isPrahaCityPartName(s1)) {
+        out.cityPart = s1;
+      }
+      if (s2) {
+        if (!out.city) out.city = s2;
+      } else if (/^praha$/i.test(s2raw) && !out.city) {
+        out.city = "Praha";
+      } else if (isPrahaCityPartName(s2raw)) {
+        if (!out.cityPart) out.cityPart = s2raw;
+        if (!out.city) out.city = "Praha";
+      }
     }
   }
 
@@ -809,11 +874,35 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  // "Praha 4, Praha" / "Praha 13, Praha"
+  // "Praha 4, Praha" / "Praha 13, Praha" — city part + municipality (never Praha N as obec).
   const prahaPart = text.match(/\b(Praha\s+\d+[a-zA-Z]?)\s*,\s*Praha\b/u);
   if (prahaPart) {
-    out.cityPart = clean(prahaPart[1]);
-    if (!out.city) out.city = "Praha";
+    if (!out.cityPart || isPrahaCityPartName(out.cityPart)) {
+      out.cityPart = clean(prahaPart[1]);
+    }
+    if (!out.city || isPrahaCityPartName(out.city)) out.city = "Praha";
+  } else if (/\bPraha\b/u.test(text) && isPrahaCityPartName(out.city)) {
+    // Mis-parsed city-part as municipality — demote.
+    if (!out.cityPart) out.cityPart = out.city;
+    out.city = "Praha";
+  }
+
+  // Final guard: tunnel/bridge names must never remain in street.
+  if (out.street) {
+    const sk = classifyLocationKindFromName(out.street);
+    if (isNamedNonStreetKind(sk)) {
+      if (!out.namedObject) {
+        out.namedObject = streetBareName(out.street);
+        out.namedObjectKind = sk;
+        out.locationKind = sk;
+      }
+      out.street = null;
+    }
+  }
+  if (out.namedObject) out.namedObject = streetBareName(out.namedObject);
+  if (out.city && isPrahaCityPartName(out.city)) {
+    if (!out.cityPart) out.cityPart = out.city;
+    out.city = /\bPraha\b/u.test(text) ? "Praha" : null;
   }
 
   // --- Parking facility + occupancy (P+R / P+G / house / named place) ---
@@ -1084,6 +1173,15 @@ export function isFullScopeClosure(rawText) {
   if (/úpln[áa]\s+uzavírk/i.test(text)) return true;
   if (/komunikace\s+(?:je\s+)?(?:zcela\s+)?uzavřen/i.test(text)) return true;
   if (/(?:silnice|dálnice|most)\s+(?:je\s+)?(?:zcela\s+)?uzavřen/i.test(text)) return true;
+  // Whole tunnel closed — not a single lane / shoulder inside a tunnel.
+  if (
+    !isSingleLaneRestriction(text) &&
+    !isShoulderOrVergeRestriction(text) &&
+    (/(?:^|[,;.\s])tunel(?:y)?\s+(?:je\s+|jsou\s+)?uzavřen/i.test(text) ||
+      /uzavřen[ýáo]?\s+tunel(?:y)?(?:[,;.\s]|$)/i.test(text))
+  ) {
+    return true;
+  }
   if (/uzavřen[áao]\s+pro\s+veškerou\s+dopravu/i.test(text)) return true;
   if (/oba\s+směry.{0,30}uzavř/i.test(text)) return true;
   if (/všechny\s+jízdní\s+pruhy.{0,30}(?:uzavř|neprůjezdn)/i.test(text)) return true;
@@ -1319,7 +1417,10 @@ function stripBoilerplate(text) {
   if (!s) return "";
   s = s.replace(/\bOd\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}[^,]{0,40},?\s*/gi, "");
   s = s.replace(/\bDo\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}[^,]{0,40},?\s*/gi, "");
+  s = s.replace(/\bod\s+\d{1,2}\.\d{1,2}\.\d{4}[^,]{0,40},?\s*/gi, "");
+  s = s.replace(/\bdo\s+\d{1,2}\.\d{1,2}\.\d{4}[^,]{0,40},?\s*/gi, "");
   s = s.replace(/\bVydal:\s*[^,]{2,80}/gi, "");
+  s = s.replace(/\bZdroj:\s*[^,]{2,120}/gi, "");
   s = s.replace(/…+/g, " ");
   s = s.replace(/\.{3,}/g, " ");
   return clean(s);
@@ -1430,6 +1531,7 @@ function extractSituationCircumstanceBits(source) {
   } else if (/\bsložky\s+IZS\b/i.test(text)) {
     bits.push("Na místě složky IZS");
   }
+  if (/pravidelná\s+údržba/i.test(text)) bits.push("Pravidelná údržba");
   return bits;
 }
 
@@ -1496,7 +1598,12 @@ export function buildTrafficSituationSummary(input = {}) {
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
   } else if (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) {
-    if (/úpln[áa]\s+uzavírk/i.test(source)) {
+    if (
+      /(?:^|[,;.\s])tunel(?:y)?\s+(?:je\s+|jsou\s+)?uzavřen/i.test(source) ||
+      /uzavřen[ýáo]?\s+tunel(?:y)?(?:[,;.\s]|$)/i.test(source)
+    ) {
+      causeBits.push("Tunel je uzavřen");
+    } else if (/úpln[áa]\s+uzavírk/i.test(source)) {
       const road = clean(input.road);
       if (road) causeBits.push("Úplná uzavírka silnice " + road);
       else causeBits.push("Úplná uzavírka komunikace");
@@ -1621,7 +1728,16 @@ export function buildTrafficSituationSummary(input = {}) {
         !/^okres\b/i.test(x)
     )
     .slice(0, 2);
-  if (clauses.length) return finalizeSentences(clauses);
+  if (clauses.length) {
+    const cleaned = clauses.filter(
+      (x) =>
+        !/^ulice\b/i.test(x) &&
+        !/^zdroj:/i.test(x) &&
+        !isPrahaCityPartName(x) &&
+        !/^praha$/i.test(x)
+    );
+    if (cleaned.length) return finalizeSentences(cleaned);
+  }
   return "Dopravní omezení.";
 }
 
@@ -1632,20 +1748,47 @@ function samePlaceName(a, b) {
 }
 
 /**
+ * Resolve municipality vs Praha city-part misfiles (Praha 7 ≠ obec).
+ */
+function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityPartHint) {
+  let structured = clean(structuredRaw);
+  let fromComment = clean(fromCommentRaw);
+  const blobText = clean(blob);
+  const cityPart = clean(cityPartHint);
+
+  if (isPrahaCityPartName(fromComment)) {
+    if (!cityPart || isPrahaCityPartName(cityPart)) {
+      // keep city-part elsewhere; municipality must be Praha when present in source
+    }
+    fromComment = /\bPraha\b/u.test(blobText) ? "Praha" : "";
+  }
+  if (isPrahaCityPartName(structured)) {
+    structured = /\bPraha\b/u.test(blobText) || fromComment === "Praha" ? "Praha" : "";
+  }
+  let city = preferFullerMunicipalityName(structured, fromComment) || "";
+  if (isPrahaCityPartName(city)) {
+    city = /\bPraha\b/u.test(blobText) ? "Praha" : "";
+  }
+  return city || null;
+}
+
+/**
  * Municipality/city name for the Czech entrance-style signboard.
  * Never invents Praha/Jižní spojka; never treats street or city-part as municipality.
  * Parking: after live NDIC fields, may enrich from verified parking registry match only.
  */
 export function resolveMunicipalitySignName(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
-  const structured = clean(input.municipality);
-  const fromComment = clean(facts.city);
+  const blob = sourceBlob(input);
   const parkingCity = clean(facts.parkingCity);
   const street = streetBareName(facts.street || input.streetHint || input.street);
-  const cityPart = clean(facts.cityPart || input.cityPart);
+  let cityPart = clean(facts.cityPart || input.cityPart);
+  if (!cityPart && isPrahaCityPartName(input.municipality)) {
+    cityPart = clean(input.municipality);
+  }
 
   let city =
-    preferFullerMunicipalityName(structured, fromComment) ||
+    resolveMunicipalityCandidate(input.municipality, facts.city, blob, cityPart) ||
     parkingCity ||
     "";
   if (!city) {
@@ -1659,7 +1802,8 @@ export function resolveMunicipalitySignName(input = {}) {
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
   if (looksLikeRoadNumberToken(city)) return null;
-  if (!structured && looksLikeNonMunicipalityPlace(city)) return null;
+  if (isPrahaCityPartName(city)) return null;
+  if (!clean(input.municipality) && looksLikeNonMunicipalityPlace(city)) return null;
   if (street && samePlaceName(city, street)) return null;
   if (cityPart && samePlaceName(city, cityPart)) return null;
   if (facts.streetMulti && looksLikeNonMunicipalityPlace(city)) return null;
@@ -1678,8 +1822,11 @@ export function buildLocalityHeaderModel(input = {}) {
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
   const district = clean(input.district) || facts.district || "";
-  const cityPart = clean(facts.cityPart || input.cityPart);
-  const namedObject = facts.namedObject || null;
+  let cityPart = clean(facts.cityPart || input.cityPart);
+  if (!cityPart && isPrahaCityPartName(input.municipality)) {
+    cityPart = clean(input.municipality);
+  }
+  const namedObject = facts.namedObject ? streetBareName(facts.namedObject) : null;
   const namedObjectKind = facts.namedObjectKind || null;
   const registry = matchParkingRegistry({
     ...input,
@@ -1837,10 +1984,20 @@ export function buildPlaceAndDirectionLine(input = {}) {
     facts.kilometerLabel ||
     "";
   const section = clean(input.section);
-  const muni = clean(input.municipality) || facts.city || "";
+  const muni =
+    resolveMunicipalitySignName(input) ||
+    resolveMunicipalityCandidate(
+      input.municipality,
+      facts.city,
+      sourceBlob(input),
+      facts.cityPart || input.cityPart
+    ) ||
+    "";
   const district = clean(input.district) || facts.district || "";
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
+  let cityPart = clean(facts.cityPart || input.cityPart);
+  if (!cityPart && isPrahaCityPartName(input.municipality)) cityPart = clean(input.municipality);
 
   if (facts.parkingName) {
     const bits = [facts.parkingName];
@@ -1850,15 +2007,15 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   if (facts.namedObject && !resolveRoadDisplayName(road)) {
-    const placeBits = [facts.namedObject];
-    if (facts.cityPart) placeBits.push(facts.cityPart);
+    const placeBits = [streetBareName(facts.namedObject)];
+    if (cityPart) placeBits.push(cityPart);
     else if (muni) placeBits.push(muni);
     return placeBits.join(" · ");
   }
 
-  if (street && (muni || facts.cityPart)) {
+  if (street && (muni || cityPart)) {
     const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
-    if (facts.cityPart) placeBits.push(facts.cityPart);
+    if (cityPart) placeBits.push(cityPart);
     else if (muni) placeBits.push(muni);
     if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
     return placeBits.join(" · ");
@@ -1984,15 +2141,25 @@ export function buildTrafficExpandedDetail(input = {}) {
     const confirmedStreet = resolveConfirmedStreet(input, facts);
     push("street", "Ulice", confirmedStreet);
   }
-  push(
-    "municipality",
-    "Obec",
-    preferFullerMunicipalityName(
-      input.municipality || facts.city,
-      facts.city
-    ) || (registry ? registry.municipality : null)
-  );
-  push("cityPart", "Městská část", facts.cityPart || (registry ? registry.cityPart : null));
+  {
+    const muniResolved =
+      resolveMunicipalitySignName(input) ||
+      resolveMunicipalityCandidate(
+        input.municipality || facts.city,
+        facts.city,
+        sourceBlob(input),
+        facts.cityPart || input.cityPart
+      ) ||
+      (registry ? registry.municipality : null);
+    push("municipality", "Obec", muniResolved);
+  }
+  {
+    let cityPartVal = facts.cityPart || input.cityPart || (registry ? registry.cityPart : null);
+    if (!cityPartVal && isPrahaCityPartName(input.municipality)) {
+      cityPartVal = clean(input.municipality);
+    }
+    push("cityPart", "Městská část", cityPartVal);
+  }
   push("district", "Okres", input.district || facts.district);
   {
     const roadNorm = clean(input.road)
@@ -2001,7 +2168,8 @@ export function buildTrafficExpandedDetail(input = {}) {
     const locNorm = clean(input.location)
       .toLowerCase()
       .replace(/\s+/g, "");
-    const named = facts.namedObject || null;
+    const named = facts.namedObject ? streetBareName(facts.namedObject) : null;
+    const namedKind = facts.namedObjectKind || (named ? classifyLocationKindFromName(named) : null);
     // Hide LOKALITA when it only echoes the road number (e.g. location=D0).
     const locIsRoadEcho =
       !!(roadNorm && locNorm && locNorm === roadNorm) ||
@@ -2009,11 +2177,21 @@ export function buildTrafficExpandedDetail(input = {}) {
         looksLikeRoadNumberToken(input.location) &&
         !!roadNorm &&
         locNorm === roadNorm);
-    if (named) {
+    if (named && namedKind === LOCATION_KIND.TUNNEL) {
+      push("tunnel", "Tunel", named);
+    } else if (named && namedKind === LOCATION_KIND.BRIDGE) {
+      push("bridge", "Most", named);
+    } else if (named && isNamedNonStreetKind(namedKind)) {
+      push("namedObject", "Objekt", named);
+    } else if (named) {
       // Named object is the authoritative locality — do not keep a conflicting TMC/area label.
       push("location", "Lokalita", named);
     } else if (!locIsRoadEcho) {
-      push("location", "Lokalita", input.location);
+      const locVal = clean(input.location);
+      // Never keep a false "ulice …tunel" locality echo.
+      if (locVal && !(/^ulice\b/i.test(locVal) && /tunel/i.test(locVal))) {
+        push("location", "Lokalita", locVal);
+      }
     }
   }
   const parkingDisplayName =

@@ -41,6 +41,10 @@ import {
   resolveConfirmedStreet,
   classifyLocationKindFromName,
   looksLikeStreetName,
+  isPrahaCityPartName,
+  isFullScopeClosure,
+  isSingleLaneRestriction,
+  isShoulderOrVergeRestriction,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -2010,7 +2014,10 @@ ok(
         (r) => r && r.key === "location" && /Letná/i.test(String(r.value || ""))
       ) &&
       (bubPres.expanded.rows || []).some(
-        (r) => r && r.key === "location" && /Bubenečský tunel/i.test(String(r.value || ""))
+        (r) =>
+          r &&
+          (r.key === "tunnel" || r.key === "location") &&
+          /Bubenečský tunel/i.test(String(r.value || ""))
       )
   );
   ok(
@@ -2093,6 +2100,167 @@ ok(
   ok(
     "PARKING_HOUSE_NOT_STREET",
     classifyLocationKindFromName("Parkovací dům DK POKLAD I.") === LOCATION_KIND.PARKING
+  );
+}
+
+// --- Prague tunnels: ulice≠tunel, Praha N≠obec, tunel uzavřen summary/classifier ---
+{
+  const mrazImpact =
+    "ulice Tunel Mrázovka, Praha 5, Praha, tunel uzavřen, od 12.8.2026 23:00 do 13.8.2026 05:00, pravidelná údržba, Zdroj: TSK Praha / DIC";
+  const mrazInput = {
+    municipality: "Praha",
+    cityPart: "Praha 5",
+    location: "ulice Tunel Mrázovka",
+    street: "Tunel Mrázovka",
+    eventType: "omezeni",
+    impact: mrazImpact,
+    impactFull: mrazImpact,
+  };
+  const mrazFacts = parseOfficialCommentFacts(mrazImpact);
+  const mrazHdr = buildLocalityHeaderModel(mrazInput);
+  const mrazPres = buildTrafficCardPresentation(mrazInput);
+  const mrazRows = mrazPres.expanded.rows || [];
+  const mrazSummary = buildTrafficSituationSummary(mrazInput);
+
+  ok(
+    "MRAZOVKA_TUNNEL_PARSE_PASS",
+    mrazFacts.city === "Praha" &&
+      mrazFacts.cityPart === "Praha 5" &&
+      mrazFacts.namedObject === "Tunel Mrázovka" &&
+      mrazFacts.namedObjectKind === LOCATION_KIND.TUNNEL &&
+      mrazFacts.street == null &&
+      resolveConfirmedStreet(mrazInput, mrazFacts) == null
+  );
+  ok(
+    "MRAZOVKA_HEADER_PASS",
+    mrazHdr.municipalitySignLabel === "PRAHA" &&
+      mrazHdr.besideLocality === "Tunel Mrázovka" &&
+      mrazHdr.streetLabel == null &&
+      /městská část:\s*Praha 5/i.test(mrazHdr.cityPartRow || "") &&
+      !/^ulice/i.test(mrazHdr.besideLocality || "")
+  );
+  ok(
+    "MRAZOVKA_PLACE_PASS",
+    mrazPres.placeLine === "Tunel Mrázovka · Praha 5"
+  );
+  ok(
+    "MRAZOVKA_SUMMARY_PASS",
+    mrazSummary === "Tunel je uzavřen. Pravidelná údržba."
+  );
+  ok(
+    "MRAZOVKA_DETAIL_TUNNEL_PASS",
+    mrazRows.some((r) => r && r.key === "tunnel" && r.value === "Tunel Mrázovka") &&
+      !mrazRows.some((r) => r && r.key === "street") &&
+      !mrazRows.some(
+        (r) => r && r.key === "location" && /ulice\s+Tunel\s+Mrázovka/i.test(String(r.value || ""))
+      ) &&
+      mrazRows.some((r) => r && r.key === "municipality" && r.value === "Praha") &&
+      mrazRows.some((r) => r && r.key === "cityPart" && r.value === "Praha 5")
+  );
+  ok(
+    "MRAZOVKA_CLOSURE_CLASSIFIER_PASS",
+    isFullScopeClosure(mrazImpact) === true &&
+      mrazPres.event.kind === EVENT_KIND.CLOSURE &&
+      mrazPres.event.titleCs === "UZAVÍRKA"
+  );
+  ok(
+    "MRAZOVKA_RAW_UNCHANGED_PASS",
+    /ulice Tunel Mrázovka/i.test(mrazPres.expanded.sourceFull || "") &&
+      /Zdroj:\s*TSK Praha/i.test(mrazPres.expanded.sourceFull || "")
+  );
+
+  const brusImpact =
+    "ulice Brusnický tunel, Praha 6 - ulice Dejvický tunel, Praha 7, Praha, tunel uzavřen, od 12.8.2026 23:00 do 13.8.2026 05:00, pravidelná údržba, Zdroj: TSK Praha / DIC";
+  const brusInput = {
+    municipality: "Praha 7",
+    cityPart: "Praha 7",
+    location: "ulice Brusnický tunel",
+    street: "Brusnický tunel",
+    eventType: "omezeni",
+    impact: brusImpact,
+    impactFull: brusImpact,
+  };
+  const brusFacts = parseOfficialCommentFacts(brusImpact);
+  const brusHdr = buildLocalityHeaderModel(brusInput);
+  const brusPres = buildTrafficCardPresentation(brusInput);
+  const brusRows = brusPres.expanded.rows || [];
+
+  ok(
+    "BRUSNICKY_TUNNEL_PARSE_PASS",
+    brusFacts.city === "Praha" &&
+      brusFacts.city !== "Praha 7" &&
+      brusFacts.namedObject === "Brusnický tunel" &&
+      brusFacts.namedObjectKind === LOCATION_KIND.TUNNEL &&
+      brusFacts.street == null &&
+      resolveConfirmedStreet(brusInput, brusFacts) == null &&
+      isPrahaCityPartName("Praha 7") === true
+  );
+  ok(
+    "BRUSNICKY_PRAHA7_NOT_MUNICIPALITY_PASS",
+    resolveMunicipalitySignName(brusInput) === "Praha" &&
+      brusHdr.municipalitySignLabel === "PRAHA" &&
+      brusHdr.municipalitySignLabel !== "PRAHA 7" &&
+      brusRows.some((r) => r && r.key === "municipality" && r.value === "Praha") &&
+      !brusRows.some((r) => r && r.key === "municipality" && r.value === "Praha 7")
+  );
+  ok(
+    "BRUSNICKY_HEADER_PASS",
+    brusHdr.besideLocality === "Brusnický tunel" &&
+      brusHdr.streetLabel == null &&
+      /městská část:\s*Praha 7/i.test(brusHdr.cityPartRow || "") &&
+      !/Dejvický|Pozďatín/i.test(brusHdr.besideLocality || "")
+  );
+  ok(
+    "BRUSNICKY_PLACE_PASS",
+    brusPres.placeLine === "Brusnický tunel · Praha 7"
+  );
+  ok(
+    "BRUSNICKY_SUMMARY_PASS",
+    buildTrafficSituationSummary(brusInput) === "Tunel je uzavřen. Pravidelná údržba."
+  );
+  ok(
+    "BRUSNICKY_DETAIL_TUNNEL_PASS",
+    brusRows.some((r) => r && r.key === "tunnel" && r.value === "Brusnický tunel") &&
+      !brusRows.some((r) => r && r.key === "street")
+  );
+  ok(
+    "PRAHA_CITYPART_NOT_MUNICIPALITY_SUITE_PASS",
+    isPrahaCityPartName("Praha 1") &&
+      isPrahaCityPartName("Praha 22") &&
+      !isPrahaCityPartName("Praha") &&
+      resolveMunicipalitySignName({
+        municipality: "Praha 5",
+        impact: "ulice Tunel Mrázovka, Praha 5, Praha, tunel uzavřen",
+        impactFull: "ulice Tunel Mrázovka, Praha 5, Praha, tunel uzavřen",
+      }) === "Praha"
+  );
+  ok(
+    "TUNNEL_FULL_CLOSURE_NOT_LANE_REGRESSION_PASS",
+    isFullScopeClosure("tunel uzavřen, pravidelná údržba") === true &&
+      isFullScopeClosure("neprůjezdný pravý jízdní pruh") === false &&
+      isSingleLaneRestriction("neprůjezdný pravý jízdní pruh") === true &&
+      isFullScopeClosure("uzavřená krajnice") === false &&
+      isShoulderOrVergeRestriction("uzavřená krajnice") === true &&
+      classifyEventPresentation({
+        eventType: "omezeni",
+        impact: "neprůjezdný pravý jízdní pruh, silný provoz",
+      }).kind !== EVENT_KIND.CLOSURE
+  );
+  ok(
+    "TUNNEL_ULICE_PREFIX_STRIP_PASS",
+    extractNamedTransportObject("ulice Tunel Mrázovka, Praha 5, Praha").name ===
+      "Tunel Mrázovka" &&
+      extractNamedTransportObject("ulice Brusnický tunel, Praha 7, Praha").name ===
+        "Brusnický tunel"
+  );
+  ok(
+    "TUNNEL_SEMANTICS_SUITE_PASS",
+    mrazPres.event.kind === EVENT_KIND.CLOSURE &&
+      brusPres.event.kind === EVENT_KIND.CLOSURE &&
+      mrazFacts.namedObject === "Tunel Mrázovka" &&
+      brusFacts.namedObject === "Brusnický tunel" &&
+      mrazHdr.municipalitySignLabel === "PRAHA" &&
+      brusHdr.municipalitySignLabel === "PRAHA"
   );
 }
 
@@ -2576,6 +2744,23 @@ console.log(
           "U_OBCE_NO_DIVERSION_TOWN",
           "U_OBCE_MULTIWORD_PASS",
           "U_OBCE_UI_ORDER_PASS",
+          "MRAZOVKA_TUNNEL_PARSE_PASS",
+          "MRAZOVKA_HEADER_PASS",
+          "MRAZOVKA_PLACE_PASS",
+          "MRAZOVKA_SUMMARY_PASS",
+          "MRAZOVKA_DETAIL_TUNNEL_PASS",
+          "MRAZOVKA_CLOSURE_CLASSIFIER_PASS",
+          "MRAZOVKA_RAW_UNCHANGED_PASS",
+          "BRUSNICKY_TUNNEL_PARSE_PASS",
+          "BRUSNICKY_PRAHA7_NOT_MUNICIPALITY_PASS",
+          "BRUSNICKY_HEADER_PASS",
+          "BRUSNICKY_PLACE_PASS",
+          "BRUSNICKY_SUMMARY_PASS",
+          "BRUSNICKY_DETAIL_TUNNEL_PASS",
+          "PRAHA_CITYPART_NOT_MUNICIPALITY_SUITE_PASS",
+          "TUNNEL_FULL_CLOSURE_NOT_LANE_REGRESSION_PASS",
+          "TUNNEL_ULICE_PREFIX_STRIP_PASS",
+          "TUNNEL_SEMANTICS_SUITE_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
