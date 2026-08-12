@@ -19,6 +19,8 @@ import {
   buildTrafficCardPresentation,
   buildPlaceAndDirectionLine,
   buildHeadLocalityLabel,
+  buildLocalityHeaderModel,
+  resolveMunicipalitySignName,
   parseOfficialCommentFacts,
   isTrafficCardInformative,
   formatCsDateTime,
@@ -256,14 +258,14 @@ for (const rel of [
     eventType: "omezeni",
     impact: "místní komunikace Bzenec",
   });
-  ok("local_place_bzenec", /Bzenec/.test(vm.locality || vm.placeLine || ""));
+  ok("local_place_bzenec", /Bzenec/i.test(vm.locality || vm.municipalitySignLabel || vm.placeLine || ""));
   ok("local_no_fake_road", !vm.roadBadge.road);
 }
 
 {
   const longTown = "Nové Město pod Smrkem u Frýdlantského výběžku";
   const vm = vmFrom({ municipality: longTown, impact: "x".repeat(400), impactFull: "y".repeat(500) });
-  ok("long_town_kept", (vm.locality || "").includes("Nové Město"));
+  ok("long_town_kept", /Nové Město/i.test(vm.locality || vm.municipalitySignLabel || ""));
   ok("long_show_more", vm.showMore === true);
   ok(
     "long_detail_keeps_source",
@@ -381,6 +383,18 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     impact,
   });
   ok("horno_head", /OSTRAVA\s*—\s*HORNOPOLNÍ/.test(head.head || ""));
+  const hdr = buildLocalityHeaderModel({
+    location: "Hornopolní",
+    municipality: "Ostrava",
+    eventType: "prace",
+    impact,
+  });
+  ok("horno_muni_sign", hdr.municipalitySignLabel === "OSTRAVA");
+  ok("horno_beside_street", hdr.besideLocality === "Hornopolní");
+  ok(
+    "horno_not_street_as_muni",
+    resolveMunicipalitySignName({ location: "Hornopolní", impact: "práce na silnici" }) == null
+  );
   const place = buildPlaceAndDirectionLine({
     location: "Hornopolní",
     municipality: "Ostrava",
@@ -389,6 +403,13 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   });
   ok("horno_place_street", /ulice Hornopolní/.test(place));
   ok("horno_place_part", /Moravská Ostrava/.test(place));
+  const pPres = buildTrafficCardPresentation({
+    location: "Hornopolní",
+    municipality: "Ostrava",
+    eventType: "prace",
+    impact,
+  });
+  ok("horno_place_no_dup_city", !/^Ostrava\b/i.test(pPres.placeLine || ""));
   const sum = buildTrafficSituationSummary({ eventType: "prace", impact });
   ok("horno_sum_complete", /Práce na inženýrských sítích/.test(sum));
   ok("horno_sum_protismer", /protisměru/.test(sum));
@@ -534,8 +555,119 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
 
 // --- No substring truncation helper in presenter ---
 ok("no_substring_trunc", !/substring\s*\(\s*0\s*,/.test(presenterSrc));
-ok("ui_head_locality", uiSrc.includes("iuPdTrafficComm__head"));
+ok("ui_muni_sign", uiSrc.includes("iuPdMuniSign") && uiSrc.includes('data-iu-muni-sign="1"'));
 ok("ui_no_impact_full_body", !uiSrc.includes("iuPdTrafficMore__body"));
+ok("css_muni_sign_white", /\.iuPdMuniSign[\s\S]{0,400}background:\s*#ffffff/.test(cssSrc));
+ok("css_muni_sign_black_border", /\.iuPdMuniSign[\s\S]{0,500}border:\s*2\.5px\s+solid\s+#000000/.test(cssSrc));
+ok(
+  "css_muni_sign_dark_stays_white",
+  /html\.dark\s+\.iuPdMuniSign[\s\S]{0,160}background:\s*#ffffff\s*!important/.test(cssSrc)
+);
+
+// --- Municipality signboard composition ---
+{
+  const plzen = buildLocalityHeaderModel({
+    municipality: "Plzeň",
+    road: "I/27",
+    street: "Klatovská třída",
+    impact: "ulice Klatovská třída, Plzeň, práce na silnici",
+  });
+  ok("plzen_sign", plzen.municipalitySignLabel === "PLZEŇ");
+  ok("plzen_beside", /Klatovská/i.test(plzen.besideLocality || ""));
+  const vmPlzen = vmFrom({
+    municipality: "Plzeň",
+    road: "I/27",
+    roadClass: "CLASS_I",
+    street: "Klatovská třída",
+    eventType: "prace",
+    impact: "ulice Klatovská třída, Plzeň, práce na silnici",
+  });
+  ok("plzen_vm_sign", vmPlzen.municipalitySignLabel === "PLZEŇ");
+  ok("plzen_vm_road", vmPlzen.roadBadge.road === "I/27");
+  ok("plzen_vm_beside", /Klatovská/i.test(vmPlzen.besideLocality || ""));
+
+  const cityOnly = buildLocalityHeaderModel({ municipality: "Přerov", eventType: "omezeni", impact: "omezení v Přerově" });
+  ok("city_only_sign", cityOnly.municipalitySignLabel === "PŘEROV");
+  ok("city_only_no_beside", !cityOnly.besideLocality);
+
+  const roadCity = buildLocalityHeaderModel({
+    municipality: "Brno",
+    road: "I/42",
+    eventType: "omezeni",
+    impact: "omezení",
+  });
+  ok("city_road_no_street", roadCity.municipalitySignLabel === "BRNO" && !roadCity.besideLocality);
+
+  const jim = buildLocalityHeaderModel({
+    municipality: "Jimramov",
+    district: "Žďár nad Sázavou",
+    eventType: "uzavirka",
+    impact: "úplná uzavírka",
+  });
+  ok("jim_sign", jim.municipalitySignLabel === "JIMRAMOV");
+  ok("jim_district", /okres Žďár/.test(jim.districtBeside || ""));
+
+  const d1 = buildLocalityHeaderModel({
+    road: "D1",
+    eventType: "kolona",
+    impact: "D1, km 99, ve směru Brno, silný provoz",
+  });
+  ok("d1_no_muni_invent", d1.municipalitySign == null);
+  ok("d0_no_praha_invent", resolveMunicipalitySignName({ road: "D0", impact: "D0, km 60, silný provoz" }) == null);
+
+  const d1muni = buildLocalityHeaderModel({
+    road: "D1",
+    municipality: "Holubice",
+    eventType: "nehoda",
+    impact: "nehoda",
+  });
+  ok("d1_with_safe_muni", d1muni.municipalitySignLabel === "HOLUBICE");
+
+  ok(
+    "citypart_not_muni",
+    resolveMunicipalitySignName({
+      municipality: "Moravská Ostrava a Přívoz",
+      street: "Hornopolní",
+      impact: "ulice Hornopolní, Moravská Ostrava a Přívoz, Ostrava",
+    }) == null
+  );
+  ok(
+    "comment_city_is_muni",
+    resolveMunicipalitySignName({
+      street: "Hornopolní",
+      impact: "ulice Hornopolní, Moravská Ostrava a Přívoz, Ostrava",
+    }) === "Ostrava"
+  );
+
+  const longName = "Nové Město pod Smrkem";
+  const longH = buildLocalityHeaderModel({ municipality: longName, impact: "x" });
+  ok("long_muni_full", longH.municipalitySignLabel === longName.toUpperCase());
+  ok("long_muni_no_ellipsis", !/…|\.\.\./.test(longH.municipalitySignLabel || ""));
+  ok("diacritics_plzen", resolveMunicipalitySignName({ municipality: "Plzeň" }) === "Plzeň");
+
+  const prCity = buildLocalityHeaderModel({
+    municipality: "Praha",
+    eventType: "doprava",
+    impact: "P+R Zličín, 90% obsazeno, méně než 10 volných parkovacích míst",
+  });
+  ok("pr_keeps_muni_sign", prCity.municipalitySignLabel === "PRAHA");
+  const prVm = vmFrom({
+    municipality: "Praha",
+    eventType: "doprava",
+    impact: "P+R Zličín, 90% obsazeno, méně než 10 volných parkovacích míst",
+  });
+  ok("pr_title_keeps_name", /P\+R ZLIČÍN/i.test(prVm.eventTypeLabel || ""));
+  ok("pr_kind_parking", prVm.eventKind === EVENT_KIND.PARKING);
+
+  const closureTown = buildLocalityHeaderModel({
+    municipality: "Jimramov",
+    road: "II/357",
+    eventType: "omezeni",
+    impact: "úplná uzavírka silnice II/357",
+  });
+  ok("closure_town_sign", closureTown.municipalitySignLabel === "JIMRAMOV");
+  ok("closure_town_road", true);
+}
 
 console.log(
   JSON.stringify(

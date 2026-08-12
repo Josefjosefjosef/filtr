@@ -191,7 +191,7 @@ export function parseOfficialCommentFacts(rawText) {
 
   // "ulice X, CityPart, City," pattern (Hornopolní)
   const locTrip = text.match(
-    /\bulice\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,/u
+    /\bulice\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\b/u
   );
   if (locTrip) {
     out.street = clean(locTrip[1]);
@@ -524,39 +524,120 @@ export function buildTrafficSituationSummary(input = {}) {
   return "Dopravní omezení.";
 }
 
+function streetBareName(raw) {
+  return clean(raw).replace(/^ulice\s+/i, "");
+}
+
+function samePlaceName(a, b) {
+  const x = clean(a).toLowerCase();
+  const y = clean(b).toLowerCase();
+  return !!(x && y && x === y);
+}
+
 /**
- * Head locality next to road badge (human).
+ * Municipality/city name for the Czech entrance-style signboard.
+ * Never invents Praha/Jižní spojka; never treats street or city-part as municipality.
  */
-export function buildHeadLocalityLabel(input = {}) {
+export function resolveMunicipalitySignName(input = {}) {
+  const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const structured = clean(input.municipality);
+  const fromComment = clean(facts.city);
+  const street = streetBareName(facts.street || input.streetHint || input.street);
+  const cityPart = clean(facts.cityPart || input.cityPart);
+
+  let city = structured || fromComment || "";
+  if (!city) return null;
+  if (/^p\s*\+\s*r\b/i.test(city)) return null;
+  if (street && samePlaceName(city, street)) return null;
+  if (cityPart && samePlaceName(city, cityPart)) return null;
+  return city;
+}
+
+/**
+ * Locality header parts: [municipality sign] [road] [street/beside].
+ */
+export function buildLocalityHeaderModel(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const road = clean(input.road);
-  const muni = clean(input.municipality);
+  const municipalitySign = resolveMunicipalitySignName(input);
+  const street = streetBareName(facts.street || input.streetHint || input.street);
   const location = clean(input.location);
-  const district = clean(input.district) || facts.district;
-  const city = facts.city || muni;
-  const street = facts.street || clean(input.streetHint || input.street);
+  const district = clean(input.district) || facts.district || "";
+  const cityPart = clean(facts.cityPart || input.cityPart);
+
+  let besideLocality = "";
+  if (street) besideLocality = street;
+  else if (
+    location &&
+    !samePlaceName(location, municipalitySign) &&
+    location !== road &&
+    !/^d\d/i.test(location) &&
+    !/^p\s*\+\s*r\b/i.test(location) &&
+    !samePlaceName(location, cityPart)
+  ) {
+    // Short location label (e.g. Hornopolní) when it is not the city itself.
+    besideLocality = location;
+  }
+
+  let districtBeside = "";
+  if (municipalitySign && !besideLocality && !road && district) {
+    districtBeside = "okres " + district;
+  }
+
+  return {
+    municipalitySign,
+    municipalitySignLabel: municipalitySign ? municipalitySign.toUpperCase() : null,
+    besideLocality: besideLocality || null,
+    districtBeside: districtBeside || null,
+    street: street || null,
+    cityPart: cityPart || null,
+    district: district || null,
+    parkingName: facts.parkingName || null,
+  };
+}
+
+/**
+ * Head locality next to road badge (human) — legacy string for tests/compat.
+ * Prefer buildLocalityHeaderModel for UI (municipality sign + beside).
+ */
+export function buildHeadLocalityLabel(input = {}) {
+  const hdr = buildLocalityHeaderModel(input);
+  const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const road = clean(input.road);
+  const location = clean(input.location);
+  const district = hdr.district;
 
   if (facts.parkingName) {
-    const place = city || (location && !/^p\+r/i.test(location) ? location : "");
+    const place =
+      hdr.municipalitySign ||
+      (location && !/^p\+r/i.test(location) ? location : "");
     return { head: facts.parkingName, subtitle: place || null };
   }
 
-  if (city && street) {
-    const streetShort = street.replace(/^ulice\s+/i, "");
+  if (hdr.municipalitySign && hdr.besideLocality) {
     return {
-      head: city.toUpperCase() + " — " + streetShort.toUpperCase(),
+      head: hdr.municipalitySignLabel + " — " + hdr.besideLocality.toUpperCase(),
       subtitle: null,
+      municipalitySign: hdr.municipalitySign,
+      besideLocality: hdr.besideLocality,
     };
   }
-
-  if (road && city) return { head: city, subtitle: null };
+  if (hdr.municipalitySign) {
+    return {
+      head: hdr.municipalitySignLabel,
+      subtitle: hdr.districtBeside,
+      municipalitySign: hdr.municipalitySign,
+      besideLocality: null,
+    };
+  }
   if (road && location && location !== road && !/^d\d/i.test(location)) {
     return { head: location, subtitle: null };
   }
-  if (!road && city && district) return { head: city + " · okres " + district, subtitle: null };
-  if (!road && city) return { head: city, subtitle: null };
+  if (!road && hdr.besideLocality && district) {
+    return { head: hdr.besideLocality + " · okres " + district, subtitle: null };
+  }
+  if (!road && hdr.besideLocality) return { head: hdr.besideLocality, subtitle: null };
   if (!road && location) return { head: location, subtitle: null };
-  if (!road && muni) return { head: muni, subtitle: null };
   return { head: null, subtitle: null };
 }
 
@@ -612,16 +693,38 @@ export function buildPlaceAndDirectionLine(input = {}) {
 export function buildCommunicationLine(input = {}) {
   const roadPres = classifyRoadPresentation(input.road, input);
   const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const hdr = buildLocalityHeaderModel(input);
   const head = buildHeadLocalityLabel(input);
   const dir = clean(input.direction) || facts.directionHuman || null;
   return {
     roadPresentation: roadPres,
     direction: dir,
-    localityFallback: !roadPres.road ? head.head : null,
-    headLocality: roadPres.road ? head.head : null,
-    street: facts.street || clean(input.streetHint || input.street) || null,
+    localityFallback:
+      !roadPres.road && !hdr.municipalitySign
+        ? head.head
+        : !roadPres.road && hdr.municipalitySign
+          ? null
+          : null,
+    headLocality: roadPres.road && !hdr.municipalitySign ? head.head : null,
+    municipalitySign: hdr.municipalitySign,
+    municipalitySignLabel: hdr.municipalitySignLabel,
+    besideLocality: hdr.besideLocality,
+    districtBeside: hdr.districtBeside,
+    street: hdr.street || null,
     parkingName: facts.parkingName || null,
   };
+}
+
+function placeLineWithoutDuplicateMunicipality(placeLine, municipalitySign) {
+  const place = clean(placeLine);
+  const muni = clean(municipalitySign);
+  if (!place || !muni) return place;
+  if (samePlaceName(place, muni)) return "";
+  const prefix = muni + " · ";
+  if (place.toLowerCase().startsWith(prefix.toLowerCase())) {
+    return clean(place.slice(prefix.length));
+  }
+  return place;
 }
 
 export function buildTrafficExpandedDetail(input = {}) {
@@ -708,7 +811,11 @@ export function buildTrafficCardPresentation(trafficV1) {
   });
   const event = classifyEventPresentation(tv);
   const communication = buildCommunicationLine(tv);
-  const placeLine = buildPlaceAndDirectionLine(tv);
+  const placeLineRaw = buildPlaceAndDirectionLine(tv);
+  const placeLine = placeLineWithoutDuplicateMunicipality(
+    placeLineRaw,
+    communication.municipalitySign
+  );
   const situationSummary = buildTrafficSituationSummary(tv);
   const expanded = buildTrafficExpandedDetail(tv);
   const informative = isTrafficCardInformative(tv);

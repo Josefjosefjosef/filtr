@@ -1331,7 +1331,9 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdTrafficComm__dir,
 .iuPdTrafficComm__place,
 .iuPdTrafficComm__street,
-.iuPdTrafficComm__head {
+.iuPdTrafficComm__head,
+.iuPdTrafficComm__beside,
+.iuPdTrafficComm__district {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--iu-pd-text);
@@ -1342,6 +1344,34 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   opacity: 0.55;
   font-weight: 600;
   margin: 0 0.1rem;
+}
+/* Czech municipality entrance-style board (dynamic text, not an image). */
+.iuPdMuniSign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 1 auto;
+  width: max-content;
+  max-width: min(100%, 15.5rem);
+  min-height: 1.55rem;
+  padding: 0.16rem 0.52rem;
+  margin: 0;
+  background: #ffffff;
+  color: #000000;
+  border: 2.5px solid #000000;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  box-shadow: none;
+  filter: none;
 }
 .iuPdTrafficEventRow {
   display: flex;
@@ -1682,9 +1712,22 @@ html.dark .iuPdTrafficComm__place,
 html[data-theme="dark"] .iuPdTrafficComm__place,
 html.dark .iuPdTrafficComm__head,
 html[data-theme="dark"] .iuPdTrafficComm__head,
+html.dark .iuPdTrafficComm__beside,
+html[data-theme="dark"] .iuPdTrafficComm__beside,
+html.dark .iuPdTrafficComm__district,
+html[data-theme="dark"] .iuPdTrafficComm__district,
 html.dark .iuPdTrafficMore__v,
 html[data-theme="dark"] .iuPdTrafficMore__v {
   color: #e2e8f0;
+}
+/* Municipality board stays a physical white CZ sign in dark mode. */
+html.dark .iuPdMuniSign,
+html[data-theme="dark"] .iuPdMuniSign {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
 html.dark .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended),
 html[data-theme="dark"] .iuPdCard__warnBadge:not(.iuPdCard__warnBadge--ended) {
