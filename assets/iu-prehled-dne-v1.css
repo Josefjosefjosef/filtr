@@ -1359,9 +1359,9 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   width: max-content;
-  max-width: min(100%, 15.5rem);
+  max-width: min(100%, 18.5rem);
   min-height: 1.55rem;
   padding: 0.16rem 0.52rem;
   margin: 0;
@@ -1378,6 +1378,7 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: normal;
+  overflow: visible;
   box-shadow: none;
   filter: none;
 }
