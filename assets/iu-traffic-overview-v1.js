@@ -14,8 +14,9 @@ import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } fro
 import {
   buildTrafficCardPresentation,
   expandTrafficAbbreviationsCs,
+  isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -680,6 +681,8 @@ export function filterOfflineTrafficCandidatesForOverview(items, prefs, opts) {
     if (!ev) continue;
     const tv = ev.trafficV1 || ev;
     if (!isTrafficMainOverviewVisible(tv, nowMs)) continue;
+    // Presentation filter: hide empty template-only cards (backend data kept).
+    if (!isTrafficCardInformative(tv)) continue;
     if (locActive && !eventMatchesLocationFilter(ev, f)) continue;
     out.push(ev);
   }
@@ -1015,16 +1018,22 @@ export function buildTrafficCardViewModel(trafficV1) {
   const eventTypeLabel = presentation.event.titleCs || eventTypeLabelCs(eventType);
   const municipality = tv.municipality != null ? String(tv.municipality).trim() : "";
   const district = tv.district != null ? String(tv.district).trim() : "";
+  const headLocality =
+    (presentation.communication && presentation.communication.headLocality) ||
+    presentation.communication.localityFallback ||
+    "";
   const locality =
+    headLocality ||
     municipality ||
     (tv.location && String(tv.location).trim()) ||
     (tv.subjectScopeLabel && String(tv.subjectScopeLabel).trim()) ||
     road ||
-    presentation.communication.localityFallback ||
     "";
   const localityLine = compactLocalityLine(municipality, district);
-  const dir = humanDirectionOrNull(tv.direction);
-  const precise = tv.preciseLocationVerified === true;
+  const dir =
+    humanDirectionOrNull(tv.direction) ||
+    (presentation.communication && presentation.communication.direction) ||
+    null;
   const locationNote =
     tv.locationDisclosureCs != null && String(tv.locationDisclosureCs).trim()
       ? String(tv.locationDisclosureCs).trim()
@@ -1040,7 +1049,10 @@ export function buildTrafficCardViewModel(trafficV1) {
   const mapUrl = resolveSafeTrafficMapUrl(tv.mapTarget);
   const followId = String(tv.publicEventId || "").trim();
   const sourceLabel = presentation.sourceLabel || "ŘSD/NDIC";
-  const showMore = presentation.showMore && !!(impactFull || (presentation.expanded.rows || []).length);
+  const expandedRows = presentation.expanded.rows || [];
+  const sourceAlreadyInExpanded = expandedRows.some((r) => r && r.key === "sourceDescription");
+  // Full source text lives once in expandedRows — do not also dump impactFull body.
+  const showMore = presentation.showMore && expandedRows.length > 0;
 
   const detailRows = [];
   if (road) detailRows.push({ key: "road", label: "Komunikace", value: road });
@@ -1077,6 +1089,7 @@ export function buildTrafficCardViewModel(trafficV1) {
       showMotorVehiclesIcon: roadPres.showMotorVehiclesIcon === true,
     },
     locality,
+    headLocality,
     localityLine,
     municipality,
     district,
@@ -1095,11 +1108,14 @@ export function buildTrafficCardViewModel(trafficV1) {
     leadText,
     headline,
     detailRows,
-    expandedRows: presentation.expanded.rows || [],
+    expandedRows,
     validityLine,
     impactShort,
     impactFull: expandTrafficAbbreviationsCs(impactFull),
     impactFullRaw,
+    sourceAlreadyInExpanded,
+    // Renderer must not append impactFull body when sourceDescription row exists.
+    renderImpactFullBody: false,
     showMore,
     quickBlocks,
     illustrationKey,
@@ -1109,6 +1125,7 @@ export function buildTrafficCardViewModel(trafficV1) {
     sourceLabel,
     showActive,
     showNew,
+    informative: presentation.informative !== false,
     presentation,
   };
 }
