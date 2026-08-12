@@ -269,6 +269,8 @@ async function main() {
     };
 
     const pubStarted = new Date().toISOString();
+    health.LAST_PUBLICATION_ATTEMPT_AT = pubStarted;
+    health.LAST_PUBLICATION_GENERATION_ATTEMPTED = generation.generationId;
     const pub = await publishLiveTrafficSnapshot({
       snapshot,
       mode,
@@ -276,11 +278,26 @@ async function main() {
       env: process.env,
     });
     const pubFinished = new Date().toISOString();
+    health.PUBLICATION_RETRY_COUNT = pub.PUBLICATION_RETRY_COUNT || 0;
+    if (pub.LAST_PUBLICATION_HTTP_STATUS != null) {
+      health.LAST_PUBLICATION_HTTP_STATUS = pub.LAST_PUBLICATION_HTTP_STATUS;
+    } else if (pub.UNCHANGED_CONTENT_PUBLICATION_SKIPPED === "YES") {
+      health.LAST_PUBLICATION_HTTP_STATUS = 200;
+    }
 
     if (pub.ok && pub.PRODUCTION_WRITE === "YES") {
       health.LAST_SUCCESSFUL_PUBLICATION_AT = pubFinished;
+      health.LAST_PUBLICATION_SUCCESS_AT = pubFinished;
+      health.LAST_PUBLICATION_GENERATION_SUCCESSFUL = pub.generationId;
       health.CURRENT_PRODUCTION_GENERATION = pub.generationId;
       health.CURRENT_SOURCE_LAST_MODIFIED = sourceLastModified;
+      health.PUBLICATION_CONSECUTIVE_FAILURES = 0;
+    } else if (pub.UNCHANGED_CONTENT_PUBLICATION_SKIPPED === "YES") {
+      health.CURRENT_SOURCE_LAST_MODIFIED = sourceLastModified;
+      health.PUBLICATION_CONSECUTIVE_FAILURES = 0;
+    } else if (!pub.ok && mode === "active") {
+      health.PUBLICATION_CONSECUTIVE_FAILURES = (health.PUBLICATION_CONSECUTIVE_FAILURES || 0) + 1;
+      health.LAST_ERROR = pub.reason || "PUBLICATION_FAILED";
     }
     saveHealth(health, root);
 
@@ -298,6 +315,7 @@ async function main() {
       PRODUCTION_WRITE: pub.PRODUCTION_WRITE || "NO",
       ATOMIC_PUBLICATION_PASS: pub.ATOMIC_PUBLICATION_PASS || (pub.ok ? "YES" : "NO"),
       LAST_KNOWN_GOOD_PROTECTED: pub.LAST_KNOWN_GOOD_PROTECTED || "YES",
+      PUBLISH_503_LKG_PASS: pub.PUBLISH_503_LKG_PASS || (pub.ok ? "YES" : pub.LAST_KNOWN_GOOD_PROTECTED) || "YES",
       generationId: pub.generationId || generation.generationId,
       summary: pub.summary || summarizeSnapshot(snapshot),
       HEADERS_RECEIVED_AT: obs.DATEX_HEADERS_RECEIVED_AT || null,
@@ -310,6 +328,19 @@ async function main() {
       DATEX_DOWNLOAD_MS: obs.DATEX_DOWNLOAD_DURATION_MS,
       DATEX_PARSE_MS: obs.DATEX_PARSE_DURATION_MS,
       RESOLVER_MS: obs.RESOLVER_DURATION_MS,
+      PAYLOAD_BYTES: pub.PAYLOAD_BYTES,
+      PUBLICATION_ATTEMPTS: pub.PUBLICATION_ATTEMPTS,
+      PUBLICATION_RETRY_COUNT: pub.PUBLICATION_RETRY_COUNT,
+      PUBLICATION_RECOVERED_BY_RETRY: pub.PUBLICATION_RECOVERED_BY_RETRY,
+      RETRY_AFTER_SUPPORTED: pub.RETRY_AFTER_SUPPORTED,
+      RETRY_POLICY: pub.RETRY_POLICY,
+      MAX_RETRY_ATTEMPTS: pub.MAX_RETRY_ATTEMPTS,
+      MAX_RETRY_WINDOW_MS: pub.MAX_RETRY_WINDOW_MS,
+      MAX_CONCURRENT_PUBLISHERS: pub.MAX_CONCURRENT_PUBLISHERS || 1,
+      IDEMPOTENT_PUBLICATION_RETRY_PASS: pub.IDEMPOTENT_PUBLICATION_RETRY_PASS,
+      LAST_PUBLICATION_HTTP_STATUS: health.LAST_PUBLICATION_HTTP_STATUS,
+      PUBLICATION_CONSECUTIVE_FAILURES: health.PUBLICATION_CONSECUTIVE_FAILURES,
+      SEMANTIC_SKIP: pub.SEMANTIC_SKIP || "NO",
       syncOk: syncResult.ok,
       publishedSync: Boolean(syncResult.published),
     });
