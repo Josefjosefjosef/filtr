@@ -167,6 +167,14 @@ for (const rel of [
     "ev_accident_asset",
     classifyEventPresentation({ eventType: "nehoda" }).asset === TRAFFIC_SIGN_ASSET.ACCIDENT
   );
+  ok(
+    "smv_icon_only_confirmed",
+    classifyRoadPresentation("I/11", { motorVehicleRoadStatus: "true" }).showMotorVehiclesIcon === true
+  );
+  ok(
+    "smv_status_unknown_no_icon",
+    classifyRoadPresentation("I/11", { motorVehicleRoadStatus: "unknown" }).showMotorVehiclesIcon === false
+  );
 }
 
 // --- Abbreviations ---
