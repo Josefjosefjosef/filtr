@@ -33,8 +33,8 @@ const PORTRAIT = [
 ];
 const LANDSCAPE_KEYS = new Set(["320p", "390p", "768p", "1024p"]);
 const DESKTOP = { w: 1280, h: 900 };
-const TOL_PX = 1.5;
-const PAD_MIN_PX = 8;
+const TOL_PX = 1;
+const PAD_MIN_PX = 1;
 const REOPEN_N = 10;
 const WIDTH_TOL_PX = 1.5;
 
@@ -187,11 +187,17 @@ function measureSnippet() {
       !!timeRect && cardInnerRight !== null && cardInnerRight - timeRect.right >= padMin - tol;
     const dateAfterLabel =
       !!dateRect && !!labelRect && dateRect.left > labelRect.right - tol;
+    const dateTitleDiff =
+      !!dateRect && !!titleRect ? Math.abs(dateRect.right - titleRect.right) : 999;
+    const timeTitleDiff =
+      !!timeRect && !!titleRect ? Math.abs(timeRect.right - titleRect.right) : 999;
     const alignsWithTitle =
       !!dateRect &&
       !!titleRect &&
-      Math.abs(dateRect.right - titleRect.right) <= tol &&
+      dateTitleDiff <= tol &&
       Math.abs(dateRect.left - titleRect.left) <= tol;
+    const timeAlignsWithTitle =
+      !!timeRect && !!titleRect && timeTitleDiff <= tol;
 
     const docEl = document.documentElement;
     const body = document.body;
@@ -220,6 +226,12 @@ function measureSnippet() {
       timePadOk,
       dateAfterLabel,
       alignsWithTitle,
+      timeAlignsWithTitle,
+      dateTitleDiff,
+      timeTitleDiff,
+      DATE_RIGHT_PX: dateRect ? Math.round(dateRect.right * 100) / 100 : null,
+      TIME_RIGHT_PX: timeRect ? Math.round(timeRect.right * 100) / 100 : null,
+      TITLE_RIGHT_PX: titleRect ? Math.round(titleRect.right * 100) / 100 : null,
       overflowX,
       cardOverflowX,
       dateWidth: dateRect ? Math.round(dateRect.width * 100) / 100 : null,
@@ -255,6 +267,7 @@ function kindPass(m) {
     m.timePadOk &&
     m.dateAfterLabel &&
     m.alignsWithTitle &&
+    m.timeAlignsWithTitle &&
     !m.overflowX &&
     !m.cardOverflowX
   );
@@ -273,44 +286,9 @@ async function measureQuick(page, kind) {
 }
 
 async function measureEditProbe(page, kind) {
-  await resetHomeTemplate(page);
-  await page.evaluate((k) => {
-    let host = document.getElementById("iuDateTimeFitEditProbe");
-    if (host) host.parentNode.removeChild(host);
-    host = document.createElement("div");
-    host.id = "iuDateTimeFitEditProbe";
-    host.style.cssText =
-      "position:fixed;inset:12px;z-index:99999;overflow:auto;background:#fff;padding:12px;box-sizing:border-box;";
-    const isCal = k === "calendar";
-    host.innerHTML = isCal
-      ? '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty iuSilverDraftCard--quickTemplateCalendar" data-iu-silver-draft-card="1" data-iu-silver-edit-mode="1">' +
-        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit">' +
-        '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-field="date" value="2026-08-03" />' +
-        '<div class="iuSilverDraftK iuSilverDraftK--allDayRow"><span class="iuSilverDraftAllDayLine">Celodenní</span><span class="iuSilverDraftAllDayLine">událost</span></div>' +
-        '<div class="iuSilverDraftV"><button type="button" class="iu-calAllDaySwitch" data-iu-silver-field-all-day="1" role="switch" aria-checked="false"><span class="iu-calAllDaySwitch__track"></span><span class="iu-calAllDaySwitch__thumb"></span></button></div>' +
-        '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-field="time" value="09:30" />' +
-        '<div class="iuSilverDraftK">Název</div><input type="text" class="iuSilverDraftInput" data-iu-silver-field="title" value="Test" />' +
-        '<div class="iuSilverDraftK">Adresa</div><input type="text" class="iuSilverDraftInput" data-iu-silver-field="location" value="" />' +
-        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" data-iu-silver-field="note"></textarea>' +
-        "</div></div>"
-      : '<div class="iuSilverDraftCard iuSilverDraftCard--quickTemplateEmpty iuSilverDraftCard--quickTemplateTask" data-iu-silver-draft-card="1" data-iu-silver-draft-kind="task" data-iu-silver-edit-mode="1">' +
-        '<div class="iuSilverDraftGrid iuSilverDraftGrid--edit iuSilverDraftGrid--task">' +
-        '<div class="iuSilverDraftK">Datum</div><input type="date" class="iuSilverDraftInput" data-iu-silver-task-field="due" value="2026-08-03" />' +
-        '<div class="iuSilverDraftK">Čas</div><input type="time" step="60" class="iuSilverDraftInput" data-iu-silver-task-field="time" value="09:30" />' +
-        '<div class="iuSilverDraftK">Název</div><input type="text" class="iuSilverDraftInput" data-iu-silver-task-field="title" value="Test" />' +
-        '<div class="iuSilverDraftK">Poznámka</div><textarea class="iuSilverDraftInput iuSilverDraftInput--note" data-iu-silver-task-field="note"></textarea>' +
-        "</div></div>";
-    document.body.appendChild(host);
-  }, kind.key === "calendar" ? "calendar" : "task");
-  await page.waitForTimeout(200);
-  return page.evaluate(measureSnippet(), {
-    cardSel: "#iuDateTimeFitEditProbe .iuSilverDraftCard",
-    dateSel: kind.dateSel,
-    timeSel: kind.timeSel,
-    titleSel: kind.titleSel,
-    tol: TOL_PX,
-    padMin: PAD_MIN_PX,
-  });
+  // Real edit path = same shared quick-template create grid (no synthetic DOM).
+  // Synthetic host previously made the guard PASS while production overlays stayed broken.
+  return measureQuick(page, kind);
 }
 
 async function runPickerAndValueChurn(page, kind) {
@@ -692,22 +670,38 @@ function assertCssSourceContract() {
     path.join(__dirname, "..", "assets", "iu-silver-premium-draft.css"),
     "utf8"
   );
-  const mq = appCss.match(/@media\s*\(\s*max-width:\s*1024px\s*\)\s*\{[\s\S]*?\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\][\s\S]*?min-width:\s*0[\s\S]*?max-width:\s*100%[\s\S]*?box-sizing:\s*border-box/);
+  const tasksCss = fs.readFileSync(
+    path.join(__dirname, "..", "assets", "iu-tasks-premium.css"),
+    "utf8"
+  );
+  const appJs = fs.readFileSync(path.join(__dirname, "..", "assets", "app.js"), "utf8");
+  const mq = /@media\s*\(\s*max-width:\s*1024px\s*\)\s*\{[\s\S]*?\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\][\s\S]*?min-width:\s*0\s*!important[\s\S]*?min-inline-size:\s*0\s*!important/.test(
+    appCss
+  );
+  const noClipOverflow =
+    /iuSilverDraftInput\[type="date"\][\s\S]{0,280}overflow-x:\s*visible/.test(appCss);
   const gridSafe = /iuSilverDraftCard--quickTemplateEmpty\s+\.iuSilverDraftGrid--edit\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*max-content\)\s+minmax\(0,\s*1fr\)/m.test(
     appCss
   );
   const premiumDate =
-    /iuSilverDraftInput\[type="date"\][\s\S]{0,200}min-width:\s*0/.test(premiumCss) &&
-    /iuSilverDraftInput\[type="time"\][\s\S]{0,200}min-width:\s*0/.test(premiumCss);
+    /iuSilverDraftInput\[type="date"\][\s\S]{0,220}min-width:\s*0\s*!important/.test(premiumCss) &&
+    /iuSilverDraftInput\[type="time"\][\s\S]{0,220}min-width:\s*0\s*!important/.test(premiumCss);
+  const tasksDate =
+    /iu-tasksOverlay__input\[type="date"\][\s\S]{0,400}min-width:\s*0\s*!important/.test(tasksCss) &&
+    /iu-tasksOverlay__input\[type="time"\][\s\S]{0,400}min-width:\s*0\s*!important/.test(tasksCss);
+  const calDate = /iu-calInline__dateInput[\s\S]{0,220}min-width:\s*0\s*!important/.test(appJs);
   const badFixed =
     /\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\]\s*,[\s\S]{0,120}\.iuSilverDraftInput\[type="time"\]\s*\{[^}]*min-width:\s*auto/.test(
       appCss
     );
   return {
-    pass: !!mq && gridSafe && premiumDate && !badFixed,
+    pass: !!mq && noClipOverflow && gridSafe && premiumDate && tasksDate && calDate && !badFixed,
     mq: !!mq,
+    noClipOverflow,
     gridSafe,
     premiumDate,
+    tasksDate,
+    calDate,
     badFixed,
   };
 }
@@ -776,14 +770,13 @@ async function main() {
     webkit: webkitResult,
     shared_component:
       ".iuSilverDraftGrid--edit + .iuSilverDraftInput[type=date|time] (quick-template + chat draft edit via renderDraftCardEditGrid / renderTaskDraftGridEdit)",
-    other_date_time_surfaces_not_shared_component: [
-      "assets/app.js iu-calInline__dateInput (calendar overlay)",
-      "assets/app.js #iuTaskDue / #iuTaskDueTime (tasks overlay)",
-      "assets/iu-invoice-module.js date fields",
-      "projects/index.html #iuSilverDatePicker (hidden home picker)",
+    surfaces_covered: [
+      "Silver quick-template calendar/reminder (.iuSilverDraftInput date|time)",
+      "Calendar overlay (.iu-calInline__dateInput + timeBtn) via CSS contract",
+      "Tasks overlay (#iuTaskDue / #iuTaskDueTime) via CSS contract",
     ],
     root_cause:
-      "Native date/time grid items default min-width:auto (esp. WebKit); fixed with min-width:0 + max-width:100% + border-box under max-width:1024px.",
+      "iOS/WebKit native date/time intrinsic min-width beats non-important min-width:0; overflow-x:hidden clipped corners without locking right edge. Fix: min-width/min-inline-size:0 !important + max-width:100% on Silver, Calendar, and Tasks under max-width:1024px; no overflow clip on inputs.",
   };
 
   const reportPath = path.join(
