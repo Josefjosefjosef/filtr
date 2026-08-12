@@ -357,6 +357,23 @@ function looksLikeRoadNumberToken(raw) {
   return /^(?:[DIE]\s*)?\d+[A-Za-z]?$/i.test(t) || /^(?:I{1,3}|D|E|R)\/\d+/i.test(t);
 }
 
+/** User-facing road aliases (presentation only — never rewrite raw NDIC text). */
+export const ROAD_DISPLAY_NAME_BY_ROAD = Object.freeze({
+  D0: "Pražský okruh",
+});
+
+/**
+ * Stable display name for a road number (e.g. D0 → Pražský okruh).
+ * Returns null when no verified alias exists.
+ */
+export function resolveRoadDisplayName(road) {
+  const r = clean(road)
+    .toUpperCase()
+    .replace(/\s+/g, "");
+  if (!r) return null;
+  return ROAD_DISPLAY_NAME_BY_ROAD[r] || null;
+}
+
 function splitStreetList(raw) {
   return String(raw || "")
     .split(/\s*,\s*/)
@@ -857,6 +874,7 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
     return {
       road: "",
       roadClass: "UNKNOWN",
+      roadDisplayName: null,
       numberBadge: ROAD_NUMBER_BADGE.UNKNOWN,
       roadTypeIcon: null,
       roadTypeIconAlt: "",
@@ -864,10 +882,12 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
       showMotorVehiclesIcon: false,
     };
   }
+  const roadDisplayName = resolveRoadDisplayName(road);
   if (/^E\d+[A-Za-z]?$/i.test(road) || /^E\s*\d+/i.test(road)) {
     return {
       road,
       roadClass: "E_ROAD",
+      roadDisplayName,
       numberBadge: ROAD_NUMBER_BADGE.E_ROAD,
       roadTypeIcon: null,
       roadTypeIconAlt: "",
@@ -879,6 +899,7 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
     return {
       road,
       roadClass: "MOTORWAY",
+      roadDisplayName,
       numberBadge: ROAD_NUMBER_BADGE.MOTORWAY,
       roadTypeIcon: TRAFFIC_SIGN_ASSET.MOTORWAY,
       roadTypeIconAlt: "Dálnice",
@@ -896,6 +917,7 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
     return {
       road,
       roadClass,
+      roadDisplayName,
       numberBadge: ROAD_NUMBER_BADGE.LOCAL,
       roadTypeIcon: null,
       roadTypeIconAlt: "",
@@ -906,6 +928,7 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
   return {
     road,
     roadClass,
+    roadDisplayName,
     numberBadge: ROAD_NUMBER_BADGE.ROAD,
     roadTypeIcon: motorVehicleConfirmed ? TRAFFIC_SIGN_ASSET.MOTOR_VEHICLES : null,
     roadTypeIconAlt: motorVehicleConfirmed ? "Silnice pro motorová vozidla" : "",
@@ -1500,6 +1523,9 @@ export function buildLocalityHeaderModel(input = {}) {
     streetLabel = "ulice: " + street;
     besideLocality = streetLabel;
     locationKind = LOCATION_KIND.STREET;
+  } else if (resolveRoadDisplayName(road)) {
+    // Verified road alias (e.g. D0 → Pražský okruh) — plain text beside badge, never muni sign.
+    besideLocality = resolveRoadDisplayName(road);
   } else if (
     location &&
     !samePlaceName(location, municipalitySign) &&
@@ -1643,11 +1669,22 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   if (road) bits.push(road);
+  {
+    const roadDisplayName = resolveRoadDisplayName(road);
+    if (roadDisplayName) bits.push(roadDisplayName);
+  }
   if (km) bits.push(km);
   else if (section) bits.push(section);
   if (dir) bits.push("směr " + dir);
   if (muni && !bits.includes(muni)) bits.push(muni);
-  else if (location && location !== road && !bits.includes(location)) bits.push(location);
+  else if (
+    location &&
+    location !== road &&
+    !looksLikeRoadNumberToken(location) &&
+    !bits.includes(location)
+  ) {
+    bits.push(location);
+  }
   if (district) {
     const distLabel = "okres " + district;
     if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
@@ -1666,6 +1703,7 @@ export function buildCommunicationLine(input = {}) {
   const dir = clean(input.direction) || facts.directionHuman || null;
   return {
     roadPresentation: roadPres,
+    roadDisplayName: roadPres.roadDisplayName || resolveRoadDisplayName(roadPres.road),
     direction: dir,
     // Never mirror parkingName (or any beside text) into localityFallback — that caused
     // "P+R Zličín / P+R Zličín" when municipality sign was missing.
@@ -1733,6 +1771,7 @@ export function buildTrafficExpandedDetail(input = {}) {
 
   // Skip redundant "Typ (zdroj)" when it only repeats the card title kind.
   push("road", "Komunikace", input.road);
+  push("roadName", "Název komunikace", resolveRoadDisplayName(input.road));
   if (input.roadClassLabel) push("roadClass", "Třída komunikace", input.roadClassLabel);
   push("kilometer", "Kilometráž", facts.kilometerLabel || input.kilometer);
   push("direction", "Směr", clean(input.direction) || facts.directionHuman);
@@ -1755,10 +1794,17 @@ export function buildTrafficExpandedDetail(input = {}) {
       .toLowerCase()
       .replace(/\s+/g, "");
     const named = facts.namedObject || null;
+    // Hide LOKALITA when it only echoes the road number (e.g. location=D0).
+    const locIsRoadEcho =
+      !!(roadNorm && locNorm && locNorm === roadNorm) ||
+      (!!locNorm &&
+        looksLikeRoadNumberToken(input.location) &&
+        !!roadNorm &&
+        locNorm === roadNorm);
     if (named) {
       // Named object is the authoritative locality — do not keep a conflicting TMC/area label.
       push("location", "Lokalita", named);
-    } else if (!(roadNorm && locNorm && roadNorm === locNorm)) {
+    } else if (!locIsRoadEcho) {
       push("location", "Lokalita", input.location);
     }
   }
