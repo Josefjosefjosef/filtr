@@ -50,7 +50,7 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-traffic-header-unify-v1-20260812";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
@@ -673,7 +673,7 @@ function displayEventTitle(ev, locationFilter) {
   return base + " — " + loc;
 }
 
-function renderTrafficCardBody(ev, url, czMapMarkup) {
+function renderTrafficCardBody(ev, url) {
   const vm = buildTrafficCardViewModel(ev.trafficV1);
   const badge = vm.badge;
   const warnBadge = badge
@@ -724,6 +724,15 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
   const districtBit = districtBeside
     ? `<span class="iuPdTrafficComm__district">${esc(districtBeside)}</span>`
     : "";
+  const cityPartRow =
+    vm.cityPartRow ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.cityPartRow) ||
+    "";
+  const cityPartBit = cityPartRow
+    ? `<div class="iuPdTrafficComm__cityPart">${esc(cityPartRow)}</div>`
+    : "";
   const dirBit = vm.direction
     ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
@@ -736,6 +745,10 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
           vm.headLocality || vm.locality || vm.localityLine
         )}</span>`
       : "";
+  const smvFirst = !!(vm.roadBadge && vm.roadBadge.showMotorVehiclesIcon && !vm.roadBadge.showMotorwayIcon);
+  const commBits = smvFirst
+    ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
+    : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";
@@ -794,16 +807,10 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
     `<div class="iuPdTrafficTop__main">` +
     (warnBadge ? `<div class="iuPdTrafficTop__badge">${warnBadge}</div>` : "") +
     `<div class="iuPdTrafficComm">` +
-    muniSign +
-    roadTypeIcon +
-    roadBadge +
-    besideBit +
-    districtBit +
-    dirBit +
-    localityFallback +
+    commBits +
     `</div>` +
+    cityPartBit +
     `</div>` +
-    (czMapMarkup ? `<div class="iuPdTrafficTop__map">${czMapMarkup}</div>` : "") +
     `</div>` +
     `<div class="iuPdTrafficEventRow" data-kind="${esc(vm.eventKind || "")}">` +
     eventSign +
@@ -936,23 +943,31 @@ function renderItem(ev) {
   const regionCoverageMarkup = regionCoverage
     ? `<div class="iuPrehledDne__regionCoverage">${esc(regionCoverage)}</div>`
     : "";
-  /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it. */
-  const cardHead = czMapMarkup
-    ? `<div class="iuPrehledDne__cardHead">` +
-      `<div class="iuPrehledDne__cardHeadMain">` +
-      czMapMarkup +
-      warnBadge +
-      titleMarkup +
-      regionCoverageMarkup +
-      `</div>` +
-      `</div>`
-    : warnBadge + titleMarkup + regionCoverageMarkup;
-  const trafficBody = isTraffic ? renderTrafficCardBody(ev, url, czMapMarkup) : "";
+  /* Map inside headMain + CSS float:right so title/coverage wrap beside then under it.
+   * Traffic cards: map lives in the bottom action row (not top-right). */
+  const cardHead =
+    !isTraffic && czMapMarkup
+      ? `<div class="iuPrehledDne__cardHead">` +
+        `<div class="iuPrehledDne__cardHeadMain">` +
+        czMapMarkup +
+        warnBadge +
+        titleMarkup +
+        regionCoverageMarkup +
+        `</div>` +
+        `</div>`
+      : !isTraffic
+        ? warnBadge + titleMarkup + regionCoverageMarkup
+        : "";
+  const trafficBody = isTraffic ? renderTrafficCardBody(ev, url) : "";
   const followId = isTraffic ? String(ev.trafficV1.publicEventId || "") : "";
+  const trafficMapAction = isTraffic && czMapMarkup
+    ? `<span class="iuPdCard__actionsMap">${czMapMarkup}</span>`
+    : "";
   const actions = hiddenMode
     ? `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="unhide" data-id="${esc(id)}">Obnovit</button>`
     : isTraffic
-      ? `<button type="button" class="iuPdBtn iuPdBtn--primary${
+      ? trafficMapAction +
+        `<button type="button" class="iuPdBtn iuPdBtn--primary${
           trafficFollowed ? " is-on" : ""
         }" data-act="traffic-follow" data-id="${esc(id)}" data-peid="${esc(followId)}">${
           trafficFollowed ? "Sleduji" : "Sledovat"
@@ -977,7 +992,7 @@ function renderItem(ev) {
       alert || capActive || (trafficBadge && trafficBadge.kind === "new") ? " iuPrehledDne__dot--alert" : ""
     }"></span></div>` +
     `<article class="iuPrehledDne__card iuPdCard__body${
-      czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""
+      !isTraffic && czMapMarkup ? " iuPrehledDne__card--hasCzMap" : ""
     }${isTraffic ? " iuPdCard__body--traffic" : ""}">` +
     (isTraffic
       ? trafficBody
@@ -988,7 +1003,9 @@ function renderItem(ev) {
         (regionPill ? `<span class="iuPdCard__pill iuPrehledDne__pill">${esc(regionPill)}</span>` : "") +
         (imp ? `<span class="iuPdCard__pill iuPdCard__pill--imp iuPrehledDne__pill">${esc(imp)}</span>` : "") +
         `</div>`) +
-    `<div class="iuPdCard__actions iuPrehledDne__actions">${actions}</div></article></li>`
+    `<div class="iuPdCard__actions iuPrehledDne__actions${
+      isTraffic ? " iuPdCard__actions--traffic" : ""
+    }">${actions}</div></article></li>`
   );
 }
 

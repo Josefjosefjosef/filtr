@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-traffic-header-unify-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -1030,6 +1030,10 @@ export function buildTrafficCardViewModel(trafficV1) {
     (presentation.communication && presentation.communication.besideLocality) || null;
   const districtBeside =
     (presentation.communication && presentation.communication.districtBeside) || null;
+  const cityPartRow =
+    (presentation.communication && presentation.communication.cityPartRow) || null;
+  const parkingStatusLabel =
+    (presentation.communication && presentation.communication.parkingStatusLabel) || null;
   const headLocality =
     (presentation.communication && presentation.communication.headLocality) ||
     presentation.communication.localityFallback ||
@@ -1107,6 +1111,8 @@ export function buildTrafficCardViewModel(trafficV1) {
     municipalitySignLabel,
     besideLocality,
     districtBeside,
+    cityPartRow,
+    parkingStatusLabel,
     localityLine,
     municipality,
     district,
