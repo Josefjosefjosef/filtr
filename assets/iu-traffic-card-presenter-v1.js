@@ -254,6 +254,52 @@ export function looksLikeNonMunicipalityPlace(raw) {
   return looksLikeStreetName(t);
 }
 
+/**
+ * Sanitize municipality name captured after "v obci" / "v katastru obce".
+ * Keeps full multi-word official names; strips leaked traffic clauses.
+ */
+export function normalizeExtractedMunicipalityName(raw) {
+  let city = clean(raw);
+  if (!city) return null;
+  if (
+    /^(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d)/i.test(
+      city
+    )
+  ) {
+    return null;
+  }
+  city = city.replace(
+    /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+    ""
+  );
+  city = clean(city);
+  if (!city) return null;
+  if (!/^[A-ZÁ-Ž]/u.test(city)) return null;
+  if (looksLikeRoadNumberToken(city)) return null;
+  if (/^p\s*\+\s*r\b/i.test(city)) return null;
+  if (/^ulice\b|\btřída\b/i.test(city)) return null;
+  if (/^okres\b|^okr\./i.test(city)) return null;
+  if (looksLikeNonMunicipalityPlace(city)) return null;
+  return city;
+}
+
+/**
+ * Prefer the fuller official multi-word municipality when structured field was
+ * truncated to the first token (e.g. "České" vs "České Budějovice").
+ */
+export function preferFullerMunicipalityName(structured, fromComment) {
+  const a = clean(structured);
+  const b = clean(fromComment);
+  if (!a) return b || null;
+  if (!b) return a;
+  const al = a.toLowerCase();
+  const bl = b.toLowerCase();
+  if (al === bl) return a;
+  if (bl.startsWith(al + " ") || bl.startsWith(al + "-")) return b;
+  if (al.startsWith(bl + " ") || al.startsWith(bl + "-")) return a;
+  return a;
+}
+
 export function classifyLocationKindFromName(name) {
   const t = clean(name);
   if (!t) return LOCATION_KIND.UNKNOWN;
@@ -693,9 +739,12 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const mObci = text.match(
-    /\b[Vv]\s+(?:katastru\s+obce|obci)\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+(?:nad|pod|u)\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)/u
+    /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
   );
-  if (mObci) out.city = clean(mObci[1]);
+  if (mObci) {
+    const city = normalizeExtractedMunicipalityName(mObci[1]);
+    if (city) out.city = city;
+  }
 
   const streetIn =
     text.match(/\bv\s+ulici\s+([^,;]{2,80})/i) || text.match(/\bulice:?\s+([^,;]{2,80})/i);
@@ -720,15 +769,15 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is not another street.
+  // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is a real municipality.
   const locTrip = text.match(
-    /\bulice:?\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\b/u
+    /\bulice:?\s+([^,;]+),\s*([^,;]+),\s*([^,;]+?)(?=\s*,|\s*$)/u
   );
   if (locTrip && !out.streetMulti) {
     const s0 = streetBareName(locTrip[1]);
     const s1 = clean(locTrip[2]);
-    const s2 = clean(locTrip[3]);
-    const cityOk = s2 && !looksLikeStreetName(s2) && !looksLikeRoadNumberToken(s2);
+    const s2 = normalizeExtractedMunicipalityName(locTrip[3]);
+    const cityOk = !!s2;
     const midOk = s1 && (!looksLikeStreetName(s1) || /\s/.test(s1));
     if (cityOk && midOk) {
       out.street = s0;
@@ -738,10 +787,11 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   if (!out.city) {
-    const cityHint = text.match(
-      /,\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,\s*okr\./u
-    );
-    if (cityHint && !looksLikeStreetName(cityHint[1])) out.city = clean(cityHint[1]);
+    const cityHint = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    if (cityHint) {
+      const hint = normalizeExtractedMunicipalityName(cityHint[1]);
+      if (hint) out.city = hint;
+    }
   }
 
   // "Praha 4, Praha" / "Praha 13, Praha"
@@ -1579,7 +1629,10 @@ export function resolveMunicipalitySignName(input = {}) {
   const street = streetBareName(facts.street || input.streetHint || input.street);
   const cityPart = clean(facts.cityPart || input.cityPart);
 
-  let city = structured || fromComment || parkingCity || "";
+  let city =
+    preferFullerMunicipalityName(structured, fromComment) ||
+    parkingCity ||
+    "";
   if (!city) {
     const reg = matchParkingRegistry({
       ...input,
@@ -1908,7 +1961,10 @@ export function buildTrafficExpandedDetail(input = {}) {
   push(
     "municipality",
     "Obec",
-    input.municipality || facts.city || (registry ? registry.municipality : null)
+    preferFullerMunicipalityName(
+      input.municipality || facts.city,
+      facts.city
+    ) || (registry ? registry.municipality : null)
   );
   push("cityPart", "Městská část", facts.cityPart || (registry ? registry.cityPart : null));
   push("district", "Okres", input.district || facts.district);

@@ -86,6 +86,7 @@ export function humanDirectionOrNull(raw) {
 /**
  * Extract municipality / district hints from official NDIC public comment text.
  * Returns only substrings present in source — never invents place names.
+ * Keeps full multi-word municipality names (e.g. České Budějovice).
  * @param {string|null|undefined} summary
  */
 export function extractLocalityFromOfficialComment(summary) {
@@ -97,22 +98,44 @@ export function extractLocalityFromOfficialComment(summary) {
   let streetHint = null;
 
   const mObci = s.match(
-    /(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+(?:nad|pod|u)\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)/u
+    /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
   );
-  if (mObci) municipality = clean(mObci[1]);
-
-  if (!municipality) {
-    // ", Postřelmov, okr. Šumperk"
-    const mTown = s.match(/,\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[nNiI]ad\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,\s*okr\./u);
-    if (mTown) municipality = clean(mTown[1]);
+  if (mObci) {
+    let city = clean(mObci[1]);
+    city = city.replace(
+      /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+      ""
+    );
+    city = clean(city);
+    if (
+      city &&
+      !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
+      !/^\d/.test(city)
+    ) {
+      municipality = city;
+    }
   }
 
-  const mOkr = s.match(/okr\.\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)/u);
+  if (!municipality) {
+    // ", České Budějovice, okr. ..." / ", Postřelmov, okr. Šumperk"
+    const mTown = s.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    if (mTown) {
+      const town = clean(mTown[1]);
+      if (town && !/(ská|cká|ovská)$/i.test(town)) municipality = town;
+    }
+  }
+
+  const mOkr = s.match(/okr\.\s*([^,;]{2,60})/u);
   if (mOkr) district = clean(mOkr[1]);
 
   const mStreet =
     s.match(/\bv\s+ulici\s+([^,;]{2,60})/i) || s.match(/\bulice:?\s+([^,;]{2,60})/i);
-  if (mStreet) streetHint = clean(mStreet[1]);
+  if (mStreet) {
+    let sn = clean(mStreet[1]);
+    sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
+    sn = clean(sn.split(/\s+okres\b/i)[0]);
+    if (sn) streetHint = sn;
+  }
 
   return { municipality, district, streetHint };
 }

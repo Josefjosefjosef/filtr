@@ -22,6 +22,8 @@ import {
   buildLocalityHeaderModel,
   resolveMunicipalitySignName,
   resolveRoadDisplayName,
+  preferFullerMunicipalityName,
+  normalizeExtractedMunicipalityName,
   resolveParkingLiveStatus,
   parseOfficialCommentFacts,
   isTrafficCardInformative,
@@ -551,6 +553,93 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     mostHdr.besideLocality === "Pražský okruh" &&
       /^D0 · Pražský okruh/.test(mostPlace) &&
       mostPlace !== "most"
+  );
+}
+
+// --- White municipality sign: full multi-word official names ---
+{
+  const husovaImpact =
+    "Od 12.8.2026 18:55 do 21:00; v ulici Husova tř. v obci České Budějovice; nehoda; 2 havarovaná vozidla; překážka na vozovce, průjezd se zvýšenou opatrností; 2 osobní automobily.";
+  const factsCeske = parseOfficialCommentFacts(husovaImpact);
+  ok("MUNI_PARSE_CESKE_BUDEJOVICE", factsCeske.city === "České Budějovice");
+  ok("MUNI_PARSE_NOT_FIRST_WORD_ONLY", factsCeske.city !== "České");
+
+  const hdrCommentOnly = buildLocalityHeaderModel({
+    eventType: "nehoda",
+    impact: husovaImpact,
+    impactFull: husovaImpact,
+    location: "Jiráskovo nábř. – Na Dlouhé louce",
+  });
+  ok(
+    "MUNI_SIGN_CESKE_BUDEJOVICE_FROM_COMMENT",
+    hdrCommentOnly.municipalitySignLabel === "ČESKÉ BUDĚJOVICE" &&
+      hdrCommentOnly.besideLocality === "ulice: Husova tř."
+  );
+
+  const hdrTruncatedStruct = buildLocalityHeaderModel({
+    municipality: "České",
+    eventType: "nehoda",
+    impact: husovaImpact,
+    impactFull: husovaImpact,
+  });
+  ok(
+    "MUNI_SIGN_RECOVERS_TRUNCATED_STRUCTURED",
+    hdrTruncatedStruct.municipalitySignLabel === "ČESKÉ BUDĚJOVICE"
+  );
+
+  const hdrFullStruct = buildLocalityHeaderModel({
+    municipality: "České Budějovice",
+    eventType: "nehoda",
+    impact: husovaImpact,
+  });
+  ok(
+    "MUNI_SIGN_CESKE_BUDEJOVICE_STRUCTURED",
+    hdrFullStruct.municipalitySignLabel === "ČESKÉ BUDĚJOVICE"
+  );
+
+  const cases = [
+    ["Praha", "PRAHA"],
+    ["Hradec Králové", "HRADEC KRÁLOVÉ"],
+    ["Ústí nad Labem", "ÚSTÍ NAD LABEM"],
+    ["Nové Město na Moravě", "NOVÉ MĚSTO NA MORAVĚ"],
+    ["Frýdek-Místek", "FRÝDEK-MÍSTEK"],
+  ];
+  let multiOk = true;
+  for (const [name, upper] of cases) {
+    const fromComment = resolveMunicipalitySignName({
+      impact: "v obci " + name + "; nehoda",
+    });
+    const fromStruct = resolveMunicipalitySignName({ municipality: name });
+    const label = buildLocalityHeaderModel({
+      impact: "v obci " + name + "; uzavřeno",
+    }).municipalitySignLabel;
+    if (fromComment !== name || fromStruct !== name || label !== upper) multiOk = false;
+    if (name.includes(" ") && String(fromComment).split(/\s+/).length < 2) multiOk = false;
+  }
+  ok("MUNI_SIGN_MULTIWORD_SUITE_PASS", multiOk);
+
+  ok(
+    "MUNI_PREFER_FULLER_HELPER",
+    preferFullerMunicipalityName("České", "České Budějovice") === "České Budějovice" &&
+      preferFullerMunicipalityName("České Budějovice", "České") === "České Budějovice" &&
+      preferFullerMunicipalityName("Praha", "Brno") === "Praha"
+  );
+
+  ok(
+    "MUNI_NORMALIZE_KEEPS_FULL",
+    normalizeExtractedMunicipalityName("České Budějovice") === "České Budějovice" &&
+      normalizeExtractedMunicipalityName("Nové Město na Moravě") === "Nové Město na Moravě"
+  );
+
+  // Layout contract: CSS must not force single-token / nowrap clipping of muni sign.
+  const css = fs.readFileSync(path.join(root, "assets/iu-prehled-dne-v1.css"), "utf8");
+  const muniCss = (css.match(/\.iuPdMuniSign\s*\{[^}]+\}/) || [""])[0];
+  ok(
+    "MUNI_SIGN_LAYOUT_WRAP_PASS",
+    /white-space:\s*normal/.test(muniCss) &&
+      !/white-space:\s*nowrap/.test(muniCss) &&
+      /overflow-wrap:\s*anywhere/.test(muniCss) &&
+      /max-width:\s*min\(100%/.test(muniCss)
   );
 }
 
@@ -1366,7 +1455,7 @@ ok(
     "PARKING_RESPONSIVE_PASS",
     cssSrc.includes(".iuPdTrafficEventStack") &&
       cssSrc.includes('data-iu-parking="1"') &&
-      /flex:\s*0\s+0\s+auto/.test(cssSrc.match(/\.iuPdMuniSign\s*\{[^}]+\}/)?.[0] || "") &&
+      /flex:\s*0\s+[01]\s+auto/.test(cssSrc.match(/\.iuPdMuniSign\s*\{[^}]+\}/)?.[0] || "") &&
       /overflow-wrap:\s*anywhere/.test(
         cssSrc.match(/\.iuPdTrafficCard\[data-iu-parking="1"\]\s+\.iuPdTrafficComm__beside\s*\{[^}]+\}/)?.[0] ||
           ""
@@ -2378,6 +2467,11 @@ console.log(
           "SIT_NO_INVENTED_ACCIDENT_PASS",
           "SIT_NO_CLOSURE_DUPLICATE_PASS",
           "SIT_RICH_SUMMARY_SUITE_PASS",
+          "MUNI_PARSE_CESKE_BUDEJOVICE",
+          "MUNI_SIGN_CESKE_BUDEJOVICE_FROM_COMMENT",
+          "MUNI_SIGN_RECOVERS_TRUNCATED_STRUCTURED",
+          "MUNI_SIGN_MULTIWORD_SUITE_PASS",
+          "MUNI_SIGN_LAYOUT_WRAP_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
