@@ -18203,28 +18203,30 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     overflow-x:hidden;
   }
   /*
-   * Native input[type=date|time] keep a large intrinsic min-width (esp. WebKit/iOS).
-   * As grid items their default min-width:auto then overflows the card on narrow viewports.
+   * Native input[type=date|time] keep a large intrinsic min-width (esp. iOS/WebKit).
+   * As grid items, min-width:auto overflows past sibling text inputs (Název) on narrow viewports.
+   * v3: min-width/min-inline-size 0 !important (UA intrinsic beats non-important);
+   * do NOT use overflow-x:hidden on the input (clips rounded corners / picker chrome).
    * Scope: mobile/tablet only — desktop .iuSilverDraftGrid--edit stays minmax(0,120px) 1fr.
-   * v2: also clip WebKit shadow chrome; apply to all draft cards (not only quickTemplateEmpty).
    */
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"],
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
-    width:100%;
-    max-width:100%;
-    min-width:0;
-    box-sizing:border-box;
-    overflow-x:hidden;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    min-inline-size:0 !important;
+    box-sizing:border-box !important;
     justify-self:stretch;
+    overflow-x:visible;
   }
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-date-and-time-value,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-date-and-time-value{
-    min-width:0;
-    max-width:100%;
+    min-width:0 !important;
+    max-width:100% !important;
   }
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-calendar-picker-indicator,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-calendar-picker-indicator{

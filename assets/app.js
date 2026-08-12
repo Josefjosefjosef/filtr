@@ -41451,7 +41451,24 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "padding-bottom:6px!important;" +
     "scroll-padding-bottom:0!important;" +
     "}" +
-    "}";
+    /* P0: date/time right-edge lock vs Název — iOS intrinsic min-width must not win. */
+    ".iu-calInline--premiumV2," +
+    ".iu-calInline--premiumV2 .iu-calInline__field{" +
+    "min-width:0!important;" +
+    "max-width:100%!important;" +
+    "box-sizing:border-box!important;" +
+    "}" +
+    ".iu-calInline--premiumV2 .iu-calInline__dateInput," +
+    ".iu-calInline--premiumV2 input[type='date']," +
+    ".iu-calInline--premiumV2 .iu-calInline__timeBtn{" +
+    "width:100%!important;" +
+    "max-width:100%!important;" +
+    "min-width:0!important;" +
+    "min-inline-size:0!important;" +
+    "box-sizing:border-box!important;" +
+    "}" +
+    "}"
+    ;
   const calScrollLock = {
     saved: false,
     bodyOverflow: "",

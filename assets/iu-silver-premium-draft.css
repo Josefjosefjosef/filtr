@@ -218,18 +218,19 @@
   }
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
-    width:100%;
-    max-width:100%;
-    min-width:0;
-    box-sizing:border-box;
-    overflow-x:hidden;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    min-inline-size:0 !important;
+    box-sizing:border-box !important;
     justify-self:stretch;
+    overflow-x:visible;
   }
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-date-and-time-value,
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-date-and-time-value{
-    min-width:0;
-    max-width:100%;
+    min-width:0 !important;
+    max-width:100% !important;
   }
 }

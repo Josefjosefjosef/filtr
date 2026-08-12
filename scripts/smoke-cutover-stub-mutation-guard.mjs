@@ -9,6 +9,7 @@ import { fileURLToPath } from "url";
 import {
   loadSmokeFeedStub,
   loadSmokeTrafficStub,
+  freshenSmokeFeedStubTimestamps,
   validateSmokeFeedStubSchema,
   validateSmokeTrafficStubSchema,
   SMOKE_FEED_STUB_PATH,
@@ -57,6 +58,29 @@ must(!validateSmokeTrafficStubSchema({ nope: true }).ok, "mutation_malformed_tra
   must(/installSmokeHeavyDataRouteStubs/.test(smokeSrc), "smoke_installs_stubs");
   must(/smokePrehledDneCutover/.test(smokeSrc), "cutover_still_present");
   must(/iuInfoSystem=off/.test(smokeSrc), "off_nav_still_present");
+}
+
+{
+  const stale = JSON.parse(JSON.stringify(baseFeed));
+  stale.generatedAt = "2020-01-01T00:00:00.000Z";
+  for (const it of stale.items || []) {
+    it.publishedAt = "2020-01-01T00:00:00.000Z";
+    it.publishedAtSource = "2020-01-01T00:00:00.000Z";
+    it.sortAt = "2020-01-01T00:00:00.000Z";
+    if (it.validTo) it.validTo = "2020-01-02T00:00:00.000Z";
+  }
+  const fresh = freshenSmokeFeedStubTimestamps(stale, new Date("2026-08-12T15:00:00.000Z"));
+  const maxAgeMs = 96 * 3600000;
+  const now = Date.parse("2026-08-12T15:00:00.000Z");
+  must(Date.parse(fresh.generatedAt) === now, "freshen_generatedAt");
+  must(
+    (fresh.items || []).every((it) => now - Date.parse(it.publishedAt) < maxAgeMs),
+    "freshen_published_within_96h"
+  );
+  must(
+    (fresh.items || []).every((it) => !it.validTo || Date.parse(it.validTo) > now),
+    "freshen_validTo_future_when_set"
+  );
 }
 
 console.log(

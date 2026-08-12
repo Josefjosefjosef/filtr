@@ -32,6 +32,36 @@ export function loadSmokeTrafficStub(filePath = SMOKE_TRAFFIC_STUB_PATH) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
+/**
+ * Keep cutover smoke stub items inside the client/backend 96h active window.
+ * Fixed fixture dates flake once `generatedAt`/`publishedAt` age past maxAgeHours.
+ * @param {object} feed
+ * @param {Date} [now]
+ */
+export function freshenSmokeFeedStubTimestamps(feed, now = new Date()) {
+  const base = feed && typeof feed === "object" ? JSON.parse(JSON.stringify(feed)) : {};
+  const t0 = now instanceof Date ? now.getTime() : Date.now();
+  const iso = (ms) => new Date(ms).toISOString();
+  const generatedAt = iso(t0);
+  const recent = iso(t0 - 2 * 3600000);
+  const validFrom = iso(t0 - 3600000);
+  const validTo = iso(t0 + 24 * 3600000);
+  base.generatedAt = generatedAt;
+  const items = Array.isArray(base.items) ? base.items : [];
+  for (const it of items) {
+    if (!it || typeof it !== "object") continue;
+    it.publishedAtSource = recent;
+    it.publishedAt = recent;
+    it.updatedAt = recent;
+    it.validFrom = validFrom;
+    if (it.validTo != null) it.validTo = validTo;
+    it.firstSeenByInfoUzel = recent;
+    it.lastProcessedAt = recent;
+    it.sortAt = recent;
+  }
+  return base;
+}
+
 export function validateSmokeFeedStubSchema(feed) {
   const fails = [];
   if (!feed || typeof feed !== "object") {
@@ -86,7 +116,11 @@ export function validateSmokeTrafficStubSchema(snap) {
  */
 export async function installSmokeHeavyDataRouteStubs(page, opts = {}) {
   const enabled = opts.enabled !== false;
-  const feedObj = opts.feedJson != null ? opts.feedJson : loadSmokeFeedStub();
+  const rawFeed = opts.feedJson != null ? opts.feedJson : loadSmokeFeedStub();
+  const feedObj =
+    opts.feedBody != null || opts.skipFreshen === true
+      ? rawFeed
+      : freshenSmokeFeedStubTimestamps(rawFeed);
   const trafficObj = opts.trafficJson != null ? opts.trafficJson : loadSmokeTrafficStub();
   const feedBody = opts.feedBody != null ? opts.feedBody : JSON.stringify(feedObj);
   const trafficBody = opts.trafficBody != null ? opts.trafficBody : JSON.stringify(trafficObj);

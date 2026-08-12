@@ -155,8 +155,20 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__search:focus{
   outline:none;border-color:rgba(99,102,241,.45);box-shadow:0 0 0 2px rgba(13,148,136,.2),0 1px 3px rgba(15,23,42,.04) inset
 }
-#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%}
+#iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%;max-width:100%;min-width:0;min-inline-size:0;box-sizing:border-box}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{padding-right:44px!important;min-height:44px}
+@media (max-width:1024px){
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__label{min-width:0;max-width:100%;box-sizing:border-box}
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"],
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"],
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-inline-size:0!important;
+    box-sizing:border-box!important;
+  }
+}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:#475569;opacity:.88}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--delete{border-color:rgba(190,18,60,.2);background:rgba(255,255,255,.95);color:#9f1239;font-weight:600}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__btn--delete:hover{background:#fff1f2;border-color:rgba(251,113,133,.45)}

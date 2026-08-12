@@ -19,7 +19,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8942", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
-const CACHE_BUST = "mobile-tablet-tasks-filter-layout-v1-20260711";
+const CACHE_BUST = "date-time-right-edge-v3-20260812";
 
 const CHECKS = [
   {
