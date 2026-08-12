@@ -256,13 +256,12 @@ export function formatValidityLineCs(validFrom, validTo, openEnded) {
   const day = fmtDay.format(fromMs);
   const t0 = fmtTime.format(fromMs);
   if (openEnded || !Number.isFinite(toMs)) {
-    return day + " od " + t0;
+    return day + " · od " + t0;
   }
-  const sameDay =
-    fmtDay.format(fromMs) === fmtDay.format(toMs);
+  const sameDay = fmtDay.format(fromMs) === fmtDay.format(toMs);
   const t1 = fmtTime.format(toMs);
-  if (sameDay) return day + " od " + t0 + " do " + t1;
-  return day + " " + t0 + " – " + fmtDay.format(toMs) + " " + t1;
+  if (sameDay) return day + " · " + t0 + "–" + t1;
+  return "od " + day + " " + t0 + " do " + fmtDay.format(toMs) + " " + t1;
 }
 
 /**

@@ -1301,15 +1301,17 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 .iuPdTrafficTop__map .iuPdCard__czMap,
 .iuPdTrafficTop__map .iuPrehledDne__czMap {
   float: none;
-  width: 52px;
-  height: 30px;
+  width: 64px;
+  height: 37px;
   margin: 0;
-  /* Map pin uses same token as timeline dot */
+  /* Map pin / silhouette uses same token as timeline dot */
   color: var(--iu-pd-dot, var(--iu-pd-accent));
 }
 .iuPdTrafficTop__map .iuPrehledDne__czMapSvg {
-  width: 41.6px;
+  width: 57.6px;
+  height: 33.1px;
   fill: currentColor;
+  display: block;
 }
 .iuPdTrafficComm {
   display: flex;
