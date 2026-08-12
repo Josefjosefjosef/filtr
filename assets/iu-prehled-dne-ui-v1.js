@@ -50,7 +50,7 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-parking-classify-v1-20260812b";
+} from "./iu-traffic-overview-v1.js?v=ndic-parking-muni-registry-v1-20260812";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
@@ -736,14 +736,23 @@ function renderTrafficCardBody(ev, url) {
   const dirBit = vm.direction
     ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
-  // Fallback only when neither municipality sign nor road badge carries the place.
+  const isParking = String(vm.eventKind || "") === "parking";
+  // Fallback only when neither municipality sign, road badge, nor beside already carries the place.
+  // Parking name must appear exactly once (besideLocality) — never also as localityFallback.
+  const fallbackPlaceRaw = String(vm.headLocality || vm.locality || vm.localityLine || "").trim();
+  const besideNorm = String(beside || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+  const fallbackNorm = fallbackPlaceRaw.toLowerCase().replace(/\s+/g, " ");
   const localityFallback =
+    !isParking &&
     !muniSign &&
     !vm.roadBadge.road &&
-    (vm.headLocality || vm.locality || vm.localityLine)
-      ? `<span class="iuPdTrafficComm__place">${esc(
-          vm.headLocality || vm.locality || vm.localityLine
-        )}</span>`
+    !beside &&
+    fallbackPlaceRaw &&
+    fallbackNorm !== besideNorm
+      ? `<span class="iuPdTrafficComm__place">${esc(fallbackPlaceRaw)}</span>`
       : "";
   const smvFirst = !!(vm.roadBadge && vm.roadBadge.showMotorVehiclesIcon && !vm.roadBadge.showMotorwayIcon);
   const commBits = smvFirst
@@ -752,7 +761,6 @@ function renderTrafficCardBody(ev, url) {
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";
-  const isParking = String(vm.eventKind || "") === "parking";
   const situation = vm.situationSummary || vm.leadText || "";
   // Parking: status stack beside P (no duplicate PARKOVIŠTĚ — … title).
   const eventTitle =
