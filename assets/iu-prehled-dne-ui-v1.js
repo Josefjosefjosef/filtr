@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
-import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
+import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-traffic-card-info-logic-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-unified-traffic-cards-v1-20260812";
+const CACHE_BUST = "ndic-traffic-card-info-logic-v1-20260812";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -700,11 +700,23 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
   const dirBit = vm.direction
     ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
-  const localityFallback =
-    !vm.roadBadge.road && (vm.locality || vm.localityLine)
-      ? `<span class="iuPdTrafficComm__place">${esc(vm.locality || vm.localityLine)}</span>`
+  const headLocality =
+    vm.headLocality ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.headLocality) ||
+    "";
+  const headLocalityBit =
+    vm.roadBadge.road && headLocality
+      ? `<span class="iuPdTrafficComm__head">${esc(headLocality)}</span>`
       : "";
+  const localityFallback =
+    !vm.roadBadge.road && (headLocality || vm.locality || vm.localityLine)
+      ? `<span class="iuPdTrafficComm__place">${esc(headLocality || vm.locality || vm.localityLine)}</span>`
+      : "";
+  // Street is shown under MÍSTO block — avoid duplicate next to road badge when headLocality covers it.
   const streetBit =
+    !headLocalityBit &&
     vm.presentation &&
     vm.presentation.communication &&
     vm.presentation.communication.street
@@ -748,11 +760,8 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
         `</div>`
     )
     .join("");
-  const moreBody =
-    (expandedRows ? `<div class="iuPdTrafficMore__grid">${expandedRows}</div>` : "") +
-    (vm.impactFull
-      ? `<p class="iuPdTrafficMore__body">${esc(vm.impactFull)}</p>`
-      : "");
+  // Source description is only in expandedRows (sourceDescription) — never also as duplicate body.
+  const moreBody = expandedRows ? `<div class="iuPdTrafficMore__grid">${expandedRows}</div>` : "";
   const more =
     vm.showMore && moreBody
       ? `<details class="iuPdTrafficMore">` +
@@ -775,6 +784,7 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
     `<div class="iuPdTrafficComm">` +
     roadTypeIcon +
     roadBadge +
+    (headLocalityBit ? `<span class="iuPdTrafficComm__sep" aria-hidden="true">—</span>` + headLocalityBit : "") +
     dirBit +
     localityFallback +
     streetBit +

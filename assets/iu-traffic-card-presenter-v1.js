@@ -1,6 +1,9 @@
 /**
  * Unified ŘSD/NDIC traffic card presentation (deterministic, no invented facts).
  * Layers: RAW source fields → normalized trafficV1 → CARD SUMMARY → EXPANDED DETAIL.
+ *
+ * Official NDIC publicComment often carries km/směr/ulice/P+R while structured
+ * card fields are null — parse only substrings present in that trusted text.
  */
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
@@ -14,13 +17,12 @@ export const TRAFFIC_SIGN_ASSET = Object.freeze({
   PARKING: "/assets/images/traffic-parking.png",
 });
 
-/** Same design token chain as timeline dots (.iuPrehledDne__dot). */
 export const TRAFFIC_MAP_DOT_CSS_VAR = "--iu-pd-dot";
 
 export const ROAD_NUMBER_BADGE = Object.freeze({
-  MOTORWAY: "motorway", // red plate, white number
-  ROAD: "road", // blue plate (I/II/III + SMV number)
-  E_ROAD: "e-road", // green plate
+  MOTORWAY: "motorway",
+  ROAD: "road",
+  E_ROAD: "e-road",
   LOCAL: "local",
   UNKNOWN: "unknown",
 });
@@ -67,6 +69,9 @@ const EVENT_KIND_META = Object.freeze({
   },
 });
 
+const EMPTY_IMPACT_RE =
+  /^(dopravní událost je evidována\.?|dopravní informace\.?|evidováno\.?)$/i;
+
 function clean(s) {
   return String(s || "")
     .replace(/\s+/g, " ")
@@ -81,15 +86,36 @@ function czechPlural(n, one, few, many) {
   return many;
 }
 
+function formatKmToken(raw) {
+  const n = Number(String(raw).replace(",", "."));
+  if (!Number.isFinite(n)) return clean(raw).replace(".", ",");
+  if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+  return String(Math.round(n * 10) / 10).replace(".", ",");
+}
+
 /**
- * Safe abbreviation expansion for public card text.
- * Word-boundary aware — does not replace OA inside longer tokens.
+ * Czech local datetime for UI (never raw ISO/UTC).
  */
+export function formatCsDateTime(isoOrDate) {
+  const ms = isoOrDate instanceof Date ? isoOrDate.getTime() : Date.parse(String(isoOrDate || ""));
+  if (!Number.isFinite(ms)) return "";
+  const day = new Intl.DateTimeFormat("cs-CZ", {
+    timeZone: "Europe/Prague",
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  }).format(ms);
+  const time = new Intl.DateTimeFormat("cs-CZ", {
+    timeZone: "Europe/Prague",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(ms);
+  return day + " v " + time;
+}
+
 export function expandTrafficAbbreviationsCs(text) {
   let s = clean(text);
   if (!s) return "";
-
-  // Counted passenger cars: 2× OA / 2x OA / 2 OA
   s = s.replace(/\b(\d+)\s*[×xX]\s*OA\b/g, (_, n) => {
     const num = Number(n);
     return num + " " + czechPlural(num, "osobní automobil", "osobní automobily", "osobních automobilů");
@@ -100,22 +126,126 @@ export function expandTrafficAbbreviationsCs(text) {
   });
   s = s.replace(/\bpro\s+OA\b/gi, "pro osobní automobily");
   s = s.replace(/\bOA\b/g, "osobní automobil");
-
-  // Counted trucks
   s = s.replace(/\b(\d+)\s*[×xX]\s*NA\b/g, (_, n) => {
     const num = Number(n);
     return num + " " + czechPlural(num, "nákladní automobil", "nákladní automobily", "nákladních automobilů");
   });
   s = s.replace(/\bpro\s+NA\b/gi, "pro nákladní automobily");
   s = s.replace(/\bNA\b/g, "nákladní automobil");
-
   return s;
 }
 
 /**
- * Classify road number for Czech plate colors + optional road-type icons.
- * motorVehicleRoadConfirmed must be explicit — never inferred from CLASS_I alone.
+ * Extract only facts that appear in trusted NDIC publicComment / impact text.
  */
+export function parseOfficialCommentFacts(rawText) {
+  const text = clean(rawText);
+  const out = {
+    kilometerFrom: null,
+    kilometerTo: null,
+    kilometerLabel: null,
+    directionHuman: null,
+    street: null,
+    city: null,
+    cityPart: null,
+    district: null,
+    parkingName: null,
+    parkingOccupancyPercent: null,
+    parkingFreeUpperBound: null,
+    queueLengthKm: null,
+    situationPhrases: [],
+    isEmptyTemplate: false,
+  };
+  if (!text) return out;
+  if (EMPTY_IMPACT_RE.test(text)) {
+    out.isEmptyTemplate = true;
+    return out;
+  }
+
+  const kmRange =
+    text.match(/\bkm\s+(\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(\d+(?:[.,]\d+)?)/i) ||
+    text.match(/\bmezi\s+km\s+(\d+(?:[.,]\d+)?)\s+a\s+(\d+(?:[.,]\d+)?)/i);
+  if (kmRange) {
+    out.kilometerFrom = formatKmToken(kmRange[1]);
+    out.kilometerTo = formatKmToken(kmRange[2]);
+    out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
+  } else {
+    const kmOne = text.match(/\bkm\s+(\d+(?:[.,]\d+)?)\b/i);
+    if (kmOne) {
+      out.kilometerFrom = formatKmToken(kmOne[1]);
+      out.kilometerLabel = "km " + out.kilometerFrom;
+    }
+  }
+
+  const dir = text.match(/\bve směru\s+([^,;.]{2,60})/i);
+  if (dir) {
+    const d = clean(dir[1]).replace(/\s+/g, " ");
+    if (d && !/^(kladný|záporný)\s+směr$/i.test(d)) out.directionHuman = d;
+  }
+
+  const street = text.match(/\bulice\s+([^,;]{2,80})/i);
+  if (street) out.street = clean(street[1]);
+
+  const okr = text.match(/\bokr\.\s*([^,;]{2,60})/i);
+  if (okr) out.district = clean(okr[1]);
+
+  // "ulice X, CityPart, City," pattern (Hornopolní)
+  const locTrip = text.match(
+    /\bulice\s+([^,;]+),\s*([^,;]+),\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,/u
+  );
+  if (locTrip) {
+    out.street = clean(locTrip[1]);
+    out.cityPart = clean(locTrip[2]);
+    out.city = clean(locTrip[3]);
+  } else {
+    const cityHint = text.match(
+      /,\s*([A-ZÁ-Ž][\p{L}\-]+(?:\s+[A-ZÁ-Ž][\p{L}\-]+)?)\s*,\s*okr\./u
+    );
+    if (cityHint) out.city = clean(cityHint[1]);
+  }
+
+  const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,60})/i);
+  if (pr) out.parkingName = "P+R " + clean(pr[1]);
+  const occ = text.match(/(\d{1,3})\s*%\s*obsazeno/i);
+  if (occ) out.parkingOccupancyPercent = Number(occ[1]);
+  const freeBound = text.match(/méně než\s+(\d+)\s+volných/i);
+  if (freeBound) out.parkingFreeUpperBound = Number(freeBound[1]);
+
+  const q = text.match(/\bkolona\s+(\d+(?:[.,]\d+)?)\s*km\b/i);
+  if (q) out.queueLengthKm = Number(String(q[1]).replace(",", "."));
+
+  const phraseRes = [
+    /práce na inženýrských sítích/i,
+    /provoz převeden do protisměru/i,
+    /zúžení vozovky na [^,;.]{3,40}/i,
+    /neprůjezdn[ýáé]\s+[^,;.]{3,40}/i,
+    /silný provoz/i,
+    /pozor!\s*tvoří se kolona[^,;.]{0,40}/i,
+    /tvoří se kolona[^,;.]{0,40}/i,
+    /kolona\s+\d+(?:[.,]\d+)?\s*km/i,
+    /úplná uzavírka[^,;.]{0,60}/i,
+    /uzavřen[ýáo]\s+[^,;.]{3,40}/i,
+    /oprava povrchu[^,;.]{0,40}/i,
+    /stavební práce/i,
+    /práce na silnici/i,
+    /havárie[^,;.]{0,40}/i,
+    /porouchané vozidlo/i,
+    /průjezd se zvýšenou opatrností/i,
+  ];
+  for (const re of phraseRes) {
+    const m = text.match(re);
+    if (m) out.situationPhrases.push(clean(m[0]));
+  }
+
+  return out;
+}
+
+function sourceBlob(input) {
+  return clean(
+    [input.impactFull, input.summaryFull, input.impact, input.summary].filter(Boolean).join(" | ")
+  );
+}
+
 export function classifyRoadPresentation(roadNumber, opts = {}) {
   const road = clean(roadNumber);
   const motorVehicleConfirmed =
@@ -134,7 +264,6 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
       showMotorVehiclesIcon: false,
     };
   }
-
   if (/^E\d+[A-Za-z]?$/i.test(road) || /^E\s*\d+/i.test(road)) {
     return {
       road,
@@ -146,7 +275,6 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
       showMotorVehiclesIcon: false,
     };
   }
-
   if (/^D\d+[A-Za-z]?$/i.test(road) || /^R\d+/i.test(road) || /^Dálnice\s*D?\d+/i.test(road)) {
     return {
       road,
@@ -158,14 +286,13 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
       showMotorVehiclesIcon: false,
     };
   }
-
   let roadClass = "LOCAL";
   if (/^III\/\d+/i.test(road)) roadClass = "CLASS_III";
   else if (/^II\/\d+/i.test(road)) roadClass = "CLASS_II";
   else if (/^I\/\d+/i.test(road)) roadClass = "CLASS_I";
   else if (/^\d{1,3}[A-Za-z]?$/i.test(road)) roadClass = "CLASS_I";
 
-  if (roadClass === "LOCAL" || roadClass === "UNKNOWN") {
+  if (roadClass === "LOCAL") {
     return {
       road,
       roadClass,
@@ -176,7 +303,6 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
       showMotorVehiclesIcon: false,
     };
   }
-
   return {
     road,
     roadClass,
@@ -188,21 +314,19 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
   };
 }
 
-/**
- * Event kind from structured type first, then safe text cues, else warning fallback.
- */
 export function classifyEventPresentation(input = {}) {
   const type = clean(input.eventType || input.category).toLowerCase();
   const illustrationKey = clean(input.illustrationKey).toLowerCase();
-  const blob = clean(
-    [input.impact, input.impactFull, input.summary, input.summaryFull, input.title].filter(Boolean).join(" ")
-  ).toLowerCase();
-
+  const blob = sourceBlob(input);
+  const facts = parseOfficialCommentFacts(blob);
   const parkingFields =
     input.parkingAvailableSpaces != null ||
     input.parkingCapacity != null ||
     input.freeSpaces != null ||
-    input.parkingOccupancy != null;
+    input.parkingOccupancy != null ||
+    !!facts.parkingName ||
+    /p\s*\+\s*r\b/i.test(blob) ||
+    /\bparkovišt/i.test(blob);
 
   if (
     type === "parkoviste" ||
@@ -210,264 +334,361 @@ export function classifyEventPresentation(input = {}) {
     illustrationKey === "parking" ||
     parkingFields
   ) {
-    return { kind: EVENT_KIND.PARKING, ...EVENT_KIND_META[EVENT_KIND.PARKING] };
+    const meta = { ...EVENT_KIND_META[EVENT_KIND.PARKING] };
+    if (facts.parkingName) meta.titleCs = "PARKOVIŠTĚ – " + facts.parkingName.toUpperCase();
+    return { kind: EVENT_KIND.PARKING, ...meta, facts };
   }
 
   if (type === "nehoda" || illustrationKey === "nehoda" || /\baccident\b/.test(type)) {
-    return { kind: EVENT_KIND.ACCIDENT, ...EVENT_KIND_META[EVENT_KIND.ACCIDENT] };
+    return { kind: EVENT_KIND.ACCIDENT, ...EVENT_KIND_META[EVENT_KIND.ACCIDENT], facts };
   }
   if (type === "kolona" || illustrationKey === "kolona" || /abnormal|congest|queue/.test(type)) {
-    return { kind: EVENT_KIND.QUEUE, ...EVENT_KIND_META[EVENT_KIND.QUEUE] };
+    return { kind: EVENT_KIND.QUEUE, ...EVENT_KIND_META[EVENT_KIND.QUEUE], facts };
   }
-  if (
-    type === "prace" ||
-    illustrationKey === "prace" ||
-    /roadwork|maintenance|construction/.test(type)
-  ) {
-    return { kind: EVENT_KIND.ROADWORKS, ...EVENT_KIND_META[EVENT_KIND.ROADWORKS] };
+  if (type === "prace" || illustrationKey === "prace" || /roadwork|maintenance|construction/.test(type)) {
+    return { kind: EVENT_KIND.ROADWORKS, ...EVENT_KIND_META[EVENT_KIND.ROADWORKS], facts };
   }
   if (type === "uzavirka" || illustrationKey === "uzavirka" || /closure/.test(type)) {
-    return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE] };
+    return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE], facts };
   }
-
-  // Priority 3: strong closure cues in source text only (never invent scope).
   if (
     /\búpln[áa]\s+uzavírk/i.test(blob) ||
     /\buzavírk/i.test(blob) ||
     /\buzavř/i.test(blob) ||
     /\bneprůjezdn/i.test(blob)
   ) {
-    // Prefer closure when text is explicit; keep roadworks if type is prace (handled above).
     if (type === "omezeni" || type === "prekazka" || type === "doprava" || !type) {
-      return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE] };
+      return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE], facts };
     }
   }
-
-  if (type === "omezeni" || type === "objizdka" || type === "prekazka" || type === "sjizdnost") {
-    return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING] };
+  if (/silný provoz|tvoří se kolona|\bkolona\b/i.test(blob) && (type === "omezeni" || type === "doprava")) {
+    return { kind: EVENT_KIND.QUEUE, ...EVENT_KIND_META[EVENT_KIND.QUEUE], facts };
   }
-
-  return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING] };
+  if (type === "omezeni" || type === "objizdka" || type === "prekazka" || type === "sjizdnost") {
+    return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING], facts };
+  }
+  return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING], facts };
 }
 
-function stripDatexBoilerplate(text) {
+/**
+ * True when the card has practical user information for the main feed.
+ */
+export function isTrafficCardInformative(input = {}) {
+  const blob = sourceBlob(input);
+  const facts = parseOfficialCommentFacts(blob);
+  if (facts.isEmptyTemplate && !input.road && !input.municipality && !input.location) return false;
+  if (facts.isEmptyTemplate && EMPTY_IMPACT_RE.test(clean(input.impact || input.impactFull || ""))) {
+    // Template-only with no richer place context → hide from main overview.
+    if (!facts.kilometerLabel && !facts.directionHuman && !facts.street && !facts.parkingName) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function stripBoilerplate(text) {
   let s = clean(text);
   if (!s) return "";
-  // Drop leading validity window when followed by more content
-  s = s.replace(/^Od\s+\d{1,2}\.\d{1,2}\.\d{4}[^,]*,\s*/i, "");
-  s = s.replace(/\bOd\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}\s+\d{1,2}:\d{2}\s+Do\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}\s+\d{1,2}:\d{2},?\s*/gi, "");
+  s = s.replace(/\bOd\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}[^,]{0,40},?\s*/gi, "");
+  s = s.replace(/\bDo\s+\d{1,2}\.\s*\d{1,2}\.\s*\d{4}[^,]{0,40},?\s*/gi, "");
+  s = s.replace(/\bVydal:\s*[^,]{2,80}/gi, "");
+  s = s.replace(/…+/g, " ");
+  s = s.replace(/\.{3,}/g, " ");
   return clean(s);
 }
 
+function finalizeSentences(parts) {
+  const uniq = [];
+  const seen = new Set();
+  for (const p of parts) {
+    let s = clean(p);
+    if (!s) continue;
+    s = s.replace(/\s*;\s*/g, ". ");
+    if (!/[.!?]$/.test(s)) s += ".";
+    s = s.charAt(0).toUpperCase() + s.slice(1);
+    const key = s.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    uniq.push(s);
+  }
+  return uniq.join(" ");
+}
+
 /**
- * Build short human situation line from available fields only.
+ * Short complete summary — never ends with "…" from truncation.
  */
 export function buildTrafficSituationSummary(input = {}) {
   const event = classifyEventPresentation(input);
-  const raw =
-    clean(input.impact) ||
-    clean(input.summary) ||
-    clean(input.impactFull) ||
-    clean(input.summaryFull) ||
-    "";
-  const source = expandTrafficAbbreviationsCs(stripDatexBoilerplate(raw));
+  const facts = event.facts || parseOfficialCommentFacts(sourceBlob(input));
+  const raw = stripBoilerplate(
+    clean(input.impactFull) || clean(input.impact) || clean(input.summaryFull) || clean(input.summary) || ""
+  );
+  const source = expandTrafficAbbreviationsCs(raw);
 
   if (event.kind === EVENT_KIND.PARKING) {
-    const free =
-      input.parkingAvailableSpaces != null
-        ? input.parkingAvailableSpaces
-        : input.freeSpaces != null
-          ? input.freeSpaces
-          : null;
-    if (free != null && Number.isFinite(Number(free))) {
-      return "Volných míst: " + String(Number(free));
+    const bits = [];
+    if (facts.parkingOccupancyPercent != null) bits.push(facts.parkingOccupancyPercent + " % obsazeno");
+    if (facts.parkingFreeUpperBound != null) {
+      bits.push("Méně než " + facts.parkingFreeUpperBound + " volných parkovacích míst");
+    } else if (input.parkingAvailableSpaces != null || input.freeSpaces != null) {
+      const free = input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces;
+      if (Number.isFinite(Number(free))) return "Volných míst: " + String(Number(free));
     }
-    return source || "Parkoviště.";
-  }
-
-  if (event.kind === EVENT_KIND.ACCIDENT) {
-    if (!source) return "Nehoda.";
-    // Prefer compact readable sentence; keep source meaning.
-    let t = source;
-    if (!/^nehoda/i.test(t)) t = "Nehoda. " + t;
-    else t = t.replace(/^nehoda[;,:]?\s*/i, "Nehoda, ");
-    return finalizeSummarySentence(t);
+    if (bits.length) return finalizeSentences(bits);
+    return "Informace o obsazenosti parkoviště.";
   }
 
   if (event.kind === EVENT_KIND.QUEUE) {
-    if (!source) return "Kolona.";
-    const len =
-      input.queueLengthKm != null && Number.isFinite(Number(input.queueLengthKm))
-        ? Number(input.queueLengthKm)
-        : input.queueLengthMeters != null && Number.isFinite(Number(input.queueLengthMeters))
-          ? Number(input.queueLengthMeters) / 1000
+    const bits = [];
+    if (/silný provoz/i.test(source)) bits.push("Silný provoz");
+    if (/tvoří se kolona/i.test(source)) bits.push("Tvoří se kolona");
+    const qKm =
+      facts.queueLengthKm != null
+        ? facts.queueLengthKm
+        : input.queueLengthKm != null
+          ? Number(input.queueLengthKm)
           : null;
-    if (len != null) {
-      const km =
-        len >= 10 ? String(Math.round(len)) : String(Math.round(len * 10) / 10).replace(".", ",");
-      return "Kolona přibližně " + km + " km.";
+    if (qKm != null && Number.isFinite(qKm)) {
+      const km = qKm >= 10 ? String(Math.round(qKm)) : String(Math.round(qKm * 10) / 10).replace(".", ",");
+      bits.push("Kolona přibližně " + km + " km");
+    } else if (/kolona/i.test(source) && !bits.length) bits.push("Kolona");
+    if (bits.length) return finalizeSentences(bits);
+    return "Kolona.";
+  }
+
+  if (event.kind === EVENT_KIND.ACCIDENT) {
+    const bits = ["Nehoda"];
+    // Prefer expanded vehicle counts from trusted comment (OA → osobní automobil…).
+    const vehicleBits = source
+      .split(/[;,.]/)
+      .map(clean)
+      .filter((x) => x && /osobní automobil|nákladní automobil|neprůjezdn|porouchan/i.test(x))
+      .slice(0, 3);
+    bits.push(...vehicleBits);
+    for (const p of facts.situationPhrases) {
+      if (/nehoda/i.test(p)) continue;
+      if (vehicleBits.some((v) => v.toLowerCase().includes(p.toLowerCase().slice(0, 12)))) continue;
+      bits.push(p);
     }
-    if (/kolon/i.test(source) || /silný provoz/i.test(source)) return finalizeSummarySentence(source);
-    return finalizeSummarySentence("Kolona. " + source);
+    if (bits.length === 1 && source && !EMPTY_IMPACT_RE.test(source)) {
+      const clipped = source
+        .replace(/^nehoda[;,:]?\s*/i, "")
+        .split(/[,;.]/)
+        .map(clean)
+        .filter((x) => x && !/^od\s+\d/i.test(x) && x.length < 80)
+        .slice(0, 2);
+      bits.push(...clipped);
+    }
+    return finalizeSentences(bits);
   }
 
   if (event.kind === EVENT_KIND.ROADWORKS) {
-    if (!source) return "Práce na silnici.";
-    return finalizeSummarySentence(source);
+    const bits = [];
+    for (const p of facts.situationPhrases) bits.push(p);
+    if (!bits.length) {
+      if (/práce na inženýrských sítích/i.test(source)) bits.push("Práce na inženýrských sítích");
+      if (/provoz převeden do protisměru/i.test(source)) bits.push("Provoz převeden do protisměru");
+      if (/stavební práce/i.test(source)) bits.push("Stavební práce");
+      if (/práce na silnici/i.test(source) && !bits.length) bits.push("Práce na silnici");
+    }
+    if (!bits.length) bits.push("Práce na silnici");
+    return finalizeSentences(bits);
   }
 
   if (event.kind === EVENT_KIND.CLOSURE) {
-    if (!source) return "Silnice je uzavřena.";
-    if (/\búpln[áa]\s+uzavírk/i.test(source)) return "Úplná uzavírka komunikace.";
-    if (/\boba směry\b/i.test(source)) return "Silnice je uzavřena v obou směrech.";
-    // Do not invent "oba směry" — only echo known scope.
-    if (/uzavř/i.test(source) || /uzavír/i.test(source) || /neprůjezd/i.test(source)) {
-      return finalizeSummarySentence(source.length > 180 ? source.slice(0, 177) + "…" : source);
+    if (/\búpln[áa]\s+uzavírk/i.test(source)) {
+      const road = clean(input.road);
+      return road ? "Úplná uzavírka silnice " + road + "." : "Úplná uzavírka komunikace.";
     }
+    if (/\boba směry\b/i.test(source)) return "Silnice je uzavřena v obou směrech.";
+    const bits = [];
+    for (const p of facts.situationPhrases) bits.push(p);
+    const dir = facts.directionHuman || clean(input.direction);
+    if (dir) bits.push("uzavřeno ve směru " + dir);
+    if (bits.length) return finalizeSentences(bits);
     return "Silnice je uzavřena.";
   }
 
-  if (!source) return "Dopravní omezení.";
-  return finalizeSummarySentence(source.length > 180 ? source.slice(0, 177) + "…" : source);
-}
-
-function finalizeSummarySentence(t) {
-  let s = clean(t);
-  if (!s) return "";
-  s = s.replace(/\s*;\s*/g, ", ");
-  s = s.replace(/\s+,/g, ",");
-  s = s.replace(/,\s*,/g, ",");
-  if (!/[.!?…]$/.test(s)) s += ".";
-  // Capitalize first letter
-  s = s.charAt(0).toUpperCase() + s.slice(1);
-  return s;
+  if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
+  if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
+  // Prefer first complete clause(s), never ellipsis-truncate mid sentence.
+  const clauses = source
+    .split(/[.;]/)
+    .map(clean)
+    .filter((x) => x && x.length >= 8 && !/^od\s+\d/i.test(x) && !/^do\s+\d/i.test(x) && !/^vydal:/i.test(x))
+    .slice(0, 2);
+  if (clauses.length) return finalizeSentences(clauses);
+  return "Dopravní omezení.";
 }
 
 /**
- * Place / direction line for the summary card.
+ * Head locality next to road badge (human).
  */
-export function buildPlaceAndDirectionLine(input = {}) {
-  const bits = [];
+export function buildHeadLocalityLabel(input = {}) {
+  const facts = parseOfficialCommentFacts(sourceBlob(input));
   const road = clean(input.road);
-  const km = input.kilometer != null ? clean(String(input.kilometer)) : "";
-  const section = clean(input.section);
-  const dir = clean(input.direction);
   const muni = clean(input.municipality);
   const location = clean(input.location);
-  const precise = input.preciseLocationVerified === true;
+  const district = clean(input.district) || facts.district;
+  const city = facts.city || muni;
+  const street = facts.street || clean(input.streetHint || input.street);
 
-  if (road) bits.push(road);
-  if (precise && km) bits.push("km " + km);
-  if (precise && section && section !== km) bits.push(section);
-  if (dir) bits.push("směr " + dir);
-  if (muni) bits.push("u obce " + muni);
-  else if (location && location !== road && location !== muni) bits.push(location);
+  if (facts.parkingName) {
+    const place = city || (location && !/^p\+r/i.test(location) ? location : "");
+    return { head: facts.parkingName, subtitle: place || null };
+  }
 
-  if (bits.length) return bits.join(" · ");
-
-  const scope = clean(input.subjectScopeLabel);
-  if (scope) return scope;
-  if (muni) return muni;
-  if (location) return location;
-  return "";
-}
-
-/**
- * First-row communication line: icons handled in UI; text bits here.
- */
-export function buildCommunicationLine(input = {}) {
-  const roadPres = classifyRoadPresentation(input.road, input);
-  const dir = clean(input.direction);
-  const muni = clean(input.municipality);
-  const location = clean(input.location);
-  const street = clean(input.streetHint || input.street);
-
-  if (roadPres.road) {
+  if (city && street) {
+    const streetShort = street.replace(/^ulice\s+/i, "");
     return {
-      roadPresentation: roadPres,
-      direction: dir || null,
-      localityFallback: null,
-      street: street || null,
+      head: city.toUpperCase() + " — " + streetShort.toUpperCase(),
+      subtitle: null,
     };
   }
 
-  const loc = muni || location || clean(input.subjectScopeLabel) || "";
+  if (road && city) return { head: city, subtitle: null };
+  if (road && location && location !== road && !/^d\d/i.test(location)) {
+    return { head: location, subtitle: null };
+  }
+  if (!road && city && district) return { head: city + " · okres " + district, subtitle: null };
+  if (!road && city) return { head: city, subtitle: null };
+  if (!road && location) return { head: location, subtitle: null };
+  if (!road && muni) return { head: muni, subtitle: null };
+  return { head: null, subtitle: null };
+}
+
+export function buildPlaceAndDirectionLine(input = {}) {
+  const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const bits = [];
+  const road = clean(input.road);
+  const dir =
+    clean(input.direction) ||
+    facts.directionHuman ||
+    "";
+  const km =
+    (input.kilometer != null ? "km " + clean(String(input.kilometer)) : "") ||
+    facts.kilometerLabel ||
+    "";
+  const section = clean(input.section);
+  const muni = clean(input.municipality) || facts.city || "";
+  const district = clean(input.district) || facts.district || "";
+  const street = facts.street || clean(input.streetHint || input.street) || "";
+  const location = clean(input.location);
+
+  if (street && (muni || facts.cityPart)) {
+    const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
+    if (facts.cityPart) placeBits.push(facts.cityPart);
+    else if (muni) placeBits.push(muni);
+    if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
+    return placeBits.join(" · ");
+  }
+
+  if (road) bits.push(road);
+  if (km) bits.push(km);
+  else if (section) bits.push(section);
+  if (dir) bits.push("směr " + dir);
+  if (muni && !bits.includes(muni)) bits.push(muni);
+  else if (location && location !== road && !bits.includes(location)) bits.push(location);
+  if (district) {
+    const distLabel = "okres " + district;
+    if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
+  }
+
+  if (bits.length) return bits.join(" · ");
+  if (muni && district) return muni + " · okres " + district;
+  return muni || location || clean(input.subjectScopeLabel) || "";
+}
+
+export function buildCommunicationLine(input = {}) {
+  const roadPres = classifyRoadPresentation(input.road, input);
+  const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const head = buildHeadLocalityLabel(input);
+  const dir = clean(input.direction) || facts.directionHuman || null;
   return {
     roadPresentation: roadPres,
-    direction: dir || null,
-    localityFallback: loc || null,
-    street: street || null,
+    direction: dir,
+    localityFallback: !roadPres.road ? head.head : null,
+    headLocality: roadPres.road ? head.head : null,
+    street: facts.street || clean(input.streetHint || input.street) || null,
+    parkingName: facts.parkingName || null,
   };
 }
 
-/**
- * Expanded detail: all relevant public source fields (no parser/debug metadata).
- */
 export function buildTrafficExpandedDetail(input = {}) {
   const rows = [];
+  const seenValues = new Set();
   const push = (key, label, value) => {
-    const v = value == null ? "" : clean(String(value));
+    let v = value == null ? "" : clean(String(value));
     if (!v) return;
     if (/^(unknown|n\/a|null|undefined)$/i.test(v)) return;
+    if (/^\d{4}-\d{2}-\d{2}T/.test(v)) {
+      const formatted = formatCsDateTime(v);
+      if (!formatted) return;
+      v = formatted;
+    }
+    const dedupeKey = label + "|" + v.toLowerCase();
+    if (seenValues.has(dedupeKey)) return;
+    seenValues.add(dedupeKey);
     rows.push({ key, label, value: v });
   };
 
   const event = classifyEventPresentation(input);
-  push("eventKind", "Druh události", event.titleCs);
-  push("eventType", "Typ (zdroj)", input.eventType || input.category);
-  push("road", "Komunikace", input.road);
-  push("roadClass", "Třída komunikace", input.roadClassLabel || input.roadClass);
-  if (input.europeanRoad) push("europeanRoad", "Evropský tah", input.europeanRoad);
-  push("kilometer", "Kilometráž", input.kilometer);
-  push("section", "Úsek", input.section);
-  push("direction", "Směr", input.direction);
-  push("location", "Místo", input.location);
-  push("municipality", "Obec", input.municipality);
-  push("district", "Okres", input.district);
-  push("administrativeArea", "Správní území", input.administrativeArea);
-  push("lanes", "Jízdní pruhy", input.lanes || input.laneStatus || input.affectedLanes);
-  push("closedLanes", "Uzavřené pruhy", input.closedLanes);
-  push("restrictionScope", "Rozsah omezení", input.restrictionScope);
-  push("vehicles", "Vozidla", input.vehicles || input.vehicleDescription);
-  push("cause", "Příčina", input.cause);
-  push("measures", "Dopravní opatření", input.measures || input.trafficMeasure);
-  push("diversion", "Objížďka", input.diversion || input.rerouting);
-  push("delay", "Očekávané zdržení", input.delayMinutes != null ? String(input.delayMinutes) + " min" : null);
-  push("queueLength", "Délka kolony", input.queueLengthKm != null ? String(input.queueLengthKm) + " km" : null);
-  push("passability", "Průjezdnost", input.passability || input.carriagewayStatus);
-  push("validityFrom", "Začátek platnosti", input.validity && input.validity.validFrom);
-  push(
-    "validityTo",
-    "Konec platnosti",
-    (input.validity && (input.validity.actualEnd || input.validity.expectedEnd || input.validity.validTo)) ||
-      input.validTo
-  );
-  push("validityLine", "Platnost", input.validityLine);
-  push("updated", "Aktualizace", input.lastMeaningfulChangeAt || input.sourceUpdatedAt);
-  push("parkingFree", "Volná místa", input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces);
-  push("parkingCapacity", "Kapacita parkoviště", input.parkingCapacity);
-  push("parkingOccupancy", "Obsazenost", input.parkingOccupancy);
+  const facts = event.facts || parseOfficialCommentFacts(sourceBlob(input));
 
-  const sourceFull =
+  // Skip redundant "Typ (zdroj)" when it only repeats the card title kind.
+  push("road", "Komunikace", input.road);
+  if (input.roadClassLabel) push("roadClass", "Třída komunikace", input.roadClassLabel);
+  push("kilometer", "Kilometráž", facts.kilometerLabel || input.kilometer);
+  push("direction", "Směr", clean(input.direction) || facts.directionHuman);
+  push("street", "Ulice", facts.street || input.streetHint || input.street);
+  push("municipality", "Obec", input.municipality || facts.city);
+  push("cityPart", "Městská část", facts.cityPart);
+  push("district", "Okres", input.district || facts.district);
+  push("location", "Lokalita", input.location);
+  if (facts.parkingName) push("parkingName", "Parkoviště", facts.parkingName);
+  if (facts.parkingOccupancyPercent != null) {
+    push("parkingOccupancy", "Obsazenost", facts.parkingOccupancyPercent + " %");
+  }
+  if (facts.parkingFreeUpperBound != null) {
+    push("parkingFree", "Volná místa", "méně než " + facts.parkingFreeUpperBound);
+  } else {
+    push(
+      "parkingFree",
+      "Volná místa",
+      input.parkingAvailableSpaces != null ? input.parkingAvailableSpaces : input.freeSpaces
+    );
+  }
+  const qKm = facts.queueLengthKm != null ? facts.queueLengthKm : input.queueLengthKm;
+  if (qKm != null) push("queueLength", "Délka kolony", String(qKm).replace(".", ",") + " km");
+  push("delay", "Očekávané zdržení", input.delayMinutes != null ? String(input.delayMinutes) + " min" : null);
+
+  const v = input.validity || {};
+  push("validityFrom", "Začátek", v.validFrom || input.validFrom);
+  push("validityTo", "Konec", v.actualEnd || v.expectedEnd || v.validTo || input.validTo);
+  // Prefer structured start/end over repeating validityLine when both exist.
+  if (!(v.validFrom || v.expectedEnd || v.actualEnd || v.validTo)) {
+    push("validityLine", "Platnost", input.validityLine);
+  }
+  push("updated", "Aktualizováno", input.lastMeaningfulChangeAt || input.sourceUpdatedAt);
+
+  const sourceFull = expandTrafficAbbreviationsCs(
     clean(input.impactFull) ||
-    clean(input.summaryFull) ||
-    clean(input.impact) ||
-    clean(input.summary) ||
-    "";
-  if (sourceFull) {
+      clean(input.summaryFull) ||
+      clean(input.impact) ||
+      clean(input.summary) ||
+      ""
+  );
+  if (sourceFull && !EMPTY_IMPACT_RE.test(sourceFull)) {
     rows.push({
       key: "sourceDescription",
       label: "Popis ze zdroje ŘSD/NDIC",
-      value: expandTrafficAbbreviationsCs(sourceFull),
+      value: sourceFull,
     });
   }
 
-  return { event, rows, sourceFull };
+  return { event, rows, sourceFull, facts };
 }
 
-/**
- * Compose the card presentation model used by UI + fixtures.
- */
 export function buildTrafficCardPresentation(trafficV1) {
   const tv = trafficV1 && typeof trafficV1 === "object" ? trafficV1 : {};
   const roadPres = classifyRoadPresentation(tv.road, {
@@ -480,16 +701,21 @@ export function buildTrafficCardPresentation(trafficV1) {
   const placeLine = buildPlaceAndDirectionLine(tv);
   const situationSummary = buildTrafficSituationSummary(tv);
   const expanded = buildTrafficExpandedDetail(tv);
+  const informative = isTrafficCardInformative(tv);
   const hasPublicOaLeak = /\bOA\b/.test(situationSummary);
+
+  let eventTitle = event.titleCs;
+  if (event.kind === EVENT_KIND.PARKING && communication.parkingName) {
+    eventTitle = "PARKOVIŠTĚ – " + String(communication.parkingName).toUpperCase();
+  }
 
   return {
     roadPresentation: roadPres,
-    event,
+    event: { ...event, titleCs: eventTitle },
     communication,
     placeLine,
     situationSummary,
-    situationLabel:
-      event.kind === EVENT_KIND.PARKING ? "Parkoviště" : "Dopravní situace",
+    situationLabel: event.kind === EVENT_KIND.PARKING ? "Stav parkoviště" : "Dopravní situace",
     placeLabel:
       communication.direction || (placeLine && placeLine.indexOf("směr") >= 0)
         ? "Místo a směr"
@@ -497,10 +723,13 @@ export function buildTrafficCardPresentation(trafficV1) {
     validityLine: tv.validityLine != null ? clean(String(tv.validityLine)) : "",
     sourceLabel: tv.source != null ? clean(String(tv.source)) : "ŘSD/NDIC",
     expanded,
+    informative,
     mapDotCssVar: TRAFFIC_MAP_DOT_CSS_VAR,
-    showMore: !!(expanded.sourceFull || (expanded.rows && expanded.rows.length > 2)),
+    // Detail opens when we have source text or more than place/validity rows.
+    showMore: !!(expanded.sourceFull || (expanded.rows && expanded.rows.length > 0)),
     regression: {
       publicSummaryHasOa: hasPublicOaLeak,
+      summaryHasEllipsisTrim: /…$|\.\.\.$/.test(situationSummary),
     },
   };
 }

@@ -1330,12 +1330,18 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 }
 .iuPdTrafficComm__dir,
 .iuPdTrafficComm__place,
-.iuPdTrafficComm__street {
+.iuPdTrafficComm__street,
+.iuPdTrafficComm__head {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--iu-pd-text);
   overflow-wrap: anywhere;
   min-width: 0;
+}
+.iuPdTrafficComm__sep {
+  opacity: 0.55;
+  font-weight: 600;
+  margin: 0 0.1rem;
 }
 .iuPdTrafficEventRow {
   display: flex;
@@ -1674,6 +1680,8 @@ html.dark .iuPdTrafficComm__dir,
 html[data-theme="dark"] .iuPdTrafficComm__dir,
 html.dark .iuPdTrafficComm__place,
 html[data-theme="dark"] .iuPdTrafficComm__place,
+html.dark .iuPdTrafficComm__head,
+html[data-theme="dark"] .iuPdTrafficComm__head,
 html.dark .iuPdTrafficMore__v,
 html[data-theme="dark"] .iuPdTrafficMore__v {
   color: #e2e8f0;

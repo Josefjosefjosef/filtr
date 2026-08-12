@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import {
   buildTrafficCardViewModel,
   trafficProjectionToFeedItem,
+  filterOfflineTrafficCandidatesForOverview,
 } from "../assets/iu-traffic-overview-v1.js";
 import {
   classifyRoadPresentation,
@@ -16,6 +17,11 @@ import {
   buildTrafficSituationSummary,
   buildTrafficExpandedDetail,
   buildTrafficCardPresentation,
+  buildPlaceAndDirectionLine,
+  buildHeadLocalityLabel,
+  parseOfficialCommentFacts,
+  isTrafficCardInformative,
+  formatCsDateTime,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
@@ -259,7 +265,11 @@ for (const rel of [
   const vm = vmFrom({ municipality: longTown, impact: "x".repeat(400), impactFull: "y".repeat(500) });
   ok("long_town_kept", (vm.locality || "").includes("Nové Město"));
   ok("long_show_more", vm.showMore === true);
-  ok("long_detail_keeps_source", (vm.impactFull || "").length > 100);
+  ok(
+    "long_detail_keeps_source",
+    (vm.impactFullRaw || "").length > 100 ||
+      (vm.expandedRows || []).some((r) => r.key === "sourceDescription" && String(r.value || "").length > 100)
+  );
 }
 
 // --- Expanded detail preserves source ---
@@ -324,6 +334,208 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   ok("closure_one_way_keeps_brno", /Brno/i.test(one));
   ok("closure_one_way_no_both", !/obou směrech/i.test(one));
 }
+
+// --- Info-logic: D1 queue with km + direction from comment ---
+{
+  const impact =
+    "D1, km 187.9 až 189.5, ve směru Ostrava, silný provoz, kolona 1 km";
+  const place = buildPlaceAndDirectionLine({
+    road: "D1",
+    eventType: "kolona",
+    impact,
+  });
+  ok("d1_place_has_km", /km 187,9–189,5/.test(place) || /km 187\.9/.test(place));
+  ok("d1_place_has_dir", /směr Ostrava/.test(place));
+  const sum = buildTrafficSituationSummary({ eventType: "kolona", impact });
+  ok("d1_sum_strong", /Silný provoz/.test(sum));
+  ok("d1_sum_queue_km", /1 km/.test(sum));
+  ok("d1_sum_no_ellipsis", !/…|\.\.\./.test(sum));
+  const vm = vmFrom({
+    road: "D1",
+    roadClass: "MOTORWAY",
+    eventType: "kolona",
+    impact,
+    impactFull: impact,
+  });
+  ok("d1_kind_queue", vm.eventKind === EVENT_KIND.QUEUE);
+  ok("d1_sign_jam", vm.eventSignSrc === TRAFFIC_SIGN_ASSET.TRAFFIC_JAM);
+}
+
+// --- D0 km + direction (no invented Praha/Jižní spojka) ---
+{
+  const impact = "D0, mezi km 16.1 a 18.1, ve směru Ruzyně - D7, silný provoz";
+  const place = buildPlaceAndDirectionLine({ road: "D0", eventType: "kolona", impact });
+  ok("d0_place_km", /km 16,1–18,1/.test(place));
+  ok("d0_place_dir", /Ruzyně/.test(place));
+  ok("d0_no_invent_js", !/Jižní spojka/i.test(place + buildHeadLocalityLabel({ road: "D0", impact }).head));
+}
+
+// --- Hornopolní locality hierarchy ---
+{
+  const impact =
+    "ulice Hornopolní, Moravská Ostrava a Přívoz, Ostrava, práce na inženýrských sítích, provoz převeden do protisměru, realizace části stavby mostního objektu a okolních komunikací";
+  const head = buildHeadLocalityLabel({
+    location: "Hornopolní",
+    municipality: "Ostrava",
+    eventType: "prace",
+    impact,
+  });
+  ok("horno_head", /OSTRAVA\s*—\s*HORNOPOLNÍ/.test(head.head || ""));
+  const place = buildPlaceAndDirectionLine({
+    location: "Hornopolní",
+    municipality: "Ostrava",
+    eventType: "prace",
+    impact,
+  });
+  ok("horno_place_street", /ulice Hornopolní/.test(place));
+  ok("horno_place_part", /Moravská Ostrava/.test(place));
+  const sum = buildTrafficSituationSummary({ eventType: "prace", impact });
+  ok("horno_sum_complete", /Práce na inženýrských sítích/.test(sum));
+  ok("horno_sum_protismer", /protisměru/.test(sum));
+  ok("horno_sum_no_ellipsis", !/…|\.\.\./.test(sum));
+  ok("horno_sum_no_trunc_rea", !/\bRea\b/i.test(sum) && !/Realizace části stavby/.test(sum));
+}
+
+// --- Parking P+R from comment ---
+{
+  const impact = "P+R Zličín, 90% obsazeno, méně než 10 volných parkovacích míst";
+  const ev = classifyEventPresentation({ eventType: "doprava", impact });
+  ok("pr_kind", ev.kind === EVENT_KIND.PARKING);
+  ok("pr_asset", ev.asset === TRAFFIC_SIGN_ASSET.PARKING);
+  ok("pr_title", /PARKOVIŠTĚ/.test(ev.titleCs) && /ZLIČÍN|Zličín/i.test(ev.titleCs));
+  const sum = buildTrafficSituationSummary({ eventType: "doprava", impact });
+  ok("pr_occ", /90\s*%/.test(sum));
+  ok("pr_free_bound", /méně než 10/i.test(sum));
+  ok("pr_no_invent_exact_free", !/\b9\b/.test(sum) && !/\b8\b/.test(sum));
+}
+
+// --- Empty template cards ---
+{
+  ok(
+    "empty_not_informative",
+    isTrafficCardInformative({
+      eventType: "doprava",
+      impact: "Dopravní událost je evidována.",
+      impactSource: "categoryTemplate",
+    }) === false
+  );
+  ok(
+    "empty_filter_drops",
+    filterOfflineTrafficCandidatesForOverview(
+      [
+        {
+          trafficV1: {
+            lifecycleStatus: "ACTIVE",
+            eventType: "doprava",
+            impact: "Dopravní událost je evidována.",
+            validity: { validFrom: "2020-01-01T00:00:00.000Z" },
+          },
+        },
+        {
+          trafficV1: {
+            lifecycleStatus: "ACTIVE",
+            eventType: "kolona",
+            road: "D1",
+            impact: "D1, km 10, silný provoz",
+            validity: { validFrom: "2020-01-01T00:00:00.000Z" },
+          },
+        },
+      ],
+      {},
+      { nowMs: Date.parse("2026-08-12T10:00:00.000Z") }
+    ).length === 1
+  );
+}
+
+// --- Future badge stays separate from type ---
+{
+  const vm = vmFrom({
+    lifecycleStatus: "FUTURE",
+    eventType: "prace",
+    road: null,
+    municipality: "Ostrava",
+    location: "Hornopolní",
+    impact:
+      "ulice Hornopolní, Moravská Ostrava a Přívoz, Ostrava, práce na inženýrských sítích",
+    validity: { validFrom: "2026-08-20T05:00:00.000Z", expectedEnd: "2026-08-30T15:00:00.000Z" },
+  });
+  ok("future_badge", vm.badge && /BUDOUCÍ|NAPLAN/i.test(vm.badge.text + vm.badge.aria));
+  ok("future_type_works", vm.eventKind === EVENT_KIND.ROADWORKS);
+}
+
+// --- Deduped source description + Czech times ---
+{
+  const full =
+    "D1, km 99, ve směru Brno, nehoda; 2× OA; neprůjezdný levý jízdní pruh";
+  const det = buildTrafficExpandedDetail({
+    eventType: "nehoda",
+    road: "D1",
+    impact: full,
+    impactFull: full,
+    validity: {
+      validFrom: "2026-08-12T05:04:18.000Z",
+      expectedEnd: "2026-08-12T05:38:16.000Z",
+    },
+    lastMeaningfulChangeAt: "2026-08-12T05:08:00.000Z",
+  });
+  const srcRows = det.rows.filter((r) => r.key === "sourceDescription");
+  ok("dedupe_one_source", srcRows.length === 1);
+  ok("dedupe_no_type_zdroj", !det.rows.some((r) => /typ\s*\(zdroj\)/i.test(r.label)));
+  ok("dedupe_no_triple_platnost", det.rows.filter((r) => r.label === "Platnost").length <= 1);
+  const from = det.rows.find((r) => r.key === "validityFrom");
+  ok("cs_time_from", from && /12\.\s*8\.\s*2026/.test(from.value) && /0?7:04/.test(from.value));
+  ok("cs_time_no_iso_z", !det.rows.some((r) => /T\d{2}:\d{2}:\d{2}.*Z/.test(r.value)));
+  const formatted = formatCsDateTime("2026-08-12T05:04:18.000Z");
+  ok("format_cs_helper", /12\.\s*8\.\s*2026/.test(formatted) && /07:04/.test(formatted));
+
+  const vm = vmFrom({
+    eventType: "nehoda",
+    road: "D1",
+    roadClass: "MOTORWAY",
+    impact: full,
+    impactFull: full,
+  });
+  ok("vm_no_dup_body", vm.sourceAlreadyInExpanded === true && vm.renderImpactFullBody === false);
+  ok("ui_no_more_body_dup", !uiSrc.includes("iuPdTrafficMore__body"));
+}
+
+// --- Class I / II / closure ---
+{
+  ok(
+    "class_i_road",
+    classifyRoadPresentation("I/38").numberBadge === ROAD_NUMBER_BADGE.ROAD
+  );
+  ok(
+    "class_ii_closure",
+    classifyEventPresentation({
+      eventType: "omezeni",
+      road: "II/357",
+      impact: "úplná uzavírka silnice II/357, Jimramov",
+    }).kind === EVENT_KIND.CLOSURE
+  );
+  const sum = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    road: "II/357",
+    impact: "úplná uzavírka silnice II/357",
+  });
+  ok("closure_sum_full", /Úplná uzavírka/.test(sum) && /II\/357/.test(sum));
+}
+
+// --- Obec + okres ---
+{
+  const place = buildPlaceAndDirectionLine({
+    municipality: "Jimramov",
+    district: "Žďár nad Sázavou",
+    road: null,
+    impact: "místní omezení",
+  });
+  ok("obec_okres", /Jimramov/.test(place) && /Žďár/.test(place));
+}
+
+// --- No substring truncation helper in presenter ---
+ok("no_substring_trunc", !/substring\s*\(\s*0\s*,/.test(presenterSrc));
+ok("ui_head_locality", uiSrc.includes("iuPdTrafficComm__head"));
+ok("ui_no_impact_full_body", !uiSrc.includes("iuPdTrafficMore__body"));
 
 console.log(
   JSON.stringify(

@@ -70,7 +70,8 @@ ok("ui_no_narrow_facts_render", !/iuPdTrafficFacts/.test(uiSrc) || !uiSrc.includ
 ok("css_hides_legacy_narrow", /iuPdTrafficFacts[\s\S]{0,80}display:\s*none\s*!important/.test(cssSrc));
 ok("css_unified_blocks", cssSrc.includes(".iuPdTrafficBlock"));
 ok("css_more_a11y_toggle", cssSrc.includes(".iuPdTrafficMore__close"));
-ok("ui_escapes_full", /esc\(\s*vm\.impactFull\s*\)/.test(uiSrc));
+ok("ui_escapes_expanded_values", /esc\(\s*r\.value\s*\)/.test(uiSrc));
+ok("ui_no_duplicate_impact_body", !uiSrc.includes("iuPdTrafficMore__body"));
 ok("ui_no_dangerously", !uiSrc.includes("dangerouslySetInnerHTML"));
 ok("ui_follow_only_traffic", /traffic-follow/.test(uiSrc) && /Sledovat/.test(uiSrc));
 ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
