@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-muni-sign-full-name-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-u-obce-locality-v1-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -1026,6 +1026,8 @@ export function buildTrafficCardViewModel(trafficV1) {
     (presentation.communication && presentation.communication.municipalitySign) || null;
   const municipalitySignLabel =
     (presentation.communication && presentation.communication.municipalitySignLabel) || null;
+  const nearMunicipalityPrefix =
+    (presentation.communication && presentation.communication.nearMunicipalityPrefix) || null;
   const besideLocality =
     (presentation.communication && presentation.communication.besideLocality) || null;
   const districtBeside =
@@ -1125,6 +1127,7 @@ export function buildTrafficCardViewModel(trafficV1) {
     headLocality,
     municipalitySign,
     municipalitySignLabel,
+    nearMunicipalityPrefix,
     besideLocality,
     districtBeside,
     cityPartRow,

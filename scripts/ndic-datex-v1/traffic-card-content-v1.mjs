@@ -97,11 +97,12 @@ export function extractLocalityFromOfficialComment(summary) {
   let district = null;
   let streetHint = null;
 
-  const mObci = s.match(
-    /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+  // Explicit event localization — not diversion "přes X", not substring of "katastru obce".
+  const mUObce = s.match(
+    /\bu\s+obce\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/iu
   );
-  if (mObci) {
-    let city = clean(mObci[1]);
+  if (mUObce) {
+    let city = clean(mUObce[1]);
     city = city.replace(
       /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
       ""
@@ -110,9 +111,31 @@ export function extractLocalityFromOfficialComment(summary) {
     if (
       city &&
       !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
-      !/^\d/.test(city)
+      !/^\d/.test(city) &&
+      /^[A-ZÁ-Ž]/u.test(city)
     ) {
       municipality = city;
+    }
+  }
+
+  if (!municipality) {
+    const mObci = s.match(
+      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+    );
+    if (mObci) {
+      let city = clean(mObci[1]);
+      city = city.replace(
+        /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+        ""
+      );
+      city = clean(city);
+      if (
+        city &&
+        !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
+        !/^\d/.test(city)
+      ) {
+        municipality = city;
+      }
     }
   }
 

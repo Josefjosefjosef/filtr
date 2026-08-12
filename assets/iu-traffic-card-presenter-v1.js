@@ -697,6 +697,7 @@ export function parseOfficialCommentFacts(rawText) {
     parkingFewSpacesLeft: false,
     queueLengthKm: null,
     heavyTrafficLengthKm: null,
+    municipalityRelation: null,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -738,12 +739,26 @@ export function parseOfficialCommentFacts(rawText) {
     if (d && !/^(kladný|záporný)\s+směr$/i.test(d)) out.directionHuman = d;
   }
 
-  const mObci = text.match(
-    /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+  // Explicit event localization "u obce X" (not diversion "přes X", not "v katastru obce").
+  const mUObce = text.match(
+    /\bu\s+obce\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/iu
   );
-  if (mObci) {
-    const city = normalizeExtractedMunicipalityName(mObci[1]);
-    if (city) out.city = city;
+  if (mUObce) {
+    const city = normalizeExtractedMunicipalityName(mUObce[1]);
+    if (city) {
+      out.city = city;
+      out.municipalityRelation = "u_obce";
+    }
+  }
+
+  if (!out.city) {
+    const mObci = text.match(
+      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+    );
+    if (mObci) {
+      const city = normalizeExtractedMunicipalityName(mObci[1]);
+      if (city) out.city = city;
+    }
   }
 
   const streetIn =
@@ -1732,6 +1747,8 @@ export function buildLocalityHeaderModel(input = {}) {
   return {
     municipalitySign,
     municipalitySignLabel: municipalitySign ? municipalitySign.toUpperCase() : null,
+    municipalityRelation: facts.municipalityRelation || null,
+    nearMunicipalityPrefix: facts.municipalityRelation === "u_obce" ? "u obce" : null,
     besideLocality: besideLocality || null,
     streetLabel: streetLabel || null,
     districtBeside: districtBeside || null,
@@ -1852,17 +1869,24 @@ export function buildPlaceAndDirectionLine(input = {}) {
     const roadDisplayName = resolveRoadDisplayName(road);
     if (roadDisplayName) bits.push(roadDisplayName);
   }
+  if (facts.municipalityRelation === "u_obce") {
+    const nearCity =
+      preferFullerMunicipalityName(muni, facts.city) || facts.city || muni || "";
+    if (nearCity) bits.push("u obce " + nearCity);
+  }
   if (km) bits.push(km);
   else if (section) bits.push(section);
   if (dir) bits.push("směr " + dir);
-  if (muni && !bits.includes(muni)) bits.push(muni);
-  else if (
-    location &&
-    location !== road &&
-    !looksLikeRoadNumberToken(location) &&
-    !bits.includes(location)
-  ) {
-    bits.push(location);
+  if (facts.municipalityRelation !== "u_obce") {
+    if (muni && !bits.includes(muni)) bits.push(muni);
+    else if (
+      location &&
+      location !== road &&
+      !looksLikeRoadNumberToken(location) &&
+      !bits.includes(location)
+    ) {
+      bits.push(location);
+    }
   }
   if (district) {
     const distLabel = "okres " + district;
@@ -1892,6 +1916,8 @@ export function buildCommunicationLine(input = {}) {
       roadPres.road && !hdr.municipalitySign && !hdr.besideLocality ? head.head : null,
     municipalitySign: hdr.municipalitySign,
     municipalitySignLabel: hdr.municipalitySignLabel,
+    municipalityRelation: hdr.municipalityRelation || null,
+    nearMunicipalityPrefix: hdr.nearMunicipalityPrefix || null,
     besideLocality: hdr.besideLocality,
     streetLabel: hdr.streetLabel,
     districtBeside: hdr.districtBeside,
