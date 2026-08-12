@@ -304,7 +304,10 @@ export function extractNamedTransportObject(rawText) {
   );
   if (bridge) {
     const name = clean(bridge[1]);
-    if (name.length >= 4) return { name, kind: LOCATION_KIND.BRIDGE };
+    // Reject bare "most" (e.g. "most ev. č. D0-202") — need a proper bridge name.
+    if (!/^most$/i.test(name) && name.length >= 4) {
+      return { name, kind: LOCATION_KIND.BRIDGE };
+    }
   }
   const muk = scan.match(/\b(MÚK\s+[^,;.]{2,60})/i);
   if (muk) return { name: clean(muk[1]), kind: LOCATION_KIND.INTERSECTION };
@@ -1515,8 +1518,9 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = "více ulic";
     streetLabel = "více ulic";
     locationKind = LOCATION_KIND.STREET;
-  } else if (namedObject) {
+  } else if (namedObject && !resolveRoadDisplayName(road)) {
     // Named tunnel/bridge/square beats generic locationLabel (e.g. Letná).
+    // Road aliases (D0 → Pražský okruh) keep the communication display name instead.
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
   } else if (street) {
@@ -1653,7 +1657,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
     return bits.join(" · ");
   }
 
-  if (facts.namedObject) {
+  if (facts.namedObject && !resolveRoadDisplayName(road)) {
     const placeBits = [facts.namedObject];
     if (facts.cityPart) placeBits.push(facts.cityPart);
     else if (muni) placeBits.push(muni);

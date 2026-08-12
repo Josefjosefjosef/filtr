@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-d0-prazsky-okruh-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-d0-prazsky-okruh-v2-20260812";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-d0-prazsky-okruh-v1-20260812";
+const CACHE_BUST = "ndic-d0-prazsky-okruh-v2-20260812";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";

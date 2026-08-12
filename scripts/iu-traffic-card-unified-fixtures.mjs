@@ -528,6 +528,30 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     if (dn != null || /Pražský okruh/.test(p)) otherOk = false;
   }
   ok("OTHER_MOTORWAYS_REGRESSION_PASS", otherOk);
+
+  // Bare "most ev. č." must not wipe D0 · Pražský okruh
+  const mostImpact =
+    "D0, mezi km 16.1 a 18.1, ve směru Ruzyně - D7, práce na silnici, zúžení vozovky na dva jízdní pruhy, D0 stavba 515 – zkapacitnění, most ev. č. D0-202 v km 16,640";
+  const mostHdr = buildLocalityHeaderModel({
+    road: "D0",
+    location: "D0",
+    eventType: "omezeni",
+    impact: mostImpact,
+    impactFull: mostImpact,
+  });
+  const mostPlace = buildPlaceAndDirectionLine({
+    road: "D0",
+    location: "D0",
+    eventType: "omezeni",
+    impact: mostImpact,
+    impactFull: mostImpact,
+  });
+  ok(
+    "D0_BARE_MOST_NOT_OVERRIDE_PASS",
+    mostHdr.besideLocality === "Pražský okruh" &&
+      /^D0 · Pražský okruh/.test(mostPlace) &&
+      mostPlace !== "most"
+  );
 }
 
 // --- Hornopolní locality hierarchy ---
@@ -2195,6 +2219,7 @@ console.log(
           "RAW_NDIC_DESCRIPTION_UNCHANGED",
           "D0_REGRESSION_PASS",
           "OTHER_MOTORWAYS_REGRESSION_PASS",
+          "D0_BARE_MOST_NOT_OVERRIDE_PASS",
         ].map((id) => {
           const hit = results.find((r) => r.id === id);
           return [id, hit && hit.pass ? "YES" : "NO"];
