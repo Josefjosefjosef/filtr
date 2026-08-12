@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-prague-tunnel-semantics-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-u-obce-header-precedence-v1-20260813";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-prague-tunnel-semantics-v1-20260812";
+const CACHE_BUST = "ndic-u-obce-header-precedence-v1-20260813";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -765,12 +765,16 @@ function renderTrafficCardBody(ev, url) {
       : "";
   const smvFirst = !!(vm.roadBadge && vm.roadBadge.showMotorVehiclesIcon && !vm.roadBadge.showMotorwayIcon);
   // Road + "u obce" + municipality sign (source order), e.g. [23] u obce [STUDENEC].
+  // TMC/locality beside must not override this header (kept in detail LOKALITA).
   const roadThenNearMuni = !!(nearPrefix && muniSign && roadBadge);
+  const nearMuniOnly = !!(nearPrefix && muniSign && !roadBadge);
   const commBits = roadThenNearMuni
-    ? roadTypeIcon + roadBadge + nearBit + muniSign + besideBit + districtBit + dirBit + localityFallback
-    : smvFirst
-      ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
-      : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
+    ? roadTypeIcon + roadBadge + nearBit + muniSign + districtBit + dirBit
+    : nearMuniOnly
+      ? nearBit + muniSign + districtBit + dirBit
+      : smvFirst
+        ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
+        : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";

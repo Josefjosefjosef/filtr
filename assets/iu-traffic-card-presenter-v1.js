@@ -302,20 +302,62 @@ export function normalizeExtractedMunicipalityName(raw) {
 }
 
 /**
+ * TMC / Alert-C segment or area labels (e.g. "Branky – Police-jih") — never municipality.
+ */
+export function looksLikeSegmentOrAreaLabel(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  if (/[–—]/.test(t)) return true;
+  if (/\s+-\s+/.test(t)) return true;
+  if (/-(jih|sever|východ|západ)\b/i.test(t)) return true;
+  return false;
+}
+
+/**
  * Prefer the fuller official multi-word municipality when structured field was
  * truncated to the first token (e.g. "České" vs "České Budějovice").
+ * Never prefers TMC segment labels over an explicit municipality from the comment.
  */
 export function preferFullerMunicipalityName(structured, fromComment) {
   const a = clean(structured);
   const b = clean(fromComment);
   if (!a) return b || null;
   if (!b) return a;
+  if (looksLikeSegmentOrAreaLabel(a) && !looksLikeSegmentOrAreaLabel(b)) return b;
+  if (looksLikeSegmentOrAreaLabel(b) && !looksLikeSegmentOrAreaLabel(a)) return a;
   const al = a.toLowerCase();
   const bl = b.toLowerCase();
   if (al === bl) return a;
   if (bl.startsWith(al + " ") || bl.startsWith(al + "-")) return b;
   if (al.startsWith(bl + " ") || al.startsWith(bl + "-")) return a;
   return a;
+}
+
+/**
+ * Road number from official NDIC text when structured roadNumber is empty.
+ * Only explicit "na silnici N" / "silnice N" forms — never invents roads.
+ */
+export function extractRoadNumberFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const m =
+    text.match(/\bna\s+silnici\s+((?:I{1,3}|II|III)\s*\/\s*)?(\d{1,4}[A-Za-z]?)\b/i) ||
+    text.match(/\bsilnice\s+((?:I{1,3}|II|III)\s*\/\s*)?(\d{1,4}[A-Za-z]?)\b/i) ||
+    text.match(/\bsil\.\s*((?:I{1,3}|II|III)\s*\/\s*)?(\d{1,4}[A-Za-z]?)\b/i);
+  if (!m) return null;
+  const cls = clean(m[1] || "").replace(/\s+/g, "");
+  const num = clean(m[2] || "");
+  if (!num) return null;
+  if (cls) return (cls.endsWith("/") ? cls : cls + "/") + num;
+  return num;
+}
+
+/** Structured road, else safe comment extraction. */
+export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
+  const structured = clean(input.road || input.roadNumber);
+  if (structured) return structured;
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  return clean(facts.roadNumber) || null;
 }
 
 export function classifyLocationKindFromName(name) {
@@ -728,6 +770,7 @@ export function parseOfficialCommentFacts(rawText) {
     queueLengthKm: null,
     heavyTrafficLengthKm: null,
     municipalityRelation: null,
+    roadNumber: null,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -739,6 +782,8 @@ export function parseOfficialCommentFacts(rawText) {
     out.isEmptyTemplate = true;
     return out;
   }
+
+  out.roadNumber = extractRoadNumberFromOfficialComment(text);
 
   const named = extractNamedTransportObject(text);
   if (named) {
@@ -1750,11 +1795,12 @@ function samePlaceName(a, b) {
 /**
  * Resolve municipality vs Praha city-part misfiles (Praha 7 ≠ obec).
  */
-function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityPartHint) {
+function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityPartHint, relationHint) {
   let structured = clean(structuredRaw);
   let fromComment = clean(fromCommentRaw);
   const blobText = clean(blob);
   const cityPart = clean(cityPartHint);
+  const relation = clean(relationHint);
 
   if (isPrahaCityPartName(fromComment)) {
     if (!cityPart || isPrahaCityPartName(cityPart)) {
@@ -1765,9 +1811,17 @@ function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityP
   if (isPrahaCityPartName(structured)) {
     structured = /\bPraha\b/u.test(blobText) || fromComment === "Praha" ? "Praha" : "";
   }
+  // Explicit "u obce X" always wins over TMC segment labels misfiled as municipality.
+  if (relation === "u_obce" && fromComment && !looksLikeSegmentOrAreaLabel(fromComment)) {
+    return fromComment;
+  }
+  if (looksLikeSegmentOrAreaLabel(structured)) structured = "";
   let city = preferFullerMunicipalityName(structured, fromComment) || "";
   if (isPrahaCityPartName(city)) {
     city = /\bPraha\b/u.test(blobText) ? "Praha" : "";
+  }
+  if (looksLikeSegmentOrAreaLabel(city)) {
+    city = fromComment && !looksLikeSegmentOrAreaLabel(fromComment) ? fromComment : "";
   }
   return city || null;
 }
@@ -1788,7 +1842,13 @@ export function resolveMunicipalitySignName(input = {}) {
   }
 
   let city =
-    resolveMunicipalityCandidate(input.municipality, facts.city, blob, cityPart) ||
+    resolveMunicipalityCandidate(
+      input.municipality,
+      facts.city,
+      blob,
+      cityPart,
+      facts.municipalityRelation
+    ) ||
     parkingCity ||
     "";
   if (!city) {
@@ -1803,6 +1863,7 @@ export function resolveMunicipalitySignName(input = {}) {
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
   if (looksLikeRoadNumberToken(city)) return null;
   if (isPrahaCityPartName(city)) return null;
+  if (looksLikeSegmentOrAreaLabel(city)) return null;
   if (!clean(input.municipality) && looksLikeNonMunicipalityPlace(city)) return null;
   if (street && samePlaceName(city, street)) return null;
   if (cityPart && samePlaceName(city, cityPart)) return null;
@@ -1817,7 +1878,7 @@ export function resolveMunicipalitySignName(input = {}) {
  */
 export function buildLocalityHeaderModel(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
-  const road = clean(input.road);
+  const road = resolvePresentationRoadNumber(input, facts);
   const municipalitySign = resolveMunicipalitySignName(input);
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
@@ -1828,6 +1889,8 @@ export function buildLocalityHeaderModel(input = {}) {
   }
   const namedObject = facts.namedObject ? streetBareName(facts.namedObject) : null;
   const namedObjectKind = facts.namedObjectKind || null;
+  const nearMunicipality =
+    facts.municipalityRelation === "u_obce" && !!municipalitySign;
   const registry = matchParkingRegistry({
     ...input,
     parkingName: facts.parkingName || input.parkingName,
@@ -1855,6 +1918,9 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = "více ulic";
     streetLabel = "více ulic";
     locationKind = LOCATION_KIND.STREET;
+  } else if (nearMunicipality) {
+    // road + "u obce" + white municipality sign — TMC/locality must not override header.
+    locationKind = LOCATION_KIND.MUNICIPALITY;
   } else if (namedObject && !resolveRoadDisplayName(road)) {
     // Named tunnel/bridge/square beats generic locationLabel (e.g. Letná).
     // Road aliases (D0 → Pražský okruh) keep the communication display name instead.
@@ -1924,7 +1990,7 @@ export function buildLocalityHeaderModel(input = {}) {
 export function buildHeadLocalityLabel(input = {}) {
   const hdr = buildLocalityHeaderModel(input);
   const facts = parseOfficialCommentFacts(sourceBlob(input));
-  const road = clean(input.road);
+  const road = resolvePresentationRoadNumber(input, facts);
   const location = clean(input.location);
   const district = hdr.district;
 
@@ -1974,7 +2040,7 @@ export function buildHeadLocalityLabel(input = {}) {
 export function buildPlaceAndDirectionLine(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const bits = [];
-  const road = clean(input.road);
+  const road = resolvePresentationRoadNumber(input, facts);
   const dir =
     clean(input.direction) ||
     facts.directionHuman ||
@@ -1990,7 +2056,8 @@ export function buildPlaceAndDirectionLine(input = {}) {
       input.municipality,
       facts.city,
       sourceBlob(input),
-      facts.cityPart || input.cityPart
+      facts.cityPart || input.cityPart,
+      facts.municipalityRelation
     ) ||
     "";
   const district = clean(input.district) || facts.district || "";
@@ -2056,8 +2123,9 @@ export function buildPlaceAndDirectionLine(input = {}) {
 }
 
 export function buildCommunicationLine(input = {}) {
-  const roadPres = classifyRoadPresentation(input.road, input);
   const facts = parseOfficialCommentFacts(sourceBlob(input));
+  const roadResolved = resolvePresentationRoadNumber(input, facts);
+  const roadPres = classifyRoadPresentation(roadResolved || input.road, input);
   const hdr = buildLocalityHeaderModel(input);
   const head = buildHeadLocalityLabel(input);
   const dir = clean(input.direction) || facts.directionHuman || null;
@@ -2284,7 +2352,9 @@ export function buildTrafficExpandedDetail(input = {}) {
 
 export function buildTrafficCardPresentation(trafficV1) {
   const tv = trafficV1 && typeof trafficV1 === "object" ? trafficV1 : {};
-  const roadPres = classifyRoadPresentation(tv.road, {
+  const factsForRoad = parseOfficialCommentFacts(sourceBlob(tv));
+  const roadResolved = resolvePresentationRoadNumber(tv, factsForRoad);
+  const roadPres = classifyRoadPresentation(roadResolved || tv.road, {
     motorVehicleRoadConfirmed: tv.motorVehicleRoadConfirmed === true,
     isMotorVehicleRoad: tv.isMotorVehicleRoad === true,
     motorVehicleRoadStatus: tv.motorVehicleRoadStatus,
