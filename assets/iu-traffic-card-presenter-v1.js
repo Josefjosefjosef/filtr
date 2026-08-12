@@ -968,10 +968,16 @@ export function buildLocalityHeaderModel(input = {}) {
     ...input,
     parkingName: facts.parkingName || input.parkingName,
   });
-  const parkingName =
+  const parkingNameRaw =
     (registry && registry.canonicalName) || facts.parkingName || null;
-  const liveStatus = resolveParkingLiveStatus(input, facts);
-  const parkingStatusLabel = liveStatus.statusLabel || formatParkingStatusLabel(facts);
+  const useParkingBeside = !!(
+    parkingNameRaw && isParkingOccupancySituation(input, facts)
+  );
+  const parkingName = useParkingBeside ? parkingNameRaw : null;
+  const liveStatus = useParkingBeside ? resolveParkingLiveStatus(input, facts) : { statusLabel: "" };
+  const parkingStatusLabel = useParkingBeside
+    ? liveStatus.statusLabel || formatParkingStatusLabel(facts)
+    : "";
   const streetMulti = facts.streetMulti === true;
 
   let besideLocality = "";
