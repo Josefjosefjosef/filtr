@@ -30,10 +30,17 @@ import {
   stripTrailingNdicDateTime,
   formatCsDateTime,
   matchParkingRegistry,
+  hasExplicitQueueSource,
+  analyzeRestrictionScope,
+  analyzePrimaryCause,
+  analyzeTrafficCondition,
   TRAFFIC_SIGN_ASSET,
   TRAFFIC_MAP_DOT_CSS_VAR,
   EVENT_KIND,
   ROAD_NUMBER_BADGE,
+  RESTRICTION_SCOPE,
+  PRIMARY_CAUSE,
+  TRAFFIC_CONDITION,
 } from "../assets/iu-traffic-card-presenter-v1.js";
 import {
   PARKING_REGISTRY,
@@ -1154,6 +1161,269 @@ ok(
       closureVm.eventKind === EVENT_KIND.CLOSURE &&
       smvPres.roadPresentation.showMotorVehiclesIcon === true
   );
+  ok("PARKING_CARD_REGRESSION_PASS", vFullOnly.event.kind === EVENT_KIND.PARKING);
+  ok("SMV_CARD_REGRESSION_PASS", smvPres.roadPresentation.showMotorVehiclesIcon === true);
+}
+
+// --- Event priority + restriction scope (cause / scope / condition) ---
+{
+  // A) nehoda + silný provoz → NEHODA, never KOLONA
+  const aImpact =
+    "D1, km 205,5, ve směru Ostrava, nehoda, silný provoz, 2 havarovaná vozidla, neprůjezdný levý jízdní pruh, 2 osobní automobily";
+  const aEv = classifyEventPresentation({
+    road: "D1",
+    eventType: "kolona",
+    impact: aImpact,
+  });
+  const aSum = buildTrafficSituationSummary({
+    road: "D1",
+    direction: "Ostrava",
+    eventType: "kolona",
+    impact: aImpact,
+  });
+  ok(
+    "ACCIDENT_PRIORITY_OVER_TRAFFIC_CONDITION_PASS",
+    aEv.kind === EVENT_KIND.ACCIDENT &&
+      aEv.titleCs === "NEHODA" &&
+      aEv.primaryCause === PRIMARY_CAUSE.ACCIDENT &&
+      aEv.trafficCondition === TRAFFIC_CONDITION.HEAVY_TRAFFIC &&
+      !/KOLONA/i.test(aEv.titleCs)
+  );
+  ok("FIXTURE_A_MAIN_NEHODA", aEv.titleCs === "NEHODA" && aEv.kind !== EVENT_KIND.QUEUE);
+  ok(
+    "TRAFFIC_SUMMARY_CAUSE_FIRST_PASS",
+    /^Nehoda/i.test(aSum) && /neprůjezdn[ýá]/i.test(aSum) && /Silný provoz/i.test(aSum)
+  );
+
+  // B) explicit kolona
+  const bEv = classifyEventPresentation({
+    eventType: "kolona",
+    impact: "D1, ve směru Brno, tvoří se kolona, kolona 2 km",
+  });
+  ok(
+    "QUEUE_REQUIRES_EXPLICIT_SOURCE_PASS",
+    bEv.kind === EVENT_KIND.QUEUE &&
+      bEv.titleCs === "KOLONA" &&
+      hasExplicitQueueSource("tvoří se kolona") === true
+  );
+  ok("FIXTURE_B_EXPLICIT_QUEUE", bEv.titleCs === "KOLONA");
+
+  // C) silný provoz without kolona
+  const cEv = classifyEventPresentation({
+    eventType: "kolona",
+    impact: "D1, km 10, silný provoz",
+  });
+  ok(
+    "HEAVY_TRAFFIC_NOT_QUEUE_PASS",
+    cEv.kind === EVENT_KIND.HEAVY_TRAFFIC &&
+      cEv.titleCs === "SILNÝ PROVOZ" &&
+      cEv.kind !== EVENT_KIND.QUEUE
+  );
+  ok(
+    "NO_QUEUE_INFERENCE_FROM_HEAVY_TRAFFIC_PASS",
+    classifyEventPresentation({ impact: "silný provoz" }).kind === EVENT_KIND.HEAVY_TRAFFIC &&
+      classifyEventPresentation({ impact: "hustý provoz" }).kind === EVENT_KIND.HEAVY_TRAFFIC
+  );
+  ok(
+    "NO_QUEUE_INFERENCE_FROM_DELAY_PASS",
+    classifyEventPresentation({ eventType: "kolona", impact: "zdržení" }).kind !==
+      EVENT_KIND.QUEUE &&
+      !hasExplicitQueueSource("zdržení")
+  );
+  ok("FIXTURE_C_HEAVY_NOT_QUEUE", cEv.titleCs === "SILNÝ PROVOZ");
+
+  // D) práce + uzavřený levý pruh → PRÁCE, not UZAVÍRKA
+  const dImpact =
+    "D35, km 277,5–276,9, ve směru Olomouc, práce na silnici, levý jízdní pruh uzavřen, údržba a opravy vozovek, pracovní místo";
+  const dEv = classifyEventPresentation({
+    road: "D35",
+    eventType: "uzavirka",
+    impact: dImpact,
+  });
+  const dSum = buildTrafficSituationSummary({
+    road: "D35",
+    direction: "Olomouc",
+    eventType: "uzavirka",
+    impact: dImpact,
+  });
+  ok(
+    "ROADWORKS_PRIORITY_WITH_SINGLE_LANE_CLOSURE_PASS",
+    dEv.kind === EVENT_KIND.ROADWORKS &&
+      dEv.titleCs === "PRÁCE NA SILNICI" &&
+      dEv.restrictionScope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED
+  );
+  ok(
+    "SINGLE_LANE_CLOSED_NOT_FULL_CLOSURE_PASS",
+    dEv.kind !== EVENT_KIND.CLOSURE &&
+      analyzeRestrictionScope(dImpact) === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED
+  );
+  ok(
+    "NO_DIRECTION_CLOSURE_FROM_SINGLE_LANE_PASS",
+    !/uzavřeno ve směru Olomouc/i.test(dSum) &&
+      /Levý jízdní pruh/i.test(dSum) &&
+      /Olomouc/i.test(dSum)
+  );
+  ok("TRAFFIC_SUMMARY_SCOPE_SECOND_PASS", /jízdní pruh/i.test(dSum));
+  ok("FIXTURE_D_ROADWORKS_LANE", dEv.kind === EVENT_KIND.ROADWORKS);
+
+  // E) odstavný pruh / zpevněná krajnice
+  const eImpact =
+    "D1, km 7,7–5,5, ve směru Praha, pomalu jedoucí vozidlo údržby, zpevněná krajnice (odstavný pruh) uzavřena, sekání trávy, údržba travních porostů";
+  const eEv = classifyEventPresentation({
+    road: "D1",
+    eventType: "uzavirka",
+    impact: eImpact,
+  });
+  ok(
+    "SHOULDER_CLOSED_NOT_FULL_CLOSURE_PASS",
+    eEv.kind === EVENT_KIND.ROADWORKS &&
+      eEv.kind !== EVENT_KIND.CLOSURE &&
+      eEv.restrictionScope === RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED
+  );
+  ok("FIXTURE_E_SHOULDER_NOT_CLOSURE", eEv.titleCs === "PRÁCE NA SILNICI");
+
+  // F) porouchané vozidlo + neprůjezdná krajnice
+  const fImpact =
+    "D2, km 25–25,1, ve směru Bratislava (SK), porouchané vozidlo, zdržení, neprůjezdná zpevněná krajnice, překážka na vozovce, průjezd se zvýšenou opatrností, defekt nákladní automobil";
+  const fEv = classifyEventPresentation({
+    road: "D2",
+    eventType: "uzavirka",
+    impact: fImpact,
+  });
+  const fSum = buildTrafficSituationSummary({
+    road: "D2",
+    eventType: "uzavirka",
+    impact: fImpact,
+  });
+  ok(
+    "BROKEN_VEHICLE_PRIORITY_PASS",
+    fEv.kind === EVENT_KIND.OBSTACLE &&
+      /POROUCHANÉ VOZIDLO|PŘEKÁŽKA/i.test(fEv.titleCs) &&
+      fEv.kind !== EVENT_KIND.CLOSURE
+  );
+  ok(
+    "HARD_SHOULDER_BLOCKED_NOT_FULL_CLOSURE_PASS",
+    fEv.restrictionScope === RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED &&
+      fEv.kind !== EVENT_KIND.CLOSURE
+  );
+  ok(
+    "TRAFFIC_SUMMARY_CONDITION_THIRD_PASS",
+    /Porouchan/i.test(fSum) &&
+      /krajnice/i.test(fSum) &&
+      /zvýšenou opatrností/i.test(fSum)
+  );
+  ok("FIXTURE_F_BROKEN_NOT_CLOSURE", fEv.kind !== EVENT_KIND.CLOSURE);
+
+  // G) úplná uzavírka
+  const gEv = classifyEventPresentation({
+    eventType: "omezeni",
+    impact: "komunikace zcela uzavřena, silnice II/357",
+  });
+  ok(
+    "FULL_CLOSURE_REQUIRES_FULL_SCOPE_PASS",
+    gEv.kind === EVENT_KIND.CLOSURE &&
+      gEv.titleCs === "UZAVÍRKA" &&
+      analyzeRestrictionScope("komunikace zcela uzavřena") === RESTRICTION_SCOPE.FULL_ROAD_CLOSED
+  );
+  ok("FIXTURE_G_FULL_CLOSURE", gEv.kind === EVENT_KIND.CLOSURE);
+
+  // H) nehoda + úplná neprůjezdnost — keep both
+  const hImpact = "nehoda, komunikace zcela uzavřena, 2 osobní automobily";
+  const hEv = classifyEventPresentation({ eventType: "omezeni", impact: hImpact });
+  const hSum = buildTrafficSituationSummary({ eventType: "omezeni", impact: hImpact });
+  ok(
+    "FIXTURE_H_ACCIDENT_FULL_CLOSURE",
+    hEv.kind === EVENT_KIND.ACCIDENT &&
+      hEv.titleCs === "NEHODA" &&
+      (/uzavřen|neprůjezdn|Komunikace/i.test(hSum) ||
+        hEv.restrictionScope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED)
+  );
+
+  // Duplicate locality vs road
+  const dupDet = buildTrafficExpandedDetail({
+    road: "D1",
+    location: "D1",
+    eventType: "nehoda",
+    impact: "nehoda na D1",
+  });
+  ok(
+    "DUPLICATE_LOCALITY_ROAD_HIDDEN_PASS",
+    !(dupDet.rows || []).some((r) => r && r.key === "location") &&
+      (dupDet.rows || []).some((r) => r && r.key === "road" && r.value === "D1")
+  );
+  const keepLoc = buildTrafficExpandedDetail({
+    road: "D1",
+    location: "exit 203 Holubice",
+    eventType: "nehoda",
+    impact: "nehoda",
+  });
+  ok(
+    "LOCALITY_KEPT_WHEN_EXTRA",
+    (keepLoc.rows || []).some((r) => r && r.key === "location" && /Holubice/i.test(r.value || ""))
+  );
+
+  // Km order preserved (descending as in source)
+  const kmFacts = parseOfficialCommentFacts("D35, km 277,5–276,9, ve směru Olomouc");
+  const kmFacts2 = parseOfficialCommentFacts("D1, km 7,7–5,5, ve směru Praha");
+  ok(
+    "KM_ORDER_PRESERVED_PASS",
+    kmFacts.kilometerLabel === "km 277,5–276,9" &&
+      kmFacts2.kilometerLabel === "km 7,7–5,5" &&
+      !/Math\.(min|max).*kilometer|sortKm|kmSort/i.test(presenterSrc)
+  );
+
+  // FUTURE lifecycle independent of type
+  const fut = vmFrom({
+    lifecycleStatus: "FUTURE",
+    eventType: "prace",
+    road: "D35",
+    impact: "práce na silnici, levý jízdní pruh uzavřen",
+    validity: { validFrom: "2026-09-01T05:00:00.000Z" },
+  });
+  ok(
+    "FUTURE_LIFECYCLE_TYPE_INDEPENDENT_PASS",
+    fut.badge &&
+      /BUDOUCÍ/i.test(fut.badge.text || "") &&
+      fut.eventKind === EVENT_KIND.ROADWORKS
+  );
+
+  // Raw NDIC description preserved
+  const rawPres = buildTrafficCardPresentation({
+    road: "D1",
+    eventType: "nehoda",
+    impact: aImpact,
+    impactFull: aImpact,
+  });
+  ok(
+    "RAW_NDIC_DESCRIPTION_PRESERVED_PASS",
+    (rawPres.expanded.rows || []).some(
+      (r) =>
+        r &&
+        r.key === "sourceDescription" &&
+        /nehoda/i.test(String(r.value || "")) &&
+        /silný provoz/i.test(String(r.value || ""))
+    )
+  );
+
+  // Extra regressions for report keys
+  const qReg = classifyEventPresentation({
+    impact: "D1, tvoří se kolona, kolona 3 km",
+  });
+  ok("QUEUE_CARD_REGRESSION_PASS", qReg.kind === EVENT_KIND.QUEUE && qReg.titleCs === "KOLONA");
+  ok(
+    "ROADWORKS_CARD_REGRESSION_PASS",
+    classifyEventPresentation({ eventType: "prace", impact: "práce na silnici" }).kind ===
+      EVENT_KIND.ROADWORKS
+  );
+  ok(
+    "PRIMARY_CAUSE_HELPER",
+    analyzePrimaryCause(aImpact, { eventType: "kolona" }) === PRIMARY_CAUSE.ACCIDENT
+  );
+  ok(
+    "TRAFFIC_CONDITION_HELPER",
+    analyzeTrafficCondition("silný provoz") === TRAFFIC_CONDITION.HEAVY_TRAFFIC &&
+      analyzeTrafficCondition("kolona") === TRAFFIC_CONDITION.QUEUE
+  );
 }
 
 // --- Parking municipality registry + title single-render (2026-08-12) ---
@@ -1525,6 +1795,29 @@ console.log(
           "ACCIDENT_CARD_REGRESSION_PASS",
           "OBSTACLE_CARD_REGRESSION_PASS",
           "SMV_REGRESSION_PASS",
+          "SMV_CARD_REGRESSION_PASS",
+          "PARKING_CARD_REGRESSION_PASS",
+          "QUEUE_CARD_REGRESSION_PASS",
+          "ROADWORKS_CARD_REGRESSION_PASS",
+          "ACCIDENT_PRIORITY_OVER_TRAFFIC_CONDITION_PASS",
+          "HEAVY_TRAFFIC_NOT_QUEUE_PASS",
+          "QUEUE_REQUIRES_EXPLICIT_SOURCE_PASS",
+          "SINGLE_LANE_CLOSED_NOT_FULL_CLOSURE_PASS",
+          "SHOULDER_CLOSED_NOT_FULL_CLOSURE_PASS",
+          "HARD_SHOULDER_BLOCKED_NOT_FULL_CLOSURE_PASS",
+          "FULL_CLOSURE_REQUIRES_FULL_SCOPE_PASS",
+          "ROADWORKS_PRIORITY_WITH_SINGLE_LANE_CLOSURE_PASS",
+          "BROKEN_VEHICLE_PRIORITY_PASS",
+          "NO_DIRECTION_CLOSURE_FROM_SINGLE_LANE_PASS",
+          "NO_QUEUE_INFERENCE_FROM_DELAY_PASS",
+          "NO_QUEUE_INFERENCE_FROM_HEAVY_TRAFFIC_PASS",
+          "TRAFFIC_SUMMARY_CAUSE_FIRST_PASS",
+          "TRAFFIC_SUMMARY_SCOPE_SECOND_PASS",
+          "TRAFFIC_SUMMARY_CONDITION_THIRD_PASS",
+          "DUPLICATE_LOCALITY_ROAD_HIDDEN_PASS",
+          "KM_ORDER_PRESERVED_PASS",
+          "FUTURE_LIFECYCLE_TYPE_INDEPENDENT_PASS",
+          "RAW_NDIC_DESCRIPTION_PRESERVED_PASS",
           "TRAFFIC_CARD_SUITE_PASS",
           "TRAFFIC_CARD_REGRESSION_PASS",
         ].map((id) => {

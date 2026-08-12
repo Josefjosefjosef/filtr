@@ -50,7 +50,7 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-parking-muni-registry-v1-20260812";
+} from "./iu-traffic-overview-v1.js?v=ndic-event-priority-scope-v1-20260812";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;

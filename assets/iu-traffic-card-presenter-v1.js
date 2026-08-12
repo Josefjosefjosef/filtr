@@ -12,7 +12,7 @@
 import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-muni-registry-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-event-priority-scope-v1-20260812";
 
 export {
   matchParkingRegistry,
@@ -21,7 +21,7 @@ export {
   PARKING_REGISTRY_VERSION,
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-muni-registry-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=ndic-event-priority-scope-v1-20260812";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -47,10 +47,47 @@ export const ROAD_NUMBER_BADGE = Object.freeze({
 export const EVENT_KIND = Object.freeze({
   ACCIDENT: "accident",
   QUEUE: "queue",
+  HEAVY_TRAFFIC: "heavy_traffic",
   ROADWORKS: "roadworks",
   CLOSURE: "closure",
+  OBSTACLE: "obstacle",
   PARKING: "parking",
   WARNING: "warning",
+});
+
+/** Restriction / closure scope — independent of primary cause. */
+export const RESTRICTION_SCOPE = Object.freeze({
+  FULL_ROAD_CLOSED: "FULL_ROAD_CLOSED",
+  DIRECTION_CLOSED: "DIRECTION_CLOSED",
+  ALL_LANES_CLOSED: "ALL_LANES_CLOSED",
+  SINGLE_LANE_CLOSED: "SINGLE_LANE_CLOSED",
+  MULTIPLE_BUT_NOT_ALL_LANES_CLOSED: "MULTIPLE_BUT_NOT_ALL_LANES_CLOSED",
+  SHOULDER_CLOSED: "SHOULDER_CLOSED",
+  HARD_SHOULDER_CLOSED: "HARD_SHOULDER_CLOSED",
+  VERGE_CLOSED: "VERGE_CLOSED",
+  UNKNOWN: "UNKNOWN_RESTRICTION_SCOPE",
+  NONE: "NONE",
+});
+
+/** Primary cause of the situation (what happened). */
+export const PRIMARY_CAUSE = Object.freeze({
+  ACCIDENT: "ACCIDENT",
+  BROKEN_VEHICLE: "BROKEN_VEHICLE",
+  OBSTACLE: "OBSTACLE",
+  ROADWORKS: "ROADWORKS",
+  FULL_CLOSURE: "FULL_CLOSURE",
+  QUEUE: "QUEUE",
+  HEAVY_TRAFFIC: "HEAVY_TRAFFIC",
+  OTHER: "OTHER",
+});
+
+/** Traffic-flow condition (secondary to cause). */
+export const TRAFFIC_CONDITION = Object.freeze({
+  QUEUE: "QUEUE",
+  HEAVY_TRAFFIC: "HEAVY_TRAFFIC",
+  DELAY: "DELAY",
+  PASS_WITH_CARE: "PASS_WITH_CARE",
+  NONE: "NONE",
 });
 
 const EVENT_KIND_META = Object.freeze({
@@ -64,6 +101,11 @@ const EVENT_KIND_META = Object.freeze({
     asset: TRAFFIC_SIGN_ASSET.TRAFFIC_JAM,
     illustrationKey: "kolona",
   },
+  [EVENT_KIND.HEAVY_TRAFFIC]: {
+    titleCs: "SILNÝ PROVOZ",
+    asset: TRAFFIC_SIGN_ASSET.TRAFFIC_JAM,
+    illustrationKey: "kolona",
+  },
   [EVENT_KIND.ROADWORKS]: {
     titleCs: "PRÁCE NA SILNICI",
     asset: TRAFFIC_SIGN_ASSET.ROADWORKS,
@@ -73,6 +115,11 @@ const EVENT_KIND_META = Object.freeze({
     titleCs: "UZAVÍRKA",
     asset: TRAFFIC_SIGN_ASSET.CLOSURE,
     illustrationKey: "uzavirka",
+  },
+  [EVENT_KIND.OBSTACLE]: {
+    titleCs: "PŘEKÁŽKA NA VOZOVCE",
+    asset: TRAFFIC_SIGN_ASSET.WARNING,
+    illustrationKey: "prekazka",
   },
   [EVENT_KIND.PARKING]: {
     titleCs: "PARKOVIŠTĚ",
@@ -464,6 +511,7 @@ export function parseOfficialCommentFacts(rawText) {
     text.match(/\bkm\s+(\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(\d+(?:[.,]\d+)?)/i) ||
     text.match(/\bmezi\s+km\s+(\d+(?:[.,]\d+)?)\s+a\s+(\d+(?:[.,]\d+)?)/i);
   if (kmRange) {
+    // Preserve source order (e.g. km 277,5–276,9) — never Math.min/max sort.
     out.kilometerFrom = formatKmToken(kmRange[1]);
     out.kilometerTo = formatKmToken(kmRange[2]);
     out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
@@ -724,49 +772,292 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
   };
 }
 
+/**
+ * Explicit queue / convoy language only — never silný provoz / zdržení alone.
+ */
+export function hasExplicitQueueSource(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/tvoří se kolona|stojící kolona|kolonový provoz/i.test(text)) return true;
+  if (/\bkolona\s+\d+(?:[.,]\d+)?\s*km\b/i.test(text)) return true;
+  // Bare "kolona" as a clause token, not inside unrelated words.
+  if (/(?:^|[,;.\s])kolona(?:[,;.\s]|$)/i.test(text)) return true;
+  return false;
+}
+
+/**
+ * Hard/soft shoulder or verge closure — not a full carriageway closure.
+ */
+export function isShoulderOrVergeRestriction(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  const closedNear =
+    /(?:uzavřen[áaýéo]|uzavřená|neprůjezdn[áaýéo]|neprůjezdná)/i;
+  if (
+    /zpevněn[áa]\s+krajnice|odstavn[ýáé]\s+pruh|hard\s+shoulder/i.test(text) &&
+    closedNear.test(text)
+  ) {
+    return true;
+  }
+  if (/\bkrajnice\b/i.test(text) && closedNear.test(text) && !/\bjízdní\s+pruh/i.test(text)) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Single (or named) lane closed/blocked — not whole road/direction.
+ */
+export function isSingleLaneRestriction(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (
+    /(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh.{0,40}(?:uzavřen|neprůjezdn)/i.test(text) ||
+    /(?:uzavřen|neprůjezdn).{0,40}(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(text) ||
+    /neprůjezdn[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * True full-scope closure of road / direction / all lanes.
+ */
+export function isFullScopeClosure(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (isShoulderOrVergeRestriction(text) && !/úpln[áa]\s+uzavírk/i.test(text)) {
+    // Shoulder-only text is never full scope unless also explicit full closure.
+    if (!/(komunikace|silnice|dálnice|most).{0,30}(?:zcela\s+)?uzavřen/i.test(text)) {
+      return false;
+    }
+  }
+  if (isSingleLaneRestriction(text) && !/úpln[áa]\s+uzavírk/i.test(text)) {
+    if (
+      !/(komunikace|silnice|dálnice).{0,30}(?:zcela\s+)?uzavřen/i.test(text) &&
+      !/oba\s+směry.{0,20}uzavř/i.test(text) &&
+      !/všechny\s+jízdní\s+pruhy.{0,20}uzavř/i.test(text)
+    ) {
+      return false;
+    }
+  }
+  // Avoid \\b with Czech diacritics (JS \\w is ASCII-only).
+  if (/úpln[áa]\s+uzavírk/i.test(text)) return true;
+  if (/komunikace\s+(?:je\s+)?(?:zcela\s+)?uzavřen/i.test(text)) return true;
+  if (/(?:silnice|dálnice|most)\s+(?:je\s+)?(?:zcela\s+)?uzavřen/i.test(text)) return true;
+  if (/uzavřen[áao]\s+pro\s+veškerou\s+dopravu/i.test(text)) return true;
+  if (/oba\s+směry.{0,30}uzavř/i.test(text)) return true;
+  if (/všechny\s+jízdní\s+pruhy.{0,30}(?:uzavř|neprůjezdn)/i.test(text)) return true;
+  if (/neprůjezdn[áaý]\s+(?:komunikace|silnice|dálnice|úsek)\b/i.test(text)) return true;
+  return false;
+}
+
+export function analyzeRestrictionScope(rawText) {
+  const text = clean(rawText);
+  if (!text) return RESTRICTION_SCOPE.NONE;
+
+  if (
+    /zpevněn[áa]\s+krajnice|odstavn[ýáé]\s+pruh/i.test(text) &&
+    /(?:uzavřen|neprůjezdn)/i.test(text)
+  ) {
+    return RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED;
+  }
+  if (/\bkrajnice\b/i.test(text) && /(?:uzavřen|neprůjezdn)/i.test(text) && !/\bjízdní\s+pruh/i.test(text)) {
+    return RESTRICTION_SCOPE.SHOULDER_CLOSED;
+  }
+  if (/\btravn|sekání|zatravněn/i.test(text) && /\bkrajnice\b/i.test(text) && /uzavřen/i.test(text)) {
+    return RESTRICTION_SCOPE.VERGE_CLOSED;
+  }
+  if (isFullScopeClosure(text)) {
+    if (/oba\s+směry/i.test(text) || /uzavřen.{0,40}ve směru|ve směru.{0,40}uzavřen/i.test(text)) {
+      if (/oba\s+směry/i.test(text)) return RESTRICTION_SCOPE.FULL_ROAD_CLOSED;
+      // Direction closed only when not merely a single lane in that direction.
+      if (!isSingleLaneRestriction(text)) return RESTRICTION_SCOPE.DIRECTION_CLOSED;
+    }
+    if (/všechny\s+jízdní\s+pruhy/i.test(text)) return RESTRICTION_SCOPE.ALL_LANES_CLOSED;
+    return RESTRICTION_SCOPE.FULL_ROAD_CLOSED;
+  }
+  if (isSingleLaneRestriction(text)) return RESTRICTION_SCOPE.SINGLE_LANE_CLOSED;
+  if (/\bdva\s+jízdní\s+pruhy.{0,20}(?:uzavř|neprůjezdn)/i.test(text)) {
+    return RESTRICTION_SCOPE.MULTIPLE_BUT_NOT_ALL_LANES_CLOSED;
+  }
+  if (/(?:uzavřen|neprůjezdn|uzavírk)/i.test(text)) return RESTRICTION_SCOPE.UNKNOWN;
+  return RESTRICTION_SCOPE.NONE;
+}
+
+export function analyzeTrafficCondition(rawText) {
+  const text = clean(rawText);
+  if (!text) return TRAFFIC_CONDITION.NONE;
+  if (hasExplicitQueueSource(text)) return TRAFFIC_CONDITION.QUEUE;
+  if (/silný provoz|hustý provoz/i.test(text)) return TRAFFIC_CONDITION.HEAVY_TRAFFIC;
+  if (/průjezd se zvýšenou opatrností/i.test(text)) return TRAFFIC_CONDITION.PASS_WITH_CARE;
+  if (/zdržení/i.test(text)) return TRAFFIC_CONDITION.DELAY;
+  return TRAFFIC_CONDITION.NONE;
+}
+
+export function analyzePrimaryCause(rawText, input = {}) {
+  const text = clean(rawText);
+  const type = clean(input.eventType || input.category).toLowerCase();
+  const illustrationKey = clean(input.illustrationKey).toLowerCase();
+
+  if (
+    type === "nehoda" ||
+    illustrationKey === "nehoda" ||
+    /\baccident\b/.test(type) ||
+    /\bnehoda\b/i.test(text) ||
+    /\bhavarovan/i.test(text)
+  ) {
+    return PRIMARY_CAUSE.ACCIDENT;
+  }
+  if (
+    /porouchan(?:é|ý|á)?\s+vozidlo|porucha\s+NA|\bdefekt\b/i.test(text) ||
+    (/porouchan/i.test(text) && /\b(NA|nákladní|vozidlo)\b/i.test(text))
+  ) {
+    return PRIMARY_CAUSE.BROKEN_VEHICLE;
+  }
+  if (
+    type === "prekazka" ||
+    illustrationKey === "prekazka" ||
+    /překážka\s+na\s+vozovce/i.test(text)
+  ) {
+    return PRIMARY_CAUSE.OBSTACLE;
+  }
+  if (
+    type === "prace" ||
+    illustrationKey === "prace" ||
+    /roadwork|maintenance|construction/.test(type) ||
+    /práce na silnici|stavební práce|údržba\s+(?:a\s+opravy|trav)|sekání\s+trávy|pracovní\s+místo|pomalu jedoucí vozidlo údržby/i.test(
+      text
+    )
+  ) {
+    return PRIMARY_CAUSE.ROADWORKS;
+  }
+  if (isFullScopeClosure(text) || type === "uzavirka" || illustrationKey === "uzavirka") {
+    // Typed uzavirka alone is not enough if blob is shoulder/lane-only.
+    if (isFullScopeClosure(text)) return PRIMARY_CAUSE.FULL_CLOSURE;
+    if (
+      (type === "uzavirka" || illustrationKey === "uzavirka") &&
+      !isShoulderOrVergeRestriction(text) &&
+      !isSingleLaneRestriction(text)
+    ) {
+      return PRIMARY_CAUSE.FULL_CLOSURE;
+    }
+  }
+  if (hasExplicitQueueSource(text)) return PRIMARY_CAUSE.QUEUE;
+  if (/silný provoz|hustý provoz/i.test(text)) return PRIMARY_CAUSE.HEAVY_TRAFFIC;
+  return PRIMARY_CAUSE.OTHER;
+}
+
+function packEventKind(kind, facts, analysis, titleOverride) {
+  const base = { ...EVENT_KIND_META[kind], kind };
+  if (titleOverride) base.titleCs = titleOverride;
+  return {
+    ...base,
+    facts,
+    primaryCause: analysis.primaryCause,
+    restrictionScope: analysis.restrictionScope,
+    trafficCondition: analysis.trafficCondition,
+  };
+}
+
 export function classifyEventPresentation(input = {}) {
   const type = clean(input.eventType || input.category).toLowerCase();
   const illustrationKey = clean(input.illustrationKey).toLowerCase();
   const blob = sourceBlob(input);
   const facts = parseOfficialCommentFacts(blob);
 
+  const primaryCause = analyzePrimaryCause(blob, input);
+  const restrictionScope = analyzeRestrictionScope(blob);
+  const trafficCondition = analyzeTrafficCondition(blob);
+  const analysis = { primaryCause, restrictionScope, trafficCondition };
+
+  const pack = (kind, titleOverride) => packEventKind(kind, facts, analysis, titleOverride);
+
   // Parking occupancy / facility status — before generic omezeni/warning fallback.
-  // False-positive road events that only mention parking are excluded inside the helper.
   if (isParkingOccupancySituation(input, facts)) {
-    const meta = { ...EVENT_KIND_META[EVENT_KIND.PARKING] };
-    meta.titleCs = "PARKOVIŠTĚ";
-    return { kind: EVENT_KIND.PARKING, ...meta, facts };
+    return pack(EVENT_KIND.PARKING, "PARKOVIŠTĚ");
   }
 
-  if (type === "nehoda" || illustrationKey === "nehoda" || /\baccident\b/.test(type)) {
-    return { kind: EVENT_KIND.ACCIDENT, ...EVENT_KIND_META[EVENT_KIND.ACCIDENT], facts };
+  // --- Cause-first classification (scope/condition are secondary layers) ---
+  if (primaryCause === PRIMARY_CAUSE.ACCIDENT) {
+    return pack(EVENT_KIND.ACCIDENT);
   }
-  if (type === "kolona" || illustrationKey === "kolona" || /abnormal|congest|queue/.test(type)) {
-    return { kind: EVENT_KIND.QUEUE, ...EVENT_KIND_META[EVENT_KIND.QUEUE], facts };
+
+  if (primaryCause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
+    return pack(EVENT_KIND.OBSTACLE, "POROUCHANÉ VOZIDLO");
   }
-  if (type === "prace" || illustrationKey === "prace" || /roadwork|maintenance|construction/.test(type)) {
-    return { kind: EVENT_KIND.ROADWORKS, ...EVENT_KIND_META[EVENT_KIND.ROADWORKS], facts };
+  if (primaryCause === PRIMARY_CAUSE.OBSTACLE) {
+    return pack(EVENT_KIND.OBSTACLE);
   }
-  if (type === "uzavirka" || illustrationKey === "uzavirka" || /closure/.test(type)) {
-    return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE], facts };
+
+  if (primaryCause === PRIMARY_CAUSE.ROADWORKS) {
+    return pack(EVENT_KIND.ROADWORKS);
   }
+
+  // Full-scope closure only — never from shoulder / single-lane wording alone.
   if (
-    /\búpln[áa]\s+uzavírk/i.test(blob) ||
-    /\buzavírk/i.test(blob) ||
-    /\buzavř/i.test(blob) ||
-    /\bneprůjezdn/i.test(blob)
+    primaryCause === PRIMARY_CAUSE.FULL_CLOSURE ||
+    restrictionScope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED ||
+    restrictionScope === RESTRICTION_SCOPE.DIRECTION_CLOSED ||
+    restrictionScope === RESTRICTION_SCOPE.ALL_LANES_CLOSED
   ) {
-    if (type === "omezeni" || type === "prekazka" || type === "doprava" || !type) {
-      return { kind: EVENT_KIND.CLOSURE, ...EVENT_KIND_META[EVENT_KIND.CLOSURE], facts };
+    if (
+      restrictionScope !== RESTRICTION_SCOPE.SINGLE_LANE_CLOSED &&
+      restrictionScope !== RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED &&
+      restrictionScope !== RESTRICTION_SCOPE.SHOULDER_CLOSED &&
+      restrictionScope !== RESTRICTION_SCOPE.VERGE_CLOSED &&
+      (isFullScopeClosure(blob) ||
+        ((type === "uzavirka" || illustrationKey === "uzavirka") &&
+          !isShoulderOrVergeRestriction(blob) &&
+          !isSingleLaneRestriction(blob)))
+    ) {
+      return pack(EVENT_KIND.CLOSURE);
     }
   }
-  if (/silný provoz|tvoří se kolona|\bkolona\b/i.test(blob) && (type === "omezeni" || type === "doprava")) {
-    return { kind: EVENT_KIND.QUEUE, ...EVENT_KIND_META[EVENT_KIND.QUEUE], facts };
+
+  // Explicit queue only — never silný provoz / zdržení / NDIC type=kolona alone.
+  if (
+    (primaryCause === PRIMARY_CAUSE.QUEUE || trafficCondition === TRAFFIC_CONDITION.QUEUE) &&
+    hasExplicitQueueSource(blob)
+  ) {
+    return pack(EVENT_KIND.QUEUE);
   }
-  if (type === "omezeni" || type === "objizdka" || type === "prekazka" || type === "sjizdnost") {
-    return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING], facts };
+
+  if (
+    primaryCause === PRIMARY_CAUSE.HEAVY_TRAFFIC ||
+    trafficCondition === TRAFFIC_CONDITION.HEAVY_TRAFFIC
+  ) {
+    return pack(EVENT_KIND.HEAVY_TRAFFIC);
   }
-  return { kind: EVENT_KIND.WARNING, ...EVENT_KIND_META[EVENT_KIND.WARNING], facts };
+
+  // NDIC typed categories when blob did not yield a stronger cause.
+  if (type === "prace" || illustrationKey === "prace") return pack(EVENT_KIND.ROADWORKS);
+  if (type === "nehoda" || illustrationKey === "nehoda") return pack(EVENT_KIND.ACCIDENT);
+  if (
+    (type === "uzavirka" || illustrationKey === "uzavirka") &&
+    !isShoulderOrVergeRestriction(blob) &&
+    !isSingleLaneRestriction(blob)
+  ) {
+    return pack(EVENT_KIND.CLOSURE);
+  }
+  if (type === "prekazka" || illustrationKey === "prekazka") return pack(EVENT_KIND.OBSTACLE);
+  if (type === "kolona" || illustrationKey === "kolona") {
+    if (hasExplicitQueueSource(blob)) return pack(EVENT_KIND.QUEUE);
+    // NDIC type=kolona must not upgrade silný provoz / zdržení into KOLONA.
+    if (/silný provoz|hustý provoz/i.test(blob)) return pack(EVENT_KIND.HEAVY_TRAFFIC);
+    if (/zdržení/i.test(blob)) {
+      // Fall through — delay alone is not a queue.
+    } else {
+      // Empty blob or other text: trust structural DATEX/NDIC type.
+      return pack(EVENT_KIND.QUEUE);
+    }
+  }
+
+  if (type === "omezeni" || type === "objizdka" || type === "sjizdnost" || type === "doprava") {
+    return pack(EVENT_KIND.WARNING);
+  }
+  return pack(EVENT_KIND.WARNING);
 }
 
 /**
@@ -814,7 +1105,8 @@ function finalizeSentences(parts) {
 }
 
 /**
- * Short complete summary — never ends with "…" from truncation.
+ * Short complete summary — cause → restriction scope → traffic condition.
+ * Never ends with "…" from truncation. Never invents kolona/uzavírka směru.
  */
 export function buildTrafficSituationSummary(input = {}) {
   const event = classifyEventPresentation(input);
@@ -823,15 +1115,71 @@ export function buildTrafficSituationSummary(input = {}) {
     clean(input.impactFull) || clean(input.impact) || clean(input.summaryFull) || clean(input.summary) || ""
   );
   const source = expandTrafficAbbreviationsCs(raw);
+  const scope = event.restrictionScope || analyzeRestrictionScope(source);
+  const condition = event.trafficCondition || analyzeTrafficCondition(source);
+  const cause = event.primaryCause || analyzePrimaryCause(source, input);
 
   if (event.kind === EVENT_KIND.PARKING) {
     return resolveParkingLiveStatus(input, facts).collapsedText;
   }
 
-  if (event.kind === EVENT_KIND.QUEUE) {
-    const bits = [];
-    if (/silný provoz/i.test(source)) bits.push("Silný provoz");
-    if (/tvoří se kolona/i.test(source)) bits.push("Tvoří se kolona");
+  const causeBits = [];
+  const scopeBits = [];
+  const conditionBits = [];
+
+  // --- 1) Cause ---
+  if (cause === PRIMARY_CAUSE.ACCIDENT || event.kind === EVENT_KIND.ACCIDENT) {
+    const vehicleBits = source
+      .split(/[;,.]/)
+      .map(clean)
+      .filter((x) => x && /(?:\d+\s+)?(?:osobní|nákladní)\s+automobil|havarovan/i.test(x))
+      .slice(0, 2);
+    if (vehicleBits.length) {
+      causeBits.push("Nehoda " + vehicleBits.join(", ").replace(/^nehoda\s+/i, ""));
+    } else {
+      causeBits.push("Nehoda");
+    }
+  } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
+    if (/porucha\s+NA|nákladní|defekt/i.test(source)) {
+      causeBits.push("Porouchané nákladní vozidlo");
+    } else {
+      causeBits.push("Porouchané vozidlo");
+    }
+  } else if (cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE) {
+    if (/překážka\s+na\s+vozovce/i.test(source)) causeBits.push("Překážka na vozovce");
+    else causeBits.push("Překážka na vozovce");
+  } else if (cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS) {
+    if (/pomalu jedoucí vozidlo údržby/i.test(source)) {
+      causeBits.push("Pomalu jedoucí vozidlo údržby");
+    }
+    if (/sekání\s+trávy|údržba\s+trav/i.test(source)) {
+      causeBits.push("Probíhá sekání trávy a údržba travních porostů");
+    }
+    if (/práce na inženýrských sítích/i.test(source)) {
+      causeBits.push("Práce na inženýrských sítích");
+    }
+    if (/stavební práce/i.test(source) && !causeBits.length) causeBits.push("Stavební práce");
+    if (/práce na silnici|údržba a opravy/i.test(source) && !/sekání|údržba trav|pomalu jedoucí/i.test(causeBits.join(" "))) {
+      if (!causeBits.some((b) => /práce na silnici|stavební|údržba/i.test(b))) {
+        causeBits.unshift("Práce na silnici");
+      }
+    }
+    if (!causeBits.length) causeBits.push("Práce na silnici");
+  } else if (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) {
+    if (/úpln[áa]\s+uzavírk/i.test(source)) {
+      const road = clean(input.road);
+      if (road) causeBits.push("Úplná uzavírka silnice " + road);
+      else causeBits.push("Úplná uzavírka komunikace");
+    } else if (/oba směry/i.test(source)) {
+      causeBits.push("Silnice je uzavřena v obou směrech");
+    } else if (!source) {
+      causeBits.push("Silnice je uzavřena");
+    } else {
+      causeBits.push("Uzavírka komunikace");
+    }
+  } else if (event.kind === EVENT_KIND.QUEUE) {
+    if (/silný provoz|hustý provoz/i.test(source)) conditionBits.push("Silný provoz");
+    if (/tvoří se kolona/i.test(source)) conditionBits.push("Tvoří se kolona");
     const qKm =
       facts.queueLengthKm != null
         ? facts.queueLengthKm
@@ -840,71 +1188,79 @@ export function buildTrafficSituationSummary(input = {}) {
           : null;
     if (qKm != null && Number.isFinite(qKm)) {
       const km = qKm >= 10 ? String(Math.round(qKm)) : String(Math.round(qKm * 10) / 10).replace(".", ",");
-      bits.push("Kolona přibližně " + km + " km");
-    } else if (/kolona/i.test(source) && !bits.length) bits.push("Kolona");
-    if (bits.length) return finalizeSentences(bits);
-    return "Kolona.";
+      conditionBits.push("Kolona přibližně " + km + " km");
+    } else if (/kolona/i.test(source) && !conditionBits.some((b) => /kolona/i.test(b))) {
+      conditionBits.push("Kolona");
+    } else if (!conditionBits.length) {
+      conditionBits.push("Kolona");
+    }
+  } else if (event.kind === EVENT_KIND.HEAVY_TRAFFIC) {
+    conditionBits.push("Silný provoz");
   }
 
-  if (event.kind === EVENT_KIND.ACCIDENT) {
-    const bits = ["Nehoda"];
-    // Prefer expanded vehicle counts from trusted comment (OA → osobní automobil…).
-    const vehicleBits = source
-      .split(/[;,.]/)
-      .map(clean)
-      .filter((x) => x && /osobní automobil|nákladní automobil|neprůjezdn|porouchan/i.test(x))
-      .slice(0, 3);
-    bits.push(...vehicleBits);
-    for (const p of facts.situationPhrases) {
-      if (/nehoda/i.test(p)) continue;
-      if (vehicleBits.some((v) => v.toLowerCase().includes(p.toLowerCase().slice(0, 12)))) continue;
-      bits.push(p);
-    }
-    if (bits.length === 1 && source && !EMPTY_IMPACT_RE.test(source)) {
-      const clipped = source
-        .replace(/^nehoda[;,:]?\s*/i, "")
-        .split(/[,;.]/)
-        .map(clean)
-        .filter((x) => x && !/^od\s+\d/i.test(x) && x.length < 80)
-        .slice(0, 2);
-      bits.push(...clipped);
-    }
-    return finalizeSentences(bits);
-  }
-
-  if (event.kind === EVENT_KIND.ROADWORKS) {
-    const bits = [];
-    for (const p of facts.situationPhrases) bits.push(p);
-    if (!bits.length) {
-      if (/práce na inženýrských sítích/i.test(source)) bits.push("Práce na inženýrských sítích");
-      if (/provoz převeden do protisměru/i.test(source)) bits.push("Provoz převeden do protisměru");
-      if (/stavební práce/i.test(source)) bits.push("Stavební práce");
-      if (/práce na silnici/i.test(source) && !bits.length) bits.push("Práce na silnici");
-    }
-    if (!bits.length) bits.push("Práce na silnici");
-    return finalizeSentences(bits);
-  }
-
-  if (event.kind === EVENT_KIND.CLOSURE) {
-    if (/\búpln[áa]\s+uzavírk/i.test(source)) {
-      const road = clean(input.road);
-      if (road) return "Úplná uzavírka silnice " + road + ".";
-      const ul = source.match(/úplná uzavírka\s+ul\.\s*([^,;]{2,60})/i);
-      if (ul) return "Úplná uzavírka ulice " + clean(ul[1]) + ".";
-      return "Úplná uzavírka komunikace.";
-    }
-    if (/\boba směry\b/i.test(source)) return "Silnice je uzavřena v obou směrech.";
-    const bits = [];
-    for (const p of facts.situationPhrases) bits.push(p);
+  // --- 2) Restriction scope (never invent direction closure from a single lane) ---
+  if (scope === RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED) {
+    if (/neprůjezdn/i.test(source)) scopeBits.push("Neprůjezdná zpevněná krajnice");
+    else scopeBits.push("Uzavřený odstavný pruh");
+  } else if (scope === RESTRICTION_SCOPE.SHOULDER_CLOSED || scope === RESTRICTION_SCOPE.VERGE_CLOSED) {
+    scopeBits.push("Uzavřená krajnice");
+  } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
+    const lane =
+      source.match(/((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
+      source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i);
     const dir = facts.directionHuman || clean(input.direction);
-    if (dir) bits.push("uzavřeno ve směru " + dir);
-    if (bits.length) return finalizeSentences(bits);
-    return "Silnice je uzavřena.";
+    if (lane && /neprůjezdn/i.test(source)) {
+      scopeBits.push("Neprůjezdný " + clean(lane[1]).toLowerCase());
+    } else if (lane && dir) {
+      const L = clean(lane[1]);
+      scopeBits.push(L.charAt(0).toUpperCase() + L.slice(1) + " ve směru " + dir + " je uzavřen");
+    } else if (lane) {
+      const L = clean(lane[1]);
+      scopeBits.push(L.charAt(0).toUpperCase() + L.slice(1) + " je uzavřen");
+    } else {
+      scopeBits.push("Jeden jízdní pruh je uzavřen");
+    }
+  } else if (
+    scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED ||
+    scope === RESTRICTION_SCOPE.DIRECTION_CLOSED ||
+    scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED
+  ) {
+    if (scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED) {
+      scopeBits.push("Všechny jízdní pruhy jsou uzavřeny");
+    } else if (scope === RESTRICTION_SCOPE.DIRECTION_CLOSED) {
+      const dir = facts.directionHuman || clean(input.direction);
+      if (dir) scopeBits.push("Uzavřeno ve směru " + dir);
+      else scopeBits.push("Směr je uzavřen");
+    } else if (!causeBits.some((b) => /uzavírk|uzavřen/i.test(b))) {
+      scopeBits.push("Komunikace je uzavřena");
+    }
   }
+
+  // --- 3) Traffic condition (never upgrade delay/heavy → kolona) ---
+  if (condition === TRAFFIC_CONDITION.QUEUE && hasExplicitQueueSource(source)) {
+    if (/tvoří se kolona/i.test(source) && !conditionBits.some((b) => /kolona/i.test(b))) {
+      conditionBits.push("Tvoří se kolona");
+    } else if (!conditionBits.some((b) => /kolona/i.test(b))) {
+      conditionBits.push("Kolona");
+    }
+  } else if (condition === TRAFFIC_CONDITION.HEAVY_TRAFFIC) {
+    if (!conditionBits.some((b) => /silný provoz/i.test(b))) conditionBits.push("Silný provoz");
+  } else if (condition === TRAFFIC_CONDITION.PASS_WITH_CARE) {
+    conditionBits.push("Průjezd se zvýšenou opatrností");
+  } else if (condition === TRAFFIC_CONDITION.DELAY) {
+    conditionBits.push("Zdržení");
+  }
+
+  // Extra trusted phrases not yet covered (roadworks transfer etc.).
+  if (/provoz převeden do protisměru/i.test(source)) {
+    scopeBits.push("Provoz převeden do protisměru");
+  }
+
+  const ordered = [...causeBits, ...scopeBits, ...conditionBits];
+  if (ordered.length) return finalizeSentences(ordered);
 
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
   if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
-  // Prefer first complete clause(s), never ellipsis-truncate mid sentence.
   const clauses = source
     .split(/[.;]/)
     .map(clean)
@@ -1231,7 +1587,18 @@ export function buildTrafficExpandedDetail(input = {}) {
   );
   push("cityPart", "Městská část", facts.cityPart || (registry ? registry.cityPart : null));
   push("district", "Okres", input.district || facts.district);
-  push("location", "Lokalita", input.location);
+  {
+    const roadNorm = clean(input.road)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const locNorm = clean(input.location)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    // Hide LOKALITA when it only repeats the road number (e.g. Komunikace D1 + Lokalita D1).
+    if (!(roadNorm && locNorm && roadNorm === locNorm)) {
+      push("location", "Lokalita", input.location);
+    }
+  }
   const parkingDisplayName =
     (registry && registry.canonicalName) || facts.parkingName || null;
   if (parkingDisplayName) push("parkingName", "Parkoviště", parkingDisplayName);
