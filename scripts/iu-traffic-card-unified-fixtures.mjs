@@ -1199,6 +1199,27 @@ ok(
   });
   ok("FALSE_POSITIVE_WORKS", fpWorks.kind === EVENT_KIND.ROADWORKS);
 
+  const fpHouseClosure = classifyEventPresentation({
+    eventType: "omezeni",
+    summaryFull:
+      "místní komunikace, v katastru obce Hranice, okr. Přerov, omezení, stavební práce, Od 09.03.2026 07:00 Do 31.12.2026 23:59, „Parkovací dům Sodovkárna“ - uzavírka chodníku, Vydal: Městský úřad Hranice",
+  });
+  ok("FALSE_POSITIVE_HOUSE_CLOSURE", fpHouseClosure.kind !== EVENT_KIND.PARKING);
+
+  const liveNamed = buildTrafficCardPresentation({
+    eventType: "doprava",
+    summaryFull: "Nám. Msgre Šrámka, plně obsazeno, 11.08.2026 19:58:49",
+    summary: "Nám. Msgre Šrámka, plně obsazeno, 11.08.2026 19:58:49",
+  });
+  ok("LIVE_SUMMARY_FULL_KIND", liveNamed.event.kind === EVENT_KIND.PARKING);
+  ok("LIVE_SUMMARY_FULL_STATUS", liveNamed.situationSummary === "PLNĚ OBSAZENO");
+
+  const liveLetna = classifyEventPresentation({
+    eventType: "doprava",
+    summaryFull: "Letná, 40% obsazeno",
+  });
+  ok("LIVE_NAMED_OCC_KIND", liveLetna.kind === EVENT_KIND.PARKING);
+
   ok(
     "DEDUP_HELPER",
     dedupePresentationPhrases(
@@ -1223,7 +1244,7 @@ ok(
   ok("P_G_SUPPORTED", /P\+G/.test(pg.communication.besideLocality || ""));
   ok("GENERIC_PARKING_SUPPORTED", named.event.kind === EVENT_KIND.PARKING);
   ok("PARKING_HOUSE_SUPPORTED", house.event.kind === EVENT_KIND.PARKING);
-  ok("FALSE_POSITIVE_GUARD", fpLane.kind !== EVENT_KIND.PARKING && fpWorks.kind === EVENT_KIND.ROADWORKS);
+  ok("FALSE_POSITIVE_GUARD", fpLane.kind !== EVENT_KIND.PARKING && fpWorks.kind === EVENT_KIND.ROADWORKS && fpHouseClosure.kind !== EVENT_KIND.PARKING);
   ok("PRESENTATION_DUPLICATION_FIXED", !/Posledních pár.*Posledních pár/i.test(few.situationSummary || ""));
   ok("RAW_NDIC_DESCRIPTION_PRESERVED", /sourceDescription/.test(JSON.stringify(named.expanded.rows || [])) || true);
   ok(
