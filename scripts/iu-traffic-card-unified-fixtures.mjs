@@ -432,8 +432,9 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   const ev = classifyEventPresentation({ eventType: "doprava", impact });
   ok("pr_kind", ev.kind === EVENT_KIND.PARKING);
   ok("pr_asset", ev.asset === TRAFFIC_SIGN_ASSET.PARKING);
-  ok("pr_title", /PARKOVIŠTĚ\s*[—–-]\s*90\s*%\s*OBSAZENO/i.test(ev.titleCs));
+  ok("pr_title", ev.titleCs === "PARKOVIŠTĚ");
   ok("pr_title_no_name", !/ZLIČÍN/i.test(ev.titleCs));
+  ok("pr_title_no_status_dup", !/OBSAZENO/i.test(ev.titleCs));
   const sum = buildTrafficSituationSummary({ eventType: "doprava", impact });
   ok("pr_occ", /90\s*%/.test(sum));
   ok("pr_free_bound", /méně než 10/i.test(sum));
@@ -666,9 +667,15 @@ ok(
     eventType: "doprava",
     impact: "P+R Zličín, 90% obsazeno, méně než 10 volných parkovacích míst",
   });
-  ok("pr_title_status_collapsed", /90\s*%\s*OBSAZENO/i.test(prVm.eventTypeLabel || ""));
+  ok("pr_title_kind_only", prVm.eventTypeLabel === "PARKOVIŠTĚ");
+  ok(
+    "pr_status_in_summary",
+    /90\s*%\s*obsazeno/i.test(prVm.situationSummary || "") &&
+      /méně než\s*10\s*volných/i.test(prVm.situationSummary || "")
+  );
   ok("pr_beside_name", /P\+R Zličín/i.test(prVm.besideLocality || ""));
   ok("pr_kind_parking", prVm.eventKind === EVENT_KIND.PARKING);
+  ok("pr_no_place_line", !prVm.placeLine);
 
   const closureTown = buildLocalityHeaderModel({
     municipality: "Jimramov",
@@ -809,36 +816,212 @@ ok(
   });
   ok("parking_praha_sign", prFull.communication.municipalitySignLabel === "PRAHA");
   ok("parking_name_beside", prFull.communication.besideLocality === "P+R Kongresové centrum");
-  ok("parking_full_status", /PLNĚ OBSAZENO/i.test(prFull.event.titleCs));
+  ok("parking_full_status", /plně\s+obsazeno/i.test(prFull.situationSummary || ""));
+  ok("parking_title_kind_only", prFull.event.titleCs === "PARKOVIŠTĚ");
   ok("parking_type_not_restriction", prFull.event.kind === EVENT_KIND.PARKING);
-  ok("parking_no_invent_100", !/100\s*%/.test(prFull.event.titleCs));
+  ok("parking_no_invent_100", !/100\s*%/.test(prFull.situationSummary || ""));
+  ok("parking_no_place_line", !prFull.placeLine);
 
   const prPct = buildTrafficCardPresentation({
     municipality: "Praha",
     impact: "P+R Opatov, 60% obsazeno",
     eventType: "doprava",
   });
-  ok("parking_percent_status", /60\s*%\s*OBSAZENO/i.test(prPct.event.titleCs));
+  ok("parking_percent_status", /60\s*%\s*obsazeno/i.test(prPct.situationSummary || ""));
 
   const prUnk = buildTrafficCardPresentation({
     impact: "P+R Testoviště otevřeno",
     eventType: "parking",
   });
-  ok("parking_unknown_occ", prUnk.event.titleCs === "PARKOVIŠTĚ");
+  ok("parking_unknown_occ", /Informace o obsazenosti parkoviště/i.test(prUnk.situationSummary || ""));
+  ok("parking_unknown_title", prUnk.event.titleCs === "PARKOVIŠTĚ");
 
   const prVmCollapsed = vmFrom({
     municipality: "Praha",
     impact: "P+R Kongresové centrum Praha, plně obsazeno",
     eventType: "doprava",
   });
-  ok("parking_status_visible_collapsed", /PLNĚ OBSAZENO/i.test(prVmCollapsed.eventTypeLabel || ""));
+  ok("parking_status_visible_collapsed", /plně\s+obsazeno/i.test(prVmCollapsed.situationSummary || ""));
   ok(
     "parking_status_visible_expanded",
     (prVmCollapsed.expandedRows || []).some((r) => /PLNĚ OBSAZENO/i.test(String(r.value || "")))
   );
+  ok(
+    "parking_name_in_expanded",
+    (prVmCollapsed.expandedRows || []).some(
+      (r) => r && r.key === "parkingName" && /Kongresové centrum/i.test(String(r.value || ""))
+    )
+  );
 
   ok("second_bottom_action_is_follow", /data-act="traffic-follow"/.test(uiSrc) && /Sledovat/.test(uiSrc));
   ok("hide_action_present", /data-act="hide"/.test(uiSrc) && /Skrýt/.test(uiSrc));
+}
+
+// --- Parking card hierarchy (collapsed: muni + name / P + status / no MÍSTO dup) ---
+{
+  const cases = [
+    {
+      id: "rajska",
+      impact: "P+R Rajská zahrada, 90% obsazeno, méně než 10 volných parkovacích míst",
+      name: "P+R Rajská zahrada",
+      statusRe: /90\s*%\s*obsazeno.*méně než\s*10\s*volných/i,
+    },
+    {
+      id: "kotlarka",
+      impact: "P+R Kotlářka, 90% obsazeno, méně než 30 volných parkovacích míst",
+      name: "P+R Kotlářka",
+      statusRe: /90\s*%\s*obsazeno.*méně než\s*30\s*volných/i,
+    },
+    {
+      id: "holesovice",
+      impact: "P+R Holešovice, 70% obsazeno, méně než 50 volných parkovacích míst",
+      name: "P+R Holešovice",
+      statusRe: /70\s*%\s*obsazeno/i,
+    },
+    {
+      id: "kongres",
+      impact: "P+R Kongresové centrum Praha, plně obsazeno",
+      name: "P+R Kongresové centrum",
+      statusRe: /plně\s+obsazeno/i,
+    },
+  ];
+
+  let allMuni = true;
+  let allName = true;
+  let allStatus = true;
+  let allPlaceGone = true;
+  let allDupTitleGone = true;
+  for (const c of cases) {
+    const p = buildTrafficCardPresentation({
+      municipality: "Praha",
+      eventType: "doprava",
+      impact: c.impact,
+      validityLine: "12. 8. 2026 od 11:12 do 11:27",
+    });
+    const vm = vmFrom({
+      municipality: "Praha",
+      eventType: "doprava",
+      impact: c.impact,
+      validityLine: "12. 8. 2026 od 11:12 do 11:27",
+    });
+    if (p.communication.municipalitySignLabel !== "PRAHA") allMuni = false;
+    if (p.communication.besideLocality !== c.name) allName = false;
+    if (!c.statusRe.test(p.situationSummary || "")) allStatus = false;
+    if (p.placeLine) allPlaceGone = false;
+    if (/PARKOVIŠTĚ\s*[—\-–]/.test(p.event.titleCs || "")) allDupTitleGone = false;
+    if (/PARKOVIŠTĚ\s*[—\-–]/.test(vm.eventTypeLabel || "")) allDupTitleGone = false;
+    ok("parking_case_" + c.id + "_muni", p.communication.municipalitySignLabel === "PRAHA");
+    ok("parking_case_" + c.id + "_name", p.communication.besideLocality === c.name);
+    ok("parking_case_" + c.id + "_status", c.statusRe.test(p.situationSummary || ""));
+    ok("parking_case_" + c.id + "_no_place", !p.placeLine && !vm.placeLine);
+    ok("parking_case_" + c.id + "_kind_title", p.event.titleCs === "PARKOVIŠTĚ");
+    ok("parking_case_" + c.id + "_validity", /12\.\s*8\.\s*2026/.test(vm.validityLine || ""));
+  }
+
+  ok("PARKING_MUNICIPALITY_SIGN_PASS", allMuni);
+  ok("PARKING_NAME_FIRST_ROW_PASS", allName);
+  ok("PARKING_STATUS_VISIBLE_PASS", allStatus);
+  ok("PARKING_PLACE_BLOCK_REMOVED_PASS", allPlaceGone);
+  ok("PARKING_DUPLICATE_TITLE_REMOVED_PASS", allDupTitleGone);
+
+  ok(
+    "PARKING_ACTION_ROW_PASS",
+    uiSrc.includes("iuPdCard__actionsMap") &&
+      /data-act="traffic-follow"/.test(uiSrc) &&
+      /Sledovat/.test(uiSrc) &&
+      /data-act="hide"/.test(uiSrc) &&
+      /Skrýt/.test(uiSrc) &&
+      !/iuPdTrafficTop__map\$\{czMapMarkup\}/.test(uiSrc)
+  );
+  ok(
+    "PARKING_RESPONSIVE_PASS",
+    cssSrc.includes(".iuPdTrafficEventStack") &&
+      cssSrc.includes('data-iu-parking="1"') &&
+      /flex:\s*0\s+0\s+auto/.test(cssSrc.match(/\.iuPdMuniSign\s*\{[^}]+\}/)?.[0] || "") &&
+      /overflow-wrap:\s*anywhere/.test(
+        cssSrc.match(/\.iuPdTrafficCard\[data-iu-parking="1"\]\s+\.iuPdTrafficComm__beside\s*\{[^}]+\}/)?.[0] ||
+          ""
+      ) &&
+      uiSrc.includes("iuPdTrafficEventStack") &&
+      uiSrc.includes('data-iu-parking="1"') &&
+      uiSrc.includes("isParking")
+  );
+
+  // Regression: other card kinds still show place / event title path (not parking-only).
+  const mwVm = vmFrom({
+    road: "D1",
+    roadClass: "MOTORWAY",
+    eventType: "nehoda",
+    impact: "nehoda na D1, 2 osobní automobily",
+    impactFull: "nehoda na D1 u Holubic, 2 osobní automobily",
+  });
+  ok(
+    "MOTORWAY_CARD_REGRESSION_PASS",
+    mwVm.roadBadge.numberBadge === "motorway" &&
+      !!mwVm.roadBadge.roadTypeIcon &&
+      mwVm.eventKind === EVENT_KIND.ACCIDENT &&
+      /NEHODA/i.test(mwVm.eventTypeLabel || "")
+  );
+
+  const roadVm = vmFrom({
+    road: "II/291",
+    roadClass: "CLASS_II",
+    municipality: "Nové Město pod Smrkem",
+    eventType: "omezeni",
+    impact: "Omezení tonáže na silnici II/291.",
+  });
+  ok(
+    "ROAD_CARD_REGRESSION_PASS",
+    roadVm.roadBadge.numberBadge === "road" &&
+      roadVm.municipalitySignLabel === "NOVÉ MĚSTO POD SMRKEM" &&
+      !!roadVm.placeLine
+  );
+
+  const closureVm = vmFrom({
+    municipality: "Jimramov",
+    road: "II/357",
+    eventType: "omezeni",
+    impact: "úplná uzavírka silnice II/357",
+  });
+  ok(
+    "CLOSURE_CARD_REGRESSION_PASS",
+    closureVm.eventKind === EVENT_KIND.CLOSURE &&
+      /uzavírk/i.test(closureVm.situationSummary || "") &&
+      closureVm.municipalitySignLabel === "JIMRAMOV"
+  );
+
+  const smvPres = buildTrafficCardPresentation({
+    road: "I/11",
+    municipality: "Ostrava",
+    isMotorVehicleRoad: true,
+    impact: "ulice Rudná, Ostrava",
+  });
+  ok(
+    "SMV_REGRESSION_PASS",
+    smvPres.roadPresentation.showMotorVehiclesIcon === true &&
+      smvPres.communication.roadTypeIconFirst === true &&
+      smvPres.communication.municipalitySignLabel === "OSTRAVA"
+  );
+
+  ok(
+    "TRAFFIC_CARD_SUITE_PASS",
+    allMuni &&
+      allName &&
+      allStatus &&
+      allPlaceGone &&
+      allDupTitleGone &&
+      mwVm.eventKind === EVENT_KIND.ACCIDENT &&
+      !!roadVm.placeLine &&
+      closureVm.eventKind === EVENT_KIND.CLOSURE &&
+      smvPres.roadPresentation.showMotorVehiclesIcon === true
+  );
+  ok(
+    "TRAFFIC_CARD_REGRESSION_PASS",
+    mwVm.roadBadge.numberBadge === "motorway" &&
+      !!roadVm.placeLine &&
+      closureVm.eventKind === EVENT_KIND.CLOSURE &&
+      smvPres.roadPresentation.showMotorVehiclesIcon === true
+  );
 }
 
 console.log(
@@ -848,6 +1031,26 @@ console.log(
       pass: results.filter((r) => r.pass).length,
       fail: fails.length,
       fails,
+      gates: Object.fromEntries(
+        [
+          "PARKING_MUNICIPALITY_SIGN_PASS",
+          "PARKING_NAME_FIRST_ROW_PASS",
+          "PARKING_STATUS_VISIBLE_PASS",
+          "PARKING_PLACE_BLOCK_REMOVED_PASS",
+          "PARKING_DUPLICATE_TITLE_REMOVED_PASS",
+          "PARKING_ACTION_ROW_PASS",
+          "PARKING_RESPONSIVE_PASS",
+          "MOTORWAY_CARD_REGRESSION_PASS",
+          "ROAD_CARD_REGRESSION_PASS",
+          "CLOSURE_CARD_REGRESSION_PASS",
+          "SMV_REGRESSION_PASS",
+          "TRAFFIC_CARD_SUITE_PASS",
+          "TRAFFIC_CARD_REGRESSION_PASS",
+        ].map((id) => {
+          const hit = results.find((r) => r.id === id);
+          return [id, hit && hit.pass ? "YES" : "NO"];
+        })
+      ),
     },
     null,
     2

@@ -1359,7 +1359,7 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   width: max-content;
   max-width: min(100%, 15.5rem);
   min-height: 1.55rem;
@@ -1381,12 +1381,46 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   box-shadow: none;
   filter: none;
 }
+.iuPdTrafficCard[data-iu-parking="1"] .iuPdTrafficComm__beside {
+  flex: 1 1 8rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
 .iuPdTrafficEventRow {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
   max-width: 100%;
+}
+.iuPdTrafficEventRow[data-kind="parking"] {
+  align-items: flex-start;
+}
+.iuPdTrafficEventStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+.iuPdTrafficEventStack__h {
+  color: var(--iu-pd-muted);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.iuPdTrafficEventStack__v {
+  color: var(--iu-pd-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-weight: 650;
+  overflow-wrap: break-word;
+  word-break: normal;
+  min-width: 0;
 }
 .iuPdTrafficEventSign {
   width: 40px;
