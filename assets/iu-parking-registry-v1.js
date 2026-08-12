@@ -335,6 +335,38 @@ export const PARKING_REGISTRY = Object.freeze([
     ]),
     lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
   }),
+  // Official TSK hl. m. Prahy garage / visitor parking — municipality only (no invented address).
+  // Evidence: TSK HMP parking price list on parking.praha.eu CDN lists this exact facility.
+  Object.freeze({
+    parkingId: "praha-hl-nadrazi-jizni-prednadrazi",
+    canonicalName: "Hlavní nádraží – jižní přednádraží",
+    municipality: "Praha",
+    cityPart: null,
+    street: null,
+    addressLine: null,
+    postalCode: null,
+    coordinates: null,
+    parkingType: "PUBLIC_PARKING",
+    parkAndRide: false,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "hlavni nadrazi jizni prednadrazi",
+      "hlavni nadrazi - jizni prednadrazi",
+      "hlavni nadrazi – jizni prednadrazi",
+      "hlavni nadrazi — jizni prednadrazi",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "TSK hl. m. Prahy — Ceník parkování 2026 (parking.praha.eu CDN)",
+        url: "https://cdn.parking.praha.eu/parking-praha/2026/02/TSK-cenik-parkovani-od-1.4.2026.pdf",
+      },
+      {
+        label: "Parking.praha.eu — oficiální portál parkování hl. m. Prahy",
+        url: "https://parking.praha.eu/cs/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
   // --- Ostrava (Ostravské komunikace, a.s. / SMO operated list) ---
   Object.freeze({
     parkingId: "ostrava-smetanovo-namesti",
@@ -582,9 +614,16 @@ export function matchParkingRegistry(input = {}) {
   const pr = String(blob).match(/\bP\s*\+\s*R\s+([^,;.]{2,80})/i);
   if (pr) nameHints.push("P+R " + String(pr[1]).trim());
 
+  // Pull named occupancy facility from trusted NDIC comment when structured name missing.
+  const namedOcc = String(blob).match(
+    /^(.{2,80}?)(?:\s*[,–—-]\s*|\s+)(?=\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných|posledních\s+pár\s+volných)/im
+  );
+  if (namedOcc) nameHints.push(String(namedOcc[1]).trim());
+
   /** @type {Map<string, ParkingRegistryEntry>} */
   const hits = new Map();
   for (const hint of nameHints) {
+    if (isAmbiguousParkingName(hint)) continue;
     for (const cand of aliasCandidatesFromName(hint)) {
       const entries = ALIAS_INDEX.get(cand);
       if (!entries || !entries.length) continue;
@@ -604,6 +643,8 @@ export function isAmbiguousParkingName(name) {
   if (!key) return false;
   // Bare "Černý Most" collides across Garáže Černý Most vs Černý Most 2 — no municipality-only row.
   if (key === "cerny most" || key === "p+r cerny most" || key === "pr cerny most") return true;
+  // Bare "Hlavní nádraží" is not unique across cities — only compound "… jižní přednádraží" is registered.
+  if (key === "hlavni nadrazi" || key === "p+r hlavni nadrazi" || key === "pr hlavni nadrazi") return true;
   return false;
 }
 

@@ -1698,12 +1698,34 @@ ok(
       skalka2.communication.municipalitySignLabel === "PRAHA" &&
       prokes.communication.municipalitySignLabel === "OSTRAVA" &&
       poklad.communication.municipalitySignLabel === "OSTRAVA" &&
-      pgLive.communication.municipalitySignLabel === "OSTRAVA"
+      pgLive.communication.municipalitySignLabel === "OSTRAVA" &&
+      hlNadrazi.communication.municipalitySignLabel === "PRAHA"
   );
   ok(
     "PARKING_MUNICIPALITY_NO_GUESS_PASS",
-    hlNadrazi.communication.municipalitySign == null &&
-      unknownPark.communication.municipalitySign == null
+    unknownPark.communication.municipalitySign == null &&
+      matchParkingRegistry({ parkingName: "Hlavní nádraží" }) == null &&
+      isAmbiguousParkingName("Hlavní nádraží") === true
+  );
+  ok(
+    "HL_NADRAZI_MUNICIPALITY_SIGN_PASS",
+    hlNadrazi.communication.municipalitySignLabel === "PRAHA" &&
+      /Hlavní nádraží/i.test(hlNadrazi.communication.besideLocality || "") &&
+      /jižní přednádraží/i.test(hlNadrazi.communication.besideLocality || "") &&
+      !/^ulice:/i.test(hlNadrazi.communication.besideLocality || "") &&
+      titleOnce(hlNadrazi) &&
+      (hlNadrazi.expanded.rows || []).some(
+        (r) => r && r.key === "municipality" && /^Praha$/i.test(String(r.value || ""))
+      ) &&
+      !(hlNadrazi.expanded.rows || []).some((r) => r && r.key === "parkingAddress") &&
+      !(hlNadrazi.expanded.rows || []).some(
+        (r) => r && r.key === "cityPart" && String(r.value || "").trim()
+      )
+  );
+  ok(
+    "HL_NADRAZI_LIVE_STATUS_UNCHANGED",
+    /10\s*%\s*obsazeno/i.test(hlNadrazi.situationSummary || "") &&
+      /méně než\s*20/i.test(hlNadrazi.situationSummary || "")
   );
 
   const inventoryIds = new Set(
@@ -1716,6 +1738,7 @@ ok(
       "praha-pr-opatov",
       "praha-pr-rajska-zahrada",
       "praha-pr-holesovice",
+      "praha-hl-nadrazi-jizni-prednadrazi",
       "ostrava-smetanovo-namesti",
       "ostrava-pod-ostravskou-univerzitou",
       "ostrava-dk-poklad-1",
@@ -1725,7 +1748,7 @@ ok(
       "ostrava-cerna-louka-pg",
     ].filter((id) => PARKING_REGISTRY.some((e) => e.parkingId === id))
   );
-  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 15 && PARKING_REGISTRY.length >= 20);
+  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 16 && PARKING_REGISTRY.length >= 21);
 
   ok(
     "PARKING_REGISTRY_EXACT_ALIAS_PASS",
@@ -1792,12 +1815,19 @@ ok(
       impact: n + ", 50% obsazeno",
     });
     if (n.startsWith("Hlavní nádraží")) {
-      ok("HLAVNI_NADRAZI_NO_GUESS", m == null);
+      ok(
+        "HLAVNI_NADRAZI_REGISTRY_MATCH",
+        m &&
+          m.parkingId === "praha-hl-nadrazi-jizni-prednadrazi" &&
+          m.municipality === "Praha" &&
+          m.addressLine == null
+      );
+      if (m && m.municipality) covered++;
       continue;
     }
     if (m && m.municipality) covered++;
   }
-  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 14);
+  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 15);
 
   void liveNames;
 }
@@ -1959,6 +1989,9 @@ console.log(
           "PARKING_TITLE_NO_DUPLICATE_WITHOUT_MUNICIPALITY_PASS",
           "PARKING_MUNICIPALITY_REGISTRY_PASS",
           "PARKING_MUNICIPALITY_NO_GUESS_PASS",
+          "HL_NADRAZI_MUNICIPALITY_SIGN_PASS",
+          "HL_NADRAZI_LIVE_STATUS_UNCHANGED",
+          "HLAVNI_NADRAZI_REGISTRY_MATCH",
           "PARKING_REGISTRY_INVENTORY_PASS",
           "PARKING_REGISTRY_EXACT_ALIAS_PASS",
           "PARKING_SKALKA_SKALKA_II_DISTINCT_PASS",
