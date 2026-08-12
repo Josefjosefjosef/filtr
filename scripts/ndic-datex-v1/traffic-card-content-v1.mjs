@@ -8,6 +8,7 @@ export const ROAD_CLASS = Object.freeze({
   CLASS_I: "CLASS_I",
   CLASS_II: "CLASS_II",
   CLASS_III: "CLASS_III",
+  E_ROAD: "E_ROAD",
   LOCAL: "LOCAL",
   UNKNOWN: "UNKNOWN",
 });
@@ -17,6 +18,7 @@ export const ROAD_CLASS_LABEL_CS = Object.freeze({
   CLASS_I: "Silnice I. třídy",
   CLASS_II: "Silnice II. třídy",
   CLASS_III: "Silnice III. třídy",
+  E_ROAD: "Evropský tah",
   LOCAL: "Místní komunikace",
   UNKNOWN: "Komunikace",
 });
@@ -51,6 +53,7 @@ function clean(s) {
 export function classifyRoadNumber(roadNumber) {
   const r = clean(roadNumber);
   if (!r) return ROAD_CLASS.UNKNOWN;
+  if (/^E\d+[A-Za-z]?$/i.test(r) || /^E\s*\d+/i.test(r)) return ROAD_CLASS.E_ROAD;
   if (/^D\d+[A-Za-z]?$/i.test(r) || /^Dálnice\s*D?\d+/i.test(r)) return ROAD_CLASS.MOTORWAY;
   if (/^III\/\d+/i.test(r)) return ROAD_CLASS.CLASS_III;
   if (/^II\/\d+/i.test(r)) return ROAD_CLASS.CLASS_II;

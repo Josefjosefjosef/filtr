@@ -50,14 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-lifecycle-overview-ended-v1-20260811";
-import {
-  trafficEventIllustrationSvg,
-  ROAD_BADGE_CLASS,
-} from "./iu-traffic-event-art-v1.js?v=traffic-card-final-redesign-v1-20260811";
+} from "./iu-traffic-overview-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
+import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-unified-traffic-cards-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "traffic-card-final-redesign-v1-20260811";
+const CACHE_BUST = "ndic-unified-traffic-cards-v1-20260812";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -527,9 +524,8 @@ function trafficFilterBarHtml(list) {
     `</div>` +
     `<div class="iuPdTrafficLegend" aria-hidden="true">` +
     `<span class="iuPdTrafficLegend__item iuPdRoadBadge--motorway">Dálnice</span>` +
-    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-i">I.</span>` +
-    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-ii">II.</span>` +
-    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--class-iii">III.</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--road">Silnice</span>` +
+    `<span class="iuPdTrafficLegend__item iuPdRoadBadge--e-road">E-tah</span>` +
     `<span class="iuPdTrafficLegend__item iuPdRoadBadge--local">Místní</span>` +
     `</div>` +
     `</div>`
@@ -685,80 +681,117 @@ function renderTrafficCardBody(ev, url, czMapMarkup) {
         badge.kind
       )}" role="status" aria-label="${esc(badge.aria)}">${esc(badge.text)}</span>`
     : "";
-  const roadMod =
-    ROAD_BADGE_CLASS[vm.roadBadge.roadClass] || ROAD_BADGE_CLASS.UNKNOWN || "unknown";
+  const numberMod =
+    (vm.roadBadge && vm.roadBadge.numberBadge) ||
+    ROAD_BADGE_CLASS[vm.roadBadge.roadClass] ||
+    ROAD_BADGE_CLASS.UNKNOWN ||
+    "unknown";
+  const roadTypeIcon =
+    vm.roadBadge && vm.roadBadge.roadTypeIcon
+      ? `<img class="iuPdTrafficRoadSign" src="${esc(vm.roadBadge.roadTypeIcon)}" alt="${esc(
+          vm.roadBadge.roadTypeIconAlt || ""
+        )}" width="28" height="28" loading="lazy" decoding="async" />`
+      : "";
   const roadBadge = vm.roadBadge.road
-    ? `<span class="iuPdRoadBadge iuPdRoadBadge--${esc(roadMod)}" title="${esc(
+    ? `<span class="iuPdRoadBadge iuPdRoadBadge--${esc(numberMod)}" title="${esc(
         vm.roadBadge.label
       )}">${esc(vm.roadBadge.road)}</span>`
     : "";
-  const placeTitle = vm.locality || vm.localityLine || "";
-  const localityTitle = placeTitle
-    ? url
-      ? `<a class="iuPdCard__title iuPrehledDne__cardTitle iuPdTraffic__locality" href="${esc(
-          url
-        )}" target="_blank" rel="noopener noreferrer" data-act="open-title">${esc(placeTitle)}</a>`
-      : `<span class="iuPdCard__title iuPrehledDne__cardTitle iuPdTraffic__locality" data-act="open-title">${esc(
-          placeTitle
-        )}</span>`
+  const dirBit = vm.direction
+    ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
-  const art = trafficEventIllustrationSvg(vm.illustrationKey);
-  const headline = vm.headline || vm.eventTypeLabel || "";
-  const lead = vm.leadText || vm.eventLine || "";
-  const rows = (vm.detailRows || [])
+  const localityFallback =
+    !vm.roadBadge.road && (vm.locality || vm.localityLine)
+      ? `<span class="iuPdTrafficComm__place">${esc(vm.locality || vm.localityLine)}</span>`
+      : "";
+  const streetBit =
+    vm.presentation &&
+    vm.presentation.communication &&
+    vm.presentation.communication.street
+      ? `<span class="iuPdTrafficComm__street">ulice ${esc(
+          vm.presentation.communication.street
+        )}</span>`
+      : "";
+  const eventSign = vm.eventSignSrc
+    ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
+    : "";
+  const eventTitle = vm.eventTypeLabel
+    ? `<span class="iuPdTrafficEventTitle">${esc(vm.eventTypeLabel)}</span>`
+    : "";
+  const placeLine = vm.placeLine || vm.communicationLine || "";
+  const placeBlock = placeLine
+    ? `<div class="iuPdTrafficBlock" data-tk="place">` +
+      `<div class="iuPdTrafficBlock__h">${esc(vm.placeLabel || "Místo")}</div>` +
+      `<div class="iuPdTrafficBlock__v">${esc(placeLine)}</div>` +
+      `</div>`
+    : "";
+  const situation = vm.situationSummary || vm.leadText || "";
+  const situationBlock = situation
+    ? `<div class="iuPdTrafficBlock" data-tk="situation">` +
+      `<div class="iuPdTrafficBlock__h">${esc(vm.situationLabel || "Dopravní situace")}</div>` +
+      `<div class="iuPdTrafficBlock__v">${esc(situation)}</div>` +
+      `</div>`
+    : "";
+  const validityBlock = vm.validityLine
+    ? `<div class="iuPdTrafficBlock" data-tk="validity">` +
+      `<div class="iuPdTrafficBlock__h">Platnost</div>` +
+      `<div class="iuPdTrafficBlock__v">${esc(vm.validityLine)}</div>` +
+      `</div>`
+    : "";
+  const expandedRows = (vm.expandedRows || [])
     .filter((r) => r && r.value && String(r.value).trim())
-    // Avoid repeating the same sentence already shown as the lead.
-    .filter((r) => {
-      if (!lead) return true;
-      if (r.key === "event" && lead.indexOf(String(r.value)) === 0) return false;
-      if (r.key === "road" && vm.roadBadge && vm.roadBadge.road) return false; // already in head badge
-      if (r.key === "locality" && placeTitle && String(r.value).indexOf(placeTitle) === 0) return false;
-      return String(r.value).trim() !== lead.trim();
-    })
     .map(
       (r) =>
-        `<div class="iuPdTrafficMeta__row" data-tk="${esc(r.key)}">` +
-        `<span class="iuPdTrafficMeta__k">${esc(r.label)}</span>` +
-        `<span class="iuPdTrafficMeta__v">${esc(r.value)}</span>` +
+        `<div class="iuPdTrafficMore__row" data-tk="${esc(r.key)}">` +
+        `<span class="iuPdTrafficMore__k">${esc(r.label)}</span>` +
+        `<span class="iuPdTrafficMore__v">${esc(r.value)}</span>` +
         `</div>`
     )
     .join("");
+  const moreBody =
+    (expandedRows ? `<div class="iuPdTrafficMore__grid">${expandedRows}</div>` : "") +
+    (vm.impactFull
+      ? `<p class="iuPdTrafficMore__body">${esc(vm.impactFull)}</p>`
+      : "");
   const more =
-    vm.showMore && vm.impactFull
+    vm.showMore && moreBody
       ? `<details class="iuPdTrafficMore">` +
-        `<summary aria-label="Zobrazit nebo skrýt úplný popis ŘSD/NDIC">` +
-        `<span class="iuPdTrafficMore__open">Více informací</span>` +
-        `<span class="iuPdTrafficMore__close">Méně informací</span>` +
+        `<summary aria-label="Zobrazit nebo skrýt úplné informace ŘSD/NDIC">` +
+        `<span class="iuPdTrafficMore__open">Zobrazit více</span>` +
+        `<span class="iuPdTrafficMore__close">Skrýt</span>` +
         `</summary>` +
-        `<p class="iuPdTrafficMore__body">${esc(vm.impactFull)}</p>` +
+        moreBody +
         `</details>`
       : "";
-  const note =
-    vm.locationNote
-      ? `<p class="iuPdTrafficNote">${esc(vm.locationNote)}</p>`
-      : "";
-  const source =
-    vm.sourceLabel
-      ? `<div class="iuPdTrafficSource">Zdroj: ${esc(vm.sourceLabel)}</div>`
-      : "";
+  const note = vm.locationNote ? `<p class="iuPdTrafficNote">${esc(vm.locationNote)}</p>` : "";
+  const source = vm.sourceLabel
+    ? `<div class="iuPdTrafficSource">Zdroj: ${esc(vm.sourceLabel)}</div>`
+    : "";
   return (
-    `<div class="iuPdTrafficCard">` +
+    `<div class="iuPdTrafficCard" data-iu-traffic-unified="1">` +
     `<div class="iuPdTrafficTop">` +
+    `<div class="iuPdTrafficTop__main">` +
     (warnBadge ? `<div class="iuPdTrafficTop__badge">${warnBadge}</div>` : "") +
+    `<div class="iuPdTrafficComm">` +
+    roadTypeIcon +
+    roadBadge +
+    dirBit +
+    localityFallback +
+    streetBit +
+    `</div>` +
+    `</div>` +
     (czMapMarkup ? `<div class="iuPdTrafficTop__map">${czMapMarkup}</div>` : "") +
     `</div>` +
-    `<div class="iuPdTrafficHead">${roadBadge}${localityTitle}</div>` +
-    `<div class="iuPdTrafficLeadRow">` +
-    `<div class="iuPdTrafficArt" data-ill="${esc(vm.illustrationKey)}" aria-hidden="true">${art}</div>` +
-    (headline
-      ? `<div class="iuPdTrafficLeadRow__text"><div class="iuPdTrafficHeadline">${esc(headline)}</div></div>`
-      : "") +
+    `<div class="iuPdTrafficEventRow" data-kind="${esc(vm.eventKind || "")}">` +
+    eventSign +
+    eventTitle +
     `</div>` +
-    (lead ? `<p class="iuPdTrafficLead">${esc(lead)}</p>` : "") +
-    (rows ? `<div class="iuPdTrafficMeta">${rows}</div>` : "") +
+    placeBlock +
+    situationBlock +
+    validityBlock +
+    source +
     more +
     note +
-    source +
     `</div>`
   );
 }

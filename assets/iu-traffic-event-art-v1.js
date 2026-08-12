@@ -4,13 +4,30 @@
  * Strokes use currentColor for light/dark CSS theming.
  */
 
+/**
+ * CSS modifiers for road NUMBER plates (Czech system):
+ * motorway → red, class I–III / SMV number → blue (road), E-road → green.
+ * Road-TYPE signs (dálnice / SMV) are separate PNG assets, not these badges.
+ */
 export const ROAD_BADGE_CLASS = Object.freeze({
   MOTORWAY: "motorway",
-  CLASS_I: "class-i",
-  CLASS_II: "class-ii",
-  CLASS_III: "class-iii",
+  CLASS_I: "road",
+  CLASS_II: "road",
+  CLASS_III: "road",
+  E_ROAD: "e-road",
+  ROAD: "road",
   LOCAL: "local",
   UNKNOWN: "unknown",
+});
+
+/** @deprecated Prefer numberBadge from presenter; kept for legend filters. */
+export const ROAD_CLASS_LEGEND = Object.freeze({
+  MOTORWAY: "motorway",
+  CLASS_I: "road",
+  CLASS_II: "road",
+  CLASS_III: "road",
+  E_ROAD: "e-road",
+  LOCAL: "local",
 });
 
 function svgWrap(inner) {

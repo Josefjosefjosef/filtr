@@ -64,16 +64,17 @@ function sampleCard(extra = {}) {
 }
 
 ok("ui_has_traffic_card_shell", uiSrc.includes("iuPdTrafficCard"));
-ok("ui_has_meta_rows", uiSrc.includes("iuPdTrafficMeta"));
-ok("ui_has_lead_fullwidth", uiSrc.includes("iuPdTrafficLead"));
+ok("ui_has_unified_blocks", uiSrc.includes("iuPdTrafficBlock") && uiSrc.includes("data-iu-traffic-unified"));
+ok("ui_has_situation_block", uiSrc.includes("Dopravní situace") || uiSrc.includes("situationLabel"));
 ok("ui_no_narrow_facts_render", !/iuPdTrafficFacts/.test(uiSrc) || !uiSrc.includes('class="iuPdTrafficFacts"'));
 ok("css_hides_legacy_narrow", /iuPdTrafficFacts[\s\S]{0,80}display:\s*none\s*!important/.test(cssSrc));
-ok("css_lead_fullwidth", cssSrc.includes(".iuPdTrafficLead"));
+ok("css_unified_blocks", cssSrc.includes(".iuPdTrafficBlock"));
 ok("css_more_a11y_toggle", cssSrc.includes(".iuPdTrafficMore__close"));
 ok("ui_escapes_full", /esc\(\s*vm\.impactFull\s*\)/.test(uiSrc));
 ok("ui_no_dangerously", !uiSrc.includes("dangerouslySetInnerHTML"));
 ok("ui_follow_only_traffic", /traffic-follow/.test(uiSrc) && /Sledovat/.test(uiSrc));
 ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
+ok("ui_zobrazit_vice", uiSrc.includes("Zobrazit více"));
 
 {
   const active = trafficBadgeModel({
@@ -91,6 +92,7 @@ ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
     lifecycleStatus: "ACTIVE",
     feed: { feedChangeType: "EVENT_CREATED" },
     category: "nehoda",
+    lastMeaningfulChangeAt: new Date().toISOString(),
   });
   ok("badge_new_kept", neu && neu.text.indexOf("NOVÁ") >= 0);
 }
@@ -98,9 +100,10 @@ ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
 {
   const r = trafficProjectionToFeedItem(sampleCard());
   const vm = buildTrafficCardViewModel(r.item.trafficV1);
-  ok("A_short_no_more", vm.showMore === false);
+  ok("A_short_has_summary", !!(vm.situationSummary || vm.leadText));
   ok("A_compact_locality", vm.localityLine.includes("Nové Město") && vm.localityLine.includes("Liberec"));
   ok("G_road_badge", vm.roadBadge.road === "II/291" && vm.roadBadge.roadClass === "CLASS_II");
+  ok("G_road_number_blue", vm.roadBadge.numberBadge === "road");
 }
 
 {

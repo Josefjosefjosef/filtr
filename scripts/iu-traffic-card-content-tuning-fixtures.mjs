@@ -153,7 +153,7 @@ function sampleCard(extra = {}) {
 
   const vm = buildTrafficCardViewModel(r.item.trafficV1);
   ok("vm_locality", vm.locality === "Mirošovice");
-  ok("vm_event_label", vm.eventTypeLabel === "Nehoda");
+  ok("vm_event_label", vm.eventTypeLabel === "NEHODA");
   ok("vm_no_delay", !(vm.quickBlocks || []).some((b) => b.key === "delay"));
   ok("vm_muni_block", (vm.quickBlocks || []).some((b) => b.key === "municipality"));
   ok("vm_locality_compact", vm.localityLine === "Mirošovice · okres Praha-východ");
@@ -184,7 +184,10 @@ function sampleCard(extra = {}) {
     "restriction_no_duplicate_lead",
     !(vm.quickBlocks || []).some((b) => b.key === "restriction" && b.body === vm.leadText)
   );
-  ok("lead_uses_short_comment", vm.leadText === "Omezení jednoho jízdního pruhu.");
+  ok(
+    "lead_uses_short_comment",
+    /Omezení jednoho jízdního pruhu/.test(vm.leadText || vm.situationSummary || "")
+  );
 }
 
 {
@@ -215,7 +218,7 @@ function sampleCard(extra = {}) {
 
 ok("art_svg", /viewBox="0 0 64 64"/.test(trafficEventIllustrationSvg("nehoda")));
 ok("art_neutral", /viewBox="0 0 64 64"/.test(trafficEventIllustrationSvg("nope")));
-ok("badge_map", ROAD_BADGE_CLASS.MOTORWAY === "motorway" && ROAD_BADGE_CLASS.CLASS_I === "class-i");
+ok("badge_map", ROAD_BADGE_CLASS.MOTORWAY === "motorway" && ROAD_BADGE_CLASS.CLASS_I === "road");
 
 {
   const r = trafficProjectionToFeedItem(sampleCard({ severity: "high" }));
@@ -249,9 +252,10 @@ ok("badge_map", ROAD_BADGE_CLASS.MOTORWAY === "motorway" && ROAD_BADGE_CLASS.CLA
     })
   );
   const vm = buildTrafficCardViewModel(short.item.trafficV1);
-  ok("short_no_more", vm.showMore === false);
+  ok("short_has_summary", !!(vm.situationSummary || vm.leadText));
   ok("short_locality_no_district", vm.localityLine === "Solnice");
   ok("short_no_direction_row", !(vm.detailRows || []).some((d) => d.key === "direction"));
+  ok("short_expanded_rows", Array.isArray(vm.expandedRows));
 }
 
 {
