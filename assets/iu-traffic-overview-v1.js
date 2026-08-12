@@ -16,7 +16,7 @@ import {
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-d0-prazsky-okruh-v1-20260812";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-d0-prazsky-okruh-v2-20260812";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
