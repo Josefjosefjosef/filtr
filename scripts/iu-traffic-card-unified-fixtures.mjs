@@ -688,7 +688,7 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   );
   ok(
     "U_OBCE_PLACE_PASS",
-    place === "23 · u obce Studenec · okres Třebíč"
+    place === "I/23 · u obce Studenec · okres Třebíč"
   );
   ok(
     "U_OBCE_DETAIL_OBEC_PASS",

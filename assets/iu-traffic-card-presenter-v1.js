@@ -570,6 +570,47 @@ export function preferClassedRoadNumber(structured, fromComment) {
 }
 
 /**
+ * Compose presentation road identity from bare number + trusted class hint.
+ * Never invents class. Never double-prefixes already classed roads (I/38 → I/I/38).
+ * Accepts CLASS_I / "I" / "Silnice I. třídy" (and II/III).
+ */
+export function composeRoadNumberWithClass(roadRaw, classHint) {
+  const road = clean(roadRaw).replace(/\s+/g, "");
+  if (!road) return null;
+  if (/^(I{1,3}|II|III)\//i.test(road)) {
+    const m = road.match(/^(I{1,3}|II|III)\/(\d{1,6}[A-Za-z]?)$/i);
+    return m ? m[1].toUpperCase() + "/" + m[2] : road;
+  }
+  if (/^D\d+/i.test(road)) return road.toUpperCase().replace(/^d/i, "D");
+  const bare = road.match(/^(\d{1,6}[A-Za-z]?)$/i);
+  if (!bare) return road;
+  const hint = clean(String(classHint ?? ""));
+  if (!hint) return road;
+  let prefix = null;
+  if (
+    /^CLASS_III$/i.test(hint) ||
+    /^III$/i.test(hint) ||
+    /Silnice\s+III(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "III";
+  } else if (
+    /^CLASS_II$/i.test(hint) ||
+    /^II$/i.test(hint) ||
+    /Silnice\s+II(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "II";
+  } else if (
+    /^CLASS_I$/i.test(hint) ||
+    /^I$/i.test(hint) ||
+    /Silnice\s+I(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "I";
+  }
+  if (!prefix) return road;
+  return prefix + "/" + bare[1];
+}
+
+/**
  * Morphology heuristic for rejecting municipality-board candidates.
  * NEVER alone sufficient to invent a street ("ulice: …").
  */
@@ -764,11 +805,21 @@ export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
   const fromComment =
     clean(facts.roadNumber) || extractRoadNumberFromOfficialComment(sourceBlob(input));
+  let resolved = null;
   if (structured && fromComment) {
-    return preferClassedRoadNumber(structured, fromComment);
+    resolved = preferClassedRoadNumber(structured, fromComment);
+  } else if (structured) {
+    resolved = structured;
+  } else {
+    resolved = fromComment || null;
   }
-  if (structured) return structured;
-  return fromComment || null;
+  if (!resolved) return null;
+  const classHint = input.roadClass || input.roadClassLabel || null;
+  if (classHint) {
+    const composed = composeRoadNumberWithClass(resolved, classHint);
+    if (composed) resolved = composed;
+  }
+  return resolved;
 }
 
 export function classifyLocationKindFromName(name) {
@@ -2202,6 +2253,17 @@ export function isSingleLaneRestriction(rawText) {
   ) {
     return true;
   }
+  // NDIC bare clause: "jízdní pruh uzavřen" (no L/R) — still a single-lane impact.
+  // Do not treat plural "jízdní pruhy" / "všechny jízdní pruhy" as single-lane.
+  if (
+    !/\bvšechny\s+jízdní\s+pruhy\b/i.test(text) &&
+    !/\bjízdní\s+pruhy\b/i.test(text) &&
+    (/\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(text))
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -2554,7 +2616,7 @@ function extractHeavyTrafficLengthKm(source, facts, input) {
  * Natural Czech accident lead from expanded source (count/type only if present).
  * Source-grounded only — never invent vehicle type from wrecked count alone.
  */
-function formatAccidentSituationLead(source) {
+export function formatAccidentSituationLead(source) {
   const text = clean(source);
 
   // Animal collision phrases (explicit in NDIC comment).
@@ -2562,15 +2624,26 @@ function formatAccidentSituationLead(source) {
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srn/i.test(text) ||
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srnou/i.test(text)
   ) {
-    return "Střet osobního automobilu se srnou";
+    return appendInjuryIfPresent("Střet osobního automobilu se srnou", text);
   }
   if (/střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+jelen/i.test(text)) {
-    return "Střet osobního automobilu s jelenem";
+    return appendInjuryIfPresent("Střet osobního automobilu s jelenem", text);
   }
   if (
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+(?:zvěří|zvířetem)/i.test(text)
   ) {
-    return "Střet osobního automobilu se zvěří";
+    return appendInjuryIfPresent("Střet osobního automobilu se zvěří", text);
+  }
+
+  // NDIC pair form without counts: "nákladní automobil x osobní automobil"
+  // Concrete types beat generic wrecked-count wording.
+  if (
+    /nákladní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*nákladní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /nákladní(?:ho)?\s+automobil(?:u)?\s+a\s+osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s+a\s+nákladní(?:ho)?\s+automobil(?:u)?/i.test(text)
+  ) {
+    return appendInjuryIfPresent("Nehoda nákladního a osobního automobilu", text);
   }
 
   const car = text.match(/(\d+)\s+osobní(?:ch)?\s+automobil(?:y|ů|u)?/i);
@@ -2582,48 +2655,55 @@ function formatAccidentSituationLead(source) {
     /(\d+)\s+havarovan(?:á|é|ých)\s+(?:vozidla|vozidlo|vozidel)/i
   );
 
+  let lead = null;
   if (car && truck) {
     const nc = Number(car[1]);
     const nt = Number(truck[1]);
-    if (nc === 1 && nt === 1) return "Nehoda osobního a nákladního automobilu";
-    if (Number.isFinite(nc) && Number.isFinite(nt) && nc > 0 && nt > 0) {
-      return "Nehoda " + nc + " osobních a " + nt + " nákladních vozidel";
+    if (nc === 1 && nt === 1) lead = "Nehoda osobního a nákladního automobilu";
+    else if (Number.isFinite(nc) && Number.isFinite(nt) && nc > 0 && nt > 0) {
+      lead = "Nehoda " + nc + " osobních a " + nt + " nákladních vozidel";
     }
-  }
-  if (car) {
+  } else if (car) {
     const n = Number(car[1]);
-    if (n === 1) return "Nehoda osobního automobilu";
-    if (n === 2) return "Nehoda dvou osobních automobilů";
-    if (n === 3) return "Nehoda tří osobních automobilů";
-    if (n === 4) return "Nehoda čtyř osobních automobilů";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " osobních automobilů";
-  }
-  if (truck) {
+    if (n === 1) lead = "Nehoda osobního automobilu";
+    else if (n === 2) lead = "Nehoda dvou osobních automobilů";
+    else if (n === 3) lead = "Nehoda tří osobních automobilů";
+    else if (n === 4) lead = "Nehoda čtyř osobních automobilů";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " osobních automobilů";
+  } else if (truck) {
     const n = Number(truck[1]);
-    if (n === 1) return "Nehoda nákladního vozidla";
-    if (n === 2) return "Nehoda dvou nákladních vozidel";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " nákladních vozidel";
-  }
-  if (wrecked) {
+    if (n === 1) lead = "Nehoda nákladního vozidla";
+    else if (n === 2) lead = "Nehoda dvou nákladních vozidel";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " nákladních vozidel";
+  } else if (wrecked) {
     const n = Number(wrecked[1]);
-    if (n === 1) return "Nehoda vozidla";
-    if (n === 2) return "Nehoda dvou vozidel";
-    if (n === 3) return "Nehoda tří vozidel";
-    if (n === 4) return "Nehoda čtyř vozidel";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " vozidel";
-  }
-
-  // Singular uncounted wrecked + explicit OA (after abbreviation expand).
-  if (
+    if (n === 1) lead = "Nehoda vozidla";
+    else if (n === 2) lead = "Nehoda dvou vozidel";
+    else if (n === 3) lead = "Nehoda tří vozidel";
+    else if (n === 4) lead = "Nehoda čtyř vozidel";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " vozidel";
+  } else if (
     /havarovan(?:é|á)\s+vozidlo/i.test(text) &&
     /osobní(?:ho)?\s+automobil/i.test(text)
   ) {
-    return "Nehoda osobního automobilu";
+    lead = "Nehoda osobního automobilu";
+  } else if (/havarovan(?:é|á)\s+vozidlo/i.test(text)) {
+    lead = "Nehoda. Havarované vozidlo";
+  } else {
+    lead = "Nehoda";
   }
-  if (/havarovan(?:é|á)\s+vozidlo/i.test(text)) {
-    return "Nehoda. Havarované vozidlo";
+  return appendInjuryIfPresent(lead, text);
+}
+
+/** Append explicit "se zraněním" — never invent count/severity/death. */
+function appendInjuryIfPresent(lead, text) {
+  const base = clean(lead);
+  if (!base) return "Nehoda";
+  if (/se\s+zraněním/i.test(base)) return base;
+  if (/\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text)) {
+    return base + " se zraněním";
   }
-  return "Nehoda";
+  return base;
 }
 
 /**
@@ -2861,6 +2941,25 @@ export function buildTrafficSituationSummary(input = {}) {
   // --- 1) Cause ---
   if (cause === PRIMARY_CAUSE.ACCIDENT || event.kind === EVENT_KIND.ACCIDENT) {
     causeBits.push(formatAccidentSituationLead(source));
+    // Accident secondary facts — never drop rescue / extrication / danger just because
+    // primary type is NEHODA. Never invent police/fire/helo/death/severity.
+    if (
+      /záchranné\s+a\s+vyprošťovací\s+práce|vyprošťovací\s+a\s+záchranné\s+práce/i.test(
+        source
+      )
+    ) {
+      circumstanceBits.push("Probíhají záchranné a vyprošťovací práce");
+    } else if (/záchranné\s+práce/i.test(source)) {
+      circumstanceBits.push("Probíhají záchranné práce");
+    } else if (/vyprošťovací\s+práce/i.test(source)) {
+      circumstanceBits.push("Probíhají vyprošťovací práce");
+    }
+    if (
+      /(?:^|[,;]\s*)nebezpečí(?:\s*[,;.]|$)/i.test(source) ||
+      /práce\s*,\s*nebezpečí/i.test(source)
+    ) {
+      circumstanceBits.push("Na místě je hlášeno nebezpečí");
+    }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     if (/porucha\s+NA|nákladní|defekt/i.test(source)) {
       causeBits.push("Porouchané nákladní vozidlo");
@@ -3218,6 +3317,16 @@ export function buildTrafficSituationSummary(input = {}) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " ve směru " + dir + " je uzavřen");
     } else if (lane) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " je uzavřen");
+    } else if (/\bjeden\s+jízdní\s+pruh\b/i.test(source)) {
+      scopeBits.push("Jeden jízdní pruh je uzavřen");
+    } else if (
+      /\bjízdní\s+pruh\s+uzavřen/i.test(source) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(source) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(source)
+    ) {
+      // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
+      if (/neprůjezdn/i.test(source)) scopeBits.push("Jízdní pruh je neprůjezdný");
+      else scopeBits.push("Jízdní pruh je uzavřen");
     } else {
       scopeBits.push("Jeden jízdní pruh je uzavřen");
     }
