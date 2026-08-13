@@ -17,7 +17,7 @@ import {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-rich-situation-summary-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
 
 export {
   matchParkingRegistry,
@@ -39,7 +39,7 @@ export {
   normalizeTunnelAliasKey,
   isAmbiguousTunnelName,
   isAmbiguousOutsideCityTunnelName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-rich-situation-summary-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -1084,7 +1084,9 @@ export function parseOfficialCommentFacts(rawText) {
     /práce na inženýrských sítích/i,
     /provoz převeden do protisměru/i,
     /zúžení vozovky na [^,;]{3,40}/i,
-    /neprůjezdn[ýáé]\s+[^,;]{3,40}/i,
+    // Height limits use Czech decimal commas — must not stop at "," in "3,7 m".
+    /neprůjezdn[áaý]\s+pro\s+vozidla\s+vyšší\s+než\s+\d+(?:[.,]\d+)?\s*m/i,
+    /neprůjezdn[ýáé]\s+[^,;.]{3,40}/i,
     /silný provoz/i,
     /pozor!\s*tvoří se kolona[^,;]{0,40}/i,
     /tvoří se kolona[^,;]{0,40}/i,
@@ -1226,10 +1228,14 @@ export function isShoulderOrVergeRestriction(rawText) {
 export function isSingleLaneRestriction(rawText) {
   const text = clean(rawText);
   if (!text) return false;
+  // Named L/R/C lane closed or impassable. "zúžená vozovka na jeden jízdní pruh"
+  // is narrowing (handled separately) — do not invent "uzavřen" from it.
   if (
     /(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh.{0,40}(?:uzavřen|neprůjezdn)/i.test(text) ||
     /(?:uzavřen|neprůjezdn).{0,40}(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(text) ||
-    /neprůjezdn[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text)
+    /neprůjezdn[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
+    /zúžen[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
+    /(?:levý|pravý|střední)\s+jízdní\s+pruh.{0,40}zúžen/i.test(text)
   ) {
     return true;
   }
@@ -1649,14 +1655,15 @@ function formatAccidentSituationLead(source) {
  * Secondary impact facts when not already the primary cause lead.
  * Keeps obstacle / wildlife / fire available beside accident leads.
  */
-function extractSecondaryImpactBits(source, cause, eventKind, causeBits) {
+function extractSecondaryImpactBits(source, cause, causeBits) {
   const text = clean(source);
   const lead = causeBits.join(" ");
   const bits = [];
+  // Skip only when the primary lead is already the obstacle (not when eventType
+  // is typed "prekazka" but cause resolved to broken vehicle / accident).
   if (
     /překážka\s+na\s+vozovce/i.test(text) &&
     cause !== PRIMARY_CAUSE.OBSTACLE &&
-    eventKind !== EVENT_KIND.OBSTACLE &&
     !/překážka/i.test(lead)
   ) {
     bits.push("Překážka na vozovce");
@@ -1669,6 +1676,12 @@ function extractSecondaryImpactBits(source, cause, eventKind, causeBits) {
   }
   if (/\bpožár\b/i.test(text) && !/požár/i.test(lead)) {
     bits.push("Požár");
+  }
+  if (
+    /Lidé na vozovce|osoby na vozovce/i.test(text) &&
+    !/lidé na vozovce|osoby na vozovce/i.test(lead)
+  ) {
+    bits.push("Lidé na vozovce");
   }
   return bits;
 }
@@ -1690,6 +1703,68 @@ function extractSituationCircumstanceBits(source) {
     bits.push("Na místě složky IZS");
   }
   if (/pravidelná\s+údržba/i.test(text)) bits.push("Pravidelná údržba");
+  const speed =
+    text.match(/\brychlost\s+snížen[ao]\s+na\s+(\d+)\s*km(?:\/h)?/i) ||
+    text.match(/\bsnížení\s+rychlosti\s+na\s+(\d+)\s*km(?:\/h)?/i) ||
+    text.match(/\bomezení\s+rychlosti\s+na\s+(\d+)\s*km(?:\/h)?/i);
+  if (speed) {
+    bits.push("Rychlost snížena na " + speed[1] + " km/h");
+  }
+  return bits;
+}
+
+/**
+ * Narrowing / shuttle / truck-only / height — source-grounded impact bits
+ * that must not be dropped when a generic roadworks/closure lead wins.
+ */
+function extractOperationalImpactBits(source, causeBits, scopeBits) {
+  const text = clean(source);
+  const have = causeBits.concat(scopeBits).join(" ");
+  const bits = [];
+
+  if (
+    /\bkyvadlový provoz\b/i.test(text) &&
+    !/kyvadlov/i.test(have)
+  ) {
+    bits.push("Kyvadlový provoz jedním jízdním pruhem");
+  } else if (
+    /\b(?:provoz\s+)?jedním jízdním pruhem\b/i.test(text) &&
+    !/jedním jízdním pruhem|kyvadlov/i.test(have)
+  ) {
+    bits.push("Provoz jedním jízdním pruhem");
+  } else if (
+    /\bzúžen(?:á|í)\s+vozovk[ay]\s+na\s+jeden\s+jízdní\s+pruh\b/i.test(text) &&
+    !/zúžen|jedním jízdním|kyvadlov/i.test(have)
+  ) {
+    bits.push("Zúžená vozovka na jeden jízdní pruh");
+  }
+
+  if (
+    /\buzavřen[oaýá]?\s+pro\s+(?:těžká\s+)?nákladní(?:\s+vozidla)?/i.test(text) &&
+    !/nákladní vozidla|těžká nákladní/i.test(have)
+  ) {
+    bits.push(
+      /\btěžká\s+nákladní/i.test(text)
+        ? "Uzavřeno pro těžká nákladní vozidla"
+        : "Uzavřeno pro nákladní vozidla"
+    );
+  }
+
+  const height =
+    text.match(
+      /\bneprůjezdn[áaý]\s+pro\s+vozidla\s+vyšší\s+než\s+(\d+(?:[.,]\d+)?)\s*m\b/i
+    ) ||
+    text.match(
+      /\bsnížení\s+povolené\s+výšky[^.]{0,60}?(\d+(?:[.,]\d+)?)\s*m\b/i
+    ) ||
+    text.match(
+      /\bomezení\s+výšky[^.]{0,60}?(\d+(?:[.,]\d+)?)\s*m\b/i
+    );
+  if (height && !/vyšší než|výšk/i.test(have)) {
+    const h = String(height[1]).replace(".", ",");
+    bits.push("Neprůjezdná pro vozidla vyšší než " + h + " m");
+  }
+
   return bits;
 }
 
@@ -1761,6 +1836,12 @@ export function buildTrafficSituationSummary(input = {}) {
       /uzavřen[ýáo]?\s+tunel(?:y)?(?:[,;.\s]|$)/i.test(source)
     ) {
       causeBits.push("Tunel je uzavřen");
+    } else if (
+      /\bmost\s+uzavřen\b/i.test(source) ||
+      /\buzavřen[ýáo]?\s+most\b/i.test(source) ||
+      /\búplná\s+uzavírka\s+mostu\b/i.test(source)
+    ) {
+      causeBits.push("Most je uzavřen");
     } else if (/úpln[áa]\s+uzavírk/i.test(source)) {
       const road = clean(input.road);
       if (road) causeBits.push("Úplná uzavírka silnice " + road);
@@ -1806,10 +1887,14 @@ export function buildTrafficSituationSummary(input = {}) {
   } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
     const lane =
       source.match(/((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
-      source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i);
+      source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
+      source.match(/zúžen[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i);
     const dir = facts.directionHuman || clean(input.direction);
+    const narrowed = /zúžen[ýáé]\s+(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(source);
     if (lane && /neprůjezdn/i.test(source)) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " je neprůjezdný");
+    } else if (lane && narrowed) {
+      scopeBits.push(capitalizeLanePhrase(lane[1]) + " je zúžený");
     } else if (lane && dir) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " ve směru " + dir + " je uzavřen");
     } else if (lane) {
@@ -1829,7 +1914,14 @@ export function buildTrafficSituationSummary(input = {}) {
       if (dir) scopeBits.push("Uzavřeno ve směru " + dir);
       else scopeBits.push("Směr je uzavřen");
     } else if (!causeBits.some((b) => /uzavírk|uzavřen/i.test(b))) {
-      scopeBits.push("Silnice je uzavřena");
+      if (
+        /\bmost\s+uzavřen\b/i.test(source) ||
+        /\buzavřen[ýáo]?\s+most\b/i.test(source)
+      ) {
+        scopeBits.push("Most je uzavřen");
+      } else {
+        scopeBits.push("Silnice je uzavřena");
+      }
     }
   } else if (
     // Typed/classified closure with bare "uzavřeno" and unknown scope — keep road closed
@@ -1838,7 +1930,14 @@ export function buildTrafficSituationSummary(input = {}) {
     /\buzavřeno\b/i.test(source) &&
     !causeBits.some((b) => /uzavřen/i.test(b))
   ) {
-    scopeBits.push("Silnice je uzavřena");
+    if (
+      /\bmost\s+uzavřen\b/i.test(source) ||
+      /\buzavřen[ýáo]?\s+most\b/i.test(source)
+    ) {
+      scopeBits.push("Most je uzavřen");
+    } else {
+      scopeBits.push("Silnice je uzavřena");
+    }
   }
 
   // --- 3) Traffic condition (never upgrade delay/heavy → kolona) ---
@@ -1860,14 +1959,30 @@ export function buildTrafficSituationSummary(input = {}) {
     if (!conditionBits.some((b) => /zdržení/i.test(b))) conditionBits.push("Zdržení");
   }
 
+  // Explicit delay must not disappear when care/heavy wins the primary condition slot.
+  if (
+    /(?:^|[,;]\s*)zdržení(?:[,;.]|$)/i.test(source) &&
+    !conditionBits.some((b) => /zdržení/i.test(b))
+  ) {
+    conditionBits.push("Zdržení");
+  }
+
   // Extra trusted phrases not yet covered (roadworks transfer etc.).
   if (/provoz převeden do protisměru/i.test(source)) {
     scopeBits.push("Provoz převeden do protisměru");
   }
 
-  // Obstacle / wildlife / fire as secondary impact (not dropped when cause=accident).
-  const secondaryImpact = extractSecondaryImpactBits(source, cause, event.kind, causeBits);
+  // Obstacle / wildlife / fire / people as secondary impact (not dropped when cause=accident).
+  const secondaryImpact = extractSecondaryImpactBits(source, cause, causeBits);
   for (const bit of secondaryImpact) {
+    if (!scopeBits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
+      scopeBits.push(bit);
+    }
+  }
+
+  // Shuttle / narrowing / truck-only / height — keep beside generic roadworks leads.
+  const operational = extractOperationalImpactBits(source, causeBits, scopeBits);
+  for (const bit of operational) {
     if (!scopeBits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
       scopeBits.push(bit);
     }
