@@ -552,6 +552,15 @@ jobs:
           SILVER_DATE_TIME_FIT_SKIP_WEBKIT: "1"
         run: npm run silver-home-date-time-input-fit-guard-checkout
 
+      - name: Datetime real-route geometry guard (Calendar + Tasks)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 25
+        env:
+          IU_DATETIME_GUARD_FAST: "1"
+        run: |
+          node node_modules/playwright/cli.js install --with-deps webkit
+          npm run iu-datetime-real-route-geometry-guard-checkout
+
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mobile-stability-guards
