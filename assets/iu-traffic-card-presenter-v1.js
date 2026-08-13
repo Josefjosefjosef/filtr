@@ -1129,6 +1129,15 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     }
   }
 
+  // Comma-separated street lists: "ulice: A, B, C, D" (do not stop at first comma).
+  const bareUliceList = text.match(/\bulice:?\s+((?:[^,;]+,\s*){1,}[^,;.]+)/i);
+  if (bareUliceList && !paren) {
+    const listChunk = clean(
+      String(bareUliceList[1]).split(/\s+(?:v\s+obci|okr\.|okres|Od\s+\d|Do\s+\d|Vydal)/i)[0]
+    );
+    for (const p of listChunk.split(/\s*,\s*/)) push(p);
+  }
+
   // Range / between patterns when bare list missed a genitive street name.
   const range = extractStreetRangeFromOfficialComment(text);
   if (range) {
@@ -1738,12 +1747,15 @@ export function parseOfficialCommentFacts(rawText) {
     } else if (streets.length) {
       out.streets = streets;
       if (streets.length === 1) {
-        out.street = streets[0];
-        out.streetMulti = false;
+        // multiStreetBlob may already know a longer comma list — do not demote.
+        if (!out.streetMulti) {
+          out.street = streets[0];
+          out.streetMulti = false;
+        }
       } else {
         // Prefer readable joined form over opaque "více ulic" for 2–3 streets.
         out.street = formatStreetDisplayList(streets);
-        out.streetMulti = streets.length >= 4;
+        out.streetMulti = streets.length >= 4 || out.streetMulti === true;
       }
     }
   }
