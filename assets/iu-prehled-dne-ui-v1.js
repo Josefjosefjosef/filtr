@@ -50,11 +50,11 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-collapsed-km-mandatory-v1-20260813";
+} from "./iu-traffic-overview-v1.js?v=ndic-rich-situation-summary-v1-20260813";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-collapsed-km-mandatory-v1-20260813";
+const CACHE_BUST = "ndic-rich-situation-summary-v1-20260813";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";

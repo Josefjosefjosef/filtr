@@ -17,7 +17,7 @@ import {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-collapsed-km-mandatory-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-rich-situation-summary-v1-20260813";
 
 export {
   matchParkingRegistry,
@@ -39,7 +39,7 @@ export {
   normalizeTunnelAliasKey,
   isAmbiguousTunnelName,
   isAmbiguousOutsideCityTunnelName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-collapsed-km-mandatory-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-rich-situation-summary-v1-20260813";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -1571,15 +1571,44 @@ function extractHeavyTrafficLengthKm(source, facts, input) {
 
 /**
  * Natural Czech accident lead from expanded source (count/type only if present).
+ * Source-grounded only — never invent vehicle type from wrecked count alone.
  */
 function formatAccidentSituationLead(source) {
   const text = clean(source);
+
+  // Animal collision phrases (explicit in NDIC comment).
+  if (
+    /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srn/i.test(text) ||
+    /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srnou/i.test(text)
+  ) {
+    return "Střet osobního automobilu se srnou";
+  }
+  if (/střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+jelen/i.test(text)) {
+    return "Střet osobního automobilu s jelenem";
+  }
+  if (
+    /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+(?:zvěří|zvířetem)/i.test(text)
+  ) {
+    return "Střet osobního automobilu se zvěří";
+  }
+
   const car = text.match(/(\d+)\s+osobní(?:ch)?\s+automobil(?:y|ů|u)?/i);
   const truck = text.match(
     /(\d+)\s+nákladní(?:ch)?\s+(?:automobil(?:y|ů|u)?|vozidel|vozidla|vozidlo)/i
   );
-  const wrecked = text.match(/(\d+)\s+havarovan(?:á|é|ých)\s+vozidel?/i);
+  // "vozidla" ≠ "vozidel" — previous vozidel? missed nominative plural.
+  const wrecked = text.match(
+    /(\d+)\s+havarovan(?:á|é|ých)\s+(?:vozidla|vozidlo|vozidel)/i
+  );
 
+  if (car && truck) {
+    const nc = Number(car[1]);
+    const nt = Number(truck[1]);
+    if (nc === 1 && nt === 1) return "Nehoda osobního a nákladního automobilu";
+    if (Number.isFinite(nc) && Number.isFinite(nt) && nc > 0 && nt > 0) {
+      return "Nehoda " + nc + " osobních a " + nt + " nákladních vozidel";
+    }
+  }
   if (car) {
     const n = Number(car[1]);
     if (n === 1) return "Nehoda osobního automobilu";
@@ -1596,11 +1625,52 @@ function formatAccidentSituationLead(source) {
   }
   if (wrecked) {
     const n = Number(wrecked[1]);
-    if (n === 1) return "Nehoda. Havarované vozidlo";
-    if (n === 2) return "Nehoda. Dvě havarovaná vozidla";
-    if (Number.isFinite(n) && n > 0) return "Nehoda. " + n + " havarovaná vozidla";
+    if (n === 1) return "Nehoda vozidla";
+    if (n === 2) return "Nehoda dvou vozidel";
+    if (n === 3) return "Nehoda tří vozidel";
+    if (n === 4) return "Nehoda čtyř vozidel";
+    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " vozidel";
+  }
+
+  // Singular uncounted wrecked + explicit OA (after abbreviation expand).
+  if (
+    /havarovan(?:é|á)\s+vozidlo/i.test(text) &&
+    /osobní(?:ho)?\s+automobil/i.test(text)
+  ) {
+    return "Nehoda osobního automobilu";
+  }
+  if (/havarovan(?:é|á)\s+vozidlo/i.test(text)) {
+    return "Nehoda. Havarované vozidlo";
   }
   return "Nehoda";
+}
+
+/**
+ * Secondary impact facts when not already the primary cause lead.
+ * Keeps obstacle / wildlife / fire available beside accident leads.
+ */
+function extractSecondaryImpactBits(source, cause, eventKind, causeBits) {
+  const text = clean(source);
+  const lead = causeBits.join(" ");
+  const bits = [];
+  if (
+    /překážka\s+na\s+vozovce/i.test(text) &&
+    cause !== PRIMARY_CAUSE.OBSTACLE &&
+    eventKind !== EVENT_KIND.OBSTACLE &&
+    !/překážka/i.test(lead)
+  ) {
+    bits.push("Překážka na vozovce");
+  }
+  if (
+    /zvěř\s+na\s+vozovce/i.test(text) &&
+    !/zvěř|srn|jelen/i.test(lead)
+  ) {
+    bits.push("Zvěř na vozovce");
+  }
+  if (/\bpožár\b/i.test(text) && !/požár/i.test(lead)) {
+    bits.push("Požár");
+  }
+  return bits;
 }
 
 function capitalizeLanePhrase(lane) {
@@ -1793,6 +1863,14 @@ export function buildTrafficSituationSummary(input = {}) {
   // Extra trusted phrases not yet covered (roadworks transfer etc.).
   if (/provoz převeden do protisměru/i.test(source)) {
     scopeBits.push("Provoz převeden do protisměru");
+  }
+
+  // Obstacle / wildlife / fire as secondary impact (not dropped when cause=accident).
+  const secondaryImpact = extractSecondaryImpactBits(source, cause, event.kind, causeBits);
+  for (const bit of secondaryImpact) {
+    if (!scopeBits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
+      scopeBits.push(bit);
+    }
   }
 
   // Order: main fact → traffic impact/scope → circumstance → condition.
