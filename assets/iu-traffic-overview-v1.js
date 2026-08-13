@@ -1093,7 +1093,24 @@ export function buildTrafficCardViewModel(trafficV1) {
 
   const detailRows = [];
   if (road) detailRows.push({ key: "road", label: "Komunikace", value: road });
-  if (localityLine) detailRows.push({ key: "locality", label: "Lokalita", value: localityLine });
+  // Never mirror municipality-only text as a separate Lokalita row.
+  if (
+    localityLine &&
+    localityLine !== municipality &&
+    !(municipality && district && localityLine === municipality + " · okres " + district && municipality === district)
+  ) {
+    // Keep district-enriched locality only when it adds info beyond Obec.
+    // If municipality name equals district name, "Beroun · okres Beroun" still echoes Obec — skip.
+    const muniOnlyEcho =
+      !!municipality &&
+      (localityLine === municipality ||
+        (district && municipality === district && localityLine === municipality + " · okres " + district));
+    if (!muniOnlyEcho) {
+      detailRows.push({ key: "locality", label: "Lokalita", value: localityLine });
+    }
+  } else if (localityLine && !municipality) {
+    detailRows.push({ key: "locality", label: "Lokalita", value: localityLine });
+  }
   if (dir) detailRows.push({ key: "direction", label: "Směr", value: dir });
   if (eventTypeLabel) detailRows.push({ key: "event", label: "Událost", value: eventTypeLabel });
   if (validityLine) detailRows.push({ key: "validity", label: "Platnost", value: validityLine });
