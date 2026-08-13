@@ -47,6 +47,43 @@ function clean(s) {
 }
 
 /**
+ * Strip orphan / unmatched parentheses from extracted locality tokens.
+ * Preserves balanced legitimate pairs (e.g. "Velký Újezd (u domu č. 100)").
+ */
+function sanitizeExtractedLocalityToken(raw) {
+  let s = clean(raw);
+  if (!s) return "";
+  s = s.replace(/^[\s({"'„\[]+/u, "");
+  let depth = 0;
+  let pass1 = "";
+  for (const ch of s) {
+    if (ch === "(") {
+      depth += 1;
+      pass1 += ch;
+    } else if (ch === ")") {
+      if (depth > 0) {
+        depth -= 1;
+        pass1 += ch;
+      }
+    } else {
+      pass1 += ch;
+    }
+  }
+  if (depth === 0) return clean(pass1);
+  const chars = Array.from(pass1);
+  const stack = [];
+  const drop = new Set();
+  for (let i = 0; i < chars.length; i += 1) {
+    if (chars[i] === "(") stack.push(i);
+    else if (chars[i] === ")") {
+      if (stack.length) stack.pop();
+    }
+  }
+  for (let i = 0; i < stack.length; i += 1) drop.add(stack[i]);
+  return clean(chars.filter((_, i) => !drop.has(i)).join(""));
+}
+
+/**
  * Derive road class from an official road number string (deterministic).
  * @param {string|null|undefined} roadNumber
  */
@@ -151,12 +188,15 @@ export function extractLocalityFromOfficialComment(summary) {
   const mOkr = s.match(/okr\.\s*([^,;]{2,60})/u);
   if (mOkr) district = clean(mOkr[1]);
 
+  // Exclude () from the capture — source wraps streets as "(ulice X)"; including
+  // ")" would leave an orphan closing paren on the extracted streetHint.
   const mStreet =
-    s.match(/\bv\s+ulici\s+([^,;]{2,60})/i) || s.match(/\bulice:?\s+([^,;]{2,60})/i);
+    s.match(/\bv\s+ulici\s+([^,;()]{2,60})/i) || s.match(/\bulice:?\s+([^,;()]{2,60})/i);
   if (mStreet) {
     let sn = clean(mStreet[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
     sn = clean(sn.split(/\s+okres\b/i)[0]);
+    sn = sanitizeExtractedLocalityToken(sn);
     if (sn) streetHint = sn;
   }
 

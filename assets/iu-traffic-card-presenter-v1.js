@@ -260,11 +260,60 @@ export function expandTrafficAbbreviationsCs(text) {
  * Strip source wrapper delimiters from extracted tokens (street, place, …).
  * Removes leading/trailing ()[]{},; — preserves Czech abbreviations like tř. / nám.
  */
+/**
+ * Remove parentheses that are extraction artifacts (orphan ) / unmatched (),
+ * while preserving legitimate balanced pairs such as "Velký Újezd (u domu č. 100)".
+ * Never does a blind global replace of ")" / "(".
+ */
+export function stripUnbalancedParentheses(raw) {
+  const s = String(raw || "");
+  if (!s) return "";
+  // Pass 1: drop closing ) that have no matching open.
+  let depth = 0;
+  let pass1 = "";
+  for (const ch of s) {
+    if (ch === "(") {
+      depth += 1;
+      pass1 += ch;
+    } else if (ch === ")") {
+      if (depth > 0) {
+        depth -= 1;
+        pass1 += ch;
+      }
+      // else: orphan closing — discard
+    } else {
+      pass1 += ch;
+    }
+  }
+  // Pass 2: drop opening ( that never closed.
+  if (depth === 0) return pass1;
+  const chars = Array.from(pass1);
+  const stack = [];
+  const drop = new Set();
+  for (let i = 0; i < chars.length; i += 1) {
+    if (chars[i] === "(") stack.push(i);
+    else if (chars[i] === ")") {
+      if (stack.length) stack.pop();
+    }
+  }
+  for (let i = 0; i < stack.length; i += 1) drop.add(stack[i]);
+  return chars.filter((_, i) => !drop.has(i)).join("");
+}
+
+/**
+ * Normalize a value extracted from official NDIC/ŘSD text.
+ * Strips wrapper punctuation and orphan parentheses from paren-wrapped source
+ * constructions like "(ulice Boskovická)" → "Boskovická", without destroying
+ * balanced legitimate parentheses inside the value.
+ */
 export function sanitizeExtractedValueToken(raw) {
   let s = clean(raw);
   if (!s) return "";
+  // Leading wrappers (quotes / brackets / open paren used as source envelope).
   s = s.replace(/^[\s({"'„\[]+/u, "");
-  s = s.replace(/[)\]}>]+$/g, "");
+  s = stripUnbalancedParentheses(s);
+  // Non-paren closers are rarely legitimate street/locality tokens.
+  s = s.replace(/[\]}>]+$/g, "");
   s = s.replace(/[,;]+$/g, "");
   s = s.replace(/["'“”]+$/g, "");
   // Drop a trailing period only when it is not a Czech abbreviation suffix.
@@ -908,7 +957,7 @@ export function resolveConfirmedStreet(input = {}, factsIn = null) {
   if (!structured) return null;
   if (looksLikeTruncatedFragment(structured) || /[()]$/.test(structured)) return null;
   if (/\s-\s*ulice\s+/i.test(structured) || /\sulice\s+/i.test(structured)) return null;
-  const location = clean(input.location);
+  const location = sanitizeExtractedValueToken(input.location);
   // Never treat generic locationLabel / TMC area as street.
   if (location && samePlaceName(structured, location)) return null;
   if (named && samePlaceName(structured, named.name)) return null;
@@ -3251,7 +3300,7 @@ export function buildLocalityHeaderModel(input = {}) {
   let road = resolvePresentationRoadNumber(input, facts);
   let municipalitySign = resolveMunicipalitySignName(input);
   const street = resolveConfirmedStreet(input, facts);
-  const location = clean(input.location);
+  const location = sanitizeExtractedValueToken(input.location);
   const district = clean(input.district) || facts.district || "";
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
@@ -3404,7 +3453,7 @@ export function buildHeadLocalityLabel(input = {}) {
   const hdr = buildLocalityHeaderModel(input);
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const road = resolvePresentationRoadNumber(input, facts);
-  const location = clean(input.location);
+  const location = sanitizeExtractedValueToken(input.location);
   const district = hdr.district;
 
   if (facts.parkingName) {
@@ -3559,7 +3608,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
     "";
   const district = clean(input.district) || facts.district || "";
   const street = resolveConfirmedStreet(input, facts);
-  const location = clean(input.location);
+  const location = sanitizeExtractedValueToken(input.location);
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) cityPart = clean(input.municipality);
   if (!cityPart && isNumericCityPartName(input.municipality)) cityPart = clean(input.municipality);
