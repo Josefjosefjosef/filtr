@@ -993,6 +993,129 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
       heavyOnly === "Silný provoz." &&
       !/kolona/i.test(heavyOnly)
   );
+
+  // A — basic accident
+  const sitA = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda",
+  });
+  ok("SIT_A_BASIC_ACCIDENT_PASS", sitA === "Nehoda.");
+
+  // B — two passenger cars
+  const sitB = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; 2 havarovaná vozidla; 2 osobní automobily",
+  });
+  ok(
+    "SIT_B_TWO_CARS_PASS",
+    sitB === "Nehoda dvou osobních automobilů."
+  );
+
+  // C — accident + obstacle + caution
+  const sitC = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact:
+      "nehoda; 2 osobní automobily; překážka na vozovce; průjezd se zvýšenou opatrností",
+  });
+  ok(
+    "SIT_C_OBSTACLE_CARE_PASS",
+    sitC ===
+      "Nehoda dvou osobních automobilů. Překážka na vozovce. Průjezd se zvýšenou opatrností."
+  );
+
+  // D — blocked right lane
+  const sitD = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; neprůjezdný pravý jízdní pruh",
+  });
+  ok(
+    "SIT_D_RIGHT_LANE_PASS",
+    /Pravý jízdní pruh je neprůjezdný/.test(sitD)
+  );
+
+  // E — heavy traffic must not invent queue
+  const sitE = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; silný provoz",
+  });
+  ok("SIT_E_HEAVY_PASS", sitE === "Nehoda. Silný provoz.");
+  ok("SIT_E_HEAVY_NOT_QUEUE_PASS", !/kolona/i.test(sitE));
+
+  // F — forming queue
+  const sitF = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; tvoří se kolona",
+  });
+  ok("SIT_F_QUEUE_PASS", /Tvoří se kolona/.test(sitF));
+
+  // G — wrecked count without vehicle type (no invented OA)
+  const sitG = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact: "nehoda; 2 havarovaná vozidla",
+  });
+  ok("SIT_G_WRECKED_NO_TYPE_PASS", sitG === "Nehoda dvou vozidel.");
+  ok("SIT_G_NO_INVENTED_OA_PASS", !/osobní/i.test(sitG));
+
+  // H — collapsed km + accident (place line separate from situation)
+  const sitHPlace = buildPlaceAndDirectionLine({
+    road: "D4",
+    direction: "Písek",
+    kilometer: 43.2,
+    eventType: "nehoda",
+    impact: "D4 ve směru Písek, 43,2 km, nehoda",
+  });
+  const sitHSit = buildTrafficSituationSummary({
+    road: "D4",
+    direction: "Písek",
+    kilometer: 43.2,
+    eventType: "nehoda",
+    impact: "D4 ve směru Písek, 43,2 km, nehoda",
+  });
+  ok(
+    "SIT_H_KM_COLLAPSED_PASS",
+    sitHPlace === "D4 · km 43,2 · směr Písek"
+  );
+  ok("SIT_H_SITUATION_PASS", sitHSit === "Nehoda.");
+  ok("SIT_H_KM_NOT_IN_SITUATION_PASS", !/km\s*43/i.test(sitHSit));
+
+  // I — kilometer range + roadworks
+  const sitIPlace = buildPlaceAndDirectionLine({
+    road: "D1",
+    direction: "Brno",
+    kilometerFrom: 98.3,
+    kilometerTo: 99,
+    eventType: "prace",
+    impact: "D1 ve směru Brno, 98,3–99 km, práce na silnici",
+  });
+  ok(
+    "SIT_I_KM_RANGE_COLLAPSED_PASS",
+    sitIPlace === "D1 · km 98,3–99 · směr Brno"
+  );
+
+  // Info-loss guard: supported facts must reach summary
+  const sitLoss = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact:
+      "nehoda; 2 havarovaná vozidla; neprůjezdný levý jízdní pruh; 2 osobní automobily; silný provoz",
+  });
+  ok(
+    "SIT_INFO_LOSS_GUARD_PASS",
+    sitLoss ===
+      "Nehoda dvou osobních automobilů. Levý jízdní pruh je neprůjezdný. Silný provoz." &&
+      sitLoss !== "Nehoda."
+  );
+
+  // LIVE-shaped animal collision must not collapse to bare Nehoda.
+  const sitAnimal = buildTrafficSituationSummary({
+    eventType: "nehoda",
+    impact:
+      "na silnici 38 u obce Bezděz; nehoda; zvěř na vozovce; havarované vozidlo; došlo ke střetu OA se srnou",
+  });
+  ok(
+    "SIT_ANIMAL_COLLISION_PASS",
+    /Střet osobního automobilu se srnou/.test(sitAnimal) &&
+      sitAnimal !== "Nehoda."
+  );
 }
 
 // --- Hornopolní locality hierarchy ---
