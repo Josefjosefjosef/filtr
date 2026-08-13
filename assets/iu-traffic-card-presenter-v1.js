@@ -587,11 +587,14 @@ export function looksLikeStreetName(raw) {
   }
   if (/\btřída\b/i.test(t)) return true;
   if (isPrahaCityPartName(t)) return false;
+  // Czech street morphology: adjective (-ská) + possessive genitive (-ského / -ého).
+  const STREET_END =
+    /(?:ská|cká|ovská|ová|ova|ná|ní|ského|ckého|kého|ého|ího)$/i;
   if (/\s/.test(t)) {
     if (/\ba\b/i.test(t)) return false;
-    return /(ská|cká|ovská)(?:\s|$)/i.test(t);
+    return /(?:ská|cká|ovská)(?:\s|$)/i.test(t);
   }
-  return /(ská|cká|ovská|ová|ova|ná|ní)$/i.test(t);
+  return STREET_END.test(t);
 }
 
 /** True when a token must not become the white municipality entrance board. */
@@ -970,10 +973,19 @@ export function resolveConfirmedStreet(input = {}, factsIn = null) {
     : extractNamedTransportObject(sourceBlob(input));
 
   if (Array.isArray(facts.streets) && facts.streets.length >= 1) {
-    const joined = formatStreetDisplayList(facts.streets);
+    const joined = formatStreetDisplayList(facts.streets, {
+      asRange: facts.streetRange === true && facts.streets.length === 2,
+    });
     if (joined && !looksLikeTruncatedFragment(joined) && !/[()]$/.test(joined)) {
       return joined;
     }
+  }
+
+  if (facts.streetFrom && facts.streetTo) {
+    const range = formatStreetDisplayList([facts.streetFrom, facts.streetTo], {
+      asRange: true,
+    });
+    if (range) return range;
   }
 
   if (facts.street) {
@@ -1112,17 +1124,101 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     if (/\s-\s*ulice\s+/i.test(chunk) || /\sulice\s+/i.test(chunk)) {
       const parts = chunk.split(/\s*-\s*ulice\s+|\s*,\s*(?:ulice\s+)?/i);
       for (const p of parts) push(p);
+    } else if (!/[-–—]/.test(chunk)) {
+      push(chunk);
     }
+  }
+
+  // Range / between patterns when bare list missed a genitive street name.
+  const range = extractStreetRangeFromOfficialComment(text);
+  if (range) {
+    push(range.streetFrom);
+    push(range.streetTo);
   }
 
   return found;
 }
 
-export function formatStreetDisplayList(streets) {
+export function formatStreetDisplayList(streets, opts = {}) {
   const list = (streets || []).map((s) => clean(s)).filter(Boolean);
   if (!list.length) return null;
   if (list.length === 1) return list[0];
+  if (list.length === 2 && (opts.asRange === true || opts.streetRange === true)) {
+    return list[0] + " – " + list[1];
+  }
   return list.join(" / ");
+}
+
+/**
+ * Two-street segment: "ulice A - ulice B", "ul. A - ul. B",
+ * "mezi ulicemi A a B", "od ulice A k ulici B".
+ * Returns { streetFrom, streetTo } or null. Never invents names.
+ */
+export function extractStreetRangeFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+
+  const toStreet = (raw) => {
+    let sn = sanitizeExtractedValueToken(streetBareName(raw));
+    if (!sn) return null;
+    sn = clean(
+      sn.split(
+        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|před\s+křižovatk|od\s+\d)/i
+      )[0]
+    );
+    sn = sanitizeExtractedValueToken(sn);
+    if (!sn || looksLikeTruncatedFragment(sn) || /[()]$/.test(sn)) return null;
+    if (/\s-\s*ulice\s+/i.test(sn) || /\sulice\s+/i.test(sn)) return null;
+    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+    if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
+    return sn;
+  };
+
+  const pairs = [
+    text.match(/\bulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+)/i),
+    text.match(/\bul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+)/i),
+    text.match(/\bmezi\s+ulicemi\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/i),
+    text.match(/\bod\s+ulice\s+([^,;]+?)\s+k\s+ulici\s+([^,;]+?)(?=\s*[,;]|$)/i),
+  ];
+  for (const m of pairs) {
+    if (!m) continue;
+    const streetFrom = toStreet(m[1]);
+    const streetTo = toStreet(m[2]);
+    if (streetFrom && streetTo && !samePlaceName(streetFrom, streetTo)) {
+      return { streetFrom, streetTo };
+    }
+  }
+  return null;
+}
+
+/**
+ * Concrete work / reconstruction phrase from NDIC comment (not generic category).
+ * Examples: "Rekonstrukce plynovodu", "výsprava vozovky", "údržba mostu".
+ * Never invents; never returns bare "stavební práce" / "práce na silnici".
+ */
+export function extractSpecificWorkFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const GENERIC =
+    /^(?:stavební\s+práce|práce\s+na\s+silnici|práce\s+na\s+inženýrských\s+sítích|dopravní\s+omezení|uzavírka|uzavřeno)\.?$/i;
+  const re =
+    /(?:^|[,;\s])((?:pravidelná\s+)?(?:rekonstrukce|oprava|údržba(?:\s+a\s+opravy)?|výsprava|pokládka|výkop|uložení|revitalizace)\s+[^,;.]+)/giu;
+  let best = null;
+  for (const m of cut.matchAll(re)) {
+    let phrase = clean(m[1]);
+    phrase = clean(
+      phrase.split(
+        /\s+v\s+MK\b|\s+v\s+ulici\b|\s+v\s+obci\b|\s+ulice\b|\s+ve\s+směru\b|\s+z\s+důvodu\b/i
+      )[0]
+    );
+    phrase = clipExtractedValueAtStructuralEnd(phrase, 90);
+    phrase = sanitizeExtractedValueToken(phrase);
+    if (!phrase || phrase.length < 8 || GENERIC.test(phrase)) continue;
+    if (/^(?:od|do)\s+\d/i.test(phrase)) continue;
+    if (!best || phrase.length < best.length) best = phrase;
+  }
+  return best;
 }
 
 /**
@@ -1425,6 +1521,9 @@ export function parseOfficialCommentFacts(rawText) {
     street: null,
     streets: [],
     streetMulti: false,
+    streetFrom: null,
+    streetTo: null,
+    streetRange: false,
     city: null,
     cityPart: null,
     district: null,
@@ -1444,6 +1543,7 @@ export function parseOfficialCommentFacts(rawText) {
     eventReason: null,
     eventName: null,
     reasonKind: null,
+    specificWork: null,
     openLaneCount: null,
     affectedRoadPart: null,
     roadworkDetail: null,
@@ -1467,6 +1567,7 @@ export function parseOfficialCommentFacts(rawText) {
   out.eventReason = eventReason.reasonText;
   out.eventName = eventReason.eventName;
   out.reasonKind = eventReason.reasonKind;
+  out.specificWork = extractSpecificWorkFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
 
   // Explicit open / passable lane count from NDIC ("počet průjezdných pruhů: 2").
@@ -1618,8 +1719,23 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C".
   {
+    const range = extractStreetRangeFromOfficialComment(text);
     const streets = extractStreetNamesFromOfficialComment(text);
-    if (streets.length) {
+    if (range) {
+      out.streetFrom = range.streetFrom;
+      out.streetTo = range.streetTo;
+      out.streetRange = true;
+      out.streets = [range.streetFrom, range.streetTo];
+      // Prefer range names; merge any extra confirmed streets after the pair.
+      for (const s of streets) {
+        if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
+      }
+      out.street = formatStreetDisplayList(
+        [range.streetFrom, range.streetTo],
+        { asRange: true }
+      );
+      out.streetMulti = out.streets.length >= 4;
+    } else if (streets.length) {
       out.streets = streets;
       if (streets.length === 1) {
         out.street = streets[0];
@@ -1628,6 +1744,22 @@ export function parseOfficialCommentFacts(rawText) {
         // Prefer readable joined form over opaque "více ulic" for 2–3 streets.
         out.street = formatStreetDisplayList(streets);
         out.streetMulti = streets.length >= 4;
+      }
+    }
+  }
+
+  // Bare ", Town, okr." municipality when no "v obci" marker exists.
+  if (!out.city) {
+    const mTown = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    if (mTown) {
+      const town = normalizeExtractedMunicipalityName(mTown[1]);
+      if (
+        town &&
+        !looksLikeStreetName(town) &&
+        !looksLikeNonMunicipalityPlace(town) &&
+        !looksLikeRoadNumberToken(town)
+      ) {
+        out.city = town;
       }
     }
   }
@@ -2674,9 +2806,10 @@ export function buildTrafficSituationSummary(input = {}) {
       causeBits.push(detail ? clean(detail[0]).replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
     }
 
-    // Rich lead: closed roadworks with explicit "z důvodu …" detail (excavation, cable, …).
+    // Rich lead: closed roadworks with explicit work detail ("z důvodu …" or specific work phrase).
     // Never invent; only merge facts proven in source. Direction stays out of situation.
     const reasonDetail = clean(facts.eventReason);
+    const specificWork = clean(facts.specificWork);
     const hasBareClosed =
       /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
       /úpln[áa]\s+uzavírk/i.test(source) ||
@@ -2687,18 +2820,40 @@ export function buildTrafficSituationSummary(input = {}) {
         !/kulturní\s+akc/i.test(reasonDetail) &&
         !/\bsměr\b/i.test(reasonDetail) &&
         reasonDetail.length >= 6);
+    const workDetail = reasonIsWorkDetail ? reasonDetail : specificWork;
+    const formatWorkReason = (raw) => {
+      const t = clean(raw);
+      if (!t) return "";
+      return t.charAt(0).toLocaleLowerCase("cs") + t.slice(1);
+    };
     let roadworksReasonMerged = false;
-    if (hasBareClosed && hasStavebni && reasonIsWorkDetail && !causeBits.length) {
+    if (hasBareClosed && hasStavebni && workDetail && !causeBits.length) {
       const noun =
         /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) && !/\bsilnice\s+[ID]/i.test(source)
           ? "Komunikace"
           : /\bsilnice\b|\bdálnice\b/i.test(source)
             ? "Silnice"
             : "Komunikace";
-      causeBits.push(
-        noun + " uzavřena z důvodu stavebních prací – " + reasonDetail
-      );
+      if (reasonIsWorkDetail) {
+        causeBits.push(
+          noun + " uzavřena z důvodu stavebních prací – " + reasonDetail
+        );
+      } else {
+        causeBits.push(
+          "Stavební práce. " +
+            noun +
+            " je uzavřena z důvodu " +
+            formatWorkReason(workDetail)
+        );
+      }
       roadworksReasonMerged = true;
+    } else if (hasStavebni && specificWork && !causeBits.length) {
+      causeBits.push(
+        "Stavební práce – " + formatWorkReason(specificWork)
+      );
+    } else if (specificWork && !causeBits.length && !hasStavebni) {
+      const sw = clean(specificWork);
+      causeBits.push(sw.charAt(0).toLocaleUpperCase("cs") + sw.slice(1));
     } else if (hasStavebni && !causeBits.length) {
       causeBits.push("Stavební práce");
     }
@@ -3492,7 +3647,7 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
   } else if (street) {
-    streetLabel = "ulice: " + street;
+    streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
     besideLocality = streetLabel;
     locationKind = LOCATION_KIND.STREET;
   } else if (resolveRoadDisplayName(road)) {
@@ -3779,7 +3934,11 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   if (street && (muni || cityPart)) {
-    const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
+    const streetDisp = street.replace(/^ulice\s+/i, "");
+    const placeBits =
+      facts.streetRange === true && facts.streetFrom && facts.streetTo
+        ? [streetDisp]
+        : ["ulice " + streetDisp];
     if (km) pushUniqueBit(placeBits, km);
     if (dir) pushUniqueBit(placeBits, "směr " + dir);
     // Prefer municipality over city-part on the collapsed place line.
@@ -4004,6 +4163,16 @@ export function buildTrafficExpandedDetail(input = {}) {
     const locIsStreetEcho = !!(locNorm && streetNorm && locNorm === streetNorm);
     const locIsMuniEcho = !!(locNorm && muniNorm && locNorm === muniNorm);
     const locIsPartEcho = !!(locNorm && partNorm && locNorm === partNorm);
+    const distNorm = clean(input.district || facts.district)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const cityNorm = clean(facts.city)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const locIsDistrictEcho =
+      !!(locNorm && distNorm && locNorm === distNorm) &&
+      !!(muniNorm && distNorm === muniNorm);
+    const locIsCityEcho = !!(locNorm && cityNorm && locNorm === cityNorm);
     const localityDetail = clean(facts.localityDetail);
     if (named && namedKind === LOCATION_KIND.TUNNEL) {
       push("tunnel", "Tunel", named);
@@ -4016,7 +4185,14 @@ export function buildTrafficExpandedDetail(input = {}) {
       push("location", "Lokalita", named);
     } else if (localityDetail) {
       push("location", "Lokalita", localityDetail);
-    } else if (!locIsRoadEcho && !locIsStreetEcho && !locIsMuniEcho && !locIsPartEcho) {
+    } else if (
+      !locIsRoadEcho &&
+      !locIsStreetEcho &&
+      !locIsMuniEcho &&
+      !locIsPartEcho &&
+      !locIsDistrictEcho &&
+      !locIsCityEcho
+    ) {
       let locVal = sanitizeExtractedValueToken(input.location);
       if (looksLikeTruncatedFragment(locVal)) locVal = "";
       // Contaminated multi-street glue from upstream location parsers.

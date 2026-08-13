@@ -157,6 +157,14 @@ export function extractLocalityFromOfficialComment(summary) {
     let sn = clean(mStreet[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
     sn = clean(sn.split(/\s+okres\b/i)[0]);
+    // "ulice A - ulice B" is a segment between two streets, not one street name.
+    if (/\s*[-–—]\s*ulice\s+/i.test(sn) || /\s*[-–—]\s*ul\.\s*/i.test(sn)) {
+      const parts = sn
+        .split(/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i)
+        .map((p) => clean(p.replace(/^ulice:?\s+/i, "").replace(/^ul\.\s*/i, "")))
+        .filter(Boolean);
+      if (parts.length >= 2) sn = parts.join(" – ");
+    }
     if (sn) streetHint = sn;
   }
 
