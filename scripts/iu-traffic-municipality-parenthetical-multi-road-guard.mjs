@@ -8,7 +8,6 @@ import {
   parseOfficialCommentFacts,
   buildTrafficCardPresentation,
   buildLocalityHeaderModel,
-  buildTrafficSituationSummary,
   normalizeExtractedMunicipalityName,
   extractMunicipalityParentheticalLocalityDetail,
   extractStreetNamesFromOfficialComment,
@@ -17,6 +16,13 @@ import {
   looksLikeTruncatedFragment,
   sanitizeExtractedValueToken,
 } from "../assets/iu-traffic-card-presenter-v1.js";
+import {
+  extractLocalityFromOfficialComment,
+  chooseHumanLocality,
+  looksLikeContaminatedLocalityToken,
+  stripMunicipalityParentheticalDetail,
+} from "../scripts/ndic-datex-v1/traffic-card-content-v1.mjs";
+import { buildTrafficCardViewModel } from "../assets/iu-traffic-overview-v1.js";
 
 const fails = [];
 const results = [];
@@ -38,6 +44,7 @@ const REF_RAW =
 
 const CONTAMINATED_MUNI = "Velký Újezd (u domů č. 100";
 const CONTAMINATED_LOC = "Olomoucká - ulice Lipenská)";
+const IMPACT_TRUNC = REF_RAW.slice(0, 159) + "…";
 
 // --- MUNICIPALITY_PARENTHETICAL_CONTAMINATION_GUARD ---
 {
@@ -55,6 +62,48 @@ const CONTAMINATED_LOC = "Olomoucká - ulice Lipenská)";
   ok(
     "LOC_DETAIL_NOT_CAST_OBEC",
     detail !== "Velký Újezd" && !/^Velký Újezd/i.test(detail || "")
+  );
+}
+
+// --- Projection locality extract (publication snapshot path) ---
+{
+  const loc = extractLocalityFromOfficialComment(REF_RAW);
+  ok("PROJ_MUNI_CLEAN", loc.municipality === "Velký Újezd", loc.municipality);
+  ok("PROJ_MUNI_NO_PAREN", !/\(/.test(loc.municipality || ""));
+  ok("PROJ_DISTRICT", loc.district === "Olomouc", loc.district);
+  ok(
+    "PROJ_STREET_HINT_NO_DANGLING",
+    !looksLikeContaminatedLocalityToken(loc.streetHint || "") &&
+      !/\)/.test(loc.streetHint || ""),
+    loc.streetHint
+  );
+  ok(
+    "PROJ_STRIP_HELPER",
+    stripMunicipalityParentheticalDetail(CONTAMINATED_MUNI) === "Velký Újezd"
+  );
+  ok("PROJ_CONTAM_DETECT", looksLikeContaminatedLocalityToken(CONTAMINATED_LOC) === true);
+  ok(
+    "PROJ_CHOOSE_HUMAN",
+    chooseHumanLocality({
+      locationLabel: CONTAMINATED_LOC,
+      summary: REF_RAW,
+      roadNumber: "III/03554",
+    }) === "Velký Újezd"
+  );
+  ok(
+    "PROJ_CHOOSE_REJECT_STREET_GLUE",
+    chooseHumanLocality({
+      locationLabel: CONTAMINATED_LOC,
+      summary: "",
+      roadNumber: null,
+    }) !== CONTAMINATED_LOC &&
+      !looksLikeContaminatedLocalityToken(
+        chooseHumanLocality({
+          locationLabel: CONTAMINATED_LOC,
+          summary: "",
+          roadNumber: null,
+        }) || ""
+      )
   );
 }
 
@@ -152,6 +201,62 @@ const CONTAMINATED_LOC = "Olomoucká - ulice Lipenská)";
   );
 }
 
+// --- Live production snapshot shape (null municipality + contaminated location) ---
+{
+  const liveShape = {
+    municipality: null,
+    road: null,
+    location: CONTAMINATED_LOC,
+    district: "Olomouc",
+    eventType: "omezeni",
+    impact: IMPACT_TRUNC,
+    impactFull: REF_RAW,
+  };
+  const card = buildTrafficCardPresentation(liveShape);
+  const hdr = buildLocalityHeaderModel(liveShape);
+  const rows = rowMap(card);
+  const sum = String(card.situationSummary || "");
+  const vm = buildTrafficCardViewModel(liveShape);
+
+  ok("LIVE_SIGN", hdr.municipalitySignLabel === "VELKÝ ÚJEZD", hdr.municipalitySignLabel);
+  ok("LIVE_MUNI_ROW", rows.municipality === "Velký Újezd", rows.municipality);
+  ok(
+    "LIVE_VM_MUNI",
+    vm.municipality === "Velký Újezd" && vm.municipalitySignLabel === "VELKÝ ÚJEZD",
+    JSON.stringify({ m: vm.municipality, s: vm.municipalitySignLabel, loc: vm.locality })
+  );
+  ok(
+    "LIVE_VM_NO_CONTAM_LOCALITY",
+    !looksLikeContaminatedLocalityToken(vm.locality || "") &&
+      !/\)/.test(String(vm.locality || "")) &&
+      !/\s-\s*ulice/i.test(String(vm.locality || "")),
+    vm.locality
+  );
+  ok(
+    "LIVE_VM_NO_CONTAM_LINE",
+    !/\(u\s+domů/i.test(String(vm.localityLine || "")) &&
+      !/\)/.test(String(vm.localityLine || "")),
+    vm.localityLine
+  );
+  ok("LIVE_ROADS", /III\/03554/.test(rows.road || "") && /III\/43617/.test(rows.road || ""), rows.road);
+  ok(
+    "LIVE_STREETS",
+    /Olomoucká/.test(rows.street || "") &&
+      /Lipenská/.test(rows.street || "") &&
+      /Přerovská/.test(rows.street || ""),
+    rows.street
+  );
+  ok("LIVE_HOUSES", /domů/i.test(rows.location || ""), rows.location);
+  ok("LIVE_SUM_EVENT", /Hodové\s+slavnosti\s+2026/i.test(sum), sum);
+  ok("LIVE_SUM_NOT_GENERIC", !/^Úplná\s+uzavírka\s+komunikace\.?$/i.test(sum.trim()), sum);
+  ok(
+    "LIVE_BESIDE_NO_GLUE",
+    !/\s-\s*ulice\s+/i.test(String(hdr.besideLocality || "")) &&
+      !/\)/.test(String(hdr.besideLocality || "")),
+    hdr.besideLocality
+  );
+}
+
 // --- Negatives ---
 {
   const partOnly =
@@ -202,11 +307,13 @@ const out = {
     .filter((r) => r.id.startsWith("EVENT_") || r.id.startsWith("SUM_REASON") || r.id.startsWith("SUM_EVENT"))
     .every((r) => r.pass),
   INFORMATION_VALUE_GUARD: results
-    .filter((r) => r.id.startsWith("SUM_"))
+    .filter((r) => r.id.startsWith("SUM_") || r.id.startsWith("LIVE_SUM_"))
     .every((r) => r.pass),
   NO_TRUNCATION_GUARD: results
-    .filter((r) => r.id.includes("DANGLING") || r.id.includes("TRUNC") || r.id.includes("NO_PAREN"))
+    .filter((r) => r.id.includes("DANGLING") || r.id.includes("TRUNC") || r.id.includes("NO_PAREN") || r.id.includes("CONTAM"))
     .every((r) => r.pass),
+  PROJECTION_LOCALITY_GUARD: results.filter((r) => r.id.startsWith("PROJ_")).every((r) => r.pass),
+  LIVE_SNAPSHOT_SHAPE_GUARD: results.filter((r) => r.id.startsWith("LIVE_")).every((r) => r.pass),
 };
 console.log(JSON.stringify(out, null, 2));
 if (!pass) {

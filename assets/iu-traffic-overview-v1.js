@@ -18,7 +18,7 @@ import {
   normalizeDirectionHuman,
   looksLikeTruncatedFragment,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-fact-preservation-v1-20260813";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -963,6 +963,27 @@ function compactLocalityLine(municipality, district) {
   return "";
 }
 
+/** Snapshot location/municipality must not leak dangling parentheses or street-range glue. */
+function looksLikeContaminatedLocationFallback(raw) {
+  const s = raw != null ? String(raw).trim() : "";
+  if (!s) return false;
+  if (looksLikeTruncatedFragment(s)) return true;
+  if (/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(s)) return true;
+  if (/\bulice\s+.+\s*[-–—]/i.test(s)) return true;
+  return false;
+}
+
+function municipalitySignNameClean(presentation) {
+  const sign =
+    presentation &&
+    presentation.communication &&
+    presentation.communication.municipalitySign
+      ? String(presentation.communication.municipalitySign).trim()
+      : "";
+  if (!sign || looksLikeContaminatedLocationFallback(sign)) return "";
+  return sign;
+}
+
 /**
  * Deterministic short lead from structured fields + short source comment.
  * Presentation-only — does not alter summaryFull / impactFull data.
@@ -1015,7 +1036,17 @@ export function buildTrafficCardViewModel(trafficV1) {
     tv.roadClassLabel || ROAD_CLASS_LABEL_CS[roadClass] || ROAD_CLASS_LABEL_CS.UNKNOWN;
   const eventType = tv.eventType || tv.category || null;
   const eventTypeLabel = presentation.event.titleCs || eventTypeLabelCs(eventType);
-  const municipality = tv.municipality != null ? String(tv.municipality).trim() : "";
+  const municipalityFromRows =
+    ((presentation.expanded && presentation.expanded.rows) || []).find(
+      (r) => r && r.key === "municipality" && r.value
+    ) || null;
+  const municipalityRaw = tv.municipality != null ? String(tv.municipality).trim() : "";
+  // Prefer presenter-cleaned obec over contaminated snapshot municipality/location.
+  const municipality =
+    (municipalitySignNameClean(presentation) ||
+      (municipalityFromRows && String(municipalityFromRows.value).trim()) ||
+      (!looksLikeContaminatedLocationFallback(municipalityRaw) ? municipalityRaw : "") ||
+      "");
   const district = tv.district != null ? String(tv.district).trim() : "";
   const municipalitySign =
     (presentation.communication && presentation.communication.municipalitySign) || null;
@@ -1041,12 +1072,21 @@ export function buildTrafficCardViewModel(trafficV1) {
     (presentation.communication && presentation.communication.headLocality) ||
     presentation.communication.localityFallback ||
     "";
+  const locationFallbackRaw = tv.location != null ? String(tv.location).trim() : "";
+  const locationFallback = looksLikeContaminatedLocationFallback(locationFallbackRaw)
+    ? ""
+    : locationFallbackRaw;
+  const scopeFallbackRaw =
+    tv.subjectScopeLabel != null ? String(tv.subjectScopeLabel).trim() : "";
+  const scopeFallback = looksLikeContaminatedLocationFallback(scopeFallbackRaw)
+    ? ""
+    : scopeFallbackRaw;
   const locality =
     municipalitySign ||
     municipality ||
     headLocality ||
-    (tv.location && String(tv.location).trim()) ||
-    (tv.subjectScopeLabel && String(tv.subjectScopeLabel).trim()) ||
+    locationFallback ||
+    scopeFallback ||
     road ||
     "";
   const localityLine = compactLocalityLine(municipality, district);

@@ -3948,6 +3948,8 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = resolveRoadDisplayName(road);
   } else if (
     location &&
+    !looksLikeTruncatedFragment(location) &&
+    !/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(location) &&
     !samePlaceName(location, municipalitySign) &&
     location !== road &&
     !looksLikeRoadNumberToken(location) &&
