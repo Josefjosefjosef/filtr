@@ -1156,6 +1156,63 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     /^Most je uzavřen\.$/i.test(sitBridge)
   );
 
+  // PRE_FIX: "Úplná uzavírka komunikace." when source names železniční přejezd P7454
+  const p7454Impact =
+    'ulice Havlíčkova, Frýdlant nad Ostravicí, okr. Frýdek-Místek, , Od 14.09.2026 00:00, Do 15.09.2026 23:59, úplná uzavírka železničního přejezdu P7454 na místní komunikaci III. třídy ev.č. 9c "SNP" na ul. Havlíčkova ve Frýdlantu nad Ostravicí, Vydal: Městský úřad Frýdlant nad Ostravicí';
+  const p7454Named = extractNamedTransportObject(p7454Impact);
+  const p7454Facts = parseOfficialCommentFacts(p7454Impact);
+  const p7454Input = {
+    eventType: "uzavirka",
+    category: "uzavirka",
+    impact: p7454Impact,
+    impactFull: p7454Impact,
+    municipality: "Frýdlant nad Ostravicí",
+    street: "Havlíčkova",
+    district: "Frýdek-Místek",
+  };
+  const p7454Sum = buildTrafficSituationSummary(p7454Input);
+  const p7454Pres = buildTrafficCardPresentation(p7454Input);
+  const p7454Hdr = buildLocalityHeaderModel(p7454Input);
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_P7454_PARSED",
+    p7454Named &&
+      p7454Named.kind === LOCATION_KIND.RAILWAY_CROSSING &&
+      p7454Named.objectIdentifier === "P7454" &&
+      /železniční přejezd P7454/i.test(p7454Named.name)
+  );
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_P7454_FACTS",
+    p7454Facts.namedObjectKind === LOCATION_KIND.RAILWAY_CROSSING &&
+      p7454Facts.objectIdentifier === "P7454" &&
+      /železniční přejezd P7454/i.test(String(p7454Facts.namedObject || ""))
+  );
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_P7454_SUMMARY",
+    /Úplná uzavírka železničního přejezdu P7454/i.test(p7454Sum) &&
+      !/^Úplná uzavírka komunikace\.?$/i.test(p7454Sum)
+  );
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_P7454_COLLAPSED",
+    /Úplná uzavírka železničního přejezdu P7454/i.test(
+      String(p7454Pres.situationSummary || "")
+    ) && !/^Úplná uzavírka komunikace\.?$/i.test(String(p7454Pres.situationSummary || ""))
+  );
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_P7454_HEADER_STREET",
+    /ulice:\s*Havlíčkova/i.test(String(p7454Hdr.besideLocality || "")) &&
+      !/přejezd/i.test(String(p7454Hdr.besideLocality || ""))
+  );
+  ok(
+    "SIT_INFO_LOSS_RAILWAY_CROSSING_NO_INVENTION",
+    extractNamedTransportObject("úplná uzavírka komunikace, obec Testovice") == null &&
+      !/přejezd/i.test(
+        buildTrafficSituationSummary({
+          eventType: "uzavirka",
+          impact: "úplná uzavírka komunikace, obec Testovice",
+        })
+      )
+  );
+
   // PRE_FIX: "Stavební práce." without speed
   const sitSpeed = buildTrafficSituationSummary({
     eventType: "prace",
