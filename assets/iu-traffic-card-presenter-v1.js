@@ -192,11 +192,26 @@ function czechPlural(n, one, few, many) {
   return many;
 }
 
-function formatKmToken(raw) {
-  const n = Number(String(raw).replace(",", "."));
-  if (!Number.isFinite(n)) return clean(raw).replace(".", ",");
+/**
+ * Format kilometrage token for UI. Preserves source fractional precision
+ * (e.g. 36.77 → "36,77"). Never rounds 36.77/36.84 down to a shared "36,8".
+ */
+export function formatKmToken(raw) {
+  const cleaned = clean(String(raw ?? ""));
+  if (!cleaned) return "";
+  const normalized = cleaned.replace(",", ".");
+  const n = Number(normalized);
+  if (!Number.isFinite(n)) return cleaned.replace(".", ",");
   if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
-  return String(Math.round(n * 10) / 10).replace(".", ",");
+  const fracMatch = normalized.match(/\.(\d{1,6})/);
+  if (fracMatch) {
+    const sign = n < 0 ? "-" : "";
+    const absInt = String(Math.trunc(Math.abs(n)));
+    // Keep source digits (cap 3) — do not re-round via toFixed.
+    const frac = fracMatch[1].slice(0, 3);
+    return sign + absInt + "," + frac;
+  }
+  return String(n).replace(".", ",");
 }
 
 /**
@@ -1336,6 +1351,9 @@ export function parseOfficialCommentFacts(rawText) {
     eventReason: null,
     eventName: null,
     reasonKind: null,
+    openLaneCount: null,
+    affectedRoadPart: null,
+    roadworkDetail: null,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -1358,6 +1376,28 @@ export function parseOfficialCommentFacts(rawText) {
   out.reasonKind = eventReason.reasonKind;
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
 
+  // Explicit open / passable lane count from NDIC ("počet průjezdných pruhů: 2").
+  {
+    const laneM = text.match(/počet\s+průjezdných\s+pruhů\s*:\s*(\d{1,2})\b/i);
+    if (laneM) {
+      const n = Number(laneM[1]);
+      if (Number.isFinite(n) && n >= 0 && n <= 20) out.openLaneCount = n;
+    }
+  }
+  // Work/restriction profile location ("rozsah: zpevněná krajnice") — never invents closure.
+  if (/rozsah\s*:\s*zpevněn[áa]\s+krajnice/i.test(text)) {
+    out.affectedRoadPart = "HARD_SHOULDER";
+  } else if (/rozsah\s*:\s*krajnice/i.test(text)) {
+    out.affectedRoadPart = "SHOULDER";
+  }
+  if (/údržba\s+a\s+opravy\s+mostů/i.test(text)) {
+    out.roadworkDetail = "BRIDGE_MAINTENANCE";
+  } else if (/údržba\s+a\s+opravy\b/i.test(text)) {
+    out.roadworkDetail = "MAINTENANCE_REPAIR";
+  } else if (/výsprava\s+tryskovou/i.test(text)) {
+    out.roadworkDetail = "JET_PATCHING";
+  }
+
   const named = extractNamedTransportObject(text);
   if (named) {
     out.namedObject = formatNamedTransportObjectLabel(named) || streetBareName(named.name);
@@ -1373,6 +1413,13 @@ export function parseOfficialCommentFacts(rawText) {
     ) ||
     text.match(
       /\bmezi\s+km\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)/i
+    ) ||
+    // NDIC: "mezi 36.77 a 36.84 km" (numbers before the km unit).
+    text.match(
+      /\bmezi\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)\s*km\b/i
+    ) ||
+    text.match(
+      /\b(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)\s*km\b/i
     );
   if (kmRange) {
     // Preserve source order (e.g. km 277,5–276,9) — never Math.min/max sort.
@@ -2494,16 +2541,59 @@ export function buildTrafficSituationSummary(input = {}) {
     if (/práce na inženýrských sítích/i.test(source)) {
       causeBits.push("Práce na inženýrských sítích");
     }
+    if (/výsprava\s+tryskovou\s+metodou/i.test(source)) {
+      causeBits.push("Výsprava tryskovou metodou");
+    }
+    // Concrete NDIC work phrases must beat the generic "Práce na silnici" fallback.
+    if (/údržba\s+a\s+opravy\s+mostů/i.test(source) || facts.roadworkDetail === "BRIDGE_MAINTENANCE") {
+      causeBits.push("Údržba a opravy mostů");
+    } else if (/údržba\s+a\s+opravy\b/i.test(source) && !causeBits.length) {
+      const detail = source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
+      causeBits.push(detail ? clean(detail[0]).replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
+    }
     if (/stavební práce/i.test(source) && !causeBits.length) causeBits.push("Stavební práce");
     if (
-      /práce na silnici|údržba a opravy/i.test(source) &&
-      !/sekání|údržba trav|pomalu jedoucí/i.test(causeBits.join(" "))
+      /práce na silnici/i.test(source) &&
+      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských/i.test(b))
     ) {
-      if (!causeBits.some((b) => /práce na silnici|stavební|údržba/i.test(b))) {
-        causeBits.unshift("Práce na silnici");
-      }
+      causeBits.unshift("Práce na silnici");
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
+
+    // Profile location of works (not a full-road closure claim).
+    if (
+      (facts.affectedRoadPart === "HARD_SHOULDER" ||
+        /rozsah\s*:\s*zpevněn[áa]\s+krajnice/i.test(source)) &&
+      !causeBits.some((b) => /zpevněn/i.test(b)) &&
+      !scopeBits.some((b) => /zpevněn|krajnice/i.test(b))
+    ) {
+      circumstanceBits.push("Práce probíhají na zpevněné krajnici");
+    }
+
+    // Explicit remaining passable lanes — never invent original lane count.
+    {
+      const openN =
+        facts.openLaneCount != null && Number.isFinite(facts.openLaneCount)
+          ? Number(facts.openLaneCount)
+          : (() => {
+              const m = source.match(/počet\s+průjezdných\s+pruhů\s*:\s*(\d{1,2})\b/i);
+              return m ? Number(m[1]) : null;
+            })();
+      if (openN != null && Number.isFinite(openN) && openN >= 0) {
+        const laneBit =
+          openN === 1
+            ? "Průjezdný je 1 jízdní pruh"
+            : openN >= 2 && openN <= 4
+              ? "Průjezdné jsou " + openN + " jízdní pruhy"
+              : "Průjezdných je " + openN + " jízdních pruhů";
+        if (
+          !causeBits.some((b) => /průjezdn/i.test(b)) &&
+          !circumstanceBits.some((b) => /průjezdn/i.test(b))
+        ) {
+          circumstanceBits.push(laneBit);
+        }
+      }
+    }
   } else if (/částečn[áa]\s+uzavírk/i.test(source)) {
     const road = resolvePresentationRoadNumber(input, facts);
     const street = resolveConfirmedStreet(input, facts) || facts.street;
