@@ -284,7 +284,9 @@ export function chooseImpactTexts(officialSummary, templateImpact, shortMax = 16
       official.length > shortMax ? official.slice(0, shortMax - 1).trim() + "…" : official;
     return {
       impactShort: short,
-      impactFull: official.length > shortMax ? official : null,
+      // Always keep the full official comment for presenters — never drop the tail
+      // (reason / parcel / work detail) just because the short preview fits in shortMax.
+      impactFull: official,
       impactSource: "publicComment",
     };
   }
