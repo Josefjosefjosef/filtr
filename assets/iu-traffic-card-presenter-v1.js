@@ -253,6 +253,9 @@ export function expandTrafficAbbreviationsCs(text) {
   });
   s = s.replace(/\bpro\s+NA\b/gi, "pro nákladní automobily");
   s = s.replace(/\bNA\b/g, "nákladní automobil");
+  // Traffic-light control (ŘSD/NDIC "SSZ") — expand only in management phrases.
+  s = s.replace(/\b(?:provoz\s+)?řízen[oaý]?\s+SSZ\b/gi, "provoz řízen semafory");
+  s = s.replace(/\břízen[oaý]?\s+světelným\s+signalizačním\s+zařízením\b/gi, "řízen semafory");
   return s;
 }
 
@@ -700,6 +703,8 @@ export function normalizeExtractedMunicipalityName(raw) {
   if (/^ulice\b|\btřída\b/i.test(city)) return null;
   if (/^okres\b|^okr\./i.test(city)) return null;
   if (looksLikeNonMunicipalityPlace(city)) return null;
+  // Place-to-place road segments are never municipality names.
+  if (looksLikeSegmentOrAreaLabel(city)) return null;
   // Reject dangling delimiter contamination.
   if (/[()]$/.test(city) || /\($/.test(city)) return null;
   return city;
@@ -733,6 +738,56 @@ export function looksLikeSegmentOrAreaLabel(raw) {
   if (/\s+-\s+/.test(t)) return true;
   if (/-(jih|sever|východ|západ)\b/i.test(t)) return true;
   return false;
+}
+
+/**
+ * Road place-to-place segment from NDIC prose (not a municipality, not a street range).
+ * Patterns: "silnice I/49, PlaceA - PlaceB, okr. …" / "I/49 PlaceA - PlaceB".
+ * Fail-closed: never invents; never splits arbitrary hyphens.
+ */
+export function extractRoadPlaceSegmentFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+
+  const looksPlaceToken = (raw) => {
+    const t = sanitizeExtractedValueToken(raw);
+    if (!t || t.length < 2 || t.length > 40) return false;
+    if (!/^[A-ZÁ-Ž]/u.test(t)) return false;
+    if (/^(?:ulice|ul\.|okres|okr\.|silnice|dálnice|od|do|km)\b/i.test(t)) return false;
+    if (looksLikeRoadNumberToken(t)) return false;
+    if (/^\d/.test(t) || /\bkm\b/i.test(t)) return false;
+    if (/\bulice\b|\bul\./i.test(t)) return false;
+    if (looksLikeStreetName(t) && /(ská|cká|ovská|ová|ova)$/i.test(t) && !/\s/.test(t)) {
+      // Bare street-like tokens alone are not place-segment ends.
+      return false;
+    }
+    return true;
+  };
+
+  const patterns = [
+    // silnice I/49, PlaceA - PlaceB, okr.
+    /\b(?:silnice|dálnice)\s+(?:[IEDR]{1,3}\s*\/\s*)?\d+[A-Za-z]?\s*,\s*([A-ZÁ-Ž][^,;]{1,40}?)\s*[-–—]\s*([A-ZÁ-Ž][^,;]{1,40}?)\s*,\s*okr\./iu,
+    // Bare ", PlaceA - PlaceB, okr." (common NDIC localization clause).
+    /(?:,|;)\s*([A-ZÁ-Ž][^,;]{1,40}?)\s*[-–—]\s*([A-ZÁ-Ž][^,;]{1,40}?)\s*,\s*okr\./u,
+    // I/49 PlaceA - PlaceB (classed road identity before the pair).
+    /\b(?:[IEDR]{1,3}\s*\/\s*\d+[A-Za-z]?)\s+([A-ZÁ-Ž][^,;]{1,40}?)\s*[-–—]\s*([A-ZÁ-Ž][^,;]{1,40}?)(?=\s*[,;.]|\s+okr|\s+Od\b|\s+Do\b|\s*$)/iu,
+  ];
+
+  for (const re of patterns) {
+    const m = cut.match(re);
+    if (!m) continue;
+    const from = sanitizeExtractedValueToken(m[1]);
+    const to = sanitizeExtractedValueToken(m[2]);
+    if (!looksPlaceToken(from) || !looksPlaceToken(to)) continue;
+    if (samePlaceName(from, to)) continue;
+    return {
+      segmentFrom: from,
+      segmentTo: to,
+      label: from + " – " + to,
+    };
+  }
+  return null;
 }
 
 /**
@@ -1643,6 +1698,9 @@ export function parseOfficialCommentFacts(rawText) {
     streetFrom: null,
     streetTo: null,
     streetRange: false,
+    segmentFrom: null,
+    segmentTo: null,
+    roadSegmentLabel: null,
     city: null,
     cityPart: null,
     district: null,
@@ -1669,6 +1727,11 @@ export function parseOfficialCommentFacts(rawText) {
     affectedRoadPart: null,
     affectedLane: null,
     roadworkDetail: null,
+    milling: false,
+    surfaceLaying: false,
+    alternatingTraffic: false,
+    trafficControlSsz: false,
+    peakFlaggers: false,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -1722,7 +1785,18 @@ export function parseOfficialCommentFacts(rawText) {
     out.roadworkDetail = "MAINTENANCE_REPAIR";
   } else if (/výsprava\s+tryskovou/i.test(text)) {
     out.roadworkDetail = "JET_PATCHING";
+  } else if (/oprava\s+povrchu/i.test(text)) {
+    out.roadworkDetail = "SURFACE_REPAIR";
   }
+
+  out.milling = /frézování/i.test(text);
+  out.surfaceLaying = /pokládka\s+povrchu/i.test(text);
+  out.alternatingTraffic = /\bkyvadlový\s+provoz\b/i.test(text);
+  out.trafficControlSsz =
+    /(?:provoz\s+)?řízen[oaý]?\s+SSZ\b/i.test(text) ||
+    /řízen[oaý]?\s+semafor/i.test(text) ||
+    /řízen[oaý]?\s+světelným\s+signalizačním/i.test(text);
+  out.peakFlaggers = /regulovčík/i.test(text);
 
   const named = extractNamedTransportObject(text);
   if (named) {
@@ -1883,20 +1957,59 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
+  // Road place-to-place segment (PlaceA – PlaceB) — never a municipality.
+  {
+    const seg = extractRoadPlaceSegmentFromOfficialComment(text);
+    if (seg) {
+      out.segmentFrom = seg.segmentFrom;
+      out.segmentTo = seg.segmentTo;
+      out.roadSegmentLabel = seg.label;
+    }
+  }
+
   // Bare ", Town, okr." municipality when no "v obci" marker exists.
   if (!out.city) {
     const mTown = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
     if (mTown) {
-      const town = normalizeExtractedMunicipalityName(mTown[1]);
-      if (
-        town &&
-        !looksLikeStreetName(town) &&
-        !looksLikeNonMunicipalityPlace(town) &&
-        !looksLikeRoadNumberToken(town)
-      ) {
-        out.city = town;
+      const townRaw = clean(mTown[1]);
+      // Never promote road segments ("A - B") into municipality.
+      if (!looksLikeSegmentOrAreaLabel(townRaw)) {
+        const town = normalizeExtractedMunicipalityName(townRaw);
+        if (
+          town &&
+          !looksLikeStreetName(town) &&
+          !looksLikeNonMunicipalityPlace(town) &&
+          !looksLikeRoadNumberToken(town) &&
+          !looksLikeSegmentOrAreaLabel(town)
+        ) {
+          out.city = town;
+        }
+      } else if (!out.roadSegmentLabel) {
+        const seg = extractRoadPlaceSegmentFromOfficialComment(", " + townRaw + ", okr. X");
+        if (seg) {
+          out.segmentFrom = seg.segmentFrom;
+          out.segmentTo = seg.segmentTo;
+          out.roadSegmentLabel = seg.label;
+        }
       }
     }
+  }
+
+  // If a previous path still left a segment misfiled as city, demote it.
+  if (out.city && looksLikeSegmentOrAreaLabel(out.city)) {
+    if (!out.roadSegmentLabel) {
+      const parts = out.city.split(/\s*[-–—]\s*/);
+      if (parts.length === 2) {
+        const a = sanitizeExtractedValueToken(parts[0]);
+        const b = sanitizeExtractedValueToken(parts[1]);
+        if (a && b && !samePlaceName(a, b)) {
+          out.segmentFrom = a;
+          out.segmentTo = b;
+          out.roadSegmentLabel = a + " – " + b;
+        }
+      }
+    }
+    out.city = null;
   }
 
   // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is a real municipality.
@@ -2877,6 +2990,33 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
   if (/frézování/i.test(text) && !/frézován/i.test(have)) {
     bits.push("Frézování");
   }
+  if (/pokládka\s+povrchu/i.test(text) && !/pokládk/i.test(have)) {
+    bits.push("Pokládka povrchu");
+  }
+
+  // Traffic management: SSZ / semaphores + peak-hour flaggers.
+  {
+    const haveAll = have + " " + bits.join(" ");
+    if (
+      (/\b(?:provoz\s+)?řízen[oaý]?\s+(?:SSZ|semafor)/i.test(text) ||
+        /\břízen[oaý]?\s+světelným\s+signalizačním/i.test(text) ||
+        /\bprovoz\s+řízen\s+semafor/i.test(text)) &&
+      !/semafor|SSZ|signalizačn/i.test(haveAll)
+    ) {
+      bits.push("Provoz řízen semafory");
+    }
+    if (
+      /(?:v\s+)?dopravní\s+špičce[^,;.]{0,40}regulovčík/i.test(text) &&
+      !/regulovčík|špičce/i.test(haveAll)
+    ) {
+      bits.push("V dopravní špičce provoz usměrňují regulovčíci");
+    } else if (
+      /usměrňován[oaý]?\s+regulovčík/i.test(text) &&
+      !/regulovčík/i.test(haveAll)
+    ) {
+      bits.push("Provoz usměrňují regulovčíci");
+    }
+  }
 
   if (
     /\buzavřen[oaýá]?\s+pro\s+(?:těžká\s+)?nákladní(?:\s+vozidla)?/i.test(text) &&
@@ -3058,6 +3198,33 @@ export function buildTrafficSituationSummary(input = {}) {
       causeBits.push(sw.charAt(0).toLocaleUpperCase("cs") + sw.slice(1));
     } else if (hasStavebni && !causeBits.length) {
       causeBits.push("Stavební práce");
+    }
+
+    // Surface repair + milling / resurfacing — keep concrete work details in the lead.
+    {
+      const hasSurface =
+        /oprava\s+povrchu/i.test(causeBits.join(" ")) ||
+        /oprava\s+povrchu/i.test(source) ||
+        facts.roadworkDetail === "SURFACE_REPAIR";
+      const mill = facts.milling === true || /frézování/i.test(source);
+      const lay = facts.surfaceLaying === true || /pokládka\s+povrchu/i.test(source);
+      if (hasSurface && (mill || lay)) {
+        const idx = causeBits.findIndex((b) => /oprava\s+povrchu/i.test(b));
+        let lead =
+          idx >= 0
+            ? clean(causeBits[idx]).replace(/\.$/, "")
+            : "Oprava povrchu vozovky";
+        if (!/frézován|pokládk/i.test(lead)) {
+          if (mill && lay) lead += " – frézování a pokládka povrchu";
+          else if (mill) lead += " – frézování";
+          else lead += " – pokládka povrchu";
+        }
+        if (idx >= 0) causeBits[idx] = lead;
+        else if (!causeBits.length) causeBits.push(lead);
+        else if (!causeBits.some((b) => /oprava\s+povrchu|frézován|pokládk/i.test(b))) {
+          causeBits.unshift(lead);
+        }
+      }
     }
 
     // Generic category lead already present (engineering networks / road works /
@@ -3946,8 +4113,13 @@ export function buildLocalityHeaderModel(input = {}) {
   } else if (resolveRoadDisplayName(road)) {
     // Verified road alias (e.g. D0 → Pražský okruh) — plain text beside badge, never muni sign.
     besideLocality = resolveRoadDisplayName(road);
+  } else if (facts.roadSegmentLabel) {
+    // Explicit PlaceA – PlaceB road segment beats district-only location labels.
+    besideLocality = facts.roadSegmentLabel;
+    locationKind = LOCATION_KIND.GENERIC_LOCALITY;
   } else if (
     location &&
+    !/^okres\b/i.test(location) &&
     !looksLikeTruncatedFragment(location) &&
     !/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(location) &&
     !samePlaceName(location, municipalitySign) &&
@@ -4197,6 +4369,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
       if (nearCity) bits.push("u obce " + nearCity);
     }
     if (km) bits.push(km);
+    else if (facts.roadSegmentLabel) bits.push(facts.roadSegmentLabel);
     else if (section) bits.push(section);
     if (street) {
       bits.push("ulice " + street.replace(/^ulice\s+/i, ""));
@@ -4206,9 +4379,12 @@ export function buildPlaceAndDirectionLine(input = {}) {
       else if (
         location &&
         location !== road &&
+        !/^okres\b/i.test(location) &&
+        !looksLikeTruncatedFragment(location) &&
         !looksLikeRoadNumberToken(location) &&
         !bits.includes(location) &&
-        !(facts.namedObject && samePlaceName(location, facts.namedObject))
+        !(facts.namedObject && samePlaceName(location, facts.namedObject)) &&
+        !(facts.roadSegmentLabel && samePlaceName(location, facts.roadSegmentLabel))
       ) {
         // Keep named bridge/tunnel out of place line when road+km already localize the event.
         if (!(km && facts.namedObject)) bits.push(location);
