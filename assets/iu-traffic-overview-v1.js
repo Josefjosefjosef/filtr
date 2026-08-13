@@ -15,8 +15,10 @@ import {
   buildTrafficCardPresentation,
   expandTrafficAbbreviationsCs,
   isTrafficCardInformative,
+  normalizeDirectionHuman,
+  looksLikeTruncatedFragment,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-fact-preservation-v1-20260813";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -274,15 +276,8 @@ const ALLOWED_CARD_KEYS = Object.freeze([
 ]);
 
 function humanDirectionOrNull(raw) {
-  const d = String(raw || "")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (!d) return null;
-  if (TECH_DIRECTION.test(d)) return null;
-  if (/^(unknown|n\/a|null|undefined|neuvedeno)$/i.test(d)) return null;
-  if (/^oba směry$/i.test(d)) return "oba směry";
-  if (/^[A-Za-zÁ-Žá-ž0-9 ./-]{2,40}$/.test(d)) return d;
-  return null;
+  if (looksLikeTruncatedFragment(raw)) return null;
+  return normalizeDirectionHuman(raw);
 }
 
 function normalizeFreshness(raw) {

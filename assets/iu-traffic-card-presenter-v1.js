@@ -316,52 +316,129 @@ export function isNumericCityPartName(raw) {
 const DIRECTION_TAIL_BOUNDARY_RE =
   /\s+(?:v souvislosti s|z důvodu(?:\s+provádění)?|za účelem|v rámci|po dobu|kvůli|v důsledku|v souvislosti se)\b/i;
 
+/** Lane / routing prose that must never remain inside a structured SMĚR value. */
+const DIRECTION_ROUTING_OVERFLOW_RE =
+  /jízdním\s+pruhem|parkovacím\s+pruhem|provoz\s+ve\s+směr|veden\s+provoz|vozovky\s+a|až\s+ke\s+křižovatce|uzavřen\s+(?:západní|východní)|zachován\s+obousměrný|objízdn/i;
+
+/** Stop destination capture before lane/routing continuation. */
+const DIRECTION_DEST_STOP_RE =
+  /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním|provoz|veden|vozovky|až\s+ke|před\s+(?:křižovatk|objekt)|zachován|objízdn|v\s+souvislosti|z\s+důvodu|za\s+účelem|v\s+rámci|po\s+dobu|kvůli|v\s+důsledku)\b/i;
+
+/**
+ * Detect parser/clip mid-token fragments (e.g. "… provoz ve smě").
+ * Does not reject legitimately short destination names.
+ */
+export function looksLikeTruncatedFragment(raw) {
+  const s = clean(raw);
+  if (!s) return false;
+  if (/\bve\s+smě$/i.test(s)) return true;
+  if (/\bv\s+rámc$/i.test(s)) return true;
+  if (/\bna\s+sil$/i.test(s)) return true;
+  if (/\bprováděn$/i.test(s)) return true;
+  if (/\bsouvislost$/i.test(s)) return true;
+  // Ends with a dangling Czech preposition / conjunction after a clip.
+  if (/\s(?:ve|na|v|do|z|se|ke|od|a|i)$/i.test(s)) return true;
+  if (/[-–—…]$/.test(s)) return true;
+  return false;
+}
+
 /**
  * Keep only the semantic direction destination from NDIC phrasing.
  * "ve směru do centra v souvislosti s …" → "do centra"
  * Does not invent direction from unrelated "v centru" prose.
+ * Rejects traffic-routing overflow ("na Bohdalec východním jízdním pruhem…").
  */
 export function normalizeDirectionHuman(raw) {
   let d = clean(raw);
   if (!d) return null;
-  d = d.replace(/^ve\s+směru\s+/i, "").replace(/^směr\s+/i, "");
+  // Routing prose clause (lane/parking guidance) is never a structured SMĚR value —
+  // even if a destination token could be salvaged from the start of the clause.
+  if (
+    DIRECTION_ROUTING_OVERFLOW_RE.test(d) &&
+    /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním)\b/i.test(d)
+  ) {
+    return null;
+  }
+  if (looksLikeTruncatedFragment(d)) return null;
+  d = d.replace(/^ve\s+směru\s+/i, "").replace(/^v\s+směru\s+/i, "").replace(/^směr\s+/i, "");
   d = clean(d.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
+  d = clean(d.split(DIRECTION_DEST_STOP_RE)[0]);
   d = sanitizeExtractedValueToken(d);
   if (!d) return null;
+  if (looksLikeTruncatedFragment(d)) return null;
   if (/^(kladný|záporný)\s+směr$/i.test(d)) return null;
   if (/^(unknown|n\/a|null|undefined|neuvedeno)$/i.test(d)) return null;
   // Reject obvious non-direction overflow / prose.
   if (d.length > 48) return null;
+  if (DIRECTION_ROUTING_OVERFLOW_RE.test(d)) return null;
   if (
-    /prováděn|stavebních prac|souvislosti|za účelem|v rámci akce|vyblokován|probíhají|bude uzavř/i.test(
+    /prováděn|stavebních prac|souvislosti|za účelem|v rámci akce|vyblokován|probíhají|bude uzavř|křižovatk/i.test(
       d
     )
   ) {
     return null;
   }
   // Destination-like: short place / left-right / centrum forms.
+  // NOTE: do not use the `i` flag on the capital-letter branch — `[A-Z]` with `i`
+  // would match lowercase and swallow routing prose after "vlevo".
   if (
-    !/^(?:do\s+|z\s+|na\s+|směr\s+)?(?:centra|centrum|vlevo|vpravo|oba směry|[A-ZÁ-Ž][\wÁ-Žá-ž ./-]{1,40})$/iu.test(
-      d
-    )
+    /^(?:do\s+|z\s+|na\s+|směr\s+)?(?:centra|centrum|vlevo|vpravo|oba směry)$/i.test(d)
   ) {
+    return d.replace(/^směr\s+/i, "").trim();
+  }
+  if (/^(?:do\s+|z\s+|na\s+)/i.test(d)) {
+    const rest = d.replace(/^(?:do\s+|z\s+|na\s+)/i, "");
+    if (/^[A-ZÁ-Ž]/u.test(rest) && /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./-]{0,40}$/u.test(rest)) {
+      return d;
+    }
     return null;
   }
-  return d;
+  if (/^[A-ZÁ-Ž]/u.test(d) && /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./-]{0,40}$/u.test(d)) {
+    return d;
+  }
+  return null;
+}
+
+/**
+ * Collect safe destination tokens from comment. When multiple distinct destinations
+ * appear (typical urban multi-way routing), structured SMĚR stays null — facts go
+ * into DOPRAVNÍ SITUACE instead.
+ */
+function collectDirectionDestinationsFromComment(text) {
+  const src = clean(text);
+  if (!src) return [];
+  const found = [];
+  const re =
+    /\b(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\s+((?:na\s+|do\s+|z\s+)?[^,;.]{1,60})/giu;
+  let m;
+  while ((m = re.exec(src))) {
+    let chunk = clean(m[1]);
+    chunk = clean(chunk.split(DIRECTION_DEST_STOP_RE)[0]);
+    chunk = clean(chunk.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
+    // "Bohdalec až ke křižovatce…" → stop before "až"
+    chunk = clean(chunk.split(/\s+až\b/i)[0]);
+    const norm = normalizeDirectionHuman(chunk);
+    if (norm) found.push(norm);
+  }
+  const uniq = [];
+  for (const d of found) {
+    if (!uniq.some((x) => samePlaceName(x, d))) uniq.push(d);
+  }
+  return uniq;
 }
 
 function extractDirectionHumanFromComment(text) {
-  const src = clean(text);
-  if (!src) return null;
-  const m =
-    src.match(
-      /\bve směru\s+([^,;.]{1,80}?)(?=\s+(?:v souvislosti s|z důvodu|za účelem|v rámci|po dobu|kvůli|v důsledku)\b|[,;.]|$)/i
-    ) ||
-    src.match(
-      /(?<![A-Za-zÁ-Žá-ž])směr\s+([^,;.]{1,80}?)(?=\s+(?:v souvislosti s|z důvodu|za účelem|v rámci|po dobu|kvůli|v důsledku)\b|[,;.]|$)/i
-    );
-  if (!m) return null;
-  return normalizeDirectionHuman(m[1]);
+  const dests = collectDirectionDestinationsFromComment(text);
+  if (!dests.length) return null;
+  const isTurnSide = (d) => /^(?:na\s+|do\s+|z\s+)?(?:vlevo|vpravo)$/i.test(d);
+  const placeLike = dests.filter((d) => !isTurnSide(d));
+  const turnLike = dests.filter((d) => isTurnSide(d));
+  // Prefer a single place/centrum destination over turn-side "vlevo/vpravo".
+  if (placeLike.length === 1) return placeLike[0];
+  // Multiple distinct place destinations (urban multi-way routing) → no single SMĚR.
+  if (placeLike.length > 1) return null;
+  if (turnLike.length === 1) return turnLike[0];
+  return null;
 }
 
 /**
@@ -1534,17 +1611,21 @@ export function isShoulderOrVergeRestriction(rawText) {
 /**
  * Single (or named) lane closed/blocked — not whole road/direction.
  */
+const NAMED_LANE_RE =
+  "(?:levý|pravý|střední|západní|východní|severní|jižní|jeden)";
+
 export function isSingleLaneRestriction(rawText) {
   const text = clean(rawText);
   if (!text) return false;
-  // Named L/R/C lane closed or impassable. "zúžená vozovka na jeden jízdní pruh"
+  // Named L/R/C/cardinal lane closed or impassable. "zúžená vozovka na jeden jízdní pruh"
   // is narrowing (handled separately) — do not invent "uzavřen" from it.
+  const lane = NAMED_LANE_RE;
   if (
-    /(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh.{0,40}(?:uzavřen|neprůjezdn)/i.test(text) ||
-    /(?:uzavřen|neprůjezdn).{0,40}(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(text) ||
-    /neprůjezdn[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
-    /zúžen[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
-    /(?:levý|pravý|střední)\s+jízdní\s+pruh.{0,40}zúžen/i.test(text) ||
+    new RegExp(lane + "\\s+jízdní\\s+pruh.{0,40}(?:uzavřen|neprůjezdn)", "i").test(text) ||
+    new RegExp("(?:uzavřen|neprůjezdn).{0,40}" + lane + "\\s+jízdní\\s+pruh", "i").test(text) ||
+    new RegExp("neprůjezdn[ýáé]\\s+" + lane + "\\s+jízdní\\s+pruh", "i").test(text) ||
+    new RegExp("zúžen[ýáé]\\s+" + lane + "\\s+jízdní\\s+pruh", "i").test(text) ||
+    new RegExp(lane + "\\s+jízdní\\s+pruh.{0,40}zúžen", "i").test(text) ||
     /odbočovací\s+pruh.{0,40}(?:uzavřen|vyblokován)/i.test(text) ||
     /(?:uzavřen|vyblokován).{0,40}odbočovací\s+pruh/i.test(text)
   ) {
@@ -2025,19 +2106,20 @@ function extractSituationCircumstanceBits(source) {
 }
 
 /**
- * Narrowing / shuttle / truck-only / height — source-grounded impact bits
- * that must not be dropped when a generic roadworks/closure lead wins.
+ * Narrowing / shuttle / truck-only / height / urban routing — source-grounded
+ * impact bits that must not be dropped when a generic roadworks/closure lead wins.
  */
 function extractOperationalImpactBits(source, causeBits, scopeBits) {
   const text = clean(source);
   const have = causeBits.concat(scopeBits).join(" ");
   const bits = [];
 
-  if (
-    /\bkyvadlový provoz\b/i.test(text) &&
-    !/kyvadlov/i.test(have)
-  ) {
-    bits.push("Kyvadlový provoz jedním jízdním pruhem");
+  if (/\bkyvadlový provoz\b/i.test(text) && !/kyvadlov/i.test(have)) {
+    if (/\bjedním\s+jízdním\s+pruhem\b/i.test(text)) {
+      bits.push("Kyvadlový provoz jedním jízdním pruhem");
+    } else {
+      bits.push("Kyvadlový provoz");
+    }
   } else if (
     /\b(?:provoz\s+)?jedním jízdním pruhem\b/i.test(text) &&
     !/jedním jízdním pruhem|kyvadlov/i.test(have)
@@ -2048,6 +2130,72 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
     bits.push("Zúžená vozovka na jeden jízdní pruh");
+  }
+
+  // Cardinal / named lane closed (západní/východní …) — not only L/R/C.
+  {
+    const closedLane =
+      text.match(
+        new RegExp(
+          "uzavřen\\s+(" + NAMED_LANE_RE + "\\s+jízdní\\s+pruh)",
+          "i"
+        )
+      ) ||
+      text.match(
+        new RegExp(
+          "(" + NAMED_LANE_RE + "\\s+jízdní\\s+pruh).{0,24}uzavřen",
+          "i"
+        )
+      );
+    if (closedLane && !/jízdní pruh je uzavřen|západní|východní|severní|jižní/i.test(have)) {
+      bits.push(capitalizeLanePhrase(closedLane[1]) + " je uzavřen");
+    }
+  }
+
+  // Traffic routing by destination + lane/parking strip (urban multi-way works).
+  {
+    const routePatterns = [
+      /(?:provoz\s+)?(?:ve\s+směru|v\s+směru)\s+na\s+([^,;]{2,40}?)\s+veden\s+((?:východním|západním|severním|jižním|levým|pravým|středním)\s+jízdním\s+pruhem|parkovacím\s+pruhem)/gi,
+      /veden\s+provoz\s+(?:ve\s+směru|v\s+směru)\s+na\s+([^,;]{2,40}?)\s+((?:východním|západním|severním|jižním|levým|pravým|středním)\s+jízdním\s+pruhem|parkovacím\s+pruhem)/gi,
+      /(?:ve\s+směru|v\s+směru)\s+na\s+([^,;]{2,40}?)\s+((?:východním|západním|severním|jižním|levým|pravým|středním)\s+jízdním\s+pruhem(?:\s+vozovky)?|parkovacím\s+pruhem)/gi,
+    ];
+    const seenRoute = new Set();
+    for (const routeRe of routePatterns) {
+      let rm;
+      while ((rm = routeRe.exec(text))) {
+        let dest = sanitizeExtractedValueToken(clean(rm[1]).split(DIRECTION_DEST_STOP_RE)[0]);
+        dest = clean(dest.split(/\s+až\b/i)[0]);
+        let via = clean(rm[2]).toLowerCase().replace(/\s+vozovky$/i, "");
+        if (!dest || !via) continue;
+        if (dest.length > 40 || DIRECTION_ROUTING_OVERFLOW_RE.test(dest)) continue;
+        if (!/^(?:[A-ZÁ-Ž]|Koh)/u.test(dest) && !/^[A-Za-zÁ-Žá-ž]/.test(dest)) continue;
+        const key = dest.toLowerCase() + "|" + via;
+        if (seenRoute.has(key)) continue;
+        seenRoute.add(key);
+        const bit = "Provoz směrem na " + dest + " je veden " + via;
+        if (!bits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
+          bits.push(bit);
+        }
+      }
+    }
+  }
+
+  if (
+    /zachován\s+obousměrný\s+provoz|obousměrný\s+provoz\s+(?:zůstává\s+)?zachován/i.test(text) &&
+    !/obousměrný/i.test(have + " " + bits.join(" "))
+  ) {
+    bits.push("Obousměrný provoz zůstává zachován");
+  }
+
+  // Concrete work activity — do not collapse to bare "Práce na silnici."
+  if (/výsprava\s+tryskovou\s+metodou/i.test(text) && !/výsprava|tryskov/i.test(have)) {
+    bits.push("Výsprava tryskovou metodou");
+  }
+  if (/\bsanace\b/i.test(text) && !/\bsanace\b/i.test(have)) {
+    bits.push("Sanace");
+  }
+  if (/frézování/i.test(text) && !/frézován/i.test(have)) {
+    bits.push("Frézování");
   }
 
   if (
@@ -2143,7 +2291,10 @@ export function buildTrafficSituationSummary(input = {}) {
     if (!causeBits.length) causeBits.push("Práce na silnici");
   } else if (/částečn[áa]\s+uzavírk/i.test(source)) {
     const road = resolvePresentationRoadNumber(input, facts);
-    if (road) causeBits.push("Částečná uzavírka silnice " + road);
+    const street = resolveConfirmedStreet(input, facts) || facts.street;
+    if (street && !road) {
+      causeBits.push("Částečná uzavírka ulice " + street.replace(/^ulice\s+/i, ""));
+    } else if (road) causeBits.push("Částečná uzavírka silnice " + road);
     else causeBits.push("Částečná uzavírka");
   } else if (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) {
     const closureObjEarly = /úpln[áa]\s+uzavírk/i.test(source)
@@ -2219,9 +2370,9 @@ export function buildTrafficSituationSummary(input = {}) {
   } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
     const turnLane = /odbočovací\s+pruh/i.test(source);
     const lane =
-      source.match(/((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
-      source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
-      source.match(/zúžen[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i);
+      source.match(/((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)/i) ||
+      source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)/i) ||
+      source.match(/zúžen[ýáé]\s+((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)/i);
     const dir = normalizeDirectionHuman(facts.directionHuman || clean(input.direction) || "");
     const turnSide = /(?:pro\s+)?směr\s+vlevo|\bvlevo\b/i.test(source)
       ? "vlevo"
@@ -2327,14 +2478,19 @@ export function buildTrafficSituationSummary(input = {}) {
     scopeBits.push("Provoz převeden do protisměru");
   }
 
-  // Partial closure lead when not already captured by cause/scope (typed restriction).
+  // Partial closure lead when not already captured by cause (typed restriction).
+  // Keep even when a named lane is already in scopeBits — complementary facts.
   if (
     /částečn[áa]\s+uzavírk/i.test(source) &&
-    !causeBits.some((b) => /částečn/i.test(b)) &&
-    !scopeBits.some((b) => /částečn|odbočovací|jízdní pruh/i.test(b))
+    !causeBits.some((b) => /částečn/i.test(b))
   ) {
     const road = resolvePresentationRoadNumber(input, facts);
-    causeBits.unshift(road ? "Částečná uzavírka silnice " + road : "Částečná uzavírka");
+    const street = resolveConfirmedStreet(input, facts) || facts.street;
+    if (street && !road) {
+      causeBits.unshift("Částečná uzavírka ulice " + street.replace(/^ulice\s+/i, ""));
+    } else {
+      causeBits.unshift(road ? "Částečná uzavírka silnice " + road : "Částečná uzavírka");
+    }
   }
 
   // Turning-lane closure when scope analyzer missed it (e.g. mixed partial-closure wording).
@@ -3063,8 +3219,9 @@ export function buildPlaceAndDirectionLine(input = {}) {
     const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
     if (km) pushUniqueBit(placeBits, km);
     if (dir) pushUniqueBit(placeBits, "směr " + dir);
-    if (cityPart) placeBits.push(cityPart);
-    else if (muni) placeBits.push(muni);
+    // Prefer municipality over city-part on the collapsed place line.
+    if (muni) placeBits.push(muni);
+    else if (cityPart) placeBits.push(cityPart);
     if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
     return placeBits.join(" · ");
   }
@@ -3219,6 +3376,7 @@ export function buildTrafficExpandedDetail(input = {}) {
     const confirmedStreet = resolveConfirmedStreet(input, facts);
     push("street", "Ulice", confirmedStreet);
   }
+  let muniResolvedForDedup = null;
   {
     const muniResolved =
       resolveMunicipalitySignName(input) ||
@@ -3229,8 +3387,10 @@ export function buildTrafficExpandedDetail(input = {}) {
         facts.cityPart || input.cityPart
       ) ||
       (registry ? registry.municipality : null);
+    muniResolvedForDedup = muniResolved;
     push("municipality", "Obec", muniResolved);
   }
+  let cityPartForDedup = null;
   {
     let cityPartVal = facts.cityPart || input.cityPart || (registry ? registry.cityPart : null);
     if (!cityPartVal && isPrahaCityPartName(input.municipality)) {
@@ -3239,14 +3399,24 @@ export function buildTrafficExpandedDetail(input = {}) {
     if (!cityPartVal && isNumericCityPartName(input.municipality)) {
       cityPartVal = clean(input.municipality);
     }
+    cityPartForDedup = cityPartVal;
     push("cityPart", "Městská část", cityPartVal);
   }
   push("district", "Okres", input.district || facts.district);
   {
-    const roadNorm = clean(input.road)
+    const roadNorm = clean(roadResolved || input.road)
       .toLowerCase()
       .replace(/\s+/g, "");
     const locNorm = clean(input.location)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const streetNorm = clean(resolveConfirmedStreet(input, facts) || facts.street)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const muniNorm = clean(muniResolvedForDedup)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const partNorm = clean(cityPartForDedup)
       .toLowerCase()
       .replace(/\s+/g, "");
     const named = facts.namedObject ? streetBareName(facts.namedObject) : null;
@@ -3258,6 +3428,9 @@ export function buildTrafficExpandedDetail(input = {}) {
         looksLikeRoadNumberToken(input.location) &&
         !!roadNorm &&
         locNorm === roadNorm);
+    const locIsStreetEcho = !!(locNorm && streetNorm && locNorm === streetNorm);
+    const locIsMuniEcho = !!(locNorm && muniNorm && locNorm === muniNorm);
+    const locIsPartEcho = !!(locNorm && partNorm && locNorm === partNorm);
     if (named && namedKind === LOCATION_KIND.TUNNEL) {
       push("tunnel", "Tunel", named);
     } else if (named && namedKind === LOCATION_KIND.BRIDGE) {
@@ -3267,7 +3440,7 @@ export function buildTrafficExpandedDetail(input = {}) {
     } else if (named) {
       // Named object is the authoritative locality — do not keep a conflicting TMC/area label.
       push("location", "Lokalita", named);
-    } else if (!locIsRoadEcho) {
+    } else if (!locIsRoadEcho && !locIsStreetEcho && !locIsMuniEcho && !locIsPartEcho) {
       const locVal = clean(input.location);
       // Never keep a false "ulice …tunel" locality echo.
       if (locVal && !(/^ulice\b/i.test(locVal) && /tunel/i.test(locVal))) {

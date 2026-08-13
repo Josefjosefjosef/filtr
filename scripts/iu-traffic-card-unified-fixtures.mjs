@@ -1313,7 +1313,9 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     impact,
   });
   ok("horno_place_street", /ulice Hornopolní/.test(place));
-  ok("horno_place_part", /Moravská Ostrava/.test(place));
+  // Collapsed place line prefers municipality; city-part stays on the secondary row.
+  ok("horno_place_muni", /\bOstrava\b/.test(place));
+  ok("horno_place_part_secondary", /Moravská Ostrava/.test(hdr.cityPartRow || ""));
   const pPres = buildTrafficCardPresentation({
     location: "Hornopolní",
     municipality: "Ostrava",
