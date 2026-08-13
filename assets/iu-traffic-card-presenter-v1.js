@@ -1202,32 +1202,74 @@ export function extractStreetRangeFromOfficialComment(rawText) {
 
 /**
  * Concrete work / reconstruction phrase from NDIC comment (not generic category).
- * Examples: "Rekonstrukce plynovodu", "výsprava vozovky", "údržba mostu".
+ * Examples: "Rekonstrukce plynovodu", "výsprava vozovky", "údržba mostu",
+ * "umístění kabelového vedení k nové trafostanici".
  * Never invents; never returns bare "stavební práce" / "práce na silnici".
  */
 export function extractSpecificWorkFromOfficialComment(rawText) {
   const text = clean(rawText);
   if (!text) return null;
   const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  // Drop municipal boilerplate wrappers — keep the concrete activity noun phrase.
+  const normalized = clean(
+    cut
+      .replace(/\bzajištění\s+realizace\s+/gi, "")
+      .replace(/\bza\s+účelem\s+(?:realizace\s+)?/gi, "")
+  );
   const GENERIC =
     /^(?:stavební\s+práce|práce\s+na\s+silnici|práce\s+na\s+inženýrských\s+sítích|dopravní\s+omezení|uzavírka|uzavřeno)\.?$/i;
   const re =
-    /(?:^|[,;\s])((?:pravidelná\s+)?(?:rekonstrukce|oprava|údržba(?:\s+a\s+opravy)?|výsprava|pokládka|výkop|uložení|revitalizace)\s+[^,;.]+)/giu;
+    /(?:^|[,;\s.])((?:pravidelná\s+)?(?:rekonstrukce|oprava|údržba(?:\s+a\s+opravy)?|výsprava|pokládka|výkop|uložení|umístění|instalace|výstavba|revitalizace)\s+[^,;.]+)/giu;
   let best = null;
-  for (const m of cut.matchAll(re)) {
+  for (const m of normalized.matchAll(re)) {
     let phrase = clean(m[1]);
     phrase = clean(
       phrase.split(
-        /\s+v\s+MK\b|\s+v\s+ulici\b|\s+v\s+obci\b|\s+ulice\b|\s+ve\s+směru\b|\s+z\s+důvodu\b/i
+        /\s+v\s+MK\b|\s+v\s+ulici\b|\s+v\s+obci\b|\s+ulice\b|\s+ve\s+směru\b|\s+z\s+důvodu\b|\s+Příjezd\b|\s+Objížď/i
       )[0]
     );
-    phrase = clipExtractedValueAtStructuralEnd(phrase, 90);
+    phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
     phrase = sanitizeExtractedValueToken(phrase);
     if (!phrase || phrase.length < 8 || GENERIC.test(phrase)) continue;
     if (/^(?:od|do)\s+\d/i.test(phrase)) continue;
-    if (!best || phrase.length < best.length) best = phrase;
+    // Prefer the most informative concrete phrase (longer wins when both are valid).
+    if (!best || phrase.length > best.length) best = phrase;
   }
   return best;
+}
+
+/**
+ * Access / approach fact from NDIC — never invents a detour.
+ * Example: "Příjezd do ulice X zajištěn DIO z ulice Y"
+ * → destinationStreet, fromStreet, presentation (DIO kept only as source marker, not expanded jargon).
+ */
+export function extractAccessInformationFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const m =
+    cut.match(
+      /Příjezd\s+do\s+(?:ulice\s+|ul\.\s*)([^,;.]+?)\s+(?:je\s+)?zajištěn(?:\s+DIO)?\s+z\s+(?:ulice\s+|ul\.\s*)([^,;.]+)/i
+    ) ||
+    cut.match(
+      /Příjezd\s+(?:do\s+)?(?:oblasti|úseku)\s+([^,;.]+?)\s+(?:je\s+)?zajištěn(?:\s+DIO)?\s+z\s+(?:ulice\s+|ul\.\s*)([^,;.]+)/i
+    );
+  if (!m) return null;
+  const destinationStreet = sanitizeExtractedValueToken(streetBareName(m[1]));
+  const fromStreet = sanitizeExtractedValueToken(streetBareName(m[2]));
+  if (!destinationStreet || !fromStreet) return null;
+  if (destinationStreet.length < 2 || fromStreet.length < 2) return null;
+  if (destinationStreet.length > 60 || fromStreet.length > 60) return null;
+  const hasDioMarker = /\bzajištěn\s+DIO\b/i.test(cut);
+  return {
+    destinationStreet,
+    fromStreet,
+    hasDioMarker,
+    // Source says access/approach — never upgrade to "objížďka".
+    isDetour: false,
+    presentation:
+      "Příjezd do ulice " + destinationStreet + " je zajištěn z ulice " + fromStreet,
+  };
 }
 
 /**
@@ -1570,6 +1612,7 @@ export function parseOfficialCommentFacts(rawText) {
     eventName: null,
     reasonKind: null,
     specificWork: null,
+    accessInformation: null,
     locationQualifier: null,
     openLaneCount: null,
     affectedRoadPart: null,
@@ -1595,6 +1638,7 @@ export function parseOfficialCommentFacts(rawText) {
   out.eventName = eventReason.eventName;
   out.reasonKind = eventReason.reasonKind;
   out.specificWork = extractSpecificWorkFromOfficialComment(text);
+  out.accessInformation = extractAccessInformationFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
   out.locationQualifier = extractLocationQualifierFromOfficialComment(text);
 
@@ -2892,6 +2936,19 @@ export function buildTrafficSituationSummary(input = {}) {
     } else if (hasStavebni && !causeBits.length) {
       causeBits.push("Stavební práce");
     }
+
+    // Generic category lead already present (engineering networks / road works) —
+    // still fold in concrete work detail so it is not dropped from collapsed UI.
+    if (specificWork && causeBits.length) {
+      const enrichIdx = causeBits.findIndex((b) =>
+        /^(?:Práce na inženýrských sítích|Práce na silnici|Stavební práce)\.?$/i.test(clean(b))
+      );
+      if (enrichIdx >= 0) {
+        const base = clean(causeBits[enrichIdx]).replace(/\.$/, "");
+        causeBits[enrichIdx] = base + " – " + formatWorkReason(specificWork);
+      }
+    }
+
     if (
       /práce na silnici/i.test(source) &&
       !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských|uzavřena z důvodu/i.test(b))
@@ -3252,6 +3309,21 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   }
 
+  // Access / approach (never upgrade to detour).
+  const accessBits = [];
+  {
+    const access = facts.accessInformation;
+    const accessText = access && clean(access.presentation);
+    if (
+      accessText &&
+      !causeBits.some((b) => /příjezd/i.test(b)) &&
+      !scopeBits.some((b) => /příjezd/i.test(b)) &&
+      !circumstanceBits.some((b) => /příjezd/i.test(b))
+    ) {
+      accessBits.push(accessText);
+    }
+  }
+
   // Explicit "z důvodu …" + quoted event/action name — never drop when present in RAW.
   {
     const reasonText = clean(facts.eventReason);
@@ -3303,8 +3375,8 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   }
 
-  // Order: main fact → traffic impact/scope → circumstance → condition.
-  const ordered = [...causeBits, ...scopeBits, ...circumstanceBits, ...conditionBits];
+  // Order: main fact → traffic impact/scope → access → circumstance → condition.
+  const ordered = [...causeBits, ...scopeBits, ...accessBits, ...circumstanceBits, ...conditionBits];
   if (ordered.length) return finalizeSentences(ordered);
 
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
@@ -4184,6 +4256,11 @@ export function buildTrafficExpandedDetail(input = {}) {
   {
     const locQ = clean(facts.locationQualifier);
     if (locQ) push("locationQualifier", "Upřesnění místa", locQ);
+  }
+  {
+    const access = facts.accessInformation;
+    const accessText = access && clean(access.presentation);
+    if (accessText) push("accessInformation", "Příjezd", accessText);
   }
   {
     const roadNorm = clean(roadResolved || input.road)
