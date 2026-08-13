@@ -1116,6 +1116,113 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     /Střet osobního automobilu se srnou/.test(sitAnimal) &&
       sitAnimal !== "Nehoda."
   );
+
+  // --- Forensic info-loss expansions (audit 2026-08-13) ---
+  // PRE_FIX: "Neprůjezdná pro vozidla vyšší než 3." (decimal comma truncated)
+  const sitHeight = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact:
+      "silnice II/311, dočasné omezení výšky, Silnice je v místě železničního mostu neprůjezdná pro vozidla vyšší než 3,7 m. - maximal height 3,7 m",
+  });
+  ok(
+    "SIT_INFO_LOSS_HEIGHT_DECIMAL_PASS",
+    /3,7\s*m/.test(sitHeight) && !/vyšší než 3\./.test(sitHeight)
+  );
+
+  // PRE_FIX: "Práce na silnici." without narrowing
+  const sitNarrow = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact:
+      "komunikace, práce na údržbě mostu, zúžená vozovka na jeden jízdní pruh, Od 01.04.2022 00:00 Do 31.12.2027 23:59",
+  });
+  ok(
+    "SIT_INFO_LOSS_NARROW_ONE_LANE_PASS",
+    /Zúžená vozovka na jeden jízdní pruh/i.test(sitNarrow) &&
+      !/^Práce na silnici\.$/i.test(sitNarrow)
+  );
+  ok(
+    "SIT_INFO_LOSS_NARROW_NO_INVENTED_CLOSURE_PASS",
+    !/Jeden jízdní pruh je uzavřen/i.test(sitNarrow)
+  );
+
+  // PRE_FIX: "Silnice je uzavřena." when source says most uzavřen
+  const sitBridge = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact:
+      "místní komunikace, Velký Šenov, okr. Děčín, most uzavřen, Od 04.04.2018 08:30 Do 11.07.2030 12:48, havarijní stav",
+  });
+  ok(
+    "SIT_INFO_LOSS_BRIDGE_CLOSED_PASS",
+    /^Most je uzavřen\.$/i.test(sitBridge)
+  );
+
+  // PRE_FIX: "Stavební práce." without speed
+  const sitSpeed = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact:
+      "silnice II/370, stavební práce, Od 08.08.2025 06:00 Do 31.08.2026 20:00, rychlost snížena na 30 km/h",
+  });
+  ok(
+    "SIT_INFO_LOSS_SPEED_LIMIT_PASS",
+    /Rychlost snížena na 30 km\/h/i.test(sitSpeed)
+  );
+
+  // PRE_FIX: sport event summary omitted "Lidé na vozovce"
+  const sitPeople = buildTrafficSituationSummary({
+    eventType: "omezeni",
+    impact:
+      "Od 14.8.2026 14:00 do 19:00; v ulicích Dlouhá, třída Tomáše Bati v obci Zlín; mezinárodní sportovní akce; automobilové závody; Pozor! Lidé na vozovce",
+  });
+  ok(
+    "SIT_INFO_LOSS_PEOPLE_ON_ROAD_PASS",
+    /Lidé na vozovce/i.test(sitPeople)
+  );
+
+  // PRE_FIX: "Stavební práce." without zúžený pravý pruh
+  const sitLaneZuz = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact:
+      "silnice I/55, stavební práce, zúžený pravý jízdní pruh ve směru jízdy od Uherského Hradiště",
+  });
+  ok(
+    "SIT_INFO_LOSS_NARROWED_RIGHT_LANE_PASS",
+    /Pravý jízdní pruh je zúžený/i.test(sitLaneZuz)
+  );
+
+  // PRE_FIX: truck-only lost under roadworks lead
+  const sitTruck = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact:
+      "silnice III/1877, práce na údržbě mostu, uzavřeno pro těžká nákladní vozidla, Od 01.01.2026 00:00 Do 31.12.2027 23:59",
+  });
+  ok(
+    "SIT_INFO_LOSS_TRUCK_ONLY_PASS",
+    /Uzavřeno pro těžká nákladní vozidla/i.test(sitTruck)
+  );
+
+  // PRE_FIX: eventType=prekazka + porouchané dropped secondary překážka
+  const sitObstBroken = buildTrafficSituationSummary({
+    eventType: "prekazka",
+    impact:
+      "D1, km 166.5, ve směru Brno, porouchané vozidlo, zdržení; překážka na vozovce, průjezd se zvýšenou opatrností; neprůjezdná zpevněná krajnice; odstavený NA.",
+  });
+  ok(
+    "SIT_INFO_LOSS_OBSTACLE_WITH_BROKEN_PASS",
+    /Překážka na vozovce/i.test(sitObstBroken) &&
+      /Porouchané nákladní vozidlo/i.test(sitObstBroken) &&
+      /Zdržení/i.test(sitObstBroken)
+  );
+
+  // Kyvadlový provoz must surface beside roadworks
+  const sitShuttle = buildTrafficSituationSummary({
+    eventType: "prace",
+    impact:
+      "silnice I/16, stavební práce, kyvadlový provoz jedním jízdním pruhem, Od 22.12.2025 00:00 Do 30.11.2026 23:59",
+  });
+  ok(
+    "SIT_INFO_LOSS_SHUTTLE_PASS",
+    /Kyvadlový provoz jedním jízdním pruhem/i.test(sitShuttle)
+  );
 }
 
 // --- Hornopolní locality hierarchy ---
