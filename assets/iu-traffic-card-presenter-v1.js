@@ -1231,6 +1231,23 @@ export function extractSpecificWorkFromOfficialComment(rawText) {
 }
 
 /**
+ * Precise place qualifier from NDIC (parcel / cadastral hint) — never invents.
+ * Kept out of the main title; used in expanded "Upřesnění místa".
+ */
+export function extractLocationQualifierFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const m =
+    cut.match(/\bu\s+p\.?\s*p\.?\s*č\.\s*([\d]+(?:\/[\d]+)?)/i) ||
+    cut.match(/\bu\s+parcel(?:y|ní\s+číslo)?\s*(?:č\.)?\s*([\d]+(?:\/[\d]+)?)/i);
+  if (!m) return null;
+  const num = clean(m[1]);
+  if (!num) return null;
+  return "u p.p.č. " + num;
+}
+
+/**
  * Explicit event reason from "z důvodu …" plus optional quoted event/action name.
  */
 export function extractEventReasonFromOfficialComment(rawText) {
@@ -1553,6 +1570,7 @@ export function parseOfficialCommentFacts(rawText) {
     eventName: null,
     reasonKind: null,
     specificWork: null,
+    locationQualifier: null,
     openLaneCount: null,
     affectedRoadPart: null,
     roadworkDetail: null,
@@ -1578,6 +1596,7 @@ export function parseOfficialCommentFacts(rawText) {
   out.reasonKind = eventReason.reasonKind;
   out.specificWork = extractSpecificWorkFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
+  out.locationQualifier = extractLocationQualifierFromOfficialComment(text);
 
   // Explicit open / passable lane count from NDIC ("počet průjezdných pruhů: 2").
   {
@@ -2647,10 +2666,10 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
   ) {
     bits.push("Zúžená vozovka na jeden jízdní pruh");
   } else if (
-    /\bzúžené\s+jízdní\s+pruhy\b/i.test(text) &&
+    /(?:^|[,;\s])zúžené\s+jízdní\s+pruhy(?:\s*[,;.]|\s+|$)/i.test(text) &&
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
-    bits.push("Zúžené jízdní pruhy");
+    bits.push("Jízdní pruhy jsou zúžené");
   }
 
   if (
@@ -2858,6 +2877,10 @@ export function buildTrafficSituationSummary(input = {}) {
             formatWorkReason(workDetail)
         );
       }
+      roadworksReasonMerged = true;
+    } else if (hasStavebni && reasonIsWorkDetail && !causeBits.length) {
+      // Open roadworks with explicit reason — never invent closure wording.
+      causeBits.push("Stavební práce z důvodu " + formatWorkReason(reasonDetail));
       roadworksReasonMerged = true;
     } else if (hasStavebni && specificWork && !causeBits.length) {
       causeBits.push(
@@ -3236,14 +3259,25 @@ export function buildTrafficSituationSummary(input = {}) {
     if (reasonText || eventName) {
       let reasonBit = null;
       if (facts._roadworksReasonMerged) {
-        // Already folded into the roadworks closure lead — do not duplicate.
+        // Already folded into the roadworks lead — do not duplicate.
         reasonBit = null;
       } else if (facts.reasonKind === "CULTURAL_EVENT") {
         reasonBit = eventName
           ? 'Uzavírka je z důvodu konání kulturní akce „' + eventName + "“"
           : "Uzavírka je z důvodu konání kulturní akce";
       } else if (reasonText) {
-        reasonBit = "Uzavírka je z důvodu " + reasonText.replace(/^konání\s+/i, "konání ");
+        const closedNow =
+          scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED ||
+          scope === RESTRICTION_SCOPE.DIRECTION_CLOSED ||
+          scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED ||
+          /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
+          /úpln[áa]\s+uzavírk/i.test(source);
+        const lead = closedNow
+          ? "Uzavírka je z důvodu "
+          : cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS
+            ? "Stavební práce z důvodu "
+            : "Omezení je z důvodu ";
+        reasonBit = lead + reasonText.replace(/^konání\s+/i, "konání ");
         if (eventName && !reasonBit.includes(eventName)) {
           reasonBit += ' „' + eventName + "“";
         }
@@ -4147,6 +4181,10 @@ export function buildTrafficExpandedDetail(input = {}) {
     push("cityPart", "Městská část", cityPartVal);
   }
   push("district", "Okres", input.district || facts.district);
+  {
+    const locQ = clean(facts.locationQualifier);
+    if (locQ) push("locationQualifier", "Upřesnění místa", locQ);
+  }
   {
     const roadNorm = clean(roadResolved || input.road)
       .toLowerCase()
