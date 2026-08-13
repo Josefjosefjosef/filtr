@@ -34,7 +34,7 @@ let BASE = "";
 const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
-const SW_VER = "2026-08-13-date-time-value-column-v4b";
+const SW_VER = "2026-08-13-urban-numbered-road-parse-v1";
 /* Must match assets/app.js FOCUS_OPEN_GRACE_MS — do not change product grace. */
 const FOCUS_OPEN_GRACE_MS = 420;
 

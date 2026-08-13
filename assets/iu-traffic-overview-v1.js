@@ -1057,7 +1057,8 @@ export function buildTrafficCardViewModel(trafficV1) {
   const localityLine = compactLocalityLine(municipality, district);
   const dir =
     humanDirectionOrNull(tv.direction) ||
-    (presentation.communication && presentation.communication.direction) ||
+    (presentation.communication &&
+      humanDirectionOrNull(presentation.communication.direction)) ||
     null;
   let locationNote =
     tv.locationDisclosureCs != null && String(tv.locationDisclosureCs).trim()
