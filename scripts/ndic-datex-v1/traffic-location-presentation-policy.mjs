@@ -32,6 +32,20 @@ function clip(s, n) {
   return t.length > n ? t.slice(0, n) : t;
 }
 
+/**
+ * Direction labels must not be mid-token clipped (avoids "… provoz ve smě").
+ * Prefer omitting an oversized/unsafe value over inventing a fragment.
+ */
+function clipDirection(s, n) {
+  if (s == null) return null;
+  const t = String(s).replace(/\s+/g, " ").trim();
+  if (!t) return null;
+  if (t.length > n) return null;
+  if (/\bve\s+smě$/i.test(t) || /\bv\s+rámc$/i.test(t) || /\bna\s+sil$/i.test(t)) return null;
+  if (/\s(?:ve|na|v|do|z|se|ke|od|a|i)$/i.test(t)) return null;
+  return t;
+}
+
 function fv(ev, name) {
   return ev && ev.fields && ev.fields[name] ? ev.fields[name] : null;
 }
@@ -150,7 +164,8 @@ export function classifyLocationPresentation(event, elig = {}) {
   // Precise geo display fields only when precise
   const displayRoad = preciseLocationVerified && road != null ? clip(String(road), 40) : null;
   const displayKm = preciseLocationVerified ? kilometer : null;
-  const displayDirection = preciseLocationVerified && direction != null ? clip(String(direction), 40) : null;
+  const displayDirection =
+    preciseLocationVerified && direction != null ? clipDirection(String(direction), 40) : null;
   const displayAdmin =
     preciseLocationVerified && admin != null ? clip(String(admin), 80) : null;
 
