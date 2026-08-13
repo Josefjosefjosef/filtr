@@ -3,7 +3,8 @@
 
 /**
  * Final geometry + CSS-contract guard for Silver draft Datum/Čas inputs.
- * Engines: Chromium + WebKit (iOS Safari closest). Portrait + landscape.
+ * Engines: Chromium + Playwright WebKit (NOT physical iPhone). Portrait + landscape.
+ * REAL_IOS_PASS is always NOT_TESTED here — use iu-datetime-real-route-geometry-guard-v1 + physical device.
  * Paths: quick-template Nová událost / Nová připomínka + injected edit-mode draft cards
  * (same .iuSilverDraftGrid--edit / .iuSilverDraftInput shared component).
  * Scenarios: value/picker churn, all-day toggle, reopen×10, dark mode, desktop unchanged.
@@ -710,21 +711,23 @@ async function main() {
   const cssContract = assertCssSourceContract();
   const chromiumResult = await runEngine(chromium, "chromium");
   let webkitResult = null;
+  // P0: no soft-PASS / skip-as-PASS. BROWSER_CRASH / SKIP = FAIL.
+  // PLAYWRIGHT_WEBKIT ≠ REAL_IOS — this guard must never certify physical iPhone.
   const skipWebkit =
     String(process.env.SILVER_DATE_TIME_FIT_SKIP_WEBKIT || "").trim() === "1" ||
     String(process.env.SILVER_DATE_TIME_FIT_SKIP_WEBKIT || "").toLowerCase() === "true";
   if (skipWebkit) {
     webkitResult = {
       engine: "webkit",
-      pass: true,
+      pass: false,
       skipped: true,
       skipReason: "SILVER_DATE_TIME_FIT_SKIP_WEBKIT",
-      overflow_x: false,
-      desktop: chromiumResult.desktop || { pass: true },
+      overflow_x: true,
+      desktop: { pass: false },
       viewports: [],
       scenario: null,
     };
-    process.stdout.write("WEBKIT_SKIPPED reason=SILVER_DATE_TIME_FIT_SKIP_WEBKIT\n");
+    process.stdout.write("WEBKIT_SKIP_FAIL reason=SILVER_DATE_TIME_FIT_SKIP_WEBKIT\n");
   } else {
     try {
       webkitResult = await runEngine(webkit, "webkit");
@@ -741,25 +744,12 @@ async function main() {
     }
   }
 
-  // CI WebKit runners intermittently crash the page during navigation; Chromium
-  // remains the hard geometry gate. Soft-pass only for Page crashed after retries.
-  let webkitSoft = null;
   if (
-    !skipWebkit &&
-    chromiumResult.pass &&
     webkitResult &&
     !webkitResult.pass &&
-    String(process.env.CI || "") === "true" &&
     /Page crashed|Target crashed/i.test(String(webkitResult.error || ""))
   ) {
-    webkitSoft = "ci_webkit_page_crash_after_retries";
-    webkitResult = Object.assign({}, webkitResult, {
-      pass: true,
-      overflow_x: false,
-      softPass: webkitSoft,
-      desktop: chromiumResult.desktop || webkitResult.desktop,
-    });
-    process.stdout.write("WEBKIT_SOFT_PASS reason=" + webkitSoft + "\n");
+    process.stdout.write("BROWSER_CRASH=FAIL engine=webkit\n");
   }
 
   const pass = cssContract.pass && chromiumResult.pass && webkitResult.pass;
@@ -768,13 +758,20 @@ async function main() {
     cssContract,
     chromium: chromiumResult,
     webkit: webkitResult,
+    PLAYWRIGHT_CHROMIUM_PASS: !!chromiumResult.pass,
+    PLAYWRIGHT_WEBKIT_PASS: !!webkitResult.pass,
+    REAL_IOS_PASS: "NOT_TESTED",
+    REAL_IOS_EQUIVALENCE_PROVEN: false,
+    softPassRemoved: true,
     shared_component:
       ".iuSilverDraftGrid--edit + .iuSilverDraftInput[type=date|time] (quick-template + chat draft edit via renderDraftCardEditGrid / renderTaskDraftGridEdit)",
     surfaces_covered: [
-      "Silver quick-template calendar/reminder (.iuSilverDraftInput date|time)",
-      "Calendar overlay (.iu-calInline__dateInput + timeBtn) via CSS contract",
-      "Tasks overlay (#iuTaskDue / #iuTaskDueTime) via CSS contract",
+      "Silver quick-template calendar/reminder (.iuSilverDraftInput date|time) — LIVE geometry",
+      "Calendar overlay (.iu-calInline__dateInput + timeBtn) via CSS contract ONLY (not live DOM; see iu-datetime-real-route-geometry-guard-v1)",
+      "Tasks overlay (#iuTaskDue / #iuTaskDueTime) via CSS contract ONLY (not live DOM; see iu-datetime-real-route-geometry-guard-v1)",
     ],
+    surfaces_note:
+      "This guard does NOT certify physical iPhone. Calendar/Tasks live DOM is covered by iu-datetime-real-route-geometry-guard-v1.",
     root_cause:
       "iOS/WebKit native date/time intrinsic min-width beats non-important min-width:0; overflow-x:hidden clipped corners without locking right edge. Fix: min-width/min-inline-size:0 !important + max-width:100% on Silver, Calendar, and Tasks under max-width:1024px; no overflow clip on inputs.",
   };
