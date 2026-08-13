@@ -1328,6 +1328,13 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   flex: 0 0 auto;
   display: block;
 }
+.iuPdTunnelObjectSign {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+  display: block;
+}
 .iuPdTrafficComm__dir,
 .iuPdTrafficComm__place,
 .iuPdTrafficComm__street,
@@ -1340,6 +1347,17 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   color: var(--iu-pd-text);
   overflow-wrap: anywhere;
   min-width: 0;
+}
+/* Outside-city tunnel name: wrap, never truncate for layout. */
+.iuPdTrafficComm__tunnelName {
+  flex: 1 1 8rem;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 .iuPdTrafficComm__cityPart {
   width: 100%;
