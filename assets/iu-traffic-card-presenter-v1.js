@@ -17,7 +17,7 @@ import {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-collapsed-km-mandatory-v1-20260813";
 
 export {
   matchParkingRegistry,
@@ -39,7 +39,7 @@ export {
   normalizeTunnelAliasKey,
   isAmbiguousTunnelName,
   isAmbiguousOutsideCityTunnelName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-outside-city-tunnel-header-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-collapsed-km-mandatory-v1-20260813";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -812,18 +812,41 @@ export function parseOfficialCommentFacts(rawText) {
     out.locationKind = named.kind;
   }
 
+  // Location kilometrage (not queue/delay length). Preserve source order; allow negatives.
   const kmRange =
-    text.match(/\bkm\s+(\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(\d+(?:[.,]\d+)?)/i) ||
-    text.match(/\bmezi\s+km\s+(\d+(?:[.,]\d+)?)\s+a\s+(\d+(?:[.,]\d+)?)/i);
+    text.match(
+      /\bkm\s+(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)/i
+    ) ||
+    text.match(
+      /\bmezi\s+km\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)/i
+    );
   if (kmRange) {
     // Preserve source order (e.g. km 277,5–276,9) — never Math.min/max sort.
     out.kilometerFrom = formatKmToken(kmRange[1]);
     out.kilometerTo = formatKmToken(kmRange[2]);
     out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
   } else {
-    const kmOne = text.match(/\bkm\s+(\d+(?:[.,]\d+)?)\b/i);
-    if (kmOne) {
-      out.kilometerFrom = formatKmToken(kmOne[1]);
+    const kmPrefix = text.match(/\bkm\s+(-?\d+(?:[.,]\d+)?)\b/i);
+    let kmToken = kmPrefix ? kmPrefix[1] : null;
+    if (!kmToken) {
+      // NDIC sometimes writes "43,2 km" (suffix). Skip length phrases (kolona/délka … km).
+      const suffixRe = /\b(-?\d+(?:[.,]\d+)?)\s*km\b/gi;
+      let m;
+      while ((m = suffixRe.exec(text))) {
+        const before = text.slice(Math.max(0, m.index - 36), m.index).toLowerCase();
+        if (
+          /\b(kolona|délka|delka|zúžení|zuzeni|vzdálenost|vzdalenost|po)\s*$/i.test(
+            before.trimEnd()
+          )
+        ) {
+          continue;
+        }
+        kmToken = m[1];
+        break;
+      }
+    }
+    if (kmToken != null) {
+      out.kilometerFrom = formatKmToken(kmToken);
       out.kilometerLabel = "km " + out.kilometerFrom;
     }
   }
@@ -2249,6 +2272,94 @@ export function buildHeadLocalityLabel(input = {}) {
   return { head: null, subtitle: null };
 }
 
+/**
+ * Resolve collapsed-card kilometrage label from structured fields + official comment.
+ * Never invents km. Prefers full range when both ends are known.
+ *
+ * @returns {{
+ *  kind: "SINGLE_KM"|"KM_RANGE",
+ *  label: string,
+ *  from: string,
+ *  to: string|null,
+ *  source: "structured_range"|"structured_single"|"comment",
+ * }|null}
+ */
+export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const fromStruct =
+    input.kilometerFrom != null
+      ? formatKmToken(input.kilometerFrom)
+      : input.kmFrom != null
+        ? formatKmToken(input.kmFrom)
+        : null;
+  const toStruct =
+    input.kilometerTo != null
+      ? formatKmToken(input.kilometerTo)
+      : input.kmTo != null
+        ? formatKmToken(input.kmTo)
+        : null;
+  if (fromStruct && toStruct) {
+    return {
+      kind: "KM_RANGE",
+      label: "km " + fromStruct + "–" + toStruct,
+      from: fromStruct,
+      to: toStruct,
+      source: "structured_range",
+    };
+  }
+  if (input.kilometer != null && clean(String(input.kilometer)) !== "") {
+    const one = formatKmToken(input.kilometer);
+    return {
+      kind: "SINGLE_KM",
+      label: "km " + one,
+      from: one,
+      to: null,
+      source: "structured_single",
+    };
+  }
+  if (facts.kilometerFrom && facts.kilometerTo) {
+    return {
+      kind: "KM_RANGE",
+      label:
+        facts.kilometerLabel ||
+        "km " + facts.kilometerFrom + "–" + facts.kilometerTo,
+      from: facts.kilometerFrom,
+      to: facts.kilometerTo,
+      source: "comment",
+    };
+  }
+  if (facts.kilometerLabel) {
+    const range = String(facts.kilometerLabel).match(
+      /^km\s+(-?[\d,]+)(?:–|-)(-?[\d,]+)$/i
+    );
+    if (range) {
+      return {
+        kind: "KM_RANGE",
+        label: "km " + range[1] + "–" + range[2],
+        from: range[1],
+        to: range[2],
+        source: "comment",
+      };
+    }
+    const one = String(facts.kilometerLabel).match(/^km\s+(-?[\d,]+)$/i);
+    return {
+      kind: "SINGLE_KM",
+      label: facts.kilometerLabel,
+      from: one ? one[1] : facts.kilometerFrom || null,
+      to: null,
+      source: "comment",
+    };
+  }
+  return null;
+}
+
+function pushUniqueBit(bits, value) {
+  const v = clean(value);
+  if (!v) return;
+  if (bits.some((b) => String(b).toLowerCase() === v.toLowerCase())) return;
+  bits.push(v);
+}
+
 export function buildPlaceAndDirectionLine(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const bits = [];
@@ -2257,10 +2368,8 @@ export function buildPlaceAndDirectionLine(input = {}) {
     clean(input.direction) ||
     facts.directionHuman ||
     "";
-  const km =
-    (input.kilometer != null ? "km " + clean(String(input.kilometer)) : "") ||
-    facts.kilometerLabel ||
-    "";
+  const kmResolved = resolveCollapsedKilometerLabel(input, facts);
+  const km = kmResolved ? kmResolved.label : "";
   const section = clean(input.section);
   const muni =
     resolveMunicipalitySignName(input) ||
@@ -2285,8 +2394,45 @@ export function buildPlaceAndDirectionLine(input = {}) {
     return bits.join(" · ");
   }
 
-  if (facts.namedObject && !resolveRoadDisplayName(road)) {
+  // Numbered road + known km/dir must never be dropped by named-object / street branches.
+  if (road) {
+    bits.push(road);
+    {
+      const roadDisplayName = resolveRoadDisplayName(road);
+      if (roadDisplayName) bits.push(roadDisplayName);
+    }
+    if (facts.municipalityRelation === "u_obce") {
+      const nearCity =
+        preferFullerMunicipalityName(muni, facts.city) || facts.city || muni || "";
+      if (nearCity) bits.push("u obce " + nearCity);
+    }
+    if (km) bits.push(km);
+    else if (section) bits.push(section);
+    if (dir) bits.push("směr " + dir);
+    if (facts.municipalityRelation !== "u_obce") {
+      if (muni && !bits.includes(muni)) bits.push(muni);
+      else if (
+        location &&
+        location !== road &&
+        !looksLikeRoadNumberToken(location) &&
+        !bits.includes(location) &&
+        !(facts.namedObject && samePlaceName(location, facts.namedObject))
+      ) {
+        // Keep named bridge/tunnel out of place line when road+km already localize the event.
+        if (!(km && facts.namedObject)) bits.push(location);
+      }
+    }
+    if (district) {
+      const distLabel = "okres " + district;
+      if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
+    }
+    return bits.join(" · ");
+  }
+
+  if (facts.namedObject) {
     const placeBits = [streetBareName(facts.namedObject)];
+    if (km) pushUniqueBit(placeBits, km);
+    if (dir) pushUniqueBit(placeBits, "směr " + dir);
     if (cityPart) placeBits.push(cityPart);
     else if (muni) placeBits.push(muni);
     return placeBits.join(" · ");
@@ -2294,35 +2440,24 @@ export function buildPlaceAndDirectionLine(input = {}) {
 
   if (street && (muni || cityPart)) {
     const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
+    if (km) pushUniqueBit(placeBits, km);
+    if (dir) pushUniqueBit(placeBits, "směr " + dir);
     if (cityPart) placeBits.push(cityPart);
     else if (muni) placeBits.push(muni);
     if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
     return placeBits.join(" · ");
   }
 
-  if (road) bits.push(road);
-  {
-    const roadDisplayName = resolveRoadDisplayName(road);
-    if (roadDisplayName) bits.push(roadDisplayName);
-  }
-  if (facts.municipalityRelation === "u_obce") {
-    const nearCity =
-      preferFullerMunicipalityName(muni, facts.city) || facts.city || muni || "";
-    if (nearCity) bits.push("u obce " + nearCity);
-  }
   if (km) bits.push(km);
   else if (section) bits.push(section);
   if (dir) bits.push("směr " + dir);
-  if (facts.municipalityRelation !== "u_obce") {
-    if (muni && !bits.includes(muni)) bits.push(muni);
-    else if (
-      location &&
-      location !== road &&
-      !looksLikeRoadNumberToken(location) &&
-      !bits.includes(location)
-    ) {
-      bits.push(location);
-    }
+  if (muni && !bits.includes(muni)) bits.push(muni);
+  else if (
+    location &&
+    !looksLikeRoadNumberToken(location) &&
+    !bits.includes(location)
+  ) {
+    bits.push(location);
   }
   if (district) {
     const distLabel = "okres " + district;
@@ -2437,7 +2572,10 @@ export function buildTrafficExpandedDetail(input = {}) {
   push("road", "Komunikace", input.road);
   push("roadName", "Název komunikace", resolveRoadDisplayName(input.road));
   if (input.roadClassLabel) push("roadClass", "Třída komunikace", input.roadClassLabel);
-  push("kilometer", "Kilometráž", facts.kilometerLabel || input.kilometer);
+  {
+    const kmDet = resolveCollapsedKilometerLabel(input, facts);
+    push("kilometer", "Kilometráž", kmDet ? kmDet.label : null);
+  }
   push("direction", "Směr", clean(input.direction) || facts.directionHuman);
   {
     const confirmedStreet = resolveConfirmedStreet(input, facts);
