@@ -158,15 +158,62 @@
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateWrap{position:relative;display:block;width:100%;max-width:100%;min-width:0;min-inline-size:0;box-sizing:border-box}
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{padding-right:44px!important;min-height:44px}
 @media (max-width:1024px){
-  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__label{min-width:0;max-width:100%;box-sizing:border-box}
-  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"],
-  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"],
-  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{
+  /* P0 value-column contract: Datum/Čas right edge == Název/Poznámka (same as Calendar). */
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__form{
+    min-width:0;
+    max-width:100%;
+    width:100%;
+    box-sizing:border-box;
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__label{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    justify-items:stretch!important;
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateWrap{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
     width:100%!important;
     max-width:100%!important;
     min-width:0!important;
     min-inline-size:0!important;
     box-sizing:border-box!important;
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__textarea,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__select,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"],
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"],
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-inline-size:0!important;
+    max-inline-size:100%!important;
+    justify-self:stretch!important;
+    box-sizing:border-box!important;
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"]::-webkit-datetime-edit,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"]::-webkit-datetime-edit,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date::-webkit-datetime-edit,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date::-webkit-datetime-edit-fields-wrapper,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"]::-webkit-date-and-time-value,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"]::-webkit-date-and-time-value,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date::-webkit-date-and-time-value{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="date"]::-webkit-calendar-picker-indicator,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input[type="time"]::-webkit-calendar-picker-indicator,
+  #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__input--date::-webkit-calendar-picker-indicator{
+    flex-shrink:0;
   }
 }
 #iuTasksOverlay.iu-tasksPremiumScope .iu-tasksOverlay__dateIcon{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:#475569;opacity:.88}

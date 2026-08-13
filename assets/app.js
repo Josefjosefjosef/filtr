@@ -41451,21 +41451,55 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     "padding-bottom:6px!important;" +
     "scroll-padding-bottom:0!important;" +
     "}" +
-    /* P0: date/time right-edge lock vs Název — iOS intrinsic min-width must not win. */
-    ".iu-calInline--premiumV2," +
-    ".iu-calInline--premiumV2 .iu-calInline__field{" +
+    /* P0 value-column contract: Datum/Čas share Název/Adresa/Poznámka right edge.
+       Native date/time keep a large intrinsic min-size; clamp control + WebKit edit parts
+       and force the field to minmax(0,1fr) so used width cannot exceed the value column. */
+    ".iu-calInline--premiumV2{" +
     "min-width:0!important;" +
     "max-width:100%!important;" +
+    "width:100%!important;" +
     "box-sizing:border-box!important;" +
     "}" +
+    ".iu-calInline--premiumV2 .iu-calInline__field{" +
+    "display:grid!important;" +
+    "grid-template-columns:minmax(0,1fr)!important;" +
+    "justify-items:stretch!important;" +
+    "min-width:0!important;" +
+    "max-width:100%!important;" +
+    "width:100%!important;" +
+    "box-sizing:border-box!important;" +
+    "}" +
+    ".iu-calInline--premiumV2 .iu-calInline__inp," +
+    ".iu-calInline--premiumV2 .iu-calInline__txt," +
     ".iu-calInline--premiumV2 .iu-calInline__dateInput," +
     ".iu-calInline--premiumV2 input[type='date']," +
+    ".iu-calInline--premiumV2 input[type='time']," +
     ".iu-calInline--premiumV2 .iu-calInline__timeBtn{" +
+    "display:block!important;" +
     "width:100%!important;" +
     "max-width:100%!important;" +
     "min-width:0!important;" +
     "min-inline-size:0!important;" +
+    "max-inline-size:100%!important;" +
+    "justify-self:stretch!important;" +
     "box-sizing:border-box!important;" +
+    "}" +
+    ".iu-calInline--premiumV2 .iu-calInline__dateInput::-webkit-datetime-edit," +
+    ".iu-calInline--premiumV2 input[type='date']::-webkit-datetime-edit," +
+    ".iu-calInline--premiumV2 input[type='time']::-webkit-datetime-edit," +
+    ".iu-calInline--premiumV2 .iu-calInline__dateInput::-webkit-datetime-edit-fields-wrapper," +
+    ".iu-calInline--premiumV2 input[type='date']::-webkit-datetime-edit-fields-wrapper," +
+    ".iu-calInline--premiumV2 input[type='time']::-webkit-datetime-edit-fields-wrapper," +
+    ".iu-calInline--premiumV2 .iu-calInline__dateInput::-webkit-date-and-time-value," +
+    ".iu-calInline--premiumV2 input[type='date']::-webkit-date-and-time-value," +
+    ".iu-calInline--premiumV2 input[type='time']::-webkit-date-and-time-value{" +
+    "min-width:0!important;" +
+    "max-width:100%!important;" +
+    "}" +
+    ".iu-calInline--premiumV2 .iu-calInline__dateInput::-webkit-calendar-picker-indicator," +
+    ".iu-calInline--premiumV2 input[type='date']::-webkit-calendar-picker-indicator," +
+    ".iu-calInline--premiumV2 input[type='time']::-webkit-calendar-picker-indicator{" +
+    "flex-shrink:0;" +
     "}" +
     "}"
     ;
