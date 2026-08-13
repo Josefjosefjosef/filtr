@@ -241,15 +241,145 @@ export function expandTrafficAbbreviationsCs(text) {
   return s;
 }
 
+/**
+ * Strip source wrapper delimiters from extracted tokens (street, place, …).
+ * Removes leading/trailing ()[]{},; — preserves Czech abbreviations like tř. / nám.
+ */
+export function sanitizeExtractedValueToken(raw) {
+  let s = clean(raw);
+  if (!s) return "";
+  s = s.replace(/^[\s({"'„\[]+/u, "");
+  s = s.replace(/[)\]}>]+$/g, "");
+  s = s.replace(/[,;]+$/g, "");
+  s = s.replace(/["'“”]+$/g, "");
+  // Drop a trailing period only when it is not a Czech abbreviation suffix.
+  if (/\.$/.test(s) && !/\b(?:tř|nám|nábř|ul|okr|č)\.$/iu.test(s)) {
+    s = s.replace(/\.$/, "");
+  }
+  return clean(s);
+}
+
 function streetBareName(raw) {
-  return clean(raw)
-    .replace(/^ulice:?\s+/i, "")
-    .replace(/^v\s+ulici\s+/i, "");
+  return sanitizeExtractedValueToken(
+    clean(raw)
+      .replace(/^ulice:?\s+/i, "")
+      .replace(/^v\s+ulici\s+/i, "")
+      .replace(/^ul\.\s*/i, "")
+  );
 }
 
 /** Praha 1–22 (and lettered variants) are city parts, never the municipality. */
 export function isPrahaCityPartName(raw) {
   return /^praha\s+\d+[a-zA-Z]?$/i.test(clean(raw));
+}
+
+/**
+ * Split "City N" / "City Na" urban district labels into municipality + cityPart.
+ * Praha keeps the dedicated helper; other cities use the same numeric-district shape
+ * (e.g. "Plzeň 4" → municipality Plzeň, cityPart Plzeň 4). Never invents a city.
+ */
+export function splitMunicipalityAndCityPart(raw) {
+  const t = clean(raw);
+  if (!t) return null;
+  if (isPrahaCityPartName(t)) {
+    return { municipality: "Praha", cityPart: t };
+  }
+  const m = t.match(/^(.+?)\s+(\d{1,2}[A-Za-z]?)$/u);
+  if (!m) return null;
+  const base = clean(m[1]);
+  if (!base || !/^[A-ZÁ-Ž]/u.test(base)) return null;
+  if (looksLikeRoadNumberToken(base)) return null;
+  if (looksLikeSegmentOrAreaLabel(base)) return null;
+  if (
+    /náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+      base
+    )
+  ) {
+    return null;
+  }
+  // Reject street-like single tokens ("Rokycanská 4") — municipalities are not street morphology alone.
+  if (
+    !/\s/.test(base) &&
+    /(ská|cká|ovská|ová|ova|ná|ní)$/i.test(base)
+  ) {
+    return null;
+  }
+  if (/^(ulice|okres|okr\.|silnice|dálnice)$/i.test(base)) return null;
+  return { municipality: base, cityPart: t };
+}
+
+export function isNumericCityPartName(raw) {
+  return !!splitMunicipalityAndCityPart(raw);
+}
+
+/** Direction clause boundaries that are circumstance / cause, not the destination. */
+const DIRECTION_TAIL_BOUNDARY_RE =
+  /\s+(?:v souvislosti s|z důvodu(?:\s+provádění)?|za účelem|v rámci|po dobu|kvůli|v důsledku|v souvislosti se)\b/i;
+
+/**
+ * Keep only the semantic direction destination from NDIC phrasing.
+ * "ve směru do centra v souvislosti s …" → "do centra"
+ * Does not invent direction from unrelated "v centru" prose.
+ */
+export function normalizeDirectionHuman(raw) {
+  let d = clean(raw);
+  if (!d) return null;
+  d = d.replace(/^ve\s+směru\s+/i, "").replace(/^směr\s+/i, "");
+  d = clean(d.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
+  d = sanitizeExtractedValueToken(d);
+  if (!d) return null;
+  if (/^(kladný|záporný)\s+směr$/i.test(d)) return null;
+  if (/^(unknown|n\/a|null|undefined|neuvedeno)$/i.test(d)) return null;
+  // Reject obvious non-direction overflow / prose.
+  if (d.length > 48) return null;
+  if (
+    /prováděn|stavebních prac|souvislosti|za účelem|v rámci akce|vyblokován|probíhají|bude uzavř/i.test(
+      d
+    )
+  ) {
+    return null;
+  }
+  // Destination-like: short place / left-right / centrum forms.
+  if (
+    !/^(?:do\s+|z\s+|na\s+|směr\s+)?(?:centra|centrum|vlevo|vpravo|oba směry|[A-ZÁ-Ž][\wÁ-Žá-ž ./-]{1,40})$/iu.test(
+      d
+    )
+  ) {
+    return null;
+  }
+  return d;
+}
+
+function extractDirectionHumanFromComment(text) {
+  const src = clean(text);
+  if (!src) return null;
+  const m =
+    src.match(
+      /\bve směru\s+([^,;.]{1,80}?)(?=\s+(?:v souvislosti s|z důvodu|za účelem|v rámci|po dobu|kvůli|v důsledku)\b|[,;.]|$)/i
+    ) ||
+    src.match(
+      /(?<![A-Za-zÁ-Žá-ž])směr\s+([^,;.]{1,80}?)(?=\s+(?:v souvislosti s|z důvodu|za účelem|v rámci|po dobu|kvůli|v důsledku)\b|[,;.]|$)/i
+    );
+  if (!m) return null;
+  return normalizeDirectionHuman(m[1]);
+}
+
+/**
+ * Prefer classed road identity from comment when structured value is bare digits
+ * (e.g. structured "26" + comment "I/26" → "I/26"). Never invents a class without evidence.
+ */
+export function preferClassedRoadNumber(structured, fromComment) {
+  const s = clean(structured).replace(/\s+/g, "");
+  const c = clean(fromComment).replace(/\s+/g, "");
+  if (!s) return c || null;
+  if (!c) return s;
+  const bare = s.match(/^(\d{1,4}[A-Za-z]?)$/i);
+  const classed = c.match(/^(I{1,3}|II|III|D)\/(\d{1,4}[A-Za-z]?)$/i);
+  if (bare && classed && bare[1].toLowerCase() === classed[2].toLowerCase()) {
+    return classed[1].toUpperCase() + "/" + classed[2];
+  }
+  if (/^(I{1,3}|II|III|D)\//i.test(s)) return s;
+  return s;
 }
 
 /**
@@ -282,6 +412,7 @@ export function looksLikeNonMunicipalityPlace(raw) {
   const t = clean(raw);
   if (!t) return false;
   if (isPrahaCityPartName(t)) return true;
+  if (isNumericCityPartName(t)) return true;
   if (
     /náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
       t
@@ -388,12 +519,17 @@ export function extractRoadNumberFromOfficialComment(rawText) {
   return num;
 }
 
-/** Structured road, else safe comment extraction. */
+/** Structured road, else safe comment extraction. Prefer classed identity when evidence exists. */
 export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const structured = clean(input.road || input.roadNumber);
-  if (structured) return structured;
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
-  return clean(facts.roadNumber) || null;
+  const fromComment =
+    clean(facts.roadNumber) || extractRoadNumberFromOfficialComment(sourceBlob(input));
+  if (structured && fromComment) {
+    return preferClassedRoadNumber(structured, fromComment);
+  }
+  if (structured) return structured;
+  return fromComment || null;
 }
 
 export function classifyLocationKindFromName(name) {
@@ -412,6 +548,7 @@ export function classifyLocationKindFromName(name) {
   if (/^ulice\b|\btřída\b/i.test(t)) return LOCATION_KIND.STREET;
   if (looksLikeRoadNumberToken(t)) return LOCATION_KIND.ROAD;
   if (/^praha\s+\d/i.test(t)) return LOCATION_KIND.CITY_PART;
+  if (isNumericCityPartName(t)) return LOCATION_KIND.CITY_PART;
   if (looksLikeStreetName(t)) return LOCATION_KIND.GENERIC_LOCALITY;
   return LOCATION_KIND.LANDMARK;
 }
@@ -992,11 +1129,8 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  const dir = text.match(/\bve směru\s+([^,;.]{2,60})/i);
-  if (dir) {
-    const d = clean(dir[1]).replace(/\s+/g, " ");
-    if (d && !/^(kladný|záporný)\s+směr$/i.test(d)) out.directionHuman = d;
-  }
+  const dirHuman = extractDirectionHumanFromComment(text);
+  if (dirHuman) out.directionHuman = dirHuman;
 
   // Explicit event localization "u obce X" (not diversion "přes X", not "v katastru obce").
   const mUObce = text.match(
@@ -1021,11 +1155,22 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const streetIn =
-    text.match(/\bv\s+ulici\s+([^,;]{2,80})/i) || text.match(/\bulice:?\s+([^,;]{2,80})/i);
+    text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
+    text.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
+    text.match(/\bul\.\s*([^,;()]{2,80})/i);
   if (streetIn) {
     let sn = streetBareName(streetIn[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
     sn = clean(sn.split(/\s+okres\b/i)[0]);
+    sn = sanitizeExtractedValueToken(sn);
+    if (
+      !sn ||
+      /^(bude|byl|je|jsou)\b/i.test(sn) ||
+      /\buzavřen/i.test(sn) ||
+      /^(práce|oprava|omezení)\b/i.test(sn)
+    ) {
+      sn = "";
+    }
     if (sn) {
       const snKind = classifyLocationKindFromName(sn);
       if (isNamedNonStreetKind(snKind)) {
@@ -1116,6 +1261,20 @@ export function parseOfficialCommentFacts(rawText) {
     out.city = "Praha";
   }
 
+  // Urban district after street/road: ", Plzeň 4," / ", Brno 1," — demote to city + cityPart.
+  if (!out.cityPart || !out.city) {
+    const urbanDist = text.match(
+      /,\s*([A-ZÁ-Ž][^,;]{1,40}?\s+\d{1,2}[A-Za-z]?)\s*,/u
+    );
+    if (urbanDist) {
+      const split = splitMunicipalityAndCityPart(urbanDist[1]);
+      if (split) {
+        if (!out.cityPart) out.cityPart = split.cityPart;
+        if (!out.city || isNumericCityPartName(out.city)) out.city = split.municipality;
+      }
+    }
+  }
+
   // Final guard: tunnel/bridge names must never remain in street.
   if (out.street) {
     const sk = classifyLocationKindFromName(out.street);
@@ -1126,12 +1285,21 @@ export function parseOfficialCommentFacts(rawText) {
         out.locationKind = sk;
       }
       out.street = null;
+    } else {
+      out.street = sanitizeExtractedValueToken(out.street);
     }
   }
   if (out.namedObject) out.namedObject = streetBareName(out.namedObject);
   if (out.city && isPrahaCityPartName(out.city)) {
     if (!out.cityPart) out.cityPart = out.city;
     out.city = /\bPraha\b/u.test(text) ? "Praha" : null;
+  }
+  if (out.city && isNumericCityPartName(out.city)) {
+    const split = splitMunicipalityAndCityPart(out.city);
+    if (split) {
+      if (!out.cityPart) out.cityPart = split.cityPart;
+      out.city = split.municipality;
+    }
   }
 
   // --- Parking facility + occupancy (P+R / P+G / house / named place) ---
@@ -1376,7 +1544,9 @@ export function isSingleLaneRestriction(rawText) {
     /(?:uzavřen|neprůjezdn).{0,40}(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(text) ||
     /neprůjezdn[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
     /zúžen[ýáé]\s+(?:levý|pravý|střední)\s+jízdní\s+pruh/i.test(text) ||
-    /(?:levý|pravý|střední)\s+jízdní\s+pruh.{0,40}zúžen/i.test(text)
+    /(?:levý|pravý|střední)\s+jízdní\s+pruh.{0,40}zúžen/i.test(text) ||
+    /odbočovací\s+pruh.{0,40}(?:uzavřen|vyblokován)/i.test(text) ||
+    /(?:uzavřen|vyblokován).{0,40}odbočovací\s+pruh/i.test(text)
   ) {
     return true;
   }
@@ -1971,6 +2141,10 @@ export function buildTrafficSituationSummary(input = {}) {
       }
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
+  } else if (/částečn[áa]\s+uzavírk/i.test(source)) {
+    const road = resolvePresentationRoadNumber(input, facts);
+    if (road) causeBits.push("Částečná uzavírka silnice " + road);
+    else causeBits.push("Částečná uzavírka");
   } else if (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) {
     const closureObjEarly = /úpln[áa]\s+uzavírk/i.test(source)
       ? extractFullClosureObjectPhrase(source)
@@ -2043,13 +2217,36 @@ export function buildTrafficSituationSummary(input = {}) {
     if (/neprůjezdn/i.test(source)) scopeBits.push("Krajnice je neprůjezdná");
     else scopeBits.push("Krajnice je uzavřena");
   } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
+    const turnLane = /odbočovací\s+pruh/i.test(source);
     const lane =
       source.match(/((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
       source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i) ||
       source.match(/zúžen[ýáé]\s+((?:levý|pravý|střední)\s+jízdní\s+pruh)/i);
-    const dir = facts.directionHuman || clean(input.direction);
+    const dir = normalizeDirectionHuman(facts.directionHuman || clean(input.direction) || "");
+    const turnSide = /(?:pro\s+)?směr\s+vlevo|\bvlevo\b/i.test(source)
+      ? "vlevo"
+      : /(?:pro\s+)?směr\s+vpravo|\bvpravo\b/i.test(source)
+        ? "vpravo"
+        : null;
+    const crossStreet = (
+      source.match(
+        /před\s+křižovatkou\s+s\s+(?:ul\.?\s*|ulicí\s+)([^,;()]{2,60}?)(?=\s+ve\s+směru|\s+v\s+souvislosti|\s+za\s+účelem|\s+z\s+důvodu|\s+v\s+rámci|\s*,|\s*$)/i
+      ) ||
+      source.match(
+        /křižovatk(?:ou|a)\s+s\s+(?:ul\.?\s*|ulicí\s+)([^,;()]{2,60}?)(?=\s+ve\s+směru|\s+v\s+souvislosti|\s+za\s+účelem|\s+z\s+důvodu|\s+v\s+rámci|\s*,|\s*$)/i
+      )
+    );
     const narrowed = /zúžen[ýáé]\s+(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(source);
-    if (lane && /neprůjezdn/i.test(source)) {
+    if (turnLane) {
+      let turn = "Odbočovací pruh";
+      if (turnSide) turn += " " + turnSide;
+      if (crossStreet) {
+        const sn = sanitizeExtractedValueToken(streetBareName(crossStreet[1]));
+        if (sn) turn += " před křižovatkou s ulicí " + sn;
+      }
+      turn += " je uzavřen";
+      scopeBits.push(turn);
+    } else if (lane && /neprůjezdn/i.test(source)) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " je neprůjezdný");
     } else if (lane && narrowed) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " je zúžený");
@@ -2130,6 +2327,51 @@ export function buildTrafficSituationSummary(input = {}) {
     scopeBits.push("Provoz převeden do protisměru");
   }
 
+  // Partial closure lead when not already captured by cause/scope (typed restriction).
+  if (
+    /částečn[áa]\s+uzavírk/i.test(source) &&
+    !causeBits.some((b) => /částečn/i.test(b)) &&
+    !scopeBits.some((b) => /částečn|odbočovací|jízdní pruh/i.test(b))
+  ) {
+    const road = resolvePresentationRoadNumber(input, facts);
+    causeBits.unshift(road ? "Částečná uzavírka silnice " + road : "Částečná uzavírka");
+  }
+
+  // Turning-lane closure when scope analyzer missed it (e.g. mixed partial-closure wording).
+  if (
+    /odbočovací\s+pruh/i.test(source) &&
+    /(?:uzavřen|vyblokován)/i.test(source) &&
+    !scopeBits.some((b) => /odbočovací/i.test(b))
+  ) {
+    const turnSide = /(?:pro\s+)?směr\s+vlevo|\bvlevo\b/i.test(source)
+      ? "vlevo"
+      : /(?:pro\s+)?směr\s+vpravo|\bvpravo\b/i.test(source)
+        ? "vpravo"
+        : null;
+    const crossStreet =
+      source.match(
+        /před\s+křižovatkou\s+s\s+(?:ul\.?\s*|ulicí\s+)([^,;()]{2,60}?)(?=\s+ve\s+směru|\s+v\s+souvislosti|\s+za\s+účelem|\s+z\s+důvodu|\s+v\s+rámci|\s*,|\s*$)/i
+      ) ||
+      source.match(
+        /křižovatk(?:ou|a)\s+s\s+(?:ul\.?\s*|ulicí\s+)([^,;()]{2,60}?)(?=\s+ve\s+směru|\s+v\s+souvislosti|\s+za\s+účelem|\s+z\s+důvodu|\s+v\s+rámci|\s*,|\s*$)/i
+      );
+    let turn = "Odbočovací pruh";
+    if (turnSide) turn += " " + turnSide;
+    if (crossStreet) {
+      const sn = sanitizeExtractedValueToken(streetBareName(crossStreet[1]));
+      if (sn) turn += " před křižovatkou s ulicí " + sn;
+    }
+    turn += " je uzavřen";
+    scopeBits.push(turn);
+  }
+  if (
+    /stavebn(?:í|ích)\s+prac/i.test(source) &&
+    !causeBits.some((b) => /stavební|práce na silnici/i.test(b)) &&
+    !circumstanceBits.some((b) => /stavební/i.test(b))
+  ) {
+    circumstanceBits.push("Stavební práce");
+  }
+
   // Obstacle / wildlife / fire / people as secondary impact (not dropped when cause=accident).
   const secondaryImpact = extractSecondaryImpactBits(source, cause, causeBits);
   for (const bit of secondaryImpact) {
@@ -2152,9 +2394,11 @@ export function buildTrafficSituationSummary(input = {}) {
 
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
   if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
+  // Split on sentence ends — never on abbreviation dots (ul. / okr. / č. / ev.č.).
   const clauses = source
+    .replace(/\b(ul|okr|č|ev\.?\s*č|tzv|např|m|km)\./gi, "$1\u2024")
     .split(/[.;]/)
-    .map(clean)
+    .map((x) => clean(x.replace(/\u2024/g, ".")))
     .filter(
       (x) =>
         x &&
@@ -2187,7 +2431,7 @@ function samePlaceName(a, b) {
 }
 
 /**
- * Resolve municipality vs Praha city-part misfiles (Praha 7 ≠ obec).
+ * Resolve municipality vs city-part misfiles (Praha 7 / Plzeň 4 ≠ obec).
  */
 function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityPartHint, relationHint) {
   let structured = clean(structuredRaw);
@@ -2196,14 +2440,20 @@ function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityP
   const cityPart = clean(cityPartHint);
   const relation = clean(relationHint);
 
-  if (isPrahaCityPartName(fromComment)) {
-    if (!cityPart || isPrahaCityPartName(cityPart)) {
-      // keep city-part elsewhere; municipality must be Praha when present in source
+  const demoteCityPartToken = (token) => {
+    const split = splitMunicipalityAndCityPart(token);
+    if (!split) return token;
+    if (isPrahaCityPartName(token)) {
+      return /\bPraha\b/u.test(blobText) || fromComment === "Praha" || cityPart ? "Praha" : "";
     }
-    fromComment = /\bPraha\b/u.test(blobText) ? "Praha" : "";
+    return split.municipality;
+  };
+
+  if (isPrahaCityPartName(fromComment) || isNumericCityPartName(fromComment)) {
+    fromComment = demoteCityPartToken(fromComment);
   }
-  if (isPrahaCityPartName(structured)) {
-    structured = /\bPraha\b/u.test(blobText) || fromComment === "Praha" ? "Praha" : "";
+  if (isPrahaCityPartName(structured) || isNumericCityPartName(structured)) {
+    structured = demoteCityPartToken(structured);
   }
   // Explicit "u obce X" always wins over TMC segment labels misfiled as municipality.
   if (relation === "u_obce" && fromComment && !looksLikeSegmentOrAreaLabel(fromComment)) {
@@ -2211,8 +2461,8 @@ function resolveMunicipalityCandidate(structuredRaw, fromCommentRaw, blob, cityP
   }
   if (looksLikeSegmentOrAreaLabel(structured)) structured = "";
   let city = preferFullerMunicipalityName(structured, fromComment) || "";
-  if (isPrahaCityPartName(city)) {
-    city = /\bPraha\b/u.test(blobText) ? "Praha" : "";
+  if (isPrahaCityPartName(city) || isNumericCityPartName(city)) {
+    city = demoteCityPartToken(city) || "";
   }
   if (looksLikeSegmentOrAreaLabel(city)) {
     city = fromComment && !looksLikeSegmentOrAreaLabel(fromComment) ? fromComment : "";
@@ -2390,6 +2640,9 @@ export function resolveMunicipalitySignName(input = {}) {
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
     cityPart = clean(input.municipality);
   }
+  if (!cityPart && isNumericCityPartName(input.municipality)) {
+    cityPart = clean(input.municipality);
+  }
 
   let city =
     resolveMunicipalityCandidate(
@@ -2420,6 +2673,7 @@ export function resolveMunicipalitySignName(input = {}) {
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
   if (looksLikeRoadNumberToken(city)) return null;
   if (isPrahaCityPartName(city)) return null;
+  if (isNumericCityPartName(city)) return null;
   if (looksLikeSegmentOrAreaLabel(city)) return null;
   if (!clean(input.municipality) && looksLikeNonMunicipalityPlace(city)) return null;
   if (street && samePlaceName(city, street)) return null;
@@ -2442,6 +2696,9 @@ export function buildLocalityHeaderModel(input = {}) {
   const district = clean(input.district) || facts.district || "";
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
+    cityPart = clean(input.municipality);
+  }
+  if (!cityPart && isNumericCityPartName(input.municipality)) {
     cityPart = clean(input.municipality);
   }
   let namedObject = facts.namedObject ? streetBareName(facts.namedObject) : null;
@@ -2727,9 +2984,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
   const bits = [];
   const road = resolvePresentationRoadNumber(input, facts);
   const dir =
-    clean(input.direction) ||
-    facts.directionHuman ||
-    "";
+    normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "") || "";
   const kmResolved = resolveCollapsedKilometerLabel(input, facts);
   const km = kmResolved ? kmResolved.label : "";
   const section = clean(input.section);
@@ -2748,6 +3003,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
   const location = clean(input.location);
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) cityPart = clean(input.municipality);
+  if (!cityPart && isNumericCityPartName(input.municipality)) cityPart = clean(input.municipality);
 
   if (facts.parkingName) {
     const bits = [facts.parkingName];
@@ -2770,7 +3026,9 @@ export function buildPlaceAndDirectionLine(input = {}) {
     }
     if (km) bits.push(km);
     else if (section) bits.push(section);
-    if (dir) bits.push("směr " + dir);
+    if (street) {
+      bits.push("ulice " + street.replace(/^ulice\s+/i, ""));
+    }
     if (facts.municipalityRelation !== "u_obce") {
       if (muni && !bits.includes(muni)) bits.push(muni);
       else if (
@@ -2784,6 +3042,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
         if (!(km && facts.namedObject)) bits.push(location);
       }
     }
+    if (dir) bits.push("směr " + dir);
     if (district) {
       const distLabel = "okres " + district;
       if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
@@ -2851,7 +3110,8 @@ export function buildCommunicationLine(input = {}) {
     };
   }
   const head = buildHeadLocalityLabel(input);
-  const dir = clean(input.direction) || facts.directionHuman || null;
+  const dir =
+    normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "") || null;
   return {
     roadPresentation: roadPres,
     roadDisplayName: roadPres.roadDisplayName || resolveRoadDisplayName(roadPres.road),
@@ -2931,14 +3191,30 @@ export function buildTrafficExpandedDetail(input = {}) {
   const liveStatus = resolveParkingLiveStatus(input, facts);
 
   // Skip redundant "Typ (zdroj)" when it only repeats the card title kind.
-  push("road", "Komunikace", input.road);
-  push("roadName", "Název komunikace", resolveRoadDisplayName(input.road));
-  if (input.roadClassLabel) push("roadClass", "Třída komunikace", input.roadClassLabel);
+  const roadResolved = resolvePresentationRoadNumber(input, facts);
+  const roadPres = classifyRoadPresentation(roadResolved || input.road, input);
+  push("road", "Komunikace", roadPres.road || roadResolved || input.road);
+  push("roadName", "Název komunikace", resolveRoadDisplayName(roadPres.road || roadResolved || input.road));
+  if (input.roadClassLabel) {
+    push("roadClass", "Třída komunikace", input.roadClassLabel);
+  } else if (roadPres.roadClass === "CLASS_I") {
+    push("roadClass", "Třída komunikace", "Silnice I. třídy");
+  } else if (roadPres.roadClass === "CLASS_II") {
+    push("roadClass", "Třída komunikace", "Silnice II. třídy");
+  } else if (roadPres.roadClass === "CLASS_III") {
+    push("roadClass", "Třída komunikace", "Silnice III. třídy");
+  } else if (roadPres.roadClass === "MOTORWAY") {
+    push("roadClass", "Třída komunikace", "Dálnice");
+  }
   {
     const kmDet = resolveCollapsedKilometerLabel(input, facts);
     push("kilometer", "Kilometráž", kmDet ? kmDet.label : null);
   }
-  push("direction", "Směr", clean(input.direction) || facts.directionHuman);
+  push(
+    "direction",
+    "Směr",
+    normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "")
+  );
   {
     const confirmedStreet = resolveConfirmedStreet(input, facts);
     push("street", "Ulice", confirmedStreet);
@@ -2958,6 +3234,9 @@ export function buildTrafficExpandedDetail(input = {}) {
   {
     let cityPartVal = facts.cityPart || input.cityPart || (registry ? registry.cityPart : null);
     if (!cityPartVal && isPrahaCityPartName(input.municipality)) {
+      cityPartVal = clean(input.municipality);
+    }
+    if (!cityPartVal && isNumericCityPartName(input.municipality)) {
       cityPartVal = clean(input.municipality);
     }
     push("cityPart", "Městská část", cityPartVal);

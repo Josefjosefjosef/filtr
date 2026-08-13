@@ -23,7 +23,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
-const SW_VER = "2026-08-13-date-time-value-column-v4b";
+const SW_VER = "2026-08-13-urban-numbered-road-parse-v1";
 
 const fails = [];
 function ok(id, cond, detail) {
