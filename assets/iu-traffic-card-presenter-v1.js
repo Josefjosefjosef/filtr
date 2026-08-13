@@ -337,7 +337,66 @@ const DIRECTION_ROUTING_OVERFLOW_RE =
 
 /** Stop destination capture before lane/routing continuation. */
 const DIRECTION_DEST_STOP_RE =
-  /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním|provoz|veden|vozovky|až\s+ke|před\s+(?:křižovatk|objekt)|zachován|objízdn|v\s+souvislosti|z\s+důvodu|za\s+účelem|v\s+rámci|po\s+dobu|kvůli|v\s+důsledku)\b/i;
+  /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním|provoz|veden|vozovky|až\s+ke|před\s+křižovatk\w*|před\s+objekt\w*|zachován|objízdn|v\s+souvislosti|z\s+důvodu|za\s+účelem|v\s+rámci|po\s+dobu|kvůli|v\s+důsledku)\b/i;
+
+/** Nested direction marker — must end the current capture so the next směr can match. */
+const DIRECTION_NESTED_MARKER_RE =
+  /\s+(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\b/i;
+
+/** Known Czech abbreviations whose trailing "." must not end an extracted value.
+ * Avoid \\b — JS word boundaries are ASCII-only and break on č/ř/… abbreviations.
+ */
+const CZECH_ABBREV_BEFORE_DOT_RE =
+  /(?:^|[^A-Za-zÁ-Žá-ž0-9])(?:ul|okr|č|ev\.?\s*č|tzv|např|sv|ing|dr|nám|nábř|tř|p|m|km|čp|ev)\s*$/iu;
+
+/**
+ * True when "." at dotIndex inside text is an abbreviation / initial, not a sentence end.
+ * Examples: "P.Bezruče", "P. Bezruče", "ul. Moskevská", "č. 100", "okr. Frýdek-Místek".
+ */
+export function isAbbreviationOrInitialDot(text, dotIndex) {
+  const s = String(text || "");
+  if (dotIndex < 0 || dotIndex >= s.length || s[dotIndex] !== ".") return false;
+  const before = s.slice(0, dotIndex);
+  const after = s.slice(dotIndex + 1);
+  // Single-letter initial: "P." / "T." — keep when name continues immediately or after space.
+  if (/\b[A-ZÁ-Ž]\s*$/u.test(before)) {
+    if (/^[A-ZÁ-Ža-zá-ž0-9]/.test(after) || /^\s+[A-ZÁ-Ža-zá-ž0-9]/.test(after)) return true;
+  }
+  if (CZECH_ABBREV_BEFORE_DOT_RE.test(before)) {
+    // "ul. Moskevská" / "č. 100" / "okr. Frýdek-Místek"
+    if (/^\s*[A-ZÁ-Ža-zá-ž0-9]/.test(after) || after === "") return true;
+  }
+  return false;
+}
+
+/**
+ * Clip extracted free-text before comma/semicolon/sentence-end, keeping abbreviation dots.
+ */
+export function clipExtractedValueAtStructuralEnd(raw, maxLen = 120) {
+  const s = String(raw || "");
+  if (!s) return "";
+  let out = "";
+  const lim = Math.min(s.length, Math.max(8, maxLen));
+  for (let i = 0; i < lim; i += 1) {
+    const ch = s[i];
+    if (ch === "," || ch === ";") break;
+    if (ch === ".") {
+      if (isAbbreviationOrInitialDot(s, i)) {
+        out += ch;
+        continue;
+      }
+      // Sentence-ending period — stop; do not keep it.
+      break;
+    }
+    out += ch;
+  }
+  return clean(out);
+}
+
+/** Normalize "P.Bezruče" → "P. Bezruče" (space after single-letter initial). */
+function normalizeInitialDotSpacing(raw) {
+  return clean(String(raw || "").replace(/\b([A-ZÁ-Ž])\.(\S)/gu, "$1. $2"));
+}
 
 /**
  * Detect parser/clip mid-token fragments (e.g. "… provoz ve smě").
@@ -382,12 +441,12 @@ export function normalizeDirectionHuman(raw) {
   d = clean(d.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
   d = clean(d.split(DIRECTION_DEST_STOP_RE)[0]);
   d = sanitizeExtractedValueToken(d);
+  d = normalizeInitialDotSpacing(d);
   if (!d) return null;
   if (looksLikeTruncatedFragment(d)) return null;
   if (/^(kladný|záporný)\s+směr$/i.test(d)) return null;
   if (/^(unknown|n\/a|null|undefined|neuvedeno)$/i.test(d)) return null;
   // Reject obvious non-direction overflow / prose.
-  if (d.length > 48) return null;
   if (DIRECTION_ROUTING_OVERFLOW_RE.test(d)) return null;
   if (
     /prováděn|stavebních prac|souvislosti|za účelem|v rámci akce|vyblokován|probíhají|bude uzavř|křižovatk/i.test(
@@ -396,6 +455,24 @@ export function normalizeDirectionHuman(raw) {
   ) {
     return null;
   }
+  // Segment / landmark direction: "od mostu P. Bezruče k husitské zvonici".
+  // Must not die on initials (P.) and must not invent destinations from unrelated prose.
+  if (/^od\s+/i.test(d)) {
+    if (d.length > 96) return null;
+    // Reject truncated initial-only leftovers ("od mostu P") — require continuation
+    // after a single-letter initial, or a clear "k …" / multi-word landmark path.
+    if (/\b[A-ZÁ-Ž]\.\s*$/u.test(d)) return null;
+    if (/\b[A-ZÁ-Ž]$/u.test(d) && !/\b[A-ZÁ-Ž]{2,}/u.test(d)) return null;
+    if (
+      /\bk\s+\S{2,}/i.test(d) ||
+      /\bmostu\b/i.test(d) ||
+      /\s/.test(d.replace(/^od\s+/i, ""))
+    ) {
+      return d;
+    }
+    return null;
+  }
+  if (d.length > 48) return null;
   // Destination-like: short place / left-right / centrum forms.
   // NOTE: do not use the `i` flag on the capital-letter branch — `[A-Z]` with `i`
   // would match lowercase and swallow routing prose after "vlevo".
@@ -426,17 +503,27 @@ function collectDirectionDestinationsFromComment(text) {
   const src = clean(text);
   if (!src) return [];
   const found = [];
+  // Capture body may include abbreviation dots (P.Bezruče / ul. X). Do NOT use [^,;.] —
+  // that class stops at the first "." and truncates initials.
   const re =
-    /\b(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\s+((?:na\s+|do\s+|z\s+)?[^,;.]{1,60})/giu;
+    /\b(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\s+((?:na\s+|do\s+|z\s+|od\s+)?[^,;]{1,120})/giu;
   let m;
   while ((m = re.exec(src))) {
-    let chunk = clean(m[1]);
+    const matchStart = m.index;
+    const bodyOffset = m[0].length - m[1].length;
+    let chunk = clipExtractedValueAtStructuralEnd(m[1], 120);
+    // Do not swallow a later "ve směru …" inside this capture (urban multi-clause).
+    chunk = clean(chunk.split(DIRECTION_NESTED_MARKER_RE)[0]);
     chunk = clean(chunk.split(DIRECTION_DEST_STOP_RE)[0]);
     chunk = clean(chunk.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
     // "Bohdalec až ke křižovatce…" → stop before "až"
     chunk = clean(chunk.split(/\s+až\b/i)[0]);
+    chunk = normalizeInitialDotSpacing(chunk);
     const norm = normalizeDirectionHuman(chunk);
     if (norm) found.push(norm);
+    // Rewind past marker + kept chunk so a nested direction marker still matches.
+    const advance = Math.max(1, bodyOffset + (chunk ? chunk.length : 1));
+    re.lastIndex = Math.min(src.length, matchStart + advance);
   }
   const uniq = [];
   for (const d of found) {
@@ -1046,9 +1133,15 @@ export function extractEventReasonFromOfficialComment(rawText) {
   if (!text) return { reasonText: null, eventName: null, reasonKind: null };
   // Never take publisher lines as reason / quoted names.
   const cut = text.split(/\bVydal\s*:/i)[0] || text;
-  const m = cut.match(/\bz\s+důvodu\s+(.+?)(?=\s*[.…](?:\s|$)|$)/is);
+  const m = cut.match(/\bz\s+důvodu\s+(.+)$/is);
   if (!m) return { reasonText: null, eventName: null, reasonKind: null };
-  let reasonText = sanitizeExtractedValueToken(m[1]);
+  // Keep abbreviation dots; stop at semicolon, direction clause, or sentence end.
+  let reasonText = clipExtractedValueAtStructuralEnd(m[1], 180);
+  reasonText = clean(reasonText.split(/\s*;\s*/)[0]);
+  reasonText = clean(
+    reasonText.split(/\s+(?:směr|ve\s+směru|v\s+směru)\b/i)[0]
+  );
+  reasonText = sanitizeExtractedValueToken(reasonText);
   if (!reasonText) return { reasonText: null, eventName: null, reasonKind: null };
   // Drop trailing sentence crumbs after a closed quote.
   reasonText = clean(reasonText.replace(/(["“”„][^"“”„]*["“”„]).*$/u, "$1"));
@@ -1934,6 +2027,18 @@ export function isFullScopeClosure(rawText) {
   if (/oba\s+směry.{0,30}uzavř/i.test(text)) return true;
   if (/všechny\s+jízdní\s+pruhy.{0,30}(?:uzavř|neprůjezdn)/i.test(text)) return true;
   if (/neprůjezdn[áaý]\s+(?:komunikace|silnice|dálnice|úsek)\b/i.test(text)) return true;
+  if (/úplně\s+uzavřen/i.test(text) || /komunikace\s+dočasně\s+uzavřen/i.test(text)) {
+    return true;
+  }
+  // Bare NDIC token ", uzavřeno," (local road / municipal notice) — full closure,
+  // unless already classified as single-lane / shoulder / truck-only restriction.
+  if (
+    /(?:^|[,;]\s*)uzavřeno(?!\s+pro\s)(?:\s*[,;.]|\s+|$)/i.test(text) &&
+    !isSingleLaneRestriction(text) &&
+    !isShoulderOrVergeRestriction(text)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -2383,6 +2488,11 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
       bits.push("Kyvadlový provoz");
     }
   } else if (
+    /\bstřídavý\s+jednosměrný\s+provoz\b/i.test(text) &&
+    !/střídavý|jednosměrný|kyvadlov/i.test(have)
+  ) {
+    bits.push("Střídavý jednosměrný provoz");
+  } else if (
     /\b(?:provoz\s+)?jedním jízdním pruhem\b/i.test(text) &&
     !/jedním jízdním pruhem|kyvadlov/i.test(have)
   ) {
@@ -2392,6 +2502,18 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
     bits.push("Zúžená vozovka na jeden jízdní pruh");
+  } else if (
+    /\bzúžené\s+jízdní\s+pruhy\b/i.test(text) &&
+    !/zúžen|jedním jízdním|kyvadlov/i.test(have)
+  ) {
+    bits.push("Zúžené jízdní pruhy");
+  }
+
+  if (
+    /výjezd\s+neprůjezdn/i.test(text) &&
+    !/výjezd\s+neprůjezdn|neprůjezdn[ýáé]\s+výjezd/i.test(have + " " + bits.join(" "))
+  ) {
+    bits.push("Výjezd je neprůjezdný");
   }
 
   // Cardinal / named lane closed (západní/východní …) — not only L/R/C.
@@ -2551,14 +2673,44 @@ export function buildTrafficSituationSummary(input = {}) {
       const detail = source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
       causeBits.push(detail ? clean(detail[0]).replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
     }
-    if (/stavební práce/i.test(source) && !causeBits.length) causeBits.push("Stavební práce");
+
+    // Rich lead: closed roadworks with explicit "z důvodu …" detail (excavation, cable, …).
+    // Never invent; only merge facts proven in source. Direction stays out of situation.
+    const reasonDetail = clean(facts.eventReason);
+    const hasBareClosed =
+      /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
+      /úpln[áa]\s+uzavírk/i.test(source) ||
+      scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED;
+    const hasStavebni = /stavební práce/i.test(source);
+    const reasonIsWorkDetail =
+      !!(reasonDetail &&
+        !/kulturní\s+akc/i.test(reasonDetail) &&
+        !/\bsměr\b/i.test(reasonDetail) &&
+        reasonDetail.length >= 6);
+    let roadworksReasonMerged = false;
+    if (hasBareClosed && hasStavebni && reasonIsWorkDetail && !causeBits.length) {
+      const noun =
+        /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) && !/\bsilnice\s+[ID]/i.test(source)
+          ? "Komunikace"
+          : /\bsilnice\b|\bdálnice\b/i.test(source)
+            ? "Silnice"
+            : "Komunikace";
+      causeBits.push(
+        noun + " uzavřena z důvodu stavebních prací – " + reasonDetail
+      );
+      roadworksReasonMerged = true;
+    } else if (hasStavebni && !causeBits.length) {
+      causeBits.push("Stavební práce");
+    }
     if (
       /práce na silnici/i.test(source) &&
-      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských/i.test(b))
+      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských|uzavřena z důvodu/i.test(b))
     ) {
       causeBits.unshift("Práce na silnici");
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
+    // Stash merge flag on facts-like local for later circumstance skip.
+    facts._roadworksReasonMerged = roadworksReasonMerged;
 
     // Profile location of works (not a full-road closure claim).
     if (
@@ -2786,6 +2938,11 @@ export function buildTrafficSituationSummary(input = {}) {
         /\buzavřen[ýáo]?\s+most\b/i.test(source)
       ) {
         scopeBits.push("Most je uzavřen");
+      } else if (
+        /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) &&
+        !/\bsilnice\s+[ID]/i.test(source)
+      ) {
+        scopeBits.push("Komunikace je uzavřena");
       } else {
         scopeBits.push("Silnice je uzavřena");
       }
@@ -2911,7 +3068,10 @@ export function buildTrafficSituationSummary(input = {}) {
     const eventName = clean(facts.eventName);
     if (reasonText || eventName) {
       let reasonBit = null;
-      if (facts.reasonKind === "CULTURAL_EVENT") {
+      if (facts._roadworksReasonMerged) {
+        // Already folded into the roadworks closure lead — do not duplicate.
+        reasonBit = null;
+      } else if (facts.reasonKind === "CULTURAL_EVENT") {
         reasonBit = eventName
           ? 'Uzavírka je z důvodu konání kulturní akce „' + eventName + "“"
           : "Uzavírka je z důvodu konání kulturní akce";
