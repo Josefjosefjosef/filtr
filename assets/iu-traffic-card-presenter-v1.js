@@ -73,6 +73,10 @@ export const LOCATION_KIND = Object.freeze({
   SQUARE: "SQUARE",
   STATION: "STATION",
   PARKING: "PARKING",
+  RAILWAY_CROSSING: "RAILWAY_CROSSING",
+  RAMP: "RAMP",
+  EXIT_RAMP: "EXIT_RAMP",
+  REST_AREA: "REST_AREA",
   ROAD: "ROAD",
   ROAD_SECTION: "ROAD_SECTION",
   LANDMARK: "LANDMARK",
@@ -257,7 +261,11 @@ export function looksLikeStreetName(raw) {
   if (!t) return false;
   // Squares / embankments are named places — not streets.
   if (/náměstí|nábřeží/i.test(t)) return false;
-  if (/tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům/i.test(t)) {
+  if (
+    /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+      t
+    )
+  ) {
     return false;
   }
   if (/\btřída\b/i.test(t)) return true;
@@ -274,7 +282,11 @@ export function looksLikeNonMunicipalityPlace(raw) {
   const t = clean(raw);
   if (!t) return false;
   if (isPrahaCityPartName(t)) return true;
-  if (/náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům/i.test(t)) {
+  if (
+    /náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+      t
+    )
+  ) {
     return true;
   }
   return looksLikeStreetName(t);
@@ -288,7 +300,11 @@ function isNamedNonStreetKind(kind) {
     kind === LOCATION_KIND.SQUARE ||
     kind === LOCATION_KIND.INTERSECTION ||
     kind === LOCATION_KIND.STATION ||
-    kind === LOCATION_KIND.PARKING
+    kind === LOCATION_KIND.PARKING ||
+    kind === LOCATION_KIND.RAILWAY_CROSSING ||
+    kind === LOCATION_KIND.RAMP ||
+    kind === LOCATION_KIND.EXIT_RAMP ||
+    kind === LOCATION_KIND.REST_AREA
   );
 }
 
@@ -386,7 +402,11 @@ export function classifyLocationKindFromName(name) {
   if (/parkovací\s+dům|parkovišt|\bP\s*\+\s*[RG]\b/i.test(t)) return LOCATION_KIND.PARKING;
   if (/tunel/i.test(t)) return LOCATION_KIND.TUNNEL;
   if (/\bmost\b/i.test(t)) return LOCATION_KIND.BRIDGE;
+  if (/železniční(?:ho)?\s+přejezd|přejezd/i.test(t)) return LOCATION_KIND.RAILWAY_CROSSING;
   if (/MÚK\b|křižovatka/i.test(t)) return LOCATION_KIND.INTERSECTION;
+  if (/\bnájezd\b/i.test(t)) return LOCATION_KIND.RAMP;
+  if (/\bsjezd\b/i.test(t)) return LOCATION_KIND.EXIT_RAMP;
+  if (/odpočívk/i.test(t)) return LOCATION_KIND.REST_AREA;
   if (/náměstí/i.test(t)) return LOCATION_KIND.SQUARE;
   if (/nádraží|terminál/i.test(t)) return LOCATION_KIND.STATION;
   if (/^ulice\b|\btřída\b/i.test(t)) return LOCATION_KIND.STREET;
@@ -413,13 +433,36 @@ export function extractNamedTransportObject(rawText) {
     !looksLikeRoadNumberToken(lead) &&
     !isPrahaCityPartName(lead) &&
     !/^od\s+\d/i.test(lead) &&
-    /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům/i.test(lead)
+    /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+      lead
+    )
   ) {
     return { name: lead, kind: classifyLocationKindFromName(lead) };
   }
 
   // Full-text scan with direction clauses removed (avoid "směr Barrandovský most").
   const scan = text.replace(/\bsměr(?:em)?\s+[^,;.]{2,80}/gi, " ");
+
+  // Railway crossing with explicit identifier (e.g. P1234) — keep type + id.
+  // Do not use \b before "ž…" — JS word boundaries are ASCII-only.
+  const railId = scan.match(
+    /(?:^|[^\p{L}\p{N}_])železniční(?:ho)?\s+přejezd(?:u)?\s+([A-Z]\d{2,6}|\d{2,6})\b/iu
+  );
+  if (railId) {
+    const id = clean(railId[1]).toUpperCase();
+    return {
+      name: "železniční přejezd " + id,
+      kind: LOCATION_KIND.RAILWAY_CROSSING,
+      objectIdentifier: id,
+    };
+  }
+  const railBare = scan.match(
+    /(?:^|[^\p{L}\p{N}_])železniční(?:ho)?\s+přejezd(?:u)?(?=[\s,;.]|$)/iu
+  );
+  if (railBare) {
+    return { name: "železniční přejezd", kind: LOCATION_KIND.RAILWAY_CROSSING };
+  }
+
   const tunnel =
     scan.match(/\b([A-ZÁ-Ž][\p{L}\-]*(?:\s+[A-ZÁ-Ž][\p{L}\-]*){0,3}\s+[Tt]unel)\b/u) ||
     scan.match(/\b([Tt]unel\s+[A-ZÁ-Ž][\p{L}0-9\-]+)\b/u);
@@ -439,10 +482,106 @@ export function extractNamedTransportObject(rawText) {
   }
   const muk = scan.match(/\b(MÚK\s+[^,;.]{2,60})/i);
   if (muk) return { name: clean(muk[1]), kind: LOCATION_KIND.INTERSECTION };
+  const intersection = scan.match(
+    /\bkřižovatk[ay]\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
+  );
+  if (intersection) {
+    return {
+      name: "křižovatka " + clean(intersection[1]),
+      kind: LOCATION_KIND.INTERSECTION,
+    };
+  }
+  const ramp = scan.match(
+    /\bnájezd(?:u)?\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
+  );
+  if (ramp) {
+    return { name: "nájezd " + clean(ramp[1]), kind: LOCATION_KIND.RAMP };
+  }
+  const exitRamp = scan.match(
+    /\bsjezd(?:u)?\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
+  );
+  if (exitRamp) {
+    return {
+      name: "sjezd " + clean(exitRamp[1]),
+      kind: LOCATION_KIND.EXIT_RAMP,
+    };
+  }
+  const rest = scan.match(
+    /\bodpočívk[ay]\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
+  );
+  if (rest) {
+    return {
+      name: "odpočívka " + clean(rest[1]),
+      kind: LOCATION_KIND.REST_AREA,
+    };
+  }
   const square = scan.match(/\b([A-ZÁ-Ž][\p{L}\-]*(?:\s+[A-ZÁ-Ž][\p{L}\-]*){0,3}\s+náměstí)\b/u);
   if (square) return { name: clean(square[1]), kind: LOCATION_KIND.SQUARE };
 
   return null;
+}
+
+/**
+ * Concrete closed object phrase already present after "úplná uzavírka …" in NDIC text.
+ * Fail-closed: only when source names a transport object (not generic komunikace/silnice).
+ * Preserves source morphology + identifier (e.g. "železničního přejezdu P1234").
+ */
+export function extractFullClosureObjectPhrase(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const m = text.match(
+    /úpln[áa]\s+uzavírk[ay]\s+([^,;.]{3,90}?)(?=\s+(?:na|ve?|u|od|do|pro|přes|směrem)\s+|[,;]|$)/iu
+  );
+  if (!m) return null;
+  let obj = clean(m[1]);
+  if (!obj) return null;
+  // Strip trailing authority / boilerplate crumbs if lookahead missed.
+  obj = clean(
+    obj.replace(
+      /\s+(?:Vydal|Zdroj|Od\s+\d|Do\s+\d|okres\b|okr\.|kraj\b).*$/i,
+      ""
+    )
+  );
+  if (!obj) return null;
+  // Generic carriageway nouns — not a concrete object.
+  if (
+    /^(?:komunikace|silnice|ulice|vozovk[ay]|dálnice|místní\s+komunikace|silniční\s+komunikace)(?:\s|$)/i.test(
+      obj
+    )
+  ) {
+    return null;
+  }
+  // Must be an explicit transport-object category from the source.
+  if (
+    !/(?:železničního\s+)?přejezdu?|(?:^|\s)tunelu?\b|(?:^|\s)mostu?\b|křižovatk[ay]|nájezdu?|sjezdu?|odpočívk[ay]|MÚK\b/i.test(
+      obj
+    )
+  ) {
+    return null;
+  }
+  // Keep identifier when present; reject empty type-only if somehow truncated to noise.
+  if (obj.length < 4) return null;
+  return obj;
+}
+
+/**
+ * Nominative display label for a parsed transport object (for facts / headers).
+ * Never invents names — only normalizes known railway-crossing morphology.
+ */
+export function formatNamedTransportObjectLabel(named) {
+  if (!named || !named.name) return null;
+  const name = clean(named.name);
+  if (!name) return null;
+  if (named.kind === LOCATION_KIND.RAILWAY_CROSSING) {
+    const id =
+      clean(named.objectIdentifier) ||
+      (name.match(/\b([A-Z]\d{2,6}|\d{2,6})\b/i) || [])[1] ||
+      "";
+    const idUp = id ? clean(id).toUpperCase() : "";
+    if (idUp) return "železniční přejezd " + idUp;
+    return "železniční přejezd";
+  }
+  return name;
 }
 
 /**
@@ -795,6 +934,7 @@ export function parseOfficialCommentFacts(rawText) {
     isEmptyTemplate: false,
     namedObject: null,
     namedObjectKind: null,
+    objectIdentifier: null,
     locationKind: LOCATION_KIND.UNKNOWN,
   };
   if (!text) return out;
@@ -807,8 +947,9 @@ export function parseOfficialCommentFacts(rawText) {
 
   const named = extractNamedTransportObject(text);
   if (named) {
-    out.namedObject = streetBareName(named.name);
+    out.namedObject = formatNamedTransportObjectLabel(named) || streetBareName(named.name);
     out.namedObjectKind = named.kind;
+    out.objectIdentifier = named.objectIdentifier ? clean(named.objectIdentifier) : null;
     out.locationKind = named.kind;
   }
 
@@ -1831,7 +1972,12 @@ export function buildTrafficSituationSummary(input = {}) {
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
   } else if (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) {
-    if (
+    const closureObjEarly = /úpln[áa]\s+uzavírk/i.test(source)
+      ? extractFullClosureObjectPhrase(source)
+      : null;
+    if (closureObjEarly) {
+      causeBits.push("Úplná uzavírka " + closureObjEarly);
+    } else if (
       /(?:^|[,;.\s])tunel(?:y)?\s+(?:je\s+|jsou\s+)?uzavřen/i.test(source) ||
       /uzavřen[ýáo]?\s+tunel(?:y)?(?:[,;.\s]|$)/i.test(source)
     ) {
@@ -1839,13 +1985,25 @@ export function buildTrafficSituationSummary(input = {}) {
     } else if (
       /\bmost\s+uzavřen\b/i.test(source) ||
       /\buzavřen[ýáo]?\s+most\b/i.test(source) ||
-      /\búplná\s+uzavírka\s+mostu\b/i.test(source)
+      /\búplná\s+uzavírka\s+mostu\b(?!\s+[A-ZÁ-Ž])/i.test(source)
     ) {
       causeBits.push("Most je uzavřen");
     } else if (/úpln[áa]\s+uzavírk/i.test(source)) {
-      const road = clean(input.road);
-      if (road) causeBits.push("Úplná uzavírka silnice " + road);
-      else causeBits.push("Úplná uzavírka komunikace");
+      if (
+        facts.namedObjectKind === LOCATION_KIND.RAILWAY_CROSSING &&
+        facts.namedObject
+      ) {
+        const id =
+          clean(facts.objectIdentifier) ||
+          ((facts.namedObject.match(/\b([A-Z]\d{2,6}|\d{2,6})\b/i) || [])[1] || "");
+        causeBits.push(
+          "Úplná uzavírka železničního přejezdu" + (id ? " " + id.toUpperCase() : "")
+        );
+      } else {
+        const road = clean(input.road);
+        if (road) causeBits.push("Úplná uzavírka silnice " + road);
+        else causeBits.push("Úplná uzavírka komunikace");
+      }
     } else if (/oba směry/i.test(source)) {
       causeBits.push("Silnice je uzavřena v obou směrech");
     } else {
@@ -2340,10 +2498,21 @@ export function buildLocalityHeaderModel(input = {}) {
     // Outside-city: [tunnel icon] + name + [road badge] — icon rendered in UI layer.
     besideLocality = outsideTunnel.displayName;
     locationKind = LOCATION_KIND.TUNNEL;
-  } else if (namedObject && !resolveRoadDisplayName(road)) {
+  } else if (
+    namedObject &&
+    !resolveRoadDisplayName(road) &&
+    !(
+      street &&
+      (namedObjectKind === LOCATION_KIND.RAILWAY_CROSSING ||
+        namedObjectKind === LOCATION_KIND.RAMP ||
+        namedObjectKind === LOCATION_KIND.EXIT_RAMP ||
+        namedObjectKind === LOCATION_KIND.REST_AREA)
+    )
+  ) {
     // Named tunnel/bridge/square beats generic locationLabel (e.g. Letná).
     // Urban tunnels: [MĚSTO] + tunnel name (municipalitySign from NDIC or tunnel registry).
     // Road aliases (D0 → Pražský okruh) keep the communication display name instead.
+    // Railway crossing / ramp / exit / rest-area are situation objects — keep confirmed street.
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
   } else if (street) {
