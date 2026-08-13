@@ -558,7 +558,7 @@ jobs:
         env:
           IU_DATETIME_GUARD_FAST: "1"
         run: |
-          node node_modules/playwright/cli.js install webkit
+          node node_modules/playwright/cli.js install --with-deps webkit
           npm run iu-datetime-real-route-geometry-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
