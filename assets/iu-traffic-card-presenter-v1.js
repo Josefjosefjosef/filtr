@@ -1616,6 +1616,7 @@ export function parseOfficialCommentFacts(rawText) {
     locationQualifier: null,
     openLaneCount: null,
     affectedRoadPart: null,
+    affectedLane: null,
     roadworkDetail: null,
     situationPhrases: [],
     isEmptyTemplate: false,
@@ -1655,6 +1656,14 @@ export function parseOfficialCommentFacts(rawText) {
     out.affectedRoadPart = "HARD_SHOULDER";
   } else if (/rozsah\s*:\s*krajnice/i.test(text)) {
     out.affectedRoadPart = "SHOULDER";
+  }
+  {
+    const lanePart = text.match(
+      /rozsah\s*:\s*((?:pravý|levý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)\b/i
+    );
+    if (lanePart) {
+      out.affectedLane = clean(lanePart[1]).toLocaleLowerCase("cs");
+    }
   }
   if (/údržba\s+a\s+opravy\s+mostů/i.test(text)) {
     out.roadworkDetail = "BRIDGE_MAINTENANCE";
@@ -2323,7 +2332,7 @@ export function analyzePrimaryCause(rawText, input = {}) {
     type === "prace" ||
     illustrationKey === "prace" ||
     /roadwork|maintenance|construction/.test(type) ||
-    /práce na silnici|stavební práce|údržba\s+(?:a\s+opravy|trav)|sekání\s+trávy|pracovní\s+místo|pomalu jedoucí vozidlo údržby/i.test(
+    /práce na silnici|stavební práce|práce na inženýrských|údržba\s+(?:a\s+opravy|trav|strom|keř|zelen|veget|dopravního|most)|sekání\s+trávy|pracovní\s+místo|pomalu jedoucí vozidlo údržby|výsprava|rekonstrukce|frézování|sanace/i.test(
       text
     )
   ) {
@@ -2969,6 +2978,27 @@ export function buildTrafficSituationSummary(input = {}) {
       circumstanceBits.push("Práce probíhají na zpevněné krajnici");
     }
 
+    // Affected lane strip from "rozsah: pravý jízdní pruh" — never invent "(3)" meaning.
+    // Emit before open-lane count so "jízdní pruh" in the open-lane sentence cannot suppress it.
+    {
+      const lane =
+        clean(facts.affectedLane) ||
+        (() => {
+          const m = source.match(
+            /rozsah\s*:\s*((?:pravý|levý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)\b/i
+          );
+          return m ? clean(m[1]).toLocaleLowerCase("cs") : "";
+        })();
+      if (
+        lane &&
+        !causeBits.some((b) => new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b)) &&
+        !circumstanceBits.some((b) => /zasahují/i.test(b) || new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b)) &&
+        !scopeBits.some((b) => new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b))
+      ) {
+        circumstanceBits.push("Práce zasahují " + lane);
+      }
+    }
+
     // Explicit remaining passable lanes — never invent original lane count.
     {
       const openN =
@@ -2981,10 +3011,10 @@ export function buildTrafficSituationSummary(input = {}) {
       if (openN != null && Number.isFinite(openN) && openN >= 0) {
         const laneBit =
           openN === 1
-            ? "Průjezdný je 1 jízdní pruh"
+            ? "Průjezdný zůstává 1 jízdní pruh"
             : openN >= 2 && openN <= 4
-              ? "Průjezdné jsou " + openN + " jízdní pruhy"
-              : "Průjezdných je " + openN + " jízdních pruhů";
+              ? "Průjezdné zůstávají " + openN + " jízdní pruhy"
+              : "Průjezdných zůstává " + openN + " jízdních pruhů";
         if (
           !causeBits.some((b) => /průjezdn/i.test(b)) &&
           !circumstanceBits.some((b) => /průjezdn/i.test(b))
@@ -3381,8 +3411,16 @@ export function buildTrafficSituationSummary(input = {}) {
 
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
   if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
-  // Split on sentence ends — never on abbreviation dots (ul. / okr. / č. / ev.č.).
-  const clauses = source
+  // Last-resort clause split — protect decimal km tokens and strip validity scaffolding.
+  // Never rebuild "mezi 44. 74 km" from "mezi 44.53 a 40.74 km".
+  const sourceForFallback = clean(
+    source
+      .replace(/\bv\s+termínu\s+od\b[\s\S]*?(?=,\s*(?:údržba|oprava|práce|stavební|rozsah|počet|zúžen|uzavř|kyvadlov)|$)/gi, "")
+      .replace(/\bOd\s+\d{1,2}\.\d{1,2}\.\d{4}[\s\S]*?(?=,\s*|,?\s*(?:údržba|oprava|práce|stavební|rozsah|počet)|$)/gi, "")
+      .replace(/\bDo\s+\d{1,2}\.\d{1,2}\.\d{4}[\s\S]*?(?=,\s*|,?\s*(?:údržba|oprava|práce|stavební|rozsah|počet)|$)/gi, "")
+  );
+  const clauses = sourceForFallback
+    .replace(/(\d)\.(\d)/g, "$1\u2024$2")
     .replace(/\b(ul|okr|č|ev\.?\s*č|tzv|např|m|km)\./gi, "$1\u2024")
     .split(/[.;]/)
     .map((x) => clean(x.replace(/\u2024/g, ".")))
@@ -3395,7 +3433,12 @@ export function buildTrafficSituationSummary(input = {}) {
         !/^vydal:/i.test(x) &&
         !/^v ulici\b/i.test(x) &&
         !/^v obci\b/i.test(x) &&
-        !/^okres\b/i.test(x)
+        !/^okres\b/i.test(x) &&
+        !/^silnice\s+[ID]/i.test(x) &&
+        !/^mezi\s+\d/i.test(x) &&
+        !/^v\s+termínu\b/i.test(x) &&
+        !/^rozsah\s*:/i.test(x) &&
+        !/^počet\s+průjezdných/i.test(x)
     )
     .slice(0, 2);
   if (clauses.length) {
@@ -3909,6 +3952,7 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       : input.kmTo != null
         ? formatKmToken(input.kmTo)
         : null;
+  // Full structured range always wins.
   if (fromStruct && toStruct) {
     return {
       kind: "KM_RANGE",
@@ -3916,6 +3960,19 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       from: fromStruct,
       to: toStruct,
       source: "structured_range",
+    };
+  }
+  // Official-comment range beats a single structured kilometer.
+  // Upstream often stores one truncated endpoint (e.g. 40.7) while RAW has 44.53–40.74.
+  if (facts.kilometerFrom && facts.kilometerTo) {
+    return {
+      kind: "KM_RANGE",
+      label:
+        facts.kilometerLabel ||
+        "km " + facts.kilometerFrom + "–" + facts.kilometerTo,
+      from: facts.kilometerFrom,
+      to: facts.kilometerTo,
+      source: "comment",
     };
   }
   if (input.kilometer != null && clean(String(input.kilometer)) !== "") {
@@ -3926,17 +3983,6 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       from: one,
       to: null,
       source: "structured_single",
-    };
-  }
-  if (facts.kilometerFrom && facts.kilometerTo) {
-    return {
-      kind: "KM_RANGE",
-      label:
-        facts.kilometerLabel ||
-        "km " + facts.kilometerFrom + "–" + facts.kilometerTo,
-      from: facts.kilometerFrom,
-      to: facts.kilometerTo,
-      source: "comment",
     };
   }
   if (facts.kilometerLabel) {
