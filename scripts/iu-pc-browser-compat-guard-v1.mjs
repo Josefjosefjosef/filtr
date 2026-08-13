@@ -30,7 +30,7 @@ function staticGate() {
     { id: "tasks_pc_filter_stable", pass: /@media \(min-width:1025px\)[\s\S]*\.iu-tasksOverlay__filter\.is-active[\s\S]*height:auto!important/.test(tasks) },
     { id: "mindmenu_label_minwidth0", pass: /\.iuMyInfoUzelOpenBtn__label[\s\S]*min-width: 0;/.test(home) },
     { id: "mindmenu_icons_noshrink", pass: /\.iuMyInfoUzelOpenBtn__icons[\s\S]*flex-shrink: 0;/.test(home) },
-    { id: "tasks_cache_bust", pass: /iu-tasks-premium\.css\?v=date-time-right-edge-v3-20260812/.test(index) },
+    { id: "tasks_cache_bust", pass: /iu-tasks-premium\.css\?v=date-time-value-column-v4-20260813/.test(index) },
     { id: "home_cache_bust", pass: /iu-desktop-home-premium\.css\?v=pc-svatek-label-pill-gap-4px-20260713/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
