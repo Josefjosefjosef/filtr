@@ -2882,18 +2882,33 @@ export function buildTrafficSituationSummary(input = {}) {
     if (/výsprava\s+tryskovou\s+metodou/i.test(source)) {
       causeBits.push("Výsprava tryskovou metodou");
     }
-    // Concrete NDIC work phrases must beat the generic "Práce na silnici" fallback.
-    if (/údržba\s+a\s+opravy\s+mostů/i.test(source) || facts.roadworkDetail === "BRIDGE_MAINTENANCE") {
-      causeBits.push("Údržba a opravy mostů");
-    } else if (/údržba\s+a\s+opravy\b/i.test(source) && !causeBits.length) {
-      const detail = source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
-      causeBits.push(detail ? clean(detail[0]).replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
-    }
-
     // Rich lead: closed roadworks with explicit work detail ("z důvodu …" or specific work phrase).
     // Never invent; only merge facts proven in source. Direction stays out of situation.
     const reasonDetail = clean(facts.eventReason);
     const specificWork = clean(facts.specificWork);
+
+    // Concrete NDIC work phrases must beat the generic "Práce na silnici" fallback.
+    // Prefer full specificWork (e.g. "údržba a opravy svislých značek a větrných rukávů")
+    // over a truncated "Údržba a opravy" stem — never hardcode one road/km.
+    if (/údržba\s+a\s+opravy\s+mostů/i.test(source) || facts.roadworkDetail === "BRIDGE_MAINTENANCE") {
+      causeBits.push("Údržba a opravy mostů");
+    } else if (specificWork && /údržba\s+a\s+opravy\b/i.test(specificWork) && !causeBits.length) {
+      causeBits.push(
+        specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1)
+      );
+    } else if (/údržba\s+a\s+opravy\b/i.test(source) && !causeBits.length) {
+      const detail =
+        source.match(/údržba\s+a\s+opravy\s+[^,;.]+/i) ||
+        source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
+      let phrase = detail ? clean(detail[0]) : "Údržba a opravy";
+      phrase = clean(
+        phrase.split(
+          /\s+v\s+termínu\b|\s+rozsah\s*:|\s+počet\s+průjezdných|\s+Vydal\s*:/i
+        )[0]
+      );
+      phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
+      causeBits.push(phrase ? phrase.replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
+    }
     const hasBareClosed =
       /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
       /úpln[áa]\s+uzavírk/i.test(source) ||
@@ -2946,15 +2961,23 @@ export function buildTrafficSituationSummary(input = {}) {
       causeBits.push("Stavební práce");
     }
 
-    // Generic category lead already present (engineering networks / road works) —
-    // still fold in concrete work detail so it is not dropped from collapsed UI.
+    // Generic category lead already present (engineering networks / road works /
+    // bare "Údržba a opravy") — still fold in concrete work detail so it is not
+    // dropped from collapsed UI.
     if (specificWork && causeBits.length) {
       const enrichIdx = causeBits.findIndex((b) =>
-        /^(?:Práce na inženýrských sítích|Práce na silnici|Stavební práce)\.?$/i.test(clean(b))
+        /^(?:Práce na inženýrských sítích|Práce na silnici|Stavební práce|Údržba a opravy)\.?$/i.test(
+          clean(b)
+        )
       );
       if (enrichIdx >= 0) {
-        const base = clean(causeBits[enrichIdx]).replace(/\.$/, "");
-        causeBits[enrichIdx] = base + " – " + formatWorkReason(specificWork);
+        if (/^údržba\s+a\s+opravy\b/i.test(specificWork)) {
+          causeBits[enrichIdx] =
+            specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1);
+        } else {
+          const base = clean(causeBits[enrichIdx]).replace(/\.$/, "");
+          causeBits[enrichIdx] = base + " – " + formatWorkReason(specificWork);
+        }
       }
     }
 
