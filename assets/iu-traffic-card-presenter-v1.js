@@ -560,14 +560,23 @@ export function sanitizeExtractedValueToken(raw) {
   let s = clean(raw);
   if (!s) return "";
   s = s.replace(/^[\s({"'„\[]+/u, "");
-  s = s.replace(/[)\]}>]+$/g, "");
+  // Keep balanced ISO-like country/region suffixes on destinations (Katowice(PL) → Katowice (PL)).
+  // Must run before generic trailing-bracket strip, which would destroy "(PL)".
+  let countrySuffix = "";
+  const withCountry = s.match(/^(.*?)(?:\s*)\(([A-Za-z]{1,3})\)$/u);
+  if (withCountry && clean(withCountry[1])) {
+    s = clean(withCountry[1]);
+    countrySuffix = " (" + String(withCountry[2]).toUpperCase() + ")";
+  } else {
+    s = s.replace(/[)\]}>]+$/g, "");
+  }
   s = s.replace(/[,;]+$/g, "");
   s = s.replace(/["'“”]+$/g, "");
   // Drop a trailing period only when it is not a Czech abbreviation suffix.
   if (/\.$/.test(s) && !/\b(?:tř|nám|nábř|ul|okr|č)\.$/iu.test(s)) {
     s = s.replace(/\.$/, "");
   }
-  return clean(s);
+  return clean(s + countrySuffix);
 }
 
 function streetBareName(raw) {
@@ -710,8 +719,16 @@ export function looksLikeTruncatedFragment(raw) {
   if (/\s(?:ve|na|v|do|z|se|ke|od|a|i)$/i.test(s)) return true;
   if (/[-–—…]$/.test(s)) return true;
   // Parser-generated dangling delimiters / open parentheticals.
-  if (/[()]$/.test(s)) return true;
-  if (/\([^)]*$/.test(s) && !/\([^)]+\)$/.test(s)) return true;
+  // Balanced country/region suffixes like "(PL)" / "(DE)" are valid direction tails.
+  if (/\([A-Za-z]{1,3}\)$/u.test(s)) {
+    // ok — closed short code suffix
+  } else if (/\($/.test(s)) {
+    return true;
+  } else if (/\)$/.test(s) && !/\([^)]+\)$/.test(s)) {
+    return true;
+  } else if (/\([^)]*$/.test(s) && !/\([^)]+\)$/.test(s)) {
+    return true;
+  }
   return false;
 }
 
@@ -779,18 +796,24 @@ export function normalizeDirectionHuman(raw) {
   }
   if (/^(?:do\s+|z\s+|na\s+)/i.test(d)) {
     const rest = d.replace(/^(?:do\s+|z\s+|na\s+)/i, "");
-    if (/^[A-ZÁ-Ž]/u.test(rest) && /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./-]{0,40}$/u.test(rest)) {
+    if (
+      /^[A-ZÁ-Ž]/u.test(rest) &&
+      /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./\-]*(?:\s*\([A-Za-z]{1,3}\))?$/u.test(rest)
+    ) {
       return d;
     }
     return null;
   }
-  if (/^[A-ZÁ-Ž]/u.test(d) && /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./-]{0,40}$/u.test(d)) {
+  if (
+    /^[A-ZÁ-Ž]/u.test(d) &&
+    /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./\-]*(?:\s*\([A-Za-z]{1,3}\))?$/u.test(d)
+  ) {
     return d;
   }
   // NDIC often writes uncapitalized landmark directions ("směr prosecká estakáda").
   // Accept short multi-word place-like tokens only — never routing prose.
   if (
-    /^[a-zá-ž][\wá-ž0-9 ./-]{2,47}$/u.test(d) &&
+    /^[a-zá-ž][\wá-ž0-9 ./\-]{2,47}$/u.test(d) &&
     /\s/.test(d) &&
     !DIRECTION_ROUTING_OVERFLOW_RE.test(d) &&
     !/prováděn|stavebních|souvislosti|účelem|vyblokován|probíhají|uzavř|křižovatk|omezení|pozor/i.test(
@@ -2039,6 +2062,7 @@ export function parseOfficialCommentFacts(rawText) {
     parkingFreeUpperBound: null,
     parkingFewSpacesLeft: false,
     queueLengthKm: null,
+    queueLengthApproximate: false,
     heavyTrafficLengthKm: null,
     municipalityRelation: null,
     roadNumber: null,
@@ -2676,8 +2700,17 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  const q = text.match(/\bkolona\s+(\d+(?:[.,]\d+)?)\s*km\b/i);
-  if (q) out.queueLengthKm = Number(String(q[1]).replace(",", "."));
+  const qApprox = text.match(
+    /\bkolona\s+(přibližně|cca|asi|zhruba)\s+(\d+(?:[.,]\d+)?)\s*km\b/i
+  );
+  const qExact = text.match(/\bkolona\s+(\d+(?:[.,]\d+)?)\s*km\b/i);
+  if (qApprox) {
+    out.queueLengthKm = Number(String(qApprox[2]).replace(",", "."));
+    out.queueLengthApproximate = true;
+  } else if (qExact) {
+    out.queueLengthKm = Number(String(qExact[1]).replace(",", "."));
+    out.queueLengthApproximate = false;
+  }
   const heavyLen =
     text.match(/silný\s+provoz(?:\s+v\s+délce)?\s+(\d+(?:[.,]\d+)?)\s*km\b/i) ||
     text.match(/(\d+(?:[.,]\d+)?)\s*km\s+siln(?:ý|ého)\s+provoz/i);
@@ -3214,6 +3247,38 @@ function formatKmCs(km) {
   if (!Number.isFinite(km)) return null;
   if (km >= 10) return String(Math.round(km));
   return String(Math.round(km * 10) / 10).replace(".", ",");
+}
+
+/**
+ * True when source (or structured flag) marks queue length as approximate.
+ * Exact "kolona 1 km" must not invent "přibližně".
+ */
+export function queueLengthApproximationFromSource(source, facts = null) {
+  if (facts && facts.queueLengthApproximate === true) return true;
+  const t = clean(source);
+  if (!t) return false;
+  if (/\bkolona\s+(přibližně|cca|asi|zhruba)\s+\d+(?:[.,]\d+)?\s*km\b/i.test(t)) return true;
+  if (
+    /\b(přibližně|cca|asi|zhruba)\s+\d+(?:[.,]\d+)?\s*km\b/i.test(t) &&
+    /\bkolona\b/i.test(t)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function formatQueueLengthSituationBit(source, facts, input) {
+  const qKm =
+    facts.queueLengthKm != null
+      ? facts.queueLengthKm
+      : input.queueLengthKm != null
+        ? Number(input.queueLengthKm)
+        : null;
+  if (qKm == null || !Number.isFinite(qKm)) return null;
+  const km = formatKmCs(qKm);
+  if (!km) return null;
+  const approx = queueLengthApproximationFromSource(source, facts);
+  return approx ? "Kolona přibližně " + km + " km" : "Kolona " + km + " km";
 }
 
 /** Source-grounded heavy-traffic length only (never invent). */
@@ -4010,15 +4075,9 @@ export function buildTrafficSituationSummary(input = {}) {
       conditionBits.push(formatHeavyTrafficBit(source, facts, input));
     }
     if (/tvoří se kolona/i.test(source)) conditionBits.push("Tvoří se kolona");
-    const qKm =
-      facts.queueLengthKm != null
-        ? facts.queueLengthKm
-        : input.queueLengthKm != null
-          ? Number(input.queueLengthKm)
-          : null;
-    if (qKm != null && Number.isFinite(qKm)) {
-      const km = formatKmCs(qKm);
-      if (km) conditionBits.push("Kolona přibližně " + km + " km");
+    const queueBit = formatQueueLengthSituationBit(source, facts, input);
+    if (queueBit) {
+      conditionBits.push(queueBit);
     } else if (/kolona/i.test(source) && !conditionBits.some((b) => /kolona/i.test(b))) {
       conditionBits.push("Kolona");
     } else if (!conditionBits.length) {
