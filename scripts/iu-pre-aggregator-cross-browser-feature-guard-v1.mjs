@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Cross-browser feature detection + fallback markers (pre-aggregator stable).
  * Static checks always; Chromium runtime when Playwright available.
@@ -25,7 +25,7 @@ function staticChecks() {
   const checks = [
     { id: "sw_feature_detect", pass: /"serviceWorker"\s+in\s+navigator/.test(app) },
     { id: "caches_feature_detect", pass: /"caches"\s+in\s+window/.test(app) },
-    { id: "sw_v4_version", pass: /pwa-offline-menu-articles-v4|prehled-settings-sw-network-first-v1|app-root-url-drop-projects-v1|app-root-pwa-assets-redirects-v1|pwa-offline-nav-fallback-v1|media-sources-removed-v1|banner-homecard-fouc-v1|chmi-cap-concrete-url-chrono-v1|chmi-cap-temporal-status-v1|chmi-cap-open-ended-public-url-v1|chmi-cap-unified-public-click-v1|chmi-cap-no-segment-dedupe-v1|chmi-multibrowser-console-v1|chmi-title-locality-v1|chmi-validfrom-timeline-v1|chmi-info-events-passthrough-v2|chmi-smog-onset-split-v1|homecard-cta-square-v1|kb-hide-v2|kb-nav-instant-restore-v1|date-time-fit-v2|date-time-right-edge-v3|date-time-value-column-v4|roadwork-lane-restriction-parts-v1|broken-vehicle-delay-header-v1|exit-ramp-tokenize-v1|d4-km-range-maintenance-v1|accident-dod-moto-investigation-v1|obstruction-stationary-vehicle-v1|accident-participants-may-block-v1|velky-ujezd-locality-sanitize-v1|hradec-accident-i57-v1|karlovy-vary-closure-access-v1|decin-narrowed-lanes-reason-v1|beroun-multi-street-work-reason-v1|direction-abbrev-rich-situation-v1|km-range-roadwork-detail-v1|municipality-parenthetical-multi-road-v1|traffic-fact-preservation-v1|urban-numbered-road-parse-v1|chmi-filter-vse-v1|bottom-nav-unify-stable-v1|root-hub-no-projects-v1|traffic-ui-activation-v1|traffic-ui-boot-nonblocking-v1|traffic-ui-ls-mem-guard-v1|traffic-ui-hero-cta-early-v1|traffic-ui-cls-stable-shell-v1|traffic-ui-defer-feed-hydrate-v1|heavy-feed-shell-first-v1/.test(sw) },
+    { id: "sw_v4_version", pass: /pwa-offline-menu-articles-v4|prehled-settings-sw-network-first-v1|app-root-url-drop-projects-v1|app-root-pwa-assets-redirects-v1|pwa-offline-nav-fallback-v1|media-sources-removed-v1|banner-homecard-fouc-v1|chmi-cap-concrete-url-chrono-v1|chmi-cap-temporal-status-v1|chmi-cap-open-ended-public-url-v1|chmi-cap-unified-public-click-v1|chmi-cap-no-segment-dedupe-v1|chmi-multibrowser-console-v1|chmi-title-locality-v1|chmi-validfrom-timeline-v1|chmi-info-events-passthrough-v2|chmi-smog-onset-split-v1|homecard-cta-square-v1|kb-hide-v2|kb-nav-instant-restore-v1|date-time-fit-v2|date-time-right-edge-v3|date-time-value-column-v4|praha-jizni-spojka-smv-header-v1|roadwork-lane-restriction-parts-v1|broken-vehicle-delay-header-v1|exit-ramp-tokenize-v1|d4-km-range-maintenance-v1|accident-dod-moto-investigation-v1|obstruction-stationary-vehicle-v1|accident-participants-may-block-v1|velky-ujezd-locality-sanitize-v1|hradec-accident-i57-v1|karlovy-vary-closure-access-v1|decin-narrowed-lanes-reason-v1|beroun-multi-street-work-reason-v1|direction-abbrev-rich-situation-v1|km-range-roadwork-detail-v1|municipality-parenthetical-multi-road-v1|traffic-fact-preservation-v1|urban-numbered-road-parse-v1|chmi-filter-vse-v1|bottom-nav-unify-stable-v1|root-hub-no-projects-v1|traffic-ui-activation-v1|traffic-ui-boot-nonblocking-v1|traffic-ui-ls-mem-guard-v1|traffic-ui-hero-cta-early-v1|traffic-ui-cls-stable-shell-v1|traffic-ui-defer-feed-hydrate-v1|heavy-feed-shell-first-v1/.test(sw) },
     { id: "durable_feed_cache", pass: /iu-feed-offline-v2|iu-feed-offline-v1/.test(sw) },
     { id: "durable_img_cache", pass: /iu-img-offline-v1/.test(sw) },
     { id: "network_module_present", pass: /online|offline|connectivity/i.test(net) },
@@ -116,7 +116,7 @@ async function main() {
   try {
     playwright = require("playwright");
   } catch (e) {
-    console.log("[xbrowser] playwright missing — static-only PASS");
+    console.log("[xbrowser] playwright missing â€” static-only PASS");
     console.log("[xbrowser] RESULT=PASS");
     process.exit(0);
   }
