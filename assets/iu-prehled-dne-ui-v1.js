@@ -803,7 +803,16 @@ function renderTrafficCardBody(ev, url) {
     fallbackNorm !== besideNorm
       ? `<span class="iuPdTrafficComm__place">${esc(fallbackPlaceRaw)}</span>`
       : "";
-  const smvFirst = !!(vm.roadBadge && vm.roadBadge.showMotorVehiclesIcon && !vm.roadBadge.showMotorwayIcon);
+  const smvFirst = !!(
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.roadTypeIconFirst === true) ||
+    // Fallback when presentation missing: numbered SMV keeps icon-before-municipality.
+    (vm.roadBadge &&
+      vm.roadBadge.showMotorVehiclesIcon &&
+      !vm.roadBadge.showMotorwayIcon &&
+      vm.roadBadge.road)
+  );
   // Road + "u obce" + municipality sign (source order), e.g. [23] u obce [STUDENEC].
   // TMC/locality beside must not override this header (kept in detail LOKALITA).
   const roadThenNearMuni = !!(nearPrefix && muniSign && roadBadge);

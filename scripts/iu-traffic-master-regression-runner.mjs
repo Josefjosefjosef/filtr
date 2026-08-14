@@ -32,6 +32,7 @@ const SUITES = [
   "iu-traffic-motorway-direction-exit-order-guard",
   "iu-traffic-direction-congestion-exactness-guard",
   "iu-traffic-explicit-road-delay-exit-guard",
+  "iu-traffic-prague-jizni-spojka-smv-header-guard",
   "iu-traffic-broken-vehicle-delay-header-guard",
   "iu-traffic-roadwork-lane-restriction-municipality-parts-guard",
 ];
