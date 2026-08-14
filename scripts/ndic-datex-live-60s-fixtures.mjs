@@ -27,6 +27,7 @@ import {
   PUBLISH_MAX_ATTEMPTS,
   snapshotStagingPath,
 } from "./ndic-datex-v1/live-publication.mjs";
+import { DEFAULT_MAX_SNAPSHOT_BYTES } from "./ndic-datex-v1/traffic-publication-snapshot.mjs";
 
 const fails = [];
 function check(id, cond, detail) {
@@ -415,6 +416,10 @@ async function main() {
   const p2 = statePaths({ ...process.env, IU_INFO_EVENTS_DATA_DIR: liveWork });
   check("conditional_state_survives_invocation", p2.stateFile === p1.stateFile);
 
+  // Prod stale-R2 incident: 8383448-byte snapshot froze at 8MiB cap.
+  check("snapshot_limit_12mib", DEFAULT_MAX_SNAPSHOT_BYTES === 12 * 1024 * 1024);
+  check("snapshot_limit_above_frozen_prod_bytes", DEFAULT_MAX_SNAPSHOT_BYTES > 8383448);
+
   try {
     fs.rmSync(tmp, { recursive: true, force: true });
   } catch {
@@ -428,7 +433,7 @@ async function main() {
   console.log(
     JSON.stringify({
       ok: true,
-      passCount: 48,
+      passCount: 50,
       schema: "iu-ndic-live-60s-fixtures-v1",
       MAX_CONCURRENT_LIVE_DATEX_PROCESSORS: 1,
       MAX_CONCURRENT_PUBLISHERS: 1,

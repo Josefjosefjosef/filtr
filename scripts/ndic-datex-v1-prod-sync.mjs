@@ -727,44 +727,17 @@ export async function runNdicDatexV1Sync(opts = {}) {
     };
 
     if (decision.publish && candidateItems && !isShadowIsolated()) {
-      const nextFeed = {
-        ...prevFeed,
-        generatedAt: started,
-        itemCount: candidateItems.length,
-        items: candidateItems,
-        ndicDatexV1Active: true,
-      };
-      writeJson(path.join(DIR, "feed.json"), nextFeed);
-      const lanePath = path.join(DIR, "lanes", "doprava.json");
-      const lane = readJson(lanePath, null);
-      if (lane) {
-        const others = (lane.items || []).filter((i) => !isNdicItem(i));
-        const merged = others.concat(feedItems);
-        writeJson(lanePath, { ...lane, generatedAt: started, itemCount: merged.length, items: merged });
-      }
-      // Count-only ACTIVE safety counters (same keys as shadow forensic; no payloads).
-      diagnostics.publicationSafety = countActivePublicationSafetyCounters(feedItems);
-      diagnostics.UNVERIFIED_LOCATION_PUBLISHED =
-        diagnostics.publicationSafety.UNVERIFIED_LOCATION_PUBLISHED;
-      diagnostics.UNVERIFIED_KM_PUBLISHED = diagnostics.publicationSafety.UNVERIFIED_KM_PUBLISHED;
-      diagnostics.UNVERIFIED_DIRECTION_PUBLISHED =
-        diagnostics.publicationSafety.UNVERIFIED_DIRECTION_PUBLISHED;
-      diagnostics.FUZZY_MATCH_USED = false;
-      diagnostics.GEOCODING_USED = false;
-      diagnostics.HEURISTIC_LOCATION_USED = false;
-
+      // Persist UI snapshot BEFORE large feed.json write (memory headroom on 1GB VPS).
+      // Fail-closed: never advance feed LM/content while traffic_offline_snapshot stays stale
+      // (prod incident 2026-08-14: PUB_SNAPSHOT_TOO_LARGE near 8MiB left R2 frozen via SEMANTIC_SKIP).
+      let uiSnap = null;
       if (PUBLICATION_LAYER_FLAGS.TRAFFIC_UI_ENABLED === true) {
-        // Write into DIR (IU_INFO_EVENTS_DATA_DIR candidate sandbox when set), NOT only
-        // feature-checkout projects/data/... — otherwise candidate artifact lacks REQUIRED
-        // traffic_offline_snapshot.json and shared-write git add can false-NO_CHANGES
-        // (ACTIVE run 31257122613).
         const snapshotDest = resolveTrafficUiSnapshotDestPath({
           repoRoot: REPO,
           infoEventsDir: DIR,
         });
-        // Offline SMV ULS reference refresh (fail-closed keeps last-good; never blocks sync).
         diagnostics.smvUlsReference = ensureSmvUlsReferenceBestEffort();
-        const uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
+        uiSnap = persistTrafficUiOfflineSnapshot(feedItems, {
           repoRoot: REPO,
           relPath: snapshotDest,
           nowIso: started,
@@ -793,7 +766,57 @@ export async function runNdicDatexV1Sync(opts = {}) {
           trafficUiEnabled: uiSnap.trafficUiEnabled === true,
           publicationEnabled: false,
         };
+        if (uiSnap.ok !== true) {
+          diagnostics.status = "failed";
+          diagnostics.error = "traffic_ui_snapshot_persist:" + (uiSnap.rejectCode || "UNKNOWN");
+          writeJson(paths.stateFile, state);
+          writeJson(paths.diagFile, diagnostics);
+          return attachShadowForensicRetention(
+            {
+              ok: false,
+              reason: "TRAFFIC_UI_SNAPSHOT_PERSIST_FAILED",
+              mode: config.mode,
+              diagnostics,
+              published: false,
+            },
+            {
+              result,
+              gateItems: feedItems,
+              startedAt: started,
+              datexBytesRead,
+              datexHttpStatus: resp.status,
+              datexContentTypeValid: true,
+              plsIndexes,
+            }
+          );
+        }
       }
+
+      const nextFeed = {
+        ...prevFeed,
+        generatedAt: started,
+        itemCount: candidateItems.length,
+        items: candidateItems,
+        ndicDatexV1Active: true,
+      };
+      writeJson(path.join(DIR, "feed.json"), nextFeed);
+      const lanePath = path.join(DIR, "lanes", "doprava.json");
+      const lane = readJson(lanePath, null);
+      if (lane) {
+        const others = (lane.items || []).filter((i) => !isNdicItem(i));
+        const merged = others.concat(feedItems);
+        writeJson(lanePath, { ...lane, generatedAt: started, itemCount: merged.length, items: merged });
+      }
+      // Count-only ACTIVE safety counters (same keys as shadow forensic; no payloads).
+      diagnostics.publicationSafety = countActivePublicationSafetyCounters(feedItems);
+      diagnostics.UNVERIFIED_LOCATION_PUBLISHED =
+        diagnostics.publicationSafety.UNVERIFIED_LOCATION_PUBLISHED;
+      diagnostics.UNVERIFIED_KM_PUBLISHED = diagnostics.publicationSafety.UNVERIFIED_KM_PUBLISHED;
+      diagnostics.UNVERIFIED_DIRECTION_PUBLISHED =
+        diagnostics.publicationSafety.UNVERIFIED_DIRECTION_PUBLISHED;
+      diagnostics.FUZZY_MATCH_USED = false;
+      diagnostics.GEOCODING_USED = false;
+      diagnostics.HEURISTIC_LOCATION_USED = false;
     } else if ((shouldRunShadow(config) || config.mode === "shadow") && process.env.IU_NDIC_SHADOW_ISOLATED !== "1") {
       /* Non-isolated legacy shadow dump — still not published; never commit this path in CI. */
       writeJson(path.join(STATE_DIR, "shadow_feed.json"), {

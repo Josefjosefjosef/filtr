@@ -414,8 +414,8 @@ try {
   }
 
   // --- L: snapshot limit ---
-  ok("L_SNAPSHOT_LIMIT_8MIB", DEFAULT_MAX_SNAPSHOT_BYTES === 8388608, String(DEFAULT_MAX_SNAPSHOT_BYTES));
-  ok("SNAPSHOT_LIMIT_INCREASED_NO", DEFAULT_MAX_SNAPSHOT_BYTES === 8388608);
+  ok("L_SNAPSHOT_LIMIT_12MIB", DEFAULT_MAX_SNAPSHOT_BYTES === 12 * 1024 * 1024, String(DEFAULT_MAX_SNAPSHOT_BYTES));
+  ok("SNAPSHOT_LIMIT_HEADROOM_PASS", DEFAULT_MAX_SNAPSHOT_BYTES > 8388608);
 
   // Data PR fixture wiring still present (open/refresh script exists; REST fixtures separate)
   ok(

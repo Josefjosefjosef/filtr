@@ -157,6 +157,11 @@ jobs:
               echo "CONDITIONAL_STATE=missing"
             fi
             df -B1 --output=avail / | tail -n1 | awk '{print "DISK_AVAILABLE_BYTES="$1}'
+            # Read-only forensic dump (stale R2 incident) — no restarts, no writes.
+            echo "FORENSIC_DUMP<<EOF"
+            export IU_NDIC_LIVE_ROOT="$LIVE_ROOT"
+            node deploy/ndic-live-60s/forensic-status-dump.mjs
+            echo "EOF"
             exit 0
           fi
 

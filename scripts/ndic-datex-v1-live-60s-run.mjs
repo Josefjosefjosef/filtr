@@ -238,7 +238,40 @@ async function main() {
       process.exitCode = 1;
       return;
     }
+    const uiDiag = diag.trafficUiSnapshot || null;
+    if (uiDiag && uiDiag.ok === false) {
+      health.LAST_ERROR = "TRAFFIC_UI_SNAPSHOT_PERSIST_FAILED";
+      saveHealth(health, root);
+      out.ok = false;
+      out.reason = "TRAFFIC_UI_SNAPSHOT_PERSIST_FAILED";
+      out.trafficUiSnapshot = uiDiag;
+      out.PRODUCTION_WRITE = "NO";
+      console.log(JSON.stringify(out));
+      process.exitCode = 1;
+      return;
+    }
     const snapshot = JSON.parse(fs.readFileSync(snapPath, "utf8"));
+    const feedPath = path.join(workDir, "feed.json");
+    const feed = readJsonSafe(feedPath, null);
+    const snapGenMs = Date.parse(String((snapshot && snapshot.generatedAt) || ""));
+    const feedGenMs = Date.parse(String((feed && feed.generatedAt) || ""));
+    if (
+      Number.isFinite(snapGenMs) &&
+      Number.isFinite(feedGenMs) &&
+      feedGenMs - snapGenMs > 120000
+    ) {
+      health.LAST_ERROR = "SNAPSHOT_STALE_VS_FEED";
+      saveHealth(health, root);
+      out.ok = false;
+      out.reason = "SNAPSHOT_STALE_VS_FEED";
+      out.SNAPSHOT_STALE_VS_FEED = "YES";
+      out.WORK_SNAPSHOT_GENERATED_AT = snapshot.generatedAt || null;
+      out.WORK_FEED_GENERATED_AT = feed.generatedAt || null;
+      out.PRODUCTION_WRITE = "NO";
+      console.log(JSON.stringify(out));
+      process.exitCode = 1;
+      return;
+    }
     const sourceLastModified = readSyncLastModified(workDir);
     const bodyHash = readSyncBodyHash(workDir);
     const ptr = readJsonSafe(generationPointerPath(root), null);
