@@ -204,6 +204,115 @@ function clean(s) {
     .trim();
 }
 
+/**
+ * Parser-only normalization: insert token boundaries for glued motorway EXIT / ramp forms.
+ * Never use the result as user-facing RAW / POPIS ZE ZDROJE — rawSource stays untouched.
+ *
+ * Examples: D5EXIT34 | D5EXIT 34 | D5 EXIT34 → "D5 EXIT 34"
+ */
+export function normalizeTrafficTextForParsing(rawText) {
+  let t = clean(rawText);
+  if (!t) return "";
+  // Motorway letter + number glued to EXIT + number (any whitespace variant).
+  t = t.replace(
+    /\b([DERder])\s*(\d{1,3}[A-Za-z]?)\s*(EXIT|exit)\s*(\d{1,4})\b/g,
+    (_, letter, num, _exit, en) => String(letter).toUpperCase() + String(num) + " EXIT " + String(en)
+  );
+  // Bare glued road+EXIT without digits on EXIT side already handled; road+sjezd/nájezd glue.
+  t = t.replace(
+    /\b([DER]\d{1,3}[A-Za-z]?)(sjezd|nájezd|exit)\b/gi,
+    (_, road, word) => String(road) + " " + String(word)
+  );
+  return clean(t);
+}
+
+function normalizeMotorwayRoadToken(raw) {
+  const t = clean(raw).replace(/\s+/g, "").toUpperCase();
+  if (!t) return null;
+  if (/^[DER]\d{1,3}[A-Z]?$/i.test(t)) return t;
+  if (/^(?:I{1,3}|II|III)\/\d+/i.test(t)) {
+    return t.replace(/^(I{1,3}|II|III)\//i, (m) => m.toUpperCase());
+  }
+  return t;
+}
+
+/**
+ * EXIT / sjezd / nájezd structured facts from official comment.
+ * Distinguishes: numbered EXIT vs exit-ramp vs entrance-ramp; on vs near.
+ * Never upgrades "u sjezdu" to "na sjezdu".
+ */
+export function extractExitAndRampFacts(rawText) {
+  const text = normalizeTrafficTextForParsing(rawText);
+  const out = {
+    exitNumber: null,
+    rampType: null,
+    rampRelation: null,
+    rampTargetRoad: null,
+    rampSourceRoad: null,
+    exitRoad: null,
+    labelCs: null,
+  };
+  if (!text) return out;
+
+  const numbered =
+    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT\s+(\d{1,4})\b/i) ||
+    text.match(/\bEXIT\s+(\d{1,4})\b/i);
+  if (numbered) {
+    if (numbered.length >= 3 && numbered[2] != null) {
+      out.exitRoad = normalizeMotorwayRoadToken(numbered[1]);
+      out.exitNumber = clean(numbered[2]);
+    } else {
+      out.exitNumber = clean(numbered[1]);
+    }
+    out.rampType = "exit";
+    if (/\bu\s+exitu?\b/i.test(text)) out.rampRelation = "near";
+    else if (/\bna\s+exitu?\b/i.test(text)) out.rampRelation = "on";
+    if (out.exitNumber) out.labelCs = "exit " + out.exitNumber;
+  }
+
+  const onExitRoad = text.match(/\bna\s+sjezdu\s+z\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  const nearExitRoad = text.match(/\bu\s+sjezdu\s+z\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  const onEntranceRoad = text.match(/\bna\s+nájezdu\s+na\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  const nearEntranceRoad = text.match(/\bu\s+nájezdu\s+na\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  const bareExitFrom = text.match(/\bsjezdu?\s+z\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  const bareEntranceOnto = text.match(/\bnájezdu?\s+na\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+
+  if (/\bna\s+sjezdu\b/i.test(text)) {
+    out.rampType = "exit";
+    out.rampRelation = "on";
+    if (onExitRoad) out.rampSourceRoad = normalizeMotorwayRoadToken(onExitRoad[1]);
+    out.labelCs = out.labelCs || "na sjezdu";
+  } else if (/\bu\s+sjezdu\b/i.test(text)) {
+    out.rampType = "exit";
+    out.rampRelation = "near";
+    if (nearExitRoad) out.rampSourceRoad = normalizeMotorwayRoadToken(nearExitRoad[1]);
+    out.labelCs = out.labelCs || "u sjezdu";
+  } else if (/\bna\s+nájezdu\b/i.test(text)) {
+    out.rampType = "entrance";
+    out.rampRelation = "on";
+    if (onEntranceRoad) out.rampTargetRoad = normalizeMotorwayRoadToken(onEntranceRoad[1]);
+    out.labelCs = out.labelCs || "na nájezdu";
+  } else if (/\bu\s+nájezdu\b/i.test(text)) {
+    out.rampType = "entrance";
+    out.rampRelation = "near";
+    if (nearEntranceRoad) out.rampTargetRoad = normalizeMotorwayRoadToken(nearEntranceRoad[1]);
+    out.labelCs = out.labelCs || "u nájezdu";
+  } else if (bareExitFrom && !out.rampType) {
+    out.rampType = "exit";
+    out.rampSourceRoad = normalizeMotorwayRoadToken(bareExitFrom[1]);
+    out.labelCs = out.labelCs || "sjezd z " + out.rampSourceRoad;
+  } else if (bareEntranceOnto && !out.rampType) {
+    out.rampType = "entrance";
+    out.rampTargetRoad = normalizeMotorwayRoadToken(bareEntranceOnto[1]);
+    out.labelCs = out.labelCs || "nájezd na " + out.rampTargetRoad;
+  }
+
+  if (!out.exitRoad) {
+    out.exitRoad = out.rampSourceRoad || out.rampTargetRoad || null;
+  }
+  return out;
+}
+
 function czechPlural(n, one, few, many) {
   const x = Math.abs(Number(n));
   if (!Number.isFinite(x)) return many;
@@ -972,7 +1081,9 @@ export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const structured = clean(input.road || input.roadNumber);
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
   const fromComment =
-    clean(facts.roadNumber) || extractRoadNumberFromOfficialComment(sourceBlob(input));
+    clean(facts.roadNumber) ||
+    clean(facts.exitRoad) ||
+    extractRoadNumberFromOfficialComment(sourceBlob(input));
   let resolved = null;
   if (structured && fromComment) {
     resolved = preferClassedRoadNumber(structured, fromComment);
@@ -1853,6 +1964,12 @@ export function parseOfficialCommentFacts(rawText) {
     namedObjectKind: null,
     objectIdentifier: null,
     locationKind: LOCATION_KIND.UNKNOWN,
+    exitNumber: null,
+    rampType: null,
+    rampRelation: null,
+    rampTargetRoad: null,
+    rampSourceRoad: null,
+    exitRoad: null,
   };
   if (!text) return out;
   if (EMPTY_IMPACT_RE.test(text)) {
@@ -1862,6 +1979,24 @@ export function parseOfficialCommentFacts(rawText) {
 
   out.roadNumbers = extractAllRoadNumbersFromOfficialComment(text);
   out.roadNumber = out.roadNumbers.length ? out.roadNumbers[0] : null;
+
+  // EXIT / sjezd / nájezd — parser-normalized copy only; raw `text` stays for display traces.
+  {
+    const rampFacts = extractExitAndRampFacts(text);
+    out.exitNumber = rampFacts.exitNumber;
+    out.rampType = rampFacts.rampType;
+    out.rampRelation = rampFacts.rampRelation;
+    out.rampTargetRoad = rampFacts.rampTargetRoad;
+    out.rampSourceRoad = rampFacts.rampSourceRoad;
+    out.exitRoad = rampFacts.exitRoad;
+    if (rampFacts.exitRoad) {
+      const er = rampFacts.exitRoad;
+      if (!out.roadNumbers.some((x) => String(x).toLowerCase() === er.toLowerCase())) {
+        out.roadNumbers = [er].concat(out.roadNumbers);
+      }
+      if (!out.roadNumber) out.roadNumber = er;
+    }
+  }
 
   const eventReason = extractEventReasonFromOfficialComment(text);
   out.eventReason = eventReason.reasonText;
@@ -1993,6 +2128,36 @@ export function parseOfficialCommentFacts(rawText) {
     out.namedObjectKind = named.kind;
     out.objectIdentifier = named.objectIdentifier ? clean(named.objectIdentifier) : null;
     out.locationKind = named.kind;
+  } else if (out.exitNumber || out.rampType) {
+    // Structured EXIT/ramp without a ProperName object — still a situation object.
+    if (out.exitNumber) {
+      out.namedObject = "exit " + out.exitNumber;
+      out.namedObjectKind = LOCATION_KIND.EXIT_RAMP;
+      out.objectIdentifier = out.exitNumber;
+      out.locationKind = LOCATION_KIND.EXIT_RAMP;
+    } else if (out.rampType === "entrance") {
+      out.namedObject =
+        out.rampRelation === "on"
+          ? "na nájezdu"
+          : out.rampRelation === "near"
+            ? "u nájezdu"
+            : out.rampTargetRoad
+              ? "nájezd na " + out.rampTargetRoad
+              : "nájezd";
+      out.namedObjectKind = LOCATION_KIND.RAMP;
+      out.locationKind = LOCATION_KIND.RAMP;
+    } else if (out.rampType === "exit") {
+      out.namedObject =
+        out.rampRelation === "on"
+          ? "na sjezdu"
+          : out.rampRelation === "near"
+            ? "u sjezdu"
+            : out.rampSourceRoad
+              ? "sjezd z " + out.rampSourceRoad
+              : "sjezd";
+      out.namedObjectKind = LOCATION_KIND.EXIT_RAMP;
+      out.locationKind = LOCATION_KIND.EXIT_RAMP;
+    }
   }
 
   // Location kilometrage (not queue/delay length). Preserve source order; allow negatives.
@@ -4611,6 +4776,18 @@ export function buildPlaceAndDirectionLine(input = {}) {
     }
     if (km) bits.push(km);
     else if (section) bits.push(section);
+    // EXIT / ramp relation — never invent; never upgrade near→on.
+    if (facts.exitNumber) {
+      bits.push("exit " + facts.exitNumber);
+    } else if (facts.rampRelation === "on" && facts.rampType === "exit") {
+      bits.push("na sjezdu");
+    } else if (facts.rampRelation === "near" && facts.rampType === "exit") {
+      bits.push("u sjezdu");
+    } else if (facts.rampRelation === "on" && facts.rampType === "entrance") {
+      bits.push("na nájezdu");
+    } else if (facts.rampRelation === "near" && facts.rampType === "entrance") {
+      bits.push("u nájezdu");
+    }
     if (street) {
       bits.push("ulice " + street.replace(/^ulice\s+/i, ""));
     }
@@ -4815,6 +4992,20 @@ export function buildTrafficExpandedDetail(input = {}) {
     "Směr",
     normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "")
   );
+  if (facts.exitNumber) push("exitNumber", "Exit", facts.exitNumber);
+  {
+    let rampLabel = null;
+    if (facts.rampType === "exit" && facts.rampRelation === "on") rampLabel = "na sjezdu";
+    else if (facts.rampType === "exit" && facts.rampRelation === "near") rampLabel = "u sjezdu";
+    else if (facts.rampType === "entrance" && facts.rampRelation === "on") rampLabel = "na nájezdu";
+    else if (facts.rampType === "entrance" && facts.rampRelation === "near")
+      rampLabel = "u nájezdu";
+    else if (facts.rampType === "exit" && facts.rampSourceRoad)
+      rampLabel = "sjezd z " + facts.rampSourceRoad;
+    else if (facts.rampType === "entrance" && facts.rampTargetRoad)
+      rampLabel = "nájezd na " + facts.rampTargetRoad;
+    if (rampLabel) push("rampRelation", "Sjezd / nájezd", rampLabel);
+  }
   {
     const confirmedStreet = resolveConfirmedStreet(input, facts);
     push("street", "Ulice", confirmedStreet);
