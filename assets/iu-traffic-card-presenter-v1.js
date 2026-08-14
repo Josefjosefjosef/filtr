@@ -1837,6 +1837,7 @@ export function parseOfficialCommentFacts(rawText) {
     affectedRoadPart: null,
     affectedLane: null,
     roadworkDetail: null,
+    workDurationHintMinutes: null,
     accidentSubtype: null,
     accidentParticipants: [],
     injuryPresent: false,
@@ -1899,6 +1900,22 @@ export function parseOfficialCommentFacts(rawText) {
     out.roadworkDetail = "MAINTENANCE_REPAIR";
   } else if (/výsprava\s+tryskovou/i.test(text)) {
     out.roadworkDetail = "JET_PATCHING";
+  } else if (/práce\s+údržby/i.test(text) || /\bmaintenance\s*works?\b/i.test(text)) {
+    // NDIC/DATEX maintenanceWorks surface in Czech comment as "práce údržby".
+    out.roadworkDetail = "MAINTENANCE";
+  }
+
+  // Explicit "… do N min" beside maintenance/work phrasing — store only, never invent delay.
+  {
+    const dur =
+      text.match(/práce\s+údržby\s+do\s+(\d{1,3})\s*min(?:ut(?:y|u)?)?\b/i) ||
+      text.match(
+        /(?:údržba|oprava|výsprava|práce(?:\s+na\s+silnici)?)\b[^.;]{0,40}?\bdo\s+(\d{1,3})\s*min(?:ut(?:y|u)?)?\b/i
+      );
+    if (dur) {
+      const n = Number(dur[1]);
+      if (Number.isFinite(n) && n > 0 && n <= 24 * 60) out.workDurationHintMinutes = n;
+    }
   }
 
   // Accident subtype / participants / soft obstruction — source-grounded only.
@@ -1979,25 +1996,44 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   // Location kilometrage (not queue/delay length). Preserve source order; allow negatives.
+  // Include ASCII hyphen, en/em dashes, and Unicode minus (U+2212) — NDIC varies.
+  const kmDash = "(?:až|–|-|—|−)";
   const kmRange =
     text.match(
-      /\bkm\s+(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)/i
+      new RegExp("\\bkm\\s+(-?\\d+(?:[.,]\\d+)?)\\s*" + kmDash + "\\s*(-?\\d+(?:[.,]\\d+)?)", "i")
     ) ||
     text.match(
-      /\bmezi\s+km\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)/i
+      new RegExp(
+        "\\bmezi\\s+km\\s+(-?\\d+(?:[.,]\\d+)?)\\s+a\\s+(-?\\d+(?:[.,]\\d+)?)",
+        "i"
+      )
     ) ||
     // NDIC: "mezi 36.77 a 36.84 km" (numbers before the km unit).
     text.match(
-      /\bmezi\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)\s*km\b/i
+      new RegExp(
+        "\\bmezi\\s+(-?\\d+(?:[.,]\\d+)?)\\s+a\\s+(-?\\d+(?:[.,]\\d+)?)\\s*km\\b",
+        "i"
+      )
     ) ||
     text.match(
-      /\b(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)\s*km\b/i
+      new RegExp(
+        "\\b(-?\\d+(?:[.,]\\d+)?)\\s*" + kmDash + "\\s*(-?\\d+(?:[.,]\\d+)?)\\s*km\\b",
+        "i"
+      )
     );
   if (kmRange) {
     // Preserve source order (e.g. km 277,5–276,9) — never Math.min/max sort.
-    out.kilometerFrom = formatKmToken(kmRange[1]);
-    out.kilometerTo = formatKmToken(kmRange[2]);
-    out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
+    const fromTok = formatKmToken(kmRange[1]);
+    const toTok = formatKmToken(kmRange[2]);
+    if (fromTok && toTok && fromTok !== toTok) {
+      out.kilometerFrom = fromTok;
+      out.kilometerTo = toTok;
+      out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
+    } else if (fromTok) {
+      // Identical ends → point, never fabricate "km X–X".
+      out.kilometerFrom = fromTok;
+      out.kilometerLabel = "km " + out.kilometerFrom;
+    }
   } else {
     const kmPrefix = text.match(/\bkm\s+(-?\d+(?:[.,]\d+)?)\b/i);
     let kmToken = kmPrefix ? kmPrefix[1] : null;
@@ -3358,6 +3394,12 @@ export function buildTrafficSituationSummary(input = {}) {
     // over a truncated "Údržba a opravy" stem — never hardcode one road/km.
     if (/údržba\s+a\s+opravy\s+mostů/i.test(source) || facts.roadworkDetail === "BRIDGE_MAINTENANCE") {
       causeBits.push("Údržba a opravy mostů");
+    } else if (
+      facts.roadworkDetail === "MAINTENANCE" ||
+      /práce\s+údržby/i.test(source)
+    ) {
+      // DATEX maintenanceWorks / Czech "práce údržby" — never invent delay from "do N min".
+      causeBits.push("Práce údržby");
     } else if (specificWork && /údržba\s+a\s+opravy\b/i.test(specificWork) && !causeBits.length) {
       causeBits.push(
         specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1)
@@ -4453,8 +4495,8 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       : input.kmTo != null
         ? formatKmToken(input.kmTo)
         : null;
-  // Full structured range always wins.
-  if (fromStruct && toStruct) {
+  // Full structured range always wins — but identical ends are a point, not a fake range.
+  if (fromStruct && toStruct && fromStruct !== toStruct) {
     return {
       kind: "KM_RANGE",
       label: "km " + fromStruct + "–" + toStruct,
@@ -4465,7 +4507,11 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
   }
   // Official-comment range beats a single structured kilometer.
   // Upstream often stores one truncated endpoint (e.g. 40.7) while RAW has 44.53–40.74.
-  if (facts.kilometerFrom && facts.kilometerTo) {
+  if (
+    facts.kilometerFrom &&
+    facts.kilometerTo &&
+    facts.kilometerFrom !== facts.kilometerTo
+  ) {
     return {
       kind: "KM_RANGE",
       label:

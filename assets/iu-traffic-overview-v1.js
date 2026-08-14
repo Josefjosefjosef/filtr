@@ -421,6 +421,18 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     roadClassLabel: c.roadClassLabel || null,
     // Never surface km/dir/section unless precise location verified
     kilometer: precise && c.kilometer != null ? c.kilometer : null,
+    kilometerFrom:
+      precise && c.kilometerFrom != null
+        ? c.kilometerFrom
+        : precise && c.kmFrom != null
+          ? c.kmFrom
+          : null,
+    kilometerTo:
+      precise && c.kilometerTo != null
+        ? c.kilometerTo
+        : precise && c.kmTo != null
+          ? c.kmTo
+          : null,
     section: precise && (c.section != null || c.sectionLabel != null) ? c.section || c.sectionLabel : null,
     direction,
     location: locLabel,
