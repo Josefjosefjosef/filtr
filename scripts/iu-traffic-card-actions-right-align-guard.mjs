@@ -18,7 +18,8 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8987", 10);
+/* Dedicated port — must not share 8987 with CHMI guards (orphan serve → EADDRINUSE). */
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8794", 10);
 const EDGE_TOL_PX = 2.5;
 const fails = [];
 const results = [];
@@ -222,10 +223,13 @@ async function main() {
   staticGate();
 
   let serverProc = null;
+  // Unique port 8794 avoids CHMI 8987. On Linux, detach + kill(-pid) so serve children die.
+  const useShell = process.platform === "win32";
   serverProc = spawn("npx", ["serve", ROOT, "-l", String(PORT)], {
     cwd: ROOT,
     stdio: "ignore",
-    shell: true,
+    shell: useShell,
+    detached: !useShell,
   });
   await waitForPort("127.0.0.1", PORT, 45000);
   const browser = await chromium.launch({ headless: true });
@@ -238,6 +242,18 @@ async function main() {
     { id: "DESKTOP", size: { width: 1280, height: 900 } },
   ];
 
+  function stopServer() {
+    if (!serverProc || !serverProc.pid) return;
+    try {
+      if (!useShell) process.kill(-serverProc.pid, "SIGTERM");
+      else serverProc.kill("SIGTERM");
+    } catch (_) {
+      try {
+        serverProc.kill("SIGTERM");
+      } catch (__) {}
+    }
+  }
+
   try {
     for (const vp of viewports) {
       await page.setViewportSize(vp.size);
@@ -246,7 +262,7 @@ async function main() {
     }
   } finally {
     await browser.close().catch(() => {});
-    if (serverProc) serverProc.kill("SIGTERM");
+    stopServer();
   }
 
   const mobilePass = !fails.some((f) => f.startsWith("MOBILE") && f.includes("RIGHT_ALIGNMENT"));
