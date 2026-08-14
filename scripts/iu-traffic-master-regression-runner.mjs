@@ -29,6 +29,7 @@ const SUITES = [
   "iu-traffic-accident-dod-moto-investigation-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
+  "iu-traffic-broken-vehicle-delay-header-guard",
 ];
 
 const rows = [];
