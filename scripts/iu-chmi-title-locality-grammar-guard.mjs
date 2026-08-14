@@ -23,7 +23,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
-const SW_VER = "2026-08-14-velky-ujezd-locality-sanitize-v1";
+const SW_VER = "2026-08-14-accident-participants-may-block-v1";
 
 const fails = [];
 function ok(id, cond, detail) {

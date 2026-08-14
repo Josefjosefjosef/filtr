@@ -1669,6 +1669,10 @@ export function parseOfficialCommentFacts(rawText) {
     affectedRoadPart: null,
     affectedLane: null,
     roadworkDetail: null,
+    accidentSubtype: null,
+    accidentParticipants: [],
+    trafficImpactKind: null,
+    trafficImpactModality: null,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -1722,6 +1726,61 @@ export function parseOfficialCommentFacts(rawText) {
     out.roadworkDetail = "MAINTENANCE_REPAIR";
   } else if (/výsprava\s+tryskovou/i.test(text)) {
     out.roadworkDetail = "JET_PATCHING";
+  }
+
+  // Accident subtype / participants / soft obstruction — source-grounded only.
+  {
+    const isAccidentish = /\bnehoda\b|\bhavarovan|\bstřet\b/i.test(text);
+    const pairTruckCar =
+      /nákladní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*osobní(?:ho)?\s+automobil(?:u)?/i.test(
+        text
+      ) ||
+      /osobní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*nákladní(?:ho)?\s+automobil(?:u)?/i.test(
+        text
+      ) ||
+      /nákladní(?:ho)?\s+automobil(?:u)?\s+a\s+osobní(?:ho)?\s+automobil(?:u)?/i.test(
+        text
+      ) ||
+      /osobní(?:ho)?\s+automobil(?:u)?\s+a\s+nákladní(?:ho)?\s+automobil(?:u)?/i.test(
+        text
+      );
+    const parts = [];
+    if (pairTruckCar) {
+      parts.push("TRUCK", "PASSENGER_CAR");
+    } else if (isAccidentish) {
+      if (
+        /nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])/i.test(text) ||
+        /nehoda\s+nákladního\s+vozidla/i.test(text)
+      ) {
+        parts.push("TRUCK");
+      }
+      if (
+        /osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+        /nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)
+      ) {
+        parts.push("PASSENGER_CAR");
+      }
+    }
+    out.accidentParticipants = parts;
+    if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
+      out.accidentSubtype = "TRUCK_ACCIDENT";
+    } else if (/nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)) {
+      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
+    } else if (parts.includes("TRUCK") && parts.includes("PASSENGER_CAR")) {
+      out.accidentSubtype = "TRUCK_AND_PASSENGER_CAR";
+    } else if (isAccidentish && parts.includes("TRUCK")) {
+      out.accidentSubtype = "TRUCK_ACCIDENT";
+    } else if (isAccidentish && parts.includes("PASSENGER_CAR")) {
+      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
+    }
+    if (
+      /překážka,?\s+která\s+může\s+bránit\s+provozu\s+v\s+celé\s+šířce\s+vozovky\s+nebo\s+její\s+části/i.test(
+        text
+      )
+    ) {
+      out.trafficImpactKind = "OBSTRUCTION_MAY_BLOCK_WHOLE_OR_PART";
+      out.trafficImpactModality = "MAY";
+    }
   }
 
   const named = extractNamedTransportObject(text);
@@ -2646,6 +2705,17 @@ export function formatAccidentSituationLead(source) {
     return appendInjuryIfPresent("Nehoda nákladního a osobního automobilu", text);
   }
 
+  // NDIC subtype phrase without vehicle count (e.g. "nehoda nákladního vozidla").
+  if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda nákladního vozidla", text);
+  }
+  if (/nehoda\s+osobního\s+automobilu/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda osobního automobilu", text);
+  }
+  if (/nehoda\s+osobního\s+vozidla/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda osobního vozidla", text);
+  }
+
   const car = text.match(/(\d+)\s+osobní(?:ch)?\s+automobil(?:y|ů|u)?/i);
   const truck = text.match(
     /(\d+)\s+nákladní(?:ch)?\s+(?:automobil(?:y|ů|u)?|vozidel|vozidla|vozidlo)/i
@@ -2709,14 +2779,26 @@ function appendInjuryIfPresent(lead, text) {
 /**
  * Secondary impact facts when not already the primary cause lead.
  * Keeps obstacle / wildlife / fire available beside accident leads.
+ * Soft "may block" modality must not be upgraded to hard closure wording.
  */
 function extractSecondaryImpactBits(source, cause, causeBits) {
   const text = clean(source);
   const lead = causeBits.join(" ");
   const bits = [];
+  const mayBlockWholeOrPart =
+    /překážka,?\s+která\s+může\s+bránit\s+provozu\s+v\s+celé\s+šířce\s+vozovky\s+nebo\s+její\s+části/i.test(
+      text
+    );
+  if (mayBlockWholeOrPart && !/může\s+bránit|šířce\s+vozovky/i.test(lead)) {
+    bits.push(
+      "Překážka může bránit provozu v celé šířce vozovky nebo její části"
+    );
+  }
   // Skip only when the primary lead is already the obstacle (not when eventType
   // is typed "prekazka" but cause resolved to broken vehicle / accident).
+  // Do not collapse the modal may-block phrase into bare "Překážka na vozovce".
   if (
+    !mayBlockWholeOrPart &&
     /překážka\s+na\s+vozovce/i.test(text) &&
     cause !== PRIMARY_CAUSE.OBSTACLE &&
     !/překážka/i.test(lead)
