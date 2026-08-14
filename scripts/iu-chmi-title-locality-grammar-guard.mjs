@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Guard: CHMI title locality counts use unique ORP unit + Czech inflection + O₃ display + same-day platnost od.
  * Does not change segment IDs / validity / publicUrl.
@@ -23,7 +23,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
-const SW_VER = "2026-08-14-velky-ujezd-locality-sanitize-v1";
+const SW_VER = "2026-08-14-i34-km-range-signs-windsocks-v1";
 
 const fails = [];
 function ok(id, cond, detail) {

@@ -2915,6 +2915,31 @@ function formatHeavyTrafficBit(source, facts, input) {
 }
 
 /**
+ * Typed NDIC category "prekazka" must not wipe concrete maintenance facts from the
+ * official comment (specific work, hard shoulder profile, open lane count).
+ * Category/title may stay OBSTACLE; collapsed DOPRAVNÍ SITUACE must keep the facts.
+ */
+function hasConcreteMaintenanceWorkFacts(facts, source) {
+  const text = clean(source);
+  const sw = clean(facts && facts.specificWork);
+  if (facts && facts.roadworkDetail) return true;
+  if (
+    sw &&
+    /údržba|oprav|výsprava|frézov|pokládk|rekonstruk|sekání|stavebn|práce\s+na/i.test(sw)
+  ) {
+    return true;
+  }
+  if (
+    /údržba\s+a\s+opravy|údržba\s+strom|údržba\s+trav|práce na silnici|stavební práce|výsprava|frézování|sekání\s+trávy/i.test(
+      text
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Short complete summary — cause → restriction scope → circumstance → traffic condition.
  * Source-grounded only. Never ends with "…" from truncation. Never invents kolona/uzavírka směru.
  */
@@ -2937,6 +2962,12 @@ export function buildTrafficSituationSummary(input = {}) {
   const scopeBits = [];
   const circumstanceBits = extractSituationCircumstanceBits(source);
   const conditionBits = [];
+  const obstacleTyped =
+    cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE;
+  const useMaintenanceSituation =
+    cause === PRIMARY_CAUSE.ROADWORKS ||
+    event.kind === EVENT_KIND.ROADWORKS ||
+    (obstacleTyped && hasConcreteMaintenanceWorkFacts(facts, source));
 
   // --- 1) Cause ---
   if (cause === PRIMARY_CAUSE.ACCIDENT || event.kind === EVENT_KIND.ACCIDENT) {
@@ -2966,9 +2997,9 @@ export function buildTrafficSituationSummary(input = {}) {
     } else {
       causeBits.push("Porouchané vozidlo");
     }
-  } else if (cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE) {
+  } else if (obstacleTyped && !useMaintenanceSituation) {
     causeBits.push("Překážka na vozovce");
-  } else if (cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS) {
+  } else if (useMaintenanceSituation) {
     if (/pomalu jedoucí vozidlo údržby/i.test(source)) {
       causeBits.push("Pomalu jedoucí vozidlo údržby");
     }
