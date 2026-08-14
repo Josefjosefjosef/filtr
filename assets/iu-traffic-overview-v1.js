@@ -18,7 +18,7 @@ import {
   normalizeDirectionHuman,
   looksLikeTruncatedFragment,
   TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814";
+} from "./iu-traffic-card-presenter-v1.js?v=ndic-i49-road-segment-surface-control-v1-20260814";
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
