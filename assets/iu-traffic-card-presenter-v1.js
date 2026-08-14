@@ -1622,6 +1622,77 @@ export function extractLocationQualifierFromOfficialComment(rawText) {
 }
 
 /**
+ * Explicit settlement parts inside a municipality: "část obce X".
+ * Never promotes these names to primary municipality.
+ */
+export function extractMunicipalityPartsFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const found = [];
+  const re =
+    /(?:^|[^\p{L}])část\s+obce\s+([A-ZÁ-Ž][^,;()–—-]{1,60}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;–—.(-]|$))/giu;
+  let m;
+  while ((m = re.exec(cut))) {
+    let name = sanitizeExtractedValueToken(m[1]);
+    name = clean(name.replace(/\s+/g, " "));
+    if (!name || name.length < 2 || name.length > 60) continue;
+    if (looksLikeRoadNumberToken(name)) continue;
+    if (/^(?:od|do)\s+\d/i.test(name)) continue;
+    // Never treat the parent municipality capture crumbs as a part.
+    if (/^(?:v\s+katastru|v\s+obci)\b/i.test(name)) continue;
+    if (!found.some((x) => samePlaceName(x, name))) found.push(name);
+  }
+  return found;
+}
+
+/**
+ * Parenthetical locality / street tokens in NDIC location chains, e.g. "(Rožnovská)".
+ * Only morphology-safe street-like tokens — never municipalities / districts.
+ */
+export function extractParentheticalStreetNamesFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const found = [];
+  const re = /\(([^)]{2,40})\)/gu;
+  let m;
+  while ((m = re.exec(cut))) {
+    let tok = sanitizeExtractedValueToken(m[1]);
+    tok = clean(tok);
+    if (!tok || /\s/.test(tok)) continue;
+    if (looksLikeRoadNumberToken(tok)) continue;
+    if (/^\d/.test(tok)) continue;
+    if (!looksLikeStreetName(tok) && !/(?:ská|cká|ovská)$/i.test(tok)) continue;
+    if (looksLikeNonMunicipalityPlace(tok) && !looksLikeStreetName(tok)) continue;
+    if (!found.some((x) => samePlaceName(x, tok))) found.push(tok);
+  }
+  return found;
+}
+
+/**
+ * Explicit NDIC lane-restriction clause (not full closure, not inventing "uzavřen").
+ */
+export function hasExplicitLaneRestrictionSource(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/omezení\s+v\s+jízdním\s+pruhu/i.test(text)) return true;
+  if (/omezen(?:í|ý|á|o)\s+jízdní\s+pruh/i.test(text)) return true;
+  return false;
+}
+
+/**
+ * Alternating / shuttle one-way traffic language from official comment.
+ */
+export function hasExplicitAlternatingTrafficSource(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/\bstřídavý\s+jednosměrný\s+provoz\b/i.test(text)) return true;
+  if (/\bkyvadlový\s+provoz\b/i.test(text)) return true;
+  return false;
+}
+
+/**
  * Explicit event reason from "z důvodu …" plus optional quoted event/action name.
  */
 export function extractEventReasonFromOfficialComment(rawText) {
@@ -1926,6 +1997,7 @@ export function parseOfficialCommentFacts(rawText) {
     streetRange: false,
     city: null,
     cityPart: null,
+    municipalityParts: [],
     district: null,
     localityDetail: null,
     parkingName: null,
@@ -1949,6 +2021,8 @@ export function parseOfficialCommentFacts(rawText) {
     openLaneCount: null,
     affectedRoadPart: null,
     affectedLane: null,
+    laneRestriction: false,
+    alternatingTraffic: false,
     roadworkDetail: null,
     workDurationHintMinutes: null,
     accidentSubtype: null,
@@ -2040,7 +2114,12 @@ export function parseOfficialCommentFacts(rawText) {
   } else if (/práce\s+údržby/i.test(text) || /\bmaintenance\s*works?\b/i.test(text)) {
     // NDIC/DATEX maintenanceWorks surface in Czech comment as "práce údržby".
     out.roadworkDetail = "MAINTENANCE";
+  } else if (/oprav[ay]\s+propustk/i.test(text) || /\bpropustk/i.test(text)) {
+    out.roadworkDetail = "CULVERT_REPAIR";
   }
+
+  out.laneRestriction = hasExplicitLaneRestrictionSource(text);
+  out.alternatingTraffic = hasExplicitAlternatingTrafficSource(text);
 
   // Explicit "… do N min" beside maintenance/work phrasing — store only, never invent delay.
   {
@@ -2244,11 +2323,45 @@ export function parseOfficialCommentFacts(rawText) {
 
   if (!out.city) {
     const mObci = text.match(
-      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+      /\b(?:([Vv]\s+katastru\s+obce)|([Vv]\s+obci)|(\bobec))\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;]|$))/u
     );
     if (mObci) {
-      const city = normalizeExtractedMunicipalityName(mObci[1]);
-      if (city) out.city = city;
+      const city = normalizeExtractedMunicipalityName(mObci[4]);
+      if (city) {
+        out.city = city;
+        // Preserve cadastral wording — never rewrite relation to "v obci".
+        if (mObci[1]) out.municipalityRelation = "v_katastru_obce";
+      }
+    }
+  }
+
+  // Settlement parts ("část obce X") — never promote to primary municipality.
+  {
+    const parts = extractMunicipalityPartsFromOfficialComment(text);
+    if (parts.length) {
+      out.municipalityParts = parts;
+      // Keep cityPart for a single urban-style part only when no multi-part list and
+      // no existing cityPart — multi-part stays in municipalityParts exclusively.
+      if (!out.cityPart && parts.length === 1 && !isPrahaCityPartName(parts[0])) {
+        // Do not map "část obce" onto "městská část" label path — leave cityPart empty.
+      }
+    }
+  }
+
+  // Parenthetical street/locality tokens: "(Rožnovská)" in cadastral location chains.
+  {
+    const parenStreets = extractParentheticalStreetNamesFromOfficialComment(text);
+    if (parenStreets.length) {
+      for (const s of parenStreets) {
+        if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
+      }
+      if (!out.street && !out.streetMulti) {
+        out.street = parenStreets.length === 1 ? parenStreets[0] : formatStreetDisplayList(parenStreets);
+        out.streetMulti = parenStreets.length >= 4;
+      }
+      if (!out.locationKind || out.locationKind === LOCATION_KIND.UNKNOWN) {
+        out.locationKind = LOCATION_KIND.STREET;
+      }
     }
   }
 
@@ -3377,6 +3490,25 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
     bits.push("Jízdní pruhy jsou zúžené");
+  }
+
+  // Explicit lane restriction is additive — must not vanish when shuttle/alternating wins.
+  if (
+    hasExplicitLaneRestrictionSource(text) &&
+    !/omezení\s+v\s+jízdním\s+pruhu|jízdní\s+pruh\s+je\s+(?:uzavřen|omezen)/i.test(
+      have + " " + bits.join(" ")
+    )
+  ) {
+    bits.push("Omezení v jízdním pruhu");
+  }
+
+  // When shuttle wording is absent but alternating one-way is present, keep it
+  // even if another operational bit already landed (additive with lane restriction).
+  if (
+    /\bstřídavý\s+jednosměrný\s+provoz\b/i.test(text) &&
+    !/střídavý|jednosměrný|kyvadlov/i.test(have + " " + bits.join(" "))
+  ) {
+    bits.push("Střídavý jednosměrný provoz");
   }
 
   if (
@@ -4573,6 +4705,17 @@ export function buildLocalityHeaderModel(input = {}) {
       ? "městská část: " + cityPart
       : null;
 
+  const municipalityParts = Array.isArray(facts.municipalityParts)
+    ? facts.municipalityParts.filter(
+        (p) => p && !samePlaceName(p, municipalitySign) && !samePlaceName(p, cityPart)
+      )
+    : [];
+  // Keep collapsed header readable — parts go to structured/expanded detail, not the sign row.
+  const municipalityPartsLabel =
+    !outsideTunnel && municipalityParts.length
+      ? "část obce: " + municipalityParts.join(", ")
+      : null;
+
   return {
     municipalitySign,
     municipalitySignLabel: municipalitySign ? municipalitySign.toUpperCase() : null,
@@ -4589,6 +4732,8 @@ export function buildLocalityHeaderModel(input = {}) {
     locationKind,
     cityPart: outsideTunnel ? null : cityPart || null,
     cityPartRow,
+    municipalityParts: outsideTunnel ? [] : municipalityParts,
+    municipalityPartsLabel,
     district: district || null,
     parkingName,
     parkingStatusLabel,
@@ -4929,6 +5074,8 @@ export function buildCommunicationLine(input = {}) {
     locationKind: hdr.locationKind || LOCATION_KIND.UNKNOWN,
     cityPart: hdr.cityPart || null,
     cityPartRow: hdr.cityPartRow || null,
+    municipalityParts: Array.isArray(hdr.municipalityParts) ? hdr.municipalityParts : [],
+    municipalityPartsLabel: hdr.municipalityPartsLabel || null,
     parkingName: hdr.parkingName || facts.parkingName || null,
     parkingStatusLabel: hdr.parkingStatusLabel || null,
     parkingRegistryId: hdr.parkingRegistryId || null,
@@ -5061,6 +5208,18 @@ export function buildTrafficExpandedDetail(input = {}) {
     }
     cityPartForDedup = cityPartVal;
     push("cityPart", "Městská část", cityPartVal);
+  }
+  {
+    const parts = Array.isArray(facts.municipalityParts) ? facts.municipalityParts : [];
+    const filtered = parts.filter(
+      (p) =>
+        p &&
+        !samePlaceName(p, muniResolvedForDedup) &&
+        !samePlaceName(p, cityPartForDedup)
+    );
+    if (filtered.length) {
+      push("municipalityParts", "Část obce", filtered.join(", "));
+    }
   }
   push("district", "Okres", input.district || facts.district);
   {
