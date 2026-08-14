@@ -905,9 +905,11 @@ export function looksLikeStreetName(raw) {
   }
   if (/\btřída\b/i.test(t)) return true;
   if (isPrahaCityPartName(t)) return false;
-  // Czech street morphology: adjective (-ská) + possessive genitive (-ského / -ého).
+  // Czech street morphology: adjective (-ská) + possessive genitive (-ova / -ského / -ého).
+  // Do NOT treat bare "-ová" (acute á) as street — that ending is common for municipalities
+  // (e.g. Višňová, Lipová). Possessive street names use plain "-ova" (Jandova).
   const STREET_END =
-    /(?:ská|cká|ovská|ová|ova|ná|ní|ského|ckého|kého|ého|ího)$/i;
+    /(?:ská|cká|ovská|ova|ná|ní|ského|ckého|kého|ého|ího)$/i;
   if (/\s/.test(t)) {
     if (/\ba\b/i.test(t)) return false;
     return /(?:ská|cká|ovská)(?:\s|$)/i.test(t);
@@ -2619,6 +2621,9 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
   else if (/^II\/\d+/i.test(road)) roadClass = "CLASS_II";
   else if (/^I\/\d+/i.test(road)) roadClass = "CLASS_I";
   else if (/^\d{1,3}[A-Za-z]?$/i.test(road)) roadClass = "CLASS_I";
+  // Bare 4–6 digit Czech III-class numbers (often with leading zero, e.g. 0357 / 03554)
+  // without an explicit III/ prefix — still a numbered road badge, never LOCAL plain text.
+  else if (/^\d{4,6}[A-Za-z]?$/i.test(road)) roadClass = "CLASS_III";
 
   if (roadClass === "LOCAL") {
     return {
@@ -2654,6 +2659,20 @@ export function hasExplicitQueueSource(rawText) {
   if (/\bkolona\s+\d+(?:[.,]\d+)?\s*km\b/i.test(text)) return true;
   // Bare "kolona" as a clause token, not inside unrelated words.
   if (/(?:^|[,;.\s])kolona(?:[,;.\s]|$)/i.test(text)) return true;
+  return false;
+}
+
+/**
+ * Explicit expected-delay language from official NDIC comment.
+ * Covers "očekávejte zdržení", bare clause "zdržení", and close family variants.
+ * Never invents delay from category alone.
+ */
+export function hasExplicitExpectedDelaySource(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/očekávejte\s+zdržení/i.test(text)) return true;
+  if (/(?:možn[áa]|hrozí|riziko)\s+zdržení/i.test(text)) return true;
+  if (/(?:^|[,;]\s*)zdržení(?:[,;.]|$)/i.test(text)) return true;
   return false;
 }
 
@@ -3963,15 +3982,22 @@ export function buildTrafficSituationSummary(input = {}) {
       conditionBits.push("Průjezd se zvýšenou opatrností");
     }
   } else if (condition === TRAFFIC_CONDITION.DELAY) {
-    if (!conditionBits.some((b) => /zdržení/i.test(b))) conditionBits.push("Zdržení");
+    if (!conditionBits.some((b) => /zdržení/i.test(b))) {
+      conditionBits.push(
+        /očekávejte\s+zdržení/i.test(source) ? "Očekávejte zdržení" : "Zdržení"
+      );
+    }
   }
 
-  // Explicit delay must not disappear when care/heavy wins the primary condition slot.
+  // Explicit delay must not disappear when care/heavy/queue wins the primary condition slot.
+  // Delay is an additive user-relevant traffic fact, not mutually exclusive with caution.
   if (
-    /(?:^|[,;]\s*)zdržení(?:[,;.]|$)/i.test(source) &&
+    hasExplicitExpectedDelaySource(source) &&
     !conditionBits.some((b) => /zdržení/i.test(b))
   ) {
-    conditionBits.push("Zdržení");
+    conditionBits.push(
+      /očekávejte\s+zdržení/i.test(source) ? "Očekávejte zdržení" : "Zdržení"
+    );
   }
 
   // Extra trusted phrases not yet covered (roadworks transfer etc.).
