@@ -241,6 +241,14 @@ function normalizeMotorwayRoadToken(raw) {
  * Distinguishes: numbered EXIT vs exit-ramp vs entrance-ramp; on vs near.
  * Never upgrades "u sjezdu" to "na sjezdu".
  */
+/** True when namedObject only restates structured EXIT N (case/spacing insensitive). */
+export function namedObjectDuplicatesExitNumber(namedObject, exitNumber) {
+  const named = clean(namedObject);
+  const exit = clean(exitNumber);
+  if (!named || !exit) return false;
+  return new RegExp("^exit\\s+" + exit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i").test(named);
+}
+
 export function extractExitAndRampFacts(rawText) {
   const text = normalizeTrafficTextForParsing(rawText);
   const out = {
@@ -249,25 +257,32 @@ export function extractExitAndRampFacts(rawText) {
     rampRelation: null,
     rampTargetRoad: null,
     rampSourceRoad: null,
+    rampTargetLocation: null,
     exitRoad: null,
     labelCs: null,
   };
   if (!text) return out;
 
-  const numbered =
-    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT\s+(\d{1,4})\b/i) ||
-    text.match(/\bEXIT\s+(\d{1,4})\b/i);
-  if (numbered) {
-    if (numbered.length >= 3 && numbered[2] != null) {
-      out.exitRoad = normalizeMotorwayRoadToken(numbered[1]);
-      out.exitNumber = clean(numbered[2]);
-    } else {
-      out.exitNumber = clean(numbered[1]);
-    }
+  // ROAD (+ optional výjezd/sjezd) + EXIT N — keeps primary motorway with numbered exit.
+  const numberedRoadExit =
+    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd)\s+EXIT\s+(\d{1,4})\b/i) ||
+    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT\s+(\d{1,4})\b/i);
+  const numberedBare = text.match(/\bEXIT\s+(\d{1,4})\b/i);
+  if (numberedRoadExit) {
+    out.exitRoad = normalizeMotorwayRoadToken(numberedRoadExit[1]);
+    out.exitNumber = clean(numberedRoadExit[2]);
     out.rampType = "exit";
+  } else if (numberedBare) {
+    out.exitNumber = clean(numberedBare[1]);
+    out.rampType = "exit";
+    // Fail-closed lead motorway when comment opens with Dx … EXIT N (e.g. "D1 výjezd EXIT 354").
+    const leadMw = text.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/);
+    if (leadMw) out.exitRoad = normalizeMotorwayRoadToken(leadMw[1]);
+  }
+  if (out.exitNumber) {
     if (/\bu\s+exitu?\b/i.test(text)) out.rampRelation = "near";
     else if (/\bna\s+exitu?\b/i.test(text)) out.rampRelation = "on";
-    if (out.exitNumber) out.labelCs = "exit " + out.exitNumber;
+    out.labelCs = "exit " + out.exitNumber;
   }
 
   const onExitRoad = text.match(/\bna\s+sjezdu\s+z\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
@@ -276,6 +291,10 @@ export function extractExitAndRampFacts(rawText) {
   const nearEntranceRoad = text.match(/\bu\s+nájezdu\s+na\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
   const bareExitFrom = text.match(/\bsjezdu?\s+z\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
   const bareEntranceOnto = text.match(/\bnájezdu?\s+na\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  // "Nájezd z dálnice D1 na Rudnou" — entrance-from-motorway onto a named target (not a road class).
+  const entranceFromMotorwayOnto = text.match(
+    /\bnájezd(?:u)?\s+z\s+(?:dálnice\s+)?([DER]\d{1,3}[A-Za-z]?)\s+na\s+([\p{L}][\p{L}\-]*)/iu
+  );
 
   if (/\bna\s+sjezdu\b/i.test(text)) {
     out.rampType = "exit";
@@ -305,6 +324,18 @@ export function extractExitAndRampFacts(rawText) {
     out.rampType = "entrance";
     out.rampTargetRoad = normalizeMotorwayRoadToken(bareEntranceOnto[1]);
     out.labelCs = out.labelCs || "nájezd na " + out.rampTargetRoad;
+  }
+
+  if (entranceFromMotorwayOnto) {
+    const src = normalizeMotorwayRoadToken(entranceFromMotorwayOnto[1]);
+    const targetLoc = clean(entranceFromMotorwayOnto[2]);
+    if (src && !out.rampSourceRoad) out.rampSourceRoad = src;
+    if (targetLoc) out.rampTargetLocation = targetLoc;
+    // Numbered EXIT remains primary rampType; only set entrance when no EXIT/sjezd already classified.
+    if (!out.rampType) {
+      out.rampType = "entrance";
+      out.labelCs = out.labelCs || "nájezd z " + src + (targetLoc ? " na " + targetLoc : "");
+    }
   }
 
   if (!out.exitRoad) {
@@ -2045,6 +2076,7 @@ export function parseOfficialCommentFacts(rawText) {
     rampRelation: null,
     rampTargetRoad: null,
     rampSourceRoad: null,
+    rampTargetLocation: null,
     exitRoad: null,
   };
   if (!text) return out;
@@ -2064,6 +2096,7 @@ export function parseOfficialCommentFacts(rawText) {
     out.rampRelation = rampFacts.rampRelation;
     out.rampTargetRoad = rampFacts.rampTargetRoad;
     out.rampSourceRoad = rampFacts.rampSourceRoad;
+    out.rampTargetLocation = rampFacts.rampTargetLocation || null;
     out.exitRoad = rampFacts.exitRoad;
     if (rampFacts.exitRoad) {
       const er = rampFacts.exitRoad;
@@ -4656,6 +4689,7 @@ export function buildLocalityHeaderModel(input = {}) {
     locationKind = LOCATION_KIND.TUNNEL;
   } else if (
     namedObject &&
+    !namedObjectDuplicatesExitNumber(namedObject, facts.exitNumber) &&
     !resolveRoadDisplayName(road) &&
     !(
       street &&
@@ -4669,6 +4703,7 @@ export function buildLocalityHeaderModel(input = {}) {
     // Urban tunnels: [MĚSTO] + tunnel name (municipalitySign from NDIC or tunnel registry).
     // Road aliases (D0 → Pražský okruh) keep the communication display name instead.
     // Railway crossing / ramp / exit / rest-area are situation objects — keep confirmed street.
+    // Structured EXIT N must not occupy besideLocality (header order: road → direction → EXIT).
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
   } else if (street) {
@@ -4730,6 +4765,8 @@ export function buildLocalityHeaderModel(input = {}) {
     namedObject: namedObject || null,
     namedObjectKind: namedObjectKind || null,
     locationKind,
+    exitNumber: facts.exitNumber || null,
+    exitHeaderLabel: facts.exitNumber ? "EXIT " + facts.exitNumber : null,
     cityPart: outsideTunnel ? null : cityPart || null,
     cityPartRow,
     municipalityParts: outsideTunnel ? [] : municipalityParts,
@@ -4947,18 +4984,6 @@ export function buildPlaceAndDirectionLine(input = {}) {
     }
     if (km) bits.push(km);
     else if (section) bits.push(section);
-    // EXIT / ramp relation — never invent; never upgrade near→on.
-    if (facts.exitNumber) {
-      bits.push("exit " + facts.exitNumber);
-    } else if (facts.rampRelation === "on" && facts.rampType === "exit") {
-      bits.push("na sjezdu");
-    } else if (facts.rampRelation === "near" && facts.rampType === "exit") {
-      bits.push("u sjezdu");
-    } else if (facts.rampRelation === "on" && facts.rampType === "entrance") {
-      bits.push("na nájezdu");
-    } else if (facts.rampRelation === "near" && facts.rampType === "entrance") {
-      bits.push("u nájezdu");
-    }
     if (street) {
       bits.push("ulice " + street.replace(/^ulice\s+/i, ""));
     }
@@ -4975,7 +5000,20 @@ export function buildPlaceAndDirectionLine(input = {}) {
         if (!(km && facts.namedObject)) bits.push(location);
       }
     }
+    // Precedence: road → direction → EXIT (never EXIT before směr).
     if (dir) bits.push("směr " + dir);
+    // EXIT / ramp relation — never invent; never upgrade near→on.
+    if (facts.exitNumber) {
+      bits.push("EXIT " + facts.exitNumber);
+    } else if (facts.rampRelation === "on" && facts.rampType === "exit") {
+      bits.push("na sjezdu");
+    } else if (facts.rampRelation === "near" && facts.rampType === "exit") {
+      bits.push("u sjezdu");
+    } else if (facts.rampRelation === "on" && facts.rampType === "entrance") {
+      bits.push("na nájezdu");
+    } else if (facts.rampRelation === "near" && facts.rampType === "entrance") {
+      bits.push("u nájezdu");
+    }
     if (district) {
       const distLabel = "okres " + district;
       if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
@@ -5072,6 +5110,8 @@ export function buildCommunicationLine(input = {}) {
     namedObject: hdr.namedObject || null,
     namedObjectKind: hdr.namedObjectKind || null,
     locationKind: hdr.locationKind || LOCATION_KIND.UNKNOWN,
+    exitNumber: hdr.exitNumber || null,
+    exitHeaderLabel: hdr.exitHeaderLabel || null,
     cityPart: hdr.cityPart || null,
     cityPartRow: hdr.cityPartRow || null,
     municipalityParts: Array.isArray(hdr.municipalityParts) ? hdr.municipalityParts : [],
@@ -5173,6 +5213,8 @@ export function buildTrafficExpandedDetail(input = {}) {
     else if (facts.rampType === "entrance" && facts.rampRelation === "on") rampLabel = "na nájezdu";
     else if (facts.rampType === "entrance" && facts.rampRelation === "near")
       rampLabel = "u nájezdu";
+    else if (facts.rampSourceRoad && facts.rampTargetLocation)
+      rampLabel = "nájezd z " + facts.rampSourceRoad + " na " + facts.rampTargetLocation;
     else if (facts.rampType === "exit" && facts.rampSourceRoad)
       rampLabel = "sjezd z " + facts.rampSourceRoad;
     else if (facts.rampType === "entrance" && facts.rampTargetRoad)
@@ -5274,9 +5316,13 @@ export function buildTrafficExpandedDetail(input = {}) {
       push("tunnel", "Tunel", named);
     } else if (named && namedKind === LOCATION_KIND.BRIDGE) {
       push("bridge", "Most", named);
-    } else if (named && isNamedNonStreetKind(namedKind)) {
+    } else if (
+      named &&
+      isNamedNonStreetKind(namedKind) &&
+      !namedObjectDuplicatesExitNumber(named, facts.exitNumber)
+    ) {
       push("namedObject", "Objekt", named);
-    } else if (named) {
+    } else if (named && !namedObjectDuplicatesExitNumber(named, facts.exitNumber)) {
       // Named object is the authoritative locality — do not keep a conflicting TMC/area label.
       push("location", "Lokalita", named);
     } else if (localityDetail) {

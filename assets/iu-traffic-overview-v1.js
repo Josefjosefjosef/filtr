@@ -1068,6 +1068,10 @@ export function buildTrafficCardViewModel(trafficV1) {
     (presentation.communication && presentation.communication.nearMunicipalityPrefix) || null;
   const besideLocality =
     (presentation.communication && presentation.communication.besideLocality) || null;
+  const exitHeaderLabel =
+    (presentation.communication && presentation.communication.exitHeaderLabel) || null;
+  const exitNumber =
+    (presentation.communication && presentation.communication.exitNumber) || null;
   const outsideCityTunnelMode =
     !!(presentation.communication && presentation.communication.outsideCityTunnelMode);
   const tunnelObjectIcon =
@@ -1212,6 +1216,8 @@ export function buildTrafficCardViewModel(trafficV1) {
     municipalitySignLabel,
     nearMunicipalityPrefix,
     besideLocality,
+    exitHeaderLabel,
+    exitNumber,
     outsideCityTunnelMode,
     tunnelObjectIcon,
     tunnelObjectIconAlt,

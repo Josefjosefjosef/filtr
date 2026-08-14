@@ -773,6 +773,17 @@ function renderTrafficCardBody(ev, url) {
   const dirBit = vm.direction
     ? `<span class="iuPdTrafficComm__dir">→ směr ${esc(vm.direction)}</span>`
     : "";
+  const exitHeaderLabel =
+    vm.exitHeaderLabel ||
+    (vm.presentation &&
+      vm.presentation.communication &&
+      vm.presentation.communication.exitHeaderLabel) ||
+    "";
+  const exitBit = exitHeaderLabel
+    ? `<span class="iuPdTrafficComm__exit">${
+        vm.direction ? " · " : ""
+      }${esc(exitHeaderLabel)}</span>`
+    : "";
   const isParking = String(vm.eventKind || "") === "parking";
   // Fallback only when neither municipality sign, road badge, nor beside already carries the place.
   // Parking name must appear exactly once (besideLocality) — never also as localityFallback.
@@ -799,15 +810,16 @@ function renderTrafficCardBody(ev, url) {
   const nearMuniOnly = !!(nearPrefix && muniSign && !roadBadge);
   // Outside-city tunnel: ICON → tunnel name → road badge (existing road badge system).
   const outsideTunnelHeader = !!(outsideCityTunnelMode && tunnelObjectIcon && besideBit);
+  // Motorway + direction + EXIT: icon → badge → (beside) → direction → EXIT.
   const commBits = roadThenNearMuni
-    ? roadTypeIcon + roadBadge + nearBit + muniSign + districtBit + dirBit
+    ? roadTypeIcon + roadBadge + nearBit + muniSign + districtBit + dirBit + exitBit
     : nearMuniOnly
-      ? nearBit + muniSign + districtBit + dirBit
+      ? nearBit + muniSign + districtBit + dirBit + exitBit
       : outsideTunnelHeader
-        ? tunnelObjectIcon + besideBit + roadBadge + districtBit + dirBit
+        ? tunnelObjectIcon + besideBit + roadBadge + districtBit + dirBit + exitBit
         : smvFirst
-          ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + localityFallback
-          : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + localityFallback;
+          ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + exitBit + localityFallback
+          : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + exitBit + localityFallback;
   const eventSign = vm.eventSignSrc
     ? `<img class="iuPdTrafficEventSign" src="${esc(vm.eventSignSrc)}" alt="" width="40" height="40" loading="lazy" decoding="async" />`
     : "";
