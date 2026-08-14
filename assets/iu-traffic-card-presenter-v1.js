@@ -18,6 +18,11 @@ import {
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
 } from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+import {
+  matchSmvNamedRoadRegistry,
+  SMV_NAMED_ROAD_REGISTRY,
+  SMV_NAMED_ROAD_REGISTRY_VERSION,
+} from "./iu-smv-named-road-registry-v1.js?v=ndic-praha-jizni-spojka-smv-v1-20260814";
 
 export {
   matchParkingRegistry,
@@ -40,6 +45,14 @@ export {
   isAmbiguousTunnelName,
   isAmbiguousOutsideCityTunnelName,
 } from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+
+export {
+  matchSmvNamedRoadRegistry,
+  SMV_NAMED_ROAD_REGISTRY,
+  SMV_NAMED_ROAD_REGISTRY_VERSION,
+  normalizeSmvNamedRoadAliasKey,
+  normalizeSmvNamedMunicipalityKey,
+} from "./iu-smv-named-road-registry-v1.js?v=ndic-praha-jizni-spojka-smv-v1-20260814";
 
 export const TRAFFIC_SIGN_ASSET = Object.freeze({
   MOTORWAY: "/assets/images/traffic-road-motorway.png",
@@ -2793,9 +2806,23 @@ export function classifyRoadPresentation(roadNumber, opts = {}) {
     opts.motorVehicleRoadConfirmed === true ||
     opts.isMotorVehicleRoad === true ||
     String(opts.motorVehicleRoadStatus || "").toLowerCase() === "true" ||
-    String(opts.roadFacilityType || "").toUpperCase() === "MOTOR_VEHICLE_ROAD";
+    String(opts.roadFacilityType || "").toUpperCase() === "MOTOR_VEHICLE_ROAD" ||
+    opts.namedMotorVehicleRoad === true;
 
   if (!road) {
+    // Named municipal SMV (e.g. Praha Jižní spojka): icon without numbered road badge.
+    if (motorVehicleConfirmed && opts.namedMotorVehicleRoad === true) {
+      return {
+        road: "",
+        roadClass: "MOTOR_VEHICLE_NAMED",
+        roadDisplayName: clean(opts.namedMotorVehicleRoadName) || null,
+        numberBadge: ROAD_NUMBER_BADGE.UNKNOWN,
+        roadTypeIcon: TRAFFIC_SIGN_ASSET.MOTOR_VEHICLES,
+        roadTypeIconAlt: "Silnice pro motorová vozidla",
+        showMotorwayIcon: false,
+        showMotorVehiclesIcon: true,
+      };
+    }
     return {
       road: "",
       roadClass: "UNKNOWN",
@@ -4640,6 +4667,53 @@ export function resolveTunnelRegistryEnrichment(input = {}, factsIn = null) {
   };
 }
 
+/**
+ * Named municipal SMV enrichment (not ŘSD numbered ULS).
+ * Requires municipality + exact road-name alias match from SMV_NAMED_ROAD_REGISTRY.
+ * Explicit DATEX motorVehicleRoadConfirmed=false / isMotorVehicleRoad=false wins (fail closed).
+ * @returns {{
+ *  entry: object,
+ *  displayName: string,
+ *  motorVehicleRoadConfirmed: true,
+ *  motorVehicleRoadSource: string,
+ * }|null}
+ */
+export function resolveNamedSmvRoadEnrichment(input = {}, factsIn = null) {
+  if (input.motorVehicleRoadConfirmed === false || input.isMotorVehicleRoad === false) {
+    return null;
+  }
+  if (String(input.motorVehicleRoadStatus || "").toLowerCase() === "false") {
+    return null;
+  }
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const municipality =
+    resolveMunicipalitySignName(input) ||
+    clean(input.municipality) ||
+    clean(facts.city) ||
+    "";
+  if (!municipality) return null;
+  const street = resolveConfirmedStreet(input, facts);
+  const entry = matchSmvNamedRoadRegistry({
+    ...input,
+    municipality,
+    street: street || input.street || null,
+    roadName: input.roadName || null,
+    namedObject: facts.namedObject || null,
+    location: input.location,
+    impact: input.impact,
+    impactFull: input.impactFull,
+    summary: input.summary,
+    summaryFull: input.summaryFull,
+  });
+  if (!entry || entry.motorVehicleRoad !== true) return null;
+  return {
+    entry,
+    displayName: entry.canonicalName,
+    motorVehicleRoadConfirmed: true,
+    motorVehicleRoadSource: "named-smv-registry",
+  };
+}
+
 function normalizeRoadNumberKey(raw) {
   return String(raw || "")
     .trim()
@@ -4843,6 +4917,7 @@ export function buildLocalityHeaderModel(input = {}) {
     ? liveStatus.statusLabel || formatParkingStatusLabel(facts)
     : "";
   const streetMulti = facts.streetMulti === true;
+  const namedSmv = resolveNamedSmvRoadEnrichment(input, facts);
 
   let besideLocality = "";
   let streetLabel = null;
@@ -4881,6 +4956,11 @@ export function buildLocalityHeaderModel(input = {}) {
     // Structured EXIT N must not occupy besideLocality (header order: road → direction → EXIT).
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
+  } else if (namedSmv && namedSmv.motorVehicleRoadConfirmed) {
+    // Authoritative named SMV: plain road name beside municipality — never "ulice:" prefix.
+    besideLocality = namedSmv.displayName;
+    if (street) streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
+    locationKind = LOCATION_KIND.ROAD;
   } else if (street) {
     streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
     besideLocality = streetLabel;
@@ -4960,6 +5040,11 @@ export function buildLocalityHeaderModel(input = {}) {
     outsideCityTunnelRoad: outsideTunnel ? outsideTunnel.road || null : null,
     outsideCityTunnelRoadConflict: !!(outsideTunnel && outsideTunnel.roadConflict),
     outsideCityTunnelUsedRegistryRoad: !!(outsideTunnel && outsideTunnel.usedRegistryRoad),
+    namedSmvRoad: !!(namedSmv && namedSmv.motorVehicleRoadConfirmed),
+    namedSmvRoadName:
+      namedSmv && namedSmv.motorVehicleRoadConfirmed ? namedSmv.displayName : null,
+    namedSmvRoadId:
+      namedSmv && namedSmv.entry && namedSmv.entry.roadId ? namedSmv.entry.roadId : null,
   };
 }
 
@@ -5249,7 +5334,16 @@ export function buildCommunicationLine(input = {}) {
     eventRoad ||
     (hdr.outsideCityTunnelMode ? hdr.outsideCityTunnelRoad : null) ||
     null;
-  let roadPres = classifyRoadPresentation(roadResolved || input.road, input);
+  const classifyOpts = {
+    ...input,
+    namedMotorVehicleRoad: hdr.namedSmvRoad === true,
+    namedMotorVehicleRoadName: hdr.namedSmvRoadName || null,
+    motorVehicleRoadConfirmed:
+      input.motorVehicleRoadConfirmed === true ||
+      input.isMotorVehicleRoad === true ||
+      hdr.namedSmvRoad === true,
+  };
+  let roadPres = classifyRoadPresentation(roadResolved || input.road, classifyOpts);
   // Outside-city tunnel header uses tunnel object icon — not motorway/SMV road-type icon.
   if (hdr.outsideCityTunnelMode) {
     roadPres = {
@@ -5259,10 +5353,24 @@ export function buildCommunicationLine(input = {}) {
       showMotorwayIcon: false,
       showMotorVehiclesIcon: false,
     };
+  } else if (hdr.namedSmvRoad && !roadPres.showMotorVehiclesIcon) {
+    roadPres = {
+      ...roadPres,
+      roadTypeIcon: TRAFFIC_SIGN_ASSET.MOTOR_VEHICLES,
+      roadTypeIconAlt: "Silnice pro motorová vozidla",
+      showMotorwayIcon: false,
+      showMotorVehiclesIcon: true,
+    };
   }
   const head = buildHeadLocalityLabel(input);
   const dir =
     normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "") || null;
+  // Numbered SMV (I/11…): icon before municipality. Named municipal SMV: municipality first.
+  const roadTypeIconFirst =
+    !hdr.outsideCityTunnelMode &&
+    roadPres.showMotorVehiclesIcon === true &&
+    roadPres.showMotorwayIcon !== true &&
+    !!clean(roadPres.road);
   return {
     roadPresentation: roadPres,
     roadDisplayName: roadPres.roadDisplayName || resolveRoadDisplayName(roadPres.road),
@@ -5295,10 +5403,10 @@ export function buildCommunicationLine(input = {}) {
     parkingStatusLabel: hdr.parkingStatusLabel || null,
     parkingRegistryId: hdr.parkingRegistryId || null,
     parkingRegistryMatch: hdr.parkingRegistryMatch === true,
-    roadTypeIconFirst:
-      !hdr.outsideCityTunnelMode &&
-      roadPres.showMotorVehiclesIcon === true &&
-      roadPres.showMotorwayIcon !== true,
+    roadTypeIconFirst,
+    namedSmvRoad: hdr.namedSmvRoad === true,
+    namedSmvRoadName: hdr.namedSmvRoadName || null,
+    namedSmvRoadId: hdr.namedSmvRoadId || null,
     outsideCityTunnelMode: hdr.outsideCityTunnelMode === true,
     tunnelObjectIcon: hdr.tunnelObjectIcon || null,
     tunnelObjectIconAlt: hdr.tunnelObjectIconAlt || null,
