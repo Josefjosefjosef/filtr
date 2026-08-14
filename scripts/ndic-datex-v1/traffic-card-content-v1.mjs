@@ -47,6 +47,32 @@ function clean(s) {
 }
 
 /**
+ * Reject parser artefacts: dangling parentheses, mid-paren comma clips,
+ * and multi-street glue ("Olomoucká - ulice Lipenská") misfiled as locality.
+ */
+export function looksLikeContaminatedLocalityToken(raw) {
+  const s = clean(raw);
+  if (!s) return false;
+  if (/[()]$/.test(s)) return true;
+  if (/\([^)]*$/.test(s) && !/\([^)]+\)$/.test(s)) return true;
+  if (/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(s)) return true;
+  if (/\bulice\s+.+\s*[-–—]/i.test(s)) return true;
+  return false;
+}
+
+/**
+ * Municipality names must not keep house/detail parentheticals
+ * ("Velký Újezd (u domů č. 100…" → "Velký Újezd").
+ */
+export function stripMunicipalityParentheticalDetail(raw) {
+  let city = clean(raw);
+  if (!city) return null;
+  city = clean(city.replace(/\s*\(.*$/u, ""));
+  if (!city || looksLikeContaminatedLocalityToken(city)) return null;
+  return city;
+}
+
+/**
  * Derive road class from an official road number string (deterministic).
  * @param {string|null|undefined} roadNumber
  */
@@ -99,7 +125,7 @@ export function extractLocalityFromOfficialComment(summary) {
 
   // Explicit event localization — not diversion "přes X", not substring of "katastru obce".
   const mUObce = s.match(
-    /\bu\s+obce\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/iu
+    /\bu\s+obce\s+([^,;(]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;(]|$))/iu
   );
   if (mUObce) {
     let city = clean(mUObce[1]);
@@ -107,7 +133,7 @@ export function extractLocalityFromOfficialComment(summary) {
       /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
       ""
     );
-    city = clean(city);
+    city = stripMunicipalityParentheticalDetail(city);
     if (
       city &&
       !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
@@ -119,8 +145,9 @@ export function extractLocalityFromOfficialComment(summary) {
   }
 
   if (!municipality) {
+    // Stop before "(" so house-number parentheticals are never part of obec.
     const mObci = s.match(
-      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/u
+      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;(]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;(]|$))/u
     );
     if (mObci) {
       let city = clean(mObci[1]);
@@ -128,7 +155,7 @@ export function extractLocalityFromOfficialComment(summary) {
         /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
         ""
       );
-      city = clean(city);
+      city = stripMunicipalityParentheticalDetail(city);
       if (
         city &&
         !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
@@ -143,8 +170,10 @@ export function extractLocalityFromOfficialComment(summary) {
     // ", České Budějovice, okr. ..." / ", Postřelmov, okr. Šumperk"
     const mTown = s.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
     if (mTown) {
-      const town = clean(mTown[1]);
-      if (town && !/(ská|cká|ovská)$/i.test(town)) municipality = town;
+      const town = stripMunicipalityParentheticalDetail(mTown[1]);
+      if (town && !/(ská|cká|ovská)$/i.test(town) && !looksLikeContaminatedLocalityToken(town)) {
+        municipality = town;
+      }
     }
   }
 
@@ -157,7 +186,24 @@ export function extractLocalityFromOfficialComment(summary) {
     let sn = clean(mStreet[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
     sn = clean(sn.split(/\s+okres\b/i)[0]);
-    if (sn) streetHint = sn;
+    // Drop leaked closing paren from road parentheticals: "(ulice A - ulice B)".
+    sn = clean(sn.replace(/\)+$/g, ""));
+    // "ulice A - ulice B" is a segment between two streets, not one street name.
+    if (/\s*[-–—]\s*ulice\s+/i.test(sn) || /\s*[-–—]\s*ul\.\s*/i.test(sn)) {
+      const parts = sn
+        .split(/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i)
+        .map((p) =>
+          clean(
+            p
+              .replace(/^ulice:?\s+/i, "")
+              .replace(/^ul\.\s*/i, "")
+              .replace(/[()]+$/g, "")
+          )
+        )
+        .filter(Boolean);
+      if (parts.length >= 2) sn = parts.join(" – ");
+    }
+    if (sn && !looksLikeContaminatedLocalityToken(sn)) streetHint = sn;
   }
 
   return { municipality, district, streetHint };
@@ -170,11 +216,17 @@ export function extractLocalityFromOfficialComment(summary) {
  */
 export function chooseHumanLocality(p = {}) {
   const fromComment = extractLocalityFromOfficialComment(p.summary);
-  if (fromComment.municipality) return fromComment.municipality;
+  const muni = stripMunicipalityParentheticalDetail(fromComment.municipality);
+  if (muni && !looksLikeContaminatedLocalityToken(muni)) return muni;
 
   const loc = clean(p.locationLabel);
   const road = clean(p.roadNumber);
-  if (loc && !BAD_LOCALITY.test(loc) && loc !== road) {
+  if (
+    loc &&
+    !BAD_LOCALITY.test(loc) &&
+    loc !== road &&
+    !looksLikeContaminatedLocalityToken(loc)
+  ) {
     // Fail-closed: street-like tokens are not municipalities.
     if (!/(ská|cká|ovská|ová|ova|ná|ní)$/i.test(loc) || /\s/.test(loc)) {
       if (!/^(náměstí|nábřeží)\b/i.test(loc) && !/\btřída\b/i.test(loc)) return loc;
@@ -182,7 +234,14 @@ export function chooseHumanLocality(p = {}) {
   }
 
   const scope = clean(p.subjectScopeLabel);
-  if (scope && !BAD_LOCALITY.test(scope) && scope !== road) return scope;
+  if (
+    scope &&
+    !BAD_LOCALITY.test(scope) &&
+    scope !== road &&
+    !looksLikeContaminatedLocalityToken(scope)
+  ) {
+    return scope;
+  }
 
   if (fromComment.district) return "okres " + fromComment.district;
 
@@ -276,7 +335,9 @@ export function chooseImpactTexts(officialSummary, templateImpact, shortMax = 16
       official.length > shortMax ? official.slice(0, shortMax - 1).trim() + "…" : official;
     return {
       impactShort: short,
-      impactFull: official.length > shortMax ? official : null,
+      // Always keep the full official comment for presenters — never drop the tail
+      // (reason / parcel / work detail) just because the short preview fits in shortMax.
+      impactFull: official,
       impactSource: "publicComment",
     };
   }

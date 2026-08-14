@@ -132,6 +132,26 @@ export const TRAFFIC_CONDITION = Object.freeze({
   NONE: "NONE",
 });
 
+/**
+ * Structured accident participant types.
+ * RAW NDIC abbreviations (uppercase) map here — composer never re-regexes RAW for labels.
+ * Authoritative abbrev set mirrors expandTrafficAbbreviationsCs (OA/NA + DOD/MOTO).
+ */
+export const ACCIDENT_PARTICIPANT = Object.freeze({
+  PASSENGER_CAR: "PASSENGER_CAR",
+  TRUCK: "TRUCK",
+  VAN: "VAN",
+  MOTORCYCLE: "MOTORCYCLE",
+});
+
+/** Uppercase NDIC/TSK vehicle abbreviations → ACCIDENT_PARTICIPANT. */
+export const TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT = Object.freeze({
+  OA: ACCIDENT_PARTICIPANT.PASSENGER_CAR,
+  NA: ACCIDENT_PARTICIPANT.TRUCK,
+  DOD: ACCIDENT_PARTICIPANT.VAN,
+  MOTO: ACCIDENT_PARTICIPANT.MOTORCYCLE,
+});
+
 const EVENT_KIND_META = Object.freeze({
   [EVENT_KIND.ACCIDENT]: {
     titleCs: "NEHODA",
@@ -253,7 +273,143 @@ export function expandTrafficAbbreviationsCs(text) {
   });
   s = s.replace(/\bpro\s+NA\b/gi, "pro nákladní automobily");
   s = s.replace(/\bNA\b/g, "nákladní automobil");
+  // DOD / MOTO — uppercase only (same discipline as OA/NA; never match Czech "na").
+  s = s.replace(/\b(\d+)\s*[×xX]\s*DOD\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "dodávka", "dodávky", "dodávek");
+  });
+  s = s.replace(/\b(\d+)\s+DOD\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "dodávka", "dodávky", "dodávek");
+  });
+  s = s.replace(/\bDOD\b/g, "dodávka");
+  s = s.replace(/\b(\d+)\s*[×xX]\s*MOTO\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "motocykl", "motocykly", "motocyklů");
+  });
+  s = s.replace(/\b(\d+)\s+MOTO\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "motocykl", "motocykly", "motocyklů");
+  });
+  s = s.replace(/\bMOTO\b/g, "motocykl");
   return s;
+}
+
+/**
+ * Parse accident participants from RAW NDIC text into ACCIDENT_PARTICIPANT tokens.
+ * Prefers structured abbrev pairs (DOD x MOTO) and full phrases; never invents.
+ */
+export function parseAccidentParticipantsFromText(rawText) {
+  const text = clean(rawText);
+  const parts = [];
+  const add = (token) => {
+    if (!token) return;
+    if (!parts.includes(token)) parts.push(token);
+  };
+
+  const abrPair = text.match(/\b(DOD|MOTO|OA|NA)\s*[x×X]\s*(DOD|MOTO|OA|NA)\b/);
+  if (abrPair) {
+    add(TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[abrPair[1]]);
+    add(TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[abrPair[2]]);
+  }
+
+  const pairTruckCar =
+    /nákladní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*nákladní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /nákladní(?:ho)?\s+automobil(?:u)?\s+a\s+osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s+a\s+nákladní(?:ho)?\s+automobil(?:u)?/i.test(text);
+  if (pairTruckCar) {
+    add(ACCIDENT_PARTICIPANT.TRUCK);
+    add(ACCIDENT_PARTICIPANT.PASSENGER_CAR);
+  }
+
+  const pairVanMoto =
+    /dodávk(?:a|y|ou)?\s*[x×]\s*motocykl/i.test(text) ||
+    /motocykl(?:u|em)?\s*[x×]\s*dodávk/i.test(text) ||
+    /dodávk(?:a|y|ou)?\s+a\s+motocykl/i.test(text) ||
+    /motocykl(?:u)?\s+a\s+dodávk/i.test(text);
+  if (pairVanMoto) {
+    add(ACCIDENT_PARTICIPANT.VAN);
+    add(ACCIDENT_PARTICIPANT.MOTORCYCLE);
+  }
+
+  const isAccidentish = /\bnehoda\b|\bhavarovan|\bstřet\b/i.test(text);
+  if (isAccidentish || parts.length) {
+    if (
+      /nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])/i.test(text) ||
+      /nehoda\s+nákladního\s+vozidla/i.test(text)
+    ) {
+      add(ACCIDENT_PARTICIPANT.TRUCK);
+    }
+    if (
+      /osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+      /nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)
+    ) {
+      add(ACCIDENT_PARTICIPANT.PASSENGER_CAR);
+    }
+    if (/\bdodávk/i.test(text) || /\b\d+\s*[x×X]\s*DOD\b/.test(text) || /\bDOD\b/.test(text)) {
+      add(ACCIDENT_PARTICIPANT.VAN);
+    }
+    if (/\bmotocykl/i.test(text) || /\b\d+\s*[x×X]\s*MOTO\b/.test(text) || /\bMOTO\b/.test(text)) {
+      add(ACCIDENT_PARTICIPANT.MOTORCYCLE);
+    }
+  }
+
+  return parts;
+}
+
+/** Genitive labels for "Nehoda …" leads — source-grounded participant tokens only. */
+const ACCIDENT_PARTICIPANT_GENITIVE_CS = Object.freeze({
+  [ACCIDENT_PARTICIPANT.VAN]: "dodávky",
+  [ACCIDENT_PARTICIPANT.MOTORCYCLE]: "motocyklu",
+  [ACCIDENT_PARTICIPANT.TRUCK]: "nákladního automobilu",
+  [ACCIDENT_PARTICIPANT.PASSENGER_CAR]: "osobního automobilu",
+});
+
+/**
+ * Build accident lead from structured participants. Returns null when empty.
+ */
+export function formatAccidentLeadFromParticipants(participants, sourceText = "") {
+  const parts = Array.isArray(participants)
+    ? participants.filter((p) => ACCIDENT_PARTICIPANT_GENITIVE_CS[p])
+    : [];
+  if (!parts.length) return null;
+  const text = clean(sourceText);
+
+  if (
+    parts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+    parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR) &&
+    parts.length === 2
+  ) {
+    return appendInjuryIfPresent("Nehoda nákladního a osobního automobilu", text);
+  }
+  if (
+    parts.includes(ACCIDENT_PARTICIPANT.VAN) &&
+    parts.includes(ACCIDENT_PARTICIPANT.MOTORCYCLE) &&
+    parts.length === 2
+  ) {
+    return appendInjuryIfPresent("Nehoda dodávky a motocyklu", text);
+  }
+  if (parts.length === 1) {
+    if (parts[0] === ACCIDENT_PARTICIPANT.TRUCK) {
+      return appendInjuryIfPresent("Nehoda nákladního vozidla", text);
+    }
+    if (parts[0] === ACCIDENT_PARTICIPANT.PASSENGER_CAR) {
+      return appendInjuryIfPresent("Nehoda osobního automobilu", text);
+    }
+    if (parts[0] === ACCIDENT_PARTICIPANT.VAN) {
+      return appendInjuryIfPresent("Nehoda dodávky", text);
+    }
+    if (parts[0] === ACCIDENT_PARTICIPANT.MOTORCYCLE) {
+      return appendInjuryIfPresent("Nehoda motocyklu", text);
+    }
+  }
+  if (parts.length === 2) {
+    const a = ACCIDENT_PARTICIPANT_GENITIVE_CS[parts[0]];
+    const b = ACCIDENT_PARTICIPANT_GENITIVE_CS[parts[1]];
+    if (a && b) return appendInjuryIfPresent("Nehoda " + a + " a " + b, text);
+  }
+  return null;
 }
 
 /**
@@ -337,7 +493,66 @@ const DIRECTION_ROUTING_OVERFLOW_RE =
 
 /** Stop destination capture before lane/routing continuation. */
 const DIRECTION_DEST_STOP_RE =
-  /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním|provoz|veden|vozovky|až\s+ke|před\s+(?:křižovatk|objekt)|zachován|objízdn|v\s+souvislosti|z\s+důvodu|za\s+účelem|v\s+rámci|po\s+dobu|kvůli|v\s+důsledku)\b/i;
+  /\s+(?:východním|západním|severním|jižním|levým|pravým|středním|parkovacím|jízdním|provoz|veden|vozovky|až\s+ke|před\s+křižovatk\w*|před\s+objekt\w*|zachován|objízdn|v\s+souvislosti|z\s+důvodu|za\s+účelem|v\s+rámci|po\s+dobu|kvůli|v\s+důsledku)\b/i;
+
+/** Nested direction marker — must end the current capture so the next směr can match. */
+const DIRECTION_NESTED_MARKER_RE =
+  /\s+(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\b/i;
+
+/** Known Czech abbreviations whose trailing "." must not end an extracted value.
+ * Avoid \\b — JS word boundaries are ASCII-only and break on č/ř/… abbreviations.
+ */
+const CZECH_ABBREV_BEFORE_DOT_RE =
+  /(?:^|[^A-Za-zÁ-Žá-ž0-9])(?:ul|okr|č|ev\.?\s*č|tzv|např|sv|ing|dr|nám|nábř|tř|p|m|km|čp|ev)\s*$/iu;
+
+/**
+ * True when "." at dotIndex inside text is an abbreviation / initial, not a sentence end.
+ * Examples: "P.Bezruče", "P. Bezruče", "ul. Moskevská", "č. 100", "okr. Frýdek-Místek".
+ */
+export function isAbbreviationOrInitialDot(text, dotIndex) {
+  const s = String(text || "");
+  if (dotIndex < 0 || dotIndex >= s.length || s[dotIndex] !== ".") return false;
+  const before = s.slice(0, dotIndex);
+  const after = s.slice(dotIndex + 1);
+  // Single-letter initial: "P." / "T." — keep when name continues immediately or after space.
+  if (/\b[A-ZÁ-Ž]\s*$/u.test(before)) {
+    if (/^[A-ZÁ-Ža-zá-ž0-9]/.test(after) || /^\s+[A-ZÁ-Ža-zá-ž0-9]/.test(after)) return true;
+  }
+  if (CZECH_ABBREV_BEFORE_DOT_RE.test(before)) {
+    // "ul. Moskevská" / "č. 100" / "okr. Frýdek-Místek"
+    if (/^\s*[A-ZÁ-Ža-zá-ž0-9]/.test(after) || after === "") return true;
+  }
+  return false;
+}
+
+/**
+ * Clip extracted free-text before comma/semicolon/sentence-end, keeping abbreviation dots.
+ */
+export function clipExtractedValueAtStructuralEnd(raw, maxLen = 120) {
+  const s = String(raw || "");
+  if (!s) return "";
+  let out = "";
+  const lim = Math.min(s.length, Math.max(8, maxLen));
+  for (let i = 0; i < lim; i += 1) {
+    const ch = s[i];
+    if (ch === "," || ch === ";") break;
+    if (ch === ".") {
+      if (isAbbreviationOrInitialDot(s, i)) {
+        out += ch;
+        continue;
+      }
+      // Sentence-ending period — stop; do not keep it.
+      break;
+    }
+    out += ch;
+  }
+  return clean(out);
+}
+
+/** Normalize "P.Bezruče" → "P. Bezruče" (space after single-letter initial). */
+function normalizeInitialDotSpacing(raw) {
+  return clean(String(raw || "").replace(/\b([A-ZÁ-Ž])\.(\S)/gu, "$1. $2"));
+}
 
 /**
  * Detect parser/clip mid-token fragments (e.g. "… provoz ve smě").
@@ -382,12 +597,12 @@ export function normalizeDirectionHuman(raw) {
   d = clean(d.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
   d = clean(d.split(DIRECTION_DEST_STOP_RE)[0]);
   d = sanitizeExtractedValueToken(d);
+  d = normalizeInitialDotSpacing(d);
   if (!d) return null;
   if (looksLikeTruncatedFragment(d)) return null;
   if (/^(kladný|záporný)\s+směr$/i.test(d)) return null;
   if (/^(unknown|n\/a|null|undefined|neuvedeno)$/i.test(d)) return null;
   // Reject obvious non-direction overflow / prose.
-  if (d.length > 48) return null;
   if (DIRECTION_ROUTING_OVERFLOW_RE.test(d)) return null;
   if (
     /prováděn|stavebních prac|souvislosti|za účelem|v rámci akce|vyblokován|probíhají|bude uzavř|křižovatk/i.test(
@@ -396,6 +611,24 @@ export function normalizeDirectionHuman(raw) {
   ) {
     return null;
   }
+  // Segment / landmark direction: "od mostu P. Bezruče k husitské zvonici".
+  // Must not die on initials (P.) and must not invent destinations from unrelated prose.
+  if (/^od\s+/i.test(d)) {
+    if (d.length > 96) return null;
+    // Reject truncated initial-only leftovers ("od mostu P") — require continuation
+    // after a single-letter initial, or a clear "k …" / multi-word landmark path.
+    if (/\b[A-ZÁ-Ž]\.\s*$/u.test(d)) return null;
+    if (/\b[A-ZÁ-Ž]$/u.test(d) && !/\b[A-ZÁ-Ž]{2,}/u.test(d)) return null;
+    if (
+      /\bk\s+\S{2,}/i.test(d) ||
+      /\bmostu\b/i.test(d) ||
+      /\s/.test(d.replace(/^od\s+/i, ""))
+    ) {
+      return d;
+    }
+    return null;
+  }
+  if (d.length > 48) return null;
   // Destination-like: short place / left-right / centrum forms.
   // NOTE: do not use the `i` flag on the capital-letter branch — `[A-Z]` with `i`
   // would match lowercase and swallow routing prose after "vlevo".
@@ -414,6 +647,18 @@ export function normalizeDirectionHuman(raw) {
   if (/^[A-ZÁ-Ž]/u.test(d) && /^[A-ZÁ-Ž][\wÁ-Žá-ž0-9 ./-]{0,40}$/u.test(d)) {
     return d;
   }
+  // NDIC often writes uncapitalized landmark directions ("směr prosecká estakáda").
+  // Accept short multi-word place-like tokens only — never routing prose.
+  if (
+    /^[a-zá-ž][\wá-ž0-9 ./-]{2,47}$/u.test(d) &&
+    /\s/.test(d) &&
+    !DIRECTION_ROUTING_OVERFLOW_RE.test(d) &&
+    !/prováděn|stavebních|souvislosti|účelem|vyblokován|probíhají|uzavř|křižovatk|omezení|pozor/i.test(
+      d
+    )
+  ) {
+    return d;
+  }
   return null;
 }
 
@@ -426,17 +671,27 @@ function collectDirectionDestinationsFromComment(text) {
   const src = clean(text);
   if (!src) return [];
   const found = [];
+  // Capture body may include abbreviation dots (P.Bezruče / ul. X). Do NOT use [^,;.] —
+  // that class stops at the first "." and truncates initials.
   const re =
-    /\b(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\s+((?:na\s+|do\s+|z\s+)?[^,;.]{1,60})/giu;
+    /\b(?:ve\s+směru|v\s+směru|(?<![A-Za-zÁ-Žá-ž])směr)\s+((?:na\s+|do\s+|z\s+|od\s+)?[^,;]{1,120})/giu;
   let m;
   while ((m = re.exec(src))) {
-    let chunk = clean(m[1]);
+    const matchStart = m.index;
+    const bodyOffset = m[0].length - m[1].length;
+    let chunk = clipExtractedValueAtStructuralEnd(m[1], 120);
+    // Do not swallow a later "ve směru …" inside this capture (urban multi-clause).
+    chunk = clean(chunk.split(DIRECTION_NESTED_MARKER_RE)[0]);
     chunk = clean(chunk.split(DIRECTION_DEST_STOP_RE)[0]);
     chunk = clean(chunk.split(DIRECTION_TAIL_BOUNDARY_RE)[0]);
     // "Bohdalec až ke křižovatce…" → stop before "až"
     chunk = clean(chunk.split(/\s+až\b/i)[0]);
+    chunk = normalizeInitialDotSpacing(chunk);
     const norm = normalizeDirectionHuman(chunk);
     if (norm) found.push(norm);
+    // Rewind past marker + kept chunk so a nested direction marker still matches.
+    const advance = Math.max(1, bodyOffset + (chunk ? chunk.length : 1));
+    re.lastIndex = Math.min(src.length, matchStart + advance);
   }
   const uniq = [];
   for (const d of found) {
@@ -483,6 +738,47 @@ export function preferClassedRoadNumber(structured, fromComment) {
 }
 
 /**
+ * Compose presentation road identity from bare number + trusted class hint.
+ * Never invents class. Never double-prefixes already classed roads (I/38 → I/I/38).
+ * Accepts CLASS_I / "I" / "Silnice I. třídy" (and II/III).
+ */
+export function composeRoadNumberWithClass(roadRaw, classHint) {
+  const road = clean(roadRaw).replace(/\s+/g, "");
+  if (!road) return null;
+  if (/^(I{1,3}|II|III)\//i.test(road)) {
+    const m = road.match(/^(I{1,3}|II|III)\/(\d{1,6}[A-Za-z]?)$/i);
+    return m ? m[1].toUpperCase() + "/" + m[2] : road;
+  }
+  if (/^D\d+/i.test(road)) return road.toUpperCase().replace(/^d/i, "D");
+  const bare = road.match(/^(\d{1,6}[A-Za-z]?)$/i);
+  if (!bare) return road;
+  const hint = clean(String(classHint ?? ""));
+  if (!hint) return road;
+  let prefix = null;
+  if (
+    /^CLASS_III$/i.test(hint) ||
+    /^III$/i.test(hint) ||
+    /Silnice\s+III(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "III";
+  } else if (
+    /^CLASS_II$/i.test(hint) ||
+    /^II$/i.test(hint) ||
+    /Silnice\s+II(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "II";
+  } else if (
+    /^CLASS_I$/i.test(hint) ||
+    /^I$/i.test(hint) ||
+    /Silnice\s+I(?:\.|\s|$)/i.test(hint)
+  ) {
+    prefix = "I";
+  }
+  if (!prefix) return road;
+  return prefix + "/" + bare[1];
+}
+
+/**
  * Morphology heuristic for rejecting municipality-board candidates.
  * NEVER alone sufficient to invent a street ("ulice: …").
  */
@@ -500,11 +796,14 @@ export function looksLikeStreetName(raw) {
   }
   if (/\btřída\b/i.test(t)) return true;
   if (isPrahaCityPartName(t)) return false;
+  // Czech street morphology: adjective (-ská) + possessive genitive (-ského / -ého).
+  const STREET_END =
+    /(?:ská|cká|ovská|ová|ova|ná|ní|ského|ckého|kého|ého|ího)$/i;
   if (/\s/.test(t)) {
     if (/\ba\b/i.test(t)) return false;
-    return /(ská|cká|ovská)(?:\s|$)/i.test(t);
+    return /(?:ská|cká|ovská)(?:\s|$)/i.test(t);
   }
-  return /(ská|cká|ovská|ová|ova|ná|ní)$/i.test(t);
+  return STREET_END.test(t);
 }
 
 /** True when a token must not become the white municipality entrance board. */
@@ -674,11 +973,21 @@ export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
   const fromComment =
     clean(facts.roadNumber) || extractRoadNumberFromOfficialComment(sourceBlob(input));
+  let resolved = null;
   if (structured && fromComment) {
-    return preferClassedRoadNumber(structured, fromComment);
+    resolved = preferClassedRoadNumber(structured, fromComment);
+  } else if (structured) {
+    resolved = structured;
+  } else {
+    resolved = fromComment || null;
   }
-  if (structured) return structured;
-  return fromComment || null;
+  if (!resolved) return null;
+  const classHint = input.roadClass || input.roadClassLabel || null;
+  if (classHint) {
+    const composed = composeRoadNumberWithClass(resolved, classHint);
+    if (composed) resolved = composed;
+  }
+  return resolved;
 }
 
 export function classifyLocationKindFromName(name) {
@@ -883,10 +1192,19 @@ export function resolveConfirmedStreet(input = {}, factsIn = null) {
     : extractNamedTransportObject(sourceBlob(input));
 
   if (Array.isArray(facts.streets) && facts.streets.length >= 1) {
-    const joined = formatStreetDisplayList(facts.streets);
+    const joined = formatStreetDisplayList(facts.streets, {
+      asRange: facts.streetRange === true && facts.streets.length === 2,
+    });
     if (joined && !looksLikeTruncatedFragment(joined) && !/[()]$/.test(joined)) {
       return joined;
     }
+  }
+
+  if (facts.streetFrom && facts.streetTo) {
+    const range = formatStreetDisplayList([facts.streetFrom, facts.streetTo], {
+      asRange: true,
+    });
+    if (range) return range;
   }
 
   if (facts.street) {
@@ -1025,17 +1343,169 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     if (/\s-\s*ulice\s+/i.test(chunk) || /\sulice\s+/i.test(chunk)) {
       const parts = chunk.split(/\s*-\s*ulice\s+|\s*,\s*(?:ulice\s+)?/i);
       for (const p of parts) push(p);
+    } else if (!/[-–—]/.test(chunk)) {
+      push(chunk);
     }
+  }
+
+  // Comma-separated street lists: "ulice: A, B, C, D" (do not stop at first comma).
+  const bareUliceList = text.match(/\bulice:?\s+((?:[^,;]+,\s*){1,}[^,;.]+)/i);
+  if (bareUliceList && !paren) {
+    const listChunk = clean(
+      String(bareUliceList[1]).split(/\s+(?:v\s+obci|okr\.|okres|Od\s+\d|Do\s+\d|Vydal)/i)[0]
+    );
+    for (const p of listChunk.split(/\s*,\s*/)) push(p);
+  }
+
+  // Range / between patterns when bare list missed a genitive street name.
+  const range = extractStreetRangeFromOfficialComment(text);
+  if (range) {
+    push(range.streetFrom);
+    push(range.streetTo);
   }
 
   return found;
 }
 
-export function formatStreetDisplayList(streets) {
+export function formatStreetDisplayList(streets, opts = {}) {
   const list = (streets || []).map((s) => clean(s)).filter(Boolean);
   if (!list.length) return null;
   if (list.length === 1) return list[0];
+  if (list.length === 2 && (opts.asRange === true || opts.streetRange === true)) {
+    return list[0] + " – " + list[1];
+  }
   return list.join(" / ");
+}
+
+/**
+ * Two-street segment: "ulice A - ulice B", "ul. A - ul. B",
+ * "mezi ulicemi A a B", "od ulice A k ulici B".
+ * Returns { streetFrom, streetTo } or null. Never invents names.
+ */
+export function extractStreetRangeFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+
+  const toStreet = (raw) => {
+    let sn = sanitizeExtractedValueToken(streetBareName(raw));
+    if (!sn) return null;
+    sn = clean(
+      sn.split(
+        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|před\s+křižovatk|od\s+\d)/i
+      )[0]
+    );
+    sn = sanitizeExtractedValueToken(sn);
+    if (!sn || looksLikeTruncatedFragment(sn) || /[()]$/.test(sn)) return null;
+    if (/\s-\s*ulice\s+/i.test(sn) || /\sulice\s+/i.test(sn)) return null;
+    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+    if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
+    return sn;
+  };
+
+  const pairs = [
+    text.match(/\bulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+)/i),
+    text.match(/\bul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+)/i),
+    text.match(/\bmezi\s+ulicemi\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/i),
+    text.match(/\bod\s+ulice\s+([^,;]+?)\s+k\s+ulici\s+([^,;]+?)(?=\s*[,;]|$)/i),
+  ];
+  for (const m of pairs) {
+    if (!m) continue;
+    const streetFrom = toStreet(m[1]);
+    const streetTo = toStreet(m[2]);
+    if (streetFrom && streetTo && !samePlaceName(streetFrom, streetTo)) {
+      return { streetFrom, streetTo };
+    }
+  }
+  return null;
+}
+
+/**
+ * Concrete work / reconstruction phrase from NDIC comment (not generic category).
+ * Examples: "Rekonstrukce plynovodu", "výsprava vozovky", "údržba mostu",
+ * "umístění kabelového vedení k nové trafostanici".
+ * Never invents; never returns bare "stavební práce" / "práce na silnici".
+ */
+export function extractSpecificWorkFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  // Drop municipal boilerplate wrappers — keep the concrete activity noun phrase.
+  const normalized = clean(
+    cut
+      .replace(/\bzajištění\s+realizace\s+/gi, "")
+      .replace(/\bza\s+účelem\s+(?:realizace\s+)?/gi, "")
+  );
+  const GENERIC =
+    /^(?:stavební\s+práce|práce\s+na\s+silnici|práce\s+na\s+inženýrských\s+sítích|dopravní\s+omezení|uzavírka|uzavřeno)\.?$/i;
+  const re =
+    /(?:^|[,;\s.])((?:pravidelná\s+)?(?:rekonstrukce|oprava|údržba(?:\s+a\s+opravy)?|výsprava|pokládka|výkop|uložení|umístění|instalace|výstavba|revitalizace)\s+[^,;.]+)/giu;
+  let best = null;
+  for (const m of normalized.matchAll(re)) {
+    let phrase = clean(m[1]);
+    phrase = clean(
+      phrase.split(
+        /\s+v\s+MK\b|\s+v\s+ulici\b|\s+v\s+obci\b|\s+ulice\b|\s+ve\s+směru\b|\s+z\s+důvodu\b|\s+Příjezd\b|\s+Objížď/i
+      )[0]
+    );
+    phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
+    phrase = sanitizeExtractedValueToken(phrase);
+    if (!phrase || phrase.length < 8 || GENERIC.test(phrase)) continue;
+    if (/^(?:od|do)\s+\d/i.test(phrase)) continue;
+    // Prefer the most informative concrete phrase (longer wins when both are valid).
+    if (!best || phrase.length > best.length) best = phrase;
+  }
+  return best;
+}
+
+/**
+ * Access / approach fact from NDIC — never invents a detour.
+ * Example: "Příjezd do ulice X zajištěn DIO z ulice Y"
+ * → destinationStreet, fromStreet, presentation (DIO kept only as source marker, not expanded jargon).
+ */
+export function extractAccessInformationFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const m =
+    cut.match(
+      /Příjezd\s+do\s+(?:ulice\s+|ul\.\s*)([^,;.]+?)\s+(?:je\s+)?zajištěn(?:\s+DIO)?\s+z\s+(?:ulice\s+|ul\.\s*)([^,;.]+)/i
+    ) ||
+    cut.match(
+      /Příjezd\s+(?:do\s+)?(?:oblasti|úseku)\s+([^,;.]+?)\s+(?:je\s+)?zajištěn(?:\s+DIO)?\s+z\s+(?:ulice\s+|ul\.\s*)([^,;.]+)/i
+    );
+  if (!m) return null;
+  const destinationStreet = sanitizeExtractedValueToken(streetBareName(m[1]));
+  const fromStreet = sanitizeExtractedValueToken(streetBareName(m[2]));
+  if (!destinationStreet || !fromStreet) return null;
+  if (destinationStreet.length < 2 || fromStreet.length < 2) return null;
+  if (destinationStreet.length > 60 || fromStreet.length > 60) return null;
+  const hasDioMarker = /\bzajištěn\s+DIO\b/i.test(cut);
+  return {
+    destinationStreet,
+    fromStreet,
+    hasDioMarker,
+    // Source says access/approach — never upgrade to "objížďka".
+    isDetour: false,
+    presentation:
+      "Příjezd do ulice " + destinationStreet + " je zajištěn z ulice " + fromStreet,
+  };
+}
+
+/**
+ * Precise place qualifier from NDIC (parcel / cadastral hint) — never invents.
+ * Kept out of the main title; used in expanded "Upřesnění místa".
+ */
+export function extractLocationQualifierFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const cut = text.split(/\bVydal\s*:/i)[0] || text;
+  const m =
+    cut.match(/\bu\s+p\.?\s*p\.?\s*č\.\s*([\d]+(?:\/[\d]+)?)/i) ||
+    cut.match(/\bu\s+parcel(?:y|ní\s+číslo)?\s*(?:č\.)?\s*([\d]+(?:\/[\d]+)?)/i);
+  if (!m) return null;
+  const num = clean(m[1]);
+  if (!num) return null;
+  return "u p.p.č. " + num;
 }
 
 /**
@@ -1046,9 +1516,15 @@ export function extractEventReasonFromOfficialComment(rawText) {
   if (!text) return { reasonText: null, eventName: null, reasonKind: null };
   // Never take publisher lines as reason / quoted names.
   const cut = text.split(/\bVydal\s*:/i)[0] || text;
-  const m = cut.match(/\bz\s+důvodu\s+(.+?)(?=\s*[.…](?:\s|$)|$)/is);
+  const m = cut.match(/\bz\s+důvodu\s+(.+)$/is);
   if (!m) return { reasonText: null, eventName: null, reasonKind: null };
-  let reasonText = sanitizeExtractedValueToken(m[1]);
+  // Keep abbreviation dots; stop at semicolon, direction clause, or sentence end.
+  let reasonText = clipExtractedValueAtStructuralEnd(m[1], 180);
+  reasonText = clean(reasonText.split(/\s*;\s*/)[0]);
+  reasonText = clean(
+    reasonText.split(/\s+(?:směr|ve\s+směru|v\s+směru)\b/i)[0]
+  );
+  reasonText = sanitizeExtractedValueToken(reasonText);
   if (!reasonText) return { reasonText: null, eventName: null, reasonKind: null };
   // Drop trailing sentence crumbs after a closed quote.
   reasonText = clean(reasonText.replace(/(["“”„][^"“”„]*["“”„]).*$/u, "$1"));
@@ -1332,6 +1808,9 @@ export function parseOfficialCommentFacts(rawText) {
     street: null,
     streets: [],
     streetMulti: false,
+    streetFrom: null,
+    streetTo: null,
+    streetRange: false,
     city: null,
     cityPart: null,
     district: null,
@@ -1351,9 +1830,23 @@ export function parseOfficialCommentFacts(rawText) {
     eventReason: null,
     eventName: null,
     reasonKind: null,
+    specificWork: null,
+    accessInformation: null,
+    locationQualifier: null,
     openLaneCount: null,
     affectedRoadPart: null,
+    affectedLane: null,
     roadworkDetail: null,
+    workDurationHintMinutes: null,
+    accidentSubtype: null,
+    accidentParticipants: [],
+    injuryPresent: false,
+    accidentInvestigationActive: false,
+    trafficImpactKind: null,
+    trafficImpactModality: null,
+    obstructionType: null,
+    obstructionContext: null,
+    locationDetail: null,
     situationPhrases: [],
     isEmptyTemplate: false,
     namedObject: null,
@@ -1374,7 +1867,10 @@ export function parseOfficialCommentFacts(rawText) {
   out.eventReason = eventReason.reasonText;
   out.eventName = eventReason.eventName;
   out.reasonKind = eventReason.reasonKind;
+  out.specificWork = extractSpecificWorkFromOfficialComment(text);
+  out.accessInformation = extractAccessInformationFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
+  out.locationQualifier = extractLocationQualifierFromOfficialComment(text);
 
   // Explicit open / passable lane count from NDIC ("počet průjezdných pruhů: 2").
   {
@@ -1390,12 +1886,105 @@ export function parseOfficialCommentFacts(rawText) {
   } else if (/rozsah\s*:\s*krajnice/i.test(text)) {
     out.affectedRoadPart = "SHOULDER";
   }
+  {
+    const lanePart = text.match(
+      /rozsah\s*:\s*((?:pravý|levý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)\b/i
+    );
+    if (lanePart) {
+      out.affectedLane = clean(lanePart[1]).toLocaleLowerCase("cs");
+    }
+  }
   if (/údržba\s+a\s+opravy\s+mostů/i.test(text)) {
     out.roadworkDetail = "BRIDGE_MAINTENANCE";
   } else if (/údržba\s+a\s+opravy\b/i.test(text)) {
     out.roadworkDetail = "MAINTENANCE_REPAIR";
   } else if (/výsprava\s+tryskovou/i.test(text)) {
     out.roadworkDetail = "JET_PATCHING";
+  } else if (/práce\s+údržby/i.test(text) || /\bmaintenance\s*works?\b/i.test(text)) {
+    // NDIC/DATEX maintenanceWorks surface in Czech comment as "práce údržby".
+    out.roadworkDetail = "MAINTENANCE";
+  }
+
+  // Explicit "… do N min" beside maintenance/work phrasing — store only, never invent delay.
+  {
+    const dur =
+      text.match(/práce\s+údržby\s+do\s+(\d{1,3})\s*min(?:ut(?:y|u)?)?\b/i) ||
+      text.match(
+        /(?:údržba|oprava|výsprava|práce(?:\s+na\s+silnici)?)\b[^.;]{0,40}?\bdo\s+(\d{1,3})\s*min(?:ut(?:y|u)?)?\b/i
+      );
+    if (dur) {
+      const n = Number(dur[1]);
+      if (Number.isFinite(n) && n > 0 && n <= 24 * 60) out.workDurationHintMinutes = n;
+    }
+  }
+
+  // Accident subtype / participants / soft obstruction — source-grounded only.
+  {
+    const isAccidentish = /\bnehoda\b|\bhavarovan|\bstřet\b/i.test(text);
+    const parts = parseAccidentParticipantsFromText(text);
+    out.accidentParticipants = parts;
+    out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
+    out.accidentInvestigationActive = /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(text);
+    if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
+      out.accidentSubtype = "TRUCK_ACCIDENT";
+    } else if (/nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)) {
+      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
+    } else if (
+      parts.includes(ACCIDENT_PARTICIPANT.VAN) &&
+      parts.includes(ACCIDENT_PARTICIPANT.MOTORCYCLE)
+    ) {
+      out.accidentSubtype = "VAN_AND_MOTORCYCLE";
+    } else if (
+      parts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+      parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR)
+    ) {
+      out.accidentSubtype = "TRUCK_AND_PASSENGER_CAR";
+    } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.TRUCK)) {
+      out.accidentSubtype = "TRUCK_ACCIDENT";
+    } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR)) {
+      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
+    } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.VAN)) {
+      out.accidentSubtype = "VAN_ACCIDENT";
+    } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.MOTORCYCLE)) {
+      out.accidentSubtype = "MOTORCYCLE_ACCIDENT";
+    }
+    if (
+      /překážka,?\s+která\s+může\s+bránit\s+provozu\s+v\s+celé\s+šířce\s+vozovky\s+nebo\s+její\s+části/i.test(
+        text
+      )
+    ) {
+      out.trafficImpactKind = "OBSTRUCTION_MAY_BLOCK_WHOLE_OR_PART";
+      out.trafficImpactModality = "MAY";
+    }
+  }
+
+  // Obstruction subtype / micro-location — never invents, never upgrades to ACCIDENT.
+  {
+    const afterAccident = /po\s+havárii/i.test(text);
+    if (/stojící\s+vozidlo/i.test(text)) {
+      out.obstructionType = "STATIONARY_VEHICLE";
+      if (afterAccident) out.obstructionContext = "AFTER_ACCIDENT";
+      const loc =
+        text.match(
+          /stojící\s+vozidlo(?:\s+po\s+havárii)?\s+((?:před|za|u|mezi|naproti|vedle|pod|nad)\s+[^,;.]+)/i
+        ) || null;
+      if (loc) {
+        let detail = clean(loc[1]);
+        detail = clean(
+          detail.split(/\s+(?:Zdroj|Vydal|Od\s+\d|Do\s+\d)\b/i)[0]
+        );
+        detail = clipExtractedValueAtStructuralEnd(detail, 120);
+        if (detail) out.locationDetail = detail;
+      }
+    } else if (/porouchan(?:é|ý|á)?\s+vozidlo/i.test(text)) {
+      out.obstructionType = "BROKEN_VEHICLE";
+    } else if (/spadl[ýáé]\s+strom|padl[ýáé]\s+strom/i.test(text)) {
+      out.obstructionType = "FALLEN_TREE";
+    } else if (/spadl[ýáé]\s+náklad|ztracen[ýáé]\s+náklad|ztráta\s+nákladu/i.test(text)) {
+      out.obstructionType = "LOST_CARGO";
+    } else if (/zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce/i.test(text)) {
+      out.obstructionType = "ANIMAL";
+    }
   }
 
   const named = extractNamedTransportObject(text);
@@ -1407,25 +1996,44 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   // Location kilometrage (not queue/delay length). Preserve source order; allow negatives.
+  // Include ASCII hyphen, en/em dashes, and Unicode minus (U+2212) — NDIC varies.
+  const kmDash = "(?:až|–|-|—|−)";
   const kmRange =
     text.match(
-      /\bkm\s+(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)/i
+      new RegExp("\\bkm\\s+(-?\\d+(?:[.,]\\d+)?)\\s*" + kmDash + "\\s*(-?\\d+(?:[.,]\\d+)?)", "i")
     ) ||
     text.match(
-      /\bmezi\s+km\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)/i
+      new RegExp(
+        "\\bmezi\\s+km\\s+(-?\\d+(?:[.,]\\d+)?)\\s+a\\s+(-?\\d+(?:[.,]\\d+)?)",
+        "i"
+      )
     ) ||
     // NDIC: "mezi 36.77 a 36.84 km" (numbers before the km unit).
     text.match(
-      /\bmezi\s+(-?\d+(?:[.,]\d+)?)\s+a\s+(-?\d+(?:[.,]\d+)?)\s*km\b/i
+      new RegExp(
+        "\\bmezi\\s+(-?\\d+(?:[.,]\\d+)?)\\s+a\\s+(-?\\d+(?:[.,]\\d+)?)\\s*km\\b",
+        "i"
+      )
     ) ||
     text.match(
-      /\b(-?\d+(?:[.,]\d+)?)\s*(?:až|–|-|—)\s*(-?\d+(?:[.,]\d+)?)\s*km\b/i
+      new RegExp(
+        "\\b(-?\\d+(?:[.,]\\d+)?)\\s*" + kmDash + "\\s*(-?\\d+(?:[.,]\\d+)?)\\s*km\\b",
+        "i"
+      )
     );
   if (kmRange) {
     // Preserve source order (e.g. km 277,5–276,9) — never Math.min/max sort.
-    out.kilometerFrom = formatKmToken(kmRange[1]);
-    out.kilometerTo = formatKmToken(kmRange[2]);
-    out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
+    const fromTok = formatKmToken(kmRange[1]);
+    const toTok = formatKmToken(kmRange[2]);
+    if (fromTok && toTok && fromTok !== toTok) {
+      out.kilometerFrom = fromTok;
+      out.kilometerTo = toTok;
+      out.kilometerLabel = "km " + out.kilometerFrom + "–" + out.kilometerTo;
+    } else if (fromTok) {
+      // Identical ends → point, never fabricate "km X–X".
+      out.kilometerFrom = fromTok;
+      out.kilometerLabel = "km " + out.kilometerFrom;
+    }
   } else {
     const kmPrefix = text.match(/\bkm\s+(-?\d+(?:[.,]\d+)?)\b/i);
     let kmToken = kmPrefix ? kmPrefix[1] : null;
@@ -1525,16 +2133,50 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C".
   {
+    const range = extractStreetRangeFromOfficialComment(text);
     const streets = extractStreetNamesFromOfficialComment(text);
-    if (streets.length) {
+    if (range) {
+      out.streetFrom = range.streetFrom;
+      out.streetTo = range.streetTo;
+      out.streetRange = true;
+      out.streets = [range.streetFrom, range.streetTo];
+      // Prefer range names; merge any extra confirmed streets after the pair.
+      for (const s of streets) {
+        if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
+      }
+      out.street = formatStreetDisplayList(
+        [range.streetFrom, range.streetTo],
+        { asRange: true }
+      );
+      out.streetMulti = out.streets.length >= 4;
+    } else if (streets.length) {
       out.streets = streets;
       if (streets.length === 1) {
-        out.street = streets[0];
-        out.streetMulti = false;
+        // multiStreetBlob may already know a longer comma list — do not demote.
+        if (!out.streetMulti) {
+          out.street = streets[0];
+          out.streetMulti = false;
+        }
       } else {
         // Prefer readable joined form over opaque "více ulic" for 2–3 streets.
         out.street = formatStreetDisplayList(streets);
-        out.streetMulti = streets.length >= 4;
+        out.streetMulti = streets.length >= 4 || out.streetMulti === true;
+      }
+    }
+  }
+
+  // Bare ", Town, okr." municipality when no "v obci" marker exists.
+  if (!out.city) {
+    const mTown = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    if (mTown) {
+      const town = normalizeExtractedMunicipalityName(mTown[1]);
+      if (
+        town &&
+        !looksLikeStreetName(town) &&
+        !looksLikeNonMunicipalityPlace(town) &&
+        !looksLikeRoadNumberToken(town)
+      ) {
+        out.city = town;
       }
     }
   }
@@ -1893,6 +2535,17 @@ export function isSingleLaneRestriction(rawText) {
   ) {
     return true;
   }
+  // NDIC bare clause: "jízdní pruh uzavřen" (no L/R) — still a single-lane impact.
+  // Do not treat plural "jízdní pruhy" / "všechny jízdní pruhy" as single-lane.
+  if (
+    !/\bvšechny\s+jízdní\s+pruhy\b/i.test(text) &&
+    !/\bjízdní\s+pruhy\b/i.test(text) &&
+    (/\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(text))
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -1934,6 +2587,18 @@ export function isFullScopeClosure(rawText) {
   if (/oba\s+směry.{0,30}uzavř/i.test(text)) return true;
   if (/všechny\s+jízdní\s+pruhy.{0,30}(?:uzavř|neprůjezdn)/i.test(text)) return true;
   if (/neprůjezdn[áaý]\s+(?:komunikace|silnice|dálnice|úsek)\b/i.test(text)) return true;
+  if (/úplně\s+uzavřen/i.test(text) || /komunikace\s+dočasně\s+uzavřen/i.test(text)) {
+    return true;
+  }
+  // Bare NDIC token ", uzavřeno," (local road / municipal notice) — full closure,
+  // unless already classified as single-lane / shoulder / truck-only restriction.
+  if (
+    /(?:^|[,;]\s*)uzavřeno(?!\s+pro\s)(?:\s*[,;.]|\s+|$)/i.test(text) &&
+    !isSingleLaneRestriction(text) &&
+    !isShoulderOrVergeRestriction(text)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -1985,12 +2650,23 @@ export function analyzePrimaryCause(rawText, input = {}) {
   const type = clean(input.eventType || input.category).toLowerCase();
   const illustrationKey = clean(input.illustrationKey).toLowerCase();
 
+  // Live accident signals. Soft "po havárii" on an obstruction (stationary vehicle
+  // after a past crash) must NOT reclassify typed překážka into ACCIDENT.
+  const softAfterAccidentOnly =
+    /po\s+havárii/i.test(text) &&
+    !/\bnehoda\b/i.test(text) &&
+    !/\bhavarovan/i.test(text) &&
+    (type === "prekazka" ||
+      illustrationKey === "prekazka" ||
+      /překážka\s+na\s+vozovce/i.test(text) ||
+      /stojící\s+vozidlo/i.test(text));
   if (
-    type === "nehoda" ||
-    illustrationKey === "nehoda" ||
-    /\baccident\b/.test(type) ||
-    /\bnehoda\b/i.test(text) ||
-    /\bhavarovan/i.test(text)
+    !softAfterAccidentOnly &&
+    (type === "nehoda" ||
+      illustrationKey === "nehoda" ||
+      /\baccident\b/.test(type) ||
+      /\bnehoda\b/i.test(text) ||
+      /\bhavarovan/i.test(text))
   ) {
     return PRIMARY_CAUSE.ACCIDENT;
   }
@@ -2011,7 +2687,7 @@ export function analyzePrimaryCause(rawText, input = {}) {
     type === "prace" ||
     illustrationKey === "prace" ||
     /roadwork|maintenance|construction/.test(type) ||
-    /práce na silnici|stavební práce|údržba\s+(?:a\s+opravy|trav)|sekání\s+trávy|pracovní\s+místo|pomalu jedoucí vozidlo údržby/i.test(
+    /práce na silnici|stavební práce|práce na inženýrských|údržba\s+(?:a\s+opravy|trav|strom|keř|zelen|veget|dopravního|most)|sekání\s+trávy|pracovní\s+místo|pomalu jedoucí vozidlo údržby|výsprava|rekonstrukce|frézování|sanace/i.test(
       text
     )
   ) {
@@ -2232,26 +2908,39 @@ function extractHeavyTrafficLengthKm(source, facts, input) {
 /**
  * Natural Czech accident lead from expanded source (count/type only if present).
  * Source-grounded only — never invent vehicle type from wrecked count alone.
+ * Prefer structured accidentParticipants when provided (abbrev → normalized → label),
+ * but explicit vehicle counts in source beat a bare single-type token.
  */
-function formatAccidentSituationLead(source) {
+export function formatAccidentSituationLead(source, factsIn = null) {
   const text = clean(source);
+  const facts = factsIn && typeof factsIn === "object" ? factsIn : {};
+  const structuredParts = Array.isArray(facts.accidentParticipants)
+    ? facts.accidentParticipants
+    : parseAccidentParticipantsFromText(text);
 
   // Animal collision phrases (explicit in NDIC comment).
   if (
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srn/i.test(text) ||
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+srnou/i.test(text)
   ) {
-    return "Střet osobního automobilu se srnou";
+    return appendInjuryIfPresent("Střet osobního automobilu se srnou", text);
   }
   if (/střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+jelen/i.test(text)) {
-    return "Střet osobního automobilu s jelenem";
+    return appendInjuryIfPresent("Střet osobního automobilu s jelenem", text);
   }
   if (
     /střet(?:u)?\s+osobní(?:ho)?\s+automobil(?:u)?\s+se\s+(?:zvěří|zvířetem)/i.test(text)
   ) {
-    return "Střet osobního automobilu se zvěří";
+    return appendInjuryIfPresent("Střet osobního automobilu se zvěří", text);
   }
 
+  // Typed participant pairs beat bare wrecked-count ("2 havarovaná" + "NA x OA").
+  if (structuredParts.length >= 2) {
+    const pairLead = formatAccidentLeadFromParticipants(structuredParts, text);
+    if (pairLead) return pairLead;
+  }
+
+  // Explicit counts beat a single structured type token ("2 osobní" ≠ "osobního").
   const car = text.match(/(\d+)\s+osobní(?:ch)?\s+automobil(?:y|ů|u)?/i);
   const truck = text.match(
     /(\d+)\s+nákladní(?:ch)?\s+(?:automobil(?:y|ů|u)?|vozidel|vozidla|vozidlo)/i
@@ -2261,61 +2950,163 @@ function formatAccidentSituationLead(source) {
     /(\d+)\s+havarovan(?:á|é|ých)\s+(?:vozidla|vozidlo|vozidel)/i
   );
 
+  let lead = null;
   if (car && truck) {
     const nc = Number(car[1]);
     const nt = Number(truck[1]);
-    if (nc === 1 && nt === 1) return "Nehoda osobního a nákladního automobilu";
-    if (Number.isFinite(nc) && Number.isFinite(nt) && nc > 0 && nt > 0) {
-      return "Nehoda " + nc + " osobních a " + nt + " nákladních vozidel";
+    if (nc === 1 && nt === 1) lead = "Nehoda osobního a nákladního automobilu";
+    else if (Number.isFinite(nc) && Number.isFinite(nt) && nc > 0 && nt > 0) {
+      lead = "Nehoda " + nc + " osobních a " + nt + " nákladních vozidel";
     }
-  }
-  if (car) {
+  } else if (car) {
     const n = Number(car[1]);
-    if (n === 1) return "Nehoda osobního automobilu";
-    if (n === 2) return "Nehoda dvou osobních automobilů";
-    if (n === 3) return "Nehoda tří osobních automobilů";
-    if (n === 4) return "Nehoda čtyř osobních automobilů";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " osobních automobilů";
-  }
-  if (truck) {
+    if (n === 1) lead = "Nehoda osobního automobilu";
+    else if (n === 2) lead = "Nehoda dvou osobních automobilů";
+    else if (n === 3) lead = "Nehoda tří osobních automobilů";
+    else if (n === 4) lead = "Nehoda čtyř osobních automobilů";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " osobních automobilů";
+  } else if (truck) {
     const n = Number(truck[1]);
-    if (n === 1) return "Nehoda nákladního vozidla";
-    if (n === 2) return "Nehoda dvou nákladních vozidel";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " nákladních vozidel";
-  }
-  if (wrecked) {
+    if (n === 1) lead = "Nehoda nákladního vozidla";
+    else if (n === 2) lead = "Nehoda dvou nákladních vozidel";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " nákladních vozidel";
+  } else if (wrecked) {
     const n = Number(wrecked[1]);
-    if (n === 1) return "Nehoda vozidla";
-    if (n === 2) return "Nehoda dvou vozidel";
-    if (n === 3) return "Nehoda tří vozidel";
-    if (n === 4) return "Nehoda čtyř vozidel";
-    if (Number.isFinite(n) && n > 0) return "Nehoda " + n + " vozidel";
+    if (n === 1) lead = "Nehoda vozidla";
+    else if (n === 2) lead = "Nehoda dvou vozidel";
+    else if (n === 3) lead = "Nehoda tří vozidel";
+    else if (n === 4) lead = "Nehoda čtyř vozidel";
+    else if (Number.isFinite(n) && n > 0) lead = "Nehoda " + n + " vozidel";
+  }
+  if (lead) return appendInjuryIfPresent(lead, text);
+
+  // Single structured participant when counts are absent.
+  const fromParts = formatAccidentLeadFromParticipants(structuredParts, text);
+  if (fromParts) return fromParts;
+
+  // NDIC pair form without counts: "nákladní automobil x osobní automobil"
+  if (
+    /nákladní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s*[x×]\s*nákladní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /nákladní(?:ho)?\s+automobil(?:u)?\s+a\s+osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
+    /osobní(?:ho)?\s+automobil(?:u)?\s+a\s+nákladní(?:ho)?\s+automobil(?:u)?/i.test(text)
+  ) {
+    return appendInjuryIfPresent("Nehoda nákladního a osobního automobilu", text);
   }
 
-  // Singular uncounted wrecked + explicit OA (after abbreviation expand).
+  // Expanded / word-form van × motorcycle (after expandTrafficAbbreviationsCs).
+  if (
+    /dodávk(?:a|y|ou)?\s*[x×]\s*motocykl/i.test(text) ||
+    /motocykl(?:u|em)?\s*[x×]\s*dodávk/i.test(text) ||
+    /dodávk(?:a|y|ou)?\s+a\s+motocykl/i.test(text)
+  ) {
+    return appendInjuryIfPresent("Nehoda dodávky a motocyklu", text);
+  }
+
+  // NDIC subtype phrase without vehicle count (e.g. "nehoda nákladního vozidla").
+  if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda nákladního vozidla", text);
+  }
+  if (/nehoda\s+osobního\s+automobilu/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda osobního automobilu", text);
+  }
+  if (/nehoda\s+osobního\s+vozidla/i.test(text)) {
+    return appendInjuryIfPresent("Nehoda osobního vozidla", text);
+  }
+
   if (
     /havarovan(?:é|á)\s+vozidlo/i.test(text) &&
     /osobní(?:ho)?\s+automobil/i.test(text)
   ) {
-    return "Nehoda osobního automobilu";
+    return appendInjuryIfPresent("Nehoda osobního automobilu", text);
   }
   if (/havarovan(?:é|á)\s+vozidlo/i.test(text)) {
-    return "Nehoda. Havarované vozidlo";
+    return appendInjuryIfPresent("Nehoda. Havarované vozidlo", text);
   }
-  return "Nehoda";
+  return appendInjuryIfPresent("Nehoda", text);
+}
+
+/**
+ * Concrete obstruction lead from structured facts / source — never invents injury or closure.
+ * Returns null when only the generic category is known (caller keeps "Překážka na vozovce").
+ */
+export function formatObstructionSituationLead(facts = {}, source = "") {
+  const text = clean(source);
+  const type = clean(facts.obstructionType);
+  const ctx = clean(facts.obstructionContext);
+  const detail = clean(facts.locationDetail);
+
+  if (type === "STATIONARY_VEHICLE" && ctx === "AFTER_ACCIDENT") {
+    return detail ? "Stojící vozidlo po havárii " + detail : "Stojící vozidlo po havárii";
+  }
+  if (type === "STATIONARY_VEHICLE") {
+    return detail ? "Stojící vozidlo " + detail : "Stojící vozidlo";
+  }
+  if (type === "BROKEN_VEHICLE") {
+    if (/porucha\s+NA|nákladní|defekt/i.test(text)) return "Porouchané nákladní vozidlo";
+    return "Porouchané vozidlo";
+  }
+  if (type === "FALLEN_TREE") return "Spadlý strom";
+  if (type === "LOST_CARGO") {
+    if (/ztracen/i.test(text) || /ztráta\s+nákladu/i.test(text)) return "Ztracený náklad";
+    return "Spadlý náklad";
+  }
+  if (type === "ANIMAL") {
+    if (/zvíře/i.test(text)) return "Zvíře na vozovce";
+    return "Zvěř na vozovce";
+  }
+
+  // Source fallbacks when structured type was not filled but phrase is explicit.
+  if (/stojící\s+vozidlo\s+po\s+havárii/i.test(text)) {
+    const loc = text.match(
+      /stojící\s+vozidlo\s+po\s+havárii\s+((?:před|za|u|mezi|naproti|vedle|pod|nad)\s+[^,;.]+)/i
+    );
+    let d = loc ? clean(loc[1]) : "";
+    d = d ? clean(d.split(/\s+(?:Zdroj|Vydal)\b/i)[0]) : "";
+    d = d ? clipExtractedValueAtStructuralEnd(d, 120) : "";
+    return d ? "Stojící vozidlo po havárii " + d : "Stojící vozidlo po havárii";
+  }
+  if (/stojící\s+vozidlo/i.test(text)) return "Stojící vozidlo";
+  if (/spadl[ýáé]\s+strom|padl[ýáé]\s+strom/i.test(text)) return "Spadlý strom";
+  if (/spadl[ýáé]\s+náklad/i.test(text)) return "Spadlý náklad";
+  if (/ztracen[ýáé]\s+náklad|ztráta\s+nákladu/i.test(text)) return "Ztracený náklad";
+  return null;
+}
+
+/** Append explicit "se zraněním" — never invent count/severity/death. */
+function appendInjuryIfPresent(lead, text) {
+  const base = clean(lead);
+  if (!base) return "Nehoda";
+  if (/se\s+zraněním/i.test(base)) return base;
+  if (/\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text)) {
+    return base + " se zraněním";
+  }
+  return base;
 }
 
 /**
  * Secondary impact facts when not already the primary cause lead.
  * Keeps obstacle / wildlife / fire available beside accident leads.
+ * Soft "may block" modality must not be upgraded to hard closure wording.
  */
 function extractSecondaryImpactBits(source, cause, causeBits) {
   const text = clean(source);
   const lead = causeBits.join(" ");
   const bits = [];
+  const mayBlockWholeOrPart =
+    /překážka,?\s+která\s+může\s+bránit\s+provozu\s+v\s+celé\s+šířce\s+vozovky\s+nebo\s+její\s+části/i.test(
+      text
+    );
+  if (mayBlockWholeOrPart && !/může\s+bránit|šířce\s+vozovky/i.test(lead)) {
+    bits.push(
+      "Překážka může bránit provozu v celé šířce vozovky nebo její části"
+    );
+  }
   // Skip only when the primary lead is already the obstacle (not when eventType
   // is typed "prekazka" but cause resolved to broken vehicle / accident).
+  // Do not collapse the modal may-block phrase into bare "Překážka na vozovce".
   if (
+    !mayBlockWholeOrPart &&
     /překážka\s+na\s+vozovce/i.test(text) &&
     cause !== PRIMARY_CAUSE.OBSTACLE &&
     !/překážka/i.test(lead)
@@ -2383,6 +3174,11 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
       bits.push("Kyvadlový provoz");
     }
   } else if (
+    /\bstřídavý\s+jednosměrný\s+provoz\b/i.test(text) &&
+    !/střídavý|jednosměrný|kyvadlov/i.test(have)
+  ) {
+    bits.push("Střídavý jednosměrný provoz");
+  } else if (
     /\b(?:provoz\s+)?jedním jízdním pruhem\b/i.test(text) &&
     !/jedním jízdním pruhem|kyvadlov/i.test(have)
   ) {
@@ -2392,6 +3188,18 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
     bits.push("Zúžená vozovka na jeden jízdní pruh");
+  } else if (
+    /(?:^|[,;\s])zúžené\s+jízdní\s+pruhy(?:\s*[,;.]|\s+|$)/i.test(text) &&
+    !/zúžen|jedním jízdním|kyvadlov/i.test(have)
+  ) {
+    bits.push("Jízdní pruhy jsou zúžené");
+  }
+
+  if (
+    /výjezd\s+neprůjezdn/i.test(text) &&
+    !/výjezd\s+neprůjezdn|neprůjezdn[ýáé]\s+výjezd/i.test(have + " " + bits.join(" "))
+  ) {
+    bits.push("Výjezd je neprůjezdný");
   }
 
   // Cardinal / named lane closed (západní/východní …) — not only L/R/C.
@@ -2522,7 +3330,32 @@ export function buildTrafficSituationSummary(input = {}) {
 
   // --- 1) Cause ---
   if (cause === PRIMARY_CAUSE.ACCIDENT || event.kind === EVENT_KIND.ACCIDENT) {
-    causeBits.push(formatAccidentSituationLead(source));
+    causeBits.push(formatAccidentSituationLead(source, facts));
+    // Accident secondary facts — never drop rescue / extrication / danger just because
+    // primary type is NEHODA. Never invent police/fire/helo/death/severity.
+    if (
+      /záchranné\s+a\s+vyprošťovací\s+práce|vyprošťovací\s+a\s+záchranné\s+práce/i.test(
+        source
+      )
+    ) {
+      circumstanceBits.push("Probíhají záchranné a vyprošťovací práce");
+    } else if (/záchranné\s+práce/i.test(source)) {
+      circumstanceBits.push("Probíhají záchranné práce");
+    } else if (/vyprošťovací\s+práce/i.test(source)) {
+      circumstanceBits.push("Probíhají vyprošťovací práce");
+    }
+    if (
+      facts.accidentInvestigationActive ||
+      /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(source)
+    ) {
+      circumstanceBits.push("Probíhá vyšetřování nehody");
+    }
+    if (
+      /(?:^|[,;]\s*)nebezpečí(?:\s*[,;.]|$)/i.test(source) ||
+      /práce\s*,\s*nebezpečí/i.test(source)
+    ) {
+      circumstanceBits.push("Na místě je hlášeno nebezpečí");
+    }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     if (/porucha\s+NA|nákladní|defekt/i.test(source)) {
       causeBits.push("Porouchané nákladní vozidlo");
@@ -2530,7 +3363,14 @@ export function buildTrafficSituationSummary(input = {}) {
       causeBits.push("Porouchané vozidlo");
     }
   } else if (cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE) {
-    causeBits.push("Překážka na vozovce");
+    // Prefer concrete obstruction facts over bare category "Překážka na vozovce".
+    // Category/title may stay PŘEKÁŽKA; never upgrade to ACCIDENT from "po havárii" alone.
+    const specificObs = formatObstructionSituationLead(facts, source);
+    if (specificObs) {
+      causeBits.push(specificObs);
+    } else {
+      causeBits.push("Překážka na vozovce");
+    }
   } else if (cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS) {
     if (/pomalu jedoucí vozidlo údržby/i.test(source)) {
       causeBits.push("Pomalu jedoucí vozidlo údržby");
@@ -2544,21 +3384,120 @@ export function buildTrafficSituationSummary(input = {}) {
     if (/výsprava\s+tryskovou\s+metodou/i.test(source)) {
       causeBits.push("Výsprava tryskovou metodou");
     }
+    // Rich lead: closed roadworks with explicit work detail ("z důvodu …" or specific work phrase).
+    // Never invent; only merge facts proven in source. Direction stays out of situation.
+    const reasonDetail = clean(facts.eventReason);
+    const specificWork = clean(facts.specificWork);
+
     // Concrete NDIC work phrases must beat the generic "Práce na silnici" fallback.
+    // Prefer full specificWork (e.g. "údržba a opravy svislých značek a větrných rukávů")
+    // over a truncated "Údržba a opravy" stem — never hardcode one road/km.
     if (/údržba\s+a\s+opravy\s+mostů/i.test(source) || facts.roadworkDetail === "BRIDGE_MAINTENANCE") {
       causeBits.push("Údržba a opravy mostů");
+    } else if (
+      facts.roadworkDetail === "MAINTENANCE" ||
+      /práce\s+údržby/i.test(source)
+    ) {
+      // DATEX maintenanceWorks / Czech "práce údržby" — never invent delay from "do N min".
+      causeBits.push("Práce údržby");
+    } else if (specificWork && /údržba\s+a\s+opravy\b/i.test(specificWork) && !causeBits.length) {
+      causeBits.push(
+        specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1)
+      );
     } else if (/údržba\s+a\s+opravy\b/i.test(source) && !causeBits.length) {
-      const detail = source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
-      causeBits.push(detail ? clean(detail[0]).replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
+      const detail =
+        source.match(/údržba\s+a\s+opravy\s+[^,;.]+/i) ||
+        source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
+      let phrase = detail ? clean(detail[0]) : "Údržba a opravy";
+      phrase = clean(
+        phrase.split(
+          /\s+v\s+termínu\b|\s+rozsah\s*:|\s+počet\s+průjezdných|\s+Vydal\s*:/i
+        )[0]
+      );
+      phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
+      causeBits.push(phrase ? phrase.replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
     }
-    if (/stavební práce/i.test(source) && !causeBits.length) causeBits.push("Stavební práce");
+    const hasBareClosed =
+      /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
+      /úpln[áa]\s+uzavírk/i.test(source) ||
+      scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED;
+    const hasStavebni = /stavební práce/i.test(source);
+    const reasonIsWorkDetail =
+      !!(reasonDetail &&
+        !/kulturní\s+akc/i.test(reasonDetail) &&
+        !/\bsměr\b/i.test(reasonDetail) &&
+        reasonDetail.length >= 6);
+    const workDetail = reasonIsWorkDetail ? reasonDetail : specificWork;
+    const formatWorkReason = (raw) => {
+      const t = clean(raw);
+      if (!t) return "";
+      return t.charAt(0).toLocaleLowerCase("cs") + t.slice(1);
+    };
+    let roadworksReasonMerged = false;
+    if (hasBareClosed && hasStavebni && workDetail && !causeBits.length) {
+      const noun =
+        /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) && !/\bsilnice\s+[ID]/i.test(source)
+          ? "Komunikace"
+          : /\bsilnice\b|\bdálnice\b/i.test(source)
+            ? "Silnice"
+            : "Komunikace";
+      if (reasonIsWorkDetail) {
+        causeBits.push(
+          noun + " uzavřena z důvodu stavebních prací – " + reasonDetail
+        );
+      } else {
+        causeBits.push(
+          "Stavební práce. " +
+            noun +
+            " je uzavřena z důvodu " +
+            formatWorkReason(workDetail)
+        );
+      }
+      roadworksReasonMerged = true;
+    } else if (hasStavebni && reasonIsWorkDetail && !causeBits.length) {
+      // Open roadworks with explicit reason — never invent closure wording.
+      causeBits.push("Stavební práce z důvodu " + formatWorkReason(reasonDetail));
+      roadworksReasonMerged = true;
+    } else if (hasStavebni && specificWork && !causeBits.length) {
+      causeBits.push(
+        "Stavební práce – " + formatWorkReason(specificWork)
+      );
+    } else if (specificWork && !causeBits.length && !hasStavebni) {
+      const sw = clean(specificWork);
+      causeBits.push(sw.charAt(0).toLocaleUpperCase("cs") + sw.slice(1));
+    } else if (hasStavebni && !causeBits.length) {
+      causeBits.push("Stavební práce");
+    }
+
+    // Generic category lead already present (engineering networks / road works /
+    // bare "Údržba a opravy") — still fold in concrete work detail so it is not
+    // dropped from collapsed UI.
+    if (specificWork && causeBits.length) {
+      const enrichIdx = causeBits.findIndex((b) =>
+        /^(?:Práce na inženýrských sítích|Práce na silnici|Stavební práce|Údržba a opravy)\.?$/i.test(
+          clean(b)
+        )
+      );
+      if (enrichIdx >= 0) {
+        if (/^údržba\s+a\s+opravy\b/i.test(specificWork)) {
+          causeBits[enrichIdx] =
+            specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1);
+        } else {
+          const base = clean(causeBits[enrichIdx]).replace(/\.$/, "");
+          causeBits[enrichIdx] = base + " – " + formatWorkReason(specificWork);
+        }
+      }
+    }
+
     if (
       /práce na silnici/i.test(source) &&
-      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských/i.test(b))
+      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských|uzavřena z důvodu/i.test(b))
     ) {
       causeBits.unshift("Práce na silnici");
     }
     if (!causeBits.length) causeBits.push("Práce na silnici");
+    // Stash merge flag on facts-like local for later circumstance skip.
+    facts._roadworksReasonMerged = roadworksReasonMerged;
 
     // Profile location of works (not a full-road closure claim).
     if (
@@ -2568,6 +3507,27 @@ export function buildTrafficSituationSummary(input = {}) {
       !scopeBits.some((b) => /zpevněn|krajnice/i.test(b))
     ) {
       circumstanceBits.push("Práce probíhají na zpevněné krajnici");
+    }
+
+    // Affected lane strip from "rozsah: pravý jízdní pruh" — never invent "(3)" meaning.
+    // Emit before open-lane count so "jízdní pruh" in the open-lane sentence cannot suppress it.
+    {
+      const lane =
+        clean(facts.affectedLane) ||
+        (() => {
+          const m = source.match(
+            /rozsah\s*:\s*((?:pravý|levý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)\b/i
+          );
+          return m ? clean(m[1]).toLocaleLowerCase("cs") : "";
+        })();
+      if (
+        lane &&
+        !causeBits.some((b) => new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b)) &&
+        !circumstanceBits.some((b) => /zasahují/i.test(b) || new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b)) &&
+        !scopeBits.some((b) => new RegExp(lane.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(b))
+      ) {
+        circumstanceBits.push("Práce zasahují " + lane);
+      }
     }
 
     // Explicit remaining passable lanes — never invent original lane count.
@@ -2582,10 +3542,10 @@ export function buildTrafficSituationSummary(input = {}) {
       if (openN != null && Number.isFinite(openN) && openN >= 0) {
         const laneBit =
           openN === 1
-            ? "Průjezdný je 1 jízdní pruh"
+            ? "Průjezdný zůstává 1 jízdní pruh"
             : openN >= 2 && openN <= 4
-              ? "Průjezdné jsou " + openN + " jízdní pruhy"
-              : "Průjezdných je " + openN + " jízdních pruhů";
+              ? "Průjezdné zůstávají " + openN + " jízdní pruhy"
+              : "Průjezdných zůstává " + openN + " jízdních pruhů";
         if (
           !causeBits.some((b) => /průjezdn/i.test(b)) &&
           !circumstanceBits.some((b) => /průjezdn/i.test(b))
@@ -2766,6 +3726,16 @@ export function buildTrafficSituationSummary(input = {}) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " ve směru " + dir + " je uzavřen");
     } else if (lane) {
       scopeBits.push(capitalizeLanePhrase(lane[1]) + " je uzavřen");
+    } else if (/\bjeden\s+jízdní\s+pruh\b/i.test(source)) {
+      scopeBits.push("Jeden jízdní pruh je uzavřen");
+    } else if (
+      /\bjízdní\s+pruh\s+uzavřen/i.test(source) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(source) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(source)
+    ) {
+      // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
+      if (/neprůjezdn/i.test(source)) scopeBits.push("Jízdní pruh je neprůjezdný");
+      else scopeBits.push("Jízdní pruh je uzavřen");
     } else {
       scopeBits.push("Jeden jízdní pruh je uzavřen");
     }
@@ -2786,6 +3756,11 @@ export function buildTrafficSituationSummary(input = {}) {
         /\buzavřen[ýáo]?\s+most\b/i.test(source)
       ) {
         scopeBits.push("Most je uzavřen");
+      } else if (
+        /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) &&
+        !/\bsilnice\s+[ID]/i.test(source)
+      ) {
+        scopeBits.push("Komunikace je uzavřena");
       } else {
         scopeBits.push("Silnice je uzavřena");
       }
@@ -2905,18 +3880,47 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   }
 
+  // Access / approach (never upgrade to detour).
+  const accessBits = [];
+  {
+    const access = facts.accessInformation;
+    const accessText = access && clean(access.presentation);
+    if (
+      accessText &&
+      !causeBits.some((b) => /příjezd/i.test(b)) &&
+      !scopeBits.some((b) => /příjezd/i.test(b)) &&
+      !circumstanceBits.some((b) => /příjezd/i.test(b))
+    ) {
+      accessBits.push(accessText);
+    }
+  }
+
   // Explicit "z důvodu …" + quoted event/action name — never drop when present in RAW.
   {
     const reasonText = clean(facts.eventReason);
     const eventName = clean(facts.eventName);
     if (reasonText || eventName) {
       let reasonBit = null;
-      if (facts.reasonKind === "CULTURAL_EVENT") {
+      if (facts._roadworksReasonMerged) {
+        // Already folded into the roadworks lead — do not duplicate.
+        reasonBit = null;
+      } else if (facts.reasonKind === "CULTURAL_EVENT") {
         reasonBit = eventName
           ? 'Uzavírka je z důvodu konání kulturní akce „' + eventName + "“"
           : "Uzavírka je z důvodu konání kulturní akce";
       } else if (reasonText) {
-        reasonBit = "Uzavírka je z důvodu " + reasonText.replace(/^konání\s+/i, "konání ");
+        const closedNow =
+          scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED ||
+          scope === RESTRICTION_SCOPE.DIRECTION_CLOSED ||
+          scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED ||
+          /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
+          /úpln[áa]\s+uzavírk/i.test(source);
+        const lead = closedNow
+          ? "Uzavírka je z důvodu "
+          : cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS
+            ? "Stavební práce z důvodu "
+            : "Omezení je z důvodu ";
+        reasonBit = lead + reasonText.replace(/^konání\s+/i, "konání ");
         if (eventName && !reasonBit.includes(eventName)) {
           reasonBit += ' „' + eventName + "“";
         }
@@ -2942,14 +3946,22 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   }
 
-  // Order: main fact → traffic impact/scope → circumstance → condition.
-  const ordered = [...causeBits, ...scopeBits, ...circumstanceBits, ...conditionBits];
+  // Order: main fact → traffic impact/scope → access → circumstance → condition.
+  const ordered = [...causeBits, ...scopeBits, ...accessBits, ...circumstanceBits, ...conditionBits];
   if (ordered.length) return finalizeSentences(ordered);
 
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
   if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
-  // Split on sentence ends — never on abbreviation dots (ul. / okr. / č. / ev.č.).
-  const clauses = source
+  // Last-resort clause split — protect decimal km tokens and strip validity scaffolding.
+  // Never rebuild "mezi 44. 74 km" from "mezi 44.53 a 40.74 km".
+  const sourceForFallback = clean(
+    source
+      .replace(/\bv\s+termínu\s+od\b[\s\S]*?(?=,\s*(?:údržba|oprava|práce|stavební|rozsah|počet|zúžen|uzavř|kyvadlov)|$)/gi, "")
+      .replace(/\bOd\s+\d{1,2}\.\d{1,2}\.\d{4}[\s\S]*?(?=,\s*|,?\s*(?:údržba|oprava|práce|stavební|rozsah|počet)|$)/gi, "")
+      .replace(/\bDo\s+\d{1,2}\.\d{1,2}\.\d{4}[\s\S]*?(?=,\s*|,?\s*(?:údržba|oprava|práce|stavební|rozsah|počet)|$)/gi, "")
+  );
+  const clauses = sourceForFallback
+    .replace(/(\d)\.(\d)/g, "$1\u2024$2")
     .replace(/\b(ul|okr|č|ev\.?\s*č|tzv|např|m|km)\./gi, "$1\u2024")
     .split(/[.;]/)
     .map((x) => clean(x.replace(/\u2024/g, ".")))
@@ -2962,7 +3974,12 @@ export function buildTrafficSituationSummary(input = {}) {
         !/^vydal:/i.test(x) &&
         !/^v ulici\b/i.test(x) &&
         !/^v obci\b/i.test(x) &&
-        !/^okres\b/i.test(x)
+        !/^okres\b/i.test(x) &&
+        !/^silnice\s+[ID]/i.test(x) &&
+        !/^mezi\s+\d/i.test(x) &&
+        !/^v\s+termínu\b/i.test(x) &&
+        !/^rozsah\s*:/i.test(x) &&
+        !/^počet\s+průjezdných/i.test(x)
     )
     .slice(0, 2);
   if (clauses.length) {
@@ -3332,7 +4349,7 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = namedObject;
     locationKind = namedObjectKind || classifyLocationKindFromName(namedObject);
   } else if (street) {
-    streetLabel = "ulice: " + street;
+    streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
     besideLocality = streetLabel;
     locationKind = LOCATION_KIND.STREET;
   } else if (resolveRoadDisplayName(road)) {
@@ -3340,6 +4357,8 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = resolveRoadDisplayName(road);
   } else if (
     location &&
+    !looksLikeTruncatedFragment(location) &&
+    !/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(location) &&
     !samePlaceName(location, municipalitySign) &&
     location !== road &&
     !looksLikeRoadNumberToken(location) &&
@@ -3476,13 +4495,31 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       : input.kmTo != null
         ? formatKmToken(input.kmTo)
         : null;
-  if (fromStruct && toStruct) {
+  // Full structured range always wins — but identical ends are a point, not a fake range.
+  if (fromStruct && toStruct && fromStruct !== toStruct) {
     return {
       kind: "KM_RANGE",
       label: "km " + fromStruct + "–" + toStruct,
       from: fromStruct,
       to: toStruct,
       source: "structured_range",
+    };
+  }
+  // Official-comment range beats a single structured kilometer.
+  // Upstream often stores one truncated endpoint (e.g. 40.7) while RAW has 44.53–40.74.
+  if (
+    facts.kilometerFrom &&
+    facts.kilometerTo &&
+    facts.kilometerFrom !== facts.kilometerTo
+  ) {
+    return {
+      kind: "KM_RANGE",
+      label:
+        facts.kilometerLabel ||
+        "km " + facts.kilometerFrom + "–" + facts.kilometerTo,
+      from: facts.kilometerFrom,
+      to: facts.kilometerTo,
+      source: "comment",
     };
   }
   if (input.kilometer != null && clean(String(input.kilometer)) !== "") {
@@ -3493,17 +4530,6 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
       from: one,
       to: null,
       source: "structured_single",
-    };
-  }
-  if (facts.kilometerFrom && facts.kilometerTo) {
-    return {
-      kind: "KM_RANGE",
-      label:
-        facts.kilometerLabel ||
-        "km " + facts.kilometerFrom + "–" + facts.kilometerTo,
-      from: facts.kilometerFrom,
-      to: facts.kilometerTo,
-      source: "comment",
     };
   }
   if (facts.kilometerLabel) {
@@ -3619,7 +4645,11 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   if (street && (muni || cityPart)) {
-    const placeBits = ["ulice " + street.replace(/^ulice\s+/i, "")];
+    const streetDisp = street.replace(/^ulice\s+/i, "");
+    const placeBits =
+      facts.streetRange === true && facts.streetFrom && facts.streetTo
+        ? [streetDisp]
+        : ["ulice " + streetDisp];
     if (km) pushUniqueBit(placeBits, km);
     if (dir) pushUniqueBit(placeBits, "směr " + dir);
     // Prefer municipality over city-part on the collapsed place line.
@@ -3817,6 +4847,15 @@ export function buildTrafficExpandedDetail(input = {}) {
   }
   push("district", "Okres", input.district || facts.district);
   {
+    const locQ = clean(facts.locationQualifier);
+    if (locQ) push("locationQualifier", "Upřesnění místa", locQ);
+  }
+  {
+    const access = facts.accessInformation;
+    const accessText = access && clean(access.presentation);
+    if (accessText) push("accessInformation", "Příjezd", accessText);
+  }
+  {
     const roadNorm = clean(roadResolved || input.road)
       .toLowerCase()
       .replace(/\s+/g, "");
@@ -3844,6 +4883,16 @@ export function buildTrafficExpandedDetail(input = {}) {
     const locIsStreetEcho = !!(locNorm && streetNorm && locNorm === streetNorm);
     const locIsMuniEcho = !!(locNorm && muniNorm && locNorm === muniNorm);
     const locIsPartEcho = !!(locNorm && partNorm && locNorm === partNorm);
+    const distNorm = clean(input.district || facts.district)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const cityNorm = clean(facts.city)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    const locIsDistrictEcho =
+      !!(locNorm && distNorm && locNorm === distNorm) &&
+      !!(muniNorm && distNorm === muniNorm);
+    const locIsCityEcho = !!(locNorm && cityNorm && locNorm === cityNorm);
     const localityDetail = clean(facts.localityDetail);
     if (named && namedKind === LOCATION_KIND.TUNNEL) {
       push("tunnel", "Tunel", named);
@@ -3856,7 +4905,14 @@ export function buildTrafficExpandedDetail(input = {}) {
       push("location", "Lokalita", named);
     } else if (localityDetail) {
       push("location", "Lokalita", localityDetail);
-    } else if (!locIsRoadEcho && !locIsStreetEcho && !locIsMuniEcho && !locIsPartEcho) {
+    } else if (
+      !locIsRoadEcho &&
+      !locIsStreetEcho &&
+      !locIsMuniEcho &&
+      !locIsPartEcho &&
+      !locIsDistrictEcho &&
+      !locIsCityEcho
+    ) {
       let locVal = sanitizeExtractedValueToken(input.location);
       if (looksLikeTruncatedFragment(locVal)) locVal = "";
       // Contaminated multi-street glue from upstream location parsers.
@@ -3939,13 +4995,13 @@ export function buildTrafficExpandedDetail(input = {}) {
   }
   push("updated", "Aktualizováno", input.lastMeaningfulChangeAt || input.sourceUpdatedAt);
 
-  const sourceFull = expandTrafficAbbreviationsCs(
+  // Transparent source layer — do not expand abbreviations or replace with summary.
+  const sourceFull =
     clean(input.impactFull) ||
-      clean(input.summaryFull) ||
-      clean(input.impact) ||
-      clean(input.summary) ||
-      ""
-  );
+    clean(input.summaryFull) ||
+    clean(input.impact) ||
+    clean(input.summary) ||
+    "";
   if (sourceFull && !EMPTY_IMPACT_RE.test(sourceFull)) {
     rows.push({
       key: "sourceDescription",
