@@ -79,7 +79,14 @@ ok("ui_zobrazit_vice", uiSrc.includes("Zobrazit více"));
 ok("ui_traffic_map_bottom", uiSrc.includes("iuPdCard__actionsMap"));
 ok("ui_traffic_map_not_top", !uiSrc.includes('iuPdTrafficTop__map">${czMapMarkup}'));
 ok("css_traffic_actions_map", cssSrc.includes(".iuPdCard__actionsMap"));
-
+{
+  const m = cssSrc.match(
+    /\.iuPdCard--traffic\s+\.iuPdCard__actions\.iuPdCard__actions--traffic[\s\S]{0,280}?\{([\s\S]*?)\}/
+  );
+  const block = m ? m[1] : "";
+  ok("css_traffic_actions_right_align", /justify-content:\s*flex-end/.test(block), block.slice(0, 80));
+  ok("css_traffic_actions_not_left", !/justify-content:\s*flex-start/.test(block));
+}
 {
   const active = trafficBadgeModel({
     lifecycleStatus: "ACTIVE",

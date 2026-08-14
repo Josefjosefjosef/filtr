@@ -1664,11 +1664,14 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 }
 .iuPdCard--traffic .iuPdCard__actions.iuPdCard__actions--traffic,
 .iuPdCard--traffic .iuPrehledDne__actions.iuPdCard__actions--traffic {
-  justify-content: flex-start;
+  /* Keep map → Sledovat → Skrýt as one group pinned to the card content's right edge.
+     Do not use flex-start — that left-anchors the whole action row. */
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 2px;
+  width: 100%;
 }
 .iuPdCard--traffic .iuPdCard__actionsMap {
   flex: 0 0 auto;
