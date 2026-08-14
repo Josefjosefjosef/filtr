@@ -880,12 +880,30 @@ function extractDirectionHumanFromComment(text) {
 /**
  * Prefer classed road identity from comment when structured value is bare digits
  * (e.g. structured "26" + comment "I/26" → "I/26"). Never invents a class without evidence.
+ *
+ * Conflicting motorways: explicit comment motorway (e.g. "D48 EXIT 46") beats a different
+ * structured/enriched motorway (e.g. TMC D56). EXIT numbers are not globally unique.
  */
 export function preferClassedRoadNumber(structured, fromComment) {
   const s = clean(structured).replace(/\s+/g, "");
   const c = clean(fromComment).replace(/\s+/g, "");
   if (!s) return c || null;
   if (!c) return s;
+
+  const sMw = s.match(/^(D)(\d{1,3}[A-Za-z]?)$/i);
+  const cMw = c.match(/^(D)(\d{1,3}[A-Za-z]?)$/i);
+  if (sMw && cMw) {
+    const sTok = "D" + sMw[2].toUpperCase();
+    const cTok = "D" + cMw[2].toUpperCase();
+    if (sTok !== cTok) return cTok;
+  }
+  // Bare structured digits that disagree with an explicit comment motorway (56 vs D48).
+  const sBare = s.match(/^(\d{1,3}[A-Za-z]?)$/i);
+  if (sBare && cMw) {
+    const cTok = "D" + cMw[2].toUpperCase();
+    if (String(sBare[1]).toUpperCase() !== String(cMw[2]).toUpperCase()) return cTok;
+  }
+
   // III. class Czech roads may use 5-digit numbers (e.g. III/03554).
   const bare = s.match(/^(\d{1,6}[A-Za-z]?)$/i);
   const classed = c.match(/^(I{1,3}|II|III|D)\/(\d{1,6}[A-Za-z]?)$/i);
@@ -1136,9 +1154,10 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
 export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const structured = clean(input.road || input.roadNumber);
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  // Prefer EXIT-paired motorway (D48 EXIT 46) before generic first road token in comment.
   const fromComment =
-    clean(facts.roadNumber) ||
     clean(facts.exitRoad) ||
+    clean(facts.roadNumber) ||
     extractRoadNumberFromOfficialComment(sourceBlob(input));
   let resolved = null;
   if (structured && fromComment) {
@@ -2088,6 +2107,11 @@ export function parseOfficialCommentFacts(rawText) {
     trafficImpactModality: null,
     obstructionType: null,
     obstructionContext: null,
+    strandedVehiclePresent: false,
+    delayExpected: false,
+    delayDurationValue: null,
+    delayDurationUnit: null,
+    delayDurationQualifier: null,
     locationDetail: null,
     situationPhrases: [],
     isEmptyTemplate: false,
@@ -2258,6 +2282,19 @@ export function parseOfficialCommentFacts(rawText) {
     } else if (/zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce/i.test(text)) {
       out.obstructionType = "ANIMAL";
     }
+    // "odstavené vozidlo" is a separate source token — may co-occur with porouchané.
+    if (/odstaven(?:é|ý|á)?\s+vozidlo/i.test(text)) {
+      out.strandedVehiclePresent = true;
+    }
+  }
+
+  // Expected delay duration — distinct from event validity (Od … Do …).
+  {
+    const delayFacts = extractExpectedDelayDurationFacts(text);
+    out.delayExpected = delayFacts.delayExpected;
+    out.delayDurationValue = delayFacts.delayDurationValue;
+    out.delayDurationUnit = delayFacts.delayDurationUnit;
+    out.delayDurationQualifier = delayFacts.delayDurationQualifier;
   }
 
   const named = extractNamedTransportObject(text);
@@ -2853,6 +2890,78 @@ export function hasExplicitExpectedDelaySource(rawText) {
   if (/(?:možn[áa]|hrozí|riziko)\s+zdržení/i.test(text)) return true;
   if (/(?:^|[,;]\s*)zdržení(?:[,;.]|$)/i.test(text)) return true;
   return false;
+}
+
+/**
+ * Parse delay duration from source ("zdržení do 1 hodiny") — never invents.
+ * Distinct from event validity window (Od … Do …).
+ */
+export function extractExpectedDelayDurationFacts(rawText) {
+  const text = clean(rawText);
+  const out = {
+    delayExpected: false,
+    delayDurationValue: null,
+    delayDurationUnit: null,
+    delayDurationQualifier: null,
+  };
+  if (!text) return out;
+  if (hasExplicitExpectedDelaySource(text)) out.delayExpected = true;
+
+  const hour =
+    text.match(
+      /(?:očekávejte\s+)?zdržení\s+(do|až\s+do)\s+(\d+)\s+(hodiny|hodin|hodinu|h)\b/i
+    ) || text.match(/(?:očekávejte\s+)?zdržení\s+(do|až\s+do)\s+(\d+)\s*h\b/i);
+  const minute = text.match(
+    /(?:očekávejte\s+)?zdržení\s+(do|až\s+do)\s+(\d+)\s+(minut[ayu]?|min)\b/i
+  );
+  if (hour) {
+    out.delayDurationQualifier = /až/i.test(hour[1]) ? "až do" : "do";
+    out.delayDurationValue = Number(hour[2]);
+    out.delayDurationUnit = "hour";
+    out.delayExpected = true;
+  } else if (minute) {
+    out.delayDurationQualifier = /až/i.test(minute[1]) ? "až do" : "do";
+    out.delayDurationValue = Number(minute[2]);
+    out.delayDurationUnit = "minute";
+    out.delayExpected = true;
+  }
+  return out;
+}
+
+/** Czech unit morphology for delay duration (source-grounded). */
+function czechDelayUnitPhrase(value, unit) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return null;
+  if (unit === "hour") {
+    if (n === 1) return "1 hodiny";
+    if (n >= 2 && n <= 4) return String(n) + " hodiny";
+    return String(n) + " hodin";
+  }
+  if (unit === "minute") {
+    if (n === 1) return "1 minuty";
+    if (n >= 2 && n <= 4) return String(n) + " minuty";
+    return String(n) + " minut";
+  }
+  return null;
+}
+
+/**
+ * Collapsed delay wording. Keeps duration when source proves it.
+ * Never invents "do N hodin" without extraction evidence.
+ */
+export function formatExpectedDelaySituationBit(source, facts = null) {
+  const text = clean(source);
+  const f = facts || {};
+  const expected =
+    f.delayExpected === true || hasExplicitExpectedDelaySource(text);
+  if (!expected) return null;
+  const lead = /očekávejte\s+zdržení/i.test(text) ? "Očekávejte zdržení" : "Zdržení";
+  const unitPhrase = czechDelayUnitPhrase(f.delayDurationValue, f.delayDurationUnit);
+  if (unitPhrase) {
+    const q = f.delayDurationQualifier === "až do" ? "až do" : "do";
+    return lead + " " + q + " " + unitPhrase;
+  }
+  return lead;
 }
 
 /**
@@ -3522,6 +3631,15 @@ function extractSecondaryImpactBits(source, cause, causeBits) {
     !/lidé na vozovce|osoby na vozovce/i.test(lead)
   ) {
     bits.push("Lidé na vozovce");
+  }
+  // "odstavené vozidlo" adds value only when not already covered by stronger
+  // "porouchané vozidlo" lead (same NDIC object, stronger cause wording).
+  if (
+    /odstaven(?:é|ý|á)?\s+vozidlo/i.test(text) &&
+    cause !== PRIMARY_CAUSE.BROKEN_VEHICLE &&
+    !/odstaven|porouchan/i.test(lead)
+  ) {
+    bits.push("Odstavené vozidlo");
   }
   return bits;
 }
@@ -4207,9 +4325,8 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   } else if (condition === TRAFFIC_CONDITION.DELAY) {
     if (!conditionBits.some((b) => /zdržení/i.test(b))) {
-      conditionBits.push(
-        /očekávejte\s+zdržení/i.test(source) ? "Očekávejte zdržení" : "Zdržení"
-      );
+      const delayBit = formatExpectedDelaySituationBit(source, facts);
+      if (delayBit) conditionBits.push(delayBit);
     }
   }
 
@@ -4219,9 +4336,8 @@ export function buildTrafficSituationSummary(input = {}) {
     hasExplicitExpectedDelaySource(source) &&
     !conditionBits.some((b) => /zdržení/i.test(b))
   ) {
-    conditionBits.push(
-      /očekávejte\s+zdržení/i.test(source) ? "Očekávejte zdržení" : "Zdržení"
-    );
+    const delayBit = formatExpectedDelaySituationBit(source, facts);
+    if (delayBit) conditionBits.push(delayBit);
   }
 
   // Extra trusted phrases not yet covered (roadworks transfer etc.).
@@ -5465,7 +5581,18 @@ export function buildTrafficExpandedDetail(input = {}) {
 
   const qKm = facts.queueLengthKm != null ? facts.queueLengthKm : input.queueLengthKm;
   if (qKm != null) push("queueLength", "Délka kolony", String(qKm).replace(".", ",") + " km");
-  push("delay", "Očekávané zdržení", input.delayMinutes != null ? String(input.delayMinutes) + " min" : null);
+  {
+    const delayBit = formatExpectedDelaySituationBit(sourceBlob(input), facts);
+    if (delayBit && facts.delayDurationValue != null) {
+      push("delayDuration", "Očekávané zdržení", delayBit);
+    } else {
+      push(
+        "delay",
+        "Očekávané zdržení",
+        input.delayMinutes != null ? String(input.delayMinutes) + " min" : null
+      );
+    }
+  }
 
   const v = input.validity || {};
   push("validityFrom", "Začátek", v.validFrom || input.validFrom);
