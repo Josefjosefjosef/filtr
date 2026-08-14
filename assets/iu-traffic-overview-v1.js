@@ -1127,6 +1127,18 @@ export function buildTrafficCardViewModel(trafficV1) {
       locationNote = "";
     }
   }
+  // False fallback: never claim "no place" when EXIT / ramp / km / road already localize.
+  if (
+    /Konkrétní úsek ani místo/i.test(locationNote) ||
+    /nespojují s jednoznačně určitelnou lokalitou/i.test(locationNote)
+  ) {
+    const xf = (presentation.expanded && presentation.expanded.facts) || {};
+    const hasConcretePlace =
+      !!(presentation.communication && presentation.communication.road) ||
+      !!(presentation.placeLine && String(presentation.placeLine).trim()) ||
+      !!(xf.exitNumber || xf.rampType || xf.kilometerLabel || xf.namedObject);
+    if (hasConcretePlace) locationNote = "";
+  }
   const communicationLine = presentation.placeLine || "";
   const impactShort = tv.impact != null ? String(tv.impact) : "";
   const impactFullRaw = tv.impactFull != null ? String(tv.impactFull) : "";
