@@ -30,6 +30,7 @@ const SUITES = [
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
   "iu-traffic-motorway-direction-exit-order-guard",
+  "iu-traffic-direction-congestion-exactness-guard",
   "iu-traffic-broken-vehicle-delay-header-guard",
   "iu-traffic-roadwork-lane-restriction-municipality-parts-guard",
 ];
