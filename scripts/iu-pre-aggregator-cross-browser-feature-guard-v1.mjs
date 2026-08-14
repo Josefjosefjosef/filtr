@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Cross-browser feature detection + fallback markers (pre-aggregator stable).
  * Static checks always; Chromium runtime when Playwright available.
@@ -116,7 +116,7 @@ async function main() {
   try {
     playwright = require("playwright");
   } catch (e) {
-    console.log("[xbrowser] playwright missing â€” static-only PASS");
+    console.log("[xbrowser] playwright missing — static-only PASS");
     console.log("[xbrowser] RESULT=PASS");
     process.exit(0);
   }

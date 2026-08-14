@@ -1,7 +1,7 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
- * P0: mobil/tablet â€” #iuMobileBottomNav skrytĂˇ pĹ™i soft keyboard.
- * v3: okamĹľitĂˇ obnova po zavĹ™enĂ­ VV i bez blur (iOS); focus fallback jen opening grace.
+ * P0: mobil/tablet — #iuMobileBottomNav skrytá při soft keyboard.
+ * v3: okamžitá obnova po zavření VV i bez blur (iOS); focus fallback jen opening grace.
  * Run: npm run iu-mobile-bottom-nav-keyboard-hide-guard
  */
 import fs from "node:fs";
@@ -35,7 +35,7 @@ const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
 const SW_VER = "2026-08-14-praha-jizni-spojka-smv-header-v1";
-/* Must match assets/app.js FOCUS_OPEN_GRACE_MS â€” do not change product grace. */
+/* Must match assets/app.js FOCUS_OPEN_GRACE_MS — do not change product grace. */
 const FOCUS_OPEN_GRACE_MS = 420;
 
 const VIEWPORTS = [
@@ -184,7 +184,7 @@ async function installVvMock(page) {
           state.heightFactor = 0.55;
           state.offsetTop = 0;
         } else if (mode === "iosZeroGap") {
-          /* Simulate iOS: VV height tracks innerHeight â†’ classic gap formula â‰ 0. */
+          /* Simulate iOS: VV height tracks innerHeight → classic gap formula ≈ 0. */
           state.mode = "iosZeroGap";
           state.heightFactor = 1;
           state.offsetTop = 0;
@@ -298,7 +298,7 @@ async function runViewport(browser, vp) {
     const idle = await readNavState(page);
     const scrollBefore = idle.scrollY;
 
-    /* A: standard VV gap + focus â†’ hide */
+    /* A: standard VV gap + focus → hide */
     await page.focus("#iuKbHideA");
     await inPageWaitNav(page, {
       expectHidden: true,
@@ -307,7 +307,7 @@ async function runViewport(browser, vp) {
     });
     const scenarioA = await readNavState(page);
 
-    /* D: switch fields â€” no blink */
+    /* D: switch fields — no blink */
     const blinkSamples = [];
     await page.focus("#iuKbHideB");
     for (let i = 0; i < 8; i++) {
@@ -316,7 +316,7 @@ async function runViewport(browser, vp) {
     }
     const noBlink = blinkSamples.every((s) => isHidden(s));
 
-    /* C: close with blur â€” in-page restore timing (â‰¤350ms assert). */
+    /* C: close with blur — in-page restore timing (≤350ms assert). */
     const restoredBlurWait = await page.evaluate(async () => {
       const readVisible = () => {
         const root = document.documentElement;
@@ -341,7 +341,7 @@ async function runViewport(browser, vp) {
     const restoredBlur = await readNavState(page);
     const restoreBlurMs = restoredBlurWait.elapsedMs;
 
-    /* B: close WITHOUT blur â€” input stays focused, VV returns â†’ instant restore */
+    /* B: close WITHOUT blur — input stays focused, VV returns → instant restore */
     await page.focus("#iuKbHideA");
     await page.type("#iuKbHideA", "x");
     const openBeforeWait = await inPageWaitNav(page, {
@@ -367,7 +367,7 @@ async function runViewport(browser, vp) {
       openBeforeWait.ok === true &&
       restoreNoBlurMs <= RESTORE_DEADLINE_MS;
 
-    /* Opening grace (iosZeroGap within grace) â†’ hide without VV gap.
+    /* Opening grace (iosZeroGap within grace) → hide without VV gap.
        Focus + mock MUST be same turn: a later iosZeroGap resize while open===true
        clears focusOpenGraceUntil (product keyboard-closed path) and races the assert. */
     await blurActive(page);
@@ -405,7 +405,7 @@ async function runViewport(browser, vp) {
     }, FOCUS_OPEN_GRACE_MS);
     const openingGrace = await readNavState(page);
 
-    /* After grace without geom evidence â†’ must NOT stay stuck hidden */
+    /* After grace without geom evidence → must NOT stay stuck hidden */
     const graceEndAt = tGrace0 + FOCUS_OPEN_GRACE_MS + 48;
     const remainAfterGrace = Math.max(0, graceEndAt - Date.now());
     if (remainAfterGrace > 0) await page.waitForTimeout(remainAfterGrace);
@@ -416,7 +416,7 @@ async function runViewport(browser, vp) {
     await page.evaluate(() => window.__iuMockKeyboard(false));
     await blurActive(page);
 
-    /* Gap without focus â€” must NOT hide */
+    /* Gap without focus — must NOT hide */
     await page.evaluate(() => {
       ["iuKbHideA", "iuKbHideB", "iuKbHideRo", "iuKbHideNone"].forEach((id) => {
         const el = document.getElementById(id);
@@ -492,7 +492,7 @@ async function runViewport(browser, vp) {
     });
     await blurActive(page);
 
-    /* H: ten open/close cycles â€” condition wait (DETECT budget; product 200ms is scenario B). */
+    /* H: ten open/close cycles — condition wait (DETECT budget; product 200ms is scenario B). */
     let tenOk = true;
     let pendingTimerCheckOk = true;
     let listenerCleanupOk = true;

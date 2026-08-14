@@ -1,6 +1,6 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
- * Guard: CHMI title locality counts use unique ORP unit + Czech inflection + Oâ‚ display + same-day platnost od.
+ * Guard: CHMI title locality counts use unique ORP unit + Czech inflection + O₃ display + same-day platnost od.
  * Does not change segment IDs / validity / publicUrl.
  */
 import fs from "node:fs";
@@ -86,71 +86,71 @@ ok("geo_dedupe_seenOrp", /seenOrp/.test(geoSrc), "geo");
 ok("norm_export_phrase", /formatExtraOrpAreasPhrase/.test(normSrc), "norm");
 ok("ui_o3_display", /\\\\bO3\\\\b/.test(ui) || /\\bO3\\b/.test(ui), "ui o3");
 
-ok("phrase_1", formatExtraOrpAreasPhrase(1) === "a 1 dalĹˇĂ­ oblast", formatExtraOrpAreasPhrase(1));
-ok("phrase_2", formatExtraOrpAreasPhrase(2) === "a 2 dalĹˇĂ­ oblasti", formatExtraOrpAreasPhrase(2));
-ok("phrase_4", formatExtraOrpAreasPhrase(4) === "a 4 dalĹˇĂ­ oblasti", formatExtraOrpAreasPhrase(4));
-ok("phrase_5", formatExtraOrpAreasPhrase(5) === "a dalĹˇĂ­ch 5 oblastĂ­", formatExtraOrpAreasPhrase(5));
-ok("phrase_32", formatExtraOrpAreasPhrase(32) === "a dalĹˇĂ­ch 32 oblastĂ­", formatExtraOrpAreasPhrase(32));
-ok("o3_display", formatChmiEventDisplayName("SmogovĂˇ situace - troposfĂ©rickĂ˝ ozĂłn O3") === "SmogovĂˇ situace - troposfĂ©rickĂ˝ ozĂłn Oâ‚", "o3");
-ok("o3_identity_safe", formatChmiEventDisplayName("O3") === "Oâ‚" && "O3" !== "Oâ‚", "identity");
+ok("phrase_1", formatExtraOrpAreasPhrase(1) === "a 1 další oblast", formatExtraOrpAreasPhrase(1));
+ok("phrase_2", formatExtraOrpAreasPhrase(2) === "a 2 další oblasti", formatExtraOrpAreasPhrase(2));
+ok("phrase_4", formatExtraOrpAreasPhrase(4) === "a 4 další oblasti", formatExtraOrpAreasPhrase(4));
+ok("phrase_5", formatExtraOrpAreasPhrase(5) === "a dalších 5 oblastí", formatExtraOrpAreasPhrase(5));
+ok("phrase_32", formatExtraOrpAreasPhrase(32) === "a dalších 32 oblastí", formatExtraOrpAreasPhrase(32));
+ok("o3_display", formatChmiEventDisplayName("Smogová situace - troposférický ozón O3") === "Smogová situace - troposférický ozón O₃", "o3");
+ok("o3_identity_safe", formatChmiEventDisplayName("O3") === "O₃" && "O3" !== "O₃", "identity");
 
 // 304 cache: refresh presentation without changing id / validity
 {
   const stale = {
     id: "ie-chmi-v2-stale-rumburk",
-    title: "Stav sucha â€” Rumburk a dalĹˇĂ­ch 1 oblastĂ­",
+    title: "Stav sucha — Rumburk a dalších 1 oblastí",
     validFrom: "2026-07-28T14:00:00+02:00",
     validTo: null,
     publicUrl: "https://example.test/portal",
-    region: { summary: "Rumburk a dalĹˇĂ­ch 1 oblastĂ­", name: "Rumburk" },
+    region: { summary: "Rumburk a dalších 1 oblastí", name: "Rumburk" },
     capV2: {
       event: "Stav sucha",
       geo: {
         links: [
-          { orpName: "Rumburk", krajName: "ĂšsteckĂ˝ kraj", orpId: "r" },
-          { orpName: "VrchlabĂ­", krajName: "KrĂˇlovĂ©hradeckĂ˝ kraj", orpId: "v" },
+          { orpName: "Rumburk", krajName: "Ústecký kraj", orpId: "r" },
+          { orpName: "Vrchlabí", krajName: "Královéhradecký kraj", orpId: "v" },
         ],
       },
     },
   };
   const fresh = refreshItemLocalityPresentation(stale);
-  ok("cache_refresh_two_names", fresh.title === "Stav sucha â€” Rumburk a VrchlabĂ­", fresh.title);
+  ok("cache_refresh_two_names", fresh.title === "Stav sucha — Rumburk a Vrchlabí", fresh.title);
   ok("cache_refresh_id_stable", fresh.id === stale.id, fresh.id);
   ok("cache_refresh_validFrom_stable", fresh.validFrom === stale.validFrom, fresh.validFrom);
   ok("cache_refresh_url_stable", fresh.publicUrl === stale.publicUrl, fresh.publicUrl);
 }
 
-// concrete ORP list (multi kraj) â€” count unique ORP only
+// concrete ORP list (multi kraj) — count unique ORP only
 const multi = summarizeAlertLocality(
   [
-    link("ÄŚeskĂ˝ Krumlov", "JihoÄŤeskĂ˝ kraj", "a"),
-    link("PĂ­sek", "JihoÄŤeskĂ˝ kraj", "b"),
-    link("Praha", "HlavnĂ­ mÄ›sto Praha", "c"),
+    link("Český Krumlov", "Jihočeský kraj", "a"),
+    link("Písek", "Jihočeský kraj", "b"),
+    link("Praha", "Hlavní město Praha", "c"),
   ],
   []
 );
 ok("multi_orp_count", multi.extraAreaCount === 2, String(multi.extraAreaCount));
-ok("multi_inflection", /a 2 dalĹˇĂ­ oblasti/.test(multi.summary), multi.summary);
+ok("multi_inflection", /a 2 další oblasti/.test(multi.summary), multi.summary);
 ok("multi_no_parent_triple", !/kraj.*okres/i.test(multi.summary), multi.summary);
 
-// whole kraj â†’ rule B
+// whole kraj → rule B
 const whole = summarizeAlertLocality(
   [
-    link("Blovice", "PlzeĹskĂ˝ kraj", "p1"),
-    link("PlzeĹ", "PlzeĹskĂ˝ kraj", "p2"),
-    link("Klatovy", "PlzeĹskĂ˝ kraj", "p3"),
+    link("Blovice", "Plzeňský kraj", "p1"),
+    link("Plzeň", "Plzeňský kraj", "p2"),
+    link("Klatovy", "Plzeňský kraj", "p3"),
   ],
   []
 );
-ok("whole_kraj_form", whole.summary === "PlzeĹskĂ˝ kraj (3 ORP)", whole.summary);
+ok("whole_kraj_form", whole.summary === "Plzeňský kraj (3 ORP)", whole.summary);
 ok("whole_kraj_level", whole.level === "kraj", whole.level);
 
 // mix whole-kraj style links + other kraj ORPs: unique ORP across kraje
 const mix = summarizeAlertLocality(
   [
-    link("Blovice", "PlzeĹskĂ˝ kraj", "p1"),
-    link("PlzeĹ", "PlzeĹskĂ˝ kraj", "p2"),
-    link("Brno", "JihomoravskĂ˝ kraj", "b1"),
+    link("Blovice", "Plzeňský kraj", "p1"),
+    link("Plzeň", "Plzeňský kraj", "p2"),
+    link("Brno", "Jihomoravský kraj", "b1"),
   ],
   []
 );
@@ -159,21 +159,21 @@ ok("mix_extra_2", mix.extraAreaCount === 2, String(mix.extraAreaCount));
 
 // parent dedupe: duplicate ORP links must not inflate
 const dups = summarizeAlertLocality(
-  [link("Praha", "HlavnĂ­ mÄ›sto Praha", "praha"), link("Praha", "HlavnĂ­ mÄ›sto Praha", "praha"), link("Brno", "JihomoravskĂ˝ kraj", "brno")],
+  [link("Praha", "Hlavní město Praha", "praha"), link("Praha", "Hlavní město Praha", "praha"), link("Brno", "Jihomoravský kraj", "brno")],
   []
 );
 ok("dedupe_two_names", dups.summary === "Praha a Brno", dups.summary);
 ok("dedupe_extra_1", dups.extraAreaCount === 1, String(dups.extraAreaCount));
 
 // Praha as ORP
-const prahaOnly = summarizeAlertLocality([link("Praha", "HlavnĂ­ mÄ›sto Praha", "praha")], []);
+const prahaOnly = summarizeAlertLocality([link("Praha", "Hlavní město Praha", "praha")], []);
 ok("praha_single", prahaOnly.summary === "Praha", prahaOnly.summary);
 
 // 1 / 2-4 / 5+
-ok("one_extra", summarizeAlertLocality([link("Rumburk", "ĂšsteckĂ˝ kraj", "r"), link("NovĂˇ Paka", "KrĂˇlovĂ©hradeckĂ˝ kraj", "n")], []).summary === "Rumburk a NovĂˇ Paka", "two names");
+ok("one_extra", summarizeAlertLocality([link("Rumburk", "Ústecký kraj", "r"), link("Nová Paka", "Královéhradecký kraj", "n")], []).summary === "Rumburk a Nová Paka", "two names");
 ok(
   "three_extra_phrase",
-  /a 2 dalĹˇĂ­ oblasti/.test(
+  /a 2 další oblasti/.test(
     summarizeAlertLocality(
       [link("A", "K1", "1"), link("B", "K2", "2"), link("C", "K3", "3")],
       []
@@ -183,7 +183,7 @@ ok(
 );
 ok(
   "four_extra_phrase",
-  /a 4 dalĹˇĂ­ oblasti/.test(
+  /a 4 další oblasti/.test(
     summarizeAlertLocality(
       [link("A", "K1", "1"), link("B", "K2", "2"), link("C", "K3", "3"), link("D", "K4", "4"), link("E", "K5", "5")],
       []
@@ -193,7 +193,7 @@ ok(
 );
 ok(
   "five_extra_phrase",
-  /a dalĹˇĂ­ch 5 oblastĂ­/.test(
+  /a dalších 5 oblastí/.test(
     summarizeAlertLocality(
       [
         link("A", "K1", "1"),
@@ -209,7 +209,7 @@ ok(
   "6orp_extra5"
 );
 
-// FUTURE platnost: single red sentence â€žVĂ˝straha ÄŚHMĂš platĂ­ od â€¦ hod.â€ś (no split date/time)
+// FUTURE platnost: single red sentence „Výstraha ČHMÚ platí od … hod.“ (no split date/time)
 const future = {
   id: "ie-chmi-v2-future-same",
   sourceId: "chmi",
@@ -221,7 +221,7 @@ const future = {
   validTo: "2026-08-01T00:00:00+02:00",
 };
 const t = IU.getEffectiveTimelinePresentation(future, Date.parse("2026-07-31T12:00:00+02:00"));
-ok("future_same_day_label", t.secondaryValidFromLabel === "VĂ˝straha ÄŚHMĂš platĂ­ od 31. 7. 16:00 hod.", String(t.secondaryValidFromLabel));
+ok("future_same_day_label", t.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 31. 7. 16:00 hod.", String(t.secondaryValidFromLabel));
 ok("future_same_day_date", t.secondaryValidFromDate == null, String(t.secondaryValidFromDate));
 ok("future_same_day_time", t.secondaryValidFromTime == null, String(t.secondaryValidFromTime));
 
@@ -232,7 +232,7 @@ const futureNext = {
   validTo: "2026-08-02T00:00:00+02:00",
 };
 const tn = IU.getEffectiveTimelinePresentation(futureNext, Date.parse("2026-07-31T12:00:00+02:00"));
-ok("future_next_day_label", tn.secondaryValidFromLabel === "VĂ˝straha ÄŚHMĂš platĂ­ od 1. 8. 12:00 hod.", String(tn.secondaryValidFromLabel));
+ok("future_next_day_label", tn.secondaryValidFromLabel === "Výstraha ČHMÚ platí od 1. 8. 12:00 hod.", String(tn.secondaryValidFromLabel));
 ok("future_next_day_date", tn.secondaryValidFromDate == null, String(tn.secondaryValidFromDate));
 ok("future_next_day_time", tn.secondaryValidFromTime == null, String(tn.secondaryValidFromTime));
 

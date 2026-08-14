@@ -1,6 +1,6 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
- * Regression guard: PĹ™ehled dne settings (autosave, structure, taxonomy, scroll open).
+ * Regression guard: Přehled dne settings (autosave, structure, taxonomy, scroll open).
  * Static contract + Playwright behavioral checks (local static server).
  */
 import fs from "node:fs";
@@ -39,12 +39,12 @@ function staticGate() {
   must(/data-iu-ui=\"v6-clean\"/.test(ui), "ui:v6_marker");
   must(/data-act=\"open-settings\"/.test(ui), "ui:open_settings");
   must(/data-act=\"settings-close\"/.test(ui), "ui:settings_close");
-  must(/ZavĹ™Ă­t/.test(ui), "ui:close_label");
+  must(/Zavřít/.test(ui), "ui:close_label");
   must(!/settings-save/.test(ui), "ui:no_settings_save");
-  must(!/UloĹľit nastavenĂ­/.test(ui), "ui:no_save_label");
+  must(!/Uložit nastavení/.test(ui), "ui:no_save_label");
   must(!/settings-cancel/.test(ui), "ui:no_settings_cancel");
-  must(!/>\s*ZruĹˇit\s*</.test(ui) && !/">ZruĹˇit</.test(ui), "ui:no_cancel_label");
-  must(!/DalĹˇĂ­ instituce/.test(ui), "ui:no_dalsi_instituce");
+  must(!/>\s*Zrušit\s*</.test(ui) && !/">Zrušit</.test(ui), "ui:no_cancel_label");
+  must(!/Další instituce/.test(ui), "ui:no_dalsi_instituce");
   must(!/label:\s*\"Kraje\"/.test(ui), "ui:no_kraje_source_group");
   must(/activeSection/.test(ui), "ui:single_section_state");
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
@@ -92,7 +92,7 @@ function staticGate() {
   );
   must(ministries.some((e) => e.id === "mzcr"), "registry:mzcr_is_ministry_by_label");
   must(ministries.length >= 5, "registry:ministries_min_5");
-  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictvĂ­/i.test(String(e.label || "")));
+  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictví/i.test(String(e.label || "")));
   must(mzcrDup.length === 1, "registry:mzcr_not_duplicate");
 
   return { pass: fails.length === 0, fails: fails.slice() };
@@ -188,7 +188,7 @@ async function runPlaywright() {
           window.IUInfoSystem.applyCutoverDom();
         }
       });
-      // Wait for taxonomy/registry shell â€” not multiâ€‘MB feed â€” before settings section clicks.
+      // Wait for taxonomy/registry shell — not multi‑MB feed — before settings section clicks.
       await page.waitForFunction(
         () => {
           const root = document.getElementById("iuPrehledDneRoot");
@@ -241,7 +241,7 @@ async function runPlaywright() {
           gap = Math.round(b.top - a.bottom);
         }
         const save = !!document.querySelector('#iuPdSettings [data-act="settings-save"]');
-        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some((b) => (b.textContent || "").trim() === "ZruĹˇit");
+        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some((b) => (b.textContent || "").trim() === "Zrušit");
         return {
           scrollTop: scroll ? scroll.scrollTop : -1,
           title: h2 ? (h2.textContent || "").trim() : "",
@@ -255,9 +255,9 @@ async function runPlaywright() {
       });
 
       if (openState.scrollTop !== 0) pwFails.push(vp.name + ":open_scroll_top");
-      if (openState.title !== "MĹŻj pĹ™ehled / NastavenĂ­") pwFails.push(vp.name + ":title");
+      if (openState.title !== "Můj přehled / Nastavení") pwFails.push(vp.name + ":title");
       if (openState.rails.length !== 3) pwFails.push(vp.name + ":three_rails");
-      if (openState.rails[0] !== "TĂ©mata" || openState.rails[1] !== "Zdroje a instituce" || openState.rails[2] !== "Lokalita") {
+      if (openState.rails[0] !== "Témata" || openState.rails[1] !== "Zdroje a instituce" || openState.rails[2] !== "Lokalita") {
         pwFails.push(vp.name + ":rail_order");
       }
       if (openState.gap == null || openState.gap < 0 || openState.gap > 28) pwFails.push(vp.name + ":close_gap:" + openState.gap);
@@ -308,7 +308,7 @@ async function runPlaywright() {
       const sourcesTaxonomy = await page.evaluate(() => {
         const html = document.querySelector("#iuPdSettings")?.innerHTML || "";
         const text = document.querySelector("#iuPdSettings")?.innerText || "";
-        const hasDalsi = /DalĹˇĂ­ instituce/.test(text) || /DalĹˇĂ­ instituce/.test(html);
+        const hasDalsi = /Další instituce/.test(text) || /Další instituce/.test(html);
         const sg = [...document.querySelectorAll("[data-sg]")].map((el) => el.getAttribute("data-sg"));
         const mzcrStandalone = [...document.querySelectorAll('input[data-draft-act="source-id"][data-group="standalone"]')].some(
           (el) => el.value === "mzcr"
@@ -333,10 +333,10 @@ async function runPlaywright() {
         const body = document.querySelector('[data-iu-pd-sec="lokalita"]');
         const text = (body?.innerText || "").replace(/\s+/g, " ");
         const lower = text.toLocaleLowerCase("cs");
-        const iCr = lower.indexOf("celĂˇ ÄŤr");
+        const iCr = lower.indexOf("celá čr");
         const iK = lower.indexOf("kraje");
         const iO = lower.indexOf("okresy");
-        const iM = lower.indexOf("mÄ›sto / obec");
+        const iM = lower.indexOf("město / obec");
         return iCr >= 0 && iK > iCr && iO > iK && iM > iO;
       });
       if (!locOrder) pwFails.push(vp.name + ":locality_order");
