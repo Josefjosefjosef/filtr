@@ -106,9 +106,23 @@ export function feedItemToPublicationEvent(item) {
   const locBits = extractLocalityFromOfficialComment(summaryFullRaw || officialSummary);
   const regionName =
     (item.region && (item.region.name || item.region.summary)) || item.locality || null;
+  const regionObec =
+    item.region && item.region.obec && String(item.region.obec).trim()
+      ? String(item.region.obec).trim()
+      : null;
+  // Municipality: comment-extracted first; else high-confidence geo-registry obec only.
+  // Never invent from street morphology / TMC segment labels alone.
+  const municipalityValue = locBits.municipality || regionObec || null;
+  const municipalitySource = locBits.municipality
+    ? "feed"
+    : regionObec
+      ? "geo_registry"
+      : "feed";
   const adminLabel =
-    locBits.municipality ||
-    (regionName && !/^česká republika$/i.test(String(regionName)) ? regionName : null) ||
+    municipalityValue ||
+    (regionName && !/^česká republika$/i.test(String(regionName)) && !regionObec
+      ? regionName
+      : null) ||
     (locBits.district ? "okres " + locBits.district : null);
   const sourceSeverity =
     item.severity != null && String(item.severity).trim() !== ""
@@ -184,8 +198,8 @@ export function feedItemToPublicationEvent(item) {
       district: locBits.district
         ? prov(locBits.district, "feed", ts, "validated")
         : prov(null, "feed", ts, "not_public"),
-      municipality: locBits.municipality
-        ? prov(locBits.municipality, "feed", ts, "validated")
+      municipality: municipalityValue
+        ? prov(municipalityValue, municipalitySource, ts, "validated")
         : prov(null, "feed", ts, "not_public"),
       lastMeaningfulChangeAt: prov(ts, "feed", ts),
       changeTimeSource: prov(timeline.changeTimeSource, "feed", ts),

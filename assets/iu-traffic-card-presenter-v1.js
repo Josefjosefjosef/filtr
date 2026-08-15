@@ -1571,6 +1571,8 @@ export function resolveConfirmedStreet(input = {}, factsIn = null) {
   if (Array.isArray(facts.streets) && facts.streets.length >= 1) {
     const joined = formatStreetDisplayList(facts.streets, {
       asRange: facts.streetRange === true && facts.streets.length === 2,
+      asIntersection:
+        facts.streetIntersection === true && facts.streets.length === 2,
     });
     if (joined && !looksLikeTruncatedFragment(joined) && !/[()]$/.test(joined)) {
       return joined;
@@ -1754,10 +1756,71 @@ export function formatStreetDisplayList(streets, opts = {}) {
   const list = (streets || []).map((s) => clean(s)).filter(Boolean);
   if (!list.length) return null;
   if (list.length === 1) return list[0];
+  if (list.length === 2 && (opts.asIntersection === true || opts.streetIntersection === true)) {
+    return list[0] + " × " + list[1];
+  }
   if (list.length === 2 && (opts.asRange === true || opts.streetRange === true)) {
     return list[0] + " – " + list[1];
   }
   return list.join(" / ");
+}
+
+/**
+ * Explicit street × street intersection from NDIC public comment
+ * (e.g. "Kolbenova x Poštovská"). Never invents names; never treats
+ * vehicle abbrev pairs (OA x MOTO) as streets.
+ * @returns {{ street1: string, street2: string }|null}
+ */
+export function extractStreetIntersectionFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const vehicleAbbrev = /^(OA|NA|DOD|MOTO)$/i;
+  const toStreet = (raw) => {
+    let sn = sanitizeExtractedValueToken(streetBareName(raw));
+    if (!sn) return null;
+    sn = clean(
+      sn.split(
+        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|Od\s+\d|Do\s+\d)/i
+      )[0]
+    );
+    sn = sanitizeExtractedValueToken(sn);
+    if (!sn || vehicleAbbrev.test(sn)) return null;
+    if (looksLikeTruncatedFragment(sn) || /[()]$/.test(sn)) return null;
+    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+    if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
+    return sn;
+  };
+  // Prefer leading "StreetA x StreetB," form used by TSK/NDIC urban events.
+  const lead = text.match(
+    /^([A-ZÁ-Ž][^,;×x]{1,48}?)\s*[x×]\s*([A-ZÁ-Ž][^,;]{1,48}?)(?=\s*[,;]|$)/u
+  );
+  if (lead) {
+    const a = toStreet(lead[1]);
+    const b = toStreet(lead[2]);
+    if (a && b && !samePlaceName(a, b)) return { street1: a, street2: b };
+  }
+  const any = text.match(
+    /\b([A-ZÁ-Ž][\wÁ-Žá-ž-]{1,40})\s*[x×]\s*([A-ZÁ-Ž][\wÁ-Žá-ž-]{1,40})\b/u
+  );
+  if (any) {
+    const a = toStreet(any[1]);
+    const b = toStreet(any[2]);
+    if (a && b && !samePlaceName(a, b)) return { street1: a, street2: b };
+  }
+  return null;
+}
+
+/**
+ * TMC-style locality range "NameA – NameB" (Alert-C point name join).
+ * Structured only — does not invent names.
+ */
+export function parseTmcStyleLocationRange(raw) {
+  const t = clean(raw);
+  if (!t || !looksLikeSegmentOrAreaLabel(t)) return null;
+  const parts = t.split(/\s*[–—]\s+/).map(clean).filter(Boolean);
+  if (parts.length !== 2) return null;
+  if (samePlaceName(parts[0], parts[1])) return null;
+  return { locationFrom: parts[0], locationTo: parts[1] };
 }
 
 /**
@@ -2265,6 +2328,11 @@ export function parseOfficialCommentFacts(rawText) {
     streetFrom: null,
     streetTo: null,
     streetRange: false,
+    streetIntersection: false,
+    intersectionStreet1: null,
+    intersectionStreet2: null,
+    tmcLocationFrom: null,
+    tmcLocationTo: null,
     city: null,
     cityPart: null,
     municipalityParts: [],
@@ -2713,9 +2781,11 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C".
+  // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C",
+  // or leading "StreetA x StreetB" intersection (never vehicle OA x MOTO).
   {
     const range = extractStreetRangeFromOfficialComment(text);
+    const intersection = extractStreetIntersectionFromOfficialComment(text);
     const streets = extractStreetNamesFromOfficialComment(text);
     if (range) {
       out.streetFrom = range.streetFrom;
@@ -2731,6 +2801,14 @@ export function parseOfficialCommentFacts(rawText) {
         { asRange: true }
       );
       out.streetMulti = out.streets.length >= 4;
+    } else if (intersection) {
+      out.streetIntersection = true;
+      out.intersectionStreet1 = intersection.street1;
+      out.intersectionStreet2 = intersection.street2;
+      out.streets = [intersection.street1, intersection.street2];
+      out.street = formatStreetDisplayList(out.streets, { asIntersection: true });
+      out.locationKind = LOCATION_KIND.INTERSECTION;
+      out.streetMulti = false;
     } else if (streets.length) {
       out.streets = streets;
       if (streets.length === 1) {
@@ -3240,6 +3318,13 @@ export function isSingleLaneRestriction(rawText) {
   ) {
     return true;
   }
+  // Urban lane occupation: "zábor pravého/parkovacího pruhu" (TSK/NDIC).
+  if (
+    /zábor\s+(?:pravého|levého|středního)(?:\/[^\s,]{2,40})?\s*pruhu/i.test(text) ||
+    /zábor\s+parkovacího\s+pruhu/i.test(text)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -3541,6 +3626,9 @@ function stripBoilerplate(text) {
   s = s.replace(/\bZdroj:\s*[^,]{2,120}/gi, "");
   s = s.replace(/…+/g, " ");
   s = s.replace(/\.{3,}/g, " ");
+  // Empty NDIC fields must not leave ", , ," separators.
+  s = s.replace(/(?:\s*,\s*){2,}/g, ", ");
+  s = s.replace(/^\s*,\s*|\s*,\s*$/g, "");
   return clean(s);
 }
 
@@ -4506,6 +4594,9 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
     const turnLane = /odbočovací\s+pruh/i.test(source);
+    const laneOccupy = source.match(
+      /zábor\s+((?:pravého|levého|středního)(?:\/[^\s,]{2,40})?\s*pruhu|parkovacího\s+pruhu)/i
+    );
     const lane =
       source.match(/((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)/i) ||
       source.match(/neprůjezdn[ýáé]\s+((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh)/i) ||
@@ -4525,7 +4616,14 @@ export function buildTrafficSituationSummary(input = {}) {
       )
     );
     const narrowed = /zúžen[ýáé]\s+(?:levý|pravý|střední|jeden)\s+jízdní\s+pruh/i.test(source);
-    if (turnLane) {
+    if (laneOccupy) {
+      const occ = clean(laneOccupy[1]);
+      scopeBits.push(
+        lifecycle === EVENT_LIFECYCLE.FUTURE
+          ? "Bude zábor " + occ
+          : "Zábor " + occ
+      );
+    } else if (turnLane) {
       let turn = "Odbočovací pruh";
       if (turnSide) turn += " " + turnSide;
       if (crossStreet) {
@@ -4737,6 +4835,19 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   }
 
+  // Traffic-device restoration (Z4d etc.) — keep when present in RAW.
+  if (
+    /zpětné\s+osazení/i.test(source) &&
+    !causeBits.some((b) => /osazení/i.test(b)) &&
+    !circumstanceBits.some((b) => /osazení/i.test(b))
+  ) {
+    const m = source.match(/zpětné\s+osazení\s+([^,;.]+)/i);
+    const detail = m ? clean(m[1]) : "";
+    circumstanceBits.push(
+      detail ? "Zpětné osazení " + detail : "Zpětné osazení dopravního značení"
+    );
+  }
+
   // Explicit "z důvodu …" + quoted event/action name — never drop when present in RAW.
   {
     const reasonText = clean(facts.eventReason);
@@ -4825,12 +4936,18 @@ export function buildTrafficSituationSummary(input = {}) {
     )
     .slice(0, 2);
   if (clauses.length) {
+    const intersectionLead =
+      facts.streetIntersection === true && Array.isArray(facts.streets) && facts.streets.length === 2
+        ? formatStreetDisplayList(facts.streets, { asIntersection: true })
+        : null;
     const cleaned = clauses.filter(
       (x) =>
         !/^ulice\b/i.test(x) &&
         !/^zdroj:/i.test(x) &&
         !isPrahaCityPartName(x) &&
-        !/^praha$/i.test(x)
+        !/^praha$/i.test(x) &&
+        !(intersectionLead && samePlaceName(x.replace(/\s*[x×]\s*/g, " × "), intersectionLead)) &&
+        !/^[A-ZÁ-Ž][^,]{1,40}\s*[x×]\s*[A-ZÁ-Ž]/u.test(x)
     );
     if (cleaned.length) return finalizeSentences(cleaned);
   }
@@ -5245,6 +5362,15 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = namedSmv.displayName;
     if (street) streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
     locationKind = LOCATION_KIND.ROAD;
+  } else if (
+    facts.streetIntersection === true &&
+    Array.isArray(facts.streets) &&
+    facts.streets.length === 2
+  ) {
+    // Explicit source intersection beats weaker TMC/locality segment labels.
+    besideLocality = formatStreetDisplayList(facts.streets, { asIntersection: true });
+    streetLabel = besideLocality;
+    locationKind = LOCATION_KIND.INTERSECTION;
   } else if (street) {
     streetLabel = "ulice: " + street.replace(/^ulice\s+/i, "");
     besideLocality = streetLabel;
@@ -5571,6 +5697,17 @@ export function buildPlaceAndDirectionLine(input = {}) {
     if (dir) pushUniqueBit(placeBits, "směr " + dir);
     if (cityPart) placeBits.push(cityPart);
     else if (muni) placeBits.push(muni);
+    return placeBits.join(" · ");
+  }
+
+  // Explicit source intersection — never let weaker TMC segment locality overwrite place line.
+  if (facts.streetIntersection === true && street) {
+    const placeBits = [street.replace(/^ulice\s+/i, "")];
+    if (km) pushUniqueBit(placeBits, km);
+    if (dir) pushUniqueBit(placeBits, "směr " + dir);
+    if (muni) placeBits.push(muni);
+    else if (cityPart) placeBits.push(cityPart);
+    if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
     return placeBits.join(" · ");
   }
 
