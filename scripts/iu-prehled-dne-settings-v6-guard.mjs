@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regression guard: Přehled dne settings (autosave, structure, taxonomy, scroll open).
+ * Regression guard: PĹ™ehled dne settings (autosave, structure, taxonomy, scroll open).
  * Static contract + Playwright behavioral checks (local static server).
  */
 import fs from "node:fs";
@@ -39,12 +39,12 @@ function staticGate() {
   must(/data-iu-ui=\"v6-clean\"/.test(ui), "ui:v6_marker");
   must(/data-act=\"open-settings\"/.test(ui), "ui:open_settings");
   must(/data-act=\"settings-close\"/.test(ui), "ui:settings_close");
-  must(/Zavřít/.test(ui), "ui:close_label");
+  must(/ZavĹ™Ă­t/.test(ui), "ui:close_label");
   must(!/settings-save/.test(ui), "ui:no_settings_save");
-  must(!/Uložit nastavení/.test(ui), "ui:no_save_label");
+  must(!/UloĹľit nastavenĂ­/.test(ui), "ui:no_save_label");
   must(!/settings-cancel/.test(ui), "ui:no_settings_cancel");
-  must(!/>\s*Zrušit\s*</.test(ui) && !/">Zrušit</.test(ui), "ui:no_cancel_label");
-  must(!/Další instituce/.test(ui), "ui:no_dalsi_instituce");
+  must(!/>\s*ZruĹˇit\s*</.test(ui) && !/">ZruĹˇit</.test(ui), "ui:no_cancel_label");
+  must(!/DalĹˇĂ­ instituce/.test(ui), "ui:no_dalsi_instituce");
   must(!/label:\s*\"Kraje\"/.test(ui), "ui:no_kraje_source_group");
   must(/activeSection/.test(ui), "ui:single_section_state");
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
@@ -67,7 +67,7 @@ function staticGate() {
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-08-15-broken-vs-generic-accident-worksite-v1|2026-08-15-intersection-locality-precedence-v1|2026-08-15-municipality-relation-oa-accident-v1|2026-08-15-future-traffic-impact-tense-v1|2026-08-14-municipality-street-accident-izs-v1|2026-08-14-praha-jizni-spojka-smv-header-v1|2026-08-14-roadwork-lane-restriction-parts-v1|2026-08-14-broken-vehicle-delay-header-v1|2026-08-14-exit-ramp-tokenize-v1|2026-08-14-d4-km-range-maintenance-v1|2026-08-14-accident-dod-moto-investigation-v1|2026-08-14-obstruction-stationary-vehicle-v1|2026-08-14-accident-participants-may-block-v1|2026-08-14-velky-ujezd-locality-sanitize-v1|2026-08-13-hradec-accident-i57-v1|2026-08-13-karlovy-vary-closure-access-v1|2026-08-13-decin-narrowed-lanes-reason-v1|2026-08-13-beroun-multi-street-work-reason-v1|2026-08-13-direction-abbrev-rich-situation-v1|2026-08-13-km-range-roadwork-detail-v1|2026-08-13-municipality-parenthetical-multi-road-v1|2026-08-13-traffic-fact-preservation-v1|2026-08-13-urban-numbered-road-parse-v1|2026-08-13-date-time-value-column-v4|2026-08-12-date-time-right-edge-v3|2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-defer-feed-hydrate-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(/2026-08-15-km-phrase-not-municipality-v1|2026-08-15-broken-vs-generic-accident-worksite-v1|2026-08-15-intersection-locality-precedence-v1|2026-08-15-municipality-relation-oa-accident-v1|2026-08-15-future-traffic-impact-tense-v1|2026-08-14-municipality-street-accident-izs-v1|2026-08-14-praha-jizni-spojka-smv-header-v1|2026-08-14-roadwork-lane-restriction-parts-v1|2026-08-14-broken-vehicle-delay-header-v1|2026-08-14-exit-ramp-tokenize-v1|2026-08-14-d4-km-range-maintenance-v1|2026-08-14-accident-dod-moto-investigation-v1|2026-08-14-obstruction-stationary-vehicle-v1|2026-08-14-accident-participants-may-block-v1|2026-08-14-velky-ujezd-locality-sanitize-v1|2026-08-13-hradec-accident-i57-v1|2026-08-13-karlovy-vary-closure-access-v1|2026-08-13-decin-narrowed-lanes-reason-v1|2026-08-13-beroun-multi-street-work-reason-v1|2026-08-13-direction-abbrev-rich-situation-v1|2026-08-13-km-range-roadwork-detail-v1|2026-08-13-municipality-parenthetical-multi-road-v1|2026-08-13-traffic-fact-preservation-v1|2026-08-13-urban-numbered-road-parse-v1|2026-08-13-date-time-value-column-v4|2026-08-12-date-time-right-edge-v3|2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-defer-feed-hydrate-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
@@ -92,7 +92,7 @@ function staticGate() {
   );
   must(ministries.some((e) => e.id === "mzcr"), "registry:mzcr_is_ministry_by_label");
   must(ministries.length >= 5, "registry:ministries_min_5");
-  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictví/i.test(String(e.label || "")));
+  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictvĂ­/i.test(String(e.label || "")));
   must(mzcrDup.length === 1, "registry:mzcr_not_duplicate");
 
   return { pass: fails.length === 0, fails: fails.slice() };
@@ -188,7 +188,7 @@ async function runPlaywright() {
           window.IUInfoSystem.applyCutoverDom();
         }
       });
-      // Wait for taxonomy/registry shell — not multi‑MB feed — before settings section clicks.
+      // Wait for taxonomy/registry shell â€” not multiâ€‘MB feed â€” before settings section clicks.
       await page.waitForFunction(
         () => {
           const root = document.getElementById("iuPrehledDneRoot");
@@ -241,7 +241,7 @@ async function runPlaywright() {
           gap = Math.round(b.top - a.bottom);
         }
         const save = !!document.querySelector('#iuPdSettings [data-act="settings-save"]');
-        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some((b) => (b.textContent || "").trim() === "Zrušit");
+        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some((b) => (b.textContent || "").trim() === "ZruĹˇit");
         return {
           scrollTop: scroll ? scroll.scrollTop : -1,
           title: h2 ? (h2.textContent || "").trim() : "",
@@ -255,9 +255,9 @@ async function runPlaywright() {
       });
 
       if (openState.scrollTop !== 0) pwFails.push(vp.name + ":open_scroll_top");
-      if (openState.title !== "Můj přehled / Nastavení") pwFails.push(vp.name + ":title");
+      if (openState.title !== "MĹŻj pĹ™ehled / NastavenĂ­") pwFails.push(vp.name + ":title");
       if (openState.rails.length !== 3) pwFails.push(vp.name + ":three_rails");
-      if (openState.rails[0] !== "Témata" || openState.rails[1] !== "Zdroje a instituce" || openState.rails[2] !== "Lokalita") {
+      if (openState.rails[0] !== "TĂ©mata" || openState.rails[1] !== "Zdroje a instituce" || openState.rails[2] !== "Lokalita") {
         pwFails.push(vp.name + ":rail_order");
       }
       if (openState.gap == null || openState.gap < 0 || openState.gap > 28) pwFails.push(vp.name + ":close_gap:" + openState.gap);
@@ -308,7 +308,7 @@ async function runPlaywright() {
       const sourcesTaxonomy = await page.evaluate(() => {
         const html = document.querySelector("#iuPdSettings")?.innerHTML || "";
         const text = document.querySelector("#iuPdSettings")?.innerText || "";
-        const hasDalsi = /Další instituce/.test(text) || /Další instituce/.test(html);
+        const hasDalsi = /DalĹˇĂ­ instituce/.test(text) || /DalĹˇĂ­ instituce/.test(html);
         const sg = [...document.querySelectorAll("[data-sg]")].map((el) => el.getAttribute("data-sg"));
         const mzcrStandalone = [...document.querySelectorAll('input[data-draft-act="source-id"][data-group="standalone"]')].some(
           (el) => el.value === "mzcr"
@@ -333,10 +333,10 @@ async function runPlaywright() {
         const body = document.querySelector('[data-iu-pd-sec="lokalita"]');
         const text = (body?.innerText || "").replace(/\s+/g, " ");
         const lower = text.toLocaleLowerCase("cs");
-        const iCr = lower.indexOf("celá čr");
+        const iCr = lower.indexOf("celĂˇ ÄŤr");
         const iK = lower.indexOf("kraje");
         const iO = lower.indexOf("okresy");
-        const iM = lower.indexOf("město / obec");
+        const iM = lower.indexOf("mÄ›sto / obec");
         return iCr >= 0 && iK > iCr && iO > iK && iM > iO;
       });
       if (!locOrder) pwFails.push(vp.name + ":locality_order");

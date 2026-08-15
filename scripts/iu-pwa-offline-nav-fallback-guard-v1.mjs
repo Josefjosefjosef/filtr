@@ -31,7 +31,7 @@ function auditStatic() {
   if (!sw.includes("offlineNavigationFallback")) fails.push("sw:missing offlineNavigationFallback");
   if (!sw.includes("OFFLINE_DOC_CACHE")) fails.push("sw:missing OFFLINE_DOC_CACHE");
   if (!sw.includes("HTML_LAST_GOOD_CACHE")) fails.push("sw:missing HTML_LAST_GOOD_CACHE");
-  if (!/2026-08-15-broken-vs-generic-accident-worksite-v1|2026-08-15-intersection-locality-precedence-v1|2026-08-15-municipality-relation-oa-accident-v1|2026-08-15-future-traffic-impact-tense-v1|2026-08-14-municipality-street-accident-izs-v1|2026-08-14-praha-jizni-spojka-smv-header-v1|2026-08-14-roadwork-lane-restriction-parts-v1|2026-08-14-broken-vehicle-delay-header-v1|2026-08-14-exit-ramp-tokenize-v1|2026-08-14-d4-km-range-maintenance-v1|2026-08-14-accident-dod-moto-investigation-v1|2026-08-14-obstruction-stationary-vehicle-v1|2026-08-14-accident-participants-may-block-v1|2026-08-14-velky-ujezd-locality-sanitize-v1|2026-08-13-hradec-accident-i57-v1|2026-08-13-karlovy-vary-closure-access-v1|2026-08-13-decin-narrowed-lanes-reason-v1|2026-08-13-beroun-multi-street-work-reason-v1|2026-08-13-direction-abbrev-rich-situation-v1|2026-08-13-km-range-roadwork-detail-v1|2026-08-13-municipality-parenthetical-multi-road-v1|2026-08-13-traffic-fact-preservation-v1|2026-08-13-urban-numbered-road-parse-v1|2026-08-13-date-time-value-column-v4|2026-08-12-date-time-right-edge-v3|2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-ls-mem-guard-v1|2026-08-08-traffic-ui-boot-nonblocking-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
+  if (!/2026-08-15-km-phrase-not-municipality-v1|2026-08-15-broken-vs-generic-accident-worksite-v1|2026-08-15-intersection-locality-precedence-v1|2026-08-15-municipality-relation-oa-accident-v1|2026-08-15-future-traffic-impact-tense-v1|2026-08-14-municipality-street-accident-izs-v1|2026-08-14-praha-jizni-spojka-smv-header-v1|2026-08-14-roadwork-lane-restriction-parts-v1|2026-08-14-broken-vehicle-delay-header-v1|2026-08-14-exit-ramp-tokenize-v1|2026-08-14-d4-km-range-maintenance-v1|2026-08-14-accident-dod-moto-investigation-v1|2026-08-14-obstruction-stationary-vehicle-v1|2026-08-14-accident-participants-may-block-v1|2026-08-14-velky-ujezd-locality-sanitize-v1|2026-08-13-hradec-accident-i57-v1|2026-08-13-karlovy-vary-closure-access-v1|2026-08-13-decin-narrowed-lanes-reason-v1|2026-08-13-beroun-multi-street-work-reason-v1|2026-08-13-direction-abbrev-rich-situation-v1|2026-08-13-km-range-roadwork-detail-v1|2026-08-13-municipality-parenthetical-multi-road-v1|2026-08-13-traffic-fact-preservation-v1|2026-08-13-urban-numbered-road-parse-v1|2026-08-13-date-time-value-column-v4|2026-08-12-date-time-right-edge-v3|2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-ls-mem-guard-v1|2026-08-08-traffic-ui-boot-nonblocking-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1/.test(sw)) fails.push("sw:missing CACHE_VERSION bump");
   if (!sw.includes("iu-feed-offline-v2")) fails.push("sw:missing FEED_OFFLINE_CACHE v2 after media removal");
   if (!sw.includes("X-IU-Offline-Fallback")) fails.push("sw:missing offline fallback header marker");
   if (!offline.includes("Jste offline")) fails.push("offline.html:missing message");
@@ -140,7 +140,7 @@ async function main() {
     const afterReload = await page.evaluate(() => ({
       title: document.title || "",
       bodyLen: (document.body && document.body.innerText || "").length,
-      hasOffline: /offline|připojení|internet/i.test(document.body && document.body.innerText || ""),
+      hasOffline: /offline|pĹ™ipojenĂ­|internet/i.test(document.body && document.body.innerText || ""),
     }));
     if (afterReload.bodyLen > 20) passes.push("offline_reload_has_document");
     else failures.push({ test: "offline_reload_has_document", detail: afterReload });
@@ -158,7 +158,7 @@ async function main() {
     if (onlineBack.ok || onlineBack.status === 200) passes.push("online_recovery_fetch");
     else failures.push({ test: "online_recovery_fetch", detail: onlineBack });
 
-    // SW deploy reload can navigate the page when coming back online — retry cache probe.
+    // SW deploy reload can navigate the page when coming back online â€” retry cache probe.
     let cachesOk = null;
     for (let i = 0; i < 6; i++) {
       try {
