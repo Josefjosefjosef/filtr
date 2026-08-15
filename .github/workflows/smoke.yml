@@ -313,6 +313,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-traffic-dod-divocak-participant-specificity-guard
 
+      - name: Traffic primary street vs cross-street + struck roe guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-traffic-primary-street-cross-street-struck-roe-guard
+
       - name: Traffic D4-class km RANGE + maintenance works guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-traffic-d4-km-range-maintenance-guard

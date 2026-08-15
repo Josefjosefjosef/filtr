@@ -298,6 +298,62 @@ function collisionWithInstrumentalPhrase(instrumental) {
 }
 
 /**
+ * Struck animal as roadway obstacle (not a vehicle×animal collision relation).
+ * "sražená srna na komunikaci" → specific animal + struck state — never invents a vehicle.
+ */
+export function parseStruckAnimalObstacleFromText(rawText) {
+  const text = clean(rawText);
+  const empty = { animal: null, state: null, location: null, adjective: null };
+  if (!text) return empty;
+  const m = text.match(
+    new RegExp(
+      "\\bsražen([áýé])\\s+(" +
+        COLLISION_ANIMAL_TOKEN_RE +
+        ")" +
+        COLLISION_ANIMAL_TRAIL +
+        "(?:\\s+na\\s+(?:komunikaci|vozovce))?",
+      "i"
+    )
+  );
+  if (!m) return empty;
+  const animal = classifyCollisionAnimalToken(m[2]);
+  if (!animal) return empty;
+  const ending = String(m[1] || "").toLowerCase();
+  let adjective = "Sražené";
+  if (ending === "á") adjective = "Sražená";
+  else if (ending === "ý") adjective = "Sražený";
+  const onRoad =
+    /sražen[áýé]\s+\S+(?:\s+\S+){0,2}\s+na\s+(?:komunikaci|vozovce)/i.test(text) ||
+    /zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce|překážka\s+na\s+vozovce/i.test(text);
+  return {
+    animal,
+    state: "struck",
+    location: onRoad ? "roadway" : null,
+    adjective,
+  };
+}
+
+function formatStruckAnimalObstacleLead(facts = {}, source = "") {
+  const text = clean(source);
+  const struck = parseStruckAnimalObstacleFromText(text);
+  const animal = facts.animalType || struck.animal;
+  const isStruck = facts.animalState === "struck" || struck.state === "struck";
+  if (!animal || !isStruck) return null;
+  const row = COLLISION_ANIMAL_CS[animal];
+  if (!row) return null;
+  let adj = struck.adjective;
+  if (!adj) {
+    if (animal === COLLISION_ANIMAL.ROE_DEER || animal === COLLISION_ANIMAL.WILDLIFE) {
+      adj = "Sražená";
+    } else {
+      adj = "Sražený";
+    }
+  }
+  // Prefer "na vozovce" for user-facing cards (source may say komunikaci).
+  return adj + " " + row.nominative + " na vozovce";
+}
+
+/**
  * Parse vehicle × animal (or reverse) collision relation from official comment.
  * "X" is a relation — not an automatic flat participant list.
  */
@@ -2160,8 +2216,84 @@ function splitStreetList(raw) {
 }
 
 /**
+ * Cross-street / landmark near an intersection — NOT the primary event street.
+ * Patterns: "v blízkosti křižovatky s ul. B", "u křižovatky s ulicí B",
+ * "křižovatka s ul. B", "poblíž křižovatky s B".
+ */
+export function extractCrossStreetFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const toStreet = (raw) => {
+    let sn = sanitizeExtractedValueToken(streetBareName(raw));
+    if (!sn) return null;
+    sn = clean(
+      sn.split(
+        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|Od\s+\d|Do\s+\d)/i
+      )[0]
+    );
+    sn = sanitizeExtractedValueToken(sn);
+    if (!sn) return null;
+    if (looksLikeStreetVerbNoise(sn) || /\buzavřen/i.test(sn)) return null;
+    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+    if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
+    return sn;
+  };
+  const patterns = [
+    /(?:v\s+blízkosti|poblíž|u)\s+křižovatk[ay]\s+s\s+(?:ulic[eií]\s+|ul\.\s+)([^,;()]{2,60}?)(?=\s*[,;.]|$)/giu,
+    /křižovatk[ay]\s+s\s+(?:ulic[eií]\s+|ul\.\s+)([^,;()]{2,60}?)(?=\s*[,;.]|$)/giu,
+    /(?:v\s+blízkosti|poblíž|u)\s+křižovatk[ay]\s+s\s+([A-ZÁ-Ž][\p{L}0-9\-]+)(?=\s*[,;.]|$)/giu,
+  ];
+  for (const re of patterns) {
+    re.lastIndex = 0;
+    const m = re.exec(text);
+    if (!m) continue;
+    const sn = toStreet(m[1]);
+    if (sn) return sn;
+  }
+  return null;
+}
+
+/**
+ * Explicit primary street phrase: "v ulici A" / "na ulici A".
+ * Beats cross-street landmarks for primaryStreet selection.
+ */
+export function extractPrimaryStreetPhraseFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const m =
+    text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
+    text.match(/\bna\s+ulici\s+([^,;()]{2,80})/i);
+  if (!m) return null;
+  let sn = sanitizeExtractedValueToken(streetBareName(m[1]));
+  if (!sn) return null;
+  sn = clean(
+    sn.split(
+      /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|před\s+křižovatk|od\s+\d)/i
+    )[0]
+  );
+  sn = sanitizeExtractedValueToken(sn);
+  if (!sn) return null;
+  if (looksLikeStreetVerbNoise(sn) || /\buzavřen/i.test(sn)) return null;
+  if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+  if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
+  return sn;
+}
+
+/** True when a match at index is a cross-street landmark, not the event street. */
+function isCrossStreetLandmarkContext(text, matchIndex) {
+  const before = text.slice(Math.max(0, matchIndex - 90), matchIndex);
+  return (
+    /(?:v\s+blízkosti|poblíž|u)\s+křižovatk[ay]\s+s\s+(?:ulic[eií]\s+|ul\.\s*)?$/i.test(
+      before
+    ) || /křižovatk[ay]\s+s\s+(?:ulic[eií]\s+|ul\.\s*)?$/i.test(before)
+  );
+}
+
+/**
  * Parse street names from NDIC comment: "(ulice A - ulice B)", "ul. A, B", "ul. C".
  * Returns unique bare street names in source order. Never invents.
+ * Cross-street landmarks ("… křižovatky s ul. B") are excluded — use
+ * extractCrossStreetFromOfficialComment.
  */
 export function extractStreetNamesFromOfficialComment(rawText) {
   const text = clean(rawText);
@@ -2214,6 +2346,7 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     /\bul\.\s*([^,;()]{2,60}?)(?=\s+(?:a\s+silnice|v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|v\s+[A-ZÁ-Ž]|Od\s+\d|Do\s+\d)|[,;]|$)/giu
   );
   for (const m of ulLists) {
+    if (isCrossStreetLandmarkContext(scan, m.index)) continue;
     const chunk = clean(m[1]);
     if (!chunk) continue;
     for (const p of chunk.split(/\s*,\s*/)) push(p);
@@ -2231,9 +2364,22 @@ export function extractStreetNamesFromOfficialComment(rawText) {
   }
 
   // Locative form used by NDIC urban events: "v ulici Ještědská v obci …"
-  const vUlici = text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i);
-  if (vUlici) {
-    push(vUlici[1]);
+  // Prefer pushing primary locative FIRST so it wins over later landmark tokens.
+  const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(text);
+  if (primaryPhrase) {
+    if (!found.some((x) => samePlaceName(x, primaryPhrase))) {
+      found.unshift(primaryPhrase);
+    } else {
+      // Move primary to front.
+      const rest = found.filter((x) => !samePlaceName(x, primaryPhrase));
+      found.length = 0;
+      found.push(primaryPhrase, ...rest);
+    }
+  } else {
+    const vUlici = text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i);
+    if (vUlici) {
+      push(vUlici[1]);
+    }
   }
 
   // Comma-separated street lists: "ulice: A, B, C, D" (do not stop at first comma).
@@ -2250,6 +2396,15 @@ export function extractStreetNamesFromOfficialComment(rawText) {
   if (range) {
     push(range.streetFrom);
     push(range.streetTo);
+  }
+
+  // Drop cross-street landmarks that slipped through (e.g. bare "ul. B" near křižovatka).
+  const cross = extractCrossStreetFromOfficialComment(text);
+  if (cross) {
+    const primary = primaryPhrase || (found.length ? found[0] : null);
+    return found.filter(
+      (s) => !samePlaceName(s, cross) || (primary && samePlaceName(s, primary))
+    );
   }
 
   return found;
@@ -2834,6 +2989,7 @@ export function parseOfficialCommentFacts(rawText) {
     streetIntersection: false,
     intersectionStreet1: null,
     intersectionStreet2: null,
+    crossStreet: null,
     tmcLocationFrom: null,
     tmcLocationTo: null,
     city: null,
@@ -2892,6 +3048,9 @@ export function parseOfficialCommentFacts(rawText) {
     trafficImpactModality: null,
     obstructionType: null,
     obstructionContext: null,
+    animalType: null,
+    animalState: null,
+    animalLocation: null,
     strandedVehiclePresent: false,
     immobileVehiclePresent: false,
     vehicleOnShoulder: false,
@@ -3134,10 +3293,22 @@ export function parseOfficialCommentFacts(rawText) {
       out.obstructionType = "FALLEN_TREE";
     } else if (/spadl[ýáé]\s+náklad|ztracen[ýáé]\s+náklad|ztráta\s+nákladu/i.test(text)) {
       out.obstructionType = "LOST_CARGO";
-    } else if (/zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce/i.test(text)) {
+    } else if (
+      /zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce/i.test(text) ||
+      /\bsražen[áýé]\s+(?:divočák|srn|jelen|zvěř|zvíře)/i.test(text)
+    ) {
       out.obstructionType = "ANIMAL";
     } else if (/olej\s+na\s+vozovce/i.test(text)) {
       out.obstructionType = "OIL_ON_ROAD";
+    }
+    {
+      const struck = parseStruckAnimalObstacleFromText(text);
+      if (struck.animal && struck.state === "struck") {
+        out.animalType = struck.animal;
+        out.animalState = struck.state;
+        out.animalLocation = struck.location || "roadway";
+        if (!out.obstructionType) out.obstructionType = "ANIMAL";
+      }
     }
     // "odstavené vozidlo" is a separate source token — may co-occur with porouchané.
     if (/odstaven(?:é|ý|á)?\s+vozidlo/i.test(text)) {
@@ -3409,7 +3580,10 @@ export function parseOfficialCommentFacts(rawText) {
   {
     const range = extractStreetRangeFromOfficialComment(text);
     const intersection = extractStreetIntersectionFromOfficialComment(text);
+    const crossStreet = extractCrossStreetFromOfficialComment(text);
+    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(text);
     const streets = extractStreetNamesFromOfficialComment(text);
+    out.crossStreet = crossStreet;
     if (range) {
       out.streetFrom = range.streetFrom;
       out.streetTo = range.streetTo;
@@ -3431,6 +3605,15 @@ export function parseOfficialCommentFacts(rawText) {
       out.streets = [intersection.street1, intersection.street2];
       out.street = formatStreetDisplayList(out.streets, { asIntersection: true });
       out.locationKind = LOCATION_KIND.INTERSECTION;
+      out.streetMulti = false;
+    } else if (
+      primaryPhrase &&
+      crossStreet &&
+      !samePlaceName(primaryPhrase, crossStreet)
+    ) {
+      // "v ulici A … křižovatky s ul. B" — A is primary; B is landmark only.
+      out.street = primaryPhrase;
+      out.streets = [primaryPhrase];
       out.streetMulti = false;
     } else if (streets.length) {
       out.streets = streets;
@@ -4642,6 +4825,8 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
     return "Spadlý náklad";
   }
   if (type === "ANIMAL") {
+    const struckLead = formatStruckAnimalObstacleLead(facts, text);
+    if (struckLead) return struckLead;
     if (/zvíře/i.test(text)) return "Zvíře na vozovce";
     return "Zvěř na vozovce";
   }
