@@ -106,6 +106,7 @@ export const EVENT_KIND = Object.freeze({
   ROADWORKS: "roadworks",
   CLOSURE: "closure",
   OBSTACLE: "obstacle",
+  OVERSIZE_LOAD: "oversize_load",
   PARKING: "parking",
   WARNING: "warning",
 });
@@ -211,6 +212,7 @@ export const PRIMARY_CAUSE = Object.freeze({
   ACCIDENT: "ACCIDENT",
   BROKEN_VEHICLE: "BROKEN_VEHICLE",
   OBSTACLE: "OBSTACLE",
+  OVERSIZE_LOAD: "OVERSIZE_LOAD",
   ROADWORKS: "ROADWORKS",
   FULL_CLOSURE: "FULL_CLOSURE",
   QUEUE: "QUEUE",
@@ -334,6 +336,144 @@ function formatMetersCs(meters) {
   return String(Math.round(n) === n ? Math.round(n) : n).replace(".", ",") + " m";
 }
 
+/** Explicit oversize / abnormal load signal from official comment. */
+export function hasExplicitOversizeLoad(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/nadměrný\s+náklad/i.test(text)) return true;
+  if (/\bNN\s+převoz\b/i.test(text)) return true;
+  if (/Parametr(?:a|y)?\s+NN\b/i.test(text)) return true;
+  return false;
+}
+
+/**
+ * Route / itinerary event: many ordered waypoints (Trasa: …) — not a single local spot.
+ * Arbitrary EXIT/sjezd inside the itinerary must not become primary card location.
+ */
+export function isRouteBasedTrafficEvent(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  const hasTrasa = /\bTrasa\s*:/i.test(text);
+  const hasOversizeHop =
+    hasExplicitOversizeLoad(text) &&
+    /(?:NN\s+)?převoz\s+\S[\s\S]{0,80}?\s[-–]\s+\S/i.test(text);
+  if (!hasTrasa && !hasOversizeHop) return false;
+  const routeBlob = hasTrasa ? text.split(/\bTrasa\s*:/i).slice(1).join(" ") : text;
+  const segmentBreaks = (routeBlob.match(/\s[–-]\s/g) || []).length;
+  const exitHits = (routeBlob.match(/\bEXIT\s+\d{1,4}\b/gi) || []).length;
+  const roadHits = (
+    routeBlob.match(/\b(?:[DE]\d{1,3}[A-Za-z]?|I{1,3}\/\-?\d{1,4})\b/gi) || []
+  ).length;
+  if (segmentBreaks >= 4) return true;
+  if (segmentBreaks >= 2 && (exitHits >= 1 || roadHits >= 3)) return true;
+  if (hasTrasa && roadHits >= 3) return true;
+  if (hasOversizeHop && segmentBreaks >= 1 && roadHits >= 2) return true;
+  return false;
+}
+
+function parseCsDecimalNumber(raw) {
+  const n = Number(String(raw || "").replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+
+function formatCsDecimalDisplay(rawOrNum) {
+  if (rawOrNum == null || rawOrNum === "") return null;
+  if (typeof rawOrNum === "string" && /[.,]/.test(rawOrNum)) {
+    return String(rawOrNum).replace(".", ",");
+  }
+  const n = Number(rawOrNum);
+  if (!Number.isFinite(n)) return null;
+  if (Math.round(n) === n) return String(Math.round(n));
+  return String(n).replace(".", ",");
+}
+
+function formatTonsCs(tons) {
+  const n = Number(tons);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  const disp = Math.round(n) === n ? String(Math.round(n)) : String(n).replace(".", ",");
+  return disp + " tun";
+}
+
+function normalizeOversizeLoadTypeCs(raw) {
+  const t = clean(raw);
+  if (!t) return null;
+  if (/^turbín/i.test(t)) return "turbína";
+  return t.charAt(0).toLocaleLowerCase("cs") + t.slice(1);
+}
+
+/**
+ * Structured oversize-load facts — length×width×height semantic order.
+ * Source forms like "d3 4,0 m; š 4,80 m; v 5,40 m; hmotnost 213,0 tun".
+ */
+export function parseOversizeLoadFactsFromText(rawText) {
+  const text = clean(rawText);
+  const out = {
+    oversizeLoad: false,
+    loadType: null,
+    loadWeightTons: null,
+    loadLengthM: null,
+    loadWidthM: null,
+    loadHeightM: null,
+    loadLengthDisplay: null,
+    loadWidthDisplay: null,
+    loadHeightDisplay: null,
+  };
+  if (!text) return out;
+  out.oversizeLoad = hasExplicitOversizeLoad(text);
+  const loadPhrase =
+    text.match(/(?:NN\s+)?převoz\s+(turbíny|turbína|[a-záčďéěíňóřšťúůýž]{3,40})\b/i) ||
+    null;
+  if (loadPhrase) out.loadType = normalizeOversizeLoadTypeCs(loadPhrase[1]);
+  const weight =
+    text.match(/hmotnost\s+(\d+(?:[.,]\d+)?)\s*tun/i) ||
+    text.match(/\b(\d+(?:[.,]\d+)?)\s*tun(?:y|a)?\b/i);
+  if (weight) {
+    const n = parseCsDecimalNumber(weight[1]);
+    if (n != null && n > 0 && n < 100000) out.loadWeightTons = n;
+  }
+  const dims = text.match(
+    /\bd(?:3)?\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*š\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*v\s*(\d+(?:[.,]\d+)?)\s*m\b/i
+  );
+  if (dims) {
+    out.loadLengthDisplay = formatCsDecimalDisplay(dims[1]);
+    out.loadWidthDisplay = formatCsDecimalDisplay(dims[2]);
+    out.loadHeightDisplay = formatCsDecimalDisplay(dims[3]);
+    out.loadLengthM = parseCsDecimalNumber(dims[1]);
+    out.loadWidthM = parseCsDecimalNumber(dims[2]);
+    out.loadHeightM = parseCsDecimalNumber(dims[3]);
+  }
+  return out;
+}
+
+function formatLoadDimensionsCs(facts) {
+  const a = facts.loadLengthDisplay || formatCsDecimalDisplay(facts.loadLengthM);
+  const b = facts.loadWidthDisplay || formatCsDecimalDisplay(facts.loadWidthM);
+  const c = facts.loadHeightDisplay || formatCsDecimalDisplay(facts.loadHeightM);
+  if (!a || !b || !c) return null;
+  return a + " × " + b + " × " + c + " m";
+}
+
+export function formatOversizeLoadSituationLead(facts = {}, source = "") {
+  const text = clean(source);
+  const load = clean(facts.loadType);
+  const weight = formatTonsCs(facts.loadWeightTons);
+  const bits = [];
+  const loadPhrase =
+    load && /^turbína$/i.test(load)
+      ? "turbíny"
+      : load;
+  if (loadPhrase && weight) {
+    bits.push("Převoz " + loadPhrase + " o hmotnosti " + weight);
+  } else if (loadPhrase) {
+    bits.push("Převoz " + loadPhrase);
+  } else if (hasExplicitOversizeLoad(text)) {
+    bits.push("Nadměrný náklad");
+  }
+  const dims = formatLoadDimensionsCs(facts);
+  if (dims) bits.push("Rozměry nákladu " + dims);
+  return bits.length ? bits.join(". ") : null;
+}
+
 /**
  * Verb/noise tokens that must never become street names.
  * Use (?=\s|$) — NOT \\b — so Czech names like "Ještědská" are not false-rejected
@@ -371,6 +511,11 @@ const EVENT_KIND_META = Object.freeze({
   },
   [EVENT_KIND.OBSTACLE]: {
     titleCs: "PŘEKÁŽKA NA VOZOVCE",
+    asset: TRAFFIC_SIGN_ASSET.WARNING,
+    illustrationKey: "prekazka",
+  },
+  [EVENT_KIND.OVERSIZE_LOAD]: {
+    titleCs: "NADMĚRNÝ NÁKLAD",
     asset: TRAFFIC_SIGN_ASSET.WARNING,
     illustrationKey: "prekazka",
   },
@@ -2496,6 +2641,17 @@ export function parseOfficialCommentFacts(rawText) {
     objectIdentifier: null,
     locationKind: LOCATION_KIND.UNKNOWN,
     exitNumber: null,
+    exitPrimaryLocation: false,
+    routeBasedEvent: false,
+    oversizeLoad: false,
+    loadType: null,
+    loadWeightTons: null,
+    loadLengthM: null,
+    loadWidthM: null,
+    loadHeightM: null,
+    loadLengthDisplay: null,
+    loadWidthDisplay: null,
+    loadHeightDisplay: null,
     rampType: null,
     rampRelation: null,
     rampTargetRoad: null,
@@ -2529,6 +2685,23 @@ export function parseOfficialCommentFacts(rawText) {
       }
       if (!out.roadNumber) out.roadNumber = er;
     }
+  }
+
+  // Oversize load + route/itinerary semantics (before namedObject promotion).
+  {
+    const loadFacts = parseOversizeLoadFactsFromText(text);
+    out.oversizeLoad = loadFacts.oversizeLoad;
+    out.loadType = loadFacts.loadType;
+    out.loadWeightTons = loadFacts.loadWeightTons;
+    out.loadLengthM = loadFacts.loadLengthM;
+    out.loadWidthM = loadFacts.loadWidthM;
+    out.loadHeightM = loadFacts.loadHeightM;
+    out.loadLengthDisplay = loadFacts.loadLengthDisplay;
+    out.loadWidthDisplay = loadFacts.loadWidthDisplay;
+    out.loadHeightDisplay = loadFacts.loadHeightDisplay;
+    out.routeBasedEvent = isRouteBasedTrafficEvent(text);
+    // Local EXIT events keep EXIT as primary; itinerary waypoints must not.
+    out.exitPrimaryLocation = !!out.exitNumber && !out.routeBasedEvent;
   }
 
   const eventReason = extractEventReasonFromOfficialComment(text);
@@ -2735,11 +2908,15 @@ export function parseOfficialCommentFacts(rawText) {
     out.locationKind = named.kind;
   } else if (out.exitNumber || out.rampType) {
     // Structured EXIT/ramp without a ProperName object — still a situation object.
-    if (out.exitNumber) {
+    // Route itineraries: keep exitNumber for expanded detail, but do not promote a
+    // mid-route EXIT waypoint to namedObject / primary location.
+    if (out.exitNumber && out.exitPrimaryLocation) {
       out.namedObject = "exit " + out.exitNumber;
       out.namedObjectKind = LOCATION_KIND.EXIT_RAMP;
       out.objectIdentifier = out.exitNumber;
       out.locationKind = LOCATION_KIND.EXIT_RAMP;
+    } else if (out.exitNumber && out.routeBasedEvent) {
+      if (out.city) out.locationKind = LOCATION_KIND.MUNICIPALITY;
     } else if (out.rampType === "entrance") {
       out.namedObject =
         out.rampRelation === "on"
@@ -3657,6 +3834,9 @@ export function analyzePrimaryCause(rawText, input = {}) {
   if (explicitBroken) {
     return PRIMARY_CAUSE.BROKEN_VEHICLE;
   }
+  if (hasExplicitOversizeLoad(text)) {
+    return PRIMARY_CAUSE.OVERSIZE_LOAD;
+  }
   if (
     type === "prekazka" ||
     illustrationKey === "prekazka" ||
@@ -3727,6 +3907,14 @@ export function classifyEventPresentation(input = {}) {
 
   if (primaryCause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     return pack(EVENT_KIND.OBSTACLE, "POROUCHANÉ VOZIDLO");
+  }
+  // Explicit oversize load beats generic obstacle / typed překážka.
+  if (
+    primaryCause === PRIMARY_CAUSE.OVERSIZE_LOAD ||
+    facts.oversizeLoad ||
+    hasExplicitOversizeLoad(blob)
+  ) {
+    return pack(EVENT_KIND.OVERSIZE_LOAD);
   }
   if (primaryCause === PRIMARY_CAUSE.OBSTACLE) {
     return pack(EVENT_KIND.OBSTACLE);
@@ -4500,6 +4688,14 @@ export function buildTrafficSituationSummary(input = {}) {
     }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     causeBits.push(formatBrokenDownVehicleSituationLead(facts, source));
+  } else if (
+    cause === PRIMARY_CAUSE.OVERSIZE_LOAD ||
+    event.kind === EVENT_KIND.OVERSIZE_LOAD ||
+    facts.oversizeLoad
+  ) {
+    const oversizeLead = formatOversizeLoadSituationLead(facts, source);
+    if (oversizeLead) causeBits.push(oversizeLead);
+    else causeBits.push("Nadměrný náklad");
   } else if (cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE) {
     // Prefer concrete obstruction facts over bare category "Překážka na vozovce".
     // Category/title may stay PŘEKÁŽKA; never upgrade to ACCIDENT from "po havárii" alone.
@@ -5694,7 +5890,8 @@ export function buildLocalityHeaderModel(input = {}) {
     namedObjectKind: namedObjectKind || null,
     locationKind,
     exitNumber: facts.exitNumber || null,
-    exitHeaderLabel: facts.exitNumber ? "EXIT " + facts.exitNumber : null,
+    exitHeaderLabel:
+      facts.exitPrimaryLocation && facts.exitNumber ? "EXIT " + facts.exitNumber : null,
     cityPart: outsideTunnel ? null : cityPart || null,
     cityPartRow,
     municipalityParts: outsideTunnel ? [] : municipalityParts,
@@ -5903,6 +6100,11 @@ export function buildPlaceAndDirectionLine(input = {}) {
     return bits.join(" · ");
   }
 
+  // Route-based transit (oversize itinerary etc.): municipality + route hint — never a waypoint EXIT.
+  if (facts.routeBasedEvent && muni) {
+    return muni + " · trasa přes více lokalit";
+  }
+
   // Numbered road + known km/dir must never be dropped by named-object / street branches.
   if (road) {
     bits.push(road);
@@ -5936,15 +6138,16 @@ export function buildPlaceAndDirectionLine(input = {}) {
     // Precedence: road → direction → EXIT (never EXIT before směr).
     if (dir) bits.push("směr " + dir);
     // EXIT / ramp relation — never invent; never upgrade near→on.
-    if (facts.exitNumber) {
+    // Route itinerary waypoints: numbered EXIT may exist for expanded detail only.
+    if (facts.exitNumber && facts.exitPrimaryLocation) {
       bits.push("EXIT " + facts.exitNumber);
-    } else if (facts.rampRelation === "on" && facts.rampType === "exit") {
+    } else if (!facts.exitNumber && facts.rampRelation === "on" && facts.rampType === "exit") {
       bits.push("na sjezdu");
-    } else if (facts.rampRelation === "near" && facts.rampType === "exit") {
+    } else if (!facts.exitNumber && facts.rampRelation === "near" && facts.rampType === "exit") {
       bits.push("u sjezdu");
-    } else if (facts.rampRelation === "on" && facts.rampType === "entrance") {
+    } else if (!facts.exitNumber && facts.rampRelation === "on" && facts.rampType === "entrance") {
       bits.push("na nájezdu");
-    } else if (facts.rampRelation === "near" && facts.rampType === "entrance") {
+    } else if (!facts.exitNumber && facts.rampRelation === "near" && facts.rampType === "entrance") {
       bits.push("u nájezdu");
     }
     if (district) {
@@ -6436,10 +6639,14 @@ export function buildTrafficCardPresentation(trafficV1) {
   const roadPres = communication.roadPresentation || classifyRoadPresentation(tv.road, tv);
   const placeLineRaw = buildPlaceAndDirectionLine(tv);
   // Parking: name lives on the municipality/beside row — hide duplicate MÍSTO block.
+  // Route-based cards keep "Municipality · trasa přes více lokalit" even when the sign
+  // already shows the municipality (user-facing place synthesis, not a duplicate bug).
   const placeLine =
     event.kind === EVENT_KIND.PARKING
       ? ""
-      : placeLineWithoutDuplicateMunicipality(placeLineRaw, communication.municipalitySign);
+      : event.facts && event.facts.routeBasedEvent
+        ? placeLineRaw
+        : placeLineWithoutDuplicateMunicipality(placeLineRaw, communication.municipalitySign);
   const situationSummary = buildTrafficSituationSummary(tv);
   const expanded = buildTrafficExpandedDetail(tv);
   const informative = isTrafficCardInformative(tv);
