@@ -639,17 +639,21 @@ export function parseAccidentParticipantsFromText(rawText) {
     add(ACCIDENT_PARTICIPANT.CYCLIST);
   }
 
-  const isAccidentish = /\bnehoda\b|\bhavarovan|\bstřet\b/i.test(text);
+  const isAccidentish =
+    /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(text);
   if (isAccidentish || parts.length) {
     if (
       /nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])/i.test(text) ||
-      /nehoda\s+nákladního\s+vozidla/i.test(text)
+      /nehoda\s+nákladního\s+vozidla/i.test(text) ||
+      /\bNA\b/.test(text)
     ) {
       add(ACCIDENT_PARTICIPANT.TRUCK);
     }
     if (
       /osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
-      /nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)
+      /nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text) ||
+      /havárie\s+OA\b/i.test(text) ||
+      /\bOA\b/.test(text)
     ) {
       add(ACCIDENT_PARTICIPANT.PASSENGER_CAR);
     }
@@ -2411,7 +2415,8 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Accident subtype / participants / soft obstruction — source-grounded only.
   {
-    const isAccidentish = /\bnehoda\b|\bhavarovan|\bstřet\b/i.test(text);
+    const isAccidentish =
+      /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(text);
     const parts = parseAccidentParticipantsFromText(text);
     out.accidentParticipants = parts;
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
@@ -2625,8 +2630,9 @@ export function parseOfficialCommentFacts(rawText) {
       const city = normalizeExtractedMunicipalityName(mObci[4]);
       if (city) {
         out.city = city;
-        // Preserve cadastral wording — never rewrite relation to "v obci".
+        // Preserve cadastral / in-municipality wording — never rewrite "u obce" → "v obci".
         if (mObci[1]) out.municipalityRelation = "v_katastru_obce";
+        else if (mObci[2] || mObci[3]) out.municipalityRelation = "v_obce";
       }
     }
   }
