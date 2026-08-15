@@ -219,6 +219,10 @@ export function chooseHumanLocality(p = {}) {
   const muni = stripMunicipalityParentheticalDetail(fromComment.municipality);
   if (muni && !looksLikeContaminatedLocalityToken(muni)) return muni;
 
+  // Explicit source intersection (StreetA x StreetB) beats weaker TMC segment labels.
+  const intersection = extractStreetIntersectionHint(p.summary);
+  if (intersection) return intersection;
+
   const loc = clean(p.locationLabel);
   const road = clean(p.roadNumber);
   if (
@@ -247,6 +251,31 @@ export function chooseHumanLocality(p = {}) {
 
   if (road) return road;
   return null;
+}
+
+/**
+ * Leading "StreetA x StreetB" intersection from official comment.
+ * Never invents; never treats vehicle abbrev pairs as streets.
+ */
+function extractStreetIntersectionHint(summary) {
+  const s = clean(summary);
+  if (!s) return null;
+  const vehicleAbbrev = /^(OA|NA|DOD|MOTO)$/i;
+  const streetish = (raw) => {
+    const t = clean(raw);
+    if (!t || vehicleAbbrev.test(t)) return null;
+    if (/\s/.test(t)) return null;
+    if (!/(?:ská|cká|ovská|ova|ná|ní|ského|ckého|kého|ého|ího)$/i.test(t)) return null;
+    return t;
+  };
+  const lead = s.match(
+    /^([A-ZÁ-Ž][^,;×x]{1,48}?)\s*[x×]\s*([A-ZÁ-Ž][^,;]{1,48}?)(?=\s*[,;]|$)/u
+  );
+  if (!lead) return null;
+  const a = streetish(lead[1]);
+  const b = streetish(lead[2]);
+  if (!a || !b || a.toLowerCase() === b.toLowerCase()) return null;
+  return a + " × " + b;
 }
 
 /**

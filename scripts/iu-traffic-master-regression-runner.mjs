@@ -38,6 +38,7 @@ const SUITES = [
   "iu-traffic-roadwork-lane-restriction-municipality-parts-guard",
   "iu-traffic-future-traffic-impact-tense-guard",
   "iu-traffic-municipality-relation-oa-accident-guard",
+  "iu-traffic-intersection-locality-precedence-guard",
 ];
 
 const rows = [];
