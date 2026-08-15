@@ -29,6 +29,7 @@ const SUITES = [
   "iu-traffic-obstacle-oil-cleanup-facts-guard",
   "iu-traffic-oversize-route-waypoint-guard",
   "iu-traffic-accident-dod-moto-investigation-guard",
+  "iu-traffic-dod-divocak-participant-specificity-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
   "iu-traffic-motorway-direction-exit-order-guard",

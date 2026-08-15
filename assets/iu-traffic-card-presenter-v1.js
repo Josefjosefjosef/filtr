@@ -251,6 +251,245 @@ export const TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT = Object.freeze({
   MOTO: ACCIDENT_PARTICIPANT.MOTORCYCLE,
 });
 
+/**
+ * Animal / wildlife in abbrev collision pairs (DOD x divočák).
+ * Not an ACCIDENT_PARTICIPANT — animals are the other side of a collision relation.
+ */
+export const COLLISION_ANIMAL = Object.freeze({
+  WILD_BOAR: "WILD_BOAR",
+  ROE_DEER: "ROE_DEER",
+  DEER: "DEER",
+  WILDLIFE: "WILDLIFE",
+});
+
+const COLLISION_ANIMAL_CS = Object.freeze({
+  [COLLISION_ANIMAL.WILD_BOAR]: { nominative: "divočák", instrumental: "divočákem" },
+  [COLLISION_ANIMAL.ROE_DEER]: { nominative: "srna", instrumental: "srnou" },
+  [COLLISION_ANIMAL.DEER]: { nominative: "jelen", instrumental: "jelenem" },
+  [COLLISION_ANIMAL.WILDLIFE]: { nominative: "zvěř", instrumental: "zvěří" },
+});
+
+const COLLISION_ANIMAL_TOKEN_RE =
+  "divočák(?:em|a)?|srn(?:a|ou|y)|jelen(?:em|a)?|zvěř(?:í)?|zvíře(?:tem)?";
+
+/** Trailing boundary after Czech animal tokens (ř/č break JS \\b). */
+const COLLISION_ANIMAL_TRAIL = "(?=\\s|[.,;:!?]|$|\\)|\\])";
+
+function classifyCollisionAnimalToken(raw) {
+  const t = clean(raw).toLowerCase();
+  if (/^divočák/.test(t)) return COLLISION_ANIMAL.WILD_BOAR;
+  if (/^srn/.test(t)) return COLLISION_ANIMAL.ROE_DEER;
+  if (/^jelen/.test(t)) return COLLISION_ANIMAL.DEER;
+  if (/^zvěř|^zvíře/.test(t)) return COLLISION_ANIMAL.WILDLIFE;
+  return null;
+}
+
+function collisionAnimalInstrumentalCs(animal) {
+  const row = COLLISION_ANIMAL_CS[animal];
+  return row ? row.instrumental : null;
+}
+
+/** Czech preposition before instrumental: se before s/z/š/ž, else s. */
+function collisionWithInstrumentalPhrase(instrumental) {
+  const instr = clean(instrumental);
+  if (!instr) return null;
+  const prep = /^[szšž]/i.test(instr) ? "se" : "s";
+  return prep + " " + instr;
+}
+
+/**
+ * Parse vehicle × animal (or reverse) collision relation from official comment.
+ * "X" is a relation — not an automatic flat participant list.
+ */
+export function parseCollisionRelationFromText(rawText) {
+  const text = clean(rawText);
+  const empty = {
+    relation: null,
+    vehicle: null,
+    animal: null,
+    animalInstrumental: null,
+    leftRaw: null,
+    rightRaw: null,
+  };
+  if (!text) return empty;
+
+  const abrAnimal = text.match(
+    new RegExp(
+      "\\b(DOD|MOTO|OA|NA)\\s*[x×X]\\s*(" +
+        COLLISION_ANIMAL_TOKEN_RE +
+        ")" +
+        COLLISION_ANIMAL_TRAIL,
+      "i"
+    )
+  );
+  if (abrAnimal) {
+    const animal = classifyCollisionAnimalToken(abrAnimal[2]);
+    const vehicle =
+      TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[String(abrAnimal[1]).toUpperCase()] || null;
+    if (animal && vehicle) {
+      return {
+        relation: "collision",
+        vehicle,
+        animal,
+        animalInstrumental: collisionAnimalInstrumentalCs(animal),
+        leftRaw: String(abrAnimal[1]).toUpperCase(),
+        rightRaw: clean(abrAnimal[2]),
+      };
+    }
+  }
+
+  const animalAbr = text.match(
+    new RegExp(
+      "(" +
+        COLLISION_ANIMAL_TOKEN_RE +
+        ")\\s*[x×X]\\s*(DOD|MOTO|OA|NA)\\b",
+      "i"
+    )
+  );
+  if (animalAbr) {
+    const animal = classifyCollisionAnimalToken(animalAbr[1]);
+    const vehicle =
+      TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[String(animalAbr[2]).toUpperCase()] || null;
+    if (animal && vehicle) {
+      return {
+        relation: "collision",
+        vehicle,
+        animal,
+        animalInstrumental: collisionAnimalInstrumentalCs(animal),
+        leftRaw: clean(animalAbr[1]),
+        rightRaw: String(animalAbr[2]).toUpperCase(),
+      };
+    }
+  }
+
+  // Word forms (after expandTrafficAbbreviationsCs or source prose).
+  const wordForms = [
+    {
+      re: new RegExp(
+        "dodávk(?:a|y|ou)?\\s*[x×X]\\s*(" +
+          COLLISION_ANIMAL_TOKEN_RE +
+          ")" +
+          COLLISION_ANIMAL_TRAIL,
+        "i"
+      ),
+      vehicle: ACCIDENT_PARTICIPANT.VAN,
+      animalIdx: 1,
+    },
+    {
+      re: new RegExp(
+        "(?:osobní(?:ho)?\\s+automobil(?:u)?|nákladní(?:ho)?\\s+(?:automobil(?:u)?|vozidl[oa])|motocykl(?:u|em)?)\\s*[x×X]\\s*(" +
+          COLLISION_ANIMAL_TOKEN_RE +
+          ")" +
+          COLLISION_ANIMAL_TRAIL,
+        "i"
+      ),
+      vehicle: null,
+      animalIdx: 1,
+    },
+  ];
+  for (const form of wordForms) {
+    const m = text.match(form.re);
+    if (!m) continue;
+    const animal = classifyCollisionAnimalToken(m[form.animalIdx]);
+    let vehicle = form.vehicle;
+    if (!vehicle) {
+      if (/osobní/i.test(m[0])) vehicle = ACCIDENT_PARTICIPANT.PASSENGER_CAR;
+      else if (/nákladní/i.test(m[0])) vehicle = ACCIDENT_PARTICIPANT.TRUCK;
+      else if (/motocykl/i.test(m[0])) vehicle = ACCIDENT_PARTICIPANT.MOTORCYCLE;
+    }
+    if (animal && vehicle) {
+      return {
+        relation: "collision",
+        vehicle,
+        animal,
+        animalInstrumental: collisionAnimalInstrumentalCs(animal),
+        leftRaw: clean(m[0].split(/[x×X]/)[0]),
+        rightRaw: clean(m[form.animalIdx]),
+      };
+    }
+  }
+
+  return empty;
+}
+
+/**
+ * True when "nákladní vozidlo" / "nehoda nákladního vozidla" is only a general
+ * class phrase — not an explicit NA abbrev or "nákladní automobil" type token.
+ */
+function isGeneralTruckClassPhraseOnly(text) {
+  const t = clean(text);
+  if (/\bNA\b/.test(t)) return false;
+  if (/nákladní(?:ho)?\s+automobil/i.test(t)) return false;
+  return (
+    /nehoda\s+nákladního\s+vozidla/i.test(t) ||
+    /nákladní(?:ho)?\s+vozidl[oa]/i.test(t)
+  );
+}
+
+/**
+ * Prefer the most specific safe vehicle when a general class phrase and a more
+ * specific abbrev collision vehicle both appear (e.g. "nehoda nákladního vozidla"
+ * + "DOD x divočák" → VAN, not TRUCK+VAN).
+ */
+export function reconcileAccidentParticipantsWithSpecificity(partsIn, rawText, collisionIn = null) {
+  const text = clean(rawText);
+  let parts = Array.isArray(partsIn) ? partsIn.slice() : [];
+  const collision = collisionIn || parseCollisionRelationFromText(text);
+  let genericVehicleFallback = false;
+  let genericVehicleFallbackReason = null;
+
+  if (
+    collision.relation === "collision" &&
+    collision.vehicle &&
+    collision.animal
+  ) {
+    if (
+      collision.vehicle === ACCIDENT_PARTICIPANT.VAN &&
+      parts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+      isGeneralTruckClassPhraseOnly(text)
+    ) {
+      parts = parts.filter((p) => p !== ACCIDENT_PARTICIPANT.TRUCK);
+    }
+    if (
+      collision.vehicle === ACCIDENT_PARTICIPANT.PASSENGER_CAR &&
+      parts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+      isGeneralTruckClassPhraseOnly(text) &&
+      !/\bNA\b/.test(text)
+    ) {
+      parts = parts.filter((p) => p !== ACCIDENT_PARTICIPANT.TRUCK);
+    }
+    // Ensure collision vehicle is present.
+    if (!parts.includes(collision.vehicle)) parts.unshift(collision.vehicle);
+  }
+
+  // Explicit NA×DOD (or NA×DOD word forms) = two vehicles — keep both.
+  const explicitTruckVanPair = /\b(?:NA|DOD)\s*[x×X]\s*(?:NA|DOD)\b/.test(text);
+
+  // Unresolved TRUCK + VAN without an explicit NA×DOD pair → generic fallback for lead.
+  if (
+    parts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+    parts.includes(ACCIDENT_PARTICIPANT.VAN) &&
+    !explicitTruckVanPair
+  ) {
+    // Animal collision with both TRUCK and VAN still present = real type conflict
+    // (e.g. "nákladní automobil" + "DOD x divočák") — generic vehicle only then.
+    if (collision.relation === "collision" && collision.animal) {
+      genericVehicleFallback = true;
+      genericVehicleFallbackReason = "truck_vs_van_conflict_with_animal_collision";
+    } else if (!(collision.relation === "collision" && collision.vehicle)) {
+      genericVehicleFallback = true;
+      genericVehicleFallbackReason = "truck_vs_van_unresolved";
+    }
+  }
+
+  return {
+    participants: parts,
+    collision,
+    genericVehicleFallback,
+    genericVehicleFallbackReason,
+  };
+}
+
 /** Emergency-response arrival state — EN_ROUTE ≠ ON_SCENE. */
 export const EMERGENCY_SERVICES_STATUS = Object.freeze({
   EN_ROUTE: "EN_ROUTE",
@@ -774,6 +1013,7 @@ export function expandTrafficAbbreviationsCs(text) {
 /**
  * Parse accident participants from RAW NDIC text into ACCIDENT_PARTICIPANT tokens.
  * Prefers structured abbrev pairs (DOD x MOTO) and full phrases; never invents.
+ * Vehicle × animal pairs are a collision relation — animal is not a participant token.
  */
 export function parseAccidentParticipantsFromText(rawText) {
   const text = clean(rawText);
@@ -782,6 +1022,11 @@ export function parseAccidentParticipantsFromText(rawText) {
     if (!token) return;
     if (!parts.includes(token)) parts.push(token);
   };
+
+  const collision = parseCollisionRelationFromText(text);
+  if (collision.relation === "collision" && collision.vehicle) {
+    add(collision.vehicle);
+  }
 
   const abrPair = text.match(/\b(DOD|MOTO|OA|NA)\s*[x×X]\s*(DOD|MOTO|OA|NA)\b/);
   if (abrPair) {
@@ -852,13 +1097,26 @@ export function parseAccidentParticipantsFromText(rawText) {
     /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(
       stripGenericEmergencyOrAccidentWorksitePhrase(text)
     );
+  const hasSpecificAbbrevCollision =
+    (collision.relation === "collision" && !!collision.vehicle) ||
+    !!abrPair ||
+    !!abrVulnerable ||
+    !!vulnerableAbr;
+
   if (isAccidentish || parts.length) {
     if (
       /nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])/i.test(text) ||
       /nehoda\s+nákladního\s+vozidla/i.test(text) ||
       /\bNA\b/.test(text)
     ) {
-      add(ACCIDENT_PARTICIPANT.TRUCK);
+      // Specific DOD/OA/MOTO × animal (or other abbrev collision) beats a broader
+      // "nehoda nákladního vozidla" class phrase — do not invent a second vehicle.
+      const skipGeneralTruck =
+        hasSpecificAbbrevCollision &&
+        collision.vehicle &&
+        collision.vehicle !== ACCIDENT_PARTICIPANT.TRUCK &&
+        isGeneralTruckClassPhraseOnly(text);
+      if (!skipGeneralTruck) add(ACCIDENT_PARTICIPANT.TRUCK);
     }
     if (
       /osobní(?:ho)?\s+automobil(?:u)?/i.test(text) ||
@@ -882,7 +1140,7 @@ export function parseAccidentParticipantsFromText(rawText) {
     }
   }
 
-  return parts;
+  return reconcileAccidentParticipantsWithSpecificity(parts, text, collision).participants;
 }
 
 /** Genitive labels for "Nehoda …" leads — source-grounded participant tokens only. */
@@ -2611,6 +2869,14 @@ export function parseOfficialCommentFacts(rawText) {
     workDurationHintMinutes: null,
     accidentSubtype: null,
     accidentParticipants: [],
+    collisionRelation: null,
+    collisionVehicle: null,
+    collisionAnimal: null,
+    collisionAnimalInstrumental: null,
+    collisionLeftRaw: null,
+    collisionRightRaw: null,
+    genericVehicleFallback: false,
+    genericVehicleFallbackReason: null,
     injuryPresent: false,
     accidentInvestigationActive: false,
     emergencyServicesStatus: null,
@@ -2768,19 +3034,30 @@ export function parseOfficialCommentFacts(rawText) {
   {
     // Generic worksite "nouze nebo nehoda" must not invent accident subtype alone.
     const isAccidentish = hasExplicitAccidentConfirmation(text, {});
-    const parts = parseAccidentParticipantsFromText(text);
+    const collision = parseCollisionRelationFromText(text);
+    const recon = reconcileAccidentParticipantsWithSpecificity(
+      parseAccidentParticipantsFromText(text),
+      text,
+      collision
+    );
+    const parts = recon.participants;
     out.accidentParticipants = parts;
+    out.collisionRelation = recon.collision.relation || null;
+    out.collisionVehicle = recon.collision.vehicle || null;
+    out.collisionAnimal = recon.collision.animal || null;
+    out.collisionAnimalInstrumental = recon.collision.animalInstrumental || null;
+    out.collisionLeftRaw = recon.collision.leftRaw || null;
+    out.collisionRightRaw = recon.collision.rightRaw || null;
+    out.genericVehicleFallback = !!recon.genericVehicleFallback;
+    out.genericVehicleFallbackReason = recon.genericVehicleFallbackReason || null;
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
     out.accidentInvestigationActive = /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(text);
     out.emergencyServicesStatus = parseEmergencyServicesStatusFromText(text);
     out.policePresent = /\bPČR\b/i.test(text);
     out.fireRescuePresent = /\bHZS\b/i.test(text);
     out.ambulancePresent = /\bZZS\b/i.test(text);
-    if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
-      out.accidentSubtype = "TRUCK_ACCIDENT";
-    } else if (/nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)) {
-      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
-    } else if (
+    // Prefer reconciled participants over a broader class phrase for subtype.
+    if (
       parts.includes(ACCIDENT_PARTICIPANT.VAN) &&
       parts.includes(ACCIDENT_PARTICIPANT.MOTORCYCLE)
     ) {
@@ -2795,6 +3072,20 @@ export function parseOfficialCommentFacts(rawText) {
       parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR)
     ) {
       out.accidentSubtype = "TRUCK_AND_PASSENGER_CAR";
+    } else if (
+      recon.collision.relation === "collision" &&
+      recon.collision.animal &&
+      parts.length === 1 &&
+      parts[0] === ACCIDENT_PARTICIPANT.VAN
+    ) {
+      out.accidentSubtype = "VAN_ACCIDENT";
+    } else if (
+      /nehoda\s+nákladního\s+vozidla/i.test(text) &&
+      parts.includes(ACCIDENT_PARTICIPANT.TRUCK)
+    ) {
+      out.accidentSubtype = "TRUCK_ACCIDENT";
+    } else if (/nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)) {
+      out.accidentSubtype = "PASSENGER_CAR_ACCIDENT";
     } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.TRUCK)) {
       out.accidentSubtype = "TRUCK_ACCIDENT";
     } else if (isAccidentish && parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR)) {
@@ -4141,6 +4432,45 @@ export function formatAccidentSituationLead(source, factsIn = null) {
   const structuredParts = Array.isArray(facts.accidentParticipants)
     ? facts.accidentParticipants
     : parseAccidentParticipantsFromText(text);
+  const collision =
+    facts.collisionRelation === "collision" && facts.collisionAnimal
+      ? {
+          relation: "collision",
+          vehicle: facts.collisionVehicle || null,
+          animal: facts.collisionAnimal,
+          animalInstrumental:
+            facts.collisionAnimalInstrumental ||
+            collisionAnimalInstrumentalCs(facts.collisionAnimal),
+        }
+      : parseCollisionRelationFromText(text);
+  const genericVehicleFallback = !!facts.genericVehicleFallback;
+
+  // Vehicle × animal collision relation — "s/se" + instrumental, not a flat "A a B" list.
+  if (collision.relation === "collision" && collision.animal) {
+    const instr =
+      collision.animalInstrumental || collisionAnimalInstrumentalCs(collision.animal);
+    const withAnimal = collisionWithInstrumentalPhrase(instr);
+    if (withAnimal) {
+      const vehicleToken =
+        structuredParts.length === 1
+          ? structuredParts[0]
+          : collision.vehicle && structuredParts.includes(collision.vehicle)
+            ? collision.vehicle
+            : collision.vehicle;
+      const conflictTruckVan =
+        structuredParts.includes(ACCIDENT_PARTICIPANT.TRUCK) &&
+        structuredParts.includes(ACCIDENT_PARTICIPANT.VAN);
+      if (genericVehicleFallback || conflictTruckVan) {
+        return appendInjuryIfPresent("Nehoda vozidla " + withAnimal, text);
+      }
+      const gen =
+        vehicleToken && ACCIDENT_PARTICIPANT_GENITIVE_CS[vehicleToken]
+          ? ACCIDENT_PARTICIPANT_GENITIVE_CS[vehicleToken]
+          : null;
+      if (gen) return appendInjuryIfPresent("Nehoda " + gen + " " + withAnimal, text);
+      return appendInjuryIfPresent("Nehoda vozidla " + withAnimal, text);
+    }
+  }
 
   // Animal collision phrases (explicit in NDIC comment).
   if (
@@ -4390,9 +4720,10 @@ function extractSecondaryImpactBits(source, cause, causeBits) {
   ) {
     bits.push("Překážka na vozovce");
   }
+  // Prefer specific animal already in the collision lead (divočák) over bare wildlife.
   if (
     /zvěř\s+na\s+vozovce/i.test(text) &&
-    !/zvěř|srn|jelen/i.test(lead)
+    !/zvěř|srn|jelen|divočák/i.test(lead)
   ) {
     bits.push("Zvěř na vozovce");
   }
