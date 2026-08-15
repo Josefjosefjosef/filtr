@@ -34,6 +34,7 @@ const SUITES = [
   "iu-traffic-roadwork-construction-vehicle-exit-guard",
   "iu-traffic-wrong-way-vehicle-hazard-guard",
   "iu-traffic-multi-road-closure-named-event-guard",
+  "iu-traffic-closure-accident-diversion-exit-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
   "iu-traffic-motorway-direction-exit-order-guard",
