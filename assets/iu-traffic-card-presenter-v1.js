@@ -4716,14 +4716,9 @@ export function analyzePrimaryCause(rawText, input = {}) {
       /překážka\s+na\s+vozovce/i.test(text) ||
       /stojící\s+vozidlo/i.test(text));
   if (!softAfterAccidentOnly && explicitAccident) {
-    // Typed/full closure keeps CLOSURE taxonomy; accident is the cause fact for composer.
-    if (
-      type === "uzavirka" ||
-      illustrationKey === "uzavirka" ||
-      (isFullScopeClosure(text) &&
-        !isShoulderOrVergeRestriction(text) &&
-        !isSingleLaneRestriction(text))
-    ) {
+    // Typed uzavirka keeps CLOSURE taxonomy; accident is the cause fact for composer.
+    // Bare accident + full-road closure still classifies as ACCIDENT (NEHODA title).
+    if (type === "uzavirka" || illustrationKey === "uzavirka") {
       return PRIMARY_CAUSE.FULL_CLOSURE;
     }
     return PRIMARY_CAUSE.ACCIDENT;
