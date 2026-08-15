@@ -2568,6 +2568,40 @@ export function extractSpecificWorkFromOfficialComment(rawText) {
  * Distinct from generic "práce na silnici" — specific traffic impact at the works site.
  * Never invents; never upgrades to a new event type.
  */
+/**
+ * Critical wrong-way vehicle hazard from official comment.
+ * Must not match "provoz převeden do protisměru" (lane diversion).
+ * Duplicate "vozidlo v protisměru" phrases collapse to one structured fact.
+ */
+export function parseWrongWayVehicleFactsFromText(rawText) {
+  const text = clean(rawText);
+  const empty = {
+    wrongWayVehicle: false,
+    dangerKeywordPresent: false,
+  };
+  if (!text) return empty;
+  // Vehicle in opposing traffic — not construction/lane "do protisměru" diversions.
+  const wrongWayVehicle =
+    /\bvozidl[oa]\s+v\s+protisměru\b/i.test(text) ||
+    /\bv\s+protisměru\s+(?:jede|jedoucí|se\s+pohybuje)\s+vozidl/i.test(text);
+  // "POZOR ! NEBEZPEČÍ !" is an emphasis signal — structured as present/absent only.
+  // Avoid \\b: JS word boundaries break on diacritics (Č/Í).
+  const dangerKeywordPresent = /nebezpeč/i.test(text);
+  return {
+    wrongWayVehicle,
+    dangerKeywordPresent,
+  };
+}
+
+/** User-facing lead for wrong-way vehicle — one sentence even if source repeats the fact. */
+export function formatWrongWayVehicleSituationLead(facts = {}, source = "") {
+  const text = clean(source);
+  const parsed = parseWrongWayVehicleFactsFromText(text);
+  const hit = facts.wrongWayVehicle === true || parsed.wrongWayVehicle;
+  if (!hit) return null;
+  return "Vozidlo v protisměru";
+}
+
 export function parseConstructionSiteTrafficFactsFromText(rawText) {
   const text = clean(rawText);
   const empty = {
@@ -3091,6 +3125,8 @@ export function parseOfficialCommentFacts(rawText) {
     constructionEquipmentMovement: false,
     constructionSiteExit: false,
     cautionModality: null,
+    wrongWayVehicle: false,
+    dangerKeywordPresent: false,
     accessInformation: null,
     locationQualifier: null,
     openLaneCount: null,
@@ -3217,6 +3253,11 @@ export function parseOfficialCommentFacts(rawText) {
     out.constructionEquipmentMovement = siteFacts.constructionEquipmentMovement;
     out.constructionSiteExit = siteFacts.constructionSiteExit;
     out.cautionModality = siteFacts.cautionModality;
+  }
+  {
+    const ww = parseWrongWayVehicleFactsFromText(text);
+    out.wrongWayVehicle = ww.wrongWayVehicle;
+    out.dangerKeywordPresent = ww.dangerKeywordPresent;
   }
   out.accessInformation = extractAccessInformationFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
@@ -3353,7 +3394,10 @@ export function parseOfficialCommentFacts(rawText) {
   // Obstruction subtype / micro-location — never invents, never upgrades to ACCIDENT.
   {
     const afterAccident = /po\s+havárii/i.test(text);
-    if (/stojící\s+vozidlo/i.test(text)) {
+    // Wrong-way vehicle is a critical hazard — beats generic obstacle subtypes.
+    if (out.wrongWayVehicle) {
+      out.obstructionType = "WRONG_WAY_VEHICLE";
+    } else if (/stojící\s+vozidlo/i.test(text)) {
       out.obstructionType = "STATIONARY_VEHICLE";
       if (afterAccident) out.obstructionContext = "AFTER_ACCIDENT";
       const loc =
@@ -4476,6 +4520,10 @@ export function classifyEventPresentation(input = {}) {
   ) {
     return pack(EVENT_KIND.OVERSIZE_LOAD);
   }
+  // Critical wrong-way hazard — title must not stay generic PŘEKÁŽKA NA VOZOVCE.
+  if (facts.wrongWayVehicle || parseWrongWayVehicleFactsFromText(blob).wrongWayVehicle) {
+    return pack(EVENT_KIND.OBSTACLE, "VOZIDLO V PROTISMĚRU");
+  }
   if (primaryCause === PRIMARY_CAUSE.OBSTACLE) {
     return pack(EVENT_KIND.OBSTACLE);
   }
@@ -4895,6 +4943,14 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
   const type = clean(facts.obstructionType);
   const ctx = clean(facts.obstructionContext);
   const detail = clean(facts.locationDetail);
+
+  // Wrong-way vehicle beats every other obstruction subtype in user-facing summary.
+  {
+    const wwLead = formatWrongWayVehicleSituationLead(facts, text);
+    if (wwLead || type === "WRONG_WAY_VEHICLE") {
+      return wwLead || "Vozidlo v protisměru";
+    }
+  }
 
   if (type === "STATIONARY_VEHICLE" && ctx === "AFTER_ACCIDENT") {
     return detail ? "Stojící vozidlo po havárii " + detail : "Stojící vozidlo po havárii";

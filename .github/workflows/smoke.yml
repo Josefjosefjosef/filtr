@@ -321,6 +321,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-traffic-roadwork-construction-vehicle-exit-guard
 
+      - name: Traffic wrong-way vehicle hazard guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-traffic-wrong-way-vehicle-hazard-guard
+
       - name: Traffic D4-class km RANGE + maintenance works guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-traffic-d4-km-range-maintenance-guard
