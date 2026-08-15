@@ -683,7 +683,7 @@ function renderTrafficCardBody(ev, url) {
     : "";
   const numberMod =
     (vm.roadBadge && vm.roadBadge.numberBadge) ||
-    ROAD_BADGE_CLASS[vm.roadBadge.roadClass] ||
+    ROAD_BADGE_CLASS[(vm.roadBadge && vm.roadBadge.roadClass) || ""] ||
     ROAD_BADGE_CLASS.UNKNOWN ||
     "unknown";
   const outsideCityTunnelMode = !!(
@@ -716,11 +716,26 @@ function renderTrafficCardBody(ev, url) {
           vm.roadBadge.roadTypeIconAlt || ""
         )}" width="28" height="28" loading="lazy" decoding="async" />`
       : "";
-  const roadBadge = vm.roadBadge.road
-    ? `<span class="iuPdRoadBadge iuPdRoadBadge--${esc(numberMod)}" title="${esc(
-        vm.roadBadge.label
-      )}">${esc(vm.roadBadge.road)}</span>`
-    : "";
+  const roadBadgeList =
+    Array.isArray(vm.roadBadges) && vm.roadBadges.length
+      ? vm.roadBadges
+      : vm.roadBadge && vm.roadBadge.road
+        ? [vm.roadBadge]
+        : [];
+  const roadBadge = roadBadgeList
+    .map((b) => {
+      if (!b || !b.road) return "";
+      const mod =
+        b.numberBadge ||
+        ROAD_BADGE_CLASS[b.roadClass] ||
+        ROAD_BADGE_CLASS.UNKNOWN ||
+        "unknown";
+      return `<span class="iuPdRoadBadge iuPdRoadBadge--${esc(mod)}" title="${esc(
+        b.label || ""
+      )}">${esc(b.road)}</span>`;
+    })
+    .join("");
+  const hasRoadBadge = roadBadgeList.some((b) => b && b.road);
   const muniLabel =
     vm.municipalitySignLabel ||
     (vm.presentation &&
@@ -797,7 +812,7 @@ function renderTrafficCardBody(ev, url) {
     !isParking &&
     !outsideCityTunnelMode &&
     !muniSign &&
-    !vm.roadBadge.road &&
+    !hasRoadBadge &&
     !beside &&
     fallbackPlaceRaw &&
     fallbackNorm !== besideNorm
@@ -815,8 +830,8 @@ function renderTrafficCardBody(ev, url) {
   );
   // Road + "u obce" + municipality sign (source order), e.g. [23] u obce [STUDENEC].
   // TMC/locality beside must not override this header (kept in detail LOKALITA).
-  const roadThenNearMuni = !!(nearPrefix && muniSign && roadBadge);
-  const nearMuniOnly = !!(nearPrefix && muniSign && !roadBadge);
+  const roadThenNearMuni = !!(nearPrefix && muniSign && hasRoadBadge);
+  const nearMuniOnly = !!(nearPrefix && muniSign && !hasRoadBadge);
   // Outside-city tunnel: ICON → tunnel name → road badge (existing road badge system).
   const outsideTunnelHeader = !!(outsideCityTunnelMode && tunnelObjectIcon && besideBit);
   // Motorway + direction + EXIT: icon → badge → (beside) → direction → EXIT.
