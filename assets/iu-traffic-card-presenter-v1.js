@@ -257,16 +257,22 @@ export const EMERGENCY_SERVICES_STATUS = Object.freeze({
 
 /**
  * Distinguish "jedou na místo" (en route) from "na místě" (on scene).
- * Returns null when IZS is absent or status is not safely known.
+ * Covers generic IZS and named units (PČR / HZS / ZZS).
+ * Returns null when emergency response is absent or status is not safely known.
  */
 export function parseEmergencyServicesStatusFromText(rawText) {
   const text = clean(rawText);
-  if (!text || !/\b(?:IZS|složky\s+IZS)\b/i.test(text)) return null;
+  if (!text || !/\b(?:IZS|složky\s+IZS|PČR|HZS|ZZS)\b/i.test(text)) return null;
   // EN_ROUTE first — "na místo jedou" must never collapse to ON_SCENE.
   if (
     /na\s+místo\s+(?:jedou|jede|směřují|směřuje)\s+složky\s+IZS/i.test(text) ||
     /(?:jedou|jede|směřují|směřuje)\s+na\s+místo(?:\s+složky\s+IZS)?/i.test(text) ||
-    /složky\s+IZS\s+(?:jedou|jede|směřují)\s+na\s+místo/i.test(text)
+    /složky\s+IZS\s+(?:jedou|jede|směřují)\s+na\s+místo/i.test(text) ||
+    /(?:PČR|HZS|ZZS)(?:\s+a\s+(?:PČR|HZS|ZZS))+\s+(?:jedou|jede|směřují)\s+na\s+místo/i.test(
+      text
+    ) ||
+    /\b(?:PČR|HZS|ZZS)\s+(?:jede|jedou|směřuje|směřují)\s+na\s+místo/i.test(text) ||
+    /na\s+místo\s+(?:jedou|jede)\s+(?:PČR|HZS|ZZS)/i.test(text)
   ) {
     return EMERGENCY_SERVICES_STATUS.EN_ROUTE;
   }
@@ -274,11 +280,58 @@ export function parseEmergencyServicesStatusFromText(rawText) {
     /na\s+místě\s+(?:jsou|je)\s+složky\s+IZS/i.test(text) ||
     /na\s+místě\s+složky\s+IZS/i.test(text) ||
     /složky\s+IZS\s+na\s+místě/i.test(text) ||
-    /(?:jsou|je)\s+na\s+místě\s+složky\s+IZS/i.test(text)
+    /(?:jsou|je)\s+na\s+místě\s+složky\s+IZS/i.test(text) ||
+    /(?:PČR|HZS|ZZS)(?:\s+a\s+(?:PČR|HZS|ZZS))+\s+na\s+místě/i.test(text) ||
+    /\b(?:PČR|HZS|ZZS)\s+na\s+místě/i.test(text) ||
+    /na\s+místě\s+(?:jsou|je)\s+(?:PČR|HZS|ZZS)/i.test(text) ||
+    /na\s+místě\s+(?:PČR|HZS|ZZS)(?:\s+a\s+(?:PČR|HZS|ZZS))*/i.test(text)
   ) {
     return EMERGENCY_SERVICES_STATUS.ON_SCENE;
   }
   return null;
+}
+
+/** Named emergency units proven in source — never invent ZZS/PČR/HZS. */
+export function parseNamedEmergencyUnitsFromText(rawText) {
+  const text = clean(rawText);
+  const units = [];
+  if (/\bPČR\b/i.test(text)) units.push("PČR");
+  if (/\bHZS\b/i.test(text)) units.push("HZS");
+  if (/\bZZS\b/i.test(text)) units.push("ZZS");
+  return units;
+}
+
+/** User-facing emergency circumstance — prefer named units over generic IZS. */
+function formatEmergencyServicesSituationBit(source) {
+  const text = clean(source);
+  const status = parseEmergencyServicesStatusFromText(text);
+  if (!status) return null;
+  const units = parseNamedEmergencyUnitsFromText(text);
+  if (units.length) {
+    const list =
+      units.length === 1
+        ? units[0]
+        : units.slice(0, -1).join(", ") + " a " + units[units.length - 1];
+    if (status === EMERGENCY_SERVICES_STATUS.EN_ROUTE) {
+      return units.length === 1 ? "Na místo jede " + list : "Na místo jedou " + list;
+    }
+    return units.length === 1 ? "Na místě je " + list : "Na místě jsou " + list;
+  }
+  if (status === EMERGENCY_SERVICES_STATUS.EN_ROUTE) {
+    return "Na místo jedou složky IZS";
+  }
+  if (status === EMERGENCY_SERVICES_STATUS.ON_SCENE) {
+    return "Na místě složky IZS";
+  }
+  return null;
+}
+
+/** Format meter lengths with existing "N m" spacing convention. */
+function formatMetersCs(meters) {
+  if (meters == null || !Number.isFinite(Number(meters))) return null;
+  const n = Number(meters);
+  if (n <= 0) return null;
+  return String(Math.round(n) === n ? Math.round(n) : n).replace(".", ",") + " m";
 }
 
 /**
@@ -2416,6 +2469,14 @@ export function parseOfficialCommentFacts(rawText) {
     injuryPresent: false,
     accidentInvestigationActive: false,
     emergencyServicesStatus: null,
+    policePresent: false,
+    fireRescuePresent: false,
+    ambulancePresent: false,
+    oilOnRoad: false,
+    slipperyRoadExpected: false,
+    cleanupWorkInProgress: false,
+    impactLengthMeters: null,
+    impactLengthSemantic: null,
     trafficImpactKind: null,
     trafficImpactModality: null,
     obstructionType: null,
@@ -2539,6 +2600,9 @@ export function parseOfficialCommentFacts(rawText) {
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
     out.accidentInvestigationActive = /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(text);
     out.emergencyServicesStatus = parseEmergencyServicesStatusFromText(text);
+    out.policePresent = /\bPČR\b/i.test(text);
+    out.fireRescuePresent = /\bHZS\b/i.test(text);
+    out.ambulancePresent = /\bZZS\b/i.test(text);
     if (/nehoda\s+nákladního\s+vozidla/i.test(text)) {
       out.accidentSubtype = "TRUCK_ACCIDENT";
     } else if (/nehoda\s+osobního\s+(?:automobilu|vozidla)/i.test(text)) {
@@ -2608,6 +2672,8 @@ export function parseOfficialCommentFacts(rawText) {
       out.obstructionType = "LOST_CARGO";
     } else if (/zvěř\s+na\s+vozovce|zvíře\s+na\s+vozovce/i.test(text)) {
       out.obstructionType = "ANIMAL";
+    } else if (/olej\s+na\s+vozovce/i.test(text)) {
+      out.obstructionType = "OIL_ON_ROAD";
     }
     // "odstavené vozidlo" is a separate source token — may co-occur with porouchané.
     if (/odstaven(?:é|ý|á)?\s+vozidlo/i.test(text)) {
@@ -2624,6 +2690,31 @@ export function parseOfficialCommentFacts(rawText) {
       /(?:nepojízdn|porouchan|odstaven|\bOA\b|vozidl)/i.test(text)
     ) {
       out.vehicleOnShoulder = true;
+    }
+    // Oil / slippery / cleanup / impact length — specific facts beat generic obstacle.
+    if (/olej\s+na\s+vozovce/i.test(text)) {
+      out.oilOnRoad = true;
+      if (!out.obstructionType) out.obstructionType = "OIL_ON_ROAD";
+    }
+    if (/očekávejte\s+kluzkou\s+vozovku/i.test(text)) {
+      out.slipperyRoadExpected = true;
+    }
+    if (
+      /probíhají\s+odklízecí\s+práce/i.test(text) ||
+      /(?:^|[,;]\s*)odklízecí\s+práce(?:\s*[,;.]|$)/i.test(text)
+    ) {
+      out.cleanupWorkInProgress = true;
+    }
+    {
+      // "délka 26m" / "délka 26 m" = affected segment length — never kilometráž.
+      const lenM = text.match(/\bdélka\s+(\d+(?:[.,]\d+)?)\s*m\b/i);
+      if (lenM) {
+        const n = Number(String(lenM[1]).replace(",", "."));
+        if (Number.isFinite(n) && n > 0 && n < 100000) {
+          out.impactLengthMeters = Math.round(n) === n ? Math.round(n) : n;
+          out.impactLengthSemantic = "AFFECTED_SEGMENT";
+        }
+      }
     }
   }
 
@@ -4036,6 +4127,10 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
     if (/zvíře/i.test(text)) return "Zvíře na vozovce";
     return "Zvěř na vozovce";
   }
+  if (type === "OIL_ON_ROAD" || facts.oilOnRoad) {
+    const meters = formatMetersCs(facts.impactLengthMeters);
+    return meters ? "Olej na vozovce v délce " + meters : "Olej na vozovce";
+  }
 
   // Source fallbacks when structured type was not filled but phrase is explicit.
   if (/stojící\s+vozidlo\s+po\s+havárii/i.test(text)) {
@@ -4051,6 +4146,19 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
   if (/spadl[ýáé]\s+strom|padl[ýáé]\s+strom/i.test(text)) return "Spadlý strom";
   if (/spadl[ýáé]\s+náklad/i.test(text)) return "Spadlý náklad";
   if (/ztracen[ýáé]\s+náklad|ztráta\s+nákladu/i.test(text)) return "Ztracený náklad";
+  if (/olej\s+na\s+vozovce/i.test(text)) {
+    const meters = formatMetersCs(facts.impactLengthMeters);
+    if (!meters) {
+      const lenM = text.match(/\bdélka\s+(\d+(?:[.,]\d+)?)\s*m\b/i);
+      if (lenM) {
+        const n = Number(String(lenM[1]).replace(",", "."));
+        if (Number.isFinite(n) && n > 0) {
+          return "Olej na vozovce v délce " + formatMetersCs(n);
+        }
+      }
+    }
+    return meters ? "Olej na vozovce v délce " + meters : "Olej na vozovce";
+  }
   return null;
 }
 
@@ -4132,12 +4240,23 @@ function extractSituationCircumstanceBits(source) {
   const text = clean(source);
   const bits = [];
   if (/mimořádná\s+událost/i.test(text)) bits.push("Mimořádná událost");
-  const izsStatus = parseEmergencyServicesStatusFromText(text);
-  if (izsStatus === EMERGENCY_SERVICES_STATUS.EN_ROUTE) {
-    bits.push("Na místo jedou složky IZS");
-  } else if (izsStatus === EMERGENCY_SERVICES_STATUS.ON_SCENE) {
-    bits.push("Na místě složky IZS");
+  // Slippery road — preserve "očekávejte" modality when source uses it.
+  if (/očekávejte\s+kluzkou\s+vozovku/i.test(text)) {
+    bits.push("Očekávejte kluzkou vozovku");
+  } else if (
+    /(?:^|[,;]\s*)kluzk[áa]\s+vozovka(?:\s*[,;.]|$)/i.test(text) ||
+    /kluzkou\s+vozovku/i.test(text)
+  ) {
+    bits.push("Kluzká vozovka");
   }
+  if (
+    /probíhají\s+odklízecí\s+práce/i.test(text) ||
+    /(?:^|[,;]\s*)odklízecí\s+práce(?:\s*[,;.]|$)/i.test(text)
+  ) {
+    bits.push("Probíhají odklízecí práce");
+  }
+  const emergencyBit = formatEmergencyServicesSituationBit(text);
+  if (emergencyBit) bits.push(emergencyBit);
   if (/pravidelná\s+údržba/i.test(text)) bits.push("Pravidelná údržba");
   const speed =
     text.match(/\brychlost\s+snížen[ao]\s+na\s+(\d+)\s*km(?:\/h)?/i) ||
