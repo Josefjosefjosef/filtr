@@ -798,6 +798,32 @@ export function isPrahaCityPartName(raw) {
 }
 
 /**
+ * True when a token/phrase is a kilometrage location ("na km 46", "mezi km …"),
+ * never a municipality or city-district name. Does NOT reject real places that
+ * merely start with "Na " (e.g. "Na Hrázi") — requires the "km" kilometrage token.
+ */
+export function isKilometerLocationPhrase(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  // Bare / prefix km phrases used as fake municipality crumbs.
+  if (/^(?:na|mezi|od|do)\s+km\b/i.test(t)) return true;
+  if (/^km\b/i.test(t)) return true;
+  // Full phrases: "na km 46,0", "mezi km 45.9 a 46", "od km 10 do km 12", "km 45,9–46".
+  if (
+    /\b(?:na|mezi|od|do)\s+km\s+-?\d+(?:[.,]\d+)?(?:\s*(?:–|-|—|−|až|a|do)\s*-?\d+(?:[.,]\d+)?)?/i.test(
+      t
+    ) &&
+    /^(?:na|mezi|od|do)\s+km\b/i.test(t)
+  ) {
+    return true;
+  }
+  if (/^km\s+-?\d+(?:[.,]\d+)?(?:\s*(?:–|-|—|−|až|a)\s*-?\d+(?:[.,]\d+)?)?$/i.test(t)) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Split "City N" / "City Na" urban district labels into municipality + cityPart.
  * Praha keeps the dedicated helper; other cities use the same numeric-district shape
  * (e.g. "Plzeň 4" → municipality Plzeň, cityPart Plzeň 4). Never invents a city.
@@ -805,6 +831,8 @@ export function isPrahaCityPartName(raw) {
 export function splitMunicipalityAndCityPart(raw) {
   const t = clean(raw);
   if (!t) return null;
+  // "Na km 46" is kilometrage, never "City N" urban district.
+  if (isKilometerLocationPhrase(t)) return null;
   if (isPrahaCityPartName(t)) {
     return { municipality: "Praha", cityPart: t };
   }
@@ -812,6 +840,7 @@ export function splitMunicipalityAndCityPart(raw) {
   if (!m) return null;
   const base = clean(m[1]);
   if (!base || !/^[A-ZÁ-Ž]/u.test(base)) return null;
+  if (isKilometerLocationPhrase(base)) return null;
   if (looksLikeRoadNumberToken(base)) return null;
   if (looksLikeSegmentOrAreaLabel(base)) return null;
   if (
@@ -829,6 +858,9 @@ export function splitMunicipalityAndCityPart(raw) {
     return null;
   }
   if (/^(ulice|okres|okr\.|silnice|dálnice)$/i.test(base)) return null;
+  // "Na km" / "Mezi km" must never become municipality base of a fake "City N" split.
+  if (/^(?:na|mezi|od|do)\s+km$/i.test(base)) return null;
+  if (/^km$/i.test(base)) return null;
   return { municipality: base, cityPart: t };
 }
 
@@ -1197,6 +1229,7 @@ export function looksLikeStreetName(raw) {
 export function looksLikeNonMunicipalityPlace(raw) {
   const t = clean(raw);
   if (!t) return false;
+  if (isKilometerLocationPhrase(t)) return true;
   if (isPrahaCityPartName(t)) return true;
   if (isNumericCityPartName(t)) return true;
   if (
@@ -1233,6 +1266,7 @@ function isNamedNonStreetKind(kind) {
 export function normalizeExtractedMunicipalityName(raw) {
   let city = clean(raw);
   if (!city) return null;
+  if (isKilometerLocationPhrase(city)) return null;
   if (
     /^(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d)/i.test(
       city
@@ -2933,11 +2967,12 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   // Urban district after street/road: ", Plzeň 4," / ", Brno 1," — demote to city + cityPart.
+  // Never treat kilometrage crumbs (", Na km 46," from "Na km 46,0") as urban districts.
   if (!out.cityPart || !out.city) {
     const urbanDist = text.match(
       /,\s*([A-ZÁ-Ž][^,;]{1,40}?\s+\d{1,2}[A-Za-z]?)\s*,/u
     );
-    if (urbanDist) {
+    if (urbanDist && !isKilometerLocationPhrase(urbanDist[1])) {
       const split = splitMunicipalityAndCityPart(urbanDist[1]);
       if (split) {
         if (!out.cityPart) out.cityPart = split.cityPart;
@@ -2972,6 +3007,9 @@ export function parseOfficialCommentFacts(rawText) {
       out.city = split.municipality;
     }
   }
+  // Kilometrage phrases must never survive as municipality / city-district facts.
+  if (out.city && isKilometerLocationPhrase(out.city)) out.city = null;
+  if (out.cityPart && isKilometerLocationPhrase(out.cityPart)) out.cityPart = null;
 
   // --- Parking facility + occupancy (P+R / P+G / house / named place) ---
   const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,80})/i);
@@ -5356,6 +5394,7 @@ export function resolveMunicipalitySignName(input = {}) {
     }
   }
   if (!city) return null;
+  if (isKilometerLocationPhrase(city)) return null;
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
   if (looksLikeRoadNumberToken(city)) return null;
