@@ -26,6 +26,7 @@ const SUITES = [
   "iu-traffic-hradec-accident-i57-guard",
   "iu-traffic-accident-participants-may-block-guard",
   "iu-traffic-obstruction-stationary-vehicle-guard",
+  "iu-traffic-obstacle-oil-cleanup-facts-guard",
   "iu-traffic-accident-dod-moto-investigation-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
