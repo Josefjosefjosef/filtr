@@ -37,6 +37,7 @@ const SUITES = [
   "iu-traffic-broken-vehicle-delay-header-guard",
   "iu-traffic-roadwork-lane-restriction-municipality-parts-guard",
   "iu-traffic-future-traffic-impact-tense-guard",
+  "iu-traffic-municipality-relation-oa-accident-guard",
 ];
 
 const rows = [];
