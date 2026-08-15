@@ -1928,6 +1928,70 @@ export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   return resolved;
 }
 
+/**
+ * All safely evidenced presentation roads (source order, deduped).
+ * Never collapses multi-road source to a single structured `input.road`.
+ * Never hard-limits to 2 roads.
+ */
+export function resolvePresentationRoadNumbers(input = {}, factsIn = null) {
+  const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
+  const classHint = input.roadClass || input.roadClassLabel || null;
+  const structured = clean(input.road || input.roadNumber || "");
+  const structuredNum = ((structured.match(/^(?:I{1,3}|II|III|D)?\/?(\d{1,6}[A-Za-z]?)$/i) ||
+    [])[1] || "").toLowerCase();
+
+  const candidates = [];
+  if (Array.isArray(facts.roadNumbers)) {
+    for (const r of facts.roadNumbers) {
+      const c = clean(r);
+      if (c) candidates.push(c);
+    }
+  }
+  if (Array.isArray(input.roads)) {
+    for (const r of input.roads) {
+      const c = clean(r);
+      if (c) candidates.push(c);
+    }
+  }
+
+  const upgradeWithStructured = (raw) => {
+    let r = clean(raw);
+    if (!r) return null;
+    if (structured && structuredNum) {
+      const bare = r.match(/^(\d{1,6}[A-Za-z]?)$/i);
+      const classed = r.match(/^(I{1,3}|II|III|D)\/(\d{1,6}[A-Za-z]?)$/i);
+      const rNum = (bare ? bare[1] : classed ? classed[2] : "").toLowerCase();
+      // Upgrade only the matching number — never replace a different road with structured.
+      if (rNum && rNum === structuredNum) {
+        const preferred = preferClassedRoadNumber(structured, r);
+        if (preferred) r = preferred;
+      }
+    }
+    if (classHint) {
+      const composed = composeRoadNumberWithClass(r, classHint);
+      if (composed) r = composed;
+    }
+    return r;
+  };
+
+  const seen = new Set();
+  const ordered = [];
+  for (const raw of candidates) {
+    const r = upgradeWithStructured(raw);
+    if (!r) continue;
+    const key = r.toUpperCase().replace(/\s+/g, "");
+    if (seen.has(key)) continue;
+    seen.add(key);
+    ordered.push(r);
+  }
+
+  if (!ordered.length) {
+    const one = resolvePresentationRoadNumber(input, facts);
+    return one ? [one] : [];
+  }
+  return ordered;
+}
+
 export function classifyLocationKindFromName(name) {
   const t = clean(name);
   if (!t) return LOCATION_KIND.UNKNOWN;
@@ -2791,7 +2855,38 @@ export function hasExplicitAlternatingTrafficSource(rawText) {
 }
 
 /**
+ * Explicit named sporting event after "sportovní akce" (semicolon / comma / space).
+ * Never invents a name when source only says "sportovní akce".
+ */
+function extractNamedSportingEventFromText(cut) {
+  const text = clean(cut);
+  if (!text || !/sportovní\s+akc/i.test(text)) return null;
+  let raw = null;
+  // Prefer clause after "sportovní akce;" — allow "55. ročník …" (dots inside name).
+  const afterSemi = text.match(/sportovní\s+akce\s*[;,]\s*([^;]+)/i);
+  if (afterSemi) raw = afterSemi[1];
+  if (!raw) {
+    const afterSpace = text.match(
+      /sportovní\s+akce\s+((?:\d{1,3}\.\s*ročník\s+)?[\p{L}\d][^;]{3,120})/iu
+    );
+    if (afterSpace) raw = afterSpace[1];
+  }
+  if (!raw) return null;
+  let name = sanitizeExtractedValueToken(clean(raw));
+  name = clean(name.replace(/^\d{1,3}\.\s*ročník\s+/i, ""));
+  name = clean(name.replace(/[,.\s]+$/g, ""));
+  // Stop at trailing validity / publisher crumbs if still present.
+  name = clean(
+    name.split(/\s+(?:Od\s+\d|Do\s+\d|Vydal\s*:)/i)[0]
+  );
+  if (!name || name.length < 4) return null;
+  if (/^(uzavřeno|omezeno|neprůjezdn|sportovní\s+akc)$/i.test(name)) return null;
+  return name;
+}
+
+/**
  * Explicit event reason from "z důvodu …" plus optional quoted event/action name.
+ * Also extracts sporting-event reason without "z důvodu" when source lists it as a fact.
  */
 export function extractEventReasonFromOfficialComment(rawText) {
   const text = clean(rawText);
@@ -2799,39 +2894,54 @@ export function extractEventReasonFromOfficialComment(rawText) {
   // Never take publisher lines as reason / quoted names.
   const cut = text.split(/\bVydal\s*:/i)[0] || text;
   const m = cut.match(/\bz\s+důvodu\s+(.+)$/is);
-  if (!m) return { reasonText: null, eventName: null, reasonKind: null };
-  // Keep abbreviation dots; stop at semicolon, direction clause, or sentence end.
-  let reasonText = clipExtractedValueAtStructuralEnd(m[1], 180);
-  reasonText = clean(reasonText.split(/\s*;\s*/)[0]);
-  reasonText = clean(
-    reasonText.split(/\s+(?:směr|ve\s+směru|v\s+směru)\b/i)[0]
-  );
-  reasonText = sanitizeExtractedValueToken(reasonText);
-  if (!reasonText) return { reasonText: null, eventName: null, reasonKind: null };
-  // Drop trailing sentence crumbs after a closed quote.
-  reasonText = clean(reasonText.replace(/(["“”„][^"“”„]*["“”„]).*$/u, "$1"));
-  let eventName = null;
-  const q =
-    reasonText.match(/[„"]([^„"]{3,80})[“"]/) ||
-    reasonText.match(/"([^"]{3,80})"/) ||
-    reasonText.match(/„([^“]{3,80})“/);
-  if (q) eventName = sanitizeExtractedValueToken(q[1] || q[2]);
-  // Quote may sit just after reason when period was between name and end.
-  if (!eventName) {
-    const q2 =
-      cut.match(/\bz\s+důvodu[\s\S]{0,160}?[„"]([^„"]{3,80})[“"]/i) ||
-      cut.match(/\bz\s+důvodu[\s\S]{0,160}?"([^"]{3,80})"/i);
-    if (q2) eventName = sanitizeExtractedValueToken(q2[1]);
+  if (m) {
+    // Keep abbreviation dots; stop at semicolon, direction clause, or sentence end.
+    let reasonText = clipExtractedValueAtStructuralEnd(m[1], 180);
+    reasonText = clean(reasonText.split(/\s*;\s*/)[0]);
+    reasonText = clean(
+      reasonText.split(/\s+(?:směr|ve\s+směru|v\s+směru)\b/i)[0]
+    );
+    reasonText = sanitizeExtractedValueToken(reasonText);
+    if (!reasonText) return { reasonText: null, eventName: null, reasonKind: null };
+    // Drop trailing sentence crumbs after a closed quote.
+    reasonText = clean(reasonText.replace(/(["“”„][^"“”„]*["“”„]).*$/u, "$1"));
+    let eventName = null;
+    const q =
+      reasonText.match(/[„"]([^„"]{3,80})[“"]/) ||
+      reasonText.match(/"([^"]{3,80})"/) ||
+      reasonText.match(/„([^“]{3,80})“/);
+    if (q) eventName = sanitizeExtractedValueToken(q[1] || q[2]);
+    // Quote may sit just after reason when period was between name and end.
+    if (!eventName) {
+      const q2 =
+        cut.match(/\bz\s+důvodu[\s\S]{0,160}?[„"]([^„"]{3,80})[“"]/i) ||
+        cut.match(/\bz\s+důvodu[\s\S]{0,160}?"([^"]{3,80})"/i);
+      if (q2) eventName = sanitizeExtractedValueToken(q2[1]);
+    }
+    let reasonKind = "OTHER";
+    if (/sportovní\s+akc/i.test(reasonText)) reasonKind = "SPORTING_EVENT";
+    else if (/kulturní\s+akc/i.test(reasonText)) reasonKind = "CULTURAL_EVENT";
+    else if (/stavební\s+prac/i.test(reasonText)) reasonKind = "ROADWORKS";
+    else if (/\búdržb/i.test(reasonText)) reasonKind = "MAINTENANCE";
+    else if (/\boprav/i.test(reasonText)) reasonKind = "REPAIR";
+    else if (/\bhavár/i.test(reasonText)) reasonKind = "ACCIDENT";
+    else if (/\bpožár/i.test(reasonText)) reasonKind = "FIRE";
+    else if (/\bIZS\b/i.test(reasonText)) reasonKind = "EMERGENCY_SERVICES";
+    if (reasonKind === "SPORTING_EVENT" && !eventName) {
+      eventName = extractNamedSportingEventFromText(cut);
+    }
+    return { reasonText, eventName, reasonKind };
   }
-  let reasonKind = "OTHER";
-  if (/kulturní\s+akc/i.test(reasonText)) reasonKind = "CULTURAL_EVENT";
-  else if (/stavební\s+prac/i.test(reasonText)) reasonKind = "ROADWORKS";
-  else if (/\búdržb/i.test(reasonText)) reasonKind = "MAINTENANCE";
-  else if (/\boprav/i.test(reasonText)) reasonKind = "REPAIR";
-  else if (/\bhavár/i.test(reasonText)) reasonKind = "ACCIDENT";
-  else if (/\bpožár/i.test(reasonText)) reasonKind = "FIRE";
-  else if (/\bIZS\b/i.test(reasonText)) reasonKind = "EMERGENCY_SERVICES";
-  return { reasonText, eventName, reasonKind };
+
+  // Bare NDIC fact list: "uzavřeno; sportovní akce; <named event>"
+  if (/sportovní\s+akc/i.test(cut)) {
+    return {
+      reasonText: "sportovní akce",
+      eventName: extractNamedSportingEventFromText(cut),
+      reasonKind: "SPORTING_EVENT",
+    };
+  }
+  return { reasonText: null, eventName: null, reasonKind: null };
 }
 
 function formatParkingStatusLabel(facts) {
@@ -4653,7 +4763,7 @@ function situationDedupeKey(sentence) {
   k = k.replace(/[.!?]+$/g, "");
   k = k.replace(/\s+/g, " ");
   if (
-    /^(silnice|komunikace|dálnice) (?:je|bude) uzavřena|uzavírka komunikace|uzavřeno$|bude uzavřeno/.test(
+    /^(silnice|komunikace|dálnice) (?:je|bude|jsou|budou) uzavřen[ay]|uzavírka komunikace|uzavřeno$|bude uzavřeno/.test(
       k
     )
   ) {
@@ -5689,8 +5799,39 @@ export function buildTrafficSituationSummary(input = {}) {
         formatImpactBePredicate("Silnice", "uzavřena v obou směrech", lifecycle)
       );
     } else {
-      // Prefer natural full-road phrasing; do not invent closure when type alone.
-      causeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
+      // Prefer natural full-road phrasing; keep specific sporting/named reason above generic.
+      const roadsForClosure = resolvePresentationRoadNumbers(input, facts);
+      const multiRoadClosed = roadsForClosure.length >= 2;
+      const sporting =
+        facts.reasonKind === "SPORTING_EVENT" ||
+        /sportovní\s+akc/i.test(clean(facts.eventReason) || "");
+      const namedEvent = clean(facts.eventName);
+      if (sporting && namedEvent) {
+        const pred =
+          "uzavřen" +
+          (multiRoadClosed ? "y" : "a") +
+          " kvůli sportovní akci " +
+          namedEvent;
+        causeBits.push(
+          multiRoadClosed
+            ? formatImpactPluralBePredicate("Silnice", pred, lifecycle)
+            : formatImpactBePredicate("Silnice", pred, lifecycle)
+        );
+        facts._closureReasonMerged = true;
+      } else if (sporting) {
+        const pred =
+          "uzavřen" + (multiRoadClosed ? "y" : "a") + " kvůli sportovní akci";
+        causeBits.push(
+          multiRoadClosed
+            ? formatImpactPluralBePredicate("Silnice", pred, lifecycle)
+            : formatImpactBePredicate("Silnice", pred, lifecycle)
+        );
+        facts._closureReasonMerged = true;
+      } else if (multiRoadClosed) {
+        causeBits.push(formatImpactPluralBePredicate("Silnice", "uzavřeny", lifecycle));
+      } else {
+        causeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
+      }
     }
   } else if (event.kind === EVENT_KIND.QUEUE) {
     if (/silný provoz|hustý provoz/i.test(source)) {
@@ -5988,9 +6129,13 @@ export function buildTrafficSituationSummary(input = {}) {
     const eventName = clean(facts.eventName);
     if (reasonText || eventName) {
       let reasonBit = null;
-      if (facts._roadworksReasonMerged) {
-        // Already folded into the roadworks lead — do not duplicate.
+      if (facts._roadworksReasonMerged || facts._closureReasonMerged) {
+        // Already folded into the roadworks / closure lead — do not duplicate.
         reasonBit = null;
+      } else if (facts.reasonKind === "SPORTING_EVENT") {
+        reasonBit = eventName
+          ? "Uzavírka je z důvodu sportovní akce " + eventName
+          : "Uzavírka je z důvodu sportovní akce";
       } else if (facts.reasonKind === "CULTURAL_EVENT") {
         reasonBit = eventName
           ? 'Uzavírka je z důvodu konání kulturní akce „' + eventName + "“"
@@ -6016,8 +6161,12 @@ export function buildTrafficSituationSummary(input = {}) {
       }
       if (
         reasonBit &&
-        !causeBits.some((b) => /z důvodu|kulturní akc/i.test(b)) &&
-        !circumstanceBits.some((b) => /z důvodu|kulturní akc/i.test(b))
+        !causeBits.some((b) =>
+          /z důvodu|kulturní akc|sportovní akc|kvůli sportovní/i.test(b)
+        ) &&
+        !circumstanceBits.some((b) =>
+          /z důvodu|kulturní akc|sportovní akc|kvůli sportovní/i.test(b)
+        )
       ) {
         circumstanceBits.push(reasonBit);
       }
@@ -6746,7 +6895,8 @@ function pushUniqueBit(bits, value) {
 export function buildPlaceAndDirectionLine(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const bits = [];
-  const road = resolvePresentationRoadNumber(input, facts);
+  const roads = resolvePresentationRoadNumbers(input, facts);
+  const road = roads[0] || null;
   const dir =
     normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "") || "";
   const kmResolved = resolveCollapsedKilometerLabel(input, facts);
@@ -6782,10 +6932,10 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   // Numbered road + known km/dir must never be dropped by named-object / street branches.
-  if (road) {
-    bits.push(road);
-    {
-      const roadDisplayName = resolveRoadDisplayName(road);
+  if (roads.length) {
+    for (const r of roads) {
+      bits.push(r);
+      const roadDisplayName = resolveRoadDisplayName(r);
       if (roadDisplayName) bits.push(roadDisplayName);
     }
     if (facts.municipalityRelation === "u_obce") {
@@ -6802,7 +6952,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
       if (muni && !bits.includes(muni)) bits.push(muni);
       else if (
         location &&
-        location !== road &&
+        !roads.some((r) => samePlaceName(location, r)) &&
         !looksLikeRoadNumberToken(location) &&
         !bits.includes(location) &&
         !(facts.namedObject && samePlaceName(location, facts.namedObject))
@@ -6892,7 +7042,11 @@ export function buildPlaceAndDirectionLine(input = {}) {
 export function buildCommunicationLine(input = {}) {
   const facts = parseOfficialCommentFacts(sourceBlob(input));
   const hdr = buildLocalityHeaderModel(input);
-  const eventRoad = resolvePresentationRoadNumber(input, facts);
+  const roadsResolved = resolvePresentationRoadNumbers(input, facts);
+  const eventRoad =
+    roadsResolved[0] ||
+    (hdr.outsideCityTunnelMode ? hdr.outsideCityTunnelRoad : null) ||
+    null;
   const roadResolved =
     eventRoad ||
     (hdr.outsideCityTunnelMode ? hdr.outsideCityTunnelRoad : null) ||
@@ -6906,25 +7060,39 @@ export function buildCommunicationLine(input = {}) {
       input.isMotorVehicleRoad === true ||
       hdr.namedSmvRoad === true,
   };
-  let roadPres = classifyRoadPresentation(roadResolved || input.road, classifyOpts);
-  // Outside-city tunnel header uses tunnel object icon — not motorway/SMV road-type icon.
-  if (hdr.outsideCityTunnelMode) {
-    roadPres = {
-      ...roadPres,
-      roadTypeIcon: null,
-      roadTypeIconAlt: "",
-      showMotorwayIcon: false,
-      showMotorVehiclesIcon: false,
-    };
-  } else if (hdr.namedSmvRoad && !roadPres.showMotorVehiclesIcon) {
-    roadPres = {
-      ...roadPres,
+  const stripTunnelIcons = (pres) => ({
+    ...pres,
+    roadTypeIcon: null,
+    roadTypeIconAlt: "",
+    showMotorwayIcon: false,
+    showMotorVehiclesIcon: false,
+  });
+  const ensureSmvIcon = (pres) => {
+    if (!hdr.namedSmvRoad || pres.showMotorVehiclesIcon) return pres;
+    return {
+      ...pres,
       roadTypeIcon: TRAFFIC_SIGN_ASSET.MOTOR_VEHICLES,
       roadTypeIconAlt: "Silnice pro motorová vozidla",
       showMotorwayIcon: false,
       showMotorVehiclesIcon: true,
     };
+  };
+  const roadList =
+    roadsResolved.length > 0
+      ? roadsResolved
+      : roadResolved
+        ? [roadResolved]
+        : [input.road].map(clean).filter(Boolean);
+  let roadPresentations = roadList.map((r) => classifyRoadPresentation(r, classifyOpts));
+  if (!roadPresentations.length) {
+    roadPresentations = [classifyRoadPresentation(roadResolved || input.road, classifyOpts)];
   }
+  if (hdr.outsideCityTunnelMode) {
+    roadPresentations = roadPresentations.map(stripTunnelIcons);
+  } else {
+    roadPresentations = roadPresentations.map(ensureSmvIcon);
+  }
+  let roadPres = roadPresentations[0];
   const head = buildHeadLocalityLabel(input);
   const dir =
     normalizeDirectionHuman(clean(input.direction) || facts.directionHuman || "") || null;
@@ -6936,6 +7104,8 @@ export function buildCommunicationLine(input = {}) {
     !!clean(roadPres.road);
   return {
     roadPresentation: roadPres,
+    roadPresentations,
+    roads: roadList,
     roadDisplayName: roadPres.roadDisplayName || resolveRoadDisplayName(roadPres.road),
     direction: dir,
     // Never mirror parkingName (or any beside text) into localityFallback — that caused
@@ -7017,17 +7187,16 @@ export function buildTrafficExpandedDetail(input = {}) {
   const liveStatus = resolveParkingLiveStatus(input, facts);
 
   // Skip redundant "Typ (zdroj)" when it only repeats the card title kind.
-  const roadResolved = resolvePresentationRoadNumber(input, facts);
+  const roadsResolved = resolvePresentationRoadNumbers(input, facts);
+  const roadResolved = roadsResolved[0] || resolvePresentationRoadNumber(input, facts);
   const roadPres = classifyRoadPresentation(roadResolved || input.road, input);
   {
-    const roads =
-      Array.isArray(facts.roadNumbers) && facts.roadNumbers.length > 1
-        ? facts.roadNumbers
-        : null;
     push(
       "road",
       "Komunikace",
-      roads ? roads.join(", ") : roadPres.road || roadResolved || input.road
+      roadsResolved.length > 1
+        ? roadsResolved.join(", ")
+        : roadPres.road || roadResolved || input.road
     );
   }
   push("roadName", "Název komunikace", resolveRoadDisplayName(roadPres.road || roadResolved || input.road));

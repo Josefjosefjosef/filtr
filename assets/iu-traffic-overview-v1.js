@@ -1042,6 +1042,12 @@ export function buildTrafficCardViewModel(trafficV1) {
   const showActive = String(tv.lifecycleStatus || "") === "ACTIVE";
   const presentation = buildTrafficCardPresentation(tv);
   const roadPres = presentation.roadPresentation;
+  const roadPresentations =
+    (presentation.communication &&
+      Array.isArray(presentation.communication.roadPresentations) &&
+      presentation.communication.roadPresentations.length
+      ? presentation.communication.roadPresentations
+      : null) || [roadPres];
   const road = roadPres.road || (tv.road != null ? String(tv.road) : "");
   const roadClass = roadPres.roadClass || tv.roadClass || "UNKNOWN";
   const roadClassLabel =
@@ -1210,6 +1216,21 @@ export function buildTrafficCardViewModel(trafficV1) {
       showMotorwayIcon: roadPres.showMotorwayIcon === true,
       showMotorVehiclesIcon: roadPres.showMotorVehiclesIcon === true,
     },
+    roadBadges: roadPresentations
+      .filter((rp) => rp && String(rp.road || "").trim())
+      .map((rp) => {
+        const rc = rp.roadClass || "UNKNOWN";
+        return {
+          road: rp.road,
+          roadClass: rc,
+          label: ROAD_CLASS_LABEL_CS[rc] || ROAD_CLASS_LABEL_CS.UNKNOWN,
+          numberBadge: rp.numberBadge,
+          roadTypeIcon: rp.roadTypeIcon,
+          roadTypeIconAlt: rp.roadTypeIconAlt || "",
+          showMotorwayIcon: rp.showMotorwayIcon === true,
+          showMotorVehiclesIcon: rp.showMotorVehiclesIcon === true,
+        };
+      }),
     locality,
     headLocality,
     municipalitySign,
