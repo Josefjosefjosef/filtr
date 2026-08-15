@@ -31,6 +31,7 @@ const SUITES = [
   "iu-traffic-accident-dod-moto-investigation-guard",
   "iu-traffic-dod-divocak-participant-specificity-guard",
   "iu-traffic-primary-street-cross-street-struck-roe-guard",
+  "iu-traffic-roadwork-construction-vehicle-exit-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
   "iu-traffic-motorway-direction-exit-order-guard",

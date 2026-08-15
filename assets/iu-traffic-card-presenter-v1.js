@@ -226,6 +226,8 @@ export const TRAFFIC_CONDITION = Object.freeze({
   HEAVY_TRAFFIC: "HEAVY_TRAFFIC",
   DELAY: "DELAY",
   PASS_WITH_CARE: "PASS_WITH_CARE",
+  /** Driver admonition "dbejte zvýšené opatrnosti" — distinct from pass-with-care phrasing. */
+  HEED_CAUTION: "HEED_CAUTION",
   NONE: "NONE",
 });
 
@@ -2562,6 +2564,77 @@ export function extractSpecificWorkFromOfficialComment(rawText) {
 }
 
 /**
+ * Construction-site vehicle / equipment movement facts from NDIC roadworks comments.
+ * Distinct from generic "práce na silnici" — specific traffic impact at the works site.
+ * Never invents; never upgrades to a new event type.
+ */
+export function parseConstructionSiteTrafficFactsFromText(rawText) {
+  const text = clean(rawText);
+  const empty = {
+    constructionVehicleExit: false,
+    constructionEquipmentMovement: false,
+    constructionSiteExit: false,
+    cautionModality: null,
+  };
+  if (!text) return empty;
+  const vehicleExit =
+    /výjezd\s+vozidel\s+stavby/i.test(text) ||
+    /výjezd\s+a\s+pohyb\s+stavební\s+techniky/i.test(text) ||
+    /výjezd\s+stavební\s+techniky/i.test(text);
+  const equipmentMovement =
+    /pohyb\s+stavební\s+techniky/i.test(text) ||
+    /výjezd\s+a\s+pohyb\s+stavební\s+techniky/i.test(text);
+  const fromSite = /ze\s+staveniště/i.test(text);
+  let cautionModality = null;
+  if (/dbejte\s+zvýšené\s+opatrnosti/i.test(text)) {
+    cautionModality = "heed";
+  } else if (/průjezd\s+se\s+zvýšenou\s+opatrností/i.test(text)) {
+    cautionModality = "pass_with_care";
+  }
+  return {
+    constructionVehicleExit: vehicleExit,
+    constructionEquipmentMovement: equipmentMovement,
+    constructionSiteExit: fromSite,
+    cautionModality,
+  };
+}
+
+/**
+ * User-facing lead for construction vehicle / equipment movement.
+ * Semantically merges overlapping "výjezd vozidel stavby" + "výjezd a pohyb techniky".
+ */
+export function formatConstructionSiteMovementLead(facts = {}, source = "") {
+  const text = clean(source);
+  const parsed = parseConstructionSiteTrafficFactsFromText(text);
+  const vehicleExit =
+    facts.constructionVehicleExit === true || parsed.constructionVehicleExit;
+  const equipmentMovement =
+    facts.constructionEquipmentMovement === true ||
+    parsed.constructionEquipmentMovement;
+  const fromSite =
+    facts.constructionSiteExit === true || parsed.constructionSiteExit;
+  if (!vehicleExit && !equipmentMovement) return null;
+
+  let lead;
+  if (
+    /výjezd\s+a\s+pohyb\s+stavební\s+techniky/i.test(text) ||
+    (vehicleExit && equipmentMovement)
+  ) {
+    // Prefer covering both when both are proven — avoid duplicate "výjezd… výjezd…".
+    lead =
+      /výjezd\s+vozidel\s+stavby/i.test(text) && equipmentMovement
+        ? "Výjezd vozidel a pohyb stavební techniky"
+        : "Výjezd a pohyb stavební techniky";
+  } else if (vehicleExit) {
+    lead = "Výjezd vozidel stavby";
+  } else {
+    lead = "Pohyb stavební techniky";
+  }
+  if (fromSite) lead += " ze staveniště";
+  return lead;
+}
+
+/**
  * Access / approach fact from NDIC — never invents a detour.
  * Example: "Příjezd do ulice X zajištěn DIO z ulice Y"
  * → destinationStreet, fromStreet, presentation (DIO kept only as source marker, not expanded jargon).
@@ -3014,6 +3087,10 @@ export function parseOfficialCommentFacts(rawText) {
     eventName: null,
     reasonKind: null,
     specificWork: null,
+    constructionVehicleExit: false,
+    constructionEquipmentMovement: false,
+    constructionSiteExit: false,
+    cautionModality: null,
     accessInformation: null,
     locationQualifier: null,
     openLaneCount: null,
@@ -3134,6 +3211,13 @@ export function parseOfficialCommentFacts(rawText) {
   out.eventName = eventReason.eventName;
   out.reasonKind = eventReason.reasonKind;
   out.specificWork = extractSpecificWorkFromOfficialComment(text);
+  {
+    const siteFacts = parseConstructionSiteTrafficFactsFromText(text);
+    out.constructionVehicleExit = siteFacts.constructionVehicleExit;
+    out.constructionEquipmentMovement = siteFacts.constructionEquipmentMovement;
+    out.constructionSiteExit = siteFacts.constructionSiteExit;
+    out.cautionModality = siteFacts.cautionModality;
+  }
   out.accessInformation = extractAccessInformationFromOfficialComment(text);
   out.localityDetail = extractMunicipalityParentheticalLocalityDetail(text);
   out.locationQualifier = extractLocationQualifierFromOfficialComment(text);
@@ -4229,6 +4313,8 @@ export function analyzeTrafficCondition(rawText) {
   if (!text) return TRAFFIC_CONDITION.NONE;
   if (hasExplicitQueueSource(text)) return TRAFFIC_CONDITION.QUEUE;
   if (/silný provoz|hustý provoz/i.test(text)) return TRAFFIC_CONDITION.HEAVY_TRAFFIC;
+  // Prefer explicit driver admonition modality over pass-with-care when both appear.
+  if (/dbejte\s+zvýšené\s+opatrnosti/i.test(text)) return TRAFFIC_CONDITION.HEED_CAUTION;
   if (/průjezd se zvýšenou opatrností/i.test(text)) return TRAFFIC_CONDITION.PASS_WITH_CARE;
   if (/zdržení/i.test(text)) return TRAFFIC_CONDITION.DELAY;
   return TRAFFIC_CONDITION.NONE;
@@ -5234,6 +5320,16 @@ export function buildTrafficSituationSummary(input = {}) {
     if (/výsprava\s+tryskovou\s+metodou/i.test(source)) {
       causeBits.push("Výsprava tryskovou metodou");
     }
+    // Construction vehicle / equipment movement beats bare "Práce na silnici".
+    {
+      const siteLead = formatConstructionSiteMovementLead(facts, source);
+      if (
+        siteLead &&
+        !causeBits.some((b) => /výjezd|stavební\s+technik|staveništ/i.test(b))
+      ) {
+        causeBits.push(siteLead);
+      }
+    }
     // Rich lead: closed roadworks with explicit work detail ("z důvodu …" or specific work phrase).
     // Never invent; only merge facts proven in source. Direction stays out of situation.
     const reasonDetail = clean(facts.eventReason);
@@ -5363,7 +5459,11 @@ export function buildTrafficSituationSummary(input = {}) {
 
     if (
       /práce na silnici/i.test(source) &&
-      !causeBits.some((b) => /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských|uzavřena z důvodu/i.test(b))
+      !causeBits.some((b) =>
+        /práce na silnici|stavební|údržba|výsprava|sekání|inženýrských|uzavřena z důvodu|výjezd|staveništ/i.test(
+          b
+        )
+      )
     ) {
       causeBits.unshift("Práce na silnici");
     }
@@ -5694,8 +5794,12 @@ export function buildTrafficSituationSummary(input = {}) {
     if (!conditionBits.some((b) => /silný provoz/i.test(b))) {
       conditionBits.push(formatHeavyTrafficBit(source, facts, input));
     }
+  } else if (condition === TRAFFIC_CONDITION.HEED_CAUTION) {
+    if (!conditionBits.some((b) => /zvýšen[ée]\s+opatrnost/i.test(b))) {
+      conditionBits.push("Dbejte zvýšené opatrnosti");
+    }
   } else if (condition === TRAFFIC_CONDITION.PASS_WITH_CARE) {
-    if (!conditionBits.some((b) => /zvýšenou opatrností/i.test(b))) {
+    if (!conditionBits.some((b) => /zvýšenou opatrností|zvýšené opatrnosti/i.test(b))) {
       conditionBits.push("Průjezd se zvýšenou opatrností");
     }
   } else if (condition === TRAFFIC_CONDITION.DELAY) {

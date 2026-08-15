@@ -24,7 +24,7 @@
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-const CACHE_VERSION = "2026-08-15-primary-street-cross-street-struck-roe-v1";
+const CACHE_VERSION = "2026-08-15-roadwork-construction-vehicle-exit-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
