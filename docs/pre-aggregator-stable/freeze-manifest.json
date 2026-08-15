@@ -1,9 +1,9 @@
 {
-  "freezeId": "municipality-street-accident-izs-v1-20260814",
+  "freezeId": "future-traffic-impact-tense-v1-20260815",
   "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-14T23:30:00.000Z",
-  "note": "Freeze bump: municipality+street header, OA×cyclist participants, IZS EN_ROUTE semantics + SW cache.",
+  "updatedAt": "2026-08-15T02:00:00.000Z",
+  "note": "Freeze bump: FUTURE lifecycle-aware traffic impact tense + lane semantic dedupe + SW cache.",
   "files": {
     "projects/index.html": "b1fcdb7c22e1f6bf79e0556f6676ef8b8b093d3648a562e16e9a07f26d4ad832",
     "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
@@ -11,7 +11,7 @@
     "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "93976193da813998a85f6a83a4d0f15d428b81e5d93995f980b13486c6acc89b",
+    "sw.js": "3cafea2161fb6582e6bce2291e70c5271bba51faa9f8a05e2930a8f743c9d08c",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-14-municipality-street-accident-izs-v1\"",
+      "CACHE_VERSION = \"2026-08-15-future-traffic-impact-tense-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",

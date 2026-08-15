@@ -110,6 +110,88 @@ export const EVENT_KIND = Object.freeze({
   WARNING: "warning",
 });
 
+/** Event lifecycle for tense-aware traffic impact wording (ACTIVE ≠ FUTURE). */
+export const EVENT_LIFECYCLE = Object.freeze({
+  ACTIVE: "ACTIVE",
+  FUTURE: "FUTURE",
+  ENDED: "ENDED",
+  CANCELLED: "CANCELLED",
+  UNKNOWN: "UNKNOWN",
+});
+
+/**
+ * Resolve lifecycle for DOPRAVNÍ SITUACE sentence tense.
+ * Prefer explicit lifecycleStatus; fall back to validFrom/validTo vs now.
+ * Never invent FUTURE from roadworks type alone.
+ */
+export function resolveSituationLifecycle(input = {}, nowMs = Date.now()) {
+  const now = Number.isFinite(nowMs) ? nowMs : Date.now();
+  const labeled = String(
+    input.lifecycleStatus ||
+      (input.trafficV1 && input.trafficV1.lifecycleStatus) ||
+      ""
+  ).toUpperCase();
+  if (labeled === EVENT_LIFECYCLE.CANCELLED) return EVENT_LIFECYCLE.CANCELLED;
+  if (labeled === EVENT_LIFECYCLE.ENDED) return EVENT_LIFECYCLE.ENDED;
+  const validTo =
+    input.validTo ||
+    input.validityTo ||
+    (input.trafficV1 && (input.trafficV1.validTo || input.trafficV1.validityTo)) ||
+    "";
+  const endMs = Date.parse(String(validTo || ""));
+  if (Number.isFinite(endMs) && endMs < now) return EVENT_LIFECYCLE.ENDED;
+  const validFrom =
+    input.validFrom ||
+    input.validityFrom ||
+    (input.trafficV1 && (input.trafficV1.validFrom || input.trafficV1.validityFrom)) ||
+    "";
+  const fromMs = Date.parse(String(validFrom || ""));
+  if (Number.isFinite(fromMs) && fromMs > now) return EVENT_LIFECYCLE.FUTURE;
+  if (labeled === EVENT_LIFECYCLE.FUTURE) return EVENT_LIFECYCLE.FUTURE;
+  if (labeled === EVENT_LIFECYCLE.ACTIVE) return EVENT_LIFECYCLE.ACTIVE;
+  if (labeled) return EVENT_LIFECYCLE.UNKNOWN;
+  return EVENT_LIFECYCLE.ACTIVE;
+}
+
+/**
+ * Build "subject je/bude predicate" for traffic impact facts.
+ * FUTURE → bude; ACTIVE/ENDED/UNKNOWN → je (ENDED not rewritten to future).
+ */
+export function formatImpactBePredicate(subject, predicate, lifecycle) {
+  const sub = clean(subject);
+  const pred = clean(predicate);
+  if (!sub || !pred) return "";
+  const be = lifecycle === EVENT_LIFECYCLE.FUTURE ? "bude" : "je";
+  return sub + " " + be + " " + pred;
+}
+
+/** Plural "jsou/budou" for multi-lane / multi-subject impact facts. */
+export function formatImpactPluralBePredicate(subject, predicate, lifecycle) {
+  const sub = clean(subject);
+  const pred = clean(predicate);
+  if (!sub || !pred) return "";
+  const be = lifecycle === EVENT_LIFECYCLE.FUTURE ? "budou" : "jsou";
+  return sub + " " + be + " " + pred;
+}
+
+/**
+ * Lane-closed bit — FUTURE prefers "Ve směru X bude uzavřen pravý jízdní pruh".
+ */
+export function formatLaneClosedImpact(lanePhrase, lifecycle, direction) {
+  const lane = capitalizeLanePhrase(lanePhrase);
+  if (!lane) return "";
+  const dir = clean(direction);
+  if (lifecycle === EVENT_LIFECYCLE.FUTURE) {
+    if (dir) {
+      const laneLc = lane.charAt(0).toLocaleLowerCase("cs") + lane.slice(1);
+      return "Ve směru " + dir + " bude uzavřen " + laneLc;
+    }
+    return formatImpactBePredicate(lane, "uzavřen", lifecycle);
+  }
+  if (dir) return lane + " ve směru " + dir + " je uzavřen";
+  return formatImpactBePredicate(lane, "uzavřen", lifecycle);
+}
+
 /** Restriction / closure scope — independent of primary cause. */
 export const RESTRICTION_SCOPE = Object.freeze({
   FULL_ROAD_CLOSED: "FULL_ROAD_CLOSED",
@@ -3478,11 +3560,31 @@ function situationDedupeKey(sentence) {
   let k = clean(sentence).toLowerCase();
   k = k.replace(/[.!?]+$/g, "");
   k = k.replace(/\s+/g, " ");
-  if (/^(silnice|komunikace|dálnice) je uzavřena|uzavírka komunikace|uzavřeno$/.test(k)) {
+  if (
+    /^(silnice|komunikace|dálnice) (?:je|bude) uzavřena|uzavírka komunikace|uzavřeno$|bude uzavřeno/.test(
+      k
+    )
+  ) {
     return "road_closed";
   }
+  // Lane / turn closures: same lane identity collapses directional vs bare variants.
+  // Keeps the first (usually stronger: with direction) from finalizeSentences order.
+  {
+    const laneCore =
+      k.match(
+        /((?:levý|pravý|střední|západní|východní|severní|jižní)\s+jízdní\s+pruh|jízdní\s+pruh|jeden\s+jízdní\s+pruh|odbočovací\s+pruh(?:\s+(?:vlevo|vpravo))?)/
+      ) || null;
+    if (
+      laneCore &&
+      /(?:je|bude)\s+(?:uzavřen|neprůjezdný|zúžený)\b|bude\s+uzavřen/.test(k) &&
+      !/krajnice|most|silnice|komunikace|tunel/.test(k)
+    ) {
+      return "lane_closed:" + laneCore[1];
+    }
+  }
   k = k.replace(/neprůjezdn[ýáé]\s+/g, "closed_");
-  k = k.replace(/\s+je\s+(?:neprůjezdn[ýáé]|uzavřen[ýáéo]?)$/g, "");
+  k = k.replace(/\s+(?:je|bude)\s+(?:neprůjezdn[ýáé]|uzavřen[ýáéo]?)$/g, "");
+  k = k.replace(/\s+(?:jsou|budou)\s+(?:uzavřeny|zúžené)$/g, "");
   return k;
 }
 
@@ -3810,10 +3912,11 @@ function extractSituationCircumstanceBits(source) {
  * Narrowing / shuttle / truck-only / height / urban routing — source-grounded
  * impact bits that must not be dropped when a generic roadworks/closure lead wins.
  */
-function extractOperationalImpactBits(source, causeBits, scopeBits) {
+function extractOperationalImpactBits(source, causeBits, scopeBits, lifecycle) {
   const text = clean(source);
   const have = causeBits.concat(scopeBits).join(" ");
   const bits = [];
+  const lc = lifecycle || EVENT_LIFECYCLE.ACTIVE;
 
   if (/\bkyvadlový provoz\b/i.test(text) && !/kyvadlov/i.test(have)) {
     if (/\bjedním\s+jízdním\s+pruhem\b/i.test(text)) {
@@ -3840,13 +3943,13 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     /(?:^|[,;\s])zúžené\s+jízdní\s+pruhy(?:\s*[,;.]|\s+|$)/i.test(text) &&
     !/zúžen|jedním jízdním|kyvadlov/i.test(have)
   ) {
-    bits.push("Jízdní pruhy jsou zúžené");
+    bits.push(formatImpactPluralBePredicate("Jízdní pruhy", "zúžené", lc));
   }
 
   // Explicit lane restriction is additive — must not vanish when shuttle/alternating wins.
   if (
     hasExplicitLaneRestrictionSource(text) &&
-    !/omezení\s+v\s+jízdním\s+pruhu|jízdní\s+pruh\s+je\s+(?:uzavřen|omezen)/i.test(
+    !/omezení\s+v\s+jízdním\s+pruhu|jízdní\s+pruh\s+(?:je|bude)\s+(?:uzavřen|omezen)|ve\s+směru\s+.+\s+bude\s+uzavřen/i.test(
       have + " " + bits.join(" ")
     )
   ) {
@@ -3866,7 +3969,7 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
     /výjezd\s+neprůjezdn/i.test(text) &&
     !/výjezd\s+neprůjezdn|neprůjezdn[ýáé]\s+výjezd/i.test(have + " " + bits.join(" "))
   ) {
-    bits.push("Výjezd je neprůjezdný");
+    bits.push(formatImpactBePredicate("Výjezd", "neprůjezdný", lc));
   }
 
   // Cardinal / named lane closed (západní/východní …) — not only L/R/C.
@@ -3884,8 +3987,13 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
           "i"
         )
       );
-    if (closedLane && !/jízdní pruh je uzavřen|západní|východní|severní|jižní/i.test(have)) {
-      bits.push(capitalizeLanePhrase(closedLane[1]) + " je uzavřen");
+    if (
+      closedLane &&
+      !/jízdní pruh (?:je|bude) uzavřen|ve směru .+ bude uzavřen|západní|východní|severní|jižní/i.test(
+        have
+      )
+    ) {
+      bits.push(formatLaneClosedImpact(closedLane[1], lc, null));
     }
   }
 
@@ -3909,7 +4017,11 @@ function extractOperationalImpactBits(source, causeBits, scopeBits) {
         const key = dest.toLowerCase() + "|" + via;
         if (seenRoute.has(key)) continue;
         seenRoute.add(key);
-        const bit = "Provoz směrem na " + dest + " je veden " + via;
+        const bit = formatImpactBePredicate(
+          "Provoz směrem na " + dest,
+          "veden " + via,
+          lc
+        );
         if (!bits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
           bits.push(bit);
         }
@@ -3978,6 +4090,7 @@ function formatHeavyTrafficBit(source, facts, input) {
 export function buildTrafficSituationSummary(input = {}) {
   const event = classifyEventPresentation(input);
   const facts = event.facts || parseOfficialCommentFacts(sourceBlob(input));
+  const lifecycle = resolveSituationLifecycle(input);
   const raw = stripBoilerplate(
     clean(input.impactFull) || clean(input.impact) || clean(input.summaryFull) || clean(input.summary) || ""
   );
@@ -3994,6 +4107,8 @@ export function buildTrafficSituationSummary(input = {}) {
   const scopeBits = [];
   const circumstanceBits = extractSituationCircumstanceBits(source);
   const conditionBits = [];
+  // Expose for forensic / guards — composer used lifecycle for impact tense.
+  facts._situationLifecycle = lifecycle;
 
   // --- 1) Cause ---
   if (cause === PRIMARY_CAUSE.ACCIDENT || event.kind === EVENT_KIND.ACCIDENT) {
@@ -4068,21 +4183,45 @@ export function buildTrafficSituationSummary(input = {}) {
       // DATEX maintenanceWorks / Czech "práce údržby" — never invent delay from "do N min".
       causeBits.push("Práce údržby");
     } else if (specificWork && /údržba\s+a\s+opravy\b/i.test(specificWork) && !causeBits.length) {
-      causeBits.push(
-        specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1)
-      );
+      let sw = clean(specificWork.replace(/\s+AB\b/gi, ""));
+      causeBits.push(sw.charAt(0).toLocaleUpperCase("cs") + sw.slice(1));
     } else if (/údržba\s+a\s+opravy\b/i.test(source) && !causeBits.length) {
-      const detail =
-        source.match(/údržba\s+a\s+opravy\s+[^,;.]+/i) ||
-        source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
-      let phrase = detail ? clean(detail[0]) : "Údržba a opravy";
-      phrase = clean(
-        phrase.split(
-          /\s+v\s+termínu\b|\s+rozsah\s*:|\s+počet\s+průjezdných|\s+Vydal\s*:/i
-        )[0]
-      );
-      phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
-      causeBits.push(phrase ? phrase.replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy");
+      // Prefer concrete specificWork (e.g. "Oprava výtluků…") over generic maintenance stem.
+      // Strip opaque "AB" (asfaltový beton jargon) from user-facing maintenance phrase.
+      if (specificWork && !/^údržba\s+a\s+opravy\b/i.test(specificWork)) {
+        let lead =
+          specificWork.charAt(0).toLocaleUpperCase("cs") + specificWork.slice(1);
+        const maint = source.match(/údržba\s+a\s+opravy\s+[^,;.]+/i);
+        if (maint) {
+          let m = clean(maint[0]);
+          m = clean(
+            m.split(
+              /\s+v\s+termínu\b|\s+rozsah\s*:|\s+počet\s+průjezdných|\s+Vydal\s*:/i
+            )[0]
+          );
+          m = clean(m.replace(/\s+AB\b/gi, ""));
+          m = clipExtractedValueAtStructuralEnd(m, 110);
+          if (m && m.length >= 8 && !samePlaceName(m, specificWork)) {
+            lead = lead + ", " + m.charAt(0).toLocaleLowerCase("cs") + m.slice(1);
+          }
+        }
+        causeBits.push(lead);
+      } else {
+        const detail =
+          source.match(/údržba\s+a\s+opravy\s+[^,;.]+/i) ||
+          source.match(/údržba\s+a\s+opravy(?:\s+(?:mostů|vozovky|silnice))?/i);
+        let phrase = detail ? clean(detail[0]) : "Údržba a opravy";
+        phrase = clean(
+          phrase.split(
+            /\s+v\s+termínu\b|\s+rozsah\s*:|\s+počet\s+průjezdných|\s+Vydal\s*:/i
+          )[0]
+        );
+        phrase = clean(phrase.replace(/\s+AB\b/gi, ""));
+        phrase = clipExtractedValueAtStructuralEnd(phrase, 110);
+        causeBits.push(
+          phrase ? phrase.replace(/^./u, (c) => c.toUpperCase()) : "Údržba a opravy"
+        );
+      }
     }
     const hasBareClosed =
       /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
@@ -4115,9 +4254,7 @@ export function buildTrafficSituationSummary(input = {}) {
       } else {
         causeBits.push(
           "Stavební práce. " +
-            noun +
-            " je uzavřena z důvodu " +
-            formatWorkReason(workDetail)
+            formatImpactBePredicate(noun, "uzavřena z důvodu " + formatWorkReason(workDetail), lifecycle)
         );
       }
       roadworksReasonMerged = true;
@@ -4208,11 +4345,17 @@ export function buildTrafficSituationSummary(input = {}) {
             })();
       if (openN != null && Number.isFinite(openN) && openN >= 0) {
         const laneBit =
-          openN === 1
-            ? "Průjezdný zůstává 1 jízdní pruh"
-            : openN >= 2 && openN <= 4
-              ? "Průjezdné zůstávají " + openN + " jízdní pruhy"
-              : "Průjezdných zůstává " + openN + " jízdních pruhů";
+          lifecycle === EVENT_LIFECYCLE.FUTURE
+            ? openN === 1
+              ? "Jeden jízdní pruh bude průjezdný"
+              : openN >= 2 && openN <= 4
+                ? openN + " jízdní pruhy budou průjezdné"
+                : openN + " jízdních pruhů bude průjezdných"
+            : openN === 1
+              ? "Průjezdný zůstává 1 jízdní pruh"
+              : openN >= 2 && openN <= 4
+                ? "Průjezdné zůstávají " + openN + " jízdní pruhy"
+                : "Průjezdných zůstává " + openN + " jízdních pruhů";
         if (
           !causeBits.some((b) => /průjezdn/i.test(b)) &&
           !circumstanceBits.some((b) => /průjezdn/i.test(b))
@@ -4238,13 +4381,13 @@ export function buildTrafficSituationSummary(input = {}) {
       /(?:^|[,;.\s])tunel(?:y)?\s+(?:je\s+|jsou\s+)?uzavřen/i.test(source) ||
       /uzavřen[ýáo]?\s+tunel(?:y)?(?:[,;.\s]|$)/i.test(source)
     ) {
-      causeBits.push("Tunel je uzavřen");
+      causeBits.push(formatImpactBePredicate("Tunel", "uzavřen", lifecycle));
     } else if (
       /\bmost\s+uzavřen\b/i.test(source) ||
       /\buzavřen[ýáo]?\s+most\b/i.test(source) ||
       /\búplná\s+uzavírka\s+mostu\b(?!\s+[A-ZÁ-Ž])/i.test(source)
     ) {
-      causeBits.push("Most je uzavřen");
+      causeBits.push(formatImpactBePredicate("Most", "uzavřen", lifecycle));
     } else if (/úpln[áa]\s+uzavírk/i.test(source)) {
       if (
         facts.namedObjectKind === LOCATION_KIND.RAILWAY_CROSSING &&
@@ -4318,10 +4461,12 @@ export function buildTrafficSituationSummary(input = {}) {
         causeBits.push(lead);
       }
     } else if (/oba směry/i.test(source)) {
-      causeBits.push("Silnice je uzavřena v obou směrech");
+      causeBits.push(
+        formatImpactBePredicate("Silnice", "uzavřena v obou směrech", lifecycle)
+      );
     } else {
       // Prefer natural full-road phrasing; do not invent closure when type alone.
-      causeBits.push("Silnice je uzavřena");
+      causeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
     }
   } else if (event.kind === EVENT_KIND.QUEUE) {
     if (/silný provoz|hustý provoz/i.test(source)) {
@@ -4342,13 +4487,17 @@ export function buildTrafficSituationSummary(input = {}) {
 
   // --- 2) Restriction scope (never invent direction closure from a single lane) ---
   if (scope === RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED) {
-    if (/neprůjezdn/i.test(source)) scopeBits.push("Zpevněná krajnice je neprůjezdná");
-    else if (/uzavřen/i.test(source) && /zpevněn/i.test(source)) {
-      scopeBits.push("Zpevněná krajnice je uzavřena");
+    if (/neprůjezdn/i.test(source)) {
+      scopeBits.push(formatImpactBePredicate("Zpevněná krajnice", "neprůjezdná", lifecycle));
+    } else if (/uzavřen/i.test(source) && /zpevněn/i.test(source)) {
+      scopeBits.push(formatImpactBePredicate("Zpevněná krajnice", "uzavřena", lifecycle));
     } else scopeBits.push("Uzavřený odstavný pruh");
   } else if (scope === RESTRICTION_SCOPE.SHOULDER_CLOSED || scope === RESTRICTION_SCOPE.VERGE_CLOSED) {
-    if (/neprůjezdn/i.test(source)) scopeBits.push("Krajnice je neprůjezdná");
-    else scopeBits.push("Krajnice je uzavřena");
+    if (/neprůjezdn/i.test(source)) {
+      scopeBits.push(formatImpactBePredicate("Krajnice", "neprůjezdná", lifecycle));
+    } else {
+      scopeBits.push(formatImpactBePredicate("Krajnice", "uzavřena", lifecycle));
+    }
   } else if (scope === RESTRICTION_SCOPE.SINGLE_LANE_CLOSED) {
     const turnLane = /odbočovací\s+pruh/i.test(source);
     const lane =
@@ -4377,28 +4526,32 @@ export function buildTrafficSituationSummary(input = {}) {
         const sn = sanitizeExtractedValueToken(streetBareName(crossStreet[1]));
         if (sn) turn += " před křižovatkou s ulicí " + sn;
       }
-      turn += " je uzavřen";
-      scopeBits.push(turn);
+      scopeBits.push(formatImpactBePredicate(turn, "uzavřen", lifecycle));
     } else if (lane && /neprůjezdn/i.test(source)) {
-      scopeBits.push(capitalizeLanePhrase(lane[1]) + " je neprůjezdný");
+      scopeBits.push(
+        formatImpactBePredicate(capitalizeLanePhrase(lane[1]), "neprůjezdný", lifecycle)
+      );
     } else if (lane && narrowed) {
-      scopeBits.push(capitalizeLanePhrase(lane[1]) + " je zúžený");
-    } else if (lane && dir) {
-      scopeBits.push(capitalizeLanePhrase(lane[1]) + " ve směru " + dir + " je uzavřen");
+      scopeBits.push(
+        formatImpactBePredicate(capitalizeLanePhrase(lane[1]), "zúžený", lifecycle)
+      );
     } else if (lane) {
-      scopeBits.push(capitalizeLanePhrase(lane[1]) + " je uzavřen");
+      scopeBits.push(formatLaneClosedImpact(lane[1], lifecycle, dir || null));
     } else if (/\bjeden\s+jízdní\s+pruh\b/i.test(source)) {
-      scopeBits.push("Jeden jízdní pruh je uzavřen");
+      scopeBits.push(formatLaneClosedImpact("jeden jízdní pruh", lifecycle, null));
     } else if (
       /\bjízdní\s+pruh\s+uzavřen/i.test(source) ||
       /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(source) ||
       /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(source)
     ) {
       // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
-      if (/neprůjezdn/i.test(source)) scopeBits.push("Jízdní pruh je neprůjezdný");
-      else scopeBits.push("Jízdní pruh je uzavřen");
+      if (/neprůjezdn/i.test(source)) {
+        scopeBits.push(formatImpactBePredicate("Jízdní pruh", "neprůjezdný", lifecycle));
+      } else {
+        scopeBits.push(formatLaneClosedImpact("jízdní pruh", lifecycle, null));
+      }
     } else {
-      scopeBits.push("Jeden jízdní pruh je uzavřen");
+      scopeBits.push(formatLaneClosedImpact("jeden jízdní pruh", lifecycle, null));
     }
   } else if (
     scope === RESTRICTION_SCOPE.FULL_ROAD_CLOSED ||
@@ -4406,24 +4559,33 @@ export function buildTrafficSituationSummary(input = {}) {
     scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED
   ) {
     if (scope === RESTRICTION_SCOPE.ALL_LANES_CLOSED) {
-      scopeBits.push("Všechny jízdní pruhy jsou uzavřeny");
+      scopeBits.push(
+        formatImpactPluralBePredicate("Všechny jízdní pruhy", "uzavřeny", lifecycle)
+      );
     } else if (scope === RESTRICTION_SCOPE.DIRECTION_CLOSED) {
       const dir = facts.directionHuman || clean(input.direction);
-      if (dir) scopeBits.push("Uzavřeno ve směru " + dir);
-      else scopeBits.push("Směr je uzavřen");
+      if (dir) {
+        scopeBits.push(
+          lifecycle === EVENT_LIFECYCLE.FUTURE
+            ? "Bude uzavřeno ve směru " + dir
+            : "Uzavřeno ve směru " + dir
+        );
+      } else {
+        scopeBits.push(formatImpactBePredicate("Směr", "uzavřen", lifecycle));
+      }
     } else if (!causeBits.some((b) => /uzavírk|uzavřen/i.test(b))) {
       if (
         /\bmost\s+uzavřen\b/i.test(source) ||
         /\buzavřen[ýáo]?\s+most\b/i.test(source)
       ) {
-        scopeBits.push("Most je uzavřen");
+        scopeBits.push(formatImpactBePredicate("Most", "uzavřen", lifecycle));
       } else if (
         /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) &&
         !/\bsilnice\s+[ID]/i.test(source)
       ) {
-        scopeBits.push("Komunikace je uzavřena");
+        scopeBits.push(formatImpactBePredicate("Komunikace", "uzavřena", lifecycle));
       } else {
-        scopeBits.push("Silnice je uzavřena");
+        scopeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
       }
     }
   } else if (
@@ -4437,9 +4599,9 @@ export function buildTrafficSituationSummary(input = {}) {
       /\bmost\s+uzavřen\b/i.test(source) ||
       /\buzavřen[ýáo]?\s+most\b/i.test(source)
     ) {
-      scopeBits.push("Most je uzavřen");
+      scopeBits.push(formatImpactBePredicate("Most", "uzavřen", lifecycle));
     } else {
-      scopeBits.push("Silnice je uzavřena");
+      scopeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
     }
   }
 
@@ -4477,7 +4639,11 @@ export function buildTrafficSituationSummary(input = {}) {
 
   // Extra trusted phrases not yet covered (roadworks transfer etc.).
   if (/provoz převeden do protisměru/i.test(source)) {
-    scopeBits.push("Provoz převeden do protisměru");
+    scopeBits.push(
+      lifecycle === EVENT_LIFECYCLE.FUTURE
+        ? "Provoz bude převeden do protisměru"
+        : "Provoz převeden do protisměru"
+    );
   }
 
   // Partial closure lead when not already captured by cause (typed restriction).
@@ -4519,8 +4685,7 @@ export function buildTrafficSituationSummary(input = {}) {
       const sn = sanitizeExtractedValueToken(streetBareName(crossStreet[1]));
       if (sn) turn += " před křižovatkou s ulicí " + sn;
     }
-    turn += " je uzavřen";
-    scopeBits.push(turn);
+    scopeBits.push(formatImpactBePredicate(turn, "uzavřen", lifecycle));
   }
   if (
     /stavebn(?:í|ích)\s+prac/i.test(source) &&
@@ -4539,7 +4704,12 @@ export function buildTrafficSituationSummary(input = {}) {
   }
 
   // Shuttle / narrowing / truck-only / height — keep beside generic roadworks leads.
-  const operational = extractOperationalImpactBits(source, causeBits, scopeBits);
+  const operational = extractOperationalImpactBits(
+    source,
+    causeBits,
+    scopeBits,
+    lifecycle
+  );
   for (const bit of operational) {
     if (!scopeBits.some((b) => situationDedupeKey(b) === situationDedupeKey(bit))) {
       scopeBits.push(bit);
