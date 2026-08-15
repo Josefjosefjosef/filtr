@@ -35,6 +35,7 @@ const SUITES = [
   "iu-traffic-prague-jizni-spojka-smv-header-guard",
   "iu-traffic-municipality-street-accident-izs-guard",
   "iu-traffic-broken-vehicle-delay-header-guard",
+  "iu-traffic-broken-down-vehicle-vs-generic-accident-worksite-guard",
   "iu-traffic-roadwork-lane-restriction-municipality-parts-guard",
   "iu-traffic-future-traffic-impact-tense-guard",
   "iu-traffic-municipality-relation-oa-accident-guard",

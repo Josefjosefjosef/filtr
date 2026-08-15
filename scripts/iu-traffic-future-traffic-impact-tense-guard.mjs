@@ -25,7 +25,7 @@ function ok(id, cond, detail) {
 }
 
 const FUTURE_RAW =
-  "D11, mezi km 16.7 a 16.3, ve směru Praha, práce na silnici; pravý jízdní pruh uzavřen, Od 14.08.2026 19:30 Do 15.08.2026 06:00, Oprava výtluků a příčných hrbolů, údržba a opravy vozovek AB, pracovní místo DK - Krátkodobé stabilní, Vydal: SSÚD 13 - Poříčany";
+  "D11, mezi km 16.7 a 16.3, ve směru Praha, práce na silnici; pravý jízdní pruh uzavřen, Od 20.09.2026 19:30 Do 21.09.2026 06:00, Oprava výtluků a příčných hrbolů, údržba a opravy vozovek AB, pracovní místo DK - Krátkodobé stabilní, Vydal: SSÚD 13 - Poříčany";
 
 const ACTIVE_RAW =
   "D8, mezi km 10.0 a 10.2, ve směru Ústí nad Labem, práce na silnici; pravý jízdní pruh uzavřen, Od 01.01.2026 08:00 Do 31.12.2026 18:00, Oprava výtluků, údržba a opravy vozovek, Vydal: SSÚD test";
@@ -44,7 +44,7 @@ function countLaneClosureSentences(sit) {
 
 function hasValidityEcho(sit) {
   return (
-    /19:30|06:00|14\.\s*8\.|15\.\s*8\.|14\.08\.|15\.08\.|Od\s+19/i.test(sit) ||
+    /19:30|06:00|20\.\s*9\.|21\.\s*9\.|20\.09\.|21\.09\.|Od\s+19/i.test(sit) ||
     /\bOd\s+\d/i.test(sit)
   );
 }
@@ -61,12 +61,12 @@ function hasValidityEcho(sit) {
     kmFrom: 16.7,
     kmTo: 16.3,
     lifecycleStatus: "FUTURE",
-    validFrom: "2026-08-14T19:30:00+02:00",
-    validTo: "2026-08-15T06:00:00+02:00",
+    validFrom: "2026-09-20T19:30:00+02:00",
+    validTo: "2026-09-21T06:00:00+02:00",
     illustrationKey: "prace",
   };
   const facts = parseOfficialCommentFacts(FUTURE_RAW);
-  const life = resolveSituationLifecycle(input, Date.parse("2026-08-14T12:00:00+02:00"));
+  const life = resolveSituationLifecycle(input, Date.parse("2026-09-20T12:00:00+02:00"));
   const sit = String(buildTrafficSituationSummary(input) || "");
   const card = buildTrafficCardPresentation(input);
   const laneCount = countLaneClosureSentences(sit);
@@ -226,7 +226,7 @@ function hasValidityEcho(sit) {
 // --- Full road closure FUTURE ---
 {
   const raw =
-    "silnice II/101, obec Sampleville, uzavřeno; silnice je uzavřena; Od 20.08.2026 22:00 Do 21.08.2026 05:00";
+    "silnice II/101, obec Sampleville, uzavřeno; silnice je uzavřena; Od 20.09.2026 22:00 Do 21.09.2026 05:00";
   const input = {
     impact: raw,
     impactFull: raw,

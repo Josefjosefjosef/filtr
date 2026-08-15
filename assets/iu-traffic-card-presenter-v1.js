@@ -639,8 +639,21 @@ export function parseAccidentParticipantsFromText(rawText) {
     add(ACCIDENT_PARTICIPANT.CYCLIST);
   }
 
+  // Broken-down / immobile OA — extract passenger car without requiring accident.
+  if (
+    /nepojízdn[ýáé]\s+OA\b/i.test(text) ||
+    (/porouchan/i.test(text) && /\bOA\b/.test(text)) ||
+    (/nepojízdn[ýáé]\s+(?:osobní|vozidl)/i.test(text) &&
+      /osobní|OA|automobil/i.test(text))
+  ) {
+    add(ACCIDENT_PARTICIPANT.PASSENGER_CAR);
+  }
+
+  // Generic DN worksite "nouze nebo nehoda" must not alone mark accidentish.
   const isAccidentish =
-    /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(text);
+    /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(
+      stripGenericEmergencyOrAccidentWorksitePhrase(text)
+    );
   if (isAccidentish || parts.length) {
     if (
       /nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])/i.test(text) ||
@@ -2374,6 +2387,8 @@ export function parseOfficialCommentFacts(rawText) {
     obstructionType: null,
     obstructionContext: null,
     strandedVehiclePresent: false,
+    immobileVehiclePresent: false,
+    vehicleOnShoulder: false,
     delayExpected: false,
     delayDurationValue: null,
     delayDurationUnit: null,
@@ -2483,8 +2498,8 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Accident subtype / participants / soft obstruction — source-grounded only.
   {
-    const isAccidentish =
-      /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(text);
+    // Generic worksite "nouze nebo nehoda" must not invent accident subtype alone.
+    const isAccidentish = hasExplicitAccidentConfirmation(text, {});
     const parts = parseAccidentParticipantsFromText(text);
     out.accidentParticipants = parts;
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
@@ -2548,7 +2563,10 @@ export function parseOfficialCommentFacts(rawText) {
         detail = clipExtractedValueAtStructuralEnd(detail, 120);
         if (detail) out.locationDetail = detail;
       }
-    } else if (/porouchan(?:é|ý|á)?\s+vozidlo/i.test(text)) {
+    } else if (
+      /porouchan(?:é|ý|á)?\s+vozidlo/i.test(text) ||
+      /nepojízdn[ýáé]\s+(?:OA|vozidl|osobní)/i.test(text)
+    ) {
       out.obstructionType = "BROKEN_VEHICLE";
     } else if (/spadl[ýáé]\s+strom|padl[ýáé]\s+strom/i.test(text)) {
       out.obstructionType = "FALLEN_TREE";
@@ -2560,6 +2578,18 @@ export function parseOfficialCommentFacts(rawText) {
     // "odstavené vozidlo" is a separate source token — may co-occur with porouchané.
     if (/odstaven(?:é|ý|á)?\s+vozidlo/i.test(text)) {
       out.strandedVehiclePresent = true;
+    }
+    if (
+      /nepojízdn/i.test(text) &&
+      /(?:\bOA\b|vozidl|osobní|automobil)/i.test(text)
+    ) {
+      out.immobileVehiclePresent = true;
+    }
+    if (
+      /na\s+krajnici/i.test(text) &&
+      /(?:nepojízdn|porouchan|odstaven|\bOA\b|vozidl)/i.test(text)
+    ) {
+      out.vehicleOnShoulder = true;
     }
   }
 
@@ -3424,35 +3454,78 @@ export function analyzeTrafficCondition(rawText) {
   return TRAFFIC_CONDITION.NONE;
 }
 
+/**
+ * Strip generic DN worksite disjunction "nouze nebo nehoda" so it cannot alone
+ * invent ACCIDENT. Does not remove explicit "nehoda" / "havárie" elsewhere.
+ */
+export function stripGenericEmergencyOrAccidentWorksitePhrase(raw) {
+  let s = clean(raw);
+  if (!s) return "";
+  s = s.replace(
+    /pracovní\s+místo\s+DN\s*[–—\-]?\s*nouze\s+nebo\s+nehoda/gi,
+    " "
+  );
+  s = s.replace(/\bnouze\s+nebo\s+nehoda\b/gi, " ");
+  return clean(s);
+}
+
+/**
+ * True when source/type authoritatively confirms an accident (not worksite OR-phrase).
+ */
+export function hasExplicitAccidentConfirmation(rawText, input = {}) {
+  const type = clean(input.eventType || input.category).toLowerCase();
+  const illustrationKey = clean(input.illustrationKey).toLowerCase();
+  if (type === "nehoda" || illustrationKey === "nehoda" || /\baccident\b/.test(type)) {
+    return true;
+  }
+  const text = stripGenericEmergencyOrAccidentWorksitePhrase(rawText);
+  return (
+    /\bnehoda\b/i.test(text) ||
+    /\bhavarovan/i.test(text) ||
+    /\bhavárie\b/i.test(text) ||
+    /\bstřet\b/i.test(text)
+  );
+}
+
+/** Explicit broken-down / immobile vehicle evidence from official comment. */
+export function hasExplicitBrokenDownVehicle(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (/porouchan(?:é|ý|á)?\s+vozidlo/i.test(text)) return true;
+  if (/porucha\s+NA|\bdefekt\b/i.test(text)) return true;
+  if (/porouchan/i.test(text) && /\b(NA|nákladní|vozidlo)\b/i.test(text)) return true;
+  if (/nepojízdn[ýáé]\s+(?:OA|vozidl|osobní)/i.test(text)) return true;
+  return false;
+}
+
 export function analyzePrimaryCause(rawText, input = {}) {
   const text = clean(rawText);
   const type = clean(input.eventType || input.category).toLowerCase();
   const illustrationKey = clean(input.illustrationKey).toLowerCase();
 
+  const explicitBroken = hasExplicitBrokenDownVehicle(text);
+  const explicitAccident = hasExplicitAccidentConfirmation(text, input);
+
+  // Explicit broken-down vehicle beats generic worksite "nouze nebo nehoda"
+  // (disjunctive metadata must not invent ACCIDENT by itself).
+  if (explicitBroken && !explicitAccident) {
+    return PRIMARY_CAUSE.BROKEN_VEHICLE;
+  }
+
   // Live accident signals. Soft "po havárii" on an obstruction (stationary vehicle
   // after a past crash) must NOT reclassify typed překážka into ACCIDENT.
   const softAfterAccidentOnly =
     /po\s+havárii/i.test(text) &&
-    !/\bnehoda\b/i.test(text) &&
-    !/\bhavarovan/i.test(text) &&
+    !hasExplicitAccidentConfirmation(text, {}) &&
+    !/\bhavarovan/i.test(stripGenericEmergencyOrAccidentWorksitePhrase(text)) &&
     (type === "prekazka" ||
       illustrationKey === "prekazka" ||
       /překážka\s+na\s+vozovce/i.test(text) ||
       /stojící\s+vozidlo/i.test(text));
-  if (
-    !softAfterAccidentOnly &&
-    (type === "nehoda" ||
-      illustrationKey === "nehoda" ||
-      /\baccident\b/.test(type) ||
-      /\bnehoda\b/i.test(text) ||
-      /\bhavarovan/i.test(text))
-  ) {
+  if (!softAfterAccidentOnly && explicitAccident) {
     return PRIMARY_CAUSE.ACCIDENT;
   }
-  if (
-    /porouchan(?:é|ý|á)?\s+vozidlo|porucha\s+NA|\bdefekt\b/i.test(text) ||
-    (/porouchan/i.test(text) && /\b(NA|nákladní|vozidlo)\b/i.test(text))
-  ) {
+  if (explicitBroken) {
     return PRIMARY_CAUSE.BROKEN_VEHICLE;
   }
   if (
@@ -3864,6 +3937,43 @@ export function formatAccidentSituationLead(source, factsIn = null) {
  * Concrete obstruction lead from structured facts / source — never invents injury or closure.
  * Returns null when only the generic category is known (caller keeps "Překážka na vozovce").
  */
+export function formatBrokenDownVehicleSituationLead(facts = {}, source = "") {
+  const text = clean(source);
+  const parts = Array.isArray(facts.accidentParticipants)
+    ? facts.accidentParticipants
+    : [];
+  const isPassenger =
+    parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR) ||
+    /\bnepojízdn[ýáé]\s+OA\b/i.test(text) ||
+    (/\bOA\b/.test(text) && /nepojízdn|porouchan/i.test(text));
+  const onShoulder =
+    !!facts.vehicleOnShoulder ||
+    (/na\s+krajnici/i.test(text) && /nepojízdn|porouchan|odstaven|\bOA\b/i.test(text));
+  const immobile =
+    !!facts.immobileVehiclePresent || /nepojízdn/i.test(text);
+
+  if (/porucha\s+NA|nákladní|defekt\s+náklad/i.test(text) && !isPassenger) {
+    return "Porouchané nákladní vozidlo";
+  }
+  if (isPassenger && immobile && onShoulder) {
+    return "Nepojízdný osobní automobil na krajnici";
+  }
+  if (isPassenger && onShoulder) {
+    return "Porouchané osobní vozidlo na krajnici";
+  }
+  if (isPassenger && immobile) {
+    return "Nepojízdný osobní automobil";
+  }
+  if (isPassenger) {
+    return "Porouchané osobní vozidlo";
+  }
+  return "Porouchané vozidlo";
+}
+
+/**
+ * Concrete obstruction lead from structured facts / source — never invents injury or closure.
+ * Returns null when only the generic category is known (caller keeps "Překážka na vozovce").
+ */
 export function formatObstructionSituationLead(facts = {}, source = "") {
   const text = clean(source);
   const type = clean(facts.obstructionType);
@@ -3877,8 +3987,7 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
     return detail ? "Stojící vozidlo " + detail : "Stojící vozidlo";
   }
   if (type === "BROKEN_VEHICLE") {
-    if (/porucha\s+NA|nákladní|defekt/i.test(text)) return "Porouchané nákladní vozidlo";
-    return "Porouchané vozidlo";
+    return formatBrokenDownVehicleSituationLead(facts, text);
   }
   if (type === "FALLEN_TREE") return "Spadlý strom";
   if (type === "LOST_CARGO") {
@@ -4233,11 +4342,7 @@ export function buildTrafficSituationSummary(input = {}) {
       circumstanceBits.push("Na místě je hlášeno nebezpečí");
     }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
-    if (/porucha\s+NA|nákladní|defekt/i.test(source)) {
-      causeBits.push("Porouchané nákladní vozidlo");
-    } else {
-      causeBits.push("Porouchané vozidlo");
-    }
+    causeBits.push(formatBrokenDownVehicleSituationLead(facts, source));
   } else if (cause === PRIMARY_CAUSE.OBSTACLE || event.kind === EVENT_KIND.OBSTACLE) {
     // Prefer concrete obstruction facts over bare category "Překážka na vozovce".
     // Category/title may stay PŘEKÁŽKA; never upgrade to ACCIDENT from "po havárii" alone.
