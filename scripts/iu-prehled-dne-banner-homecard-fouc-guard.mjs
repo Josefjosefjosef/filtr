@@ -43,7 +43,7 @@ function staticGate() {
   must(!/data-iu-news-preview-card="1"/.test(index), "index:no_static_news_card");
   must(!/id="iuSilverFinanceHomeCard"/.test(index), "index:no_static_finance_homecard");
   must(!/id="iuFeedNewsSplitPostHomeCards"/.test(index), "index:no_static_post_homecards");
-  must(!/id="iuFeedNewsSplit"[^>]*>[\s\S]*AKTUĂLNĂŤ ÄŚLĂNKY/.test(index), "index:no_static_media_split");
+  must(!/id="iuFeedNewsSplit"[^>]*>[\s\S]*AKTUÁLNÍ ČLÁNKY/.test(index), "index:no_static_media_split");
   must(/function bannerHtml\(/.test(ui), "ui:bannerHtml");
   must(/bannerHtml\(\)/.test(ui) && /homeShellHtml/.test(ui), "ui:banner_in_shell");
   must(/iuPd__hero/.test(ui) && /data-iu-pd-hero/.test(ui), "ui:hero_wrapper");

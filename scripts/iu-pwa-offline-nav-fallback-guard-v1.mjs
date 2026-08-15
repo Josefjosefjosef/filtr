@@ -140,7 +140,7 @@ async function main() {
     const afterReload = await page.evaluate(() => ({
       title: document.title || "",
       bodyLen: (document.body && document.body.innerText || "").length,
-      hasOffline: /offline|pĹ™ipojenĂ­|internet/i.test(document.body && document.body.innerText || ""),
+      hasOffline: /offline|připojení|internet/i.test(document.body && document.body.innerText || ""),
     }));
     if (afterReload.bodyLen > 20) passes.push("offline_reload_has_document");
     else failures.push({ test: "offline_reload_has_document", detail: afterReload });
@@ -158,7 +158,7 @@ async function main() {
     if (onlineBack.ok || onlineBack.status === 200) passes.push("online_recovery_fetch");
     else failures.push({ test: "online_recovery_fetch", detail: onlineBack });
 
-    // SW deploy reload can navigate the page when coming back online â€” retry cache probe.
+    // SW deploy reload can navigate the page when coming back online — retry cache probe.
     let cachesOk = null;
     for (let i = 0; i < 6; i++) {
       try {

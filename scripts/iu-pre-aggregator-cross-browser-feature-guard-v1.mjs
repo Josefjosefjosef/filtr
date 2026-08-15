@@ -116,7 +116,7 @@ async function main() {
   try {
     playwright = require("playwright");
   } catch (e) {
-    console.log("[xbrowser] playwright missing â€” static-only PASS");
+    console.log("[xbrowser] playwright missing — static-only PASS");
     console.log("[xbrowser] RESULT=PASS");
     process.exit(0);
   }
