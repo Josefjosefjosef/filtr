@@ -264,6 +264,28 @@ export const COLLISION_ANIMAL = Object.freeze({
   WILDLIFE: "WILDLIFE",
 });
 
+/**
+ * Fixed infrastructure collision targets (participant → object), not a second vehicle.
+ * Distinct from vehicle×vehicle / vehicle×animal participant relations.
+ */
+export const COLLISION_FIXED_OBJECT = Object.freeze({
+  GUARDRAIL: "GUARDRAIL",
+});
+
+const COLLISION_FIXED_OBJECT_CS = Object.freeze({
+  [COLLISION_FIXED_OBJECT.GUARDRAIL]: {
+    accusative: "svodidla",
+    genitive: "svodidel",
+  },
+});
+
+const ACCIDENT_PARTICIPANT_NOMINATIVE_CS = Object.freeze({
+  [ACCIDENT_PARTICIPANT.PASSENGER_CAR]: "Osobní automobil",
+  [ACCIDENT_PARTICIPANT.TRUCK]: "Nákladní automobil",
+  [ACCIDENT_PARTICIPANT.VAN]: "Dodávka",
+  [ACCIDENT_PARTICIPANT.MOTORCYCLE]: "Motocykl",
+});
+
 const COLLISION_ANIMAL_CS = Object.freeze({
   [COLLISION_ANIMAL.WILD_BOAR]: { nominative: "divočák", instrumental: "divočákem" },
   [COLLISION_ANIMAL.ROE_DEER]: { nominative: "srna", instrumental: "srnou" },
@@ -463,6 +485,61 @@ export function parseCollisionRelationFromText(rawText) {
         animalInstrumental: collisionAnimalInstrumentalCs(animal),
         leftRaw: clean(m[0].split(/[x×X]/)[0]),
         rightRaw: clean(m[form.animalIdx]),
+      };
+    }
+  }
+
+  return empty;
+}
+
+/**
+ * Participant → fixed infrastructure object (e.g. "havárie OA do svodidel").
+ * Never invents a second vehicle participant from the fixed object.
+ */
+export function parseFixedObjectCollisionFromText(rawText) {
+  const text = clean(rawText);
+  const empty = {
+    relation: null,
+    vehicle: null,
+    fixedObject: null,
+    leftRaw: null,
+    rightRaw: null,
+  };
+  if (!text) return empty;
+
+  const abr = text.match(
+    /\b(?:havárie\s+)?(DOD|MOTO|OA|NA)\s+do\s+(svodidel|svodidla|svodidlo)\b/i
+  );
+  if (abr) {
+    const vehicle =
+      TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[String(abr[1]).toUpperCase()] || null;
+    if (vehicle) {
+      return {
+        relation: "impact",
+        vehicle,
+        fixedObject: COLLISION_FIXED_OBJECT.GUARDRAIL,
+        leftRaw: String(abr[1]).toUpperCase(),
+        rightRaw: clean(abr[2]),
+      };
+    }
+  }
+
+  const word = text.match(
+    /\b(?:havárie\s+)?(?:osobní(?:ho)?\s+automobil(?:u)?|nákladní(?:ho)?\s+(?:automobil(?:u)?|vozidl[oa])|dodávk(?:a|y|ou)?|motocykl(?:u|em)?)\s+(?:havaroval[ao]?\s+)?do\s+(svodidel|svodidla|svodidlo)\b/i
+  );
+  if (word) {
+    let vehicle = null;
+    if (/osobní/i.test(word[0])) vehicle = ACCIDENT_PARTICIPANT.PASSENGER_CAR;
+    else if (/nákladní/i.test(word[0])) vehicle = ACCIDENT_PARTICIPANT.TRUCK;
+    else if (/dodávk/i.test(word[0])) vehicle = ACCIDENT_PARTICIPANT.VAN;
+    else if (/motocykl/i.test(word[0])) vehicle = ACCIDENT_PARTICIPANT.MOTORCYCLE;
+    if (vehicle) {
+      return {
+        relation: "impact",
+        vehicle,
+        fixedObject: COLLISION_FIXED_OBJECT.GUARDRAIL,
+        leftRaw: clean(word[0].split(/\s+do\s+/i)[0]),
+        rightRaw: clean(word[1]),
       };
     }
   }
@@ -879,7 +956,33 @@ export function namedObjectDuplicatesExitNumber(namedObject, exitNumber) {
   const named = clean(namedObject);
   const exit = clean(exitNumber);
   if (!named || !exit) return false;
-  return new RegExp("^exit\\s+" + exit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i").test(named);
+  if (new RegExp("^exit\\s+" + exit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i").test(named)) {
+    return true;
+  }
+  // "D1 sjezd EXIT 282 na Prahu" restates structured road+EXIT (+ optional direction).
+  return namedObjectRestatesStructuredMotorwayExit(named, exit, null);
+}
+
+/**
+ * True when a namedObject string is only a structured motorway EXIT phrase
+ * (road + sjezd/výjezd + EXIT N [+ na Place]) — not a ProperName to show beside badges.
+ */
+export function namedObjectRestatesStructuredMotorwayExit(namedObject, exitNumber, exitRoad) {
+  const named = clean(namedObject);
+  const exit = clean(exitNumber);
+  if (!named || !exit) return false;
+  const escExit = exit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const roadPart = exitRoad
+    ? "(?:" + String(exitRoad).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s+)?"
+    : "(?:[DER]\\d{1,3}[A-Za-z]?\\s+)?";
+  return new RegExp(
+    "^" +
+      roadPart +
+      "(?:výjezd|sjezd)\\s+EXIT\\s+" +
+      escExit +
+      "(?:\\s+na\\s+[\\p{L}\\-]+)?$",
+    "iu"
+  ).test(named);
 }
 
 export function extractExitAndRampFacts(rawText) {
@@ -1615,6 +1718,32 @@ function collectDirectionDestinationsFromComment(text) {
 
 function extractDirectionHumanFromComment(text) {
   const dests = collectDirectionDestinationsFromComment(text);
+  // "D1 sjezd EXIT 282 na Prahu" / "EXIT 76 na Brno" — destination after EXIT, not "ve směru".
+  // Do NOT use \b after the place token — JS \b is ASCII-only and truncates "Ústí" → "Úst".
+  const exitDest = text.match(
+    /\b(?:(?:výjezd|sjezd)\s+)?EXIT\s+\d{1,4}\s+na\s+([A-ZÁ-Ž][\p{L}\-]*)(?=[\s,;.]|$)/iu
+  );
+  if (exitDest) {
+    let bare = clean(exitDest[1]);
+    // Czech feminine place accusative after "na": Prahu → Praha (never invent multi-token forms).
+    if (
+      bare &&
+      !/\s/.test(bare) &&
+      /^[A-ZÁ-Ž][\p{L}]*[^aeiouyáéíóúýůAEIOUYÁÉÍÓÚÝŮ]u$/u.test(bare)
+    ) {
+      bare = bare.slice(0, -1) + "a";
+    }
+    const norm = normalizeDirectionHuman(bare) || normalizeDirectionHuman("na " + bare);
+    if (norm) {
+      // Prefer bare place for header/place ("směr Praha"), not "na Prahu".
+      const placeOnly = norm.replace(/^(?:na|do|z)\s+/i, "").trim();
+      if (placeOnly && !dests.some((d) => samePlaceName(d, placeOnly))) {
+        dests.unshift(placeOnly);
+      } else if (!placeOnly && !dests.some((d) => samePlaceName(d, norm))) {
+        dests.unshift(norm);
+      }
+    }
+  }
   if (!dests.length) return null;
   const isTurnSide = (d) => /^(?:na\s+|do\s+|z\s+)?(?:vlevo|vpravo)$/i.test(d);
   const placeLike = dests.filter((d) => !isTurnSide(d));
@@ -2039,8 +2168,14 @@ export function extractNamedTransportObject(rawText) {
   // NDIC may prefix tunnels as "ulice Tunel X" / "ulice Brusnický tunel" — strip that.
   const leadRaw = clean(text.split(/[,;]/)[0] || "");
   const lead = streetBareName(leadRaw);
+  // Structured motorway EXIT phrases decompose via EXIT/ramp facts — not ProperName objects.
+  const structuredMotorwayExit =
+    /\b[DER]\d{1,3}[A-Za-z]?\s+(?:výjezd|sjezd)\s+EXIT\s+\d{1,4}\b/i.test(lead) ||
+    /\b[DER]\d{1,3}[A-Za-z]?\s+EXIT\s+\d{1,4}\b/i.test(lead) ||
+    /^(?:výjezd|sjezd)\s+EXIT\s+\d{1,4}\b/i.test(lead);
   if (
     lead &&
+    !structuredMotorwayExit &&
     !looksLikeRoadNumberToken(lead) &&
     !isPrahaCityPartName(lead) &&
     !/^od\s+\d/i.test(lead) &&
@@ -2108,8 +2243,9 @@ export function extractNamedTransportObject(rawText) {
   if (ramp) {
     return { name: "nájezd " + clean(ramp[1]), kind: LOCATION_KIND.RAMP };
   }
+  // Never treat "sjezd EXIT N …" as a ProperName — that is structured EXIT/ramp.
   const exitRamp = scan.match(
-    /\bsjezd(?:u)?\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
+    /\bsjezd(?:u)?\s+(?!EXIT\b)([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
   );
   if (exitRamp) {
     return {
@@ -3268,6 +3404,8 @@ export function parseOfficialCommentFacts(rawText) {
     collisionAnimalInstrumental: null,
     collisionLeftRaw: null,
     collisionRightRaw: null,
+    collisionFixedObject: null,
+    collisionTargetType: null,
     genericVehicleFallback: false,
     genericVehicleFallbackReason: null,
     injuryPresent: false,
@@ -3443,19 +3581,35 @@ export function parseOfficialCommentFacts(rawText) {
     // Generic worksite "nouze nebo nehoda" must not invent accident subtype alone.
     const isAccidentish = hasExplicitAccidentConfirmation(text, {});
     const collision = parseCollisionRelationFromText(text);
+    const fixedImpact = parseFixedObjectCollisionFromText(text);
     const recon = reconcileAccidentParticipantsWithSpecificity(
       parseAccidentParticipantsFromText(text),
       text,
       collision
     );
-    const parts = recon.participants;
+    let parts = recon.participants;
+    // Fixed-object impact (OA do svodidel): ensure vehicle participant, never invent object as vehicle.
+    if (
+      fixedImpact.relation === "impact" &&
+      fixedImpact.vehicle &&
+      fixedImpact.fixedObject
+    ) {
+      if (!parts.includes(fixedImpact.vehicle)) parts = [fixedImpact.vehicle].concat(parts);
+    }
     out.accidentParticipants = parts;
-    out.collisionRelation = recon.collision.relation || null;
-    out.collisionVehicle = recon.collision.vehicle || null;
+    out.collisionRelation = recon.collision.relation || fixedImpact.relation || null;
+    out.collisionVehicle =
+      recon.collision.vehicle || fixedImpact.vehicle || null;
     out.collisionAnimal = recon.collision.animal || null;
     out.collisionAnimalInstrumental = recon.collision.animalInstrumental || null;
-    out.collisionLeftRaw = recon.collision.leftRaw || null;
-    out.collisionRightRaw = recon.collision.rightRaw || null;
+    out.collisionLeftRaw =
+      recon.collision.leftRaw || fixedImpact.leftRaw || null;
+    out.collisionRightRaw =
+      recon.collision.rightRaw || fixedImpact.rightRaw || null;
+    out.collisionFixedObject =
+      fixedImpact.relation === "impact" ? fixedImpact.fixedObject : null;
+    out.collisionTargetType =
+      fixedImpact.relation === "impact" ? fixedImpact.fixedObject : null;
     out.genericVehicleFallback = !!recon.genericVehicleFallback;
     out.genericVehicleFallbackReason = recon.genericVehicleFallbackReason || null;
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
@@ -4886,7 +5040,33 @@ export function formatAccidentSituationLead(source, factsIn = null) {
             collisionAnimalInstrumentalCs(facts.collisionAnimal),
         }
       : parseCollisionRelationFromText(text);
+  const fixedImpact =
+    (facts.collisionRelation === "impact" || facts.collisionFixedObject) &&
+    (facts.collisionFixedObject || facts.collisionTargetType)
+      ? {
+          relation: "impact",
+          vehicle: facts.collisionVehicle || null,
+          fixedObject: facts.collisionFixedObject || facts.collisionTargetType,
+        }
+      : parseFixedObjectCollisionFromText(text);
   const genericVehicleFallback = !!facts.genericVehicleFallback;
+
+  // Participant → fixed infrastructure (OA do svodidel) — not a second vehicle.
+  if (fixedImpact.relation === "impact" && fixedImpact.fixedObject) {
+    const objCs = COLLISION_FIXED_OBJECT_CS[fixedImpact.fixedObject];
+    const vehicleToken =
+      fixedImpact.vehicle && structuredParts.includes(fixedImpact.vehicle)
+        ? fixedImpact.vehicle
+        : fixedImpact.vehicle ||
+          (structuredParts.length === 1 ? structuredParts[0] : null);
+    const nom =
+      vehicleToken && ACCIDENT_PARTICIPANT_NOMINATIVE_CS[vehicleToken]
+        ? ACCIDENT_PARTICIPANT_NOMINATIVE_CS[vehicleToken]
+        : null;
+    if (nom && objCs && objCs.genitive) {
+      return appendInjuryIfPresent(nom + " havaroval do " + objCs.genitive, text);
+    }
+  }
 
   // Vehicle × animal collision relation — "s/se" + instrumental, not a flat "A a B" list.
   if (collision.relation === "collision" && collision.animal) {
@@ -6575,6 +6755,8 @@ export function buildLocalityHeaderModel(input = {}) {
   let municipalitySign = resolveMunicipalitySignName(input);
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
+  const blob = sourceBlob(input);
+  const weakLocationEnrichment = isWeakDerivedRampEnrichmentLabel(location, blob);
   const district = clean(input.district) || facts.district || "";
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
@@ -6680,6 +6862,7 @@ export function buildLocalityHeaderModel(input = {}) {
     besideLocality = resolveRoadDisplayName(road);
   } else if (
     location &&
+    !weakLocationEnrichment &&
     !looksLikeTruncatedFragment(location) &&
     !/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(location) &&
     !samePlaceName(location, municipalitySign) &&
@@ -6690,6 +6873,7 @@ export function buildLocalityHeaderModel(input = {}) {
     !samePlaceName(location, cityPart)
   ) {
     // Generic / landmark locality — NEVER prefix with "ulice:".
+    // Weak TMC "výjezd … vjezd …" must not sit beside structured EXIT primary.
     besideLocality = location;
     locationKind = classifyLocationKindFromName(location);
     if (looksLikeStreetName(location)) locationKind = LOCATION_KIND.GENERIC_LOCALITY;
@@ -6901,6 +7085,21 @@ export function resolveCollapsedKilometerLabel(input = {}, factsIn = null) {
   return null;
 }
 
+/**
+ * True when input.location looks like a weak TMC/resolver ramp enrichment label
+ * that must not override an explicit primary EXIT event location from the comment.
+ */
+export function isWeakDerivedRampEnrichmentLabel(location, sourceText = "") {
+  const loc = clean(location);
+  if (!loc) return false;
+  const src = clean(sourceText);
+  // Authoritative when the exact enrichment phrase also appears in official comment.
+  if (src && src.toLowerCase().includes(loc.toLowerCase())) return false;
+  // Typical TMC "výjezd X – vjezd Y" / "vjezd … – výjezd …" without source grounding.
+  if (/\bvýjezd\b/i.test(loc) && /\bvjezd\b/i.test(loc)) return true;
+  return false;
+}
+
 function pushUniqueBit(bits, value) {
   const v = clean(value);
   if (!v) return;
@@ -6931,6 +7130,8 @@ export function buildPlaceAndDirectionLine(input = {}) {
   const district = clean(input.district) || facts.district || "";
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
+  const blob = sourceBlob(input);
+  const weakEnrichment = isWeakDerivedRampEnrichmentLabel(location, blob);
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) cityPart = clean(input.municipality);
   if (!cityPart && isNumericCityPartName(input.municipality)) cityPart = clean(input.municipality);
@@ -6968,6 +7169,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
       if (muni && !bits.includes(muni)) bits.push(muni);
       else if (
         location &&
+        !weakEnrichment &&
         !roads.some((r) => samePlaceName(location, r)) &&
         !looksLikeRoadNumberToken(location) &&
         !bits.includes(location) &&
