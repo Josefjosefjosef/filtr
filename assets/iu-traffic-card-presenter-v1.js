@@ -697,7 +697,7 @@ function formatEmergencyServicesSituationBit(source) {
     return "Na místo jedou složky IZS";
   }
   if (status === EMERGENCY_SERVICES_STATUS.ON_SCENE) {
-    return "Na místě složky IZS";
+    return "Na místě jsou složky IZS";
   }
   return null;
 }
@@ -1000,10 +1000,11 @@ export function extractExitAndRampFacts(rawText) {
   if (!text) return out;
 
   // ROAD (+ optional výjezd/sjezd) + EXIT N — keeps primary motorway with numbered exit.
+  // Accept Czech-inflected EXITu / EXITe (NDIC "na EXITu 354").
   const numberedRoadExit =
-    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd)\s+EXIT\s+(\d{1,4})\b/i) ||
-    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT\s+(\d{1,4})\b/i);
-  const numberedBare = text.match(/\bEXIT\s+(\d{1,4})\b/i);
+    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd)\s+EXIT(?:u|e)?\s+(\d{1,4})\b/i) ||
+    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT(?:u|e)?\s+(\d{1,4})\b/i);
+  const numberedBare = text.match(/\bEXIT(?:u|e)?\s+(\d{1,4})\b/i);
   if (numberedRoadExit) {
     out.exitRoad = normalizeMotorwayRoadToken(numberedRoadExit[1]);
     out.exitNumber = clean(numberedRoadExit[2]);
@@ -1080,6 +1081,107 @@ export function extractExitAndRampFacts(rawText) {
   return out;
 }
 
+/**
+ * EXIT mentioned only as diversion measure ("odklon dopravy na EXITu N"),
+ * not as the primary event location ("D1 výjezd EXIT N" / "D48 EXIT 46").
+ * Never invents diversion — requires explicit odklon + matching EXIT number.
+ */
+export function isDiversionOnlyExitMention(rawText, diversionExit) {
+  const text = clean(rawText);
+  const exit = clean(diversionExit);
+  if (!text || !exit) return false;
+  const esc = exit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const diversionAtExit = new RegExp(
+    "odklon\\s+dopravy\\s+na\\s+EXIT(?:u|e)?\\s*" + esc + "\\b",
+    "i"
+  );
+  if (!diversionAtExit.test(text)) return false;
+  // Explicit event-at-exit keeps EXIT primary even if diversion also present.
+  const eventAtExit =
+    new RegExp("\\b(?:výjezd|sjezd)\\s+EXIT(?:u|e)?\\s*" + esc + "\\b", "i").test(text) ||
+    new RegExp("\\b([DER]\\d{1,3}[A-Za-z]?)\\s+EXIT(?:u|e)?\\s*" + esc + "\\b", "i").test(
+      text
+    );
+  return !eventAtExit;
+}
+
+/**
+ * Road-class noun for closure leads (Dálnice / Silnice / Komunikace).
+ * Uses classifyRoadPresentation — never hardcodes a specific road number.
+ */
+export function resolveClosureRoadNoun(input = {}, factsIn = null, sourceText = "") {
+  const facts = factsIn && typeof factsIn === "object" ? factsIn : {};
+  const source = clean(sourceText);
+  const road = resolvePresentationRoadNumber(input, facts);
+  const cls = classifyRoadPresentation(road, input);
+  if (cls.roadClass === "MOTORWAY") return "Dálnice";
+  if (
+    /\bmístní\s+komunikace\b|\bkomunikace\b/i.test(source) &&
+    !/\bsilnice\s+[ID]/i.test(source) &&
+    !/^D\d+/i.test(road || "")
+  ) {
+    return "Komunikace";
+  }
+  return "Silnice";
+}
+
+/** Counted vehicles after "kvůli nehodě" — genitive-of-quantity, source-grounded type only. */
+function formatCountedAccidentVehiclesForClosureCause(count, participantType) {
+  const n = Number(count);
+  if (!Number.isFinite(n) || n < 1 || n > 50) return null;
+  if (participantType === ACCIDENT_PARTICIPANT.PASSENGER_CAR) {
+    if (n === 1) return "1 osobního automobilu";
+    return n + " osobních automobilů";
+  }
+  if (participantType === ACCIDENT_PARTICIPANT.TRUCK) {
+    if (n === 1) return "1 nákladního automobilu";
+    return n + " nákladních automobilů";
+  }
+  if (participantType === ACCIDENT_PARTICIPANT.VAN) {
+    if (n === 1) return "1 dodávky";
+    return n + " " + czechPlural(n, "dodávky", "dodávek", "dodávek");
+  }
+  if (participantType === ACCIDENT_PARTICIPANT.MOTORCYCLE) {
+    if (n === 1) return "1 motocyklu";
+    return n + " " + czechPlural(n, "motocyklu", "motocyklů", "motocyklů");
+  }
+  return null;
+}
+
+/**
+ * Closure lead with accident as cause (not primary type NEHODA).
+ * Returns null when closure+accident facts are not both evidenced.
+ */
+export function formatClosureDueToAccidentLead(input, factsIn, sourceText, lifecycle) {
+  const facts = factsIn && typeof factsIn === "object" ? factsIn : {};
+  const source = clean(sourceText);
+  const closedBare =
+    /(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(source) ||
+    /úpln[áa]\s+uzavírk/i.test(source) ||
+    facts.closureAccidentCause === true;
+  if (!closedBare) return null;
+  const accidentEvidence =
+    hasExplicitAccidentConfirmation(source, input) ||
+    facts.accidentInvestigationActive === true ||
+    (facts.accidentParticipantCount != null && facts.accidentParticipantCount > 0) ||
+    (Array.isArray(facts.accidentParticipants) && facts.accidentParticipants.length > 0);
+  if (!accidentEvidence) return null;
+  const noun = resolveClosureRoadNoun(input, facts, source);
+  const type =
+    facts.accidentParticipantType ||
+    (Array.isArray(facts.accidentParticipants) && facts.accidentParticipants.length === 1
+      ? facts.accidentParticipants[0]
+      : null);
+  const vehicles = formatCountedAccidentVehiclesForClosureCause(
+    facts.accidentParticipantCount,
+    type
+  );
+  const pred = vehicles
+    ? "uzavřena kvůli nehodě " + vehicles
+    : "uzavřena kvůli nehodě";
+  return formatImpactBePredicate(noun, pred, lifecycle || EVENT_LIFECYCLE.ACTIVE);
+}
+
 function czechPlural(n, one, few, many) {
   const x = Math.abs(Number(n));
   if (!Number.isFinite(x)) return many;
@@ -1133,6 +1235,8 @@ export function formatCsDateTime(isoOrDate) {
 export function expandTrafficAbbreviationsCs(text) {
   let s = clean(text);
   if (!s) return "";
+  // DN = dopravní nehoda (NDIC). Expand before vehicle counts so "DN 3 OA" → full phrase.
+  s = s.replace(/\bDN\b/g, "dopravní nehoda");
   s = s.replace(/\b(\d+)\s*[×xX]\s*OA\b/g, (_, n) => {
     const num = Number(n);
     return num + " " + czechPlural(num, "osobní automobil", "osobní automobily", "osobních automobilů");
@@ -1255,7 +1359,7 @@ export function parseAccidentParticipantsFromText(rawText) {
 
   // Generic DN worksite "nouze nebo nehoda" must not alone mark accidentish.
   const isAccidentish =
-    /\bnehoda\b|\bhavarovan|\bhavárie\b|\bstřet\b/i.test(
+    /\bnehod[ay]\b|\bhavarovan|\bhavárie\b|\bstřet\b|\bDN\b|\bdopravní\s+nehoda\b/i.test(
       stripGenericEmergencyOrAccidentWorksitePhrase(text)
     );
   const hasSpecificAbbrevCollision =
@@ -1263,6 +1367,12 @@ export function parseAccidentParticipantsFromText(rawText) {
     !!abrPair ||
     !!abrVulnerable ||
     !!vulnerableAbr;
+
+  // Counted DN/OA form ("DN 3 OA") — participant type + count without inventing.
+  const dnCounted = text.match(/\bDN\s+(\d+)\s+(OA|NA|DOD|MOTO)\b/);
+  if (dnCounted) {
+    add(TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[String(dnCounted[2]).toUpperCase()]);
+  }
 
   if (isAccidentish || parts.length) {
     if (
@@ -2994,6 +3104,49 @@ export function hasExplicitLaneRestrictionSource(rawText) {
 }
 
 /**
+ * Travel-lane impact facts from official comment.
+ * Distinguishes impassable vs closed wording; never invents L/R/C side.
+ * Shoulder / odstavný are not travel-lane facts.
+ */
+export function parseLaneImpactFactsFromText(rawText) {
+  const text = clean(rawText);
+  const out = { laneImpassable: false, laneSide: null, laneClosed: false };
+  if (!text) return out;
+  if (isShoulderOrVergeRestriction(text) && !/\bjízdní\s+pruh\b/i.test(text)) {
+    return out;
+  }
+  const namedSide = text.match(
+    /\b(pravý|levý|střední)\s+jízdní\s+pruh\b/i
+  );
+  if (namedSide) {
+    const s = String(namedSide[1]).toLowerCase();
+    if (s === "pravý") out.laneSide = "RIGHT";
+    else if (s === "levý") out.laneSide = "LEFT";
+    else if (s === "střední") out.laneSide = "CENTER";
+  }
+  const impassable =
+    /\bneprůjezdn[ýáo]?\s+(?:jízdní\s+)?pruh\b/i.test(text) ||
+    /\b(?:jízdní\s+)?pruh\s+(?:je\s+)?neprůjezdn/i.test(text) ||
+    (namedSide &&
+      new RegExp(
+        namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}neprůjezdn",
+        "i"
+      ).test(text));
+  const closed =
+    /\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
+    /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
+    (namedSide &&
+      new RegExp(
+        namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}uzavřen",
+        "i"
+      ).test(text));
+  out.laneImpassable = impassable;
+  out.laneClosed = closed && !impassable;
+  if ((impassable || closed) && !out.laneSide) out.laneSide = "UNKNOWN";
+  return out;
+}
+
+/**
  * Alternating / shuttle one-way traffic language from official comment.
  */
 export function hasExplicitAlternatingTrafficSource(rawText) {
@@ -3393,6 +3546,8 @@ export function parseOfficialCommentFacts(rawText) {
     affectedRoadPart: null,
     affectedLane: null,
     laneRestriction: false,
+    laneImpassable: false,
+    laneSide: null,
     alternatingTraffic: false,
     roadworkDetail: null,
     workDurationHintMinutes: null,
@@ -3410,6 +3565,9 @@ export function parseOfficialCommentFacts(rawText) {
     genericVehicleFallbackReason: null,
     injuryPresent: false,
     accidentInvestigationActive: false,
+    accidentParticipantCount: null,
+    accidentParticipantType: null,
+    closureAccidentCause: false,
     emergencyServicesStatus: null,
     policePresent: false,
     fireRescuePresent: false,
@@ -3442,6 +3600,8 @@ export function parseOfficialCommentFacts(rawText) {
     locationKind: LOCATION_KIND.UNKNOWN,
     exitNumber: null,
     exitPrimaryLocation: false,
+    trafficDiversion: false,
+    diversionExit: null,
     routeBasedEvent: false,
     oversizeLoad: false,
     loadType: null,
@@ -3501,7 +3661,18 @@ export function parseOfficialCommentFacts(rawText) {
     out.loadHeightDisplay = loadFacts.loadHeightDisplay;
     out.routeBasedEvent = isRouteBasedTrafficEvent(text);
     // Local EXIT events keep EXIT as primary; itinerary waypoints must not.
-    out.exitPrimaryLocation = !!out.exitNumber && !out.routeBasedEvent;
+    // Diversion-only EXIT ("odklon dopravy na EXITu N") is a secondary measure — not primary location.
+    {
+      const diversionExitM = text.match(
+        /odklon\s+dopravy\s+na\s+EXIT(?:u|e)?\s*(\d{1,4})\b/i
+      );
+      out.trafficDiversion = /odklon\s+dopravy/i.test(text);
+      out.diversionExit = diversionExitM ? clean(diversionExitM[1]) : null;
+      if (out.diversionExit && !out.exitNumber) out.exitNumber = out.diversionExit;
+      const diversionOnlyExit = isDiversionOnlyExitMention(text, out.diversionExit);
+      out.exitPrimaryLocation =
+        !!out.exitNumber && !out.routeBasedEvent && !diversionOnlyExit;
+    }
   }
 
   const eventReason = extractEventReasonFromOfficialComment(text);
@@ -3562,6 +3733,15 @@ export function parseOfficialCommentFacts(rawText) {
 
   out.laneRestriction = hasExplicitLaneRestrictionSource(text);
   out.alternatingTraffic = hasExplicitAlternatingTrafficSource(text);
+  {
+    const laneFacts = parseLaneImpactFactsFromText(text);
+    out.laneImpassable = laneFacts.laneImpassable;
+    out.laneSide = laneFacts.laneSide;
+    if (laneFacts.laneImpassable || laneFacts.laneSide) {
+      // Lane impassable / named-side is an explicit travel-lane fact (≠ "omezení v jízdním pruhu").
+      out.laneRestriction = out.laneRestriction || laneFacts.laneImpassable || !!laneFacts.laneSide;
+    }
+  }
 
   // Explicit "… do N min" beside maintenance/work phrasing — store only, never invent delay.
   {
@@ -3614,6 +3794,45 @@ export function parseOfficialCommentFacts(rawText) {
     out.genericVehicleFallbackReason = recon.genericVehicleFallbackReason || null;
     out.injuryPresent = /\bse\s+zraněním\b/i.test(text) || /,\s*se\s+zraněním\b/i.test(text);
     out.accidentInvestigationActive = /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(text);
+    {
+      const counted =
+        text.match(/\bDN\s+(\d+)\s+(OA|NA|DOD|MOTO)\b/) ||
+        text.match(/\b(\d+)\s*[x×X]\s*(OA|NA|DOD|MOTO)\b/) ||
+        text.match(/\b(\d+)\s+(OA|NA|DOD|MOTO)\b/) ||
+        text.match(
+          /\bdopravní\s+nehoda\s+(\d+)\s+(osobní|nákladní|dodávk|motocykl)/i
+        ) ||
+        text.match(/(\d+)\s+havarovan(?:á|é|ých)\s+(?:vozidla|vozidlo|vozidel)/i);
+      if (counted) {
+        const n = Number(counted[1]);
+        if (Number.isFinite(n) && n > 0 && n <= 50) {
+          out.accidentParticipantCount = n;
+          const tok = String(counted[2] || "").toUpperCase();
+          if (TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[tok]) {
+            out.accidentParticipantType = TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[tok];
+          } else if (/^osobní/i.test(counted[2] || "")) {
+            out.accidentParticipantType = ACCIDENT_PARTICIPANT.PASSENGER_CAR;
+          } else if (/^nákladní/i.test(counted[2] || "")) {
+            out.accidentParticipantType = ACCIDENT_PARTICIPANT.TRUCK;
+          } else if (/^dodávk/i.test(counted[2] || "")) {
+            out.accidentParticipantType = ACCIDENT_PARTICIPANT.VAN;
+          } else if (/^motocykl/i.test(counted[2] || "")) {
+            out.accidentParticipantType = ACCIDENT_PARTICIPANT.MOTORCYCLE;
+          } else if (parts.length === 1) {
+            out.accidentParticipantType = parts[0];
+          }
+        }
+      } else if (parts.length === 1) {
+        out.accidentParticipantType = parts[0];
+      }
+    }
+    out.closureAccidentCause =
+      (hasExplicitAccidentConfirmation(text, {}) ||
+        out.accidentInvestigationActive ||
+        (out.accidentParticipantCount != null && out.accidentParticipantCount > 0) ||
+        (Array.isArray(parts) && parts.length > 0)) &&
+      (/(?:^|[,;]\s*)uzavřeno(?:\s*[,;.]|\s*$)/i.test(text) ||
+        /úpln[áa]\s+uzavírk/i.test(text));
     out.emergencyServicesStatus = parseEmergencyServicesStatusFromText(text);
     out.policePresent = /\bPČR\b/i.test(text);
     out.fireRescuePresent = /\bHZS\b/i.test(text);
@@ -3778,6 +3997,7 @@ export function parseOfficialCommentFacts(rawText) {
     // Structured EXIT/ramp without a ProperName object — still a situation object.
     // Route itineraries: keep exitNumber for expanded detail, but do not promote a
     // mid-route EXIT waypoint to namedObject / primary location.
+    // Diversion-only EXIT: secondary measure — never promote to namedObject / place.
     if (out.exitNumber && out.exitPrimaryLocation) {
       out.namedObject = "exit " + out.exitNumber;
       out.namedObjectKind = LOCATION_KIND.EXIT_RAMP;
@@ -3785,6 +4005,13 @@ export function parseOfficialCommentFacts(rawText) {
       out.locationKind = LOCATION_KIND.EXIT_RAMP;
     } else if (out.exitNumber && out.routeBasedEvent) {
       if (out.city) out.locationKind = LOCATION_KIND.MUNICIPALITY;
+    } else if (
+      out.trafficDiversion &&
+      out.diversionExit &&
+      String(out.diversionExit) === String(out.exitNumber) &&
+      !out.exitPrimaryLocation
+    ) {
+      // Diversion VIA exit — leave namedObject unset; km/road stay primary.
     } else if (out.rampType === "entrance") {
       out.namedObject =
         out.rampRelation === "on"
@@ -4536,6 +4763,17 @@ export function isSingleLaneRestriction(rawText) {
   ) {
     return true;
   }
+  // NDIC shorthand "neprůjezdný pruh" (without "jízdní") — travel-lane impact.
+  // Never classify hard-shoulder / odstavný as a travel lane here.
+  if (
+    !isShoulderOrVergeRestriction(text) &&
+    !/\bodstavn[ýáé]\s+pruh\b/i.test(text) &&
+    !/\bzpevněn[áa]\s+krajnice\b/i.test(text) &&
+    (/\bneprůjezdn[ýáo]?\s+pruh\b/i.test(text) ||
+      /\bpruh\s+(?:je\s+)?neprůjezdn/i.test(text))
+  ) {
+    return true;
+  }
   // Urban lane occupation: "zábor pravého/parkovacího pruhu" (TSK/NDIC).
   if (
     /zábor\s+(?:pravého|levého|středního)(?:\/[^\s,]{2,40})?\s*pruhu/i.test(text) ||
@@ -4652,7 +4890,7 @@ export function stripGenericEmergencyOrAccidentWorksitePhrase(raw) {
   let s = clean(raw);
   if (!s) return "";
   s = s.replace(
-    /pracovní\s+místo\s+DN\s*[–—\-]?\s*nouze\s+nebo\s+nehoda/gi,
+    /pracovní\s+místo\s+(?:DN|dopravní\s+nehoda)\s*[–—\-]?\s*nouze\s+nebo\s+nehoda/gi,
     " "
   );
   s = s.replace(/\bnouze\s+nebo\s+nehoda\b/gi, " ");
@@ -4670,7 +4908,11 @@ export function hasExplicitAccidentConfirmation(rawText, input = {}) {
   }
   const text = stripGenericEmergencyOrAccidentWorksitePhrase(rawText);
   return (
-    /\bnehoda\b/i.test(text) ||
+    /\bnehod[ay]\b/i.test(text) ||
+    /\bDN\s+\d+\s+(?:OA|NA|DOD|MOTO)\b/.test(text) ||
+    /\bdopravní\s+nehoda\s+\d+\s+(?:OA|NA|DOD|MOTO|osobní|nákladní|dodávk|motocykl)/i.test(
+      text
+    ) ||
     /\bhavarovan/i.test(text) ||
     /\bhavárie\b/i.test(text) ||
     /\bstřet\b/i.test(text)
@@ -4713,6 +4955,11 @@ export function analyzePrimaryCause(rawText, input = {}) {
       /překážka\s+na\s+vozovce/i.test(text) ||
       /stojící\s+vozidlo/i.test(text));
   if (!softAfterAccidentOnly && explicitAccident) {
+    // Typed uzavirka keeps CLOSURE taxonomy; accident is the cause fact for composer.
+    // Bare accident + full-road closure still classifies as ACCIDENT (NEHODA title).
+    if (type === "uzavirka" || illustrationKey === "uzavirka") {
+      return PRIMARY_CAUSE.FULL_CLOSURE;
+    }
     return PRIMARY_CAUSE.ACCIDENT;
   }
   if (explicitBroken) {
@@ -5648,7 +5895,7 @@ export function buildTrafficSituationSummary(input = {}) {
       /(?:^|[,;]\s*)nebezpečí(?:\s*[,;.]|$)/i.test(source) ||
       /práce\s*,\s*nebezpečí/i.test(source)
     ) {
-      circumstanceBits.push("Na místě je hlášeno nebezpečí");
+      circumstanceBits.push("Hlášeno nebezpečí");
     }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     causeBits.push(formatBrokenDownVehicleSituationLead(facts, source));
@@ -6026,7 +6273,19 @@ export function buildTrafficSituationSummary(input = {}) {
       } else if (multiRoadClosed) {
         causeBits.push(formatImpactPluralBePredicate("Silnice", "uzavřeny", lifecycle));
       } else {
-        causeBits.push(formatImpactBePredicate("Silnice", "uzavřena", lifecycle));
+        const accidentCauseLead = formatClosureDueToAccidentLead(
+          input,
+          facts,
+          source,
+          lifecycle
+        );
+        if (accidentCauseLead) {
+          causeBits.push(accidentCauseLead);
+          facts._closureAccidentCauseMerged = true;
+        } else {
+          const noun = resolveClosureRoadNoun(input, facts, source);
+          causeBits.push(formatImpactBePredicate(noun, "uzavřena", lifecycle));
+        }
       }
     }
   } else if (event.kind === EVENT_KIND.QUEUE) {
@@ -6117,10 +6376,25 @@ export function buildTrafficSituationSummary(input = {}) {
     ) {
       // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
       if (/neprůjezdn/i.test(source)) {
-        scopeBits.push(formatImpactBePredicate("Jízdní pruh", "neprůjezdný", lifecycle));
+        scopeBits.push(
+          lifecycle === EVENT_LIFECYCLE.FUTURE
+            ? "Jízdní pruh bude neprůjezdný"
+            : "Neprůjezdný jízdní pruh"
+        );
       } else {
         scopeBits.push(formatLaneClosedImpact("jízdní pruh", lifecycle, null));
       }
+    } else if (
+      facts.laneImpassable ||
+      /\bneprůjezdn[ýáo]?\s+pruh\b/i.test(source) ||
+      /\bpruh\s+(?:je\s+)?neprůjezdn/i.test(source)
+    ) {
+      // NDIC shorthand without "jízdní" / without side — never invent pravý/levý.
+      scopeBits.push(
+        lifecycle === EVENT_LIFECYCLE.FUTURE
+          ? "Jízdní pruh bude neprůjezdný"
+          : "Neprůjezdný jízdní pruh"
+      );
     } else {
       scopeBits.push(formatLaneClosedImpact("jeden jízdní pruh", lifecycle, null));
     }
@@ -6135,13 +6409,20 @@ export function buildTrafficSituationSummary(input = {}) {
       );
     } else if (scope === RESTRICTION_SCOPE.DIRECTION_CLOSED) {
       const dir = facts.directionHuman || clean(input.direction);
-      if (dir) {
+      // When closure+accident cause already states the road is closed, do not repeat
+      // "Uzavřeno ve směru X" — direction lives in place/header.
+      const skipRedundantDirection =
+        !!dir &&
+        (facts._closureAccidentCauseMerged ||
+          facts.closureAccidentCause ||
+          causeBits.some((b) => /uzavřen/i.test(b) && /kvůli\s+nehod/i.test(b)));
+      if (dir && !skipRedundantDirection) {
         scopeBits.push(
           lifecycle === EVENT_LIFECYCLE.FUTURE
             ? "Bude uzavřeno ve směru " + dir
             : "Uzavřeno ve směru " + dir
         );
-      } else {
+      } else if (!dir) {
         scopeBits.push(formatImpactBePredicate("Směr", "uzavřen", lifecycle));
       }
     } else if (!causeBits.some((b) => /uzavírk|uzavřen/i.test(b))) {
@@ -6375,6 +6656,31 @@ export function buildTrafficSituationSummary(input = {}) {
       !circumstanceBits.some((b) => /domů|č\./i.test(b))
     ) {
       circumstanceBits.push(locBit);
+    }
+  }
+
+  // Closure secondary facts: investigation + diversion (once each; never RAW dump).
+  if (
+    (event.kind === EVENT_KIND.CLOSURE || cause === PRIMARY_CAUSE.FULL_CLOSURE) &&
+    (facts.accidentInvestigationActive ||
+      /probíhá\s+vyšetřování(?:\s+nehody)?/i.test(source)) &&
+    !circumstanceBits.some((b) => /vyšetřování/i.test(b))
+  ) {
+    circumstanceBits.push("Probíhá vyšetřování nehody");
+  }
+  {
+    const divExit =
+      clean(facts.diversionExit) ||
+      ((source.match(/odklon\s+dopravy\s+na\s+EXIT(?:u|e)?\s*(\d{1,4})\b/i) || [])[1] ||
+        "");
+    if (
+      (facts.trafficDiversion || /odklon\s+dopravy/i.test(source)) &&
+      divExit &&
+      !circumstanceBits.some((b) => /odkláněn|odklon\s+dopravy/i.test(b)) &&
+      !scopeBits.some((b) => /odkláněn|odklon\s+dopravy/i.test(b)) &&
+      !causeBits.some((b) => /odkláněn|odklon\s+dopravy/i.test(b))
+    ) {
+      circumstanceBits.push("Doprava je odkláněna na EXITu " + divExit);
     }
   }
 
