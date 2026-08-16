@@ -14,6 +14,8 @@ import { evaluateLiveAnomalyGuard } from "./live-anomaly-guard.mjs";
 export const LIVE_SNAPSHOT_OBJECT_KEY = "current/traffic_offline_snapshot.json";
 export const LIVE_META_OBJECT_KEY = "current/meta.json";
 export const LIVE_PUBLISH_PATH = "/projects/data/info_events/ndic_datex_v1/__iu_live_publish";
+/** Prefer raw snapshot body + meta header — avoids Worker JSON.parse of multi-MiB envelopes. */
+export const LIVE_PUBLISH_WIRE_RAW = "snapshot-raw-v1";
 
 /** Bounded publish retry budget (must fit inside ~60s poll without queueing). */
 export const PUBLISH_MAX_ATTEMPTS = 4;
@@ -265,7 +267,9 @@ export async function publishLiveTrafficSnapshot({
     };
   }
 
-  const requestBody = JSON.stringify({ meta, snapshot });
+  // Body = already-serialized snapshot only (not {meta,snapshot} envelope).
+  const requestBody = body;
+  const metaHeader = JSON.stringify(meta);
   const started = nowMs();
   let attempt = 0;
   let lastStatus = 0;
@@ -282,8 +286,10 @@ export async function publishLiveTrafficSnapshot({
       res = await fetchImpl(publishUrl, {
         method: "POST",
         headers: {
-          "content-type": "application/json",
+          "content-type": "application/json; charset=utf-8",
           authorization: "Bearer " + token,
+          "x-iu-ndic-publish-wire": LIVE_PUBLISH_WIRE_RAW,
+          "x-iu-ndic-meta": metaHeader,
           "x-iu-ndic-generation-id": meta.generationId,
           "x-iu-ndic-source-last-modified": meta.sourceLastModified || "",
           "x-iu-ndic-checksum": checksum,
