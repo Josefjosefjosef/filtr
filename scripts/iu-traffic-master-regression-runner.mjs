@@ -48,6 +48,7 @@ const SUITES = [
   "iu-traffic-municipality-relation-oa-accident-guard",
   "iu-traffic-intersection-locality-precedence-guard",
   "iu-traffic-km-phrase-not-municipality-guard",
+  "iu-traffic-street-in-municipality-guard",
 ];
 
 const rows = [];
