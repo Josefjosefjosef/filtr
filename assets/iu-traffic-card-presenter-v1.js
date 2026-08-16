@@ -620,7 +620,7 @@ function formatEmergencyServicesSituationBit(source) {
     return "Na místo jedou složky IZS";
   }
   if (status === EMERGENCY_SERVICES_STATUS.ON_SCENE) {
-    return "Na místě složky IZS";
+    return "Na místě jsou složky IZS";
   }
   return null;
 }
@@ -2954,6 +2954,49 @@ export function hasExplicitLaneRestrictionSource(rawText) {
 }
 
 /**
+ * Travel-lane impact facts from official comment.
+ * Distinguishes impassable vs closed wording; never invents L/R/C side.
+ * Shoulder / odstavný are not travel-lane facts.
+ */
+export function parseLaneImpactFactsFromText(rawText) {
+  const text = clean(rawText);
+  const out = { laneImpassable: false, laneSide: null, laneClosed: false };
+  if (!text) return out;
+  if (isShoulderOrVergeRestriction(text) && !/\bjízdní\s+pruh\b/i.test(text)) {
+    return out;
+  }
+  const namedSide = text.match(
+    /\b(pravý|levý|střední)\s+jízdní\s+pruh\b/i
+  );
+  if (namedSide) {
+    const s = String(namedSide[1]).toLowerCase();
+    if (s === "pravý") out.laneSide = "RIGHT";
+    else if (s === "levý") out.laneSide = "LEFT";
+    else if (s === "střední") out.laneSide = "CENTER";
+  }
+  const impassable =
+    /\bneprůjezdn[ýáo]?\s+(?:jízdní\s+)?pruh\b/i.test(text) ||
+    /\b(?:jízdní\s+)?pruh\s+(?:je\s+)?neprůjezdn/i.test(text) ||
+    (namedSide &&
+      new RegExp(
+        namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}neprůjezdn",
+        "i"
+      ).test(text));
+  const closed =
+    /\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
+    /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
+    (namedSide &&
+      new RegExp(
+        namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}uzavřen",
+        "i"
+      ).test(text));
+  out.laneImpassable = impassable;
+  out.laneClosed = closed && !impassable;
+  if ((impassable || closed) && !out.laneSide) out.laneSide = "UNKNOWN";
+  return out;
+}
+
+/**
  * Alternating / shuttle one-way traffic language from official comment.
  */
 export function hasExplicitAlternatingTrafficSource(rawText) {
@@ -3353,6 +3396,8 @@ export function parseOfficialCommentFacts(rawText) {
     affectedRoadPart: null,
     affectedLane: null,
     laneRestriction: false,
+    laneImpassable: false,
+    laneSide: null,
     alternatingTraffic: false,
     roadworkDetail: null,
     workDurationHintMinutes: null,
@@ -3536,6 +3581,15 @@ export function parseOfficialCommentFacts(rawText) {
 
   out.laneRestriction = hasExplicitLaneRestrictionSource(text);
   out.alternatingTraffic = hasExplicitAlternatingTrafficSource(text);
+  {
+    const laneFacts = parseLaneImpactFactsFromText(text);
+    out.laneImpassable = laneFacts.laneImpassable;
+    out.laneSide = laneFacts.laneSide;
+    if (laneFacts.laneImpassable || laneFacts.laneSide) {
+      // Lane impassable / named-side is an explicit travel-lane fact (≠ "omezení v jízdním pruhu").
+      out.laneRestriction = out.laneRestriction || laneFacts.laneImpassable || !!laneFacts.laneSide;
+    }
+  }
 
   // Explicit "… do N min" beside maintenance/work phrasing — store only, never invent delay.
   {
@@ -3575,10 +3629,12 @@ export function parseOfficialCommentFacts(rawText) {
     {
       const counted =
         text.match(/\bDN\s+(\d+)\s+(OA|NA|DOD|MOTO)\b/) ||
+        text.match(/\b(\d+)\s*[x×X]\s*(OA|NA|DOD|MOTO)\b/) ||
         text.match(/\b(\d+)\s+(OA|NA|DOD|MOTO)\b/) ||
         text.match(
           /\bdopravní\s+nehoda\s+(\d+)\s+(osobní|nákladní|dodávk|motocykl)/i
-        );
+        ) ||
+        text.match(/(\d+)\s+havarovan(?:á|é|ých)\s+(?:vozidla|vozidlo|vozidel)/i);
       if (counted) {
         const n = Number(counted[1]);
         if (Number.isFinite(n) && n > 0 && n <= 50) {
@@ -3586,14 +3642,16 @@ export function parseOfficialCommentFacts(rawText) {
           const tok = String(counted[2] || "").toUpperCase();
           if (TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[tok]) {
             out.accidentParticipantType = TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT[tok];
-          } else if (/^osobní/i.test(counted[2])) {
+          } else if (/^osobní/i.test(counted[2] || "")) {
             out.accidentParticipantType = ACCIDENT_PARTICIPANT.PASSENGER_CAR;
-          } else if (/^nákladní/i.test(counted[2])) {
+          } else if (/^nákladní/i.test(counted[2] || "")) {
             out.accidentParticipantType = ACCIDENT_PARTICIPANT.TRUCK;
-          } else if (/^dodávk/i.test(counted[2])) {
+          } else if (/^dodávk/i.test(counted[2] || "")) {
             out.accidentParticipantType = ACCIDENT_PARTICIPANT.VAN;
-          } else if (/^motocykl/i.test(counted[2])) {
+          } else if (/^motocykl/i.test(counted[2] || "")) {
             out.accidentParticipantType = ACCIDENT_PARTICIPANT.MOTORCYCLE;
+          } else if (parts.length === 1) {
+            out.accidentParticipantType = parts[0];
           }
         }
       } else if (parts.length === 1) {
@@ -4532,6 +4590,17 @@ export function isSingleLaneRestriction(rawText) {
     (/\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
       /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
       /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(text))
+  ) {
+    return true;
+  }
+  // NDIC shorthand "neprůjezdný pruh" (without "jízdní") — travel-lane impact.
+  // Never classify hard-shoulder / odstavný as a travel lane here.
+  if (
+    !isShoulderOrVergeRestriction(text) &&
+    !/\bodstavn[ýáé]\s+pruh\b/i.test(text) &&
+    !/\bzpevněn[áa]\s+krajnice\b/i.test(text) &&
+    (/\bneprůjezdn[ýáo]?\s+pruh\b/i.test(text) ||
+      /\bpruh\s+(?:je\s+)?neprůjezdn/i.test(text))
   ) {
     return true;
   }
@@ -5630,7 +5699,7 @@ export function buildTrafficSituationSummary(input = {}) {
       /(?:^|[,;]\s*)nebezpečí(?:\s*[,;.]|$)/i.test(source) ||
       /práce\s*,\s*nebezpečí/i.test(source)
     ) {
-      circumstanceBits.push("Na místě je hlášeno nebezpečí");
+      circumstanceBits.push("Hlášeno nebezpečí");
     }
   } else if (cause === PRIMARY_CAUSE.BROKEN_VEHICLE) {
     causeBits.push(formatBrokenDownVehicleSituationLead(facts, source));
@@ -6111,10 +6180,25 @@ export function buildTrafficSituationSummary(input = {}) {
     ) {
       // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
       if (/neprůjezdn/i.test(source)) {
-        scopeBits.push(formatImpactBePredicate("Jízdní pruh", "neprůjezdný", lifecycle));
+        scopeBits.push(
+          lifecycle === EVENT_LIFECYCLE.FUTURE
+            ? "Jízdní pruh bude neprůjezdný"
+            : "Neprůjezdný jízdní pruh"
+        );
       } else {
         scopeBits.push(formatLaneClosedImpact("jízdní pruh", lifecycle, null));
       }
+    } else if (
+      facts.laneImpassable ||
+      /\bneprůjezdn[ýáo]?\s+pruh\b/i.test(source) ||
+      /\bpruh\s+(?:je\s+)?neprůjezdn/i.test(source)
+    ) {
+      // NDIC shorthand without "jízdní" / without side — never invent pravý/levý.
+      scopeBits.push(
+        lifecycle === EVENT_LIFECYCLE.FUTURE
+          ? "Jízdní pruh bude neprůjezdný"
+          : "Neprůjezdný jízdní pruh"
+      );
     } else {
       scopeBits.push(formatLaneClosedImpact("jeden jízdní pruh", lifecycle, null));
     }
