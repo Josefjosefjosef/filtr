@@ -13,12 +13,21 @@ const R2_SNAPSHOT_KEY = "current/traffic_offline_snapshot.json";
 const R2_META_KEY = "current/meta.json";
 const R2_STAGING_SNAPSHOT_KEY = "staging/traffic_offline_snapshot.json";
 const R2_STAGING_META_KEY = "staging/meta.json";
+/** Body = pre-serialized snapshot JSON; meta in x-iu-ndic-meta (avoids Worker JSON.parse of ~8MiB). */
+const LIVE_PUBLISH_WIRE_RAW = "snapshot-raw-v1";
 
 export type Env = {
   TRAFFIC_LIVE?: R2Bucket;
   LIVE_TRAFFIC_ENABLED?: string;
   LIVE_PUBLISH_TOKEN?: string;
 };
+
+function hasOfflineSnapshotSchema(snapBody: string): boolean {
+  return (
+    snapBody.includes('"schema":"iu-traffic-offline-snapshot-v1"') ||
+    snapBody.includes('"schema": "iu-traffic-offline-snapshot-v1"')
+  );
+}
 
 function isDataOrVersionPath(pathname: string): boolean {
   if (pathname === "/projects/version.json") return true;
@@ -77,28 +86,55 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
   const auth = request.headers.get("authorization") || "";
   if (auth !== "Bearer " + token) return json({ ok: false, reason: "UNAUTHORIZED" }, 401);
 
-  // Read body once as text — avoid request.json() + re-stringify of large snapshots (CPU/memory).
-  let rawText: string;
-  try {
-    rawText = await request.text();
-  } catch {
-    return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
-  }
+  const wire = String(request.headers.get("x-iu-ndic-publish-wire") || "").trim();
+  let meta: Record<string, unknown>;
+  let snapBody: string;
+  let publishWire = "legacy-envelope";
 
-  let payload: { meta?: Record<string, unknown>; snapshot?: Record<string, unknown> };
-  try {
-    payload = JSON.parse(rawText);
-  } catch {
-    return json({ ok: false, reason: "INVALID_JSON" }, 400);
-  }
-  const meta = payload.meta;
-  const snapshot = payload.snapshot;
-  if (!meta || !snapshot || typeof snapshot !== "object") {
-    return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
-  }
-  const schema = String((snapshot as { schema?: string }).schema || "");
-  if (schema !== "iu-traffic-offline-snapshot-v1") {
-    return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
+  if (wire === LIVE_PUBLISH_WIRE_RAW) {
+    // Prefer path for production ~8MiB snapshots: no JSON.parse of the snapshot body.
+    publishWire = LIVE_PUBLISH_WIRE_RAW;
+    const metaHdr = String(request.headers.get("x-iu-ndic-meta") || "");
+    try {
+      meta = JSON.parse(metaHdr);
+    } catch {
+      return json({ ok: false, reason: "INVALID_META_HEADER" }, 400);
+    }
+    if (!meta || typeof meta !== "object") {
+      return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
+    }
+    try {
+      snapBody = await request.text();
+    } catch {
+      return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
+    }
+    if (!snapBody || !hasOfflineSnapshotSchema(snapBody)) {
+      return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
+    }
+  } else {
+    // Legacy envelope {meta,snapshot} — fine for small fixtures; avoid in production.
+    let rawText: string;
+    try {
+      rawText = await request.text();
+    } catch {
+      return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
+    }
+    let payload: { meta?: Record<string, unknown>; snapshot?: Record<string, unknown> };
+    try {
+      payload = JSON.parse(rawText);
+    } catch {
+      return json({ ok: false, reason: "INVALID_JSON" }, 400);
+    }
+    const snapshot = payload.snapshot;
+    meta = payload.meta as Record<string, unknown>;
+    if (!meta || !snapshot || typeof snapshot !== "object") {
+      return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
+    }
+    const schema = String((snapshot as { schema?: string }).schema || "");
+    if (schema !== "iu-traffic-offline-snapshot-v1") {
+      return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
+    }
+    snapBody = JSON.stringify(snapshot);
   }
 
   const incomingSemantic = String(
@@ -136,9 +172,8 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
     }
   }
 
-  const snapBody = JSON.stringify(snapshot);
   const metaBody = JSON.stringify(meta);
-  if (!snapBody.includes('"schema":"iu-traffic-offline-snapshot-v1"') && !snapBody.includes('"schema": "iu-traffic-offline-snapshot-v1"')) {
+  if (!hasOfflineSnapshotSchema(snapBody)) {
     return json({ ok: false, reason: "STAGING_SCHEMA_VERIFY_FAILED" }, 500);
   }
 
@@ -167,6 +202,7 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
     generationId: meta.generationId,
     publishedAt: meta.publishedAt,
     payloadBytes: snapBody.length,
+    publishWire,
   });
 }
 
@@ -183,7 +219,18 @@ export default {
     const pathname = url.pathname;
 
     if (pathname === LIVE_PUBLISH_PATH && request.method === "POST") {
-      return handleLivePublish(env, request);
+      try {
+        return await handleLivePublish(env, request);
+      } catch (err) {
+        return json(
+          {
+            ok: false,
+            reason: "WORKER_PUBLISH_THROW",
+            detail: String((err && (err as Error).message) || err).slice(0, 120),
+          },
+          500
+        );
+      }
     }
 
     if (
