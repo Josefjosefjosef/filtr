@@ -49,6 +49,7 @@ const SUITES = [
   "iu-traffic-intersection-locality-precedence-guard",
   "iu-traffic-km-phrase-not-municipality-guard",
   "iu-traffic-exit-object-direction-collision-guard",
+  "iu-traffic-street-in-municipality-guard",
 ];
 
 const rows = [];

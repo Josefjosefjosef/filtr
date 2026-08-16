@@ -1868,6 +1868,19 @@ export function looksLikeStreetName(raw) {
   return STREET_END.test(t);
 }
 
+/**
+ * True when a token looks like a bridge *object* (not the Czech municipality "Most").
+ * Bare "Most" alone is insufficient — NDIC bridge objects are "X most", "most X",
+ * "most ev. č. …", etc.
+ */
+export function looksLikeBridgeObjectToken(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  if (!/\bmost\b/i.test(t)) return false;
+  if (/^most$/i.test(t)) return false;
+  return true;
+}
+
 /** True when a token must not become the white municipality entrance board. */
 export function looksLikeNonMunicipalityPlace(raw) {
   const t = clean(raw);
@@ -1876,12 +1889,13 @@ export function looksLikeNonMunicipalityPlace(raw) {
   if (isPrahaCityPartName(t)) return true;
   if (isNumericCityPartName(t)) return true;
   if (
-    /náměstí|nábřeží|tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+    /náměstí|nábřeží|tunel|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
       t
     )
   ) {
     return true;
   }
+  if (looksLikeBridgeObjectToken(t)) return true;
   return looksLikeStreetName(t);
 }
 
@@ -2126,7 +2140,7 @@ export function classifyLocationKindFromName(name) {
   if (!t) return LOCATION_KIND.UNKNOWN;
   if (/parkovací\s+dům|parkovišt|\bP\s*\+\s*[RG]\b/i.test(t)) return LOCATION_KIND.PARKING;
   if (/tunel/i.test(t)) return LOCATION_KIND.TUNNEL;
-  if (/\bmost\b/i.test(t)) return LOCATION_KIND.BRIDGE;
+  if (looksLikeBridgeObjectToken(t)) return LOCATION_KIND.BRIDGE;
   if (/železniční(?:ho)?\s+přejezd|přejezd/i.test(t)) return LOCATION_KIND.RAILWAY_CROSSING;
   if (/MÚK\b|křižovatka/i.test(t)) return LOCATION_KIND.INTERSECTION;
   if (/\bnájezd\b/i.test(t)) return LOCATION_KIND.RAMP;
@@ -2165,9 +2179,9 @@ export function extractNamedTransportObject(rawText) {
     !looksLikeRoadNumberToken(lead) &&
     !isPrahaCityPartName(lead) &&
     !/^od\s+\d/i.test(lead) &&
-    /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+    /tunel|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
       lead
-    )
+    ) || looksLikeBridgeObjectToken(lead)
   ) {
     return { name: lead, kind: classifyLocationKindFromName(lead) };
   }
@@ -3876,9 +3890,11 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
+  // Locative form used by NDIC urban events: "v ulici Ještědská v obci …"
+  // Do not use \\b before "v" — Czech letters before "v obci"/"v ulici" kill ASCII word boundaries.
   if (!out.city) {
     const mObci = text.match(
-      /\b(?:([Vv]\s+katastru\s+obce)|([Vv]\s+obci)|(\bobec))\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;]|$))/u
+      /(?:^|[^\p{L}])(?:([Vv]\s+katastru\s+obce)|([Vv]\s+obci)|(\bobec))\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;]|$))/u
     );
     if (mObci) {
       const city = normalizeExtractedMunicipalityName(mObci[4]);
