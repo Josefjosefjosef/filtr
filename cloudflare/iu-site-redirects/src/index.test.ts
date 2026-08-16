@@ -135,6 +135,47 @@ describe("iu-site-redirects", () => {
     expect(j.ATOMIC_PUBLICATION_PASS).toBe("YES");
   });
 
+  it("publish accepts snapshot-raw-v1 wire without envelope parse", async () => {
+    const r2 = mockR2();
+    const env = {
+      LIVE_TRAFFIC_ENABLED: "true",
+      LIVE_PUBLISH_TOKEN: "secret",
+      TRAFFIC_LIVE: r2,
+    };
+    const snap = {
+      schema: "iu-traffic-offline-snapshot-v1",
+      cardCount: 0,
+      cards: [],
+    };
+    const meta = {
+      generationId: "gen_raw",
+      sourceLastModified: "Tue, 11 Aug 2026 12:00:00 GMT",
+      checksum: "abc",
+      semanticChecksum: "sem_raw",
+      publishedAt: "2026-08-11T12:00:01.000Z",
+    };
+    const ok = await worker.fetch(
+      req(PUB, {
+        method: "POST",
+        headers: {
+          authorization: "Bearer secret",
+          "content-type": "application/json; charset=utf-8",
+          "x-iu-ndic-publish-wire": "snapshot-raw-v1",
+          "x-iu-ndic-meta": JSON.stringify(meta),
+          "x-iu-ndic-checksum": "abc",
+          "x-iu-ndic-semantic-checksum": "sem_raw",
+        },
+        body: JSON.stringify(snap),
+      }),
+      env
+    );
+    expect(ok.status).toBe(200);
+    const j = await ok.json();
+    expect(j.ok).toBe(true);
+    expect(j.publishWire).toBe("snapshot-raw-v1");
+    expect(r2._store.get("current/traffic_offline_snapshot.json")).toContain("iu-traffic-offline-snapshot-v1");
+  });
+
   it("skips publish when semantic checksum matches current", async () => {
     const r2 = mockR2({
       "current/meta.json": JSON.stringify({

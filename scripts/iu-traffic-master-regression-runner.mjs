@@ -34,6 +34,8 @@ const SUITES = [
   "iu-traffic-roadwork-construction-vehicle-exit-guard",
   "iu-traffic-wrong-way-vehicle-hazard-guard",
   "iu-traffic-multi-road-closure-named-event-guard",
+  "iu-traffic-closure-accident-diversion-exit-guard",
+  "iu-traffic-impassable-lane-exit-primary-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
   "iu-traffic-motorway-direction-exit-order-guard",
@@ -49,6 +51,8 @@ const SUITES = [
   "iu-traffic-intersection-locality-precedence-guard",
   "iu-traffic-km-phrase-not-municipality-guard",
   "iu-traffic-primary-vs-detour-location-guard",
+  "iu-traffic-exit-object-direction-collision-guard",
+  "iu-traffic-street-in-municipality-guard",
 ];
 
 const rows = [];

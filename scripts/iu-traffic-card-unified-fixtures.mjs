@@ -859,7 +859,7 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   });
   ok(
     "SIT_CLOSURE_EXTRAORDINARY_IZS_PASS",
-    komor === "Silnice je uzavřena. Mimořádná událost. Na místě složky IZS."
+    komor === "Silnice je uzavřena. Mimořádná událost. Na místě jsou složky IZS."
   );
   ok(
     "SIT_CLOSURE_KEEPS_KIND_UZAVIRKA",
