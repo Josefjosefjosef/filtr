@@ -81,12 +81,20 @@ function mockSequence(statuses) {
     const idx = Math.min(i, statuses.length - 1);
     const spec = statuses[idx];
     i += 1;
-    calls.push({ idx: i, status: spec.status, gen: init && init.headers && init.headers["x-iu-ndic-generation-id"] });
-    const headers = { "content-type": "application/json" };
-    if (spec.retryAfter != null) headers["retry-after"] = String(spec.retryAfter);
+    const headers = (init && init.headers) || {};
+    calls.push({
+      idx: i,
+      status: spec.status,
+      gen: headers["x-iu-ndic-generation-id"],
+      wire: headers["x-iu-ndic-publish-wire"],
+      hasMetaHeader: Boolean(headers["x-iu-ndic-meta"]),
+      bodyIsEnvelope: typeof init.body === "string" && init.body.startsWith('{"meta"'),
+    });
+    const resHeaders = { "content-type": "application/json" };
+    if (spec.retryAfter != null) resHeaders["retry-after"] = String(spec.retryAfter);
     return new Response(spec.body != null ? spec.body : JSON.stringify({ ok: spec.status < 400 }), {
       status: spec.status,
-      headers,
+      headers: resHeaders,
     });
   };
   return { fetchImpl, calls, get count() { return i; } };
@@ -188,6 +196,9 @@ async function main() {
   check("publish_success_first_attempt", pub3.ok === true && pub3.PRODUCTION_WRITE === "YES");
   check("active_atomic", pub3.ATOMIC_PUBLICATION_PASS === "YES");
   check("publish_attempts_1", pub3.PUBLICATION_ATTEMPTS === 1);
+  check("publish_wire_raw_v1", okSeq.calls[0] && okSeq.calls[0].wire === "snapshot-raw-v1");
+  check("publish_meta_header", okSeq.calls[0] && okSeq.calls[0].hasMetaHeader === true);
+  check("publish_body_not_envelope", okSeq.calls[0] && okSeq.calls[0].bodyIsEnvelope === false);
 
   // unchanged skip (same LM + checksum)
   const pub4 = await publishLiveTrafficSnapshot({
@@ -433,7 +444,7 @@ async function main() {
   console.log(
     JSON.stringify({
       ok: true,
-      passCount: 50,
+      passCount: 53,
       schema: "iu-ndic-live-60s-fixtures-v1",
       MAX_CONCURRENT_LIVE_DATEX_PROCESSORS: 1,
       MAX_CONCURRENT_PUBLISHERS: 1,
