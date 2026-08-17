@@ -1,6 +1,6 @@
 {
-  "runId": "9302fd3d7c952295",
-  "started": "2026-08-17T18:39:34.987Z",
+  "runId": "7a0c9bf6ee4344ee",
+  "started": "2026-08-17T19:10:48.000Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,20 +37,19 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 7,
+      "logicalAlerts": 4,
       "uniqueEvents": [
-        "Velmi silné bouřky",
         "Stav sucha",
         "Hydrologické sucho",
         "Riziko požárů"
       ],
-      "totalAreas": 243,
-      "mappedAreas": 506,
+      "totalAreas": 234,
+      "mappedAreas": 412,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 7,
+      "publishedActive": 4,
       "publishedScheduled": 0,
-      "publishableCount": 7,
+      "publishableCount": 4,
       "productStreams": [
         "50",
         "70"
@@ -58,7 +57,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 3,
+      "expiredCount": 6,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -67,13 +66,13 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 6,
-    "after": 7,
+    "before": 3,
+    "after": 4,
     "ledgerKeys": 3,
     "ledgerFingerprint": "f1593da09b423b5a",
     "history": {
-      "fetched": 1,
-      "cached": 31,
+      "fetched": 0,
+      "cached": 32,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_241200.xml",
@@ -312,31 +311,30 @@
   },
   "temporalCounts": {
     "totalItems": 9,
-    "activeCount": 6,
+    "activeCount": 3,
     "scheduledCount": 0,
-    "expiredCount": 3,
+    "expiredCount": 6,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 7,
-    "visibleCount": 7
+    "publishableCount": 4,
+    "visibleCount": 4
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 7,
+    "logicalAlerts": 4,
     "uniqueEvents": [
-      "Velmi silné bouřky",
       "Stav sucha",
       "Hydrologické sucho",
       "Riziko požárů"
     ],
-    "totalAreas": 243,
-    "mappedAreas": 506,
+    "totalAreas": 234,
+    "mappedAreas": 412,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 7,
+    "publishedActive": 4,
     "publishedScheduled": 0,
-    "publishableCount": 7,
+    "publishableCount": 4,
     "productStreams": [
       "50",
       "70"
@@ -344,7 +342,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 3,
+    "expiredCount": 6,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -352,7 +350,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 506,
+    "headAreas": 412,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -360,6 +358,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-17T18:39:42.407Z",
-  "runMs": 7420
+  "finished": "2026-08-17T19:10:53.999Z",
+  "runMs": 5999
 }
