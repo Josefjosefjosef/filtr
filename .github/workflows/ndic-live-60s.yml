@@ -57,16 +57,40 @@ jobs:
       # Avoid actions/checkout + setup-node: GitHub codeload often returns 429 to this VPS.
       # Use plain git + system node already present on the self-hosted runner.
       - name: Materialize workspace (git, no actions/checkout)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          echo "NODE_VERSION=$(node -v 2>/dev/null || echo MISSING)"
-          command -v node >/dev/null
+          # Runner PATH may omit node; discover durable binary (same as cron install).
+          NODE_BIN=""
+          for c in \
+            /usr/bin/node \
+            /usr/local/bin/node \
+            "$HOME/infouzel-ndic-live/node" \
+            $(ls -1d "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | tail -n1 || true)
+          do
+            if [ -n "${c:-}" ] && [ -x "$c" ]; then NODE_BIN="$c"; break; fi
+          done
+          if [ -z "${NODE_BIN}" ] && [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
+            NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2- || true)
+          fi
+          if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+            echo "NODE_BIN_MISSING"
+            echo "PATH=$PATH"
+            ls -la /usr/bin/node /usr/local/bin/node 2>/dev/null || true
+            type node || true
+            exit 1
+          fi
+          export PATH="$(dirname "$NODE_BIN"):$PATH"
+          echo "NODE_BIN=$NODE_BIN"
+          echo "NODE_VERSION=$("$NODE_BIN" -v)"
           command -v git >/dev/null
+          AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           for i in 1 2 3 4 5 6 7 8 9 10; do
             echo "GIT_MATERIALIZE_RETRY=$i"
             find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
             git init
-            git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+            git remote add origin "$AUTH_URL"
             if git fetch --depth 1 origin "${GITHUB_SHA}" && git checkout --force FETCH_HEAD; then
               echo "GIT_MATERIALIZE_OK sha=$(git rev-parse HEAD)"
               exit 0
@@ -192,10 +216,25 @@ jobs:
             if [ -n "${IU_NDIC_PULL_URL:-}" ]; then export IU_NDIC_PULL_URL; fi
             if [ -n "${IU_NDIC_PULL_USER:-}" ]; then export IU_NDIC_PULL_USER; fi
             if [ -n "${IU_NDIC_PULL_PASS:-}" ]; then export IU_NDIC_PULL_PASS; fi
+            NODE_BIN=""
+            for c in /usr/bin/node /usr/local/bin/node $(ls -1d "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | tail -n1 || true); do
+              if [ -n "${c:-}" ] && [ -x "$c" ]; then NODE_BIN="$c"; break; fi
+            done
+            if [ -z "${NODE_BIN}" ] && [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
+              NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2- || true)
+            fi
+            if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+              NODE_BIN="$(command -v node || true)"
+            fi
+            if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+              echo "NODE_BIN_MISSING_FOR_LEDGER"
+              exit 1
+            fi
             echo "LEDGER_AUDIT_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             echo "LEDGER_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
+            echo "LEDGER_NODE_BIN=$NODE_BIN"
             set +e
-            OUT=$(node scripts/ndic-datex-v1-publication-ledger-audit.mjs)
+            OUT=$("$NODE_BIN" scripts/ndic-datex-v1-publication-ledger-audit.mjs)
             CODE=$?
             set -e
             echo "LEDGER_JSON<<EOF"
