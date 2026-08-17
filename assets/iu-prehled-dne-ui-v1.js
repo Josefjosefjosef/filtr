@@ -478,12 +478,26 @@ function matchesTrafficClientFilters(ev, tf) {
     if (!tf.eventTypes.includes(et)) return false;
   }
   if (tf.roadClasses && tf.roadClasses.length) {
-    const rc = String(tv.roadClass || "UNKNOWN");
+    let rc = String(tv.roadClass || "UNKNOWN");
+    if (rc === "UNKNOWN" || !rc) {
+      const blob = String(tv.impactFull || tv.impact || "").trim();
+      const primary = blob.split(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i)[0] || blob;
+      if (/^\s*[DER]\d{1,3}[A-Za-z]?\b/i.test(primary) || /\bdálnice\s+[DER]\d/i.test(primary)) {
+        rc = "MOTORWAY";
+      }
+    }
     if (!tf.roadClasses.includes(rc)) return false;
   }
   if (tf.roads && tf.roads.length) {
-    const road = String(tv.road || "").toUpperCase();
-    if (!tf.roads.map((r) => String(r).toUpperCase()).includes(road)) return false;
+    const road = String(tv.road || tv.roadNumber || "").toUpperCase();
+    let resolved = road;
+    if (!resolved) {
+      const blob = String(tv.impactFull || tv.impact || "").trim();
+      const primary = blob.split(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i)[0] || blob;
+      const lead = primary.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/i);
+      if (lead) resolved = String(lead[1]).toUpperCase();
+    }
+    if (!tf.roads.map((r) => String(r).toUpperCase()).includes(resolved)) return false;
   }
   return true;
 }

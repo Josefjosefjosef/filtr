@@ -40,6 +40,10 @@ export {
   loadNdicFirstSeenById,
 } from "./normalize-feed.mjs";
 export {
+  extractRoadNumberFromNdicComment,
+  classifyPublishDecision,
+} from "./official-comment-road.mjs";
+export {
   createFixtureDiscovery,
   createAuthenticatedPullDiscovery,
   resolveDiscoveryAdapter,

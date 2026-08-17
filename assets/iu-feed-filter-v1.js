@@ -372,9 +372,28 @@ export function buildRoadCatalogFromTrafficItems(items) {
   };
 }
 
+function roadFromTrafficView(tv) {
+  const direct = normalizeRoadLabel(tv.road || tv.roadNumber || "");
+  if (direct) return direct;
+  // Existing offline cards may lack structured road while official impact names D1 / EXIT.
+  // Fail-closed: leading motorway token or "dálnice Dx" / "Dx … EXIT" only.
+  const blob = String(tv.impactFull || tv.impact || tv.summaryFull || tv.summary || "").trim();
+  if (!blob) return "";
+  const primary = blob.split(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i)[0] || blob;
+  const lead = primary.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/i);
+  if (lead) return normalizeRoadLabel(lead[1]);
+  const dalnice = primary.match(/\bdálnice\s+([DER]\d{1,3}[A-Za-z]?)\b/i);
+  if (dalnice) return normalizeRoadLabel(dalnice[1]);
+  const exitPaired = primary.match(
+    /\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd|nájezd)?\s*EXIT(?:u|e)?\s+\d{1,4}[A-Za-z]?\b/i
+  );
+  if (exitPaired) return normalizeRoadLabel(exitPaired[1]);
+  return "";
+}
+
 function roadMatchesSelection(tv, selectedRoads) {
   if (!selectedRoads.length) return true;
-  const road = normalizeRoadLabel(tv.road || tv.roadNumber || "");
+  const road = roadFromTrafficView(tv);
   if (!road) return false;
   const set = new Set(selectedRoads.map(normalizeRoadLabel));
   if (set.has(road)) return true;
