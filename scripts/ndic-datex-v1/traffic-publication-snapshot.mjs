@@ -11,8 +11,12 @@ import {
 import { scanPublicationCanaries } from "./traffic-publication-projection.mjs";
 
 export const SNAPSHOT_SCHEMA_VERSION = "iu-traffic-offline-snapshot-v1";
-/** Live NDIC UI snapshot cap. Raised from 8 MiB after prod freeze at 8383448/8388608 (PUB_SNAPSHOT_TOO_LARGE → stale R2). */
-export const DEFAULT_MAX_SNAPSHOT_BYTES = 12 * 1024 * 1024;
+/**
+ * Live NDIC UI snapshot cap.
+ * Raised 8→12 MiB after prod freeze at 8383448/8388608 (PUB_SNAPSHOT_TOO_LARGE → stale R2).
+ * Raised 12→16 MiB after SituationRecord expansion (~14.7 MiB compact cards body, OVER_BY≈2.1 MiB).
+ */
+export const DEFAULT_MAX_SNAPSHOT_BYTES = 16 * 1024 * 1024;
 
 function utf8Bytes(value) {
   return Buffer.byteLength(JSON.stringify(value), "utf8");
