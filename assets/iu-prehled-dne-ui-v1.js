@@ -35,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=heavy-feed-shell-first-v1-20260809";
+} from "./iu-info-system-core-v1.js?v=feed-filter-redesign-v1-20260817";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -52,9 +52,42 @@ import {
   filterOfflineTrafficCandidatesForOverview,
 } from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
+import {
+  applyFeedSourceAndQuickView,
+  buildRoadCatalogFromTrafficItems,
+  ensureFeedFilter,
+  matchesTrafficDetailFilter,
+  parkingCitiesFromRegistry,
+  prefsForChmuFilter,
+  prefsForTrafficLocality,
+  sanitizeFeedFilter,
+} from "./iu-feed-filter-v1.js?v=feed-filter-redesign-v1-20260817";
+import {
+  addCityLocality,
+  chmuDetailSettingsHtml,
+  emptyFeedStateHtml,
+  getDraftFeedFilter,
+  mainFeedSettingsHtml,
+  quickViewBarHtml,
+  removeCityLocality,
+  resetChmu,
+  resetTraffic,
+  setAllEventCategories,
+  setDraftFeedFilter,
+  setParkingCity,
+  setRoadsGroup,
+  toggleEventCategory,
+  toggleLocCr,
+  toggleLocKraj,
+  toggleLocOkres,
+  toggleParkingEnabled,
+  toggleParkingId,
+  toggleRoad,
+  trafficDetailSettingsHtml,
+} from "./iu-prehled-dne-feed-settings-v1.js?v=feed-filter-redesign-v1-20260817";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "ndic-info-loss-forensic-v1-20260813";
+const CACHE_BUST = "feed-filter-redesign-v1-20260817";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -168,8 +201,15 @@ const state = {
   /** @type {'home'|'all'|'saved'|'unread'|'hidden'} */
   viewMode: "home",
   settingsOpen: false,
-  /** @type {null|'temata'|'zdroje'|'lokalita'} */
+  /** @type {null|'main'|'traffic'|'chmu'} */
   activeSection: null,
+  /** Accordion id inside traffic/chmu detail. */
+  feedAccOpen: "area",
+  openRoadGroups: {},
+  openParkingCities: {},
+  roadQuery: "",
+  /** @type {'all'|'traffic'|'chmu'} Session-only quick view (not persisted). */
+  feedQuickView: "all",
   openSourceGroups: {},
   page: 1,
   cityQuery: "",
@@ -181,7 +221,7 @@ const state = {
   persistSeq: 0,
   timelineBoundaryTimer: null,
   timelineListenersBound: false,
-  /** Client-side traffic chips (not SEPARATE_TRAFFIC_FILTERS). */
+  /** Legacy client chips kept empty — replaced by feedFilter + quick view. */
   trafficFilters: {
     eventTypes: [],
     roadClasses: [],
@@ -369,6 +409,19 @@ function standaloneSources(registry) {
 
 function allSelectableSourceIds(registry) {
   return settingsCatalogSources(registry).map((e) => String(e.id));
+}
+
+function ensurePrefsHaveFeedFilter(prefs) {
+  const p = prefs || getPrefs();
+  if (!p.feedFilter) {
+    p.feedFilter = ensureFeedFilter(p);
+    try {
+      setPrefs(p);
+    } catch (_) {}
+  } else {
+    p.feedFilter = sanitizeFeedFilter(p.feedFilter);
+  }
+  return p;
 }
 
 function clonePrefs(p) {
@@ -566,33 +619,53 @@ function mergeChmiAndTrafficTimeline(chmiList, trafficList) {
 
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
-  const f = effectivePrefs();
+  const basePrefs = effectivePrefs();
+  const ff = ensureFeedFilter(basePrefs);
+  // Persist migrated filter onto in-memory prefs (localStorage on next persistDraft/setPrefs).
+  if (basePrefs && !basePrefs.feedFilter) {
+    basePrefs.feedFilter = ff;
+    if (state.prefs) state.prefs.feedFilter = ff;
+  }
   const mode = state.viewMode;
-  // Defer saved/hidden/unread to presentation ids after 1→N CHMI locality expand.
-  const filterPrefs = Object.assign({}, f, { savedOnly: false, unreadOnly: false });
+  const chmuPrefs = prefsForChmuFilter(basePrefs, ff);
+  const filterPrefs = Object.assign({}, chmuPrefs, { savedOnly: false, unreadOnly: false });
   const opts = {
     index: state.index,
     generationId: state.data && state.data.manifest && state.data.manifest.generationId,
     hiddenMode: "include",
   };
-  // Keep CHMI/shared feed on the memoized filterEvents path (stable items ref).
-  // NDIC offline catalog is filtered separately — never concat into filterEvents (O(n log n) sort on 3k+ cards blocks UI).
-  let list = filterEvents(items, filterPrefs, opts);
-  if (TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false && TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER) {
-    const offline = collectOfflineTrafficCandidates(f, {
+  let list = [];
+  if (ff.chmuEnabled) {
+    list = filterEvents(items, filterPrefs, opts);
+    // Feed redesign: shared feed path contributes only ČHMÚ cards (not legacy topics).
+    list = list.filter(
+      (ev) => ev && (ev.capV2 || String(ev.sourceId || "") === "chmi") && !ev.trafficV1
+    );
+  }
+  if (
+    ff.trafficEnabled &&
+    TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false &&
+    TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER
+  ) {
+    const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
+    // Gate collectOffline via feedFilter on prefs
+    trafficPrefs.feedFilter = ff;
+    const offline = collectOfflineTrafficCandidates(trafficPrefs, {
       snapshot: loadOfflineTrafficSnapshot(),
       nowIso: new Date().toISOString(),
     });
     if (offline.length) {
-      const trafficList = filterOfflineTrafficCandidatesForOverview(offline, filterPrefs, {
+      let trafficList = filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
         nowMs: Date.now(),
       });
+      trafficList = trafficList.filter((ev) => matchesTrafficDetailFilter(ev, ff.traffic));
       const seen = new Set(list.map((x) => String((x && x.id) || "")));
       const uniqueTraffic = trafficList.filter((x) => x && !seen.has(String(x.id)));
       list = mergeChmiAndTrafficTimeline(list, uniqueTraffic);
     }
   }
-  list = expandChmiLocalityPresentationCards(list, f);
+  list = expandChmiLocalityPresentationCards(list, chmuPrefs);
+  list = applyFeedSourceAndQuickView(list, ff, state.feedQuickView);
   list = list.filter((ev) => {
     const id = String((ev && ev.id) || "");
     const src = chmiPresentationSourceId(ev) || id;
@@ -614,7 +687,6 @@ function filteredList() {
       return !isRead(id) && !(src && src !== id && isRead(src));
     });
   }
-  list = applyTrafficClientFilters(list);
   return list;
 }
 
@@ -1513,36 +1585,70 @@ function renderLocalityBody(draft) {
 
 function renderSettingsBody() {
   const draft = state.draft || clonePrefs(state.prefs);
+  if (!draft.feedFilter) draft.feedFilter = ensureFeedFilter(draft);
   const active = state.activeSection;
   const err = state.saveError
     ? `<div class="iuPdSettings__toast" role="status">${esc(state.saveError)}</div>`
     : "";
 
-  if (!active) {
+  if (!active || active === "main") {
     return (
       `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-main="1">` +
       err +
-      `<div class="iuPdSettings__menu" data-iu-pd-menu="1">` +
-      SECTION_ORDER.map(
-        (id) =>
-          `<button type="button" class="iuPdAcc__toggle iuPdSettings__rail" data-act="open-section" data-id="${esc(id)}" aria-expanded="false">` +
-          `<span>${esc(SECTION_LABELS[id])}</span><span class="iuPdAcc__chev" aria-hidden="true"></span>` +
-          `</button>`
-      ).join("") +
+      mainFeedSettingsHtml(draft) +
       `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block iuPdSettings__closeBtn" data-act="settings-close">Zavřít</button>` +
-      `</div></div>`
+      `</div>`
     );
   }
 
-  const body =
-    active === "temata" ? renderTopicsBody(draft) : active === "zdroje" ? renderSourcesBody(draft) : renderLocalityBody(draft);
+  const kraje = CZ_KRAJE;
+  const trafficItems = (() => {
+    try {
+      const snap = loadOfflineTrafficSnapshot();
+      return collectOfflineTrafficCandidates(
+        prefsForTrafficLocality(draft, ensureFeedFilter(draft)),
+        { snapshot: snap, nowIso: new Date().toISOString() }
+      );
+    } catch (_) {
+      return [];
+    }
+  })();
+
+  let body = "";
+  let title = "";
+  if (active === "traffic") {
+    title = "Dopravní informace";
+    body = trafficDetailSettingsHtml({
+      draft,
+      openAcc: state.feedAccOpen || "area",
+      krajeList: kraje,
+      cityQuery: state.cityQuery,
+      citySuggest: state.citySuggest,
+      cityLimitMsg: "",
+      roadQuery: state.roadQuery,
+      openRoadGroups: state.openRoadGroups,
+      openParkingCities: state.openParkingCities,
+      trafficItemsForCatalog: trafficItems,
+    });
+  } else if (active === "chmu") {
+    title = "Výstrahy ČHMÚ";
+    body = chmuDetailSettingsHtml({
+      draft,
+      krajeList: kraje,
+      okresyMap: CZ_OKRESY,
+      cityQuery: state.cityQuery,
+      citySuggest: state.citySuggest,
+      cityLimitMsg: "",
+      openAcc: "area",
+    });
+  }
 
   return (
     `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-section="${esc(active)}">` +
     err +
     `<div class="iuPdSettings__sectionHead">` +
     `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="back-section">Zpět</button>` +
-    `<h3 class="iuPdSettings__sectionTitle">${esc(SECTION_LABELS[active] || "")}</h3>` +
+    `<h3 class="iuPdSettings__sectionTitle">${esc(title)}</h3>` +
     `</div>` +
     `<div class="iuPdSettings__sectionBody">${body}</div>` +
     `</div>`
@@ -1589,12 +1695,15 @@ function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
   const mode = state.viewMode;
   const offlineSnap = loadOfflineTrafficSnapshot();
   const fresh = trafficFreshnessBanner(offlineSnap);
+  const ff = ensureFeedFilter(effectivePrefs());
   const trafficOfflineBanner =
-    fresh && isRsdTrafficSourceEnabled(effectivePrefs())
+    fresh && ff.trafficEnabled
       ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
       : "";
-  const filterBar = trafficFilterBarHtml(listForFilters || []);
+  const filterBar = quickViewBarHtml(ff, state.feedQuickView);
   const hasTraffic = (listForFilters || []).some((ev) => ev && ev.trafficV1);
+  const listOrEmpty =
+    !(listForFilters || []).length && mode === "home" ? emptyFeedStateHtml() : null;
   return (
     `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean"${hasTraffic ? ' data-iu-has-traffic="1"' : ""}>` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
@@ -1619,7 +1728,9 @@ function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
     trafficOfflineBanner +
     filterBar +
-    `<ul class="iuPdFeed iuPrehledDne__timeline${hasTraffic ? " iuPdFeed--trafficPad" : ""}" id="iuPrehledDneTimeline">${listHtml}</ul>` +
+    (listOrEmpty
+      ? listOrEmpty
+      : `<ul class="iuPdFeed iuPrehledDne__timeline${hasTraffic ? " iuPdFeed--trafficPad" : ""}" id="iuPrehledDneTimeline">${listHtml}</ul>`) +
     `<div id="iuPdMoreWrap">${moreHtml}</div>` +
     `</section>`
   );
@@ -1692,27 +1803,41 @@ function updateFeedDom() {
   const count = root.querySelector("#iuPdCount");
   const feed = root.querySelector("#iuPrehledDneTimeline");
   const moreWrap = root.querySelector("#iuPdMoreWrap");
+  const ff = ensureFeedFilter(effectivePrefs());
   if (count) count.textContent = `${list.length} položek · okno 96 h`;
-  if (feed) {
-    feed.innerHTML = pageItems.length
+  // Keep quick-view bar in sync with persistent enable flags (disabled when category OFF).
+  const quickHtml = quickViewBarHtml(ff, state.feedQuickView);
+  const existingQuick = root.querySelector("[data-iu-feed-quick]");
+  if (existingQuick) existingQuick.outerHTML = quickHtml;
+  else if (count) count.insertAdjacentHTML("afterend", quickHtml);
+  // Empty presentation state (both categories off / zero matches on home).
+  const emptyHost = root.querySelector("[data-iu-feed-empty]");
+  if (!pageItems.length && state.viewMode === "home") {
+    const emptyHtml = emptyFeedStateHtml();
+    if (feed) {
+      feed.outerHTML = emptyHtml;
+    } else if (emptyHost) {
+      emptyHost.outerHTML = emptyHtml;
+    } else if (count) {
+      count.insertAdjacentHTML("afterend", emptyHtml);
+    }
+  } else if (emptyHost && pageItems.length) {
+    emptyHost.outerHTML =
+      `<ul class="iuPdFeed iuPrehledDne__timeline" id="iuPrehledDneTimeline"></ul>`;
+  }
+  const feedNow = root.querySelector("#iuPrehledDneTimeline");
+  if (feedNow) {
+    feedNow.innerHTML = pageItems.length
       ? pageItems.map(renderItem).join("")
       : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
     const hasTraffic = pageItems.some((ev) => ev && ev.trafficV1);
-    feed.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
+    feedNow.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
   }
   if (moreWrap) {
     moreWrap.innerHTML =
       pageItems.length < list.length
         ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
         : "";
-  }
-  const existingFilters = root.querySelector("[data-iu-traffic-filters]");
-  const bar = trafficFilterBarHtml(list);
-  if (bar) {
-    if (existingFilters) existingFilters.outerHTML = bar;
-    else if (count) count.insertAdjacentHTML("afterend", bar);
-  } else if (existingFilters) {
-    existingFilters.remove();
   }
 }
 
@@ -1739,6 +1864,13 @@ function paint(opts) {
       root.querySelectorAll(".iuPdToggle[data-act='mode']").forEach((btn) => {
         const mode = btn.getAttribute("data-mode") || "";
         btn.classList.toggle("is-active", mode === state.viewMode);
+      });
+    } catch (_) {}
+    // Sync quick-view active button without full shell rebuild.
+    try {
+      root.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
+        const view = btn.getAttribute("data-view") || "";
+        btn.classList.toggle("is-on", view === state.feedQuickView);
       });
     } catch (_) {}
   } else {
@@ -1805,6 +1937,8 @@ function persistDraft() {
   const snapshot = clonePrefs(state.draft);
   snapshot.unreadOnly = false;
   snapshot.savedOnly = false;
+  if (snapshot.feedFilter) snapshot.feedFilter = sanitizeFeedFilter(snapshot.feedFilter);
+  else snapshot.feedFilter = ensureFeedFilter(snapshot);
   const ok = setPrefs(snapshot);
   if (seq !== state.persistSeq) return true;
   if (!ok) {
@@ -1814,6 +1948,7 @@ function persistDraft() {
   }
   try {
     const readBack = getPrefs();
+    if (readBack && !readBack.feedFilter) readBack.feedFilter = snapshot.feedFilter;
     state.prefs = readBack;
     state.draft = clonePrefs(readBack);
     clearSaveError();
@@ -1833,6 +1968,13 @@ function closeSettings() {
   state.cityQuery = "";
   state.citySuggest = [];
   state.saveError = "";
+  try {
+    const panel = document.querySelector("#iuPdSettings .iuPdSettings__panel");
+    if (panel) {
+      panel.style.maxHeight = "";
+      panel.style.height = "";
+    }
+  } catch (_) {}
   removeSettingsHost();
   setBodyScrollLock(false);
   paint();
@@ -1853,8 +1995,13 @@ function openSettings(opener) {
   state.settingsOpen = true;
   state.activeSection = null;
   state.draft = clonePrefs(state.prefs || getPrefs());
+  state.draft.feedFilter = ensureFeedFilter(state.draft);
   state.cityQuery = "";
   state.citySuggest = [];
+  state.roadQuery = "";
+  state.feedAccOpen = "area";
+  state.openRoadGroups = {};
+  state.openParkingCities = {};
   state.saveError = "";
   state.openSourceGroups = {};
   paint({ resetSettingsScroll: true });
@@ -1871,6 +2018,23 @@ function openSettings(opener) {
     }
   }
   resetSettingsScroll();
+}
+
+function refreshSettingsKeepingScroll() {
+  const scrollEl = document.getElementById("iuPdSettingsScroll");
+  const prev = scrollEl ? scrollEl.scrollTop : 0;
+  paintSettingsOnly({ resetSettingsScroll: false });
+  wire();
+  restoreSettingsScroll(prev);
+}
+
+function mutateFeedFilter(mutator) {
+  if (!state.draft) state.draft = clonePrefs(state.prefs || getPrefs());
+  const ff = getDraftFeedFilter(state.draft);
+  mutator(ff);
+  setDraftFeedFilter(state.draft, ff);
+  persistDraft();
+  if (state.settingsOpen) refreshSettingsKeepingScroll();
 }
 
 function syncDraftFromEvent(ev) {
@@ -2023,9 +2187,167 @@ function wire() {
       closeSettings();
       return;
     }
+    if (act === "feed-quick-view") {
+      const view = t.getAttribute("data-view");
+      if (view !== "all" && view !== "traffic" && view !== "chmu") return;
+      const ff = ensureFeedFilter(effectivePrefs());
+      if (view === "traffic" && ff.trafficEnabled === false) return;
+      if (view === "chmu" && ff.chmuEnabled === false) return;
+      state.feedQuickView = view;
+      state.page = 1;
+      paint();
+      wire();
+      return;
+    }
+    if (act === "feed-main-toggle") {
+      const kind = t.getAttribute("data-kind");
+      const checked = !!t.checked;
+      mutateFeedFilter((ff) => {
+        if (kind === "traffic") ff.trafficEnabled = checked;
+        if (kind === "chmu") ff.chmuEnabled = checked;
+      });
+      return;
+    }
+    if (act === "feed-open-detail") {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const kind = t.getAttribute("data-kind");
+      if (kind !== "traffic" && kind !== "chmu") return;
+      state.activeSection = kind;
+      state.feedAccOpen = "area";
+      state.cityQuery = "";
+      state.citySuggest = [];
+      state.roadQuery = "";
+      paintSettingsOnly({ resetSettingsScroll: true });
+      wire();
+      resetSettingsScroll();
+      return;
+    }
+    if (act === "feed-acc-toggle") {
+      const id = t.getAttribute("data-id");
+      state.feedAccOpen = state.feedAccOpen === id ? "" : id;
+      refreshSettingsKeepingScroll();
+      return;
+    }
+    if (act === "feed-loc-cr") {
+      const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
+      mutateFeedFilter((ff) => toggleLocCr(ff, kind));
+      return;
+    }
+    if (act === "feed-loc-kraj") {
+      const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
+      const name = t.getAttribute("data-value");
+      const on = !!t.checked;
+      mutateFeedFilter((ff) => {
+        toggleLocKraj(ff, kind, name, on);
+        // Selecting any locality clears "whole CR" implicitly (non-empty list).
+      });
+      return;
+    }
+    if (act === "feed-loc-okres") {
+      const name = t.getAttribute("data-value");
+      mutateFeedFilter((ff) => toggleLocOkres(ff, name, !!t.checked));
+      return;
+    }
+    if (act === "feed-city-add") {
+      const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
+      const city = {
+        name: t.getAttribute("data-name") || "",
+        id: t.getAttribute("data-id") || "",
+        orpCode: t.getAttribute("data-orp") || "",
+      };
+      mutateFeedFilter((ff) => {
+        const res = addCityLocality(ff, kind, city, MAX_CITY_LOCALITIES);
+        if (!res.ok) state.saveError = CITY_LIMIT_MSG;
+      });
+      state.cityQuery = "";
+      state.citySuggest = [];
+      return;
+    }
+    if (act === "feed-city-remove") {
+      const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
+      mutateFeedFilter((ff) =>
+        removeCityLocality(ff, kind, t.getAttribute("data-name") || "", t.getAttribute("data-id") || "")
+      );
+      return;
+    }
+    if (act === "feed-road-group") {
+      const g = t.getAttribute("data-group");
+      state.openRoadGroups = Object.assign({}, state.openRoadGroups, {
+        [g]: !state.openRoadGroups[g],
+      });
+      refreshSettingsKeepingScroll();
+      return;
+    }
+    if (act === "feed-road-toggle") {
+      mutateFeedFilter((ff) => toggleRoad(ff, t.getAttribute("data-value"), !!t.checked));
+      return;
+    }
+    if (act === "feed-roads-all") {
+      const g = t.getAttribute("data-group");
+      const catalog = buildRoadCatalogFromTrafficItems(
+        collectOfflineTrafficCandidates(
+          prefsForTrafficLocality(state.draft || state.prefs, ensureFeedFilter(state.draft || state.prefs)),
+          {
+            snapshot: loadOfflineTrafficSnapshot(),
+            nowIso: new Date().toISOString(),
+          }
+        )
+      );
+      const roads = (catalog.byClass && catalog.byClass[g]) || [];
+      const selected = new Set(
+        (ensureFeedFilter(state.draft).traffic.roads || []).map((x) => String(x).toUpperCase())
+      );
+      const allOn = roads.length > 0 && roads.every((r) => selected.has(r));
+      mutateFeedFilter((ff) => setRoadsGroup(ff, roads, !allOn));
+      return;
+    }
+    if (act === "feed-event-toggle") {
+      mutateFeedFilter((ff) => toggleEventCategory(ff, t.getAttribute("data-value"), !!t.checked));
+      return;
+    }
+    if (act === "feed-events-all") {
+      const cats = ensureFeedFilter(state.draft).traffic.eventCategories || [];
+      const selectAll = cats.length > 0; // if filtered → select all (empty); if empty(=all) → none
+      mutateFeedFilter((ff) => setAllEventCategories(ff, selectAll));
+      return;
+    }
+    if (act === "feed-park-enable") {
+      mutateFeedFilter((ff) => toggleParkingEnabled(ff, !!t.checked));
+      return;
+    }
+    if (act === "feed-park-city") {
+      const city = t.getAttribute("data-city");
+      state.openParkingCities = Object.assign({}, state.openParkingCities, {
+        [city]: !state.openParkingCities[city],
+      });
+      refreshSettingsKeepingScroll();
+      return;
+    }
+    if (act === "feed-park-toggle") {
+      mutateFeedFilter((ff) => toggleParkingId(ff, t.getAttribute("data-value"), !!t.checked));
+      return;
+    }
+    if (act === "feed-park-all") {
+      const cityName = t.getAttribute("data-city");
+      const city = parkingCitiesFromRegistry().find((c) => c.city === cityName);
+      if (!city) return;
+      const ids = new Set(ensureFeedFilter(state.draft).traffic.parkingIds || []);
+      const allOn = city.lots.every((l) => ids.has(l.id));
+      mutateFeedFilter((ff) => setParkingCity(ff, city.lots, !allOn));
+      return;
+    }
+    if (act === "feed-reset-traffic") {
+      mutateFeedFilter((ff) => resetTraffic(ff));
+      return;
+    }
+    if (act === "feed-reset-chmu") {
+      mutateFeedFilter((ff) => resetChmu(ff));
+      return;
+    }
     if (act === "open-section") {
       const id = t.getAttribute("data-id");
-      if (!SECTION_ORDER.includes(id)) return;
+      if (id !== "traffic" && id !== "chmu") return;
       state.activeSection = id;
       paintSettingsOnly({ resetSettingsScroll: true });
       wire();
@@ -2187,20 +2509,35 @@ function wire() {
 
   const inputHandler = async (ev) => {
     const t = ev.target;
-    if (!t || t.getAttribute("data-act") !== "city-q") return;
+    if (!t) return;
+    const act = t.getAttribute("data-act");
+    if (act === "feed-road-q") {
+      state.roadQuery = t.value || "";
+      refreshSettingsKeepingScroll();
+      const input = document.querySelector('#iuPdSettings [data-act="feed-road-q"]');
+      if (input) {
+        input.value = state.roadQuery;
+        try {
+          input.focus();
+          input.setSelectionRange(state.roadQuery.length, state.roadQuery.length);
+        } catch (_) {}
+      }
+      return;
+    }
+    if (act !== "city-q" && act !== "feed-city-q") return;
     state.cityQuery = t.value || "";
     const locs = await ensureLocalities();
     state.citySuggest = localitySuggest(state.cityQuery, locs).slice(0, 8);
     const scope = document.getElementById("iuPdSettings") || root;
     const box = scope.querySelector(".iuPdSuggest");
-    const input = scope.querySelector('[data-act="city-q"]');
+    const input = scope.querySelector('[data-act="feed-city-q"],[data-act="city-q"]');
     if (input) input.value = state.cityQuery;
     if (state.citySuggest.length) {
       const html = `<ul class="iuPdSuggest">${state.citySuggest
         .map((s) => {
           const label = s.label || s.name;
           return (
-            `<li><button type="button" data-act="city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
+            `<li><button type="button" data-act="feed-city-add" data-name="${esc(s.name)}" data-id="${esc(s.id || "")}" data-orp="${esc(s.orpCode || "")}">${esc(label)}</button></li>`
           );
         })
         .join("")}</ul>`;
@@ -2210,6 +2547,59 @@ function wire() {
   };
   root.oninput = inputHandler;
   if (settingsHost) settingsHost.oninput = inputHandler;
+
+  // Keep focused search fields visible above a simulated / real mobile keyboard.
+  const syncSettingsToVisualViewport = () => {
+    try {
+      const panel = document.querySelector("#iuPdSettings .iuPdSettings__panel");
+      if (!panel) return;
+      const vv = window.visualViewport;
+      if (!vv || !Number.isFinite(vv.height)) return;
+      // Shrink the settings sheet to the visible viewport (above soft keyboard).
+      const h = Math.max(240, Math.floor(vv.height - 4));
+      panel.style.maxHeight = h + "px";
+      panel.style.height = h + "px";
+    } catch (_) {}
+  };
+  const scrollSettingsFieldIntoView = (el) => {
+    try {
+      const sc = document.getElementById("iuPdSettingsScroll");
+      if (!sc || !el) return;
+      syncSettingsToVisualViewport();
+      const vvH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      const scRect = sc.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const desiredTop = Math.min(Math.max(scRect.top + 72, 48), Math.max(48, vvH * 0.28));
+      sc.scrollTop += elRect.top - desiredTop;
+    } catch (_) {}
+  };
+  const focusScrollHandler = (ev) => {
+    const t = ev.target;
+    if (!t || !t.getAttribute) return;
+    const act = t.getAttribute("data-act");
+    if (act !== "feed-city-q" && act !== "feed-road-q" && act !== "city-q") return;
+    scrollSettingsFieldIntoView(t);
+    setTimeout(() => scrollSettingsFieldIntoView(t), 120);
+    setTimeout(() => scrollSettingsFieldIntoView(t), 360);
+  };
+  if (settingsHost) {
+    settingsHost.addEventListener("focusin", focusScrollHandler);
+  }
+  try {
+    if (window.visualViewport && !window.__iuPdVvBound) {
+      window.__iuPdVvBound = true;
+      window.visualViewport.addEventListener("resize", () => {
+        syncSettingsToVisualViewport();
+        const ae = document.activeElement;
+        if (ae && ae.getAttribute) {
+          const act = ae.getAttribute("data-act");
+          if (act === "feed-city-q" || act === "feed-road-q" || act === "city-q") {
+            scrollSettingsFieldIntoView(ae);
+          }
+        }
+      });
+    }
+  } catch (_) {}
 
   document.onkeydown = (ev) => {
     if (ev.key === "Escape" && state.settingsOpen) {
@@ -2252,7 +2642,7 @@ async function boot() {
   if (!root) return;
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
-  state.prefs = getPrefs();
+  state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
   root.innerHTML = homeShellHtml(
     `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
     "Načítám…",
@@ -2279,7 +2669,7 @@ async function boot() {
       });
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = shell;
-      state.prefs = getPrefs();
+      state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
       state.page = 1;
       state.index = buildFeedIndex([]);
       paint();
