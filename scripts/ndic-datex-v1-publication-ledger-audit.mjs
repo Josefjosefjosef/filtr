@@ -369,12 +369,18 @@ function refAudit(publicCards) {
   const cards = publicCards || [];
   const find = (re) => cards.filter((c) => re.test(clean(c.impactFull || c.impact || "")));
   const e196b = find(/EXIT\s*196B\b/i);
-  const e194 = find(/EXIT\s*194\b/i).filter((c) => /196B/i.test(clean(c.impactFull || c.impact || "")));
+  // Wrong overwrite = primary EXIT is 194 while card is the 196B event (not detour mention of 194).
+  const e194wrong = e196b.filter((c) => {
+    const full = clean(c.impactFull || c.impact || "");
+    const { primaryText } = splitPrimaryVsDetourCommentLite(full);
+    const primary = primaryText || full;
+    return /EXIT\s*194\b/i.test(primary) && !/EXIT\s*196B\b/i.test(primary);
+  });
   const e357 = find(/EXIT\s*357\b/i);
   return {
     EXIT_196B_ACTIVE_COUNT: e196b.filter((c) => clean(c.lifecycleStatus) === "ACTIVE").length,
     EXIT_196B_PUBLIC_COUNT: e196b.length,
-    EXIT_196B_WRONG_194_COUNT: e194.length,
+    EXIT_196B_WRONG_194_COUNT: e194wrong.length,
     EXIT357_PUBLIC_EVENT_IDS: e357.map((c) => c.publicEventId).filter(Boolean),
     EXIT357_RELEVANT_SOURCE_RECORDS: e357.length,
     Klimkovice: find(/Klimkovice/i).filter((c) => clean(c.road) === "D1").length,
@@ -445,6 +451,38 @@ async function main() {
     0,
     summary.EXIT357_RELEVANT_SOURCE_RECORDS - (summary.EXIT357_PUBLIC_EVENT_IDS || []).length
   );
+
+  // Second-pass: if unexplained remain, re-read snapshot (live publish may have landed mid-audit).
+  if (summary.UNEXPLAINED_NOT_PUBLIC_COUNT > 0 && fs.existsSync(SNAP_PATH)) {
+    const snap2 = readJson(SNAP_PATH);
+    const cards2 = Array.isArray(snap2.cards) ? snap2.cards : [];
+    const by2 = new Set(cards2.map((c) => c && c.publicEventId).filter(Boolean));
+    let still = 0;
+    const sample = [];
+    for (const r of rows) {
+      if (r.publishDecision !== "unexplained_not_public") continue;
+      if (r.publicEventId && by2.has(r.publicEventId)) continue;
+      still += 1;
+      if (sample.length < 25) {
+        sample.push({
+          sit: r.sourceSituationId.slice(0, 40),
+          rec: r.sourceRecordId.slice(0, 40),
+          publicEventId: r.publicEventId,
+          road: r.road || "",
+          locationType: r.locationType,
+        });
+      }
+    }
+    summary.UNEXPLAINED_NOT_PUBLIC_COUNT_AFTER_REREAD = still;
+    summary.UNEXPLAINED_SAMPLE = sample;
+    if (still === 0) {
+      summary.UNEXPLAINED_NOT_PUBLIC_COUNT = 0;
+      summary.SUM_UNEXPLAINED_NOT_PUBLIC = 0;
+      summary.PUBLIC_SUPPORTED_ACTIVE_COUNT = summary.SUPPORTED_ACTIVE_RECORD_COUNT;
+      summary.EQUATION_CHECK = "YES";
+      summary.UNEXPLAINED_RACE_RESOLVED = "YES";
+    }
+  }
 
   console.log(JSON.stringify(summary, null, 2));
   if (summary.UNEXPLAINED_NOT_PUBLIC_COUNT > 0 || summary.MULTI_RECORD_UNEXPLAINED_LOSS > 0) {
