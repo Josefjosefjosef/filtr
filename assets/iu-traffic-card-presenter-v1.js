@@ -986,7 +986,9 @@ export function namedObjectRestatesStructuredMotorwayExit(namedObject, exitNumbe
 }
 
 export function extractExitAndRampFacts(rawText) {
-  const text = normalizeTrafficTextForParsing(rawText);
+  // Detour "Objížďka … (EXIT N)" must never overwrite the primary event EXIT.
+  const { primaryText } = splitPrimaryVsDetourComment(rawText);
+  const text = normalizeTrafficTextForParsing(primaryText || rawText);
   const out = {
     exitNumber: null,
     rampType: null,
@@ -999,24 +1001,39 @@ export function extractExitAndRampFacts(rawText) {
   };
   if (!text) return out;
 
-  // ROAD (+ optional výjezd/sjezd) + EXIT N — keeps primary motorway with numbered exit.
+  // EXIT token: digits + optional letter suffix (NDIC "EXIT 196B").
+  // Word-boundary after bare digits fails on 196B — allow optional [A-Za-z].
+  const EXIT_NUM = "(\\d{1,4}[A-Za-z]?)";
+  // ROAD (+ optional výjezd/sjezd/nájezd) + EXIT N — keeps primary motorway with numbered exit.
   // Accept Czech-inflected EXITu / EXITe (NDIC "na EXITu 354").
   const numberedRoadExit =
-    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd)\s+EXIT(?:u|e)?\s+(\d{1,4})\b/i) ||
-    text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+EXIT(?:u|e)?\s+(\d{1,4})\b/i);
-  const numberedBare = text.match(/\bEXIT(?:u|e)?\s+(\d{1,4})\b/i);
+    text.match(
+      new RegExp(
+        "\\b([DER]\\d{1,3}[A-Za-z]?)\\s+(?:výjezd|sjezd|nájezd)\\s+EXIT(?:u|e)?\\s+" + EXIT_NUM + "\\b",
+        "i"
+      )
+    ) ||
+    text.match(new RegExp("\\b([DER]\\d{1,3}[A-Za-z]?)\\s+EXIT(?:u|e)?\\s+" + EXIT_NUM + "\\b", "i"));
+  const numberedBare = text.match(new RegExp("\\bEXIT(?:u|e)?\\s+" + EXIT_NUM + "\\b", "i"));
   if (numberedRoadExit) {
     out.exitRoad = normalizeMotorwayRoadToken(numberedRoadExit[1]);
-    out.exitNumber = clean(numberedRoadExit[2]);
-    out.rampType = "exit";
+    out.exitNumber = clean(numberedRoadExit[2]).toUpperCase();
+    // nájezd EXIT → entrance; sjezd/výjezd EXIT → exit
+    out.rampType = /\bnájezd\b/i.test(numberedRoadExit[0]) ? "entrance" : "exit";
   } else if (numberedBare) {
-    out.exitNumber = clean(numberedBare[1]);
+    out.exitNumber = clean(numberedBare[1]).toUpperCase();
     out.rampType = "exit";
     // Fail-closed lead motorway when comment opens with Dx … EXIT N (e.g. "D1 výjezd EXIT 354").
     const leadMw = text.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/);
     if (leadMw) out.exitRoad = normalizeMotorwayRoadToken(leadMw[1]);
   }
   if (out.exitNumber) {
+    // "D1 nájezd EXIT 357" / "nájezd … EXIT" without sjezd/výjezd → entrance ramp.
+    if (/\bnájezdu?\b/i.test(text) && !/\b(?:sjezdu?|výjezdu?)\b/i.test(text)) {
+      out.rampType = "entrance";
+    } else if (/\b(?:sjezdu?|výjezdu?)\b/i.test(text)) {
+      out.rampType = "exit";
+    }
     if (/\bu\s+exitu?\b/i.test(text)) out.rampRelation = "near";
     else if (/\bna\s+exitu?\b/i.test(text)) out.rampRelation = "on";
     out.labelCs = "exit " + out.exitNumber;
@@ -2252,6 +2269,28 @@ export function extractRoadNumberFromOfficialComment(rawText) {
 }
 
 /**
+ * Explicit motorway / expressway tokens from official NDIC comment (order preserved).
+ * Fail-closed: leading "D1," / "D1 " / "dálnice D1" / EXIT-paired forms only — never invents.
+ */
+export function extractMotorwayNumbersFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const push = (tok) => {
+    const n = normalizeMotorwayRoadToken(tok);
+    if (n && !found.some((x) => x.toLowerCase() === n.toLowerCase())) found.push(n);
+  };
+  const lead = text.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/);
+  if (lead) push(lead[1]);
+  const dalniceRe = /\bdálnice\s+([DER]\d{1,3}[A-Za-z]?)\b/gi;
+  let dm;
+  while ((dm = dalniceRe.exec(text))) push(dm[1]);
+  const exitPaired = text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd|nájezd)?\s*EXIT(?:u|e)?\s+\d{1,4}[A-Za-z]?\b/i);
+  if (exitPaired) push(exitPaired[1]);
+  return found;
+}
+
+/**
  * All explicit classed road identities present in official comment text (order preserved).
  */
 export function extractAllRoadNumbersFromOfficialComment(rawText) {
@@ -2278,6 +2317,10 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
       const num = clean(m2[2] || "");
       if (num) found.push(cls ? (cls.endsWith("/") ? cls : cls + "/") + num : num);
     }
+  }
+  // Motorways (D/R/E) from explicit NDIC lead / dálnice / EXIT-paired forms.
+  for (const mw of extractMotorwayNumbersFromOfficialComment(text)) {
+    if (!found.some((x) => x.toLowerCase() === mw.toLowerCase())) found.push(mw);
   }
   return found.map((r) => {
     const m = r.match(/^(I{1,3}|II|III|D)\/(\d{1,6}[A-Za-z]?)$/i);
@@ -3771,9 +3814,9 @@ export function parseOfficialCommentFacts(rawText) {
   out.roadNumber = out.roadNumbers.length ? out.roadNumbers[0] : null;
   out.detour = extractDetourRouteFactsFromOfficialComment(text);
 
-  // EXIT / sjezd / nájezd — parser-normalized copy only; raw `text` stays for display traces.
+  // EXIT / sjezd / nájezd — primary prose only (detour EXIT must not win).
   {
-    const rampFacts = extractExitAndRampFacts(text);
+    const rampFacts = extractExitAndRampFacts(locationScanText);
     out.exitNumber = rampFacts.exitNumber;
     out.rampType = rampFacts.rampType;
     out.rampRelation = rampFacts.rampRelation;

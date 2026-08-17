@@ -20,6 +20,10 @@ import { OPENLR_STATUS } from "./openlr-constants.mjs";
 import { SUPPLEMENTARY_CLASS } from "./supplementary-location.mjs";
 import { buildTrafficTitle, buildTrafficSummary, sanitizeTrafficComment } from "./title.mjs";
 import {
+  extractRoadNumberFromNdicComment,
+  classifyPublishDecision,
+} from "./official-comment-road.mjs";
+import {
   attachLegalProvenance,
   canPublishFromSource,
   loadLegalRegistry,
@@ -39,12 +43,16 @@ export function isPublishableNdicItem(item) {
 
 /**
  * @param {object} situation — parseDatex output situation
- * @param {{ tmcTable?: object|null, nowIso?: string, geoRegistry?: object|null, firstSeenMap?: Map|object }} [opts]
+ * @param {{ tmcTable?: object|null, nowIso?: string, geoRegistry?: object|null, firstSeenMap?: Map|object, recordIndex?: number }} [opts]
  */
 export function situationToFeedItem(situation, opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
-  const identity = buildSituationIdentity(situation);
-  const primary = (situation.records && situation.records[0]) || {};
+  const recordIndex = opts.recordIndex != null ? Number(opts.recordIndex) : 0;
+  const identity = buildSituationIdentity(situation, { recordIndex });
+  const primary =
+    (situation.records && situation.records[recordIndex]) ||
+    (situation.records && situation.records[0]) ||
+    {};
   const validity = primary.validity || {};
   let loc = localizeFromTmc(primary.tmcRefs || [], opts.tmcTable || null, {
     coordinates: primary.coordinates || null,
@@ -125,20 +133,28 @@ export function situationToFeedItem(situation, opts = {}) {
     nowIso,
   });
 
+  const summaryFull = sanitizeTrafficComment(primary.comment || primary.cause || "");
+  const summary = buildTrafficSummary(summaryFull);
+  // Prefer structured/TMC road; else fail-closed extract from official NDIC comment
+  // (e.g. "D1, km 344,5, odpočívka…" / "D1 nájezd EXIT 357") so filters see the road.
+  let commentRoad = "";
+  let roadNumber = loc.roadNumber || primary.roadNumber || "";
+  if (!roadNumber && summaryFull) {
+    commentRoad = extractRoadNumberFromNdicComment(summaryFull);
+    if (commentRoad) roadNumber = commentRoad;
+  }
+
   const title = buildTrafficTitle({
     labelCs: primary.category && primary.category.labelCs,
-    roadNumber: loc.roadNumber || primary.roadNumber,
+    roadNumber,
     locationLabel: loc.locationLabel,
     direction: loc.direction,
   });
-  // Full source-backed comment first; short summary is derived for UI only.
-  const summaryFull = sanitizeTrafficComment(primary.comment || primary.cause || "");
-  const summary = buildTrafficSummary(summaryFull);
 
   // Fail-closed quarantine: unknown type without trustworthy base fields
   let quarantine = false;
   let quarantineReason = "";
-  if (!primary.rawTypeKnown && !summary && !loc.roadNumber && loc.trust === "national_fallback") {
+  if (!primary.rawTypeKnown && !summary && !roadNumber && loc.trust === "national_fallback") {
     quarantine = true;
     quarantineReason = "unknown_type_insufficient_fields";
   }
@@ -187,7 +203,7 @@ export function situationToFeedItem(situation, opts = {}) {
     importance: (primary.category && primary.category.importance) || 2,
     severity: primary.severity || "",
     region: loc.region,
-    roadNumber: loc.roadNumber || primary.roadNumber || "",
+    roadNumber: roadNumber || "",
     direction: loc.direction || "",
     tmcLocationCodes: loc.region.tmcCodes || [],
     lat: loc.lat,
@@ -205,16 +221,22 @@ export function situationToFeedItem(situation, opts = {}) {
     ndicV1: {
       situationId: identity.situationId,
       situationVersion: situation.situationVersion || "",
-      recordId: primary.recordId || "",
+      recordId: primary.recordId || identity.recordId || "",
       recordVersion: primary.recordVersion || "",
       recordType: primary.recordType || "",
+      recordIndex,
       tmcOk: loc.tmcOk,
       tmcMiss: loc.tmcMiss,
       trust: loc.trust,
       openlrStatus: openlr ? openlr.status : null,
+      roadFromOfficialComment: Boolean(commentRoad),
       forensic,
     },
   };
+
+  const decision = classifyPublishDecision(item, { commentRoad });
+  item.publishDecision = decision.publishDecision;
+  item.publishDecisionReason = decision.publishDecisionReason;
 
   item.contentHash = contentFingerprint({
     category: item.eventType,
@@ -245,15 +267,21 @@ export function situationsToFeedItems(situations, opts = {}) {
   const quarantine = [];
   for (const sit of situations || []) {
     try {
-      const item = situationToFeedItem(sit, opts);
-      if (item.quarantine || !item.publishable) quarantine.push(item);
-      else items.push(item);
+      const records = (sit && sit.records) || [];
+      const count = Math.max(records.length, 1);
+      for (let recordIndex = 0; recordIndex < count; recordIndex++) {
+        const item = situationToFeedItem(sit, { ...opts, recordIndex });
+        if (item.quarantine || !item.publishable) quarantine.push(item);
+        else items.push(item);
+      }
     } catch (e) {
       quarantine.push({
         id: null,
         quarantine: true,
         quarantineReason: String(e && e.message),
         sourceId: NDIC_SOURCE_ID,
+        publishDecision: "invalidRecord",
+        publishDecisionReason: String(e && e.message),
       });
     }
   }

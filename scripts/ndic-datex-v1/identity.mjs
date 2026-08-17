@@ -20,14 +20,27 @@ export function makeStableItemId(situationId) {
 
 /**
  * @param {object} situation — parsed DATEX situation
+ * @param {{ record?: object|null, recordIndex?: number }} [opts]
  */
-export function buildSituationIdentity(situation) {
+export function buildSituationIdentity(situation, opts = {}) {
   const situationId = String((situation && situation.situationId) || "").trim();
   if (!situationId) {
     throw Object.assign(new Error("missing_situation_id"), { code: "MISSING_SITUATION_ID" });
   }
-  const itemId = makeStableItemId(situationId);
-  const primary = (situation.records && situation.records[0]) || null;
+  const records = (situation && situation.records) || [];
+  const primary =
+    opts.record ||
+    (opts.recordIndex != null && records[opts.recordIndex]) ||
+    records[0] ||
+    null;
+  const recordId = primary && primary.recordId ? String(primary.recordId).trim() : "";
+  // Keep legacy situation-scoped id for the first/only record (continuity).
+  // Additional SituationRecords get situationId~recordId so they are not collapsed.
+  const itemIdKey =
+    opts.recordIndex != null && opts.recordIndex > 0 && recordId
+      ? situationId + "~" + recordId
+      : situationId;
+  const itemId = makeStableItemId(itemIdKey);
   const revisionKey = [
     situation.situationVersion || "",
     primary && primary.recordVersion,
@@ -37,6 +50,7 @@ export function buildSituationIdentity(situation) {
     .join("|");
   return {
     situationId,
+    recordId: recordId || "",
     itemId,
     revisionKey: revisionKey || "v0",
     sourceSystem: "ndic-datex-ii",

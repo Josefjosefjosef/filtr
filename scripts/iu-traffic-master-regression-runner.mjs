@@ -38,6 +38,7 @@ const SUITES = [
   "iu-traffic-impassable-lane-exit-primary-guard",
   "iu-traffic-d4-km-range-maintenance-guard",
   "iu-traffic-exit-ramp-tokenize-guard",
+  "iu-ndic-publication-completeness-guard",
   "iu-traffic-motorway-direction-exit-order-guard",
   "iu-traffic-direction-congestion-exactness-guard",
   "iu-traffic-explicit-road-delay-exit-guard",
