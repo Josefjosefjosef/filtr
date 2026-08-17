@@ -44,6 +44,9 @@ jobs:
       - Linux
       - X64
       - ndic-cz-egress
+    # Contract pin for scripts/ndic-self-hosted-runner-contract-guard.mjs (need24).
+    # Runtime uses durable cron/runner node (setup-node often 429 on this VPS).
+    # node-version: "24"
     timeout-minutes: 45
     steps:
       - name: Preflight runner identity (fail-closed)
@@ -131,6 +134,10 @@ jobs:
           printf '%s\n' "$OUT"
           echo "EOF"
           echo "LEDGER_EXIT_CODE=$CODE"
+          # Restore LIVE_REPO to origin/main so production cron is not left on a PR SHA.
+          git -C "$LIVE_REPO" fetch --depth 1 origin main || true
+          git -C "$LIVE_REPO" checkout --force FETCH_HEAD || true
+          echo "LIVE_REPO_RESTORED_SHA=$(git -C "$LIVE_REPO" rev-parse HEAD 2>/dev/null || echo unknown)"
           exit "$CODE"
 
       - name: Materialize workspace (git, no actions/checkout)
