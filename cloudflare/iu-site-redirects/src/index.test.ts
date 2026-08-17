@@ -18,13 +18,25 @@ function mockR2(initial: Record<string, string> = {}) {
       if (v == null) return null;
       return {
         body: v,
+        size: v.length,
         async text() {
           return v;
         },
       };
     },
-    async put(key: string, value: string) {
-      const s = typeof value === "string" ? value : String(value);
+    async put(key: string, value: unknown) {
+      let s: string;
+      if (typeof value === "string") {
+        s = value;
+      } else if (value instanceof ReadableStream) {
+        s = await new Response(value).text();
+      } else if (value instanceof ArrayBuffer) {
+        s = new TextDecoder().decode(value);
+      } else if (value instanceof Uint8Array) {
+        s = new TextDecoder().decode(value);
+      } else {
+        s = String(value);
+      }
       store.set(key, s);
       return { size: s.length, key };
     },
@@ -164,6 +176,7 @@ describe("iu-site-redirects", () => {
           "x-iu-ndic-meta": JSON.stringify(meta),
           "x-iu-ndic-checksum": "abc",
           "x-iu-ndic-semantic-checksum": "sem_raw",
+          "x-iu-ndic-snapshot-schema": "iu-traffic-offline-snapshot-v1",
         },
         body: JSON.stringify(snap),
       }),
@@ -174,6 +187,51 @@ describe("iu-site-redirects", () => {
     expect(j.ok).toBe(true);
     expect(j.publishWire).toBe("snapshot-raw-v1");
     expect(r2._store.get("current/traffic_offline_snapshot.json")).toContain("iu-traffic-offline-snapshot-v1");
+  });
+
+  it("publish accepts gzip snapshot-raw-v1 body", async () => {
+    const r2 = mockR2();
+    const env = {
+      LIVE_TRAFFIC_ENABLED: "true",
+      LIVE_PUBLISH_TOKEN: "secret",
+      TRAFFIC_LIVE: r2,
+    };
+    const snap = {
+      schema: "iu-traffic-offline-snapshot-v1",
+      cardCount: 1,
+      cards: [{ id: "c1" }],
+    };
+    const meta = {
+      generationId: "gen_gz",
+      sourceLastModified: "Tue, 11 Aug 2026 12:00:00 GMT",
+      checksum: "gz",
+      semanticChecksum: "sem_gz",
+      publishedAt: "2026-08-11T12:00:01.000Z",
+    };
+    const raw = new TextEncoder().encode(JSON.stringify(snap));
+    const gz = await new Response(
+      new Blob([raw]).stream().pipeThrough(new CompressionStream("gzip"))
+    ).arrayBuffer();
+    const ok = await worker.fetch(
+      req(PUB, {
+        method: "POST",
+        headers: {
+          authorization: "Bearer secret",
+          "content-type": "application/json; charset=utf-8",
+          "content-encoding": "gzip",
+          "x-iu-ndic-publish-wire": "snapshot-raw-v1",
+          "x-iu-ndic-meta": JSON.stringify(meta),
+          "x-iu-ndic-snapshot-schema": "iu-traffic-offline-snapshot-v1",
+        },
+        body: gz,
+      }),
+      env
+    );
+    expect(ok.status).toBe(200);
+    const j = await ok.json();
+    expect(j.ok).toBe(true);
+    expect(j.contentEncoding).toBe("gzip");
+    expect(r2._store.get("current/traffic_offline_snapshot.json")).toContain('"id":"c1"');
   });
 
   it("skips publish when semantic checksum matches current", async () => {

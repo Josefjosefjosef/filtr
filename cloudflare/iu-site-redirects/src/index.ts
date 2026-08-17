@@ -13,8 +13,9 @@ const R2_SNAPSHOT_KEY = "current/traffic_offline_snapshot.json";
 const R2_META_KEY = "current/meta.json";
 const R2_STAGING_SNAPSHOT_KEY = "staging/traffic_offline_snapshot.json";
 const R2_STAGING_META_KEY = "staging/meta.json";
-/** Body = pre-serialized snapshot JSON; meta in x-iu-ndic-meta (avoids Worker JSON.parse of ~8MiB). */
+/** Body = pre-serialized snapshot JSON; meta in x-iu-ndic-meta (avoids Worker JSON.parse of multi-MiB). */
 const LIVE_PUBLISH_WIRE_RAW = "snapshot-raw-v1";
+const SNAPSHOT_SCHEMA = "iu-traffic-offline-snapshot-v1";
 
 export type Env = {
   TRAFFIC_LIVE?: R2Bucket;
@@ -27,6 +28,26 @@ function hasOfflineSnapshotSchema(snapBody: string): boolean {
     snapBody.includes('"schema":"iu-traffic-offline-snapshot-v1"') ||
     snapBody.includes('"schema": "iu-traffic-offline-snapshot-v1"')
   );
+}
+
+/**
+ * Stream request body to R2 (optional gzip Content-Encoding).
+ * Avoids buffering multi-MiB snapshots in the isolate (Free-plan CPU/empty-body 503).
+ */
+function publishBodyForR2(request: Request): ReadableStream | null {
+  const src = request.body;
+  if (!src) return null;
+  const enc = String(request.headers.get("content-encoding") || "")
+    .toLowerCase()
+    .trim();
+  if (enc === "gzip") {
+    return src.pipeThrough(new DecompressionStream("gzip"));
+  }
+  return src;
+}
+
+function schemaHeaderTrusted(request: Request): boolean {
+  return String(request.headers.get("x-iu-ndic-snapshot-schema") || "").trim() === SNAPSHOT_SCHEMA;
 }
 
 function isDataOrVersionPath(pathname: string): boolean {
@@ -88,11 +109,12 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
 
   const wire = String(request.headers.get("x-iu-ndic-publish-wire") || "").trim();
   let meta: Record<string, unknown>;
-  let snapBody: string;
   let publishWire = "legacy-envelope";
+  /** Set only for legacy envelope path (small fixtures). */
+  let legacySnapBody: string | null = null;
 
   if (wire === LIVE_PUBLISH_WIRE_RAW) {
-    // Prefer path for production ~8MiB snapshots: no JSON.parse of the snapshot body.
+    // Production path: stream body (optional gzip) → R2; never JSON.parse snapshot in Worker.
     publishWire = LIVE_PUBLISH_WIRE_RAW;
     const metaHdr = String(request.headers.get("x-iu-ndic-meta") || "");
     try {
@@ -102,14 +124,6 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
     }
     if (!meta || typeof meta !== "object") {
       return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
-    }
-    try {
-      snapBody = await request.text();
-    } catch {
-      return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
-    }
-    if (!snapBody || !hasOfflineSnapshotSchema(snapBody)) {
-      return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
     }
   } else {
     // Legacy envelope {meta,snapshot} — fine for small fixtures; avoid in production.
@@ -131,10 +145,10 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
       return json({ ok: false, reason: "MISSING_META_OR_SNAPSHOT" }, 400);
     }
     const schema = String((snapshot as { schema?: string }).schema || "");
-    if (schema !== "iu-traffic-offline-snapshot-v1") {
+    if (schema !== SNAPSHOT_SCHEMA) {
       return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
     }
-    snapBody = JSON.stringify(snapshot);
+    legacySnapBody = JSON.stringify(snapshot);
   }
 
   const incomingSemantic = String(
@@ -142,7 +156,7 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
   );
   const incomingChecksum = String(meta.checksum || request.headers.get("x-iu-ndic-checksum") || "");
 
-  // Stale writer protection vs current meta
+  // Stale writer protection vs current meta (before consuming body stream)
   const currentMetaObj = await env.TRAFFIC_LIVE.get(R2_META_KEY);
   if (currentMetaObj) {
     try {
@@ -173,24 +187,64 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
   }
 
   const metaBody = JSON.stringify(meta);
-  if (!hasOfflineSnapshotSchema(snapBody)) {
-    return json({ ok: false, reason: "STAGING_SCHEMA_VERIFY_FAILED" }, 500);
+  let payloadBytes = 0;
+
+  if (wire === LIVE_PUBLISH_WIRE_RAW) {
+    const stream = publishBodyForR2(request);
+    if (!stream) {
+      return json({ ok: false, reason: "BODY_READ_FAILED" }, 400);
+    }
+    const stagedSnap = await env.TRAFFIC_LIVE.put(R2_STAGING_SNAPSHOT_KEY, stream, {
+      httpMetadata: { contentType: "application/json" },
+    });
+    await env.TRAFFIC_LIVE.put(R2_STAGING_META_KEY, metaBody, {
+      httpMetadata: { contentType: "application/json" },
+    });
+    if (!stagedSnap || !(stagedSnap.size > 0)) {
+      return json({ ok: false, reason: "STAGING_VERIFY_FAILED" }, 500);
+    }
+    payloadBytes = stagedSnap.size;
+
+    const stagedObj = await env.TRAFFIC_LIVE.get(R2_STAGING_SNAPSHOT_KEY);
+    if (!stagedObj) {
+      return json({ ok: false, reason: "STAGING_READBACK_FAILED" }, 500);
+    }
+
+    // Authenticated publisher may assert schema (VPS already validated) to avoid
+    // re-buffering ~14MiB in the isolate. Fallback: readback substring check.
+    if (schemaHeaderTrusted(request)) {
+      await env.TRAFFIC_LIVE.put(R2_SNAPSHOT_KEY, stagedObj.body, {
+        httpMetadata: { contentType: "application/json" },
+      });
+    } else {
+      const snapBody = await stagedObj.text();
+      if (!hasOfflineSnapshotSchema(snapBody)) {
+        return json({ ok: false, reason: "INVALID_SNAPSHOT_SCHEMA" }, 400);
+      }
+      await env.TRAFFIC_LIVE.put(R2_SNAPSHOT_KEY, snapBody, {
+        httpMetadata: { contentType: "application/json" },
+      });
+    }
+  } else {
+    const snapBody = legacySnapBody || "";
+    if (!hasOfflineSnapshotSchema(snapBody)) {
+      return json({ ok: false, reason: "STAGING_SCHEMA_VERIFY_FAILED" }, 500);
+    }
+    payloadBytes = snapBody.length;
+    const stagedSnap = await env.TRAFFIC_LIVE.put(R2_STAGING_SNAPSHOT_KEY, snapBody, {
+      httpMetadata: { contentType: "application/json" },
+    });
+    await env.TRAFFIC_LIVE.put(R2_STAGING_META_KEY, metaBody, {
+      httpMetadata: { contentType: "application/json" },
+    });
+    if (!stagedSnap || !(stagedSnap.size > 0)) {
+      return json({ ok: false, reason: "STAGING_VERIFY_FAILED" }, 500);
+    }
+    await env.TRAFFIC_LIVE.put(R2_SNAPSHOT_KEY, snapBody, {
+      httpMetadata: { contentType: "application/json" },
+    });
   }
 
-  // staging → size verify → current (no full-body re-read of staging)
-  const stagedSnap = await env.TRAFFIC_LIVE.put(R2_STAGING_SNAPSHOT_KEY, snapBody, {
-    httpMetadata: { contentType: "application/json" },
-  });
-  await env.TRAFFIC_LIVE.put(R2_STAGING_META_KEY, metaBody, {
-    httpMetadata: { contentType: "application/json" },
-  });
-  if (!stagedSnap || !(stagedSnap.size > 0)) {
-    return json({ ok: false, reason: "STAGING_VERIFY_FAILED" }, 500);
-  }
-
-  await env.TRAFFIC_LIVE.put(R2_SNAPSHOT_KEY, snapBody, {
-    httpMetadata: { contentType: "application/json" },
-  });
   await env.TRAFFIC_LIVE.put(R2_META_KEY, metaBody, {
     httpMetadata: { contentType: "application/json" },
   });
@@ -201,8 +255,14 @@ async function handleLivePublish(env: Env, request: Request): Promise<Response> 
     ATOMIC_PUBLICATION_PASS: "YES",
     generationId: meta.generationId,
     publishedAt: meta.publishedAt,
-    payloadBytes: snapBody.length,
+    payloadBytes,
     publishWire,
+    contentEncoding:
+      String(request.headers.get("content-encoding") || "")
+        .toLowerCase()
+        .trim() === "gzip"
+        ? "gzip"
+        : "identity",
   });
 }
 

@@ -23,7 +23,8 @@ binding = "TRAFFIC_LIVE"
 bucket_name = "iu-ndic-traffic-live"
 
 # NOTE: [limits] cpu_ms is Paid-only; Free plan rejects deploy (API 100328).
-# Mitigations for empty-body 503: snapshot-raw-v1 wire (no Worker JSON.parse of ~8MiB)
+# Mitigations for empty-body 503: snapshot-raw-v1 wire (no Worker JSON.parse),
+# stream body→R2 (optional gzip Content-Encoding), schema header trust,
 # + client bounded retry for true transient edge failures.
 
 [observability]

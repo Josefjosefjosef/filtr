@@ -8,6 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import zlib from "node:zlib";
 import { defaultLiveRoot, writeJsonAtomic, readJsonSafe, generationPointerPath } from "./live-health.mjs";
 import { evaluateLiveAnomalyGuard } from "./live-anomaly-guard.mjs";
 
@@ -16,6 +17,9 @@ export const LIVE_META_OBJECT_KEY = "current/meta.json";
 export const LIVE_PUBLISH_PATH = "/projects/data/info_events/ndic_datex_v1/__iu_live_publish";
 /** Prefer raw snapshot body + meta header — avoids Worker JSON.parse of multi-MiB envelopes. */
 export const LIVE_PUBLISH_WIRE_RAW = "snapshot-raw-v1";
+export const LIVE_SNAPSHOT_SCHEMA = "iu-traffic-offline-snapshot-v1";
+/** Gzip wire bodies above this size to stay under Cloudflare Free-plan Worker CPU. */
+export const LIVE_PUBLISH_GZIP_MIN_BYTES = 256 * 1024;
 
 /** Bounded publish retry budget (must fit inside ~60s poll without queueing). */
 export const PUBLISH_MAX_ATTEMPTS = 4;
@@ -268,7 +272,9 @@ export async function publishLiveTrafficSnapshot({
   }
 
   // Body = already-serialized snapshot only (not {meta,snapshot} envelope).
-  const requestBody = body;
+  // Gzip large payloads so Free-plan Worker stays under CPU (empty-body 503 mitigation).
+  const useGzip = payloadBytes >= LIVE_PUBLISH_GZIP_MIN_BYTES;
+  const requestBody = useGzip ? zlib.gzipSync(Buffer.from(body, "utf8")) : body;
   const metaHeader = JSON.stringify(meta);
   const started = nowMs();
   let attempt = 0;
@@ -283,18 +289,21 @@ export async function publishLiveTrafficSnapshot({
     const attemptStarted = nowMs();
     let res;
     try {
+      const headers = {
+        "content-type": "application/json; charset=utf-8",
+        authorization: "Bearer " + token,
+        "x-iu-ndic-publish-wire": LIVE_PUBLISH_WIRE_RAW,
+        "x-iu-ndic-meta": metaHeader,
+        "x-iu-ndic-generation-id": meta.generationId,
+        "x-iu-ndic-source-last-modified": meta.sourceLastModified || "",
+        "x-iu-ndic-checksum": checksum,
+        "x-iu-ndic-semantic-checksum": semanticChecksum,
+        "x-iu-ndic-snapshot-schema": LIVE_SNAPSHOT_SCHEMA,
+      };
+      if (useGzip) headers["content-encoding"] = "gzip";
       res = await fetchImpl(publishUrl, {
         method: "POST",
-        headers: {
-          "content-type": "application/json; charset=utf-8",
-          authorization: "Bearer " + token,
-          "x-iu-ndic-publish-wire": LIVE_PUBLISH_WIRE_RAW,
-          "x-iu-ndic-meta": metaHeader,
-          "x-iu-ndic-generation-id": meta.generationId,
-          "x-iu-ndic-source-last-modified": meta.sourceLastModified || "",
-          "x-iu-ndic-checksum": checksum,
-          "x-iu-ndic-semantic-checksum": semanticChecksum,
-        },
+        headers,
         body: requestBody,
       });
     } catch (e) {
