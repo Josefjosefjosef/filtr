@@ -35,6 +35,8 @@ ok("freshness_meta", /endToEndLagMs/.test(sync) && /officialLatestSentAt/.test(s
 ok("freshness_sla_limit", /slaLimitMs:\s*15\s*\*\s*60\s*\*\s*1000/.test(sync), "15m");
 ok("watchdog_exists", wd.length > 0, "watchdog file");
 ok("watchdog_fail_closed", /CHMI_CAP_FRESHNESS_WATCHDOG=FAIL/.test(wd) || /SOURCE_NEW_PRODUCTION_STALE/.test(wd), "fail");
+ok("watchdog_detects_disabled", /WORKFLOW_DISABLED/.test(wd), "disabled");
+ok("watchdog_enable_hint", /gh workflow enable/.test(wd), "enable hint");
 
 if (fails.length) {
   console.error("IU_CHMI_E2E_FRESHNESS_SLA=FAIL");

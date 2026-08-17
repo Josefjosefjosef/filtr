@@ -34,8 +34,13 @@ jobs:
             echo "WATCHDOG_PROBE_UNEXPECTED_HTTP=$code"
             exit 1
           fi
-          if grep -q '"ok":false' "$OUT" && grep -q 'dispatch_failed\|GitHub dispatch failed' "$OUT"; then
-            echo "WATCHDOG_DISPATCH_FAILED"
+          if grep -q '"ok":false' "$OUT" && grep -q 'dispatch_failed\|GitHub dispatch failed\|workflow_disabled' "$OUT"; then
+            if grep -q 'workflow_disabled' "$OUT"; then
+              echo "WATCHDOG_WORKFLOW_DISABLED"
+              echo "CHMI_CAP_FIX=gh workflow enable update-chmi-cap-v2.yml"
+            else
+              echo "WATCHDOG_DISPATCH_FAILED"
+            fi
             exit 1
           fi
           echo "WATCHDOG_PROBE_OK"

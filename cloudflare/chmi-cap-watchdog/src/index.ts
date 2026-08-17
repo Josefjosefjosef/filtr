@@ -82,7 +82,23 @@ async function listRuns(env: Env): Promise<GhRun[]> {
   return data.workflow_runs ?? [];
 }
 
-async function dispatchWorkflow(env: Env): Promise<{ status: number; ok: boolean }> {
+async function fetchWorkflowState(env: Env): Promise<string | null> {
+  assertGithubToken(env);
+  const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
+  const wf = encodeURIComponent(env.WORKFLOW_FILE);
+  const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${wf}`;
+  const res = await fetch(url, { headers: ghHeaders(env.GITHUB_TOKEN) });
+  if (!res.ok) {
+    console.log(`[chmi-cap-watchdog] workflow state fetch failed: ${res.status}`);
+    return null;
+  }
+  const data = (await res.json()) as { state?: string };
+  return typeof data.state === "string" && data.state ? data.state : null;
+}
+
+async function dispatchWorkflow(
+  env: Env
+): Promise<{ status: number; ok: boolean; workflowState?: string | null; reason?: string }> {
   assertGithubToken(env);
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
   const wf = encodeURIComponent(env.WORKFLOW_FILE);
@@ -101,7 +117,17 @@ async function dispatchWorkflow(env: Env): Promise<{ status: number; ok: boolean
   });
   const bodyText = res.status === 204 ? "" : await res.text();
   console.log(`[chmi-cap-watchdog] dispatch status=${res.status} body=${bodyText.slice(0, 200)}`);
-  return { status: res.status, ok: res.status === 204 };
+  if (res.status === 204) return { status: res.status, ok: true };
+  // 422 commonly means the workflow is disabled_manually (schedule+dispatch both dead).
+  let workflowState: string | null = null;
+  let reason = `dispatch_failed status=${res.status}`;
+  if (res.status === 422) {
+    workflowState = await fetchWorkflowState(env);
+    if (workflowState && workflowState !== "active") {
+      reason = `workflow_disabled state=${workflowState}`;
+    }
+  }
+  return { status: res.status, ok: false, workflowState, reason };
 }
 
 async function cancelStaleQueued(env: Env, staleMin: number): Promise<number> {
@@ -148,7 +174,12 @@ async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Recor
         runs,
       });
 
-  let dispatch: { status: number; ok: boolean } | null = null;
+  let dispatch: {
+    status: number;
+    ok: boolean;
+    workflowState?: string | null;
+    reason?: string;
+  } | null = null;
   if (decision.action === "dispatch") {
     dispatch = await dispatchWorkflow(env);
   }
@@ -172,7 +203,7 @@ async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Recor
   };
   console.log(`[chmi-cap-watchdog] REPORT=${JSON.stringify(report)}`);
   if (decision.action === "dispatch" && dispatch && !dispatch.ok) {
-    throw new Error(`dispatch_failed status=${dispatch.status}`);
+    throw new Error(dispatch.reason || `dispatch_failed status=${dispatch.status}`);
   }
   return report;
 }

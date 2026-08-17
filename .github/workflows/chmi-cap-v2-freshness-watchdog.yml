@@ -40,6 +40,15 @@ jobs:
           set -euo pipefail
           OWNER="${GITHUB_REPOSITORY%%/*}"
           REPO="${GITHUB_REPOSITORY#*/}"
+          wf_meta="$(gh api "repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE")"
+          printf '%s' "$wf_meta" > /tmp/chmi-cap-workflow.json
+          WF_STATE=$(jq -r '.state // empty' /tmp/chmi-cap-workflow.json)
+          if [ "$WF_STATE" != "active" ]; then
+            echo "CHMI_CAP_FRESHNESS_WATCHDOG_REPORT={\"state\":\"WORKFLOW_DISABLED\",\"workflowFile\":\"$WORKFLOW_FILE\",\"workflowState\":\"$WF_STATE\"}"
+            echo "CHMI_CAP_FRESHNESS_WATCHDOG=FAIL state=WORKFLOW_DISABLED workflowState=$WF_STATE"
+            echo "CHMI_CAP_FIX=gh workflow enable $WORKFLOW_FILE"
+            exit 1
+          fi
           runs_json="$(gh api "repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE/runs?per_page=20")"
           printf '%s' "$runs_json" > /tmp/chmi-cap-runs.json
           MAIN_AT=$(jq -r '.generatedAt // empty' projects/data/info_events/feed.json)
@@ -172,6 +181,7 @@ jobs:
             "CDN_OR_SW_STALE",
             "PRODUCTION_DATA_MISMATCH",
             "DEPLOY_PENDING",
+            "WORKFLOW_DISABLED",
           ]);
           // Pending within SLA is OK (in-progress sync / brief pages lag).
           if (state === "SOURCE_NEW_PRODUCTION_PENDING_WITHIN_SLA") {
