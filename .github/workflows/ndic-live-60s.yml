@@ -54,16 +54,40 @@ jobs:
           if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then echo "REFUSING_UNEXPECTED_RUNNER_NAME"; exit 1; fi
           echo "RUNNER_PREFLIGHT_OK"
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout (primary)
+        id: checkout_primary
+        continue-on-error: true
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           persist-credentials: false
+
+      - name: Checkout fallback (rate-limit resilient)
+        if: steps.checkout_primary.outcome != 'success'
+        run: |
+          set -euo pipefail
+          echo "CHECKOUT_PRIMARY_FAILED — trying git fetch retries"
+          for i in 1 2 3 4 5 6 7 8; do
+            echo "CHECKOUT_RETRY=$i"
+            rm -rf .git || true
+            find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+            git init
+            git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+            if git fetch --depth 1 origin "${GITHUB_SHA}" && git checkout --force FETCH_HEAD; then
+              echo "CHECKOUT_FALLBACK_OK"
+              exit 0
+            fi
+            sleep $((25 * i))
+          done
+          echo "CHECKOUT_FALLBACK_FAILED"
+          exit 1
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
 
       - name: Offline live-60s fixtures
+        if: github.event.inputs.action != 'ledger-audit'
         run: node scripts/ndic-datex-live-60s-fixtures.mjs
 
       - name: Action dispatch
