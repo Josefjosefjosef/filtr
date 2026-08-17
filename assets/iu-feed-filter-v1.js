@@ -19,6 +19,17 @@ import {
 
 export const FEED_FILTER_VERSION = 1;
 
+/** True for ČHMÚ / CAP feed items (incl. smoke stubs using sourceId chmi-cap). */
+export function isChmiFeedEvent(ev) {
+  if (!ev || typeof ev !== "object") return false;
+  if (ev.capV2) return true;
+  const sid = String(ev.sourceId || "").toLowerCase();
+  if (sid === "chmi" || sid === "chmi-cap" || sid.startsWith("chmi")) return true;
+  const ctype = String(ev.connectorType || "").toLowerCase();
+  if (ctype === "chmi-cap" || ctype.startsWith("chmi")) return true;
+  return false;
+}
+
 /** @typedef {'all'|'traffic'|'chmu'} FeedQuickView */
 
 /** User-facing event categories (normalized types fully covered). */
@@ -510,7 +521,7 @@ export function applyFeedSourceAndQuickView(list, ff, quickView) {
   const q = quickView === "traffic" || quickView === "chmu" ? quickView : "all";
   return (list || []).filter((ev) => {
     const isTraffic = !!(ev && ev.trafficV1);
-    const isChmi = !!(ev && (ev.capV2 || String(ev.sourceId || "") === "chmi"));
+    const isChmi = isChmiFeedEvent(ev);
     if (isTraffic) {
       if (!trafficOn) return false;
       if (q === "chmu") return false;

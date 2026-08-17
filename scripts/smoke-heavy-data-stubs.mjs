@@ -62,6 +62,35 @@ export function freshenSmokeFeedStubTimestamps(feed, now = new Date()) {
   return base;
 }
 
+/**
+ * Keep traffic offline stub cards inside ACTIVE overview window.
+ * Fixed fixture validity ages out and zeros the shared feed under smoke stubs.
+ * @param {object} snap
+ * @param {Date} [now]
+ */
+export function freshenSmokeTrafficStubTimestamps(snap, now = new Date()) {
+  const base = snap && typeof snap === "object" ? JSON.parse(JSON.stringify(snap)) : {};
+  const t0 = now instanceof Date ? now.getTime() : Date.now();
+  const iso = (ms) => new Date(ms).toISOString();
+  base.generatedAt = iso(t0);
+  const validFrom = iso(t0 - 2 * 3600000);
+  const expectedEnd = iso(t0 + 12 * 3600000);
+  const cards = Array.isArray(base.cards) ? base.cards : [];
+  for (const c of cards) {
+    if (!c || typeof c !== "object") continue;
+    c.lifecycleStatus = "ACTIVE";
+    if (!c.validity || typeof c.validity !== "object") c.validity = {};
+    c.validity.validFrom = validFrom;
+    c.validity.expectedEnd = expectedEnd;
+    c.validity.actualEnd = null;
+    if (c.feed && typeof c.feed === "object") {
+      c.feed.publishedAt = validFrom;
+      c.feed.updatedAt = iso(t0 - 3600000);
+    }
+  }
+  return base;
+}
+
 export function validateSmokeFeedStubSchema(feed) {
   const fails = [];
   if (!feed || typeof feed !== "object") {
@@ -121,7 +150,11 @@ export async function installSmokeHeavyDataRouteStubs(page, opts = {}) {
     opts.feedBody != null || opts.skipFreshen === true
       ? rawFeed
       : freshenSmokeFeedStubTimestamps(rawFeed);
-  const trafficObj = opts.trafficJson != null ? opts.trafficJson : loadSmokeTrafficStub();
+  const rawTraffic = opts.trafficJson != null ? opts.trafficJson : loadSmokeTrafficStub();
+  const trafficObj =
+    opts.trafficBody != null || opts.skipFreshen === true
+      ? rawTraffic
+      : freshenSmokeTrafficStubTimestamps(rawTraffic);
   const feedBody = opts.feedBody != null ? opts.feedBody : JSON.stringify(feedObj);
   const trafficBody = opts.trafficBody != null ? opts.trafficBody : JSON.stringify(trafficObj);
 

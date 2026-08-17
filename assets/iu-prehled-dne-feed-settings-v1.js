@@ -379,7 +379,7 @@ export function quickViewBarHtml(ff, quickView) {
 
 export function emptyFeedStateHtml() {
   return (
-    `<div class="iuPdFeedEmpty" data-iu-feed-empty="1" role="status">` +
+    `<div class="iuPdFeedEmpty iuPdEmpty iuPrehledDne__empty" data-iu-feed-empty="1" role="status">` +
     `<p class="iuPdFeedEmpty__title">Pro toto nastavení momentálně nemáme žádné události.</p>` +
     `<button type="button" class="iuPdBtn iuPdBtn--primary" data-act="open-settings">Upravit filtry</button>` +
     `</div>`

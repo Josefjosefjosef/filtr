@@ -56,6 +56,7 @@ import {
   applyFeedSourceAndQuickView,
   buildRoadCatalogFromTrafficItems,
   ensureFeedFilter,
+  isChmiFeedEvent,
   matchesTrafficDetailFilter,
   parkingCitiesFromRegistry,
   prefsForChmuFilter,
@@ -210,6 +211,8 @@ const state = {
   roadQuery: "",
   /** @type {'all'|'traffic'|'chmu'} Session-only quick view (not persisted). */
   feedQuickView: "all",
+  /** False until hosted traffic offline snapshot fetch settles (or traffic UI disabled). */
+  trafficSnapSettled: false,
   openSourceGroups: {},
   page: 1,
   cityQuery: "",
@@ -638,9 +641,7 @@ function filteredList() {
   if (ff.chmuEnabled) {
     list = filterEvents(items, filterPrefs, opts);
     // Feed redesign: shared feed path contributes only ČHMÚ cards (not legacy topics).
-    list = list.filter(
-      (ev) => ev && (ev.capV2 || String(ev.sourceId || "") === "chmi") && !ev.trafficV1
-    );
+    list = list.filter((ev) => ev && isChmiFeedEvent(ev) && !ev.trafficV1);
   }
   if (
     ff.trafficEnabled &&
@@ -708,7 +709,7 @@ function sectionColor(sectionId) {
 function chmiPublicDetailUrl(ev) {
   // Unified public click for every CHMI card: https://vystrahy-cr.chmi.cz/
   // Never open CAP XML, ovzduší, or other specialized CAP <web> pages.
-  if (!(ev && (ev.capV2 || String(ev.sourceId || "") === "chmi"))) return "";
+  if (!isChmiFeedEvent(ev)) return "";
   const forced = String(
     (ev.publicClickUrl ||
       ev.publicUrl ||
@@ -1810,9 +1811,14 @@ function updateFeedDom() {
   const existingQuick = root.querySelector("[data-iu-feed-quick]");
   if (existingQuick) existingQuick.outerHTML = quickHtml;
   else if (count) count.insertAdjacentHTML("afterend", quickHtml);
-  // Empty presentation state (both categories off / zero matches on home).
+  // Empty presentation state only after feed + traffic snapshot hydrate settle.
+  const feedHydrated = !!(state.data && state.data.feed && Array.isArray(state.data.feed.items));
+  const trafficPending =
+    TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
+    ff.trafficEnabled !== false &&
+    !state.trafficSnapSettled;
   const emptyHost = root.querySelector("[data-iu-feed-empty]");
-  if (!pageItems.length && state.viewMode === "home") {
+  if (!pageItems.length && state.viewMode === "home" && feedHydrated && !trafficPending) {
     const emptyHtml = emptyFeedStateHtml();
     if (feed) {
       feed.outerHTML = emptyHtml;
@@ -1829,7 +1835,9 @@ function updateFeedDom() {
   if (feedNow) {
     feedNow.innerHTML = pageItems.length
       ? pageItems.map(renderItem).join("")
-      : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
+      : feedHydrated && !trafficPending
+        ? `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`
+        : `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`;
     const hasTraffic = pageItems.some((ev) => ev && ev.trafficV1);
     feedNow.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
   }
@@ -2643,6 +2651,7 @@ async function boot() {
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
+  state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
   root.innerHTML = homeShellHtml(
     `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
     "Načítám…",
@@ -2769,6 +2778,7 @@ async function boot() {
           .then(() => {
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;
+            state.trafficSnapSettled = true;
             setTimeout(() => {
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
@@ -2778,7 +2788,17 @@ async function boot() {
               } catch (_) {}
             }, 0);
           })
-          .catch(() => {});
+          .catch(() => {
+            state.trafficSnapSettled = true;
+            try {
+              if (root.isConnected) {
+                if (state.settingsOpen) updateFeedDom();
+                else paint();
+              }
+            } catch (_) {}
+          });
+      } else {
+        state.trafficSnapSettled = true;
       }
       window.addEventListener(
         "beforeunload",
