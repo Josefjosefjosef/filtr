@@ -2397,8 +2397,11 @@ function filterEvents(events, filters, opts) {
       const t = parseTime(eventSortAt(ev));
       if (!t || now - t > rangeMs) continue;
     }
-    // Client-side 96h safety (mirrors backend isInActiveFeedWindow) for stale published feeds
-    {
+    // Client-side 96h safety (mirrors backend isInActiveFeedWindow) for stale published feeds.
+    // CHMI CAP is already gated by isPublicFeedChmiWarning (ACTIVE/FUTURE + untilRevoked).
+    // Do NOT re-apply publish-age kill here — untilRevoked alerts often have null validTo and
+    // publishedAt older than 96h while still officially active (stav sucha / riziko požárů).
+    if (!isChmiCapWarning(ev)) {
       const maxAgeMs = 96 * 3600000;
       const validTo = parseTime(ev.validTo);
       const validFrom = parseTime(ev.validFrom);
