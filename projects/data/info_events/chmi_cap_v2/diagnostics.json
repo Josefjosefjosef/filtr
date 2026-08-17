@@ -1,6 +1,6 @@
 {
-  "runId": "6b5b842bd34e356e",
-  "started": "2026-08-17T16:12:11.113Z",
+  "runId": "7a0c9bf6ee4344ee",
+  "started": "2026-08-17T19:10:48.000Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_171534.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_111200.xml",
@@ -30,40 +30,26 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 0,
-    "update": 1,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 26,
-      "logicalAlerts": 8,
+      "capMessages": null,
+      "infoBlocks": null,
+      "logicalAlerts": 4,
       "uniqueEvents": [
-        "Velmi silné bouřky",
         "Stav sucha",
         "Hydrologické sucho",
         "Riziko požárů"
       ],
-      "totalAreas": 244,
-      "mappedAreas": 522,
+      "totalAreas": 234,
+      "mappedAreas": 412,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 7,
-      "publishedScheduled": 1,
-      "publishableCount": 8,
+      "publishedActive": 4,
+      "publishedScheduled": 0,
+      "publishableCount": 4,
       "productStreams": [
         "50",
         "70"
@@ -71,22 +57,22 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 2,
+      "expiredCount": 6,
       "cancelledCount": 0
     },
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 7,
-    "after": 8,
+    "before": 3,
+    "after": 4,
     "ledgerKeys": 3,
     "ledgerFingerprint": "f1593da09b423b5a",
     "history": {
-      "fetched": 8,
-      "cached": 24,
+      "fetched": 0,
+      "cached": 32,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_241200.xml",
@@ -123,7 +109,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_171534.xml"
       ],
       "recentCount": 32,
-      "refCount": 2,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -325,31 +311,30 @@
   },
   "temporalCounts": {
     "totalItems": 9,
-    "activeCount": 6,
-    "scheduledCount": 1,
-    "expiredCount": 2,
+    "activeCount": 3,
+    "scheduledCount": 0,
+    "expiredCount": 6,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 8,
-    "visibleCount": 8
+    "publishableCount": 4,
+    "visibleCount": 4
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 26,
-    "logicalAlerts": 8,
+    "capMessages": null,
+    "infoBlocks": null,
+    "logicalAlerts": 4,
     "uniqueEvents": [
-      "Velmi silné bouřky",
       "Stav sucha",
       "Hydrologické sucho",
       "Riziko požárů"
     ],
-    "totalAreas": 244,
-    "mappedAreas": 522,
+    "totalAreas": 234,
+    "mappedAreas": 412,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 7,
-    "publishedScheduled": 1,
-    "publishableCount": 8,
+    "publishedActive": 4,
+    "publishedScheduled": 0,
+    "publishableCount": 4,
     "productStreams": [
       "50",
       "70"
@@ -357,7 +342,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 2,
+    "expiredCount": 6,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -365,7 +350,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 522,
+    "headAreas": 412,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -373,6 +358,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-17T16:12:32.604Z",
-  "runMs": 21490
+  "finished": "2026-08-17T19:10:53.999Z",
+  "runMs": 5999
 }
