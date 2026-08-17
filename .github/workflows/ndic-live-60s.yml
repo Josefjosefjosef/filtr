@@ -106,6 +106,7 @@ jobs:
           fi
           if [ -z "${NODE_BIN}" ]; then
             echo "NODE_BIN_MISSING_ON_VPS"
+            # shellcheck disable=SC2012
             ls -la "$HOME/infouzel-ndic-live" || true
             if [ -f "$CRON_SH" ]; then sed -n '1,25p' "$CRON_SH"; fi
             find /home/github-runner/actions-runner/externals -type f -name node 2>/dev/null | head -n 20 || true
@@ -154,7 +155,8 @@ jobs:
             echo "NODE_BIN_MISSING"
             exit 1
           fi
-          export PATH="$(dirname "$NODE_BIN"):$PATH"
+          PATH="$(dirname "$NODE_BIN"):${PATH}"
+          export PATH
           echo "NODE_BIN=$NODE_BIN"
           AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           for i in 1 2 3 4 5 6 7 8; do
@@ -175,6 +177,7 @@ jobs:
         if: github.event.inputs.action != 'ledger-audit'
         run: |
           set -euo pipefail
+          NODE_BIN=""
           NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2-)
           "$NODE_BIN" scripts/ndic-datex-live-60s-fixtures.mjs
 
@@ -197,14 +200,19 @@ jobs:
           export IU_NDIC_LIVE_ROOT="$LIVE_ROOT"
           export IU_NDIC_TMC_LKG_ROOT="${HOME}/.cache/infouzel-ndic-tmc-lkg"
           export IU_NDIC_LIVE_PUBLISH_URL="https://infouzel.cz/projects/data/info_events/ndic_datex_v1/__iu_live_publish"
-          NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" 2>/dev/null | head -n1 | cut -d= -f2- || true)
+          NODE_BIN=""
+          if [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
+            NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" 2>/dev/null | head -n1 | cut -d= -f2- || true)
+          fi
           if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
             echo "NODE_BIN_MISSING_IN_DISPATCH"
             exit 1
           fi
-          export PATH="$(dirname "$NODE_BIN"):$PATH"
+          PATH="$(dirname "$NODE_BIN"):${PATH}"
+          export PATH
 
           # Non-interactive runners often lack a user session bus.
+          uid=""
           uid="$(id -u)"
           export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/${uid}}"
           export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=${XDG_RUNTIME_DIR}/bus}"
@@ -283,46 +291,6 @@ jobs:
             node deploy/ndic-live-60s/forensic-status-dump.mjs
             echo "EOF"
             exit 0
-          fi
-
-          if [ "$ACTION" = "ledger-audit" ]; then
-            ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
-            if [ ! -f "$ENV_FILE" ]; then echo "MISSING_ENV_FILE"; exit 1; fi
-            set -a
-            # shellcheck disable=SC1090
-            . "$ENV_FILE"
-            set +a
-            export IU_NDIC_LIVE_ROOT="${IU_NDIC_LIVE_ROOT:-$LIVE_ROOT}"
-            export IU_NDIC_DATEX_V1_MODE=active
-            if [ -n "${IU_NDIC_PULL_URL:-}" ]; then export IU_NDIC_PULL_URL; fi
-            if [ -n "${IU_NDIC_PULL_USER:-}" ]; then export IU_NDIC_PULL_USER; fi
-            if [ -n "${IU_NDIC_PULL_PASS:-}" ]; then export IU_NDIC_PULL_PASS; fi
-            NODE_BIN=""
-            for c in /usr/bin/node /usr/local/bin/node $(ls -1d "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | tail -n1 || true); do
-              if [ -n "${c:-}" ] && [ -x "$c" ]; then NODE_BIN="$c"; break; fi
-            done
-            if [ -z "${NODE_BIN}" ] && [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
-              NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2- || true)
-            fi
-            if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
-              NODE_BIN="$(command -v node || true)"
-            fi
-            if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
-              echo "NODE_BIN_MISSING_FOR_LEDGER"
-              exit 1
-            fi
-            echo "LEDGER_AUDIT_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            echo "LEDGER_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
-            echo "LEDGER_NODE_BIN=$NODE_BIN"
-            set +e
-            OUT=$("$NODE_BIN" scripts/ndic-datex-v1-publication-ledger-audit.mjs)
-            CODE=$?
-            set -e
-            echo "LEDGER_JSON<<EOF"
-            printf '%s\n' "$OUT"
-            echo "EOF"
-            echo "LEDGER_EXIT_CODE=$CODE"
-            exit "$CODE"
           fi
 
           if [ "$ACTION" = "shadow-window" ]; then
