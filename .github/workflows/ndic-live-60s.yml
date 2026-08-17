@@ -81,18 +81,31 @@ jobs:
           export IU_NDIC_LIVE_ROOT="${IU_NDIC_LIVE_ROOT:-$HOME/.cache/infouzel-ndic-live}"
           export IU_NDIC_DATEX_V1_MODE=active
           NODE_BIN=""
+          pick_node() {
+            local p="$1"
+            case "$p" in
+              *alpine*) return 1 ;;
+            esac
+            if [ -x "$p" ] && "$p" -e "process.stdout.write('ok')" >/dev/null 2>&1; then
+              NODE_BIN="$p"
+              return 0
+            fi
+            return 1
+          }
           if [ -f "$CRON_SH" ]; then
-            NODE_BIN=$(grep -E '^NODE_BIN=' "$CRON_SH" | head -n1 | cut -d= -f2- || true)
+            CAND=$(grep -E '^NODE_BIN=' "$CRON_SH" | head -n1 | cut -d= -f2- || true)
+            pick_node "$CAND" || true
           fi
-          if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+          if [ -z "${NODE_BIN}" ]; then
             while IFS= read -r p; do
-              if [ -x "$p" ]; then NODE_BIN="$p"; break; fi
-            done < <(find /home/github-runner -type f -name node 2>/dev/null | head -n 30)
+              if pick_node "$p"; then break; fi
+            done < <(find /home/github-runner/actions-runner/externals /home/github-runner -type f -name node 2>/dev/null | head -n 80)
           fi
-          if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+          if [ -z "${NODE_BIN}" ]; then
             echo "NODE_BIN_MISSING_ON_VPS"
             ls -la "$HOME/infouzel-ndic-live" || true
             if [ -f "$CRON_SH" ]; then sed -n '1,25p' "$CRON_SH"; fi
+            find /home/github-runner/actions-runner/externals -type f -name node 2>/dev/null | head -n 20 || true
             exit 1
           fi
           echo "NODE_BIN=$NODE_BIN"
