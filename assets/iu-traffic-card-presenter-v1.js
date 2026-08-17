@@ -1503,8 +1503,12 @@ export function sanitizeExtractedValueToken(raw) {
   }
   s = s.replace(/[,;]+$/g, "");
   s = s.replace(/["'“”]+$/g, "");
-  // Drop a trailing period only when it is not a Czech abbreviation suffix.
-  if (/\.$/.test(s) && !/\b(?:tř|nám|nábř|ul|okr|č)\.$/iu.test(s)) {
+  // Drop a trailing period only when it is not a Czech abbreviation suffix
+  // (street titles: Ant. / Dr. / gen. / nám. / tř. …).
+  if (
+    /\.$/.test(s) &&
+    !/\b(?:tř|nám|nábř|ul|okr|č|ant|dr|gen|pplk|kpt|prof|ing|sv|mgr|bc|mudr|judr|phdr|rnDr)\.$/iu.test(s)
+  ) {
     s = s.replace(/\.$/, "");
   }
   return clean(s + countrySuffix);
@@ -1973,6 +1977,13 @@ export function looksLikeStreetName(raw) {
     /(?:ská|cká|ovská|ova|ná|ní|ského|ckého|kého|ého|ího)$/i;
   if (/\s/.test(t)) {
     if (/\ba\b/i.test(t)) return false;
+    // Abbreviated personal / title street names: "Ant. Škváry", "Dr. E. Beneše", "gen. Píky".
+    if (
+      /\b(?:ant|dr|gen|nám|pplk|kpt|prof|ing|sv|mgr|bc|mudr|judr|phdr)\.\s+\S+/iu.test(t) ||
+      /\b[A-ZÁ-Ž]\.\s+[A-ZÁ-Ž]/u.test(t)
+    ) {
+      return true;
+    }
     return /(?:ská|cká|ovská)(?:\s|$)/i.test(t);
   }
   return STREET_END.test(t);
@@ -2088,7 +2099,126 @@ export function looksLikeSegmentOrAreaLabel(raw) {
   if (/[–—]/.test(t)) return true;
   if (/\s+-\s+/.test(t)) return true;
   if (/-(jih|sever|východ|západ)\b/i.test(t)) return true;
+  if (looksLikeBetweenIntersectionsPhrase(t)) return true;
   return false;
+}
+
+/** "mezi křižovatkami ulic A a B" is a segment description — never a city district. */
+export function looksLikeBetweenIntersectionsPhrase(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  return /^mezi\s+křižovatkami\b/i.test(t);
+}
+
+/**
+ * Split primary event prose from a trailing detour/route section.
+ * Detour roads/streets must not overwrite primary location selection.
+ */
+export function splitPrimaryVsDetourComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return { primaryText: "", detourText: "" };
+  const m = text.match(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i);
+  if (!m || m.index == null) return { primaryText: text, detourText: "" };
+  return {
+    primaryText: clean(text.slice(0, m.index)),
+    detourText: clean(text.slice(m.index)),
+  };
+}
+
+/**
+ * Segment between two cross-streets: "mezi křižovatkami ulic A a B".
+ * Never invents names; never promotes the phrase to cityPart.
+ */
+export function extractBetweenIntersectionsSegment(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const m = text.match(
+    /\bmezi\s+křižovatkami\s+ulic\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/iu
+  );
+  if (!m) return null;
+  const toCross = (raw) => {
+    let sn = sanitizeExtractedValueToken(streetBareName(raw));
+    if (!sn) return null;
+    sn = sanitizeExtractedValueToken(
+      clean(sn.split(/\s+(?:v\s+obci|okr\.|okres|Od\s+\d|Do\s+\d)/i)[0])
+    );
+    if (!sn || looksLikeTruncatedFragment(sn)) return null;
+    if (!looksLikeStreetName(sn) && !/^Na\s+/u.test(sn) && !/náměstí/i.test(sn)) return null;
+    return sn;
+  };
+  const fromCrossStreet = toCross(m[1]);
+  const toCrossStreet = toCross(m[2]);
+  if (!fromCrossStreet || !toCrossStreet || samePlaceName(fromCrossStreet, toCrossStreet)) {
+    return null;
+  }
+  return {
+    segmentType: "betweenIntersections",
+    fromCrossStreet,
+    toCrossStreet,
+    presentation:
+      "mezi křižovatkami ulic " + fromCrossStreet + " a " + toCrossStreet,
+  };
+}
+
+/**
+ * Detour route facts from the Objížďka / přes section only.
+ * Never upgrades detour waypoints into primary event streets/roads.
+ */
+export function extractDetourRouteFactsFromOfficialComment(rawText) {
+  const { detourText: detourRaw } = splitPrimaryVsDetourComment(rawText);
+  if (!detourRaw) return null;
+  // sourceBlob may join impactFull|impact|… — keep only the first field's detour block.
+  const detourText = clean(String(detourRaw).split(/\s\|\s/)[0]);
+  if (!detourText) return null;
+  const typeRaw = ((detourText.match(/\bObjížďk[ay][^\n,:]{0,40}/i) || [])[0] || "").trim();
+  let origin = null;
+  let destination = null;
+  const od = detourText.match(
+    /\bulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+)/i
+  );
+  if (od) {
+    origin = sanitizeExtractedValueToken(streetBareName(od[1]));
+    destination = sanitizeExtractedValueToken(streetBareName(od[2]));
+  }
+  const waypoints = [];
+  const roads = extractAllRoadNumbersFromOfficialComment(detourText);
+  const viaParts = detourText.split(/\bpřes\s*:/i);
+  const via =
+    viaParts.length > 1 ? clean(String(viaParts[1]).split(/\bObjížďk/i)[0]) : "";
+  if (via) {
+    const streets = extractStreetNamesFromOfficialComment(via);
+    for (const s of streets) {
+      if (s && !waypoints.some((x) => samePlaceName(x, s))) waypoints.push(s);
+    }
+    const bare = via.matchAll(/\bulice:?\s+([^,;()]+)/gi);
+    for (const m of bare) {
+      const sn = sanitizeExtractedValueToken(streetBareName(m[1]));
+      if (
+        sn &&
+        !/\s-\s*ulice\s+/i.test(sn) &&
+        looksLikeStreetName(sn) &&
+        !waypoints.some((x) => samePlaceName(x, sn))
+      ) {
+        waypoints.push(sn);
+      }
+    }
+  }
+  // Origin/destination are detour endpoints — never also list them as via waypoints.
+  const filteredWaypoints = waypoints.filter(
+    (s) =>
+      !(origin && samePlaceName(s, origin)) &&
+      !(destination && samePlaceName(s, destination))
+  );
+  if (!origin && !destination && !filteredWaypoints.length && !roads.length) return null;
+  return {
+    detourSourcePresent: true,
+    typeRaw: typeRaw || null,
+    typeStructured: "DETOUR",
+    origin: origin || null,
+    destination: destination || null,
+    waypoints: filteredWaypoints,
+    roads,
+  };
 }
 
 /**
@@ -2160,10 +2290,14 @@ export function resolvePresentationRoadNumber(input = {}, factsIn = null) {
   const structured = clean(input.road || input.roadNumber);
   const facts = factsIn || parseOfficialCommentFacts(sourceBlob(input));
   // Prefer EXIT-paired motorway (D48 EXIT 46) before generic first road token in comment.
+  // When a detour section exists, facts.roadNumber is already primary-scoped — do NOT
+  // re-scan the full blob (detour "silnice II/…" must not become the event badge).
   const fromComment =
     clean(facts.exitRoad) ||
     clean(facts.roadNumber) ||
-    extractRoadNumberFromOfficialComment(sourceBlob(input));
+    (facts.detour && facts.detour.detourSourcePresent
+      ? null
+      : extractRoadNumberFromOfficialComment(sourceBlob(input)));
   let resolved = null;
   if (structured && fromComment) {
     resolved = preferClassedRoadNumber(structured, fromComment);
@@ -2678,17 +2812,6 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     for (const p of chunk.split(/\s*,\s*/)) push(p);
   }
 
-  const bareUlice = text.match(/\bulice:?\s+([^,;()]{2,80})/i);
-  if (bareUlice && !paren) {
-    const chunk = clean(bareUlice[1]);
-    if (/\s-\s*ulice\s+/i.test(chunk) || /\sulice\s+/i.test(chunk)) {
-      const parts = chunk.split(/\s*-\s*ulice\s+|\s*,\s*(?:ulice\s+)?/i);
-      for (const p of parts) push(p);
-    } else if (!/[-–—]/.test(chunk)) {
-      push(chunk);
-    }
-  }
-
   // Locative form used by NDIC urban events: "v ulici Ještědská v obci …"
   // Prefer pushing primary locative FIRST so it wins over later landmark tokens.
   const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(text);
@@ -2705,6 +2828,19 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     const vUlici = text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i);
     if (vUlici) {
       push(vUlici[1]);
+    }
+  }
+
+  // Leading "ulice X" must still be collected even when a later "(ulice Y)" paren
+  // exists (paren is often a detour alias, e.g. "silnice II/118 (ulice Slánská)").
+  const bareUlice = text.match(/\bulice:?\s+([^,;()]{2,80})/i);
+  if (bareUlice) {
+    const chunk = clean(bareUlice[1]);
+    if (/\s-\s*ulice\s+/i.test(chunk) || /\sulice\s+/i.test(chunk)) {
+      const parts = chunk.split(/\s*-\s*ulice\s+|\s*,\s*(?:ulice\s+)?/i);
+      for (const p of parts) push(p);
+    } else if (!/[-–—]/.test(chunk)) {
+      push(chunk);
     }
   }
 
@@ -3618,6 +3754,8 @@ export function parseOfficialCommentFacts(rawText) {
     rampSourceRoad: null,
     rampTargetLocation: null,
     exitRoad: null,
+    detour: null,
+    segmentBetweenIntersections: null,
   };
   if (!text) return out;
   if (EMPTY_IMPACT_RE.test(text)) {
@@ -3625,8 +3763,13 @@ export function parseOfficialCommentFacts(rawText) {
     return out;
   }
 
-  out.roadNumbers = extractAllRoadNumbersFromOfficialComment(text);
+  const { primaryText } = splitPrimaryVsDetourComment(text);
+  const locationScanText = primaryText || text;
+
+  // Primary roads only — detour "přes silnice II/…" must not become the event road badge.
+  out.roadNumbers = extractAllRoadNumbersFromOfficialComment(locationScanText);
   out.roadNumber = out.roadNumbers.length ? out.roadNumbers[0] : null;
+  out.detour = extractDetourRouteFactsFromOfficialComment(text);
 
   // EXIT / sjezd / nájezd — parser-normalized copy only; raw `text` stays for display traces.
   {
@@ -4165,9 +4308,9 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const streetIn =
-    text.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
-    text.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
-    text.match(/\bul\.\s*([^,;()]{2,80})/i);
+    locationScanText.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
+    locationScanText.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
+    locationScanText.match(/\bul\.\s*([^,;()]{2,80})/i);
   if (streetIn) {
     let sn = streetBareName(streetIn[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
@@ -4196,11 +4339,11 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  const okr = text.match(/\bokr\.\s*([^,;]{2,60})/i) || text.match(/\bokres\s+([^,;]{2,60})/i);
+  const okr = locationScanText.match(/\bokr\.\s*([^,;]{2,60})/i) || locationScanText.match(/\bokres\s+([^,;]{2,60})/i);
   if (okr) out.district = clean(okr[1]);
 
   // Multi-street lists: never pick one street as the whole-event locality.
-  const multiStreetBlob = text.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
+  const multiStreetBlob = locationScanText.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
   if (multiStreetBlob) {
     const parts = splitStreetList(multiStreetBlob[1]);
     const streetish = parts.filter((p) => looksLikeStreetName(p) || /náměstí/i.test(p));
@@ -4213,11 +4356,11 @@ export function parseOfficialCommentFacts(rawText) {
   // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C",
   // or leading "StreetA x StreetB" intersection (never vehicle OA x MOTO).
   {
-    const range = extractStreetRangeFromOfficialComment(text);
-    const intersection = extractStreetIntersectionFromOfficialComment(text);
-    const crossStreet = extractCrossStreetFromOfficialComment(text);
-    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(text);
-    const streets = extractStreetNamesFromOfficialComment(text);
+    const range = extractStreetRangeFromOfficialComment(locationScanText);
+    const intersection = extractStreetIntersectionFromOfficialComment(locationScanText);
+    const crossStreet = extractCrossStreetFromOfficialComment(locationScanText);
+    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(locationScanText);
+    const streets = extractStreetNamesFromOfficialComment(locationScanText);
     out.crossStreet = crossStreet;
     if (range) {
       out.streetFrom = range.streetFrom;
@@ -4268,7 +4411,7 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Bare ", Town, okr." municipality when no "v obci" marker exists.
   if (!out.city) {
-    const mTown = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    const mTown = locationScanText.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
     if (mTown) {
       const town = normalizeExtractedMunicipalityName(mTown[1]);
       if (
@@ -4284,7 +4427,8 @@ export function parseOfficialCommentFacts(rawText) {
 
   // "ulice X, CityPart, City," pattern (Hornopolní) — only when City is a real municipality.
   // Also covers "ulice Tunel X, Praha 5, Praha" where X is a named tunnel (not a street).
-  const locTrip = text.match(
+  // Middle token that is a between-intersections segment must NEVER become cityPart.
+  const locTrip = locationScanText.match(
     /\bulice:?\s+([^,;]+),\s*([^,;]+),\s*([^,;]+?)(?=\s*,|\s*$)/u
   );
   if (locTrip && !out.streetMulti) {
@@ -4293,8 +4437,11 @@ export function parseOfficialCommentFacts(rawText) {
     const s2raw = clean(locTrip[3]);
     const s2 = normalizeExtractedMunicipalityName(s2raw);
     const s0Kind = classifyLocationKindFromName(s0);
+    const midIsSegment = looksLikeBetweenIntersectionsPhrase(s1) || isKilometerLocationPhrase(s1);
     const midIsPrahaPart = isPrahaCityPartName(s1);
-    const midOk = s1 && (midIsPrahaPart || !looksLikeStreetName(s1) || /\s/.test(s1));
+    const midOk =
+      s1 &&
+      (midIsPrahaPart || midIsSegment || !looksLikeStreetName(s1) || /\s/.test(s1));
     if (s0 && midOk && (s2 || /^praha$/i.test(s2raw) || isPrahaCityPartName(s2raw))) {
       if (isNamedNonStreetKind(s0Kind)) {
         if (!out.namedObject || /^ulice\b/i.test(out.namedObject)) {
@@ -4306,7 +4453,9 @@ export function parseOfficialCommentFacts(rawText) {
       } else if (s2) {
         out.street = s0;
       }
-      if (midIsPrahaPart) {
+      if (midIsSegment) {
+        // handled below via extractBetweenIntersectionsSegment — never cityPart
+      } else if (midIsPrahaPart) {
         if (!out.cityPart) out.cityPart = s1;
       } else if (s2 && !isPrahaCityPartName(s1)) {
         out.cityPart = s1;
@@ -4318,6 +4467,17 @@ export function parseOfficialCommentFacts(rawText) {
       } else if (isPrahaCityPartName(s2raw)) {
         if (!out.cityPart) out.cityPart = s2raw;
         if (!out.city) out.city = "Praha";
+      }
+    }
+  }
+
+  {
+    const seg = extractBetweenIntersectionsSegment(locationScanText);
+    if (seg) {
+      out.segmentBetweenIntersections = seg;
+      if (!out.localityDetail) out.localityDetail = seg.presentation;
+      if (out.cityPart && looksLikeBetweenIntersectionsPhrase(out.cityPart)) {
+        out.cityPart = null;
       }
     }
   }
@@ -4387,6 +4547,7 @@ export function parseOfficialCommentFacts(rawText) {
   // Kilometrage phrases must never survive as municipality / city-district facts.
   if (out.city && isKilometerLocationPhrase(out.city)) out.city = null;
   if (out.cityPart && isKilometerLocationPhrase(out.cityPart)) out.cityPart = null;
+  if (out.cityPart && looksLikeBetweenIntersectionsPhrase(out.cityPart)) out.cityPart = null;
 
   // --- Parking facility + occupancy (P+R / P+G / house / named place) ---
   const pr = text.match(/\bP\s*\+\s*R\s+([^,;]{2,80})/i);
@@ -6688,10 +6849,48 @@ export function buildTrafficSituationSummary(input = {}) {
   const ordered = [...causeBits, ...scopeBits, ...accessBits, ...circumstanceBits, ...conditionBits];
   if (ordered.length) return finalizeSentences(ordered);
 
+  // Detour route (primary location already structured elsewhere) — prefer over raw location dump.
+  if (facts.detour && facts.detour.detourSourcePresent) {
+    const d = facts.detour;
+    const blob = sourceBlob(input);
+    const viaBits = [];
+    const roadAliasStreets = new Set();
+    for (const r of d.roads || []) {
+      if (!r) continue;
+      const esc = String(r).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const m = blob.match(new RegExp("silnice\\s+" + esc + "\\s*\\(\\s*ulice\\s+([^)]+)\\)", "i"));
+      if (m) {
+        const alias = sanitizeExtractedValueToken(streetBareName(m[1]));
+        if (alias) roadAliasStreets.add(alias.toLowerCase());
+        viaBits.push("silnici " + r + " (ulice " + alias + ")");
+      } else {
+        viaBits.push("silnici " + r);
+      }
+    }
+    for (const s of d.waypoints || []) {
+      if (!s) continue;
+      if (roadAliasStreets.has(String(s).toLowerCase())) continue;
+      viaBits.unshift("ulici " + String(s).replace(/^ulice\s+/i, ""));
+    }
+    if (viaBits.length) {
+      const joinVia =
+        viaBits.length === 1
+          ? viaBits[0]
+          : viaBits.slice(0, -1).join(", ") + " a " + viaBits[viaBits.length - 1];
+      const lead =
+        lifecycle === EVENT_LIFECYCLE.FUTURE
+          ? "Objížďka povede přes "
+          : "Objížďka vede přes ";
+      return finalizeSentences([lead + joinVia]);
+    }
+  }
+
   if (facts.situationPhrases.length) return finalizeSentences(facts.situationPhrases.slice(0, 3));
   if (!source || EMPTY_IMPACT_RE.test(source)) return "Dopravní omezení.";
   // Last-resort clause split — protect decimal km tokens and strip validity scaffolding.
   // Never rebuild "mezi 44. 74 km" from "mezi 44.53 a 40.74 km".
+  // Protect Czech street-name abbreviations (Ant. / Dr. / gen. / nám.) so they are not
+  // split into raw location fragments that leak into DOPRAVNÍ SITUACE.
   const sourceForFallback = clean(
     source
       .replace(/\bv\s+termínu\s+od\b[\s\S]*?(?=,\s*(?:údržba|oprava|práce|stavební|rozsah|počet|zúžen|uzavř|kyvadlov)|$)/gi, "")
@@ -6700,7 +6899,10 @@ export function buildTrafficSituationSummary(input = {}) {
   );
   const clauses = sourceForFallback
     .replace(/(\d)\.(\d)/g, "$1\u2024$2")
-    .replace(/\b(ul|okr|č|ev\.?\s*č|tzv|např|m|km)\./gi, "$1\u2024")
+    .replace(
+      /\b(ul|okr|č|ev\.?\s*č|tzv|např|m|km|ant|dr|gen|nám|nábř|tř|pplk|kpt|prof|ing|sv|mgr|bc)\./gi,
+      "$1\u2024"
+    )
     .split(/[.;]/)
     .map((x) => clean(x.replace(/\u2024/g, ".")))
     .filter(
@@ -6711,10 +6913,14 @@ export function buildTrafficSituationSummary(input = {}) {
         !/^do\s+\d/i.test(x) &&
         !/^vydal:/i.test(x) &&
         !/^v ulici\b/i.test(x) &&
+        !/^ulice\b/i.test(x) &&
         !/^v obci\b/i.test(x) &&
         !/^okres\b/i.test(x) &&
+        !/^okr\./i.test(x) &&
         !/^silnice\s+[ID]/i.test(x) &&
         !/^mezi\s+\d/i.test(x) &&
+        !/^mezi\s+křižovatkami\b/i.test(x) &&
+        !/^objížďk/i.test(x) &&
         !/^v\s+termínu\b/i.test(x) &&
         !/^rozsah\s*:/i.test(x) &&
         !/^počet\s+průjezdných/i.test(x)
@@ -7533,11 +7739,17 @@ export function buildPlaceAndDirectionLine(input = {}) {
       facts.streetRange === true && facts.streetFrom && facts.streetTo
         ? [streetDisp]
         : ["ulice " + streetDisp];
+    const segment =
+      (facts.segmentBetweenIntersections && facts.segmentBetweenIntersections.presentation) ||
+      (facts.localityDetail && looksLikeBetweenIntersectionsPhrase(facts.localityDetail)
+        ? facts.localityDetail
+        : null);
+    if (segment) pushUniqueBit(placeBits, segment);
     if (km) pushUniqueBit(placeBits, km);
     if (dir) pushUniqueBit(placeBits, "směr " + dir);
     // Prefer municipality over city-part on the collapsed place line.
     if (muni) placeBits.push(muni);
-    else if (cityPart) placeBits.push(cityPart);
+    else if (cityPart && !looksLikeBetweenIntersectionsPhrase(cityPart)) placeBits.push(cityPart);
     if (district && !placeBits.join(" ").includes(district)) placeBits.push("okres " + district);
     return placeBits.join(" · ");
   }
