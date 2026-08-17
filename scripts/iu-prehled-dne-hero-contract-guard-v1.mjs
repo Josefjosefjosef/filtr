@@ -684,6 +684,11 @@ async function runPlaywright() {
         return !!(img && img.complete && img.naturalWidth > 0);
       }, { timeout: 45000 });
       await pinAndWaitDaypart(page, vp);
+      // Daypart pin can remount banner <img>; wait again before measure (flake on tablet-dark reload).
+      await page.waitForFunction(() => {
+        const img = document.querySelector('[data-testid="prehled-dne-homecard"] img');
+        return !!(img && img.complete && img.naturalWidth > 0);
+      }, { timeout: 45000 });
       await page.evaluate(() => {
         const hero = document.querySelector('[data-testid="prehled-dne-hero"]');
         if (hero) hero.scrollIntoView({ block: "center", inline: "nearest" });

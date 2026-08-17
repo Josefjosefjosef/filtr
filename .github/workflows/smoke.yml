@@ -766,8 +766,15 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             SHA="${{ github.event.pull_request.head.sha }}"
           fi
-          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
-            -f state="$STATE" \
-            -f context="smoke" \
-            -f description="Required status context (smoke)" \
-            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          for attempt in 1 2 3 4 5 6; do
+            if gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+              -f state="$STATE" \
+              -f context="smoke" \
+              -f description="Required status context (smoke)" \
+              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; then
+              exit 0
+            fi
+            echo "status_post_retry=$attempt"
+            sleep $((attempt * 5))
+          done
+          exit 1
