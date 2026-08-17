@@ -59,8 +59,15 @@ jobs:
           STATE="success"
           if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
           SHA="${GITHUB_SHA}"
-          gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
-            -f state="$STATE" \
-            -f context="layout-guard" \
-            -f description="Required status context (layout-guard)" \
-            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          for attempt in 1 2 3 4 5 6; do
+            if gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
+              -f state="$STATE" \
+              -f context="layout-guard" \
+              -f description="Required status context (layout-guard)" \
+              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; then
+              exit 0
+            fi
+            echo "status_post_retry=$attempt"
+            sleep $((attempt * 5))
+          done
+          exit 1

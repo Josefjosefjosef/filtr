@@ -19,8 +19,9 @@ on:
         required: false
         default: "active"
   schedule:
-    # schedule-reregister: 2026-08-10T19:40Z — after PR #9595 merge window
-    # (temporary workflow disable/enable). Comment-only rebind (do NOT disable/enable).
+    # schedule-reregister: 2026-08-17T16:12Z — workflow was disabled_manually since
+    # 2026-08-12 (root cause of stale CAP). Re-enabled + comment-only rebind.
+    # Do NOT disable/enable for rebind; keep workflow active.
     - cron: "*/5 * * * *"
 
 # Intentionally NO workflow-level info-events-data-writers lock (overbroad / NDIC starvation).
