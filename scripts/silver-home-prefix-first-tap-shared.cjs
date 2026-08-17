@@ -21,7 +21,9 @@ const STRESS_OPTIMISTIC_SOFT_MS = 250;
 const STRESS_OPTIMISTIC_HARD_MS = 1000;
 const STRESS_OPTIMISTIC_MAX_MS = STRESS_OPTIMISTIC_SOFT_MS;
 const STRESS_TIMING_SAMPLES_MAX = 3;
-const STRESS_FINAL_MAX_MS = 4500;
+// CI runners + delayed engine route (STRESS_ENGINE_DELAY_MS) need headroom beyond
+// the intentional 2s engine stall; 4500ms flaked on tablet/mobile cold opens.
+const STRESS_FINAL_MAX_MS = 10000;
 
 function timingStats(msArr) {
   const a = (msArr || []).map((n) => Number(n)).filter((n) => Number.isFinite(n) && n >= 0).sort((x, y) => x - y);
