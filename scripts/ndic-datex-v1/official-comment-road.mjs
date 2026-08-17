@@ -1,12 +1,70 @@
 /**
  * Source-backed road identity from official NDIC comment when structured/TMC road is empty.
- * Reuses presenter fail-closed extractors — never invents roads from free prose.
+ * Lightweight (no presenter import) — safe for 1GB VPS live tick memory budget.
+ * Fail-closed: primary prose only; never invents roads from detour text.
  */
-import {
-  resolvePresentationRoadNumber,
-  parseOfficialCommentFacts,
-  extractMotorwayNumbersFromOfficialComment,
-} from "../../assets/iu-traffic-card-presenter-v1.js";
+
+function clean(s) {
+  return String(s || "").replace(/\s+/g, " ").trim();
+}
+
+function normalizeMotorwayRoadToken(raw) {
+  const t = clean(raw).toUpperCase().replace(/\s+/g, "");
+  if (!/^[DER]\d{1,3}[A-Z]?$/.test(t)) return "";
+  return t;
+}
+
+/**
+ * Split primary event prose from a trailing detour/route section.
+ */
+export function splitPrimaryVsDetourCommentLite(rawText) {
+  const text = clean(rawText);
+  if (!text) return { primaryText: "", detourText: "" };
+  const m = text.match(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i);
+  if (!m || m.index == null) return { primaryText: text, detourText: "" };
+  return {
+    primaryText: clean(text.slice(0, m.index)),
+    detourText: clean(text.slice(m.index)),
+  };
+}
+
+/**
+ * Explicit motorway tokens from official NDIC primary comment only.
+ */
+export function extractMotorwayNumbersFromOfficialCommentLite(rawText) {
+  const { primaryText } = splitPrimaryVsDetourCommentLite(rawText);
+  const text = primaryText || clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const push = (tok) => {
+    const n = normalizeMotorwayRoadToken(tok);
+    if (n && !found.includes(n)) found.push(n);
+  };
+  const lead = text.match(/^\s*([DER]\d{1,3}[A-Za-z]?)\b/i);
+  if (lead) push(lead[1]);
+  const dalniceRe = /\bdálnice\s+([DER]\d{1,3}[A-Za-z]?)\b/gi;
+  let dm;
+  while ((dm = dalniceRe.exec(text))) push(dm[1]);
+  const exitPaired = text.match(
+    /\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd|nájezd)?\s*EXIT(?:u|e)?\s+\d{1,4}[A-Za-z]?\b/i
+  );
+  if (exitPaired) push(exitPaired[1]);
+  return found;
+}
+
+/**
+ * Classed silnice I/II/III from primary official comment.
+ */
+function extractClassedRoadFromOfficialComment(rawText) {
+  const { primaryText } = splitPrimaryVsDetourCommentLite(rawText);
+  const text = primaryText || clean(rawText);
+  if (!text) return "";
+  const re =
+    /\b(?:(?:na\s+)?silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)\b/i;
+  const m = text.match(re);
+  if (!m) return "";
+  return clean(m[1]).replace(/\s+/g, "").replace(/^(i{1,3}|ii|iii)\//i, (x) => x.toUpperCase());
+}
 
 /**
  * @param {string|null|undefined} comment
@@ -15,11 +73,9 @@ import {
 export function extractRoadNumberFromNdicComment(comment) {
   const text = String(comment || "").trim();
   if (!text) return "";
-  const facts = parseOfficialCommentFacts(text);
-  const resolved = resolvePresentationRoadNumber({ impact: text, summaryFull: text }, facts);
-  if (resolved) return String(resolved).trim();
-  const mw = extractMotorwayNumbersFromOfficialComment(text);
-  return mw.length ? String(mw[0]).trim() : "";
+  const mw = extractMotorwayNumbersFromOfficialCommentLite(text);
+  if (mw.length) return mw[0];
+  return extractClassedRoadFromOfficialComment(text) || "";
 }
 
 /**
@@ -29,7 +85,7 @@ export function extractRoadNumberFromNdicComment(comment) {
  */
 export function classifyPublishDecision(item, meta = {}) {
   if (!item || typeof item !== "object") {
-    return { publishDecision: "invalidRecord", publishDecisionReason: "missing_item" };
+    return { publishDecision: "invalidSource", publishDecisionReason: "missing_item" };
   }
   if (item.quarantine === true) {
     return {
@@ -46,7 +102,7 @@ export function classifyPublishDecision(item, meta = {}) {
       };
     }
     return {
-      publishDecision: "invalidRecord",
+      publishDecision: "invalidSource",
       publishDecisionReason: "not_publishable",
     };
   }

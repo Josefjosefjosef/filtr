@@ -216,6 +216,19 @@ async function main() {
       out.ok = false;
       out.reason = syncResult.reason || "sync_failed";
       out.CONSECUTIVE_FAILURES = health.CONSECUTIVE_FAILURES;
+      if (diag && diag.trafficUiSnapshot) {
+        out.trafficUiSnapshot = {
+          ok: diag.trafficUiSnapshot.ok === true,
+          rejectCode: diag.trafficUiSnapshot.rejectCode || null,
+          cardCount: diag.trafficUiSnapshot.cardCount || 0,
+          bytes: diag.trafficUiSnapshot.bytes || 0,
+          OVER_BY:
+            diag.trafficUiSnapshot.sizeBreakdown && diag.trafficUiSnapshot.sizeBreakdown.OVER_BY != null
+              ? diag.trafficUiSnapshot.sizeBreakdown.OVER_BY
+              : null,
+        };
+      }
+      if (diag && diag.error) out.diagnosticsError = String(diag.error).slice(0, 200);
       console.log(JSON.stringify(out));
       process.exitCode = 1;
       return;
