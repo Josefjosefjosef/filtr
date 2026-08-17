@@ -428,8 +428,9 @@ async function main() {
   check("conditional_state_survives_invocation", p2.stateFile === p1.stateFile);
 
   // Prod stale-R2 incident: 8383448-byte snapshot froze at 8MiB cap.
-  check("snapshot_limit_12mib", DEFAULT_MAX_SNAPSHOT_BYTES === 12 * 1024 * 1024);
+  check("snapshot_limit_16mib", DEFAULT_MAX_SNAPSHOT_BYTES === 16 * 1024 * 1024);
   check("snapshot_limit_above_frozen_prod_bytes", DEFAULT_MAX_SNAPSHOT_BYTES > 8383448);
+  check("snapshot_limit_above_post_expansion_bytes", DEFAULT_MAX_SNAPSHOT_BYTES > 14726364);
 
   try {
     fs.rmSync(tmp, { recursive: true, force: true });

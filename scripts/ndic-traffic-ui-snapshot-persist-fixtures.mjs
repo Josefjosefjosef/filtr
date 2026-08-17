@@ -273,7 +273,7 @@ ok(
   );
   const bd = measureSnapshotSizeBreakdown(compact.snapshot);
   ok("size_breakdown_ok", bd.ok === true && bd.FULL_SNAPSHOT === compact.snapshotBytes);
-  ok("default_limit_12mib", DEFAULT_MAX_SNAPSHOT_BYTES === 12 * 1024 * 1024);
+  ok("default_limit_16mib", DEFAULT_MAX_SNAPSHOT_BYTES === 16 * 1024 * 1024);
   const compactedPayload = compactTrafficUiSnapshotPayload({
     projections: full.projections,
     feed: full.feed,

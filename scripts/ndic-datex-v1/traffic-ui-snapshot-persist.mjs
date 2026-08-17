@@ -333,6 +333,9 @@ export function persistTrafficUiOfflineSnapshot(feedItems, opts = {}) {
       writeSequence,
       sizeBreakdown: layer.sizeBreakdown || null,
       bytes: layer.bytes || 0,
+      // Preserve compact intent on reject path (avoids false uiCompact:false forensics).
+      uiCompact: opts.uiCompact !== false,
+      cardCount: layer.cardCount || (layer.snapshot && layer.snapshot.cardCount) || 0,
     };
   }
 
