@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Regression guard: Přehled dne settings (autosave, structure, taxonomy, scroll open).
+ * Regression guard: Přehled dne settings (autosave, Doprava/ČHMÚ feed-filter structure).
  * Static contract + Playwright behavioral checks (local static server).
+ * Updated for feed filter redesign (traffic/CHMU main + detail panels).
  */
 import fs from "node:fs";
 import http from "node:http";
@@ -15,14 +16,15 @@ const ROOT = path.join(__dirname, "..");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
+const FEED_FILTER = path.join(ROOT, "assets", "iu-feed-filter-v1.js");
+const FEED_SETTINGS = path.join(ROOT, "assets", "iu-prehled-dne-feed-settings-v1.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const REGISTRY = path.join(ROOT, "projects", "data", "info_events", "source_registry.json");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const CACHE_BUST = "feed-filter-redesign-v1-20260817";
 const fails = [];
 
 function must(cond, id) {
@@ -34,7 +36,8 @@ function staticGate() {
   const css = fs.readFileSync(CSS, "utf8");
   const core = fs.readFileSync(CORE, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
-  const registry = JSON.parse(fs.readFileSync(REGISTRY, "utf8"));
+  const feedFilter = fs.readFileSync(FEED_FILTER, "utf8");
+  const feedSettings = fs.readFileSync(FEED_SETTINGS, "utf8");
 
   must(/data-iu-ui=\"v6-clean\"/.test(ui), "ui:v6_marker");
   must(/data-act=\"open-settings\"/.test(ui), "ui:open_settings");
@@ -44,30 +47,42 @@ function staticGate() {
   must(!/Uložit nastavení/.test(ui), "ui:no_save_label");
   must(!/settings-cancel/.test(ui), "ui:no_settings_cancel");
   must(!/>\s*Zrušit\s*</.test(ui) && !/">Zrušit</.test(ui), "ui:no_cancel_label");
-  must(!/Další instituce/.test(ui), "ui:no_dalsi_instituce");
-  must(!/label:\s*\"Kraje\"/.test(ui), "ui:no_kraje_source_group");
   must(/activeSection/.test(ui), "ui:single_section_state");
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
-  must(/NONE_SENTINEL|__none__/.test(ui), "ui:none_sentinel");
-  must(/isMinistryEntry|ministerstvo/i.test(ui), "ui:ministry_classifier");
   must(/iuPdBtn--settings/.test(ui), "ui:green_btn_class");
   must(/resetSettingsScroll/.test(ui), "ui:open_scroll_reset");
-  must(/standaloneSources/.test(ui), "ui:standalone_sources");
   must(/document\.body\.appendChild|mountSettingsOverlay/.test(ui), "ui:settings_body_portal");
-  must(/SECTION_ORDER/.test(ui) && /temata/.test(ui) && /zdroje/.test(ui) && /lokalita/.test(ui), "ui:section_order");
   must(/loadInfoSystemShellData/.test(ui) && /data-iu-pd-shell-ready/.test(ui), "ui:shell_first_boot");
   must(/loadInfoSystemShellData/.test(core) && /loadInfoSystemFeedOnly/.test(core), "core:shell_feed_split");
   must(/iuPrehledDne__axis/.test(ui) && /iuPrehledDne__dot/.test(ui), "ui:timeline_axis_markup");
   must(/sectionColor|iu-pd-dot/.test(ui), "ui:timeline_dot_color");
   must(/iuPrehledDne__timeline/.test(ui), "ui:timeline_list");
 
+  // New feed-filter contract
+  must(/iu-feed-filter-v1\.js/.test(ui), "ui:imports_feed_filter");
+  must(/iu-prehled-dne-feed-settings-v1\.js/.test(ui), "ui:imports_feed_settings");
+  must(/feed-main-toggle/.test(feedSettings) && /feed-open-detail/.test(feedSettings), "settings:main_rows");
+  must(/Dopravní informace/.test(feedSettings) && /Výstrahy ČHMÚ/.test(feedSettings), "settings:main_labels");
+  must(/trafficEnabled/.test(feedFilter) && /chmuEnabled/.test(feedFilter), "filter:master_toggles");
+  must(/matchesTrafficDetailFilter/.test(feedFilter), "filter:detail_matcher");
+  must(/quickViewBarHtml|feed-quick-view/.test(feedSettings + ui), "ui:quick_view");
+  must(/emptyFeedStateHtml|iu-feed-empty/.test(feedSettings + ui), "ui:empty_state");
+  must(/feedMainHtml|data-iu-pd-feed-main/.test(feedSettings + ui), "ui:feed_main_surface");
+
   must(/\.iuPdBtn--settings/.test(css), "css:green_btn");
   must(/iuPrehledDne__axis::before/.test(css) && /\.iuPrehledDne__dot\b/.test(css), "css:timeline_axis");
   must(/\.iuPdCard__actions[\s\S]*justify-content:\s*flex-end/.test(css), "css:actions_right");
+  must(/--iu-pd-traffic/.test(css) && /--iu-pd-chmu/.test(css), "css:feed_filter_tokens");
+  must(/iuPdFeedMainRow/.test(css) && /iuPdQuickView/.test(css), "css:feed_filter_classes");
 
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
-  must(/2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-15-wrong-way-vehicle-hazard-v1|2026-08-15-roadwork-construction-vehicle-exit-v1|2026-08-15-primary-street-cross-street-struck-roe-v1|2026-08-15-dod-divocak-participant-specificity-v1|2026-08-15-oversize-route-waypoint-v1|2026-08-15-obstacle-oil-cleanup-facts-v1|2026-08-15-km-phrase-not-municipality-v1|2026-08-15-broken-vs-generic-accident-worksite-v1|2026-08-15-intersection-locality-precedence-v1|2026-08-15-municipality-relation-oa-accident-v1|2026-08-15-future-traffic-impact-tense-v1|2026-08-14-municipality-street-accident-izs-v1|2026-08-14-praha-jizni-spojka-smv-header-v1|2026-08-14-roadwork-lane-restriction-parts-v1|2026-08-14-broken-vehicle-delay-header-v1|2026-08-14-exit-ramp-tokenize-v1|2026-08-14-d4-km-range-maintenance-v1|2026-08-14-accident-dod-moto-investigation-v1|2026-08-14-obstruction-stationary-vehicle-v1|2026-08-14-accident-participants-may-block-v1|2026-08-14-velky-ujezd-locality-sanitize-v1|2026-08-13-hradec-accident-i57-v1|2026-08-13-karlovy-vary-closure-access-v1|2026-08-13-decin-narrowed-lanes-reason-v1|2026-08-13-beroun-multi-street-work-reason-v1|2026-08-13-direction-abbrev-rich-situation-v1|2026-08-13-km-range-roadwork-detail-v1|2026-08-13-municipality-parenthetical-multi-road-v1|2026-08-13-traffic-fact-preservation-v1|2026-08-13-urban-numbered-road-parse-v1|2026-08-13-date-time-value-column-v4|2026-08-12-date-time-right-edge-v3|2026-08-09-heavy-feed-shell-first-v1|2026-08-08-traffic-ui-defer-feed-hydrate-v1|2026-08-06-traffic-overview-rsd-prehled-v1|2026-08-04-root-hub-no-projects-v1|2026-08-01-homecard-cta-square-v1|2026-07-31-chmi-smog-onset-split-v1|2026-07-31-chmi-info-events-passthrough-v2|2026-07-31-chmi-validfrom-timeline-v1|2026-07-31-chmi-title-locality-v1|2026-07-31-chmi-multibrowser-console-v1|2026-07-30-chmi-cap-no-segment-dedupe-v1|2026-07-30-chmi-cap-unified-public-click-v1|2026-07-30-chmi-cap-open-ended-public-url-v1|2026-07-30-chmi-cap-temporal-status-v1|2026-07-30-chmi-cap-concrete-url-chrono-v1|2026-07-30-banner-homecard-fouc-v1|2026-07-29-media-sources-removed-v1|2026-07-27-pwa-offline-nav-fallback-v1|2026-07-26-app-root-pwa-assets-redirects-v1|2026-07-26-app-root-url-drop-projects-v1|2026-07-21-prehled-settings-sw-network-first-v1-cross-origin-passthrough/.test(sw), "sw:cache_version_bump");
+  must(
+    /2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
+      sw
+    ),
+    "sw:cache_version_bump"
+  );
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
@@ -75,6 +90,7 @@ function staticGate() {
   must(!/\.iuPdSettings__foot/.test(css), "css:no_sticky_foot");
 
   must(/function setPrefs[\s\S]*return true/.test(core), "core:setPrefs_returns_bool");
+  must(/feedFilter/.test(core), "core:preserves_feedFilter");
 
   must(index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index:css_cache_bust");
   must(index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index:js_cache_bust");
@@ -85,15 +101,6 @@ function staticGate() {
   must(/__iuInfoSystemCutoverEarlyBoot/.test(index), "index:cutover_early_boot");
   must(/\.iuPd__bannerImg/.test(css) && /aspect-ratio:\s*1661\s*\/\s*616/.test(css), "css:banner_aspect");
   must(/#iuFeedNewsSplitPostHomeCards/.test(css) && /#iuSilverFinanceHomeCard/.test(css), "css:cutover_hides_finance_homecard");
-
-  const allEntries = registry.entries || [];
-  const ministries = allEntries.filter(
-    (e) => String(e.group || "") === "ministerstva" || /ministerstvo/i.test(String(e.label || ""))
-  );
-  must(ministries.some((e) => e.id === "mzcr"), "registry:mzcr_is_ministry_by_label");
-  must(ministries.length >= 5, "registry:ministries_min_5");
-  const mzcrDup = allEntries.filter((e) => /ministerstvo zdravotnictví/i.test(String(e.label || "")));
-  must(mzcrDup.length === 1, "registry:mzcr_not_duplicate");
 
   return { pass: fails.length === 0, fails: fails.slice() };
 }
@@ -166,8 +173,6 @@ async function runPlaywright() {
       await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 60000 });
       await page.evaluate(() => {
         try {
-          // Guard bootstrap sets __IU_INFO_SYSTEM_CUTOVER__=false for legacy HomeCards
-          // layout tests; Prehled dne settings require production cutover ON.
           window.__IU_INFO_SYSTEM_CUTOVER__ = true;
         } catch (_) {}
       });
@@ -188,7 +193,6 @@ async function runPlaywright() {
           window.IUInfoSystem.applyCutoverDom();
         }
       });
-      // Wait for taxonomy/registry shell — not multi‑MB feed — before settings section clicks.
       await page.waitForFunction(
         () => {
           const root = document.getElementById("iuPrehledDneRoot");
@@ -227,135 +231,97 @@ async function runPlaywright() {
       const openState = await page.evaluate(() => {
         const scroll = document.getElementById("iuPdSettingsScroll");
         const h2 = document.querySelector("#iuPdSettings h2");
-        const rails = [...document.querySelectorAll("[data-act='open-section']")].map((el) =>
-          (el.textContent || "").replace(/\s+/g, " ").trim()
-        );
-        const closeBtn = document.querySelector('[data-act="settings-close"].iuPdSettings__closeBtn, .iuPdSettings__closeBtn');
-        const lokalita = [...document.querySelectorAll("[data-act='open-section']")].find((el) =>
-          /Lokalita/i.test(el.textContent || "")
-        );
-        let gap = null;
-        if (closeBtn && lokalita) {
-          const a = lokalita.getBoundingClientRect();
-          const b = closeBtn.getBoundingClientRect();
-          gap = Math.round(b.top - a.bottom);
-        }
+        const main = document.querySelector("[data-iu-pd-feed-main]");
+        const text = (main && main.innerText) || "";
+        const gears = document.querySelectorAll('[data-act="feed-open-detail"]').length;
+        const toggles = document.querySelectorAll('[data-act="feed-main-toggle"]').length;
+        const hasTemata = /Témata/.test(text);
+        const hasZdroje = /Zdroje a instituce/.test(text);
+        const hasTraffic = /Dopravní informace/.test(text);
+        const hasChmu = /Výstrahy ČHMÚ/.test(text);
         const save = !!document.querySelector('#iuPdSettings [data-act="settings-save"]');
-        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some((b) => (b.textContent || "").trim() === "Zrušit");
+        const cancel = [...document.querySelectorAll("#iuPdSettings button")].some(
+          (b) => (b.textContent || "").trim() === "Zrušit"
+        );
         return {
           scrollTop: scroll ? scroll.scrollTop : -1,
           title: h2 ? (h2.textContent || "").trim() : "",
-          rails,
-          gap,
+          gears,
+          toggles,
+          hasTemata,
+          hasZdroje,
+          hasTraffic,
+          hasChmu,
           save,
           cancel,
-          main: !!document.querySelector("[data-iu-pd-settings-main]"),
-          bodyChild: !!(document.getElementById("iuPdSettings") && document.getElementById("iuPdSettings").parentElement === document.body),
+          main: !!main,
+          bodyChild: !!(
+            document.getElementById("iuPdSettings") &&
+            document.getElementById("iuPdSettings").parentElement === document.body
+          ),
         };
       });
 
       if (openState.scrollTop !== 0) pwFails.push(vp.name + ":open_scroll_top");
       if (openState.title !== "Můj přehled / Nastavení") pwFails.push(vp.name + ":title");
-      if (openState.rails.length !== 3) pwFails.push(vp.name + ":three_rails");
-      if (openState.rails[0] !== "Témata" || openState.rails[1] !== "Zdroje a instituce" || openState.rails[2] !== "Lokalita") {
-        pwFails.push(vp.name + ":rail_order");
-      }
-      if (openState.gap == null || openState.gap < 0 || openState.gap > 28) pwFails.push(vp.name + ":close_gap:" + openState.gap);
+      if (!openState.main) pwFails.push(vp.name + ":feed_main_missing");
+      if (!openState.hasTraffic || !openState.hasChmu) pwFails.push(vp.name + ":main_labels");
+      if (openState.hasTemata || openState.hasZdroje) pwFails.push(vp.name + ":legacy_rails_visible");
+      if (openState.gears < 2 || openState.toggles < 2) pwFails.push(vp.name + ":gear_toggle_count");
       if (openState.save) pwFails.push(vp.name + ":save_present");
       if (openState.cancel) pwFails.push(vp.name + ":cancel_present");
       if (!openState.bodyChild) pwFails.push(vp.name + ":settings_not_on_body");
 
-      await page.evaluate(() => document.querySelector('[data-act="open-section"][data-id="temata"]')?.click());
-      await page.waitForSelector('[data-iu-pd-sec="temata"]', { timeout: 8000 });
-      const onlyTemata = await page.evaluate(() => {
-        const rails = document.querySelectorAll("[data-act='open-section']").length;
-        const secs = [...document.querySelectorAll("[data-iu-pd-sec]")].map((el) => el.getAttribute("data-iu-pd-sec"));
-        return { rails, secs };
+      await page.evaluate(() =>
+        document.querySelector('[data-act="feed-open-detail"][data-kind="traffic"]')?.click()
+      );
+      await page.waitForSelector('[data-iu-feed-detail="traffic"]', { timeout: 8000 });
+      const trafficDetail = await page.evaluate(() => {
+        const text = document.querySelector('[data-iu-feed-detail="traffic"]')?.innerText || "";
+        return {
+          area: /Oblast/.test(text),
+          roads: /Silnice/.test(text),
+          events: /Události/.test(text),
+          parking: /Parkovišt/.test(text),
+        };
       });
-      if (onlyTemata.rails !== 0) pwFails.push(vp.name + ":rails_under_section");
-      if (onlyTemata.secs.join(",") !== "temata") pwFails.push(vp.name + ":only_temata");
+      if (!trafficDetail.area || !trafficDetail.roads || !trafficDetail.events || !trafficDetail.parking) {
+        pwFails.push(vp.name + ":traffic_four_sections");
+      }
 
-      await page.evaluate(() => document.querySelector('input[data-draft-act="topics-all"]')?.click());
-      await page.waitForTimeout(120);
-      const topicsNone = await page.evaluate(() => {
-        const boxes = [...document.querySelectorAll('input[data-draft-act="topic"]')];
-        return boxes.length > 0 && boxes.every((b) => !b.checked);
+      await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
+      await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+
+      await page.evaluate(() => document.querySelector('[data-act="feed-open-detail"][data-kind="chmu"]')?.click());
+      await page.waitForSelector('[data-iu-feed-detail="chmu"]', { timeout: 8000 });
+      const chmuDetail = await page.evaluate(() => {
+        const text = document.querySelector('[data-iu-feed-detail="chmu"]')?.innerText || "";
+        return {
+          area: /Oblast/.test(text),
+          noRoads: !/Silnice/.test(text),
+          hasCr: /Celá ČR/.test(text),
+        };
       });
-      if (!topicsNone) pwFails.push(vp.name + ":topics_all_off");
+      if (!chmuDetail.area || !chmuDetail.noRoads || !chmuDetail.hasCr) pwFails.push(vp.name + ":chmu_area_only");
 
-      await page.evaluate(() => document.querySelector('input[data-draft-act="topics-all"]')?.click());
-      await page.waitForTimeout(120);
-      const topicsAll = await page.evaluate(() => {
-        const all = document.querySelector('input[data-draft-act="topics-all"]');
-        return !!(all && all.checked);
+      // Autosave: toggle CHMU off
+      await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
+      await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+      await page.evaluate(() => {
+        const el = document.querySelector('[data-act="feed-main-toggle"][data-kind="chmu"]');
+        if (el && el.checked) el.click();
       });
-      if (!topicsAll) pwFails.push(vp.name + ":topics_all_on");
-
-      const prefsAfterTopic = await page.evaluate(() => {
+      await page.waitForTimeout(200);
+      const prefsAfter = await page.evaluate(() => {
         try {
-          return localStorage.getItem("iu.infoEvents.prefs.v1");
+          const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
+          const p = raw ? JSON.parse(raw) : null;
+          return !!(p && p.feedFilter && p.feedFilter.chmuEnabled === false);
         } catch (_) {
-          return null;
+          return false;
         }
       });
-      if (!prefsAfterTopic) pwFails.push(vp.name + ":autosave_prefs_missing");
-
-      await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
-      await page.waitForSelector("[data-iu-pd-settings-main]", { timeout: 8000 });
-
-      await page.evaluate(() => document.querySelector('[data-act="open-section"][data-id="zdroje"]')?.click());
-      await page.waitForSelector('[data-iu-pd-sec="zdroje"]', { timeout: 8000 });
-      const sourcesTaxonomy = await page.evaluate(() => {
-        const html = document.querySelector("#iuPdSettings")?.innerHTML || "";
-        const text = document.querySelector("#iuPdSettings")?.innerText || "";
-        const hasDalsi = /Další instituce/.test(text) || /Další instituce/.test(html);
-        const sg = [...document.querySelectorAll("[data-sg]")].map((el) => el.getAttribute("data-sg"));
-        const mzcrStandalone = [...document.querySelectorAll('input[data-draft-act="source-id"][data-group="standalone"]')].some(
-          (el) => el.value === "mzcr"
-        );
-        return { hasDalsi, sg, mzcrStandalone };
-      });
-      if (sourcesTaxonomy.hasDalsi) pwFails.push(vp.name + ":dalsi_visible");
-      if (sourcesTaxonomy.sg.includes("kraje") || sourcesTaxonomy.sg.includes("dalsi")) pwFails.push(vp.name + ":bad_source_groups");
-      if (sourcesTaxonomy.mzcrStandalone) pwFails.push(vp.name + ":mzcr_standalone");
-      await page.evaluate(() => document.querySelector('[data-sg="ministerstva"] [data-act="toggle-sg"]')?.click());
-      await page.waitForTimeout(100);
-      const mzcrOk = await page.evaluate(() =>
-        [...document.querySelectorAll('[data-sg="ministerstva"] input[data-draft-act="source-id"]')].some((el) => el.value === "mzcr")
-      );
-      if (!mzcrOk) pwFails.push(vp.name + ":mzcr_not_under_ministerstva");
-
-      await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
-      await page.waitForSelector("[data-iu-pd-settings-main]", { timeout: 8000 });
-      await page.evaluate(() => document.querySelector('[data-act="open-section"][data-id="lokalita"]')?.click());
-      await page.waitForSelector('[data-iu-pd-sec="lokalita"]', { timeout: 8000 });
-      const locOrder = await page.evaluate(() => {
-        const body = document.querySelector('[data-iu-pd-sec="lokalita"]');
-        const text = (body?.innerText || "").replace(/\s+/g, " ");
-        const lower = text.toLocaleLowerCase("cs");
-        const iCr = lower.indexOf("celá čr");
-        const iK = lower.indexOf("kraje");
-        const iO = lower.indexOf("okresy");
-        const iM = lower.indexOf("město / obec");
-        return iCr >= 0 && iK > iCr && iO > iK && iM > iO;
-      });
-      if (!locOrder) pwFails.push(vp.name + ":locality_order");
-
-      await page.evaluate(() => {
-        const sc = document.getElementById("iuPdSettingsScroll");
-        if (sc) sc.scrollTop = Math.min(180, Math.max(0, sc.scrollHeight - sc.clientHeight));
-      });
-      await page.waitForTimeout(40);
-      const beforeScroll = await page.evaluate(() => document.getElementById("iuPdSettingsScroll")?.scrollTop || 0);
-      await page.evaluate(() => {
-        const boxes = [...document.querySelectorAll('input[data-draft-act="loc-kraj"]')];
-        const mid = boxes[Math.min(6, Math.max(0, boxes.length - 1))];
-        if (mid) mid.click();
-      });
-      await page.waitForTimeout(180);
-      const afterScroll = await page.evaluate(() => document.getElementById("iuPdSettingsScroll")?.scrollTop || 0);
-      // Allow tiny layout reflow; flag only real jumps that yank the user away.
-      if (Math.abs(afterScroll - beforeScroll) > 48) pwFails.push(vp.name + ":scroll_jump:" + beforeScroll + "->" + afterScroll);
+      if (!prefsAfter) pwFails.push(vp.name + ":autosave_feedFilter");
 
       if (vp.name !== "desktop") {
         const clearance = await page.evaluate(() => {
@@ -372,6 +338,18 @@ async function runPlaywright() {
 
       await page.evaluate(() => document.querySelector('.iuPdSettings__head [data-act="settings-close"]')?.click());
       await page.waitForFunction(() => !document.getElementById("iuPdSettings"), { timeout: 8000 });
+
+      const quick = await page.evaluate(() => {
+        const bar = document.querySelector("[data-iu-feed-quick]");
+        const chmuBtn = document.querySelector('[data-act="feed-quick-view"][data-view="chmu"]');
+        return {
+          bar: !!bar,
+          chmuDisabled: !!(chmuBtn && (chmuBtn.disabled || chmuBtn.getAttribute("aria-disabled") === "true")),
+        };
+      });
+      if (!quick.bar) pwFails.push(vp.name + ":quick_bar");
+      if (!quick.chmuDisabled) pwFails.push(vp.name + ":quick_chmu_disabled_after_off");
+
       const feedYAfter = await page.evaluate(() => {
         const vpEl = document.getElementById("iuSilverTallScrollViewport");
         return vpEl ? vpEl.scrollTop : 0;
@@ -418,8 +396,12 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("[iu-prehled-dne-settings-v6-guard] OK static+behavior");
+  console.log("[iu-prehled-dne-settings-v6-guard] PASS");
   console.log("RESULT=PASS");
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  console.log("RESULT=FAIL");
+  process.exit(1);
+});

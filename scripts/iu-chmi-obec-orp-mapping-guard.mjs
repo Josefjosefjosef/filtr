@@ -19,7 +19,7 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const PICKER = path.join(ROOT, "projects", "data", "cz_localities_picker.json");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "data", "geo-registry.json");
 const BUILD = path.join(ROOT, "scripts", "build-cz-localities-picker.mjs");
-const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const CACHE_BUST = "feed-filter-redesign-v1-20260817";
 
 const fails = [];
 function ok(id, cond, detail) {

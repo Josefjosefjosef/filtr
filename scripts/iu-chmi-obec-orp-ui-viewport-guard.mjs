@@ -16,7 +16,7 @@ const { chromium } = require("playwright");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 /* Ephemeral port (0): avoids EADDRINUSE when prior smoke guards leave fixed ports bound. */
-const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const CACHE_BUST = "feed-filter-redesign-v1-20260817";
 
 const fails = [];
 function ok(id, cond, detail) {

@@ -415,6 +415,8 @@ function defaultPrefs() {
     savedOnly: false,
     favoritesOnly: false,
     activeViewId: "",
+    /** @type {object|null} Nested Doprava/ČHMÚ feed filter (see iu-feed-filter-v1.js). */
+    feedFilter: null,
   };
 }
 
@@ -470,6 +472,12 @@ function sanitizeUserPrefs(raw) {
   delete merged.trafficCustomFrom;
   delete merged.trafficCustomTo;
   delete merged.trafficOfflineAware;
+  // Preserve nested feedFilter blob (sanitized deeply by iu-feed-filter-v1).
+  if (merged.feedFilter && typeof merged.feedFilter === "object") {
+    merged.feedFilter = merged.feedFilter;
+  } else {
+    merged.feedFilter = null;
+  }
   return merged;
 }
 

@@ -601,6 +601,10 @@ export function trafficBadgeModel(trafficV1, opts) {
 
 export function isRsdTrafficSourceEnabled(prefs) {
   const f = prefs || {};
+  // New feed filter model: master traffic toggle (independent of legacy Zdroje).
+  if (f.feedFilter && typeof f.feedFilter === "object") {
+    return f.feedFilter.trafficEnabled !== false;
+  }
   const ids = f.sourceIds || [];
   const groups = f.sourceGroups || [];
   if (ids.length === 1 && ids[0] === "__none__") return false;
@@ -611,7 +615,11 @@ export function isRsdTrafficSourceEnabled(prefs) {
 }
 
 export function isDopravaTopicEnabled(prefs) {
-  const secs = (prefs && prefs.sections) || [];
+  const f = prefs || {};
+  if (f.feedFilter && typeof f.feedFilter === "object") {
+    return f.feedFilter.trafficEnabled !== false;
+  }
+  const secs = (f.sections) || [];
   if (secs.length === 1 && secs[0] === "__none__") return false;
   if (!secs.length) return true;
   return secs.includes("doprava");
