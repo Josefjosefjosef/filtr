@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: "install-units | shadow-window | status | cutover-active | rollback-shadow"
+        description: "install-units | shadow-window | status | cutover-active | rollback-shadow | ledger-audit"
         required: true
         type: choice
         options:
@@ -21,6 +21,7 @@ on:
           - status
           - cutover-active
           - rollback-shadow
+          - ledger-audit
         default: status
       shadow_minutes:
         description: "Shadow window minutes (5-30)"
@@ -163,6 +164,31 @@ jobs:
             node deploy/ndic-live-60s/forensic-status-dump.mjs
             echo "EOF"
             exit 0
+          fi
+
+          if [ "$ACTION" = "ledger-audit" ]; then
+            ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
+            if [ ! -f "$ENV_FILE" ]; then echo "MISSING_ENV_FILE"; exit 1; fi
+            set -a
+            # shellcheck disable=SC1090
+            . "$ENV_FILE"
+            set +a
+            export IU_NDIC_LIVE_ROOT="${IU_NDIC_LIVE_ROOT:-$LIVE_ROOT}"
+            export IU_NDIC_DATEX_V1_MODE=active
+            if [ -n "${IU_NDIC_PULL_URL:-}" ]; then export IU_NDIC_PULL_URL; fi
+            if [ -n "${IU_NDIC_PULL_USER:-}" ]; then export IU_NDIC_PULL_USER; fi
+            if [ -n "${IU_NDIC_PULL_PASS:-}" ]; then export IU_NDIC_PULL_PASS; fi
+            echo "LEDGER_AUDIT_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "LEDGER_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
+            set +e
+            OUT=$(node scripts/ndic-datex-v1-publication-ledger-audit.mjs)
+            CODE=$?
+            set -e
+            echo "LEDGER_JSON<<EOF"
+            printf '%s\n' "$OUT"
+            echo "EOF"
+            echo "LEDGER_EXIT_CODE=$CODE"
+            exit "$CODE"
           fi
 
           if [ "$ACTION" = "shadow-window" ]; then
