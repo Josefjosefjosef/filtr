@@ -461,6 +461,18 @@ function main() {
     process.exit(0);
   }
 
+  let headCommitDataOnly = false;
+  try {
+    const parentLine = run("git rev-list --parents -n 1 HEAD");
+    const parentParts = parentLine.split(/\s+/).filter(Boolean);
+    if (parentParts.length >= 3) {
+      const headFiles = run("git diff --name-only HEAD^1 HEAD").split("\n");
+      headCommitDataOnly = isDataOnlyScope(headFiles);
+    }
+  } catch {
+    headCommitDataOnly = false;
+  }
+
   const dataOnly = isDataOnlyScope(files);
   const workflowOnly = isWorkflowOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
@@ -487,9 +499,10 @@ function main() {
     dataOnly ||
     workflowOnly ||
     pipelineOnly ||
+    headCommitDataOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
