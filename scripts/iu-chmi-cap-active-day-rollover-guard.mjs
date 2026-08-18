@@ -145,7 +145,7 @@ function staticGate() {
   ok("css_future_red", /\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css) && /#dc2626/.test(css), "future red");
   ok("css_future_red_parts", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromDate/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromTime/.test(css), "future red parts");
   ok("css_evening_timeline", /html\.iu-time-evening\s+\.iuPrehledDne__axis::before/.test(css), "evening axis");
-  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPdToggle/.test(css), "evening toggle");
+  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdToggle/.test(css), "evening toggle");
   ok("css_evening_card", /html\.iu-time-evening\s+\.iuPrehledDne__card/.test(css), "evening card");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
