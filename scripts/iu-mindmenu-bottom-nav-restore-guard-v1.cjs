@@ -3,10 +3,11 @@
 
 const fs = require("fs");
 const path = require("path");
+const { readAppRuntimeSrc } = require("./guards/iu-app-runtime-src.cjs");
 
 const CSS = path.join(__dirname, "..", "assets", "iu-mindmenu-bottom-nav-restore-v1.css");
 const INDEX = path.join(__dirname, "..", "projects", "index.html");
-const APP = path.join(__dirname, "..", "assets", "app.js");
+const ROOT = path.join(__dirname, "..");
 const REPORT = path.join(__dirname, "iu-mindmenu-bottom-nav-restore-guard-v1-report.json");
 
 function restoreNoSafeSpaceOutsideDsPanel(src) {
@@ -28,13 +29,14 @@ const REQUIRED = [
   { id: "quickfeed_gate_scope", pattern: /body\.iu-mobileGateOverlayOpen\.iu-mobileGateToolsQuickOpen #iuQuickFeed/ },
   { id: "calendar_dialog_clearance", pattern: /#iuCalendarOverlay \.iu-calendarOverlay__dialog/ },
   { id: "index_link", file: INDEX, pattern: /iu-mindmenu-bottom-nav-restore-v1\.css/ },
-  { id: "js_close_helper", file: APP, pattern: /function iuMindMenuCloseToolOverlaysIfOpen\(\)/ },
+  { id: "js_close_helper", src: "runtime", pattern: /function iuMindMenuCloseToolOverlaysIfOpen\(\)/ },
 ];
 
 function main() {
   const css = fs.readFileSync(CSS, "utf8");
+  const runtime = readAppRuntimeSrc(ROOT);
   const checks = REQUIRED.map((item) => {
-    const src = item.file ? fs.readFileSync(item.file, "utf8") : css;
+    const src = item.file ? fs.readFileSync(item.file, "utf8") : item.src === "runtime" ? runtime : css;
     let pass;
     if (item.custom) {
       pass = item.custom(src);

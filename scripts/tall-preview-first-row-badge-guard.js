@@ -2,18 +2,17 @@
  * Hard guard: tall-window Zprávy + Sport first-row badges = section name only (no NOVÉ / LIVE).
  * Run: node scripts/tall-preview-first-row-badge-guard.js
  */
-const fs = require("fs");
 const path = require("path");
+const { readAppRuntimeSrc } = require("./guards/iu-app-runtime-src.cjs");
 
 const ROOT = path.join(__dirname, "..");
-const appJsPath = path.join(ROOT, "assets", "app.js");
 
 function fail(msg) {
   console.error(msg);
   process.exit(1);
 }
 
-const appJs = fs.readFileSync(appJsPath, "utf8");
+const appJs = readAppRuntimeSrc(ROOT);
 
 if (!/data-iu-news-preview-badge>Zprávy</.test(appJs)) {
   fail("❌ assets/app.js: news preview badge must be text Zprávy (data-iu-news-preview-badge>Zprávy)");

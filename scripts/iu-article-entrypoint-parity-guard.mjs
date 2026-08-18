@@ -136,7 +136,12 @@ function waitForPort(host, port, timeoutMs) {
 
 function staticArchitectureGuard() {
   const fails = [];
-  const appSrc = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
+  const appSrc = [
+    fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8"),
+    fs.existsSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"))
+      ? fs.readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8")
+      : "",
+  ].join("\n");
   const loaderSrc = fs.readFileSync(path.join(REPO, "assets", "iu-article-chunk-loader.js"), "utf8");
 
   const configSrc = fs.readFileSync(path.join(REPO, "assets", "iu-client-article-config.js"), "utf8");

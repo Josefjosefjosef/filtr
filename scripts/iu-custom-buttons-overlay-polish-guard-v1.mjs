@@ -15,6 +15,7 @@ const { chromium } = require("playwright");
 
 const INDEX = path.join(REPO, "projects", "index.html");
 const APP = path.join(REPO, "assets", "app.js");
+const FEED = path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8901", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 
@@ -26,7 +27,10 @@ const VIEWPORTS = [
 
 function staticGate() {
   const index = fs.readFileSync(INDEX, "utf8");
-  const app = fs.readFileSync(APP, "utf8");
+  const app = [
+    fs.readFileSync(APP, "utf8"),
+    fs.existsSync(FEED) ? fs.readFileSync(FEED, "utf8") : "",
+  ].join("\n");
   const checks = [
     {
       id: "name_input_no_email_placeholder",

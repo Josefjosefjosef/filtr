@@ -25,7 +25,12 @@ const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
 function auditStatic() {
   const fails = [];
   const netJs = fs.readFileSync(path.join(REPO, "assets", "iu-network-connectivity-v1.js"), "utf8");
-  const appJs = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
+  const appJs = [
+    fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8"),
+    fs.existsSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"))
+      ? fs.readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8")
+      : "",
+  ].join("\n");
   const html = fs.readFileSync(path.join(REPO, "projects", "index.html"), "utf8");
   const sw = fs.readFileSync(path.join(REPO, "sw.js"), "utf8");
   const chunk = fs.readFileSync(path.join(REPO, "assets", "iu-article-chunk-loader.js"), "utf8");

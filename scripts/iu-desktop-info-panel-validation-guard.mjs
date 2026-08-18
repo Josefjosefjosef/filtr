@@ -90,6 +90,15 @@ async function waitForDesktopPanel(page) {
     CATALOG_COUNT,
     { timeout: 45000 }
   );
+  await page.waitForFunction(
+    () =>
+      !!document.getElementById("iuMyInfoUzelOpenBtn") &&
+      !!(
+        document.querySelector("#iuNewsPreviewCardMount .iuNewsPreviewCard, #iuNewsPreviewCardMount button") ||
+        document.getElementById("iuNewsPreviewCardMount")?.firstElementChild
+      ),
+    { timeout: 45000 }
+  );
   await page.waitForTimeout(350);
 }
 

@@ -12,7 +12,7 @@
 import {
   matchParkingRegistry,
   PARK_AND_RIDE_EXPLANATION_CS,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-hl-nadrazi-muni-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=evening-theme-settings-v1-20260818";
 import {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
@@ -31,7 +31,7 @@ export {
   PARKING_REGISTRY_VERSION,
   normalizeParkingAliasKey,
   isAmbiguousParkingName,
-} from "./iu-parking-registry-v1.js?v=ndic-parking-hl-nadrazi-muni-v1-20260812";
+} from "./iu-parking-registry-v1.js?v=evening-theme-settings-v1-20260818";
 
 export {
   matchTunnelRegistry,

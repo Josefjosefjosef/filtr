@@ -6,6 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -15,7 +16,7 @@ function read(rel) {
 }
 
 const failures = [];
-const appJs = read("assets/app.js");
+const appJs = readAppRuntimeSrc(ROOT);
 const appCss = read("assets/app.css");
 const overlayCss = read("assets/iu-myinfouzel-premium-overlay.css");
 const homePremiumCss = read("assets/iu-desktop-home-premium.css");

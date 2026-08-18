@@ -14,7 +14,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(__dirname, "..");
-const APP = path.join(REPO, "assets", "app.js");
+const FEED = path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js");
 
 const CASES = [
   ["Laura", "Lauře"],
@@ -29,8 +29,8 @@ const CASES = [
 const FORBIDDEN = ["Laurě", "Petřě", "Věřě", "Sářě", "Barborě", "Zorě", "Tamarě"];
 
 function main() {
-  const app = fs.readFileSync(APP, "utf8");
-  assert.ok(app.includes('from "./iu-nameday-dative.js"'), "app.js must import iu-nameday-dative.js");
+  const app = fs.readFileSync(FEED, "utf8");
+  assert.ok(app.includes('from "./iu-nameday-dative.js"'), "feed pipeline must import iu-nameday-dative.js");
   for (const bad of FORBIDDEN) {
     assert.ok(!app.includes(bad), `forbidden dative form in app.js: ${bad}`);
   }

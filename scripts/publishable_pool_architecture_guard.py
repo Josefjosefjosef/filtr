@@ -43,6 +43,10 @@ def check_homepage_source_code() -> list[str]:
     """Hard architecture checks: homepage must read publishable pool, not articles.json."""
     errors: list[str] = []
     app_src = _read_repo_file("assets/app.js")
+    feed_path = os.path.join(ROOT, "assets", "iu-app-feed-pipeline-v1.js")
+    if os.path.isfile(feed_path):
+        with open(feed_path, encoding="utf-8") as f:
+            app_src = app_src + "\n" + f.read()
     index_src = _read_repo_file("projects/index.html")
 
     required_app = (

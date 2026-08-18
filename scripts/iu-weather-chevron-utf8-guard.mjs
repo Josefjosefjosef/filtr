@@ -5,11 +5,12 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const appCss = fs.readFileSync(path.join(root, "assets", "app.css"), "utf8");
-const appJs = fs.readFileSync(path.join(root, "assets", "app.js"), "utf8");
+const appJs = readAppRuntimeSrc(root);
 const indexHtml = fs.readFileSync(path.join(root, "projects", "index.html"), "utf8");
 
 const checks = [

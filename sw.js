@@ -24,7 +24,7 @@
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-const CACHE_VERSION = "2026-08-18-evening-theme-settings-v1";
+const CACHE_VERSION = "2026-08-18-perf-stage3-feed-split-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -82,6 +82,7 @@ function getAppShellUrls() {
     `${BASE}assets/app-crash-shield.js`,
     `${BASE}assets/iu-network-connectivity-v1.js`,
     `${BASE}assets/app.js`,
+    `${BASE}assets/iu-mobile-bottom-nav-shell-v1.js`,
     `${BASE}sw.js`
   ];
 }
@@ -101,6 +102,7 @@ function getOfflineWarmUrls() {
     `${BASE}assets/iu-tool-guard.js`,
     `${BASE}assets/iu-legal-documents-module.js`,
     `${BASE}assets/iu-silver-p0-engine.js`,
+    `${BASE}assets/iu-app-feed-pipeline-v1.js`,
     `${BASE}assets/iu-pdf-convert-module.js`,
     `${BASE}assets/iu-invoice-pdf-legacy-export.js`,
     `${BASE}assets/images/news-default.jpg`,

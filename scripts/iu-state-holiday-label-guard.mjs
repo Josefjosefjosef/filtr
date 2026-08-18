@@ -6,10 +6,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-const appJs = fs.readFileSync(path.join(root, "assets", "app.js"), "utf8");
+const appJs = readAppRuntimeSrc(root);
 const indexHtml = fs.readFileSync(path.join(root, "projects", "index.html"), "utf8");
 
 const IU_CZ_FIXED_STATE_HOLIDAYS = new Set([

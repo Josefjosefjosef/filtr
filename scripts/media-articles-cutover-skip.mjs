@@ -10,23 +10,28 @@ import { fileURLToPath } from "url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export function mediaArticlesGuardsShouldSkip(root = REPO) {
+  const reasons = [];
   try {
     const cut = JSON.parse(
       fs.readFileSync(path.join(root, "projects/data/info_events/cutover_state.json"), "utf8")
     );
-    if (cut.commercialAggregationActive === false) return true;
+    if (cut.commercialAggregationActive === false) reasons.push("commercialAggregationActive=false");
   } catch (_) {}
   try {
     const arts = JSON.parse(fs.readFileSync(path.join(root, "projects/data/articles.json"), "utf8"));
-    if (!Array.isArray(arts.articles) || arts.articles.length === 0) return true;
+    if (!Array.isArray(arts.articles) || arts.articles.length === 0) reasons.push("articles.json_empty");
   } catch (_) {
-    return true;
+    reasons.push("articles.json_unreadable");
   }
-  return false;
+  if (!reasons.length) return { skip: false, reason: "" };
+  return { skip: true, reason: reasons.join(";") };
 }
 
 export function exitIfMediaArticlesGuardsSkipped(label) {
-  if (!mediaArticlesGuardsShouldSkip()) return false;
-  console.log(`[${label}] SKIP (commercialAggregationActive=false / empty articles.json)`);
+  const st = mediaArticlesGuardsShouldSkip();
+  if (!st.skip) return false;
+  console.log(
+    `[${label}] SKIP (${st.reason}; media-article section-switch is not a production path while cutover home is Přehled dne)`
+  );
   process.exit(0);
 }

@@ -22,6 +22,7 @@ const { chromium } = require("playwright");
 
 const CUSTOM = path.join(REPO, "assets", "iu-custom-buttons-overlay.css");
 const APP_JS = path.join(REPO, "assets", "app.js");
+const FEED_JS = path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js");
 const APP_CSS = path.join(REPO, "assets", "app.css");
 const INDEX = path.join(REPO, "projects", "index.html");
 const CACHE_BUST = "custom-buttons-dynamic-bottom-clearance-v1-20260804";
@@ -41,7 +42,10 @@ const VIEWPORTS = [
 function staticGate() {
   const custom = fs.readFileSync(CUSTOM, "utf8");
   const app = fs.readFileSync(APP_CSS, "utf8");
-  const appJs = fs.readFileSync(APP_JS, "utf8");
+  const appJs = [
+    fs.readFileSync(APP_JS, "utf8"),
+    fs.existsSync(FEED_JS) ? fs.readFileSync(FEED_JS, "utf8") : "",
+  ].join("\n");
   const index = fs.readFileSync(INDEX, "utf8");
   const fails = [];
   const ok = (id, cond) => {

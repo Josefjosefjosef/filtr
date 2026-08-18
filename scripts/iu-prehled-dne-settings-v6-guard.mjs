@@ -49,6 +49,14 @@ function staticGate() {
   must(!/>\s*Zrušit\s*</.test(ui) && !/">Zrušit</.test(ui), "ui:no_cancel_label");
   must(/activeSection/.test(ui), "ui:single_section_state");
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
+  must(/feedDomDirty/.test(ui), "ui:defer_feed_while_settings");
+  must(/keepSettingsDom/.test(ui), "ui:checkbox_keep_dom");
+  must(
+    /feed-quick-view[\s\S]{0,900}setAttribute\("aria-disabled"/.test(ui),
+    "ui:quick_view_disabled_sync"
+  );
+  must(/function openSettings[\s\S]{0,900}mountSettingsOverlay\(\)/.test(ui), "ui:open_overlay_without_feed_paint");
+  must(/let _prefsMem/.test(core), "core:prefs_mem_cache");
   must(/iuPdBtn--settings/.test(ui), "ui:green_btn_class");
   must(/resetSettingsScroll/.test(ui), "ui:open_scroll_reset");
   must(/document\.body\.appendChild|mountSettingsOverlay/.test(ui), "ui:settings_body_portal");
@@ -78,7 +86,7 @@ function staticGate() {
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
   must(
-    /2026-08-18-evening-theme-settings-v1|2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
+    /2026-08-18-perf-stage3-feed-split-v1|2026-08-18-evening-theme-settings-v1|2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
       sw
     ),
     "sw:cache_version_bump"
@@ -502,6 +510,10 @@ async function runPlaywright() {
 
       await page.evaluate(() => document.querySelector('.iuPdSettings__head [data-act="settings-close"]')?.click());
       await page.waitForFunction(() => !document.getElementById("iuPdSettings"), { timeout: 8000 });
+      await page.waitForFunction(() => {
+        const chmuBtn = document.querySelector('[data-act="feed-quick-view"][data-view="chmu"]');
+        return !!(chmuBtn && (chmuBtn.disabled || chmuBtn.getAttribute("aria-disabled") === "true"));
+      }, { timeout: 5000 });
 
       const quick = await page.evaluate(() => {
         const bar = document.querySelector("[data-iu-feed-quick]");

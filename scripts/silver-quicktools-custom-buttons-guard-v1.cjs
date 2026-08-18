@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 
 const APP = path.join(__dirname, "..", "assets", "app.js");
+const FEED = path.join(__dirname, "..", "assets", "iu-app-feed-pipeline-v1.js");
 const REPORT = path.join(__dirname, "silver-quicktools-custom-buttons-guard-v1-report.json");
 
 const REQUIRED = [
@@ -66,7 +67,7 @@ const REQUIRED = [
 ];
 
 function main() {
-  const src = fs.readFileSync(APP, "utf8");
+  const src = fs.readFileSync(APP, "utf8") + "\n" + (fs.existsSync(FEED) ? fs.readFileSync(FEED, "utf8") : "");
   const checks = REQUIRED.map((item) => ({
     id: item.id,
     pass: item.pattern.test(src),
