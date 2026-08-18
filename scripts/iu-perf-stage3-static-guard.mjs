@@ -59,6 +59,10 @@ must(
   /min-width:\s*1025px[\s\S]{0,120}ensure\(\)/.test(app),
   "app:desktop_eager_feed"
 );
+must(
+  /function iuProjectsHubNavigateHardResetFromHomeOrBack\(/.test(app),
+  "app:hub_reset_on_critical_path"
+);
 must(!/from\s+["']\.\/iu-article-chunk-loader\.js/.test(app), "app:no_static_chunk_loader_import");
 must(!/from\s+["']\.\/cluster_engine\.js/.test(app), "app:no_static_cluster_import");
 must(/from\s+["']\.\/iu-article-chunk-loader\.js/.test(feed), "feed:owns_chunk_loader");

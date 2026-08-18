@@ -59,6 +59,48 @@ try {
   }
 } catch (e) {}
 
+/**
+ * Stage-3: Domů / gate Zpět must reset hub URL before the 1.11MB feed chunk evaluates.
+ * Feed IIFE overwrites this with the full applySectionFromURL path when it loads.
+ */
+function iuProjectsHubNavigateHardResetFromHomeOrBack() {
+  try {
+    if (typeof window.iuIsProjectsRoute === "function" && !window.iuIsProjectsRoute()) return;
+  } catch (_) {}
+  try {
+    if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
+    else window.__iuNavOverlayLock = false;
+  } catch (_) {}
+  try {
+    var wrapR = document.getElementById("iuMobileGateWrap");
+    if (wrapR && typeof wrapR.__iuMobileGateSetTab === "function") wrapR.__iuMobileGateSetTab("");
+  } catch (_) {}
+  try {
+    if (document.body) document.body.classList.remove("iu-mobileMainVisible", "iu-webnavDetailFromGate");
+  } catch (_) {}
+  try {
+    var uSync = new URL(window.location.href);
+    if (uSync.hash === "#iu-nav" || uSync.hash === "#nav" || uSync.hash === "#iu-mindmenu") uSync.hash = "";
+    uSync.searchParams.delete("section");
+    uSync.searchParams.delete("topic");
+    uSync.searchParams.delete("mode");
+    uSync.searchParams.delete("panel");
+    uSync.searchParams.delete("radarOpen");
+    history.replaceState(null, "", uSync.toString());
+  } catch (_) {}
+  try {
+    window.scrollTo(0, 0);
+  } catch (_) {}
+  try {
+    if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
+  } catch (_) {}
+}
+try {
+  if (typeof window !== "undefined") {
+    window.iuProjectsHubNavigateHardResetFromHomeOrBack = iuProjectsHubNavigateHardResetFromHomeOrBack;
+  }
+} catch (e) {}
+
 /** P0: production host — debug UI and ?debug=1 tooling must never activate on infouzel.cz */
 function iuIsProdHost() {
   try {
