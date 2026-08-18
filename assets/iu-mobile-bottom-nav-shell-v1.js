@@ -206,6 +206,19 @@
       wrap.__iuMobileGateNavTabToggleFromUserAction = toggleNav;
     } catch (_) {}
     try {
+      if (!wrap.__iuMobileGateTabClicksBound) {
+        wrap.__iuMobileGateTabClicksBound = 1;
+        tabNav.addEventListener("click", function () {
+          prefetchFeed();
+          toggleNav();
+        });
+        tabTools.addEventListener("click", function () {
+          prefetchFeed();
+          toggleTools();
+        });
+      }
+    } catch (_) {}
+    try {
       window.iuMobileGateCloseForMainNav = function () {
         try {
           if (window.__iuNavOverlayLock === true) return;

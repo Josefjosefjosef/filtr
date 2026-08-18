@@ -38,6 +38,7 @@ const index = read("projects/index.html");
 const sw = read("sw.js");
 
 must(/iuMobileBottomNavShellV1/.test(shell), "shell:iife_name");
+must(/__iuMobileGateTabClicksBound/.test(shell), "shell:gate_tab_clicks");
 must(/data-iu-bottom-nav/.test(shell), "shell:bottom_nav_attr");
 must(/__iuMobileBottomNavInit/.test(shell), "shell:init_flag");
 must(/iu-app-feed-pipeline-v1\.js\?v=perf-stage3-feed-split-v1-20260818/.test(shell), "shell:feed_cache_bust");

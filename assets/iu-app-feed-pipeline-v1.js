@@ -17093,9 +17093,13 @@ function buildVideoAsArticleCard(it) {
           } catch (_) {}
         }
       }
-      tabNav.addEventListener("click", function () {
-        iuMobileGateNavTabToggleFromUserAction();
-      });
+      if (!wrap.__iuMobileGateTabClicksBound) {
+        wrap.__iuMobileGateTabClicksBound = 1;
+        tabNav.addEventListener("click", function () {
+          iuMobileGateNavTabToggleFromUserAction();
+        });
+        tabTools.addEventListener("click", iuHandleToolsTabClick);
+      }
       try {
         wrap.__iuMobileGateNavTabToggleFromUserAction = iuMobileGateNavTabToggleFromUserAction;
       } catch (_) {}
@@ -17299,7 +17303,6 @@ function buildVideoAsArticleCard(it) {
           iuMindMenuToolsTabPushHistory();
         }
       }
-      tabTools.addEventListener("click", iuHandleToolsTabClick);
       try {
         wrap.__iuMobileGateSetTab = setTab;
       } catch (_) {}
