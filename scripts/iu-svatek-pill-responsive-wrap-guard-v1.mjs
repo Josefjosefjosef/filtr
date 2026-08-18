@@ -5,13 +5,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const INDEX = path.join(ROOT, "projects", "index.html");
 const APP_CSS = path.join(ROOT, "assets", "app.css");
 const DHP_CSS = path.join(ROOT, "assets", "iu-desktop-home-premium.css");
-const APP_JS = path.join(ROOT, "assets", "app.js");
+const RUNTIME_JS = Symbol("runtime");
 
 const CHECKS = [
   {
@@ -72,7 +73,7 @@ const CHECKS = [
   },
   {
     id: "js_state_holiday_cluster_class",
-    file: APP_JS,
+    file: RUNTIME_JS,
     pattern: /iuSilverWelcomeMetaSvatekCluster--stateHoliday/,
   },
   {
@@ -82,15 +83,16 @@ const CHECKS = [
   },
   {
     id: "js_no_svatek_icon_element",
-    file: APP_JS,
+    file: RUNTIME_JS,
     pattern: /spanIcon\.className\s*=\s*"svatek-icon"/,
     invert: true,
   },
 ];
 
 function main() {
+  const runtime = readAppRuntimeSrc(ROOT);
   const checks = CHECKS.map((item) => {
-    const src = fs.readFileSync(item.file, "utf8");
+    const src = item.file === RUNTIME_JS ? runtime : fs.readFileSync(item.file, "utf8");
     const hit = item.pattern.test(src);
     const pass = item.invert ? !hit : hit;
     return { id: item.id, pass };
