@@ -15,7 +15,7 @@
 import {
   PARKING_REGISTRY,
   matchParkingRegistry,
-} from "./iu-parking-registry-v1.js?v=feed-filter-redesign-v1-20260817";
+} from "./iu-parking-registry-v1.js?v=evening-theme-settings-v1-20260818";
 
 export const FEED_FILTER_VERSION = 1;
 

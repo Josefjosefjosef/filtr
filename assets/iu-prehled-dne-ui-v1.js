@@ -35,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=feed-filter-redesign-v1-20260817";
+} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -62,7 +62,7 @@ import {
   prefsForChmuFilter,
   prefsForTrafficLocality,
   sanitizeFeedFilter,
-} from "./iu-feed-filter-v1.js?v=feed-filter-redesign-v1-20260817";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818";
 import {
   addCityLocality,
   chmuDetailSettingsHtml,
@@ -85,10 +85,10 @@ import {
   toggleParkingId,
   toggleRoad,
   trafficDetailSettingsHtml,
-} from "./iu-prehled-dne-feed-settings-v1.js?v=feed-filter-redesign-v1-20260817";
+} from "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "feed-filter-redesign-v1-20260817";
+const CACHE_BUST = "evening-theme-settings-v1-20260818";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";

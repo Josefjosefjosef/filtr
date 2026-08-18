@@ -2118,32 +2118,36 @@ html.iu-time-evening .iuPdCard__warnBadge--ended {
   border-color: rgba(148, 163, 184, 0.35);
 }
 
-/* Filter toggles: Vše / Uložené / Nepřečtené / Skryté */
-html.iu-time-evening .iuPdToggle,
-html.iu-time-evening .iuPdBtn,
-html.iu-time-evening .iuPdChip,
-html.iu-time-evening .iuPdIconBtn {
+/*
+ * Filter / chip controls on the main feed surface only.
+ * Settings portals to body (#iuPdSettings) — keep it out of evening paint
+ * so configuration panels stay light/readable.
+ */
+html.iu-time-evening .iuPrehledDne .iuPdToggle,
+html.iu-time-evening .iuPrehledDne .iuPdBtn,
+html.iu-time-evening .iuPrehledDne .iuPdChip,
+html.iu-time-evening .iuPrehledDne .iuPdIconBtn {
   background: rgba(15, 23, 42, 0.72);
   border-color: rgba(148, 163, 184, 0.42);
   color: rgba(241, 245, 249, 0.96);
 }
-html.iu-time-evening .iuPdToggle.is-active,
-html.iu-time-evening .iuPdBtn--primary {
+html.iu-time-evening .iuPrehledDne .iuPdToggle.is-active,
+html.iu-time-evening .iuPrehledDne .iuPdBtn--primary {
   background: #2563eb;
   border-color: #3b82f6;
   color: #ffffff;
 }
-html.iu-time-evening .iuPdBtn--ghost {
+html.iu-time-evening .iuPrehledDne .iuPdBtn--ghost {
   background: rgba(30, 41, 59, 0.85);
   border-color: rgba(148, 163, 184, 0.38);
   color: rgba(241, 245, 249, 0.94);
 }
-html.iu-time-evening .iuPdBtn--ghost.is-on {
+html.iu-time-evening .iuPrehledDne .iuPdBtn--ghost.is-on {
   border-color: rgba(96, 165, 250, 0.55);
   color: #bfdbfe;
   background: rgba(37, 99, 235, 0.28);
 }
-html.iu-time-evening .iuPdBtn--settings {
+html.iu-time-evening .iuPrehledDne .iuPdBtn--settings {
   background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
   border-color: #15803d;
   color: #fff;
@@ -2154,6 +2158,28 @@ html.iu-time-evening .iuPrehledDne__more button {
   color: #bfdbfe;
 }
 
+/* Source quick-view pills: Vše / Doprava / ČHMÚ (inactive must not stay #f8fafc) */
+html.iu-time-evening .iuPrehledDne .iuPdQuickView__btn {
+  background: rgba(15, 23, 42, 0.72);
+  border-color: rgba(148, 163, 184, 0.42);
+  color: rgba(241, 245, 249, 0.96);
+}
+html.iu-time-evening .iuPrehledDne .iuPdQuickView__btn.is-on.iuPdQuickView__btn--all {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #fff;
+}
+html.iu-time-evening .iuPrehledDne .iuPdQuickView__btn.is-on.iuPdQuickView__btn--traffic {
+  background: var(--iu-pd-traffic);
+  border-color: #c2410c;
+  color: #fff;
+}
+html.iu-time-evening .iuPrehledDne .iuPdQuickView__btn.is-on.iuPdQuickView__btn--chmu {
+  background: var(--iu-pd-chmu);
+  border-color: #0284c7;
+  color: #0f172a;
+}
+
 /* FUTURE red must stay red in evening */
 html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFrom,
 html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFromWord,
@@ -2162,21 +2188,38 @@ html.iu-time-evening .iuPrehledDne__item.is-futureWarning .iuPrehledDne__validFr
   color: #f87171;
 }
 
+/*
+ * Settings theme isolation: main page may be evening-dark (html tokens),
+ * but configuration UI must stay light. Reset tokens on the portal root so
+ * var(--iu-pd-text) / muted / line resolve to light values inside Settings.
+ */
+html.iu-time-evening .iuPdSettings {
+  color-scheme: light;
+  --iu-pd-card: #ffffff;
+  --iu-pd-text: rgba(15, 30, 45, 0.96);
+  --iu-pd-muted: rgba(71, 85, 105, 0.92);
+  --iu-pd-line: rgba(15, 35, 55, 0.1);
+  --iu-pd-shadow: 0 8px 24px rgba(35, 45, 120, 0.1);
+  --iu-pd-accent: #5b6cff;
+  --iu-pd-accent-2: #2563eb;
+  color: var(--iu-pd-text);
+}
 html.iu-time-evening .iuPdSettings__panel {
-  background: #111827;
+  background: #fff;
   color: var(--iu-pd-text);
 }
 html.iu-time-evening .iuPdSettings__head,
 html.iu-time-evening .iuPdSettings__rail,
-html.iu-time-evening .iuPdAcc__toggle {
-  background: rgba(15, 23, 42, 0.92);
+html.iu-time-evening .iuPdSettings .iuPdAcc__toggle,
+html.iu-time-evening .iuPdSettings .iuPdFeedAcc__toggle {
+  background: #fff;
   border-color: var(--iu-pd-line);
   color: var(--iu-pd-text);
 }
-html.iu-time-evening .iuPdInput,
-html.iu-time-evening .iuPrehledDne__input,
-html.iu-time-evening .iuPrehledDne__select,
-html.iu-time-evening .iuPdSuggest button {
+html.iu-time-evening .iuPrehledDne .iuPdInput,
+html.iu-time-evening .iuPrehledDne .iuPrehledDne__input,
+html.iu-time-evening .iuPrehledDne .iuPrehledDne__select,
+html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   background: #1e293b;
   border-color: var(--iu-pd-line);
   color: var(--iu-pd-text);

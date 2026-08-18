@@ -15,7 +15,7 @@ import {
   summarizeLocalities,
   summarizeParking,
   summarizeRoads,
-} from "./iu-feed-filter-v1.js?v=feed-filter-redesign-v1-20260817";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818";
 
 function esc(s) {
   return String(s ?? "")

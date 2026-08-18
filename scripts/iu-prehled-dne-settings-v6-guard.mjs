@@ -24,7 +24,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "feed-filter-redesign-v1-20260817";
+const CACHE_BUST = "evening-theme-settings-v1-20260818";
 const fails = [];
 
 function must(cond, id) {
@@ -78,11 +78,34 @@ function staticGate() {
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
   must(
-    /2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
+    /2026-08-18-evening-theme-settings-v1|2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
       sw
     ),
     "sw:cache_version_bump"
   );
+
+  // Evening dark main page + light Settings isolation (mobile/tablet paint)
+  must(
+    /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdQuickView__btn\b/.test(css) &&
+      /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdQuickView__btn\.is-on\.iuPdQuickView__btn--traffic/.test(
+        css
+      ) &&
+      /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdQuickView__btn\.is-on\.iuPdQuickView__btn--chmu/.test(
+        css
+      ),
+    "css:evening_quick_view_pills"
+  );
+  must(
+    /html\.iu-time-evening\s+\.iuPdSettings\s*\{[\s\S]*?--iu-pd-text:\s*rgba\(15,\s*30,\s*45/.test(css) &&
+      /color-scheme:\s*light/.test(css),
+    "css:evening_settings_light_tokens"
+  );
+  must(
+    /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdToggle/.test(css) &&
+      !/html\.iu-time-evening\s+\.iuPdToggle\s*,/.test(css.replace(/\s+/g, " ")),
+    "css:evening_controls_scoped_to_main"
+  );
+  must(!/html\.iu-time-evening\s+\.iuPdSettings__panel\s*\{[^}]*#111827/.test(css), "css:no_dark_settings_panel");
   must(/#16a34a|#15803d/.test(css), "css:green_color");
   must(/iu-pd-settings-open/.test(css), "css:body_lock");
   must(/--bottom-nav-height/.test(css), "css:bottom_nav");
@@ -213,6 +236,80 @@ async function runPlaywright() {
       });
       if (!green.ok) pwFails.push(vp.name + ":green_btn");
 
+      if (vp.name === "mobile" || vp.name === "tablet") {
+        const eveningPills = await page.evaluate(() => {
+          const html = document.documentElement;
+          ["iu-time-morning", "iu-time-late-morning", "iu-time-afternoon", "iu-time-evening"].forEach((c) =>
+            html.classList.remove(c)
+          );
+          html.classList.add("iu-time-evening");
+
+          const nearWhite = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return false;
+            return Number(m[1]) > 235 && Number(m[2]) > 235 && Number(m[3]) > 235;
+          };
+          const luminance = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return -1;
+            return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255;
+          };
+
+          const inactive = [...document.querySelectorAll(".iuPdQuickView__btn")].filter(
+            (b) => !b.classList.contains("is-on")
+          );
+          const inactiveBgs = inactive.map((b) => getComputedStyle(b).backgroundColor);
+          const inactiveOk = inactive.length > 0 && inactiveBgs.every((bg) => !nearWhite(bg));
+
+          const traffic = document.querySelector(".iuPdQuickView__btn--traffic");
+          if (traffic) traffic.click();
+          const trafficLive = document.querySelector(".iuPdQuickView__btn--traffic");
+          const trafficBg = trafficLive ? getComputedStyle(trafficLive).backgroundColor : "";
+          const trafficOn = trafficLive && trafficLive.classList.contains("is-on");
+          const trafficOrange =
+            trafficOn &&
+            (() => {
+              const m = String(trafficBg).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+              if (!m) return false;
+              return Number(m[1]) > 180 && Number(m[2]) < 140 && Number(m[3]) < 80;
+            })();
+
+          const chmu = document.querySelector(".iuPdQuickView__btn--chmu");
+          if (chmu) chmu.click();
+          const chmuLive = document.querySelector(".iuPdQuickView__btn--chmu");
+          const chmuBg = chmuLive ? getComputedStyle(chmuLive).backgroundColor : "";
+          const chmuOn = chmuLive && chmuLive.classList.contains("is-on");
+          const chmuBlue =
+            chmuOn &&
+            (() => {
+              const m = String(chmuBg).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+              if (!m) return false;
+              return Number(m[3]) > Number(m[1]) && Number(m[3]) > 140;
+            })();
+
+          const allBtn = document.querySelector(".iuPdQuickView__btn--all");
+          if (allBtn) allBtn.click();
+
+          return {
+            inactiveOk,
+            inactiveBgs,
+            trafficOrange,
+            trafficBg,
+            chmuBlue,
+            chmuBg,
+            inactiveLumOk: inactiveBgs.every((bg) => {
+              const L = luminance(bg);
+              return L >= 0 && L < 0.85;
+            }),
+          };
+        });
+        if (!eveningPills.inactiveOk || !eveningPills.inactiveLumOk) {
+          pwFails.push(vp.name + ":evening_inactive_quick_view_not_white");
+        }
+        if (!eveningPills.trafficOrange) pwFails.push(vp.name + ":evening_traffic_active_orange");
+        if (!eveningPills.chmuBlue) pwFails.push(vp.name + ":evening_chmu_active_blue");
+      }
+
       await page.evaluate(() => {
         const vpEl = document.getElementById("iuSilverTallScrollViewport");
         if (vpEl) vpEl.scrollTop = 400;
@@ -271,6 +368,73 @@ async function runPlaywright() {
       if (openState.save) pwFails.push(vp.name + ":save_present");
       if (openState.cancel) pwFails.push(vp.name + ":cancel_present");
       if (!openState.bodyChild) pwFails.push(vp.name + ":settings_not_on_body");
+
+      if (vp.name === "mobile" || vp.name === "tablet") {
+        const settingsLight = await page.evaluate(() => {
+          const html = document.documentElement;
+          html.classList.add("iu-time-evening");
+          const root = document.getElementById("iuPdSettings");
+          const panel = document.querySelector(".iuPdSettings__panel");
+          const label = document.querySelector(".iuPdFeedMainRow__label");
+          const nearWhite = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return false;
+            return Number(m[1]) > 235 && Number(m[2]) > 235 && Number(m[3]) > 235;
+          };
+          const luminance = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return -1;
+            return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255;
+          };
+          const textColor = label ? getComputedStyle(label).color : "";
+          const panelBg = panel ? getComputedStyle(panel).backgroundColor : "";
+          const token = root ? getComputedStyle(root).getPropertyValue("--iu-pd-text").trim() : "";
+          return {
+            textColor,
+            panelBg,
+            token,
+            panelLight: nearWhite(panelBg) || luminance(panelBg) > 0.9,
+            textDark: !nearWhite(textColor) && luminance(textColor) < 0.45,
+            tokenLight: /15,\s*30,\s*45|rgba\(15/.test(token),
+          };
+        });
+        if (!settingsLight.panelLight) pwFails.push(vp.name + ":settings_panel_not_light");
+        if (!settingsLight.textDark) pwFails.push(vp.name + ":settings_label_not_dark");
+        if (!settingsLight.tokenLight) pwFails.push(vp.name + ":settings_token_not_light");
+
+        await page.evaluate(() =>
+          document.querySelector('[data-act="feed-open-detail"][data-kind="traffic"]')?.click()
+        );
+        await page.waitForSelector('[data-iu-feed-detail="traffic"]', { timeout: 8000 });
+        const trafficReadable = await page.evaluate(() => {
+          const head = [...document.querySelectorAll(".iuPdFeedSub__head")].find((el) =>
+            /Kraje/i.test(el.textContent || "")
+          );
+          const check = document.querySelector(".iuPdFeedCheck");
+          const nearWhite = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return false;
+            return Number(m[1]) > 235 && Number(m[2]) > 235 && Number(m[3]) > 235;
+          };
+          const luminance = (cssColor) => {
+            const m = String(cssColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return -1;
+            return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255;
+          };
+          const headColor = head ? getComputedStyle(head).color : "";
+          const checkColor = check ? getComputedStyle(check).color : "";
+          return {
+            headOk: !!head && !nearWhite(headColor) && luminance(headColor) < 0.55,
+            checkOk: !!check && !nearWhite(checkColor) && luminance(checkColor) < 0.45,
+            headColor,
+            checkColor,
+          };
+        });
+        if (!trafficReadable.headOk) pwFails.push(vp.name + ":traffic_kraje_unreadable");
+        if (!trafficReadable.checkOk) pwFails.push(vp.name + ":traffic_check_unreadable");
+        await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
+        await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+      }
 
       await page.evaluate(() =>
         document.querySelector('[data-act="feed-open-detail"][data-kind="traffic"]')?.click()
