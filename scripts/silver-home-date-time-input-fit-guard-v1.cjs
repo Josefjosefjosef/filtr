@@ -14,6 +14,7 @@ const fs = require("fs");
 const path = require("path");
 const { chromium, webkit } = require("playwright");
 const base = require("./silver-mobile-tablet-home-ux-v1-shared.cjs");
+const { readAppRuntimeSrc } = require("./guards/iu-app-runtime-src.cjs");
 const {
   installProofGuardNetworkStubs,
   createIgnorableResourceTracker,
@@ -675,7 +676,7 @@ function assertCssSourceContract() {
     path.join(__dirname, "..", "assets", "iu-tasks-premium.css"),
     "utf8"
   );
-  const appJs = fs.readFileSync(path.join(__dirname, "..", "assets", "app.js"), "utf8");
+  const appJs = readAppRuntimeSrc(path.join(__dirname, ".."));
   const mq = /@media\s*\(\s*max-width:\s*1024px\s*\)\s*\{[\s\S]*?\.iuSilverDraftGrid--edit\s*>\s*\.iuSilverDraftInput\[type="date"\][\s\S]*?min-width:\s*0\s*!important[\s\S]*?min-inline-size:\s*0\s*!important/.test(
     appCss
   );
