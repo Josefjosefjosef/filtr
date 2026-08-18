@@ -463,10 +463,11 @@ function main() {
 
   let headCommitDataOnly = false;
   try {
-    const parentLine = run("git rev-list --parents -n 1 HEAD");
+    const inspectSha = (process.env.SMOKE_HEAD_SHA || "").trim() || "HEAD";
+    const parentLine = run("git rev-list --parents -n 1 " + inspectSha);
     const parentParts = parentLine.split(/\s+/).filter(Boolean);
     if (parentParts.length >= 3) {
-      const headFiles = run("git diff --name-only HEAD^1 HEAD").split("\n");
+      const headFiles = run("git diff --name-only " + inspectSha + "^1 " + inspectSha).split("\n");
       headCommitDataOnly = isDataOnlyScope(headFiles);
     }
   } catch {
