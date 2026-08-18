@@ -42254,6 +42254,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
      and #iuCalendarDayOverlay ship inside an inert <template id="iuLazyOverlayTpl-calendar">
      and mount on first open. Premium overlay DOM + direct element bindings follow. */
   function ensureCalendarOverlayMounted(){
+    try { ensureStyles(); } catch (_) {}
     if (getOverlay()){
       bindOverlayDirectUiOnce();
       return true;
@@ -42291,6 +42292,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   }
 
   function openOverlay(originEl){
+    try { ensureStyles(); } catch (_) {}
     try{ ensureCalendarOverlayMounted(); }catch{}
     const ov = getOverlay();
     if (!ov) return;
@@ -44049,7 +44051,8 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   async function init(){
     if (state.inited) return;
     state.inited = true;
-    ensureStyles();
+    /* P1 perf: do not inject calendar CSS or render overlay DOM during app.js eval.
+       Styles + mount run on first openOverlay / ensureCalendarOverlayMounted. */
     await initStorage();
     await readStore();
     bindUi();
@@ -44065,10 +44068,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         } catch (_) {}
       });
     } catch (_) {}
-    /* Eager-DOM fallback (no template in HTML): bind direct UI right away,
-       same as the previous boot path. With the template this is a no-op and
-       binding happens on first open (ensureCalendarOverlayMounted). */
-    bindOverlayDirectUiOnce();
     try{
       if (!window.__iuCalVvInlineScroll && window.visualViewport){
         window.__iuCalVvInlineScroll = 1;
@@ -44087,7 +44086,6 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
         );
       }
     }catch{}
-    render();
     window.iuCalendarService = {
       calendarOpenTodayDayView: function(originEl){
         const today = toDateOnly(new Date());

@@ -626,6 +626,7 @@ font-src 'self' data:;
       .iuPd__hero .iuPdBtn--settings{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:999px;border-bottom-right-radius:999px}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
+    <link rel="modulepreload" href="/assets/iu-prehled-dne-ui-v1.js?v=evening-theme-settings-v1-20260818" />
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)" />
     <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.png" type="image/png" fetchpriority="high" />
