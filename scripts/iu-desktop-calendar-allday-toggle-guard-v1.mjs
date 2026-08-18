@@ -84,8 +84,16 @@ function trackPageErrors(page) {
 }
 
 async function waitForCalendarReady(page) {
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureCalendarOverlay === "function") {
+      await window.__iuEnsureCalendarOverlay();
+    }
+  });
   await page.waitForFunction(
-    () => window.iuCalendarService && typeof window.iuCalendarService.openOverlay === "function",
+    () =>
+      window.iuCalendarService &&
+      !window.iuCalendarService.__iuCalendarLazyStub &&
+      typeof window.iuCalendarService.openOverlay === "function",
     { timeout: CAL_SERVICE_WAIT_MS }
   );
 }

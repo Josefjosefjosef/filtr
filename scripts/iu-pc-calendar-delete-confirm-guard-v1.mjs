@@ -16,6 +16,7 @@ import {
   createIgnorableResourceTracker,
   installLocalDataProtectionAccepted,
 } from "./proofs/open_meteo_guard_stub.cjs";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -60,7 +61,7 @@ function buildUrl(params) {
 }
 
 function assertSourceContract() {
-  const appJs = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
+  const appJs = readAppRuntimeSrc(REPO);
   const checks = [
     { id: "zindex_12350", ok: /\.iu-calDeleteConfirm\{[^}]*z-index:12350/.test(appJs) },
     {
@@ -84,18 +85,26 @@ function assertSourceContract() {
 }
 
 async function waitForCalendarReady(page) {
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureCalendarOverlay === "function") {
+      await window.__iuEnsureCalendarOverlay();
+    }
+  });
   await page.waitForFunction(
-    () => window.iuCalendarService && typeof window.iuCalendarService.openOverlay === "function",
+    () =>
+      window.iuCalendarService &&
+      !window.iuCalendarService.__iuCalendarLazyStub &&
+      typeof window.iuCalendarService.openOverlay === "function",
     { timeout: 90000 }
   );
 }
 
 async function openCalendarOverlay(page) {
   await waitForCalendarReady(page);
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
     document.body.classList.add("iu-myinfouzel-open");
     if (window.iuCalendarService && typeof window.iuCalendarService.openOverlay === "function") {
-      window.iuCalendarService.openOverlay();
+      await window.iuCalendarService.openOverlay();
     }
   });
   await page.waitForFunction(() => {
