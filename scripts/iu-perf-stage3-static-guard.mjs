@@ -55,6 +55,10 @@ const appIdx = index.indexOf('src="/assets/app.js?v=');
 must(shellIdx > 0 && appIdx > shellIdx, "index:shell_before_app");
 must(/function iuBootFeedPipelineLazy/.test(app), "app:lazy_feed_boot");
 must(/window\.__iuEnsureFeedPipeline/.test(app), "app:ensure_feed_hook");
+must(
+  /min-width:\s*1025px[\s\S]{0,120}ensure\(\)/.test(app),
+  "app:desktop_eager_feed"
+);
 must(!/from\s+["']\.\/iu-article-chunk-loader\.js/.test(app), "app:no_static_chunk_loader_import");
 must(!/from\s+["']\.\/cluster_engine\.js/.test(app), "app:no_static_cluster_import");
 must(/from\s+["']\.\/iu-article-chunk-loader\.js/.test(feed), "feed:owns_chunk_loader");

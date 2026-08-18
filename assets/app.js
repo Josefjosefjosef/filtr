@@ -455,6 +455,12 @@ try {
     );
   } catch (_) {}
   try {
+    var desktopMq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
+    if (desktopMq && desktopMq.matches) {
+      void ensure();
+    }
+  } catch (_) {}
+  try {
     setTimeout(function () {
       try {
         if (typeof requestIdleCallback === "function") {
