@@ -51,6 +51,10 @@ function staticGate() {
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
   must(/feedDomDirty/.test(ui), "ui:defer_feed_while_settings");
   must(/keepSettingsDom/.test(ui), "ui:checkbox_keep_dom");
+  must(
+    /feed-quick-view[\s\S]{0,900}setAttribute\("aria-disabled"/.test(ui),
+    "ui:quick_view_disabled_sync"
+  );
   must(/function openSettings[\s\S]{0,900}mountSettingsOverlay\(\)/.test(ui), "ui:open_overlay_without_feed_paint");
   must(/let _prefsMem/.test(core), "core:prefs_mem_cache");
   must(/iuPdBtn--settings/.test(ui), "ui:green_btn_class");
@@ -506,6 +510,10 @@ async function runPlaywright() {
 
       await page.evaluate(() => document.querySelector('.iuPdSettings__head [data-act="settings-close"]')?.click());
       await page.waitForFunction(() => !document.getElementById("iuPdSettings"), { timeout: 8000 });
+      await page.waitForFunction(() => {
+        const chmuBtn = document.querySelector('[data-act="feed-quick-view"][data-view="chmu"]');
+        return !!(chmuBtn && (chmuBtn.disabled || chmuBtn.getAttribute("aria-disabled") === "true"));
+      }, { timeout: 5000 });
 
       const quick = await page.evaluate(() => {
         const bar = document.querySelector("[data-iu-feed-quick]");

@@ -1918,9 +1918,16 @@ function paint(opts) {
     } catch (_) {}
     // Sync quick-view active button without full shell rebuild.
     try {
+      const ffQuick = ensureFeedFilter(effectivePrefs());
       root.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
         const view = btn.getAttribute("data-view") || "";
         btn.classList.toggle("is-on", view === state.feedQuickView);
+        const disabled =
+          (view === "traffic" && ffQuick.trafficEnabled === false) ||
+          (view === "chmu" && ffQuick.chmuEnabled === false);
+        btn.disabled = !!disabled;
+        if (disabled) btn.setAttribute("aria-disabled", "true");
+        else btn.removeAttribute("aria-disabled");
       });
     } catch (_) {}
   } else {
