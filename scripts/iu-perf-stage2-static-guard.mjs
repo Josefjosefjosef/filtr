@@ -6,6 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fails = [];
@@ -32,6 +33,7 @@ function walkJs(dir, acc = []) {
 
 const ui = read("assets/iu-prehled-dne-ui-v1.js");
 const app = read("assets/app.js");
+const runtime = readAppRuntimeSrc(ROOT);
 const index = read("projects/index.html");
 const freeze = read("docs/pre-aggregator-stable/freeze-manifest.json");
 
@@ -42,8 +44,9 @@ must(/scheduleEnsureIdle/.test(app), "app:silver_idle_schedule");
 must(/__iuSilverP0IdleArmed/.test(app), "app:silver_idle_once");
 must(!/iu-silver-p0-engine\.js/.test(index), "index:no_eager_silver_engine_script");
 must(/rel="modulepreload"/.test(index) && /iu-prehled-dne-ui-v1\.js/.test(index), "index:modulepreload_prehled_dne_ui");
-must(/function openOverlay\(originEl\)\{\s*try \{ ensureStyles\(\); \}/.test(app), "app:calendar_styles_on_open");
-must(/P1 perf: do not inject calendar CSS/.test(app), "app:calendar_init_no_boot_css");
+must(/function openOverlay\(originEl\)\{\s*try \{ ensureStyles\(\); \}/.test(runtime), "app:calendar_styles_on_open");
+must(/P1 perf: do not inject calendar CSS/.test(runtime), "app:calendar_init_no_boot_css");
+must(/function iuBootCalendarOverlayLazy/.test(app), "app:calendar_lazy_boot");
 
 const files = walkJs(path.join(ROOT, "assets"));
 const byMod = new Map();
