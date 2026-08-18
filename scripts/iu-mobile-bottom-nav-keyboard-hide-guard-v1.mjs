@@ -18,6 +18,7 @@ import {
   inPageWaitNav,
   assertKeyboardHideIdle,
 } from "./guards/iu-mobile-kb-hide-wait.mjs";
+import { IU_SW_CACHE_VERSION_CURRENT } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -35,7 +36,7 @@ let BASE = "";
 const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
-const SW_VER = "2026-08-18-perf-stage3-feed-split-v1";
+const SW_VER = IU_SW_CACHE_VERSION_CURRENT;
 /* Must match assets/app.js FOCUS_OPEN_GRACE_MS — do not change product grace. */
 const FOCUS_OPEN_GRACE_MS = 420;
 
