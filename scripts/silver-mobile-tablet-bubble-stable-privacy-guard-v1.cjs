@@ -45,7 +45,14 @@ async function measureSpeechLayout(page, text) {
     el.style.webkitBoxOrient = "vertical";
     el.style.overflow = "hidden";
   }, text);
-  await page.waitForTimeout(120);
+  // Settle after text swap: CI Linux fonts/layout can shift privacy row mid-measure.
+  await page.evaluate(async () => {
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    } catch (_) {}
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  });
+  await page.waitForTimeout(180);
   return page.evaluate(({ privacy1, privacy2 }) => {
     function rect(el) {
       if (!el) return null;
@@ -282,7 +289,14 @@ async function runGuard() {
         });
         await p.setViewportSize({ width: vp.w, height: vp.h });
         await p.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
-        await p.waitForTimeout(2600);
+        await p.waitForSelector("#iuSilverHeroPremium [data-iu-silver-speech-text]", { timeout: 60000 });
+        await p.evaluate(async () => {
+          try {
+            if (document.fonts && document.fonts.ready) await document.fonts.ready;
+          } catch (_) {}
+          await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        });
+        await p.waitForTimeout(2800);
         const measurements = [];
         for (let j = 0; j < SPEECH_VARIANTS.length; j++) {
           const variant = SPEECH_VARIANTS[j];
