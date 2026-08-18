@@ -222,6 +222,8 @@ const state = {
   settingsOpener: null,
   saveError: "",
   persistSeq: 0,
+  /** True when prefs changed while settings overlay is open — feed paint is deferred until close. */
+  feedDomDirty: false,
   timelineBoundaryTimer: null,
   timelineListenersBound: false,
   /** Legacy client chips kept empty — replaced by feedFilter + quick view. */
@@ -1598,6 +1600,42 @@ function renderLocalityBody(draft) {
   );
 }
 
+let _settingsTrafficItemsCache = { key: "", items: [] };
+
+function trafficSettingsCatalogKey(draft, snap) {
+  const ff = ensureFeedFilter(draft);
+  const tloc = ff && ff.traffic ? ff.traffic.localities : null;
+  const cloc = ff && ff.chmu ? ff.chmu.localities : null;
+  return [
+    String((snap && snap.generatedAt) || "none"),
+    String(ff.trafficEnabled !== false ? 1 : 0),
+    JSON.stringify(tloc || null),
+    JSON.stringify(cloc || null),
+    String((draft && draft.homeKraj) || ""),
+    String((draft && draft.homeOkres) || ""),
+    String((draft && draft.homeObec) || ""),
+    String(draft && draft.myRegionOnly ? 1 : 0),
+  ].join("|");
+}
+
+function trafficItemsForSettingsDraft(draft) {
+  try {
+    const snap = loadOfflineTrafficSnapshot();
+    const key = trafficSettingsCatalogKey(draft, snap);
+    if (_settingsTrafficItemsCache.key === key && Array.isArray(_settingsTrafficItemsCache.items)) {
+      return _settingsTrafficItemsCache.items;
+    }
+    const items = collectOfflineTrafficCandidates(prefsForTrafficLocality(draft, ensureFeedFilter(draft)), {
+      snapshot: snap,
+      nowIso: new Date().toISOString(),
+    });
+    _settingsTrafficItemsCache = { key, items };
+    return items;
+  } catch (_) {
+    return [];
+  }
+}
+
 function renderSettingsBody() {
   const draft = state.draft || clonePrefs(state.prefs);
   if (!draft.feedFilter) draft.feedFilter = ensureFeedFilter(draft);
@@ -1617,17 +1655,7 @@ function renderSettingsBody() {
   }
 
   const kraje = CZ_KRAJE;
-  const trafficItems = (() => {
-    try {
-      const snap = loadOfflineTrafficSnapshot();
-      return collectOfflineTrafficCandidates(
-        prefsForTrafficLocality(draft, ensureFeedFilter(draft)),
-        { snapshot: snap, nowIso: new Date().toISOString() }
-      );
-    } catch (_) {
-      return [];
-    }
-  })();
+  const trafficItems = trafficItemsForSettingsDraft(draft);
 
   let body = "";
   let title = "";
@@ -1969,12 +1997,15 @@ function persistDraft() {
     return false;
   }
   try {
-    const readBack = getPrefs();
-    if (readBack && !readBack.feedFilter) readBack.feedFilter = snapshot.feedFilter;
-    state.prefs = readBack;
-    state.draft = clonePrefs(readBack);
+    state.prefs = getPrefs();
+    if (state.prefs && !state.prefs.feedFilter) state.prefs.feedFilter = snapshot.feedFilter;
+    state.draft = clonePrefs(state.prefs);
     clearSaveError();
-    updateFeedDom();
+    if (state.settingsOpen) {
+      state.feedDomDirty = true;
+    } else {
+      updateFeedDom();
+    }
     return true;
   } catch (_) {
     state.draft = clonePrefs(getPrefs());
@@ -1984,6 +2015,7 @@ function persistDraft() {
 }
 
 function closeSettings() {
+  const dirty = !!state.feedDomDirty;
   state.settingsOpen = false;
   state.activeSection = null;
   state.draft = null;
@@ -1999,16 +2031,25 @@ function closeSettings() {
   } catch (_) {}
   removeSettingsHost();
   setBodyScrollLock(false);
-  paint();
-  wire();
-  restoreFeedScroll();
   const opener = state.settingsOpener;
   state.settingsOpener = null;
-  if (opener && typeof opener.focus === "function") {
-    try {
-      opener.focus();
-    } catch (_) {}
-  }
+  const finish = () => {
+    if (dirty) {
+      state.feedDomDirty = false;
+      try {
+        paint();
+        wire();
+      } catch (_) {}
+    }
+    restoreFeedScroll();
+    if (opener && typeof opener.focus === "function") {
+      try {
+        opener.focus();
+      } catch (_) {}
+    }
+  };
+  if (typeof requestAnimationFrame === "function") requestAnimationFrame(finish);
+  else finish();
 }
 
 function openSettings(opener) {
@@ -2026,7 +2067,8 @@ function openSettings(opener) {
   state.openParkingCities = {};
   state.saveError = "";
   state.openSourceGroups = {};
-  paint({ resetSettingsScroll: true });
+  mountSettingsOverlay();
+  setBodyScrollLock(true);
   wire();
   resetSettingsScroll();
   const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
@@ -2050,13 +2092,15 @@ function refreshSettingsKeepingScroll() {
   restoreSettingsScroll(prev);
 }
 
-function mutateFeedFilter(mutator) {
+function mutateFeedFilter(mutator, opts) {
   if (!state.draft) state.draft = clonePrefs(state.prefs || getPrefs());
   const ff = getDraftFeedFilter(state.draft);
   mutator(ff);
   setDraftFeedFilter(state.draft, ff);
   persistDraft();
-  if (state.settingsOpen) refreshSettingsKeepingScroll();
+  if (state.settingsOpen && !(opts && opts.keepSettingsDom)) {
+    refreshSettingsKeepingScroll();
+  }
 }
 
 function syncDraftFromEvent(ev) {
@@ -2268,7 +2312,7 @@ function wire() {
     }
     if (act === "feed-loc-okres") {
       const name = t.getAttribute("data-value");
-      mutateFeedFilter((ff) => toggleLocOkres(ff, name, !!t.checked));
+      mutateFeedFilter((ff) => toggleLocOkres(ff, name, !!t.checked), { keepSettingsDom: true });
       return;
     }
     if (act === "feed-city-add") {
@@ -2302,19 +2346,15 @@ function wire() {
       return;
     }
     if (act === "feed-road-toggle") {
-      mutateFeedFilter((ff) => toggleRoad(ff, t.getAttribute("data-value"), !!t.checked));
+      mutateFeedFilter((ff) => toggleRoad(ff, t.getAttribute("data-value"), !!t.checked), {
+        keepSettingsDom: true,
+      });
       return;
     }
     if (act === "feed-roads-all") {
       const g = t.getAttribute("data-group");
       const catalog = buildRoadCatalogFromTrafficItems(
-        collectOfflineTrafficCandidates(
-          prefsForTrafficLocality(state.draft || state.prefs, ensureFeedFilter(state.draft || state.prefs)),
-          {
-            snapshot: loadOfflineTrafficSnapshot(),
-            nowIso: new Date().toISOString(),
-          }
-        )
+        trafficItemsForSettingsDraft(state.draft || state.prefs)
       );
       const roads = (catalog.byClass && catalog.byClass[g]) || [];
       const selected = new Set(
@@ -2325,7 +2365,9 @@ function wire() {
       return;
     }
     if (act === "feed-event-toggle") {
-      mutateFeedFilter((ff) => toggleEventCategory(ff, t.getAttribute("data-value"), !!t.checked));
+      mutateFeedFilter((ff) => toggleEventCategory(ff, t.getAttribute("data-value"), !!t.checked), {
+        keepSettingsDom: true,
+      });
       return;
     }
     if (act === "feed-events-all") {
@@ -2347,7 +2389,9 @@ function wire() {
       return;
     }
     if (act === "feed-park-toggle") {
-      mutateFeedFilter((ff) => toggleParkingId(ff, t.getAttribute("data-value"), !!t.checked));
+      mutateFeedFilter((ff) => toggleParkingId(ff, t.getAttribute("data-value"), !!t.checked), {
+        keepSettingsDom: true,
+      });
       return;
     }
     if (act === "feed-park-all") {
@@ -2605,7 +2649,7 @@ function wire() {
     setTimeout(() => scrollSettingsFieldIntoView(t), 360);
   };
   if (settingsHost) {
-    settingsHost.addEventListener("focusin", focusScrollHandler);
+    settingsHost.onfocusin = focusScrollHandler;
   }
   try {
     if (window.visualViewport && !window.__iuPdVvBound) {

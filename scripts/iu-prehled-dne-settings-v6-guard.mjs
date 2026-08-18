@@ -49,6 +49,10 @@ function staticGate() {
   must(!/>\s*Zrušit\s*</.test(ui) && !/">Zrušit</.test(ui), "ui:no_cancel_label");
   must(/activeSection/.test(ui), "ui:single_section_state");
   must(/persistDraft|setPrefs\(snapshot\)/.test(ui), "ui:autosave");
+  must(/feedDomDirty/.test(ui), "ui:defer_feed_while_settings");
+  must(/keepSettingsDom/.test(ui), "ui:checkbox_keep_dom");
+  must(/function openSettings[\s\S]{0,900}mountSettingsOverlay\(\)/.test(ui), "ui:open_overlay_without_feed_paint");
+  must(/let _prefsMem/.test(core), "core:prefs_mem_cache");
   must(/iuPdBtn--settings/.test(ui), "ui:green_btn_class");
   must(/resetSettingsScroll/.test(ui), "ui:open_scroll_reset");
   must(/document\.body\.appendChild|mountSettingsOverlay/.test(ui), "ui:settings_body_portal");

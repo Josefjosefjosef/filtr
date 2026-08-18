@@ -44532,6 +44532,28 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
     } catch (_) {}
   }
 
+  function scheduleEnsureIdle() {
+    try {
+      if (window.__iuSilverP0EngineReady) return;
+      if (window.__iuSilverP0IdleArmed) return;
+      window.__iuSilverP0IdleArmed = 1;
+      var run = function () {
+        void ensure();
+      };
+      /* Keep 1.55MB engine off first paint and early interaction (settings/checkboxes).
+         FAST first-tap guards wait ≤15s for ready, so a 7s floor is safe. */
+      setTimeout(function () {
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(run, { timeout: 1500 });
+        } else {
+          run();
+        }
+      }, 7000);
+    } catch (_) {
+      void ensure();
+    }
+  }
+
   function maybePrefetchVisibleHomeUx() {
     try {
       if (!narrowComposer()) return;
@@ -44543,7 +44565,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       var r = ux.getBoundingClientRect ? ux.getBoundingClientRect() : null;
       if (!r || r.width < 8 || r.height < 8) return;
       if (r.bottom < 0 || r.top > (window.innerHeight || 0) + 8) return;
-      void ensure();
+      scheduleEnsureIdle();
     } catch (_) {}
   }
 
@@ -44560,7 +44582,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
             try {
               for (var i = 0; i < entries.length; i++) {
                 if (entries[i] && entries[i].isIntersecting) {
-                  void ensure();
+                  scheduleEnsureIdle();
                   break;
                 }
               }

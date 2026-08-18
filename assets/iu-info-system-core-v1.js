@@ -649,6 +649,9 @@ function rollbackChmiCapV2UserStates() {
   }
 }
 
+/** In-memory prefs cache — avoids sync JSON.parse of localStorage on every checkbox/click. */
+let _prefsMem = null;
+
 function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
@@ -660,6 +663,7 @@ function migrateLocalStateOnce() {
       cleaned.unreadOnly = false;
       cleaned.savedOnly = false;
       localStorage.setItem(LS_PREFS, JSON.stringify(cleaned));
+      _prefsMem = null;
     }
     const store = readJsonObj(LS_VIEWS, { views: [] });
     const views = Array.isArray(store.views) ? store.views : [];
@@ -679,12 +683,18 @@ function migrateLocalStateOnce() {
 
 function getPrefs() {
   migrateLocalStateOnce();
+  if (_prefsMem) return _prefsMem;
   try {
     const raw = localStorage.getItem(LS_PREFS);
-    if (!raw) return defaultPrefs();
-    return normalizePrefs(JSON.parse(raw) || {});
+    if (!raw) {
+      _prefsMem = defaultPrefs();
+      return _prefsMem;
+    }
+    _prefsMem = normalizePrefs(JSON.parse(raw) || {});
+    return _prefsMem;
   } catch (_) {
-    return defaultPrefs();
+    _prefsMem = defaultPrefs();
+    return _prefsMem;
   }
 }
 
@@ -761,7 +771,9 @@ function countTemporaryFilters(prefs, baseline) {
 
 function setPrefs(prefs) {
   try {
-    localStorage.setItem(LS_PREFS, JSON.stringify(normalizePrefs(prefs || {})));
+    const n = normalizePrefs(prefs || {});
+    localStorage.setItem(LS_PREFS, JSON.stringify(n));
+    _prefsMem = n;
     return true;
   } catch (_) {
     return false;
