@@ -111,8 +111,20 @@ def check_blocked_hedvabnastezka():
     return issues
 
 
+def read_app_runtime_src() -> str:
+    """app.js plus extracted feed pipeline (perf stage-3 split)."""
+    parts = []
+    app = ROOT / "assets" / "app.js"
+    feed = ROOT / "assets" / "iu-app-feed-pipeline-v1.js"
+    if app.exists():
+        parts.append(app.read_text(encoding="utf-8"))
+    if feed.exists():
+        parts.append(feed.read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
 def check_fetch_paths(app_js: Path):
-    text = app_js.read_text(encoding="utf-8")
+    text = read_app_runtime_src() if app_js.exists() else ""
     issues = []
     if '"/data/' in text or "\"/data/" in text:
         issues.append("assets/app.js references /data/ instead of /projects/data/")
@@ -126,7 +138,7 @@ def check_weather_inline_video_autopause(app_js: Path):
     issues = []
     if not app_js.exists():
         return issues
-    t = app_js.read_text(encoding="utf-8")
+    t = read_app_runtime_src()
     if "function stopWeatherInlineVideo" not in t:
         issues.append(
             "assets/app.js must define stopWeatherInlineVideo(reason) for Počasí inline video cleanup"
@@ -150,7 +162,7 @@ def check_section_feed_header(app_js: Path, index_html: Path):
     """Regresní guard: feed #dataUpdatedAt nesmí používat globální dataset generatedAt ani starý text."""
     issues = []
     if app_js.exists():
-        t = app_js.read_text(encoding="utf-8")
+        t = read_app_runtime_src()
         if "Poslední aktualizace dat" in t:
             issues.append(
                 "assets/app.js must not contain legacy label 'Poslední aktualizace dat' (use section-derived header)"
