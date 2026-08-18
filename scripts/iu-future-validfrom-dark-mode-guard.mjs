@@ -22,7 +22,7 @@ const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const PARCEL_CSS = path.join(ROOT, "assets", "iu-silver-parcel-dashboard.css");
 const APP_JS = path.join(ROOT, "assets", "app.js");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "heavy-feed-shell-first-v1-20260809";
+const CACHE_BUST = "evening-theme-settings-v1-20260818";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -105,7 +105,7 @@ function staticGate() {
   ok("ui_no_timeline_setInterval", !/setInterval\s*\(\s*\(\)\s*=>\s*\{[\s\S]{0,80}paint\(/.test(ui), "no interval paint");
   ok("ui_listeners_once", /if\s*\(\s*state\.timelineListenersBound\s*\)\s*return/.test(ui), "listeners once");
   ok("ui_no_manual_theme_toggle", !/toggleFuture|manualFuture|forceFutureRed/.test(ui), "manual");
-  ok("freeze_manifest_bumped", /heavy-feed-shell-first-v1-20260809/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
+  ok("freeze_manifest_bumped", /evening-theme-settings-v1-20260818/.test(fs.readFileSync(path.join(ROOT, "docs", "pre-aggregator-stable", "freeze-manifest.json"), "utf8")), "freeze");
 
   ok("css_future_red_block", /\.iuPrehledDne__item\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css), "red block");
   ok("css_future_red_word", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css), "red word");
@@ -117,8 +117,8 @@ function staticGate() {
   ok("css_evening_vars", /html\.iu-time-evening\s*\{[\s\S]*--iu-pd-card:\s*#182235/.test(css), "vars");
   ok("css_evening_axis", /html\.iu-time-evening\s+\.iuPrehledDne__axis::before/.test(css), "axis");
   ok("css_evening_card", /html\.iu-time-evening\s+\.iuPrehledDne__card/.test(css), "card");
-  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPdToggle/.test(css), "toggle");
-  ok("css_evening_toggle_active", /html\.iu-time-evening\s+\.iuPdToggle\.is-active/.test(css), "toggle active");
+  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdToggle/.test(css), "toggle");
+  ok("css_evening_toggle_active", /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdToggle\.is-active/.test(css), "toggle active");
   ok("css_light_card_default", /:root\s*\{[\s\S]*--iu-pd-card:\s*#ffffff/.test(css), "light card");
 
   ok("index_info_cards_evening", /html\.iu-time-evening[\s\S]{0,200}iu-info-cards-mobile-tablet[\s\S]{0,120}#iuSilverCalendarSummaryCard/.test(index), "info cards");

@@ -13,7 +13,7 @@ const CORE = path.join(ROOT, "assets", "iu-info-system-core-v1.js");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const INDEX = path.join(ROOT, "projects", "index.html");
-const CACHE_BUST = "feed-filter-redesign-v1-20260817";
+const CACHE_BUST = "evening-theme-settings-v1-20260818";
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -145,7 +145,7 @@ function staticGate() {
   ok("css_future_red", /\.is-futureWarning\s+\.iuPrehledDne__validFrom/.test(css) && /#dc2626/.test(css), "future red");
   ok("css_future_red_parts", /\.is-futureWarning\s+\.iuPrehledDne__validFromWord/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromDate/.test(css) && /\.is-futureWarning\s+\.iuPrehledDne__validFromTime/.test(css), "future red parts");
   ok("css_evening_timeline", /html\.iu-time-evening\s+\.iuPrehledDne__axis::before/.test(css), "evening axis");
-  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPdToggle/.test(css), "evening toggle");
+  ok("css_evening_toggle", /html\.iu-time-evening\s+\.iuPrehledDne\s+\.iuPdToggle/.test(css), "evening toggle");
   ok("css_evening_card", /html\.iu-time-evening\s+\.iuPrehledDne__card/.test(css), "evening card");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");

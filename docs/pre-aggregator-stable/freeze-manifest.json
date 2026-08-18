@@ -1,17 +1,17 @@
 {
-    "freezeId":  "feed-filter-redesign-v1-20260817",
+    "freezeId":  "evening-theme-settings-v1-20260818",
     "preStabilizationProductionSha":  "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt":  "2026-07-20T08:15:00Z",
-    "updatedAt":  "2026-08-17T07:40:00.000Z",
-    "note":  "Freeze bump: feed filter redesign (Doprava/CHMU) + SW cache + index cache bust.",
+    "updatedAt":  "2026-08-18T01:55:00.000Z",
+    "note":  "Freeze bump: evening theme settings isolation + SW cache + index cache bust.",
     "files":  {
-                  "projects/index.html":  "936c47bb1f27069397cb07a8fc9e42582a933260c43f74ff366d679523c2e8f2",
+                  "projects/index.html":  "8265e74e32885991243749365011eb8321d05ec90bbb10649945ed25ecd8e814",
                   "assets/app.css":  "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
                   "assets/app.js":  "e510a4cc10085f5cfcae9af8ba2859625f9aa0486addda95c8c29907c24ed844",
                   "assets/iu-silver-p0-engine.js":  "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
                   "assets/iu-pdf-convert-module.js":  "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
                   "assets/iu-invoice-pdf-legacy-export.js":  "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-                  "sw.js":  "e0b8cb50376e55f19db5a974e37d48f366386170b3b6719618de34955038f9f9",
+                  "sw.js":  "f71ed2ec799fbe986b5fd3dfb9fa9552191288ebcd62d4cf02b6febe711083dd",
                   "projects/version.json":  "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
                   "assets/iu-network-connectivity-v1.js":  "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
                   "assets/iu-article-chunk-loader.js":  "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,7 +23,7 @@
               },
     "requiredMarkers":  {
                             "sw.js":  [
-                                          "CACHE_VERSION = \"2026-08-17-feed-filter-redesign-v1\"",
+                                          "CACHE_VERSION = \"2026-08-18-evening-theme-settings-v1\"",
                                           "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
                                           "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
                                           "OFFLINE_DOC_CACHE",
@@ -34,7 +34,7 @@
                                                           "chmi-multibrowser-console-v1-20260731"
                                                       ],
                             "projects/index.html":  [
-                                                        "feed-filter-redesign-v1-20260817",
+                                                        "evening-theme-settings-v1-20260818",
                                                         "custom-buttons-dynamic-bottom-clearance-v1-20260804",
                                                         "bottom-nav-unify-v1-20260804",
                                                         "silver-speech-bubble-down-4px-v1-20260804"

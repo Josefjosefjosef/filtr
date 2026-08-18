@@ -116,7 +116,7 @@ function staticGate() {
   ok("css_size_80pct_math_d", Math.abs(67.2 - 84 * 0.8) < 0.001, "84*0.8");
 
   // Keep in lockstep with assets/iu-prehled-dne-ui-v1.js CACHE_BUST (CZ map + current PD UI).
-  const CACHE_BUST = "feed-filter-redesign-v1-20260817";
+  const CACHE_BUST = "evening-theme-settings-v1-20260818";
   ok("index_css_bust", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "css ver");
   ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "js ver");
   ok("ui_cache_bust", ui.includes('CACHE_BUST = "' + CACHE_BUST + '"') || ui.includes(CACHE_BUST), "ui ver");
