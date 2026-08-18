@@ -24,6 +24,7 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const APP = path.join(REPO, "assets", "app.js");
+const FEED = path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js");
 const UNIFIED = path.join(REPO, "assets", "iu-overlay-mobile-tablet-unified-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
 const SW = path.join(REPO, "sw.js");
@@ -34,7 +35,7 @@ let BASE = "";
 const CSS_BUST =
   "ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804";
 const JS_BUST_TOKEN = "bottom-nav-unify-v1-20260804";
-const SW_VER = "2026-08-18-evening-theme-settings-v1";
+const SW_VER = "2026-08-18-perf-stage3-feed-split-v1";
 /* Must match assets/app.js FOCUS_OPEN_GRACE_MS — do not change product grace. */
 const FOCUS_OPEN_GRACE_MS = 420;
 
@@ -44,7 +45,10 @@ const VIEWPORTS = [
 ];
 
 function staticGate() {
-  const app = fs.readFileSync(APP, "utf8");
+  const app = [
+    fs.readFileSync(APP, "utf8"),
+    fs.existsSync(FEED) ? fs.readFileSync(FEED, "utf8") : "",
+  ].join("\n");
   const unified = fs.readFileSync(UNIFIED, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");
   const sw = fs.readFileSync(SW, "utf8");

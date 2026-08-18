@@ -46,6 +46,10 @@ jobs:
       - run: node scripts/silver-stack-guard.js
       - name: Silver home prefix first-tap static contract
         run: npm run silver-home-prefix-first-tap-static-guard
+      - name: Perf stage-2 static contract
+        run: npm run iu-perf-stage2-static-guard
+      - name: Perf stage-3 static contract
+        run: npm run iu-perf-stage3-static-guard
       - run: node scripts/tall-preview-first-row-badge-guard.js
       - name: Silver summary + calendar accent UI proof
         run: node scripts/silver-summary-ui-proof.mjs

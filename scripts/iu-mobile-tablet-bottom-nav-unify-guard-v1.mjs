@@ -16,6 +16,8 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const APP = path.join(REPO, "assets", "app.js");
+const SHELL = path.join(REPO, "assets", "iu-mobile-bottom-nav-shell-v1.js");
+const FEED = path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js");
 const LDP = path.join(REPO, "assets", "iu-local-data-protection.js");
 const RESTORE = path.join(REPO, "assets", "iu-mindmenu-bottom-nav-restore-v1.css");
 const INDEX = path.join(REPO, "projects", "index.html");
@@ -32,7 +34,11 @@ const VIEWPORTS = [
 ];
 
 function staticGate() {
-  const app = fs.readFileSync(APP, "utf8");
+  const app = [
+    fs.readFileSync(APP, "utf8"),
+    fs.existsSync(SHELL) ? fs.readFileSync(SHELL, "utf8") : "",
+    fs.existsSync(FEED) ? fs.readFileSync(FEED, "utf8") : "",
+  ].join("\n");
   const ldp = fs.readFileSync(LDP, "utf8");
   const restore = fs.readFileSync(RESTORE, "utf8");
   const index = fs.readFileSync(INDEX, "utf8");

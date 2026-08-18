@@ -82,7 +82,7 @@ function staticGate() {
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   must(/iu-prehled-dne-/.test(sw) && /network-first/i.test(sw), "sw:prehled_network_first");
   must(
-    /2026-08-18-evening-theme-settings-v1|2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
+    /2026-08-18-perf-stage3-feed-split-v1|2026-08-18-evening-theme-settings-v1|2026-08-17-feed-filter-redesign-v1|2026-08-16-impassable-lane-exit-primary-v1|2026-08-16-closure-accident-diversion-exit-v1|2026-08-15-multi-road-closure-named-event-v1|2026-08-09-heavy-feed-shell-first-v1/.test(
       sw
     ),
     "sw:cache_version_bump"
