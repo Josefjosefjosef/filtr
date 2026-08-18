@@ -120,7 +120,8 @@ if (!/iu-silver-parcel-dashboard\.css/.test(html)) {
 }
 
 const appJsPath = path.join(ROOT, "assets", "app.js");
-const appJsGuard = fs.readFileSync(appJsPath, "utf8");
+const { readAppRuntimeSrc } = require("./guards/iu-app-runtime-src.cjs");
+const appJsGuard = readAppRuntimeSrc(ROOT);
 
 if (!/function\s+iuLegacyHomeCardsEnsureShell/.test(appJsGuard) || !/function\s+iuLegacyHomeCardsWanted/.test(appJsGuard)) {
   fail("❌ assets/app.js must define iuLegacyHomeCardsEnsureShell + iuLegacyHomeCardsWanted (cutover: no static HomeCards)");
