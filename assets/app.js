@@ -12042,7 +12042,9 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
   function isCalTrigger(el) {
     try {
       if (!el || typeof el.closest !== "function") return null;
-      return el.closest("[data-iu-calendar-trigger], .iu-mmTopTool--cal");
+      return el.closest(
+        "[data-iu-calendar-trigger], .iu-mmTopTool--cal, #iuHeroQuickCal, [data-iu-hero-quick=\"cal\"]"
+      );
     } catch (_) {
       return null;
     }
