@@ -2,7 +2,7 @@
 /**
  * Cross-browser feature detection + fallback markers (pre-aggregator stable).
  * Static checks always; Chromium runtime when Playwright available.
- * Firefox/WebKit: SKIP if browser binary missing (reported, not FAIL).
+ * Firefox/WebKit: SKIP if binary missing or host libs unavailable (reported, not FAIL).
  *
  * Run: npm run iu-pre-aggregator-cross-browser-feature-guard
  */
