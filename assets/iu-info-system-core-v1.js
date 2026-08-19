@@ -277,27 +277,18 @@ function eventSortAt(ev) {
 /** Small JSON only — safe to await before first interactive settings paint. */
 async function loadInfoSystemShellData(opts) {
   const o = opts || {};
-  let manifest = null;
-  let metadata = null;
-  try {
-    manifest = await fetchJson(iuInfoDataUrl("manifest.json"));
-  } catch (_) {
-    manifest = null;
-  }
-  try {
-    metadata = await fetchJson(iuInfoDataUrl("metadata.json"));
-  } catch (_) {
-    metadata = null;
-  }
+  /* Perf-loop iter-001: fetch all shell JSON in parallel (was sequential manifest→metadata→rest). */
   const settled = await Promise.all([
+    fetchJson(iuInfoDataUrl("manifest.json")).catch(() => null),
+    fetchJson(iuInfoDataUrl("metadata.json")).catch(() => null),
     fetchJson(iuInfoDataUrl("taxonomy.json")).catch(() => null),
     fetchJson(iuInfoDataUrl("source_registry.json")).catch(() => null),
   ]);
   return {
-    taxonomy: settled[0],
-    registry: settled[1],
-    metadata,
-    manifest,
+    manifest: settled[0],
+    metadata: settled[1],
+    taxonomy: settled[2],
+    registry: settled[3],
     feed: { items: [], itemCount: 0, shellOnly: true },
     loadedAt: new Date().toISOString(),
     feedLoad: {
@@ -356,14 +347,23 @@ async function loadInfoSystemFeedOnly(opts) {
 async function loadInfoSystemData(opts) {
   const o = opts || {};
   if (o.shellOnly === true) return loadInfoSystemShellData(o);
-  const shell = await loadInfoSystemShellData(o);
-  if (o.skipFeed === true) return shell;
-  const feed = await loadInfoSystemFeedOnly({
+  if (o.skipFeed === true) return loadInfoSystemShellData(o);
+  /* Perf-loop iter-001: start feed fetch before awaiting shell (default path needs no manifest). */
+  const feedPromise = loadInfoSystemFeedOnly({
     signal: o.signal,
     omitFeedSourceIds: o.omitFeedSourceIds,
     lanes: o.lanes,
-    manifest: shell.manifest,
+    manifest: o.manifest || null,
   });
+  const shell = await loadInfoSystemShellData(o);
+  const feed = await (o.lanes && o.lanes.length
+    ? loadInfoSystemFeedOnly({
+        signal: o.signal,
+        omitFeedSourceIds: o.omitFeedSourceIds,
+        lanes: o.lanes,
+        manifest: shell.manifest,
+      })
+    : feedPromise);
   return {
     taxonomy: shell.taxonomy,
     registry: shell.registry,
