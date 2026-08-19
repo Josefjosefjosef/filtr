@@ -12421,7 +12421,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (!t || !t.closest) return false;
       /* Narrow: do not prefetch on whole Silver slot (weather/cards) — that pulls 1.55MB during Lighthouse. */
       if (t.closest(SILVER_P0_PREFETCH_SEL)) return true;
-      if (t.closest("#iuHeroQuickCal, #iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
+      /* Stage 8: hero Calendar opens via calendar overlay chunk (isCalTrigger), not Silver P0 engine.
+         Prefetching Silver here races the ~142KB calendar chunk with ~1.55MB engine on 3G. */
+      if (t.closest("#iuHeroQuickCal, [data-iu-hero-quick=\"cal\"]")) return false;
+      if (t.closest("#iuHeroQuickTasks, #iuHeroQuickNotes, [data-iu-silver-open-chat]")) return true;
       return false;
     } catch (_) {
       return false;
