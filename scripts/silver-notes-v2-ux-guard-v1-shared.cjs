@@ -105,9 +105,12 @@ async function dismissNotesConfirm(page) {
 }
 
 async function openNotesOverlay(page) {
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureNotesOverlay === "function") {
+      await window.__iuEnsureNotesOverlay();
+    }
     if (window.iuNotesService && typeof window.iuNotesService.openOverlay === "function") {
-      window.iuNotesService.openOverlay();
+      await window.iuNotesService.openOverlay();
     }
   });
   await page.waitForFunction(() => {

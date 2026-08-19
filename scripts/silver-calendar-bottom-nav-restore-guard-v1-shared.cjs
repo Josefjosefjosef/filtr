@@ -209,9 +209,12 @@ async function openTasksForCompare(page) {
 }
 
 async function openNotesForCompare(page) {
-  await page.evaluate(() => {
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureNotesOverlay === "function") {
+      await window.__iuEnsureNotesOverlay();
+    }
     if (window.iuNotesService && typeof window.iuNotesService.openOverlay === "function") {
-      window.iuNotesService.openOverlay();
+      await window.iuNotesService.openOverlay();
       return;
     }
     const btn = document.getElementById("iuHeroQuickNotes");

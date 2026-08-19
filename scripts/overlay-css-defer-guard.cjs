@@ -203,11 +203,18 @@ async function runViewport(browser, vp, baseUrl) {
   }
 
   await overlayCycle(
-    () => { window.iuNotesService.openOverlay(); },
+    async () => {
+      if (typeof window.__iuEnsureNotesOverlay === "function") await window.__iuEnsureNotesOverlay();
+      window.iuNotesService.openOverlay();
+    },
     null,
     "#iuNotesOverlay",
     "notes",
-    () => { window.iuNotesService.closeOverlay(); }
+    async () => {
+      if (window.iuNotesService && typeof window.iuNotesService.closeOverlay === "function") {
+        await window.iuNotesService.closeOverlay();
+      }
+    }
   );
 
   await overlayCycle(

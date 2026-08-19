@@ -53,6 +53,11 @@ async function preparePage(page) {
     } catch (_) {}
   });
   await page.goto(BASE, { waitUntil: "networkidle", timeout: 90000 });
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureNotesOverlay === "function") {
+      await window.__iuEnsureNotesOverlay();
+    }
+  });
   await page.waitForFunction(() => {
     return (
       window.iuNotesStorage &&
@@ -155,7 +160,12 @@ async function testUnifiedFormUi(page, vp) {
     ? BASE + "&iuInfoSystem=off&nosw=1"
     : BASE + "?iuInfoSystem=off&nosw=1";
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
-  await page.waitForFunction(() => typeof window.iuNotesService?.openOverlay === "function", null, { timeout: 60000 });
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureNotesOverlay === "function") {
+      await window.__iuEnsureNotesOverlay();
+    }
+  });
+  await page.waitForFunction(() => typeof window.iuNotesService?.openOverlay === "function" && !window.iuNotesService.__iuNotesLazyStub, null, { timeout: 60000 });
   await page.evaluate(() => {
     if (window.iuNotesService && typeof window.iuNotesService.openOverlay === "function") {
       window.iuNotesService.openOverlay();
