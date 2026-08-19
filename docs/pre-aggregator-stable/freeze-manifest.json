@@ -1,13 +1,13 @@
 {
-    "freezeId":  "perf-stage7-calendar-hero-prefetch-v1-20260819",
+    "freezeId":  "perf-stage8-cal-no-silver-prefetch-v1-20260819",
     "preStabilizationProductionSha":  "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt":  "2026-07-20T08:15:00Z",
-    "updatedAt":  "2026-08-19T19:30:00.000Z",
-    "note":  "Freeze bump: stage-7 calendar hero pointerdown prefetch (isCalTrigger includes #iuHeroQuickCal). No new chunk/SW bump; app.js + index.html cache bust append only.",
+    "updatedAt":  "2026-08-19T21:50:00.000Z",
+    "note":  "Freeze bump: stage-8 hero Calendar must not prefetch Silver P0 engine (shouldPrefetch returns false for #iuHeroQuickCal). Stage-7 calendar pointerdown prefetch kept. No new chunk/SW bump; app.js + index.html cache bust append only.",
     "files":  {
-                  "projects/index.html":  "08e7d4277f294fd0bf3fc66724055f25a69053bd44d3e5756834c5b898cf1100",
+                  "projects/index.html":  "842f497f3b517ebb471ddb87c4f2b9de871f46bd31ccd53bec1d72e332792a47",
                   "assets/app.css":  "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
-                  "assets/app.js":  "c87fb391e7a46677161c1576c393fb0e0cf6001d6f15a4196b8a3bb87fab00b3",
+                  "assets/app.js":  "2551caa2db7193b3744aa5dfc981fd475157889b3c1ec03f19e3cef331b54f72",
                   "assets/iu-mobile-bottom-nav-shell-v1.js":  "e79259abd18c9005ec8d1931d17cd0e6fa91dcb1ab0b8207e2516178b112daba",
                   "assets/iu-app-feed-pipeline-v1.js":  "e35519bc8dae396522284f00384b8ee22e60132ced1eea687cc60e3c8bac6d5c",
                   "assets/iu-calendar-overlay-v1.js":  "606370c0d61aa941a5637bde64bf4380355b0164096768b64d6582ff47a4054e",
@@ -38,6 +38,7 @@
                                                           "chmi-multibrowser-console-v1-20260731"
                                                       ],
                             "projects/index.html":  [
+                                                        "perf-stage8-cal-no-silver-prefetch-v1-20260819",
                                                         "perf-stage7-calendar-hero-prefetch-v1-20260819",
                                                         "perf-stage5-notes-v1-20260819",
                                                         "perf-stage4-calendar-v1-20260818",
