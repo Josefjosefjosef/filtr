@@ -724,12 +724,9 @@ jobs:
         timeout-minutes: 25
         env:
           IU_DATETIME_GUARD_FAST: "1"
-        run: |
-          # WebKit needs OS libs that ubuntu-latest does not ship (unlike Chromium).
-          # Binary-only install fails host validation; --with-deps is required here.
-          # Main chromium step stays without --with-deps to avoid duplicate apt hangs.
-          node node_modules/playwright/cli.js install --with-deps webkit
-          npm run iu-datetime-real-route-geometry-guard-checkout
+          # apt --with-deps webkit hangs on GitHub-hosted runners; Chromium geometry is required.
+          IU_DATETIME_GUARD_SKIP_WEBKIT: "1"
+        run: npm run iu-datetime-real-route-geometry-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
