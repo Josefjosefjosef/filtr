@@ -21,7 +21,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: smoke-${{ github.event.pull_request.number || github.ref }}
+  # Unify PR + branch-push so only one smoke runs for the same head branch
+  # (push uses ref_name; pull_request uses head_ref). Prevents duplicate apt/playwright races.
+  group: smoke-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -723,9 +725,10 @@ jobs:
         env:
           IU_DATETIME_GUARD_FAST: "1"
         run: |
-          # Avoid --with-deps (apt hang on GitHub-hosted). Chromium deps already present;
-          # WebKit binary-only install is enough for this guard.
-          node node_modules/playwright/cli.js install webkit
+          # WebKit needs OS libs that ubuntu-latest does not ship (unlike Chromium).
+          # Binary-only install fails host validation; --with-deps is required here.
+          # Main chromium step stays without --with-deps to avoid duplicate apt hangs.
+          node node_modules/playwright/cli.js install --with-deps webkit
           npm run iu-datetime-real-route-geometry-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
