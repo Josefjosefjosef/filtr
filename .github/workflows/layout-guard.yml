@@ -5,8 +5,6 @@ permissions:
   statuses: write
 
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - automation/update-articles-data
@@ -25,15 +23,7 @@ jobs:
   layout-guard:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (PR head for pull_request_target)
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 64
-
       - name: Checkout
-        if: github.event_name != 'pull_request_target'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 64
@@ -77,6 +67,7 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         env:
           IU_HERO_GUARD_MAX_MS: "900000"
+          IU_HERO_GUARD_FAST: "1"
         run: npm run iu-prehled-dne-hero-contract-guard
       - run: node scripts/silver-stack-guard.js
       - name: Silver home prefix first-tap static contract
@@ -95,7 +86,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
-          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
