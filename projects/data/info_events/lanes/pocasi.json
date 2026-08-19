@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
   "lane": "pocasi",
-  "generatedAt": "2026-08-19T21:52:34.591Z",
+  "generatedAt": "2026-08-19T22:02:10.931Z",
   "itemCount": 5,
   "items": [
     {
@@ -1234,8 +1234,8 @@
       "sectionId": "pocasi",
       "subsectionId": "vystrahy",
       "eventType": "mimoradne",
-      "status": "naplanovano",
-      "lifecycle": "naplanovano",
+      "status": "aktivni",
+      "lifecycle": "prave-probihajici",
       "publishable": true,
       "untilRevoked": false,
       "importance": 3,
@@ -1460,9 +1460,9 @@
         "severity": "Moderate",
         "urgency": "Future",
         "certainty": "Likely",
-        "badgeActive": false,
-        "temporalState": "scheduled",
-        "temporalReason": "before_validFrom",
+        "badgeActive": true,
+        "temporalState": "active",
+        "temporalReason": "in_force",
         "publishable": true,
         "untilRevoked": false,
         "openEnded": false,
