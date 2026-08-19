@@ -47,6 +47,7 @@ must(/rel="modulepreload"/.test(index) && /iu-prehled-dne-ui-v1\.js/.test(index)
 must(/function openOverlay\(originEl\)\{\s*try \{ ensureStyles\(\); \}/.test(runtime), "app:calendar_styles_on_open");
 must(/P1 perf: do not inject calendar CSS/.test(runtime), "app:calendar_init_no_boot_css");
 must(/function iuBootCalendarOverlayLazy/.test(app), "app:calendar_lazy_boot");
+must(/function iuBootNotesOverlayLazy/.test(app), "app:notes_lazy_boot");
 
 const files = walkJs(path.join(ROOT, "assets"));
 const byMod = new Map();

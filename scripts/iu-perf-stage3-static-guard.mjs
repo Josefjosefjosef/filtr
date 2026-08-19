@@ -76,16 +76,24 @@ must(
 must(/iu-mobile-bottom-nav-shell-v1\.js/.test(sw), "sw:shell_in_graph");
 must(/iu-app-feed-pipeline-v1\.js/.test(sw), "sw:feed_in_graph");
 must(/iu-calendar-overlay-v1\.js/.test(sw), "sw:calendar_in_graph");
-must(/CACHE_VERSION = "2026-08-18-perf-stage4-calendar-v1"/.test(sw), "sw:cache_version");
+must(/iu-notes-overlay-v1\.js/.test(sw), "sw:notes_in_graph");
+must(/CACHE_VERSION = "2026-08-19-perf-stage5-notes-v1"/.test(sw), "sw:cache_version");
 must(/function iuBootCalendarOverlayLazy/.test(app), "app:lazy_calendar_boot");
 must(/window\.__iuEnsureCalendarOverlay/.test(app), "app:ensure_calendar_hook");
 must(/iu-calendar-overlay-v1\.js\?v=perf-stage4-calendar-v1-20260818/.test(app), "app:calendar_cache_bust");
+must(/function iuBootNotesOverlayLazy/.test(app), "app:lazy_notes_boot");
+must(/window\.__iuEnsureNotesOverlay/.test(app), "app:ensure_notes_hook");
+must(/iu-notes-overlay-v1\.js\?v=perf-stage5-notes-v1-20260819/.test(app), "app:notes_cache_bust");
 must(fs.existsSync(path.join(ROOT, "assets", "iu-calendar-overlay-v1.js")), "calendar:exists");
 must(/export function initIuCalendarOverlay/.test(read("assets/iu-calendar-overlay-v1.js")), "calendar:export_init");
 must(!/\/\/ === Calendar overlay module \(isolated, local-first, Silver API\) ===/.test(app), "app:no_inline_calendar_iife");
+must(fs.existsSync(path.join(ROOT, "assets", "iu-notes-overlay-v1.js")), "notes:exists");
+must(/export function initIuNotesOverlay/.test(read("assets/iu-notes-overlay-v1.js")), "notes:export_init");
+must(!/\/\/ === Notes overlay module \(local-first, Silver-ready storage contract\) ===/.test(app), "app:no_inline_notes_iife");
 must(/rel="modulepreload"[^>]+iu-mobile-bottom-nav-shell-v1\.js/.test(index), "index:shell_modulepreload");
 must(!/rel="modulepreload"[^>]+iu-app-feed-pipeline-v1/.test(index), "index:no_feed_preload_head");
 must(!/rel="modulepreload"[^>]+iu-calendar-overlay-v1/.test(index), "index:no_calendar_preload_head");
+must(!/rel="modulepreload"[^>]+iu-notes-overlay-v1/.test(index), "index:no_notes_preload_head");
 
 if (fails.length) {
   console.error("[iu-perf-stage3-static-guard] FAIL");

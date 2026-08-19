@@ -163,7 +163,12 @@ async function runViewport(browser, vp, baseUrl) {
   const domLoad = s0.domTotal;
 
   // ---- NOTES: open -> close -> reopen (public service path = same openOverlay used by triggers)
-  await page.evaluate(() => { window.iuNotesService.openOverlay(); });
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureNotesOverlay === "function") {
+      await window.__iuEnsureNotesOverlay();
+    }
+    window.iuNotesService.openOverlay();
+  });
   await page.waitForTimeout(600);
   let s = await overlayState(page);
   const notesUx = await page.evaluate(() => {
