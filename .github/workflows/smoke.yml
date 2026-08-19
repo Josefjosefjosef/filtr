@@ -20,6 +20,10 @@ on:
       - "fix/**"
   workflow_dispatch:
 
+concurrency:
+  group: smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   smoke:
     runs-on: ubuntu-latest
@@ -57,6 +61,13 @@ jobs:
       - name: Silver calendar.create regression
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run silver-regression
+
+      - name: Cache Playwright browser
+        if: steps.scope.outputs.data_only != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browsers
         if: steps.scope.outputs.data_only != 'true'
@@ -759,23 +770,10 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
-          STATE="success"
-          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
-          SHA="${GITHUB_SHA}"
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            SHA="${{ github.event.pull_request.head.sha }}"
-          fi
-          for attempt in 1 2 3 4 5 6; do
-            if gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
-              -f state="$STATE" \
-              -f context="smoke" \
-              -f description="Required status context (smoke)" \
-              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; then
-              exit 0
-            fi
-            echo "status_post_retry=$attempt"
-            sleep $((attempt * 5))
-          done
-          exit 1
+          chmod +x scripts/ci/post-required-status.sh
+          scripts/ci/post-required-status.sh smoke
