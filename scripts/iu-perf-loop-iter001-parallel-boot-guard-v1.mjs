@@ -29,6 +29,12 @@ must(
 );
 must(/Promise\.resolve\(trafficPromise\)/.test(ui), "ui:uses_early_traffic_promise");
 must(/perf-loop-iter001-parallel-boot-v1-20260819/.test(index), "index:cache_bust");
+must(
+  /iu-info-system-core-v1\.js\?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819/.test(
+    fs.readFileSync(path.join(ROOT, "assets", "iu-traffic-overview-v1.js"), "utf8")
+  ),
+  "traffic_overview:core_cache_bust_unified"
+);
 
 if (fails.length) {
   console.error("[iu-perf-loop-iter001-parallel-boot-guard] FAIL");
