@@ -723,7 +723,9 @@ jobs:
         env:
           IU_DATETIME_GUARD_FAST: "1"
         run: |
-          node node_modules/playwright/cli.js install --with-deps webkit
+          # Avoid --with-deps (apt hang on GitHub-hosted). Chromium deps already present;
+          # WebKit binary-only install is enough for this guard.
+          node node_modules/playwright/cli.js install webkit
           npm run iu-datetime-real-route-geometry-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
