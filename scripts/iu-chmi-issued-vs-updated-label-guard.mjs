@@ -9,6 +9,7 @@ import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 import crypto from "node:crypto";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -137,7 +138,7 @@ ok("ui_parses_both", /Vydáno\|Aktualizováno/.test(ui), "ui regex");
 ok("css_timeCol_wider", /88px/.test(css), "timeCol");
 ok("css_issued_wrap", /\.iuPrehledDne__issued[\s\S]*overflow-wrap:\s*anywhere/.test(css), "wrap");
 ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
-ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust js");
+ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "bust js");
 ok("bust_index_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "bust css");
 
 const nowActive = Date.parse("2026-07-31T12:00:00+02:00");

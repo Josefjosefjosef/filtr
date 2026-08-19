@@ -2,7 +2,7 @@
 /**
  * Cross-browser feature detection + fallback markers (pre-aggregator stable).
  * Static checks always; Chromium runtime when Playwright available.
- * Firefox/WebKit: SKIP if browser binary missing (reported, not FAIL).
+ * Firefox/WebKit: SKIP if binary missing or host libs unavailable (reported, not FAIL).
  *
  * Run: npm run iu-pre-aggregator-cross-browser-feature-guard
  */
@@ -97,7 +97,16 @@ async function probeBrowser(browserType, name) {
     return { name, ok, feat, skip: false };
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
-    if (/Executable doesn't exist|browserType\.launch|Firefox|WebKit/i.test(msg) && /Executable doesn't exist/i.test(msg)) {
+    // Chromium is required on CI (layout-guard installs it). Firefox/WebKit are optional:
+    // missing binary OR missing host libs (partial cache without --with-deps) → SKIP, not FAIL.
+    const optionalBrowser = name === "firefox" || name === "webkit";
+    const missingOrUnusable =
+      /Executable doesn't exist/i.test(msg) ||
+      /Host system is missing dependencies/i.test(msg) ||
+      /Missing libraries/i.test(msg) ||
+      /Target page, context or browser has been closed/i.test(msg) ||
+      /browserType\.launch/i.test(msg);
+    if (optionalBrowser && missingOrUnusable) {
       console.log(`[xbrowser] ${name} SKIP=${msg.slice(0, 120)}`);
       return { name, ok: true, skip: true, reason: msg.slice(0, 200) };
     }

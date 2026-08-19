@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -130,7 +131,7 @@ function staticGate() {
   ok("parcel_evening_btn", /html\.iu-time-evening[\s\S]{0,120}iuSilverParcelWatch__btnPrimary/.test(parcel), "parcel btn");
 
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
-  ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust js");
+  ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "bust js");
   ok("bust_index_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "bust css");
 }
 

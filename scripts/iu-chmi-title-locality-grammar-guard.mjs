@@ -14,6 +14,7 @@ import {
   refreshItemLocalityPresentation,
 } from "./chmi-cap-v2/normalize-feed.mjs";
 import { IU_SW_CACHE_VERSION_CURRENT } from "./guards/iu-sw-cache-version-allowlist.mjs";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -80,7 +81,7 @@ const geoSrc = fs.readFileSync(GEO, "utf8");
 const normSrc = fs.readFileSync(NORM, "utf8");
 
 ok("bust_ui_import", ui.includes("iu-info-system-core-v1.js?v=" + CACHE_BUST), "ui import");
-ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index js");
+ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "index js");
 ok("bust_index_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index css");
 ok("sw_version", sw.includes(SW_VER), "sw");
 ok("geo_dedupe_seenOrp", /seenOrp/.test(geoSrc), "geo");

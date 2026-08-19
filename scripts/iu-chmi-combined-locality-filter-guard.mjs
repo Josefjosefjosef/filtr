@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -104,7 +105,7 @@ function staticGate() {
   ok("ui_order_preserve_cities", /desiredByKey/.test(ui), "city order");
   ok("ui_order_preserve_loc", /wantedKeys/.test(ui), "loc order");
   ok("bust_ui", ui.includes(CACHE_BUST), "ui");
-  ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index");
+  ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "index");
 }
 
 function unitGate(IU) {

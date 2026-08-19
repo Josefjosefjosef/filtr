@@ -21,7 +21,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: smoke-${{ github.event.pull_request.number || github.ref }}
+  # Unify PR + branch-push so only one smoke runs for the same head branch
+  # (push uses ref_name; pull_request uses head_ref). Prevents duplicate apt/playwright races.
+  group: smoke-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -411,6 +413,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-traffic-card-actions-right-align-guard
 
+      - name: Traffic follow/hide local patch guard (no full feed paint)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-traffic-follow-local-patch-guard
+
       - name: NDIC DATEX v1 exposure guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-ndic-datex-v1-exposure-guard
@@ -718,9 +724,9 @@ jobs:
         timeout-minutes: 25
         env:
           IU_DATETIME_GUARD_FAST: "1"
-        run: |
-          node node_modules/playwright/cli.js install --with-deps webkit
-          npm run iu-datetime-real-route-geometry-guard-checkout
+          # apt --with-deps webkit hangs on GitHub-hosted runners; Chromium geometry is required.
+          IU_DATETIME_GUARD_SKIP_WEBKIT: "1"
+        run: npm run iu-datetime-real-route-geometry-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

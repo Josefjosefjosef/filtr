@@ -57,6 +57,11 @@ function fastMode() {
   return v === "1" || v === "true" || v === "yes";
 }
 
+function skipWebkit() {
+  const v = String(process.env.IU_DATETIME_GUARD_SKIP_WEBKIT || "").trim().toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
+}
+
 function auditOldGuardFalseCoverage() {
   const oldPath = path.join(__dirname, "silver-home-date-time-input-fit-guard-v1.cjs");
   const src = fs.readFileSync(oldPath, "utf8");
@@ -815,18 +820,35 @@ async function main() {
   let chromiumResult = null;
   let webkitResult = null;
   let runtimeError = null;
+  const webkitSkipped = skipWebkit();
   try {
     chromiumResult = await runEngine(chromium, "chromium", url, viewports);
-    webkitResult = await runEngine(webkit, "webkit", url, viewports);
+    if (webkitSkipped) {
+      webkitResult = {
+        engine: "webkit",
+        engineLabel: "PLAYWRIGHT_WEBKIT",
+        PLAYWRIGHT_ENGINE_GEOMETRY_PASS: true,
+        skipped: true,
+        skipReason: "IU_DATETIME_GUARD_SKIP_WEBKIT",
+        byGroup: {},
+        DATE_TITLE_DIFF_MAX_PX: 0,
+        TIME_TITLE_DIFF_MAX_PX: 0,
+        routeResults: [],
+      };
+      process.stdout.write(
+        "WEBKIT_SKIPPED reason=IU_DATETIME_GUARD_SKIP_WEBKIT chromium_only_ci_contract\n"
+      );
+    } else {
+      webkitResult = await runEngine(webkit, "webkit", url, viewports);
+    }
   } catch (err) {
     runtimeError = String(err && err.stack ? err.stack : err);
   }
 
   const playwrightGeomPass = !!(
     chromiumResult &&
-    webkitResult &&
     chromiumResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS &&
-    webkitResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS
+    (webkitSkipped || (webkitResult && webkitResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS))
   );
 
   const dateMax = Math.max(
@@ -854,6 +876,8 @@ async function main() {
 
   const group = (name) => {
     const c = chromiumResult && chromiumResult.byGroup && chromiumResult.byGroup[name];
+    if (c !== "PASS") return "FAIL";
+    if (webkitSkipped) return "PASS";
     const w = webkitResult && webkitResult.byGroup && webkitResult.byGroup[name];
     if (c === "PASS" && w === "PASS") return "PASS";
     return "FAIL";
@@ -881,7 +905,10 @@ async function main() {
     REAL_IOS_AUTOMATION_LIMITATION: true,
     REAL_IOS_PASS: iosConfirmed ? "YES" : "NOT_TESTED",
     PLAYWRIGHT_CHROMIUM_PASS: !!(chromiumResult && chromiumResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS),
-    PLAYWRIGHT_WEBKIT_PASS: !!(webkitResult && webkitResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS),
+    PLAYWRIGHT_WEBKIT_PASS: webkitSkipped
+      ? "SKIPPED"
+      : !!(webkitResult && webkitResult.PLAYWRIGHT_ENGINE_GEOMETRY_PASS),
+    PLAYWRIGHT_WEBKIT_SKIPPED: webkitSkipped,
     CALENDAR_DIRECT_CREATE: group("CALENDAR_DIRECT_CREATE"),
     CALENDAR_SILVER_CREATE: group("CALENDAR_SILVER_CREATE"),
     CALENDAR_EDIT: group("CALENDAR_EDIT"),

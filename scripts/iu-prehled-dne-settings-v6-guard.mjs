@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -123,7 +124,7 @@ function staticGate() {
   must(/feedFilter/.test(core), "core:preserves_feedFilter");
 
   must(index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index:css_cache_bust");
-  must(index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index:js_cache_bust");
+  must(index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "index:js_cache_bust");
   must(/infouzel-prehled-dne-banner\.png/.test(ui), "ui:banner_asset");
   must(/data-iu-pd-banner=\"1\"/.test(ui), "ui:banner_marker");
   must(/infouzel-prehled-dne-banner\.png/.test(index), "index:banner_asset");

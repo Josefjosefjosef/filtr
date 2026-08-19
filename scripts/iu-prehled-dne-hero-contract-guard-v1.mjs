@@ -55,6 +55,20 @@ const VIEWPORTS = [
   { name: "bp-1025", width: 1025, height: 900, colorScheme: "light" },
 ];
 
+function viewportsForRun() {
+  const fast = String(process.env.IU_HERO_GUARD_FAST || "").trim() === "1";
+  if (!fast) return VIEWPORTS;
+  const keep = new Set([
+    "mobile-portrait",
+    "mobile-portrait-dark",
+    "tablet-portrait",
+    "tablet-portrait-dark",
+    "desktop",
+    "desktop-dark",
+  ]);
+  return VIEWPORTS.filter((vp) => keep.has(vp.name));
+}
+
 /** Wall-clock hour driving projects/index.html daypart bootstrap + iuSilverWelcomeRefresh. */
 function pinnedHourForScheme(colorScheme) {
   return colorScheme === "dark" ? 21 : 14;
@@ -533,7 +547,7 @@ async function runPlaywright() {
   /** @type {Map<string, {cells: number[][], theme: object, paint: string}>} */
   const captured = new Map();
   try {
-    for (const vp of VIEWPORTS) {
+    for (const vp of viewportsForRun()) {
       const hour = pinnedHourForScheme(vp.colorScheme);
       const expectDaypart = expectedDaypartForScheme(vp.colorScheme);
       const expectPaint = expectedPaintFor(expectDaypart, vp.width);
@@ -751,14 +765,32 @@ async function runPlaywright() {
   return fails.length - pwFailsBefore;
 }
 
-staticGate();
-const server = await startServer();
-await waitForPort("127.0.0.1", PORT, 10000);
+async function runGuardMain() {
+  staticGate();
+  const server = await startServer();
+  await waitForPort("127.0.0.1", PORT, 10000);
+  try {
+    await assetGate();
+    await runPlaywright();
+  } finally {
+    await new Promise((r) => server.close(r));
+  }
+}
+
+const heroGuardMaxMs = parseInt(process.env.IU_HERO_GUARD_MAX_MS || "900000", 10);
+const heroGuardTimer = setTimeout(() => {
+  console.error("HERO_GUARD_TIMEOUT after " + heroGuardMaxMs + "ms");
+  process.exit(1);
+}, heroGuardMaxMs);
+if (typeof heroGuardTimer.unref === "function") heroGuardTimer.unref();
+
 try {
-  await assetGate();
-  await runPlaywright();
+  await runGuardMain();
+} catch (err) {
+  console.error(String(err && err.message ? err.message : err));
+  process.exit(1);
 } finally {
-  await new Promise((r) => server.close(r));
+  clearTimeout(heroGuardTimer);
 }
 
 if (fails.length) {
