@@ -62,6 +62,7 @@ function viewportsForRun() {
     "mobile-portrait",
     "mobile-portrait-dark",
     "tablet-portrait",
+    "tablet-portrait-dark",
     "desktop",
     "desktop-dark",
   ]);
