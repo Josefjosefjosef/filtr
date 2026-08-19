@@ -19,6 +19,10 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
+concurrency:
+  group: repo-guard-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   repo-guard:
     runs-on: ubuntu-latest
@@ -75,20 +79,10 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
-          STATE="success"
-          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
-          SHA="${GITHUB_SHA}"
-          for attempt in 1 2 3 4 5 6; do
-            if gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
-              -f state="$STATE" \
-              -f context="repo-guard" \
-              -f description="Required status context (repo-guard)" \
-              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; then
-              exit 0
-            fi
-            echo "status_post_retry=$attempt"
-            sleep $((attempt * 5))
-          done
-          exit 1
+          chmod +x scripts/ci/post-required-status.sh
+          scripts/ci/post-required-status.sh repo-guard

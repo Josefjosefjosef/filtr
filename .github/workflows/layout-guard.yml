@@ -17,6 +17,10 @@ on:
       - "fix/**"
   workflow_dispatch:
 
+concurrency:
+  group: layout-guard-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   layout-guard:
     runs-on: ubuntu-latest
@@ -34,8 +38,16 @@ jobs:
         with:
           node-version: "20"
       - run: npm ci
+      - name: Cache Playwright browser
+        id: pwcache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      # GitHub-hosted ubuntu images already include common Chromium deps; --with-deps
+      # has been observed to hang indefinitely on apt. Cache + install chromium only.
       - name: Install Playwright browsers
-        run: node node_modules/playwright/cli.js install --with-deps chromium
+        run: node node_modules/playwright/cli.js install chromium
       - run: node scripts/check_layout.js
       - name: Pre-aggregator UI freeze guard
         run: npm run iu-pre-aggregator-stable-freeze-guard
@@ -58,20 +70,10 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
-          STATE="success"
-          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
-          SHA="${GITHUB_SHA}"
-          for attempt in 1 2 3 4 5 6; do
-            if gh api --method POST "repos/${{ github.repository }}/statuses/${SHA}" \
-              -f state="$STATE" \
-              -f context="layout-guard" \
-              -f description="Required status context (layout-guard)" \
-              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; then
-              exit 0
-            fi
-            echo "status_post_retry=$attempt"
-            sleep $((attempt * 5))
-          done
-          exit 1
+          chmod +x scripts/ci/post-required-status.sh
+          scripts/ci/post-required-status.sh layout-guard
