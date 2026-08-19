@@ -12,6 +12,7 @@ import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "module";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -118,7 +119,7 @@ function staticGate() {
   // Keep in lockstep with assets/iu-prehled-dne-ui-v1.js CACHE_BUST (CZ map + current PD UI).
   const CACHE_BUST = "evening-theme-settings-v1-20260818";
   ok("index_css_bust", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "css ver");
-  ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "js ver");
+  ok("index_js_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "js ver");
   ok("ui_cache_bust", ui.includes('CACHE_BUST = "' + CACHE_BUST + '"') || ui.includes(CACHE_BUST), "ui ver");
   ok(
     "css_map_scoped_to_chmi_card",

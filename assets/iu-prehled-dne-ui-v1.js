@@ -88,7 +88,7 @@ import {
 } from "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "evening-theme-settings-v1-20260818";
+const CACHE_BUST = "perf-stage6-traffic-follow-local-v1-20260819";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
@@ -2239,6 +2239,102 @@ async function ensureLocalities() {
   return state.localitiesCache;
 }
 
+function patchTrafficFollowButton(btn, followed) {
+  if (!btn) return;
+  try {
+    btn.classList.toggle("is-on", !!followed);
+    btn.textContent = followed ? "Sleduji" : "Sledovat";
+  } catch (_) {}
+}
+
+function refreshFeedCountAndMore() {
+  const root = ensureRoot();
+  if (!root) return;
+  const list = filteredList();
+  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const count = root.querySelector("#iuPdCount");
+  if (count) count.textContent = `${list.length} položek · okno 96 h`;
+  const moreWrap = root.querySelector("#iuPdMoreWrap");
+  if (moreWrap) {
+    moreWrap.innerHTML =
+      pageItems.length < list.length
+        ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
+        : "";
+  }
+  const feed = root.querySelector("#iuPrehledDneTimeline");
+  if (!feed) return;
+  const cards = feed.querySelectorAll("li.iuPdCard, li.iuPrehledDne__item");
+  if (!cards.length) {
+    const feedHydrated = !!(state.data && state.data.feed && Array.isArray(state.data.feed.items));
+    const ff = ensureFeedFilter(effectivePrefs());
+    const trafficPending =
+      TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
+      ff.trafficEnabled !== false &&
+      !state.trafficSnapSettled;
+    feed.innerHTML =
+      feedHydrated && !trafficPending
+        ? `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`
+        : `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`;
+    feed.classList.remove("iuPdFeed--trafficPad");
+    return;
+  }
+  let hasTraffic = false;
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i].getAttribute("data-iu-traffic") === "1") {
+      hasTraffic = true;
+      break;
+    }
+  }
+  feed.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
+}
+
+function syncFeedCardsAfterMembershipChange() {
+  const root = ensureRoot();
+  if (!root) return;
+  const feed = root.querySelector("#iuPrehledDneTimeline");
+  if (!feed) {
+    paint();
+    wire();
+    return;
+  }
+  const list = filteredList();
+  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const wantedSet = new Set();
+  for (let i = 0; i < pageItems.length; i++) {
+    const id = String((pageItems[i] && pageItems[i].id) || "");
+    if (id) wantedSet.add(id);
+  }
+  const existing = feed.querySelectorAll("li[data-id]");
+  for (let i = existing.length - 1; i >= 0; i--) {
+    const id = String(existing[i].getAttribute("data-id") || "");
+    if (!wantedSet.has(id)) existing[i].remove();
+  }
+  const have = new Set();
+  const left = feed.querySelectorAll("li[data-id]");
+  for (let i = 0; i < left.length; i++) have.add(String(left[i].getAttribute("data-id") || ""));
+  for (let i = 0; i < pageItems.length; i++) {
+    const id = String((pageItems[i] && pageItems[i].id) || "");
+    if (!id || have.has(id)) continue;
+    try {
+      feed.insertAdjacentHTML("beforeend", renderItem(pageItems[i]));
+      have.add(id);
+    } catch (_) {}
+  }
+  refreshFeedCountAndMore();
+}
+
+function applyLocalTrafficFollow(btn, peid, meta) {
+  const res = peid ? toggleTrafficFollow(peid, meta) : { ok: false, followed: false };
+  if (!res || !res.ok) return res;
+  const tf = state.trafficFilters || {};
+  if (tf.followedOnly && !res.followed) {
+    syncFeedCardsAfterMembershipChange();
+    return res;
+  }
+  patchTrafficFollowButton(btn, res.followed);
+  return res;
+}
+
 function wire() {
   const root = ensureRoot();
   if (!root) return;
@@ -2486,9 +2582,7 @@ function wire() {
         const tv = (item && item.trafficV1) || null;
         if (tv) meta = { road: tv.road || null, eventType: tv.eventType || tv.category || null };
       }
-      if (peid) toggleTrafficFollow(peid, meta);
-      paint();
-      wire();
+      applyLocalTrafficFollow(t, peid, meta);
       return;
     }
     if (act === "tf-filter") {
@@ -2514,14 +2608,12 @@ function wire() {
     }
     if (act === "hide") {
       hideItem(t.getAttribute("data-id"));
-      paint();
-      wire();
+      syncFeedCardsAfterMembershipChange();
       return;
     }
     if (act === "unhide") {
       unhideItem(t.getAttribute("data-id"));
-      paint();
-      wire();
+      syncFeedCardsAfterMembershipChange();
       return;
     }
     if (act === "city-add") {

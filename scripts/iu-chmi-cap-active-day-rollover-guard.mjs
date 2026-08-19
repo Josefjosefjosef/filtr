@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -149,7 +150,7 @@ function staticGate() {
   ok("css_evening_card", /html\.iu-time-evening\s+\.iuPrehledDne__card/.test(css), "evening card");
   ok("css_active", /\.iuPdCard__pill--active/.test(css), "css active");
   ok("bust_ui", ui.includes(CACHE_BUST), "bust ui");
-  ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust index");
+  ok("bust_index", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "bust index");
   ok("bust_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "bust css");
 }
 

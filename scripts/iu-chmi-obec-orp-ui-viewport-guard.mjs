@@ -9,6 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
@@ -90,7 +91,7 @@ function staticGate() {
   const index = fs.readFileSync(path.join(ROOT, "projects/index.html"), "utf8");
   ok("css_title_wrap", /\.iuPdCard__title[\s\S]{0,260}overflow-wrap:\s*anywhere/.test(css), "wrap");
   ok("ui_limit_msg", /Můžete vybrat maximálně 20 obcí/.test(ui), "msg");
-  ok("index_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "bust");
+  ok("index_bust", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "bust");
 }
 
 async function run() {

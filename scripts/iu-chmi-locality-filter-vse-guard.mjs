@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { readPrehledDneUiCacheBust } from "./guards/iu-prehled-dne-cache-bust.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -127,7 +128,7 @@ function staticGate() {
   ok("ui_future_sentence_class", /validFrom--futureSentence/.test(ui), "css class");
   ok("css_sentence", /validFrom--futureSentence/.test(css), "css");
   ok("bust_ui", ui.includes(CACHE_BUST), "ui bust");
-  ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + CACHE_BUST), "index js");
+  ok("bust_index_js", index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "index js");
   ok("bust_index_css", index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index css");
 }
 
