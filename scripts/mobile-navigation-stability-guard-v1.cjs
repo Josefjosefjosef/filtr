@@ -28,7 +28,7 @@ async function clickIfVisible(page, selector) {
 async function runGuard(baseUrl) {
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext();
-  await ctx.addInitScript(shared.clsInitScript());
+  await shared.installStabilityGuardContext(ctx);
   const results = [];
   try {
     for (const vp of shared.VIEWPORTS) {
@@ -42,6 +42,8 @@ async function runGuard(baseUrl) {
         });
         await shared.dismissGuardOverlays(page);
         await page.waitForTimeout(3600);
+        // LDP can re-open during idle settle; clear again so CLS measures real section taps.
+        await shared.dismissGuardOverlays(page);
 
         const transitions = [];
 
