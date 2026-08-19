@@ -751,14 +751,30 @@ async function runPlaywright() {
   return fails.length - pwFailsBefore;
 }
 
-staticGate();
-const server = await startServer();
-await waitForPort("127.0.0.1", PORT, 10000);
+async function runGuardMain() {
+  staticGate();
+  const server = await startServer();
+  await waitForPort("127.0.0.1", PORT, 10000);
+  try {
+    await assetGate();
+    await runPlaywright();
+  } finally {
+    await new Promise((r) => server.close(r));
+  }
+}
+
+const heroGuardMaxMs = parseInt(process.env.IU_HERO_GUARD_MAX_MS || "900000", 10);
+const heroGuardTimeout = new Promise((_, reject) => {
+  setTimeout(() => {
+    reject(new Error("HERO_GUARD_TIMEOUT after " + heroGuardMaxMs + "ms"));
+  }, heroGuardMaxMs);
+});
+
 try {
-  await assetGate();
-  await runPlaywright();
-} finally {
-  await new Promise((r) => server.close(r));
+  await Promise.race([runGuardMain(), heroGuardTimeout]);
+} catch (err) {
+  console.error(String(err && err.message ? err.message : err));
+  process.exit(1);
 }
 
 if (fails.length) {

@@ -30,10 +30,22 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 64
 
       - name: Checkout
         if: github.event_name != 'pull_request_target'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 64
+
+      - name: Detect data-only scope (layout fast path)
+        id: scope
+        env:
+          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+        run: node scripts/smoke-data-only-scope.mjs
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -53,7 +65,18 @@ jobs:
         run: npm run iu-pre-aggregator-stable-freeze-guard
       - name: Pre-aggregator cross-browser feature guard
         run: npm run iu-pre-aggregator-cross-browser-feature-guard
+
+      - name: Data-only layout fast path proof (skip Playwright hero when data-only)
+        if: steps.scope.outputs.data_only == 'true'
+        run: |
+          set -euo pipefail
+          node scripts/smoke_data_only_scope_proof.mjs
+          echo "LAYOUT_HERO_GUARD_SKIPPED=DATA_ONLY_FAST_PATH"
+
       - name: Prehled dne hero contract guard (banner+CTA seam/radius/visibility)
+        if: steps.scope.outputs.data_only != 'true'
+        env:
+          IU_HERO_GUARD_MAX_MS: "900000"
         run: npm run iu-prehled-dne-hero-contract-guard
       - run: node scripts/silver-stack-guard.js
       - name: Silver home prefix first-tap static contract
@@ -64,6 +87,7 @@ jobs:
         run: npm run iu-perf-stage3-static-guard
       - run: node scripts/tall-preview-first-row-badge-guard.js
       - name: Silver summary + calendar accent UI proof
+        if: steps.scope.outputs.data_only != 'true'
         run: node scripts/silver-summary-ui-proof.mjs
 
       - name: Set required status context (layout-guard)
