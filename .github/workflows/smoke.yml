@@ -64,14 +64,16 @@ jobs:
 
       - name: Cache Playwright browser
         if: steps.scope.outputs.data_only != 'true'
+        id: pwcache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
+      # Avoid --with-deps on GitHub-hosted runners (apt hang). Browser binary via cache/install.
       - name: Install Playwright browsers
         if: steps.scope.outputs.data_only != 'true'
-        run: node node_modules/playwright/cli.js install --with-deps chromium
+        run: node node_modules/playwright/cli.js install chromium
 
       - name: Ensure playwright bin executable (fallback)
         if: steps.scope.outputs.data_only != 'true'
