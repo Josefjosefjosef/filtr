@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: repo-guard-${{ github.event.pull_request.number || github.ref }}
+  group: repo-guard-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
