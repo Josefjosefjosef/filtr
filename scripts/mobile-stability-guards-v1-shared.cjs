@@ -139,6 +139,17 @@ async function preparePage(page) {
   }
 }
 
+async function installStabilityGuardContext(context) {
+  if (!context || typeof context.addInitScript !== "function") return;
+  await context.addInitScript(clsInitScript());
+  try {
+    const stubs = require("./proofs/open_meteo_guard_stub.cjs");
+    if (stubs && typeof stubs.installLocalDataProtectionAccepted === "function") {
+      await stubs.installLocalDataProtectionAccepted(context);
+    }
+  } catch (_) {}
+}
+
 async function dismissGuardOverlays(page) {
   try {
     const essential = await page.$("#iuConsentEssentialOnly");
@@ -163,6 +174,8 @@ async function dismissGuardOverlays(page) {
         consent.style.pointerEvents = "none";
       }
       document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
+      document.documentElement.classList.remove("iu-ldp-dialog-open");
+      if (document.body) document.body.classList.remove("iu-ldp-dialog-open");
     });
   } catch (_) {}
 }
@@ -248,6 +261,7 @@ module.exports = {
   readCls,
   resetCls,
   preparePage,
+  installStabilityGuardContext,
   dismissGuardOverlays,
   scrollAllToBottom,
   emitBanner,

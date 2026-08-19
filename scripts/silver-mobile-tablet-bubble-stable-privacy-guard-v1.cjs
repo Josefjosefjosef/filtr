@@ -34,92 +34,159 @@ function parseRgbLuminance(color) {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 }
 
-async function measureSpeechLayout(page, text) {
-  await page.evaluate((txt) => {
-    const el = document.querySelector("[data-iu-silver-speech-text]");
-    if (!el) return;
-    el.textContent = txt;
-    // Match product max (2-line speech-row); avoid flaky 3-line wraps across OS fonts.
-    el.style.display = "-webkit-box";
-    el.style.webkitLineClamp = "2";
-    el.style.webkitBoxOrient = "vertical";
-    el.style.overflow = "hidden";
-  }, text);
-  await page.waitForTimeout(120);
-  return page.evaluate(({ privacy1, privacy2 }) => {
-    function rect(el) {
-      if (!el) return null;
-      const r = el.getBoundingClientRect();
-      return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, height: r.height, width: r.width };
-    }
-    const hero = document.getElementById("iuSilverHeroPremium");
-    if (!hero) return { hero_found: false };
-    const bubble = hero.querySelector("[data-iu-silver-speech-bubble]");
-    const speech = hero.querySelector("[data-iu-silver-speech-text]");
-    const badge = hero.querySelector("[data-iu-silver-ai-badge]");
-    const privacy1El = hero.querySelector("[data-iu-silver-privacy-line]");
-    const privacy2El = hero.querySelector("[data-iu-silver-privacy-line-2]");
-    const figure = hero.querySelector(".iu-hero-figureImg");
-    const speechRow = hero.querySelector(".silver-speech-row");
-    const bubbleSt = bubble ? getComputedStyle(bubble) : null;
-    const speechSt = speech ? getComputedStyle(speech) : null;
-    const rowSt = speechRow ? getComputedStyle(speechRow) : null;
-    const br = rect(bubble);
-    const badgeR = rect(badge);
-    const rowR = rect(speechRow);
-    const p1 = rect(privacy1El);
-    const p2 = rect(privacy2El);
-    const fr = rect(figure);
-    const docEl = document.documentElement;
-    const body = document.body;
-    const overflowX =
-      (docEl && docEl.scrollWidth > docEl.clientWidth + 1) ||
-      (body && body.scrollWidth > body.clientWidth + 1);
-    let overlapFigure = false;
-    if (br && fr) {
-      overlapFigure = br.bottom > fr.top + 2 && br.left < fr.right && br.right > fr.left && br.top < fr.bottom;
-    }
-    let translateY = 0;
-    if (bubbleSt) {
-      const t = String(bubbleSt.transform || "");
-      if (t && t !== "none") {
-        const m = t.match(/matrix\(([^)]+)\)/);
-        if (m) {
-          const parts = m[1].split(",").map((x) => parseFloat(String(x).trim()));
-          if (Number.isFinite(parts[5])) translateY = parts[5];
-        } else {
-          const ty = t.match(/translateY\(([-\d.]+)px\)/);
-          if (ty) translateY = parseFloat(ty[1]);
-        }
+async function measureSpeechLayoutVariants(page, variants) {
+  // Atomic multi-variant measure: avoids CI flakes where unrelated async layout
+  // (fonts/images/feed) shifts the whole hero between separate Playwright turns.
+  // Contract still checked: privacy must stay fixed across speech text variants.
+  return page.evaluate(
+    async ({ variantsIn, privacy1, privacy2 }) => {
+      function rect(el) {
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+          top: r.top,
+          bottom: r.bottom,
+          left: r.left,
+          right: r.right,
+          height: r.height,
+          width: r.width,
+        };
       }
-    }
-    const badgeGap =
-      badgeR && br ? Number((br.top - badgeR.bottom).toFixed(2)) : null;
-    // Designed 2-line ceiling: bottom-anchored bubble fills the speech-row, then translateY(4).
-    const designedBadgeGap =
-      badgeR && rowR ? Number((rowR.top + translateY - badgeR.bottom).toFixed(2)) : null;
-    return {
-      hero_found: true,
-      bubble_rect: br,
-      badge_rect: badgeR,
-      speech_row_rect: rowR,
-      badge_bubble_gap_px: badgeGap,
-      designed_badge_gap_px: designedBadgeGap,
-      privacy1_rect: p1,
-      privacy2_rect: p2,
-      privacy1_text_ok: privacy1El ? String(privacy1El.textContent || "").trim() === privacy1 : false,
-      privacy2_text_ok: privacy2El ? String(privacy2El.textContent || "").trim() === privacy2 : false,
-      bubble_bg: bubbleSt ? bubbleSt.background || bubbleSt.backgroundColor || "" : "",
-      bubble_border_width: bubbleSt ? parseFloat(bubbleSt.borderTopWidth || "0") : 0,
-      bubble_box_shadow: bubbleSt ? bubbleSt.boxShadow || "" : "",
-      speech_color: speechSt ? speechSt.color || "" : "",
-      speech_row_margin_top_px: rowSt ? parseFloat(rowSt.marginTop || "0") : null,
-      bubble_translate_y_px: translateY,
-      overflow_x: overflowX,
-      overlap_figure: overlapFigure,
-      overlap_ai_badge: badgeR && br ? br.top < badgeR.bottom - 0.5 && br.right > badgeR.left && br.left < badgeR.right : false,
-    };
-  }, { privacy1: PRIVACY_LINE1, privacy2: PRIVACY_LINE2 });
+
+      function forceReflow(el) {
+        try {
+          void el.offsetHeight;
+        } catch (_) {}
+      }
+
+      async function waitStablePrivacyTop(privacyEl, samples) {
+        let last = null;
+        let stable = 0;
+        for (let i = 0; i < 45; i++) {
+          await new Promise((r) => requestAnimationFrame(r));
+          const t = privacyEl.getBoundingClientRect().top;
+          if (last != null && Math.abs(t - last) <= 0.75) {
+            stable += 1;
+            if (stable >= samples) return t;
+          } else {
+            stable = 0;
+          }
+          last = t;
+        }
+        return last;
+      }
+
+      try {
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      } catch (_) {}
+
+      const hero = document.getElementById("iuSilverHeroPremium");
+      if (!hero) return [{ hero_found: false }];
+
+      const imgs = Array.from(hero.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise((resolve) => {
+            const done = () => resolve();
+            img.addEventListener("load", done, { once: true });
+            img.addEventListener("error", done, { once: true });
+            setTimeout(done, 2500);
+          });
+        })
+      );
+
+      const privacy1El = hero.querySelector("[data-iu-silver-privacy-line]");
+      if (privacy1El) await waitStablePrivacyTop(privacy1El, 3);
+
+      const out = [];
+      for (let i = 0; i < variantsIn.length; i++) {
+        const variant = variantsIn[i];
+        const speech = hero.querySelector("[data-iu-silver-speech-text]");
+        if (!speech) {
+          out.push({ id: variant.id, hero_found: false });
+          continue;
+        }
+        speech.textContent = variant.text;
+        speech.style.display = "-webkit-box";
+        speech.style.webkitLineClamp = "2";
+        speech.style.webkitBoxOrient = "vertical";
+        speech.style.overflow = "hidden";
+        forceReflow(speech);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+        const bubble = hero.querySelector("[data-iu-silver-speech-bubble]");
+        const badge = hero.querySelector("[data-iu-silver-ai-badge]");
+        const p1El = hero.querySelector("[data-iu-silver-privacy-line]");
+        const p2El = hero.querySelector("[data-iu-silver-privacy-line-2]");
+        const figure = hero.querySelector(".iu-hero-figureImg");
+        const speechRow = hero.querySelector(".silver-speech-row");
+        const bubbleSt = bubble ? getComputedStyle(bubble) : null;
+        const speechSt = speech ? getComputedStyle(speech) : null;
+        const rowSt = speechRow ? getComputedStyle(speechRow) : null;
+        const br = rect(bubble);
+        const badgeR = rect(badge);
+        const rowR = rect(speechRow);
+        const p1 = rect(p1El);
+        const p2 = rect(p2El);
+        const fr = rect(figure);
+        const docEl = document.documentElement;
+        const body = document.body;
+        const overflowX =
+          (docEl && docEl.scrollWidth > docEl.clientWidth + 1) ||
+          (body && body.scrollWidth > body.clientWidth + 1);
+        let overlapFigure = false;
+        if (br && fr) {
+          overlapFigure =
+            br.bottom > fr.top + 2 && br.left < fr.right && br.right > fr.left && br.top < fr.bottom;
+        }
+        let translateY = 0;
+        if (bubbleSt) {
+          const t = String(bubbleSt.transform || "");
+          if (t && t !== "none") {
+            const m = t.match(/matrix\(([^)]+)\)/);
+            if (m) {
+              const parts = m[1].split(",").map((x) => parseFloat(String(x).trim()));
+              if (Number.isFinite(parts[5])) translateY = parts[5];
+            } else {
+              const ty = t.match(/translateY\(([-\d.]+)px\)/);
+              if (ty) translateY = parseFloat(ty[1]);
+            }
+          }
+        }
+        const badgeGap = badgeR && br ? Number((br.top - badgeR.bottom).toFixed(2)) : null;
+        const designedBadgeGap =
+          badgeR && rowR ? Number((rowR.top + translateY - badgeR.bottom).toFixed(2)) : null;
+        out.push({
+          id: variant.id,
+          hero_found: true,
+          bubble_rect: br,
+          badge_rect: badgeR,
+          speech_row_rect: rowR,
+          badge_bubble_gap_px: badgeGap,
+          designed_badge_gap_px: designedBadgeGap,
+          privacy1_rect: p1,
+          privacy2_rect: p2,
+          privacy1_text_ok: p1El ? String(p1El.textContent || "").trim() === privacy1 : false,
+          privacy2_text_ok: p2El ? String(p2El.textContent || "").trim() === privacy2 : false,
+          bubble_bg: bubbleSt ? bubbleSt.background || bubbleSt.backgroundColor || "" : "",
+          bubble_border_width: bubbleSt ? parseFloat(bubbleSt.borderTopWidth || "0") : 0,
+          bubble_box_shadow: bubbleSt ? bubbleSt.boxShadow || "" : "",
+          speech_color: speechSt ? speechSt.color || "" : "",
+          speech_row_margin_top_px: rowSt ? parseFloat(rowSt.marginTop || "0") : null,
+          bubble_translate_y_px: translateY,
+          overflow_x: overflowX,
+          overlap_figure: overlapFigure,
+          overlap_ai_badge:
+            badgeR && br
+              ? br.top < badgeR.bottom - 0.5 && br.right > badgeR.left && br.left < badgeR.right
+              : false,
+        });
+      }
+      return out;
+    },
+    { variantsIn: variants, privacy1: PRIVACY_LINE1, privacy2: PRIVACY_LINE2 }
+  );
 }
 
 async function collectDesktopChecks(page) {
@@ -282,12 +349,29 @@ async function runGuard() {
         });
         await p.setViewportSize({ width: vp.w, height: vp.h });
         await p.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
-        await p.waitForTimeout(2600);
-        const measurements = [];
-        for (let j = 0; j < SPEECH_VARIANTS.length; j++) {
-          const variant = SPEECH_VARIANTS[j];
-          const m = await measureSpeechLayout(p, variant.text);
-          measurements.push(Object.assign({ id: variant.id }, m));
+        await p.waitForSelector("#iuSilverHeroPremium [data-iu-silver-speech-text]", { timeout: 60000 });
+        await p.evaluate(async () => {
+          try {
+            if (document.fonts && document.fonts.ready) await document.fonts.ready;
+          } catch (_) {}
+          await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        });
+        await p.waitForTimeout(2800);
+        let measurements = await measureSpeechLayoutVariants(p, SPEECH_VARIANTS);
+        let mergedProbe = evaluateVariantPass(measurements, {
+          bubble_neon_ok: false,
+          bubble_white_text_ok: false,
+        });
+        // One retry after extra settle if privacy drifted (async page chrome, not speech contract).
+        if (!mergedProbe.privacy_text_position_fixed) {
+          await p.waitForTimeout(1200);
+          await p.evaluate(async () => {
+            try {
+              if (document.fonts && document.fonts.ready) await document.fonts.ready;
+            } catch (_) {}
+            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+          });
+          measurements = await measureSpeechLayoutVariants(p, SPEECH_VARIANTS);
         }
         const styleSample = measurements[measurements.length - 1] || {};
         const shadow = String(styleSample.bubble_box_shadow || "");

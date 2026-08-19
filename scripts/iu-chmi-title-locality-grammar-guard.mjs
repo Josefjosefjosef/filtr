@@ -13,6 +13,7 @@ import {
   formatChmiEventDisplayName,
   refreshItemLocalityPresentation,
 } from "./chmi-cap-v2/normalize-feed.mjs";
+import { IU_SW_CACHE_VERSION_CURRENT } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -23,7 +24,7 @@ const SW = path.join(ROOT, "sw.js");
 const GEO = path.join(ROOT, "scripts", "chmi-cap-v2", "geo-registry.mjs");
 const NORM = path.join(ROOT, "scripts", "chmi-cap-v2", "normalize-feed.mjs");
 const CACHE_BUST = "evening-theme-settings-v1-20260818";
-const SW_VER = "2026-08-18-perf-stage3-feed-split-v1";
+const SW_VER = IU_SW_CACHE_VERSION_CURRENT;
 
 const fails = [];
 function ok(id, cond, detail) {

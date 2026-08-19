@@ -1,0 +1,102 @@
+/**
+ * Shared SW CACHE_VERSION allowlist for guards.
+ * When bumping CACHE_VERSION in sw.js, add the new token here once.
+ */
+const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-08-18-perf-stage4-calendar-v1",
+  "perf-stage4-calendar-v1",
+  "2026-08-18-perf-stage3-feed-split-v1",
+  "perf-stage3-feed-split-v1",
+  "2026-08-18-evening-theme-settings-v1",
+  "evening-theme-settings-v1",
+  "2026-08-17-feed-filter-redesign-v1",
+  "feed-filter-redesign-v1",
+  "2026-08-16-impassable-lane-exit-primary-v1",
+  "impassable-lane-exit-primary-v1",
+  "2026-08-16-closure-accident-diversion-exit-v1",
+  "closure-accident-diversion-exit-v1",
+  "2026-08-15-multi-road-closure-named-event-v1",
+  "multi-road-closure-named-event-v1",
+  "2026-08-09-heavy-feed-shell-first-v1",
+  "heavy-feed-shell-first-v1",
+  "pwa-offline-menu-articles-v4",
+  "prehled-settings-sw-network-first-v1",
+  "app-root-url-drop-projects-v1",
+  "app-root-pwa-assets-redirects-v1",
+  "pwa-offline-nav-fallback-v1",
+  "media-sources-removed-v1",
+  "banner-homecard-fouc-v1",
+  "chmi-cap-concrete-url-chrono-v1",
+  "chmi-cap-temporal-status-v1",
+  "chmi-cap-open-ended-public-url-v1",
+  "chmi-cap-unified-public-click-v1",
+  "chmi-cap-no-segment-dedupe-v1",
+  "chmi-multibrowser-console-v1",
+  "chmi-title-locality-v1",
+  "chmi-validfrom-timeline-v1",
+  "chmi-info-events-passthrough-v2",
+  "chmi-smog-onset-split-v1",
+  "homecard-cta-square-v1",
+  "kb-hide-v2",
+  "kb-nav-instant-restore-v1",
+  "date-time-fit-v2",
+  "date-time-right-edge-v3",
+  "date-time-value-column-v4",
+  "municipality-relation-oa-accident-v1",
+  "wrong-way-vehicle-hazard-v1",
+  "roadwork-construction-vehicle-exit-v1",
+  "primary-street-cross-street-struck-roe-v1",
+  "dod-divocak-participant-specificity-v1",
+  "oversize-route-waypoint-v1",
+  "obstacle-oil-cleanup-facts-v1",
+  "km-phrase-not-municipality-v1",
+  "broken-vs-generic-accident-worksite-v1",
+  "intersection-locality-precedence-v1",
+  "future-traffic-impact-tense-v1",
+  "municipality-street-accident-izs-v1",
+  "praha-jizni-spojka-smv-header-v1",
+  "roadwork-lane-restriction-parts-v1",
+  "broken-vehicle-delay-header-v1",
+  "exit-ramp-tokenize-v1",
+  "exit-ramp-tokenize-v1",
+  "d4-km-range-maintenance-v1",
+  "accident-dod-moto-investigation-v1",
+  "obstruction-stationary-vehicle-v1",
+  "accident-participants-may-block-v1",
+  "velky-ujezd-locality-sanitize-v1",
+  "hradec-accident-i57-v1",
+  "karlovy-vary-closure-access-v1",
+  "decin-narrowed-lanes-reason-v1",
+  "beroun-multi-street-work-reason-v1",
+  "direction-abbrev-rich-situation-v1",
+  "km-range-roadwork-detail-v1",
+  "municipality-parenthetical-multi-road-v1",
+  "traffic-fact-preservation-v1",
+  "urban-numbered-road-parse-v1",
+  "chmi-filter-vse-v1",
+  "bottom-nav-unify-stable-v1",
+  "root-hub-no-projects-v1",
+  "traffic-ui-activation-v1",
+  "traffic-ui-boot-nonblocking-v1",
+  "traffic-ui-ls-mem-guard-v1",
+  "traffic-ui-hero-cta-early-v1",
+  "traffic-ui-cls-stable-shell-v1",
+  "traffic-ui-defer-feed-hydrate-v1",
+];
+
+/** Current production CACHE_VERSION string inside sw.js */
+const IU_SW_CACHE_VERSION_CURRENT = "2026-08-18-perf-stage4-calendar-v1";
+
+function swHasAllowedCacheVersion(swSrc) {
+  const src = String(swSrc || "");
+  for (let i = 0; i < IU_SW_CACHE_VERSION_TOKENS.length; i++) {
+    if (src.indexOf(IU_SW_CACHE_VERSION_TOKENS[i]) >= 0) return true;
+  }
+  return false;
+}
+
+module.exports = {
+  IU_SW_CACHE_VERSION_TOKENS,
+  IU_SW_CACHE_VERSION_CURRENT,
+  swHasAllowedCacheVersion,
+};

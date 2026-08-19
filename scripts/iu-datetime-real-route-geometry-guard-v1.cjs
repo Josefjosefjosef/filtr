@@ -396,8 +396,21 @@ async function sleep(page, ms) {
 }
 
 async function openCalendarDirectCreate(page) {
-  await page.waitForFunction(() => typeof window.iuCalendarService === "object", { timeout: 25000 });
-  await page.evaluate(() => window.iuCalendarService.openOverlay());
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureCalendarOverlay === "function") {
+      await window.__iuEnsureCalendarOverlay();
+    }
+  });
+  await page.waitForFunction(
+    () =>
+      window.iuCalendarService &&
+      !window.iuCalendarService.__iuCalendarLazyStub &&
+      typeof window.iuCalendarService.openOverlay === "function",
+    { timeout: 25000 }
+  );
+  await page.evaluate(async () => {
+    await window.iuCalendarService.openOverlay();
+  });
   await sleep(page, 700);
   await page.evaluate(() => {
     const close = document.querySelector("#iuCalendarDayOverlay .iu-day-close");

@@ -22,6 +22,7 @@ import {
   createIgnorableResourceTracker,
   installLocalDataProtectionAccepted,
 } from "./proofs/open_meteo_guard_stub.cjs";
+import { readAppRuntimeSrc } from "./guards/iu-app-runtime-src.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -44,7 +45,7 @@ const ARTIFACT_DIR =
   path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu-calendar-allday-limit-guard");
 
 function readStaticChecks() {
-  const appJs = fs.readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
+  const appJs = readAppRuntimeSrc(REPO);
   const indexHtml = fs.readFileSync(path.join(REPO, "projects", "index.html"), "utf8");
   const appCss = fs.readFileSync(path.join(REPO, "assets", "app.css"), "utf8");
   const checks = [
@@ -231,8 +232,16 @@ async function prepareLimitScenario(page, opts) {
     await options.afterInitScript(page);
   }
   await page.goto(buildUrl(), { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureCalendarOverlay === "function") {
+      await window.__iuEnsureCalendarOverlay();
+    }
+  });
   await page.waitForFunction(
-    () => window.iuCalendarService && typeof window.iuCalendarService.calendarCreateEvent === "function",
+    () =>
+      window.iuCalendarService &&
+      !window.iuCalendarService.__iuCalendarLazyStub &&
+      typeof window.iuCalendarService.calendarCreateEvent === "function",
     { timeout: 90000 }
   );
   if (typeof options.afterReady === "function") {
