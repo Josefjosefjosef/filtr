@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-08-20T00:29:01.604Z",
-    "lastSuccessAt": "2026-08-20T00:29:03.903Z",
+    "lastRunAt": "2026-08-20T04:32:28.701Z",
+    "lastSuccessAt": "2026-08-20T04:32:32.002Z",
     "lastChangedAt": "2026-08-19T10:34:17.800Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,13 +423,13 @@
     "lastModified": "Wed, 19 Aug 2026 08:39:26 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 4,
+    "activeCount": 3,
     "scheduledCount": 1,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 1,
-    "publishableCount": 5,
-    "visibleCount": 5,
+    "publishableCount": 4,
+    "visibleCount": 4,
     "totalItems": 6,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -452,19 +452,19 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 5,
+      "logicalAlerts": 4,
       "uniqueEvents": [
         "Silné bouřky",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 40,
-      "mappedAreas": 302,
+      "totalAreas": 37,
+      "mappedAreas": 269,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 1,
-      "publishableCount": 5,
+      "publishableCount": 4,
       "productStreams": [
         "50",
         "70"
@@ -472,7 +472,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 1,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -481,19 +481,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 4983,
+    "runMs": 6236,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-08-20T00:29:01.604Z",
+    "lastSnapshotAt": "2026-08-20T04:32:28.701Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-08-19T10:34:13.701Z",
       "officialLatestSentAt": "2026-08-19T10:38:57+02:00",
       "officialLatestValidFrom": "2026-08-20T16:00:00+02:00",
-      "discoveredAt": "2026-08-20T00:29:01.604Z",
-      "fetchedAt": "2026-08-20T00:29:01.604Z",
-      "transformedAt": "2026-08-20T00:29:06.588Z",
-      "validatedAt": "2026-08-20T00:29:06.588Z",
-      "publishedAt": "2026-08-20T00:29:01.604Z",
+      "discoveredAt": "2026-08-20T04:32:28.701Z",
+      "fetchedAt": "2026-08-20T04:32:28.701Z",
+      "transformedAt": "2026-08-20T04:32:34.937Z",
+      "validatedAt": "2026-08-20T04:32:34.937Z",
+      "publishedAt": "2026-08-20T04:32:28.701Z",
       "endToEndLagMs": 6916701
     },
     "audit": {
@@ -519,19 +519,19 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 5,
+          "logicalAlerts": 4,
           "uniqueEvents": [
             "Silné bouřky",
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 40,
-          "mappedAreas": 302,
+          "totalAreas": 37,
+          "mappedAreas": 269,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 4,
+          "publishedActive": 3,
           "publishedScheduled": 1,
-          "publishableCount": 5,
+          "publishableCount": 4,
           "productStreams": [
             "50",
             "70"
@@ -539,7 +539,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 1,
-          "expiredCount": 0,
+          "expiredCount": 1,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -548,6 +548,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-08-20T04:32:28.701Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6236,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 1,
+        "publishableCount": 4
+      },
       {
         "at": "2026-08-20T00:29:01.604Z",
         "status": "not_modified",
@@ -1060,17 +1071,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7286,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 2,
-        "publishableCount": 5
-      },
-      {
-        "at": "2026-08-19T12:38:28.845Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4999,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 2,
