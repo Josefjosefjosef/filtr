@@ -43,7 +43,7 @@ const mustDesktop = [
 ];
 for (const f of mustDesktop) {
   const re = new RegExp(
-    `href="[^"]*${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[^"]*"[^>]*media="\\(min-width: 1025px\\)"`
+    `(?:href|data-iu-href)="[^"]*${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[^"]*"[^>]*media="\\(min-width: 1025px\\)"`
   );
   must(re.test(index), "desktop_mq:" + f);
 }
