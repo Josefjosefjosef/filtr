@@ -1,6 +1,6 @@
 {
-  "runId": "3aa72a639e3a39e1",
-  "started": "2026-08-20T00:29:01.604Z",
+  "runId": "ab41d7b34a36d99b",
+  "started": "2026-08-20T04:32:28.701Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,19 +37,19 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 5,
+      "logicalAlerts": 4,
       "uniqueEvents": [
         "Silné bouřky",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 40,
-      "mappedAreas": 302,
+      "totalAreas": 37,
+      "mappedAreas": 269,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 1,
-      "publishableCount": 5,
+      "publishableCount": 4,
       "productStreams": [
         "50",
         "70"
@@ -57,7 +57,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 1,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -66,8 +66,8 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 5,
-    "after": 5,
+    "before": 4,
+    "after": 4,
     "ledgerKeys": 2,
     "ledgerFingerprint": "3ccfd36f4b79d933",
     "history": {
@@ -311,30 +311,30 @@
   },
   "temporalCounts": {
     "totalItems": 6,
-    "activeCount": 4,
+    "activeCount": 3,
     "scheduledCount": 1,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 1,
-    "publishableCount": 5,
-    "visibleCount": 5
+    "publishableCount": 4,
+    "visibleCount": 4
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 5,
+    "logicalAlerts": 4,
     "uniqueEvents": [
       "Silné bouřky",
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 40,
-    "mappedAreas": 302,
+    "totalAreas": 37,
+    "mappedAreas": 269,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 4,
+    "publishedActive": 3,
     "publishedScheduled": 1,
-    "publishableCount": 5,
+    "publishableCount": 4,
     "productStreams": [
       "50",
       "70"
@@ -342,7 +342,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 1,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -350,7 +350,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 302,
+    "headAreas": 269,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -358,6 +358,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-08-20T00:29:06.589Z",
-  "runMs": 4984
+  "finished": "2026-08-20T04:32:34.938Z",
+  "runMs": 6237
 }
