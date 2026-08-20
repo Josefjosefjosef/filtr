@@ -177,6 +177,37 @@ async function contentClearsNav(page) {
   });
 }
 
+/**
+ * content_under_nav must not measure transitional Silver/feed boot geometry.
+ * Wait until scroll-end clearance is stable across consecutive frames.
+ * Still FAILs if the stable settled state has content under the nav.
+ */
+async function waitContentClearsNavStable(page, { timeoutMs = 12000 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  let last = null;
+  let stableHits = 0;
+  while (Date.now() < deadline) {
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.evaluate(
+      () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+    );
+    const cur = await contentClearsNav(page);
+    if (
+      last &&
+      last.ok === cur.ok &&
+      Math.abs((last.gap == null ? 0 : last.gap) - (cur.gap == null ? 0 : cur.gap)) < 2
+    ) {
+      stableHits += 1;
+      if (stableHits >= 3) return cur;
+    } else {
+      stableHits = 1;
+    }
+    last = cur;
+    await page.waitForTimeout(80);
+  }
+  return last || { ok: false, reason: "stable_timeout" };
+}
+
 async function clickNav(page, key) {
   await page.locator('#iuMobileBottomNav [data-iu-bottom-nav="' + key + '"]').first().click({ timeout: 8000 });
   await page.waitForTimeout(650);
@@ -232,8 +263,7 @@ async function runViewport(browser, vp) {
       if (Math.abs((before.top || 0) - (after.top || 0)) > 2) fails.push("scroll_restore_jump");
 
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-      await page.waitForTimeout(400);
-      const end = await contentClearsNav(page);
+      const end = await waitContentClearsNavStable(page, { timeoutMs: 12000 });
       if (!end.ok) fails.push("content_under_nav");
 
       await page.goto(BASE + "?section=media&topic=zpravy&cb=" + Date.now(), {

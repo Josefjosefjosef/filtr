@@ -21,9 +21,10 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # Unify PR + branch-push so only one smoke runs for the same head branch
-  # (push uses ref_name; pull_request uses head_ref). Prevents duplicate apt/playwright races.
-  group: smoke-${{ github.head_ref || github.ref_name }}
+  # Event-scoped group: push+pull_request must NOT cancel each other on the same
+  # head SHA. Cross-event cancel left cancelled check runs that blocked merge
+  # ("2 of 3 required status checks are cancelled") even after a valid PASS.
+  group: smoke-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -36,20 +37,57 @@ jobs:
           # Full history clones hang/timeout on this large repo; scope script fetches main --depth=64.
           fetch-depth: 64
 
+      - name: Skip redundant push when open PR covers branch
+        id: prgate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/skip-push-if-pr-open.sh
+          scripts/ci/skip-push-if-pr-open.sh
+
       - name: Detect data-only scope (fast pool / data PR fast path)
         id: scope
         env:
           SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-        run: node scripts/smoke-data-only-scope.mjs
+          IU_SKIP_PUSH_IF_PR_OPEN: ${{ steps.prgate.outputs.skip }}
+        run: |
+          set -euo pipefail
+          if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
+            {
+              echo "data_only=true"
+              echo "info_panel_only=false"
+              echo "fin_calc_header_only=false"
+              echo "datovka_overlay_only=false"
+              echo "custom_buttons_scroll_only=false"
+              echo "quicktools_mobile_visibility_only=false"
+              echo "quicktools_fixed_width_only=false"
+              echo "user_data_backup_only=false"
+              echo "data_mgmt_restore_overlay_mobile_only=false"
+              echo "pc_left_rail_same_window_tabs_only=false"
+              echo "pc_tool_window_left_rail_layout_only=false"
+              echo "notes_unified_field_only=false"
+              echo "pwa_offline_resilience_only=false"
+              echo "info_panel_cnb_rates_only=false"
+              echo "jr_section_header_line_color_only=false"
+              echo "legal_doc_section_bar_only=false"
+              echo "legal_docs_form_state_only=false"
+              echo "pc_svatek_label_pill_gap_only=false"
+              echo "calendar_allday_pinned_limit_only=false"
+              echo "desktop_article_read_mark_only=false"
+            } >> "$GITHUB_OUTPUT"
+            echo "SMOKE_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
+            exit 0
+          fi
+          node scripts/smoke-data-only-scope.mjs
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - run: npm ci
-
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |
@@ -137,6 +175,8 @@ jobs:
       - name: Stage 7 calendar hero prefetch guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-perf-stage7-calendar-hero-prefetch-guard
+      - name: Perf-loop iter-001 parallel boot guard
+        run: npm run iu-perf-loop-iter001-parallel-boot-guard
 
       - name: Reload / section switch / scroll stability guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.quicktools_fixed_width_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

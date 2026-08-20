@@ -35,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818";
+} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819";
 import {
   TRAFFIC_OVERVIEW_FLAGS,
   trafficBadgeModel,
@@ -2828,10 +2828,21 @@ async function boot() {
   } catch (_) {}
   // 1) Await small shell JSON (taxonomy/registry) so settings rails work immediately.
   // 2) Hydrate multi‑MB feed off-main via Worker without blocking shell interactivity.
+  // Perf-loop iter-001: start feed + traffic snapshot in parallel with shell (no sequential wait).
   void (async () => {
     try {
+      const bootSignal = bootAbort ? bootAbort.signal : undefined;
+      const feedPromise = loadInfoSystemFeedOnly({
+        signal: bootSignal,
+        omitFeedSourceIds: ["ndic"],
+      });
+      const trafficPromise =
+        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
+          ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
+          : Promise.resolve(null);
+
       const shell = await loadInfoSystemShellData({
-        signal: bootAbort ? bootAbort.signal : undefined,
+        signal: bootSignal,
       });
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = shell;
@@ -2846,11 +2857,7 @@ async function boot() {
         root.setAttribute("data-iu-pd-shell-ready", "1");
       } catch (_) {}
 
-      const feed = await loadInfoSystemFeedOnly({
-        signal: bootAbort ? bootAbort.signal : undefined,
-        omitFeedSourceIds: ["ndic"],
-        manifest: shell.manifest,
-      });
+      const feed = await feedPromise;
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = Object.assign({}, shell, {
         feed,
@@ -2931,7 +2938,7 @@ async function boot() {
         } catch (_) {}
       }
       if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
-        void fetchHostedTrafficOfflineSnapshot({ persist: true })
+        void Promise.resolve(trafficPromise)
           .then(() => {
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;

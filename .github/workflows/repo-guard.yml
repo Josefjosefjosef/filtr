@@ -20,7 +20,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: repo-guard-${{ github.head_ref || github.ref_name }}
+  # Event-scoped: push must not cancel pull_request (cancelled checks blocked merge).
+  group: repo-guard-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -37,12 +38,35 @@ jobs:
         if: github.event_name != 'pull_request_target'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Skip redundant push when open PR covers branch
+        id: prgate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/skip-push-if-pr-open.sh
+          scripts/ci/skip-push-if-pr-open.sh
+
+      - name: Redundant push — success exit (PR owns required repo-guard)
+        if: steps.prgate.outputs.skip == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: success
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/post-required-status.sh
+          scripts/ci/post-required-status.sh repo-guard
+          echo "REPO_GUARD_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
+
       - name: Setup Python
+        if: steps.prgate.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Python syntax check (data generators)
+        if: steps.prgate.outputs.skip != 'true'
         run: |
           python -m py_compile scripts/build_articles.py
           python -m py_compile scripts/ingest_telemetry.py
@@ -58,25 +82,31 @@ jobs:
           python -m py_compile scripts/publishable_pool_architecture_proof.py
 
       - name: Publishable pool architecture guard (Phase 7A)
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/publishable_pool_architecture_guard.py
 
       - name: Publishable pool architecture proof (Phase 7A)
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/publishable_pool_architecture_proof.py
 
       - name: Počasíčko / pocasicko export guard
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/weather_pocasicko_guard.py
 
       - name: Feed classification unit tests
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/test_iu_feed_classification.py
 
       - name: Validate feed classification (same enrich as build_articles)
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/validate_feed_classification.py --skip-missing --enrich
 
       - name: Run repo guard
+        if: steps.prgate.outputs.skip != 'true'
         run: python scripts/repo_guard.py
 
       - name: Set required status context (repo-guard)
-        if: always()
+        if: always() && steps.prgate.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
