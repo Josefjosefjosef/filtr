@@ -18,7 +18,7 @@ function must(cond, id) {
 const boot = app.match(/function iuBootFeedPipelineLazy\(\)[\s\S]{0,2500}/)?.[0] || "";
 must(/keep 240KB feed-pipeline off the slow-net/.test(boot), "app:iter006_comment");
 must(/function isSlowNet\(/.test(boot), "app:isSlowNet");
-must(/delayMs = slow \|\| compact \? 20000 : 2500/.test(boot), "app:delay_20s_slow_compact");
+must(/delayMs = slow \? 20000 : compact \? 5000 : 2500/.test(boot), "app:delay_tiers");
 must(/desktopMq\.matches && !slow/.test(boot), "app:desktop_skip_on_slow");
 must(/perf-loop-iter006-defer-pipeline-v1-20260820/.test(boot), "app:feed_url_bust");
 must(/perf-loop-iter006-defer-pipeline-v1-20260820/.test(shell), "shell:feed_mod_bust");
