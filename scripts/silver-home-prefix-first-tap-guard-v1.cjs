@@ -723,6 +723,16 @@ async function runRapidSwitchStress(browser, url) {
     await clickPrefixDom(page, "notes");
     const early = await readInputValue(page);
     if (early !== "Do poznámek ") return fail(result, "rapid_switch_optimistic_last_not_notes_got_" + early);
+    try {
+      await page.waitForFunction(
+        () => Number(window.__iuSilverPrefixOptimisticCount || 0) >= 3,
+        null,
+        { timeout: 2000 }
+      );
+    } catch (_) {
+      const countersEarly = await readCounters(page);
+      return fail(result, "expected_3_optimistic_got_" + countersEarly.optimistic);
+    }
     await waitEngineReady(page, STRESS_FINAL_MAX_MS);
     await page.waitForTimeout(100);
     const finalValue = await readInputValue(page);
@@ -803,20 +813,31 @@ async function runQuickActionsPresent(browser, url) {
     const missing = ["calendar", "reminder", "notes"].filter((k) => !info[k] || !info[k].found);
     if (missing.length) return fail(result, "missing_quick_actions_" + missing.join(","));
 
-    /* Cold click hold should mark aria-busy then clear after engine (no throw). */
+    /* Cold click hold should mark aria-busy then clear after engine (no throw).
+       Arm observation BEFORE click so brief/committed busy is not missed via IPC. */
+    const busySeen = page.waitForFunction(
+      () => {
+        const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
+        return !!(el && el.getAttribute("aria-busy") === "true");
+      },
+      null,
+      { timeout: 2000 }
+    );
     await page.locator(quickActionSel("calendar")).click({ timeout: 10000 });
-    const busy = await page.evaluate(() => {
-      const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
-      return el ? el.getAttribute("aria-busy") : null;
-    });
-    if (busy !== "true") return fail(result, "quick_action_missing_immediate_aria_busy");
+    try {
+      await busySeen;
+    } catch (_) {
+      return fail(result, "quick_action_missing_immediate_aria_busy");
+    }
     await waitEngineReady(page, STRESS_FINAL_MAX_MS);
-    await page.waitForTimeout(120);
-    const busyAfter = await page.evaluate(() => {
-      const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
-      return el ? el.getAttribute("aria-busy") : "missing";
-    });
-    if (busyAfter === "true") return fail(result, "quick_action_aria_busy_stuck");
+    await page.waitForFunction(
+      () => {
+        const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
+        return !el || el.getAttribute("aria-busy") !== "true";
+      },
+      null,
+      { timeout: 3000 }
+    );
     return ok(result);
   } catch (err) {
     return fail(result, String(err && err.message ? err.message : err));
