@@ -525,11 +525,10 @@ try {
     }
   } catch (_) {}
   try {
-    // Slow net: late fallback only (pointerdown still warms on intent).
-    // Compact (mobile/tablet): short defer so nav keyboard-hide (in pipeline) still boots.
-    // Fast desktop: short idle after 2.5s.
-    var delayMs = slow ? 20000 : compact ? 5000 : 2500;
-    var idleTimeout = slow ? 8000 : compact ? 3000 : 2500;
+    // Slow net only: late fallback (pointerdown still warms on intent).
+    // Compact keeps the historic 2.5s idle — keyboard-hide lives inside the pipeline.
+    var delayMs = slow ? 20000 : 2500;
+    var idleTimeout = slow ? 8000 : 2500;
     setTimeout(function () {
       try {
         if (typeof requestIdleCallback === "function") {
