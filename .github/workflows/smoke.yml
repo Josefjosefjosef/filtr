@@ -181,6 +181,8 @@ jobs:
         run: npm run iu-perf-loop-iter003-core-dedupe-guard
       - name: Perf-loop iter-004 lazy traffic presenter guard
         run: npm run iu-perf-loop-iter004-lazy-presenter-guard
+      - name: Perf-loop iter-005 defer traffic presenter guard
+        run: npm run iu-perf-loop-iter005-defer-presenter-guard
 
       - name: Reload / section switch / scroll stability guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.quicktools_fixed_width_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
