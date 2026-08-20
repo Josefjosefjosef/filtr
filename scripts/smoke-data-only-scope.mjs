@@ -474,9 +474,9 @@ function main() {
     headCommitDataOnly = false;
   }
 
-  // Catch-up merge at tip may be data-only, but the same push can also include
-  // code commits (e.g. guard fix + merge main). Only allow headCommitDataOnly
-  // when the push/event range itself is data-only — never mask code changes.
+  // Catch-up merge at tip may be data-only, but the PR three-dot diff can still
+  // include code. NEVER use tip/push-range alone to enable fast path — that masks
+  // code PRs (false green). Fast path only when the full compared file set is data-only.
   let pushRangeDataOnly = false;
   try {
     const before = (process.env.GITHUB_EVENT_BEFORE || "").trim();
@@ -521,7 +521,6 @@ function main() {
     dataOnly ||
     workflowOnly ||
     pipelineOnly ||
-    (headCommitDataOnly && pushRangeDataOnly) ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
 
   console.log(`[smoke-data-only-scope] files=${files.length} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
