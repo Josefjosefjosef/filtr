@@ -1,11 +1,11 @@
 {
-    "freezeId":  "perf-loop-iter001-parallel-boot-v1-20260819",
+    "freezeId":  "perf-loop-iter002-hero-webp-v1-20260820",
     "preStabilizationProductionSha":  "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt":  "2026-07-20T08:15:00Z",
-    "updatedAt":  "2026-08-19T22:55:00.000Z",
-    "note":  "Freeze bump: perf-loop iter-001 parallel shell/feed/traffic boot. index.html + iu-prehled/iu-info-system-core; no SW bump.",
+    "updatedAt":  "2026-08-20T04:20:00.000Z",
+    "note":  "Freeze bump: perf-loop iter-002 hero banner WebP (~72KB) replaces 1MB PNG on critical preload path.",
     "files":  {
-                  "projects/index.html":  "2b3f072e10cc3b02a462166f308a8bc449df5cd3621aaf5d9aca6e970c13a3db",
+                  "projects/index.html":  "e3324c9361b17f0235514ecca74c9928628e99b64def8a2d5433b5416aa16a39",
                   "assets/app.css":  "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
                   "assets/app.js":  "c87fb391e7a46677161c1576c393fb0e0cf6001d6f15a4196b8a3bb87fab00b3",
                   "assets/iu-mobile-bottom-nav-shell-v1.js":  "e79259abd18c9005ec8d1931d17cd0e6fa91dcb1ab0b8207e2516178b112daba",
@@ -38,6 +38,7 @@
                                                           "chmi-multibrowser-console-v1-20260731"
                                                       ],
                             "projects/index.html":  [
+                                                        "perf-loop-iter002-hero-webp-v1-20260820",
                                                         "perf-loop-iter001-parallel-boot-v1-20260819",
                                                         "perf-stage7-calendar-hero-prefetch-v1-20260819",
                                                         "perf-stage5-notes-v1-20260819",
