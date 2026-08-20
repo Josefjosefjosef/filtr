@@ -510,11 +510,9 @@ try {
   } catch (_) {}
   var slow = isSlowNet();
   try {
+    // Desktop eager only when not slow-net (stage-3: min-width…ensure within 120).
     var desktopMq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
-    // Fast desktop only — avoid competing with homepage boot on 3G/Save-Data.
-    if (desktopMq && desktopMq.matches && !slow) {
-      void ensure();
-    }
+    if (desktopMq && desktopMq.matches && !slow) void ensure();
   } catch (_) {}
   try {
     // Slow net only: late fallback (pointerdown still warms on intent).
