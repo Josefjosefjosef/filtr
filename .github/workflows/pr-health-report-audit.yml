@@ -14,7 +14,8 @@ on:
       - "fix/**"
 
 concurrency:
-  group: pr-health-audit-${{ github.event.pull_request.number || github.ref }}
+  # Event-scoped: push must not cancel pull_request (cancelled checks blocked merge).
+  group: pr-health-audit-${{ github.event.pull_request.number || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -28,12 +29,27 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
 
+      - name: Skip redundant push when open PR covers branch
+        id: prgate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/skip-push-if-pr-open.sh
+          scripts/ci/skip-push-if-pr-open.sh
+
+      - name: Redundant push — success exit (PR owns audit)
+        if: steps.prgate.outputs.skip == 'true'
+        run: echo "PR_HEALTH_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
+
       - name: Setup Python
+        if: steps.prgate.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install Python dependencies (tinycss2)
+        if: steps.prgate.outputs.skip != 'true'
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
@@ -41,9 +57,11 @@ jobs:
           python3 -c "import tinycss2; print('TINYCSS2_IMPORT_OK', getattr(tinycss2, '__version__', 'unknown'))"
 
       - name: Python compile gate (audit + report + css debt guard)
+        if: steps.prgate.outputs.skip != 'true'
         run: python -m py_compile scripts/health_report.py scripts/css_duplicate_audit.py scripts/css_debt_guard.py scripts/generate_security_governance_reports.py
 
       - name: Run health report
+        if: steps.prgate.outputs.skip != 'true'
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_WORKFLOW: ${{ github.workflow }}
@@ -55,6 +73,7 @@ jobs:
           echo "HEALTH_REPORT_EXIT_OK"
 
       - name: Verify audit markers and sections (FAIL-FAST)
+        if: steps.prgate.outputs.skip != 'true'
         run: |
           set -euo pipefail
           test -f reports/latest.md
@@ -73,6 +92,7 @@ jobs:
           echo "PR_HEALTH_REPORT_AUDIT_GATES=PASS"
 
       - name: CSS debt guard (AST baseline lock; HARD FAIL on debt growth)
+        if: steps.prgate.outputs.skip != 'true'
         run: |
           set -euo pipefail
           mkdir -p reports
@@ -80,6 +100,7 @@ jobs:
           test -f reports/css_debt_guard_summary.json
 
       - name: Log audit excerpt
+        if: steps.prgate.outputs.skip != 'true'
         run: |
           set -euo pipefail
           echo "=== grep: marker + section headers ==="

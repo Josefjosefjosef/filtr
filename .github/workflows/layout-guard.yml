@@ -5,6 +5,8 @@ permissions:
   statuses: write
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - automation/update-articles-data
@@ -16,7 +18,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: layout-guard-${{ github.head_ref || github.ref_name }}
+  # Event-scoped: push must not cancel pull_request (cancelled checks blocked merge).
+  group: layout-guard-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -28,19 +31,37 @@ jobs:
         with:
           fetch-depth: 64
 
+      - name: Skip redundant push when open PR covers branch
+        id: prgate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/skip-push-if-pr-open.sh
+          scripts/ci/skip-push-if-pr-open.sh
+
       - name: Detect data-only scope (layout fast path)
         id: scope
         env:
           SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-        run: node scripts/smoke-data-only-scope.mjs
+          IU_SKIP_PUSH_IF_PR_OPEN: ${{ steps.prgate.outputs.skip }}
+        run: |
+          set -euo pipefail
+          if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
+            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            echo "LAYOUT_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
+            exit 0
+          fi
+          node scripts/smoke-data-only-scope.mjs
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: npm ci
       - name: Cache Playwright browser
+        if: steps.scope.outputs.data_only != 'true'
         id: pwcache
         uses: actions/cache@v4
         with:
@@ -49,19 +70,35 @@ jobs:
       # GitHub-hosted ubuntu images already include common Chromium deps; --with-deps
       # has been observed to hang indefinitely on apt. Cache + install chromium only.
       - name: Install Playwright browsers
+        if: steps.scope.outputs.data_only != 'true'
         run: node node_modules/playwright/cli.js install chromium
-      - run: node scripts/check_layout.js
-      - name: Pre-aggregator UI freeze guard
-        run: npm run iu-pre-aggregator-stable-freeze-guard
-      - name: Pre-aggregator cross-browser feature guard
-        run: npm run iu-pre-aggregator-cross-browser-feature-guard
-
-      - name: Data-only layout fast path proof (skip Playwright hero when data-only)
+      - name: Data-only / skipped-push layout fast path proof
         if: steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: success
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
+          if [ "${{ steps.prgate.outputs.skip }}" = "true" ]; then
+            chmod +x scripts/ci/post-required-status.sh
+            scripts/ci/post-required-status.sh layout-guard
+            echo "LAYOUT_HERO_GUARD_SKIPPED=PUSH_PR_OWNS"
+            exit 0
+          fi
           node scripts/smoke_data_only_scope_proof.mjs
           echo "LAYOUT_HERO_GUARD_SKIPPED=DATA_ONLY_FAST_PATH"
+
+      - name: Run node scripts/check_layout.js
+        if: steps.scope.outputs.data_only != 'true'
+        run: node scripts/check_layout.js
+      - name: Pre-aggregator UI freeze guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pre-aggregator-stable-freeze-guard
+      - name: Pre-aggregator cross-browser feature guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pre-aggregator-cross-browser-feature-guard
 
       - name: Prehled dne hero contract guard (banner+CTA seam/radius/visibility)
         if: steps.scope.outputs.data_only != 'true'
@@ -69,20 +106,27 @@ jobs:
           IU_HERO_GUARD_MAX_MS: "900000"
           IU_HERO_GUARD_FAST: "1"
         run: npm run iu-prehled-dne-hero-contract-guard
-      - run: node scripts/silver-stack-guard.js
+      - name: Silver stack guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: node scripts/silver-stack-guard.js
       - name: Silver home prefix first-tap static contract
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run silver-home-prefix-first-tap-static-guard
       - name: Perf stage-2 static contract
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-perf-stage2-static-guard
       - name: Perf stage-3 static contract
+        if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-perf-stage3-static-guard
-      - run: node scripts/tall-preview-first-row-badge-guard.js
+      - name: Tall preview first-row badge guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: node scripts/tall-preview-first-row-badge-guard.js
       - name: Silver summary + calendar accent UI proof
         if: steps.scope.outputs.data_only != 'true'
         run: node scripts/silver-summary-ui-proof.mjs
 
       - name: Set required status context (layout-guard)
-        if: always()
+        if: always() && steps.prgate.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
