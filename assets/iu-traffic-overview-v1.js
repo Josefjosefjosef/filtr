@@ -10,7 +10,7 @@
  * - TRAFFIC_UI_ENABLED is the single feature flag; flip to false for instant rollback
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
-import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819";
+import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
 import {
   buildTrafficCardPresentation,
   expandTrafficAbbreviationsCs,

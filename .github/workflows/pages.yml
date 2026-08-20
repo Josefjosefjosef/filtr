@@ -74,12 +74,23 @@ jobs:
             -e "s#/assets/iu-prehled-dne-ui-v1\\.js?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js#g" \
             -e "s#iu-data-ver-placeholder#${ASSET_VER}#g"
 
-          # ES module relative import inside Prehled UI must resolve to the same deploy SHA copy.
+          # ES module relative imports must resolve to the same deploy SHA core copy.
+          # Prehled UI is hashed; traffic-overview (and any other importer) is still loaded unhashed
+          # with ?v= — without rewriting those, the browser downloads core twice (hashed + unhashed).
           if [ -f "assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js" ]; then
             sed -i \
               -e "s#\\./iu-info-system-core-v1\\.js?v=[A-Za-z0-9._-]*#./iu-info-system-core-v1.${ASSET_VER}.js#g" \
               "assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js"
           fi
+          while IFS= read -r -d '' f; do
+            if grep -q 'iu-info-system-core-v1\.js?v=' "$f"; then
+              sed -i \
+                -e "s#\\./iu-info-system-core-v1\\.js?v=[A-Za-z0-9._-]*#./iu-info-system-core-v1.${ASSET_VER}.js#g" \
+                "$f"
+            fi
+          done < <(find assets -type f -name '*.js' ! -name "iu-prehled-dne-ui-v1.${ASSET_VER}.js" -print0)
+          echo "--- core import rewrite sample (traffic + hashed UI) ---"
+          grep -n 'iu-info-system-core-v1' "assets/iu-traffic-overview-v1.js" "assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js" | head -n 20 || true
 
           echo "--- app.*.css refs after rewrite (first 20) ---"
           grep -R --line-number "/assets/app\.${ASSET_VER}\.css" "$SITE_DIR" | head -n 20 || true
