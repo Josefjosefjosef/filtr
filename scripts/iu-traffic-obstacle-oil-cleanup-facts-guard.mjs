@@ -42,8 +42,31 @@ const GENERIC_RAW =
 const LIBEREC_EN_ROUTE =
   "Od 14.8.2026 16:50 do 17:50; v ulici Ještědská v obci Liberec; nehoda; probíhá vyšetřování nehody; Pozor! Lidé na vozovce; OA x cyklista, na místo jedou složky IZS.";
 
+const FUTURE_FROM = new Date(Date.now() + 36 * 3600 * 1000);
+const FUTURE_TO = new Date(Date.now() + 48 * 3600 * 1000);
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+function fmtCzWall(d) {
+  // Local wall clock for NDIC-style "Od D.M.YYYY HH:MM" (guard uses Date.parse via validFrom ISO below).
+  return (
+    d.getDate() +
+    "." +
+    (d.getMonth() + 1) +
+    "." +
+    d.getFullYear() +
+    " " +
+    pad2(d.getHours()) +
+    ":" +
+    pad2(d.getMinutes())
+  );
+}
 const FUTURE_D11 =
-  "Od 20.8.2026 22:00 do 21.8.2026 05:00; na dálnici D11; práce na silnici; ve směru Praha bude uzavřen jízdní pruh; provoz bude převeden.";
+  "Od " +
+  fmtCzWall(FUTURE_FROM) +
+  " do " +
+  fmtCzWall(FUTURE_TO) +
+  "; na dálnici D11; práce na silnici; ve směru Praha bude uzavřen jízdní pruh; provoz bude převeden.";
 
 // --- Reference oil-on-road obstacle fixture ---
 {
