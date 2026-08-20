@@ -50,7 +50,9 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
-            echo "data_only=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "data_only=true"
+            } >> "$GITHUB_OUTPUT"
             echo "LAYOUT_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
             exit 0
           fi
