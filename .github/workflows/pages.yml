@@ -49,12 +49,14 @@ jobs:
           echo "ASSET_VER=${ASSET_VER}"
           cp assets/app.css "assets/app.${ASSET_VER}.css"
           cp assets/app.js "assets/app.${ASSET_VER}.js"
+          cp assets/iu-app-deferred.css "assets/iu-app-deferred.${ASSET_VER}.css"
+          cp assets/iu-app-desktop.css "assets/iu-app-desktop.${ASSET_VER}.css"
           cp assets/iu-desktop-home-premium.css "assets/iu-desktop-home-premium.${ASSET_VER}.css"
           cp assets/iu-silver-premium-draft.css "assets/iu-silver-premium-draft.${ASSET_VER}.css"
           cp assets/iu-prehled-dne-v1.css "assets/iu-prehled-dne-v1.${ASSET_VER}.css"
           cp assets/iu-prehled-dne-ui-v1.js "assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js"
           cp assets/iu-info-system-core-v1.js "assets/iu-info-system-core-v1.${ASSET_VER}.js"
-          ls -la "assets/app.${ASSET_VER}.css" "assets/app.${ASSET_VER}.js" "assets/iu-desktop-home-premium.${ASSET_VER}.css" \
+          ls -la "assets/app.${ASSET_VER}.css" "assets/app.${ASSET_VER}.js" "assets/iu-app-deferred.${ASSET_VER}.css" "assets/iu-app-desktop.${ASSET_VER}.css" "assets/iu-desktop-home-premium.${ASSET_VER}.css" \
             "assets/iu-silver-premium-draft.${ASSET_VER}.css" \
             "assets/iu-prehled-dne-v1.${ASSET_VER}.css" "assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js" "assets/iu-info-system-core-v1.${ASSET_VER}.js"
 
@@ -68,6 +70,8 @@ jobs:
           find "$SITE_DIR" -name "*.html" -print0 | xargs -0 sed -i \
             -e "s#/assets/app\\.css?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.css#g" \
             -e "s#/assets/app\\.js?v=[A-Za-z0-9_-]*#/assets/app.${ASSET_VER}.js#g" \
+            -e "s#/assets/iu-app-deferred\\.css?v=[A-Za-z0-9._-]*#/assets/iu-app-deferred.${ASSET_VER}.css#g" \
+            -e "s#/assets/iu-app-desktop\\.css?v=[A-Za-z0-9._-]*#/assets/iu-app-desktop.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-desktop-home-premium\\.css?v=[A-Za-z0-9_-]*#/assets/iu-desktop-home-premium.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-silver-premium-draft\\.css?v=[A-Za-z0-9._-]*#/assets/iu-silver-premium-draft.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-prehled-dne-v1\\.css?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-v1.${ASSET_VER}.css#g" \

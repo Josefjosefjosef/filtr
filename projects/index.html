@@ -633,6 +633,8 @@ font-src 'self' data:;
     <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.webp" type="image/webp" fetchpriority="high" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" />
+    <link rel="stylesheet" href="/assets/iu-app-deferred.css?v=perf-loop-iter009-appcss-coverage-split-v1-20260820" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-app-desktop.css?v=perf-loop-iter009-appcss-coverage-split-v1-20260820" media="(min-width: 1025px)" />
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -2168,9 +2170,9 @@ font-src 'self' data:;
     <link rel="stylesheet" href="/assets/iu-banking-premium.css?v=prod1551banking-premium-ui" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-form-premium.css?v=form-premium-v4-mobile-card-content-20260704" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-tool-privacy-info.css?v=unified-overlay-header-v73-20260701" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" />
-    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" />
-    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" />
+    <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-section-bar-evening-accent-v1-20260802" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
@@ -5896,7 +5898,11 @@ font-src 'self' data:;
         "iu-banking-premium.css",
         "iu-form-premium.css",
         "iu-tool-privacy-info.css",
-        "iu-myinfouzel-premium-overlay.css"
+        "iu-myinfouzel-premium-overlay.css",
+        "iu-app-deferred.css",
+        "iu-mindmenu-bottom-nav-restore-v1.css",
+        "iu-overlay-mobile-tablet-unified-v1.css",
+        "iu-mindmenu-mobile-tablet-v61.css"
       ];
       function findLink(frag){
         var nodes=document.querySelectorAll('link[rel="stylesheet"]');
