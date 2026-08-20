@@ -1,12 +1,12 @@
 {
-    "freezeId": "perf-loop-iter009-appcss-coverage-split-v1-20260820",
+    "freezeId": "perf-loop-iter008-defer-secondary-css-v1-20260820",
     "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-20T14:12:00.000Z",
-    "note": "Freeze bump: perf-loop iter-009 coverage-split + restore CI-critical CSS (feed hide, JR accent, mailbox, PC tile 64).",
+    "updatedAt": "2026-08-20T12:34:37.481Z",
+    "note": "Freeze bump: perf-loop iter-008 defer secondary overlay CSS + desktop CSS media=(min-width:1025px) so mobile 3G critical path is not competed by off-viewport styles.",
     "files": {
-        "projects/index.html": "02dc381cab21b57119c788c40b580ad2d8d95d9dd5a048f4ab34c9e054bb18fb",
-        "assets/app.css": "9cb698093b528fa28bfb048d91b9aa427b456cc9b96ec089106e811f315c8283",
+        "projects/index.html": "cdf7c4f8b4f5cc95c34b3e159b62a03b6eca5e41b0c7b34cda7cb2b99e5c211a",
+        "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "3f12169bdb487099a36546ef4d5f755990c56af07e1ef01e165a1e1a12e3c813",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "59f848ef19f56c24875d8018e74c7bd70c62812c6143568f88b7e78fbc95b8f6",
         "assets/iu-app-feed-pipeline-v1.js": "e35519bc8dae396522284f00384b8ee22e60132ced1eea687cc60e3c8bac6d5c",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "a24ec35ba63d734909db8a9575df1f7a727389acbf1960db6b4c85897c5d4715",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "9a36b9e5b3703ef8f2f0186510ae912fbd18e0d6fc2e7ac3c41aeb1a55ba017e",
+        "sw.js": "4a12b27fb2f22a893ce70ea455ba789a959214f15d65bc158c3fadac5dd9df0a",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -23,9 +23,7 @@
         "assets/iu-user-data-backup-core.js": "8f4cd93fed8399fd24cb670fd992c5fd230155fb26ec4c835c333e477840fb32",
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
-        "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-app-deferred.css": "7522d7be082bd2983e9a43dc15fd27cb549834a634af658dad521f6e8e508384",
-        "assets/iu-app-desktop.css": "f3fe9e71f21ac5845241582234457fab961bfd95ed62b4ca0e98cf5ad564a65a"
+        "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0"
     },
     "requiredMarkers": {
         "sw.js": [
@@ -40,7 +38,6 @@
             "chmi-multibrowser-console-v1-20260731"
         ],
         "projects/index.html": [
-            "perf-loop-iter009-appcss-coverage-split-v1-20260820",
             "perf-loop-iter008-defer-secondary-css-v1-20260820",
             "perf-loop-iter007-demote-silver-img-v1-20260820",
             "perf-loop-iter006-defer-pipeline-v1-20260820",

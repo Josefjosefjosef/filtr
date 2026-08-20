@@ -74,8 +74,6 @@ function getAppShellUrls() {
     // P0: BASE / index.html — nepre-cacheovat (document = network-first; starý shell by přežíval)
     // CSS/JS musí být updatovatelný i se stabilním ?v=... (viz fetch handler níž)
     `${BASE}assets/app.css`,
-    `${BASE}assets/iu-app-deferred.css`,
-    `${BASE}assets/iu-app-desktop.css`,
     `${BASE}assets/iu-financial-overlay.css`,
     `${BASE}assets/iu-legal-documents-overlay.css`,
     `${BASE}assets/iu-legal-documents-mobile-template-v1.css`,
