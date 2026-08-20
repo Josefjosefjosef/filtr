@@ -24,10 +24,13 @@ const mustDefer = [
   "iu-myinfouzel-premium-overlay.css",
 ];
 for (const f of mustDefer) {
-  const re = new RegExp(
+  const reHref = new RegExp(
     `href="[^"]*${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[^"]*"[^>]*data-iu-defer-overlay-css="1"`
   );
-  must(re.test(index), "defer:" + f);
+  const reData = new RegExp(
+    `data-iu-href="[^"]*${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[^"]*"[^>]*data-iu-defer-overlay-css="1"`
+  );
+  must(reHref.test(index) || reData.test(index), "defer:" + f);
 }
 
 const mustDesktop = [
