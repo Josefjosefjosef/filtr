@@ -1,11 +1,11 @@
 {
-    "freezeId":  "perf-loop-iter005-defer-presenter-v1-20260820",
+    "freezeId":  "perf-loop-iter006-defer-pipeline-v1-20260820",
     "preStabilizationProductionSha":  "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt":  "2026-07-20T08:15:00Z",
-    "updatedAt":  "2026-08-20T08:45:00.000Z",
-    "note":  "Freeze bump: perf-loop iter-005 defer traffic presenter until after feed paint (no microtask/parallel warm on FCP path).",
+    "updatedAt":  "2026-08-20T10:00:00.000Z",
+    "note":  "Freeze bump: perf-loop iter-006 defer 240KB feed-pipeline on slow-net/compact viewports (20s idle; desktop skip when slow).",
     "files":  {
-                  "projects/index.html":  "b9bfaff3095adb186340071fe125ea2ce45df0480128556b5a8520021cd84aee",
+                  "projects/index.html":  "6376e61c80dee01a2ea89faa9643e70b3f3914ccd45e2f201f1cdc8c0f534e2e",
                   "assets/app.css":  "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
                   "assets/app.js":  "c87fb391e7a46677161c1576c393fb0e0cf6001d6f15a4196b8a3bb87fab00b3",
                   "assets/iu-mobile-bottom-nav-shell-v1.js":  "e79259abd18c9005ec8d1931d17cd0e6fa91dcb1ab0b8207e2516178b112daba",
@@ -38,6 +38,7 @@
                                                           "chmi-multibrowser-console-v1-20260731"
                                                       ],
                             "projects/index.html":  [
+                                                        "perf-loop-iter006-defer-pipeline-v1-20260820",
                                                         "perf-loop-iter005-defer-presenter-v1-20260820",
                                                         "perf-loop-iter004-lazy-presenter-v1-20260820",
                                                         "perf-loop-iter003-core-dedupe-v1-20260820",
