@@ -472,7 +472,8 @@ if (!iuIsProdHost() && new URLSearchParams(location.search || "").get("debug") =
 
 try {
 (function iuBootFeedPipelineLazy() {
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818";
+  // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -483,6 +484,17 @@ try {
       } catch (_) {}
     });
     return p;
+  }
+  function isSlowNet() {
+    try {
+      var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (!c) return false;
+      if (c.saveData) return true;
+      var t = String(c.effectiveType || "");
+      return t === "slow-2g" || t === "2g" || t === "3g";
+    } catch (_) {
+      return false;
+    }
   }
   try {
     window.__iuEnsureFeedPipeline = ensure;
@@ -496,13 +508,17 @@ try {
       true
     );
   } catch (_) {}
+  var slow = isSlowNet();
   try {
+    // Desktop eager only when not slow-net (stage-3: min-width…ensure within 120).
     var desktopMq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
-    if (desktopMq && desktopMq.matches) {
-      void ensure();
-    }
+    if (desktopMq && desktopMq.matches && !slow) void ensure();
   } catch (_) {}
   try {
+    // Slow net only: late fallback (pointerdown still warms on intent).
+    // Compact keeps the historic 2.5s idle — keyboard-hide lives inside the pipeline.
+    var delayMs = slow ? 20000 : 2500;
+    var idleTimeout = slow ? 8000 : 2500;
     setTimeout(function () {
       try {
         if (typeof requestIdleCallback === "function") {
@@ -510,7 +526,7 @@ try {
             function () {
               void ensure();
             },
-            { timeout: 2500 }
+            { timeout: idleTimeout }
           );
         } else {
           void ensure();
@@ -518,7 +534,7 @@ try {
       } catch (_) {
         void ensure();
       }
-    }, 2500);
+    }, delayMs);
   } catch (_) {
     void ensure();
   }

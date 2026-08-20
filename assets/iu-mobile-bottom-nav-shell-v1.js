@@ -5,7 +5,7 @@
  */
 (function iuMobileBottomNavShellV1() {
   "use strict";
-  var FEED_MOD = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818";
+  var FEED_MOD = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820";
 
   function prefetchFeed() {
     try {
