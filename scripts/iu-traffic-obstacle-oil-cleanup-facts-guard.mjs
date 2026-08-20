@@ -178,8 +178,9 @@ const FUTURE_D11 =
       impactFull: FUTURE_D11,
       eventType: "prace",
       road: "D11",
-      validFrom: "2026-08-20T22:00:00+02:00",
-      validTo: "2026-08-21T05:00:00+02:00",
+      validFrom: FUTURE_FROM.toISOString(),
+      validTo: FUTURE_TO.toISOString(),
+      lifecycleStatus: "FUTURE",
     }) || ""
   );
   ok("FUTURE_TENSE_PRESERVED", /bude\s+uzavřen|bude\s+převeden/i.test(sit), sit);
