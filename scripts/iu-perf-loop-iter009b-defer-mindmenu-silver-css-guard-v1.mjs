@@ -16,9 +16,6 @@ const mustDefer = [
   "iu-mindmenu-mobile-tablet-v61.css",
   "iu-mindmenu-bottom-nav-restore-v1.css",
   "iu-overlay-mobile-tablet-unified-v1.css",
-  "iu-silver-parcel-dashboard.css",
-  "iu-silver-finance-home-card.css",
-  "iu-home-premium-install-box.css",
 ];
 for (const f of mustDefer) {
   const re = new RegExp(
@@ -27,6 +24,10 @@ for (const f of mustDefer) {
   must(re.test(index), "defer:" + f);
 }
 
+must(/href="[^"]*iu-silver-parcel-dashboard\.css[^"]*"\s*\/>/.test(index), "parcel:stays_blocking");
+must(!/iu-silver-parcel-dashboard\.css[^>]*data-iu-defer-overlay-css/.test(index), "parcel:not_deferred");
+must(/href="[^"]*iu-silver-finance-home-card\.css[^"]*"\s*\/>/.test(index), "finance:stays_blocking");
+must(/href="[^"]*iu-home-premium-install-box\.css[^"]*"\s*\/>/.test(index), "install:stays_blocking");
 must(/href="[^"]*app\.css[^"]*"\s*\/>/.test(index), "appcss:stays_blocking");
 must(/href="[^"]*iu-prehled-dne-v1\.css[^"]*"\s*\/>/.test(index), "prehled:stays_blocking");
 must(/href="[^"]*iu-silver-premium-draft\.css[^"]*"\s*\/>/.test(index), "silver_draft:stays_blocking");
