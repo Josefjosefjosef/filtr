@@ -2854,11 +2854,6 @@ button.iu-close-btn-38:focus-visible{
 }
 
 
-html[data-section]:not([data-iu-fc="1"]) #feed,
-body[data-section]:not([data-iu-fc="1"]) #feed{
-  display: none !important;
-}
-
 @media (max-width: 900px) {
   body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] #feed.iuTimelineFeed {
     min-height: clamp(28rem, 62vh, 44rem);

@@ -540,6 +540,12 @@ body[data-iu-fc="1"] #feed{
   display: grid !important;
 }
 
+/* Hide #feed outside article-list sections until data-iu-fc=1 (must stay critical — section-cz-guard). */
+html[data-section]:not([data-iu-fc="1"]) #feed,
+body[data-section]:not([data-iu-fc="1"]) #feed{
+  display: none !important;
+}
+
 /* Timeline-first middle feed (V1): light canvas, 3-column rows, continuous axis */
 body[data-iu-fc="1"] #feed.iuTimelineFeed{
   background: #ffffff;
