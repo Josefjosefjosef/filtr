@@ -496,13 +496,6 @@ try {
       return false;
     }
   }
-  function isCompactViewport() {
-    try {
-      return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
-    } catch (_) {
-      return false;
-    }
-  }
   try {
     window.__iuEnsureFeedPipeline = ensure;
   } catch (_) {}
@@ -516,7 +509,6 @@ try {
     );
   } catch (_) {}
   var slow = isSlowNet();
-  var compact = isCompactViewport();
   try {
     var desktopMq = window.matchMedia && window.matchMedia("(min-width: 1025px)");
     // Fast desktop only — avoid competing with homepage boot on 3G/Save-Data.
