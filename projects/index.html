@@ -626,7 +626,7 @@ font-src 'self' data:;
       .iuPd__hero .iuPdBtn--settings{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:999px;border-bottom-right-radius:999px}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
-    <link rel="modulepreload" href="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820" />
+    <link rel="modulepreload" href="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820" />
     <link rel="modulepreload" href="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818" />
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="low" media="(max-width: 1024px)" />
@@ -5840,7 +5840,7 @@ font-src 'self' data:;
     })();
     </script>
     <script defer src="/assets/iu-parcel-tracking-engine.js?v=4"></script>
-    <script defer src="/assets/iu-home-load-audit.js?v=home-audit-first-shell-stable-2"></script>
+    <!-- ITER-012: home-load-audit is opt-in only (?iuHomeAudit=1) — see iuDeferSecondaryJsUntilFcp -->
     <!-- Opt-in homepage perf (?iuPerfProbe=1): marks from real navigation start (before module app.js). -->
     <script>
       (function () {
@@ -5867,12 +5867,12 @@ font-src 'self' data:;
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=mobile-gate-icentrum-v64-20260629"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
-    <script defer src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629"></script>
+    <script data-iu-defer-secondary-js="1" data-iu-secondary-id="affiliate" data-iu-src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629-perf-loop-iter012-secondary-js-after-fcp-v1-20260820"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
-    <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
+    <script data-iu-defer-secondary-js="1" data-iu-secondary-id="privacy" data-iu-src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701-perf-loop-iter012-secondary-js-after-fcp-v1-20260820"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
-    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-stage7-calendar-hero-prefetch-v1-20260819"></script>
+    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-stage7-calendar-hero-prefetch-v1-20260819"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
     <script defer src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
@@ -5984,6 +5984,177 @@ font-src 'self' data:;
         return prevEnsure?prevEnsure(frag):Promise.resolve(true);
       };
       afterFcp(activate);
+    })();
+    </script>
+
+    <script>
+    (function iuDeferSecondaryJsUntilFcp(){
+      "use strict";
+      if(window.__iuDeferSecondaryJsUntilFcp)return;
+      window.__iuDeferSecondaryJsUntilFcp=true;
+      var pending={};
+      function findNode(id){
+        return document.querySelector('script[data-iu-defer-secondary-js="1"][data-iu-secondary-id="'+String(id||'')+'"]');
+      }
+      function loadNode(node){
+        if(!node)return Promise.resolve(false);
+        if(node.getAttribute("data-iu-loaded")==="1")return Promise.resolve(true);
+        if(node.getAttribute("data-iu-failed")==="1")return Promise.resolve(false);
+        var id=String(node.getAttribute("data-iu-secondary-id")||"");
+        if(pending[id])return pending[id];
+        var src=node.getAttribute("data-iu-src");
+        if(!src)return Promise.resolve(false);
+        pending[id]=new Promise(function(resolve){
+          try{
+            var s=document.createElement("script");
+            s.src=src;
+            s.async=true;
+            s.onload=function(){
+              try{node.setAttribute("data-iu-loaded","1");}catch(_){}
+              resolve(true);
+            };
+            s.onerror=function(){
+              try{node.setAttribute("data-iu-failed","1");}catch(_){}
+              resolve(false);
+            };
+            (document.head||document.documentElement).appendChild(s);
+          }catch(_){resolve(false);}
+        });
+        return pending[id];
+      }
+      window.iuEnsureSecondaryJs=function(id){
+        return loadNode(findNode(id));
+      };
+      function affiliateApplyStub(section){
+        return window.iuEnsureSecondaryJs("affiliate").then(function(ok){
+          var fn=window.iuAffiliateApplySection;
+          if(ok&&typeof fn==="function"&&fn!==affiliateApplyStub){
+            try{return fn(section);}catch(_){}
+          }
+        });
+      }
+      window.iuAffiliateApplySection=affiliateApplyStub;
+      function escAttr(v){
+        return String(v||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+      }
+      function privacyBtnHtml(key){
+        var k=escAttr(key);
+        return '<button type="button" class="iu-tool-privacy-btn" data-iu-tool-privacy-open="'+k+'" aria-haspopup="dialog" aria-label="Informace o soukromí a bezpečnosti">ℹ Informace</button>';
+      }
+      function privacyCall(name, args){
+        return window.iuEnsureSecondaryJs("privacy").then(function(ok){
+          if(typeof window.iuEnsureOverlayCss==="function"){
+            try{window.iuEnsureOverlayCss("iu-tool-privacy-info.css");}catch(_){}
+          }
+          var fn=window[name];
+          if(ok&&typeof fn==="function"&&fn!==privacyStubs[name]){
+            try{return fn.apply(null, args||[]);}catch(_){}
+          }
+        });
+      }
+      var privacyStubs={};
+      privacyStubs.iuToolPrivacyHeadBlockHtml=function(key){
+        try{window.iuEnsureSecondaryJs("privacy");}catch(_){}
+        return privacyBtnHtml(key);
+      };
+      privacyStubs.iuToolPrivacyBtnHtml=function(key){
+        try{window.iuEnsureSecondaryJs("privacy");}catch(_){}
+        return privacyBtnHtml(key);
+      };
+      privacyStubs.iuToolPrivacyOpenModal=function(key){
+        return privacyCall("iuToolPrivacyOpenModal", arguments);
+      };
+      privacyStubs.iuToolPrivacyMountDatovkaHeading=function(){
+        return privacyCall("iuToolPrivacyMountDatovkaHeading", arguments);
+      };
+      privacyStubs.iuToolPrivacyBoot=function(){
+        return privacyCall("iuToolPrivacyBoot", arguments);
+      };
+      window.iuToolPrivacyHeadBlockHtml=privacyStubs.iuToolPrivacyHeadBlockHtml;
+      window.iuToolPrivacyBtnHtml=privacyStubs.iuToolPrivacyBtnHtml;
+      window.iuToolPrivacyOpenModal=privacyStubs.iuToolPrivacyOpenModal;
+      window.iuToolPrivacyMountDatovkaHeading=privacyStubs.iuToolPrivacyMountDatovkaHeading;
+      window.iuToolPrivacyBoot=privacyStubs.iuToolPrivacyBoot;
+      document.addEventListener("click",function(e){
+        try{
+          if(window.__iuToolPrivacyDelegation)return;
+          var t=e&&e.target;
+          if(!t||typeof t.closest!=="function")return;
+          var btn=t.closest("[data-iu-tool-privacy-open]");
+          if(!btn)return;
+          e.preventDefault();
+          e.stopPropagation();
+          var key=btn.getAttribute("data-iu-tool-privacy-open");
+          window.iuEnsureSecondaryJs("privacy").then(function(ok){
+            if(!ok)return;
+            if(typeof window.iuEnsureOverlayCss==="function"){
+              try{window.iuEnsureOverlayCss("iu-tool-privacy-info.css");}catch(_){}
+            }
+            var open=window.iuToolPrivacyOpenModal;
+            if(typeof open==="function"&&open!==privacyStubs.iuToolPrivacyOpenModal){
+              try{open(key);}catch(_){}
+            }
+          });
+        }catch(_){}
+      },true);
+      function afterFcp(fn){
+        var done=false;
+        function run(){if(done)return;done=true;try{fn();}catch(_){}}
+        try{
+          if(window.PerformanceObserver){
+            var po=new PerformanceObserver(function(list){
+              var ents=list.getEntries();
+              for(var i=0;i<ents.length;i++){
+                if(ents[i].name==="first-contentful-paint"){
+                  try{po.disconnect();}catch(_){}
+                  run();
+                  return;
+                }
+              }
+            });
+            po.observe({type:"paint",buffered:true});
+          }
+        }catch(_){}
+        setTimeout(run,1800);
+        if(document.readyState==="complete")setTimeout(run,0);
+        else window.addEventListener("load",function(){setTimeout(run,0);},{once:true});
+      }
+      function idleActivate(){
+        function go(){
+          window.iuEnsureSecondaryJs("affiliate");
+          window.iuEnsureSecondaryJs("privacy");
+        }
+        try{
+          if(typeof window.requestIdleCallback==="function"){
+            window.requestIdleCallback(function(){go();},{timeout:2500});
+            return;
+          }
+        }catch(_){}
+        setTimeout(go,400);
+      }
+      afterFcp(idleActivate);
+      document.addEventListener("pointerdown",function(e){
+        try{
+          var t=e&&e.target;
+          if(!t||typeof t.closest!=="function")return;
+          if(t.closest('[href*="section=aff-"],[data-section^="aff-"],#iuAffiliateView,[data-iu-nav="affiliate"]')){
+            window.iuEnsureSecondaryJs("affiliate");
+          }
+          if(t.closest('[data-iu-tool-privacy],.iu-tool-privacy-btn,[data-section="banka"],[data-section="bakalari"],[data-section="pojistovna"],[data-section="datovka"],[href*="section=banka"],[href*="section=bakalari"],[href*="section=pojistovna"],[href*="section=datovka"]')){
+            window.iuEnsureSecondaryJs("privacy");
+            if(typeof window.iuEnsureOverlayCss==="function")window.iuEnsureOverlayCss("iu-tool-privacy-info.css");
+          }
+        }catch(_){}
+      },true);
+      try{
+        if(String(location.search||"").indexOf("iuHomeAudit=1")!==-1){
+          window.__IU_HOME_LOAD_AUDIT__=true;
+          var audit=document.createElement("script");
+          audit.src="/assets/iu-home-load-audit.js?v=home-audit-first-shell-stable-2";
+          audit.defer=true;
+          (document.head||document.documentElement).appendChild(audit);
+        }
+      }catch(_){}
     })();
     </script>
 
