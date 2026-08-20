@@ -16,6 +16,7 @@ const INDEX = path.join(ROOT, "projects", "index.html");
 const UI = path.join(ROOT, "assets", "iu-prehled-dne-ui-v1.js");
 const CSS = path.join(ROOT, "assets", "iu-prehled-dne-v1.css");
 const BANNER = path.join(ROOT, "assets", "images", "infouzel-prehled-dne-banner.png");
+const BANNER_WEBP = path.join(ROOT, "assets", "images", "infouzel-prehled-dne-banner.webp");
 const SW = path.join(ROOT, "sw.js");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
@@ -35,11 +36,15 @@ function staticGate() {
   const sw = fs.readFileSync(SW, "utf8");
 
   must(fs.existsSync(BANNER), "asset:banner_exists");
+  must(fs.existsSync(BANNER_WEBP), "asset:banner_webp_exists");
   must(/<html[^>]*class="[^"]*iu-info-system-cutover/.test(index), "index:html_cutover_class");
   must(/__iuInfoSystemCutoverEarlyBoot/.test(index), "index:early_cutover_boot");
   must(/infouzel-prehled-dne-banner\.png/.test(index), "index:banner_path");
+  must(/infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_webp_path");
   must(/data-iu-pd-banner="1"/.test(index), "index:static_banner_shell");
-  must(/preload[^>]+infouzel-prehled-dne-banner\.png/.test(index), "index:banner_preload");
+  must(/preload[^>]+infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_preload");
+  must(/type="image\/webp"\s+srcset="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "index:banner_picture_source");
+  must(/bannerHtml[\s\S]*infouzel-prehled-dne-banner\.webp/.test(ui), "ui:banner_webp");
   must(!/id="iuNewsPreviewCardMount"/.test(index), "index:no_static_news_mount");
   must(!/data-iu-news-preview-card="1"/.test(index), "index:no_static_news_card");
   must(!/id="iuSilverFinanceHomeCard"/.test(index), "index:no_static_finance_homecard");

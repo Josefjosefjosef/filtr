@@ -626,11 +626,11 @@ font-src 'self' data:;
       .iuPd__hero .iuPdBtn--settings{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:999px;border-bottom-right-radius:999px}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
-    <link rel="modulepreload" href="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819" />
+    <link rel="modulepreload" href="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820" />
     <link rel="modulepreload" href="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818" />
     <link rel="preload" as="image" href="/assets/images/section-prehled-dne.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <link rel="preload" as="image" href="/assets/images/iu-silver-hero-v4.webp" type="image/webp" fetchpriority="high" media="(max-width: 1024px)" />
-    <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.png" type="image/png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.webp" type="image/webp" fetchpriority="high" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
     <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" />
     <style id="iuDesktopLayoutV3PostAppCss">
@@ -2815,7 +2815,10 @@ font-src 'self' data:;
                                   <div class="iuHomeSectionBar" data-iu-home-section-bar="muj-prehled-dne" aria-hidden="true">MŮJ PŘEHLED DNE</div>
                                   <div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">
                                   <div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">
-                                    <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="high" loading="eager" />
+                                    <picture>
+                                      <source type="image/webp" srcset="/assets/images/infouzel-prehled-dne-banner.webp" />
+                                      <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="high" loading="eager" />
+                                    </picture>
                                   </div>
                                   <div class="iuPd__top">
                                     <div class="iuPdBtn iuPdBtn--settings iuPdBtn--block" data-testid="prehled-dne-settings-cta" style="opacity:0.35;pointer-events:none" aria-hidden="true"><span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span></div>
@@ -5868,7 +5871,7 @@ font-src 'self' data:;
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script defer src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
-    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819"></script>
+    <script type="module" src="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820"></script>
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-stage7-calendar-hero-prefetch-v1-20260819"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
