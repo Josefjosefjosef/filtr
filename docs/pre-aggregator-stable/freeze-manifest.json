@@ -1,11 +1,11 @@
 {
-    "freezeId":  "perf-loop-iter004-lazy-presenter-v1-20260820",
+    "freezeId":  "perf-loop-iter005-defer-presenter-v1-20260820",
     "preStabilizationProductionSha":  "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt":  "2026-07-20T08:15:00Z",
-    "updatedAt":  "2026-08-20T08:00:00.000Z",
-    "note":  "Freeze bump: perf-loop iter-004 lazy-load traffic-card-presenter (~81KB gz) off homepage static module graph.",
+    "updatedAt":  "2026-08-20T08:45:00.000Z",
+    "note":  "Freeze bump: perf-loop iter-005 defer traffic presenter until after feed paint (no microtask/parallel warm on FCP path).",
     "files":  {
-                  "projects/index.html":  "093f25b1c477806f81da86a34338c7d2d240d4df27bbf2924ef4e2069924c619",
+                  "projects/index.html":  "b9bfaff3095adb186340071fe125ea2ce45df0480128556b5a8520021cd84aee",
                   "assets/app.css":  "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
                   "assets/app.js":  "c87fb391e7a46677161c1576c393fb0e0cf6001d6f15a4196b8a3bb87fab00b3",
                   "assets/iu-mobile-bottom-nav-shell-v1.js":  "e79259abd18c9005ec8d1931d17cd0e6fa91dcb1ab0b8207e2516178b112daba",
@@ -38,6 +38,7 @@
                                                           "chmi-multibrowser-console-v1-20260731"
                                                       ],
                             "projects/index.html":  [
+                                                        "perf-loop-iter005-defer-presenter-v1-20260820",
                                                         "perf-loop-iter004-lazy-presenter-v1-20260820",
                                                         "perf-loop-iter003-core-dedupe-v1-20260820",
                                                         "perf-loop-iter002-hero-webp-v1-20260820",

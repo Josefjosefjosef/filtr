@@ -17,7 +17,7 @@ import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } fro
  * into the homepage module graph. Browser loads it on demand; Node fixtures prime via TLA.
  */
 const IU_TRAFFIC_PRESENTER_URL =
-  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820";
+  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820";
 
 let _iuTrafficPresenter = null;
 let _iuTrafficPresenterPromise = null;
@@ -36,12 +36,8 @@ export function ensureTrafficPresenter() {
 if (typeof window === "undefined") {
   // Node guards/fixtures call sync buildTrafficCardViewModel after import.
   _iuTrafficPresenter = await import(IU_TRAFFIC_PRESENTER_URL);
-} else {
-  // Warm presenter ASAP without blocking module evaluation / shell+feed paint.
-  queueMicrotask(() => {
-    void ensureTrafficPresenter();
-  });
 }
+// Browser: do NOT queueMicrotask-warm presenter — wait until after feed paint (iter-005).
 
 function iuTrafficPresenter() {
   if (!_iuTrafficPresenter) {
@@ -792,11 +788,7 @@ export function loadOfflineTrafficSnapshot() {
 export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return null;
-  try {
-    await ensureTrafficPresenter();
-  } catch (_) {
-    return null;
-  }
+  // Presenter not required for snapshot fetch/parse (iter-005: keep off FCP→feed path).
   const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
   if (typeof fetch !== "function") return null;
   try {

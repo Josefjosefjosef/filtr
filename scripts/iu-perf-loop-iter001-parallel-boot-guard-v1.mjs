@@ -29,7 +29,8 @@ must(
 );
 must(
   /Promise\.resolve\(trafficPromise\)/.test(ui) ||
-    /Promise\.all\(\[\s*trafficPromise\s*,\s*presenterWarm\s*\]\)/.test(ui),
+    /Promise\.all\(\[\s*trafficPromise\s*,\s*presenterWarm\s*\]\)/.test(ui) ||
+    /await trafficPromise[\s\S]{0,200}ensureTrafficPresenter/.test(ui),
   "ui:uses_early_traffic_promise"
 );
 must(/perf-loop-iter001-parallel-boot-v1-20260819/.test(index), "index:cache_bust");
