@@ -7958,18 +7958,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     box-sizing:border-box;
   }
 }
-body[data-section="jr"] #iuJrEmptyView .iuSectionHeader--jr,
-html[data-section="jr"] #iuJrEmptyView .iuSectionHeader--jr,
-#newsList #iuJrEmptyView .iuSectionHeader--jr{
-  --iuSectionAccent:#F59E0B;
-}
-#iuJrEmptyView .iuSectionHeader--jr{margin:0 0 8px;align-items:center}
-#iuJrEmptyView .iuSectionHeader--jr h2{font-size:clamp(19px,1.05rem + .6vw,22px);font-weight:820;letter-spacing:.045em;line-height:1.2;color:#F59E0B}
-#iuJrEmptyView .iu-timetables-seo-block{margin:16px 0 12px;padding:14px 14px 16px;box-sizing:border-box;width:100%;max-width:100%;border-radius:12px;border:1px solid color-mix(in srgb,var(--iuSectionAccent) 20%,rgba(11,27,43,.1));background:linear-gradient(165deg,#fbfcfd,#f6f2eb 52%,#f8fafc);box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)}
-#iuJrEmptyView .iu-timetables-seo-block h2{margin:0 0 10px;font-size:clamp(16px,.95rem + .5vw,18px);font-weight:780;letter-spacing:.02em;line-height:1.25;color:#F59E0B}
-#iuJrEmptyView .iu-timetables-seo-block p{margin:0 0 10px;color:rgba(11,27,43,.88);font-size:14px;line-height:1.45}
-#iuJrEmptyView .iu-timetables-seo-block p:last-child{margin-bottom:0}
-#iuJrEmptyView .iuSectionHeader--jr .iuSectionHeaderLine{height:3px;border-radius:999px;opacity:1;background:linear-gradient(90deg,color-mix(in srgb,var(--iuSectionAccent) 72%,transparent) 0%,color-mix(in srgb,var(--iuSectionAccent) 28%,transparent) 38%,transparent 100%)}
+
 #iuJrEmptyView>.iuSectionSubtitle{margin:2px 0 12px;line-height:1.38}
 #newsList #iuJrEmptyView .iuJRGrid a.iuRadioChip{
   -webkit-tap-highlight-color:transparent;
@@ -8845,20 +8834,7 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks[aria-label="Rychl?Â© odka
   text-decoration:underline;
 }
 
-@media (min-width: 901px){
-  body .layout > aside.accordionCol .iuMailboxControls,
-  body .layout > aside.accordionCol #iuMailboxControls{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  body .layout > aside.accordionCol .iuMailboxControls span,
-  body .layout > aside.accordionCol #iuMailboxControls span{
-    display: block;
-    margin: 0;
-  }
-}
+
 
 .accordionCol .mindMenu .iu-mailbox-row .iu-mailbox-pill{
   transition: box-shadow 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 180ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -9831,65 +9807,7 @@ html[data-iu-debug="1"] #iuVideoDbgDumpSummary{
   justify-content: center !important;
 }
 
-.layout > aside.accordionCol .mindMenu .iu-mailbox-row{
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 36px 40px !important;
-  align-items: center;
-  justify-content: stretch;
-  width: 100%;
-  min-height: 40px;
-  gap: 5px !important;
-  padding: 0 !important;
-  margin: 0;
-}
 
-.layout > aside.accordionCol .mindMenu .iu-mailbox-pill{
-  grid-column: 1;
-  width: auto !important;
-  flex: unset !important;
-  min-width: 0;
-  max-width: 100%;
-  height: 35px !important;
-  line-height: 35px !important;
-  border: 1px solid rgba(20, 40, 70, 0.18);
-  border-radius: 999px !important;
-  background-color: rgba(255, 255, 255, 0.62) !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.18);
-  text-align: center !important;
-  justify-content: center !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  contain: layout style;
-  isolation: isolate;
-}
-
-.layout > aside.accordionCol .mindMenu .iu-mailbox-gear{
-  grid-column: 2;
-  flex: unset;
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px !important;
-  min-height: 32px !important;
-  margin: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  color: rgba(170, 176, 184, 0.95) !important;
-}
-
-.layout > aside.accordionCol .mindMenu .iu-mailbox-gear svg{
-  color: inherit;
-  opacity: 1;
-}
-
-.layout > aside.accordionCol .mindMenu .iu-pill-social-slot{
-  grid-column: 3;
-  margin-left: 0;
-}
 
 @media (prefers-reduced-motion: no-preference){
   .layout > aside.accordionCol .mindMenu .iu-mailbox-row:hover .iu-mailbox-gear{
@@ -15296,12 +15214,7 @@ body .accordionCol .mindMenu .iu-mmQuickGrid{
   grid-template-columns:repeat(2, 1fr) !important;
 }
 
-body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile{
-  width:100% !important;
-  height:64px !important;
-  min-height:64px !important;
-  box-sizing:border-box !important;
-}
+
 
 body .accordionCol .mindMenu .iu-mmQuickGrid > .iuTile > .iuTileLink{
   width:100% !important;
