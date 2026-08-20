@@ -50,7 +50,8 @@ import {
   isTrafficFollowed,
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
-} from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+  ensureTrafficPresenter,
+} from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {
   applyFeedSourceAndQuickView,
@@ -2839,6 +2840,11 @@ async function boot() {
         signal: bootSignal,
         omitFeedSourceIds: ["ndic"],
       });
+      // Warm heavy traffic presenter in parallel with feed (not on static module graph).
+      const presenterWarm =
+        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
+          ? ensureTrafficPresenter().catch(() => null)
+          : Promise.resolve(null);
       const trafficPromise =
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
@@ -2941,7 +2947,7 @@ async function boot() {
         } catch (_) {}
       }
       if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
-        void Promise.resolve(trafficPromise)
+        void Promise.all([trafficPromise, presenterWarm])
           .then(() => {
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;

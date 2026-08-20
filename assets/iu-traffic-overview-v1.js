@@ -11,14 +11,68 @@
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
 import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
-import {
-  buildTrafficCardPresentation,
-  expandTrafficAbbreviationsCs,
-  isTrafficCardInformative,
-  normalizeDirectionHuman,
-  looksLikeTruncatedFragment,
-  TRAFFIC_MAP_DOT_CSS_VAR,
-} from "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814";
+
+/**
+ * Perf-loop iter-004: do NOT statically import the ~80KB+ gzip presenter (+ registries)
+ * into the homepage module graph. Browser loads it on demand; Node fixtures prime via TLA.
+ */
+const IU_TRAFFIC_PRESENTER_URL =
+  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820";
+
+let _iuTrafficPresenter = null;
+let _iuTrafficPresenterPromise = null;
+
+export function ensureTrafficPresenter() {
+  if (_iuTrafficPresenter) return Promise.resolve(_iuTrafficPresenter);
+  if (!_iuTrafficPresenterPromise) {
+    _iuTrafficPresenterPromise = import(IU_TRAFFIC_PRESENTER_URL).then((m) => {
+      _iuTrafficPresenter = m;
+      return m;
+    });
+  }
+  return _iuTrafficPresenterPromise;
+}
+
+if (typeof window === "undefined") {
+  // Node guards/fixtures call sync buildTrafficCardViewModel after import.
+  _iuTrafficPresenter = await import(IU_TRAFFIC_PRESENTER_URL);
+} else {
+  // Warm presenter ASAP without blocking module evaluation / shell+feed paint.
+  queueMicrotask(() => {
+    void ensureTrafficPresenter();
+  });
+}
+
+function iuTrafficPresenter() {
+  if (!_iuTrafficPresenter) {
+    throw new Error("IU_TRAFFIC_PRESENTER_NOT_READY");
+  }
+  return _iuTrafficPresenter;
+}
+
+function buildTrafficCardPresentation(tv) {
+  return iuTrafficPresenter().buildTrafficCardPresentation(tv);
+}
+function expandTrafficAbbreviationsCs(s) {
+  return iuTrafficPresenter().expandTrafficAbbreviationsCs(s);
+}
+function isTrafficCardInformative(tv) {
+  if (!_iuTrafficPresenter) return false;
+  return iuTrafficPresenter().isTrafficCardInformative(tv);
+}
+function normalizeDirectionHuman(s) {
+  if (!_iuTrafficPresenter) return String(s || "").trim() || null;
+  return iuTrafficPresenter().normalizeDirectionHuman(s);
+}
+function looksLikeTruncatedFragment(s) {
+  if (!_iuTrafficPresenter) return false;
+  return iuTrafficPresenter().looksLikeTruncatedFragment(s);
+}
+function TRAFFIC_MAP_DOT_CSS_VAR_VALUE() {
+  if (!_iuTrafficPresenter) return "var(--iu-pd-dot-traffic, #2563eb)";
+  return iuTrafficPresenter().TRAFFIC_MAP_DOT_CSS_VAR;
+}
+
 export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
   PUBLICATION_ENABLED: false,
   PUBLIC_API_ENABLED: false,
@@ -738,6 +792,11 @@ export function loadOfflineTrafficSnapshot() {
 export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return null;
+  try {
+    await ensureTrafficPresenter();
+  } catch (_) {
+    return null;
+  }
   const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
   if (typeof fetch !== "function") return null;
   try {
@@ -1043,6 +1102,15 @@ function fullTextAddsDetail(leadText, impactFull) {
  * Structured view-model for redesigned traffic cards (no invented facts).
  */
 export function buildTrafficCardViewModel(trafficV1) {
+  if (!_iuTrafficPresenter) {
+    return {
+      informative: false,
+      presentation: null,
+      followId: "",
+      mapUrl: "",
+      mapDotCssVar: TRAFFIC_MAP_DOT_CSS_VAR_VALUE(),
+    };
+  }
   const tv = trafficV1 && typeof trafficV1 === "object" ? trafficV1 : {};
   const badge = trafficBadgeModel(tv);
   const change = String((tv.feed && tv.feed.feedChangeType) || "");
@@ -1283,7 +1351,7 @@ export function buildTrafficCardViewModel(trafficV1) {
     quickBlocks,
     illustrationKey,
     mapUrl,
-    mapDotCssVar: TRAFFIC_MAP_DOT_CSS_VAR,
+    mapDotCssVar: TRAFFIC_MAP_DOT_CSS_VAR_VALUE(),
     followId,
     sourceLabel,
     showActive,

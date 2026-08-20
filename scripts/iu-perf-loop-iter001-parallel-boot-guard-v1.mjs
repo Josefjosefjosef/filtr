@@ -27,7 +27,11 @@ must(
     /const shell = await loadInfoSystemShellData/.test(ui),
   "ui:boot_parallel_promises"
 );
-must(/Promise\.resolve\(trafficPromise\)/.test(ui), "ui:uses_early_traffic_promise");
+must(
+  /Promise\.resolve\(trafficPromise\)/.test(ui) ||
+    /Promise\.all\(\[\s*trafficPromise\s*,\s*presenterWarm\s*\]\)/.test(ui),
+  "ui:uses_early_traffic_promise"
+);
 must(/perf-loop-iter001-parallel-boot-v1-20260819/.test(index), "index:cache_bust");
 must(
   /iu-info-system-core-v1\.js\?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819/.test(
