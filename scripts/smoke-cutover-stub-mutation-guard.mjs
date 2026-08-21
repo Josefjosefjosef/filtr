@@ -52,6 +52,7 @@ must(!validateSmokeTrafficStubSchema({ nope: true }).ok, "mutation_malformed_tra
 
 {
   const smokeSrc = fs.readFileSync(path.join(__dirname, "smoke.mjs"), "utf8");
+  must(/lanes\/pocasi\.json/.test(fs.readFileSync(path.join(__dirname, "smoke-heavy-data-stubs.mjs"), "utf8")), "stubs_intercept_pocasi_lane");
   must(/SMOKE_FEED_ROUTE_NOT_INTERCEPTED/.test(smokeSrc), "stub_not_intercepted_fail_closed_in_smoke");
   must(/SMOKE_TRAFFIC_SNAPSHOT_ROUTE_NOT_INTERCEPTED/.test(smokeSrc), "traffic_not_intercepted_fail_closed");
   must(/SMOKE_UI_DID_NOT_CONSUME_FEED_STUB/.test(smokeSrc), "ui_consume_fail_closed");

@@ -263,7 +263,7 @@ async function smokePrehledDneCutover(page) {
   }
   if (smokeHeavyStubStats.feedIntercepts < 1) {
     fail(
-      "SMOKE_FEED_ROUTE_NOT_INTERCEPTED: cutover expected stubbed feed.json intercept (anti-false-green)"
+      "SMOKE_FEED_ROUTE_NOT_INTERCEPTED: cutover expected stubbed feed.json or lanes/pocasi.json intercept (anti-false-green)"
     );
   }
   if (!smokeHeavyStubStats.feedSchema || !smokeHeavyStubStats.feedSchema.ok) {
@@ -308,6 +308,7 @@ async function smokePrehledDneCutover(page) {
       SMOKE_UI_CONSUMED_STUBBED_DATA: stubUi.feedMarker ? "YES" : "NO",
       SMOKE_UI_TRAFFIC_MARKER: stubUi.trafficMarker ? "YES" : "NO",
       feedIntercepts: smokeHeavyStubStats.feedIntercepts,
+      pocasiLaneIntercepts: smokeHeavyStubStats.pocasiLaneIntercepts || 0,
       trafficIntercepts: smokeHeavyStubStats.trafficIntercepts,
       feedStubBytes: smokeHeavyStubStats.feedBytesServed,
       trafficStubBytes: smokeHeavyStubStats.trafficBytesServed,

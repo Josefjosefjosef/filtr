@@ -21,6 +21,8 @@ export const SMOKE_STUB_MARKERS = Object.freeze({
 });
 
 const FEED_URL_RE = /\/projects\/data\/info_events\/feed\.json(?:\?|$)/i;
+/** FIRST LOAD: home CHMI path uses lanes/pocasi.json (not multi‑MB feed.json). */
+const POCASI_LANE_URL_RE = /\/projects\/data\/info_events\/lanes\/pocasi\.json(?:\?|$)/i;
 const TRAFFIC_URL_RE =
   /\/projects\/data\/info_events\/ndic_datex_v1\/traffic_offline_snapshot\.json(?:\?|$)/i;
 
@@ -168,6 +170,7 @@ export async function installSmokeHeavyDataRouteStubs(page, opts = {}) {
   const stats = {
     enabled,
     feedIntercepts: 0,
+    pocasiLaneIntercepts: 0,
     trafficIntercepts: 0,
     feedSchema,
     trafficSchema,
@@ -177,7 +180,19 @@ export async function installSmokeHeavyDataRouteStubs(page, opts = {}) {
 
   if (!enabled) return stats;
 
-  await page.route(FEED_URL_RE, async (route) => {
+  const fulfillFeedStub = async (route) => {
+    stats.feedIntercepts += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      body: feedBody,
+    });
+  };
+
+  await page.route(FEED_URL_RE, fulfillFeedStub);
+  // Same stub items shape as feed.json — home boot loads CHMI via pocasi lane.
+  await page.route(POCASI_LANE_URL_RE, async (route) => {
+    stats.pocasiLaneIntercepts += 1;
     stats.feedIntercepts += 1;
     await route.fulfill({
       status: 200,
@@ -198,7 +213,8 @@ export async function installSmokeHeavyDataRouteStubs(page, opts = {}) {
 }
 
 export function isFeedStubUrl(url) {
-  return FEED_URL_RE.test(String(url || ""));
+  const u = String(url || "");
+  return FEED_URL_RE.test(u) || POCASI_LANE_URL_RE.test(u);
 }
 
 export function isTrafficStubUrl(url) {
