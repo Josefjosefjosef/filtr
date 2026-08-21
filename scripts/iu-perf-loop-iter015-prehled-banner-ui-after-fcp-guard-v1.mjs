@@ -19,6 +19,8 @@ must(!/<script[^>]*type="module"[^>]*src="[^"]*iu-prehled-dne-ui-v1\.js/.test(in
 must(/infouzel-prehled-dne-banner\.webp"[^>]*media="\(min-width: 768px\)"/.test(index), "banner_preload_media");
 must(/iuPd__bannerImg[^>]*fetchpriority="low"/.test(index), "banner_fetchpriority_low");
 must(/iuPd__bannerImg[^>]*loading="lazy"/.test(index), "banner_loading_lazy");
+/* Banner stays deferred; CHMI module may start in early head for first-real-card P0. */
+must(/first-load-early-chmi-boot-v1-20260821/.test(index), "early_chmi_boot_marker");
 
 if (fails.length) {
   console.error("[iu-perf-loop-iter015-prehled-banner-ui-after-fcp-guard] FAIL");

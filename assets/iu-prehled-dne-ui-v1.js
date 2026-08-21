@@ -3104,16 +3104,51 @@ async function boot() {
   })();
 }
 
+function whenPrehledRootReady(fn) {
+  let done = false;
+  const run = () => {
+    if (done) return;
+    try {
+      if (!document.getElementById("iuPrehledDneRoot")) return;
+    } catch (_) {
+      return;
+    }
+    done = true;
+    try {
+      if (mo) mo.disconnect();
+    } catch (_) {}
+    try {
+      fn();
+    } catch (_) {}
+  };
+  let mo = null;
+  try {
+    if (document.getElementById("iuPrehledDneRoot")) {
+      run();
+      return;
+    }
+  } catch (_) {}
+  try {
+    mo = new MutationObserver(run);
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (_) {}
+  try {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", run, { once: true });
+    } else {
+      run();
+    }
+  } catch (_) {
+    run();
+  }
+}
+
 function mountPrehledDne() {
   boot();
 }
 
 try {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountPrehledDne, { once: true });
-  } else {
-    mountPrehledDne();
-  }
+  whenPrehledRootReady(mountPrehledDne);
 } catch (_) {
   mountPrehledDne();
 }
