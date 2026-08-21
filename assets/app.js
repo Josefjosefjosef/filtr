@@ -473,7 +473,8 @@ if (!iuIsProdHost() && new URLSearchParams(location.search || "").get("debug") =
 try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820";
+  // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -515,26 +516,65 @@ try {
     if (desktopMq && desktopMq.matches && !slow) void ensure();
   } catch (_) {}
   try {
-    // Slow net only: late fallback (pointerdown still warms on intent).
-    // Compact keeps the historic 2.5s idle — keyboard-hide lives inside the pipeline.
-    var delayMs = slow ? 20000 : 2500;
-    var idleTimeout = slow ? 8000 : 2500;
-    setTimeout(function () {
+    // After FCP: start sooner on fast nets; slow-net capped (was 20s — blocked Silver weather).
+    // Compact/keyboard-hide still inside pipeline; early weather is HEAD-painted independently.
+    var delayMs = slow ? 4000 : 0;
+    var idleTimeout = slow ? 4000 : 1200;
+    function afterFcpThen(fn) {
+      var done = false;
+      function run() {
+        if (done) return;
+        done = true;
+        try {
+          fn();
+        } catch (_) {}
+      }
       try {
-        if (typeof requestIdleCallback === "function") {
-          requestIdleCallback(
-            function () {
-              void ensure();
-            },
-            { timeout: idleTimeout }
-          );
-        } else {
+        var paints = performance.getEntriesByType && performance.getEntriesByType("paint");
+        if (paints && paints.some(function (e) { return e && e.name === "first-contentful-paint"; })) {
+          run();
+          return;
+        }
+      } catch (_) {}
+      try {
+        if (typeof PerformanceObserver === "function") {
+          var po = new PerformanceObserver(function (list) {
+            try {
+              var ents = list.getEntries();
+              for (var i = 0; i < ents.length; i++) {
+                if (ents[i] && ents[i].name === "first-contentful-paint") {
+                  try {
+                    po.disconnect();
+                  } catch (_) {}
+                  run();
+                  return;
+                }
+              }
+            } catch (_) {}
+          });
+          po.observe({ type: "paint", buffered: true });
+        }
+      } catch (_) {}
+      setTimeout(run, 1800);
+    }
+    afterFcpThen(function () {
+      setTimeout(function () {
+        try {
+          if (typeof requestIdleCallback === "function") {
+            requestIdleCallback(
+              function () {
+                void ensure();
+              },
+              { timeout: idleTimeout }
+            );
+          } else {
+            void ensure();
+          }
+        } catch (_) {
           void ensure();
         }
-      } catch (_) {
-        void ensure();
-      }
-    }, delayMs);
+      }, delayMs);
+    });
   } catch (_) {
     void ensure();
   }

@@ -20,10 +20,53 @@
       try{
         var p=String(location.pathname||"");
         if(!(p==="/"||p==="/index.html"||p==="/projects/"||p==="/projects"||p.indexOf("/projects/")===0||p.indexOf("/filtr/")===0))return;
-        var gps=localStorage.getItem("iuWeatherGpsSelectedV1");
-        var man=localStorage.getItem("iu_manual_location");
-        var has=!!(gps||man);
+        function readLoc(){
+          try{
+            var man=localStorage.getItem("iu_manual_location");
+            if(man){
+              var o=JSON.parse(man);
+              var lat=Number(o&&o.lat), lon=Number(o&&o.lon);
+              if(isFinite(lat)&&isFinite(lon)) return {lat:lat,lon:lon,src:"manual"};
+            }
+          }catch(_){}
+          try{
+            var gps=localStorage.getItem("iuWeatherGpsSelectedV1");
+            if(gps){
+              var g=JSON.parse(gps);
+              var la=Number(g&&g.lat), lo=Number(g&&g.lon);
+              if(isFinite(la)&&isFinite(lo)) return {lat:la,lon:lo,src:"gps"};
+            }
+          }catch(_){}
+          return null;
+        }
+        var loc=readLoc();
+        var has=!!loc;
         document.documentElement.setAttribute("data-iu-silver-wx-boot",has?"ready":"firstVisit");
+        /* FIRST LOAD P0: start Open-Meteo immediately for returning users (do not wait 2.5–20s feed-pipeline). */
+        if(!loc)return;
+        window.__iuEarlyWxLoc={lat:loc.lat,lon:loc.lon,src:loc.src};
+        var url="https://api.open-meteo.com/v1/forecast"+
+          "?latitude="+encodeURIComponent(String(loc.lat))+
+          "&longitude="+encodeURIComponent(String(loc.lon))+
+          "&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility"+
+          "&hourly=temperature_2m,apparent_temperature,weather_code,is_day,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,relative_humidity_2m,visibility,uv_index"+
+          "&daily=temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,sunrise,sunset"+
+          "&timezone=Europe%2FPrague&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&pressure_unit=hPa&models=gfs_seamless";
+        window.__iuEarlyWxUrl=url;
+        window.__iuEarlyWxP=fetch(url,{cache:"no-store",credentials:"omit"}).then(function(r){
+          if(!r||!r.ok)throw new Error("early-wx-http");
+          return r.json();
+        }).then(function(d){
+          window.__iuEarlyWxData=d;
+          window.__iuEarlyWxAt=Date.now();
+          try{
+            if(typeof window.__iuEarlyWxOnData==="function")window.__iuEarlyWxOnData(d);
+          }catch(_){}
+          return d;
+        }).catch(function(e){
+          window.__iuEarlyWxErr=String(e&&e.message||e||"err");
+          return null;
+        });
       }catch(_){
         try{document.documentElement.setAttribute("data-iu-silver-wx-boot","firstVisit");}catch(_e){}
       }
@@ -2763,6 +2806,71 @@ font-src 'self' data:;
                             if(l1)l1.innerHTML='<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> <span data-iu-silver-weather-hook="summary">Počasí se načítá…</span>';
                             if(l2)l2.innerHTML='<span data-iu-silver-weather-hook="tip">💡 Za chvíli ho ukážeme tady.</span>';
                             if(pr){pr.hidden=true;pr.setAttribute("hidden","");}
+                            function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+                            function iconFor(code,isDay){
+                              var c0=Number(code);
+                              if(isDay===false||isDay===0)return "🌙";
+                              if(c0===0)return "☀️";
+                              if(c0===1||c0===2)return "🌤";
+                              if(c0===3)return "⛅";
+                              if(c0>=95)return "⛈️";
+                              if((c0>=51&&c0<=67)||(c0>=80&&c0<=82))return "🌧️";
+                              if(c0>=71&&c0<=77)return "❄️";
+                              if((c0>=45&&c0<=48)||c0===56)return "🌫️";
+                              return "🌤";
+                            }
+                            function statusFor(code,isDay){
+                              var c0=Number(code);
+                              if(isFinite(c0)&&c0>=95)return {icon:"⛈️",text:"Bouřky"};
+                              if(isFinite(c0)&&((c0>=51&&c0<=67)||(c0>=80&&c0<=82)))return {icon:"🌧️",text:"Déšť"};
+                              if(isFinite(c0)&&c0>=71&&c0<=77)return {icon:"❄️",text:"Sníh"};
+                              if(isFinite(c0)&&((c0>=45&&c0<=48)||c0===56))return {icon:"🌫️",text:"Mlha / vlhko"};
+                              if(c0===0)return {icon:"☀️",text:"Beze srážek"};
+                              if(c0===1||c0===2)return {icon:"🌤",text:"Proměnlivo"};
+                              if(c0===3)return {icon:"⛅",text:"Oblačno"};
+                              return {icon:iconFor(code,isDay),text:"Počasí"};
+                            }
+                            function paint(d){
+                              try{
+                                if(!d||!d.current)return;
+                                if(c.getAttribute("data-iu-silver-wx-phase")==="data"&&c.getAttribute("data-iu-early-wx-painted")!=="1")return;
+                                var cur=d.current;
+                                var t=typeof cur.temperature_2m==="number"?Math.round(cur.temperature_2m):null;
+                                var fl=typeof cur.apparent_temperature==="number"?Math.round(cur.apparent_temperature):null;
+                                if(t==null)return;
+                                var st=statusFor(cur.weather_code,cur.is_day);
+                                var dp=iconFor(cur.weather_code,cur.is_day);
+                                var tStr=t+" °C";
+                                var flStr=fl!=null?("Pocitově "+fl+" °C"):"Pocitově —°C";
+                                var tip="💡 Počasí pro tvoji polohu.";
+                                l1=document.getElementById("iuSilverWeatherLine1")||l1;
+                                l2=document.getElementById("iuSilverWeatherLine2")||l2;
+                                if(!l1||!l2)return;
+                                l1.innerHTML=
+                                  '<span class="silver-weather-dpart" aria-hidden="true">'+esc(dp)+'</span>'+
+                                  '<span class="iu-weather-compact-tempCol">'+
+                                  '<span class="iu-weather-temp-prefix" aria-hidden="true">Venku je </span>'+
+                                  '<span class="silver-weather-outside-temp iu-weather-compact-temp" data-iu-silver-weather-hook="temp">'+esc(tStr)+'</span>'+
+                                  '<span class="iu-weather-compact-feels" data-iu-silver-weather-hook="feels">'+esc(flStr)+'</span>'+
+                                  '</span>'+
+                                  '<span class="iu-weather-compact-divider" aria-hidden="true"></span>'+
+                                  '<span class="iu-weather-compact-status">'+
+                                  '<span class="silver-weather-stat" aria-hidden="true">'+esc(st.icon)+'</span>'+
+                                  '<span data-iu-silver-weather-hook="status"> '+esc(st.text)+'</span>'+
+                                  '</span>';
+                                l2.innerHTML='<span class="iu-weather-compact-advice" data-iu-silver-weather-hook="tip">'+esc(tip)+'</span>';
+                                try{l2.setAttribute("data-iu-action-indicator","chevron");}catch(_){}
+                                c.setAttribute("data-iu-silver-wx-phase","data");
+                                c.setAttribute("data-iu-silver-wx-layout","data");
+                                c.setAttribute("data-iu-early-wx-painted","1");
+                                window.__iuEarlyWxPaintedAt=Date.now();
+                              }catch(_){}
+                            }
+                            window.__iuEarlyWxOnData=paint;
+                            if(window.__iuEarlyWxData)paint(window.__iuEarlyWxData);
+                            else if(window.__iuEarlyWxP&&typeof window.__iuEarlyWxP.then==="function"){
+                              window.__iuEarlyWxP.then(function(d){ if(d)paint(d); });
+                            }
                           }catch(_){}
                         })();
                         </script>
@@ -5989,7 +6097,7 @@ font-src 'self' data:;
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
     <script defer src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
