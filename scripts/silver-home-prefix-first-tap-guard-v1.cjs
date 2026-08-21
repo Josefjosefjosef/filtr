@@ -814,30 +814,41 @@ async function runQuickActionsPresent(browser, url) {
     if (missing.length) return fail(result, "missing_quick_actions_" + missing.join(","));
 
     /* Cold click hold should mark aria-busy then clear after engine (no throw).
-       Arm observation BEFORE click so brief/committed busy is not missed via IPC. */
-    const busySeen = page.waitForFunction(
-      () => {
-        const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
-        return !!(el && el.getAttribute("aria-busy") === "true");
-      },
-      null,
-      { timeout: 2000 }
-    );
+       Arm BEFORE click so brief busy is not missed, but keep timeout above
+       Playwright actionability wait — a short armed waiter rejects as unhandled
+       while click() is still pending and crashes the process. */
+    let busySeen = false;
+    const busyWait = page
+      .waitForFunction(
+        () => {
+          const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
+          return !!(el && el.getAttribute("aria-busy") === "true");
+        },
+        null,
+        { timeout: 12000 }
+      )
+      .then(() => {
+        busySeen = true;
+      })
+      .catch(() => {
+        busySeen = false;
+      });
     await page.locator(quickActionSel("calendar")).click({ timeout: 10000 });
-    try {
-      await busySeen;
-    } catch (_) {
-      return fail(result, "quick_action_missing_immediate_aria_busy");
-    }
+    await busyWait;
+    if (!busySeen) return fail(result, "quick_action_missing_immediate_aria_busy");
     await waitEngineReady(page, STRESS_FINAL_MAX_MS);
-    await page.waitForFunction(
-      () => {
-        const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
-        return !el || el.getAttribute("aria-busy") !== "true";
-      },
-      null,
-      { timeout: 3000 }
-    );
+    try {
+      await page.waitForFunction(
+        () => {
+          const el = document.querySelector('#iuSilverHomeInputUx [data-iu-silver-home-quick-action="calendar"]');
+          return !el || el.getAttribute("aria-busy") !== "true";
+        },
+        null,
+        { timeout: 5000 }
+      );
+    } catch (_) {
+      return fail(result, "quick_action_aria_busy_stuck");
+    }
     return ok(result);
   } catch (err) {
     return fail(result, String(err && err.message ? err.message : err));
