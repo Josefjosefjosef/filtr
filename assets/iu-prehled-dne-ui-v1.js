@@ -2920,16 +2920,64 @@ async function boot() {
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
           : Promise.resolve(null);
 
+      // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
+      let feedEarlyPainted = false;
+      let shellRef = null;
+      const paintFeed = (feed, shellData) => {
+        if (bootAbort && bootAbort.signal.aborted) return;
+        state.data = Object.assign({}, shellData || shellRef || {}, {
+          feed,
+          feedLoad: {
+            omittedSourceIds: (feed && feed.omittedSourceIds) || ["ndic"],
+            trafficPrimarySource: "traffic_offline_snapshot",
+            parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
+            shellOnly: false,
+            feedSource: (feed && feed.feedSource) || (feed && feed.fromLanes ? "lanes" : "feed.json"),
+          },
+          loadedAt: new Date().toISOString(),
+        });
+        try {
+          migrateChmiCapV2UserStates((feed && feed.items) || []);
+        } catch (_) {}
+        state.index = buildFeedIndex((feed && feed.items) || []);
+        if (state.settingsOpen) {
+          try {
+            updateFeedDom();
+          } catch (_) {
+            paint();
+            wire();
+          }
+        } else {
+          paint();
+          wire();
+        }
+        try {
+          root.setAttribute("data-iu-pd-feed-ready", "1");
+        } catch (_) {}
+      };
+
+      void feedPromise
+        .then((feed) => {
+          if (bootAbort && bootAbort.signal.aborted) return;
+          if (!feed || !Array.isArray(feed.items) || !feed.items.length) return;
+          feedEarlyPainted = true;
+          paintFeed(feed, shellRef);
+        })
+        .catch(() => {});
+
       const shell = await loadInfoSystemShellData({
         signal: bootSignal,
       });
+      shellRef = shell;
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = shell;
       state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
       state.page = 1;
-      state.index = buildFeedIndex([]);
-      paint();
-      wire();
+      if (!feedEarlyPainted) {
+        state.index = buildFeedIndex([]);
+        paint();
+        wire();
+      }
       bindTimelineLifecycleListeners();
       scheduleTimelineBoundaryRefresh();
       try {
@@ -2938,16 +2986,7 @@ async function boot() {
 
       const feed = await feedPromise;
       if (bootAbort && bootAbort.signal.aborted) return;
-      state.data = Object.assign({}, shell, {
-        feed,
-        feedLoad: {
-          omittedSourceIds: (feed && feed.omittedSourceIds) || ["ndic"],
-          trafficPrimarySource: "traffic_offline_snapshot",
-          parsedOffMainThread: !!(feed && feed.parsedOffMainThread),
-          shellOnly: false,
-        },
-        loadedAt: new Date().toISOString(),
-      });
+      paintFeed(feed, shell);
       try {
         migrateChmiCapV2UserStates((feed && feed.items) || []);
       } catch (_) {}
@@ -2993,23 +3032,7 @@ async function boot() {
           }
         }
       } catch (_) {}
-      state.index = buildFeedIndex((feed && feed.items) || []);
       const scroll = getScrollState();
-      // Avoid remounting an open settings overlay (race with Playwright section clicks).
-      if (state.settingsOpen) {
-        try {
-          updateFeedDom();
-        } catch (_) {
-          paint();
-          wire();
-        }
-      } else {
-        paint();
-        wire();
-      }
-      try {
-        root.setAttribute("data-iu-pd-feed-ready", "1");
-      } catch (_) {}
       if (!state.settingsOpen && scroll && Number(scroll.y) > 0) {
         try {
           const vp = feedViewport();
