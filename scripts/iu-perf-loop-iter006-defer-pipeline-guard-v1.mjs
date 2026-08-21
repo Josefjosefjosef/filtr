@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Perf-loop iter-006: feed-pipeline must stay off slow-net / early-mobile critical path.
+ * Perf-loop iter-006 + early-wx: feed-pipeline stays off early critical path,
+ * but slow-net delay must not be 20s (blocked Silver weather). Early Open-Meteo lives in index.html HEAD.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,14 +16,17 @@ function must(cond, id) {
   if (!cond) fails.push(id);
 }
 
-const boot = app.match(/function iuBootFeedPipelineLazy\(\)[\s\S]{0,2500}/)?.[0] || "";
+const boot = app.match(/function iuBootFeedPipelineLazy\(\)[\s\S]{0,4500}/)?.[0] || "";
 must(/keep 240KB feed-pipeline off the slow-net/.test(boot), "app:iter006_comment");
 must(/function isSlowNet\(/.test(boot), "app:isSlowNet");
-must(/delayMs = slow \? 20000 : 2500/.test(boot), "app:delay_slow_only");
+must(/delayMs = slow \? 4000 : 0/.test(boot), "app:delay_slow_capped");
+must(/afterFcpThen/.test(boot), "app:after_fcp_gate");
 must(/desktopMq\.matches && !slow/.test(boot), "app:desktop_skip_on_slow");
-must(/perf-loop-iter006-defer-pipeline-v1-20260820/.test(boot), "app:feed_url_bust");
-must(/perf-loop-iter006-defer-pipeline-v1-20260820/.test(shell), "shell:feed_mod_bust");
-must(/perf-loop-iter006-defer-pipeline-v1-20260820/.test(index), "index:cache_bust");
+must(/early-wx-v1-20260822/.test(boot), "app:feed_url_bust");
+must(/early-wx-v1-20260822/.test(shell) || /early-wx-v1-20260822/.test(index), "shell_or_index:feed_mod_bust");
+must(/__iuEarlyWxP/.test(index), "index:early_wx_fetch");
+must(/__iuEarlyWxOnData/.test(index), "index:early_wx_paint");
+must(/data-iu-early-wx-painted/.test(index), "index:early_wx_mark");
 
 if (fails.length) {
   console.error("[iu-perf-loop-iter006-defer-pipeline-guard] FAIL");

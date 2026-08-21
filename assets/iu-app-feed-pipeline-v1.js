@@ -15733,6 +15733,11 @@ function buildVideoAsArticleCard(it) {
     }
 
     function iuSilverWeatherRenderLoading(){
+      try{
+        if (card && card.getAttribute("data-iu-early-wx-painted") === "1" && card.getAttribute("data-iu-silver-wx-phase") === "data") {
+          return;
+        }
+      }catch{}
       iuSilverWeatherHideAllActions();
       line1.innerHTML =
         `<span class="silver-weather-dpart" aria-hidden="true">🌤️</span> ` +
@@ -15819,7 +15824,12 @@ function buildVideoAsArticleCard(it) {
         if (phase === "data"){
           const st = window.__iuWeatherState;
           if (st && st.current) iuSilverWeatherRenderData(st);
-          else iuSilverWeatherRenderLoading();
+          else {
+            try{
+              if (card && card.getAttribute("data-iu-early-wx-painted") === "1") return;
+            }catch{}
+            iuSilverWeatherRenderLoading();
+          }
         }
       }catch{}
       try{ iuSilverWeatherHandleOverlayGeoPendingAfterLoad(); }catch{}
@@ -22710,6 +22720,40 @@ function buildVideoAsArticleCard(it) {
     if (iuWeatherLiveBackoffActive()) return null;
     const key = `${Number(lat)},${Number(lon)}`;
     const now = Date.now();
+    /* FIRST LOAD: reuse HEAD early Open-Meteo fetch (same coords) — avoids second wait after feed-pipeline boots. */
+    try {
+      const earlyLoc = typeof window !== "undefined" ? window.__iuEarlyWxLoc : null;
+      const earlyData = typeof window !== "undefined" ? window.__iuEarlyWxData : null;
+      const earlyAt = typeof window !== "undefined" ? Number(window.__iuEarlyWxAt || 0) : 0;
+      if (
+        earlyData &&
+        earlyLoc &&
+        Math.abs(Number(earlyLoc.lat) - Number(lat)) < 1e-4 &&
+        Math.abs(Number(earlyLoc.lon) - Number(lon)) < 1e-4 &&
+        iuOpenMeteoPayloadIsValid(earlyData) &&
+        earlyAt > 0 &&
+        now - earlyAt < IU_WEATHER_INMEM_TTL_MS
+      ) {
+        __iuOpenMeteoCache.set(key, { t: earlyAt, data: earlyData });
+        iuWeatherClearLiveBackoffOnSuccess();
+        return earlyData;
+      }
+      const earlyP = typeof window !== "undefined" ? window.__iuEarlyWxP : null;
+      if (
+        earlyP &&
+        typeof earlyP.then === "function" &&
+        earlyLoc &&
+        Math.abs(Number(earlyLoc.lat) - Number(lat)) < 1e-4 &&
+        Math.abs(Number(earlyLoc.lon) - Number(lon)) < 1e-4
+      ) {
+        const awaitedEarly = await earlyP;
+        if (iuOpenMeteoPayloadIsValid(awaitedEarly)) {
+          __iuOpenMeteoCache.set(key, { t: Date.now(), data: awaitedEarly });
+          iuWeatherClearLiveBackoffOnSuccess();
+          return awaitedEarly;
+        }
+      }
+    } catch (_) {}
     const cached = __iuOpenMeteoCache.get(key);
     if (cached && cached.data != null && iuOpenMeteoPayloadIsValid(cached.data) && (now - cached.t) < IU_WEATHER_INMEM_TTL_MS) return cached.data;
     if (cached && cached.failed && typeof cached.failedAt === "number" && (now - cached.failedAt) < IU_WEATHER_LIVE_BACKOFF_DEFAULT_MS) return null;
