@@ -1079,6 +1079,24 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   min-height: 120px;
   position: relative;
 }
+.iuPdFeed[aria-busy="true"],
+.iuPdFeed[data-iu-pd-feed-skeleton="1"] {
+  min-height: 520px;
+  box-sizing: border-box;
+}
+.iuPdFeedSkeleton {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.iuPdFeedSkeleton__row {
+  display: grid;
+  grid-template-columns: 72px 18px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 0;
+  min-height: 96px;
+  box-sizing: border-box;
+}
 /* Outer item = timeline row (no card chrome); card chrome stays on .iuPrehledDne__card */
 .iuPdFeed > .iuPrehledDne__item.iuPdCard,
 .iuPdCard.iuPrehledDne__item {

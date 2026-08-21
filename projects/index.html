@@ -623,6 +623,12 @@ font-src 'self' data:;
       .iuPd__top>.iuPdBtn{margin:0}
       .iuPd__banner{display:block;width:100%;max-width:100%;margin:0;padding:0;line-height:0;box-sizing:border-box;overflow:visible;visibility:visible;opacity:1}
       .iuPd__bannerImg{display:block;width:100%;max-width:100%;height:auto;min-height:48px;object-fit:contain;aspect-ratio:1661/616;margin:0;padding:0;border:0;visibility:visible;opacity:1}
+      /* FIRST LOAD: reserve feed geometry while prehled-dne-ui is deferred (avoids 120→1000px jump). */
+      .iuPdFeed[aria-busy="true"],.iuPdFeed[data-iu-pd-feed-skeleton="1"]{min-height:520px;box-sizing:border-box}
+      .iuPdFeedSkeleton{display:flex;flex-direction:column;gap:0;margin:0;padding:0;width:100%}
+      .iuPdFeedSkeleton__row{display:grid;grid-template-columns:72px 18px minmax(0,1fr);gap:10px;padding:10px 0;min-height:96px;box-sizing:border-box}
+      .iuPdFeedSkeleton__row::before{content:"";grid-column:1;border-radius:8px;background:rgba(148,163,184,.22)}
+      .iuPdFeedSkeleton__row::after{content:"";grid-column:3;border-radius:10px;background:linear-gradient(90deg,rgba(148,163,184,.18),rgba(148,163,184,.08),rgba(148,163,184,.18));background-size:200% 100%}
       .iuPd__hero .iuPdBtn--settings{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:999px;border-bottom-right-radius:999px}
     </style>
     <!-- P0 LCP fast path: feed section header (hub) je JS-injected v app.js (renderFeed) — preload scanner ho nevidí; preload jen ≥768px (mobile LCP = silver-hero, feed skrytý pre-gate). -->
@@ -2832,7 +2838,15 @@ font-src 'self' data:;
                                       <span class="iuPdToggle">Vše</span><span class="iuPdToggle">Uložené</span><span class="iuPdToggle">Nepřečtené</span><span class="iuPdToggle">Skryté</span>
                                     </div>
                                   </div>
-                                  <div class="iuPdFeed" aria-busy="true"></div>
+                                  <div class="iuPdFeed" aria-busy="true" data-iu-pd-feed-skeleton="1">
+                                    <div class="iuPdFeedSkeleton" aria-hidden="true">
+                                      <div class="iuPdFeedSkeleton__row"></div>
+                                      <div class="iuPdFeedSkeleton__row"></div>
+                                      <div class="iuPdFeedSkeleton__row"></div>
+                                      <div class="iuPdFeedSkeleton__row"></div>
+                                      <div class="iuPdFeedSkeleton__row"></div>
+                                    </div>
+                                  </div>
                                 </section>
                               </div>
                               <div class="iuSilverTallScrollLayoutSpacer" aria-hidden="true" data-iu-silver-tall-scroll-spacer></div>
@@ -5873,8 +5887,10 @@ font-src 'self' data:;
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="privacy" data-iu-src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
     <!-- ITER-015: iu-prehled-dne-ui-v1 loaded idle after FCP (see iuDeferPrehledDneUiUntilFcp).
+         FIRST-LOAD: feed skeleton + immediate post-FCP import (no idle) — first-load-stable-home-v1-20260821
          Cache-bust / freeze markers retained after removing early module src:
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821
+         first-load-stable-home-v1-20260821
          perf-loop-iter001-parallel-boot-v1-20260819
          perf-loop-iter002-hero-webp-v1-20260820
          perf-loop-iter003-core-dedupe-v1-20260820
@@ -6214,14 +6230,9 @@ font-src 'self' data:;
         else window.addEventListener("load",function(){setTimeout(run,0);},{once:true});
       }
       afterFcp(function(){
-        function go(){window.iuEnsurePrehledDneUi();}
-        try{
-          if(typeof window.requestIdleCallback==="function"){
-            window.requestIdleCallback(function(){go();},{timeout:2500});
-            return;
-          }
-        }catch(_){}
-        setTimeout(go,400);
+        /* FIRST LOAD: start prehled UI immediately after FCP (no idle delay) so feed
+           fills the reserved skeleton instead of arriving as a late second wave. */
+        window.iuEnsurePrehledDneUi();
       });
       document.addEventListener("pointerdown",function(e){
         try{
