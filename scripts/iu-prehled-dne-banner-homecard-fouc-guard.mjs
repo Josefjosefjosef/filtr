@@ -43,7 +43,12 @@ function staticGate() {
   must(/infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_webp_path");
   must(/data-iu-pd-banner="1"/.test(index), "index:static_banner_shell");
   must(/preload[^>]+infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_preload");
-  must(/type="image\/webp"\s+srcset="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "index:banner_picture_source");
+  must(
+    /data-iu-banner-srcset="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index) ||
+      /type="image\/webp"[^>]*srcset="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index),
+    "index:banner_picture_source"
+  );
+  must(/iuEnsurePrehledBanner|iuDeferPrehledBannerUntilFcp/.test(index), "index:banner_defer_hook");
   must(/bannerHtml[\s\S]*infouzel-prehled-dne-banner\.webp/.test(ui), "ui:banner_webp");
   must(!/id="iuNewsPreviewCardMount"/.test(index), "index:no_static_news_mount");
   must(!/data-iu-news-preview-card="1"/.test(index), "index:no_static_news_card");
@@ -176,6 +181,16 @@ async function runPlaywright() {
       });
 
       await page.waitForFunction(() => !!document.querySelector('[data-act="open-settings"]'), { timeout: 45000 });
+
+      await page.evaluate(() => {
+        try {
+          if (typeof window.iuEnsurePrehledBanner === "function") window.iuEnsurePrehledBanner();
+        } catch (_) {}
+      });
+      await page.waitForFunction(() => {
+        const img = document.querySelector(".iuPd__bannerImg");
+        return !!(img && /infouzel-prehled-dne-banner\.png/.test(String(img.getAttribute("src") || "")));
+      }, { timeout: 10000 });
 
       const layout = await page.evaluate(() => {
         const parcel = document.getElementById("iuSilverParcelWatch");

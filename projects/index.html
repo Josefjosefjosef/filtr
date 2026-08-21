@@ -2816,9 +2816,9 @@ font-src 'self' data:;
                                   <div class="iuHomeSectionBar" data-iu-home-section-bar="muj-prehled-dne" aria-hidden="true">MŮJ PŘEHLED DNE</div>
                                   <div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">
                                   <div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">
-                                    <picture>
-                                      <source type="image/webp" srcset="/assets/images/infouzel-prehled-dne-banner.webp" />
-                                      <img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="low" loading="lazy" />
+                                    <picture data-iu-pd-banner-picture="1">
+                                      <source type="image/webp" media="(min-width: 768px)" data-iu-banner-srcset="/assets/images/infouzel-prehled-dne-banner.webp" />
+                                      <img class="iuPd__bannerImg" data-iu-banner-src="/assets/images/infouzel-prehled-dne-banner.png" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="1661" height="616" alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" decoding="async" fetchpriority="low" loading="lazy" />
                                     </picture>
                                   </div>
                                   <div class="iuPd__top">
@@ -5875,6 +5875,7 @@ font-src 'self' data:;
     <!-- ITER-015: iu-prehled-dne-ui-v1 loaded idle after FCP (see iuDeferPrehledDneUiUntilFcp).
          Cache-bust / freeze markers retained after removing early module src:
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821
+         perf-loop-iter016-prehled-banner-src-after-fcp-v1-20260821
          perf-loop-iter001-parallel-boot-v1-20260819
          perf-loop-iter002-hero-webp-v1-20260820
          perf-loop-iter003-core-dedupe-v1-20260820
@@ -6230,6 +6231,80 @@ font-src 'self' data:;
           if(t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__hero,.iuPd__banner,.iuPdFeed,[data-testid=\"prehled-dne-homecard\"]")){
             window.iuEnsurePrehledDneUi();
           }
+        }catch(_){}
+      },true);
+    })();
+    </script>
+
+    <script>
+    (function iuDeferPrehledBannerUntilFcp(){
+      "use strict";
+      if(window.__iuDeferPrehledBannerUntilFcp)return;
+      window.__iuDeferPrehledBannerUntilFcp=true;
+      function activate(){
+        try{
+          var pic=document.querySelector("[data-iu-pd-banner-picture='1']");
+          if(!pic||pic.getAttribute("data-iu-banner-active")==="1")return;
+          pic.setAttribute("data-iu-banner-active","1");
+          var source=pic.querySelector("source[data-iu-banner-srcset]");
+          if(source){
+            var ss=source.getAttribute("data-iu-banner-srcset");
+            if(ss)source.setAttribute("srcset",ss);
+          }
+          var img=pic.querySelector("img[data-iu-banner-src]");
+          if(img){
+            var src=img.getAttribute("data-iu-banner-src");
+            if(src)img.setAttribute("src",src);
+          }
+        }catch(_){}
+      }
+      window.iuEnsurePrehledBanner=activate;
+      function afterFcp(fn){
+        var done=false;
+        function run(){if(done)return;done=true;try{fn();}catch(_){}}
+        try{
+          var fcp=performance.getEntriesByType("paint").find(function(e){return e&&e.name==="first-contentful-paint";});
+          if(fcp&&fcp.startTime>0){run();return;}
+        }catch(_){}
+        try{
+          if(typeof PerformanceObserver==="function"){
+            var po=new PerformanceObserver(function(list){
+              try{
+                var ents=list.getEntries();
+                for(var i=0;i<ents.length;i++){
+                  if(ents[i]&&ents[i].name==="first-contentful-paint"){
+                    try{po.disconnect();}catch(_){}
+                    run();
+                    return;
+                  }
+                }
+              }catch(_){}
+            });
+            po.observe({type:"paint",buffered:true});
+          }
+        }catch(_){}
+        setTimeout(run,1800);
+      }
+      /* Desktop/tablet: activate soon after FCP (LCP candidate). Mobile: idle after FCP. */
+      afterFcp(function(){
+        try{
+          if(window.matchMedia&&window.matchMedia("(min-width: 768px)").matches){
+            activate();
+            return;
+          }
+        }catch(_){}
+        try{
+          if(typeof window.requestIdleCallback==="function"){
+            window.requestIdleCallback(function(){activate();},{timeout:2500});
+            return;
+          }
+        }catch(_){}
+        setTimeout(activate,400);
+      });
+      document.addEventListener("pointerdown",function(e){
+        try{
+          var t=e&&e.target;
+          if(t&&t.closest&&t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__banner"))activate();
         }catch(_){}
       },true);
     })();
