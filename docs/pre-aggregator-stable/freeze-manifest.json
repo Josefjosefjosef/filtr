@@ -2,10 +2,10 @@
     "freezeId": "doprava-chmi-switch-snap-first-v1-20260821",
     "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-21T15:10:12.327Z",
-    "note": "Freeze bump: Doprava quick-view paints from in-memory traffic snapshot without waiting for presenter; progressive first paint.",
+    "updatedAt": "2026-08-21T19:00:00.000Z",
+    "note": "Freeze bump: traffic snap settles before presenter await; presenter warms in parallel with snap; Doprava paint awaits presenter (informative filter); progressive first paint cap 12.",
     "files": {
-        "projects/index.html": "131f14b75e5eb946df35a988e1c10db4bafd68e3f19bb6c1d0de33ee7b7026f4",
+        "projects/index.html": "d430c8e5c6c0b619aa695c92ad9c8e2b0f537dd4694ab147499a05aabebd857c",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "3f12169bdb487099a36546ef4d5f755990c56af07e1ef01e165a1e1a12e3c813",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "59f848ef19f56c24875d8018e74c7bd70c62812c6143568f88b7e78fbc95b8f6",
@@ -24,7 +24,7 @@
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
         "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-prehled-dne-ui-v1.js": "9bc551b06fbb4dd079bedd2228d846751a8019a84ca74bd1b90590e167471917"
+        "assets/iu-prehled-dne-ui-v1.js": "b506f0cf350f3a602b9ae1acc128fd21738490d8f5a545a05094ec407f1e476e"
     },
     "requiredMarkers": {
         "sw.js": [
@@ -40,6 +40,7 @@
         ],
         "projects/index.html": [
             "doprava-chmi-switch-snap-first-v1-20260821",
+            "presenter-parallel-v1-20260821",
             "first-load-early-chmi-boot-v1-20260821",
             "first-load-prehled-bootstrap-before-appjs-v1-20260821",
             "first-load-feed-lanes-not-feedjson-v1-20260821",

@@ -2404,20 +2404,30 @@ function wire() {
       } catch (_) {}
 
       const paintTrafficQuick = () => {
-        // First paint a short page so correct cards appear before full PAGE_SIZE render.
-        state.trafficQuickFirstCap = view === "traffic" ? 12 : 0;
-        paint();
-        wire();
-        if (state.trafficQuickFirstCap > 0) {
-          state.trafficQuickFirstCap = 0;
-          setTimeout(() => {
-            if (state.feedQuickView !== "traffic") return;
-            try {
-              paint();
-              wire();
-            } catch (_) {}
-          }, 0);
-        }
+        // Presenter required: without it isTrafficCardInformative() drops every card.
+        void (async () => {
+          try {
+            await ensureTrafficPresenter().catch(() => null);
+          } catch (_) {}
+          if (state.feedQuickView !== view) return;
+          // First paint a short page so correct cards appear before full PAGE_SIZE render.
+          // Cap is progressive only — same filtered list, then full page on next tick.
+          state.trafficQuickFirstCap = view === "traffic" ? 12 : 0;
+          try {
+            paint();
+            wire();
+          } catch (_) {}
+          if (state.trafficQuickFirstCap > 0) {
+            state.trafficQuickFirstCap = 0;
+            setTimeout(() => {
+              if (state.feedQuickView !== "traffic") return;
+              try {
+                paint();
+                wire();
+              } catch (_) {}
+            }, 0);
+          }
+        })();
       };
 
       if (
@@ -2425,6 +2435,8 @@ function wire() {
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
         !state.trafficSnapSettled
       ) {
+        // Overlap presenter download with snap wait (do not serialize after snap).
+        void ensureTrafficPresenter().catch(() => null);
         if (loadOfflineTrafficSnapshot()) {
           state.trafficSnapSettled = true;
           paintTrafficQuick();
@@ -2995,12 +3007,16 @@ async function boot() {
         signal: bootSignal,
         omitFeedSourceIds: ["ndic"],
       });
-      // Snapshot JSON only — presenter loads after feed paint (iter-005).
+      // Snapshot JSON + presenter in parallel (iter-005 kept off FCP path; overlap after shell).
       const trafficPromise =
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
           : Promise.resolve(null);
       state.trafficFetchPromise = trafficPromise;
+      const presenterWarm =
+        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
+          ? ensureTrafficPresenter().catch(() => null)
+          : Promise.resolve(null);
 
       // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
       let feedEarlyPainted = false;
@@ -3126,9 +3142,9 @@ async function boot() {
           try {
             await trafficPromise;
             if (bootAbort && bootAbort.signal.aborted) return;
-            // doprava-chmi-switch-snap-first-v1-20260821: settle before presenter
+            // doprava-chmi-switch-snap-first-v1-20260821: settle snap before awaiting presenter
             state.trafficSnapSettled = true;
-            await ensureTrafficPresenter().catch(() => null);
+            await presenterWarm;
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;
             setTimeout(() => {
