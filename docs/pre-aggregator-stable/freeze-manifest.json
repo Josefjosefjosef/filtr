@@ -1,11 +1,11 @@
 {
-    "freezeId": "first-load-app-css-nonblocking-v1-20260821",
+    "freezeId": "first-load-feed-lanes-not-feedjson-v1-20260821",
     "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-21T07:23:16.193Z",
-    "note": "Freeze bump: FIRST LOAD app.css non-render-blocking (preload+print/onload).",
+    "updatedAt": "2026-08-21T09:37:35.386Z",
+    "note": "Freeze bump: FIRST LOAD use pocasi lane instead of 24MB feed.json; prehled bootstrap before app.js.",
     "files": {
-        "projects/index.html": "49859bba3b8580ff41fe815f927ddf05cb880d7dfb9c2f0467b5d81a136acf78",
+        "projects/index.html": "4fbf4e9501760236a2e16cffde8ec9e6ee592348bda6caefd630863a0648041d",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "3f12169bdb487099a36546ef4d5f755990c56af07e1ef01e165a1e1a12e3c813",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "59f848ef19f56c24875d8018e74c7bd70c62812c6143568f88b7e78fbc95b8f6",
@@ -24,7 +24,7 @@
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
         "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-prehled-dne-ui-v1.js": "06bdd25a8e86e200bca48cb86e5ac3d8c626a74329e8b83ff94f925add05d728"
+        "assets/iu-prehled-dne-ui-v1.js": "a455ada87c60c02e84083c7dcb2ab5ba8b0279d97220a8c3986ac08c166c0761"
     },
     "requiredMarkers": {
         "sw.js": [
@@ -39,6 +39,8 @@
             "chmi-multibrowser-console-v1-20260731"
         ],
         "projects/index.html": [
+            "first-load-prehled-bootstrap-before-appjs-v1-20260821",
+            "first-load-feed-lanes-not-feedjson-v1-20260821",
             "first-load-app-css-nonblocking-v1-20260821",
             "first-load-preserve-prehled-shell-v1-20260821",
             "first-load-stable-home-v1-20260821",

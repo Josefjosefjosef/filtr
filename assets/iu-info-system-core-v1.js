@@ -112,11 +112,35 @@ function isParallelMode() {
   }
 }
 
-async function fetchJson(url) {
-  const res = await fetch(url, { cache: "no-store", credentials: "same-origin" });
+async function fetchJson(url, opts) {
+  const o = opts || {};
+  const res = await fetch(url, {
+    cache: o.cache || "no-store",
+    credentials: "same-origin",
+    signal: o.signal,
+  });
   if (!res.ok) throw new Error(`fetch ${url} → ${res.status}`);
   return res.json();
 }
+
+/** Lane JSON is small and safe to reuse (preload / parallel callers). */
+async function fetchLaneJson(url, signal) {
+  try {
+    if (
+      typeof window !== "undefined" &&
+      window.__iuPocasiLanePrefetch &&
+      /lanes\/pocasi\.json/i.test(String(url || ""))
+    ) {
+      const pre = window.__iuPocasiLanePrefetch;
+      window.__iuPocasiLanePrefetch = null;
+      const res = await pre;
+      if (res && res.ok) return res.clone().json();
+    }
+  } catch (_) {}
+  return fetchJson(url, { cache: "force-cache", signal });
+}
+
+let _iuLaneFeedInflight = null;
 
 /** Shared worker for multi‑MB JSON parse (feed.json). Reused; requests keyed by requestId. */
 let _iuJsonParseWorker = null;
@@ -304,7 +328,7 @@ async function loadInfoSystemFeedOnly(opts) {
   const o = opts || {};
   const laneIds = Array.isArray(o.lanes) ? o.lanes.map(String) : [];
   const manifest = o.manifest || null;
-  const wantLanesOnly = laneIds.length > 0 && manifest;
+  const wantLanesOnly = laneIds.length > 0;
   /**
    * feed.json is ~22MB because it embeds the full NDIC catalog (thousands of items).
    * Traffic UI already uses traffic_offline_snapshot.json as the public-safe source.
@@ -317,20 +341,50 @@ async function loadInfoSystemFeedOnly(opts) {
         : []
       : ["ndic"];
   if (wantLanesOnly) {
-    const parts = await Promise.all(
-      laneIds.map((id) => fetchJson(iuInfoDataUrl(`lanes/${id}.json`)).catch(() => null))
-    );
-    const laneItems = [];
-    for (const part of parts) {
-      if (part && Array.isArray(part.items)) laneItems.push(...part.items);
+    const laneKey = "lanes:" + laneIds.slice().sort().join(",");
+    if (_iuLaneFeedInflight && _iuLaneFeedInflight.key === laneKey) {
+      return _iuLaneFeedInflight.promise;
     }
-    return {
-      items: laneItems,
-      itemCount: laneItems.length,
-      fromLanes: laneIds,
-      omittedSourceIds: [],
-      parsedOffMainThread: false,
-    };
+    const p = (async () => {
+      const parts = await Promise.all(
+        laneIds.map((id) => fetchLaneJson(iuInfoDataUrl(`lanes/${id}.json`), o.signal || null).catch(() => null))
+      );
+      const laneItems = [];
+      for (const part of parts) {
+        if (part && Array.isArray(part.items)) laneItems.push(...part.items);
+      }
+      return {
+        items: laneItems,
+        itemCount: laneItems.length,
+        fromLanes: laneIds,
+        omittedSourceIds: omitFeedSourceIds.slice(),
+        parsedOffMainThread: false,
+        feedSource: "lanes",
+      };
+    })().finally(() => {
+      if (_iuLaneFeedInflight && _iuLaneFeedInflight.key === laneKey) _iuLaneFeedInflight = null;
+    });
+    _iuLaneFeedInflight = { key: laneKey, promise: p };
+    return p;
+  }
+  /**
+   * FIRST LOAD: when NDIC is omitted, do NOT download feed.json (~24MB decoded / ~1.5MB gzip).
+   * Worker still had to download+parse the full file before stripping ndic — that alone cost
+   * ~15–20s on Slow3G+CPU4× and blocked first real cards. Home CHMI content is the pocasi
+   * lane (~266KB); traffic cards come from traffic_offline_snapshot (separate path).
+   */
+  if (omitFeedSourceIds.map(String).includes("ndic") && o.allowFullFeed !== true) {
+    const preferLaneIds =
+      Array.isArray(o.preferLaneIds) && o.preferLaneIds.length
+        ? o.preferLaneIds.map(String)
+        : ["pocasi"];
+    return loadInfoSystemFeedOnly({
+      signal: o.signal,
+      omitFeedSourceIds,
+      lanes: preferLaneIds,
+      preferLaneIds,
+      allowFullFeed: true,
+    });
   }
   const feedUrl = iuInfoDataUrl("feed.json");
   const feedKey = feedUrl + "|" + omitFeedSourceIds.slice().sort().join(",");
