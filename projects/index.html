@@ -639,7 +639,12 @@ font-src 'self' data:;
     <!-- Mobile LCP = silver-hero; banner preload only where feed/prehled is first-paint relevant. -->
     <link rel="preload" as="image" href="/assets/images/infouzel-prehled-dne-banner.webp" type="image/webp" fetchpriority="high" media="(min-width: 768px)" />
     <!-- IMPORTANT: /projects/ musí načítat root assets. Font Awesome CDN odstraněno (P0 CLS): 4 ikony přes inline SVG v app.js. -->
-    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" />
+    <!-- FIRST-LOAD RC3: app.css non-render-blocking (inline critical CSS already covers first paint).
+         Measured: ~105KB / ~1.5s Slow3G download was render-blocking before FCP.
+         first-load-app-css-nonblocking-v1-20260821 -->
+    <link rel="preload" as="style" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" />
+    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" media="print" onload="this.media='all';this.dataset.iuDeferReady='1'" data-iu-defer-app-css="1" />
+    <noscript><link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803" /></noscript>
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -5889,6 +5894,7 @@ font-src 'self' data:;
     <!-- ITER-015: iu-prehled-dne-ui-v1 loaded idle after FCP (see iuDeferPrehledDneUiUntilFcp).
          FIRST-LOAD: feed skeleton + immediate post-FCP import (no idle) — first-load-stable-home-v1-20260821
          FIRST-LOAD: preserve static prehled shell in boot() — first-load-preserve-prehled-shell-v1-20260821
+         FIRST-LOAD: app.css non-render-blocking — first-load-app-css-nonblocking-v1-20260821
          Cache-bust / freeze markers retained after removing early module src:
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821
          first-load-stable-home-v1-20260821
