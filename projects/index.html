@@ -54,13 +54,14 @@
     <!-- FIRST LOAD: CHMI boot must run in early <head> — late-body script only ran after multi‑MB HTML parse (~+5s).
          first-load-feed-lanes-not-feedjson-v1-20260821
          first-load-prehled-bootstrap-before-appjs-v1-20260821
-         first-load-early-chmi-boot-v1-20260821 -->
+         first-load-early-chmi-boot-v1-20260821
+         doprava-chmi-switch-snap-first-v1-20260821 -->
     <script>
     (function iuDeferPrehledDneUiUntilFcp(){
       "use strict";
       if(window.__iuDeferPrehledDneUiUntilFcp)return;
       window.__iuDeferPrehledDneUiUntilFcp=true;
-      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821";
+      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-doprava-chmi-switch-snap-first-v1-20260821-presenter-parallel-v1-20260821";
       var pending=null;
       window.iuEnsurePrehledDneUi=function(){
         if(pending)return pending;
@@ -5978,6 +5979,7 @@ font-src 'self' data:;
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
         <!-- FIRST LOAD: CHMI boot lives in early <head> (iuDeferPrehledDneUiUntilFcp).
          first-load-early-chmi-boot-v1-20260821
+         doprava-chmi-switch-snap-first-v1-20260821
          first-load-stable-home-v1-20260821
          first-load-preserve-prehled-shell-v1-20260821
          first-load-app-css-nonblocking-v1-20260821

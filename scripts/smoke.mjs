@@ -652,6 +652,22 @@ async function runSmoke() {
       () => document.body && document.body.dataset && document.body.dataset.section === "pocasi",
       { timeout: PREVIEW_SELECTOR_TIMEOUT_MS }
     );
+    // Feed pipeline (iuInitWeatherHistory) is deferred after FCP — wait for real readiness, not a fixed sleep.
+    try {
+      await page.waitForFunction(
+        () => typeof window.iuInitWeatherHistory === "function",
+        { timeout: 60000 }
+      );
+    } catch (e) {
+      const wxDiag = await page.evaluate(() => ({
+        section: (document.body && document.body.dataset && document.body.dataset.section) || "",
+        hasInit: typeof window.iuInitWeatherHistory === "function",
+        hasLoad: typeof window.iuWeatherLoadAndRender === "function",
+      }));
+      fail(
+        `Weather history init API not ready (feed-pipeline deferred): ${e && e.message ? e.message : String(e)} diag=${JSON.stringify(wxDiag)}`
+      );
+    }
     await page.evaluate(async () => {
       try {
         if (typeof window.iuWeatherLoadAndRender === "function") {
@@ -659,9 +675,7 @@ async function runSmoke() {
         }
       } catch (_w) {}
       try {
-        if (typeof window.iuInitWeatherHistory === "function") {
-          window.iuInitWeatherHistory();
-        }
+        window.iuInitWeatherHistory();
       } catch (_h) {}
     });
     try {
@@ -687,6 +701,7 @@ async function runSmoke() {
           cardHidden: card ? !!card.hidden : null,
           fallbackHidden: fb ? !!fb.hidden : null,
           initFlag: typeof window.__iu_weatherHistoryInit !== "undefined" ? window.__iu_weatherHistoryInit : null,
+          hasInit: typeof window.iuInitWeatherHistory === "function",
         };
       });
       fail(
