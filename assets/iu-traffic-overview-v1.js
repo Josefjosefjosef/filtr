@@ -89,6 +89,12 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
  */
 export const TRAFFIC_UI_INITIAL_CARD_CAP = 0;
 
+/**
+ * First paint / switch: transfer only newest N cards from the worker (postMessage of the full
+ * ~6–7k catalog was multi-second). Full catalog hydrates in background — not a silent truncate.
+ */
+export const TRAFFIC_UI_FIRST_PAINT_CARD_CAP = 100;
+
 /** NOVÁ badge: only when source publication/version time is within this age (not merely ACTIVE). */
 export const TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS = 72 * 60 * 60 * 1000;
 
@@ -784,7 +790,77 @@ export function loadOfflineTrafficSnapshot() {
 /**
  * Fetch hosted offline snapshot when TRAFFIC_UI_ENABLED. Never follows redirect off-origin.
  * Returns null on any failure (fail-closed).
+ *
+ * Default: first-paint cap (newest 100) so worker→main postMessage stays small, then background
+ * full-catalog hydrate (TRAFFIC_UI_INITIAL_CARD_CAP=0). Pass full:true or maxCards:0 for full only.
  */
+let _trafficFullHydratePromise = null;
+
+async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
+  let parsed = null;
+  try {
+    parsed = await fetchTrafficSnapshotSlimOffMainThread(url, maxCards, signal);
+  } catch (_) {
+    parsed = null;
+  }
+  if (!parsed) {
+    // Last resort (Worker unavailable): drop history; keep card catalog (optional cap).
+    const res = await fetch(url, {
+      credentials: "same-origin",
+      cache: "no-store",
+      signal: signal || undefined,
+    });
+    if (!res || !res.ok) return null;
+    const full = await res.json();
+    const cards = Array.isArray(full.cards)
+      ? full.cards
+      : Array.isArray(full.projections)
+        ? full.projections
+        : [];
+    const ordered = orderTrafficCardsNewestFirst(cards);
+    const cap = resolveTrafficCardCap(maxCards);
+    const kept = cap == null ? ordered : ordered.slice(0, cap);
+    parsed = Object.assign({}, full, {
+      cards: kept,
+      historyItems: [],
+      historyCount: 0,
+      cardsCappedTo: cap,
+      cardCount: full.cardCount != null ? full.cardCount : cards.length,
+    });
+  }
+  return acceptTrafficSnapshot(parsed);
+}
+
+function scheduleTrafficSnapshotFullHydrate(url) {
+  if (_trafficFullHydratePromise) return _trafficFullHydratePromise;
+  _trafficFullHydratePromise = (async () => {
+    try {
+      const full = await fetchTrafficSnapshotParsed(url, 0, null);
+      if (!full) return null;
+      invalidateTrafficFeedItemsCache();
+      _trafficSnapMem = full;
+      // Memory-only for multi‑MB full catalog (saveOfflineTrafficSnapshot already guards LS size).
+      saveOfflineTrafficSnapshot(full);
+      try {
+        if (typeof window !== "undefined" && typeof window.dispatchEvent === "function") {
+          window.dispatchEvent(
+            new CustomEvent("iu-traffic-snap-hydrated", {
+              detail: {
+                cardCount: Array.isArray(full.cards) ? full.cards.length : 0,
+                generatedAt: full.generatedAt || null,
+              },
+            })
+          );
+        }
+      } catch (_) {}
+      return full;
+    } catch (_) {
+      return null;
+    }
+  })();
+  return _trafficFullHydratePromise;
+}
+
 export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return null;
@@ -792,45 +868,21 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
   if (typeof fetch !== "function") return null;
   try {
-    let parsed = null;
-    try {
-      parsed = await fetchTrafficSnapshotSlimOffMainThread(
-        url,
-        opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP,
-        opts.signal || null
-      );
-    } catch (_) {
-      parsed = null;
-    }
-    if (!parsed) {
-      // Last resort (Worker unavailable): drop history; keep full card catalog (DOM paginated).
-      const res = await fetch(url, {
-        credentials: "same-origin",
-        cache: "no-store",
-      });
-      if (!res || !res.ok) return null;
-      const full = await res.json();
-      const cards = Array.isArray(full.cards)
-        ? full.cards
-        : Array.isArray(full.projections)
-          ? full.projections
-          : [];
-      const ordered = orderTrafficCardsNewestFirst(cards);
-      const cap = resolveTrafficCardCap(opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP);
-      const kept = cap == null ? ordered : ordered.slice(0, cap);
-      parsed = Object.assign({}, full, {
-        cards: kept,
-        historyItems: [],
-        historyCount: 0,
-        cardsCappedTo: cap,
-        cardCount: full.cardCount != null ? full.cardCount : cards.length,
-      });
-    }
-    const snap = acceptTrafficSnapshot(parsed);
+    const fullOnly = opts.full === true || opts.maxCards === 0;
+    const maxCards = fullOnly
+      ? 0
+      : opts.maxCards != null
+        ? opts.maxCards
+        : TRAFFIC_UI_FIRST_PAINT_CARD_CAP;
+    const snap = await fetchTrafficSnapshotParsed(url, maxCards, opts.signal || null);
     if (!snap) return null;
     invalidateTrafficFeedItemsCache();
     _trafficSnapMem = snap;
     if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
+    // Background full catalog (not a permanent truncate).
+    if (!fullOnly && opts.hydrate !== false && !(Number(opts.maxCards) > 0)) {
+      void scheduleTrafficSnapshotFullHydrate(url);
+    }
     return snap;
   } catch (_) {
     return null;

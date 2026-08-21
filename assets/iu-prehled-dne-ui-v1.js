@@ -51,7 +51,7 @@ import {
   toggleTrafficFollow,
   filterOfflineTrafficCandidatesForOverview,
   ensureTrafficPresenter,
-} from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820";
+} from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {
   applyFeedSourceAndQuickView,
@@ -3165,6 +3165,18 @@ async function boot() {
       } else {
         state.trafficSnapSettled = true;
       }
+      // Full catalog hydrate after first-paint cap — refresh feed without blocking switch.
+      try {
+        window.addEventListener("iu-traffic-snap-hydrated", () => {
+          if (bootAbort && bootAbort.signal.aborted) return;
+          if (!root || !root.isConnected) return;
+          try {
+            if (state.settingsOpen) updateFeedDom();
+            else paint();
+            wire();
+          } catch (_) {}
+        });
+      } catch (_) {}
       window.addEventListener(
         "beforeunload",
         () => {
