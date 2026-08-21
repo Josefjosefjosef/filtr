@@ -13,6 +13,7 @@ const must = (c, id) => {
 
 must(/first-load-feed-lanes-not-feedjson-v1-20260821/.test(index), "marker_lanes");
 must(/first-load-prehled-bootstrap-before-appjs-v1-20260821/.test(index), "marker_bootstrap");
+must(/first-load-early-chmi-boot-v1-20260821/.test(index), "marker_early_boot");
 must(/lanes\/pocasi\.json/.test(index), "preload_pocasi");
 must(/__iuPocasiLanePrefetch/.test(index), "pocasi_prefetch");
 must(/__iuPocasiLanePrefetch/.test(core), "core_reuses_prefetch");
@@ -23,10 +24,12 @@ must(
     /do NOT download feed\.json/.test(core),
   "core_comment"
 );
-// Bootstrap classic script must appear before app.js module
+// Bootstrap classic script must appear before app.js module (preferably early <head>).
 const bootIdx = index.indexOf("iuDeferPrehledDneUiUntilFcp");
 const appIdx = index.indexOf('<script type="module" src="/assets/app.js');
+const headEnd = index.indexOf("</head>");
 must(bootIdx > 0 && appIdx > 0 && bootIdx < appIdx, "bootstrap_before_appjs");
+must(headEnd > 0 && bootIdx < headEnd, "bootstrap_in_head");
 
 if (fails.length) {
   console.error("[iu-first-load-feed-lanes-guard] FAIL");

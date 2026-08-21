@@ -123,17 +123,18 @@ async function fetchJson(url, opts) {
   return res.json();
 }
 
-/** Lane JSON: prefer shared early prefetch Response; otherwise same-origin no-store fetch. */
+/** Lane JSON: one shared in-flight Response for pocasi (prefetch + concurrent boot callers). */
 async function fetchLaneJson(url, signal) {
+  const isPocasi = /lanes\/pocasi\.json/i.test(String(url || ""));
   try {
-    if (
-      typeof window !== "undefined" &&
-      window.__iuPocasiLanePrefetch &&
-      /lanes\/pocasi\.json/i.test(String(url || ""))
-    ) {
-      const pre = window.__iuPocasiLanePrefetch;
-      window.__iuPocasiLanePrefetch = null;
-      const res = await pre;
+    if (typeof window !== "undefined" && isPocasi) {
+      if (!window.__iuPocasiLaneInflight) {
+        window.__iuPocasiLaneInflight =
+          window.__iuPocasiLanePrefetch ||
+          fetch(url, { credentials: "same-origin", cache: "no-store", signal });
+        window.__iuPocasiLanePrefetch = null;
+      }
+      const res = await window.__iuPocasiLaneInflight;
       if (res && res.ok) return res.clone().json();
     }
   } catch (_) {}

@@ -51,6 +51,91 @@
       }catch(_){}
     })();
     </script>
+    <!-- FIRST LOAD: CHMI boot must run in early <head> — late-body script only ran after multi‑MB HTML parse (~+5s).
+         first-load-feed-lanes-not-feedjson-v1-20260821
+         first-load-prehled-bootstrap-before-appjs-v1-20260821
+         first-load-early-chmi-boot-v1-20260821 -->
+    <script>
+    (function iuDeferPrehledDneUiUntilFcp(){
+      "use strict";
+      if(window.__iuDeferPrehledDneUiUntilFcp)return;
+      window.__iuDeferPrehledDneUiUntilFcp=true;
+      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821";
+      var pending=null;
+      window.iuEnsurePrehledDneUi=function(){
+        if(pending)return pending;
+        pending=import(SRC).then(function(){return true;}).catch(function(){pending=null;return false;});
+        return pending;
+      };
+      function startPocasiPrefetch(){
+        try{
+          if(!window.__iuPocasiLanePrefetch && !window.__iuPocasiLaneInflight){
+            window.__iuPocasiLanePrefetch=fetch("/projects/data/info_events/lanes/pocasi.json",{credentials:"same-origin",cache:"no-store"});
+          }
+        }catch(_){}
+      }
+      function afterFcp(fn){
+        var done=false;
+        function run(){if(done)return;done=true;try{fn();}catch(_){}}
+        try{
+          var fcp=performance.getEntriesByType("paint").find(function(e){return e&&e.name==="first-contentful-paint";});
+          if(fcp&&fcp.startTime>0){run();return;}
+        }catch(_){}
+        try{
+          if(typeof PerformanceObserver==="function"){
+            var po=new PerformanceObserver(function(list){
+              try{
+                var ents=list.getEntries();
+                for(var i=0;i<ents.length;i++){
+                  if(ents[i]&&ents[i].name==="first-contentful-paint"){
+                    try{po.disconnect();}catch(_){}
+                    run();
+                    return;
+                  }
+                }
+              }catch(_){}
+            });
+            po.observe({type:"paint",buffered:true});
+          }
+        }catch(_){}
+        setTimeout(run,1800);
+        if(document.readyState==="complete")setTimeout(run,0);
+        else window.addEventListener("load",function(){setTimeout(run,0);},{once:true});
+      }
+      /* Root-ready: start CHMI data immediately. Module import stays after FCP (Silver first-tap / main-thread). */
+      (function waitRoot(){
+        var done=false;
+        function go(){
+          if(done)return;
+          try{ if(!document.getElementById("iuPrehledDneRoot")) return; }catch(_){ return; }
+          done=true;
+          try{ if(mo) mo.disconnect(); }catch(_){}
+          startPocasiPrefetch();
+        }
+        var mo=null;
+        try{
+          if(document.getElementById("iuPrehledDneRoot")){ go(); return; }
+          mo=new MutationObserver(go);
+          mo.observe(document.documentElement,{childList:true,subtree:true});
+        }catch(_){}
+        document.addEventListener("DOMContentLoaded",go,{once:true});
+      })();
+      afterFcp(function(){
+        /* FIRST LOAD */
+        window.iuEnsurePrehledDneUi();
+      });
+      document.addEventListener("pointerdown",function(e){
+        try{
+          var t=e&&e.target;
+          if(!t||typeof t.closest!=="function")return;
+          if(t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__hero,.iuPd__banner,.iuPdFeed,[data-testid=\"prehled-dne-homecard\"]")){
+            startPocasiPrefetch();
+            window.iuEnsurePrehledDneUi();
+          }
+        }catch(_){}
+      },true);
+    })();
+    </script>
     <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v3"></script>
     <title>infoUzel.cz</title>
     <meta name="description" content="infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Rychlé odkazy, zprávy, počasí a nástroje na jednom místě." />
@@ -5891,76 +5976,15 @@ font-src 'self' data:;
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="privacy" data-iu-src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
-    <!-- FIRST LOAD: start prehled UI without waiting for app.js module evaluation.
-         Previously iuEnsurePrehledDneUi lived in a module AFTER app.js, so feed bootstrap
-         could not begin until ~app.js download+eval finished (~+3s after FCP).
-         first-load-feed-lanes-not-feedjson-v1-20260821
-         first-load-prehled-bootstrap-before-appjs-v1-20260821 -->
-    <script>
-    (function iuDeferPrehledDneUiUntilFcp(){
-      "use strict";
-      if(window.__iuDeferPrehledDneUiUntilFcp)return;
-      window.__iuDeferPrehledDneUiUntilFcp=true;
-      try{
-        /* Single shared Response — loadInfoSystemFeedOnly reuses this (no second Slow3G download). */
-        window.__iuPocasiLanePrefetch=fetch("/projects/data/info_events/lanes/pocasi.json",{credentials:"same-origin",cache:"no-store"});
-      }catch(_){}
-      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821";
-      var pending=null;
-      window.iuEnsurePrehledDneUi=function(){
-        if(pending)return pending;
-        pending=import(SRC).then(function(){return true;}).catch(function(){pending=null;return false;});
-        return pending;
-      };
-      function afterFcp(fn){
-        var done=false;
-        function run(){if(done)return;done=true;try{fn();}catch(_){}}
-        try{
-          var fcp=performance.getEntriesByType("paint").find(function(e){return e&&e.name==="first-contentful-paint";});
-          if(fcp&&fcp.startTime>0){run();return;}
-        }catch(_){}
-        try{
-          if(typeof PerformanceObserver==="function"){
-            var po=new PerformanceObserver(function(list){
-              try{
-                var ents=list.getEntries();
-                for(var i=0;i<ents.length;i++){
-                  if(ents[i]&&ents[i].name==="first-contentful-paint"){
-                    try{po.disconnect();}catch(_){}
-                    run();
-                    return;
-                  }
-                }
-              }catch(_){}
-            });
-            po.observe({type:"paint",buffered:true});
-          }
-        }catch(_){}
-        setTimeout(run,1800);
-        if(document.readyState==="complete")setTimeout(run,0);
-        else window.addEventListener("load",function(){setTimeout(run,0);},{once:true});
-      }
-      afterFcp(function(){
-        window.iuEnsurePrehledDneUi();
-      });
-      document.addEventListener("pointerdown",function(e){
-        try{
-          var t=e&&e.target;
-          if(!t||typeof t.closest!=="function")return;
-          if(t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__hero,.iuPd__banner,.iuPdFeed,[data-testid=\"prehled-dne-homecard\"]")){
-            window.iuEnsurePrehledDneUi();
-          }
-        }catch(_){}
-      },true);
-    })();
-    </script>
-    <!-- ITER-015 / FIRST-LOAD markers (bootstrap owns load; kept for freeze/guards):
+        <!-- FIRST LOAD: CHMI boot lives in early <head> (iuDeferPrehledDneUiUntilFcp).
+         first-load-early-chmi-boot-v1-20260821
          first-load-stable-home-v1-20260821
          first-load-preserve-prehled-shell-v1-20260821
          first-load-app-css-nonblocking-v1-20260821
          first-load-feed-lanes-not-feedjson-v1-20260821
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
+
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819"></script>
     <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
     <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
