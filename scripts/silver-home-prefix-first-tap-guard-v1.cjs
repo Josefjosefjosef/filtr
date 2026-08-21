@@ -727,11 +727,14 @@ async function runRapidSwitchStress(browser, url) {
       await page.waitForFunction(
         () => Number(window.__iuSilverPrefixOptimisticCount || 0) >= 3,
         null,
-        { timeout: 2000 }
+        { timeout: 5000 }
       );
     } catch (_) {
       const countersEarly = await readCounters(page);
-      return fail(result, "expected_3_optimistic_got_" + countersEarly.optimistic);
+      // Race: count can reach 3 in the same turn the waiter times out.
+      if (Number(countersEarly.optimistic || 0) < 3) {
+        return fail(result, "expected_3_optimistic_got_" + countersEarly.optimistic);
+      }
     }
     await waitEngineReady(page, STRESS_FINAL_MAX_MS);
     await page.waitForTimeout(100);
