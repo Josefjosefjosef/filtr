@@ -3007,16 +3007,13 @@ async function boot() {
         signal: bootSignal,
         omitFeedSourceIds: ["ndic"],
       });
-      // Snapshot JSON + presenter in parallel (iter-005 kept off FCP path; overlap after shell).
+      // Snapshot JSON only — presenter loads after snap settle (iter-005: keep off FCP→feed).
+      // Doprava click overlaps presenter fetch with snap wait (see feed-quick-view handler).
       const trafficPromise =
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
           : Promise.resolve(null);
       state.trafficFetchPromise = trafficPromise;
-      const presenterWarm =
-        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
-          ? ensureTrafficPresenter().catch(() => null)
-          : Promise.resolve(null);
 
       // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
       let feedEarlyPainted = false;
@@ -3144,7 +3141,7 @@ async function boot() {
             if (bootAbort && bootAbort.signal.aborted) return;
             // doprava-chmi-switch-snap-first-v1-20260821: settle snap before awaiting presenter
             state.trafficSnapSettled = true;
-            await presenterWarm;
+            await ensureTrafficPresenter().catch(() => null);
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;
             setTimeout(() => {
