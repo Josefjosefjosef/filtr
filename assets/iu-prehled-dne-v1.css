@@ -1081,7 +1081,8 @@ html.iu-info-system-cutover #feed .iuArticleCard {
 }
 .iuPdFeed[aria-busy="true"],
 .iuPdFeed[data-iu-pd-feed-skeleton="1"] {
-  min-height: 520px;
+  /* FIRST-LOAD RC4: reserve final card stack height (~1079 measured) — first-load-feed-reserve-1080-v1-20260821 */
+  min-height: 1080px;
   box-sizing: border-box;
 }
 .iuPdFeedSkeleton {

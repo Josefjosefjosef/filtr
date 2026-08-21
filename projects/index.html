@@ -624,7 +624,7 @@ font-src 'self' data:;
       .iuPd__banner{display:block;width:100%;max-width:100%;margin:0;padding:0;line-height:0;box-sizing:border-box;overflow:visible;visibility:visible;opacity:1}
       .iuPd__bannerImg{display:block;width:100%;max-width:100%;height:auto;min-height:48px;object-fit:contain;aspect-ratio:1661/616;margin:0;padding:0;border:0;visibility:visible;opacity:1}
       /* FIRST LOAD: reserve feed geometry while prehled-dne-ui is deferred (avoids 120→1000px jump). */
-      .iuPdFeed[aria-busy="true"],.iuPdFeed[data-iu-pd-feed-skeleton="1"]{min-height:520px;box-sizing:border-box}
+      .iuPdFeed[aria-busy="true"],.iuPdFeed[data-iu-pd-feed-skeleton="1"]{min-height:1080px;box-sizing:border-box}
       .iuPdFeedSkeleton{display:flex;flex-direction:column;gap:0;margin:0;padding:0;width:100%}
       .iuPdFeedSkeleton__row{display:grid;grid-template-columns:72px 18px minmax(0,1fr);gap:10px;padding:10px 0;min-height:96px;box-sizing:border-box}
       .iuPdFeedSkeleton__row::before{content:"";grid-column:1;border-radius:8px;background:rgba(148,163,184,.22)}
@@ -5895,6 +5895,7 @@ font-src 'self' data:;
          FIRST-LOAD: feed skeleton + immediate post-FCP import (no idle) — first-load-stable-home-v1-20260821
          FIRST-LOAD: preserve static prehled shell in boot() — first-load-preserve-prehled-shell-v1-20260821
          FIRST-LOAD: app.css non-render-blocking — first-load-app-css-nonblocking-v1-20260821
+         FIRST-LOAD: feed skeleton reserve 1080px — first-load-feed-reserve-1080-v1-20260821
          Cache-bust / freeze markers retained after removing early module src:
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821
          first-load-stable-home-v1-20260821

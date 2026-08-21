@@ -14,7 +14,8 @@ const must = (c, id) => {
 must(/first-load-stable-home-v1-20260821/.test(index), "marker");
 must(/data-iu-pd-feed-skeleton="1"/.test(index), "skeleton_attr");
 must(/iuPdFeedSkeleton__row/.test(index), "skeleton_rows");
-must(/min-height:\s*520px/.test(index) || /min-height:\s*520px/.test(css), "feed_min_height");
+must(/min-height:\s*1080px/.test(index) || /min-height:\s*1080px/.test(css), "feed_min_height");
+must(/first-load-feed-reserve-1080-v1-20260821/.test(index) || /first-load-feed-reserve-1080-v1-20260821/.test(css), "feed_reserve_marker");
 must(/iuEnsurePrehledDneUi\(\)/.test(index), "ensure_call");
 must(
   /afterFcp\(function\(\)\{\s*\/\* FIRST LOAD[\s\S]*?iuEnsurePrehledDneUi\(\);/.test(index) ||
