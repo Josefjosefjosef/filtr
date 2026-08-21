@@ -214,6 +214,13 @@ const state = {
   feedQuickView: "all",
   /** False until hosted traffic offline snapshot fetch settles (or traffic UI disabled). */
   trafficSnapSettled: false,
+  /** In-flight hosted traffic snapshot promise (boot); awaited on Doprava quick-view. */
+  trafficFetchPromise: null,
+  /**
+   * Optional first-paint cap after quick-view switch (0 = use PAGE_SIZE).
+   * Keeps Doprava↔ČHMÚ responsive; remaining cards paint on next frame.
+   */
+  quickPaintCap: 0,
   openSourceGroups: {},
   page: 1,
   cityQuery: "",
@@ -1841,12 +1848,36 @@ function restoreSettingsScroll(y) {
   });
 }
 
+function pageLimit() {
+  const base = Math.max(1, state.page | 0) * PAGE_SIZE;
+  const cap = Number(state.quickPaintCap) || 0;
+  return cap > 0 ? Math.min(base, cap) : base;
+}
+
+function syncQuickViewButtons(rootEl) {
+  const root = rootEl || ensureRoot();
+  if (!root) return;
+  try {
+    const ffQuick = ensureFeedFilter(effectivePrefs());
+    root.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
+      const view = btn.getAttribute("data-view") || "";
+      btn.classList.toggle("is-on", view === state.feedQuickView);
+      const disabled =
+        (view === "traffic" && ffQuick.trafficEnabled === false) ||
+        (view === "chmu" && ffQuick.chmuEnabled === false);
+      btn.disabled = !!disabled;
+      if (disabled) btn.setAttribute("aria-disabled", "true");
+      else btn.removeAttribute("aria-disabled");
+    });
+  } catch (_) {}
+}
+
 function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
   void ensureCzMapSprite();
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageLimit());
   const count = root.querySelector("#iuPdCount");
   const feed = root.querySelector("#iuPrehledDneTimeline");
   const moreWrap = root.querySelector("#iuPdMoreWrap");
@@ -1915,7 +1946,7 @@ function paint(opts) {
   const root = ensureRoot();
   if (!root) return;
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageLimit());
   const listHtml = pageItems.length
     ? pageItems.map(renderItem).join("")
     : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
@@ -1935,20 +1966,7 @@ function paint(opts) {
         btn.classList.toggle("is-active", mode === state.viewMode);
       });
     } catch (_) {}
-    // Sync quick-view active button without full shell rebuild.
-    try {
-      const ffQuick = ensureFeedFilter(effectivePrefs());
-      root.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
-        const view = btn.getAttribute("data-view") || "";
-        btn.classList.toggle("is-on", view === state.feedQuickView);
-        const disabled =
-          (view === "traffic" && ffQuick.trafficEnabled === false) ||
-          (view === "chmu" && ffQuick.chmuEnabled === false);
-        btn.disabled = !!disabled;
-        if (disabled) btn.setAttribute("aria-disabled", "true");
-        else btn.removeAttribute("aria-disabled");
-      });
-    } catch (_) {}
+    syncQuickViewButtons(root);
   } else {
     root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml, list);
   }
@@ -2270,7 +2288,7 @@ function refreshFeedCountAndMore() {
   const root = ensureRoot();
   if (!root) return;
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageLimit());
   const count = root.querySelector("#iuPdCount");
   if (count) count.textContent = `${list.length} položek · okno 96 h`;
   const moreWrap = root.querySelector("#iuPdMoreWrap");
@@ -2317,7 +2335,7 @@ function syncFeedCardsAfterMembershipChange() {
     return;
   }
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageLimit());
   const wantedSet = new Set();
   for (let i = 0; i < pageItems.length; i++) {
     const id = String((pageItems[i] && pageItems[i].id) || "");
@@ -2376,6 +2394,7 @@ function wire() {
       return;
     }
     if (act === "feed-quick-view") {
+      // doprava-chmi-switch-snap-first-v1-20260821
       const view = t.getAttribute("data-view");
       if (view !== "all" && view !== "traffic" && view !== "chmu") return;
       const ff = ensureFeedFilter(effectivePrefs());
@@ -2383,8 +2402,66 @@ function wire() {
       if (view === "chmu" && ff.chmuEnabled === false) return;
       state.feedQuickView = view;
       state.page = 1;
-      paint();
-      wire();
+      // Immediate button visual response (before filter/render work).
+      syncQuickViewButtons(ensureRoot());
+
+      const finishQuickPaint = () => {
+        // First paint a short page so correct cards appear quickly; fill rest next frame.
+        state.quickPaintCap = view === "traffic" ? 12 : 0;
+        paint();
+        wire();
+        if (state.quickPaintCap > 0) {
+          const cap = state.quickPaintCap;
+          state.quickPaintCap = 0;
+          requestAnimationFrame(() => {
+            if (state.feedQuickView !== view) return;
+            try {
+              paint();
+              wire();
+            } catch (_) {}
+            void cap;
+          });
+        }
+      };
+
+      // Doprava: prefer in-memory snapshot; only await boot fetch when snap is still missing.
+      // Do NOT wait for ensureTrafficPresenter — that blocked first correct cards for seconds.
+      if (
+        view === "traffic" &&
+        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
+        !state.trafficSnapSettled
+      ) {
+        const snapNow = loadOfflineTrafficSnapshot();
+        if (snapNow) {
+          state.trafficSnapSettled = true;
+          finishQuickPaint();
+          return;
+        }
+        try {
+          const rootQ = ensureRoot();
+          const feedQ = rootQ && rootQ.querySelector("#iuPrehledDneTimeline");
+          if (feedQ) {
+            feedQ.innerHTML =
+              `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám dopravu…</li>`;
+            feedQ.setAttribute("aria-busy", "true");
+          }
+        } catch (_) {}
+        let pending = state.trafficFetchPromise;
+        if (!pending) {
+          pending = fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null);
+          state.trafficFetchPromise = pending;
+        }
+        void Promise.resolve(pending)
+          .catch(() => null)
+          .then(() => {
+            if (state.feedQuickView !== "traffic") return;
+            state.trafficSnapSettled = true;
+            finishQuickPaint();
+          });
+        return;
+      }
+
+      finishQuickPaint();
       return;
     }
     if (act === "feed-main-toggle") {
@@ -2919,6 +2996,7 @@ async function boot() {
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
           : Promise.resolve(null);
+      state.trafficFetchPromise = trafficPromise;
 
       // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
       let feedEarlyPainted = false;
@@ -3044,10 +3122,19 @@ async function boot() {
           try {
             await trafficPromise;
             if (bootAbort && bootAbort.signal.aborted) return;
+            // Snapshot ready → settle immediately so Doprava quick-view can paint without presenter.
+            state.trafficSnapSettled = true;
+            setTimeout(() => {
+              if (bootAbort && bootAbort.signal.aborted) return;
+              if (!root.isConnected) return;
+              try {
+                if (state.settingsOpen) updateFeedDom();
+                else paint();
+              } catch (_) {}
+            }, 0);
             await ensureTrafficPresenter().catch(() => null);
             if (bootAbort && bootAbort.signal.aborted) return;
             if (!root.isConnected) return;
-            state.trafficSnapSettled = true;
             setTimeout(() => {
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
