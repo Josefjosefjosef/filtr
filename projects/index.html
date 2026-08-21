@@ -45,6 +45,29 @@
         /* FIRST LOAD P0: start Open-Meteo immediately for returning users (do not wait 2.5–20s feed-pipeline). */
         if(!loc)return;
         window.__iuEarlyWxLoc={lat:loc.lat,lon:loc.lon,src:loc.src};
+        var CACHE_KEY="iuEarlyWxCacheV1";
+        var CACHE_TTL_MS=45*60*1000;
+        try{
+          var rawCache=localStorage.getItem(CACHE_KEY);
+          if(rawCache){
+            var cached=JSON.parse(rawCache);
+            var cLat=Number(cached&&cached.lat), cLon=Number(cached&&cached.lon);
+            var cAt=Number(cached&&cached.at||0);
+            if(
+              cached&&cached.data&&cached.data.current&&
+              isFinite(cLat)&&isFinite(cLon)&&
+              Math.abs(cLat-loc.lat)<1e-4&&Math.abs(cLon-loc.lon)<1e-4&&
+              cAt>0&&(Date.now()-cAt)<CACHE_TTL_MS
+            ){
+              window.__iuEarlyWxData=cached.data;
+              window.__iuEarlyWxAt=cAt;
+              window.__iuEarlyWxFromCache=1;
+              try{
+                if(typeof window.__iuEarlyWxOnData==="function")window.__iuEarlyWxOnData(cached.data);
+              }catch(_){}
+            }
+          }
+        }catch(_){}
         var url="https://api.open-meteo.com/v1/forecast"+
           "?latitude="+encodeURIComponent(String(loc.lat))+
           "&longitude="+encodeURIComponent(String(loc.lon))+
@@ -59,13 +82,17 @@
         }).then(function(d){
           window.__iuEarlyWxData=d;
           window.__iuEarlyWxAt=Date.now();
+          window.__iuEarlyWxFromCache=0;
+          try{
+            localStorage.setItem(CACHE_KEY,JSON.stringify({lat:loc.lat,lon:loc.lon,at:Date.now(),data:d}));
+          }catch(_){}
           try{
             if(typeof window.__iuEarlyWxOnData==="function")window.__iuEarlyWxOnData(d);
           }catch(_){}
           return d;
         }).catch(function(e){
           window.__iuEarlyWxErr=String(e&&e.message||e||"err");
-          return null;
+          return window.__iuEarlyWxData||null;
         });
       }catch(_){
         try{document.documentElement.setAttribute("data-iu-silver-wx-boot","firstVisit");}catch(_e){}
