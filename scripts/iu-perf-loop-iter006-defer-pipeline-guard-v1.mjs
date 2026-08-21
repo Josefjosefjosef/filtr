@@ -27,6 +27,7 @@ must(/early-wx-v1-20260822/.test(shell) || /early-wx-v1-20260822/.test(index), "
 must(/__iuEarlyWxP/.test(index), "index:early_wx_fetch");
 must(/__iuEarlyWxOnData/.test(index), "index:early_wx_paint");
 must(/data-iu-early-wx-painted/.test(index), "index:early_wx_mark");
+must(/iuEarlyWxCacheV1/.test(index), "index:early_wx_ls_cache");
 
 if (fails.length) {
   console.error("[iu-perf-loop-iter006-defer-pipeline-guard] FAIL");
