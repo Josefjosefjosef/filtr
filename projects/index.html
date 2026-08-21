@@ -67,15 +67,42 @@
         pending=import(SRC).then(function(){return true;}).catch(function(){pending=null;return false;});
         return pending;
       };
-      function startChmiBoot(){
+      function startPocasiPrefetch(){
         try{
           if(!window.__iuPocasiLanePrefetch && !window.__iuPocasiLaneInflight){
             window.__iuPocasiLanePrefetch=fetch("/projects/data/info_events/lanes/pocasi.json",{credentials:"same-origin",cache:"no-store"});
           }
         }catch(_){}
-        try{ window.iuEnsurePrehledDneUi(); }catch(_){}
       }
-      /* Start when #iuPrehledDneRoot is parsed — do not wait for full DOMContentLoaded (trailing HTML/scripts). */
+      function afterFcp(fn){
+        var done=false;
+        function run(){if(done)return;done=true;try{fn();}catch(_){}}
+        try{
+          var fcp=performance.getEntriesByType("paint").find(function(e){return e&&e.name==="first-contentful-paint";});
+          if(fcp&&fcp.startTime>0){run();return;}
+        }catch(_){}
+        try{
+          if(typeof PerformanceObserver==="function"){
+            var po=new PerformanceObserver(function(list){
+              try{
+                var ents=list.getEntries();
+                for(var i=0;i<ents.length;i++){
+                  if(ents[i]&&ents[i].name==="first-contentful-paint"){
+                    try{po.disconnect();}catch(_){}
+                    run();
+                    return;
+                  }
+                }
+              }catch(_){}
+            });
+            po.observe({type:"paint",buffered:true});
+          }
+        }catch(_){}
+        setTimeout(run,1800);
+        if(document.readyState==="complete")setTimeout(run,0);
+        else window.addEventListener("load",function(){setTimeout(run,0);},{once:true});
+      }
+      /* Root-ready: start CHMI data immediately. Module import stays after FCP (Silver first-tap / main-thread). */
       (function waitRoot(){
         var done=false;
         function go(){
@@ -83,7 +110,7 @@
           try{ if(!document.getElementById("iuPrehledDneRoot")) return; }catch(_){ return; }
           done=true;
           try{ if(mo) mo.disconnect(); }catch(_){}
-          startChmiBoot();
+          startPocasiPrefetch();
         }
         var mo=null;
         try{
@@ -93,12 +120,17 @@
         }catch(_){}
         document.addEventListener("DOMContentLoaded",go,{once:true});
       })();
+      afterFcp(function(){
+        /* FIRST LOAD */
+        window.iuEnsurePrehledDneUi();
+      });
       document.addEventListener("pointerdown",function(e){
         try{
           var t=e&&e.target;
           if(!t||typeof t.closest!=="function")return;
           if(t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__hero,.iuPd__banner,.iuPdFeed,[data-testid=\"prehled-dne-homecard\"]")){
-            startChmiBoot();
+            startPocasiPrefetch();
+            window.iuEnsurePrehledDneUi();
           }
         }catch(_){}
       },true);
