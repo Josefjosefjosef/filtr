@@ -34638,6 +34638,12 @@
       try {
         if (typeof window.__iuSilverSyncHomeMicSend === "function") window.__iuSilverSyncHomeMicSend();
       } catch (_) {}
+      /* Keep first-tap counters consistent with app.js optimistic hold path
+         (engine-ready clicks must still register every trusted prefix tap). */
+      try {
+        window.__iuSilverPrefixOptimisticCount = (window.__iuSilverPrefixOptimisticCount || 0) + 1;
+        window.__iuSilverPrefixOptimisticLast = key;
+      } catch (_) {}
     }
 
     function bindPrefixButtons(root) {
@@ -34671,8 +34677,33 @@
               e.stopPropagation();
             } catch (_) {}
             var kind = String(btn.getAttribute("data-iu-silver-home-quick-action") || "");
-            if (typeof window.__iuSilverOpenQuickTemplateEmptyDirect === "function") {
-              window.__iuSilverOpenQuickTemplateEmptyDirect(kind, homeInput());
+            try {
+              btn.setAttribute("aria-busy", "true");
+            } catch (_) {}
+            try {
+              if (typeof window.__iuSilverOpenQuickTemplateEmptyDirect === "function") {
+                window.__iuSilverOpenQuickTemplateEmptyDirect(kind, homeInput());
+              }
+            } catch (_) {}
+            /* Keep busy through at least one committed paint so first-tap
+               feedback is observable; clear on the next frames (action is sync). */
+            try {
+              var clearBusy = function () {
+                try {
+                  btn.removeAttribute("aria-busy");
+                } catch (_) {}
+              };
+              if (typeof requestAnimationFrame === "function") {
+                requestAnimationFrame(function () {
+                  requestAnimationFrame(clearBusy);
+                });
+              } else {
+                setTimeout(clearBusy, 0);
+              }
+            } catch (_) {
+              try {
+                btn.removeAttribute("aria-busy");
+              } catch (_) {}
             }
           });
         })(btns[i]);
