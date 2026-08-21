@@ -1879,11 +1879,26 @@ function updateFeedDom() {
   }
   const feedNow = root.querySelector("#iuPrehledDneTimeline");
   if (feedNow) {
-    feedNow.innerHTML = pageItems.length
-      ? pageItems.map(renderItem).join("")
-      : feedHydrated && !trafficPending
-        ? `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`
-        : `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`;
+    if (pageItems.length) {
+      feedNow.innerHTML = pageItems.map(renderItem).join("");
+      try {
+        feedNow.removeAttribute("aria-busy");
+        feedNow.removeAttribute("data-iu-pd-feed-skeleton");
+      } catch (_) {}
+    } else if (feedHydrated && !trafficPending) {
+      feedNow.innerHTML = `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
+      try {
+        feedNow.removeAttribute("aria-busy");
+      } catch (_) {}
+    } else {
+      // Keep reserved skeleton geometry while still loading — do not collapse to one line.
+      if (!feedNow.querySelector(".iuPdFeedSkeleton") && !feedNow.querySelector(".iuPrehledDne__item")) {
+        feedNow.innerHTML = `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`;
+      }
+      try {
+        feedNow.setAttribute("aria-busy", "true");
+      } catch (_) {}
+    }
     const hasTraffic = pageItems.some((ev) => ev && ev.trafficV1);
     feedNow.classList.toggle("iuPdFeed--trafficPad", hasTraffic);
   }
@@ -1909,7 +1924,7 @@ function paint(opts) {
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
       : "";
   // Keep an existing hero shell (boot skeleton / prior paint) to avoid CLS from full innerHTML replace.
-  const heroReady = !!root.querySelector('[data-testid="prehled-dne-hero"] [data-act="open-settings"]');
+  const heroReady = !!root.querySelector('[data-testid="prehled-dne-hero"]');
   const feedReady = !!root.querySelector("#iuPrehledDneTimeline");
   if (heroReady && feedReady && !options.forceFullShell) {
     updateFeedDom();
@@ -2813,11 +2828,70 @@ async function boot() {
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
   state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
-  root.innerHTML = homeShellHtml(
-    `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
-    "Načítám…",
-    ""
-  );
+  // FIRST LOAD: never wipe the static HTML shell (banner/feed skeleton). A full
+  // root.innerHTML replace was collapsing reserved feed geometry (~520px → tiny
+  // "Načítám") and then expanding again when cards arrived (user-visible jump).
+  const heroReady = !!root.querySelector('[data-testid="prehled-dne-hero"]');
+  if (heroReady) {
+    try {
+      const cta = root.querySelector('[data-testid="prehled-dne-settings-cta"]');
+      if (cta) {
+        cta.setAttribute("data-act", "open-settings");
+        cta.removeAttribute("aria-hidden");
+        try {
+          cta.style.opacity = "";
+          cta.style.pointerEvents = "";
+        } catch (_) {}
+      }
+    } catch (_) {}
+    try {
+      const toggles = root.querySelector(".iuPd__toggles");
+      if (toggles) {
+        toggles.removeAttribute("aria-hidden");
+        if (!toggles.querySelector("[data-act='mode']")) {
+          const mode = state.viewMode || "all";
+          toggles.setAttribute("role", "toolbar");
+          toggles.setAttribute("aria-label", "Zobrazení feedu");
+          toggles.innerHTML =
+            `<button type="button" class="iuPdToggle${mode === "all" ? " is-active" : ""}" data-act="mode" data-mode="all">Vše</button>` +
+            `<button type="button" class="iuPdToggle${mode === "saved" ? " is-active" : ""}" data-act="mode" data-mode="saved">Uložené</button>` +
+            `<button type="button" class="iuPdToggle${mode === "unread" ? " is-active" : ""}" data-act="mode" data-mode="unread">Nepřečtené</button>` +
+            `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>`;
+        }
+      }
+    } catch (_) {}
+    try {
+      let feed = root.querySelector("#iuPrehledDneTimeline") || root.querySelector(".iuPdFeed");
+      if (feed) {
+        feed.id = "iuPrehledDneTimeline";
+        feed.classList.add("iuPrehledDne__timeline", "iuPdFeed");
+        feed.setAttribute("aria-busy", "true");
+      }
+    } catch (_) {}
+    try {
+      if (!root.querySelector("#iuPdCount")) {
+        const feed = root.querySelector("#iuPrehledDneTimeline, .iuPdFeed");
+        if (feed) {
+          feed.insertAdjacentHTML(
+            "beforebegin",
+            `<div class="iuPd__count" id="iuPdCount">Načítám…</div>`
+          );
+        }
+      }
+    } catch (_) {}
+    try {
+      if (!root.querySelector("#iuPdMoreWrap")) {
+        const feed = root.querySelector("#iuPrehledDneTimeline, .iuPdFeed");
+        if (feed) feed.insertAdjacentHTML("afterend", `<div id="iuPdMoreWrap"></div>`);
+      }
+    } catch (_) {}
+  } else {
+    root.innerHTML = homeShellHtml(
+      `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám přehled…</li>`,
+      "Načítám…",
+      ""
+    );
+  }
   try {
     wire();
   } catch (_) {}

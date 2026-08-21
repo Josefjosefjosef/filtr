@@ -1,9 +1,9 @@
 {
-    "freezeId": "first-load-stable-home-v1-20260821",
+    "freezeId": "first-load-preserve-prehled-shell-v1-20260821",
     "preStabilizationProductionSha": "1e47ac46d93147035730314716641f71b330fffd",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-21T05:31:29.473Z",
-    "note": "Freeze bump: FIRST LOAD reserve prehled feed skeleton + immediate post-FCP prehled-dne-ui.",
+    "updatedAt": "2026-08-21T06:24:35.287Z",
+    "note": "Freeze bump: FIRST LOAD preserve static prehled shell in boot() (no wipe).",
     "files": {
         "projects/index.html": "2a830fe8770223eb43620c54d80ca1c3724a026fa55180f7accae7d5dc8f7399",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
@@ -23,7 +23,8 @@
         "assets/iu-user-data-backup-core.js": "8f4cd93fed8399fd24cb670fd992c5fd230155fb26ec4c835c333e477840fb32",
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
-        "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0"
+        "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
+        "assets/iu-prehled-dne-ui-v1.js": "06bdd25a8e86e200bca48cb86e5ac3d8c626a74329e8b83ff94f925add05d728"
     },
     "requiredMarkers": {
         "sw.js": [
@@ -38,6 +39,7 @@
             "chmi-multibrowser-console-v1-20260731"
         ],
         "projects/index.html": [
+            "first-load-preserve-prehled-shell-v1-20260821",
             "first-load-stable-home-v1-20260821",
             "perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821",
             "perf-loop-iter014-secondary-js-batch2-v1-20260820",
