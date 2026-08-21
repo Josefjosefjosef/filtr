@@ -2920,17 +2920,12 @@ async function boot() {
           ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
           : Promise.resolve(null);
 
-      const shellPromise = loadInfoSystemShellData({
-        signal: bootSignal,
-      });
-
-      // FIRST LOAD: do not block first CHMI cards on shell JSON. Apply feed as soon as
-      // lanes resolve; shell taxonomy can land in parallel for settings.
-      let shell = null;
+      // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
       let feedEarlyPainted = false;
+      let shellRef = null;
       const paintFeed = (feed, shellData) => {
         if (bootAbort && bootAbort.signal.aborted) return;
-        state.data = Object.assign({}, shellData || shell || {}, {
+        state.data = Object.assign({}, shellData || shellRef || {}, {
           feed,
           feedLoad: {
             omittedSourceIds: (feed && feed.omittedSourceIds) || ["ndic"],
@@ -2961,14 +2956,19 @@ async function boot() {
         } catch (_) {}
       };
 
-      void feedPromise.then((feed) => {
-        if (bootAbort && bootAbort.signal.aborted) return;
-        if (!feed || !Array.isArray(feed.items) || !feed.items.length) return;
-        feedEarlyPainted = true;
-        paintFeed(feed, shell);
-      }).catch(() => {});
+      void feedPromise
+        .then((feed) => {
+          if (bootAbort && bootAbort.signal.aborted) return;
+          if (!feed || !Array.isArray(feed.items) || !feed.items.length) return;
+          feedEarlyPainted = true;
+          paintFeed(feed, shellRef);
+        })
+        .catch(() => {});
 
-      shell = await shellPromise;
+      const shell = await loadInfoSystemShellData({
+        signal: bootSignal,
+      });
+      shellRef = shell;
       if (bootAbort && bootAbort.signal.aborted) return;
       state.data = shell;
       state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
