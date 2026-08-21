@@ -30,6 +30,9 @@ const appIdx = index.indexOf('<script type="module" src="/assets/app.js');
 const headEnd = index.indexOf("</head>");
 must(bootIdx > 0 && appIdx > 0 && bootIdx < appIdx, "bootstrap_before_appjs");
 must(headEnd > 0 && bootIdx < headEnd, "bootstrap_in_head");
+must(/modulepreload/.test(index) && /iu-info-system-core-v1/.test(index), "modulepreload_core");
+must(/first-load-modulepreload-core-v1-20260821/.test(index), "marker_modulepreload");
+must(!/<link[^>]*rel="modulepreload"[^>]*iu-prehled-dne-ui-v1\.js/.test(index), "no_prehled_modulepreload_link");
 
 if (fails.length) {
   console.error("[iu-first-load-feed-lanes-guard] FAIL");

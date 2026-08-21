@@ -54,7 +54,8 @@
     <!-- FIRST LOAD: CHMI boot must run in early <head> — late-body script only ran after multi‑MB HTML parse (~+5s).
          first-load-feed-lanes-not-feedjson-v1-20260821
          first-load-prehled-bootstrap-before-appjs-v1-20260821
-         first-load-early-chmi-boot-v1-20260821 -->
+         first-load-early-chmi-boot-v1-20260821
+         first-load-modulepreload-core-v1-20260821 -->
     <script>
     (function iuDeferPrehledDneUiUntilFcp(){
       "use strict";
@@ -62,8 +63,28 @@
       window.__iuDeferPrehledDneUiUntilFcp=true;
       var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821";
       var pending=null;
+      function preloadCriticalDeps(){
+        /* Parallel-discover first-card deps (browser only sees them after parent module eval otherwise). */
+        try{
+          var hash=(SRC.match(/iu-prehled-dne-ui-v1(\.[a-f0-9]+)\.js/i)||[])[1]||"";
+          var core=hash
+            ? ("/assets/iu-info-system-core-v1"+hash+".js")
+            : "/assets/iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
+          var traffic=hash
+            ? "/assets/iu-traffic-overview-v1.js"
+            : "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820";
+          [core,traffic].forEach(function(href){
+            if(document.querySelector('link[rel="modulepreload"][href="'+href+'"]'))return;
+            var l=document.createElement("link");
+            l.rel="modulepreload";
+            l.href=href;
+            document.head.appendChild(l);
+          });
+        }catch(_){}
+      }
       window.iuEnsurePrehledDneUi=function(){
         if(pending)return pending;
+        preloadCriticalDeps();
         pending=import(SRC).then(function(){return true;}).catch(function(){pending=null;return false;});
         return pending;
       };
