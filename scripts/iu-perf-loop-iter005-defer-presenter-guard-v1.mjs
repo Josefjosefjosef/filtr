@@ -19,7 +19,12 @@ function must(cond, id) {
 must(!/queueMicrotask\(\(\) => \{\s*void ensureTrafficPresenter\(\)/.test(overview), "overview:no_microtask_warm");
 must(!/await ensureTrafficPresenter\(\)/.test(overview.match(/fetchHostedTrafficOfflineSnapshot[\s\S]{0,400}/)?.[0] || ""), "fetch:no_presenter_before_snapshot");
 must(!/const presenterWarm/.test(ui), "ui:no_parallel_presenter_warm");
-must(/data-iu-pd-feed-ready[\s\S]{0,800}ensureTrafficPresenter/.test(ui), "ui:presenter_after_feed_ready");
+{
+  // Presenter must appear after feed-ready is set in source order (distance may grow with early-paint helpers).
+  const readyIdx = ui.indexOf("data-iu-pd-feed-ready");
+  const presenterIdx = ui.indexOf("ensureTrafficPresenter", readyIdx >= 0 ? readyIdx : 0);
+  must(readyIdx >= 0 && presenterIdx > readyIdx, "ui:presenter_after_feed_ready");
+}
 must(/perf-loop-iter005-defer-presenter-v1-20260820/.test(ui), "ui:cache_bust");
 must(/perf-loop-iter005-defer-presenter-v1-20260820/.test(index), "index:cache_bust");
 must(/Presenter not required for snapshot fetch/.test(overview), "overview:comment_marker");
