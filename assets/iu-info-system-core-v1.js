@@ -123,7 +123,7 @@ async function fetchJson(url, opts) {
   return res.json();
 }
 
-/** Lane JSON is small and safe to reuse (preload / parallel callers). */
+/** Lane JSON: prefer shared early prefetch Response; otherwise same-origin no-store fetch. */
 async function fetchLaneJson(url, signal) {
   try {
     if (
@@ -137,7 +137,7 @@ async function fetchLaneJson(url, signal) {
       if (res && res.ok) return res.clone().json();
     }
   } catch (_) {}
-  return fetchJson(url, { cache: "force-cache", signal });
+  return fetchJson(url, { cache: "no-store", signal });
 }
 
 let _iuLaneFeedInflight = null;
