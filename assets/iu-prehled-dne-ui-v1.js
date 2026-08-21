@@ -216,6 +216,8 @@ const state = {
   trafficSnapSettled: false,
   /** In-flight hosted traffic snapshot promise (boot). */
   trafficFetchPromise: null,
+  /** Temporary first-paint card cap for Doprava quick-view (0 = normal PAGE_SIZE). */
+  trafficQuickFirstCap: 0,
   openSourceGroups: {},
   page: 1,
   cityQuery: "",
@@ -1843,12 +1845,18 @@ function restoreSettingsScroll(y) {
   });
 }
 
+function pageItemsLimit() {
+  const base = Math.max(1, state.page | 0) * PAGE_SIZE;
+  const cap = Number(state.trafficQuickFirstCap) || 0;
+  return cap > 0 ? Math.min(base, cap) : base;
+}
+
 function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
   void ensureCzMapSprite();
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageItemsLimit());
   const count = root.querySelector("#iuPdCount");
   const feed = root.querySelector("#iuPrehledDneTimeline");
   const moreWrap = root.querySelector("#iuPdMoreWrap");
@@ -1917,7 +1925,7 @@ function paint(opts) {
   const root = ensureRoot();
   if (!root) return;
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageItemsLimit());
   const listHtml = pageItems.length
     ? pageItems.map(renderItem).join("")
     : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
@@ -2272,7 +2280,7 @@ function refreshFeedCountAndMore() {
   const root = ensureRoot();
   if (!root) return;
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageItemsLimit());
   const count = root.querySelector("#iuPdCount");
   if (count) count.textContent = `${list.length} položek · okno 96 h`;
   const moreWrap = root.querySelector("#iuPdMoreWrap");
@@ -2319,7 +2327,7 @@ function syncFeedCardsAfterMembershipChange() {
     return;
   }
   const list = filteredList();
-  const pageItems = list.slice(0, state.page * PAGE_SIZE);
+  const pageItems = list.slice(0, pageItemsLimit());
   const wantedSet = new Set();
   for (let i = 0; i < pageItems.length; i++) {
     const id = String((pageItems[i] && pageItems[i].id) || "");
@@ -2394,6 +2402,24 @@ function wire() {
           });
         }
       } catch (_) {}
+
+      const paintTrafficQuick = () => {
+        // First paint a short page so correct cards appear before full PAGE_SIZE render.
+        state.trafficQuickFirstCap = view === "traffic" ? 12 : 0;
+        paint();
+        wire();
+        if (state.trafficQuickFirstCap > 0) {
+          state.trafficQuickFirstCap = 0;
+          setTimeout(() => {
+            if (state.feedQuickView !== "traffic") return;
+            try {
+              paint();
+              wire();
+            } catch (_) {}
+          }, 0);
+        }
+      };
+
       if (
         view === "traffic" &&
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
@@ -2401,34 +2427,45 @@ function wire() {
       ) {
         if (loadOfflineTrafficSnapshot()) {
           state.trafficSnapSettled = true;
-        } else {
-          try {
-            const rootQ = ensureRoot();
-            const feedQ = rootQ && rootQ.querySelector("#iuPrehledDneTimeline");
-            if (feedQ) {
-              feedQ.innerHTML =
-                `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám dopravu…</li>`;
-              feedQ.setAttribute("aria-busy", "true");
-            }
-          } catch (_) {}
-          let pending = state.trafficFetchPromise;
-          if (!pending) {
-            pending = fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null);
-            state.trafficFetchPromise = pending;
-          }
-          void Promise.resolve(pending)
-            .catch(() => null)
-            .then(() => {
-              if (state.feedQuickView !== "traffic") return;
-              state.trafficSnapSettled = true;
-              paint();
-              wire();
-            });
+          paintTrafficQuick();
           return;
         }
+        try {
+          const rootQ = ensureRoot();
+          const feedQ = rootQ && rootQ.querySelector("#iuPrehledDneTimeline");
+          if (feedQ) {
+            feedQ.innerHTML =
+              `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám dopravu…</li>`;
+            feedQ.setAttribute("aria-busy", "true");
+          }
+        } catch (_) {}
+        let pending = state.trafficFetchPromise;
+        if (!pending) {
+          pending = fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null);
+          state.trafficFetchPromise = pending;
+        }
+        void (async () => {
+          let done = false;
+          const tracked = Promise.resolve(pending)
+            .catch(() => null)
+            .finally(() => {
+              done = true;
+            });
+          // Poll memory: boot may populate snap before our await observes resolve.
+          const deadline = Date.now() + 30000;
+          while (!loadOfflineTrafficSnapshot() && Date.now() < deadline) {
+            if (done) break;
+            await new Promise((r) => setTimeout(r, 40));
+          }
+          await tracked;
+          if (state.feedQuickView !== "traffic") return;
+          state.trafficSnapSettled = true;
+          paintTrafficQuick();
+        })();
+        return;
       }
-      paint();
-      wire();
+
+      paintTrafficQuick();
       return;
     }
     if (act === "feed-main-toggle") {
