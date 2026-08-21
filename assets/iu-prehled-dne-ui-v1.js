@@ -3144,6 +3144,8 @@ function whenPrehledRootReady(fn) {
 }
 
 function mountPrehledDne() {
+  if (window.__iuPrehledDneBootStarted) return;
+  window.__iuPrehledDneBootStarted = true;
   boot();
 }
 

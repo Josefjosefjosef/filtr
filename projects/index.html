@@ -69,7 +69,7 @@
       };
       function startChmiBoot(){
         try{
-          if(!window.__iuPocasiLanePrefetch){
+          if(!window.__iuPocasiLanePrefetch && !window.__iuPocasiLaneInflight){
             window.__iuPocasiLanePrefetch=fetch("/projects/data/info_events/lanes/pocasi.json",{credentials:"same-origin",cache:"no-store"});
           }
         }catch(_){}
@@ -2844,6 +2844,29 @@ font-src 'self' data:;
                             <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
                           </div>
                         </div>
+                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="sledovani-zasilek" aria-hidden="true">SLEDOVÁNÍ ZÁSILEK</div>
+                          <div class="iuSilverParcelWatch__hero">
+                            <div class="iuSilverParcelWatch__content">
+                              <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
+                              <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a sleduj její pohyb.</p>
+                              <div class="iuSilverParcelWatch__mainShell">
+                                <div class="iuSilverParcelWatch__row">
+                                  <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                                  <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Vyhledat zásilku</button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="iuSilverParcelWatch__illus" aria-hidden="true">
+                              <img class="iuSilverParcelWatch__illusImg" src="/assets/images/parcel-tracking-illustration.webp" alt="" width="480" height="640" decoding="async" loading="lazy" fetchpriority="low" />
+                            </div>
+                          </div>
+                          <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
+                          <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
+                          <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
+                          <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
+                        </section>
+                        </section>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
                         <div id="iuDesktopInfoPanelMount" class="iuDesktopInfoPanelMount" hidden aria-hidden="true"></div>
