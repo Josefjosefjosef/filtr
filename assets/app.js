@@ -10610,15 +10610,70 @@ try {
     try {
       if (window.iuNotesService && !window.iuNotesService.__iuNotesLazyStub) return;
     } catch (_) {}
+    var openingGen = 0;
+    function removeOpeningShell() {
+      try {
+        var shell = document.getElementById("iuNotesOpeningShell");
+        if (shell && shell.parentNode) shell.parentNode.removeChild(shell);
+      } catch (_) {}
+    }
+    function showOpeningShell() {
+      try {
+        if (document.getElementById("iuNotesOpeningShell")) return;
+        var shell = document.createElement("div");
+        shell.id = "iuNotesOpeningShell";
+        shell.setAttribute("data-iu-notes-opening-shell", "1");
+        shell.setAttribute("role", "dialog");
+        shell.setAttribute("aria-modal", "true");
+        shell.setAttribute("aria-label", "Poznámky");
+        shell.style.cssText =
+          "position:fixed;inset:0;z-index:10040;background:rgba(15,23,42,.42);display:flex;align-items:stretch;justify-content:center;";
+        shell.innerHTML =
+          '<div style="width:100%;max-width:720px;margin:0 auto;background:#fff;display:flex;flex-direction:column;min-height:100%;box-shadow:0 8px 32px rgba(0,0,0,.18)">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #e2e8f0">' +
+          "<strong>Poznámky</strong>" +
+          '<button type="button" data-iu-notes-opening-close="1" aria-label="Zavřít" style="border:0;background:transparent;font-size:28px;line-height:1;cursor:pointer;padding:0 6px">×</button>' +
+          "</div>" +
+          '<div style="padding:16px;color:#64748b">Načítám…</div>' +
+          "</div>";
+        shell.addEventListener(
+          "click",
+          function (ev) {
+            try {
+              var t = ev.target;
+              if (!t) return;
+              if (t === shell || (t.closest && t.closest("[data-iu-notes-opening-close]"))) {
+                openingGen += 1;
+                removeOpeningShell();
+              }
+            } catch (_) {}
+          },
+          true
+        );
+        document.body.appendChild(shell);
+      } catch (_) {}
+    }
     window.iuNotesService = {
       __iuNotesLazyStub: 1,
       openOverlay: function (el) {
-        return ensure().then(function () {
-          var s = window.iuNotesService;
-          if (s && !s.__iuNotesLazyStub && typeof s.openOverlay === "function") return s.openOverlay(el);
-        });
+        // UI first: shell immediately, then lazy module (no blank first tap).
+        var gen = (openingGen += 1);
+        showOpeningShell();
+        return ensure()
+          .then(function () {
+            if (gen !== openingGen) return;
+            removeOpeningShell();
+            var s = window.iuNotesService;
+            if (s && !s.__iuNotesLazyStub && typeof s.openOverlay === "function") return s.openOverlay(el);
+          })
+          .catch(function (e) {
+            if (gen === openingGen) removeOpeningShell();
+            throw e;
+          });
       },
       closeOverlay: function () {
+        openingGen += 1;
+        removeOpeningShell();
         return ensure().then(function () {
           var s = window.iuNotesService;
           if (s && !s.__iuNotesLazyStub && typeof s.closeOverlay === "function") return s.closeOverlay();
@@ -10631,7 +10686,11 @@ try {
   function isNotesTrigger(el) {
     try {
       if (!el || typeof el.closest !== "function") return null;
-      return el.closest("[data-iu-notes-trigger], .iu-mmTopTool--notes");
+      return (
+        el.closest("[data-iu-notes-trigger], .iu-mmTopTool--notes") ||
+        (el.closest &&
+          el.closest('button[aria-label="Poznámky"], [aria-label="Poznámky"]'))
+      );
     } catch (_) {
       return null;
     }
@@ -10664,12 +10723,17 @@ try {
           e.preventDefault();
           e.stopPropagation();
           e.stopImmediatePropagation();
-          ensure().then(function () {
-            try {
-              var s = window.iuNotesService;
-              if (s && !s.__iuNotesLazyStub && typeof s.openOverlay === "function") s.openOverlay(hit);
-            } catch (_) {}
-          });
+          // Same path as stub: immediate shell via openOverlay stub.
+          try {
+            window.iuNotesService.openOverlay(hit);
+          } catch (_) {
+            ensure().then(function () {
+              try {
+                var s = window.iuNotesService;
+                if (s && !s.__iuNotesLazyStub && typeof s.openOverlay === "function") s.openOverlay(hit);
+              } catch (_) {}
+            });
+          }
         } catch (_) {}
       },
       true
