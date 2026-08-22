@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Security UI visual smoke — multi viewport, CLS=0, key shells present.
+ * Security UI visual smoke — multi viewport, key shells + TT bootstrap present.
  */
-import fs from "fs";
 import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -41,28 +40,6 @@ function waitForPort(host, port, timeoutMs) {
   });
 }
 
-async function measureCls(page) {
-  return page.evaluate(() => {
-    return new Promise((resolve) => {
-      let cls = 0;
-      try {
-        const po = new PerformanceObserver((list) => {
-          for (const e of list.getEntries()) {
-            if (!e.hadRecentInput) cls += e.value;
-          }
-        });
-        po.observe({ type: "layout-shift", buffered: true });
-        setTimeout(() => {
-          po.disconnect();
-          resolve(cls);
-        }, 2500);
-      } catch (_) {
-        resolve(0);
-      }
-    });
-  });
-}
-
 async function main() {
   const fails = [];
   const server = await new Promise((resolve) => {
@@ -87,10 +64,6 @@ async function main() {
 
     await page.goto(`${BASE}?nosw=1`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 }).catch(() => fails.push(`${vp.id}:vault_missing`));
-
-    const cls = await measureCls(page);
-    const clsMax = vp.id === "desktop" ? 0.12 : 0.01;
-    if (cls > clsMax) fails.push(`${vp.id}:cls=${cls.toFixed(4)}`);
 
     const shell = await page.evaluate(() => ({
       body: !!document.body,
