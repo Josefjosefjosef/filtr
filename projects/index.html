@@ -132,7 +132,7 @@
       "use strict";
       if(window.__iuDeferPrehledDneUiUntilFcp)return;
       window.__iuDeferPrehledDneUiUntilFcp=true;
-      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-doprava-chmi-switch-snap-first-v1-20260821-presenter-parallel-v1-20260821-doprava-snap-first-paint-hydrate-v1-20260821-chmi-first-home-boot-v1-20260822";
+      var SRC="/assets/iu-prehled-dne-ui-v1.js?v=perf-stage6-traffic-follow-local-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-doprava-chmi-switch-snap-first-v1-20260821-presenter-parallel-v1-20260821-doprava-snap-first-paint-hydrate-v1-20260821-chmi-first-home-boot-v1-20260822-chmi-lane-fast-paint-v1-20260822";
       var pending=null;
       window.iuEnsurePrehledDneUi=function(){
         if(pending)return pending;
@@ -145,6 +145,10 @@
             window.__iuPocasiLanePrefetch=fetch("/projects/data/info_events/lanes/pocasi.json",{credentials:"same-origin",cache:"no-store"});
           }
         }catch(_){}
+      }
+      function startChmiBoot(){
+        startPocasiPrefetch();
+        try{ if(window.iuEnsurePrehledDneUi) window.iuEnsurePrehledDneUi(); }catch(_){}
       }
       function afterFcp(fn){
         var done=false;
@@ -182,7 +186,7 @@
           try{ if(!document.getElementById("iuPrehledDneRoot")) return; }catch(_){ return; }
           done=true;
           try{ if(mo) mo.disconnect(); }catch(_){}
-          startPocasiPrefetch();
+          startChmiBoot();
         }
         var mo=null;
         try{
@@ -201,7 +205,7 @@
           var t=e&&e.target;
           if(!t||typeof t.closest!=="function")return;
           if(t.closest("#iuPrehledDneRoot,[data-iu-prehled-dne-root],.iuPd__hero,.iuPd__banner,.iuPdFeed,[data-testid=\"prehled-dne-homecard\"]")){
-            startPocasiPrefetch();
+            startChmiBoot();
             window.iuEnsurePrehledDneUi();
           }
         }catch(_){}

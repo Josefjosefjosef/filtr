@@ -658,6 +658,30 @@ function shouldRepaintForTrafficCatalogUpdate() {
   return feedQuickViewIncludesTraffic();
 }
 
+/** Perf boot phase marker (FIRST LOAD forensics). */
+function markPrehledBootPhase(phase) {
+  try {
+    if (typeof performance !== "undefined" && performance.mark) {
+      performance.mark("iu:pd-" + phase);
+    }
+  } catch (_) {}
+}
+
+function ensureTrafficFetchPromise() {
+  if (state.trafficFetchPromise) return state.trafficFetchPromise;
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) {
+    state.trafficFetchPromise = Promise.resolve(null);
+    return state.trafficFetchPromise;
+  }
+  markPrehledBootPhase("traffic-fetch-start");
+  state.trafficFetchPromise = fetchHostedTrafficOfflineSnapshot({ persist: true })
+    .catch(() => null)
+    .finally(() => {
+      markPrehledBootPhase("traffic-fetch-end");
+    });
+  return state.trafficFetchPromise;
+}
+
 /** Filtered traffic candidates in memory — no DOM (background prep / Doprava fast open). */
 function computeTrafficFilteredCandidates() {
   const basePrefs = effectivePrefs();
@@ -688,7 +712,8 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
   state.trafficBackgroundPrepStarted = true;
   const run = async () => {
     try {
-      const pending = state.trafficFetchPromise;
+      markPrehledBootPhase("traffic-bg-start");
+      const pending = ensureTrafficFetchPromise();
       if (pending) await pending.catch(() => null);
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root || !root.isConnected) return;
@@ -702,6 +727,7 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
         state.trafficBackgroundFilteredCount = 0;
       }
       state.trafficBackgroundReady = true;
+      markPrehledBootPhase("traffic-bg-ready");
       try {
         window.dispatchEvent(new CustomEvent("iu-traffic-background-ready"));
       } catch (_) {}
@@ -709,19 +735,32 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       state.trafficSnapSettled = true;
     }
   };
-  const kick = () => {
+  const scheduleIdle = () => {
     try {
       if (typeof requestIdleCallback === "function") {
-        requestIdleCallback(() => void run(), { timeout: 5000 });
+        requestIdleCallback(() => void run(), { timeout: 8000 });
       } else {
-        setTimeout(() => void run(), 2000);
+        setTimeout(() => void run(), 3000);
       }
     } catch (_) {
-      setTimeout(() => void run(), 2000);
+      setTimeout(() => void run(), 3000);
     }
   };
-  // After first ČHMÚ paint — do not compete with first-screen critical work.
-  setTimeout(kick, 0);
+  // After first ČHMÚ cards + feed-ready — never compete with lane fetch/paint on the wire or main thread.
+  const waitFeedReady = (deadline) => {
+    if (bootAbort && bootAbort.signal.aborted) return;
+    if (!root || !root.isConnected) return;
+    if (root.getAttribute("data-iu-pd-feed-ready") === "1") {
+      scheduleIdle();
+      return;
+    }
+    if (Date.now() > deadline) {
+      scheduleIdle();
+      return;
+    }
+    setTimeout(() => waitFeedReady(deadline), 40);
+  };
+  waitFeedReady(Date.now() + 12000);
 }
 
 function filteredList() {
@@ -2545,11 +2584,7 @@ function wire() {
             feedQ.setAttribute("aria-busy", "true");
           }
         } catch (_) {}
-        let pending = state.trafficFetchPromise;
-        if (!pending) {
-          pending = fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null);
-          state.trafficFetchPromise = pending;
-        }
+        let pending = ensureTrafficFetchPromise();
         void (async () => {
           let done = false;
           const tracked = Promise.resolve(pending)
@@ -3004,11 +3039,24 @@ function isBootNetworkAbort(err) {
 }
 
 async function boot() {
+  markPrehledBootPhase("chmi-boot-start");
   // Explicit legacy HomeCards / smoke probes: do not hydrate Prehled or race navigations.
   if (infoSystemQueryMode() === "off") return;
   migrateLocalStateOnce();
   applyCutoverDom();
-  void ensureCzMapSprite();
+  // CZ map sprite is not needed for first ČHMÚ cards — defer off critical path.
+  const scheduleCzMapSprite = () => {
+    try {
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(() => void ensureCzMapSprite(), { timeout: 10000 });
+      } else {
+        setTimeout(() => void ensureCzMapSprite(), 2000);
+      }
+    } catch (_) {
+      setTimeout(() => void ensureCzMapSprite(), 2000);
+    }
+  };
+  scheduleCzMapSprite();
   const root = ensureRoot();
   if (!root) return;
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
@@ -3099,23 +3147,21 @@ async function boot() {
   void (async () => {
     try {
       const bootSignal = bootAbort ? bootAbort.signal : undefined;
+      markPrehledBootPhase("chmi-boot-scheduled");
       const feedPromise = loadInfoSystemFeedOnly({
         signal: bootSignal,
         omitFeedSourceIds: ["ndic"],
       });
-      // Snapshot JSON only — presenter loads after snap settle (iter-005: keep off FCP→feed).
-      // Doprava click overlaps presenter fetch with snap wait (see feed-quick-view handler).
-      const trafficPromise =
-        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true
-          ? fetchHostedTrafficOfflineSnapshot({ persist: true }).catch(() => null)
-          : Promise.resolve(null);
-      state.trafficFetchPromise = trafficPromise;
+      // ČHMÚ-first: do NOT fetch traffic snapshot in parallel with pocasi lane (network contention).
+      state.trafficFetchPromise = null;
 
       // FIRST LOAD: paint CHMI as soon as lane resolves; do not wait for shell JSON.
       let feedEarlyPainted = false;
       let shellRef = null;
-      const paintFeed = (feed, shellData) => {
+      const paintFeed = (feed, shellData, opts) => {
         if (bootAbort && bootAbort.signal.aborted) return;
+        const options = opts || {};
+        if (options.phase) markPrehledBootPhase(options.phase);
         state.data = Object.assign({}, shellData || shellRef || {}, {
           feed,
           feedLoad: {
@@ -3145,14 +3191,17 @@ async function boot() {
         try {
           root.setAttribute("data-iu-pd-feed-ready", "1");
         } catch (_) {}
+        markPrehledBootPhase("chmi-paint-end");
       };
 
+      markPrehledBootPhase("chmi-request-start");
       void feedPromise
         .then((feed) => {
+          markPrehledBootPhase("chmi-data-ready");
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!feed || !Array.isArray(feed.items) || !feed.items.length) return;
           feedEarlyPainted = true;
-          paintFeed(feed, shellRef);
+          paintFeed(feed, shellRef, { phase: "chmi-first-paint" });
         })
         .catch(() => {});
 
@@ -3161,13 +3210,11 @@ async function boot() {
       });
       shellRef = shell;
       if (bootAbort && bootAbort.signal.aborted) return;
-      state.data = shell;
       state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
       state.page = 1;
       if (!feedEarlyPainted) {
+        // Keep static HTML skeleton ("Načítám…") — skip empty paint() until lane resolves.
         state.index = buildFeedIndex([]);
-        paint();
-        wire();
       }
       bindTimelineLifecycleListeners();
       scheduleTimelineBoundaryRefresh();
@@ -3176,11 +3223,24 @@ async function boot() {
       } catch (_) {}
 
       const feed = await feedPromise;
+      markPrehledBootPhase("chmi-feed-settled");
       if (bootAbort && bootAbort.signal.aborted) return;
-      paintFeed(feed, shell);
-      try {
-        migrateChmiCapV2UserStates((feed && feed.items) || []);
-      } catch (_) {}
+      if (feedEarlyPainted) {
+        // Merge shell taxonomy/registry only — feed DOM already painted from early lane resolve.
+        state.data = Object.assign({}, state.data || {}, {
+          manifest: shell.manifest,
+          metadata: shell.metadata,
+          taxonomy: shell.taxonomy,
+          registry: shell.registry,
+        });
+      } else {
+        paintFeed(feed, shell, { phase: "chmi-paint-late" });
+      }
+      if (!feedEarlyPainted) {
+        try {
+          migrateChmiCapV2UserStates((feed && feed.items) || []);
+        } catch (_) {}
+      }
       // Optional ops diagnostics (no UI change unless ?iu_chmi_diag=1)
       try {
         if (typeof location !== "undefined" && /(?:^|[?&])iu_chmi_diag=1(?:&|$)/.test(location.search || "")) {

@@ -23,7 +23,8 @@ must(
 must(/fetch all shell JSON in parallel/.test(core), "core:comment_marker");
 must(
   /const feedPromise = loadInfoSystemFeedOnly\(/.test(ui) &&
-    /const trafficPromise =/.test(ui) &&
+    (/const trafficPromise =/.test(ui) ||
+      (/function ensureTrafficFetchPromise/.test(ui) && /state\.trafficFetchPromise = null/.test(ui))) &&
     /const shell = await loadInfoSystemShellData/.test(ui),
   "ui:boot_parallel_promises"
 );
@@ -32,7 +33,8 @@ must(
     /Promise\.all\(\[\s*trafficPromise\s*,\s*presenterWarm\s*\]\)/.test(ui) ||
     /await trafficPromise[\s\S]{0,200}ensureTrafficPresenter/.test(ui) ||
     // Snap settle before presenter (Doprava quick-view must not wait on presenter for settle flag).
-    /await trafficPromise[\s\S]{0,600}trafficSnapSettled\s*=\s*true[\s\S]{0,400}ensureTrafficPresenter/.test(ui),
+    /await trafficPromise[\s\S]{0,600}trafficSnapSettled\s*=\s*true[\s\S]{0,400}ensureTrafficPresenter/.test(ui) ||
+    /function ensureTrafficFetchPromise/.test(ui),
   "ui:uses_early_traffic_promise"
 );
 must(/perf-loop-iter001-parallel-boot-v1-20260819/.test(index), "index:cache_bust");
