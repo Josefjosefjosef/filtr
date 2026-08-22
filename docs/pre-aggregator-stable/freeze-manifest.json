@@ -1,11 +1,11 @@
 {
-    "freezeId": "chmi-lane-fast-paint-v1-20260822",
-    "preStabilizationProductionSha": "596af79cdd4765598aee2a7699df022a3a7473f9",
+    "freezeId": "chmi-asset-waterfall-v1-20260822",
+    "preStabilizationProductionSha": "6c9d206fd1e4c58aec21483db65ae54ba8aa0e7f",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-22T10:30:00.000Z",
-    "note": "Freeze bump: defer traffic fetch off CHMI lane; early module boot; skip empty paint.",
+    "updatedAt": "2026-08-22T11:30:00.000Z",
+    "note": "Freeze bump: early CHMI module discovery; lazy traffic/settings off critical graph.",
     "files": {
-        "projects/index.html": "49fd6e3b346ef0d2f6988742c5a95d519363151f8a01b296da7baac50481a0fe",
+        "projects/index.html": "607035ef3a992000ddaa2e04d62e1331c4012f6a6a228943570941a8d5c1155f",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "eadc3580b6f8f059e00f5b9fe2f02b4cbcd9c48de6a1a9bb012953841d7f4152",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "1cf9220b500ea8c2289cf9b56179762e0c80f62872ff2c46c26b896e2766f801",
@@ -24,7 +24,7 @@
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
         "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-prehled-dne-ui-v1.js": "2f279697cf24014e5a6003b1e173ecdbf1d0651b25e4f3756fbca44b958fc5e8"
+        "assets/iu-prehled-dne-ui-v1.js": "e890e22ca304f5dce2cc8818e8b7e8d85482277d16a3847d0fbd2c8ab5dc200c"
     },
     "requiredMarkers": {
         "sw.js": [
@@ -52,6 +52,7 @@
             "early-welcome-shell-v1-20260822",
             "chmi-first-home-boot-v1-20260822",
             "chmi-lane-fast-paint-v1-20260822",
+            "chmi-asset-waterfall-v1-20260822",
             "perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821",
             "perf-loop-iter014-secondary-js-batch2-v1-20260820",
             "perf-loop-iter012-secondary-js-after-fcp-v1-20260820",

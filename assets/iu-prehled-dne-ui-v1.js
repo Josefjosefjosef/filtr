@@ -35,23 +35,8 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
-import {
-  TRAFFIC_OVERVIEW_FLAGS,
-  trafficBadgeModel,
-  resolveSafeTrafficMapUrl,
-  collectOfflineTrafficCandidates,
-  isRsdTrafficSourceEnabled,
-  isDopravaTopicEnabled,
-  trafficFreshnessBanner,
-  loadOfflineTrafficSnapshot,
-  fetchHostedTrafficOfflineSnapshot,
-  buildTrafficCardViewModel,
-  isTrafficFollowed,
-  toggleTrafficFollow,
-  filterOfflineTrafficCandidatesForOverview,
-  ensureTrafficPresenter,
-} from "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821";
+} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822";
+import { TRAFFIC_OVERVIEW_FLAGS } from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {
   applyFeedSourceAndQuickView,
@@ -63,30 +48,48 @@ import {
   prefsForChmuFilter,
   prefsForTrafficLocality,
   sanitizeFeedFilter,
-} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818";
-import {
-  addCityLocality,
-  chmuDetailSettingsHtml,
-  emptyFeedStateHtml,
-  getDraftFeedFilter,
-  mainFeedSettingsHtml,
   quickViewBarHtml,
-  removeCityLocality,
-  resetChmu,
-  resetTraffic,
-  setAllEventCategories,
-  setDraftFeedFilter,
-  setParkingCity,
-  setRoadsGroup,
-  toggleEventCategory,
-  toggleLocCr,
-  toggleLocKraj,
-  toggleLocOkres,
-  toggleParkingEnabled,
-  toggleParkingId,
-  toggleRoad,
-  trafficDetailSettingsHtml,
-} from "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818";
+  emptyFeedStateHtml,
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
+
+const TRAFFIC_OVERVIEW_MOD_URL =
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822";
+const FEED_SETTINGS_MOD_URL =
+  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
+
+let trafficOverviewMod = null;
+let trafficOverviewPromise = null;
+function loadTrafficOverview() {
+  if (trafficOverviewMod) return Promise.resolve(trafficOverviewMod);
+  if (!trafficOverviewPromise) {
+    trafficOverviewPromise = import(TRAFFIC_OVERVIEW_MOD_URL).then((m) => {
+      trafficOverviewMod = m;
+      return m;
+    });
+  }
+  return trafficOverviewPromise;
+}
+
+let feedSettingsMod = null;
+let feedSettingsPromise = null;
+function loadFeedSettings() {
+  if (feedSettingsMod) return Promise.resolve(feedSettingsMod);
+  if (!feedSettingsPromise) {
+    feedSettingsPromise = import(FEED_SETTINGS_MOD_URL).then((m) => {
+      feedSettingsMod = m;
+      return m;
+    });
+  }
+  return feedSettingsPromise;
+}
+
+function loadOfflineTrafficSnapshotSync() {
+  try {
+    return trafficOverviewMod ? trafficOverviewMod.loadOfflineTrafficSnapshot() : null;
+  } catch (_) {
+    return null;
+  }
+}
 
 const PAGE_SIZE = 50;
 const CACHE_BUST = "perf-stage6-traffic-follow-local-v1-20260819";
@@ -481,7 +484,7 @@ function matchesTrafficClientFilters(ev, tf) {
   if (!(ev && ev.trafficV1)) return true;
   const tv = ev.trafficV1;
   if (tf.followedOnly) {
-    if (!isTrafficFollowed(tv.publicEventId)) return false;
+    if (!trafficOverviewMod || !trafficOverviewMod.isTrafficFollowed(tv.publicEventId)) return false;
   }
   if (tf.activeOnly) {
     if (String(tv.lifecycleStatus || "") !== "ACTIVE") return false;
@@ -554,7 +557,13 @@ function collectVisibleTrafficRoadPicks(items) {
 
 function shouldShowTrafficFilterBar(list) {
   const prefs = effectivePrefs();
-  if (isDopravaTopicEnabled(prefs) && isRsdTrafficSourceEnabled(prefs)) return true;
+  if (
+    trafficOverviewMod &&
+    trafficOverviewMod.isDopravaTopicEnabled(prefs) &&
+    trafficOverviewMod.isRsdTrafficSourceEnabled(prefs)
+  ) {
+    return true;
+  }
   return (list || []).some((ev) => ev && ev.trafficV1);
 }
 
@@ -674,7 +683,8 @@ function ensureTrafficFetchPromise() {
     return state.trafficFetchPromise;
   }
   markPrehledBootPhase("traffic-fetch-start");
-  state.trafficFetchPromise = fetchHostedTrafficOfflineSnapshot({ persist: true })
+  state.trafficFetchPromise = loadTrafficOverview()
+    .then((m) => m.fetchHostedTrafficOfflineSnapshot({ persist: true }))
     .catch(() => null)
     .finally(() => {
       markPrehledBootPhase("traffic-fetch-end");
@@ -683,7 +693,8 @@ function ensureTrafficFetchPromise() {
 }
 
 /** Filtered traffic candidates in memory — no DOM (background prep / Doprava fast open). */
-function computeTrafficFilteredCandidates() {
+async function computeTrafficFilteredCandidates() {
+  const m = await loadTrafficOverview();
   const basePrefs = effectivePrefs();
   const ff = ensureFeedFilter(basePrefs);
   if (
@@ -695,12 +706,12 @@ function computeTrafficFilteredCandidates() {
   }
   const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
   trafficPrefs.feedFilter = ff;
-  const offline = collectOfflineTrafficCandidates(trafficPrefs, {
-    snapshot: loadOfflineTrafficSnapshot(),
+  const offline = m.collectOfflineTrafficCandidates(trafficPrefs, {
+    snapshot: m.loadOfflineTrafficSnapshot(),
     nowIso: new Date().toISOString(),
   });
   if (!offline.length) return [];
-  let trafficList = filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
+  let trafficList = m.filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
     nowMs: Date.now(),
   });
   return trafficList.filter((ev) => matchesTrafficDetailFilter(ev, ff.traffic));
@@ -718,11 +729,11 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root || !root.isConnected) return;
       state.trafficSnapSettled = true;
-      await ensureTrafficPresenter().catch(() => null);
+      await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root.isConnected) return;
       try {
-        state.trafficBackgroundFilteredCount = computeTrafficFilteredCandidates().length;
+        state.trafficBackgroundFilteredCount = (await computeTrafficFilteredCandidates()).length;
       } catch (_) {
         state.trafficBackgroundFilteredCount = 0;
       }
@@ -795,12 +806,14 @@ function filteredList() {
     const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
     // Gate collectOffline via feedFilter on prefs
     trafficPrefs.feedFilter = ff;
-    const offline = collectOfflineTrafficCandidates(trafficPrefs, {
-      snapshot: loadOfflineTrafficSnapshot(),
-      nowIso: new Date().toISOString(),
-    });
+    const offline = trafficOverviewMod
+      ? trafficOverviewMod.collectOfflineTrafficCandidates(trafficPrefs, {
+          snapshot: trafficOverviewMod.loadOfflineTrafficSnapshot(),
+          nowIso: new Date().toISOString(),
+        })
+      : [];
     if (offline.length) {
-      let trafficList = filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
+      let trafficList = trafficOverviewMod.filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
         nowMs: Date.now(),
       });
       trafficList = trafficList.filter((ev) => matchesTrafficDetailFilter(ev, ff.traffic));
@@ -891,7 +904,10 @@ function displayEventTitle(ev, locationFilter) {
 }
 
 function renderTrafficCardBody(ev, url) {
-  const vm = buildTrafficCardViewModel(ev.trafficV1);
+  if (!trafficOverviewMod) {
+    return `<div class="iuPdCard__body"><p class="iuPdMuted">Načítám dopravu…</p></div>`;
+  }
+  const vm = trafficOverviewMod.buildTrafficCardViewModel(ev.trafficV1);
   const badge = vm.badge;
   const warnBadge = badge
     ? `<span class="iuPdCard__warnBadge iuPrehledDne__warnBadge iuPdCard__warnBadge--traffic iuPdCard__warnBadge--${esc(
@@ -1154,7 +1170,11 @@ function renderItem(ev) {
   const id = String(ev.id || "");
   const isTraffic = !!(ev && ev.trafficV1);
   const forced = chmiPublicDetailUrl(ev);
-  const trafficMapUrl = isTraffic ? resolveSafeTrafficMapUrl(ev.trafficV1.mapTarget) : "";
+  const trafficMapUrl = isTraffic
+    ? trafficOverviewMod
+      ? trafficOverviewMod.resolveSafeTrafficMapUrl(ev.trafficV1.mapTarget)
+      : ""
+    : "";
   // CHMI: never fall back to XML / specialized publisher web — portal only.
   // Traffic: only allowlisted mapTarget URLs (never heuristic internal IDs).
   const url = isTraffic
@@ -1198,8 +1218,16 @@ function renderItem(ev) {
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
-  const trafficBadge = isTraffic ? trafficBadgeModel(ev.trafficV1) : null;
-  const trafficFollowed = isTraffic ? isTrafficFollowed(ev.trafficV1.publicEventId) : false;
+  const trafficBadge = isTraffic
+    ? trafficOverviewMod
+      ? trafficOverviewMod.trafficBadgeModel(ev.trafficV1)
+      : null
+    : null;
+  const trafficFollowed = isTraffic
+    ? trafficOverviewMod
+      ? trafficOverviewMod.isTrafficFollowed(ev.trafficV1.publicEventId)
+      : false
+    : false;
   const timeline = getEffectiveTimelinePresentation(ev, Date.now());
   const timePrimary = esc(timeline.primaryDate || fmtTime(publishIso(ev)));
   const timeSub = timeline.primaryTime ? `<div class="iuPrehledDne__timeSub">${esc(timeline.primaryTime)}</div>` : "";
@@ -1747,16 +1775,20 @@ function trafficSettingsCatalogKey(draft, snap) {
 }
 
 function trafficItemsForSettingsDraft(draft) {
+  if (!trafficOverviewMod) return [];
   try {
-    const snap = loadOfflineTrafficSnapshot();
+    const snap = trafficOverviewMod.loadOfflineTrafficSnapshot();
     const key = trafficSettingsCatalogKey(draft, snap);
     if (_settingsTrafficItemsCache.key === key && Array.isArray(_settingsTrafficItemsCache.items)) {
       return _settingsTrafficItemsCache.items;
     }
-    const items = collectOfflineTrafficCandidates(prefsForTrafficLocality(draft, ensureFeedFilter(draft)), {
-      snapshot: snap,
-      nowIso: new Date().toISOString(),
-    });
+    const items = trafficOverviewMod.collectOfflineTrafficCandidates(
+      prefsForTrafficLocality(draft, ensureFeedFilter(draft)),
+      {
+        snapshot: snap,
+        nowIso: new Date().toISOString(),
+      }
+    );
     _settingsTrafficItemsCache = { key, items };
     return items;
   } catch (_) {
@@ -1764,7 +1796,20 @@ function trafficItemsForSettingsDraft(draft) {
   }
 }
 
+function getDraftFeedFilter(draft) {
+  return ensureFeedFilter(draft || {});
+}
+
+function setDraftFeedFilter(draft, ff) {
+  if (!draft) return;
+  draft.feedFilter = sanitizeFeedFilter(ff);
+}
+
 function renderSettingsBody() {
+  const fs = feedSettingsMod;
+  if (!fs) {
+    return `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll"><p class="iuPdMuted">Načítám nastavení…</p></div>`;
+  }
   const draft = state.draft || clonePrefs(state.prefs);
   if (!draft.feedFilter) draft.feedFilter = ensureFeedFilter(draft);
   const active = state.activeSection;
@@ -1776,7 +1821,7 @@ function renderSettingsBody() {
     return (
       `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-main="1">` +
       err +
-      mainFeedSettingsHtml(draft) +
+      fs.mainFeedSettingsHtml(draft) +
       `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block iuPdSettings__closeBtn" data-act="settings-close">Zavřít</button>` +
       `</div>`
     );
@@ -1789,7 +1834,7 @@ function renderSettingsBody() {
   let title = "";
   if (active === "traffic") {
     title = "Dopravní informace";
-    body = trafficDetailSettingsHtml({
+    body = fs.trafficDetailSettingsHtml({
       draft,
       openAcc: state.feedAccOpen || "area",
       krajeList: kraje,
@@ -1803,7 +1848,7 @@ function renderSettingsBody() {
     });
   } else if (active === "chmu") {
     title = "Výstrahy ČHMÚ";
-    body = chmuDetailSettingsHtml({
+    body = fs.chmuDetailSettingsHtml({
       draft,
       krajeList: kraje,
       okresyMap: CZ_OKRESY,
@@ -1867,8 +1912,8 @@ function settingsCtaInnerHtml() {
 
 function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
   const mode = state.viewMode;
-  const offlineSnap = loadOfflineTrafficSnapshot();
-  const fresh = trafficFreshnessBanner(offlineSnap);
+  const offlineSnap = loadOfflineTrafficSnapshotSync();
+  const fresh = trafficOverviewMod ? trafficOverviewMod.trafficFreshnessBanner(offlineSnap) : null;
   const ff = ensureFeedFilter(effectivePrefs());
   const trafficOfflineBanner =
     fresh && ff.trafficEnabled
@@ -2226,21 +2271,23 @@ function openSettings(opener) {
   state.openParkingCities = {};
   state.saveError = "";
   state.openSourceGroups = {};
-  mountSettingsOverlay();
-  setBodyScrollLock(true);
-  wire();
-  resetSettingsScroll();
-  const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
-  if (closeBtn && typeof closeBtn.focus === "function") {
-    try {
-      closeBtn.focus({ preventScroll: true });
-    } catch (_) {
+  void Promise.all([loadFeedSettings(), loadTrafficOverview()]).then(() => {
+    mountSettingsOverlay();
+    setBodyScrollLock(true);
+    wire();
+    resetSettingsScroll();
+    const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
+    if (closeBtn && typeof closeBtn.focus === "function") {
       try {
-        closeBtn.focus();
-      } catch (_2) {}
+        closeBtn.focus({ preventScroll: true });
+      } catch (_) {
+        try {
+          closeBtn.focus();
+        } catch (_2) {}
+      }
     }
-  }
-  resetSettingsScroll();
+    resetSettingsScroll();
+  });
 }
 
 function refreshSettingsKeepingScroll() {
@@ -2476,7 +2523,8 @@ function syncFeedCardsAfterMembershipChange() {
 }
 
 function applyLocalTrafficFollow(btn, peid, meta) {
-  const res = peid ? toggleTrafficFollow(peid, meta) : { ok: false, followed: false };
+  if (!trafficOverviewMod) return { ok: false, followed: false };
+  const res = peid ? trafficOverviewMod.toggleTrafficFollow(peid, meta) : { ok: false, followed: false };
   if (!res || !res.ok) return res;
   const tf = state.trafficFilters || {};
   if (tf.followedOnly && !res.followed) {
@@ -2530,7 +2578,7 @@ function wire() {
         // Presenter required: without it isTrafficCardInformative() drops every card.
         void (async () => {
           try {
-            await ensureTrafficPresenter().catch(() => null);
+            await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
           } catch (_) {}
           if (state.feedQuickView !== view) return;
           // First paint a short page so correct cards appear before full PAGE_SIZE render.
@@ -2569,8 +2617,8 @@ function wire() {
         !state.trafficSnapSettled
       ) {
         // Overlap presenter download with snap wait (do not serialize after snap).
-        void ensureTrafficPresenter().catch(() => null);
-        if (loadOfflineTrafficSnapshot()) {
+        void loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
+        if (loadOfflineTrafficSnapshotSync()) {
           state.trafficSnapSettled = true;
           paintTrafficQuick();
           return;
@@ -2594,7 +2642,7 @@ function wire() {
             });
           // Poll memory: boot may populate snap before our await observes resolve.
           const deadline = Date.now() + 30000;
-          while (!loadOfflineTrafficSnapshot() && Date.now() < deadline) {
+          while (!loadOfflineTrafficSnapshotSync() && Date.now() < deadline) {
             if (done) break;
             await new Promise((r) => setTimeout(r, 40));
           }
@@ -2640,26 +2688,42 @@ function wire() {
       return;
     }
     if (act === "feed-loc-cr") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
-      mutateFeedFilter((ff) => toggleLocCr(ff, kind));
+      mutateFeedFilter((ff) => feedSettingsMod.toggleLocCr(ff, kind));
       return;
     }
     if (act === "feed-loc-kraj") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
       const name = t.getAttribute("data-value");
       const on = !!t.checked;
       mutateFeedFilter((ff) => {
-        toggleLocKraj(ff, kind, name, on);
+        feedSettingsMod.toggleLocKraj(ff, kind, name, on);
         // Selecting any locality clears "whole CR" implicitly (non-empty list).
       });
       return;
     }
     if (act === "feed-loc-okres") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const name = t.getAttribute("data-value");
-      mutateFeedFilter((ff) => toggleLocOkres(ff, name, !!t.checked), { keepSettingsDom: true });
+      mutateFeedFilter((ff) => feedSettingsMod.toggleLocOkres(ff, name, !!t.checked), { keepSettingsDom: true });
       return;
     }
     if (act === "feed-city-add") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
       const city = {
         name: t.getAttribute("data-name") || "",
@@ -2667,7 +2731,7 @@ function wire() {
         orpCode: t.getAttribute("data-orp") || "",
       };
       mutateFeedFilter((ff) => {
-        const res = addCityLocality(ff, kind, city, MAX_CITY_LOCALITIES);
+        const res = feedSettingsMod.addCityLocality(ff, kind, city, MAX_CITY_LOCALITIES);
         if (!res.ok) state.saveError = CITY_LIMIT_MSG;
       });
       state.cityQuery = "";
@@ -2675,9 +2739,13 @@ function wire() {
       return;
     }
     if (act === "feed-city-remove") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
       mutateFeedFilter((ff) =>
-        removeCityLocality(ff, kind, t.getAttribute("data-name") || "", t.getAttribute("data-id") || "")
+        feedSettingsMod.removeCityLocality(ff, kind, t.getAttribute("data-name") || "", t.getAttribute("data-id") || "")
       );
       return;
     }
@@ -2690,12 +2758,20 @@ function wire() {
       return;
     }
     if (act === "feed-road-toggle") {
-      mutateFeedFilter((ff) => toggleRoad(ff, t.getAttribute("data-value"), !!t.checked), {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.toggleRoad(ff, t.getAttribute("data-value"), !!t.checked), {
         keepSettingsDom: true,
       });
       return;
     }
     if (act === "feed-roads-all") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const g = t.getAttribute("data-group");
       const catalog = buildRoadCatalogFromTrafficItems(
         trafficItemsForSettingsDraft(state.draft || state.prefs)
@@ -2705,23 +2781,35 @@ function wire() {
         (ensureFeedFilter(state.draft).traffic.roads || []).map((x) => String(x).toUpperCase())
       );
       const allOn = roads.length > 0 && roads.every((r) => selected.has(r));
-      mutateFeedFilter((ff) => setRoadsGroup(ff, roads, !allOn));
+      mutateFeedFilter((ff) => feedSettingsMod.setRoadsGroup(ff, roads, !allOn));
       return;
     }
     if (act === "feed-event-toggle") {
-      mutateFeedFilter((ff) => toggleEventCategory(ff, t.getAttribute("data-value"), !!t.checked), {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.toggleEventCategory(ff, t.getAttribute("data-value"), !!t.checked), {
         keepSettingsDom: true,
       });
       return;
     }
     if (act === "feed-events-all") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const cats = ensureFeedFilter(state.draft).traffic.eventCategories || [];
       const selectAll = cats.length > 0; // if filtered → select all (empty); if empty(=all) → none
-      mutateFeedFilter((ff) => setAllEventCategories(ff, selectAll));
+      mutateFeedFilter((ff) => feedSettingsMod.setAllEventCategories(ff, selectAll));
       return;
     }
     if (act === "feed-park-enable") {
-      mutateFeedFilter((ff) => toggleParkingEnabled(ff, !!t.checked));
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.toggleParkingEnabled(ff, !!t.checked));
       return;
     }
     if (act === "feed-park-city") {
@@ -2733,26 +2821,42 @@ function wire() {
       return;
     }
     if (act === "feed-park-toggle") {
-      mutateFeedFilter((ff) => toggleParkingId(ff, t.getAttribute("data-value"), !!t.checked), {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.toggleParkingId(ff, t.getAttribute("data-value"), !!t.checked), {
         keepSettingsDom: true,
       });
       return;
     }
     if (act === "feed-park-all") {
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
       const cityName = t.getAttribute("data-city");
       const city = parkingCitiesFromRegistry().find((c) => c.city === cityName);
       if (!city) return;
       const ids = new Set(ensureFeedFilter(state.draft).traffic.parkingIds || []);
       const allOn = city.lots.every((l) => ids.has(l.id));
-      mutateFeedFilter((ff) => setParkingCity(ff, city.lots, !allOn));
+      mutateFeedFilter((ff) => feedSettingsMod.setParkingCity(ff, city.lots, !allOn));
       return;
     }
     if (act === "feed-reset-traffic") {
-      mutateFeedFilter((ff) => resetTraffic(ff));
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.resetTraffic(ff));
       return;
     }
     if (act === "feed-reset-chmu") {
-      mutateFeedFilter((ff) => resetChmu(ff));
+      if (!feedSettingsMod) {
+        void loadFeedSettings().then(() => wire());
+        return;
+      }
+      mutateFeedFilter((ff) => feedSettingsMod.resetChmu(ff));
       return;
     }
     if (act === "open-section") {
@@ -3300,7 +3404,7 @@ async function boot() {
               await trafficPromise;
               if (bootAbort && bootAbort.signal.aborted) return;
               state.trafficSnapSettled = true;
-              await ensureTrafficPresenter().catch(() => null);
+              await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
               setTimeout(() => {
