@@ -2796,6 +2796,121 @@ font-src 'self' data:;
                             <span class="iuSilverWelcomeGreet" id="iuSilverWelcomeGreet"></span><span class="iuSilverWelcomeUser" id="iuSilverWelcomeUser" hidden></span><span class="iuSilverWelcomeAddressSlot" id="iuSilverWelcomeAddressSlot" data-iu-user-address-slot=""></span>
                           </div>
                           <div class="iuSilverWelcomeMeta" id="iuSilverWelcomeMeta" data-iu-silver-meta></div>
+                          <script>
+                          /* FIRST LOAD: local greeting+date shell before deferred feed-pipeline (no empty→fill flash). Nameday pill stays "—" until iuSilverWelcomeInit. */
+                          (function iuEarlyWelcomeShellV1(){
+                            "use strict";
+                            if(window.__iuEarlyWelcomeShellV1)return;
+                            window.__iuEarlyWelcomeShellV1=1;
+                            var TZ="Europe/Prague";
+                            function daypartKeyFromHour(h){
+                              if(h>=5&&h<9)return "morning";
+                              if(h>=9&&h<12)return "forenoon";
+                              if(h>=12&&h<18)return "afternoon";
+                              return "evening";
+                            }
+                            function phraseFromKey(daypart){
+                              if(daypart==="morning")return "Dobré ráno";
+                              if(daypart==="forenoon")return "Hezké dopoledne";
+                              if(daypart==="afternoon")return "Příjemné odpoledne";
+                              return "Dobrý večer";
+                            }
+                            function fmtDay(d){
+                              try{
+                                var day=new Intl.DateTimeFormat("cs-CZ",{weekday:"long",timeZone:TZ}).format(d);
+                                return day.charAt(0).toUpperCase()+day.slice(1);
+                              }catch(_){ return ""; }
+                            }
+                            function fmtDateLong(d){
+                              try{
+                                return new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"long",year:"numeric",timeZone:TZ}).format(d);
+                              }catch(_){
+                                try{ return String(d.toLocaleDateString("cs-CZ")); }catch(__){ return ""; }
+                              }
+                            }
+                            function splitDlong(d){
+                              try{
+                                var s=fmtDateLong(d);
+                                var m=String(s).match(/^(\d+\.)\s+(.+?)\s+(\d{4})$/);
+                                if(m)return {dayNum:m[1],month:m[2],year:m[3]};
+                              }catch(_){}
+                              return null;
+                            }
+                            try{
+                              var now=new Date();
+                              var daypart=typeof window.__IU_SILVER_DAYPART__==="string"&&window.__IU_SILVER_DAYPART__
+                                ? window.__IU_SILVER_DAYPART__
+                                : daypartKeyFromHour(now.getHours());
+                              var phrase=phraseFromKey(daypart);
+                              var greet=document.getElementById("iuSilverWelcomeGreet");
+                              if(greet&&!String(greet.textContent||"").trim()){
+                                greet.textContent=phrase;
+                                try{ window.__iuSilverWelcomeLastPhrase=phrase; }catch(_){}
+                              }
+                              var meta=document.getElementById("iuSilverWelcomeMeta");
+                              if(meta&&!meta.childNodes.length){
+                                var w=fmtDay(now);
+                                var wLower=w?w.charAt(0).toLowerCase()+w.slice(1):"";
+                                var parts=splitDlong(now);
+                                var narrow=false;
+                                try{
+                                  if(window.matchMedia)narrow=window.matchMedia("(max-width: 1024px)").matches;
+                                  else if(typeof window.innerWidth==="number")narrow=window.innerWidth<=1024;
+                                }catch(_){}
+                                var dateCluster=document.createElement("span");
+                                dateCluster.className="iuSilverWelcomeMetaDateCluster";
+                                dateCluster.appendChild(document.createTextNode(narrow?"Je ":"Dnes je "));
+                                if(parts){
+                                  if(wLower){
+                                    var spanWd=document.createElement("span");
+                                    spanWd.className="iuDateStrong";
+                                    spanWd.textContent=wLower;
+                                    dateCluster.appendChild(spanWd);
+                                    dateCluster.appendChild(document.createTextNode(" "));
+                                  }
+                                  var spanDn=document.createElement("span");
+                                  spanDn.className="iuDateStrong";
+                                  spanDn.textContent=parts.dayNum;
+                                  dateCluster.appendChild(spanDn);
+                                  dateCluster.appendChild(document.createTextNode(" "));
+                                  var spanMo=document.createElement("span");
+                                  spanMo.className="iuDateStrong";
+                                  spanMo.textContent=parts.month;
+                                  dateCluster.appendChild(spanMo);
+                                  dateCluster.appendChild(document.createTextNode(" "));
+                                  var spanYr=document.createElement("span");
+                                  spanYr.className="iuDateStrong";
+                                  spanYr.textContent=parts.year;
+                                  dateCluster.appendChild(spanYr);
+                                }else{
+                                  var spanFb=document.createElement("span");
+                                  spanFb.className="iuDateStrong";
+                                  spanFb.textContent=(wLower?wLower+" ":"")+fmtDateLong(now);
+                                  dateCluster.appendChild(spanFb);
+                                }
+                                var ndCluster=document.createElement("span");
+                                ndCluster.className="iuSilverWelcomeMetaSvatekCluster";
+                                var svatekLabel=document.createElement("span");
+                                svatekLabel.className="iuSilverWelcomeMetaSvatekLabel";
+                                svatekLabel.textContent="svátek má";
+                                ndCluster.appendChild(svatekLabel);
+                                var pillBtn=document.createElement("button");
+                                pillBtn.className="svatek-pill";
+                                pillBtn.type="button";
+                                pillBtn.setAttribute("aria-expanded","false");
+                                pillBtn.setAttribute("aria-controls","svatekOverlay");
+                                var spanName=document.createElement("span");
+                                spanName.className="svatek-name";
+                                spanName.textContent="—";
+                                pillBtn.appendChild(spanName);
+                                ndCluster.appendChild(pillBtn);
+                                meta.appendChild(dateCluster);
+                                meta.appendChild(ndCluster);
+                                meta.setAttribute("data-iu-early-welcome","1");
+                              }
+                            }catch(_){}
+                          })();
+                          </script>
                           </div>
                           <div class="iu-nameday-cta iu-nameday-cta--slotDesktop" id="iuNamedayCta" data-iu-nameday-cta>
                             <button type="button" class="silver-weather-btn iu-nameday-wish">
@@ -6124,7 +6239,7 @@ font-src 'self' data:;
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->
     <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
