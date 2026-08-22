@@ -43,6 +43,7 @@
   function isAllowedScriptUrl(url) {
     var u = String(url || "");
     if (!u) return false;
+    if (u.startsWith("blob:")) return true;
     if (u.startsWith("/")) return true;
     if (u.startsWith("./") || u.startsWith("../")) return true;
     if (u === "/sw.js" || u.startsWith("/sw.js?")) return true;
@@ -107,6 +108,48 @@
     };
   }
 
+  function toTrustedScriptUrl(url) {
+    if (policies.default) return policies.default.createScriptURL(String(url || ""));
+    return String(url || "");
+  }
+
+  function trustScriptElement(node) {
+    if (!node || !policies.default) return;
+    if (node.tagName !== "SCRIPT") return;
+    var src = node.getAttribute("src");
+    if (src) node.setAttribute("src", toTrustedScriptUrl(src));
+  }
+
+  function patchDomInsertion() {
+    var origAppend = Node.prototype.appendChild;
+    Node.prototype.appendChild = function (child) {
+      trustScriptElement(child);
+      return origAppend.call(this, child);
+    };
+    var origInsert = Node.prototype.insertBefore;
+    Node.prototype.insertBefore = function (child, ref) {
+      trustScriptElement(child);
+      return origInsert.call(this, child, ref);
+    };
+    var origSetAttr = Element.prototype.setAttribute;
+    Element.prototype.setAttribute = function (name, value) {
+      if (String(name).toLowerCase() === "src" && this.tagName === "SCRIPT" && typeof value === "string" && policies.default) {
+        value = toTrustedScriptUrl(value);
+      }
+      return origSetAttr.call(this, name, value);
+    };
+  }
+
+  function patchWorkerConstructor() {
+    if (typeof Worker !== "function") return;
+    var OrigWorker = Worker;
+    window.Worker = function (url, options) {
+      if (typeof url === "string" && policies.default) url = toTrustedScriptUrl(url);
+      return new OrigWorker(url, options);
+    };
+    window.Worker.prototype = OrigWorker.prototype;
+  }
+
   function patchScriptSrc() {
     var desc = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, "src");
     if (!desc || typeof desc.set !== "function") return;
@@ -116,18 +159,11 @@
       get: desc.get,
       set: function (value) {
         if (typeof value === "string" && policies.default) {
-          value = policies.default.createScriptURL(value);
+          value = toTrustedScriptUrl(value);
         }
         desc.set.call(this, value);
       },
     });
-    var origSetAttr = HTMLScriptElement.prototype.setAttribute;
-    HTMLScriptElement.prototype.setAttribute = function (name, value) {
-      if (String(name).toLowerCase() === "src" && typeof value === "string" && policies.default) {
-        value = policies.default.createScriptURL(value);
-      }
-      return origSetAttr.call(this, name, value);
-    };
   }
 
   function patchServiceWorkerRegister() {
@@ -147,6 +183,8 @@
       patchSetter(Element.prototype, "outerHTML");
       patchInsertAdjacentHTML();
       patchScriptSrc();
+      patchDomInsertion();
+      patchWorkerConstructor();
       patchServiceWorkerRegister();
     } catch (_) {}
   }
