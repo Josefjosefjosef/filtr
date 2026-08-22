@@ -60,6 +60,13 @@ must(
   "trusted_types_before_vault",
   fails
 );
+must(!/<link\b[^>]*\sonload\s*=/i.test(indexHtml), "no_link_inline_onload", fails);
+must(indexHtml.includes("iu-defer-stylesheet-v1.js"), "defer_stylesheet_script_present", fails);
+must(
+  indexHtml.indexOf("iu-defer-stylesheet-v1.js") < indexHtml.indexOf('data-iu-defer-app-css="1"'),
+  "defer_stylesheet_before_app_css",
+  fails
+);
 
 if (fails.length) {
   console.error("IU_CSP_SECURITY_GUARD_FAIL");
