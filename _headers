@@ -3,7 +3,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), payment=(), geolocation=(self)
   X-Frame-Options: SAMEORIGIN
-  Content-Security-Policy: default-src 'self' https:; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests; connect-src 'self' https://api.open-meteo.com https://infouzel-analytics.josef-zmrhal.workers.dev https://ads.infouzel.cz; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' data: blob: https://i.ytimg.com https:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:
+  Content-Security-Policy: default-src 'self' https:; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests; connect-src 'self' https://api.open-meteo.com https://infouzel-analytics.josef-zmrhal.workers.dev https://ads.infouzel.cz; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' data: blob: https://i.ytimg.com https:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; manifest-src 'self'; trusted-types iu-default
 
 /
   Cache-Control: no-cache, no-store, must-revalidate

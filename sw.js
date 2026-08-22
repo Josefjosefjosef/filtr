@@ -100,6 +100,7 @@ function getOfflineWarmUrls() {
     `${BASE}assets/iu-brand-colors.js`,
     `${BASE}assets/iu-local-data-protection.js`,
     `${BASE}assets/iu-tool-guard.js`,
+    `${BASE}assets/iu-trusted-types-v1.js`,
     `${BASE}assets/iu-vault-bootstrap-v1.js`,
     `${BASE}assets/iu-vault-core-v1.js`,
     `${BASE}assets/iu-vault-storage-v1.js`,
