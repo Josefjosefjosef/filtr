@@ -8,7 +8,7 @@ import path from "path";
 import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -162,6 +162,7 @@ async function runViewport(browser, vp) {
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => typeof window.iuUserDataBackupExportJson === "function", { timeout: 45000 });
+  await waitForVaultReady(page);
   await page.waitForTimeout(1500);
   await openConfirmOverlay(page);
   const first = await measureOverlay(page);
