@@ -6,7 +6,7 @@ import { readRecord, writeRecord, deleteRecord } from "./iu-vault-db-v1.js";
 import { getMdk, touchActivity, getVaultState } from "./iu-vault-lock-v1.js";
 import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
 
-const ENC_PREFIX = "iu:vault:enc:v1:";
+export const ENC_PREFIX = "iu:vault:enc:v1:";
 const memoryCache = new Map();
 let nativeGetItem = null;
 let nativeSetItem = null;
@@ -49,10 +49,10 @@ async function readEnvelope(storageKey) {
 
 export async function persistEnvelope(storageKey, envelope) {
   const k = String(storageKey);
-  await writeRecord(k, envelope);
   captureNativeLocalStorage();
   nativeSetItem(encStorageKey(k), JSON.stringify(envelope));
   nativeRemoveItem(k);
+  await writeRecord(k, envelope);
 }
 
 export async function vaultGetItem(storageKey) {
@@ -95,6 +95,14 @@ export async function vaultRemoveItem(storageKey) {
 
 export function memoryCacheSet(key, value) {
   memoryCache.set(String(key), String(value));
+}
+
+export function notifyVaultMemoryHydrated() {
+  for (const key of memoryCache.keys()) {
+    try {
+      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key, source: "iu-vault-hydrate" } }));
+    } catch (_) {}
+  }
 }
 
 export function installLocalStorageShim() {

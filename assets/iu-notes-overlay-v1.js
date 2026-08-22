@@ -44,6 +44,7 @@ export function initIuNotesOverlay() {
 
   const SCHEMA_VERSION = 1;
   const STORE_KEY = NOTES_NS + ".store.v1";
+  const VAULT_ENC_PREFIX = "iu:vault:enc:v1:";
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
   const MAX_TITLE = 140;
   const MAX_CONTENT = 50000;
@@ -241,6 +242,14 @@ export function initIuNotesOverlay() {
     return { schemaVersion: SCHEMA_VERSION, notes: clean };
   }
 
+  function hasVaultEncBlob(key) {
+    try {
+      return !!localStorage.getItem(VAULT_ENC_PREFIX + key);
+    } catch (_) {
+      return false;
+    }
+  }
+
   function loadNotes(){
     let raw = "";
     try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
@@ -248,6 +257,12 @@ export function initIuNotesOverlay() {
     try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
     const norm = normalizeStore(parsed);
     if (!norm){
+      if (hasVaultEncBlob(STORE_KEY)) {
+        if (!state.data || !Array.isArray(state.data.notes)) {
+          state.data = { schemaVersion: SCHEMA_VERSION, notes: [] };
+        }
+        return state.data;
+      }
       const empty = { schemaVersion: SCHEMA_VERSION, notes: [] };
       try{ localStorage.setItem(STORE_KEY, JSON.stringify(empty)); }catch{}
       state.data = empty;
@@ -1167,6 +1182,24 @@ export function initIuNotesOverlay() {
       window.addEventListener("iu-local-store-changed", function (ev) {
         try {
           if (!ev || !ev.detail || ev.detail.key !== STORE_KEY) return;
+          loadNotes();
+          if (state.overlayMounted) render();
+        } catch (_) {}
+      });
+    } catch (_) {}
+
+    try {
+      window.addEventListener("iu-vault-hydrated", function () {
+        try {
+          loadNotes();
+          if (state.overlayMounted) render();
+        } catch (_) {}
+      });
+    } catch (_) {}
+
+    try {
+      queueMicrotask(function () {
+        try {
           loadNotes();
           if (state.overlayMounted) render();
         } catch (_) {}

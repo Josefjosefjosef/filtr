@@ -2,7 +2,7 @@
  * Vault bootstrap — must load before app.js (top-level await).
  */
 import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin } from "./iu-vault-lock-v1.js";
-import { installLocalStorageShim, preloadAllVaultRecords } from "./iu-vault-storage-v1.js";
+import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js";
@@ -29,6 +29,7 @@ async function initVault() {
   } else {
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
+    notifyVaultMemoryHydrated();
   }
 
   window.addEventListener("iu-local-store-changed", (ev) => {
@@ -102,6 +103,8 @@ const api = {
   afterUnlock: async () => {
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
+    const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
+    notify();
   },
 };
 

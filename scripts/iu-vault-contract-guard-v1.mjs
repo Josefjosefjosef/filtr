@@ -121,10 +121,17 @@ async function runPlaywrightTests() {
       localStorage.setItem("iu:tool-local-storage-consent:v1", "accepted");
       const payload = {
         schemaVersion: 1,
-        notes: [{ id: "iu-test-note-1", title, body: "IU_TEST_SECRET_body", tags: [], pinned: false, createdAt: Date.now(), updatedAt: Date.now() }],
+        notes: [{ id: "iu-test-note-1", title, content: "IU_TEST_SECRET_body", tags: [], pinned: false, createdAt: Date.now(), updatedAt: Date.now() }],
       };
       localStorage.setItem("iu.notes.store.v1", JSON.stringify(payload));
     }, noteTitle);
+    await page.waitForFunction(() => {
+      try {
+        return !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      } catch (_) {
+        return false;
+      }
+    }, null, { timeout: 10000 });
 
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
