@@ -89,7 +89,7 @@ import {
 } from "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818";
 
 const PAGE_SIZE = 50;
-const CACHE_BUST = "chmi-first-home-boot-v1-20260822";
+const CACHE_BUST = "perf-stage6-traffic-follow-local-v1-20260819";
 const CITY_LIMIT_MSG =
   "Můžete vybrat maximálně 20 obcí. Pokud chcete přidat jinou obec, nejprve některou z vybraných odeberte.";
 const CZ_MAP_SPRITE_ID = "iu-cz-map-sprite";
