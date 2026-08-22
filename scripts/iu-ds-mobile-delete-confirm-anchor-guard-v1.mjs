@@ -115,8 +115,8 @@ async function openDatovka(page) {
   await page.waitForTimeout(500);
 }
 
-async function seedProfiles(page) {
-  await page.evaluate((rows) => {
+async function installProfileSeed(page) {
+  await page.addInitScript((rows) => {
     const t = Date.now();
     const profiles = rows.map((row) => ({
       id: row.id,
@@ -127,8 +127,12 @@ async function seedProfiles(page) {
       createdAt: t,
       updatedAt: t,
     }));
-    localStorage.setItem("infouzel_datovka_profiles_v1", JSON.stringify({ v: 1, profiles }));
-    localStorage.setItem("iu_local_data_protection_accepted_v1", "1");
+    try {
+      localStorage.setItem("infouzel_datovka_profiles_v1", JSON.stringify({ v: 1, profiles }));
+      localStorage.setItem("iu_local_data_protection_accepted_v1", "1");
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+    } catch (_) {}
   }, PROFILES);
 }
 
@@ -212,9 +216,9 @@ async function runViewport(browser, vp) {
     hasTouch: true,
   });
   const page = await context.newPage();
+  await installProfileSeed(page);
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
-  await seedProfiles(page);
   await page.reload({ waitUntil: "load" });
   await page.waitForTimeout(1500);
   await openDatovka(page);

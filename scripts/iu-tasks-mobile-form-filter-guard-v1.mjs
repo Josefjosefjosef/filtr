@@ -7,7 +7,7 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, installProtectedStorageSeed } from "./guards/guard-playwright-bootstrap.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -98,24 +98,20 @@ function staticGate() {
 }
 
 async function measureViewport(browser, viewport) {
+  const today = new Date().toISOString().slice(0, 10);
+  const seedPayload = JSON.stringify({
+    schemaVersion: 1,
+    tasks: [
+      { id: "t1", title: "Today", status: "todo", priority: "medium", dueAt: today, note: "", createdAt: 1, updatedAt: 1 },
+      { id: "t2", title: "Done", status: "done", priority: "low", dueAt: today, note: "", createdAt: 1, updatedAt: 1 },
+    ],
+  });
   const context = await bootstrapGuardContext(browser, { viewport });
+  await installProtectedStorageSeed(context, [{ key: "iu.tasks.mvp.v1", value: seedPayload }]);
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
 
-  const today = new Date().toISOString().slice(0, 10);
-  await page.evaluate((d) => {
-    localStorage.setItem(
-      "iu.tasks.mvp.v1",
-      JSON.stringify({
-        schemaVersion: 1,
-        tasks: [
-          { id: "t1", title: "Today", status: "todo", priority: "medium", dueAt: d, note: "", createdAt: 1, updatedAt: 1 },
-          { id: "t2", title: "Done", status: "done", priority: "low", dueAt: d, note: "", createdAt: 1, updatedAt: 1 },
-        ],
-      })
-    );
-  }, today);
   await page.reload({ waitUntil: "load" });
   await page.waitForTimeout(1500);
 

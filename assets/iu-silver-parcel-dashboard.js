@@ -945,6 +945,20 @@ try {
       syncMainSaveState();
     });
 
+    window.addEventListener("iu-vault-hydrated", function () {
+      render();
+      syncMainSaveState();
+    });
+
+    window.addEventListener("iu-local-store-changed", function (ev) {
+      try {
+        if (ev && ev.detail && ev.detail.key === LS_KEY) {
+          render();
+          syncMainSaveState();
+        }
+      } catch (_) {}
+    });
+
     btnSave.addEventListener("click", onSave);
     inp.addEventListener("input", syncMainSaveState);
     inp.addEventListener("paste", function () {

@@ -6,6 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fails = [];
@@ -77,7 +78,7 @@ must(/iu-mobile-bottom-nav-shell-v1\.js/.test(sw), "sw:shell_in_graph");
 must(/iu-app-feed-pipeline-v1\.js/.test(sw), "sw:feed_in_graph");
 must(/iu-calendar-overlay-v1\.js/.test(sw), "sw:calendar_in_graph");
 must(/iu-notes-overlay-v1\.js/.test(sw), "sw:notes_in_graph");
-must(/CACHE_VERSION = "2026-08-19-perf-stage5-notes-v1"/.test(sw), "sw:cache_version");
+must(swHasAllowedCacheVersion(sw), "sw:cache_version");
 must(/function iuBootCalendarOverlayLazy/.test(app), "app:lazy_calendar_boot");
 must(/window\.__iuEnsureCalendarOverlay/.test(app), "app:ensure_calendar_hook");
 must(/iu-calendar-overlay-v1\.js\?v=perf-stage4-calendar-v1-20260818/.test(app), "app:calendar_cache_bust");

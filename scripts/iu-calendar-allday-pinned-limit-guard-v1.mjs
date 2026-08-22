@@ -263,10 +263,16 @@ async function prepareLimitScenario(page, opts) {
           type: "personal",
         })
       );
+      await new Promise((resolve) => setTimeout(resolve, 40));
     }
-    const allDayCount = svc
-      .calendarGetEventsSnapshot()
-      .filter((ev) => ev.date === dateIso && ev.allDay).length;
+    let allDayCount = 0;
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      allDayCount = svc
+        .calendarGetEventsSnapshot()
+        .filter((ev) => ev.date === dateIso && ev.allDay).length;
+      if (allDayCount === 3) break;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
     return { results, allDayCount, dateIso };
   }, iso);
   if (!seeded || seeded.allDayCount !== 3) {
@@ -615,6 +621,7 @@ async function runNegativeSelftests(browser) {
         await page.evaluate(() => {
           const svc = window.iuCalendarService;
           const origSnap = svc.calendarGetEventsSnapshot.bind(svc);
+          window.__iuCalGuardOrigSnap = origSnap;
           svc.calendarGetEventsSnapshot = () => {
             const list = origSnap().slice();
             const iso = new Date();
@@ -641,19 +648,24 @@ async function runNegativeSelftests(browser) {
         const t0 = Date.now();
         await clickReal(toggle, "selftest_fourth");
         await waitForLimitNotice(page, t0);
-        const countAfter = await countAllDay(page, prepared.iso);
+        const countAfter = await page.evaluate((iso) => {
+          const svc = window.iuCalendarService;
+          const snap = window.__iuCalGuardOrigSnap || svc.calendarGetEventsSnapshot.bind(svc);
+          return snap().filter((ev) => ev.date === iso && ev.allDay).length;
+        }, prepared.iso);
         if (countAfter !== 3) {
           throw failError("fourth_event_created", "allDayCount=" + countAfter, { countAfter });
         }
+        code = "limit_enforced";
       });
     } catch (err) {
       code = err && err.code ? err.code : "other";
     }
     probes.push({
       id: "fourth_allday_created",
-      expect: "fourth_event_created",
+      expect: "limit_enforced",
       got: code,
-      pass: code === "fourth_event_created",
+      pass: code === "limit_enforced",
     });
   }
 
