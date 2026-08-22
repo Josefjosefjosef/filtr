@@ -3136,12 +3136,7 @@ font-src 'self' data:;
                           </div>
                         </div>
                         </div>
-                        <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
-                          <div class="iuHomeSectionBar" data-iu-home-section-bar="rychly-prehled" aria-hidden="true">RYCHLÝ PŘEHLED</div>
-                          <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
-                            <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
-                          </div>
-                        </div>
+                        <!-- home-mobile-parcel-quick-swap-v1-20260822 -->
                         <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
                           <div class="iuHomeSectionBar" data-iu-home-section-bar="sledovani-zasilek" aria-hidden="true">SLEDOVÁNÍ ZÁSILEK</div>
                           <div class="iuSilverParcelWatch__hero">
@@ -3164,6 +3159,12 @@ font-src 'self' data:;
                           <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
                           <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
                         </section>
+                        <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
+                          <div class="iuHomeSectionBar" data-iu-home-section-bar="rychly-prehled" aria-hidden="true">RYCHLÝ PŘEHLED</div>
+                          <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
+                            <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
+                          </div>
+                        </div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorTallBefore" aria-hidden="true"></div>
                         <div id="iuDesktopInfoPanelMount" class="iuDesktopInfoPanelMount" hidden aria-hidden="true"></div>
@@ -6128,6 +6129,7 @@ font-src 'self' data:;
         var mount = document.getElementById("iuDesktopParcelWatchMount");
         var overlay = document.getElementById("iuDesktopParcelWatchOverlay");
         var stack = document.getElementById("iuSilverWelcomeStack");
+        var infoUnit = stack ? stack.querySelector(".iuHomeSectionUnit--info") : null;
         var feedAnchor = document.getElementById("iuSilverWelcomeStackSeparatorHolidayWeather");
         if (!parcel || !stack || !feedAnchor) return;
         function iuDesktopParcelWatchPlacementApply(){
@@ -6137,7 +6139,11 @@ font-src 'self' data:;
               if (!mount.contains(parcel)) mount.appendChild(parcel);
               return;
             }
-            if (mount && mount.contains(parcel)) stack.insertBefore(parcel, feedAnchor);
+            if (infoUnit && infoUnit !== parcel && !infoUnit.contains(parcel)) {
+              stack.insertBefore(parcel, infoUnit);
+            } else if (mount && mount.contains(parcel)) {
+              stack.insertBefore(parcel, feedAnchor);
+            }
             if (overlay) {
               overlay.hidden = true;
               overlay.classList.remove("is-open");

@@ -1,5 +1,5 @@
 /**
- * Mobil / tablet — informační lišta pod Kalendář / Úkoly, nad Sledování zásilek (≤1024px).
+ * Mobil / tablet — informační lišta pod Sledování zásilek (≤1024px).
  * PC: mount hidden. Sdílené segmenty z iu-desktop-info-panel.js.
  */
 
@@ -62,7 +62,11 @@
     box-sizing: border-box;
   }
 
-  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info + #iuSilverParcelWatch {
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet + #iuSilverParcelWatch {
+    margin-top: 16px !important;
+  }
+
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch + .iuHomeSectionUnit--info {
     margin-top: 0 !important;
   }
 
