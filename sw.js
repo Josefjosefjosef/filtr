@@ -24,7 +24,7 @@
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-const CACHE_VERSION = "2026-08-19-perf-stage5-notes-v1";
+const CACHE_VERSION = "2026-08-22-iu-vault-security-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -100,6 +100,10 @@ function getOfflineWarmUrls() {
     `${BASE}assets/iu-brand-colors.js`,
     `${BASE}assets/iu-local-data-protection.js`,
     `${BASE}assets/iu-tool-guard.js`,
+    `${BASE}assets/iu-vault-bootstrap-v1.js`,
+    `${BASE}assets/iu-vault-core-v1.js`,
+    `${BASE}assets/iu-vault-storage-v1.js`,
+    `${BASE}assets/iu-vault-ui-v1.js`,
     `${BASE}assets/iu-legal-documents-module.js`,
     `${BASE}assets/iu-silver-p0-engine.js`,
     `${BASE}assets/iu-app-feed-pipeline-v1.js`,
