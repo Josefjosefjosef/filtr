@@ -50,6 +50,7 @@ for (const csp of csps) {
   must(/worker-src\s+'self'/.test(csp), "worker_src_self", fails);
   must(/manifest-src\s+'self'/.test(csp), "manifest_src_self", fails);
   must(/trusted-types\s+iu-default/.test(csp), "trusted_types_policy", fails);
+  must(/require-trusted-types-for\s+'script'/.test(csp), "require_trusted_types_script", fails);
 }
 
 must(indexHtml.includes("iu-trusted-types-v1.js"), "trusted_types_script_loaded", fails);
