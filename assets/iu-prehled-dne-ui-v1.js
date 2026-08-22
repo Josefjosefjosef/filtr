@@ -1837,7 +1837,6 @@ function renderSettingsBody() {
     body = fs.trafficDetailSettingsHtml({
       draft,
       openAcc: state.feedAccOpen || "area",
-      krajeList: kraje,
       cityQuery: state.cityQuery,
       citySuggest: state.citySuggest,
       cityLimitMsg: "",
@@ -2701,11 +2700,11 @@ function wire() {
         void loadFeedSettings().then(() => wire());
         return;
       }
-      const kind = state.activeSection === "chmu" ? "chmu" : "traffic";
+      if (state.activeSection !== "chmu") return;
       const name = t.getAttribute("data-value");
       const on = !!t.checked;
       mutateFeedFilter((ff) => {
-        feedSettingsMod.toggleLocKraj(ff, kind, name, on);
+        feedSettingsMod.toggleLocKraj(ff, "chmu", name, on);
         // Selecting any locality clears "whole CR" implicitly (non-empty list).
       });
       return;
