@@ -8,6 +8,7 @@ import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
 
 export const ENC_PREFIX = "iu:vault:enc:v1:";
 const memoryCache = new Map();
+const writeGeneration = new Map();
 let nativeGetItem = null;
 let nativeSetItem = null;
 let nativeRemoveItem = null;
@@ -71,9 +72,13 @@ export async function vaultSetItem(storageKey, value) {
   touchActivity();
   const k = String(storageKey);
   const text = String(value);
+  const generation = (writeGeneration.get(k) || 0) + 1;
+  writeGeneration.set(k, generation);
   const mdk = getMdk();
   const envelope = await encryptString(mdk, k, text);
+  if (writeGeneration.get(k) !== generation) return;
   await persistEnvelope(k, envelope);
+  if (writeGeneration.get(k) !== generation) return;
   memoryCache.set(k, text);
   try {
     window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
