@@ -130,14 +130,26 @@
     };
   }
 
-    if (policies.default) {
-      try {
-        patchSetter(Element.prototype, "innerHTML");
-        patchSetter(Element.prototype, "outerHTML");
-        patchInsertAdjacentHTML();
-        patchScriptSrc();
-      } catch (_) {}
-    }
+  function patchServiceWorkerRegister() {
+    if (!navigator.serviceWorker || typeof navigator.serviceWorker.register !== "function") return;
+    var orig = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+    navigator.serviceWorker.register = function (url, options) {
+      if (typeof url === "string" && policies.default) {
+        url = policies.default.createScriptURL(url);
+      }
+      return orig(url, options);
+    };
+  }
+
+  if (policies.default) {
+    try {
+      patchSetter(Element.prototype, "innerHTML");
+      patchSetter(Element.prototype, "outerHTML");
+      patchInsertAdjacentHTML();
+      patchScriptSrc();
+      patchServiceWorkerRegister();
+    } catch (_) {}
+  }
 
   window.iuTrustedHtml = {
     escape: escapeHtml,
