@@ -150,6 +150,31 @@ export async function derivePinKey(pin, saltBytes, iterations) {
   return subtle.importKey("raw", bits, "AES-KW", false, ["wrapKey", "unwrapKey"]);
 }
 
+/** AES-GCM key derived from PIN — encrypts MDK seed bytes (non-extractable MDK safe). */
+export async function derivePinAesKey(pin, saltBytes, iterations) {
+  requireSubtle();
+  const enc = new TextEncoder();
+  const baseKey = await subtle.importKey("raw", enc.encode(String(pin)), "PBKDF2", false, ["deriveBits"]);
+  const bits = await subtle.deriveBits(
+    { name: "PBKDF2", salt: saltBytes, iterations, hash: "SHA-256" },
+    baseKey,
+    256
+  );
+  return subtle.importKey("raw", bits, { name: CIPHER_ALG, length: KEY_BITS }, false, ["encrypt", "decrypt"]);
+}
+
+export const PIN_MDK_SEED_STORAGE_KEY = "iu:vault:pin:mdk-seed:v1";
+
+export async function wrapMdkSeedForPin(pinAesKey, seedBytes) {
+  const seedB64 = bytesToB64(seedBytes);
+  return encryptString(pinAesKey, PIN_MDK_SEED_STORAGE_KEY, seedB64);
+}
+
+export async function unwrapMdkSeedFromPin(pinAesKey, envelope) {
+  const seedB64 = await decryptString(pinAesKey, PIN_MDK_SEED_STORAGE_KEY, envelope);
+  return b64ToBytes(seedB64);
+}
+
 export async function calibratePbkdf2Iterations(targetMs = 250) {
   requireSubtle();
   const salt = getRandomValues(16);

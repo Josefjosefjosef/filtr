@@ -192,11 +192,10 @@ export async function storeDeviceWrap(meta, deviceWrap) {
 }
 
 export async function verifyPinRecord(pinWrap, pin) {
-  const { derivePinKey, unwrapMdkRaw } = await import("./iu-vault-core-v1.js");
+  const { mdkFromPinWrap } = await import("./iu-vault-pin-crypto-v1.js");
   const remain = getPinBackoffRemainingMs();
   if (remain > 0) throw new Error("VAULT_PIN_BACKOFF");
-  const wrapKey = await derivePinKey(pin, pinWrap.salt, pinWrap.iterations);
-  return unwrapMdkRaw(wrapKey, pinWrap.wrappedMdk);
+  return mdkFromPinWrap(pinWrap, pin);
 }
 
 export async function unlockWithPin(pin) {

@@ -35,6 +35,14 @@ export async function wipePersonalVault() {
   await wipeCalendarMirrorIdb();
   await wipeVaultDatabase();
 
+  const { readMeta, writeMeta, defaultMeta } = await import("./iu-vault-db-v1.js");
+  let meta = await readMeta();
+  if (!meta) meta = await defaultMeta();
+  meta.pinEnabled = false;
+  meta.deviceEnabled = false;
+  meta.securityLevel = 1;
+  await writeMeta(meta);
+
   const { ensureLevel1Mdk } = await import("./iu-vault-lock-v1.js");
   const { migratePlaintextToVault } = await import("./iu-vault-migrate-v1.js");
   const { preloadAllVaultRecords } = await import("./iu-vault-storage-v1.js");
