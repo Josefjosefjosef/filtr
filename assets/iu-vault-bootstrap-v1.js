@@ -44,6 +44,17 @@ const meta = await initVault().catch((err) => {
   return null;
 });
 
+function notifyVaultHydrated() {
+  try {
+    window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+  } catch (_) {}
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", notifyVaultHydrated, { once: true });
+} else {
+  queueMicrotask(notifyVaultHydrated);
+}
+
 const api = {
   getState: () => getVaultState(),
   getMeta: () => readMeta(),

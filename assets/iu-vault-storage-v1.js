@@ -6,10 +6,15 @@ import { readRecord, writeRecord, deleteRecord } from "./iu-vault-db-v1.js";
 import { getMdk, touchActivity, getVaultState } from "./iu-vault-lock-v1.js";
 import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
 
+const ENC_PREFIX = "iu:vault:enc:v1:";
 const memoryCache = new Map();
 let nativeGetItem = null;
 let nativeSetItem = null;
 let nativeRemoveItem = null;
+
+export function encStorageKey(storageKey) {
+  return ENC_PREFIX + String(storageKey);
+}
 
 export function captureNativeLocalStorage() {
   if (nativeGetItem) return;
@@ -28,11 +33,33 @@ export function nativeLocalStorageRemove(key) {
   return nativeRemoveItem(key);
 }
 
+async function readEnvelope(storageKey) {
+  const k = String(storageKey);
+  let envelope = await readRecord(k);
+  if (envelope) return envelope;
+  captureNativeLocalStorage();
+  const raw = nativeGetItem(encStorageKey(k));
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (_) {
+    return null;
+  }
+}
+
+export async function persistEnvelope(storageKey, envelope) {
+  const k = String(storageKey);
+  await writeRecord(k, envelope);
+  captureNativeLocalStorage();
+  nativeSetItem(encStorageKey(k), JSON.stringify(envelope));
+  nativeRemoveItem(k);
+}
+
 export async function vaultGetItem(storageKey) {
   touchActivity();
   const k = String(storageKey);
   if (memoryCache.has(k)) return memoryCache.get(k);
-  const envelope = await readRecord(k);
+  const envelope = await readEnvelope(k);
   if (!envelope) return null;
   const mdk = getMdk();
   const text = await decryptString(mdk, k, envelope);
@@ -46,7 +73,7 @@ export async function vaultSetItem(storageKey, value) {
   const text = String(value);
   const mdk = getMdk();
   const envelope = await encryptString(mdk, k, text);
-  await writeRecord(k, envelope);
+  await persistEnvelope(k, envelope);
   memoryCache.set(k, text);
   try {
     window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
@@ -58,6 +85,9 @@ export async function vaultRemoveItem(storageKey) {
   const k = String(storageKey);
   memoryCache.delete(k);
   await deleteRecord(k);
+  captureNativeLocalStorage();
+  nativeRemoveItem(encStorageKey(k));
+  nativeRemoveItem(k);
   try {
     window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
   } catch (_) {}
@@ -102,8 +132,10 @@ export function installLocalStorageShim() {
       return;
     }
     memoryCache.delete(String(key));
-    vaultRemoveItem(key).catch(() => {});
+    captureNativeLocalStorage();
+    try { nativeRemoveItem(encStorageKey(key)); } catch (_) {}
     try { nativeRemove(key); } catch (_) {}
+    vaultRemoveItem(key).catch(() => {});
   };
 }
 
@@ -117,7 +149,24 @@ export async function hydrateMemoryCacheFromVault(keys) {
 }
 
 export async function preloadAllVaultRecords() {
+  captureNativeLocalStorage();
+  const keys = new Set();
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(ENC_PREFIX)) keys.add(k.slice(ENC_PREFIX.length));
+  }
   const { listRecordKeys } = await import("./iu-vault-db-v1.js");
-  const keys = await listRecordKeys();
-  await hydrateMemoryCacheFromVault(keys);
+  const idbKeys = await listRecordKeys();
+  for (const k of idbKeys) keys.add(k);
+  await hydrateMemoryCacheFromVault(Array.from(keys));
+}
+
+export function listEncryptedStorageKeys() {
+  captureNativeLocalStorage();
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(ENC_PREFIX)) keys.push(k.slice(ENC_PREFIX.length));
+  }
+  return keys;
 }

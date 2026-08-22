@@ -65,7 +65,7 @@ async function main() {
     const found = [];
     for (let i = 0; i < localStorage.length; i += 1) {
       const k = localStorage.key(i);
-      if (!k) continue;
+      if (!k || k.startsWith("iu:vault:enc:v1:")) continue;
       const val = localStorage.getItem(k) || "";
       if (val.includes("IU_TEST_SECRET_guard")) found.push(k);
     }

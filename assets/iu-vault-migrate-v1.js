@@ -19,7 +19,7 @@ import {
   isProtectedStorageKey,
 } from "./iu-vault-protected-keys-v1.js";
 import { getMdk } from "./iu-vault-lock-v1.js";
-import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet } from "./iu-vault-storage-v1.js";
+import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, persistEnvelope } from "./iu-vault-storage-v1.js";
 
 const MIGRATION_ID = "plaintext-to-vault-v1";
 
@@ -55,7 +55,7 @@ export async function migratePlaintextToVault() {
         if (roundtrip !== plaintext) throw new Error(`VAULT_MIGRATE_MISMATCH:${key}`);
       } else {
         const envelope = await encryptString(mdk, key, plaintext);
-        await writeRecord(key, envelope);
+        await persistEnvelope(key, envelope);
         const verify = await decryptString(mdk, key, envelope);
         if (verify !== plaintext) throw new Error(`VAULT_MIGRATE_VERIFY_FAIL:${key}`);
       }

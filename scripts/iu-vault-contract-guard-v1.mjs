@@ -159,12 +159,11 @@ async function runPlaywrightTests() {
     if (plaintextLeak) fails.push("vault_record_contains_plaintext");
 
     const nativePlain = await page.evaluate(() => {
-      const keys = [];
       for (let i = 0; i < localStorage.length; i += 1) {
         const k = localStorage.key(i);
-        if (k === "iu.notes.store.v1") keys.push(k);
+        if (k === "iu.notes.store.v1") return true;
       }
-      return keys.length > 0;
+      return false;
     });
     if (nativePlain) fails.push("protected_key_still_in_native_localstorage");
 
@@ -174,6 +173,29 @@ async function runPlaywrightTests() {
     console.log(readBack ? "PASS notes_roundtrip" : "FAIL notes_roundtrip");
     console.log(!plaintextLeak ? "PASS no_plaintext_in_idb" : "FAIL no_plaintext_in_idb");
     console.log(!nativePlain ? "PASS no_plaintext_ls" : "FAIL no_plaintext_ls");
+
+    const parcelRoundtrip = await page.evaluate(async () => {
+      const key = "iu_silver_parcel_watch_v1";
+      const payload = JSON.stringify([{ id: "p1", number: "IU_TEST_PARCEL_1", addedAt: Date.now() }]);
+      localStorage.setItem(key, payload);
+      await new Promise((r) => setTimeout(r, 50));
+      return localStorage.getItem(key) || "";
+    });
+    if (!parcelRoundtrip.includes("IU_TEST_PARCEL_1")) fails.push("parcel_memory_roundtrip");
+
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
+    await page.waitForTimeout(100);
+    const parcelAfterReload = await page.evaluate(() => {
+      try {
+        const raw = localStorage.getItem("iu_silver_parcel_watch_v1") || "";
+        return raw.includes("IU_TEST_PARCEL_1");
+      } catch (_) {
+        return false;
+      }
+    });
+    if (!parcelAfterReload) fails.push("parcel_reload_roundtrip");
+    console.log(parcelAfterReload ? "PASS parcel_reload" : "FAIL parcel_reload");
   } finally {
     await browser.close();
     server.kill();
