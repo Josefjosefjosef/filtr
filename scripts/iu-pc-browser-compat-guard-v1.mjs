@@ -8,7 +8,7 @@ import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, installProtectedStorageSeed } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -83,31 +83,26 @@ async function runPlaywright() {
   await waitForPort("127.0.0.1", PORT, 10000);
 
   const browser = await chromium.launch({ headless: true });
+  const today = new Date().toISOString().slice(0, 10);
+  const seedPayload = JSON.stringify({
+    schemaVersion: 1,
+    tasks: [
+      { id: "t1", title: "Today", status: "todo", priority: "medium", dueAt: today, note: "", createdAt: 1, updatedAt: 1 },
+      { id: "t2", title: "Future", status: "todo", priority: "low", dueAt: "2099-12-31", note: "", createdAt: 1, updatedAt: 1 },
+      { id: "t3", title: "Done", status: "done", priority: "low", dueAt: today, note: "", createdAt: 1, updatedAt: 1 },
+    ],
+  });
   const context = await bootstrapGuardContext(browser, { viewport: { width: 1280, height: 900 } });
+  await installProtectedStorageSeed(context, [{ key: "iu.tasks.mvp.v1", value: seedPayload }]);
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
-
-  const today = new Date().toISOString().slice(0, 10);
-  await page.evaluate((d) => {
-    document.body.classList.add("iu-desktop-home-grid", "iu-home");
-    localStorage.setItem(
-      "iu.tasks.mvp.v1",
-      JSON.stringify({
-        schemaVersion: 1,
-        tasks: [
-          { id: "t1", title: "Today", status: "todo", priority: "medium", dueAt: d, note: "", createdAt: 1, updatedAt: 1 },
-          { id: "t2", title: "Future", status: "todo", priority: "low", dueAt: "2099-12-31", note: "", createdAt: 1, updatedAt: 1 },
-          { id: "t3", title: "Done", status: "done", priority: "low", dueAt: d, note: "", createdAt: 1, updatedAt: 1 },
-        ],
-      })
-    );
-  }, today);
 
   await page.reload({ waitUntil: "load" });
   await page.waitForTimeout(2000);
 
   const mindMenu = await page.evaluate(() => {
+    document.body.classList.add("iu-desktop-home-grid", "iu-home");
     if (typeof window.iuArticleActionsEnsureDesktopButton === "function") {
       window.iuArticleActionsEnsureDesktopButton();
     }

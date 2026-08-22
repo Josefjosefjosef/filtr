@@ -8,7 +8,7 @@ import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, installProtectedStorageSeed, waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
 import {
   BACKUP_FORMAT,
   BACKUP_VERSION,
@@ -307,12 +307,6 @@ async function runPlaywright() {
   await waitForPort("127.0.0.1", PORT, 10000);
 
   const browser = await chromium.launch({ headless: true });
-  const context = await bootstrapGuardContext(browser, { viewport: { width: 390, height: 844 } });
-  const page = await context.newPage();
-
-  await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
-  await page.waitForFunction(() => typeof window.iuUserDataBackupExportJson === "function", { timeout: 45000 });
-
   const seedNotes = JSON.stringify({
     schemaVersion: 1,
     notes: [{ id: "g1", title: "Guard note", body: "diakritika ěšč", tags: [], createdAt: 1, updatedAt: 1 }],
@@ -321,14 +315,16 @@ async function runPlaywright() {
     schemaVersion: 1,
     tasks: [{ id: "gt1", title: "Guard task", status: "todo", priority: "medium", createdAt: 1, updatedAt: 1 }],
   });
+  const context = await bootstrapGuardContext(browser, { viewport: { width: 390, height: 844 } });
+  await installProtectedStorageSeed(context, [
+    { key: "iu.notes.store.v1", value: seedNotes },
+    { key: "iu.tasks.mvp.v1", value: seedTasks },
+  ]);
+  const page = await context.newPage();
 
-  await page.evaluate(
-    ({ notes, tasks }) => {
-      localStorage.setItem("iu.notes.store.v1", notes);
-      localStorage.setItem("iu.tasks.mvp.v1", tasks);
-    },
-    { notes: seedNotes, tasks: seedTasks }
-  );
+  await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
+  await page.waitForFunction(() => typeof window.iuUserDataBackupExportJson === "function", { timeout: 45000 });
+  await waitForVaultReady(page);
 
   /** @type {{ cycle: number, exportOk: boolean, unchanged: boolean }[]} */
   const cycles = [];
