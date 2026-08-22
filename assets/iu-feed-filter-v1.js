@@ -556,3 +556,40 @@ export function applyFeedSourceAndQuickView(list, ff, quickView) {
     return trafficOn || chmuOn;
   });
 }
+
+function escFeedHtml(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Quick-view toolbar — on critical CHMI path (feed-filter, not deferred settings module). */
+export function quickViewBarHtml(ff, quickView) {
+  const trafficOn = ff.trafficEnabled !== false;
+  const chmuOn = ff.chmuEnabled !== false;
+  const q = quickView === "traffic" || quickView === "chmu" ? quickView : "all";
+  const btn = (id, label, cls, disabled) =>
+    `<button type="button" class="iuPdQuickView__btn iuPdQuickView__btn--${escFeedHtml(cls)}${
+      q === id ? " is-on" : ""
+    }" data-act="feed-quick-view" data-view="${escFeedHtml(id)}"${disabled ? " disabled aria-disabled=\"true\"" : ""}>${escFeedHtml(
+      label
+    )}</button>`;
+  return (
+    `<div class="iuPdQuickView" data-iu-feed-quick="1" role="toolbar" aria-label="Rychlý pohled feedu">` +
+    btn("all", "Vše", "all", false) +
+    btn("traffic", "Doprava", "traffic", !trafficOn) +
+    btn("chmu", "ČHMÚ", "chmu", !chmuOn) +
+    `</div>`
+  );
+}
+
+export function emptyFeedStateHtml() {
+  return (
+    `<div class="iuPdFeedEmpty iuPdEmpty iuPrehledDne__empty" data-iu-feed-empty="1" role="status">` +
+    `<p class="iuPdFeedEmpty__title">Pro toto nastavení momentálně nemáme žádné události.</p>` +
+    `<button type="button" class="iuPdBtn iuPdBtn--primary" data-act="open-settings">Upravit filtry</button>` +
+    `</div>`
+  );
+}

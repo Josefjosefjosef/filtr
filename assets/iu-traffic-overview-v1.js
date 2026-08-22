@@ -11,6 +11,13 @@
  * - NDIC cards come from traffic_offline_snapshot.json (not from multi‑MB feed.json)
  */
 import { fetchTrafficSnapshotSlimOffMainThread, eventMatchesLocationFilter } from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
+import {
+  TRAFFIC_OVERVIEW_FLAGS,
+  TRAFFIC_UI_INITIAL_CARD_CAP,
+  TRAFFIC_UI_FIRST_PAINT_CARD_CAP,
+} from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
+
+export { TRAFFIC_OVERVIEW_FLAGS, TRAFFIC_UI_INITIAL_CARD_CAP, TRAFFIC_UI_FIRST_PAINT_CARD_CAP };
 
 /**
  * Perf-loop iter-004: do NOT statically import the ~80KB+ gzip presenter (+ registries)
@@ -68,32 +75,6 @@ function TRAFFIC_MAP_DOT_CSS_VAR_VALUE() {
   if (!_iuTrafficPresenter) return "var(--iu-pd-dot-traffic, #2563eb)";
   return iuTrafficPresenter().TRAFFIC_MAP_DOT_CSS_VAR;
 }
-
-export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
-  PUBLICATION_ENABLED: false,
-  PUBLIC_API_ENABLED: false,
-  LIVE_NDIC_INGEST: false,
-  TRAFFIC_UI_ENABLED: true,
-  TRAFFIC_CARDS_RENDER: true,
-  SEPARATE_TRAFFIC_HOME: false,
-  SEPARATE_TRAFFIC_SETTINGS: false,
-  SEPARATE_TRAFFIC_FILTERS: false,
-  SEPARATE_TRAFFIC_LOCALITIES: false,
-  PRODUCTION_DEPLOY: false,
-});
-
-/**
- * Catalog card limit for offline snapshot → feed conversion.
- * 0 / non-positive = no silent truncation (full catalog available; DOM bounded by shared PAGE_SIZE).
- * Positive values remain available for tests/debug hard-caps only.
- */
-export const TRAFFIC_UI_INITIAL_CARD_CAP = 0;
-
-/**
- * First paint / switch: transfer only newest N cards from the worker (postMessage of the full
- * ~6–7k catalog was multi-second). Full catalog hydrates in background — not a silent truncate.
- */
-export const TRAFFIC_UI_FIRST_PAINT_CARD_CAP = 100;
 
 /** NOVÁ badge: only when source publication/version time is within this age (not merely ACTIVE). */
 export const TRAFFIC_UI_NEW_BADGE_MAX_AGE_MS = 72 * 60 * 60 * 1000;
