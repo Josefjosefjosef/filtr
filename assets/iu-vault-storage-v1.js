@@ -102,6 +102,11 @@ export function memoryCacheSet(key, value) {
   memoryCache.set(String(key), String(value));
 }
 
+export function clearVaultMemoryCache() {
+  memoryCache.clear();
+  writeGeneration.clear();
+}
+
 export function notifyVaultMemoryHydrated() {
   for (const key of memoryCache.keys()) {
     try {
@@ -182,4 +187,33 @@ export function listEncryptedStorageKeys() {
     if (k && k.startsWith(ENC_PREFIX)) keys.push(k.slice(ENC_PREFIX.length));
   }
   return keys;
+}
+
+/** Re-encrypt all vault records when rotating MDK (e.g. PIN setup). */
+export async function rotateVaultMdk(oldMdk, newMdk) {
+  const { listRecordKeys, readRecord } = await import("./iu-vault-db-v1.js");
+  const keys = new Set(await listRecordKeys());
+  captureNativeLocalStorage();
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(ENC_PREFIX)) keys.add(k.slice(ENC_PREFIX.length));
+  }
+  for (const k of keys) {
+    let envelope = await readRecord(k);
+    if (!envelope) {
+      const raw = nativeGetItem(encStorageKey(k));
+      if (raw) {
+        try {
+          envelope = JSON.parse(raw);
+        } catch (_) {
+          envelope = null;
+        }
+      }
+    }
+    if (!envelope) continue;
+    const pt = await decryptString(oldMdk, k, envelope);
+    const newEnv = await encryptString(newMdk, k, pt);
+    await persistEnvelope(k, newEnv);
+    memoryCache.set(k, pt);
+  }
 }
