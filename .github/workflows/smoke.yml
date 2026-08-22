@@ -197,6 +197,8 @@ jobs:
         run: npm run iu-first-load-defer-desktop-js-mobile-guard
       - name: First-load early welcome shell guard
         run: npm run iu-first-load-early-welcome-shell-guard
+      - name: First-load CHMI default + background traffic guard
+        run: npm run iu-first-load-chmi-default-background-traffic-guard
       - name: Perf-loop iter-012 secondary js after FCP guard
         run: npm run iu-perf-loop-iter012-secondary-js-after-fcp-guard
       - name: Perf-loop iter-014 secondary js batch2 guard
