@@ -19755,7 +19755,7 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       const latest = arr.slice(-5);
-      el.innerHTML = "Události:<br />" + latest.map((item) => `${new Date(item.t).toLocaleTimeString("cs-CZ")} ${item.name}`).join("<br />");
+      el.innerHTML = "Události:<br />" + latest.map((item) => `${new Date(item.t).toLocaleTimeString("cs-CZ")} ${escapeHtml(String(item && item.name != null ? item.name : ""))}`).join("<br />");
     } catch {
       el.textContent = "Události: chybné data";
     }
