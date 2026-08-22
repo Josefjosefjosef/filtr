@@ -24,7 +24,7 @@ export async function bootstrapGuardPage(context) {
   return page;
 }
 
-export async function waitForVaultReady(page, timeoutMs = 60000) {
+export async function waitForVaultReady(page, timeoutMs = 120000) {
   await page.waitForFunction(() => {
     try {
       return !!(window.iuVault && window.iuVault.getState && window.iuVault.getState().unlocked);

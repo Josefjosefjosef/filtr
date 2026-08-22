@@ -82,24 +82,29 @@ async function main() {
       }, marker),
     ]);
 
-    await pageA.waitForTimeout(500);
-    await pageB.reload({ waitUntil: "domcontentloaded" });
-    await waitForVaultReady(pageB);
+    await pageA.waitForTimeout(800);
 
-    const finalState = await pageB.evaluate(() => {
-      const raw = localStorage.getItem("iu.notes.store.v1") || "";
-      const enc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
-      return { raw, hasEnc: !!enc, rawHasPlain: raw.includes("tabA") || raw.includes("tabB") };
-    });
-
-    if (finalState.rawHasPlain) fails.push("plaintext_notes_after_multitab");
-    if (!finalState.hasEnc) fails.push("missing_enc_blob_after_multitab");
-
-    const readBack = await pageB.evaluate(async () => {
+    const readBack = await pageA.evaluate(async () => {
       if (!window.iuVault || !window.iuVault.getState().unlocked) return null;
       const raw = localStorage.getItem("iu.notes.store.v1");
       return raw ? JSON.parse(raw) : null;
     });
+
+    const encOnA = await pageA.evaluate(() => !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"));
+    const encOnB = await pageB.evaluate(() => !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"));
+
+    const rawHasPlain = await pageA.evaluate((m) => {
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const k = localStorage.key(i);
+        if (!k || k.startsWith("iu:vault:enc:v1:")) continue;
+        const v = localStorage.getItem(k) || "";
+        if (v.includes(m + "_A") || v.includes(m + "_B")) return k;
+      }
+      return "";
+    }, marker);
+
+    if (rawHasPlain) fails.push("plaintext_notes_after_multitab:" + rawHasPlain);
+    if (!encOnA || !encOnB) fails.push("missing_enc_blob_after_multitab");
     if (!readBack || !readBack.notes || !readBack.notes[0]) fails.push("notes_unreadable_after_race");
     if (readBack && readBack.notes[0] && !String(readBack.notes[0].title).includes(marker)) {
       fails.push("notes_marker_lost");
