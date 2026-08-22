@@ -211,11 +211,17 @@ const state = {
   openParkingCities: {},
   roadQuery: "",
   /** @type {'all'|'traffic'|'chmu'} Session-only quick view (not persisted). */
-  feedQuickView: "all",
+  feedQuickView: "chmu",
   /** False until hosted traffic offline snapshot fetch settles (or traffic UI disabled). */
   trafficSnapSettled: false,
   /** In-flight hosted traffic snapshot promise (boot). */
   trafficFetchPromise: null,
+  /** Background traffic prep started (presenter + filtered list, no DOM). */
+  trafficBackgroundPrepStarted: false,
+  /** True when background traffic data + presenter are ready for Doprava click. */
+  trafficBackgroundReady: false,
+  /** Diagnostic: filtered traffic candidate count after background prep. */
+  trafficBackgroundFilteredCount: 0,
   /** Temporary first-paint card cap for Doprava quick-view (0 = normal PAGE_SIZE). */
   trafficQuickFirstCap: 0,
   openSourceGroups: {},
@@ -641,6 +647,83 @@ function mergeChmiAndTrafficTimeline(chmiList, trafficList) {
   return merged;
 }
 
+/** Session quick view includes traffic cards in the merged timeline (not ČHMÚ-only). */
+function feedQuickViewIncludesTraffic() {
+  const q = state.feedQuickView;
+  return q === "traffic" || q === "all";
+}
+
+/** Repaint feed when traffic snapshot/catalog updates (skip when ČHMÚ-only view). */
+function shouldRepaintForTrafficCatalogUpdate() {
+  return feedQuickViewIncludesTraffic();
+}
+
+/** Filtered traffic candidates in memory — no DOM (background prep / Doprava fast open). */
+function computeTrafficFilteredCandidates() {
+  const basePrefs = effectivePrefs();
+  const ff = ensureFeedFilter(basePrefs);
+  if (
+    !ff.trafficEnabled ||
+    TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === true ||
+    TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER !== true
+  ) {
+    return [];
+  }
+  const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
+  trafficPrefs.feedFilter = ff;
+  const offline = collectOfflineTrafficCandidates(trafficPrefs, {
+    snapshot: loadOfflineTrafficSnapshot(),
+    nowIso: new Date().toISOString(),
+  });
+  if (!offline.length) return [];
+  let trafficList = filterOfflineTrafficCandidatesForOverview(offline, trafficPrefs, {
+    nowMs: Date.now(),
+  });
+  return trafficList.filter((ev) => matchesTrafficDetailFilter(ev, ff.traffic));
+}
+
+function scheduleTrafficBackgroundPrep(bootAbort, root) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return;
+  if (state.trafficBackgroundPrepStarted) return;
+  state.trafficBackgroundPrepStarted = true;
+  const run = async () => {
+    try {
+      const pending = state.trafficFetchPromise;
+      if (pending) await pending.catch(() => null);
+      if (bootAbort && bootAbort.signal.aborted) return;
+      if (!root || !root.isConnected) return;
+      state.trafficSnapSettled = true;
+      await ensureTrafficPresenter().catch(() => null);
+      if (bootAbort && bootAbort.signal.aborted) return;
+      if (!root.isConnected) return;
+      try {
+        state.trafficBackgroundFilteredCount = computeTrafficFilteredCandidates().length;
+      } catch (_) {
+        state.trafficBackgroundFilteredCount = 0;
+      }
+      state.trafficBackgroundReady = true;
+      try {
+        window.dispatchEvent(new CustomEvent("iu-traffic-background-ready"));
+      } catch (_) {}
+    } catch (_) {
+      state.trafficSnapSettled = true;
+    }
+  };
+  const kick = () => {
+    try {
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(() => void run(), { timeout: 5000 });
+      } else {
+        setTimeout(() => void run(), 2000);
+      }
+    } catch (_) {
+      setTimeout(() => void run(), 2000);
+    }
+  };
+  // After first ČHMÚ paint — do not compete with first-screen critical work.
+  setTimeout(kick, 0);
+}
+
 function filteredList() {
   const items = (state.data && state.data.feed && state.data.feed.items) || [];
   const basePrefs = effectivePrefs();
@@ -665,6 +748,7 @@ function filteredList() {
     list = list.filter((ev) => ev && isChmiFeedEvent(ev) && !ev.trafficV1);
   }
   if (
+    feedQuickViewIncludesTraffic() &&
     ff.trafficEnabled &&
     TRAFFIC_OVERVIEW_FLAGS.SEPARATE_TRAFFIC_HOME === false &&
     TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_CARDS_RENDER
@@ -2433,6 +2517,16 @@ function wire() {
       if (
         view === "traffic" &&
         TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
+        state.trafficBackgroundReady
+      ) {
+        state.trafficSnapSettled = true;
+        paintTrafficQuick();
+        return;
+      }
+
+      if (
+        view === "traffic" &&
+        TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true &&
         !state.trafficSnapSettled
       ) {
         // Overlap presenter download with snap wait (do not serialize after snap).
@@ -2920,6 +3014,8 @@ async function boot() {
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
+  // FIRST LOAD: every fresh homepage navigation opens ČHMÚ (session-only; not persisted).
+  state.feedQuickView = "chmu";
   state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
   // FIRST LOAD: never wipe the static HTML shell (banner/feed skeleton). A full
   // root.innerHTML replace was collapsing reserved feed geometry (~520px → tiny
@@ -3135,41 +3231,46 @@ async function boot() {
         } catch (_) {}
       }
       if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED === true) {
-        void (async () => {
-          try {
-            await trafficPromise;
-            if (bootAbort && bootAbort.signal.aborted) return;
-            // doprava-chmi-switch-snap-first-v1-20260821: settle snap before awaiting presenter
-            state.trafficSnapSettled = true;
-            await ensureTrafficPresenter().catch(() => null);
-            if (bootAbort && bootAbort.signal.aborted) return;
-            if (!root.isConnected) return;
-            setTimeout(() => {
+        if (state.feedQuickView === "chmu") {
+          // ČHMÚ-first: fetch snapshot in parallel; defer presenter + traffic DOM until Doprava or idle bg prep.
+          scheduleTrafficBackgroundPrep(bootAbort, root);
+        } else {
+          void (async () => {
+            try {
+              await trafficPromise;
+              if (bootAbort && bootAbort.signal.aborted) return;
+              state.trafficSnapSettled = true;
+              await ensureTrafficPresenter().catch(() => null);
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
+              setTimeout(() => {
+                if (bootAbort && bootAbort.signal.aborted) return;
+                if (!root.isConnected) return;
+                try {
+                  if (state.settingsOpen) updateFeedDom();
+                  else paint();
+                } catch (_) {}
+              }, 0);
+            } catch (_) {
+              state.trafficSnapSettled = true;
               try {
-                if (state.settingsOpen) updateFeedDom();
-                else paint();
+                if (root.isConnected) {
+                  if (state.settingsOpen) updateFeedDom();
+                  else paint();
+                }
               } catch (_) {}
-            }, 0);
-          } catch (_) {
-            state.trafficSnapSettled = true;
-            try {
-              if (root.isConnected) {
-                if (state.settingsOpen) updateFeedDom();
-                else paint();
-              }
-            } catch (_) {}
-          }
-        })();
+            }
+          })();
+        }
       } else {
         state.trafficSnapSettled = true;
       }
-      // Full catalog hydrate after first-paint cap — refresh feed without blocking switch.
+      // Full catalog hydrate after first-paint cap — refresh feed only when traffic is visible.
       try {
         window.addEventListener("iu-traffic-snap-hydrated", () => {
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!root || !root.isConnected) return;
+          if (!shouldRepaintForTrafficCatalogUpdate()) return;
           try {
             if (state.settingsOpen) updateFeedDom();
             else paint();
