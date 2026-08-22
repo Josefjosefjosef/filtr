@@ -173,7 +173,7 @@ export function sanitizeFeedFilter(raw) {
     trafficEnabled: src.trafficEnabled !== false,
     chmuEnabled: src.chmuEnabled !== false,
     traffic: {
-      localities: asLocalities(trafficIn.localities),
+      localities: asLocalities(trafficIn.localities).filter((l) => l.level !== "kraj"),
       roads: asStringArray(trafficIn.roads).map((r) => r.toUpperCase()),
       eventCategories: eventCategoriesFinal,
       parkingEnabled: !!trafficIn.parkingEnabled,
@@ -473,10 +473,9 @@ export function prefsForTrafficLocality(prefs, feedFilter) {
   base.sourceGroups = [];
   if (base.localities.length) {
     const cities = base.localities.filter((l) => l.level === "mesto");
-    const kraje = base.localities.filter((l) => l.level === "kraj");
     base.homeObec = cities[0] ? cities[0].name : "";
     base.homeOkres = "";
-    base.homeKraj = kraje[0] ? kraje[0].name : "";
+    base.homeKraj = "";
   } else {
     base.homeObec = "";
     base.homeOkres = "";

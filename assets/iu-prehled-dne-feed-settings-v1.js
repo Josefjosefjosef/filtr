@@ -82,13 +82,14 @@ function checkItem(act, value, label, checked, extraAttrs) {
   );
 }
 
-/** Shared locality picker pieces (kraje / optional okresy / město). */
+/** Shared locality picker pieces (optional kraje / optional okresy / město). */
 export function localityPickerHtml(opts) {
   const {
     localities,
     krajeList,
     okresyMap,
     includeOkresy,
+    hideKraje,
     cityQuery,
     citySuggest,
     selCities,
@@ -98,9 +99,11 @@ export function localityPickerHtml(opts) {
   const selectedKraje = new Set(locs.filter((l) => l.level === "kraj").map((l) => l.name));
   const selectedOkresy = new Set(locs.filter((l) => l.level === "okres").map((l) => l.name));
   const wholeCr = locs.length === 0;
-  const krajChecks = (krajeList || [])
-    .map((k) => checkItem("feed-loc-kraj", k, k, selectedKraje.has(k)))
-    .join("");
+  const krajBlock = hideKraje
+    ? ""
+    : `<div class="iuPdFeedSub"><div class="iuPdFeedSub__head">Kraje</div>${(krajeList || [])
+        .map((k) => checkItem("feed-loc-kraj", k, k, selectedKraje.has(k)))
+        .join("")}</div>`;
   let okresBlock = "";
   if (includeOkresy) {
     const okresNames = [];
@@ -145,7 +148,7 @@ export function localityPickerHtml(opts) {
   return (
     `<div class="iuPdFeedLocality" data-iu-feed-locality="1">` +
     checkItem("feed-loc-cr", "1", "Celá ČR", wholeCr) +
-    `<div class="iuPdFeedSub"><div class="iuPdFeedSub__head">Kraje</div>${krajChecks}</div>` +
+    krajBlock +
     okresBlock +
     `<div class="iuPdFeedSub">` +
     `<div class="iuPdFeedSub__head">Město / obec</div>` +
@@ -282,7 +285,6 @@ export function trafficDetailSettingsHtml(ctx) {
   const {
     draft,
     openAcc,
-    krajeList,
     cityQuery,
     citySuggest,
     cityLimitMsg,
@@ -297,9 +299,9 @@ export function trafficDetailSettingsHtml(ctx) {
   const selCities = (traffic.localities || []).filter((l) => l.level === "mesto");
   const areaBody = localityPickerHtml({
     localities: traffic.localities,
-    krajeList,
     okresyMap: null,
     includeOkresy: false,
+    hideKraje: true,
     cityQuery,
     citySuggest,
     selCities,

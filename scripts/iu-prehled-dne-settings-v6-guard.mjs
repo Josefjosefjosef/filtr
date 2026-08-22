@@ -78,6 +78,8 @@ function staticGate() {
   must(/quickViewBarHtml|feed-quick-view/.test(feedSettings + ui), "ui:quick_view");
   must(/emptyFeedStateHtml|iu-feed-empty/.test(feedSettings + ui), "ui:empty_state");
   must(/feedMainHtml|data-iu-pd-feed-main/.test(feedSettings + ui), "ui:feed_main_surface");
+  must(/hideKraje:\s*true/.test(feedSettings), "settings:traffic_hides_kraje");
+  must(/level !== "kraj"/.test(feedFilter), "filter:traffic_strips_kraj_localities");
 
   must(/\.iuPdBtn--settings/.test(css), "css:green_btn");
   must(/iuPrehledDne__axis::before/.test(css) && /\.iuPrehledDne__dot\b/.test(css), "css:timeline_axis");
@@ -415,8 +417,10 @@ async function runPlaywright() {
         );
         await page.waitForSelector('[data-iu-feed-detail="traffic"]', { timeout: 8000 });
         const trafficReadable = await page.evaluate(() => {
-          const head = [...document.querySelectorAll(".iuPdFeedSub__head")].find((el) =>
-            /Kraje/i.test(el.textContent || "")
+          const detail = document.querySelector('[data-iu-feed-detail="traffic"]');
+          const text = detail?.innerText || "";
+          const cityHead = [...document.querySelectorAll(".iuPdFeedSub__head")].find((el) =>
+            /Město\s*\/\s*obec/i.test(el.textContent || "")
           );
           const check = document.querySelector(".iuPdFeedCheck");
           const nearWhite = (cssColor) => {
@@ -429,16 +433,18 @@ async function runPlaywright() {
             if (!m) return -1;
             return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255;
           };
-          const headColor = head ? getComputedStyle(head).color : "";
+          const headColor = cityHead ? getComputedStyle(cityHead).color : "";
           const checkColor = check ? getComputedStyle(check).color : "";
           return {
-            headOk: !!head && !nearWhite(headColor) && luminance(headColor) < 0.55,
+            noKraje: !/Kraje/i.test(text),
+            cityHeadOk: !!cityHead && !nearWhite(headColor) && luminance(headColor) < 0.55,
             checkOk: !!check && !nearWhite(checkColor) && luminance(checkColor) < 0.45,
             headColor,
             checkColor,
           };
         });
-        if (!trafficReadable.headOk) pwFails.push(vp.name + ":traffic_kraje_unreadable");
+        if (!trafficReadable.noKraje) pwFails.push(vp.name + ":traffic_kraje_still_present");
+        if (!trafficReadable.cityHeadOk) pwFails.push(vp.name + ":traffic_city_head_unreadable");
         if (!trafficReadable.checkOk) pwFails.push(vp.name + ":traffic_check_unreadable");
         await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
         await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
