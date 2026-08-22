@@ -6124,12 +6124,73 @@ font-src 'self' data:;
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822"></script>
-    <script defer src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
-    <script defer src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
-    <script defer src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822"></script>
+    <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
+    <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->
+    <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
+    <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-left-rail-new-window-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
+    <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-tool-window-left-rail-v1.js?v=pc-tool-window-left-rail-layout-v1-20260714"></script>
+    <!-- Info panel powers mobile Rychlý přehled — keep eager on all viewports. -->
     <script type="module" src="/assets/iu-desktop-info-panel.js?v=info-panel-mpsv-audit-v1-20260716-rychly-prehled-horizontal-persist-v1-20260803"></script>
     
+    <script>
+    (function iuDeferDesktopJsUntilDesktop(){
+      "use strict";
+      if(window.__iuDeferDesktopJsUntilDesktop)return;
+      window.__iuDeferDesktopJsUntilDesktop=1;
+      var loaded=false;
+      function isDesktop(){
+        try{ return !!(window.matchMedia&&window.matchMedia("(min-width: 1025px)").matches); }catch(_){ return false; }
+      }
+      function activate(){
+        if(loaded)return;
+        if(!isDesktop())return;
+        loaded=true;
+        var nodes=document.querySelectorAll('script[data-iu-desktop-js="1"][data-iu-src]');
+        for(var i=0;i<nodes.length;i++){
+          var node=nodes[i];
+          if(node.getAttribute("data-iu-loaded")==="1")continue;
+          var src=node.getAttribute("data-iu-src");
+          if(!src)continue;
+          try{
+            var s=document.createElement("script");
+            s.src=src;
+            if(node.getAttribute("data-iu-module")==="1")s.type="module";
+            else s.defer=true;
+            s.onload=function(){ try{node.setAttribute("data-iu-loaded","1");}catch(_){} };
+            (document.head||document.documentElement).appendChild(s);
+          }catch(_){}
+        }
+      }
+      function afterFcp(fn){
+        var done=false;
+        function run(){ if(done)return; done=true; try{ fn(); }catch(_){} }
+        try{
+          if(window.PerformanceObserver){
+            var po=new PerformanceObserver(function(list){
+              var ents=list.getEntries();
+              for(var i=0;i<ents.length;i++){
+                if(ents[i].name==="first-contentful-paint"){ try{ po.disconnect(); }catch(_){}
+                  run(); return; }
+              }
+            });
+            po.observe({type:"paint",buffered:true});
+          }
+        }catch(_){}
+        setTimeout(run,2000);
+        window.addEventListener("load",function(){ setTimeout(run,0); },{once:true});
+      }
+      afterFcp(activate);
+      try{
+        if(window.matchMedia){
+          var mq=window.matchMedia("(min-width: 1025px)");
+          if(mq.addEventListener) mq.addEventListener("change", function(){ if(mq.matches) activate(); });
+          else if(mq.addListener) mq.addListener(function(){ if(mq.matches) activate(); });
+        }
+      }catch(_){}
+    })();
+    </script>
+
     <script>
     (function iuDeferDesktopCssUntilNeeded(){
       "use strict";

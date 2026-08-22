@@ -193,6 +193,8 @@ jobs:
         run: npm run iu-perf-loop-iter010-overlay-css-after-fcp-guard
       - name: Perf-loop iter-011 desktop css after FCP guard
         run: npm run iu-perf-loop-iter011-desktop-css-after-fcp-guard
+      - name: First-load defer desktop JS on mobile guard
+        run: npm run iu-first-load-defer-desktop-js-mobile-guard
       - name: Perf-loop iter-012 secondary js after FCP guard
         run: npm run iu-perf-loop-iter012-secondary-js-after-fcp-guard
       - name: Perf-loop iter-014 secondary js batch2 guard
