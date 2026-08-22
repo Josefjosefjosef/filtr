@@ -34,6 +34,9 @@ async function main() {
   if (!/trusted-types\s+iu-default\s+iu-escape/.test(csp)) fails.push("missing_trusted_types_policies");
   if (/script-src[^;]*\bunsafe-eval\b/.test(csp.replace(/wasm-unsafe-eval/g, ""))) fails.push("unsafe_eval_in_script_src");
   if (!/object-src\s+'none'/.test(csp)) fails.push("object_src_missing_none");
+  if (/'unsafe-inline'/.test((csp.match(/script-src\s+([^;]+)/i) || [])[1] || "")) {
+    fails.push("script_src_unsafe_inline");
+  }
 
   if (!root.html.includes("iu-trusted-types-v1.js")) fails.push("missing_tt_script");
   if (!root.html.includes("iu-vault-bootstrap")) fails.push("missing_vault_bootstrap");

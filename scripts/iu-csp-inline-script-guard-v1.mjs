@@ -24,8 +24,8 @@ function extractInlineScripts(html) {
   const re = /<script(?![^>]*\bsrc\s*=)([^>]*)>([\s\S]*?)<\/script>/gi;
   let m;
   while ((m = re.exec(html))) {
-    const body = m[2].trim();
-    if (!body) continue;
+    const body = m[2];
+    if (!body.trim()) continue;
     const hash = crypto.createHash("sha256").update(body, "utf8").digest("base64");
     scripts.push({ hash: `'sha256-${hash}'`, bytes: body.length });
   }
@@ -53,6 +53,8 @@ console.log(
       requireTrustedTypes: /require-trusted-types-for\s+'script'/.test(cspMeta),
     })
 );
+
+if (hasUnsafeInline) fails.push("script_src_unsafe_inline_forbidden");
 
 if (!scripts.length) {
   if (hasUnsafeInline) fails.push("unsafe_inline_without_scripts");

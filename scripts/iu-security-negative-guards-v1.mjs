@@ -130,11 +130,25 @@ t("analytics_client_no_pii_keys", () => {
   if (/sendBeacon\([^)]*notes\.store/i.test(client)) throw new Error("analytics sends notes");
 });
 
-t("negative_plaintext_detector", () => {
-  const marker = "IU_TEST_SECRET_NEG";
-  const storage = { x: `enc:${marker}` };
-  const leak = Object.values(storage).some((v) => v === marker);
-  if (leak) throw new Error("detector false negative");
+t("csp_no_script_unsafe_inline", () => {
+  const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
+  const csp = extractCsp(index);
+  if (/'unsafe-inline'/.test((csp.match(/script-src\s+([^;]+)/i) || [])[1] || "")) {
+    throw new Error("script-src still has unsafe-inline");
+  }
+});
+
+t("device_seed_v1_format", () => {
+  const device = fs.readFileSync(path.join(ROOT, "assets", "iu-vault-device-crypto-v1.js"), "utf8");
+  if (!/seed-v1/.test(device)) throw new Error("missing seed-v1");
+  if (!/wrappedSeed/.test(device)) throw new Error("missing wrappedSeed");
+});
+
+t("negative_unsafe_inline_detector", () => {
+  const bad = "script-src 'self' 'unsafe-inline'";
+  if (!/'unsafe-inline'/.test(bad)) throw new Error("detector broken");
+  const good = "script-src 'self' 'sha256-abc'";
+  if (/'unsafe-inline'/.test(good)) throw new Error("false positive");
 });
 
 if (fails.length) {

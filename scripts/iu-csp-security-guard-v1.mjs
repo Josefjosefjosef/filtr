@@ -45,6 +45,7 @@ for (const csp of csps) {
   must(/base-uri\s+'self'/.test(csp), "base_uri_self", fails);
   must(/form-action\s+'self'/.test(csp), "form_action_self", fails);
   must(!hasBareUnsafeEval(csp), "no_unsafe_eval", fails);
+  must(!/script-src[^;]*'unsafe-inline'/.test(csp), "no_script_unsafe_inline", fails);
   must(/\bwasm-unsafe-eval\b/.test(csp), "wasm_unsafe_eval_allowed", fails);
   must(!/script-src[^;]*\bhttps:\b/.test(csp), "script_src_no_https_wildcard", fails);
   must(/worker-src\s+'self'/.test(csp), "worker_src_self", fails);
