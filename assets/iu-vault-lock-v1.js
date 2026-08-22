@@ -24,7 +24,14 @@ const state = {
   autoLockPolicy: "background",
   idleTimer: null,
   lastActivity: Date.now(),
+  requiresUserReauth: false,
 };
+
+async function refreshSecurityMode(meta) {
+  const m = meta || await readMeta();
+  state.requiresUserReauth = !!(m && (m.pinEnabled || m.deviceEnabled));
+  return state.requiresUserReauth;
+}
 
 export function getVaultState() {
   return {
@@ -58,6 +65,7 @@ function clearIdleTimer() {
 
 function scheduleIdleLock() {
   clearIdleTimer();
+  if (!state.requiresUserReauth) return;
   const policy = state.autoLockPolicy;
   let ms = 0;
   if (policy === "idle_1m") ms = 60000;
@@ -70,6 +78,7 @@ function scheduleIdleLock() {
 }
 
 export async function lockVault(reason = "manual") {
+  if (!state.requiresUserReauth) return;
   clearIdleTimer();
   state.mdk = null;
   state.unlocked = false;
@@ -98,6 +107,7 @@ export async function ensureLevel1Mdk() {
     await writeMeta(meta);
   }
   state.autoLockPolicy = meta.autoLockPolicy || "background";
+  await refreshSecurityMode(meta);
 
   if (meta.securityLevel === 1 && !meta.pinEnabled && !meta.deviceEnabled) {
     let keyRec = await readKeyRecord("mdk:level1");
@@ -131,12 +141,14 @@ export async function activateLevel1AutoKey() {
   }
   await unlockWithMdk(keyRec.mdk);
   await writeMeta(meta);
+  await refreshSecurityMode(meta);
 }
 
 export function registerAutoLockListeners() {
   if (registerAutoLockListeners._done) return;
   registerAutoLockListeners._done = true;
   document.addEventListener("visibilitychange", () => {
+    if (!state.requiresUserReauth) return;
     if (document.visibilityState === "hidden") {
       const p = state.autoLockPolicy;
       if (p === "background" || p === "tools_open") lockVault("background");
@@ -165,6 +177,7 @@ export async function storePinWrap(meta, pinWrap) {
   meta.securityLevel = meta.deviceEnabled ? 23 : 3;
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
+  await refreshSecurityMode(meta);
   await lockVault("pin_enabled");
 }
 
@@ -174,6 +187,7 @@ export async function storeDeviceWrap(meta, deviceWrap) {
   meta.securityLevel = meta.pinEnabled ? 23 : 2;
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
+  await refreshSecurityMode(meta);
   await lockVault("device_enabled");
 }
 
