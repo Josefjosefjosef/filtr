@@ -14,7 +14,9 @@ must(/perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821/.test(index), "m
 must(/iuDeferPrehledDneUiUntilFcp/.test(index), "defer_fn");
 must(/iuEnsurePrehledDneUi/.test(index), "ensure_api");
 must(/import\(SRC\)/.test(index) || /import\(/.test(index) && /iu-prehled-dne-ui-v1\.js/.test(index), "dynamic_import");
-must(!/<link[^>]*rel="modulepreload"[^>]*iu-prehled-dne-ui-v1\.js/.test(index), "no_modulepreload");
+const chmiAssetWaterfall = /chmi-asset-waterfall-v1-20260822/.test(index);
+const hasPrehledPreload = /<link[^>]*rel="modulepreload"[^>]*iu-prehled-dne-ui-v1\.js/.test(index);
+must(chmiAssetWaterfall && hasPrehledPreload || !hasPrehledPreload, "no_modulepreload");
 must(!/<script[^>]*type="module"[^>]*src="[^"]*iu-prehled-dne-ui-v1\.js/.test(index), "no_early_module_src");
 must(/infouzel-prehled-dne-banner\.webp"[^>]*media="\(min-width: 768px\)"/.test(index), "banner_preload_media");
 must(/iuPd__bannerImg[^>]*fetchpriority="low"/.test(index), "banner_fetchpriority_low");
