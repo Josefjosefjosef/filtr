@@ -166,7 +166,7 @@ async function measureContent(page, label) {
       mountCs.visibility !== "hidden" &&
       !mount.hidden &&
       !mount.hasAttribute("hidden") &&
-      (!parcelRect || !mountRect || parcelRect.top >= mountRect.bottom - 2);
+      (!parcelRect || !mountRect || mountRect.top >= parcelRect.bottom - 2);
     return {
       label,
       pass,
@@ -179,7 +179,7 @@ async function measureContent(page, label) {
       scrollWidth: scroll ? scroll.scrollWidth : 0,
       clientWidth: scroll ? scroll.clientWidth : 0,
       parcelBelow:
-        !parcelRect || !mountRect ? null : Math.round(parcelRect.top - mountRect.bottom),
+        !parcelRect || !mountRect ? null : Math.round(mountRect.top - parcelRect.bottom),
     };
   }, label);
 }
