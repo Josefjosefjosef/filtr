@@ -107,7 +107,13 @@ jobs:
           # Data/icons/version/manifest stay under /projects/* (folder names unchanged).
           node scripts/iu-pages-root-publish.mjs
 
-      - name: Verify CSP inline script hashes unchanged after deploy rewrite
+      - name: Recompute CSP script hashes for deploy artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          IU_CSP_APPLY_INDEX=index.html node scripts/iu-csp-apply-script-hashes-v1.mjs
+
+      - name: Verify CSP inline script hashes on deploy artifact
         shell: bash
         run: |
           set -euo pipefail
