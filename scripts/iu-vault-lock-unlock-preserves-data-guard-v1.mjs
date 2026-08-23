@@ -72,6 +72,21 @@ function staticChecks(fails) {
   }
 }
 
+async function seedPersonalData(page, noteSeed, taskSeed, calSeed) {
+  await page.evaluate(
+    async ({ noteSeed, taskSeed, calSeed }) => {
+      localStorage.setItem("iu.notes.store.v1", noteSeed);
+      localStorage.setItem("iu.tasks.mvp.v1", taskSeed);
+      localStorage.setItem("iu.calendar.store.v1", calSeed);
+      if (typeof window.iuVault?.afterUnlock === "function" && window.iuVault.getState().unlocked) {
+        await window.iuVault.afterUnlock();
+      }
+    },
+    { noteSeed, taskSeed, calSeed }
+  );
+  await page.waitForTimeout(500);
+}
+
 async function waitForMarkers(page, needle, timeoutMs) {
   await page.waitForFunction(
     (n) => {
@@ -130,6 +145,11 @@ async function unlockProtection(page, mode) {
     });
   }
   await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 60000 });
+  await page.evaluate(async () => {
+    if (typeof window.iuVault.afterUnlock === "function") {
+      await window.iuVault.afterUnlock();
+    }
+  });
   await page.waitForTimeout(500);
   await waitForMarkers(page, MARKER, 90000);
 }
@@ -202,6 +222,7 @@ async function main() {
   try {
     await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await waitForVaultReady(page);
+    await seedPersonalData(page, noteSeed, taskSeed, calSeed);
 
     const beforeProtect = await readModuleMarkers(page);
     if (!beforeProtect.notes || !beforeProtect.tasks) fails.push("seed_not_visible_before_protect");

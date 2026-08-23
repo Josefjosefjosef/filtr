@@ -21,6 +21,8 @@ import {
   validateBackupStructure,
   verifyBackupIntegrity,
   applyBackupReplaceMode,
+  applyBackupReplaceModeAsync,
+  writeModuleEntriesAsync,
   storageSnapshotsEqual,
   assertSafeJsonValue,
   userMessageForError,
@@ -193,7 +195,31 @@ async function runUnitTests() {
   }
 
   try {
-    const name = formatBackupFilename(new Date("2026-07-12T10:15:00Z"));
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "a1", title: "Async", body: "" }] }),
+    });
+    const json = await exportBackupJson(storage, "v1", subtle);
+    const target = createMockStorage({});
+    const backup = await parseAndVerifyBackupText(json, subtle);
+    const writes = [];
+    await applyBackupReplaceModeAsync(target, {}, backup, {
+      persistEntry: async (key, value) => {
+        writes.push(key);
+        target.setItem(key, value);
+      },
+      removeEntry: async (key) => {
+        target.removeItem(key);
+      },
+    });
+    if (!writes.includes("iu.notes.store.v1")) throw new Error("async persist missing");
+    const notes = JSON.parse(target.getItem("iu.notes.store.v1") || "{}");
+    if (!notes.notes?.length) throw new Error("async round trip missing");
+    pass("async_round_trip");
+  } catch (e) {
+    fail("async_round_trip", e);
+  }
+
+  try {
     if (!name.endsWith(BACKUP_FILE_EXT)) throw new Error("filename ext");
     if (!name.startsWith("InfoUzel-zaloha-")) throw new Error("filename prefix");
     pass("export_filename_json");
@@ -254,7 +280,7 @@ function staticGate() {
     { id: "export_btn", pass: /id="iuDataMgmtExportBtn"/.test(index) },
     { id: "import_btn", pass: /id="iuDataMgmtImportBtn"/.test(index) },
     { id: "script_ui", pass: /iu-user-data-backup-v1\.js/.test(index) },
-    { id: "script_ui_bump", pass: /user-data-backup-v1-20260712/.test(index) },
+    { id: "script_ui_bump", pass: /user-data-backup-vault-restore-v1-20260823/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
   return { pass: fails.length === 0, fails, checks };

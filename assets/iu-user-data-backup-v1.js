@@ -8,13 +8,66 @@ import {
   readBackupFileText,
   parseAndVerifyBackupText,
   getBackupPreview,
-  applyBackupReplaceMode,
+  applyBackupReplaceModeAsync,
   collectAllModules,
   storageSnapshotsEqual,
   formatBackupFilename,
   userMessageForError,
   errorCodeFrom,
 } from "./iu-user-data-backup-core.js";
+import { vaultSetItem, vaultRemoveItem, preloadAllVaultRecords, notifyVaultMemoryHydrated } from "./iu-vault-storage-v1.js";
+import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
+
+function isVaultActive() {
+  try {
+    return typeof window.iuVault === "object" && window.iuVault !== null;
+  } catch {
+    return false;
+  }
+}
+
+function isVaultUnlocked() {
+  if (!isVaultActive()) return true;
+  try {
+    return !!window.iuVault.getState().unlocked;
+  } catch {
+    return false;
+  }
+}
+
+function assertVaultUnlockedForBackup(op) {
+  if (!isVaultActive()) return;
+  if (!isVaultUnlocked()) {
+    throw new Error(op === "export" ? "VAULT_LOCKED_EXPORT" : "VAULT_LOCKED_IMPORT");
+  }
+}
+
+async function persistBackupEntry(key, value) {
+  if (isVaultActive() && isProtectedStorageKey(key)) {
+    assertVaultUnlockedForBackup("import");
+    await vaultSetItem(key, value);
+    return;
+  }
+  localStorage.setItem(key, value);
+}
+
+async function removeBackupEntry(key) {
+  if (isVaultActive() && isProtectedStorageKey(key)) {
+    assertVaultUnlockedForBackup("import");
+    await vaultRemoveItem(key);
+    return;
+  }
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* ignore */
+  }
+}
+
+const backupPersistHooks = {
+  persistEntry: persistBackupEntry,
+  removeEntry: removeBackupEntry,
+};
 
 function createStorageAdapter() {
   return {
@@ -286,6 +339,7 @@ function initUserDataBackupUi() {
     setBusy(exportBtn, true, "Vytvářím zálohu…");
     announce(statusLive, "Probíhá vytváření zálohy…");
     try {
+      assertVaultUnlockedForBackup("export");
       const json = await exportBackupJson(storage, readAppVersion(), getSubtle());
       const filename = formatBackupFilename(new Date());
       triggerDownload(filename, json);
@@ -350,7 +404,18 @@ function initUserDataBackupUi() {
     setBusy(confirmApplyBtn, true, "Obnovuji…");
     announce(statusLive, "Probíhá obnova dat…");
     try {
-      await applyBackupReplaceMode(storage, { putCalendarMirror: writeCalendarIdbMirror }, pendingBackup);
+      assertVaultUnlockedForBackup("import");
+      window.__iuBackupImportInProgress = true;
+      await applyBackupReplaceModeAsync(
+        storage,
+        {},
+        pendingBackup,
+        backupPersistHooks
+      );
+      if (isVaultActive() && isVaultUnlocked()) {
+        await preloadAllVaultRecords();
+        notifyVaultMemoryHydrated();
+      }
       closeConfirmDialog();
       announce(statusLive, "Obnova byla úspěšná. Načítám aktualizovaná data…");
       try {
@@ -373,6 +438,12 @@ function initUserDataBackupUi() {
         : "Obnova selhala a původní data byla zachována.";
       announce(statusLive, `${baseMsg} ${userMessageForError(errorCodeFrom(err))}`);
       setBusy(confirmApplyBtn, false);
+    } finally {
+      try {
+        window.__iuBackupImportInProgress = false;
+      } catch {
+        /* ignore */
+      }
     }
   }
 
@@ -416,8 +487,34 @@ function initUserDataBackupUi() {
 
 function exposeBackupGlobals() {
   window.iuUserDataBackupCollectSnapshot = () => collectAllModules(createStorageAdapter());
-  window.iuUserDataBackupExportJson = () => exportBackupJson(createStorageAdapter(), readAppVersion(), getSubtle());
+  window.iuUserDataBackupExportJson = () => {
+    assertVaultUnlockedForBackup("export");
+    return exportBackupJson(createStorageAdapter(), readAppVersion(), getSubtle());
+  };
   window.iuUserDataBackupParseAndVerify = (text) => parseAndVerifyBackupText(text, getSubtle());
+  window.iuUserDataBackupApplyReplace = async (backup) => {
+    assertVaultUnlockedForBackup("import");
+    const storage = createStorageAdapter();
+    window.__iuBackupImportInProgress = true;
+    try {
+      await applyBackupReplaceModeAsync(
+        storage,
+        {},
+        backup,
+        backupPersistHooks
+      );
+      if (isVaultActive() && isVaultUnlocked()) {
+        await preloadAllVaultRecords();
+        notifyVaultMemoryHydrated();
+      }
+    } finally {
+      try {
+        window.__iuBackupImportInProgress = false;
+      } catch {
+        /* ignore */
+      }
+    }
+  };
 }
 
 exposeBackupGlobals();
