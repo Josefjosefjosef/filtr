@@ -78,6 +78,29 @@ function startStaticServer() {
   });
 }
 
+async function waitForDeferredAppCss(page) {
+  await page.waitForFunction(
+    () => {
+      const link = document.querySelector('link[data-iu-defer-app-css="1"]');
+      if (!link) return false;
+      if (link.dataset && link.dataset.iuDeferReady === "1") return true;
+      try {
+        return !!(link.sheet && link.media === "all");
+      } catch (_) {
+        return false;
+      }
+    },
+    { timeout: 30000 }
+  );
+  try {
+    await page.evaluate(async () => {
+      try {
+        await document.fonts.ready;
+      } catch (_) {}
+    });
+  } catch (_) {}
+}
+
 async function installClsHarness(page) {
   await page.evaluate(async () => {
     try {
@@ -154,6 +177,7 @@ async function main() {
       });
 
       await page.goto(base + "/projects/", { waitUntil: "load", timeout: 120000 });
+      await waitForDeferredAppCss(page);
       await page.waitForFunction(() => typeof window.iuSilverWeatherRefresh === "function", null, {
         timeout: 120000
       });
