@@ -72,7 +72,7 @@ jobs:
             -e "s#/assets/iu-silver-premium-draft\\.css?v=[A-Za-z0-9._-]*#/assets/iu-silver-premium-draft.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-prehled-dne-v1\\.css?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-v1.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-prehled-dne-ui-v1\\.js?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js#g" \
-            -e "s#iu-data-ver-placeholder#${ASSET_VER}#g"
+            -e "s#<meta name=\"iu-data-ver\" content=\"iu-data-ver-placeholder\"#<meta name=\"iu-data-ver\" content=\"${ASSET_VER}\"#g"
 
           # ES module relative imports must resolve to the same deploy SHA core copy.
           # Prehled UI is hashed; traffic-overview (and any other importer) is still loaded unhashed
@@ -106,6 +106,12 @@ jobs:
           # Source of truth remains projects/index.html in git. Artifact serves the app at /.
           # Data/icons/version/manifest stay under /projects/* (folder names unchanged).
           node scripts/iu-pages-root-publish.mjs
+
+      - name: Verify CSP inline script hashes unchanged after deploy rewrite
+        shell: bash
+        run: |
+          set -euo pipefail
+          IU_CSP_GUARD_INDEX=index.html node scripts/iu-csp-inline-script-guard-v1.mjs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

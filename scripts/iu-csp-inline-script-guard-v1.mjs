@@ -9,7 +9,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const INDEX = path.join(ROOT, "projects", "index.html");
+const INDEX = process.env.IU_CSP_GUARD_INDEX
+  ? path.resolve(ROOT, process.env.IU_CSP_GUARD_INDEX)
+  : path.join(ROOT, "projects", "index.html");
 const HEADERS = path.join(ROOT, "_headers");
 
 function extractCsp(text) {
