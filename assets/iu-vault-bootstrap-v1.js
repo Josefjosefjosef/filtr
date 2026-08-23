@@ -45,7 +45,12 @@ async function initVault() {
 
   window.addEventListener("iu-local-store-changed", (ev) => {
     const key = ev && ev.detail && ev.detail.key;
-    if (key === "iu.calendar.store.v1") wipeCalendarMirrorIdb().catch(() => {});
+    if (key === "iu.calendar.store.v1") {
+      try {
+        if (window.__iuBackupImportInProgress) return;
+      } catch (_) {}
+      wipeCalendarMirrorIdb().catch(() => {});
+    }
   });
 
   return meta;

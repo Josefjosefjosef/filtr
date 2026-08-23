@@ -386,6 +386,48 @@ export function removeModuleEntries(storage, def) {
 }
 
 /**
+ * @typedef {{ persistEntry?: (key: string, value: string) => void | Promise<void>, removeEntry?: (key: string) => void | Promise<void> }} BackupPersistHooks
+ */
+
+/**
+ * @param {StorageAdapter} storage
+ * @param {ModuleDef} def
+ * @param {BackupPersistHooks} [hooks]
+ */
+export async function removeModuleEntriesAsync(storage, def, hooks) {
+  const removeEntry = hooks && hooks.removeEntry;
+  if (def.kind === "key") {
+    if (removeEntry) await removeEntry(def.key);
+    else storage.removeItem(def.key);
+    return;
+  }
+  for (const key of storage.keys()) {
+    if (key.startsWith(def.prefix)) {
+      if (removeEntry) await removeEntry(key);
+      else storage.removeItem(key);
+    }
+  }
+}
+
+/**
+ * @param {StorageAdapter} storage
+ * @param {{ schemaVersion?: number, count?: number, entries: Record<string, string> }} mod
+ * @param {ModuleDef} def
+ * @param {BackupPersistHooks} [hooks]
+ */
+export async function writeModuleEntriesAsync(storage, mod, def, hooks) {
+  await removeModuleEntriesAsync(storage, def, hooks);
+  const persistEntry = hooks && hooks.persistEntry;
+  for (const [key, val] of Object.entries(mod.entries || {})) {
+    if (typeof val !== "string") throw new Error("BACKUP_INVALID_ENTRY");
+    if (def.kind === "key" && key !== def.key) throw new Error("BACKUP_INVALID_ENTRY_KEY");
+    if (def.kind === "prefix" && !key.startsWith(def.prefix)) throw new Error("BACKUP_INVALID_ENTRY_KEY");
+    if (persistEntry) await persistEntry(key, val);
+    else storage.setItem(key, val);
+  }
+}
+
+/**
  * @param {StorageAdapter} storage
  * @param {{ schemaVersion?: number, count?: number, entries: Record<string, string> }} mod
  * @param {ModuleDef} def
@@ -414,10 +456,11 @@ export async function applyBackupReplaceMode(storage, idb, backup) {
       if (!def) throw new Error("BACKUP_UNKNOWN_MODULE");
       const mod = backup.modules[modId];
       writeModuleEntries(storage, mod, def);
-      if (modId === "calendar" && idb.putCalendarMirror) {
-        const raw = mod.entries[CALENDAR_IDB.localStorageKey];
-        if (typeof raw === "string" && raw) await idb.putCalendarMirror(raw);
-      }
+    }
+    if (touched.includes("calendar") && idb.putCalendarMirror) {
+      const calMod = backup.modules.calendar;
+      const raw = calMod && calMod.entries[CALENDAR_IDB.localStorageKey];
+      if (typeof raw === "string" && raw) await idb.putCalendarMirror(raw);
     }
   } catch (err) {
     for (const def of MODULE_DEFS) {
@@ -425,6 +468,44 @@ export async function applyBackupReplaceMode(storage, idb, backup) {
       const snap = snapshot[def.id];
       if (snap) writeModuleEntries(storage, snap, def);
       else removeModuleEntries(storage, def);
+    }
+    if (touched.includes("calendar") && idb.putCalendarMirror) {
+      const snap = snapshot.calendar;
+      const raw = snap && snap.entries[CALENDAR_IDB.localStorageKey];
+      if (typeof raw === "string") await idb.putCalendarMirror(raw);
+    }
+    throw err;
+  }
+}
+
+/**
+ * Vault-aware import: await each protected-key persist/remove hook before continuing.
+ * @param {StorageAdapter} storage
+ * @param {IdbAdapter} idb
+ * @param {ReturnType<typeof validateBackupStructure>} backup
+ * @param {BackupPersistHooks} [hooks]
+ */
+export async function applyBackupReplaceModeAsync(storage, idb, backup, hooks) {
+  const snapshot = collectAllModules(storage);
+  const touched = Object.keys(backup.modules);
+  try {
+    for (const modId of touched) {
+      const def = MODULE_DEFS.find((d) => d.id === modId);
+      if (!def) throw new Error("BACKUP_UNKNOWN_MODULE");
+      const mod = backup.modules[modId];
+      await writeModuleEntriesAsync(storage, mod, def, hooks);
+    }
+    if (touched.includes("calendar") && idb.putCalendarMirror) {
+      const calMod = backup.modules.calendar;
+      const raw = calMod && calMod.entries[CALENDAR_IDB.localStorageKey];
+      if (typeof raw === "string" && raw) await idb.putCalendarMirror(raw);
+    }
+  } catch (err) {
+    for (const def of MODULE_DEFS) {
+      if (!touched.includes(def.id)) continue;
+      const snap = snapshot[def.id];
+      if (snap) await writeModuleEntriesAsync(storage, snap, def, hooks);
+      else await removeModuleEntriesAsync(storage, def, hooks);
     }
     if (touched.includes("calendar") && idb.putCalendarMirror) {
       const snap = snapshot.calendar;
@@ -480,6 +561,11 @@ export function userMessageForError(code) {
     BACKUP_UNSAFE_KEY: "Soubor obsahuje neplatnou strukturu.",
     BACKUP_DEPTH_EXCEEDED: "Soubor obsahuje příliš složitou strukturu.",
     BACKUP_STRING_TOO_LONG: "Soubor obsahuje příliš dlouhá data.",
+    VAULT_LOCKED_IMPORT:
+      "Před obnovou zálohy odemkněte osobní data (Můj infoUzel.cz / MindMenu). Obnova chráněných dat vyžaduje aktivní odemknutý trezor.",
+    VAULT_LOCKED_EXPORT:
+      "Před vytvořením zálohy odemkněte osobní data (Můj infoUzel.cz / MindMenu). Záloha chráněných dat vyžaduje aktivní odemknutý trezor.",
+    BACKUP_DATA_CHANGED: "Během exportu došlo ke změně dat. Zkuste export znovu.",
   };
   if (code && map[code]) return map[code];
   if (typeof code === "string" && code.startsWith("BACKUP_")) return "Zálohu se nepodařilo zpracovat.";
