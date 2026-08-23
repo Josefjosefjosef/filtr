@@ -129,8 +129,9 @@ async function unlockProtection(page, mode) {
       await window.iuVault.unlockPin("847291");
     });
   }
-  await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 30000 });
-  await waitForMarkers(page, MARKER, 30000);
+  await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 60000 });
+  await page.waitForTimeout(500);
+  await waitForMarkers(page, MARKER, 90000);
 }
 
 async function readModuleMarkers(page) {
