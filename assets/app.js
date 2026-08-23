@@ -10722,6 +10722,7 @@ try {
   "use strict";
 
   const TASKS_STORE_KEY = "iu.tasks.mvp.v1";
+  const VAULT_ENC_PREFIX = "iu:vault:enc:v1:";
   const TASKS_OVERLAY_DOM_VERSION = "2";
   const LEGACY_SILVER_KEY = "iu.infoUzel.silverTasks.v1";
   const SCHEMA_VERSION = 1;
@@ -10833,12 +10834,24 @@ try {
     return { id, title, note, dueAt, dueTime, priority, status, createdAt, updatedAt };
   }
 
+  function hasVaultEncBlob(key) {
+    try {
+      return !!localStorage.getItem(VAULT_ENC_PREFIX + key);
+    } catch (_) {
+      return false;
+    }
+  }
+
   function loadRaw(){
     try{
       const raw = localStorage.getItem(TASKS_STORE_KEY);
       const p = raw ? JSON.parse(raw) : null;
       if (p && p.schemaVersion === SCHEMA_VERSION && Array.isArray(p.tasks)) return p;
     }catch{}
+    if (hasVaultEncBlob(TASKS_STORE_KEY)) {
+      if (state.data && Array.isArray(state.data.tasks)) return state.data;
+      return { schemaVersion: SCHEMA_VERSION, tasks: [] };
+    }
     return { schemaVersion: SCHEMA_VERSION, tasks: [] };
   }
 
@@ -11604,6 +11617,13 @@ try {
       window.addEventListener("iu-local-store-changed", function (ev) {
         try {
           if (!ev || !ev.detail || ev.detail.key !== TASKS_STORE_KEY) return;
+          loadTasks();
+          const ov = getOverlay();
+          if (ov && !ov.hidden) render();
+        } catch (_) {}
+      });
+      window.addEventListener("iu-vault-hydrated", function () {
+        try {
           loadTasks();
           const ov = getOverlay();
           if (ov && !ov.hidden) render();

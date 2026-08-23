@@ -3,6 +3,8 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-08-23-iu-vault-desktop-mindmenu-gate",
+  "iu-vault-desktop-mindmenu-gate",
   "2026-08-23-iu-vault-security-ui-icentrum",
   "iu-vault-security-ui-icentrum",
   "2026-08-22-iu-vault-security-v1",
@@ -91,7 +93,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-08-23-iu-vault-security-ui-icentrum";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-08-23-iu-vault-desktop-mindmenu-gate";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

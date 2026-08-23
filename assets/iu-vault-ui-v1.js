@@ -6,6 +6,25 @@
   "use strict";
 
   let eventsBound = false;
+  let mindMenuGateBound = false;
+  let desktopHookTimer = null;
+
+  function isDesktopVaultGate() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function vaultNeedsUserUnlock() {
+    const vault = await waitVault();
+    const meta = await vault.getMeta();
+    const st = vault.getState();
+    const pinOn = !!(meta && meta.pinEnabled);
+    const devOn = !!(meta && meta.deviceEnabled);
+    return { vault, meta, st, needsLock: (pinOn || devOn) && !st.unlocked, pinOn, devOn };
+  }
 
   function waitVault() {
     return new Promise((resolve) => {
@@ -105,6 +124,173 @@
     document.body.appendChild(el);
   }
 
+  function ensureMindMenuLockGate() {
+    const scroll = document.querySelector("#iuMyInfoUzelOverlay .iuMyInfoUzelOverlay__scroll");
+    if (!scroll) return null;
+    let gate = document.getElementById("iuVaultMindMenuLockGate");
+    if (!gate) {
+      gate = document.createElement("div");
+      gate.id = "iuVaultMindMenuLockGate";
+      gate.className = "iuVaultMindMenuLockGate";
+      gate.hidden = true;
+      gate.innerHTML = [
+        '<div class="iuVaultMindMenuLockGate__panel" role="region" aria-labelledby="iuVaultMindMenuLockTitle">',
+        '  <h2 id="iuVaultMindMenuLockTitle" class="iuVaultMindMenuLockGate__title">Osobní data jsou zamčena</h2>',
+        '  <p class="iuVaultMindMenuLockGate__text">Pro pokračování odemkněte osobní data.</p>',
+        '  <label class="iuVaultMindMenuLockGate__label" id="iuVaultMindMenuPinLabel" hidden>PIN InfoUzlu</label>',
+        '  <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="iuVaultMindMenuLockGate__input" id="iuVaultMindMenuPinInput" hidden>',
+        '  <button type="button" class="iuInfoCenter__btn" id="iuVaultMindMenuUnlockPinBtn" hidden>Odemknout PINem</button>',
+        '  <button type="button" class="iuInfoCenter__btn" id="iuVaultMindMenuUnlockDeviceBtn" hidden>Odemknout zařízením</button>',
+        '  <p class="iuVaultMindMenuLockGate__err" id="iuVaultMindMenuLockErr" aria-live="polite"></p>',
+        "</div>",
+      ].join("");
+      scroll.insertBefore(gate, scroll.firstChild);
+    }
+    return gate;
+  }
+
+  async function refreshMindMenuLockGate(meta, st) {
+    const gate = ensureMindMenuLockGate();
+    if (!gate) return;
+    const vault = await waitVault();
+    const deviceSupported = await vault.detectDeviceSupport();
+    const pinOn = !!(meta && meta.pinEnabled);
+    const devOn = !!(meta && meta.deviceEnabled);
+    const pinInput = document.getElementById("iuVaultMindMenuPinInput");
+    const pinLabel = document.getElementById("iuVaultMindMenuPinLabel");
+    const unlockPin = document.getElementById("iuVaultMindMenuUnlockPinBtn");
+    const unlockDev = document.getElementById("iuVaultMindMenuUnlockDeviceBtn");
+    if (pinInput) pinInput.hidden = !pinOn;
+    if (pinLabel) pinLabel.hidden = !pinOn;
+    if (unlockPin) unlockPin.hidden = !pinOn;
+    if (unlockDev) unlockDev.hidden = !devOn || !deviceSupported;
+    gate.hidden = !((pinOn || devOn) && !st.unlocked);
+    const host = document.getElementById("iuMyInfoUzelMindMenuHost");
+    const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+    const locked = (pinOn || devOn) && !st.unlocked;
+    if (host) host.hidden = locked;
+    if (toolsHost) toolsHost.hidden = locked;
+  }
+
+  function hideMindMenuLockGate() {
+    const gate = document.getElementById("iuVaultMindMenuLockGate");
+    if (gate) gate.hidden = true;
+    const host = document.getElementById("iuMyInfoUzelMindMenuHost");
+    const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+    if (host) host.hidden = false;
+    if (toolsHost) toolsHost.hidden = false;
+  }
+
+  async function showDesktopMindMenuLockGate() {
+    const { meta, st } = await vaultNeedsUserUnlock();
+    ensureMindMenuLockGate();
+    await refreshMindMenuLockGate(meta, st);
+  }
+
+  async function remountDesktopMindMenuContent() {
+    if (!isDesktopVaultGate()) return;
+    if (!document.body.classList.contains("iu-myinfouzel-open")) return;
+    hideMindMenuLockGate();
+    if (window.__iuVaultBypassDesktopGate) return;
+    window.__iuVaultBypassDesktopGate = true;
+    try {
+      const orig = window.__iuVaultOrigMindMenuOpen;
+      if (typeof orig === "function") orig();
+    } catch (_) {}
+    window.__iuVaultBypassDesktopGate = false;
+  }
+
+  function installDesktopMindMenuHook() {
+    const wrapOrig = (orig) => {
+      if (!orig || orig._iuVaultGateHook) return orig;
+      window.__iuVaultOrigMindMenuOpen = orig;
+      const wrapped = async function iuVaultDesktopMindMenuOpen() {
+        if (window.__iuVaultBypassDesktopGate || !isDesktopVaultGate()) {
+          return orig.apply(this, arguments);
+        }
+        const { needsLock } = await vaultNeedsUserUnlock();
+        if (!needsLock) {
+          hideMindMenuLockGate();
+          return orig.apply(this, arguments);
+        }
+        const result = orig.apply(this, arguments);
+        await showDesktopMindMenuLockGate();
+        return result;
+      };
+      wrapped._iuVaultGateHook = true;
+      return wrapped;
+    };
+
+    window.__iuVaultRegisterDesktopMindMenuOpen = (orig) => {
+      window.iuArticleActionsOpenOverlay = wrapOrig(orig);
+    };
+
+    if (window.iuArticleActionsOpenOverlay) {
+      window.iuArticleActionsOpenOverlay = wrapOrig(window.iuArticleActionsOpenOverlay);
+    } else if (!desktopHookTimer) {
+      desktopHookTimer = setInterval(() => {
+        if (window.iuArticleActionsOpenOverlay) {
+          window.iuArticleActionsOpenOverlay = wrapOrig(window.iuArticleActionsOpenOverlay);
+          clearInterval(desktopHookTimer);
+          desktopHookTimer = null;
+        }
+      }, 120);
+      setTimeout(() => {
+        if (desktopHookTimer) {
+          clearInterval(desktopHookTimer);
+          desktopHookTimer = null;
+        }
+      }, 120000);
+    }
+  }
+
+  async function bindMindMenuGateEvents() {
+    if (mindMenuGateBound) return;
+    mindMenuGateBound = true;
+    const vault = await waitVault();
+
+    document.getElementById("iuVaultMindMenuUnlockPinBtn")?.addEventListener("click", async () => {
+      const pin = document.getElementById("iuVaultMindMenuPinInput")?.value || "";
+      const err = document.getElementById("iuVaultMindMenuLockErr");
+      try {
+        await vault.unlockPin(pin);
+        await vault.afterUnlock();
+        if (err) err.textContent = "";
+        const inp = document.getElementById("iuVaultMindMenuPinInput");
+        if (inp) inp.value = "";
+        await remountDesktopMindMenuContent();
+      } catch (e) {
+        if (err) err.textContent = "Neplatný PIN.";
+      }
+    });
+
+    document.getElementById("iuVaultMindMenuUnlockDeviceBtn")?.addEventListener("click", async () => {
+      const err = document.getElementById("iuVaultMindMenuLockErr");
+      try {
+        await vault.unlockDevice();
+        await vault.afterUnlock();
+        if (err) err.textContent = "";
+        await remountDesktopMindMenuContent();
+      } catch (e) {
+        if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
+      }
+    });
+
+    window.addEventListener("iu-vault-locked", () => {
+      if (!isDesktopVaultGate()) return;
+      if (document.body.classList.contains("iu-myinfouzel-open")) {
+        showDesktopMindMenuLockGate().catch(() => {});
+      }
+    });
+
+    window.addEventListener("iu-vault-unlocked", () => {
+      if (!isDesktopVaultGate()) return;
+      if (document.body.classList.contains("iu-myinfouzel-open")) {
+        remountDesktopMindMenuContent().catch(() => {});
+      }
+    });
+  }
+
   async function refreshSecurityUi() {
     const vault = await waitVault();
     if (!document.getElementById("iuVaultSecuritySection")) return;
@@ -157,7 +343,8 @@
     const overlay = document.getElementById("iuVaultLockOverlay");
     if (overlay) {
       const needsLock = (pinOn || devOn) && !st.unlocked;
-      overlay.hidden = !needsLock;
+      const useDesktopGate = isDesktopVaultGate();
+      overlay.hidden = !needsLock || useDesktopGate;
       const pinInput = document.getElementById("iuVaultPinInput");
       const pinLabel = document.getElementById("iuVaultPinLabel");
       const unlockPin = document.getElementById("iuVaultUnlockPinBtn");
@@ -318,6 +505,8 @@
 
   function init() {
     ensureLockOverlay();
+    bindMindMenuGateEvents().catch(() => {});
+    installDesktopMindMenuHook();
     ensureSecurityUi().catch(() => {});
     document.addEventListener("iu:info-center-mounted", () => {
       ensureSecurityUi().catch(() => {});

@@ -32,6 +32,17 @@ async function initVault() {
     notifyVaultMemoryHydrated();
   }
 
+  window.addEventListener("iu-vault-unlocked", () => {
+    readMeta()
+      .then((m) => {
+        if (!m || (!m.pinEnabled && !m.deviceEnabled)) return null;
+        return migratePlaintextToVault()
+          .then(() => preloadAllVaultRecords())
+          .then(() => notifyVaultMemoryHydrated());
+      })
+      .catch(() => {});
+  });
+
   window.addEventListener("iu-local-store-changed", (ev) => {
     const key = ev && ev.detail && ev.detail.key;
     if (key === "iu.calendar.store.v1") wipeCalendarMirrorIdb().catch(() => {});

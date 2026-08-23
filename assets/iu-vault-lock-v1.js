@@ -84,6 +84,10 @@ export async function lockVault(reason = "manual") {
   state.unlocked = false;
   state.lockedReason = reason;
   try {
+    const { clearVaultMemoryCache } = await import("./iu-vault-storage-v1.js");
+    clearVaultMemoryCache();
+  } catch (_) {}
+  try {
     window.dispatchEvent(new CustomEvent("iu-vault-locked", { detail: { reason } }));
   } catch (_) {}
 }
