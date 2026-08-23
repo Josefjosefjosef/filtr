@@ -160,40 +160,32 @@ function waitForPort(host, port, timeoutMs) {
   });
 }
 
-async function seedConfig(page, visibleIds) {
-  await page.evaluate(({ order, visibleIds }) => {
-    const cfg = {
-      version: 2,
-      order: order.slice(),
-      visible: visibleIds.slice(),
-      customButtons: [],
-    };
-    localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
+async function armQuicktoolsSeed(context, visibleIds) {
+  await context.addInitScript(({ order, visibleIds }) => {
+    try {
+      localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+      localStorage.setItem(
+        "infouzel_quicktools",
+        JSON.stringify({
+          version: 2,
+          order: order.slice(),
+          visible: visibleIds.slice(),
+          customButtons: [],
+        })
+      );
+    } catch (_) {}
   }, { order: DEFAULT_ORDER, visibleIds });
 }
 
-async function openSettings(page) {
-  await page.evaluate(() => document.querySelector("[data-iu-quicktools-settings]")?.click());
-  await page.waitForTimeout(600);
-  await page.waitForSelector("#iuQuickToolsSettingsPanel:not([hidden])", { timeout: 10000 });
+function visibleTileIds(tiles) {
+  return tiles.map((tile) => tile.id).sort();
 }
 
-async function closeSettings(page) {
-  await page.evaluate(() => document.querySelector(".iu-quicktools-settings-close")?.click());
-  await page.waitForTimeout(400);
-}
-
-async function setVisibilityBulk(page, hideIds) {
-  await openSettings(page);
-  for (const id of hideIds) {
-    await page.evaluate((tileId) => {
-      const cb = document.querySelector(`input[data-iu-quicktools-visible-toggle="${tileId}"]`);
-      if (!cb || !cb.checked) return;
-      cb.checked = false;
-      cb.dispatchEvent(new Event("change", { bubbles: true }));
-    }, id);
-  }
-  await closeSettings(page);
+function idsMatch(actualIds, expectedIds) {
+  if (actualIds.length !== expectedIds.length) return false;
+  const expected = expectedIds.slice().sort();
+  return actualIds.every((id, idx) => id === expected[idx]);
 }
 
 async function measureVisibleTiles(page, gridSel) {
@@ -297,9 +289,9 @@ function widthStable(baselineWidths, currentTiles, tol) {
   };
 }
 
-async function waitForQuickToolsGrid(page, gridSel, minVisible) {
-  await page.waitForSelector(gridSel, { timeout: 30000 });
-  await page.waitForFunction(({ gridSel, minVisible }) => {
+async function waitForExactVisibleQuicktools(page, gridSel, expectedIds) {
+  const expected = expectedIds.slice().sort();
+  await page.waitForFunction(({ gridSel, expected }) => {
     let grid = gridSel ? document.querySelector(gridSel) : null;
     if (!grid) {
       const grids = Array.from(
@@ -312,103 +304,101 @@ async function waitForQuickToolsGrid(page, gridSel, minVisible) {
       }) || null;
     }
     if (!grid) return false;
-    const section = grid.closest("section.iu-mmQuickLinks");
-    const stGrid = getComputedStyle(grid);
-    const rGrid = grid.getBoundingClientRect();
-    const rSection = section ? section.getBoundingClientRect() : rGrid;
-    if (stGrid.display === "none" || rGrid.width < 80 || rGrid.height < 40) return false;
     const visible = Array.from(grid.querySelectorAll(".iuTile[data-quicktool-id]")).filter((tile) => {
       if (tile.hidden) return false;
       const st = getComputedStyle(tile);
       const r = tile.getBoundingClientRect();
       return st.display !== "none" && r.width > 0 && r.height > 0;
     });
-    return visible.length >= minVisible;
-  }, { gridSel, minVisible }, { timeout: 30000 });
-  await page.waitForTimeout(400);
-  await page.evaluate(() => {
-    if (typeof window.iuQuickToolsScheduleLockAll === "function") window.iuQuickToolsScheduleLockAll();
-  });
+    if (visible.length !== expected.length) return false;
+    const ids = visible.map((tile) => tile.getAttribute("data-quicktool-id")).sort();
+    return ids.every((id, idx) => id === expected[idx]);
+  }, { gridSel, expected }, { timeout: 30000 });
   await page.waitForTimeout(200);
+  if (typeof page.evaluate === "function") {
+    await page.evaluate(() => {
+      if (typeof window.iuQuickToolsScheduleLockAll === "function") window.iuQuickToolsScheduleLockAll();
+    });
+    await page.waitForTimeout(200);
+  }
 }
 
-async function runViewport(browser, vp) {
+async function openViewportScenario(browser, vp, visibleIds) {
   const context = await bootstrapGuardContext(browser, {
     viewport: { width: vp.width, height: vp.height },
     isMobile: vp.isMobile,
     hasTouch: vp.isMobile,
   });
+  await armQuicktoolsSeed(context, visibleIds);
   const page = await context.newPage();
   const url = USE_LOCAL_SERVER ? BASE : `${BASE}${BASE.includes("?") ? "&" : "?"}iuRobust=1&nosw=1`;
   await page.goto(url, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
-  await page.waitForTimeout(2000);
-
-  await seedConfig(page, DEFAULT_ORDER.slice());
-  await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1500);
   await vp.openTools(page);
-  await page.waitForTimeout(1200);
-  await waitForQuickToolsGrid(page, vp.gridSel, 10);
+  await page.waitForTimeout(800);
+  await waitForExactVisibleQuicktools(page, vp.gridSel, visibleIds);
+  return { context, page };
+}
 
-  const full = await measureVisibleTiles(page, vp.gridSel);
+async function runViewport(browser, vp) {
+  const fullVisible = DEFAULT_ORDER.slice();
+  const { context: fullCtx, page: fullPage } = await openViewportScenario(browser, vp, fullVisible);
+  const full = await measureVisibleTiles(fullPage, vp.gridSel);
   const fullStable = widthStable(
     full.tiles.map((t) => t.width),
     full.tiles,
     WIDTH_TOL
   );
+  await fullCtx.close();
 
-  const hideMost = DEFAULT_ORDER.filter((id) => id !== "bakalari" && id !== "pridat_tlacitko");
-  await seedConfig(page, ["bakalari", "pridat_tlacitko"]);
-  await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
-  await vp.openTools(page);
-  await waitForQuickToolsGrid(page, vp.gridSel, 2);
-  const twoLeft = await measureVisibleTiles(page, vp.gridSel);
+  const twoVisible = ["bakalari", "pridat_tlacitko"];
+  const { context: twoCtx, page: twoPage } = await openViewportScenario(browser, vp, twoVisible);
+  const twoLeft = await measureVisibleTiles(twoPage, vp.gridSel);
   const twoStable = widthStable(
     full.tiles.map((t) => t.width),
     twoLeft.tiles,
     WIDTH_TOL
   );
+  await twoCtx.close();
 
-  await seedConfig(page, ["pridat_tlacitko"]);
-  await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
-  await vp.openTools(page);
-  await waitForQuickToolsGrid(page, vp.gridSel, 1);
-  const addOnly = await measureVisibleTiles(page, vp.gridSel);
+  const addOnlyVisible = ["pridat_tlacitko"];
+  const { context: addCtx, page: addPage } = await openViewportScenario(browser, vp, addOnlyVisible);
+  const addOnly = await measureVisibleTiles(addPage, vp.gridSel);
   const addOnlyStable = widthStable(
     full.tiles.map((t) => t.width),
     addOnly.tiles,
     WIDTH_TOL
   );
+  await addCtx.close();
 
-  await seedConfig(page, ["datovka", "bankovnictvi", "pridat_tlacitko"]);
-  await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
-  await vp.openTools(page);
-  await waitForQuickToolsGrid(page, vp.gridSel, 3);
-  const oddThree = await measureVisibleTiles(page, vp.gridSel);
+  const oddVisible = ["datovka", "bankovnictvi", "pridat_tlacitko"];
+  const { context: oddCtx, page: oddPage } = await openViewportScenario(browser, vp, oddVisible);
+  const oddThree = await measureVisibleTiles(oddPage, vp.gridSel);
   const oddStable = widthStable(
     full.tiles.map((t) => t.width),
     oddThree.tiles,
     WIDTH_TOL
   );
+  await oddCtx.close();
 
-  await context.close();
-
+  const hideMost = DEFAULT_ORDER.filter((id) => id !== "bakalari" && id !== "pridat_tlacitko");
   const pass =
     full.ok &&
-    full.tiles.length >= 10 &&
+    full.tiles.length === fullVisible.length &&
+    idsMatch(visibleTileIds(full.tiles), fullVisible) &&
     fullStable.pass &&
     twoLeft.ok &&
-    twoLeft.tiles.length === 2 &&
+    twoLeft.tiles.length === twoVisible.length &&
+    idsMatch(visibleTileIds(twoLeft.tiles), twoVisible) &&
     twoStable.pass &&
     addOnly.ok &&
-    addOnly.tiles.length === 1 &&
+    addOnly.tiles.length === addOnlyVisible.length &&
+    idsMatch(visibleTileIds(addOnly.tiles), addOnlyVisible) &&
     addOnlyStable.pass &&
     oddThree.ok &&
-    oddThree.tiles.length === 3 &&
+    oddThree.tiles.length === oddVisible.length &&
+    idsMatch(visibleTileIds(oddThree.tiles), oddVisible) &&
     oddStable.pass;
 
   return {
