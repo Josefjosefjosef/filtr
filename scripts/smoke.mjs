@@ -684,7 +684,11 @@ async function runSmoke() {
           const btn = document.getElementById("iuWeatherHistoryPlay");
           const card = document.getElementById("iuWeatherHistoryCard");
           const fb = document.getElementById("iuWeatherHistoryFallback");
-          if (btn && card && !card.hidden) return true;
+          if (btn && card && !card.hidden) {
+            const st = window.getComputedStyle(btn);
+            const r = btn.getBoundingClientRect();
+            if (st.display !== "none" && st.visibility !== "hidden" && r.width > 0 && r.height > 0) return true;
+          }
           if (fb && !fb.hidden) return true;
           return false;
         },
@@ -715,7 +719,10 @@ async function runSmoke() {
     if (!wxCardReady) {
       fail("Weather history card hidden after init (dataset or history load unavailable in smoke)");
     }
-    await page.click("#iuWeatherHistoryPlay");
+    try {
+      await page.locator("#iuWeatherHistoryPlay").scrollIntoViewIfNeeded({ timeout: 15000 });
+    } catch (_) {}
+    await page.click("#iuWeatherHistoryPlay", { timeout: 30000 });
     await page.waitForTimeout(900);
     try {
       await page.waitForSelector("#iuWeatherHistoryPlayerHost iframe.iuVideoIframe", { timeout: 20000 });

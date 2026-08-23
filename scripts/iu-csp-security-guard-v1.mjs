@@ -45,6 +45,7 @@ for (const csp of csps) {
   must(/base-uri\s+'self'/.test(csp), "base_uri_self", fails);
   must(/form-action\s+'self'/.test(csp), "form_action_self", fails);
   must(!hasBareUnsafeEval(csp), "no_unsafe_eval", fails);
+  must(!/script-src[^;]*'unsafe-inline'/.test(csp), "no_script_unsafe_inline", fails);
   must(/\bwasm-unsafe-eval\b/.test(csp), "wasm_unsafe_eval_allowed", fails);
   must(!/script-src[^;]*\bhttps:\b/.test(csp), "script_src_no_https_wildcard", fails);
   must(/worker-src\s+'self'/.test(csp), "worker_src_self", fails);
@@ -57,6 +58,13 @@ must(indexHtml.includes("iu-trusted-types-v1.js"), "trusted_types_script_loaded"
 must(
   indexHtml.indexOf("iu-trusted-types-v1.js") < indexHtml.indexOf("iu-vault-bootstrap-v1.js"),
   "trusted_types_before_vault",
+  fails
+);
+must(!/<link\b[^>]*\sonload\s*=/i.test(indexHtml), "no_link_inline_onload", fails);
+must(indexHtml.includes("iu-defer-stylesheet-v1.js"), "defer_stylesheet_script_present", fails);
+must(
+  indexHtml.indexOf("iu-defer-stylesheet-v1.js") < indexHtml.indexOf('data-iu-defer-app-css="1"'),
+  "defer_stylesheet_before_app_css",
   fails
 );
 

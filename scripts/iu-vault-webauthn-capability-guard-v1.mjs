@@ -39,9 +39,8 @@ async function main() {
   const deviceJs = path.join(REPO, "assets", "iu-vault-device-v1.js");
   const src = require("fs").readFileSync(deviceJs, "utf8");
   if (!/prf/i.test(src)) fails.push("device_module_missing_prf");
-  if (/isUnlocked\s*=\s*true/.test(src) && !/unwrapMdk|unwrapKey|unlockWithMdk/.test(src)) {
-    fails.push("device_unlock_without_unwrap");
-  }
+  if (!/seed-v1|wrappedSeed/.test(src)) fails.push("device_missing_seed_wrap");
+  if (/wrapMdkRaw\s*\(\s*mdk/.test(src)) fails.push("device_raw_mdk_wrap");
 
   const server = await new Promise((resolve) => {
     const proc = require("child_process").spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {

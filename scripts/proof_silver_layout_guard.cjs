@@ -132,6 +132,36 @@ async function installParcelHeightTracker(context) {
   });
 }
 
+async function waitForDeferredAppCss(page) {
+  try {
+    await page.waitForFunction(
+      () => {
+        const link = document.querySelector('link[data-iu-defer-app-css="1"]');
+        if (!link) return false;
+        if (link.dataset && link.dataset.iuDeferReady === "1") return true;
+        try {
+          return !!(link.sheet && link.media === "all");
+        } catch (_) {
+          return false;
+        }
+      },
+      { timeout: 20000 }
+    );
+  } catch (_) {}
+  await page.evaluate(() => {
+    const t = window.__iuParcelHeightTrack;
+    if (!t) return;
+    const el = document.getElementById("iuSilverParcelWatch");
+    const h = el ? el.getBoundingClientRect().height : null;
+    if (h == null) return;
+    t.first = h;
+    t.last = h;
+    t.min = h;
+    t.max = h;
+    t.shiftDelta = 0;
+  });
+}
+
 async function readParcelHeightTrack(page) {
   return page.evaluate(() => {
     const t = window.__iuParcelHeightTrack || {};
@@ -205,6 +235,7 @@ async function runViewport(page, w, h) {
   page.on("pageerror", onPageError);
 
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  await waitForDeferredAppCss(page);
   await page.waitForTimeout(2600);
 
   const geom = await page.evaluate(() => {

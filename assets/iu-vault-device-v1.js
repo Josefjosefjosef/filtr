@@ -1,10 +1,7 @@
 /**
- * Level 2 — device unlock via WebAuthn PRF (only when cryptographically supported).
+ * Level 2 — device unlock via WebAuthn PRF + seed-v1 MDK wrap.
  */
-import {
-  wrapMdkRaw,
-  unwrapMdkRaw,
-} from "./iu-vault-core-v1.js";
+import { importMdkRaw } from "./iu-vault-core-v1.js";
 import {
   readMeta,
   readKeyRecord,
@@ -15,12 +12,21 @@ import {
   storeDeviceWrap,
   lockVault,
 } from "./iu-vault-lock-v1.js";
+import { rotateVaultMdk } from "./iu-vault-storage-v1.js";
+import {
+  buildDeviceWrap,
+  mdkFromDeviceWrap,
+  wrapMdkSeedForDevice,
+  deriveDeviceAesKeyFromPrf,
+} from "./iu-vault-device-crypto-v1.js";
 
 const RP_NAME = "InfoUzel.cz";
 
 function rpId() {
   try {
-    return location.hostname || "infouzel.cz";
+    const host = location.hostname || "infouzel.cz";
+    if (host === "127.0.0.1" || host === "[::1]") return "localhost";
+    return host;
   } catch (_) {
     return "infouzel.cz";
   }
@@ -49,24 +55,15 @@ function prfSalt() {
   return crypto.getRandomValues(new Uint8Array(32));
 }
 
-export async function deriveWrapKeyFromPrf(prfBytes) {
-  return crypto.subtle.importKey(
-    "raw",
-    prfBytes,
-    "AES-KW",
-    false,
-    ["wrapKey", "unwrapKey"]
-  );
+function readPrfBytes(assertion) {
+  const prfOut = assertion.getClientExtensionResults().prf;
+  if (!prfOut || !prfOut.results || !prfOut.results.first) {
+    throw new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
+  }
+  return new Uint8Array(prfOut.results.first);
 }
 
-export async function setupDeviceUnlock() {
-  const supported = await detectDeviceUnlockSupport();
-  if (!supported) throw new Error("VAULT_DEVICE_UNSUPPORTED");
-
-  const mdk = getMdk();
-  const meta = await readMeta();
-  const salt = prfSalt();
-
+async function createCredentialWithPrf(salt) {
   const createOpts = {
     publicKey: {
       challenge: crypto.getRandomValues(new Uint8Array(32)),
@@ -98,20 +95,27 @@ export async function setupDeviceUnlock() {
     },
   };
   const assertion = await navigator.credentials.get(getOpts);
-  const prfOut = assertion.getClientExtensionResults().prf;
-  if (!prfOut || !prfOut.results || !prfOut.results.first) throw new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
+  return { cred, prfBytes: readPrfBytes(assertion) };
+}
 
-  const wrapKey = await deriveWrapKeyFromPrf(new Uint8Array(prfOut.results.first));
-  const wrappedMdk = await wrapMdkRaw(mdk, wrapKey);
-  const deviceWrap = {
-    type: "device",
-    credentialId: Array.from(new Uint8Array(cred.rawId)),
-    prfSalt: Array.from(salt),
-    wrappedMdk,
-    createdAt: new Date().toISOString(),
-  };
+export async function setupDeviceUnlock() {
+  const supported = await detectDeviceUnlockSupport();
+  if (!supported) throw new Error("VAULT_DEVICE_UNSUPPORTED");
 
-  const testMdk = await unwrapMdkRaw(wrapKey, wrappedMdk);
+  const oldMdk = getMdk();
+  const meta = await readMeta();
+  const seedBytes = crypto.getRandomValues(new Uint8Array(32));
+  const newMdk = await importMdkRaw(seedBytes);
+  await rotateVaultMdk(oldMdk, newMdk);
+
+  const salt = prfSalt();
+  const { cred, prfBytes } = await createCredentialWithPrf(salt);
+
+  const deviceAesKey = await deriveDeviceAesKeyFromPrf(prfBytes);
+  const wrappedSeed = await wrapMdkSeedForDevice(deviceAesKey, seedBytes);
+  const deviceWrap = await buildDeviceWrap(new Uint8Array(cred.rawId), salt, wrappedSeed);
+
+  const testMdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
   await unlockWithMdk(testMdk);
   await storeDeviceWrap(meta, deviceWrap);
   return { ok: true };
@@ -133,11 +137,8 @@ export async function unlockWithDevice() {
     },
   });
 
-  const prfOut = assertion.getClientExtensionResults().prf;
-  if (!prfOut || !prfOut.results || !prfOut.results.first) throw new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
-
-  const wrapKey = await deriveWrapKeyFromPrf(new Uint8Array(prfOut.results.first));
-  const mdk = await unwrapMdkRaw(wrapKey, deviceWrap.wrappedMdk);
+  const prfBytes = readPrfBytes(assertion);
+  const mdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
   await unlockWithMdk(mdk);
   return true;
 }
@@ -162,3 +163,5 @@ export async function disableDeviceUnlock() {
     await lockVault("device_disabled");
   }
 }
+
+export { mdkFromDeviceWrap } from "./iu-vault-device-crypto-v1.js";
