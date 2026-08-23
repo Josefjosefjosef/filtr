@@ -14,7 +14,7 @@ import path from "path";
 import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, installProtectedStorageSeed } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -101,20 +101,22 @@ const DEFAULT_ORDER = [
   "pridat_tlacitko",
 ];
 
-async function seedButtons(page, buttons) {
-  await page.evaluate(
-    ({ list, order }) => {
-      const ids = list.map((b) => b.id);
-      const cfg = {
-        version: 2,
-        order: order.slice(0, -1).concat(ids).concat(["pridat_tlacitko"]),
-        visible: order.slice(0, -1).concat(ids).concat(["pridat_tlacitko"]),
-        customButtons: list,
-      };
-      localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
-    },
-    { list: buttons, order: DEFAULT_ORDER }
-  );
+function buildQuicktoolsCfg(buttons) {
+  const ids = buttons.map((b) => b.id);
+  const fullOrder = DEFAULT_ORDER.slice(0, -1).concat(ids).concat(["pridat_tlacitko"]);
+  return {
+    version: 2,
+    order: fullOrder,
+    visible: fullOrder.slice(),
+    customButtons: buttons,
+  };
+}
+
+async function armButtonsSeed(context, buttons) {
+  const cfg = buildQuicktoolsCfg(buttons);
+  await installProtectedStorageSeed(context, [
+    { key: "infouzel_quicktools", value: JSON.stringify(cfg) },
+  ]);
 }
 
 function makeButtons(scenario) {
@@ -269,10 +271,10 @@ async function measureDesktopUnchanged(browser) {
     isMobile: false,
     hasTouch: false,
   });
+  await armButtonsSeed(context, makeButtons("wrap"));
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForTimeout(1500);
-  await seedButtons(page, makeButtons("wrap"));
   await page.reload({ waitUntil: "load" });
   await page.waitForTimeout(1500);
   const m = await page.evaluate(() => {
@@ -296,11 +298,11 @@ async function runViewport(browser, vp, scenario) {
     isMobile: true,
     hasTouch: true,
   });
+  await armButtonsSeed(context, makeButtons(scenario));
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
   await page.waitForTimeout(2000);
-  await seedButtons(page, makeButtons(scenario));
   await page.reload({ waitUntil: "load" });
   await page.waitForTimeout(2000);
   await openToolsGate(page);
@@ -328,10 +330,12 @@ async function liveApplyCount(page, count) {
       const ids = buttons.map((b) => b.id);
       const fullOrder = order.slice(0, -1).concat(ids).concat(["pridat_tlacitko"]);
       const cfg = { version: 2, order: fullOrder, visible: fullOrder.slice(), customButtons: buttons };
-      localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
       const panel = document.getElementById("iuMobileGatePanelTools");
       const beforeScrollH = panel ? panel.scrollHeight : 0;
       if (typeof window.iuQuickToolsApplyConfig === "function") window.iuQuickToolsApplyConfig(cfg);
+      try {
+        window.__iuGuardQuicktoolsCfg = cfg;
+      } catch (_) {}
       const afterScrollH = panel ? panel.scrollHeight : 0;
       const flow = document.getElementById("iuMobileMindMenuFlow");
       const mind = flow && flow.querySelector(".mindMenu");
@@ -375,7 +379,8 @@ async function runLiveAddViewport(browser, vp) {
   }
   // mutate without reload: edit + remove + add
   await page.evaluate((long) => {
-    const cfg = JSON.parse(localStorage.getItem("infouzel_quicktools"));
+    const cfg = window.__iuGuardQuicktoolsCfg;
+    if (!cfg || !Array.isArray(cfg.customButtons) || !cfg.customButtons.length) return;
     cfg.customButtons[0].label = long + " " + long;
     cfg.customButtons = cfg.customButtons.slice(0, 18);
     const keep = new Set(cfg.customButtons.map((b) => b.id).concat(["pridat_tlacitko"]));
@@ -390,8 +395,8 @@ async function runLiveAddViewport(browser, vp) {
     if (pridat >= 0) cfg.order.splice(pridat, 0, "cb_live_extra");
     else cfg.order.push("cb_live_extra");
     cfg.visible = cfg.order.slice();
-    localStorage.setItem("infouzel_quicktools", JSON.stringify(cfg));
-    window.iuQuickToolsApplyConfig(cfg);
+    window.__iuGuardQuicktoolsCfg = cfg;
+    if (typeof window.iuQuickToolsApplyConfig === "function") window.iuQuickToolsApplyConfig(cfg);
   }, LONG);
   await page.waitForTimeout(300);
   steps.afterMutate = await measureGrid(page);
@@ -408,7 +413,11 @@ async function runLiveAddViewport(browser, vp) {
   await openToolsGate(page);
   steps.portraitBack = await measureGrid(page);
 
-  await page.evaluate(() => localStorage.removeItem("infouzel_quicktools"));
+  await page.evaluate(() => {
+    try {
+      delete window.__iuGuardQuicktoolsCfg;
+    } catch (_) {}
+  });
   await context.close();
   return { viewport: vp.name, scenario: "live_add", steps };
 }
