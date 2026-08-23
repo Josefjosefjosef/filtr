@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-vault-l2-csp-v1-20260823",
+    "freezeId": "iu-vault-security-ui-icentrum-v1-20260823",
     "preStabilizationProductionSha": "f74d1f18ea250142a45a0d4a58f6806891540084",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-23T01:16:00.000Z",
-    "note": "Freeze bump: L2 seed-v1 + CSP hashes + iu-defer-stylesheet-v1 (no link onload).",
+    "updatedAt": "2026-08-23T08:50:00.000Z",
+    "note": "Freeze bump: Info Center vault security UI lazy-mount + SW cache bust.",
     "files": {
-        "projects/index.html": "4f8853a0c9b2c85f5a88b39d7b6d209ef38a0e5ad8ba50b7e1f63b1a800455a9",
+        "projects/index.html": "87f908f299d370158314341d5a6b0f62e81015b8441e18a0fd6062120592eb95",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "eadc3580b6f8f059e00f5b9fe2f02b4cbcd9c48de6a1a9bb012953841d7f4152",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "1cf9220b500ea8c2289cf9b56179762e0c80f62872ff2c46c26b896e2766f801",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "18432c3e7709bd4c46526990732663f175e7ae79bbce07d929f8861a2610981d",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "eac1255cecaa1dd244c65d0a6224f283416aa5b2d7839d5c3bfd45d8467cdbfe",
+        "sw.js": "449a464dd7064c0b0e5b02c6147c6698496a464ff8924bb031112f07dd028a69",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,7 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-08-22-iu-vault-security-v1\"",
+            "CACHE_VERSION = \"2026-08-23-iu-vault-security-ui-icentrum\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",
