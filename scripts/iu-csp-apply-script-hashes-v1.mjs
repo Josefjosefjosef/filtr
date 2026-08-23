@@ -2,6 +2,7 @@
 /**
  * Compute inline script SHA-256 hashes and apply to CSP (removes script-src unsafe-inline).
  * Run: node scripts/iu-csp-apply-script-hashes-v1.mjs
+ * Deploy artifact: IU_CSP_APPLY_INDEX=index.html node scripts/iu-csp-apply-script-hashes-v1.mjs
  */
 import fs from "fs";
 import crypto from "crypto";
@@ -9,7 +10,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const INDEX = path.join(ROOT, "projects", "index.html");
+const INDEX = process.env.IU_CSP_APPLY_INDEX
+  ? path.resolve(ROOT, process.env.IU_CSP_APPLY_INDEX)
+  : path.join(ROOT, "projects", "index.html");
 const HEADERS = path.join(ROOT, "_headers");
 
 function extractInlineScriptHashes(html) {
@@ -61,6 +64,7 @@ fs.writeFileSync(HEADERS, newHeaders);
 console.log(
   "IU_CSP_SCRIPT_HASHES_APPLIED=" +
     JSON.stringify({
+      indexPath: path.relative(ROOT, INDEX),
       hashCount: hashes.length,
       scriptSrcLength: scriptSrcLine.length,
       removedUnsafeInline: true,
