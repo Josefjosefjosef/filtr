@@ -4,6 +4,7 @@
  * Canonical app URL is https://infouzel.cz/ — never /projects/ as the hub.
  */
 import { createRequire } from "node:module";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,7 +26,37 @@ try {
 
 const PROD = "https://infouzel.cz";
 const fails = [];
+const pending = [];
 const report = { steps: [], at: new Date().toISOString() };
+
+function isCspInlineHashMismatchError(msg) {
+  const t = String(msg || "");
+  return (
+    /Executing inline script violates the following Content Security Policy directive/i.test(t) &&
+    /Either the 'unsafe-inline' keyword, a hash \('sha256-/.test(t)
+  );
+}
+
+function localRepoCspInlineGuardClean() {
+  try {
+    const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
+    const headers = fs.readFileSync(path.join(ROOT, "_headers"), "utf8");
+    const scriptSrcMeta = (index.match(/script-src\s+([^;]+)/i) || [])[1] || "";
+    const scriptSrcHeader = (headers.match(/script-src\s+([^;]+)/i) || [])[1] || "";
+    if (/'unsafe-inline'/.test(scriptSrcMeta) || /'unsafe-inline'/.test(scriptSrcHeader)) return false;
+    const re = /<script(?![^>]*\bsrc\s*=)([^>]*)>([\s\S]*?)<\/script>/gi;
+    let m;
+    while ((m = re.exec(index))) {
+      const body = m[2];
+      if (!body.trim()) continue;
+      const hash = `'sha256-${crypto.createHash("sha256").update(body, "utf8").digest("base64")}'`;
+      if (!scriptSrcMeta.includes(hash)) return false;
+    }
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 
 function ok(id, cond, detail) {
   report.steps.push({ id, ok: !!cond, detail: detail || "" });
@@ -130,7 +161,19 @@ async function main() {
     ok("browser_manifest_link", !String(info.manifest || "").includes("/projects/"), String(info.manifest || ""));
     ok("browser_sw_scope", !info.sw || !String(info.sw.scope || "").includes("/projects/"), JSON.stringify(info.sw));
     ok("browser_body", info.bodyLen > 40 || info.hasApp, String(info.bodyLen));
-    ok("console_errors_zero", consoleErrors.length === 0, consoleErrors.slice(0, 5).join(" | "));
+    const eventName = String(process.env.GITHUB_EVENT_NAME || "");
+    const onlyCspHashMismatch =
+      consoleErrors.length > 0 && consoleErrors.every(isCspInlineHashMismatchError);
+    if (
+      onlyCspHashMismatch &&
+      eventName === "pull_request" &&
+      localRepoCspInlineGuardClean()
+    ) {
+      pending.push("csp_script_hash_mismatch_pending_deploy");
+      report.cspHashMismatchConsole = consoleErrors.slice(0, 3);
+    } else {
+      ok("console_errors_zero", consoleErrors.length === 0, consoleErrors.slice(0, 5).join(" | "));
+    }
     ok("page_errors_zero", pageErrors.length === 0, pageErrors.slice(0, 5).join(" | "));
     await browser.close();
   } else {
@@ -144,6 +187,9 @@ async function main() {
     console.log("FAIL_COUNT=" + fails.length);
     for (const f of fails) console.log("FAIL " + f);
     process.exit(1);
+  }
+  if (pending.length) {
+    console.log("IU_ROOT_ROUTING_PROD_PENDING_DEPLOY=" + JSON.stringify(pending));
   }
   console.log("[iu-root-routing-prod-guard] OK");
 }
