@@ -8090,6 +8090,11 @@ function iuIsBenignResizeObserverLoopError(ev) {
     if (typeof window !== "undefined") {
       window.iuArticleActionsOpenOverlay = iuArticleActionsOpenOverlay;
       window.iuArticleActionsCloseOverlay = iuArticleActionsCloseOverlay;
+      try {
+        if (typeof window.__iuVaultRegisterDesktopMindMenuOpen === "function") {
+          window.__iuVaultRegisterDesktopMindMenuOpen(iuArticleActionsOpenOverlay);
+        }
+      } catch (_) {}
     }
   } catch (_) {}
 
