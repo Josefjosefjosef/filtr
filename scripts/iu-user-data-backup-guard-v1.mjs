@@ -220,6 +220,7 @@ async function runUnitTests() {
   }
 
   try {
+    const name = formatBackupFilename(new Date());
     if (!name.endsWith(BACKUP_FILE_EXT)) throw new Error("filename ext");
     if (!name.startsWith("InfoUzel-zaloha-")) throw new Error("filename prefix");
     pass("export_filename_json");
