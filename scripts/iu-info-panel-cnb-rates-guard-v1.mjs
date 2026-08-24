@@ -50,9 +50,29 @@ function auditWorkflow() {
   assert(wf.includes("gh pr merge"), "workflow must enable auto-merge");
 }
 
+async function auditWorkflowEnabledInCi() {
+  const repo = process.env.GITHUB_REPOSITORY || "";
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+  if (!repo || !token || process.env.GITHUB_ACTIONS !== "true") return;
+  const res = await fetch(
+    `https://api.github.com/repos/${repo}/actions/workflows/update-info-panel-snapshot.yml`,
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+  assert(res.ok, "snapshot workflow metadata must be readable in CI");
+  const body = await res.json();
+  assert(body && body.state === "active", `snapshot workflow must be active not ${body && body.state}`);
+}
+
 async function main() {
   auditBuildScript();
   auditWorkflow();
+  await auditWorkflowEnabledInCi();
 
   const liveText = await fetchLiveCnbSample();
   const parsed = parseCnbRatesText(liveText);
