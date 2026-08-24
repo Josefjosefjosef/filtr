@@ -3,6 +3,8 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-08-24-iu-vault-mindmenu-device-prf-create-v1",
+  "iu-vault-mindmenu-device-prf-create-v1",
   "2026-08-24-iu-vault-mindmenu-lock-functional-v1",
   "iu-vault-mindmenu-lock-functional-v1",
   "2026-08-24-iu-vault-mindmenu-persist-v2",
@@ -101,7 +103,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-08-24-iu-vault-mindmenu-lock-functional-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-08-24-iu-vault-mindmenu-device-prf-create-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
