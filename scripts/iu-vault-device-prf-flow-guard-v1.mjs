@@ -141,6 +141,7 @@ async function runMockFlowTests(context, fails) {
     await waitForVaultReady(page);
     const out = await page.evaluate(async (cfg) => {
       if (window.PublicKeyCredential) {
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
         PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
       }
       const prfBytesFromCfg = (part) => {
