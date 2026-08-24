@@ -129,6 +129,10 @@ async function main() {
     await waitForVaultReady(page);
 
     const cancelResult = await page.evaluate(async () => {
+      if (window.PublicKeyCredential) {
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
+        PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
+      }
       const originalCreate = navigator.credentials.create.bind(navigator.credentials);
       navigator.credentials.create = async () => {
         const err = new DOMException("User cancelled", "NotAllowedError");
@@ -160,6 +164,10 @@ async function main() {
     if (cancelResult.device || cancelResult.deviceEnabled) fails.push("cancel_partial_l2");
 
     const timeoutResult = await page.evaluate(async () => {
+      if (window.PublicKeyCredential) {
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
+        PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
+      }
       const originalCreate = navigator.credentials.create.bind(navigator.credentials);
       navigator.credentials.create = () =>
         new Promise((_, reject) => {
@@ -198,6 +206,10 @@ async function main() {
 
     if (virtualAuth) {
       const setup = await page.evaluate(async () => {
+        if (window.PublicKeyCredential) {
+          PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
+          PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
+        }
         try {
           await window.iuVault.setupDevice();
           const meta = await window.iuVault.getMeta();
