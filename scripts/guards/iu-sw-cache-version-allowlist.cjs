@@ -99,7 +99,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-08-24-iu-vault-mindmenu-persist";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-08-24-iu-vault-mindmenu-persist-v2";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
