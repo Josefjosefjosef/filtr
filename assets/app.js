@@ -474,7 +474,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=pc-vault-mindmenu-persist-v1-20260824";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-persist-v1-20260824";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -10591,7 +10591,7 @@ try {
 // === Notes overlay module (lazy boot; heavy IIFE in iu-notes-overlay-v1.js) ===
 (function iuBootNotesOverlayLazy() {
   "use strict";
-  var NOTES_URL = "./iu-notes-overlay-v1.js?v=pc-vault-mindmenu-persist-v1-20260824";
+  var NOTES_URL = "./iu-notes-overlay-v1.js?v=perf-stage5-notes-v1-20260819-pc-vault-mindmenu-persist-v1-20260824";
   var p = null;
 
   function ready() {
@@ -12041,7 +12041,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 // === Calendar overlay module (lazy boot; heavy IIFE in iu-calendar-overlay-v1.js) ===
 (function iuBootCalendarOverlayLazy() {
   "use strict";
-  var CAL_URL = "./iu-calendar-overlay-v1.js?v=pc-vault-mindmenu-persist-v1-20260824";
+  var CAL_URL = "./iu-calendar-overlay-v1.js?v=perf-stage4-calendar-v1-20260818-pc-vault-mindmenu-persist-v1-20260824";
   var p = null;
 
   function ready() {
