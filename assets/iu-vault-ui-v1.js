@@ -90,7 +90,8 @@
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
       "  </fieldset>",
       '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden>',
-      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu (min. 6 číslic)</label>',
+      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Nepoužívejte stejné číslice opakovaně ani jednoduchou číselnou řadu (např. 123456).</p>',
+      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu</label>',
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupNew" />',
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupConfirm" />',
@@ -284,23 +285,44 @@
     const warn =
       "PIN nelze obnovit. Pokud jej zapomenete, nebude možné uložená osobní data otevřít. V takovém případě bude nutné osobní data v tomto prohlížeči vymazat.";
     if (!window.confirm(warn)) return null;
-    const pin = window.prompt("Zadejte PIN (min. 6 číslic):");
+    const pin = window.prompt("Zadejte PIN (min. 6 číslic, bez opakování a bez jednoduché řady):");
     if (pin == null) return null;
     const confirmPin = window.prompt("Zadejte PIN znovu pro potvrzení:");
     if (confirmPin == null) return null;
     return { pin, confirm: confirmPin };
   }
 
+  function pinSetupUserMessage(err) {
+    const code = String(err && err.message ? err.message : err);
+    if (code.startsWith("VAULT_PIN_WEAK|invalid_format")) {
+      return "PIN musí mít alespoň 6 číslic (pouze číslice 0–9).";
+    }
+    if (code.startsWith("VAULT_PIN_WEAK|")) {
+      return "Zvolte méně snadno uhodnutelný PIN. Nepoužívejte stejné číslice ani jednoduchou číselnou řadu.";
+    }
+    if (code.includes("VAULT_PIN_MISMATCH")) return "PIN a potvrzení se neshodují.";
+    return code;
+  }
+
   function deviceSetupUserMessage(err) {
     const code = String(err && err.message ? err.message : err);
+    const stepMatch = code.match(/step:([0-9]{2}-[a-z0-9-]+)/);
+    const errNameMatch = code.match(/error\.name:([^|]+)/);
+    const opMatch = code.match(/operation:([^|]+)/);
+    const keyMatch = code.match(/recordKey:([^|]+)/);
     const phaseMatch = code.match(/^(DEVICE_[A-Z0-9_]+)/);
     if (phaseMatch) {
       const phase = phaseMatch[1];
-      const domMatch = code.match(/\|(NotAllowedError|SecurityError|InvalidStateError|NotSupportedError|TypeError|AbortError)(?:\||$)/);
-      if (domMatch) {
-        return `Nastavení zabezpečení zařízením se nezdařilo (${phase}, ${domMatch[1]}).`;
-      }
-      return `Nastavení zabezpečení zařízením se nezdařilo (${phase}).`;
+      const step = stepMatch ? stepMatch[1] : "";
+      const errName = errNameMatch ? errNameMatch[1] : "";
+      const op = opMatch ? opMatch[1] : "";
+      const key = keyMatch ? keyMatch[1] : "";
+      const parts = [phase];
+      if (step) parts.push(`krok ${step}`);
+      if (errName) parts.push(errName);
+      if (op) parts.push(op);
+      if (key) parts.push(`key:${key}`);
+      return `Nastavení zabezpečení zařízením se nezdařilo (${parts.join(", ")}).`;
     }
     if (code.includes("VAULT_DEVICE_CANCELLED")) {
       return "Zabezpečení zařízením nebylo dokončeno. Nastavení zůstává beze změny.";
@@ -437,6 +459,11 @@
           say("PIN a potvrzení se neshodují.");
           return;
         }
+        const pinReject = vault.validatePinPolicy ? vault.validatePinPolicy(pin) : null;
+        if (pinReject) {
+          say(pinSetupUserMessage(new Error(`VAULT_PIN_WEAK|${pinReject}`)));
+          return;
+        }
         try {
           await vault.setupPin(pin, confirmPin);
           if (pinNew) pinNew.value = "";
@@ -444,7 +471,7 @@
           say("InfoUzel je nyní chráněn pomocí PINu.");
           await notifySecurityChanged(vault);
         } catch (e) {
-          say(String(e.message || e));
+          say(pinSetupUserMessage(e));
         }
         return;
       }
