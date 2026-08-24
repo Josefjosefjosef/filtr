@@ -13,7 +13,7 @@ import {
   unlockWithMdk,
   storeDeviceWrap,
 } from "./iu-vault-lock-v1.js";
-import { rotateVaultMdk } from "./iu-vault-storage-v1.js";
+import { rotateVaultMdk, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import {
   buildDeviceWrap,
   mdkFromDeviceWrap,
@@ -56,17 +56,47 @@ async function stableDeviceUserId() {
 }
 
 export async function detectDeviceUnlockSupport() {
-  if (!window.PublicKeyCredential) return false;
+  if (!window.PublicKeyCredential || !window.isSecureContext) return false;
   try {
     if (await hasDeviceConfigured()) return true;
   } catch (_) {}
+  let platformAvailable = false;
+  try {
+    if (typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === "function") {
+      platformAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    } else {
+      platformAvailable = true;
+    }
+  } catch (_) {
+    platformAvailable = false;
+  }
+  if (!platformAvailable) return false;
   try {
     if (typeof PublicKeyCredential.getClientCapabilities === "function") {
       const caps = await PublicKeyCredential.getClientCapabilities();
-      if (caps && caps["extension:prf"]) return true;
+      if (caps && caps["extension:prf"] === true) return true;
+      if (caps && caps["extension:prf"] === false) return false;
     }
   } catch (_) {}
-  return false;
+  const standalone =
+    (typeof window.matchMedia === "function" && window.matchMedia("(display-mode: standalone)").matches) ||
+    window.navigator.standalone === true;
+  if (standalone) return true;
+  if (isLikelyMobileBrowserTab()) return false;
+  return true;
+}
+
+function isLikelyMobileBrowserTab() {
+  try {
+    const ua = String(navigator.userAgent || "");
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+    const standalone =
+      window.navigator.standalone === true ||
+      (typeof window.matchMedia === "function" && window.matchMedia("(display-mode: standalone)").matches);
+    return isMobile && !standalone;
+  } catch (_) {
+    return false;
+  }
 }
 
 function prfSalt() {
@@ -98,6 +128,15 @@ function sanitizeDeviceErrorDetail(name, msg) {
 function devicePhaseError(code, detail) {
   if (detail) return new Error(`${code}|${detail}`);
   return new Error(code);
+}
+
+function persistStepFromError(err) {
+  const msg = String(err && err.message ? err.message : err);
+  if (msg.includes("VAULT_ROTATE_FAIL")) return "rotate";
+  if (msg.includes("VAULT_IDB") || (err && err.name === "QuotaExceededError")) return "idb";
+  if (msg.includes("VAULT_LOCKED")) return "unlock";
+  if (msg.includes("writeMeta") || msg.includes("writeKeyRecord")) return "meta";
+  return "persist";
 }
 
 export function mapDeviceSetupError(err) {
@@ -327,6 +366,25 @@ async function verifyDeviceWrapUnlock(deviceWrap, credRawId, salt, signal) {
   }
 }
 
+async function persistDeviceActivation(meta, deviceWrap, oldMdk, testMdk, rotatedRef) {
+  try {
+    await flushPendingVaultWrites();
+    await rotateVaultMdk(oldMdk, testMdk);
+    rotatedRef.value = true;
+    await unlockWithMdk(testMdk);
+    await storeDeviceWrap(meta, deviceWrap);
+    await clearPendingDeviceSetup();
+  } catch (err) {
+    const name = err && err.name ? String(err.name) : "";
+    const msg = String(err && err.message ? err.message : err);
+    const step = persistStepFromError(err);
+    throw devicePhaseError(
+      "DEVICE_PERSIST_FAILED",
+      `step:${step}|${sanitizeDeviceErrorDetail(name, msg)}`
+    );
+  }
+}
+
 export async function setupDeviceUnlock() {
   const supported = await detectDeviceUnlockSupport();
   if (!supported) throw new Error("VAULT_DEVICE_UNSUPPORTED");
@@ -334,10 +392,9 @@ export async function setupDeviceUnlock() {
   const oldMdk = getMdk();
   const meta = await readMeta();
   const seedBytes = crypto.getRandomValues(new Uint8Array(32));
-  const newMdk = await importMdkRaw(seedBytes);
 
-  let rotated = false;
   let testMdk = null;
+  const rotatedRef = { value: false };
   try {
     const salt = prfSalt();
     const { cred, prfBytes, salt: prfSaltUsed } = await createCredentialWithPrf(salt);
@@ -357,20 +414,11 @@ export async function setupDeviceUnlock() {
       await verifyDeviceWrapUnlock(deviceWrap, cred.rawId, activeSalt, signal);
     });
 
-    try {
-      await rotateVaultMdk(oldMdk, testMdk);
-      rotated = true;
-      await unlockWithMdk(testMdk);
-      await storeDeviceWrap(meta, deviceWrap);
-      await clearPendingDeviceSetup();
-    } catch (err) {
-      throw devicePhaseError("DEVICE_PERSIST_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
-    }
-
+    await persistDeviceActivation(meta, deviceWrap, oldMdk, testMdk, rotatedRef);
     return { ok: true };
   } catch (err) {
-    if (rotated) {
-      await rollbackMdkRotation(oldMdk, testMdk || newMdk);
+    if (rotatedRef.value && testMdk) {
+      await rollbackMdkRotation(oldMdk, testMdk);
     }
     throw mapDeviceSetupError(err);
   }

@@ -70,6 +70,9 @@ function staticSourceChecks(fails) {
   const cryptoJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-device-crypto-v1.js"), "utf8");
   if (!/format:\s*["']seed-v1["']/.test(cryptoJs)) fails.push("device_missing_seed_v1_format");
   if (!/rotateVaultMdk/.test(deviceJs)) fails.push("device_missing_mdk_rotation");
+  if (!/persistDeviceActivation|flushPendingVaultWrites/.test(deviceJs)) {
+    fails.push("device_missing_atomic_persist");
+  }
   if (/wrapMdkRaw\s*\(\s*mdk/.test(deviceJs)) fails.push("device_still_wraps_raw_mdk");
   if (!/wrappedSeed/.test(deviceJs)) fails.push("device_missing_wrapped_seed");
   if (/isUnlocked\s*=\s*true/.test(deviceJs) && !/mdkFromDeviceWrap|unlockWithMdk/.test(deviceJs)) {

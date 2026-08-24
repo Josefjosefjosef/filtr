@@ -1,7 +1,7 @@
 /**
  * Vault record storage + localStorage shim.
  */
-import { encryptString, decryptString } from "./iu-vault-core-v1.js";
+import { encryptString, decryptString, VAULT_SCHEMA_VERSION } from "./iu-vault-core-v1.js";
 import { readRecord, writeRecord, deleteRecord } from "./iu-vault-db-v1.js";
 import { getMdk, touchActivity, getVaultState } from "./iu-vault-lock-v1.js";
 import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
@@ -225,7 +225,11 @@ export function listEncryptedStorageKeys() {
   return keys;
 }
 
-/** Re-encrypt all vault records when rotating MDK (e.g. PIN setup). */
+function isVaultEnvelope(value) {
+  return !!(value && value.v === VAULT_SCHEMA_VERSION && value.ct);
+}
+
+/** Re-encrypt all vault records when rotating MDK (e.g. PIN / L2 setup). */
 export async function rotateVaultMdk(oldMdk, newMdk) {
   const { listRecordKeys, readRecord } = await import("./iu-vault-db-v1.js");
   const keys = new Set(await listRecordKeys());
@@ -235,21 +239,52 @@ export async function rotateVaultMdk(oldMdk, newMdk) {
     if (k && k.startsWith(ENC_PREFIX)) keys.add(k.slice(ENC_PREFIX.length));
   }
   for (const k of keys) {
-    let envelope = await readRecord(k);
-    if (!envelope) {
-      const raw = nativeGetItem(encStorageKey(k));
-      if (raw) {
-        try {
-          envelope = JSON.parse(raw);
-        } catch (_) {
-          envelope = null;
+    if (!isProtectedStorageKey(k)) continue;
+    let pt = null;
+    if (memoryCache.has(k)) {
+      pt = memoryCache.get(k);
+    }
+    if (pt == null) {
+      let envelope = await readRecord(k);
+      if (!envelope) {
+        const raw = nativeGetItem(encStorageKey(k));
+        if (raw) {
+          try {
+            envelope = JSON.parse(raw);
+          } catch (_) {
+            envelope = null;
+          }
+        }
+      }
+      if (!envelope) continue;
+      if (!isVaultEnvelope(envelope)) continue;
+      try {
+        pt = await decryptString(oldMdk, k, envelope);
+      } catch (err) {
+        captureNativeLocalStorage();
+        const nativePlain = nativeGetItem(k);
+        if (nativePlain != null) {
+          pt = nativePlain;
+        } else {
+          continue;
         }
       }
     }
-    if (!envelope) continue;
-    const pt = await decryptString(oldMdk, k, envelope);
-    const newEnv = await encryptString(newMdk, k, pt);
-    await persistEnvelope(k, newEnv);
+    let newEnv = null;
+    try {
+      newEnv = await encryptString(newMdk, k, pt);
+    } catch (err) {
+      const name = err && err.name ? String(err.name) : "";
+      const msg = String(err && err.message ? err.message : err);
+      throw new Error(`VAULT_ROTATE_FAIL:${k}:${name || "encrypt"}:${msg}`);
+    }
+    try {
+      await persistEnvelope(k, newEnv);
+    } catch (err) {
+      const name = err && err.name ? String(err.name) : "";
+      const msg = String(err && err.message ? err.message : err);
+      throw new Error(`VAULT_ROTATE_FAIL:${k}:${name || "persist"}:${msg}`);
+    }
     memoryCache.set(k, pt);
   }
 }
