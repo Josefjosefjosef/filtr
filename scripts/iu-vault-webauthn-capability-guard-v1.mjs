@@ -71,7 +71,7 @@ async function main() {
     if (!cap.ok) fails.push(cap.reason || "capability_check_failed");
 
     const vaultUi = fs.readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
-    if (!/iuVaultEnableDeviceBtn/.test(vaultUi)) fails.push("vault_ui_missing_device_btn");
+    if (!/iuVaultMindMenuMethodDeviceLabel|value="device"/.test(vaultUi)) fails.push("vault_ui_missing_device_method");
     if (!/iuVaultDeviceUnsupported/.test(vaultUi)) fails.push("vault_ui_missing_unsupported");
   } finally {
     await browser.close();
