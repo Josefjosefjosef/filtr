@@ -49,6 +49,30 @@ function deviceUnlockUserMessage(err) {
   return "Odemknutí zařízením se nezdařilo.";
 }
 
+function installLockedPersonalEntryBlock() {
+  if (installLockedPersonalEntryBlock._done) return;
+  installLockedPersonalEntryBlock._done = true;
+
+  const wrapOpenOverlay = () => {
+    const current = window.iuArticleActionsOpenOverlay;
+    if (typeof current !== "function" || current.__iuVaultLockWrapped) return;
+    const wrapped = function iuVaultBlockedArticleActionsOpenOverlay() {
+      if (document.documentElement.classList.contains("iu-vault-app-locked")) return;
+      return current.apply(this, arguments);
+    };
+    wrapped.__iuVaultLockWrapped = true;
+    window.iuArticleActionsOpenOverlay = wrapped;
+  };
+
+  wrapOpenOverlay();
+  window.addEventListener("iu-vault-ready", wrapOpenOverlay);
+  document.addEventListener("DOMContentLoaded", wrapOpenOverlay);
+  try {
+    const obs = new MutationObserver(wrapOpenOverlay);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (_) {}
+}
+
 export async function refreshGlobalAppLockUi(vault) {
   if (!vault) return;
   const configured = await vault.getSecurityConfigured();
@@ -59,6 +83,15 @@ export async function refreshGlobalAppLockUi(vault) {
 
   syncAppLockHintFromMeta(configured && configured.meta ? configured.meta : null);
   applyAppLockedPresentation(locked);
+
+  try {
+    window.__iuVaultDeferMindMenuMount = !!locked;
+    if (locked && typeof window.iuArticleActionsCloseOverlay === "function") {
+      window.iuArticleActionsCloseOverlay();
+    }
+  } catch (_) {}
+
+  installLockedPersonalEntryBlock();
 
   const pinInput = document.getElementById("iuVaultPinInput");
   const pinLabel = document.getElementById("iuVaultPinLabel");

@@ -8056,6 +8056,7 @@ function iuIsBenignResizeObserverLoopError(ev) {
   }
 
   function iuArticleActionsOpenOverlay() {
+    if (document.documentElement.classList.contains("iu-vault-app-locked")) return;
     iuArticleActionsEnsureOverlay();
     const overlay = document.getElementById("iuMyInfoUzelOverlay");
     if (!overlay) return;
