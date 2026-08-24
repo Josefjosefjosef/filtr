@@ -8,6 +8,8 @@
   let mindMenuGateBound = false;
   let desktopHookTimer = null;
   let methodPickerOpen = false;
+  let pickerDraftMethod = null;
+  let autoDeviceUnlockToken = 0;
 
   function isDesktopVaultGate() {
     try {
@@ -87,6 +89,12 @@
       '    <label class="iuVaultSecurity__radio" id="iuVaultMindMenuMethodDeviceLabel"><input type="radio" name="iuVaultMindMenuMethod" value="device" /> Zabezpečení zařízení — doporučeno</label>',
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
       "  </fieldset>",
+      '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden>',
+      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu (min. 6 číslic)</label>',
+      '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupNew" />',
+      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
+      '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupConfirm" />',
+      "  </div>",
       '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Můžete použít vlastní PIN InfoUzlu.</p>',
       '  <button type="button" class="iuInfoCenter__btn" id="iuVaultApplyMindMenuMethodBtn">Zapnout zamykání MindMenu</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
@@ -114,13 +122,21 @@
 
   function selectedMethodFromUi() {
     const checked = document.querySelector('input[name="iuVaultMindMenuMethod"]:checked');
-    return checked ? String(checked.value || "none") : "none";
+    return checked ? String(checked.value || "none") : pickerDraftMethod || "none";
+  }
+
+  function syncPickerDraftFromUi() {
+    const selected = selectedMethodFromUi();
+    if (selected) pickerDraftMethod = selected;
+    return pickerDraftMethod;
   }
 
   function setMethodRadios(method) {
+    const value = method || "none";
     document.querySelectorAll('input[name="iuVaultMindMenuMethod"]').forEach((el) => {
-      el.checked = el.value === method;
+      el.checked = el.value === value;
     });
+    pickerDraftMethod = value;
   }
 
   function ensureLockOverlay() {
@@ -191,6 +207,37 @@
     const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
     if (host) host.hidden = locked;
     if (toolsHost) toolsHost.hidden = locked;
+    if (locked && pinOn && pinInput) {
+      try {
+        pinInput.focus();
+      } catch (_) {}
+    }
+    if (locked && devOn && deviceSupported && window.__iuVaultPendingAutoDeviceUnlock) {
+      const token = ++autoDeviceUnlockToken;
+      window.__iuVaultPendingAutoDeviceUnlock = false;
+      try {
+        await vault.unlockDevice();
+        if (token !== autoDeviceUnlockToken) return;
+        await vault.afterUnlock();
+        errClear();
+        await remountDesktopMindMenuContent();
+      } catch (e) {
+        if (token !== autoDeviceUnlockToken) return;
+        const err = document.getElementById("iuVaultMindMenuLockErr");
+        const code = String(e && e.message ? e.message : e);
+        if (code.includes("VAULT_DEVICE_CANCELLED")) {
+          if (err) err.textContent = "Odemknutí bylo zrušeno. MindMenu zůstává zamčen.";
+        } else if (code.includes("VAULT_DEVICE_TIMEOUT")) {
+          if (err) err.textContent = "Vypršel časový limit. Zkuste odemknutí znovu.";
+        } else {
+          if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
+        }
+      }
+    }
+    function errClear() {
+      const err = document.getElementById("iuVaultMindMenuLockErr");
+      if (err) err.textContent = "";
+    }
   }
 
   function hideMindMenuLockGate() {
@@ -202,8 +249,12 @@
     if (toolsHost) toolsHost.hidden = false;
   }
 
-  async function showDesktopMindMenuLockGate() {
+  async function showDesktopMindMenuLockGate(options) {
+    const opts = options || {};
     const { meta, st, method } = await vaultNeedsUserUnlock();
+    if (opts.autoDevice && method === "device" && !st.unlocked) {
+      window.__iuVaultPendingAutoDeviceUnlock = true;
+    }
     ensureMindMenuLockGate();
     await refreshMindMenuLockGate(meta, st, method);
   }
@@ -229,7 +280,7 @@
         if (window.__iuVaultBypassDesktopGate || !isDesktopVaultGate()) {
           return orig.apply(this, arguments);
         }
-        const { needsLock } = await vaultNeedsUserUnlock();
+        const { needsLock, method } = await vaultNeedsUserUnlock();
         if (!needsLock) {
           hideMindMenuLockGate();
           return orig.apply(this, arguments);
@@ -237,7 +288,7 @@
         window.__iuVaultDeferMindMenuMount = true;
         try {
           const result = orig.apply(this, arguments);
-          await showDesktopMindMenuLockGate();
+          await showDesktopMindMenuLockGate({ autoDevice: method === "device" });
           return result;
         } finally {
           window.__iuVaultDeferMindMenuMount = false;
@@ -247,26 +298,41 @@
       return wrapped;
     };
 
-    window.__iuVaultRegisterDesktopMindMenuOpen = (orig) => {
-      window.iuArticleActionsOpenOverlay = wrapOrig(orig);
-    };
+    const attach = (orig) => wrapOrig(orig);
 
-    if (window.iuArticleActionsOpenOverlay) {
-      window.iuArticleActionsOpenOverlay = wrapOrig(window.iuArticleActionsOpenOverlay);
-    } else if (!desktopHookTimer) {
-      desktopHookTimer = setInterval(() => {
-        if (window.iuArticleActionsOpenOverlay) {
-          window.iuArticleActionsOpenOverlay = wrapOrig(window.iuArticleActionsOpenOverlay);
-          clearInterval(desktopHookTimer);
-          desktopHookTimer = null;
-        }
-      }, 120);
-      setTimeout(() => {
-        if (desktopHookTimer) {
-          clearInterval(desktopHookTimer);
-          desktopHookTimer = null;
-        }
-      }, 120000);
+    window.__iuVaultRegisterDesktopMindMenuOpen = attach;
+
+    try {
+      let stored = window.iuArticleActionsOpenOverlay;
+      Object.defineProperty(window, "iuArticleActionsOpenOverlay", {
+        configurable: true,
+        enumerable: true,
+        get() {
+          return stored;
+        },
+        set(fn) {
+          stored = fn && fn._iuVaultGateHook ? fn : attach(fn);
+        },
+      });
+      if (stored) window.iuArticleActionsOpenOverlay = stored;
+    } catch (_) {
+      if (window.iuArticleActionsOpenOverlay) {
+        window.iuArticleActionsOpenOverlay = attach(window.iuArticleActionsOpenOverlay);
+      } else if (!desktopHookTimer) {
+        desktopHookTimer = setInterval(() => {
+          if (window.iuArticleActionsOpenOverlay) {
+            window.iuArticleActionsOpenOverlay = attach(window.iuArticleActionsOpenOverlay);
+            clearInterval(desktopHookTimer);
+            desktopHookTimer = null;
+          }
+        }, 120);
+        setTimeout(() => {
+          if (desktopHookTimer) {
+            clearInterval(desktopHookTimer);
+            desktopHookTimer = null;
+          }
+        }, 120000);
+      }
     }
   }
 
@@ -341,6 +407,8 @@
     const autoBlock = document.getElementById("iuVaultAutoLockBlock");
     const autoSel = document.getElementById("iuVaultAutoLockSelect");
     const lockNow = document.getElementById("iuVaultLockNowBtn");
+    const pinSetupBlock = document.getElementById("iuVaultPinSetupBlock");
+    const draftMethod = pickerDraftMethod || method;
 
     if (statusEl) {
       statusEl.innerHTML =
@@ -370,8 +438,18 @@
     if (lockNow) lockNow.hidden = method === "none";
 
     if (devNo) devNo.hidden = deviceSupported || !showPicker;
-    if (devLabel) devLabel.hidden = !deviceSupported && showPicker;
-    if (fieldset && showPicker) setMethodRadios(methodPickerOpen ? selectedMethodFromUi() || method : method);
+    if (devLabel) {
+      devLabel.hidden = !deviceSupported && showPicker;
+      devLabel.style.pointerEvents = deviceSupported ? "" : "none";
+    }
+    if (fieldset && showPicker) {
+      setMethodRadios(methodPickerOpen ? draftMethod : method);
+      fieldset.disabled = false;
+      fieldset.removeAttribute("aria-disabled");
+    }
+    if (pinSetupBlock) {
+      pinSetupBlock.hidden = !(showPicker && draftMethod === "pin");
+    }
 
     const overlay = document.getElementById("iuVaultLockOverlay");
     if (overlay) {
@@ -435,6 +513,7 @@
       if (vault.flushPendingWrites) await vault.flushPendingWrites();
     } catch (_) {}
     methodPickerOpen = false;
+    pickerDraftMethod = null;
     await refreshSecurityUi();
     try {
       window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
@@ -454,12 +533,38 @@
     document.getElementById("iuVaultChangeMindMenuMethodBtn")?.addEventListener("click", async () => {
       methodPickerOpen = true;
       const { method } = await readUnlockState(vault);
+      pickerDraftMethod = method;
       setMethodRadios(method);
       await refreshSecurityUi();
     });
 
+    document.getElementById("iuVaultMindMenuMethodFieldset")?.addEventListener("change", (ev) => {
+      const t = ev.target;
+      if (!t || t.name !== "iuVaultMindMenuMethod") return;
+      methodPickerOpen = true;
+      pickerDraftMethod = String(t.value || "none");
+      const pinSetupBlock = document.getElementById("iuVaultPinSetupBlock");
+      if (pinSetupBlock) pinSetupBlock.hidden = pickerDraftMethod !== "pin";
+      const msg = document.getElementById("iuVaultSecurityMsg");
+      if (msg) msg.textContent = "";
+    });
+
+    document.getElementById("iuVaultMindMenuMethodFieldset")?.addEventListener("click", (ev) => {
+      const label = ev.target && ev.target.closest ? ev.target.closest("label.iuVaultSecurity__radio") : null;
+      if (!label) return;
+      methodPickerOpen = true;
+      const input = label.querySelector('input[name="iuVaultMindMenuMethod"]');
+      if (input) {
+        pickerDraftMethod = String(input.value || "none");
+        input.checked = true;
+        const pinSetupBlock = document.getElementById("iuVaultPinSetupBlock");
+        if (pinSetupBlock) pinSetupBlock.hidden = pickerDraftMethod !== "pin";
+      }
+    });
+
     document.getElementById("iuVaultApplyMindMenuMethodBtn")?.addEventListener("click", async () => {
-      const target = selectedMethodFromUi();
+      syncPickerDraftFromUi();
+      const target = pickerDraftMethod || selectedMethodFromUi();
       const { method: current, st } = await readUnlockState(vault);
 
       if (target === current && target !== "none") {
@@ -495,10 +600,29 @@
       }
 
       if (target === "pin") {
-        const input = showPinSetupDialog();
-        if (!input) return;
+        if (!window.confirm(
+          "PIN nelze obnovit. Pokud jej zapomenete, nebude možné uložená osobní data otevřít. V takovém případě bude nutné osobní data v tomto prohlížeči vymazat."
+        )) {
+          return;
+        }
+        const pinNew = document.getElementById("iuVaultPinSetupNew");
+        const pinConfirm = document.getElementById("iuVaultPinSetupConfirm");
+        const pin = pinNew ? String(pinNew.value || "") : "";
+        const confirmPin = pinConfirm ? String(pinConfirm.value || "") : "";
+        if (!pin || !confirmPin) {
+          say("Vyplňte nový PIN i potvrzení PINu.");
+          const pinSetupBlock = document.getElementById("iuVaultPinSetupBlock");
+          if (pinSetupBlock) pinSetupBlock.hidden = false;
+          return;
+        }
+        if (pin !== confirmPin) {
+          say("PIN a potvrzení se neshodují.");
+          return;
+        }
         try {
-          await vault.setupPin(input.pin, input.confirm);
+          await vault.setupPin(pin, confirmPin);
+          if (pinNew) pinNew.value = "";
+          if (pinConfirm) pinConfirm.value = "";
           say("Zamykání MindMenu bylo zapnuto pomocí PINu.");
           await notifySecurityChanged(vault);
         } catch (e) {
@@ -628,6 +752,7 @@
 
   async function ensureSecurityUi() {
     if (!injectSecuritySection()) return;
+    if (pickerDraftMethod == null) pickerDraftMethod = "none";
     await bindEvents();
     await refreshSecurityUi();
   }

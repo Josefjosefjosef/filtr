@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-vault-mindmenu-lock-ux-v1-20260824",
+    "freezeId": "iu-vault-mindmenu-lock-functional-v1-20260824",
     "preStabilizationProductionSha": "f74d1f18ea250142a45a0d4a58f6806891540084",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-24T10:30:00.000Z",
-    "note": "Freeze bump: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method.",
+    "updatedAt": "2026-08-24T11:55:00.000Z",
+    "note": "Freeze bump: PC MindMenu lock functional fix — radio picker draft, inline PIN setup, gate hook.",
     "files": {
-        "projects/index.html": "09ebb65ee4aedffd33e8b37c3cfba287d37f13a2321008be434fea674905b27b",
+        "projects/index.html": "c96215f37049ef0efdde31614af4ea9d54ad78290bba76b1450a9f21594f2f9c",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "85ea605f87d9d81d3bd780276f40b727d22e1e04cadcf6250f20d582dcb856fe",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "1cf9220b500ea8c2289cf9b56179762e0c80f62872ff2c46c26b896e2766f801",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "18432c3e7709bd4c46526990732663f175e7ae79bbce07d929f8861a2610981d",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "d8773c644b08182326c46236f093b9ddbdedd73ae802784bb33a76e2b259558c",
+        "sw.js": "603d966fa5e3bf36e558496544aa3f31276ac1caceda8bf2c2f94084a3d09212",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,7 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-08-24-iu-vault-mindmenu-lock-ux-v1\"",
+            "CACHE_VERSION = \"2026-08-24-iu-vault-mindmenu-lock-functional-v1\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",

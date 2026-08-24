@@ -865,6 +865,58 @@ body.iu-theme-dark .iuDataMgmtConfirm__btn--ghost{
   font-size: 0.88rem;
   margin-top: 0.5rem;
 }
+.iuVaultSecurity__methodFieldset{
+  margin: 0.75rem 0 1rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(14, 42, 74, 0.18);
+  border-radius: 10px;
+  pointer-events: auto;
+}
+.iuVaultSecurity__legend{
+  padding: 0 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.iuVaultSecurity__radio{
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0.55rem 0;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  line-height: 1.4;
+}
+.iuVaultSecurity__radio input[type="radio"]{
+  margin: 0.15rem 0 0;
+  flex: 0 0 auto;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.iuVaultSecurity__pinSetup{
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(14, 42, 74, 0.04);
+}
+.iuVaultSecurity__pinSetupLabel{
+  display: block;
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.iuVaultSecurity__input{
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(14, 42, 74, 0.22);
+  font: inherit;
+  pointer-events: auto;
+}
 .iuVaultLockOverlay{
   position: fixed;
   inset: 0;
