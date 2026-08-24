@@ -213,9 +213,14 @@
           hideMindMenuLockGate();
           return orig.apply(this, arguments);
         }
-        const result = orig.apply(this, arguments);
-        await showDesktopMindMenuLockGate();
-        return result;
+        window.__iuVaultDeferMindMenuMount = true;
+        try {
+          const result = orig.apply(this, arguments);
+          await showDesktopMindMenuLockGate();
+          return result;
+        } finally {
+          window.__iuVaultDeferMindMenuMount = false;
+        }
       };
       wrapped._iuVaultGateHook = true;
       return wrapped;

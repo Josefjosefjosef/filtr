@@ -928,6 +928,11 @@ export function initIuCalendarOverlay() {
   }
 
   async function writeStore(){
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+        return;
+      }
+    } catch (_) {}
     const ok = await ensureLocalDataProtectionBeforeSave();
     if (!ok) return;
     const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });

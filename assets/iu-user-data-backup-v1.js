@@ -363,6 +363,17 @@ function initUserDataBackupUi() {
 
   importBtn.addEventListener("click", () => {
     if (importBtn.disabled) return;
+    try {
+      if (isVaultActive() && !isVaultUnlocked()) {
+        announce(
+          statusLive,
+          "Nejdříve odemkněte osobní data v Můj InfoUzel (PIN nebo zařízení), poté zkuste import znovu."
+        );
+        return;
+      }
+    } catch {
+      /* ignore */
+    }
     returnFocusEl = importBtn;
     try {
       fileInput.value = "";

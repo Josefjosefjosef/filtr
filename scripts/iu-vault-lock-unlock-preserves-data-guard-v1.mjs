@@ -61,15 +61,23 @@ function staticChecks(fails) {
   const uiJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
   const appJs = require("fs").readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
   if (!/clearVaultMemoryCache/.test(lockJs)) fails.push("lock_missing_cache_clear");
-  if (!/iu-vault-unlocked/.test(bootJs) || !/preloadAllVaultRecords/.test(bootJs)) {
+  if (!/afterUnlock/.test(bootJs) || !/preloadAllVaultRecords/.test(bootJs)) {
     fails.push("bootstrap_missing_unlock_hydrate");
   }
   if (!/isDesktopVaultGate/.test(uiJs) || !/iuVaultMindMenuLockGate/.test(uiJs)) {
     fails.push("ui_missing_desktop_gate");
   }
+  if (!/isVaultPersistBlocked|__iuVaultDeferMindMenuMount|__iuVaultHydrationComplete/.test(bootJs)) {
+    fails.push("bootstrap_missing_persist_hydration_guards");
+  }
+  const storageJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8");
+  if (!/isVaultPersistBlocked/.test(storageJs)) fails.push("storage_missing_persist_block");
+  const pipelineJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8");
+  if (!/__iuVaultDeferMindMenuMount/.test(pipelineJs)) fails.push("pipeline_missing_defer_mount");
   if (!/hasVaultEncBlob/.test(appJs) || !/iu-vault-hydrated/.test(appJs)) {
     fails.push("tasks_missing_vault_hydrate_guard");
   }
+  if (!/isPersistBlocked/.test(appJs)) fails.push("tasks_missing_persist_block");
 }
 
 async function seedPersonalData(page, noteSeed, taskSeed, calSeed) {
@@ -353,12 +361,76 @@ async function main() {
       const lockedAfterReload = await page.evaluate(() => !window.iuVault.getState().unlocked);
       if (!lockedAfterReload) fails.push("should_be_locked_after_reload");
 
+      const hydrationPending = await page.evaluate(() => ({
+        pending: window.__iuVaultHydrationPending === true,
+        complete: window.__iuVaultHydrationComplete === true,
+      }));
+      if (!hydrationPending.pending || hydrationPending.complete) {
+        fails.push("hydration_should_be_pending_after_reload_while_locked");
+      }
+
       await unlockProtection(page, activated.mode);
 
       const afterReload = await readModuleMarkers(page);
       if (!afterReload.notes) fails.push("notes_lost_after_reload_unlock");
       if (!afterReload.tasks && !afterReload.tasksService) fails.push("tasks_lost_after_reload_unlock");
       if (!afterReload.calendar) fails.push("calendar_lost_after_reload_unlock");
+
+      await page.close();
+      const page2 = await context.newPage();
+      await page2.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await page2.waitForFunction(
+        () => !!(window.iuVault && typeof window.iuVault.getState === "function"),
+        null,
+        { timeout: 120000 }
+      );
+
+      if (activated.mode === "l2") {
+        try {
+          await enableVirtualAuthenticator(page2);
+        } catch (e) {
+          fails.push(`virtual_auth_reopen:${e.message || e}`);
+        }
+      }
+
+      const encAfterReopen = await page2.evaluate(() => ({
+        notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
+        tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
+      }));
+      if (!encAfterReopen.notes || !encAfterReopen.tasks) fails.push("enc_missing_after_browser_reopen");
+
+      await page2.evaluate(() => {
+        document.body.classList.add("iu-desktop-home-grid");
+      });
+      await page2.waitForFunction(
+        () =>
+          typeof window.iuArticleActionsOpenOverlay === "function" &&
+          window.iuArticleActionsOpenOverlay._iuVaultGateHook,
+        null,
+        { timeout: 180000 }
+      );
+      await page2.evaluate(async () => {
+        await window.iuArticleActionsOpenOverlay();
+      });
+      const gateAfterReopen = await page2.evaluate(() => {
+        const gate = document.getElementById("iuVaultMindMenuLockGate");
+        const host = document.getElementById("iuMyInfoUzelMindMenuHost");
+        return {
+          gateVisible: gate ? !gate.hidden : false,
+          hostHidden: host ? host.hidden : false,
+          mindMenuMounted: !!(host && host.querySelector("#iuMindMenuView, .mindMenu")),
+        };
+      });
+      if (!gateAfterReopen.gateVisible) fails.push("mindmenu_gate_hidden_after_browser_reopen");
+      if (!gateAfterReopen.hostHidden) fails.push("mindmenu_host_visible_after_browser_reopen");
+      if (gateAfterReopen.mindMenuMounted) fails.push("mindmenu_mounted_before_unlock_after_reopen");
+
+      await unlockProtection(page2, activated.mode);
+
+      const afterReopen = await readModuleMarkers(page2);
+      if (!afterReopen.notes) fails.push("notes_lost_after_browser_reopen");
+      if (!afterReopen.tasks && !afterReopen.tasksService) fails.push("tasks_lost_after_browser_reopen");
+      if (!afterReopen.calendar) fails.push("calendar_lost_after_browser_reopen");
     }
   } finally {
     await browser.close();
