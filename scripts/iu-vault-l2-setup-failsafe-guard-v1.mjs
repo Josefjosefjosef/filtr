@@ -55,6 +55,9 @@ function staticSourceChecks(fails) {
   if (!/rollbackMdkRotation/.test(deviceJs)) {
     fails.push("device_missing_mdk_rollback");
   }
+  if (!/prf:\s*\{\s*eval:\s*\{\s*first:\s*salt/.test(deviceJs)) {
+    fails.push("device_missing_prf_eval_on_create");
+  }
   if (!/VAULT_DEVICE_CANCELLED/.test(deviceJs) || !/VAULT_DEVICE_TIMEOUT/.test(deviceJs)) {
     fails.push("device_missing_cancel_timeout_codes");
   }

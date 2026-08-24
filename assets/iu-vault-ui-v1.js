@@ -496,6 +496,15 @@
     if (code.includes("VAULT_DEVICE_UNSUPPORTED")) {
       return "Zabezpečení zařízením není v tomto prohlížeči podporováno.";
     }
+    if (code.includes("VAULT_DEVICE_CREATE_FAILED")) {
+      const domMatch = code.match(/\|(NotAllowedError|SecurityError|InvalidStateError|NotSupportedError|TypeError|AbortError)(?:\||$)/);
+      if (domMatch) {
+        return `Nastavení zabezpečení zařízením se nezdařilo (${domMatch[1]}).`;
+      }
+      if (code.includes("get_null")) {
+        return "Nastavení zabezpečení zařízením se nezdařilo (PRF ověření po vytvoření klíče).";
+      }
+    }
     return "Nastavení zabezpečení zařízením se nezdařilo.";
   }
 

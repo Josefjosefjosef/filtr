@@ -74,12 +74,34 @@ function prfSalt() {
   return crypto.getRandomValues(new Uint8Array(32));
 }
 
-function readPrfBytes(assertion) {
-  const prfOut = assertion.getClientExtensionResults().prf;
+function readPrfExtensionResults(credOrAssertion) {
+  try {
+    return credOrAssertion && credOrAssertion.getClientExtensionResults
+      ? credOrAssertion.getClientExtensionResults().prf
+      : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function readPrfBytes(credOrAssertion) {
+  const prfOut = readPrfExtensionResults(credOrAssertion);
   if (!prfOut || !prfOut.results || !prfOut.results.first) {
     throw new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
   }
   return new Uint8Array(prfOut.results.first);
+}
+
+function sanitizeDeviceErrorDetail(name, msg) {
+  const safeName = name && /^[A-Za-z]+Error$/.test(name) ? name : "";
+  const safeMsg = String(msg || "")
+    .replace(/[\r\n\t]/g, " ")
+    .replace(/[^\x20-\x7E]/g, "")
+    .slice(0, 96);
+  if (safeName && safeMsg) return `${safeName}|${safeMsg}`;
+  if (safeName) return safeName;
+  if (safeMsg) return safeMsg;
+  return "unknown";
 }
 
 export function mapDeviceSetupError(err) {
@@ -97,7 +119,10 @@ export function mapDeviceSetupError(err) {
   if (msg.includes("VAULT_DEVICE_UNSUPPORTED")) {
     return new Error("VAULT_DEVICE_UNSUPPORTED");
   }
-  return new Error("VAULT_DEVICE_CREATE_FAILED");
+  if (msg.includes("VAULT_DEVICE_CREATE_FAILED")) {
+    return new Error(msg.includes("|") ? msg : `VAULT_DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
+  }
+  return new Error(`VAULT_DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
 }
 
 async function withWebAuthnWatchdog(operation, fn) {
@@ -121,7 +146,8 @@ async function withWebAuthnWatchdog(operation, fn) {
   }
 }
 
-function buildCreateOptions(signal) {
+function buildCreateOptions(salt, signal, withPrfEval) {
+  const extensions = withPrfEval ? { prf: { eval: { first: salt } } } : { prf: {} };
   return {
     publicKey: {
       challenge: crypto.getRandomValues(new Uint8Array(32)),
@@ -139,7 +165,7 @@ function buildCreateOptions(signal) {
         requireResidentKey: false,
       },
       timeout: webAuthnTimeoutMs(),
-      extensions: { prf: {} },
+      extensions,
     },
     signal,
   };
@@ -160,11 +186,27 @@ function buildPrfGetOptions(credRawId, salt, signal) {
 
 async function createCredentialWithPrf(salt) {
   return withWebAuthnWatchdog("create", async (signal) => {
-    const cred = await navigator.credentials.create(buildCreateOptions(signal));
-    if (!cred || !cred.rawId) throw new Error("VAULT_DEVICE_CREATE_FAILED");
+    let cred = null;
+    try {
+      cred = await navigator.credentials.create(buildCreateOptions(salt, signal, true));
+    } catch (err) {
+      const name = err && err.name ? String(err.name) : "";
+      const msg = String(err && err.message ? err.message : err);
+      if (/prf|extension|NotSupportedError|TypeError/i.test(`${name}|${msg}`)) {
+        cred = await navigator.credentials.create(buildCreateOptions(salt, signal, false));
+      } else {
+        throw err;
+      }
+    }
+    if (!cred || !cred.rawId) throw new Error("VAULT_DEVICE_CREATE_FAILED|missing_credential");
+
+    const createPrf = readPrfExtensionResults(cred);
+    if (createPrf && createPrf.results && createPrf.results.first) {
+      return { cred, prfBytes: new Uint8Array(createPrf.results.first) };
+    }
 
     const assertion = await navigator.credentials.get(buildPrfGetOptions(cred.rawId, salt, signal));
-    if (!assertion) throw new Error("VAULT_DEVICE_CREATE_FAILED");
+    if (!assertion) throw new Error("VAULT_DEVICE_CREATE_FAILED|get_null");
     return { cred, prfBytes: readPrfBytes(assertion) };
   });
 }
