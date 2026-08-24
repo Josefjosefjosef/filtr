@@ -1,8 +1,8 @@
 /**
  * Vault bootstrap — must load before app.js (top-level await).
  */
-import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin } from "./iu-vault-lock-v1.js";
-import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked } from "./iu-vault-storage-v1.js";
+import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, readSecurityConfiguredState } from "./iu-vault-lock-v1.js";
+import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js";
@@ -21,6 +21,11 @@ async function initVault() {
 
   installLocalStorageShim();
   registerAutoLockListeners();
+  try {
+    window.addEventListener("pagehide", () => {
+      flushPendingVaultWrites().catch(() => {});
+    });
+  } catch (_) {}
 
   let meta = await ensureLevel1Mdk();
 
@@ -74,10 +79,12 @@ if (document.readyState === "loading") {
 const api = {
   getState: () => getVaultState(),
   getMeta: () => readMeta(),
+  getSecurityConfigured: () => readSecurityConfiguredState(),
+  flushPendingWrites: () => flushPendingVaultWrites(),
   lock: () => lockVault("manual"),
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -93,11 +100,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
     return disableDeviceUnlock();
   },
   detectDeviceSupport: () => detectDeviceUnlockSupport(),

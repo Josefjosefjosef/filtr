@@ -77,8 +77,55 @@ function scheduleIdleLock() {
   }, ms);
 }
 
+export async function repairVaultMetaFromKeys(meta) {
+  if (!meta) return null;
+  const pinWrap = await readKeyRecord("mdk:pin");
+  const deviceWrap = await readKeyRecord("mdk:device");
+  let changed = false;
+  if (pinWrap && !meta.pinEnabled) {
+    meta.pinEnabled = true;
+    changed = true;
+  }
+  if (deviceWrap && !meta.deviceEnabled) {
+    meta.deviceEnabled = true;
+    changed = true;
+  }
+  if (pinWrap && deviceWrap) {
+    if (meta.securityLevel !== 23) {
+      meta.securityLevel = 23;
+      changed = true;
+    }
+  } else if (pinWrap && meta.securityLevel !== 3) {
+    meta.securityLevel = 3;
+    changed = true;
+  } else if (deviceWrap && meta.securityLevel !== 2) {
+    meta.securityLevel = 2;
+    changed = true;
+  }
+  if (changed) {
+    await writeMeta(meta);
+    await refreshSecurityMode(meta);
+  }
+  return meta;
+}
+
+export async function readSecurityConfiguredState(meta) {
+  const m = meta || await readMeta();
+  const pinWrap = await readKeyRecord("mdk:pin");
+  const deviceWrap = await readKeyRecord("mdk:device");
+  return {
+    pinConfigured: !!(m && m.pinEnabled) || !!pinWrap,
+    deviceConfigured: !!(m && m.deviceEnabled) || !!deviceWrap,
+    meta: m,
+  };
+}
+
 export async function lockVault(reason = "manual") {
   if (!state.requiresUserReauth) return;
+  try {
+    const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
+    await flushPendingVaultWrites();
+  } catch (_) {}
   clearIdleTimer();
   state.mdk = null;
   state.unlocked = false;
@@ -110,6 +157,7 @@ export async function ensureLevel1Mdk() {
     meta = await defaultMeta();
     await writeMeta(meta);
   }
+  meta = await repairVaultMetaFromKeys(meta);
   state.autoLockPolicy = meta.autoLockPolicy || "background";
   await refreshSecurityMode(meta);
 

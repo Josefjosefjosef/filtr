@@ -24,8 +24,8 @@
 // 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-// 2026-08-24: PC MindMenu lock gate + vault persistence (no pre-hydration wipe)
-const CACHE_VERSION = "2026-08-24-iu-vault-mindmenu-persist";
+// 2026-08-24: PC MindMenu mailbox vault adapter + meta repair + persist flush
+const CACHE_VERSION = "2026-08-24-iu-vault-mindmenu-persist-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

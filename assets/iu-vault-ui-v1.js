@@ -21,8 +21,17 @@
     const vault = await waitVault();
     const meta = await vault.getMeta();
     const st = vault.getState();
-    const pinOn = !!(meta && meta.pinEnabled);
-    const devOn = !!(meta && meta.deviceEnabled);
+    let pinOn = !!(meta && meta.pinEnabled);
+    let devOn = !!(meta && meta.deviceEnabled);
+    if (!pinOn || !devOn) {
+      try {
+        const configured = await vault.getSecurityConfigured();
+        if (configured) {
+          if (!pinOn) pinOn = !!configured.pinConfigured;
+          if (!devOn) devOn = !!configured.deviceConfigured;
+        }
+      } catch (_) {}
+    }
     return { vault, meta, st, needsLock: (pinOn || devOn) && !st.unlocked, pinOn, devOn };
   }
 
@@ -154,8 +163,15 @@
     if (!gate) return;
     const vault = await waitVault();
     const deviceSupported = await vault.detectDeviceSupport();
-    const pinOn = !!(meta && meta.pinEnabled);
-    const devOn = !!(meta && meta.deviceEnabled);
+    let pinOn = !!(meta && meta.pinEnabled);
+    let devOn = !!(meta && meta.deviceEnabled);
+    try {
+      const configured = await vault.getSecurityConfigured();
+      if (configured) {
+        if (!pinOn) pinOn = !!configured.pinConfigured;
+        if (!devOn) devOn = !!configured.deviceConfigured;
+      }
+    } catch (_) {}
     const pinInput = document.getElementById("iuVaultMindMenuPinInput");
     const pinLabel = document.getElementById("iuVaultMindMenuPinLabel");
     const unlockPin = document.getElementById("iuVaultMindMenuUnlockPinBtn");
@@ -302,10 +318,17 @@
     const meta = await vault.getMeta();
     const st = vault.getState();
     const deviceSupported = await vault.detectDeviceSupport();
+    let pinOn = !!(meta && meta.pinEnabled);
+    let devOn = !!(meta && meta.deviceEnabled);
+    try {
+      const configured = await vault.getSecurityConfigured();
+      if (configured) {
+        if (!pinOn) pinOn = !!configured.pinConfigured;
+        if (!devOn) devOn = !!configured.deviceConfigured;
+      }
+    } catch (_) {}
 
-    const pinOn = !!(meta && meta.pinEnabled);
-    const devOn = !!(meta && meta.deviceEnabled);
-    const summary = protectionSummary(meta);
+    const summary = protectionSummary({ pinEnabled: pinOn, deviceEnabled: devOn });
 
     const current = document.getElementById("iuVaultCurrentProtection");
     if (current) {

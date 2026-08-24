@@ -9,6 +9,7 @@ import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
 export const ENC_PREFIX = "iu:vault:enc:v1:";
 const memoryCache = new Map();
 const writeGeneration = new Map();
+const pendingWrites = new Set();
 let nativeGetItem = null;
 let nativeSetItem = null;
 let nativeRemoveItem = null;
@@ -74,15 +75,30 @@ export async function vaultSetItem(storageKey, value) {
   const text = String(value);
   const generation = (writeGeneration.get(k) || 0) + 1;
   writeGeneration.set(k, generation);
-  const mdk = getMdk();
-  const envelope = await encryptString(mdk, k, text);
-  if (writeGeneration.get(k) !== generation) return;
-  await persistEnvelope(k, envelope);
-  if (writeGeneration.get(k) !== generation) return;
-  memoryCache.set(k, text);
+  let writePromise;
+  writePromise = (async () => {
+    const mdk = getMdk();
+    const envelope = await encryptString(mdk, k, text);
+    if (writeGeneration.get(k) !== generation) return;
+    await persistEnvelope(k, envelope);
+    if (writeGeneration.get(k) !== generation) return;
+    memoryCache.set(k, text);
+    try {
+      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
+    } catch (_) {}
+  })();
+  pendingWrites.add(writePromise);
   try {
-    window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
-  } catch (_) {}
+    await writePromise;
+  } finally {
+    pendingWrites.delete(writePromise);
+  }
+}
+
+export async function flushPendingVaultWrites() {
+  const pending = Array.from(pendingWrites);
+  if (!pending.length) return;
+  await Promise.all(pending.map((p) => p.catch(() => {})));
 }
 
 export async function vaultRemoveItem(storageKey) {
@@ -158,8 +174,10 @@ export function installLocalStorageShim() {
     if (!st.unlocked) throw new Error("VAULT_LOCKED");
     const text = String(value);
     memoryCache.set(String(key), text);
-    vaultSetItem(key, text).catch(() => {});
+    const writePromise = vaultSetItem(key, text);
+    writePromise.catch(() => {});
     try { nativeRemove(key); } catch (_) {}
+    return writePromise;
   };
 
   localStorage.removeItem = function shimRemoveItem(key) {

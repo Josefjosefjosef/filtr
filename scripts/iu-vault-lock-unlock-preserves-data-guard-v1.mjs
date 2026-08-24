@@ -20,6 +20,7 @@ const { chromium } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8970", 10);
 const BASE = `http://localhost:${PORT}/projects/`;
 const MARKER = `IU_LOCK_UNLOCK_${Date.now()}`;
+const MAILBOX_MARKER = `IU_REAL_PC_PERSIST_${Date.now()}`;
 
 function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
@@ -74,10 +75,79 @@ function staticChecks(fails) {
   if (!/isVaultPersistBlocked/.test(storageJs)) fails.push("storage_missing_persist_block");
   const pipelineJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8");
   if (!/__iuVaultDeferMindMenuMount/.test(pipelineJs)) fails.push("pipeline_missing_defer_mount");
+  if (!/repairVaultMetaFromKeys|readSecurityConfiguredState/.test(lockJs)) {
+    fails.push("lock_missing_meta_repair");
+  }
+  if (!/flushPendingVaultWrites/.test(require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8"))) {
+    fails.push("storage_missing_flush_pending");
+  }
+  if (!/iuVaultHasEncBlob|iuVaultIsPersistBlocked/.test(pipelineJs)) {
+    fails.push("pipeline_missing_mailbox_vault_adapter");
+  }
   if (!/hasVaultEncBlob/.test(appJs) || !/iu-vault-hydrated/.test(appJs)) {
     fails.push("tasks_missing_vault_hydrate_guard");
   }
   if (!/isPersistBlocked/.test(appJs)) fails.push("tasks_missing_persist_block");
+}
+
+async function seedMindMenuMailbox(page, marker) {
+  const mailboxSeed = JSON.stringify({
+    items: [{ label: marker, url: "https://example.com/" + marker, social: null, hidden: false, slot: 1 }],
+  });
+  await page.evaluate(
+    async ({ mailboxSeed, marker }) => {
+      localStorage.setItem("iu_mailboxes_v1", mailboxSeed);
+      if (typeof window.iuVault?.afterUnlock === "function" && window.iuVault.getState().unlocked) {
+        await window.iuVault.afterUnlock();
+      }
+      if (typeof window.iuVault?.flushPendingWrites === "function") {
+        await window.iuVault.flushPendingWrites();
+      }
+    },
+    { mailboxSeed, marker }
+  );
+  await page.waitForTimeout(500);
+  return mailboxSeed;
+}
+
+async function readMailboxMarker(page, marker) {
+  return page.evaluate((needle) => {
+    try {
+      const raw = localStorage.getItem("iu_mailboxes_v1") || "";
+      if (raw.includes(needle)) return needle;
+    } catch (_) {}
+    return null;
+  }, marker);
+}
+
+async function readSecurityUiState(page) {
+  return page.evaluate(async () => {
+    const meta = await window.iuVault.getMeta();
+    const configured = await window.iuVault.getSecurityConfigured();
+    const setupPinBtn = document.getElementById("iuVaultSetupPinBtn");
+    const pinActive = document.getElementById("iuVaultPinActiveStatus");
+    const devBtn = document.getElementById("iuVaultEnableDeviceBtn");
+    const devActive = document.getElementById("iuVaultDeviceActiveStatus");
+    return {
+      metaPin: !!(meta && meta.pinEnabled),
+      metaDev: !!(meta && meta.deviceEnabled),
+      configuredPin: !!(configured && configured.pinConfigured),
+      configuredDev: !!(configured && configured.deviceConfigured),
+      setupPinHidden: setupPinBtn ? setupPinBtn.hidden : null,
+      pinActiveVisible: pinActive ? !pinActive.hidden : null,
+      devBtnHidden: devBtn ? devBtn.hidden : null,
+      devActiveVisible: devActive ? !devActive.hidden : null,
+    };
+  });
+}
+
+async function openInfoCenterPrivacy(page) {
+  await page.evaluate(() => {
+    document.dispatchEvent(new CustomEvent("iu:info-center-mounted"));
+    const panel = document.getElementById("iuInfoCenterDetailPrivacy");
+    if (panel) panel.hidden = false;
+  });
+  await page.waitForTimeout(300);
 }
 
 async function seedPersonalData(page, noteSeed, taskSeed, calSeed) {
@@ -231,9 +301,17 @@ async function main() {
     await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await waitForVaultReady(page);
     await seedPersonalData(page, noteSeed, taskSeed, calSeed);
+    await seedMindMenuMailbox(page, MAILBOX_MARKER);
 
     const beforeProtect = await readModuleMarkers(page);
+    const beforeMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
     if (!beforeProtect.notes || !beforeProtect.tasks) fails.push("seed_not_visible_before_protect");
+    if (!beforeMailbox) fails.push("mailbox_seed_not_visible_before_protect");
+
+    const encBeforeProtect = await page.evaluate(() => ({
+      mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
+    }));
+    if (!encBeforeProtect.mailbox) fails.push("mailbox_missing_enc_before_protect");
 
     const activated = await activateProtection(page);
     if (!activated.mode) {
@@ -241,12 +319,29 @@ async function main() {
     } else {
       if (!activated.setup.locked) fails.push("protection_setup_should_lock");
 
+      await openInfoCenterPrivacy(page);
+      await page.evaluate(async () => {
+        const section = document.getElementById("iuVaultSecuritySection");
+        if (!section) document.dispatchEvent(new CustomEvent("iu:info-center-mounted"));
+      });
+      await page.waitForTimeout(400);
+      const securityUiAfterSetup = await readSecurityUiState(page);
+      if (activated.mode === "l3") {
+        if (!securityUiAfterSetup.configuredPin) fails.push("pin_not_configured_after_setup");
+        if (!securityUiAfterSetup.metaPin) fails.push("pin_meta_not_set_after_setup");
+      } else if (activated.mode === "l2") {
+        if (!securityUiAfterSetup.configuredDev) fails.push("device_not_configured_after_setup");
+        if (!securityUiAfterSetup.metaDev) fails.push("device_meta_not_set_after_setup");
+      }
+
       const encBeforeLock = await page.evaluate(() => ({
         notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
         tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
         calendar: !!localStorage.getItem("iu:vault:enc:v1:iu.calendar.store.v1"),
+        mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
       }));
       if (!encBeforeLock.notes || !encBeforeLock.tasks) fails.push("missing_enc_before_lock");
+      if (!encBeforeLock.mailbox) fails.push("mailbox_missing_enc_before_lock");
 
       await page.evaluate(async () => {
         await window.iuVault.lock();
@@ -312,9 +407,11 @@ async function main() {
       await unlockProtection(page, activated.mode);
 
       const afterUnlock = await readModuleMarkers(page);
+      const afterUnlockMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
       if (!afterUnlock.notes) fails.push("notes_lost_after_unlock");
       if (!afterUnlock.tasks && !afterUnlock.tasksService) fails.push("tasks_lost_after_unlock");
       if (!afterUnlock.calendar) fails.push("calendar_lost_after_unlock");
+      if (!afterUnlockMailbox) fails.push("mailbox_lost_after_unlock");
 
       await page.evaluate(() => {
         document.body.classList.add("iu-desktop-home-grid");
@@ -372,9 +469,11 @@ async function main() {
       await unlockProtection(page, activated.mode);
 
       const afterReload = await readModuleMarkers(page);
+      const afterReloadMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
       if (!afterReload.notes) fails.push("notes_lost_after_reload_unlock");
       if (!afterReload.tasks && !afterReload.tasksService) fails.push("tasks_lost_after_reload_unlock");
       if (!afterReload.calendar) fails.push("calendar_lost_after_reload_unlock");
+      if (!afterReloadMailbox) fails.push("mailbox_lost_after_reload_unlock");
 
       await page.close();
       const page2 = await context.newPage();
@@ -396,8 +495,10 @@ async function main() {
       const encAfterReopen = await page2.evaluate(() => ({
         notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
         tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
+        mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
       }));
       if (!encAfterReopen.notes || !encAfterReopen.tasks) fails.push("enc_missing_after_browser_reopen");
+      if (!encAfterReopen.mailbox) fails.push("mailbox_enc_missing_after_browser_reopen");
 
       await page2.evaluate(() => {
         document.body.classList.add("iu-desktop-home-grid");
@@ -428,16 +529,23 @@ async function main() {
       await unlockProtection(page2, activated.mode);
 
       const afterReopen = await readModuleMarkers(page2);
+      const afterReopenMailbox = await readMailboxMarker(page2, MAILBOX_MARKER);
       if (!afterReopen.notes) fails.push("notes_lost_after_browser_reopen");
       if (!afterReopen.tasks && !afterReopen.tasksService) fails.push("tasks_lost_after_browser_reopen");
       if (!afterReopen.calendar) fails.push("calendar_lost_after_browser_reopen");
+      if (!afterReopenMailbox) fails.push("mailbox_lost_after_browser_reopen");
     }
   } finally {
     await browser.close();
     server.kill();
   }
 
-  const report = { IU_VAULT_LOCK_UNLOCK_PRESERVES_DATA_GUARD: fails.length ? "FAIL" : "PASS", fails, marker: MARKER };
+  const report = {
+    IU_VAULT_LOCK_UNLOCK_PRESERVES_DATA_GUARD: fails.length ? "FAIL" : "PASS",
+    fails,
+    marker: MARKER,
+    mailboxMarker: MAILBOX_MARKER,
+  };
   console.log(JSON.stringify(report));
   if (fails.length) {
     console.error("IU_VAULT_LOCK_UNLOCK_PRESERVES_DATA_GUARD_FAIL");
