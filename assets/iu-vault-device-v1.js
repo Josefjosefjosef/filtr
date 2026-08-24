@@ -237,19 +237,8 @@ export async function hasDeviceConfigured() {
 
 export async function disableDeviceUnlock() {
   await unlockWithDevice();
-  const meta = await readMeta();
-  const { deleteKeyRecord, writeMeta } = await import("./iu-vault-db-v1.js");
   const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
-  await deleteKeyRecord("mdk:device");
-  meta.deviceEnabled = false;
-  if (!meta.pinEnabled) {
-    await activateLevel1AutoKey();
-  } else {
-    meta.securityLevel = 3;
-    await writeMeta(meta);
-    const { lockVault } = await import("./iu-vault-lock-v1.js");
-    await lockVault("device_disabled");
-  }
+  await activateLevel1AutoKey();
 }
 
 export { mdkFromDeviceWrap } from "./iu-vault-device-crypto-v1.js";

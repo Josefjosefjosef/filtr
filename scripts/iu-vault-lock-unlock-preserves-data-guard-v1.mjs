@@ -78,6 +78,12 @@ function staticChecks(fails) {
   if (!/repairVaultMetaFromKeys|readSecurityConfiguredState/.test(lockJs)) {
     fails.push("lock_missing_meta_repair");
   }
+  if (!/mindMenuUnlockMethod|resolveMindMenuUnlockMethod/.test(lockJs)) {
+    fails.push("lock_missing_unlock_method");
+  }
+  if (!/data-iu-vault-ui-version/.test(uiJs) || !/Zamknutí MindMenu/.test(uiJs)) {
+    fails.push("ui_missing_mindmenu_lock_ux");
+  }
   if (!/flushPendingVaultWrites/.test(require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8"))) {
     fails.push("storage_missing_flush_pending");
   }
