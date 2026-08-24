@@ -51,6 +51,7 @@ function staticChecks(fails) {
   if (!/DEVICE_PRF_RESULT_MISSING/.test(deviceJs)) fails.push("missing_phase_prf_result_missing");
   if (!/mdk:device:pending/.test(deviceJs)) fails.push("missing_pending_device_state");
   if (!/verifyDeviceWrapUnlock/.test(deviceJs)) fails.push("missing_verify_unlock");
+  if (!/wrappedSeed|format:\s*["']seed-v1["']/.test(deviceJs)) fails.push("missing_seed_v1_wrap");
   if (!/DEVICE_[A-Z0-9_]+/.test(uiJs)) fails.push("ui_missing_phase_codes");
   if (!/initGlobalAppLock/.test(appLockJs)) fails.push("missing_global_app_lock_module");
 }
@@ -175,7 +176,7 @@ async function runMockFlowTests(context, fails) {
         };
       };
       try {
-        const mod = await import("/assets/iu-vault-device-v1.js?v=iu-vault-global-app-lock-v1-20260824");
+        const mod = await import("/assets/iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824");
         await mod.setupDeviceUnlock();
         return { ok: true, locked: !window.iuVault.getState().unlocked };
       } catch (e) {

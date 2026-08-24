@@ -41,19 +41,28 @@ function staticSourceChecks(fails) {
   const uiJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
 
   const setupFn = deviceJs.slice(deviceJs.indexOf("export async function setupDeviceUnlock"));
-  const rotateIdx = setupFn.indexOf("await rotateVaultMdk");
+  const persistIdx = setupFn.indexOf("await persistDeviceActivation");
   const createIdx = setupFn.indexOf("await createCredentialWithPrf");
-  if (rotateIdx < 0 || createIdx < 0 || rotateIdx < createIdx) {
-    fails.push("device_setup_not_atomic_rotate_after_webauthn");
+  if (persistIdx < 0 || createIdx < 0 || persistIdx < createIdx) {
+    fails.push("device_setup_not_atomic_persist_after_webauthn");
+  }
+  if (!/await rotateVaultMdk/.test(deviceJs)) {
+    fails.push("device_setup_missing_mdk_rotation");
+  }
+  if (!/format:\s*["']seed-v1["']/.test(deviceJs) && !/wrappedSeed/.test(deviceJs)) {
+    fails.push("device_setup_missing_seed_v1_wrap");
+  }
+  if (!/flushPendingVaultWrites/.test(deviceJs)) {
+    fails.push("device_setup_missing_flush_before_persist");
+  }
+  if (!/persistDeviceActivation/.test(deviceJs)) {
+    fails.push("device_setup_missing_atomic_persist");
   }
   if (!/webAuthnWatchdogMs/.test(deviceJs) || !/withWebAuthnWatchdog/.test(deviceJs)) {
     fails.push("device_missing_webauthn_timeout");
   }
   if (!/residentKey:\s*["']discouraged["']/.test(deviceJs)) {
     fails.push("device_resident_key_not_discouraged");
-  }
-  if (!/rollbackMdkRotation/.test(deviceJs)) {
-    fails.push("device_missing_mdk_rollback");
   }
   if (!/extensions:\s*\{\s*prf:\s*\{\s*\}\s*\}/.test(deviceJs)) {
     fails.push("device_missing_prf_enable_only_on_create");

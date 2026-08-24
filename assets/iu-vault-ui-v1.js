@@ -95,7 +95,7 @@
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupConfirm" />',
       "  </div>",
-      '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Můžete použít vlastní PIN InfoUzlu.</p>',
+      '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Na mobilu použijte nainstalovanou PWA aplikaci InfoUzlu, nebo zvolte vlastní PIN InfoUzlu.</p>',
       '  <button type="button" class="iuInfoCenter__btn" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
