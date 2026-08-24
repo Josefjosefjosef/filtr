@@ -42,7 +42,7 @@ function waitForPort(host, port, timeoutMs) {
   });
 }
 
-  function staticChecks(fails) {
+function staticChecks(fails) {
   const deviceJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-device-v1.js"), "utf8");
   const uiJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
   const appLockJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-app-lock-v1.js"), "utf8");
@@ -62,8 +62,10 @@ function unitMapTests(fails) {
   if (!String(dom.message).includes("DEVICE_CREATE_FAILED")) fails.push("map_dom_to_phase");
 }
 
-async function resetGuardVaultState(page) {
-  await page.evaluate(async () => {
+async function resetGuardVaultContext(context) {
+  const scratch = await context.newPage();
+  await scratch.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await scratch.evaluate(async () => {
     try {
       localStorage.removeItem("iu:vault:app-lock-active:v1");
       document.documentElement.classList.remove("iu-vault-app-locked");
@@ -72,7 +74,7 @@ async function resetGuardVaultState(page) {
       const keys = [];
       for (let i = 0; i < localStorage.length; i += 1) {
         const k = localStorage.key(i);
-        if (k && (k.startsWith("iu:vault:enc:v1:") || k.startsWith("iu:vault:"))) keys.push(k);
+        if (k && k.startsWith("iu:vault:")) keys.push(k);
       }
       for (const k of keys) {
         try {
@@ -80,25 +82,21 @@ async function resetGuardVaultState(page) {
         } catch (_) {}
       }
     } catch (_) {}
-    const { deleteKeyRecord, readMeta, writeMeta } = await import("/assets/iu-vault-db-v1.js");
-    for (const key of ["mdk:device", "mdk:device:pending", "mdk:pin", "mdk:level1"]) {
-      try {
-        await deleteKeyRecord(key);
-      } catch (_) {}
-    }
     try {
-      const meta = await readMeta();
-      meta.deviceEnabled = false;
-      meta.pinEnabled = false;
-      meta.mindMenuUnlockMethod = "none";
-      meta.securityLevel = 1;
-      await writeMeta(meta);
+      const { listRecordKeys, deleteRecord, wipeVaultDatabase } = await import("/assets/iu-vault-db-v1.js");
+      const recKeys = await listRecordKeys();
+      for (const k of recKeys) {
+        try {
+          await deleteRecord(k);
+        } catch (_) {}
+      }
+      await wipeVaultDatabase();
     } catch (_) {}
   });
+  await scratch.close();
 }
 
-
-async function runMockFlowTests(page, fails) {
+async function runMockFlowTests(context, fails) {
   const scenarios = [
     {
       id: "enabled_then_get_success",
@@ -136,7 +134,8 @@ async function runMockFlowTests(page, fails) {
   ];
 
   for (const scenario of scenarios) {
-    await resetGuardVaultState(page);
+    await resetGuardVaultContext(context);
+    const page = await context.newPage();
     await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await waitForVaultReady(page);
     const out = await page.evaluate(async (cfg) => {
@@ -184,20 +183,6 @@ async function runMockFlowTests(page, fails) {
       } finally {
         navigator.credentials.create = origCreate;
         navigator.credentials.get = origGet;
-        try {
-          const { deleteKeyRecord, readMeta, writeMeta } = await import("/assets/iu-vault-db-v1.js");
-          for (const key of ["mdk:device", "mdk:device:pending", "mdk:pin", "mdk:level1"]) {
-            try {
-              await deleteKeyRecord(key);
-            } catch (_) {}
-          }
-          const meta = await readMeta();
-          meta.deviceEnabled = false;
-          meta.pinEnabled = false;
-          meta.mindMenuUnlockMethod = "none";
-          meta.securityLevel = 1;
-          await writeMeta(meta);
-        } catch (_) {}
       }
     }, {
       ...scenario,
@@ -228,6 +213,7 @@ async function runMockFlowTests(page, fails) {
         fails.push(`${scenario.id}:expected_${scenario.expectPhase}_got_${out.reason}`);
       }
     }
+    await page.close();
   }
 }
 
@@ -262,12 +248,9 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   const context = await bootstrapGuardContext(browser, { viewport: { width: 1366, height: 768 }, isMobile: false });
-  const page = await context.newPage();
 
   try {
-    await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
-    await waitForVaultReady(page);
-    await runMockFlowTests(page, fails);
+    await runMockFlowTests(context, fails);
   } finally {
     await browser.close();
     server.kill();
