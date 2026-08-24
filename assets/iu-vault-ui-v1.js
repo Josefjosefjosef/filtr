@@ -421,6 +421,15 @@
     return "Nastavení zabezpečení zařízením se nezdařilo.";
   }
 
+  function setDeviceSetupBusy(busy) {
+    const applyBtn = document.getElementById("iuVaultApplyMindMenuMethodBtn");
+    const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
+    const mindMenuDev = document.getElementById("iuVaultMindMenuUnlockDeviceBtn");
+    if (applyBtn) applyBtn.disabled = !!busy;
+    if (unlockDev) unlockDev.disabled = !!busy;
+    if (mindMenuDev) mindMenuDev.disabled = !!busy;
+  }
+
   async function notifySecurityChanged(vault) {
     try {
       if (vault.flushPendingWrites) await vault.flushPendingWrites();
@@ -499,8 +508,7 @@
       }
 
       if (target === "device") {
-        const btn = document.getElementById("iuVaultApplyMindMenuMethodBtn");
-        if (btn) btn.disabled = true;
+        setDeviceSetupBusy(true);
         say("Probíhá nastavení zabezpečení zařízením. Dokončete ověření ve Windows.");
         try {
           await vault.setupDevice();
@@ -510,7 +518,7 @@
           say(deviceSetupUserMessage(e));
           await refreshSecurityUi();
         } finally {
-          if (btn) btn.disabled = false;
+          setDeviceSetupBusy(false);
         }
       }
     });
