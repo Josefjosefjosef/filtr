@@ -15,6 +15,63 @@ import {
   defaultMeta,
 } from "./iu-vault-db-v1.js";
 
+export const APP_LOCK_HINT_KEY = "iu:vault:app-lock-active:v1";
+
+let vaultBroadcast = null;
+
+function getVaultBroadcast() {
+  if (vaultBroadcast) return vaultBroadcast;
+  try {
+    if (typeof BroadcastChannel !== "undefined") {
+      vaultBroadcast = new BroadcastChannel("iu-vault-lock-v1");
+    }
+  } catch (_) {}
+  return vaultBroadcast;
+}
+
+export function setAppLockHintActive() {
+  try {
+    localStorage.setItem(APP_LOCK_HINT_KEY, "1");
+  } catch (_) {}
+  try {
+    document.documentElement.classList.add("iu-vault-app-locked");
+  } catch (_) {}
+}
+
+export function clearAppLockHint() {
+  try {
+    localStorage.removeItem(APP_LOCK_HINT_KEY);
+  } catch (_) {}
+  try {
+    document.documentElement.classList.remove("iu-vault-app-locked");
+  } catch (_) {}
+}
+
+function postVaultLockMessage(type, reason) {
+  try {
+    getVaultBroadcast()?.postMessage({ type, reason: reason || "", ts: Date.now() });
+  } catch (_) {}
+}
+
+export function registerVaultLockBroadcastListener(vault) {
+  const bc = getVaultBroadcast();
+  if (!bc || registerVaultLockBroadcastListener._done) return;
+  registerVaultLockBroadcastListener._done = true;
+  bc.addEventListener("message", (ev) => {
+    const data = ev && ev.data ? ev.data : null;
+    if (!data || !data.type) return;
+    if (data.type === "locked") {
+      lockVault(data.reason || "remote_tab").catch(() => {});
+      if (vault && typeof vault.isHydrationComplete === "function" && !vault.isHydrationComplete()) {
+        try {
+          window.__iuVaultHydrationPending = true;
+          window.__iuVaultHydrationComplete = false;
+        } catch (_) {}
+      }
+    }
+  });
+}
+
 const state = {
   mdk: null,
   unlocked: false,
@@ -162,6 +219,7 @@ export async function lockVault(reason = "manual") {
   try {
     window.dispatchEvent(new CustomEvent("iu-vault-locked", { detail: { reason } }));
   } catch (_) {}
+  postVaultLockMessage("locked", reason);
 }
 
 export async function unlockWithMdk(mdk) {
@@ -174,6 +232,7 @@ export async function unlockWithMdk(mdk) {
   try {
     window.dispatchEvent(new CustomEvent("iu-vault-unlocked", { detail: {} }));
   } catch (_) {}
+  postVaultLockMessage("unlocked", "");
 }
 
 export async function ensureLevel1Mdk() {
@@ -220,6 +279,7 @@ export async function activateLevel1AutoKey() {
   await unlockWithMdk(keyRec.mdk);
   await writeMeta(meta);
   await refreshSecurityMode(meta);
+  clearAppLockHint();
 }
 
 export function registerAutoLockListeners() {
@@ -259,6 +319,7 @@ export async function storePinWrap(meta, pinWrap) {
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
   await refreshSecurityMode(meta);
+  setAppLockHintActive();
   await lockVault("pin_enabled");
 }
 
@@ -272,6 +333,7 @@ export async function storeDeviceWrap(meta, deviceWrap) {
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
   await refreshSecurityMode(meta);
+  setAppLockHintActive();
   await lockVault("device_enabled");
 }
 

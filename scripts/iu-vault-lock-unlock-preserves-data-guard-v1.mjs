@@ -60,14 +60,15 @@ function staticChecks(fails) {
   const lockJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-lock-v1.js"), "utf8");
   const bootJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-bootstrap-v1.js"), "utf8");
   const uiJs = require("fs").readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
+  const indexHtml = require("fs").readFileSync(path.join(REPO, "projects", "index.html"), "utf8");
   const appJs = require("fs").readFileSync(path.join(REPO, "assets", "app.js"), "utf8");
   if (!/clearVaultMemoryCache/.test(lockJs)) fails.push("lock_missing_cache_clear");
   if (!/afterUnlock/.test(bootJs) || !/preloadAllVaultRecords/.test(bootJs)) {
     fails.push("bootstrap_missing_unlock_hydrate");
   }
-  if (!/isDesktopVaultGate/.test(uiJs) || !/iuVaultMindMenuLockGate/.test(uiJs)) {
-    fails.push("ui_missing_desktop_gate");
-  }
+  if (!/iuVaultAppLockScreen/.test(indexHtml)) fails.push("index_missing_global_lock_screen");
+  if (!/initGlobalAppLock/.test(bootJs)) fails.push("bootstrap_missing_global_app_lock");
+  if (!/refreshGlobalAppLockUi/.test(bootJs)) fails.push("bootstrap_missing_refresh_app_lock");
   if (!/isVaultPersistBlocked|__iuVaultDeferMindMenuMount|__iuVaultHydrationComplete/.test(bootJs)) {
     fails.push("bootstrap_missing_persist_hydration_guards");
   }
@@ -81,8 +82,8 @@ function staticChecks(fails) {
   if (!/mindMenuUnlockMethod|resolveMindMenuUnlockMethod/.test(lockJs)) {
     fails.push("lock_missing_unlock_method");
   }
-  if (!/data-iu-vault-ui-version/.test(uiJs) || !/Zamknutí MindMenu/.test(uiJs)) {
-    fails.push("ui_missing_mindmenu_lock_ux");
+  if (!/data-iu-vault-ui-version/.test(uiJs) || !/InfoUzel je chráněn|Zabezpečení InfoUzlu/.test(uiJs)) {
+    fails.push("ui_missing_global_lock_ux");
   }
   if (!/pickerDraftMethod|iuVaultPinSetupBlock/.test(uiJs)) {
     fails.push("ui_missing_picker_draft");
@@ -364,21 +365,20 @@ async function main() {
           notesPlain = localStorage.getItem("iu.notes.store.v1");
           tasksPlain = localStorage.getItem("iu.tasks.mvp.v1");
         } catch (_) {}
-        const overlay = document.getElementById("iuVaultLockOverlay");
+        const overlay = document.getElementById("iuVaultAppLockScreen");
         return {
           unlocked: st.unlocked,
           notesPlain,
           tasksPlain,
-          globalOverlayVisible: overlay ? !overlay.hidden : false,
-          desktopGate: window.matchMedia("(min-width: 1025px)").matches,
+          globalLockVisible: overlay ? !overlay.hidden : false,
+          htmlLocked: document.documentElement.classList.contains("iu-vault-app-locked"),
         };
       });
 
       if (lockedState.unlocked) fails.push("should_be_locked");
       if (lockedState.notesPlain || lockedState.tasksPlain) fails.push("plaintext_visible_while_locked");
-      if (lockedState.desktopGate && lockedState.globalOverlayVisible) {
-        fails.push("global_overlay_visible_on_desktop");
-      }
+      if (!lockedState.globalLockVisible) fails.push("global_lock_hidden_while_locked");
+      if (!lockedState.htmlLocked) fails.push("html_not_locked_while_locked");
 
       const encWhileLocked = await page.evaluate(() => ({
         notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
@@ -390,9 +390,7 @@ async function main() {
         document.body.classList.add("iu-desktop-home-grid");
       });
       await page.waitForFunction(
-        () =>
-          typeof window.iuArticleActionsOpenOverlay === "function" &&
-          window.iuArticleActionsOpenOverlay._iuVaultGateHook,
+        () => typeof window.iuArticleActionsOpenOverlay === "function",
         null,
         { timeout: 180000 }
       );
@@ -400,18 +398,23 @@ async function main() {
         await window.iuArticleActionsOpenOverlay();
       });
 
-      const lockedGateUi = await page.evaluate(() => {
-        const gate = document.getElementById("iuVaultMindMenuLockGate");
-        const host = document.getElementById("iuMyInfoUzelMindMenuHost");
-        const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
+      const lockedGateUi = await page.evaluate(async () => {
+        const screen = document.getElementById("iuVaultAppLockScreen");
+        let getMdkFailed = false;
+        try {
+          const { getMdk } = await import("/assets/iu-vault-lock-v1.js");
+          getMdk();
+        } catch (e) {
+          getMdkFailed = String(e.message || e).includes("VAULT_LOCKED");
+        }
         return {
-          gateVisible: gate ? !gate.hidden : false,
-          hostHidden: host ? host.hidden : false,
-          toolsHidden: toolsHost ? toolsHost.hidden : false,
+          globalLockVisible: screen ? !screen.hidden : false,
+          htmlLocked: document.documentElement.classList.contains("iu-vault-app-locked"),
+          getMdkFailed,
         };
       });
-      if (!lockedGateUi.gateVisible) fails.push("mindmenu_gate_hidden_while_locked");
-      if (!lockedGateUi.hostHidden) fails.push("mindmenu_host_visible_while_locked");
+      if (!lockedGateUi.globalLockVisible) fails.push("global_lock_hidden_while_app_used");
+      if (!lockedGateUi.getMdkFailed) fails.push("mdk_accessible_while_locked");
 
       await unlockProtection(page, activated.mode);
 
@@ -426,9 +429,7 @@ async function main() {
         document.body.classList.add("iu-desktop-home-grid");
       });
       await page.waitForFunction(
-        () =>
-          typeof window.iuArticleActionsOpenOverlay === "function" &&
-          window.iuArticleActionsOpenOverlay._iuVaultGateHook,
+        () => typeof window.iuArticleActionsOpenOverlay === "function",
         null,
         { timeout: 180000 }
       );
@@ -437,21 +438,15 @@ async function main() {
       });
 
       const gateUi = await page.evaluate(() => {
-        const gate = document.getElementById("iuVaultMindMenuLockGate");
+        const screen = document.getElementById("iuVaultAppLockScreen");
         const host = document.getElementById("iuMyInfoUzelMindMenuHost");
         return {
-          gateExists: !!gate,
-          gateHidden: gate ? gate.hidden : true,
+          globalLockHidden: screen ? screen.hidden : true,
           hostHidden: host ? host.hidden : false,
         };
       });
-      if (!gateUi.gateExists && !gateUi.hostHidden) {
-        /* gate element is created on first locked open */
-      } else {
-        if (!gateUi.gateExists) fails.push("mindmenu_gate_missing");
-        if (!gateUi.gateHidden) fails.push("mindmenu_gate_visible_while_unlocked");
-        if (gateUi.hostHidden) fails.push("mindmenu_host_hidden_while_unlocked");
-      }
+      if (!gateUi.globalLockHidden) fails.push("global_lock_visible_while_unlocked");
+      if (gateUi.hostHidden) fails.push("mindmenu_host_hidden_while_unlocked");
 
       await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
       await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
@@ -513,9 +508,7 @@ async function main() {
         document.body.classList.add("iu-desktop-home-grid");
       });
       await page2.waitForFunction(
-        () =>
-          typeof window.iuArticleActionsOpenOverlay === "function" &&
-          window.iuArticleActionsOpenOverlay._iuVaultGateHook,
+        () => typeof window.iuArticleActionsOpenOverlay === "function",
         null,
         { timeout: 180000 }
       );
@@ -523,17 +516,20 @@ async function main() {
         await window.iuArticleActionsOpenOverlay();
       });
       const gateAfterReopen = await page2.evaluate(() => {
-        const gate = document.getElementById("iuVaultMindMenuLockGate");
+        const screen = document.getElementById("iuVaultAppLockScreen");
         const host = document.getElementById("iuMyInfoUzelMindMenuHost");
         return {
-          gateVisible: gate ? !gate.hidden : false,
+          globalLockVisible: screen ? !screen.hidden : false,
+          htmlLocked: document.documentElement.classList.contains("iu-vault-app-locked"),
           hostHidden: host ? host.hidden : false,
           mindMenuMounted: !!(host && host.querySelector("#iuMindMenuView, .mindMenu")),
         };
       });
-      if (!gateAfterReopen.gateVisible) fails.push("mindmenu_gate_hidden_after_browser_reopen");
-      if (!gateAfterReopen.hostHidden) fails.push("mindmenu_host_visible_after_browser_reopen");
-      if (gateAfterReopen.mindMenuMounted) fails.push("mindmenu_mounted_before_unlock_after_reopen");
+      if (!gateAfterReopen.globalLockVisible) fails.push("global_lock_hidden_after_browser_reopen");
+      if (!gateAfterReopen.htmlLocked) fails.push("html_not_locked_after_browser_reopen");
+      if (gateAfterReopen.mindMenuMounted && !gateAfterReopen.hostHidden) {
+        fails.push("mindmenu_accessible_before_unlock_after_reopen");
+      }
 
       await unlockProtection(page2, activated.mode);
 
