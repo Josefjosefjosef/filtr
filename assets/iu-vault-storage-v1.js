@@ -115,6 +115,24 @@ export function notifyVaultMemoryHydrated() {
   }
 }
 
+export function hasEncryptedRecordAtRest(storageKey) {
+  const k = String(storageKey);
+  captureNativeLocalStorage();
+  try {
+    return !!nativeGetItem(encStorageKey(k));
+  } catch (_) {
+    return false;
+  }
+}
+
+/** Block module saves while vault is locked but ciphertext still exists (pre-hydration). */
+export function isVaultPersistBlocked(storageKey) {
+  if (!isProtectedStorageKey(storageKey)) return false;
+  const st = getVaultState();
+  if (st.unlocked) return false;
+  return hasEncryptedRecordAtRest(storageKey);
+}
+
 export function installLocalStorageShim() {
   if (installLocalStorageShim._done) return;
   installLocalStorageShim._done = true;

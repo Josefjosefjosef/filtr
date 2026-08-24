@@ -278,6 +278,11 @@ export function initIuNotesOverlay() {
     function emitNotesChanged(){
       try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } })); }catch{}
     }
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+        return norm;
+      }
+    } catch (_) {}
     if (!isLocalDataProtectionNoticeAccepted()) {
       void ensureLocalDataProtectionBeforeSave().then(function (ok) {
         if (!ok) return;

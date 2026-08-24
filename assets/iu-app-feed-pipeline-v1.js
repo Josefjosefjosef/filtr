@@ -8060,18 +8060,22 @@ function iuIsBenignResizeObserverLoopError(ev) {
     const overlay = document.getElementById("iuMyInfoUzelOverlay");
     if (!overlay) return;
     iuArticleActionsRefreshManagePanels();
-    iuArticleActionsMountMindMenuInOverlay();
-    iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
+    if (!window.__iuVaultDeferMindMenuMount) {
+      iuArticleActionsMountMindMenuInOverlay();
+      iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
+    }
     overlay.hidden = false;
     document.body.classList.add("iu-myinfouzel-open");
-    try {
-      window.requestAnimationFrame(function () {
+    if (!window.__iuVaultDeferMindMenuMount) {
+      try {
         window.requestAnimationFrame(function () {
-          try { iuQuickToolsApplyConfig(); } catch (_) {}
-          try { iuQuickToolsScheduleLockAll(); } catch (_) {}
+          window.requestAnimationFrame(function () {
+            try { iuQuickToolsApplyConfig(); } catch (_) {}
+            try { iuQuickToolsScheduleLockAll(); } catch (_) {}
+          });
         });
-      });
-    } catch (_) {}
+      } catch (_) {}
+    }
     try {
       const closeBtn = overlay.querySelector(".iuMyInfoUzelOverlay__close");
       if (closeBtn) closeBtn.focus();

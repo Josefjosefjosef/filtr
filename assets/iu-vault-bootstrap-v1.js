@@ -2,7 +2,7 @@
  * Vault bootstrap — must load before app.js (top-level await).
  */
 import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin } from "./iu-vault-lock-v1.js";
-import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated } from "./iu-vault-storage-v1.js";
+import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js";
@@ -26,22 +26,19 @@ async function initVault() {
 
   if (meta.pinEnabled || meta.deviceEnabled) {
     await lockVault("startup");
+    try {
+      window.__iuVaultHydrationPending = true;
+      window.__iuVaultHydrationComplete = false;
+    } catch (_) {}
   } else {
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
     notifyVaultMemoryHydrated();
+    try {
+      window.__iuVaultHydrationPending = false;
+      window.__iuVaultHydrationComplete = true;
+    } catch (_) {}
   }
-
-  window.addEventListener("iu-vault-unlocked", () => {
-    readMeta()
-      .then((m) => {
-        if (!m || (!m.pinEnabled && !m.deviceEnabled)) return null;
-        return migratePlaintextToVault()
-          .then(() => preloadAllVaultRecords())
-          .then(() => notifyVaultMemoryHydrated());
-      })
-      .catch(() => {});
-  });
 
   window.addEventListener("iu-local-store-changed", (ev) => {
     const key = ev && ev.detail && ev.detail.key;
@@ -63,7 +60,9 @@ const meta = await initVault().catch((err) => {
 
 function notifyVaultHydrated() {
   try {
-    window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+    if (window.__iuVaultHydrationComplete) {
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+    }
   } catch (_) {}
 }
 if (document.readyState === "loading") {
@@ -121,7 +120,14 @@ const api = {
     await preloadAllVaultRecords();
     const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
     notify();
+    try {
+      window.__iuVaultHydrationPending = false;
+      window.__iuVaultHydrationComplete = true;
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+    } catch (_) {}
   },
+  isPersistBlocked: (key) => isVaultPersistBlocked(key),
+  isHydrationComplete: () => !!window.__iuVaultHydrationComplete,
 };
 
 window.iuVault = api;
