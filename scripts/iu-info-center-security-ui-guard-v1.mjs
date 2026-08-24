@@ -104,7 +104,8 @@ async function openPrivacySection(page) {
   await page.waitForFunction(
     () => {
       const el = document.getElementById("iuVaultMindMenuLockStatus");
-      return el && String(el.textContent || "").includes("Zamknutí MindMenu");
+      const t = el ? String(el.textContent || "") : "";
+      return t.includes("Zabezpečení InfoUzlu") || t.includes("InfoUzel je chráněn");
     },
     null,
     { timeout: 30000 }
@@ -123,7 +124,7 @@ async function readSecurityUi(page) {
       uiVersion: section ? section.getAttribute("data-iu-vault-ui-version") : null,
       heading: text.includes("Zabezpečení osobních dat"),
       standard: text.includes("Standardní ochrana"),
-      mindMenuLock: text.includes("Zamknutí MindMenu"),
+      infoUzelLock: text.includes("Odemknutí zařízením") || text.includes("Zabezpečení InfoUzlu"),
       statusText: status ? String(status.textContent || "").trim() : "",
       applyVisible: applyBtn ? !applyBtn.hidden : false,
       deviceUnsupportedUi: devNo ? !devNo.hidden : false,
@@ -193,14 +194,18 @@ async function runScenario(browser, base, scenario) {
   if (ui.uiVersion !== "2") fails.push("security_ui_version_not_v2");
   if (!ui.heading) fails.push("heading_missing");
   if (!ui.standard) fails.push("standard_missing");
-  if (!ui.mindMenuLock) fails.push("mindmenu_lock_missing");
-  if (!ui.statusText.includes("Zamknutí MindMenu")) fails.push("mindmenu_status_missing");
+  if (!ui.infoUzelLock) fails.push("infouzel_lock_missing");
+  if (
+    !ui.statusText.includes("Zabezpečení InfoUzlu") &&
+    !ui.statusText.includes("InfoUzel je chráněn")
+  ) {
+    fails.push("infouzel_status_missing");
+  }
   const expectL3Active = scenario.id === "iphone" && l3PinOk === "ok";
   if (expectL3Active) {
-    if (!ui.statusText.includes("zapnuté")) fails.push("l3_active_state_missing");
-    if (!ui.statusText.includes("Vypnuto") && !ui.statusText.includes("zapnuté")) fails.push("l3_status_wrong");
+    if (!ui.statusText.includes("chráněn")) fails.push("l3_active_state_missing");
   } else {
-    if (!ui.statusText.includes("Vypnuto")) fails.push("mindmenu_lock_off_missing");
+    if (!ui.statusText.includes("Vypnuto")) fails.push("infouzel_lock_off_missing");
     if (!ui.applyVisible) fails.push("apply_button_hidden");
   }
 
