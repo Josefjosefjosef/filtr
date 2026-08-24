@@ -29,8 +29,23 @@ const state = {
 
 async function refreshSecurityMode(meta) {
   const m = meta || await readMeta();
-  state.requiresUserReauth = !!(m && (m.pinEnabled || m.deviceEnabled));
+  const pinWrap = await readKeyRecord("mdk:pin");
+  const deviceWrap = await readKeyRecord("mdk:device");
+  const method = resolveMindMenuUnlockMethod(m, pinWrap, deviceWrap);
+  state.requiresUserReauth = method !== "none";
   return state.requiresUserReauth;
+}
+
+export function resolveMindMenuUnlockMethod(meta, pinWrap, deviceWrap) {
+  const m = meta || {};
+  if (m.mindMenuUnlockMethod === "pin" || m.mindMenuUnlockMethod === "device" || m.mindMenuUnlockMethod === "none") {
+    if (m.mindMenuUnlockMethod === "pin" && !pinWrap && !m.pinEnabled) return "none";
+    if (m.mindMenuUnlockMethod === "device" && !deviceWrap && !m.deviceEnabled) return "none";
+    return m.mindMenuUnlockMethod;
+  }
+  if (deviceWrap || m.deviceEnabled) return pinWrap || m.pinEnabled ? "device" : "device";
+  if (pinWrap || m.pinEnabled) return "pin";
+  return "none";
 }
 
 export function getVaultState() {
@@ -82,24 +97,32 @@ export async function repairVaultMetaFromKeys(meta) {
   const pinWrap = await readKeyRecord("mdk:pin");
   const deviceWrap = await readKeyRecord("mdk:device");
   let changed = false;
-  if (pinWrap && !meta.pinEnabled) {
-    meta.pinEnabled = true;
+  const method = resolveMindMenuUnlockMethod(meta, pinWrap, deviceWrap);
+  if (meta.mindMenuUnlockMethod !== method) {
+    meta.mindMenuUnlockMethod = method;
     changed = true;
   }
-  if (deviceWrap && !meta.deviceEnabled) {
-    meta.deviceEnabled = true;
+  const pinOn = method === "pin";
+  const devOn = method === "device";
+  if (meta.pinEnabled !== pinOn) {
+    meta.pinEnabled = pinOn;
     changed = true;
   }
-  if (pinWrap && deviceWrap) {
-    if (meta.securityLevel !== 23) {
-      meta.securityLevel = 23;
-      changed = true;
-    }
-  } else if (pinWrap && meta.securityLevel !== 3) {
-    meta.securityLevel = 3;
+  if (meta.deviceEnabled !== devOn) {
+    meta.deviceEnabled = devOn;
     changed = true;
-  } else if (deviceWrap && meta.securityLevel !== 2) {
-    meta.securityLevel = 2;
+  }
+  const level = method === "pin" ? 3 : method === "device" ? 2 : 1;
+  if (meta.securityLevel !== level) {
+    meta.securityLevel = level;
+    changed = true;
+  }
+  if (pinOn && deviceWrap) {
+    await deleteKeyRecord("mdk:device");
+    changed = true;
+  }
+  if (devOn && pinWrap) {
+    await deleteKeyRecord("mdk:pin");
     changed = true;
   }
   if (changed) {
@@ -113,9 +136,11 @@ export async function readSecurityConfiguredState(meta) {
   const m = meta || await readMeta();
   const pinWrap = await readKeyRecord("mdk:pin");
   const deviceWrap = await readKeyRecord("mdk:device");
+  const unlockMethod = resolveMindMenuUnlockMethod(m, pinWrap, deviceWrap);
   return {
-    pinConfigured: !!(m && m.pinEnabled) || !!pinWrap,
-    deviceConfigured: !!(m && m.deviceEnabled) || !!deviceWrap,
+    unlockMethod,
+    pinConfigured: unlockMethod === "pin",
+    deviceConfigured: unlockMethod === "device",
     meta: m,
   };
 }
@@ -180,6 +205,7 @@ export async function activateLevel1AutoKey() {
   const meta = await readMeta();
   if (!meta) throw new Error("VAULT_META_MISSING");
   meta.securityLevel = 1;
+  meta.mindMenuUnlockMethod = "none";
   meta.pinEnabled = false;
   meta.deviceEnabled = false;
   await writeMeta(meta);
@@ -225,8 +251,11 @@ export function registerPinFailure() {
 
 export async function storePinWrap(meta, pinWrap) {
   await writeKeyRecord("mdk:pin", pinWrap);
+  await deleteKeyRecord("mdk:device");
   meta.pinEnabled = true;
-  meta.securityLevel = meta.deviceEnabled ? 23 : 3;
+  meta.deviceEnabled = false;
+  meta.mindMenuUnlockMethod = "pin";
+  meta.securityLevel = 3;
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
   await refreshSecurityMode(meta);
@@ -235,8 +264,11 @@ export async function storePinWrap(meta, pinWrap) {
 
 export async function storeDeviceWrap(meta, deviceWrap) {
   await writeKeyRecord("mdk:device", deviceWrap);
+  await deleteKeyRecord("mdk:pin");
   meta.deviceEnabled = true;
-  meta.securityLevel = meta.pinEnabled ? 23 : 2;
+  meta.pinEnabled = false;
+  meta.mindMenuUnlockMethod = "device";
+  meta.securityLevel = 2;
   await deleteKeyRecord("mdk:level1");
   await writeMeta(meta);
   await refreshSecurityMode(meta);

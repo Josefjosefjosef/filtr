@@ -74,17 +74,7 @@ export async function changePin(oldPin, newPin, confirmPin) {
 export async function disablePin(pin) {
   const { unlockWithPin } = await import("./iu-vault-lock-v1.js");
   await unlockWithPin(pin);
-  const meta = await readMeta();
-  await deleteKeyRecord("mdk:pin");
-  meta.pinEnabled = false;
-  if (!meta.deviceEnabled) {
-    await activateLevel1AutoKey();
-  } else {
-    meta.securityLevel = 2;
-    await writeMeta(meta);
-    const { lockVault } = await import("./iu-vault-lock-v1.js");
-    await lockVault("pin_disabled");
-  }
+  await activateLevel1AutoKey();
 }
 
 export async function hasPinConfigured() {

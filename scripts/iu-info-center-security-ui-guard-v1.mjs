@@ -103,8 +103,8 @@ async function openPrivacySection(page) {
   );
   await page.waitForFunction(
     () => {
-      const el = document.getElementById("iuVaultCurrentProtection");
-      return el && String(el.textContent || "").includes("Aktuální ochrana:");
+      const el = document.getElementById("iuVaultMindMenuLockStatus");
+      return el && String(el.textContent || "").includes("Zamknutí MindMenu");
     },
     null,
     { timeout: 30000 }
@@ -115,20 +115,18 @@ async function readSecurityUi(page) {
   return page.evaluate(() => {
     const section = document.getElementById("iuVaultSecuritySection");
     const text = section ? section.innerText || "" : "";
-    const current = document.getElementById("iuVaultCurrentProtection");
-    const devBtn = document.getElementById("iuVaultEnableDeviceBtn");
+    const status = document.getElementById("iuVaultMindMenuLockStatus");
+    const applyBtn = document.getElementById("iuVaultApplyMindMenuMethodBtn");
     const devNo = document.getElementById("iuVaultDeviceUnsupported");
-    const pinBtn = document.getElementById("iuVaultSetupPinBtn");
     return {
       sectionExists: !!section,
+      uiVersion: section ? section.getAttribute("data-iu-vault-ui-version") : null,
       heading: text.includes("Zabezpečení osobních dat"),
       standard: text.includes("Standardní ochrana"),
-      device: text.includes("Odemknutí zařízením"),
-      pin: text.includes("Vlastní PIN InfoUzlu"),
-      currentText: current ? String(current.textContent || "").trim() : "",
-      deviceSupportedUi: devBtn ? !devBtn.hidden : false,
+      mindMenuLock: text.includes("Zamknutí MindMenu"),
+      statusText: status ? String(status.textContent || "").trim() : "",
+      applyVisible: applyBtn ? !applyBtn.hidden : false,
       deviceUnsupportedUi: devNo ? !devNo.hidden : false,
-      pinSetupVisible: pinBtn ? !pinBtn.hidden : false,
     };
   });
 }
@@ -192,20 +190,19 @@ async function runScenario(browser, base, scenario) {
   const ui = await readSecurityUi(page);
 
   if (!ui.sectionExists) fails.push("security_section_missing");
+  if (ui.uiVersion !== "2") fails.push("security_ui_version_not_v2");
   if (!ui.heading) fails.push("heading_missing");
   if (!ui.standard) fails.push("standard_missing");
-  if (!ui.device) fails.push("device_missing");
-  if (!ui.pin) fails.push("pin_missing");
-  if (!ui.currentText.includes("Aktuální ochrana:")) fails.push("current_protection_missing");
+  if (!ui.mindMenuLock) fails.push("mindmenu_lock_missing");
+  if (!ui.statusText.includes("Zamknutí MindMenu")) fails.push("mindmenu_status_missing");
   const expectL3Active = scenario.id === "iphone" && l3PinOk === "ok";
   if (expectL3Active) {
-    if (!ui.currentText.includes("Vlastní PIN")) fails.push("l3_active_state_missing");
-    if (ui.pinSetupVisible) fails.push("l3_pin_setup_should_hide");
+    if (!ui.statusText.includes("zapnuté")) fails.push("l3_active_state_missing");
+    if (!ui.statusText.includes("Vypnuto") && !ui.statusText.includes("zapnuté")) fails.push("l3_status_wrong");
   } else {
-    if (!ui.currentText.includes("Standardní ochrana")) fails.push("current_l1_missing");
-    if (!ui.pinSetupVisible) fails.push("pin_setup_hidden");
+    if (!ui.statusText.includes("Vypnuto")) fails.push("mindmenu_lock_off_missing");
+    if (!ui.applyVisible) fails.push("apply_button_hidden");
   }
-  if (ui.deviceSupportedUi && ui.deviceUnsupportedUi) fails.push("device_capability_conflict");
 
   if (expectL3Active) {
     await page.evaluate(async () => {

@@ -155,6 +155,7 @@ export async function defaultMeta() {
   return {
     schemaVersion: VAULT_SCHEMA_VERSION,
     securityLevel: 1,
+    mindMenuUnlockMethod: "none",
     autoLockPolicy: "background",
     pinEnabled: false,
     deviceEnabled: false,

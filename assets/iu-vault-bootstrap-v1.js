@@ -29,7 +29,7 @@ async function initVault() {
 
   let meta = await ensureLevel1Mdk();
 
-  if (meta.pinEnabled || meta.deviceEnabled) {
+  if (meta.pinEnabled || meta.deviceEnabled || meta.mindMenuUnlockMethod === "pin" || meta.mindMenuUnlockMethod === "device") {
     await lockVault("startup");
     try {
       window.__iuVaultHydrationPending = true;
@@ -84,7 +84,7 @@ const api = {
   lock: () => lockVault("manual"),
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -100,12 +100,34 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-persist-v2-20260824");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
     return disableDeviceUnlock();
+  },
+  disableMindMenuLock: async (authPin) => {
+    const configured = await readSecurityConfiguredState();
+    if (configured.unlockMethod === "pin") {
+      if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
+      await unlockWithPin(authPin);
+    } else if (configured.unlockMethod === "device") {
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
+      await unlockWithDevice();
+    }
+    const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
+    await activateLevel1AutoKey();
+    await migratePlaintextToVault();
+    await preloadAllVaultRecords();
+    const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
+    notify();
+    try {
+      window.__iuVaultHydrationPending = false;
+      window.__iuVaultHydrationComplete = true;
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+      window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
+    } catch (_) {}
   },
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   wipePersonal: async () => {
