@@ -379,6 +379,38 @@
       if (msg) msg.textContent = text || "";
     }
 
+    function deviceSetupUserMessage(err) {
+      const code = String(err && err.message ? err.message : err);
+      if (code.includes("VAULT_DEVICE_CANCELLED")) {
+        return "Odemknutí zařízením nebylo dokončeno. Aktuální ochrana a data zůstávají beze změny.";
+      }
+      if (code.includes("VAULT_DEVICE_TIMEOUT")) {
+        return "Vypršel časový limit pro Windows Hello. Zkuste to znovu nebo použijte jiný prohlížeč.";
+      }
+      if (code.includes("VAULT_DEVICE_PRF_UNAVAILABLE")) {
+        return "Toto zařízení nepodporuje bezpečné odemknutí přes Windows Hello. Ochrana zůstává beze změny.";
+      }
+      if (code.includes("VAULT_DEVICE_UNSUPPORTED")) {
+        return "Odemknutí zařízením není v tomto prohlížeči podporováno.";
+      }
+      if (code.includes("VAULT_DEVICE_CREATE_FAILED")) {
+        return "Nastavení odemknutí zařízením se nezdařilo. Ochrana zůstává beze změny — zkuste to znovu.";
+      }
+      return "Nastavení odemknutí zařízením se nezdařilo. Ochrana zůstává beze změny.";
+    }
+
+    function setDeviceSetupBusy(btn, busy) {
+      if (!btn) return;
+      btn.disabled = !!busy;
+      if (busy) {
+        if (!btn.dataset.iuVaultPrevLabel) btn.dataset.iuVaultPrevLabel = btn.textContent || "";
+        btn.textContent = "Čekám na Windows Hello…";
+      } else if (btn.dataset.iuVaultPrevLabel) {
+        btn.textContent = btn.dataset.iuVaultPrevLabel;
+        delete btn.dataset.iuVaultPrevLabel;
+      }
+    }
+
     document.getElementById("iuVaultSetupPinBtn")?.addEventListener("click", async () => {
       const input = showPinSetupDialog();
       if (!input) return;
@@ -419,12 +451,19 @@
     });
 
     document.getElementById("iuVaultEnableDeviceBtn")?.addEventListener("click", async () => {
+      const btn = document.getElementById("iuVaultEnableDeviceBtn");
+      if (btn && btn.disabled) return;
+      setDeviceSetupBusy(btn, true);
+      say("Probíhá nastavení odemknutí zařízením. Dokončete ověření ve Windows.");
       try {
         await vault.setupDevice();
         say("Odemknutí zařízením bylo zapnuto.");
         await refreshSecurityUi();
       } catch (e) {
-        say(String(e.message || e));
+        say(deviceSetupUserMessage(e));
+        await refreshSecurityUi();
+      } finally {
+        setDeviceSetupBusy(btn, false);
       }
     });
 
@@ -472,13 +511,26 @@
 
     document.getElementById("iuVaultUnlockDeviceBtn")?.addEventListener("click", async () => {
       const err = document.getElementById("iuVaultLockErr");
+      const btn = document.getElementById("iuVaultUnlockDeviceBtn");
+      if (btn && btn.disabled) return;
+      if (btn) btn.disabled = true;
+      if (err) err.textContent = "";
       try {
         await vault.unlockDevice();
         await vault.afterUnlock();
         if (err) err.textContent = "";
         await refreshSecurityUi();
       } catch (e) {
-        if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
+        const code = String(e && e.message ? e.message : e);
+        if (code.includes("VAULT_DEVICE_CANCELLED")) {
+          if (err) err.textContent = "Odemknutí bylo zrušeno. Data zůstávají zamčená.";
+        } else if (code.includes("VAULT_DEVICE_TIMEOUT")) {
+          if (err) err.textContent = "Vypršel časový limit. Zkuste odemknutí znovu.";
+        } else {
+          if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
+        }
+      } finally {
+        if (btn) btn.disabled = false;
       }
     });
 

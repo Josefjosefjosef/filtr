@@ -78,7 +78,7 @@ const api = {
   lock: () => lockVault("manual"),
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -94,11 +94,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-failsafe-v1-20260823");
     return disableDeviceUnlock();
   },
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
