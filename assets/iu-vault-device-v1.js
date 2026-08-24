@@ -50,6 +50,10 @@ function rpId() {
 export async function detectDeviceUnlockSupport() {
   if (!window.PublicKeyCredential) return false;
   try {
+    const configured = await hasDeviceConfigured();
+    if (configured) return true;
+  } catch (_) {}
+  try {
     if (typeof PublicKeyCredential.getClientCapabilities === "function") {
       const caps = await PublicKeyCredential.getClientCapabilities();
       if (caps && caps["extension:prf"]) return true;
@@ -58,7 +62,7 @@ export async function detectDeviceUnlockSupport() {
   try {
     if (typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === "function") {
       const uvpa = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-      if (!uvpa) return false;
+      return !!uvpa;
     }
   } catch (_) {
     return false;

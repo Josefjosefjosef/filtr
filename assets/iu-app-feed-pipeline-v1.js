@@ -25285,6 +25285,22 @@ function buildVideoAsArticleCard(it) {
   const IU_MAILBOX_LABEL_MAX = 25;
   const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
   const MAILBOX_PLACEHOLDERS = Array.from({ length: IU_MAILBOX_MAX }, () => IU_MM_EDIT_INPUT_PLACEHOLDER);
+  const VAULT_ENC_PREFIX = "iu:vault:enc:v1:";
+  function iuVaultHasEncBlob(key) {
+    try { return !!localStorage.getItem(VAULT_ENC_PREFIX + key); } catch (_) { return false; }
+  }
+  function iuVaultIsPersistBlocked(key) {
+    try {
+      return !!(window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(key));
+    } catch (_) { return false; }
+  }
+  function iuVaultTrySetItem(key, value) {
+    if (iuVaultIsPersistBlocked(key)) return false;
+    try { localStorage.setItem(key, value); return true; } catch (_) { return false; }
+  }
+  function iuMailboxDefaultItems() {
+    return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
+  }
   function iuMmIsPlaceholderLabel(label) {
     const s = String(label ?? "").trim();
     if (!s) return true;
@@ -25336,15 +25352,18 @@ function buildVideoAsArticleCard(it) {
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        const items = MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
+        if (iuVaultHasEncBlob(MAILBOX_STORAGE_KEY) || iuVaultIsPersistBlocked(MAILBOX_STORAGE_KEY)) {
+          return iuMailboxDefaultItems();
+        }
+        const items = iuMailboxDefaultItems();
         if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
           for (let i = 0; i < 4 && i < items.length; i++) {
             if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
           }
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) })); }catch{}
+          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
           try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
         } else {
-          try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) })); }catch{}
+          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
         }
         return items;
       }
@@ -25365,19 +25384,19 @@ function buildVideoAsArticleCard(it) {
         };
       });
       if (items.length > IU_MAILBOX_MAX) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
           fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER, url: "", social: null, hidden: false, index: i, slot: i + 1 });
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
       }
       if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
           if (fixed[i].social == null) fixed[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
         }
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       let migrated56 = false;
@@ -25388,11 +25407,11 @@ function buildVideoAsArticleCard(it) {
         }
       }
       if (migrated56) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
       }
       const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > IU_MAILBOX_MAX);
       if (hadSlotMigration) {
-        try{ localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) })); }catch{}
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
       }
       fixed.sort((a, b) => (a.slot || 0) - (b.slot || 0));
       return fixed;
@@ -25403,6 +25422,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuMailboxSave(items){
     try{
+      if (iuVaultIsPersistBlocked(MAILBOX_STORAGE_KEY)) return;
       const sorted = items.slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
       const toSave = sorted.map((it) => ({
         label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
@@ -25485,6 +25505,14 @@ function buildVideoAsArticleCard(it) {
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
     iuMailboxRender();
+    try {
+      window.addEventListener("iu-vault-hydrated", function iuMailboxVaultHydrated() {
+        try { iuMailboxRender(); } catch (_) {}
+      });
+      window.addEventListener("iu-vault-unlocked", function iuMailboxVaultUnlocked() {
+        try { iuMailboxRender(); } catch (_) {}
+      });
+    } catch (_) {}
     let mailboxCount = iuMailboxLoad().filter((it) => !it.hidden).length;
     iuUpdateMailboxControls(mailboxCount);
     iuPositionMailboxControls();
@@ -26217,7 +26245,12 @@ function buildVideoAsArticleCard(it) {
   function loadQuickToolsConfig() {
     try {
       const raw = typeof localStorage !== "undefined" ? localStorage.getItem(IU_QUICKTOOLS_STORAGE_KEY) : null;
-      if (!raw) return null;
+      if (!raw) {
+        if (iuVaultHasEncBlob(IU_QUICKTOOLS_STORAGE_KEY) || iuVaultIsPersistBlocked(IU_QUICKTOOLS_STORAGE_KEY)) {
+          return null;
+        }
+        return null;
+      }
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed.version === "number" && Array.isArray(parsed.order) && Array.isArray(parsed.visible)) {
         if (!Array.isArray(parsed.customButtons)) parsed.customButtons = [];
@@ -26231,6 +26264,7 @@ function buildVideoAsArticleCard(it) {
 
   function saveQuickToolsConfig(cfg) {
     try {
+      if (iuVaultIsPersistBlocked(IU_QUICKTOOLS_STORAGE_KEY)) return;
       if (!isLocalDataProtectionNoticeAccepted()) {
         void ensureLocalDataProtectionBeforeSave().then(function (ok) {
           if (!ok) return;
@@ -27186,6 +27220,14 @@ function buildVideoAsArticleCard(it) {
   function iuQuickToolsBindDocumentOnce() {
     if (window.__iuQuickToolsDocBound) return;
     window.__iuQuickToolsDocBound = 1;
+    try {
+      window.addEventListener("iu-vault-hydrated", function iuQuickToolsVaultHydrated() {
+        try { iuQuickToolsApplyConfig(); } catch (_) {}
+      });
+      window.addEventListener("iu-vault-unlocked", function iuQuickToolsVaultUnlocked() {
+        try { iuQuickToolsApplyConfig(); } catch (_) {}
+      });
+    } catch (_) {}
     document.addEventListener("click", function(e) {
       iuQuickToolsHandleSettingsTriggerClick(e);
     }, false);

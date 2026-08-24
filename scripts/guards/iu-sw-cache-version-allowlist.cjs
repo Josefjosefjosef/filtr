@@ -3,6 +3,8 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-08-24-iu-vault-mindmenu-persist-v2",
+  "iu-vault-mindmenu-persist-v2",
   "2026-08-24-iu-vault-mindmenu-persist",
   "iu-vault-mindmenu-persist",
   "2026-08-23-iu-vault-l2-failsafe",
