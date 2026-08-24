@@ -5,6 +5,8 @@ import { importMdkRaw } from "./iu-vault-core-v1.js";
 import {
   readMeta,
   readKeyRecord,
+  writeKeyRecord,
+  deleteKeyRecord,
 } from "./iu-vault-db-v1.js";
 import {
   getMdk,
@@ -20,8 +22,8 @@ import {
 } from "./iu-vault-device-crypto-v1.js";
 
 const RP_NAME = "InfoUzel.cz";
+const PENDING_DEVICE_KEY = "mdk:device:pending";
 const WEBAUTHN_TIMEOUT_MS = 120000;
-const WEBAUTHN_WATCHDOG_MS = WEBAUTHN_TIMEOUT_MS + 10000;
 
 function webAuthnTimeoutMs() {
   try {
@@ -47,11 +49,16 @@ function rpId() {
   }
 }
 
+async function stableDeviceUserId() {
+  const enc = new TextEncoder().encode("iu-vault-device-user@" + rpId());
+  const hash = await crypto.subtle.digest("SHA-256", enc);
+  return new Uint8Array(hash).slice(0, 16);
+}
+
 export async function detectDeviceUnlockSupport() {
   if (!window.PublicKeyCredential) return false;
   try {
-    const configured = await hasDeviceConfigured();
-    if (configured) return true;
+    if (await hasDeviceConfigured()) return true;
   } catch (_) {}
   try {
     if (typeof PublicKeyCredential.getClientCapabilities === "function") {
@@ -59,14 +66,6 @@ export async function detectDeviceUnlockSupport() {
       if (caps && caps["extension:prf"]) return true;
     }
   } catch (_) {}
-  try {
-    if (typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === "function") {
-      const uvpa = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-      return !!uvpa;
-    }
-  } catch (_) {
-    return false;
-  }
   return false;
 }
 
@@ -84,14 +83,6 @@ function readPrfExtensionResults(credOrAssertion) {
   }
 }
 
-function readPrfBytes(credOrAssertion) {
-  const prfOut = readPrfExtensionResults(credOrAssertion);
-  if (!prfOut || !prfOut.results || !prfOut.results.first) {
-    throw new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
-  }
-  return new Uint8Array(prfOut.results.first);
-}
-
 function sanitizeDeviceErrorDetail(name, msg) {
   const safeName = name && /^[A-Za-z]+Error$/.test(name) ? name : "";
   const safeMsg = String(msg || "")
@@ -104,6 +95,11 @@ function sanitizeDeviceErrorDetail(name, msg) {
   return "unknown";
 }
 
+function devicePhaseError(code, detail) {
+  if (detail) return new Error(`${code}|${detail}`);
+  return new Error(code);
+}
+
 export function mapDeviceSetupError(err) {
   const name = err && err.name ? String(err.name) : "";
   const msg = String(err && err.message ? err.message : err);
@@ -113,48 +109,51 @@ export function mapDeviceSetupError(err) {
   if (msg.includes("VAULT_DEVICE_TIMEOUT") || name === "AbortError" || msg.includes("AbortError")) {
     return new Error("VAULT_DEVICE_TIMEOUT");
   }
+  if (/^DEVICE_[A-Z0-9_]+/.test(msg)) {
+    if (msg.includes("|")) return new Error(msg);
+    return new Error(msg.split("|")[0]);
+  }
   if (msg.includes("VAULT_DEVICE_PRF")) {
-    return new Error("VAULT_DEVICE_PRF_UNAVAILABLE");
+    return new Error("DEVICE_PRF_RESULT_MISSING");
   }
   if (msg.includes("VAULT_DEVICE_UNSUPPORTED")) {
     return new Error("VAULT_DEVICE_UNSUPPORTED");
   }
-  if (msg.includes("VAULT_DEVICE_CREATE_FAILED")) {
-    return new Error(msg.includes("|") ? msg : `VAULT_DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
+  if (msg.includes("VAULT_DEVICE_NOT_CONFIGURED")) {
+    return new Error("DEVICE_VERIFY_GET_FAILED");
   }
-  return new Error(`VAULT_DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
+  if (msg.includes("VAULT_DEVICE_CREATE_FAILED")) {
+    return new Error(msg.includes("|") ? msg.replace("VAULT_DEVICE_CREATE_FAILED", "DEVICE_CREATE_FAILED") : `DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
+  }
+  return new Error(`DEVICE_CREATE_FAILED|${sanitizeDeviceErrorDetail(name, msg)}`);
 }
 
-async function withWebAuthnWatchdog(operation, fn) {
+async function withWebAuthnWatchdog(fn) {
   const controller = new AbortController();
   let watchdog = null;
-  const watchdogMs = webAuthnWatchdogMs();
   const timeoutPromise = new Promise((_, reject) => {
     watchdog = setTimeout(() => {
       try {
         controller.abort();
       } catch (_) {}
       reject(new Error("VAULT_DEVICE_TIMEOUT"));
-    }, watchdogMs);
+    }, webAuthnWatchdogMs());
   });
   try {
     return await Promise.race([fn(controller.signal), timeoutPromise]);
-  } catch (err) {
-    throw mapDeviceSetupError(err);
   } finally {
     if (watchdog) clearTimeout(watchdog);
   }
 }
 
-function buildCreateOptions(salt, signal, withPrfEval) {
-  const extensions = withPrfEval ? { prf: { eval: { first: salt } } } : { prf: {} };
+function buildCreateOptions(userId, signal) {
   return {
     publicKey: {
       challenge: crypto.getRandomValues(new Uint8Array(32)),
       rp: { name: RP_NAME, id: rpId() },
       user: {
-        id: crypto.getRandomValues(new Uint8Array(16)),
-        name: "iu-vault-device@" + rpId() + ":" + Date.now(),
+        id: userId,
+        name: "iu-vault-device@" + rpId(),
         displayName: "InfoUzel",
       },
       pubKeyCredParams: [{ alg: -7, type: "public-key" }],
@@ -165,17 +164,33 @@ function buildCreateOptions(salt, signal, withPrfEval) {
         requireResidentKey: false,
       },
       timeout: webAuthnTimeoutMs(),
-      extensions,
+      extensions: { prf: {} },
     },
     signal,
   };
 }
 
+function toCredRawIdBuffer(rawId) {
+  if (rawId instanceof ArrayBuffer) return rawId;
+  if (ArrayBuffer.isView(rawId)) {
+    return rawId.buffer.slice(rawId.byteOffset, rawId.byteOffset + rawId.byteLength);
+  }
+  return new Uint8Array(rawId).buffer;
+}
+
+function toCredRawIdUint8(rawId) {
+  if (rawId instanceof ArrayBuffer) return new Uint8Array(rawId);
+  if (ArrayBuffer.isView(rawId)) return new Uint8Array(rawId.buffer, rawId.byteOffset, rawId.byteLength);
+  return new Uint8Array(rawId);
+}
+
 function buildPrfGetOptions(credRawId, salt, signal) {
+  const idBuffer = toCredRawIdBuffer(credRawId);
   return {
     publicKey: {
       challenge: crypto.getRandomValues(new Uint8Array(32)),
-      allowCredentials: [{ id: credRawId, type: "public-key", transports: ["internal"] }],
+      rpId: rpId(),
+      allowCredentials: [{ id: idBuffer, type: "public-key", transports: ["internal"] }],
       userVerification: "required",
       timeout: webAuthnTimeoutMs(),
       extensions: { prf: { eval: { first: salt } } },
@@ -184,30 +199,105 @@ function buildPrfGetOptions(credRawId, salt, signal) {
   };
 }
 
+function prfBytesFromExtension(credOrAssertion, phaseCode) {
+  const prfOut = readPrfExtensionResults(credOrAssertion);
+  if (prfOut && prfOut.results && prfOut.results.first) {
+    return new Uint8Array(prfOut.results.first);
+  }
+  if (prfOut && prfOut.enabled === false) {
+    throw devicePhaseError("DEVICE_PRF_NOT_ENABLED");
+  }
+  throw devicePhaseError(phaseCode);
+}
+
+async function evaluatePrfViaGet(credRawId, salt, signal) {
+  let assertion = null;
+  try {
+    assertion = await navigator.credentials.get(buildPrfGetOptions(credRawId, salt, signal));
+  } catch (err) {
+    const name = err && err.name ? String(err.name) : "";
+    if (name === "NotAllowedError") throw new Error("VAULT_DEVICE_CANCELLED");
+    if (name === "AbortError") throw new Error("VAULT_DEVICE_TIMEOUT");
+    throw devicePhaseError("DEVICE_PRF_GET_FAILED", sanitizeDeviceErrorDetail(name, err && err.message ? err.message : err));
+  }
+  if (!assertion) throw devicePhaseError("DEVICE_PRF_GET_FAILED", "empty_assertion");
+  try {
+    return prfBytesFromExtension(assertion, "DEVICE_PRF_RESULT_MISSING");
+  } catch (err) {
+    if (String(err.message || err).includes("DEVICE_PRF_RESULT_MISSING")) {
+      throw devicePhaseError("DEVICE_PRF_RESULT_INVALID");
+    }
+    throw err;
+  }
+}
+
+async function obtainPrfBytesAfterCreate(cred, salt, signal) {
+  const createPrf = readPrfExtensionResults(cred);
+  if (createPrf && createPrf.results && createPrf.results.first) {
+    return new Uint8Array(createPrf.results.first);
+  }
+  if (createPrf && createPrf.enabled === false) {
+    throw devicePhaseError("DEVICE_PRF_NOT_ENABLED");
+  }
+  return evaluatePrfViaGet(cred.rawId, salt, signal);
+}
+
+async function writePendingDeviceSetup(credentialId, salt) {
+  await writeKeyRecord(PENDING_DEVICE_KEY, {
+    credentialId: Array.from(new Uint8Array(credentialId)),
+    prfSalt: Array.from(salt),
+    savedAt: Date.now(),
+  });
+}
+
+async function clearPendingDeviceSetup() {
+  try {
+    await deleteKeyRecord(PENDING_DEVICE_KEY);
+  } catch (_) {}
+}
+
+async function readPendingDeviceSetup() {
+  const pending = await readKeyRecord(PENDING_DEVICE_KEY);
+  if (!pending || !pending.credentialId || !pending.prfSalt) return null;
+  return {
+    credentialId: new Uint8Array(pending.credentialId),
+    prfSalt: new Uint8Array(pending.prfSalt),
+  };
+}
+
+async function createPlatformCredential(signal) {
+  const userId = await stableDeviceUserId();
+  let cred = null;
+  try {
+    cred = await navigator.credentials.create(buildCreateOptions(userId, signal));
+  } catch (err) {
+    const name = err && err.name ? String(err.name) : "";
+    if (name === "NotAllowedError") throw new Error("VAULT_DEVICE_CANCELLED");
+    if (name === "AbortError") throw new Error("VAULT_DEVICE_TIMEOUT");
+    throw devicePhaseError("DEVICE_CREATE_FAILED", sanitizeDeviceErrorDetail(name, err && err.message ? err.message : err));
+  }
+  if (!cred || !cred.rawId) throw devicePhaseError("DEVICE_CREATE_FAILED", "missing_credential");
+  return cred;
+}
+
 async function createCredentialWithPrf(salt) {
-  return withWebAuthnWatchdog("create", async (signal) => {
-    let cred = null;
-    try {
-      cred = await navigator.credentials.create(buildCreateOptions(salt, signal, true));
-    } catch (err) {
-      const name = err && err.name ? String(err.name) : "";
-      const msg = String(err && err.message ? err.message : err);
-      if (/prf|extension|NotSupportedError|TypeError/i.test(`${name}|${msg}`)) {
-        cred = await navigator.credentials.create(buildCreateOptions(salt, signal, false));
-      } else {
-        throw err;
-      }
-    }
-    if (!cred || !cred.rawId) throw new Error("VAULT_DEVICE_CREATE_FAILED|missing_credential");
-
-    const createPrf = readPrfExtensionResults(cred);
-    if (createPrf && createPrf.results && createPrf.results.first) {
-      return { cred, prfBytes: new Uint8Array(createPrf.results.first) };
+  return withWebAuthnWatchdog(async (signal) => {
+    const pending = await readPendingDeviceSetup();
+    const existingDevice = await readKeyRecord("mdk:device");
+    if (pending && !existingDevice) {
+      const prfBytes = await evaluatePrfViaGet(pending.credentialId, pending.prfSalt, signal);
+      return {
+        cred: { rawId: pending.credentialId },
+        prfBytes,
+        salt: pending.prfSalt,
+        resumed: true,
+      };
     }
 
-    const assertion = await navigator.credentials.get(buildPrfGetOptions(cred.rawId, salt, signal));
-    if (!assertion) throw new Error("VAULT_DEVICE_CREATE_FAILED|get_null");
-    return { cred, prfBytes: readPrfBytes(assertion) };
+    const cred = await createPlatformCredential(signal);
+    await writePendingDeviceSetup(toCredRawIdUint8(cred.rawId), salt);
+    const prfBytes = await obtainPrfBytesAfterCreate(cred, salt, signal);
+    return { cred, prfBytes, salt, resumed: false };
   });
 }
 
@@ -217,6 +307,24 @@ async function rollbackMdkRotation(oldMdk, newMdk) {
     await rotateVaultMdk(newMdk, oldMdk);
     await unlockWithMdk(oldMdk);
   } catch (_) {}
+}
+
+async function verifyDeviceWrapUnlock(deviceWrap, credRawId, salt, signal) {
+  let verifyPrf = null;
+  try {
+    verifyPrf = await evaluatePrfViaGet(credRawId, salt, signal);
+  } catch (err) {
+    const name = err && err.name ? String(err.name) : "";
+    const msg = String(err && err.message ? err.message : err);
+    if (msg.includes("VAULT_DEVICE_CANCELLED")) throw err;
+    if (msg.includes("VAULT_DEVICE_TIMEOUT")) throw err;
+    throw devicePhaseError("DEVICE_VERIFY_GET_FAILED", sanitizeDeviceErrorDetail(name, msg));
+  }
+  try {
+    await mdkFromDeviceWrap(deviceWrap, verifyPrf);
+  } catch (err) {
+    throw devicePhaseError("DEVICE_VERIFY_DECRYPT_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
+  }
 }
 
 export async function setupDeviceUnlock() {
@@ -232,18 +340,33 @@ export async function setupDeviceUnlock() {
   let testMdk = null;
   try {
     const salt = prfSalt();
-    const { cred, prfBytes } = await createCredentialWithPrf(salt);
+    const { cred, prfBytes, salt: prfSaltUsed } = await createCredentialWithPrf(salt);
+    const activeSalt = prfSaltUsed || salt;
 
-    const deviceAesKey = await deriveDeviceAesKeyFromPrf(prfBytes);
-    const wrappedSeed = await wrapMdkSeedForDevice(deviceAesKey, seedBytes);
-    const deviceWrap = await buildDeviceWrap(new Uint8Array(cred.rawId), salt, wrappedSeed);
+    let deviceWrap = null;
+    try {
+      const deviceAesKey = await deriveDeviceAesKeyFromPrf(prfBytes);
+      const wrappedSeed = await wrapMdkSeedForDevice(deviceAesKey, seedBytes);
+      deviceWrap = await buildDeviceWrap(toCredRawIdUint8(cred.rawId), activeSalt, wrappedSeed);
+      testMdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
+    } catch (err) {
+      throw devicePhaseError("DEVICE_WRAP_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
+    }
 
-    testMdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
+    await withWebAuthnWatchdog(async (signal) => {
+      await verifyDeviceWrapUnlock(deviceWrap, cred.rawId, activeSalt, signal);
+    });
 
-    await rotateVaultMdk(oldMdk, testMdk);
-    rotated = true;
-    await unlockWithMdk(testMdk);
-    await storeDeviceWrap(meta, deviceWrap);
+    try {
+      await rotateVaultMdk(oldMdk, testMdk);
+      rotated = true;
+      await unlockWithMdk(testMdk);
+      await storeDeviceWrap(meta, deviceWrap);
+      await clearPendingDeviceSetup();
+    } catch (err) {
+      throw devicePhaseError("DEVICE_PERSIST_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
+    }
+
     return { ok: true };
   } catch (err) {
     if (rotated) {
@@ -260,14 +383,25 @@ export async function unlockWithDevice() {
   const credId = new Uint8Array(deviceWrap.credentialId);
   const salt = new Uint8Array(deviceWrap.prfSalt);
 
-  const assertion = await withWebAuthnWatchdog("unlock", async (signal) => {
+  const assertion = await withWebAuthnWatchdog(async (signal) => {
     const result = await navigator.credentials.get(buildPrfGetOptions(credId, salt, signal));
     if (!result) throw new Error("VAULT_DEVICE_UNLOCK_FAILED");
     return result;
   });
 
-  const prfBytes = readPrfBytes(assertion);
-  const mdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
+  let prfBytes = null;
+  try {
+    prfBytes = prfBytesFromExtension(assertion, "DEVICE_PRF_RESULT_MISSING");
+  } catch (err) {
+    throw mapDeviceSetupError(err);
+  }
+
+  let mdk = null;
+  try {
+    mdk = await mdkFromDeviceWrap(deviceWrap, prfBytes);
+  } catch (err) {
+    throw devicePhaseError("DEVICE_UNWRAP_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
+  }
   await unlockWithMdk(mdk);
   return true;
 }
@@ -281,6 +415,7 @@ export async function disableDeviceUnlock() {
   await unlockWithDevice();
   const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
   await activateLevel1AutoKey();
+  await clearPendingDeviceSetup();
 }
 
 export { mdkFromDeviceWrap } from "./iu-vault-device-crypto-v1.js";

@@ -1,12 +1,13 @@
 /**
  * Vault bootstrap — must load before app.js (top-level await).
  */
-import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, readSecurityConfiguredState } from "./iu-vault-lock-v1.js";
+import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, readSecurityConfiguredState, setAppLockHintActive } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
+import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
 
 function vaultDisabled() {
   try {
@@ -30,6 +31,7 @@ async function initVault() {
   let meta = await ensureLevel1Mdk();
 
   if (meta.pinEnabled || meta.deviceEnabled || meta.mindMenuUnlockMethod === "pin" || meta.mindMenuUnlockMethod === "device") {
+    setAppLockHintActive();
     await lockVault("startup");
     try {
       window.__iuVaultHydrationPending = true;
@@ -63,28 +65,18 @@ const meta = await initVault().catch((err) => {
   return null;
 });
 
-function notifyVaultHydrated() {
-  try {
-    if (window.__iuVaultHydrationComplete) {
-      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
-    }
-  } catch (_) {}
-}
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", notifyVaultHydrated, { once: true });
-} else {
-  queueMicrotask(notifyVaultHydrated);
-}
-
 const api = {
   getState: () => getVaultState(),
   getMeta: () => readMeta(),
   getSecurityConfigured: () => readSecurityConfiguredState(),
   flushPendingWrites: () => flushPendingVaultWrites(),
-  lock: () => lockVault("manual"),
+  lock: async () => {
+    await lockVault("manual");
+    await refreshGlobalAppLockUi(api);
+  },
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-device-prf-create-v1-20260824");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-global-app-lock-v1-20260824");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -100,11 +92,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-device-prf-create-v1-20260824");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-global-app-lock-v1-20260824");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-device-prf-create-v1-20260824");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-global-app-lock-v1-20260824");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -113,7 +105,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-device-prf-create-v1-20260824");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-global-app-lock-v1-20260824");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -128,6 +120,7 @@ const api = {
       window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
       window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
     } catch (_) {}
+    await refreshGlobalAppLockUi(api);
   },
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   wipePersonal: async () => {
@@ -154,12 +147,39 @@ const api = {
       window.__iuVaultHydrationComplete = true;
       window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
     } catch (_) {}
+    await refreshGlobalAppLockUi(api);
   },
+  refreshAppLockUi: () => refreshGlobalAppLockUi(api),
   isPersistBlocked: (key) => isVaultPersistBlocked(key),
   isHydrationComplete: () => !!window.__iuVaultHydrationComplete,
+  isAppLocked: async () => {
+    const configured = await readSecurityConfiguredState();
+    const st = getVaultState();
+    return configured.unlockMethod !== "none" && !st.unlocked;
+  },
 };
 
 window.iuVault = api;
+
+if (window.__iuVaultBootError && meta) {
+  await enforceFailClosedAppLock(api, meta);
+} else {
+  await initGlobalAppLock(api);
+}
+
+function notifyVaultHydrated() {
+  try {
+    if (window.__iuVaultHydrationComplete) {
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+    }
+  } catch (_) {}
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", notifyVaultHydrated, { once: true });
+} else {
+  queueMicrotask(notifyVaultHydrated);
+}
+
 window.dispatchEvent(new CustomEvent("iu-vault-ready", { detail: { meta } }));
 
 export default api;

@@ -1,5 +1,5 @@
 /**
- * Vault UI — Informační centrum + MindMenu lock gate (PC desktop).
+ * Vault UI — Informační centrum + globální app lock (L2/L3).
  */
 (function iuVaultUiModule() {
   "use strict";
@@ -79,8 +79,8 @@
       '  <p class="iuVaultSecurity__status" id="iuVaultLevel1Status"><strong>Aktivní</strong></p>',
       "</div>",
       '<div class="iuVaultSecurity__level" id="iuVaultMindMenuLockBlock">',
-      '  <h4 class="iuVaultSecurity__title">Zamknutí MindMenu</h4>',
-      '  <p class="iuInfoCenter__p">Chraňte své osobní údaje v MindMenu před přístupem dalších osob používajících toto zařízení.</p>',
+      '  <h4 class="iuVaultSecurity__title">Odemknutí zařízením</h4>',
+      '  <p class="iuInfoCenter__p">Po aktivaci bude InfoUzel při novém otevření vyžadovat ověření pomocí zabezpečení tohoto zařízení. Na Windows může systém použít Windows Hello PIN, otisk prstu nebo rozpoznání obličeje. Na podporovaných mobilních zařízeních může být použito Face ID, Touch ID, otisk prstu nebo jiná systémová autentizace.</p>',
       '  <p class="iuVaultSecurity__current" id="iuVaultMindMenuLockStatus" aria-live="polite"></p>',
       '  <p class="iuVaultSecurity__currentBackup" id="iuVaultMindMenuUnlockMethodLabel" aria-live="polite"></p>',
       '  <fieldset class="iuVaultSecurity__methodFieldset" id="iuVaultMindMenuMethodFieldset">',
@@ -96,10 +96,10 @@
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupConfirm" />',
       "  </div>",
       '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Můžete použít vlastní PIN InfoUzlu.</p>',
-      '  <button type="button" class="iuInfoCenter__btn" id="iuVaultApplyMindMenuMethodBtn">Zapnout zamykání MindMenu</button>',
+      '  <button type="button" class="iuInfoCenter__btn" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zamykání MindMenu</button>',
+      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
       '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock">',
       '    <h4 class="iuVaultSecurity__title">Automaticky zamknout</h4>',
       '    <select id="iuVaultAutoLockSelect" class="iuVaultSecurity__select" aria-label="Automatické zamknutí">',
@@ -109,7 +109,7 @@
       '      <option value="idle_5m">Po 5 minutách nečinnosti</option>',
       '      <option value="idle_15m">Po 15 minutách nečinnosti</option>',
       "    </select>",
-      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultLockNowBtn">Zamknout osobní data nyní</button>',
+      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultLockNowBtn">Zamknout InfoUzel</button>',
       "  </div>",
       "</div>",
       '<p class="iuVaultSecurity__msg" id="iuVaultSecurityMsg" aria-live="polite"></p>',
@@ -140,24 +140,7 @@
   }
 
   function ensureLockOverlay() {
-    if (document.getElementById("iuVaultLockOverlay")) return;
-    const el = document.createElement("div");
-    el.id = "iuVaultLockOverlay";
-    el.className = "iuVaultLockOverlay";
-    el.hidden = true;
-    el.innerHTML = [
-      '<div class="iuVaultLockOverlay__panel" role="dialog" aria-modal="true" aria-labelledby="iuVaultLockTitle">',
-      '  <h2 id="iuVaultLockTitle" class="iuVaultLockOverlay__title">MindMenu je zamčen</h2>',
-      '  <p class="iuVaultLockOverlay__text">Pro pokračování odemkněte osobní data.</p>',
-      '  <label class="iuVaultLockOverlay__label" id="iuVaultPinLabel" hidden>PIN InfoUzlu</label>',
-      '  <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="iuVaultLockOverlay__input" id="iuVaultPinInput" hidden>',
-      '  <button type="button" class="iuInfoCenter__btn" id="iuVaultUnlockPinBtn" hidden>Odemknout PINem</button>',
-      '  <button type="button" class="iuInfoCenter__btn" id="iuVaultUnlockDeviceBtn" hidden>Odemknout zařízením</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultForgotPinBtn" hidden>Zapomněl jsem PIN</button>',
-      '  <p class="iuVaultLockOverlay__err" id="iuVaultLockErr" aria-live="polite"></p>',
-      "</div>",
-    ].join("");
-    document.body.appendChild(el);
+    /* Global lock screen lives in index.html (#iuVaultAppLockScreen). */
   }
 
   function ensureMindMenuLockGate() {
@@ -185,59 +168,9 @@
     return gate;
   }
 
-  async function refreshMindMenuLockGate(meta, st, method) {
-    const gate = ensureMindMenuLockGate();
-    if (!gate) return;
-    const vault = await waitVault();
-    const deviceSupported = await vault.detectDeviceSupport();
-    const unlockMethod = method || "none";
-    const pinInput = document.getElementById("iuVaultMindMenuPinInput");
-    const pinLabel = document.getElementById("iuVaultMindMenuPinLabel");
-    const unlockPin = document.getElementById("iuVaultMindMenuUnlockPinBtn");
-    const unlockDev = document.getElementById("iuVaultMindMenuUnlockDeviceBtn");
-    const pinOn = unlockMethod === "pin";
-    const devOn = unlockMethod === "device";
-    if (pinInput) pinInput.hidden = !pinOn;
-    if (pinLabel) pinLabel.hidden = !pinOn;
-    if (unlockPin) unlockPin.hidden = !pinOn;
-    if (unlockDev) unlockDev.hidden = !devOn || !deviceSupported;
-    const locked = unlockMethod !== "none" && !st.unlocked;
-    gate.hidden = !locked;
-    const host = document.getElementById("iuMyInfoUzelMindMenuHost");
-    const toolsHost = document.getElementById("iuMyInfoUzelToolsHost");
-    if (host) host.hidden = locked;
-    if (toolsHost) toolsHost.hidden = locked;
-    if (locked && pinOn && pinInput) {
-      try {
-        pinInput.focus();
-      } catch (_) {}
-    }
-    if (locked && devOn && deviceSupported && window.__iuVaultPendingAutoDeviceUnlock) {
-      const token = ++autoDeviceUnlockToken;
-      window.__iuVaultPendingAutoDeviceUnlock = false;
-      try {
-        await vault.unlockDevice();
-        if (token !== autoDeviceUnlockToken) return;
-        await vault.afterUnlock();
-        errClear();
-        await remountDesktopMindMenuContent();
-      } catch (e) {
-        if (token !== autoDeviceUnlockToken) return;
-        const err = document.getElementById("iuVaultMindMenuLockErr");
-        const code = String(e && e.message ? e.message : e);
-        if (code.includes("VAULT_DEVICE_CANCELLED")) {
-          if (err) err.textContent = "Odemknutí bylo zrušeno. MindMenu zůstává zamčen.";
-        } else if (code.includes("VAULT_DEVICE_TIMEOUT")) {
-          if (err) err.textContent = "Vypršel časový limit. Zkuste odemknutí znovu.";
-        } else {
-          if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
-        }
-      }
-    }
-    function errClear() {
-      const err = document.getElementById("iuVaultMindMenuLockErr");
-      if (err) err.textContent = "";
-    }
+  async function refreshMindMenuLockGate() {
+    /* MindMenu-only gate retired — global app lock handles L2/L3. */
+    hideMindMenuLockGate();
   }
 
   function hideMindMenuLockGate() {
@@ -273,119 +206,11 @@
   }
 
   function installDesktopMindMenuHook() {
-    const wrapOrig = (orig) => {
-      if (!orig || orig._iuVaultGateHook) return orig;
-      window.__iuVaultOrigMindMenuOpen = orig;
-      const wrapped = async function iuVaultDesktopMindMenuOpen() {
-        if (window.__iuVaultBypassDesktopGate || !isDesktopVaultGate()) {
-          return orig.apply(this, arguments);
-        }
-        const { needsLock, method } = await vaultNeedsUserUnlock();
-        if (!needsLock) {
-          hideMindMenuLockGate();
-          return orig.apply(this, arguments);
-        }
-        window.__iuVaultDeferMindMenuMount = true;
-        try {
-          const result = orig.apply(this, arguments);
-          await showDesktopMindMenuLockGate({ autoDevice: method === "device" });
-          return result;
-        } finally {
-          window.__iuVaultDeferMindMenuMount = false;
-        }
-      };
-      wrapped._iuVaultGateHook = true;
-      return wrapped;
-    };
-
-    const attach = (orig) => wrapOrig(orig);
-
-    window.__iuVaultRegisterDesktopMindMenuOpen = attach;
-
-    try {
-      let stored = window.iuArticleActionsOpenOverlay;
-      Object.defineProperty(window, "iuArticleActionsOpenOverlay", {
-        configurable: true,
-        enumerable: true,
-        get() {
-          return stored;
-        },
-        set(fn) {
-          stored = fn && fn._iuVaultGateHook ? fn : attach(fn);
-        },
-      });
-      if (stored) window.iuArticleActionsOpenOverlay = stored;
-    } catch (_) {
-      if (window.iuArticleActionsOpenOverlay) {
-        window.iuArticleActionsOpenOverlay = attach(window.iuArticleActionsOpenOverlay);
-      } else if (!desktopHookTimer) {
-        desktopHookTimer = setInterval(() => {
-          if (window.iuArticleActionsOpenOverlay) {
-            window.iuArticleActionsOpenOverlay = attach(window.iuArticleActionsOpenOverlay);
-            clearInterval(desktopHookTimer);
-            desktopHookTimer = null;
-          }
-        }, 120);
-        setTimeout(() => {
-          if (desktopHookTimer) {
-            clearInterval(desktopHookTimer);
-            desktopHookTimer = null;
-          }
-        }, 120000);
-      }
-    }
+    /* Global app lock — no MindMenu-only defer hook. */
   }
 
   async function bindMindMenuGateEvents() {
-    if (mindMenuGateBound) return;
-    mindMenuGateBound = true;
-    const vault = await waitVault();
-
-    document.getElementById("iuVaultMindMenuUnlockPinBtn")?.addEventListener("click", async () => {
-      const pin = document.getElementById("iuVaultMindMenuPinInput")?.value || "";
-      const err = document.getElementById("iuVaultMindMenuLockErr");
-      try {
-        await vault.unlockPin(pin);
-        await vault.afterUnlock();
-        if (err) err.textContent = "";
-        const inp = document.getElementById("iuVaultMindMenuPinInput");
-        if (inp) inp.value = "";
-        await remountDesktopMindMenuContent();
-      } catch (e) {
-        if (err) err.textContent = "Neplatný PIN.";
-      }
-    });
-
-    document.getElementById("iuVaultMindMenuUnlockDeviceBtn")?.addEventListener("click", async () => {
-      const err = document.getElementById("iuVaultMindMenuLockErr");
-      try {
-        await vault.unlockDevice();
-        await vault.afterUnlock();
-        if (err) err.textContent = "";
-        await remountDesktopMindMenuContent();
-      } catch (e) {
-        const code = String(e && e.message ? e.message : e);
-        if (code.includes("VAULT_DEVICE_CANCELLED")) {
-          if (err) err.textContent = "Odemknutí bylo zrušeno. MindMenu zůstává zamčen.";
-        } else {
-          if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
-        }
-      }
-    });
-
-    window.addEventListener("iu-vault-locked", () => {
-      if (!isDesktopVaultGate()) return;
-      if (document.body.classList.contains("iu-myinfouzel-open")) {
-        showDesktopMindMenuLockGate().catch(() => {});
-      }
-    });
-
-    window.addEventListener("iu-vault-unlocked", () => {
-      if (!isDesktopVaultGate()) return;
-      if (document.body.classList.contains("iu-myinfouzel-open")) {
-        remountDesktopMindMenuContent().catch(() => {});
-      }
-    });
+    /* Unlock handlers bound in iu-vault-app-lock-v1.js at bootstrap. */
   }
 
   async function refreshSecurityUi() {
@@ -413,8 +238,8 @@
     if (statusEl) {
       statusEl.innerHTML =
         method === "none"
-          ? "Zamknutí MindMenu: <strong>Vypnuto</strong>"
-          : "✓ Zamknutí MindMenu je zapnuté";
+          ? "Zabezpečení InfoUzlu: <strong>Vypnuto</strong>"
+          : "✓ InfoUzel je chráněn při otevření";
     }
     if (methodEl) {
       methodEl.textContent =
@@ -428,7 +253,7 @@
     if (fieldset) fieldset.hidden = !showPicker;
     if (applyBtn) {
       applyBtn.hidden = !showPicker;
-      applyBtn.textContent = active ? "Použít nový způsob odemknutí" : "Zapnout zamykání MindMenu";
+      applyBtn.textContent = active ? "Použít nový způsob odemknutí" : "Aktivovat zabezpečení InfoUzlu";
     }
     if (changePin) changePin.hidden = method !== "pin" || methodPickerOpen;
     if (changeMethod) changeMethod.hidden = !active || methodPickerOpen;
@@ -451,24 +276,8 @@
       pinSetupBlock.hidden = !(showPicker && draftMethod === "pin");
     }
 
-    const overlay = document.getElementById("iuVaultLockOverlay");
-    if (overlay) {
-      const needsLock = method !== "none" && !st.unlocked;
-      const useDesktopGate = isDesktopVaultGate();
-      overlay.hidden = !needsLock || useDesktopGate;
-      const pinInput = document.getElementById("iuVaultPinInput");
-      const pinLabel = document.getElementById("iuVaultPinLabel");
-      const unlockPin = document.getElementById("iuVaultUnlockPinBtn");
-      const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
-      const forgot = document.getElementById("iuVaultForgotPinBtn");
-      if (pinInput) pinInput.hidden = method !== "pin";
-      if (pinLabel) pinLabel.hidden = method !== "pin";
-      if (unlockPin) unlockPin.hidden = method !== "pin";
-      if (unlockDev) unlockDev.hidden = method !== "device" || !deviceSupported;
-      if (forgot) forgot.hidden = method !== "pin";
-    }
-
-    await refreshMindMenuLockGate(meta, st, method);
+    if (vault.refreshAppLockUi) await vault.refreshAppLockUi();
+    await refreshMindMenuLockGate();
   }
 
   function showPinSetupDialog() {
@@ -484,6 +293,15 @@
 
   function deviceSetupUserMessage(err) {
     const code = String(err && err.message ? err.message : err);
+    const phaseMatch = code.match(/^(DEVICE_[A-Z0-9_]+)/);
+    if (phaseMatch) {
+      const phase = phaseMatch[1];
+      const domMatch = code.match(/\|(NotAllowedError|SecurityError|InvalidStateError|NotSupportedError|TypeError|AbortError)(?:\||$)/);
+      if (domMatch) {
+        return `Nastavení zabezpečení zařízením se nezdařilo (${phase}, ${domMatch[1]}).`;
+      }
+      return `Nastavení zabezpečení zařízením se nezdařilo (${phase}).`;
+    }
     if (code.includes("VAULT_DEVICE_CANCELLED")) {
       return "Zabezpečení zařízením nebylo dokončeno. Nastavení zůstává beze změny.";
     }
@@ -495,15 +313,6 @@
     }
     if (code.includes("VAULT_DEVICE_UNSUPPORTED")) {
       return "Zabezpečení zařízením není v tomto prohlížeči podporováno.";
-    }
-    if (code.includes("VAULT_DEVICE_CREATE_FAILED")) {
-      const domMatch = code.match(/\|(NotAllowedError|SecurityError|InvalidStateError|NotSupportedError|TypeError|AbortError)(?:\||$)/);
-      if (domMatch) {
-        return `Nastavení zabezpečení zařízením se nezdařilo (${domMatch[1]}).`;
-      }
-      if (code.includes("get_null")) {
-        return "Nastavení zabezpečení zařízením se nezdařilo (PRF ověření po vytvoření klíče).";
-      }
     }
     return "Nastavení zabezpečení zařízením se nezdařilo.";
   }
@@ -582,9 +391,9 @@
         return;
       }
 
-      if (target === "none") {
+        if (target === "none") {
         if (current === "none") {
-          say("Zamykání MindMenu je již vypnuto.");
+          say("Zabezpečení InfoUzlu je již vypnuto.");
           return;
         }
         try {
@@ -595,7 +404,7 @@
           } else {
             await vault.disableMindMenuLock();
           }
-          say("Zamykání MindMenu bylo vypnuto.");
+          say("Zabezpečení InfoUzlu bylo vypnuto.");
           await notifySecurityChanged(vault);
         } catch (e) {
           say(String(e.message || e));
@@ -604,7 +413,7 @@
       }
 
       if (current !== "none" && !st.unlocked) {
-        say("Nejdříve odemkněte osobní data současnou metodou, poté změňte způsob odemknutí.");
+        say("Nejdříve odemkněte InfoUzel současnou metodou, poté změňte způsob odemknutí.");
         return;
       }
 
@@ -632,7 +441,7 @@
           await vault.setupPin(pin, confirmPin);
           if (pinNew) pinNew.value = "";
           if (pinConfirm) pinConfirm.value = "";
-          say("Zamykání MindMenu bylo zapnuto pomocí PINu.");
+          say("InfoUzel je nyní chráněn pomocí PINu.");
           await notifySecurityChanged(vault);
         } catch (e) {
           say(String(e.message || e));
@@ -645,7 +454,7 @@
         say("Probíhá nastavení zabezpečení zařízením. Dokončete ověření ve Windows.");
         try {
           await vault.setupDevice();
-          say("Zamykání MindMenu bylo zapnuto pomocí zabezpečení zařízení.");
+          say("InfoUzel je nyní chráněn pomocí zabezpečení zařízení.");
           await notifySecurityChanged(vault);
         } catch (e) {
           say(deviceSetupUserMessage(e));
@@ -696,62 +505,12 @@
     document.getElementById("iuVaultLockNowBtn")?.addEventListener("click", async () => {
       const { method } = await readUnlockState(vault);
       if (method === "none") {
-        say("Zamknutí je dostupné až po zapnutí zamykání MindMenu.");
+        say("Zamknutí je dostupné až po aktivaci zabezpečení InfoUzlu.");
         return;
       }
       await vault.lock();
+      if (vault.refreshAppLockUi) await vault.refreshAppLockUi();
       await refreshSecurityUi();
-    });
-
-    document.getElementById("iuVaultUnlockPinBtn")?.addEventListener("click", async () => {
-      const pin = document.getElementById("iuVaultPinInput")?.value || "";
-      const err = document.getElementById("iuVaultLockErr");
-      try {
-        await vault.unlockPin(pin);
-        await vault.afterUnlock();
-        if (err) err.textContent = "";
-        const inp = document.getElementById("iuVaultPinInput");
-        if (inp) inp.value = "";
-        await refreshSecurityUi();
-      } catch (e) {
-        if (err) err.textContent = "Neplatný PIN.";
-      }
-    });
-
-    document.getElementById("iuVaultUnlockDeviceBtn")?.addEventListener("click", async () => {
-      const err = document.getElementById("iuVaultLockErr");
-      const btn = document.getElementById("iuVaultUnlockDeviceBtn");
-      if (btn && btn.disabled) return;
-      if (btn) btn.disabled = true;
-      if (err) err.textContent = "";
-      try {
-        await vault.unlockDevice();
-        await vault.afterUnlock();
-        if (err) err.textContent = "";
-        await refreshSecurityUi();
-      } catch (e) {
-        const code = String(e && e.message ? e.message : e);
-        if (code.includes("VAULT_DEVICE_CANCELLED")) {
-          if (err) err.textContent = "Odemknutí bylo zrušeno. MindMenu zůstává zamčen.";
-        } else if (code.includes("VAULT_DEVICE_TIMEOUT")) {
-          if (err) err.textContent = "Vypršel časový limit. Zkuste odemknutí znovu.";
-        } else {
-          if (err) err.textContent = "Odemknutí zařízením se nezdařilo.";
-        }
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    });
-
-    document.getElementById("iuVaultForgotPinBtn")?.addEventListener("click", async () => {
-      const step1 = window.confirm(
-        "PIN nelze obnovit.\n\nPokračováním nenávratně odstraníte osobní data uložená v tomto prohlížeči."
-      );
-      if (!step1) return;
-      const typed = window.prompt("Pro potvrzení napište přesně: VYMAZAT OSOBNÍ DATA");
-      if (typed !== "VYMAZAT OSOBNÍ DATA") return;
-      await vault.wipePersonal();
-      window.location.reload();
     });
 
     window.addEventListener("iu-vault-locked", () => refreshSecurityUi());
