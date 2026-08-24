@@ -44,7 +44,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /data-mgmt-restore-overlay-mobile-v1-20260714/.test(index),
+      pass: /iu-info-center\.css\?v=iu-vault-mindmenu-lock-functional-v1-20260824/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
