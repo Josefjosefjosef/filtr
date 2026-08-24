@@ -84,7 +84,7 @@ const api = {
   lock: () => lockVault("manual"),
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-functional-v1-20260824");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -100,11 +100,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-functional-v1-20260824");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-functional-v1-20260824");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -113,7 +113,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-ux-v1-20260824");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mindmenu-lock-functional-v1-20260824");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");

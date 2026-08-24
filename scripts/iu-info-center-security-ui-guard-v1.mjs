@@ -213,6 +213,41 @@ async function runScenario(browser, base, scenario) {
     });
   }
 
+  if (scenario.id === "desktop") {
+    const radio = await page.evaluate(async () => {
+      function isChecked(value) {
+        const el = document.querySelector('input[name="iuVaultMindMenuMethod"][value="' + value + '"]');
+        return !!(el && el.checked);
+      }
+      function clickValue(value) {
+        const el = document.querySelector('input[name="iuVaultMindMenuMethod"][value="' + value + '"]');
+        if (!el) return false;
+        el.click();
+        return isChecked(value);
+      }
+      const pinClicked = clickValue("pin");
+      await new Promise((r) => setTimeout(r, 80));
+      window.dispatchEvent(new Event("iu-vault-unlocked"));
+      await new Promise((r) => setTimeout(r, 80));
+      const pinHeld = isChecked("pin");
+      const pinBlock = document.getElementById("iuVaultPinSetupBlock");
+      const pinBlockVisible = pinBlock ? !pinBlock.hidden : false;
+      const deviceClicked = clickValue("device");
+      await new Promise((r) => setTimeout(r, 80));
+      window.dispatchEvent(new Event("iu-vault-security-changed"));
+      await new Promise((r) => setTimeout(r, 80));
+      const deviceHeld = isChecked("device");
+      const noneClicked = clickValue("none");
+      return { pinClicked, pinHeld, pinBlockVisible, deviceClicked, deviceHeld, noneClicked };
+    });
+    if (!radio.pinClicked) fails.push("radio_pin_click_failed");
+    if (!radio.pinHeld) fails.push("radio_pin_not_held_after_refresh");
+    if (!radio.pinBlockVisible) fails.push("pin_setup_block_not_visible");
+    if (!radio.deviceClicked) fails.push("radio_device_click_failed");
+    if (!radio.deviceHeld) fails.push("radio_device_not_held_after_refresh");
+    if (!radio.noneClicked) fails.push("radio_none_click_failed");
+  }
+
   if (consoleErrors.length) fails.push("console=" + consoleErrors[0]);
 
   await context.close();
