@@ -85,6 +85,7 @@ async function main() {
 
     const bypass = await page.evaluate(async () => {
       if (window.PublicKeyCredential) {
+        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
         PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
       }
       const origCreate = navigator.credentials.create.bind(navigator.credentials);
