@@ -30,6 +30,46 @@
         padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
         background: rgba(11, 31, 51, 0.92);
         backdrop-filter: blur(6px);
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #iuVaultAppLockScreen .iuVaultLockOverlay__panel {
+        width: min(420px, 100%);
+        margin: auto;
+        flex-shrink: 0;
+      }
+      #iuVaultAppLockScreen .iuVaultLockOverlay__input {
+        font-size: 16px !important;
+        line-height: 1.35;
+        -webkit-text-size-adjust: 100%;
+      }
+      #iuVaultAppLockScreen .iuInfoCenter__btn {
+        appearance: none;
+        -webkit-appearance: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        margin: 0 0 0.55rem;
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        border: 1.5px solid transparent;
+        box-sizing: border-box;
+        font: inherit;
+        font-size: 0.95rem;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      #iuVaultAppLockScreen .iuInfoCenter__btn--primary {
+        background: #0b5fff;
+        color: #fff;
+        border-color: #0b5fff;
+      }
+      #iuVaultAppLockScreen .iuInfoCenter__btn--danger {
+        background: #fff5f4;
+        color: #b42318;
+        border-color: rgba(180, 35, 24, 0.35);
       }
       #iuVaultAppLockScreen[hidden] { display: none !important; }
       html.iu-vault-app-locked #iuVaultAppLockScreen[hidden] { display: flex !important; }
@@ -2517,9 +2557,9 @@ require-trusted-types-for 'script';
         <p class="iuVaultLockOverlay__text" id="iuVaultAppLockText">Pro pokračování odemkněte InfoUzel.</p>
         <label class="iuVaultLockOverlay__label" id="iuVaultPinLabel" hidden>PIN InfoUzlu</label>
         <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="iuVaultLockOverlay__input" id="iuVaultPinInput" hidden />
-        <button type="button" class="iuInfoCenter__btn" id="iuVaultUnlockPinBtn" hidden>Odemknout PINem</button>
-        <button type="button" class="iuInfoCenter__btn" id="iuVaultUnlockDeviceBtn" hidden>Odemknout InfoUzel</button>
-        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultForgotPinBtn" hidden>Zapomněl jsem PIN</button>
+        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockPinBtn" hidden>Odemknout PINem</button>
+        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockDeviceBtn" hidden>Odemknout InfoUzel</button>
+        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultForgotPinBtn" hidden>Zapomněl jsem PIN</button>
         <p class="iuVaultLockOverlay__err" id="iuVaultLockErr" aria-live="polite"></p>
       </div>
     </div>
@@ -6309,7 +6349,7 @@ require-trusted-types-for 'script';
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824"></script>
+    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825"></script>
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->

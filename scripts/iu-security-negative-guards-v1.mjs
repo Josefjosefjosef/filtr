@@ -82,10 +82,13 @@ t("module_defs_keys_protected", () => {
   if (exact.length < 10) throw new Error("too few protected keys");
 });
 
-t("pin_trivial_reject", () => {
-  if (!isTrivialPin("123456")) throw new Error("sequential pin must fail");
-  if (!isTrivialPin("111111")) throw new Error("repeated pin must fail");
-  if (isTrivialPin("847291")) throw new Error("valid pin rejected");
+t("pin_policy_any_numeric_6plus", () => {
+  if (isTrivialPin("123456")) throw new Error("123456 must pass");
+  if (isTrivialPin("111111")) throw new Error("111111 must pass");
+  if (isTrivialPin("000000")) throw new Error("000000 must pass");
+  if (isTrivialPin("847291")) throw new Error("847291 must pass");
+  if (!isTrivialPin("12345")) throw new Error("short pin must fail");
+  if (!isTrivialPin("abc123")) throw new Error("nonnumeric must fail");
 });
 
 t("trusted_types_no_passthrough_policy", () => {

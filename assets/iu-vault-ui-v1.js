@@ -90,17 +90,17 @@
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
       "  </fieldset>",
       '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden>',
-      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Nepoužívejte stejné číslice opakovaně ani jednoduchou číselnou řadu (např. 123456).</p>',
+      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9).</p>',
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu</label>',
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupNew" />',
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
       '    <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" class="iuVaultSecurity__input" id="iuVaultPinSetupConfirm" />',
       "  </div>",
       '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Na mobilu použijte nainstalovanou PWA aplikaci InfoUzlu, nebo zvolte vlastní PIN InfoUzlu.</p>',
-      '  <button type="button" class="iuInfoCenter__btn" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
+      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
+      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
       '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock">',
       '    <h4 class="iuVaultSecurity__title">Automaticky zamknout</h4>',
       '    <select id="iuVaultAutoLockSelect" class="iuVaultSecurity__select" aria-label="Automatické zamknutí">',
@@ -159,8 +159,8 @@
         '  <p class="iuVaultMindMenuLockGate__text">Pro pokračování odemkněte osobní data.</p>',
         '  <label class="iuVaultMindMenuLockGate__label" id="iuVaultMindMenuPinLabel" hidden>PIN InfoUzlu</label>',
         '  <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="iuVaultMindMenuLockGate__input" id="iuVaultMindMenuPinInput" hidden>',
-        '  <button type="button" class="iuInfoCenter__btn" id="iuVaultMindMenuUnlockPinBtn" hidden>Odemknout PINem</button>',
-        '  <button type="button" class="iuInfoCenter__btn" id="iuVaultMindMenuUnlockDeviceBtn" hidden>Odemknout zařízením</button>',
+        '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultMindMenuUnlockPinBtn" hidden>Odemknout PINem</button>',
+        '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultMindMenuUnlockDeviceBtn" hidden>Odemknout zařízením</button>',
         '  <p class="iuVaultMindMenuLockGate__err" id="iuVaultMindMenuLockErr" aria-live="polite"></p>',
         "</div>",
       ].join("");
@@ -285,7 +285,7 @@
     const warn =
       "PIN nelze obnovit. Pokud jej zapomenete, nebude možné uložená osobní data otevřít. V takovém případě bude nutné osobní data v tomto prohlížeči vymazat.";
     if (!window.confirm(warn)) return null;
-    const pin = window.prompt("Zadejte PIN (min. 6 číslic, bez opakování a bez jednoduché řady):");
+    const pin = window.prompt("Zadejte PIN (min. 6 číslic, pouze 0–9):");
     if (pin == null) return null;
     const confirmPin = window.prompt("Zadejte PIN znovu pro potvrzení:");
     if (confirmPin == null) return null;
@@ -294,11 +294,8 @@
 
   function pinSetupUserMessage(err) {
     const code = String(err && err.message ? err.message : err);
-    if (code.startsWith("VAULT_PIN_WEAK|invalid_format")) {
+    if (code.startsWith("VAULT_PIN_WEAK|invalid_format") || code.startsWith("VAULT_PIN_WEAK|")) {
       return "PIN musí mít alespoň 6 číslic (pouze číslice 0–9).";
-    }
-    if (code.startsWith("VAULT_PIN_WEAK|")) {
-      return "Zvolte méně snadno uhodnutelný PIN. Nepoužívejte stejné číslice ani jednoduchou číselnou řadu.";
     }
     if (code.includes("VAULT_PIN_MISMATCH")) return "PIN a potvrzení se neshodují.";
     return code;

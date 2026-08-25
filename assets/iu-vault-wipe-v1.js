@@ -1,30 +1,51 @@
 /**
- * Wipe personal vault — forgot PIN flow.
+ * Wipe personal vault — forgot PIN flow (atomic, no reload required).
  */
 import { listProtectedExactKeys, listProtectedPrefixKeys } from "./iu-vault-protected-keys-v1.js";
 import { wipeVaultDatabase, wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
-import { clearVaultMemoryCache } from "./iu-vault-storage-v1.js";
-import { lockVault } from "./iu-vault-lock-v1.js";
+import { clearVaultMemoryCache, ENC_PREFIX } from "./iu-vault-storage-v1.js";
+import { lockVault, clearAppLockHint, postVaultLockMessage } from "./iu-vault-lock-v1.js";
 
 export async function wipePersonalVault() {
   clearVaultMemoryCache();
-  await lockVault("wiped");
+  try {
+    window.__iuVaultHydrationPending = true;
+    window.__iuVaultHydrationComplete = false;
+  } catch (_) {}
+
+  try {
+    await lockVault("wiped");
+  } catch (_) {}
 
   const exact = listProtectedExactKeys();
   for (const key of exact) {
-    try { localStorage.removeItem(key); } catch (_) {}
+    try {
+      localStorage.removeItem(key);
+    } catch (_) {}
+    try {
+      localStorage.removeItem(ENC_PREFIX + key);
+    } catch (_) {}
   }
   const prefixes = listProtectedPrefixKeys();
   const toRemove = [];
   for (let i = 0; i < localStorage.length; i += 1) {
     const k = localStorage.key(i);
     if (!k) continue;
+    if (k.startsWith(ENC_PREFIX)) {
+      const bare = k.slice(ENC_PREFIX.length);
+      for (const p of prefixes) {
+        if (bare.startsWith(p)) toRemove.push(k);
+      }
+      continue;
+    }
     for (const p of prefixes) {
       if (k.startsWith(p)) toRemove.push(k);
     }
   }
   for (const k of toRemove) {
-    try { localStorage.removeItem(k); } catch (_) {}
+    try {
+      localStorage.removeItem(k);
+    } catch (_) {}
   }
 
   try {
@@ -36,17 +57,34 @@ export async function wipePersonalVault() {
   await wipeVaultDatabase();
 
   const { readMeta, writeMeta, defaultMeta } = await import("./iu-vault-db-v1.js");
-  let meta = await readMeta();
-  if (!meta) meta = await defaultMeta();
+  let meta = await defaultMeta();
+  try {
+    const existing = await readMeta();
+    if (existing && existing.createdAt) meta.createdAt = existing.createdAt;
+  } catch (_) {}
   meta.pinEnabled = false;
   meta.deviceEnabled = false;
   meta.securityLevel = 1;
+  meta.mindMenuUnlockMethod = "none";
+  meta.migrationComplete = true;
   await writeMeta(meta);
+
+  clearAppLockHint();
 
   const { ensureLevel1Mdk } = await import("./iu-vault-lock-v1.js");
   const { migratePlaintextToVault } = await import("./iu-vault-migrate-v1.js");
-  const { preloadAllVaultRecords } = await import("./iu-vault-storage-v1.js");
+  const { preloadAllVaultRecords, notifyVaultMemoryHydrated } = await import("./iu-vault-storage-v1.js");
   await ensureLevel1Mdk();
   await migratePlaintextToVault();
   await preloadAllVaultRecords();
+  notifyVaultMemoryHydrated();
+
+  try {
+    window.__iuVaultHydrationPending = false;
+    window.__iuVaultHydrationComplete = true;
+    window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+    window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
+    window.dispatchEvent(new CustomEvent("iu-vault-wiped"));
+  } catch (_) {}
+  postVaultLockMessage("wiped", "forgot_pin");
 }

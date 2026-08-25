@@ -60,6 +60,16 @@ export function registerVaultLockBroadcastListener(vault) {
   bc.addEventListener("message", (ev) => {
     const data = ev && ev.data ? ev.data : null;
     if (!data || !data.type) return;
+    if (data.type === "wiped") {
+      try {
+        window.__iuVaultHydrationPending = true;
+        window.__iuVaultHydrationComplete = false;
+      } catch (_) {}
+      try {
+        window.location.reload();
+      } catch (_) {}
+      return;
+    }
     if (data.type === "locked") {
       lockVault(data.reason || "remote_tab").catch(() => {});
       if (vault && typeof vault.isHydrationComplete === "function" && !vault.isHydrationComplete()) {
@@ -71,6 +81,8 @@ export function registerVaultLockBroadcastListener(vault) {
     }
   });
 }
+
+export { postVaultLockMessage };
 
 const state = {
   mdk: null,
@@ -212,6 +224,10 @@ export async function lockVault(reason = "manual") {
   state.mdk = null;
   state.unlocked = false;
   state.lockedReason = reason;
+  try {
+    window.__iuVaultHydrationPending = true;
+    window.__iuVaultHydrationComplete = false;
+  } catch (_) {}
   try {
     const { clearVaultMemoryCache } = await import("./iu-vault-storage-v1.js");
     clearVaultMemoryCache();

@@ -950,16 +950,129 @@ body.iu-theme-dark .iuDataMgmtConfirm__btn--ghost{
   width: 100%;
   box-sizing: border-box;
   margin: 0 0 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
   border: 1px solid rgba(14, 42, 74, 0.25);
   font: inherit;
+  font-size: 16px;
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.iuVaultLockOverlay__label{
+  display: block;
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 .iuVaultLockOverlay__err{
   min-height: 1.1rem;
   margin: 0.5rem 0 0;
   color: #b42318;
   font-size: 0.88rem;
+}
+.iuInfoCenter__btn,
+.iuVaultLockOverlay__panel .iuInfoCenter__btn{
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 0.55rem;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+  touch-action: manipulation;
+}
+.iuInfoCenter__btn:last-of-type{
+  margin-bottom: 0;
+}
+.iuInfoCenter__btn--primary,
+.iuInfoCenter__btn:not(.iuInfoCenter__btn--secondary):not(.iuInfoCenter__btn--danger){
+  background: #0b5fff;
+  color: #fff;
+  border-color: #0b5fff;
+  box-shadow: 0 1px 0 rgba(11, 31, 51, 0.08);
+}
+.iuInfoCenter__btn--primary:hover,
+.iuInfoCenter__btn:not(.iuInfoCenter__btn--secondary):not(.iuInfoCenter__btn--danger):hover{
+  background: #0949cc;
+  border-color: #0949cc;
+}
+.iuInfoCenter__btn--primary:active,
+.iuInfoCenter__btn:not(.iuInfoCenter__btn--secondary):not(.iuInfoCenter__btn--danger):active{
+  transform: translateY(1px);
+}
+.iuInfoCenter__btn--secondary{
+  background: #fff;
+  color: #0e2a4a;
+  border-color: rgba(14, 42, 74, 0.28);
+}
+.iuInfoCenter__btn--secondary:hover{
+  background: #f4f7fb;
+  border-color: rgba(14, 42, 74, 0.42);
+}
+.iuInfoCenter__btn--danger{
+  background: #fff5f4;
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.35);
+}
+.iuInfoCenter__btn--danger:hover{
+  background: #feeceb;
+  border-color: rgba(180, 35, 24, 0.55);
+}
+.iuInfoCenter__btn:focus-visible{
+  outline: 2px solid #0b5fff;
+  outline-offset: 2px;
+}
+.iuInfoCenter__btn:disabled,
+.iuInfoCenter__btn[aria-disabled="true"]{
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+html[data-theme="dark"] .iuInfoCenter__btn--secondary,
+body.iu-theme-dark .iuInfoCenter__btn--secondary{
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: rgba(226, 232, 240, 0.28);
+}
+html[data-theme="dark"] .iuInfoCenter__btn--danger,
+body.iu-theme-dark .iuInfoCenter__btn--danger{
+  background: rgba(180, 35, 24, 0.18);
+  color: #fecaca;
+  border-color: rgba(254, 202, 202, 0.35);
+}
+html[data-theme="dark"] .iuVaultLockOverlay__input,
+body.iu-theme-dark .iuVaultLockOverlay__input{
+  background: #0b1220;
+  color: #e2e8f0;
+  border-color: rgba(226, 232, 240, 0.22);
+}
+@media (min-width: 1025px) {
+  .iuVaultLockOverlay__input{
+    font-size: 15px;
+  }
+  .iuInfoCenter__btn,
+  .iuVaultLockOverlay__panel .iuInfoCenter__btn{
+    min-height: 40px;
+    width: auto;
+    min-width: 11rem;
+  }
+  .iuVaultLockOverlay__panel .iuInfoCenter__btn{
+    width: 100%;
+  }
 }
 html[data-theme="dark"] .iuVaultLockOverlay__panel,
 body.iu-theme-dark .iuVaultLockOverlay__panel{
