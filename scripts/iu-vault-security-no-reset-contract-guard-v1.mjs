@@ -61,8 +61,8 @@ function main() {
   }
 
   const core = fs.readFileSync(path.join(REPO, "assets", "iu-info-system-core-v1.js"), "utf8");
-  if (!/isVaultPrefsOpaque|clearPrefsMemCache/.test(core)) {
-    fails.push("info_core_missing_prefs_opaque_guard");
+  if (!/isVaultPrefsWriteBlocked|__iuVaultUserWriteDepth/.test(core)) {
+    fails.push("info_core_missing_prefs_write_guard");
   }
   if (!/iu-vault-hydrated/.test(core)) fails.push("info_core_missing_hydrate_clear");
 

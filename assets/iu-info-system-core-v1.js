@@ -707,10 +707,23 @@ function rollbackChmiCapV2UserStates() {
 /** In-memory prefs cache — avoids sync JSON.parse of localStorage on every checkbox/click. */
 let _prefsMem = null;
 
-function isVaultPrefsOpaque() {
+function isVaultPrefsWriteBlocked() {
   try {
-    if (window.__iuVaultHydrationPending) return true;
     if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+    const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
+    if (st && !st.unlocked) return true;
+  } catch (_) {}
+  return false;
+}
+
+/** Avoid pinning default prefs into memory while locked or pre-hydrate. */
+function isVaultPrefsReadOpaque() {
+  if (isVaultPrefsWriteBlocked()) return true;
+  try {
+    if (window.__iuVaultHydrationPending) {
+      const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
+      if (!st || !st.unlocked) return true;
+    }
   } catch (_) {}
   return false;
 }
@@ -729,7 +742,7 @@ function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
   // Never migrate/write defaults while vault lock hides protected prefs.
-  if (isVaultPrefsOpaque()) return { migrated: false, from: ver, to: ver, deferred: true };
+  if (isVaultPrefsReadOpaque()) return { migrated: false, from: ver, to: ver, deferred: true };
   try {
     const rawPrefs = localStorage.getItem(LS_PREFS);
     if (rawPrefs) {
@@ -764,14 +777,14 @@ function getPrefs() {
     if (!raw) {
       // Do not pin defaults into _prefsMem while vault is locked/hydrating —
       // that would survive unlock and clobber real Doprava/ČHMÚ filters.
-      if (isVaultPrefsOpaque()) return defaultPrefs();
+      if (isVaultPrefsReadOpaque()) return defaultPrefs();
       _prefsMem = defaultPrefs();
       return _prefsMem;
     }
     _prefsMem = normalizePrefs(JSON.parse(raw) || {});
     return _prefsMem;
   } catch (_) {
-    if (isVaultPrefsOpaque()) return defaultPrefs();
+    if (isVaultPrefsReadOpaque()) return defaultPrefs();
     _prefsMem = defaultPrefs();
     return _prefsMem;
   }
@@ -850,9 +863,18 @@ function countTemporaryFilters(prefs, baseline) {
 
 function setPrefs(prefs) {
   try {
-    if (isVaultPrefsOpaque()) return false;
+    if (isVaultPrefsWriteBlocked()) return false;
     const n = normalizePrefs(prefs || {});
-    localStorage.setItem(LS_PREFS, JSON.stringify(n));
+    try {
+      window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
+    } catch (_) {}
+    try {
+      localStorage.setItem(LS_PREFS, JSON.stringify(n));
+    } finally {
+      try {
+        window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
+      } catch (_) {}
+    }
     _prefsMem = n;
     return true;
   } catch (_) {

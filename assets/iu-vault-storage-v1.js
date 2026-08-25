@@ -10,12 +10,41 @@ export const ENC_PREFIX = "iu:vault:enc:v1:";
 const memoryCache = new Map();
 const writeGeneration = new Map();
 const pendingWrites = new Set();
+let userWriteDepth = 0;
 let nativeGetItem = null;
 let nativeSetItem = null;
 let nativeRemoveItem = null;
 
 export function encStorageKey(storageKey) {
   return ENC_PREFIX + String(storageKey);
+}
+
+/** True while an explicit user-initiated protected write is in flight (filters, notes, etc.). */
+export function isVaultUserWriteActive() {
+  if (userWriteDepth > 0) return true;
+  try {
+    return (window.__iuVaultUserWriteDepth || 0) > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
+export function runVaultUserWrite(fn) {
+  userWriteDepth += 1;
+  try {
+    return fn();
+  } finally {
+    userWriteDepth -= 1;
+  }
+}
+
+export async function runVaultUserWriteAsync(fn) {
+  userWriteDepth += 1;
+  try {
+    return await fn();
+  } finally {
+    userWriteDepth -= 1;
+  }
 }
 
 export function captureNativeLocalStorage() {
@@ -215,6 +244,7 @@ function looksLikeEmptyModuleReset(text, storageKey) {
  * Wipe uses removeItem / DB wipe — not empty setItem.
  */
 function shouldBlockPostHydrateClobber(key, text) {
+  if (isVaultUserWriteActive()) return false;
   const k = String(key || "");
   if (!looksLikeEmptyModuleReset(text, k)) return false;
   if (memoryCache.has(k)) {
@@ -222,6 +252,8 @@ function shouldBlockPostHydrateClobber(key, text) {
     if (prev.length >= 24 && !looksLikeEmptyModuleReset(prev, k)) return true;
   }
   try {
+    const st = getVaultState();
+    if (st.unlocked) return false;
     if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(k)) return true;
   } catch (_) {}
   return false;
@@ -240,11 +272,12 @@ export function hasEncryptedRecordAtRest(storageKey) {
 /** Block module saves while locked (ciphertext at rest) or while post-unlock hydrate is still pending. */
 export function isVaultPersistBlocked(storageKey) {
   if (!isProtectedStorageKey(storageKey)) return false;
+  if (isVaultUserWriteActive()) return false;
+  const st = getVaultState();
+  if (st.unlocked) return false;
   try {
     if (window.__iuVaultHydrationPending) return true;
   } catch (_) {}
-  const st = getVaultState();
-  if (st.unlocked) return false;
   return hasEncryptedRecordAtRest(storageKey);
 }
 

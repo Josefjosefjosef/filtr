@@ -1,9 +1,9 @@
 {
-    "freezeId": "iu-vault-mobile-data-pin-layout-v3-20260825",
+    "freezeId": "iu-vault-wipe-filter-cross-browser-v1-20260825",
     "preStabilizationProductionSha": "f74d1f18ea250142a45a0d4a58f6806891540084",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-25T15:40:06.365Z",
-    "note": "Mobile/PWA data preservation + PIN setup zoom/layout v3; protect info prefs; permanent empty clobber.",
+    "updatedAt": "2026-08-25T20:40:00.000Z",
+    "note": "Wipe phrase input→button sync + filter user-write vs anti-clobber split.",
     "files": {
         "projects/index.html": "45d168d72dc2d08d7c96296c844c87cedfc991b8a26506e1d433a20f3233de2a",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
@@ -28,7 +28,7 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-08-25-iu-vault-mobile-data-pin-layout-v3\"",
+            "CACHE_VERSION = \"2026-08-25-iu-vault-wipe-filter-cross-browser-v1\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",
