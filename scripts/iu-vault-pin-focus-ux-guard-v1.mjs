@@ -23,9 +23,13 @@ const PIN = "012345";
 function staticChecks(fails) {
   const css = fs.readFileSync(path.join(REPO, "assets", "iu-info-center.css"), "utf8");
   const index = fs.readFileSync(path.join(REPO, "projects", "index.html"), "utf8");
+  const ui = fs.readFileSync(path.join(REPO, "assets", "iu-vault-ui-v1.js"), "utf8");
   if (!/\.iuVaultLockOverlay__input[\s\S]{0,280}font-size:\s*16px\s*!important/.test(css)
     && !/#iuVaultAppLockScreen[\s\S]{0,400}font-size:\s*16px\s*!important/.test(index)) {
     fails.push("missing_pin_input_16px_important");
+  }
+  if (!/\.iuVaultSecurity__input\{[\s\S]{0,400}font-size:\s*16px\s*!important/.test(css)) {
+    fails.push("missing_pin_setup_input_16px");
   }
   if (/@media \(min-width: 1025px\)[\s\S]{0,180}\.iuVaultLockOverlay__input\{[\s\S]{0,80}font-size:\s*15px/.test(css)) {
     fails.push("desktop_media_overrides_pin_below_16px");
@@ -36,6 +40,17 @@ function staticChecks(fails) {
       && !/<input[^>]*id="iuVaultPinInput"[^>]*type="text"/.test(index)) {
       fails.push("pin_input_not_type_text");
     }
+  }
+  if (/id="iuVaultPinSetupNew"[^>]*type="password"/.test(ui)
+    || /type="password"[^>]*id="iuVaultPinSetupNew"/.test(ui)) {
+    fails.push("pin_setup_still_type_password");
+  }
+  if (!/id="iuVaultPinSetupNew"[^>]*type="text"/.test(ui)
+    && !/type="text"[^>]*id="iuVaultPinSetupNew"/.test(ui)) {
+    fails.push("pin_setup_not_type_text");
+  }
+  if (!/align-items:\s*flex-start/.test(index) && !/#iuVaultAppLockScreen[\s\S]{0,200}align-items:\s*flex-start/.test(index)) {
+    fails.push("lock_screen_still_flex_center");
   }
   if (!/\.iuInfoCenter__btn/.test(css) && !/#iuVaultAppLockScreen[\s\S]{0,800}iuInfoCenter__btn/.test(index)) {
     fails.push("missing_security_btn_styles");

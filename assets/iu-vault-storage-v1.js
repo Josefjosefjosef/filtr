@@ -145,6 +145,32 @@ export function notifyVaultMemoryHydrated() {
  * clobber hydrated ciphertext. Block only empty/default-shaped overwrites
  * briefly after hydrate when cache already holds substance.
  */
+function emptyArr(a) {
+  return !Array.isArray(a) || a.length === 0;
+}
+
+function looksLikeEmptyPrefsReset(o) {
+  if (!o || typeof o !== "object") return false;
+  if (!("sections" in o) && !("feedFilter" in o) && !("homeObec" in o) && !("sourceGroups" in o)) {
+    return false;
+  }
+  const feedEmpty =
+    o.feedFilter == null ||
+    (typeof o.feedFilter === "object" && !Array.isArray(o.feedFilter) && Object.keys(o.feedFilter).length === 0);
+  return (
+    emptyArr(o.sections) &&
+    emptyArr(o.sourceGroups) &&
+    emptyArr(o.sourceIds) &&
+    emptyArr(o.lanes) &&
+    emptyArr(o.localities) &&
+    !String(o.homeKraj || "").trim() &&
+    !String(o.homeOkres || "").trim() &&
+    !String(o.homeObec || "").trim() &&
+    !String(o.localityQuery || "").trim() &&
+    feedEmpty
+  );
+}
+
 function looksLikeEmptyModuleReset(text) {
   try {
     const o = JSON.parse(String(text || ""));
@@ -156,6 +182,8 @@ function looksLikeEmptyModuleReset(text) {
     if (Array.isArray(o.profiles) && o.profiles.length === 0) return true;
     if (Array.isArray(o.buttons) && o.buttons.length === 0) return true;
     if (Array.isArray(o.topics) && o.topics.length === 0) return true;
+    if (Array.isArray(o.views) && o.views.length === 0) return true;
+    if (looksLikeEmptyPrefsReset(o)) return true;
     if (Array.isArray(o.items)) {
       if (o.items.length === 0) return true;
       const placeholder = (label) => {
@@ -175,20 +203,21 @@ function looksLikeEmptyModuleReset(text) {
   }
 }
 
+/**
+ * Mobile/PWA: modules often re-init empty defaults long after unlock (>4s).
+ * Permanently block empty/default-shaped overwrites when cache already holds substance.
+ * Wipe uses removeItem / DB wipe — not empty setItem.
+ */
 function shouldBlockPostHydrateClobber(key, text) {
-  try {
-    const t = window.__iuVaultHydratedAt || 0;
-    if (!t || Date.now() - t > 4000) return false;
-  } catch (_) {
-    return false;
-  }
-  if (!memoryCache.has(key)) return false;
-  const prev = memoryCache.get(key) || "";
-  if (prev.length < 24) return false;
   if (!looksLikeEmptyModuleReset(text)) return false;
-  // Previous value must not itself be an empty reset.
-  if (looksLikeEmptyModuleReset(prev)) return false;
-  return true;
+  if (memoryCache.has(key)) {
+    const prev = memoryCache.get(key) || "";
+    if (prev.length >= 24 && !looksLikeEmptyModuleReset(prev)) return true;
+  }
+  try {
+    if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(key)) return true;
+  } catch (_) {}
+  return false;
 }
 
 export function hasEncryptedRecordAtRest(storageKey) {

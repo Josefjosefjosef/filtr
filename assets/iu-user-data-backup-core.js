@@ -64,6 +64,12 @@ export const MODULE_DEFS = Object.freeze([
   { id: "rail_bg", label: "Vzhled — pozadí lišty", kind: "key", key: "iuRailBg", schemaVersion: 1 },
   { id: "rail_btn_bg", label: "Vzhled — tlačítka lišty (pozadí)", kind: "key", key: "iuRailBtnBg", schemaVersion: 1 },
   { id: "rail_btn_fg", label: "Vzhled — tlačítka lišty (text)", kind: "key", key: "iuRailBtnFg", schemaVersion: 1 },
+  { id: "info_prefs", label: "Info systém — filtry (Doprava/ČHMÚ/obce)", kind: "key", key: "iu.infoEvents.prefs.v1", schemaVersion: 6 },
+  { id: "info_views", label: "Info systém — uložené pohledy", kind: "key", key: "iu.infoEvents.views.v1", schemaVersion: 6 },
+  { id: "info_read", label: "Info systém — přečtené", kind: "key", key: "iu.infoEvents.read.v1", schemaVersion: 6 },
+  { id: "info_saved", label: "Info systém — uložené", kind: "key", key: "iu.infoEvents.saved.v1", schemaVersion: 6 },
+  { id: "info_hidden", label: "Info systém — skryté", kind: "key", key: "iu.infoEvents.hidden.v1", schemaVersion: 6 },
+  { id: "info_view_baseline", label: "Info systém — baseline pohled", kind: "key", key: "iu.infoEvents.viewBaseline.v1", schemaVersion: 6 },
 ]);
 
 const UNSAFE_KEYS = new Set(["__proto__", "prototype", "constructor"]);

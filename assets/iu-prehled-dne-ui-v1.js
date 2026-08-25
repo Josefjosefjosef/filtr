@@ -35,7 +35,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822";
+} from "./iu-info-system-core-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825";
 import { TRAFFIC_OVERVIEW_FLAGS } from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {

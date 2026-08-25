@@ -345,23 +345,28 @@ export function registerAutoLockListeners() {
       }
     });
     window.addEventListener("pageshow", (ev) => {
-      if (!ev || !ev.persisted) return;
-      // BFCache restore: re-assert locked empty cache so modules cannot treat
-      // a frozen empty runtime as source of truth after unlock.
       if (!state.requiresUserReauth) return;
+      const bf = !!(ev && ev.persisted);
       if (!state.unlocked) {
         try {
-          window.__iuVaultHydrationPending = true;
-          window.__iuVaultHydrationComplete = false;
+          // Fresh launch: bootstrap already sets pending. Re-assert if cleared early.
+          // BFCache: always re-assert + clear frozen empty runtime cache.
+          if (bf || !window.__iuVaultHydrationPending) {
+            window.__iuVaultHydrationPending = true;
+            window.__iuVaultHydrationComplete = false;
+          }
         } catch (_) {}
-        import("./iu-vault-storage-v1.js")
-          .then((m) => {
-            try {
-              m.clearVaultMemoryCache();
-            } catch (_) {}
-          })
-          .catch(() => {});
+        if (bf) {
+          import("./iu-vault-storage-v1.js")
+            .then((m) => {
+              try {
+                m.clearVaultMemoryCache();
+              } catch (_) {}
+            })
+            .catch(() => {});
+        }
       }
+      if (!bf) return;
       try {
         window.dispatchEvent(
           new CustomEvent("iu-vault-bfcache-restore", {

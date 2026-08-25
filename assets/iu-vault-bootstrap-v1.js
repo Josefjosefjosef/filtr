@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Vault bootstrap — must load before app.js (top-level await).
  */
 import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, readSecurityConfiguredState, setAppLockHintActive } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
@@ -95,7 +95,7 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     try {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
       return await unlockWithDevice();
     } catch (err) {
       try {
@@ -117,11 +117,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -130,7 +130,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -150,15 +150,15 @@ const api = {
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   validatePinPolicy: (pin) => explainPinRejection(pin),
   getLastDeviceDiag: async () => {
-    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
     return getLastDeviceSetupDiag();
   },
   getWebAuthnCeremonyLog: async () => {
-    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
     return getWebAuthnCeremonyLog();
   },
   clearWebAuthnCeremonyLog: async () => {
-    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-ux-pwa-pin-l2-v1-20260825");
+    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-data-pin-layout-v3-20260825");
     return clearWebAuthnCeremonyLog();
   },
   wipePersonal: async () => {
@@ -185,7 +185,7 @@ const api = {
         encExists = !!localStorage.getItem("iu:vault:enc:v1:" + key);
       } catch (_) {}
       try {
-        // Native probe via unlocked cache presence only — never return value.
+        // Native probe via unlocked cache presence only â€” never return value.
         protectedPlainExists = st.unlocked && !!(await import("./iu-vault-storage-v1.js").then(() => {
           try {
             return localStorage.getItem(key) != null;
