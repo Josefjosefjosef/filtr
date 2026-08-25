@@ -175,7 +175,8 @@ function looksLikeEmptyModuleReset(text, storageKey) {
   const key = String(storageKey || "");
   try {
     const o = JSON.parse(String(text || ""));
-    if (Array.isArray(o) && o.length === 0) return true;
+    // Top-level [] is a legitimate clear-all (e.g. iu_silver_parcel_watch_v1).
+    if (Array.isArray(o)) return false;
     if (!o || typeof o !== "object") return false;
     if (Array.isArray(o.notes) && o.notes.length === 0) return true;
     if (Array.isArray(o.tasks) && o.tasks.length === 0) return true;
