@@ -5,7 +5,7 @@ import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, u
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
@@ -87,7 +87,7 @@ const api = {
       window.__iuVaultHydrationPending = true;
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -103,11 +103,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -116,7 +116,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -136,12 +136,58 @@ const api = {
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   validatePinPolicy: (pin) => explainPinRejection(pin),
   getLastDeviceDiag: async () => {
-    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825");
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825");
     return getLastDeviceSetupDiag();
   },
   wipePersonal: async () => {
     const { wipePersonalVault } = await import("./iu-vault-wipe-v1.js");
     return wipePersonalVault();
+  },
+  isWipeConfirmPhraseAccepted: async (value) => {
+    const { isWipeConfirmPhraseAccepted } = await import("./iu-vault-wipe-v1.js");
+    return isWipeConfirmPhraseAccepted(value);
+  },
+  /**
+   * Safe synthetic-test metadata only (no plaintext / secrets).
+   * @param {string} phase
+   * @param {string} [moduleKey]
+   */
+  diagLifecycle: async (phase, moduleKey) => {
+    const key = moduleKey ? String(moduleKey) : "";
+    const st = getVaultState();
+    const configured = await readSecurityConfiguredState();
+    let encExists = false;
+    let protectedPlainExists = false;
+    if (key) {
+      try {
+        encExists = !!localStorage.getItem("iu:vault:enc:v1:" + key);
+      } catch (_) {}
+      try {
+        // Native probe via unlocked cache presence only — never return value.
+        protectedPlainExists = st.unlocked && !!(await import("./iu-vault-storage-v1.js").then(() => {
+          try {
+            return localStorage.getItem(key) != null;
+          } catch (_) {
+            return false;
+          }
+        }));
+      } catch (_) {}
+    }
+    return {
+      phase: String(phase || ""),
+      moduleId: key || null,
+      protectedKeyExists: protectedPlainExists,
+      encryptedEnvelopeExists: encExists,
+      cacheStateExists: null,
+      hydrationPending: !!window.__iuVaultHydrationPending,
+      hydrationComplete: !!window.__iuVaultHydrationComplete,
+      persistBlocked: key ? isVaultPersistBlocked(key) : !!window.__iuVaultHydrationPending,
+      unlocked: !!st.unlocked,
+      unlockMethod: configured.unlockMethod,
+      bfcachePersisted: null,
+      lifecycleEvent: String(phase || ""),
+      securityLevel: configured.meta && configured.meta.securityLevel,
+    };
   },
   setAutoLockPolicy: async (policy) => {
     const { setAutoLockPolicy } = await import("./iu-vault-lock-v1.js");

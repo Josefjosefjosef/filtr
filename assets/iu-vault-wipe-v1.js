@@ -6,6 +6,28 @@ import { wipeVaultDatabase, wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { clearVaultMemoryCache, ENC_PREFIX } from "./iu-vault-storage-v1.js";
 import { lockVault, clearAppLockHint, postVaultLockMessage } from "./iu-vault-lock-v1.js";
 
+export const WIPE_CONFIRM_PHRASE = "VYMAZAT OSOBNÍ DATA";
+
+function stripDiacritics(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+/** Trim + case-insensitive + NFC + diacritics-insensitive. */
+export function normalizeWipeConfirmPhrase(value) {
+  return stripDiacritics(
+    String(value || "")
+      .normalize("NFC")
+      .trim()
+      .toLocaleLowerCase("cs-CZ")
+  );
+}
+
+export function isWipeConfirmPhraseAccepted(value) {
+  return normalizeWipeConfirmPhrase(value) === normalizeWipeConfirmPhrase(WIPE_CONFIRM_PHRASE);
+}
+
 export async function wipePersonalVault() {
   clearVaultMemoryCache();
   try {
@@ -82,6 +104,7 @@ export async function wipePersonalVault() {
   try {
     window.__iuVaultHydrationPending = false;
     window.__iuVaultHydrationComplete = true;
+    window.__iuVaultHydratedAt = Date.now();
     window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
     window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
     window.dispatchEvent(new CustomEvent("iu-vault-wiped"));

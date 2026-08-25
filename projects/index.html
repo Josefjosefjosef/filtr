@@ -40,8 +40,26 @@
       }
       #iuVaultAppLockScreen .iuVaultLockOverlay__input {
         font-size: 16px !important;
-        line-height: 1.35;
+        line-height: 1.35 !important;
         -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        transform: none !important;
+      }
+      #iuVaultAppLockScreen .iuVaultWipeConfirm {
+        display: none;
+        margin-top: 0.35rem;
+      }
+      #iuVaultAppLockScreen .iuVaultWipeConfirm:not([hidden]) {
+        display: block;
+      }
+      #iuVaultAppLockScreen .iuVaultWipeConfirm__hint {
+        margin: 0 0 0.55rem;
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+      #iuVaultAppLockScreen .iuVaultWipeConfirm__phrase {
+        font-weight: 700;
+        letter-spacing: 0.02em;
       }
       #iuVaultAppLockScreen .iuInfoCenter__btn {
         appearance: none;
@@ -2556,10 +2574,20 @@ require-trusted-types-for 'script';
         <h1 id="iuVaultAppLockTitle" class="iuVaultLockOverlay__title">InfoUzel je zamčen</h1>
         <p class="iuVaultLockOverlay__text" id="iuVaultAppLockText">Pro pokračování odemkněte InfoUzel.</p>
         <label class="iuVaultLockOverlay__label" id="iuVaultPinLabel" hidden>PIN InfoUzlu</label>
-        <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" class="iuVaultLockOverlay__input" id="iuVaultPinInput" hidden />
-        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockPinBtn" hidden>Odemknout PINem</button>
-        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockDeviceBtn" hidden>Odemknout InfoUzel</button>
-        <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultForgotPinBtn" hidden>Zapomněl jsem PIN</button>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultLockOverlay__input" id="iuVaultPinInput" hidden />
+        <div id="iuVaultLockMainActions">
+          <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockPinBtn" hidden>Odemknout PINem</button>
+          <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultUnlockDeviceBtn" hidden>Odemknout InfoUzel</button>
+          <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultForgotPinBtn" hidden>Zapomněl jsem PIN</button>
+        </div>
+        <div id="iuVaultWipeConfirm" class="iuVaultWipeConfirm" hidden aria-hidden="true">
+          <p class="iuVaultWipeConfirm__hint">PIN nelze obnovit. Vymazáním nenávratně odstraníte osobní data v tomto prohlížeči.</p>
+          <p class="iuVaultWipeConfirm__hint">Pro potvrzení napište: <span class="iuVaultWipeConfirm__phrase">VYMAZAT OSOBNÍ DATA</span></p>
+          <label class="iuVaultLockOverlay__label" for="iuVaultWipePhraseInput">Potvrzovací fráze</label>
+          <input type="text" id="iuVaultWipePhraseInput" class="iuVaultLockOverlay__input" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+          <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultWipeConfirmBtn">Vymazat osobní data</button>
+          <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultWipeCancelBtn">Zrušit</button>
+        </div>
         <p class="iuVaultLockOverlay__err" id="iuVaultLockErr" aria-live="polite"></p>
       </div>
     </div>
@@ -6349,7 +6377,7 @@ require-trusted-types-for 'script';
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-lock-data-mobile-ux-v1-20260825"></script>
+    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825"></script>
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->

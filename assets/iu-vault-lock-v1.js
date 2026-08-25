@@ -94,6 +94,7 @@ const state = {
   idleTimer: null,
   lastActivity: Date.now(),
   requiresUserReauth: false,
+  lockInProgress: false,
 };
 
 async function refreshSecurityMode(meta) {
@@ -216,26 +217,44 @@ export async function readSecurityConfiguredState(meta) {
 
 export async function lockVault(reason = "manual") {
   if (!state.requiresUserReauth) return;
+  if (state.lockInProgress) {
+    try {
+      const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
+      await flushPendingVaultWrites();
+    } catch (_) {}
+    return;
+  }
+  state.lockInProgress = true;
   try {
-    const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
-    await flushPendingVaultWrites();
-  } catch (_) {}
-  clearIdleTimer();
-  state.mdk = null;
-  state.unlocked = false;
-  state.lockedReason = reason;
-  try {
-    window.__iuVaultHydrationPending = true;
-    window.__iuVaultHydrationComplete = false;
-  } catch (_) {}
-  try {
-    const { clearVaultMemoryCache } = await import("./iu-vault-storage-v1.js");
-    clearVaultMemoryCache();
-  } catch (_) {}
-  try {
-    window.dispatchEvent(new CustomEvent("iu-vault-locked", { detail: { reason } }));
-  } catch (_) {}
-  postVaultLockMessage("locked", reason);
+    // Block NEW module writes BEFORE flush/clear — mobile visibilitychange races otherwise
+    // overwrite ciphertext while encrypt is still in flight.
+    try {
+      window.__iuVaultHydrationPending = true;
+      window.__iuVaultHydrationComplete = false;
+    } catch (_) {}
+    try {
+      const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
+      await flushPendingVaultWrites();
+    } catch (_) {}
+    clearIdleTimer();
+    state.mdk = null;
+    state.unlocked = false;
+    state.lockedReason = reason;
+    try {
+      const { clearVaultMemoryCache } = await import("./iu-vault-storage-v1.js");
+      clearVaultMemoryCache();
+    } catch (_) {}
+    try {
+      window.dispatchEvent(new CustomEvent("iu-vault-locked", { detail: { reason } }));
+    } catch (_) {}
+    // Wipe clears security in the same turn; broadcasting "locked" would race
+    // async lock-UI refresh and re-show APP_LOCKED after clean L1 is ready.
+    if (reason !== "wiped") {
+      postVaultLockMessage("locked", reason);
+    }
+  } finally {
+    state.lockInProgress = false;
+  }
 }
 
 export async function unlockWithMdk(mdk) {
@@ -305,9 +324,53 @@ export function registerAutoLockListeners() {
     if (!state.requiresUserReauth) return;
     if (document.visibilityState === "hidden") {
       const p = state.autoLockPolicy;
-      if (p === "background" || p === "tools_open") lockVault("background");
+      if (p === "background" || p === "tools_open") {
+        // Fire-and-follow: do not leave flush unstarted on iOS suspend.
+        lockVault("background").catch(() => {});
+      }
     }
   });
+  try {
+    window.addEventListener("pagehide", () => {
+      if (!state.requiresUserReauth) return;
+      try {
+        window.__iuVaultHydrationPending = true;
+      } catch (_) {}
+      import("./iu-vault-storage-v1.js")
+        .then((m) => m.flushPendingVaultWrites())
+        .catch(() => {});
+      const p = state.autoLockPolicy;
+      if (state.unlocked && (p === "background" || p === "tools_open")) {
+        lockVault("pagehide").catch(() => {});
+      }
+    });
+    window.addEventListener("pageshow", (ev) => {
+      if (!ev || !ev.persisted) return;
+      // BFCache restore: re-assert locked empty cache so modules cannot treat
+      // a frozen empty runtime as source of truth after unlock.
+      if (!state.requiresUserReauth) return;
+      if (!state.unlocked) {
+        try {
+          window.__iuVaultHydrationPending = true;
+          window.__iuVaultHydrationComplete = false;
+        } catch (_) {}
+        import("./iu-vault-storage-v1.js")
+          .then((m) => {
+            try {
+              m.clearVaultMemoryCache();
+            } catch (_) {}
+          })
+          .catch(() => {});
+      }
+      try {
+        window.dispatchEvent(
+          new CustomEvent("iu-vault-bfcache-restore", {
+            detail: { persisted: true, unlocked: !!state.unlocked },
+          })
+        );
+      } catch (_) {}
+    });
+  } catch (_) {}
   ["pointerdown", "keydown", "touchstart"].forEach((ev) => {
     document.addEventListener(ev, () => touchActivity(), { passive: true });
   });
