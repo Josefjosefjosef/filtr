@@ -49,6 +49,48 @@ function deviceUnlockUserMessage(err) {
   return "Odemknutí zařízením se nezdařilo.";
 }
 
+function clearFailedUnlockHydrationFlags() {
+  try {
+    // Failed unlock must not leave hydration-pending stuck (blocks UI/retry semantics).
+    if (window.__iuVaultHydrationPending && !(window.iuVault && window.iuVault.getState && window.iuVault.getState().unlocked)) {
+      window.__iuVaultHydrationPending = false;
+    }
+  } catch (_) {}
+}
+
+function ensurePinInputEditable(pinInput) {
+  if (!pinInput) return;
+  try {
+    pinInput.disabled = false;
+    pinInput.readOnly = false;
+    pinInput.removeAttribute("aria-disabled");
+    pinInput.removeAttribute("disabled");
+    pinInput.style.pointerEvents = "auto";
+  } catch (_) {}
+}
+
+/** Re-enable lock controls after cancel/background/hang — never leave PWA unlock stuck. */
+export function resetAppLockUnlockControls() {
+  const unlockPin = document.getElementById("iuVaultUnlockPinBtn");
+  const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
+  const pinInput = document.getElementById("iuVaultPinInput");
+  if (unlockPin) {
+    unlockPin.disabled = false;
+    unlockPin.removeAttribute("aria-disabled");
+    unlockPin.style.pointerEvents = "auto";
+  }
+  if (unlockDev) {
+    unlockDev.disabled = false;
+    unlockDev.removeAttribute("aria-disabled");
+    unlockDev.style.pointerEvents = "auto";
+  }
+  ensurePinInputEditable(pinInput);
+  try {
+    window.__iuVaultUnlockPinInFlight = false;
+    window.__iuVaultUnlockDeviceInFlight = false;
+  } catch (_) {}
+}
+
 function installLockedPersonalEntryBlock() {
   if (installLockedPersonalEntryBlock._done) return;
   installLockedPersonalEntryBlock._done = true;
@@ -73,6 +115,36 @@ function installLockedPersonalEntryBlock() {
   } catch (_) {}
 }
 
+/**
+ * Derive visible primary unlock actions from configured method only.
+ * L3 pin → exactly one primary (PIN). L2 device → exactly one primary (device).
+ */
+function applyUnlockActionVisibility(method, deviceSupported) {
+  const pinInput = document.getElementById("iuVaultPinInput");
+  const pinLabel = document.getElementById("iuVaultPinLabel");
+  const unlockPin = document.getElementById("iuVaultUnlockPinBtn");
+  const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
+  const forgot = document.getElementById("iuVaultForgotPinBtn");
+
+  const showPin = method === "pin";
+  const showDevice = method === "device" && !!deviceSupported;
+
+  if (pinInput) pinInput.hidden = !showPin;
+  if (pinLabel) pinLabel.hidden = !showPin;
+  if (unlockPin) {
+    unlockPin.hidden = !showPin;
+    unlockPin.classList.add("iuInfoCenter__btn--primary");
+    unlockPin.classList.remove("iuInfoCenter__btn--secondary");
+  }
+  if (unlockDev) {
+    unlockDev.hidden = !showDevice;
+    unlockDev.textContent = "Odemknout InfoUzel";
+    unlockDev.classList.add("iuInfoCenter__btn--primary");
+    unlockDev.classList.remove("iuInfoCenter__btn--secondary");
+  }
+  if (forgot) forgot.hidden = !showPin;
+}
+
 export async function refreshGlobalAppLockUi(vault) {
   if (!vault) return;
   const configured = await vault.getSecurityConfigured();
@@ -93,11 +165,6 @@ export async function refreshGlobalAppLockUi(vault) {
 
   installLockedPersonalEntryBlock();
 
-  const pinInput = document.getElementById("iuVaultPinInput");
-  const pinLabel = document.getElementById("iuVaultPinLabel");
-  const unlockPin = document.getElementById("iuVaultUnlockPinBtn");
-  const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
-  const forgot = document.getElementById("iuVaultForgotPinBtn");
   const title = document.getElementById("iuVaultAppLockTitle");
   const text = document.getElementById("iuVaultAppLockText");
   const errEl = document.getElementById("iuVaultLockErr");
@@ -111,14 +178,8 @@ export async function refreshGlobalAppLockUi(vault) {
           ? "Pro pokračování zadejte PIN InfoUzlu."
           : "Pro pokračování odemkněte InfoUzel.";
   }
-  if (pinInput) pinInput.hidden = method !== "pin";
-  if (pinLabel) pinLabel.hidden = method !== "pin";
-  if (unlockPin) unlockPin.hidden = method !== "pin";
-  if (unlockDev) {
-    unlockDev.hidden = method !== "device" || !deviceSupported;
-    unlockDev.textContent = "Odemknout InfoUzel";
-  }
-  if (forgot) forgot.hidden = method !== "pin";
+  applyUnlockActionVisibility(method, deviceSupported);
+  if (locked) resetAppLockUnlockControls();
   if (!locked && errEl) errEl.textContent = "";
   setWipeConfirmVisible(false);
   restorePinViewportAfterUnlock();
@@ -152,32 +213,60 @@ function restorePinViewportAfterUnlock() {
   } catch (_) {}
 }
 
+function pinUnlockErrorMessage(err) {
+  const code = String(err && err.message ? err.message : err);
+  if (code.includes("VAULT_PIN_BACKOFF")) {
+    return "Příliš mnoho pokusů. Počkejte chvíli a zkuste znovu.";
+  }
+  return "Neplatný PIN.";
+}
+
 function bindUnlockHandlers(vault) {
   if (bindUnlockHandlers._done) return;
   bindUnlockHandlers._done = true;
 
   document.getElementById("iuVaultUnlockPinBtn")?.addEventListener("click", async () => {
-    const pin = document.getElementById("iuVaultPinInput")?.value || "";
+    if (window.__iuVaultUnlockPinInFlight) return;
+    window.__iuVaultUnlockPinInFlight = true;
+    const pinInput = document.getElementById("iuVaultPinInput");
+    const btn = document.getElementById("iuVaultUnlockPinBtn");
     const err = document.getElementById("iuVaultLockErr");
+    const pin = pinInput ? String(pinInput.value || "") : "";
+    // Submit may be briefly disabled; input must stay editable for retry.
+    if (btn) btn.disabled = true;
+    ensurePinInputEditable(pinInput);
     try {
       await vault.unlockPin(pin);
       await vault.afterUnlock();
       if (err) err.textContent = "";
-      const inp = document.getElementById("iuVaultPinInput");
-      if (inp) inp.value = "";
+      if (pinInput) pinInput.value = "";
       await refreshGlobalAppLockUi(vault);
       try {
         window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
       } catch (_) {}
-    } catch (_) {
-      if (err) err.textContent = "Neplatný PIN.";
+    } catch (e) {
+      clearFailedUnlockHydrationFlags();
+      if (err) err.textContent = pinUnlockErrorMessage(e);
+      ensurePinInputEditable(pinInput);
+      try {
+        if (pinInput) {
+          pinInput.focus({ preventScroll: true });
+          if (typeof pinInput.select === "function") pinInput.select();
+        }
+      } catch (_) {}
+    } finally {
+      window.__iuVaultUnlockPinInFlight = false;
+      if (btn) btn.disabled = false;
+      ensurePinInputEditable(pinInput);
     }
   });
 
   document.getElementById("iuVaultUnlockDeviceBtn")?.addEventListener("click", async () => {
+    if (window.__iuVaultUnlockDeviceInFlight) return;
     const err = document.getElementById("iuVaultLockErr");
     const btn = document.getElementById("iuVaultUnlockDeviceBtn");
     if (btn && btn.disabled) return;
+    window.__iuVaultUnlockDeviceInFlight = true;
     if (btn) btn.disabled = true;
     if (err) err.textContent = "";
     try {
@@ -189,9 +278,15 @@ function bindUnlockHandlers(vault) {
         window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
       } catch (_) {}
     } catch (e) {
+      clearFailedUnlockHydrationFlags();
       if (err) err.textContent = deviceUnlockUserMessage(e);
     } finally {
-      if (btn) btn.disabled = false;
+      window.__iuVaultUnlockDeviceInFlight = false;
+      if (btn) {
+        btn.disabled = false;
+        btn.removeAttribute("aria-disabled");
+        btn.style.pointerEvents = "auto";
+      }
     }
   });
 
@@ -248,7 +343,18 @@ function bindUnlockHandlers(vault) {
     refreshGlobalAppLockUi(vault).catch(() => {});
   });
   window.addEventListener("iu-vault-bfcache-restore", () => {
+    resetAppLockUnlockControls();
     refreshGlobalAppLockUi(vault).catch(() => {});
+  });
+
+  // PWA/iOS: WebAuthn or background can leave unlock button disabled mid-flight.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      resetAppLockUnlockControls();
+    }
+  });
+  window.addEventListener("pageshow", () => {
+    resetAppLockUnlockControls();
   });
 }
 

@@ -1,9 +1,9 @@
 {
-    "freezeId": "iu-vault-mobile-lifecycle-wipe-zoom-v2-20260825",
+    "freezeId": "iu-vault-lock-ux-pwa-pin-l2-v1-20260825",
     "preStabilizationProductionSha": "f74d1f18ea250142a45a0d4a58f6806891540084",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-25T09:30:00.000Z",
-    "note": "Mobile/tablet lifecycle data preservation + in-DOM wipe UI + PIN zoom hardening (type=text 16px).",
+    "updatedAt": "2026-08-25T14:00:00.000Z",
+    "note": "Lock UX: single primary unlock, wrong-PIN retry, PWA unlock re-enable, L2 ceremony dedupe.",
     "files": {
         "projects/index.html": "fd1a6107236e20e36409bc7dc44dc8802d852cba246b87a1f1186f40d02c9faf",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
@@ -28,7 +28,7 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-08-25-iu-vault-mobile-lifecycle-wipe-zoom-v2\"",
+            "CACHE_VERSION = \"2026-08-25-iu-vault-lock-ux-pwa-pin-l2-v1\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",

@@ -25,6 +25,55 @@ const RP_NAME = "InfoUzel.cz";
 const PENDING_DEVICE_KEY = "mdk:device:pending";
 const WEBAUTHN_TIMEOUT_MS = 120000;
 
+function ensureCeremonyLog() {
+  try {
+    if (!Array.isArray(window.__iuVaultWebAuthnCeremonyLog)) {
+      window.__iuVaultWebAuthnCeremonyLog = [];
+    }
+    return window.__iuVaultWebAuthnCeremonyLog;
+  } catch (_) {
+    return null;
+  }
+}
+
+function recordWebAuthnCeremony(operation, purpose, result) {
+  const log = ensureCeremonyLog();
+  if (!log) return;
+  const entry = {
+    ceremonyIndex: log.length + 1,
+    operation: operation === "create" ? "create" : "get",
+    purpose: String(purpose || "").slice(0, 48),
+    result: String(result || "").slice(0, 32),
+  };
+  log.push(entry);
+  try {
+    window.__iuVaultLastWebAuthnCeremony = entry;
+  } catch (_) {}
+  return entry;
+}
+
+export function clearWebAuthnCeremonyLog() {
+  try {
+    window.__iuVaultWebAuthnCeremonyLog = [];
+    window.__iuVaultLastWebAuthnCeremony = null;
+  } catch (_) {}
+}
+
+export function getWebAuthnCeremonyLog() {
+  try {
+    const log = window.__iuVaultWebAuthnCeremonyLog;
+    if (!Array.isArray(log)) return [];
+    return log.map((row) => ({
+      ceremonyIndex: Number(row.ceremonyIndex) || 0,
+      operation: String(row.operation || ""),
+      purpose: String(row.purpose || ""),
+      result: String(row.result || ""),
+    }));
+  } catch (_) {
+    return [];
+  }
+}
+
 function webAuthnTimeoutMs() {
   try {
     const testMs = globalThis.__iuVaultWebAuthnTestTimeoutMs;
@@ -322,12 +371,14 @@ function prfBytesFromExtension(credOrAssertion, phaseCode) {
   throw devicePhaseError(phaseCode);
 }
 
-async function evaluatePrfViaGet(credRawId, salt, signal) {
+async function evaluatePrfViaGet(credRawId, salt, signal, purpose) {
   let assertion = null;
   try {
     assertion = await navigator.credentials.get(buildPrfGetOptions(credRawId, salt, signal));
+    recordWebAuthnCeremony("get", purpose || "prf_get", assertion ? "ok" : "empty");
   } catch (err) {
     const name = err && err.name ? String(err.name) : "";
+    recordWebAuthnCeremony("get", purpose || "prf_get", name || "error");
     if (name === "NotAllowedError") throw new Error("VAULT_DEVICE_CANCELLED");
     if (name === "AbortError") throw new Error("VAULT_DEVICE_TIMEOUT");
     throw devicePhaseError("DEVICE_PRF_GET_FAILED", sanitizeDeviceErrorDetail(name, err && err.message ? err.message : err));
@@ -346,12 +397,13 @@ async function evaluatePrfViaGet(credRawId, salt, signal) {
 async function obtainPrfBytesAfterCreate(cred, salt, signal) {
   const createPrf = readPrfExtensionResults(cred);
   if (createPrf && createPrf.results && createPrf.results.first) {
-    return new Uint8Array(createPrf.results.first);
+    return { prfBytes: new Uint8Array(createPrf.results.first), prfSource: "create" };
   }
   if (createPrf && createPrf.enabled === false) {
     throw devicePhaseError("DEVICE_PRF_NOT_ENABLED");
   }
-  return evaluatePrfViaGet(cred.rawId, salt, signal);
+  const prfBytes = await evaluatePrfViaGet(cred.rawId, salt, signal, "prf_after_create");
+  return { prfBytes, prfSource: "get" };
 }
 
 async function writePendingDeviceSetup(credentialId, salt) {
@@ -382,8 +434,10 @@ async function createPlatformCredential(signal) {
   let cred = null;
   try {
     cred = await navigator.credentials.create(buildCreateOptions(userId, signal));
+    recordWebAuthnCeremony("create", "device_activation_create", cred && cred.rawId ? "ok" : "empty");
   } catch (err) {
     const name = err && err.name ? String(err.name) : "";
+    recordWebAuthnCeremony("create", "device_activation_create", name || "error");
     if (name === "NotAllowedError") throw new Error("VAULT_DEVICE_CANCELLED");
     if (name === "AbortError") throw new Error("VAULT_DEVICE_TIMEOUT");
     throw devicePhaseError("DEVICE_CREATE_FAILED", sanitizeDeviceErrorDetail(name, err && err.message ? err.message : err));
@@ -397,19 +451,26 @@ async function createCredentialWithPrf(salt) {
     const pending = await readPendingDeviceSetup();
     const existingDevice = await readKeyRecord("mdk:device");
     if (pending && !existingDevice) {
-      const prfBytes = await evaluatePrfViaGet(pending.credentialId, pending.prfSalt, signal);
+      const prfBytes = await evaluatePrfViaGet(pending.credentialId, pending.prfSalt, signal, "prf_resume_pending");
       return {
         cred: { rawId: pending.credentialId },
         prfBytes,
         salt: pending.prfSalt,
         resumed: true,
+        prfSource: "get",
       };
     }
 
     const cred = await createPlatformCredential(signal);
     await writePendingDeviceSetup(toCredRawIdUint8(cred.rawId), salt);
-    const prfBytes = await obtainPrfBytesAfterCreate(cred, salt, signal);
-    return { cred, prfBytes, salt, resumed: false };
+    const obtained = await obtainPrfBytesAfterCreate(cred, salt, signal);
+    return {
+      cred,
+      prfBytes: obtained.prfBytes,
+      salt,
+      resumed: false,
+      prfSource: obtained.prfSource || "get",
+    };
   });
 }
 
@@ -424,7 +485,7 @@ async function rollbackMdkRotation(oldMdk, newMdk) {
 async function verifyDeviceWrapUnlock(deviceWrap, credRawId, salt, signal) {
   let verifyPrf = null;
   try {
-    verifyPrf = await evaluatePrfViaGet(credRawId, salt, signal);
+    verifyPrf = await evaluatePrfViaGet(credRawId, salt, signal, "verify_wrap_unlock");
   } catch (err) {
     const name = err && err.name ? String(err.name) : "";
     const msg = String(err && err.message ? err.message : err);
@@ -511,6 +572,8 @@ export async function setupDeviceUnlock() {
   const supported = await detectDeviceUnlockSupport();
   if (!supported) throw new Error("VAULT_DEVICE_UNSUPPORTED");
 
+  clearWebAuthnCeremonyLog();
+
   const STEP_MDK = "01-get-existing-mdk";
   const STEP_CREATE = "03-create-webauthn-credential";
   const STEP_PRF = "04-extract-prf-result";
@@ -536,11 +599,13 @@ export async function setupDeviceUnlock() {
     let cred = null;
     let prfBytes = null;
     let activeSalt = salt;
+    let prfSource = "get";
     try {
       const created = await createCredentialWithPrf(salt);
       cred = created.cred;
       prfBytes = created.prfBytes;
       activeSalt = created.salt || salt;
+      prfSource = created.prfSource || "get";
       recordDeviceDiag(STEP_CREATE, true, { operation: "createCredentialWithPrf", resumed: !!created.resumed });
       recordDeviceDiag(STEP_PRF, true, { operation: "extractPrfResult" });
     } catch (err) {
@@ -564,14 +629,23 @@ export async function setupDeviceUnlock() {
       throw devicePhaseError("DEVICE_WRAP_FAILED", sanitizeDeviceErrorDetail("", err && err.message ? err.message : err));
     }
 
-    await withWebAuthnWatchdog(async (signal) => {
-      try {
-        await verifyDeviceWrapUnlock(deviceWrap, cred.rawId, activeSalt, signal);
-        recordDeviceDiag(STEP_VERIFY, true, { operation: "verifyDeviceWrapUnlock" });
-      } catch (err) {
-        throwDeviceSetupStep(STEP_VERIFY, err, "verifyDeviceWrapUnlock");
-      }
-    });
+    // Unlock path always uses credentials.get. If PRF already came from get
+    // (create had no PRF results — typical Safari/iOS), a second verify get is
+    // redundant Face ID. Only run verify get when PRF came from create alone.
+    if (prfSource === "create") {
+      await withWebAuthnWatchdog(async (signal) => {
+        try {
+          await verifyDeviceWrapUnlock(deviceWrap, cred.rawId, activeSalt, signal);
+          recordDeviceDiag(STEP_VERIFY, true, { operation: "verifyDeviceWrapUnlock" });
+        } catch (err) {
+          throwDeviceSetupStep(STEP_VERIFY, err, "verifyDeviceWrapUnlock");
+        }
+      });
+    } else {
+      recordDeviceDiag(STEP_VERIFY, true, {
+        operation: "verifySkippedPrfFromGet",
+      });
+    }
 
     await persistDeviceActivation(meta, deviceWrap, oldMdk, testMdk, rotatedRef);
     recordDeviceDiag("14-activate-l2-state", true, { operation: "setupDeviceUnlock" });
@@ -592,7 +666,15 @@ export async function unlockWithDevice() {
   const salt = new Uint8Array(deviceWrap.prfSalt);
 
   const assertion = await withWebAuthnWatchdog(async (signal) => {
-    const result = await navigator.credentials.get(buildPrfGetOptions(credId, salt, signal));
+    let result = null;
+    try {
+      result = await navigator.credentials.get(buildPrfGetOptions(credId, salt, signal));
+      recordWebAuthnCeremony("get", "device_unlock", result ? "ok" : "empty");
+    } catch (err) {
+      const name = err && err.name ? String(err.name) : "";
+      recordWebAuthnCeremony("get", "device_unlock", name || "error");
+      throw err;
+    }
     if (!result) throw new Error("VAULT_DEVICE_UNLOCK_FAILED");
     return result;
   });

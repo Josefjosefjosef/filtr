@@ -1009,6 +1009,15 @@ body.iu-theme-dark .iuDataMgmtConfirm__btn--ghost{
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
   touch-action: manipulation;
+  pointer-events: auto;
+}
+/* Critical: explicit display must not override [hidden] on lock-screen actions. */
+#iuVaultAppLockScreen .iuInfoCenter__btn[hidden],
+#iuVaultAppLockScreen .iuVaultLockOverlay__label[hidden],
+#iuVaultAppLockScreen .iuVaultLockOverlay__input[hidden],
+#iuVaultAppLockScreen #iuVaultLockMainActions[hidden],
+.iuVaultLockOverlay__panel .iuInfoCenter__btn[hidden]{
+  display: none !important;
 }
 .iuInfoCenter__btn:last-of-type{
   margin-bottom: 0;
