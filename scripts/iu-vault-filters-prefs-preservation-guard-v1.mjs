@@ -29,6 +29,7 @@ function staticChecks(fails) {
   if (!prot.includes(PREFS_KEY)) fails.push("prefs_not_protected");
   const storage = fs.readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8");
   if (!/looksLikeEmptyPrefsReset/.test(storage)) fails.push("missing_prefs_clobber_detect");
+  if (!/isVaultUserWriteActive/.test(storage)) fails.push("missing_user_write_active");
 }
 
 async function waitVaultApi(page) {

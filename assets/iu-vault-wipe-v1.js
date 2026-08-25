@@ -14,19 +14,27 @@ function stripDiacritics(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-/** Trim + case-insensitive + NFC + diacritics-insensitive. */
+/** Trim + case-insensitive + NFC + diacritics-insensitive + NBSP/whitespace normalize. */
 export function normalizeWipeConfirmPhrase(value) {
   return stripDiacritics(
     String(value || "")
       .normalize("NFC")
+      .replace(/\u00a0/g, " ")
+      .replace(/\s+/g, " ")
       .trim()
       .toLocaleLowerCase("cs-CZ")
   );
 }
 
+/** Alias for UI/guards — single canonical normalizer. */
+export const normalizeWipeConfirmation = normalizeWipeConfirmPhrase;
+
 export function isWipeConfirmPhraseAccepted(value) {
   return normalizeWipeConfirmPhrase(value) === normalizeWipeConfirmPhrase(WIPE_CONFIRM_PHRASE);
 }
+
+/** Alias for UI/guards — same validator as submit. */
+export const isWipeConfirmationValid = isWipeConfirmPhraseAccepted;
 
 export async function wipePersonalVault() {
   clearVaultMemoryCache();

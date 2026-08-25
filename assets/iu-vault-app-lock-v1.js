@@ -2,6 +2,7 @@
  * Global InfoUzel app lock — L2/L3 full-application gate (not MindMenu-only).
  */
 import { APP_LOCK_HINT_KEY, registerVaultLockBroadcastListener } from "./iu-vault-lock-v1.js";
+import { isWipeConfirmPhraseAccepted, WIPE_CONFIRM_PHRASE } from "./iu-vault-wipe-v1.js";
 
 const LOCK_SCREEN_ID = "iuVaultAppLockScreen";
 
@@ -196,7 +197,42 @@ function setWipeConfirmVisible(visible) {
   if (!visible) {
     const inp = document.getElementById("iuVaultWipePhraseInput");
     if (inp) inp.value = "";
+    syncWipeConfirmButtonState();
+  } else {
+    syncWipeConfirmButtonState();
   }
+}
+
+function syncWipeConfirmButtonState() {
+  const btn = document.getElementById("iuVaultWipeConfirmBtn");
+  const inp = document.getElementById("iuVaultWipePhraseInput");
+  if (!btn) return;
+  const raw = inp ? String(inp.value || "") : "";
+  const ok = isWipeConfirmPhraseAccepted(raw);
+  btn.disabled = !ok;
+  if (ok) {
+    btn.removeAttribute("aria-disabled");
+    btn.style.pointerEvents = "auto";
+  } else {
+    btn.setAttribute("aria-disabled", "true");
+  }
+}
+
+function bindWipePhraseInputListeners() {
+  if (bindWipePhraseInputListeners._done) return;
+  bindWipePhraseInputListeners._done = true;
+  const inp = document.getElementById("iuVaultWipePhraseInput");
+  if (!inp) return;
+  const sync = () => {
+    syncWipeConfirmButtonState();
+  };
+  inp.addEventListener("input", sync);
+  inp.addEventListener("change", sync);
+  inp.addEventListener("keyup", sync);
+  inp.addEventListener("paste", () => {
+    setTimeout(sync, 0);
+  });
+  inp.addEventListener("compositionend", sync);
 }
 
 function restorePinViewportAfterUnlock() {
@@ -295,9 +331,16 @@ function bindUnlockHandlers(vault) {
     if (err) err.textContent = "";
     setWipeConfirmVisible(true);
     try {
-      document.getElementById("iuVaultWipePhraseInput")?.focus();
+      const inp = document.getElementById("iuVaultWipePhraseInput");
+      if (inp) {
+        inp.value = "";
+        inp.focus();
+      }
     } catch (_) {}
+    syncWipeConfirmButtonState();
   });
+
+  bindWipePhraseInputListeners();
 
   document.getElementById("iuVaultWipeCancelBtn")?.addEventListener("click", () => {
     const err = document.getElementById("iuVaultLockErr");
@@ -306,14 +349,16 @@ function bindUnlockHandlers(vault) {
   });
 
   document.getElementById("iuVaultWipeConfirmBtn")?.addEventListener("click", async () => {
+    if (window.__iuVaultWipeInFlight) return;
     const err = document.getElementById("iuVaultLockErr");
     const typed = document.getElementById("iuVaultWipePhraseInput")?.value || "";
-    const { isWipeConfirmPhraseAccepted } = await import("./iu-vault-wipe-v1.js");
     if (!isWipeConfirmPhraseAccepted(typed)) {
-      if (err) err.textContent = "Pro potvrzení napište: VYMAZAT OSOBNÍ DATA";
+      if (err) err.textContent = "Pro potvrzení napište: " + WIPE_CONFIRM_PHRASE;
+      syncWipeConfirmButtonState();
       return;
     }
     const btn = document.getElementById("iuVaultWipeConfirmBtn");
+    window.__iuVaultWipeInFlight = true;
     if (btn) btn.disabled = true;
     try {
       await vault.wipePersonal();
@@ -326,8 +371,9 @@ function bindUnlockHandlers(vault) {
       if (err) err.textContent = "";
     } catch (_) {
       if (err) err.textContent = "Vymazání se nezdařilo. Zkuste to znovu.";
+      syncWipeConfirmButtonState();
     } finally {
-      if (btn) btn.disabled = false;
+      window.__iuVaultWipeInFlight = false;
     }
   });
 
@@ -356,6 +402,7 @@ function bindUnlockHandlers(vault) {
   window.addEventListener("pageshow", () => {
     resetAppLockUnlockControls();
   });
+  syncWipeConfirmButtonState();
 }
 
 export async function initGlobalAppLock(vault) {

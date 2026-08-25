@@ -76,7 +76,12 @@ async function main() {
     await page.click("#iuVaultForgotPinBtn");
     await page.waitForSelector("#iuVaultWipeConfirm:not([hidden])", { timeout: 10000 });
     await page.fill("#iuVaultWipePhraseInput", "SPATNE");
-    await page.click("#iuVaultWipeConfirmBtn");
+    await page.waitForTimeout(120);
+    const wrongBtnDisabled = await page.evaluate(() => {
+      const btn = document.getElementById("iuVaultWipeConfirmBtn");
+      return !!(btn && btn.disabled);
+    });
+    if (!wrongBtnDisabled) fails.push("wrong_phrase_enabled_btn");
     await page.waitForTimeout(300);
     const wrong = await page.evaluate((marker) => {
       return {
@@ -118,19 +123,18 @@ async function main() {
       await page.evaluate(() => {
         window.__IU_NEG_SKIP_REFRESH_UI = false;
       });
-      await page.evaluate(() => {
-        const inp = document.getElementById("iuVaultWipePhraseInput");
-        if (inp) inp.value = "  vymazat osobni data  ";
-      });
+      await page.fill("#iuVaultWipePhraseInput", "  vymazat osobni data  ");
+      await page.waitForFunction(() => {
+        const btn = document.getElementById("iuVaultWipeConfirmBtn");
+        return btn && !btn.disabled;
+      }, null, { timeout: 5000 });
       const accepted = await page.evaluate(async () => {
         return window.iuVault.isWipeConfirmPhraseAccepted(
           document.getElementById("iuVaultWipePhraseInput").value
         );
       });
       if (!accepted) fails.push("phrase_not_accepted_in_ui");
-      await page.evaluate(() => {
-        document.getElementById("iuVaultWipeConfirmBtn").click();
-      });
+      await page.click("#iuVaultWipeConfirmBtn");
       try {
         await page.waitForFunction(() => !document.documentElement.classList.contains("iu-vault-app-locked"), null, {
           timeout: 30000,
