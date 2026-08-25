@@ -1,45 +1,45 @@
 {
   "version": 4,
-  "generatedAt": "2026-08-25T11:40:17.695Z",
+  "generatedAt": "2026-08-25T13:09:20.116Z",
   "catalogCount": 32,
   "items": {
     "eur_czk": {
-      "value": 24.1,
+      "value": 24.095,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 0,020 Kč",
+      "secondaryValue": "▼ 0,005 Kč",
       "trendDirection": "down",
-      "updatedAt": "24.08.2026",
+      "updatedAt": "25.08.2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "usd_czk": {
-      "value": 20.66,
+      "value": 20.659,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▲ 0,040 Kč",
-      "trendDirection": "up",
-      "updatedAt": "24.08.2026",
+      "secondaryValue": "▼ 0,001 Kč",
+      "trendDirection": "down",
+      "updatedAt": "25.08.2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1638847,
+      "value": 1632376,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▲ 1,98 %",
-      "trendDirection": "up",
-      "updatedAt": "2026-08-25T10:47:44.365Z",
+      "secondaryValue": "▼ 0,06 %",
+      "trendDirection": "down",
+      "updatedAt": "2026-08-25T13:09:20.116Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 95631,
+      "value": 95465,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▼ 0,18 %",
+      "secondaryValue": "▼ 0,90 %",
       "trendDirection": "down",
-      "updatedAt": "2026-08-25T10:47:44.365Z",
+      "updatedAt": "2026-08-25T13:09:20.116Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
@@ -360,14 +360,17 @@
   },
   "errors": [],
   "scheduler": {
-    "checkedBuckets": [],
+    "checkedBuckets": [
+      "cnb",
+      "coingecko"
+    ],
     "skippedBuckets": []
   },
   "bucketFetchedAt": {
     "csu_fuel": "2026-08-24T16:27:43.909Z",
-    "cnb": "2026-08-24T16:27:43.909Z",
+    "cnb": "2026-08-25T13:09:20.116Z",
     "csu_coicop": "2026-08-17T16:47:35.484Z",
-    "coingecko": "2026-08-25T10:47:44.365Z",
+    "coingecko": "2026-08-25T13:09:20.116Z",
     "csu_inflation": "2026-08-17T16:47:35.484Z",
     "mpsv_labor": "2026-08-11T04:37:38.265Z",
     "csu_wage_q": "2026-07-16T00:27:30.151Z",
