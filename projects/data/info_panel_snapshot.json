@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "generatedAt": "2026-08-25T15:57:24.790Z",
+  "generatedAt": "2026-08-25T16:53:20.033Z",
   "catalogCount": 32,
   "items": {
     "eur_czk": {
@@ -24,22 +24,22 @@
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1634314,
+      "value": 1635038,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 0,41 %",
-      "trendDirection": "down",
-      "updatedAt": "2026-08-25T15:03:06.777Z",
+      "secondaryValue": "▲ 0,04 %",
+      "trendDirection": "up",
+      "updatedAt": "2026-08-25T16:53:20.033Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 95510,
+      "value": 95680,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▼ 0,86 %",
+      "secondaryValue": "▼ 0,35 %",
       "trendDirection": "down",
-      "updatedAt": "2026-08-25T15:03:06.777Z",
+      "updatedAt": "2026-08-25T16:53:20.033Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
@@ -325,15 +325,15 @@
       "referencePeriod": "1. čtvrtletí 2026"
     },
     "crime": {
-      "value": 173322,
+      "value": 170051,
       "unit": "",
       "primaryLabel": "Reg. skutky",
-      "secondaryValue": "▼ 8 095",
+      "secondaryValue": "▼ 3 271",
       "trendDirection": "down",
-      "updatedAt": "2024",
+      "updatedAt": "2025",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "2024"
+      "referencePeriod": "2025"
     },
     "elections": {
       "value": 68.95,
@@ -360,14 +360,68 @@
   },
   "errors": [],
   "scheduler": {
-    "checkedBuckets": [],
-    "skippedBuckets": []
+    "checkedBuckets": [
+      "csu_fuel",
+      "cnb",
+      "csu_coicop",
+      "coingecko",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections",
+      "csu_environment"
+    ],
+    "skippedBuckets": [
+      "csu_fuel",
+      "cnb",
+      "csu_coicop",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_elections",
+      "csu_environment"
+    ]
   },
   "bucketFetchedAt": {
     "csu_fuel": "2026-08-24T16:27:43.909Z",
     "cnb": "2026-08-25T13:09:20.116Z",
     "csu_coicop": "2026-08-17T16:47:35.484Z",
-    "coingecko": "2026-08-25T15:03:06.777Z",
+    "coingecko": "2026-08-25T16:53:20.033Z",
     "csu_inflation": "2026-08-17T16:47:35.484Z",
     "mpsv_labor": "2026-08-11T04:37:38.265Z",
     "csu_wage_q": "2026-07-16T00:27:30.151Z",
@@ -388,7 +442,7 @@
     "csu_migration": "2026-07-16T00:27:30.151Z",
     "csu_education": "2026-07-16T00:27:30.151Z",
     "csu_health": "2026-07-16T00:27:30.151Z",
-    "csu_crime": "2026-07-16T00:27:30.151Z",
+    "csu_crime": "2026-08-25T16:53:20.033Z",
     "csu_elections": "2026-07-16T00:27:30.151Z",
     "csu_environment": "2026-07-16T00:27:30.151Z"
   }
