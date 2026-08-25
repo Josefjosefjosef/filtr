@@ -14,6 +14,13 @@ import {
   writeMeta,
   defaultMeta,
 } from "./iu-vault-db-v1.js";
+import {
+  initDesktopSessionCoordinator,
+  publishDesktopSession,
+  invalidateDesktopSession,
+  shouldSkipDesktopBackgroundAutoLock,
+  isDesktopSharedSessionViewport,
+} from "./iu-vault-desktop-session-v1.js";
 
 export const APP_LOCK_HINT_KEY = "iu:vault:app-lock-active:v1";
 
@@ -71,13 +78,35 @@ export function registerVaultLockBroadcastListener(vault) {
       return;
     }
     if (data.type === "locked") {
-      lockVault(data.reason || "remote_tab").catch(() => {});
+      lockVault(data.reason || "remote_tab")
+        .then(() => {
+          if (vault && typeof vault.refreshAppLockUi === "function") {
+            return vault.refreshAppLockUi();
+          }
+          return undefined;
+        })
+        .catch(() => {});
       if (vault && typeof vault.isHydrationComplete === "function" && !vault.isHydrationComplete()) {
         try {
           window.__iuVaultHydrationPending = true;
           window.__iuVaultHydrationComplete = false;
         } catch (_) {}
       }
+      return;
+    }
+    if (data.type === "unlocked") {
+      if (!isDesktopSharedSessionViewport() || !vault) return;
+      import("./iu-vault-desktop-session-v1.js")
+        .then(async (mod) => {
+          const st = getVaultState();
+          if (st.unlocked) return;
+          const mdk = await mod.tryJoinDesktopSession();
+          if (!mdk) return;
+          await unlockWithMdk(mdk);
+          if (typeof vault.afterUnlock === "function") await vault.afterUnlock();
+          if (typeof vault.refreshAppLockUi === "function") await vault.refreshAppLockUi();
+        })
+        .catch(() => {});
     }
   });
 }
@@ -215,8 +244,9 @@ export async function readSecurityConfiguredState(meta) {
   };
 }
 
-export async function lockVault(reason = "manual") {
+export async function lockVault(reason = "manual", options = {}) {
   if (!state.requiresUserReauth) return;
+  const localOnly = !!(options && options.localOnly);
   if (state.lockInProgress) {
     try {
       const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
@@ -249,8 +279,11 @@ export async function lockVault(reason = "manual") {
     } catch (_) {}
     // Wipe clears security in the same turn; broadcasting "locked" would race
     // async lock-UI refresh and re-show APP_LOCKED after clean L1 is ready.
-    if (reason !== "wiped") {
+    if (!localOnly && reason !== "wiped") {
       postVaultLockMessage("locked", reason);
+    }
+    if (!localOnly && isDesktopSharedSessionViewport()) {
+      invalidateDesktopSession(reason || "locked").catch(() => {});
     }
   } finally {
     state.lockInProgress = false;
@@ -268,6 +301,9 @@ export async function unlockWithMdk(mdk) {
     window.dispatchEvent(new CustomEvent("iu-vault-unlocked", { detail: {} }));
   } catch (_) {}
   postVaultLockMessage("unlocked", "");
+  if (state.requiresUserReauth && isDesktopSharedSessionViewport()) {
+    publishDesktopSession(mdk).catch(() => {});
+  }
 }
 
 export async function ensureLevel1Mdk() {
@@ -322,6 +358,7 @@ export function registerAutoLockListeners() {
   registerAutoLockListeners._done = true;
   document.addEventListener("visibilitychange", () => {
     if (!state.requiresUserReauth) return;
+    if (shouldSkipDesktopBackgroundAutoLock()) return;
     if (document.visibilityState === "hidden") {
       const p = state.autoLockPolicy;
       if (p === "background" || p === "tools_open") {
@@ -333,6 +370,7 @@ export function registerAutoLockListeners() {
   try {
     window.addEventListener("pagehide", () => {
       if (!state.requiresUserReauth) return;
+      if (shouldSkipDesktopBackgroundAutoLock()) return;
       try {
         window.__iuVaultHydrationPending = true;
       } catch (_) {}

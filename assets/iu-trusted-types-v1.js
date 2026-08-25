@@ -177,6 +177,16 @@
     };
   }
 
+  function patchSharedWorkerConstructor() {
+    if (typeof SharedWorker !== "function") return;
+    var OrigSharedWorker = SharedWorker;
+    window.SharedWorker = function (url, options) {
+      if (typeof url === "string" && policies.default) url = toTrustedScriptUrl(url);
+      return new OrigSharedWorker(url, options);
+    };
+    window.SharedWorker.prototype = OrigSharedWorker.prototype;
+  }
+
   if (policies.default) {
     try {
       patchSetter(Element.prototype, "innerHTML");
@@ -185,6 +195,7 @@
       patchScriptSrc();
       patchDomInsertion();
       patchWorkerConstructor();
+      patchSharedWorkerConstructor();
       patchServiceWorkerRegister();
     } catch (_) {}
   }

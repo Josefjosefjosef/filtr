@@ -1,14 +1,15 @@
 ﻿/**
  * Vault bootstrap — must load before app.js (top-level await).
  */
-import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, readSecurityConfiguredState, setAppLockHintActive } from "./iu-vault-lock-v1.js";
+import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, unlockWithMdk, readSecurityConfiguredState, setAppLockHintActive } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
+import { initDesktopSessionCoordinator, tryJoinDesktopSession, onDesktopSessionReady } from "./iu-vault-desktop-session-v1.js";
 
 function vaultDisabled() {
   try {
@@ -30,14 +31,19 @@ async function initVault() {
   } catch (_) {}
 
   let meta = await ensureLevel1Mdk();
+  let desktopJoinMdk = null;
 
   if (meta.pinEnabled || meta.deviceEnabled || meta.mindMenuUnlockMethod === "pin" || meta.mindMenuUnlockMethod === "device") {
     setAppLockHintActive();
-    await lockVault("startup");
-    try {
-      window.__iuVaultHydrationPending = true;
-      window.__iuVaultHydrationComplete = false;
-    } catch (_) {}
+    await initDesktopSessionCoordinator();
+    await lockVault("startup", { localOnly: true });
+    desktopJoinMdk = await tryJoinDesktopSession();
+    if (!desktopJoinMdk) {
+      try {
+        window.__iuVaultHydrationPending = true;
+        window.__iuVaultHydrationComplete = false;
+      } catch (_) {}
+    }
   } else {
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
@@ -58,13 +64,15 @@ async function initVault() {
     }
   });
 
-  return meta;
+  return { meta, desktopJoinMdk };
 }
 
-const meta = await initVault().catch((err) => {
+const boot = await initVault().catch((err) => {
   window.__iuVaultBootError = String(err && err.message ? err.message : err);
   return null;
 });
+const meta = boot && boot.meta ? boot.meta : boot;
+const desktopJoinMdk = boot && boot.desktopJoinMdk ? boot.desktopJoinMdk : null;
 
 const api = {
   getState: () => getVaultState(),
@@ -95,7 +103,7 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     try {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
       return await unlockWithDevice();
     } catch (err) {
       try {
@@ -117,11 +125,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -130,7 +138,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -150,15 +158,15 @@ const api = {
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   validatePinPolicy: (pin) => explainPinRejection(pin),
   getLastDeviceDiag: async () => {
-    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
     return getLastDeviceSetupDiag();
   },
   getWebAuthnCeremonyLog: async () => {
-    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
     return getWebAuthnCeremonyLog();
   },
   clearWebAuthnCeremonyLog: async () => {
-    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-wipe-filter-cross-browser-v1-20260825");
+    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
     return clearWebAuthnCeremonyLog();
   },
   wipePersonal: async () => {
@@ -252,7 +260,22 @@ window.iuVault = api;
 if (window.__iuVaultBootError && meta) {
   await enforceFailClosedAppLock(api, meta);
 } else {
+  if (desktopJoinMdk) {
+    await unlockWithMdk(desktopJoinMdk);
+    await api.afterUnlock();
+  }
   await initGlobalAppLock(api);
+  onDesktopSessionReady(async () => {
+    try {
+      const st = getVaultState();
+      if (st.unlocked) return;
+      const mdk = await tryJoinDesktopSession();
+      if (!mdk) return;
+      await unlockWithMdk(mdk);
+      await api.afterUnlock();
+      await refreshGlobalAppLockUi(api);
+    } catch (_) {}
+  });
 }
 
 function notifyVaultHydrated() {
