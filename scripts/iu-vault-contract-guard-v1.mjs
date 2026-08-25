@@ -82,9 +82,11 @@ async function runUnitTests() {
     if (plain !== "IU_TEST_NOTE_x") throw new Error("unwrap failed");
   });
 
-  await t("pin_trivial_reject", () => {
-    if (!isTrivialPin("111111")) throw new Error("should reject");
-    if (isTrivialPin("847291")) throw new Error("should accept");
+  await t("pin_policy_any_numeric_6plus", () => {
+    if (isTrivialPin("111111")) throw new Error("111111 should accept");
+    if (isTrivialPin("123456")) throw new Error("123456 should accept");
+    if (isTrivialPin("847291")) throw new Error("847291 should accept");
+    if (!isTrivialPin("12345")) throw new Error("short should reject");
   });
 
   return fails;

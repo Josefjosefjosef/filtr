@@ -193,16 +193,10 @@ export async function calibratePbkdf2Iterations(targetMs = 250) {
   return iterations;
 }
 
-const PIN_SEQUENCE_CHAIN = "012345678901234567890";
-
-/** @returns {null | "invalid_format" | "trivial_repeat" | "trivial_sequence"} */
+/** @returns {null | "invalid_format"} — product policy: any numeric PIN with 6+ digits is allowed. */
 export function explainPinRejection(pin) {
   const s = String(pin || "");
   if (!/^\d{6,}$/.test(s)) return "invalid_format";
-  if (/^(\d)\1+$/.test(s)) return "trivial_repeat";
-  if (PIN_SEQUENCE_CHAIN.includes(s) || PIN_SEQUENCE_CHAIN.split("").reverse().join("").includes(s)) {
-    return "trivial_sequence";
-  }
   return null;
 }
 
@@ -214,8 +208,8 @@ export function pinPolicySummary() {
   return {
     minDigits: 6,
     digitsOnly: true,
-    rejectRepeated: true,
-    rejectSequential: true,
+    rejectRepeated: false,
+    rejectSequential: false,
   };
 }
 

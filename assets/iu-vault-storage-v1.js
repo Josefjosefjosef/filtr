@@ -72,11 +72,13 @@ export async function vaultGetItem(storageKey) {
 export async function vaultSetItem(storageKey, value) {
   touchActivity();
   const k = String(storageKey);
+  if (isVaultPersistBlocked(k)) return;
   const text = String(value);
   const generation = (writeGeneration.get(k) || 0) + 1;
   writeGeneration.set(k, generation);
   let writePromise;
   writePromise = (async () => {
+    if (isVaultPersistBlocked(k)) return;
     const mdk = getMdk();
     const envelope = await encryptString(mdk, k, text);
     if (writeGeneration.get(k) !== generation) return;
@@ -141,9 +143,12 @@ export function hasEncryptedRecordAtRest(storageKey) {
   }
 }
 
-/** Block module saves while vault is locked but ciphertext still exists (pre-hydration). */
+/** Block module saves while locked (ciphertext at rest) or while post-unlock hydrate is still pending. */
 export function isVaultPersistBlocked(storageKey) {
   if (!isProtectedStorageKey(storageKey)) return false;
+  try {
+    if (window.__iuVaultHydrationPending) return true;
+  } catch (_) {}
   const st = getVaultState();
   if (st.unlocked) return false;
   return hasEncryptedRecordAtRest(storageKey);
@@ -172,6 +177,7 @@ export function installLocalStorageShim() {
     }
     const st = getVaultState();
     if (!st.unlocked) throw new Error("VAULT_LOCKED");
+    if (isVaultPersistBlocked(key)) return;
     const text = String(value);
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);

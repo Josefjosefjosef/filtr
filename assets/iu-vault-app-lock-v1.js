@@ -172,8 +172,16 @@ function bindUnlockHandlers(vault) {
     if (!step1) return;
     const typed = window.prompt("Pro potvrzení napište přesně: VYMAZAT OSOBNÍ DATA");
     if (typed !== "VYMAZAT OSOBNÍ DATA") return;
-    await vault.wipePersonal();
-    window.location.reload();
+    try {
+      await vault.wipePersonal();
+      await refreshGlobalAppLockUi(vault);
+      try {
+        window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
+      } catch (_) {}
+    } catch (_) {
+      const err = document.getElementById("iuVaultLockErr");
+      if (err) err.textContent = "Vymazání se nezdařilo. Zkuste obnovit stránku.";
+    }
   });
 
   window.addEventListener("iu-vault-locked", () => {

@@ -32,33 +32,38 @@ function staticChecks(fails) {
   if (!/recordDeviceDiag|getLastDeviceSetupDiag/.test(deviceJs)) fails.push("device_missing_step_diag");
   if (!/07-rotate-existing-records/.test(deviceJs)) fails.push("device_missing_rotate_step");
   if (!/iuVaultPinSetupHint/.test(uiJs)) fails.push("ui_missing_pin_policy_text");
-  if (!/Zvolte m[eé]n[eě] snadno uhodnuteln[yý] PIN/.test(uiJs)) fails.push("ui_missing_pin_weak_message");
+  if (!/PIN musí mít alespoň 6 číslic/.test(uiJs)) fails.push("ui_missing_pin_min_digits_message");
+  if (/Nepoužívejte stejné číslice opakovaně/.test(uiJs)) fails.push("ui_still_has_trivial_pin_warning");
   if (explainPinRejection(GUARD_PIN)) fails.push("pin_ok_rejected");
-  if (!explainPinRejection("123456")) fails.push("pin_seq_should_reject");
-  if (!explainPinRejection("654321")) fails.push("pin_desc_seq_should_reject");
-  if (!explainPinRejection("111111")) fails.push("pin_repeat_should_reject");
+  if (explainPinRejection("123456")) fails.push("pin_seq_should_accept");
+  if (explainPinRejection("654321")) fails.push("pin_desc_seq_should_accept");
+  if (explainPinRejection("111111")) fails.push("pin_repeat_should_accept");
+  if (explainPinRejection("000000")) fails.push("pin_zeros_should_accept");
+  if (!explainPinRejection("12345")) fails.push("pin_short_should_reject");
+  if (!explainPinRejection("abc123")) fails.push("pin_nonnumeric_should_reject");
   if (explainPinRejection("593817")) fails.push("pin_valid_rejected");
 }
 
 async function runPinPolicyBrowserChecks(page, fails) {
   const pinChecks = await page.evaluate(async () => {
+    const out = {
+      seqOk: false,
+      descOk: false,
+      repeatOk: false,
+      zerosOk: false,
+      shortFail: false,
+      nonNumericFail: false,
+      mismatch: false,
+    };
+    if (window.iuVault && window.iuVault.validatePinPolicy) {
+      out.seqOk = !window.iuVault.validatePinPolicy("123456");
+      out.descOk = !window.iuVault.validatePinPolicy("654321");
+      out.repeatOk = !window.iuVault.validatePinPolicy("111111");
+      out.zerosOk = !window.iuVault.validatePinPolicy("000000");
+      out.shortFail = !!window.iuVault.validatePinPolicy("12345");
+      out.nonNumericFail = !!window.iuVault.validatePinPolicy("abc123");
+    }
     const { setupPin } = await import("/assets/iu-vault-pin-v1.js");
-    const out = { weakSeq: false, weakDesc: false, weakRepeat: false, mismatch: false };
-    try {
-      await setupPin("123456", "123456");
-    } catch (e) {
-      if (String(e.message || e).includes("VAULT_PIN_WEAK")) out.weakSeq = true;
-    }
-    try {
-      await setupPin("654321", "654321");
-    } catch (e) {
-      if (String(e.message || e).includes("VAULT_PIN_WEAK")) out.weakDesc = true;
-    }
-    try {
-      await setupPin("111111", "111111");
-    } catch (e) {
-      if (String(e.message || e).includes("VAULT_PIN_WEAK")) out.weakRepeat = true;
-    }
     try {
       await setupPin("847291", "847292");
     } catch (e) {
@@ -66,9 +71,12 @@ async function runPinPolicyBrowserChecks(page, fails) {
     }
     return out;
   });
-  if (!pinChecks.weakSeq) fails.push("pin_weak_seq_not_rejected");
-  if (!pinChecks.weakDesc) fails.push("pin_weak_desc_seq_not_rejected");
-  if (!pinChecks.weakRepeat) fails.push("pin_weak_repeat_not_rejected");
+  if (!pinChecks.seqOk) fails.push("pin_seq_not_accepted");
+  if (!pinChecks.descOk) fails.push("pin_desc_seq_not_accepted");
+  if (!pinChecks.repeatOk) fails.push("pin_repeat_not_accepted");
+  if (!pinChecks.zerosOk) fails.push("pin_zeros_not_accepted");
+  if (!pinChecks.shortFail) fails.push("pin_short_not_rejected");
+  if (!pinChecks.nonNumericFail) fails.push("pin_nonnumeric_not_rejected");
   if (!pinChecks.mismatch) fails.push("pin_mismatch_not_rejected");
 
   const pinPlain = await page.evaluate((pin) => {
