@@ -171,7 +171,8 @@ function looksLikeEmptyPrefsReset(o) {
   );
 }
 
-function looksLikeEmptyModuleReset(text) {
+function looksLikeEmptyModuleReset(text, storageKey) {
+  const key = String(storageKey || "");
   try {
     const o = JSON.parse(String(text || ""));
     if (Array.isArray(o) && o.length === 0) return true;
@@ -185,7 +186,11 @@ function looksLikeEmptyModuleReset(text) {
     if (Array.isArray(o.views) && o.views.length === 0) return true;
     if (looksLikeEmptyPrefsReset(o)) return true;
     if (Array.isArray(o.items)) {
-      if (o.items.length === 0) return true;
+      // Empty items[] is a legitimate clear-all for parcels/shopping/etc.
+      // Only mailbox bootstrap uses empty/placeholder items as a hostile reset.
+      if (o.items.length === 0) {
+        return key === "iu_mailboxes_v1";
+      }
       const placeholder = (label) => {
         const s = String(label || "").trim();
         if (!s) return true;
@@ -209,13 +214,14 @@ function looksLikeEmptyModuleReset(text) {
  * Wipe uses removeItem / DB wipe — not empty setItem.
  */
 function shouldBlockPostHydrateClobber(key, text) {
-  if (!looksLikeEmptyModuleReset(text)) return false;
-  if (memoryCache.has(key)) {
-    const prev = memoryCache.get(key) || "";
-    if (prev.length >= 24 && !looksLikeEmptyModuleReset(prev)) return true;
+  const k = String(key || "");
+  if (!looksLikeEmptyModuleReset(text, k)) return false;
+  if (memoryCache.has(k)) {
+    const prev = memoryCache.get(k) || "";
+    if (prev.length >= 24 && !looksLikeEmptyModuleReset(prev, k)) return true;
   }
   try {
-    if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(key)) return true;
+    if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(k)) return true;
   } catch (_) {}
   return false;
 }
