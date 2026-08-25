@@ -337,11 +337,11 @@
   }
 
   function setDeviceSetupBusy(busy) {
+    // Only disable the setup/apply controls — never the global lock-screen unlock
+    // button (PWA/iOS can leave it stuck disabled across background/Face ID).
     const applyBtn = document.getElementById("iuVaultApplyMindMenuMethodBtn");
-    const unlockDev = document.getElementById("iuVaultUnlockDeviceBtn");
     const mindMenuDev = document.getElementById("iuVaultMindMenuUnlockDeviceBtn");
     if (applyBtn) applyBtn.disabled = !!busy;
-    if (unlockDev) unlockDev.disabled = !!busy;
     if (mindMenuDev) mindMenuDev.disabled = !!busy;
   }
 
