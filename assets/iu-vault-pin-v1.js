@@ -4,7 +4,7 @@
 import {
   importMdkRaw,
   calibratePbkdf2Iterations,
-  isTrivialPin,
+  explainPinRejection,
 } from "./iu-vault-core-v1.js";
 import {
   readMeta,
@@ -27,9 +27,14 @@ function randomSalt() {
 
 export { mdkFromPinWrap } from "./iu-vault-pin-crypto-v1.js";
 
+function assertPinStrength(pin) {
+  const reason = explainPinRejection(pin);
+  if (reason) throw new Error(`VAULT_PIN_WEAK|${reason}`);
+}
+
 export async function setupPin(pin, confirmPin) {
   if (String(pin) !== String(confirmPin)) throw new Error("VAULT_PIN_MISMATCH");
-  if (isTrivialPin(pin)) throw new Error("VAULT_PIN_WEAK");
+  assertPinStrength(pin);
   const oldMdk = getMdk();
   const meta = await readMeta();
   const seedBytes = globalThis.crypto.getRandomValues(new Uint8Array(32));
@@ -46,7 +51,7 @@ export async function setupPin(pin, confirmPin) {
 
 export async function changePin(oldPin, newPin, confirmPin) {
   if (String(newPin) !== String(confirmPin)) throw new Error("VAULT_PIN_MISMATCH");
-  if (isTrivialPin(newPin)) throw new Error("VAULT_PIN_WEAK");
+  assertPinStrength(newPin);
   const { unlockWithPin } = await import("./iu-vault-lock-v1.js");
   await unlockWithPin(oldPin);
   const pinWrap = await readKeyRecord("mdk:pin");

@@ -5,7 +5,8 @@ import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, u
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824";
+import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
 
@@ -76,7 +77,7 @@ const api = {
   },
   unlockPin: (pin) => unlockWithPin(pin),
   unlockDevice: async () => {
-    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824");
+    const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824");
     return unlockWithDevice();
   },
   setupPin: async (pin, confirm) => {
@@ -92,11 +93,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -105,7 +106,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-device-persist-v1-20260824");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -123,6 +124,11 @@ const api = {
     await refreshGlobalAppLockUi(api);
   },
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
+  validatePinPolicy: (pin) => explainPinRejection(pin),
+  getLastDeviceDiag: async () => {
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-l2-l3-prod-diag-v1-20260824");
+    return getLastDeviceSetupDiag();
+  },
   wipePersonal: async () => {
     const { wipePersonalVault } = await import("./iu-vault-wipe-v1.js");
     return wipePersonalVault();

@@ -12,9 +12,24 @@ const {
 
 export { installLocalDataProtectionAccepted, installProofGuardNetworkStubs };
 
+export async function installGuardWebAuthnStub(context) {
+  if (!context || typeof context.addInitScript !== "function") return;
+  await context.addInitScript(() => {
+    if (!window.PublicKeyCredential) return;
+    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = async () => true;
+    PublicKeyCredential.getClientCapabilities = async () => ({ "extension:prf": true });
+  });
+}
+
 export async function bootstrapGuardContext(browser, contextOptions = {}) {
-  const context = await browser.newContext(contextOptions);
+  const playwrightOptions = { ...contextOptions };
+  delete playwrightOptions.webauthnStub;
+  delete playwrightOptions.isMobile;
+  const context = await browser.newContext(playwrightOptions);
   await installLocalDataProtectionAccepted(context);
+  if (contextOptions.webauthnStub === true) {
+    await installGuardWebAuthnStub(context);
+  }
   return context;
 }
 

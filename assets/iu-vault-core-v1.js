@@ -193,13 +193,30 @@ export async function calibratePbkdf2Iterations(targetMs = 250) {
   return iterations;
 }
 
-export function isTrivialPin(pin) {
+const PIN_SEQUENCE_CHAIN = "012345678901234567890";
+
+/** @returns {null | "invalid_format" | "trivial_repeat" | "trivial_sequence"} */
+export function explainPinRejection(pin) {
   const s = String(pin || "");
-  if (!/^\d{6,}$/.test(s)) return true;
-  if (/^(\d)\1+$/.test(s)) return true;
-  const seq = "012345678901234567890";
-  if (seq.includes(s) || seq.split("").reverse().join("").includes(s)) return true;
-  return false;
+  if (!/^\d{6,}$/.test(s)) return "invalid_format";
+  if (/^(\d)\1+$/.test(s)) return "trivial_repeat";
+  if (PIN_SEQUENCE_CHAIN.includes(s) || PIN_SEQUENCE_CHAIN.split("").reverse().join("").includes(s)) {
+    return "trivial_sequence";
+  }
+  return null;
+}
+
+export function isTrivialPin(pin) {
+  return explainPinRejection(pin) !== null;
+}
+
+export function pinPolicySummary() {
+  return {
+    minDigits: 6,
+    digitsOnly: true,
+    rejectRepeated: true,
+    rejectSequential: true,
+  };
 }
 
 export async function sha256Hex(text) {
