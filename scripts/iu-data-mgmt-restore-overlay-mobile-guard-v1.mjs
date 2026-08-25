@@ -44,7 +44,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-info-center\.css\?v=iu-vault-global-app-lock-v1-20260824/.test(index),
+      pass: /iu-info-center\.css\?v=iu-vault-mobile-data-pin-layout-v3-20260825/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
