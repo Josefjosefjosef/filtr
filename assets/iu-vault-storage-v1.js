@@ -74,14 +74,18 @@ export async function vaultSetItem(storageKey, value) {
   const k = String(storageKey);
   if (isVaultPersistBlocked(k)) return;
   const text = String(value);
+  if (shouldBlockPostHydrateClobber(k, text)) return;
   const generation = (writeGeneration.get(k) || 0) + 1;
   writeGeneration.set(k, generation);
   let writePromise;
   writePromise = (async () => {
     if (isVaultPersistBlocked(k)) return;
+    if (shouldBlockPostHydrateClobber(k, text)) return;
     const mdk = getMdk();
+    if (!mdk) return;
     const envelope = await encryptString(mdk, k, text);
     if (writeGeneration.get(k) !== generation) return;
+    if (isVaultPersistBlocked(k)) return;
     await persistEnvelope(k, envelope);
     if (writeGeneration.get(k) !== generation) return;
     memoryCache.set(k, text);
@@ -126,11 +130,65 @@ export function clearVaultMemoryCache() {
 }
 
 export function notifyVaultMemoryHydrated() {
+  try {
+    window.__iuVaultHydratedAt = Date.now();
+  } catch (_) {}
   for (const key of memoryCache.keys()) {
     try {
       window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key, source: "iu-vault-hydrate" } }));
     } catch (_) {}
   }
+}
+
+/**
+ * Mobile/BFCache: modules often re-init empty defaults right after unlock and
+ * clobber hydrated ciphertext. Block only empty/default-shaped overwrites
+ * briefly after hydrate when cache already holds substance.
+ */
+function looksLikeEmptyModuleReset(text) {
+  try {
+    const o = JSON.parse(String(text || ""));
+    if (Array.isArray(o) && o.length === 0) return true;
+    if (!o || typeof o !== "object") return false;
+    if (Array.isArray(o.notes) && o.notes.length === 0) return true;
+    if (Array.isArray(o.tasks) && o.tasks.length === 0) return true;
+    if (Array.isArray(o.events) && o.events.length === 0) return true;
+    if (Array.isArray(o.profiles) && o.profiles.length === 0) return true;
+    if (Array.isArray(o.buttons) && o.buttons.length === 0) return true;
+    if (Array.isArray(o.topics) && o.topics.length === 0) return true;
+    if (Array.isArray(o.items)) {
+      if (o.items.length === 0) return true;
+      const placeholder = (label) => {
+        const s = String(label || "").trim();
+        if (!s) return true;
+        if (s === "Nastavit e-mail") return true;
+        if (/^Schránka\s+\d+$/i.test(s)) return true;
+        if (/^Např\.:/i.test(s)) return true;
+        return false;
+      };
+      const allPlaceholder = o.items.every((it) => placeholder(it && it.label) && !String((it && it.url) || "").trim());
+      if (allPlaceholder) return true;
+    }
+    return false;
+  } catch (_) {
+    return String(text || "").trim() === "" || String(text || "").trim() === "{}";
+  }
+}
+
+function shouldBlockPostHydrateClobber(key, text) {
+  try {
+    const t = window.__iuVaultHydratedAt || 0;
+    if (!t || Date.now() - t > 4000) return false;
+  } catch (_) {
+    return false;
+  }
+  if (!memoryCache.has(key)) return false;
+  const prev = memoryCache.get(key) || "";
+  if (prev.length < 24) return false;
+  if (!looksLikeEmptyModuleReset(text)) return false;
+  // Previous value must not itself be an empty reset.
+  if (looksLikeEmptyModuleReset(prev)) return false;
+  return true;
 }
 
 export function hasEncryptedRecordAtRest(storageKey) {
@@ -179,6 +237,7 @@ export function installLocalStorageShim() {
     if (!st.unlocked) throw new Error("VAULT_LOCKED");
     if (isVaultPersistBlocked(key)) return;
     const text = String(value);
+    if (shouldBlockPostHydrateClobber(String(key), text)) return;
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);
     writePromise.catch(() => {});

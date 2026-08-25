@@ -950,15 +950,31 @@ body.iu-theme-dark .iuDataMgmtConfirm__btn--ghost{
   width: 100%;
   box-sizing: border-box;
   margin: 0 0 0.75rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.75rem 0.85rem;
   border-radius: 10px;
   border: 1px solid rgba(14, 42, 74, 0.25);
-  font: inherit;
-  font-size: 16px;
+  font-family: inherit;
+  font-size: 16px !important;
   line-height: 1.35;
   letter-spacing: 0.12em;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  transform: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+#iuVaultPinInput{
+  /* Mask digits without type=password (Safari password zoom quirks). */
+  -webkit-text-security: disc;
+  text-security: disc;
+}
+.iuVaultWipeConfirm__hint{
+  margin: 0 0 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+.iuVaultWipeConfirm__phrase{
+  font-weight: 700;
 }
 .iuVaultLockOverlay__label{
   display: block;
@@ -1062,7 +1078,7 @@ body.iu-theme-dark .iuVaultLockOverlay__input{
 }
 @media (min-width: 1025px) {
   .iuVaultLockOverlay__input{
-    font-size: 15px;
+    font-size: 16px !important;
   }
   .iuInfoCenter__btn,
   .iuVaultLockOverlay__panel .iuInfoCenter__btn{

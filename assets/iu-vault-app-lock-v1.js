@@ -120,6 +120,36 @@ export async function refreshGlobalAppLockUi(vault) {
   }
   if (forgot) forgot.hidden = method !== "pin";
   if (!locked && errEl) errEl.textContent = "";
+  setWipeConfirmVisible(false);
+  restorePinViewportAfterUnlock();
+}
+
+function setWipeConfirmVisible(visible) {
+  const wipePanel = document.getElementById("iuVaultWipeConfirm");
+  const mainActions = document.getElementById("iuVaultLockMainActions");
+  if (wipePanel) {
+    wipePanel.hidden = !visible;
+    wipePanel.setAttribute("aria-hidden", visible ? "false" : "true");
+  }
+  if (mainActions) mainActions.hidden = !!visible;
+  if (!visible) {
+    const inp = document.getElementById("iuVaultWipePhraseInput");
+    if (inp) inp.value = "";
+  }
+}
+
+function restorePinViewportAfterUnlock() {
+  try {
+    if (document.documentElement.classList.contains("iu-vault-app-locked")) return;
+    const vv = window.visualViewport;
+    if (vv && typeof vv.scale === "number" && vv.scale > 1.01) {
+      const el = document.activeElement;
+      if (el && typeof el.blur === "function") el.blur();
+      try {
+        window.scrollTo(0, 0);
+      } catch (_) {}
+    }
+  } catch (_) {}
 }
 
 function bindUnlockHandlers(vault) {
@@ -165,32 +195,59 @@ function bindUnlockHandlers(vault) {
     }
   });
 
-  document.getElementById("iuVaultForgotPinBtn")?.addEventListener("click", async () => {
-    const step1 = window.confirm(
-      "PIN nelze obnovit.\n\nPokračováním nenávratně odstraníte osobní data uložená v tomto prohlížeči."
-    );
-    if (!step1) return;
-    const typed = window.prompt("Pro potvrzení napište přesně: VYMAZAT OSOBNÍ DATA");
-    if (typed !== "VYMAZAT OSOBNÍ DATA") return;
+  document.getElementById("iuVaultForgotPinBtn")?.addEventListener("click", () => {
+    const err = document.getElementById("iuVaultLockErr");
+    if (err) err.textContent = "";
+    setWipeConfirmVisible(true);
+    try {
+      document.getElementById("iuVaultWipePhraseInput")?.focus();
+    } catch (_) {}
+  });
+
+  document.getElementById("iuVaultWipeCancelBtn")?.addEventListener("click", () => {
+    const err = document.getElementById("iuVaultLockErr");
+    if (err) err.textContent = "";
+    setWipeConfirmVisible(false);
+  });
+
+  document.getElementById("iuVaultWipeConfirmBtn")?.addEventListener("click", async () => {
+    const err = document.getElementById("iuVaultLockErr");
+    const typed = document.getElementById("iuVaultWipePhraseInput")?.value || "";
+    const { isWipeConfirmPhraseAccepted } = await import("./iu-vault-wipe-v1.js");
+    if (!isWipeConfirmPhraseAccepted(typed)) {
+      if (err) err.textContent = "Pro potvrzení napište: VYMAZAT OSOBNÍ DATA";
+      return;
+    }
+    const btn = document.getElementById("iuVaultWipeConfirmBtn");
+    if (btn) btn.disabled = true;
     try {
       await vault.wipePersonal();
+      setWipeConfirmVisible(false);
       await refreshGlobalAppLockUi(vault);
+      applyAppLockedPresentation(false);
       try {
         window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
       } catch (_) {}
+      if (err) err.textContent = "";
     } catch (_) {
-      const err = document.getElementById("iuVaultLockErr");
-      if (err) err.textContent = "Vymazání se nezdařilo. Zkuste obnovit stránku.";
+      if (err) err.textContent = "Vymazání se nezdařilo. Zkuste to znovu.";
+    } finally {
+      if (btn) btn.disabled = false;
     }
   });
 
-  window.addEventListener("iu-vault-locked", () => {
+  window.addEventListener("iu-vault-locked", (ev) => {
+    const reason = ev && ev.detail && ev.detail.reason;
+    if (reason === "wiped") return;
     refreshGlobalAppLockUi(vault).catch(() => {});
   });
   window.addEventListener("iu-vault-unlocked", () => {
     refreshGlobalAppLockUi(vault).catch(() => {});
   });
   window.addEventListener("iu-vault-security-changed", () => {
+    refreshGlobalAppLockUi(vault).catch(() => {});
+  });
+  window.addEventListener("iu-vault-bfcache-restore", () => {
     refreshGlobalAppLockUi(vault).catch(() => {});
   });
 }

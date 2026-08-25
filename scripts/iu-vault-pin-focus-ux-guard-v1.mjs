@@ -23,9 +23,19 @@ const PIN = "012345";
 function staticChecks(fails) {
   const css = fs.readFileSync(path.join(REPO, "assets", "iu-info-center.css"), "utf8");
   const index = fs.readFileSync(path.join(REPO, "projects", "index.html"), "utf8");
-  if (!/\.iuVaultLockOverlay__input[\s\S]{0,220}font-size:\s*16px/.test(css)
-    && !/#iuVaultAppLockScreen[\s\S]{0,400}font-size:\s*16px/.test(index)) {
-    fails.push("missing_pin_input_16px");
+  if (!/\.iuVaultLockOverlay__input[\s\S]{0,280}font-size:\s*16px\s*!important/.test(css)
+    && !/#iuVaultAppLockScreen[\s\S]{0,400}font-size:\s*16px\s*!important/.test(index)) {
+    fails.push("missing_pin_input_16px_important");
+  }
+  if (/@media \(min-width: 1025px\)[\s\S]{0,180}\.iuVaultLockOverlay__input\{[\s\S]{0,80}font-size:\s*15px/.test(css)) {
+    fails.push("desktop_media_overrides_pin_below_16px");
+  }
+  if (!/id="iuVaultPinInput"[^>]*type="text"/.test(index) && !/<input[^>]*id="iuVaultPinInput"[^>]*type="text"/.test(index)) {
+    // tolerate attribute order
+    if (!/<input[^>]*type="text"[^>]*id="iuVaultPinInput"/.test(index)
+      && !/<input[^>]*id="iuVaultPinInput"[^>]*type="text"/.test(index)) {
+      fails.push("pin_input_not_type_text");
+    }
   }
   if (!/\.iuInfoCenter__btn/.test(css) && !/#iuVaultAppLockScreen[\s\S]{0,800}iuInfoCenter__btn/.test(index)) {
     fails.push("missing_security_btn_styles");
