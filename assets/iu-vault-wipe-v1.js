@@ -96,18 +96,20 @@ export async function wipePersonalVault() {
   const { ensureLevel1Mdk } = await import("./iu-vault-lock-v1.js");
   const { migratePlaintextToVault } = await import("./iu-vault-migrate-v1.js");
   const { preloadAllVaultRecords, notifyVaultMemoryHydrated } = await import("./iu-vault-storage-v1.js");
-  await ensureLevel1Mdk();
-  await migratePlaintextToVault();
-  await preloadAllVaultRecords();
-  notifyVaultMemoryHydrated();
-
   try {
-    window.__iuVaultHydrationPending = false;
-    window.__iuVaultHydrationComplete = true;
-    window.__iuVaultHydratedAt = Date.now();
-    window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
-    window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
-    window.dispatchEvent(new CustomEvent("iu-vault-wiped"));
-  } catch (_) {}
+    await ensureLevel1Mdk();
+    await migratePlaintextToVault();
+    await preloadAllVaultRecords();
+    notifyVaultMemoryHydrated();
+  } finally {
+    try {
+      window.__iuVaultHydrationPending = false;
+      window.__iuVaultHydrationComplete = true;
+      window.__iuVaultHydratedAt = Date.now();
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
+      window.dispatchEvent(new CustomEvent("iu-vault-security-changed"));
+      window.dispatchEvent(new CustomEvent("iu-vault-wiped"));
+    } catch (_) {}
+  }
   postVaultLockMessage("wiped", "forgot_pin");
 }

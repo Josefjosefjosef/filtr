@@ -707,9 +707,29 @@ function rollbackChmiCapV2UserStates() {
 /** In-memory prefs cache — avoids sync JSON.parse of localStorage on every checkbox/click. */
 let _prefsMem = null;
 
+function isVaultPrefsOpaque() {
+  try {
+    if (window.__iuVaultHydrationPending) return true;
+    if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+  } catch (_) {}
+  return false;
+}
+
+function clearPrefsMemCache() {
+  _prefsMem = null;
+}
+
+try {
+  window.addEventListener("iu-vault-hydrated", clearPrefsMemCache);
+  window.addEventListener("iu-vault-unlocked", clearPrefsMemCache);
+  window.addEventListener("iu-vault-bfcache-restore", clearPrefsMemCache);
+} catch (_) {}
+
 function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
+  // Never migrate/write defaults while vault lock hides protected prefs.
+  if (isVaultPrefsOpaque()) return { migrated: false, from: ver, to: ver, deferred: true };
   try {
     const rawPrefs = localStorage.getItem(LS_PREFS);
     if (rawPrefs) {
@@ -742,12 +762,16 @@ function getPrefs() {
   try {
     const raw = localStorage.getItem(LS_PREFS);
     if (!raw) {
+      // Do not pin defaults into _prefsMem while vault is locked/hydrating —
+      // that would survive unlock and clobber real Doprava/ČHMÚ filters.
+      if (isVaultPrefsOpaque()) return defaultPrefs();
       _prefsMem = defaultPrefs();
       return _prefsMem;
     }
     _prefsMem = normalizePrefs(JSON.parse(raw) || {});
     return _prefsMem;
   } catch (_) {
+    if (isVaultPrefsOpaque()) return defaultPrefs();
     _prefsMem = defaultPrefs();
     return _prefsMem;
   }
@@ -826,6 +850,7 @@ function countTemporaryFilters(prefs, baseline) {
 
 function setPrefs(prefs) {
   try {
+    if (isVaultPrefsOpaque()) return false;
     const n = normalizePrefs(prefs || {});
     localStorage.setItem(LS_PREFS, JSON.stringify(n));
     _prefsMem = n;

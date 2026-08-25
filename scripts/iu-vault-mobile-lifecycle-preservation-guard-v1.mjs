@@ -37,6 +37,7 @@ const KEYS = {
   bak: "iu_bakalari_profiles",
   weather: "iuWeatherCitySelectedV1",
   filter: "iuFollowedTopics",
+  infoPrefs: "iu.infoEvents.prefs.v1",
 };
 
 function payloads(tag) {
@@ -64,6 +65,16 @@ function payloads(tag) {
     [KEYS.bak]: JSON.stringify({ profiles: [{ id: "b1", school: tag + "_BAK" }] }),
     [KEYS.weather]: JSON.stringify({ city: tag + "_CITY", ts: 1 }),
     [KEYS.filter]: JSON.stringify({ topics: [tag + "_FILTER"] }),
+    [KEYS.infoPrefs]: JSON.stringify({
+      sections: ["doprava", "chmi"],
+      sourceGroups: ["doprava", "chmi"],
+      lanes: [tag + "_LANE"],
+      homeObec: tag + "_OBEC",
+      homeKraj: tag + "_KRAJ",
+      localities: [tag + "_LOC"],
+      regionalDoprava: true,
+      feedFilter: { roads: [tag + "_ROAD"], eventTypes: ["closure"] },
+    }),
   };
 }
 
@@ -78,6 +89,10 @@ function staticChecks(fails) {
   if (!/shouldBlockPostHydrateClobber|__iuVaultHydratedAt/.test(storageJs)) {
     fails.push("storage_missing_post_hydrate_clobber_guard");
   }
+  if (/Date\.now\(\) - t > 4000/.test(storageJs)) fails.push("clobber_still_time_window_4s");
+  const prot = fs.readFileSync(path.join(REPO, "assets", "iu-vault-protected-keys-v1.js"), "utf8");
+  if (!/iu\.infoEvents\.prefs\.v1/.test(prot)) fails.push("protected_keys_missing_info_prefs");
+  if (!/looksLikeEmptyPrefsReset/.test(storageJs)) fails.push("storage_missing_prefs_empty_detect");
 }
 
 async function waitVaultApi(page) {
@@ -154,6 +169,8 @@ function assertValues(fails, label, after) {
   if (!after.task || !String(after.task).includes(MARKER + "_TASK")) fails.push(`${label}_task`);
   if (!after.weather || !String(after.weather).includes(MARKER + "_CITY")) fails.push(`${label}_pref_weather`);
   if (!after.filter || !String(after.filter).includes(MARKER + "_FILTER")) fails.push(`${label}_pref_filter`);
+  if (!after.infoPrefs || !String(after.infoPrefs).includes(MARKER + "_OBEC")) fails.push(`${label}_info_prefs_obec`);
+  if (!after.infoPrefs || !String(after.infoPrefs).includes(MARKER + "_ROAD")) fails.push(`${label}_info_prefs_road`);
 }
 
 async function runViewport(browser, base, viewport, fails, label) {
@@ -169,7 +186,7 @@ async function runViewport(browser, base, viewport, fails, label) {
   await waitVaultApi(page);
 
   const enc = await seed(page, MARKER);
-  if (!enc[KEYS.note] || !enc[KEYS.weather]) fails.push(`${label}_enc_missing`);
+  if (!enc[KEYS.note] || !enc[KEYS.weather] || !enc[KEYS.infoPrefs]) fails.push(`${label}_enc_missing`);
 
   // Scenario A: visibilitycycle
   await page.evaluate(async () => {
