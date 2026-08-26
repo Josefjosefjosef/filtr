@@ -504,6 +504,16 @@ async function main() {
       if (!encAfterReopen.notes || !encAfterReopen.tasks) fails.push("enc_missing_after_browser_reopen");
       if (!encAfterReopen.mailbox) fails.push("mailbox_enc_missing_after_browser_reopen");
 
+      await page2.waitForFunction(
+        () => {
+          const phase = window.__iuVaultBootPhase;
+          if (phase === "locked" || phase === "unlocked") return true;
+          if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+          return !document.documentElement.classList.contains("iu-vault-app-init");
+        },
+        null,
+        { timeout: 30000 }
+      );
       await page2.evaluate(() => {
         document.body.classList.add("iu-desktop-home-grid");
       });

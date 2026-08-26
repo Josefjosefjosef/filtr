@@ -77,10 +77,9 @@ function armBootHandshakeFailClosed() {
     }
   } catch (_) {}
   try {
-    // Fail-closed after SharedWorker/BroadcastChannel handshake window (not a UI delay mask).
     window.__iuVaultBootHandshakeTimer = setTimeout(() => {
       finishBootLockDecision(true).catch(() => {});
-    }, 4500);
+    }, 1200);
   } catch (_) {}
 }
 
