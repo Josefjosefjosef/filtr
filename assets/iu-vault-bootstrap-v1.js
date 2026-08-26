@@ -27,6 +27,12 @@ import {
   isDesktopSharedSessionViewport,
   desktopSessionPeerTabCount,
 } from "./iu-vault-desktop-session-v1.js";
+import {
+  initVaultPersistenceDiag,
+  getPersistenceDiag,
+  getPersistenceTimeline,
+  recordVaultPersistenceEvent,
+} from "./iu-vault-persistence-diag-v1.js";
 
 function vaultSecurityActive(meta) {
   return !!(
@@ -95,6 +101,7 @@ async function initVault() {
   if (vaultDisabled()) return null;
 
   installLocalStorageShim();
+  initVaultPersistenceDiag();
   registerAutoLockListeners();
   try {
     window.addEventListener("pagehide", () => {
@@ -254,11 +261,6 @@ const api = {
     const { isWipeConfirmPhraseAccepted } = await import("./iu-vault-wipe-v1.js");
     return isWipeConfirmPhraseAccepted(value);
   },
-  /**
-   * Safe synthetic-test metadata only (no plaintext / secrets).
-   * @param {string} phase
-   * @param {string} [moduleKey]
-   */
   diagLifecycle: async (phase, moduleKey) => {
     const key = moduleKey ? String(moduleKey) : "";
     const st = getVaultState();
@@ -296,6 +298,9 @@ const api = {
       securityLevel: configured.meta && configured.meta.securityLevel,
     };
   },
+  getPersistenceDiag: (options) => getPersistenceDiag(options),
+  getPersistenceTimeline: (limit) => getPersistenceTimeline(limit),
+  recordPersistenceEvent: (step, detail) => recordVaultPersistenceEvent(step, detail),
   setAutoLockPolicy: async (policy) => {
     const { setAutoLockPolicy } = await import("./iu-vault-lock-v1.js");
     const { writeMeta, readMeta: rm } = await import("./iu-vault-db-v1.js");
@@ -311,6 +316,7 @@ const api = {
       window.__iuVaultHydrationPending = true;
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
+    recordVaultPersistenceEvent("20-module-hydrate", { source: "afterUnlock-start" });
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
     const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
@@ -320,6 +326,7 @@ const api = {
       window.__iuVaultHydrationComplete = true;
       window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
     } catch (_) {}
+    recordVaultPersistenceEvent("23-persist-after-hydrate", { source: "afterUnlock-complete" });
     await refreshGlobalAppLockUi(api);
   },
   refreshAppLockUi: () => refreshGlobalAppLockUi(api),
