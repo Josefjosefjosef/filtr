@@ -392,8 +392,8 @@ export function installLocalStorageShim() {
     }
     if (isVaultPersistBlocked(key)) {
       diagSync("01-user-write-request", { key: String(key), source: writeSource, writeBlocked: true, reason: "persist_blocked" });
-      return;
     }
+    if (isVaultPersistBlocked(key)) return;
     const text = String(value);
     if (shouldBlockPostHydrateClobber(String(key), text)) {
       diagSync("24-overwrite-blocked", { key: String(key), source: writeSource, writeBlocked: true, reason: "empty_clobber" });
