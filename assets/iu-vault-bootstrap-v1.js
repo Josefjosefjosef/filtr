@@ -5,7 +5,7 @@ import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, u
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
@@ -103,7 +103,7 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     try {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
       return await unlockWithDevice();
     } catch (err) {
       try {
@@ -125,11 +125,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -138,7 +138,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -158,15 +158,15 @@ const api = {
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   validatePinPolicy: (pin) => explainPinRejection(pin),
   getLastDeviceDiag: async () => {
-    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
     return getLastDeviceSetupDiag();
   },
   getWebAuthnCeremonyLog: async () => {
-    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
     return getWebAuthnCeremonyLog();
   },
   clearWebAuthnCeremonyLog: async () => {
-    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v1-20260825");
+    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
     return clearWebAuthnCeremonyLog();
   },
   wipePersonal: async () => {

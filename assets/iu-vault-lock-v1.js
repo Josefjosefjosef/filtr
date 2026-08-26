@@ -153,6 +153,7 @@ export function getVaultState() {
     lockedReason: state.lockedReason,
     autoLockPolicy: state.autoLockPolicy,
     failedPinAttempts: state.failedPinAttempts,
+    requiresUserReauth: !!state.requiresUserReauth,
   };
 }
 
