@@ -707,6 +707,14 @@ function rollbackChmiCapV2UserStates() {
 /** In-memory prefs cache — avoids sync JSON.parse of localStorage on every checkbox/click. */
 let _prefsMem = null;
 
+function prefsDiag(step, detail) {
+  try {
+    import("./iu-vault-persistence-diag-v1.js")
+      .then((mod) => mod.recordVaultPersistenceEvent(step, Object.assign({ key: LS_PREFS, keyType: "info_prefs_filters" }, detail || {})))
+      .catch(() => {});
+  } catch (_) {}
+}
+
 function isVaultPrefsWriteBlocked() {
   try {
     if (document.documentElement.classList.contains("iu-vault-app-init")) return true;
@@ -744,7 +752,10 @@ function migrateLocalStateOnce() {
   const ver = readSchemaVersion();
   if (ver >= LS_SCHEMA_VERSION) return { migrated: false, from: ver, to: ver };
   // Never migrate/write defaults while vault lock hides protected prefs.
-  if (isVaultPrefsReadOpaque()) return { migrated: false, from: ver, to: ver, deferred: true };
+  if (isVaultPrefsReadOpaque()) {
+    prefsDiag("22-module-default-init", { source: "migrateLocalStateOnce", writeBlocked: true, reason: "prefs_read_opaque" });
+    return { migrated: false, from: ver, to: ver, deferred: true };
+  }
   try {
     const rawPrefs = localStorage.getItem(LS_PREFS);
     if (rawPrefs) {
@@ -779,8 +790,12 @@ function getPrefs() {
     if (!raw) {
       // Do not pin defaults into _prefsMem while vault is locked/hydrating —
       // that would survive unlock and clobber real Doprava/ČHMÚ filters.
-      if (isVaultPrefsReadOpaque()) return defaultPrefs();
+      if (isVaultPrefsReadOpaque()) {
+        prefsDiag("22-module-default-init", { source: "getPrefs", writeBlocked: true, reason: "prefs_read_opaque" });
+        return defaultPrefs();
+      }
       _prefsMem = defaultPrefs();
+      prefsDiag("22-module-default-init", { source: "getPrefs", reason: "no_raw_default" });
       return _prefsMem;
     }
     _prefsMem = normalizePrefs(JSON.parse(raw) || {});
@@ -865,13 +880,18 @@ function countTemporaryFilters(prefs, baseline) {
 
 function setPrefs(prefs) {
   try {
-    if (isVaultPrefsWriteBlocked()) return false;
+    if (isVaultPrefsWriteBlocked()) {
+      prefsDiag("01-user-write-request", { source: "setPrefs", writeBlocked: true, reason: "prefs_write_blocked" });
+      return false;
+    }
     const n = normalizePrefs(prefs || {});
+    prefsDiag("01-user-write-request", { source: "setPrefs" });
     try {
       window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
     } catch (_) {}
     try {
       localStorage.setItem(LS_PREFS, JSON.stringify(n));
+      prefsDiag("08-write-confirmed", { source: "setPrefs" });
     } finally {
       try {
         window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);

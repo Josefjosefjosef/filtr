@@ -111,6 +111,14 @@ export function registerVaultLockBroadcastListener(vault) {
 
 export { postVaultLockMessage };
 
+function lockDiag(step, detail) {
+  try {
+    import("./iu-vault-persistence-diag-v1.js")
+      .then((mod) => mod.recordVaultPersistenceEvent(step, detail))
+      .catch(() => {});
+  } catch (_) {}
+}
+
 const state = {
   mdk: null,
   unlocked: false,
@@ -269,6 +277,7 @@ export async function lockVault(reason = "manual", options = {}) {
   }
   state.lockInProgress = true;
   try {
+    lockDiag("12-lock-start", { reason: String(reason || ""), source: "lockVault" });
     if (!localOnly) {
       try {
         window.__iuVaultBootLockDecisionPending = false;
@@ -287,6 +296,7 @@ export async function lockVault(reason = "manual", options = {}) {
     clearIdleTimer();
     state.mdk = null;
     state.unlocked = false;
+    lockDiag("13-runtime-mdk-cleared", { reason: String(reason || ""), source: "lockVault" });
     state.lockedReason = reason;
     try {
       const { clearVaultMemoryCache } = await import("./iu-vault-storage-v1.js");
@@ -312,6 +322,7 @@ export async function lockVault(reason = "manual", options = {}) {
 }
 
 export async function unlockWithMdk(mdk) {
+  lockDiag("16-auth-success", { source: "unlockWithMdk" });
   state.mdk = mdk;
   state.unlocked = true;
   state.lockedReason = "";
@@ -503,6 +514,7 @@ export async function unlockWithPin(pin) {
   if (!pinWrap) throw new Error("VAULT_PIN_NOT_CONFIGURED");
   try {
     const mdk = await verifyPinRecord(pinWrap, pin);
+    lockDiag("16-auth-success", { source: "unlockWithPin" });
     await unlockWithMdk(mdk);
     return true;
   } catch (e) {

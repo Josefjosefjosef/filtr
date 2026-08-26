@@ -19,6 +19,40 @@ export function encStorageKey(storageKey) {
   return ENC_PREFIX + String(storageKey);
 }
 
+let recordDiag = null;
+async function diag() {
+  if (recordDiag) return recordDiag;
+  try {
+    const mod = await import("./iu-vault-persistence-diag-v1.js");
+    recordDiag = mod.recordVaultPersistenceEvent;
+    return recordDiag;
+  } catch (_) {
+    recordDiag = () => {};
+    return recordDiag;
+  }
+}
+
+function diagSync(step, detail) {
+  if (recordDiag) {
+    recordDiag(step, detail);
+    return;
+  }
+  void diag().then((fn) => fn(step, detail)).catch(() => {});
+}
+
+export function getPendingVaultWriteCount() {
+  return pendingWrites.size;
+}
+
+export function isPlaintextStagingPresent(storageKey) {
+  captureNativeLocalStorage();
+  try {
+    return nativeGetItem(String(storageKey)) != null;
+  } catch (_) {
+    return false;
+  }
+}
+
 /** True while an explicit user-initiated protected write is in flight (filters, notes, etc.). */
 export function isVaultUserWriteActive() {
   if (userWriteDepth > 0) return true;
@@ -80,41 +114,77 @@ async function readEnvelope(storageKey) {
 
 export async function persistEnvelope(storageKey, envelope) {
   const k = String(storageKey);
+  diagSync("06-write-start", { key: k, source: "persistEnvelope" });
   captureNativeLocalStorage();
   nativeSetItem(encStorageKey(k), JSON.stringify(envelope));
   nativeRemoveItem(k);
   await writeRecord(k, envelope);
+  diagSync("07-write-transaction-complete", { key: k, source: "persistEnvelope" });
 }
 
 export async function vaultGetItem(storageKey) {
   touchActivity();
   const k = String(storageKey);
   if (memoryCache.has(k)) return memoryCache.get(k);
+  diagSync("18-record-read", { key: k, source: "vaultGetItem" });
   const envelope = await readEnvelope(k);
   if (!envelope) return null;
   const mdk = getMdk();
-  const text = await decryptString(mdk, k, envelope);
-  memoryCache.set(k, text);
-  return text;
+  try {
+    const text = await decryptString(mdk, k, envelope);
+    memoryCache.set(k, text);
+    diagSync("19-decrypt-success", { key: k, decryptStatus: "ok", source: "vaultGetItem" });
+    return text;
+  } catch (err) {
+    diagSync("19-decrypt-fail", {
+      key: k,
+      decryptStatus: "fail",
+      reason: String(err && err.message ? err.message : err).slice(0, 64),
+      source: "vaultGetItem",
+    });
+    throw err;
+  }
 }
 
 export async function vaultSetItem(storageKey, value) {
   touchActivity();
   const k = String(storageKey);
-  if (isVaultPersistBlocked(k)) return;
+  const source = isVaultUserWriteActive() ? "user" : "module";
+  diagSync("03-persist-request", { key: k, source, pendingWrites: pendingWrites.size });
+  if (isVaultPersistBlocked(k)) {
+    diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked" });
+    return;
+  }
   const text = String(value);
-  if (shouldBlockPostHydrateClobber(k, text)) return;
+  if (shouldBlockPostHydrateClobber(k, text)) {
+    diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber" });
+    return;
+  }
   const generation = (writeGeneration.get(k) || 0) + 1;
   writeGeneration.set(k, generation);
   let writePromise;
   writePromise = (async () => {
-    if (isVaultPersistBlocked(k)) return;
-    if (shouldBlockPostHydrateClobber(k, text)) return;
+    if (isVaultPersistBlocked(k)) {
+      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked_async" });
+      return;
+    }
+    if (shouldBlockPostHydrateClobber(k, text)) {
+      diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber_async" });
+      return;
+    }
     const mdk = getMdk();
-    if (!mdk) return;
+    if (!mdk) {
+      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "no_mdk" });
+      return;
+    }
+    diagSync("04-encrypt-start", { key: k, generation, source, pendingWrites: pendingWrites.size });
     const envelope = await encryptString(mdk, k, text);
+    diagSync("05-encrypt-success", { key: k, generation, source });
     if (writeGeneration.get(k) !== generation) return;
-    if (isVaultPersistBlocked(k)) return;
+    if (isVaultPersistBlocked(k)) {
+      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked_pre_write" });
+      return;
+    }
     await persistEnvelope(k, envelope);
     if (writeGeneration.get(k) !== generation) return;
     captureNativeLocalStorage();
@@ -122,6 +192,7 @@ export async function vaultSetItem(storageKey, value) {
       nativeRemoveItem(k);
     } catch (_) {}
     memoryCache.set(k, text);
+    diagSync("08-write-confirmed", { key: k, generation, source, pendingWrites: pendingWrites.size });
     try {
       window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
     } catch (_) {}
@@ -306,6 +377,8 @@ export function installLocalStorageShim() {
       nativeSet(key, value);
       return;
     }
+    const writeSource = isVaultUserWriteActive() ? "user" : "module";
+    diagSync("01-user-write-request", { key: String(key), source: writeSource, pendingWrites: pendingWrites.size });
     const st = getVaultState();
     if (!st.unlocked) {
       // L1 boot race: shim is installed before ensureLevel1Mdk unlocks.
@@ -314,11 +387,18 @@ export function installLocalStorageShim() {
         nativeSet(key, value);
         return;
       }
+      diagSync("01-user-write-request", { key: String(key), source: writeSource, writeBlocked: true, reason: "vault_locked" });
       throw new Error("VAULT_LOCKED");
+    }
+    if (isVaultPersistBlocked(key)) {
+      diagSync("01-user-write-request", { key: String(key), source: writeSource, writeBlocked: true, reason: "persist_blocked" });
     }
     if (isVaultPersistBlocked(key)) return;
     const text = String(value);
-    if (shouldBlockPostHydrateClobber(String(key), text)) return;
+    if (shouldBlockPostHydrateClobber(String(key), text)) {
+      diagSync("24-overwrite-blocked", { key: String(key), source: writeSource, writeBlocked: true, reason: "empty_clobber" });
+      return;
+    }
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);
     writePromise.catch(() => {});
@@ -341,6 +421,7 @@ export function installLocalStorageShim() {
 export async function hydrateMemoryCacheFromVault(keys) {
   for (const key of keys) {
     try {
+      diagSync("20-module-hydrate", { key: String(key), source: "hydrateMemoryCacheFromVault" });
       const val = await vaultGetItem(key);
       if (val != null) memoryCache.set(key, val);
     } catch (_) {}
