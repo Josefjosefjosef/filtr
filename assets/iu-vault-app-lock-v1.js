@@ -155,10 +155,35 @@ export async function refreshGlobalAppLockUi(vault) {
   const locked = method !== "none" && !st.unlocked;
 
   syncAppLockHintFromMeta(configured && configured.meta ? configured.meta : null);
-  applyAppLockedPresentation(locked);
+  let bootPending = false;
+  try {
+    bootPending = !!(locked && window.__iuVaultBootLockDecisionPending);
+  } catch (_) {}
+
+  if (bootPending) {
+    try {
+      window.__iuVaultBootPhase = "initializing";
+      document.documentElement.classList.add("iu-vault-app-init");
+      document.documentElement.classList.remove("iu-vault-app-locked");
+    } catch (_) {}
+    applyAppLockedPresentation(false);
+  } else if (locked) {
+    try {
+      window.__iuVaultBootPhase = "locked";
+      document.documentElement.classList.remove("iu-vault-app-init");
+    } catch (_) {}
+    applyAppLockedPresentation(true);
+  } else {
+    try {
+      window.__iuVaultBootLockDecisionPending = false;
+      window.__iuVaultBootPhase = "unlocked";
+      document.documentElement.classList.remove("iu-vault-app-init");
+    } catch (_) {}
+    applyAppLockedPresentation(false);
+  }
 
   try {
-    window.__iuVaultDeferMindMenuMount = !!locked;
+    window.__iuVaultDeferMindMenuMount = bootPending || locked;
     if (locked && typeof window.iuArticleActionsCloseOverlay === "function") {
       window.iuArticleActionsCloseOverlay();
     }
@@ -429,6 +454,11 @@ export async function enforceFailClosedAppLock(vault, meta) {
     meta.mindMenuUnlockMethod === "device";
   if (!needsReauth) return;
   syncAppLockHintFromMeta(meta);
+  try {
+    window.__iuVaultBootLockDecisionPending = false;
+    window.__iuVaultBootPhase = "locked";
+    document.documentElement.classList.remove("iu-vault-app-init");
+  } catch (_) {}
   applyAppLockedPresentation(true);
   try {
     window.__iuVaultHydrationPending = true;

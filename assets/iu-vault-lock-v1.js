@@ -40,9 +40,6 @@ export function setAppLockHintActive() {
   try {
     localStorage.setItem(APP_LOCK_HINT_KEY, "1");
   } catch (_) {}
-  try {
-    document.documentElement.classList.add("iu-vault-app-locked");
-  } catch (_) {}
 }
 
 export function clearAppLockHint() {
@@ -51,6 +48,7 @@ export function clearAppLockHint() {
   } catch (_) {}
   try {
     document.documentElement.classList.remove("iu-vault-app-locked");
+    document.documentElement.classList.remove("iu-vault-app-init");
   } catch (_) {}
 }
 
@@ -245,6 +243,20 @@ export async function readSecurityConfiguredState(meta) {
   };
 }
 
+function applyLockedPresentationSync() {
+  try {
+    window.__iuVaultBootLockDecisionPending = false;
+    window.__iuVaultBootPhase = "locked";
+    document.documentElement.classList.remove("iu-vault-app-init");
+    document.documentElement.classList.add("iu-vault-app-locked");
+    const screen = document.getElementById("iuVaultAppLockScreen");
+    if (screen) {
+      screen.hidden = false;
+      screen.removeAttribute("aria-hidden");
+    }
+  } catch (_) {}
+}
+
 export async function lockVault(reason = "manual", options = {}) {
   if (!state.requiresUserReauth) return;
   const localOnly = !!(options && options.localOnly);
@@ -257,6 +269,11 @@ export async function lockVault(reason = "manual", options = {}) {
   }
   state.lockInProgress = true;
   try {
+    if (!localOnly) {
+      try {
+        window.__iuVaultBootLockDecisionPending = false;
+      } catch (_) {}
+    }
     // Block NEW module writes BEFORE flush/clear — mobile visibilitychange races otherwise
     // overwrite ciphertext while encrypt is still in flight.
     try {
@@ -283,6 +300,9 @@ export async function lockVault(reason = "manual", options = {}) {
     if (!localOnly && reason !== "wiped") {
       postVaultLockMessage("locked", reason);
     }
+    if (!localOnly && state.requiresUserReauth) {
+      applyLockedPresentationSync();
+    }
     if (!localOnly && isDesktopSharedSessionViewport()) {
       invalidateDesktopSession(reason || "locked").catch(() => {});
     }
@@ -298,6 +318,17 @@ export async function unlockWithMdk(mdk) {
   state.failedPinAttempts = 0;
   state.pinBackoffUntil = 0;
   touchActivity();
+  try {
+    window.__iuVaultBootLockDecisionPending = false;
+    window.__iuVaultBootPhase = "unlocked";
+    document.documentElement.classList.remove("iu-vault-app-init");
+    document.documentElement.classList.remove("iu-vault-app-locked");
+    const screen = document.getElementById("iuVaultAppLockScreen");
+    if (screen) {
+      screen.hidden = true;
+      screen.setAttribute("aria-hidden", "true");
+    }
+  } catch (_) {}
   try {
     window.dispatchEvent(new CustomEvent("iu-vault-unlocked", { detail: {} }));
   } catch (_) {}

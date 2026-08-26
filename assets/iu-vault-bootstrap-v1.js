@@ -1,15 +1,49 @@
 ﻿/**
  * Vault bootstrap — must load before app.js (top-level await).
  */
-import { ensureLevel1Mdk, registerAutoLockListeners, getVaultState, lockVault, unlockWithPin, unlockWithMdk, readSecurityConfiguredState, setAppLockHintActive } from "./iu-vault-lock-v1.js";
+import {
+  ensureLevel1Mdk,
+  registerAutoLockListeners,
+  getVaultState,
+  lockVault,
+  unlockWithPin,
+  unlockWithMdk,
+  readSecurityConfiguredState,
+  setAppLockHintActive,
+  registerVaultLockBroadcastListener,
+} from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
-import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826";
+import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
-import { initDesktopSessionCoordinator, tryJoinDesktopSession, onDesktopSessionReady } from "./iu-vault-desktop-session-v1.js";
+import {
+  initDesktopSessionCoordinator,
+  tryJoinDesktopSession,
+  onDesktopSessionReady,
+  wasDesktopJoinPending,
+  isDesktopSharedSessionViewport,
+  desktopSessionPeerTabCount,
+} from "./iu-vault-desktop-session-v1.js";
+
+function vaultSecurityActive(meta) {
+  return !!(
+    meta &&
+    (meta.pinEnabled ||
+      meta.deviceEnabled ||
+      meta.mindMenuUnlockMethod === "pin" ||
+      meta.mindMenuUnlockMethod === "device")
+  );
+}
+
+async function finishBootLockDecision(showRefresh) {
+  try {
+    window.__iuVaultBootLockDecisionPending = false;
+  } catch (_) {}
+  if (showRefresh) await refreshGlobalAppLockUi(api);
+}
 
 function vaultDisabled() {
   try {
@@ -103,7 +137,7 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     try {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
       return await unlockWithDevice();
     } catch (err) {
       try {
@@ -125,11 +159,11 @@ const api = {
     return disablePin(pin);
   },
   setupDevice: async () => {
-    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+    const { setupDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
     return setupDeviceUnlock();
   },
   disableDevice: async () => {
-    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+    const { disableDeviceUnlock } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
     return disableDeviceUnlock();
   },
   disableMindMenuLock: async (authPin) => {
@@ -138,7 +172,7 @@ const api = {
       if (!authPin) throw new Error("VAULT_PIN_REQUIRED");
       await unlockWithPin(authPin);
     } else if (configured.unlockMethod === "device") {
-      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+      const { unlockWithDevice } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
       await unlockWithDevice();
     }
     const { activateLevel1AutoKey } = await import("./iu-vault-lock-v1.js");
@@ -158,15 +192,15 @@ const api = {
   detectDeviceSupport: () => detectDeviceUnlockSupport(),
   validatePinPolicy: (pin) => explainPinRejection(pin),
   getLastDeviceDiag: async () => {
-    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+    const { getLastDeviceSetupDiag } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
     return getLastDeviceSetupDiag();
   },
   getWebAuthnCeremonyLog: async () => {
-    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+    const { getWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
     return getWebAuthnCeremonyLog();
   },
   clearWebAuthnCeremonyLog: async () => {
-    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v2-20260826");
+    const { clearWebAuthnCeremonyLog } = await import("./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826");
     return clearWebAuthnCeremonyLog();
   },
   wipePersonal: async () => {
@@ -260,9 +294,20 @@ window.iuVault = api;
 if (window.__iuVaultBootError && meta) {
   await enforceFailClosedAppLock(api, meta);
 } else {
+  registerVaultLockBroadcastListener(api);
   if (desktopJoinMdk) {
     await unlockWithMdk(desktopJoinMdk);
+    await finishBootLockDecision(true);
     await api.afterUnlock();
+  } else if (vaultSecurityActive(meta)) {
+    let deferBootDecision = false;
+    if (wasDesktopJoinPending() && isDesktopSharedSessionViewport()) {
+      const peerTabs = await desktopSessionPeerTabCount();
+      deferBootDecision = peerTabs > 1;
+    }
+    if (!deferBootDecision) {
+      await finishBootLockDecision(true);
+    }
   }
   await initGlobalAppLock(api);
   onDesktopSessionReady(async () => {
@@ -270,10 +315,13 @@ if (window.__iuVaultBootError && meta) {
       const st = getVaultState();
       if (st.unlocked) return;
       const mdk = await tryJoinDesktopSession();
-      if (!mdk) return;
+      if (!mdk) {
+        await finishBootLockDecision(true);
+        return;
+      }
       await unlockWithMdk(mdk);
+      await finishBootLockDecision(true);
       await api.afterUnlock();
-      await refreshGlobalAppLockUi(api);
     } catch (_) {}
   });
 }

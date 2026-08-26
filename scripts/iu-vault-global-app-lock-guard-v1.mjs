@@ -44,6 +44,9 @@ function staticChecks(fails) {
   if (!/id="iuVaultAppLockScreen"/.test(index)) fails.push("index_missing_app_lock_screen");
   if (!/iu:vault:app-lock-active:v1/.test(index)) fails.push("index_missing_sync_hint");
   if (!/iu-vault-app-locked/.test(index)) fails.push("index_missing_lock_css");
+  if (!/iu-vault-app-init/.test(index)) fails.push("index_missing_init_css");
+  if (!/__iuVaultBootLockDecisionPending/.test(appLock)) fails.push("app_lock_missing_boot_lock_decision");
+  if (!/finishBootLockDecision/.test(boot)) fails.push("bootstrap_missing_finish_boot_lock_decision");
   if (!/initGlobalAppLock/.test(boot)) fails.push("bootstrap_missing_global_lock");
   if (!/isAppLocked/.test(boot)) fails.push("bootstrap_missing_isAppLocked");
   if (!/refreshGlobalAppLockUi/.test(appLock)) fails.push("app_lock_missing_refresh");

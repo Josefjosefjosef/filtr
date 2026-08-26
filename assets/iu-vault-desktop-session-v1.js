@@ -3,7 +3,7 @@
  * Ephemeral: no persistent unlock flag; MDK never written to storage.
  */
 const DESKTOP_MQ = "(min-width: 1025px)";
-const WORKER_URL = "/assets/iu-vault-desktop-session-worker-v1.js?v=iu-vault-desktop-shared-session-v2-20260826";
+const WORKER_URL = "/assets/iu-vault-desktop-session-worker-v1.js?v=iu-vault-desktop-shared-session-v3-20260826";
 const BC_NAME = "iu-vault-desktop-session-v1";
 
 let workerPort = null;
@@ -13,6 +13,11 @@ let localGeneration = 0;
 let leaderId = null;
 let joinWaiters = [];
 let sessionReadyListeners = [];
+let lastDesktopJoinPending = false;
+
+export function wasDesktopJoinPending() {
+  return !!lastDesktopJoinPending;
+}
 
 function randomId() {
   try {
@@ -186,6 +191,7 @@ export function onDesktopSessionReady(fn) {
 
 export async function tryJoinDesktopSession() {
   if (!isDesktopSharedSessionViewport()) return null;
+  lastDesktopJoinPending = false;
   try {
     if (window.__IU_NEG_BLOCK_DESKTOP_SESSION_JOIN) return null;
   } catch (_) {}
@@ -197,6 +203,7 @@ export async function tryJoinDesktopSession() {
       return resp.mdk;
     }
     if (resp && resp.op === "join-pending") {
+      lastDesktopJoinPending = true;
       return null;
     }
   }
