@@ -193,8 +193,19 @@ async function main() {
     if (!seeded.enc.note || !seeded.enc.task || !seeded.enc.cal) fails.push("enc_missing_after_setup");
     if (!seeded.enc.mailbox && !seeded.enc.banks) fails.push("enc_personal_modules_missing");
 
-    // setupPin already locks; ensure lock screen + pending hydrate for reopen
+    // setupPin already locks; wait for boot decision (INITIALIZING must not look like unlocked)
     await pageA.goto(`${base}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 60000 });
+    await pageA.waitForFunction(
+      () => {
+        const phase = window.__iuVaultBootPhase;
+        if (phase === "locked") return true;
+        if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+        const screen = document.getElementById("iuVaultAppLockScreen");
+        return !!(screen && !screen.hidden && !document.documentElement.classList.contains("iu-vault-app-init"));
+      },
+      null,
+      { timeout: 60000 }
+    );
 
     const locked = await pageA.evaluate(() => {
       return document.documentElement.classList.contains("iu-vault-app-locked")
