@@ -711,6 +711,7 @@ function isVaultPrefsWriteBlocked() {
   try {
     if (document.documentElement.classList.contains("iu-vault-app-init")) return true;
     if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+    if (window.__iuVaultHydrationPending) return true;
     const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
     if (st && !st.unlocked) return true;
   } catch (_) {}
@@ -724,10 +725,7 @@ function isVaultPrefsReadOpaque() {
     if (window.__iuVaultBootLockDecisionPending) return true;
   } catch (_) {}
   try {
-    if (window.__iuVaultHydrationPending) {
-      const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
-      if (!st || !st.unlocked) return true;
-    }
+    if (window.__iuVaultHydrationPending) return true;
   } catch (_) {}
   return false;
 }
