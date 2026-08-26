@@ -26,6 +26,8 @@ const PIN = "123456";
 const MARKER = `IU_MOB_LIFE_${Date.now()}`;
 const SKIP_PAGESHOW_HYDRATE = process.env.IU_NEG_SKIP_PAGESHOW_HYDRATE === "1";
 const EMPTY_BEFORE_HYDRATE = process.env.IU_NEG_EMPTY_BEFORE_HYDRATE === "1";
+const SKIP_FLUSH = process.env.IU_NEG_SKIP_FLUSH === "1";
+const ALLOW_HYDRATION_EMPTY = process.env.IU_NEG_ALLOW_HYDRATION_EMPTY === "1";
 
 const KEYS = {
   note: "iu.notes.store.v1",
@@ -81,6 +83,8 @@ function payloads(tag) {
 function staticChecks(fails) {
   const lockJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-lock-v1.js"), "utf8");
   const storageJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8");
+  const bootJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-bootstrap-v1.js"), "utf8");
+  const infoJs = fs.readFileSync(path.join(REPO, "assets", "iu-info-system-core-v1.js"), "utf8");
   if (!/lockInProgress/.test(lockJs)) fails.push("lock_missing_in_progress");
   if (!/__iuVaultHydrationPending = true/.test(lockJs.split("lockVault")[1] || "")) {
     fails.push("lock_missing_pending_before_flush");
@@ -90,6 +94,16 @@ function staticChecks(fails) {
     fails.push("storage_missing_post_hydrate_clobber_guard");
   }
   if (/Date\.now\(\) - t > 4000/.test(storageJs)) fails.push("clobber_still_time_window_4s");
+  const persistBlockFn = storageJs.split("export function isVaultPersistBlocked")[1] || "";
+  if (!/__iuVaultHydrationPending/.test(persistBlockFn.split("st.unlocked")[0] || "")) {
+    fails.push("storage_hydration_pending_after_unlock_bypass");
+  }
+  if (!/visibilitychange/.test(bootJs) || !/flushPendingVaultWrites/.test(bootJs.split("visibilitychange")[1] || "")) {
+    fails.push("bootstrap_missing_visibility_flush");
+  }
+  if (!/if \(window\.__iuVaultHydrationPending\) return true;/.test(infoJs.split("isVaultPrefsReadOpaque")[1] || "")) {
+    fails.push("info_prefs_hydration_still_unlock_bypass");
+  }
   const prot = fs.readFileSync(path.join(REPO, "assets", "iu-vault-protected-keys-v1.js"), "utf8");
   if (!/iu\.infoEvents\.prefs\.v1/.test(prot)) fails.push("protected_keys_missing_info_prefs");
   if (!/looksLikeEmptyPrefsReset/.test(storageJs)) fails.push("storage_missing_prefs_empty_detect");
@@ -234,6 +248,82 @@ async function runViewport(browser, base, viewport, fails, label) {
   });
   assertValues(fails, `${label}_C`, afterC);
 
+  // Scenario F: durable write without explicit flush (mobile background/kill safety)
+  const durable = await page.evaluate(async ({ noteKey, marker, simulateEarlyNativeRemove }) => {
+    await window.iuVault.unlockPin("123456");
+    await window.iuVault.afterUnlock();
+    const payload = JSON.stringify({
+      schemaVersion: 1,
+      notes: [{ id: "f1", title: marker + "_DURABLE", body: "b", tags: [], createdAt: 1, updatedAt: 1 }],
+    });
+    if (simulateEarlyNativeRemove) {
+      const native = Storage.prototype.setItem;
+      Storage.prototype.setItem = function patchedSetItem(key, value) {
+        const out = native.call(this, key, value);
+        try {
+          if (String(key) === noteKey) Storage.prototype.removeItem.call(localStorage, noteKey);
+        } catch (_) {}
+        return out;
+      };
+    }
+    localStorage.setItem(noteKey, payload);
+    await new Promise((r) => setTimeout(r, 40));
+    const encKey = "iu:vault:enc:v1:" + noteKey;
+    const enc = localStorage.getItem(encKey);
+    const plain = localStorage.getItem(noteKey);
+    if (simulateEarlyNativeRemove) {
+      try {
+        Storage.prototype.setItem = native;
+      } catch (_) {}
+    }
+    return {
+      encExists: !!enc,
+      plainExists: plain === payload,
+      durableBlob: enc || plain || "",
+    };
+  }, {
+    noteKey: KEYS.note,
+    marker: MARKER,
+    simulateEarlyNativeRemove: SKIP_FLUSH,
+  });
+  if (SKIP_FLUSH) {
+    if (durable.encExists || durable.plainExists) fails.push(`${label}_F_negative_early_remove_still_durable`);
+  } else if (!durable.encExists && !durable.plainExists) {
+    fails.push(`${label}_F_no_durable_copy`);
+  }
+
+  // Scenario G: unlocked + hydration pending must block empty module overwrite
+  const hydrationBlock = await page.evaluate(async ({ noteKey, allowHydrationEmpty }) => {
+    await window.iuVault.unlockPin("123456");
+    try {
+      window.__iuVaultHydrationPending = true;
+    } catch (_) {}
+    const beforeEnc = localStorage.getItem("iu:vault:enc:v1:" + noteKey);
+    let blocked = window.iuVault.isPersistBlocked(noteKey);
+    let restore = null;
+    if (allowHydrationEmpty) {
+      restore = window.iuVault.isPersistBlocked;
+      window.iuVault.isPersistBlocked = () => false;
+      blocked = false;
+    }
+    if (!blocked) {
+      localStorage.setItem(noteKey, JSON.stringify({ schemaVersion: 1, notes: [] }));
+      await window.iuVault.flushPendingWrites();
+    }
+    if (restore) window.iuVault.isPersistBlocked = restore;
+    return { blocked: !!blocked, afterEnc: localStorage.getItem("iu:vault:enc:v1:" + noteKey), beforeEnc };
+  }, { noteKey: KEYS.note, allowHydrationEmpty: ALLOW_HYDRATION_EMPTY });
+  if (ALLOW_HYDRATION_EMPTY) {
+    if (!hydrationBlock.beforeEnc || hydrationBlock.afterEnc === hydrationBlock.beforeEnc) {
+      fails.push(`${label}_G_negative_hydration_empty_not_clobbered`);
+    }
+  } else {
+    if (!hydrationBlock.blocked) fails.push(`${label}_G_hydration_empty_not_blocked`);
+    if (hydrationBlock.beforeEnc && hydrationBlock.afterEnc !== hydrationBlock.beforeEnc) {
+      fails.push(`${label}_G_hydration_empty_clobbered`);
+    }
+  }
+
   await closePlaywrightSession(page, context, null);
 }
 
@@ -300,6 +390,8 @@ async function main() {
       fails,
       skipPageshowHydrate: SKIP_PAGESHOW_HYDRATE,
       emptyBeforeHydrate: EMPTY_BEFORE_HYDRATE,
+      skipFlush: SKIP_FLUSH,
+      allowHydrationEmpty: ALLOW_HYDRATION_EMPTY,
       marker: MARKER,
     })
   );

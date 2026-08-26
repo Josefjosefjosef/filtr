@@ -117,6 +117,10 @@ export async function vaultSetItem(storageKey, value) {
     if (isVaultPersistBlocked(k)) return;
     await persistEnvelope(k, envelope);
     if (writeGeneration.get(k) !== generation) return;
+    captureNativeLocalStorage();
+    try {
+      nativeRemoveItem(k);
+    } catch (_) {}
     memoryCache.set(k, text);
     try {
       window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: k, source: "iu-vault" } }));
@@ -252,9 +256,9 @@ function shouldBlockPostHydrateClobber(key, text) {
     if (prev.length >= 24 && !looksLikeEmptyModuleReset(prev, k)) return true;
   }
   try {
+    if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(k)) return true;
     const st = getVaultState();
     if (st.unlocked) return false;
-    if (window.__iuVaultHydrationPending && hasEncryptedRecordAtRest(k)) return true;
   } catch (_) {}
   return false;
 }
@@ -273,11 +277,11 @@ export function hasEncryptedRecordAtRest(storageKey) {
 export function isVaultPersistBlocked(storageKey) {
   if (!isProtectedStorageKey(storageKey)) return false;
   if (isVaultUserWriteActive()) return false;
-  const st = getVaultState();
-  if (st.unlocked) return false;
   try {
     if (window.__iuVaultHydrationPending) return true;
   } catch (_) {}
+  const st = getVaultState();
+  if (st.unlocked) return false;
   return hasEncryptedRecordAtRest(storageKey);
 }
 
@@ -318,7 +322,6 @@ export function installLocalStorageShim() {
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);
     writePromise.catch(() => {});
-    try { nativeRemove(key); } catch (_) {}
     return writePromise;
   };
 

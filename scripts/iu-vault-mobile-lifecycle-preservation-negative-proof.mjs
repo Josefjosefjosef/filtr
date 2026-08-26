@@ -36,6 +36,24 @@ if (neg2.status === 0 || !/IU_VAULT_MOBILE_LIFECYCLE_PRESERVATION_GUARD_FAIL/.te
 }
 console.log("IU_MOBILE_LIFECYCLE_NEGATIVE_SKIP_HYDRATE_FAIL_OK");
 
+const neg3 = run({ IU_NEG_SKIP_FLUSH: "1" });
+const neg3Out = `${neg3.stdout || ""}\n${neg3.stderr || ""}`;
+if (neg3.status === 0 || !/IU_VAULT_MOBILE_LIFECYCLE_PRESERVATION_GUARD_FAIL/.test(neg3Out)) {
+  console.error("NEGATIVE_SKIP_FLUSH_EXPECTED_FAIL_BUT_PASSED");
+  console.error(neg3Out);
+  process.exit(1);
+}
+console.log("IU_MOBILE_LIFECYCLE_NEGATIVE_SKIP_FLUSH_FAIL_OK");
+
+const neg4 = run({ IU_NEG_ALLOW_HYDRATION_EMPTY: "1" });
+const neg4Out = `${neg4.stdout || ""}\n${neg4.stderr || ""}`;
+if (neg4.status === 0 || !/IU_VAULT_MOBILE_LIFECYCLE_PRESERVATION_GUARD_FAIL/.test(neg4Out)) {
+  console.error("NEGATIVE_HYDRATION_EMPTY_EXPECTED_FAIL_BUT_PASSED");
+  console.error(neg4Out);
+  process.exit(1);
+}
+console.log("IU_MOBILE_LIFECYCLE_NEGATIVE_HYDRATION_EMPTY_FAIL_OK");
+
 const pos = run({});
 const posOut = `${pos.stdout || ""}\n${pos.stderr || ""}`;
 if (pos.status !== 0 || !/IU_VAULT_MOBILE_LIFECYCLE_PRESERVATION_GUARD_PASS/.test(posOut)) {

@@ -100,6 +100,11 @@ async function initVault() {
     window.addEventListener("pagehide", () => {
       flushPendingVaultWrites().catch(() => {});
     });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        flushPendingVaultWrites().catch(() => {});
+      }
+    });
   } catch (_) {}
 
   let meta = await ensureLevel1Mdk();
