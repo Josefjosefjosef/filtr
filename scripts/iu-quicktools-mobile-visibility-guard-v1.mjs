@@ -8,7 +8,7 @@ import path from "path";
 import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -188,10 +188,12 @@ async function runViewport(browser, vp) {
   const page = await context.newPage();
   await page.goto(BASE, { waitUntil: "load", timeout: 60000 });
   await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 30000 });
-  await page.waitForTimeout(2000);
+  // Wait until L1 vault unlock finishes — early setItem throws VAULT_LOCKED.
+  await waitForVaultReady(page, 60000);
   await seedDefaultConfig(page);
   await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
+  await waitForVaultReady(page, 60000);
+  await page.waitForTimeout(500);
 
   await openToolsTab(page);
   const beforeHide = await measureTile(page, "bakalari");
@@ -211,7 +213,8 @@ async function runViewport(browser, vp) {
   const hiddenCustom = await measureTile(page, CUSTOM_ID);
 
   await page.reload({ waitUntil: "load" });
-  await page.waitForTimeout(2000);
+  await waitForVaultReady(page, 60000);
+  await page.waitForTimeout(500);
   await openToolsTab(page);
   const persistedBakalari = await measureTile(page, "bakalari");
   const persistedCustom = await measureTile(page, CUSTOM_ID);

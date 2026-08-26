@@ -44,7 +44,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-info-center\.css\?v=iu-vault-wipe-filter-cross-browser-v1-20260825/.test(index),
+      pass: /iu-info-center\.css\?v=iu-vault-desktop-shared-session-v2-20260826/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);

@@ -303,7 +303,15 @@ export function installLocalStorageShim() {
       return;
     }
     const st = getVaultState();
-    if (!st.unlocked) throw new Error("VAULT_LOCKED");
+    if (!st.unlocked) {
+      // L1 boot race: shim is installed before ensureLevel1Mdk unlocks.
+      // Only hard-block writes when the user must re-authenticate.
+      if (!st.requiresUserReauth) {
+        nativeSet(key, value);
+        return;
+      }
+      throw new Error("VAULT_LOCKED");
+    }
     if (isVaultPersistBlocked(key)) return;
     const text = String(value);
     if (shouldBlockPostHydrateClobber(String(key), text)) return;
