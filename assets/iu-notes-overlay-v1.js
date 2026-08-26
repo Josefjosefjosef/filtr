@@ -250,6 +250,24 @@ export function initIuNotesOverlay() {
     }
   }
 
+  function isNotesReadOpaque() {
+    try {
+      if (window.__iuVaultBootLockDecisionPending) return true;
+      if (window.__iuVaultHydrationPending) return true;
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+        return true;
+      }
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isHydrationComplete === "function" && !window.iuVault.isHydrationComplete()) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   function loadNotes(){
     let raw = "";
     try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
@@ -257,7 +275,7 @@ export function initIuNotesOverlay() {
     try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
     const norm = normalizeStore(parsed);
     if (!norm){
-      if (hasVaultEncBlob(STORE_KEY)) {
+      if (hasVaultEncBlob(STORE_KEY) || isNotesReadOpaque()) {
         if (!state.data || !Array.isArray(state.data.notes)) {
           state.data = { schemaVersion: SCHEMA_VERSION, notes: [] };
         }
@@ -272,30 +290,57 @@ export function initIuNotesOverlay() {
     return norm;
   }
 
-  function saveNotes(data){
+  function mapNotesSaveError(err) {
+    const msg = String(err && err.message ? err.message : err);
+    if (msg === "VAULT_LOCKED") return "vault_locked";
+    if (msg === "PERSIST_BLOCKED") return "persist_blocked";
+    return msg || "write_failed";
+  }
+
+  function saveNotesStatusMessage(reason) {
+    if (reason === "vault_locked") return "Uložení blokováno — odemkněte trezor.";
+    if (reason === "persist_blocked") return "Uložení dočasně blokováno — zkuste znovu.";
+    if (reason === "ldp_declined") return "Uložení vyžaduje souhlas s ochranou lokálních dat.";
+    return "Nepodařilo se uložit poznámku.";
+  }
+
+  async function persistNotesWrite(norm) {
+    if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+      throw new Error("PERSIST_BLOCKED");
+    }
+    const ret = localStorage.setItem(STORE_KEY, JSON.stringify(norm));
+    if (ret && typeof ret.then === "function") {
+      await ret;
+    }
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
+    if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+      throw new Error("PERSIST_BLOCKED");
+    }
+  }
+
+  async function saveNotes(data){
     const norm = normalizeStore(data) || { schemaVersion: SCHEMA_VERSION, notes: [] };
     state.data = norm;
     function emitNotesChanged(){
       try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } })); }catch{}
     }
-    try {
-      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
-        return norm;
-      }
-    } catch (_) {}
-    if (!isLocalDataProtectionNoticeAccepted()) {
-      void ensureLocalDataProtectionBeforeSave().then(function (ok) {
-        if (!ok) return;
-        try { localStorage.setItem(STORE_KEY, JSON.stringify(norm)); } catch {}
-        state.lastSavedAt = Date.now();
-        emitNotesChanged();
-      });
-      return norm;
+    function fail(reason) {
+      return { ok: false, reason: reason, data: norm };
     }
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(norm)); }catch{}
-    state.lastSavedAt = Date.now();
-    emitNotesChanged();
-    return norm;
+    if (!isLocalDataProtectionNoticeAccepted()) {
+      const ldpOk = await ensureLocalDataProtectionBeforeSave();
+      if (!ldpOk) return fail("ldp_declined");
+    }
+    try {
+      await persistNotesWrite(norm);
+      state.lastSavedAt = Date.now();
+      emitNotesChanged();
+      return { ok: true, data: norm };
+    } catch (err) {
+      return fail(mapNotesSaveError(err));
+    }
   }
 
   function createEmptyNote(){
@@ -344,29 +389,42 @@ export function initIuNotesOverlay() {
     if (!isDraftNewNoteActive()) return;
     if (state.draftCommitInFlight) return;
     state.draftCommitInFlight = true;
-    try{
-      if (state.autosaveTimer){
-        try{ clearTimeout(state.autosaveTimer); }catch{}
-        state.autosaveTimer = null;
+    void (async function () {
+      try{
+        if (state.autosaveTimer){
+          try{ clearTimeout(state.autosaveTimer); }catch{}
+          state.autosaveTimer = null;
+        }
+        syncDraftFromDom();
+        const split = noteSplitUnifiedBody(noteBodyFromNote(state.draftNewNote));
+        if (!split.ok){
+          renderStatus("Zadejte text poznámky.");
+          return;
+        }
+        const n = sanitizeNote(state.draftNewNote);
+        if (!n) return;
+        const draftId = n.id;
+        state.data.notes.unshift(n);
+        state.selectedId = n.id;
+        discardDraftNewNote();
+        sortNotesInPlace(state.data.notes);
+        const saveRes = await saveNotes(state.data);
+        if (!saveRes.ok) {
+          state.data.notes = state.data.notes.filter((x) => String(x.id) !== String(draftId));
+          if (state.selectedId === draftId) {
+            const first = searchNotes(state.searchQuery)[0];
+            state.selectedId = first ? first.id : "";
+          }
+          renderStatus(saveNotesStatusMessage(saveRes.reason));
+          render();
+          return;
+        }
+        renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+        render();
+      }finally{
+        state.draftCommitInFlight = false;
       }
-      syncDraftFromDom();
-      const split = noteSplitUnifiedBody(noteBodyFromNote(state.draftNewNote));
-      if (!split.ok){
-        renderStatus("Zadejte text poznámky.");
-        return;
-      }
-      const n = sanitizeNote(state.draftNewNote);
-      if (!n) return;
-      state.data.notes.unshift(n);
-      state.selectedId = n.id;
-      discardDraftNewNote();
-      sortNotesInPlace(state.data.notes);
-      saveNotes(state.data);
-      renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
-      render();
-    }finally{
-      state.draftCommitInFlight = false;
-    }
+    })();
   }
 
   function cancelDraftNewNote(){
@@ -584,11 +642,18 @@ export function initIuNotesOverlay() {
       if (!note) return;
       note.deleted = false;
       note.updatedAt = Date.now();
-      saveNotes(state.data);
-      const first = searchNotes(state.searchQuery)[0];
-      state.selectedId = first ? first.id : "";
-      if (isNotesNarrowViewport()) setMobileMode("list");
-      render();
+      void saveNotes(state.data).then(function (saveRes) {
+        if (!saveRes.ok) {
+          note.deleted = true;
+          renderStatus(saveNotesStatusMessage(saveRes.reason));
+          render();
+          return;
+        }
+        const first = searchNotes(state.searchQuery)[0];
+        state.selectedId = first ? first.id : "";
+        if (isNotesNarrowViewport()) setMobileMode("list");
+        render();
+      });
     }
   }
 
@@ -805,12 +870,18 @@ export function initIuNotesOverlay() {
     }
     state.autosaveTimer = setTimeout(() => {
       state.autosaveTimer = null;
-      try{
-        sortNotesInPlace(state.data.notes);
-        saveNotes(state.data);
-        renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
-        renderList();
-      }catch{}
+      void (async () => {
+        try{
+          sortNotesInPlace(state.data.notes);
+          const saveRes = await saveNotes(state.data);
+          if (saveRes.ok) {
+            renderStatus("Uloženo " + fmtDate(state.lastSavedAt));
+            renderList();
+          } else {
+            renderStatus(saveNotesStatusMessage(saveRes.reason));
+          }
+        }catch{}
+      })();
     }, 450);
     renderStatus("Ukládám…");
   }
@@ -857,11 +928,18 @@ export function initIuNotesOverlay() {
     if (!note || note.deleted) return;
     note.deleted = true;
     note.updatedAt = Date.now();
-    saveNotes(state.data);
-    const first = searchNotes(state.searchQuery)[0];
-    state.selectedId = first ? first.id : "";
-    if (isNotesNarrowViewport()) setMobileMode("list");
-    render();
+    void saveNotes(state.data).then(function (saveRes) {
+      if (!saveRes.ok) {
+        note.deleted = false;
+        renderStatus(saveNotesStatusMessage(saveRes.reason));
+        render();
+        return;
+      }
+      const first = searchNotes(state.searchQuery)[0];
+      state.selectedId = first ? first.id : "";
+      if (isNotesNarrowViewport()) setMobileMode("list");
+      render();
+    });
   }
 
   function requestMoveNoteToTrash(id){
@@ -876,10 +954,16 @@ export function initIuNotesOverlay() {
     const list = state.data && Array.isArray(state.data.notes) ? state.data.notes : [];
     const kept = list.filter((n)=>!n.deleted);
     state.data.notes = kept;
-    saveNotes(state.data);
-    state.selectedId = "";
-    if (isNotesNarrowViewport()) setMobileMode("list");
-    render();
+    void saveNotes(state.data).then(function (saveRes) {
+      if (!saveRes.ok) {
+        renderStatus(saveNotesStatusMessage(saveRes.reason));
+        render();
+        return;
+      }
+      state.selectedId = "";
+      if (isNotesNarrowViewport()) setMobileMode("list");
+      render();
+    });
   }
 
   function requestPurgeTrash(){
@@ -1071,7 +1155,7 @@ export function initIuNotesOverlay() {
       if (!split.ok) return;
       note.updatedAt = Date.now();
       sortNotesInPlace(state.data.notes);
-      saveNotes(state.data);
+      void saveNotes(state.data);
     }catch{}
   }
 
@@ -1097,8 +1181,13 @@ export function initIuNotesOverlay() {
       return;
     }
     sortNotesInPlace(state.data.notes);
-    saveNotes(state.data);
-    render();
+    void saveNotes(state.data).then(function (saveRes) {
+      if (!saveRes.ok) {
+        note.tags = note.tags.filter((x) => foldCs(String(x || "")) !== foldCs(next));
+        renderStatus(saveNotesStatusMessage(saveRes.reason));
+      }
+      render();
+    });
   }
 
   function togglePin(id){
@@ -1107,8 +1196,13 @@ export function initIuNotesOverlay() {
     note.pinned = !note.pinned;
     note.updatedAt = Date.now();
     sortNotesInPlace(state.data.notes);
-    saveNotes(state.data);
-    renderList();
+    void saveNotes(state.data).then(function (saveRes) {
+      if (!saveRes.ok) {
+        note.pinned = !note.pinned;
+        renderStatus(saveNotesStatusMessage(saveRes.reason));
+      }
+      renderList();
+    });
   }
 
   function bindUi(){
@@ -1229,7 +1323,7 @@ export function initIuNotesOverlay() {
       closeOverlay: function(){ closeOverlay(); },
       notesGetSnapshot: function(){ return (state.data && Array.isArray(state.data.notes)) ? state.data.notes.slice() : []; },
       notesSearch: function(q){ return searchNotes(q); },
-      notesSaveSilverDraft: function(opts){
+      notesSaveSilverDraft: async function(opts){
         try{
           loadNotes();
           const o = opts && typeof opts === "object" ? opts : {};
@@ -1241,9 +1335,14 @@ export function initIuNotesOverlay() {
           n.content = split.content;
           if (Number.isFinite(Number(o.createdTs))) n.createdAt = Number(o.createdTs);
           if (Number.isFinite(Number(o.createdTs))) n.updatedAt = Number(o.createdTs);
+          const noteId = n.id;
           state.data.notes.unshift(sanitizeNote(n));
           sortNotesInPlace(state.data.notes);
-          saveNotes(state.data);
+          const saveRes = await saveNotes(state.data);
+          if (!saveRes.ok) {
+            state.data.notes = state.data.notes.filter((x) => String(x.id) !== String(noteId));
+            return { ok: false, reason: saveRes.reason };
+          }
           try {
             loadNotes();
             if (state.overlayMounted) render();
@@ -1253,7 +1352,7 @@ export function initIuNotesOverlay() {
           return { ok: false, reason: String(err && err.message ? err.message : err) };
         }
       },
-      notesCreateFromSilver: function(payload){
+      notesCreateFromSilver: async function(payload){
         try{
           loadNotes();
           const o = payload && typeof payload === "object" ? payload : {};
@@ -1277,9 +1376,14 @@ export function initIuNotesOverlay() {
           const tagList = Array.isArray(n.tags) ? n.tags.slice() : [];
           if (!tagList.some((x)=>String(x || "").toLowerCase() === "#silver")) tagList.push("#silver");
           n.tags = tagList;
+          const noteId = n.id;
           state.data.notes.unshift(sanitizeNote(n));
           sortNotesInPlace(state.data.notes);
-          saveNotes(state.data);
+          const saveRes = await saveNotes(state.data);
+          if (!saveRes.ok) {
+            state.data.notes = state.data.notes.filter((x) => String(x.id) !== String(noteId));
+            return { ok: false, reason: saveRes.reason };
+          }
           try {
             loadNotes();
             if (state.overlayMounted) render();

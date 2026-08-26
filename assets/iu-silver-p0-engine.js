@@ -34100,14 +34100,43 @@
     appendAssistantTurn(turn);
   }
 
-  function handleStorageNotesCreate() {
+  async function iuSilverEnsureNotesOverlayReady() {
+    try {
+      if (typeof window.__iuEnsureNotesOverlay === "function") {
+        await window.__iuEnsureNotesOverlay();
+      }
+    } catch (_) {
+      return { ok: false, reason: "notes_overlay_boot_failed" };
+    }
+    const svc = window.iuNotesService;
+    if (!svc || svc.__iuNotesLazyStub || typeof svc.notesSaveSilverDraft !== "function") {
+      return { ok: false, reason: "notes_api_unavailable" };
+    }
+    if (typeof svc.notesCreateFromSilver !== "function") {
+      return { ok: false, reason: "notes_create_api_unavailable" };
+    }
+    return { ok: true, svc: svc };
+  }
+
+  function iuSilverAppendNotesUnavailableTurn(preserveDraft) {
+    appendAssistantTurn({
+      processingState: "CLARIFICATION",
+      normalizedIntent: "clarification",
+      assistantLead: "Poznámky teď nejdou uložit. Zkuste obnovit stránku.",
+      clarificationText: "",
+      draft: preserveDraft ? (chatState.draft || createEmptyDraft()) : createEmptyDraft(),
+      clarificationReason: "unsupported_request"
+    });
+  }
+
+  async function handleStorageNotesCreate() {
     if (!chatState.pendingStorageAction || chatState.pendingStorageAction.type !== "create") return;
     const pd = chatState.pendingStorageAction.parsedData;
     clearPendingStorageDisambiguation();
-    const svc = window.iuNotesService;
-    let res = { ok: false, reason: "service_unavailable" };
-    if (svc && typeof svc.notesCreateFromSilver === "function") {
-      res = svc.notesCreateFromSilver(pd);
+    const ready = await iuSilverEnsureNotesOverlayReady();
+    let res = { ok: false, reason: ready.ok ? "unknown" : ready.reason };
+    if (ready.ok) {
+      res = await ready.svc.notesCreateFromSilver(pd);
     }
     chatState.draft = createEmptyDraft();
     chatState.lastDraftTurn = null;
@@ -34172,21 +34201,14 @@
     }
     const d = chatState.draft;
     if (!isNoteDraftSaveable(d)) return;
-    const svc = window.iuNotesService;
-    if (!svc || typeof svc.notesSaveSilverDraft !== "function") {
-      appendAssistantTurn({
-        processingState: "CLARIFICATION",
-        normalizedIntent: "clarification",
-        assistantLead: "Poznámky teď nejdou uložit. Zkuste obnovit stránku.",
-        clarificationText: "",
-        draft: createEmptyDraft(),
-        clarificationReason: "unsupported_request"
-      });
+    const ready = await iuSilverEnsureNotesOverlayReady();
+    if (!ready.ok) {
+      iuSilverAppendNotesUnavailableTurn(true);
       return;
     }
     chatState.saveBusy = true;
     try {
-      const res = svc.notesSaveSilverDraft({
+      const res = await ready.svc.notesSaveSilverDraft({
         text: String(d.silverNoteText || ""),
         createdTs: d.silverNoteCreatedTs || Date.now()
       });
@@ -34301,21 +34323,14 @@
       syncDraftFromCardInputs(clickedCard);
       const nd = cloneDraft(chatState.silverCompanionNoteDraft);
       if (!isNoteDraftSaveable(nd)) return;
-      const nsvc = window.iuNotesService;
-      if (!nsvc || typeof nsvc.notesSaveSilverDraft !== "function") {
-        appendAssistantTurn({
-          processingState: "CLARIFICATION",
-          normalizedIntent: "clarification",
-          assistantLead: "Poznámky teď nejdou uložit. Zkuste obnovit stránku.",
-          clarificationText: "",
-          draft: createEmptyDraft(),
-          clarificationReason: "unsupported_request"
-        });
+      const ready = await iuSilverEnsureNotesOverlayReady();
+      if (!ready.ok) {
+        iuSilverAppendNotesUnavailableTurn(true);
         return;
       }
       chatState.saveBusy = true;
       try {
-        const resN = nsvc.notesSaveSilverDraft({
+        const resN = await ready.svc.notesSaveSilverDraft({
           text: String(nd.silverNoteText || ""),
           createdTs: nd.silverNoteCreatedTs || Date.now()
         });
@@ -34407,9 +34422,9 @@
         let noteAlso = "";
         const compD = chatState.silverCompanionNoteDraft;
         if (compD && isNoteDraftSaveable(compD)) {
-          const nsvc2 = window.iuNotesService;
-          if (nsvc2 && typeof nsvc2.notesSaveSilverDraft === "function") {
-            const res2 = nsvc2.notesSaveSilverDraft({
+          const ready = await iuSilverEnsureNotesOverlayReady();
+          if (ready.ok) {
+            const res2 = await ready.svc.notesSaveSilverDraft({
               text: String(compD.silverNoteText || ""),
               createdTs: compD.silverNoteCreatedTs || Date.now()
             });
@@ -34479,7 +34494,7 @@
       handleStorageCalendarContinue();
     } else if (a === "storage-notes") {
       e.preventDefault();
-      handleStorageNotesCreate();
+      void handleStorageNotesCreate();
     } else if (a === "storage-tasks") {
       e.preventDefault();
       handleStorageTasksCreate();
