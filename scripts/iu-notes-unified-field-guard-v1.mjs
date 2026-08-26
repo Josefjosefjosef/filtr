@@ -108,13 +108,13 @@ async function testCardPreview(page) {
 
 async function testSilverSaveNoDup(page) {
   const text = "Adam narozeniny 26.6.\n\nKoupit dort.\nZavolat rodičům.";
-  return page.evaluate(({ key, body }) => {
+  return page.evaluate(async ({ key, body }) => {
     const svc = window.iuNotesService;
     if (!svc || typeof svc.notesSaveSilverDraft !== "function") return { ok: false, msg: "missing notesSaveSilverDraft" };
     try {
       localStorage.setItem(key, JSON.stringify({ schemaVersion: 1, notes: [] }));
     } catch (_) {}
-    const res = svc.notesSaveSilverDraft({ text: body });
+    const res = await svc.notesSaveSilverDraft({ text: body });
     if (!res || !res.ok || !res.note) return { ok: false, msg: "save failed", res };
     const n = res.note;
     const st = window.iuNotesStorage;
