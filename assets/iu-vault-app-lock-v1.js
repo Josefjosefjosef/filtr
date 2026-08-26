@@ -5,6 +5,7 @@ import { APP_LOCK_HINT_KEY, registerVaultLockBroadcastListener } from "./iu-vaul
 import { isWipeConfirmPhraseAccepted, WIPE_CONFIRM_PHRASE } from "./iu-vault-wipe-v1.js";
 
 const LOCK_SCREEN_ID = "iuVaultAppLockScreen";
+let lockUiEpoch = 0;
 
 export function syncAppLockHintFromMeta(meta) {
   if (!meta) return;
@@ -148,10 +149,13 @@ function applyUnlockActionVisibility(method, deviceSupported) {
 
 export async function refreshGlobalAppLockUi(vault) {
   if (!vault) return;
+  const epoch = ++lockUiEpoch;
   const configured = await vault.getSecurityConfigured();
+  if (epoch !== lockUiEpoch) return;
   const st = vault.getState();
   const method = configured && configured.unlockMethod ? configured.unlockMethod : "none";
   const deviceSupported = await vault.detectDeviceSupport();
+  if (epoch !== lockUiEpoch) return;
   const locked = method !== "none" && !st.unlocked;
 
   syncAppLockHintFromMeta(configured && configured.meta ? configured.meta : null);
@@ -159,6 +163,8 @@ export async function refreshGlobalAppLockUi(vault) {
   try {
     bootPending = !!(locked && window.__iuVaultBootLockDecisionPending);
   } catch (_) {}
+
+  if (epoch !== lockUiEpoch) return;
 
   if (bootPending) {
     try {

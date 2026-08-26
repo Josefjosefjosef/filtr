@@ -42,7 +42,46 @@ async function finishBootLockDecision(showRefresh) {
   try {
     window.__iuVaultBootLockDecisionPending = false;
   } catch (_) {}
-  if (showRefresh) await refreshGlobalAppLockUi(api);
+  try {
+    if (window.__iuVaultBootHandshakeTimer) {
+      clearTimeout(window.__iuVaultBootHandshakeTimer);
+      window.__iuVaultBootHandshakeTimer = null;
+    }
+  } catch (_) {}
+  if (showRefresh) {
+    try {
+      await refreshGlobalAppLockUi(api);
+    } catch (_) {}
+  }
+  // Hard fail-closed: never leave INITIALIZING after decision completes.
+  try {
+    const st = getVaultState();
+    if (!st.unlocked) {
+      window.__iuVaultBootPhase = "locked";
+      document.documentElement.classList.remove("iu-vault-app-init");
+      document.documentElement.classList.add("iu-vault-app-locked");
+      const screen = document.getElementById("iuVaultAppLockScreen");
+      if (screen) {
+        screen.hidden = false;
+        screen.removeAttribute("aria-hidden");
+      }
+      window.__iuVaultDeferMindMenuMount = true;
+    }
+  } catch (_) {}
+}
+
+function armBootHandshakeFailClosed() {
+  try {
+    if (window.__iuVaultBootHandshakeTimer) {
+      clearTimeout(window.__iuVaultBootHandshakeTimer);
+    }
+  } catch (_) {}
+  try {
+    // Fail-closed after SharedWorker/BroadcastChannel handshake window (not a UI delay mask).
+    window.__iuVaultBootHandshakeTimer = setTimeout(() => {
+      finishBootLockDecision(true).catch(() => {});
+    }, 4500);
+  } catch (_) {}
 }
 
 function vaultDisabled() {
@@ -307,13 +346,18 @@ if (window.__iuVaultBootError && meta) {
     }
     if (!deferBootDecision) {
       await finishBootLockDecision(true);
+    } else {
+      armBootHandshakeFailClosed();
     }
   }
   await initGlobalAppLock(api);
   onDesktopSessionReady(async () => {
     try {
       const st = getVaultState();
-      if (st.unlocked) return;
+      if (st.unlocked) {
+        await finishBootLockDecision(true);
+        return;
+      }
       const mdk = await tryJoinDesktopSession();
       if (!mdk) {
         await finishBootLockDecision(true);
@@ -322,7 +366,9 @@ if (window.__iuVaultBootError && meta) {
       await unlockWithMdk(mdk);
       await finishBootLockDecision(true);
       await api.afterUnlock();
-    } catch (_) {}
+    } catch (_) {
+      await finishBootLockDecision(true);
+    }
   });
 }
 
