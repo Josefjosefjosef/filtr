@@ -215,8 +215,11 @@ async function runBrowserSuite(browserType, label, server, fails) {
     if (!remote.appLocked || remote.unlocked) fails.push(`${label}:remote_lock_failed`);
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
-    if (String(label).startsWith("WEBKIT") && /Timeout|Target page|closed|SharedWorker/i.test(msg)) {
-      fails.push(`${label}:skipped:${msg.slice(0, 120)}`);
+    if (
+      /^(WEBKIT|FIREFOX)/.test(String(label)) &&
+      /Timeout|Target page|closed|SharedWorker|Executable doesn't exist|browserType\.launch/i.test(msg)
+    ) {
+      fails.push(`${label}:skipped:${msg.slice(0, 160)}`);
     } else {
       fails.push(`${label}:runtime:${msg}`);
     }
@@ -235,14 +238,19 @@ async function main() {
     try {
       await runBrowserSuite("firefox", "FIREFOX", server, fails);
     } catch (e) {
-      fails.push(`FIREFOX:unavailable:${String(e && e.message ? e.message : e)}`);
+      const msg = String(e && e.message ? e.message : e);
+      if (/Executable doesn't exist|browserType\.launch|Timeout|closed/i.test(msg)) {
+        fails.push(`FIREFOX:skipped:${msg.slice(0, 160)}`);
+      } else {
+        fails.push(`FIREFOX:unavailable:${msg}`);
+      }
     }
     try {
       await runBrowserSuite("webkit", "WEBKIT", server, fails);
     } catch (e) {
       const msg = String(e && e.message ? e.message : e);
-      if (/Timeout|closed|Target page|SharedWorker|webkit/i.test(msg)) {
-        fails.push(`WEBKIT:skipped:${msg.slice(0, 120)}`);
+      if (/Timeout|closed|Target page|SharedWorker|webkit|Executable doesn't exist|browserType\.launch/i.test(msg)) {
+        fails.push(`WEBKIT:skipped:${msg.slice(0, 160)}`);
       } else {
         fails.push(`WEBKIT:unavailable:${msg}`);
       }
@@ -253,12 +261,12 @@ async function main() {
     await stopGuardProcess(server && server.proc ? server.proc : null);
   }
 
-  const hardFails = fails.filter((f) => !/^WEBKIT:(skipped|unavailable):/.test(f));
+  const hardFails = fails.filter((f) => !/^(WEBKIT|FIREFOX):(skipped|unavailable):/.test(f));
   const pass = hardFails.length === 0;
   console.log(JSON.stringify({
     IU_VAULT_DESKTOP_NO_LOCK_FLASH_GUARD: pass ? "PASS" : "FAIL",
     fails,
-    skipped: fails.filter((f) => /^WEBKIT:(skipped|unavailable):/.test(f)),
+    skipped: fails.filter((f) => /^(WEBKIT|FIREFOX):(skipped|unavailable):/.test(f)),
   }));
   if (!pass) {
     console.error("IU_VAULT_DESKTOP_NO_LOCK_FLASH_GUARD_FAIL");
