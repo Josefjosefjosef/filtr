@@ -709,6 +709,7 @@ let _prefsMem = null;
 
 function isVaultPrefsWriteBlocked() {
   try {
+    if (document.documentElement.classList.contains("iu-vault-app-init")) return true;
     if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
     const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
     if (st && !st.unlocked) return true;
@@ -719,6 +720,9 @@ function isVaultPrefsWriteBlocked() {
 /** Avoid pinning default prefs into memory while locked or pre-hydrate. */
 function isVaultPrefsReadOpaque() {
   if (isVaultPrefsWriteBlocked()) return true;
+  try {
+    if (window.__iuVaultBootLockDecisionPending) return true;
+  } catch (_) {}
   try {
     if (window.__iuVaultHydrationPending) {
       const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();

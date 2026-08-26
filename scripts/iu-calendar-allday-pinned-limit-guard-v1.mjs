@@ -168,6 +168,20 @@ async function countAllDay(page, dateIso) {
   }, dateIso);
 }
 
+async function waitForVaultBootReady(page) {
+  await page
+    .waitForFunction(
+      () => {
+        const phase = window.__iuVaultBootPhase;
+        if (phase === "locked" || phase === "unlocked") return true;
+        if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+        return !document.documentElement.classList.contains("iu-vault-app-init");
+      },
+      { timeout: 30000 }
+    )
+    .catch(() => {});
+}
+
 async function clickReal(locator, label) {
   try {
     await locator.waitFor({ state: "attached", timeout: 15000 });
@@ -175,29 +189,39 @@ async function clickReal(locator, label) {
     const msg = err && err.message ? err.message : String(err);
     throw failError("toggle_not_found", label + " — " + msg, { label, error: msg });
   }
-  try {
-    await locator.scrollIntoViewIfNeeded();
-  } catch (err) {
-    const msg = err && err.message ? err.message : String(err);
-    throw failError("click_not_performed", label + " scroll failed — " + msg, { label, error: msg });
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    if (attempt > 0) {
+      await locator.page().waitForTimeout(300);
+    }
+    try {
+      await locator.scrollIntoViewIfNeeded();
+    } catch (err) {
+      const msg = err && err.message ? err.message : String(err);
+      lastErr = failError("click_not_performed", label + " scroll failed — " + msg, { label, error: msg });
+      continue;
+    }
+    let box = null;
+    try {
+      box = await locator.boundingBox();
+    } catch (err) {
+      const msg = err && err.message ? err.message : String(err);
+      lastErr = failError("click_target_not_visible", label + " — " + msg, { label, error: msg });
+      continue;
+    }
+    if (!box || box.width < 1 || box.height < 1) {
+      lastErr = failError("click_target_not_visible", label + " has no bounding box", { label, box });
+      continue;
+    }
+    try {
+      await locator.click({ timeout: 10000 });
+      return { force: false, attempts: attempt + 1 };
+    } catch (err) {
+      const msg = err && err.message ? err.message : String(err);
+      lastErr = failError("click_not_performed", label + " — " + msg, { label, error: msg, forceAttempted: false });
+    }
   }
-  let box = null;
-  try {
-    box = await locator.boundingBox();
-  } catch (err) {
-    const msg = err && err.message ? err.message : String(err);
-    throw failError("click_target_not_visible", label + " — " + msg, { label, error: msg });
-  }
-  if (!box || box.width < 1 || box.height < 1) {
-    throw failError("click_target_not_visible", label + " has no bounding box", { label, box });
-  }
-  try {
-    await locator.click({ timeout: 10000 });
-    return { force: false };
-  } catch (err) {
-    const msg = err && err.message ? err.message : String(err);
-    throw failError("click_not_performed", label + " — " + msg, { label, error: msg, forceAttempted: false });
-  }
+  throw lastErr || failError("click_not_performed", label + " — unknown click failure", { label });
 }
 
 /**
@@ -209,6 +233,7 @@ async function prepareLimitScenario(page, opts) {
   await page.addInitScript(() => {
     try {
       localStorage.removeItem("iu.calendar.store.v1");
+      localStorage.removeItem("iu:vault:app-lock-active:v1");
     } catch (_) {}
     try {
       indexedDB.deleteDatabase("iu.calendar.idb");
@@ -244,6 +269,7 @@ async function prepareLimitScenario(page, opts) {
       typeof window.iuCalendarService.calendarCreateEvent === "function",
     { timeout: 90000 }
   );
+  await waitForVaultBootReady(page);
   if (typeof options.afterReady === "function") {
     await options.afterReady(page);
   }

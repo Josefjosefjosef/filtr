@@ -5,6 +5,7 @@ import { APP_LOCK_HINT_KEY, registerVaultLockBroadcastListener } from "./iu-vaul
 import { isWipeConfirmPhraseAccepted, WIPE_CONFIRM_PHRASE } from "./iu-vault-wipe-v1.js";
 
 const LOCK_SCREEN_ID = "iuVaultAppLockScreen";
+let lockUiEpoch = 0;
 
 export function syncAppLockHintFromMeta(meta) {
   if (!meta) return;
@@ -148,17 +149,47 @@ function applyUnlockActionVisibility(method, deviceSupported) {
 
 export async function refreshGlobalAppLockUi(vault) {
   if (!vault) return;
+  const epoch = ++lockUiEpoch;
   const configured = await vault.getSecurityConfigured();
+  if (epoch !== lockUiEpoch) return;
   const st = vault.getState();
   const method = configured && configured.unlockMethod ? configured.unlockMethod : "none";
   const deviceSupported = await vault.detectDeviceSupport();
+  if (epoch !== lockUiEpoch) return;
   const locked = method !== "none" && !st.unlocked;
 
   syncAppLockHintFromMeta(configured && configured.meta ? configured.meta : null);
-  applyAppLockedPresentation(locked);
+  let bootPending = false;
+  try {
+    bootPending = !!(locked && window.__iuVaultBootLockDecisionPending);
+  } catch (_) {}
+
+  if (epoch !== lockUiEpoch) return;
+
+  if (bootPending) {
+    try {
+      window.__iuVaultBootPhase = "initializing";
+      document.documentElement.classList.add("iu-vault-app-init");
+      document.documentElement.classList.remove("iu-vault-app-locked");
+    } catch (_) {}
+    applyAppLockedPresentation(false);
+  } else if (locked) {
+    try {
+      window.__iuVaultBootPhase = "locked";
+      document.documentElement.classList.remove("iu-vault-app-init");
+    } catch (_) {}
+    applyAppLockedPresentation(true);
+  } else {
+    try {
+      window.__iuVaultBootLockDecisionPending = false;
+      window.__iuVaultBootPhase = "unlocked";
+      document.documentElement.classList.remove("iu-vault-app-init");
+    } catch (_) {}
+    applyAppLockedPresentation(false);
+  }
 
   try {
-    window.__iuVaultDeferMindMenuMount = !!locked;
+    window.__iuVaultDeferMindMenuMount = bootPending || locked;
     if (locked && typeof window.iuArticleActionsCloseOverlay === "function") {
       window.iuArticleActionsCloseOverlay();
     }
@@ -429,6 +460,11 @@ export async function enforceFailClosedAppLock(vault, meta) {
     meta.mindMenuUnlockMethod === "device";
   if (!needsReauth) return;
   syncAppLockHintFromMeta(meta);
+  try {
+    window.__iuVaultBootLockDecisionPending = false;
+    window.__iuVaultBootPhase = "locked";
+    document.documentElement.classList.remove("iu-vault-app-init");
+  } catch (_) {}
   applyAppLockedPresentation(true);
   try {
     window.__iuVaultHydrationPending = true;

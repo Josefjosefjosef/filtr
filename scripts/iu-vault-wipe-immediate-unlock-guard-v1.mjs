@@ -74,6 +74,18 @@ async function main() {
     });
     await page.waitForFunction(() => !!(window.iuVault && window.iuVault.wipePersonal), null, { timeout: 60000 });
 
+    await page.waitForFunction(
+      () => {
+        if (document.documentElement.classList.contains("iu-vault-app-init")) return false;
+        const phase = window.__iuVaultBootPhase;
+        if (phase === "locked") return document.documentElement.classList.contains("iu-vault-app-locked");
+        if (phase === "unlocked") return false;
+        return document.documentElement.classList.contains("iu-vault-app-locked");
+      },
+      null,
+      { timeout: 30000 }
+    );
+
     const beforeWipeLocked = await page.evaluate(() => document.documentElement.classList.contains("iu-vault-app-locked"));
     if (!beforeWipeLocked) fails.push("not_locked_before_wipe");
 
