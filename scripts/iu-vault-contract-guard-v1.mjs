@@ -126,14 +126,16 @@ async function runPlaywrightTests() {
         notes: [{ id: "iu-test-note-1", title, content: "IU_TEST_SECRET_body", tags: [], pinned: false, createdAt: Date.now(), updatedAt: Date.now() }],
       };
       localStorage.setItem("iu.notes.store.v1", JSON.stringify(payload));
+      await window.iuVault.flushPendingWrites();
     }, noteTitle);
-    await page.waitForFunction(() => {
+    await page.waitForFunction(async () => {
       try {
-        return !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        return !!(await readRecord("iu.notes.store.v1"));
       } catch (_) {
         return false;
       }
-    }, null, { timeout: 10000 });
+    }, null, { timeout: 30000 });
 
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });

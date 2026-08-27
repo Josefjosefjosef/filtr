@@ -22,6 +22,24 @@ const BASE = `http://localhost:${PORT}/projects/`;
 const MARKER = `IU_LOCK_UNLOCK_${Date.now()}`;
 const MAILBOX_MARKER = `IU_REAL_PC_PERSIST_${Date.now()}`;
 
+const IDB_ENC_KEYS = {
+  notes: "iu.notes.store.v1",
+  tasks: "iu.tasks.mvp.v1",
+  calendar: "iu.calendar.store.v1",
+  mailbox: "iu_mailboxes_v1",
+};
+
+async function readIdbEncPresence(page, keys = IDB_ENC_KEYS) {
+  return page.evaluate(async (keyMap) => {
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+    const out = {};
+    for (const [name, storageKey] of Object.entries(keyMap)) {
+      out[name] = !!(await readRecord(storageKey));
+    }
+    return out;
+  }, keys);
+}
+
 function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   return new Promise((resolve, reject) => {
@@ -318,9 +336,7 @@ async function main() {
     if (!beforeProtect.notes || !beforeProtect.tasks) fails.push("seed_not_visible_before_protect");
     if (!beforeMailbox) fails.push("mailbox_seed_not_visible_before_protect");
 
-    const encBeforeProtect = await page.evaluate(() => ({
-      mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
-    }));
+    const encBeforeProtect = await readIdbEncPresence(page, { mailbox: IDB_ENC_KEYS.mailbox });
     if (!encBeforeProtect.mailbox) fails.push("mailbox_missing_enc_before_protect");
 
     const activated = await activateProtection(page);
@@ -344,12 +360,7 @@ async function main() {
         if (!securityUiAfterSetup.metaDev) fails.push("device_meta_not_set_after_setup");
       }
 
-      const encBeforeLock = await page.evaluate(() => ({
-        notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
-        tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
-        calendar: !!localStorage.getItem("iu:vault:enc:v1:iu.calendar.store.v1"),
-        mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
-      }));
+      const encBeforeLock = await readIdbEncPresence(page);
       if (!encBeforeLock.notes || !encBeforeLock.tasks) fails.push("missing_enc_before_lock");
       if (!encBeforeLock.mailbox) fails.push("mailbox_missing_enc_before_lock");
 
@@ -380,10 +391,7 @@ async function main() {
       if (!lockedState.globalLockVisible) fails.push("global_lock_hidden_while_locked");
       if (!lockedState.htmlLocked) fails.push("html_not_locked_while_locked");
 
-      const encWhileLocked = await page.evaluate(() => ({
-        notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
-        tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
-      }));
+      const encWhileLocked = await readIdbEncPresence(page, { notes: IDB_ENC_KEYS.notes, tasks: IDB_ENC_KEYS.tasks });
       if (!encWhileLocked.notes || !encWhileLocked.tasks) fails.push("enc_deleted_on_lock");
 
       await page.evaluate(() => {
@@ -496,11 +504,11 @@ async function main() {
         }
       }
 
-      const encAfterReopen = await page2.evaluate(() => ({
-        notes: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
-        tasks: !!localStorage.getItem("iu:vault:enc:v1:iu.tasks.mvp.v1"),
-        mailbox: !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"),
-      }));
+      const encAfterReopen = await readIdbEncPresence(page2, {
+        notes: IDB_ENC_KEYS.notes,
+        tasks: IDB_ENC_KEYS.tasks,
+        mailbox: IDB_ENC_KEYS.mailbox,
+      });
       if (!encAfterReopen.notes || !encAfterReopen.tasks) fails.push("enc_missing_after_browser_reopen");
       if (!encAfterReopen.mailbox) fails.push("mailbox_enc_missing_after_browser_reopen");
 

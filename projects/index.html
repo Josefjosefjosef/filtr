@@ -20,8 +20,9 @@
       html.iu-vault-app-locked { background: #0b1f33; }
       html.iu-vault-app-init body,
       html.iu-vault-app-locked body { overflow: hidden !important; }
-      html.iu-vault-app-init body > :not(#iuVaultAppLockScreen):not(script):not(style):not(noscript):not(link),
-      html.iu-vault-app-locked body > :not(#iuVaultAppLockScreen):not(script):not(style):not(noscript):not(link) {
+      html.iu-vault-app-init body > :not(#iuVaultAppLockScreen):not(#iuVaultStorageRecoveryScreen):not(script):not(style):not(noscript):not(link),
+      html.iu-vault-app-locked body > :not(#iuVaultAppLockScreen):not(#iuVaultStorageRecoveryScreen):not(script):not(style):not(noscript):not(link),
+      html.iu-vault-storage-recovery body > :not(#iuVaultStorageRecoveryScreen):not(script):not(style):not(noscript):not(link) {
         visibility: hidden !important;
         pointer-events: none !important;
       }
@@ -29,6 +30,33 @@
         display: none !important;
         visibility: hidden !important;
         pointer-events: none !important;
+      }
+      html.iu-vault-storage-recovery body { overflow: hidden !important; background: #0b1f33; }
+      html.iu-vault-storage-recovery #iuVaultStorageRecoveryScreen {
+        display: flex !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+      #iuVaultStorageRecoveryScreen.iuVaultStorageRecoveryScreen {
+        position: fixed;
+        inset: 0;
+        z-index: 10070;
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding: max(20px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+        background: rgba(11, 31, 51, 0.92);
+        backdrop-filter: blur(6px);
+        overflow: auto;
+      }
+      #iuVaultStorageRecoveryScreen .iuVaultLockOverlay__panel {
+        width: min(420px, 100%);
+        margin: 12vh auto 24px;
+      }
+      #iuVaultStorageRecoveryScreen[hidden] { display: none !important; }
+      html.iu-vault-storage-recovery #iuVaultStorageRecoveryScreen[hidden] {
+        display: flex !important;
+        visibility: visible !important;
       }
       #iuVaultAppLockScreen.iuVaultAppLockScreen {
         position: fixed;
@@ -2617,6 +2645,14 @@ require-trusted-types-for 'script';
           <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultWipeCancelBtn">Zrušit</button>
         </div>
         <p class="iuVaultLockOverlay__err" id="iuVaultLockErr" aria-live="polite"></p>
+      </div>
+    </div>
+    <div id="iuVaultStorageRecoveryScreen" class="iuVaultStorageRecoveryScreen" hidden aria-hidden="true">
+      <div class="iuVaultLockOverlay__panel iuVaultAppLockScreen" role="alertdialog" aria-modal="true" aria-labelledby="iuVaultStorageRecoveryTitle">
+        <h1 id="iuVaultStorageRecoveryTitle" class="iuVaultLockOverlay__title">Osobní data nelze bezpečně otevřít</h1>
+        <p class="iuVaultLockOverlay__text">Vaše chráněná data v tomto prohlížeči existují, ale bezpečné úložiště se nepodařilo načíst. InfoUzel záměrně nezobrazuje prázdný stav a vaše data nemazá.</p>
+        <p class="iuVaultLockOverlay__text">Zkuste stránku znovu načíst. Pokud problém přetrvává, neprovádějte reset ani mazání dat.</p>
+        <p class="iuVaultLockOverlay__err" id="iuVaultStorageRecoveryDetail" aria-live="polite"></p>
       </div>
     </div>
     <!-- P0 desktop: --iuDesktopVScrollbarPx vždy nastavené (0px i kladné); innerWidth−body.clientWidth + 3× rAF = bez race se stable gutter před topbar paint. -->

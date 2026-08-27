@@ -81,16 +81,20 @@ async function runSetupPin(page, pin, expectFailMode) {
     const pin = payload.pin;
     const expectFailMode = !!payload.expectFailMode;
     const nativeGet = (key) => Storage.prototype.getItem.call(localStorage, key);
-    const encKey = (k) => "iu:vault:enc:v1:" + k;
     const state = window.__iuMigrateProbe;
     const { setupPin } = await import("/assets/iu-vault-pin-v1.js");
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
     await setupPin(pin, pin);
     if (expectFailMode) {
+      const idbRec = await readRecord("iu_moje_sluzby_banks_state_v1");
       const quickChecks = {
-        legacyEncCreated: !!nativeGet(encKey("iu_moje_sluzby_banks_state_v1")),
+        legacyIdbCreated: !!idbRec,
         legacyPlainNative: nativeGet("iu_moje_sluzby_banks_state_v1") === state.expected.legacyPlain,
       };
-      return { pass: Object.values(quickChecks).every(Boolean), checks: quickChecks };
+      return {
+        pass: quickChecks.legacyIdbCreated && quickChecks.legacyPlainNative,
+        checks: quickChecks,
+      };
     }
     return { ok: true };
   }, { pin, expectFailMode });
@@ -118,6 +122,7 @@ async function readBackChecks(page) {
     const { getMdk } = await import("/assets/iu-vault-lock-v1.js");
     const { decryptString } = await import("/assets/iu-vault-core-v1.js");
     const { vaultGetItem } = await import("/assets/iu-vault-storage-v1.js");
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
     const mdkNow = getMdk();
     const readPlainKey = async (key) => {
       try {
@@ -155,7 +160,7 @@ async function readBackChecks(page) {
       pending: eqStored(after.pending, expected.pending),
       calendar: eqStored(after.calendar, expected.calendar),
       orphanPreserved: !!after.orphanEnc && after.orphanEnc === orphanBefore,
-      legacyEncCreated: !!nativeGet(encKey("iu_moje_sluzby_banks_state_v1")),
+      legacyIdbCreated: !!(await readRecord("iu_moje_sluzby_banks_state_v1")),
     };
     return { pass: Object.values(checks).every(Boolean), checks };
   });

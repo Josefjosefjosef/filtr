@@ -18,7 +18,7 @@ import {
   isProtectedStorageKey,
 } from "./iu-vault-protected-keys-v1.js";
 import { getMdk } from "./iu-vault-lock-v1.js";
-import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage } from "./iu-vault-storage-v1.js";
+import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage, isEmptyShapedVaultPlaintext } from "./iu-vault-storage-v1.js";
 
 function collectPlaintextProtectedKeys() {
   captureNativeLocalStorage();
@@ -43,6 +43,9 @@ async function withMigrateLock(fn) {
 export async function migratePlaintextToVault() {
   return withMigrateLock(async () => {
     const meta = await readMeta();
+    if (meta && meta.l1IdbOnly && meta.migrationComplete) {
+      return { skipped: true, reason: "l1_idb_only" };
+    }
     const checkpoint = await readMigrationCheckpoint(MIGRATION_ID);
     const doneKeys = new Set(checkpoint && checkpoint.doneKeys ? checkpoint.doneKeys : []);
 
@@ -60,8 +63,21 @@ export async function migratePlaintextToVault() {
 
       const existing = await readRecord(key);
       if (existing) {
-        const roundtrip = await decryptString(mdk, key, existing);
+        let roundtrip = null;
+        try {
+          roundtrip = await decryptString(mdk, key, existing);
+        } catch (_) {
+          roundtrip = null;
+        }
+        if (plaintext == null) {
+          doneKeys.add(key);
+          continue;
+        }
         if (roundtrip !== plaintext) {
+          if (isEmptyShapedVaultPlaintext(plaintext, key) && roundtrip && !isEmptyShapedVaultPlaintext(roundtrip, key)) {
+            doneKeys.add(key);
+            continue;
+          }
           const envelope = await encryptString(mdk, key, plaintext);
           await persistEnvelope(key, envelope);
           const verify = await decryptString(mdk, key, envelope);

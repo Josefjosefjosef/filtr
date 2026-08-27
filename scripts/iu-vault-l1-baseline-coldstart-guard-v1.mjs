@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 /**
- * L1 no-security baseline cold-start guard.
- * Proves: without PIN, multi-module writes survive process restart,
- * and MDK survives simulated IDB key-store loss via localStorage backup.
+ * L1 no-security baseline cold-start guard (IDB-only architecture).
  */
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import fs from "fs";
-import { bootstrapGuardContext, waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
+import { waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
 import {
   pickGuardPort,
   startGuardStaticServer,
@@ -30,10 +28,9 @@ const KEYS = {
 };
 
 function staticChecks(fails) {
-  const lockJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-lock-v1.js"), "utf8");
-  if (!/LEVEL1_MDK_BACKUP_KEY/.test(lockJs)) fails.push("missing_level1_mdk_backup_key");
-  if (!/restoreLevel1MdkFromBackup/.test(lockJs)) fails.push("missing_restore_from_backup");
-  if (!/17-mdk-orphan-ciphertext/.test(lockJs)) fails.push("missing_orphan_cipher_diag");
+  const storageJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-storage-v1.js"), "utf8");
+  if (/nativeSetItem\(encStorageKey/.test(storageJs)) fails.push("storage_still_writes_ls_enc_mirror");
+  if (!fs.existsSync(path.join(REPO, "assets", "iu-vault-l1-migrate-v1.js"))) fails.push("missing_l1_migrate_module");
 }
 
 function payloads(tag) {
@@ -46,37 +43,19 @@ function payloads(tag) {
   };
 }
 
-async function seedL1(page, tag) {
-  return page.evaluate(async ({ data, marker }) => {
-    const sec = await window.iuVault.getSecurityConfigured();
-    if (sec.unlockMethod !== "none") return { ok: false, reason: "security_not_none:" + sec.unlockMethod };
-    for (const [k, v] of Object.entries(data)) localStorage.setItem(k, v);
-    await window.iuVault.flushPendingWrites();
-    const backup = localStorage.getItem("iu:vault:mdk-level1-backup:v1");
-    const out = { backup: !!backup };
-    for (const k of Object.keys(data)) {
-      out[k] = !!localStorage.getItem("iu:vault:enc:v1:" + k);
-    }
-    out.marker = marker;
-    return { ok: true, out };
-  }, { data: payloads(tag), marker: tag });
-}
-
 async function readMarkers(page, tag) {
   return page.evaluate(async ({ keys, marker }) => {
-    const sec = await window.iuVault.getSecurityConfigured();
     const { vaultGetItem } = await import("/assets/iu-vault-storage-v1.js");
-    const out = { unlockMethod: sec.unlockMethod, keys: {} };
+    const out = { unlockMethod: (await window.iuVault.getSecurityConfigured()).unlockMethod, keys: {} };
     for (const [name, key] of Object.entries(keys)) {
       let raw = null;
       let err = null;
-      try { raw = await vaultGetItem(key); } catch (e) { err = String(e.message || e); }
-      const shim = localStorage.getItem(key);
-      out.keys[name] = {
-        vaultHas: raw != null && String(raw).includes(marker),
-        shimHas: shim != null && String(shim).includes(marker),
-        err,
-      };
+      try {
+        raw = await vaultGetItem(key);
+      } catch (e) {
+        err = String(e.message || e);
+      }
+      out.keys[name] = { vaultHas: raw != null && String(raw).includes(marker), err };
     }
     return out;
   }, { keys: KEYS, marker: tag });
@@ -87,43 +66,62 @@ async function main() {
   staticChecks(fails);
   let server = null;
   let browser = null;
-  let page = null;
-  let context = null;
+  const profile = fs.mkdtempSync(path.join(require("os").tmpdir(), "iu-l1-base-"));
+
   try {
     const started = await startGuardStaticServer(pickGuardPort(9160, 400));
     server = started;
     const base = `http://127.0.0.1:${started.port}/projects/`;
     browser = await chromium.launch({ headless: true });
-    context = await bootstrapGuardContext(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-    page = await context.newPage();
-    await page.goto(`${base}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 90000 });
-    await waitForVaultReady(page, 90000);
-    await page.evaluate(() => {
+
+    const ctx1 = await chromium.launchPersistentContext(profile, {
+      headless: true,
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page1 = await ctx1.newPage();
+    await page1.goto(`${base}?nosw=1`, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitForVaultReady(page1, 90000);
+    await page1.evaluate(() => {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
     });
-    const seed = await seedL1(page, MARKER);
-    if (!seed.ok) fails.push(`seed:${seed.reason}`);
-    else if (!seed.out.backup) fails.push("level1_mdk_backup_missing_after_save");
+    await page1.evaluate(async ({ data }) => {
+      for (const [k, v] of Object.entries(data)) localStorage.setItem(k, v);
+      await window.iuVault.flushPendingWrites();
+    }, { data: payloads(MARKER) });
+    await ctx1.close();
 
-    await page.evaluate(async () => {
-      const { deleteKeyRecord } = await import("/assets/iu-vault-db-v1.js");
-      await deleteKeyRecord("mdk:level1");
+    const ctx2 = await chromium.launchPersistentContext(profile, {
+      headless: true,
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
     });
-
-    await page.reload({ waitUntil: "domcontentloaded", timeout: 90000 });
-    await waitForVaultReady(page, 90000);
-    const after = await readMarkers(page, MARKER);
+    const page2 = await ctx2.newPage();
+    await page2.goto(`${base}?nosw=1&cold=1`, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitForVaultReady(page2, 90000);
+    const after = await readMarkers(page2, MARKER);
     if (after.unlockMethod !== "none") fails.push(`unlock_method:${after.unlockMethod}`);
-    for (const name of ["note", "task", "cal", "parcel"]) {
+    for (const name of ["note", "task", "cal", "parcel", "prefs"]) {
       const rec = after.keys[name];
-      if (!rec || !rec.vaultHas) fails.push(`mdk_restore_fail:${name}:${rec && rec.err ? rec.err : "no_marker"}`);
+      if (!rec || !rec.vaultHas) fails.push(`cold_persist_fail:${name}:${rec && rec.err ? rec.err : "no_marker"}`);
     }
+    const lsState = await page2.evaluate(() => ({
+      backup: !!localStorage.getItem("iu:vault:mdk-level1-backup:v1"),
+      enc: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
+    }));
+    if (lsState.backup) fails.push("raw_backup_present");
+    if (lsState.enc) fails.push("ls_enc_mirror_present");
+    await ctx2.close();
   } catch (e) {
     fails.push(`runtime:${String(e && e.message ? e.message : e)}`);
   } finally {
-    await closePlaywrightSession(page, context, browser);
     await stopGuardProcess(server && server.proc ? server.proc : null);
+    try {
+      fs.rmSync(profile, { recursive: true, force: true });
+    } catch (_) {}
   }
 
   const pass = fails.length === 0;

@@ -11,6 +11,8 @@ import {
   readSecurityConfiguredState,
   setAppLockHintActive,
   registerVaultLockBroadcastListener,
+  isVaultStorageRecoveryRequired,
+  getVaultStorageRecoveryReason,
 } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
@@ -115,6 +117,26 @@ async function initVault() {
   } catch (_) {}
 
   let meta = await ensureLevel1Mdk();
+
+  if (isVaultStorageRecoveryRequired()) {
+    const { showVaultStorageRecovery } = await import("./iu-vault-l1-recovery-ui-v1.js");
+    showVaultStorageRecovery(getVaultStorageRecoveryReason());
+    return { meta, storageRecovery: true };
+  }
+
+  if (meta && meta.securityLevel === 1 && !meta.pinEnabled && !meta.deviceEnabled) {
+    const { requestVaultStoragePersist } = await import("./iu-vault-l1-recovery-ui-v1.js");
+    requestVaultStoragePersist()
+      .then((res) => {
+        recordVaultPersistenceEvent("09-storage-persist", {
+          supported: !!res.supported,
+          persisted: !!res.persisted,
+          requested: !!res.requested,
+        });
+      })
+      .catch(() => {});
+  }
+
   let desktopJoinMdk = null;
 
   if (meta.pinEnabled || meta.deviceEnabled || meta.mindMenuUnlockMethod === "pin" || meta.mindMenuUnlockMethod === "device") {
@@ -157,6 +179,7 @@ const boot = await initVault().catch((err) => {
 });
 const meta = boot && boot.meta ? boot.meta : boot;
 const desktopJoinMdk = boot && boot.desktopJoinMdk ? boot.desktopJoinMdk : null;
+const storageRecoveryBoot = !!(boot && boot.storageRecovery);
 
 const api = {
   getState: () => getVaultState(),
@@ -332,6 +355,8 @@ const api = {
   refreshAppLockUi: () => refreshGlobalAppLockUi(api),
   isPersistBlocked: (key) => isVaultPersistBlocked(key),
   isHydrationComplete: () => !!window.__iuVaultHydrationComplete,
+  isStorageRecoveryRequired: () => isVaultStorageRecoveryRequired(),
+  getStorageRecoveryReason: () => getVaultStorageRecoveryReason(),
   isAppLocked: async () => {
     const configured = await readSecurityConfiguredState();
     const st = getVaultState();
@@ -343,6 +368,8 @@ window.iuVault = api;
 
 if (window.__iuVaultBootError && meta) {
   await enforceFailClosedAppLock(api, meta);
+} else if (storageRecoveryBoot) {
+  registerVaultLockBroadcastListener(api);
 } else {
   registerVaultLockBroadcastListener(api);
   if (desktopJoinMdk) {
