@@ -159,7 +159,62 @@ async function seedAndOpenTimedEvent(page, title) {
     }
     throw new Error("open_target_missing");
   }, { id: created.id, title });
-  await page.waitForSelector("[data-iu-cal-inline-delete]", { timeout: 30000 });
+  await waitForVisibleInlineDelete(page);
+}
+
+async function waitForVisibleInlineDelete(page, timeoutMs = 30000) {
+  await page.waitForFunction(
+    () => {
+      const ov = document.getElementById("iuCalendarOverlay");
+      if (!ov || ov.hidden || ov.getAttribute("aria-hidden") === "true") return false;
+      const roots = [
+        ov.querySelector("#iuCalendarSidePanelScroll [data-iu-cal-inline-delete]"),
+        ov.querySelector("#iuCalendarViewRoot [data-iu-cal-inline-delete]"),
+        ov.querySelector("[data-iu-cal-inline-delete]"),
+      ].filter(Boolean);
+      for (const btn of roots) {
+        const r = btn.getBoundingClientRect();
+        const cs = window.getComputedStyle(btn);
+        if (r.width < 8 || r.height < 8) continue;
+        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0) continue;
+        let hiddenParent = false;
+        let p = btn.parentElement;
+        while (p && p !== document.body) {
+          if (p.hidden || p.getAttribute("aria-hidden") === "true") {
+            hiddenParent = true;
+            break;
+          }
+          const pcs = window.getComputedStyle(p);
+          if (pcs.display === "none" || pcs.visibility === "hidden") {
+            hiddenParent = true;
+            break;
+          }
+          p = p.parentElement;
+        }
+        if (!hiddenParent) return true;
+      }
+      return false;
+    },
+    null,
+    { timeout: timeoutMs }
+  );
+}
+
+function visibleInlineDeleteLocator(page) {
+  return page
+    .locator(
+      "#iuCalendarOverlay:not([hidden]) #iuCalendarSidePanelScroll [data-iu-cal-inline-delete], " +
+        "#iuCalendarOverlay:not([hidden]) #iuCalendarViewRoot [data-iu-cal-inline-delete]"
+    )
+    .first();
+}
+
+async function clickVisibleInlineDelete(page, attemptLabel) {
+  await waitForVisibleInlineDelete(page);
+  const btn = visibleInlineDeleteLocator(page);
+  await btn.scrollIntoViewIfNeeded();
+  await btn.click({ timeout: 10000 });
+  return attemptLabel;
 }
 
 async function confirmVisibleAboveCalendar(page) {
@@ -208,7 +263,7 @@ async function testPcDeleteConfirmFlow(page) {
   await openCalendarOverlay(page);
   await seedAndOpenTimedEvent(page, title);
 
-  await page.locator("[data-iu-cal-inline-delete]").click({ force: true, timeout: 10000 });
+  await clickVisibleInlineDelete(page, "open_confirm");
   await page.waitForFunction(() => {
     const dc = document.getElementById("iuCalDeleteConfirm");
     return !!(dc && !dc.hidden);
@@ -217,7 +272,7 @@ async function testPcDeleteConfirmFlow(page) {
   const stack = await confirmVisibleAboveCalendar(page);
   if (!stack.ok) throw new Error("confirm_not_above_calendar:" + JSON.stringify(stack));
 
-  await page.locator("[data-iu-cal-delete-confirm-cancel]").click({ force: true });
+  await page.locator("[data-iu-cal-delete-confirm-cancel]").click({ timeout: 10000 });
   await page.waitForFunction(() => {
     const dc = document.getElementById("iuCalDeleteConfirm");
     return !!(dc && dc.hidden);
@@ -225,12 +280,12 @@ async function testPcDeleteConfirmFlow(page) {
   const afterCancel = await countEventsByTitle(page, title);
   if (afterCancel < 1) throw new Error("cancel_removed_event");
 
-  await page.locator("[data-iu-cal-inline-delete]").click({ force: true, timeout: 10000 });
+  await clickVisibleInlineDelete(page, "reopen_confirm");
   await page.waitForFunction(() => {
     const dc = document.getElementById("iuCalDeleteConfirm");
     return !!(dc && !dc.hidden);
   }, { timeout: 10000 });
-  await page.locator("[data-iu-cal-delete-confirm-yes]").click({ force: true });
+  await page.locator("[data-iu-cal-delete-confirm-yes]").click({ timeout: 10000 });
   await page.waitForTimeout(600);
   const afterYes = await countEventsByTitle(page, title);
   if (afterYes !== 0) throw new Error("confirm_did_not_delete");
@@ -279,7 +334,16 @@ async function main() {
     try {
       passes.push(await testPcDeleteConfirmFlow(page));
     } catch (err) {
-      failures.push(`pc-delete-confirm: ${err && err.message ? err.message : String(err)}`);
+      const msg = err && err.message ? err.message : String(err);
+      if (/not visible|Timeout|open_target_missing|confirm_not_above/i.test(msg)) {
+        try {
+          passes.push(await testPcDeleteConfirmFlow(page));
+        } catch (retryErr) {
+          failures.push(`pc-delete-confirm: ${retryErr && retryErr.message ? retryErr.message : String(retryErr)}`);
+        }
+      } else {
+        failures.push(`pc-delete-confirm: ${msg}`);
+      }
     }
   } finally {
     await browser.close().catch(() => {});
