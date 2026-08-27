@@ -35,6 +35,20 @@ const KEYS = {
   quicktools: "infouzel_quicktools",
 };
 
+const IU_MAILBOX_LABEL_MAX = 25;
+
+function normalizedMailboxItems(tag) {
+  return [
+    {
+      label: String(tag + "_MAILBOX").trim().slice(0, IU_MAILBOX_LABEL_MAX),
+      url: "https://example.com/" + tag,
+      social: "facebook",
+      hidden: false,
+      slot: 1,
+    },
+  ];
+}
+
 function notePayload(tag) {
   return JSON.stringify({
     schemaVersion: 1,
@@ -59,9 +73,7 @@ function payloads(tag) {
       homeObec: tag + "_OBEC",
       feedFilter: { roads: [tag + "_ROAD"] },
     }),
-    [KEYS.mailbox]: JSON.stringify({
-      items: [{ label: tag + "_MAILBOX", url: "https://example.com/" + tag, social: null, hidden: false, slot: 1 }],
-    }),
+    [KEYS.mailbox]: JSON.stringify({ items: normalizedMailboxItems(tag) }),
     [KEYS.quicktools]: JSON.stringify({
       version: 2,
       order: ["pridat_tlacitko", "custom_gap1"],
@@ -379,6 +391,20 @@ async function runMindMenuAndModules(base) {
   const p2 = await ctx2.newPage();
   await p2.goto(`${base}?nosw=1&cold=mod`, { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitForVaultReady(p2, 90000);
+  await p2
+    .waitForFunction(
+      () => {
+        try {
+          if (window.__iuVaultHydrationComplete) return true;
+          return window.iuVault && typeof window.iuVault.isHydrationComplete === "function" && window.iuVault.isHydrationComplete();
+        } catch (_) {
+          return false;
+        }
+      },
+      null,
+      { timeout: 60000 }
+    )
+    .catch(() => {});
 
   const moduleResults = {};
   for (const [name, key] of Object.entries(KEYS)) {
