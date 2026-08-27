@@ -123,7 +123,19 @@ async function waitForCustomTile(page) {
 }
 
 async function waitForVisibilityToggle(page, tileId) {
-  await page.waitForSelector(`input[data-iu-quicktools-visible-toggle="${tileId}"]`, { timeout: 15000 });
+  const sel = `input[data-iu-quicktools-visible-toggle="${tileId}"]`;
+  await page.waitForSelector(sel, { state: "attached", timeout: 20000 });
+  await page.waitForFunction(
+    (id) => {
+      const cb = document.querySelector(`input[data-iu-quicktools-visible-toggle="${id}"]`);
+      if (!cb) return false;
+      const st = getComputedStyle(cb);
+      const r = cb.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && st.display !== "none" && st.visibility !== "hidden";
+    },
+    tileId,
+    { timeout: 20000 }
+  );
 }
 
 async function waitForTileHidden(page, tileId) {
@@ -159,10 +171,23 @@ async function openToolsTab(page) {
 
 async function openSettings(page) {
   await page.evaluate(() => document.querySelector("[data-iu-quicktools-settings]")?.click());
-  await page.waitForFunction(() => {
-    const panel = document.getElementById("iuQuickToolsSettingsPanel");
-    return panel && !panel.hidden && panel.querySelector('input[data-iu-quicktools-visible-toggle="bakalari"]');
-  }, null, { timeout: 15000 });
+  await page.waitForFunction(
+    (customId) => {
+      const panel = document.getElementById("iuQuickToolsSettingsPanel");
+      if (!panel || panel.hidden) return false;
+      const bakalari = panel.querySelector('input[data-iu-quicktools-visible-toggle="bakalari"]');
+      const custom = panel.querySelector(`input[data-iu-quicktools-visible-toggle="${customId}"]`);
+      if (!bakalari || !custom) return false;
+      const visible = (el) => {
+        const st = getComputedStyle(el);
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && st.display !== "none" && st.visibility !== "hidden";
+      };
+      return visible(bakalari) && visible(custom);
+    },
+    CUSTOM_ID,
+    { timeout: 20000 }
+  );
 }
 
 async function closeSettings(page) {
