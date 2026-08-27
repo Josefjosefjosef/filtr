@@ -226,7 +226,7 @@ async function runScenarioA(base) {
     !postCold.recovery &&
     migrationMeta &&
     migrationMeta.phase === "complete" &&
-    migrationMeta.resolvedMdk === "idb" &&
+    (migrationMeta.resolvedMdk === "idb" || migrationMeta.resolvedMdk === "idb_checkpoint") &&
     postCold.ok &&
     postCold.plaintext === canonicalPlaintext &&
     !cleanup.backup &&
