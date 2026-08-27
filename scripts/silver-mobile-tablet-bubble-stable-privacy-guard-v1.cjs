@@ -76,6 +76,47 @@ async function measureSpeechLayoutVariants(page, variants) {
         return last;
       }
 
+      async function waitStableSpeechBubble(speechEl, bubbleEl, expectedText, minBubbleHeight) {
+        let lastH = null;
+        let lastT = null;
+        let stable = 0;
+        for (let frame = 0; frame < 60; frame++) {
+          await new Promise((r) => requestAnimationFrame(r));
+          if (String(speechEl.textContent || "").trim() !== expectedText) {
+            stable = 0;
+            continue;
+          }
+          const br = bubbleEl.getBoundingClientRect();
+          if (minBubbleHeight != null && br.height + 0.5 < minBubbleHeight) {
+            stable = 0;
+            lastH = br.height;
+            lastT = br.top;
+            continue;
+          }
+          if (
+            lastH != null &&
+            Math.abs(br.height - lastH) <= 0.75 &&
+            Math.abs(br.top - lastT) <= 0.75
+          ) {
+            stable += 1;
+            if (stable >= 3) return;
+          } else {
+            stable = 0;
+          }
+          lastH = br.height;
+          lastT = br.top;
+        }
+      }
+
+      function detachSilverSpeechRotator(heroEl) {
+        const speechEl = heroEl.querySelector("[data-iu-silver-speech-text]");
+        if (!speechEl || speechEl.dataset.iuGuardSpeechDetached === "1") return speechEl;
+        const fresh = speechEl.cloneNode(true);
+        fresh.dataset.iuGuardSpeechDetached = "1";
+        speechEl.parentNode.replaceChild(fresh, speechEl);
+        return fresh;
+      }
+
       try {
         if (document.fonts && document.fonts.ready) await document.fonts.ready;
       } catch (_) {}
@@ -99,7 +140,10 @@ async function measureSpeechLayoutVariants(page, variants) {
       const privacy1El = hero.querySelector("[data-iu-silver-privacy-line]");
       if (privacy1El) await waitStablePrivacyTop(privacy1El, 3);
 
+      detachSilverSpeechRotator(hero);
+
       const out = [];
+      let oneLineBubbleHeight = null;
       for (let i = 0; i < variantsIn.length; i++) {
         const variant = variantsIn[i];
         const speech = hero.querySelector("[data-iu-silver-speech-text]");
@@ -113,9 +157,18 @@ async function measureSpeechLayoutVariants(page, variants) {
         speech.style.webkitBoxOrient = "vertical";
         speech.style.overflow = "hidden";
         forceReflow(speech);
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
         const bubble = hero.querySelector("[data-iu-silver-speech-bubble]");
+        if (!bubble) {
+          out.push({ id: variant.id, hero_found: false });
+          continue;
+        }
+        const minHeight =
+          variant.id === "two_line" && oneLineBubbleHeight != null ? oneLineBubbleHeight : null;
+        await waitStableSpeechBubble(speech, bubble, variant.text, minHeight);
+        if (variant.id === "one_line") {
+          oneLineBubbleHeight = bubble.getBoundingClientRect().height;
+        }
+
         const badge = hero.querySelector("[data-iu-silver-ai-badge]");
         const p1El = hero.querySelector("[data-iu-silver-privacy-line]");
         const p2El = hero.querySelector("[data-iu-silver-privacy-line-2]");
@@ -362,9 +415,8 @@ async function runGuard() {
           bubble_neon_ok: false,
           bubble_white_text_ok: false,
         });
-        // One retry after extra settle if privacy drifted (async page chrome, not speech contract).
-        if (!mergedProbe.privacy_text_position_fixed) {
-          await p.waitForTimeout(1200);
+        // One bounded retry when speech contract layout is not stable yet.
+        if (!mergedProbe.privacy_text_position_fixed || !mergedProbe.bubble_grows_upward_only) {
           await p.evaluate(async () => {
             try {
               if (document.fonts && document.fonts.ready) await document.fonts.ready;
