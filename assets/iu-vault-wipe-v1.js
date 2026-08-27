@@ -4,7 +4,7 @@
 import { listProtectedExactKeys, listProtectedPrefixKeys } from "./iu-vault-protected-keys-v1.js";
 import { wipeVaultDatabase, wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
 import { clearVaultMemoryCache, ENC_PREFIX } from "./iu-vault-storage-v1.js";
-import { lockVault, clearAppLockHint, postVaultLockMessage } from "./iu-vault-lock-v1.js";
+import { lockVault, clearAppLockHint, postVaultLockMessage, clearLevel1MdkBackup } from "./iu-vault-lock-v1.js";
 
 export const WIPE_CONFIRM_PHRASE = "VYMAZAT OSOBNÍ DATA";
 
@@ -77,6 +77,7 @@ export async function wipePersonalVault() {
       localStorage.removeItem(k);
     } catch (_) {}
   }
+  clearLevel1MdkBackup();
 
   try {
     sessionStorage.removeItem("iuSilver.pendingFirstMessage.v1");
