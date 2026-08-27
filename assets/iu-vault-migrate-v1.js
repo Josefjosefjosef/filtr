@@ -18,7 +18,7 @@ import {
   isProtectedStorageKey,
 } from "./iu-vault-protected-keys-v1.js";
 import { getMdk } from "./iu-vault-lock-v1.js";
-import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage, isEmptyShapedVaultPlaintext } from "./iu-vault-storage-v1.js";
+import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, getMemoryCachePlaintext, listMemoryCacheProtectedKeys, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage, isEmptyShapedVaultPlaintext } from "./iu-vault-storage-v1.js";
 
 function collectPlaintextProtectedKeys() {
   captureNativeLocalStorage();
@@ -29,6 +29,37 @@ function collectPlaintextProtectedKeys() {
     if (isProtectedStorageKey(k)) keys.push(k);
   }
   return keys;
+}
+
+async function collectMigrationKeys(mdk) {
+  const keys = new Set();
+  for (const k of collectPlaintextProtectedKeys()) {
+    if (nativeLocalStorageGet(k) != null) keys.add(k);
+  }
+  for (const k of listMemoryCacheProtectedKeys()) {
+    if (nativeLocalStorageGet(k) != null) continue;
+    const cached = getMemoryCachePlaintext(k);
+    if (cached == null) continue;
+    const existing = await readRecord(k);
+    if (!existing) {
+      keys.add(k);
+      continue;
+    }
+    let roundtrip = null;
+    try {
+      roundtrip = await decryptString(mdk, k, existing);
+    } catch (_) {
+      roundtrip = null;
+    }
+    if (roundtrip !== cached) keys.add(k);
+  }
+  return Array.from(keys);
+}
+
+function readMigrationPlaintext(key) {
+  const native = nativeLocalStorageGet(key);
+  if (native != null) return native;
+  return getMemoryCachePlaintext(key);
 }
 
 const MIGRATION_ID = "plaintext-to-vault-v1";
@@ -43,19 +74,21 @@ async function withMigrateLock(fn) {
 export async function migratePlaintextToVault() {
   return withMigrateLock(async () => {
     const meta = await readMeta();
+    const mdk = getMdk();
     if (meta && meta.l1IdbOnly && meta.migrationComplete) {
-      return { skipped: true, reason: "l1_idb_only" };
+      if ((await collectMigrationKeys(mdk)).length === 0) {
+        return { skipped: true, reason: "l1_idb_only" };
+      }
     }
     const checkpoint = await readMigrationCheckpoint(MIGRATION_ID);
     const doneKeys = new Set(checkpoint && checkpoint.doneKeys ? checkpoint.doneKeys : []);
 
-    const mdk = getMdk();
-    const keys = collectPlaintextProtectedKeys();
+    const keys = await collectMigrationKeys(mdk);
 
     if (keys.length === 0 && meta && meta.migrationComplete) return { skipped: true };
 
     for (const key of keys) {
-      const plaintext = nativeLocalStorageGet(key);
+      const plaintext = readMigrationPlaintext(key);
       if (plaintext == null) {
         doneKeys.add(key);
         continue;

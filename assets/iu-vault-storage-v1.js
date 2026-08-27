@@ -247,6 +247,15 @@ export function memoryCacheSet(key, value) {
   memoryCache.set(String(key), String(value));
 }
 
+export function getMemoryCachePlaintext(storageKey) {
+  const k = String(storageKey);
+  return memoryCache.has(k) ? memoryCache.get(k) : null;
+}
+
+export function listMemoryCacheProtectedKeys() {
+  return Array.from(memoryCache.keys()).filter((k) => isProtectedStorageKey(k));
+}
+
 export function clearVaultMemoryCache() {
   memoryCache.clear();
   writeGeneration.clear();

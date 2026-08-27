@@ -244,10 +244,14 @@ export function initIuNotesOverlay() {
 
   function hasVaultEncBlob(key) {
     try {
-      return !!localStorage.getItem(VAULT_ENC_PREFIX + key);
-    } catch (_) {
-      return false;
-    }
+      if (localStorage.getItem(VAULT_ENC_PREFIX + key)) return true;
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(key)) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
   }
 
   function isNotesReadOpaque() {

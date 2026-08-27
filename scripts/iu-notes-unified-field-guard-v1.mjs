@@ -160,6 +160,11 @@ async function testUnifiedFormUi(page, vp) {
     ? BASE + "&iuInfoSystem=off&nosw=1"
     : BASE + "?iuInfoSystem=off&nosw=1";
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.waitForFunction(
+    () => !!(window.iuVault && window.iuVault.isHydrationComplete && window.iuVault.isHydrationComplete()),
+    null,
+    { timeout: 60000 }
+  );
   await page.evaluate(async () => {
     if (typeof window.__iuEnsureNotesOverlay === "function") {
       await window.__iuEnsureNotesOverlay();

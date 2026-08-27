@@ -157,6 +157,7 @@ async function initVault() {
     try {
       window.__iuVaultHydrationPending = false;
       window.__iuVaultHydrationComplete = true;
+      window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
     } catch (_) {}
   }
 
