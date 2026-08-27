@@ -270,6 +270,9 @@ async function prepareLimitScenario(page, opts) {
     { timeout: 90000 }
   );
   await waitForVaultBootReady(page);
+  await page
+    .waitForFunction(() => window.__iuVaultHydrationComplete === true, { timeout: 45000 })
+    .catch(() => {});
   if (typeof options.afterReady === "function") {
     await options.afterReady(page);
   }
@@ -277,22 +280,25 @@ async function prepareLimitScenario(page, opts) {
   const seeded = await page.evaluate(async (dateIso) => {
     const svc = window.iuCalendarService;
     const results = [];
-    for (let j = 0; j < 3; j++) {
-      results.push(
-        await svc.calendarCreateEvent({
-          date: dateIso,
-          time: "00:00",
-          allDay: true,
-          title: "Guard AD " + (j + 1),
-          note: "",
-          address: "",
-          type: "personal",
-        })
-      );
+    for (let j = 0; j < 3; j += 1) {
+      const res = await svc.calendarCreateEvent({
+        date: dateIso,
+        time: "00:00",
+        allDay: true,
+        title: "Guard AD " + (j + 1),
+        note: "",
+        address: "",
+        type: "personal",
+      });
+      results.push(res);
+      if (!res || !res.ok) break;
       await new Promise((resolve) => setTimeout(resolve, 40));
     }
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
     let allDayCount = 0;
-    for (let attempt = 0; attempt < 20; attempt += 1) {
+    for (let attempt = 0; attempt < 40; attempt += 1) {
       allDayCount = svc
         .calendarGetEventsSnapshot()
         .filter((ev) => ev.date === dateIso && ev.allDay).length;
@@ -301,7 +307,27 @@ async function prepareLimitScenario(page, opts) {
     }
     return { results, allDayCount, dateIso };
   }, iso);
-  if (!seeded || seeded.allDayCount !== 3) {
+  if (!seeded || !Array.isArray(seeded.results) || seeded.results.length !== 3 || seeded.results.some((r) => !r || !r.ok)) {
+    throw failError("seed_failed", "create_results:" + JSON.stringify(seeded && seeded.results), { seeded });
+  }
+  await page
+    .waitForFunction(
+      (dateIso) => {
+        const svc = window.iuCalendarService;
+        if (!svc) return false;
+        return (
+          svc
+            .calendarGetEventsSnapshot()
+            .filter((ev) => ev.date === dateIso && ev.allDay).length === 3
+        );
+      },
+      iso,
+      { timeout: 15000 }
+    )
+    .catch(() => {
+      throw failError("seed_failed", JSON.stringify(seeded), { seeded });
+    });
+  if (seeded.allDayCount !== 3) {
     throw failError("seed_failed", JSON.stringify(seeded), { seeded });
   }
   if (!options.skipApiFourthReject) {
@@ -507,23 +533,13 @@ async function runNegativeSelftests(browser) {
     let code = null;
     try {
       await withPage(async (page) => {
-        await prepareLimitScenario(page, {
-          afterReady: async (p) => {
-            await p.evaluate(() => {
-              const svc = window.iuCalendarService;
-              // Patch after service ready: wrap notice setter if exposed via DOM path by monkeypatching click path.
-              const origQuery = Document.prototype.querySelector;
-              // Intercept notice insertion by clearing notice nodes as they appear.
-              const obs = new MutationObserver(() => {
-                document.querySelectorAll("[data-iu-cal-inline-notice]").forEach((n) => n.remove());
-              });
-              obs.observe(document.documentElement, { childList: true, subtree: true });
-              window.__iuCalGuardBlockNoticeObs = obs;
-            });
-          },
-        });
-        // Stronger: override after form open — patch canAdd path by replacing notice function via inline click hijack.
+        await prepareLimitScenario(page, {});
         await page.evaluate(() => {
+          const obs = new MutationObserver(() => {
+            document.querySelectorAll("[data-iu-cal-inline-notice]").forEach((n) => n.remove());
+          });
+          obs.observe(document.documentElement, { childList: true, subtree: true });
+          window.__iuCalGuardBlockNoticeObs = obs;
           const btn = document.querySelector("[data-iu-cal-inline-all-day]");
           if (!btn) return;
           btn.addEventListener(
@@ -531,7 +547,6 @@ async function runNegativeSelftests(browser) {
             (ev) => {
               ev.stopImmediatePropagation();
               ev.preventDefault();
-              // Intentionally do nothing — no notice, no toggle.
             },
             true
           );
