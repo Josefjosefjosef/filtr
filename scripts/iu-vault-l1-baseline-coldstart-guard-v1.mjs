@@ -11,7 +11,6 @@ import {
   pickGuardPort,
   startGuardStaticServer,
   stopGuardProcess,
-  closePlaywrightSession,
 } from "./guards/guard-playwright-lifecycle.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -65,14 +64,12 @@ async function main() {
   const fails = [];
   staticChecks(fails);
   let server = null;
-  let browser = null;
   const profile = fs.mkdtempSync(path.join(require("os").tmpdir(), "iu-l1-base-"));
 
   try {
     const started = await startGuardStaticServer(pickGuardPort(9160, 400));
     server = started;
     const base = `http://127.0.0.1:${started.port}/projects/`;
-    browser = await chromium.launch({ headless: true });
 
     const ctx1 = await chromium.launchPersistentContext(profile, {
       headless: true,
@@ -131,6 +128,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_L1_BASELINE_COLDSTART_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {
