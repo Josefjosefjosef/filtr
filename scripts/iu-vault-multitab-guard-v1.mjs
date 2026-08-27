@@ -84,14 +84,34 @@ async function main() {
 
     await pageA.waitForTimeout(800);
 
+    await Promise.all([
+      pageA.evaluate(async () => {
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+      }),
+      pageB.evaluate(async () => {
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+      }),
+    ]);
+
     const readBack = await pageA.evaluate(async () => {
       if (!window.iuVault || !window.iuVault.getState().unlocked) return null;
       const raw = localStorage.getItem("iu.notes.store.v1");
       return raw ? JSON.parse(raw) : null;
     });
 
-    const encOnA = await pageA.evaluate(() => !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"));
-    const encOnB = await pageB.evaluate(() => !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"));
+    const persistState = await pageA.evaluate(async () => {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      const env = await readRecord("iu.notes.store.v1");
+      const lsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      return {
+        idbHas: !!(env && (env.ciphertext || env.iv)),
+        lsEncAbsent: !lsEnc,
+      };
+    });
 
     const rawHasPlain = await pageA.evaluate((m) => {
       for (let i = 0; i < localStorage.length; i += 1) {
@@ -104,7 +124,8 @@ async function main() {
     }, marker);
 
     if (rawHasPlain) fails.push("plaintext_notes_after_multitab:" + rawHasPlain);
-    if (!encOnA || !encOnB) fails.push("missing_enc_blob_after_multitab");
+    if (!persistState.idbHas) fails.push("missing_idb_record_after_multitab");
+    if (!persistState.lsEncAbsent) fails.push("ls_enc_mirror_present_after_multitab");
     if (!readBack || !readBack.notes || !readBack.notes[0]) fails.push("notes_unreadable_after_race");
     if (readBack && readBack.notes[0] && !String(readBack.notes[0].title).includes(marker)) {
       fails.push("notes_marker_lost");
