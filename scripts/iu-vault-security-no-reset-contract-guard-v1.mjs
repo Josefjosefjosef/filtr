@@ -73,6 +73,7 @@ function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_SECURITY_NO_RESET_CONTRACT_GUARD_PASS");
+  process.exit(0);
 }
 
 function srcIncludes(src, needle) {

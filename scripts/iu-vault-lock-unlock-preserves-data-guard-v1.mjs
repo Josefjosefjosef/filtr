@@ -18,7 +18,7 @@ const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8970", 10);
-const BASE = `http://localhost:${PORT}/projects/`;
+const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const MARKER = `IU_LOCK_UNLOCK_${Date.now()}`;
 const MAILBOX_MARKER = `IU_REAL_PC_PERSIST_${Date.now()}`;
 
@@ -289,13 +289,20 @@ async function main() {
   const fails = [];
   staticChecks(fails);
 
-  const server = await new Promise((resolve) => {
+  const server = await new Promise((resolve, reject) => {
     const proc = require("child_process").spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
       cwd: REPO,
       env: { ...process.env, PORT: String(PORT) },
       stdio: "ignore",
     });
-    waitForPort("localhost", PORT, 30000).then(() => resolve(proc));
+    waitForPort("127.0.0.1", PORT, 30000)
+      .then(() => resolve(proc))
+      .catch((err) => {
+        try {
+          proc.kill("SIGKILL");
+        } catch (_) {}
+        reject(err);
+      });
   });
 
   const browser = await chromium.launch({ headless: true });
@@ -559,8 +566,29 @@ async function main() {
       if (!afterReopenMailbox) fails.push("mailbox_lost_after_browser_reopen");
     }
   } finally {
-    await browser.close();
-    server.kill();
+    try {
+      await Promise.race([
+        browser.close(),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ]);
+    } catch (_) {}
+    try {
+      if (browser && typeof browser.process === "function") {
+        const bp = browser.process();
+        if (bp && bp.pid) {
+          try {
+            process.kill(bp.pid, "SIGKILL");
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
+    try {
+      server.kill("SIGKILL");
+    } catch (_) {
+      try {
+        server.kill();
+      } catch (_) {}
+    }
   }
 
   const report = {
@@ -575,6 +603,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_LOCK_UNLOCK_PRESERVES_DATA_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

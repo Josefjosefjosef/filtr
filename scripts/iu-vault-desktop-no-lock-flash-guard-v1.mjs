@@ -273,6 +273,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_DESKTOP_NO_LOCK_FLASH_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

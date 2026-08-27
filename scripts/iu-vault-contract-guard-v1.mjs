@@ -224,6 +224,7 @@ async function main() {
     process.exit(1);
   }
   console.log("VAULT_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

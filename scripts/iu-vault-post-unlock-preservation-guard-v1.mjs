@@ -263,6 +263,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_POST_UNLOCK_PRESERVATION_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

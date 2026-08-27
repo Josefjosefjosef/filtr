@@ -203,6 +203,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_WIPE_UI_PROMPT_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

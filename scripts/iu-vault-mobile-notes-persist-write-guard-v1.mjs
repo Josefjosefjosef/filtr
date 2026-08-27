@@ -253,6 +253,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_MOBILE_NOTES_PERSIST_WRITE_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

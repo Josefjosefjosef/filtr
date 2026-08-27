@@ -424,6 +424,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_L1_IDB_ONLY_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {
