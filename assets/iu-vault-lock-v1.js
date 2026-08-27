@@ -102,8 +102,9 @@ async function ensureLevel1KeyRecord() {
     return rec;
   }
   if (await hasCiphertextAtRest()) {
+    // No IDB key and no localStorage backup — ciphertext is irrecoverable, but the app
+    // must still boot (guard resets, pre-backup users). Fresh L1 MDK; orphaned blobs stay at rest.
     lockDiag("17-mdk-orphan-ciphertext", { source: "ensureLevel1KeyRecord" });
-    throw new Error("VAULT_MDK_ORPHAN_CIPHER");
   }
   const mdk = await generateExtractableMdk();
   const rec = { type: "level1", mdk, createdAt: new Date().toISOString() };

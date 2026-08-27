@@ -33,7 +33,7 @@ function staticChecks(fails) {
   const lockJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-lock-v1.js"), "utf8");
   if (!/LEVEL1_MDK_BACKUP_KEY/.test(lockJs)) fails.push("missing_level1_mdk_backup_key");
   if (!/restoreLevel1MdkFromBackup/.test(lockJs)) fails.push("missing_restore_from_backup");
-  if (!/VAULT_MDK_ORPHAN_CIPHER/.test(lockJs)) fails.push("missing_orphan_cipher_guard");
+  if (!/17-mdk-orphan-ciphertext/.test(lockJs)) fails.push("missing_orphan_cipher_diag");
 }
 
 function payloads(tag) {
