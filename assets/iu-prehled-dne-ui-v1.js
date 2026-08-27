@@ -435,6 +435,17 @@ function ensurePrefsHaveFeedFilter(prefs) {
   if (!p.feedFilter) {
     p.feedFilter = ensureFeedFilter(p);
     try {
+      let blocked = false;
+      try {
+        if (document.documentElement.classList.contains("iu-vault-app-init")) blocked = true;
+        if (document.documentElement.classList.contains("iu-vault-app-locked")) blocked = true;
+        if (window.__iuVaultHydrationPending) blocked = true;
+        const st = window.iuVault && window.iuVault.getState && window.iuVault.getState();
+        if (st && !st.unlocked) blocked = true;
+      } catch (_) {}
+      if (blocked) return p;
+      const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
+      if (!raw) return p;
       setPrefs(p);
     } catch (_) {}
   } else {
@@ -3141,10 +3152,45 @@ function isBootNetworkAbort(err) {
   return err instanceof TypeError && /Failed to fetch|Load failed|NetworkError/i.test(msg);
 }
 
+async function waitForVaultHydration() {
+  try {
+    if (window.__iuVaultHydrationComplete) return;
+    if (window.iuVault && typeof window.iuVault.isHydrationComplete === "function" && window.iuVault.isHydrationComplete()) {
+      return;
+    }
+  } catch (_) {}
+  await new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    try {
+      if (window.__iuVaultHydrationComplete) {
+        finish();
+        return;
+      }
+    } catch (_) {}
+    try {
+      window.addEventListener("iu-vault-hydrated", finish, { once: true });
+    } catch (_) {}
+    try {
+      window.addEventListener("iu-vault-ready", () => {
+        try {
+          if (window.__iuVaultHydrationComplete) finish();
+        } catch (_) {}
+      }, { once: true });
+    } catch (_) {}
+    setTimeout(finish, 45000);
+  });
+}
+
 async function boot() {
   markPrehledBootPhase("chmi-boot-start");
   // Explicit legacy HomeCards / smoke probes: do not hydrate Prehled or race navigations.
   if (infoSystemQueryMode() === "off") return;
+  await waitForVaultHydration();
   migrateLocalStateOnce();
   applyCutoverDom();
   // CZ map sprite is not needed for first ČHMÚ cards — defer off critical path.
