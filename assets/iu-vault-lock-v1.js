@@ -5,6 +5,11 @@ import {
   generateMdk,
   decryptString,
   encryptString,
+  exportMdkRaw,
+  importMdkRaw,
+  bytesToB64,
+  b64ToBytes,
+  generateExtractableMdk,
 } from "./iu-vault-core-v1.js";
 import {
   readKeyRecord,
@@ -23,6 +28,89 @@ import {
 } from "./iu-vault-desktop-session-v1.js";
 
 export const APP_LOCK_HINT_KEY = "iu:vault:app-lock-active:v1";
+/** L1-only: mirror MDK in localStorage so IDB key eviction cannot orphan ciphertext. */
+export const LEVEL1_MDK_BACKUP_KEY = "iu:vault:mdk-level1-backup:v1";
+
+export function clearLevel1MdkBackup() {
+  try {
+    localStorage.removeItem(LEVEL1_MDK_BACKUP_KEY);
+  } catch (_) {}
+}
+
+async function hasCiphertextAtRest() {
+  try {
+    const { listEncryptedStorageKeys } = await import("./iu-vault-storage-v1.js");
+    if (listEncryptedStorageKeys().length > 0) return true;
+  } catch (_) {}
+  try {
+    const { ENC_PREFIX } = await import("./iu-vault-storage-v1.js");
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(ENC_PREFIX)) return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+async function persistLevel1MdkBackup(mdk) {
+  if (!mdk) return false;
+  try {
+    const raw = await exportMdkRaw(mdk);
+    localStorage.setItem(LEVEL1_MDK_BACKUP_KEY, bytesToB64(raw));
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function restoreLevel1MdkFromBackup() {
+  try {
+    const b64 = localStorage.getItem(LEVEL1_MDK_BACKUP_KEY);
+    if (!b64) return null;
+    return await importMdkRaw(b64ToBytes(b64));
+  } catch (_) {
+    return null;
+  }
+}
+
+async function ensureLevel1KeyRecord() {
+  let keyRec = await readKeyRecord("mdk:level1");
+  if (keyRec && keyRec.mdk) {
+    if (await persistLevel1MdkBackup(keyRec.mdk)) return keyRec;
+    try {
+      const newMdk = await generateExtractableMdk();
+      const { rotateVaultMdk } = await import("./iu-vault-storage-v1.js");
+      await rotateVaultMdk(keyRec.mdk, newMdk);
+      keyRec = { type: "level1", mdk: newMdk, createdAt: new Date().toISOString(), rotatedForBackup: true };
+      await writeKeyRecord("mdk:level1", keyRec);
+      await persistLevel1MdkBackup(newMdk);
+      lockDiag("15-mdk-rotated-for-backup", { source: "ensureLevel1KeyRecord" });
+      return keyRec;
+    } catch (err) {
+      lockDiag("17-mdk-backup-rotate-fail", {
+        source: "ensureLevel1KeyRecord",
+        errorName: String(err && err.name ? err.name : "Error"),
+      });
+      return keyRec;
+    }
+  }
+  const restored = await restoreLevel1MdkFromBackup();
+  if (restored) {
+    const rec = { type: "level1", mdk: restored, createdAt: new Date().toISOString(), restoredFrom: "localStorage" };
+    await writeKeyRecord("mdk:level1", rec);
+    lockDiag("15-mdk-restored-from-backup", { source: "ensureLevel1KeyRecord" });
+    return rec;
+  }
+  if (await hasCiphertextAtRest()) {
+    lockDiag("17-mdk-orphan-ciphertext", { source: "ensureLevel1KeyRecord" });
+    throw new Error("VAULT_MDK_ORPHAN_CIPHER");
+  }
+  const mdk = await generateExtractableMdk();
+  const rec = { type: "level1", mdk, createdAt: new Date().toISOString() };
+  await writeKeyRecord("mdk:level1", rec);
+  await persistLevel1MdkBackup(mdk);
+  return rec;
+}
 
 let vaultBroadcast = null;
 
@@ -360,12 +448,7 @@ export async function ensureLevel1Mdk() {
   await refreshSecurityMode(meta);
 
   if (meta.securityLevel === 1 && !meta.pinEnabled && !meta.deviceEnabled) {
-    let keyRec = await readKeyRecord("mdk:level1");
-    if (!keyRec || !keyRec.mdk) {
-      const mdk = await generateMdk();
-      await writeKeyRecord("mdk:level1", { type: "level1", mdk, createdAt: new Date().toISOString() });
-      keyRec = await readKeyRecord("mdk:level1");
-    }
+    const keyRec = await ensureLevel1KeyRecord();
     await unlockWithMdk(keyRec.mdk);
     return meta;
   }
@@ -386,9 +469,15 @@ export async function activateLevel1AutoKey() {
   await deleteKeyRecord("mdk:device");
   let keyRec = await readKeyRecord("mdk:level1");
   if (!keyRec || !keyRec.mdk) {
-    const mdk = state.mdk || await generateMdk();
-    await writeKeyRecord("mdk:level1", { type: "level1", mdk, createdAt: new Date().toISOString() });
-    keyRec = await readKeyRecord("mdk:level1");
+    if (state.mdk) {
+      keyRec = { type: "level1", mdk: state.mdk, createdAt: new Date().toISOString() };
+      await writeKeyRecord("mdk:level1", keyRec);
+      await persistLevel1MdkBackup(state.mdk);
+    } else {
+      keyRec = await ensureLevel1KeyRecord();
+    }
+  } else {
+    await persistLevel1MdkBackup(keyRec.mdk);
   }
   await unlockWithMdk(keyRec.mdk);
   await writeMeta(meta);
@@ -482,6 +571,7 @@ export async function storePinWrap(meta, pinWrap) {
   meta.mindMenuUnlockMethod = "pin";
   meta.securityLevel = 3;
   await deleteKeyRecord("mdk:level1");
+  clearLevel1MdkBackup();
   await writeMeta(meta);
   await refreshSecurityMode(meta);
   setAppLockHintActive();
@@ -496,6 +586,7 @@ export async function storeDeviceWrap(meta, deviceWrap) {
   meta.mindMenuUnlockMethod = "device";
   meta.securityLevel = 2;
   await deleteKeyRecord("mdk:level1");
+  clearLevel1MdkBackup();
   await writeMeta(meta);
   await refreshSecurityMode(meta);
   setAppLockHintActive();
