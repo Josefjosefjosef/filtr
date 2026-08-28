@@ -99,12 +99,35 @@ function vaultDisabled() {
   return false;
 }
 
+function conflictForensicsOnlyMode() {
+  try {
+    return new URLSearchParams(location.search || "").get("iuConflictForensics") === "1";
+  } catch (_) {
+    return false;
+  }
+}
+
 async function initVault() {
   if (vaultDisabled()) return null;
 
   installLocalStorageShim();
   initVaultPersistenceDiag();
   registerAutoLockListeners();
+
+  // READ-ONLY physical conflict forensics: do not migrate/repair/write.
+  if (conflictForensicsOnlyMode()) {
+    try {
+      window.__iuVaultConflictForensicsOnly = true;
+      window.__iuVaultHydrationPending = false;
+      window.__iuVaultHydrationComplete = false;
+    } catch (_) {}
+    let meta = null;
+    try {
+      meta = await readMeta();
+    } catch (_) {}
+    return { meta, storageRecovery: false, forensicsOnly: true };
+  }
+
   try {
     window.addEventListener("pagehide", () => {
       flushPendingVaultWrites().catch(() => {});
@@ -181,6 +204,7 @@ const boot = await initVault().catch((err) => {
 const meta = boot && boot.meta ? boot.meta : boot;
 const desktopJoinMdk = boot && boot.desktopJoinMdk ? boot.desktopJoinMdk : null;
 const storageRecoveryBoot = !!(boot && boot.storageRecovery);
+const forensicsOnlyBoot = !!(boot && boot.forensicsOnly);
 
 const api = {
   getState: () => getVaultState(),
@@ -325,6 +349,10 @@ const api = {
   getPersistenceDiag: (options) => getPersistenceDiag(options),
   getPersistenceTimeline: (limit) => getPersistenceTimeline(limit),
   recordPersistenceEvent: (step, detail) => recordVaultPersistenceEvent(step, detail),
+  getConflictForensics: async () => {
+    const { getConflictForensics } = await import("./iu-vault-conflict-forensics-v1.js");
+    return getConflictForensics();
+  },
   setAutoLockPolicy: async (policy) => {
     const { setAutoLockPolicy } = await import("./iu-vault-lock-v1.js");
     const { writeMeta, readMeta: rm } = await import("./iu-vault-db-v1.js");
@@ -389,7 +417,9 @@ const api = {
 
 window.iuVault = api;
 
-if (window.__iuVaultBootError && meta) {
+if (forensicsOnlyBoot) {
+  // No migrate, no recovery UI, no lock enforce — overlay captures read-only topology.
+} else if (window.__iuVaultBootError && meta) {
   await enforceFailClosedAppLock(api, meta);
 } else if (storageRecoveryBoot) {
   registerVaultLockBroadcastListener(api);
