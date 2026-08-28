@@ -78,19 +78,22 @@ async function seedAndProtect(page) {
     await window.iuVault.flushPendingWrites();
     await window.iuVault.lock();
 
-    const enc = (k) => !!localStorage.getItem("iu:vault:enc:v1:" + k);
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+    const encLs = (k) => !!localStorage.getItem("iu:vault:enc:v1:" + k);
+    const encIdb = async (k) => !!(await readRecord(k));
+    const encAtRest = async (k) => encLs(k) || (await encIdb(k));
     return {
       before: { note, task, cal, mailbox, banks, bak, quick, invoice, datovka },
       enc: {
-        note: enc("iu.notes.store.v1"),
-        task: enc("iu.tasks.mvp.v1"),
-        cal: enc("iu.calendar.store.v1"),
-        mailbox: enc("iu_mailboxes_v1"),
-        banks: enc("iu_moje_sluzby_banks_state_v1"),
-        bak: enc("iu_bakalari_profiles"),
-        quick: enc("infouzel_quicktools"),
-        invoice: enc("iu_invoice_form_state_v1"),
-        datovka: enc("infouzel_datovka_profiles_v1"),
+        note: await encAtRest("iu.notes.store.v1"),
+        task: await encAtRest("iu.tasks.mvp.v1"),
+        cal: await encAtRest("iu.calendar.store.v1"),
+        mailbox: await encAtRest("iu_mailboxes_v1"),
+        banks: await encAtRest("iu_moje_sluzby_banks_state_v1"),
+        bak: await encAtRest("iu_bakalari_profiles"),
+        quick: await encAtRest("infouzel_quicktools"),
+        invoice: await encAtRest("iu_invoice_form_state_v1"),
+        datovka: await encAtRest("infouzel_datovka_profiles_v1"),
       },
     };
   }, { marker: MARKER, pin: PIN });
@@ -238,8 +241,14 @@ async function main() {
       fails.push("mailbox_unexpected_shape");
     }
     if (after.quick && !String(after.quick).includes(MARKER + "_QUICK")) fails.push("quick_marker_missing");
-    // Ciphertext must still exist for mailbox after reopen unlock (not wiped).
-    const encAfter = await pageA.evaluate(() => !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1"));
+    // Ciphertext must still exist for mailbox after reopen unlock (IDB-only or LS mirror).
+    const encAfter = await pageA.evaluate(async () => {
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        if (await readRecord("iu_mailboxes_v1")) return true;
+      } catch (_) {}
+      return !!localStorage.getItem("iu:vault:enc:v1:iu_mailboxes_v1");
+    });
     if (!encAfter) fails.push("mailbox_enc_deleted");
     if (!after.unlocked) fails.push("not_unlocked");
     if (!SKIP_HYDRATE && !after.hydrationComplete) fails.push("hydration_incomplete");
