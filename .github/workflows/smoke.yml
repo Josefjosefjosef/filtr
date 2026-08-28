@@ -56,8 +56,20 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
+            PUSH_CHANGED=""
+            PR_CHANGED=""
+            if [ -n "${GITHUB_EVENT_BEFORE:-}" ] && [ "${GITHUB_EVENT_BEFORE}" != "0000000000000000000000000000000000000000" ]; then
+              PUSH_CHANGED="$(git diff --name-only "${GITHUB_EVENT_BEFORE}..${GITHUB_SHA}" || true)"
+            fi
+            PR_CHANGED="$(git diff --name-only origin/main...HEAD || true)"
+            if echo "$PUSH_CHANGED"$'\n'"$PR_CHANGED" | grep -qE '^assets/iu-vault-'; then
+              echo "SMOKE_PUSH_VAULT_RUNTIME_REQUIRES_FULL=YES"
+              node scripts/smoke-data-only-scope.mjs
+              exit $?
+            fi
             {
               echo "data_only=true"
+              echo "vault_runtime_scope=false"
               echo "info_panel_only=false"
               echo "fin_calc_header_only=false"
               echo "datovka_overlay_only=false"

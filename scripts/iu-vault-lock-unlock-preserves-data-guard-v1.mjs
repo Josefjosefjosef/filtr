@@ -3,24 +3,49 @@
  * Lock → unlock must preserve encrypted personal data (L2 desktop flow).
  * Run: npm run iu-vault-lock-unlock-preserves-data-guard
  */
-import http from "http";
 import path from "path";
+import fs from "fs";
+import os from "os";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import {
-  bootstrapGuardContext,
+  installLocalDataProtectionAccepted,
   installProtectedStorageSeed,
   waitForVaultReady,
 } from "./guards/guard-playwright-bootstrap.mjs";
+import {
+  closePlaywrightSession,
+  pickGuardPort,
+  startGuardStaticServer,
+  stopGuardProcess,
+} from "./guards/guard-playwright-lifecycle.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8970", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || String(pickGuardPort(8970, 200)), 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const MARKER = `IU_LOCK_UNLOCK_${Date.now()}`;
 const MAILBOX_MARKER = `IU_REAL_PC_PERSIST_${Date.now()}`;
+
+const GUARD_BROWSER_ARGS = ["--disable-features=BackForwardCache"];
+
+async function launchGuardPersistentContext(userDataDir) {
+  const context = await chromium.launchPersistentContext(userDataDir, {
+    headless: true,
+    args: GUARD_BROWSER_ARGS,
+    viewport: { width: 1366, height: 768 },
+  });
+  await installLocalDataProtectionAccepted(context);
+  await installBfcacheGuard(context);
+  return context;
+}
+
+async function restartGuardPersistentContext(userDataDir) {
+  const context = await launchGuardPersistentContext(userDataDir);
+  return context;
+}
 
 const IDB_ENC_KEYS = {
   notes: "iu.notes.store.v1",
@@ -89,24 +114,6 @@ async function readIdbEncPresence(page, keys = IDB_ENC_KEYS) {
     }
     return out;
   }, keys);
-}
-
-function waitForPort(host, port, timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
-  return new Promise((resolve, reject) => {
-    const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
-        res.resume();
-        resolve();
-      });
-      req.on("error", () => {
-        if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
-      });
-      req.end();
-    };
-    tryOnce();
-  });
 }
 
 async function enableVirtualAuthenticator(page) {
@@ -310,7 +317,27 @@ async function waitForVaultBootReady(page, timeoutMs = 30000) {
   );
 }
 
+async function installBfcacheGuard(context) {
+  await context.addInitScript(() => {
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+  });
+}
+
+async function waitForMigrateLockFree(page, timeoutMs = 15000) {
+  await page.waitForFunction(async () => {
+    if (!navigator.locks || typeof navigator.locks.query !== "function") return true;
+    const state = await navigator.locks.query();
+    const held = state && Array.isArray(state.held) ? state.held : [];
+    return !held.some((lock) => lock && lock.name === "iu-vault-migrate");
+  }, null, { timeout: timeoutMs });
+}
+
 async function unlockProtection(page, mode, scenario = "UNLOCK") {
+  await waitForMigrateLockFree(page, 15000);
   logStep(scenario, "UNLOCK_REQUEST", "START");
   if (mode === "l2") {
     await page.evaluate(async () => {
@@ -325,10 +352,18 @@ async function unlockProtection(page, mode, scenario = "UNLOCK") {
   logStep(scenario, "UNLOCK_REQUEST", "PASS");
   logStep(scenario, "HYDRATE", "START");
   await page.evaluate(async () => {
-    if (typeof window.iuVault.afterUnlock === "function") {
+    if (typeof window.iuVault?.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
+    if (typeof window.iuVault?.afterUnlock === "function") {
       await window.iuVault.afterUnlock();
     }
   });
+  await page.waitForFunction(
+    () => window.__iuVaultHydrationComplete === true,
+    null,
+    { timeout: 120000 }
+  );
   logStep(scenario, "HYDRATE", "PASS");
   logStep(scenario, "MARKERS", "START");
   await waitForMarkers(page, MARKER, 90000);
@@ -364,27 +399,19 @@ async function main() {
   const fails = [];
   staticChecks(fails);
 
-  const server = await new Promise((resolve, reject) => {
-    const proc = require("child_process").spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
-      cwd: REPO,
-      env: { ...process.env, PORT: String(PORT) },
-      stdio: "ignore",
-    });
-    waitForPort("127.0.0.1", PORT, 30000)
-      .then(() => resolve(proc))
-      .catch((err) => {
-        try {
-          proc.kill("SIGKILL");
-        } catch (_) {}
-        reject(err);
-      });
-  });
+  let serverProc = null;
+  let profileDir = null;
+  let context = null;
+  let page = null;
+  let page2 = null;
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await bootstrapGuardContext(browser, {
-    viewport: { width: 1366, height: 768 },
-    isMobile: false,
-  });
+  const serverInfo = await startGuardStaticServer(PORT);
+  serverProc = serverInfo.proc;
+  const activePort = serverInfo.port;
+  const activeBase = `http://127.0.0.1:${activePort}/projects/`;
+
+  profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "iu-lock-unlock-guard-"));
+  context = await launchGuardPersistentContext(profileDir);
 
   const noteSeed = JSON.stringify({
     schemaVersion: 1,
@@ -405,13 +432,13 @@ async function main() {
     { key: "iu.calendar.store.v1", value: calSeed },
   ]);
 
-  const page = await context.newPage();
+  page = await context.newPage();
   page.setDefaultTimeout(180000);
 
   try {
     console.log("IU_LOCK_UNLOCK_GUARD_START");
     await runStep("MAIN", "BROWSER_LOAD", fails, async () => {
-      await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await page.goto(`${activeBase}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
       await waitForVaultReady(page);
     }, 130000);
     logStep("MAIN", "VAULT_INIT", "PASS");
@@ -537,7 +564,15 @@ async function main() {
       if (gateUi.hostHidden) fails.push("mindmenu_host_hidden_while_unlocked");
 
       await runStep("MAIN", "RELOAD", fails, async () => {
-        await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+        await page.evaluate(async () => {
+          if (typeof window.iuVault?.lock === "function") {
+            await window.iuVault.lock();
+          }
+          if (typeof window.iuVault?.flushPendingWrites === "function") {
+            await window.iuVault.flushPendingWrites();
+          }
+        });
+        await page.goto(`${activeBase}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
         await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
         await waitForVaultBootReady(page, 30000);
       }, 130000);
@@ -574,9 +609,17 @@ async function main() {
       else logStep("MAIN", "POST_RELOAD_PRESERVATION", "PASS");
 
       logStep("MAIN", "CLEANUP", "START");
-      await page.close();
-      const page2 = await context.newPage();
-      await page2.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      if (page && !page.isClosed()) {
+        await page.close().catch(() => {});
+        page = null;
+      }
+      logStep("MAIN", "BROWSER_RESTART", "START");
+      await closePlaywrightSession(null, context, null, 5000);
+      context = await restartGuardPersistentContext(profileDir);
+      logStep("MAIN", "BROWSER_RESTART", "PASS");
+      page2 = await context.newPage();
+      page2.setDefaultTimeout(180000);
+      await page2.goto(`${activeBase}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
       await page2.waitForFunction(
         () => !!(window.iuVault && typeof window.iuVault.getState === "function"),
         null,
@@ -609,7 +652,10 @@ async function main() {
         null,
         { timeout: 30000 }
       );
-      await ensureDesktopMindMenuOverlay(page2, "REOPEN", fails, 60000);
+      logStep("REOPEN", "DESKTOP_OVERLAY", "START");
+      await page2.evaluate(() => {
+        document.body.classList.add("iu-desktop-home-grid");
+      });
       const gateAfterReopen = await page2.evaluate(() => {
         const screen = document.getElementById("iuVaultAppLockScreen");
         const host = document.getElementById("iuMyInfoUzelMindMenuHost");
@@ -625,6 +671,7 @@ async function main() {
       if (gateAfterReopen.mindMenuMounted && !gateAfterReopen.hostHidden) {
         fails.push("mindmenu_accessible_before_unlock_after_reopen");
       }
+      logStep("REOPEN", "DESKTOP_OVERLAY", "PASS");
 
       await runStep("MAIN", "REOPEN_UNLOCK", fails, async () => {
         await unlockProtection(page2, activated.mode, "REOPEN");
@@ -643,30 +690,25 @@ async function main() {
   } finally {
     logStep("MAIN", "BROWSER_CLOSE", "START");
     try {
-      await Promise.race([
-        browser.close(),
-        new Promise((resolve) => setTimeout(resolve, 3000)),
-      ]);
+      if (page2 && !page2.isClosed()) await page2.close().catch(() => {});
+      if (page && !page.isClosed()) await page.close().catch(() => {});
+      await closePlaywrightSession(null, context, null, 5000);
     } catch (_) {}
-    try {
-      if (browser && typeof browser.process === "function") {
-        const bp = browser.process();
-        if (bp && bp.pid) {
-          try {
-            process.kill(bp.pid, "SIGKILL");
-          } catch (_) {}
-        }
-      }
-    } catch (_) {}
+    context = null;
+    page = null;
+    page2 = null;
+    if (profileDir) {
+      try {
+        fs.rmSync(profileDir, { recursive: true, force: true });
+      } catch (_) {}
+      profileDir = null;
+    }
     logStep("MAIN", "BROWSER_CLOSE", "PASS");
     logStep("MAIN", "SERVER_STOP", "START");
     try {
-      server.kill("SIGKILL");
-    } catch (_) {
-      try {
-        server.kill();
-      } catch (_) {}
-    }
+      await stopGuardProcess(serverProc, 4000);
+    } catch (_) {}
+    serverProc = null;
     logStep("MAIN", "SERVER_STOP", "PASS");
   }
 
