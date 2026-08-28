@@ -28,6 +28,11 @@ function listChangedFiles() {
     return run(`git diff --name-only ${baseSha}...${headSha}`).split("\n");
   }
   if (event === "push") {
+    const refName = (process.env.GITHUB_REF_NAME || process.env.GITHUB_HEAD_REF || "").trim();
+    // fix/** push with open PR: classify from full PR diff, not tip push range only.
+    if (refName.startsWith("fix/")) {
+      return run("git diff --name-only origin/main...HEAD").split("\n");
+    }
     const before = (process.env.GITHUB_EVENT_BEFORE || "").trim();
     const after = (process.env.GITHUB_SHA || "").trim();
     if (before && after && before !== "0000000000000000000000000000000000000000") {
