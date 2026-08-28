@@ -83,13 +83,18 @@ async function main() {
     });
     if (!wrongBtnDisabled) fails.push("wrong_phrase_enabled_btn");
     await page.waitForTimeout(300);
-    const wrong = await page.evaluate((marker) => {
+    const wrong = await page.evaluate(async () => {
+      let idbEnc = false;
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        idbEnc = !!(await readRecord("iu.notes.store.v1"));
+      } catch (_) {}
       return {
         locked: document.documentElement.classList.contains("iu-vault-app-locked"),
-        enc: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
+        enc: !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1") || idbEnc,
         err: (document.getElementById("iuVaultLockErr") || {}).textContent || "",
       };
-    }, MARKER);
+    });
     if (!wrong.locked) fails.push("wrong_phrase_unlocked");
     if (!wrong.enc) fails.push("wrong_phrase_wiped_data");
 
@@ -136,20 +141,27 @@ async function main() {
       if (!accepted) fails.push("phrase_not_accepted_in_ui");
       await page.click("#iuVaultWipeConfirmBtn");
       try {
-        await page.waitForFunction(() => !document.documentElement.classList.contains("iu-vault-app-locked"), null, {
-          timeout: 30000,
-        });
+        await page.waitForFunction(
+          () =>
+            window.iuVault.getState().unlocked === true &&
+            window.__iuVaultHydrationComplete === true &&
+            !document.documentElement.classList.contains("iu-vault-app-locked"),
+          null,
+          { timeout: 30000 }
+        );
       } catch (_) {
         const snap = await page.evaluate(async () => ({
           err: (document.getElementById("iuVaultLockErr") || {}).textContent || "",
           unlocked: !!(window.iuVault.getState && window.iuVault.getState().unlocked),
           method: (await window.iuVault.getSecurityConfigured()).unlockMethod,
           wipeHidden: !!(document.getElementById("iuVaultWipeConfirm") || {}).hidden,
+          pending: !!window.__iuVaultHydrationPending,
+          complete: !!window.__iuVaultHydrationComplete,
         }));
         fails.push(`unlock_wait_timeout:${JSON.stringify(snap)}`);
       }
     }
-    const after = await page.evaluate(async (marker) => {
+    const after = await page.evaluate(async () => {
       const skipRefresh = !!(window.__IU_NEG_SKIP_REFRESH_UI);
       try {
         if (!skipRefresh && window.iuVault && window.iuVault.refreshAppLockUi) {
@@ -158,6 +170,11 @@ async function main() {
       } catch (_) {}
       const screen = document.getElementById("iuVaultAppLockScreen");
       const cs = screen ? getComputedStyle(screen) : null;
+      let idbEnc = false;
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        idbEnc = !!(await readRecord("iu.notes.store.v1"));
+      } catch (_) {}
       return {
         url: location.href,
         appLocked: document.documentElement.classList.contains("iu-vault-app-locked"),
@@ -165,12 +182,12 @@ async function main() {
           !document.documentElement.classList.contains("iu-vault-app-locked") &&
           (!!screen?.hidden || (cs && cs.display === "none") || screen?.getAttribute("aria-hidden") === "true"),
         note: localStorage.getItem("iu.notes.store.v1"),
-        enc: localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
+        enc: localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1") || (idbEnc ? "idb" : null),
         unlocked: !!(window.iuVault.getState && window.iuVault.getState().unlocked),
         method: (await window.iuVault.getSecurityConfigured()).unlockMethod,
         pending: !!window.__iuVaultHydrationPending,
       };
-    }, MARKER);
+    });
     if (after.url !== beforeUrl) fails.push("unexpected_navigation");
     if (after.appLocked) fails.push("still_app_locked");
     if (!after.screenHidden) fails.push(`lock_screen_visible:method=${after.method}:pending=${after.pending}`);
@@ -186,7 +203,15 @@ async function main() {
       });
       localStorage.setItem("iu.notes.store.v1", payload);
       await window.iuVault.flushPendingWrites();
-      return (localStorage.getItem("iu.notes.store.v1") || "").includes(marker + "_NEW");
+      const ls = localStorage.getItem("iu.notes.store.v1") || "";
+      if (ls.includes(marker + "_NEW")) return true;
+      try {
+        const { vaultGetItem } = await import("/assets/iu-vault-storage-v1.js");
+        const v = await vaultGetItem("iu.notes.store.v1");
+        return !!(v && String(v).includes(marker + "_NEW"));
+      } catch (_) {
+        return false;
+      }
     }, MARKER);
     if (!canWrite) fails.push("cannot_write_after_wipe");
   } catch (e) {
