@@ -95,9 +95,11 @@ async function buildSeedConfig() {
 
 async function seedDefaultConfig(page) {
   const cfg = await buildSeedConfig();
-  await page.evaluate(({ payload }) => {
-    if (localStorage.getItem(payload.key) != null) return;
+  await page.evaluate(async ({ payload }) => {
     localStorage.setItem(payload.key, payload.value);
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
   }, { payload: { key: "infouzel_quicktools", value: JSON.stringify(cfg) } });
 }
 
@@ -312,6 +314,7 @@ async function runViewport(browser, vp) {
   }, null, { timeout: 60000 }).catch(() => {});
 
   await openToolsTab(page);
+  await waitForTilePresent(page, CUSTOM_ID);
   await waitForCustomTile(page);
   const beforeHide = await measureTile(page, "bakalari");
   await openSettings(page);

@@ -102,6 +102,7 @@ async function readEnvelope(storageKey) {
   const k = String(storageKey);
   let envelope = await readRecord(k);
   if (envelope) return envelope;
+  // Legacy LS mirror — read-only fallback until L1 migration removes it.
   captureNativeLocalStorage();
   const raw = nativeGetItem(encStorageKey(k));
   if (!raw) return null;
@@ -115,10 +116,15 @@ async function readEnvelope(storageKey) {
 export async function persistEnvelope(storageKey, envelope) {
   const k = String(storageKey);
   diagSync("06-write-start", { key: k, source: "persistEnvelope" });
-  captureNativeLocalStorage();
-  nativeSetItem(encStorageKey(k), JSON.stringify(envelope));
-  nativeRemoveItem(k);
   await writeRecord(k, envelope);
+  captureNativeLocalStorage();
+  nativeRemoveItem(k);
+  try {
+    const { isL1IdbMigrationComplete } = await import("./iu-vault-l1-migrate-v1.js");
+    if (await isL1IdbMigrationComplete()) {
+      nativeRemoveItem(encStorageKey(k));
+    }
+  } catch (_) {}
   diagSync("07-write-transaction-complete", { key: k, source: "persistEnvelope" });
 }
 
@@ -171,6 +177,19 @@ export async function vaultSetItem(storageKey, value) {
     if (shouldBlockPostHydrateClobber(k, text)) {
       diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber_async" });
       return;
+    }
+    if (!isVaultUserWriteActive() && looksLikeEmptyModuleReset(text, k)) {
+      const existing = await readRecord(k);
+      if (existing) {
+        try {
+          const probeMdk = getMdk();
+          const prev = await decryptString(probeMdk, k, existing);
+          if (prev && prev.length >= 24 && !looksLikeEmptyModuleReset(prev, k)) {
+            diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "idb_nonempty_clobber" });
+            return;
+          }
+        } catch (_) {}
+      }
     }
     const mdk = getMdk();
     if (!mdk) {
@@ -226,6 +245,15 @@ export async function vaultRemoveItem(storageKey) {
 
 export function memoryCacheSet(key, value) {
   memoryCache.set(String(key), String(value));
+}
+
+export function getMemoryCachePlaintext(storageKey) {
+  const k = String(storageKey);
+  return memoryCache.has(k) ? memoryCache.get(k) : null;
+}
+
+export function listMemoryCacheProtectedKeys() {
+  return Array.from(memoryCache.keys()).filter((k) => isProtectedStorageKey(k));
 }
 
 export function clearVaultMemoryCache() {
@@ -338,10 +366,23 @@ export function hasEncryptedRecordAtRest(storageKey) {
   const k = String(storageKey);
   captureNativeLocalStorage();
   try {
-    return !!nativeGetItem(encStorageKey(k));
-  } catch (_) {
-    return false;
-  }
+    if (nativeGetItem(encStorageKey(k))) return true;
+  } catch (_) {}
+  return false;
+}
+
+/** Authoritative check including IDB records store (async). */
+export async function hasEncryptedRecordAtRestAsync(storageKey) {
+  const k = String(storageKey);
+  try {
+    const env = await readRecord(k);
+    if (env) return true;
+  } catch (_) {}
+  return hasEncryptedRecordAtRest(k);
+}
+
+export function isEmptyShapedVaultPlaintext(text, storageKey) {
+  return looksLikeEmptyModuleReset(text, storageKey);
 }
 
 /** Block module saves while locked (ciphertext at rest) or while post-unlock hydrate is still pending. */
@@ -449,6 +490,18 @@ export function listEncryptedStorageKeys() {
     if (k && k.startsWith(ENC_PREFIX)) keys.push(k.slice(ENC_PREFIX.length));
   }
   return keys;
+}
+
+export async function listEncryptedStorageKeysAsync() {
+  const keys = new Set(listEncryptedStorageKeys());
+  try {
+    const { listRecordKeys } = await import("./iu-vault-db-v1.js");
+    const { isProtectedStorageKey } = await import("./iu-vault-protected-keys-v1.js");
+    for (const k of await listRecordKeys()) {
+      if (isProtectedStorageKey(k)) keys.add(k);
+    }
+  } catch (_) {}
+  return Array.from(keys);
 }
 
 function isVaultEnvelope(value) {

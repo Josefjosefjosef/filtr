@@ -177,6 +177,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_FILTER_USER_WRITE_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

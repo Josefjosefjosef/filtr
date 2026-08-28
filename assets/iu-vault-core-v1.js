@@ -39,7 +39,7 @@ export async function generateMdk() {
   return subtle.generateKey({ name: CIPHER_ALG, length: KEY_BITS }, false, ["encrypt", "decrypt"]);
 }
 
-/** L1 baseline: exportable MDK so localStorage backup survives IDB key eviction. */
+/** L1: extractable briefly so durable IDB ArrayBuffer material can be written (never LS raw). */
 export async function generateExtractableMdk() {
   requireSubtle();
   return subtle.generateKey({ name: CIPHER_ALG, length: KEY_BITS }, true, ["encrypt", "decrypt"]);

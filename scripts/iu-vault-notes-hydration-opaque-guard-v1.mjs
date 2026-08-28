@@ -86,9 +86,17 @@ async function main() {
       await window.iuVault.afterUnlock();
       localStorage.setItem(notesKey, payload);
       await window.iuVault.flushPendingWrites();
+      let encLen = 0;
       const enc = localStorage.getItem("iu:vault:enc:v1:" + notesKey);
+      if (enc) encLen = enc.length;
+      else {
+        try {
+          const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+          if (await readRecord(notesKey)) encLen = 1;
+        } catch (_) {}
+      }
       await window.iuVault.lock();
-      return { encLen: enc ? enc.length : 0 };
+      return { encLen };
     }, { pin: PIN, marker: MARKER, notesKey: NOTES_KEY });
 
     if (!seeded.encLen) fails.push("seed_enc_missing");
@@ -158,6 +166,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_NOTES_HYDRATION_OPAQUE_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

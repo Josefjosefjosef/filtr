@@ -56,30 +56,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
-            {
-              echo "data_only=true"
-              echo "info_panel_only=false"
-              echo "fin_calc_header_only=false"
-              echo "datovka_overlay_only=false"
-              echo "custom_buttons_scroll_only=false"
-              echo "quicktools_mobile_visibility_only=false"
-              echo "quicktools_fixed_width_only=false"
-              echo "user_data_backup_only=false"
-              echo "data_mgmt_restore_overlay_mobile_only=false"
-              echo "pc_left_rail_same_window_tabs_only=false"
-              echo "pc_tool_window_left_rail_layout_only=false"
-              echo "notes_unified_field_only=false"
-              echo "pwa_offline_resilience_only=false"
-              echo "info_panel_cnb_rates_only=false"
-              echo "jr_section_header_line_color_only=false"
-              echo "legal_doc_section_bar_only=false"
-              echo "legal_docs_form_state_only=false"
-              echo "pc_svatek_label_pill_gap_only=false"
-              echo "calendar_allday_pinned_limit_only=false"
-              echo "desktop_article_read_mark_only=false"
-            } >> "$GITHUB_OUTPUT"
-            echo "SMOKE_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
-            exit 0
+            echo "SMOKE_PUSH_PR_OWNS_CHECK=YES"
           fi
           node scripts/smoke-data-only-scope.mjs
 
@@ -775,6 +752,22 @@ jobs:
       - name: Vault contract guard (encryption + round-trip)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-vault-contract-guard
+
+      - name: Vault L1 baseline coldstart guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-vault-l1-baseline-coldstart-guard
+
+      - name: Vault L1 IDB-only guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-vault-l1-idb-only-guard
+
+      - name: Vault L1 key-path loss guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-vault-l1-key-path-loss-guard
+
+      - name: Vault L1 proof gaps guard (#10103 A, conflict, MindMenu)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-vault-l1-proof-gaps-guard
 
       - name: Vault plaintext guard (no protected LS leaks)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

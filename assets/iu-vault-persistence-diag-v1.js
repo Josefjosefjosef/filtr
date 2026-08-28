@@ -185,7 +185,14 @@ export async function getPersistenceDiag(options) {
     getPendingVaultWriteCount,
     isPlaintextStagingPresent,
   } = await import("./iu-vault-storage-v1.js");
-  const { readRecord } = await import("./iu-vault-db-v1.js");
+  const { readRecord, readKeyRecord, listRecordKeys } = await import("./iu-vault-db-v1.js");
+  const {
+    readLevel1DurableMaterialBytes,
+    isVaultStorageRecoveryRequired,
+    getVaultStorageRecoveryReason,
+    LEVEL1_MDK_MATERIAL_ID,
+    LEVEL1_MDK_BACKUP_KEY,
+  } = await import("./iu-vault-lock-v1.js");
 
   const st = getVaultState();
   let configured = { unlockMethod: "unknown", meta: null };
@@ -195,6 +202,7 @@ export async function getPersistenceDiag(options) {
 
   captureNativeLocalStorage();
   const records = [];
+  let ciphertextCount = 0;
   for (const key of keys) {
     const k = String(key);
     let idbEnvelope = false;
@@ -207,6 +215,7 @@ export async function getPersistenceDiag(options) {
     try {
       plainStaging = isPlaintextStagingPresent(k);
     } catch (_) {}
+    if (idbEnvelope || lsEnvelope) ciphertextCount += 1;
     const stats = recordStats.get(k) || {};
     let backend = "none";
     if (idbEnvelope && lsEnvelope) backend = "idb+ls_enc";
@@ -233,6 +242,65 @@ export async function getPersistenceDiag(options) {
     });
   }
 
+  let allRecordCount = 0;
+  try {
+    allRecordCount = (await listRecordKeys()).length;
+  } catch (_) {}
+
+  let cryptoKeyPresent = false;
+  let cryptoKeyUsable = false;
+  try {
+    const keyRec = await readKeyRecord("mdk:level1");
+    cryptoKeyPresent = !!(keyRec && keyRec.mdk);
+    if (cryptoKeyPresent) {
+      try {
+        const { encryptString, decryptString } = await import("./iu-vault-core-v1.js");
+        const env = await encryptString(keyRec.mdk, "iu.vault.selftest.v1", "ok");
+        const pt = await decryptString(keyRec.mdk, "iu.vault.selftest.v1", env);
+        cryptoKeyUsable = pt === "ok";
+      } catch (_) {
+        cryptoKeyUsable = false;
+      }
+    }
+  } catch (_) {}
+
+  let durableMaterialPresent = false;
+  try {
+    const raw = await readLevel1DurableMaterialBytes();
+    durableMaterialPresent = !!(raw && raw.byteLength >= 16);
+  } catch (_) {}
+
+  let legacyBackupPresent = false;
+  try {
+    legacyBackupPresent = !!localStorage.getItem(LEVEL1_MDK_BACKUP_KEY);
+  } catch (_) {}
+
+  const recoveryRequired = (() => {
+    try {
+      return !!isVaultStorageRecoveryRequired();
+    } catch (_) {
+      return !!window.__iuVaultStorageRecoveryRequired;
+    }
+  })();
+
+  const ciphertextPresent = ciphertextCount > 0 || allRecordCount > 0;
+  let persistenceState = "STATE_1_NO_CIPHERTEXT";
+  if (ciphertextPresent) {
+    if (recoveryRequired && !cryptoKeyUsable && !durableMaterialPresent) {
+      persistenceState = "STATE_3_CIPHERTEXT_PRESENT_KEY_PATH_LOST";
+    } else if (cryptoKeyPresent && !cryptoKeyUsable && !durableMaterialPresent) {
+      persistenceState = "STATE_4_CIPHERTEXT_PRESENT_DECRYPT_FAILED";
+    } else if ((cryptoKeyUsable || durableMaterialPresent) && !st.unlocked) {
+      persistenceState = "STATE_2_CIPHERTEXT_PRESENT_KEY_PRESENT";
+    } else if ((cryptoKeyUsable || durableMaterialPresent) && st.unlocked && !window.__iuVaultHydrationComplete) {
+      persistenceState = "STATE_5_DECRYPT_OK_HYDRATION_PENDING";
+    } else if ((cryptoKeyUsable || durableMaterialPresent) && st.unlocked) {
+      persistenceState = "STATE_2_CIPHERTEXT_PRESENT_KEY_PRESENT";
+    } else if (!cryptoKeyUsable && !durableMaterialPresent) {
+      persistenceState = "STATE_3_CIPHERTEXT_PRESENT_KEY_PATH_LOST";
+    }
+  }
+
   return {
     capturedAt: Date.now(),
     platform: detectPlatform(),
@@ -251,6 +319,27 @@ export async function getPersistenceDiag(options) {
     pendingWriteCount: getPendingVaultWriteCount(),
     serviceWorker: serviceWorkerMeta(),
     bundleHint: detectBundleHint(),
+    forensics: {
+      dbName: "iu.vault.v1",
+      schemaVersion: 1,
+      recordCount: allRecordCount,
+      probeCiphertextCount: ciphertextCount,
+      cryptoKeyPresent,
+      cryptoKeyUsable,
+      durableMaterialPresent,
+      legacyBackupPresent,
+      recoveryRequired,
+      recoveryReason: recoveryRequired
+        ? safeToken(
+            (typeof getVaultStorageRecoveryReason === "function" && getVaultStorageRecoveryReason()) ||
+              window.__iuVaultStorageRecoveryReason ||
+              "",
+            64
+          )
+        : null,
+      persistenceState,
+      materialStoreId: LEVEL1_MDK_MATERIAL_ID ? "level1-material" : null,
+    },
     records,
   };
 }

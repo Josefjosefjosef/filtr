@@ -123,25 +123,34 @@ async function seed(page, tag) {
     await window.iuVault.afterUnlock();
     for (const [k, v] of Object.entries(data)) localStorage.setItem(k, v);
     await window.iuVault.flushPendingWrites();
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
     const enc = {};
-    for (const k of Object.keys(data)) enc[k] = !!localStorage.getItem("iu:vault:enc:v1:" + k);
+    for (const k of Object.keys(data)) {
+      enc[k] = !!localStorage.getItem("iu:vault:enc:v1:" + k) || !!(await readRecord(k));
+    }
     return enc;
   }, { data, pin: PIN });
 }
 
 async function unlockRead(page, opts = {}) {
   return page.evaluate(async ({ pin, skipHydrate, emptyBefore, keys, marker }) => {
-    await window.iuVault.unlockPin(pin);
+    const withTimeout = (p, ms, label) =>
+      Promise.race([
+        p,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(`${label}_TIMEOUT_${ms}ms`)), ms)),
+      ]);
+    await withTimeout(window.iuVault.unlockPin(pin), 60000, "UNLOCK_PIN");
     if (emptyBefore) {
       try {
         window.__iuVaultHydrationPending = false;
       } catch (_) {}
       localStorage.setItem("iu.notes.store.v1", JSON.stringify({ schemaVersion: 1, notes: [] }));
       localStorage.setItem("iu.tasks.mvp.v1", JSON.stringify({ schemaVersion: 1, tasks: [] }));
-      await window.iuVault.flushPendingWrites();
+      await withTimeout(window.iuVault.flushPendingWrites(), 30000, "FLUSH_EMPTY");
     }
-    if (!skipHydrate) await window.iuVault.afterUnlock();
-    else {
+    if (!skipHydrate) {
+      await withTimeout(window.iuVault.afterUnlock(), 55000, "AFTER_UNLOCK");
+    } else {
       try {
         window.__iuVaultHydrationPending = false;
         window.__iuVaultHydrationComplete = true;
@@ -270,6 +279,11 @@ async function runViewport(browser, base, viewport, fails, label) {
     await new Promise((r) => setTimeout(r, 40));
     const encKey = "iu:vault:enc:v1:" + noteKey;
     const enc = localStorage.getItem(encKey);
+    let idb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      idb = !!(await readRecord(noteKey));
+    } catch (_) {}
     const plain = localStorage.getItem(noteKey);
     if (simulateEarlyNativeRemove) {
       try {
@@ -277,7 +291,7 @@ async function runViewport(browser, base, viewport, fails, label) {
       } catch (_) {}
     }
     return {
-      encExists: !!enc,
+      encExists: !!enc || idb,
       plainExists: plain === payload,
       durableBlob: enc || plain || "",
     };
@@ -299,6 +313,12 @@ async function runViewport(browser, base, viewport, fails, label) {
       window.__iuVaultHydrationPending = true;
     } catch (_) {}
     const beforeEnc = localStorage.getItem("iu:vault:enc:v1:" + noteKey);
+    let beforeIdb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      beforeIdb = !!(await readRecord(noteKey));
+    } catch (_) {}
+    const beforeAtRest = beforeEnc || (beforeIdb ? "idb" : null);
     let blocked = window.iuVault.isPersistBlocked(noteKey);
     let restore = null;
     if (allowHydrationEmpty) {
@@ -311,7 +331,14 @@ async function runViewport(browser, base, viewport, fails, label) {
       await window.iuVault.flushPendingWrites();
     }
     if (restore) window.iuVault.isPersistBlocked = restore;
-    return { blocked: !!blocked, afterEnc: localStorage.getItem("iu:vault:enc:v1:" + noteKey), beforeEnc };
+    const afterEnc = localStorage.getItem("iu:vault:enc:v1:" + noteKey);
+    let afterIdb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      afterIdb = !!(await readRecord(noteKey));
+    } catch (_) {}
+    const afterAtRest = afterEnc || (afterIdb ? "idb" : null);
+    return { blocked: !!blocked, afterEnc: afterAtRest, beforeEnc: beforeAtRest };
   }, { noteKey: KEYS.note, allowHydrationEmpty: ALLOW_HYDRATION_EMPTY });
   if (ALLOW_HYDRATION_EMPTY) {
     if (!hydrationBlock.beforeEnc || hydrationBlock.afterEnc === hydrationBlock.beforeEnc) {
@@ -329,6 +356,7 @@ async function runViewport(browser, base, viewport, fails, label) {
 
 async function main() {
   const fails = [];
+  console.log("IU_MOBILE_LIFECYCLE_GUARD_START");
   staticChecks(fails);
   let server = null;
   let browser = null;
@@ -400,6 +428,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_MOBILE_LIFECYCLE_PRESERVATION_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

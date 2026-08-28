@@ -88,13 +88,20 @@ async function waitForMarkers(page, needle, timeoutMs) {
 }
 
 async function readMarkers(page) {
-  return page.evaluate((needle) => {
+  return page.evaluate(async (needle) => {
     const out = { notes: false, tasks: false, calendar: false, encNotes: false };
     try {
       out.notes = (localStorage.getItem("iu.notes.store.v1") || "").includes(needle);
       out.tasks = (localStorage.getItem("iu.tasks.mvp.v1") || "").includes(needle);
       out.calendar = (localStorage.getItem("iu.calendar.store.v1") || "").includes(needle);
-      out.encNotes = !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      const lsEnc = !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      let idbEnc = false;
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        const rec = await readRecord("iu.notes.store.v1");
+        idbEnc = !!(rec && rec.ct);
+      } catch (_) {}
+      out.encNotes = lsEnc || idbEnc;
     } catch (_) {}
     return out;
   }, MARKER);
@@ -261,8 +268,19 @@ async function main() {
     await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 60000 });
 
     const invalidImport = await page.evaluate(async (json) => {
+      if (typeof window.iuVault?.flushPendingWrites === "function") {
+        await window.iuVault.flushPendingWrites();
+      }
       const beforeNotes = localStorage.getItem("iu.notes.store.v1");
-      const beforeEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      const beforeLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      let beforeIdbEnc = false;
+      let beforeIdbCt = null;
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        const rec = await readRecord("iu.notes.store.v1");
+        beforeIdbEnc = !!(rec && rec.ct);
+        beforeIdbCt = rec && rec.ct ? String(rec.ct) : null;
+      } catch (_) {}
       const parsed = JSON.parse(json);
       parsed.modules.notes.entries["iu.notes.store.v1"] = JSON.stringify({ schemaVersion: 1, notes: [] });
       const tampered = JSON.stringify(parsed);
@@ -271,10 +289,22 @@ async function main() {
         return { failed: false };
       } catch (e) {
         const afterNotes = localStorage.getItem("iu.notes.store.v1");
-        const afterEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+        const afterLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+        let afterIdbEnc = false;
+        let afterIdbCt = null;
+        try {
+          const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+          const rec = await readRecord("iu.notes.store.v1");
+          afterIdbEnc = !!(rec && rec.ct);
+          afterIdbCt = rec && rec.ct ? String(rec.ct) : null;
+        } catch (_) {}
+        const hadEnc = !!(beforeLsEnc || beforeIdbEnc);
+        const stillHasEnc = !!(afterLsEnc || afterIdbEnc);
+        const encUnchanged =
+          beforeLsEnc === afterLsEnc && beforeIdbCt === afterIdbCt;
         return {
           failed: true,
-          preserved: beforeNotes === afterNotes && !!beforeEnc && !!afterEnc,
+          preserved: beforeNotes === afterNotes && hadEnc && stillHasEnc && encUnchanged,
           code: String(e.message || e),
         };
       }

@@ -46,6 +46,8 @@ function assertSafePayload(fails, label, obj) {
   if (!Array.isArray(obj.records)) fails.push(`${label}_missing_records`);
   if (!obj.platform) fails.push(`${label}_missing_platform`);
   if (!obj.vaultState || typeof obj.vaultState.unlocked !== "boolean") fails.push(`${label}_missing_vaultState`);
+  if (!obj.forensics || typeof obj.forensics !== "object") fails.push(`${label}_missing_forensics`);
+  if (obj.forensics && !obj.forensics.persistenceState) fails.push(`${label}_missing_persistenceState`);
   for (const rec of obj.records || []) {
     if ("value" in rec || "plaintext" in rec || "body" in rec) fails.push(`${label}_record_value_leak`);
   }
@@ -130,6 +132,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_PERSISTENCE_DIAG_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {

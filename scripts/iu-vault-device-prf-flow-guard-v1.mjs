@@ -4,7 +4,6 @@
  * Run: npm run iu-vault-device-prf-flow-guard
  */
 import fs from "fs";
-import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
@@ -16,31 +15,18 @@ import {
 } from "../assets/iu-vault-device-crypto-v1.js";
 import { mapDeviceSetupError } from "../assets/iu-vault-device-v1.js";
 import { bootstrapGuardContext, waitForVaultReady } from "./guards/guard-playwright-bootstrap.mjs";
+import {
+  pickGuardPort,
+  startGuardStaticServer,
+  stopGuardProcess,
+  closePlaywrightSession,
+} from "./guards/guard-playwright-lifecycle.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8984", 10);
-const BASE = `http://127.0.0.1:${PORT}/projects/`;
-
-function waitForPort(host, port, timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
-  return new Promise((resolve, reject) => {
-    const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
-        res.resume();
-        resolve();
-      });
-      req.on("error", () => {
-        if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
-      });
-      req.end();
-    };
-    tryOnce();
-  });
-}
+let BASE = "http://127.0.0.1:8984/projects/";
 
 function staticChecks(fails) {
   const deviceJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-device-v1.js"), "utf8");
@@ -84,17 +70,12 @@ async function resetGuardVaultContext(context) {
       }
     } catch (_) {}
     try {
-      const { listRecordKeys, deleteRecord, wipeVaultDatabase } = await import("/assets/iu-vault-db-v1.js");
-      const recKeys = await listRecordKeys();
-      for (const k of recKeys) {
-        try {
-          await deleteRecord(k);
-        } catch (_) {}
-      }
+      const { wipeVaultDatabase } = await import("/assets/iu-vault-db-v1.js");
       await wipeVaultDatabase();
     } catch (_) {}
   });
-  await scratch.close();
+  await scratch.goto("about:blank", { waitUntil: "load", timeout: 15000 }).catch(() => {});
+  await scratch.close().catch(() => {});
 }
 
 async function runMockFlowTests(context, fails) {
@@ -239,14 +220,8 @@ async function main() {
   unitMapTests(fails);
   await cryptoRoundtrip(fails);
 
-  const server = await new Promise((resolve) => {
-    const proc = require("child_process").spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
-      cwd: REPO,
-      env: { ...process.env, PORT: String(PORT) },
-      stdio: "ignore",
-    });
-    waitForPort("127.0.0.1", PORT, 60000).then(() => resolve(proc));
-  });
+  const started = await startGuardStaticServer(pickGuardPort(8984, 200));
+  BASE = `http://127.0.0.1:${started.port}/projects/`;
 
   const browser = await chromium.launch({ headless: true });
   const context = await bootstrapGuardContext(browser, { viewport: { width: 1366, height: 768 }, isMobile: false });
@@ -254,8 +229,8 @@ async function main() {
   try {
     await runMockFlowTests(context, fails);
   } finally {
-    await browser.close();
-    server.kill();
+    await closePlaywrightSession(null, context, browser, 5000);
+    await stopGuardProcess(started.proc, 4000);
   }
 
   console.log("IU_VAULT_DEVICE_PRF_FLOW=" + JSON.stringify({ fails }));

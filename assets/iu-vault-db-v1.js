@@ -129,12 +129,32 @@ export async function writeMigrationCheckpoint(id, value) {
 }
 
 export async function wipeVaultDatabase() {
+  try {
+    if (dbPromise) {
+      const db = await dbPromise.catch(() => null);
+      if (db && typeof db.close === "function") {
+        try {
+          db.close();
+        } catch (_) {}
+      }
+    }
+  } catch (_) {}
   dbPromise = null;
   return new Promise((resolve, reject) => {
+    let settled = false;
+    const finish = (fn, arg) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      fn(arg);
+    };
+    const timer = setTimeout(() => finish(resolve), 8000);
     const req = indexedDB.deleteDatabase(VAULT_DB_NAME);
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
-    req.onblocked = () => resolve();
+    req.onsuccess = () => finish(resolve);
+    req.onerror = () => finish(reject, req.error || new Error("VAULT_IDB_DELETE_FAILED"));
+    req.onblocked = () => {
+      // Connection may still be closing; wait for onsuccess/timeout rather than racing reopen.
+    };
   });
 }
 

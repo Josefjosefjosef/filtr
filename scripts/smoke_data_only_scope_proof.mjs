@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { isDataOnlyScope, isFastPoolPipelineScope, isWorkflowOnlyScope } from "./smoke-data-only-scope.mjs";
+import { allowsDataOnlyFastPath, isDataOnlyScope, isFastPoolPipelineScope, isVaultSecurityRuntimeScope, isWorkflowOnlyScope } from "./smoke-data-only-scope.mjs";
 
 let failed = 0;
 function assert(cond, msg) {
@@ -28,6 +28,12 @@ assert(
 assert(!isWorkflowOnlyScope([".github/workflows/smoke.yml", "assets/app.js"]), "mixed workflow+assets not workflow scope");
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
+assert(isVaultSecurityRuntimeScope(["assets/iu-vault-bootstrap-v1.js"]), "vault bootstrap is vault runtime scope");
+assert(isVaultSecurityRuntimeScope(["assets/iu-vault-lock-v1.js", "scripts/iu-vault-lock-unlock-preserves-data-guard-v1.mjs"]), "vault runtime asset in mixed diff");
+assert(!isVaultSecurityRuntimeScope(["projects/data/x.json", "scripts/iu-vault-lock-unlock-preserves-data-guard-v1.mjs"]), "guard script alone is not vault runtime scope");
+assert(!allowsDataOnlyFastPath(["assets/iu-vault-bootstrap-v1.js"]), "vault bootstrap blocks fast path");
+assert(!allowsDataOnlyFastPath([".github/workflows/smoke.yml", "assets/iu-vault-bootstrap-v1.js"]), "vault+wworkflow blocks fast path");
+assert(allowsDataOnlyFastPath([".github/workflows/smoke.yml"]), "workflow-only still allows fast path when no vault runtime");
 
 console.log("SMOKE_DATA_ONLY_SCOPE_PROOF=" + (failed === 0 ? "PASS" : "FAIL"));
 process.exit(failed === 0 ? 0 : 1);

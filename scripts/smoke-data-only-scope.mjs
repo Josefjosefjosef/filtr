@@ -28,6 +28,11 @@ function listChangedFiles() {
     return run(`git diff --name-only ${baseSha}...${headSha}`).split("\n");
   }
   if (event === "push") {
+    const refName = (process.env.GITHUB_REF_NAME || process.env.GITHUB_HEAD_REF || "").trim();
+    // fix/** push with open PR: classify from full PR diff, not tip push range only.
+    if (refName.startsWith("fix/")) {
+      return run("git diff --name-only origin/main...HEAD").split("\n");
+    }
     const before = (process.env.GITHUB_EVENT_BEFORE || "").trim();
     const after = (process.env.GITHUB_SHA || "").trim();
     if (before && after && before !== "0000000000000000000000000000000000000000") {
@@ -42,6 +47,22 @@ export function isDataOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
   return paths.every((f) => f.startsWith("projects/data/"));
+}
+
+/** Production vault/security runtime — must never use data-only smoke fast path. */
+export function isVaultSecurityRuntimeScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  return paths.some((f) => f.startsWith("assets/iu-vault-"));
+}
+
+export function allowsDataOnlyFastPath(files) {
+  if (isVaultSecurityRuntimeScope(files)) return false;
+  return (
+    isDataOnlyScope(files) ||
+    isWorkflowOnlyScope(files) ||
+    isFastPoolPipelineScope(files)
+  );
 }
 
 /** CI-only workflow edits — no UI surface; skip Playwright guards. */
@@ -496,6 +517,7 @@ function main() {
   }
 
   const dataOnly = isDataOnlyScope(files);
+  const vaultRuntime = isVaultSecurityRuntimeScope(files);
   const workflowOnly = isWorkflowOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
   const infoPanelOnly = isInfoPanelOnlyScope(files);
@@ -518,12 +540,13 @@ function main() {
   const calendarAllDayPinnedLimitOnly = isCalendarAllDayPinnedLimitScope(files);
   const desktopArticleReadMarkOnly = isDesktopArticleReadMarkOnlyScope(files);
   const allowFastPath =
-    dataOnly ||
+    !vaultRuntime &&
+    (dataOnly ||
     workflowOnly ||
     pipelineOnly ||
-    (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"]));
+    (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"])));
 
-  console.log(`[smoke-data-only-scope] files=${files.length} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
+  console.log(`[smoke-data-only-scope] files=${files.length} vault_runtime=${vaultRuntime ? "YES" : "NO"} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
   for (const f of files.slice(0, 20)) {
     console.log(`[smoke-data-only-scope] changed=${f}`);
   }
@@ -532,6 +555,7 @@ function main() {
   }
 
   writeOutput("data_only", allowFastPath ? "true" : "false");
+  writeOutput("vault_runtime_scope", vaultRuntime ? "true" : "false");
   writeOutput("info_panel_only", infoPanelOnly ? "true" : "false");
   writeOutput("fin_calc_header_only", finCalcHeaderOnly ? "true" : "false");
   writeOutput("datovka_overlay_only", datovkaOverlayOnly ? "true" : "false");
@@ -552,6 +576,7 @@ function main() {
   writeOutput("calendar_allday_pinned_limit_only", calendarAllDayPinnedLimitOnly ? "true" : "false");
   writeOutput("desktop_article_read_mark_only", desktopArticleReadMarkOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
+  console.log(`SMOKE_VAULT_RUNTIME_SCOPE=${vaultRuntime ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_DATOVKA_OVERLAY_ONLY_SCOPE=${datovkaOverlayOnly ? "YES" : "NO"}`);

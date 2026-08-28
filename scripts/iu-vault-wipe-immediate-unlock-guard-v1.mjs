@@ -110,6 +110,14 @@ async function main() {
         method: (await window.iuVault.getSecurityConfigured()).unlockMethod,
         noteAfter: localStorage.getItem("iu.notes.store.v1"),
         noteEnc: localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1"),
+        noteIdb: !!(await (async () => {
+          try {
+            const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+            return await readRecord("iu.notes.store.v1");
+          } catch (_) {
+            return null;
+          }
+        })()),
       };
     }, KEEP_LOCKED);
 
@@ -118,13 +126,20 @@ async function main() {
     if (!wipeResult.screenHidden && !KEEP_LOCKED) fails.push("lock_screen_visible_after_wipe");
     if (!wipeResult.unlocked) fails.push("not_unlocked_after_wipe");
     if (wipeResult.method !== "none") fails.push(`method_not_none:${wipeResult.method}`);
-    if (wipeResult.noteAfter || wipeResult.noteEnc) fails.push("old_note_still_present");
+    if (wipeResult.noteAfter || wipeResult.noteEnc || wipeResult.noteIdb) fails.push("old_note_still_present");
 
     const canWrite = await page.evaluate(async (marker) => {
       const payload = JSON.stringify({ schemaVersion: 1, notes: [{ id: "n2", title: marker, body: "ok", tags: [], createdAt: 2, updatedAt: 2 }] });
       localStorage.setItem("iu.notes.store.v1", payload);
       await window.iuVault.flushPendingWrites();
-      return localStorage.getItem("iu.notes.store.v1") === payload || !!localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+      if (localStorage.getItem("iu.notes.store.v1") === payload) return true;
+      if (localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1")) return true;
+      try {
+        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+        return !!(await readRecord("iu.notes.store.v1"));
+      } catch (_) {
+        return false;
+      }
     }, `IU_WIPE_NEW_${Date.now()}`);
     if (!canWrite) fails.push("cannot_write_after_wipe");
   } catch (e) {
@@ -141,6 +156,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_WIPE_IMMEDIATE_UNLOCK_GUARD_PASS");
+  process.exit(0);
 }
 
 main().catch((e) => {
