@@ -32,8 +32,11 @@ if (!/iu-vault-l1-migrate-v1\.js/.test(sw) || !/iu-vault-conflict-forensics-v1\.
   fails.push("sw_missing_network_first_migrate_forensics");
 }
 if (!/#iuPersistDiagOverlay/.test(index)) fails.push("css_missing_overlay_exception");
-if (!/iu-vault-conflict-forensics-readonly-v1-20260828/.test(index)) {
+if (!/iu-vault-l1-orphan-quarantine-v1-20260828|iu-vault-conflict-forensics-readonly-v1-20260828/.test(index)) {
   fails.push("index_missing_cache_bust");
+}
+if (!/iu-vault-physical-diag-overlay-v1\.js/.test(index)) {
+  fails.push("index_missing_forensics_overlay_script");
 }
 
 const report = {

@@ -15,6 +15,7 @@ import {
   writeKeyRecord,
   readRecord,
   writeRecord,
+  deleteRecord,
   listRecordKeys,
   readMigrationCheckpoint,
   writeMigrationCheckpoint,
@@ -27,8 +28,19 @@ const ENC_PREFIX = "iu:vault:enc:v1:";
 const CONFLICT_ARCHIVE_PREFIX = "iu:vault:enc:conflict-archive:v1:";
 const LEVEL1_MDK_BACKUP_KEY = "iu:vault:mdk-level1-backup:v1";
 
-/** Fail-closed reasons that are safe to retry after compat resolution (same MDK decrypts both sides). */
-const RETRIABLE_FAIL_CLOSED = new Set(["conflict_idb_ls"]);
+/**
+ * Retriable fail-closed reasons after compat resolution:
+ * - conflict_idb_ls: same-MDK divergent mirrors → IDB authority
+ * - *_decrypt_fail / ls_migrate_verify_fail: proven working MDK + orphan
+ *   undecryptable ciphertext (lost historical key) → quarantine, keep valid data
+ */
+const RETRIABLE_FAIL_CLOSED = new Set([
+  "conflict_idb_ls",
+  "ls_migrate_verify_fail",
+  "both_decrypt_fail",
+  "idb_decrypt_fail",
+  "ls_to_idb_verify_fail",
+]);
 
 function encStorageKey(storageKey) {
   return ENC_PREFIX + String(storageKey);
@@ -40,6 +52,10 @@ function conflictArchiveKey(storageKey) {
 
 function conflictArchiveIdbKey(storageKey) {
   return "iu.vault.conflict.archive.v1:" + String(storageKey);
+}
+
+function orphanArchiveIdbKey(storageKey) {
+  return "iu.vault.orphan.undecryptable.v1:" + String(storageKey);
 }
 
 function nativeLocalStorageGet(key) {
@@ -226,13 +242,86 @@ async function persistNonExtractableMdk(mdk, source) {
   }
 }
 
-async function reconcileRecordToIdb(storageKey, mdk, checkpoint) {
+/**
+ * Alternate historical key paths (legacy LS backup / durable material).
+ * Used only after the primary working MDK is already proven for other records.
+ */
+async function collectAlternateMdks(primaryMdk) {
+  const out = [];
+  const backup = await readLegacyBackupMdk();
+  if (backup && backup !== primaryMdk) out.push({ mdk: backup, source: "legacy_backup" });
+  try {
+    const { readLevel1DurableMaterialBytes } = await import("./iu-vault-lock-v1.js");
+    const raw = await readLevel1DurableMaterialBytes();
+    if (raw && raw.byteLength >= 16) {
+      const materialMdk = await importMdkRaw(raw);
+      if (materialMdk && materialMdk !== primaryMdk) {
+        out.push({ mdk: materialMdk, source: "idb_durable_material" });
+      }
+    }
+  } catch (_) {}
+  return out;
+}
+
+async function tryRecoverEnvelopeWithAlternates(storageKey, envelope, primaryMdk, alts) {
+  if (!envelope || !alts || !alts.length) return { ok: false };
+  for (let i = 0; i < alts.length; i += 1) {
+    const alt = alts[i];
+    const dec = await tryDecryptEnvelope(alt.mdk, storageKey, envelope);
+    if (!dec.ok) continue;
+    try {
+      const sealed = await encryptString(primaryMdk, storageKey, dec.plaintext);
+      return { ok: true, envelope: sealed, source: alt.source };
+    } catch (_) {
+      return { ok: false };
+    }
+  }
+  return { ok: false };
+}
+
+/**
+ * Preserve undecryptable orphan ciphertext (lost historical key) without blocking
+ * a vault whose primary MDK already decrypts other protected records.
+ * Does NOT create a new MDK and does NOT silently drop ciphertext.
+ */
+async function quarantineUndecryptableOrphan(storageKey, idbEnv, lsEnv) {
+  const envelope = idbEnv || lsEnv;
+  try {
+    await writeRecord(orphanArchiveIdbKey(storageKey), {
+      v: VAULT_SCHEMA_VERSION,
+      kind: "undecryptable_orphan",
+      originalKey: String(storageKey),
+      archivedAt: new Date().toISOString(),
+      envelope: envelope || null,
+    });
+  } catch (_) {}
+  try {
+    const rawLs = nativeLocalStorageGet(encStorageKey(storageKey));
+    if (rawLs) nativeLocalStorageSet(conflictArchiveKey(storageKey), rawLs);
+    else if (envelope) nativeLocalStorageSet(conflictArchiveKey(storageKey), JSON.stringify(envelope));
+  } catch (_) {}
+  try {
+    await deleteRecord(storageKey);
+  } catch (_) {}
+  try {
+    nativeLocalStorageRemove(encStorageKey(storageKey));
+  } catch (_) {}
+  return {
+    ok: true,
+    source: "orphan_undecryptable_quarantined",
+    quarantined: true,
+    key: storageKey,
+  };
+}
+
+async function reconcileRecordToIdb(storageKey, mdk, checkpoint, alternateMdks) {
   const done = checkpoint && Array.isArray(checkpoint.recordsDone) ? new Set(checkpoint.recordsDone) : new Set();
   if (done.has(storageKey)) {
     const idb = await readRecord(storageKey);
     if (idb) return { ok: true, skipped: true };
   }
 
+  const alts = alternateMdks || [];
   const idbEnv = await readRecord(storageKey);
   const lsEnv = readLegacyLsEnvelope(storageKey);
 
@@ -275,20 +364,47 @@ async function reconcileRecordToIdb(storageKey, mdk, checkpoint) {
       await writeRecord(storageKey, idbEnv);
       return { ok: true, source: "idb_only" };
     }
-    return { ok: false, failClosed: true, reason: "both_decrypt_fail", key: storageKey };
+    // Both fail under primary MDK: try historical alternate keys, else quarantine.
+    const recoveredIdb = await tryRecoverEnvelopeWithAlternates(storageKey, idbEnv, mdk, alts);
+    if (recoveredIdb.ok) {
+      await writeRecord(storageKey, recoveredIdb.envelope);
+      return { ok: true, source: "alt_mdk_recovered_idb_" + recoveredIdb.source };
+    }
+    const recoveredLs = await tryRecoverEnvelopeWithAlternates(storageKey, lsEnv, mdk, alts);
+    if (recoveredLs.ok) {
+      await writeRecord(storageKey, recoveredLs.envelope);
+      return { ok: true, source: "alt_mdk_recovered_ls_" + recoveredLs.source };
+    }
+    return quarantineUndecryptableOrphan(storageKey, idbEnv, lsEnv);
   }
 
   if (idbEnv) {
     const idbDec = await tryDecryptEnvelope(mdk, storageKey, idbEnv);
-    if (!idbDec.ok) return { ok: false, failClosed: true, reason: "idb_decrypt_fail", key: storageKey };
-    return { ok: true, source: "idb_existing" };
+    if (idbDec.ok) return { ok: true, source: "idb_existing" };
+    const recovered = await tryRecoverEnvelopeWithAlternates(storageKey, idbEnv, mdk, alts);
+    if (recovered.ok) {
+      await writeRecord(storageKey, recovered.envelope);
+      return { ok: true, source: "alt_mdk_recovered_idb_only_" + recovered.source };
+    }
+    return quarantineUndecryptableOrphan(storageKey, idbEnv, null);
   }
 
   if (lsEnv) {
-    await writeRecord(storageKey, lsEnv);
-    const verify = await tryDecryptEnvelope(mdk, storageKey, lsEnv);
-    if (!verify.ok) return { ok: false, failClosed: true, reason: "ls_migrate_verify_fail", key: storageKey };
-    return { ok: true, source: "ls_only_migrated" };
+    // Verify BEFORE write (physical PC bug: prior write-then-verify copied
+    // undecryptable LS into IDB, then fail-closed as ls_migrate_verify_fail).
+    const lsDec = await tryDecryptEnvelope(mdk, storageKey, lsEnv);
+    if (lsDec.ok) {
+      await writeRecord(storageKey, lsEnv);
+      const verify = await tryDecryptEnvelope(mdk, storageKey, lsEnv);
+      if (!verify.ok) return { ok: false, failClosed: true, reason: "ls_migrate_verify_fail", key: storageKey };
+      return { ok: true, source: "ls_only_migrated" };
+    }
+    const recovered = await tryRecoverEnvelopeWithAlternates(storageKey, lsEnv, mdk, alts);
+    if (recovered.ok) {
+      await writeRecord(storageKey, recovered.envelope);
+      return { ok: true, source: "alt_mdk_recovered_ls_only_" + recovered.source };
+    }
+    return quarantineUndecryptableOrphan(storageKey, null, lsEnv);
   }
 
   return { ok: true, skipped: true, reason: "no_envelope" };
@@ -347,7 +463,7 @@ export async function migrateL1ToIdbOnly(options = {}) {
     }
     if (checkpoint.phase === PHASE_FAIL_CLOSED && !options.retry) {
       const priorReason = checkpoint.reason || "prior_fail_closed";
-      // conflict_idb_ls is retriable: same-MDK divergent mirrors now resolve to IDB authority.
+      // Retriable after compat: conflict_idb_ls + orphan undecryptable quarantine paths.
       if (!RETRIABLE_FAIL_CLOSED.has(priorReason)) {
         return { ok: false, failClosed: true, reason: priorReason };
       }
@@ -389,10 +505,12 @@ export async function migrateL1ToIdbOnly(options = {}) {
     checkpoint.updatedAt = new Date().toISOString();
     await writeMigrationCheckpoint(L1_IDB_MIGRATION_ID, checkpoint);
 
+    const alternateMdks = workingMdk ? await collectAlternateMdks(workingMdk) : [];
+
     const recordsDone = Array.isArray(checkpoint.recordsDone) ? checkpoint.recordsDone.slice() : [];
     for (const key of recordKeys) {
       if (recordsDone.includes(key)) continue;
-      const rec = await reconcileRecordToIdb(key, workingMdk, checkpoint);
+      const rec = await reconcileRecordToIdb(key, workingMdk, checkpoint, alternateMdks);
       if (rec.failClosed) {
         checkpoint = { phase: PHASE_FAIL_CLOSED, reason: rec.reason, key: rec.key, updatedAt: new Date().toISOString(), recordsDone };
         await writeMigrationCheckpoint(L1_IDB_MIGRATION_ID, checkpoint);
