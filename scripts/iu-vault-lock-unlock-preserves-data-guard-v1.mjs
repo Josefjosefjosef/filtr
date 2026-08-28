@@ -29,6 +29,57 @@ const IDB_ENC_KEYS = {
   mailbox: "iu_mailboxes_v1",
 };
 
+function logStep(scenario, step, state, detail = "") {
+  const suffix = detail ? ` ${detail}` : "";
+  console.log(`IU_LOCK_UNLOCK_${scenario}_${step}_${state}${suffix}`);
+}
+
+async function runStep(scenario, step, fails, fn, timeoutMs) {
+  logStep(scenario, step, "START");
+  try {
+    await Promise.race([
+      fn(),
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error(`${step}_TIMEOUT_${timeoutMs}ms`)), timeoutMs);
+      }),
+    ]);
+    logStep(scenario, step, "PASS");
+  } catch (e) {
+    const msg = String(e && e.message ? e.message : e).slice(0, 160);
+    fails.push(`${scenario}_${step}:${msg}`);
+    logStep(scenario, step, "FAIL", msg);
+    throw e;
+  }
+}
+
+async function ensureDesktopMindMenuOverlay(page, scenario, fails, timeoutMs = 60000) {
+  logStep(scenario, "DESKTOP_OVERLAY", "START");
+  await page.evaluate(() => {
+    document.body.classList.add("iu-desktop-home-grid");
+  });
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureFeedPipeline === "function") {
+      await window.__iuEnsureFeedPipeline();
+    }
+  });
+  try {
+    await page.waitForFunction(
+      () => typeof window.iuArticleActionsOpenOverlay === "function",
+      null,
+      { timeout: timeoutMs }
+    );
+  } catch (e) {
+    fails.push(`${scenario}_overlay_fn_missing`);
+    logStep(scenario, "DESKTOP_OVERLAY", "FAIL", String(e.message || e).slice(0, 120));
+    return false;
+  }
+  await page.evaluate(async () => {
+    await window.iuArticleActionsOpenOverlay();
+  });
+  logStep(scenario, "DESKTOP_OVERLAY", "PASS");
+  return true;
+}
+
 async function readIdbEncPresence(page, keys = IDB_ENC_KEYS) {
   return page.evaluate(async (keyMap) => {
     const { readRecord } = await import("/assets/iu-vault-db-v1.js");
@@ -84,6 +135,9 @@ function staticChecks(fails) {
   if (!/afterUnlock/.test(bootJs) || !/preloadAllVaultRecords/.test(bootJs)) {
     fails.push("bootstrap_missing_unlock_hydrate");
   }
+  if (!/flushPendingVaultWrites\(\);\s*\n\s*await migratePlaintextToVault/.test(bootJs)) {
+    fails.push("bootstrap_after_unlock_missing_flush_before_migrate");
+  }
   if (!/iuVaultAppLockScreen/.test(indexHtml)) fails.push("index_missing_global_lock_screen");
   if (!/initGlobalAppLock/.test(bootJs)) fails.push("bootstrap_missing_global_app_lock");
   if (!/refreshGlobalAppLockUi/.test(bootJs)) fails.push("bootstrap_missing_refresh_app_lock");
@@ -125,16 +179,16 @@ async function seedMindMenuMailbox(page, marker) {
   await page.evaluate(
     async ({ mailboxSeed, marker }) => {
       localStorage.setItem("iu_mailboxes_v1", mailboxSeed);
-      if (typeof window.iuVault?.afterUnlock === "function" && window.iuVault.getState().unlocked) {
-        await window.iuVault.afterUnlock();
-      }
       if (typeof window.iuVault?.flushPendingWrites === "function") {
         await window.iuVault.flushPendingWrites();
+      }
+      if (typeof window.iuVault?.afterUnlock === "function" && window.iuVault.getState().unlocked) {
+        await window.iuVault.afterUnlock();
       }
     },
     { mailboxSeed, marker }
   );
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(300);
   return mailboxSeed;
 }
 
@@ -184,13 +238,16 @@ async function seedPersonalData(page, noteSeed, taskSeed, calSeed) {
       localStorage.setItem("iu.notes.store.v1", noteSeed);
       localStorage.setItem("iu.tasks.mvp.v1", taskSeed);
       localStorage.setItem("iu.calendar.store.v1", calSeed);
+      if (typeof window.iuVault?.flushPendingWrites === "function") {
+        await window.iuVault.flushPendingWrites();
+      }
       if (typeof window.iuVault?.afterUnlock === "function" && window.iuVault.getState().unlocked) {
         await window.iuVault.afterUnlock();
       }
     },
     { noteSeed, taskSeed, calSeed }
   );
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(300);
 }
 
 async function waitForMarkers(page, needle, timeoutMs) {
@@ -240,7 +297,21 @@ async function activateProtection(page) {
   }
 }
 
-async function unlockProtection(page, mode) {
+async function waitForVaultBootReady(page, timeoutMs = 30000) {
+  await page.waitForFunction(
+    () => {
+      const phase = window.__iuVaultBootPhase;
+      if (phase === "locked" || phase === "unlocked") return true;
+      if (document.documentElement.classList.contains("iu-vault-app-locked")) return true;
+      return !document.documentElement.classList.contains("iu-vault-app-init");
+    },
+    null,
+    { timeout: timeoutMs }
+  );
+}
+
+async function unlockProtection(page, mode, scenario = "UNLOCK") {
+  logStep(scenario, "UNLOCK_REQUEST", "START");
   if (mode === "l2") {
     await page.evaluate(async () => {
       await window.iuVault.unlockDevice();
@@ -251,13 +322,17 @@ async function unlockProtection(page, mode) {
     });
   }
   await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 60000 });
+  logStep(scenario, "UNLOCK_REQUEST", "PASS");
+  logStep(scenario, "HYDRATE", "START");
   await page.evaluate(async () => {
     if (typeof window.iuVault.afterUnlock === "function") {
       await window.iuVault.afterUnlock();
     }
   });
-  await page.waitForTimeout(500);
+  logStep(scenario, "HYDRATE", "PASS");
+  logStep(scenario, "MARKERS", "START");
   await waitForMarkers(page, MARKER, 90000);
+  logStep(scenario, "MARKERS", "PASS");
 }
 
 async function readModuleMarkers(page) {
@@ -331,20 +406,32 @@ async function main() {
   ]);
 
   const page = await context.newPage();
+  page.setDefaultTimeout(180000);
 
   try {
-    await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
-    await waitForVaultReady(page);
-    await seedPersonalData(page, noteSeed, taskSeed, calSeed);
-    await seedMindMenuMailbox(page, MAILBOX_MARKER);
+    console.log("IU_LOCK_UNLOCK_GUARD_START");
+    await runStep("MAIN", "BROWSER_LOAD", fails, async () => {
+      await page.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await waitForVaultReady(page);
+    }, 130000);
+    logStep("MAIN", "VAULT_INIT", "PASS");
 
+    await runStep("MAIN", "WRITE", fails, async () => {
+      await seedPersonalData(page, noteSeed, taskSeed, calSeed);
+      await seedMindMenuMailbox(page, MAILBOX_MARKER);
+    }, 120000);
+    logStep("MAIN", "PERSISTENCE", "START");
     const beforeProtect = await readModuleMarkers(page);
     const beforeMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
     if (!beforeProtect.notes || !beforeProtect.tasks) fails.push("seed_not_visible_before_protect");
     if (!beforeMailbox) fails.push("mailbox_seed_not_visible_before_protect");
-
     const encBeforeProtect = await readIdbEncPresence(page, { mailbox: IDB_ENC_KEYS.mailbox });
     if (!encBeforeProtect.mailbox) fails.push("mailbox_missing_enc_before_protect");
+    if (fails.some((f) => f.startsWith("seed_") || f.startsWith("mailbox_seed"))) {
+      logStep("MAIN", "PERSISTENCE", "FAIL");
+    } else {
+      logStep("MAIN", "PERSISTENCE", "PASS");
+    }
 
     const activated = await activateProtection(page);
     if (!activated.mode) {
@@ -371,9 +458,11 @@ async function main() {
       if (!encBeforeLock.notes || !encBeforeLock.tasks) fails.push("missing_enc_before_lock");
       if (!encBeforeLock.mailbox) fails.push("mailbox_missing_enc_before_lock");
 
-      await page.evaluate(async () => {
-        await window.iuVault.lock();
-      });
+      await runStep("MAIN", "LOCK", fails, async () => {
+        await page.evaluate(async () => {
+          await window.iuVault.lock();
+        });
+      }, 60000);
 
       const lockedState = await page.evaluate(() => {
         const st = window.iuVault.getState();
@@ -401,17 +490,7 @@ async function main() {
       const encWhileLocked = await readIdbEncPresence(page, { notes: IDB_ENC_KEYS.notes, tasks: IDB_ENC_KEYS.tasks });
       if (!encWhileLocked.notes || !encWhileLocked.tasks) fails.push("enc_deleted_on_lock");
 
-      await page.evaluate(() => {
-        document.body.classList.add("iu-desktop-home-grid");
-      });
-      await page.waitForFunction(
-        () => typeof window.iuArticleActionsOpenOverlay === "function",
-        null,
-        { timeout: 180000 }
-      );
-      await page.evaluate(async () => {
-        await window.iuArticleActionsOpenOverlay();
-      });
+      await ensureDesktopMindMenuOverlay(page, "LOCKED", fails, 60000);
 
       const lockedGateUi = await page.evaluate(async () => {
         const screen = document.getElementById("iuVaultAppLockScreen");
@@ -430,8 +509,11 @@ async function main() {
       });
       if (!lockedGateUi.globalLockVisible) fails.push("global_lock_hidden_while_app_used");
       if (!lockedGateUi.getMdkFailed) fails.push("mdk_accessible_while_locked");
+      else logStep("MAIN", "LOCKED_ACCESS_DENIED", "PASS");
 
-      await unlockProtection(page, activated.mode);
+      await runStep("MAIN", "UNLOCK", fails, async () => {
+        await unlockProtection(page, activated.mode, "MAIN");
+      }, 180000);
 
       const afterUnlock = await readModuleMarkers(page);
       const afterUnlockMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
@@ -439,18 +521,9 @@ async function main() {
       if (!afterUnlock.tasks && !afterUnlock.tasksService) fails.push("tasks_lost_after_unlock");
       if (!afterUnlock.calendar) fails.push("calendar_lost_after_unlock");
       if (!afterUnlockMailbox) fails.push("mailbox_lost_after_unlock");
+      else logStep("MAIN", "DATA_PRESERVATION", "PASS");
 
-      await page.evaluate(() => {
-        document.body.classList.add("iu-desktop-home-grid");
-      });
-      await page.waitForFunction(
-        () => typeof window.iuArticleActionsOpenOverlay === "function",
-        null,
-        { timeout: 180000 }
-      );
-      await page.evaluate(async () => {
-        await window.iuArticleActionsOpenOverlay();
-      });
+      await ensureDesktopMindMenuOverlay(page, "UNLOCKED", fails, 60000);
 
       const gateUi = await page.evaluate(() => {
         const screen = document.getElementById("iuVaultAppLockScreen");
@@ -463,8 +536,11 @@ async function main() {
       if (!gateUi.globalLockHidden) fails.push("global_lock_visible_while_unlocked");
       if (gateUi.hostHidden) fails.push("mindmenu_host_hidden_while_unlocked");
 
-      await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
-      await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
+      await runStep("MAIN", "RELOAD", fails, async () => {
+        await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+        await page.waitForFunction(() => !!window.iuVault, null, { timeout: 60000 });
+        await waitForVaultBootReady(page, 30000);
+      }, 130000);
 
       if (activated.mode === "l2") {
         try {
@@ -485,7 +561,9 @@ async function main() {
         fails.push("hydration_should_be_pending_after_reload_while_locked");
       }
 
-      await unlockProtection(page, activated.mode);
+      await runStep("MAIN", "POST_RELOAD_UNLOCK", fails, async () => {
+        await unlockProtection(page, activated.mode, "RELOAD");
+      }, 180000);
 
       const afterReload = await readModuleMarkers(page);
       const afterReloadMailbox = await readMailboxMarker(page, MAILBOX_MARKER);
@@ -493,7 +571,9 @@ async function main() {
       if (!afterReload.tasks && !afterReload.tasksService) fails.push("tasks_lost_after_reload_unlock");
       if (!afterReload.calendar) fails.push("calendar_lost_after_reload_unlock");
       if (!afterReloadMailbox) fails.push("mailbox_lost_after_reload_unlock");
+      else logStep("MAIN", "POST_RELOAD_PRESERVATION", "PASS");
 
+      logStep("MAIN", "CLEANUP", "START");
       await page.close();
       const page2 = await context.newPage();
       await page2.goto(`${BASE}?nosw=1&cb=${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -529,17 +609,7 @@ async function main() {
         null,
         { timeout: 30000 }
       );
-      await page2.evaluate(() => {
-        document.body.classList.add("iu-desktop-home-grid");
-      });
-      await page2.waitForFunction(
-        () => typeof window.iuArticleActionsOpenOverlay === "function",
-        null,
-        { timeout: 180000 }
-      );
-      await page2.evaluate(async () => {
-        await window.iuArticleActionsOpenOverlay();
-      });
+      await ensureDesktopMindMenuOverlay(page2, "REOPEN", fails, 60000);
       const gateAfterReopen = await page2.evaluate(() => {
         const screen = document.getElementById("iuVaultAppLockScreen");
         const host = document.getElementById("iuMyInfoUzelMindMenuHost");
@@ -556,7 +626,9 @@ async function main() {
         fails.push("mindmenu_accessible_before_unlock_after_reopen");
       }
 
-      await unlockProtection(page2, activated.mode);
+      await runStep("MAIN", "REOPEN_UNLOCK", fails, async () => {
+        await unlockProtection(page2, activated.mode, "REOPEN");
+      }, 180000);
 
       const afterReopen = await readModuleMarkers(page2);
       const afterReopenMailbox = await readMailboxMarker(page2, MAILBOX_MARKER);
@@ -564,8 +636,12 @@ async function main() {
       if (!afterReopen.tasks && !afterReopen.tasksService) fails.push("tasks_lost_after_browser_reopen");
       if (!afterReopen.calendar) fails.push("calendar_lost_after_browser_reopen");
       if (!afterReopenMailbox) fails.push("mailbox_lost_after_browser_reopen");
+      logStep("MAIN", "CLEANUP", "PASS");
     }
+  } catch (stepErr) {
+    if (!fails.length) fails.push(`guard_abort:${String(stepErr.message || stepErr).slice(0, 160)}`);
   } finally {
+    logStep("MAIN", "BROWSER_CLOSE", "START");
     try {
       await Promise.race([
         browser.close(),
@@ -582,6 +658,8 @@ async function main() {
         }
       }
     } catch (_) {}
+    logStep("MAIN", "BROWSER_CLOSE", "PASS");
+    logStep("MAIN", "SERVER_STOP", "START");
     try {
       server.kill("SIGKILL");
     } catch (_) {
@@ -589,6 +667,7 @@ async function main() {
         server.kill();
       } catch (_) {}
     }
+    logStep("MAIN", "SERVER_STOP", "PASS");
   }
 
   const report = {
@@ -603,6 +682,7 @@ async function main() {
     process.exit(1);
   }
   console.log("IU_VAULT_LOCK_UNLOCK_PRESERVES_DATA_GUARD_PASS");
+  console.log("IU_LOCK_UNLOCK_COMPLETE_PASS");
   process.exit(0);
 }
 

@@ -341,6 +341,7 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     recordVaultPersistenceEvent("20-module-hydrate", { source: "afterUnlock-start" });
+    await flushPendingVaultWrites();
     await migratePlaintextToVault();
     await preloadAllVaultRecords();
     const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
