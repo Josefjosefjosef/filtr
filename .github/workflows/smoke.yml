@@ -56,42 +56,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
-            PUSH_CHANGED=""
-            PR_CHANGED=""
-            if [ -n "${GITHUB_EVENT_BEFORE:-}" ] && [ "${GITHUB_EVENT_BEFORE}" != "0000000000000000000000000000000000000000" ]; then
-              PUSH_CHANGED="$(git diff --name-only "${GITHUB_EVENT_BEFORE}..${GITHUB_SHA}" || true)"
-            fi
-            PR_CHANGED="$(git diff --name-only origin/main...HEAD || true)"
-            if echo "$PUSH_CHANGED"$'\n'"$PR_CHANGED" | grep -qE '^assets/iu-vault-'; then
-              echo "SMOKE_PUSH_VAULT_RUNTIME_REQUIRES_FULL=YES"
-              node scripts/smoke-data-only-scope.mjs
-              exit $?
-            fi
-            {
-              echo "data_only=true"
-              echo "vault_runtime_scope=false"
-              echo "info_panel_only=false"
-              echo "fin_calc_header_only=false"
-              echo "datovka_overlay_only=false"
-              echo "custom_buttons_scroll_only=false"
-              echo "quicktools_mobile_visibility_only=false"
-              echo "quicktools_fixed_width_only=false"
-              echo "user_data_backup_only=false"
-              echo "data_mgmt_restore_overlay_mobile_only=false"
-              echo "pc_left_rail_same_window_tabs_only=false"
-              echo "pc_tool_window_left_rail_layout_only=false"
-              echo "notes_unified_field_only=false"
-              echo "pwa_offline_resilience_only=false"
-              echo "info_panel_cnb_rates_only=false"
-              echo "jr_section_header_line_color_only=false"
-              echo "legal_doc_section_bar_only=false"
-              echo "legal_docs_form_state_only=false"
-              echo "pc_svatek_label_pill_gap_only=false"
-              echo "calendar_allday_pinned_limit_only=false"
-              echo "desktop_article_read_mark_only=false"
-            } >> "$GITHUB_OUTPUT"
-            echo "SMOKE_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
-            exit 0
+            echo "SMOKE_PUSH_PR_OWNS_CHECK=YES"
           fi
           node scripts/smoke-data-only-scope.mjs
 
