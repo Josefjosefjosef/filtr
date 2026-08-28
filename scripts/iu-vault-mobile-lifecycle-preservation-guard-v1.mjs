@@ -149,7 +149,7 @@ async function unlockRead(page, opts = {}) {
       await withTimeout(window.iuVault.flushPendingWrites(), 30000, "FLUSH_EMPTY");
     }
     if (!skipHydrate) {
-      await withTimeout(window.iuVault.afterUnlock(), 90000, "AFTER_UNLOCK");
+      await withTimeout(window.iuVault.afterUnlock(), 55000, "AFTER_UNLOCK");
     } else {
       try {
         window.__iuVaultHydrationPending = false;

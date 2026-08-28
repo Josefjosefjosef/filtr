@@ -58,7 +58,7 @@ async function withMigrateLock(fn) {
       if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
         return await navigator.locks.request(
           "iu-vault-l1-migrate",
-          { mode: "exclusive", signal: AbortSignal.timeout(20000) },
+          { mode: "exclusive", signal: AbortSignal.timeout(12000) },
           fn
         );
       }

@@ -355,13 +355,13 @@ const api = {
       }
     };
     try {
-      await withTimeout(flushPendingVaultWrites(), 30000, "VAULT_FLUSH_TIMEOUT");
+      await withTimeout(flushPendingVaultWrites(), 10000, "VAULT_FLUSH_TIMEOUT");
     } catch (_) {}
     try {
-      await withTimeout(migratePlaintextToVault(), 45000, "VAULT_MIGRATE_TIMEOUT");
+      await withTimeout(migratePlaintextToVault(), 15000, "VAULT_MIGRATE_TIMEOUT");
     } catch (_) {}
     try {
-      await withTimeout(preloadAllVaultRecords(), 60000, "VAULT_PRELOAD_TIMEOUT");
+      await withTimeout(preloadAllVaultRecords(), 25000, "VAULT_PRELOAD_TIMEOUT");
     } catch (_) {}
     const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
     notify();
@@ -372,7 +372,7 @@ const api = {
     } catch (_) {}
     recordVaultPersistenceEvent("23-persist-after-hydrate", { source: "afterUnlock-complete" });
     try {
-      await withTimeout(refreshGlobalAppLockUi(api), 15000, "VAULT_APP_LOCK_UI_TIMEOUT");
+      await withTimeout(refreshGlobalAppLockUi(api), 5000, "VAULT_APP_LOCK_UI_TIMEOUT");
     } catch (_) {}
   },
   refreshAppLockUi: () => refreshGlobalAppLockUi(api),

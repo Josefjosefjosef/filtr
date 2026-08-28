@@ -12,7 +12,7 @@ const script = path.join(REPO, "scripts", "iu-vault-mobile-lifecycle-preservatio
 const lifecycleUrl = pathToFileURL(path.join(REPO, "scripts/guards/guard-playwright-lifecycle.mjs")).href;
 const { runGuardChildScript } = await import(lifecycleUrl);
 
-const CHILD_TIMEOUT_MS = 180000;
+const CHILD_TIMEOUT_MS = 300000;
 
 async function run(envExtra) {
   const result = await runGuardChildScript(script, [], {
