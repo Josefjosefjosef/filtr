@@ -134,17 +134,23 @@ async function seed(page, tag) {
 
 async function unlockRead(page, opts = {}) {
   return page.evaluate(async ({ pin, skipHydrate, emptyBefore, keys, marker }) => {
-    await window.iuVault.unlockPin(pin);
+    const withTimeout = (p, ms, label) =>
+      Promise.race([
+        p,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(`${label}_TIMEOUT_${ms}ms`)), ms)),
+      ]);
+    await withTimeout(window.iuVault.unlockPin(pin), 60000, "UNLOCK_PIN");
     if (emptyBefore) {
       try {
         window.__iuVaultHydrationPending = false;
       } catch (_) {}
       localStorage.setItem("iu.notes.store.v1", JSON.stringify({ schemaVersion: 1, notes: [] }));
       localStorage.setItem("iu.tasks.mvp.v1", JSON.stringify({ schemaVersion: 1, tasks: [] }));
-      await window.iuVault.flushPendingWrites();
+      await withTimeout(window.iuVault.flushPendingWrites(), 30000, "FLUSH_EMPTY");
     }
-    if (!skipHydrate) await window.iuVault.afterUnlock();
-    else {
+    if (!skipHydrate) {
+      await withTimeout(window.iuVault.afterUnlock(), 90000, "AFTER_UNLOCK");
+    } else {
       try {
         window.__iuVaultHydrationPending = false;
         window.__iuVaultHydrationComplete = true;
@@ -350,6 +356,7 @@ async function runViewport(browser, base, viewport, fails, label) {
 
 async function main() {
   const fails = [];
+  console.log("IU_MOBILE_LIFECYCLE_GUARD_START");
   staticChecks(fails);
   let server = null;
   let browser = null;
