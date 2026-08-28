@@ -301,6 +301,25 @@ export async function getPersistenceDiag(options) {
     }
   }
 
+  let storagePersisted = null;
+  let storagePersistSupported = false;
+  try {
+    storagePersistSupported = !!(navigator.storage && typeof navigator.storage.persisted === "function");
+    if (storagePersistSupported) storagePersisted = await navigator.storage.persisted();
+  } catch (_) {}
+
+  let pageOrigin = null;
+  try {
+    pageOrigin = String(location.origin || "").slice(0, 120);
+  } catch (_) {}
+
+  let confirmedWriteCount = 0;
+  try {
+    for (const ev of timeline) {
+      if (ev && ev.step === "08-write-confirmed") confirmedWriteCount += 1;
+    }
+  } catch (_) {}
+
   return {
     capturedAt: Date.now(),
     platform: detectPlatform(),
@@ -322,6 +341,9 @@ export async function getPersistenceDiag(options) {
     forensics: {
       dbName: "iu.vault.v1",
       schemaVersion: 1,
+      origin: pageOrigin,
+      storagePersistSupported,
+      storagePersisted,
       recordCount: allRecordCount,
       probeCiphertextCount: ciphertextCount,
       cryptoKeyPresent,
@@ -339,6 +361,8 @@ export async function getPersistenceDiag(options) {
         : null,
       persistenceState,
       materialStoreId: LEVEL1_MDK_MATERIAL_ID ? "level1-material" : null,
+      confirmedWriteCount,
+      pendingWriteCount: getPendingVaultWriteCount(),
     },
     records,
   };

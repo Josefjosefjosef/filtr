@@ -25,7 +25,7 @@
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
-const CACHE_VERSION = "2026-08-26-iu-vault-desktop-shared-session-v3";
+const CACHE_VERSION = "2026-08-28-iu-vault-physical-diag-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -857,6 +857,35 @@ self.addEventListener("fetch", (event) => {
             return fresh;
           }
         } catch (_) {}
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
+  /* Vault persistence path: network-first so physical forensics / fail-closed
+     builds are not held by SWR pathname cache after deploy. */
+  if (
+    path.includes("/assets/iu-vault-bootstrap-v1.js") ||
+    path.includes("/assets/iu-vault-persistence-diag-v1.js") ||
+    path.includes("/assets/iu-vault-physical-diag-overlay-v1.js") ||
+    path.includes("/assets/iu-vault-storage-v1.js") ||
+    path.includes("/assets/iu-vault-lock-v1.js") ||
+    path.includes("/assets/iu-vault-db-v1.js")
+  ) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
         if (cached) return cached;
         return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
       })()
