@@ -1,15 +1,20 @@
 /**
- * Physical persistence diagnostic overlay — metadata only.
- * Activates only with ?iuPersistDiag=1.
- * Does NOT flush, write vault data, or change persistence semantics.
+ * Physical persistence / conflict forensics overlay — metadata only.
+ * ?iuPersistDiag=1 → BEFORE/AFTER persistence diag (may run normal vault boot)
+ * ?iuConflictForensics=1 → READ-ONLY conflict topology (boot must skip migrate)
+ * Does NOT flush or write vault data from this overlay.
  */
 (function iuPhysicalPersistDiagOverlay() {
   "use strict";
+  var params;
   try {
-    if (new URLSearchParams(location.search || "").get("iuPersistDiag") !== "1") return;
+    params = new URLSearchParams(location.search || "");
   } catch (_) {
     return;
   }
+  var persistMode = params.get("iuPersistDiag") === "1";
+  var conflictMode = params.get("iuConflictForensics") === "1";
+  if (!persistMode && !conflictMode) return;
   if (window.__iuPhysicalPersistDiagOverlay) return;
   window.__iuPhysicalPersistDiagOverlay = 1;
 
@@ -18,31 +23,37 @@
     b.type = "button";
     b.setAttribute("data-act", act);
     b.textContent = label;
-    b.style.cssText = flex
-      ? "flex:1;min-width:120px;padding:10px"
-      : "padding:10px";
+    b.style.cssText = flex ? "flex:1;min-width:120px;padding:10px" : "padding:10px";
     return b;
   }
 
   var root = document.createElement("div");
   root.id = "iuPersistDiagOverlay";
   root.setAttribute("role", "dialog");
-  root.setAttribute("aria-label", "Persistence diagnostika");
+  root.setAttribute("aria-label", conflictMode ? "Conflict forensics" : "Persistence diagnostika");
   root.style.cssText =
-    "position:fixed;z-index:2147483000;left:8px;right:8px;bottom:8px;max-height:46vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
+    "position:fixed;z-index:2147483646;left:8px;right:8px;bottom:8px;max-height:52vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
 
   var row = document.createElement("div");
   row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px";
-  row.appendChild(btn("1) BEFORE close", "before", true));
-  row.appendChild(btn("2) AFTER reopen", "after", true));
-  row.appendChild(btn("Kopírovat JSON", "copy", true));
-  row.appendChild(btn("Zavřít", "close", false));
+  if (conflictMode) {
+    row.appendChild(btn("1) Capture forensics", "conflict", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  } else {
+    row.appendChild(btn("1) BEFORE close", "before", true));
+    row.appendChild(btn("2) AFTER reopen", "after", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  }
   root.appendChild(row);
 
   var pre = document.createElement("pre");
   pre.id = "iuPersistDiagOut";
   pre.style.cssText = "white-space:pre-wrap;word-break:break-word;margin:0";
-  pre.textContent = "Čekám na vault…";
+  pre.textContent = conflictMode
+    ? "READ-ONLY conflict forensics. Stiskni Capture. Žádný migrate/write."
+    : "Čekám na vault…";
   root.appendChild(pre);
 
   function mount() {
@@ -56,18 +67,20 @@
   function setText(t) {
     pre.textContent = t;
   }
-  function waitVault(ms) {
+
+  function waitApi(ms, pred) {
     return new Promise(function (resolve, reject) {
       var t0 = Date.now();
       (function tick() {
-        if (window.iuVault && typeof window.iuVault.getPersistenceDiag === "function") {
-          return resolve(window.iuVault);
-        }
+        try {
+          if (pred()) return resolve(window.iuVault);
+        } catch (_) {}
         if (Date.now() - t0 > ms) return reject(new Error("VAULT_DIAG_TIMEOUT"));
         setTimeout(tick, 200);
       })();
     });
   }
+
   function compactRecords(records) {
     var arr = Array.isArray(records) ? records : [];
     return arr.map(function (r) {
@@ -84,10 +97,13 @@
       };
     });
   }
-  async function capture(tag) {
+
+  async function capturePersist(tag) {
     setText("Načítám " + tag + "…");
     try {
-      var vault = await waitVault(20000);
+      var vault = await waitApi(20000, function () {
+        return window.iuVault && typeof window.iuVault.getPersistenceDiag === "function";
+      });
       var diag = await vault.getPersistenceDiag();
       lastPayload = {
         tag: tag,
@@ -107,16 +123,30 @@
       setText("FAIL: " + String(err && err.message ? err.message : err));
     }
   }
+
+  async function captureConflict() {
+    setText("Načítám READ-ONLY conflict forensics…");
+    try {
+      var vault = await waitApi(25000, function () {
+        return window.iuVault && typeof window.iuVault.getConflictForensics === "function";
+      });
+      lastPayload = await vault.getConflictForensics();
+      setText(JSON.stringify(lastPayload, null, 2));
+    } catch (err) {
+      setText("FAIL: " + String(err && err.message ? err.message : err));
+    }
+  }
+
   async function copyLast() {
     if (!lastPayload) {
-      setText("Nejdřív stiskni BEFORE nebo AFTER.");
+      setText(conflictMode ? "Nejdřív Capture forensics." : "Nejdřív stiskni BEFORE nebo AFTER.");
       return;
     }
     var text = JSON.stringify(lastPayload, null, 2);
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
-        setText(text + "\n\n---\nZkopírováno do schránky. Pošli mi tento JSON.");
+        setText(text + "\n\n---\nZkopírováno. Pošli mi tento JSON.");
         return;
       }
     } catch (_) {}
@@ -129,18 +159,26 @@
       ta.select();
       document.execCommand("copy");
       ta.remove();
-      setText(text + "\n\n---\nZkuseno zkopírovat. Pokud schránka selhala, označ text výše a zkopíruj ručně.");
+      setText(text + "\n\n---\nZkuseno zkopírovat. Jinak označ text ručně.");
     } catch (_) {
       setText(text + "\n\n---\nOznač text a zkopíruj ručně.");
     }
   }
+
   root.addEventListener("click", function (ev) {
     var t = ev.target;
     if (!t || !t.getAttribute) return;
     var act = t.getAttribute("data-act");
-    if (act === "before") capture("BEFORE_CLOSE");
-    else if (act === "after") capture("AFTER_REOPEN");
+    if (act === "before") capturePersist("BEFORE_CLOSE");
+    else if (act === "after") capturePersist("AFTER_REOPEN");
+    else if (act === "conflict") captureConflict();
     else if (act === "copy") copyLast();
     else if (act === "close") root.remove();
   });
+
+  if (conflictMode) {
+    setTimeout(function () {
+      captureConflict();
+    }, 400);
+  }
 })();
