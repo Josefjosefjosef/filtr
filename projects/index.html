@@ -6441,7 +6441,131 @@ require-trusted-types-for 'script';
          first-load-prehled-bootstrap-before-appjs-v1-20260821
          perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821 -->
 
-    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-l1-durable-material-v3-20260828"></script>
+    <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-physical-diag-v1-20260828"></script>
+    <script>
+    (function iuPhysicalPersistDiagOverlay(){
+      "use strict";
+      try {
+        if (new URLSearchParams(location.search || "").get("iuPersistDiag") !== "1") return;
+      } catch (_) { return; }
+      if (window.__iuPhysicalPersistDiagOverlay) return;
+      window.__iuPhysicalPersistDiagOverlay = 1;
+
+      var root = document.createElement("div");
+      root.id = "iuPersistDiagOverlay";
+      root.setAttribute("role", "dialog");
+      root.setAttribute("aria-label", "Persistence diagnostika");
+      root.style.cssText = "position:fixed;z-index:2147483000;left:8px;right:8px;bottom:8px;max-height:46vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
+      root.innerHTML = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
+        '<button type="button" data-act="before" style="flex:1;min-width:120px;padding:10px">1) BEFORE close</button>' +
+        '<button type="button" data-act="after" style="flex:1;min-width:120px;padding:10px">2) AFTER reopen</button>' +
+        '<button type="button" data-act="copy" style="flex:1;min-width:120px;padding:10px">Kopírovat JSON</button>' +
+        '<button type="button" data-act="close" style="padding:10px">Zavřít</button>' +
+        '</div><pre id="iuPersistDiagOut" style="white-space:pre-wrap;word-break:break-word;margin:0">Čekám na vault…</pre>';
+      function mount(){
+        if (!document.body) return false;
+        document.body.appendChild(root);
+        return true;
+      }
+      if (!mount()) document.addEventListener("DOMContentLoaded", mount);
+
+      var lastPayload = null;
+      var outEl = null;
+      function out(){
+        if (!outEl) outEl = document.getElementById("iuPersistDiagOut");
+        return outEl;
+      }
+      function setText(t){
+        var el = out();
+        if (el) el.textContent = t;
+      }
+      function waitVault(ms){
+        return new Promise(function(resolve, reject){
+          var t0 = Date.now();
+          (function tick(){
+            if (window.iuVault && typeof window.iuVault.getPersistenceDiag === "function") return resolve(window.iuVault);
+            if (Date.now() - t0 > ms) return reject(new Error("VAULT_DIAG_TIMEOUT"));
+            setTimeout(tick, 200);
+          })();
+        });
+      }
+      function compactRecords(records){
+        var arr = Array.isArray(records) ? records : [];
+        return arr.map(function(r){
+          return {
+            storageKey: r && r.storageKey ? String(r.storageKey) : null,
+            keyType: r && r.keyType ? String(r.keyType) : null,
+            backend: r && r.backend ? String(r.backend) : null,
+            idbEnvelope: !!(r && r.idbEnvelope),
+            lsEnvelope: !!(r && r.lsEnvelope),
+            plainStaging: !!(r && r.plainStaging),
+            lastWritePhase: r && r.lastWritePhase ? String(r.lastWritePhase) : null,
+            decryptStatus: r && r.decryptStatus ? String(r.decryptStatus) : null,
+            blockedWriteCount: r && typeof r.blockedWriteCount === "number" ? r.blockedWriteCount : 0
+          };
+        });
+      }
+      async function capture(tag){
+        setText("Načítám " + tag + "…");
+        try {
+          var vault = await waitVault(20000);
+          var diag = await vault.getPersistenceDiag();
+          lastPayload = {
+            tag: tag,
+            capturedAt: Date.now(),
+            hrefPath: String(location.pathname || "").slice(0, 80),
+            platform: diag && diag.platform ? diag.platform : null,
+            displayMode: diag && diag.displayMode ? diag.displayMode : null,
+            bootPhase: diag && diag.bootPhase ? diag.bootPhase : null,
+            hydrationComplete: !!(diag && diag.hydrationComplete),
+            pendingWriteCount: diag && typeof diag.pendingWriteCount === "number" ? diag.pendingWriteCount : null,
+            serviceWorker: diag && diag.serviceWorker ? diag.serviceWorker : null,
+            forensics: diag && diag.forensics ? diag.forensics : null,
+            records: compactRecords(diag && diag.records)
+          };
+          setText(JSON.stringify(lastPayload, null, 2));
+        } catch (err) {
+          setText("FAIL: " + String(err && err.message ? err.message : err));
+        }
+      }
+      async function copyLast(){
+        if (!lastPayload) {
+          setText("Nejdřív stiskni BEFORE nebo AFTER.");
+          return;
+        }
+        var text = JSON.stringify(lastPayload, null, 2);
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            setText(text + "\n\n---\nZkopírováno do schránky. Pošli mi tento JSON.");
+            return;
+          }
+        } catch (_) {}
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.cssText = "position:fixed;left:-9999px;top:0";
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          setText(text + "\n\n---\nZkuseno zkopírovat. Pokud schránka selhala, označ text výše a zkopíruj ručně.");
+        } catch (_) {
+          setText(text + "\n\n---\nOznač text a zkopíruj ručně.");
+        }
+      }
+      root.addEventListener("click", function(ev){
+        var t = ev.target;
+        if (!t || !t.getAttribute) return;
+        var act = t.getAttribute("data-act");
+        if (act === "before") capture("BEFORE_CLOSE");
+        else if (act === "after") capture("AFTER_REOPEN");
+        else if (act === "copy") copyLast();
+        else if (act === "close") root.remove();
+      });
+    })();
+    </script>
     <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->
