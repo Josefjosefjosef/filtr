@@ -123,8 +123,11 @@ async function seed(page, tag) {
     await window.iuVault.afterUnlock();
     for (const [k, v] of Object.entries(data)) localStorage.setItem(k, v);
     await window.iuVault.flushPendingWrites();
+    const { readRecord } = await import("/assets/iu-vault-db-v1.js");
     const enc = {};
-    for (const k of Object.keys(data)) enc[k] = !!localStorage.getItem("iu:vault:enc:v1:" + k);
+    for (const k of Object.keys(data)) {
+      enc[k] = !!localStorage.getItem("iu:vault:enc:v1:" + k) || !!(await readRecord(k));
+    }
     return enc;
   }, { data, pin: PIN });
 }
@@ -270,6 +273,11 @@ async function runViewport(browser, base, viewport, fails, label) {
     await new Promise((r) => setTimeout(r, 40));
     const encKey = "iu:vault:enc:v1:" + noteKey;
     const enc = localStorage.getItem(encKey);
+    let idb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      idb = !!(await readRecord(noteKey));
+    } catch (_) {}
     const plain = localStorage.getItem(noteKey);
     if (simulateEarlyNativeRemove) {
       try {
@@ -277,7 +285,7 @@ async function runViewport(browser, base, viewport, fails, label) {
       } catch (_) {}
     }
     return {
-      encExists: !!enc,
+      encExists: !!enc || idb,
       plainExists: plain === payload,
       durableBlob: enc || plain || "",
     };
@@ -299,6 +307,12 @@ async function runViewport(browser, base, viewport, fails, label) {
       window.__iuVaultHydrationPending = true;
     } catch (_) {}
     const beforeEnc = localStorage.getItem("iu:vault:enc:v1:" + noteKey);
+    let beforeIdb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      beforeIdb = !!(await readRecord(noteKey));
+    } catch (_) {}
+    const beforeAtRest = beforeEnc || (beforeIdb ? "idb" : null);
     let blocked = window.iuVault.isPersistBlocked(noteKey);
     let restore = null;
     if (allowHydrationEmpty) {
@@ -311,7 +325,14 @@ async function runViewport(browser, base, viewport, fails, label) {
       await window.iuVault.flushPendingWrites();
     }
     if (restore) window.iuVault.isPersistBlocked = restore;
-    return { blocked: !!blocked, afterEnc: localStorage.getItem("iu:vault:enc:v1:" + noteKey), beforeEnc };
+    const afterEnc = localStorage.getItem("iu:vault:enc:v1:" + noteKey);
+    let afterIdb = false;
+    try {
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      afterIdb = !!(await readRecord(noteKey));
+    } catch (_) {}
+    const afterAtRest = afterEnc || (afterIdb ? "idb" : null);
+    return { blocked: !!blocked, afterEnc: afterAtRest, beforeEnc: beforeAtRest };
   }, { noteKey: KEYS.note, allowHydrationEmpty: ALLOW_HYDRATION_EMPTY });
   if (ALLOW_HYDRATION_EMPTY) {
     if (!hydrationBlock.beforeEnc || hydrationBlock.afterEnc === hydrationBlock.beforeEnc) {

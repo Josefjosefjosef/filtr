@@ -79,7 +79,8 @@ async function main() {
       await window.iuVault.afterUnlock();
       localStorage.setItem(prefsKey, JSON.stringify(prefs));
       await window.iuVault.flushPendingWrites();
-      const enc = !!localStorage.getItem("iu:vault:enc:v1:" + prefsKey);
+      const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+      const enc = !!localStorage.getItem("iu:vault:enc:v1:" + prefsKey) || !!(await readRecord(prefsKey));
       await window.iuVault.lock();
       document.dispatchEvent(new Event("visibilitychange"));
       window.dispatchEvent(new Event("pagehide"));
