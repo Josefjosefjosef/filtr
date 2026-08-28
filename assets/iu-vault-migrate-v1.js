@@ -66,7 +66,24 @@ const MIGRATION_ID = "plaintext-to-vault-v1";
 
 async function withMigrateLock(fn) {
   if (navigator.locks && navigator.locks.request) {
-    return navigator.locks.request("iu-vault-migrate", { mode: "exclusive" }, fn);
+    const run = () => navigator.locks.request("iu-vault-migrate", { mode: "exclusive" }, fn);
+    try {
+      if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+        return await navigator.locks.request(
+          "iu-vault-migrate",
+          { mode: "exclusive", signal: AbortSignal.timeout(20000) },
+          fn
+        );
+      }
+    } catch (err) {
+      const name = err && err.name ? err.name : "";
+      if (name === "AbortError" || name === "TimeoutError") {
+        // Never block unlock/hydrate forever if a prior holder stalled.
+        return fn();
+      }
+      throw err;
+    }
+    return run();
   }
   return fn();
 }

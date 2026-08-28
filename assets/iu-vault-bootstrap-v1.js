@@ -341,9 +341,28 @@ const api = {
       window.__iuVaultHydrationComplete = false;
     } catch (_) {}
     recordVaultPersistenceEvent("20-module-hydrate", { source: "afterUnlock-start" });
-    await flushPendingVaultWrites();
-    await migratePlaintextToVault();
-    await preloadAllVaultRecords();
+    const withTimeout = async (promise, ms, label) => {
+      let timer = null;
+      try {
+        return await Promise.race([
+          promise,
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(label)), ms);
+          }),
+        ]);
+      } finally {
+        if (timer) clearTimeout(timer);
+      }
+    };
+    try {
+      await withTimeout(flushPendingVaultWrites(), 30000, "VAULT_FLUSH_TIMEOUT");
+    } catch (_) {}
+    try {
+      await withTimeout(migratePlaintextToVault(), 45000, "VAULT_MIGRATE_TIMEOUT");
+    } catch (_) {}
+    try {
+      await withTimeout(preloadAllVaultRecords(), 60000, "VAULT_PRELOAD_TIMEOUT");
+    } catch (_) {}
     const { notifyVaultMemoryHydrated: notify } = await import("./iu-vault-storage-v1.js");
     notify();
     try {
@@ -352,7 +371,9 @@ const api = {
       window.dispatchEvent(new CustomEvent("iu-vault-hydrated"));
     } catch (_) {}
     recordVaultPersistenceEvent("23-persist-after-hydrate", { source: "afterUnlock-complete" });
-    await refreshGlobalAppLockUi(api);
+    try {
+      await withTimeout(refreshGlobalAppLockUi(api), 15000, "VAULT_APP_LOCK_UI_TIMEOUT");
+    } catch (_) {}
   },
   refreshAppLockUi: () => refreshGlobalAppLockUi(api),
   isPersistBlocked: (key) => isVaultPersistBlocked(key),

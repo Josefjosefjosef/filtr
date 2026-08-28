@@ -54,6 +54,21 @@ function isVaultEnvelope(value) {
 
 async function withMigrateLock(fn) {
   if (navigator.locks && navigator.locks.request) {
+    try {
+      if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") {
+        return await navigator.locks.request(
+          "iu-vault-l1-migrate",
+          { mode: "exclusive", signal: AbortSignal.timeout(20000) },
+          fn
+        );
+      }
+    } catch (err) {
+      const name = err && err.name ? err.name : "";
+      if (name === "AbortError" || name === "TimeoutError") {
+        return fn();
+      }
+      throw err;
+    }
     return navigator.locks.request("iu-vault-l1-migrate", { mode: "exclusive" }, fn);
   }
   return fn();

@@ -142,7 +142,7 @@ function staticChecks(fails) {
   if (!/afterUnlock/.test(bootJs) || !/preloadAllVaultRecords/.test(bootJs)) {
     fails.push("bootstrap_missing_unlock_hydrate");
   }
-  if (!/flushPendingVaultWrites\(\);\s*\n\s*await migratePlaintextToVault/.test(bootJs)) {
+  if (!/flushPendingVaultWrites[\s\S]{0,200}?migratePlaintextToVault/.test(bootJs)) {
     fails.push("bootstrap_after_unlock_missing_flush_before_migrate");
   }
   if (!/iuVaultAppLockScreen/.test(indexHtml)) fails.push("index_missing_global_lock_screen");
