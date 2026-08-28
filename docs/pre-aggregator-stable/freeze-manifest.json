@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-vault-physical-diag-v1-20260828",
+    "freezeId": "iu-vault-conflict-idb-ls-compat-v1-20260828",
     "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-08-28T18:40:00.000Z",
-    "note": "Physical persistence forensics overlay + durable write counters; no persistence architecture change; full-web lock unchanged.",
+    "updatedAt": "2026-08-28T21:20:00.000Z",
+    "note": "Resolve same-MDK IDB/LS conflict by preferring IDB + archive LS; always clear LS enc after IDB write; full-web lock unchanged.",
     "files": {
-        "projects/index.html": "393b045a4e54b3f465bdc637fc5a74f38509c83498345440ae5b7f2b7363183e",
+        "projects/index.html": "5b020a61f1f026d501865f834415b1ad61672b24f34bac7606ef0eaa2aa3282a",
         "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
         "assets/app.js": "85ea605f87d9d81d3bd780276f40b727d22e1e04cadcf6250f20d582dcb856fe",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "1cf9220b500ea8c2289cf9b56179762e0c80f62872ff2c46c26b896e2766f801",
@@ -28,7 +28,7 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-08-28-iu-vault-physical-diag-v1\"",
+            "CACHE_VERSION = \"2026-08-28-iu-vault-conflict-idb-ls-compat-v1\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",
@@ -45,6 +45,7 @@
             "iuVaultStorageRecoveryScreen",
             "iu-vault-physical-diag-v1-20260828",
             "iu-vault-physical-diag-overlay-v1.js",
+            "iu-vault-conflict-idb-ls-compat-v1-20260828",
             "script-src 'self' 'sha256-",
             "doprava-chmi-switch-snap-first-v1-20260821",
             "doprava-snap-first-paint-hydrate-v1-20260821",

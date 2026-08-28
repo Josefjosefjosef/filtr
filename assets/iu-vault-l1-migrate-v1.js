@@ -4,6 +4,7 @@
  */
 import {
   decryptString,
+  encryptString,
   exportMdkRaw,
   importMdkRaw,
   b64ToBytes,
@@ -23,10 +24,22 @@ import {
 import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
 
 const ENC_PREFIX = "iu:vault:enc:v1:";
+const CONFLICT_ARCHIVE_PREFIX = "iu:vault:enc:conflict-archive:v1:";
 const LEVEL1_MDK_BACKUP_KEY = "iu:vault:mdk-level1-backup:v1";
+
+/** Fail-closed reasons that are safe to retry after compat resolution (same MDK decrypts both sides). */
+const RETRIABLE_FAIL_CLOSED = new Set(["conflict_idb_ls"]);
 
 function encStorageKey(storageKey) {
   return ENC_PREFIX + String(storageKey);
+}
+
+function conflictArchiveKey(storageKey) {
+  return CONFLICT_ARCHIVE_PREFIX + String(storageKey);
+}
+
+function conflictArchiveIdbKey(storageKey) {
+  return "iu.vault.conflict.archive.v1:" + String(storageKey);
 }
 
 function nativeLocalStorageGet(key) {
@@ -40,6 +53,12 @@ function nativeLocalStorageGet(key) {
 function nativeLocalStorageRemove(key) {
   try {
     localStorage.removeItem(String(key));
+  } catch (_) {}
+}
+
+function nativeLocalStorageSet(key, value) {
+  try {
+    localStorage.setItem(String(key), String(value));
   } catch (_) {}
 }
 
@@ -222,7 +241,26 @@ async function reconcileRecordToIdb(storageKey, mdk, checkpoint) {
     const lsDec = await tryDecryptEnvelope(mdk, storageKey, lsEnv);
     if (idbDec.ok && lsDec.ok) {
       if (idbDec.plaintext !== lsDec.plaintext) {
-        return { ok: false, failClosed: true, reason: "conflict_idb_ls", key: storageKey };
+        // Same MDK decrypts both → crypto path is intact. Prefer IDB (historical readEnvelope
+        // authority + post-#10104 write authority). Seal LS plaintext into IDB quarantine
+        // (survives later MDK rotate) and archive raw LS ciphertext for forensics.
+        try {
+          const archiveIdbKey = conflictArchiveIdbKey(storageKey);
+          const sealed = await encryptString(mdk, archiveIdbKey, lsDec.plaintext);
+          await writeRecord(archiveIdbKey, sealed);
+        } catch (_) {}
+        try {
+          const rawLs = nativeLocalStorageGet(encStorageKey(storageKey));
+          if (rawLs) nativeLocalStorageSet(conflictArchiveKey(storageKey), rawLs);
+          nativeLocalStorageRemove(encStorageKey(storageKey));
+        } catch (_) {}
+        await writeRecord(storageKey, idbEnv);
+        return {
+          ok: true,
+          source: "idb_preferred_divergent_ls",
+          conflictResolved: true,
+          key: storageKey,
+        };
       }
       await writeRecord(storageKey, idbEnv);
       return { ok: true, source: "idb_authoritative" };
@@ -308,7 +346,18 @@ export async function migrateL1ToIdbOnly(options = {}) {
       return { ok: true, complete: true, skipped: true };
     }
     if (checkpoint.phase === PHASE_FAIL_CLOSED && !options.retry) {
-      return { ok: false, failClosed: true, reason: checkpoint.reason || "prior_fail_closed" };
+      const priorReason = checkpoint.reason || "prior_fail_closed";
+      // conflict_idb_ls is retriable: same-MDK divergent mirrors now resolve to IDB authority.
+      if (!RETRIABLE_FAIL_CLOSED.has(priorReason)) {
+        return { ok: false, failClosed: true, reason: priorReason };
+      }
+      checkpoint = {
+        phase: "retry_after_compat",
+        recordsDone: Array.isArray(checkpoint.recordsDone) ? checkpoint.recordsDone : [],
+        priorFailReason: priorReason,
+        updatedAt: new Date().toISOString(),
+      };
+      await writeMigrationCheckpoint(L1_IDB_MIGRATION_ID, checkpoint);
     }
 
     const recordKeys = await collectProtectedRecordKeys();

@@ -119,11 +119,10 @@ export async function persistEnvelope(storageKey, envelope) {
   await writeRecord(k, envelope);
   captureNativeLocalStorage();
   nativeRemoveItem(k);
+  // Always drop legacy LS enc mirror after authoritative IDB commit.
+  // Leaving a stale LS enc while migration is incomplete creates conflict_idb_ls on next boot.
   try {
-    const { isL1IdbMigrationComplete } = await import("./iu-vault-l1-migrate-v1.js");
-    if (await isL1IdbMigrationComplete()) {
-      nativeRemoveItem(encStorageKey(k));
-    }
+    nativeRemoveItem(encStorageKey(k));
   } catch (_) {}
   diagSync("07-write-transaction-complete", { key: k, source: "persistEnvelope" });
 }
@@ -536,7 +535,8 @@ export async function rotateVaultMdk(oldMdk, newMdk) {
     keys.add(k);
   }
   for (const k of keys) {
-    if (!isProtectedStorageKey(k)) continue;
+    const isConflictArchive = String(k).indexOf("iu.vault.conflict.archive.v1:") === 0;
+    if (!isProtectedStorageKey(k) && !isConflictArchive) continue;
     let pt = null;
     let recordType = "unknown";
     if (memoryCache.has(k)) {
@@ -568,7 +568,7 @@ export async function rotateVaultMdk(oldMdk, newMdk) {
       } else if (!isVaultEnvelope(envelope)) {
         continue;
       } else {
-        recordType = "encrypted_record";
+        recordType = isConflictArchive ? "conflict_archive" : "encrypted_record";
         try {
           pt = await decryptString(oldMdk, k, envelope);
         } catch (err) {
