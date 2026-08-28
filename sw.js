@@ -869,6 +869,7 @@ self.addEventListener("fetch", (event) => {
   if (
     path.includes("/assets/iu-vault-bootstrap-v1.js") ||
     path.includes("/assets/iu-vault-persistence-diag-v1.js") ||
+    path.includes("/assets/iu-vault-physical-diag-overlay-v1.js") ||
     path.includes("/assets/iu-vault-storage-v1.js") ||
     path.includes("/assets/iu-vault-lock-v1.js") ||
     path.includes("/assets/iu-vault-db-v1.js")
