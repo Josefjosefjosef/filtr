@@ -2,9 +2,11 @@
  * Vault runtime state — MDK in memory, lock/unlock, auto-lock.
  */
 import {
-  generateMdk,
+  generateExtractableMdk,
   decryptString,
   encryptString,
+  exportMdkRaw,
+  importMdkRaw,
 } from "./iu-vault-core-v1.js";
 import {
   readKeyRecord,
@@ -25,12 +27,117 @@ import {
 export const APP_LOCK_HINT_KEY = "iu:vault:app-lock-active:v1";
 /** Legacy #10103 — removed after verified L1 IDB-only migration. */
 export const LEVEL1_MDK_BACKUP_KEY = "iu:vault:mdk-level1-backup:v1";
+/**
+ * L1 durable key material in IndexedDB (ArrayBuffer), not localStorage.
+ * Survives platforms that drop deserialized CryptoKey objects while keeping IDB records.
+ * Cleared on L2/L3 activation. Never logged / never exported to LS.
+ */
+export const LEVEL1_MDK_MATERIAL_ID = "mdk:level1:material";
 export const VAULT_STORAGE_RECOVERY_REQUIRED = "VAULT_STORAGE_RECOVERY_REQUIRED";
 
 export function clearLevel1MdkBackup() {
   try {
     localStorage.removeItem(LEVEL1_MDK_BACKUP_KEY);
   } catch (_) {}
+}
+
+export async function clearLevel1DurableMaterial() {
+  try {
+    await deleteKeyRecord(LEVEL1_MDK_MATERIAL_ID);
+  } catch (_) {}
+  clearLevel1MdkBackup();
+}
+
+function materialBytesFromRecord(rec) {
+  if (!rec || rec.raw == null) return null;
+  try {
+    if (rec.raw instanceof ArrayBuffer) return new Uint8Array(rec.raw);
+    if (ArrayBuffer.isView(rec.raw)) {
+      return new Uint8Array(rec.raw.buffer, rec.raw.byteOffset, rec.raw.byteLength);
+    }
+    if (Array.isArray(rec.raw)) return new Uint8Array(rec.raw);
+  } catch (_) {}
+  return null;
+}
+
+export async function readLevel1DurableMaterialBytes() {
+  const rec = await readKeyRecord(LEVEL1_MDK_MATERIAL_ID);
+  return materialBytesFromRecord(rec);
+}
+
+export async function writeLevel1DurableMaterialBytes(rawBytes) {
+  const src = rawBytes instanceof Uint8Array ? rawBytes : new Uint8Array(rawBytes);
+  const copy = new Uint8Array(src.byteLength);
+  copy.set(src);
+  await writeKeyRecord(LEVEL1_MDK_MATERIAL_ID, {
+    type: "level1-material",
+    v: 1,
+    alg: "AES-GCM",
+    raw: copy.buffer,
+    createdAt: new Date().toISOString(),
+  });
+}
+
+async function cryptoKeySelfTest(mdk) {
+  if (!mdk) return false;
+  try {
+    const env = await encryptString(mdk, "iu.vault.selftest.v1", "ok");
+    const pt = await decryptString(mdk, "iu.vault.selftest.v1", env);
+    return pt === "ok";
+  } catch (_) {
+    return false;
+  }
+}
+
+/**
+ * Persist L1 runtime CryptoKey + durable ArrayBuffer material in IDB keys store.
+ * Prefer export; if current key is non-extractable, rotate once then persist material.
+ */
+export async function persistLevel1KeyWithDurableMaterial(mdk, meta = {}) {
+  if (!mdk) throw new Error("VAULT_LEVEL1_KEY_MISSING");
+  let working = mdk;
+  let raw = null;
+  try {
+    raw = await exportMdkRaw(working);
+  } catch (_) {
+    const { rotateVaultMdk } = await import("./iu-vault-storage-v1.js");
+    const next = await generateExtractableMdk();
+    await rotateVaultMdk(working, next);
+    working = next;
+    raw = await exportMdkRaw(working);
+    lockDiag("15-level1-rotated-for-durable-material", { source: "persistLevel1KeyWithDurableMaterial" });
+  }
+  const runtimeMdk = await importMdkRaw(raw);
+  const rec = {
+    type: "level1",
+    mdk: runtimeMdk,
+    createdAt: new Date().toISOString(),
+    extractable: false,
+    durableMaterial: true,
+    ...meta,
+  };
+  await writeKeyRecord("mdk:level1", rec);
+  await writeLevel1DurableMaterialBytes(raw);
+  clearLevel1MdkBackup();
+  return rec;
+}
+
+async function restoreLevel1FromDurableMaterial() {
+  const raw = await readLevel1DurableMaterialBytes();
+  if (!raw || raw.byteLength < 16) return null;
+  const mdk = await importMdkRaw(raw);
+  if (!(await cryptoKeySelfTest(mdk))) return null;
+  const rec = {
+    type: "level1",
+    mdk,
+    createdAt: new Date().toISOString(),
+    extractable: false,
+    durableMaterial: true,
+    restoredFrom: "idb_durable_material",
+  };
+  await writeKeyRecord("mdk:level1", rec);
+  lockDiag("15-level1-restored-from-durable-material", { source: "ensureLevel1KeyRecord" });
+  return rec;
 }
 
 async function ensureLevel1KeyRecord() {
@@ -44,9 +151,25 @@ async function ensureLevel1KeyRecord() {
   }
 
   let keyRec = await readKeyRecord("mdk:level1");
-  if (keyRec && keyRec.mdk) {
+  if (keyRec && keyRec.mdk && (await cryptoKeySelfTest(keyRec.mdk))) {
+    const material = await readLevel1DurableMaterialBytes();
+    if (!material) {
+      try {
+        keyRec = await persistLevel1KeyWithDurableMaterial(keyRec.mdk, {
+          backfilledDurableMaterial: true,
+        });
+      } catch (err) {
+        lockDiag("17-level1-durable-material-backfill-fail", {
+          source: "ensureLevel1KeyRecord",
+          reason: String(err && err.message ? err.message : err).slice(0, 64),
+        });
+      }
+    }
     return keyRec;
   }
+
+  const restored = await restoreLevel1FromDurableMaterial();
+  if (restored) return restored;
 
   const evidence = await hasProtectedVaultEvidence();
   if (evidence) {
@@ -56,9 +179,8 @@ async function ensureLevel1KeyRecord() {
     throw err;
   }
 
-  const mdk = await generateMdk();
-  const rec = { type: "level1", mdk, createdAt: new Date().toISOString(), extractable: false };
-  await writeKeyRecord("mdk:level1", rec);
+  const mdk = await generateExtractableMdk();
+  const rec = await persistLevel1KeyWithDurableMaterial(mdk, { freshlyGenerated: true });
   lockDiag("14-mdk-generated-new-vault", { source: "ensureLevel1KeyRecord" });
   return rec;
 }
@@ -443,13 +565,14 @@ export async function activateLevel1AutoKey() {
   await deleteKeyRecord("mdk:pin");
   await deleteKeyRecord("mdk:device");
   let keyRec = await readKeyRecord("mdk:level1");
-  if (!keyRec || !keyRec.mdk) {
-    if (state.mdk) {
-      keyRec = { type: "level1", mdk: state.mdk, createdAt: new Date().toISOString() };
-      await writeKeyRecord("mdk:level1", keyRec);
+  if (!keyRec || !keyRec.mdk || !(await cryptoKeySelfTest(keyRec.mdk))) {
+    if (state.mdk && (await cryptoKeySelfTest(state.mdk))) {
+      keyRec = await persistLevel1KeyWithDurableMaterial(state.mdk, { from: "activateLevel1AutoKey" });
     } else {
       keyRec = await ensureLevel1KeyRecord();
     }
+  } else {
+    keyRec = await persistLevel1KeyWithDurableMaterial(keyRec.mdk, { from: "activateLevel1AutoKey" });
   }
   await unlockWithMdk(keyRec.mdk);
   await writeMeta(meta);
@@ -544,7 +667,7 @@ export async function storePinWrap(meta, pinWrap) {
   meta.mindMenuUnlockMethod = "pin";
   meta.securityLevel = 3;
   await deleteKeyRecord("mdk:level1");
-  clearLevel1MdkBackup();
+  await clearLevel1DurableMaterial();
   await writeMeta(meta);
   await refreshSecurityMode(meta);
   setAppLockHintActive();
@@ -559,7 +682,7 @@ export async function storeDeviceWrap(meta, deviceWrap) {
   meta.mindMenuUnlockMethod = "device";
   meta.securityLevel = 2;
   await deleteKeyRecord("mdk:level1");
-  clearLevel1MdkBackup();
+  await clearLevel1DurableMaterial();
   await writeMeta(meta);
   await refreshSecurityMode(meta);
   setAppLockHintActive();

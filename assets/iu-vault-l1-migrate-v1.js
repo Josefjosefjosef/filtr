@@ -143,6 +143,16 @@ async function resolveValidMdk(recordKeys, checkpoint) {
     if (test.ok || recordKeys.length === 0) return { mdk: idbRec.mdk, source: "idb" };
   }
 
+  try {
+    const { readLevel1DurableMaterialBytes } = await import("./iu-vault-lock-v1.js");
+    const raw = await readLevel1DurableMaterialBytes();
+    if (raw && raw.byteLength >= 16) {
+      const materialMdk = await importMdkRaw(raw);
+      const test = await mdkDecryptsAnyRecord(materialMdk, recordKeys);
+      if (test.ok || recordKeys.length === 0) return { mdk: materialMdk, source: "idb_durable_material" };
+    }
+  } catch (_) {}
+
   const backupMdk = await readLegacyBackupMdk();
   if (backupMdk) {
     const test = await mdkDecryptsAnyRecord(backupMdk, recordKeys);
@@ -156,22 +166,30 @@ async function resolveValidMdk(recordKeys, checkpoint) {
 }
 
 async function persistNonExtractableMdk(mdk, source) {
-  let finalMdk = mdk;
+  const { persistLevel1KeyWithDurableMaterial } = await import("./iu-vault-lock-v1.js");
   try {
-    const raw = await exportMdkRaw(mdk);
-    finalMdk = await importMdkRaw(raw);
+    const rec = await persistLevel1KeyWithDurableMaterial(mdk, {
+      migratedFrom: source || "l1-idb-only",
+    });
+    return rec.mdk;
   } catch (_) {
-    finalMdk = mdk;
+    let finalMdk = mdk;
+    try {
+      const raw = await exportMdkRaw(mdk);
+      finalMdk = await importMdkRaw(raw);
+    } catch (_) {
+      finalMdk = mdk;
+    }
+    const rec = {
+      type: "level1",
+      mdk: finalMdk,
+      createdAt: new Date().toISOString(),
+      migratedFrom: source || "l1-idb-only",
+      extractable: false,
+    };
+    await writeKeyRecord("mdk:level1", rec);
+    return finalMdk;
   }
-  const rec = {
-    type: "level1",
-    mdk: finalMdk,
-    createdAt: new Date().toISOString(),
-    migratedFrom: source || "l1-idb-only",
-    extractable: false,
-  };
-  await writeKeyRecord("mdk:level1", rec);
-  return finalMdk;
 }
 
 async function reconcileRecordToIdb(storageKey, mdk, checkpoint) {
