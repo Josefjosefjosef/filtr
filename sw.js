@@ -25,7 +25,7 @@
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
-const CACHE_VERSION = "2026-08-28-iu-vault-physical-diag-v1";
+const CACHE_VERSION = "2026-08-28-iu-vault-conflict-idb-ls-compat-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

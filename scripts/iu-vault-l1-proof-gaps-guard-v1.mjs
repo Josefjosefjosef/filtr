@@ -291,48 +291,61 @@ async function runConflictTest(base) {
   });
   const p2 = await ctx2.newPage();
   await p2.goto(`${base}?nosw=1&gap=conf-boot`, { waitUntil: "domcontentloaded", timeout: 90000 });
-  await waitForVaultBoot(p2, true);
+  await waitForVaultBoot(p2, false);
 
   const proof = await p2.evaluate(
-    async ({ key, encPrefix, backupKey, plainA, plainB, migrationId }) => {
+    async ({ key, encPrefix, archivePrefix, archiveIdbPrefix, backupKey, plainA, plainB, migrationId }) => {
       const { readKeyRecord, readRecord, readMigrationCheckpoint } = await import("/assets/iu-vault-db-v1.js");
       const { decryptString } = await import("/assets/iu-vault-core-v1.js");
       const cp = await readMigrationCheckpoint(migrationId);
       const keyRec = await readKeyRecord("mdk:level1");
       const idbEnv = await readRecord(key);
       const lsRaw = localStorage.getItem(encPrefix + key);
+      const archiveRaw = localStorage.getItem(archivePrefix + key);
+      const archiveIdbKey = archiveIdbPrefix + key;
+      const archiveIdbEnv = await readRecord(archiveIdbKey);
       const backup = localStorage.getItem(backupKey);
       let idbPt = null;
-      let lsPt = null;
+      let archiveIdbPt = null;
       if (keyRec && keyRec.mdk && idbEnv) {
         try {
           idbPt = await decryptString(keyRec.mdk, key, idbEnv);
         } catch (_) {}
       }
-      if (keyRec && keyRec.mdk && lsRaw) {
+      if (keyRec && keyRec.mdk && archiveIdbEnv) {
         try {
-          lsPt = await decryptString(keyRec.mdk, key, JSON.parse(lsRaw));
+          archiveIdbPt = await decryptString(keyRec.mdk, archiveIdbKey, archiveIdbEnv);
         } catch (_) {}
       }
       return {
         recovery: window.iuVault.isStorageRecoveryRequired(),
         unlocked: window.iuVault.getState().unlocked,
         failClosedPhase: cp && cp.phase === "fail_closed",
+        migrationComplete: cp && cp.phase === "complete",
         failClosedReason: cp && cp.reason,
         idbPtMatchesA: idbPt === plainA,
-        lsPtMatchesB: lsPt === plainB,
-        backupPreserved: !!backup,
-        lsEncPreserved: !!lsRaw,
+        archiveIdbPtMatchesB: archiveIdbPt === plainB,
+        activeLsEncCleared: !lsRaw,
+        lsArchivePresent: !!archiveRaw,
+        idbArchivePresent: !!archiveIdbEnv,
         idbPreserved: !!idbEnv,
-        idbPt,
-        lsPt,
+        backupClearedOrAbsent: !backup,
         USED_RUNTIME_MEMORY: false,
         USED_LOCALSTORAGE: true,
         USED_INDEXEDDB: true,
         USED_NETWORK: false,
       };
     },
-    { key: KEYS.note, encPrefix: ENC_PREFIX, backupKey: BACKUP_KEY, plainA, plainB, migrationId: L1_MIGRATION_ID }
+    {
+      key: KEYS.note,
+      encPrefix: ENC_PREFIX,
+      archivePrefix: "iu:vault:enc:conflict-archive:v1:",
+      archiveIdbPrefix: "iu.vault.conflict.archive.v1:",
+      backupKey: BACKUP_KEY,
+      plainA,
+      plainB,
+      migrationId: L1_MIGRATION_ID,
+    }
   );
 
   await ctx2.close();
@@ -341,18 +354,19 @@ async function runConflictTest(base) {
   } catch (_) {}
 
   const pass =
-    proof.recovery === true &&
-    proof.unlocked === false &&
-    proof.failClosedPhase === true &&
-    proof.failClosedReason === "conflict_idb_ls" &&
+    proof.recovery === false &&
+    proof.unlocked === true &&
+    proof.failClosedPhase === false &&
+    proof.migrationComplete === true &&
     proof.idbPtMatchesA &&
-    proof.lsPtMatchesB &&
-    proof.backupPreserved &&
-    proof.lsEncPreserved &&
+    proof.activeLsEncCleared &&
+    proof.idbArchivePresent &&
+    proof.archiveIdbPtMatchesB &&
     proof.idbPreserved;
 
   return {
-    CONFLICT_AMBIGUOUS_FAIL_CLOSED: pass ? "PASS" : "FAIL",
+    CONFLICT_SAME_MDK_IDB_PREFERRED: pass ? "PASS" : "FAIL",
+    CONFLICT_AMBIGUOUS_FAIL_CLOSED: "SUPERSEDED_BY_IDB_PREFERRED",
     proof,
     AMBIGUOUS_CONFLICT_DATA_PRESERVED: pass ? "PASS" : "FAIL",
   };
@@ -459,7 +473,7 @@ async function main() {
     const modules = await runMindMenuAndModules(base);
 
     if (scenarioA.F_10103_SCENARIO_A !== "PASS") fails.push("F_10103_SCENARIO_A");
-    if (conflict.CONFLICT_AMBIGUOUS_FAIL_CLOSED !== "PASS") fails.push("CONFLICT_AMBIGUOUS_FAIL_CLOSED");
+    if (conflict.CONFLICT_SAME_MDK_IDB_PREFERRED !== "PASS") fails.push("CONFLICT_SAME_MDK_IDB_PREFERRED");
     if (modules.mindMenuProof.MINDMENU_DATA_PRESERVATION !== "PASS") fails.push("MINDMENU_DATA_PRESERVATION");
 
     const report = {
@@ -468,7 +482,7 @@ async function main() {
       fails,
       F_10103_SCENARIO_A: scenarioA.F_10103_SCENARIO_A,
       scenarioA,
-      CONFLICT_AMBIGUOUS_FAIL_CLOSED: conflict.CONFLICT_AMBIGUOUS_FAIL_CLOSED,
+      CONFLICT_SAME_MDK_IDB_PREFERRED: conflict.CONFLICT_SAME_MDK_IDB_PREFERRED,
       conflict,
       MINDMENU_DATA_PRESERVATION: modules.mindMenuProof.MINDMENU_DATA_PRESERVATION,
       mindMenuProof: modules.mindMenuProof,
