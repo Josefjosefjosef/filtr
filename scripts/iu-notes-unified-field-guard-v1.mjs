@@ -148,13 +148,12 @@ async function testUnifiedFormUi(page, vp) {
     ],
   };
   await page.setViewportSize({ width: vp.w, height: vp.h });
-  await page.addInitScript(({ key, payload }) => {
+  await page.addInitScript(() => {
     try {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
-      localStorage.setItem(key, JSON.stringify(payload));
     } catch (_) {}
-  }, { key: STORE_KEY, payload: seedPayload });
+  });
   // Notes overlay does not need info-system cutover; keep feed.json hydrate off on CI.
   const url = BASE.includes("?")
     ? BASE + "&iuInfoSystem=off&nosw=1"
@@ -165,6 +164,19 @@ async function testUnifiedFormUi(page, vp) {
     null,
     { timeout: 60000 }
   );
+  // Authoritative IDB wins over late plaintext: seed via unlocked user write, not init-script LS.
+  await page.evaluate(async ({ key, payload }) => {
+    window.__iuVaultUserWriteDepth = 1;
+    try {
+      const ret = localStorage.setItem(key, JSON.stringify(payload));
+      if (ret && ret.then) await ret;
+    } finally {
+      window.__iuVaultUserWriteDepth = 0;
+    }
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
+  }, { key: STORE_KEY, payload: seedPayload });
   await page.evaluate(async () => {
     if (typeof window.__iuEnsureNotesOverlay === "function") {
       await window.__iuEnsureNotesOverlay();
