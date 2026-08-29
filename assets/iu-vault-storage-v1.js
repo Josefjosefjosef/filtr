@@ -170,10 +170,10 @@ export async function vaultSetItem(storageKey, value) {
   writeGeneration.set(k, generation);
   let writePromise;
   writePromise = (async () => {
-    if (isVaultPersistBlocked(k)) {
-      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked_async" });
-      return;
-    }
+    // In-flight writes must NOT re-check isVaultPersistBlocked / hydrationPending.
+    // lockVault arms __iuVaultHydrationPending before flushPendingVaultWrites so NEW
+    // shim writes stop; aborting encrypt→IDB here dropped durable user saves on
+    // mobile/tablet/PWA background (pagehide/visibility) while desktop skipped that path.
     if (shouldBlockPostHydrateClobber(k, text)) {
       diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber_async" });
       return;
@@ -200,8 +200,8 @@ export async function vaultSetItem(storageKey, value) {
     const envelope = await encryptString(mdk, k, text);
     diagSync("05-encrypt-success", { key: k, generation, source });
     if (writeGeneration.get(k) !== generation) return;
-    if (isVaultPersistBlocked(k)) {
-      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked_pre_write" });
+    if (!getMdk()) {
+      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "mdk_cleared_pre_write" });
       return;
     }
     await persistEnvelope(k, envelope);

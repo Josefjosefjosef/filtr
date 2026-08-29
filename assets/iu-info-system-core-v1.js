@@ -886,22 +886,49 @@ function setPrefs(prefs) {
     }
     const n = normalizePrefs(prefs || {});
     prefsDiag("01-user-write-request", { source: "setPrefs" });
+    let writeRet = null;
     try {
       window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
     } catch (_) {}
     try {
-      localStorage.setItem(LS_PREFS, JSON.stringify(n));
-      prefsDiag("08-write-confirmed", { source: "setPrefs" });
+      writeRet = localStorage.setItem(LS_PREFS, JSON.stringify(n));
     } finally {
       try {
         window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
       } catch (_) {}
     }
     _prefsMem = n;
+    // Durable commit tracking: UI must await awaitPrefsDurable() / persistDraft before exit.
+    const durable = Promise.resolve(writeRet)
+      .then(async () => {
+        try {
+          if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+            await window.iuVault.flushPendingWrites();
+          }
+        } catch (_) {}
+        prefsDiag("08-write-confirmed", { source: "setPrefs", durable: true });
+        return true;
+      })
+      .catch(() => false);
+    try {
+      window.__iuPrefsDurableWrite = durable;
+    } catch (_) {}
     return true;
   } catch (_) {
     return false;
   }
+}
+
+async function awaitPrefsDurable() {
+  try {
+    if (window.__iuPrefsDurableWrite) return !!(await window.__iuPrefsDurableWrite);
+  } catch (_) {}
+  try {
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
+  } catch (_) {}
+  return true;
 }
 
 function prefsFingerprint(f) {
@@ -2746,6 +2773,7 @@ const IUInfoSystem = {
   pragueYmd,
   getPrefs,
   setPrefs,
+  awaitPrefsDurable,
   markRead,
   toggleSaved,
   hideItem,
@@ -2832,6 +2860,7 @@ export {
   pragueYmd,
   getPrefs,
   setPrefs,
+  awaitPrefsDurable,
   markRead,
   toggleSaved,
   hideItem,

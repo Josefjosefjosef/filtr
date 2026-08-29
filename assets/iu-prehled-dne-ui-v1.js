@@ -13,6 +13,7 @@ import {
   buildFeedIndex,
   getPrefs,
   setPrefs,
+  awaitPrefsDurable,
   markRead,
   toggleSaved,
   hideItem,
@@ -2196,7 +2197,7 @@ function clearSaveError() {
   if (state.saveError) state.saveError = "";
 }
 
-function persistDraft() {
+async function persistDraft() {
   const seq = ++state.persistSeq;
   const snapshot = clonePrefs(state.draft);
   snapshot.unreadOnly = false;
@@ -2210,6 +2211,13 @@ function persistDraft() {
     showSaveError("Změnu se nepodařilo uložit. Obnoven poslední uložený stav.");
     return false;
   }
+  try {
+    if (typeof awaitPrefsDurable === "function") await awaitPrefsDurable();
+    else if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
+  } catch (_) {}
+  if (seq !== state.persistSeq) return true;
   try {
     state.prefs = getPrefs();
     if (state.prefs && !state.prefs.feedFilter) state.prefs.feedFilter = snapshot.feedFilter;
@@ -2313,10 +2321,11 @@ function mutateFeedFilter(mutator, opts) {
   const ff = getDraftFeedFilter(state.draft);
   mutator(ff);
   setDraftFeedFilter(state.draft, ff);
-  persistDraft();
-  if (state.settingsOpen && !(opts && opts.keepSettingsDom)) {
-    refreshSettingsKeepingScroll();
-  }
+  void persistDraft().then(() => {
+    if (state.settingsOpen && !(opts && opts.keepSettingsDom)) {
+      refreshSettingsKeepingScroll();
+    }
+  });
 }
 
 function syncDraftFromEvent(ev) {
@@ -2406,10 +2415,12 @@ function syncDraftFromEvent(ev) {
 
   const scrollEl = document.getElementById("iuPdSettingsScroll");
   const prevScroll = scrollEl ? scrollEl.scrollTop : 0;
-  if (!persistDraft()) return;
-  paintSettingsOnly({ resetSettingsScroll: false });
-  wire();
-  restoreSettingsScroll(prevScroll);
+  void persistDraft().then((ok) => {
+    if (!ok) return;
+    paintSettingsOnly({ resetSettingsScroll: false });
+    wire();
+    restoreSettingsScroll(prevScroll);
+  });
 }
 
 async function ensureLocalities() {
@@ -2997,10 +3008,12 @@ function wire() {
       state.citySuggest = [];
       const scrollEl = document.getElementById("iuPdSettingsScroll");
       const prev = scrollEl ? scrollEl.scrollTop : 0;
-      if (!persistDraft()) return;
-      paintSettingsOnly({ resetSettingsScroll: false });
-      wire();
-      restoreSettingsScroll(prev);
+      void persistDraft().then((ok) => {
+        if (!ok) return;
+        paintSettingsOnly({ resetSettingsScroll: false });
+        wire();
+        restoreSettingsScroll(prev);
+      });
       return;
     }
     if (act === "city-remove") {
@@ -3015,10 +3028,12 @@ function wire() {
       );
       const scrollEl = document.getElementById("iuPdSettingsScroll");
       const prev = scrollEl ? scrollEl.scrollTop : 0;
-      if (!persistDraft()) return;
-      paintSettingsOnly({ resetSettingsScroll: false });
-      wire();
-      restoreSettingsScroll(prev);
+      void persistDraft().then((ok) => {
+        if (!ok) return;
+        paintSettingsOnly({ resetSettingsScroll: false });
+        wire();
+        restoreSettingsScroll(prev);
+      });
       return;
     }
   };
