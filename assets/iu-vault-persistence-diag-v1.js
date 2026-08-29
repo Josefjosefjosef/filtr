@@ -894,14 +894,26 @@ export async function captureLifecycleSaveReopenTrace(phase) {
         const stateFp = await fp8(structCanon(stateP));
         const liveFp = await fp8(structCanon(liveP));
         const prefsProbe = probes.find((p) => p && p.key === "iu.infoEvents.prefs.v1") || null;
+        // Compare apples-to-apples: structCanon(live) vs structCanon(parsed mem).
+        // Raw memFp (full JSON SHA) is incompatible with structCanon fps.
+        let memStructFp = null;
+        try {
+          const memRaw = getMemoryCachePlaintext("iu.infoEvents.prefs.v1");
+          if (memRaw != null) {
+            memStructFp = await fp8(structCanon(JSON.parse(String(memRaw) || "{}")));
+          }
+        } catch (_) {
+          memStructFp = null;
+        }
         return {
           present: true,
           stateFp,
           liveFp,
           memFp: prefsProbe ? prefsProbe.memFp : null,
+          memStructFp,
           idbFp: prefsProbe ? prefsProbe.idbFp : null,
           stateMatchesLive: !!(stateFp && liveFp && stateFp === liveFp),
-          liveMatchesMem: !!(liveFp && prefsProbe && prefsProbe.memFp && liveFp === prefsProbe.memFp),
+          liveMatchesMem: !!(liveFp && memStructFp && liveFp === memStructFp),
           appliedReason: window.__iuPrehledPrefsAppliedReason || null,
           appliedAt: window.__iuPrehledPrefsAppliedAt || null,
         };

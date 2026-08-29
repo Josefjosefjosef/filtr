@@ -214,7 +214,7 @@ const state = {
   openRoadGroups: {},
   openParkingCities: {},
   roadQuery: "",
-  /** @type {'all'|'traffic'|'chmu'} Session-only quick view (not persisted). */
+  /** @type {'all'|'traffic'|'chmu'} Session-only quick view (sessionStorage across reload). */
   feedQuickView: "chmu",
   /** False until hosted traffic offline snapshot fetch settles (or traffic UI disabled). */
   trafficSnapSettled: false,
@@ -337,6 +337,28 @@ function bindTimelineLifecycleListeners() {
       reapplyPrefsFromStore({ reason: "online" });
       scheduleTimelineBoundaryRefresh();
     });
+  } catch (_) {}
+}
+
+const FEED_QUICK_VIEW_SS = "iu.prehled.feedQuickView.v1";
+
+function restoreFeedQuickViewFromSession() {
+  try {
+    const q = sessionStorage.getItem(FEED_QUICK_VIEW_SS);
+    if (q === "all" || q === "traffic" || q === "chmu") {
+      state.feedQuickView = q;
+      return;
+    }
+  } catch (_) {}
+  state.feedQuickView = "chmu";
+}
+
+function persistFeedQuickViewToSession() {
+  try {
+    const q = state.feedQuickView;
+    if (q === "all" || q === "traffic" || q === "chmu") {
+      sessionStorage.setItem(FEED_QUICK_VIEW_SS, q);
+    }
   } catch (_) {}
 }
 
@@ -2660,6 +2682,7 @@ function wire() {
       if (view === "traffic" && ff.trafficEnabled === false) return;
       if (view === "chmu" && ff.chmuEnabled === false) return;
       state.feedQuickView = view;
+      persistFeedQuickViewToSession();
       state.page = 1;
       try {
         const rootQ = ensureRoot();
@@ -3315,8 +3338,8 @@ async function boot() {
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
   reapplyPrefsFromStore({ reason: "boot-after-hydrate-wait" });
-  // FIRST LOAD: every fresh homepage navigation opens ČHMÚ (session-only; not persisted).
-  state.feedQuickView = "chmu";
+  // Reload: restore last quick view from sessionStorage. Cold session → ČHMÚ.
+  restoreFeedQuickViewFromSession();
   state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
   // FIRST LOAD: never wipe the static HTML shell (banner/feed skeleton). A full
   // root.innerHTML replace was collapsing reserved feed geometry (~520px → tiny
