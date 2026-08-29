@@ -607,3 +607,341 @@ export async function captureSecOffReloadTrace(phase) {
 
   return payload;
 }
+
+/**
+ * Mobile/tablet/PWA lifecycle SAVE→RELOAD→REOPEN trace — metadata + fingerprints only.
+ * Distinguishes durability miss vs record loss vs key-path vs decrypt vs hydration vs SW skew.
+ */
+export async function captureLifecycleSaveReopenTrace(phase) {
+  const keys = [
+    "iu.infoEvents.prefs.v1",
+    "iu.notes.store.v1",
+    "iu.tasks.mvp.v1",
+    "iu.calendar.store.v1",
+  ];
+  const { getVaultState, readSecurityConfiguredState, getMdk } = await import("./iu-vault-lock-v1.js");
+  const {
+    nativeLocalStorageGet,
+    captureNativeLocalStorage,
+    getPendingVaultWriteCount,
+    isPlaintextStagingPresent,
+    getMemoryCachePlaintext,
+  } = await import("./iu-vault-storage-v1.js");
+  const { readRecord, readKeyRecord, readMeta } = await import("./iu-vault-db-v1.js");
+  const { decryptString, encryptString } = await import("./iu-vault-core-v1.js");
+
+  captureNativeLocalStorage();
+  const st = getVaultState();
+  let configured = { unlockMethod: "unknown" };
+  try {
+    configured = await readSecurityConfiguredState();
+  } catch (_) {}
+  let meta = null;
+  try {
+    meta = await readMeta();
+  } catch (_) {}
+
+  async function fp8(text) {
+    try {
+      const data = new TextEncoder().encode(String(text || ""));
+      const dig = await crypto.subtle.digest("SHA-256", data);
+      const hex = Array.from(new Uint8Array(dig))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hex.slice(0, 8);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function uaFamily() {
+    try {
+      const ua = String(navigator.userAgent || "");
+      if (/Firefox\//i.test(ua)) return "gecko";
+      if (/AppleWebKit/i.test(ua) && /Safari/i.test(ua) && !/Chrome|CriOS|Edg|OPR|Brave/i.test(ua)) return "webkit";
+      if (/Chrome|CriOS|Edg|OPR|Brave|SamsungBrowser/i.test(ua)) return "chromium";
+      return "other";
+    } catch (_) {
+      return "unknown";
+    }
+  }
+
+  let keyRecordPresent = false;
+  let cryptoKeyUsable = false;
+  let durableMaterialPresent = false;
+  try {
+    const keyRec = await readKeyRecord("mdk:level1");
+    keyRecordPresent = !!(keyRec && keyRec.mdk);
+    if (keyRec && keyRec.mdk) {
+      try {
+        const probe = await encryptString(keyRec.mdk, "iu.diag.probe.v1", "ok");
+        const pt = await decryptString(keyRec.mdk, "iu.diag.probe.v1", probe);
+        cryptoKeyUsable = pt === "ok";
+      } catch (_) {
+        cryptoKeyUsable = false;
+      }
+    }
+  } catch (_) {}
+  try {
+    durableMaterialPresent = !!nativeLocalStorageGet("iu:vault:mdk-level1-backup:v1");
+  } catch (_) {}
+
+  let storagePersisted = null;
+  let storagePersistSupported = false;
+  try {
+    storagePersistSupported = !!(navigator.storage && typeof navigator.storage.persisted === "function");
+    if (storagePersistSupported) storagePersisted = await navigator.storage.persisted();
+  } catch (_) {}
+
+  const probes = [];
+  for (const key of keys) {
+    let idbPresent = false;
+    let encFp = null;
+    let encLen = null;
+    let decryptOk = false;
+    let idbFp = null;
+    let idbLen = null;
+    let independentReadbackSame = null;
+    try {
+      const env = await readRecord(key);
+      idbPresent = !!(env && env.ct);
+      if (idbPresent) {
+        encLen = String(env.ct || "").length;
+        encFp = await fp8(String(env.v || "") + ":" + String(env.ct || "").slice(0, 64));
+        if (st.unlocked) {
+          try {
+            const mdk = getMdk();
+            const pt = await decryptString(mdk, key, env);
+            decryptOk = true;
+            idbLen = String(pt || "").length;
+            idbFp = await fp8(pt);
+            // Independent second read of same record — durability/readback proof.
+            const env2 = await readRecord(key);
+            if (env2 && env2.ct) {
+              const pt2 = await decryptString(mdk, key, env2);
+              independentReadbackSame = (await fp8(pt2)) === idbFp;
+            } else {
+              independentReadbackSame = false;
+            }
+          } catch (_) {
+            decryptOk = false;
+          }
+        }
+      }
+    } catch (_) {}
+
+    let memFp = null;
+    let memLen = null;
+    let memPresent = false;
+    try {
+      const mem = getMemoryCachePlaintext(key);
+      if (mem != null) {
+        memPresent = true;
+        memLen = String(mem).length;
+        memFp = await fp8(mem);
+      }
+    } catch (_) {}
+
+    let shimPresent = false;
+    let shimFp = null;
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw != null) {
+        shimPresent = true;
+        shimFp = await fp8(raw);
+      }
+    } catch (_) {}
+
+    probes.push({
+      key: safeToken(key, 64),
+      keyType: classifyKey(key),
+      idbPresent,
+      encFp,
+      encLen,
+      decryptOk,
+      idbFp,
+      idbLen,
+      independentReadbackSame,
+      plainStaging: !!isPlaintextStagingPresent(key),
+      nativePlainLen: (() => {
+        try {
+          const n = nativeLocalStorageGet(key);
+          return n == null ? null : String(n).length;
+        } catch (_) {
+          return null;
+        }
+      })(),
+      memPresent,
+      memFp,
+      memLen,
+      shimPresent,
+      shimFp,
+      fpMatchIdbMem: !!(idbFp && memFp && idbFp === memFp),
+      fpMatchIdbShim: !!(idbFp && shimFp && idbFp === shimFp),
+    });
+  }
+
+  let swCacheHint = null;
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      const url = String(navigator.serviceWorker.controller.scriptURL || "");
+      swCacheHint = safeToken(url, 160);
+    }
+  } catch (_) {}
+
+  const payload = {
+    tag: "LIFECYCLE_SAVE_REOPEN_TRACE_V1",
+    phase: safeToken(phase || "unknown", 32),
+    capturedAt: Date.now(),
+    origin: (() => {
+      try {
+        return safeToken(location.origin || "", 120);
+      } catch (_) {
+        return null;
+      }
+    })(),
+    pathname: (() => {
+      try {
+        return safeToken(location.pathname || "", 80);
+      } catch (_) {
+        return null;
+      }
+    })(),
+    searchFlags: (() => {
+      try {
+        const p = new URLSearchParams(location.search || "");
+        return {
+          iuLifecycleDiag: p.get("iuLifecycleDiag") === "1",
+          nosw: p.get("nosw") === "1",
+        };
+      } catch (_) {
+        return null;
+      }
+    })(),
+    securityMethod: configured.unlockMethod || "unknown",
+    securityLevel: meta && meta.securityLevel != null ? meta.securityLevel : null,
+    l1IdbOnly: !!(meta && meta.l1IdbOnly),
+    unlocked: !!st.unlocked,
+    requiresUserReauth: !!st.requiresUserReauth,
+    hydrationPending: !!window.__iuVaultHydrationPending,
+    hydrationComplete: !!window.__iuVaultHydrationComplete,
+    pendingWriteCount: getPendingVaultWriteCount(),
+    platform: detectPlatform(),
+    displayMode: detectDisplayMode(),
+    uaFamily: uaFamily(),
+    bundleHint: detectBundleHint(),
+    serviceWorker: serviceWorkerMeta(),
+    swCacheHint,
+    storagePersistSupported,
+    storagePersisted,
+    keyRecordPresent,
+    cryptoKeyUsable,
+    durableMaterialPresent,
+    probes,
+  };
+
+  let firstDiff = null;
+  try {
+    const prevRaw = sessionStorage.getItem("iu:vault:lifecycle-save-reopen-trace:v1");
+    if (prevRaw) {
+      const prev = JSON.parse(prevRaw);
+      if (prev && Array.isArray(prev.probes)) {
+        if (prev.origin && payload.origin && prev.origin !== payload.origin) {
+          firstDiff = {
+            kind: "origin_changed",
+            fromPhase: prev.phase,
+            toPhase: payload.phase,
+            fromOrigin: prev.origin,
+            toOrigin: payload.origin,
+          };
+        }
+        if (!firstDiff && prev.displayMode && payload.displayMode && prev.displayMode !== payload.displayMode) {
+          firstDiff = {
+            kind: "display_mode_changed",
+            fromPhase: prev.phase,
+            toPhase: payload.phase,
+            from: prev.displayMode,
+            to: payload.displayMode,
+          };
+        }
+        for (const now of probes) {
+          if (firstDiff) break;
+          const old = prev.probes.find((p) => p && p.key === now.key);
+          if (!old) continue;
+          if (old.idbPresent && old.independentReadbackSame === false) {
+            firstDiff = {
+              key: now.key,
+              kind: "prior_save_readback_failed",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+            };
+            break;
+          }
+          if (old.idbPresent && !now.idbPresent) {
+            firstDiff = { key: now.key, kind: "idb_lost", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+          if (old.encFp && now.encFp && old.encFp !== now.encFp) {
+            firstDiff = {
+              key: now.key,
+              kind: "enc_fp_changed",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              fromFp: old.encFp,
+              toFp: now.encFp,
+            };
+            break;
+          }
+          if (old.idbFp && now.idbFp && old.idbFp !== now.idbFp) {
+            firstDiff = {
+              key: now.key,
+              kind: "idb_fp_changed",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              fromFp: old.idbFp,
+              toFp: now.idbFp,
+            };
+            break;
+          }
+          if (old.decryptOk && !now.decryptOk && now.idbPresent) {
+            firstDiff = { key: now.key, kind: "decrypt_failed", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+          if (old.idbFp && now.memPresent && now.memFp && old.idbFp !== now.memFp) {
+            firstDiff = {
+              key: now.key,
+              kind: "mem_diverged_from_prior_idb",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              priorIdbFp: old.idbFp,
+              memFp: now.memFp,
+            };
+            break;
+          }
+          if (now.plainStaging) {
+            firstDiff = {
+              key: now.key,
+              kind: "plain_staging_present",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+            };
+            break;
+          }
+        }
+        if (!firstDiff && prev.keyRecordPresent && !payload.keyRecordPresent) {
+          firstDiff = { kind: "key_record_lost", fromPhase: prev.phase, toPhase: payload.phase };
+        }
+        if (!firstDiff && prev.cryptoKeyUsable && !payload.cryptoKeyUsable) {
+          firstDiff = { kind: "crypto_key_unusable", fromPhase: prev.phase, toPhase: payload.phase };
+        }
+      }
+    }
+  } catch (_) {}
+  payload.firstDiff = firstDiff;
+
+  try {
+    sessionStorage.setItem("iu:vault:lifecycle-save-reopen-trace:v1", JSON.stringify(payload));
+  } catch (_) {}
+
+  return payload;
+}
