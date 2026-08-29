@@ -421,3 +421,189 @@ export function initVaultPersistenceDiag() {
     });
   } catch (_) {}
 }
+
+/**
+ * SECURITY OFF reload trace — fingerprints only (no plaintext body).
+ * Distinguishes missing IDB, plaintext staging, decrypt fail, mem divergence after hydrate.
+ */
+export async function captureSecOffReloadTrace(phase) {
+  const keys = ["iu.infoEvents.prefs.v1", "iu.notes.store.v1", "iu.tasks.mvp.v1", "iu.calendar.store.v1"];
+  const { getVaultState, readSecurityConfiguredState, getMdk } = await import("./iu-vault-lock-v1.js");
+  const {
+    nativeLocalStorageGet,
+    captureNativeLocalStorage,
+    getPendingVaultWriteCount,
+    isPlaintextStagingPresent,
+    getMemoryCachePlaintext,
+  } = await import("./iu-vault-storage-v1.js");
+  const { readRecord, readMeta } = await import("./iu-vault-db-v1.js");
+  const { decryptString } = await import("./iu-vault-core-v1.js");
+
+  captureNativeLocalStorage();
+  const st = getVaultState();
+  let configured = { unlockMethod: "unknown" };
+  try {
+    configured = await readSecurityConfiguredState();
+  } catch (_) {}
+  let meta = null;
+  try {
+    meta = await readMeta();
+  } catch (_) {}
+
+  async function fp8(text) {
+    try {
+      const data = new TextEncoder().encode(String(text || ""));
+      const dig = await crypto.subtle.digest("SHA-256", data);
+      const hex = Array.from(new Uint8Array(dig))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hex.slice(0, 8);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  const probes = [];
+  for (const key of keys) {
+    let idbPresent = false;
+    let decryptOk = false;
+    let idbFp = null;
+    let idbLen = null;
+    try {
+      const env = await readRecord(key);
+      idbPresent = !!(env && env.ct);
+      if (idbPresent && st.unlocked) {
+        try {
+          const mdk = getMdk();
+          const pt = await decryptString(mdk, key, env);
+          decryptOk = true;
+          idbLen = String(pt || "").length;
+          idbFp = await fp8(pt);
+        } catch (_) {
+          decryptOk = false;
+        }
+      }
+    } catch (_) {}
+    let memFp = null;
+    let memLen = null;
+    let memPresent = false;
+    try {
+      const mem = getMemoryCachePlaintext(key);
+      if (mem != null) {
+        memPresent = true;
+        memLen = String(mem).length;
+        memFp = await fp8(mem);
+      }
+    } catch (_) {}
+    let shimPresent = false;
+    let shimFp = null;
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw != null) {
+        shimPresent = true;
+        shimFp = await fp8(raw);
+      }
+    } catch (_) {}
+    probes.push({
+      key: safeToken(key, 64),
+      keyType: classifyKey(key),
+      idbPresent,
+      decryptOk,
+      idbFp,
+      idbLen,
+      plainStaging: !!isPlaintextStagingPresent(key),
+      nativePlainLen: (() => {
+        try {
+          const n = nativeLocalStorageGet(key);
+          return n == null ? null : String(n).length;
+        } catch (_) {
+          return null;
+        }
+      })(),
+      memPresent,
+      memFp,
+      memLen,
+      shimPresent,
+      shimFp,
+      fpMatchIdbMem: !!(idbFp && memFp && idbFp === memFp),
+      fpMatchIdbShim: !!(idbFp && shimFp && idbFp === shimFp),
+    });
+  }
+
+  const payload = {
+    tag: "SEC_OFF_RELOAD_TRACE_V1",
+    phase: safeToken(phase || "unknown", 32),
+    capturedAt: Date.now(),
+    securityMethod: configured.unlockMethod || "unknown",
+    securityLevel: meta && meta.securityLevel != null ? meta.securityLevel : null,
+    l1IdbOnly: !!(meta && meta.l1IdbOnly),
+    unlocked: !!st.unlocked,
+    requiresUserReauth: !!st.requiresUserReauth,
+    hydrationPending: !!window.__iuVaultHydrationPending,
+    hydrationComplete: !!window.__iuVaultHydrationComplete,
+    pendingWriteCount: getPendingVaultWriteCount(),
+    platform: detectPlatform(),
+    displayMode: detectDisplayMode(),
+    serviceWorker: serviceWorkerMeta(),
+    probes,
+  };
+
+  let firstDiff = null;
+  try {
+    const prevRaw = sessionStorage.getItem("iu:vault:sec-off-reload-trace:v1");
+    if (prevRaw) {
+      const prev = JSON.parse(prevRaw);
+      if (prev && Array.isArray(prev.probes)) {
+        for (const now of probes) {
+          const old = prev.probes.find((p) => p && p.key === now.key);
+          if (!old) continue;
+          if (old.idbFp && now.idbFp && old.idbFp !== now.idbFp) {
+            firstDiff = {
+              key: now.key,
+              kind: "idb_fp_changed",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              fromFp: old.idbFp,
+              toFp: now.idbFp,
+            };
+            break;
+          }
+          if (old.idbPresent && !now.idbPresent) {
+            firstDiff = { key: now.key, kind: "idb_lost", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+          if (old.decryptOk && !now.decryptOk && now.idbPresent) {
+            firstDiff = { key: now.key, kind: "decrypt_failed", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+          if (now.plainStaging) {
+            firstDiff = firstDiff || {
+              key: now.key,
+              kind: "plain_staging_present",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+            };
+          }
+          if (old.idbFp && now.memPresent && now.memFp && old.idbFp !== now.memFp) {
+            firstDiff = {
+              key: now.key,
+              kind: "mem_diverged_from_prior_idb",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              priorIdbFp: old.idbFp,
+              memFp: now.memFp,
+            };
+            break;
+          }
+        }
+      }
+    }
+  } catch (_) {}
+  payload.firstDiff = firstDiff;
+
+  try {
+    sessionStorage.setItem("iu:vault:sec-off-reload-trace:v1", JSON.stringify(payload));
+  } catch (_) {}
+
+  return payload;
+}

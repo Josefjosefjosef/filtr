@@ -2,7 +2,8 @@
  * Physical persistence / conflict forensics overlay — metadata only.
  * ?iuPersistDiag=1 → BEFORE/AFTER persistence diag (may run normal vault boot)
  * ?iuConflictForensics=1 → READ-ONLY conflict topology (boot must skip migrate)
- * Does NOT flush or write vault data from this overlay.
+ * ?iuSecOffReloadDiag=1 → SECURITY OFF save→reload fingerprint trace
+ * Does NOT flush or write vault data from this overlay (except sessionStorage fingerprints).
  */
 (function iuPhysicalPersistDiagOverlay() {
   "use strict";
@@ -14,7 +15,8 @@
   }
   var persistMode = params.get("iuPersistDiag") === "1";
   var conflictMode = params.get("iuConflictForensics") === "1";
-  if (!persistMode && !conflictMode) return;
+  var secOffMode = params.get("iuSecOffReloadDiag") === "1";
+  if (!persistMode && !conflictMode && !secOffMode) return;
   if (window.__iuPhysicalPersistDiagOverlay) return;
   window.__iuPhysicalPersistDiagOverlay = 1;
 
@@ -30,7 +32,10 @@
   var root = document.createElement("div");
   root.id = "iuPersistDiagOverlay";
   root.setAttribute("role", "dialog");
-  root.setAttribute("aria-label", conflictMode ? "Conflict forensics" : "Persistence diagnostika");
+  root.setAttribute(
+    "aria-label",
+    conflictMode ? "Conflict forensics" : secOffMode ? "SECURITY OFF reload trace" : "Persistence diagnostika"
+  );
   root.style.cssText =
     "position:fixed;z-index:2147483646;left:8px;right:8px;bottom:8px;max-height:52vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
 
@@ -38,6 +43,11 @@
   row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px";
   if (conflictMode) {
     row.appendChild(btn("1) Capture forensics", "conflict", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  } else if (secOffMode) {
+    row.appendChild(btn("1) Po SAVE", "secAfterSave", true));
+    row.appendChild(btn("2) Po RELOAD", "secAfterReload", true));
     row.appendChild(btn("Kopírovat JSON", "copy", true));
     row.appendChild(btn("Zavřít", "close", false));
   } else {
@@ -53,7 +63,9 @@
   pre.style.cssText = "white-space:pre-wrap;word-break:break-word;margin:0";
   pre.textContent = conflictMode
     ? "READ-ONLY conflict forensics. Stiskni Capture. Žádný migrate/write."
-    : "Čekám na vault…";
+    : secOffMode
+      ? "SECURITY OFF reload trace. 1) Ulož filtr/data → Po SAVE. 2) Reload → Po RELOAD. Bez plaintextu."
+      : "Čekám na vault…";
   root.appendChild(pre);
 
   function mount() {
@@ -124,6 +136,19 @@
     }
   }
 
+  async function captureSecOff(phase) {
+    setText("Načítám " + phase + "…");
+    try {
+      var vault = await waitApi(25000, function () {
+        return window.iuVault && typeof window.iuVault.captureSecOffReloadTrace === "function";
+      });
+      lastPayload = await vault.captureSecOffReloadTrace(phase);
+      setText(JSON.stringify(lastPayload, null, 2));
+    } catch (err) {
+      setText("FAIL: " + String(err && err.message ? err.message : err));
+    }
+  }
+
   async function captureConflict() {
     setText("Načítám READ-ONLY conflict forensics…");
     try {
@@ -139,7 +164,13 @@
 
   async function copyLast() {
     if (!lastPayload) {
-      setText(conflictMode ? "Nejdřív Capture forensics." : "Nejdřív stiskni BEFORE nebo AFTER.");
+      setText(
+        conflictMode
+          ? "Nejdřív Capture forensics."
+          : secOffMode
+            ? "Nejdřív Po SAVE nebo Po RELOAD."
+            : "Nejdřív stiskni BEFORE nebo AFTER."
+      );
       return;
     }
     var text = JSON.stringify(lastPayload, null, 2);
@@ -171,6 +202,8 @@
     var act = t.getAttribute("data-act");
     if (act === "before") capturePersist("BEFORE_CLOSE");
     else if (act === "after") capturePersist("AFTER_REOPEN");
+    else if (act === "secAfterSave") captureSecOff("AFTER_SAVE");
+    else if (act === "secAfterReload") captureSecOff("AFTER_RELOAD");
     else if (act === "conflict") captureConflict();
     else if (act === "copy") copyLast();
     else if (act === "close") root.remove();
@@ -180,5 +213,12 @@
     setTimeout(function () {
       captureConflict();
     }, 400);
+  } else if (secOffMode) {
+    setTimeout(function () {
+      captureSecOff("BOOT_HYDRATED");
+    }, 1200);
+    setTimeout(function () {
+      captureSecOff("BOOT_PLUS_4S");
+    }, 5200);
   }
 })();
