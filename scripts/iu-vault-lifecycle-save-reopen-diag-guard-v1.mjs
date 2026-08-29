@@ -43,8 +43,11 @@ async function main() {
     if (!/iuLifecycleDiag/.test(overlay)) fails.push("overlay_missing_mode");
     if (!/lifeAfterSave|lifeAfterReload|lifeAfterReopen/.test(overlay)) fails.push("overlay_missing_buttons");
     if (!/iu-vault-physical-diag-overlay-v1\.js/.test(index)) fails.push("index_missing_overlay");
-    if (!/iu-vault-lifecycle-diag-v1-20260829/.test(index)) fails.push("index_missing_cache_bust");
-    if (!/2026-08-29-iu-vault-lifecycle-diag-v1/.test(sw)) fails.push("sw_missing_cache_version");
+    if (!/iu-vault-lifecycle-diag-v1-20260829|iu-vault-hydrated-prefs-ui-v1-20260829/.test(index)) fails.push("index_missing_cache_bust");
+    if (!/2026-08-29-iu-vault-hydrated-prefs-ui-v1|2026-08-29-iu-vault-lifecycle-diag-v1/.test(sw)) fails.push("sw_missing_cache_version");
+    if (!/2026-08-29-iu-vault-hydrated-prefs-ui-v1/.test(sw)) fails.push("sw_missing_hydrated_prefs_ui_version");
+    if (!/prefsUi/.test(diag)) fails.push("diag_missing_prefsUi");
+    if (!/moduleSaveTrace/.test(diag)) fails.push("diag_missing_moduleSaveTrace");
 
     const started = await startGuardStaticServer(pickGuardPort(9420, 400));
     server = started;
