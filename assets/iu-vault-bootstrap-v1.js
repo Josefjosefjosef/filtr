@@ -115,6 +115,13 @@ async function initVault() {
   initVaultPersistenceDiag();
   registerAutoLockListeners();
 
+  // Hold hydration gate for ALL boots (SECURITY OFF included) so early module
+  // defaults cannot poison memoryCache / plant plaintext before IDB preload.
+  try {
+    window.__iuVaultHydrationPending = true;
+    window.__iuVaultHydrationComplete = false;
+  } catch (_) {}
+
   // READ-ONLY physical conflict forensics: do not migrate/repair/write.
   if (conflictForensicsOnlyMode()) {
     try {
@@ -200,6 +207,9 @@ async function initVault() {
 
 const boot = await initVault().catch((err) => {
   window.__iuVaultBootError = String(err && err.message ? err.message : err);
+  try {
+    window.__iuVaultHydrationPending = false;
+  } catch (_) {}
   return null;
 });
 const meta = boot && boot.meta ? boot.meta : boot;

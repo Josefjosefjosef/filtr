@@ -127,10 +127,11 @@ export async function persistEnvelope(storageKey, envelope) {
   diagSync("07-write-transaction-complete", { key: k, source: "persistEnvelope" });
 }
 
-export async function vaultGetItem(storageKey) {
+export async function vaultGetItem(storageKey, options) {
   touchActivity();
   const k = String(storageKey);
-  if (memoryCache.has(k)) return memoryCache.get(k);
+  const opts = options && typeof options === "object" ? options : {};
+  if (!opts.bypassMemoryCache && memoryCache.has(k)) return memoryCache.get(k);
   diagSync("18-record-read", { key: k, source: "vaultGetItem" });
   const envelope = await readEnvelope(k);
   if (!envelope) return null;
@@ -387,10 +388,12 @@ export function isEmptyShapedVaultPlaintext(text, storageKey) {
 /** Block module saves while locked (ciphertext at rest) or while post-unlock hydrate is still pending. */
 export function isVaultPersistBlocked(storageKey) {
   if (!isProtectedStorageKey(storageKey)) return false;
-  if (isVaultUserWriteActive()) return false;
   try {
+    // Hydration window blocks ALL writers (including user) so early module defaults
+    // cannot poison memoryCache before authoritative IDB preload.
     if (window.__iuVaultHydrationPending) return true;
   } catch (_) {}
+  if (isVaultUserWriteActive()) return false;
   const st = getVaultState();
   if (st.unlocked) return false;
   return hasEncryptedRecordAtRest(storageKey);
@@ -421,10 +424,16 @@ export function installLocalStorageShim() {
     diagSync("01-user-write-request", { key: String(key), source: writeSource, pendingWrites: pendingWrites.size });
     const st = getVaultState();
     if (!st.unlocked) {
-      // L1 boot race: shim is installed before ensureLevel1Mdk unlocks.
-      // Only hard-block writes when the user must re-authenticate.
+      // Never plant native plaintext for protected keys during L1 boot race.
+      // True legacy plaintext already sits in LS before shim install; migrate reads it.
+      // Late nativeSet staging is what enabled migratePlaintextToVault to overwrite IDB.
       if (!st.requiresUserReauth) {
-        nativeSet(key, value);
+        diagSync("01-user-write-request", {
+          key: String(key),
+          source: writeSource,
+          writeBlocked: true,
+          reason: "pre_unlock_no_native_staging",
+        });
         return;
       }
       diagSync("01-user-write-request", { key: String(key), source: writeSource, writeBlocked: true, reason: "vault_locked" });
@@ -462,7 +471,9 @@ export async function hydrateMemoryCacheFromVault(keys) {
   for (const key of keys) {
     try {
       diagSync("20-module-hydrate", { key: String(key), source: "hydrateMemoryCacheFromVault" });
-      const val = await vaultGetItem(key);
+      // Drop any pre-hydrate poison (empty/default setItem raced before preload).
+      memoryCache.delete(String(key));
+      const val = await vaultGetItem(key, { bypassMemoryCache: true });
       if (val != null) memoryCache.set(key, val);
     } catch (_) {}
   }
