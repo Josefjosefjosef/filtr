@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Negative proof: skip afterUnlock preload (IU_NEG_SKIP_HYDRATE=1)
- * → preservation guard must FAIL.
- * Empty-module overwrite is now blocked centrally (authoritative IDB), so
- * IU_NEG_FORCE_EMPTY_WRITE is no longer a valid regression injector.
- * Without env → PASS.
+ * Negative proof: plant empty module defaults into memory after unlock and skip
+ * afterUnlock preload (IU_NEG_FORCE_EMPTY_WRITE=1 + IU_NEG_SKIP_HYDRATE=1)
+ * → preservation guard must FAIL (memory poison without authoritative reload).
+ *
+ * Central IDB clobber guards block durable empty overwrite, so FORCE_EMPTY alone
+ * is no longer a valid injector. Without both envs → PASS.
  */
 import path from "path";
 import { fileURLToPath } from "url";
@@ -17,11 +18,15 @@ const broken = spawnSync(process.execPath, [GUARD], {
   cwd: REPO,
   encoding: "utf8",
   timeout: 180000,
-  env: { ...process.env, IU_NEG_SKIP_HYDRATE: "1", IU_NEG_FORCE_EMPTY_WRITE: "0" },
+  env: {
+    ...process.env,
+    IU_NEG_FORCE_EMPTY_WRITE: "1",
+    IU_NEG_SKIP_HYDRATE: "1",
+  },
 });
 
 if (broken.status === 0) {
-  console.error("NEGATIVE_PROOF_FAIL:skip_hydrate_still_passed");
+  console.error("NEGATIVE_PROOF_FAIL:memory_poison_still_passed");
   console.error(broken.stdout);
   process.exit(1);
 }
@@ -30,7 +35,11 @@ const fixed = spawnSync(process.execPath, [GUARD], {
   cwd: REPO,
   encoding: "utf8",
   timeout: 180000,
-  env: { ...process.env, IU_NEG_SKIP_HYDRATE: "0", IU_NEG_FORCE_EMPTY_WRITE: "0" },
+  env: {
+    ...process.env,
+    IU_NEG_FORCE_EMPTY_WRITE: "0",
+    IU_NEG_SKIP_HYDRATE: "0",
+  },
 });
 
 if (fixed.status !== 0) {
