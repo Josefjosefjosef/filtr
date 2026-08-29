@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-08-29-iu-vault-hydrated-owns-ui-v1",
   "2026-08-29-iu-vault-key-path-atomic-v1",
   "2026-08-29-iu-vault-hydrated-prefs-ui-v1",
   "2026-08-29-iu-vault-lifecycle-diag-v1",

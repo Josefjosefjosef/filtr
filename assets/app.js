@@ -10900,26 +10900,78 @@ try {
   function saveTasks(data){
     const copy = { schemaVersion: SCHEMA_VERSION, tasks: (data.tasks || []).map(sanitizeTask).filter(Boolean).slice(0, MAX_TASKS) };
     state.data = copy;
+    function pushTasksSaveTrace(step, detail){
+      try {
+        const arr = window.__iuModuleSaveTrace || (window.__iuModuleSaveTrace = []);
+        arr.push({
+          at: Date.now(),
+          module: "tasks",
+          key: TASKS_STORE_KEY,
+          step: String(step || ""),
+          ok: detail && detail.ok === true ? true : detail && detail.ok === false ? false : null,
+          reason: detail && detail.reason ? String(detail.reason).slice(0, 64) : null,
+          tasksLen: Array.isArray(copy.tasks) ? copy.tasks.length : null,
+        });
+        if (arr.length > 40) arr.splice(0, arr.length - 40);
+      } catch (_) {}
+    }
     function emitTasksChanged(){
       try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: TASKS_STORE_KEY } })); }catch{}
     }
+    pushTasksSaveTrace("user_save_enter", { ok: null });
     try {
       if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(TASKS_STORE_KEY)) {
+        pushTasksSaveTrace("persist_blocked_pre", { ok: false, reason: "persist_blocked" });
         return;
       }
     } catch (_) {}
     if (!isLocalDataProtectionNoticeAccepted()) {
       void ensureLocalDataProtectionBeforeSave().then(function (ok) {
-        if (!ok) return;
-        try { localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy)); } catch {}
-        emitTasksChanged();
+        if (!ok) {
+          pushTasksSaveTrace("user_save_fail", { ok: false, reason: "ldp_declined" });
+          return;
+        }
+        void persistTasksDurable(copy, pushTasksSaveTrace, emitTasksChanged);
       });
       return;
     }
-    try{
-      localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
-    }catch{}
-    emitTasksChanged();
+    void persistTasksDurable(copy, pushTasksSaveTrace, emitTasksChanged);
+  }
+
+  async function persistTasksDurable(copy, pushTasksSaveTrace, emitTasksChanged){
+    try {
+      pushTasksSaveTrace("persist_enter", { ok: null });
+      try {
+        window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
+      } catch (_) {}
+      let writeRet = null;
+      try {
+        writeRet = localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
+      } finally {
+        try {
+          window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
+        } catch (_) {}
+      }
+      pushTasksSaveTrace("vault_setitem_returned", { ok: true });
+      if (writeRet && typeof writeRet.then === "function") {
+        await writeRet;
+        pushTasksSaveTrace("vault_setitem_awaited", { ok: true });
+      }
+      if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+        await window.iuVault.flushPendingWrites();
+        pushTasksSaveTrace("flush_pending_done", { ok: true });
+      }
+      emitTasksChanged();
+      pushTasksSaveTrace("persist_commit_ok", { ok: true });
+      try {
+        window.__iuTasksDurableWrite = Promise.resolve(true);
+      } catch (_) {}
+    } catch (err) {
+      pushTasksSaveTrace("user_save_fail", {
+        ok: false,
+        reason: String((err && err.message) || err || "write_failed").slice(0, 64),
+      });
+    }
   }
 
   function sortTasksInPlace(arr){

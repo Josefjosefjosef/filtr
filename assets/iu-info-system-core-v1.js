@@ -746,6 +746,8 @@ try {
   window.addEventListener("iu-vault-hydrated", clearPrefsMemCache);
   window.addEventListener("iu-vault-unlocked", clearPrefsMemCache);
   window.addEventListener("iu-vault-bfcache-restore", clearPrefsMemCache);
+  // Mobile Safari pageshow can re-enter UI after hydrate; drop any stale pin.
+  window.addEventListener("pageshow", clearPrefsMemCache);
 } catch (_) {}
 
 function migrateLocalStateOnce() {
@@ -784,14 +786,29 @@ function migrateLocalStateOnce() {
 
 function getPrefs() {
   migrateLocalStateOnce();
+  // After authoritative hydrate, vault memory/shim is the sole source of truth for
+  // initial UI. Never let a pre-hydrate/default pin win over durable prefs.
+  try {
+    if (window.__iuVaultHydrationComplete === true) {
+      const rawHydrated = localStorage.getItem(LS_PREFS);
+      if (rawHydrated) {
+        _prefsMem = normalizePrefs(JSON.parse(rawHydrated) || {});
+        return _prefsMem;
+      }
+    }
+  } catch (_) {}
   if (_prefsMem) return _prefsMem;
   try {
     const raw = localStorage.getItem(LS_PREFS);
     if (!raw) {
       // Do not pin defaults into _prefsMem while vault is locked/hydrating —
       // that would survive unlock and clobber real Doprava/ČHMÚ filters.
-      if (isVaultPrefsReadOpaque()) {
-        prefsDiag("22-module-default-init", { source: "getPrefs", writeBlocked: true, reason: "prefs_read_opaque" });
+      if (isVaultPrefsReadOpaque() || window.__iuVaultHydrationComplete !== true) {
+        prefsDiag("22-module-default-init", {
+          source: "getPrefs",
+          writeBlocked: true,
+          reason: isVaultPrefsReadOpaque() ? "prefs_read_opaque" : "hydration_incomplete",
+        });
         return defaultPrefs();
       }
       _prefsMem = defaultPrefs();
@@ -801,7 +818,7 @@ function getPrefs() {
     _prefsMem = normalizePrefs(JSON.parse(raw) || {});
     return _prefsMem;
   } catch (_) {
-    if (isVaultPrefsReadOpaque()) return defaultPrefs();
+    if (isVaultPrefsReadOpaque() || window.__iuVaultHydrationComplete !== true) return defaultPrefs();
     _prefsMem = defaultPrefs();
     return _prefsMem;
   }
