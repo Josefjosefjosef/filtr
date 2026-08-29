@@ -160,13 +160,22 @@ export async function wipeVaultDatabase() {
 
 export async function wipeCalendarMirrorIdb() {
   return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve();
+    };
+    // Never block migrate/unlock on a stuck legacy calendar IDB delete.
+    const timer = setTimeout(finish, 2500);
     try {
       const req = indexedDB.deleteDatabase("iu.calendar.idb");
-      req.onsuccess = () => resolve();
-      req.onerror = () => resolve();
-      req.onblocked = () => resolve();
+      req.onsuccess = () => finish();
+      req.onerror = () => finish();
+      req.onblocked = () => finish();
     } catch (_) {
-      resolve();
+      finish();
     }
   });
 }

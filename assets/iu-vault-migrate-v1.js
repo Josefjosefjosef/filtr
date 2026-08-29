@@ -18,7 +18,7 @@ import {
   isProtectedStorageKey,
 } from "./iu-vault-protected-keys-v1.js";
 import { getMdk } from "./iu-vault-lock-v1.js";
-import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, getMemoryCachePlaintext, listMemoryCacheProtectedKeys, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage, isEmptyShapedVaultPlaintext } from "./iu-vault-storage-v1.js";
+import { nativeLocalStorageGet, nativeLocalStorageRemove, memoryCacheSet, getMemoryCachePlaintext, listMemoryCacheProtectedKeys, persistEnvelope, ENC_PREFIX, captureNativeLocalStorage } from "./iu-vault-storage-v1.js";
 
 function collectPlaintextProtectedKeys() {
   captureNativeLocalStorage();
@@ -41,17 +41,9 @@ async function collectMigrationKeys(mdk) {
     const cached = getMemoryCachePlaintext(k);
     if (cached == null) continue;
     const existing = await readRecord(k);
-    if (!existing) {
-      keys.add(k);
-      continue;
-    }
-    let roundtrip = null;
-    try {
-      roundtrip = await decryptString(mdk, k, existing);
-    } catch (_) {
-      roundtrip = null;
-    }
-    if (roundtrip !== cached) keys.add(k);
+    // Memory poison / late defaults must never schedule overwrite of any IDB record.
+    // Seal memory-only plaintext only when IDB has no record (true first-time seal).
+    if (!existing) keys.add(k);
   }
   return Array.from(keys);
 }
@@ -119,26 +111,32 @@ export async function migratePlaintextToVault() {
         } catch (_) {
           roundtrip = null;
         }
-        if (plaintext == null) {
+        if (roundtrip != null) {
+          // Authoritative encrypted IDB wins over any late plaintext/default staging.
+          // Plaintext may only seal when IDB is missing (true legacy one-shot migrate).
+          nativeLocalStorageRemove(key);
+          memoryCacheSet(key, roundtrip);
           doneKeys.add(key);
+          await writeMigrationCheckpoint(MIGRATION_ID, {
+            doneKeys: Array.from(doneKeys),
+            updatedAt: new Date().toISOString(),
+          });
           continue;
         }
-        if (roundtrip !== plaintext) {
-          if (isEmptyShapedVaultPlaintext(plaintext, key) && roundtrip && !isEmptyShapedVaultPlaintext(roundtrip, key)) {
-            doneKeys.add(key);
-            continue;
-          }
-          const envelope = await encryptString(mdk, key, plaintext);
-          await persistEnvelope(key, envelope);
-          const verify = await decryptString(mdk, key, envelope);
-          if (verify !== plaintext) throw new Error(`VAULT_MIGRATE_VERIFY_FAIL:${key}`);
-        }
-      } else {
-        const envelope = await encryptString(mdk, key, plaintext);
-        await persistEnvelope(key, envelope);
-        const verify = await decryptString(mdk, key, envelope);
-        if (verify !== plaintext) throw new Error(`VAULT_MIGRATE_VERIFY_FAIL:${key}`);
+        // IDB present but undecryptable: do not overwrite with plaintext (orphan fail-closed).
+        nativeLocalStorageRemove(key);
+        doneKeys.add(key);
+        await writeMigrationCheckpoint(MIGRATION_ID, {
+          doneKeys: Array.from(doneKeys),
+          updatedAt: new Date().toISOString(),
+        });
+        continue;
       }
+
+      const envelope = await encryptString(mdk, key, plaintext);
+      await persistEnvelope(key, envelope);
+      const verify = await decryptString(mdk, key, envelope);
+      if (verify !== plaintext) throw new Error(`VAULT_MIGRATE_VERIFY_FAIL:${key}`);
 
       nativeLocalStorageRemove(key);
       memoryCacheSet(key, plaintext);
