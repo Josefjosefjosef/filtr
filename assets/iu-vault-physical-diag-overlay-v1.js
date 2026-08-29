@@ -4,6 +4,7 @@
  * ?iuConflictForensics=1 → READ-ONLY conflict topology (boot must skip migrate)
  * ?iuSecOffReloadDiag=1 → SECURITY OFF save→reload fingerprint trace
  * ?iuLifecycleDiag=1 → mobile/tablet/PWA SAVE→RELOAD→REOPEN lifecycle trace
+ * ?iuKeyPathDiag=1 → key-path forensics (works on fail-closed recovery screen)
  * Does NOT flush or write vault data from this overlay (except sessionStorage fingerprints).
  */
 (function iuPhysicalPersistDiagOverlay() {
@@ -18,7 +19,8 @@
   var conflictMode = params.get("iuConflictForensics") === "1";
   var secOffMode = params.get("iuSecOffReloadDiag") === "1";
   var lifecycleMode = params.get("iuLifecycleDiag") === "1";
-  if (!persistMode && !conflictMode && !secOffMode && !lifecycleMode) return;
+  var keyPathMode = params.get("iuKeyPathDiag") === "1";
+  if (!persistMode && !conflictMode && !secOffMode && !lifecycleMode && !keyPathMode) return;
   if (window.__iuPhysicalPersistDiagOverlay) return;
   window.__iuPhysicalPersistDiagOverlay = 1;
 
@@ -38,7 +40,9 @@
   root.setAttribute("role", "dialog");
   root.setAttribute(
     "aria-label",
-    lifecycleMode
+    keyPathMode
+      ? "Key path forensics"
+      : lifecycleMode
       ? "Lifecycle SAVE REOPEN trace"
       : conflictMode
         ? "Conflict forensics"
@@ -55,6 +59,10 @@
     row.appendChild(btn("1) Po SAVE", "lifeAfterSave", true));
     row.appendChild(btn("2) Po RELOAD", "lifeAfterReload", true));
     row.appendChild(btn("3) Po REOPEN", "lifeAfterReopen", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  } else if (keyPathMode) {
+    row.appendChild(btn("1) Capture key-path", "keyPath", true));
     row.appendChild(btn("Kopírovat JSON", "copy", true));
     row.appendChild(btn("Zavřít", "close", false));
   } else if (conflictMode) {
@@ -77,7 +85,9 @@
   var pre = document.createElement("pre");
   pre.id = "iuPersistDiagOut";
   pre.style.cssText = "white-space:pre-wrap;word-break:break-word;margin:0";
-  pre.textContent = lifecycleMode
+  pre.textContent = keyPathMode
+    ? "KEY-PATH FORENSICS (bez secrets). Capture na fail-closed i unlocked. Kopírovat JSON."
+    : lifecycleMode
     ? "LIFECYCLE TRACE (bez plaintextu).\n1) Ulož filtr/notes/tasks/calendar → Po SAVE.\n2) Reload → Po RELOAD.\n3) Zavři browser/PWA úplně → otevři stejné URL → Po REOPEN.\nPak Kopírovat JSON."
     : conflictMode
       ? "READ-ONLY conflict forensics. Stiskni Capture. Žádný migrate/write."
@@ -229,6 +239,50 @@
     }
   }
 
+  async function captureKeyPath() {
+    setText("Načítám key-path forensics…");
+    await waitApi(90000, function () {
+      return window.iuVault && typeof window.iuVault.getPersistenceDiag === "function";
+    });
+    var vault = window.iuVault;
+    var diag = await vault.getPersistenceDiag({
+      keys: ["iu.infoEvents.prefs.v1", "iu.notes.store.v1", "iu.tasks.mvp.v1", "iu.calendar.store.v1"],
+    });
+    var life = null;
+    try {
+      if (typeof vault.captureLifecycleSaveReopenTrace === "function") {
+        life = await vault.captureLifecycleSaveReopenTrace("KEY_PATH_FORENSICS");
+      }
+    } catch (_) {}
+    lastPayload = {
+      tag: "KEY_PATH_FORENSICS_V1",
+      capturedAt: Date.now(),
+      recoveryRequired: !!(vault.isStorageRecoveryRequired && vault.isStorageRecoveryRequired()),
+      recoveryReason: vault.getStorageRecoveryReason ? vault.getStorageRecoveryReason() : null,
+      recoveryKeyPath: vault.getStorageRecoveryKeyPath ? vault.getStorageRecoveryKeyPath() : null,
+      windowKeyPath: window.__iuVaultStorageRecoveryKeyPath || null,
+      forensics: diag && diag.forensics ? diag.forensics : null,
+      lifecycle: life
+        ? {
+            keyRecordPresent: life.keyRecordPresent,
+            cryptoKeyUsable: life.cryptoKeyUsable,
+            durableMaterialPresent: life.durableMaterialPresent,
+            durableMaterialUsable: life.durableMaterialUsable,
+            legacyBackupPresent: life.legacyBackupPresent,
+            storageRecoveryReason: life.storageRecoveryReason,
+            storageRecoveryKeyPath: life.storageRecoveryKeyPath,
+            probes: life.probes,
+            bundleHint: life.bundleHint,
+            serviceWorker: life.serviceWorker,
+            platform: life.platform,
+            displayMode: life.displayMode,
+            origin: life.origin,
+          }
+        : null,
+    };
+    setText(JSON.stringify(lastPayload, null, 2));
+  }
+
   root.addEventListener("click", function (ev) {
     var t = ev.target;
     if (!t || !t.getAttribute) return;
@@ -241,6 +295,7 @@
     else if (act === "lifeAfterReload") captureLifecycle("AFTER_RELOAD");
     else if (act === "lifeAfterReopen") captureLifecycle("AFTER_REOPEN");
     else if (act === "conflict") captureConflict();
+    else if (act === "keyPath") captureKeyPath();
     else if (act === "copy") copyLast();
     else if (act === "close") root.remove();
   });
@@ -249,6 +304,10 @@
     setTimeout(function () {
       captureConflict();
     }, 400);
+  } else if (keyPathMode) {
+    setTimeout(function () {
+      captureKeyPath();
+    }, 600);
   } else if (lifecycleMode) {
     setTimeout(function () {
       captureLifecycle("BOOT_HYDRATED");

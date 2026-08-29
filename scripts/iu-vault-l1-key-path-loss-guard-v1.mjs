@@ -29,6 +29,15 @@ function staticChecks(fails) {
   const diagJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-persistence-diag-v1.js"), "utf8");
   if (!/LEVEL1_MDK_MATERIAL_ID/.test(lockJs)) fails.push("lock_missing_durable_material_id");
   if (!/persistLevel1KeyWithDurableMaterial/.test(lockJs)) fails.push("lock_missing_persist_durable_material");
+  if (!/writeKeyRecordsBatch/.test(fs.readFileSync(path.join(REPO, "assets", "iu-vault-db-v1.js"), "utf8"))) {
+    fails.push("db_missing_writeKeyRecordsBatch");
+  }
+  if (!/VAULT_LEVEL1_DURABLE_MATERIAL_READBACK_FAIL/.test(lockJs)) {
+    fails.push("lock_missing_material_readback");
+  }
+  if (!/Never continue CryptoKey-only|backfilledDurableMaterial/.test(lockJs)) {
+    fails.push("lock_allows_silent_cryptokey_only");
+  }
   if (!/restoreLevel1FromDurableMaterial|idb_durable_material/.test(lockJs)) {
     fails.push("lock_missing_restore_from_durable_material");
   }

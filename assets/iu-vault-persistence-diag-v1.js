@@ -669,6 +669,8 @@ export async function captureLifecycleSaveReopenTrace(phase) {
   let keyRecordPresent = false;
   let cryptoKeyUsable = false;
   let durableMaterialPresent = false;
+  let durableMaterialUsable = false;
+  let legacyBackupPresent = false;
   try {
     const keyRec = await readKeyRecord("mdk:level1");
     keyRecordPresent = !!(keyRec && keyRec.mdk);
@@ -683,7 +685,23 @@ export async function captureLifecycleSaveReopenTrace(phase) {
     }
   } catch (_) {}
   try {
-    durableMaterialPresent = !!nativeLocalStorageGet("iu:vault:mdk-level1-backup:v1");
+    const { readLevel1DurableMaterialBytes } = await import("./iu-vault-lock-v1.js");
+    const raw = await readLevel1DurableMaterialBytes();
+    durableMaterialPresent = !!(raw && raw.byteLength >= 16);
+    if (durableMaterialPresent) {
+      try {
+        const { importMdkRaw } = await import("./iu-vault-core-v1.js");
+        const mdk = await importMdkRaw(raw);
+        const probe = await encryptString(mdk, "iu.diag.mat.v1", "ok");
+        const pt = await decryptString(mdk, "iu.diag.mat.v1", probe);
+        durableMaterialUsable = pt === "ok";
+      } catch (_) {
+        durableMaterialUsable = false;
+      }
+    }
+  } catch (_) {}
+  try {
+    legacyBackupPresent = !!nativeLocalStorageGet("iu:vault:mdk-level1-backup:v1");
   } catch (_) {}
 
   let storagePersisted = null;
@@ -830,6 +848,7 @@ export async function captureLifecycleSaveReopenTrace(phase) {
     displayMode: detectDisplayMode(),
     uaFamily: uaFamily(),
     bundleHint: detectBundleHint(),
+    bundleHintSource: "meta[name=iu-build]|projects/version.json (product stamp; not SW CACHE_VERSION)",
     serviceWorker: serviceWorkerMeta(),
     swCacheHint,
     storagePersistSupported,
@@ -837,7 +856,67 @@ export async function captureLifecycleSaveReopenTrace(phase) {
     keyRecordPresent,
     cryptoKeyUsable,
     durableMaterialPresent,
+    durableMaterialUsable,
+    legacyBackupPresent,
+    storageRecoveryRequired: !!(st && st.storageRecoveryRequired),
+    storageRecoveryReason: st && st.storageRecoveryReason ? safeToken(st.storageRecoveryReason, 64) : null,
+    storageRecoveryKeyPath: st && st.storageRecoveryKeyPath ? st.storageRecoveryKeyPath : null,
     probes,
+    prefsUi: await (async () => {
+      try {
+        const diag = window.__iuPrehledPrefsDiag;
+        if (!diag || typeof diag.getStatePrefs !== "function" || typeof diag.getLivePrefs !== "function") {
+          return { present: false };
+        }
+        const stateP = diag.getStatePrefs();
+        const liveP = diag.getLivePrefs();
+        function structCanon(p) {
+          if (!p || typeof p !== "object") return "";
+          return JSON.stringify({
+            sections: Array.isArray(p.sections) ? p.sections.slice().sort() : [],
+            sourceGroups: Array.isArray(p.sourceGroups) ? p.sourceGroups.slice().sort() : [],
+            lanesLen: Array.isArray(p.lanes) ? p.lanes.length : 0,
+            localitiesLen: Array.isArray(p.localities) ? p.localities.length : 0,
+            homeKrajLen: String(p.homeKraj || "").length,
+            homeOkresLen: String(p.homeOkres || "").length,
+            homeObecLen: String(p.homeObec || "").length,
+            roadsLen: p.feedFilter && Array.isArray(p.feedFilter.roads) ? p.feedFilter.roads.length : 0,
+            orpLen:
+              p.feedFilter && p.feedFilter.chmi && Array.isArray(p.feedFilter.chmi.orpCodes)
+                ? p.feedFilter.chmi.orpCodes.length
+                : 0,
+            unreadOnly: !!p.unreadOnly,
+            savedOnly: !!p.savedOnly,
+            favoritesOnly: !!p.favoritesOnly,
+            searchQueryLen: String(p.searchQuery || "").length,
+          });
+        }
+        const stateFp = await fp8(structCanon(stateP));
+        const liveFp = await fp8(structCanon(liveP));
+        const prefsProbe = probes.find((p) => p && p.key === "iu.infoEvents.prefs.v1") || null;
+        return {
+          present: true,
+          stateFp,
+          liveFp,
+          memFp: prefsProbe ? prefsProbe.memFp : null,
+          idbFp: prefsProbe ? prefsProbe.idbFp : null,
+          stateMatchesLive: !!(stateFp && liveFp && stateFp === liveFp),
+          liveMatchesMem: !!(liveFp && prefsProbe && prefsProbe.memFp && liveFp === prefsProbe.memFp),
+          appliedReason: window.__iuPrehledPrefsAppliedReason || null,
+          appliedAt: window.__iuPrehledPrefsAppliedAt || null,
+        };
+      } catch (_) {
+        return { present: false };
+      }
+    })(),
+    moduleSaveTrace: (() => {
+      try {
+        const arr = window.__iuModuleSaveTrace;
+        return Array.isArray(arr) ? arr.slice(-24) : [];
+      } catch (_) {
+        return [];
+      }
+    })(),
   };
 
   let firstDiff = null;

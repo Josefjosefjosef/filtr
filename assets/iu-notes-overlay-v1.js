@@ -308,29 +308,69 @@ export function initIuNotesOverlay() {
     return "Nepodařilo se uložit poznámku.";
   }
 
+  function pushNotesSaveTrace(step, detail) {
+    try {
+      const arr = window.__iuModuleSaveTrace || (window.__iuModuleSaveTrace = []);
+      const notesLen =
+        detail && detail.notesLen != null
+          ? Number(detail.notesLen)
+          : detail && detail.data && Array.isArray(detail.data.notes)
+            ? detail.data.notes.length
+            : null;
+      arr.push({
+        at: Date.now(),
+        module: "notes",
+        key: STORE_KEY,
+        step: String(step || ""),
+        ok: detail && detail.ok === true ? true : detail && detail.ok === false ? false : null,
+        reason: detail && detail.reason ? String(detail.reason).slice(0, 64) : null,
+        notesLen: Number.isFinite(notesLen) ? notesLen : null,
+      });
+      if (arr.length > 40) arr.splice(0, arr.length - 40);
+    } catch (_) {}
+  }
+
   async function persistNotesWrite(norm) {
+    pushNotesSaveTrace("persist_enter", {
+      ok: null,
+      notesLen: Array.isArray(norm && norm.notes) ? norm.notes.length : 0,
+    });
     if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+      pushNotesSaveTrace("persist_blocked_pre", { ok: false, reason: "persist_blocked" });
       throw new Error("PERSIST_BLOCKED");
     }
     const ret = localStorage.setItem(STORE_KEY, JSON.stringify(norm));
+    pushNotesSaveTrace("vault_setitem_returned", { ok: true });
     if (ret && typeof ret.then === "function") {
       await ret;
+      pushNotesSaveTrace("vault_setitem_awaited", { ok: true });
     }
     if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
       await window.iuVault.flushPendingWrites();
+      pushNotesSaveTrace("flush_pending_done", { ok: true });
     }
     if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+      pushNotesSaveTrace("persist_blocked_post", { ok: false, reason: "persist_blocked" });
       throw new Error("PERSIST_BLOCKED");
     }
+    pushNotesSaveTrace("persist_commit_ok", {
+      ok: true,
+      notesLen: Array.isArray(norm && norm.notes) ? norm.notes.length : 0,
+    });
   }
 
   async function saveNotes(data){
     const norm = normalizeStore(data) || { schemaVersion: SCHEMA_VERSION, notes: [] };
     state.data = norm;
+    pushNotesSaveTrace("user_save_enter", {
+      ok: null,
+      notesLen: Array.isArray(norm.notes) ? norm.notes.length : 0,
+    });
     function emitNotesChanged(){
       try{ window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY } })); }catch{}
     }
     function fail(reason) {
+      pushNotesSaveTrace("user_save_fail", { ok: false, reason: reason, data: norm });
       return { ok: false, reason: reason, data: norm };
     }
     if (!isLocalDataProtectionNoticeAccepted()) {
@@ -341,6 +381,7 @@ export function initIuNotesOverlay() {
       await persistNotesWrite(norm);
       state.lastSavedAt = Date.now();
       emitNotesChanged();
+      pushNotesSaveTrace("user_save_ok", { ok: true, data: norm });
       return { ok: true, data: norm };
     } catch (err) {
       return fail(mapNotesSaveError(err));

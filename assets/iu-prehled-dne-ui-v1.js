@@ -320,29 +320,104 @@ function bindTimelineLifecycleListeners() {
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") return;
       captureFeedScroll();
-      clearInfoEventsFilterMemo();
-      paint();
-      wire();
+      reapplyPrefsFromStore({ reason: "visibilitychange" });
       scheduleTimelineBoundaryRefresh();
     });
   } catch (_) {}
   try {
     window.addEventListener("pageshow", () => {
       captureFeedScroll();
-      clearInfoEventsFilterMemo();
-      paint();
-      wire();
+      reapplyPrefsFromStore({ reason: "pageshow" });
       scheduleTimelineBoundaryRefresh();
     });
   } catch (_) {}
   try {
     window.addEventListener("online", () => {
       captureFeedScroll();
-      clearInfoEventsFilterMemo();
-      paint();
-      wire();
+      reapplyPrefsFromStore({ reason: "online" });
       scheduleTimelineBoundaryRefresh();
     });
+  } catch (_) {}
+}
+
+/**
+ * Vault may finish hydrate after Prehled already snapshotted state.prefs (or wait timed out).
+ * Notes/Tasks re-load on iu-vault-hydrated; Prehled must do the same for prefs/filters.
+ */
+function reapplyPrefsFromStore(opts) {
+  const reason = opts && opts.reason ? String(opts.reason) : "reapply";
+  try {
+    const next = ensurePrefsHaveFeedFilter(getPrefs());
+    state.prefs = next;
+    if (state.settingsOpen && state.draft) {
+      // Keep draft edits if settings open, but refresh baseline prefs for feed.
+    } else if (state.settingsOpen) {
+      state.draft = clonePrefs(next);
+    }
+    clearInfoEventsFilterMemo();
+    if (state.settingsOpen) {
+      try {
+        paintSettingsOnly({ resetSettingsScroll: false });
+        wire();
+      } catch (_) {
+        paint();
+        wire();
+      }
+    } else {
+      paint();
+      wire();
+    }
+    try {
+      window.__iuPrehledPrefsAppliedAt = Date.now();
+      window.__iuPrehledPrefsAppliedReason = reason;
+    } catch (_) {}
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function bindPrefsHydrationListeners() {
+  if (state.prefsHydrationBound) return;
+  state.prefsHydrationBound = true;
+  try {
+    window.addEventListener("iu-vault-hydrated", () => {
+      reapplyPrefsFromStore({ reason: "iu-vault-hydrated" });
+    });
+  } catch (_) {}
+  try {
+    window.addEventListener("iu-local-store-changed", (ev) => {
+      try {
+        const key = ev && ev.detail && ev.detail.key ? String(ev.detail.key) : "";
+        if (key !== "iu.infoEvents.prefs.v1") return;
+        reapplyPrefsFromStore({ reason: "iu-local-store-changed" });
+      } catch (_) {}
+    });
+  } catch (_) {}
+  try {
+    window.__iuPrehledPrefsDiag = {
+      getStatePrefs: () => state.prefs,
+      getLivePrefs: () => getPrefs(),
+      reapply: () => reapplyPrefsFromStore({ reason: "diag" }),
+      poisonDefaults: () => {
+        state.prefs = ensurePrefsHaveFeedFilter({
+          sections: [],
+          sourceGroups: [],
+          sourceIds: [],
+          lanes: [],
+          localities: [],
+          homeKraj: "",
+          homeOkres: "",
+          homeObec: "",
+          localityQuery: "",
+          feedFilter: { roads: [], chmi: { orpCodes: [] } },
+          unreadOnly: false,
+          savedOnly: false,
+          favoritesOnly: false,
+          searchQuery: "__IU_PREFS_UI_POISON__",
+        });
+      },
+    };
   } catch (_) {}
 }
 
@@ -3197,7 +3272,19 @@ async function waitForVaultHydration() {
         } catch (_) {}
       }, { once: true });
     } catch (_) {}
-    setTimeout(finish, 45000);
+    // Do not finish on bare timeout while hydration is still pending — that froze
+    // empty/default state.prefs on iOS before vault mem was ready.
+    setTimeout(() => {
+      try {
+        if (window.__iuVaultHydrationComplete) finish();
+        else if (window.iuVault && window.iuVault.getState && !window.iuVault.getState().unlocked) {
+          // Locked: allow shell boot; reapplyPrefsFromStore runs on hydrate after unlock.
+          finish();
+        }
+      } catch (_) {
+        finish();
+      }
+    }, 45000);
   });
 }
 
@@ -3205,6 +3292,7 @@ async function boot() {
   markPrehledBootPhase("chmi-boot-start");
   // Explicit legacy HomeCards / smoke probes: do not hydrate Prehled or race navigations.
   if (infoSystemQueryMode() === "off") return;
+  bindPrefsHydrationListeners();
   await waitForVaultHydration();
   migrateLocalStateOnce();
   applyCutoverDom();
@@ -3226,6 +3314,7 @@ async function boot() {
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
+  reapplyPrefsFromStore({ reason: "boot-after-hydrate-wait" });
   // FIRST LOAD: every fresh homepage navigation opens ČHMÚ (session-only; not persisted).
   state.feedQuickView = "chmu";
   state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
