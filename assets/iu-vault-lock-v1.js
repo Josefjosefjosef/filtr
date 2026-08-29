@@ -11,6 +11,7 @@ import {
 import {
   readKeyRecord,
   writeKeyRecord,
+  writeKeyRecordsBatch,
   deleteKeyRecord,
   readMeta,
   writeMeta,
@@ -78,6 +79,19 @@ export async function writeLevel1DurableMaterialBytes(rawBytes) {
   });
 }
 
+function level1MaterialRecordFromBytes(rawBytes) {
+  const src = rawBytes instanceof Uint8Array ? rawBytes : new Uint8Array(rawBytes);
+  const copy = new Uint8Array(src.byteLength);
+  copy.set(src);
+  return {
+    type: "level1-material",
+    v: 1,
+    alg: "AES-GCM",
+    raw: copy.buffer,
+    createdAt: new Date().toISOString(),
+  };
+}
+
 async function cryptoKeySelfTest(mdk) {
   if (!mdk) return false;
   try {
@@ -90,8 +104,9 @@ async function cryptoKeySelfTest(mdk) {
 }
 
 /**
- * Persist L1 runtime CryptoKey + durable ArrayBuffer material in IDB keys store.
+ * Persist L1 runtime CryptoKey + durable ArrayBuffer material in ONE IDB transaction.
  * Prefer export; if current key is non-extractable, rotate once then persist material.
+ * Readback-verified: never leave CryptoKey without recoverable material.
  */
 export async function persistLevel1KeyWithDurableMaterial(mdk, meta = {}) {
   if (!mdk) throw new Error("VAULT_LEVEL1_KEY_MISSING");
@@ -116,8 +131,18 @@ export async function persistLevel1KeyWithDurableMaterial(mdk, meta = {}) {
     durableMaterial: true,
     ...meta,
   };
-  await writeKeyRecord("mdk:level1", rec);
-  await writeLevel1DurableMaterialBytes(raw);
+  await writeKeyRecordsBatch([
+    { id: "mdk:level1", value: rec },
+    { id: LEVEL1_MDK_MATERIAL_ID, value: level1MaterialRecordFromBytes(raw) },
+  ]);
+  const readBack = await readLevel1DurableMaterialBytes();
+  if (!readBack || readBack.byteLength < 16) {
+    throw new Error("VAULT_LEVEL1_DURABLE_MATERIAL_READBACK_FAIL");
+  }
+  const restored = await importMdkRaw(readBack);
+  if (!(await cryptoKeySelfTest(restored))) {
+    throw new Error("VAULT_LEVEL1_DURABLE_MATERIAL_SELFTEST_FAIL");
+  }
   clearLevel1MdkBackup();
   return rec;
 }
@@ -140,6 +165,51 @@ async function restoreLevel1FromDurableMaterial() {
   return rec;
 }
 
+async function classifyKeyPathFailure() {
+  let cryptoKeyPresent = false;
+  let cryptoKeyUsable = false;
+  let durableMaterialPresent = false;
+  let durableMaterialUsable = false;
+  let legacyBackupPresent = false;
+  try {
+    const keyRec = await readKeyRecord("mdk:level1");
+    cryptoKeyPresent = !!(keyRec && keyRec.mdk);
+    if (cryptoKeyPresent) cryptoKeyUsable = await cryptoKeySelfTest(keyRec.mdk);
+  } catch (_) {}
+  try {
+    const raw = await readLevel1DurableMaterialBytes();
+    durableMaterialPresent = !!(raw && raw.byteLength >= 16);
+    if (durableMaterialPresent) {
+      try {
+        const mdk = await importMdkRaw(raw);
+        durableMaterialUsable = await cryptoKeySelfTest(mdk);
+      } catch (_) {
+        durableMaterialUsable = false;
+      }
+    }
+  } catch (_) {}
+  try {
+    legacyBackupPresent = !!localStorage.getItem(LEVEL1_MDK_BACKUP_KEY);
+  } catch (_) {}
+  let subclass = "unknown";
+  if (!cryptoKeyPresent && !durableMaterialPresent && !legacyBackupPresent) subclass = "all_key_paths_absent";
+  else if (cryptoKeyPresent && !cryptoKeyUsable && !durableMaterialPresent) subclass = "crypto_unusable_no_material";
+  else if (!cryptoKeyPresent && durableMaterialPresent && !durableMaterialUsable) subclass = "material_present_unusable";
+  else if (!cryptoKeyPresent && durableMaterialPresent && durableMaterialUsable) subclass = "material_usable_restore_missed";
+  else if (legacyBackupPresent && !cryptoKeyUsable && !durableMaterialUsable) subclass = "legacy_backup_only_unusable_or_unused";
+  else if (cryptoKeyPresent && !cryptoKeyUsable && durableMaterialPresent && !durableMaterialUsable) {
+    subclass = "crypto_and_material_unusable";
+  }
+  return {
+    cryptoKeyPresent,
+    cryptoKeyUsable,
+    durableMaterialPresent,
+    durableMaterialUsable,
+    legacyBackupPresent,
+    subclass,
+  };
+}
+
 async function ensureLevel1KeyRecord() {
   const { migrateL1ToIdbOnly, hasProtectedVaultEvidence } = await import("./iu-vault-l1-migrate-v1.js");
   const mig = await migrateL1ToIdbOnly();
@@ -147,22 +217,36 @@ async function ensureLevel1KeyRecord() {
     lockDiag("17-mdk-orphan-ciphertext", { source: "ensureLevel1KeyRecord", reason: mig.reason || "migration_fail_closed" });
     const err = new Error(VAULT_STORAGE_RECOVERY_REQUIRED);
     err.reason = mig.reason || "migration_fail_closed";
+    try {
+      err.keyPath = await classifyKeyPathFailure();
+    } catch (_) {}
     throw err;
   }
 
   let keyRec = await readKeyRecord("mdk:level1");
   if (keyRec && keyRec.mdk && (await cryptoKeySelfTest(keyRec.mdk))) {
     const material = await readLevel1DurableMaterialBytes();
-    if (!material) {
+    if (!material || material.byteLength < 16) {
       try {
+        // Never continue CryptoKey-only: WebKit/mobile cold start can lose CryptoKey objects.
         keyRec = await persistLevel1KeyWithDurableMaterial(keyRec.mdk, {
           backfilledDurableMaterial: true,
         });
-      } catch (err) {
-        lockDiag("17-level1-durable-material-backfill-fail", {
-          source: "ensureLevel1KeyRecord",
-          reason: String(err && err.message ? err.message : err).slice(0, 64),
-        });
+      } catch (backfillErr) {
+        const evidence = await hasProtectedVaultEvidence();
+        if (evidence) {
+          const keyPath = await classifyKeyPathFailure();
+          keyPath.subclass = "durable_material_backfill_fail";
+          lockDiag("17-level1-durable-material-backfill-fail", {
+            source: "ensureLevel1KeyRecord",
+            reason: String(backfillErr && backfillErr.message ? backfillErr.message : backfillErr).slice(0, 64),
+          });
+          const err = new Error(VAULT_STORAGE_RECOVERY_REQUIRED);
+          err.reason = "protected_evidence_no_mdk";
+          err.keyPath = keyPath;
+          throw err;
+        }
+        throw backfillErr;
       }
     }
     return keyRec;
@@ -173,9 +257,20 @@ async function ensureLevel1KeyRecord() {
 
   const evidence = await hasProtectedVaultEvidence();
   if (evidence) {
-    lockDiag("17-mdk-orphan-ciphertext", { source: "ensureLevel1KeyRecord", reason: "protected_evidence_no_mdk" });
+    const keyPath = await classifyKeyPathFailure();
+    lockDiag("17-mdk-orphan-ciphertext", {
+      source: "ensureLevel1KeyRecord",
+      reason: "protected_evidence_no_mdk",
+      subclass: keyPath.subclass,
+      cryptoKeyPresent: keyPath.cryptoKeyPresent,
+      cryptoKeyUsable: keyPath.cryptoKeyUsable,
+      durableMaterialPresent: keyPath.durableMaterialPresent,
+      durableMaterialUsable: keyPath.durableMaterialUsable,
+      legacyBackupPresent: keyPath.legacyBackupPresent,
+    });
     const err = new Error(VAULT_STORAGE_RECOVERY_REQUIRED);
     err.reason = "protected_evidence_no_mdk";
+    err.keyPath = keyPath;
     throw err;
   }
 
@@ -293,6 +388,7 @@ const state = {
   lockInProgress: false,
   recoveryRequired: false,
   recoveryReason: "",
+  recoveryKeyPath: null,
 };
 
 async function refreshSecurityMode(meta) {
@@ -325,6 +421,7 @@ export function getVaultState() {
     requiresUserReauth: !!state.requiresUserReauth,
     storageRecoveryRequired: !!state.recoveryRequired,
     storageRecoveryReason: state.recoveryReason || "",
+    storageRecoveryKeyPath: state.recoveryKeyPath || null,
   };
 }
 
@@ -533,9 +630,17 @@ export async function ensureLevel1Mdk() {
       if (String(err && err.message ? err.message : err) === VAULT_STORAGE_RECOVERY_REQUIRED) {
         state.recoveryRequired = true;
         state.recoveryReason = err.reason || "storage_unavailable";
+        state.recoveryKeyPath = err.keyPath || null;
         state.unlocked = false;
         state.mdk = null;
-        lockDiag("17-mdk-orphan-ciphertext", { source: "ensureLevel1Mdk", reason: state.recoveryReason });
+        try {
+          window.__iuVaultStorageRecoveryKeyPath = err.keyPath || null;
+        } catch (_) {}
+        lockDiag("17-mdk-orphan-ciphertext", {
+          source: "ensureLevel1Mdk",
+          reason: state.recoveryReason,
+          subclass: err.keyPath && err.keyPath.subclass ? err.keyPath.subclass : null,
+        });
         return meta;
       }
       throw err;
@@ -552,6 +657,10 @@ export function isVaultStorageRecoveryRequired() {
 
 export function getVaultStorageRecoveryReason() {
   return state.recoveryReason || "";
+}
+
+export function getVaultStorageRecoveryKeyPath() {
+  return state.recoveryKeyPath || null;
 }
 
 export async function activateLevel1AutoKey() {

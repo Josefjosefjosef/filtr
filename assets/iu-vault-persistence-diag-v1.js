@@ -669,6 +669,8 @@ export async function captureLifecycleSaveReopenTrace(phase) {
   let keyRecordPresent = false;
   let cryptoKeyUsable = false;
   let durableMaterialPresent = false;
+  let durableMaterialUsable = false;
+  let legacyBackupPresent = false;
   try {
     const keyRec = await readKeyRecord("mdk:level1");
     keyRecordPresent = !!(keyRec && keyRec.mdk);
@@ -683,7 +685,23 @@ export async function captureLifecycleSaveReopenTrace(phase) {
     }
   } catch (_) {}
   try {
-    durableMaterialPresent = !!nativeLocalStorageGet("iu:vault:mdk-level1-backup:v1");
+    const { readLevel1DurableMaterialBytes } = await import("./iu-vault-lock-v1.js");
+    const raw = await readLevel1DurableMaterialBytes();
+    durableMaterialPresent = !!(raw && raw.byteLength >= 16);
+    if (durableMaterialPresent) {
+      try {
+        const { importMdkRaw } = await import("./iu-vault-core-v1.js");
+        const mdk = await importMdkRaw(raw);
+        const probe = await encryptString(mdk, "iu.diag.mat.v1", "ok");
+        const pt = await decryptString(mdk, "iu.diag.mat.v1", probe);
+        durableMaterialUsable = pt === "ok";
+      } catch (_) {
+        durableMaterialUsable = false;
+      }
+    }
+  } catch (_) {}
+  try {
+    legacyBackupPresent = !!nativeLocalStorageGet("iu:vault:mdk-level1-backup:v1");
   } catch (_) {}
 
   let storagePersisted = null;
@@ -838,6 +856,11 @@ export async function captureLifecycleSaveReopenTrace(phase) {
     keyRecordPresent,
     cryptoKeyUsable,
     durableMaterialPresent,
+    durableMaterialUsable,
+    legacyBackupPresent,
+    storageRecoveryRequired: !!(st && st.storageRecoveryRequired),
+    storageRecoveryReason: st && st.storageRecoveryReason ? safeToken(st.storageRecoveryReason, 64) : null,
+    storageRecoveryKeyPath: st && st.storageRecoveryKeyPath ? st.storageRecoveryKeyPath : null,
     probes,
     prefsUi: await (async () => {
       try {

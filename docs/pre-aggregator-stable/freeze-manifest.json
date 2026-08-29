@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-vault-hydrated-prefs-ui-v1-20260829",
+  "freezeId": "iu-vault-key-path-atomic-v1-20260829",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-08-29T18:10:00.000Z",
-  "note": "Hydrated prefs must reapply to Prehled UI after vault hydrate (iOS prefs storage PASS / UI FAIL).",
+  "updatedAt": "2026-08-29T19:30:00.000Z",
+  "note": "L1 key+durable-material atomicity; prevent protected_evidence_no_mdk from CryptoKey-only vaults; prefs UI reapply.",
   "files": {
-    "projects/index.html": "dd2b3958816920c1953f043c0cc015983d650693155fda3a2418bc2c8c5eace0",
+    "projects/index.html": "8db105a7bc007ea7baea92f747dc1d73a29f3a065e4a078a6e6e4f171f13774f",
     "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
     "assets/app.js": "85ea605f87d9d81d3bd780276f40b727d22e1e04cadcf6250f20d582dcb856fe",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "1cf9220b500ea8c2289cf9b56179762e0c80f62872ff2c46c26b896e2766f801",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "74820c105e963c7cb5498c1b6a54bac0be4baf7ac0f5953ef2e2a892502f6fc2",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "57c44d2a13b3fa4d8e4aa616ac00d1302fa6c20dbc3eefc1ce0be311b4e7b742",
+    "sw.js": "0ba269850089993c593194f89521e4a36e4d311fa8a9462c47874136bacd05a7",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-08-29-iu-vault-hydrated-prefs-ui-v1\"",
+      "CACHE_VERSION = \"2026-08-29-iu-vault-key-path-atomic-v1\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
@@ -44,7 +44,7 @@
       "iu-vault-bootstrap-v1.js",
       "iuVaultStorageRecoveryScreen",
       "iu-vault-physical-diag-overlay-v1.js",
-      "iu-vault-hydrated-prefs-ui-v1-20260829",
+      "iu-vault-key-path-atomic-v1-20260829",
       "iuPersistDiagOverlay",
       "script-src 'self' 'sha256-",
       "doprava-chmi-switch-snap-first-v1-20260821",

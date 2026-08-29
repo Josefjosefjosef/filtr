@@ -13,6 +13,7 @@ import {
   registerVaultLockBroadcastListener,
   isVaultStorageRecoveryRequired,
   getVaultStorageRecoveryReason,
+  getVaultStorageRecoveryKeyPath,
 } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
@@ -152,7 +153,7 @@ async function initVault() {
 
   if (isVaultStorageRecoveryRequired()) {
     const { showVaultStorageRecovery } = await import("./iu-vault-l1-recovery-ui-v1.js");
-    showVaultStorageRecovery(getVaultStorageRecoveryReason());
+    showVaultStorageRecovery(getVaultStorageRecoveryReason(), getVaultStorageRecoveryKeyPath());
     return { meta, storageRecovery: true };
   }
 
@@ -422,6 +423,7 @@ const api = {
   isHydrationComplete: () => !!window.__iuVaultHydrationComplete,
   isStorageRecoveryRequired: () => isVaultStorageRecoveryRequired(),
   getStorageRecoveryReason: () => getVaultStorageRecoveryReason(),
+  getStorageRecoveryKeyPath: () => getVaultStorageRecoveryKeyPath(),
   isAppLocked: async () => {
     const configured = await readSecurityConfiguredState();
     const st = getVaultState();

@@ -1,10 +1,11 @@
 /**
  * L1 storage recovery UI — shown when protected data exists but MDK cannot be opened.
  */
-export function showVaultStorageRecovery(reason) {
+export function showVaultStorageRecovery(reason, keyPath) {
   try {
     window.__iuVaultStorageRecoveryRequired = true;
     window.__iuVaultStorageRecoveryReason = String(reason || "storage_unavailable");
+    if (keyPath) window.__iuVaultStorageRecoveryKeyPath = keyPath;
     document.documentElement.classList.add("iu-vault-storage-recovery");
     document.documentElement.classList.remove("iu-vault-app-init");
   } catch (_) {}
@@ -15,8 +16,23 @@ export function showVaultStorageRecovery(reason) {
     screen.removeAttribute("aria-hidden");
   }
   const err = document.getElementById("iuVaultStorageRecoveryDetail");
-  if (err && reason) {
-    err.textContent = "Technický stav: " + String(reason).slice(0, 120);
+  if (err) {
+    const parts = [];
+    if (reason) parts.push("Technický stav: " + String(reason).slice(0, 80));
+    const kp = keyPath || (typeof window !== "undefined" ? window.__iuVaultStorageRecoveryKeyPath : null);
+    if (kp && kp.subclass) {
+      parts.push(
+        "keyPath=" +
+          String(kp.subclass) +
+          " crypto=" +
+          (kp.cryptoKeyPresent ? (kp.cryptoKeyUsable ? "ok" : "unusable") : "absent") +
+          " material=" +
+          (kp.durableMaterialPresent ? (kp.durableMaterialUsable ? "ok" : "unusable") : "absent") +
+          " legacyBackup=" +
+          (kp.legacyBackupPresent ? "1" : "0")
+      );
+    }
+    err.textContent = parts.join(" | ").slice(0, 280);
   }
   try {
     window.__iuVaultHydrationPending = true;

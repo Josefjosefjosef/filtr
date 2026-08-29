@@ -70,6 +70,21 @@ export async function writeKeyRecord(id, value) {
   await txDone(tx);
 }
 
+/** Atomic multi-key write in a single IDB transaction (L1 key + durable material). */
+export async function writeKeyRecordsBatch(entries) {
+  const list = Array.isArray(entries) ? entries : [];
+  if (!list.length) return;
+  const db = await openVaultDb();
+  const tx = db.transaction("keys", "readwrite");
+  const store = tx.objectStore("keys");
+  for (let i = 0; i < list.length; i += 1) {
+    const entry = list[i];
+    if (!entry || entry.id == null) continue;
+    store.put(entry.value, entry.id);
+  }
+  await txDone(tx);
+}
+
 export async function deleteKeyRecord(id) {
   const db = await openVaultDb();
   const tx = db.transaction("keys", "readwrite");
