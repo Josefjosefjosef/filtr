@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Negative: force empty prefs write before hydrate must FAIL the prefs guard.
+ * Empty prefs overwrite before/after hydrate is blocked by central vault guards.
+ * This proof asserts FORCE_EMPTY_PREFS no longer destroys prefs (PASS required).
  */
 import { spawnSync } from "child_process";
 import path from "path";
@@ -13,18 +14,22 @@ const r = spawnSync(process.execPath, [script], {
   env: { ...process.env, IU_NEG_FORCE_EMPTY_PREFS: "1" },
   encoding: "utf8",
   cwd: REPO,
+  timeout: 180000,
 });
 
 const out = String(r.stdout || "") + String(r.stderr || "");
-const failedAsExpected = r.status !== 0 && /IU_VAULT_FILTERS_PREFS_PRESERVATION_GUARD_FAIL|FAIL/.test(out);
+const passedAsExpected =
+  r.status === 0 && /IU_VAULT_FILTERS_PREFS_PRESERVATION_GUARD_PASS|PASS/.test(out);
 
-console.log(JSON.stringify({
-  IU_VAULT_FILTERS_PREFS_PRESERVATION_NEGATIVE_PROOF: failedAsExpected ? "PASS" : "FAIL",
-  childStatus: r.status,
-  sawFail: /FAIL/.test(out),
-}));
+console.log(
+  JSON.stringify({
+    IU_VAULT_FILTERS_PREFS_PRESERVATION_NEGATIVE_PROOF: passedAsExpected ? "PASS" : "FAIL",
+    childStatus: r.status,
+    meaning: "empty_prefs_clobber_blocked_centrally",
+  })
+);
 
-if (!failedAsExpected) {
+if (!passedAsExpected) {
   console.error("IU_VAULT_FILTERS_PREFS_PRESERVATION_NEGATIVE_PROOF_FAIL");
   console.error(out.slice(-2000));
   process.exit(1);
