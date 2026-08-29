@@ -35,6 +35,7 @@ import {
   getPersistenceTimeline,
   recordVaultPersistenceEvent,
   captureSecOffReloadTrace,
+  captureLifecycleSaveReopenTrace,
 } from "./iu-vault-persistence-diag-v1.js";
 
 function vaultSecurityActive(meta) {
@@ -361,6 +362,7 @@ const api = {
   getPersistenceTimeline: (limit) => getPersistenceTimeline(limit),
   recordPersistenceEvent: (step, detail) => recordVaultPersistenceEvent(step, detail),
   captureSecOffReloadTrace: (phase) => captureSecOffReloadTrace(phase),
+  captureLifecycleSaveReopenTrace: (phase) => captureLifecycleSaveReopenTrace(phase),
   getConflictForensics: async () => {
     const { getConflictForensics } = await import("./iu-vault-conflict-forensics-v1.js");
     return getConflictForensics();

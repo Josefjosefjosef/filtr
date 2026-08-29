@@ -3,6 +3,7 @@
  * ?iuPersistDiag=1 → BEFORE/AFTER persistence diag (may run normal vault boot)
  * ?iuConflictForensics=1 → READ-ONLY conflict topology (boot must skip migrate)
  * ?iuSecOffReloadDiag=1 → SECURITY OFF save→reload fingerprint trace
+ * ?iuLifecycleDiag=1 → mobile/tablet/PWA SAVE→RELOAD→REOPEN lifecycle trace
  * Does NOT flush or write vault data from this overlay (except sessionStorage fingerprints).
  */
 (function iuPhysicalPersistDiagOverlay() {
@@ -16,7 +17,8 @@
   var persistMode = params.get("iuPersistDiag") === "1";
   var conflictMode = params.get("iuConflictForensics") === "1";
   var secOffMode = params.get("iuSecOffReloadDiag") === "1";
-  if (!persistMode && !conflictMode && !secOffMode) return;
+  var lifecycleMode = params.get("iuLifecycleDiag") === "1";
+  if (!persistMode && !conflictMode && !secOffMode && !lifecycleMode) return;
   if (window.__iuPhysicalPersistDiagOverlay) return;
   window.__iuPhysicalPersistDiagOverlay = 1;
 
@@ -25,7 +27,9 @@
     b.type = "button";
     b.setAttribute("data-act", act);
     b.textContent = label;
-    b.style.cssText = flex ? "flex:1;min-width:120px;padding:10px" : "padding:10px";
+    b.style.cssText = flex
+      ? "flex:1;min-width:110px;padding:12px 10px;font-size:13px"
+      : "padding:12px 10px;font-size:13px";
     return b;
   }
 
@@ -34,14 +38,26 @@
   root.setAttribute("role", "dialog");
   root.setAttribute(
     "aria-label",
-    conflictMode ? "Conflict forensics" : secOffMode ? "SECURITY OFF reload trace" : "Persistence diagnostika"
+    lifecycleMode
+      ? "Lifecycle SAVE REOPEN trace"
+      : conflictMode
+        ? "Conflict forensics"
+        : secOffMode
+          ? "SECURITY OFF reload trace"
+          : "Persistence diagnostika"
   );
   root.style.cssText =
-    "position:fixed;z-index:2147483646;left:8px;right:8px;bottom:8px;max-height:52vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
+    "position:fixed;z-index:2147483646;left:6px;right:6px;bottom:6px;max-height:58vh;overflow:auto;background:#111;color:#eee;border:1px solid #555;border-radius:10px;padding:10px;font:12px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 8px 28px rgba(0,0,0,.45)";
 
   var row = document.createElement("div");
   row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px";
-  if (conflictMode) {
+  if (lifecycleMode) {
+    row.appendChild(btn("1) Po SAVE", "lifeAfterSave", true));
+    row.appendChild(btn("2) Po RELOAD", "lifeAfterReload", true));
+    row.appendChild(btn("3) Po REOPEN", "lifeAfterReopen", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  } else if (conflictMode) {
     row.appendChild(btn("1) Capture forensics", "conflict", true));
     row.appendChild(btn("Kopírovat JSON", "copy", true));
     row.appendChild(btn("Zavřít", "close", false));
@@ -61,11 +77,13 @@
   var pre = document.createElement("pre");
   pre.id = "iuPersistDiagOut";
   pre.style.cssText = "white-space:pre-wrap;word-break:break-word;margin:0";
-  pre.textContent = conflictMode
-    ? "READ-ONLY conflict forensics. Stiskni Capture. Žádný migrate/write."
-    : secOffMode
-      ? "SECURITY OFF reload trace. 1) Ulož filtr/data → Po SAVE. 2) Reload → Po RELOAD. Bez plaintextu."
-      : "Čekám na vault…";
+  pre.textContent = lifecycleMode
+    ? "LIFECYCLE TRACE (bez plaintextu).\n1) Ulož filtr/notes/tasks/calendar → Po SAVE.\n2) Reload → Po RELOAD.\n3) Zavři browser/PWA úplně → otevři stejné URL → Po REOPEN.\nPak Kopírovat JSON."
+    : conflictMode
+      ? "READ-ONLY conflict forensics. Stiskni Capture. Žádný migrate/write."
+      : secOffMode
+        ? "SECURITY OFF reload trace. 1) Ulož filtr/data → Po SAVE. 2) Reload → Po RELOAD. Bez plaintextu."
+        : "Čekám na vault…";
   root.appendChild(pre);
 
   function mount() {
@@ -149,6 +167,19 @@
     }
   }
 
+  async function captureLifecycle(phase) {
+    setText("Načítám " + phase + "…");
+    try {
+      var vault = await waitApi(30000, function () {
+        return window.iuVault && typeof window.iuVault.captureLifecycleSaveReopenTrace === "function";
+      });
+      lastPayload = await vault.captureLifecycleSaveReopenTrace(phase);
+      setText(JSON.stringify(lastPayload, null, 2));
+    } catch (err) {
+      setText("FAIL: " + String(err && err.message ? err.message : err));
+    }
+  }
+
   async function captureConflict() {
     setText("Načítám READ-ONLY conflict forensics…");
     try {
@@ -165,11 +196,13 @@
   async function copyLast() {
     if (!lastPayload) {
       setText(
-        conflictMode
-          ? "Nejdřív Capture forensics."
-          : secOffMode
-            ? "Nejdřív Po SAVE nebo Po RELOAD."
-            : "Nejdřív stiskni BEFORE nebo AFTER."
+        lifecycleMode
+          ? "Nejdřív Po SAVE / Po RELOAD / Po REOPEN."
+          : conflictMode
+            ? "Nejdřív Capture forensics."
+            : secOffMode
+              ? "Nejdřív Po SAVE nebo Po RELOAD."
+              : "Nejdřív stiskni BEFORE nebo AFTER."
       );
       return;
     }
@@ -204,6 +237,9 @@
     else if (act === "after") capturePersist("AFTER_REOPEN");
     else if (act === "secAfterSave") captureSecOff("AFTER_SAVE");
     else if (act === "secAfterReload") captureSecOff("AFTER_RELOAD");
+    else if (act === "lifeAfterSave") captureLifecycle("AFTER_SAVE");
+    else if (act === "lifeAfterReload") captureLifecycle("AFTER_RELOAD");
+    else if (act === "lifeAfterReopen") captureLifecycle("AFTER_REOPEN");
     else if (act === "conflict") captureConflict();
     else if (act === "copy") copyLast();
     else if (act === "close") root.remove();
@@ -213,6 +249,10 @@
     setTimeout(function () {
       captureConflict();
     }, 400);
+  } else if (lifecycleMode) {
+    setTimeout(function () {
+      captureLifecycle("BOOT_HYDRATED");
+    }, 1400);
   } else if (secOffMode) {
     setTimeout(function () {
       captureSecOff("BOOT_HYDRATED");
