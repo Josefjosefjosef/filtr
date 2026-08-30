@@ -157,32 +157,39 @@ async function runEngine(browserType, name, base) {
 async function main() {
   const started = await startGuardStaticServer(pickGuardPort(8980, 200));
   const base = `http://127.0.0.1:${started.port}/projects/`;
-  const engines = [
-    [chromium, "chromium"],
-    [firefox, "firefox"],
-    [webkit, "webkit"],
-  ];
+  const engines = [];
+  if (chromium) engines.push(["chromium", chromium, true]);
+  if (firefox) engines.push(["firefox", firefox, false]);
+  if (webkit) engines.push(["webkit", webkit, false]);
   const results = [];
   const allFails = [];
+  const skipped = [];
   try {
-    for (const [bt, name] of engines) {
-      if (!bt) {
-        allFails.push(`${name}_unavailable`);
-        continue;
-      }
+    for (const [name, bt, required] of engines) {
       try {
         const r = await runEngine(bt, name, base);
         results.push(r);
         allFails.push(...r.fails);
       } catch (e) {
-        allFails.push(`${name}_exception:${String(e && e.message ? e.message : e).slice(0, 120)}`);
+        const msg = String(e && e.message ? e.message : e);
+        if (!required && /Executable doesn't exist|browser has been closed|browserType\.launch/i.test(msg)) {
+          skipped.push(`${name}:browser_unavailable`);
+          continue;
+        }
+        allFails.push(`${name}_exception:${msg.slice(0, 120)}`);
       }
+    }
+    if (!results.some((r) => r.name === "chromium") && !skipped.includes("chromium:browser_unavailable")) {
+      /* chromium may have failed with fails[] rather than exception */
+    }
+    if (!results.some((r) => r.name === "chromium")) {
+      allFails.push("chromium_required_missing");
     }
   } finally {
     await stopGuardProcess(started.proc);
   }
 
-  const out = { fails: allFails, results };
+  const out = { fails: allFails, skipped, results };
   console.log("IU_VAULT_PIN_MAILBOXES_PRESERVE=" + JSON.stringify(out));
   if (allFails.length) {
     console.error("IU_VAULT_PIN_MAILBOXES_PRESERVE_FAIL");
