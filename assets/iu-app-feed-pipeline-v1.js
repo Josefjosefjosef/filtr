@@ -25350,10 +25350,8 @@ function buildVideoAsArticleCard(it) {
   function iuVaultTrySetItem(key, value) {
     if (iuVaultIsPersistBlocked(key)) return false;
     try {
-      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-        void window.iuVault.durableSet(key, value).catch(function () {});
-        return true;
-      }
+      // Module/bootstrap writes must NOT use durableSet (user-write depth): that bypasses
+      // empty/placeholder clobber guards and can wipe MindMenu mailboxes during PIN enable.
       const ret = localStorage.setItem(key, value);
       if (ret && typeof ret.then === "function") {
         void Promise.resolve(ret).then(async () => {
@@ -25456,7 +25454,14 @@ function buildVideoAsArticleCard(it) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
           if (fixed[i].social == null) fixed[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
         }
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        // Never durable-rewrite user-labeled mailboxes just to attach default social icons.
+        // Persist only first-run placeholder rows; otherwise keep display mutation in-memory only.
+        const onlyPlaceholders = fixed.every(
+          (it) => iuMmIsPlaceholderLabel(it && it.label) && !String((it && it.url) || "").trim()
+        );
+        if (onlyPlaceholders) {
+          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        }
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       let migrated56 = false;

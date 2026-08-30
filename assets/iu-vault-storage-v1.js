@@ -11,9 +11,46 @@ const memoryCache = new Map();
 const writeGeneration = new Map();
 const pendingWrites = new Set();
 let userWriteDepth = 0;
+/** Depth > 0 while MDK rotate / PIN|device security transition must not accept module writes. */
+let securityTransitionDepth = 0;
+/** Bumped at rotate start; in-flight encrypts with a stale epoch must not persist. */
+let mdkWriteEpoch = 0;
 let nativeGetItem = null;
 let nativeSetItem = null;
 let nativeRemoveItem = null;
+
+export function isVaultSecurityTransitionActive() {
+  return securityTransitionDepth > 0;
+}
+
+export function getMdkWriteEpoch() {
+  return mdkWriteEpoch;
+}
+
+export function beginVaultSecurityTransition() {
+  securityTransitionDepth += 1;
+  try {
+    window.__iuVaultSecurityTransition = securityTransitionDepth > 0;
+  } catch (_) {}
+  diagSync("30-security-transition-begin", { depth: securityTransitionDepth, epoch: mdkWriteEpoch });
+}
+
+export function endVaultSecurityTransition() {
+  securityTransitionDepth = Math.max(0, securityTransitionDepth - 1);
+  try {
+    window.__iuVaultSecurityTransition = securityTransitionDepth > 0;
+  } catch (_) {}
+  diagSync("31-security-transition-end", { depth: securityTransitionDepth, epoch: mdkWriteEpoch });
+}
+
+export async function withVaultSecurityTransition(fn) {
+  beginVaultSecurityTransition();
+  try {
+    return await fn();
+  } finally {
+    endVaultSecurityTransition();
+  }
+}
 
 export function encStorageKey(storageKey) {
   return ENC_PREFIX + String(storageKey);
@@ -225,6 +262,10 @@ export async function vaultSetItem(storageKey, value, opts = {}) {
     rejectOrReturn("persist_blocked");
     return;
   }
+  if (isVaultSecurityTransitionActive()) {
+    rejectOrReturn("security_transition");
+    return;
+  }
   // KEY_PATH_BEFORE_PROTECTED_DATA: never commit ciphertext without proven durable L1 material.
   try {
     if (window.__iuVaultKeyPathDurableReady !== true) {
@@ -242,17 +283,34 @@ export async function vaultSetItem(storageKey, value, opts = {}) {
   }
   const generation = (writeGeneration.get(k) || 0) + 1;
   writeGeneration.set(k, generation);
+  const epochAtStart = mdkWriteEpoch;
   let writePromise;
   writePromise = (async () => {
     // In-flight writes must NOT re-check isVaultPersistBlocked / hydrationPending.
     // lockVault arms __iuVaultHydrationPending before flushPendingVaultWrites so NEW
     // shim writes stop; aborting encrypt→IDB here dropped durable user saves on
     // mobile/tablet/PWA background (pagehide/visibility) while desktop skipped that path.
+    // Security transition / MDK epoch ARE re-checked before persist — a write that
+    // encrypted under a pre-rotate MDK must not land after rotateVaultMdk commits gen B.
     if (shouldBlockPostHydrateClobber(k, text)) {
       diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber_async" });
       if (requireCommit) {
         const err = new Error("VAULT_WRITE_BLOCKED");
         err.reason = "empty_clobber_async";
+        throw err;
+      }
+      return;
+    }
+    if (isVaultSecurityTransitionActive() || epochAtStart !== mdkWriteEpoch) {
+      diagSync("03-persist-request", {
+        key: k,
+        source,
+        writeBlocked: true,
+        reason: epochAtStart !== mdkWriteEpoch ? "mdk_epoch_stale" : "security_transition_async",
+      });
+      if (requireCommit) {
+        const err = new Error("VAULT_WRITE_BLOCKED");
+        err.reason = epochAtStart !== mdkWriteEpoch ? "mdk_epoch_stale" : "security_transition_async";
         throw err;
       }
       return;
@@ -291,6 +349,20 @@ export async function vaultSetItem(storageKey, value, opts = {}) {
     const envelope = await encryptString(mdk, k, text);
     diagSync("05-encrypt-success", { key: k, generation, source });
     if (writeGeneration.get(k) !== generation) return;
+    if (isVaultSecurityTransitionActive() || epochAtStart !== mdkWriteEpoch) {
+      diagSync("03-persist-request", {
+        key: k,
+        source,
+        writeBlocked: true,
+        reason: epochAtStart !== mdkWriteEpoch ? "mdk_epoch_stale_pre_persist" : "security_transition_pre_persist",
+      });
+      if (requireCommit) {
+        const err = new Error("VAULT_WRITE_BLOCKED");
+        err.reason = epochAtStart !== mdkWriteEpoch ? "mdk_epoch_stale_pre_persist" : "security_transition_pre_persist";
+        throw err;
+      }
+      return;
+    }
     if (!getMdk()) {
       diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "mdk_cleared_pre_write" });
       if (requireCommit) {
@@ -489,6 +561,7 @@ export function isVaultPersistBlocked(storageKey) {
     // cannot poison memoryCache before authoritative IDB preload.
     if (window.__iuVaultHydrationPending) return true;
   } catch (_) {}
+  if (isVaultSecurityTransitionActive()) return true;
   if (isVaultUserWriteActive()) return false;
   const st = getVaultState();
   if (st.unlocked) return false;
@@ -683,83 +756,98 @@ function rotateFailError(storageKey, phase, err, recordType) {
   return new Error(`VAULT_ROTATE_FAIL:${storageKey}:${phase}:${name || "Error"}:${msg}${type}`);
 }
 
-/** Re-encrypt all vault records when rotating MDK (e.g. PIN / L2 setup). */
+/**
+ * Re-encrypt all vault records when rotating MDK (e.g. PIN / L2 setup).
+ * PIN enable intentionally changes the data MDK (new seed + wrap), not wrap-only.
+ * Transition must be atomic: flush → fence writers → bump epoch → re-encrypt all → unfence.
+ */
 export async function rotateVaultMdk(oldMdk, newMdk) {
-  const { listRecordKeys, readRecord } = await import("./iu-vault-db-v1.js");
-  const keys = new Set(await listRecordKeys());
-  captureNativeLocalStorage();
-  for (let i = 0; i < localStorage.length; i += 1) {
-    const k = localStorage.key(i);
-    if (!k) continue;
-    if (k.startsWith(ENC_PREFIX)) {
-      keys.add(k.slice(ENC_PREFIX.length));
-      continue;
-    }
-    if (isProtectedStorageKey(k)) keys.add(k);
-  }
-  for (const k of memoryCache.keys()) {
-    keys.add(k);
-  }
-  for (const k of keys) {
-    const isConflictArchive = String(k).indexOf("iu.vault.conflict.archive.v1:") === 0;
-    if (!isProtectedStorageKey(k) && !isConflictArchive) continue;
-    let pt = null;
-    let recordType = "unknown";
-    if (memoryCache.has(k)) {
-      pt = memoryCache.get(k);
-      recordType = "memory_cache";
-    }
-    if (pt == null) {
-      let envelope = null;
-      const rawEnc = nativeGetItem(encStorageKey(k));
-      if (rawEnc) {
-        try {
-          envelope = JSON.parse(rawEnc);
-        } catch (_) {
-          envelope = null;
-        }
-      }
-      if (!envelope) {
-        envelope = await readRecord(k);
-      }
-      if (!envelope) {
-        captureNativeLocalStorage();
-        const nativePlain = nativeGetItem(k);
-        if (nativePlain != null) {
-          pt = nativePlain;
-          recordType = "legacy_plaintext_only";
-        } else {
-          continue;
-        }
-      } else if (!isVaultEnvelope(envelope)) {
+  // Drain in-flight module/user encrypts that still hold the pre-rotate MDK.
+  await flushPendingVaultWrites();
+  beginVaultSecurityTransition();
+  try {
+    await flushPendingVaultWrites();
+    mdkWriteEpoch += 1;
+    diagSync("32-mdk-rotate-start", { epoch: mdkWriteEpoch, pendingWrites: pendingWrites.size });
+    const { listRecordKeys, readRecord } = await import("./iu-vault-db-v1.js");
+    const keys = new Set(await listRecordKeys());
+    captureNativeLocalStorage();
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const k = localStorage.key(i);
+      if (!k) continue;
+      if (k.startsWith(ENC_PREFIX)) {
+        keys.add(k.slice(ENC_PREFIX.length));
         continue;
-      } else {
-        recordType = isConflictArchive ? "conflict_archive" : "encrypted_record";
-        try {
-          pt = await decryptString(oldMdk, k, envelope);
-        } catch (err) {
+      }
+      if (isProtectedStorageKey(k)) keys.add(k);
+    }
+    for (const k of memoryCache.keys()) {
+      keys.add(k);
+    }
+    for (const k of keys) {
+      const isConflictArchive = String(k).indexOf("iu.vault.conflict.archive.v1:") === 0;
+      if (!isProtectedStorageKey(k) && !isConflictArchive) continue;
+      let pt = null;
+      let recordType = "unknown";
+      if (memoryCache.has(k)) {
+        pt = memoryCache.get(k);
+        recordType = "memory_cache";
+      }
+      if (pt == null) {
+        let envelope = null;
+        const rawEnc = nativeGetItem(encStorageKey(k));
+        if (rawEnc) {
+          try {
+            envelope = JSON.parse(rawEnc);
+          } catch (_) {
+            envelope = null;
+          }
+        }
+        if (!envelope) {
+          envelope = await readRecord(k);
+        }
+        if (!envelope) {
           captureNativeLocalStorage();
           const nativePlain = nativeGetItem(k);
           if (nativePlain != null) {
             pt = nativePlain;
-            recordType = "legacy_plaintext_fallback";
+            recordType = "legacy_plaintext_only";
           } else {
             continue;
           }
+        } else if (!isVaultEnvelope(envelope)) {
+          continue;
+        } else {
+          recordType = isConflictArchive ? "conflict_archive" : "encrypted_record";
+          try {
+            pt = await decryptString(oldMdk, k, envelope);
+          } catch (err) {
+            captureNativeLocalStorage();
+            const nativePlain = nativeGetItem(k);
+            if (nativePlain != null) {
+              pt = nativePlain;
+              recordType = "legacy_plaintext_fallback";
+            } else {
+              continue;
+            }
+          }
         }
       }
+      let newEnv = null;
+      try {
+        newEnv = await encryptString(newMdk, k, pt);
+      } catch (err) {
+        throw rotateFailError(k, "encrypt", err, recordType);
+      }
+      try {
+        await persistEnvelope(k, newEnv);
+      } catch (err) {
+        throw rotateFailError(k, "persist", err, recordType);
+      }
+      memoryCache.set(k, pt);
     }
-    let newEnv = null;
-    try {
-      newEnv = await encryptString(newMdk, k, pt);
-    } catch (err) {
-      throw rotateFailError(k, "encrypt", err, recordType);
-    }
-    try {
-      await persistEnvelope(k, newEnv);
-    } catch (err) {
-      throw rotateFailError(k, "persist", err, recordType);
-    }
-    memoryCache.set(k, pt);
+    diagSync("33-mdk-rotate-complete", { epoch: mdkWriteEpoch });
+  } finally {
+    endVaultSecurityTransition();
   }
 }
