@@ -25371,20 +25371,9 @@ function buildVideoAsArticleCard(it) {
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        if (iuVaultHasEncBlob(MAILBOX_STORAGE_KEY) || iuVaultIsPersistBlocked(MAILBOX_STORAGE_KEY)) {
-          return iuMailboxDefaultItems();
-        }
-        const items = iuMailboxDefaultItems();
-        if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
-          for (let i = 0; i < 4 && i < items.length; i++) {
-            if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
-          }
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
-          try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
-        } else {
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
-        }
-        return items;
+        /* Never durable-write placeholder defaults from a read miss — races hydration /
+           IDB-only cold start and can wipe a just-committed MindMenu mailbox record. */
+        return iuMailboxDefaultItems();
       }
       const parsed = JSON.parse(txt);
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
