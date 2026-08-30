@@ -81,7 +81,7 @@ must(/iu-notes-overlay-v1\.js/.test(sw), "sw:notes_in_graph");
 must(swHasAllowedCacheVersion(sw), "sw:cache_version");
 must(/function iuBootCalendarOverlayLazy/.test(app), "app:lazy_calendar_boot");
 must(/window\.__iuEnsureCalendarOverlay/.test(app), "app:ensure_calendar_hook");
-must(/iu-calendar-overlay-v1\.js\?v=perf-stage4-calendar-v1-20260818/.test(app), "app:calendar_cache_bust");
+must(/iu-calendar-overlay-v1\.js\?v=iu-calendar-persist-ack-v1-20260830/.test(app), "app:calendar_cache_bust");
 must(/function iuBootNotesOverlayLazy/.test(app), "app:lazy_notes_boot");
 must(/window\.__iuEnsureNotesOverlay/.test(app), "app:ensure_notes_hook");
 must(/iu-notes-overlay-v1\.js\?v=perf-stage5-notes-v1-20260819/.test(app), "app:notes_cache_bust");
