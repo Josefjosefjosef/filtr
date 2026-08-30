@@ -15578,7 +15578,7 @@ function buildVideoAsArticleCard(it) {
 
     function iuSilverWeatherComputePhase(){
       try{
-        if (window.__iuVaultHydrationComplete !== true) return "loading";
+        if (window.__iuVaultHydrationComplete !== true) return "boot";
       }catch{}
       try{
         if (iuSilverWeatherGeoDeniedVisible() && iuWeatherReadLocationMode() === IU_WEATHER_MODE_GPS && !iuWeatherReadGpsSelected()) return "denied";
@@ -15807,6 +15807,7 @@ function buildVideoAsArticleCard(it) {
     function iuSilverWeatherRefresh(){
       try{
         const phase = iuSilverWeatherComputePhase();
+        if (phase === "boot") return;
         try{
           if (line2){
             if (phase === "loading") line2.removeAttribute("data-iu-action-indicator");
