@@ -437,6 +437,10 @@ const api = {
   refreshAppLockUi: () => refreshGlobalAppLockUi(api),
   isPersistBlocked: (key) => isVaultPersistBlocked(key),
   isHydrationComplete: () => !!window.__iuVaultHydrationComplete,
+  getProtectedSyncReadState: async (key) => {
+    const { getProtectedSyncReadState } = await import("./iu-vault-storage-v1.js");
+    return getProtectedSyncReadState(key);
+  },
   isStorageRecoveryRequired: () => isVaultStorageRecoveryRequired(),
   getStorageRecoveryReason: () => getVaultStorageRecoveryReason(),
   getStorageRecoveryKeyPath: () => getVaultStorageRecoveryKeyPath(),

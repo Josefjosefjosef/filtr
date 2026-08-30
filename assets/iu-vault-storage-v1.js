@@ -83,9 +83,58 @@ export async function runVaultUserWriteAsync(fn) {
 
 export function captureNativeLocalStorage() {
   if (nativeGetItem) return;
-  nativeGetItem = localStorage.getItem.bind(localStorage);
-  nativeSetItem = localStorage.setItem.bind(localStorage);
-  nativeRemoveItem = localStorage.removeItem.bind(localStorage);
+  // Bind the *prototype* natives before any shim install. Instance assignment
+  // to localStorage.getItem is a no-op on Firefox/WebKit (Storage exotic object);
+  // those engines always dispatch through Storage.prototype.
+  const protoGet = Storage.prototype.getItem;
+  const protoSet = Storage.prototype.setItem;
+  const protoRemove = Storage.prototype.removeItem;
+  nativeGetItem = function nativeLsGet(key) {
+    return protoGet.call(localStorage, key);
+  };
+  nativeSetItem = function nativeLsSet(key, value) {
+    return protoSet.call(localStorage, key, value);
+  };
+  nativeRemoveItem = function nativeLsRemove(key) {
+    return protoRemove.call(localStorage, key);
+  };
+}
+
+function isLocalStorageTarget(storageObj) {
+  try {
+    return storageObj === localStorage;
+  } catch (_) {
+    return false;
+  }
+}
+
+/**
+ * Sync compatibility read for protected keys.
+ * Distinguishes NOT_READY / LOCKED / PRESENT / ABSENT so UI never treats
+ * pre-hydrate opaque null as "user never set anything".
+ */
+export function getProtectedSyncReadState(storageKey) {
+  const k = String(storageKey || "");
+  if (!k) return { status: "ABSENT", value: null };
+  if (!isProtectedStorageKey(k)) {
+    captureNativeLocalStorage();
+    let v = null;
+    try {
+      v = nativeGetItem(k);
+    } catch (_) {}
+    return { status: v != null ? "PRESENT" : "ABSENT", value: v };
+  }
+  try {
+    if (window.__iuVaultHydrationPending || window.__iuVaultHydrationComplete !== true) {
+      return { status: "NOT_READY", value: null };
+    }
+  } catch (_) {
+    return { status: "NOT_READY", value: null };
+  }
+  const st = getVaultState();
+  if (!st.unlocked) return { status: "LOCKED", value: null };
+  if (memoryCache.has(k)) return { status: "PRESENT", value: memoryCache.get(k) };
+  return { status: "ABSENT", value: null };
 }
 
 export function nativeLocalStorageGet(key) {
@@ -444,24 +493,30 @@ export function isVaultPersistBlocked(storageKey) {
 export function installLocalStorageShim() {
   if (installLocalStorageShim._done) return;
   installLocalStorageShim._done = true;
+  // Capture prototype natives FIRST — must happen before Storage.prototype patch.
   captureNativeLocalStorage();
   const nativeGet = nativeGetItem;
   const nativeSet = nativeSetItem;
   const nativeRemove = nativeRemoveItem;
+  const protoGet = Storage.prototype.getItem;
+  const protoSet = Storage.prototype.setItem;
+  const protoRemove = Storage.prototype.removeItem;
 
-  localStorage.getItem = function shimGetItem(key) {
-    if (!isProtectedStorageKey(key)) return nativeGet(key);
+  function readProtectedCompat(key) {
+    const k = String(key);
+    // Pre-hydrate: stay opaque even if L1 already unlocked (SECURITY OFF boot).
+    try {
+      if (window.__iuVaultHydrationComplete !== true) return null;
+    } catch (_) {
+      return null;
+    }
     const st = getVaultState();
     if (!st.unlocked) return null;
-    if (memoryCache.has(key)) return memoryCache.get(key);
+    if (memoryCache.has(k)) return memoryCache.get(k);
     return null;
-  };
+  }
 
-  localStorage.setItem = function shimSetItem(key, value) {
-    if (!isProtectedStorageKey(key)) {
-      nativeSet(key, value);
-      return;
-    }
+  function writeProtectedCompat(key, value) {
     const writeSource = isVaultUserWriteActive() ? "user" : "module";
     diagSync("01-user-write-request", { key: String(key), source: writeSource, pendingWrites: pendingWrites.size });
     const st = getVaultState();
@@ -504,13 +559,9 @@ export function installLocalStorageShim() {
       }
     } catch (_) {}
     return writePromise;
-  };
+  }
 
-  localStorage.removeItem = function shimRemoveItem(key) {
-    if (!isProtectedStorageKey(key)) {
-      nativeRemove(key);
-      return;
-    }
+  function removeProtectedCompat(key) {
     memoryCache.delete(String(key));
     captureNativeLocalStorage();
     try { nativeRemoveItem(encStorageKey(key)); } catch (_) {}
@@ -518,17 +569,62 @@ export function installLocalStorageShim() {
     const rem = vaultRemoveItem(key);
     rem.catch(() => {});
     return rem;
+  }
+
+  // Engine-portable bridge: Firefox/WebKit ignore localStorage.getItem = fn
+  // (no own property; calls always hit Storage.prototype). Patch prototype and
+  // scope vault behavior to localStorage only (sessionStorage stays native).
+  Storage.prototype.getItem = function shimGetItem(key) {
+    if (isLocalStorageTarget(this) && isProtectedStorageKey(key)) {
+      return readProtectedCompat(key);
+    }
+    return protoGet.call(this, key);
   };
+  Storage.prototype.setItem = function shimSetItem(key, value) {
+    if (isLocalStorageTarget(this) && isProtectedStorageKey(key)) {
+      return writeProtectedCompat(key, value);
+    }
+    return protoSet.call(this, key, value);
+  };
+  Storage.prototype.removeItem = function shimRemoveItem(key) {
+    if (isLocalStorageTarget(this) && isProtectedStorageKey(key)) {
+      return removeProtectedCompat(key);
+    }
+    return protoRemove.call(this, key);
+  };
+
+  // Chromium also accepts instance own-properties — keep as belt-and-suspenders.
+  try {
+    localStorage.getItem = function shimGetItemOwn(key) {
+      if (!isProtectedStorageKey(key)) return nativeGet(key);
+      return readProtectedCompat(key);
+    };
+    localStorage.setItem = function shimSetItemOwn(key, value) {
+      if (!isProtectedStorageKey(key)) {
+        nativeSet(key, value);
+        return;
+      }
+      return writeProtectedCompat(key, value);
+    };
+    localStorage.removeItem = function shimRemoveItemOwn(key) {
+      if (!isProtectedStorageKey(key)) {
+        nativeRemove(key);
+        return;
+      }
+      return removeProtectedCompat(key);
+    };
+  } catch (_) {}
 }
 
 export async function hydrateMemoryCacheFromVault(keys) {
   for (const key of keys) {
     try {
-      diagSync("20-module-hydrate", { key: String(key), source: "hydrateMemoryCacheFromVault" });
+      const k = String(key);
+      diagSync("20-module-hydrate", { key: k, source: "hydrateMemoryCacheFromVault" });
       // Drop any pre-hydrate poison (empty/default setItem raced before preload).
-      memoryCache.delete(String(key));
-      const val = await vaultGetItem(key, { bypassMemoryCache: true });
-      if (val != null) memoryCache.set(key, val);
+      memoryCache.delete(k);
+      const val = await vaultGetItem(k, { bypassMemoryCache: true });
+      if (val != null) memoryCache.set(k, val);
     } catch (_) {}
   }
 }

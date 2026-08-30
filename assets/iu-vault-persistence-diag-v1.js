@@ -1095,6 +1095,11 @@ export async function captureMultiCanaryBootTrace(phase) {
       shimGet = localStorage.getItem(key);
     } catch (_) {}
     const mem = getMemoryCachePlaintext(key);
+    let syncReadStatus = null;
+    try {
+      const { getProtectedSyncReadState } = await import("./iu-vault-storage-v1.js");
+      syncReadStatus = getProtectedSyncReadState(key).status;
+    } catch (_) {}
     let idbPresent = false;
     let idbFp = null;
     let decryptOk = false;
@@ -1126,6 +1131,7 @@ export async function captureMultiCanaryBootTrace(phase) {
       shimGetFp: shimGet != null ? await fp8(shimGet) : null,
       memPresent: mem != null && String(mem).length > 0,
       memFp: mem != null ? await fp8(mem) : null,
+      syncReadStatus,
       idbPresent,
       idbFp,
       decryptOk,
