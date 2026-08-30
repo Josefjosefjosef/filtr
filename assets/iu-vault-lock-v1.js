@@ -241,6 +241,9 @@ async function ensureLevel1KeyRecord() {
             source: "ensureLevel1KeyRecord",
             reason: String(backfillErr && backfillErr.message ? backfillErr.message : backfillErr).slice(0, 64),
           });
+          try {
+            window.__iuVaultKeyPathDurableReady = false;
+          } catch (_) {}
           const err = new Error(VAULT_STORAGE_RECOVERY_REQUIRED);
           err.reason = "protected_evidence_no_mdk";
           err.keyPath = keyPath;
@@ -249,11 +252,19 @@ async function ensureLevel1KeyRecord() {
         throw backfillErr;
       }
     }
+    try {
+      window.__iuVaultKeyPathDurableReady = true;
+    } catch (_) {}
     return keyRec;
   }
 
   const restored = await restoreLevel1FromDurableMaterial();
-  if (restored) return restored;
+  if (restored) {
+    try {
+      window.__iuVaultKeyPathDurableReady = true;
+    } catch (_) {}
+    return restored;
+  }
 
   const evidence = await hasProtectedVaultEvidence();
   if (evidence) {
@@ -268,6 +279,9 @@ async function ensureLevel1KeyRecord() {
       durableMaterialUsable: keyPath.durableMaterialUsable,
       legacyBackupPresent: keyPath.legacyBackupPresent,
     });
+    try {
+      window.__iuVaultKeyPathDurableReady = false;
+    } catch (_) {}
     const err = new Error(VAULT_STORAGE_RECOVERY_REQUIRED);
     err.reason = "protected_evidence_no_mdk";
     err.keyPath = keyPath;
@@ -277,6 +291,9 @@ async function ensureLevel1KeyRecord() {
   const mdk = await generateExtractableMdk();
   const rec = await persistLevel1KeyWithDurableMaterial(mdk, { freshlyGenerated: true });
   lockDiag("14-mdk-generated-new-vault", { source: "ensureLevel1KeyRecord" });
+  try {
+    window.__iuVaultKeyPathDurableReady = true;
+  } catch (_) {}
   return rec;
 }
 
@@ -550,6 +567,7 @@ export async function lockVault(reason = "manual", options = {}) {
     try {
       window.__iuVaultHydrationPending = true;
       window.__iuVaultHydrationComplete = false;
+      window.__iuVaultKeyPathDurableReady = false;
     } catch (_) {}
     try {
       const { flushPendingVaultWrites } = await import("./iu-vault-storage-v1.js");
@@ -591,6 +609,13 @@ export async function unlockWithMdk(mdk) {
   state.failedPinAttempts = 0;
   state.pinBackoffUntil = 0;
   touchActivity();
+  try {
+    // L2/L3: runtime MDK is the usable key while unlocked (L1 durable material cleared on upgrade).
+    // L1: ensureLevel1KeyRecord already set this after material readback.
+    if (state.requiresUserReauth) {
+      window.__iuVaultKeyPathDurableReady = true;
+    }
+  } catch (_) {}
   try {
     window.__iuVaultBootLockDecisionPending = false;
     window.__iuVaultBootPhase = "unlocked";

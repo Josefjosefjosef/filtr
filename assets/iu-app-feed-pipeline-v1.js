@@ -25297,7 +25297,25 @@ function buildVideoAsArticleCard(it) {
   }
   function iuVaultTrySetItem(key, value) {
     if (iuVaultIsPersistBlocked(key)) return false;
-    try { localStorage.setItem(key, value); return true; } catch (_) { return false; }
+    try {
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(key, value);
+        return true;
+      }
+      const ret = localStorage.setItem(key, value);
+      if (ret && typeof ret.then === "function") {
+        void Promise.resolve(ret).then(async () => {
+          try {
+            if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+              await window.iuVault.flushPendingWrites();
+            }
+          } catch (_) {}
+        });
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
   function iuMailboxDefaultItems() {
     return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
@@ -26266,16 +26284,25 @@ function buildVideoAsArticleCard(it) {
   function saveQuickToolsConfig(cfg) {
     try {
       if (iuVaultIsPersistBlocked(IU_QUICKTOOLS_STORAGE_KEY)) return;
+      const payload = JSON.stringify(cfg);
       if (!isLocalDataProtectionNoticeAccepted()) {
         void ensureLocalDataProtectionBeforeSave().then(function (ok) {
           if (!ok) return;
           try {
-            if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+            if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+              void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload);
+            } else if (typeof localStorage !== "undefined") {
+              localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
+            }
           } catch (e) {}
         });
         return;
       }
-      if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload);
+      } else if (typeof localStorage !== "undefined") {
+        localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
+      }
     } catch (e) {}
   }
 

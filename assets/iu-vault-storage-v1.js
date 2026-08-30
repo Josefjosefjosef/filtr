@@ -161,6 +161,16 @@ export async function vaultSetItem(storageKey, value) {
     diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked" });
     return;
   }
+  // KEY_PATH_BEFORE_PROTECTED_DATA: never commit ciphertext without proven durable L1 material.
+  try {
+    if (window.__iuVaultKeyPathDurableReady !== true) {
+      diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "key_path_not_ready" });
+      return;
+    }
+  } catch (_) {
+    diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "key_path_flag_error" });
+    return;
+  }
   const text = String(value);
   if (shouldBlockPostHydrateClobber(k, text)) {
     diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber" });
@@ -451,6 +461,16 @@ export function installLocalStorageShim() {
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);
     writePromise.catch(() => {});
+    // Auto-flush shortly after every protected write so mobile suspend cannot
+    // rely solely on pagehide (primary SAVE path still must await durableSet).
+    try {
+      if (!installLocalStorageShim._flushTimer) {
+        installLocalStorageShim._flushTimer = setTimeout(() => {
+          installLocalStorageShim._flushTimer = null;
+          flushPendingVaultWrites().catch(() => {});
+        }, 0);
+      }
+    } catch (_) {}
     return writePromise;
   };
 
@@ -463,7 +483,9 @@ export function installLocalStorageShim() {
     captureNativeLocalStorage();
     try { nativeRemoveItem(encStorageKey(key)); } catch (_) {}
     try { nativeRemove(key); } catch (_) {}
-    vaultRemoveItem(key).catch(() => {});
+    const rem = vaultRemoveItem(key);
+    rem.catch(() => {});
+    return rem;
   };
 }
 

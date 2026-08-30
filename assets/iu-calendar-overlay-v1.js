@@ -936,7 +936,18 @@ export function initIuCalendarOverlay() {
     const ok = await ensureLocalDataProtectionBeforeSave();
     if (!ok) return;
     const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
-    try{ localStorage.setItem(STORE_KEY, payload); }catch{}
+    // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
+    try {
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        await window.iuVault.durableSet(STORE_KEY, payload);
+      } else {
+        const ret = localStorage.setItem(STORE_KEY, payload);
+        if (ret && typeof ret.then === "function") await ret;
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+      }
+    } catch (_) {}
     if (state.dbReady && state.db){
       try{
         await new Promise((resolve, reject)=>{

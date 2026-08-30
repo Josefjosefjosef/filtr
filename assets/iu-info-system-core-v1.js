@@ -908,7 +908,31 @@ function setPrefs(prefs) {
       window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
     } catch (_) {}
     try {
-      writeRet = localStorage.setItem(LS_PREFS, JSON.stringify(n));
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        const durable = window.iuVault.durableSet(LS_PREFS, JSON.stringify(n));
+        try {
+          window.__iuPrefsDurableWrite = durable;
+        } catch (_) {}
+        void durable.then(() => {
+          prefsDiag("08-write-confirmed", { source: "setPrefs", durable: true });
+        });
+      } else {
+        writeRet = localStorage.setItem(LS_PREFS, JSON.stringify(n));
+        const durable = Promise.resolve(writeRet)
+          .then(async () => {
+            try {
+              if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+                await window.iuVault.flushPendingWrites();
+              }
+            } catch (_) {}
+            prefsDiag("08-write-confirmed", { source: "setPrefs", durable: true });
+            return true;
+          })
+          .catch(() => false);
+        try {
+          window.__iuPrefsDurableWrite = durable;
+        } catch (_) {}
+      }
     } finally {
       try {
         window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
@@ -916,20 +940,6 @@ function setPrefs(prefs) {
     }
     _prefsMem = n;
     // Durable commit tracking: UI must await awaitPrefsDurable() / persistDraft before exit.
-    const durable = Promise.resolve(writeRet)
-      .then(async () => {
-        try {
-          if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-            await window.iuVault.flushPendingWrites();
-          }
-        } catch (_) {}
-        prefsDiag("08-write-confirmed", { source: "setPrefs", durable: true });
-        return true;
-      })
-      .catch(() => false);
-    try {
-      window.__iuPrefsDurableWrite = durable;
-    } catch (_) {}
     return true;
   } catch (_) {
     return false;
