@@ -27278,7 +27278,7 @@ function buildVideoAsArticleCard(it) {
       else { if (idx !== -1) cfg.visible.splice(idx, 1); }
       cfg = iuQuickToolsEnforcePinnedRules(cfg);
       saveQuickToolsConfig(cfg);
-      iuQuickToolsApplyConfig();
+      iuQuickToolsApplyConfig(cfg);
     }
     function onQuickToolsVisibilityChange(e) {
       const t = e.target;
@@ -27310,7 +27310,7 @@ function buildVideoAsArticleCard(it) {
       if (changed) {
         cfg = iuQuickToolsEnforcePinnedRules(cfg);
         saveQuickToolsConfig(cfg);
-        iuQuickToolsApplyConfig();
+        iuQuickToolsApplyConfig(cfg);
       }
     }
     panel._iuQuickToolsSync = syncQuickToolsVisibilityFromPanel;

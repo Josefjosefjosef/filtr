@@ -18,6 +18,7 @@ import {
   runVaultUserWriteAsync,
   getMemoryCachePlaintext,
   getPendingVaultWriteCount,
+  memoryCacheSet,
 } from "./iu-vault-storage-v1.js";
 import { readRecord, deleteRecord } from "./iu-vault-db-v1.js";
 import { decryptString } from "./iu-vault-core-v1.js";
@@ -108,6 +109,9 @@ export async function durableSet(storageKey, value) {
   }
   await assertDurableKeyPathReady();
   const text = String(value);
+  // Optimistic memory so UI consumers that re-read storage mid-flight see the write
+  // (durable ACK still requires IDB commit + readback below).
+  memoryCacheSet(k, text);
   await runVaultUserWriteAsync(async () => {
     await vaultSetItem(k, text, { requireCommit: true });
   });
