@@ -81,8 +81,9 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    width: min(720px, calc(100vw - 36px));
-    max-width: 100%;
+    /* Match legal docs reference: min(720px, calc(100vw - 80px)) */
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
     align-self: center;
     height: auto;
     max-height: min(86vh, calc(100dvh - 36px));

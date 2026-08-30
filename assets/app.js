@@ -12762,7 +12762,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuFinancialCalcOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (finPromise) return finPromise;
-    finPromise = import("./iu-financial-calculators-module.js")
+    finPromise = import("./iu-financial-calculators-module.js?v=desktop-width-legal-720-v1-20260830")
       .then(function (m) {
         try {
           m.initIuFinancialCalculatorsOverlay({});
@@ -12815,7 +12815,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       if (typeof window.iuInvoiceOpenSurface === "function") return Promise.resolve();
     } catch (_) {}
     if (invPromise) return invPromise;
-    invPromise = import("./iu-invoice-module.js?v=invoice-desktop-fullpage-v1-20260620")
+    invPromise = import("./iu-invoice-module.js?v=invoice-desktop-fullpage-v1-20260620-desktop-width-legal-720-v1-20260830")
       .then(function (m) {
         try {
           m.initIuInvoiceOverlay({});

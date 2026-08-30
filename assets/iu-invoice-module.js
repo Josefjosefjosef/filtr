@@ -973,13 +973,21 @@ export function initIuInvoiceOverlay(deps) {
       if (typeof document === "undefined" || !document.body) return false;
       if (typeof window.matchMedia !== "function") return false;
       if (!window.matchMedia("(min-width: 1025px)").matches) return false;
+      /* Public hub is site root (/); /projects/ is legacy. Match canonical iuIsProjectsRoute. */
+      if (typeof window.iuIsProjectsRoute === "function") return !!window.iuIsProjectsRoute();
       const p = String(typeof location !== "undefined" && location && location.pathname ? location.pathname : "").replace(/\\/g, "/");
       const hub =
+        p === "/" ||
+        p === "/index.html" ||
+        p === "/filtr/" ||
+        p === "/filtr" ||
+        p === "/filtr/index.html" ||
         p === "/projects/" ||
         p === "/projects" ||
         p.indexOf("/projects/") === 0 ||
         p === "/filtr/projects" ||
-        p === "/filtr/projects/";
+        p === "/filtr/projects/" ||
+        p.indexOf("/filtr/projects/") === 0;
       return !!hub;
     } catch (_) {
       return false;
@@ -2057,8 +2065,8 @@ export function initIuInvoiceOverlay(deps) {
           cardShell.style.display = "flex";
           cardShell.style.flexDirection = "column";
           cardShell.style.flex = "0 1 auto";
-          cardShell.style.width = "min(720px, calc(100vw - 36px))";
-          cardShell.style.maxWidth = "100%";
+          cardShell.style.width = "min(720px, calc(100vw - 80px))";
+          cardShell.style.maxWidth = "min(720px, calc(100vw - 80px))";
           cardShell.style.maxHeight = "min(86vh, calc(100dvh - 36px))";
           cardShell.style.height = "auto";
         } else {
