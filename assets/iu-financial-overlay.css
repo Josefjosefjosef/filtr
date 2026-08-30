@@ -36,6 +36,13 @@
   box-shadow: 0 24px 56px rgba(15, 23, 42, 0.22);
   overflow: hidden;
 }
+/* Desktop ≥1025: outer width = legal docs reference (even when fullpage class is absent). Mobile/tablet unchanged. */
+@media (min-width: 1025px){
+  #iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-cardShell{
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
+  }
+}
 #iuFinancialCalcPanel.iu-financial-overlay-panel .iu-financial-overlay-inner{
   display: flex;
   flex-direction: column;

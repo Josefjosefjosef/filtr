@@ -885,13 +885,21 @@ export function initIuFinancialCalculatorsOverlay(deps) {
       if (typeof document === "undefined" || !document.body) return false;
       if (typeof window.matchMedia !== "function") return false;
       if (!window.matchMedia("(min-width: 1025px)").matches) return false;
+      /* Public hub is site root (/); /projects/ is legacy. Match canonical iuIsProjectsRoute. */
+      if (typeof window.iuIsProjectsRoute === "function") return !!window.iuIsProjectsRoute();
       const p = String(typeof location !== "undefined" && location && location.pathname ? location.pathname : "").replace(/\\/g, "/");
       const hub =
+        p === "/" ||
+        p === "/index.html" ||
+        p === "/filtr/" ||
+        p === "/filtr" ||
+        p === "/filtr/index.html" ||
         p === "/projects/" ||
         p === "/projects" ||
         p.indexOf("/projects/") === 0 ||
         p === "/filtr/projects" ||
-        p === "/filtr/projects/";
+        p === "/filtr/projects/" ||
+        p.indexOf("/filtr/projects/") === 0;
       if (!hub) return false;
       /* P0: Nezáviset na body.iu-desktop-home-grid — iuDesktopHomeSectionGridGuardApply ho může odebrat dřív než existuje #iuSilverTallScrollViewport; pak se nespustil full-page režim (stack + neprůhledný backdrop) při reálném kliku. */
       return true;
