@@ -122,6 +122,10 @@ async function runEngine(browserType, engineName, base, fails, evidence) {
         if (c.shimGetPresent) fails.push(`${engineName}_pre_hydrate_shim_not_opaque_${name}`);
         if (c.nativePlainPresent) fails.push(`${engineName}_pre_hydrate_native_plaintext_${name}`);
         if (!c.idbPresent) fails.push(`${engineName}_pre_hydrate_idb_missing_${name}`);
+        // NOT_READY ≠ ABSENT: ciphertext may already exist while hydration is pending.
+        if (c.syncReadStatus !== "NOT_READY") {
+          fails.push(`${engineName}_pre_hydrate_status_not_not_ready_${name}:${c.syncReadStatus || "null"}`);
+        }
       }
     }
 
