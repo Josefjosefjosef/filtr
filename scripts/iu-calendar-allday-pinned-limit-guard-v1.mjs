@@ -180,6 +180,18 @@ async function waitForVaultBootReady(page) {
       { timeout: 30000 }
     )
     .catch(() => {});
+  await page
+    .waitForFunction(() => window.__iuVaultHydrationComplete === true, { timeout: 60000 })
+    .catch(() => {});
+  await page
+    .waitForFunction(
+      () =>
+        window.__iuVaultKeyPathDurableReady === true &&
+        window.iuVault &&
+        typeof window.iuVault.durableSet === "function",
+      { timeout: 60000 }
+    )
+    .catch(() => {});
 }
 
 async function clickReal(locator, label) {
@@ -270,9 +282,6 @@ async function prepareLimitScenario(page, opts) {
     { timeout: 90000 }
   );
   await waitForVaultBootReady(page);
-  await page
-    .waitForFunction(() => window.__iuVaultHydrationComplete === true, { timeout: 45000 })
-    .catch(() => {});
   if (typeof options.afterReady === "function") {
     await options.afterReady(page);
   }
@@ -280,16 +289,32 @@ async function prepareLimitScenario(page, opts) {
   const seeded = await page.evaluate(async (dateIso) => {
     const svc = window.iuCalendarService;
     const results = [];
+    async function waitKeyReady(ms) {
+      const t0 = Date.now();
+      while (Date.now() - t0 < ms) {
+        if (window.__iuVaultKeyPathDurableReady === true) return true;
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      return window.__iuVaultKeyPathDurableReady === true;
+    }
+    await waitKeyReady(15000);
     for (let j = 0; j < 3; j += 1) {
-      const res = await svc.calendarCreateEvent({
-        date: dateIso,
-        time: "00:00",
-        allDay: true,
-        title: "Guard AD " + (j + 1),
-        note: "",
-        address: "",
-        type: "personal",
-      });
+      let res = null;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        if (attempt > 0) await waitKeyReady(5000);
+        res = await svc.calendarCreateEvent({
+          date: dateIso,
+          time: "00:00",
+          allDay: true,
+          title: "Guard AD " + (j + 1),
+          note: "",
+          address: "",
+          type: "personal",
+        });
+        if (res && res.ok) break;
+        if (res && res.reason === "all_day_limit") break;
+        await new Promise((resolve) => setTimeout(resolve, 80 * (attempt + 1)));
+      }
       results.push(res);
       if (!res || !res.ok) break;
       await new Promise((resolve) => setTimeout(resolve, 40));
@@ -305,7 +330,14 @@ async function prepareLimitScenario(page, opts) {
       if (allDayCount === 3) break;
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
-    return { results, allDayCount, dateIso };
+    return {
+      results,
+      allDayCount,
+      dateIso,
+      keyReady: window.__iuVaultKeyPathDurableReady === true,
+      bootPhase: window.__iuVaultBootPhase || null,
+      hydrationComplete: window.__iuVaultHydrationComplete === true,
+    };
   }, iso);
   if (!seeded || !Array.isArray(seeded.results) || seeded.results.length !== 3 || seeded.results.some((r) => !r || !r.ok)) {
     throw failError("seed_failed", "create_results:" + JSON.stringify(seeded && seeded.results), { seeded });

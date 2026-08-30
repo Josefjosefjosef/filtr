@@ -901,6 +901,8 @@ export function initIuCalendarOverlay() {
   }
 
   async function readStore(){
+    const epochAtStart = iuCalStoreWriteEpoch;
+    if (iuCalWriteInFlight > 0) return;
     let raw = "";
     try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
     if (!raw && state.dbReady && state.db){
@@ -914,71 +916,82 @@ export function initIuCalendarOverlay() {
         });
       }catch{}
     }
+    if (iuCalWriteInFlight > 0 || iuCalStoreWriteEpoch !== epochAtStart) return;
     let parsed = null;
     try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
     if (!parsed || parsed.schemaVersion !== SCHEMA_VERSION || !Array.isArray(parsed.events)){
       if (hasVaultEncBlob(STORE_KEY)) {
+        if (iuCalWriteInFlight > 0 || iuCalStoreWriteEpoch !== epochAtStart) return;
         state.data = { schemaVersion: SCHEMA_VERSION, events: [] };
         return;
       }
+      if (iuCalWriteInFlight > 0 || iuCalStoreWriteEpoch !== epochAtStart) return;
+      /* Do not empty-write while another write owns memory — cold empty only. */
+      if (state.data.events && state.data.events.length) return;
       state.data = { schemaVersion: SCHEMA_VERSION, events: [] };
       await writeStore();
       return;
     }
     const clean = parsed.events.map(sanitizeEvent).filter(Boolean).sort(compareEvents);
+    if (iuCalWriteInFlight > 0 || iuCalStoreWriteEpoch !== epochAtStart) return;
     state.data = { schemaVersion: SCHEMA_VERSION, events: clean };
   }
 
   async function writeStore(){
+    iuCalWriteInFlight += 1;
     const run = async () => {
-      iuCalWriteInFlight += 1;
       try {
-        try {
-          if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
-            return false;
-          }
-        } catch (_) {}
-        const ok = await ensureLocalDataProtectionBeforeSave();
-        if (!ok) return false;
-        const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
-        // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
-        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-          await window.iuVault.durableSet(STORE_KEY, payload);
-        } else {
-          const ret = localStorage.setItem(STORE_KEY, payload);
-          if (ret && typeof ret.then === "function") await ret;
-          if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-            await window.iuVault.flushPendingWrites();
-          }
+        if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+          return false;
         }
-        if (state.dbReady && state.db){
-          try{
-            await new Promise((resolve, reject)=>{
-              const tx = state.db.transaction("meta", "readwrite");
-              tx.objectStore("meta").put(payload, STORE_KEY);
-              tx.oncomplete = ()=>resolve();
-              tx.onerror = ()=>reject(tx.error);
-            });
-          }catch{}
+      } catch (_) {}
+      const ok = await ensureLocalDataProtectionBeforeSave();
+      if (!ok) return false;
+      try {
+        const t0 = Date.now();
+        while (Date.now() - t0 < 8000) {
+          if (window.__iuVaultKeyPathDurableReady === true) break;
+          await new Promise((resolve) => setTimeout(resolve, 50));
         }
-        iuCalStoreWriteEpoch += 1;
-        const writeEpoch = iuCalStoreWriteEpoch;
+      } catch (_) {}
+      const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
+      // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        await window.iuVault.durableSet(STORE_KEY, payload);
+      } else {
+        const ret = localStorage.setItem(STORE_KEY, payload);
+        if (ret && typeof ret.then === "function") await ret;
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+      }
+      if (state.dbReady && state.db){
         try{
-          window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
-        }catch{}
-        try{
-          queueMicrotask(()=>{
-            try{
-              if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
-            }catch{}
+          await new Promise((resolve, reject)=>{
+            const tx = state.db.transaction("meta", "readwrite");
+            tx.objectStore("meta").put(payload, STORE_KEY);
+            tx.oncomplete = ()=>resolve();
+            tx.onerror = ()=>reject(tx.error);
           });
         }catch{}
-        return true;
-      } finally {
-        iuCalWriteInFlight = Math.max(0, iuCalWriteInFlight - 1);
       }
+      iuCalStoreWriteEpoch += 1;
+      const writeEpoch = iuCalStoreWriteEpoch;
+      try{
+        window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
+      }catch{}
+      try{
+        queueMicrotask(()=>{
+          try{
+            if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
+          }catch{}
+        });
+      }catch{}
+      return true;
     };
-    const next = iuCalWriteChain.then(run, run);
+    const next = iuCalWriteChain.then(run, run).finally(() => {
+      iuCalWriteInFlight = Math.max(0, iuCalWriteInFlight - 1);
+    });
     iuCalWriteChain = next.then(
       () => undefined,
       () => undefined
