@@ -107,13 +107,19 @@ async function userSave(page, payloads) {
         [CAL, goodCal],
         [NOTE, goodNote],
       ]) {
-        const ret = localStorage.setItem(k, v);
-        if (ret && ret.then) await ret;
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          await window.iuVault.durableSet(k, v);
+        } else {
+          const ret = localStorage.setItem(k, v);
+          if (ret && ret.then) await ret;
+        }
       }
     } finally {
       window.__iuVaultUserWriteDepth = 0;
     }
-    await window.iuVault.flushPendingWrites();
+    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+      await window.iuVault.flushPendingWrites();
+    }
   }, payloads);
 }
 
