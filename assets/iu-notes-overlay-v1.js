@@ -339,15 +339,21 @@ export function initIuNotesOverlay() {
       pushNotesSaveTrace("persist_blocked_pre", { ok: false, reason: "persist_blocked" });
       throw new Error("PERSIST_BLOCKED");
     }
-    const ret = localStorage.setItem(STORE_KEY, JSON.stringify(norm));
-    pushNotesSaveTrace("vault_setitem_returned", { ok: true });
-    if (ret && typeof ret.then === "function") {
-      await ret;
-      pushNotesSaveTrace("vault_setitem_awaited", { ok: true });
-    }
-    if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-      await window.iuVault.flushPendingWrites();
-      pushNotesSaveTrace("flush_pending_done", { ok: true });
+    const payload = JSON.stringify(norm);
+    if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+      await window.iuVault.durableSet(STORE_KEY, payload);
+      pushNotesSaveTrace("durable_set_ok", { ok: true });
+    } else {
+      const ret = localStorage.setItem(STORE_KEY, payload);
+      pushNotesSaveTrace("vault_setitem_returned", { ok: true });
+      if (ret && typeof ret.then === "function") {
+        await ret;
+        pushNotesSaveTrace("vault_setitem_awaited", { ok: true });
+      }
+      if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+        await window.iuVault.flushPendingWrites();
+        pushNotesSaveTrace("flush_pending_done", { ok: true });
+      }
     }
     if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
       pushNotesSaveTrace("persist_blocked_post", { ok: false, reason: "persist_blocked" });

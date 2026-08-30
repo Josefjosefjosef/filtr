@@ -217,29 +217,11 @@ async function resolveValidMdk(recordKeys, checkpoint) {
 
 async function persistNonExtractableMdk(mdk, source) {
   const { persistLevel1KeyWithDurableMaterial } = await import("./iu-vault-lock-v1.js");
-  try {
-    const rec = await persistLevel1KeyWithDurableMaterial(mdk, {
-      migratedFrom: source || "l1-idb-only",
-    });
-    return rec.mdk;
-  } catch (_) {
-    let finalMdk = mdk;
-    try {
-      const raw = await exportMdkRaw(mdk);
-      finalMdk = await importMdkRaw(raw);
-    } catch (_) {
-      finalMdk = mdk;
-    }
-    const rec = {
-      type: "level1",
-      mdk: finalMdk,
-      createdAt: new Date().toISOString(),
-      migratedFrom: source || "l1-idb-only",
-      extractable: false,
-    };
-    await writeKeyRecord("mdk:level1", rec);
-    return finalMdk;
-  }
+  // NEVER CryptoKey-only: mobile cold start can drop CryptoKey while IDB records remain.
+  const rec = await persistLevel1KeyWithDurableMaterial(mdk, {
+    migratedFrom: source || "l1-idb-only",
+  });
+  return rec.mdk;
 }
 
 /**

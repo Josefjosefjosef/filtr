@@ -152,18 +152,38 @@ export async function vaultGetItem(storageKey, options) {
   }
 }
 
-export async function vaultSetItem(storageKey, value) {
+export async function vaultSetItem(storageKey, value, opts = {}) {
+  const requireCommit = !!(opts && opts.requireCommit);
   touchActivity();
   const k = String(storageKey);
   const source = isVaultUserWriteActive() ? "user" : "module";
   diagSync("03-persist-request", { key: k, source, pendingWrites: pendingWrites.size });
+  function rejectOrReturn(reason) {
+    diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason });
+    if (requireCommit) {
+      const err = new Error("VAULT_WRITE_BLOCKED");
+      err.reason = reason;
+      err.key = k;
+      throw err;
+    }
+  }
   if (isVaultPersistBlocked(k)) {
-    diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "persist_blocked" });
+    rejectOrReturn("persist_blocked");
+    return;
+  }
+  // KEY_PATH_BEFORE_PROTECTED_DATA: never commit ciphertext without proven durable L1 material.
+  try {
+    if (window.__iuVaultKeyPathDurableReady !== true) {
+      rejectOrReturn("key_path_not_ready");
+      return;
+    }
+  } catch (_) {
+    rejectOrReturn("key_path_flag_error");
     return;
   }
   const text = String(value);
   if (shouldBlockPostHydrateClobber(k, text)) {
-    diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber" });
+    rejectOrReturn("empty_clobber");
     return;
   }
   const generation = (writeGeneration.get(k) || 0) + 1;
@@ -176,6 +196,11 @@ export async function vaultSetItem(storageKey, value) {
     // mobile/tablet/PWA background (pagehide/visibility) while desktop skipped that path.
     if (shouldBlockPostHydrateClobber(k, text)) {
       diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "empty_clobber_async" });
+      if (requireCommit) {
+        const err = new Error("VAULT_WRITE_BLOCKED");
+        err.reason = "empty_clobber_async";
+        throw err;
+      }
       return;
     }
     if (!isVaultUserWriteActive() && looksLikeEmptyModuleReset(text, k)) {
@@ -186,14 +211,26 @@ export async function vaultSetItem(storageKey, value) {
           const prev = await decryptString(probeMdk, k, existing);
           if (prev && prev.length >= 24 && !looksLikeEmptyModuleReset(prev, k)) {
             diagSync("24-overwrite-blocked", { key: k, source, writeBlocked: true, reason: "idb_nonempty_clobber" });
+            if (requireCommit) {
+              const err = new Error("VAULT_WRITE_BLOCKED");
+              err.reason = "idb_nonempty_clobber";
+              throw err;
+            }
             return;
           }
-        } catch (_) {}
+        } catch (e) {
+          if (e && e.message === "VAULT_WRITE_BLOCKED") throw e;
+        }
       }
     }
     const mdk = getMdk();
     if (!mdk) {
       diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "no_mdk" });
+      if (requireCommit) {
+        const err = new Error("VAULT_WRITE_BLOCKED");
+        err.reason = "no_mdk";
+        throw err;
+      }
       return;
     }
     diagSync("04-encrypt-start", { key: k, generation, source, pendingWrites: pendingWrites.size });
@@ -202,6 +239,11 @@ export async function vaultSetItem(storageKey, value) {
     if (writeGeneration.get(k) !== generation) return;
     if (!getMdk()) {
       diagSync("03-persist-request", { key: k, source, writeBlocked: true, reason: "mdk_cleared_pre_write" });
+      if (requireCommit) {
+        const err = new Error("VAULT_WRITE_BLOCKED");
+        err.reason = "mdk_cleared_pre_write";
+        throw err;
+      }
       return;
     }
     await persistEnvelope(k, envelope);
@@ -451,6 +493,16 @@ export function installLocalStorageShim() {
     memoryCache.set(String(key), text);
     const writePromise = vaultSetItem(key, text);
     writePromise.catch(() => {});
+    // Auto-flush shortly after every protected write so mobile suspend cannot
+    // rely solely on pagehide (primary SAVE path still must await durableSet).
+    try {
+      if (!installLocalStorageShim._flushTimer) {
+        installLocalStorageShim._flushTimer = setTimeout(() => {
+          installLocalStorageShim._flushTimer = null;
+          flushPendingVaultWrites().catch(() => {});
+        }, 0);
+      }
+    } catch (_) {}
     return writePromise;
   };
 
@@ -463,7 +515,9 @@ export function installLocalStorageShim() {
     captureNativeLocalStorage();
     try { nativeRemoveItem(encStorageKey(key)); } catch (_) {}
     try { nativeRemove(key); } catch (_) {}
-    vaultRemoveItem(key).catch(() => {});
+    const rem = vaultRemoveItem(key);
+    rem.catch(() => {});
+    return rem;
   };
 }
 

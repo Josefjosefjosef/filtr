@@ -16,6 +16,7 @@ import {
   getVaultStorageRecoveryKeyPath,
 } from "./iu-vault-lock-v1.js";
 import { installLocalStorageShim, preloadAllVaultRecords, notifyVaultMemoryHydrated, isVaultPersistBlocked, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
+import { durableSet, durableRemove, durableFlush, assertDurableKeyPathReady, durableSetJson } from "./iu-vault-durable-adapter-v1.js";
 import { migratePlaintextToVault } from "./iu-vault-migrate-v1.js";
 import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826";
@@ -224,6 +225,12 @@ const api = {
   getMeta: () => readMeta(),
   getSecurityConfigured: () => readSecurityConfiguredState(),
   flushPendingWrites: () => flushPendingVaultWrites(),
+  durableSet: (key, value) => durableSet(key, value),
+  durableSetJson: (key, obj) => durableSetJson(key, obj),
+  durableRemove: (key) => durableRemove(key),
+  durableFlush: () => durableFlush(),
+  assertKeyPathReady: () => assertDurableKeyPathReady(),
+  isKeyPathDurableReady: () => !!window.__iuVaultKeyPathDurableReady,
   lock: async () => {
     await lockVault("manual");
     await refreshGlobalAppLockUi(api);

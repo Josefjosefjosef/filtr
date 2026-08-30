@@ -25297,7 +25297,25 @@ function buildVideoAsArticleCard(it) {
   }
   function iuVaultTrySetItem(key, value) {
     if (iuVaultIsPersistBlocked(key)) return false;
-    try { localStorage.setItem(key, value); return true; } catch (_) { return false; }
+    try {
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(key, value).catch(function () {});
+        return true;
+      }
+      const ret = localStorage.setItem(key, value);
+      if (ret && typeof ret.then === "function") {
+        void Promise.resolve(ret).then(async () => {
+          try {
+            if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+              await window.iuVault.flushPendingWrites();
+            }
+          } catch (_) {}
+        });
+      }
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
   function iuMailboxDefaultItems() {
     return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
@@ -25353,20 +25371,9 @@ function buildVideoAsArticleCard(it) {
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
-        if (iuVaultHasEncBlob(MAILBOX_STORAGE_KEY) || iuVaultIsPersistBlocked(MAILBOX_STORAGE_KEY)) {
-          return iuMailboxDefaultItems();
-        }
-        const items = iuMailboxDefaultItems();
-        if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
-          for (let i = 0; i < 4 && i < items.length; i++) {
-            if (items[i].social == null) items[i].social = IU_MAILBOX_DEFAULT_SOCIAL[i] || null;
-          }
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
-          try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
-        } else {
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: items.map(({ label, url, social, hidden, slot }) => ({ label, url, social, hidden: !!hidden, slot })) }));
-        }
-        return items;
+        /* Never durable-write placeholder defaults from a read miss — races hydration /
+           IDB-only cold start and can wipe a just-committed MindMenu mailbox record. */
+        return iuMailboxDefaultItems();
       }
       const parsed = JSON.parse(txt);
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
@@ -26266,16 +26273,25 @@ function buildVideoAsArticleCard(it) {
   function saveQuickToolsConfig(cfg) {
     try {
       if (iuVaultIsPersistBlocked(IU_QUICKTOOLS_STORAGE_KEY)) return;
+      const payload = JSON.stringify(cfg);
       if (!isLocalDataProtectionNoticeAccepted()) {
         void ensureLocalDataProtectionBeforeSave().then(function (ok) {
           if (!ok) return;
           try {
-            if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+            if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+              void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
+            } else if (typeof localStorage !== "undefined") {
+              localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
+            }
           } catch (e) {}
         });
         return;
       }
-      if (typeof localStorage !== "undefined") localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, JSON.stringify(cfg));
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
+      } else if (typeof localStorage !== "undefined") {
+        localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
+      }
     } catch (e) {}
   }
 
@@ -27251,7 +27267,7 @@ function buildVideoAsArticleCard(it) {
       else { if (idx !== -1) cfg.visible.splice(idx, 1); }
       cfg = iuQuickToolsEnforcePinnedRules(cfg);
       saveQuickToolsConfig(cfg);
-      iuQuickToolsApplyConfig();
+      iuQuickToolsApplyConfig(cfg);
     }
     function onQuickToolsVisibilityChange(e) {
       const t = e.target;
@@ -27283,7 +27299,7 @@ function buildVideoAsArticleCard(it) {
       if (changed) {
         cfg = iuQuickToolsEnforcePinnedRules(cfg);
         saveQuickToolsConfig(cfg);
-        iuQuickToolsApplyConfig();
+        iuQuickToolsApplyConfig(cfg);
       }
     }
     panel._iuQuickToolsSync = syncQuickToolsVisibilityFromPanel;

@@ -175,7 +175,18 @@ try {
     }
     function store() {
       try {
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          void window.iuVault.durableSet(LS_KEY, payload).then(function () {
+            finish(true);
+          }).catch(function () {
+            finish(false);
+          });
+          return;
+        }
         localStorage.setItem(LS_KEY, payload);
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          void window.iuVault.flushPendingWrites();
+        }
         finish(true);
       } catch (_) {
         finish(false);

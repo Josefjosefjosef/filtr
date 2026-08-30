@@ -22,6 +22,41 @@ var iuIsProjectsRoute = function iuIsProjectsRoute(){
 };
 try { if (typeof window !== "undefined") window.iuIsProjectsRoute = iuIsProjectsRoute; } catch(e){}
 try { if (typeof window !== "undefined") window.__iuNavOverlayLock = false; } catch (e) {}
+
+/** Canonical protected write — prefer vault.durableSet (readback-verified). */
+function iuDurableProtectedSet(key, value) {
+  try {
+    if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+      return window.iuVault.durableSet(String(key), String(value)).catch(function () {
+        try {
+          const ret = localStorage.setItem(String(key), String(value));
+          return Promise.resolve(ret).then(async function () {
+            try {
+              if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+                await window.iuVault.flushPendingWrites();
+              }
+            } catch (_) {}
+          });
+        } catch (err) {
+          return Promise.reject(err);
+        }
+      });
+    }
+  } catch (_) {}
+  try {
+    const ret = localStorage.setItem(String(key), String(value));
+    return Promise.resolve(ret).then(async function () {
+      try {
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+      } catch (_) {}
+    });
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
 /** P0 mobile/tablet: transient lock during popstate overlay restore — rAF-only release left stale locks on WebKit/throttled tabs (dead Domů/Menu/Zpět). */
 function iuNavOverlayLockArm() {
   try {
@@ -2216,7 +2251,7 @@ try {
       vasBlockNow.removeAttribute("hidden");
       hideClarify();
       try {
-        localStorage.setItem(IU_SHOPPING_LAST_LIST_KEY, val);
+        try { void iuDurableProtectedSet(IU_SHOPPING_LAST_LIST_KEY, val); } catch {}
       } catch (_) {}
       if (parsed.clarificationNeeded) {
         var uncertain = parsed.items.filter(function(it) { return !it.recognized; });
@@ -2283,7 +2318,7 @@ try {
       var normalized = iuNakupNormalizeAddress({ ulice: ulice, mesto: mesto, psc: psc });
       if (normalized && saveAddrCb && saveAddrCb.checked) {
         try {
-          localStorage.setItem(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify({ street: normalized.street, city: normalized.city, postalCode: normalized.postalCode, country: normalized.country }));
+          try { void iuDurableProtectedSet(IU_SHOPPING_DELIVERY_ADDRESS_KEY, JSON.stringify({ street: normalized.street, city: normalized.city, postalCode: normalized.postalCode, country: normalized.country })); } catch {}
         } catch (_) {}
       }
       if (savedAddrText) savedAddrText.textContent = formatAddress(normalized || { ulice: ulice, mesto: mesto, psc: psc });
@@ -4792,12 +4827,12 @@ try {
     if (!isLocalDataProtectionNoticeAccepted()) {
       void ensureLocalDataProtectionBeforeSave().then(function (ok) {
         if (!ok) return;
-        try { localStorage.setItem(IU_DS_STORAGE_KEY, JSON.stringify(payload)); } catch (_) {}
+        try { void iuDurableProtectedSet(IU_DS_STORAGE_KEY, JSON.stringify(payload)); } catch (_) {}
       });
       return;
     }
     try {
-      localStorage.setItem(IU_DS_STORAGE_KEY, JSON.stringify(payload));
+      void iuDurableProtectedSet(IU_DS_STORAGE_KEY, JSON.stringify(payload));
     } catch (_) {}
   }
 
@@ -6473,7 +6508,7 @@ try {
   function iuSaveLegacySectionNotes(obj){
     try{
       if (!obj || typeof obj !== "object") return;
-      localStorage.setItem(IU_SECTION_NOTES_KEY, JSON.stringify(obj));
+      void iuDurableProtectedSet(IU_SECTION_NOTES_KEY, JSON.stringify(obj));
     }catch{}
   }
 
@@ -9043,7 +9078,7 @@ try {
       var cleaned = iuFilterBlockedFromFavorites(arr);
       if (cleaned.length !== arr.length) {
         arr = cleaned;
-        try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
+        try { void iuDurableProtectedSet(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
       }
       if (arr.length === 0) {
         try {
@@ -9065,7 +9100,7 @@ try {
     } catch (_) { return []; }
   }
   function iuSetBanks(arr) {
-    try { localStorage.setItem(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
+    try { void iuDurableProtectedSet(IU_BANKS_KEY, JSON.stringify(arr)); } catch (_) {}
   }
   function iuAddBank(id) {
     if (iuIsBlockedBankId(id)) return;
@@ -9231,7 +9266,7 @@ try {
   function healthSaveCardsToStorage(cards) {
     try {
       var list = Array.isArray(cards) ? cards.slice(0, HEALTH_MAX_CARDS) : [];
-      localStorage.setItem(HEALTH_INSURANCE_STORAGE_KEY, JSON.stringify({ schemaVersion: HEALTH_INSURANCE_SCHEMA_VERSION, cards: list }));
+      void iuDurableProtectedSet(HEALTH_INSURANCE_STORAGE_KEY, JSON.stringify({ schemaVersion: HEALTH_INSURANCE_SCHEMA_VERSION, cards: list }));
     } catch (_) {}
   }
 
@@ -9338,7 +9373,7 @@ try {
         out.push({ id: "mig_" + t + "_" + i, name: name, url: url, username: "", password: "", locked: false });
       }
       if (out.length) {
-        try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(out)); } catch (_) {}
+        try { void iuDurableProtectedSet(BAKALARI_PROFILES_KEY, JSON.stringify(out)); } catch (_) {}
       }
       try { localStorage.removeItem(BAKALARI_LEGACY_KEY); } catch (_) {}
     } catch (_) {}
@@ -9367,7 +9402,7 @@ try {
 
   function setBakalariProfilesToStorage(arr) {
     var list = Array.isArray(arr) ? arr.slice(0, BAKALARI_MAX_CARDS) : [];
-    try { localStorage.setItem(BAKALARI_PROFILES_KEY, JSON.stringify(list)); } catch (_) {}
+    try { void iuDurableProtectedSet(BAKALARI_PROFILES_KEY, JSON.stringify(list)); } catch (_) {}
   }
 
   function openBakalariUrlSafe(urlRaw) {
@@ -10941,25 +10976,31 @@ try {
   async function persistTasksDurable(copy, pushTasksSaveTrace, emitTasksChanged){
     try {
       pushTasksSaveTrace("persist_enter", { ok: null });
-      try {
-        window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
-      } catch (_) {}
-      let writeRet = null;
-      try {
-        writeRet = localStorage.setItem(TASKS_STORE_KEY, JSON.stringify(copy));
-      } finally {
+      const payload = JSON.stringify(copy);
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        await window.iuVault.durableSet(TASKS_STORE_KEY, payload);
+        pushTasksSaveTrace("durable_set_ok", { ok: true });
+      } else {
         try {
-          window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
+          window.__iuVaultUserWriteDepth = (window.__iuVaultUserWriteDepth || 0) + 1;
         } catch (_) {}
-      }
-      pushTasksSaveTrace("vault_setitem_returned", { ok: true });
-      if (writeRet && typeof writeRet.then === "function") {
-        await writeRet;
-        pushTasksSaveTrace("vault_setitem_awaited", { ok: true });
-      }
-      if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-        await window.iuVault.flushPendingWrites();
-        pushTasksSaveTrace("flush_pending_done", { ok: true });
+        let writeRet = null;
+        try {
+          writeRet = localStorage.setItem(TASKS_STORE_KEY, payload);
+        } finally {
+          try {
+            window.__iuVaultUserWriteDepth = Math.max(0, (window.__iuVaultUserWriteDepth || 1) - 1);
+          } catch (_) {}
+        }
+        pushTasksSaveTrace("vault_setitem_returned", { ok: true });
+        if (writeRet && typeof writeRet.then === "function") {
+          await writeRet;
+          pushTasksSaveTrace("vault_setitem_awaited", { ok: true });
+        }
+        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+          pushTasksSaveTrace("flush_pending_done", { ok: true });
+        }
       }
       emitTasksChanged();
       pushTasksSaveTrace("persist_commit_ok", { ok: true });
