@@ -33,8 +33,9 @@
   #iuDesktopParcelWatchOverlay .iu-desktop-parcel-watch-overlay__panel {
     position: relative;
     z-index: 1;
-    width: min(520px, calc(100vw - 36px));
-    max-width: 100%;
+    /* Desktop outer width = legal/finance/invoice reference (PR #10137). */
+    width: min(720px, calc(100vw - 80px));
+    max-width: min(720px, calc(100vw - 80px));
     max-height: min(86vh, calc(100dvh - 36px));
     margin: 0;
     box-sizing: border-box;
