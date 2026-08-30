@@ -224,6 +224,7 @@ export function initIuCalendarOverlay() {
   const FOCUSABLE_SELECTOR = 'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
   /* Skip same-tab reload after our own writeStore (rapid creates were racing readStore). */
   let iuCalStoreWriteEpoch = 0;
+  let iuCalWriteInFlight = 0;
 
   const CZ_FIXED_HOLIDAYS = new Set([
     "01-01","05-01","05-08","07-05","07-06","09-28","10-28","11-17","12-24","12-25","12-26"
@@ -928,48 +929,53 @@ export function initIuCalendarOverlay() {
   }
 
   async function writeStore(){
+    iuCalWriteInFlight += 1;
     try {
-      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
-        return;
-      }
-    } catch (_) {}
-    const ok = await ensureLocalDataProtectionBeforeSave();
-    if (!ok) return;
-    const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
-    // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
-    try {
-      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-        await window.iuVault.durableSet(STORE_KEY, payload);
-      } else {
-        const ret = localStorage.setItem(STORE_KEY, payload);
-        if (ret && typeof ret.then === "function") await ret;
-        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-          await window.iuVault.flushPendingWrites();
+      try {
+        if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+          return;
         }
+      } catch (_) {}
+      const ok = await ensureLocalDataProtectionBeforeSave();
+      if (!ok) return;
+      const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
+      // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
+      try {
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          await window.iuVault.durableSet(STORE_KEY, payload);
+        } else {
+          const ret = localStorage.setItem(STORE_KEY, payload);
+          if (ret && typeof ret.then === "function") await ret;
+          if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+            await window.iuVault.flushPendingWrites();
+          }
+        }
+      } catch (_) {}
+      if (state.dbReady && state.db){
+        try{
+          await new Promise((resolve, reject)=>{
+            const tx = state.db.transaction("meta", "readwrite");
+            tx.objectStore("meta").put(payload, STORE_KEY);
+            tx.oncomplete = ()=>resolve();
+            tx.onerror = ()=>reject(tx.error);
+          });
+        }catch{}
       }
-    } catch (_) {}
-    if (state.dbReady && state.db){
+      iuCalStoreWriteEpoch += 1;
+      const writeEpoch = iuCalStoreWriteEpoch;
       try{
-        await new Promise((resolve, reject)=>{
-          const tx = state.db.transaction("meta", "readwrite");
-          tx.objectStore("meta").put(payload, STORE_KEY);
-          tx.oncomplete = ()=>resolve();
-          tx.onerror = ()=>reject(tx.error);
+        window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
+      }catch{}
+      try{
+        queueMicrotask(()=>{
+          try{
+            if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
+          }catch{}
         });
       }catch{}
+    } finally {
+      iuCalWriteInFlight = Math.max(0, iuCalWriteInFlight - 1);
     }
-    iuCalStoreWriteEpoch += 1;
-    const writeEpoch = iuCalStoreWriteEpoch;
-    try{
-      window.dispatchEvent(new CustomEvent("iu-local-store-changed", { detail: { key: STORE_KEY, source: "iu-calendar-self", epoch: writeEpoch } }));
-    }catch{}
-    try{
-      queueMicrotask(()=>{
-        try{
-          if (typeof window.iuSilverCalendarSummaryRefresh === "function") window.iuSilverCalendarSummaryRefresh();
-        }catch{}
-      });
-    }catch{}
   }
 
   function getEventsForDate(date){ return state.data.events.filter((e)=>e.date === date).sort(compareEvents); }
@@ -2787,6 +2793,8 @@ export function initIuCalendarOverlay() {
           if (!ev || !ev.detail || ev.detail.key !== STORE_KEY) return;
           /* Ignore echo from this tab's writeStore — otherwise rapid calendarCreateEvent races. */
           if (ev.detail.source === "iu-calendar-self") return;
+          /* durableSet emits source=iu-vault mid-flight; do not clobber in-memory creates. */
+          if (iuCalWriteInFlight > 0) return;
           void readStore().then(function () {
             try { render(); } catch (_) {}
           });
