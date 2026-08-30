@@ -183,8 +183,11 @@ async function main() {
     await waitHydrated(page);
     await userSave(page, payloads);
     await page.evaluate(async ({ PREFS, CAL, competing }) => {
-      Storage.prototype.setItem.call(localStorage, PREFS, competing);
-      Storage.prototype.setItem.call(localStorage, CAL, JSON.stringify({ schemaVersion: 1, events: [] }));
+      // Plant competing plaintext via true native LS (bypass vault shim).
+      // Storage.prototype.setItem is now the vault bridge — cannot use it as a native probe.
+      const { nativeLocalStorageSet } = await import("/assets/iu-vault-storage-v1.js");
+      nativeLocalStorageSet(PREFS, competing);
+      nativeLocalStorageSet(CAL, JSON.stringify({ schemaVersion: 1, events: [] }));
       const { migratePlaintextToVault } = await import("/assets/iu-vault-migrate-v1.js");
       await migratePlaintextToVault();
     }, { PREFS, CAL, competing: competingPrefs() });

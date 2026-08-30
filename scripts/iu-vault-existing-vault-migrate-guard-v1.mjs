@@ -79,10 +79,12 @@ async function runPinPolicyBrowserChecks(page, fails) {
   if (!pinChecks.nonNumericFail) fails.push("pin_nonnumeric_not_rejected");
   if (!pinChecks.mismatch) fails.push("pin_mismatch_not_rejected");
 
-  const pinPlain = await page.evaluate((pin) => {
+  const pinPlain = await page.evaluate(async (pin) => {
+    const { nativeLocalStorageGet } = await import("/assets/iu-vault-storage-v1.js");
     for (let i = 0; i < localStorage.length; i += 1) {
-      const k = Storage.prototype.key.call(localStorage, i);
-      const v = Storage.prototype.getItem.call(localStorage, k) || "";
+      const k = localStorage.key(i);
+      if (!k) continue;
+      const v = nativeLocalStorageGet(k) || "";
       if (v.includes(pin)) return k;
     }
     return null;

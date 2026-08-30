@@ -265,12 +265,15 @@ async function runViewport(browser, base, viewport, fails, label) {
       schemaVersion: 1,
       notes: [{ id: "f1", title: marker + "_DURABLE", body: "b", tags: [], createdAt: 1, updatedAt: 1 }],
     });
+    let restoreSetItem = null;
     if (simulateEarlyNativeRemove) {
-      const native = Storage.prototype.setItem;
+      const { nativeLocalStorageRemove } = await import("/assets/iu-vault-storage-v1.js");
+      const vaultSet = Storage.prototype.setItem;
+      restoreSetItem = vaultSet;
       Storage.prototype.setItem = function patchedSetItem(key, value) {
-        const out = native.call(this, key, value);
+        const out = vaultSet.call(this, key, value);
         try {
-          if (String(key) === noteKey) Storage.prototype.removeItem.call(localStorage, noteKey);
+          if (String(key) === noteKey) nativeLocalStorageRemove(noteKey);
         } catch (_) {}
         return out;
       };
@@ -285,9 +288,9 @@ async function runViewport(browser, base, viewport, fails, label) {
       idb = !!(await readRecord(noteKey));
     } catch (_) {}
     const plain = localStorage.getItem(noteKey);
-    if (simulateEarlyNativeRemove) {
+    if (restoreSetItem) {
       try {
-        Storage.prototype.setItem = native;
+        Storage.prototype.setItem = restoreSetItem;
       } catch (_) {}
     }
     return {

@@ -142,6 +142,11 @@ export function nativeLocalStorageGet(key) {
   return nativeGetItem(key);
 }
 
+export function nativeLocalStorageSet(key, value) {
+  if (!nativeSetItem) captureNativeLocalStorage();
+  return nativeSetItem(key, value);
+}
+
 export function nativeLocalStorageRemove(key) {
   if (!nativeRemoveItem) captureNativeLocalStorage();
   return nativeRemoveItem(key);
