@@ -1036,3 +1036,227 @@ export async function captureLifecycleSaveReopenTrace(phase) {
 
   return payload;
 }
+
+const CANARY_KEYS = Object.freeze({
+  weatherGps: "iuWeatherGpsSelectedV1",
+  weatherMode: "iu_location_mode",
+  weatherManual: "iu_manual_location",
+  prefs: "iu.infoEvents.prefs.v1",
+  notes: "iu.notes.store.v1",
+});
+
+/**
+ * Multi-canary boot divergence trace (weather UI pref + filters + personal note).
+ * Metadata / fingerprints only — no plaintext bodies, no secrets.
+ */
+export async function captureMultiCanaryBootTrace(phase) {
+  const { getVaultState, readSecurityConfiguredState } = await import("./iu-vault-lock-v1.js");
+  const {
+    nativeLocalStorageGet,
+    captureNativeLocalStorage,
+    getPendingVaultWriteCount,
+    getMemoryCachePlaintext,
+    isVaultPersistBlocked,
+  } = await import("./iu-vault-storage-v1.js");
+  const { isProtectedStorageKey } = await import("./iu-vault-protected-keys-v1.js");
+  const { readRecord, readMeta } = await import("./iu-vault-db-v1.js");
+  const { decryptString } = await import("./iu-vault-core-v1.js");
+  const { getMdk } = await import("./iu-vault-lock-v1.js");
+
+  captureNativeLocalStorage();
+  const st = getVaultState();
+  let configured = { unlockMethod: "unknown" };
+  try {
+    configured = await readSecurityConfiguredState();
+  } catch (_) {}
+  let meta = null;
+  try {
+    meta = await readMeta();
+  } catch (_) {}
+
+  async function fp8(text) {
+    try {
+      const data = new TextEncoder().encode(String(text || ""));
+      const dig = await crypto.subtle.digest("SHA-256", data);
+      const hex = Array.from(new Uint8Array(dig))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hex.slice(0, 8);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  const canaries = {};
+  for (const [name, key] of Object.entries(CANARY_KEYS)) {
+    const protectedKey = isProtectedStorageKey(key);
+    let shimGet = null;
+    try {
+      shimGet = localStorage.getItem(key);
+    } catch (_) {}
+    const mem = getMemoryCachePlaintext(key);
+    let idbPresent = false;
+    let idbFp = null;
+    let decryptOk = false;
+    let decryptFp = null;
+    try {
+      const env = await readRecord(key);
+      idbPresent = !!(env && env.ct);
+      if (idbPresent) idbFp = await fp8(JSON.stringify(env));
+      const mdk = getMdk();
+      if (mdk && env && env.ct) {
+        try {
+          const pt = await decryptString(mdk, key, env);
+          decryptOk = pt != null;
+          decryptFp = pt != null ? await fp8(pt) : null;
+        } catch (_) {
+          decryptOk = false;
+        }
+      }
+    } catch (_) {}
+    let nativePlain = null;
+    try {
+      nativePlain = nativeLocalStorageGet(key);
+    } catch (_) {}
+    canaries[name] = {
+      key,
+      storageFamily: protectedKey ? "vault_protected_idb" : "native_ls",
+      protectedKey,
+      shimGetPresent: shimGet != null && String(shimGet).length > 0,
+      shimGetFp: shimGet != null ? await fp8(shimGet) : null,
+      memPresent: mem != null && String(mem).length > 0,
+      memFp: mem != null ? await fp8(mem) : null,
+      idbPresent,
+      idbFp,
+      decryptOk,
+      decryptFp,
+      nativePlainPresent: nativePlain != null && String(nativePlain).length > 0,
+      persistBlocked: !!isVaultPersistBlocked(key),
+    };
+  }
+
+  let weatherUiPhase = null;
+  let weatherOverlayVisible = null;
+  let weatherHasPersonalized = null;
+  try {
+    const card = document.querySelector("[data-iu-silver-wx-phase], #iuSilverWeatherCard, .iuSilverWeatherCard");
+    weatherUiPhase = card ? String(card.getAttribute("data-iu-silver-wx-phase") || "") || null : null;
+  } catch (_) {}
+  try {
+    const ov = document.getElementById("iuSilverWeatherGeoOverlay");
+    weatherOverlayVisible = !!(ov && !ov.hidden && ov.getAttribute("aria-hidden") !== "true");
+  } catch (_) {}
+  try {
+    weatherHasPersonalized = !!(
+      (canaries.weatherGps && canaries.weatherGps.shimGetPresent) ||
+      (canaries.weatherManual && canaries.weatherManual.shimGetPresent)
+    );
+  } catch (_) {}
+
+  let swCache = null;
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      swCache = "controller_present";
+    } else {
+      swCache = "no_controller";
+    }
+  } catch (_) {
+    swCache = "unknown";
+  }
+
+  let displayMode = "browser";
+  try {
+    if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) displayMode = "standalone";
+    else if (window.navigator.standalone) displayMode = "ios_standalone";
+  } catch (_) {}
+
+  const payload = {
+    tag: "MULTI_CANARY_BOOT_TRACE_V1",
+    phase: String(phase || ""),
+    capturedAt: Date.now(),
+    origin: String(location.origin || ""),
+    pathname: String(location.pathname || ""),
+    displayMode,
+    swCache,
+    hydrationPending: !!window.__iuVaultHydrationPending,
+    hydrationComplete: !!window.__iuVaultHydrationComplete,
+    keyPathDurableReady: !!window.__iuVaultKeyPathDurableReady,
+    unlocked: !!(st && st.unlocked),
+    unlockMethod: configured.unlockMethod,
+    securityLevel: meta && meta.securityLevel,
+    pendingWrites: getPendingVaultWriteCount(),
+    canaries,
+    weatherUi: {
+      phaseAttr: weatherUiPhase,
+      overlayVisible: weatherOverlayVisible,
+      hasPersonalizedFromShim: weatherHasPersonalized,
+      wouldShowFirstVisitDialog: weatherHasPersonalized === false,
+    },
+  };
+
+  try {
+    const prevRaw = sessionStorage.getItem("iu:vault:multi-canary-boot-trace:v1");
+    if (prevRaw) {
+      const prev = JSON.parse(prevRaw);
+      payload.priorPhase = prev && prev.phase ? prev.phase : null;
+      payload.priorCanaries = prev && prev.canaries ? prev.canaries : null;
+      let firstDiff = null;
+      if (prev && prev.canaries) {
+        for (const name of Object.keys(CANARY_KEYS)) {
+          const a = prev.canaries[name];
+          const b = payload.canaries[name];
+          if (!a || !b) continue;
+          if (a.idbPresent && !b.idbPresent) {
+            firstDiff = { canary: name, kind: "idb_lost", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+          if (a.decryptFp && b.decryptOk && a.decryptFp !== b.decryptFp) {
+            firstDiff = {
+              canary: name,
+              kind: "decrypt_fp_changed",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+              fromFp: a.decryptFp,
+              toFp: b.decryptFp,
+            };
+            break;
+          }
+          if (a.idbPresent && a.decryptFp && !b.shimGetPresent && payload.hydrationComplete) {
+            firstDiff = {
+              canary: name,
+              kind: "idb_ok_but_shim_missing_after_hydrate",
+              fromPhase: prev.phase,
+              toPhase: payload.phase,
+            };
+            break;
+          }
+          if (a.shimGetPresent && !b.shimGetPresent) {
+            firstDiff = { canary: name, kind: "shim_lost", fromPhase: prev.phase, toPhase: payload.phase };
+            break;
+          }
+        }
+      }
+      if (
+        !firstDiff &&
+        prev.weatherUi &&
+        prev.weatherUi.wouldShowFirstVisitDialog === false &&
+        payload.weatherUi &&
+        payload.weatherUi.wouldShowFirstVisitDialog === true
+      ) {
+        firstDiff = {
+          canary: "weatherGps",
+          kind: "ui_first_visit_regressed",
+          fromPhase: prev.phase,
+          toPhase: payload.phase,
+        };
+      }
+      payload.firstDiff = firstDiff;
+    }
+  } catch (_) {}
+
+  try {
+    sessionStorage.setItem("iu:vault:multi-canary-boot-trace:v1", JSON.stringify(payload));
+  } catch (_) {}
+
+  return payload;
+}

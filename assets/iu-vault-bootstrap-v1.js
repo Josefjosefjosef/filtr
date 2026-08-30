@@ -38,6 +38,7 @@ import {
   recordVaultPersistenceEvent,
   captureSecOffReloadTrace,
   captureLifecycleSaveReopenTrace,
+  captureMultiCanaryBootTrace,
 } from "./iu-vault-persistence-diag-v1.js";
 
 function vaultSecurityActive(meta) {
@@ -123,6 +124,13 @@ async function initVault() {
   try {
     window.__iuVaultHydrationPending = true;
     window.__iuVaultHydrationComplete = false;
+  } catch (_) {}
+
+  try {
+    if (new URLSearchParams(location.search || "").get("iuCanaryDiag") === "1") {
+      const { captureMultiCanaryBootTrace } = await import("./iu-vault-persistence-diag-v1.js");
+      window.__iuCanaryEarlyBoot = await captureMultiCanaryBootTrace("EARLY_BOOT_PRE_HYDRATE");
+    }
   } catch (_) {}
 
   // READ-ONLY physical conflict forensics: do not migrate/repair/write.
@@ -371,6 +379,7 @@ const api = {
   recordPersistenceEvent: (step, detail) => recordVaultPersistenceEvent(step, detail),
   captureSecOffReloadTrace: (phase) => captureSecOffReloadTrace(phase),
   captureLifecycleSaveReopenTrace: (phase) => captureLifecycleSaveReopenTrace(phase),
+  captureMultiCanaryBootTrace: (phase) => captureMultiCanaryBootTrace(phase),
   getConflictForensics: async () => {
     const { getConflictForensics } = await import("./iu-vault-conflict-forensics-v1.js");
     return getConflictForensics();
