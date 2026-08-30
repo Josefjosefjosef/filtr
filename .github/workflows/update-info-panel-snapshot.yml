@@ -40,7 +40,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Build info panel snapshot
         run: node scripts/build_info_panel_snapshot.mjs
