@@ -21,9 +21,17 @@ const GUARD_PIN = "847291";
 
 async function seedFixtures(page, marker) {
   return page.evaluate(async (marker) => {
-    const nativeGet = (key) => Storage.prototype.getItem.call(localStorage, key);
-    const nativeSet = (key, val) => Storage.prototype.setItem.call(localStorage, key, val);
-    const nativeRemove = (key) => Storage.prototype.removeItem.call(localStorage, key);
+    const {
+      nativeLocalStorageGet,
+      nativeLocalStorageSet,
+      nativeLocalStorageRemove,
+      memoryCacheSet,
+      flushPendingVaultWrites,
+      clearVaultMemoryCache,
+    } = await import("/assets/iu-vault-storage-v1.js");
+    const nativeGet = nativeLocalStorageGet;
+    const nativeSet = nativeLocalStorageSet;
+    const nativeRemove = nativeLocalStorageRemove;
     const encKey = (k) => "iu:vault:enc:v1:" + k;
     const expected = {
       validEnc: JSON.stringify({ schemaVersion: 1, notes: [{ id: "v1", title: marker + "_VALID_ENC" }] }),
@@ -34,7 +42,6 @@ async function seedFixtures(page, marker) {
     };
     const { getMdk } = await import("/assets/iu-vault-lock-v1.js");
     const { encryptString } = await import("/assets/iu-vault-core-v1.js");
-    const { memoryCacheSet, flushPendingVaultWrites, clearVaultMemoryCache } = await import("/assets/iu-vault-storage-v1.js");
     clearVaultMemoryCache();
     const mdk = getMdk();
     nativeSet(encKey("iu.notes.store.v1"), JSON.stringify(await encryptString(mdk, "iu.notes.store.v1", expected.validEnc)));
@@ -80,7 +87,8 @@ async function runSetupPin(page, pin, expectFailMode) {
   return page.evaluate(async (payload) => {
     const pin = payload.pin;
     const expectFailMode = !!payload.expectFailMode;
-    const nativeGet = (key) => Storage.prototype.getItem.call(localStorage, key);
+    const { nativeLocalStorageGet } = await import("/assets/iu-vault-storage-v1.js");
+    const nativeGet = nativeLocalStorageGet;
     const state = window.__iuMigrateProbe;
     const { setupPin } = await import("/assets/iu-vault-pin-v1.js");
     const { readRecord } = await import("/assets/iu-vault-db-v1.js");
@@ -113,7 +121,8 @@ async function runHydrate(page, pin) {
 
 async function readBackChecks(page) {
   return page.evaluate(async () => {
-    const nativeGet = (key) => Storage.prototype.getItem.call(localStorage, key);
+    const { nativeLocalStorageGet, vaultGetItem } = await import("/assets/iu-vault-storage-v1.js");
+    const nativeGet = nativeLocalStorageGet;
     const encKey = (k) => "iu:vault:enc:v1:" + k;
     const state = window.__iuMigrateProbe;
     const expected = state.expected;
@@ -121,7 +130,6 @@ async function readBackChecks(page) {
     const orphanBefore = state.orphanBefore;
     const { getMdk } = await import("/assets/iu-vault-lock-v1.js");
     const { decryptString } = await import("/assets/iu-vault-core-v1.js");
-    const { vaultGetItem } = await import("/assets/iu-vault-storage-v1.js");
     const { readRecord } = await import("/assets/iu-vault-db-v1.js");
     const mdkNow = getMdk();
     const readPlainKey = async (key) => {

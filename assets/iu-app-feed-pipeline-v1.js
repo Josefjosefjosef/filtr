@@ -22090,6 +22090,9 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherReadManualLocation(){
     try{
+      if (window.__iuVaultHydrationComplete !== true) return null;
+    }catch{}
+    try{
       const raw = localStorage.getItem(IU_MANUAL_LOCATION_KEY);
       if (!raw) return null;
       const o = JSON.parse(raw);
@@ -22126,6 +22129,9 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherReadLocationMode(){
     try{
+      if (window.__iuVaultHydrationComplete !== true) return IU_WEATHER_MODE_GPS;
+    }catch{}
+    try{
       iuWeatherMigrateLegacyOnce();
       const m = String(localStorage.getItem(IU_WEATHER_MODE_KEY) || IU_WEATHER_MODE_GPS).trim().toLowerCase();
       return m === IU_WEATHER_MODE_MANUAL ? IU_WEATHER_MODE_MANUAL : IU_WEATHER_MODE_GPS;
@@ -22147,6 +22153,9 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuWeatherReadGpsSelected(){
+    try{
+      if (window.__iuVaultHydrationComplete !== true) return null;
+    }catch{}
     try{
       const raw = localStorage.getItem(IU_WEATHER_GPS_SELECTED_KEY);
       if (!raw) return null;
