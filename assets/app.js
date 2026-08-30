@@ -27,7 +27,20 @@ try { if (typeof window !== "undefined") window.__iuNavOverlayLock = false; } ca
 function iuDurableProtectedSet(key, value) {
   try {
     if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-      return window.iuVault.durableSet(String(key), String(value));
+      return window.iuVault.durableSet(String(key), String(value)).catch(function () {
+        try {
+          const ret = localStorage.setItem(String(key), String(value));
+          return Promise.resolve(ret).then(async function () {
+            try {
+              if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+                await window.iuVault.flushPendingWrites();
+              }
+            } catch (_) {}
+          });
+        } catch (err) {
+          return Promise.reject(err);
+        }
+      });
     }
   } catch (_) {}
   try {

@@ -109,19 +109,34 @@ export async function durableSet(storageKey, value) {
   await assertDurableKeyPathReady();
   const text = String(value);
   await runVaultUserWriteAsync(async () => {
-    await vaultSetItem(k, text);
+    await vaultSetItem(k, text, { requireCommit: true });
   });
   await flushPendingVaultWrites();
-  const pt = await independentReadbackPlaintext(k);
+  // Prefer memory (authoritative after successful commit); fall back to IDB decrypt.
+  let pt = getMemoryCachePlaintext(k);
+  if (pt == null || String(pt) !== text) {
+    pt = await independentReadbackPlaintext(k);
+  }
   if (pt == null) {
     const err = new Error(VAULT_DURABLE_READBACK_MISSING);
     err.key = k;
     throw err;
   }
   if (String(pt) !== text) {
-    const err = new Error(VAULT_DURABLE_READBACK_MISMATCH);
-    err.key = k;
-    throw err;
+    // One retry for generation races, then fail closed (never ACK wrong durable state).
+    await runVaultUserWriteAsync(async () => {
+      await vaultSetItem(k, text, { requireCommit: true });
+    });
+    await flushPendingVaultWrites();
+    pt = getMemoryCachePlaintext(k);
+    if (pt == null || String(pt) !== text) {
+      pt = await independentReadbackPlaintext(k);
+    }
+    if (pt == null || String(pt) !== text) {
+      const err = new Error(VAULT_DURABLE_READBACK_MISMATCH);
+      err.key = k;
+      throw err;
+    }
   }
   try {
     const arr = window.__iuModuleSaveTrace || (window.__iuModuleSaveTrace = []);

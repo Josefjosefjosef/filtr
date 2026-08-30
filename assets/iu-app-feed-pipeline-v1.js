@@ -25299,7 +25299,7 @@ function buildVideoAsArticleCard(it) {
     if (iuVaultIsPersistBlocked(key)) return false;
     try {
       if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-        void window.iuVault.durableSet(key, value);
+        void window.iuVault.durableSet(key, value).catch(function () {});
         return true;
       }
       const ret = localStorage.setItem(key, value);
@@ -26290,7 +26290,7 @@ function buildVideoAsArticleCard(it) {
           if (!ok) return;
           try {
             if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-              void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload);
+              void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
             } else if (typeof localStorage !== "undefined") {
               localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
             }
@@ -26299,7 +26299,7 @@ function buildVideoAsArticleCard(it) {
         return;
       }
       if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-        void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload);
+        void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
       } else if (typeof localStorage !== "undefined") {
         localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
       }
