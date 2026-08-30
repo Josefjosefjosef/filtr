@@ -13,7 +13,7 @@ import {
   unlockWithMdk,
   storeDeviceWrap,
 } from "./iu-vault-lock-v1.js";
-import { rotateVaultMdk, flushPendingVaultWrites } from "./iu-vault-storage-v1.js";
+import { rotateVaultMdk, flushPendingVaultWrites, withVaultSecurityTransition } from "./iu-vault-storage-v1.js";
 import {
   buildDeviceWrap,
   mdkFromDeviceWrap,
@@ -518,8 +518,12 @@ async function persistDeviceActivation(meta, deviceWrap, oldMdk, testMdk, rotate
 
   try {
     recordDeviceDiag(STEP_ROTATE, true, { operation: "rotateVaultMdk" });
-    await rotateVaultMdk(oldMdk, testMdk);
-    rotatedRef.value = true;
+    await withVaultSecurityTransition(async () => {
+      await rotateVaultMdk(oldMdk, testMdk);
+      rotatedRef.value = true;
+      recordDeviceDiag(STEP_UNWRAP, true, { operation: "unlockWithMdk" });
+      await unlockWithMdk(testMdk);
+    });
   } catch (err) {
     const msg = String(err && err.message ? err.message : err);
     let extra = "";
@@ -532,14 +536,8 @@ async function persistDeviceActivation(meta, deviceWrap, oldMdk, testMdk, rotate
       const recordType = recordTypeMatch ? recordTypeMatch[1] : "unknown";
       extra = `recordKey:${recordKey}|recordPhase:${recordPhase}|recordType:${recordType}`;
     }
-    throwDeviceSetupStep(STEP_ROTATE, err, "rotateVaultMdk", extra);
-  }
-
-  try {
-    recordDeviceDiag(STEP_UNWRAP, true, { operation: "unlockWithMdk" });
-    await unlockWithMdk(testMdk);
-  } catch (err) {
-    throwDeviceSetupStep(STEP_UNWRAP, err, "unlockWithMdk");
+    const step = msg.includes("unlock") || String(err && err.step) === STEP_UNWRAP ? STEP_UNWRAP : STEP_ROTATE;
+    throwDeviceSetupStep(step === STEP_UNWRAP ? STEP_UNWRAP : STEP_ROTATE, err, step === STEP_UNWRAP ? "unlockWithMdk" : "rotateVaultMdk", extra);
   }
 
   try {

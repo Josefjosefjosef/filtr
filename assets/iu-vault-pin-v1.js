@@ -35,18 +35,27 @@ function assertPinStrength(pin) {
 export async function setupPin(pin, confirmPin) {
   if (String(pin) !== String(confirmPin)) throw new Error("VAULT_PIN_MISMATCH");
   assertPinStrength(pin);
+  const { flushPendingVaultWrites, withVaultSecurityTransition } = await import("./iu-vault-storage-v1.js");
+  await flushPendingVaultWrites();
   const oldMdk = getMdk();
   const meta = await readMeta();
   const seedBytes = globalThis.crypto.getRandomValues(new Uint8Array(32));
   const newMdk = await importMdkRaw(seedBytes);
-  await rotateVaultMdk(oldMdk, newMdk);
-  const salt = randomSalt();
-  const iterations = await calibratePbkdf2Iterations(250);
-  const pinWrap = await buildPinWrap(seedBytes, pin, salt, iterations);
-  const testMdk = await mdkFromPinWrap(pinWrap, pin);
-  await unlockWithMdk(testMdk);
-  await storePinWrap(meta, pinWrap);
-  return { iterations };
+  // Fence must cover rotate AND unlockWithMdk(new): after rotate returns, getMdk() is
+  // still the OLD key until unlockWithMdk — module writers (MindMenu mailboxes) must not
+  // persist old-MDK ciphertext over the rotated vault in that gap.
+  let iterationsOut = 0;
+  await withVaultSecurityTransition(async () => {
+    await rotateVaultMdk(oldMdk, newMdk);
+    const salt = randomSalt();
+    const iterations = await calibratePbkdf2Iterations(250);
+    iterationsOut = iterations;
+    const pinWrap = await buildPinWrap(seedBytes, pin, salt, iterations);
+    const testMdk = await mdkFromPinWrap(pinWrap, pin);
+    await unlockWithMdk(testMdk);
+    await storePinWrap(meta, pinWrap);
+  });
+  return { iterations: iterationsOut };
 }
 
 export async function changePin(oldPin, newPin, confirmPin) {
@@ -59,10 +68,14 @@ export async function changePin(oldPin, newPin, confirmPin) {
   if (pinWrap.wrappedSeed) {
     seedBytes = await unwrapSeedFromPinWrap(pinWrap, oldPin);
   } else if (pinWrap.wrappedMdk) {
+    const { withVaultSecurityTransition } = await import("./iu-vault-storage-v1.js");
     const oldMdk = getMdk();
     seedBytes = globalThis.crypto.getRandomValues(new Uint8Array(32));
     const newMdk = await importMdkRaw(seedBytes);
-    await rotateVaultMdk(oldMdk, newMdk);
+    await withVaultSecurityTransition(async () => {
+      await rotateVaultMdk(oldMdk, newMdk);
+      await unlockWithMdk(newMdk);
+    });
   } else {
     throw new Error("VAULT_PIN_FORMAT_UNSUPPORTED");
   }

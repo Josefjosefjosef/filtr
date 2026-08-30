@@ -13,19 +13,19 @@ const STORAGE_PATH = path.join(REPO, "assets", "iu-vault-storage-v1.js");
 const BACKUP_PATH = path.join(os.tmpdir(), "iu-vault-storage-v1-negative-proof-backup.js");
 
 function breakLegacyPlaintextBranch(source) {
-  const needle = `      if (!envelope) {
-        captureNativeLocalStorage();
-        const nativePlain = nativeGetItem(k);
-        if (nativePlain != null) {
-          pt = nativePlain;
-          recordType = "legacy_plaintext_only";
-        } else {
+  const needle = `        if (!envelope) {
+          captureNativeLocalStorage();
+          const nativePlain = nativeGetItem(k);
+          if (nativePlain != null) {
+            pt = nativePlain;
+            recordType = "legacy_plaintext_only";
+          } else {
+            continue;
+          }
+        } else if (!isVaultEnvelope(envelope)) {`;
+  const broken = `        if (!envelope) {
           continue;
-        }
-      } else if (!isVaultEnvelope(envelope)) {`;
-  const broken = `      if (!envelope) {
-        continue;
-      } else if (!isVaultEnvelope(envelope)) {`;
+        } else if (!isVaultEnvelope(envelope)) {`;
   if (!source.includes(needle)) throw new Error("negative_proof_anchor_missing");
   return source.replace(needle, broken);
 }
