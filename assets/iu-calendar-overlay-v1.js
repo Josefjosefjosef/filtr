@@ -873,40 +873,52 @@ export function initIuCalendarOverlay() {
     };
   }
 
-  async function initStorage(){
-    try{
-      const req = indexedDB.open(CAL_NS + ".idb", 1);
-      await new Promise((resolve, reject)=>{
-        req.onupgradeneeded = function(){
-          const db = req.result;
-          if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta");
-        };
-        req.onsuccess = ()=>resolve();
-        req.onerror = ()=>reject(req.error || new Error("IDB open failed"));
-      });
-      state.db = req.result;
-      state.dbReady = true;
-    }catch{
-      state.dbReady = false;
+  function isCalendarReadOpaque() {
+    try {
+      if (window.__iuVaultBootLockDecisionPending) return true;
+      if (window.__iuVaultHydrationPending) return true;
+      if (window.__iuVaultHydrationComplete !== true) return true;
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isHydrationComplete === "function" && !window.iuVault.isHydrationComplete()) {
+        return true;
+      }
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  async function waitForCalendarHydrationWindow(timeoutMs) {
+    const limit = typeof timeoutMs === "number" ? timeoutMs : 12000;
+    const t0 = Date.now();
+    while (Date.now() - t0 < limit) {
+      if (!isCalendarReadOpaque()) return true;
+      await new Promise((resolve) => setTimeout(resolve, 40));
     }
+    return !isCalendarReadOpaque();
+  }
+
+  async function initStorage(){
+    /* Legacy iu.calendar.idb is non-authoritative. Do not open/read/write it on the
+       hot path — wipe+open races previously fed empty mirror JSON into readStore
+       while vault ciphertext was still PRESENT. */
+    state.db = null;
+    state.dbReady = false;
   }
 
   async function readStore(){
     const epochAtStart = iuCalStoreWriteEpoch;
     if (iuCalWriteInFlight > 0) return;
+    if (isCalendarReadOpaque()) {
+      /* NOT_READY must not be treated as ABSENT — keep current memory. */
+      return;
+    }
     let raw = "";
     try{ raw = String(localStorage.getItem(STORE_KEY) || ""); }catch{}
-    if (!raw && state.dbReady && state.db){
-      try{
-        raw = await new Promise((resolve, reject)=>{
-          const tx = state.db.transaction("meta", "readonly");
-          const st = tx.objectStore("meta");
-          const rq = st.get(STORE_KEY);
-          rq.onsuccess = ()=>resolve(String(rq.result || ""));
-          rq.onerror = ()=>reject(rq.error);
-        });
-      }catch{}
-    }
     if (iuCalWriteInFlight > 0 || iuCalStoreWriteEpoch !== epochAtStart) return;
     let parsed = null;
     try{ parsed = raw ? JSON.parse(raw) : null; }catch{}
@@ -939,26 +951,25 @@ export function initIuCalendarOverlay() {
           await new Promise((resolve) => setTimeout(resolve, 50));
         }
       } catch (_) {}
-      const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
-      // Canonical vault is authoritative; calendar IDB is non-authoritative legacy mirror only.
-      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
-        await window.iuVault.durableSet(STORE_KEY, payload);
-      } else {
-        const ret = localStorage.setItem(STORE_KEY, payload);
-        if (ret && typeof ret.then === "function") await ret;
-        if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
-          await window.iuVault.flushPendingWrites();
+      try {
+        if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+          return false;
         }
-      }
-      if (state.dbReady && state.db){
-        try{
-          await new Promise((resolve, reject)=>{
-            const tx = state.db.transaction("meta", "readwrite");
-            tx.objectStore("meta").put(payload, STORE_KEY);
-            tx.oncomplete = ()=>resolve();
-            tx.onerror = ()=>reject(tx.error);
-          });
-        }catch{}
+      } catch (_) {}
+      const payload = JSON.stringify({ schemaVersion: SCHEMA_VERSION, events: state.data.events });
+      // Canonical vault only — no legacy calendar IDB mirror writes.
+      try {
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          await window.iuVault.durableSet(STORE_KEY, payload);
+        } else {
+          const ret = localStorage.setItem(STORE_KEY, payload);
+          if (ret && typeof ret.then === "function") await ret;
+          if (window.iuVault && typeof window.iuVault.flushPendingWrites === "function") {
+            await window.iuVault.flushPendingWrites();
+          }
+        }
+      } catch (_) {
+        return false;
       }
       iuCalStoreWriteEpoch += 1;
       const writeEpoch = iuCalStoreWriteEpoch;
@@ -982,6 +993,20 @@ export function initIuCalendarOverlay() {
       () => undefined
     );
     return next;
+  }
+
+  function calendarPersistFailMessage() {
+    try {
+      if (window.__iuVaultHydrationPending || window.__iuVaultHydrationComplete !== true) {
+        return "Uložení dočasně blokováno — zkuste znovu po načtení trezoru.";
+      }
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.isPersistBlocked === "function" && window.iuVault.isPersistBlocked(STORE_KEY)) {
+        return "Uložení dočasně blokováno — zkuste znovu.";
+      }
+    } catch (_) {}
+    return "Nepodařilo se uložit událost.";
   }
 
   function getEventsForDate(date){ return state.data.events.filter((e)=>e.date === date).sort(compareEvents); }
@@ -1810,6 +1835,7 @@ export function initIuCalendarOverlay() {
       updatedAt: Date.now()
     });
     if (!base){ setCalInlineNotice("Neplatná data."); return; }
+    const prevSnapshot = state.data.events.slice();
     const idx = state.data.events.findIndex((e)=>e.id === base.id);
     if (idx >= 0) state.data.events[idx] = base;
     else state.data.events.push(base);
@@ -1820,7 +1846,21 @@ export function initIuCalendarOverlay() {
     state.selectedDate = base.date;
     state.cursorDate = base.date;
     clearCalInlineNotice();
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      state.data.events = prevSnapshot;
+      state.currentEditId = id || "";
+      setCalInlineNotice(calendarPersistFailMessage());
+      setMessage(calendarPersistFailMessage());
+      render();
+      restoreCalendarScrollGuard();
+      return;
+    }
     setMessage("");
     render();
     restoreCalendarScrollGuard();
@@ -1830,11 +1870,26 @@ export function initIuCalendarOverlay() {
     const inl = state.inline;
     if (!inl || inl.mode !== "edit" || !inl.id) return;
     closeCalDeleteConfirm();
+    const prevSnapshot = state.data.events.slice();
+    const deletedId = inl.id;
     state.data.events = state.data.events.filter((e)=>e.id !== inl.id);
     state.inline = null;
     state.bottomSheetOpen = false;
     state.currentEditId = "";
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      state.data.events = prevSnapshot;
+      state.currentEditId = deletedId;
+      setMessage(calendarPersistFailMessage());
+      render();
+      restoreCalendarScrollGuard();
+      return;
+    }
     setMessage("");
     render();
     restoreCalendarScrollGuard();
@@ -2584,9 +2639,23 @@ export function initIuCalendarOverlay() {
     if (!state.currentEditId) return;
     const ev = state.data.events.find((e)=>e.id === state.currentEditId);
     if (!ev) return;
+    const prevAttachments = Array.isArray(ev.attachments) ? ev.attachments.slice() : [];
+    const prevUpdated = ev.updatedAt;
     ev.attachments = ev.attachments.filter((a)=>a.id !== attId);
     ev.updatedAt = Date.now();
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      ev.attachments = prevAttachments;
+      ev.updatedAt = prevUpdated;
+      setMessage(calendarPersistFailMessage());
+      render();
+      return;
+    }
     render();
   }
 
@@ -2610,6 +2679,7 @@ export function initIuCalendarOverlay() {
       updatedAt: Date.now()
     });
     if (!base){ setMessage("Vyplňte název, datum a čas."); return; }
+    const prevSnapshot = state.data.events.slice();
     const idx = state.data.events.findIndex((e)=>e.id === base.id);
     if (idx >= 0) state.data.events[idx] = base;
     else state.data.events.push(base);
@@ -2617,17 +2687,43 @@ export function initIuCalendarOverlay() {
     state.currentEditId = base.id;
     state.selectedDate = base.date;
     state.cursorDate = base.date;
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      state.data.events = prevSnapshot;
+      state.currentEditId = id || "";
+      setMessage(calendarPersistFailMessage());
+      render();
+      return;
+    }
     setMessage("Uloženo.");
     render();
   }
 
   async function deleteCurrentEvent(){
     if (!state.currentEditId){ setMessage("Vyberte událost."); return; }
+    const prevSnapshot = state.data.events.slice();
+    const deletedId = state.currentEditId;
     state.data.events = state.data.events.filter((e)=>e.id !== state.currentEditId);
     state.currentEditId = "";
     state.inline = null;
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      state.data.events = prevSnapshot;
+      state.currentEditId = deletedId;
+      setMessage(calendarPersistFailMessage());
+      render();
+      return;
+    }
     setMessage("Smazáno.");
     render();
   }
@@ -2636,6 +2732,8 @@ export function initIuCalendarOverlay() {
     if (!state.currentEditId){ setMessage("Nejdřív uložte událost, pak přidejte fotky."); return; }
     const ev = state.data.events.find((e)=>e.id === state.currentEditId);
     if (!ev) return;
+    const prevAttachments = Array.isArray(ev.attachments) ? ev.attachments.slice() : [];
+    const prevUpdated = ev.updatedAt;
     const list = Array.from(files || []);
     for (const file of list){
       if (ev.attachments.length >= MAX_ATTACHMENTS){ setMessage("Maximálně " + MAX_ATTACHMENTS + " fotky na událost."); break; }
@@ -2647,7 +2745,19 @@ export function initIuCalendarOverlay() {
       }
     }
     ev.updatedAt = Date.now();
-    await writeStore();
+    let wrote = false;
+    try {
+      wrote = await writeStore();
+    } catch (_) {
+      wrote = false;
+    }
+    if (!wrote) {
+      ev.attachments = prevAttachments;
+      ev.updatedAt = prevUpdated;
+      setMessage(calendarPersistFailMessage());
+      render();
+      return;
+    }
     render();
   }
 
@@ -2791,6 +2901,7 @@ export function initIuCalendarOverlay() {
     /* P1 perf: do not inject calendar CSS or render overlay DOM during app.js eval.
        Styles + mount run on first openOverlay / ensureCalendarOverlayMounted. */
     await initStorage();
+    await waitForCalendarHydrationWindow(12000);
     await readStore();
     bindUi();
     try {
@@ -2815,6 +2926,12 @@ export function initIuCalendarOverlay() {
           try { render(); } catch (_) {}
         });
       });
+      /* Catch-up if hydrate already completed before this listener attached. */
+      if (window.__iuVaultHydrationComplete === true) {
+        void readStore().then(function () {
+          try { render(); } catch (_) {}
+        });
+      }
     } catch (_) {}
     try{
       if (!window.__iuCalVvInlineScroll && window.visualViewport){
