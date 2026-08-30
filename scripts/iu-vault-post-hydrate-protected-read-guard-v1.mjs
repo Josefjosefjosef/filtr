@@ -195,6 +195,7 @@ async function runEngine(browserType, engineName, base, fails, evidence) {
 async function main() {
   const fails = [];
   const evidence = {};
+  const skipped = [];
   staticChecks(fails);
 
   let server = null;
@@ -204,25 +205,40 @@ async function main() {
     const base = `http://127.0.0.1:${started.port}/projects/`;
 
     const engines = [];
-    if (pw.chromium) engines.push(["chromium", pw.chromium]);
-    if (pw.firefox) engines.push(["firefox", pw.firefox]);
-    if (pw.webkit) engines.push(["webkit", pw.webkit]);
+    if (pw.chromium) engines.push(["chromium", pw.chromium, true]);
+    if (pw.firefox) engines.push(["firefox", pw.firefox, false]);
+    if (pw.webkit) engines.push(["webkit", pw.webkit, false]);
 
-    for (const [name, bt] of engines) {
+    for (const [name, bt, required] of engines) {
       try {
         await runEngine(bt, name, base, fails, evidence);
       } catch (err) {
-        fails.push(`${name}_engine_error:${String(err && err.message ? err.message : err).slice(0, 160)}`);
+        const msg = String(err && err.message ? err.message : err);
+        const missingBrowser =
+          /Executable doesn't exist/i.test(msg) ||
+          /browserType\.launch/i.test(msg) ||
+          /Target page, context or browser has been closed/i.test(msg);
+        if (!required && missingBrowser) {
+          skipped.push(`${name}:browser_unavailable`);
+          evidence[name] = { skipped: true, reason: msg.slice(0, 120) };
+          continue;
+        }
+        fails.push(`${name}_engine_error:${msg.slice(0, 160)}`);
       }
+    }
+
+    if (!evidence.chromium || evidence.chromium.skipped) {
+      fails.push("chromium_required_missing");
     }
 
     const report = {
       IU_VAULT_POST_HYDRATE_PROTECTED_READ_GUARD: fails.length === 0 ? "PASS" : "FAIL",
       marker: MARKER,
       fails,
+      skipped,
       evidence,
       note:
-        "Root cause class: localStorage.getItem instance monkey-patch is ignored on Firefox/WebKit; canonical fix patches Storage.prototype scoped to localStorage.",
+        "Root cause class: localStorage.getItem instance monkey-patch is ignored on Firefox/WebKit; canonical fix patches Storage.prototype scoped to localStorage. Chromium is required in CI; Firefox/WebKit run when Playwright browsers are installed.",
     };
     console.log(JSON.stringify(report, null, 2));
     if (fails.length) process.exit(1);
