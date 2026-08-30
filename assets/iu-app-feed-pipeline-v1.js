@@ -15578,6 +15578,9 @@ function buildVideoAsArticleCard(it) {
 
     function iuSilverWeatherComputePhase(){
       try{
+        if (window.__iuVaultHydrationComplete !== true) return "loading";
+      }catch{}
+      try{
         if (iuSilverWeatherGeoDeniedVisible() && iuWeatherReadLocationMode() === IU_WEATHER_MODE_GPS && !iuWeatherReadGpsSelected()) return "denied";
       }catch{}
       try{
@@ -15965,6 +15968,21 @@ function buildVideoAsArticleCard(it) {
       });
     }catch{}
 
+    try{
+      window.addEventListener("iu-vault-hydrated", function () {
+        try{ iuSilverWeatherRefresh(); }catch{}
+      });
+    }catch{}
+    try{
+      window.addEventListener("iu-local-store-changed", (ev) => {
+        try{
+          const k = ev && ev.detail && ev.detail.key ? String(ev.detail.key) : "";
+          if (k === "iu_location_mode" || k === "iu_manual_location" || k.indexOf("iuWeather") !== -1) {
+            try{ iuSilverWeatherRefresh(); }catch{}
+          }
+        }catch{}
+      });
+    }catch{}
     window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
     iuSilverWeatherSyncPrivacyText();
     iuSilverWeatherRefresh();
@@ -22057,8 +22075,15 @@ function buildVideoAsArticleCard(it) {
     try{
       if (window.__iuWeatherLegacyMigrated) return;
       window.__iuWeatherLegacyMigrated = 1;
+      try {
+        if (window.__iuVaultHydrationPending || window.__iuVaultHydrationComplete !== true) return;
+      } catch (_) {}
       if (localStorage.getItem(IU_WEATHER_MODE_KEY)) return;
-      localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS);
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS).catch(function () {});
+      } else {
+        localStorage.setItem(IU_WEATHER_MODE_KEY, IU_WEATHER_MODE_GPS);
+      }
     }catch{}
   }
 
@@ -22082,16 +22107,20 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherWriteManualLocation(m){
     try{
-      if (!m || !iuWeatherIsValidGeoCoords(m.lat, m.lon)) return;
-      localStorage.setItem(
-        IU_MANUAL_LOCATION_KEY,
-        JSON.stringify({
-          lat: Number(m.lat),
-          lon: Number(m.lon),
-          label: String(m.label || "").trim(),
-        }),
-      );
-    }catch{}
+      if (!m || !iuWeatherIsValidGeoCoords(m.lat, m.lon)) return Promise.resolve(false);
+      const payload = JSON.stringify({
+        lat: Number(m.lat),
+        lon: Number(m.lon),
+        label: String(m.label || "").trim(),
+      });
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        return window.iuVault.durableSet(IU_MANUAL_LOCATION_KEY, payload).then(function () { return true; }).catch(function () { return false; });
+      }
+      localStorage.setItem(IU_MANUAL_LOCATION_KEY, payload);
+      return Promise.resolve(true);
+    }catch{
+      return Promise.resolve(false);
+    }
   }
 
   function iuWeatherReadLocationMode(){
@@ -22106,8 +22135,14 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherWriteLocationMode(mode){
     try{
       const m = mode === IU_WEATHER_MODE_MANUAL ? IU_WEATHER_MODE_MANUAL : IU_WEATHER_MODE_GPS;
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        return window.iuVault.durableSet(IU_WEATHER_MODE_KEY, m).then(function () { return true; }).catch(function () { return false; });
+      }
       localStorage.setItem(IU_WEATHER_MODE_KEY, m);
-    }catch{}
+      return Promise.resolve(true);
+    }catch{
+      return Promise.resolve(false);
+    }
   }
 
   function iuWeatherReadGpsSelected(){
@@ -22127,13 +22162,20 @@ function buildVideoAsArticleCard(it) {
 
   function iuWeatherWriteGpsSelected(city){
     try{
-      if (!city) return;
-      localStorage.setItem(IU_WEATHER_GPS_SELECTED_KEY, JSON.stringify({
+      if (!city) return Promise.resolve(false);
+      const payload = JSON.stringify({
         name: String(city.name || "").trim(),
         lat: Number(city.lat),
         lon: Number(city.lon),
-      }));
-    }catch{}
+      });
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        return window.iuVault.durableSet(IU_WEATHER_GPS_SELECTED_KEY, payload).then(function () { return true; }).catch(function () { return false; });
+      }
+      localStorage.setItem(IU_WEATHER_GPS_SELECTED_KEY, payload);
+      return Promise.resolve(true);
+    }catch{
+      return Promise.resolve(false);
+    }
   }
 
   function iuWeatherClearRuntimeCity(){
@@ -25737,13 +25779,51 @@ function buildVideoAsArticleCard(it) {
             lon = Number(pos && pos.coords && pos.coords.longitude);
             if (!isFinite(lat) || !isFinite(lon)) throw new Error("bad coords");
             const tempCity = { name: "Poloha", lat, lon };
-            iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
-            iuWeatherClearRuntimeCity();
-            iuWeatherWriteGpsSelected(tempCity);
-            iuWeatherClearOpenMeteoCache();
-            try{ window.__iuWeatherState = null; }catch{}
-            iuWeatherSyncCityLabels(tempCity);
-            try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+            void (async () => {
+              try {
+                await iuWeatherWriteLocationMode(IU_WEATHER_MODE_GPS);
+                iuWeatherClearRuntimeCity();
+                await iuWeatherWriteGpsSelected(tempCity);
+                iuWeatherClearOpenMeteoCache();
+                try{ window.__iuWeatherState = null; }catch{}
+                iuWeatherSyncCityLabels(tempCity);
+                try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+              } catch (_) {
+                iuWeatherClearRuntimeCity();
+                iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
+                try{
+                  const c = iuWeatherGetActiveCity();
+                  iuWeatherSyncCityLabels(c);
+                }catch{}
+                iuWeatherLoadAndRender();
+                return;
+              }
+              try{
+                const labelP = iuWeatherGpsNearestLocalityLabel(lat, lon);
+                const wxP = typeof window.iuWeatherEnsureState === "function"
+                  ? window.iuWeatherEnsureState()
+                  : Promise.resolve(null);
+                const label = await labelP;
+                const city = { name: (label && String(label).trim()) || "Poloha", lat, lon };
+                if (city.name !== "Poloha") {
+                  await iuWeatherWriteGpsSelected(city);
+                  iuWeatherSyncCityLabels(city);
+                }
+                await wxP;
+                iuWeatherSetGeoFlowFeedback("", "clear");
+                try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+                iuWeatherLoadAndRender();
+              }catch{
+                iuWeatherClearRuntimeCity();
+                iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
+                try{
+                  const c = iuWeatherGetActiveCity();
+                  iuWeatherSyncCityLabels(c);
+                }catch{}
+                try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+                iuWeatherLoadAndRender();
+              }
+            })();
           }catch{
             iuWeatherClearRuntimeCity();
             iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
@@ -25754,33 +25834,6 @@ function buildVideoAsArticleCard(it) {
             iuWeatherLoadAndRender();
             return;
           }
-          void (async () => {
-            try{
-              const labelP = iuWeatherGpsNearestLocalityLabel(lat, lon);
-              const wxP = typeof window.iuWeatherEnsureState === "function"
-                ? window.iuWeatherEnsureState()
-                : Promise.resolve(null);
-              const label = await labelP;
-              const city = { name: (label && String(label).trim()) || "Poloha", lat, lon };
-              if (city.name !== "Poloha") {
-                iuWeatherWriteGpsSelected(city);
-                iuWeatherSyncCityLabels(city);
-              }
-              await wxP;
-              iuWeatherSetGeoFlowFeedback("", "clear");
-              try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
-              iuWeatherLoadAndRender();
-            }catch{
-              iuWeatherClearRuntimeCity();
-              iuWeatherSetGeoFlowFeedback("Nelze získat polohu", "error");
-              try{
-                const c = iuWeatherGetActiveCity();
-                iuWeatherSyncCityLabels(c);
-              }catch{}
-              try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
-              iuWeatherLoadAndRender();
-            }
-          })();
         },
         (err) => {
           iuWeatherClearRuntimeCity();

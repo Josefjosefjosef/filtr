@@ -5,6 +5,7 @@
  * ?iuSecOffReloadDiag=1 → SECURITY OFF save→reload fingerprint trace
  * ?iuLifecycleDiag=1 → mobile/tablet/PWA SAVE→RELOAD→REOPEN lifecycle trace
  * ?iuKeyPathDiag=1 → key-path forensics (works on fail-closed recovery screen)
+ * ?iuCanaryDiag=1 → weather+prefs+notes multi-canary BEFORE/AFTER reload trace
  * Does NOT flush or write vault data from this overlay (except sessionStorage fingerprints).
  */
 (function iuPhysicalPersistDiagOverlay() {
@@ -20,7 +21,8 @@
   var secOffMode = params.get("iuSecOffReloadDiag") === "1";
   var lifecycleMode = params.get("iuLifecycleDiag") === "1";
   var keyPathMode = params.get("iuKeyPathDiag") === "1";
-  if (!persistMode && !conflictMode && !secOffMode && !lifecycleMode && !keyPathMode) return;
+  var canaryMode = params.get("iuCanaryDiag") === "1";
+  if (!persistMode && !conflictMode && !secOffMode && !lifecycleMode && !keyPathMode && !canaryMode) return;
   if (window.__iuPhysicalPersistDiagOverlay) return;
   window.__iuPhysicalPersistDiagOverlay = 1;
 
@@ -40,7 +42,9 @@
   root.setAttribute("role", "dialog");
   root.setAttribute(
     "aria-label",
-    keyPathMode
+    canaryMode
+      ? "Multi-canary persistence trace"
+      : keyPathMode
       ? "Key path forensics"
       : lifecycleMode
       ? "Lifecycle SAVE REOPEN trace"
@@ -55,7 +59,13 @@
 
   var row = document.createElement("div");
   row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px";
-  if (lifecycleMode) {
+  if (canaryMode) {
+    row.appendChild(btn("1) Po SAVE (před reload)", "canaryBefore", true));
+    row.appendChild(btn("2) Po RELOAD (hydrate+UI)", "canaryAfter", true));
+    row.appendChild(btn("Early boot (auto)", "canaryEarly", true));
+    row.appendChild(btn("Kopírovat JSON", "copy", true));
+    row.appendChild(btn("Zavřít", "close", false));
+  } else if (lifecycleMode) {
     row.appendChild(btn("1) Po SAVE", "lifeAfterSave", true));
     row.appendChild(btn("2) Po RELOAD", "lifeAfterReload", true));
     row.appendChild(btn("3) Po REOPEN", "lifeAfterReopen", true));
@@ -171,6 +181,26 @@
         return window.iuVault && typeof window.iuVault.captureSecOffReloadTrace === "function";
       });
       lastPayload = await vault.captureSecOffReloadTrace(phase);
+      setText(JSON.stringify(lastPayload, null, 2));
+    } catch (err) {
+      setText("FAIL: " + String(err && err.message ? err.message : err));
+    }
+  }
+
+  async function captureCanary(phase) {
+    setText("Načítám canary " + phase + "…");
+    try {
+      var vault = await waitApi(30000, function () {
+        return window.iuVault && typeof window.iuVault.captureMultiCanaryBootTrace === "function";
+      });
+      var live = await vault.captureMultiCanaryBootTrace(phase);
+      lastPayload = {
+        tag: "MULTI_CANARY_PHYSICAL_BUNDLE_V1",
+        phase: phase,
+        capturedAt: Date.now(),
+        earlyBootAuto: window.__iuCanaryEarlyBoot || null,
+        live: live,
+      };
       setText(JSON.stringify(lastPayload, null, 2));
     } catch (err) {
       setText("FAIL: " + String(err && err.message ? err.message : err));
@@ -294,13 +324,46 @@
     else if (act === "lifeAfterSave") captureLifecycle("AFTER_SAVE");
     else if (act === "lifeAfterReload") captureLifecycle("AFTER_RELOAD");
     else if (act === "lifeAfterReopen") captureLifecycle("AFTER_REOPEN");
+    else if (act === "canaryBefore") captureCanary("BEFORE_RELOAD_AFTER_SAVE");
+    else if (act === "canaryAfter") captureCanary("AFTER_RELOAD_HYDRATED_UI");
+    else if (act === "canaryEarly") {
+      lastPayload = {
+        tag: "MULTI_CANARY_PHYSICAL_BUNDLE_V1",
+        phase: "EARLY_BOOT_PRE_HYDRATE",
+        capturedAt: Date.now(),
+        earlyBootAuto: window.__iuCanaryEarlyBoot || null,
+        live: null,
+      };
+      setText(
+        lastPayload.earlyBootAuto
+          ? JSON.stringify(lastPayload, null, 2)
+          : "Early boot snapshot zatím chybí — reloadni s ?iuCanaryDiag=1"
+      );
+    }
     else if (act === "conflict") captureConflict();
     else if (act === "keyPath") captureKeyPath();
     else if (act === "copy") copyLast();
     else if (act === "close") root.remove();
   });
 
-  if (conflictMode) {
+  if (canaryMode) {
+    setTimeout(function () {
+      if (window.__iuCanaryEarlyBoot) {
+        lastPayload = {
+          tag: "MULTI_CANARY_PHYSICAL_BUNDLE_V1",
+          phase: "EARLY_BOOT_PRE_HYDRATE",
+          capturedAt: Date.now(),
+          earlyBootAuto: window.__iuCanaryEarlyBoot,
+          live: null,
+        };
+        setText(
+          "EARLY_BOOT auto-captured. Po hydrate stiskni „Po RELOAD“. JSON:\n\n" +
+            JSON.stringify(lastPayload, null, 2)
+        );
+      }
+      captureCanary("AFTER_RELOAD_HYDRATED_UI");
+    }, 1800);
+  } else if (conflictMode) {
     setTimeout(function () {
       captureConflict();
     }, 400);
