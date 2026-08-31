@@ -129,7 +129,25 @@
     hidden: 1,
     tabindex: 1,
     role: 1,
+    // First-party UI templates set layout via inline style through patched innerHTML.
+    // Values are filtered by sanitizeStyleValue (not raw passthrough).
+    style: 1,
   };
+
+  /**
+   * Minimal CSS defense for first-party style attrs (not a full CSS sanitizer).
+   * Reject known scriptable / binding vectors; allow ordinary layout declarations.
+   */
+  function sanitizeStyleValue(raw) {
+    var s = String(raw == null ? "" : raw);
+    if (!s) return "";
+    if (/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(s)) return null;
+    if (/expression\s*\(|-moz-binding|@import|behavior\s*:|javascript\s*:|vbscript\s*:|mocha\s*:/i.test(s)) {
+      return null;
+    }
+    if (/url\s*\(\s*['"]?\s*(?:javascript|vbscript|data)\s*:/i.test(s)) return null;
+    return s;
+  }
 
   var TAG_ATTRS = {
     A: { href: 1, target: 1, rel: 1, download: 1 },
@@ -377,8 +395,9 @@
       var m = v.toLowerCase();
       return m === "get" || m === "post" ? m : "get";
     }
-    // Never allow style / srcdoc / xlink event-ish
-    if (attr === "style" || attr === "srcdoc" || attr === "poster") return null;
+    if (attr === "style") return sanitizeStyleValue(v);
+    // Never allow srcdoc / poster on HTML sinks
+    if (attr === "srcdoc" || attr === "poster") return null;
     return v;
   }
 
@@ -396,7 +415,7 @@
     for (var i = 0; i < names.length; i += 1) {
       var name = names[i];
       var lower = String(name).toLowerCase();
-      if (isEventAttr(lower) || lower === "style" || lower === "srcdoc" || lower === "poster") {
+      if (isEventAttr(lower) || lower === "srcdoc" || lower === "poster") {
         nativeRemoveAttribute.call(el, name);
         continue;
       }

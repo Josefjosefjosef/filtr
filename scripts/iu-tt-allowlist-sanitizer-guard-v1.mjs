@@ -88,8 +88,10 @@ async function runBrowser(browserType, name, withTtMeta) {
       run("safe_list", "<ul><li><strong>a</strong></li><li><em>b</em></li></ul>");
       run("safe_link", '<a href="https://example.com/path" target="_blank">link</a>');
       run("safe_table", "<table><tr><th>A</th><td>1</td></tr></table>");
-      run("safe_button", '<button type="button" data-act="x" class="btn">Go</button>');
-      run("safe_svg_icon", '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M1 1h10v10H1z" fill="none" stroke="currentColor"/></svg>');
+    run("safe_button", '<button type="button" data-act="x" class="btn">Go</button>');
+    run("safe_style", '<div style="position:fixed;left:8px;top:8px;width:10px;height:10px">x</div>');
+    run("evil_style", '<div style="background:url(javascript:alert(1))">x</div>');
+    run("safe_svg_icon", '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M1 1h10v10H1z" fill="none" stroke="currentColor"/></svg>');
       run("safe_yt", '<iframe src="https://www.youtube-nocookie.com/embed/abc" title="t" loading="lazy" allowfullscreen></iframe>');
       run("evil_yt_host", '<iframe src="https://evil.example/embed"></iframe>');
       return out;
@@ -132,6 +134,8 @@ async function runBrowser(browserType, name, withTtMeta) {
     if (!cases.safe_link || !/noopener/.test(cases.safe_link.inner || "")) fails.push("safe_link_rel");
     if (!cases.safe_table || !/<td>1<\/td>/.test(cases.safe_table.inner || "")) fails.push("safe_table_lost");
     if (!cases.safe_button || !/data-act="x"/.test(cases.safe_button.inner || "")) fails.push("safe_button_lost");
+    if (!cases.safe_style || !/position:\s*fixed/i.test(cases.safe_style.inner || "")) fails.push("safe_style_lost");
+    if (cases.evil_style && /javascript:/i.test(cases.evil_style.inner || "")) fails.push("evil_style_kept");
     if (!cases.safe_svg_icon || !cases.safe_svg_icon.hasSvg) fails.push("safe_svg_lost");
     if (!cases.safe_yt || !/youtube-nocookie/.test(cases.safe_yt.inner || "")) fails.push("safe_yt_lost");
     if (cases.evil_yt_host && /evil\.example/.test(cases.evil_yt_host.inner || "")) fails.push("evil_iframe_kept");
