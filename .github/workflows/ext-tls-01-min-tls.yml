@@ -1,0 +1,124 @@
+# EXT-TLS-01 — Cloudflare zone Minimum TLS Version (read / apply)
+# Manual only. Does not run on push/PR.
+# Required secret: CLOUDFLARE_API_TOKEN with Zone → Zone Settings → Read (and Edit for apply).
+name: ext-tls-01-min-tls
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "read = forensic only; apply = set min TLS to 1.2 when legacy confirmed"
+        required: true
+        type: choice
+        options:
+          - read
+          - apply
+        default: read
+      zone_name:
+        description: "Cloudflare zone name"
+        required: true
+        type: string
+        default: infouzel.cz
+
+permissions:
+  contents: read
+
+jobs:
+  min-tls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloudflare min TLS forensic / apply
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MODE: ${{ inputs.mode }}
+          ZONE_NAME: ${{ inputs.zone_name }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "BLOCKER=CLOUDFLARE_API_TOKEN_MISSING"
+            exit 1
+          fi
+          AUTH="Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+          echo "MODE=${MODE}"
+          echo "ZONE_NAME=${ZONE_NAME}"
+
+          ZONE_JSON=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
+            "https://api.cloudflare.com/client/v4/zones?name=${ZONE_NAME}")
+          echo "$ZONE_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("ZONE_API_SUCCESS=", d.get("success")); print("ZONE_ERRORS=", d.get("errors")); r=d.get("result") or []; print("ZONE_COUNT=", len(r));
+print("ZONE_ID=", (r[0]["id"] if r else "")); print("ZONE_STATUS=", (r[0].get("status") if r else "")); print("ZONE_PLAN=", ((r[0].get("plan") or {}).get("name") if r else ""))'
+          ZONE_ID=$(echo "$ZONE_JSON" | python3 -c 'import json,sys; r=(json.load(sys.stdin).get("result") or []); print(r[0]["id"] if r else "")')
+          if [ -z "$ZONE_ID" ]; then
+            echo "BLOCKER=ZONE_NOT_FOUND_OR_TOKEN_LACKS_ZONE_READ"
+            exit 1
+          fi
+
+          get_setting () {
+            local path="$1"
+            curl -sS -H "$AUTH" -H "Content-Type: application/json" \
+              "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/${path}"
+          }
+
+          echo "=== BEFORE min_tls_version ==="
+          BEFORE_JSON=$(get_setting min_tls_version)
+          echo "$BEFORE_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("SUCCESS=", d.get("success")); print("ERRORS=", d.get("errors")); r=d.get("result") or {}; print("ID=", r.get("id")); print("VALUE=", r.get("value")); print("EDITABLE=", r.get("editable")); print("MODIFIED_ON=", r.get("modified_on"))'
+          BEFORE_VAL=$(echo "$BEFORE_JSON" | python3 -c 'import json,sys; print(((json.load(sys.stdin).get("result") or {}).get("value") or ""))')
+
+          echo "=== RELATED TLS SETTINGS (read-only) ==="
+          for s in tls_1_3 ssl always_use_https opportunistic_encryption; do
+            SJ=$(get_setting "$s" || true)
+            echo "$SJ" | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result") or {}; print("SETTING=", r.get("id") or "'"$s"'"); print("VALUE=", r.get("value")); print("SUCCESS=", d.get("success")); print("ERRORS=", d.get("errors"))' || true
+          done
+
+          echo "=== CONFIGURATION RULES (TLS-related names) ==="
+          RULES=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
+            "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets?phase=http_config_settings" || true)
+          echo "$RULES" | python3 -c 'import json,sys
+try:
+ d=json.load(sys.stdin)
+except Exception as e:
+ print("RULES_PARSE_ERROR=", str(e)); raise SystemExit(0)
+print("RULES_SUCCESS=", d.get("success")); print("RULES_ERRORS=", d.get("errors"))
+for r in (d.get("result") or []):
+ print("RULESET=", r.get("id"), r.get("name"), r.get("phase"), "rules=", len(r.get("rules") or []))
+' || true
+
+          if [ "$MODE" = "read" ]; then
+            echo "EXT_TLS_01_MODE=READ_ONLY"
+            echo "MIN_TLS_BEFORE=${BEFORE_VAL}"
+            exit 0
+          fi
+
+          if [ "$MODE" != "apply" ]; then
+            echo "BLOCKER=UNKNOWN_MODE"
+            exit 1
+          fi
+
+          case "$BEFORE_VAL" in
+            1.0|1.1|"1.0"|"1.1")
+              echo "LEGACY_MIN_TLS_CONFIRMED=${BEFORE_VAL}"
+              ;;
+            1.2|1.3|"1.2"|"1.3")
+              echo "STOP=MIN_TLS_ALREADY_${BEFORE_VAL}"
+              echo "If SSL Labs still reports TLS 1.0/1.1, this is TLS EDGE CONFIGURATION MISMATCH — no blind change applied."
+              exit 2
+              ;;
+            *)
+              echo "BLOCKER=UNEXPECTED_MIN_TLS_VALUE_${BEFORE_VAL}"
+              exit 1
+              ;;
+          esac
+
+          echo "=== APPLY min_tls_version=1.2 ==="
+          AFTER_JSON=$(curl -sS -X PATCH -H "$AUTH" -H "Content-Type: application/json" \
+            --data '{"value":"1.2"}' \
+            "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/min_tls_version")
+          echo "$AFTER_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("SUCCESS=", d.get("success")); print("ERRORS=", d.get("errors")); r=d.get("result") or {}; print("ID=", r.get("id")); print("VALUE=", r.get("value")); print("EDITABLE=", r.get("editable")); print("MODIFIED_ON=", r.get("modified_on"))'
+          AFTER_OK=$(echo "$AFTER_JSON" | python3 -c 'import json,sys; print("1" if json.load(sys.stdin).get("success") else "0")')
+          AFTER_VAL=$(echo "$AFTER_JSON" | python3 -c 'import json,sys; print(((json.load(sys.stdin).get("result") or {}).get("value") or ""))')
+          if [ "$AFTER_OK" != "1" ] || [ "$AFTER_VAL" != "1.2" ]; then
+            echo "BLOCKER=APPLY_FAILED"
+            exit 1
+          fi
+          echo "MIN_TLS_BEFORE=${BEFORE_VAL}"
+          echo "MIN_TLS_AFTER=${AFTER_VAL}"
+          echo "EXT_TLS_01_APPLY=PASS"
