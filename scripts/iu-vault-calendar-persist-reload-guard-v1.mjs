@@ -286,7 +286,7 @@ async function main() {
     console.log(JSON.stringify({ pass: false, fails }, null, 2));
     process.exit(2);
   }
-  const started = await startGuardStaticServer(pickGuardPort(9800, 300));
+  const started = await startGuardStaticServer(pickGuardPort(8900, 200));
   const base = `http://127.0.0.1:${started.port}/projects/`;
   const results = [];
   try {
