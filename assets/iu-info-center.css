@@ -1185,3 +1185,181 @@ body.iu-theme-dark .iuVaultLockOverlay__panel{
     color: #e2e8f0;
   }
 }
+
+/* —— Phase 6: semantic status colors (color is not the only signal) —— */
+.iuInfoCenter__statusRow{
+  margin: 0 0 0.65rem;
+}
+.iuInfoCenter__status{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  max-width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+.iuInfoCenter__statusIcon{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.iuInfoCenter__statusLabel{
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+.iuInfoCenter__statusText{
+  font-weight: 600;
+  min-width: 0;
+}
+.iuInfoCenter__status--ok{
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(5, 150, 105, 0.35);
+  color: #065f46;
+}
+.iuInfoCenter__status--ok .iuInfoCenter__statusIcon{
+  background: #059669;
+  color: #fff;
+}
+.iuInfoCenter__status--info{
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(37, 99, 235, 0.32);
+  color: #1e3a8a;
+}
+.iuInfoCenter__status--info .iuInfoCenter__statusIcon{
+  background: #2563eb;
+  color: #fff;
+}
+.iuInfoCenter__status--warn{
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(217, 119, 6, 0.4);
+  color: #92400e;
+}
+.iuInfoCenter__status--warn .iuInfoCenter__statusIcon{
+  background: #d97706;
+  color: #fff;
+}
+.iuInfoCenter__status--danger{
+  background: rgba(220, 38, 38, 0.12);
+  border-color: rgba(185, 28, 28, 0.4);
+  color: #7f1d1d;
+}
+.iuInfoCenter__status--danger .iuInfoCenter__statusIcon{
+  background: #b91c1c;
+  color: #fff;
+}
+.iuInfoCenter__box--info{
+  border-color: rgba(37, 99, 235, 0.28);
+  background: linear-gradient(165deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1e3a8a;
+}
+.iuInfoCenter__box--ok{
+  border-color: rgba(5, 150, 105, 0.3);
+  background: linear-gradient(165deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #065f46;
+}
+.iuInfoCenter__box--danger{
+  border-color: rgba(185, 28, 28, 0.35);
+  background: linear-gradient(165deg, #fef2f2 0%, #fee2e2 100%);
+  color: #7f1d1d;
+}
+.iuInfoCenter__details{
+  margin: 0.85rem 0;
+  padding: 0.35rem 0.75rem 0.75rem;
+  border: 1px solid rgba(14, 42, 74, 0.12);
+  border-radius: 12px;
+  background: #fff;
+}
+.iuInfoCenter__details > summary{
+  cursor: pointer;
+  font-weight: 700;
+  color: #0b1f33;
+  padding: 0.55rem 0.15rem;
+  list-style: disclosure-closed;
+}
+.iuInfoCenter__details > summary:focus-visible{
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+.iuInfoCenter__details[open] > summary{
+  list-style: disclosure-open;
+  margin-bottom: 0.35rem;
+}
+.iuVaultSecurity__recommend{
+  margin: 0.35rem 0 0.75rem;
+}
+.iuVaultSecurity__current .iuInfoCenter__status{
+  width: 100%;
+}
+html[data-theme="dark"] .iuInfoCenter__status--ok,
+body.iu-theme-dark .iuInfoCenter__status--ok{
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #a7f3d0;
+}
+html[data-theme="dark"] .iuInfoCenter__status--info,
+body.iu-theme-dark .iuInfoCenter__status--info{
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #bfdbfe;
+}
+html[data-theme="dark"] .iuInfoCenter__status--warn,
+body.iu-theme-dark .iuInfoCenter__status--warn{
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fde68a;
+}
+html[data-theme="dark"] .iuInfoCenter__status--danger,
+body.iu-theme-dark .iuInfoCenter__status--danger{
+  background: rgba(248, 113, 113, 0.16);
+  border-color: rgba(252, 165, 165, 0.4);
+  color: #fecaca;
+}
+html[data-theme="dark"] .iuInfoCenter__box--info,
+body.iu-theme-dark .iuInfoCenter__box--info{
+  background: rgba(30, 58, 138, 0.28);
+  border-color: rgba(96, 165, 250, 0.35);
+  color: #bfdbfe;
+}
+html[data-theme="dark"] .iuInfoCenter__box--ok,
+body.iu-theme-dark .iuInfoCenter__box--ok{
+  background: rgba(6, 78, 59, 0.35);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #a7f3d0;
+}
+html[data-theme="dark"] .iuInfoCenter__box--danger,
+body.iu-theme-dark .iuInfoCenter__box--danger{
+  background: rgba(127, 29, 29, 0.35);
+  border-color: rgba(252, 165, 165, 0.35);
+  color: #fecaca;
+}
+html[data-theme="dark"] .iuInfoCenter__details,
+body.iu-theme-dark .iuInfoCenter__details{
+  background: #0f172a;
+  border-color: rgba(226, 232, 240, 0.16);
+}
+html[data-theme="dark"] .iuInfoCenter__details > summary,
+body.iu-theme-dark .iuInfoCenter__details > summary{
+  color: #e2e8f0;
+}
+@media (max-width: 640px){
+  .iuInfoCenter__status{
+    align-items: flex-start;
+  }
+  .iuInfoCenter__statusText{
+    flex: 1 1 100%;
+  }
+}

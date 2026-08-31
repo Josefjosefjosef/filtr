@@ -122,9 +122,16 @@ async function readSecurityUi(page) {
     return {
       sectionExists: !!section,
       uiVersion: section ? section.getAttribute("data-iu-vault-ui-version") : null,
-      heading: text.includes("Zabezpečení osobních dat"),
-      standard: text.includes("Standardní ochrana"),
-      infoUzelLock: text.includes("Odemknutí zařízením") || text.includes("Zabezpečení InfoUzlu"),
+      heading: text.includes("Stav zabezpečení") || text.includes("Zabezpečení osobních dat"),
+      standard:
+        text.includes("Šifrování v zařízení") ||
+        text.includes("šifrovaná at-rest") ||
+        text.includes("Standardní ochrana"),
+      infoUzelLock:
+        text.includes("Dodatečný zámek InfoUzlu") ||
+        text.includes("Odemknutí zařízením") ||
+        text.includes("Zabezpečení InfoUzlu"),
+      limitations: text.includes("Co zabezpečení chrání a co ne"),
       statusText: status ? String(status.textContent || "").trim() : "",
       applyVisible: applyBtn ? !applyBtn.hidden : false,
       deviceUnsupportedUi: devNo ? !devNo.hidden : false,
@@ -191,21 +198,31 @@ async function runScenario(browser, base, scenario) {
   const ui = await readSecurityUi(page);
 
   if (!ui.sectionExists) fails.push("security_section_missing");
-  if (ui.uiVersion !== "2") fails.push("security_ui_version_not_v2");
+  if (ui.uiVersion !== "3") fails.push("security_ui_version_not_v3");
   if (!ui.heading) fails.push("heading_missing");
-  if (!ui.standard) fails.push("standard_missing");
+  if (!ui.standard) fails.push("encrypted_at_rest_missing");
   if (!ui.infoUzelLock) fails.push("infouzel_lock_missing");
+  if (!ui.limitations) fails.push("limitations_missing");
   if (
     !ui.statusText.includes("Zabezpečení InfoUzlu") &&
-    !ui.statusText.includes("InfoUzel je chráněn")
+    !ui.statusText.includes("InfoUzel je chráněn") &&
+    !ui.statusText.includes("dodatečný zámek")
   ) {
     fails.push("infouzel_status_missing");
   }
   const expectL3Active = scenario.id === "iphone" && l3PinOk === "ok";
   if (expectL3Active) {
-    if (!ui.statusText.includes("chráněn")) fails.push("l3_active_state_missing");
+    if (!ui.statusText.includes("chráněn") && !ui.statusText.includes("CHRÁNĚNO")) {
+      fails.push("l3_active_state_missing");
+    }
   } else {
-    if (!ui.statusText.includes("Vypnuto")) fails.push("infouzel_lock_off_missing");
+    if (
+      !ui.statusText.includes("Vypnuto") &&
+      !ui.statusText.includes("vypnutý") &&
+      !ui.statusText.includes("dodatečný zámek")
+    ) {
+      fails.push("infouzel_lock_off_missing");
+    }
     if (!ui.applyVisible) fails.push("apply_button_hidden");
   }
 

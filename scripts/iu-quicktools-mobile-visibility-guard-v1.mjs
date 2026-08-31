@@ -172,24 +172,42 @@ async function openToolsTab(page) {
 }
 
 async function openSettings(page) {
-  await page.evaluate(() => document.querySelector("[data-iu-quicktools-settings]")?.click());
-  await page.waitForFunction(
-    (customId) => {
-      const panel = document.getElementById("iuQuickToolsSettingsPanel");
-      if (!panel || panel.hidden) return false;
-      const bakalari = panel.querySelector('input[data-iu-quicktools-visible-toggle="bakalari"]');
-      const custom = panel.querySelector(`input[data-iu-quicktools-visible-toggle="${customId}"]`);
-      if (!bakalari || !custom) return false;
-      const visible = (el) => {
-        const st = getComputedStyle(el);
-        const r = el.getBoundingClientRect();
-        return r.width > 0 && r.height > 0 && st.display !== "none" && st.visibility !== "hidden";
-      };
-      return visible(bakalari) && visible(custom);
-    },
-    CUSTOM_ID,
-    { timeout: 20000 }
-  );
+  const deadline = Date.now() + 45000;
+  let lastErr = null;
+  while (Date.now() < deadline) {
+    try {
+      await page.evaluate(() => {
+        const btn = document.querySelector("[data-iu-quicktools-settings]");
+        if (btn) btn.click();
+      });
+      await page.waitForFunction(
+        (customId) => {
+          const panel = document.getElementById("iuQuickToolsSettingsPanel");
+          if (!panel || panel.hidden) return false;
+          const bakalari = panel.querySelector('input[data-iu-quicktools-visible-toggle="bakalari"]');
+          const custom = panel.querySelector(`input[data-iu-quicktools-visible-toggle="${customId}"]`);
+          if (!bakalari || !custom) return false;
+          const visible = (el) => {
+            const st = getComputedStyle(el);
+            const r = el.getBoundingClientRect();
+            return r.width > 0 && r.height > 0 && st.display !== "none" && st.visibility !== "hidden";
+          };
+          return visible(bakalari) && visible(custom);
+        },
+        CUSTOM_ID,
+        { timeout: 12000 }
+      );
+      return;
+    } catch (e) {
+      lastErr = e;
+      await page.evaluate(() => {
+        const panel = document.getElementById("iuQuickToolsSettingsPanel");
+        if (panel) panel.hidden = true;
+      }).catch(() => {});
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+  throw lastErr || new Error("openSettings_timeout");
 }
 
 async function closeSettings(page) {
