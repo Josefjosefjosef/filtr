@@ -204,7 +204,7 @@ async function openSettings(page) {
         const panel = document.getElementById("iuQuickToolsSettingsPanel");
         if (panel) panel.hidden = true;
       }).catch(() => {});
-      await page.waitForTimeout(400);
+      await new Promise((r) => setTimeout(r, 400));
     }
   }
   throw lastErr || new Error("openSettings_timeout");
