@@ -444,9 +444,11 @@ export async function initGlobalAppLock(vault) {
 }
 
 function vaultDisabled() {
+  // V-KM-01: public URL/LS kill-switch is retired (not SECURITY OFF).
   try {
-    if (new URLSearchParams(location.search).get("iuVault") === "0") return true;
-    if (localStorage.getItem("iu:vault:disabled:v1") === "1") return true;
+    if (localStorage.getItem("iu:vault:disabled:v1") === "1") {
+      localStorage.removeItem("iu:vault:disabled:v1");
+    }
   } catch (_) {}
   return false;
 }
