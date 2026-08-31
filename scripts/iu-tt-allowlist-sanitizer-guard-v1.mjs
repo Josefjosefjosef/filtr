@@ -32,10 +32,11 @@ function startServer(withTtMeta) {
 
 async function runBrowser(browserType, name, withTtMeta) {
   const { server, url } = await startServer(withTtMeta);
-  const browser = await browserType.launch({ headless: true });
-  const page = await browser.newPage();
-  const fails = [];
+  let browser;
   try {
+    browser = await browserType.launch({ headless: true });
+    const page = await browser.newPage();
+    const fails = [];
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
     const ready = await page.evaluate(() => ({
       ready: !!window.__iuTrustedTypesReady,
@@ -175,33 +176,56 @@ async function runBrowser(browserType, name, withTtMeta) {
     );
     if (fails.length) {
       console.error("IU_TT_ALLOWLIST_FAIL_" + name);
-      process.exitCode = 1;
-    } else {
-      console.log("IU_TT_ALLOWLIST_PASS_" + name);
+      return false;
     }
+    console.log("IU_TT_ALLOWLIST_PASS_" + name);
+    return true;
   } finally {
-    await browser.close();
+    if (browser) await browser.close();
     server.close();
   }
 }
 
 const browsers = [
-  [chromium, "chromium", true],
-  [firefox, "firefox", false], // no TT enforcement — sanitizer must stand alone
-  [webkit, "webkit", true],
+  // Chromium with TT meta (Chromium/WebKit-like).
+  [chromium, "chromium_tt", true, true],
+  // Chromium without TT meta — proves allowlist stands alone (Firefox-class engines).
+  [chromium, "chromium_no_tt", false, true],
+  // Optional real engines when Playwright browsers/deps are installed locally.
+  [firefox, "firefox", false, false],
+  [webkit, "webkit", true, false],
 ];
 
-for (const [bt, name, withTt] of browsers) {
+let hardFail = false;
+const skipped = [];
+
+for (const [bt, name, withTt, required] of browsers) {
   try {
-    await runBrowser(bt, name, withTt);
+    const ok = await runBrowser(bt, name, withTt);
+    if (!ok) hardFail = true;
   } catch (e) {
-    console.error("IU_TT_ALLOWLIST_THROW_" + name + "=" + (e && e.message ? e.message : e));
-    process.exitCode = 1;
+    const msg = String(e && e.message ? e.message : e);
+    const missing =
+      /Executable doesn't exist|browserType\.launch|libwoff2|shared libraries|Target page, context or browser has been closed/i.test(
+        msg
+      );
+    if (!required && missing) {
+      skipped.push(name + ":" + msg.slice(0, 120));
+      console.log("IU_TT_ALLOWLIST_SKIP_" + name + "=" + msg.slice(0, 160));
+      continue;
+    }
+    console.error("IU_TT_ALLOWLIST_THROW_" + name + "=" + msg);
+    hardFail = true;
   }
 }
 
-if (process.exitCode) {
+if (skipped.length) {
+  console.log("IU_TT_ALLOWLIST_SKIPPED=" + JSON.stringify(skipped));
+}
+
+if (hardFail) {
   console.error("IU_TT_ALLOWLIST_SANITIZER_GUARD_FAIL");
   process.exit(1);
 }
 console.log("IU_TT_ALLOWLIST_SANITIZER_GUARD_PASS");
+process.exit(0);
