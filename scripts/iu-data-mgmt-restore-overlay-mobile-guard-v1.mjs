@@ -44,7 +44,7 @@ function staticGate() {
     },
     {
       id: "index_cache_bust",
-      pass: /iu-info-center\.css\?v=iu-vault-desktop-shared-session-v3-20260826/.test(index),
+      pass: /iu-info-center\.css\?v=iu-pin-offline-guidance-v1-20260831/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
