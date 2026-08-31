@@ -119,10 +119,24 @@ jobs:
           set -euo pipefail
           IU_CSP_GUARD_INDEX=index.html node scripts/iu-csp-inline-script-guard-v1.mjs
 
+      # SC-EXP-01: never upload the full repository checkout to Pages.
+      # Canonical contract = allowlisted runtime staging directory only.
+      - name: Stage allowlisted Pages production artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-pages-stage-artifact-v1.mjs
+
+      - name: Pages artifact allowlist guard (SC-EXP-01)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-pages-artifact-guard-v1.mjs
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist-pages
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -157,6 +171,37 @@ jobs:
           grep -E '"start_url"[[:space:]]*:[[:space:]]*"/"' /tmp/iu_manifest.json
           grep -E '"scope"[[:space:]]*:[[:space:]]*"/"' /tmp/iu_manifest.json
           echo "POST_DEPLOY_ROOT_GATE=PASS"
+
+          # SC-EXP-01 live deny proof (Cache-Control bypass for CDN freshness).
+          echo "=== SC-EXP-01 production deny proof ==="
+          DENY_PATHS=(
+            "/.gitignore"
+            "/package.json"
+            "/package-lock.json"
+            "/node_modules/puppeteer/package.json"
+            "/cloudflare/iu-ads/wrangler.toml"
+            "/cloudflare/iu-site-redirects/wrangler.toml"
+            "/cloudflare/iu-site-redirects/src/index.ts"
+            "/scripts/smoke.mjs"
+            "/.vscode/settings.json"
+          )
+          for p in "${DENY_PATHS[@]}"; do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" -H 'Cache-Control: no-cache' --max-redirs 0 "${BASE_URL}${p}" || true)
+            echo "deny_path=${p} status=${code}"
+            if [ "$code" = "200" ]; then
+              echo "FAIL SC-EXP-01 still public: ${p}"
+              exit 1
+            fi
+          done
+          echo "SC_EXP_01_DENY_PROOF=PASS"
+
+          # Positive runtime smoke (minimal).
+          for p in "/sw.js" "/offline.html" "/assets/iu-trusted-types-v1.js" "/projects/version.json" "/manifest.json" "/favicon.svg"; do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" -H 'Cache-Control: no-cache' "${BASE_URL}${p}" || true)
+            echo "runtime_path=${p} status=${code}"
+            test "$code" = "200"
+          done
+          echo "SC_EXP_01_RUNTIME_PROOF=PASS"
 
       - name: Pages deploy telemetry (summary)
         if: always()

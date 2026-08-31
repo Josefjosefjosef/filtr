@@ -93,6 +93,9 @@ scripts/silver-retrieval-stress-300k-export*.json
 # Node (vendor libs in assets/vendor; do not track node_modules)
 node_modules/
 
+# SC-EXP-01: local/CI Pages staging artifact (never commit)
+dist-pages/
+
 # CHMI CAP v2: local shadow-run audit dumps (written to %TEMP%; ignore if recreated under fixtures)
 scripts/fixtures/chmi-cap-v2/_shadow_out/*.json
 
