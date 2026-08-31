@@ -52,9 +52,18 @@ t("xss_guard_fails_on_raw_item_name", () => {
   if (detectRawEventsName(good)) throw new Error("detector false positive");
 });
 
+t("tt_sanitize_is_allowlist_model", () => {
+  const tt = fs.readFileSync(path.join(ROOT, "assets", "iu-trusted-types-v1.js"), "utf8");
+  if (!/dom-allowlist-v1/.test(tt)) throw new Error("missing allowlist model marker");
+  if (!/DOMParser/.test(tt)) throw new Error("missing DOMParser sanitizer");
+  if (!/nativeInnerHTML/.test(tt)) throw new Error("missing native innerHTML bypass for TT");
+  if (/BLOCKED_HTML_RE/.test(tt)) throw new Error("legacy blocklist still present");
+});
+
 t("tt_sanitize_blocks_script_tag", () => {
   const tt = fs.readFileSync(path.join(ROOT, "assets", "iu-trusted-types-v1.js"), "utf8");
-  if (!/IU_TT_HTML_BLOCKED/.test(tt)) throw new Error("missing block marker");
+  if (!/function sanitizeHtml\(/.test(tt)) throw new Error("missing sanitizeHtml");
+  if (!/ALLOWED_TAGS/.test(tt)) throw new Error("missing ALLOWED_TAGS");
   if (detectBlockedHtml('<script>alert(1)</script>') !== true) throw new Error("detector broken");
 });
 
