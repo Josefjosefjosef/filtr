@@ -2,10 +2,17 @@
  * Legacy /projects/* → root permanent redirects (301).
  * Pass-through: /projects/data/*, /projects/version.json
  *
+ * HTML CSP edge (XSS-CSP-01/02):
+ *   Promote document meta CSP → HTTP Content-Security-Policy so the browser
+ *   enforces CSP before any script runs (closes pre-meta execution window).
+ *   Canonical policy source remains HTML meta (+ hash apply script).
+ *
  * Live traffic overlay (optional R2):
  *   GET  .../ndic_datex_v1/traffic_offline_snapshot.json → R2 current when LIVE_TRAFFIC_ENABLED
  *   POST .../ndic_datex_v1/__iu_live_publish → authenticated atomic publish to R2
  */
+import { isHtmlDocumentPath, promoteHtmlCsp } from "./csp-promote";
+
 const TRAFFIC_SNAPSHOT_PATH =
   "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
 const LIVE_PUBLISH_PATH = "/projects/data/info_events/ndic_datex_v1/__iu_live_publish";
@@ -21,6 +28,39 @@ export type Env = {
   LIVE_TRAFFIC_ENABLED?: string;
   LIVE_PUBLISH_TOKEN?: string;
 };
+
+async function fetchOrigin(request: Request): Promise<Response> {
+  return fetch(request);
+}
+
+async function fetchOriginMaybePromoteCsp(request: Request, pathname: string): Promise<Response> {
+  if (!isHtmlDocumentPath(pathname)) return fetchOrigin(request);
+  if (request.method !== "GET" && request.method !== "HEAD") return fetchOrigin(request);
+
+  try {
+    // Origin HEAD bodies are often empty — GET to read meta CSP, then shape HEAD if needed.
+    const originReq =
+      request.method === "HEAD"
+        ? new Request(request.url, {
+            method: "GET",
+            headers: request.headers,
+            redirect: "manual",
+          })
+        : request;
+    const res = await fetchOrigin(originReq);
+    const promoted = await promoteHtmlCsp(res);
+    if (request.method === "HEAD") {
+      return new Response(null, {
+        status: promoted.status,
+        statusText: promoted.statusText,
+        headers: promoted.headers,
+      });
+    }
+    return promoted;
+  } catch {
+    return fetchOrigin(request);
+  }
+}
 
 function hasOfflineSnapshotSchema(snapBody: string): boolean {
   return (
@@ -240,16 +280,16 @@ export default {
       const live = await serveLiveSnapshot(env, request);
       if (live) return live;
       // fall through to origin Pages
-      return fetch(request);
+      return fetchOrigin(request);
     }
 
     if (isDataOrVersionPath(pathname)) {
-      return fetch(request);
+      return fetchOrigin(request);
     }
 
     const destPath = redirectTarget(pathname);
     if (!destPath) {
-      return fetch(request);
+      return fetchOriginMaybePromoteCsp(request, pathname);
     }
 
     const dest = new URL(url.toString());

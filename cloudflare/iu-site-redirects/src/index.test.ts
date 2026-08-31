@@ -72,6 +72,42 @@ describe("iu-site-redirects", () => {
     }
   });
 
+  it("promotes meta CSP to HTTP header on / HTML documents", async () => {
+    const orig = globalThis.fetch;
+    const html = `<!doctype html><html><head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; trusted-types iu-default iu-escape; require-trusted-types-for 'script';">
+<script>early()</script>
+</head><body>ok</body></html>`;
+    globalThis.fetch = async () =>
+      new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+    try {
+      const res = await worker.fetch(req("/"), {});
+      expect(res.status).toBe(200);
+      const csp = res.headers.get("Content-Security-Policy") || "";
+      expect(csp).toContain("default-src 'self' https:");
+      expect(csp).toContain("require-trusted-types-for 'script'");
+      expect(csp).toContain("frame-ancestors 'self'");
+      expect(res.headers.get("x-iu-csp-edge")).toBe("meta-promoted-v1");
+    } finally {
+      globalThis.fetch = orig;
+    }
+  });
+
+  it("HEAD / also returns promoted CSP (scanner-compatible)", async () => {
+    const orig = globalThis.fetch;
+    const html = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; object-src 'none'; trusted-types iu-default; require-trusted-types-for 'script';">`;
+    globalThis.fetch = async () =>
+      new Response(html, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
+    try {
+      const res = await worker.fetch(req("/", { method: "HEAD" }), {});
+      expect(res.status).toBe(200);
+      expect(res.headers.get("Content-Security-Policy") || "").toContain("frame-ancestors 'self'");
+      expect(await res.text()).toBe("");
+    } finally {
+      globalThis.fetch = orig;
+    }
+  });
+
   it("serves live snapshot from R2 when enabled", async () => {
     const body = JSON.stringify({
       schema: "iu-traffic-offline-snapshot-v1",

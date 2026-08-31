@@ -101,3 +101,16 @@ jobs:
           echo "DATA_PROBE_HTTP=$code"
           test "$code" = "200"
           echo "REDIRECT_PROOF=PASS"
+
+      - name: Prove HTTP CSP on HTML documents (XSS-CSP-01/02)
+        run: |
+          set -euo pipefail
+          curl -sI "https://infouzel.cz/" | tee /tmp/root_headers.txt
+          grep -qiE "^Content-Security-Policy:" /tmp/root_headers.txt
+          grep -qiE "frame-ancestors 'self'" /tmp/root_headers.txt
+          grep -qiE "^x-iu-csp-edge: meta-promoted-v1" /tmp/root_headers.txt
+          grep -qiE "require-trusted-types-for 'script'" /tmp/root_headers.txt
+          # /projects/ → 301 → / ; final document must carry HTTP CSP
+          curl -sIL "https://infouzel.cz/projects/" | tee /tmp/projects_follow.txt
+          grep -qiE "^Content-Security-Policy:" /tmp/projects_follow.txt
+          echo "HTTP_CSP_PROOF=PASS"
