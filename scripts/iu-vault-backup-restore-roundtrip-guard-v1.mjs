@@ -21,6 +21,7 @@ const fs = require("fs");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8981", 10);
 const BASE = `http://localhost:${PORT}/projects/`;
+const TEST_BACKUP_PASSWORD = "TestBackupPass1!";
 const MARKER = `IU_PC_BACKUP_TEST_${Date.now()}`;
 
 function waitForPort(host, port, timeoutMs) {
@@ -46,6 +47,10 @@ function staticChecks(fails) {
   const coreJs = fs.readFileSync(path.join(REPO, "assets", "iu-user-data-backup-core.js"), "utf8");
   const bootJs = fs.readFileSync(path.join(REPO, "assets", "iu-vault-bootstrap-v1.js"), "utf8");
   if (!/applyBackupReplaceModeAsync/.test(coreJs)) fails.push("core_missing_async_apply");
+  if (!/encryptBackupPlaintext/.test(coreJs) || !/BACKUP_VERSION = 2/.test(coreJs)) {
+    fails.push("core_missing_encrypted_export_v2");
+  }
+  if (!/promptNewBackupPassword/.test(uiJs)) fails.push("ui_missing_backup_password_prompt");
   if (!/vaultSetItem/.test(uiJs) || !/preloadAllVaultRecords/.test(uiJs)) {
     fails.push("ui_missing_vault_aware_import");
   }
@@ -154,7 +159,8 @@ async function main() {
       },
     },
     "guard",
-    globalThis.crypto?.subtle
+    globalThis.crypto?.subtle,
+    TEST_BACKUP_PASSWORD
   );
 
   await installProtectedStorageSeed(context, [
@@ -195,27 +201,37 @@ async function main() {
     await page.waitForTimeout(500);
     await waitForMarkers(page, MARKER, 90000);
 
-    const exportResult = await page.evaluate(async (marker) => {
-      const json = await window.iuUserDataBackupExportJson();
-      return {
-        ok: typeof json === "string" && json.includes("infouzel-backup") && json.includes(marker),
-      };
-    }, MARKER);
+    const exportResult = await page.evaluate(
+      async ({ marker, password }) => {
+        const json = await window.iuUserDataBackupExportJson(password);
+        return {
+          ok:
+            typeof json === "string" &&
+            json.includes("infouzel-backup") &&
+            json.includes('"encrypted":true') &&
+            !json.includes(marker),
+        };
+      },
+      { marker: MARKER, password: TEST_BACKUP_PASSWORD }
+    );
     if (!exportResult.ok) fails.push("export_failed");
 
-    const wipeAndImport = await page.evaluate(async (json) => {
-      localStorage.removeItem("iu.notes.store.v1");
-      localStorage.removeItem("iu.tasks.mvp.v1");
-      localStorage.removeItem("iu.calendar.store.v1");
-      await new Promise((r) => setTimeout(r, 500));
-      const notesGone = !localStorage.getItem("iu.notes.store.v1");
-      const backup = await window.iuUserDataBackupParseAndVerify(json);
-      await window.iuUserDataBackupApplyReplace(backup);
-      if (typeof window.iuVault?.afterUnlock === "function") {
-        await window.iuVault.afterUnlock();
-      }
-      return { notesGone };
-    }, minimalBackupJson);
+    const wipeAndImport = await page.evaluate(
+      async ({ json, password }) => {
+        localStorage.removeItem("iu.notes.store.v1");
+        localStorage.removeItem("iu.tasks.mvp.v1");
+        localStorage.removeItem("iu.calendar.store.v1");
+        await new Promise((r) => setTimeout(r, 500));
+        const notesGone = !localStorage.getItem("iu.notes.store.v1");
+        const backup = await window.iuUserDataBackupParseAndVerify(json, password);
+        await window.iuUserDataBackupApplyReplace(backup);
+        if (typeof window.iuVault?.afterUnlock === "function") {
+          await window.iuVault.afterUnlock();
+        }
+        return { notesGone };
+      },
+      { json: minimalBackupJson, password: TEST_BACKUP_PASSWORD }
+    );
 
     if (!wipeAndImport.notesGone) fails.push("wipe_before_import_failed");
 
@@ -246,15 +262,15 @@ async function main() {
       fails.push("data_lost_after_lock_unlock_post_import");
     }
 
-    const lockedImport = await page.evaluate(async () => {
+    const lockedImport = await page.evaluate(async (password) => {
       await window.iuVault.lock();
       try {
-        const json = await window.iuUserDataBackupExportJson();
+        const json = await window.iuUserDataBackupExportJson(password);
         return { blocked: false, jsonLen: json.length };
       } catch (e) {
         return { blocked: true, code: String(e.message || e) };
       }
-    });
+    }, TEST_BACKUP_PASSWORD);
     if (!lockedImport.blocked || !lockedImport.code.includes("VAULT_LOCKED")) {
       fails.push("export_should_fail_when_locked");
     }
@@ -267,48 +283,51 @@ async function main() {
     });
     await page.waitForFunction(() => window.iuVault.getState().unlocked, null, { timeout: 60000 });
 
-    const invalidImport = await page.evaluate(async (json) => {
-      if (typeof window.iuVault?.flushPendingWrites === "function") {
-        await window.iuVault.flushPendingWrites();
-      }
-      const beforeNotes = localStorage.getItem("iu.notes.store.v1");
-      const beforeLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
-      let beforeIdbEnc = false;
-      let beforeIdbCt = null;
-      try {
-        const { readRecord } = await import("/assets/iu-vault-db-v1.js");
-        const rec = await readRecord("iu.notes.store.v1");
-        beforeIdbEnc = !!(rec && rec.ct);
-        beforeIdbCt = rec && rec.ct ? String(rec.ct) : null;
-      } catch (_) {}
-      const parsed = JSON.parse(json);
-      parsed.modules.notes.entries["iu.notes.store.v1"] = JSON.stringify({ schemaVersion: 1, notes: [] });
-      const tampered = JSON.stringify(parsed);
-      try {
-        await window.iuUserDataBackupParseAndVerify(tampered);
-        return { failed: false };
-      } catch (e) {
-        const afterNotes = localStorage.getItem("iu.notes.store.v1");
-        const afterLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
-        let afterIdbEnc = false;
-        let afterIdbCt = null;
+    const invalidImport = await page.evaluate(
+      async ({ json, password }) => {
+        if (typeof window.iuVault?.flushPendingWrites === "function") {
+          await window.iuVault.flushPendingWrites();
+        }
+        const beforeNotes = localStorage.getItem("iu.notes.store.v1");
+        const beforeLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+        let beforeIdbEnc = false;
+        let beforeIdbCt = null;
         try {
           const { readRecord } = await import("/assets/iu-vault-db-v1.js");
           const rec = await readRecord("iu.notes.store.v1");
-          afterIdbEnc = !!(rec && rec.ct);
-          afterIdbCt = rec && rec.ct ? String(rec.ct) : null;
+          beforeIdbEnc = !!(rec && rec.ct);
+          beforeIdbCt = rec && rec.ct ? String(rec.ct) : null;
         } catch (_) {}
-        const hadEnc = !!(beforeLsEnc || beforeIdbEnc);
-        const stillHasEnc = !!(afterLsEnc || afterIdbEnc);
-        const encUnchanged =
-          beforeLsEnc === afterLsEnc && beforeIdbCt === afterIdbCt;
-        return {
-          failed: true,
-          preserved: beforeNotes === afterNotes && hadEnc && stillHasEnc && encUnchanged,
-          code: String(e.message || e),
-        };
-      }
-    }, minimalBackupJson);
+        const parsed = JSON.parse(json);
+        const ct = String((parsed.cipher && parsed.cipher.ct) || "");
+        parsed.cipher.ct = ct.slice(0, Math.max(0, ct.length - 8)) + "XXXXXXXX";
+        const tampered = JSON.stringify(parsed);
+        try {
+          await window.iuUserDataBackupParseAndVerify(tampered, password);
+          return { failed: false };
+        } catch (e) {
+          const afterNotes = localStorage.getItem("iu.notes.store.v1");
+          const afterLsEnc = localStorage.getItem("iu:vault:enc:v1:iu.notes.store.v1");
+          let afterIdbEnc = false;
+          let afterIdbCt = null;
+          try {
+            const { readRecord } = await import("/assets/iu-vault-db-v1.js");
+            const rec = await readRecord("iu.notes.store.v1");
+            afterIdbEnc = !!(rec && rec.ct);
+            afterIdbCt = rec && rec.ct ? String(rec.ct) : null;
+          } catch (_) {}
+          const hadEnc = !!(beforeLsEnc || beforeIdbEnc);
+          const stillHasEnc = !!(afterLsEnc || afterIdbEnc);
+          const encUnchanged = beforeLsEnc === afterLsEnc && beforeIdbCt === afterIdbCt;
+          return {
+            failed: true,
+            preserved: beforeNotes === afterNotes && hadEnc && stillHasEnc && encUnchanged,
+            code: String(e.message || e),
+          };
+        }
+      },
+      { json: minimalBackupJson, password: TEST_BACKUP_PASSWORD }
+    );
 
     if (!invalidImport.failed) {
       fails.push("tampered_import_should_fail");
