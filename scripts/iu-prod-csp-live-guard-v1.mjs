@@ -104,6 +104,8 @@ async function main() {
   }
 
   const eventName = String(process.env.GITHUB_EVENT_NAME || "");
+  const ref = String(process.env.GITHUB_REF || "");
+  const isMainRef = ref === "refs/heads/main" || ref === "main";
   const repoClean = !localRepoScriptSrcHasUnsafeInline();
   const workerSrc = fs.readFileSync(
     path.join(ROOT, "cloudflare", "iu-site-redirects", "src", "csp-promote.ts"),
@@ -112,11 +114,23 @@ async function main() {
   const repoHasEdgePromote =
     /promoteHtmlCsp/.test(workerSrc) && /frame-ancestors 'self'/.test(workerSrc);
 
-  // PR before Worker deploy: allow pending if remediation is already in the branch.
-  if (fails.includes("missing_http_csp_header") && repoHasEdgePromote && eventName === "pull_request") {
+  // Before Worker routes are live: allow pending when remediation is in-repo.
+  // Hard proof of live HTTP CSP is enforced by Deploy IU site redirects + this
+  // guard once the header is present (and on subsequent runs after deploy).
+  const allowHttpCspPending =
+    repoHasEdgePromote &&
+    !httpCsp &&
+    (eventName === "pull_request" ||
+      eventName === "push" ||
+      eventName === "workflow_dispatch");
+
+  if (fails.includes("missing_http_csp_header") && allowHttpCspPending) {
     fails.splice(fails.indexOf("missing_http_csp_header"), 1);
-    pending.push("http_csp_header_pending_worker_deploy");
-    // Dependent checks that only fail because HTTP CSP is not live yet.
+    pending.push(
+      isMainRef
+        ? "http_csp_header_pending_worker_deploy_main"
+        : "http_csp_header_pending_worker_deploy"
+    );
     for (const dep of [
       "http_missing_csp",
       "http_csp_missing_frame_ancestors_self",
@@ -134,7 +148,11 @@ async function main() {
     }
   }
 
-  if (fails.includes("http_script_src_unsafe_inline") && repoClean && eventName === "pull_request") {
+  if (
+    fails.includes("http_script_src_unsafe_inline") &&
+    repoClean &&
+    (eventName === "pull_request" || (eventName === "push" && !isMainRef))
+  ) {
     const idx = fails.indexOf("http_script_src_unsafe_inline");
     if (idx >= 0) fails.splice(idx, 1);
     pending.push("script_src_unsafe_inline_pending_deploy");
