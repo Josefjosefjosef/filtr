@@ -873,6 +873,22 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-csp-inline-script-guard
 
+      - name: Pages artifact allowlist stage + guard (SC-EXP-01)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Contract: Pages must upload allowlisted staging dir, never full checkout.
+          grep -n 'path: dist-pages' .github/workflows/pages.yml
+          if grep -n 'upload-pages-artifact' -A2 .github/workflows/pages.yml | grep -E 'path:[[:space:]]*\.'; then
+            echo "FAIL: upload-pages-artifact still uses path: ."
+            exit 1
+          fi
+          npm run iu-pages-stage-artifact
+          npm run iu-pages-artifact-guard
+          # Ensure smoke checkout is not polluted for later UI guards.
+          rm -rf dist-pages
+
       - name: Vault PIN E2E guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-vault-pin-e2e-guard
