@@ -14,6 +14,48 @@ zone_name = "infouzel.cz"
 pattern = "www.infouzel.cz/projects*"
 zone_name = "infouzel.cz"
 
+# XSS-CSP-01/02: HTML documents — promote meta CSP to HTTP response header.
+# Assets (/assets/*, /sw.js, JSON) are intentionally NOT routed here.
+[[routes]]
+pattern = "infouzel.cz/"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "infouzel.cz/index.html"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/index.html"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "infouzel.cz/statistiky*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/statistiky*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "infouzel.cz/zdroje-a-licence*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/zdroje-a-licence*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "infouzel.cz/bot*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/bot*"
+zone_name = "infouzel.cz"
+
 [vars]
 # Cutover: R2 is authoritative for traffic_offline_snapshot when true (Pages fallback if R2 empty).
 LIVE_TRAFFIC_ENABLED = "true"
