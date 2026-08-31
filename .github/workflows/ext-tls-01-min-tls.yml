@@ -71,15 +71,7 @@ jobs:
           echo "=== CONFIGURATION RULES (http_config_settings) ==="
           RULES=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
             "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets?phase=http_config_settings" || true)
-          echo "$RULES" | python3 -c 'import json,sys
-try:
- d=json.load(sys.stdin)
-except Exception as e:
- print("RULES_PARSE_ERROR=", str(e)); raise SystemExit(0)
-print("RULES_SUCCESS=", d.get("success")); print("RULES_ERRORS=", d.get("errors"))
-for r in (d.get("result") or []):
- print("RULESET=", r.get("id"), r.get("name"), r.get("phase"), "rules=", len(r.get("rules") or []))
-' || true
+          echo "$RULES" | python3 -c "import json,sys; d=json.load(sys.stdin); print('RULES_SUCCESS=', d.get('success')); print('RULES_ERRORS=', d.get('errors')); [print('RULESET=', r.get('id'), r.get('name'), r.get('phase'), 'rules=', len(r.get('rules') or [])) for r in (d.get('result') or [])]" || true
 
           if [ "$MODE" = "read" ]; then
             echo "EXT_TLS_01_MODE=READ_ONLY"
