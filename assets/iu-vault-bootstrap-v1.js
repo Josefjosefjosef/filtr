@@ -22,7 +22,7 @@ import { readMeta } from "./iu-vault-db-v1.js";
 import { detectDeviceUnlockSupport } from "./iu-vault-device-v1.js?v=iu-vault-desktop-shared-session-v3-20260826";
 import { explainPinRejection } from "./iu-vault-core-v1.js";
 import { wipeCalendarMirrorIdb } from "./iu-vault-db-v1.js";
-import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js";
+import { initGlobalAppLock, enforceFailClosedAppLock, refreshGlobalAppLockUi } from "./iu-vault-app-lock-v1.js?v=iu-vault-killswitch-restrict-v1-20260831";
 import {
   initDesktopSessionCoordinator,
   tryJoinDesktopSession,
@@ -97,9 +97,13 @@ function armBootHandshakeFailClosed() {
 }
 
 function vaultDisabled() {
+  // V-KM-01: public URL/LS kill-switch is retired. SECURITY OFF remains the
+  // supported no-lock path (L1 auto-MDK + encrypted-at-rest). Clear any legacy
+  // sticky flag so prior origins cannot stay permanently disabled.
   try {
-    if (new URLSearchParams(location.search).get("iuVault") === "0") return true;
-    if (localStorage.getItem("iu:vault:disabled:v1") === "1") return true;
+    if (localStorage.getItem("iu:vault:disabled:v1") === "1") {
+      localStorage.removeItem("iu:vault:disabled:v1");
+    }
   } catch (_) {}
   return false;
 }
