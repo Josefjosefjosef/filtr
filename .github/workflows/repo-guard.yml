@@ -15,8 +15,6 @@ on:
       - "fix/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-  pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 concurrency:
@@ -28,14 +26,11 @@ jobs:
   repo-guard:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (PR head for pull_request_target)
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
+      # P0 F-02/F-03: never use pull_request_target + checkout PR head + execute repo scripts
+      # with a base-repo token that can write commit statuses. Test PR code only via pull_request
+      # (same pattern as smoke.yml / layout-guard.yml). statuses:write remains required for
+      # scripts/ci/post-required-status.sh (branch protection contexts).
       - name: Checkout
-        if: github.event_name != 'pull_request_target'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Skip redundant push when open PR covers branch
