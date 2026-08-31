@@ -1,9 +1,19 @@
 /**
  * InfoUzel.cz — user data backup core (export / import / validate).
  * Browser UI and Node guards import this module.
+ *
+ * New exports (v2): AES-256-GCM envelope + PBKDF2-SHA256 password.
+ * Legacy plaintext v1 imports remain supported (read-only path).
  */
 export const BACKUP_FORMAT = "infouzel-backup";
-export const BACKUP_VERSION = 1;
+/** Outer envelope version for newly created encrypted backups. */
+export const BACKUP_VERSION = 2;
+/** Inner plaintext payload schema version (also legacy file version). */
+export const BACKUP_PAYLOAD_VERSION = 1;
+export const BACKUP_PBKDF2_ITERATIONS = 310000;
+export const BACKUP_SALT_BYTES = 16;
+export const BACKUP_IV_BYTES = 12;
+export const BACKUP_PASSWORD_MIN_LEN = 8;
 /** Primary extension for newly exported backups (JSON payload). */
 export const BACKUP_FILE_EXT = ".json";
 /** Legacy/custom extension still accepted on import. */
@@ -271,13 +281,14 @@ export function stableStringify(value) {
 /**
  * @param {StorageAdapter} storage
  * @param {string} appVersion
+ * @param {SubtleCrypto | undefined} subtle
  */
 export async function buildBackupObject(storage, appVersion, subtle) {
   const modules = collectAllModules(storage);
   const createdAt = new Date().toISOString();
   const body = {
     format: BACKUP_FORMAT,
-    backupVersion: BACKUP_VERSION,
+    backupVersion: BACKUP_PAYLOAD_VERSION,
     createdAt,
     appVersion: String(appVersion || ""),
     encrypted: false,
@@ -287,14 +298,153 @@ export async function buildBackupObject(storage, appVersion, subtle) {
   return { ...body, integrity };
 }
 
+function requireSubtle(subtle) {
+  if (!subtle || !subtle.importKey || !subtle.deriveBits || !subtle.encrypt || !subtle.decrypt) {
+    throw new Error("BACKUP_CRYPTO_UNAVAILABLE");
+  }
+}
+
+function bytesToB64(bytes) {
+  const arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  let bin = "";
+  for (let i = 0; i < arr.length; i += 1) bin += String.fromCharCode(arr[i]);
+  return btoa(bin);
+}
+
+function b64ToBytes(b64) {
+  const bin = atob(String(b64 || ""));
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i += 1) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+/** @returns {null | "too_short" | "empty"} */
+export function explainBackupPasswordRejection(password) {
+  const s = String(password || "");
+  if (!s) return "empty";
+  if (s.length < BACKUP_PASSWORD_MIN_LEN) return "too_short";
+  return null;
+}
+
+/**
+ * @param {string} password
+ * @param {Uint8Array} saltBytes
+ * @param {number} iterations
+ * @param {SubtleCrypto} subtle
+ */
+async function deriveBackupAesKey(password, saltBytes, iterations, subtle) {
+  const baseKey = await subtle.importKey("raw", new TextEncoder().encode(String(password)), "PBKDF2", false, [
+    "deriveBits",
+  ]);
+  const bits = await subtle.deriveBits(
+    { name: "PBKDF2", salt: saltBytes, iterations, hash: "SHA-256" },
+    baseKey,
+    256
+  );
+  return subtle.importKey("raw", bits, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+}
+
+/**
+ * @param {string} plaintextUtf8
+ * @param {string} password
+ * @param {SubtleCrypto} subtle
+ * @param {{ createdAt?: string, appVersion?: string }} [meta]
+ */
+export async function encryptBackupPlaintext(plaintextUtf8, password, subtle, meta = {}) {
+  requireSubtle(subtle);
+  const reject = explainBackupPasswordRejection(password);
+  if (reject) throw new Error(`BACKUP_PASSWORD_WEAK|${reject}`);
+  const rnd = globalThis.crypto && typeof globalThis.crypto.getRandomValues === "function"
+    ? (n) => globalThis.crypto.getRandomValues(new Uint8Array(n))
+    : null;
+  if (!rnd) throw new Error("BACKUP_CRYPTO_UNAVAILABLE");
+  const salt = rnd(BACKUP_SALT_BYTES);
+  const iv = rnd(BACKUP_IV_BYTES);
+  const key = await deriveBackupAesKey(password, salt, BACKUP_PBKDF2_ITERATIONS, subtle);
+  const aad = new TextEncoder().encode("iu-backup-v2");
+  const ct = await subtle.encrypt(
+    { name: "AES-GCM", iv, additionalData: aad, tagLength: 128 },
+    key,
+    new TextEncoder().encode(String(plaintextUtf8))
+  );
+  return {
+    format: BACKUP_FORMAT,
+    backupVersion: BACKUP_VERSION,
+    encrypted: true,
+    createdAt: typeof meta.createdAt === "string" ? meta.createdAt : new Date().toISOString(),
+    appVersion: typeof meta.appVersion === "string" ? meta.appVersion : "",
+    kdf: {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      iterations: BACKUP_PBKDF2_ITERATIONS,
+      salt: bytesToB64(salt),
+    },
+    cipher: {
+      alg: "AES-GCM",
+      iv: bytesToB64(iv),
+      aad: bytesToB64(aad),
+      ct: bytesToB64(new Uint8Array(ct)),
+    },
+  };
+}
+
+/**
+ * @param {Record<string, unknown>} envelope
+ * @param {string} password
+ * @param {SubtleCrypto} subtle
+ * @returns {Promise<string>} plaintext UTF-8 JSON
+ */
+export async function decryptBackupEnvelope(envelope, password, subtle) {
+  requireSubtle(subtle);
+  if (!envelope || typeof envelope !== "object") throw new Error("BACKUP_INVALID");
+  if (envelope.format !== BACKUP_FORMAT) throw new Error("BACKUP_WRONG_FORMAT");
+  if (envelope.encrypted !== true) throw new Error("BACKUP_INVALID");
+  if (typeof envelope.backupVersion !== "number") throw new Error("BACKUP_INVALID_VERSION");
+  if (envelope.backupVersion > BACKUP_VERSION) throw new Error("BACKUP_NEWER_VERSION");
+  if (envelope.backupVersion < 2) throw new Error("BACKUP_UNSUPPORTED_VERSION");
+  const kdf = envelope.kdf;
+  const cipher = envelope.cipher;
+  if (!kdf || typeof kdf !== "object" || !cipher || typeof cipher !== "object") throw new Error("BACKUP_INVALID");
+  if (kdf.name !== "PBKDF2" || kdf.hash !== "SHA-256") throw new Error("BACKUP_UNSUPPORTED_VERSION");
+  if (cipher.alg !== "AES-GCM") throw new Error("BACKUP_UNSUPPORTED_VERSION");
+  const iterations = Number(kdf.iterations);
+  if (!Number.isFinite(iterations) || iterations < 100000 || iterations > 2000000) {
+    throw new Error("BACKUP_UNSUPPORTED_VERSION");
+  }
+  const salt = b64ToBytes(kdf.salt);
+  const iv = b64ToBytes(cipher.iv);
+  const ct = b64ToBytes(cipher.ct);
+  if (salt.length < 8 || iv.length !== BACKUP_IV_BYTES || ct.length < 16) throw new Error("BACKUP_INVALID");
+  const aad = cipher.aad ? b64ToBytes(cipher.aad) : new TextEncoder().encode("iu-backup-v2");
+  const key = await deriveBackupAesKey(password, salt, iterations, subtle);
+  try {
+    const pt = await subtle.decrypt({ name: "AES-GCM", iv, additionalData: aad, tagLength: 128 }, key, ct);
+    return new TextDecoder().decode(pt);
+  } catch {
+    throw new Error("BACKUP_DECRYPT_FAILED");
+  }
+}
+
+export function isEncryptedBackupEnvelope(value) {
+  return !!(value && typeof value === "object" && value.encrypted === true);
+}
+
 /**
  * @param {StorageAdapter} storage
  * @param {string} appVersion
  * @param {SubtleCrypto | undefined} subtle
+ * @param {string} password
  */
-export async function exportBackupJson(storage, appVersion, subtle) {
+export async function exportBackupJson(storage, appVersion, subtle, password) {
+  requireSubtle(subtle);
+  const reject = explainBackupPasswordRejection(password);
+  if (reject) throw new Error(`BACKUP_PASSWORD_WEAK|${reject}`);
   const backup = await buildBackupObject(storage, appVersion, subtle);
-  return JSON.stringify(backup);
+  const envelope = await encryptBackupPlaintext(JSON.stringify(backup), password, subtle, {
+    createdAt: backup.createdAt,
+    appVersion: backup.appVersion,
+  });
+  return JSON.stringify(envelope);
 }
 
 /**
@@ -305,7 +455,7 @@ export function validateBackupStructure(backup) {
   const b = backup;
   if (b.format !== BACKUP_FORMAT) throw new Error("BACKUP_WRONG_FORMAT");
   if (typeof b.backupVersion !== "number") throw new Error("BACKUP_INVALID_VERSION");
-  if (b.backupVersion > BACKUP_VERSION) throw new Error("BACKUP_NEWER_VERSION");
+  if (b.backupVersion > BACKUP_PAYLOAD_VERSION) throw new Error("BACKUP_NEWER_VERSION");
   if (b.backupVersion < 1) throw new Error("BACKUP_UNSUPPORTED_VERSION");
   if (typeof b.createdAt !== "string") throw new Error("BACKUP_INVALID");
   if (typeof b.encrypted === "boolean" && b.encrypted === true) throw new Error("BACKUP_ENCRYPTED_UNSUPPORTED");
@@ -344,11 +494,23 @@ export async function verifyBackupIntegrity(backup, subtle) {
 
 /**
  * Parse, validate structure, and verify integrity in one step.
+ * Encrypted v2 envelopes require password; legacy plaintext v1 does not.
  * @param {string} raw
  * @param {SubtleCrypto | undefined} subtle
+ * @param {string} [password]
  */
-export async function parseAndVerifyBackupText(raw, subtle) {
+export async function parseAndVerifyBackupText(raw, subtle, password) {
   const parsed = parseBackupJson(raw);
+  if (isEncryptedBackupEnvelope(parsed)) {
+    if (!password) throw new Error("BACKUP_PASSWORD_REQUIRED");
+    const innerText = await decryptBackupEnvelope(parsed, password, subtle);
+    const inner = parseBackupJson(innerText);
+    return verifyBackupIntegrity(inner, subtle);
+  }
+  // Legacy plaintext export (v1 only).
+  if (typeof parsed.backupVersion === "number" && parsed.backupVersion > BACKUP_PAYLOAD_VERSION) {
+    throw new Error("BACKUP_NEWER_VERSION");
+  }
   return verifyBackupIntegrity(parsed, subtle);
 }
 
@@ -561,18 +723,27 @@ export function userMessageForError(code) {
     BACKUP_INVALID_VERSION: "Záloha má neplatnou verzi.",
     BACKUP_NEWER_VERSION: "Tato záloha byla vytvořena novější verzí InfoUzelu a aktuální verze ji neumí bezpečně obnovit.",
     BACKUP_UNSUPPORTED_VERSION: "Verze zálohy není podporovaná.",
-    BACKUP_ENCRYPTED_UNSUPPORTED: "Záloha je chráněná heslem. Tato verze aplikace ji zatím neumí obnovit.",
+    BACKUP_ENCRYPTED_UNSUPPORTED: "Tento šifrovaný formát zálohy není podporovaný.",
     BACKUP_CHECKSUM_MISMATCH: "Záloha je poškozená nebo byla upravena.",
     BACKUP_INTEGRITY_MISSING: "Záloha postrádá kontrolní údaje integrity.",
     BACKUP_UNSAFE_KEY: "Soubor obsahuje neplatnou strukturu.",
     BACKUP_DEPTH_EXCEEDED: "Soubor obsahuje příliš složitou strukturu.",
     BACKUP_STRING_TOO_LONG: "Soubor obsahuje příliš dlouhá data.",
+    BACKUP_CRYPTO_UNAVAILABLE: "Prohlížeč nepodporuje šifrování zálohy.",
+    BACKUP_PASSWORD_REQUIRED: "Pro obnovení šifrované zálohy zadejte heslo zálohy.",
+    BACKUP_PASSWORD_WEAK: "Heslo zálohy musí mít alespoň 8 znaků.",
+    BACKUP_PASSWORD_MISMATCH: "Heslo a potvrzení hesla se neshodují.",
+    BACKUP_DECRYPT_FAILED: "Heslo zálohy je nesprávné, nebo je soubor poškozený. Původní data nebyla změněna.",
+    BACKUP_CANCELLED: "Vytváření zálohy bylo zrušeno.",
     VAULT_LOCKED_IMPORT:
       "Před obnovou zálohy odemkněte osobní data (Můj infoUzel.cz / MindMenu). Obnova chráněných dat vyžaduje aktivní odemknutý trezor.",
     VAULT_LOCKED_EXPORT:
       "Před vytvořením zálohy odemkněte osobní data (Můj infoUzel.cz / MindMenu). Záloha chráněných dat vyžaduje aktivní odemknutý trezor.",
     BACKUP_DATA_CHANGED: "Během exportu došlo ke změně dat. Zkuste export znovu.",
   };
+  if (typeof code === "string" && code.startsWith("BACKUP_PASSWORD_WEAK|")) {
+    return "Heslo zálohy musí mít alespoň 8 znaků.";
+  }
   if (code && map[code]) return map[code];
   if (typeof code === "string" && code.startsWith("BACKUP_")) return "Zálohu se nepodařilo zpracovat.";
   return "Operace se nezdařila.";

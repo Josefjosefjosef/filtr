@@ -7,6 +7,8 @@ import {
   exportBackupJson,
   readBackupFileText,
   parseAndVerifyBackupText,
+  parseBackupJson,
+  isEncryptedBackupEnvelope,
   getBackupPreview,
   applyBackupReplaceModeAsync,
   collectAllModules,
@@ -14,6 +16,7 @@ import {
   formatBackupFilename,
   userMessageForError,
   errorCodeFrom,
+  explainBackupPasswordRejection,
 } from "./iu-user-data-backup-core.js";
 import { vaultSetItem, vaultRemoveItem, preloadAllVaultRecords, notifyVaultMemoryHydrated } from "./iu-vault-storage-v1.js";
 import { isProtectedStorageKey } from "./iu-vault-protected-keys-v1.js";
@@ -118,6 +121,29 @@ function getSubtle() {
   } catch {
     return undefined;
   }
+}
+
+function promptBackupPassword(message) {
+  try {
+    const value = window.prompt(message);
+    if (value == null) return null;
+    return String(value);
+  } catch {
+    return null;
+  }
+}
+
+function promptNewBackupPassword() {
+  const first = promptBackupPassword(
+    "Zvolte heslo zálohy (min. 8 znaků). Heslo bude potřeba pro obnovu. InfoUzel heslo nezná a nelze jej obnovit."
+  );
+  if (first == null) throw new Error("BACKUP_CANCELLED");
+  const reject = explainBackupPasswordRejection(first);
+  if (reject) throw new Error(`BACKUP_PASSWORD_WEAK|${reject}`);
+  const second = promptBackupPassword("Zadejte heslo zálohy znovu pro potvrzení:");
+  if (second == null) throw new Error("BACKUP_CANCELLED");
+  if (first !== second) throw new Error("BACKUP_PASSWORD_MISMATCH");
+  return first;
 }
 
 async function readCalendarIdbMirror() {
@@ -340,7 +366,8 @@ function initUserDataBackupUi() {
     announce(statusLive, "Probíhá vytváření zálohy…");
     try {
       assertVaultUnlockedForBackup("export");
-      const json = await exportBackupJson(storage, readAppVersion(), getSubtle());
+      const password = promptNewBackupPassword();
+      const json = await exportBackupJson(storage, readAppVersion(), getSubtle(), password);
       const filename = formatBackupFilename(new Date());
       triggerDownload(filename, json);
       try {
@@ -353,7 +380,10 @@ function initUserDataBackupUi() {
       if (!storageSnapshotsEqual(beforeClone, afterClone)) {
         throw new Error("BACKUP_DATA_CHANGED");
       }
-      announce(statusLive, "Záloha byla úspěšně stažena. Vaše data v InfoUzelu zůstala beze změny.");
+      announce(
+        statusLive,
+        "Šifrovaná záloha byla stažena. Uchovejte heslo — bez něj soubor nelze obnovit. Data v InfoUzelu zůstala beze změny."
+      );
     } catch (err) {
       announce(statusLive, userMessageForError(errorCodeFrom(err)) || "Zálohu se nepodařilo vytvořit.");
     } finally {
@@ -390,7 +420,14 @@ function initUserDataBackupUi() {
     announce(statusLive, "Probíhá ověřování zálohy…");
     try {
       const text = await readBackupFileText(file);
-      const verified = await parseAndVerifyBackupText(text, getSubtle());
+      const parsed = parseBackupJson(text);
+      let password = "";
+      if (isEncryptedBackupEnvelope(parsed)) {
+        const entered = promptBackupPassword("Zadejte heslo této šifrované zálohy:");
+        if (entered == null) throw new Error("BACKUP_CANCELLED");
+        password = entered;
+      }
+      const verified = await parseAndVerifyBackupText(text, getSubtle(), password);
       pendingBackup = verified;
       const preview = getBackupPreview(verified);
       openConfirmDialog(preview);
@@ -498,11 +535,12 @@ function initUserDataBackupUi() {
 
 function exposeBackupGlobals() {
   window.iuUserDataBackupCollectSnapshot = () => collectAllModules(createStorageAdapter());
-  window.iuUserDataBackupExportJson = () => {
+  window.iuUserDataBackupExportJson = (password) => {
     assertVaultUnlockedForBackup("export");
-    return exportBackupJson(createStorageAdapter(), readAppVersion(), getSubtle());
+    return exportBackupJson(createStorageAdapter(), readAppVersion(), getSubtle(), password);
   };
-  window.iuUserDataBackupParseAndVerify = (text) => parseAndVerifyBackupText(text, getSubtle());
+  window.iuUserDataBackupParseAndVerify = (text, password) =>
+    parseAndVerifyBackupText(text, getSubtle(), password);
   window.iuUserDataBackupApplyReplace = async (backup) => {
     assertVaultUnlockedForBackup("import");
     const storage = createStorageAdapter();

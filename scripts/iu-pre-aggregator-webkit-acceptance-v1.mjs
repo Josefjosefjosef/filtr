@@ -190,8 +190,9 @@ async function runStorageExportImport(browser, results) {
           return a;
         },
       };
-      const json = await mod.exportBackupJson(storageAdapter, "webkit-acceptance", crypto.subtle);
-      const backup = await mod.parseAndVerifyBackupText(json, crypto.subtle);
+      const password = "TestBackupPass1!";
+      const json = await mod.exportBackupJson(storageAdapter, "webkit-acceptance", crypto.subtle, password);
+      const backup = await mod.parseAndVerifyBackupText(json, crypto.subtle, password);
       await mod.applyBackupReplaceMode(storageAdapter, {}, backup);
       const notes = localStorage.getItem("iu.notes.store.v1") || "";
       out.exportRoundtrip = notes.includes("webkit-note");

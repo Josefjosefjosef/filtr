@@ -12,9 +12,11 @@ import { bootstrapGuardContext, installProtectedStorageSeed, waitForVaultReady }
 import {
   BACKUP_FORMAT,
   BACKUP_VERSION,
+  BACKUP_PAYLOAD_VERSION,
   BACKUP_FILE_EXT,
   BACKUP_FILE_EXT_LEGACY,
   exportBackupJson,
+  buildBackupObject,
   parseBackupJson,
   parseAndVerifyBackupText,
   normalizeBackupText,
@@ -27,6 +29,7 @@ import {
   assertSafeJsonValue,
   userMessageForError,
   formatBackupFilename,
+  isEncryptedBackupEnvelope,
 } from "../assets/iu-user-data-backup-core.js";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -39,6 +42,7 @@ const UI = path.join(REPO, "assets", "iu-user-data-backup-v1.js");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8944", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/`;
 const CYCLES = 5;
+const TEST_BACKUP_PASSWORD = "TestBackupPass1!";
 
 function createMockStorage(seed = {}) {
   const map = new Map(Object.entries(seed));
@@ -79,17 +83,27 @@ async function runUnitTests() {
   }
 
   try {
+    const PASS_CANARY = "TEST_ONLY_PASSWORD_CANARY_GUARD_9f3a";
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "n1", title: "Test 🎉", body: "Ahoj\nsvět" }] }),
       "iu.tasks.mvp.v1": JSON.stringify({ schemaVersion: 1, tasks: [{ id: "t1", title: "Úkol" }] }),
+      "infouzel_datovka_profiles_v1": JSON.stringify({
+        profiles: [{ label: "synth", username: "u", password: PASS_CANARY }],
+      }),
     });
     const before = cloneFromStorage(storage);
-    const json = await exportBackupJson(storage, "test-build", subtle);
+    const json = await exportBackupJson(storage, "test-build", subtle, TEST_BACKUP_PASSWORD);
     const after = cloneFromStorage(storage);
     if (!storageSnapshotsEqual(before, after)) throw new Error("export mutated storage");
     const parsed = parseBackupJson(json);
-    await verifyBackupIntegrity(parsed, subtle);
     if (parsed.format !== BACKUP_FORMAT) throw new Error("bad format");
+    if (parsed.encrypted !== true) throw new Error("export must be encrypted");
+    if (parsed.backupVersion !== BACKUP_VERSION) throw new Error("bad outer version");
+    if (json.includes(PASS_CANARY)) throw new Error("password canary leaked into export");
+    if (!isEncryptedBackupEnvelope(parsed)) throw new Error("envelope detect failed");
+    const inner = await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
+    if (inner.backupVersion !== BACKUP_PAYLOAD_VERSION) throw new Error("bad inner version");
+    if (!inner.modules?.datovka) throw new Error("datovka module missing after decrypt");
     pass("export_readonly");
   } catch (e) {
     fail("export_readonly", e);
@@ -114,8 +128,8 @@ async function runUnitTests() {
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "a", title: "A" }] }),
     });
-    const json = await exportBackupJson(storage, "v1", subtle);
-    const backup = await verifyBackupIntegrity(parseBackupJson(json), subtle);
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
+    const backup = await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
     storage.setItem("iu.notes.store.v1", JSON.stringify({ schemaVersion: 1, notes: [] }));
     await applyBackupReplaceMode(storage, {}, backup);
     const notes = JSON.parse(storage.getItem("iu.notes.store.v1") || "{}");
@@ -130,8 +144,8 @@ async function runUnitTests() {
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "keep", title: "Keep" }] }),
       "iu.tasks.mvp.v1": JSON.stringify({ schemaVersion: 1, tasks: [{ id: "t", title: "Task" }] }),
     });
-    const json = await exportBackupJson(storage, "v1", subtle);
-    const backup = await verifyBackupIntegrity(parseBackupJson(json), subtle);
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
+    const backup = await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
     let failNextSet = true;
     const origSet = storage.setItem.bind(storage);
     storage.setItem = (key, value) => {
@@ -168,9 +182,9 @@ async function runUnitTests() {
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "n1", title: "Český 🎉", body: "test" }] }),
     });
-    const json = await exportBackupJson(storage, "v1", subtle);
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
     const withBom = `\uFEFF${json}`;
-    const verified = await parseAndVerifyBackupText(withBom, subtle);
+    const verified = await parseAndVerifyBackupText(withBom, subtle, TEST_BACKUP_PASSWORD);
     if (verified.format !== BACKUP_FORMAT) throw new Error("bom import failed");
     pass("import_utf8_bom");
   } catch (e) {
@@ -182,9 +196,9 @@ async function runUnitTests() {
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "n1", title: "Round", body: "" }] }),
       "iu.tasks.mvp.v1": JSON.stringify({ schemaVersion: 1, tasks: [{ id: "t1", title: "Task" }] }),
     });
-    const json = await exportBackupJson(storage, "v1", subtle);
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
     const wiped = createMockStorage({});
-    const backup = await parseAndVerifyBackupText(json, subtle);
+    const backup = await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
     await applyBackupReplaceMode(wiped, {}, backup);
     const notes = JSON.parse(wiped.getItem("iu.notes.store.v1") || "{}");
     const tasks = JSON.parse(wiped.getItem("iu.tasks.mvp.v1") || "{}");
@@ -198,9 +212,9 @@ async function runUnitTests() {
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "a1", title: "Async", body: "" }] }),
     });
-    const json = await exportBackupJson(storage, "v1", subtle);
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
     const target = createMockStorage({});
-    const backup = await parseAndVerifyBackupText(json, subtle);
+    const backup = await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
     const writes = [];
     await applyBackupReplaceModeAsync(target, {}, backup, {
       persistEntry: async (key, value) => {
@@ -232,15 +246,16 @@ async function runUnitTests() {
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "x", title: "x" }] }),
     });
-    let json = await exportBackupJson(storage, "v1", subtle);
+    let json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
     const parsed = JSON.parse(json);
-    parsed.modules.notes.entries["iu.notes.store.v1"] = JSON.stringify({ schemaVersion: 1, notes: [] });
+    const ct = String(parsed.cipher.ct || "");
+    parsed.cipher.ct = ct.slice(0, Math.max(0, ct.length - 4)) + "AAAA";
     json = JSON.stringify(parsed);
     try {
-      await parseAndVerifyBackupText(json, subtle);
+      await parseAndVerifyBackupText(json, subtle, TEST_BACKUP_PASSWORD);
       fail("checksum_tamper", "expected throw");
     } catch (e) {
-      if (!String(e.message).includes("CHECKSUM")) throw e;
+      if (!String(e.message).includes("DECRYPT_FAILED") && !String(e.message).includes("CHECKSUM")) throw e;
       pass("checksum_tamper");
     }
   } catch (e) {
@@ -261,11 +276,33 @@ async function runUnitTests() {
     const storage = createMockStorage({
       "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "l", title: "legacy" }] }),
     });
-    const json = await exportBackupJson(storage, "legacy", subtle);
-    await parseAndVerifyBackupText(normalizeBackupText(json), subtle);
+    const plain = await buildBackupObject(storage, "legacy", subtle);
+    const json = JSON.stringify(plain);
+    if (plain.encrypted !== false) throw new Error("legacy must be plaintext object");
+    if (plain.backupVersion !== BACKUP_PAYLOAD_VERSION) throw new Error("legacy version");
+    const verified = await parseAndVerifyBackupText(normalizeBackupText(json), subtle);
+    if (!verified.modules?.notes) throw new Error("legacy import missing notes");
     pass("legacy_backup_content");
   } catch (e) {
     fail("legacy_backup_content", e);
+  }
+
+  try {
+    const storage = createMockStorage({
+      "iu.notes.store.v1": JSON.stringify({ schemaVersion: 1, notes: [{ id: "w", title: "wrong-pw" }] }),
+    });
+    const before = storage.getItem("iu.notes.store.v1");
+    const json = await exportBackupJson(storage, "v1", subtle, TEST_BACKUP_PASSWORD);
+    try {
+      await parseAndVerifyBackupText(json, subtle, "WrongPassword1!");
+      fail("wrong_password", "expected throw");
+    } catch (e) {
+      if (!String(e.message).includes("DECRYPT_FAILED")) throw e;
+      if (storage.getItem("iu.notes.store.v1") !== before) throw new Error("storage mutated on bad password");
+      pass("wrong_password");
+    }
+  } catch (e) {
+    fail("wrong_password", e);
   }
 
   const fails = results.filter((r) => !r.pass);
@@ -281,7 +318,7 @@ function staticGate() {
     { id: "export_btn", pass: /id="iuDataMgmtExportBtn"/.test(index) },
     { id: "import_btn", pass: /id="iuDataMgmtImportBtn"/.test(index) },
     { id: "script_ui", pass: /iu-user-data-backup-v1\.js/.test(index) },
-    { id: "script_ui_bump", pass: /user-data-backup-vault-restore-v1-20260823/.test(index) },
+    { id: "script_ui_bump", pass: /user-data-backup-encrypted-v1-20260831/.test(index) },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
   return { pass: fails.length === 0, fails, checks };
@@ -357,13 +394,16 @@ async function runPlaywright() {
   const cycles = [];
 
   for (let i = 0; i < CYCLES; i += 1) {
-    const result = await page.evaluate(async () => {
+    const result = await page.evaluate(async (password) => {
       const notesBefore = localStorage.getItem("iu.notes.store.v1");
       const tasksBefore = localStorage.getItem("iu.tasks.mvp.v1");
       let exportOk = false;
       try {
-        const json = await window.iuUserDataBackupExportJson();
-        exportOk = typeof json === "string" && json.includes("infouzel-backup");
+        const json = await window.iuUserDataBackupExportJson(password);
+        exportOk =
+          typeof json === "string" &&
+          json.includes("infouzel-backup") &&
+          json.includes('"encrypted":true');
       } catch {
         exportOk = false;
       }
@@ -371,7 +411,7 @@ async function runPlaywright() {
         localStorage.getItem("iu.notes.store.v1") === notesBefore &&
         localStorage.getItem("iu.tasks.mvp.v1") === tasksBefore;
       return { exportOk, unchanged };
-    });
+    }, TEST_BACKUP_PASSWORD);
     cycles.push({ cycle: i + 1, ...result });
   }
 
@@ -392,18 +432,19 @@ async function runPlaywright() {
     };
   });
 
-  const importRoundTrip = await page.evaluate(async () => {
+  const importRoundTrip = await page.evaluate(async (password) => {
     const notes = JSON.stringify({
       schemaVersion: 1,
       notes: [{ id: "pw1", title: "Playwright import", body: "diakritika", tags: [], createdAt: 1, updatedAt: 1 }],
     });
     localStorage.setItem("iu.notes.store.v1", notes);
-    const json = await window.iuUserDataBackupExportJson();
+    const json = await window.iuUserDataBackupExportJson(password);
+    if (json.includes("Playwright import")) return { pass: false, reason: "plaintext_leak" };
     localStorage.removeItem("iu.notes.store.v1");
     if (localStorage.getItem("iu.notes.store.v1")) return { pass: false, reason: "not cleared" };
-    await window.iuUserDataBackupParseAndVerify(json);
-    return { pass: true, hasFormat: json.includes("infouzel-backup") };
-  });
+    await window.iuUserDataBackupParseAndVerify(json, password);
+    return { pass: true, hasFormat: json.includes("infouzel-backup"), encrypted: json.includes('"encrypted":true') };
+  }, TEST_BACKUP_PASSWORD);
 
   await browser.close();
   server.close();

@@ -92,7 +92,12 @@ async function openConfirmOverlay(page) {
   });
   await page.waitForTimeout(700);
 
-  const json = await page.evaluate(async () => window.iuUserDataBackupExportJson());
+  const TEST_BACKUP_PASSWORD = "TestBackupPass1!";
+  const json = await page.evaluate(async (password) => window.iuUserDataBackupExportJson(password), TEST_BACKUP_PASSWORD);
+
+  await page.evaluate((password) => {
+    window.prompt = () => password;
+  }, TEST_BACKUP_PASSWORD);
 
   await page.setInputFiles("#iuDataMgmtImportFile", {
     name: "guard-backup.json",

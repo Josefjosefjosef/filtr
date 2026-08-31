@@ -6929,7 +6929,7 @@ require-trusted-types-for 'script';
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="ads" data-iu-src="/assets/iu-ads-public-v1.js?v=ads-public-inject-v1-20260724-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script defer src="/assets/iu-info-center.js?v=info-center-data-mgmt-v1-20260711"></script>
     <script defer src="/assets/iu-vault-ui-v1.js?v=iu-vault-desktop-shared-session-v3-20260826"></script>
-    <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-vault-restore-v1-20260823-user-data-backup-vault-persist-v1-20260824"></script>
+    <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-navigate-address-v62-20260629"></script>
@@ -7934,7 +7934,10 @@ require-trusted-types-for 'script';
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">Stáhněte si záložní kopii svého uloženého obsahu nebo obnovte dříve vytvořenou zálohu. Operace probíhá lokálně v prohlížeči — soubor se neodesílá na server.</p>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
-                Záloha může obsahovat osobní údaje a další citlivý obsah, který jste si v InfoUzelu uložili. Uchovávejte stažený soubor na bezpečném místě. Stažením se vaše data z InfoUzelu <strong>nesmažou ani nepřesunou</strong>.
+                Záloha může obsahovat osobní údaje a přihlašovací údaje, které jste si v InfoUzelu uložili.
+                Nové zálohy jsou <strong>šifrované heslem</strong>, které zvolíte při stažení — InfoUzel heslo nezná a nelze jej obnovit.
+                Uchovávejte soubor i heslo na bezpečném místě. Stažením se vaše data z InfoUzelu <strong>nesmažou ani nepřesunou</strong>.
+                Starší nešifrované zálohy (v1) lze stále obnovit.
               </div>
               <section class="iuPrivacySettings__card" aria-labelledby="iuDataMgmtExportHeading">
                 <h3 class="iuPrivacySettings__cardTitle" id="iuDataMgmtExportHeading">Stáhnout obsah</h3>
