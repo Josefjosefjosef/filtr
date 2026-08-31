@@ -1009,7 +1009,7 @@ require-trusted-types-for 'script';
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <link rel="stylesheet" data-iu-href="/assets/iu-tasks-premium.css?v=date-time-value-column-v4-20260813" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=iu-pin-offline-guidance-v1-20260831" media="print" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=iu-icentrum-security-ux-v1-20260831" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
@@ -6927,8 +6927,8 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="analytics" data-iu-src="/assets/iu-analytics-client.js?v=iu-analytics-v1-20260721b-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="ads" data-iu-src="/assets/iu-ads-public-v1.js?v=ads-public-inject-v1-20260724-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-info-center.js?v=info-center-data-mgmt-v1-20260711"></script>
-    <script defer src="/assets/iu-vault-ui-v1.js?v=iu-pin-offline-guidance-v1-20260831"></script>
+    <script defer src="/assets/iu-info-center.js?v=iu-icentrum-security-ux-v1-20260831"></script>
+    <script defer src="/assets/iu-vault-ui-v1.js?v=iu-icentrum-security-ux-v1-20260831"></script>
     <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
@@ -7558,40 +7558,37 @@ require-trusted-types-for 'script';
 
           <article id="iuInfoCenterDetailAbout" class="iuInfoCenter__detail" data-iu-info-section="about" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">InfoUzel.cz je český přehledový web a sada praktických nástrojů v jednom — bez nutnosti registrace. Kombinuje lokální osobní nástroje s automaticky agregovaným obsahem z veřejných zdrojů.</p>
+              <p class="iuInfoCenter__lead">InfoUzel.cz je český přehledový web a sada praktických nástrojů v jednom — bez nutnosti registrace. Kombinuje lokální osobní nástroje s veřejnými informačními zdroji a technickými službami načítanými po síti.</p>
               <!-- Required AI transparency note. Do not remove without legal/product review. -->
               <p class="iuInfoCenter__p" data-iu-info-ai-graphics-note="1">Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence, například pro AI asistenta Silver a při tvorbě nebo úpravě některých ilustračních grafických prvků webu.</p>
-              <h3 class="iuInfoCenter__h3">Hlavní části webu</h3>
-              <ul class="iuInfoCenter__moduleList">
-                <li class="iuInfoCenter__moduleItem"><strong>Homepage</strong> — úvodní rozcestník, souhrn dne a rychlý přístup k modulům.<br><span class="iuInfoCenter__moduleTag">Orientační informace · kombinace lokálních a externích dat</span></li>
+              <h3 class="iuInfoCenter__h3">Současné hlavní funkce</h3>
+              <ul class="iuInfoCenter__moduleList" data-iu-ic-feature-inventory="current-v1">
+                <li class="iuInfoCenter__moduleItem"><strong>Homepage / Přehled dne</strong> — personalizovaný informační přehled s tématy (např. doprava, počasí, stát, sport, kultura) a oficiálními zdroji.<br><span class="iuInfoCenter__moduleTag">Veřejná data · filtry témat a zdrojů</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Silver</strong> — AI asistent pro rychlé zadání úkolů, poznámek a událostí.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · orientační odpovědi</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Kalendář</strong> — osobní události, připomínky a plánování.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data v zařízení</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Kalendář</strong> — osobní události, připomínky a plánování.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · šifrovaně v zařízení</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Úkoly</strong> — seznam úkolů s termíny a prioritami.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Poznámky</strong> — textové záznamy s vyhledáváním a tagy.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>MindMenu</strong> — rychlé odkazy, schránky, bankovnictví, datovka a další nástroje.<br><span class="iuInfoCenter__moduleTag">Lokální navigace · část odkazů vede na externí weby</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Zprávy</strong> — přehled zpráv a RSS kanálů podle témat.<br><span class="iuInfoCenter__moduleTag">Automaticky agregovaný obsah · externí zdroje</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>RSS agregátor článků</strong> — titulky z veřejných zdrojů s odkazem na originál.<br><span class="iuInfoCenter__moduleTag">Automaticky agregovaný obsah · závislost na třetích stranách</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Sport, Finance, Zdraví, Kultura, Hry, Věda, Vzdělávání, Cestování</strong> — tematické přehledy a filtry.<br><span class="iuInfoCenter__moduleTag">Externí data · orientační informace</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Videa</strong> — denní výběr a přehrávání z YouTube.<br><span class="iuInfoCenter__moduleTag">Externí data · závislost na YouTube</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Počasí</strong> — předpověď pro zvolené město nebo polohu (Open-Meteo).<br><span class="iuInfoCenter__moduleTag">Externí data · poloha jen po vašem souhlasu</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Doprava</strong> — odkazy na IDOS, PID, železnici a další dopravní služby.<br><span class="iuInfoCenter__moduleTag">Externí data · orientační informace</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Mapy a poloha</strong> — mapové a navigační odkazy tam, kde jsou v UI dostupné.<br><span class="iuInfoCenter__moduleTag">Externí služby · závislost na třetích stranách</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>MindMenu</strong> — rychlé odkazy, schránky, bankovnictví, Datové schránky a další nástroje.<br><span class="iuInfoCenter__moduleTag">Lokální navigace · část odkazů vede na externí weby</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Počasí</strong> — předpověď (Open-Meteo) a související veřejné zdroje včetně ČHMÚ v přehledu.<br><span class="iuInfoCenter__moduleTag">Externí data · poloha jen po vašem souhlasu</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Doprava a jízdní řády</strong> — odkazy a přehledy (IDOS/PID/železnice a související služby dle aktuální nabídky).<br><span class="iuInfoCenter__moduleTag">Externí data · orientační informace</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Mapy, TV, rádio, média, kultura, cestování</strong> — rozcestník služeb dostupný z homepage.<br><span class="iuInfoCenter__moduleTag">Externí služby · závislost na třetích stranách</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Vyhledávání zásilek</strong> — detekce dopravce a přesměrování na oficiální stránky.<br><span class="iuInfoCenter__moduleTag">Externí služby dopravců</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Finance</strong> — fakturační pomůcka a související nástroje.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · data vložená uživatelem</span></li>
                 <li class="iuInfoCenter__moduleItem"><strong>Kalkulačky</strong> — praktické finanční a daňové výpočty.<br><span class="iuInfoCenter__moduleTag">Orientační informace · nejsou odborné poradenství</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>Jmeniny a svátky</strong> — denní přehled jmen a svátků.<br><span class="iuInfoCenter__moduleTag">Orientační informace</span></li>
-                <li class="iuInfoCenter__moduleItem"><strong>TV, rádio, datovka, AI odkazy, právní generátor</strong> — další moduly podle aktuální nabídky webu.<br><span class="iuInfoCenter__moduleTag">Kombinace lokálních nástrojů a externích odkazů</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Právní generátor</strong> — pomocný nástroj pro sestavení textu dokumentů.<br><span class="iuInfoCenter__moduleTag">Lokální nástroj · není právní služba</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>Informační panel (PC)</strong> — rychlé orientační údaje (např. kurzy ČNB) dle ověřených zdrojů.<br><span class="iuInfoCenter__moduleTag">Veřejná data · orientační informace</span></li>
+                <li class="iuInfoCenter__moduleItem"><strong>PWA / ikona na ploše</strong> — pohodlnější spuštění podobné aplikaci.<br><span class="iuInfoCenter__moduleTag">Lokální instalace · není automatická záloha dat</span></li>
               </ul>
               <div class="iuInfoCenter__box" role="note">
                 <strong>Informace a data z externích zdrojů</strong>
-                <p class="iuInfoCenter__p">Část obsahu pochází z veřejných nebo externích zdrojů — například RSS kanály (ČT24, Seznam, Novinky, iRozhlas a další), YouTube, počasí (Open-Meteo), dopravní data, mapové služby, dopravci (Zásilkovna, PPL, DPD, GLS, Balíkovna, DHL a další) a další poskytovatelé. Tyto zdroje se mohou měnit, být dočasně nedostupné, zpomalené nebo obsahovat chybu. U článků odkazujeme na původní web vydavatele — nejsme autorem těchto textů.</p>
+                <p class="iuInfoCenter__p">Část obsahu pochází z veřejných nebo externích zdrojů — například oficiální instituce a média v Přehledu dne, YouTube, počasí (Open-Meteo / ČHMÚ), dopravní data, mapové služby, dopravci (Zásilkovna, PPL, DPD, GLS, Balíkovna, DHL a další) a další poskytovatelé. Tyto zdroje se mohou měnit, být dočasně nedostupné, zpomalené nebo obsahovat chybu. U odkazovaných článků směřujeme na původní web vydavatele — nejsme autorem těchto textů.</p>
               </div>
               <div class="iuInfoCenter__box" role="note">
                 <strong>Reklamní a partnerské odkazy</strong>
                 <p class="iuInfoCenter__p">Na InfoUzel.cz se nacházejí odkazy, které jsou reklamní nebo partnerské. Některé doporučené služby a obchody jsou součástí affiliate spolupráce s jejich provozovateli.</p>
                 <p class="iuInfoCenter__p">Pokud přes některý z těchto odkazů nakoupíte zboží nebo si objednáte službu, může InfoUzel.cz získat provizi od partnera. Tato provize nemá žádný vliv na cenu, kterou zaplatíte — ta zůstává stejná, jako kdybyste partnera navštívili přímo.</p>
                 <p class="iuInfoCenter__p">Cílem affiliate spolupráce je podpora provozu, vývoje a dalšího rozvoje služby InfoUzel.cz. Doporučované služby a obchody vybíráme s ohledem na jejich praktický přínos pro uživatele webu.</p>
-                <p class="iuInfoCenter__p">Klientský report reklamních kampaní: <a class="iuInfoCenter__actionLink" href="https://ads.infouzel.cz/client" rel="noopener noreferrer">portál InfoUzel Ads</a> (přístupový kód). Veřejná doručení reklam zůstávají vypnutá, dokud provozovatel neprovede release.</p>
+                <p class="iuInfoCenter__p">Klientský report reklamních kampaní: <a class="iuInfoCenter__actionLink" href="https://ads.infouzel.cz/client" rel="noopener noreferrer">portál InfoUzel Ads</a> (přístupový kód). Veřejné doručení reklam se načítá z ads.infouzel.cz pouze pokud je kampaň aktivní — při prázdné odpovědi se reklama nezobrazí.</p>
               </div>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>Omezení služby</strong>
@@ -7652,7 +7649,7 @@ require-trusted-types-for 'script';
               <ul class="iuInfoCenter__ul">
                 <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení vzhledu, preference počasí, schránky MindMenu, cache feedu, volba soukromí a příznak zavření consent lišty</li>
                 <li><strong>sessionStorage</strong> — dočasné údaje relace (návrat z odkazu, aktualizace PWA, obnova po chybě)</li>
-                <li><strong>IndexedDB</strong> — záloha kalendáře (databáze <code>iu.calendar.idb</code>)</li>
+                <li><strong>IndexedDB</strong> — šifrovaný vault osobních dat a záloha kalendáře</li>
                 <li><strong>Cache API</strong> — uložené soubory webu a naposledy stažené články pro rychlejší načtení</li>
                 <li><strong>Service Worker</strong> — správa cache, offline přístup a aktualizace webu</li>
                 <li><strong>PWA / ikona na ploše</strong> — instalace webu jako aplikace, bez samostatného účtu</li>
@@ -7789,11 +7786,11 @@ require-trusted-types-for 'script';
               <h3 class="iuInfoCenter__h3">2. Kde jsou data uložena</h3>
               <ul class="iuInfoCenter__ul">
                 <li><strong>Zařízení uživatele</strong> — většina osobních údajů zůstává v prohlížeči</li>
-                <li><strong>localStorage</strong> — poznámky, úkoly, kalendář, faktury, nastavení, preference</li>
-                <li><strong>IndexedDB</strong> — záloha kalendáře (<code>iu.calendar.idb</code>)</li>
+                <li><strong>Šifrovaný vault (IndexedDB)</strong> — osobní persistentní data at-rest</li>
+                <li><strong>Kompatibilní úložiště prohlížeče</strong> — preference a chráněné klíče dle security modelu</li>
                 <li><strong>sessionStorage</strong> — dočasné údaje během relace</li>
-                <li><strong>Service Worker cache</strong> — stažené soubory webu a články</li>
-                <li><strong>Externí poskytovatelé</strong> — u funkcí, které je používají (počasí, videa, dopravci, mapy)</li>
+                <li><strong>Service Worker cache</strong> — stažené soubory webu a veřejný obsah</li>
+                <li><strong>Externí poskytovatelé</strong> — u funkcí, které je používají (počasí, videa, dopravci, mapy, Workers)</li>
               </ul>
               <h3 class="iuInfoCenter__h3">Doba uchování dat (retention)</h3>
               <p class="iuInfoCenter__p">Osobní data v prohlížeči zůstávají uložena, dokud je uživatel sám nesmaže nebo dokud nedojde ke smazání dat webu, resetu zařízení či výměně zařízení. InfoUzel <strong>negarantuje</strong> trvalé uchování lokálních dat.</p>
@@ -7892,15 +7889,22 @@ require-trusted-types-for 'script';
 
           <article id="iuInfoCenterDetailDataStorage" class="iuInfoCenter__detail" data-iu-info-section="data-storage" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">InfoUzel je <strong>local-first</strong> aplikace: vaše osobní údaje (poznámky, úkoly, kalendář, faktury, smlouvy, nastavení MindMenu a další) ukládáme <strong>pouze do vašeho telefonu, tabletu nebo počítače</strong>. InfoUzel je automaticky neposílá na server ani do cloudu a k nim standardně nemá přístup.</p>
-              <h3 class="iuInfoCenter__h3">Kde jsou data</h3>
+              <p class="iuInfoCenter__lead">InfoUzel je <strong>local-first</strong> aplikace: vaše <strong>osobní</strong> údaje (poznámky, úkoly, kalendář, faktury, smlouvy, nastavení MindMenu a další) se ukládají <strong>primárně do tohoto zařízení a prohlížeče</strong>. Nezakládáme cloudový uživatelský účet InfoUzlu jako automatickou zálohu těchto dat. Web současně komunikuje po síti kvůli veřejnému obsahu, assets, Workers, CDN, počasí, dopravě, volitelným statistikám nebo reklamě.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--info" role="note" data-iu-ic-truth="encrypted-at-rest">
+                <p class="iuInfoCenter__statusRow"><span class="iuInfoCenter__status iuInfoCenter__status--ok" role="status"><span class="iuInfoCenter__statusIcon" aria-hidden="true">●</span><span class="iuInfoCenter__statusLabel">AKTIVNÍ</span><span class="iuInfoCenter__statusText">Šifrování at-rest osobních persistentních dat</span></span></p>
+                <p class="iuInfoCenter__p">Osobní data jsou podle současného modelu ukládána šifrovaně. Vypnutý dodatečný zámek neznamená plaintext. Šifrování není totéž jako absolutní ochrana po odemčení relace.</p>
+              </div>
+              <h3 class="iuInfoCenter__h3">Kde jsou osobní data</h3>
               <ul class="iuInfoCenter__ul">
-                <li><strong>Poznámky</strong> — localStorage (<code>iu.notes.store.v1</code>)</li>
-                <li><strong>Úkoly</strong> — localStorage (<code>iu.tasks.mvp.v1</code>)</li>
-                <li><strong>Kalendář</strong> — localStorage + záloha IndexedDB (<code>iu.calendar.idb</code>)</li>
+                <li><strong>Poznámky, úkoly, MindMenu a další chráněné moduly</strong> — šifrovaně v prohlížeči (IndexedDB vault + kompatibilní vrstva)</li>
+                <li><strong>Kalendář</strong> — šifrovaně v zařízení; může mít i zrcadlení v IndexedDB</li>
                 <li><strong>Faktury, smlouvy, plné moci</strong> — formuláře a rozpracované stavy v prohlížeči; PDF exportujete vy</li>
-                <li><strong>MindMenu, e-mailové odkazy, vlastní tlačítka</strong> — localStorage ve vašem zařízení</li>
+                <li><strong>Nastavení a preference</strong> — lokálně v tomto prohlížeči</li>
               </ul>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <p class="iuInfoCenter__statusRow"><span class="iuInfoCenter__status iuInfoCenter__status--warn" role="status"><span class="iuInfoCenter__statusIcon" aria-hidden="true">▲</span><span class="iuInfoCenter__statusLabel">DOPORUČENÍ</span><span class="iuInfoCenter__statusText">Prohlížeč / OS může úložiště za určitých okolností odstranit</span></span></p>
+                <p class="iuInfoCenter__p">Data závisí na úložišti prohlížeče. Uživatel je může smazat ručně; privátní režim se může chovat jinak; odinstalace PWA nebo reset prohlížeče může mít dopad. Pravidelná šifrovaná záloha je důležitá. Specifické platformní lhůty (např. u konkrétních mobilních prohlížečů) budou detailně řešeny samostatným data-loss auditem.</p>
+              </div>
               <h3 class="iuInfoCenter__h3">Co je Persistent Storage (bezpečnější ukládání)</h3>
               <p class="iuInfoCenter__p">Některé prohlížeče umožňují požádat o <strong>trvalejší lokální úložiště</strong>. To může snížit riziko automatického smazání dat prohlížečem při nedostatku místa. <strong>Není to záloha</strong> — nechrání před ručním smazáním dat webu, vymazáním prohlížeče ani odinstalováním aplikace.</p>
               <h3 class="iuInfoCenter__h3">Kdy mohou být data ztracena</h3>
@@ -7932,12 +7936,17 @@ require-trusted-types-for 'script';
 
           <article id="iuInfoCenterDetailDataManagement" class="iuInfoCenter__detail" data-iu-info-section="data-management" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">Stáhněte si záložní kopii svého uloženého obsahu nebo obnovte dříve vytvořenou zálohu. Operace probíhá lokálně v prohlížeči — soubor se neodesílá na server.</p>
-              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
-                Záloha může obsahovat osobní údaje a přihlašovací údaje, které jste si v InfoUzelu uložili.
+              <p class="iuInfoCenter__lead">Stáhněte si šifrovanou záložní kopii svého uloženého obsahu nebo obnovte dříve vytvořenou zálohu. Operace probíhá lokálně v prohlížeči — soubor se automaticky neodesílá na server InfoUzlu.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note" data-iu-ic-truth="backup">
+                <p class="iuInfoCenter__statusRow"><span class="iuInfoCenter__status iuInfoCenter__status--warn" role="status"><span class="iuInfoCenter__statusIcon" aria-hidden="true">▲</span><span class="iuInfoCenter__statusLabel">DOPORUČENÍ</span><span class="iuInfoCenter__statusText">Uložte zálohu i heslo bezpečně mimo InfoUzel</span></span></p>
+                Záloha může obsahovat osobní údaje a přihlašovací údaje, které jste si v InfoUzelu uložili (včetně citlivých profilů, pokud je používáte).
                 Nové zálohy jsou <strong>šifrované heslem</strong>, které zvolíte při stažení — InfoUzel heslo nezná a nelze jej obnovit.
-                Uchovávejte soubor i heslo na bezpečném místě. Stažením se vaše data z InfoUzelu <strong>nesmažou ani nepřesunou</strong>.
+                Osoba se souborem zálohy a správným heslem může data obnovit. Stažením se vaše data z InfoUzelu <strong>nesmažou ani nepřesunou</strong>.
                 Starší nešifrované zálohy (v1) lze stále obnovit.
+              </div>
+              <div class="iuInfoCenter__box iuInfoCenter__box--danger" role="note" data-iu-ic-truth="import-destructive">
+                <p class="iuInfoCenter__statusRow"><span class="iuInfoCenter__status iuInfoCenter__status--danger" role="status"><span class="iuInfoCenter__statusIcon" aria-hidden="true">!</span><span class="iuInfoCenter__statusLabel">POZOR</span><span class="iuInfoCenter__statusText">Obnovení může nahradit současná data — možná ztráta aktuálního stavu</span></span></p>
+                <p class="iuInfoCenter__p">Import nevyžaduje server. Šifrovaná záloha (v2) vyžaduje heslo. Neplatný nebo nekompatibilní soubor se neobnoví. Import nemusí garantovat obnovení úplně všeho, co kdy existovalo mimo pokryté moduly zálohy. Před obnovením se vytvoří bezpečnostní kopie současného stavu.</p>
               </div>
               <section class="iuPrivacySettings__card" aria-labelledby="iuDataMgmtExportHeading">
                 <h3 class="iuPrivacySettings__cardTitle" id="iuDataMgmtExportHeading">Stáhnout obsah</h3>

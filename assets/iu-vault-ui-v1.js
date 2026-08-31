@@ -53,6 +53,34 @@
     return "Bez dalšího zamykání";
   }
 
+  function statusBadgeHtml(tone, label, text) {
+    const toneClass =
+      tone === "ok"
+        ? "iuInfoCenter__status--ok"
+        : tone === "warn"
+          ? "iuInfoCenter__status--warn"
+          : tone === "danger"
+            ? "iuInfoCenter__status--danger"
+            : "iuInfoCenter__status--info";
+    const icon =
+      tone === "ok" ? "●" : tone === "warn" ? "▲" : tone === "danger" ? "!" : "i";
+    return (
+      '<span class="iuInfoCenter__status ' +
+      toneClass +
+      '" role="status">' +
+      '<span class="iuInfoCenter__statusIcon" aria-hidden="true">' +
+      icon +
+      "</span>" +
+      '<span class="iuInfoCenter__statusLabel">' +
+      label +
+      "</span>" +
+      '<span class="iuInfoCenter__statusText">' +
+      text +
+      "</span>" +
+      "</span>"
+    );
+  }
+
   function injectSecuritySection() {
     const panel = document.getElementById("iuInfoCenterDetailPrivacy");
     if (!panel) return false;
@@ -60,7 +88,7 @@
     if (!inner) return false;
 
     let existing = document.getElementById("iuVaultSecuritySection");
-    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "2") {
+    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "3") {
       existing.remove();
       existing = null;
     }
@@ -70,40 +98,53 @@
     section.id = "iuVaultSecuritySection";
     section.className = "iuVaultSecurity";
     section.setAttribute("data-iu-vault-security-ui", "1");
-    section.setAttribute("data-iu-vault-ui-version", "2");
+    section.setAttribute("data-iu-vault-ui-version", "3");
+    section.setAttribute("data-iu-icentrum-security-ux", "phase6-v1");
     section.innerHTML = [
-      '<h3 class="iuInfoCenter__h3">Zabezpečení osobních dat</h3>',
-      '<div class="iuVaultSecurity__level" data-iu-vault-level="1">',
-      '  <h4 class="iuVaultSecurity__title">Standardní ochrana</h4>',
-      '  <p class="iuInfoCenter__p">Vaše osobní data jsou automaticky šifrována a zůstávají pouze v tomto prohlížeči. Tato ochrana funguje vždy, bez zásahu uživatele.</p>',
-      '  <p class="iuVaultSecurity__status" id="iuVaultLevel1Status"><strong>Aktivní</strong></p>',
+      '<h3 class="iuInfoCenter__h3">Stav zabezpečení</h3>',
+      '<div class="iuInfoCenter__box iuInfoCenter__box--info" role="note" data-iu-ic-truth="local-first">',
+      '  <p class="iuInfoCenter__statusRow">' +
+        statusBadgeHtml("info", "INFORMACE", "Local-first: osobní data primárně v tomto zařízení") +
+        "</p>",
+      '  <p class="iuInfoCenter__p">Osobní obsah (poznámky, úkoly, kalendář, MindMenu a další lokální moduly) se standardně neukládá jako cloudový účet InfoUzlu. Web zároveň načítá veřejná a technická data po síti (assets, Workers, počasí, doprava, volitelné statistiky, reklama).</p>',
+      "</div>",
+      '<div class="iuVaultSecurity__level" data-iu-vault-level="1" data-iu-ic-truth="encrypted-at-rest">',
+      '  <h4 class="iuVaultSecurity__title">Šifrování v zařízení</h4>',
+      '  <p class="iuInfoCenter__statusRow" id="iuVaultLevel1Status">' +
+        statusBadgeHtml("ok", "AKTIVNÍ", "Osobní persistentní data jsou šifrovaná at-rest") +
+        "</p>",
+      '  <p class="iuInfoCenter__p">Šifrování funguje vždy. Vypnutý dodatečný zámek neznamená plaintext. Po odemčení relace jsou data dostupná v běžící aplikaci — kompromitovaný systém nebo rozšíření prohlížeče je jiná třída rizika.</p>',
       "</div>",
       '<div class="iuVaultSecurity__level" id="iuVaultMindMenuLockBlock">',
-      '  <h4 class="iuVaultSecurity__title">Odemknutí zařízením</h4>',
-      '  <p class="iuInfoCenter__p">Po aktivaci bude InfoUzel při novém otevření vyžadovat ověření pomocí zabezpečení tohoto zařízení. Na Windows může systém použít Windows Hello PIN, otisk prstu nebo rozpoznání obličeje. Na podporovaných mobilních zařízeních může být použito Face ID, Touch ID, otisk prstu nebo jiná systémová autentizace.</p>',
-      '  <p class="iuVaultSecurity__current" id="iuVaultMindMenuLockStatus" aria-live="polite"></p>',
+      '  <h4 class="iuVaultSecurity__title">Dodatečný zámek InfoUzlu</h4>',
+      '  <p class="iuInfoCenter__p">Zapnutím zámku se při otevření nebo návratu podle nastavení ověřuje přístup. Zamkne se <strong>celý InfoUzel</strong>, nejen MindMenu.</p>',
+      '  <div class="iuVaultSecurity__current" id="iuVaultMindMenuLockStatus" aria-live="polite"></div>',
       '  <p class="iuVaultSecurity__currentBackup" id="iuVaultMindMenuUnlockMethodLabel" aria-live="polite"></p>',
+      '  <p class="iuInfoCenter__p iuVaultSecurity__recommend" id="iuVaultSecurityRecommend" hidden></p>',
       '  <fieldset class="iuVaultSecurity__methodFieldset" id="iuVaultMindMenuMethodFieldset">',
       '    <legend class="iuVaultSecurity__legend">Způsob odemknutí</legend>',
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="none" /> Bez dalšího zamykání</label>',
       '    <label class="iuVaultSecurity__radio" id="iuVaultMindMenuMethodDeviceLabel"><input type="radio" name="iuVaultMindMenuMethod" value="device" /> Zabezpečení zařízení — doporučeno</label>',
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
       "  </fieldset>",
-      '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden>',
-      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Vlastní PIN může mít 6 a více číslic — 6 je minimum, ne maximální délka.</p>',
-      '    <p class="iuInfoCenter__p iuVaultSecurity__pinSetupGuidance">Pro vyšší zabezpečení doporučujeme použít delší, náhodný a obtížně odhadnutelný PIN. Čím delší a méně předvídatelný PIN zvolíte, tím vyšší je odolnost uložených dat proti pokusům o jeho prolomení. Nepoužívejte datum narození, jednoduché číselné řady, opakující se číslice ani jiné snadno zjistitelné údaje. Pro vyšší úroveň ochrany doporučujeme zabezpečení prostřednictvím zařízení, pokud jej vaše zařízení podporuje.</p>',
+      '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden data-iu-ic-truth="pin-policy">',
+      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Může být delší — 6 je minimum, ne maximum. Delší náhodný PIN je odolnější. PIN není serverové heslo a InfoUzel jej neobnovuje.</p>',
+      '    <p class="iuInfoCenter__p iuVaultSecurity__pinSetupGuidance">Pro vyšší odolnost doporučujeme delší, náhodný PIN. Nepoužívejte datum narození, řady ani opakující se číslice. Pokud zařízení podporuje zabezpečení zařízení (např. Windows Hello, Face ID, Touch ID), je to často pohodlnější volba.</p>',
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu</label>',
       '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupNew" />',
       '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
       '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupConfirm" />',
+      "  </div>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--info" data-iu-ic-truth="device-security">',
+      '    <p class="iuInfoCenter__p"><strong>Zabezpečení zařízení:</strong> ověření provádí operační systém / prohlížeč (WebAuthn). InfoUzel nezískává biometrickou šablonu. Dostupnost závisí na zařízení a prohlížeči. Nejde o absolutní ochranu proti malware ani XSS.</p>',
       "  </div>",
       '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Na mobilu použijte nainstalovanou PWA aplikaci InfoUzlu, nebo zvolte vlastní PIN InfoUzlu.</p>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
       '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
-      '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock">',
-      '    <h4 class="iuVaultSecurity__title">Automaticky zamknout</h4>',
+      '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock" data-iu-ic-truth="full-web-lock">',
+      '    <h4 class="iuVaultSecurity__title">Automaticky zamknout celý InfoUzel</h4>',
       '    <select id="iuVaultAutoLockSelect" class="iuVaultSecurity__select" aria-label="Automatické zamknutí">',
       '      <option value="manual">Pouze ručně</option>',
       '      <option value="background">Při návratu z pozadí</option>',
@@ -114,11 +155,58 @@
       '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultLockNowBtn">Zamknout InfoUzel</button>',
       "  </div>",
       "</div>",
+      '<details class="iuInfoCenter__details" data-iu-ic-truth="limitations">',
+      "  <summary>Co zabezpečení chrání a co ne</summary>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--ok" role="note">',
+      "    <p class=\"iuInfoCenter__statusRow\">" +
+        statusBadgeHtml("ok", "CHRÁNÍ", "Lokální data at-rest · zámek při aktivním PIN/zařízení · HTTPS transport") +
+        "</p>",
+      '    <ul class="iuInfoCenter__ul"><li>šifrované uložení osobních dat v prohlížeči</li><li>neoprávněné otevření při aktivním zámku</li><li>přenos webu přes HTTPS/TLS</li></ul>',
+      "  </div>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">',
+      "    <p class=\"iuInfoCenter__statusRow\">" +
+        statusBadgeHtml("warn", "NECHRÁNÍ ABSOLUTNĚ", "OS · malware · rozšíření · ztráta zařízení bez zálohy") +
+        "</p>",
+      '    <ul class="iuInfoCenter__ul"><li>kompromitovaný operační systém nebo malware</li><li>škodlivé rozšíření prohlížeče s odpovídajícími právy</li><li>ztráta zařízení nebo smazání úložiště prohlížeče bez zálohy</li><li>odcizení zálohy spolu s jejím heslem</li><li>vlastní předání PINu nebo přístupových údajů jiné osobě</li></ul>',
+      "  </div>",
+      "</details>",
+      '<details class="iuInfoCenter__details" data-iu-ic-truth="recovery">',
+      "  <summary>Ztráta PINu, zařízení a obnova</summary>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--danger" role="note">',
+      "    <p class=\"iuInfoCenter__statusRow\">" +
+        statusBadgeHtml("danger", "POZOR", "Serverová obnova PINu neexistuje — možná nenávratná ztráta dat") +
+        "</p>",
+      '    <ul class="iuInfoCenter__ul"><li><strong>Zapomenutý PIN:</strong> nelze obnovit ze serveru. Bez šifrované zálohy může být nutné vymazat osobní data v tomto prohlížeči.</li><li><strong>Ztráta zařízení:</strong> local-first není cloud sync. Bez zálohy a bez dat na jiném zařízení nemusí být obsah obnovitelný.</li><li><strong>Obnovení přístupu ≠ obnovení dat:</strong> po wipe se InfoUzel znovu otevře, ale původní obsah nemusí existovat.</li></ul>',
+      "  </div>",
+      '  <p class="iuInfoCenter__p">Zálohu stáhněte v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-management">Správa dat</button>. Soubor i heslo uchovejte bezpečně mimo InfoUzel.</p>',
+      "</details>",
+      '<details class="iuInfoCenter__details" data-iu-ic-truth="sensitive-credentials">',
+      "  <summary>Citlivé přístupové údaje</summary>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">',
+      "    <p class=\"iuInfoCenter__statusRow\">" +
+        statusBadgeHtml("warn", "ZVÝŠENÉ RIZIKO", "Datové schránky a podobné údaje jsou vysoce citlivé") +
+        "</p>",
+      '    <p class="iuInfoCenter__p">Pokud si v MindMenu uložíte přístupové údaje k Datovým schránkám nebo jiné citlivé identifikátory, zůstávají v local-first modelu tohoto zařízení. Doporučujeme silnější ochranu (delší PIN nebo zabezpečení zařízení). Šifrovaná záloha může tyto údaje obsahovat — chraňte soubor i heslo.</p>',
+      "  </div>",
+      "</details>",
       '<p class="iuVaultSecurity__msg" id="iuVaultSecurityMsg" aria-live="polite"></p>',
       '<hr class="iuVaultSecurity__divider" aria-hidden="true">',
     ].join("");
 
     inner.insertBefore(section, inner.firstChild);
+    try {
+      section.querySelectorAll("[data-iu-info-goto]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          try {
+            e.preventDefault();
+          } catch (_) {}
+          const dest = btn.getAttribute("data-iu-info-goto");
+          if (dest && typeof window.iuInfoCenterOpenSection === "function") {
+            window.iuInfoCenterOpenSection(dest);
+          }
+        });
+      });
+    } catch (_) {}
     return true;
   }
 
@@ -240,13 +328,45 @@
     if (statusEl) {
       statusEl.innerHTML =
         method === "none"
-          ? "Zabezpečení InfoUzlu: <strong>Vypnuto</strong>"
-          : "✓ InfoUzel je chráněn při otevření";
+          ? statusBadgeHtml(
+              "warn",
+              "DOPORUČENÍ",
+              "Zabezpečení InfoUzlu: dodatečný zámek vypnutý — šifrování at-rest zůstává aktivní"
+            )
+          : statusBadgeHtml("ok", "CHRÁNĚNO", "InfoUzel je chráněn při otevření");
     }
     if (methodEl) {
       methodEl.textContent =
         method === "none" ? "" : "Způsob odemknutí: " + methodLabel(method);
       methodEl.hidden = method === "none";
+    }
+    const recommendEl = document.getElementById("iuVaultSecurityRecommend");
+    if (recommendEl) {
+      if (method === "none") {
+        recommendEl.hidden = false;
+        recommendEl.innerHTML = statusBadgeHtml(
+          "warn",
+          "PRO VYŠŠÍ OCHRANU",
+          "Zapněte PIN nebo zabezpečení zařízení. Bez zámku může InfoUzel otevřít kdokoli s přístupem k tomuto odemčenému zařízení a profilu prohlížeče."
+        );
+      } else if (method === "pin") {
+        recommendEl.hidden = false;
+        recommendEl.innerHTML = statusBadgeHtml(
+          "warn",
+          "DOPORUČENÍ",
+          "Pro vyšší odolnost použijte delší náhodný PIN než minimum 6 číslic, pokud jste zvolili krátký PIN."
+        );
+      } else if (method === "device") {
+        recommendEl.hidden = false;
+        recommendEl.innerHTML = statusBadgeHtml(
+          "ok",
+          "AKTIVNÍ",
+          "Zabezpečení zařízení zvyšuje ochranu proti neoprávněnému otevření na tomto zařízení."
+        );
+      } else {
+        recommendEl.hidden = true;
+        recommendEl.textContent = "";
+      }
     }
 
     const active = method !== "none";
