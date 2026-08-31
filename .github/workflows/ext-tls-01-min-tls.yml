@@ -1,6 +1,6 @@
-# EXT-TLS-01 — Cloudflare zone Minimum TLS Version (read / apply)
+# EXT-TLS-01 Cloudflare zone Minimum TLS Version (read / apply)
 # Manual only. Does not run on push/PR.
-# Required secret: CLOUDFLARE_API_TOKEN with Zone → Zone Settings → Read (and Edit for apply).
+# Required secret: CLOUDFLARE_API_TOKEN with Zone Settings Read (and Edit for apply).
 name: ext-tls-01-min-tls
 
 on:
@@ -15,7 +15,7 @@ on:
           - apply
         default: read
       zone_name:
-        description: "Cloudflare zone name"
+        description: Cloudflare zone name
         required: true
         type: string
         default: infouzel.cz
@@ -44,8 +44,7 @@ jobs:
 
           ZONE_JSON=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
             "https://api.cloudflare.com/client/v4/zones?name=${ZONE_NAME}")
-          echo "$ZONE_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("ZONE_API_SUCCESS=", d.get("success")); print("ZONE_ERRORS=", d.get("errors")); r=d.get("result") or []; print("ZONE_COUNT=", len(r));
-print("ZONE_ID=", (r[0]["id"] if r else "")); print("ZONE_STATUS=", (r[0].get("status") if r else "")); print("ZONE_PLAN=", ((r[0].get("plan") or {}).get("name") if r else ""))'
+          echo "$ZONE_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("ZONE_API_SUCCESS=", d.get("success")); print("ZONE_ERRORS=", d.get("errors")); r=d.get("result") or []; print("ZONE_COUNT=", len(r)); print("ZONE_ID=", (r[0]["id"] if r else "")); print("ZONE_STATUS=", (r[0].get("status") if r else "")); print("ZONE_PLAN=", ((r[0].get("plan") or {}).get("name") if r else ""))'
           ZONE_ID=$(echo "$ZONE_JSON" | python3 -c 'import json,sys; r=(json.load(sys.stdin).get("result") or []); print(r[0]["id"] if r else "")')
           if [ -z "$ZONE_ID" ]; then
             echo "BLOCKER=ZONE_NOT_FOUND_OR_TOKEN_LACKS_ZONE_READ"
@@ -69,7 +68,7 @@ print("ZONE_ID=", (r[0]["id"] if r else "")); print("ZONE_STATUS=", (r[0].get("s
             echo "$SJ" | python3 -c 'import json,sys; d=json.load(sys.stdin); r=d.get("result") or {}; print("SETTING=", r.get("id") or "'"$s"'"); print("VALUE=", r.get("value")); print("SUCCESS=", d.get("success")); print("ERRORS=", d.get("errors"))' || true
           done
 
-          echo "=== CONFIGURATION RULES (TLS-related names) ==="
+          echo "=== CONFIGURATION RULES (http_config_settings) ==="
           RULES=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
             "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets?phase=http_config_settings" || true)
           echo "$RULES" | python3 -c 'import json,sys
@@ -94,12 +93,12 @@ for r in (d.get("result") or []):
           fi
 
           case "$BEFORE_VAL" in
-            1.0|1.1|"1.0"|"1.1")
+            1.0|1.1)
               echo "LEGACY_MIN_TLS_CONFIRMED=${BEFORE_VAL}"
               ;;
-            1.2|1.3|"1.2"|"1.3")
+            1.2|1.3)
               echo "STOP=MIN_TLS_ALREADY_${BEFORE_VAL}"
-              echo "If SSL Labs still reports TLS 1.0/1.1, this is TLS EDGE CONFIGURATION MISMATCH — no blind change applied."
+              echo "If SSL Labs still reports TLS 1.0/1.1: TLS EDGE CONFIGURATION MISMATCH - no blind change applied."
               exit 2
               ;;
             *)
