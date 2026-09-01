@@ -71,6 +71,8 @@ jobs:
         run: npm run iu-permissions-policy-guard
       - name: Secondary HTML CSP guard (EXT-CSP-SECONDARY-01)
         run: npm run iu-secondary-csp-guard
+      - name: security.txt guard (EXT-SEC-TXT-01 / RFC 9116)
+        run: npm run iu-security-txt-guard
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |

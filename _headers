@@ -31,4 +31,8 @@
 
 /projects/manifest.json
   Cache-Control: no-cache, must-revalidate
+
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: max-age=86400
 
