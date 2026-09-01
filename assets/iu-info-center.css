@@ -453,16 +453,56 @@ body.iu-theme-dark .iuInfoCenter__tile--hero .iuInfoCenter__tileHint{
   margin-bottom: 0.45rem;
 }
 
-.iuInfoCenter__shotPlaceholder{
-  margin: 12px 0 0;
-  padding: 28px 16px;
-  border: 2px dashed rgba(14, 42, 74, 0.18);
-  border-radius: 10px;
-  background: rgba(248, 250, 252, 0.8);
-  color: #64748b;
-  font-size: 0.82rem;
-  text-align: center;
-  line-height: 1.4;
+.iuInfoCenter__crossNav{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 1rem 0 0;
+  max-width: 100%;
+}
+.iuInfoCenter__crossNavItem{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.iuInfoCenter__crossNavItem:focus-visible{
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.iuInfoCenter__crossNavLabel{
+  color: #1d4ed8;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.iuInfoCenter__crossNavItem:hover .iuInfoCenter__crossNavLabel{
+  color: #1e40af;
+}
+.iuInfoCenter__crossNavHint{
+  display: block;
+  margin: 0;
+  max-width: 100%;
+  color: rgba(11, 31, 51, 0.68);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .iuInfoCenter__companyCard{

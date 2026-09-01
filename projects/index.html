@@ -7540,7 +7540,6 @@ require-trusted-types-for 'script';
                   <li>Zvolte <strong>Přidat na plochu</strong>.</li>
                   <li>Potvrďte vytvoření ikony.</li>
                 </ol>
-                <div class="iuInfoCenter__shotPlaceholder" aria-hidden="true">Prostor pro budoucí screenshoty návodu (iPhone / iPad)</div>
               </div>
               <div id="iuInfoCenterPwaAndroid" class="iuInfoCenter__card" hidden>
                 <h3 class="iuInfoCenter__h3">Android</h3>
@@ -7551,7 +7550,6 @@ require-trusted-types-for 'script';
                   <li>Zvolte <strong>Přidat na plochu</strong> nebo <strong>Nainstalovat aplikaci</strong>.</li>
                   <li>Potvrďte vytvoření ikony.</li>
                 </ol>
-                <div class="iuInfoCenter__shotPlaceholder" aria-hidden="true">Prostor pro budoucí screenshoty návodu (Android)</div>
               </div>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <strong>Důležité upozornění:</strong> Vytvoření ikony na ploše <strong>samo o sobě nezaručuje</strong> zachování uložených dat a <strong>není šifrovaná záloha</strong>. Na iPhonu/iPadu může Home Screen podle dokumentace WebKit snížit riziko ITP mazání při dlouhé nečinnosti v Safari — stále však nechrání před ručním smazáním dat webu, resetem telefonu, výměnou zařízení ani ztrátou zařízení. InfoUzel <strong>není určen jako jediná záloha</strong> důležitých údajů.
@@ -7563,6 +7561,16 @@ require-trusted-types-for 'script';
                 <li>Zálohujte zařízení podle návodu výrobce.</li>
                 <li>Nemažte bezdůvodně data prohlížeče pro InfoUzel — obsahuje poznámky, úkoly, kalendář a další lokální nastavení.</li>
               </ul>
+              <div class="iuInfoCenter__crossNav" aria-label="Související sekce">
+                <button type="button" class="iuInfoCenter__crossNavItem" data-iu-info-goto="data-management">
+                  <span class="iuInfoCenter__crossNavLabel">💾 Záloha a obnova dat →</span>
+                  <span class="iuInfoCenter__crossNavHint">Vytvořte si šifrovanou zálohu nebo obnovte dříve uložená data.</span>
+                </button>
+                <button type="button" class="iuInfoCenter__crossNavItem" data-iu-info-goto="data-storage">
+                  <span class="iuInfoCenter__crossNavLabel">🛡️ Ukládání a ochrana vašich dat →</span>
+                  <span class="iuInfoCenter__crossNavHint">Zjistěte, kde jsou vaše data uložena a jak jsou chráněna.</span>
+                </button>
+              </div>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
