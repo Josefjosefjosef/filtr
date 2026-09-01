@@ -60,11 +60,13 @@ jobs:
           fi
           node scripts/smoke-data-only-scope.mjs
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "24"
 
       - run: npm ci
+      - name: GHA immutable pin guard (SC-GHA-02)
+        run: npm run iu-gha-immutable-pin-guard
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |
@@ -82,7 +84,7 @@ jobs:
       - name: Cache Playwright browser
         if: steps.scope.outputs.data_only != 'true'
         id: pwcache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -516,7 +518,7 @@ jobs:
 
       - name: Upload CHMI CZ map visual proof
         if: always() && steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: iu-chmi-cz-map-visual-proof
           path: iu-chmi-cz-map-visual-proof/
