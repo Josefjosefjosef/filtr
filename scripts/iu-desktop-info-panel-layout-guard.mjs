@@ -120,6 +120,9 @@ if (IU_INFO_PANEL_CATALOG.some((item) => !item.maxAgeMs || !item.updateNote)) {
 if (catalogIds.includes("trains") || catalogIds.includes("aviation")) {
   failures.push("removed proxy cards trains/aviation must not be in catalog");
 }
+if (catalogIds.includes("environment")) {
+  failures.push("removed environment indicator must not be in catalog");
+}
 if (!IU_INFO_PANEL_EXCLUDED.length) {
   failures.push("excluded source list must be documented");
 }

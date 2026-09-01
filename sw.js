@@ -25,7 +25,8 @@
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
-const CACHE_VERSION = "2026-08-30-iu-calendar-persist-ack-v1";
+// 2026-09-01: remove environment info panel — bust shell + network-first info-panel modules (SWR stale catalog)
+const CACHE_VERSION = "2026-09-01-remove-environment-info-panel-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -926,7 +927,10 @@ self.addEventListener("fetch", (event) => {
     path.includes("/assets/iu-prehled-dne-") ||
     path.includes("/assets/iu-info-system-core-v1.js") ||
     path.includes("/assets/iu-traffic-overview-v1.js") ||
-    path.includes("/assets/iu-json-parse-worker-v1.js")
+    path.includes("/assets/iu-json-parse-worker-v1.js") ||
+    path.includes("/assets/iu-desktop-info-panel") ||
+    path.includes("/assets/iu-info-panel-") ||
+    path.includes("/assets/iu-mobile-info-panel")
   ) {
     event.respondWith(
       (async () => {

@@ -71,10 +71,19 @@ function staticGate() {
     {
       id: "cache_bust",
       pass:
+        indexHtml.includes("remove-environment-info-panel-v1-20260901") ||
         indexHtml.includes("rychly-prehled-horizontal-persist-v1-20260803") ||
         indexHtml.includes("info-panel-mpsv-audit-v1-20260716") ||
         indexHtml.includes("info-panel-cnb-rates-v1-20260715") ||
         indexHtml.includes("info-panel-freshness-period-v1-20260709"),
+    },
+    {
+      id: "catalog_no_environment",
+      pass: !/id:\s*"environment"/.test(read("assets/iu-desktop-info-panel-catalog.js")),
+    },
+    {
+      id: "user_content_no_environment",
+      pass: !/environment:\s*\{/.test(read("assets/iu-info-panel-user-content.js")),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -190,6 +199,8 @@ async function measureViewport(page, vpName) {
     const scroll = panel ? panel.querySelector(".iuDesktopInfoPanel__scroll") : null;
     const btc = panel ? panel.querySelector('[data-iu-info-panel-id="bitcoin"]') : null;
     const gold = panel ? panel.querySelector('[data-iu-info-panel-id="gold"]') : null;
+    const environment = panel ? panel.querySelector('[data-iu-info-panel-id="environment"]') : null;
+    const environmentText = panel ? (panel.textContent || "").includes("Investice na ochranu") : false;
 
     const sourcesRect = sources ? sources.getBoundingClientRect() : null;
     const panelRect = panel ? panel.getBoundingClientRect() : null;
@@ -220,6 +231,7 @@ async function measureViewport(page, vpName) {
         gold &&
         btc.getAttribute("data-iu-info-panel-state") !== "loading" &&
         gold.getAttribute("data-iu-info-panel-state") !== "loading",
+      noEnvironmentSegment: !environment && !environmentText,
     };
   }, vpName);
 }
@@ -243,7 +255,8 @@ async function runViewport(browser, vp) {
     metrics.sourcesVisible &&
     metrics.scrollHintPresent &&
     metrics.scrollHintVisible &&
-    metrics.cardsNotLoading;
+    metrics.cardsNotLoading &&
+    metrics.noEnvironmentSegment;
 
   return { ...metrics, pass };
 }
