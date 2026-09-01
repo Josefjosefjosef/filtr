@@ -681,13 +681,17 @@ function assertCssSourceContract() {
     appCss
   );
   const noClipOverflow =
-    /iuSilverDraftInput\[type="date"\][\s\S]{0,280}overflow-x:\s*visible/.test(appCss);
+    /min-inline-size:\s*0\s*!important[\s\S]{0,200}overflow-x:\s*visible/.test(appCss);
   const gridSafe = /iuSilverDraftCard--quickTemplateEmpty\s+\.iuSilverDraftGrid--edit\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*max-content\)\s+minmax\(0,\s*1fr\)/m.test(
     appCss
   );
   const premiumDate =
-    /iuSilverDraftInput\[type="date"\][\s\S]{0,220}min-width:\s*0\s*!important/.test(premiumCss) &&
-    /iuSilverDraftInput\[type="time"\][\s\S]{0,220}min-width:\s*0\s*!important/.test(premiumCss);
+    /iuSilverDraftInput\[type="date"\][\s\S]{0,320}min-width:\s*0\s*!important/.test(premiumCss) &&
+    /iuSilverDraftInput\[type="time"\][\s\S]{0,320}min-width:\s*0\s*!important/.test(premiumCss) &&
+    /iuSilverDraftInput\[type="date"\][\s\S]{0,420}max-inline-size:\s*100%\s*!important/.test(premiumCss);
+  const silverFieldsWrapper =
+    /datetime-edit-fields-wrapper[\s\S]{0,240}min-width:\s*0\s*!important/.test(appCss) &&
+    /datetime-edit-fields-wrapper[\s\S]{0,240}min-width:\s*0\s*!important/.test(premiumCss);
   const tasksDate =
     /iu-tasksOverlay__input\[type="date"\][\s\S]{0,400}min-width:\s*0\s*!important/.test(tasksCss) &&
     /iu-tasksOverlay__input\[type="time"\][\s\S]{0,400}min-width:\s*0\s*!important/.test(tasksCss);
@@ -697,11 +701,12 @@ function assertCssSourceContract() {
       appCss
     );
   return {
-    pass: !!mq && noClipOverflow && gridSafe && premiumDate && tasksDate && calDate && !badFixed,
+    pass: !!mq && noClipOverflow && gridSafe && premiumDate && silverFieldsWrapper && tasksDate && calDate && !badFixed,
     mq: !!mq,
     noClipOverflow,
     gridSafe,
     premiumDate,
+    silverFieldsWrapper,
     tasksDate,
     calDate,
     badFixed,
@@ -779,7 +784,7 @@ async function main() {
     surfaces_note:
       "This guard does NOT certify physical iPhone. Calendar/Tasks live DOM is covered by iu-datetime-real-route-geometry-guard-v1.",
     root_cause:
-      "iOS/WebKit native date/time intrinsic min-width beats non-important min-width:0; overflow-x:hidden clipped corners without locking right edge. Fix: min-width/min-inline-size:0 !important + max-width:100% on Silver, Calendar, and Tasks under max-width:1024px; no overflow clip on inputs.",
+      "iOS/WebKit native date/time intrinsic min-width + datetime-edit-fields-wrapper beat grid shrink; v4 adds display:block, max-inline-size:100%, and fields-wrapper clamp under max-width:1024px (Silver Nová připomínka + shared draft edit).",
   };
 
   const reportPath = path.join(
@@ -879,6 +884,10 @@ async function main() {
       cssContract.gridSafe +
       " premiumDate=" +
       cssContract.premiumDate +
+      " silverFieldsWrapper=" +
+      cssContract.silverFieldsWrapper +
+      " noClipOverflow=" +
+      cssContract.noClipOverflow +
       " badFixed=" +
       cssContract.badFixed +
       "\n"

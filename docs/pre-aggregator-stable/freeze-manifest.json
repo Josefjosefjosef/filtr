@@ -2,11 +2,11 @@
     "freezeId": "iu-xss-tt-01-allowlist-sanitizer-v1-20260831",
     "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-09-01T19:45:00.000Z",
-    "note": "Remove environment info panel — SW cache bust + info panel network-first; index cache bust bump.",
+    "updatedAt": "2026-09-01T21:10:00.000Z",
+    "note": "Silver Nová připomínka date/time v4 — clamp WebKit fields-wrapper; SW + CSS cache bust.",
     "files": {
-        "projects/index.html": "6776a5c5dcb4445aaeb20299324e64698f96752386abb59f3c4f5593307c95bc",
-        "assets/app.css": "6874b094a48e954bcc533eaf01f0a802495461dd2458c7bd8f806b5d75560bd3",
+        "projects/index.html": "123f64a06d7efcd391f9129f9097e5e14929ea7faf1bf5a4941ba339e4faac13",
+        "assets/app.css": "a5bf39a9ffe3756f1813ee1c13dd1766c487cf7ecdb2171d1b3085659c2b9a5b",
         "assets/app.js": "a7107392fcbdcf43596770cbfb63b0a70913bbf39e0f78fae725115d7bf1384f",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "c6bca3651f37fa18707d8383207544f2d7d96c7d199f10f3c632752e145ad327",
         "assets/iu-app-feed-pipeline-v1.js": "b5b0ef85f35035e90e1726f2ce1ae29f66bba98712b53c3565a576ad7541e8b9",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "74820c105e963c7cb5498c1b6a54bac0be4baf7ac0f5953ef2e2a892502f6fc2",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "3fb8ff9a6f9184e101e0ef13083eef4955bb9bc2797bd7f1cc1ffc01c41e3c7d",
+        "sw.js": "222949622d392613812be21db74e6a42fc4f01c11353b43c246b38eafbfb998c",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-09-01-remove-environment-info-panel-v1\"",
+      "CACHE_VERSION = \"2026-09-01-silver-reminder-date-time-v4\"",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
       "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
       "OFFLINE_DOC_CACHE",
