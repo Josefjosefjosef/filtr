@@ -1,5 +1,6 @@
 import { applyEvent, rejectEvent } from "./aggregate";
 import { isTestAdCampaignId } from "./ads-policy";
+import { buildCorsHeaders } from "./cors";
 import { privacyGuard, todayUtc } from "./privacy";
 import { AnalyticsStore, createStore } from "./store";
 import { Env } from "./types";
@@ -11,34 +12,9 @@ function json(data: unknown, status = 200, extra: HeadersInit = {}): Response {
   });
 }
 
-function corsHeaders(env: Env, req: Request): HeadersInit {
-  const origin = req.headers.get("Origin") || "";
-  const allow = env.CORS_ALLOW_ORIGIN || "*";
-  const ok =
-    allow === "*" ||
-    origin === "https://infouzel.cz" ||
-    origin === "https://www.infouzel.cz" ||
-    /^https:\/\/[a-z0-9-]+\.pages\.dev$/i.test(origin) ||
-    /^http:\/\/127\.0\.0\.1:\d+$/i.test(origin) ||
-    /^http:\/\/localhost:\d+$/i.test(origin);
-  // sendBeacon(JSON) always uses credentials mode "include"; browsers require ACAC + concrete ACAO.
-  const acao = ok ? origin || allow : "https://infouzel.cz";
-  const headers: Record<string, string> = {
-    "access-control-allow-origin": acao,
-    "access-control-allow-methods": "GET, POST, OPTIONS",
-    "access-control-allow-headers": "content-type, authorization",
-    "access-control-max-age": "86400",
-    vary: "Origin",
-  };
-  if (acao && acao !== "*") {
-    headers["access-control-allow-credentials"] = "true";
-  }
-  return headers;
-}
-
 function withCors(env: Env, req: Request, res: Response): Response {
   const h = new Headers(res.headers);
-  for (const [k, v] of Object.entries(corsHeaders(env, req))) h.set(k, String(v));
+  for (const [k, v] of Object.entries(buildCorsHeaders(env, req))) h.set(k, String(v));
   return new Response(res.body, { status: res.status, headers: h });
 }
 
