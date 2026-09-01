@@ -688,25 +688,6 @@ export const IU_INFO_PANEL_CATALOG = [
     fetchBucket: "csu_elections",
     vyberCode: "VOLPST2",
   }),
-  csuItem({
-    id: "environment",
-    order: 41,
-    group: "society",
-    label: "Životní prostředí",
-    title: "Investice na ochranu životního prostředí",
-    icon: "🌳",
-    primaryLabel: "Roční investice",
-    unit: "tis. Kč",
-    publishFrequency: "annual",
-    maxAgeMs: 400 * DAY_MS,
-    sourceUrl: "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/WZPR05T01?format=CSV",
-    licenseNote: "Investice na ochranu životního prostředí — oficiální statistika ČSÚ.",
-    dataType: "Investice na ochranu životního prostředí (tis. Kč)",
-    updateNote: "Roční publikace statistik životního prostředí",
-    staleNote: "Starší než 400 dní od generace snapshotu",
-    fetchBucket: "csu_environment",
-    vyberCode: "WZPR05T01",
-  }),
 ].sort((a, b) => a.order - b.order);
 
 export const IU_INFO_PANEL_CATALOG_COUNT = IU_INFO_PANEL_CATALOG.length;
