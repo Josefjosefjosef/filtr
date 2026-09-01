@@ -244,13 +244,6 @@ export const IU_INFO_PANEL_USER_CONTENT = {
     fall: "Nišší účast může signalizovat apatii nebo nespokojenost.",
     life: "Důležité před volbami — vyšší účast posiluje legitimitu výsledku.",
   },
-  environment: {
-    meaning: "Investice na ochranu životního prostředí v Česku.",
-    importance: "Ukazuje, kolik se investuje do čistšího vzduchu, vody a udržitelnosti.",
-    rise: "Více investic může znamenat větší důraz na ekologii a zelené projekty.",
-    fall: "Pokles může signalizovat menší prioritizaci ochrany přírody.",
-    life: "Relevantní pro kvalitu životního prostředí ve vašem okolí dlouhodobě.",
-  },
 };
 
 export function getInfoPanelUserContent(id) {

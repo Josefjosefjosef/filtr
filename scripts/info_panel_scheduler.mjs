@@ -41,7 +41,6 @@ export const BUCKET_SCHEDULE = {
   csu_health: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_crime: { checkIntervalMs: DAY_MS, label: "daily" },
   csu_elections: { checkIntervalMs: DAY_MS, label: "daily" },
-  csu_environment: { checkIntervalMs: DAY_MS, label: "daily" },
 };
 
 const GROUP_LABELS = {

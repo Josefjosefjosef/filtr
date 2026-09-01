@@ -15,6 +15,7 @@ import {
 import {
   bucketContentHash,
   bucketsDueForCheck,
+  getAllFetchBuckets,
   readSchedulerState,
   touchBucketCheck,
   writeSchedulerState,
@@ -742,20 +743,6 @@ async function fetchCsuElections(snapshot) {
   }
 }
 
-async function fetchCsuEnvironment(snapshot) {
-  try {
-    const records = await fetchCsuCsv("WZPR05T01");
-    const rows = findLatestCsuRows(records, (row, header) => {
-      if (!isCzechTotal(row, header)) return false;
-      return /investice na ochranu/.test(normalizeText(row[0])) && /celkem/.test(normalizeText(row.join(" ")));
-    });
-    if (!rows.length) throw new Error("csu_environment_missing");
-    putItem(snapshot, "environment", rows[0], { unit: "tis. Kč", primaryLabel: "Investice", prev: rows[1], round: true });
-  } catch (err) {
-    pushError(snapshot, "csu_environment", err);
-  }
-}
-
 function readPrevious() {
   try {
     if (!fs.existsSync(OUT)) return null;
@@ -792,7 +779,6 @@ const BUCKET_FETCHERS = {
   csu_health: fetchCsuHealth,
   csu_crime: fetchCsuCrime,
   csu_elections: fetchCsuElections,
-  csu_environment: fetchCsuEnvironment,
 };
 
 function copyPrevErrorsExcept(snapshot, prev, skipBuckets) {
@@ -803,6 +789,37 @@ function copyPrevErrorsExcept(snapshot, prev, skipBuckets) {
     if (snapshot.errors.some((e) => e.id === err.id)) return;
     snapshot.errors.push({ ...err });
   });
+}
+
+function pruneSnapshotToCatalog(snapshot, schedulerState) {
+  const catalogIds = new Set(IU_INFO_PANEL_CATALOG.map((item) => item.id));
+  const activeBuckets = new Set(getAllFetchBuckets());
+
+  Object.keys(snapshot.items || {}).forEach((id) => {
+    if (!catalogIds.has(id)) delete snapshot.items[id];
+  });
+
+  if (Array.isArray(snapshot.errors)) {
+    snapshot.errors = snapshot.errors.filter((err) => {
+      if (!err || !err.id) return true;
+      if (!catalogIds.has(err.id) && !activeBuckets.has(err.id)) return false;
+      return true;
+    });
+  }
+
+  if (snapshot.bucketFetchedAt) {
+    Object.keys(snapshot.bucketFetchedAt).forEach((bucket) => {
+      if (!activeBuckets.has(bucket)) delete snapshot.bucketFetchedAt[bucket];
+    });
+  }
+
+  if (schedulerState.buckets) {
+    Object.keys(schedulerState.buckets).forEach((bucket) => {
+      if (!activeBuckets.has(bucket)) delete schedulerState.buckets[bucket];
+    });
+  }
+
+  snapshot.catalogCount = IU_INFO_PANEL_CATALOG.length;
 }
 
 async function main() {
@@ -870,6 +887,8 @@ async function main() {
   }
 
   copyPrevErrorsExcept(snapshot, prev, fetchedBuckets);
+
+  pruneSnapshotToCatalog(snapshot, schedulerState);
 
   snapshot.bucketFetchedAt = {};
   Object.keys(schedulerState.buckets || {}).forEach((bucket) => {
