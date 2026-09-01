@@ -43,7 +43,7 @@ const SILVER_AI_DISCLAIMER_NEEDLES = [
   "Důležité informace si proto vždy ověřte",
 ];
 const ABOUT_AI_NOTE =
-  "Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence, například pro AI asistenta Silver a při tvorbě nebo úpravě některých ilustračních grafických prvků webu.";
+  "Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence. AI asistent Silver pracuje lokálně v zařízení uživatele a jeho pokyny a požadavky se neodesílají na server. Při tvorbě nebo úpravě některých ilustračních grafických prvků webu byla rovněž použita umělá inteligence.";
 const FORBIDDEN_ACTIVE = [
   "O Silverovi / osobní asistent",
   "O Silverovi / AI asistent",
