@@ -15,7 +15,8 @@ enabled = true
 
 [vars]
 PUBLIC_CACHE_SECONDS = "60"
-CORS_ALLOW_ORIGIN = "*"
+# Exact browser origins only (comma-separated). Never use "*" (fail-closed → production defaults).
+CORS_ALLOW_ORIGIN = "https://infouzel.cz,https://www.infouzel.cz"
 
 # Placeholder id replaced by deploy workflow after D1 create/list.
 [[d1_databases]]
