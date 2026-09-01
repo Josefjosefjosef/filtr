@@ -18,7 +18,7 @@ const SPEECH_VARIANTS = [
 ];
 
 const PRIVACY_LINE1 = "🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.";
-const PRIVACY_LINE2 = "Nic neopouští tvoje zařízení.";
+const PRIVACY_LINE2 = "Síť jen pro provoz webu — viz iCentrum.";
 const POSITION_TOLERANCE_PX = 1;
 
 function envUrl() {
