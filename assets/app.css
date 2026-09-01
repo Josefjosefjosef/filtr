@@ -18213,16 +18213,22 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"],
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]{
+    display:block !important;
     width:100% !important;
     max-width:100% !important;
     min-width:0 !important;
     min-inline-size:0 !important;
+    max-inline-size:100% !important;
     box-sizing:border-box !important;
     justify-self:stretch;
     overflow-x:visible;
   }
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,
+  .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit-fields-wrapper,
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit-fields-wrapper,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-date-and-time-value,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-date-and-time-value{
     min-width:0 !important;
