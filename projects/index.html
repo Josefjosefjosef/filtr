@@ -1009,7 +1009,7 @@ require-trusted-types-for 'script';
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <link rel="stylesheet" data-iu-href="/assets/iu-tasks-premium.css?v=date-time-value-column-v4-20260813" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=iu-dataloss-backup-ux-v1-20260901" media="print" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=iu-legal-content-v1-20260901" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
@@ -3237,7 +3237,7 @@ require-trusted-types-for 'script';
                                   </div>
                                   <div class="iu-silver-trust" data-iu-silver-trust>
                                     <p class="silver-privacy-line silver-privacy-line--1" data-iu-silver-privacy-line>🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.</p>
-                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Nic neopouští tvoje zařízení.</p>
+                                    <p class="silver-privacy-line silver-privacy-line--2" data-iu-silver-privacy-line-2>Web ale pro provoz využívá běžná síťová spojení — viz iCentrum.</p>
                                   </div>
                                   <p class="iu-hero-silverLines iu-hero-silverLines--desktop" aria-label="Pomůžu ti se vším na infoUzel.cz">
                                     <span class="iu-hero-line iu-hero-line--2">Pomůžu ti se vším</span>
@@ -6927,7 +6927,7 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="analytics" data-iu-src="/assets/iu-analytics-client.js?v=iu-analytics-v1-20260721b-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="ads" data-iu-src="/assets/iu-ads-public-v1.js?v=ads-public-inject-v1-20260724-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-info-center.js?v=iu-dataloss-backup-ux-v1-20260901"></script>
+    <script defer src="/assets/iu-info-center.js?v=iu-legal-content-v1-20260901"></script>
     <script defer src="/assets/iu-vault-ui-v1.js?v=iu-icentrum-security-ux-v1-20260831"></script>
     <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
@@ -7686,7 +7686,7 @@ require-trusted-types-for 'script';
               <p class="iuInfoCenter__p">Souhlas se statistikami <strong>není</strong> odvozen z pokračování v prohlížení ani z používání nástrojů.</p>
               <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit v Nastavení soukromí →</button>
               <h3 class="iuInfoCenter__h3">D) Třetí strany (mimo naše statistiky)</h3>
-              <p class="iuInfoCenter__p">Při zobrazení náhledů videí v sekci Média může prohlížeč načíst obrázky z CDN YouTube (<code>i.ytimg.com</code>) ještě <strong>před</strong> kliknutím na přehrání. Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data dle svých pravidel. Na to nemáme přímou kontrolu. Naše volitelné statistiky se jich netýkají.</p>
+              <p class="iuInfoCenter__p">Při zobrazení náhledů videí v sekci Média může prohlížeč načíst obrázky z CDN YouTube (<code>i.ytimg.com</code>) ještě <strong>před</strong> kliknutím na přehrání. Při přehrání videa (YouTube / youtube-nocookie.com) nebo načtení počasí (Open-Meteo) mohou tyto služby ukládat vlastní technická data dle svých pravidel. Veřejné reklamy se načítají z <strong>ads.infouzel.cz</strong> (technický dotaz bez profilování dle současného modelu). Na to nemáme přímou kontrolu. Naše volitelné statistiky se jich netýkají.</p>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
@@ -7757,9 +7757,14 @@ require-trusted-types-for 'script';
             </div>
           </article>
 
-          <article id="iuInfoCenterDetailPrivacy" class="iuInfoCenter__detail" data-iu-info-section="privacy" hidden>
+          <article id="iuInfoCenterDetailPrivacy" class="iuInfoCenter__detail" data-iu-info-section="privacy" data-iu-legal-content="phase8a-v1" hidden>
             <div class="iuInfoCenter__detailInner">
               <p class="iuInfoCenter__lead">Tato sekce popisuje poctivě, jaká data InfoUzel používá, kde zůstávají a co můžete ovlivnit vy.</p>
+              <div class="iuInfoCenter__box iuInfoCenter__box--info" role="note" data-iu-legal-truth="controller">
+                <p class="iuInfoCenter__statusRow"><span class="iuInfoCenter__status iuInfoCenter__status--info" role="status"><span class="iuInfoCenter__statusIcon" aria-hidden="true">i</span><span class="iuInfoCenter__statusLabel">INFORMACE</span><span class="iuInfoCenter__statusText">Správce osobních údajů</span></span></p>
+                <p class="iuInfoCenter__p"><strong>Správce osobních údajů</strong> pro zpracování prováděné provozovatelem InfoUzel.cz (hosting, volitelné statistiky, e-mailové dotazy k ochraně soukromí): <strong>Media Uzel s.r.o.</strong> — podrobnosti v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="contact">Provozovatel a kontakt</button>.</p>
+                <p class="iuInfoCenter__p">Obsah local-first nástrojů (poznámky, úkoly, kalendář, faktury…) provozovatel <strong>standardně neukládá na své servery</strong> — správu těchto dat provádíte vy v zařízení.</p>
+              </div>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat (local-first) →</button></p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Správa souhlasu a nastavení soukromí →</button></p>
               <h3 class="iuInfoCenter__h3">Jak používáme údaje a nastavení</h3>
@@ -7807,6 +7812,7 @@ require-trusted-types-for 'script';
                     <tr><td>Poznámky, úkoly, kalendář, faktury (formulář)</td><td>v zařízení do odstranění uživatelem</td></tr>
                     <tr><td>Právní dokumenty (generátor)</td><td>primárně v relaci prohlížeče; po obnovení stránky může být ztracen náhled — neukládáme na server</td></tr>
                     <tr><td>E-mailová korespondence (dotazy k ochraně soukromí)</td><td>po dobu vyřízení dotazu</td></tr>
+                    <tr><td>Agregované statistiky (InfoUzel Analytics, po souhlasu)</td><td>ukládány v agregované podobě v databázi provozovatele (Cloudflare D1); v aplikaci není nastavena automatická doba smazání — agregáty zůstávají, dokud je provozovatel ručně neodstraní nebo dokud nebude zavedena interní retention policy</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -7857,7 +7863,9 @@ require-trusted-types-for 'script';
                   <tbody>
                     <tr><td>GitHub Pages</td><td>hosting statického webu</td><td>technický provoz, IP při HTTP požadavku</td><td><strong>Ne</strong> — neukládá obsah local-first modulů</td></tr>
                     <tr><td>GitHub Actions</td><td>CI, generování veřejných JSON</td><td>repozitář, build logy</td><td><strong>Ne</strong> — bez user content z prohlížeče</td></tr>
-                    <tr><td>Cloudflare Workers</td><td>volitelně articles-watchdog (pokud nasazeno)</td><td>technický provoz HTTP požadavků</td><td><strong>Ne</strong> pro poznámky/úkoly/kalendář/faktury/právní docs</td></tr>
+                    <tr><td>Cloudflare (CDN / Workers)</td><td>doručení webu, edge služby, Analytics Worker, Ads Worker</td><td>technický provoz HTTP požadavků</td><td><strong>Ne</strong> pro poznámky/úkoly/kalendář/faktury/právní docs</td></tr>
+                    <tr><td>InfoUzel Analytics (Cloudflare Worker)</td><td>volitelné agregované statistiky — pouze po souhlasu</td><td>agregované události (návštěvy, sekce, chyby, výkon), kategorie zařízení — ne IP, ne cookies, ne obsah nástrojů</td><td><strong>Ne</strong></td></tr>
+                    <tr><td>ads.infouzel.cz (Cloudflare Worker)</td><td>kontextové doručení veřejných reklam</td><td>technický dotaz (kategorie zařízení, volitelně sekce) — bez reklamního profilování dle současného modelu</td><td><strong>Ne</strong></td></tr>
                     <tr><td>Open-Meteo</td><td>předpověď počasí</td><td>souřadnice / město při volbě polohy</td><td><strong>Ne</strong></td></tr>
                     <tr><td>YouTube / Google</td><td>náhledy videí (<code>i.ytimg.com</code>) a embed po kliknutí</td><td>technická data při načtení náhledu a při přehrání dle Google</td><td><strong>Ne</strong> — neposíláme texty z nástrojů</td></tr>
                     <tr><td>RSS vydavatelé</td><td>veřejné články</td><td>veřejný obsah feedu</td><td><strong>Ne</strong></td></tr>
@@ -7867,6 +7875,16 @@ require-trusted-types-for 'script';
                 </table>
               </div>
               <p class="iuInfoCenter__p">Každý poskytovatel má vlastní podmínky ochrany soukromí. InfoUzel za jejich zpracování nenese plnou odpovědnost.</p>
+              <h3 class="iuInfoCenter__h3" data-iu-legal-truth="international-transfers">Mezinárodní předávání dat</h3>
+              <div class="iuInfoCenter__box iuInfoCenter__box--info" role="note">
+                <p class="iuInfoCenter__p">Obsah local-first nástrojů (poznámky, úkoly, kalendář, faktury…) <strong>standardně neodesíláme</strong> mimo vaše zařízení. Některé technické služby webu však mohou zpracovávat údaje mimo Evropský hospodářský prostor (EHP), zejména:</p>
+                <ul class="iuInfoCenter__ul">
+                  <li><strong>GitHub</strong> (hosting statických souborů) — technické logy HTTP požadavků; provozovatel může mít sídlo mimo EHP</li>
+                  <li><strong>Cloudflare</strong> (CDN / Workers) — doručení webu, volitelné statistiky (po souhlasu), reklamní doručení; globální síť edge uzlů</li>
+                  <li><strong>Google / YouTube</strong> — při načtení náhledů (<code>i.ytimg.com</code>) nebo přehrání videa</li>
+                </ul>
+                <p class="iuInfoCenter__p">Předávání mimo EHP může být zajištěno vhodnými zárukami dle GDPR kapitoly V (např. rozhodnutí o odpovídající ochraně, standardní smluvní doložky nebo rámec EU–US Data Privacy Framework, pokud je pro daného poskytovatele použitelný). Konkrétní mechanismus u jednotlivých poskytovatelů je uveden v jejich dokumentaci; provozovatel sleduje použité smluvní a technické záruky ve vztahu se zpracovateli.</p>
+              </div>
               <h3 class="iuInfoCenter__h3">7. Upozornění k nástrojům (ne právní / účetní služba)</h3>
               <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
                 <p class="iuInfoCenter__p"><strong>Právní dokumenty</strong> — generátor slouží jako pomocný nástroj pro sestavení textu. <strong>Nejde o právní službu, právní poradenství ani advokátní činnost.</strong> Před použitím dokumentu v právním styku ověřte text u odborníka.</p>
@@ -8063,6 +8081,7 @@ require-trusted-types-for 'script';
                 <li>Bez souhlasu se žádná analytika neodesílá.</li>
                 <li>Soukromé nástroje se ve veřejném přehledu zobrazují jen jako anonymní souhrn.</li>
                 <li>Detailní reklamní reporty nejsou veřejné.</li>
+                <li>Agregáty se ukládají v databázi provozovatele bez automatické doby smazání — viz retention v sekci Ochrana soukromí.</li>
               </ul>
               <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/statistiky/">Otevřít Statistiky a transparentnost →</a></p>
               <p class="iuInfoCenter__p"><button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit souhlas v Nastavení soukromí →</button></p>
@@ -8074,6 +8093,7 @@ require-trusted-types-for 'script';
             <div class="iuInfoCenter__detailInner">
               <div class="iuInfoCenter__companyCard">
                 <p class="iuInfoCenter__companyName">Media Uzel s.r.o.</p>
+                <p class="iuInfoCenter__companyRow"><strong>Správce osobních údajů</strong> pro server-side zpracování provozovatele InfoUzel.cz (hosting, volitelné statistiky, e-mailové dotazy).</p>
                 <p class="iuInfoCenter__companyRow">Kněžická 96<br>190 12 Praha 9</p>
                 <p class="iuInfoCenter__companyRow"><strong>IČ:</strong> 29482241</p>
                 <p class="iuInfoCenter__companyRow"><strong>E-mail:</strong> <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a></p>
