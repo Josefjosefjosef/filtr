@@ -48,7 +48,7 @@ async function fetchOriginMaybePromoteCsp(request: Request, pathname: string): P
           })
         : request;
     const res = await fetchOrigin(originReq);
-    const promoted = await promoteHtmlCsp(res);
+    const promoted = await promoteHtmlCsp(res, pathname);
     if (request.method === "HEAD") {
       return new Response(null, {
         status: promoted.status,
