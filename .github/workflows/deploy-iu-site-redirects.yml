@@ -110,7 +110,16 @@ jobs:
           grep -qiE "frame-ancestors 'self'" /tmp/root_headers.txt
           grep -qiE "^x-iu-csp-edge: meta-promoted-v1" /tmp/root_headers.txt
           grep -qiE "require-trusted-types-for 'script'" /tmp/root_headers.txt
+          grep -qiE "^Permissions-Policy:" /tmp/root_headers.txt
+          grep -qiE "geolocation=\(self\)" /tmp/root_headers.txt
+          grep -qiE "camera=\(\)" /tmp/root_headers.txt
+          grep -qiE "clipboard-read=\(\)" /tmp/root_headers.txt
+          # Must not deny capabilities InfoUzel uses
+          if grep -qiE "clipboard-write=\(\)" /tmp/root_headers.txt; then echo "PP_FORBIDDEN clipboard-write deny"; exit 1; fi
+          if grep -qiE "geolocation=\(\)(,|$)" /tmp/root_headers.txt; then echo "PP_FORBIDDEN geolocation deny-all"; exit 1; fi
           # /projects/ → 301 → / ; final document must carry HTTP CSP
           curl -sIL "https://infouzel.cz/projects/" | tee /tmp/projects_follow.txt
           grep -qiE "^Content-Security-Policy:" /tmp/projects_follow.txt
+          grep -qiE "^Permissions-Policy:" /tmp/projects_follow.txt
           echo "HTTP_CSP_PROOF=PASS"
+          echo "PERMISSIONS_POLICY_PROOF=PASS"

@@ -67,6 +67,8 @@ jobs:
       - run: npm ci
       - name: GHA immutable pin guard (SC-GHA-02)
         run: npm run iu-gha-immutable-pin-guard
+      - name: Permissions-Policy guard (EXT-HDR-PERM-01)
+        run: npm run iu-permissions-policy-guard
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |
