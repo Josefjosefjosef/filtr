@@ -681,7 +681,7 @@ function assertCssSourceContract() {
     appCss
   );
   const noClipOverflow =
-    /iuSilverDraftInput\[type="date"\][\s\S]{0,280}overflow-x:\s*visible/.test(appCss);
+    /min-inline-size:\s*0\s*!important[\s\S]{0,200}overflow-x:\s*visible/.test(appCss);
   const gridSafe = /iuSilverDraftCard--quickTemplateEmpty\s+\.iuSilverDraftGrid--edit\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*max-content\)\s+minmax\(0,\s*1fr\)/m.test(
     appCss
   );
@@ -884,6 +884,10 @@ async function main() {
       cssContract.gridSafe +
       " premiumDate=" +
       cssContract.premiumDate +
+      " silverFieldsWrapper=" +
+      cssContract.silverFieldsWrapper +
+      " noClipOverflow=" +
+      cssContract.noClipOverflow +
       " badFixed=" +
       cssContract.badFixed +
       "\n"
