@@ -13,7 +13,7 @@ const {
 
 const BUBBLE_TEXT = "Jsem Silver, tvůj soukromý asistent.";
 const PRIVACY_LINE1 = "🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.";
-const PRIVACY_LINE2 = "Nic neopouští tvoje zařízení.";
+const PRIVACY_LINE2 = "Síť jen pro provoz webu — viz iCentrum.";
 const OLD_PRIVACY_SNIPPET = "🔒 Co napíšeš, zůstává jen u tebe";
 const FIGURE_HEIGHT_PX = 140;
 const TAIL_TOP_MIN_PCT = 48;

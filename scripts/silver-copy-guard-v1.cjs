@@ -2,8 +2,7 @@
 "use strict";
 
 /* silver_copy_guard
-   Ověřuje: Silver okno zobrazuje původní privacy text
-   "Co napíšeš nebo si uložíš, zůstává jen u tebe. Nic neopouští tvoje zařízení."
+   Ověřuje: Silver okno zobrazuje Phase 8A privacy text (qualified local-first + network note).
    Statická kontrola zdroje (projects/index.html) + DOM kontrola na mobilu/tabletu. */
 
 const fs = require("fs");
@@ -15,8 +14,12 @@ const GUARD_NAME = "SILVER_COPY_GUARD_V1";
 const REPORT = "scripts/silver-copy-guard-v1-report.json";
 
 const LINE1 = "🔒 Co napíšeš nebo si uložíš, zůstává jen u tebe.";
-const LINE2 = "Nic neopouští tvoje zařízení.";
-const FORBIDDEN = ["Osobní záznamy ukládáme primárně", "Část webu může používat externí služby"];
+const LINE2 = "Síť jen pro provoz webu — viz iCentrum.";
+const FORBIDDEN = [
+  "Osobní záznamy ukládáme primárně",
+  "Část webu může používat externí služby",
+  "Nic neopouští tvoje zařízení",
+];
 
 function staticCheck() {
   const html = fs.readFileSync(path.join(shared.ROOT, "projects", "index.html"), "utf8");
