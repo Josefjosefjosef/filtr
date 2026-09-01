@@ -56,6 +56,15 @@ zone_name = "infouzel.cz"
 pattern = "www.infouzel.cz/bot*"
 zone_name = "infouzel.cz"
 
+# EXT-CSP-SECONDARY-01: SW offline fallback document
+[[routes]]
+pattern = "infouzel.cz/offline.html"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/offline.html"
+zone_name = "infouzel.cz"
+
 [vars]
 # Cutover: R2 is authoritative for traffic_offline_snapshot when true (Pages fallback if R2 empty).
 LIVE_TRAFFIC_ENABLED = "true"

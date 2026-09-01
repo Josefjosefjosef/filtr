@@ -123,10 +123,20 @@ jobs:
           grep -qiE "^Permissions-Policy:" /tmp/projects_follow.txt
           echo "HTTP_CSP_PROOF=PASS"
           echo "PERMISSIONS_POLICY_PROOF=PASS"
-          curl -sI "https://infouzel.cz/offline.html" | tee /tmp/offline_headers.txt
-          grep -qiE "^Content-Security-Policy:" /tmp/offline_headers.txt
-          grep -qiE "^x-iu-csp-edge: secondary-v1" /tmp/offline_headers.txt
-          grep -qiE "frame-ancestors 'none'" /tmp/offline_headers.txt
+          # offline.html is a dedicated Worker route; allow brief edge propagation
+          ok=0
+          for attempt in 1 2 3 4 5 6; do
+            echo "OFFLINE_CSP_PROBE_ATTEMPT=${attempt}"
+            curl -sI "https://infouzel.cz/offline.html" | tee /tmp/offline_headers.txt
+            if grep -qiE "^x-iu-csp-edge: secondary-v1" /tmp/offline_headers.txt \
+              && grep -qiE "^Content-Security-Policy:" /tmp/offline_headers.txt \
+              && grep -qiE "frame-ancestors 'none'" /tmp/offline_headers.txt; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok" = "1"
           if grep -qiE "script-src[^;]*'unsafe-inline'" /tmp/offline_headers.txt; then echo "OFFLINE_UNSAFE_INLINE"; exit 1; fi
           curl -sI "https://infouzel.cz/bot/" | tee /tmp/bot_headers.txt
           grep -qiE "^Content-Security-Policy:" /tmp/bot_headers.txt
