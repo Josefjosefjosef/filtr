@@ -34,7 +34,7 @@ const REPORT = path.join(
 
 const BADGE_TEXT = "AI asistent";
 const PC_SILVER_LABEL = "Silver — AI asistent";
-const ICENTRUM_TILE = "O Silverovi / AI asistent";
+const ICENTRUM_TILE = "O Silverovi – AI asistent";
 const SILVER_LEAD =
   "Silver je AI osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.";
 const SILVER_AI_DISCLAIMER_NEEDLES = [
@@ -46,6 +46,7 @@ const ABOUT_AI_NOTE =
   "Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence, například pro AI asistenta Silver a při tvorbě nebo úpravě některých ilustračních grafických prvků webu.";
 const FORBIDDEN_ACTIVE = [
   "O Silverovi / osobní asistent",
+  "O Silverovi / AI asistent",
   'iuSilverHomeDesktopActionMenuItemLabel">Silver</span>',
   "Silver je osobní asistent přímo v InfoUzel.cz",
 ];

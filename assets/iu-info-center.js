@@ -151,7 +151,7 @@
     a.innerHTML =
       '<span class="iuInfoCenter__tileIcon" aria-hidden="true">📢</span>' +
       '<span class="iuInfoCenter__tileLabel">Reklama a klientský portál</span>' +
-      '<span class="iuInfoCenter__tileHint">Vstup pro inzerenty a přehled reklamních kampaní</span>';
+      '<span class="iuInfoCenter__tileHint">Informace o reklamě v InfoUzlu a vstup do klientského portálu InfoUzel Ads.</span>';
     if (contact && contact.parentNode) contact.parentNode.insertBefore(a, contact);
     else menu.appendChild(a);
   }
