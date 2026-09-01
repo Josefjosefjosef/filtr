@@ -88,6 +88,8 @@ describe("iu-site-redirects", () => {
       expect(csp).toContain("require-trusted-types-for 'script'");
       expect(csp).toContain("frame-ancestors 'self'");
       expect(res.headers.get("x-iu-csp-edge")).toBe("meta-promoted-v1");
+      expect(res.headers.get("Permissions-Policy") || "").toContain("geolocation=(self)");
+      expect(res.headers.get("Permissions-Policy") || "").toContain("camera=()");
     } finally {
       globalThis.fetch = orig;
     }
@@ -102,6 +104,7 @@ describe("iu-site-redirects", () => {
       const res = await worker.fetch(req("/", { method: "HEAD" }), {});
       expect(res.status).toBe(200);
       expect(res.headers.get("Content-Security-Policy") || "").toContain("frame-ancestors 'self'");
+      expect(res.headers.get("Permissions-Policy") || "").toContain("geolocation=(self)");
       expect(await res.text()).toBe("");
     } finally {
       globalThis.fetch = orig;

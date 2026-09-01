@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   ensureFrameAncestors,
+  ensurePermissionsPolicy,
   extractMetaCsp,
   isHtmlDocumentPath,
   promoteHtmlCsp,
   IU_CSP_EDGE_MARKER,
+  PERMISSIONS_POLICY_VALUE,
 } from "./csp-promote";
 
 describe("csp-promote", () => {
@@ -58,7 +60,33 @@ require-trusted-types-for 'script';
     expect(csp).toContain("frame-ancestors 'self'");
     expect(csp).toContain("require-trusted-types-for 'script'");
     expect(out.headers.get("x-iu-csp-edge")).toBe(IU_CSP_EDGE_MARKER);
+    expect(out.headers.get("Permissions-Policy")).toBe(PERMISSIONS_POLICY_VALUE);
     expect(await out.text()).toContain("Content-Security-Policy");
+  });
+
+  it("sets Permissions-Policy on HTML even when meta CSP is missing", async () => {
+    const origin = new Response("<!doctype html><html><body>ok</body></html>", {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+    const out = await promoteHtmlCsp(origin);
+    expect(out.headers.get("Content-Security-Policy")).toBeNull();
+    expect(out.headers.get("Permissions-Policy")).toBe(PERMISSIONS_POLICY_VALUE);
+  });
+
+  it("does not duplicate Permissions-Policy", () => {
+    const headers = new Headers({ "Permissions-Policy": "camera=(self)" });
+    ensurePermissionsPolicy(headers);
+    expect(headers.get("Permissions-Policy")).toBe("camera=(self)");
+  });
+
+  it("policy keeps geolocation self and does not deny clipboard-write", () => {
+    expect(PERMISSIONS_POLICY_VALUE).toContain("geolocation=(self)");
+    expect(PERMISSIONS_POLICY_VALUE).toContain("camera=()");
+    expect(PERMISSIONS_POLICY_VALUE).toContain("clipboard-read=()");
+    expect(PERMISSIONS_POLICY_VALUE).not.toMatch(/clipboard-write\s*=\s*\(\)/);
+    expect(PERMISSIONS_POLICY_VALUE).not.toMatch(/autoplay\s*=\s*\(\)/);
+    expect(PERMISSIONS_POLICY_VALUE).not.toMatch(/fullscreen\s*=\s*\(\)/);
   });
 
   it("leaves non-HTML unchanged", async () => {
@@ -68,5 +96,6 @@ require-trusted-types-for 'script';
     });
     const out = await promoteHtmlCsp(origin);
     expect(out.headers.get("Content-Security-Policy")).toBeNull();
+    expect(out.headers.get("Permissions-Policy")).toBeNull();
   });
 });

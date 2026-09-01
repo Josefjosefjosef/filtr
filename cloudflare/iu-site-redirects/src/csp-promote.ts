@@ -8,6 +8,39 @@
 export const IU_CSP_EDGE_MARKER = "meta-promoted-v1";
 export const FRAME_ANCESTORS_SELF = "frame-ancestors 'self'";
 
+/**
+ * EXT-HDR-PERM-01 — minimal Permissions-Policy for public HTML documents.
+ *
+ * Inventory-backed:
+ * - geolocation=(self): weather GPS (iu-app-feed-pipeline) — first-party only
+ * - clipboard-read=(): app never reads clipboard (write-only + execCommand copy)
+ * - camera/microphone/payment/usb/serial/bluetooth/hid=(): unused
+ * - browsing-topics/interest-cohort=(): privacy Topics/FLoC not used
+ *
+ * Intentionally omitted (defaults preserved for real features / YouTube embeds):
+ * clipboard-write, autoplay, accelerometer, gyroscope, picture-in-picture,
+ * encrypted-media, fullscreen.
+ */
+export const PERMISSIONS_POLICY_VALUE = [
+  "camera=()",
+  "microphone=()",
+  "payment=()",
+  "usb=()",
+  "serial=()",
+  "bluetooth=()",
+  "hid=()",
+  "geolocation=(self)",
+  "clipboard-read=()",
+  "browsing-topics=()",
+  "interest-cohort=()",
+].join(", ");
+
+/** Apply Permissions-Policy once; never duplicate / overwrite an existing value. */
+export function ensurePermissionsPolicy(headers: Headers, value = PERMISSIONS_POLICY_VALUE): void {
+  if (headers.has("Permissions-Policy")) return;
+  headers.set("Permissions-Policy", value);
+}
+
 /** Extract Content-Security-Policy from a meta http-equiv tag (multiline OK). */
 export function extractMetaCsp(html: string): string | null {
   const equivIdx = html.search(/http-equiv\s*=\s*["']Content-Security-Policy["']/i);
@@ -57,7 +90,8 @@ export function isHtmlDocumentPath(pathname: string): boolean {
 
 /**
  * Clone an HTML origin response and set Content-Security-Policy from meta.
- * If meta is missing, leave response unchanged (fail-open for non-app HTML).
+ * Always attach Permissions-Policy on HTML documents (EXT-HDR-PERM-01).
+ * If meta CSP is missing, still apply Permissions-Policy (fail-open for CSP only).
  */
 export async function promoteHtmlCsp(response: Response): Promise<Response> {
   if (!isHtmlContentType(response.headers.get("content-type"))) {
@@ -68,17 +102,13 @@ export async function promoteHtmlCsp(response: Response): Promise<Response> {
   const headBytes = Math.min(buf.byteLength, 96 * 1024);
   const headText = new TextDecoder("utf-8", { fatal: false }).decode(buf.slice(0, headBytes));
   const metaCsp = extractMetaCsp(headText);
-  if (!metaCsp) {
-    return new Response(buf, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-    });
-  }
-
   const headers = new Headers(response.headers);
-  headers.set("Content-Security-Policy", ensureFrameAncestors(metaCsp));
-  headers.set("x-iu-csp-edge", IU_CSP_EDGE_MARKER);
+  ensurePermissionsPolicy(headers);
+
+  if (metaCsp) {
+    headers.set("Content-Security-Policy", ensureFrameAncestors(metaCsp));
+    headers.set("x-iu-csp-edge", IU_CSP_EDGE_MARKER);
+  }
 
   return new Response(buf, {
     status: response.status,
