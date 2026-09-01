@@ -95,6 +95,42 @@ describe("iu-site-redirects", () => {
     }
   });
 
+  it("applies secondary CSP on /offline.html", async () => {
+    const orig = globalThis.fetch;
+    globalThis.fetch = async () =>
+      new Response("<!doctype html><html><body>offline</body></html>", {
+        status: 200,
+        headers: { "content-type": "text/html; charset=utf-8" },
+      });
+    try {
+      const res = await worker.fetch(req("/offline.html"), {});
+      expect(res.status).toBe(200);
+      expect(res.headers.get("x-iu-csp-edge")).toBe("secondary-v1");
+      expect(res.headers.get("Content-Security-Policy") || "").toContain("script-src 'sha256-");
+      expect(res.headers.get("Content-Security-Policy") || "").toContain("frame-ancestors 'none'");
+      expect(res.headers.get("Permissions-Policy") || "").toContain("geolocation=(self)");
+    } finally {
+      globalThis.fetch = orig;
+    }
+  });
+
+  it("applies secondary CSP on /bot/", async () => {
+    const orig = globalThis.fetch;
+    globalThis.fetch = async () =>
+      new Response("<!doctype html><html><body>bot</body></html>", {
+        status: 200,
+        headers: { "content-type": "text/html; charset=utf-8" },
+      });
+    try {
+      const res = await worker.fetch(req("/bot/"), {});
+      expect(res.status).toBe(200);
+      expect(res.headers.get("x-iu-csp-edge")).toBe("secondary-v1");
+      expect(res.headers.get("Content-Security-Policy") || "").toContain("script-src 'self'");
+    } finally {
+      globalThis.fetch = orig;
+    }
+  });
+
   it("HEAD / also returns promoted CSP (scanner-compatible)", async () => {
     const orig = globalThis.fetch;
     const html = `<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; object-src 'none'; trusted-types iu-default; require-trusted-types-for 'script';">`;

@@ -3,9 +3,13 @@
  * Canonical policy source remains the HTML meta tag (updated by
  * scripts/iu-csp-apply-script-hashes-v1.mjs). Edge adds HTTP-only
  * frame-ancestors to match X-Frame-Options: SAMEORIGIN.
+ *
+ * EXT-CSP-SECONDARY-01: path-scoped minimal CSP for first-party secondary
+ * HTML that has no meta CSP (offline / bot / zdroje-a-licence).
  */
 
 export const IU_CSP_EDGE_MARKER = "meta-promoted-v1";
+export const IU_CSP_SECONDARY_EDGE_MARKER = "secondary-v1";
 export const FRAME_ANCESTORS_SELF = "frame-ancestors 'self'";
 
 /**
@@ -40,6 +44,73 @@ export function ensurePermissionsPolicy(headers: Headers, value = PERMISSIONS_PO
   if (headers.has("Permissions-Policy")) return;
   headers.set("Permissions-Policy", value);
 }
+
+/**
+ * Exact sha256 of offline.html inline <script> body (no attrs).
+ * Guard fails if offline.html script drifts without updating this constant.
+ */
+export const OFFLINE_INLINE_SCRIPT_SHA256 =
+  "sha256-1PVur2yZYBQRvFvdt/52Tnb5q0UG7UA2TnrjjxtV2pU=";
+
+/**
+ * Exact sha256 of projekty zdroje-a-licence inline type=module script body.
+ */
+export const ZDROJE_INLINE_MODULE_SHA256 =
+  "sha256-JoFufHtYGJMeC+JTfvecNqetb2l9beDy21ibIhUuypM=";
+
+/** Minimal CSP: offline SW fallback — one hashed inline script + inline CSS. */
+export const CSP_OFFLINE_HTML = [
+  "default-src 'none'",
+  "base-uri 'none'",
+  "object-src 'none'",
+  "script-src '" + OFFLINE_INLINE_SCRIPT_SHA256 + "'",
+  "style-src 'unsafe-inline'",
+  "img-src 'none'",
+  "font-src 'none'",
+  "connect-src 'none'",
+  "form-action 'none'",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "worker-src 'none'",
+  "manifest-src 'none'",
+].join("; ");
+
+/**
+ * Minimal CSP: crawler contact page.
+ * script-src 'self' allows Cloudflare same-origin email-decode inject only.
+ */
+export const CSP_BOT_HTML = [
+  "default-src 'none'",
+  "base-uri 'none'",
+  "object-src 'none'",
+  "script-src 'self'",
+  "style-src 'none'",
+  "img-src 'none'",
+  "font-src 'none'",
+  "connect-src 'none'",
+  "form-action 'none'",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "worker-src 'none'",
+  "manifest-src 'none'",
+].join("; ");
+
+/** Minimal CSP: legal sources registry page (hashed module + self JSON fetch). */
+export const CSP_ZDROJE_HTML = [
+  "default-src 'none'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "script-src '" + ZDROJE_INLINE_MODULE_SHA256 + "'",
+  "style-src 'unsafe-inline'",
+  "img-src 'none'",
+  "font-src 'none'",
+  "connect-src 'self'",
+  "form-action 'none'",
+  "frame-src 'none'",
+  "frame-ancestors 'self'",
+  "worker-src 'none'",
+  "manifest-src 'none'",
+].join("; ");
 
 /** Extract Content-Security-Policy from a meta http-equiv tag (multiline OK). */
 export function extractMetaCsp(html: string): string | null {
@@ -82,18 +153,38 @@ export function isHtmlContentType(contentType: string | null): boolean {
  */
 export function isHtmlDocumentPath(pathname: string): boolean {
   if (pathname === "/" || pathname === "/index.html") return true;
+  if (pathname === "/offline.html") return true;
   if (pathname === "/statistiky" || pathname.startsWith("/statistiky/")) return true;
   if (pathname === "/zdroje-a-licence" || pathname.startsWith("/zdroje-a-licence/")) return true;
   if (pathname === "/bot" || pathname.startsWith("/bot/")) return true;
   return false;
 }
 
+/** Path-scoped secondary CSP when document has no meta CSP. */
+export function secondaryCspForPath(pathname: string): string | null {
+  if (pathname === "/offline.html") return CSP_OFFLINE_HTML;
+  if (pathname === "/bot" || pathname === "/bot/" || pathname === "/bot/index.html") {
+    return CSP_BOT_HTML;
+  }
+  if (
+    pathname === "/zdroje-a-licence" ||
+    pathname === "/zdroje-a-licence/" ||
+    pathname === "/zdroje-a-licence/index.html"
+  ) {
+    return CSP_ZDROJE_HTML;
+  }
+  return null;
+}
+
 /**
- * Clone an HTML origin response and set Content-Security-Policy from meta.
+ * Clone an HTML origin response and set Content-Security-Policy from meta
+ * or path-scoped secondary policy (EXT-CSP-SECONDARY-01).
  * Always attach Permissions-Policy on HTML documents (EXT-HDR-PERM-01).
- * If meta CSP is missing, still apply Permissions-Policy (fail-open for CSP only).
  */
-export async function promoteHtmlCsp(response: Response): Promise<Response> {
+export async function promoteHtmlCsp(
+  response: Response,
+  pathname = "/"
+): Promise<Response> {
   if (!isHtmlContentType(response.headers.get("content-type"))) {
     return response;
   }
@@ -106,8 +197,17 @@ export async function promoteHtmlCsp(response: Response): Promise<Response> {
   ensurePermissionsPolicy(headers);
 
   if (metaCsp) {
-    headers.set("Content-Security-Policy", ensureFrameAncestors(metaCsp));
-    headers.set("x-iu-csp-edge", IU_CSP_EDGE_MARKER);
+    // Do not overwrite an existing origin/edge CSP.
+    if (!headers.has("Content-Security-Policy")) {
+      headers.set("Content-Security-Policy", ensureFrameAncestors(metaCsp));
+      headers.set("x-iu-csp-edge", IU_CSP_EDGE_MARKER);
+    }
+  } else {
+    const secondary = secondaryCspForPath(pathname);
+    if (secondary && !headers.has("Content-Security-Policy")) {
+      headers.set("Content-Security-Policy", secondary);
+      headers.set("x-iu-csp-edge", IU_CSP_SECONDARY_EDGE_MARKER);
+    }
   }
 
   return new Response(buf, {
