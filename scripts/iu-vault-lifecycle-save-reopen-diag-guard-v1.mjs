@@ -17,6 +17,7 @@ import {
   stopGuardProcess,
   closePlaywrightSession,
 } from "./guards/guard-playwright-lifecycle.mjs";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -44,7 +45,7 @@ async function main() {
     if (!/lifeAfterSave|lifeAfterReload|lifeAfterReopen/.test(overlay)) fails.push("overlay_missing_buttons");
     if (!/iu-vault-physical-diag-overlay-v1\.js/.test(index)) fails.push("index_missing_overlay");
     if (!/iu-calendar-persist-ack-v1-20260830|iu-vault-killswitch-restrict-v1-20260831|iu-vault-pin-rotate-fence-v1-20260830|iu-vault-post-hydrate-shim-v1-20260830|iu-vault-canary-diag-v1-20260830|iu-vault-canonical-durable-v1-20260830|iu-vault-hydrated-owns-ui-v1-20260829|iu-vault-key-path-atomic-v1-20260829|iu-vault-hydrated-prefs-ui-v1-20260829|iu-vault-lifecycle-diag-v1-20260829/.test(index)) fails.push("index_missing_cache_bust");
-    if (!/2026-08-30-iu-calendar-persist-ack-v1|2026-08-30-iu-vault-pin-rotate-fence-v1|2026-08-30-iu-vault-post-hydrate-shim-v1|2026-08-30-iu-vault-canary-diag-v1|2026-08-30-iu-vault-canonical-durable-v1|2026-08-29-iu-vault-hydrated-owns-ui-v1|2026-08-29-iu-vault-key-path-atomic-v1|2026-08-29-iu-vault-hydrated-prefs-ui-v1|2026-08-29-iu-vault-lifecycle-diag-v1/.test(sw)) fails.push("sw_missing_cache_version");
+    if (!swHasAllowedCacheVersion(sw)) fails.push("sw_missing_cache_version");
     if (!/persistLevel1KeyWithDurableMaterial|writeKeyRecordsBatch/.test(fs.readFileSync(path.join(REPO, "assets", "iu-vault-lock-v1.js"), "utf8"))) fails.push("missing_key_path_atomic_contract");
     if (!/durableSet/.test(fs.readFileSync(path.join(REPO, "assets", "iu-vault-durable-adapter-v1.js"), "utf8"))) fails.push("missing_durable_adapter");
     if (!/prefsUi/.test(diag)) fails.push("diag_missing_prefsUi");
