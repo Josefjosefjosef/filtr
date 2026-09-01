@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-01-remove-environment-info-panel-v1",
   "2026-08-30-iu-calendar-persist-ack-v1",
   "2026-08-30-iu-vault-pin-rotate-fence-v1",
   "2026-08-30-iu-vault-canary-diag-v1",
@@ -129,7 +130,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-08-30-iu-calendar-persist-ack-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-01-remove-environment-info-panel-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
