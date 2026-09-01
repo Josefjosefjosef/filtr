@@ -24,7 +24,7 @@ const BASE = process.env.IU_GUARD_BASE_URL
   ? String(process.env.IU_GUARD_BASE_URL).replace(/\/?$/, "/")
   : `http://127.0.0.1:${PORT}/projects/`;
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
-const CACHE_BUST = "rychly-prehled-horizontal-persist-v1-20260803";
+const CACHE_BUST = "remove-environment-info-panel-v1-20260901";
 
 const VIEWPORTS = [
   { name: "MOBILE", width: 390, height: 844 },
@@ -149,6 +149,8 @@ async function measureContent(page, label) {
     const panel = document.getElementById("iuMobileInfoPanel");
     const scroll = panel ? panel.querySelector(".iuDesktopInfoPanel__scroll") : null;
     const segs = panel ? Array.from(panel.querySelectorAll(".iuDesktopInfoPanel__segment")) : [];
+    const environment = panel ? panel.querySelector('[data-iu-info-panel-id="environment"]') : null;
+    const environmentText = panel ? (panel.textContent || "").includes("Investice na ochranu") : false;
     const parcel = document.querySelector('[data-iu-home-section-bar="sledovani-zasilek"]');
     const barRect = bar ? bar.getBoundingClientRect() : null;
     const mountRect = mount ? mount.getBoundingClientRect() : null;
@@ -159,6 +161,8 @@ async function measureContent(page, label) {
       !!mount &&
       !!panel &&
       segs.length >= 2 &&
+      !environment &&
+      !environmentText &&
       mountRect &&
       mountRect.height > 40 &&
       mountCs &&
@@ -172,6 +176,7 @@ async function measureContent(page, label) {
       pass,
       barVisible: !!(barRect && barRect.height > 8),
       segmentCount: segs.length,
+      noEnvironmentSegment: !environment && !environmentText,
       mountHeight: mountRect ? Math.round(mountRect.height) : 0,
       mountHiddenAttr: !!(mount && (mount.hidden || mount.hasAttribute("hidden"))),
       mountDisplay: mountCs ? mountCs.display : null,
