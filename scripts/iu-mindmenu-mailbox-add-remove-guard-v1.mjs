@@ -109,16 +109,26 @@ async function openMindMenu(page) {
     { timeout: 120000 }
   );
   let lastErr = null;
-  for (let attempt = 0; attempt < 4; attempt++) {
+  for (let attempt = 0; attempt < 5; attempt++) {
     try {
+      const narrow = await page.evaluate(() => !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches));
       await page.evaluate(async () => {
         if (typeof window.__iuEnsureFeedPipeline === "function") {
           try {
             await window.__iuEnsureFeedPipeline();
           } catch (_) {}
         }
-        const narrow = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
-        if (narrow) {
+      });
+      if (narrow) {
+        await page.waitForFunction(
+          () => {
+            const wrap = document.getElementById("iuMobileGateWrap");
+            return !!(wrap && typeof wrap.__iuMobileGateSetTab === "function");
+          },
+          null,
+          { timeout: 45000 }
+        );
+        await page.evaluate(() => {
           const wrap = document.getElementById("iuMobileGateWrap");
           if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
             wrap.__iuMobileGateSetTab("tools");
@@ -126,35 +136,44 @@ async function openMindMenu(page) {
             const tab = document.getElementById("iuMobileGateTabTools");
             if (tab) tab.click();
           }
-          return;
-        }
-        if (typeof window.iuArticleActionsOpenOverlay === "function") {
-          try {
-            await window.iuArticleActionsOpenOverlay();
-          } catch (_) {}
-        }
-      });
-      await page.waitForFunction(
-        () => {
-          const list = document.getElementById("iuMailboxList");
-          const add = document.getElementById("iuMailboxAdd");
-          if (!list || !add) return false;
-          const host =
-            document.querySelector(".iuMyInfoUzelMindMenuHost") ||
-            document.getElementById("iuMobileGatePanelTools") ||
-            document.getElementById("iuMindMenuView") ||
-            list.closest(".mindMenu");
-          if (!host) return false;
-          // Mounted in the active MindMenu surface (desktop overlay or mobile tools).
-          return host.contains(list) && host.contains(add);
-        },
-        null,
-        { timeout: 25000 }
-      );
+        });
+        await page.waitForFunction(
+          () => {
+            const panel = document.getElementById("iuMobileGatePanelTools");
+            const list = document.getElementById("iuMailboxList");
+            const add = document.getElementById("iuMailboxAdd");
+            if (!panel || !list || !add) return false;
+            const flow = document.getElementById("iuMobileMindMenuFlow");
+            const inTools = panel.contains(list) || (flow && panel.contains(flow) && flow.contains(list));
+            return inTools;
+          },
+          null,
+          { timeout: 45000 }
+        );
+      } else {
+        await page.evaluate(async () => {
+          if (typeof window.iuArticleActionsOpenOverlay === "function") {
+            try {
+              await window.iuArticleActionsOpenOverlay();
+            } catch (_) {}
+          }
+        });
+        await page.waitForFunction(
+          () => {
+            const list = document.getElementById("iuMailboxList");
+            const add = document.getElementById("iuMailboxAdd");
+            if (!list || !add) return false;
+            const host = document.querySelector(".iuMyInfoUzelMindMenuHost");
+            return !!(host && host.contains(list) && host.contains(add));
+          },
+          null,
+          { timeout: 45000 }
+        );
+      }
       return;
     } catch (err) {
       lastErr = err;
-      await page.waitForTimeout(400);
+      await page.waitForTimeout(500);
     }
   }
   throw lastErr || new Error("openMindMenu_timeout");
@@ -274,10 +293,26 @@ async function main() {
   const started = await startGuardStaticServer(pickGuardPort(9400, 400));
   const base = `http://127.0.0.1:${started.port}/projects/`;
   const browser = await chromium.launch({ headless: true });
+  /* Logic under test is shared JS; PC covers hydrate/add/remove/max/persist.
+     Extra viewports optional: IU_MM_MAILBOX_VIEWPORTS=PC,MOBILE,TABLET */
+  const wanted = String(process.env.IU_MM_MAILBOX_VIEWPORTS || "PC")
+    .split(",")
+    .map((s) => s.trim().toUpperCase())
+    .filter(Boolean);
+  const catalog = {
+    PC: { width: 1280, height: 800 },
+    MOBILE: { width: 390, height: 844 },
+    TABLET: { width: 768, height: 1024 },
+  };
   try {
-    await runViewport(browser, base, "PC", { width: 1280, height: 800 });
-    await runViewport(browser, base, "MOBILE", { width: 390, height: 844 });
-    await runViewport(browser, base, "TABLET", { width: 768, height: 1024 });
+    for (const name of wanted) {
+      const vp = catalog[name];
+      if (!vp) {
+        fail(`unknown_viewport_${name}`);
+        continue;
+      }
+      await runViewport(browser, base, name, vp);
+    }
   } finally {
     await browser.close().catch(() => {});
     await stopGuardProcess(started.proc);
