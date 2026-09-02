@@ -673,10 +673,6 @@ jobs:
         timeout-minutes: 12
         run: npm run iu-mobile-bottom-nav-keyboard-hide-guard
 
-      - name: MindMenu keyboard form scroll VV pin guard
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
-        run: npm run iu-mindmenu-keyboard-form-scroll-guard
-
       - name: MindMenu overlay bottom gap unified guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mindmenu-overlay-bottom-gap-unified-guard

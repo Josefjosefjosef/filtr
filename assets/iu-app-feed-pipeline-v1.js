@@ -17967,8 +17967,6 @@ function buildVideoAsArticleCard(it) {
         "iuMobileGatePanelTools",
         "iuMobileGatePanelNav",
         "iuDsBody",
-        "iuDsPanel",
-        "iuQuickFeed",
       ];
       var out = [];
       for (var i = 0; i < ids.length; i++) {
@@ -17982,97 +17980,11 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
       }
       try {
-        document
-          .querySelectorAll(
-            ".iu-tasksOverlay__scroll, .iu-notesOverlay__scroll, .iu-calendarOverlay__scroll, .iu-datovka-scroll-host, .iu-banking-scroll-host, .iuQBody, .iu-legal-overlay-cardShell, .iu-financial-overlay-cardShell, .iu-invoice-overlay-cardShell, .iu-ai-scroll-host"
-          )
-          .forEach(function (el) {
-            if (!el) return;
-            try {
-              var st2 = getComputedStyle(el);
-              if (st2 && (st2.overflowY === "auto" || st2.overflowY === "scroll")) out.push(el);
-            } catch (_) {}
-          });
+        document.querySelectorAll(".iu-tasksOverlay__scroll, .iu-notesOverlay__scroll, .iu-calendarOverlay__scroll").forEach(function (el) {
+          if (el) out.push(el);
+        });
       } catch (_) {}
       return out;
-    }
-
-    /**
-     * Pin MindMenu tool surfaces to visualViewport while soft keyboard is open.
-     * Root cause: overlays stay at layout-viewport height (100dvh / top+bottom:0) so
-     * scrollMax cannot lift form bottoms above the keyboard. CSS consumes these vars.
-     */
-    function syncVvCssVars(forceClear) {
-      try {
-        var root = document.documentElement;
-        if (!root || !root.style) return;
-        if (forceClear || !open) {
-          root.style.removeProperty("--iu-vv-height");
-          root.style.removeProperty("--iu-vv-offset-top");
-          root.style.removeProperty("--iu-keyboard-inset-bottom");
-          return;
-        }
-        var vv = window.visualViewport;
-        var h =
-          vv && typeof vv.height === "number" && vv.height > 0
-            ? Math.floor(vv.height)
-            : Math.floor(window.innerHeight || 0);
-        var top = vv && typeof vv.offsetTop === "number" ? Math.max(0, Math.floor(vv.offsetTop)) : 0;
-        if (!(h > 120)) return;
-        root.style.setProperty("--iu-vv-height", h + "px");
-        root.style.setProperty("--iu-vv-offset-top", top + "px");
-        var inset = Math.floor(keyboardGap());
-        if (inset > 24) root.style.setProperty("--iu-keyboard-inset-bottom", inset + "px");
-        else root.style.removeProperty("--iu-keyboard-inset-bottom");
-      } catch (_) {}
-    }
-
-    function findScrollParent(el) {
-      try {
-        var n = el && el.parentElement;
-        while (n && n !== document.body && n !== document.documentElement) {
-          try {
-            var st = getComputedStyle(n);
-            if (
-              st &&
-              (st.overflowY === "auto" || st.overflowY === "scroll") &&
-              n.scrollHeight > n.clientHeight + 4
-            ) {
-              return n;
-            }
-          } catch (_) {}
-          n = n.parentElement;
-        }
-      } catch (_) {}
-      return null;
-    }
-
-    /** Keep focused field (and room below it) inside the visual viewport after VV shrink. */
-    function ensureActiveFieldAboveKeyboard() {
-      try {
-        if (!open) return;
-        var ae = document.activeElement;
-        if (!isEditableEl(ae)) return;
-        var vv = window.visualViewport;
-        var vvTop = vv && typeof vv.offsetTop === "number" ? vv.offsetTop : 0;
-        var vvH = vv && typeof vv.height === "number" && vv.height > 0 ? vv.height : window.innerHeight || 0;
-        var vvBottom = vvTop + vvH;
-        var rect = ae.getBoundingClientRect();
-        var pad = 20;
-        var host = findScrollParent(ae);
-        if (!host) {
-          if (rect.bottom > vvBottom - pad || rect.top < vvTop + pad) {
-            try {
-              ae.scrollIntoView({ block: "center", inline: "nearest", behavior: "auto" });
-            } catch (_) {}
-          }
-          return;
-        }
-        var delta = 0;
-        if (rect.bottom > vvBottom - pad) delta = rect.bottom - (vvBottom - pad);
-        else if (rect.top < vvTop + pad) delta = rect.top - (vvTop + pad);
-        if (delta) host.scrollTop = Math.max(0, (host.scrollTop || 0) + delta);
-      } catch (_) {}
     }
 
     function captureScrollSnap() {
@@ -18131,10 +18043,7 @@ function buildVideoAsArticleCard(it) {
     function applyOpen(next) {
       try {
         if (open === next) {
-          if (next) {
-            clearNavPinTransform();
-            syncVvCssVars(false);
-          }
+          if (next) clearNavPinTransform();
           return;
         }
         var wasOpen = open;
@@ -18153,17 +18062,7 @@ function buildVideoAsArticleCard(it) {
         if (next && !wasOpen) {
           captureScrollSnap();
         }
-        if (next) {
-          syncVvCssVars(false);
-          try {
-            window.requestAnimationFrame(function () {
-              syncVvCssVars(false);
-              ensureActiveFieldAboveKeyboard();
-            });
-          } catch (_) {
-            ensureActiveFieldAboveKeyboard();
-          }
-        } else {
+        if (!next) {
           focusOpenGraceUntil = 0;
           geomKeyboardOpen = false;
           try {
@@ -18172,7 +18071,6 @@ function buildVideoAsArticleCard(it) {
               graceTimer = 0;
             }
           } catch (_) {}
-          syncVvCssVars(true);
           refreshStableViewport();
           restoreScrollIfNeeded();
         }
@@ -18290,14 +18188,6 @@ function buildVideoAsArticleCard(it) {
             } else {
               refreshStableViewport();
             }
-            if (open || geomNow) {
-              syncVvCssVars(false);
-              try {
-                window.requestAnimationFrame(ensureActiveFieldAboveKeyboard);
-              } catch (_) {
-                ensureActiveFieldAboveKeyboard();
-              }
-            }
             scheduleHide();
           },
           { passive: true }
@@ -18321,7 +18211,6 @@ function buildVideoAsArticleCard(it) {
           if (vkHeight > 40) {
             geomKeyboardOpen = true;
             focusOpenGraceUntil = 0;
-            if (open) syncVvCssVars(false);
             scheduleHide();
           } else if (geomKeyboardOpen || open) {
             geomKeyboardOpen = false;
@@ -18441,31 +18330,12 @@ function buildVideoAsArticleCard(it) {
               classBody: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
               navDisplay: cs ? cs.display : "missing",
               userScrolledWhileKb: userScrolledWhileKb,
-              vvCssH: (document.documentElement.style.getPropertyValue("--iu-vv-height") || ""),
-              vvCssTop: (document.documentElement.style.getPropertyValue("--iu-vv-offset-top") || ""),
             };
           } catch (err) {
             return { error: String(err && err.message) };
           }
         };
       }
-    } catch (_) {}
-    try {
-      /* Guard/test hook: prove VV pin vars exist while keyboard-open. */
-      window.__iuKbFormScrollVvPin = function () {
-        try {
-          var root = document.documentElement;
-          return {
-            open: open,
-            classHtml: !!(root && root.classList.contains("iu-keyboard-open")),
-            vvHeight: root ? root.style.getPropertyValue("--iu-vv-height") : "",
-            vvOffsetTop: root ? root.style.getPropertyValue("--iu-vv-offset-top") : "",
-            keyboardInset: root ? root.style.getPropertyValue("--iu-keyboard-inset-bottom") : "",
-          };
-        } catch (err) {
-          return { error: String(err && err.message) };
-        }
-      };
     } catch (_) {}
     try {
       readFocusState(document.activeElement);
