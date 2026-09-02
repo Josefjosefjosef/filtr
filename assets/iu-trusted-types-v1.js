@@ -206,12 +206,19 @@
     PROGRESS: { value: 1, max: 1 },
     METER: { value: 1, min: 1, max: 1, low: 1, high: 1, optimum: 1 },
     DETAILS: { open: 1 },
+    /* SVG attr keys MUST be lowercase: HTML DOMParser lowercases camelCase
+       (viewBox → viewbox). CamelCase keys silently strip presentation attrs and
+       break MindMenu gear/social icons (XSS-TT-01 regression). */
     SVG: {
-      viewBox: 1,
+      viewbox: 1,
       width: 1,
       height: 1,
       fill: 1,
       stroke: 1,
+      "stroke-width": 1,
+      "stroke-linecap": 1,
+      "stroke-linejoin": 1,
+      preserveaspectratio: 1,
       xmlns: 1,
       focusable: 1,
       "aria-hidden": 1,
@@ -239,12 +246,20 @@
       stroke: 1,
       "stroke-width": 1,
     },
-    LINE: { x1: 1, y1: 1, x2: 1, y2: 1, stroke: 1, "stroke-width": 1 },
+    LINE: {
+      x1: 1,
+      y1: 1,
+      x2: 1,
+      y2: 1,
+      stroke: 1,
+      "stroke-width": 1,
+      "stroke-linecap": 1,
+    },
     POLYLINE: { points: 1, fill: 1, stroke: 1, "stroke-width": 1 },
     POLYGON: { points: 1, fill: 1, stroke: 1, "stroke-width": 1 },
     ELLIPSE: { cx: 1, cy: 1, rx: 1, ry: 1, fill: 1, stroke: 1 },
     USE: { href: 1, "xlink:href": 1, width: 1, height: 1, x: 1, y: 1 },
-    SYMBOL: { viewBox: 1, id: 1 },
+    SYMBOL: { viewbox: 1, id: 1 },
   };
 
   var SAFE_INPUT_TYPES = {

@@ -92,7 +92,14 @@ async function runBrowser(browserType, name, withTtMeta) {
     run("safe_button", '<button type="button" data-act="x" class="btn">Go</button>');
     run("safe_style", '<div style="position:fixed;left:8px;top:8px;width:10px;height:10px">x</div>');
     run("evil_style", '<div style="background:url(javascript:alert(1))">x</div>');
-    run("safe_svg_icon", '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M1 1h10v10H1z" fill="none" stroke="currentColor"/></svg>');
+    run(
+        "safe_svg_icon",
+        '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1h10v10H1z"/></svg>'
+      );
+      run(
+        "safe_svg_social",
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M9.101 23.691v-7.98H6.627z"/></svg>'
+      );
       run("safe_yt", '<iframe src="https://www.youtube-nocookie.com/embed/abc" title="t" loading="lazy" allowfullscreen></iframe>');
       run("evil_yt_host", '<iframe src="https://evil.example/embed"></iframe>');
       return out;
@@ -138,6 +145,17 @@ async function runBrowser(browserType, name, withTtMeta) {
     if (!cases.safe_style || !/position:\s*fixed/i.test(cases.safe_style.inner || "")) fails.push("safe_style_lost");
     if (cases.evil_style && /javascript:/i.test(cases.evil_style.inner || "")) fails.push("evil_style_kept");
     if (!cases.safe_svg_icon || !cases.safe_svg_icon.hasSvg) fails.push("safe_svg_lost");
+    // HTML parser lowercases viewBox → viewbox; allowlist must keep it (MindMenu icons).
+    if (!cases.safe_svg_icon || !/viewbox=["']0 0 24 24["']/i.test(cases.safe_svg_icon.inner || "")) {
+      fails.push("safe_svg_viewbox_lost");
+    }
+    if (!cases.safe_svg_icon || !/stroke-width=["']1\.8["']/i.test(cases.safe_svg_icon.inner || "")) {
+      fails.push("safe_svg_stroke_width_lost");
+    }
+    if (!cases.safe_svg_social || !cases.safe_svg_social.hasSvg) fails.push("safe_svg_social_lost");
+    if (!cases.safe_svg_social || !/viewbox=["']0 0 24 24["']/i.test(cases.safe_svg_social.inner || "")) {
+      fails.push("safe_svg_social_viewbox_lost");
+    }
     if (!cases.safe_yt || !/youtube-nocookie/.test(cases.safe_yt.inner || "")) fails.push("safe_yt_lost");
     if (cases.evil_yt_host && /evil\.example/.test(cases.evil_yt_host.inner || "")) fails.push("evil_iframe_kept");
 
