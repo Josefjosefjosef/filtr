@@ -101,47 +101,63 @@ function controlState(page) {
 async function openMindMenu(page) {
   await page.waitForFunction(
     () =>
+      typeof window.__iuEnsureFeedPipeline === "function" ||
       typeof window.iuArticleActionsOpenOverlay === "function" ||
       document.getElementById("iuMailboxList") ||
       document.getElementById("iuMobileGateWrap"),
     null,
-    { timeout: 90000 }
+    { timeout: 120000 }
   );
-  await page.evaluate(async () => {
-    if (typeof window.__iuEnsureFeedPipeline === "function") {
-      try {
-        await window.__iuEnsureFeedPipeline();
-      } catch (_) {}
-    }
-    const narrow = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
-    if (narrow) {
-      const wrap = document.getElementById("iuMobileGateWrap");
-      if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
-        wrap.__iuMobileGateSetTab("tools");
-      } else {
-        const tab = document.getElementById("iuMobileGateTabTools");
-        if (tab) tab.click();
-      }
+  let lastErr = null;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      await page.evaluate(async () => {
+        if (typeof window.__iuEnsureFeedPipeline === "function") {
+          try {
+            await window.__iuEnsureFeedPipeline();
+          } catch (_) {}
+        }
+        const narrow = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+        if (narrow) {
+          const wrap = document.getElementById("iuMobileGateWrap");
+          if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
+            wrap.__iuMobileGateSetTab("tools");
+          } else {
+            const tab = document.getElementById("iuMobileGateTabTools");
+            if (tab) tab.click();
+          }
+          return;
+        }
+        if (typeof window.iuArticleActionsOpenOverlay === "function") {
+          try {
+            await window.iuArticleActionsOpenOverlay();
+          } catch (_) {}
+        }
+      });
+      await page.waitForFunction(
+        () => {
+          const list = document.getElementById("iuMailboxList");
+          const add = document.getElementById("iuMailboxAdd");
+          if (!list || !add) return false;
+          const host =
+            document.querySelector(".iuMyInfoUzelMindMenuHost") ||
+            document.getElementById("iuMobileGatePanelTools") ||
+            document.getElementById("iuMindMenuView") ||
+            list.closest(".mindMenu");
+          if (!host) return false;
+          // Mounted in the active MindMenu surface (desktop overlay or mobile tools).
+          return host.contains(list) && host.contains(add);
+        },
+        null,
+        { timeout: 25000 }
+      );
       return;
+    } catch (err) {
+      lastErr = err;
+      await page.waitForTimeout(400);
     }
-    if (typeof window.iuArticleActionsOpenOverlay === "function") {
-      try {
-        await window.iuArticleActionsOpenOverlay();
-      } catch (_) {}
-    }
-  });
-  await page.waitForFunction(
-    () => {
-      const add = document.getElementById("iuMailboxAdd");
-      const row = document.querySelector("#iuMailboxList .iu-mailbox-row");
-      if (!add && !row) return false;
-      const el = row || add;
-      const cs = getComputedStyle(el);
-      return cs.display !== "none" && cs.visibility !== "hidden" && el.getClientRects().length > 0;
-    },
-    null,
-    { timeout: 90000 }
-  );
+  }
+  throw lastErr || new Error("openMindMenu_timeout");
 }
 
 async function runViewport(browser, base, name, viewport) {
