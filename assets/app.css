@@ -18367,9 +18367,9 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 .iuSilverDraftCard .iu-calAllDaySwitch{
   position:relative;
   width:48px;
-  height:28px;
+  height:44px;
   min-width:48px;
-  min-height:28px;
+  min-height:44px;
   flex:0 0 auto;
   border:none;
   padding:0;
@@ -18379,6 +18379,8 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   touch-action:manipulation;
   appearance:none;
   -webkit-appearance:none;
+  display:inline-flex;
+  align-items:center;
 }
 .iuSilverDraftCard .iu-calAllDaySwitch__track{
   display:block;
@@ -18391,10 +18393,11 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 }
 .iuSilverDraftCard .iu-calAllDaySwitch__thumb{
   position:absolute;
-  top:3px;
+  top:50%;
   left:3px;
   width:22px;
   height:22px;
+  margin-top:-11px;
   border-radius:50%;
   background:#fff;
   box-shadow:0 2px 6px rgba(15,23,42,.18);
@@ -18412,16 +18415,6 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   outline:2px solid #16a34a;
   outline-offset:2px;
   border-radius:999px;
-}
-@media (max-width:1024px){
-  /* Expand hit target without changing visible 48×28 track. */
-  .iuSilverDraftCard .iu-calAllDaySwitch{
-    min-width:48px;
-    min-height:44px;
-    height:44px;
-    display:inline-flex;
-    align-items:center;
-  }
 }
 .iuSilverDraftInput{
   width: 100%;

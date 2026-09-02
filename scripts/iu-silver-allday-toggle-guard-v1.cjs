@@ -35,9 +35,7 @@ function assertCssContract() {
     /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch__thumb\s*\{/.test(app);
   const hasSilverCell = /\.iuSilverDraftV--allDaySwitch\s*\{/.test(app);
   const hasMobileHit =
-    /@media\s*\(\s*max-width:\s*1024px\s*\)[\s\S]{0,400}\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,160}min-height:\s*44px/.test(
-      app
-    );
+    /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,280}min-height:\s*44px/.test(app);
   return { pass: hasSwitch && hasSilverCell && hasMobileHit, hasSwitch, hasSilverCell, hasMobileHit };
 }
 
