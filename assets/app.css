@@ -18206,7 +18206,8 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
    * Native input[type=date|time] keep a large intrinsic min-width (esp. iOS/WebKit).
    * As grid items, min-width:auto overflows past sibling text inputs (Název) on narrow viewports.
    * v3: min-width/min-inline-size 0 !important (UA intrinsic beats non-important);
-   * do NOT use overflow-x:hidden on the input (clips rounded corners / picker chrome).
+   * v5: appearance:none resets native datetime visual layer (layout-only width clamps false-PASS on iOS);
+   * overflow-x:clip keeps picker indicator inside the same box as text inputs.
    * Scope: mobile/tablet only — desktop .iuSilverDraftGrid--edit stays minmax(0,120px) 1fr.
    */
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"],
@@ -18221,7 +18222,9 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
     max-inline-size:100% !important;
     box-sizing:border-box !important;
     justify-self:stretch;
-    overflow-x:visible;
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    overflow-x:clip;
   }
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
   .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,

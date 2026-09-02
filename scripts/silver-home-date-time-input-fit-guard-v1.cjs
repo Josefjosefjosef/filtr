@@ -681,7 +681,7 @@ function assertCssSourceContract() {
     appCss
   );
   const noClipOverflow =
-    /min-inline-size:\s*0\s*!important[\s\S]{0,200}overflow-x:\s*visible/.test(appCss);
+    /min-inline-size:\s*0\s*!important[\s\S]{0,200}overflow-x:\s*clip/.test(appCss);
   const gridSafe = /iuSilverDraftCard--quickTemplateEmpty\s+\.iuSilverDraftGrid--edit\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*max-content\)\s+minmax\(0,\s*1fr\)/m.test(
     appCss
   );

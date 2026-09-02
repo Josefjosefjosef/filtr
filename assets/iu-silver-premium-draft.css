@@ -226,7 +226,9 @@
     max-inline-size:100% !important;
     box-sizing:border-box !important;
     justify-self:stretch;
-    overflow-x:visible;
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    overflow-x:clip;
   }
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="date"]::-webkit-datetime-edit,
   .iuSilverDraftCard .iuSilverDraftGrid--edit > .iuSilverDraftInput[type="time"]::-webkit-datetime-edit,
