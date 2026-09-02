@@ -625,6 +625,45 @@ function iuIsBenignResizeObserverLoopError(ev) {
     const s = String(sec || "").trim().toLowerCase();
     return s === IU_ARTICLE_HUB_SECTION || s === "media";
   }
+
+  /**
+   * P0 Menu tool subsections (mapy/jr/affiliate/…): #feed is display:none (data-iu-fc≠1) but
+   * loadData/applyFilter still run. Video-only batches are skipped for slot injection →
+   * renderedCount=0 → false #lastErrInline ("Obsah se nepodařilo zobrazit") + scroll gap.
+   * Feed DOM / inline errors only when the article feed is the active surface.
+   */
+  function iuFeedPipelineDomActiveP() {
+    try {
+      const toolMain =
+        (document.body && document.body.getAttribute("data-iu-tool-main")) ||
+        (document.documentElement && document.documentElement.getAttribute("data-iu-tool-main")) ||
+        "";
+      if (String(toolMain).trim() === "1") return false;
+      const fc = String(
+        (document.body && document.body.getAttribute("data-iu-fc")) ||
+          (document.documentElement && document.documentElement.getAttribute("data-iu-fc")) ||
+          ""
+      ).trim();
+      if (fc === "1") return true;
+      if (fc === "0") return false;
+      const sec = String(
+        (document.body && document.body.dataset && document.body.dataset.section) ||
+          (document.documentElement && document.documentElement.dataset && document.documentElement.dataset.section) ||
+          ""
+      )
+        .trim()
+        .toLowerCase();
+      if (!sec) return true;
+      if (iuArticleHubSectionP(sec)) return true;
+      if (["hry", "kultura", "veda", "vzdelavani", "travel"].indexOf(sec) !== -1) return true;
+      return false;
+    } catch (_) {
+      return true;
+    }
+  }
+  try {
+    window.iuFeedPipelineDomActiveP = iuFeedPipelineDomActiveP;
+  } catch (_) {}
   let activeSections = ["vse"];
   const state = {
     cachedItems: [],
@@ -6571,16 +6610,20 @@ function iuIsBenignResizeObserverLoopError(ev) {
             ? buildVideoAsArticleCard(item)
             : buildArticleHtml(item);
         if (!markup) {
-          persistLastError("Invariant breach: builder returned falsy markup");
-          renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          if (iuFeedPipelineDomActiveP()) {
+            persistLastError("Invariant breach: builder returned falsy markup");
+            renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          }
           continue;
         }
         const template = document.createElement("template");
         template.innerHTML = markup.trim();
         const node = template.content.firstElementChild;
         if (!node || !(node instanceof HTMLElement)) {
-          persistLastError("Invariant breach: builder returned invalid node");
-          renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          if (iuFeedPipelineDomActiveP()) {
+            persistLastError("Invariant breach: builder returned invalid node");
+            renderInlineError("Obsah se nepodařilo zobrazit. Zkus stránku obnovit.");
+          }
           continue;
         }
 
@@ -6826,6 +6869,14 @@ function iuIsBenignResizeObserverLoopError(ev) {
       );
     }
     if (items.length > 0 && renderedCount === 0) {
+      /* Tool / non-feed surfaces: video-only batches are intentionally skipped for slot
+         injection while #feed is hidden — do not surface a false end-of-page error. */
+      if (!iuFeedPipelineDomActiveP()) {
+        try {
+          feedEl.setAttribute("data-feed-ready", "true");
+        } catch (_) {}
+        return;
+      }
       safeTarget.insertAdjacentHTML(
         "beforeend",
         `<div class="empty" style="margin-top:10px;color:rgba(11,27,43,0.7);font-weight:600;">Data načtena, ale nic se nevykreslilo. Obnov stránku.<br /><small>${items.length} položek</small></div>`
@@ -19265,6 +19316,9 @@ function buildVideoAsArticleCard(it) {
         }
       } catch (_) {}
       if (!state.hasLoadedData) return;
+      try {
+        if (!iuFeedPipelineDomActiveP()) doRender = false;
+      } catch (_) {}
       if (iuUseChunkedArticleLoader()) {
         try {
           await iuChunkReloadIfSectionChanged();
@@ -21070,7 +21124,14 @@ function buildVideoAsArticleCard(it) {
           }
         } catch (_) {}
       } catch (_) {}
-      await renderItems(state.filteredItems);
+      if (iuFeedPipelineDomActiveP()) {
+        await renderItems(state.filteredItems);
+      } else {
+        try {
+          const fel = document.getElementById("feed");
+          if (fel) fel.setAttribute("data-feed-ready", "true");
+        } catch (_) {}
+      }
       iuBootTracePhase("loadData_first_renderItems_done");
       iuPreviewFeedProbeTick("afterFirstRenderFeed");
       iuHomeLoadAuditNotify("loadData:afterFirstRender");
@@ -21243,6 +21304,16 @@ function buildVideoAsArticleCard(it) {
       iuHomeLoadAuditNotify("loadData:beforeApplyFilter");
       await applyFilter();
       state.__iuLoadDataMainApplyFilterDone = true;
+      /* Tool sections: suppress stale feed inline error from first renderItems / video-only skip. */
+      try {
+        if (!iuFeedPipelineDomActiveP()) {
+          const inline = document.getElementById("lastErrInline");
+          if (inline) {
+            inline.textContent = "";
+            inline.style.display = "none";
+          }
+        }
+      } catch (_) {}
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {

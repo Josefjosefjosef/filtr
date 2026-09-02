@@ -136,10 +136,11 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "pc-cal-bottom-actions-toggle-v1",
   "pd-city-input-ios-zoom-v1",
   "mm-kb-scroll-pad-allowance-v1",
+  "menu-tool-false-err-v1",
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-mm-kb-scroll-pad-allowance-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-menu-tool-false-err-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

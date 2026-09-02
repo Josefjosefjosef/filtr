@@ -8100,6 +8100,14 @@ try {
       if (iuTmSec[section] || section.indexOf("aff-") === 0) {
         if (document.documentElement) document.documentElement.setAttribute("data-iu-tool-main", "1");
         if (document.body) document.body.setAttribute("data-iu-tool-main", "1");
+        /* P0: tool subsections must not keep a stale feed #lastErrInline under the real section content. */
+        try {
+          const lastErr = document.getElementById("lastErrInline");
+          if (lastErr) {
+            lastErr.textContent = "";
+            lastErr.style.display = "none";
+          }
+        } catch (_clrErr) {}
       } else {
         if (document.documentElement) document.documentElement.removeAttribute("data-iu-tool-main");
         if (document.body) document.body.removeAttribute("data-iu-tool-main");
