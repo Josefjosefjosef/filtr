@@ -25516,6 +25516,11 @@ function buildVideoAsArticleCard(it) {
     rem.style.display = count > IU_MAILBOX_MIN ? "inline" : "none";
   }
 
+  function iuMailboxVisibleCount(items){
+    const list = Array.isArray(items) ? items : iuMailboxLoad();
+    return list.filter((it) => !it.hidden).length;
+  }
+
   function iuPositionMailboxControls(controlsEl){
     const controls = controlsEl || document.getElementById("iuMailboxControls");
     const list = document.getElementById("iuMailboxList");
@@ -25531,7 +25536,7 @@ function buildVideoAsArticleCard(it) {
 
   function iuMailboxRender(){
     const list = document.getElementById("iuMailboxList");
-    if (!list) return;
+    if (!list) return 0;
     const controls = document.getElementById("iuMailboxControls");
     if (controls && controls.parentNode) controls.remove();
     let items = iuMailboxLoad();
@@ -25561,6 +25566,11 @@ function buildVideoAsArticleCard(it) {
     list.innerHTML = "";
     list.appendChild(frag);
     if (controls) iuPositionMailboxControls(controls);
+    // P0: after vault hydrate/unlock, render alone used to leave Add/Remove display +
+    // closed-over mailboxCount stuck on the pre-hydrate default (often 10 → Add hidden).
+    const visibleCount = iuMailboxVisibleCount(items);
+    iuUpdateMailboxControls(visibleCount);
+    return visibleCount;
   }
 
   function iuMailboxesInit(){
@@ -25569,23 +25579,21 @@ function buildVideoAsArticleCard(it) {
     iuMindMenuReturnInit();
     const list = document.getElementById("iuMailboxList");
     if (!list) return;
-    iuMailboxRender();
+    let mailboxCount = iuMailboxRender();
     try {
       window.addEventListener("iu-vault-hydrated", function iuMailboxVaultHydrated() {
-        try { iuMailboxRender(); } catch (_) {}
+        try { mailboxCount = iuMailboxRender(); } catch (_) {}
       });
       window.addEventListener("iu-vault-unlocked", function iuMailboxVaultUnlocked() {
-        try { iuMailboxRender(); } catch (_) {}
+        try { mailboxCount = iuMailboxRender(); } catch (_) {}
       });
     } catch (_) {}
-    let mailboxCount = iuMailboxLoad().filter((it) => !it.hidden).length;
-    iuUpdateMailboxControls(mailboxCount);
     iuPositionMailboxControls();
 
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
-      if (mailboxCount >= IU_MAILBOX_MAX) return;
       const items = iuMailboxLoad();
-      const visibleCount = items.filter((it) => !it.hidden).length;
+      const visibleCount = iuMailboxVisibleCount(items);
+      mailboxCount = visibleCount;
       if (visibleCount >= IU_MAILBOX_MAX) return;
       const next = items.filter((x) => x && x.hidden).sort((a, b) => (a.slot || 0) - (b.slot || 0))[0];
       let restored = false;
@@ -25608,10 +25616,7 @@ function buildVideoAsArticleCard(it) {
         }
       }
       iuMailboxSave(items);
-      iuMailboxRender();
-      mailboxCount = items.filter((it) => !it.hidden).length;
-      iuUpdateMailboxControls(mailboxCount);
-      iuPositionMailboxControls();
+      mailboxCount = iuMailboxRender();
       requestAnimationFrame(() => {
         const rail = document.querySelector(".layout > aside.accordionCol");
         if (rail) rail.style.height = "auto";
@@ -25619,9 +25624,9 @@ function buildVideoAsArticleCard(it) {
     });
 
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
-      if (mailboxCount <= IU_MAILBOX_MIN) return;
       const items = iuMailboxLoad();
-      const visibleCount = items.filter((it) => !it.hidden).length;
+      const visibleCount = iuMailboxVisibleCount(items);
+      mailboxCount = visibleCount;
       if (visibleCount <= IU_MAILBOX_MIN) return;
       for (let i = items.length - 1; i >= 0; i--) {
         if (!items[i].hidden) {
@@ -25630,10 +25635,7 @@ function buildVideoAsArticleCard(it) {
         }
       }
       iuMailboxSave(items);
-      iuMailboxRender();
-      mailboxCount = items.filter((it) => !it.hidden).length;
-      iuUpdateMailboxControls(mailboxCount);
-      iuPositionMailboxControls();
+      mailboxCount = iuMailboxRender();
       requestAnimationFrame(() => {
         const rail = document.querySelector(".layout > aside.accordionCol");
         if (rail) rail.style.height = "auto";
