@@ -29,19 +29,16 @@ const VIEWPORTS = [
 
 function assertCssContract() {
   const app = fs.readFileSync(path.join(REPO, "assets", "app.css"), "utf8");
-  const premium = fs.readFileSync(
-    path.join(REPO, "assets", "iu-silver-premium-draft.css"),
-    "utf8"
-  );
   const hasSwitch =
     /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,280}width:\s*48px/.test(app) &&
     /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch__track\s*\{[\s\S]{0,120}width:\s*48px/.test(app) &&
     /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch__thumb\s*\{/.test(app);
   const hasSilverCell = /\.iuSilverDraftV--allDaySwitch\s*\{/.test(app);
-  const premiumMirror = /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,280}width:\s*48px/.test(
-    premium
-  );
-  return { pass: hasSwitch && hasSilverCell && premiumMirror, hasSwitch, hasSilverCell, premiumMirror };
+  const hasMobileHit =
+    /@media\s*\(\s*max-width:\s*1024px\s*\)[\s\S]{0,400}\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,160}min-height:\s*44px/.test(
+      app
+    );
+  return { pass: hasSwitch && hasSilverCell && hasMobileHit, hasSwitch, hasSilverCell, hasMobileHit };
 }
 
 async function dismiss(page) {
@@ -319,8 +316,8 @@ async function main() {
       css.hasSwitch +
       " hasSilverCell=" +
       css.hasSilverCell +
-      " premiumMirror=" +
-      css.premiumMirror +
+      " hasMobileHit=" +
+      css.hasMobileHit +
       "\n"
   );
   process.stdout.write("RUNTIME: " + (runtimePass ? "PASS" : "FAIL") + "\n");
