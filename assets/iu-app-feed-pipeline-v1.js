@@ -18043,7 +18043,10 @@ function buildVideoAsArticleCard(it) {
     function applyOpen(next) {
       try {
         if (open === next) {
-          if (next) clearNavPinTransform();
+          if (next) {
+            clearNavPinTransform();
+            syncKbScrollPad(false);
+          }
           return;
         }
         var wasOpen = open;
@@ -18062,7 +18065,10 @@ function buildVideoAsArticleCard(it) {
         if (next && !wasOpen) {
           captureScrollSnap();
         }
-        if (!next) {
+        if (next) {
+          /* Publish scroll pad only — never resize/reposition overlays (see #10184 regression). */
+          syncKbScrollPad(false);
+        } else {
           focusOpenGraceUntil = 0;
           geomKeyboardOpen = false;
           try {
@@ -18071,9 +18077,72 @@ function buildVideoAsArticleCard(it) {
               graceTimer = 0;
             }
           } catch (_) {}
+          syncKbScrollPad(true);
           refreshStableViewport();
           restoreScrollIfNeeded();
         }
+      } catch (_) {}
+    }
+
+    /**
+     * Measure soft-keyboard inset → --iu-kb-scroll-pad + padding-bottom on scroll hosts.
+     * Must not mutate overlay top/height/bottom (that closed MindMenu sections in #10184).
+     * Inline padding !important beats injected Datovka padding:0 styles from app.js.
+     */
+    function kbScrollPadTargets() {
+      var out = [];
+      var ids = ["iuDsPanel", "iuQuickFeed", "iuCustomButtonsScrollHost", "iuMobileGatePanelTools", "iu-mailbox-edit-overlay"];
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el) out.push(el);
+      }
+      try {
+        document
+          .querySelectorAll(
+            "#iuLegalDocsPanel .iu-legal-overlay-cardShell, #iuFinancialCalcPanel .iu-financial-overlay-cardShell, #iuInvoicePanel .iu-invoice-overlay-cardShell, #iuNotesOverlay .iu-notesOverlay__scroll, #iuTasksOverlay .iu-tasksOverlay__scroll, #iu-aiPanel .iu-aiBody, #iu-aiPanel .iu-ai-scroll-host"
+          )
+          .forEach(function (el) {
+            if (el) out.push(el);
+          });
+      } catch (_) {}
+      return out;
+    }
+
+    function applyKbScrollPadToHosts(pad) {
+      var hosts = kbScrollPadTargets();
+      for (var i = 0; i < hosts.length; i++) {
+        var el = hosts[i];
+        if (!el || !el.style) continue;
+        try {
+          if (!pad) {
+            el.style.removeProperty("padding-bottom");
+            el.style.removeProperty("scroll-padding-bottom");
+          } else {
+            el.style.setProperty("padding-bottom", pad, "important");
+            el.style.setProperty("scroll-padding-bottom", pad, "important");
+          }
+        } catch (_) {}
+      }
+    }
+
+    function syncKbScrollPad(forceClear) {
+      try {
+        var root = document.documentElement;
+        if (!root || !root.style) return;
+        if (forceClear || !open) {
+          root.style.removeProperty("--iu-kb-scroll-pad");
+          applyKbScrollPadToHosts("");
+          return;
+        }
+        var gap = Math.floor(keyboardGap());
+        var base = stableViewportH || currentVvHeight() || window.innerHeight || 640;
+        /* Opening grace / iOS gap≈0: keep a usable allowance until geometry arrives. */
+        if (gap < 96) gap = Math.max(gap, Math.round(base * 0.42));
+        var maxPad = Math.round(base * 0.72);
+        gap = Math.min(Math.max(gap, 120), maxPad);
+        var pad = gap + "px";
+        root.style.setProperty("--iu-kb-scroll-pad", pad);
+        applyKbScrollPadToHosts(pad);
       } catch (_) {}
     }
 
@@ -18188,6 +18257,7 @@ function buildVideoAsArticleCard(it) {
             } else {
               refreshStableViewport();
             }
+            if (open || geomNow) syncKbScrollPad(false);
             scheduleHide();
           },
           { passive: true }
@@ -18211,6 +18281,7 @@ function buildVideoAsArticleCard(it) {
           if (vkHeight > 40) {
             geomKeyboardOpen = true;
             focusOpenGraceUntil = 0;
+            if (open) syncKbScrollPad(false);
             scheduleHide();
           } else if (geomKeyboardOpen || open) {
             geomKeyboardOpen = false;
@@ -18330,12 +18401,27 @@ function buildVideoAsArticleCard(it) {
               classBody: !!(document.body && document.body.classList.contains("iu-keyboard-open")),
               navDisplay: cs ? cs.display : "missing",
               userScrolledWhileKb: userScrolledWhileKb,
+              kbScrollPad: document.documentElement.style.getPropertyValue("--iu-kb-scroll-pad") || "",
             };
           } catch (err) {
             return { error: String(err && err.message) };
           }
         };
       }
+    } catch (_) {}
+    try {
+      window.__iuKbScrollPadState = function () {
+        try {
+          var root = document.documentElement;
+          return {
+            open: open,
+            classHtml: !!(root && root.classList.contains("iu-keyboard-open")),
+            kbScrollPad: root ? root.style.getPropertyValue("--iu-kb-scroll-pad") : "",
+          };
+        } catch (err) {
+          return { error: String(err && err.message) };
+        }
+      };
     } catch (_) {}
     try {
       readFocusState(document.activeElement);

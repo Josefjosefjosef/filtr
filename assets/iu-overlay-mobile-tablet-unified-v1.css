@@ -32,6 +32,14 @@
     --iu-mobile-bottom-nav-safe-space: 0px;
     --iu-tool-overlay-panel-bottom: 0px;
     --iu-calendar-action-bar-nav-gap: 0px;
+    /*
+     * Keyboard scroll allowance (NOT overlay VV-pin — that regressed #10184).
+     * Extra padding-bottom on scroll hosts increases scrollMax so form ends can rise above kb.
+     * Overlay top/height/bottom geometry stays unchanged → open/close lifecycle untouched.
+     * Marker: iu-kb-scroll-pad-allowance-v1
+     * Fallback until JS publishes measured --iu-kb-scroll-pad px.
+     */
+    --iu-kb-scroll-pad: 45vh;
   }
 
   html.iu-keyboard-open #iuMobileBottomNav.iu-mobileBottomNav,
@@ -911,6 +919,47 @@
     max-width: 100% !important;
     align-self: stretch !important;
     margin-top: 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  /*
+   * LAST in this media block so we beat earlier padding:0 / gap rules.
+   * Soft keyboard scroll allowance only — never change overlay top/height/bottom (#10184).
+   */
+  html.iu-keyboard-open
+    body.iu-modal-open.iu-ds-overlay-open
+    #iuDsPanel.iu-ds-panel[data-open="1"]:not([hidden]) {
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-bottom: var(--iu-kb-scroll-pad) !important;
+    scroll-padding-bottom: var(--iu-kb-scroll-pad) !important;
+    box-sizing: border-box !important;
+  }
+
+  html.iu-keyboard-open
+    body:is(.iu-quickFeedOpen, .iu-quickFeedMojeFullscreen, .iu-mobileGateToolsQuickOpen)
+    #iuQuickFeed:not([hidden]) {
+    padding-bottom: var(--iu-kb-scroll-pad) !important;
+    scroll-padding-bottom: var(--iu-kb-scroll-pad) !important;
+    box-sizing: border-box !important;
+  }
+
+  html.iu-keyboard-open
+    :is(
+      #iuLegalDocsPanel .iu-legal-overlay-cardShell,
+      #iuFinancialCalcPanel .iu-financial-overlay-cardShell,
+      #iuInvoicePanel .iu-invoice-overlay-cardShell,
+      #iuCustomButtonsScrollHost.iu-custom-buttons-overlay-scrollHost,
+      #iuNotesOverlay .iu-notesOverlay__scroll,
+      #iuTasksOverlay .iu-tasksOverlay__scroll,
+      #iu-aiPanel .iu-aiBody,
+      #iu-aiPanel .iu-ai-scroll-host,
+      #iu-mailbox-edit-overlay,
+      #iuMobileGatePanelTools
+    ) {
+    padding-bottom: var(--iu-kb-scroll-pad) !important;
+    scroll-padding-bottom: var(--iu-kb-scroll-pad) !important;
     box-sizing: border-box !important;
   }
 }

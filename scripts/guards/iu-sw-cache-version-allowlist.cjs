@@ -135,10 +135,11 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "mm-mailbox-add-hydrate-v1",
   "pc-cal-bottom-actions-toggle-v1",
   "pd-city-input-ios-zoom-v1",
+  "mm-kb-scroll-pad-allowance-v1",
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-pd-city-input-ios-zoom-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-mm-kb-scroll-pad-allowance-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
