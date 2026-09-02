@@ -1094,6 +1094,14 @@ jobs:
           IU_DATETIME_GUARD_SKIP_WEBKIT: "1"
         run: npm run iu-datetime-real-route-geometry-guard-checkout
 
+      - name: Silver native datetime visual contract guard (mobile/tablet)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 12
+        env:
+          # apt --with-deps webkit hangs on GitHub-hosted runners; Chromium visual contract is required.
+          IU_SILVER_NATIVE_DATETIME_SKIP_WEBKIT: "1"
+        run: npm run iu-silver-native-datetime-visual-contract-guard-checkout
+
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mobile-stability-guards
