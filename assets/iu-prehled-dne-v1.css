@@ -2385,6 +2385,19 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   font: inherit;
   margin: 8px 0;
 }
+/*
+ * Mobile/tablet: body font-size is 14px; .iuPdFeedSearch { font: inherit } yields 14px.
+ * iOS Safari / WebKit auto-zooms focused inputs when computed font-size < 16px
+ * (ČHMÚ + Dopravní informace share this class for «Město / obec»).
+ * Explicit 16px removes focus auto-zoom without disabling pinch-to-zoom (viewport untouched).
+ * Desktop (≥1025px) keeps inherit — no PC visual change.
+ */
+@media (max-width: 1024px) {
+  .iuPdFeedSearch {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+}
 .iuPdFeedHint {
   margin: 6px 0 10px;
   font-size: 0.82rem;
