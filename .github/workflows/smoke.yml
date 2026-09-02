@@ -225,6 +225,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-desktop-calendar-allday-toggle-guard
 
+      - name: PC calendar bottom actions toggle guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-pc-calendar-bottom-actions-toggle-guard
+
       - name: PC calendar delete confirm overlay guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-pc-calendar-delete-confirm-guard

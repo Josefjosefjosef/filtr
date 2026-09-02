@@ -2534,9 +2534,11 @@ export function initIuCalendarOverlay() {
     const editing = !!(state.inline && state.inline.showDatePicker && state.inline.mode === "new");
     let show;
     if (mob){
+      /* Mobile/tablet: keep prior contract — hide FABs while day/search/new-event UI owns the chrome. */
       show = (month || year) && !state.dayOpen && !state.mobileDayOverlayOpen && !editing && !state.searchOpen;
     } else {
-      show = (month || year) && !state.mobileDayOverlayOpen && !isCalDesktopSideFormOnly();
+      /* PC: bottom Search/Add stay visible while the right side panel is open (toggle targets). */
+      show = (month || year) && !state.mobileDayOverlayOpen;
     }
     bar.hidden = !show;
     bar.classList.toggle("iu-calMonthActionBar--yearOnly", year && !month);
@@ -2853,6 +2855,11 @@ export function initIuCalendarOverlay() {
         if (!ov0 || ov0.hidden) return;
         if (state.view !== "month" || state.mobileDayOverlayOpen) return;
         if (state.dayOpen && !isCalDesktopTwoPanel()) return;
+        /* PC: second click on + Přidat událost closes the side add panel (toggle). */
+        if (isCalDesktopTwoPanel() && isCalDesktopSideFormOnly()){
+          closeDesktopSidePanel();
+          return;
+        }
         const def = defaultDateForMonthQuickAdd();
         openCalendarEventForm({ source: "month", date: def, time: "09:00", showDatePicker: true });
         return;
@@ -2861,6 +2868,11 @@ export function initIuCalendarOverlay() {
       if (searchBtn){
         e.preventDefault();
         const scope = String(searchBtn.getAttribute("data-iu-cal-search-open") || "month");
+        /* PC: second click on Vyhledat událost closes the side search panel (toggle). */
+        if (isCalDesktopTwoPanel() && state.searchOpen){
+          closeEventSearch();
+          return;
+        }
         openEventSearch(scope);
         return;
       }

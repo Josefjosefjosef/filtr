@@ -133,10 +133,11 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "traffic-ui-defer-feed-hydrate-v1",
   "mm-tt-svg-viewbox-v1",
   "mm-mailbox-add-hydrate-v1",
+  "pc-cal-bottom-actions-toggle-v1",
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-mm-mailbox-add-hydrate-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-pc-cal-bottom-actions-toggle-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
