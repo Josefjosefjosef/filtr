@@ -1720,8 +1720,9 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   outline: 2px solid var(--iu-pd-accent-2);
   outline-offset: 2px;
 }
+/* Floating traffic map chrome removed — do not reserve obsolete bottom pad (stacked on gate nav clearance). */
 .iuPdFeed--trafficPad {
-  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: 0;
 }
 /* Legacy narrow two-column facts/quicks — keep inert if old markup appears. */
 .iuPdTrafficMain,
