@@ -18348,7 +18348,8 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
  * Silver Nová událost reuses .iu-calAllDaySwitch markup, but calendar-overlay
  * CSS (iu-calendar-premium-update-v1) is only injected after lazy calendar boot.
  * Without these rules the switch collapses to ~16×6px and is untappable on mobile.
- * Keep in always-loaded app.css so Silver quick-template does not depend on calendar.
+ * Scoped to .iuSilverDraftCard so calendar-overlay toggles keep their own CSS
+ * (and calendar all-day limit guard zero-size selftest is unaffected).
  */
 .iuSilverDraftAllDayLine{
   display:block;
@@ -18363,7 +18364,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   min-height:40px;
   min-width:0;
 }
-.iu-calAllDaySwitch{
+.iuSilverDraftCard .iu-calAllDaySwitch{
   position:relative;
   width:48px;
   height:28px;
@@ -18379,7 +18380,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   appearance:none;
   -webkit-appearance:none;
 }
-.iu-calAllDaySwitch__track{
+.iuSilverDraftCard .iu-calAllDaySwitch__track{
   display:block;
   width:48px;
   height:28px;
@@ -18388,7 +18389,7 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   transition:background .22s ease,box-shadow .22s ease;
   box-shadow:inset 0 1px 2px rgba(15,23,42,.12);
 }
-.iu-calAllDaySwitch__thumb{
+.iuSilverDraftCard .iu-calAllDaySwitch__thumb{
   position:absolute;
   top:3px;
   left:3px;
@@ -18400,14 +18401,14 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   transition:transform .22s ease;
   pointer-events:none;
 }
-.iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__track{
+.iuSilverDraftCard .iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__track{
   background:linear-gradient(180deg,#22c55e,#16a34a);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
 }
-.iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__thumb{
+.iuSilverDraftCard .iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__thumb{
   transform:translateX(20px);
 }
-.iu-calAllDaySwitch:focus-visible{
+.iuSilverDraftCard .iu-calAllDaySwitch:focus-visible{
   outline:2px solid #16a34a;
   outline-offset:2px;
   border-radius:999px;

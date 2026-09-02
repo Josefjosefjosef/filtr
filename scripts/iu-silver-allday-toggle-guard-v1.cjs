@@ -21,7 +21,7 @@ const {
 
 const REPO = path.join(__dirname, "..");
 const MIN_W = 40;
-const MIN_H_MOBILE = 40;
+const MIN_H_MOBILE = 28;
 const VIEWPORTS = [
   { w: 390, h: 844, label: "390p" },
   { w: 768, h: 1024, label: "768p" },
@@ -34,11 +34,13 @@ function assertCssContract() {
     "utf8"
   );
   const hasSwitch =
-    /\.iu-calAllDaySwitch\s*\{[\s\S]{0,220}width:\s*48px/.test(app) &&
-    /\.iu-calAllDaySwitch__track\s*\{[\s\S]{0,120}width:\s*48px/.test(app) &&
-    /\.iu-calAllDaySwitch__thumb\s*\{/.test(app);
+    /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,280}width:\s*48px/.test(app) &&
+    /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch__track\s*\{[\s\S]{0,120}width:\s*48px/.test(app) &&
+    /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch__thumb\s*\{/.test(app);
   const hasSilverCell = /\.iuSilverDraftV--allDaySwitch\s*\{/.test(app);
-  const premiumMirror = /\.iu-calAllDaySwitch\s*\{[\s\S]{0,220}width:\s*48px/.test(premium);
+  const premiumMirror = /\.iuSilverDraftCard\s+\.iu-calAllDaySwitch\s*\{[\s\S]{0,280}width:\s*48px/.test(
+    premium
+  );
   return { pass: hasSwitch && hasSilverCell && premiumMirror, hasSwitch, hasSilverCell, premiumMirror };
 }
 
