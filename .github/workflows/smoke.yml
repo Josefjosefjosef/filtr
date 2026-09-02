@@ -522,6 +522,10 @@ jobs:
           IU_CZ_MAP_SHOT_DIR: ${{ github.workspace }}/iu-chmi-cz-map-visual-proof
         run: npm run iu-chmi-card-cz-map-guard
 
+      - name: Prehled CZ map TT viewBox guard (Doprava+ČHMÚ sprite)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-prehled-cz-map-tt-viewbox-guard
+
       - name: Upload CHMI CZ map visual proof
         if: always() && steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
