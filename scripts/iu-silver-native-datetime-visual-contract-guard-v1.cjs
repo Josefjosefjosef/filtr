@@ -226,7 +226,17 @@ async function runEngine(engineType, label) {
 async function main() {
   const css = assertCssContract();
   const chromiumRows = await runEngine(chromium, "chromium");
-  const webkitRows = await runEngine(webkit, "webkit");
+  const skipWebkit =
+    String(process.env.IU_SILVER_NATIVE_DATETIME_SKIP_WEBKIT || "").trim() === "1" ||
+    String(process.env.IU_SILVER_NATIVE_DATETIME_SKIP_WEBKIT || "").toLowerCase() === "true";
+  let webkitRows = [];
+  if (skipWebkit) {
+    process.stdout.write(
+      "WEBKIT_SKIPPED reason=IU_SILVER_NATIVE_DATETIME_SKIP_WEBKIT chromium_only_ci_contract\n"
+    );
+  } else {
+    webkitRows = await runEngine(webkit, "webkit");
+  }
   const rows = chromiumRows.concat(webkitRows);
 
   const layoutOnlyWouldPass = rows.every((r) => r.ok && r.layoutOnlyPass);
