@@ -26,7 +26,7 @@
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
 // 2026-09-01: remove environment info panel — bust shell + network-first info-panel modules (SWR stale catalog)
-const CACHE_VERSION = "2026-09-02-silver-allday-toggle-v1";
+const CACHE_VERSION = "2026-09-02-mm-tt-svg-viewbox-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

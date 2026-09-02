@@ -131,10 +131,11 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "traffic-ui-hero-cta-early-v1",
   "traffic-ui-cls-stable-shell-v1",
   "traffic-ui-defer-feed-hydrate-v1",
+  "mm-tt-svg-viewbox-v1",
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-silver-allday-toggle-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-mm-tt-svg-viewbox-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
