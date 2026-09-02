@@ -167,14 +167,21 @@
         var p=String(location.pathname||"");
         if(!(p==="/"||p==="/index.html"||p==="/projects/"||p==="/projects"||p.indexOf("/projects/")===0||p.indexOf("/filtr/")===0))return;
         function readLoc(){
+          var mode="gps";
           try{
-            var man=localStorage.getItem("iu_manual_location");
-            if(man){
-              var o=JSON.parse(man);
-              var lat=Number(o&&o.lat), lon=Number(o&&o.lon);
-              if(isFinite(lat)&&isFinite(lon)) return {lat:lat,lon:lon,src:"manual"};
-            }
+            mode=String(localStorage.getItem("iu_location_mode")||"gps").trim().toLowerCase();
           }catch(_){}
+          if(mode==="manual"){
+            try{
+              var man=localStorage.getItem("iu_manual_location");
+              if(man){
+                var o=JSON.parse(man);
+                var lat=Number(o&&o.lat), lon=Number(o&&o.lon);
+                if(isFinite(lat)&&isFinite(lon)) return {lat:lat,lon:lon,src:"manual"};
+              }
+            }catch(_){}
+            return null;
+          }
           try{
             var gps=localStorage.getItem("iuWeatherGpsSelectedV1");
             if(gps){

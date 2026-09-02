@@ -15560,6 +15560,10 @@ function buildVideoAsArticleCard(it) {
 
     async function iuSilverWeatherTryAutoGpsOnLoad(){
       try{
+        if (typeof window.iuWeatherScheduleGpsRefreshIfNeeded === "function") {
+          window.iuWeatherScheduleGpsRefreshIfNeeded("silver-load");
+          return;
+        }
         if (typeof window.iuWeatherActivateGpsViaGeolocation !== "function") return;
         if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) return;
         if (navigator.permissions && typeof navigator.permissions.query === "function") {
@@ -21835,6 +21839,10 @@ function buildVideoAsArticleCard(it) {
 
   const IU_WEATHER_GPS_SELECTED_KEY = "iuWeatherGpsSelectedV1";
 
+  /** Soft: resume/open should refresh GPS. Legacy records without `at` always refresh. */
+  const IU_WEATHER_GPS_SOFT_STALE_MS = 30 * 60 * 1000;
+
+  /** Praha coords exist only as optional city-picker/snapshot geometry — NEVER as silent "you are here". */
   const IU_WEATHER_DEFAULT_CITY = { name: "Praha", lat: 50.0755, lon: 14.4378 };
 
   function iuWeatherIsValidGeoCoords(lat, lon){
@@ -22303,7 +22311,18 @@ function buildVideoAsArticleCard(it) {
       const lat = Number(obj && obj.lat);
       const lon = Number(obj && obj.lon);
       if (!name || !isFinite(lat) || !isFinite(lon)) return null;
-      return { name, lat, lon };
+      if (!iuWeatherIsValidGeoCoords(lat, lon)) {
+        try{ localStorage.removeItem(IU_WEATHER_GPS_SELECTED_KEY); }catch{}
+        return null;
+      }
+      const atRaw = obj && obj.at;
+      const at = Number(atRaw);
+      return {
+        name,
+        lat,
+        lon,
+        at: Number.isFinite(at) && at > 0 ? at : null,
+      };
     }catch{
       return null;
     }
@@ -22312,10 +22331,12 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherWriteGpsSelected(city){
     try{
       if (!city) return Promise.resolve(false);
+      if (!iuWeatherIsValidGeoCoords(city.lat, city.lon)) return Promise.resolve(false);
       const payload = JSON.stringify({
         name: String(city.name || "").trim(),
         lat: Number(city.lat),
         lon: Number(city.lon),
+        at: Date.now(),
       });
       if (window.iuVault && typeof window.iuVault.durableSet === "function") {
         return window.iuVault.durableSet(IU_WEATHER_GPS_SELECTED_KEY, payload).then(function () { return true; }).catch(function () { return false; });
@@ -22324,6 +22345,37 @@ function buildVideoAsArticleCard(it) {
       return Promise.resolve(true);
     }catch{
       return Promise.resolve(false);
+    }
+  }
+
+  function iuWeatherGpsAgeMs(gps){
+    try{
+      if (!gps || gps.at == null) return null;
+      const at = Number(gps.at);
+      if (!Number.isFinite(at) || at <= 0) return null;
+      return Math.max(0, Date.now() - at);
+    }catch{
+      return null;
+    }
+  }
+
+  function iuWeatherGpsNeedsRefresh(gps){
+    try{
+      if (!gps) return true;
+      const age = iuWeatherGpsAgeMs(gps);
+      /* Legacy records without `at` are treated as stale — force refresh on GPS mode. */
+      if (age == null) return true;
+      return age >= IU_WEATHER_GPS_SOFT_STALE_MS;
+    }catch{
+      return true;
+    }
+  }
+
+  function iuWeatherHasPersonalizedLocation(){
+    try{
+      return !!iuWeatherReadGpsSelected() || !!iuWeatherReadManualLocation();
+    }catch{
+      return false;
     }
   }
 
@@ -22344,18 +22396,67 @@ function buildVideoAsArticleCard(it) {
     return null;
   }
 
-  function iuWeatherGetActiveCity(){
-    const runtime = iuWeatherGetRuntime();
-    if (runtime) return runtime;
-    const mode = iuWeatherReadLocationMode();
-    if (mode === IU_WEATHER_MODE_MANUAL) {
-      const man = iuWeatherReadManualLocation();
-      if (man) return { name: man.label, lat: man.lat, lon: man.lon, key: null };
+  /**
+   * Authoritative weather location (single source of truth).
+   * Contract:
+   * - mode manual + stored Moje město → that city
+   * - mode gps + stored GPS → that fix (may be soft-stale → refresh scheduled separately)
+   * - otherwise → null (NEVER silent Praha-as-current-location)
+   */
+  function iuWeatherResolveLocation(){
+    try{
+      const runtime = iuWeatherGetRuntime();
+      if (runtime) {
+        return {
+          status: "ok",
+          source: "runtime",
+          city: { name: runtime.name, lat: runtime.lat, lon: runtime.lon, key: null },
+          gpsAgeMs: null,
+          needsGpsRefresh: false,
+        };
+      }
+      const mode = iuWeatherReadLocationMode();
+      if (mode === IU_WEATHER_MODE_MANUAL) {
+        const man = iuWeatherReadManualLocation();
+        if (man) {
+          return {
+            status: "ok",
+            source: "manual",
+            city: { name: man.label, lat: man.lat, lon: man.lon, key: null },
+            gpsAgeMs: null,
+            needsGpsRefresh: false,
+          };
+        }
+        return { status: "needs_setup", source: null, city: null, gpsAgeMs: null, needsGpsRefresh: false };
+      }
+      const gps = iuWeatherReadGpsSelected();
+      if (gps) {
+        const age = iuWeatherGpsAgeMs(gps);
+        return {
+          status: "ok",
+          source: "gps",
+          city: { name: gps.name, lat: gps.lat, lon: gps.lon, key: null },
+          gpsAgeMs: age,
+          needsGpsRefresh: iuWeatherGpsNeedsRefresh(gps),
+        };
+      }
+      return { status: "needs_setup", source: null, city: null, gpsAgeMs: null, needsGpsRefresh: true };
+    }catch{
+      return { status: "needs_setup", source: null, city: null, gpsAgeMs: null, needsGpsRefresh: false };
     }
-    const gps = iuWeatherReadGpsSelected();
-    if (gps) return { name: gps.name, lat: gps.lat, lon: gps.lon, key: null };
-    return IU_WEATHER_DEFAULT_CITY;
   }
+
+  function iuWeatherGetActiveCity(){
+    const resolved = iuWeatherResolveLocation();
+    return resolved && resolved.city ? resolved.city : null;
+  }
+
+  try{
+    window.iuWeatherResolveLocation = iuWeatherResolveLocation;
+    window.iuWeatherHasPersonalizedLocation = iuWeatherHasPersonalizedLocation;
+    window.iuWeatherGpsNeedsRefresh = iuWeatherGpsNeedsRefresh;
+    window.iuWeatherGetActiveCity = iuWeatherGetActiveCity;
+  }catch{}
 
   function iuWeatherSetRuntime(city){
     try{ window.__iuWeatherRuntimeCity = { name: city.name, lat: city.lat, lon: city.lon }; }catch{}
@@ -23227,7 +23328,7 @@ function buildVideoAsArticleCard(it) {
         myInfo = disp;
       } else {
         if (manualStored && manualStored.label) myInfo = String(manualStored.label).trim();
-        else myInfo = String(IU_WEATHER_DEFAULT_CITY && IU_WEATHER_DEFAULT_CITY.name ? IU_WEATHER_DEFAULT_CITY.name : "Praha");
+        else myInfo = "—";
       }
 
       if (geoLabel) geoLabel.textContent = geoInfo;
@@ -23684,7 +23785,7 @@ function buildVideoAsArticleCard(it) {
         cityLabel: city && city.name ? String(city.name) : "—",
       },
       mode: locationMode,
-      city: city || { name: "Praha", lat: 50.0755, lon: 14.4378 },
+      city: city || { name: "—", lat: NaN, lon: NaN },
       lat: Number(city && city.lat),
       lon: Number(city && city.lon),
       current: {
@@ -24199,8 +24300,10 @@ function buildVideoAsArticleCard(it) {
   function iuWeatherBootPrefetchIfReady(){
     try{
       if (window.__iuWeatherBootPrefetchStarted) return;
-      const hasLoc = !!(iuWeatherReadGpsSelected && iuWeatherReadGpsSelected()) ||
-        !!(iuWeatherReadManualLocation && iuWeatherReadManualLocation());
+      const mode = iuWeatherReadLocationMode();
+      const hasLoc = mode === IU_WEATHER_MODE_MANUAL
+        ? !!(iuWeatherReadManualLocation && iuWeatherReadManualLocation())
+        : !!(iuWeatherReadGpsSelected && iuWeatherReadGpsSelected());
       if (!hasLoc) return;
       window.__iuWeatherBootPrefetchStarted = 1;
       if (typeof iuWeatherEnsureState !== "function") return;
@@ -24983,8 +25086,8 @@ function buildVideoAsArticleCard(it) {
       try{ if (mapInner) mapInner.appendChild(svg); }catch{}
 
       const ac = iuWeatherGetActiveCity();
-      const seedLat = isFinite(ac.lat) ? ac.lat : 49.75;
-      const seedLon = isFinite(ac.lon) ? ac.lon : 15.5;
+      const seedLat = ac && isFinite(ac.lat) ? ac.lat : 49.75;
+      const seedLon = ac && isFinite(ac.lon) ? ac.lon : 15.5;
       const seed = iuPickerNearest(seedLat, seedLon, localities);
       if (seed) setPendingFromIt(seed);
 
@@ -25134,9 +25237,24 @@ function buildVideoAsArticleCard(it) {
       const elMinMax = document.getElementById("iuWxMinMax");
       const elNarrative = document.getElementById("iuWxHeroNarrative");
 
+      if (!city || typeof city.lat !== "number" || typeof city.lon !== "number" || !isFinite(city.lat) || !isFinite(city.lon)) {
+        if (elErr) elErr.hidden = true;
+        if (elWeather) elWeather.hidden = false;
+        if (elPlace) elPlace.textContent = "—";
+        if (elTemp) elTemp.textContent = "—°C";
+        if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
+        if (elIcon) elIcon.textContent = "☁️";
+        if (elFeelsLike) elFeelsLike.textContent = "Pocitově —°C";
+        if (elNarrative) elNarrative.textContent = locationMode === IU_WEATHER_MODE_MANUAL
+          ? "Nastavte Moje město"
+          : "Povolte polohu nebo nastavte Moje město";
+        try{ if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh(); }catch{}
+        return;
+      }
+
       if (elErr) elErr.hidden = true;
       if (elWeather) elWeather.hidden = false;
-      if (elPlace) elPlace.textContent = String(city.name || "Praha");
+      if (elPlace) elPlace.textContent = String(city.name || "—");
       if (elTemp) elTemp.textContent = "—°C";
       if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
       if (elIcon) elIcon.textContent = "☁️";
@@ -25925,6 +26043,13 @@ function buildVideoAsArticleCard(it) {
       // user-gesture turn as the tap/click. An async IIFE defers to a microtask and
       // drops the gesture, so the API never prompts / never returns — looks like a dead button.
       // P0 mobile Chrome: error callback must set visible feedback — manual mode hides the geo line unless we force-show it via iuWeatherSyncCityLabels + __iuWeatherGeoFlowFeedback.
+      const forceFresh = (function () {
+        try {
+          return iuWeatherGpsNeedsRefresh(iuWeatherReadGpsSelected());
+        } catch (_) {
+          return true;
+        }
+      })();
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           let lat = NaN;
@@ -25998,9 +26123,9 @@ function buildVideoAsArticleCard(it) {
             const c = iuWeatherGetActiveCity();
             iuWeatherSyncCityLabels(c);
           }catch{}
-          iuWeatherLoadAndRender();
+          try{ if (iuWeatherGetActiveCity()) iuWeatherLoadAndRender(); }catch{}
         },
-        { enableHighAccuracy: false, timeout: 12000, maximumAge: 60000 },
+        { enableHighAccuracy: false, timeout: 12000, maximumAge: forceFresh ? 0 : 60000 },
       );
     }catch{
       iuWeatherClearRuntimeCity();
@@ -26009,9 +26134,56 @@ function buildVideoAsArticleCard(it) {
         const c = iuWeatherGetActiveCity();
         iuWeatherSyncCityLabels(c);
       }catch{}
-      iuWeatherLoadAndRender();
+      try{ if (iuWeatherGetActiveCity()) iuWeatherLoadAndRender(); }catch{}
     }
   }
+
+  function iuWeatherScheduleGpsRefreshIfNeeded(reason){
+    try{
+      if (window.__iuVaultHydrationComplete !== true) return false;
+      if (iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) return false;
+      const resolved = iuWeatherResolveLocation();
+      const needs = !!(resolved && (resolved.needsGpsRefresh || resolved.status === "needs_setup"));
+      if (!needs) return false;
+      const now = Date.now();
+      const last = Number(window.__iuWeatherGpsRefreshAt || 0);
+      if (last && now - last < 12000) return false;
+      const run = function () {
+        try{
+          window.__iuWeatherGpsRefreshAt = Date.now();
+          window.__iuWeatherGpsRefreshReason = String(reason || "");
+          iuWeatherActivateGpsViaGeolocation();
+        }catch{}
+      };
+      if (navigator.permissions && typeof navigator.permissions.query === "function") {
+        navigator.permissions.query({ name: "geolocation" }).then(function (perm) {
+          try{
+            if (perm && perm.state === "denied") return;
+            if (perm && perm.state === "granted") {
+              run();
+              return;
+            }
+            if (iuWeatherReadGpsSelected()) run();
+          }catch{}
+        }).catch(function () {
+          try{ if (iuWeatherReadGpsSelected()) run(); }catch{}
+        });
+        return true;
+      }
+      if (iuWeatherReadGpsSelected()) {
+        run();
+        return true;
+      }
+      return false;
+    }catch{
+      return false;
+    }
+  }
+
+  try{
+    window.iuWeatherActivateGpsViaGeolocation = iuWeatherActivateGpsViaGeolocation;
+    window.iuWeatherScheduleGpsRefreshIfNeeded = iuWeatherScheduleGpsRefreshIfNeeded;
+  }catch{}
 
   function iuWeatherHasSavedManualCity(){
     try{
@@ -26104,6 +26276,20 @@ function buildVideoAsArticleCard(it) {
         }
       }catch{}
       try{ iuWxApplyMobileLayoutFix(); }catch{}
+      try{
+        if (!window.__iuWeatherGpsRefreshLifecycleBound) {
+          window.__iuWeatherGpsRefreshLifecycleBound = 1;
+          document.addEventListener("visibilitychange", function () {
+            try{
+              if (document.visibilityState === "visible") iuWeatherScheduleGpsRefreshIfNeeded("visibility");
+            }catch{}
+          });
+          window.addEventListener("pageshow", function () {
+            try{ iuWeatherScheduleGpsRefreshIfNeeded("pageshow"); }catch{}
+          });
+        }
+      }catch{}
+      try{ iuWeatherScheduleGpsRefreshIfNeeded("init"); }catch{}
     }catch{}
   }
   /* P1 lazy mount (pocasi): the section-view mount listener lives in another
@@ -26298,7 +26484,16 @@ function buildVideoAsArticleCard(it) {
 
     // WEATHER (Open-Meteo) + hourly strip + min/max
     const city = iuWeatherGetActiveCity();
-    const placeName = String(city && city.name ? city.name : "Praha");
+    if (!city || typeof city.lat !== "number" || typeof city.lon !== "number" || !isFinite(city.lat) || !isFinite(city.lon)) {
+      if (elErr) elErr.hidden = true;
+      if (elWeather) elWeather.hidden = false;
+      if (elPlace) elPlace.textContent = "—";
+      if (elTemp) elTemp.textContent = "—°C";
+      if (elMinMax) elMinMax.textContent = "Max —° · Min —°";
+      if (elIcon) elIcon.textContent = "☁️";
+      return;
+    }
+    const placeName = String(city && city.name ? city.name : "—");
     const lat = Number(city && city.lat);
     const lon = Number(city && city.lon);
 
@@ -26319,7 +26514,7 @@ function buildVideoAsArticleCard(it) {
     try{
       const st = window.__iuWeatherState;
       if (st && typeof st.lat === "number" && typeof st.lon === "number" && Math.abs(st.lat - lat) < 0.00001 && Math.abs(st.lon - lon) < 0.00001 && st.current && st.hourly && st.rawDaily && iuWeatherStateMatchesActiveCity(st)) {
-        if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
+        if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : placeName;
         if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
         if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iuWxResolveWeatherIcon(st.current.weatherCode, st.current.isDay);
         if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
@@ -26341,7 +26536,7 @@ function buildVideoAsArticleCard(it) {
             if (window.__iuDailyPanelWxToken !== wxToken) return;
             if (!iuWeatherStateMatchesActiveCity(st)) return;
             if (!st || !st.current) throw new Error("bad state");
-            if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : "Praha";
+            if (elPlace) elPlace.textContent = st.city && st.city.name ? String(st.city.name) : placeName;
             if (elTemp) elTemp.textContent = typeof st.current.temperatureC === "number" ? `${Math.round(st.current.temperatureC)}°C` : "—°C";
             if (elIcon) elIcon.textContent = st.current.icon ? String(st.current.icon) : iuWxResolveWeatherIcon(st.current.weatherCode, st.current.isDay);
             if (elMinMax) elMinMax.textContent = `Max ${fmtDeg(st.daily ? st.daily.todayMax : null)} · Min ${fmtDeg(st.daily ? st.daily.todayMin : null)}`;
