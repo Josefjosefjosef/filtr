@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-02-home-empty-space-under-feed-v1",
   "2026-09-02-silver-allday-toggle-v1",
   "2026-09-01-silver-native-datetime-v5",
   "2026-09-01-silver-reminder-date-time-v4",
@@ -136,10 +137,11 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "pc-cal-bottom-actions-toggle-v1",
   "pd-city-input-ios-zoom-v1",
   "mm-kb-scroll-pad-allowance-v1",
+  "home-empty-space-under-feed-v1",
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-mm-kb-scroll-pad-allowance-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-home-empty-space-under-feed-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

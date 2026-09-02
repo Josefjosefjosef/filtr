@@ -15839,8 +15839,12 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
 }
 
 @media (max-width: 900px){
+  /* P0 homepage empty gap: spacer stacked on #iuMobileGateWrap bottom-nav pad → hundreds of px.
+     Desktop home already hides this spacer; mobile gate must not reserve a second clearance. */
   .iuSilverTallScrollLayoutSpacer{
-    height: 72px !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    display: none !important;
   }
   .iuSilverTallScrollChromaFrame{
     padding: 4px !important;

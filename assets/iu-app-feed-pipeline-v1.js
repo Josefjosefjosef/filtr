@@ -625,6 +625,30 @@ function iuIsBenignResizeObserverLoopError(ev) {
     const s = String(sec || "").trim().toLowerCase();
     return s === IU_ARTICLE_HUB_SECTION || s === "media";
   }
+  /**
+   * Homepage mobile/PWA gate: #feed / #leftContent are display:none while loadData still runs.
+   * Video-only batches → renderedCount=0 → false #lastErrInline + duplicate bottom margin gap.
+   * Only paint feed inline errors when the article feed host is actually shown.
+   */
+  function iuArticleFeedHostPaintedP() {
+    try {
+      const feed = document.getElementById("feed");
+      if (!feed) return false;
+      const feedCs = window.getComputedStyle(feed);
+      if (!feedCs || feedCs.display === "none" || feedCs.visibility === "hidden") return false;
+      const left = document.getElementById("leftContent");
+      if (left) {
+        const leftCs = window.getComputedStyle(left);
+        if (leftCs && leftCs.display === "none") return false;
+      }
+      return true;
+    } catch (_) {
+      return true;
+    }
+  }
+  try {
+    window.iuArticleFeedHostPaintedP = iuArticleFeedHostPaintedP;
+  } catch (_) {}
   let activeSections = ["vse"];
   const state = {
     cachedItems: [],
@@ -6826,6 +6850,20 @@ function iuIsBenignResizeObserverLoopError(ev) {
       );
     }
     if (items.length > 0 && renderedCount === 0) {
+      /* Gate home / hidden feed host: do not paint false end-of-page error into document scroll. */
+      if (!iuArticleFeedHostPaintedP()) {
+        try {
+          const inline = document.getElementById("lastErrInline");
+          if (inline) {
+            inline.textContent = "";
+            inline.style.display = "none";
+          }
+        } catch (_) {}
+        try {
+          feedEl.setAttribute("data-feed-ready", "true");
+        } catch (_) {}
+        return;
+      }
       safeTarget.insertAdjacentHTML(
         "beforeend",
         `<div class="empty" style="margin-top:10px;color:rgba(11,27,43,0.7);font-weight:600;">Data načtena, ale nic se nevykreslilo. Obnov stránku.<br /><small>${items.length} položek</small></div>`
@@ -7096,6 +7134,11 @@ function iuIsBenignResizeObserverLoopError(ev) {
   function renderInlineError(message) {
     const inline = document.getElementById("lastErrInline");
     if (!inline) return;
+    if (!iuArticleFeedHostPaintedP()) {
+      inline.textContent = "";
+      inline.style.display = "none";
+      return;
+    }
     inline.textContent = message;
     inline.style.display = "block";
     inline.style.opacity = "1";
@@ -21243,6 +21286,16 @@ function buildVideoAsArticleCard(it) {
       iuHomeLoadAuditNotify("loadData:beforeApplyFilter");
       await applyFilter();
       state.__iuLoadDataMainApplyFilterDone = true;
+      /* Homepage gate: suppress stale feed inline error while #feed is not painted. */
+      try {
+        if (!iuArticleFeedHostPaintedP()) {
+          const inline = document.getElementById("lastErrInline");
+          if (inline) {
+            inline.textContent = "";
+            inline.style.display = "none";
+          }
+        }
+      } catch (_) {}
       iuPreviewFeedProbeTick("afterApplyFilterLoadData");
       iuHomeLoadAuditNotify("loadData:afterApplyFilter");
       try {
