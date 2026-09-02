@@ -18344,6 +18344,78 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
   grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
   align-items: start;
 }
+/*
+ * Silver Nová událost reuses .iu-calAllDaySwitch markup, but calendar-overlay
+ * CSS (iu-calendar-premium-update-v1) is only injected after lazy calendar boot.
+ * Without these rules the switch collapses to ~16×6px and is untappable on mobile.
+ * Scoped to .iuSilverDraftCard so calendar-overlay toggles keep their own CSS
+ * (and calendar all-day limit guard zero-size selftest is unaffected).
+ */
+.iuSilverDraftAllDayLine{
+  display:block;
+  line-height:1.25;
+  font-size:14px;
+  font-weight:700;
+  color:#1f3a5f;
+}
+.iuSilverDraftV--allDaySwitch{
+  display:flex;
+  align-items:center;
+  min-height:40px;
+  min-width:0;
+}
+.iuSilverDraftCard .iu-calAllDaySwitch{
+  position:relative;
+  width:48px;
+  height:44px;
+  min-width:48px;
+  min-height:44px;
+  flex:0 0 auto;
+  border:none;
+  padding:0;
+  background:transparent;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  appearance:none;
+  -webkit-appearance:none;
+  display:inline-flex;
+  align-items:center;
+}
+.iuSilverDraftCard .iu-calAllDaySwitch__track{
+  display:block;
+  width:48px;
+  height:28px;
+  border-radius:999px;
+  background:#cbd5e1;
+  transition:background .22s ease,box-shadow .22s ease;
+  box-shadow:inset 0 1px 2px rgba(15,23,42,.12);
+}
+.iuSilverDraftCard .iu-calAllDaySwitch__thumb{
+  position:absolute;
+  top:50%;
+  left:3px;
+  width:22px;
+  height:22px;
+  margin-top:-11px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(15,23,42,.18);
+  transition:transform .22s ease;
+  pointer-events:none;
+}
+.iuSilverDraftCard .iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__track{
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+.iuSilverDraftCard .iu-calAllDaySwitch.is-on .iu-calAllDaySwitch__thumb{
+  transform:translateX(20px);
+}
+.iuSilverDraftCard .iu-calAllDaySwitch:focus-visible{
+  outline:2px solid #16a34a;
+  outline-offset:2px;
+  border-radius:999px;
+}
 .iuSilverDraftInput{
   width: 100%;
   max-width: 100%;
