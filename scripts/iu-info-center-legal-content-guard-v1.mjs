@@ -85,10 +85,44 @@ function main() {
     fails += 1;
   } else ok("no_historical_modules");
 
-  if (!ic.includes('DOC_VERSION = "1.8"')) {
-    fail("doc_version_not_18");
+  if (!ic.includes('DOC_VERSION = "1.9"')) {
+    fail("doc_version_not_19");
     fails += 1;
-  } else ok("doc_version_18");
+  } else ok("doc_version_19");
+
+  const dataSources = html.match(
+    /id="iuInfoCenterDetailDataSources"[\s\S]*?<\/article>/
+  );
+  if (!dataSources) {
+    fail("data_sources_section_missing");
+    fails += 1;
+  } else {
+    const ds = dataSources[0];
+    if (/docs\/data-sources\/legal-review-info-panel\.md/.test(ds)) {
+      fail("data_sources_exposes_internal_doc_path");
+      fails += 1;
+    } else ok("data_sources_no_internal_doc_path");
+    if (!/Open-Meteo/.test(ds) || !/ČHMÚ|CHMI/.test(ds)) {
+      fail("data_sources_missing_weather_providers");
+      fails += 1;
+    } else ok("data_sources_weather_providers");
+    if (!/NDIC/.test(ds) || !/dopravniinfo\.cz/.test(ds)) {
+      fail("data_sources_missing_traffic_provider");
+      fails += 1;
+    } else ok("data_sources_traffic_provider");
+    if (!/Česká národní banka|ČNB/.test(ds) || !/CoinGecko/.test(ds)) {
+      fail("data_sources_missing_panel_providers");
+      fails += 1;
+    } else ok("data_sources_panel_providers");
+    if (/placeholder_only|verified_requires_attribution/.test(ds)) {
+      fail("data_sources_exposes_internal_status_tokens");
+      fails += 1;
+    } else ok("data_sources_no_internal_status_tokens");
+    if (!/Informační panel/.test(ds)) {
+      fail("data_sources_missing_info_panel_section");
+      fails += 1;
+    } else ok("data_sources_info_panel_section");
+  }
 
   if (fails === 0) {
     console.log("iCENTRUM_LEGAL_CONTENT_GUARD=PASS");

@@ -8093,20 +8093,88 @@ require-trusted-types-for 'script';
 
           <article id="iuInfoCenterDetailDataSources" class="iuInfoCenter__detail" data-iu-info-section="data-sources" hidden>
             <div class="iuInfoCenter__detailInner">
-              <p class="iuInfoCenter__lead">Údaje v informačním panelu slouží pouze pro rychlou orientaci. InfoUzel.cz čerpá data pouze z veřejně dostupných, oficiálních nebo licencovaných zdrojů, jejichž podmínky umožňují zobrazení na našem webu. U každé položky je uveden zdroj dat, čas poslední aktualizace a odkaz na podmínky použití. Pokud u některého údaje není bezpečný zdroj ověřen, údaj se nezobrazuje jako živé dato.</p>
+              <p class="iuInfoCenter__lead">InfoUzel.cz na některých místech zobrazuje nebo zpracovává veřejně dostupná data a informace poskytované třetími stranami. Tato stránka poskytuje přehled hlavních externích zdrojů používaných jednotlivými funkcemi InfoUzlu.</p>
+              <p class="iuInfoCenter__p">U jednotlivých zdrojů uvádíme jejich poskytovatele, účel použití a podle dostupnosti také odkaz na oficiální zdroj nebo podmínky použití. Aktuálnost jednotlivých údajů se může lišit podle poskytovatele a způsobu jejich poskytování.</p>
+              <p class="iuInfoCenter__p">Pokud není zdroj pro určitou funkci bezpečně a právně ověřen, není příslušný údaj zobrazován jako živé dato.</p>
+
+              <h3 class="iuInfoCenter__h3">Počasí</h3>
               <div class="iuInfoCenter__box" role="note">
-                <strong>Právní poznámka</strong>
-                <p class="iuInfoCenter__p">InfoUzel.cz nevydává zobrazované údaje za vlastní primární data. Údaje jsou přebírány z uvedených zdrojů v rozsahu povoleném jejich podmínkami. Data slouží pouze pro rychlou orientaci a nemusí být vhodná jako jediný podklad pro rozhodování. Uživatel by si měl důležité údaje ověřit přímo u oficiálního zdroje.</p>
+                <p class="iuInfoCenter__p"><strong>Poskytovatel:</strong> Open-Meteo</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> předpověď a aktuální počasí v sekci Počasí (včetně souvisejícího zobrazení ve Silverovi).</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> živý požadavek prohlížeče na veřejné API Open-Meteo podle zvoleného města nebo polohy; jako záloha může sloužit lokálně publikovaný snapshot počasí.</p>
+                <p class="iuInfoCenter__p"><strong>Atribuce:</strong> u počasí je uvedeno „Zdroj: Open-Meteo“.</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Oficiální web Open-Meteo</a></p>
               </div>
-              <h3 class="iuInfoCenter__h3">Přehled položek panelu (PC) — stav ověření 2026-06-29</h3>
+
+              <h3 class="iuInfoCenter__h3">Meteorologické výstrahy</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <p class="iuInfoCenter__p"><strong>Poskytovatel:</strong> Český hydrometeorologický ústav (ČHMÚ)</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> výstrahy v Přehledu dne (meteorologické výstrahy / počasí).</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> oficiální CAP open data ČHMÚ se stahují na straně InfoUzlu a publikují se jako stejnodoménový snapshot/lane. Prohlížeč nevolá přímo opendata.chmi.cz.</p>
+                <p class="iuInfoCenter__p"><strong>Aktualizace:</strong> periodická synchronizace v řádu minut (podle provozního plánu CI).</p>
+                <p class="iuInfoCenter__p"><strong>Licence / atribuce:</strong> CC BY 4.0 · ve UI je uvedeno „Zdroj: ČHMÚ“.</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://vystrahy-cr.chmi.cz/" target="_blank" rel="noopener noreferrer">Veřejný portál výstrah ČHMÚ</a> · <a class="iuInfoCenter__link" href="https://opendata.chmi.cz/meteorology/weather/alerts/cap/" target="_blank" rel="noopener noreferrer">Open data CAP</a></p>
+              </div>
+
+              <h3 class="iuInfoCenter__h3">Dopravní informace</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <p class="iuInfoCenter__p"><strong>Poskytovatel:</strong> Národní dopravní informační centrum (NDIC) / ŘSD</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> dopravní karty a filtry v Přehledu dne (Doprava).</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> DATEX II data se stahují autentizovaně na straně InfoUzlu a do prohlížeče se doručují jako stejnodoménový offline snapshot. Prohlížeč neprovádí přímý přístup k NDIC PULL.</p>
+                <p class="iuInfoCenter__p"><strong>Aktualizace:</strong> periodická synchronizace v řádu minut (podle provozního plánu CI).</p>
+                <p class="iuInfoCenter__p"><strong>Atribuce:</strong> „Zdroj: NDIC“ · zdrojem digitalizovaných informací o silničním provozu je NDIC.</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://www.dopravniinfo.cz/" target="_blank" rel="noopener noreferrer">dopravniinfo.cz</a> · <a class="iuInfoCenter__link" href="https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/" target="_blank" rel="noopener noreferrer">Registr zdroje DATEX PULL</a></p>
+              </div>
+
+              <h3 class="iuInfoCenter__h3">Kurzy měn</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <p class="iuInfoCenter__p"><strong>Poskytovatel:</strong> Česká národní banka (ČNB)</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> EUR/CZK a USD/CZK v informačním panelu.</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> oficiální denní kurzy ČNB se načítají při sestavení snapshotu informačního panelu (ne přímo z prohlížeče). Maximální stáří zobrazené hodnoty je nastaveno na 48 hodin.</p>
+                <p class="iuInfoCenter__p"><strong>Atribuce:</strong> povinné uvedení ČNB u položky (dialog ⓘ).</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/" target="_blank" rel="noopener noreferrer">Kurzy ČNB</a> · <a class="iuInfoCenter__link" href="https://www.cnb.cz/cs/verejnost/pro-media/informace-pro-media/pravidla-pro-pouzivani-informaci-cnb/" target="_blank" rel="noopener noreferrer">Podmínky použití informací ČNB</a></p>
+              </div>
+
+              <h3 class="iuInfoCenter__h3">Kryptoměny a zlato (tržní cena)</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <p class="iuInfoCenter__p"><strong>Poskytovatel:</strong> CoinGecko</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> Bitcoin a orientační cena zlata (PAX Gold) v informačním panelu.</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> tržní ceny z CoinGecko API se načítají při sestavení snapshotu. Maximální stáří zobrazené hodnoty je nastaveno na 2 hodiny. Jde o orientační tržní údaje, nikoli o oficiální kurz ČNB.</p>
+                <p class="iuInfoCenter__p"><strong>Atribuce:</strong> uvedení CoinGecko u položky (dialog ⓘ).</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer">CoinGecko API</a> · <a class="iuInfoCenter__link" href="https://www.coingecko.com/en/api_terms" target="_blank" rel="noopener noreferrer">Podmínky CoinGecko API</a></p>
+              </div>
+
+              <h3 class="iuInfoCenter__h3">Statistiky a ekonomické ukazatele</h3>
+              <div class="iuInfoCenter__box" role="note">
+                <p class="iuInfoCenter__p"><strong>Poskytovatelé:</strong> Český statistický úřad (DataStat) a Ministerstvo práce a sociálních věcí / Úřad práce ČR</p>
+                <p class="iuInfoCenter__p"><strong>Použití:</strong> vybrané ukazatele informačního panelu (např. ceny pohonných hmot, elektřina, inflace, HDP, průmysl, maloobchod, obyvatelstvo a další ČSÚ řady; nezaměstnanost a volná pracovní místa z MPSV).</p>
+                <p class="iuInfoCenter__p"><strong>Charakter dat:</strong> oficiální open-data / DataStat výběry se načítají při sestavení snapshotu informačního panelu. Periodicita a maximální stáří se liší podle ukazatele (typicky dny až měsíce).</p>
+                <p class="iuInfoCenter__p"><strong>Atribuce:</strong> u položky je uveden poskytovatel; odkazy na podmínky jsou dostupné v dialogu ⓘ.</p>
+                <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="https://csu.gov.cz/zakladni-informace-pro-pouziti-api-datastatu" target="_blank" rel="noopener noreferrer">Podmínky API DataStat (ČSÚ)</a> · <a class="iuInfoCenter__link" href="https://data.mpsv.cz/portal" target="_blank" rel="noopener noreferrer">Portál dat MPSV</a> · <a class="iuInfoCenter__link" href="https://data.gov.cz/podm%C3%ADnky-u%C5%BEit%C3%AD/" target="_blank" rel="noopener noreferrer">Podmínky užití otevřených dat</a></p>
+              </div>
+
+              <h3 class="iuInfoCenter__h3">Informační panel — stav položek</h3>
+              <p class="iuInfoCenter__p">Informační panel zobrazuje pouze ukazatele s ověřeným poskytovatelem. Hodnoty přicházejí ze stejnodoménového snapshotu. U každé karty klepněte na ⓘ pro poskytovatele, typ dat, aktualizaci a odkazy.</p>
               <ul class="iuInfoCenter__ul">
-                <li><strong>EUR / CZK</strong> — Česká národní banka · živě ze snapshotu · <em>verified_requires_attribution</em> · max. stáří 48 h · <a class="iuInfoCenter__link" href="https://www.cnb.cz/cs/verejnost/pro-media/informace-pro-media/pravidla-pro-pouzivani-informaci-cnb/" target="_blank" rel="noopener noreferrer">Podmínky ČNB</a></li>
-                <li><strong>USD / CZK</strong> — Česká národní banka · živě ze snapshotu · <em>verified_requires_attribution</em> · max. stáří 48 h</li>
-                <li><strong>Bitcoin</strong> — CoinGecko · živě ze snapshotu · <em>verified_requires_attribution</em> · max. stáří 2 h · <a class="iuInfoCenter__link" href="https://www.coingecko.com/en/api_terms" target="_blank" rel="noopener noreferrer">Podmínky CoinGecko</a></li>
-                <li><strong>Benzín, doprava, elektřina, zlato, vlaky, letecká doprava</strong> — <em>placeholder_only</em> · zdroj se ověřuje · živá data nejsou zobrazena</li>
+                <li><strong>EUR / CZK, USD / CZK</strong> — ČNB · živá data ze snapshotu · max. stáří 48 h</li>
+                <li><strong>Bitcoin, zlato (PAX Gold)</strong> — CoinGecko · živá data ze snapshotu · max. stáří 2 h</li>
+                <li><strong>Benzín, nafta, elektřina a další ČSÚ ukazatele</strong> — ČSÚ DataStat · živá data ze snapshotu · stáří podle periodicity ukazatele</li>
+                <li><strong>Nezaměstnanost, uchazeči, volná pracovní místa</strong> — MPSV / ÚP · živá data ze snapshotu</li>
+                <li><strong>Živá dopravní omezení, vlaky a letecká doprava v informačním panelu</strong> — zdroj pro panel není ověřen · <em>živá data v panelu nejsou zobrazena</em> (dopravní informace jsou k dispozici samostatně v Přehledu dne ze zdroje NDIC)</li>
               </ul>
-              <p class="iuInfoCenter__p">Podrobný interní právní přehled je v dokumentaci projektu: <code>docs/data-sources/legal-review-info-panel.md</code>.</p>
-              <p class="iuInfoCenter__p">U každé položky panelu klepněte na ⓘ pro poskytovatele, typ dat, aktualizaci a odkazy.</p>
+
+              <h3 class="iuInfoCenter__h3">Další externí služby související s obsahem</h3>
+              <ul class="iuInfoCenter__ul">
+                <li><strong>YouTube / Google</strong> — náhledy a přehrávání videí v sekci Média (načtení náhledů z CDN a embed po akci uživatele). Nejde o datový ukazatel informačního panelu.</li>
+                <li><strong>RSS / Atom vydavatelé</strong> — veřejné články se zpracovávají v pipeline InfoUzlu a do prohlížeče se doručují jako publikovaná data webu.</li>
+                <li><strong>Mapové služby a dopravci zásilek</strong> — otevírají se zpravidla až po akci uživatele jako externí odkaz; InfoUzel z nich nestahuje živé ukazatele do informačního panelu.</li>
+              </ul>
+
+              <div class="iuInfoCenter__box iuInfoCenter__box--warn" role="note">
+                <strong>Právní poznámka</strong>
+                <p class="iuInfoCenter__p">InfoUzel.cz nevydává zobrazované údaje za vlastní primární data. Údaje pocházející od třetích stran jsou přebírány nebo zobrazovány z uvedených zdrojů v rozsahu odpovídajícím způsobu jejich poskytování a příslušným podmínkám použití.</p>
+                <p class="iuInfoCenter__p">Data slouží především pro rychlou orientaci a nemusí být vhodná jako jediný podklad pro rozhodování. Důležité nebo časově citlivé údaje by si měl uživatel ověřit přímo u příslušného oficiálního zdroje.</p>
+              </div>
               <footer class="iuInfoCenter__meta">Verze dokumentace: <span data-iu-info-doc-version>1.0</span> · Poslední aktualizace: <span data-iu-info-version-date></span></footer>
             </div>
           </article>
