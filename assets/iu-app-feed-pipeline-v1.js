@@ -25494,6 +25494,22 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {
       return;
     }
+    /* P0: Datové schránky / other fullscreen tool overlays — do not remount MindMenu tools
+       chrome on return from external tab (would nest overlay under MindMenu/iCentrum header). */
+    try {
+      if (
+        window.iuNetwork &&
+        typeof window.iuNetwork.hasIntentionalToolOverlayOpen === "function" &&
+        window.iuNetwork.hasIntentionalToolOverlayOpen()
+      ) {
+        try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_arm) {}
+        return;
+      }
+      if (document.body && document.body.classList.contains("iu-ds-overlay-open")) {
+        try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_arm2) {}
+        return;
+      }
+    } catch (_) {}
     try {
       var wrap = document.getElementById("iuMobileGateWrap");
       if (wrap && typeof wrap.__iuMobileGateSetTab === "function" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
@@ -25514,6 +25530,16 @@ function buildVideoAsArticleCard(it) {
       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
       var wrap = document.getElementById("iuMobileGateWrap");
       if (!wrap || typeof wrap.__iuMobileGateSetTab !== "function") return;
+      try {
+        if (
+          window.iuNetwork &&
+          typeof window.iuNetwork.hasIntentionalToolOverlayOpen === "function" &&
+          window.iuNetwork.hasIntentionalToolOverlayOpen()
+        ) {
+          return;
+        }
+        if (document.body && document.body.classList.contains("iu-ds-overlay-open")) return;
+      } catch (_ov) {}
       var hash = String(window.location.hash || "").replace("#", "");
       var st = false;
       try { st = !!(history.state && history.state.iu_mindmenu_overlay === true); } catch (_st) {}

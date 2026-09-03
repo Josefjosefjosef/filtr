@@ -106,24 +106,73 @@
     }, 3200);
   }
 
+  /* Body classes for intentional fullscreen / tool overlays. Stripping iu-modal-open
+     while any of these are set collapses mobile layout (e.g. Datové schránky after
+     return from external login tab → nested MindMenu chrome). */
+  var INTENTIONAL_TOOL_OVERLAY_BODY_CLASSES = [
+    "iu-ds-overlay-open",
+    "iu-financial-overlay-open",
+    "iu-financial-calculators-overlay-open",
+    "iu-legal-docs-overlay-open",
+    "iu-invoice-overlay-open",
+    "iu-custom-buttons-overlay-open",
+    "iu-quickFeedOpen",
+    "iu-nakup-online-overlay-open",
+    "iu-grocery-desktop-overlay-open",
+    "iu-banking-desktop-overlay-open",
+    "iu-bakalari-desktop-overlay-open",
+    "iu-pojistovna-desktop-overlay-open",
+    "iu-wordpdf-desktop-overlay-open",
+    "iu-ai-narrow-fullscreen",
+  ];
+
+  function hasIntentionalToolOverlayOpen() {
+    try {
+      var b = document.body;
+      if (!b || !b.classList) return false;
+      for (var i = 0; i < INTENTIONAL_TOOL_OVERLAY_BODY_CLASSES.length; i++) {
+        if (b.classList.contains(INTENTIONAL_TOOL_OVERLAY_BODY_CLASSES[i])) return true;
+      }
+      var ds = document.getElementById("iuDsPanel");
+      if (ds && String(ds.dataset.open || "") === "1" && !ds.hasAttribute("hidden")) return true;
+      var fin = document.getElementById("iuFinancialCalcPanel");
+      if (fin && String(fin.dataset.open || "") === "1" && !fin.hasAttribute("hidden")) return true;
+      var leg = document.getElementById("iuLegalDocsPanel");
+      if (leg && String(leg.dataset.open || "") === "1" && !leg.hasAttribute("hidden")) return true;
+      var inv = document.getElementById("iuInvoicePanel");
+      if (inv && String(inv.dataset.open || "") === "1" && !inv.hasAttribute("hidden")) return true;
+    } catch (_) {}
+    return false;
+  }
+
   function shouldRestoreShell() {
     try {
       if (sessionStorage.getItem(EXTERNAL_ARMED_KEY) === "1") return true;
     } catch (_) {}
     try {
-      if (document.body.classList.contains("iu-modal-open")) return true;
+      /* Stuck modal lock without an intentional tool overlay (error/loading leftover).
+         Do NOT treat intentional overlays (Datovka / invoice / …) as restore triggers —
+         that path used to strip iu-modal-open on every pageshow/visibility resume. */
+      if (document.body.classList.contains("iu-modal-open") && !hasIntentionalToolOverlayOpen()) return true;
     } catch (_) {}
     return false;
   }
 
   function clearShellErrorUiOnly() {
+    var preserveModal = hasIntentionalToolOverlayOpen();
     try {
-      document.documentElement.classList.remove("iu-modal-open");
-      document.body.classList.remove("iu-modal-open", "iu-custom-buttons-overlay-open");
-      document.documentElement.style.overflow = "";
-      document.documentElement.style.pointerEvents = "";
-      document.body.style.overflow = "";
-      document.body.style.pointerEvents = "";
+      if (!preserveModal) {
+        document.documentElement.classList.remove("iu-modal-open");
+        document.body.classList.remove("iu-modal-open", "iu-custom-buttons-overlay-open");
+        document.documentElement.style.overflow = "";
+        document.documentElement.style.pointerEvents = "";
+        document.body.style.overflow = "";
+        document.body.style.pointerEvents = "";
+      } else {
+        /* Keep overflow lock for open tool overlays; only drop pointer-events traps. */
+        document.documentElement.style.pointerEvents = "";
+        document.body.style.pointerEvents = "";
+      }
     } catch (_) {}
     try {
       document.querySelectorAll("[data-iu-loading-overlay='1'], .iu-loading-overlay").forEach(function (node) {
@@ -136,7 +185,28 @@
     } catch (_) {}
   }
 
+  function reassertIntentionalOverlayShell() {
+    try {
+      if (!hasIntentionalToolOverlayOpen()) return;
+      document.body.classList.add("iu-modal-open");
+      if (document.body.classList.contains("iu-ds-overlay-open") ||
+          (function () {
+            var ds = document.getElementById("iuDsPanel");
+            return !!(ds && String(ds.dataset.open || "") === "1" && !ds.hasAttribute("hidden"));
+          })()) {
+        document.body.classList.add("iu-ds-overlay-open");
+        if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
+      }
+    } catch (_) {}
+  }
+
   function invokeReturnNavigationRestore() {
+    /* P0: while a fullscreen tool overlay is open, do not remount MindMenu tools chrome
+       (would surface MindMenu/iCentrum header around Datové schránky after external return). */
+    if (hasIntentionalToolOverlayOpen()) {
+      reassertIntentionalOverlayShell();
+      return;
+    }
     try {
       if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
     } catch (_) {}
@@ -149,11 +219,15 @@
   }
 
   function restoreAppShellAfterReturn() {
-    if (!shouldRestoreShell()) return;
+    if (!shouldRestoreShell()) {
+      reassertIntentionalOverlayShell();
+      return;
+    }
     clearShellErrorUiOnly();
     try {
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
     } catch (_) {}
+    reassertIntentionalOverlayShell();
     invokeReturnNavigationRestore();
   }
 
@@ -320,6 +394,7 @@
     openExternalUrl: openExternalUrl,
     openExternalSync: openExternalSync,
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
+    hasIntentionalToolOverlayOpen: hasIntentionalToolOverlayOpen,
     showOfflineHint: showOfflineHint,
     hideOfflineHint: hideOfflineHint,
     fetchJson: fetchJson,

@@ -509,7 +509,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -4905,8 +4905,18 @@ try {
     if (!url) return;
     iuDsOpenLoginBusy = true;
     try {
-      window.open(url, "_blank", "noopener,noreferrer");
-    } catch (_) {}
+      /* Prefer central external-open path (arms return + offline hint) without clearing
+         intentional overlay shell — iuNetwork preserves iu-modal-open while Datovka is open. */
+      if (window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function") {
+        void window.iuNetwork.openExternalUrl(url);
+      } else {
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
+    } catch (_) {
+      try {
+        window.open(url, "_blank", "noopener,noreferrer");
+      } catch (_o) {}
+    }
     try {
       setTimeout(function () {
         iuDsOpenLoginBusy = false;
