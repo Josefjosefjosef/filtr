@@ -64,10 +64,25 @@ function main() {
     } else ok("prehled_dne_present");
   }
 
-  if (!vault.includes('data-iu-vault-ui-version", "3"')) {
-    fail("vault_ui_version_not_3");
+  if (!vault.includes('data-iu-vault-ui-version", "4"')) {
+    fail("vault_ui_version_not_4");
     fails += 1;
-  } else ok("vault_ui_version_3");
+  } else ok("vault_ui_version_4");
+
+  const unlockIdx = vault.indexOf("Způsob odemknutí");
+  const statusIdx = vault.indexOf("Stav zabezpečení");
+  const webAuthnIdx = vault.indexOf("Zabezpečení zařízení:</strong> ověření provádí");
+  const applyIdx = vault.indexOf("iuVaultApplyMindMenuMethodBtn");
+  if (
+    unlockIdx < 0 ||
+    statusIdx < 0 ||
+    webAuthnIdx < 0 ||
+    applyIdx < 0 ||
+    !(unlockIdx < applyIdx && applyIdx < webAuthnIdx && webAuthnIdx < statusIdx)
+  ) {
+    fail("vault_controls_order_regression");
+    fails += 1;
+  } else ok("vault_controls_order");
 
   if (!vault.includes("Co zabezpečení chrání a co ne")) {
     fail("limitations_section_missing");

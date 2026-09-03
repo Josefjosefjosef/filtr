@@ -119,6 +119,23 @@ async function readSecurityUi(page) {
     const status = document.getElementById("iuVaultMindMenuLockStatus");
     const applyBtn = document.getElementById("iuVaultApplyMindMenuMethodBtn");
     const devNo = document.getElementById("iuVaultDeviceUnsupported");
+    const fieldset = document.getElementById("iuVaultMindMenuMethodFieldset");
+    const deviceInfo = section ? section.querySelector("[data-iu-ic-truth=\"device-security\"]") : null;
+    let controlsOrderOk = false;
+    if (fieldset && applyBtn && deviceInfo && section && typeof fieldset.compareDocumentPosition === "function") {
+      const fieldsetBeforeApply =
+        (fieldset.compareDocumentPosition(applyBtn) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      const applyBeforeDeviceInfo =
+        (applyBtn.compareDocumentPosition(deviceInfo) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      const deviceInfoBeforeStatus =
+        status &&
+        (deviceInfo.compareDocumentPosition(status) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      controlsOrderOk = fieldsetBeforeApply && applyBeforeDeviceInfo && !!deviceInfoBeforeStatus;
+    }
+    const legendFirst =
+      section && section.querySelector(".iuVaultSecurity__legend")
+        ? String(section.querySelector(".iuVaultSecurity__legend").textContent || "").includes("Způsob odemknutí")
+        : false;
     return {
       sectionExists: !!section,
       uiVersion: section ? section.getAttribute("data-iu-vault-ui-version") : null,
@@ -135,6 +152,8 @@ async function readSecurityUi(page) {
       statusText: status ? String(status.textContent || "").trim() : "",
       applyVisible: applyBtn ? !applyBtn.hidden : false,
       deviceUnsupportedUi: devNo ? !devNo.hidden : false,
+      controlsOrderOk,
+      legendFirst,
     };
   });
 }
@@ -198,7 +217,9 @@ async function runScenario(browser, base, scenario) {
   const ui = await readSecurityUi(page);
 
   if (!ui.sectionExists) fails.push("security_section_missing");
-  if (ui.uiVersion !== "3") fails.push("security_ui_version_not_v3");
+  if (ui.uiVersion !== "4") fails.push("security_ui_version_not_v4");
+  if (!ui.legendFirst) fails.push("unlock_method_not_first");
+  if (!ui.controlsOrderOk) fails.push("controls_order_regression");
   if (!ui.heading) fails.push("heading_missing");
   if (!ui.standard) fails.push("encrypted_at_rest_missing");
   if (!ui.infoUzelLock) fails.push("infouzel_lock_missing");
