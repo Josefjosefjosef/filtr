@@ -2839,7 +2839,7 @@ try {
       return;
     }
     if (keyNorm === "banka" || keyNorm === "bakalari" || keyNorm === "pojistovna") {
-      const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
+      const titles = { banka: "Banka", bakalari: "Školní systémy", pojistovna: "Zdravotní pojišťovna" };
       const isNarrowMojeFs = !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
       const isBankingDesktop = keyNorm === "banka" && !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
       const isBakalariDesktop = keyNorm === "bakalari" && !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
@@ -9557,7 +9557,7 @@ try {
     const bodyEl = document.getElementById("iu-mojeSluzbyBody");
     if (!overlay || !panel || !bodyEl) return;
     try { iuCloseAllOverlaysExcept("mojesluzby"); } catch (_) {}
-    const titles = { banka: "Banka", bakalari: "Bakaláři", pojistovna: "Zdravotní pojišťovna" };
+    const titles = { banka: "Banka", bakalari: "Školní systémy", pojistovna: "Zdravotní pojišťovna" };
     if (titleEl) titleEl.textContent = titles[kind] || kind;
     bodyEl.innerHTML = "";
     if (panel) panel.setAttribute("data-moje-kind", kind);
@@ -10084,10 +10084,10 @@ try {
       var lockClass = locked ? " bakalari-card--locked" : "";
       return (
         "<section class=\"bakalari-card" + lockClass + "\" data-bakalari-id=\"" + id + "\">" +
-        "  <button type=\"button\" class=\"bakalari-open-btn\" data-bakalari-open disabled aria-disabled=\"true\">Otevřít Bakaláře</button>" +
+        "  <button type=\"button\" class=\"bakalari-open-btn\" data-bakalari-open disabled aria-disabled=\"true\">Otevřít školní systém</button>" +
         "  <div class=\"bakalari-fields\">" +
         "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Jméno dítěte</span><input type=\"text\" class=\"bakalari-input\" data-field=\"name\" maxlength=\"30\" autocomplete=\"name\"" + ro + " value=\"" + nameV + "\" placeholder=\"" + esc(PH_NAME) + "\" /></label>" +
-        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Odkaz na Bakaláře</span><input type=\"text\" class=\"bakalari-input\" data-field=\"url\" inputmode=\"url\" autocomplete=\"url\"" + ro + " value=\"" + urlV + "\" placeholder=\"" + esc(PH_URL) + "\" /></label>" +
+        "    <label class=\"bakalari-field\"><span class=\"bakalari-label\">Odkaz na školní systém</span><input type=\"text\" class=\"bakalari-input\" data-field=\"url\" inputmode=\"url\" autocomplete=\"url\"" + ro + " value=\"" + urlV + "\" placeholder=\"" + esc(PH_URL) + "\" /></label>" +
         "    <div class=\"bakalari-field\"><span class=\"bakalari-label\">Uživatelské jméno (volitelné)</span><div class=\"bakalari-inline-row\">" +
         "<input type=\"text\" class=\"bakalari-input\" data-field=\"username\" autocomplete=\"username\"" + ro + " value=\"" + userV + "\" placeholder=\"" + esc(PH_USER) + "\" />" +
         "<button type=\"button\" class=\"bakalari-btn bakalari-btn--mini bakalari-btn--ghost\" data-copy-username>Kopírovat</button></div></div>" +

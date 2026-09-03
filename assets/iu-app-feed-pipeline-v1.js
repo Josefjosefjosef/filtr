@@ -26602,7 +26602,7 @@ function buildVideoAsArticleCard(it) {
   const IU_QUICKTOOLS_REGISTRY = [
     { id: "datovka", label: "Datová schránka", accent: "#1F4B99" },
     { id: "bankovnictvi", label: "Internetové bankovnictví", accent: "#0066cc" },
-    { id: "bakalari", label: "Bakaláři", accent: "#2e7d32" },
+    { id: "bakalari", label: "Školní systémy", accent: "#2e7d32" },
     { id: "zdravotni_pojistovna", label: "Zdravotní pojišťovna", accent: "#00838f" },
     { id: "zasilky", label: "Zásilky a sledování", accent: "#e60012" },
     { id: "ai_asistenti", label: "AI asistenti", accent: "#0d9488" },

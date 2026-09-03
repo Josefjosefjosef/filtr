@@ -21181,6 +21181,44 @@ body section.iu-mmQuickLinks[aria-label="Rychl?Â© odkazy"] .iuQlText{
   overflow-wrap:break-word;
 }
 
+/* MindMenu: Školní systémy tile — primary + secondary label stack (id bakalari kept). */
+.iuTile[data-quicktool-id="bakalari"] .iuTileText.iuTileText--stack,
+.iuTile[data-iu-ql="bakalari"] .iuTileText.iuTileText--stack,
+.iuTile[data-ms="bakalari"] .iuTileText.iuTileText--stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:2px;
+  -webkit-line-clamp:unset;
+  -webkit-box-orient:unset;
+  overflow:visible;
+  white-space:normal !important;
+  text-align:center !important;
+  line-height:1.15 !important;
+  hyphens:manual;
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+.iuTile[data-quicktool-id="bakalari"] .iuTileTextPrimary,
+.iuTile[data-iu-ql="bakalari"] .iuTileTextPrimary,
+.iuTile[data-ms="bakalari"] .iuTileTextPrimary{
+  display:block;
+  font-weight:700;
+  font-size:1em;
+  line-height:1.15;
+}
+.iuTile[data-quicktool-id="bakalari"] .iuTileTextSecondary,
+.iuTile[data-iu-ql="bakalari"] .iuTileTextSecondary,
+.iuTile[data-ms="bakalari"] .iuTileTextSecondary{
+  display:block;
+  font-weight:500;
+  font-size:0.72em;
+  line-height:1.2;
+  opacity:0.88;
+  max-width:100%;
+}
+
 .iuTile > .iuTileText{
   padding:10px 14px;
   text-align:center;
