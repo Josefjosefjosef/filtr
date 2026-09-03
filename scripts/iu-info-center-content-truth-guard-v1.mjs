@@ -139,6 +139,25 @@ function main() {
     fails += 1;
   } else ok("color_not_only_signal");
 
+  if (!css.includes("iu-privacy-providers-table-fit-v1")) {
+    fail("providers_table_fit_marker_missing");
+    fails += 1;
+  } else ok("providers_table_fit_marker");
+  if (!/@media \(max-width:\s*1024px\)[\s\S]{0,1200}iuInfoCenter__table:has\(>\s*thead th:nth-child\(4\)\)[\s\S]{0,400}table-layout:\s*fixed/.test(css)) {
+    fail("providers_table_mobile_fixed_layout_missing");
+    fails += 1;
+  } else ok("providers_table_mobile_fixed_layout");
+  const fitChunk = css.slice(css.indexOf("iu-privacy-providers-table-fit-v1"));
+  const fitBlock = fitChunk.slice(0, 1800);
+  if (/overflow-x:\s*auto/.test(fitBlock)) {
+    fail("providers_table_must_not_use_overflow_x_auto");
+    fails += 1;
+  } else ok("providers_table_no_hscroll_workaround");
+  if (/text-overflow:\s*ellipsis/.test(fitBlock)) {
+    fail("providers_table_must_not_ellipsis");
+    fails += 1;
+  } else ok("providers_table_no_ellipsis");
+
   if (fails === 0) {
     console.log("iCENTRUM_CONTENT_TRUTH_GUARD=PASS");
   } else {

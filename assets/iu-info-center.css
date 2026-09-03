@@ -397,6 +397,49 @@ body.iu-theme-dark .iuInfoCenter__tile--hero .iuInfoCenter__tileHint{
   color: #1e293b;
 }
 
+/* iu-privacy-providers-table-fit-v1: 4-col infra table (bod 6) fits mobile/tablet/PWA width.
+   Desktop (>1024) unchanged. Fit via type + wrap, not a horizontal scroller, not ellipsis. */
+@media (max-width: 1024px){
+  .iuInfoCenter__box:has(> .iuInfoCenter__table > thead th:nth-child(4)){
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 10px 8px;
+  }
+  .iuInfoCenter__table:has(> thead th:nth-child(4)){
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+  .iuInfoCenter__table:has(> thead th:nth-child(4)) th,
+  .iuInfoCenter__table:has(> thead th:nth-child(4)) td{
+    box-sizing: border-box;
+    min-width: 0;
+    width: auto;
+    padding: 0.4em 0.32em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
+    vertical-align: top;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+@media (max-width: 480px){
+  .iuInfoCenter__table:has(> thead th:nth-child(4)){
+    font-size: 0.74rem;
+    line-height: 1.32;
+  }
+  .iuInfoCenter__table:has(> thead th:nth-child(4)) th,
+  .iuInfoCenter__table:has(> thead th:nth-child(4)) td{
+    padding: 0.32em 0.26em;
+  }
+}
+
 .iuInfoCenter__platformRow{
   display: grid;
   grid-template-columns: 1fr 1fr;
