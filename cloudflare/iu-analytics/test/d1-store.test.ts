@@ -180,4 +180,17 @@ describe("createD1Store", () => {
     expect(Object.values(blob.ads)[0].valid_clicks).toBe(1);
     expect(blob.audit["2026-07-21"].accepted).toBe(1);
   });
+
+  it("readDailySeries sums visits and page_views per day across devices", async () => {
+    const db = mockD1();
+    const store = createD1Store(db);
+    await store.bumpTraffic("2026-07-21", "pc", { visits: 2, page_views: 3 });
+    await store.bumpTraffic("2026-07-21", "mobile", { visits: 5, page_views: 7 });
+    await store.bumpTraffic("2026-07-22", "pc", { visits: 1, page_views: 1 });
+    const series = await store.readDailySeries("2000-01-01", "2026-07-22");
+    expect(series).toEqual([
+      { day: "2026-07-21", visits: 7, page_views: 10 },
+      { day: "2026-07-22", visits: 1, page_views: 1 },
+    ]);
+  });
 });
