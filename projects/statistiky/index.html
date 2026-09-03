@@ -24,6 +24,10 @@
         --safe-bottom: env(safe-area-inset-bottom, 0px);
       }
       * { box-sizing: border-box; }
+      html {
+        overflow-x: clip;
+        max-width: 100%;
+      }
       body {
         margin: 0;
         font-family: "Segoe UI", system-ui, sans-serif;
@@ -31,12 +35,26 @@
         background: linear-gradient(180deg, #e5eef6 0%, var(--bg) 45%, #fff 100%);
         line-height: 1.5;
         padding-bottom: calc(var(--nav) + var(--safe-bottom) + 24px);
+        overflow-x: clip;
+        max-width: 100%;
       }
-      main { max-width: 920px; margin: 0 auto; padding: 20px 16px 40px; }
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
+        min-width: 0;
+        width: 100%;
+      }
       h1 { font-size: 1.65rem; margin: 0 0 8px; }
       h2 { font-size: 1.15rem; margin: 0 0 10px; }
       .lead { color: var(--muted); margin: 0 0 20px; }
-      .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+      .grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr;
+        min-width: 0;
+        max-width: 100%;
+      }
       @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
       .card {
         background: var(--card);
@@ -44,8 +62,10 @@
         border-radius: 14px;
         padding: 14px 16px;
         box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        min-width: 0;
+        max-width: 100%;
       }
-      .card.full { grid-column: 1 / -1; }
+      .card.full { grid-column: 1 / -1; min-width: 0; }
       .stat { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
       .label { color: var(--muted); font-size: 0.85rem; }
       .codex li { margin: 0 0 6px; }
@@ -62,7 +82,7 @@
         gap: 10px;
         align-items: center;
         justify-content: space-between;
-        margin: 0 0 12px;
+        margin: 0 0 14px;
       }
       .seg {
         display: inline-flex;
@@ -103,26 +123,78 @@
         border-radius: 12px;
         background: #f8fafc;
         overflow: hidden;
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+      }
+      .chart-frame {
+        display: flex;
+        align-items: stretch;
+        gap: 4px;
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+        padding: 6px 4px 4px;
+      }
+      .chart-nav {
+        flex: 0 0 auto;
+        align-self: center;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--accent);
+        font: inherit;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .chart-nav:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .chart-nav:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      @media (min-width: 720px) {
+        .chart-frame.is-scrollable .chart-nav {
+          display: inline-flex;
+        }
       }
       .chart-scroll {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 100%;
         overflow-x: auto;
-        overflow-y: visible;
+        overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
         touch-action: pan-x pan-y;
-        max-width: 100%;
+        scrollbar-width: thin;
       }
       .chart-svg {
         display: block;
-        height: 220px;
+        height: 248px;
         min-width: 100%;
+        max-width: none;
         touch-action: pan-x pan-y;
+        overflow: visible;
       }
       .chart-tip {
         position: absolute;
         z-index: 2;
         min-width: 140px;
-        max-width: min(240px, calc(100% - 16px));
+        max-width: min(220px, calc(100% - 24px));
         padding: 8px 10px;
         border-radius: 10px;
         border: 1px solid var(--line);
@@ -131,18 +203,21 @@
         font-size: 0.85rem;
         line-height: 1.35;
         pointer-events: none;
-        transform: translate(-50%, calc(-100% - 10px));
+        transform: translate(-50%, calc(-100% - 8px));
+        box-sizing: border-box;
       }
       .chart-tip strong { display: block; margin-bottom: 2px; }
       .chart-live {
-        margin: 8px 0 0;
+        margin: 12px 0 0;
         min-height: 1.2em;
         font-size: 0.85rem;
         color: var(--muted);
+        overflow-wrap: anywhere;
       }
       .chart-note {
         margin: 10px 0 0;
         font-size: 0.82rem;
+        overflow-wrap: anywhere;
       }
       .sr-only {
         position: absolute;
@@ -169,6 +244,7 @@
         body { background: linear-gradient(180deg, #0b1220 0%, #111827 50%, #0b1220 100%); }
         .seg { background: #0f172a; }
         .chart-shell { background: #0f172a; }
+        .chart-nav { background: #111827; color: #7dd3fc; }
         .chart-tip { background: rgba(17, 24, 39, 0.98); color: var(--text); }
       }
     </style>
@@ -204,11 +280,15 @@
             </div>
           </div>
           <div class="chart-shell" id="sChartShell">
-            <div class="chart-scroll" id="sChartScroll">
-              <svg class="chart-svg" id="sChartSvg" role="img" aria-labelledby="sChartTitle sChartDesc" tabindex="0">
-                <title id="sChartTitle">Vývoj návštěvnosti InfoUzel.cz</title>
-                <desc id="sChartDesc">Spojnicový graf anonymních agregovaných návštěv a zobrazení.</desc>
-              </svg>
+            <div class="chart-frame" id="sChartFrame">
+              <button type="button" class="chart-nav chart-nav--prev" id="sChartPrev" aria-label="Zobrazit starší data" disabled>←</button>
+              <div class="chart-scroll" id="sChartScroll">
+                <svg class="chart-svg" id="sChartSvg" role="img" aria-labelledby="sChartTitle sChartDesc" tabindex="0">
+                  <title id="sChartTitle">Vývoj návštěvnosti InfoUzel.cz</title>
+                  <desc id="sChartDesc">Spojnicový graf anonymních agregovaných návštěv a zobrazení.</desc>
+                </svg>
+              </div>
+              <button type="button" class="chart-nav chart-nav--next" id="sChartNext" aria-label="Zobrazit novější data" disabled>→</button>
             </div>
             <div class="chart-tip" id="sChartTip" hidden></div>
           </div>
@@ -305,6 +385,11 @@
           if (p.length !== 3) return String(iso || "");
           return Number(p[2]) + ". " + Number(p[1]) + ". " + p[0];
         }
+        function formatCsDayShort(iso) {
+          var p = String(iso || "").split("-");
+          if (p.length !== 3) return String(iso || "");
+          return Number(p[2]) + ". " + Number(p[1]) + ".";
+        }
         function daysBetween(a, b) {
           var da = new Date(a + "T00:00:00Z").getTime();
           var db = new Date(b + "T00:00:00Z").getTime();
@@ -374,7 +459,7 @@
             row.label =
               grain === "week"
                 ? formatCsDay(row.dayFrom) + " – " + formatCsDay(row.dayTo)
-                : Number(String(k).slice(5)) + "/" + String(k).slice(0, 4);
+                : Number(String(k).slice(5)) + ". " + String(k).slice(0, 4);
             return row;
           });
         }
@@ -413,32 +498,83 @@
             esc(num(p.page_views))
           );
         }
-        function showTip(idx, clientX) {
+        function updateLiveDetail(p) {
+          var live = el("sChartLive");
+          if (!live || !p) return;
+          live.textContent =
+            p.label + " · " + metricLabel(state.metric) + ": " + num(p[state.metric]);
+        }
+        function positionTipForSelection() {
           var tip = el("sChartTip");
           var shell = el("sChartShell");
-          var live = el("sChartLive");
-          if (!tip || !shell || !state.points[idx]) return;
-          state.selected = idx;
-          var p = state.points[idx];
+          var svg = el("sChartSvg");
+          var scroll = el("sChartScroll");
+          if (!tip || !shell || !svg || !scroll) return;
+          if (state.selected < 0 || !state.points[state.selected]) {
+            tip.hidden = true;
+            return;
+          }
+          var circle = svg.querySelector('circle.chart-dot[data-idx="' + state.selected + '"]');
+          if (!circle) {
+            tip.hidden = true;
+            return;
+          }
+          var scrollRect = scroll.getBoundingClientRect();
+          var cRect = circle.getBoundingClientRect();
+          if (cRect.right < scrollRect.left + 2 || cRect.left > scrollRect.right - 2) {
+            tip.hidden = true;
+            return;
+          }
+          var p = state.points[state.selected];
           tip.hidden = false;
           tip.innerHTML = tipHtml(p);
-          var rect = shell.getBoundingClientRect();
-          var x = Math.min(Math.max(12, clientX - rect.left), rect.width - 12);
-          tip.style.left = x + "px";
-          tip.style.top = "18px";
-          if (live) {
-            live.textContent =
-              p.label +
-              " · Návštěvy: " +
-              num(p.visits) +
-              " · Zobrazení: " +
-              num(p.page_views);
-          }
+          var shellRect = shell.getBoundingClientRect();
+          var cx = cRect.left + cRect.width / 2 - shellRect.left;
+          var cy = Math.max(18, cRect.top - shellRect.top);
+          tip.style.left = cx + "px";
+          tip.style.top = cy + "px";
+          var tw = tip.offsetWidth || 160;
+          var half = tw / 2;
+          var clamped = Math.min(Math.max(half + 8, cx), Math.max(half + 8, shellRect.width - half - 8));
+          tip.style.left = clamped + "px";
+        }
+        function showTip(idx) {
+          if (!state.points[idx]) return;
+          state.selected = idx;
+          updateLiveDetail(state.points[idx]);
           drawChart(true);
+          positionTipForSelection();
         }
         function hideTip() {
           var tip = el("sChartTip");
           if (tip) tip.hidden = true;
+        }
+        function updateNavState() {
+          var scroll = el("sChartScroll");
+          var prev = el("sChartPrev");
+          var next = el("sChartNext");
+          var frame = el("sChartFrame");
+          if (!scroll || !prev || !next) return;
+          var max = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
+          var sl = scroll.scrollLeft;
+          var eps = 2;
+          var canScroll = max > eps;
+          if (frame) frame.classList.toggle("is-scrollable", canScroll);
+          prev.disabled = !canScroll || sl <= eps;
+          next.disabled = !canScroll || sl >= max - eps;
+        }
+        function scrollChartBy(dir) {
+          var scroll = el("sChartScroll");
+          if (!scroll) return;
+          var step = Math.max(140, Math.floor(scroll.clientWidth * 0.72));
+          scroll.scrollBy({ left: dir * step, behavior: "smooth" });
+        }
+        function scrollChartToNewest() {
+          var scroll = el("sChartScroll");
+          if (!scroll) return;
+          scroll.scrollLeft = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
+          updateNavState();
+          positionTipForSelection();
         }
         function drawChart(keepSelection) {
           var svg = el("sChartSvg");
@@ -467,12 +603,15 @@
           });
           var maxV = Math.max.apply(null, values.concat([1]));
           var padL = 36;
-          var padR = 14;
-          var padT = 16;
-          var padB = 30;
-          var h = 220;
+          var padR = 16;
+          var padT = 28;
+          var padB = 38;
+          var h = 248;
           var minPlotW = Math.max(260, scroll.clientWidth || 320);
-          var step = points.length <= 1 ? minPlotW : Math.max(10, Math.min(28, Math.floor(minPlotW / Math.max(points.length - 1, 1))));
+          var step =
+            points.length <= 1
+              ? minPlotW
+              : Math.max(16, Math.min(40, Math.floor(minPlotW / Math.max(points.length - 1, 1))));
           var plotW = Math.max(minPlotW - padL - padR, step * Math.max(points.length - 1, 1));
           var w = plotW + padL + padR;
           var plotH = h - padT - padB;
@@ -525,12 +664,12 @@
               return a.indexOf(v) === i;
             })
             .map(function (i) {
-              var short = String(points[i].dayFrom || "").slice(5);
+              var short = formatCsDayShort(points[i].dayFrom || "");
               return (
                 '<text x="' +
                 xAt(i).toFixed(1) +
                 '" y="' +
-                (h - 8) +
+                (h - 10) +
                 '" text-anchor="middle" fill="#64748b" font-size="11">' +
                 esc(short) +
                 "</text>"
@@ -599,18 +738,10 @@
             '" fill="transparent"></rect>';
 
           svg._iuChartMeta = { padL: padL, plotW: plotW, w: w };
-          if (state.selected >= 0) {
-            var selectedPt = points[state.selected];
-            var live = el("sChartLive");
-            if (live && selectedPt) {
-              live.textContent =
-                selectedPt.label +
-                " · " +
-                metricLabel(metric) +
-                ": " +
-                num(selectedPt[metric]);
-            }
+          if (state.selected >= 0 && state.points[state.selected]) {
+            updateLiveDetail(state.points[state.selected]);
           }
+          updateNavState();
         }
 
         function idxFromClientX(clientX) {
@@ -650,12 +781,15 @@
 
         function bindChartInteractions() {
           var svg = el("sChartSvg");
+          var scroll = el("sChartScroll");
+          var prev = el("sChartPrev");
+          var next = el("sChartNext");
           if (!svg || svg._iuBound) return;
           svg._iuBound = true;
           function pick(ev) {
             var idx = idxFromClientX(ev.clientX);
             if (idx < 0) return;
-            showTip(idx, ev.clientX);
+            showTip(idx);
           }
           svg.addEventListener("pointerdown", function (ev) {
             if (ev.pointerType === "mouse" && ev.button !== 0) return;
@@ -665,7 +799,7 @@
             if (ev.buttons) return;
             var idx = idxFromClientX(ev.clientX);
             if (idx < 0) return;
-            showTip(idx, ev.clientX);
+            showTip(idx);
           });
           svg.addEventListener("keydown", function (ev) {
             if (!state.points.length) return;
@@ -674,28 +808,58 @@
             else if (ev.key === "ArrowRight") idx = Math.min(state.points.length - 1, idx + 1);
             else return;
             ev.preventDefault();
-            var rect = svg.getBoundingClientRect();
-            var meta = svg._iuChartMeta || { padL: 0, plotW: rect.width, w: rect.width };
-            var xRatio = state.points.length === 1 ? 0.5 : idx / (state.points.length - 1);
-            var clientX = rect.left + ((meta.padL + xRatio * meta.plotW) / meta.w) * rect.width;
-            showTip(idx, clientX);
+            showTip(idx);
+            var circle = svg.querySelector('circle.chart-dot[data-idx="' + idx + '"]');
+            if (circle && scroll) {
+              var cRect = circle.getBoundingClientRect();
+              var sRect = scroll.getBoundingClientRect();
+              if (cRect.left < sRect.left + 8) {
+                scroll.scrollLeft -= sRect.left + 8 - cRect.left;
+              } else if (cRect.right > sRect.right - 8) {
+                scroll.scrollLeft += cRect.right - (sRect.right - 8);
+              }
+              updateNavState();
+              positionTipForSelection();
+            }
           });
+          if (scroll && !scroll._iuScrollBound) {
+            scroll._iuScrollBound = true;
+            scroll.addEventListener("scroll", function () {
+              updateNavState();
+              positionTipForSelection();
+            }, { passive: true });
+          }
+          if (prev && !prev._iuBound) {
+            prev._iuBound = true;
+            prev.addEventListener("click", function () {
+              if (prev.disabled) return;
+              scrollChartBy(-1);
+            });
+          }
+          if (next && !next._iuBound) {
+            next._iuBound = true;
+            next.addEventListener("click", function () {
+              if (next.disabled) return;
+              scrollChartBy(1);
+            });
+          }
         }
 
         function renderChart() {
           setSeg("sRangeSeg", "data-range", state.range);
           setSeg("sMetricSeg", "data-metric", state.metric);
           drawChart(false);
-          hideTip();
           if (state.points.length) {
-            var scroll = el("sChartScroll");
-            if (scroll) scroll.scrollLeft = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
-            var last = state.points[state.points.length - 1];
-            var shell = el("sChartShell");
-            if (shell && last) {
-              var rect = shell.getBoundingClientRect();
-              showTip(state.points.length - 1, rect.left + rect.width * 0.85);
-            }
+            scrollChartToNewest();
+            showTip(state.points.length - 1);
+            requestAnimationFrame(function () {
+              scrollChartToNewest();
+              positionTipForSelection();
+              updateNavState();
+            });
+          } else {
+            hideTip();
+            updateNavState();
           }
         }
 
@@ -710,6 +874,10 @@
         bindChartInteractions();
         window.addEventListener("resize", function () {
           drawChart(true);
+          requestAnimationFrame(function () {
+            updateNavState();
+            positionTipForSelection();
+          });
         });
 
         fetch(ENDPOINT, { credentials: "omit", cache: "no-store" })
