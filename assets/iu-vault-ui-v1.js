@@ -88,7 +88,7 @@
     if (!inner) return false;
 
     let existing = document.getElementById("iuVaultSecuritySection");
-    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "3") {
+    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "4") {
       existing.remove();
       existing = null;
     }
@@ -98,10 +98,38 @@
     section.id = "iuVaultSecuritySection";
     section.className = "iuVaultSecurity";
     section.setAttribute("data-iu-vault-security-ui", "1");
-    section.setAttribute("data-iu-vault-ui-version", "3");
-    section.setAttribute("data-iu-icentrum-security-ux", "phase6-v1");
+    section.setAttribute("data-iu-vault-ui-version", "4");
+    section.setAttribute("data-iu-icentrum-security-ux", "phase7-v1");
     section.innerHTML = [
+      '<div class="iuVaultSecurity__controlsTop" data-iu-vault-security-controls-top="1">',
+      '  <fieldset class="iuVaultSecurity__methodFieldset" id="iuVaultMindMenuMethodFieldset">',
+      '    <legend class="iuVaultSecurity__legend">Způsob odemknutí</legend>',
+      '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="none" /> Bez dalšího zamykání</label>',
+      '    <label class="iuVaultSecurity__radio" id="iuVaultMindMenuMethodDeviceLabel"><input type="radio" name="iuVaultMindMenuMethod" value="device" /> Zabezpečení zařízení — doporučeno</label>',
+      '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
+      "  </fieldset>",
+      '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden data-iu-ic-truth="pin-policy">',
+      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Může být delší — 6 je minimum, ne maximum. Delší náhodný PIN je odolnější. PIN není serverové heslo a InfoUzel jej neobnovuje.</p>',
+      '    <p class="iuInfoCenter__p iuVaultSecurity__pinSetupGuidance">Pro vyšší odolnost doporučujeme delší, náhodný PIN. Nepoužívejte datum narození, řady ani opakující se číslice. Pokud zařízení podporuje zabezpečení zařízení (např. Windows Hello, Face ID, Touch ID), je to často pohodlnější volba.</p>',
+      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu</label>',
+      '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupNew" />',
+      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
+      '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupConfirm" />',
+      "  </div>",
+      '  <div class="iuVaultSecurity__actions" data-iu-vault-security-actions="1">',
+      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
+      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
+      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
+      '    <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
+      "  </div>",
+      "</div>",
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--info iuVaultSecurity__deviceInfo" data-iu-ic-truth="device-security">',
+      '    <p class="iuInfoCenter__p"><strong>Zabezpečení zařízení:</strong> ověření provádí operační systém / prohlížeč (WebAuthn). InfoUzel nezískává biometrickou šablonu. Dostupnost závisí na zařízení a prohlížeči. Nejde o absolutní ochranu proti malware ani XSS.</p>',
+      "  </div>",
+      '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Na mobilu použijte nainstalovanou PWA aplikaci InfoUzlu, nebo zvolte vlastní PIN InfoUzlu.</p>',
       '<h3 class="iuInfoCenter__h3">Stav zabezpečení</h3>',
+      '  <div class="iuVaultSecurity__current" id="iuVaultMindMenuLockStatus" aria-live="polite"></div>',
+      '  <p class="iuVaultSecurity__currentBackup" id="iuVaultMindMenuUnlockMethodLabel" aria-live="polite"></p>',
       '<div class="iuInfoCenter__box iuInfoCenter__box--info" role="note" data-iu-ic-truth="local-first">',
       '  <p class="iuInfoCenter__statusRow">' +
         statusBadgeHtml("info", "INFORMACE", "Local-first: osobní data primárně v tomto zařízení") +
@@ -118,31 +146,7 @@
       '<div class="iuVaultSecurity__level" id="iuVaultMindMenuLockBlock">',
       '  <h4 class="iuVaultSecurity__title">Dodatečný zámek InfoUzlu</h4>',
       '  <p class="iuInfoCenter__p">Zapnutím zámku se při otevření nebo návratu podle nastavení ověřuje přístup. Zamkne se <strong>celý InfoUzel</strong>, nejen MindMenu.</p>',
-      '  <div class="iuVaultSecurity__current" id="iuVaultMindMenuLockStatus" aria-live="polite"></div>',
-      '  <p class="iuVaultSecurity__currentBackup" id="iuVaultMindMenuUnlockMethodLabel" aria-live="polite"></p>',
       '  <p class="iuInfoCenter__p iuVaultSecurity__recommend" id="iuVaultSecurityRecommend" hidden></p>',
-      '  <fieldset class="iuVaultSecurity__methodFieldset" id="iuVaultMindMenuMethodFieldset">',
-      '    <legend class="iuVaultSecurity__legend">Způsob odemknutí</legend>',
-      '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="none" /> Bez dalšího zamykání</label>',
-      '    <label class="iuVaultSecurity__radio" id="iuVaultMindMenuMethodDeviceLabel"><input type="radio" name="iuVaultMindMenuMethod" value="device" /> Zabezpečení zařízení — doporučeno</label>',
-      '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="pin" /> Vlastní PIN InfoUzlu</label>',
-      "  </fieldset>",
-      '  <div class="iuVaultSecurity__pinSetup" id="iuVaultPinSetupBlock" hidden data-iu-ic-truth="pin-policy">',
-      '    <p class="iuVaultSecurity__pinSetupHint" id="iuVaultPinSetupHint">PIN musí mít alespoň 6 číslic (0–9). Může být delší — 6 je minimum, ne maximum. Delší náhodný PIN je odolnější. PIN není serverové heslo a InfoUzel jej neobnovuje.</p>',
-      '    <p class="iuInfoCenter__p iuVaultSecurity__pinSetupGuidance">Pro vyšší odolnost doporučujeme delší, náhodný PIN. Nepoužívejte datum narození, řady ani opakující se číslice. Pokud zařízení podporuje zabezpečení zařízení (např. Windows Hello, Face ID, Touch ID), je to často pohodlnější volba.</p>',
-      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupNew">Nový PIN InfoUzlu</label>',
-      '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupNew" />',
-      '    <label class="iuVaultSecurity__pinSetupLabel" for="iuVaultPinSetupConfirm">Potvrzení PINu</label>',
-      '    <input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" enterkeyhint="done" autocapitalize="off" autocorrect="off" spellcheck="false" class="iuVaultSecurity__input iuVaultSecurity__input--pin" id="iuVaultPinSetupConfirm" />',
-      "  </div>",
-      '  <div class="iuInfoCenter__box iuInfoCenter__box--info" data-iu-ic-truth="device-security">',
-      '    <p class="iuInfoCenter__p"><strong>Zabezpečení zařízení:</strong> ověření provádí operační systém / prohlížeč (WebAuthn). InfoUzel nezískává biometrickou šablonu. Dostupnost závisí na zařízení a prohlížeči. Nejde o absolutní ochranu proti malware ani XSS.</p>',
-      "  </div>",
-      '  <p class="iuVaultSecurity__unsupported" id="iuVaultDeviceUnsupported" hidden>Zabezpečení zařízením není v tomto prohlížeči podporováno. Na mobilu použijte nainstalovanou PWA aplikaci InfoUzlu, nebo zvolte vlastní PIN InfoUzlu.</p>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuVaultApplyMindMenuMethodBtn">Aktivovat zabezpečení InfoUzlu</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangePinBtn" hidden>Změnit PIN</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuVaultChangeMindMenuMethodBtn" hidden>Změnit způsob odemknutí</button>',
-      '  <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuVaultDisableMindMenuLockBtn" hidden>Vypnout zabezpečení InfoUzlu</button>',
       '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock" data-iu-ic-truth="full-web-lock">',
       '    <h4 class="iuVaultSecurity__title">Automaticky zamknout celý InfoUzel</h4>',
       '    <select id="iuVaultAutoLockSelect" class="iuVaultSecurity__select" aria-label="Automatické zamknutí">',
