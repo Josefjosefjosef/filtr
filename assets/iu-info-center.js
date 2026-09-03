@@ -21,7 +21,7 @@
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.8";
+  var DOC_VERSION = "1.9";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
