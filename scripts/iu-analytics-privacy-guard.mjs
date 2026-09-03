@@ -56,6 +56,11 @@ if (!/data-range=\"30\"/.test(publicPage) || !/data-metric=\"visits\"/.test(publ
 }
 if (!/Historie je zobrazena od data/.test(publicPage)) fail("public:missing_history_note");
 if (!/touch-action:\s*pan-x\s+pan-y/.test(publicPage)) fail("public:missing_chart_touch_action");
+if (!/formatCsDayShort/.test(publicPage)) fail("public:missing_cz_short_date");
+if (!/sChartPrev|Zobrazit starší data/.test(publicPage)) fail("public:missing_chart_prev_nav");
+if (!/sChartNext|Zobrazit novější data/.test(publicPage)) fail("public:missing_chart_next_nav");
+if (!/min-width:\s*0/.test(publicPage)) fail("public:missing_chart_min_width_containment");
+if (/\.dayFrom[^;\n]{0,40}\.slice\(\s*5\s*\)/.test(publicPage)) fail("public:axis_must_not_use_mm_dd_slice");
 if (!/readDailySeries|historyStart|series_from/.test(indexTs)) fail("worker:missing_series_history_api");
 if (!/readDailySeries/.test(storeTs)) fail("store:missing_readDailySeries");
 // LF-003: admin Bearer must stay in page memory only — never Web Storage.
@@ -305,12 +310,25 @@ try {
     const metricVisits = document.querySelector('#sMetricSeg button[data-metric="visits"]');
     const dots = document.querySelectorAll("#sChartSvg circle.chart-dot").length;
     const overflowX = document.documentElement.scrollWidth > window.innerWidth + 1;
+    const axisTexts = Array.from(document.querySelectorAll("#sChartSvg text"))
+      .map((n) => String(n.textContent || "").trim())
+      .filter((t) => /\d+\.\s*\d+\./.test(t));
+    const mmDd = Array.from(document.querySelectorAll("#sChartSvg text")).some((n) =>
+      /^\d{2}-\d{2}$/.test(String(n.textContent || "").trim())
+    );
+    const prev = document.getElementById("sChartPrev");
+    const next = document.getElementById("sChartNext");
     return {
       touchAction: cs ? cs.touchAction : "",
       range30: range30 ? range30.getAttribute("aria-checked") : null,
       metricVisits: metricVisits ? metricVisits.getAttribute("aria-checked") : null,
       dots,
       overflowX,
+      hasCzAxis: axisTexts.length > 0,
+      hasMmDd: mmDd,
+      hasPrev: !!(prev && prev.getAttribute("aria-label")),
+      hasNext: !!(next && next.getAttribute("aria-label")),
+      bodyOverflow: document.body.scrollWidth > window.innerWidth + 1,
     };
   });
   if (!/pan-x/.test(String(chartUi.touchAction || "")) || !/pan-y/.test(String(chartUi.touchAction || ""))) {
@@ -318,7 +336,10 @@ try {
   }
   if (chartUi.range30 !== "true" || chartUi.metricVisits !== "true") fail("behavior:chart_defaults");
   if (!(chartUi.dots > 5)) fail("behavior:chart_points_missing");
-  if (chartUi.overflowX) fail("behavior:page_overflow_x");
+  if (chartUi.overflowX || chartUi.bodyOverflow) fail("behavior:page_overflow_x");
+  if (!chartUi.hasCzAxis) fail("behavior:chart_axis_not_cz");
+  if (chartUi.hasMmDd) fail("behavior:chart_axis_mm_dd");
+  if (!chartUi.hasPrev || !chartUi.hasNext) fail("behavior:chart_nav_missing");
   await page.click('#sRangeSeg button[data-range="14"]');
   await page.waitForTimeout(100);
   const after14 = await page.evaluate(() => {
