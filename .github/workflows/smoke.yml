@@ -289,6 +289,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-rychly-prehled-horizontal-content-guard
 
+      - name: Rychly prehled vertical page scroll guard (touch-action pan-x pan-y)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-rychly-prehled-vertical-scroll-guard
+
       - name: Home section blue bars guard (mobile/tablet unified headers)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-home-section-bar-guard
