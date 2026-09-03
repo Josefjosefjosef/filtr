@@ -36,11 +36,11 @@ const BADGE_TEXT = "AI asistent";
 const PC_SILVER_LABEL = "Silver — AI asistent";
 const ICENTRUM_TILE = "O Silverovi – AI asistent";
 const SILVER_LEAD =
-  "Silver je AI osobní asistent přímo v InfoUzel.cz. Pomůže vám rychle zapsat úkol, poznámku nebo událost běžnou češtinou.";
+  "Silver je AI osobní asistent, který pracuje přímo v prohlížeči InfoUzel.cz. Je navržen tak, aby zpracování vašich osobních údajů, poznámek, úkolů a kalendářních údajů probíhalo lokálně ve vašem zařízení, bez jejich odesílání na server za účelem dalšího zpracování.";
 const SILVER_AI_DISCLAIMER_NEEDLES = [
-  "Silver využívá umělou inteligenci",
+  "Silver je lokální umělá inteligence",
   "mohou obsahovat nepřesnosti",
-  "Důležité informace si proto vždy ověřte",
+  "vytvářeny automaticky",
 ];
 const ABOUT_AI_NOTE =
   "Při provozu InfoUzel.cz jsou využívány také nástroje umělé inteligence. AI asistent Silver pracuje lokálně v zařízení uživatele a jeho pokyny a požadavky se neodesílají na server. Při tvorbě nebo úpravě některých ilustračních grafických prvků webu byla rovněž použita umělá inteligence.";
