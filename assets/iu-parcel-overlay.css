@@ -551,6 +551,31 @@ body.iu-parcels-overlay-open #iuParcelsPopover.iu-parcels-modal.iu-parcels-guard
   min-width: 0;
 }
 
+/*
+ * Root cause (Univerzální vyhledávač): #iuParcelQuickInput has both
+ * .iu-parcel-input and .iu-parcels-quicktrack-input. Equal specificity —
+ * later .iu-parcel-input { font-size:13px } overrode earlier
+ * .iu-parcels-quicktrack-input { font-size:16px } → computed 13px.
+ * iOS Safari / WebKit auto-zooms focused inputs when font-size < 16px.
+ * Carrier rows are covered by @media (max-width:1023px) .iu-parcel-carrier .iu-parcel-input;
+ * quicktrack sits outside .iu-parcel-carrier, so it never got that bump.
+ * Compound selectors restore intended ≥16px + quicktrack flex without
+ * disabling pinch-to-zoom (viewport untouched).
+ */
+.iu-parcel-input.iu-parcels-quicktrack-input{
+  flex: 1 1 220px;
+  max-width: 100%;
+  font-size: 16px;
+  min-height: 44px;
+}
+.iu-parcel-input.iu-parcels-quicktrack-postal-input{
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 280px;
+  font-size: 16px;
+  min-height: 44px;
+}
+
 .iu-parcel-input:focus{
   outline: none;
   border-color: rgba(0,123,255,.5);
