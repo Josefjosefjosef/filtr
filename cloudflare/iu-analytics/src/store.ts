@@ -64,6 +64,10 @@ export type AnalyticsStore = {
   bumpError: (day: string, code: string) => Promise<void>;
   bumpAudit: (day: string, field: "accepted" | "rejected" | "suspicious") => Promise<void>;
   readRange: (from: string, to: string) => Promise<StoreBlob>;
+  readDailySeries: (
+    from: string,
+    to: string
+  ) => Promise<Array<{ day: string; visits: number; page_views: number }>>;
 };
 
 type StoreEnv = { DB?: D1Database };
@@ -217,6 +221,24 @@ export function createD1Store(db: D1Database): AnalyticsStore {
         )
         .bind(day, accepted, rejected, suspicious, nowIso())
         .run();
+    },
+
+    async readDailySeries(from, to) {
+      const traffic = await db
+        .prepare(
+          `SELECT day, visits, page_views
+           FROM daily_traffic WHERE day >= ? AND day <= ?`
+        )
+        .bind(from, to)
+        .all<{ day: string; visits: number; page_views: number }>();
+      const byDay: Record<string, { day: string; visits: number; page_views: number }> = {};
+      for (const row of traffic.results || []) {
+        const cur = byDay[row.day] || { day: row.day, visits: 0, page_views: 0 };
+        cur.visits += Number(row.visits || 0);
+        cur.page_views += Number(row.page_views || 0);
+        byDay[row.day] = cur;
+      }
+      return Object.values(byDay).sort((a, b) => a.day.localeCompare(b.day));
     },
 
     async readRange(from, to) {

@@ -50,21 +50,126 @@
       .label { color: var(--muted); font-size: 0.85rem; }
       .codex li { margin: 0 0 6px; }
       .ok { color: var(--ok); font-weight: 650; }
-      .bars { display: grid; gap: 8px; }
-      .bar-row { display: grid; grid-template-columns: 72px minmax(0, 1fr) 48px; gap: 8px; align-items: center; font-size: 0.9rem; }
-      @media (max-width: 420px) {
-        .bar-row { grid-template-columns: 56px minmax(0, 1fr) 40px; font-size: 0.8rem; gap: 6px; }
-      }
-      .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
-      .bar-fill { height: 100%; background: linear-gradient(90deg, #0284c7, #0f766e); }
       .muted { color: var(--muted); }
       .err { color: #b91c1c; }
       .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
       .links a { color: var(--accent); }
       table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
       th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+      .chart-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 12px;
+      }
+      .seg {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 3px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #f8fafc;
+      }
+      .seg button {
+        appearance: none;
+        border: 0;
+        margin: 0;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        line-height: 1.2;
+        padding: 7px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .seg button[aria-checked="true"] {
+        background: var(--accent);
+        color: #fff;
+      }
+      .seg button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .chart-shell {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #f8fafc;
+        overflow: hidden;
+      }
+      .chart-scroll {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        touch-action: pan-x pan-y;
+        max-width: 100%;
+      }
+      .chart-svg {
+        display: block;
+        height: 220px;
+        min-width: 100%;
+        touch-action: pan-x pan-y;
+      }
+      .chart-tip {
+        position: absolute;
+        z-index: 2;
+        min-width: 140px;
+        max-width: min(240px, calc(100% - 16px));
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+        font-size: 0.85rem;
+        line-height: 1.35;
+        pointer-events: none;
+        transform: translate(-50%, calc(-100% - 10px));
+      }
+      .chart-tip strong { display: block; margin-bottom: 2px; }
+      .chart-live {
+        margin: 8px 0 0;
+        min-height: 1.2em;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .chart-note {
+        margin: 10px 0 0;
+        font-size: 0.82rem;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
       @media (max-width: 1024px) {
         main { padding-bottom: calc(80px + var(--safe-bottom)); }
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0b1220;
+          --card: #111827;
+          --text: #e5eef8;
+          --muted: #94a3b8;
+          --line: #243044;
+        }
+        body { background: linear-gradient(180deg, #0b1220 0%, #111827 50%, #0b1220 100%); }
+        .seg { background: #0f172a; }
+        .chart-shell { background: #0f172a; }
+        .chart-tip { background: rgba(17, 24, 39, 0.98); color: var(--text); }
       }
     </style>
   </head>
@@ -85,7 +190,37 @@
         <div class="card"><div class="label">Soukromé nástroje (měsíc)</div><div class="stat" id="sPrivateNum">—</div></div>
         <div class="card full">
           <h2>Vývoj návštěvnosti</h2>
-          <div class="bars" id="sSeries"></div>
+          <div class="chart-toolbar">
+            <div class="seg" role="radiogroup" aria-label="Období grafu" id="sRangeSeg">
+              <button type="button" role="radio" aria-checked="false" data-range="14">14 dní</button>
+              <button type="button" role="radio" aria-checked="true" data-range="30">30 dní</button>
+              <button type="button" role="radio" aria-checked="false" data-range="90">3 měsíce</button>
+              <button type="button" role="radio" aria-checked="false" data-range="180">6 měsíců</button>
+              <button type="button" role="radio" aria-checked="false" data-range="all">Vše</button>
+            </div>
+            <div class="seg" role="radiogroup" aria-label="Metrika grafu" id="sMetricSeg">
+              <button type="button" role="radio" aria-checked="true" data-metric="visits">Návštěvy</button>
+              <button type="button" role="radio" aria-checked="false" data-metric="page_views">Zobrazení</button>
+            </div>
+          </div>
+          <div class="chart-shell" id="sChartShell">
+            <div class="chart-scroll" id="sChartScroll">
+              <svg class="chart-svg" id="sChartSvg" role="img" aria-labelledby="sChartTitle sChartDesc" tabindex="0">
+                <title id="sChartTitle">Vývoj návštěvnosti InfoUzel.cz</title>
+                <desc id="sChartDesc">Spojnicový graf anonymních agregovaných návštěv a zobrazení.</desc>
+              </svg>
+            </div>
+            <div class="chart-tip" id="sChartTip" hidden></div>
+          </div>
+          <p class="chart-live" id="sChartLive" aria-live="polite"></p>
+          <p class="muted chart-note" id="sChartNote">
+            Historie je zobrazena od data, od kterého jsou k dispozici spolehlivě zaznamenané anonymní agregované statistiky.
+          </p>
+          <table class="sr-only" id="sChartTable">
+            <caption>Hodnoty grafu návštěvnosti</caption>
+            <thead><tr><th scope="col">Datum</th><th scope="col">Návštěvy</th><th scope="col">Zobrazení</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
         <div class="card">
           <h2>Zařízení</h2>
@@ -134,8 +269,21 @@
     <script>
       (function () {
         var ENDPOINT = "https://infouzel-analytics.josef-zmrhal.workers.dev/v1/public/stats";
-        function el(id) { return document.getElementById(id); }
-        function num(v) { return String(Number(v || 0)); }
+        var state = {
+          series: [],
+          historyStart: null,
+          range: "30",
+          metric: "visits",
+          selected: -1,
+          points: [],
+        };
+
+        function el(id) {
+          return document.getElementById(id);
+        }
+        function num(v) {
+          return String(Number(v || 0));
+        }
         function esc(s) {
           return String(s == null ? "" : s)
             .replace(/&/g, "&amp;")
@@ -144,8 +292,430 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
         }
+        function todayIso() {
+          return new Date().toISOString().slice(0, 10);
+        }
+        function addDaysIso(iso, delta) {
+          var d = new Date(iso + "T00:00:00Z");
+          d.setUTCDate(d.getUTCDate() + delta);
+          return d.toISOString().slice(0, 10);
+        }
+        function formatCsDay(iso) {
+          var p = String(iso || "").split("-");
+          if (p.length !== 3) return String(iso || "");
+          return Number(p[2]) + ". " + Number(p[1]) + ". " + p[0];
+        }
+        function daysBetween(a, b) {
+          var da = new Date(a + "T00:00:00Z").getTime();
+          var db = new Date(b + "T00:00:00Z").getTime();
+          return Math.max(0, Math.round((db - da) / 86400000));
+        }
+        function weekStart(iso) {
+          var d = new Date(iso + "T00:00:00Z");
+          var day = d.getUTCDay();
+          var diff = (day + 6) % 7;
+          d.setUTCDate(d.getUTCDate() - diff);
+          return d.toISOString().slice(0, 10);
+        }
+        function metricLabel(m) {
+          return m === "page_views" ? "Zobrazení" : "Návštěvy";
+        }
+        function filterByRange(rows, range) {
+          if (!rows.length) return [];
+          if (range === "all") return rows.slice();
+          var n = Number(range) || 30;
+          var end = rows[rows.length - 1].day;
+          var start = addDaysIso(end, 1 - n);
+          return rows.filter(function (r) {
+            return r.day >= start;
+          });
+        }
+        function chooseGrain(rows) {
+          if (!rows.length) return "day";
+          var span = daysBetween(rows[0].day, rows[rows.length - 1].day) + 1;
+          if (span <= 100) return "day";
+          if (span <= 220) return "week";
+          return "month";
+        }
+        function aggregate(rows, grain) {
+          if (grain === "day") {
+            return rows.map(function (r) {
+              return {
+                key: r.day,
+                label: formatCsDay(r.day),
+                dayFrom: r.day,
+                dayTo: r.day,
+                visits: Number(r.visits || 0),
+                page_views: Number(r.page_views || 0),
+              };
+            });
+          }
+          var map = {};
+          var order = [];
+          rows.forEach(function (r) {
+            var key = grain === "week" ? weekStart(r.day) : String(r.day).slice(0, 7);
+            if (!map[key]) {
+              map[key] = {
+                key: key,
+                dayFrom: r.day,
+                dayTo: r.day,
+                visits: 0,
+                page_views: 0,
+              };
+              order.push(key);
+            }
+            map[key].visits += Number(r.visits || 0);
+            map[key].page_views += Number(r.page_views || 0);
+            if (r.day < map[key].dayFrom) map[key].dayFrom = r.day;
+            if (r.day > map[key].dayTo) map[key].dayTo = r.day;
+          });
+          return order.map(function (k) {
+            var row = map[k];
+            row.label =
+              grain === "week"
+                ? formatCsDay(row.dayFrom) + " – " + formatCsDay(row.dayTo)
+                : Number(String(k).slice(5)) + "/" + String(k).slice(0, 4);
+            return row;
+          });
+        }
+        function setSeg(groupId, attr, value) {
+          var root = el(groupId);
+          if (!root) return;
+          Array.prototype.forEach.call(root.querySelectorAll("button[role='radio']"), function (btn) {
+            var on = btn.getAttribute(attr) === value;
+            btn.setAttribute("aria-checked", on ? "true" : "false");
+          });
+        }
+        function updateA11yTable(points) {
+          var body = el("sChartTable") && el("sChartTable").querySelector("tbody");
+          if (!body) return;
+          body.innerHTML = points
+            .map(function (p) {
+              return (
+                "<tr><td>" +
+                esc(p.label) +
+                "</td><td>" +
+                esc(num(p.visits)) +
+                "</td><td>" +
+                esc(num(p.page_views)) +
+                "</td></tr>"
+              );
+            })
+            .join("");
+        }
+        function tipHtml(p) {
+          return (
+            "<strong>" +
+            esc(p.label) +
+            "</strong>Návštěvy: " +
+            esc(num(p.visits)) +
+            "<br>Zobrazení: " +
+            esc(num(p.page_views))
+          );
+        }
+        function showTip(idx, clientX) {
+          var tip = el("sChartTip");
+          var shell = el("sChartShell");
+          var live = el("sChartLive");
+          if (!tip || !shell || !state.points[idx]) return;
+          state.selected = idx;
+          var p = state.points[idx];
+          tip.hidden = false;
+          tip.innerHTML = tipHtml(p);
+          var rect = shell.getBoundingClientRect();
+          var x = Math.min(Math.max(12, clientX - rect.left), rect.width - 12);
+          tip.style.left = x + "px";
+          tip.style.top = "18px";
+          if (live) {
+            live.textContent =
+              p.label +
+              " · Návštěvy: " +
+              num(p.visits) +
+              " · Zobrazení: " +
+              num(p.page_views);
+          }
+          drawChart(true);
+        }
+        function hideTip() {
+          var tip = el("sChartTip");
+          if (tip) tip.hidden = true;
+        }
+        function drawChart(keepSelection) {
+          var svg = el("sChartSvg");
+          var scroll = el("sChartScroll");
+          if (!svg || !scroll) return;
+          var filtered = filterByRange(state.series, state.range);
+          var grain = chooseGrain(filtered);
+          var points = aggregate(filtered, grain);
+          state.points = points;
+          updateA11yTable(points);
+          if (!keepSelection) state.selected = points.length ? points.length - 1 : -1;
+          if (!points.length) {
+            svg.setAttribute("viewBox", "0 0 320 220");
+            svg.style.width = "100%";
+            svg.innerHTML =
+              '<title id="sChartTitle">Vývoj návštěvnosti InfoUzel.cz</title>' +
+              '<desc id="sChartDesc">Zatím nejsou k dispozici agregovaná data.</desc>' +
+              '<text x="16" y="112" fill="#64748b" font-size="14">Zatím nejsou k dispozici agregovaná data.</text>';
+            hideTip();
+            return;
+          }
+
+          var metric = state.metric;
+          var values = points.map(function (p) {
+            return Number(p[metric] || 0);
+          });
+          var maxV = Math.max.apply(null, values.concat([1]));
+          var padL = 36;
+          var padR = 14;
+          var padT = 16;
+          var padB = 30;
+          var h = 220;
+          var minPlotW = Math.max(260, scroll.clientWidth || 320);
+          var step = points.length <= 1 ? minPlotW : Math.max(10, Math.min(28, Math.floor(minPlotW / Math.max(points.length - 1, 1))));
+          var plotW = Math.max(minPlotW - padL - padR, step * Math.max(points.length - 1, 1));
+          var w = plotW + padL + padR;
+          var plotH = h - padT - padB;
+
+          function xAt(i) {
+            if (points.length === 1) return padL + plotW / 2;
+            return padL + (i / (points.length - 1)) * plotW;
+          }
+          function yAt(v) {
+            return padT + plotH - (v / maxV) * plotH;
+          }
+
+          var path = [];
+          var area = [];
+          points.forEach(function (p, i) {
+            var x = xAt(i);
+            var y = yAt(Number(p[metric] || 0));
+            path.push((i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1));
+            if (!i) area.push("M" + x.toFixed(1) + " " + (padT + plotH).toFixed(1));
+            area.push("L" + x.toFixed(1) + " " + y.toFixed(1));
+            if (i === points.length - 1) area.push("L" + x.toFixed(1) + " " + (padT + plotH).toFixed(1) + " Z");
+          });
+
+          var ticks = [0, 0.5, 1].map(function (t) {
+            var v = Math.round(maxV * t);
+            var y = yAt(v);
+            return (
+              '<line x1="' +
+              padL +
+              '" y1="' +
+              y.toFixed(1) +
+              '" x2="' +
+              (w - padR) +
+              '" y2="' +
+              y.toFixed(1) +
+              '" stroke="#e2e8f0" stroke-width="1"/>' +
+              '<text x="4" y="' +
+              (y + 4).toFixed(1) +
+              '" fill="#64748b" font-size="11">' +
+              esc(v) +
+              "</text>"
+            );
+          });
+
+          var labelIdx = [0];
+          if (points.length > 2) labelIdx.push(Math.floor((points.length - 1) / 2));
+          if (points.length > 1) labelIdx.push(points.length - 1);
+          var xLabels = labelIdx
+            .filter(function (v, i, a) {
+              return a.indexOf(v) === i;
+            })
+            .map(function (i) {
+              var short = String(points[i].dayFrom || "").slice(5);
+              return (
+                '<text x="' +
+                xAt(i).toFixed(1) +
+                '" y="' +
+                (h - 8) +
+                '" text-anchor="middle" fill="#64748b" font-size="11">' +
+                esc(short) +
+                "</text>"
+              );
+            });
+
+          var dots = points
+            .map(function (p, i) {
+              var active = i === state.selected;
+              return (
+                '<circle class="chart-dot" data-idx="' +
+                i +
+                '" cx="' +
+                xAt(i).toFixed(1) +
+                '" cy="' +
+                yAt(Number(p[metric] || 0)).toFixed(1) +
+                '" r="' +
+                (active ? 5 : 3.5) +
+                '" fill="' +
+                (active ? "#0f766e" : "#0369a1") +
+                '" stroke="#fff" stroke-width="1.5"/>'
+              );
+            })
+            .join("");
+
+          var guide = "";
+          if (state.selected >= 0 && state.selected < points.length) {
+            var gx = xAt(state.selected);
+            guide =
+              '<line x1="' +
+              gx.toFixed(1) +
+              '" y1="' +
+              padT +
+              '" x2="' +
+              gx.toFixed(1) +
+              '" y2="' +
+              (padT + plotH) +
+              '" stroke="#94a3b8" stroke-dasharray="3 3"/>';
+          }
+
+          svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+          svg.style.width = w + "px";
+          svg.innerHTML =
+            '<title id="sChartTitle">Vývoj návštěvnosti InfoUzel.cz</title>' +
+            '<desc id="sChartDesc">Spojnicový graf metriky ' +
+            esc(metricLabel(metric)) +
+            ".</desc>" +
+            ticks.join("") +
+            '<path d="' +
+            area.join(" ") +
+            '" fill="rgba(3,105,161,0.12)"></path>' +
+            '<path d="' +
+            path.join(" ") +
+            '" fill="none" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>' +
+            guide +
+            dots +
+            xLabels.join("") +
+            '<rect class="chart-hit" x="' +
+            padL +
+            '" y="' +
+            padT +
+            '" width="' +
+            plotW +
+            '" height="' +
+            plotH +
+            '" fill="transparent"></rect>';
+
+          svg._iuChartMeta = { padL: padL, plotW: plotW, w: w };
+          if (state.selected >= 0) {
+            var selectedPt = points[state.selected];
+            var live = el("sChartLive");
+            if (live && selectedPt) {
+              live.textContent =
+                selectedPt.label +
+                " · " +
+                metricLabel(metric) +
+                ": " +
+                num(selectedPt[metric]);
+            }
+          }
+        }
+
+        function idxFromClientX(clientX) {
+          var svg = el("sChartSvg");
+          var meta = svg && svg._iuChartMeta;
+          if (!svg || !meta || !state.points.length) return -1;
+          var rect = svg.getBoundingClientRect();
+          var x = ((clientX - rect.left) / Math.max(rect.width, 1)) * meta.w;
+          var t = (x - meta.padL) / Math.max(meta.plotW, 1);
+          var idx = Math.round(t * Math.max(state.points.length - 1, 0));
+          return Math.min(Math.max(idx, 0), state.points.length - 1);
+        }
+
+        function bindSeg(groupId, attr, onPick) {
+          var root = el(groupId);
+          if (!root) return;
+          root.addEventListener("click", function (ev) {
+            var btn = ev.target && ev.target.closest ? ev.target.closest("button[role='radio']") : null;
+            if (!btn || !root.contains(btn)) return;
+            onPick(btn.getAttribute(attr));
+          });
+          root.addEventListener("keydown", function (ev) {
+            var radios = Array.prototype.slice.call(root.querySelectorAll("button[role='radio']"));
+            var i = radios.indexOf(document.activeElement);
+            if (i < 0) return;
+            var next = i;
+            if (ev.key === "ArrowRight" || ev.key === "ArrowDown") next = (i + 1) % radios.length;
+            else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") next = (i - 1 + radios.length) % radios.length;
+            else if (ev.key === "Home") next = 0;
+            else if (ev.key === "End") next = radios.length - 1;
+            else return;
+            ev.preventDefault();
+            radios[next].focus();
+            onPick(radios[next].getAttribute(attr));
+          });
+        }
+
+        function bindChartInteractions() {
+          var svg = el("sChartSvg");
+          if (!svg || svg._iuBound) return;
+          svg._iuBound = true;
+          function pick(ev) {
+            var idx = idxFromClientX(ev.clientX);
+            if (idx < 0) return;
+            showTip(idx, ev.clientX);
+          }
+          svg.addEventListener("pointerdown", function (ev) {
+            if (ev.pointerType === "mouse" && ev.button !== 0) return;
+            pick(ev);
+          });
+          svg.addEventListener("mousemove", function (ev) {
+            if (ev.buttons) return;
+            var idx = idxFromClientX(ev.clientX);
+            if (idx < 0) return;
+            showTip(idx, ev.clientX);
+          });
+          svg.addEventListener("keydown", function (ev) {
+            if (!state.points.length) return;
+            var idx = state.selected < 0 ? state.points.length - 1 : state.selected;
+            if (ev.key === "ArrowLeft") idx = Math.max(0, idx - 1);
+            else if (ev.key === "ArrowRight") idx = Math.min(state.points.length - 1, idx + 1);
+            else return;
+            ev.preventDefault();
+            var rect = svg.getBoundingClientRect();
+            var meta = svg._iuChartMeta || { padL: 0, plotW: rect.width, w: rect.width };
+            var xRatio = state.points.length === 1 ? 0.5 : idx / (state.points.length - 1);
+            var clientX = rect.left + ((meta.padL + xRatio * meta.plotW) / meta.w) * rect.width;
+            showTip(idx, clientX);
+          });
+        }
+
+        function renderChart() {
+          setSeg("sRangeSeg", "data-range", state.range);
+          setSeg("sMetricSeg", "data-metric", state.metric);
+          drawChart(false);
+          hideTip();
+          if (state.points.length) {
+            var scroll = el("sChartScroll");
+            if (scroll) scroll.scrollLeft = Math.max(0, scroll.scrollWidth - scroll.clientWidth);
+            var last = state.points[state.points.length - 1];
+            var shell = el("sChartShell");
+            if (shell && last) {
+              var rect = shell.getBoundingClientRect();
+              showTip(state.points.length - 1, rect.left + rect.width * 0.85);
+            }
+          }
+        }
+
+        bindSeg("sRangeSeg", "data-range", function (v) {
+          state.range = v || "30";
+          renderChart();
+        });
+        bindSeg("sMetricSeg", "data-metric", function (v) {
+          state.metric = v === "page_views" ? "page_views" : "visits";
+          renderChart();
+        });
+        bindChartInteractions();
+        window.addEventListener("resize", function () {
+          drawChart(true);
+        });
+
         fetch(ENDPOINT, { credentials: "omit", cache: "no-store" })
-          .then(function (r) { return r.json(); })
+          .then(function (r) {
+            return r.json();
+          })
           .then(function (d) {
             el("sToday").textContent = num(d.today && d.today.visits);
             el("sTodayViews").textContent = num(d.today && d.today.page_views);
@@ -158,32 +728,16 @@
               num(d.privateToolsSummary && d.privateToolsSummary.opens) +
               " otevření (měsíc). Bez rozpadu na konkrétní osobní moduly.";
 
-            var series = d.series || [];
-            var max = 1;
-            series.forEach(function (row) {
-              max = Math.max(max, Number(row.visits || 0), Number(row.page_views || 0));
-            });
-            el("sSeries").innerHTML = series.length
-              ? series
-                  .slice(-14)
-                  .map(function (row) {
-                    var v = Number(row.visits || 0);
-                    var pv = Number(row.page_views || 0);
-                    var pct = Math.round((v / max) * 100);
-                    return (
-                      '<div class="bar-row"><span>' +
-                      esc(String(row.day).slice(5)) +
-                      '</span><div class="bar-track"><div class="bar-fill" style="width:' +
-                      esc(pct) +
-                      '%"></div></div><span title="návštěvy / zobrazení">' +
-                      esc(v) +
-                      "/" +
-                      esc(pv) +
-                      "</span></div>"
-                    );
-                  })
-                  .join("")
-              : '<p class="muted">Zatím nejsou k dispozici agregovaná data (nebo ještě nebyl udělen souhlas žádným návštěvníkem).</p>';
+            state.series = Array.isArray(d.series) ? d.series.slice() : [];
+            state.historyStart = d.historyStart || (state.series[0] && state.series[0].day) || null;
+            var note = el("sChartNote");
+            if (note && state.historyStart) {
+              note.textContent =
+                "Historie je zobrazena od data, od kterého jsou k dispozici spolehlivě zaznamenané anonymní agregované statistiky (" +
+                formatCsDay(state.historyStart) +
+                ").";
+            }
+            renderChart();
 
             var devices = d.devices || [];
             el("sDevices").innerHTML = devices.length
@@ -223,8 +777,8 @@
           })
           .catch(function () {
             el("sToday").textContent = "0";
-            el("sSeries").innerHTML =
-              '<p class="err">Veřejné API zatím není dostupné. Po nasazení Cloudflare Workeru se statistiky načtou automaticky.</p>';
+            el("sChartLive").innerHTML =
+              '<span class="err">Veřejné API zatím není dostupné. Po nasazení Cloudflare Workeru se statistiky načtou automaticky.</span>';
           });
       })();
     </script>

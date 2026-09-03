@@ -38,7 +38,11 @@ function daysAgo(n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-async function publicStats(store: AnalyticsStore, from: string, to: string) {
+function isIsoDay(v: string | null): v is string {
+  return !!(v && /^\d{4}-\d{2}-\d{2}$/.test(v));
+}
+
+async function publicStats(store: AnalyticsStore, from: string, to: string, seriesFrom: string) {
   const blob = await store.readRange(from, to);
   const byDay: Record<string, { day: string; visits: number; page_views: number; public_section_views: number; private_tools_opens: number }> = {};
   for (const row of Object.values(blob.traffic)) {
@@ -55,7 +59,7 @@ async function publicStats(store: AnalyticsStore, from: string, to: string) {
     cur.private_tools_opens += row.private_tools_opens;
     byDay[row.day] = cur;
   }
-  const series = Object.values(byDay).sort((a, b) => a.day.localeCompare(b.day));
+  const series = await store.readDailySeries(seriesFrom, to);
   const devicesMap: Record<string, { device_category: string; visits: number; page_views: number; activity: number }> = {};
   for (const row of Object.values(blob.traffic)) {
     const cur = devicesMap[row.device_category] || {
@@ -90,7 +94,7 @@ async function publicStats(store: AnalyticsStore, from: string, to: string) {
   let monthVisits = 0;
   let monthViews = 0;
   let monthPrivate = 0;
-  for (const row of series) {
+  for (const row of Object.values(byDay)) {
     if (row.day >= monthStart && row.day <= today) {
       monthVisits += row.visits;
       monthViews += row.page_views;
@@ -116,6 +120,7 @@ async function publicStats(store: AnalyticsStore, from: string, to: string) {
     yesterday: sumFor(yesterday),
     month: { visits: monthVisits, page_views: monthViews, private_tools_opens: monthPrivate },
     series,
+    historyStart: series.length ? series[0].day : null,
     devices: Object.values(devicesMap)
       .filter((d) => d.activity > 0)
       .map(({ device_category, visits, page_views }) => ({ device_category, visits, page_views })),
@@ -284,7 +289,9 @@ export default {
       try {
         const from = url.searchParams.get("from") || daysAgo(30);
         const to = url.searchParams.get("to") || todayUtc();
-        const data = await publicStats(store, from, to);
+        const seriesFromRaw = url.searchParams.get("series_from");
+        const seriesFrom = isIsoDay(seriesFromRaw) ? seriesFromRaw : "2000-01-01";
+        const data = await publicStats(store, from, to, seriesFrom);
         const cacheSec = String(env.PUBLIC_CACHE_SECONDS || "60");
         return withCors(
           env,
@@ -304,7 +311,9 @@ export default {
       try {
         const from = url.searchParams.get("from") || daysAgo(30);
         const to = url.searchParams.get("to") || todayUtc();
-        const pub = await publicStats(store, from, to);
+        const seriesFromRaw = url.searchParams.get("series_from");
+        const seriesFrom = isIsoDay(seriesFromRaw) ? seriesFromRaw : from;
+        const pub = await publicStats(store, from, to, seriesFrom);
         const blob = await store.readRange(from, to);
         const ads = Object.values(blob.ads)
           .map((r) => ({

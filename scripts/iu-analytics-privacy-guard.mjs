@@ -49,6 +49,15 @@ if ((appJs.match(/iuAnalytics\.privateToolsOpen/g) || []).length < 4) {
   fail("app:private_tools_open_not_wired");
 }
 if (!/sTodayViews|Dnes \(zobrazení\)/.test(publicPage)) fail("public:missing_page_views_tile");
+if (/slice\(\s*-14\s*\)/.test(publicPage)) fail("public:must_not_slice_series_to_14");
+if (!/sChartSvg|Vývoj návštěvnosti/.test(publicPage)) fail("public:missing_history_chart");
+if (!/data-range=\"30\"/.test(publicPage) || !/data-metric=\"visits\"/.test(publicPage)) {
+  fail("public:missing_chart_controls");
+}
+if (!/Historie je zobrazena od data/.test(publicPage)) fail("public:missing_history_note");
+if (!/touch-action:\s*pan-x\s+pan-y/.test(publicPage)) fail("public:missing_chart_touch_action");
+if (!/readDailySeries|historyStart|series_from/.test(indexTs)) fail("worker:missing_series_history_api");
+if (!/readDailySeries/.test(storeTs)) fail("store:missing_readDailySeries");
 // LF-003: admin Bearer must stay in page memory only — never Web Storage.
 if (!/memoryToken/.test(adminPage)) {
   fail("admin:token_must_use_memory_only");
@@ -151,6 +160,37 @@ try {
   const browser = await chromium.launch({ headless: true });
   const context = await bootstrapGuardContext(browser);
   await context.route("**/infouzel-analytics.josef-zmrhal.workers.dev/**", async (route) => {
+    const req = route.request();
+    const url = req.url();
+    if (req.method() === "GET" && /\/v1\/public\/stats/.test(url)) {
+      const series = [];
+      for (let i = 0; i < 45; i++) {
+        const d = new Date(Date.UTC(2026, 6, 21 + i));
+        const day = d.toISOString().slice(0, 10);
+        series.push({ day, visits: 20 + (i % 17), page_views: 20 + (i % 17) });
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          storageMode: "d1",
+          today: { visits: 50, page_views: 50 },
+          yesterday: { visits: 40, page_views: 40 },
+          month: { visits: 900, page_views: 900, private_tools_opens: 12 },
+          series,
+          historyStart: series[0].day,
+          devices: [{ device_category: "mobile", visits: 10, page_views: 10 }],
+          topPublicSections: [{ section_id: "home", views: 5 }],
+          privateToolsSummary: { opens: 12 },
+          auditStatus: {
+            legal: "Veřejné agregáty bez osobních údajů.",
+            security: "Admin API chráněno Bearer tokenem.",
+            anonymization: "Neukládáme IP ani fingerprint.",
+          },
+        }),
+      });
+      return;
+    }
     await route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -253,6 +293,57 @@ try {
   if (!/Statistiky/.test(title)) fail("behavior:public_page_title");
   const hasCodex = await page.locator("text=Nesledujeme jednotlivé osoby").count();
   if (!hasCodex) fail("behavior:public_codex_missing");
+  try {
+    await page.waitForSelector("#sChartSvg circle.chart-dot", { timeout: 10000 });
+  } catch (_) {
+    fail("behavior:chart_not_rendered");
+  }
+  const chartUi = await page.evaluate(() => {
+    const scroll = document.getElementById("sChartScroll");
+    const cs = scroll ? getComputedStyle(scroll) : null;
+    const range30 = document.querySelector('#sRangeSeg button[data-range="30"]');
+    const metricVisits = document.querySelector('#sMetricSeg button[data-metric="visits"]');
+    const dots = document.querySelectorAll("#sChartSvg circle.chart-dot").length;
+    const overflowX = document.documentElement.scrollWidth > window.innerWidth + 1;
+    return {
+      touchAction: cs ? cs.touchAction : "",
+      range30: range30 ? range30.getAttribute("aria-checked") : null,
+      metricVisits: metricVisits ? metricVisits.getAttribute("aria-checked") : null,
+      dots,
+      overflowX,
+    };
+  });
+  if (!/pan-x/.test(String(chartUi.touchAction || "")) || !/pan-y/.test(String(chartUi.touchAction || ""))) {
+    fail("behavior:chart_touch_action");
+  }
+  if (chartUi.range30 !== "true" || chartUi.metricVisits !== "true") fail("behavior:chart_defaults");
+  if (!(chartUi.dots > 5)) fail("behavior:chart_points_missing");
+  if (chartUi.overflowX) fail("behavior:page_overflow_x");
+  await page.click('#sRangeSeg button[data-range="14"]');
+  await page.waitForTimeout(100);
+  const after14 = await page.evaluate(() => {
+    const btn = document.querySelector('#sRangeSeg button[data-range="14"]');
+    return {
+      checked: btn ? btn.getAttribute("aria-checked") : null,
+      dots: document.querySelectorAll("#sChartSvg circle.chart-dot").length,
+    };
+  });
+  if (after14.checked !== "true") fail("behavior:range_14_not_selected");
+  if (!(after14.dots > 0 && after14.dots <= 14)) fail("behavior:range_14_wrong_points");
+  await page.click('#sMetricSeg button[data-metric="page_views"]');
+  await page.waitForTimeout(80);
+  const metricOk = await page.evaluate(() => {
+    const btn = document.querySelector('#sMetricSeg button[data-metric="page_views"]');
+    return btn ? btn.getAttribute("aria-checked") === "true" : false;
+  });
+  if (!metricOk) fail("behavior:metric_views_not_selected");
+  await page.locator("#sChartSvg").click({ position: { x: 40, y: 110 } });
+  await page.waitForTimeout(80);
+  const tipVisible = await page.evaluate(() => {
+    const tip = document.getElementById("sChartTip");
+    return !!(tip && !tip.hidden && /Návštěvy:/.test(String(tip.textContent || "")));
+  });
+  if (!tipVisible) fail("behavior:chart_tip_missing");
 
   await browser.close();
   server.close();
