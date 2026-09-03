@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-03-parcels-quicktrack-ios-zoom-v1",
   "2026-09-02-weather-location-resolve-v1",
   "2026-09-02-home-empty-space-under-feed-v1",
   "2026-09-02-silver-allday-toggle-v1",
@@ -143,7 +144,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-02-weather-location-resolve-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-03-parcels-quicktrack-ios-zoom-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

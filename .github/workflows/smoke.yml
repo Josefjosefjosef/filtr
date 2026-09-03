@@ -321,6 +321,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-pd-city-input-ios-zoom-guard
 
+      - name: Parcels quicktrack iOS zoom guard (universal search ≥16px)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-parcels-quicktrack-ios-zoom-guard
+
       - name: Prehled dne banner FOUC / placement guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-prehled-dne-banner-homecard-fouc-guard
