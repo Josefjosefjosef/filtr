@@ -57,7 +57,7 @@ export const MODULE_DEFS = Object.freeze([
   { id: "section_notes", label: "Sekční poznámky", kind: "prefix", prefix: "iu_notes_v1_", schemaVersion: 1 },
   { id: "translator_notes", label: "Překladač — poznámky", kind: "key", key: "iu:translator:notes", schemaVersion: 1 },
   { id: "banks", label: "Internetové bankovnictví", kind: "key", key: "iuUserBanks", schemaVersion: 1 },
-  { id: "bakalari", label: "Bakaláři", kind: "key", key: "iu_bakalari_profiles", schemaVersion: 1 },
+  { id: "bakalari", label: "Školní systémy", kind: "key", key: "iu_bakalari_profiles", schemaVersion: 1 },
   { id: "health_insurance", label: "Zdravotní pojištění", kind: "key", key: "iu_health_insurance_v2", schemaVersion: 1 },
   { id: "shopping_list", label: "Nákupní seznam", kind: "key", key: "iuShoppingLastListV1", schemaVersion: 1 },
   { id: "shopping_address", label: "Doručovací adresa", kind: "key", key: "iuShoppingDeliveryAddressV1", schemaVersion: 1 },

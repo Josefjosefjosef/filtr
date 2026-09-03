@@ -31,7 +31,7 @@
 
   var MODAL_TITLES = {
     datovka: "Informace o soukromí — Datové schránky",
-    bakalari: "Informace o soukromí — Bakaláři",
+    bakalari: "Informace o soukromí — Školní systémy",
     pojistovna: "Informace o soukromí — Zdravotní pojišťovny",
     banka: "Informace o soukromí — Internetové bankovnictví",
     invoice: "Informace o soukromí — Generátor faktur",
@@ -97,7 +97,7 @@
       {
         title: "K čemu nástroj slouží",
         paragraphs: [
-          "Nástroj umožňuje uložit odkazy a volitelně přístupové údaje k Bakalářům a rychle otevřít školní portál.",
+          "Nástroj umožňuje uložit odkazy a volitelně přístupové údaje ke školnímu informačnímu systému a rychle otevřít školní portál.",
         ],
       },
       {
@@ -110,7 +110,7 @@
       {
         title: "Externí služby",
         paragraphs: [
-          "InfoUzel.cz není provozovatelem systému Bakaláři. Přihlášení probíhá vždy na webu vaší školy nebo poskytovatele.",
+          "InfoUzel.cz není provozovatelem školního informačního systému. Přihlášení probíhá vždy na webu vaší školy nebo poskytovatele.",
           "Po kliknutí budete přesměrováni na oficiální stránky vybraného poskytovatele. Opustíte prostředí InfoUzel.cz.",
         ],
       },

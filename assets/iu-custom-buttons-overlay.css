@@ -267,3 +267,35 @@ body .layout > aside.accordionCol section.iu-mmQuickLinks:not(.iu-mojeSluzby) > 
     gap: 10px 12px !important;
   }
 }
+
+/* MindMenu: Školní systémy tile stack (bakalari id unchanged). */
+.iuTile:is([data-quicktool-id="bakalari"],[data-iu-ql="bakalari"],[data-ms="bakalari"]) .iuTileText.iuTileText--stack{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:2px;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  overflow:visible!important;
+  white-space:normal!important;
+  text-align:center!important;
+  line-height:1.15!important;
+  hyphens:manual;
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+.iuTile:is([data-quicktool-id="bakalari"],[data-iu-ql="bakalari"],[data-ms="bakalari"]) .iuTileTextPrimary{
+  display:block;
+  font-weight:700;
+  font-size:1em;
+  line-height:1.15;
+}
+.iuTile:is([data-quicktool-id="bakalari"],[data-iu-ql="bakalari"],[data-ms="bakalari"]) .iuTileTextSecondary{
+  display:block;
+  font-weight:500;
+  font-size:.72em;
+  line-height:1.2;
+  opacity:.88;
+  max-width:100%;
+}
