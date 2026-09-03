@@ -26,7 +26,7 @@ const { chromium } = require("playwright");
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8967", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media`;
-const CACHE_BUST = "evening-theme-settings-v1-20260818";
+const CACHE_BUST = "evening-theme-settings-v1-20260818-coming-soon-v1-20260903";
 const fails = [];
 
 function must(cond, id) {
@@ -73,6 +73,29 @@ function staticGate() {
   must(/iu-prehled-dne-feed-settings-v1\.js/.test(ui), "ui:imports_feed_settings");
   must(/feed-main-toggle/.test(feedSettings) && /feed-open-detail/.test(feedSettings), "settings:main_rows");
   must(/Dopravní informace/.test(feedSettings) && /Výstrahy ČHMÚ/.test(feedSettings), "settings:main_labels");
+  must(
+    /feed-coming-soon/.test(feedSettings) &&
+      /PŘIPRAVUJEME/.test(feedSettings) &&
+      /Média/.test(feedSettings) &&
+      /Státní instituce/.test(feedSettings) &&
+      /Bezpečnost/.test(feedSettings),
+    "settings:coming_soon_rows"
+  );
+  must(
+    /comingSoonInfoHtml/.test(feedSettings) &&
+      /mailto:info@infouzel\.cz/.test(feedSettings) &&
+      /Média – připravujeme/.test(feedSettings) &&
+      /Státní instituce – připravujeme/.test(feedSettings) &&
+      /Bezpečnost – připravujeme/.test(feedSettings),
+    "settings:coming_soon_info"
+  );
+  must(/feed-coming-soon/.test(ui) && /soon-media|soon-institutions|soon-security/.test(ui), "ui:coming_soon_acts");
+  must(
+    !/mediaEnabled|institutionsEnabled|securityEnabled/.test(feedFilter) &&
+      !/data-view=\"media\"|data-view=\"institutions\"|data-view=\"security\"/.test(feedSettings + ui),
+    "filter:no_coming_soon_active_keys"
+  );
+  must(/iuPdFeedMainRow--soon/.test(css) && /iuPdSoonInfo/.test(css), "css:coming_soon");
   must(/trafficEnabled/.test(feedFilter) && /chmuEnabled/.test(feedFilter), "filter:master_toggles");
   must(/matchesTrafficDetailFilter/.test(feedFilter), "filter:detail_matcher");
   must(/quickViewBarHtml|feed-quick-view/.test(feedSettings + ui), "ui:quick_view");
@@ -378,6 +401,84 @@ async function runPlaywright() {
       if (openState.save) pwFails.push(vp.name + ":save_present");
       if (openState.cancel) pwFails.push(vp.name + ":cancel_present");
       if (!openState.bodyChild) pwFails.push(vp.name + ":settings_not_on_body");
+
+      const soonState = await page.evaluate(() => {
+        const rows = [...document.querySelectorAll('[data-act="feed-coming-soon"]')];
+        const kinds = rows.map((r) => r.getAttribute("data-kind") || "");
+        const badges = rows.map((r) => ((r.querySelector(".iuPdFeedMainRow__soonBadge") || {}).textContent || "").trim());
+        const soonCbs = document.querySelectorAll(
+          '[data-iu-pd-coming-soon] input[type="checkbox"], [data-act="feed-coming-soon"] input[type="checkbox"]'
+        ).length;
+        return { count: rows.length, kinds: kinds.join(","), badges: badges.join("|"), soonCbs };
+      });
+      if (soonState.count !== 3) pwFails.push(vp.name + ":coming_soon_count");
+      if (soonState.kinds !== "media,institutions,security") pwFails.push(vp.name + ":coming_soon_kinds");
+      if (!/PŘIPRAVUJEME/.test(soonState.badges) || (soonState.badges.match(/PŘIPRAVUJEME/g) || []).length !== 3) {
+        pwFails.push(vp.name + ":coming_soon_badges");
+      }
+      if (soonState.soonCbs !== 0) pwFails.push(vp.name + ":coming_soon_checkbox");
+
+      await page.evaluate(() => {
+        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="media"]');
+        if (btn) btn.click();
+      });
+      await page.waitForSelector('[data-iu-pd-soon-info="media"]', { timeout: 8000 });
+      const mediaInfo = await page.evaluate(() => {
+        const root = document.querySelector('[data-iu-pd-soon-info="media"]');
+        const mail = root ? root.querySelector('a[href="mailto:info@infouzel.cz"]') : null;
+        return {
+          title: root ? ((root.querySelector(".iuPdSoonInfo__title") || {}).textContent || "").trim() : "",
+          hasMail: !!mail,
+          mailText: mail ? (mail.textContent || "").trim() : "",
+        };
+      });
+      if (mediaInfo.title !== "Média – připravujeme") pwFails.push(vp.name + ":media_info_title");
+      if (!mediaInfo.hasMail || mediaInfo.mailText !== "info@infouzel.cz") pwFails.push(vp.name + ":media_mailto");
+
+      await page.evaluate(() => {
+        const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
+        if (back) back.click();
+      });
+      await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+
+      await page.evaluate(() => {
+        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="institutions"]');
+        if (btn) btn.click();
+      });
+      await page.waitForSelector('[data-iu-pd-soon-info="institutions"]', { timeout: 8000 });
+      const instTitle = await page.evaluate(() => {
+        const t = document.querySelector('[data-iu-pd-soon-info="institutions"] .iuPdSoonInfo__title');
+        return t ? (t.textContent || "").trim() : "";
+      });
+      if (instTitle !== "Státní instituce – připravujeme") pwFails.push(vp.name + ":institutions_info_title");
+      await page.evaluate(() => {
+        const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
+        if (back) back.click();
+      });
+      await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+
+      await page.evaluate(() => {
+        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="security"]');
+        if (btn) btn.click();
+      });
+      await page.waitForSelector('[data-iu-pd-soon-info="security"]', { timeout: 8000 });
+      const secTitle = await page.evaluate(() => {
+        const t = document.querySelector('[data-iu-pd-soon-info="security"] .iuPdSoonInfo__title');
+        return t ? (t.textContent || "").trim() : "";
+      });
+      if (secTitle !== "Bezpečnost – připravujeme") pwFails.push(vp.name + ":security_info_title");
+      await page.evaluate(() => {
+        const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
+        if (back) back.click();
+      });
+      await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
+
+      const quickViews = await page.evaluate(() => {
+        return [...document.querySelectorAll(".iuPdQuickView__btn")]
+          .map((b) => b.getAttribute("data-view") || "")
+          .join(",");
+      });
+      if (/media|institutions|security/.test(quickViews)) pwFails.push(vp.name + ":coming_soon_quick_view_leak");
 
       if (vp.name === "mobile" || vp.name === "tablet") {
         const settingsLight = await page.evaluate(() => {

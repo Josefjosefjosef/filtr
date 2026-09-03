@@ -56,7 +56,7 @@ import {
 const TRAFFIC_OVERVIEW_MOD_URL =
   "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822";
 const FEED_SETTINGS_MOD_URL =
-  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
+  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
 let trafficOverviewMod = null;
 let trafficOverviewPromise = null;
@@ -1936,6 +1936,32 @@ function renderSettingsBody() {
     );
   }
 
+  const soonKind =
+    active === "soon-media"
+      ? "media"
+      : active === "soon-institutions"
+        ? "institutions"
+        : active === "soon-security"
+          ? "security"
+          : "";
+  if (soonKind) {
+    const soonTitle = fs.comingSoonSectionTitle(soonKind);
+    const soonBody = fs.comingSoonInfoHtml(soonKind);
+    return (
+      `<div class="iuPdSettings__scroll" id="iuPdSettingsScroll" data-iu-pd-settings-section="${esc(
+        active
+      )}" data-iu-pd-soon-section="1">` +
+      err +
+      `<div class="iuPdSettings__sectionHead">` +
+      `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="back-section">Zpět</button>` +
+      `<h3 class="iuPdSettings__sectionTitle">${esc(soonTitle)}</h3>` +
+      `</div>` +
+      `<div class="iuPdSettings__sectionBody">${soonBody}</div>` +
+      `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block iuPdSettings__closeBtn" data-act="back-section">Zavřít</button>` +
+      `</div>`
+    );
+  }
+
   const kraje = CZ_KRAJE;
   const trafficItems = trafficItemsForSettingsDraft(draft);
 
@@ -2795,6 +2821,17 @@ function wire() {
       state.cityQuery = "";
       state.citySuggest = [];
       state.roadQuery = "";
+      paintSettingsOnly({ resetSettingsScroll: true });
+      wire();
+      resetSettingsScroll();
+      return;
+    }
+    if (act === "feed-coming-soon") {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const kind = t.getAttribute("data-kind");
+      if (kind !== "media" && kind !== "institutions" && kind !== "security") return;
+      state.activeSection = "soon-" + kind;
       paintSettingsOnly({ resetSettingsScroll: true });
       wire();
       resetSettingsScroll();

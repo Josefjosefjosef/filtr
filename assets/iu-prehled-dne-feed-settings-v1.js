@@ -36,6 +36,70 @@ export function setDraftFeedFilter(draft, ff) {
   draft.feedFilter = sanitizeFeedFilter(ff);
 }
 
+const COMING_SOON_ROWS = [
+  { kind: "media", accent: "media", icon: "📰", label: "Média" },
+  { kind: "institutions", accent: "institutions", icon: "🏛️", label: "Státní instituce" },
+  { kind: "security", accent: "security", icon: "🛡️", label: "Bezpečnost" },
+];
+
+function comingSoonRowHtml(row) {
+  return (
+    `<button type="button" class="iuPdFeedMainRow iuPdFeedMainRow--soon iuPdFeedMainRow--${esc(
+      row.accent
+    )}" data-act="feed-coming-soon" data-kind="${esc(row.kind)}" data-iu-feed-kind="${esc(
+      row.kind
+    )}" data-iu-pd-coming-soon="1" aria-label="${esc(row.label)} – připravujeme">` +
+    `<span class="iuPdFeedMainRow__soonLead">` +
+    `<span class="iuPdFeedMainRow__soonIcon" aria-hidden="true">${row.icon}</span>` +
+    `<span class="iuPdFeedMainRow__label">${esc(row.label)}</span>` +
+    `</span>` +
+    `<span class="iuPdFeedMainRow__soonBadge">PŘIPRAVUJEME</span>` +
+    `</button>`
+  );
+}
+
+/** Read-only info panels for pre-launch categories (no feedFilter / prefs writes). */
+export function comingSoonInfoHtml(kind) {
+  const k = String(kind || "");
+  if (k === "media") {
+    return (
+      `<div class="iuPdSoonInfo" data-iu-pd-soon-info="media" role="region" aria-labelledby="iuPdSoonInfoTitle">` +
+      `<h3 class="iuPdSoonInfo__title" id="iuPdSoonInfoTitle">Média – připravujeme</h3>` +
+      `<p class="iuPdSoonInfo__p">Připravujeme spolupráci s médii, abychom Vám mohli na jednom místě přinášet aktuální informace o dění v České republice i ve světě.</p>` +
+      `<p class="iuPdSoonInfo__p">Pokud jste provozovatelem média a chcete, aby se Vaše články nebo odkazy na články zobrazovaly v InfoUzlu, neváhejte nás kontaktovat na e-mailu <a class="iuPdSoonInfo__mail" href="mailto:info@infouzel.cz">info@infouzel.cz</a>.</p>` +
+      `<p class="iuPdSoonInfo__mailLine">E-mail: <a class="iuPdSoonInfo__mail" href="mailto:info@infouzel.cz">info@infouzel.cz</a></p>` +
+      `</div>`
+    );
+  }
+  if (k === "institutions") {
+    return (
+      `<div class="iuPdSoonInfo" data-iu-pd-soon-info="institutions" role="region" aria-labelledby="iuPdSoonInfoTitle">` +
+      `<h3 class="iuPdSoonInfo__title" id="iuPdSoonInfoTitle">Státní instituce – připravujeme</h3>` +
+      `<p class="iuPdSoonInfo__p">Připravujeme přehled důležitých informací, upozornění a sdělení státních institucí a dalších veřejných orgánů, aby byly důležité informace dostupné na jednom místě.</p>` +
+      `<p class="iuPdSoonInfo__p">Tuto část postupně připravujeme a rozšiřujeme.</p>` +
+      `</div>`
+    );
+  }
+  if (k === "security") {
+    return (
+      `<div class="iuPdSoonInfo" data-iu-pd-soon-info="security" role="region" aria-labelledby="iuPdSoonInfoTitle">` +
+      `<h3 class="iuPdSoonInfo__title" id="iuPdSoonInfoTitle">Bezpečnost – připravujeme</h3>` +
+      `<p class="iuPdSoonInfo__p">Připravujeme sekci zaměřenou na důležité bezpečnostní informace, upozornění a mimořádné události, které mohou být relevantní pro uživatele v České republice.</p>` +
+      `<p class="iuPdSoonInfo__p">Tuto část postupně připravujeme a rozšiřujeme.</p>` +
+      `</div>`
+    );
+  }
+  return "";
+}
+
+export function comingSoonSectionTitle(kind) {
+  const k = String(kind || "");
+  if (k === "media") return "Média";
+  if (k === "institutions") return "Státní instituce";
+  if (k === "security") return "Bezpečnost";
+  return "Připravujeme";
+}
+
 export function mainFeedSettingsHtml(draft) {
   const ff = getDraftFeedFilter(draft);
   const row = (kind, enabled, label, accent) =>
@@ -52,6 +116,7 @@ export function mainFeedSettingsHtml(draft) {
     `<div class="iuPdFeedMain" data-iu-pd-feed-main="1">` +
     row("traffic", ff.trafficEnabled, "Dopravní informace", "traffic") +
     row("chmu", ff.chmuEnabled, "Výstrahy ČHMÚ", "chmu") +
+    COMING_SOON_ROWS.map(comingSoonRowHtml).join("") +
     `</div>`
   );
 }

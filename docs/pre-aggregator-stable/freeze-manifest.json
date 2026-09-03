@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-rychly-prehled-vertical-scroll-v1-20260903",
+    "freezeId": "iu-pd-settings-coming-soon-v1-20260903",
     "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-09-03T05:40:00.000Z",
-    "note": "Rychlý přehled: touch-action pan-x pan-y so vertical page scroll works from the horizontal strip; SW/CSS cache bump.",
+    "updatedAt": "2026-09-03T08:00:00.000Z",
+    "note": "Přehled dne Nastavení: pre-launch karty Média / Státní instituce / Bezpečnost (info only, no feedFilter).",
     "files": {
-        "projects/index.html": "88806a4cffbe2409fa9f2097d067ee3ebc5b58151460f07b1f4b2bf89a347820",
+        "projects/index.html": "10eb15a197501e827d553b9198d4eff6eaf352a44b354901afafd503d224580e",
         "assets/app.css": "5925228d8bc9493bfb060b88d34626bb315415d7b3e6dcd5fac7eee841a4bd2d",
         "assets/app.js": "a7107392fcbdcf43596770cbfb63b0a70913bbf39e0f78fae725115d7bf1384f",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "c6bca3651f37fa18707d8383207544f2d7d96c7d199f10f3c632752e145ad327",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "74820c105e963c7cb5498c1b6a54bac0be4baf7ac0f5953ef2e2a892502f6fc2",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "7e9aa6ff11aafa9716d3c0b1d7c6ea9365d13003a7785841e04c5ea4d4fb01d1",
+        "sw.js": "bdc0906ae60b946adfeab69b4b7d2c3ddaa06bf40d916f9566012aa72633a24e",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "4ee5818d976509e6c2237e1438fa9723fafb4779dcee159ad7ae5f47ddc1bb4c",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,11 +24,11 @@
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
         "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-prehled-dne-ui-v1.js": "6175f03728514d4964232cc09c12aa098d7f2b4cd31313710ba919b7d04ed9a2"
+        "assets/iu-prehled-dne-ui-v1.js": "99d10a1b3632b6c4289df3728fbce1ce4c6e41dae8a06d0a0aa6ba7453366b2a"
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-09-03-rychly-prehled-vertical-scroll-v1\"",
+            "CACHE_VERSION = \"2026-09-03-pd-settings-coming-soon-v1\"",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",
@@ -84,6 +84,7 @@
             "perf-stage4-calendar-v1-20260818",
             "perf-stage3-bottom-nav-shell-v1-20260818",
             "evening-theme-settings-v1-20260818",
+            "coming-soon-v1-20260903",
             "custom-buttons-dynamic-bottom-clearance-v1-20260804",
             "bottom-nav-unify-v1-20260804",
             "silver-speech-bubble-down-4px-v1-20260804"

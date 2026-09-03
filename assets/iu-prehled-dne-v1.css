@@ -2312,6 +2312,92 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   color: #0369a1;
   border-color: color-mix(in srgb, var(--iu-pd-chmu) 35%, transparent);
 }
+.iuPdFeedMainRow--soon {
+  width: 100%;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border-style: dashed;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.12), #fff 58%);
+}
+.iuPdFeedMainRow--soon:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 2px;
+}
+.iuPdFeedMainRow--soon.iuPdFeedMainRow--media {
+  border-color: color-mix(in srgb, #0f766e 38%, var(--iu-pd-line));
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.1), #fff 58%);
+}
+.iuPdFeedMainRow--soon.iuPdFeedMainRow--institutions {
+  border-color: color-mix(in srgb, #1d4ed8 36%, var(--iu-pd-line));
+  background: linear-gradient(90deg, rgba(29, 78, 216, 0.1), #fff 58%);
+}
+.iuPdFeedMainRow--soon.iuPdFeedMainRow--security {
+  border-color: color-mix(in srgb, #b45309 38%, var(--iu-pd-line));
+  background: linear-gradient(90deg, rgba(180, 83, 9, 0.1), #fff 58%);
+}
+.iuPdFeedMainRow__soonLead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.iuPdFeedMainRow__soonIcon {
+  flex: 0 0 auto;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.iuPdFeedMainRow__soonBadge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 35, 55, 0.14);
+  background: rgba(248, 250, 252, 0.98);
+  color: #334155;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.iuPdSoonInfo {
+  padding: 4px 2px 12px;
+}
+.iuPdSoonInfo__title {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  font-weight: 750;
+  color: var(--iu-pd-text);
+}
+.iuPdSoonInfo__p {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--iu-pd-text);
+}
+.iuPdSoonInfo__mailLine {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--iu-pd-text);
+}
+.iuPdSoonInfo__mail {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
 .iuPdFeedAcc {
   border: 1px solid var(--iu-pd-line);
   border-radius: 12px;
@@ -2510,6 +2596,14 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   }
   .iuPdFeedMainRow__gear {
     width: 100%;
+  }
+  .iuPdFeedMainRow--soon {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .iuPdFeedMainRow__soonBadge {
+    font-size: 0.64rem;
+    padding: 4px 8px;
   }
   .iuPdFeedAcc__toggle {
     grid-template-columns: 1fr auto;
