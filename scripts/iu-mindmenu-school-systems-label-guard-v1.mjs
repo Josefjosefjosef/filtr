@@ -22,6 +22,7 @@ function read(rel) {
 const index = read("projects/index.html");
 const appJs = read("assets/app.js");
 const css = read("assets/app.css");
+const cssOverlay = read("assets/iu-custom-buttons-overlay.css");
 const privacy = read("assets/iu-tool-privacy-info.js");
 const feed = read("assets/iu-app-feed-pipeline-v1.js");
 const backup = read("assets/iu-user-data-backup-core.js");
@@ -53,7 +54,7 @@ else ok("storage_key_preserved");
 if (!/data-quicktool-id="bakalari"/.test(index) || !/data-iuq="bakalari"/.test(index)) fail("tile_ids_must_remain");
 else ok("tile_ids_preserved");
 
-if (!/iuTileText--stack/.test(css) || !/iuTileTextSecondary/.test(css)) fail("css_stack_missing");
+if (!/iuTileText--stack/.test(cssOverlay) || !/iuTileTextSecondary/.test(cssOverlay)) fail("css_stack_missing");
 else ok("css_stack");
 
 if (!/Informace o soukromí — Školní systémy/.test(privacy)) fail("privacy_title");
