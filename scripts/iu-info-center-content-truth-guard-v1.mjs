@@ -158,6 +158,48 @@ function main() {
     fails += 1;
   } else ok("providers_table_no_ellipsis");
 
+  const menuNav = html.match(
+    /<nav class="iuInfoCenter__grid"[^>]*>[\s\S]*?<\/nav>/
+  );
+  if (!menuNav) {
+    fail("icentrum_menu_nav_missing");
+    fails += 1;
+  } else {
+    ok("icentrum_menu_nav");
+    const labels = Array.from(menuNav[0].matchAll(/class="iuInfoCenter__tileLabel">([^<]+)</g)).map(
+      (x) => x[1]
+    );
+    const expected = [
+      "Vytvořit ikonu na plochu",
+      "O InfoUzel.cz",
+      "O Silverovi – AI asistent",
+      "Cookies a technické ukládání",
+      "Zdroje dat",
+      "Ukládání a ochrana vašich dat",
+      "Nastavení zabezpečení",
+      "Nastavení soukromí",
+      "Záloha a obnova dat",
+      "Statistiky a transparentnost",
+      "Provozovatel a kontakt",
+    ];
+    if (labels.join("|") !== expected.join("|")) {
+      fail("icentrum_menu_order_mismatch:" + labels.join(">"));
+      fails += 1;
+    } else ok("icentrum_menu_order");
+    if (labels.includes("Soukromí a zabezpečení")) {
+      fail("icentrum_old_privacy_security_tile_label");
+      fails += 1;
+    } else ok("icentrum_security_tile_renamed");
+    if (!/data-iu-info-section="privacy"[\s\S]{0,400}Nastavení zabezpečení/.test(menuNav[0])) {
+      fail("icentrum_privacy_section_key_label_mismatch");
+      fails += 1;
+    } else ok("icentrum_privacy_section_key_preserved");
+    if (!/data-iu-info-section="privacy-settings"[\s\S]{0,400}Nastavení soukromí/.test(menuNav[0])) {
+      fail("icentrum_privacy_settings_key_label_mismatch");
+      fails += 1;
+    } else ok("icentrum_privacy_settings_key_preserved");
+  }
+
   if (fails === 0) {
     console.log("iCENTRUM_CONTENT_TRUTH_GUARD=PASS");
   } else {
