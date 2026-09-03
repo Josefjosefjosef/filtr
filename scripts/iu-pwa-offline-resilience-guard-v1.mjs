@@ -36,6 +36,7 @@ function auditStatic() {
   const chunk = fs.readFileSync(path.join(REPO, "assets", "iu-article-chunk-loader.js"), "utf8");
   if (!netJs.includes("openExternalUrl")) fails.push("network:missing openExternalUrl");
   if (!netJs.includes("restoreAppShellAfterReturn")) fails.push("network:missing restoreAppShellAfterReturn");
+  if (!netJs.includes("hasIntentionalToolOverlayOpen")) fails.push("network:missing hasIntentionalToolOverlayOpen");
   if (!netJs.includes("probeReachability")) fails.push("network:missing probeReachability");
   if (!netJs.includes("hideOfflineHint")) fails.push("network:missing hideOfflineHint");
   if (!netJs.includes("openExternalSync")) fails.push("network:missing openExternalSync");
@@ -122,6 +123,27 @@ async function testShellRestore(page) {
   });
 }
 
+async function testIntentionalOverlayPreservedOnReturn(page) {
+  return page.evaluate(() => {
+    try {
+      sessionStorage.setItem("iu_external_nav_armed", "1");
+      sessionStorage.setItem("iuMindMenuReturnArmed", "1");
+    } catch (_) {}
+    document.body.classList.add("iu-modal-open", "iu-ds-overlay-open");
+    document.body.style.overflow = "hidden";
+    document.body.style.pointerEvents = "none";
+    window.iuNetwork.restoreAppShellAfterReturn();
+    return {
+      modalKept: document.body.classList.contains("iu-modal-open"),
+      dsKept: document.body.classList.contains("iu-ds-overlay-open"),
+      pointerOk: document.body.style.pointerEvents !== "none",
+      hasApi:
+        !!(window.iuNetwork && typeof window.iuNetwork.hasIntentionalToolOverlayOpen === "function") &&
+        window.iuNetwork.hasIntentionalToolOverlayOpen() === true,
+    };
+  });
+}
+
 async function main() {
   const staticFails = auditStatic();
   if (staticFails.length) {
@@ -170,6 +192,14 @@ async function main() {
     const restore = await testShellRestore(page);
     if (restore.modalGone && restore.overflowClear) passes.push("shell_restore");
     else failures.push({ test: "shell_restore", detail: restore });
+
+    await preparePage(page);
+    const preserve = await testIntentionalOverlayPreservedOnReturn(page);
+    if (preserve.modalKept && preserve.dsKept && preserve.hasApi && preserve.pointerOk) {
+      passes.push("intentional_overlay_preserved_on_return");
+    } else {
+      failures.push({ test: "intentional_overlay_preserved_on_return", detail: preserve });
+    }
   } finally {
     await browser.close();
     if (serverProc && !serverProc.killed) serverProc.kill("SIGTERM");
