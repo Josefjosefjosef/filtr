@@ -129,7 +129,13 @@
     overflow-y: visible;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
-    touch-action: pan-x;
+    /*
+     * Root cause: touch-action:pan-x alone told WebKit/Blink to accept ONLY horizontal
+     * pans on RYCHLÝ PŘEHLED — vertical page scroll starting on the strip was blocked
+     * ("dead zone"). pan-x pan-y keeps native horizontal swipe AND allows vertical
+     * document scroll when the gesture is predominantly up/down. Desktop CSS untouched.
+     */
+    touch-action: pan-x pan-y;
     scrollbar-width: none;
     margin: 0;
     padding: 0;
