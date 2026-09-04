@@ -318,12 +318,26 @@ async function main() {
 
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
-    serverProc = spawn("npx", ["serve", REPO, "-l", String(PORT)], {
+    const serverScript = path.join(REPO, "server", "projects-static.mjs");
+    serverProc = spawn(process.execPath, [serverScript], {
       cwd: REPO,
-      stdio: "ignore",
-      shell: true,
+      env: { ...process.env, PORT: String(PORT) },
+      stdio: ["ignore", "ignore", "pipe"],
+      shell: false,
     });
-    await waitForPort("127.0.0.1", PORT, 90000);
+    let serverErr = "";
+    serverProc.stderr.on("data", (c) => {
+      serverErr += String(c);
+    });
+    serverProc.on("exit", (code) => {
+      if (code && code !== 0 && !serverErr) serverErr = `static server exit ${code}`;
+    });
+    try {
+      await waitForPort("127.0.0.1", PORT, 90000);
+    } catch (err) {
+      if (serverErr) console.error(serverErr.trim());
+      throw err;
+    }
   }
 
   const ignorable = createIgnorableResourceTracker();
