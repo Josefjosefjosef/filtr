@@ -203,9 +203,13 @@
         font-size: 0.85rem;
         line-height: 1.35;
         pointer-events: none;
-        transform: translate(-50%, calc(-100% - 8px));
+        /* Positioned by JS (adaptive above/below + edge clamp). Do not use fixed -100% Y. */
+        transform: none;
+        left: 0;
+        top: 0;
         box-sizing: border-box;
       }
+      /* stats-chart-tooltip-adaptive-v1-20260904 */
       .chart-tip strong { display: block; margin-bottom: 2px; }
       .chart-live {
         margin: 12px 0 0;
@@ -512,31 +516,77 @@
           if (!tip || !shell || !svg || !scroll) return;
           if (state.selected < 0 || !state.points[state.selected]) {
             tip.hidden = true;
+            tip.classList.remove("chart-tip--below");
             return;
           }
           var circle = svg.querySelector('circle.chart-dot[data-idx="' + state.selected + '"]');
           if (!circle) {
             tip.hidden = true;
+            tip.classList.remove("chart-tip--below");
             return;
           }
           var scrollRect = scroll.getBoundingClientRect();
           var cRect = circle.getBoundingClientRect();
           if (cRect.right < scrollRect.left + 2 || cRect.left > scrollRect.right - 2) {
             tip.hidden = true;
+            tip.classList.remove("chart-tip--below");
             return;
           }
           var p = state.points[state.selected];
           tip.hidden = false;
           tip.innerHTML = tipHtml(p);
+          tip.style.transform = "none";
+          tip.classList.remove("chart-tip--below");
+          /* Force layout so offsetWidth/Height match final content. */
+          void tip.offsetWidth;
+
           var shellRect = shell.getBoundingClientRect();
-          var cx = cRect.left + cRect.width / 2 - shellRect.left;
-          var cy = Math.max(18, cRect.top - shellRect.top);
-          tip.style.left = cx + "px";
-          tip.style.top = cy + "px";
+          var gap = 8;
+          var pad = 8;
           var tw = tip.offsetWidth || 160;
-          var half = tw / 2;
-          var clamped = Math.min(Math.max(half + 8, cx), Math.max(half + 8, shellRect.width - half - 8));
-          tip.style.left = clamped + "px";
+          var th = tip.offsetHeight || 56;
+          var maxLeft = Math.max(pad, shellRect.width - tw - pad);
+          var cx = cRect.left + cRect.width / 2 - shellRect.left;
+          var tipLeft = Math.min(Math.max(pad, cx - tw / 2), maxLeft);
+
+          var aboveTop = cRect.top - shellRect.top - gap - th;
+          var belowTop = cRect.bottom - shellRect.top + gap;
+          var maxTop = Math.max(pad, shellRect.height - th - pad);
+          var tipTop;
+          var placeBelow = false;
+          if (aboveTop >= pad) {
+            tipTop = aboveTop;
+          } else if (belowTop + th <= shellRect.height - pad) {
+            tipTop = belowTop;
+            placeBelow = true;
+          } else {
+            var spaceAbove = Math.max(0, cRect.top - shellRect.top - pad);
+            var spaceBelow = Math.max(0, shellRect.bottom - cRect.bottom - pad);
+            if (spaceBelow > spaceAbove) {
+              tipTop = Math.min(belowTop, maxTop);
+              placeBelow = true;
+            } else {
+              tipTop = Math.max(pad, aboveTop);
+            }
+            tipTop = Math.min(Math.max(pad, tipTop), maxTop);
+          }
+
+          tip.style.left = tipLeft + "px";
+          tip.style.top = tipTop + "px";
+          tip.classList.toggle("chart-tip--below", placeBelow);
+
+          /* Final edge clamp after paint (fonts / wrapping). */
+          var tipRect = tip.getBoundingClientRect();
+          var dx = 0;
+          var dy = 0;
+          if (tipRect.left < shellRect.left + pad) dx = shellRect.left + pad - tipRect.left;
+          if (tipRect.right > shellRect.right - pad) dx = shellRect.right - pad - tipRect.right;
+          if (tipRect.top < shellRect.top + pad) dy = shellRect.top + pad - tipRect.top;
+          if (tipRect.bottom > shellRect.bottom - pad) dy = shellRect.bottom - pad - tipRect.bottom;
+          if (dx || dy) {
+            tip.style.left = tipLeft + dx + "px";
+            tip.style.top = tipTop + dy + "px";
+          }
         }
         function showTip(idx) {
           if (!state.points[idx]) return;
