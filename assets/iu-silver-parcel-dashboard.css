@@ -456,7 +456,8 @@
     --iuParcelInputBg: #eef1f5;
     --iuParcelBtnBlue: linear-gradient(135deg, #1e40af 0%, #1e3a8a 55%, #172554 100%);
     --iuParcelBtnBlueActive: linear-gradient(135deg, #2563eb 0%, #1d4ed8 55%, #1e40af 100%);
-    --iuParcelCardH: 176px;
+    /* Content-driven height — do not reserve artificial --iuParcelCardH slack under hero. */
+    --iuParcelCardH: 0px;
     width: calc(100% - 20px) !important;
     max-width: calc(100% - 20px) !important;
     margin: 0 10px 0 10px;
@@ -469,18 +470,12 @@
     flex-shrink: 0 !important;
     align-self: stretch !important;
     min-width: 0 !important;
-    min-height: var(--iuParcelCardH);
+    min-height: 0;
     height: auto;
     max-height: none;
     contain: layout style;
     position: relative;
     isolation: isolate;
-  }
-  @media (min-width: 480px) {
-    #silver-slot #iuSilverParcelWatch,
-    #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
-      --iuParcelCardH: 178px;
-    }
   }
   /* Day mode (default mobile/tablet) */
   #silver-slot #iuSilverParcelWatch,
@@ -658,6 +653,18 @@
     flex-direction: column;
     gap: 10px;
     min-width: 0;
+  }
+  /* P0: empty list/completed must not inflate card height (margin-top on :empty boxes). */
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list:empty,
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed:empty,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list:empty,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed:empty {
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__showall,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__showall {
