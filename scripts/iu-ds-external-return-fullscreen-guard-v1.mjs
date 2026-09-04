@@ -45,8 +45,11 @@ function auditStatic() {
     fails.push("app:iuDsOpenLoginInNewTab not routed via iuNetwork");
   }
   if (!feed.includes("hasIntentionalToolOverlayOpen")) fails.push("feed:MindMenu restore missing intentional overlay guard");
-  if (!index.includes("ds-external-return-fullscreen-v1-20260903")) fails.push("index:missing cache bust token");
-  if (!sw.includes('CACHE_VERSION = "2026-09-03-ds-external-return-fullscreen-v1"')) {
+  if (!index.includes("cal-sheet-nav-stable-v1-20260904") && !index.includes("ds-external-return-fullscreen-v1-20260903")) {
+    fails.push("index:missing cache bust token");
+  }
+  if (!sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v1"') &&
+      !sw.includes('CACHE_VERSION = "2026-09-03-ds-external-return-fullscreen-v1"')) {
     fails.push("sw:missing CACHE_VERSION bump");
   }
   return fails;
