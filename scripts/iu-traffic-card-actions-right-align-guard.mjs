@@ -88,15 +88,22 @@ function waitForPort(host, port, timeoutMs) {
   return new Promise((resolve, reject) => {
     const tryOnce = () => {
       const req = http.request(
-        { host, port, path: "/assets/iu-prehled-dne-v1.css", method: "HEAD", timeout: 800 },
+        { host, port, path: "/assets/iu-prehled-dne-v1.css", method: "GET", timeout: 2000 },
         (res) => {
           res.resume();
           resolve();
         }
       );
+      req.on("timeout", () => {
+        try {
+          req.destroy();
+        } catch (_) {}
+        if (Date.now() > deadline) reject(new Error("server not up"));
+        else setTimeout(tryOnce, 200);
+      });
       req.on("error", () => {
         if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
+        else setTimeout(tryOnce, 200);
       });
       req.end();
     };
@@ -223,15 +230,24 @@ async function main() {
   staticGate();
 
   let serverProc = null;
-  // Unique port 8794 avoids CHMI 8987. On Linux, detach + kill(-pid) so serve children die.
-  const useShell = process.platform === "win32";
-  serverProc = spawn("npx", ["serve", ROOT, "-l", String(PORT)], {
+  // Unique port 8794 avoids CHMI 8987. Prefer repo static server over flaky npx serve.
+  const serverScript = path.join(ROOT, "server", "projects-static.mjs");
+  serverProc = spawn(process.execPath, [serverScript], {
     cwd: ROOT,
-    stdio: "ignore",
-    shell: useShell,
-    detached: !useShell,
+    env: { ...process.env, PORT: String(PORT) },
+    stdio: ["ignore", "ignore", "pipe"],
+    shell: false,
   });
-  await waitForPort("127.0.0.1", PORT, 45000);
+  let serverErr = "";
+  serverProc.stderr.on("data", (c) => {
+    serverErr += String(c);
+  });
+  try {
+    await waitForPort("127.0.0.1", PORT, 90000);
+  } catch (err) {
+    if (serverErr) console.error(serverErr.trim());
+    throw err;
+  }
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
@@ -245,13 +261,8 @@ async function main() {
   function stopServer() {
     if (!serverProc || !serverProc.pid) return;
     try {
-      if (!useShell) process.kill(-serverProc.pid, "SIGTERM");
-      else serverProc.kill("SIGTERM");
-    } catch (_) {
-      try {
-        serverProc.kill("SIGTERM");
-      } catch (__) {}
-    }
+      serverProc.kill("SIGTERM");
+    } catch (_) {}
   }
 
   try {

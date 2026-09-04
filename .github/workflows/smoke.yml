@@ -1153,6 +1153,13 @@ jobs:
           IU_SILVER_ALLDAY_TOGGLE_SKIP_WEBKIT: "1"
         run: npm run iu-silver-allday-toggle-guard-checkout
 
+      - name: Silver calendar Save enable guard (Nová událost mobile/tablet)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 12
+        env:
+          IU_SILVER_CAL_SAVE_ENABLE_SKIP_WEBKIT: "1"
+        run: npm run iu-silver-calendar-save-enable-guard-checkout
+
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mobile-stability-guards

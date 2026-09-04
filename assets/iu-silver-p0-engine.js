@@ -33272,9 +33272,14 @@
     }
     const titleIn = cardEl.querySelector('[data-iu-silver-field="title"]');
     if (titleIn) {
-      d.title = String(titleIn.value || "")
+      /* Manual form entry (Silver Nová událost / draft card edit): keep the typed
+         title. Do NOT run iuSilverSanitizeDraftTitle here — that conversational
+         NLP pipeline is for chat utterances and can wipe a valid typed title
+         (DOM still shows text, Save stays disabled). Mirror tasks path. */
+      const tt0 = String(titleIn.value || "")
         .trim()
         .slice(0, 160);
+      d.title = normalizeSilverTitleV1(tt0, { kind: "calendar" }).slice(0, 160);
       d.meta.title = d.title ? "certain" : "missing";
     }
     const noteIn = cardEl.querySelector('[data-iu-silver-field="note"]');
@@ -33294,7 +33299,6 @@
     }
     d.durationMinutes = null;
     d.meta.duration = "optional";
-    iuSilverSanitizeDraftTitle(d);
     chatState.draft = d;
     const ps = processingStateFromDraft(d);
     const ap = buildAssistantParts(d, ps);
