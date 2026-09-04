@@ -126,35 +126,47 @@
     syncQuickPanelUxState();
   }
 
+  /**
+   * Focus must stay inside the same user gesture as the prefix tap.
+   * Async rAF/setTimeout focus breaks iOS Safari/PWA soft-keyboard + caret.
+   */
+  function focusInputSync() {
+    var inp = inputEl();
+    if (!inp) return false;
+    try {
+      inp.focus({ preventScroll: true });
+    } catch (_) {
+      try {
+        inp.focus();
+      } catch (_2) {}
+    }
+    try {
+      var pos = String(inp.value || "").length;
+      inp.setSelectionRange(pos, pos);
+    } catch (_3) {}
+    syncQuickPanelUxState();
+    try {
+      return document.activeElement === inp;
+    } catch (_4) {
+      return false;
+    }
+  }
+
   function insertNotesPrefix() {
     var inp = inputEl();
-    if (!inp) return;
+    if (!inp) return false;
     try {
       inp.value = PREFIX_NOTES;
     } catch (_) {}
+    /* Compose classes first so caret paints on the final input chrome. */
     syncQuickPanelUxState();
-    focusInput();
+    return focusInputSync();
   }
 
-  function focusInput() {
+  function notesPrefixAlreadyApplied() {
     var inp = inputEl();
-    if (!inp) return;
-    window.requestAnimationFrame(function () {
-      window.setTimeout(function () {
-        try {
-          inp.focus({ preventScroll: true });
-        } catch (_) {
-          try {
-            inp.focus();
-          } catch (_2) {}
-        }
-        try {
-          var pos = String(inp.value || "").length;
-          inp.setSelectionRange(pos, pos);
-        } catch (_3) {}
-        syncQuickPanelUxState();
-      }, 40);
-    });
+    if (!inp) return false;
+    return String(inp.value || "").indexOf(PREFIX_NOTES) === 0;
   }
 
   function closePanel() {
@@ -218,12 +230,32 @@
 
     if (prefix && !prefix.__iuSilverQuickPanelBound) {
       prefix.__iuSilverQuickPanelBound = 1;
+      /* pointerdown: keep user-activation chain for iOS keyboard; preventDefault
+         so the button does not steal focus before the textarea. */
+      prefix.addEventListener(
+        "pointerdown",
+        function (e) {
+          try {
+            if (e.pointerType === "mouse" && e.button !== 0) return;
+          } catch (_) {}
+          try {
+            e.preventDefault();
+          } catch (_) {}
+          insertNotesPrefix();
+        },
+        { passive: false }
+      );
       prefix.addEventListener("click", function (e) {
         try {
           e.preventDefault();
           e.stopPropagation();
         } catch (_) {}
-        insertNotesPrefix();
+        /* Idempotent fallback when pointerdown was skipped (keyboard/a11y). */
+        if (!notesPrefixAlreadyApplied()) {
+          insertNotesPrefix();
+        } else if (document.activeElement !== inputEl()) {
+          focusInputSync();
+        }
       });
     }
 
@@ -261,6 +293,8 @@
         return open;
       };
       window.__iuSilverSyncQuickPanelUxState = syncQuickPanelUxState;
+      window.__iuSilverQuickPanelFocusInputSync = focusInputSync;
+      window.__iuSilverQuickPanelInsertNotesPrefix = insertNotesPrefix;
     } catch (_) {}
   }
 
