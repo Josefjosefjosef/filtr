@@ -66,8 +66,10 @@
     margin-top: 16px !important;
   }
 
+  /* Same inter-section gap as Rychlý přehled → Můj přehled dne (--iu-home-section-gap). */
   :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch + .iuHomeSectionUnit--info {
-    margin-top: 0 !important;
+    margin-top: var(--iu-home-section-gap, 16px) !important;
+    margin-bottom: var(--iu-home-section-gap, 16px) !important;
   }
 
   :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuMobileInfoPanel.iuDesktopInfoPanel {

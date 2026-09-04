@@ -669,7 +669,7 @@ require-trusted-types-for 'script';
           overflow-x:hidden;
           overflow-y:visible;
           height:auto;
-          min-height:176px;
+          min-height:0;
           max-height:none;
         }
         :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverHeroInputHost{
@@ -713,7 +713,7 @@ require-trusted-types-for 'script';
         @media(min-width:480px){
           :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch{
             height:auto;
-            min-height:178px;
+            min-height:0;
             max-height:none;
           }
           :is(#silver-slot,#iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch .iuSilverParcelWatch__content{
@@ -1206,11 +1206,12 @@ require-trusted-types-for 'script';
           display: none !important;
         }
         :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info {
+          --iu-home-section-gap: 16px;
           box-sizing: border-box;
           width: 100%;
           max-width: 100%;
           min-width: 0;
-          margin: 16px 0;
+          margin: var(--iu-home-section-gap) 0;
           padding: 0 10px;
         }
         :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iuHomeSectionUnit--info #iuMobileInfoPanelMount {
@@ -2522,7 +2523,7 @@ require-trusted-types-for 'script';
     <link rel="stylesheet" href="/assets/iu-mindmenu-mobile-tablet-v61.css?v=icentrum-gate-v70-20260629" />
     <link rel="stylesheet" href="/assets/iu-mindmenu-bottom-nav-restore-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" />
     <link rel="stylesheet" href="/assets/iu-overlay-mobile-tablet-unified-v1.css?v=ds-mobile-overlay-nav-flush-v1-20260713-bottom-nav-keyboard-hide-v1-20260802-ds-full-height-v1-20260803-kb-hide-v2-20260803-kb-restore-v3-20260803-bottom-nav-unify-v1-20260804" />
-    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=home-section-bar-evening-accent-v1-20260802" />
+    <link rel="stylesheet" href="/assets/iu-silver-parcel-dashboard.css?v=parcel-card-content-height-gap-v1-20260904" />
     <link rel="stylesheet" href="/assets/iu-silver-finance-home-card.css?v=home-divider-spacing-8-4-20260628" />
     <link rel="stylesheet" href="/assets/iu-home-premium-install-box.css?v=1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-desktop-right-rail-cards.css?v=remove-partner-banners-v1-20260706" data-iu-desktop-css="1" media="(min-width: 1025px)" />
@@ -2532,15 +2533,15 @@ require-trusted-types-for 'script';
     <link rel="stylesheet" data-iu-href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" data-iu-desktop-css="1" media="(min-width: 1025px)" />
     <link rel="stylesheet" data-iu-href="/assets/iu-desktop-tool-window-shell-v1.css?v=pc-topbar-height-unify-v1-20260716" data-iu-desktop-css="1" media="(min-width: 1025px)" />
     <link rel="stylesheet" data-iu-href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" data-iu-desktop-css="1" media="(min-width: 1025px)" />
-    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=rychly-prehled-vertical-scroll-v1-20260903" />
+    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=home-section-gap-unify-v1-20260904" />
     <link rel="stylesheet" data-iu-href="/assets/iu-myinfouzel-premium-overlay.css?v=mindmenu-mailbox-gear-track-v1-20260707-mindmenu-articles-removed-v1-20260803" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuParcelWatchFirstPaintClsGuard">
-      /* P0 CLS: post parcel-dashboard.css — lock first paint = hydrated compact height; no vertical clip on mainShell. */
+      /* P0 CLS: post parcel-dashboard.css — fixed illus sizes stabilize height; card height is content-driven (no artificial min-height slack). */
       @media (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
           height: auto !important;
-          min-height: 176px !important;
+          min-height: 0 !important;
           max-height: none !important;
           overflow-x: hidden !important;
           overflow-y: visible !important;
@@ -2576,12 +2577,22 @@ require-trusted-types-for 'script';
           object-fit: contain !important;
           object-position: right bottom !important;
         }
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list:empty,
+        #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed:empty,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__list:empty,
+        #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__completed:empty {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          min-height: 0 !important;
+          height: 0 !important;
+          overflow: hidden !important;
+        }
       }
       @media (min-width: 480px) and (max-width: 1023px) {
         #silver-slot #iuSilverParcelWatch,
         #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch {
           height: auto !important;
-          min-height: 178px !important;
+          min-height: 0 !important;
           max-height: none !important;
         }
         #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__illus,
