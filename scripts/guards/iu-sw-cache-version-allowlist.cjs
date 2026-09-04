@@ -11,6 +11,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
   "2026-09-02-home-empty-space-under-feed-v1",
   "2026-09-02-silver-allday-toggle-v1",
   "2026-09-04-silver-cal-save-enable-v1",
+  "2026-09-04-wx-offline-online-reconnect-v1",
   "2026-09-01-silver-native-datetime-v5",
   "2026-09-01-silver-reminder-date-time-v4",
   "2026-09-01-remove-environment-info-panel-v1",
@@ -148,7 +149,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-04-silver-cal-save-enable-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-04-wx-offline-online-reconnect-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

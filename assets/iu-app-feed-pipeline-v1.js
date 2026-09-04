@@ -21498,7 +21498,11 @@ function buildVideoAsArticleCard(it) {
           if (typeof window.iuUpdateNameday === "function") window.iuUpdateNameday();
         } catch (_) {}
         try {
-          if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+          if (typeof window.iuWeatherOnNetworkReconnect === "function") {
+            void window.iuWeatherOnNetworkReconnect({ reason: "network" });
+          } else if (typeof window.iuSilverWeatherRefresh === "function") {
+            window.iuSilverWeatherRefresh();
+          }
         } catch (_) {}
         try {
           if (typeof window.iuWeatherHistoryReconnect === "function") window.iuWeatherHistoryReconnect();
@@ -24182,6 +24186,178 @@ function buildVideoAsArticleCard(it) {
     }catch{}
   }
 
+  function iuWeatherLocationFingerprint(){
+    try{
+      const mode = iuWeatherReadLocationMode();
+      const city = iuWeatherGetActiveCity();
+      const man = mode === IU_WEATHER_MODE_MANUAL ? iuWeatherReadManualLocation() : null;
+      const gps = mode === IU_WEATHER_MODE_GPS ? iuWeatherReadGpsSelected() : null;
+      return {
+        mode: String(mode || ""),
+        lat: city && typeof city.lat === "number" ? city.lat : null,
+        lon: city && typeof city.lon === "number" ? city.lon : null,
+        name: city && city.name ? String(city.name) : "",
+        manualLabel: man && man.label ? String(man.label) : (man && man.name ? String(man.name) : ""),
+        gpsAt: gps && gps.at != null ? Number(gps.at) : null,
+      };
+    }catch{
+      return { mode: "", lat: null, lon: null, name: "", manualLabel: "", gpsAt: null };
+    }
+  }
+
+  function iuWeatherHasConfiguredLocationForFetch(){
+    try{
+      const mode = iuWeatherReadLocationMode();
+      if (mode === IU_WEATHER_MODE_MANUAL) return !!(iuWeatherReadManualLocation && iuWeatherReadManualLocation());
+      return !!(iuWeatherReadGpsSelected && iuWeatherReadGpsSelected());
+    }catch{
+      return false;
+    }
+  }
+
+  function iuWeatherNeedsNetworkRecovery(){
+    try{
+      if (!iuWeatherHasConfiguredLocationForFetch()) return false;
+      const city = iuWeatherGetActiveCity();
+      if (!city || typeof city.lat !== "number" || typeof city.lon !== "number") return false;
+      const st = window.__iuWeatherState;
+      const hasReal = !!(st && iuWeatherStateHasRealData(st) && iuWeatherStateMatchesActiveCity(st));
+      try{
+        const err = document.getElementById("iuDailyErr");
+        if (err && !err.hidden) return true;
+      }catch{}
+      try{
+        const card = document.getElementById("iuSilverWeatherCard");
+        const phase = card ? String(card.getAttribute("data-iu-silver-wx-phase") || "") : "";
+        if (phase === "loading") return true;
+      }catch{}
+      if (!hasReal) return true;
+      return false;
+    }catch{
+      return false;
+    }
+  }
+
+  function iuWeatherPrepareLiveRetryAfterReconnect(){
+    try{ iuWeatherClearOpenMeteoCache(); }catch{}
+    try{ iuWeatherClearLiveBackoffOnSuccess(); }catch{}
+    try{ window.__iuWeatherLiveRefreshScheduled = 0; }catch{}
+    try{ window.__iuWeatherEnsurePromisesByKey = {}; }catch{}
+  }
+
+  function iuWeatherRefreshUiAfterReconnect(){
+    try{
+      if (typeof window.iuSilverWeatherRefresh === "function") window.iuSilverWeatherRefresh();
+    }catch{}
+    try{
+      const sec = String((document.body && document.body.dataset && document.body.dataset.section) || "");
+      if (sec === "pocasi" && typeof window.iuWeatherLoadAndRender === "function") {
+        void window.iuWeatherLoadAndRender();
+      }
+    }catch{}
+  }
+
+  /**
+   * Offline → online recovery for shared weather store (homepage Silver + Počasí detail).
+   * Clears fail-cache/backoff, re-fetches with limited retries, refreshes UI.
+   * Does NOT mutate location mode / Moje město / GPS selection.
+   */
+  function iuWeatherOnNetworkReconnect(opts){
+    const options = opts && typeof opts === "object" ? opts : {};
+    const reason = String(options.reason || "network");
+    const maxAttempts = Math.max(1, Math.min(4, Number(options.maxAttempts) || 3));
+    const force = options.force === true;
+    try{
+      if (!force && document.visibilityState !== "visible") {
+        return Promise.resolve({ ok: false, skipped: "hidden", reason: reason });
+      }
+    }catch{}
+    try{
+      if (!force && reason !== "network" && !iuWeatherNeedsNetworkRecovery()) {
+        return Promise.resolve({ ok: false, skipped: "healthy", reason: reason });
+      }
+    }catch{}
+    try{
+      if (!iuWeatherHasConfiguredLocationForFetch()) {
+        return Promise.resolve({ ok: false, skipped: "no_location", reason: reason });
+      }
+    }catch{}
+
+    if (window.__iuWeatherReconnectInFlight && typeof window.__iuWeatherReconnectInFlight.then === "function") {
+      return window.__iuWeatherReconnectInFlight;
+    }
+
+    const beforeFp = iuWeatherLocationFingerprint();
+    const job = (async function iuWeatherReconnectJob(){
+      let lastState = null;
+      for (let attempt = 0; attempt < maxAttempts; attempt++){
+        try{
+          if (!force && document.visibilityState !== "visible") {
+            return { ok: false, skipped: "hidden_mid", reason: reason, attempt: attempt, locationBefore: beforeFp, locationAfter: iuWeatherLocationFingerprint() };
+          }
+        }catch{}
+        try{
+          if (navigator.onLine === false) {
+            await new Promise(function(r){ setTimeout(r, 350 * (attempt + 1)); });
+            continue;
+          }
+        }catch{}
+
+        iuWeatherPrepareLiveRetryAfterReconnect();
+        try{
+          lastState = await iuWeatherEnsureState();
+        }catch(_){
+          lastState = null;
+        }
+
+        const afterFp = iuWeatherLocationFingerprint();
+        const locStable =
+          afterFp.mode === beforeFp.mode &&
+          afterFp.lat === beforeFp.lat &&
+          afterFp.lon === beforeFp.lon;
+
+        if (lastState && iuWeatherStateHasRealData(lastState) && iuWeatherStateMatchesActiveCity(lastState)) {
+          iuWeatherRefreshUiAfterReconnect();
+          return {
+            ok: true,
+            reason: reason,
+            attempt: attempt,
+            locationBefore: beforeFp,
+            locationAfter: afterFp,
+            locationStable: locStable,
+            dataSource: lastState.dataSource || null,
+          };
+        }
+
+        if (attempt < maxAttempts - 1) {
+          await new Promise(function(r){ setTimeout(r, 450 * (attempt + 1)); });
+        }
+      }
+      try{ iuWeatherRefreshUiAfterReconnect(); }catch{}
+      return {
+        ok: false,
+        reason: reason,
+        attempt: maxAttempts - 1,
+        locationBefore: beforeFp,
+        locationAfter: iuWeatherLocationFingerprint(),
+        locationStable:
+          iuWeatherLocationFingerprint().mode === beforeFp.mode &&
+          iuWeatherLocationFingerprint().lat === beforeFp.lat &&
+          iuWeatherLocationFingerprint().lon === beforeFp.lon,
+      };
+    })();
+
+    window.__iuWeatherReconnectInFlight = job;
+    try{
+      job.finally(function(){
+        try{
+          if (window.__iuWeatherReconnectInFlight === job) window.__iuWeatherReconnectInFlight = null;
+        }catch{}
+      });
+    }catch{}
+    return job;
+  }
+
   async function iuWeatherEnsureState(){
     const city = iuWeatherGetActiveCity();
     if (!city || typeof city.lat !== "number" || typeof city.lon !== "number") throw new Error("bad city");
@@ -24326,6 +24502,10 @@ function buildVideoAsArticleCard(it) {
   try{
     window.iuWeatherEnsureState = iuWeatherEnsureState;
     window.iuWeatherBootPrefetchIfReady = iuWeatherBootPrefetchIfReady;
+    window.iuWeatherOnNetworkReconnect = iuWeatherOnNetworkReconnect;
+    window.iuWeatherNeedsNetworkRecovery = iuWeatherNeedsNetworkRecovery;
+    window.iuWeatherLocationFingerprint = iuWeatherLocationFingerprint;
+    window.iuWeatherClearOpenMeteoCache = iuWeatherClearOpenMeteoCache;
     window.iuWeatherRenderMapLayer = iuWeatherRenderMapLayer;
     window.iuWeatherGetDataSource = function iuWeatherGetDataSource(){
       try{
@@ -26309,9 +26489,22 @@ function buildVideoAsArticleCard(it) {
             try{
               if (document.visibilityState === "visible") iuWeatherScheduleGpsRefreshIfNeeded("visibility");
             }catch{}
+            try{
+              if (document.visibilityState !== "visible") return;
+              if (navigator.onLine === false) return;
+              if (typeof iuWeatherOnNetworkReconnect === "function") {
+                void iuWeatherOnNetworkReconnect({ reason: "visibility" });
+              }
+            }catch{}
           });
           window.addEventListener("pageshow", function () {
             try{ iuWeatherScheduleGpsRefreshIfNeeded("pageshow"); }catch{}
+            try{
+              if (navigator.onLine === false) return;
+              if (typeof iuWeatherOnNetworkReconnect === "function") {
+                void iuWeatherOnNetworkReconnect({ reason: "pageshow" });
+              }
+            }catch{}
           });
         }
       }catch{}
