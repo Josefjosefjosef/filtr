@@ -29,9 +29,20 @@ const schema = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/schema.s
 const arch = fs.readFileSync(path.join(ROOT, "docs/InfoUzel-Analytics-Architecture.md"), "utf8");
 const storeTs = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/src/store.ts"), "utf8");
 const migration = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/migrations/0001_init.sql"), "utf8");
+const migrationPwa = fs.readFileSync(
+  path.join(ROOT, "cloudflare/iu-analytics/migrations/0002_pwa_installs.sql"),
+  "utf8"
+);
 if (!/createD1Store/.test(storeTs)) fail("store:missing_d1_impl");
 if (/createCacheStore|createKvStore/.test(storeTs)) fail("store:cache_or_kv_store_must_be_removed");
 if (!/daily_traffic/.test(migration) || !/daily_ads/.test(migration)) fail("migration:missing_core_tables");
+if (!/ADD COLUMN pwa_installs/.test(migrationPwa)) fail("migration:missing_pwa_installs");
+if (!/pwa_install/.test(client) || !/iu_pwa_install_counted_v1/.test(client)) {
+  fail("client:missing_pwa_install_contract");
+}
+if (!/Zaznamenané instalace PWA/.test(publicPage) || !/sPwaInstalls/.test(publicPage)) {
+  fail("public:missing_pwa_installs_tile");
+}
 if (!/CREATE INDEX IF NOT EXISTS idx_ads_campaign/.test(migration)) fail("migration:missing_ad_indexes");
 if (!/d1_binding_missing|d1_unreachable/.test(indexTs)) fail("worker:missing_d1_failure_mode");
 if (!/Cloudflare D1/.test(arch)) fail("docs:d1_source_of_truth_missing");
@@ -186,6 +197,7 @@ try {
           today: { visits: 50, page_views: 50 },
           yesterday: { visits: 40, page_views: 40 },
           month: { visits: 900, page_views: 900, private_tools_opens: 12 },
+          pwaInstalls: { total: 3, since: "2026-09-04", label: "Zaznamenané instalace PWA" },
           series,
           historyStart: series[0].day,
           devices: [{ device_category: "mobile", visits: 10, page_views: 10 }],

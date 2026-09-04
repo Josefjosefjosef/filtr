@@ -22,6 +22,10 @@ function mockD1() {
       },
       async first<T>() {
         if (/SELECT 1/.test(sql)) return { ok: 1 } as T;
+        if (/SUM\(pwa_installs\)/.test(sql)) {
+          const total = tables.daily_traffic.reduce((s, r) => s + Number(r.pwa_installs || 0), 0);
+          return { total } as T;
+        }
         if (/FROM daily_ads/.test(sql)) {
           const row = tables.daily_ads.find(
             (r) =>
@@ -38,7 +42,7 @@ function mockD1() {
       },
       async run() {
         if (/INSERT INTO daily_traffic/.test(sql)) {
-          const [day, device, visits, page_views, public_section_views, private_tools_opens] = binds;
+          const [day, device, visits, page_views, public_section_views, private_tools_opens, pwa_installs] = binds;
           const key = String(day) + "|" + String(device);
           const existing = tables.daily_traffic.find((r) => r.day === day && r.device_category === device);
           if (existing) {
@@ -46,6 +50,7 @@ function mockD1() {
             existing.page_views = Number(existing.page_views) + Number(page_views);
             existing.public_section_views = Number(existing.public_section_views) + Number(public_section_views);
             existing.private_tools_opens = Number(existing.private_tools_opens) + Number(private_tools_opens);
+            existing.pwa_installs = Number(existing.pwa_installs || 0) + Number(pwa_installs || 0);
           } else {
             tables.daily_traffic.push({
               day,
@@ -54,6 +59,7 @@ function mockD1() {
               page_views,
               public_section_views,
               private_tools_opens,
+              pwa_installs: pwa_installs || 0,
               _key: key,
             });
           }
@@ -192,5 +198,17 @@ describe("createD1Store", () => {
       { day: "2026-07-21", visits: 7, page_views: 10 },
       { day: "2026-07-22", visits: 1, page_views: 1 },
     ]);
+  });
+
+  it("bumps pwa_installs without affecting visits", async () => {
+    const db = mockD1();
+    const store = createD1Store(db);
+    await store.bumpTraffic("2026-09-04", "mobile", { pwa_installs: 1 });
+    await store.bumpTraffic("2026-09-04", "mobile", { pwa_installs: 1 });
+    await store.bumpTraffic("2026-09-04", "pc", { visits: 3, page_views: 3 });
+    const blob = await store.readRange("2026-09-04", "2026-09-04");
+    expect(blob.traffic["2026-09-04|mobile"].pwa_installs).toBe(2);
+    expect(blob.traffic["2026-09-04|mobile"].visits).toBe(0);
+    expect(await store.sumPwaInstalls()).toBe(2);
   });
 });

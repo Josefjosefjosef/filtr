@@ -268,6 +268,13 @@
         <div class="card"><div class="label">Tento měsíc (návštěvy)</div><div class="stat" id="sMonth">—</div></div>
         <div class="card"><div class="label">Tento měsíc (zobrazení)</div><div class="stat" id="sMonthViews">—</div></div>
         <div class="card"><div class="label">Soukromé nástroje (měsíc)</div><div class="stat" id="sPrivateNum">—</div></div>
+        <div class="card">
+          <div class="label">Zaznamenané instalace PWA</div>
+          <div class="stat" id="sPwaInstalls">—</div>
+          <p class="muted" id="sPwaInstallsNote" style="margin:0.4rem 0 0;font-size:0.82rem;line-height:1.35">
+            Anonymní agregovaný počet potvrzených instalací nebo prvních zaznamenaných spuštění v režimu nainstalované PWA. Nejde o počet unikátních osob.
+          </p>
+        </div>
         <div class="card full">
           <h2>Vývoj návštěvnosti</h2>
           <div class="chart-toolbar">
@@ -331,6 +338,7 @@
             <li><span class="ok">✓</span> Ochrana proti podvodům neslouží ke sledování uživatelů.</li>
             <li><span class="ok">✓</span> Reklamní statistiky jsou měřeny anonymně a agregovaně.</li>
             <li><span class="ok">✓</span> Reklamní pozice mohou vznikat dynamicky podle objednávky, ale nikdy bez profilování lidí.</li>
+            <li><span class="ok">✓</span> Instalace PWA měříme pouze anonymně a agregovaně. Nezjišťujeme identitu uživatele ani nevytváříme profil zařízení.</li>
           </ul>
         </div>
         <div class="card full">
@@ -945,6 +953,16 @@
               "Soukromé nástroje – anonymní souhrn: " +
               num(d.privateToolsSummary && d.privateToolsSummary.opens) +
               " otevření (měsíc). Bez rozpadu na konkrétní osobní moduly.";
+
+            var pwa = d.pwaInstalls || {};
+            el("sPwaInstalls").textContent = num(pwa.total);
+            var pwaNote = el("sPwaInstallsNote");
+            if (pwaNote) {
+              var sinceTxt = pwa.since ? formatCsDay(pwa.since) : "";
+              pwaNote.textContent =
+                "Zaznamenané instalace PWA představují anonymní agregovaný počet potvrzených instalací nebo prvních zaznamenaných spuštění InfoUzlu v režimu nainstalované PWA. Údaj nepředstavuje počet unikátních osob." +
+                (sinceTxt ? " Měřeno od " + sinceTxt + "." : "");
+            }
 
             state.series = Array.isArray(d.series) ? d.series.slice() : [];
             state.historyStart = d.historyStart || (state.series[0] && state.series[0].day) || null;

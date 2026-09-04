@@ -1,6 +1,12 @@
 /**
  * InfoUzel Analytics client — consent-gated, allowlisted events only.
  * Never sends IP, fingerprint, full UA, free-text, or private module content.
+ *
+ * PWA install metric (pwa_install):
+ * - Chromium: appinstalled event
+ * - iOS / platforms without install event: first recorded standalone launch
+ * - Local once-marker only after successful server ACK (no silent permanent loss)
+ * - Does NOT increment visits / page_views / sections / private_tools
  */
 (function iuAnalyticsClient() {
   "use strict";
@@ -9,11 +15,17 @@
     (typeof window !== "undefined" && window.__IU_ANALYTICS_ENDPOINT__) ||
     "https://infouzel-analytics.josef-zmrhal.workers.dev/v1/ingest";
 
+  var PWA_COUNTED_KEY = "iu_pwa_install_counted_v1";
+  var PWA_PENDING_KEY = "iu_pwa_install_pending_v1";
+
   var queue = [];
   var flushTimer = null;
   var active = false;
   var pageViewSent = false;
   var techErrorSent = false;
+  var pwaInFlight = false;
+  var pwaHooksBound = false;
+  var pwaRetryTimer = null;
 
   function granted() {
     try {
@@ -39,6 +51,38 @@
     return s;
   }
 
+  function lsGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function lsSet(key, val) {
+    try {
+      localStorage.setItem(key, val);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function lsRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (_) {}
+  }
+
+  function isStandalonePwa() {
+    try {
+      if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) return true;
+      if (navigator.standalone === true) return true;
+      if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
+    } catch (_) {}
+    return false;
+  }
+
   function track(type, fields) {
     if (!active || !granted()) return false;
     var ev = { type: String(type || ""), device_category: deviceCategory() };
@@ -54,7 +98,7 @@
     if (fields.error_code) ev.error_code = sanitizeId(fields.error_code) || "unknown";
 
     // Hard block accidental PII keys from callers
-    var blocked = ["ip", "fingerprint", "user_agent", "email", "payload", "text", "content", "query"];
+    var blocked = ["ip", "fingerprint", "user_agent", "email", "payload", "text", "content", "query", "count"];
     for (var i = 0; i < blocked.length; i++) {
       if (Object.prototype.hasOwnProperty.call(fields, blocked[i])) return false;
     }
@@ -102,6 +146,87 @@
         }).catch(function () {});
       }
     } catch (_) {}
+  }
+
+  /**
+   * ACK-before-marker ingest for pwa_install only (not fire-and-forget).
+   * Returns Promise<boolean> — true only when server accepted >= 1 event.
+   */
+  function sendPwaInstallAck() {
+    if (!active || !granted()) return Promise.resolve(false);
+    if (lsGet(PWA_COUNTED_KEY) === "1") return Promise.resolve(false);
+    if (pwaInFlight) return Promise.resolve(false);
+    pwaInFlight = true;
+    lsSet(PWA_PENDING_KEY, "1");
+
+    var body = JSON.stringify({
+      events: [{ type: "pwa_install", device_category: deviceCategory() }],
+    });
+
+    return fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: body,
+      mode: "cors",
+      credentials: "omit",
+      keepalive: true,
+    })
+      .then(function (r) {
+        if (!r || !r.ok) throw new Error("http");
+        return r.json();
+      })
+      .then(function (j) {
+        if (!j || j.ok !== true || Number(j.accepted || 0) < 1) throw new Error("nack");
+        lsSet(PWA_COUNTED_KEY, "1");
+        lsRemove(PWA_PENDING_KEY);
+        return true;
+      })
+      .catch(function () {
+        // Keep pending; do not set counted marker.
+        return false;
+      })
+      .then(function (ok) {
+        pwaInFlight = false;
+        return ok;
+      });
+  }
+
+  function schedulePwaRetry() {
+    if (pwaRetryTimer) return;
+    pwaRetryTimer = setTimeout(function () {
+      pwaRetryTimer = null;
+      maybeRecordPwaInstall("retry");
+    }, 8000);
+  }
+
+  function maybeRecordPwaInstall(reason) {
+    if (!active || !granted()) return Promise.resolve(false);
+    if (lsGet(PWA_COUNTED_KEY) === "1") return Promise.resolve(false);
+
+    var pending = lsGet(PWA_PENDING_KEY) === "1";
+    var standalone = isStandalonePwa();
+    var fromInstallEvent = reason === "appinstalled";
+
+    // Only count on: confirmed install event, standalone first launch, or pending retry.
+    if (!fromInstallEvent && !standalone && !pending) return Promise.resolve(false);
+
+    return sendPwaInstallAck().then(function (ok) {
+      if (!ok && (pending || fromInstallEvent || standalone)) schedulePwaRetry();
+      return ok;
+    });
+  }
+
+  function bindPwaHooks() {
+    if (pwaHooksBound) return;
+    pwaHooksBound = true;
+    window.addEventListener("appinstalled", function () {
+      maybeRecordPwaInstall("appinstalled");
+    });
+    window.addEventListener("online", function () {
+      if (lsGet(PWA_PENDING_KEY) === "1" && lsGet(PWA_COUNTED_KEY) !== "1") {
+        maybeRecordPwaInstall("online");
+      }
+    });
   }
 
   function sectionFromLocation() {
@@ -159,9 +284,12 @@
     }
     active = true;
     window.__IU_ANALYTICS_ACTIVE__ = true;
+    bindPwaHooks();
     sendPageViewOnce();
     maybeTechErrorHook();
     setTimeout(maybePerf, 2500);
+    // Lightweight: only requests when standalone / pending / later appinstalled.
+    maybeRecordPwaInstall("init");
   }
 
   function teardown() {
@@ -172,6 +300,10 @@
     if (flushTimer) {
       clearTimeout(flushTimer);
       flushTimer = null;
+    }
+    if (pwaRetryTimer) {
+      clearTimeout(pwaRetryTimer);
+      pwaRetryTimer = null;
     }
   }
 
@@ -199,6 +331,12 @@
     },
     privateToolsOpen: function () {
       return track("private_tools_total_open", {});
+    },
+    recordPwaInstall: function () {
+      return maybeRecordPwaInstall("appinstalled");
+    },
+    maybeCountStandalonePwa: function () {
+      return maybeRecordPwaInstall("standalone");
     },
     isActive: function () {
       return !!(active && granted());

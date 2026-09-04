@@ -24,6 +24,11 @@ export async function applyEvent(
     await store.bumpTraffic(day, device, { private_tools_opens: 1 });
   }
 
+  // Standalone metric: never bumps visits / page_views / sections / private_tools.
+  if (event.type === "pwa_install") {
+    await store.bumpTraffic(day, device, { pwa_installs: 1 });
+  }
+
   if (event.type === "performance_metric" && event.metric_name) {
     await store.bumpPerf(day, event.metric_name, Number(event.metric_value || 0));
   }

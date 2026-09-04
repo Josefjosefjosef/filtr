@@ -54,7 +54,7 @@ Versioned SQL: `cloudflare/iu-analytics/migrations/0001_init.sql`
 
 Tables (aggregate only):
 
-- `daily_traffic` — visits / page_views / public_section_views / private_tools_opens by day + device
+- `daily_traffic` — visits / page_views / public_section_views / private_tools_opens / pwa_installs by day + device
 - `daily_sections` — public section views
 - `daily_ads` — dynamic campaign/placement/section/slot/device counters + valid/suspicious clicks
 - `daily_performance` — anonymous metric sums
@@ -100,7 +100,17 @@ UI may display it as a percentage by multiplying by 100. Division by zero → `0
 
 ## Allowlisted events
 
-`page_view`, `public_section_view`, `private_tools_total_open`, `ad_impression`, `ad_click`, `performance_metric`, `technical_error`
+`page_view`, `public_section_view`, `private_tools_total_open`, `pwa_install`, `ad_impression`, `ad_click`, `performance_metric`, `technical_error`
+
+### PWA install metric (`pwa_install`)
+
+Anonymous aggregate of recorded PWA install signals:
+
+- Chromium / supporting browsers: `appinstalled`
+- iOS / platforms without install event: first recorded launch in `display-mode: standalone` (or compatible standalone fallback)
+- Client sets local once-marker (`iu_pwa_install_counted_v1`) only after successful ingest ACK
+- Does **not** increment visits, page_views, public sections, or private tools
+- No fingerprint, persistent device ID, IP storage, or personal content
 
 Ad fields only: `campaign_id`, `placement_id`, `section_id`, `slot_type`, `device_category`, `day`
 

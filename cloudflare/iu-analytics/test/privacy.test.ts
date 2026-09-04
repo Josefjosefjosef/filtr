@@ -58,6 +58,15 @@ describe("privacyGuard", () => {
     );
     expect(r.ok).toBe(false);
   });
+
+  it("accepts pwa_install and rejects client count", () => {
+    const ok = privacyGuard({ type: "pwa_install", device_category: "mobile" }, "Mozilla/5.0 (iPhone)");
+    expect(ok.ok).toBe(true);
+    if (ok.ok) expect(ok.event.type).toBe("pwa_install");
+    const bad = privacyGuard({ type: "pwa_install", count: 1000 }, "Mozilla/5.0");
+    expect(bad.ok).toBe(false);
+    if (!bad.ok) expect(bad.reason).toBe("client_count_forbidden");
+  });
 });
 
 describe("antiFraudGuard", () => {

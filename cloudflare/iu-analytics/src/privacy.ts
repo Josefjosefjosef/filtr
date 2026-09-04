@@ -87,6 +87,11 @@ export function privacyGuard(
     return { ok: false, reason: "event_not_allowlisted" };
   }
 
+  // Client must never dictate aggregation magnitude (always server +1).
+  if (Object.prototype.hasOwnProperty.call(raw, "count")) {
+    return { ok: false, reason: "client_count_forbidden" };
+  }
+
   if (isCrawlerUa(uaHeader)) {
     return { ok: false, reason: "crawler" };
   }

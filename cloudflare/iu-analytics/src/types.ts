@@ -6,6 +6,7 @@ export const ALLOWED_EVENTS = [
   "page_view",
   "public_section_view",
   "private_tools_total_open",
+  "pwa_install",
   "ad_impression",
   "ad_click",
   "performance_metric",
