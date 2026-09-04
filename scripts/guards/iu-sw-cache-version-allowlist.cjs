@@ -151,7 +151,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-04-silver-quick-notes-focus-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-04-reload-visual-stability-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
