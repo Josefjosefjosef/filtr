@@ -509,7 +509,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -12498,7 +12498,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     } catch (_) {}
     if (p) return p;
-    p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1a-20260728")
+    p = import("./iu-silver-p0-engine.js?v=silver-cal-save-enable-v1-20260904")
       .then(function () {
         markReady();
       })
@@ -12719,6 +12719,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (window.__iuSilverP0EngineReady) return;
           var t = e.target && e.target.closest ? e.target.closest(SILVER_P0_CLICK_HOLD_SEL) : null;
           if (!t) return;
+          /* Quick panel owns its own notes-prefix + sync focus (iOS keyboard). */
+          try {
+            if (t.closest && t.closest("#iuSilverQuickPanel")) return;
+          } catch (_) {}
           e.preventDefault();
           e.stopImmediatePropagation();
           var prefixKey = "";

@@ -141,6 +141,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-weather-location-resolve-guard
 
+      - name: Weather offline → online recovery guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-weather-offline-online-recovery-guard
+
       - name: Počasíčko / pocasicko data guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run weather-pocasicko-guard
@@ -208,6 +212,10 @@ jobs:
       - name: Reload / section switch / scroll stability guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.quicktools_fixed_width_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-reload-section-scroll-stability-guard
+
+      - name: Reload visual stability contract guard (FOUC / SW layout CSS)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-reload-visual-stability-contract-guard
 
       - name: Section switch instant response guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
@@ -1120,6 +1128,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run silver-home-prefix-first-tap-guard-checkout
 
+      - name: Silver quick-panel notes focus guard (Do poznámek)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-silver-quick-notes-focus-guard
+
       - name: Silver home date/time input fit guard (mobile/tablet geometry)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         timeout-minutes: 12
@@ -1159,6 +1171,13 @@ jobs:
         env:
           IU_CAL_SHEET_NAV_SKIP_WEBKIT: "1"
         run: npm run iu-cal-new-event-bottom-nav-stability-guard-checkout
+
+      - name: Silver calendar Save enable guard (Nová událost mobile/tablet)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 12
+        env:
+          IU_SILVER_CAL_SAVE_ENABLE_SKIP_WEBKIT: "1"
+        run: npm run iu-silver-calendar-save-enable-guard-checkout
 
       - name: Mobile/tablet stability guards (CLS + nav + media)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

@@ -26,7 +26,9 @@
 // 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
 // 2026-09-01: remove environment info panel — bust shell + network-first info-panel modules (SWR stale catalog)
-const CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v1";
+// 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
+// 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
+const CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -901,6 +903,37 @@ self.addEventListener("fetch", (event) => {
 
   /* app.js: network-first (must run before generic CSS/JS SWR). */
   if (path.includes("/assets/app.js")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
+  /* Layout-critical CSS: network-first (before generic SWR).
+     Generic SWR keys by pathname only (strips ?v=), so a stale app.css / shell CSS
+     could paint with fresh network-first HTML → reload FOUC / layout break. */
+  if (
+    path.includes("/assets/app.css") ||
+    path.includes("/assets/iu-prehled-dne-v1.css") ||
+    path.includes("/assets/iu-mindmenu-bottom-nav-restore-v1.css") ||
+    path.includes("/assets/iu-overlay-mobile-tablet-unified-v1.css") ||
+    path.includes("/assets/iu-silver-premium-draft.css") ||
+    path.includes("/assets/iu-desktop-home-premium.css") ||
+    path.includes("/assets/iu-tasks-premium.css")
+  ) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(APP_SHELL_CACHE);

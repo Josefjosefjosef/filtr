@@ -415,6 +415,15 @@ require-trusted-types-for 'script';
       body {
         background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
         background-color: #e5eef6;
+        /* Reload visual stability: hold viewport height from first paint (no blank collapse). */
+        min-height: 100%;
+        min-height: 100svh;
+        min-height: 100dvh;
+      }
+      #app {
+        min-height: 100svh;
+        min-height: 100dvh;
+        box-sizing: border-box;
       }
       /* P0 desktop: shodně s assets/app.css @1025px před načtením app.css — html bez vertikálního scrollu, jen body (jedna lišta, žádný transient double-track). */
       @media (min-width: 1025px) {
@@ -6266,7 +6275,7 @@ require-trusted-types-for 'script';
     })();
     </script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="crash-shield" data-iu-src="/assets/app-crash-shield.js?v=perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-cal-sheet-nav-stable-v1-20260904"></script>
+    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904"></script>
     <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
     <script>
     (function(){
@@ -6434,7 +6443,7 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=mobile-gate-icentrum-v64-20260629"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="affiliate" data-iu-src="/assets/iu-affiliate-catalog.js?v=affiliate-disclosure-title-remove-v56-20260629-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-v1"></script>
+    <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-notes-focus-v1-20260904"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="privacy" data-iu-src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>
         <!-- FIRST LOAD: CHMI boot lives in early <head> (iuDeferPrehledDneUiUntilFcp).
@@ -6450,7 +6459,7 @@ require-trusted-types-for 'script';
 
     <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-killswitch-restrict-v1-20260831"></script>
     <script defer src="/assets/iu-vault-physical-diag-overlay-v1.js?v=iu-vault-pin-rotate-fence-v1-20260830"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824-iu-vault-hydrated-owns-ui-v1-20260829-iu-vault-post-hydrate-shim-v1-20260830-pin-mbox-module-write-v1-20260830-iu-calendar-persist-ack-v1-20260830-cal-sheet-nav-stable-v1-20260904"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824-iu-vault-hydrated-owns-ui-v1-20260829-iu-vault-post-hydrate-shim-v1-20260830-pin-mbox-module-write-v1-20260830-iu-calendar-persist-ack-v1-20260830-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->
     <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
@@ -7719,7 +7728,7 @@ require-trusted-types-for 'script';
                 <p class="iuInfoCenter__p">Statistiky pracují pouze s <strong>agregovanými</strong> údaji o návštěvnosti a používání webu — nikoli s obsahem, který píšete do nástrojů.</p>
               </div>
               <h3 class="iuInfoCenter__h3">C) Anonymní statistiky návštěvnosti (volitelné)</h3>
-              <p class="iuInfoCenter__p">Statistiky jsou <strong>vypnuté</strong>, dokud nezvolíte <strong>Povolit anonymní statistiky</strong> v liště soukromí nebo nezapnete volbu v Nastavení soukromí. Volba <strong>Pouze nezbytné</strong> statistiky nezapíná.</p>
+              <p class="iuInfoCenter__p">Statistiky jsou <strong>vypnuté</strong>, dokud nezvolíte <strong>Povolit anonymní statistiky</strong> v liště soukromí nebo nezapnete volbu v Nastavení soukromí. Volba <strong>Nepovolit anonymní statistiky</strong> statistiky nezapíná.</p>
               <p class="iuInfoCenter__p">Po zapnutí pomáhají zjistit počet návštěv, vytížení webu, technické chyby a využití sekcí — bez reklamního profilování. Veřejný přehled: <a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a>.</p>
               <p class="iuInfoCenter__p">Souhlas se statistikami <strong>není</strong> odvozen z pokračování v prohlížení ani z používání nástrojů.</p>
               <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="privacy-settings">Upravit v Nastavení soukromí →</button>
@@ -8226,10 +8235,10 @@ require-trusted-types-for 'script';
 
     <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a anonymní statistiky" hidden>
       <div class="iuConsentLayer__panel">
-        <h2 class="iuConsentLayer__title">Soukromí a anonymní statistiky</h2>
+        <h2 class="iuConsentLayer__title">Anonymní statistiky návštěvnosti</h2>
         <p class="iuConsentLayer__text">Anonymní statistiky nám pomáhají pochopit návštěvnost a zlepšovat InfoUzel.cz. Neslouží k identifikaci konkrétních osob. Více v Informačním centru a na stránce <a class="iuConsentLayer__inlineLink" href="/statistiky/">Statistiky a transparentnost</a>.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
         <div class="iuConsentLayer__actions">
-          <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--essential" id="iuConsentEssentialOnly">Povolit pouze nezbytné</button>
+          <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--essential" id="iuConsentEssentialOnly">Nepovolit anonymní statistiky</button>
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--primary" id="iuConsentAllowStats">Povolit anonymní statistiky</button>
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--settings" id="iuConsentSettings">Nastavení</button>
         </div>
