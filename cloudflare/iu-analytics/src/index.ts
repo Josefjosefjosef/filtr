@@ -102,6 +102,11 @@ async function publicStats(store: AnalyticsStore, from: string, to: string, seri
     }
   }
 
+  // All-time anonymous PWA install aggregate (independent of 30-day public window).
+  const pwaInstallsTotal = await store.sumPwaInstalls();
+  // Metric availability date — set to production deploy day of this feature.
+  const PWA_INSTALLS_SINCE = "2026-09-04";
+
   return {
     generatedAt: new Date().toISOString(),
     storageMode: store.mode,
@@ -119,6 +124,11 @@ async function publicStats(store: AnalyticsStore, from: string, to: string, seri
     today: sumFor(today),
     yesterday: sumFor(yesterday),
     month: { visits: monthVisits, page_views: monthViews, private_tools_opens: monthPrivate },
+    pwaInstalls: {
+      total: pwaInstallsTotal,
+      since: PWA_INSTALLS_SINCE,
+      label: "Zaznamenané instalace PWA",
+    },
     series,
     historyStart: series.length ? series[0].day : null,
     devices: Object.values(devicesMap)
@@ -132,7 +142,8 @@ async function publicStats(store: AnalyticsStore, from: string, to: string, seri
     auditStatus: {
       legal: "Veřejné agregáty bez osobních údajů; monetizace podléhá samostatnému právnímu review.",
       security: "Admin API chráněno Bearer tokenem; veřejný endpoint vrací jen agregáty.",
-      anonymization: "Neukládáme IP ani fingerprint; UA jen kategorie zařízení.",
+      anonymization:
+        "Neukládáme IP ani fingerprint; UA jen kategorie zařízení. PWA instalace jsou evidovány pouze jako agregovaný počet; bez identity uživatele a bez fingerprintu zařízení.",
     },
   };
 }

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS daily_traffic (
   page_views INTEGER NOT NULL DEFAULT 0,
   public_section_views INTEGER NOT NULL DEFAULT 0,
   private_tools_opens INTEGER NOT NULL DEFAULT 0,
+  pwa_installs INTEGER NOT NULL DEFAULT 0,
   updated_at TEXT NOT NULL,
   PRIMARY KEY (day, device_category)
 );

@@ -11,6 +11,7 @@ export type TrafficRow = {
   page_views: number;
   public_section_views: number;
   private_tools_opens: number;
+  pwa_installs: number;
 };
 
 export type StoreBlob = {
@@ -46,8 +47,11 @@ export type AnalyticsStore = {
   bumpTraffic: (
     day: string,
     device: string,
-    delta: Partial<Pick<TrafficRow, "visits" | "page_views" | "public_section_views" | "private_tools_opens">>
+    delta: Partial<
+      Pick<TrafficRow, "visits" | "page_views" | "public_section_views" | "private_tools_opens" | "pwa_installs">
+    >
   ) => Promise<void>;
+  sumPwaInstalls: () => Promise<number>;
   bumpSection: (day: string, sectionId: string, n?: number) => Promise<void>;
   bumpAd: (
     day: string,
@@ -99,19 +103,28 @@ export function createD1Store(db: D1Database): AnalyticsStore {
       const page_views = delta.page_views || 0;
       const public_section_views = delta.public_section_views || 0;
       const private_tools_opens = delta.private_tools_opens || 0;
+      const pwa_installs = delta.pwa_installs || 0;
       await db
         .prepare(
-          `INSERT INTO daily_traffic (day, device_category, visits, page_views, public_section_views, private_tools_opens, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?)
+          `INSERT INTO daily_traffic (day, device_category, visits, page_views, public_section_views, private_tools_opens, pwa_installs, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
            ON CONFLICT(day, device_category) DO UPDATE SET
              visits = visits + excluded.visits,
              page_views = page_views + excluded.page_views,
              public_section_views = public_section_views + excluded.public_section_views,
              private_tools_opens = private_tools_opens + excluded.private_tools_opens,
+             pwa_installs = pwa_installs + excluded.pwa_installs,
              updated_at = excluded.updated_at`
         )
-        .bind(day, device, visits, page_views, public_section_views, private_tools_opens, nowIso())
+        .bind(day, device, visits, page_views, public_section_views, private_tools_opens, pwa_installs, nowIso())
         .run();
+    },
+
+    async sumPwaInstalls() {
+      const row = await db
+        .prepare(`SELECT COALESCE(SUM(pwa_installs), 0) AS total FROM daily_traffic`)
+        .first<{ total: number }>();
+      return Number(row?.total || 0);
     },
 
     async bumpSection(day, sectionId, n = 1) {
@@ -245,7 +258,7 @@ export function createD1Store(db: D1Database): AnalyticsStore {
       const out = emptyBlob();
       const traffic = await db
         .prepare(
-          `SELECT day, device_category, visits, page_views, public_section_views, private_tools_opens
+          `SELECT day, device_category, visits, page_views, public_section_views, private_tools_opens, pwa_installs
            FROM daily_traffic WHERE day >= ? AND day <= ?`
         )
         .bind(from, to)
