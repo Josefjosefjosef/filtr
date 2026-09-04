@@ -33,9 +33,9 @@ const BASE = process.env.IU_GUARD_BASE_URL
   ? String(process.env.IU_GUARD_BASE_URL).replace(/\/?$/, "/")
   : `http://127.0.0.1:${PORT}/projects/`;
 const USE_LOCAL_SERVER = !process.env.IU_GUARD_BASE_URL;
-const LIMIT_MSG = "Pro jeden den lze ulo┼żit maxim├íln─Ť 3 celodenn├ş ud├ílosti.";
+const LIMIT_MSG = "Pro jeden den lze uložit maximálně 3 celodenní události.";
 
-/** Soft UX diagnostic: notice usually appears well under this (measured p90Ôëł90ms). */
+/** Soft UX diagnostic: notice usually appears well under this (measured p90≈90ms). */
 const NOTICE_SOFT_MS = 750;
 /** Hard wait for notice DOM after a real Playwright click. */
 const NOTICE_WAIT_MS = 2500;
@@ -204,7 +204,7 @@ async function clickReal(locator, label) {
     await locator.waitFor({ state: "attached", timeout: 15000 });
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);
-    throw failError("toggle_not_found", label + " ÔÇö " + msg, { label, error: msg });
+    throw failError("toggle_not_found", label + " — " + msg, { label, error: msg });
   }
   let lastErr = null;
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -215,7 +215,7 @@ async function clickReal(locator, label) {
       await locator.scrollIntoViewIfNeeded();
     } catch (err) {
       const msg = err && err.message ? err.message : String(err);
-      lastErr = failError("click_not_performed", label + " scroll failed ÔÇö " + msg, { label, error: msg });
+      lastErr = failError("click_not_performed", label + " scroll failed — " + msg, { label, error: msg });
       continue;
     }
     let box = null;
@@ -223,7 +223,7 @@ async function clickReal(locator, label) {
       box = await locator.boundingBox();
     } catch (err) {
       const msg = err && err.message ? err.message : String(err);
-      lastErr = failError("click_target_not_visible", label + " ÔÇö " + msg, { label, error: msg });
+      lastErr = failError("click_target_not_visible", label + " — " + msg, { label, error: msg });
       continue;
     }
     if (!box || box.width < 1 || box.height < 1) {
@@ -235,10 +235,10 @@ async function clickReal(locator, label) {
       return { force: false, attempts: attempt + 1 };
     } catch (err) {
       const msg = err && err.message ? err.message : String(err);
-      lastErr = failError("click_not_performed", label + " ÔÇö " + msg, { label, error: msg, forceAttempted: false });
+      lastErr = failError("click_not_performed", label + " — " + msg, { label, error: msg, forceAttempted: false });
     }
   }
-  throw lastErr || failError("click_not_performed", label + " ÔÇö unknown click failure", { label });
+  throw lastErr || failError("click_not_performed", label + " — unknown click failure", { label });
 }
 
 /**
@@ -515,7 +515,7 @@ async function testPinnedAndLimit(page) {
     throw failError("fourth_event_created", "allDayCount=" + countAfter, { countAfter, prepared, noticeMs });
   }
 
-  // Second click must still refuse / keep notice ÔÇö no double-action bypass.
+  // Second click must still refuse / keep notice — no double-action bypass.
   const secondClickedAt = Date.now();
   await clickReal(page.locator("[data-iu-cal-inline-all-day]"), "all_day_toggle_second");
   const second = await waitForLimitNotice(page, secondClickedAt);
@@ -565,7 +565,7 @@ async function runNegativeSelftests(browser) {
     }
   }
 
-  // 1) Notice never appears ÔÇö swallow setCalInlineNotice.
+  // 1) Notice never appears — swallow setCalInlineNotice.
   {
     let code = null;
     try {
@@ -604,7 +604,7 @@ async function runNegativeSelftests(browser) {
     });
   }
 
-  // 2) Notice stays empty ÔÇö inject empty notice node and block real notice text.
+  // 2) Notice stays empty — inject empty notice node and block real notice text.
   {
     let code = null;
     try {
@@ -672,7 +672,7 @@ async function runNegativeSelftests(browser) {
                 n.setAttribute("role", "alert");
                 root.insertBefore(n, root.firstChild);
               }
-              n.textContent = "Pro jeden den lze ulo┼żit maxim├íln─Ť 3 celodenn├ş ud├ílosti.";
+              n.textContent = "Pro jeden den lze uložit maximálně 3 celodenní události.";
             },
             true
           );
@@ -690,7 +690,7 @@ async function runNegativeSelftests(browser) {
     });
   }
 
-  // 4) Fourth all-day event created ÔÇö monkeypatch snapshot count after toggle path.
+  // 4) Fourth all-day event created — monkeypatch snapshot count after toggle path.
   {
     let code = null;
     try {
@@ -747,7 +747,7 @@ async function runNegativeSelftests(browser) {
     });
   }
 
-  // 5) Click never performed ÔÇö collapse toggle so Playwright cannot click it.
+  // 5) Click never performed — collapse toggle so Playwright cannot click it.
   {
     let code = null;
     try {
