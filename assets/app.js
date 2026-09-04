@@ -12498,7 +12498,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
       }
     } catch (_) {}
     if (p) return p;
-    p = import("./iu-silver-p0-engine.js?v=silver-p0-lazy-v1a-20260728")
+    p = import("./iu-silver-p0-engine.js?v=silver-cal-save-enable-v1-20260904")
       .then(function () {
         markReady();
       })
