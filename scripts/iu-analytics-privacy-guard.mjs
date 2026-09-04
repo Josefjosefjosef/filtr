@@ -51,6 +51,10 @@ if ((appJs.match(/iuAnalytics\.privateToolsOpen/g) || []).length < 4) {
 if (!/sTodayViews|Dnes \(zobrazení\)/.test(publicPage)) fail("public:missing_page_views_tile");
 if (/slice\(\s*-14\s*\)/.test(publicPage)) fail("public:must_not_slice_series_to_14");
 if (!/sChartSvg|Vývoj návštěvnosti/.test(publicPage)) fail("public:missing_history_chart");
+if (!/stats-chart-tooltip-adaptive-v1-20260904/.test(publicPage)) fail("public:missing_adaptive_tooltip_marker");
+if (/transform:\s*translate\(\s*-50%\s*,\s*calc\(\s*-100%/.test(publicPage)) {
+  fail("public:tooltip_must_not_use_fixed_above_transform");
+}
 if (!/data-range=\"30\"/.test(publicPage) || !/data-metric=\"visits\"/.test(publicPage)) {
   fail("public:missing_chart_controls");
 }
