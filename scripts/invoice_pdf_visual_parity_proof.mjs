@@ -105,7 +105,7 @@ function startPdfjsServer() {
 
 async function dismissCookieBanner(page) {
   try {
-    const btn = page.locator('button:has-text("Pouze nezbytné")').first();
+    const btn = page.locator("#iuConsentEssentialOnly").first();
     if (await btn.isVisible({ timeout: 2000 })) await btn.click();
     await page.waitForTimeout(400);
   } catch (_) {}
