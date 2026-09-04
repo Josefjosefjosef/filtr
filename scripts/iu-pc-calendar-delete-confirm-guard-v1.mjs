@@ -37,13 +37,19 @@ function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   return new Promise((resolve, reject) => {
     const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
+      /* GET: some static servers answer slowly / oddly on HEAD under CI load. */
+      const req = http.request({ host, port, path: "/projects/", method: "GET", timeout: 2000 }, (res) => {
         res.resume();
         resolve();
       });
+      req.on("timeout", () => {
+        try { req.destroy(); } catch {}
+        if (Date.now() > deadline) reject(new Error("server not up"));
+        else setTimeout(tryOnce, 200);
+      });
       req.on("error", () => {
         if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
+        else setTimeout(tryOnce, 200);
       });
       req.end();
     };
@@ -317,7 +323,7 @@ async function main() {
       stdio: "ignore",
       shell: true,
     });
-    await waitForPort("127.0.0.1", PORT, 45000);
+    await waitForPort("127.0.0.1", PORT, 90000);
   }
 
   const ignorable = createIgnorableResourceTracker();
