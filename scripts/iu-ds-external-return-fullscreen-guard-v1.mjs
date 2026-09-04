@@ -45,10 +45,15 @@ function auditStatic() {
     fails.push("app:iuDsOpenLoginInNewTab not routed via iuNetwork");
   }
   if (!feed.includes("hasIntentionalToolOverlayOpen")) fails.push("feed:MindMenu restore missing intentional overlay guard");
-  if (!index.includes("ds-external-return-fullscreen-v1-20260903") && !index.includes("silver-cal-save-enable-v1-20260904")) {
+  if (
+    !index.includes("ds-external-return-fullscreen-v1-20260903") &&
+    !index.includes("silver-cal-save-enable-v1-20260904") &&
+    !index.includes("wx-offline-online-reconnect-v1-20260904")
+  ) {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-04-wx-offline-online-reconnect-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-silver-cal-save-enable-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-03-ds-external-return-fullscreen-v1"')
   ) {
