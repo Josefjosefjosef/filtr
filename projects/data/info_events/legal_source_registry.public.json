@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "schema": "iu-legal-source-registry-public-v1",
+  "generatedAt": "2026-09-04T18:19:35.445Z",
+  "scope": "Veřejný sanitizovaný výpis produkčně aktivních schválených zdrojů Přehledu dne + související UI datové služby.",
+  "sources": [
+    {
+      "id": "legal-chmi",
+      "sourceId": "chmi",
+      "name": "Český hydrometeorologický ústav",
+      "category": "data-source",
+      "purpose": "Informační položky Přehledu dne — Národní databáze hydrometeorologických údajů a produktů / výstrahy",
+      "status": "APPROVED_CC_BY",
+      "statusLabel": "Aktivní",
+      "licenseLabel": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "termsUrl": "https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni",
+      "officialUrl": "https://opendata.chmi.cz/",
+      "attribution": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://opendata.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
+      "transformations": [
+        "normalized-metadata-link-only"
+      ],
+      "lastVerified": "2026-09-04"
+    },
+    {
+      "id": "legal-ndic",
+      "sourceId": "ndic",
+      "name": "Národní dopravní informační centrum",
+      "category": "data-source",
+      "purpose": "Informační položky Přehledu dne — DATEX II — Běžné dopravní informace (snímek) + TMC lokační tabulka CC2/LTN25",
+      "status": "APPROVED_WITH_SPECIFIC_CONDITIONS",
+      "statusLabel": "Aktivní",
+      "licenseLabel": "Contract and Free of charge (NDIC / MobilityData)",
+      "licenseUrl": "https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/",
+      "termsUrl": "https://mobilitydata.rsd.cz/",
+      "officialUrl": "https://registr.dopravniinfo.cz/cs/providers/cz-ndic/",
+      "attribution": "Zdroj: NDIC. Zdrojem digitalizovaných informací o silničním provozu je NDIC. InfoUzel.cz je samostatná informační služba; nejde o partnerství ani oficiální službu ŘSD/NDIC. Surový feed a TMC tabulka nejsou veřejně redistribuovány.",
+      "transformations": [
+        "normalized-metadata-link-only"
+      ],
+      "lastVerified": "2026-09-04"
+    }
+  ],
+  "relatedUiSources": [
+    {
+      "id": "ui-open-meteo",
+      "sourceId": "open-meteo",
+      "name": "Open-Meteo",
+      "category": "data-source",
+      "purpose": "Předpověď počasí v Přehledu dne (UI)",
+      "status": "VERIFICATION_REQUIRED",
+      "statusLabel": "Ověření podmínek probíhá",
+      "licenseLabel": "Data: CC BY 4.0. Hostovaný Free API endpoint je dle podmínek Open-Meteo omezen na nekomerční použití; komerční provoz hosted API vyžaduje samostatné oprávnění.",
+      "licenseUrl": "https://open-meteo.com/en/licence",
+      "termsUrl": "https://open-meteo.com/en/terms",
+      "officialUrl": "https://open-meteo.com/",
+      "attribution": "Weather data by Open-Meteo.com (CC BY 4.0)",
+      "lastVerified": "2026-09-04"
+    }
+  ]
+}
