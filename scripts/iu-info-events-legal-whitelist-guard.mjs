@@ -116,8 +116,11 @@ if (!/canPublishFromSource|loadLegalRegistry|attachLegalProvenance/.test(refresh
 }
 
 const page = fs.readFileSync(publicPage, "utf8");
-if (!/Zdroje a licence/.test(page) || !/legal_source_registry\.json/.test(page)) {
+if (!/Zdroje a licence/.test(page) || !/legal_source_registry\.public\.json/.test(page)) {
   fail("public_page:missing_markers");
+}
+if (/\.\.\/data\/info_events\/legal_source_registry\.json/.test(page)) {
+  fail("public_page:broken_relative_full_registry");
 }
 
 for (const e of legal.entries || []) {

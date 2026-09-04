@@ -16,6 +16,7 @@
         --muted: #64748b;
         --line: #e2e8f0;
         --accent: #0f766e;
+        --warn: #b45309;
       }
       * { box-sizing: border-box; }
       body {
@@ -29,8 +30,10 @@
         max-width: 920px;
         margin: 0 auto;
         padding: 24px 16px 64px;
+        min-width: 0;
       }
-      h1 { font-size: 1.75rem; margin: 0 0 8px; }
+      h1 { font-size: 1.75rem; margin: 0 0 8px; overflow-wrap: anywhere; }
+      h2.sec { font-size: 1.15rem; margin: 28px 0 12px; }
       .lead { color: var(--muted); margin: 0 0 24px; }
       .card {
         background: var(--card);
@@ -39,8 +42,9 @@
         padding: 16px;
         margin: 0 0 14px;
         box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        min-width: 0;
       }
-      .card h2 { margin: 0 0 8px; font-size: 1.1rem; }
+      .card h2 { margin: 0 0 8px; font-size: 1.1rem; overflow-wrap: anywhere; }
       .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
       .pill {
         font-size: 0.78rem;
@@ -49,13 +53,18 @@
         background: rgba(15, 118, 110, 0.1);
         border-radius: 999px;
         padding: 4px 10px;
+        max-width: 100%;
+        overflow-wrap: anywhere;
       }
+      .pill.warn { color: var(--warn); background: rgba(180, 83, 9, 0.12); }
       dl { margin: 0; display: grid; gap: 8px; }
       dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-      dd { margin: 0; word-break: break-word; }
-      a { color: #0e7490; }
+      dd { margin: 0; overflow-wrap: anywhere; word-break: break-word; }
+      a { color: #0e7490; overflow-wrap: anywhere; }
       .err { color: #b91c1c; }
+      .note { color: var(--muted); font-size: 0.92rem; }
       .foot { margin-top: 28px; color: var(--muted); font-size: 0.9rem; }
+      .links { display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 8px; }
       @media (min-width: 768px) {
         main { padding: 40px 24px 80px; }
         h1 { font-size: 2rem; }
@@ -68,91 +77,22 @@
       <p class="lead">
         Přehled produkčně používaných ověřených zdrojů pro Přehled dne na infoUzel.cz.
         Systém je připraven i na budoucí postupné zapojování dalších schválených zdrojů
-        (včetně médií) přes samostatné konektory — aktuálně jsou aktivní pouze zdroje
-        s doloženou licencí pro provoz webu.
+        (včetně médií) přes samostatné konektory. V registru Přehledu dne jsou jako aktivní
+        uváděny pouze zdroje s doloženou licencí/oprávněním pro provoz webu. Související
+        datové služby UI (např. předpověď počasí) jsou uvedeny zvlášť se skutečným stavem ověření.
       </p>
       <div id="iuLegalSourcesRoot" aria-live="polite">Načítám registr…</div>
       <p class="foot">
         Interní právní poznámky a provozní detaily se na této stránce nezveřejňují. Poslední kontrola se
         načítá z produkčního registru.
       </p>
+      <p class="foot"><a href="/?section=media">← Zpět na InfoUzel</a></p>
     </main>
+    <script type="application/json" id="iuLegalRegistrySnapshot">{"version":1,"schema":"iu-legal-source-registry-public-v1","generatedAt":"2026-09-04T18:19:35.445Z","scope":"Veřejný sanitizovaný výpis produkčně aktivních schválených zdrojů Přehledu dne + související UI datové služby.","sources":[{"id":"legal-chmi","sourceId":"chmi","name":"Český hydrometeorologický ústav","category":"data-source","purpose":"Informační položky Přehledu dne — Národní databáze hydrometeorologických údajů a produktů / výstrahy","status":"APPROVED_CC_BY","statusLabel":"Aktivní","licenseLabel":"Creative Commons Attribution 4.0 International (CC BY 4.0)","licenseUrl":"https://creativecommons.org/licenses/by/4.0/","termsUrl":"https://www.chmi.cz/o-chmu/produkty-a-sluzby/data-a-vyhodnoceni","officialUrl":"https://opendata.chmi.cz/","attribution":"Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://opendata.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.","transformations":["normalized-metadata-link-only"],"lastVerified":"2026-09-04"},{"id":"legal-ndic","sourceId":"ndic","name":"Národní dopravní informační centrum","category":"data-source","purpose":"Informační položky Přehledu dne — DATEX II — Běžné dopravní informace (snímek) + TMC lokační tabulka CC2/LTN25","status":"APPROVED_WITH_SPECIFIC_CONDITIONS","statusLabel":"Aktivní","licenseLabel":"Contract and Free of charge (NDIC / MobilityData)","licenseUrl":"https://registr.dopravniinfo.cz/cs/sources/cz-ndic_d2-common-pull/","termsUrl":"https://mobilitydata.rsd.cz/","officialUrl":"https://registr.dopravniinfo.cz/cs/providers/cz-ndic/","attribution":"Zdroj: NDIC. Zdrojem digitalizovaných informací o silničním provozu je NDIC. InfoUzel.cz je samostatná informační služba; nejde o partnerství ani oficiální službu ŘSD/NDIC. Surový feed a TMC tabulka nejsou veřejně redistribuovány.","transformations":["normalized-metadata-link-only"],"lastVerified":"2026-09-04"}],"relatedUiSources":[{"id":"ui-open-meteo","sourceId":"open-meteo","name":"Open-Meteo","category":"data-source","purpose":"Předpověď počasí v Přehledu dne (UI)","status":"VERIFICATION_REQUIRED","statusLabel":"Ověření podmínek probíhá","licenseLabel":"Data: CC BY 4.0. Hostovaný Free API endpoint je dle podmínek Open-Meteo omezen na nekomerční použití; komerční provoz hosted API vyžaduje samostatné oprávnění.","licenseUrl":"https://open-meteo.com/en/licence","termsUrl":"https://open-meteo.com/en/terms","officialUrl":"https://open-meteo.com/","attribution":"Weather data by Open-Meteo.com (CC BY 4.0)","lastVerified":"2026-09-04"}]}</script>
     <script type="module">
       const root = document.getElementById("iuLegalSourcesRoot");
-      const APPROVED = new Set([
-        "APPROVED_CC0",
-        "APPROVED_CC_BY",
-        "APPROVED_OPEN_DATA",
-        "APPROVED_WITH_ATTRIBUTION",
-        "APPROVED_WITH_SPECIFIC_CONDITIONS",
-      ]);
-      try {
-        const res = await fetch("../data/info_events/legal_source_registry.json", { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const legal = await res.json();
-        const tpls = legal.attributionTemplates || {};
-        const rows = (legal.entries || []).filter(
-          (e) => e && e.productionSourceActive === true && APPROVED.has(e.status)
-        );
-        if (!rows.length) {
-          root.innerHTML = "<p class=\"err\">Momentálně není publikován žádný produkčně schválený zdroj.</p>";
-        } else {
-          root.innerHTML = rows
-            .map((e) => {
-              let attr = "";
-              for (const v of Object.values(tpls)) {
-                if (v && v.id === e.attributionTemplateId) {
-                  attr = String(v.template || "")
-                    .replace("{institution}", e.institution || "")
-                    .replace("{datasetLabel}", e.datasetLabel || "")
-                    .replace("{licenseLabel}", e.licenseLabel || "")
-                    .replace("{licenseUrl}", e.licenseUrl || "")
-                    .replace("{sourceUrl}", e.distributionUrl || e.catalogUrl || "");
-                }
-              }
-              const mods = Array.isArray(e.transformations) ? e.transformations.join(", ") : "normalizace metadat";
-              return (
-                "<article class=\"card\">" +
-                "<h2>" +
-                escapeHtml(e.institution || e.sourceId) +
-                "</h2>" +
-                "<div class=\"meta\">" +
-                "<span class=\"pill\">" +
-                escapeHtml(e.status) +
-                "</span>" +
-                "<span class=\"pill\">" +
-                escapeHtml(e.licenseLabel || "licence") +
-                "</span>" +
-                "</div>" +
-                "<dl>" +
-                "<div><dt>Datová sada</dt><dd>" +
-                escapeHtml(e.datasetLabel || "—") +
-                "</dd></div>" +
-                "<div><dt>Účel</dt><dd>Informační položky v Přehledu dne (link-only / schválená metadata)</dd></div>" +
-                "<div><dt>Původní zdroj</dt><dd>" +
-                linkOrDash(e.distributionUrl || e.catalogUrl) +
-                "</dd></div>" +
-                "<div><dt>Licence</dt><dd>" +
-                linkOrDash(e.licenseUrl, e.licenseLabel) +
-                "</dd></div>" +
-                "<div><dt>Atribuce</dt><dd>" +
-                escapeHtml(attr || "—") +
-                "</dd></div>" +
-                "<div><dt>Úpravy</dt><dd>" +
-                escapeHtml(mods) +
-                "</dd></div>" +
-                "<div><dt>Poslední právní ověření</dt><dd>" +
-                escapeHtml(e.lastReviewedAt || "—") +
-                "</dd></div>" +
-                "</dl></article>"
-              );
-            })
-            .join("");
-        }
-      } catch (err) {
-        root.innerHTML = "<p class=\"err\">Registr se nepodařilo načíst.</p>";
-        console.error(err);
-      }
+      const REGISTRY_URL = "/projects/data/info_events/legal_source_registry.public.json";
+
       function escapeHtml(s) {
         return String(s || "")
           .replace(/&/g, "&amp;")
@@ -160,10 +100,135 @@
           .replace(/>/g, "&gt;")
           .replace(/\"/g, "&quot;");
       }
+
       function linkOrDash(url, label) {
         if (!url) return "—";
-        return "<a href=\"" + escapeHtml(url) + "\" rel=\"noopener noreferrer\" target=\"_blank\">" + escapeHtml(label || url) + "</a>";
+        return (
+          "<a href=\"" +
+          escapeHtml(url) +
+          "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
+          escapeHtml(label || url) +
+          "</a>"
+        );
       }
+
+      function categoryLabel(c) {
+        if (c === "data-source") return "Datový zdroj";
+        if (c === "external-link") return "Externí služba / odkaz";
+        if (c === "technical") return "Technická služba";
+        return c || "—";
+      }
+
+      function cardHtml(e, opts) {
+        opts = opts || {};
+        const warn = e.status === "VERIFICATION_REQUIRED" || opts.warn;
+        const mods = Array.isArray(e.transformations) ? e.transformations.join(", ") : "";
+        return (
+          "<article class=\"card\">" +
+          "<h2>" +
+          escapeHtml(e.name || e.sourceId || "Zdroj") +
+          "</h2>" +
+          "<div class=\"meta\">" +
+          "<span class=\"pill" +
+          (warn ? " warn" : "") +
+          "\">● " +
+          escapeHtml(e.statusLabel || e.status || "—") +
+          "</span>" +
+          "<span class=\"pill\">" +
+          escapeHtml(categoryLabel(e.category)) +
+          "</span>" +
+          "</div>" +
+          "<dl>" +
+          "<div><dt>Účel</dt><dd>" +
+          escapeHtml(e.purpose || "—") +
+          "</dd></div>" +
+          "<div><dt>Licence / podmínky</dt><dd>" +
+          escapeHtml(e.licenseLabel || "—") +
+          "</dd></div>" +
+          (e.attribution
+            ? "<div><dt>Atribuce</dt><dd>" + escapeHtml(e.attribution) + "</dd></div>"
+            : "") +
+          (mods
+            ? "<div><dt>Úpravy</dt><dd>" + escapeHtml(mods) + "</dd></div>"
+            : "") +
+          "<div><dt>Poslední kontrola</dt><dd>" +
+          escapeHtml(e.lastVerified || "—") +
+          "</dd></div>" +
+          "</dl>" +
+          "<div class=\"links\">" +
+          (e.officialUrl ? linkOrDash(e.officialUrl, "Oficiální web") : "") +
+          (e.termsUrl || e.licenseUrl
+            ? linkOrDash(e.termsUrl || e.licenseUrl, "Podmínky / licence")
+            : "") +
+          "</div>" +
+          "</article>"
+        );
+      }
+
+      function render(doc, fromSnapshot) {
+        const sources = Array.isArray(doc.sources) ? doc.sources : [];
+        const related = Array.isArray(doc.relatedUiSources) ? doc.relatedUiSources : [];
+        let html = "";
+        if (fromSnapshot) {
+          html +=
+            "<p class=\"note\">Aktuální kontrolu registru se nepodařilo načíst. Zobrazen je poslední dostupný veřejný stav.</p>";
+        }
+        html += "<h2 class=\"sec\">Přehled dne — schválené datové zdroje</h2>";
+        if (!sources.length) {
+          html +=
+            "<p class=\"err\">Momentálně není publikován žádný produkčně schválený zdroj Přehledu dne.</p>";
+        } else {
+          html += sources.map(function (e) {
+            return cardHtml(e);
+          }).join("");
+        }
+        if (related.length) {
+          html += "<h2 class=\"sec\">Související datové služby UI</h2>";
+          html +=
+            "<p class=\"note\">Tyto služby nejsou součástí ingestu informačních položek Přehledu dne; slouží k zobrazení v UI. Stav odpovídá skutečnému ověření podmínek.</p>";
+          html += related
+            .map(function (e) {
+              return cardHtml(e, { warn: true });
+            })
+            .join("");
+        }
+        root.innerHTML = html;
+      }
+
+      function readSnapshot() {
+        try {
+          const el = document.getElementById("iuLegalRegistrySnapshot");
+          if (!el) return null;
+          const doc = JSON.parse(el.textContent || "{}");
+          if (!doc || !Array.isArray(doc.sources)) return null;
+          return doc;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      async function loadRegistry() {
+        try {
+          const res = await fetch(REGISTRY_URL, { cache: "no-store", credentials: "omit" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const doc = await res.json();
+          if (!doc || !Array.isArray(doc.sources)) throw new Error("bad_schema");
+          render(doc, false);
+          return;
+        } catch (err) {
+          console.error(err);
+          const snap = readSnapshot();
+          if (snap && (snap.sources.length || (snap.relatedUiSources && snap.relatedUiSources.length))) {
+            render(snap, true);
+            return;
+          }
+          root.innerHTML =
+            "<p class=\"err\">Registr se nepodařilo načíst.</p>" +
+            "<p class=\"note\">Zkuste obnovit stránku. Pokud problém přetrvá, kontaktujte provozovatele.</p>";
+        }
+      }
+
+      loadRegistry();
     </script>
   </body>
 </html>

@@ -56,7 +56,7 @@ export const OFFLINE_INLINE_SCRIPT_SHA256 =
  * Exact sha256 of projekty zdroje-a-licence inline type=module script body.
  */
 export const ZDROJE_INLINE_MODULE_SHA256 =
-  "sha256-JoFufHtYGJMeC+JTfvecNqetb2l9beDy21ibIhUuypM=";
+  "sha256-utP47or9WHGFUDOBx6M+rFC7+ZG4DPnjGcpkUff2Jcg=";
 
 /** Minimal CSP: offline SW fallback — one hashed inline script + inline CSS. */
 export const CSP_OFFLINE_HTML = [
