@@ -65,13 +65,18 @@ function waitForPort(host, port, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   return new Promise((resolve, reject) => {
     const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
+      const req = http.request({ host, port, path: "/projects/", method: "GET", timeout: 2000 }, (res) => {
         res.resume();
         resolve();
       });
+      req.on("timeout", () => {
+        try { req.destroy(); } catch {}
+        if (Date.now() > deadline) reject(new Error("server not up"));
+        else setTimeout(tryOnce, 200);
+      });
       req.on("error", () => {
         if (Date.now() > deadline) reject(new Error("server not up"));
-        else setTimeout(tryOnce, 120);
+        else setTimeout(tryOnce, 200);
       });
       req.end();
     };
@@ -809,12 +814,23 @@ async function main() {
 
   let serverProc = null;
   if (USE_LOCAL_SERVER) {
-    serverProc = spawn("npx", ["serve", REPO, "-l", String(PORT)], {
+    const serverScript = path.join(REPO, "server", "projects-static.mjs");
+    serverProc = spawn(process.execPath, [serverScript], {
       cwd: REPO,
-      stdio: "ignore",
-      shell: true,
+      env: { ...process.env, PORT: String(PORT) },
+      stdio: ["ignore", "ignore", "pipe"],
+      shell: false,
     });
-    await waitForPort("127.0.0.1", PORT, 45000);
+    let serverErr = "";
+    serverProc.stderr.on("data", (c) => {
+      serverErr += String(c);
+    });
+    try {
+      await waitForPort("127.0.0.1", PORT, 90000);
+    } catch (err) {
+      if (serverErr) console.error(serverErr.trim());
+      throw err;
+    }
   }
 
   const ignorable = createIgnorableResourceTracker();
