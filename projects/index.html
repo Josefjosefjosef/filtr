@@ -1025,7 +1025,7 @@ require-trusted-types-for 'script';
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
     <link rel="stylesheet" data-iu-href="/assets/iu-tasks-premium.css?v=date-time-value-column-v4-20260813" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-info-center.css?v=iu-legal-content-v1-20260901" media="print" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=gdpr-vop-section-v1-20260905" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
@@ -6954,7 +6954,8 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-consent.js?v=consent-v1-20260609"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="analytics" data-iu-src="/assets/iu-analytics-client.js?v=iu-analytics-v1-20260904-pwa-install"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="ads" data-iu-src="/assets/iu-ads-public-v1.js?v=ads-public-inject-v1-20260724-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-info-center.js?v=iu-legal-content-v1-20260901"></script>
+    <script defer src="/assets/iu-gdpr-vop-legal-body-v1.js?v=gdpr-vop-ads-legal-v1-20260905"></script>
+    <script defer src="/assets/iu-info-center.js?v=gdpr-vop-section-v1-20260905"></script>
     <script defer src="/assets/iu-vault-ui-v1.js?v=iu-icentrum-security-ux-v1-20260831"></script>
     <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
@@ -7534,6 +7535,11 @@ require-trusted-types-for 'script';
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">📊</span>
                 <span class="iuInfoCenter__tileLabel">Statistiky a transparentnost</span>
                 <span class="iuInfoCenter__tileHint">Zjistěte, jaké anonymní agregované statistiky InfoUzel používá a co se naopak nesleduje.</span>
+              </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="gdpr-vop" data-iu-legal-entry="gdpr-vop-v1">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">📜</span>
+                <span class="iuInfoCenter__tileLabel">GDPR a Všeobecné obchodní podmínky</span>
+                <span class="iuInfoCenter__tileHint">Informace o zpracování osobních údajů a podmínkách používání služeb InfoUzel.cz.</span>
               </button>
               <button type="button" class="iuInfoCenter__tile" data-iu-info-section="contact">
                 <span class="iuInfoCenter__tileIcon" aria-hidden="true">🏢</span>
@@ -8215,6 +8221,13 @@ require-trusted-types-for 'script';
             </div>
           </article>
 
+          <article id="iuInfoCenterDetailGdprVop" class="iuInfoCenter__detail" data-iu-info-section="gdpr-vop" data-iu-legal-shell="gdpr-vop-v1" hidden>
+            <div class="iuInfoCenter__detailInner iuInfoCenter__legalMount" data-iu-legal-mount="gdpr-vop">
+              <p class="iuInfoCenter__lead">Načítám dokument GDPR a VOP…</p>
+              <p class="iuInfoCenter__p">Veřejná adresa dokumentu: <a class="iuInfoCenter__link" href="/gdpr-a-vop/">/gdpr-a-vop/</a></p>
+            </div>
+          </article>
+
           <article id="iuInfoCenterDetailContact" class="iuInfoCenter__detail" data-iu-info-section="contact" hidden>
             <div class="iuInfoCenter__detailInner">
               <div class="iuInfoCenter__companyCard">
@@ -8231,7 +8244,7 @@ require-trusted-types-for 'script';
               <h3 class="iuInfoCenter__h3">Kontakt pro dotazy k ochraně soukromí</h3>
               <p class="iuInfoCenter__p">Dotazy k provozu webu, ochraně soukromí a uplatnění práv směřujte na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a>. U GDPR žádostí se snažíme odpovědět do 30 dnů.</p>
               <p class="iuInfoCenter__p">Provozovatel není pověřencem pro ochranu osobních údajů (DPO), pokud právní povinnost jeho jmenování nevznikne.</p>
-              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a> · <a class="iuInfoCenter__link" href="/zdroje-a-licence/">Zdroje a licence</a></p>
+              <p class="iuInfoCenter__p"><a class="iuInfoCenter__link" href="/statistiky/">Statistiky a transparentnost</a> · <a class="iuInfoCenter__link" href="/gdpr-a-vop/">GDPR a VOP</a> · <a class="iuInfoCenter__link" href="/zdroje-a-licence/">Zdroje a licence</a></p>
               <h3 class="iuInfoCenter__h3">Bezpečnost a hlášení problémů</h3>
               <p class="iuInfoCenter__p">Pokud zjistíte bezpečnostní zranitelnost webu, podezření na zneužití nebo problém s ochranou osobních údajů u dat, která u provozovatele existují (e-mail, budoucí statistiky, provoz hostingu), napište na <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a> s předmětem „Bezpečnost / GDPR“.</p>
               <p class="iuInfoCenter__p">U obsahu uloženého pouze ve vašem prohlížeči (poznámky, úkoly, kalendář) nám obvykle nelze pomoci se smazáním ze serveru — postupujte dle sekce <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="data-storage">Jak funguje ukládání dat</button>.</p>

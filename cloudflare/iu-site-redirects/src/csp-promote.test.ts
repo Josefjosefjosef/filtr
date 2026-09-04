@@ -52,6 +52,7 @@ require-trusted-types-for 'script';
     expect(isHtmlDocumentPath("/offline.html")).toBe(true);
     expect(isHtmlDocumentPath("/statistiky/")).toBe(true);
     expect(isHtmlDocumentPath("/zdroje-a-licence/")).toBe(true);
+    expect(isHtmlDocumentPath("/gdpr-a-vop/")).toBe(true);
     expect(isHtmlDocumentPath("/bot/")).toBe(true);
     expect(isHtmlDocumentPath("/assets/app.js")).toBe(false);
     expect(isHtmlDocumentPath("/sw.js")).toBe(false);

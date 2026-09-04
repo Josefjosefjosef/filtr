@@ -156,6 +156,7 @@ export function isHtmlDocumentPath(pathname: string): boolean {
   if (pathname === "/offline.html") return true;
   if (pathname === "/statistiky" || pathname.startsWith("/statistiky/")) return true;
   if (pathname === "/zdroje-a-licence" || pathname.startsWith("/zdroje-a-licence/")) return true;
+  if (pathname === "/gdpr-a-vop" || pathname.startsWith("/gdpr-a-vop/")) return true;
   if (pathname === "/bot" || pathname.startsWith("/bot/")) return true;
   return false;
 }

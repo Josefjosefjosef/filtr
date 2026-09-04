@@ -51,7 +51,7 @@ if (!existsSync(appSrc)) {
 writeFileSync(join(ROOT, "index.html"), readFileSync(appSrc));
 console.log("ROOT_APP=index.html");
 
-for (const name of ["statistiky", "zdroje-a-licence"]) {
+for (const name of ["statistiky", "zdroje-a-licence", "gdpr-a-vop"]) {
   const from = join(ROOT, "projects", name);
   const to = join(ROOT, name);
   if (!existsSync(from)) {
@@ -85,4 +85,5 @@ console.log("ROOT_COPY=manifest.json");
 writeRedirect("projects/index.html", "/");
 writeRedirect("projects/statistiky/index.html", "/statistiky/");
 writeRedirect("projects/zdroje-a-licence/index.html", "/zdroje-a-licence/");
+writeRedirect("projects/gdpr-a-vop/index.html", "/gdpr-a-vop/");
 console.log("ROOT_PUBLISH=OK");

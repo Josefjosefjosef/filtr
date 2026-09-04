@@ -1480,3 +1480,38 @@ body.iu-theme-dark .iuInfoCenter__details > summary{
     flex: 1 1 100%;
   }
 }
+
+/* GDPR / VOP long legal document */
+.iuInfoCenter__legalMount{
+  max-width: 100%;
+  overflow-x: clip;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+}
+.iuInfoCenter__legalMount .iuInfoCenter__h2{
+  scroll-margin-top: 12px;
+}
+.iuInfoCenter__tableWrap{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  margin: 0.5rem 0 1rem;
+}
+.iuInfoCenter__tableWrap .iuInfoCenter__table{
+  min-width: 520px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.iuInfoCenter__tableWrap th,
+.iuInfoCenter__tableWrap td{
+  border: 1px solid #e2e8f0;
+  padding: 0.45rem 0.55rem;
+  vertical-align: top;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.iuInfoCenter__tableWrap th{
+  background: #f8fafc;
+  font-weight: 650;
+}
+
