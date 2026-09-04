@@ -12719,6 +12719,10 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
           if (window.__iuSilverP0EngineReady) return;
           var t = e.target && e.target.closest ? e.target.closest(SILVER_P0_CLICK_HOLD_SEL) : null;
           if (!t) return;
+          /* Quick panel owns its own notes-prefix + sync focus (iOS keyboard). */
+          try {
+            if (t.closest && t.closest("#iuSilverQuickPanel")) return;
+          } catch (_) {}
           e.preventDefault();
           e.stopImmediatePropagation();
           var prefixKey = "";
