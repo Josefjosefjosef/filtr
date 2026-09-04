@@ -250,7 +250,6 @@ async function runtimeProof() {
           "iu_manual_location",
           JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name, name: city.name })
         );
-        localStorage.removeItem("iu:consent:layer:dismissed:v1");
         localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
         localStorage.setItem("iu:consent:analytics:v1", "denied");
       } catch (_) {}
@@ -264,12 +263,42 @@ async function runtimeProof() {
       timeout: 90000,
     });
 
+    /* Re-assert manual city after vault/boot may briefly race location keys. */
+    await page.evaluate((city) => {
+      try {
+        localStorage.setItem("iu_location_mode", "manual");
+        localStorage.setItem(
+          "iu_manual_location",
+          JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name, name: city.name })
+        );
+        try {
+          window.__iuWeatherState = null;
+        } catch (_) {}
+        try {
+          window.__iuWeatherRuntimeCity = null;
+        } catch (_) {}
+      } catch (_) {}
+    }, BRNO);
+    await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+    await page.waitForFunction(() => typeof window.iuWeatherOnNetworkReconnect === "function", null, {
+      timeout: 90000,
+    });
+    await page.evaluate((city) => {
+      try {
+        localStorage.setItem("iu_location_mode", "manual");
+        localStorage.setItem(
+          "iu_manual_location",
+          JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name, name: city.name })
+        );
+      } catch (_) {}
+    }, BRNO);
+
     const before = await page.evaluate(() => {
       if (typeof window.iuWeatherLocationFingerprint === "function") return window.iuWeatherLocationFingerprint();
       return null;
     });
     if (!before || before.mode !== "manual" || Math.abs(Number(before.lat) - BRNO.lat) > 0.01) {
-      fails.push("runtime_before_location_not_brno");
+      fails.push("runtime_before_location_not_brno:" + JSON.stringify(before));
     }
 
     await page.evaluate(async () => {
