@@ -50,11 +50,15 @@ function auditStatic() {
     !index.includes("silver-cal-save-enable-v1-20260904") &&
     !index.includes("wx-offline-online-reconnect-v1-20260904") &&
     !index.includes("silver-quick-notes-focus-v1-20260904") &&
-    !index.includes("Reload visual stability: hold viewport height")
+    !index.includes("Reload visual stability: hold viewport height") &&
+    !index.includes("cal-sheet-nav-stable-v1-20260904") &&
+    !index.includes("cal-sheet-nav-stable-v2-20260904")
   ) {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v2"') &&
+    !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-reload-visual-stability-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-silver-quick-notes-focus-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-wx-offline-online-reconnect-v1"') &&

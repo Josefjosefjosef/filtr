@@ -689,8 +689,13 @@ export function initIuCalendarOverlay() {
       if (modalLock){
         captureCalScrollLockSnapshot();
         document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
         document.body.style.touchAction = "none";
+        /* Calendar overlay already locks body via .iu-calendarOverlay-open.
+           Setting documentElement.overflow=hidden on sheet open/close reflows
+           position:fixed bottom nav on mobile WebKit — skip when overlay owns lock. */
+        if (!document.body.classList.contains("iu-calendarOverlay-open")){
+          document.documentElement.style.overflow = "hidden";
+        }
       } else {
         releaseCalScrollLockSnapshot();
         if (!document.body.classList.contains("iu-calendarOverlay-open")){
@@ -1942,12 +1947,10 @@ export function initIuCalendarOverlay() {
     bs.hidden = false;
     bs.setAttribute("aria-hidden", "false");
     syncCalendarScrollLocks();
-    try{
-      requestAnimationFrame(()=>{
-        const ti = bs.querySelector("[data-iu-cal-inline-field=\"title\"]");
-        if (ti && ti.focus) ti.focus({ preventScroll: true });
-      });
-    }catch{}
+    /* Do NOT autofocus title on mobile bottom sheet open: focusin trips
+       iu-keyboard-open grace (FOCUS_OPEN_GRACE_MS) which hides #iuMobileBottomNav
+       and zeros --bottom-nav-height → sheet margin-bottom + nav flash/jump.
+       User taps title when ready to type (keyboard hide then is intentional). */
   }
 
   function closeCalBottomSheet(){

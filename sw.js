@@ -27,7 +27,8 @@
 // 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
 // 2026-09-01: remove environment info panel — bust shell + network-first info-panel modules (SWR stale catalog)
 // 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
-const CACHE_VERSION = "2026-09-04-reload-visual-stability-v1";
+// 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
+const CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v2";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

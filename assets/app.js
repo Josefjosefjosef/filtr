@@ -12144,7 +12144,7 @@ try { localStorage.removeItem("iuInfoUzel_autoAds_v1"); } catch (e) {}
 // === Calendar overlay module (lazy boot; heavy IIFE in iu-calendar-overlay-v1.js) ===
 (function iuBootCalendarOverlayLazy() {
   "use strict";
-  var CAL_URL = "./iu-calendar-overlay-v1.js?v=iu-calendar-persist-ack-v1-20260830";
+  var CAL_URL = "./iu-calendar-overlay-v1.js?v=iu-calendar-persist-ack-v1-20260830-iu-cal-sheet-nav-stable-v1-20260904";
   var p = null;
 
   function ready() {
