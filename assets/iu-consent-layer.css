@@ -160,16 +160,17 @@
   .iuConsentLayer__panel {
     gap: 4px;
     padding: 8px 10px;
-    max-height: 86px;
+    /* Allow wrapped longer deny label without clipping title/buttons. */
+    max-height: min(28vh, 132px);
     overflow: hidden;
   }
 
   .iuConsentLayer__title {
     font-size: 0.72rem;
     line-height: 1.15;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 
   .iuConsentLayer__text {
@@ -182,11 +183,13 @@
   }
 
   .iuConsentLayer__btn {
-    min-height: 34px;
+    min-height: 40px;
     padding: 5px 4px;
     font-size: 0.65rem;
-    line-height: 1.1;
+    line-height: 1.15;
     border-radius: 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
