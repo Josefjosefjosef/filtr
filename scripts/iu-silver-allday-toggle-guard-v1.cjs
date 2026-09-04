@@ -222,8 +222,7 @@ async function runSaveAllDay(page) {
     const save = document.querySelector(
       '.iuSilverDraftCard--quickTemplateEmpty [data-iu-silver-action="save"]'
     );
-    if (save) {
-      save.disabled = false;
+    if (save && !save.disabled) {
       save.click();
     }
     await new Promise((r) => setTimeout(r, 400));
