@@ -415,6 +415,15 @@ require-trusted-types-for 'script';
       body {
         background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
         background-color: #e5eef6;
+        /* Reload visual stability: hold viewport height from first paint (no blank collapse). */
+        min-height: 100%;
+        min-height: 100svh;
+        min-height: 100dvh;
+      }
+      #app {
+        min-height: 100svh;
+        min-height: 100dvh;
+        box-sizing: border-box;
       }
       /* P0 desktop: shodně s assets/app.css @1025px před načtením app.css — html bez vertikálního scrollu, jen body (jedna lišta, žádný transient double-track). */
       @media (min-width: 1025px) {

@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-silver-quick-notes-focus-20260904",
+    "freezeId": "iu-reload-visual-stability-fouc-20260904",
     "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-09-04T14:40:00.000Z",
-    "note": "Silver quick-panel Do poznámek: sync focus on pointerdown (iOS keyboard); exclude quick panel from home prefix click-hold.",
+    "updatedAt": "2026-09-04T15:30:00.000Z",
+    "note": "Reload FOUC: layout-critical CSS network-first in SW; critical html/body/#app min-height shell stability.",
     "files": {
-        "projects/index.html": "6b2d99456f21bd68ee4fc14b73036616b98372870ae801073eee05fdcecce09d",
+        "projects/index.html": "a3a67443a9630b67bb49dd7192c10e097d4cf5cb3dfa87d05e43e991520a3ed8",
         "assets/app.css": "5925228d8bc9493bfb060b88d34626bb315415d7b3e6dcd5fac7eee841a4bd2d",
         "assets/app.js": "a2c4d38cc8dd1610846dd7c92183aad6de62c996a6255ca63689db0bd2b62a9f",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "3d59f518cce36894e6b4564580b734cec9625933b18882ef1819df5d417ef54d",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "d5a567ba90af909b04f2c3c25a044a653a6bf427c018a049ea71c527d286d990",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "c8f3fb4b52dbdb58fba7a6b44cd8c2cbaa4ff74b0c795bb86c339b5899485a10",
+        "sw.js": "fd4b519c1b853fff754b4295069ca93cc1f8b2e95ac24f9b3dc07b7f8f4b35c2",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "c85df3cff0a3cac9b9051d1b605d378cec2d9488ddf324d498948682ca144f23",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,9 @@
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-09-04-silver-quick-notes-focus-v1\"",
+            "CACHE_VERSION = \"2026-09-04-reload-visual-stability-v1\"",
+            "Layout-critical CSS: network-first",
+            "/assets/app.css",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
             "IMG_OFFLINE_CACHE = \"iu-img-offline-v1\"",
             "OFFLINE_DOC_CACHE",
@@ -39,6 +41,7 @@
             "chmi-multibrowser-console-v1-20260731"
         ],
         "projects/index.html": [
+            "Reload visual stability: hold viewport height",
             "iu-trusted-types-v1.js",
             "iu-security-tt-svg-viewbox-v1-20260902",
             "trusted-types iu-default iu-escape iu-tt-parser",
