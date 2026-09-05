@@ -40,6 +40,11 @@ function auditStatic() {
   if (!netJs.includes("probeReachability")) fails.push("network:missing probeReachability");
   if (!netJs.includes("hideOfflineHint")) fails.push("network:missing hideOfflineHint");
   if (!netJs.includes("openExternalSync")) fails.push("network:missing openExternalSync");
+  if (!netJs.includes("preferSingleAnchorExternalOpen")) fails.push("network:missing preferSingleAnchorExternalOpen");
+  if (/opened = !!\(w && !w\.closed\)/.test(netJs)) fails.push("network:noopener_null_treated_as_blocked");
+  if (/if \(!opened\) opened = openExternalViaAnchor\(url\)/.test(netJs)) {
+    fails.push("network:null_fallback_second_open");
+  }
   if (!netJs.includes("AbortController")) fails.push("network:missing AbortController usage in module");
   if (!netJs.includes("--iu-mobile-bottom-nav-safe-space") && !netJs.includes("--iu-mobile-bottom-nav-h")) {
     fails.push("network:offline hint missing bottom nav offset");

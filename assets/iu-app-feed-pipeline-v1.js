@@ -25653,9 +25653,16 @@ function buildVideoAsArticleCard(it) {
       if (/^mailto:/i.test(url) || /^tel:/i.test(url)) {
         opened = iuMindMenuOpenExternalViaAnchor(url);
       } else {
-        var w = window.open(url, "_blank", "noopener,noreferrer");
-        opened = !!(w && !w.closed);
-        if (!opened) opened = iuMindMenuOpenExternalViaAnchor(url);
+        /* Do not treat window.open(..., "noopener") null return as blocked —
+           that double-fired viaAnchor and left about:blank on iOS/PWA. */
+        var openThrew = false;
+        try {
+          window.open(url, "_blank", "noopener,noreferrer");
+        } catch (_) {
+          openThrew = true;
+        }
+        if (openThrew) opened = iuMindMenuOpenExternalViaAnchor(url);
+        else opened = true;
       }
     } catch (_) {
       try { opened = iuMindMenuOpenExternalViaAnchor(url); } catch (_a) {}

@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-05-external-open-no-blank-v1",
   "2026-09-05-pd-filter-layout-save-no-window-v1",
   "2026-09-05-gdpr-vop-legal-v1",
   "2026-09-04-cal-sheet-nav-stable-v2",
@@ -155,7 +156,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-05-pd-filter-layout-save-no-window-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-05-external-open-no-blank-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
