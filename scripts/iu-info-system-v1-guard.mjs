@@ -270,8 +270,8 @@ if (!/parsePublishDateToIso|extractTitleLeadingDate|sourcePublications/.test(lib
   fails.push("lib:publish_date_dedup_missing");
 }
 const refreshsrc = fs.readFileSync(path.join(REPO, "scripts/iu-info-events-refresh.mjs"), "utf8");
-if (!/MAX_AGE_HOURS \|\| \"96\"|activeWindowHours|publikovano/.test(refreshsrc)) {
-  fails.push("refresh:96h_lifecycle_missing");
+if (!/MAX_AGE_HOURS \|\| \"0\"|activeWindowHours|publikovano/.test(refreshsrc)) {
+  fails.push("refresh:lifecycle_window_config_missing");
 }
 if (!/sourcePublications|Právě probíhá|další .* zdroje|Zobrazit všechny zdroje|iuPdCard__title|data-act=\"open-title\"/.test(ui)) {
   fails.push("ui:clean_meta_or_title_open_missing");
@@ -287,13 +287,15 @@ for (const it of feed.items || []) {
 }
 if (feed.dataQuality) {
   if (techTags > 0) fails.push("feed:tech_tags_in_user_tags:" + techTags);
-  if (Number(feed.maxAgeHours || feed.activeWindowHours || 0) > 96) fails.push("feed:maxAgeHours_gt_96");
   if (Array.isArray(feed.dataQuality.blockers) && feed.dataQuality.blockers.includes("tech_tags_in_user_fields")) {
     fails.push("monitoring:tech_tags_blocker");
   }
 }
-if (!/Client-side 96h safety|96 \* 3600000/.test(core)) {
-  fails.push("core:client_96h_safety_missing");
+if (/Client-side 96h safety|96 \* 3600000/.test(core)) {
+  fails.push("core:client_96h_safety_must_be_removed");
+}
+if (!/no fixed client publish-age window|lifecycle \/ future-publish/.test(core)) {
+  fails.push("core:client_no_fixed_window_missing");
 }
 if (!fs.existsSync(path.join(REPO, "docs/info-system-v1/09-data-stabilization-evidence.json"))) {
   fails.push("docs:evidence_json_missing");

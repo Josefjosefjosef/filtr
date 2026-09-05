@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Structural guard: Sledovat/Skrýt must not rebuild the whole feed via paint()+wire().
+ * Structural guard: traffic Uložit/Skrýt must not rebuild the whole feed via paint()+wire().
  * Run: npm run iu-traffic-follow-local-patch-guard
  */
 import fs from "fs";
@@ -34,7 +34,9 @@ must(unhideBlock && /syncFeedCardsAfterMembershipChange\(\)/.test(unhideBlock[0]
 must(unhideBlock && !/\bpaint\(\);/.test(unhideBlock[0]), "handler:unhide_no_paint");
 
 must(/tf\.followedOnly && !res\.followed/.test(ui), "follow:followedOnly_membership_path");
-must(/btn\.textContent = followed \? "Sleduji" : "Sledovat"/.test(ui), "follow:button_copy_unchanged");
+must(/btn\.textContent = followed \? "Uloženo" : "Uložit"|btn\.textContent = label/.test(ui), "follow:button_copy_ulozit");
+must(/Uloženo|Uložit/.test(ui) && /traffic-follow/.test(ui), "follow:ulozit_labels");
+must(!/Sleduji|Sledovat/.test(ui.match(/function patchTrafficFollowButton[\s\S]*?\n\}/)?.[0] || ""), "follow:no_sledovat_in_patch");
 
 if (fails.length) {
   console.error("[iu-traffic-follow-local-patch-guard] FAIL");

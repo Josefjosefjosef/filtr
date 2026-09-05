@@ -28,21 +28,27 @@ function ok(cond, msg) {
   ok(!!(cz && cz.startsWith("2026-07-18")), "parser:czech_datetime");
 }
 
-// --- 96h window ---
+// --- Feed window (no default publish-age cutoff; optional maxAgeHours still honored) ---
 {
   const now = "2026-07-19T12:00:00.000Z";
   const in95 = isInActiveFeedWindow(
     { publishedAtSource: "2026-07-15T13:00:00.000Z", status: "publikovano", timeConfidence: "high" },
     now,
-    96
+    null
   );
-  ok(in95.ok === true, "96h:95h_in:" + in95.reason);
+  ok(in95.ok === true, "win:95h_in:" + in95.reason);
   const out97 = isInActiveFeedWindow(
+    { publishedAtSource: "2026-07-15T10:00:00.000Z", status: "publikovano", timeConfidence: "high" },
+    now,
+    null
+  );
+  ok(out97.ok === true, "win:97h_kept_no_default_window:" + out97.reason);
+  const capped = isInActiveFeedWindow(
     { publishedAtSource: "2026-07-15T10:00:00.000Z", status: "publikovano", timeConfidence: "high" },
     now,
     96
   );
-  ok(out97.ok === false && out97.reason === "older_than_window", "96h:97h_out:" + out97.reason);
+  ok(capped.ok === false && capped.reason === "older_than_window", "win:optional_96h_still_works:" + capped.reason);
   const active = isInActiveFeedWindow(
     {
       publishedAtSource: "2026-07-01T10:00:00.000Z",
@@ -51,9 +57,9 @@ function ok(cond, msg) {
       timeConfidence: "high",
     },
     now,
-    96
+    null
   );
-  ok(active.ok === true && active.reason === "valid_active_event", "96h:long_active:" + active.reason);
+  ok(active.ok === true && active.reason === "valid_active_event", "win:long_active:" + active.reason);
 }
 
 // --- Chronology ---
@@ -144,9 +150,9 @@ function ok(cond, msg) {
     },
   ];
   const ids = IU.filterEvents(items, {}).map((x) => x.id);
-  ok(ids.includes("fresh"), "client96:fresh_kept");
-  ok(!ids.includes("old"), "client96:old_dropped");
-  ok(ids.includes("cap"), "client96:active_kept");
+  ok(ids.includes("fresh"), "clientWin:fresh_kept");
+  ok(ids.includes("old"), "clientWin:old_kept_no_96h");
+  ok(ids.includes("cap"), "clientWin:active_kept");
 
   const multi = [
     {

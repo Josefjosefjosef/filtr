@@ -73,7 +73,7 @@ ok("css_more_a11y_toggle", cssSrc.includes(".iuPdTrafficMore__close"));
 ok("ui_escapes_expanded_values", /esc\(\s*r\.value\s*\)/.test(uiSrc));
 ok("ui_no_duplicate_impact_body", !uiSrc.includes("iuPdTrafficMore__body"));
 ok("ui_no_dangerously", !uiSrc.includes("dangerouslySetInnerHTML"));
-ok("ui_follow_only_traffic", /traffic-follow/.test(uiSrc) && /Sledovat/.test(uiSrc));
+ok("ui_follow_only_traffic", /traffic-follow/.test(uiSrc) && /Uložit/.test(uiSrc));
 ok("ui_hide_present", /data-act="hide"/.test(uiSrc));
 ok("ui_zobrazit_vice", uiSrc.includes("Zobrazit více"));
 ok("ui_traffic_map_bottom", uiSrc.includes("iuPdCard__actionsMap"));

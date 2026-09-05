@@ -127,7 +127,7 @@ async function runViewport(page, label, size) {
       '<span class="iuPdCard__actionsMap">' +
       trafficMap +
       "</span>" +
-      '<button type="button" class="iuPdBtn iuPdBtn--ghost">Sledovat</button>' +
+      '<button type="button" class="iuPdBtn iuPdBtn--ghost">Uložit</button>' +
       "</div></article></li>";
     if (window.iuTrustedHtml && typeof window.iuTrustedHtml.setInnerHtml === "function") {
       window.iuTrustedHtml.setInnerHtml(host, markup);
