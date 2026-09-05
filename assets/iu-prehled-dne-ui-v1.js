@@ -970,10 +970,39 @@ function importanceLabel(ev) {
   return "Běžná";
 }
 
+/**
+ * Accents matching projects/data/info_events/taxonomy.json.
+ * Required for ČHMÚ-first paint: lane can resolve before shell taxonomy hydrates.
+ * Without these fallbacks, sectionColor() returned brand purple #5B6CFF and map/dot
+ * stayed purple until a later interaction re-painted with taxonomy (purple→blue flash).
+ */
+const SECTION_COLOR_FALLBACK = Object.freeze({
+  "cesko-svet": "#334155",
+  bezpecnost: "#DC2626",
+  pocasi: "#0EA5E9",
+  doprava: "#F59E0B",
+  stat: "#6366F1",
+  zdravi: "#10B981",
+  veda: "#8B5CF6",
+  kultura: "#EC4899",
+  sport: "#22C55E",
+});
+
 function sectionColor(sectionId) {
   const taxonomy = (state.data && state.data.taxonomy) || {};
   const sec = (taxonomy.sections || []).find((s) => s && s.id === sectionId);
-  return (sec && sec.color) || "#5B6CFF";
+  if (sec && sec.color) return sec.color;
+  const id = String(sectionId || "");
+  if (SECTION_COLOR_FALLBACK[id]) return SECTION_COLOR_FALLBACK[id];
+  return "#5B6CFF";
+}
+
+/** Timeline/map accent for a card — CAP/CHMI always use Počasí blue (ČHMÚ section). */
+function cardAccentColor(ev) {
+  if (ev && (ev.capV2 || isChmiFeedEvent(ev))) {
+    return sectionColor(ev.sectionId || "pocasi");
+  }
+  return sectionColor(ev && ev.sectionId);
 }
 
 function chmiPublicDetailUrl(ev) {
@@ -1327,7 +1356,7 @@ function renderItem(ev) {
   const saved = isSaved(id);
   const hiddenMode = state.viewMode === "hidden";
   const read = isRead(id);
-  const color = safeCssColor(sectionColor(ev.sectionId));
+  const color = safeCssColor(cardAccentColor(ev));
   const alert = String(ev.eventType || "") === "mimoradne" || Number(ev.importance) >= 5;
   const capActive = !!(ev.capV2 && ev.capV2.badgeActive);
   const capEnded = !!(ev.capV2 && (ev.status === "ukonceno" || ev.status === "zruseno"));
@@ -2159,6 +2188,9 @@ function updateFeedDom() {
   const root = ensureRoot();
   if (!root) return;
   void ensureCzMapSprite();
+  try {
+    root.setAttribute("data-iu-pd-quick-view", String(state.feedQuickView || "chmu"));
+  } catch (_) {}
   const list = filteredList();
   const pageItems = list.slice(0, pageItemsLimit());
   const count = root.querySelector("#iuPdCount");
@@ -2234,6 +2266,9 @@ function paint(opts) {
   const options = opts || {};
   const root = ensureRoot();
   if (!root) return;
+  try {
+    root.setAttribute("data-iu-pd-quick-view", String(state.feedQuickView || "chmu"));
+  } catch (_) {}
   const list = filteredList();
   const pageItems = list.slice(0, pageItemsLimit());
   const listHtml = pageItems.length
@@ -3556,13 +3591,31 @@ async function boot() {
       markPrehledBootPhase("chmi-feed-settled");
       if (bootAbort && bootAbort.signal.aborted) return;
       if (feedEarlyPainted) {
-        // Merge shell taxonomy/registry only — feed DOM already painted from early lane resolve.
+        // Merge shell taxonomy/registry — accents already correct via SECTION_COLOR_FALLBACK
+        // on first paint; re-paint only if taxonomy colors differ from fallback (no purple flash).
         state.data = Object.assign({}, state.data || {}, {
           manifest: shell.manifest,
           metadata: shell.metadata,
           taxonomy: shell.taxonomy,
           registry: shell.registry,
         });
+        try {
+          const taxSecs = (shell.taxonomy && shell.taxonomy.sections) || [];
+          let needsAccentRepaint = false;
+          for (let i = 0; i < taxSecs.length; i++) {
+            const s = taxSecs[i];
+            if (!s || !s.id || !s.color) continue;
+            const fb = SECTION_COLOR_FALLBACK[String(s.id)];
+            if (fb && String(s.color).toLowerCase() !== String(fb).toLowerCase()) {
+              needsAccentRepaint = true;
+              break;
+            }
+          }
+          if (needsAccentRepaint) {
+            if (state.settingsOpen) updateFeedDom();
+            else paint();
+          }
+        } catch (_) {}
       } else {
         paintFeed(feed, shell, { phase: "chmi-paint-late" });
       }

@@ -207,7 +207,7 @@ function card(opts) {
   const active = opts.active
     ? '<span class="iuPdCard__pill iuPdCard__pill--active iuPrehledDne__pill">AKTIVNÍ VÝSTRAHA</span>'
     : '';
-  return '<li class="iuPdCard iuPrehledDne__item" data-id="'+e.id+'" style="--iu-pd-dot:#5B6CFF">'
+  return '<li class="iuPdCard iuPrehledDne__item" data-id="'+e.id+'" style="--iu-pd-dot:#0EA5E9">'
     + '<div class="iuPrehledDne__timeCol"><div class="iuPdCard__time iuPrehledDne__time">12:00</div></div>'
     + '<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot'+(capActive?' iuPrehledDne__dot--alert':'')+'"></span></div>'
     + '<article class="iuPrehledDne__card iuPdCard__body'+(map?' iuPrehledDne__card--hasCzMap':'')+'">'

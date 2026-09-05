@@ -2244,6 +2244,12 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   color: var(--iu-pd-text);
 }
 
+/* ČHMÚ quick-view: brand accent must be Počasí blue from first paint (not purple #5b6cff). */
+.iuPrehledDne[data-iu-pd-quick-view="chmu"] {
+  --iu-pd-accent: #0ea5e9;
+  --iu-pd-accent-2: #0284c7;
+}
+
 /* === Feed filter redesign (Doprava / ČHMÚ) === */
 :root {
   --iu-pd-traffic: #ea580c;

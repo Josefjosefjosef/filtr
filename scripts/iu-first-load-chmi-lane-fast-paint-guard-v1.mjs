@@ -26,6 +26,8 @@ must(/Keep static HTML skeleton/.test(ui), "ui:skip_empty_paint");
 must(/feedEarlyPainted/.test(ui) && /Merge shell taxonomy/.test(ui), "ui:skip_dup_paint");
 must(/chmi-lane-fast-paint-v1-20260822/.test(index), "index:cache_bust");
 must(/feedQuickView:\s*"chmu"/.test(ui), "ui:default_chmu");
+must(/SECTION_COLOR_FALLBACK/.test(ui) && /pocasi:\s*"#0EA5E9"/.test(ui), "ui:pocasi_fallback_blue");
+must(/function cardAccentColor\(ev\)/.test(ui), "ui:card_accent_color");
 must(/scheduleTrafficBackgroundPrep/.test(ui), "ui:bg_prep");
 
 if (fails.length) {

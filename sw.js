@@ -1,38 +1,38 @@
-/* sw.js – Service Worker pro infoUzel.cz
+/* sw.js â€“ Service Worker pro infoUzel.cz
    Strategie: Network First + Cache Fallback pro JSON data s TTL
    App Shell: Cache First
-   Poznámka: Kill switch ?nosw=1 je řešen v registraci na stránce (app-crash-shield.js), ne zde
+   PoznĂˇmka: Kill switch ?nosw=1 je Ĺ™eĹˇen v registraci na strĂˇnce (app-crash-shield.js), ne zde
 */
 
-// Verze cache (měnit při každé významné změně)
-// 2026-03-22: bust app shell po gap-align CSS (PR #1362) — klienti se starým SW mohli držet zastaralé /assets cache
-// 2026-03-22: bump — app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodního CTA)
-// 2026-03-22: HTML document = network-first (žádný preferovaný starý shell)
-// 2026-03-29: PR #1488 — nový SW + vyprázdnění APP_SHELL_CACHE po deployi (staré app.*.css v cache)
-// 2026-06-10: mobile/tablet stability v1 — bottom-nav clearance, app-render-optimizer.js odstraněn z precache
-// 2026-06-11: P1 perf fix #7 — IU_SW_DEPLOY_RELOAD se NEposílá při první instalaci SW (cold load se načítal 2×)
-// 2026-06-28: PWA brand blue iU icons — bump app shell cache for new favicon/manifest references
-// 2026-06-29: PWA icon final tuning v54 — larger optically centered iU + infoUzel.cz short_name
-// 2026-07-14: PWA offline completion — reconnect refresh, sync external opens
-// 2026-07-16: PWA offline menu/articles/images — durable last-good feed+img caches, tool modules precache
-// 2026-07-20: Prehled dne settings/timeline — network-first for info-system modules (SWR + stripped ?v=
+// Verze cache (mÄ›nit pĹ™i kaĹľdĂ© vĂ˝znamnĂ© zmÄ›nÄ›)
+// 2026-03-22: bust app shell po gap-align CSS (PR #1362) â€” klienti se starĂ˝m SW mohli drĹľet zastaralĂ© /assets cache
+// 2026-03-22: bump â€” app.js silent SW activation (SKIP_WAITING + jeden reload, bez spodnĂ­ho CTA)
+// 2026-03-22: HTML document = network-first (ĹľĂˇdnĂ˝ preferovanĂ˝ starĂ˝ shell)
+// 2026-03-29: PR #1488 â€” novĂ˝ SW + vyprĂˇzdnÄ›nĂ­ APP_SHELL_CACHE po deployi (starĂ© app.*.css v cache)
+// 2026-06-10: mobile/tablet stability v1 â€” bottom-nav clearance, app-render-optimizer.js odstranÄ›n z precache
+// 2026-06-11: P1 perf fix #7 â€” IU_SW_DEPLOY_RELOAD se NEposĂ­lĂˇ pĹ™i prvnĂ­ instalaci SW (cold load se naÄŤĂ­tal 2Ă—)
+// 2026-06-28: PWA brand blue iU icons â€” bump app shell cache for new favicon/manifest references
+// 2026-06-29: PWA icon final tuning v54 â€” larger optically centered iU + infoUzel.cz short_name
+// 2026-07-14: PWA offline completion â€” reconnect refresh, sync external opens
+// 2026-07-16: PWA offline menu/articles/images â€” durable last-good feed+img caches, tool modules precache
+// 2026-07-20: Prehled dne settings/timeline â€” network-first for info-system modules (SWR + stripped ?v=
 //             kept stale iu-prehled-dne-ui after #7622 for installed PWAs)
-// 2026-07-21: Cross-origin passthrough (analytics Worker ingest) — SW must not re-fetch with a different UA
-// 2026-07-27: Offline nav fallback — never bare 503 for navigations; durable offline.html + last-good public HTML
-// 2026-07-29: Media sources removed — bust app/data caches + durable feed last-good so old media JSON cannot return offline
-// 2026-07-30: Prehled dne banner + HomeCard FOUC fix — bust shell so cutover-first HTML/CSS reach clients
-// 2026-08-01: Homecard CTA flush — banner + settings button zero seam (hero wrapper)
+// 2026-07-21: Cross-origin passthrough (analytics Worker ingest) â€” SW must not re-fetch with a different UA
+// 2026-07-27: Offline nav fallback â€” never bare 503 for navigations; durable offline.html + last-good public HTML
+// 2026-07-29: Media sources removed â€” bust app/data caches + durable feed last-good so old media JSON cannot return offline
+// 2026-07-30: Prehled dne banner + HomeCard FOUC fix â€” bust shell so cutover-first HTML/CSS reach clients
+// 2026-08-01: Homecard CTA flush â€” banner + settings button zero seam (hero wrapper)
 // 2026-08-01: Homecard CTA square top + hero block layout (no nested-flex collapse)
-// 2026-08-03: Silver date/time fit v2 — bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
-// 2026-08-24: PC MindMenu lock UX — unified Zamknutí MindMenu + single unlock method
-// 2026-09-01: remove environment info panel — bust shell + network-first info-panel modules (SWR stale catalog)
-// 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
-// 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
-const CACHE_VERSION = "2026-09-05-external-open-no-blank-v1";
+// 2026-08-03: Silver date/time fit v2 â€” bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
+// 2026-08-24: PC MindMenu lock UX â€” unified ZamknutĂ­ MindMenu + single unlock method
+// 2026-09-01: remove environment info panel â€” bust shell + network-first info-panel modules (SWR stale catalog)
+// 2026-09-04: Reload FOUC â€” layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
+// 2026-09-04: Calendar NovĂˇ udĂˇlost bottom-nav sheet stability (merge onto FOUC SW)
+const CACHE_VERSION = "2026-09-05-chmi-first-paint-blue-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
-/** Durable across SW version bumps — last-good feed chunks/manifest for offline UI (v2 after media wipe). */
+/** Durable across SW version bumps â€” last-good feed chunks/manifest for offline UI (v2 after media wipe). */
 const FEED_OFFLINE_CACHE = "iu-feed-offline-v2";
 /** Durable same-origin image cache (defaults + previously loaded /assets/images/*). */
 const IMG_OFFLINE_CACHE = "iu-img-offline-v1";
@@ -42,7 +42,7 @@ const OFFLINE_DOC_CACHE = "iu-offline-doc-v1";
 /** Durable last-good public app HTML for offline navigation (never admin/auth). */
 const HTML_LAST_GOOD_CACHE = "iu-html-last-good-v1";
 
-// TTL pro JSON data (v sekundách)
+// TTL pro JSON data (v sekundĂˇch)
 const TTL = {
   articles: 300,
   videos: 600,
@@ -52,7 +52,7 @@ const TTL = {
   status: 300,
 };
 
-// Maximální stáří cache pro fallback (ms): čerstvost podle generatedAt
+// MaximĂˇlnĂ­ stĂˇĹ™Ă­ cache pro fallback (ms): ÄŤerstvost podle generatedAt
 const MAX_STALE_MS = {
   articles: 10 * 60 * 1000,
   videos: 10 * 60 * 1000,
@@ -71,12 +71,12 @@ function getDataRequestType(pathname) {
   return "meta";
 }
 
-// ✅ FIX: App Shell soubory (Cache First) - relativní vůči BASE
-// BASE bude definován později, takže použijeme funkci
+// âś… FIX: App Shell soubory (Cache First) - relativnĂ­ vĹŻÄŤi BASE
+// BASE bude definovĂˇn pozdÄ›ji, takĹľe pouĹľijeme funkci
 function getAppShellUrls() {
   return [
-    // P0: BASE / index.html — nepre-cacheovat (document = network-first; starý shell by přežíval)
-    // CSS/JS musí být updatovatelný i se stabilním ?v=... (viz fetch handler níž)
+    // P0: BASE / index.html â€” nepre-cacheovat (document = network-first; starĂ˝ shell by pĹ™eĹľĂ­val)
+    // CSS/JS musĂ­ bĂ˝t updatovatelnĂ˝ i se stabilnĂ­m ?v=... (viz fetch handler nĂ­Ĺľ)
     `${BASE}assets/app.css`,
     `${BASE}assets/iu-financial-overlay.css`,
     `${BASE}assets/iu-legal-documents-overlay.css`,
@@ -91,7 +91,7 @@ function getAppShellUrls() {
   ];
 }
 
-/** Offline tool modules + default section images — warmed after activate (not in install addAll). */
+/** Offline tool modules + default section images â€” warmed after activate (not in install addAll). */
 function getOfflineWarmUrls() {
   return [
     `${BASE}assets/iu-financial-calculators-module.js`,
@@ -169,9 +169,9 @@ async function warmOfflineAssets() {
   } catch (_) {}
 }
 
-// ✅ FIX: BASE je path-only ("/" nebo "/filtr/"), vždy s trailing slash
+// âś… FIX: BASE je path-only ("/" nebo "/filtr/"), vĹľdy s trailing slash
 function getBaseRoot() {
-  // Pro github.io projektové stránky: BASE = "/filtr/"
+  // Pro github.io projektovĂ© strĂˇnky: BASE = "/filtr/"
   if (self.location.hostname.endsWith("github.io")) {
     return "/filtr/";
   }
@@ -216,7 +216,7 @@ function getSeedArticles() {
   const items = [
     { title: "Info", link: "#", pubDate: generatedAt, source: "infoUzel" },
     { title: "Novinky", link: "#", pubDate: generatedAt, source: "infoUzel" },
-    { title: "Přehled", link: "#", pubDate: generatedAt, source: "infoUzel" },
+    { title: "PĹ™ehled", link: "#", pubDate: generatedAt, source: "infoUzel" },
   ];
   return JSON.stringify({ generatedAt, items });
 }
@@ -226,7 +226,7 @@ function getSeedVideos() {
   const vid = "dQw4w9WgXcQ";
   const videos = [
     { title: "Video", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
-    { title: "Přehled", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
+    { title: "PĹ™ehled", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
     { title: "Info", url: "https://www.youtube.com/watch?v=" + vid, publishedAt: generatedAt, videoId: vid, thumb: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" },
   ];
   return JSON.stringify({ generatedAt, videos });
@@ -265,12 +265,12 @@ function isProjectsFeedDataPath(pathname) {
   return false;
 }
 
-/** PWA deploy probe — always network, never SW cache (home-screen stale shell recovery). */
+/** PWA deploy probe â€” always network, never SW cache (home-screen stale shell recovery). */
 function isProjectsVersionProbePath(pathname) {
   return pathname === "/projects/version.json";
 }
 
-/** App hub HTML — network-first for all GET (iOS/Android home-screen may skip navigate mode). */
+/** App hub HTML â€” network-first for all GET (iOS/Android home-screen may skip navigate mode). */
 function isProjectsHtmlPath(pathname) {
   return (
     pathname === "/" ||
@@ -304,7 +304,7 @@ function isUnsafeHtmlCachePath(pathname) {
 
 function isPublicLastGoodHtmlPath(pathname) {
   if (isUnsafeHtmlCachePath(pathname)) return false;
-  /* Only real app shells — never legacy /projects redirect stubs (offline loop risk). */
+  /* Only real app shells â€” never legacy /projects redirect stubs (offline loop risk). */
   return (
     pathname === "/" ||
     pathname === "/index.html" ||
@@ -381,13 +381,13 @@ function syntheticOfflineHtmlResponse() {
   const html =
     "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/>" +
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>" +
-    "<title>Offline — infoUzel.cz</title>" +
+    "<title>Offline â€” infoUzel.cz</title>" +
     "<style>body{margin:0;font-family:system-ui,sans-serif;background:#e5eef6;color:#0f172a}" +
     "main{max-width:28rem;margin:0 auto;padding:2rem 1.25rem}.card{background:#fff;border:1px solid #dbe4ee;" +
     "border-radius:16px;padding:1.25rem}h1{font-size:1.25rem;margin:0 0 .5rem}p{color:#64748b;line-height:1.5}" +
     "button{border:0;border-radius:10px;background:#0369a1;color:#fff;padding:.7rem 1rem;font:inherit}</style>" +
     "</head><body><main><div class=\"card\"><strong style=\"color:#0369a1\">infoUzel.cz</strong>" +
-    "<h1>Jste offline</h1><p>Internet není dostupný. Aktuální online data teď nejsou k dispozici.</p>" +
+    "<h1>Jste offline</h1><p>Internet nenĂ­ dostupnĂ˝. AktuĂˇlnĂ­ online data teÄŹ nejsou k dispozici.</p>" +
     "<button type=\"button\" id=\"r\">Zkusit znovu</button></div></main>" +
     "<script>(function(){var b=document.getElementById(\"r\");" +
     "function go(){try{location.reload()}catch(e){}}" +
@@ -405,7 +405,7 @@ function syntheticOfflineHtmlResponse() {
 }
 
 /**
- * Navigation offline order: exact cache → last-good public HTML → offline.html → synthetic 200.
+ * Navigation offline order: exact cache â†’ last-good public HTML â†’ offline.html â†’ synthetic 200.
  * Never return an unmanaged empty 503 when SW can serve a fallback document.
  */
 async function offlineNavigationFallback(request) {
@@ -490,7 +490,7 @@ async function matchFeedOfflineLastGood(request) {
 }
 
 /**
- * Online: network-first (no-store) — never serve stale as fresh when network works.
+ * Online: network-first (no-store) â€” never serve stale as fresh when network works.
  * Offline: last-good JSON from FEED_OFFLINE_CACHE; then DATA_CACHE; then seed.
  */
 async function handleProjectsFeedDataPassthrough(event, pathname) {
@@ -643,10 +643,10 @@ async function handleDataRequest(event) {
   }
 }
 
-/* P1 perf fix #7: rozlišení FIRST INSTALL vs UPDATE.
-   Při install nového SW je registration.active starý SW (= update / deploy);
-   při úplně první instalaci je null. Flag přežije do activate (skipWaiting
-   aktivuje tentýž SW instance hned po install). */
+/* P1 perf fix #7: rozliĹˇenĂ­ FIRST INSTALL vs UPDATE.
+   PĹ™i install novĂ©ho SW je registration.active starĂ˝ SW (= update / deploy);
+   pĹ™i ĂşplnÄ› prvnĂ­ instalaci je null. Flag pĹ™eĹľije do activate (skipWaiting
+   aktivuje tentĂ˝Ĺľ SW instance hned po install). */
 let IU_HAD_ACTIVE_SW_AT_INSTALL = false;
 
 // Install: cache App Shell + durable offline.html
@@ -676,12 +676,12 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    /* P1 perf fix #7: reload signál jen pro UPDATE (deploy refresh), nikdy pro
-       první instalaci — cold load se kvůli broadcastu načítal 2× (LCP +1.7-3.9 s).
-       Update detekce: starý SW byl aktivní při install NEBO existují iu-* cache
-       z jiné CACHE_VERSION (fallback, kdyby SW instance mezi install/activate padla). */
+    /* P1 perf fix #7: reload signĂˇl jen pro UPDATE (deploy refresh), nikdy pro
+       prvnĂ­ instalaci â€” cold load se kvĹŻli broadcastu naÄŤĂ­tal 2Ă— (LCP +1.7-3.9 s).
+       Update detekce: starĂ˝ SW byl aktivnĂ­ pĹ™i install NEBO existujĂ­ iu-* cache
+       z jinĂ© CACHE_VERSION (fallback, kdyby SW instance mezi install/activate padla). */
     /* Durable offline caches omit CACHE_VERSION on purpose. Exclude them from
-       deploy detection — otherwise IU_SW_DEPLOY_RELOAD fires after the first
+       deploy detection â€” otherwise IU_SW_DEPLOY_RELOAD fires after the first
        feed/image write and breaks tab UI (Playwright + installed PWA). */
     const durableCaches = new Set([
       FEED_OFFLINE_CACHE,
@@ -698,7 +698,7 @@ self.addEventListener("activate", (event) => {
     /* Keep durable last-good feed/images + offline.html + public HTML shells.
        Always drop versioned app/data shell caches (including current) so
        activate matches main: CSS/JS come from network, not a half-filled
-       install precache — keeping APP_SHELL here broke mobile Tools tab. */
+       install precache â€” keeping APP_SHELL here broke mobile Tools tab. */
     await Promise.all(
       keys.map((key) => {
         if (durableCaches.has(key)) return Promise.resolve();
@@ -706,7 +706,7 @@ self.addEventListener("activate", (event) => {
       })
     );
     await self.clients.claim();
-    /* Fire-and-forget only — never event.waitUntil(warm…).
+    /* Fire-and-forget only â€” never event.waitUntil(warmâ€¦).
        A hung warm fetch would keep activate "activating" and freeze navigations
        (desktop section-close / Playwright). */
     try {
@@ -761,7 +761,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // P0: HTML dokumenty (navigace) — network-first; offline → last-good / offline.html / synthetic 200
+  // P0: HTML dokumenty (navigace) â€” network-first; offline â†’ last-good / offline.html / synthetic 200
   if (
     event.request.method === "GET" &&
     url.origin === self.location.origin &&
@@ -842,7 +842,7 @@ self.addEventListener("fetch", (event) => {
         const cached = await cache.match(cacheKey);
         try {
           const fresh = await fetch(event.request, { mode: event.request.mode || "no-cors" });
-          /* Cache opaque (status 0) and ok responses — both usable offline for <img>. */
+          /* Cache opaque (status 0) and ok responses â€” both usable offline for <img>. */
           if (fresh && (fresh.ok || fresh.type === "opaque")) {
             event.waitUntil(
               (async () => {
@@ -924,7 +924,7 @@ self.addEventListener("fetch", (event) => {
 
   /* Layout-critical CSS: network-first (before generic SWR).
      Generic SWR keys by pathname only (strips ?v=), so a stale app.css / shell CSS
-     could paint with fresh network-first HTML → reload FOUC / layout break. */
+     could paint with fresh network-first HTML â†’ reload FOUC / layout break. */
   if (
     path.includes("/assets/app.css") ||
     path.includes("/assets/iu-prehled-dne-v1.css") ||
@@ -985,7 +985,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // CSS/JS assets: stale-while-revalidate, cache key bez query stringu.
-  // Důvod: stabilní ?v=... + Cache First by jinak mohl držet staré CSS/JS donekonečna.
+  // DĹŻvod: stabilnĂ­ ?v=... + Cache First by jinak mohl drĹľet starĂ© CSS/JS donekoneÄŤna.
   if (
     url.origin === self.location.origin &&
     path.includes("/assets/") &&
@@ -1060,7 +1060,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ FIX: App Shell: Cache First - detekce relativně vůči BASE
+  // âś… FIX: App Shell: Cache First - detekce relativnÄ› vĹŻÄŤi BASE
   const isAppShell = path === BASE || 
                      path === `${BASE}index.html` || 
                      path.startsWith(`${BASE}assets/`) && (path.endsWith(".js") || path.endsWith(".css")) ||
@@ -1084,12 +1084,12 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ FIX: Funkce pro kontrolu, zda response je JSON (ne HTML)
+  // âś… FIX: Funkce pro kontrolu, zda response je JSON (ne HTML)
   function looksLikeJSON(response) {
     const contentType = response.headers.get("content-type") || "";
     if (contentType.includes("application/json")) return true;
-    // Pokud není content-type, zkontroluj první znak
-    return false; // Musíme zkontrolovat tělo
+    // Pokud nenĂ­ content-type, zkontroluj prvnĂ­ znak
+    return false; // MusĂ­me zkontrolovat tÄ›lo
   }
 
   // JSON data: Network First + Cache Fallback s TTL
@@ -1097,7 +1097,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(event.request)
         .then(async (response) => {
-          // ✅ FIX: Nekacherovat 404 nebo HTML místo JSON
+          // âś… FIX: Nekacherovat 404 nebo HTML mĂ­sto JSON
           if (!response.ok || response.status === 404) {
             // Zkus cache jako fallback
             const cached = await caches.match(event.request);
@@ -1107,17 +1107,17 @@ self.addEventListener("fetch", (event) => {
                 return cached;
               }
             }
-            return response; // Vrať chybu, ne cacheuj HTML
+            return response; // VraĹĄ chybu, ne cacheuj HTML
           }
 
-          // ✅ FIX: Ověř, že response je skutečně JSON (ne HTML)
+          // âś… FIX: OvÄ›Ĺ™, Ĺľe response je skuteÄŤnÄ› JSON (ne HTML)
           const clone = response.clone();
           const text = await clone.text();
           const isJSON = text.trim().startsWith("{") || text.trim().startsWith("[");
           const isHTML = text.trim().toLowerCase().startsWith("<!doctype") || text.trim().toLowerCase().startsWith("<html");
 
           if (isHTML) {
-            // HTML místo JSON - nekacherovat, zkus cache jako fallback
+            // HTML mĂ­sto JSON - nekacherovat, zkus cache jako fallback
             const cached = await caches.match(event.request);
             if (cached) {
               const cachedText = await cached.clone().text();
@@ -1132,7 +1132,7 @@ self.addEventListener("fetch", (event) => {
           }
 
           if (isJSON) {
-            // Validní JSON - cacheuj (klonovat a await před return response — jinak tělo už čte klient a .clone() spadne)
+            // ValidnĂ­ JSON - cacheuj (klonovat a await pĹ™ed return response â€” jinak tÄ›lo uĹľ ÄŤte klient a .clone() spadne)
             const responseForCache = response.clone();
             const cache = await caches.open(DATA_CACHE);
             await cache.put(event.request, responseForCache);
@@ -1150,10 +1150,10 @@ self.addEventListener("fetch", (event) => {
           // Network failed, zkus cache
           const cached = await caches.match(event.request);
           if (cached) {
-            // ✅ FIX: Ověř, že cached response je JSON (ne HTML)
+            // âś… FIX: OvÄ›Ĺ™, Ĺľe cached response je JSON (ne HTML)
             const text = await cached.clone().text();
             if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
-              // Ověř TTL
+              // OvÄ›Ĺ™ TTL
               const metaCache = await caches.open(DATA_META_CACHE);
               const metaRes = await metaCache.match(new Request(event.request.url + ".meta"));
               if (metaRes) {
@@ -1162,7 +1162,7 @@ self.addEventListener("fetch", (event) => {
                   return cached;
                 }
               } else {
-                // Pokud není metadata, použij cache (ale jen pokud je JSON)
+                // Pokud nenĂ­ metadata, pouĹľij cache (ale jen pokud je JSON)
                 return cached;
               }
             }
@@ -1177,13 +1177,13 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Cross-origin (non-image): never intercept. Image GET is handled above.
-  // Important for InfoUzel Analytics ingest — SW fetch() can use a different UA than the page
+  // Important for InfoUzel Analytics ingest â€” SW fetch() can use a different UA than the page
   // (e.g. Playwright UA override vs HeadlessChrome), which would fail the Worker crawler guard.
   if (url.origin !== self.location.origin) {
     return;
   }
 
-  // Ostatní same-origin: Network First (vždy platná Response — nikdy undefined)
+  // OstatnĂ­ same-origin: Network First (vĹľdy platnĂˇ Response â€” nikdy undefined)
   event.respondWith(
     (async () => {
       try {
