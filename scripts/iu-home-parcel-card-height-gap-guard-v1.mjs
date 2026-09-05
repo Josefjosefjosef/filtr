@@ -58,7 +58,8 @@ function staticGate() {
       !/min-height:\s*176px\s*!important/.test(index),
     "static:index_no_176_minheight"
   );
-  must(/parcel-card-content-height-gap-v1-20260904/.test(index), "static:parcel_css_cache_bust");
+  must(/parcel-seq-created-header-v1-20260905/.test(index), "static:parcel_css_cache_bust");
+  must(/parcel-seq-created-header-v1-20260905/.test(index), "static:parcel_js_cache_bust");
   must(/home-section-gap-unify-v1-20260904/.test(index), "static:info_css_cache_bust");
   must(/rychly-prehled-vertical-scroll-v1-20260903/.test(index), "static:info_css_vertical_scroll_bust");
 }
