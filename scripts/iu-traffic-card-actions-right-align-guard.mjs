@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Guard: traffic card bottom action row (map → Sledovat → Skrýt) is right-aligned
+ * Guard: traffic card bottom action row (map → Uložit → Skrýt) is right-aligned
  * to the card's inner content edge on mobile / tablet / desktop. Light + dark.
  * Static CSS/DOM contract + Playwright geometry. Pure local (served assets).
  */
@@ -136,7 +136,7 @@ function fixtureHtml(dark) {
             <svg class="iuPrehledDne__czMapSvg" viewBox="0 0 48 28" aria-hidden="true"><rect width="48" height="28" rx="4"/></svg>
           </a>
         </span>
-        <button type="button" class="iuPdBtn iuPdBtn--primary" data-act="traffic-follow">Sledovat</button>
+        <button type="button" class="iuPdBtn iuPdBtn--primary" data-act="traffic-follow">Uložit</button>
         <button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide">Skrýt</button>
       </div>
     </article>
@@ -222,7 +222,7 @@ async function measure(page, label, dark) {
   ok(prefix + "_no_overlap", m.overlap === false, "overlap");
   ok(prefix + "_no_clip", m.clipped === false, "clip");
   ok(prefix + "_MAP_CLICK", /^https?:\/\//.test(m.mapHref), m.mapHref);
-  ok(prefix + "_FOLLOW_ACTION", /Sledovat|Sleduji/.test(m.followText), m.followText);
+  ok(prefix + "_FOLLOW_ACTION", /Uložit|Uloženo/.test(m.followText), m.followText);
   ok(prefix + "_HIDE_ACTION", /Skrýt|Skryt/.test(m.hideText), m.hideText);
 }
 

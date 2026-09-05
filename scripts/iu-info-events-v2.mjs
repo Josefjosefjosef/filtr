@@ -367,8 +367,10 @@ export function applyChronology(item, nowIso, firstSeenMap) {
   });
 }
 
-/** Active 96h window: prefer publishedAtSource; long-lived events via validTo/status. */
-export function isInActiveFeedWindow(item, nowIso, maxAgeHours = 96) {
+/** Active feed eligibility: prefer publishedAtSource; long-lived events via validTo/status.
+ * No fixed publish-age window (former 96h cutoff removed).
+ */
+export function isInActiveFeedWindow(item, nowIso, maxAgeHours = null) {
   const now = Date.parse(nowIso) || Date.now();
   const validTo = Date.parse(item && item.validTo ? item.validTo : "") || 0;
   const validFrom = Date.parse(item && item.validFrom ? item.validFrom : "") || 0;
@@ -387,8 +389,11 @@ export function isInActiveFeedWindow(item, nowIso, maxAgeHours = 96) {
   const ageH = (now - Date.parse(pub)) / 3600000;
   if (!Number.isFinite(ageH)) return { ok: false, reason: "bad_published_at" };
   if (ageH < -48) return { ok: false, reason: "published_in_future" };
-  if (ageH > maxAgeHours) return { ok: false, reason: "older_than_window" };
-  return { ok: true, reason: "within_window" };
+  // Optional legacy maxAgeHours still honored when callers pass a finite positive limit.
+  if (Number.isFinite(maxAgeHours) && maxAgeHours > 0 && ageH > maxAgeHours) {
+    return { ok: false, reason: "older_than_window" };
+  }
+  return { ok: true, reason: "eligible_published" };
 }
 
 export function splitIntoLanes(items) {

@@ -1,6 +1,6 @@
 /**
  * InfoUzel.cz — Přehled dne UI v6 (timeline axis restore + actions align)
- * Hlavní stránka: Můj přehled/Nastavení + Zobrazit (Vše/Uložené/Nepřečtené/Skryté) + feed.
+ * Hlavní stránka: Můj přehled/Nastavení + quick view + Zobrazit (Vše/Uložené/Skryté) + feed.
  * Nastavení: jeden overlay/modal — hlavní 3 lišty, jedna otevřená sekce, autosave.
  * Feed: svislá časová osa + puntíky; Uložit/Skrýt zarovnané vpravo.
  */
@@ -204,7 +204,7 @@ const state = {
   index: null,
   prefs: null,
   draft: null,
-  /** @type {'home'|'all'|'saved'|'unread'|'hidden'} */
+  /** @type {'home'|'all'|'saved'|'hidden'} */
   viewMode: "home",
   settingsOpen: false,
   /** @type {null|'main'|'traffic'|'chmu'} */
@@ -944,14 +944,18 @@ function filteredList() {
     list = list.filter((ev) => {
       const id = String((ev && ev.id) || "");
       const src = chmiPresentationSourceId(ev) || id;
-      return isSaved(id) || (src && src !== id && isSaved(src));
-    });
-  }
-  if (mode === "unread") {
-    list = list.filter((ev) => {
-      const id = String((ev && ev.id) || "");
-      const src = chmiPresentationSourceId(ev) || id;
-      return !isRead(id) && !(src && src !== id && isRead(src));
+      if (isSaved(id) || (src && src !== id && isSaved(src))) return true;
+      // Traffic "Uložit" uses existing follow store (migrated label; same persistence).
+      if (
+        ev &&
+        ev.trafficV1 &&
+        trafficOverviewMod &&
+        typeof trafficOverviewMod.isTrafficFollowed === "function" &&
+        trafficOverviewMod.isTrafficFollowed(ev.trafficV1.publicEventId)
+      ) {
+        return true;
+      }
+      return false;
     });
   }
   return list;
@@ -1430,9 +1434,9 @@ function renderItem(ev) {
       ? trafficMapAction +
         `<button type="button" class="iuPdBtn iuPdBtn--primary${
           trafficFollowed ? " is-on" : ""
-        }" data-act="traffic-follow" data-id="${esc(id)}" data-peid="${esc(followId)}">${
-          trafficFollowed ? "Sleduji" : "Sledovat"
-        }</button>` +
+        }" data-act="traffic-follow" data-id="${esc(id)}" data-peid="${esc(followId)}" aria-label="${
+          trafficFollowed ? "Uloženo" : "Uložit"
+        }">${trafficFollowed ? "Uloženo" : "Uložit"}</button>` +
         `<button type="button" class="iuPdBtn iuPdBtn--ghost" data-act="hide" data-id="${esc(id)}">Skrýt</button>`
       : `<button type="button" class="iuPdBtn iuPdBtn--ghost${saved ? " is-on" : ""}" data-act="save" data-id="${esc(
           id
@@ -2070,17 +2074,15 @@ function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
     `</div>` +
     `</div>` +
     `</div>` +
+    filterBar +
     `<div class="iuPd__show">` +
-    `<div class="iuPd__label">Zobrazit</div>` +
     `<div class="iuPd__toggles" role="toolbar" aria-label="Zobrazení feedu">` +
     `<button type="button" class="iuPdToggle${mode === "all" ? " is-active" : ""}" data-act="mode" data-mode="all">Vše</button>` +
     `<button type="button" class="iuPdToggle${mode === "saved" ? " is-active" : ""}" data-act="mode" data-mode="saved">Uložené</button>` +
-    `<button type="button" class="iuPdToggle${mode === "unread" ? " is-active" : ""}" data-act="mode" data-mode="unread">Nepřečtené</button>` +
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
     trafficOfflineBanner +
-    filterBar +
     (listOrEmpty
       ? listOrEmpty
       : `<ul class="iuPdFeed iuPrehledDne__timeline${hasTraffic ? " iuPdFeed--trafficPad" : ""}" id="iuPrehledDneTimeline">${listHtml}</ul>`) +
@@ -2163,12 +2165,16 @@ function updateFeedDom() {
   const feed = root.querySelector("#iuPrehledDneTimeline");
   const moreWrap = root.querySelector("#iuPdMoreWrap");
   const ff = ensureFeedFilter(effectivePrefs());
-  if (count) count.textContent = `${list.length} položek · okno 96 h`;
+  if (count) count.textContent = `${list.length} položek`;
   // Keep quick-view bar in sync with persistent enable flags (disabled when category OFF).
   const quickHtml = quickViewBarHtml(ff, state.feedQuickView);
   const existingQuick = root.querySelector("[data-iu-feed-quick]");
   if (existingQuick) existingQuick.outerHTML = quickHtml;
-  else if (count) count.insertAdjacentHTML("afterend", quickHtml);
+  else {
+    const show = root.querySelector(".iuPd__show");
+    if (show) show.insertAdjacentHTML("beforebegin", quickHtml);
+    else if (count) count.insertAdjacentHTML("beforebegin", quickHtml);
+  }
   // Empty presentation state only after feed + traffic snapshot hydrate settle.
   const feedHydrated = !!(state.data && state.data.feed && Array.isArray(state.data.feed.items));
   const trafficPending =
@@ -2223,6 +2229,8 @@ function updateFeedDom() {
 }
 
 function paint(opts) {
+  // Removed "Nepřečtené" mode — migrate any in-memory leftover to home.
+  if (state.viewMode === "unread") state.viewMode = "home";
   const options = opts || {};
   const root = ensureRoot();
   if (!root) return;
@@ -2262,7 +2270,7 @@ function paint(opts) {
       });
     } catch (_) {}
   } else {
-    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek · okno 96 h`, moreHtml, list);
+    root.innerHTML = homeShellHtml(listHtml, `${list.length} položek`, moreHtml, list);
   }
   applyIndeterminateFlags(root);
   if (state.settingsOpen) mountSettingsOverlay();
@@ -2586,7 +2594,9 @@ function patchTrafficFollowButton(btn, followed) {
   if (!btn) return;
   try {
     btn.classList.toggle("is-on", !!followed);
-    btn.textContent = followed ? "Sleduji" : "Sledovat";
+    const label = followed ? "Uloženo" : "Uložit";
+    btn.textContent = label;
+    btn.setAttribute("aria-label", label);
   } catch (_) {}
 }
 
@@ -2596,7 +2606,7 @@ function refreshFeedCountAndMore() {
   const list = filteredList();
   const pageItems = list.slice(0, pageItemsLimit());
   const count = root.querySelector("#iuPdCount");
-  if (count) count.textContent = `${list.length} položek · okno 96 h`;
+  if (count) count.textContent = `${list.length} položek`;
   const moreWrap = root.querySelector("#iuPdMoreWrap");
   if (moreWrap) {
     moreWrap.innerHTML =
@@ -3043,6 +3053,14 @@ function wire() {
     }
     if (act === "mode") {
       const m = t.getAttribute("data-mode");
+      // Removed UI mode "unread" — safe fallback if stale DOM/state ever appears.
+      if (m === "unread") {
+        state.viewMode = "home";
+        state.page = 1;
+        paint();
+        wire();
+        return;
+      }
       if (m === "all") {
         // Toggle: 1st click → temporary locality bypass; 2nd click → restore saved filter (home).
         // Never writes localities to localStorage / prefs.
@@ -3405,7 +3423,6 @@ async function boot() {
           toggles.innerHTML =
             `<button type="button" class="iuPdToggle${mode === "all" ? " is-active" : ""}" data-act="mode" data-mode="all">Vše</button>` +
             `<button type="button" class="iuPdToggle${mode === "saved" ? " is-active" : ""}" data-act="mode" data-mode="saved">Uložené</button>` +
-            `<button type="button" class="iuPdToggle${mode === "unread" ? " is-active" : ""}" data-act="mode" data-mode="unread">Nepřečtené</button>` +
             `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>`;
         }
       }

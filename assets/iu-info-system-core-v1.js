@@ -498,7 +498,7 @@ function sanitizeUserPrefs(raw) {
   merged.homeObec = String(merged.homeObec || "");
   merged.searchQuery = String(merged.searchQuery || "");
   merged.activeViewId = String(merged.activeViewId || "");
-  // Feed window is server-side 96h; no user time-range control
+  // Feed eligibility is lifecycle-based; no fixed client publish-age window.
   merged.timeRangeHours = 0;
   merged.importanceMin = Number(merged.importanceMin) || 0;
   merged.regionalDoprava = !!merged.regionalDoprava;
@@ -2587,12 +2587,9 @@ function filterEvents(events, filters, opts) {
       const t = parseTime(eventSortAt(ev));
       if (!t || now - t > rangeMs) continue;
     }
-    // Client-side 96h safety (mirrors backend isInActiveFeedWindow) for stale published feeds.
+    // Client-side: keep lifecycle / future-publish gates; no fixed 96h publish-age window.
     // CHMI CAP is already gated by isPublicFeedChmiWarning (ACTIVE/FUTURE + untilRevoked).
-    // Do NOT re-apply publish-age kill here — untilRevoked alerts often have null validTo and
-    // publishedAt older than 96h while still officially active (stav sucha / riziko požárů).
     if (!isChmiCapWarning(ev)) {
-      const maxAgeMs = 96 * 3600000;
       const validTo = parseTime(ev.validTo);
       const validFrom = parseTime(ev.validFrom);
       const status = String(ev.status || "").toLowerCase();
@@ -2605,7 +2602,6 @@ function filterEvents(events, filters, opts) {
       const pubT = parseTime(ev.publishedAtSource || (ev.timeConfidence !== "fallback" ? ev.publishedAt : null));
       if (!lifecycleOk) {
         if (!pubT) continue;
-        if (now - pubT > maxAgeMs) continue;
         if (pubT - now > 48 * 3600000) continue;
       }
     }

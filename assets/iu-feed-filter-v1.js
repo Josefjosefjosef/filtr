@@ -576,10 +576,10 @@ export function quickViewBarHtml(ff, quickView) {
       label
     )}</button>`;
   return (
-    `<div class="iuPdQuickView" data-iu-feed-quick="1" role="toolbar" aria-label="Rychlý pohled feedu">` +
-    btn("all", "Vše", "all", false) +
-    btn("traffic", "Doprava", "traffic", !trafficOn) +
-    btn("chmu", "ČHMÚ", "chmu", !chmuOn) +
+    `<div class="iuPdQuickView iuPdQuickView--primary" data-iu-feed-quick="1" role="toolbar" aria-label="Rychlý pohled feedu">` +
+    btn("all", "Zobrazit vše", "all", false) +
+    btn("traffic", "Dopravní informace", "traffic", !trafficOn) +
+    btn("chmu", "Výstrahy ČHMÚ", "chmu", !chmuOn) +
     `</div>`
   );
 }

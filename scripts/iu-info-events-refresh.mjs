@@ -65,7 +65,7 @@ const DIR = process.env.IU_INFO_EVENTS_DATA_DIR
   : path.join(REPO, "projects", "data", "info_events");
 
 const MAX_ITEMS = Number(process.env.IU_INFO_EVENTS_MAX_ITEMS || "300");
-const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "96");
+const MAX_AGE_HOURS = Number(process.env.IU_INFO_EVENTS_MAX_AGE_HOURS || "0");
 const PER_FEED_CAP = Number(process.env.IU_INFO_EVENTS_PER_FEED_CAP || "25");
 const PER_SOURCE_CAP = Number(process.env.IU_INFO_EVENTS_PER_SOURCE_CAP || "40");
 const CAP_FILES_MAX = Number(process.env.IU_INFO_EVENTS_CAP_FILES_MAX || "6");
@@ -139,8 +139,8 @@ function buildItem(entry, raw, nowIso, extra = {}) {
   const importance = scoreImportance(title, entry.group, raw.severity);
   const life = resolveLifecycle(entry, raw, importance);
 
-  // Age gate ONLY on reliable publishedAtSource — never invent "now" to pass the window.
-  if (hasSourcePubDate) {
+  // Age gate ONLY when IU_INFO_EVENTS_MAX_AGE_HOURS > 0 (default: no fixed publish-age window).
+  if (hasSourcePubDate && Number.isFinite(MAX_AGE_HOURS) && MAX_AGE_HOURS > 0) {
     const ageH = (Date.parse(nowIso) - Date.parse(sourcePub)) / 3600000;
     const stillValid = validTo && Date.parse(validTo) >= Date.parse(nowIso);
     if (Number.isFinite(ageH) && ageH > MAX_AGE_HOURS && !stillValid) return null;
@@ -521,7 +521,7 @@ async function main() {
   const beforeWindow = items.length;
   const windowDropped = [];
   items = items.filter((it) => {
-    const w = isInActiveFeedWindow(it, nowIso, MAX_AGE_HOURS);
+    const w = isInActiveFeedWindow(it, nowIso, Number.isFinite(MAX_AGE_HOURS) && MAX_AGE_HOURS > 0 ? MAX_AGE_HOURS : null);
     if (!w.ok) {
       windowDropped.push({ id: it.id, sourceId: it.sourceId, reason: w.reason });
       return false;
@@ -592,8 +592,8 @@ async function main() {
     connector: "iu-info-events-refresh",
     architecture: "v2-pipeline",
     itemCount: items.length,
-    maxAgeHours: MAX_AGE_HOURS,
-    activeWindowHours: MAX_AGE_HOURS,
+    maxAgeHours: Number.isFinite(MAX_AGE_HOURS) && MAX_AGE_HOURS > 0 ? MAX_AGE_HOURS : null,
+    activeWindowHours: Number.isFinite(MAX_AGE_HOURS) && MAX_AGE_HOURS > 0 ? MAX_AGE_HOURS : null,
     onlyGroup: ONLY_GROUP || null,
     laneCounts,
     dataQuality,
@@ -629,8 +629,8 @@ async function main() {
         "timeConfidence",
       ],
       sortRule: "prefer publishedAtSource; else firstSeenByInfoUzel (display only)",
-      activeWindowHours: MAX_AGE_HOURS,
-      activeWindowRule: "include by publishedAtSource within window; long-lived via validTo/status",
+      activeWindowHours: Number.isFinite(MAX_AGE_HOURS) && MAX_AGE_HOURS > 0 ? MAX_AGE_HOURS : null,
+      activeWindowRule: "lifecycle/validTo + reliable publishedAtSource; no fixed publish-age window by default",
       neverRejuvenateByFirstSeen: true,
     },
     dataQuality,

@@ -1761,7 +1761,7 @@ ok(
     )
   );
 
-  ok("second_bottom_action_is_follow", /data-act="traffic-follow"/.test(uiSrc) && /Sledovat/.test(uiSrc));
+  ok("second_bottom_action_is_follow", /data-act="traffic-follow"/.test(uiSrc) && /Uložit/.test(uiSrc));
   ok("hide_action_present", /data-act="hide"/.test(uiSrc) && /Skrýt/.test(uiSrc));
 }
 
@@ -1942,7 +1942,7 @@ ok(
     "PARKING_ACTION_ROW_PASS",
     uiSrc.includes("iuPdCard__actionsMap") &&
       /data-act="traffic-follow"/.test(uiSrc) &&
-      /Sledovat/.test(uiSrc) &&
+      /Uložit/.test(uiSrc) &&
       /data-act="hide"/.test(uiSrc) &&
       /Skrýt/.test(uiSrc) &&
       !/iuPdTrafficTop__map\$\{czMapMarkup\}/.test(uiSrc)

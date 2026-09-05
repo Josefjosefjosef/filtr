@@ -2543,6 +2543,15 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   gap: 8px;
   margin: 0 0 12px;
 }
+.iuPdQuickView--primary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .iuPdQuickView__btn {
   appearance: none;
   border: 1px solid rgba(15, 35, 55, 0.14);
@@ -2554,6 +2563,31 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
+}
+.iuPdQuickView--primary .iuPdQuickView__btn {
+  border-radius: 14px;
+  min-height: 52px;
+  padding: 12px 10px;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 420px) {
+  .iuPdQuickView--primary {
+    grid-template-columns: 1fr;
+  }
+  .iuPdQuickView--primary .iuPdQuickView__btn {
+    min-height: 48px;
+  }
 }
 .iuPdQuickView__btn.is-on.iuPdQuickView__btn--all {
   background: #0f172a;
