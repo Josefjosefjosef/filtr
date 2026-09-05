@@ -249,6 +249,34 @@
     return true;
   }
 
+  /**
+   * Mobile / tablet / iOS PWA / standalone: prefer a single <a target=_blank> open.
+   * Avoids window.open(..., "noopener") which always returns null (HTML) and historically
+   * triggered a second openExternalViaAnchor → duplicate tab / about:blank (+ PWA "Hotovo").
+   * HTTPS targets still get OS Universal/App Link handoff when an app is installed.
+   */
+  function preferSingleAnchorExternalOpen() {
+    try {
+      if (typeof navigator !== "undefined" && navigator.standalone === true) return true;
+    } catch (_) {}
+    try {
+      if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) return true;
+    } catch (_) {}
+    try {
+      if (window.matchMedia && window.matchMedia("(display-mode: fullscreen)").matches) return true;
+    } catch (_) {}
+    try {
+      var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      var narrow = window.matchMedia && window.matchMedia("(max-width: 1024px)").matches;
+      if (coarse || narrow) return true;
+    } catch (_) {}
+    try {
+      var ua = String((navigator && navigator.userAgent) || "");
+      if (/iPhone|iPad|iPod|Android/i.test(ua)) return true;
+    } catch (_) {}
+    return false;
+  }
+
   function openExternalSync(url, isMailTel) {
     armExternalReturn();
     clearShellErrorUiOnly();
@@ -259,20 +287,42 @@
       window.__iuMindMenuLastExternalOpen = { url: url, ts: now };
     } catch (_) {}
     var opened = false;
+    var reason = "blocked";
     try {
       if (isMailTel) {
         opened = openExternalViaAnchor(url);
+        reason = opened ? "anchor_mail_tel" : "blocked";
+      } else if (preferSingleAnchorExternalOpen()) {
+        // One user gesture → one browsing/app target (maps UL + web fallback stay intact).
+        opened = openExternalViaAnchor(url);
+        reason = opened ? "anchor_mobile_pwa" : "blocked";
       } else {
-        var w = window.open(url, "_blank", "noopener,noreferrer");
-        opened = !!(w && !w.closed);
-        if (!opened) opened = openExternalViaAnchor(url);
+        // Desktop: window.open with noopener. Spec: return value is null when noopener is set,
+        // so NEVER treat null as "popup blocked" or a second open will create about:blank.
+        var openThrew = false;
+        try {
+          window.open(url, "_blank", "noopener,noreferrer");
+        } catch (_) {
+          openThrew = true;
+        }
+        if (!openThrew) {
+          opened = true;
+          reason = "window_open";
+        } else {
+          opened = openExternalViaAnchor(url);
+          reason = opened ? "anchor_after_throw" : "blocked";
+        }
       }
     } catch (_) {
       try {
         opened = openExternalViaAnchor(url);
-      } catch (_a) {}
+        reason = opened ? "anchor_catch" : "blocked";
+      } catch (_a) {
+        opened = false;
+        reason = "blocked";
+      }
     }
-    return { ok: !!opened, reason: opened ? "opened" : "blocked" };
+    return { ok: !!opened, reason: reason };
   }
 
   function openExternalUrl(rawUrl, opts) {

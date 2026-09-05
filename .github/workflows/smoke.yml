@@ -121,6 +121,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-offline-resilience-guard
 
+      - name: External open no blank/duplicate context guard (mobile/PWA)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-external-open-no-blank-duplicate-guard
+
       - name: PWA offline nav fallback guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-offline-nav-fallback-guard
