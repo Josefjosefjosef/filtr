@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-05-gdpr-vop-legal-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v2"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-04-reload-visual-stability-v1"') &&

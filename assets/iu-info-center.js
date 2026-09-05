@@ -18,10 +18,11 @@
     "device-storage": "Ukládání dat v zařízení",
     "data-sources": "Zdroje dat",
     stats: "Statistiky a transparentnost",
+    "gdpr-vop": "GDPR a Všeobecné obchodní podmínky",
     contact: "Provozovatel a kontakt"
   };
 
-  var DOC_VERSION = "1.9";
+  var DOC_VERSION = "2.0";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
@@ -138,11 +139,13 @@
     refreshPanel();
   }
 
-  /** Insert Ads client portal tile before "Provozovatel a kontakt" without editing frozen projects/index.html. */
+  /** Insert Ads client portal tile before GDPR/VOP (fallback: contact). */
   function ensureAdsClientTile(menu) {
     if (!menu) return;
     if (menu.querySelector('[data-iu-info-external="ads-client"]')) return;
-    var contact = menu.querySelector('.iuInfoCenter__tile[data-iu-info-section="contact"]');
+    var anchor =
+      menu.querySelector('.iuInfoCenter__tile[data-iu-info-section="gdpr-vop"]') ||
+      menu.querySelector('.iuInfoCenter__tile[data-iu-info-section="contact"]');
     var a = document.createElement("a");
     a.className = "iuInfoCenter__tile";
     a.href = "https://ads.infouzel.cz/client";
@@ -152,8 +155,19 @@
       '<span class="iuInfoCenter__tileIcon" aria-hidden="true">📢</span>' +
       '<span class="iuInfoCenter__tileLabel">Reklama a klientský portál</span>' +
       '<span class="iuInfoCenter__tileHint">Informace o reklamě v InfoUzlu a vstup do klientského portálu InfoUzel Ads.</span>';
-    if (contact && contact.parentNode) contact.parentNode.insertBefore(a, contact);
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(a, anchor);
     else menu.appendChild(a);
+  }
+
+  function ensureGdprVopMounted(panel) {
+    var legal = window.iuGdprVopLegal;
+    if (!legal || typeof legal.mountInto !== "function") return;
+    var mount = panel.querySelector("[data-iu-legal-mount]") || panel;
+    if (legal.mountInto(mount)) {
+      try {
+        legal.enhanceToc(mount);
+      } catch (_) {}
+    }
   }
 
   function initNavigation() {
@@ -209,6 +223,10 @@
             if (dsp) void ldp.refreshDeviceStorageStatusPanel(dsp);
           }
         } catch (_) {}
+      }
+      if (currentSection === "gdpr-vop") {
+        var gdprPanel = document.getElementById("iuInfoCenterDetailGdprVop");
+        if (gdprPanel) ensureGdprVopMounted(gdprPanel);
       }
     }
 

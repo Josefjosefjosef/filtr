@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>GDPR a Všeobecné obchodní podmínky — InfoUzel.cz</title>
+    <meta
+      name="description"
+      content="Ochrana osobních údajů (GDPR), Všeobecné obchodní podmínky a pravidla reklamy InfoUzel Ads."
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://infouzel.cz/gdpr-a-vop/" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self' https:; connect-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'self'; object-src 'none'; form-action 'self'; upgrade-insecure-requests;" />
+    <link rel="stylesheet" href="/assets/iu-info-center.css?v=gdpr-vop-section-v1-20260905" />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #eef4f8;
+        color: #0f172a;
+        line-height: 1.5;
+        padding: 16px 12px calc(48px + env(safe-area-inset-bottom, 0px));
+        overflow-x: clip;
+        max-width: 100%;
+      }
+      .iuLegalPublic {
+        max-width: 820px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        padding: 16px 14px 28px;
+        box-sizing: border-box;
+      }
+      .iuLegalPublic__top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .iuLegalPublic__top a {
+        color: #003cff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .iuInfoCenter__tableWrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+      .iuInfoCenter__h2 { scroll-margin-top: 12px; }
+      .iuInfoCenter__actionLink {
+        appearance: none;
+        border: 0;
+        background: none;
+        color: #003cff;
+        font: inherit;
+        font-weight: 600;
+        padding: 0;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="iuLegalPublic" id="iuLegalPublicRoot">
+      <div class="iuLegalPublic__top">
+        <a href="/">← InfoUzel.cz</a>
+        <a href="/#icentrum">iCentrum</a>
+        <a href="/statistiky/">Statistiky</a>
+        <a href="/zdroje-a-licence/">Zdroje a licence</a>
+      </div>
+      <p>Načítám právní dokument…</p>
+    </main>
+    <script src="/assets/iu-gdpr-vop-legal-body-v1.js?v=gdpr-vop-ads-legal-v1-20260905"></script>
+    <script>
+      (function () {
+        var root = document.getElementById("iuLegalPublicRoot");
+        var legal = window.iuGdprVopLegal;
+        if (!root || !legal) return;
+        var top = root.querySelector(".iuLegalPublic__top");
+        root.innerHTML = "";
+        if (top) root.appendChild(top);
+        var wrap = document.createElement("div");
+        wrap.className = "iuInfoCenter__detailInner";
+        legal.mountInto(wrap);
+        root.appendChild(wrap);
+        legal.enhanceToc(root);
+        // Public page: convert iCentrum goto buttons to anchors where possible.
+        root.querySelectorAll("[data-iu-info-goto]").forEach(function (btn) {
+          var key = btn.getAttribute("data-iu-info-goto");
+          var a = document.createElement("a");
+          a.className = "iuInfoCenter__link";
+          a.href = "/#icentrum";
+          a.textContent = btn.textContent || key;
+          a.title = "Otevřete iCentrum a sekci: " + key;
+          btn.replaceWith(a);
+        });
+      })();
+    </script>
+  </body>
+</html>

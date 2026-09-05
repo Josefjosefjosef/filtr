@@ -85,10 +85,10 @@ function main() {
     fails += 1;
   } else ok("no_historical_modules");
 
-  if (!ic.includes('DOC_VERSION = "1.9"')) {
-    fail("doc_version_not_19");
+  if (!ic.includes('DOC_VERSION = "2.0"')) {
+    fail("doc_version_not_20");
     fails += 1;
-  } else ok("doc_version_19");
+  } else ok("doc_version_20");
 
   const dataSources = html.match(
     /id="iuInfoCenterDetailDataSources"[\s\S]*?<\/article>/

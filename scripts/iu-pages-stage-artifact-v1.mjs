@@ -40,6 +40,7 @@ const ALLOW_DIRS = [
   "icons", // root-publish
   "statistiky", // root-publish
   "zdroje-a-licence", // root-publish
+  "gdpr-a-vop", // root-publish
   "bot",
   ".well-known",
 ];
@@ -58,7 +59,7 @@ const ALLOW_FILES = [
 ];
 
 /** Optional until iu-pages-root-publish has run (still required in real Pages deploy). */
-const OPTIONAL_DIRS = new Set(["icons", "statistiky", "zdroje-a-licence", ".well-known"]);
+const OPTIONAL_DIRS = new Set(["icons", "statistiky", "zdroje-a-licence", "gdpr-a-vop", ".well-known"]);
 
 const SKIP_NAME_RE = /(^|\/)(\.env|\.env\..*|.*\.(bak|old|orig|tmp|zip|tar|gz|7z|map))$/i;
 

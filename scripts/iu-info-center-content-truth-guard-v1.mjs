@@ -180,6 +180,7 @@ function main() {
       "Nastavení soukromí",
       "Záloha a obnova dat",
       "Statistiky a transparentnost",
+      "GDPR a Všeobecné obchodní podmínky",
       "Provozovatel a kontakt",
     ];
     if (labels.join("|") !== expected.join("|")) {

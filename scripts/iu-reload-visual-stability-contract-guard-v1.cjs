@@ -95,10 +95,10 @@ function staticContract() {
     fails.push("smoke_yml_missing_guard");
   }
 
-  if (
-    sw.indexOf("2026-09-04-reload-visual-stability-v1") < 0 &&
-    sw.indexOf("2026-09-04-cal-sheet-nav-stable-v2") < 0
-  ) {
+  const {
+    swHasAllowedCacheVersion,
+  } = require("./guards/iu-sw-cache-version-allowlist.cjs");
+  if (!swHasAllowedCacheVersion(sw)) {
     fails.push("sw_cache_version_token_missing");
   }
 
