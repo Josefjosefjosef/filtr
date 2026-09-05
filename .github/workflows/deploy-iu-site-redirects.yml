@@ -144,6 +144,18 @@ jobs:
           curl -sI "https://infouzel.cz/zdroje-a-licence/" | tee /tmp/zl_headers.txt
           grep -qiE "^Content-Security-Policy:" /tmp/zl_headers.txt
           grep -qiE "^x-iu-csp-edge: secondary-v1" /tmp/zl_headers.txt
+          ok_gdpr=0
+          for attempt in 1 2 3 4 5 6; do
+            echo "GDPR_CSP_PROBE_ATTEMPT=${attempt}"
+            curl -sI "https://infouzel.cz/gdpr-a-vop/" | tee /tmp/gdpr_headers.txt
+            if grep -qiE "^x-iu-csp-edge: meta-promoted-v1" /tmp/gdpr_headers.txt \
+              && grep -qiE "^Content-Security-Policy:" /tmp/gdpr_headers.txt; then
+              ok_gdpr=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok_gdpr" = "1"
           curl -sI "https://infouzel.cz/sw.js" | tee /tmp/sw_headers.txt
           if grep -qiE "^Content-Security-Policy:" /tmp/sw_headers.txt; then echo "SW_UNEXPECTED_CSP"; exit 1; fi
           echo "SECONDARY_CSP_PROOF=PASS"

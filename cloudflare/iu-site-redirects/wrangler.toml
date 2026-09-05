@@ -49,6 +49,14 @@ pattern = "www.infouzel.cz/zdroje-a-licence*"
 zone_name = "infouzel.cz"
 
 [[routes]]
+pattern = "infouzel.cz/gdpr-a-vop*"
+zone_name = "infouzel.cz"
+
+[[routes]]
+pattern = "www.infouzel.cz/gdpr-a-vop*"
+zone_name = "infouzel.cz"
+
+[[routes]]
 pattern = "infouzel.cz/bot*"
 zone_name = "infouzel.cz"
 
