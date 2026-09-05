@@ -342,9 +342,35 @@
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle {
     font-weight: 700;
     font-size: 13.5px;
-    margin-bottom: 6px;
+    margin-bottom: 0;
     color: rgba(248, 252, 255, 0.96);
-    word-break: break-all;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardHead,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardHead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 10px;
+    margin-bottom: 6px;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated {
+    flex: 0 1 auto;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: rgba(200, 216, 232, 0.72);
+    white-space: nowrap;
+    max-width: 100%;
+    text-align: right;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow {
@@ -699,10 +725,36 @@
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle {
     font-weight: 800;
     font-size: 0.9375rem;
-    margin-bottom: 6px;
+    margin-bottom: 0;
     color: #0f172a;
-    word-break: break-all;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    flex: 1 1 auto;
     line-height: 1.25;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardHead,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardHead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin-bottom: 6px;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated {
+    flex: 0 1 auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #64748b;
+    white-space: nowrap;
+    max-width: 100%;
+    text-align: right;
   }
   #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,
   #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow {
@@ -1182,6 +1234,10 @@
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle {
     color: #0f172a;
   }
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated {
+    color: #64748b;
+  }
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,
   html:is(.iu-time-morning, .iu-time-late-morning, .iu-time-afternoon) #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow {
     color: #1e293b;
@@ -1262,6 +1318,12 @@
   #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle,
   #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__cardTitle {
     color: rgba(248, 252, 255, 0.96);
+  }
+  html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated,
+  #iuMobileSilverSlot #silver-slot[data-iu-silver-welcome-variant="evening"] #iuSilverParcelWatch .iuSilverParcelWatch__cardCreated {
+    color: rgba(200, 216, 232, 0.72);
   }
   html.iu-time-evening #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,
   html.iu-time-evening #iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__cardRow,

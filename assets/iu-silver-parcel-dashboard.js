@@ -162,10 +162,87 @@ try {
       var raw = localStorage.getItem(LS_KEY);
       if (!raw) return [];
       var j = JSON.parse(raw);
-      return Array.isArray(j) ? j : [];
+      if (!Array.isArray(j)) return [];
+      var migrated = migrateParcelList(j);
+      if (migrated.changed) {
+        writeList(migrated.list);
+      }
+      return migrated.list;
     } catch (_) {
       return [];
     }
+  }
+
+  /**
+   * Idempotent: assign stable sequence to legacy items; never invent addedAt.
+   * Sequence is permanent (survives delete); next create uses max(seq)+1.
+   */
+  function migrateParcelList(list) {
+    if (!Array.isArray(list) || !list.length) {
+      return { list: Array.isArray(list) ? list : [], changed: false };
+    }
+    var changed = false;
+    var maxSeq = 0;
+    var missing = [];
+    for (var i = 0; i < list.length; i++) {
+      var it = list[i];
+      if (!it || typeof it !== "object") continue;
+      var seq = Number(it.sequence);
+      if (Number.isFinite(seq) && seq >= 1 && Math.floor(seq) === seq) {
+        if (seq > maxSeq) maxSeq = seq;
+      } else {
+        missing.push({ item: it, idx: i });
+      }
+    }
+    if (missing.length) {
+      missing.sort(function (a, b) {
+        var aTs = Number(a.item.addedAt);
+        var bTs = Number(b.item.addedAt);
+        var aOk = Number.isFinite(aTs) && aTs > 0;
+        var bOk = Number.isFinite(bTs) && bTs > 0;
+        if (aOk && bOk && aTs !== bTs) return aTs - bTs;
+        if (aOk && !bOk) return -1;
+        if (!aOk && bOk) return 1;
+        return a.idx - b.idx;
+      });
+      for (var m = 0; m < missing.length; m++) {
+        maxSeq += 1;
+        missing[m].item.sequence = maxSeq;
+        changed = true;
+      }
+    }
+    return { list: list, changed: changed };
+  }
+
+  function nextParcelSequence(list) {
+    var maxSeq = 0;
+    for (var i = 0; i < list.length; i++) {
+      var seq = Number(list[i] && list[i].sequence);
+      if (Number.isFinite(seq) && seq > maxSeq) maxSeq = seq;
+    }
+    return maxSeq + 1;
+  }
+
+  /** Czech: "5. 9. 2026 01:04" — local timezone; no invented values. */
+  function formatCreatedAt(ts) {
+    var n = Number(ts);
+    if (!Number.isFinite(n) || n <= 0) return "";
+    var d = new Date(n);
+    if (isNaN(d.getTime())) return "";
+    var pad = function (x) {
+      return (x < 10 ? "0" : "") + x;
+    };
+    return (
+      d.getDate() +
+      ". " +
+      (d.getMonth() + 1) +
+      ". " +
+      d.getFullYear() +
+      " " +
+      pad(d.getHours()) +
+      ":" +
+      pad(d.getMinutes())
+    );
   }
 
   function writeList(arr, onWritten) {
@@ -668,9 +745,27 @@ try {
       item.terminalVerified === "picked_up";
     if (isCompleted) wrap.classList.add("iuSilverParcelWatch__card--done");
 
+    var titleRow = document.createElement("div");
+    titleRow.className = "iuSilverParcelWatch__cardHead";
+
     var title = document.createElement("div");
     title.className = "iuSilverParcelWatch__cardTitle";
-    title.textContent = "📦 Zásilka " + item.number;
+    var seqLabel = Number(item.sequence);
+    var seqText =
+      Number.isFinite(seqLabel) && seqLabel >= 1 ? String(Math.floor(seqLabel)) : "?";
+    title.textContent = "📦 Zásilka " + seqText + " – " + item.number;
+
+    var createdAtLabel = formatCreatedAt(item.addedAt);
+    if (createdAtLabel) {
+      var createdEl = document.createElement("div");
+      createdEl.className = "iuSilverParcelWatch__cardCreated";
+      createdEl.textContent = createdAtLabel;
+      createdEl.setAttribute("title", "Datum a čas vložení zásilky");
+      titleRow.appendChild(title);
+      titleRow.appendChild(createdEl);
+    } else {
+      titleRow.appendChild(title);
+    }
 
     var rowCarrier = document.createElement("div");
     rowCarrier.className = "iuSilverParcelWatch__cardRow";
@@ -692,7 +787,7 @@ try {
     rowTime.textContent =
       "Poslední ověření: " + formatLastCheck(item.lastCheckedAt);
 
-    wrap.appendChild(title);
+    wrap.appendChild(titleRow);
     wrap.appendChild(rowCarrier);
     wrap.appendChild(rowStatus);
     if (rowPick) wrap.appendChild(rowPick);
@@ -878,6 +973,7 @@ try {
       number: collapsed,
       carrierHint: "",
       postalDigits: "",
+      sequence: nextParcelSequence(list),
       addedAt: Date.now(),
       lastCheckedAt: null,
       terminalVerified: null,

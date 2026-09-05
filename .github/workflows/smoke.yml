@@ -313,6 +313,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-home-parcel-card-height-gap-guard
 
+      - name: Parcel sequence + created-at header guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-parcel-sequence-created-header-guard
+
       - name: Article entrypoint parity guard (chunked loading V1)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_only != 'true' && steps.scope.outputs.fin_calc_header_only != 'true' && steps.scope.outputs.datovka_overlay_only != 'true' && steps.scope.outputs.custom_buttons_scroll_only != 'true' && steps.scope.outputs.quicktools_mobile_visibility_only != 'true' && steps.scope.outputs.quicktools_fixed_width_only != 'true' && steps.scope.outputs.user_data_backup_only != 'true' && steps.scope.outputs.data_mgmt_restore_overlay_mobile_only != 'true' && steps.scope.outputs.pc_left_rail_same_window_tabs_only != 'true' && steps.scope.outputs.pc_tool_window_left_rail_layout_only != 'true' && steps.scope.outputs.notes_unified_field_only != 'true' && steps.scope.outputs.pwa_offline_resilience_only != 'true' && steps.scope.outputs.pc_svatek_label_pill_gap_only != 'true' && steps.scope.outputs.calendar_allday_pinned_limit_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run article-entrypoint-parity-guard
