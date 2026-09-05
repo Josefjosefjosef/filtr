@@ -15,7 +15,7 @@ import {
   TRAFFIC_OVERVIEW_FLAGS,
   TRAFFIC_UI_INITIAL_CARD_CAP,
   TRAFFIC_UI_FIRST_PAINT_CARD_CAP,
-} from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
+} from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
 
 export { TRAFFIC_OVERVIEW_FLAGS, TRAFFIC_UI_INITIAL_CARD_CAP, TRAFFIC_UI_FIRST_PAINT_CARD_CAP };
 
