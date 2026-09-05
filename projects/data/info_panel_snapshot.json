@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "generatedAt": "2026-09-04T21:25:40.949Z",
+  "generatedAt": "2026-09-05T00:01:21.595Z",
   "catalogCount": 31,
   "items": {
     "eur_czk": {
@@ -24,46 +24,46 @@
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1662804,
+      "value": 1659955,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 1,92 %",
+      "secondaryValue": "▼ 1,72 %",
       "trendDirection": "down",
-      "updatedAt": "2026-09-04T21:25:40.949Z",
+      "updatedAt": "2026-09-05T00:01:21.595Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 92359,
+      "value": 92349,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▼ 0,78 %",
+      "secondaryValue": "▼ 0,89 %",
       "trendDirection": "down",
-      "updatedAt": "2026-09-04T21:25:40.949Z",
+      "updatedAt": "2026-09-05T00:01:21.595Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "fuel": {
-      "value": 41.91,
+      "value": 42.02,
       "unit": "Kč/l",
       "primaryLabel": "Natural 95",
-      "secondaryValue": "▲ 0,44 Kč/l",
+      "secondaryValue": "▲ 0,11 Kč/l",
       "trendDirection": "up",
-      "updatedAt": "35. týden 2026",
+      "updatedAt": "36. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "35. týden 2026"
+      "referencePeriod": "36. týden 2026"
     },
     "transport": {
-      "value": 45.76,
+      "value": 45.92,
       "unit": "Kč/l",
       "primaryLabel": "Motorová nafta",
-      "secondaryValue": "▲ 1,13 Kč/l",
+      "secondaryValue": "▲ 0,16 Kč/l",
       "trendDirection": "up",
-      "updatedAt": "35. týden 2026",
+      "updatedAt": "36. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "35. týden 2026"
+      "referencePeriod": "36. týden 2026"
     },
     "electricity": {
       "value": 101.7,
@@ -182,15 +182,15 @@
       "referencePeriod": "červen 2026"
     },
     "retail": {
-      "value": 103.2188408901,
+      "value": 103.4700203915,
       "unit": "index",
       "primaryLabel": "Meziroční tržby",
-      "secondaryValue": "▲ 1,14",
+      "secondaryValue": "▲ 2,15",
       "trendDirection": "up",
-      "updatedAt": "červen 2026",
+      "updatedAt": "červenec 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "červen 2026"
+      "referencePeriod": "červenec 2026"
     },
     "agriculture": {
       "value": 87,
@@ -350,18 +350,64 @@
   "errors": [],
   "scheduler": {
     "checkedBuckets": [
+      "csu_fuel",
       "cnb",
-      "coingecko"
+      "csu_coicop",
+      "coingecko",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ],
     "skippedBuckets": [
-      "cnb"
+      "cnb",
+      "csu_coicop",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ]
   },
   "bucketFetchedAt": {
-    "csu_fuel": "2026-08-29T02:09:21.637Z",
+    "csu_fuel": "2026-09-05T00:01:21.595Z",
     "cnb": "2026-09-04T14:19:26.655Z",
     "csu_coicop": "2026-08-17T16:47:35.484Z",
-    "coingecko": "2026-09-04T21:25:40.949Z",
+    "coingecko": "2026-09-05T00:01:21.595Z",
     "csu_inflation": "2026-08-17T16:47:35.484Z",
     "mpsv_labor": "2026-08-11T04:37:38.265Z",
     "csu_wage_q": "2026-09-03T21:41:16.538Z",
@@ -369,7 +415,7 @@
     "csu_gdp": "2026-07-16T00:27:30.151Z",
     "csu_industry": "2026-08-06T23:16:40.398Z",
     "csu_construction": "2026-08-06T23:16:40.398Z",
-    "csu_retail": "2026-08-05T17:30:37.408Z",
+    "csu_retail": "2026-09-05T00:01:21.595Z",
     "csu_agriculture": "2026-08-17T16:47:35.484Z",
     "csu_employment": "2026-07-16T00:27:30.151Z",
     "csu_population": "2026-07-16T00:27:30.151Z",
