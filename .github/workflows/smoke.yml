@@ -570,6 +570,10 @@ jobs:
           IU_CZ_MAP_SHOT_DIR: ${{ github.workspace }}/iu-chmi-cz-map-visual-proof
         run: npm run iu-chmi-card-cz-map-guard
 
+      - name: CHMI first-paint accent blue guard (no purple flash)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-chmi-first-paint-accent-blue-guard
+
       - name: Prehled CZ map TT viewBox guard (Doprava+ČHMÚ sprite)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-prehled-cz-map-tt-viewbox-guard

@@ -1,11 +1,11 @@
 {
-    "freezeId": "iu-external-open-no-blank-v1-20260905",
+    "freezeId": "iu-chmi-first-paint-blue-v1-20260905",
     "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
     "createdAt": "2026-07-20T08:15:00Z",
-    "updatedAt": "2026-09-05T08:00:00.000Z",
-    "note": "External open: no duplicate blank/about:blank on mobile/PWA; freeze hash refreshed.",
+    "updatedAt": "2026-09-05T16:07:28.844Z",
+    "note": "CHMI first-paint Počasí blue accent (#0EA5E9); CAP sync workflow must stay enabled.",
     "files": {
-        "projects/index.html": "eab391f8e98aa7a6f4c154067f299bd7c7abf5c01de1a96b058a826759f0adad",
+        "projects/index.html": "dc057635eceaf324e8fc9ae77defa4ad266a806efc1110d4cc78952d46e8f5a6",
         "assets/app.css": "5925228d8bc9493bfb060b88d34626bb315415d7b3e6dcd5fac7eee841a4bd2d",
         "assets/app.js": "ac63637459ba1a716eeebcc7de5c7fcc1f58ab0ef913bc1be97c59ceb3569132",
         "assets/iu-mobile-bottom-nav-shell-v1.js": "3d59f518cce36894e6b4564580b734cec9625933b18882ef1819df5d417ef54d",
@@ -15,7 +15,7 @@
         "assets/iu-silver-p0-engine.js": "d5a567ba90af909b04f2c3c25a044a653a6bf427c018a049ea71c527d286d990",
         "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
         "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-        "sw.js": "db8cad7f0ebffe4a1340c30701e371c3281a2d9e395fd07bcdc9395b61f8a14f",
+        "sw.js": "9361b511bcb7bde22a71d49437e32d0a55b8f3b80f8e32a9b83c73a4e9a2db81",
         "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
         "assets/iu-network-connectivity-v1.js": "c4492c87eefbae20e0a53c6cf683043c9bfa40c6ea2d7ad728c63d60302bc854",
         "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,11 +24,11 @@
         "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
         "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
         "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-        "assets/iu-prehled-dne-ui-v1.js": "b3da83c739511431cbd37e2b2c2c1ec781311b03ef9876964344403855b9fe8d"
+        "assets/iu-prehled-dne-ui-v1.js": "75556730e46b27c2e657f70ec76689ee2721b90039781430ad2dbe1c151c3f86"
     },
     "requiredMarkers": {
         "sw.js": [
-            "CACHE_VERSION = \"2026-09-05-external-open-no-blank-v1\"",
+            "CACHE_VERSION = \"2026-09-05-chmi-first-paint-blue-v1\"",
             "Layout-critical CSS: network-first",
             "/assets/app.css",
             "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
@@ -91,6 +91,7 @@
             "coming-soon-v1-20260903",
             "pd-filter-layout-save-no-window-v1-20260905",
             "external-open-no-blank-v1-20260905",
+            "chmi-first-paint-blue-v1-20260905",
             "ds-external-return-fullscreen-v1-20260903",
             "silver-cal-save-enable-v1-20260904",
             "wx-offline-online-reconnect-v1-20260904",
