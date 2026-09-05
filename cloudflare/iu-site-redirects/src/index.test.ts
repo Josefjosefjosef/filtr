@@ -168,6 +168,114 @@ describe("iu-site-redirects", () => {
     expect(await res.text()).toContain("iu-traffic-offline-snapshot-v1");
   });
 
+  it("serves head slim snapshot without full card catalog", async () => {
+    const cards = [];
+    for (let i = 0; i < 5; i++) {
+      cards.push({
+        schema: "iu-traffic-card-projection-v1",
+        publicEventId: "iu-te-" + String(i).padStart(32, "a"),
+        lastMeaningfulChangeAt: "2026-09-05T12:0" + i + ":00.000Z",
+      });
+    }
+    const body = JSON.stringify({
+      schema: "iu-traffic-offline-snapshot-v1",
+      cardCount: 5000,
+      cards,
+    });
+    const env = {
+      LIVE_TRAFFIC_ENABLED: "true",
+      TRAFFIC_LIVE: mockR2({
+        "current/traffic_offline_snapshot.json": body,
+        "current/meta.json": JSON.stringify({
+          generationId: "gen_head",
+          publishedAt: "2026-09-05T22:00:00.000Z",
+          summary: { cardCount: 5000 },
+        }),
+      }),
+    };
+    const res = await worker.fetch(req(SNAP + "?iu_head=1&limit=2"), env);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-iu-ndic-snapshot-kind")).toBe("head");
+    const j = await res.json();
+    expect(j.cardCount).toBe(5000);
+    expect(j.cards.length).toBe(2);
+    expect(j.edgeSlim).toBe(true);
+    expect(env.TRAFFIC_LIVE._store.has("current/traffic_offline_snapshot_head.json")).toBe(true);
+  });
+
+  it("serves public live meta from R2", async () => {
+    const META = "/projects/data/info_events/ndic_datex_v1/traffic_live_meta.json";
+    const env = {
+      LIVE_TRAFFIC_ENABLED: "true",
+      TRAFFIC_LIVE: mockR2({
+        "current/meta.json": JSON.stringify({
+          schema: "iu-ndic-live-generation-v1",
+          generationId: "gen_meta",
+          publishedAt: "2026-09-05T22:00:00.000Z",
+          summary: { cardCount: 12 },
+        }),
+      }),
+    };
+    const res = await worker.fetch(req(META), env);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-iu-ndic-meta")).toBe("1");
+    const j = await res.json();
+    expect(j.generationId).toBe("gen_meta");
+    expect(j.summary.cardCount).toBe(12);
+  });
+
+  it("publish writes head artifact alongside full snapshot", async () => {
+    const r2 = mockR2();
+    const env = {
+      LIVE_TRAFFIC_ENABLED: "true",
+      LIVE_PUBLISH_TOKEN: "secret",
+      TRAFFIC_LIVE: r2,
+    };
+    const snap = {
+      schema: "iu-traffic-offline-snapshot-v1",
+      cardCount: 2,
+      cards: [
+        {
+          publicEventId: "iu-te-" + "b".repeat(32),
+          lastMeaningfulChangeAt: "2026-09-05T12:00:00.000Z",
+        },
+        {
+          publicEventId: "iu-te-" + "c".repeat(32),
+          lastMeaningfulChangeAt: "2026-09-05T11:00:00.000Z",
+        },
+      ],
+    };
+    const meta = {
+      generationId: "gen_head_pub",
+      sourceLastModified: "Tue, 11 Aug 2026 12:00:00 GMT",
+      checksum: "abc",
+      semanticChecksum: "sem_head",
+      publishedAt: "2026-08-11T12:00:01.000Z",
+    };
+    const ok = await worker.fetch(
+      req(PUB, {
+        method: "POST",
+        headers: {
+          authorization: "Bearer secret",
+          "content-type": "application/json; charset=utf-8",
+          "x-iu-ndic-publish-wire": "snapshot-raw-v1",
+          "x-iu-ndic-meta": JSON.stringify(meta),
+          "x-iu-ndic-checksum": "abc",
+          "x-iu-ndic-semantic-checksum": "sem_head",
+        },
+        body: JSON.stringify(snap),
+      }),
+      env
+    );
+    expect(ok.status).toBe(200);
+    const j = await ok.json();
+    expect(j.headWritten).toBe(true);
+    expect(r2._store.has("current/traffic_offline_snapshot_head.json")).toBe(true);
+    const head = JSON.parse(r2._store.get("current/traffic_offline_snapshot_head.json") || "{}");
+    expect(head.cardCount).toBe(2);
+    expect(Array.isArray(head.cards)).toBe(true);
+  });
+
   it("publish is atomic and rejects unauthorized", async () => {
     const r2 = mockR2();
     const env = {

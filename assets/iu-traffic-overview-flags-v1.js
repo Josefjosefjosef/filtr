@@ -16,4 +16,5 @@ export const TRAFFIC_OVERVIEW_FLAGS = Object.freeze({
 });
 
 export const TRAFFIC_UI_INITIAL_CARD_CAP = 0;
-export const TRAFFIC_UI_FIRST_PAINT_CARD_CAP = 100;
+/** Align with Worker TRAFFIC_HEAD_CARD_CAP — first network payload, not full catalog. */
+export const TRAFFIC_UI_FIRST_PAINT_CARD_CAP = 200;

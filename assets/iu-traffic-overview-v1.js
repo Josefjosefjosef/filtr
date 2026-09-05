@@ -15,7 +15,7 @@ import {
   TRAFFIC_OVERVIEW_FLAGS,
   TRAFFIC_UI_INITIAL_CARD_CAP,
   TRAFFIC_UI_FIRST_PAINT_CARD_CAP,
-} from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
+} from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
 
 export { TRAFFIC_OVERVIEW_FLAGS, TRAFFIC_UI_INITIAL_CARD_CAP, TRAFFIC_UI_FIRST_PAINT_CARD_CAP };
 
@@ -175,6 +175,16 @@ export function isTrafficMainOverviewVisible(trafficV1, nowMs) {
 /** Hosted offline snapshot (fail-closed if missing / poison). */
 export const TRAFFIC_UI_SNAPSHOT_URL =
   "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
+
+/** Edge head: ≤200 newest cards + full cardCount (no multi‑MiB download). */
+export const TRAFFIC_UI_SNAPSHOT_HEAD_URL =
+  TRAFFIC_UI_SNAPSHOT_URL + "?iu_head=1&limit=200";
+
+/** Public live generation meta (R2) — freshness observability without git monitoring lag. */
+export const TRAFFIC_LIVE_META_URL =
+  "/projects/data/info_events/ndic_datex_v1/traffic_live_meta.json";
+
+export const TRAFFIC_UI_HEAD_CARD_CAP = 200;
 
 /** Internal publication-layer enums (not separate UI). Mapped via shared prefs. */
 export const TRAFFIC_SPATIAL = Object.freeze({
@@ -772,10 +782,62 @@ export function loadOfflineTrafficSnapshot() {
  * Fetch hosted offline snapshot when TRAFFIC_UI_ENABLED. Never follows redirect off-origin.
  * Returns null on any failure (fail-closed).
  *
- * Default: first-paint cap (newest 100) so worker→main postMessage stays small, then background
- * full-catalog hydrate (TRAFFIC_UI_INITIAL_CARD_CAP=0). Pass full:true or maxCards:0 for full only.
+ * Default: edge head (?iu_head=1, ≤200 cards) so first Doprava open does NOT download ~6k cards.
+ * Full catalog only via ensureFullTrafficOfflineSnapshot / { full:true }.
  */
 let _trafficFullHydratePromise = null;
+
+export function isTrafficSnapshotCapped(snap) {
+  if (!snap || typeof snap !== "object") return true;
+  const cards = Array.isArray(snap.cards)
+    ? snap.cards
+    : Array.isArray(snap.projections)
+      ? snap.projections
+      : [];
+  const total = Number(snap.cardCount);
+  if (snap.edgeSlim === true) return true;
+  if (snap.cardsCappedTo != null && Number.isFinite(total) && cards.length < total) return true;
+  if (Number.isFinite(total) && total > 0 && cards.length > 0 && cards.length < total) return true;
+  return false;
+}
+
+/** Locality / detail filters must run on the full catalog — never page-then-filter. */
+export function trafficPrefsNeedFullCatalog(prefs, feedFilter) {
+  const f = prefs || {};
+  const ff = feedFilter || f.feedFilter || {};
+  const traffic = ff.traffic || {};
+  if (
+    f.myRegionOnly ||
+    f.localityQuery ||
+    (f.localities && f.localities.length) ||
+    f.homeObec ||
+    f.homeOkres ||
+    f.homeKraj
+  ) {
+    return true;
+  }
+  // Non-default traffic detail filters (type/severity/etc.) need full set.
+  try {
+    const keys = Object.keys(traffic || {});
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      const v = traffic[k];
+      if (v == null || v === false || v === "" || v === "ALL" || v === "all") continue;
+      if (Array.isArray(v) && v.length === 0) continue;
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+export async function ensureFullTrafficOfflineSnapshot(opts = {}) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
+  const cur = loadOfflineTrafficSnapshot();
+  if (cur && !isTrafficSnapshotCapped(cur)) return cur;
+  return fetchHostedTrafficOfflineSnapshot(
+    Object.assign({}, opts, { full: true, hydrate: false, url: TRAFFIC_UI_SNAPSHOT_URL })
+  );
+}
 
 async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
   let parsed = null;
@@ -846,10 +908,13 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return null;
   // Presenter not required for snapshot fetch/parse (iter-005: keep off FCP→feed path).
-  const url = String(opts.url || TRAFFIC_UI_SNAPSHOT_URL);
   if (typeof fetch !== "function") return null;
   try {
     const fullOnly = opts.full === true || opts.maxCards === 0;
+    const useHead = !fullOnly && opts.head !== false && !opts.url;
+    const url = String(
+      opts.url || (useHead ? TRAFFIC_UI_SNAPSHOT_HEAD_URL : TRAFFIC_UI_SNAPSHOT_URL)
+    );
     const maxCards = fullOnly
       ? 0
       : opts.maxCards != null
@@ -860,9 +925,9 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
     invalidateTrafficFeedItemsCache();
     _trafficSnapMem = snap;
     if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
-    // Background full catalog (not a permanent truncate).
-    if (!fullOnly && opts.hydrate !== false && !(Number(opts.maxCards) > 0)) {
-      void scheduleTrafficSnapshotFullHydrate(url);
+    // Full catalog only on explicit request — never auto-download ~6k cards in background.
+    if (opts.hydrate === true && !fullOnly) {
+      void scheduleTrafficSnapshotFullHydrate(TRAFFIC_UI_SNAPSHOT_URL);
     }
     return snap;
   } catch (_) {
