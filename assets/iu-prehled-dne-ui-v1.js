@@ -37,7 +37,7 @@ import {
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
 } from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822";
-import { TRAFFIC_OVERVIEW_FLAGS } from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822";
+import { TRAFFIC_OVERVIEW_FLAGS } from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {
   applyFeedSourceAndQuickView,
@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -815,6 +815,13 @@ async function computeTrafficFilteredCandidates() {
   }
   const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
   trafficPrefs.feedFilter = ff;
+  if (
+    typeof m.trafficPrefsNeedFullCatalog === "function" &&
+    m.trafficPrefsNeedFullCatalog(trafficPrefs, ff) &&
+    typeof m.ensureFullTrafficOfflineSnapshot === "function"
+  ) {
+    await m.ensureFullTrafficOfflineSnapshot().catch(() => null);
+  }
   const offline = m.collectOfflineTrafficCandidates(trafficPrefs, {
     snapshot: m.loadOfflineTrafficSnapshot(),
     nowIso: new Date().toISOString(),
@@ -824,6 +831,55 @@ async function computeTrafficFilteredCandidates() {
     nowMs: Date.now(),
   });
   return trafficList.filter((ev) => matchesTrafficDetailFilter(ev, ff.traffic));
+}
+
+/** Ensure full NDIC catalog in memory when filters or pagination demand it. */
+async function ensureTrafficCatalogForCurrentFilters(pageHint) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return;
+  if (!feedQuickViewIncludesTraffic()) return;
+  try {
+    const m = await loadTrafficOverview();
+    if (!m || typeof m.ensureFullTrafficOfflineSnapshot !== "function") return;
+    const basePrefs = effectivePrefs();
+    const ff = ensureFeedFilter(basePrefs);
+    const trafficPrefs = prefsForTrafficLocality(basePrefs, ff);
+    trafficPrefs.feedFilter = ff;
+    const snap = m.loadOfflineTrafficSnapshot();
+    const needFilter =
+      typeof m.trafficPrefsNeedFullCatalog === "function" &&
+      m.trafficPrefsNeedFullCatalog(trafficPrefs, ff);
+    const cardsLen = snap && Array.isArray(snap.cards) ? snap.cards.length : 0;
+    const pageNeed = Math.max(1, Number(pageHint != null ? pageHint : state.page) || 1) * PAGE_SIZE;
+    const needPage =
+      typeof m.isTrafficSnapshotCapped === "function" &&
+      m.isTrafficSnapshotCapped(snap) &&
+      pageNeed > cardsLen;
+    if (needFilter || needPage) {
+      await m.ensureFullTrafficOfflineSnapshot();
+    }
+  } catch (_) {}
+}
+
+function trafficCatalogMayHaveMore(listLen) {
+  try {
+    if (!trafficOverviewMod || typeof trafficOverviewMod.isTrafficSnapshotCapped !== "function") {
+      return false;
+    }
+    const snap = trafficOverviewMod.loadOfflineTrafficSnapshot();
+    if (!trafficOverviewMod.isTrafficSnapshotCapped(snap)) return false;
+    const total = Number(snap && snap.cardCount);
+    if (!Number.isFinite(total) || total <= 0) return false;
+    const shown = Math.max(1, state.page | 0) * PAGE_SIZE;
+    // Still capped and user has not yet reached reported catalog size.
+    return shown < total || (Array.isArray(listLen) ? listLen.length : Number(listLen) || 0) < total;
+  } catch (_) {
+    return false;
+  }
+}
+
+function shouldShowLoadMore(pageItems, list) {
+  if (pageItems.length < list.length) return true;
+  return trafficCatalogMayHaveMore(list.length);
 }
 
 function scheduleTrafficBackgroundPrep(bootAbort, root) {
@@ -2256,7 +2312,9 @@ function updateFeedDom() {
     moreWrap.innerHTML =
       pageItems.length < list.length
         ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
-        : "";
+        : trafficCatalogMayHaveMore(list.length)
+          ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
+          : "";
   }
 }
 
@@ -2275,7 +2333,7 @@ function paint(opts) {
     ? pageItems.map(renderItem).join("")
     : `<li class="iuPdEmpty iuPrehledDne__empty">Žádné položky pro toto zobrazení.</li>`;
   const moreHtml =
-    pageItems.length < list.length
+    pageItems.length < list.length || trafficCatalogMayHaveMore(list.length)
       ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
       : "";
   // Keep an existing hero shell (boot skeleton / prior paint) to avoid CLS from full innerHTML replace.
@@ -2647,7 +2705,9 @@ function refreshFeedCountAndMore() {
     moreWrap.innerHTML =
       pageItems.length < list.length
         ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
-        : "";
+        : trafficCatalogMayHaveMore(list.length)
+          ? `<button type="button" class="iuPdBtn iuPdBtn--ghost iuPdBtn--block" data-act="more">Načíst další</button>`
+          : "";
   }
   const feed = root.querySelector("#iuPrehledDneTimeline");
   if (!feed) return;
@@ -2769,6 +2829,7 @@ function wire() {
         void (async () => {
           try {
             await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
+            await ensureTrafficCatalogForCurrentFilters(1);
           } catch (_) {}
           if (state.feedQuickView !== view) return;
           // First paint a short page so correct cards appear before full PAGE_SIZE render.
@@ -3110,8 +3171,13 @@ function wire() {
     }
     if (act === "more") {
       state.page += 1;
-      paint();
-      wire();
+      void (async () => {
+        await ensureTrafficCatalogForCurrentFilters(state.page);
+        try {
+          paint();
+          wire();
+        } catch (_) {}
+      })();
       return;
     }
     if (act === "open-title") {
@@ -3156,8 +3222,13 @@ function wire() {
       else if (kind === "active") tf.activeOnly = !tf.activeOnly;
       state.trafficFilters = tf;
       state.page = 1;
-      paint();
-      wire();
+      void (async () => {
+        await ensureTrafficCatalogForCurrentFilters(1);
+        try {
+          paint();
+          wire();
+        } catch (_) {}
+      })();
       return;
     }
     if (act === "hide") {
