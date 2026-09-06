@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-06-mapy-neutral-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-radio-neutral-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-mindmenu-lock-infouzel-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-ai-assistants-neutral-v1"') &&
