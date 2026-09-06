@@ -1204,15 +1204,15 @@ try {
     ai: {
       title: "AI asistenti",
       items: [
-        { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty", external: true, color: "#10A37F", video: "JTxsNm9IdYU" },
-        { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem", external: true, color: "#4285F4", video: "r4sQqfvTv_g" },
-        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů", external: true, color: "#7B61FF", video: "mO1f7b0f8C0" },
-        { name: "Claude", url: "https://claude.ai", desc: "Přirozené a přesné psaní, analýza dokumentů a práce s dlouhými texty", external: true, color: "#D97706", video: "X1FOhLxFQqo" },
-        { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací", external: true, color: "#0EA5E9", video: "bL_0vD2i4-o" },
-        { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku", external: true, color: "#6366F1", video: "i9kTrcf-gDQ" },
-        { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X", external: true, color: "#111827", video: "Hy46FSmgkmg" },
-        { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu", external: true, color: "#F97316", video: "tcBYaZqdc4A" },
-        { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah", external: true, color: "#EC4899" }
+        { name: "ChatGPT", url: "https://chat.openai.com", external: true, color: "#10A37F", video: "JTxsNm9IdYU" },
+        { name: "Google Gemini", url: "https://gemini.google.com", external: true, color: "#4285F4", video: "r4sQqfvTv_g" },
+        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", external: true, color: "#7B61FF", video: "mO1f7b0f8C0" },
+        { name: "Claude", url: "https://claude.ai", external: true, color: "#D97706", video: "X1FOhLxFQqo" },
+        { name: "Perplexity AI", url: "https://www.perplexity.ai", external: true, color: "#0EA5E9", video: "bL_0vD2i4-o" },
+        { name: "DeepSeek", url: "https://chat.deepseek.com", external: true, color: "#6366F1", video: "i9kTrcf-gDQ" },
+        { name: "Grok", url: "https://x.ai", external: true, color: "#111827", video: "Hy46FSmgkmg" },
+        { name: "Mistral AI", url: "https://chat.mistral.ai", external: true, color: "#F97316", video: "tcBYaZqdc4A" },
+        { name: "Editee", url: "https://www.editee.com", external: true, color: "#EC4899" }
       ]
     },
     deepl: {
@@ -3035,29 +3035,8 @@ try {
       const isAi = (key || "").toLowerCase() === "ai";
       /* AI: keep legacy markup. Convert: separate wrapper — never put iuQClose on forward (it strips border and looks text-only). */
       const shareBtnHtml = isAi ? `<button type="button" class="iuAiShareBtn iuQClose" aria-label="Přeposlat" title="Přeposlat">Přeposlat</button>` : "";
+      /* ai-assistants-neutral-v1-20260906: no duplicate SEO title box / ranking copy in quick-feed path */
       const aiSeoBlock = isAi ? `
-        <div class="iuFeedSeoBlock iuFeedSeoAI">
-          <h2>AI asistenti – přehled nástrojů ChatGPT, Gemini, Copilot a další</h2>
-          <p>
-            Sekce AI asistenti na infoUzel.cz nabízí přehled známých nástrojů
-            pro psaní textů, práci s daty, programování a vyhledávání informací.
-            Najdete zde například ChatGPT, Google Gemini, Microsoft Copilot,
-            Claude, Perplexity AI, DeepSeek, Grok, Mistral AI a Editee.
-          </p>
-          <p>
-            infoUzel.cz funguje jako rozcestník – po kliknutí se otevře
-            oficiální stránka AI nástroje v nové kartě.
-            Můžete tak rychle vyzkoušet různé AI služby na jednom místě.
-          </p>
-          <h3>Co v této sekci najdete</h3>
-          <ul>
-            <li>AI pro psaní textů – ChatGPT, Claude</li>
-            <li>AI od Googlu – Gemini</li>
-            <li>AI ve Windows a Office – Microsoft Copilot</li>
-            <li>AI pro vyhledávání – Perplexity</li>
-            <li>Další nástroje – DeepSeek, Grok, Mistral AI, Editee</li>
-          </ul>
-        </div>
         <section class="iuAiVideos">
           <h2>AI asistenti – krátké představení</h2>
           <div class="iuAiVideoGrid"></div>
@@ -4186,15 +4165,15 @@ try {
   }, true);
 
   const AI_FALLBACK = [
-    { name: "ChatGPT", url: "https://chat.openai.com", desc: "Univerzální AI na psaní, nápady, obrázky i práci s daty" },
-    { name: "Google Gemini", url: "https://gemini.google.com", desc: "AI propojená s Googlem, mapami, vyhledáváním a Gmailem" },
-    { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", desc: "AI pro práci ve Windows, Office a psaní e-mailů" },
-    { name: "Claude", url: "https://claude.ai", desc: "Přirozené a přesné psaní, analýza dokumentů a práce s dlouhými texty" },
-    { name: "Perplexity AI", url: "https://www.perplexity.ai", desc: "Odpovídá jako vyhledávač a uvádí zdroje informací" },
-    { name: "DeepSeek", url: "https://chat.deepseek.com", desc: "Silná AI na programování, logiku a matematiku" },
-    { name: "Grok", url: "https://x.ai", desc: "AI zaměřená na aktuální dění a trendy na síti X" },
-    { name: "Mistral AI", url: "https://chat.mistral.ai", desc: "Evropská AI s důrazem na soukromí a efektivitu" },
-    { name: "Editee", url: "https://www.editee.com", desc: "Česká AI pro marketing, podnikání a obsah" }
+    { name: "ChatGPT", url: "https://chat.openai.com", color: "#10A37F" },
+    { name: "Google Gemini", url: "https://gemini.google.com", color: "#4285F4" },
+    { name: "Microsoft Copilot", url: "https://copilot.microsoft.com", color: "#7B61FF" },
+    { name: "Claude", url: "https://claude.ai", color: "#D97706" },
+    { name: "Perplexity AI", url: "https://www.perplexity.ai", color: "#0EA5E9" },
+    { name: "DeepSeek", url: "https://chat.deepseek.com", color: "#6366F1" },
+    { name: "Grok", url: "https://x.ai", color: "#111827" },
+    { name: "Mistral AI", url: "https://chat.mistral.ai", color: "#F97316" },
+    { name: "Editee", url: "https://www.editee.com", color: "#EC4899" }
   ];
 
   function renderAiCards(container, items){
@@ -4213,10 +4192,10 @@ try {
       const openLink = href
         ? `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">Otevřít</a>`
         : `<span>Otevřít</span>`;
-      return `<div class="iu-aiItem" style="--aiColor:${esc(c)}">
-        <div>
+      /* Neutral catalog: name + Otevřít only (no InfoUzel quality/ranking copy). */
+      return `<div class="iu-aiItem iu-aiItem--nameOnly" style="--aiColor:${esc(c)}">
+        <div class="iu-aiItemMain">
           <strong>${esc(it.name)}</strong>
-          <p>${esc(it.desc || "")}</p>
         </div>
         ${openLink}
       </div>`;
