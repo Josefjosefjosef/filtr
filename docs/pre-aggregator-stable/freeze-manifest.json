@@ -1,13 +1,13 @@
 {
-  "freezeId": "iu-traffic-first-batch-v1-20260906",
+  "freezeId": "iu-ai-assistants-neutral-v1-20260906",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-05T22:16:32.302Z",
-  "note": "Traffic first-batch head pagination (edge ?iu_head=1); no eager full NDIC hydrate.",
+  "updatedAt": "2026-09-06T00:22:02.785Z",
+  "note": "AI asistenti: remove duplicate title box; neutral name+Open cards; scope disclaimer.",
   "files": {
-    "projects/index.html": "7dfaabfde305507326662b9c993c0a8088407f3aa7b5d86def4c1f8b1a306fcd",
+    "projects/index.html": "c93fedb6e04693e3ee7319d9bf3552d31d275b024e7748dbbd8a7685b0a5ddce",
     "assets/app.css": "5925228d8bc9493bfb060b88d34626bb315415d7b3e6dcd5fac7eee841a4bd2d",
-    "assets/app.js": "ac63637459ba1a716eeebcc7de5c7fcc1f58ab0ef913bc1be97c59ceb3569132",
+    "assets/app.js": "e0723b44c0ca8d4751f7c5e83068bad1b2cba63e3d97b379899fee5c9fc47c85",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "3d59f518cce36894e6b4564580b734cec9625933b18882ef1819df5d417ef54d",
     "assets/iu-app-feed-pipeline-v1.js": "9fac1ad2ccf631a614e3c2cd79d8463e8374ad0d67ef062d35264cbaf7a13962",
     "assets/iu-calendar-overlay-v1.js": "d33bc5862bf6c390d946a4f14955c1f135c43155dd30134e30c90f5ce0993403",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "d5a567ba90af909b04f2c3c25a044a653a6bf427c018a049ea71c527d286d990",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "26964a17f29082617ac4507fd9ec1eec7b15cca3b257765a91957b7a71aeed39",
+    "sw.js": "e4aaa554a708c53d3ba91e7dff349960c4888b3462caca80d6ee577b0c152971",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "c4492c87eefbae20e0a53c6cf683043c9bfa40c6ea2d7ad728c63d60302bc854",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -28,7 +28,7 @@
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-09-06-traffic-first-batch-v1\"",
+      "CACHE_VERSION = \"2026-09-06-ai-assistants-neutral-v1\"",
       "Layout-critical CSS: network-first",
       "/assets/app.css",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
@@ -101,7 +101,9 @@
       "Anonymní statistiky návštěvnosti",
       "custom-buttons-dynamic-bottom-clearance-v1-20260804",
       "bottom-nav-unify-v1-20260804",
-      "silver-speech-bubble-down-4px-v1-20260804"
+      "silver-speech-bubble-down-4px-v1-20260804",
+      "ai-assistants-neutral-v1-20260906",
+      "iuAiScopeNote"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
