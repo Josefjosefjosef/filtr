@@ -131,13 +131,21 @@
 
   body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo {
     position: relative;
-    min-height: 32px;
+    min-height: 36px;
     padding-top: 0;
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 6px;
+  }
+
+  body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iuMmLockInfoUzelBtn--mobile {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    align-self: center;
+    z-index: 2;
   }
 
   body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo .iu-mmSectionTitle {
@@ -146,9 +154,10 @@
     text-align: center !important;
     width: auto !important;
     margin: 0;
-    padding: 0;
+    padding: 0 2px;
     line-height: 1.25;
     justify-self: center;
+    min-width: 0;
   }
 
   body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) #iuMobileGatePanelTools .iu-mmSectionHead--gateInfo [data-iu-mobile-gate-info-btn="tools"] {
@@ -168,5 +177,54 @@
     grid-column: 1 / -1;
     grid-row: 2;
     width: 100%;
+  }
+
+  .iuMmLockInfoUzelBtn--mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 32px;
+    min-width: 44px;
+    max-width: 92px;
+    margin: 0;
+    padding: 3px 7px;
+    border: 1px solid rgba(0, 60, 255, 0.16);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+    color: #1e3a8a;
+    box-shadow: 0 1px 3px rgba(11, 42, 74, 0.06);
+    cursor: pointer;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .iuMmLockInfoUzelBtn--mobile:focus-visible {
+    outline: 2px solid var(--iu-brand-blue, #003cff);
+    outline-offset: 2px;
+  }
+
+  .iuMmLockInfoUzelBtn--mobile .iuMmLockInfoUzelBtn__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    opacity: 0.9;
+  }
+
+  .iuMmLockInfoUzelBtn--mobile .iuMmLockInfoUzelBtn__label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.05;
+    min-width: 0;
+  }
+
+  .iuMmLockInfoUzelBtn--mobile .iuMmLockInfoUzelBtn__line {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
   }
 }

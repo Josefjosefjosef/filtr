@@ -48,8 +48,66 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     min-width: 0;
+  }
+
+  .iuMyInfoUzelOverlay__headMain {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .iuMyInfoUzelOverlay__title {
+    margin: 0;
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: clamp(30px, 2.1vw, 32px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .iuMmLockInfoUzelBtn--desktop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    min-height: 36px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid rgba(0, 60, 255, 0.16);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(11, 42, 74, 0.06);
+  }
+
+  .iuMmLockInfoUzelBtn--desktop:hover {
+    border-color: rgba(0, 60, 255, 0.28);
+    background: linear-gradient(180deg, #e0e7ff 0%, #c7d2fe 100%);
+  }
+
+  .iuMmLockInfoUzelBtn--desktop:focus-visible {
+    outline: 2px solid var(--iu-brand-blue, #003cff);
+    outline-offset: 2px;
+  }
+
+  .iuMmLockInfoUzelBtn--desktop .iuMmLockInfoUzelBtn__icon {
+    font-size: 14px;
+    line-height: 1;
   }
 
   .iuMyInfoUzelOverlay__headRule {
@@ -64,19 +122,6 @@
 
   .iuMyInfoUzelOverlay__headerTools {
     display: none !important;
-  }
-
-  .iuMyInfoUzelOverlay__title {
-    margin: 0;
-    flex: 1 1 auto;
-    min-width: 0;
-    font-size: clamp(30px, 2.1vw, 32px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .iuMyInfoUzelOverlay__titleBrand {
