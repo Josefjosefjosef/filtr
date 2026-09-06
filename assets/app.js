@@ -5404,16 +5404,17 @@ try {
     return s === IU_ARTICLE_HUB_SECTION || s === "media";
   }
 
+  /* radio-neutral-v1-20260906: title + url only (no ranking/descriptive blurbs). */
   const RADIO_ITEMS = [
-    { title: "Radiožurnál", url: "https://radiozurnal.rozhlas.cz/", desc: "Zpravodajství ČRo" },
-    { title: "Dvojka", url: "https://dvojka.rozhlas.cz/", desc: "Mluvené slovo" },
-    { title: "Vltava", url: "https://vltava.rozhlas.cz/", desc: "Kultura a hudba" },
-    { title: "Evropa 2", url: "https://www.evropa2.cz/", desc: "Pop a zábava" },
-    { title: "Impuls", url: "https://www.impuls.cz/", desc: "Hity + servis" },
-    { title: "Fajn rádio", url: "https://fajnradio.cz/", desc: "Aktuální hity" },
-    { title: "Kiss", url: "https://kiss.cz/", desc: "Hudba a zábava" },
-    { title: "Rádio Beat", url: "https://www.radiobeat.cz/", desc: "Rock" },
-    { title: "Blaník", url: "https://www.radioblanik.cz/", desc: "České hity" }
+    { title: "Radiožurnál", url: "https://radiozurnal.rozhlas.cz/" },
+    { title: "Dvojka", url: "https://dvojka.rozhlas.cz/" },
+    { title: "Vltava", url: "https://vltava.rozhlas.cz/" },
+    { title: "Evropa 2", url: "https://www.evropa2.cz/" },
+    { title: "Impuls", url: "https://www.impuls.cz/" },
+    { title: "Fajn rádio", url: "https://fajnradio.cz/" },
+    { title: "Kiss", url: "https://kiss.cz/" },
+    { title: "Rádio Beat", url: "https://www.radiobeat.cz/" },
+    { title: "Blaník", url: "https://www.radioblanik.cz/" }
   ];
 
   // Unified navigation router (UI-only)
@@ -6883,12 +6884,9 @@ try {
     const chips = RADIO_ITEMS.map((it) => {
       const title = escapeHtml(it.title);
       const url = escapeHtml(it.url);
-      const desc = escapeHtml(it.desc || "");
-      const descHtml = desc ? `<span class="iuRadioChipDesc">${desc}</span>` : "";
       return `
-        <a class="iuRadioChip" href="${url}" target="_blank" rel="noopener noreferrer">
+        <a class="iuRadioChip iuRadioChip--nameOnly" href="${url}" target="_blank" rel="noopener noreferrer">
           <span class="iuRadioChipTitle">${title}</span>
-          ${descHtml}
         </a>
       `;
     }).join("");

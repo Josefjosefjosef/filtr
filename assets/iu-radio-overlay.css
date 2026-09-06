@@ -1,0 +1,38 @@
+/**
+ * Rádio section — name-only chips (no descriptive blurbs).
+ * Scoped to #iuRadioView so TV online / weather chips keep their desc row.
+ */
+#iuRadioView .iuRadioChip.iuRadioChip--nameOnly,
+#iuRadioView .iuRadioChip:not(:has(.iuRadioChipDesc)) {
+  --iuChipH: 72px;
+  height: var(--iuChipH);
+  min-height: 56px;
+  max-height: none;
+  padding: 12px var(--iuChipPadX, 12px);
+  gap: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+#iuRadioView .iuRadioChip.iuRadioChip--nameOnly .iuRadioChipTitle,
+#iuRadioView .iuRadioChip:not(:has(.iuRadioChipDesc)) .iuRadioChipTitle {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
+#iuRadioView .iuRadioChip .iuRadioChipDesc {
+  display: none !important;
+}
+
+@media (min-width: 1025px) {
+  #iuRadioView .iuRadioChip.iuRadioChip--nameOnly,
+  #iuRadioView .iuRadioChip:not(:has(.iuRadioChipDesc)) {
+    --iuChipH: 76px;
+  }
+}
