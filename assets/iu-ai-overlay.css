@@ -22,8 +22,52 @@
   color: var(--iu-brand-blue-dark, #0B2A4A);
 }
 
-#iu-aiPanel .iuAiScopeNote{
+
+.iuAiScopeNote{
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 450;
   color: rgba(11, 42, 74, 0.72);
+  max-width: 42rem;
+}
+html[data-theme="dark"] .iuAiScopeNote,
+html[data-theme="dark"] #iu-aiPanel .iuAiScopeNote{
+  color: rgba(226, 232, 240, 0.82);
+}
+#iu-aiPanel .iuSeoTitle{
+  margin: 8px 0 8px;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 800;
+  color: var(--iu-brand-blue-dark, #0B2A4A);
+}
+#iu-aiPanel .iu-aiItem--nameOnly,
+.iuSectionAI .iu-aiItem--nameOnly{
+  align-items: center;
+  min-height: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+#iu-aiPanel .iu-aiItem--nameOnly .iu-aiItemMain,
+.iuSectionAI .iu-aiItem--nameOnly .iu-aiItemMain{
+  min-width: 0;
+  flex: 1 1 auto;
+}
+#iu-aiPanel .iu-aiItem--nameOnly strong,
+.iuSectionAI .iu-aiItem--nameOnly strong{
+  display: block;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+#iu-aiPanel .iu-aiItem--nameOnly a,
+.iuSectionAI .iu-aiItem--nameOnly a{
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 #iu-aiPanel #iu-aiPanelCards{
@@ -86,10 +130,6 @@
 #iu-aiPanel .iu-aiItem a:active{
   transform: translateY(0);
   box-shadow: 0 2px 8px var(--iu-brand-blue-a16, rgba(0, 60, 255, 0.16));
-}
-
-#iu-aiPanel .iuSeoTitle{
-  color: var(--iu-brand-blue-dark, #0B2A4A);
 }
 
 #iu-aiPanel .iuSeoText{
