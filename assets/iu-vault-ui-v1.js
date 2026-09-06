@@ -88,7 +88,7 @@
     if (!inner) return false;
 
     let existing = document.getElementById("iuVaultSecuritySection");
-    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "4") {
+    if (existing && existing.getAttribute("data-iu-vault-ui-version") !== "5") {
       existing.remove();
       existing = null;
     }
@@ -98,10 +98,13 @@
     section.id = "iuVaultSecuritySection";
     section.className = "iuVaultSecurity";
     section.setAttribute("data-iu-vault-security-ui", "1");
-    section.setAttribute("data-iu-vault-ui-version", "4");
+    section.setAttribute("data-iu-vault-ui-version", "5");
     section.setAttribute("data-iu-icentrum-security-ux", "phase7-v1");
     section.innerHTML = [
       '<div class="iuVaultSecurity__controlsTop" data-iu-vault-security-controls-top="1">',
+      '  <div class="iuInfoCenter__box iuInfoCenter__box--info iuVaultSecurity__lockIntro" role="note" data-iu-ic-truth="lock-intro" data-iu-vault-lock-intro="1">',
+      '    <p class="iuInfoCenter__p" data-iu-vault-lock-intro-text="1">Zapnutím zámku se celý InfoUzel uzamkne. Při jeho otevření nebo návratu do InfoUzlu bude pro přístup vyžadováno zvolené ověření.</p>',
+      "  </div>",
       '  <fieldset class="iuVaultSecurity__methodFieldset" id="iuVaultMindMenuMethodFieldset">',
       '    <legend class="iuVaultSecurity__legend">Způsob odemknutí</legend>',
       '    <label class="iuVaultSecurity__radio"><input type="radio" name="iuVaultMindMenuMethod" value="none" /> Bez dalšího zamykání</label>',
@@ -145,7 +148,6 @@
       "</div>",
       '<div class="iuVaultSecurity__level" id="iuVaultMindMenuLockBlock">',
       '  <h4 class="iuVaultSecurity__title">Dodatečný zámek InfoUzlu</h4>',
-      '  <p class="iuInfoCenter__p">Zapnutím zámku se při otevření nebo návratu podle nastavení ověřuje přístup. Zamkne se <strong>celý InfoUzel</strong>, nejen MindMenu.</p>',
       '  <p class="iuInfoCenter__p iuVaultSecurity__recommend" id="iuVaultSecurityRecommend" hidden></p>',
       '  <div class="iuVaultSecurity__auto" id="iuVaultAutoLockBlock" data-iu-ic-truth="full-web-lock">',
       '    <h4 class="iuVaultSecurity__title">Automaticky zamknout celý InfoUzel</h4>',
