@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-06-mindmenu-lock-infouzel-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-ai-assistants-neutral-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-traffic-first-batch-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-05-chmi-first-paint-blue-v1"') &&

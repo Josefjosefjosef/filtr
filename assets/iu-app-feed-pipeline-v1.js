@@ -7965,6 +7965,7 @@ function iuIsBenignResizeObserverLoopError(ev) {
       const existing = document.getElementById("iuMyInfoUzelOverlay");
       if (existing && document.getElementById("iuMyInfoUzelToolsHost") && existing.querySelector(".iuMyInfoUzelOverlay__headRow") && !existing.querySelector(".iuMyInfoUzelDashboard__col--saved") && !existing.querySelector("[data-iu-manage-tabs]")) {
         iuQuickToolsBindToolsHostGearOnce(document.getElementById("iuMyInfoUzelToolsHost"));
+        iuMyInfoUzelEnsureLockBtn(existing);
         return;
       }
       if (existing) existing.remove();
@@ -7980,7 +7981,10 @@ function iuIsBenignResizeObserverLoopError(ev) {
         <div class="iuMyInfoUzelOverlay__sheet">
           <header class="iuMyInfoUzelOverlay__head">
             <div class="iuMyInfoUzelOverlay__headRow">
-              <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title"><span class="iuMyInfoUzelOverlay__titleBrand">Můj infoUzel.cz</span><span class="iuMyInfoUzelOverlay__titleSep" aria-hidden="true"> / </span><span class="iuMyInfoUzelOverlay__titleMind">MindMenu</span></h2>
+              <div class="iuMyInfoUzelOverlay__headMain">
+                <h2 id="iuMyInfoUzelOverlayTitle" class="iuMyInfoUzelOverlay__title"><span class="iuMyInfoUzelOverlay__titleBrand">Můj infoUzel.cz</span><span class="iuMyInfoUzelOverlay__titleSep" aria-hidden="true"> / </span><span class="iuMyInfoUzelOverlay__titleMind">MindMenu</span></h2>
+                <button type="button" class="iuMmLockInfoUzelBtn iuMmLockInfoUzelBtn--desktop" data-iu-mm-lock-infouzel="1" aria-label="Zamknout InfoUzel"><span class="iuMmLockInfoUzelBtn__icon" aria-hidden="true">🔒</span><span class="iuMmLockInfoUzelBtn__text">Zamknout InfoUzel</span></button>
+              </div>
               <button type="button" class="iuMyInfoUzelOverlay__close" data-iu-myinfouzel-close aria-label="Zavřít">×</button>
             </div>
             <div class="iuMyInfoUzelOverlay__headRule" aria-hidden="true"></div>
@@ -8000,6 +8004,7 @@ function iuIsBenignResizeObserverLoopError(ev) {
       `.trim();
       document.body.appendChild(overlay);
       iuQuickToolsBindToolsHostGearOnce(overlay.querySelector("#iuMyInfoUzelToolsHost"));
+      iuMyInfoUzelEnsureLockBtn(overlay);
       overlay.addEventListener("click", (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
@@ -16780,6 +16785,92 @@ function buildVideoAsArticleCard(it) {
     );
   }
 
+  /* mindmenu-lock-infouzel-v1-20260906: entry to existing iCentrum › Nastavení zabezpečení (privacy). Does NOT lock. */
+  function iuOpenInfoCenterSecuritySettings() {
+    try {
+      if (typeof window.iuInfoCenterOpenSection === "function") {
+        window.iuInfoCenterOpenSection("privacy");
+        return;
+      }
+    } catch (_) {}
+    try {
+      var trigger =
+        document.getElementById("iuTopbarInfoBtn") ||
+        document.getElementById("iuSilverWelcomeInfoBtn") ||
+        document.querySelector("[data-iu-mobile-gate-info-btn]");
+      if (trigger) trigger.click();
+    } catch (_) {}
+    window.setTimeout(function () {
+      try {
+        if (typeof window.iuInfoCenterOpenSection === "function") {
+          window.iuInfoCenterOpenSection("privacy");
+        }
+      } catch (_) {}
+    }, 80);
+  }
+
+  function iuMmLockInfoUzelBtnMarkup(variant) {
+    var isDesktop = String(variant || "") === "desktop";
+    if (isDesktop) {
+      return (
+        '<button type="button" class="iuMmLockInfoUzelBtn iuMmLockInfoUzelBtn--desktop" data-iu-mm-lock-infouzel="1" aria-label="Zamknout InfoUzel">' +
+        '<span class="iuMmLockInfoUzelBtn__icon" aria-hidden="true">🔒</span>' +
+        '<span class="iuMmLockInfoUzelBtn__text">Zamknout InfoUzel</span></button>'
+      );
+    }
+    return (
+      '<button type="button" class="iuMmLockInfoUzelBtn iuMmLockInfoUzelBtn--mobile" data-iu-mm-lock-infouzel="1" aria-label="Zamknout InfoUzel">' +
+      '<span class="iuMmLockInfoUzelBtn__icon" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">' +
+      '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>' +
+      '<span class="iuMmLockInfoUzelBtn__label" aria-hidden="true">' +
+      '<span class="iuMmLockInfoUzelBtn__line">Zamknout</span>' +
+      '<span class="iuMmLockInfoUzelBtn__line">InfoUzel</span></span></button>'
+    );
+  }
+
+  function iuMyInfoUzelEnsureLockBtn(overlayRoot) {
+    try {
+      var root = overlayRoot || document.getElementById("iuMyInfoUzelOverlay");
+      if (!root) return;
+      var row = root.querySelector(".iuMyInfoUzelOverlay__headRow");
+      if (!row || row.querySelector("[data-iu-mm-lock-infouzel]")) return;
+      var title = row.querySelector(".iuMyInfoUzelOverlay__title");
+      var closeBtn = row.querySelector(".iuMyInfoUzelOverlay__close");
+      var wrap = document.createElement("div");
+      wrap.className = "iuMyInfoUzelOverlay__headMain";
+      if (title) wrap.appendChild(title);
+      wrap.insertAdjacentHTML("beforeend", iuMmLockInfoUzelBtnMarkup("desktop"));
+      if (closeBtn) row.insertBefore(wrap, closeBtn);
+      else row.appendChild(wrap);
+    } catch (_) {}
+  }
+
+  function iuMmLockInfoUzelBindOnce() {
+    try {
+      if (window.__iuMmLockInfoUzelBound) return;
+      window.__iuMmLockInfoUzelBound = 1;
+      document.addEventListener(
+        "click",
+        function (e) {
+          var t = e.target;
+          if (!(t && t.closest)) return;
+          var btn = t.closest("[data-iu-mm-lock-infouzel]");
+          if (!btn) return;
+          try {
+            e.preventDefault();
+          } catch (_) {}
+          iuOpenInfoCenterSecuritySettings();
+        },
+        false
+      );
+    } catch (_) {}
+  }
+  iuMmLockInfoUzelBindOnce();
+  try {
+    window.iuOpenInfoCenterSecuritySettings = iuOpenInfoCenterSecuritySettings;
+  } catch (_) {}
+
   function iuMobileGateIsMobileTabletUx() {
     try {
       return !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
@@ -16794,6 +16885,8 @@ function buildVideoAsArticleCard(it) {
       if (navHead) navHead.remove();
       var toolsBtn = document.querySelector("[data-iu-mobile-gate-info-btn='tools']");
       if (toolsBtn) toolsBtn.remove();
+      var lockBtn = document.querySelector("section.iu-mailboxes .iu-mmSectionHead [data-iu-mm-lock-infouzel]");
+      if (lockBtn) lockBtn.remove();
       var sectionHead = document.querySelector("section.iu-mailboxes .iu-mmSectionHead.iu-mmSectionHead--gateInfo");
       if (sectionHead) sectionHead.classList.remove("iu-mmSectionHead--gateInfo");
     } catch (_) {}
@@ -16829,8 +16922,13 @@ function buildVideoAsArticleCard(it) {
           var mailboxes = mindMenu.querySelector("section.iu-mailboxes");
           if (mailboxes) {
             var sectionHead = mailboxes.querySelector(".iu-mmSectionHead");
-            if (sectionHead && !sectionHead.querySelector("[data-iu-mobile-gate-info-btn='tools']")) {
-              sectionHead.insertAdjacentHTML("beforeend", iuMobileGateInfoBtnMarkup("tools"));
+            if (sectionHead) {
+              if (!sectionHead.querySelector("[data-iu-mm-lock-infouzel]")) {
+                sectionHead.insertAdjacentHTML("afterbegin", iuMmLockInfoUzelBtnMarkup("mobile"));
+              }
+              if (!sectionHead.querySelector("[data-iu-mobile-gate-info-btn='tools']")) {
+                sectionHead.insertAdjacentHTML("beforeend", iuMobileGateInfoBtnMarkup("tools"));
+              }
               sectionHead.classList.add("iu-mmSectionHead--gateInfo");
             }
           }
@@ -16838,6 +16936,8 @@ function buildVideoAsArticleCard(it) {
       } else {
         var staleToolsBtn = document.querySelector("[data-iu-mobile-gate-info-btn='tools']");
         if (staleToolsBtn) staleToolsBtn.remove();
+        var staleLockBtn = document.querySelector("section.iu-mailboxes .iu-mmSectionHead [data-iu-mm-lock-infouzel]");
+        if (staleLockBtn) staleLockBtn.remove();
         var staleSectionHead = document.querySelector("section.iu-mailboxes .iu-mmSectionHead.iu-mmSectionHead--gateInfo");
         if (staleSectionHead) staleSectionHead.classList.remove("iu-mmSectionHead--gateInfo");
       }
@@ -16845,6 +16945,7 @@ function buildVideoAsArticleCard(it) {
   }
   try {
     window.iuMobileGateReorder = iuMobileGateReorder;
+    window.iuMobileGateEnsureInfoButtons = iuMobileGateEnsureInfoButtons;
   } catch (_) {}
 
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
