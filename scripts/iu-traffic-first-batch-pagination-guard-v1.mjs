@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
  * Guard: Doprava first open must not download/render the full ~6k NDIC catalog.
- * - Edge head URL (?iu_head=1) + deferred full hydrate
+ * - Edge head URL (?iu_head=1) for first batch
  * - PAGE_SIZE=50 DOM window + Načíst další
+ * - Auto background full hydrate AFTER head (hydrate:true), never blocking first return
+ * - Single-flight full hydrate (ensureFull joins scheduleTrafficSnapshotFullHydrate)
  * - Filter-before-page invariant (full catalog when locality/detail filters active)
  */
 import fs from "node:fs";
@@ -35,14 +37,52 @@ ok(
   "missing live meta URL"
 );
 ok(
-  "no_auto_full_hydrate",
-  /opts\.hydrate === true/.test(overview) && !overview.includes("opts.hydrate !== false && !(Number(opts.maxCards) > 0)"),
-  "auto full hydrate still default"
+  "hydrate_opt_in_gate",
+  /opts\.hydrate === true/.test(overview),
+  "hydrate must stay opt-in (never default-true inside fetchHosted)"
 );
 ok(
-  "ensure_full_export",
-  /export async function ensureFullTrafficOfflineSnapshot/.test(overview),
-  "ensureFull missing"
+  "no_legacy_auto_default_hydrate",
+  !overview.includes("opts.hydrate !== false && !(Number(opts.maxCards) > 0)"),
+  "legacy auto-default hydrate pattern"
+);
+ok(
+  "schedule_full_hydrate_fn",
+  /function scheduleTrafficSnapshotFullHydrate/.test(overview),
+  "scheduleTrafficSnapshotFullHydrate"
+);
+ok(
+  "public_bg_hydrate_export",
+  /export function scheduleTrafficBackgroundFullHydrate/.test(overview),
+  "scheduleTrafficBackgroundFullHydrate"
+);
+ok(
+  "single_flight_promise",
+  /_trafficFullHydratePromise/.test(overview) && /export function getTrafficFullHydratePromise/.test(overview),
+  "single-flight promise"
+);
+ok(
+  "ensure_full_joins_schedule",
+  /export async function ensureFullTrafficOfflineSnapshot[\s\S]{0,400}scheduleTrafficSnapshotFullHydrate/.test(
+    overview
+  ),
+  "ensureFull must join single-flight schedule (no parallel full GET)"
+);
+ok(
+  "ensure_full_no_parallel_full_fetch",
+  !/ensureFullTrafficOfflineSnapshot[\s\S]{0,500}full:\s*true/.test(overview),
+  "ensureFull must not start a separate {full:true} fetch"
+);
+ok(
+  "atomic_accept_helper",
+  /function shouldAcceptTrafficFullSnapshot/.test(overview),
+  "generation/accept helper"
+);
+ok(
+  "no_clobber_full_with_head",
+  /Do not clobber an already-ready full catalog/.test(overview) ||
+    /!isTrafficSnapshotCapped\(_trafficSnapMem\) && isTrafficSnapshotCapped\(snap\)/.test(overview),
+  "head must not overwrite ready full"
 );
 ok(
   "capped_helper",
@@ -63,6 +103,18 @@ ok(
   "prehled_page_size_50",
   /const PAGE_SIZE\s*=\s*50/.test(prehled),
   "PAGE_SIZE"
+);
+ok(
+  "prehled_auto_hydrate_on_traffic_open",
+  /scheduleTrafficBackgroundFullHydrate/.test(prehled) &&
+    /paintTrafficQuick[\s\S]{0,800}scheduleTrafficBackgroundFullHydrate/.test(prehled),
+  "Doprava open must schedule background full hydrate (not wait for filter/Další)"
+);
+ok(
+  "prehled_head_fetch_not_await_full",
+  /fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true\s*\}/.test(prehled) &&
+    !/fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true,\s*hydrate:\s*true\s*\}/.test(prehled),
+  "boot head fetch must not await/block on full hydrate"
 );
 ok(
   "prehled_ensure_catalog_on_more",

@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-privacy-lock-intro-v1-20260906",
+  "freezeId": "iu-traffic-auto-bg-hydrate-v1-20260906",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-06T15:10:00.000Z",
-  "note": "Privacy section: lock-intro above unlock methods; remove duplicate blurb.",
+  "updatedAt": "2026-09-06T18:26:03.843Z",
+  "note": "Traffic: auto background full hydrate after first-batch head; single-flight; no full DOM.",
   "files": {
-    "projects/index.html": "85be77adbddba071c4e6a1bd0e7e3731ddd185a9292c17e6d1390b464335a66f",
+    "projects/index.html": "0ce03cb5c718fa621744e754443e182a33cfd5939c8c02194b715f18f38a0e9d",
     "assets/app.css": "5925228d8bc9493bfb060b88d34626bb315415d7b3e6dcd5fac7eee841a4bd2d",
     "assets/app.js": "f0d5a10f9245c3eda3eca9c95ebd77ccc93dd7192fa1dc4152d2eebf9a42eaa3",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "3d59f518cce36894e6b4564580b734cec9625933b18882ef1819df5d417ef54d",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "d5a567ba90af909b04f2c3c25a044a653a6bf427c018a049ea71c527d286d990",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "0b0a2b26beca6073eb87eef9dcea1e88929e98f0fd9f3e5772b57fc71a98f8d0",
+    "sw.js": "5924fe86b9d05151351dd5c78b21d8443f89da5578f35ddeffc2ac0dfd617806",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "c4492c87eefbae20e0a53c6cf683043c9bfa40c6ea2d7ad728c63d60302bc854",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,11 +24,11 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "4cad7d36ef5fe381824813a8bc9a7c6482cd897eccb14ac41a4ac3a1c8e3c0b3",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "9577e8f3bd467eb0982ba835a11d5a52d194b255d6afc809486a713ab160cba4"
+    "assets/iu-prehled-dne-ui-v1.js": "33b923c0dcc474dc0f04fbfedc9d39d71aa326c81eec07dcd4d6ac75e9881cea"
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-09-06-privacy-lock-intro-v1\"",
+      "CACHE_VERSION = \"2026-09-06-traffic-auto-bg-hydrate-v1\"",
       "Layout-critical CSS: network-first",
       "/assets/app.css",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",

@@ -198,6 +198,8 @@ jobs:
         run: npm run iu-first-load-chmi-default-background-traffic-guard
       - name: Traffic first-batch pagination guard
         run: npm run iu-traffic-first-batch-pagination-guard
+      - name: Traffic auto background full hydrate guard
+        run: npm run iu-traffic-auto-bg-full-hydrate-guard
       - name: NDIC live freshness watchdog guard
         run: npm run iu-ndic-live-freshness-watchdog-guard
       - name: First-load CHMI lane fast paint guard
