@@ -1,6 +1,6 @@
 /**
  * InfoUzel.cz — Přehled dne UI v6 (timeline axis restore + actions align)
- * Hlavní stránka: Můj přehled/Nastavení + quick view + Zobrazit (Vše/Uložené/Skryté) + feed.
+ * Hlavní stránka: Můj přehled/Nastavení + quick view (Dopravní/ČHMÚ) + Vše/Uložené/Skryté + feed.
  * Nastavení: jeden overlay/modal — hlavní 3 lišty, jedna otevřená sekce, autosave.
  * Feed: svislá časová osa + puntíky; Uložit/Skrýt zarovnané vpravo.
  */

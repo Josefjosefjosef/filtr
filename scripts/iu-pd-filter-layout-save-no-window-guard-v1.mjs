@@ -18,14 +18,25 @@ function must(cond, id) {
   if (!cond) fails.push(id);
 }
 
-must(/Zobrazit vše/.test(feed), "labels:zobrazit_vse");
+must(!/Zobrazit vše/.test(feed), "labels:no_zobrazit_vse");
 must(/Dopravní informace/.test(feed), "labels:dopravni_info");
 must(/Výstrahy ČHMÚ/.test(feed), "labels:vystrahy_chmu");
+must(!/btn\("all",\s*"Zobrazit vše"/.test(feed), "render:no_all_quick_btn");
 must(/data-act="feed-quick-view"/.test(feed), "handlers:feed_quick_view_kept");
 must(/data-view="\$\{escFeedHtml\(id\)\}"|data-view="/.test(feed) || /data-view="/.test(feed), "handlers:data_view_kept");
 
 must(/iuPdQuickView--primary/.test(feed) && /iuPdQuickView--primary/.test(css), "css:primary_quick_view");
-must(/border-radius:\s*14px/.test(css), "css:rect_radius");
+must(/--iu-pd-control-radius:\s*14px/.test(css), "css:control_radius_token");
+must(/border-radius:\s*var\(--iu-pd-control-radius\)/.test(css), "css:primary_uses_control_radius");
+must(
+  /\.iuPd__hero\s+\.iuPdBtn--settings[\s\S]*?border-bottom-left-radius:\s*var\(--iu-pd-control-radius\)/.test(css) &&
+    /\.iuPd__hero\s+\.iuPdBtn--settings[\s\S]*?border-bottom-right-radius:\s*var\(--iu-pd-control-radius\)/.test(css) &&
+    /\.iuPd__hero\s+\.iuPdBtn--settings[\s\S]*?border-top-left-radius:\s*0/.test(css) &&
+    /\.iuPd__hero\s+\.iuPdBtn--settings[\s\S]*?border-top-right-radius:\s*0/.test(css),
+  "css:settings_bottom_radius_only"
+);
+must(/grid-template-columns:\s*repeat\(2,/.test(css), "css:quick_view_two_cols");
+must(!/grid-template-columns:\s*repeat\(3,/.test(css), "css:no_quick_view_three_cols");
 
 const shell = ui.match(/function homeShellHtml[\s\S]*?\n\}/);
 must(!!shell, "shell:homeShellHtml");

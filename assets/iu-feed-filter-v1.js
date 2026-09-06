@@ -577,7 +577,6 @@ export function quickViewBarHtml(ff, quickView) {
     )}</button>`;
   return (
     `<div class="iuPdQuickView iuPdQuickView--primary" data-iu-feed-quick="1" role="toolbar" aria-label="Rychlý pohled feedu">` +
-    btn("all", "Zobrazit vše", "all", false) +
     btn("traffic", "Dopravní informace", "traffic", !trafficOn) +
     btn("chmu", "Výstrahy ČHMÚ", "chmu", !chmuOn) +
     `</div>`
