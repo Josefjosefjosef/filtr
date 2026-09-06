@@ -1,6 +1,6 @@
 {
-  "runId": "6fd18aa7c2fe4ce5",
-  "started": "2026-09-05T22:13:36.703Z",
+  "runId": "65f576d087f8ee7a",
+  "started": "2026-09-06T11:42:35.897Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,11 +16,11 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050823.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_011200.xml",
@@ -30,13 +30,26 @@
       "cacheHit": true
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 1,
+    "valid": 1,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 1,
+    "status": "healthy",
+    "alert": 0,
+    "update": 1,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 18,
       "logicalAlerts": 4,
       "uniqueEvents": [
         "Stav sucha",
@@ -62,7 +75,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
   "onsetSplit": {
     "before": 3,
@@ -88,7 +101,6 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_041200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_111200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_181200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_211723.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_211917.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220636.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_230940.xml",
@@ -105,10 +117,11 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_020755.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_030749.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_040803.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050823.xml"
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050823.xml",
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml"
       ],
       "recentCount": 32,
-      "refCount": 0,
+      "refCount": 2,
       "window": 16
     },
     "chainSteps": [
@@ -195,12 +208,6 @@
         "msgType": "Update",
         "openEndedCount": 3,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_181200.xml"
-      },
-      {
-        "sent": "2026-08-21T19:23:04+02:00",
-        "msgType": "Update",
-        "openEndedCount": 0,
-        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_211723.xml"
       },
       {
         "sent": "2026-08-21T21:17:52+02:00",
@@ -303,6 +310,12 @@
         "msgType": "Update",
         "openEndedCount": 0,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050823.xml"
+      },
+      {
+        "sent": "2026-09-06T11:08:13+02:00",
+        "msgType": "Update",
+        "openEndedCount": 0,
+        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml"
       }
     ],
     "fixtureSeed": false,
@@ -319,8 +332,8 @@
     "visibleCount": 4
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
+    "capMessages": 1,
+    "infoBlocks": 18,
     "logicalAlerts": 4,
     "uniqueEvents": [
       "Stav sucha",
@@ -356,6 +369,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-09-05T22:13:43.322Z",
-  "runMs": 6619
+  "finished": "2026-09-06T11:42:43.698Z",
+  "runMs": 7801
 }
