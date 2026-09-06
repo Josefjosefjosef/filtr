@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-07-affiliate-selected-services-neutral-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-jr-neutral-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-traffic-auto-bg-hydrate-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-06-privacy-lock-intro-v1"') &&

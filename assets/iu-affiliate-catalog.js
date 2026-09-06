@@ -9,7 +9,7 @@
   window.__iuAffiliateCatalogBooted = true;
 
   var IU_AFFILIATE_DISCLOSURE_TEXT =
-    "Tato sekce obsahuje reklamní a partnerské odkazy na ověřené služby a obchody.";
+    "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 
   function renderAffiliateDisclosure(el) {
     if (!el) return;
@@ -24,11 +24,10 @@
     };
   }
 
-  function affSeo(title, paragraphs, keywords) {
+  function affSeo(title, paragraphs) {
     return {
       title: title,
       paragraphs: paragraphs,
-      keywords: keywords,
     };
   }
 
@@ -45,229 +44,204 @@
 
   var IU_AFFILIATE_SEO = {
     "aff-cestovni-kancelare": affSeo(
-      "Cestovní kanceláře a zájezdy online",
+      "Cestovní kanceláře – odkazy na vybrané externí služby",
       [
-        "V sekci Cestovní kanceláře najdete přehled známých touroperátorů a portálů se zájezdy do Evropy i exotických destinací. Rychle otevřete nabídky last minute, rodinných dovolených u moře, poznávacích cest i lyžařských pobytů.",
-        "Praktický rozcestník ušetří čas při hledání aktuálních akcí, termínů odletů a dostupnosti kapacit. Hodí se, když chcete porovnat více cestovních kanceláří na jednom místě.",
-        "Cílem je nabídnout přehledné odkazy na ověřené služby pro plánování dovolené bez zbytečného proklikávání.",
-      ],
-      "cestovní kanceláře, zájezdy, last minute, dovolená u moře, poznávací cesty"
+        "Sekce Cestovní kanceláře obsahuje odkazy na vybrané externí cestovní kanceláře, cestovní portály a související služby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídky, ceny, dostupnost, podmínky, informace o zájezdech a další obsah určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-ubytovani-hotely": affSeo(
-      "Ubytování, hotely a apartmány",
+      "Ubytování a hotely – odkazy na vybrané externí služby",
       [
-        "Sekce Ubytování a hotely shrnuje služby pro rezervaci hotelů, apartmánů, penzionů i wellness pobytů v Česku i v zahraničí.",
-        "Snadno najdete nabídky pro víkendové pobyty, rodinnou dovolenou, pracovní cesty nebo romantický výlet. Užitečné je i při rychlém porovnání dostupnosti termínů a cen.",
-        "Jde o praktický rozcestník pro každého, kdo hledá spolehlivé ubytování online.",
-      ],
-      "ubytování, hotely, apartmány, rezervace, wellness pobyty"
+        "Sekce Ubytování a hotely obsahuje odkazy na vybrané externí služby pro rezervaci ubytování, hotelů a souvisejících pobytů. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-letenky": affSeo(
-      "Letenky a cestovní pomoc online",
+      "Letenky a cestovní pomoc – odkazy na vybrané externí služby",
       [
-        "Letenky a cestovní pomoc spojují vyhledávače letenek, dopravce a služby pro cestující, včetně pomoci s kompenzacemi nebo zpožděními.",
-        "Sekce je užitečná při plánování cest po Evropě i do vzdálenějších destinací, a také když potřebujete rychle ověřit spojení autobusem či vlakem.",
-        "Cílem je mít po ruce ověřené odkazy pro cestování bez zbytečného hledání.",
-      ],
-      "letenky, levné letenky, cestovní pomoc, kompenzace, autobusy"
+        "Sekce Letenky a cestovní pomoc obsahuje odkazy na vybrané externí služby související s letenkami, dopravou a cestovní podporou. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-cestovni-pojisteni": affSeo(
-      "Cestovní pojištění a asistence",
+      "Cestovní pojištění – odkazy na vybrané externí služby",
       [
-        "Cestovní pojištění chrání před neočekávanými výdaji na zahraniční dovolené i pracovní cesty. V této sekci najdete přehled pojišťoven a asistenčních služeb.",
-        "Hodí se před odletem k moři, na hory i na krátký víkend v EU, kdy potřebujete rychle srovnat rozsah krytí, limity a asistenci.",
-        "Praktický rozcestník usnadní výběr cestovního pojištění podle typu cesty.",
-      ],
-      "cestovní pojištění, asistenční služby, pojištění na dovolenou"
+        "Sekce Cestovní pojištění obsahuje odkazy na vybrané externí pojišťovny a asistenční služby související s cestováním. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Rozsah krytí, ceny, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-auto-moto": affSeo(
-      "Auto, moto a příslušenství",
+      "Auto a moto – odkazy na vybrané externí služby",
       [
-        "Sekce Auto a moto sdružuje e-shopy s autodoplňky, pneumatikami, moto vybavením i servisními produkty pro řidiče a motorkáře.",
-        "Pomůže při nákupu sezónních pneumatik, olejů, autokosmetiky, brašen, helmic nebo příslušenství pro údržbu vozu.",
-        "Cílem je rychlý přístup k ověřeným obchodům pro motoristy.",
-      ],
-      "auto, moto, pneumatiky, autodoplňky, motorkářské vybavení"
+        "Sekce Auto a moto obsahuje odkazy na vybrané externí obchody a služby se sortimentem pro automobily a motocykly. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-pojisteni": affSeo(
-      "Pojištění vozidel, majetku a odpovědnosti",
+      "Pojištění – odkazy na vybrané externí služby",
       [
-        "V kategorii Pojištění najdete odkazy na srovnání a sjednání pojištění vozidel, domácnosti, odpovědnosti i dalších běžných produktů.",
-        "Sekce je užitečná, když chcete rychle porovnat nabídky pojišťoven, ceny a rozsah krytí před obnovou smlouvy.",
-        "Jde o praktický rozcestník pro informované rozhodnutí o pojištění.",
-      ],
-      "pojištění, povinné ručení, havarijní pojištění, pojištění domácnosti"
+        "Sekce Pojištění obsahuje odkazy na vybrané externí pojišťovny a srovnávací služby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, rozsah krytí, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-finance": affSeo(
-      "Finance, investice a platební služby",
+      "Finance – odkazy na vybrané externí služby",
       [
-        "Finance shrnují digitální bankovní služby, investiční platformy, půjčky, splátkové programy a další finanční nástroje pro běžné použití.",
-        "Sekce pomáhá rychle najít ověřené služby pro správu peněz, spoření, investování nebo výhodnější placení online.",
-        "Cílem je přehledný vstup do světa osobních financí bez zbytečného hledání.",
-      ],
-      "finance, investice, půjčky, platební služby, spoření"
+        "Sekce Finance obsahuje odkazy na vybrané externí finanční služby a produkty. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, podmínky, dostupnost produktů a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-energie-uspor": affSeo(
-      "Energie, úspory a domácí efektivita",
+      "Energie a úspory – odkazy na vybrané externí služby",
       [
-        "Energie a úspory nabízejí odkazy na srovnání dodavatelů energií, úsporné produkty a technologie pro nižší spotřebu domácnosti.",
-        "Hodí se při hledání levnějšího tarifu, LED osvětlení, chytrého měření nebo tipů, jak snížit náklady na elektřinu a plyn.",
-        "Praktický rozcestník pro každého, kdo chce lépe hospodařit s domácí energií.",
-      ],
-      "energie, úspory, elektřina, plyn, LED osvětlení"
+        "Sekce Energie a úspory obsahuje odkazy na vybrané externí služby a obchody související s energiemi a domácími produkty. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, tarify, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-lekarny": affSeo(
-      "Online lékárny a zdravotní sortiment",
+      "Lékárny – odkazy na vybrané externí služby",
       [
-        "Lékárny online umožňují rychlý nákup volně prodejných léků, doplňků, kosmetiky a zdravotnických potřeb s doručením domů.",
-        "Sekce je užitečná, když potřebujete rychle objednat běžné preparáty, vitamíny nebo produkty pro celou rodinu.",
-        "Cílem je přehledný přístup k ověřeným internetovým lékárnám.",
-      ],
-      "lékárna online, e-lékárna, volně prodejné léky, zdravotní potřeby"
+        "Sekce Lékárny obsahuje odkazy na vybrané externí lékárny a související obchody. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky prodeje a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-zdravi-doplnky": affSeo(
-      "Zdraví, doplňky stravy a wellness",
+      "Zdraví a doplňky – odkazy na vybrané externí služby",
       [
-        "Zdraví a doplňky sdružují e-shopy se doplňky stravy, produkty pro aktivní životní styl, rehabilitaci a celkovou pohodu.",
-        "Sekce pomáhá najít ověřené značky vitamínů, proteinů, bylinných produktů i pomůcek pro domácí péči o zdraví.",
-        "Praktický rozcestník pro každodenní podporu zdravého životního stylu.",
-      ],
-      "zdraví, doplňky stravy, vitamíny, wellness, rehabilitace"
+        "Sekce Zdraví a doplňky obsahuje odkazy na vybrané externí obchody se sortimentem souvisejícím se zdravím a doplňky. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-kosmetika": affSeo(
-      "Kosmetika, parfémy a péče o pleť",
+      "Kosmetika a parfémy – odkazy na vybrané externí služby",
       [
-        "Kosmetika a parfémy nabízejí přehled obchodů s makeupy, parfémy, pleťovou péčí a dárkovými sady pro ženy i muže.",
-        "Hodí se při hledání novinek, slev, niche vůní nebo osvědčené péče pro citlivou pleť.",
-        "Cílem je rychlý přístup ke kvalitní kosmetice online.",
-      ],
-      "kosmetika, parfémy, péče o pleť, makeup, dárkové sady"
+        "Sekce Kosmetika a parfémy obsahuje odkazy na vybrané externí obchody s kosmetikou a parfémy. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-drogerie": affSeo(
-      "Drogerie a domácí péče",
+      "Drogerie – odkazy na vybrané externí služby",
       [
-        "Drogerie online spojují běžné produkty pro domácnost, hygienu, péči o tělo i ekologické alternativy.",
-        "Sekce je praktická pro pravidelný nákup papírenského zboží, pracích prostředků, kosmetiky a drobností pro celou rodinu.",
-        "Rozcestník šetří čas při objednávání z ověřených drogerií.",
-      ],
-      "drogerie, domácí péče, hygiena, ekologická drogerie"
+        "Sekce Drogerie obsahuje odkazy na vybrané externí drogerie a související obchody. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-moda": affSeo(
-      "Móda a oblečení online",
+      "Móda – odkazy na vybrané externí služby",
       [
-        "Móda sdružuje e-shopy s oblečením pro ženy, muže i děti včetně běžné módy, značkových kolekcí a sezónních výprodejů.",
-        "Sekce pomáhá rychle najít nové kolekce, slevy a ověřené obchody s doručením po celé ČR.",
-        "Praktický rozcestník pro nákup oblečení online.",
-      ],
-      "móda, oblečení, fashion e-shopy, slevy, značková móda"
+        "Sekce Móda obsahuje odkazy na vybrané externí obchody s oblečením a módním sortimentem. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-boty": affSeo(
-      "Boty, tenisky a barefoot obuv",
+      "Boty a tenisky – odkazy na vybrané externí služby",
       [
-        "Boty a tenisky nabízejí přehled obchodů s volnočasovou, sportovní i elegantní obuví včetně barefoot a minimalistických střihů.",
-        "Hodí se při výběru sezónní obuvi, běžeckých tenisek nebo pohodlné obuvi na každý den.",
-        "Cílem je rychlý přístup k široké nabídce obuvi online.",
-      ],
-      "boty, tenisky, barefoot, obuv online, sportovní obuv"
+        "Sekce Boty a tenisky obsahuje odkazy na vybrané externí obchody s obuví. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-sportovni-obleceni": affSeo(
-      "Sportovní oblečení a funkční móda",
+      "Sportovní oblečení – odkazy na vybrané externí služby",
       [
-        "Sportovní oblečení sdružuje značky s funkčními materiály pro běh, fitness, outdoor i týmové sporty.",
-        "Sekce je užitečná při hledání kvalitního sportovního oblečení, termo vrstev nebo výbavy pro pravidelný trénink.",
-        "Praktický rozcestník pro aktivní sportovce i rekreační uživatele.",
-      ],
-      "sportovní oblečení, funkční móda, fitness, běžecké oblečení"
+        "Sekce Sportovní oblečení obsahuje odkazy na vybrané externí obchody se sportovním oblečením. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-sport-outdoor": affSeo(
-      "Sport, outdoor a aktivní život",
+      "Sport a outdoor – odkazy na vybrané externí služby",
       [
-        "Sport a outdoor spojují e-shopy s vybavením na turistiku, kempování, cyklistiku, rybaření i další volnočasové aktivity.",
-        "Hodí se při plánování výletu, nákupu stanu, batohu, trekingového vybavení nebo sportovních potřeb pro děti.",
-        "Cílem je mít po ruce ověřené obchody pro aktivní trávení volného času.",
-      ],
-      "outdoor, sport, turistika, kempování, cyklistika"
+        "Sekce Sport a outdoor obsahuje odkazy na vybrané externí obchody se sportovním a outdoorovým vybavením. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-dum-zahrada": affSeo(
-      "Dům, zahrada a hobby",
+      "Dům a zahrada – odkazy na vybrané externí služby",
       [
-        "Dům a zahrada shrnují obchody se stavebním materiálem, zahradní technikou, nářadím a vybavením pro rekonstrukce i hobby projekty.",
-        "Sekce pomáhá rychle najít produkty pro údržbu zahrady, stavbu pergoly, zavlažování nebo vybavení dílny.",
-        "Praktický rozcestník pro majitele domů a zahrádkáře.",
-      ],
-      "dům, zahrada, hobby, zahradní technika, rekonstrukce"
+        "Sekce Dům a zahrada obsahuje odkazy na vybrané externí obchody se sortimentem pro dům, zahradu a hobby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-nabytek": affSeo(
-      "Nábytek, bydlení a dekorace",
+      "Nábytek a bydlení – odkazy na vybrané externí služby",
       [
-        "Nábytek a bydlení nabízejí e-shopy s nábytkem, matracemi, osvětlením a doplňky pro obývák, ložnici i pracovnu.",
-        "Hodí se při zařizování bytu, výměně matrace nebo hledání designových kousků za rozumnou cenu.",
-        "Cílem je přehledný vstup do světa online nábytku a bydlení.",
-      ],
-      "nábytek, bydlení, matrace, dekorace, interiér"
+        "Sekce Nábytek a bydlení obsahuje odkazy na vybrané externí obchody s nábytkem a vybavením interiéru. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-kuchyn": affSeo(
-      "Kuchyně, domácnost a spotřebiče",
+      "Kuchyně a domácnost – odkazy na vybrané externí služby",
       [
-        "Kuchyně a domácnost sdružují obchody s kuchyňskými potřebami, spotřebiči, úklidovými produkty a vybavením pro každodenní provoz domácnosti.",
-        "Sekce je užitečná při výběru hrnců, nožů, robotů, vysavačů nebo organizace kuchyně.",
-        "Praktický rozcestník pro vybavení moderní domácnosti.",
-      ],
-      "kuchyně, domácnost, spotřebiče, kuchyňské potřeby, úklid"
+        "Sekce Kuchyně a domácnost obsahuje odkazy na vybrané externí obchody s vybavením kuchyně a domácnosti. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-elektro": affSeo(
-      "Elektro a chytrá domácnost",
+      "Elektro a chytrá domácnost – odkazy na vybrané externí služby",
       [
-        "Elektro a chytrá domácnost spojují e-shopy s elektronikou, spotřebiči, robotickými vysavači, chytrými zařízeními a příslušenstvím.",
-        "Hodí se při výběru televize, audio vybavení, domácích robotů nebo produktů pro automatizaci bytu.",
-        "Cílem je rychlý přístup k ověřeným prodejcům elektroniky.",
-      ],
-      "elektro, chytrá domácnost, robotický vysavač, elektronika, spotřebiče"
+        "Sekce Elektro a chytrá domácnost obsahuje odkazy na vybrané externí obchody s elektronikou a produkty pro domácnost. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-mobily": affSeo(
-      "Mobily, tablety a příslušenství",
+      "Mobily a příslušenství – odkazy na vybrané externí služby",
       [
-        "Mobily a příslušenství nabízejí obchody s telefony, kryty, tvrzeným sklem, nabíječkami a dalšími doplňky pro každodenní použití.",
-        "Sekce pomáhá rychle najít vhodné příslušenství, ochranu displeje nebo repasované a nové telefony.",
-        "Praktický rozcestník pro mobilní techniku a doplňky.",
-      ],
-      "mobily, telefony, příslušenství, tvrzené sklo, kryty"
+        "Sekce Mobily a příslušenství obsahuje odkazy na vybrané externí obchody s telefony a příslušenstvím. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-software": affSeo(
-      "Software, antiviry a digitální bezpečnost",
+      "Software a bezpečnost – odkazy na vybrané externí služby",
       [
-        "Software a bezpečnost sdružují antiviry, VPN služby, kancelářské nástroje a další digitální produkty pro ochranu soukromí i práci.",
-        "Hodí se při výběru zabezpečení počítače, mobilu nebo domácí sítě a také pro nákup licencí software.",
-        "Cílem je přehledný vstup do světa digitální bezpečnosti.",
-      ],
-      "software, antivir, VPN, bezpečnost, digitální služby"
+        "Sekce Software a bezpečnost obsahuje odkazy na vybrané externí softwarové a bezpečnostní služby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-knihy": affSeo(
-      "Knihy, filmy, hry a zábava",
+      "Knihy, filmy a hry – odkazy na vybrané externí služby",
       [
-        "Knihy, filmy a hry spojují knihkupectví, prodejce deskových her, audioknih a streamovacích služeb pro volný čas.",
-        "Sekce je užitečná při hledání nové četby, dárků pro děti nebo zábavy pro celou rodinu.",
-        "Praktický rozcestník pro kulturu a volnočasové aktivity doma.",
-      ],
-      "knihy, filmy, hry, deskové hry, zábava"
+        "Sekce Knihy, filmy a hry obsahuje odkazy na vybrané externí obchody a služby se sortimentem knih, filmů a her. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-jidlo": affSeo(
-      "Jídlo, potraviny a online nákup",
+      "Jídlo a potraviny – odkazy na vybrané externí služby",
       [
-        "Jídlo a potraviny shrnují služby pro online nákup potravin, kávy, čokolády, zdravé výživy a gastronomických specialit.",
-        "Hodí se pro pravidelný rozvoz nákupu, objednání kvalitní kávy nebo výběr produktů pro zdravější stravování.",
-        "Cílem je rychlý přístup k ověřeným potravinovým e-shopům.",
-      ],
-      "potraviny, online nákup, rozvoz potravin, káva, zdravá výživa"
+        "Sekce Jídlo a potraviny obsahuje odkazy na vybrané externí obchody a služby s potravinami. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
     "aff-zvirata": affSeo(
-      "Zvířata, krmiva a chovatelské potřeby",
+      "Zvířata a chovatelství – odkazy na vybrané externí služby",
       [
-        "Zvířata a chovatelství nabízejí e-shopy s krmivy, hračkami, pelíšky a vybavením pro psy, kočky i další domácí mazlíčky.",
-        "Sekce pomáhá rychle najít kvalitní krmivo, antiparazitika nebo doplňky pro péči o zvíře.",
-        "Praktický rozcestník pro chovatele a majitele domácích mazlíčků.",
-      ],
-      "zvířata, krmivo, chovatelské potřeby, psi, kočky"
+        "Sekce Zvířata a chovatelství obsahuje odkazy na vybrané externí obchody se sortimentem pro domácí mazlíčky. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
     ),
   };
 
@@ -276,7 +250,7 @@
       id: "aff-cestovni-kancelare",
       title: "Cestovní kanceláře",
       icon: "iu-aff-suitcase",
-      description: "Vyberte si cestovní kancelář a zobrazte aktuální nabídku zájezdů.",
+      description: "Odkazy na vybrané cestovní kanceláře a služby související s cestováním.",
       items: [
         affItem("Čedok", "cedok"),
         affItem("Blue Style", "blue-style"),
@@ -292,7 +266,7 @@
       id: "aff-ubytovani-hotely",
       title: "Ubytování a hotely",
       icon: "iu-aff-hotel",
-      description: "Najděte ubytování, hotely, apartmány nebo wellness pobyty.",
+      description: "Odkazy na vybrané služby pro ubytování a hotely.",
       items: [
         affItem("Booking.com", "booking"),
         affItem("Agoda", "agoda"),
@@ -308,7 +282,7 @@
       id: "aff-letenky",
       title: "Letenky a cestovní pomoc",
       icon: "iu-aff-plane",
-      description: "Služby pro cesty, letenky, kompenzace a cestovní podporu.",
+      description: "Odkazy na vybrané služby související s letenkami a cestovní pomocí.",
       items: [
         affItem("AirHelp", "airhelp"),
         affItem("Refundio", "refundio"),
@@ -324,7 +298,7 @@
       id: "aff-cestovni-pojisteni",
       title: "Cestovní pojištění",
       icon: "iu-aff-shield",
-      description: "Cestovní pojištění a asistence na cesty.",
+      description: "Odkazy na vybrané služby cestovního pojištění.",
       items: [
         affItem("AXA Assistance", "axa"),
         affItem("Direct", "direct-cestovni"),
@@ -338,7 +312,7 @@
       id: "aff-auto-moto",
       title: "Auto a moto",
       icon: "iu-aff-car",
-      description: "Auto-moto obchody, příslušenství, pneumatiky a motorkářské vybavení.",
+      description: "Odkazy na vybrané obchody a služby v kategorii auto a moto.",
       items: [
         affItem("24MX", "24mx"),
         affItem("Ahifi", "ahifi"),
@@ -354,7 +328,7 @@
       id: "aff-pojisteni",
       title: "Pojištění",
       icon: "iu-aff-shield",
-      description: "Porovnání a sjednání pojištění.",
+      description: "Odkazy na vybrané pojišťovny a srovnávací služby.",
       items: [
         affItem("Direct", "direct-pojisteni"),
         affItem("Klikpojištění", "klikpojisteni"),
@@ -370,7 +344,7 @@
       id: "aff-finance",
       title: "Finance",
       icon: "iu-finance",
-      description: "Finanční produkty, splátky, investice a platební služby.",
+      description: "Odkazy na vybrané externí finanční služby.",
       items: [
         affItem("Skip Pay", "skip-pay"),
         affItem("Portu", "portu"),
@@ -386,7 +360,7 @@
       id: "aff-energie-uspor",
       title: "Energie a úspory",
       icon: "iu-aff-bulb",
-      description: "Srovnání energií, úsporné produkty a domácí technologie.",
+      description: "Odkazy na vybrané služby a obchody související s energiemi a úsporami.",
       items: [
         affItem("Kalkulator.cz", "kalkulator-energie"),
         affItem("SMD LED žárovky", "smd-led"),
@@ -402,7 +376,7 @@
       id: "aff-lekarny",
       title: "Lékárny",
       icon: "iu-aff-cross",
-      description: "Online lékárny a zdravotní sortiment.",
+      description: "Odkazy na vybrané externí lékárny a související obchody.",
       items: [
         affItem("Dr. Max", "dr-max"),
         affItem("Pilulka", "pilulka"),
@@ -418,7 +392,7 @@
       id: "aff-zdravi-doplnky",
       title: "Zdraví a doplňky",
       icon: "iu-health",
-      description: "Doplňky stravy, zdravý životní styl a zdravotní pomůcky.",
+      description: "Odkazy na vybrané obchody se sortimentem zdraví a doplňků.",
       items: [
         affItem("Klub zdraví", "klub-zdravi"),
         affItem("GS Klub", "gs-klub"),
@@ -434,7 +408,7 @@
       id: "aff-kosmetika",
       title: "Kosmetika a parfémy",
       icon: "iu-aff-perfume",
-      description: "Kosmetika, parfémy, péče o pleť a osobní péče.",
+      description: "Odkazy na vybrané obchody s kosmetikou a parfémy.",
       items: [
         affItem("Notino", "notino"),
         affItem("Sephora", "sephora"),
@@ -450,7 +424,7 @@
       id: "aff-drogerie",
       title: "Drogerie",
       icon: "iu-aff-bottle",
-      description: "Drogerie, domácí péče a ekologické čisticí prostředky.",
+      description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
         affItem("Rossmann", "rossmann"),
         affItem("Teta drogerie", "teta-drogerie"),
@@ -466,7 +440,7 @@
       id: "aff-moda",
       title: "Móda",
       icon: "iu-aff-shirt",
-      description: "Oblečení, módní značky a módní e-shopy.",
+      description: "Odkazy na vybrané obchody s módou a oblečením.",
       items: [
         affItem("Answear", "answear"),
         affItem("Reserved", "reserved"),
@@ -482,7 +456,7 @@
       id: "aff-boty",
       title: "Boty a tenisky",
       icon: "iu-aff-shoe",
-      description: "Obuv, tenisky, barefoot a módní boty.",
+      description: "Odkazy na vybrané obchody s obuví.",
       items: [
         affItem("Footshop", "footshop"),
         affItem("Queens", "queens"),
@@ -498,7 +472,7 @@
       id: "aff-sportovni-obleceni",
       title: "Sportovní oblečení",
       icon: "iu-aff-jersey",
-      description: "Sportovní móda, funkční oblečení a značkové sportovní kolekce.",
+      description: "Odkazy na vybrané obchody se sportovním oblečením.",
       items: [
         affItem("Sportisimo", "sportisimo"),
         affItem("Decathlon", "decathlon"),
@@ -514,7 +488,7 @@
       id: "aff-sport-outdoor",
       title: "Sport a outdoor",
       icon: "iu-aff-tent",
-      description: "Outdoor vybavení, sportovní potřeby, rybaření a aktivní život.",
+      description: "Odkazy na vybrané obchody se sportovním a outdoorovým vybavením.",
       items: [
         affItem("4camping", "4camping"),
         affItem("inSPORTline", "insportline"),
@@ -530,7 +504,7 @@
       id: "aff-dum-zahrada",
       title: "Dům a zahrada",
       icon: "iu-home-hobby",
-      description: "Vybavení domu, zahrady, stavby a hobby.",
+      description: "Odkazy na vybrané obchody pro dům, zahradu a hobby.",
       items: [
         affItem("OBI", "obi"),
         affItem("Baumax", "baumax"),
@@ -546,7 +520,7 @@
       id: "aff-nabytek",
       title: "Nábytek a bydlení",
       icon: "iu-aff-chair",
-      description: "Nábytek, dekorace, matrace a vybavení interiéru.",
+      description: "Odkazy na vybrané obchody s nábytkem a bydlením.",
       items: [
         affItem("ASKO Nábytek", "asko-nabytek"),
         affItem("Benlemi", "benlemi"),
@@ -562,7 +536,7 @@
       id: "aff-kuchyn",
       title: "Kuchyně a domácnost",
       icon: "iu-aff-pot",
-      description: "Kuchyňské vybavení, spotřebiče a pomocníci do domácnosti.",
+      description: "Odkazy na vybrané obchody s vybavením kuchyně a domácnosti.",
       items: [
         affItem("Tescoma", "tescoma"),
         affItem("Fabini", "fabini"),
@@ -578,7 +552,7 @@
       id: "aff-elektro",
       title: "Elektro a chytrá domácnost",
       icon: "iu-aff-plug",
-      description: "Elektronika, spotřebiče, robotické vysavače a chytrá domácnost.",
+      description: "Odkazy na vybrané obchody s elektronikou a chytrou domácností.",
       items: [
         affItem("LG", "lg"),
         affItem("Philips", "philips"),
@@ -594,7 +568,7 @@
       id: "aff-mobily",
       title: "Mobily a příslušenství",
       icon: "iu-aff-phone",
-      description: "Mobily, kryty, ochranná skla a příslušenství.",
+      description: "Odkazy na vybrané obchody s mobily a příslušenstvím.",
       items: [
         affItem("F-mobil", "f-mobil"),
         affItem("Tvrzenaskla.cz", "tvrzenaskla"),
@@ -610,7 +584,7 @@
       id: "aff-software",
       title: "Software a bezpečnost",
       icon: "iu-aff-lock",
-      description: "Antiviry, bezpečnostní software a digitální služby.",
+      description: "Odkazy na vybrané softwarové a bezpečnostní služby.",
       items: [
         affItem("Kaspersky", "kaspersky"),
         affItem("Norton", "norton"),
@@ -626,7 +600,7 @@
       id: "aff-knihy",
       title: "Knihy, filmy a hry",
       icon: "iu-aff-book",
-      description: "Knihy, deskové hry, filmy, hudba a zábava.",
+      description: "Odkazy na vybrané obchody s knihami, filmy a hrami.",
       items: [
         affItem("Knihy Dobrovský", "dobrovsky"),
         affItem("Martinus", "martinus"),
@@ -642,7 +616,7 @@
       id: "aff-jidlo",
       title: "Jídlo a potraviny",
       icon: "iu-aff-cart",
-      description: "Online potraviny, káva, čokoláda, zdravá výživa a dobroty.",
+      description: "Odkazy na vybrané obchody a služby s potravinami.",
       items: [
         affItem("Rohlík", "rohlik"),
         affItem("Tesco", "tesco"),
@@ -658,7 +632,7 @@
       id: "aff-zvirata",
       title: "Zvířata a chovatelství",
       icon: "iu-aff-paw",
-      description: "Chovatelské potřeby, krmiva a vybavení pro mazlíčky.",
+      description: "Odkazy na vybrané obchody pro zvířata a chovatelství.",
       items: [
         affItem("SuperZoo", "superzoo"),
         affItem("PetCenter", "petcenter"),
@@ -845,13 +819,7 @@
     for (var pi = 0; pi < seo.paragraphs.length; pi++) {
       parts.push("<p>", escapeHtml(seo.paragraphs[pi]), "</p>");
     }
-    if (seo.keywords) {
-      parts.push(
-        '<p class="iuAffiliateSeoKeywords"><strong>Klíčová slova:</strong> ',
-        escapeHtml(seo.keywords),
-        "</p>"
-      );
-    }
+    /* keywords block removed: affiliate-selected-services-neutral-v1-20260907 */
     seoEl.innerHTML = parts.join("");
     seoEl.hidden = false;
   }
@@ -921,7 +889,7 @@
 
     var title = document.createElement("div");
     title.className = "iuLeftRailSectionTitle iuLeftRailSectionTitle--affiliate";
-    title.textContent = "Doporučené služby";
+    title.textContent = "Vybrané služby a odkazy";
     nav.appendChild(title);
 
     refreshAffiliateColorsFromCss();
