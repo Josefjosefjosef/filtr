@@ -121,8 +121,15 @@ async function readSecurityUi(page) {
     const devNo = document.getElementById("iuVaultDeviceUnsupported");
     const fieldset = document.getElementById("iuVaultMindMenuMethodFieldset");
     const deviceInfo = section ? section.querySelector("[data-iu-ic-truth=\"device-security\"]") : null;
+    const lockIntro = section ? section.querySelector("[data-iu-vault-lock-intro='1']") : null;
+    const introTextEl = section ? section.querySelector("[data-iu-vault-lock-intro-text='1']") : null;
+    const introText = introTextEl ? String(introTextEl.textContent || "").trim() : "";
+    const expectedIntro =
+      "Zapnutím zámku se celý InfoUzel uzamkne. Při jeho otevření nebo návratu do InfoUzlu bude pro přístup vyžadováno zvolené ověření.";
     let controlsOrderOk = false;
-    if (fieldset && applyBtn && deviceInfo && section && typeof fieldset.compareDocumentPosition === "function") {
+    if (lockIntro && fieldset && applyBtn && deviceInfo && section && typeof fieldset.compareDocumentPosition === "function") {
+      const introBeforeFieldset =
+        (lockIntro.compareDocumentPosition(fieldset) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
       const fieldsetBeforeApply =
         (fieldset.compareDocumentPosition(applyBtn) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
       const applyBeforeDeviceInfo =
@@ -130,12 +137,22 @@ async function readSecurityUi(page) {
       const deviceInfoBeforeStatus =
         status &&
         (deviceInfo.compareDocumentPosition(status) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-      controlsOrderOk = fieldsetBeforeApply && applyBeforeDeviceInfo && !!deviceInfoBeforeStatus;
+      controlsOrderOk =
+        introBeforeFieldset && fieldsetBeforeApply && applyBeforeDeviceInfo && !!deviceInfoBeforeStatus;
     }
-    const legendFirst =
+    const legendOk =
       section && section.querySelector(".iuVaultSecurity__legend")
         ? String(section.querySelector(".iuVaultSecurity__legend").textContent || "").includes("Způsob odemknutí")
         : false;
+    const introCount = (text.match(/Zapnutím zámku se celý InfoUzel uzamkne/g) || []).length;
+    const hasLegacyBlurb = /Zapnutím zámku se při otevření nebo návratu podle nastavení ověřuje přístup/.test(text);
+    const hasDisable = !!document.getElementById("iuVaultDisableMindMenuLockBtn");
+    const hasChangePin = !!document.getElementById("iuVaultChangePinBtn");
+    const hasChangeMethod = !!document.getElementById("iuVaultChangeMindMenuMethodBtn");
+    const hasMethods =
+      !!document.querySelector('input[name="iuVaultMindMenuMethod"][value="none"]') &&
+      !!document.querySelector('input[name="iuVaultMindMenuMethod"][value="device"]') &&
+      !!document.querySelector('input[name="iuVaultMindMenuMethod"][value="pin"]');
     return {
       sectionExists: !!section,
       uiVersion: section ? section.getAttribute("data-iu-vault-ui-version") : null,
@@ -153,7 +170,14 @@ async function readSecurityUi(page) {
       applyVisible: applyBtn ? !applyBtn.hidden : false,
       deviceUnsupportedUi: devNo ? !devNo.hidden : false,
       controlsOrderOk,
-      legendFirst,
+      legendOk,
+      lockIntroOk: !!lockIntro && introText === expectedIntro,
+      introSingle: introCount === 1,
+      noLegacyBlurb: !hasLegacyBlurb,
+      hasDisable,
+      hasChangePin,
+      hasChangeMethod,
+      hasMethods,
     };
   });
 }
@@ -217,9 +241,14 @@ async function runScenario(browser, base, scenario) {
   const ui = await readSecurityUi(page);
 
   if (!ui.sectionExists) fails.push("security_section_missing");
-  if (ui.uiVersion !== "4") fails.push("security_ui_version_not_v4");
-  if (!ui.legendFirst) fails.push("unlock_method_not_first");
+  if (ui.uiVersion !== "5") fails.push("security_ui_version_not_v5");
+  if (!ui.lockIntroOk) fails.push("lock_intro_missing_or_wrong");
+  if (!ui.introSingle) fails.push("lock_intro_duplicate");
+  if (!ui.noLegacyBlurb) fails.push("legacy_lock_blurb_present");
+  if (!ui.legendOk) fails.push("unlock_method_legend_missing");
   if (!ui.controlsOrderOk) fails.push("controls_order_regression");
+  if (!ui.hasMethods) fails.push("unlock_methods_missing");
+  if (!ui.hasDisable || !ui.hasChangePin || !ui.hasChangeMethod) fails.push("action_buttons_missing");
   if (!ui.heading) fails.push("heading_missing");
   if (!ui.standard) fails.push("encrypted_at_rest_missing");
   if (!ui.infoUzelLock) fails.push("infouzel_lock_missing");

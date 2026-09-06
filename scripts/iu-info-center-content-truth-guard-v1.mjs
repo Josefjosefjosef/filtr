@@ -64,15 +64,28 @@ function main() {
     } else ok("prehled_dne_present");
   }
 
-  if (!vault.includes('data-iu-vault-ui-version", "4"')) {
-    fail("vault_ui_version_not_4");
+  if (!vault.includes('data-iu-vault-ui-version", "5"')) {
+    fail("vault_ui_version_not_5");
     fails += 1;
-  } else ok("vault_ui_version_4");
+  } else ok("vault_ui_version_5");
 
+  const introMarker = 'data-iu-vault-lock-intro="1"';
+  const introText =
+    "Zapnutím zámku se celý InfoUzel uzamkne. Při jeho otevření nebo návratu do InfoUzlu bude pro přístup vyžadováno zvolené ověření.";
+  const introIdx = vault.indexOf(introMarker);
   const unlockIdx = vault.indexOf("Způsob odemknutí");
   const statusIdx = vault.indexOf("Stav zabezpečení");
   const webAuthnIdx = vault.indexOf("Zabezpečení zařízení:</strong> ověření provádí");
   const applyIdx = vault.indexOf("iuVaultApplyMindMenuMethodBtn");
+  const disableIdx = vault.indexOf("iuVaultDisableMindMenuLockBtn");
+  if (introIdx < 0 || !vault.includes(introText)) {
+    fail("lock_intro_missing");
+    fails += 1;
+  } else ok("lock_intro_present");
+  if (introIdx >= 0 && unlockIdx >= 0 && !(introIdx < unlockIdx)) {
+    fail("lock_intro_not_before_unlock_methods");
+    fails += 1;
+  } else if (introIdx >= 0 && unlockIdx >= 0) ok("lock_intro_before_unlock_methods");
   if (
     unlockIdx < 0 ||
     statusIdx < 0 ||
@@ -83,6 +96,34 @@ function main() {
     fail("vault_controls_order_regression");
     fails += 1;
   } else ok("vault_controls_order");
+  if (disableIdx < 0 || webAuthnIdx < 0 || !(disableIdx < webAuthnIdx)) {
+    fail("detail_info_not_after_disable_button");
+    fails += 1;
+  } else ok("detail_info_after_disable");
+
+  const introOccurrences = vault.split(introText).length - 1;
+  if (introOccurrences !== 1) {
+    fail("lock_intro_duplicate_or_missing_count=" + introOccurrences);
+    fails += 1;
+  } else ok("lock_intro_single_occurrence");
+  if (/Zapnutím zámku se při otevření nebo návratu podle nastavení ověřuje přístup/.test(vault)) {
+    fail("legacy_lock_blurb_still_present");
+    fails += 1;
+  } else ok("legacy_lock_blurb_removed");
+
+  if (!vault.includes("Bez dalšího zamykání") || !vault.includes("Zabezpečení zařízení — doporučeno") || !vault.includes("Vlastní PIN InfoUzlu")) {
+    fail("unlock_method_options_missing");
+    fails += 1;
+  } else ok("unlock_method_options");
+  if (
+    !vault.includes("Aktivovat zabezpečení InfoUzlu") ||
+    !vault.includes("Změnit PIN") ||
+    !vault.includes("Změnit způsob odemknutí") ||
+    !vault.includes("Vypnout zabezpečení InfoUzlu")
+  ) {
+    fail("security_action_buttons_missing");
+    fails += 1;
+  } else ok("security_action_buttons");
 
   if (!vault.includes("Co zabezpečení chrání a co ne")) {
     fail("limitations_section_missing");
