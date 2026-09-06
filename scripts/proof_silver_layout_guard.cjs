@@ -344,31 +344,43 @@ async function runViewport(page, w, h) {
   let calendarFlowOk = false;
   let tasksOk = false;
   let notesOk = false;
+  const calendarFlowProbe = () => {
+    const overlay = document.getElementById("iuCalendarOverlay");
+    const open = !!(overlay && !overlay.hasAttribute("hidden") && overlay.getAttribute("aria-hidden") !== "true");
+    const oldSave = document.querySelector('[data-iu-silver-guided="save"]');
+    const oldSearch = document.querySelector('[data-iu-silver-guided="search"]');
+    const oldCancel = document.querySelector('[data-iu-silver-guided="cal-back"]');
+    const miniCalGrid = document.querySelector(".iuSilverMiniCal__grid");
+    const composeAux = document.querySelector("[data-iu-silver-calendar-compose-aux]");
+    function vis(el) {
+      if (!el) return false;
+      const st = window.getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden") return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 2 && r.height > 2;
+    }
+    if (vis(oldSave) || vis(oldSearch) || vis(oldCancel)) return false;
+    if (miniCalGrid && vis(miniCalGrid)) return false;
+    if (composeAux && vis(composeAux)) return false;
+    return open;
+  };
   try {
     /* Force-click only: scrollIntoViewIfNeeded stalls when Chromium main thread is
-       busy (multi‑MB feed.json parse). Stubs + force keep the calendar contract. */
-    await page.click("#iuHeroQuickCal", { timeout: 15000, force: true });
-    await page.waitForTimeout(600);
-    calendarFlowOk = await page.evaluate(() => {
-      const overlay = document.getElementById("iuCalendarOverlay");
-      const open = !!(overlay && !overlay.hasAttribute("hidden") && overlay.getAttribute("aria-hidden") !== "true");
-      const oldSave = document.querySelector('[data-iu-silver-guided="save"]');
-      const oldSearch = document.querySelector('[data-iu-silver-guided="search"]');
-      const oldCancel = document.querySelector('[data-iu-silver-guided="cal-back"]');
-      const miniCalGrid = document.querySelector(".iuSilverMiniCal__grid");
-      const composeAux = document.querySelector("[data-iu-silver-calendar-compose-aux]");
-      function vis(el) {
-        if (!el) return false;
-        const st = window.getComputedStyle(el);
-        if (st.display === "none" || st.visibility === "hidden") return false;
-        const r = el.getBoundingClientRect();
-        return r.width > 2 && r.height > 2;
+       busy (multi‑MB feed.json parse). Stubs + force keep the calendar contract.
+       CI can race the old fixed 600ms settle — wait for the open contract instead. */
+    for (let attempt = 0; attempt < 2 && !calendarFlowOk; attempt++) {
+      await page.click("#iuHeroQuickCal", { timeout: 15000, force: true });
+      try {
+        await page.waitForFunction(calendarFlowProbe, { timeout: 8000 });
+        calendarFlowOk = true;
+      } catch (_) {
+        calendarFlowOk = false;
+        try {
+          await page.keyboard.press("Escape");
+        } catch (_) {}
+        await page.waitForTimeout(250);
       }
-      if (vis(oldSave) || vis(oldSearch) || vis(oldCancel)) return false;
-      if (miniCalGrid && vis(miniCalGrid)) return false;
-      if (composeAux && vis(composeAux)) return false;
-      return open;
-    });
+    }
     try {
       await page.keyboard.press("Escape");
     } catch (_) {}
