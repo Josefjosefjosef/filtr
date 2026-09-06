@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-09-06T11:42:35.897Z",
-    "lastSuccessAt": "2026-09-06T11:42:40.938Z",
+    "lastRunAt": "2026-09-06T15:00:12.568Z",
+    "lastSuccessAt": "2026-09-06T15:00:15.968Z",
     "lastChangedAt": "2026-09-06T11:42:39.810Z",
     "lastError": null,
     "status": "not_modified",
@@ -433,11 +433,11 @@
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 1,
+    "updateCount": 0,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 18,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 4,
       "uniqueEvents": [
         "Stav sucha",
@@ -480,19 +480,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7801,
+    "runMs": 7738,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-09-06T11:42:35.897Z",
+    "lastSnapshotAt": "2026-09-06T15:00:12.568Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-09-05T15:59:38.264Z",
       "officialLatestSentAt": "2026-09-01T14:00:00+02:00",
       "officialLatestValidFrom": "2026-09-01T14:00:00+02:00",
-      "discoveredAt": "2026-09-06T11:42:35.897Z",
-      "fetchedAt": "2026-09-06T11:42:35.897Z",
-      "transformedAt": "2026-09-06T11:42:43.698Z",
-      "validatedAt": "2026-09-06T11:42:43.698Z",
-      "publishedAt": "2026-09-06T11:42:35.897Z",
+      "discoveredAt": "2026-09-06T15:00:12.568Z",
+      "fetchedAt": "2026-09-06T15:00:12.568Z",
+      "transformedAt": "2026-09-06T15:00:20.306Z",
+      "validatedAt": "2026-09-06T15:00:20.306Z",
+      "publishedAt": "2026-09-06T15:00:12.568Z",
       "endToEndLagMs": 359978264
     },
     "audit": {
@@ -500,9 +500,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml",
           "productKey": "50",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_011200.xml",
@@ -516,8 +516,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 18,
+          "capMessages": null,
+          "infoBlocks": null,
           "logicalAlerts": 4,
           "uniqueEvents": [
             "Stav sucha",
@@ -543,22 +543,20 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 0,
-        "update": 1,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-09-06T15:00:12.568Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7738,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 4
+      },
       {
         "at": "2026-09-06T11:42:35.897Z",
         "status": "not_modified",
@@ -1071,17 +1069,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 5527,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 2,
-        "publishableCount": 5
-      },
-      {
-        "at": "2026-08-19T21:30:52.097Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6231,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 2,

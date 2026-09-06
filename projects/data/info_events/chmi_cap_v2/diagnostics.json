@@ -1,6 +1,6 @@
 {
-  "runId": "65f576d087f8ee7a",
-  "started": "2026-09-06T11:42:35.897Z",
+  "runId": "47fd536b27e94199",
+  "started": "2026-09-06T15:00:12.568Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_011200.xml",
@@ -30,26 +30,13 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 0,
-    "update": 1,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 18,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 4,
       "uniqueEvents": [
         "Stav sucha",
@@ -75,7 +62,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
     "before": 3,
@@ -83,8 +70,8 @@
     "ledgerKeys": 2,
     "ledgerFingerprint": "68c32ac14bc517bf",
     "history": {
-      "fetched": 0,
-      "cached": 32,
+      "fetched": 1,
+      "cached": 31,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_121200.xml",
@@ -121,7 +108,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060908.xml"
       ],
       "recentCount": 32,
-      "refCount": 2,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -332,8 +319,8 @@
     "visibleCount": 4
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 18,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 4,
     "uniqueEvents": [
       "Stav sucha",
@@ -369,6 +356,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-09-06T11:42:43.698Z",
-  "runMs": 7801
+  "finished": "2026-09-06T15:00:20.306Z",
+  "runMs": 7738
 }
