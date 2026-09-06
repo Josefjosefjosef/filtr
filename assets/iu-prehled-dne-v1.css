@@ -8,6 +8,8 @@
   --iu-pd-line: rgba(15, 35, 55, 0.1);
   --iu-pd-shadow: 0 8px 24px rgba(35, 45, 120, 0.1);
   --iu-pd-radius: 16px;
+  /* Shared control radius: primary quick-view buttons + Nastavení bottom corners. */
+  --iu-pd-control-radius: 14px;
 }
 
 .iuPrehledDne {
@@ -677,12 +679,12 @@ html.iu-info-system-cutover #iuSilverTallScrollViewport {
   opacity: 1;
 }
 
-/* Flush join: square top edge against banner; keep rounded bottom ends. */
+/* Flush join: square top edge against banner; bottom corners match primary quick-view buttons. */
 .iuPd__hero .iuPdBtn--settings {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  border-bottom-left-radius: 999px;
-  border-bottom-right-radius: 999px;
+  border-bottom-left-radius: var(--iu-pd-control-radius);
+  border-bottom-right-radius: var(--iu-pd-control-radius);
 }
 
 /* Hide legacy commercial article timeline on cutover (P┼Öehled dne is the product). */
@@ -2551,7 +2553,7 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
 }
 .iuPdQuickView--primary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin: 0 0 14px;
   width: 100%;
@@ -2571,7 +2573,7 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   cursor: pointer;
 }
 .iuPdQuickView--primary .iuPdQuickView__btn {
-  border-radius: 14px;
+  border-radius: var(--iu-pd-control-radius);
   min-height: 52px;
   padding: 12px 10px;
   font-size: 0.92rem;
