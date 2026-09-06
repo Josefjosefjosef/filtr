@@ -783,9 +783,33 @@ export function loadOfflineTrafficSnapshot() {
  * Returns null on any failure (fail-closed).
  *
  * Default: edge head (?iu_head=1, ≤200 cards) so first Doprava open does NOT download ~6k cards.
- * Full catalog only via ensureFullTrafficOfflineSnapshot / { full:true }.
+ * After head settles, callers may opt into background full hydrate via { hydrate:true }.
+ * Full catalog is also available via ensureFullTrafficOfflineSnapshot (joins the same single-flight).
+ * Full hydrate never creates full DOM — only the in-memory catalog.
  */
 let _trafficFullHydratePromise = null;
+
+function trafficSnapshotGeneratedMs(snap) {
+  if (!snap || typeof snap !== "object") return 0;
+  const ms = Date.parse(String(snap.generatedAt || ""));
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function trafficSnapshotGenKey(snap) {
+  if (!snap || typeof snap !== "object") return "";
+  return String(snap.generationId || snap.generatedAt || snap.snapshotVersion || "");
+}
+
+/** Prefer uncapped catalog; among full snapshots keep the newer generation. */
+function shouldAcceptTrafficFullSnapshot(full, current) {
+  if (!full || isTrafficSnapshotCapped(full)) return false;
+  if (!current) return true;
+  if (isTrafficSnapshotCapped(current)) return true;
+  const fullMs = trafficSnapshotGeneratedMs(full);
+  const curMs = trafficSnapshotGeneratedMs(current);
+  if (fullMs && curMs && fullMs < curMs) return false;
+  return true;
+}
 
 export function isTrafficSnapshotCapped(snap) {
   if (!snap || typeof snap !== "object") return true;
@@ -834,9 +858,21 @@ export async function ensureFullTrafficOfflineSnapshot(opts = {}) {
   if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return null;
   const cur = loadOfflineTrafficSnapshot();
   if (cur && !isTrafficSnapshotCapped(cur)) return cur;
-  return fetchHostedTrafficOfflineSnapshot(
-    Object.assign({}, opts, { full: true, hydrate: false, url: TRAFFIC_UI_SNAPSHOT_URL })
-  );
+  // Single-flight: never start a second parallel full GET while background hydrate runs.
+  void opts;
+  return scheduleTrafficSnapshotFullHydrate(TRAFFIC_UI_SNAPSHOT_URL);
+}
+
+/** Public entry for auto / manual background full hydrate (same single-flight). */
+export function scheduleTrafficBackgroundFullHydrate() {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return Promise.resolve(null);
+  const cur = loadOfflineTrafficSnapshot();
+  if (cur && !isTrafficSnapshotCapped(cur)) return Promise.resolve(cur);
+  return scheduleTrafficSnapshotFullHydrate(TRAFFIC_UI_SNAPSHOT_URL);
+}
+
+export function getTrafficFullHydratePromise() {
+  return _trafficFullHydratePromise;
 }
 
 async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
@@ -875,11 +911,16 @@ async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
 }
 
 function scheduleTrafficSnapshotFullHydrate(url) {
+  const ready = loadOfflineTrafficSnapshot();
+  if (ready && !isTrafficSnapshotCapped(ready)) return Promise.resolve(ready);
   if (_trafficFullHydratePromise) return _trafficFullHydratePromise;
+  const targetUrl = url || TRAFFIC_UI_SNAPSHOT_URL;
+  const headGenKey = trafficSnapshotGenKey(_trafficSnapMem);
   _trafficFullHydratePromise = (async () => {
     try {
-      const full = await fetchTrafficSnapshotParsed(url, 0, null);
-      if (!full) return null;
+      const full = await fetchTrafficSnapshotParsed(targetUrl, 0, null);
+      if (!shouldAcceptTrafficFullSnapshot(full, _trafficSnapMem)) return null;
+      // Atomic take-over: only replace after a complete valid full catalog parse.
       invalidateTrafficFeedItemsCache();
       _trafficSnapMem = full;
       // Memory-only for multi‑MB full catalog (saveOfflineTrafficSnapshot already guards LS size).
@@ -891,6 +932,9 @@ function scheduleTrafficSnapshotFullHydrate(url) {
               detail: {
                 cardCount: Array.isArray(full.cards) ? full.cards.length : 0,
                 generatedAt: full.generatedAt || null,
+                generationId: full.generationId || null,
+                headGenerationKey: headGenKey || null,
+                fullGenerationKey: trafficSnapshotGenKey(full),
               },
             })
           );
@@ -901,6 +945,20 @@ function scheduleTrafficSnapshotFullHydrate(url) {
       return null;
     }
   })();
+  // Controlled retry: clear single-flight only on failure so a later ensureFull can retry once.
+  _trafficFullHydratePromise = _trafficFullHydratePromise.then(
+    (full) => {
+      if (!full || isTrafficSnapshotCapped(full)) {
+        _trafficFullHydratePromise = null;
+        return null;
+      }
+      return full;
+    },
+    () => {
+      _trafficFullHydratePromise = null;
+      return null;
+    }
+  );
   return _trafficFullHydratePromise;
 }
 
@@ -923,9 +981,13 @@ export async function fetchHostedTrafficOfflineSnapshot(opts = {}) {
     const snap = await fetchTrafficSnapshotParsed(url, maxCards, opts.signal || null);
     if (!snap) return null;
     invalidateTrafficFeedItemsCache();
-    _trafficSnapMem = snap;
-    if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
-    // Full catalog only on explicit request — never auto-download ~6k cards in background.
+    // Do not clobber an already-ready full catalog with a capped head (race vs background hydrate).
+    if (!( _trafficSnapMem && !isTrafficSnapshotCapped(_trafficSnapMem) && isTrafficSnapshotCapped(snap) )) {
+      _trafficSnapMem = snap;
+      if (opts.persist !== false) saveOfflineTrafficSnapshot(snap);
+    }
+    // After first-batch/head settles: optional non-blocking full catalog hydrate (single-flight).
+    // First paint must never await this promise — schedule only.
     if (opts.hydrate === true && !fullOnly) {
       void scheduleTrafficSnapshotFullHydrate(TRAFFIC_UI_SNAPSHOT_URL);
     }

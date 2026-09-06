@@ -28,7 +28,7 @@
 // 2026-09-01: remove environment info panel â€” bust shell + network-first info-panel modules (SWR stale catalog)
 // 2026-09-04: Reload FOUC â€” layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
 // 2026-09-04: Calendar NovĂˇ udĂˇlost bottom-nav sheet stability (merge onto FOUC SW)
-const CACHE_VERSION = "2026-09-06-privacy-lock-intro-v1";
+const CACHE_VERSION = "2026-09-06-traffic-auto-bg-hydrate-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

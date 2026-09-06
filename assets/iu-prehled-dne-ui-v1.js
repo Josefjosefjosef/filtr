@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -792,6 +792,7 @@ function ensureTrafficFetchPromise() {
     return state.trafficFetchPromise;
   }
   markPrehledBootPhase("traffic-fetch-start");
+  // Head/first-batch only here — full hydrate is scheduled after Doprava can paint (see paintTrafficQuick).
   state.trafficFetchPromise = loadTrafficOverview()
     .then((m) => m.fetchHostedTrafficOfflineSnapshot({ persist: true }))
     .catch(() => null)
@@ -2828,7 +2829,27 @@ function wire() {
         // Presenter required: without it isTrafficCardInformative() drops every card.
         void (async () => {
           try {
-            await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
+            const tm = await loadTrafficOverview().catch(() => null);
+            if (tm && typeof tm.ensureTrafficPresenter === "function") {
+              await tm.ensureTrafficPresenter().catch(() => null);
+            }
+            // Auto full hydrate after first-batch path — never await; defer slightly so first paint wins.
+            if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
+              const kickHydrate = () => {
+                try {
+                  void tm.scheduleTrafficBackgroundFullHydrate();
+                } catch (_) {}
+              };
+              try {
+                if (typeof requestIdleCallback === "function") {
+                  requestIdleCallback(kickHydrate, { timeout: 1200 });
+                } else {
+                  setTimeout(kickHydrate, 0);
+                }
+              } catch (_) {
+                setTimeout(kickHydrate, 0);
+              }
+            }
             await ensureTrafficCatalogForCurrentFilters(1);
           } catch (_) {}
           if (state.feedQuickView !== view) return;
