@@ -262,9 +262,10 @@ function staticGate() {
     "css:cta_top_radius_zero"
   );
   must(
-    /\.iuPd__hero\s+\.iuPdBtn--settings\s*\{[\s\S]*?border-bottom-left-radius:\s*999px/.test(css) &&
-      /\.iuPd__hero\s+\.iuPdBtn--settings\s*\{[\s\S]*?border-bottom-right-radius:\s*999px/.test(css),
-    "css:cta_bottom_radius_kept"
+    /\.iuPd__hero\s+\.iuPdBtn--settings\s*\{[\s\S]*?border-bottom-left-radius:\s*var\(--iu-pd-control-radius\)/.test(css) &&
+      /\.iuPd__hero\s+\.iuPdBtn--settings\s*\{[\s\S]*?border-bottom-right-radius:\s*var\(--iu-pd-control-radius\)/.test(css) &&
+      /--iu-pd-control-radius:\s*14px/.test(css),
+    "css:cta_bottom_radius_control_token"
   );
   must(/aspect-ratio:\s*1661\s*\/\s*616/.test(css), "css:banner_aspect");
   must(/min-height:\s*48px/.test(css), "css:banner_min_height");
@@ -527,8 +528,8 @@ function assertMeasure(prefix, m) {
   must(m.seam != null && Math.abs(m.seam) <= 0.5, prefix + ":seam:" + m.seam);
   must(m.borderTopLeftRadius === "0px", prefix + ":tl_radius:" + m.borderTopLeftRadius);
   must(m.borderTopRightRadius === "0px", prefix + ":tr_radius:" + m.borderTopRightRadius);
-  must(m.borderBottomLeftRadius !== "0px", prefix + ":bl_radius_kept:" + m.borderBottomLeftRadius);
-  must(m.borderBottomRightRadius !== "0px", prefix + ":br_radius_kept:" + m.borderBottomRightRadius);
+  must(m.borderBottomLeftRadius === "14px", prefix + ":bl_radius_14:" + m.borderBottomLeftRadius);
+  must(m.borderBottomRightRadius === "14px", prefix + ":br_radius_14:" + m.borderBottomRightRadius);
   must(/infouzel-prehled-dne-banner\.png/.test(m.src), prefix + ":img_src");
   must(m.showExists, prefix + ":zobrazit_exists");
   if (m.sample) {
