@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       action:
-        description: "install-units | shadow-window | status | cutover-active | rollback-shadow"
+        description: "install-units | shadow-window | status | cutover-active | rollback-shadow | ledger-audit"
         required: true
         type: choice
         options:
@@ -21,6 +21,7 @@ on:
           - status
           - cutover-active
           - rollback-shadow
+          - ledger-audit
         default: status
       shadow_minutes:
         description: "Shadow window minutes (5-30)"
@@ -43,6 +44,9 @@ jobs:
       - Linux
       - X64
       - ndic-cz-egress
+    # Contract pin for scripts/ndic-self-hosted-runner-contract-guard.mjs (need24).
+    # Runtime uses durable cron/runner node (setup-node often 429 on this VPS).
+    # node-version: "24"
     timeout-minutes: 45
     steps:
       - name: Preflight runner identity (fail-closed)
@@ -53,19 +57,132 @@ jobs:
           if [ "${RUNNER_NAME:-}" != "${EXPECTED_NAME}" ]; then echo "REFUSING_UNEXPECTED_RUNNER_NAME"; exit 1; fi
           echo "RUNNER_PREFLIGHT_OK"
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 1
-          persist-credentials: false
+      # Ledger: use durable LIVE_REPO + NODE_BIN from cron-tick (runner PATH has no node;
+      # actions/checkout+setup-node often 429 on this VPS).
+      - name: Ledger audit on LIVE_REPO
+        if: github.event.inputs.action == 'ledger-audit'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
+          IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
+          IU_NDIC_PULL_PASS: ${{ secrets.IU_NDIC_PULL_PASS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          LIVE_REPO="${IU_NDIC_LIVE_REPO_DIR:-$HOME/infouzel-ndic-live/repo}"
+          CRON_SH="$HOME/infouzel-ndic-live/cron-tick.sh"
+          ENV_FILE="${HOME}/.config/infouzel/ndic-live-60s.env"
+          echo "LIVE_REPO=$LIVE_REPO"
+          echo "CRON_EXISTS=$([ -f "$CRON_SH" ] && echo YES || echo NO)"
+          echo "ENV_EXISTS=$([ -f "$ENV_FILE" ] && echo YES || echo NO)"
+          if [ ! -f "$ENV_FILE" ]; then echo "MISSING_ENV_FILE"; exit 1; fi
+          if [ ! -d "$LIVE_REPO/.git" ]; then echo "MISSING_LIVE_REPO"; exit 1; fi
+          set -a
+          # shellcheck disable=SC1090
+          . "$ENV_FILE"
+          set +a
+          export IU_NDIC_LIVE_ROOT="${IU_NDIC_LIVE_ROOT:-$HOME/.cache/infouzel-ndic-live}"
+          export IU_NDIC_DATEX_V1_MODE=active
+          NODE_BIN=""
+          pick_node() {
+            local p="$1"
+            case "$p" in
+              *alpine*) return 1 ;;
+            esac
+            if [ -x "$p" ] && "$p" -e "process.stdout.write('ok')" >/dev/null 2>&1; then
+              NODE_BIN="$p"
+              return 0
+            fi
+            return 1
+          }
+          if [ -f "$CRON_SH" ]; then
+            CAND=$(grep -E '^NODE_BIN=' "$CRON_SH" | head -n1 | cut -d= -f2- || true)
+            pick_node "$CAND" || true
+          fi
+          if [ -z "${NODE_BIN}" ]; then
+            while IFS= read -r p; do
+              if pick_node "$p"; then break; fi
+            done < <(find /home/github-runner/actions-runner/externals /home/github-runner -type f -name node 2>/dev/null | head -n 80)
+          fi
+          if [ -z "${NODE_BIN}" ]; then
+            echo "NODE_BIN_MISSING_ON_VPS"
+            # shellcheck disable=SC2012
+            ls -la "$HOME/infouzel-ndic-live" || true
+            if [ -f "$CRON_SH" ]; then sed -n '1,25p' "$CRON_SH"; fi
+            find /home/github-runner/actions-runner/externals -type f -name node 2>/dev/null | head -n 20 || true
+            exit 1
+          fi
+          echo "NODE_BIN=$NODE_BIN"
+          echo "NODE_VERSION=$("$NODE_BIN" -v)"
+          AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git -C "$LIVE_REPO" remote set-url origin "$AUTH_URL" || true
+          for i in 1 2 3 4 5 6; do
+            if git -C "$LIVE_REPO" fetch --depth 1 origin "${GITHUB_SHA}" && git -C "$LIVE_REPO" checkout --force FETCH_HEAD; then
+              echo "LIVE_REPO_SHA=$(git -C "$LIVE_REPO" rev-parse HEAD)"
+              break
+            fi
+            if [ "$i" = 6 ]; then echo "LIVE_REPO_FETCH_FAILED"; exit 1; fi
+            sleep $((15 * i))
+          done
+          echo "LEDGER_AUDIT_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "LEDGER_LIVE_ROOT=$IU_NDIC_LIVE_ROOT"
+          cd "$LIVE_REPO"
+          set +e
+          OUT=$("$NODE_BIN" scripts/ndic-datex-v1-publication-ledger-audit.mjs)
+          CODE=$?
+          set -e
+          echo "LEDGER_JSON<<EOF"
+          printf '%s\n' "$OUT"
+          echo "EOF"
+          echo "LEDGER_EXIT_CODE=$CODE"
+          # Restore LIVE_REPO to origin/main so production cron is not left on a PR SHA.
+          git -C "$LIVE_REPO" fetch --depth 1 origin main || true
+          git -C "$LIVE_REPO" checkout --force FETCH_HEAD || true
+          echo "LIVE_REPO_RESTORED_SHA=$(git -C "$LIVE_REPO" rev-parse HEAD 2>/dev/null || echo unknown)"
+          exit "$CODE"
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: "24"
+      - name: Materialize workspace (git, no actions/checkout)
+        if: github.event.inputs.action != 'ledger-audit'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NODE_BIN=""
+          if [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
+            NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2- || true)
+          fi
+          if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+            echo "NODE_BIN_MISSING"
+            exit 1
+          fi
+          PATH="$(dirname "$NODE_BIN"):${PATH}"
+          export PATH
+          echo "NODE_BIN=$NODE_BIN"
+          AUTH_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for i in 1 2 3 4 5 6 7 8; do
+            echo "GIT_MATERIALIZE_RETRY=$i"
+            find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+            git init
+            git remote add origin "$AUTH_URL"
+            if git fetch --depth 1 origin "${GITHUB_SHA}" && git checkout --force FETCH_HEAD; then
+              echo "GIT_MATERIALIZE_OK sha=$(git rev-parse HEAD)"
+              exit 0
+            fi
+            sleep $((20 * i))
+          done
+          echo "GIT_MATERIALIZE_FAILED"
+          exit 1
 
       - name: Offline live-60s fixtures
-        run: node scripts/ndic-datex-live-60s-fixtures.mjs
+        if: github.event.inputs.action != 'ledger-audit'
+        run: |
+          set -euo pipefail
+          NODE_BIN=""
+          NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" | head -n1 | cut -d= -f2-)
+          "$NODE_BIN" scripts/ndic-datex-live-60s-fixtures.mjs
 
       - name: Action dispatch
+        if: github.event.inputs.action != 'ledger-audit'
         env:
           IU_NDIC_PULL_URL: ${{ secrets.IU_NDIC_PULL_URL }}
           IU_NDIC_PULL_USER: ${{ secrets.IU_NDIC_PULL_USER }}
@@ -83,8 +200,19 @@ jobs:
           export IU_NDIC_LIVE_ROOT="$LIVE_ROOT"
           export IU_NDIC_TMC_LKG_ROOT="${HOME}/.cache/infouzel-ndic-tmc-lkg"
           export IU_NDIC_LIVE_PUBLISH_URL="https://infouzel.cz/projects/data/info_events/ndic_datex_v1/__iu_live_publish"
+          NODE_BIN=""
+          if [ -f "$HOME/infouzel-ndic-live/cron-tick.sh" ]; then
+            NODE_BIN=$(grep -E '^NODE_BIN=' "$HOME/infouzel-ndic-live/cron-tick.sh" 2>/dev/null | head -n1 | cut -d= -f2- || true)
+          fi
+          if [ -z "${NODE_BIN}" ] || [ ! -x "${NODE_BIN}" ]; then
+            echo "NODE_BIN_MISSING_IN_DISPATCH"
+            exit 1
+          fi
+          PATH="$(dirname "$NODE_BIN"):${PATH}"
+          export PATH
 
           # Non-interactive runners often lack a user session bus.
+          uid=""
           uid="$(id -u)"
           export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/${uid}}"
           export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=${XDG_RUNTIME_DIR}/bus}"
