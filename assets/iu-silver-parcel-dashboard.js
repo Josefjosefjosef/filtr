@@ -866,9 +866,18 @@ try {
       pickerHost = document.createElement("div");
       pickerHost.className = "iuSilverParcelWatch__picker";
       pickerHost.hidden = true;
+      pickerHost.id =
+        "iuSilverParcelPicker_" +
+        String(item.id || "x").replace(/[^\w-]/g, "_");
+      pickCarrier.setAttribute("aria-expanded", "false");
+      pickCarrier.setAttribute("aria-controls", pickerHost.id);
       pickCarrier.addEventListener("click", function () {
-        pickerHost.hidden = !pickerHost.hidden;
-        if (!pickerHost.hidden && pickerHost.childElementCount === 0) {
+        // Toggle open/close. CSS display:flex on .picker would otherwise keep
+        // the panel visible unless [hidden]{display:none!important} is present.
+        var willOpen = !!pickerHost.hidden;
+        pickerHost.hidden = !willOpen;
+        pickCarrier.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        if (willOpen && pickerHost.childElementCount === 0) {
           renderCarrierPicker(item, pickerHost);
         }
       });

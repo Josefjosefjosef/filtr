@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-07-parcel-carrier-picker-toggle-v1",
   "2026-09-07-silver-result-hide-chat-composer-v1",
   "2026-09-07-weather-moje-mesto-autocomplete-v1",
   "2026-09-07-affiliate-selected-services-neutral-v1",
@@ -169,7 +170,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-07-silver-result-hide-chat-composer-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-07-parcel-carrier-picker-toggle-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
