@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-07-external-open-dead-fix-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-icentrum-dph-wording-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-parcel-carrier-picker-toggle-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-silver-result-hide-chat-composer-v1"') &&
