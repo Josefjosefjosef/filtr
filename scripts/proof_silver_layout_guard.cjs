@@ -368,9 +368,11 @@ async function runViewport(page, w, h) {
     return true;
   };
   try {
-    /* Force-click only: scrollIntoViewIfNeeded stalls when Chromium main thread is
-       busy (multi‑MB feed.json parse). Preload calendar module so CI cold open
-       is not racing lazy import behind the first hero click. */
+    /* Preload calendar module so CI cold open is not racing lazy import.
+       Prefer a real (non-force) click when the button is the top hit target;
+       Playwright force-clicks use coordinates and miss when #iuConsentLayer
+       (or another sheet) covers the hero. DOM click / openOverlay remain as
+       deterministic fallbacks — probe invariants are unchanged. */
     await page.waitForFunction(
       () =>
         !!document.getElementById("iuHeroQuickCal") &&
@@ -383,9 +385,42 @@ async function runViewport(page, w, h) {
         await window.__iuEnsureCalendarOverlay();
       });
     } catch (_) {}
+    try {
+      await page.evaluate(() => {
+        const layer = document.getElementById("iuConsentLayer");
+        if (layer && !layer.hidden) {
+          try {
+            if (window.iuConsent && typeof window.iuConsent.dismissLayer === "function") {
+              window.iuConsent.dismissLayer();
+            }
+          } catch (_) {}
+          try {
+            if (window.iuConsent && typeof window.iuConsent.setAnalyticsConsent === "function") {
+              window.iuConsent.setAnalyticsConsent("denied");
+            }
+          } catch (_) {}
+          layer.hidden = true;
+        }
+      });
+    } catch (_) {}
     for (let attempt = 0; attempt < 3 && !calendarFlowOk; attempt++) {
       if (attempt === 0) {
-        await page.click("#iuHeroQuickCal", { timeout: 15000, force: true });
+        const topIsCal = await page.evaluate(() => {
+          const btn = document.getElementById("iuHeroQuickCal");
+          if (!btn) return false;
+          const r = btn.getBoundingClientRect();
+          const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+          return !!(el && (el === btn || btn.contains(el)));
+        });
+        if (topIsCal) {
+          await page.click("#iuHeroQuickCal", { timeout: 15000 });
+        } else {
+          await page.evaluate(() => {
+            const btn = document.getElementById("iuHeroQuickCal");
+            if (btn && typeof btn.click === "function") btn.click();
+            else if (typeof window.iuSilverCalEntryQuick === "function") window.iuSilverCalEntryQuick();
+          });
+        }
       } else if (attempt === 1) {
         await page.evaluate(() => {
           const btn = document.getElementById("iuHeroQuickCal");
@@ -414,6 +449,7 @@ async function runViewport(page, w, h) {
         try {
           calendarFlowDetail = await page.evaluate(() => {
             const overlay = document.getElementById("iuCalendarOverlay");
+            const consent = document.getElementById("iuConsentLayer");
             return JSON.stringify({
               hasBtn: !!document.getElementById("iuHeroQuickCal"),
               hasEntry: typeof window.iuSilverCalEntryQuick,
@@ -425,6 +461,7 @@ async function runViewport(page, w, h) {
               hidden: overlay ? overlay.hidden : null,
               aria: overlay ? overlay.getAttribute("aria-hidden") : null,
               calUi: document.documentElement.getAttribute("data-iu-silver-cal-ui"),
+              consentHidden: consent ? !!consent.hidden : null,
             });
           });
         } catch (_) {
@@ -605,6 +642,11 @@ async function main() {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
+      /* Without analytics consent dismiss, #iuConsentLayer sits over hero quick
+         actions at 390×844. Playwright force-clicks hit the consent panel (not
+         #iuHeroQuickCal), so calendar_flow waits out attempt-0 and flakes in CI. */
+      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+      localStorage.setItem("iu:consent:analytics:v1", "denied");
     } catch (_) {}
   });
   await installClsObserver(ctx);
