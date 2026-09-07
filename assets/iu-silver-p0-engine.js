@@ -33386,14 +33386,23 @@
     chatState.opened = true;
     attachTrap();
     if (!chatState.quickTemplateEmptySubmit) {
-      const inp = document.getElementById("iuSilverChatInput");
-      if (inp) {
-        try {
-          inp.focus({ preventScroll: true });
-        } catch {
+      var narrowComposer = false;
+      try {
+        narrowComposer = !!(window.matchMedia && window.matchMedia("(max-width: 1024px)").matches);
+      } catch (_) {
+        narrowComposer = (window.innerWidth || 0) <= 1024;
+      }
+      /* Mobile/tablet: result overlay hides the chat composer — do not steal focus / open keyboard. */
+      if (!narrowComposer) {
+        const inp = document.getElementById("iuSilverChatInput");
+        if (inp) {
           try {
-            inp.focus();
-          } catch {}
+            inp.focus({ preventScroll: true });
+          } catch {
+            try {
+              inp.focus();
+            } catch {}
+          }
         }
       }
     }

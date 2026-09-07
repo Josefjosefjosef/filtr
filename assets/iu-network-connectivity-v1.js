@@ -242,6 +242,10 @@
     a.href = url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
+    /* Must skip bindGlobalExternalCapture: otherwise the synthetic .click() is
+       preventDefault'd in the same capture phase, then 600ms dedupe returns
+       without opening → dead external buttons (post-#10239 mobile/PWA path). */
+    a.setAttribute("data-iu-skip-external-guard", "1");
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();

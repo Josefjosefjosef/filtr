@@ -21970,12 +21970,43 @@ function buildVideoAsArticleCard(it) {
     ["Plzeň","Plzeň-město",49.7384,13.3736],
   ];
 
+  function iuCityRowUnwrap(row){
+    try{
+      if (Array.isArray(row) && row.length >= 4) return row;
+      /* Legacy corruption: PowerShell ConvertTo-Json turned arrays into {value,Count}. */
+      if (row && typeof row === "object" && Array.isArray(row.value) && row.value.length >= 4) return row.value;
+    }catch{}
+    return null;
+  }
+
+  function iuCityRowNormalize(row){
+    try{
+      const a = iuCityRowUnwrap(row);
+      if (!a) return null;
+      const name = String(a[0] || "").trim();
+      const region = String(a[1] || "").trim();
+      const lat = Number(a[2]);
+      const lon = Number(a[3]);
+      if (!name || !iuWeatherIsValidGeoCoords(lat, lon)) return null;
+      return [name, region, lat, lon];
+    }catch{
+      return null;
+    }
+  }
+
   async function iuLoadCitiesSafe(){
     try{
       const r = await fetch(iuDataUrl("cz_cities_min.json"), { cache: "force-cache" });
       if (r.ok) {
         const d = await r.json();
-        if (Array.isArray(d) && d.length) return d;
+        if (Array.isArray(d) && d.length) {
+          const out = [];
+          for (let i = 0; i < d.length; i++){
+            const n = iuCityRowNormalize(d[i]);
+            if (n) out.push(n);
+          }
+          if (out.length) return out;
+        }
       }
     }catch{}
     return IU_CITY_FALLBACK;
@@ -24797,18 +24828,42 @@ function buildVideoAsArticleCard(it) {
     try{
       if (window.__iuPickerLocalitiesCache) return window.__iuPickerLocalitiesCache;
     }catch{}
+    let fromLoc = [];
     try{
       const r = await fetch(iuDataUrl("cz_localities_picker.json"), { cache: "force-cache" });
       if (r.ok) {
         const d = await r.json();
         const raw = Array.isArray(d.items) ? d.items : [];
-        const items = iuPickerApplyLabelSuffixCollisionGuard(raw.map(iuPickerParseRow).filter(Boolean));
-        if (items.length) {
-          try{ window.__iuPickerLocalitiesCache = items; }catch{}
-          return items;
-        }
+        fromLoc = iuPickerApplyLabelSuffixCollisionGuard(raw.map(iuPickerParseRow).filter(Boolean));
       }
     }catch{}
+    let fromCities = [];
+    try{
+      const cities = await iuLoadCitiesSafe();
+      fromCities = iuPickerApplyLabelSuffixCollisionGuard(
+        (cities || []).map((row) => iuPickerParseRow([row[0], row[1], row[2], row[3], 80, "city"])).filter(Boolean),
+      );
+    }catch{}
+    /* Prefer localities (ORP metadata) when they carry coords; always union cities so
+       autocomplete cannot collapse to the 4-city fallback after a bad localities build. */
+    const out = [];
+    const seen = new Set();
+    function pushAll(arr){
+      for (let i = 0; i < (arr || []).length; i++){
+        const it = arr[i];
+        if (!it || !iuWeatherIsValidGeoCoords(it.lat, it.lon)) continue;
+        const k = iuPickerSearchDedupeKey(it);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(it);
+      }
+    }
+    pushAll(fromLoc);
+    pushAll(fromCities);
+    if (out.length) {
+      try{ window.__iuPickerLocalitiesCache = out; }catch{}
+      return out;
+    }
     const fb = iuPickerApplyLabelSuffixCollisionGuard(
       IU_CITY_FALLBACK.map((row) => iuPickerParseRow([row[0], row[1], row[2], row[3], 85, "city"])).filter(Boolean),
     );
@@ -25173,6 +25228,11 @@ function buildVideoAsArticleCard(it) {
             hideSuggest();
             return;
           }
+          /* Query text ≠ selected location. Clear seed/stale pending until user picks a hit. */
+          pending = null;
+          try{ overlay.__iuWeatherPickerLastPick = null; }catch{}
+          if (btnOk) btnOk.disabled = true;
+          if (selectedEl) selectedEl.textContent = "Vyberte lokalitu z našeptávače.";
           const hits = iuPickerSearchItems(q, localities, 28);
           renderSuggest(hits);
         }catch{}
@@ -25413,8 +25473,10 @@ function buildVideoAsArticleCard(it) {
               alert("Vyberte prosím lokalitu.");
               return;
             }
-            iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
-            iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label });
+            /* Must await durable writes — syncing labels before vault/localStorage settle
+               left mode=gps and UI showed „Aktuální poloha“ after a manual save. */
+            await iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+            await iuWeatherWriteManualLocation({ lat: pending.lat, lon: pending.lon, label });
             iuWeatherClearRuntimeCity();
             iuWeatherClearOpenMeteoCache();
             try{ window.__iuWeatherState = null; }catch{}
@@ -25722,6 +25784,7 @@ function buildVideoAsArticleCard(it) {
     a.href = url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
+    a.setAttribute("data-iu-skip-external-guard", "1");
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
@@ -26511,13 +26574,17 @@ function buildVideoAsArticleCard(it) {
     try{
       const man = iuWeatherReadManualLocation();
       if (!man) return false;
-      iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
-      iuWeatherClearRuntimeCity();
-      iuWeatherClearOpenMeteoCache();
-      try{ window.__iuWeatherState = null; }catch{}
-      const c = iuWeatherGetActiveCity();
-      iuWeatherSyncCityLabels(c);
-      iuWeatherLoadAndRender();
+      void (async function () {
+        try{
+          await iuWeatherWriteLocationMode(IU_WEATHER_MODE_MANUAL);
+        }catch{}
+        iuWeatherClearRuntimeCity();
+        iuWeatherClearOpenMeteoCache();
+        try{ window.__iuWeatherState = null; }catch{}
+        const c = iuWeatherGetActiveCity();
+        iuWeatherSyncCityLabels(c);
+        try{ await iuWeatherLoadAndRender(); }catch{ try{ iuWeatherLoadAndRender(); }catch{} }
+      })();
       return true;
     }catch{
       return false;

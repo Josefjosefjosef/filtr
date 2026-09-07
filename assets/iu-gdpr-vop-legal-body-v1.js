@@ -40,7 +40,7 @@
       '<p class="iuInfoCenter__companyRow"><strong>Web:</strong> <a class="iuInfoCenter__link" href="https://infouzel.cz" rel="noopener noreferrer">https://infouzel.cz</a></p>',
       '<p class="iuInfoCenter__companyRow">Společnost zapsaná u Městského soudu v Praze, sp. zn. <strong>C 447292</strong></p>',
       '<p class="iuInfoCenter__companyRow"><strong>Bankovní účet:</strong> 294822412/5500</p>',
-      '<p class="iuInfoCenter__companyRow">DIČ není ve veřejném UI uváděno; společnost není prezentována jako plátce DPH v iCentru.</p>',
+      '<p class="iuInfoCenter__companyRow">Provozovatel není plátcem DPH.</p>',
       "</div>",
       '<p class="iuInfoCenter__p">Podrobnosti a kontaktní formulace jsou vedeny jednotně v sekci <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="contact">Provozovatel a kontakt</button>.</p>',
 

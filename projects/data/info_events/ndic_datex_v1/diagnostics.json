@@ -1,6 +1,6 @@
 {
-  "runId": "e16e8c1c9f37ea16",
-  "started": "2026-08-11T18:09:48.732Z",
+  "runId": "d2c13b2dd091f0cb",
+  "started": "2026-09-07T10:31:02.786Z",
   "mode": "active",
   "discovery": {
     "type": "authenticated_pull"
@@ -12,28 +12,28 @@
     }
   ],
   "parser": {
-    "situations": 3595,
+    "situations": 3278,
     "rejected": 0,
-    "quarantine": 5,
+    "quarantine": 88,
     "stats": {
-      "new": 11,
-      "updated": 28,
-      "unchanged": 3551,
-      "ended": 20,
+      "new": 3894,
+      "updated": 680,
+      "unchanged": 1321,
+      "ended": 1537,
       "skippedOlder": 0,
-      "softMissing": 2
+      "softMissing": 54
     }
   },
   "publish": {
     "publish": true,
     "reason": "ok",
     "stats": {
-      "new": 11,
-      "updated": 28,
-      "unchanged": 3551,
-      "ended": 20,
+      "new": 3894,
+      "updated": 680,
+      "unchanged": 1321,
+      "ended": 1537,
       "skippedOlder": 0,
-      "softMissing": 2
+      "softMissing": 54
     },
     "alarms": []
   },
@@ -70,14 +70,16 @@
   },
   "observability": {
     "schema": "iu-ndic-phase-observability-v1",
-    "DATEX_REQUEST_STARTED_AT": "2026-08-11T18:09:49.052Z",
-    "DATEX_HEADERS_RECEIVED_AT": "2026-08-11T18:09:49.342Z",
-    "DATEX_DOWNLOAD_FINISHED_AT": "2026-08-11T18:09:50.206Z",
-    "DATEX_REQUEST_DURATION_MS": 289,
-    "DATEX_DOWNLOAD_DURATION_MS": 865,
+    "DATEX_REQUEST_STARTED_AT": "2026-09-07T10:31:03.524Z",
+    "DATEX_HEADERS_RECEIVED_AT": "2026-09-07T10:31:03.923Z",
+    "DATEX_DOWNLOAD_FINISHED_AT": "2026-09-07T10:31:05.700Z",
+    "DATEX_REQUEST_DURATION_MS": 400,
+    "DATEX_DOWNLOAD_DURATION_MS": 1777,
     "DATEX_HTTP_STATUS": 200,
-    "DATEX_CONTENT_LENGTH": 2544911,
-    "DATEX_BYTES_READ": 59213422,
+    "DATEX_CONTENT_LENGTH": 2426919,
+    "DATEX_BYTES_READ": 55564438,
+    "DATEX_REQUEST_IF_MODIFIED_SINCE": "Tue, 11 Aug 2026 18:08:51 GMT",
+    "DATEX_RESPONSE_LAST_MODIFIED": "Mon, 07 Sep 2026 10:31:01 GMT",
     "conditional": {
       "DATEX_REQUEST_IF_MODIFIED_SINCE_SENT": "YES",
       "DATEX_REQUEST_IF_NONE_MATCH_SENT": "NO",
@@ -85,47 +87,47 @@
       "DATEX_RESPONSE_LAST_MODIFIED_PRESENT": "YES",
       "DATEX_RESPONSE_ETAG_PRESENT": "NO",
       "DATEX_RESPONSE_ETAG_HASH": null,
-      "DATEX_RESPONSE_CONTENT_LENGTH": 2544911,
+      "DATEX_RESPONSE_CONTENT_LENGTH": 2426919,
       "DATEX_NOT_MODIFIED": "NO",
-      "DATEX_BYTES_READ": 59213422
+      "DATEX_BYTES_READ": 55564438
     },
     "TMC_LIVE_DOWNLOAD": "NO",
     "TMC_LIVE_IMPORT": "NO",
     "TMC_STORE_BYTES": 32938816,
     "phases": {
       "DATEX_REQUEST": {
-        "startedAt": "2026-08-11T18:09:49.052Z",
-        "finishedAt": "2026-08-11T18:09:50.256Z",
-        "durationMs": 1204
+        "startedAt": "2026-09-07T10:31:03.523Z",
+        "finishedAt": "2026-09-07T10:31:05.782Z",
+        "durationMs": 2259
       },
       "DATEX_DOWNLOAD": {
-        "startedAt": "2026-08-11T18:09:50.256Z",
-        "finishedAt": "2026-08-11T18:09:50.256Z",
+        "startedAt": "2026-09-07T10:31:05.782Z",
+        "finishedAt": "2026-09-07T10:31:05.782Z",
         "durationMs": 0
       },
       "DATEX_PARSE": {
-        "startedAt": "2026-08-11T18:09:50.915Z",
-        "finishedAt": "2026-08-11T18:10:05.556Z",
-        "durationMs": 14641
+        "startedAt": "2026-09-07T10:31:06.877Z",
+        "finishedAt": "2026-09-07T10:31:20.348Z",
+        "durationMs": 13471
       },
       "RESOLVER": {
-        "startedAt": "2026-08-11T18:09:50.915Z",
-        "finishedAt": "2026-08-11T18:10:05.556Z",
-        "durationMs": 14641
+        "startedAt": "2026-09-07T10:31:06.877Z",
+        "finishedAt": "2026-09-07T10:31:20.348Z",
+        "durationMs": 13471
       },
       "CANDIDATE": {
-        "startedAt": "2026-08-11T18:09:50.915Z",
-        "finishedAt": "2026-08-11T18:10:05.556Z",
-        "durationMs": 14641
+        "startedAt": "2026-09-07T10:31:06.877Z",
+        "finishedAt": "2026-09-07T10:31:20.348Z",
+        "durationMs": 13471
       }
     },
     "DATEX_ETAG_PERSISTED": "NO",
     "DATEX_LAST_MODIFIED_PERSISTED": "YES",
-    "DATEX_PARSE_STARTED_AT": "2026-08-11T18:09:50.915Z",
-    "DATEX_PARSE_FINISHED_AT": "2026-08-11T18:10:05.556Z",
-    "DATEX_PARSE_DURATION_MS": 14641,
-    "RESOLVER_DURATION_MS": 14641,
-    "CANDIDATE_READY_AT": "2026-08-11T18:10:05.556Z"
+    "DATEX_PARSE_STARTED_AT": "2026-09-07T10:31:06.877Z",
+    "DATEX_PARSE_FINISHED_AT": "2026-09-07T10:31:20.348Z",
+    "DATEX_PARSE_DURATION_MS": 13471,
+    "RESOLVER_DURATION_MS": 13471,
+    "CANDIDATE_READY_AT": "2026-09-07T10:31:20.348Z"
   },
   "datexTmcCompatibility": {
     "ok": true,
@@ -149,8 +151,34 @@
     "alarms": []
   },
   "forensicMeta": {
-    "datexBytesRead": 59213422,
+    "datexBytesRead": 55564438,
     "datexHttpStatus": 200
+  },
+  "smvUlsReference": {
+    "ok": false,
+    "status": 1,
+    "result": null
+  },
+  "trafficUiSnapshot": {
+    "ok": true,
+    "rejectCode": null,
+    "cardCount": 5949,
+    "bytes": 13100743,
+    "uiCompact": true,
+    "sizeBreakdown": {
+      "metadata": 353,
+      "projections": 2,
+      "feed": 156,
+      "cards": 13100163,
+      "historyItems": 2,
+      "filterIndexes": 2,
+      "cardsProvenance": 11898,
+      "FULL_SNAPSHOT": 13100743,
+      "LIMIT_DEFAULT": 16777216,
+      "OVER_BY": 0
+    },
+    "trafficUiEnabled": true,
+    "publicationEnabled": false
   },
   "publicationSafety": {
     "UNVERIFIED_LOCATION_PUBLISHED": 0,
@@ -165,26 +193,5 @@
   "UNVERIFIED_DIRECTION_PUBLISHED": 0,
   "FUZZY_MATCH_USED": false,
   "GEOCODING_USED": false,
-  "HEURISTIC_LOCATION_USED": false,
-  "trafficUiSnapshot": {
-    "ok": true,
-    "rejectCode": null,
-    "cardCount": 3592,
-    "bytes": 7916064,
-    "uiCompact": true,
-    "sizeBreakdown": {
-      "metadata": 353,
-      "projections": 2,
-      "feed": 156,
-      "cards": 7915484,
-      "historyItems": 2,
-      "filterIndexes": 2,
-      "cardsProvenance": 7184,
-      "FULL_SNAPSHOT": 7916064,
-      "LIMIT_DEFAULT": 8388608,
-      "OVER_BY": 0
-    },
-    "trafficUiEnabled": true,
-    "publicationEnabled": false
-  }
+  "HEURISTIC_LOCATION_USED": false
 }

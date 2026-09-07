@@ -12,6 +12,7 @@ import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -56,29 +57,7 @@ function auditStatic() {
   ) {
     fails.push("index:missing cache bust token");
   }
-  if (
-    !sw.includes('CACHE_VERSION = "2026-09-07-tv-online-neutral-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-jr-neutral-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-traffic-auto-bg-hydrate-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-privacy-lock-intro-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-pd-no-zobrazit-vse-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-mapy-neutral-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-radio-neutral-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-mindmenu-lock-infouzel-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-ai-assistants-neutral-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-06-traffic-first-batch-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-05-chmi-first-paint-blue-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-05-external-open-no-blank-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-05-pd-filter-layout-save-no-window-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-05-gdpr-vop-legal-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v2"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-cal-sheet-nav-stable-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-reload-visual-stability-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-silver-quick-notes-focus-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-wx-offline-online-reconnect-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-04-silver-cal-save-enable-v1"') &&
-    !sw.includes('CACHE_VERSION = "2026-09-03-ds-external-return-fullscreen-v1"')
-  ) {
+  if (!swHasAllowedCacheVersion(sw)) {
     fails.push("sw:missing CACHE_VERSION bump");
   }
   return fails;

@@ -119,6 +119,14 @@ if (!body.includes("C 447292")) fail("body_controller_file");
 else ok("body_controller_file");
 if (!body.includes("Kněžická 96")) fail("body_controller_address");
 else ok("body_controller_address");
+if (!body.includes("Provozovatel není plátcem DPH.")) fail("body_dph_not_payer");
+else ok("body_dph_not_payer");
+if (body.includes("DIČ není ve veřejném UI uváděno")) fail("body_old_dic_ui_wording");
+else ok("body_no_old_dic_ui_wording");
+if (body.includes("není prezentována jako plátce DPH")) fail("body_old_payer_presentation_wording");
+else ok("body_no_old_payer_presentation_wording");
+if (/identifikovan[áa]\s+osob/i.test(body)) fail("body_no_identified_person_vat");
+else ok("body_no_identified_person_vat");
 if (!body.includes(VERSION)) fail("body_version_id");
 else ok("body_version_id");
 if (!body.includes("www.uoou.cz")) fail("body_uoou");
@@ -167,6 +175,9 @@ const forbidden = [
   /Data\s+nikdy\s+neopustí\s+zařízení/i,
   /100%\s+bezpečný/i,
   /nenese\s+žádnou\s+odpovědnost/i,
+  /DIČ není ve veřejném UI uváděno/,
+  /není prezentována jako plátce DPH v iCentru/,
+  /identifikovan[áa]\s+osob[ay]\s+k\s+DPH/i,
   /\bTODO\b/,
   /\bXX\b/,
   /doplnit@/i,
