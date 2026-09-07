@@ -50,6 +50,16 @@ ok(
 );
 ok("static_bg_export", /export function scheduleTrafficBackgroundFullHydrate/.test(overview));
 ok("static_event", /iu-traffic-snap-hydrated/.test(overview) && /iu-traffic-snap-hydrated/.test(prehled));
+ok(
+  "static_settings_join_on_persist",
+  /void ensureTrafficCatalogForCurrentFilters\(1\)\.catch/.test(prehled),
+  "persistDraft must join full hydrate when filters need catalog"
+);
+ok(
+  "static_settings_await_on_close",
+  /await ensureTrafficCatalogForCurrentFilters\(1\)/.test(prehled),
+  "closeSettings dirty path must await catalog"
+);
 
 const report = {
   TRAFFIC_AUTO_BG_FULL_HYDRATE_GUARD: "PENDING",
@@ -73,14 +83,25 @@ const bootstrapUrl = pathToFileURL(
 const { bootstrapGuardContext } = await import(bootstrapUrl);
 
 function makeCard(i) {
+  const types = ["nehoda", "prace", "omezeni", "prekazka", "kolona"];
+  const et = types[i % types.length];
+  const peid = "iu-te-" + Number(i).toString(16).padStart(32, "0");
   return {
+    publicEventId: peid,
     id: "t-" + i,
     title: "Test událost " + i,
     summary: "Souhrn " + i,
     road: "D1",
     municipality: "Praha",
+    location: "Praha",
     status: "ACTIVE",
+    lifecycleStatus: "ACTIVE",
+    eventType: et,
+    category: et,
+    impact: "Omezení " + et + " " + i,
+    impactFull: "Omezení " + et + " " + i + " Praha",
     updatedAt: new Date(Date.now() - i * 1000).toISOString(),
+    lastMeaningfulChangeAt: new Date(Date.now() - i * 1000).toISOString(),
   };
 }
 
@@ -104,6 +125,9 @@ function makeSnap(n, opts = {}) {
 const ORIGIN = process.env.IU_TRAFFIC_HYDRATE_ORIGIN || "https://infouzel.cz";
 const FULL_N = 120;
 const HEAD_N = 40;
+const FULL_LATENCY_MS = 1800;
+const TRAFFIC_MOD =
+  "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906";
 
 const browser = await chromium.launch({ headless: true });
 const runtime = {
@@ -116,11 +140,27 @@ const runtime = {
   fullReady: false,
   toggleFullCount: 0,
   filterJoined: false,
+  midFlight: {
+    fullAtClick: 0,
+    fullAfterFilter: 0,
+    promiseAliveAtClick: false,
+    filterResultCount: null,
+    fullRecordCount: 0,
+    overFullCatalog: false,
+  },
 };
 try {
   const context = await bootstrapGuardContext(browser, { viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
   const reqLog = [];
+
+  await page.route("**/assets/iu-prehled-dne-ui-v1.js*", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/javascript; charset=utf-8",
+      body: prehled,
+    });
+  });
 
   await page.route("**/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json*", async (route) => {
     const u = route.request().url();
@@ -140,8 +180,8 @@ try {
       });
       return;
     }
-    // Simulate network latency so filter-during-hydrate is observable.
-    await new Promise((r) => setTimeout(r, 800));
+    // Simulate network latency so mid-flight filter is observable.
+    await new Promise((r) => setTimeout(r, FULL_LATENCY_MS));
     const body = makeSnap(FULL_N, { generationId: "gen-test-1" });
     await route.fulfill({
       status: 200,
@@ -154,75 +194,175 @@ try {
   await page.waitForFunction(() => !!document.querySelector("[data-act='feed-quick-view'][data-view='traffic']"), null, {
     timeout: 120000,
   });
+  await page.evaluate(() => {
+    try {
+      window.__IU_INFO_SYSTEM_CUTOVER__ = true;
+    } catch (_) {}
+    document.documentElement.classList.add("iu-info-system-cutover");
+    const root = document.getElementById("iuPrehledDneRoot");
+    if (root) {
+      root.style.display = "block";
+      root.hidden = false;
+    }
+    const vpEl = document.getElementById("iuSilverTallScrollViewport");
+    if (vpEl) {
+      vpEl.style.display = "block";
+      vpEl.hidden = false;
+    }
+    if (window.IUInfoSystem && typeof window.IUInfoSystem.applyCutoverDom === "function") {
+      window.IUInfoSystem.applyCutoverDom();
+    }
+  });
 
   // Open Doprava (no filter, no Další).
-  await page.click("[data-act='feed-quick-view'][data-view='traffic']");
-  await page.waitForTimeout(1500);
+  await page.evaluate(() => {
+    document.querySelector("[data-act='feed-quick-view'][data-view='traffic']").click();
+  });
+
+  // Wait first-batch DOM before measuring / mid-flight filter.
+  const firstDomDeadline = Date.now() + 25000;
+  while (Date.now() < firstDomDeadline) {
+    runtime.headCount = reqLog.filter((r) => r.kind === "head").length;
+    runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
+    runtime.domAfterFirst = await page.evaluate(() => {
+      const feed = document.querySelector("#iuPrehledDneTimeline");
+      if (!feed) return 0;
+      return (
+        feed.querySelectorAll(
+          "li.iuPdCard, li[data-iu-card], article, .iuTrafficCard, [data-iu-traffic-card], li[data-id]"
+        ).length || feed.querySelectorAll("li").length
+      );
+    });
+    if (runtime.headCount >= 1 && runtime.domAfterFirst >= 20) break;
+    await page.waitForTimeout(120);
+  }
 
   const firstHeadIdx = reqLog.findIndex((r) => r.kind === "head");
   const firstFullIdx = reqLog.findIndex((r) => r.kind === "full");
   runtime.headBeforeFull = firstHeadIdx >= 0 && (firstFullIdx < 0 || firstHeadIdx < firstFullIdx);
-  runtime.headCount = reqLog.filter((r) => r.kind === "head").length;
-  runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
 
-  runtime.domAfterFirst = await page.evaluate(() => {
-    const feed = document.querySelector("#iuPrehledDneTimeline");
-    if (!feed) return 0;
-    return feed.querySelectorAll("li.iuPdCard, li[data-iu-card], article, .iuTrafficCard, [data-iu-traffic-card]").length ||
-      feed.querySelectorAll("li").length;
+  // Wait until full hydrate is in-flight (single GET started, promise alive).
+  const hydrateDeadline = Date.now() + 20000;
+  while (Date.now() < hydrateDeadline) {
+    runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
+    const alive = await page.evaluate(async (modUrl) => {
+      try {
+        const mod = await import(modUrl);
+        const p = mod.getTrafficFullHydratePromise && mod.getTrafficFullHydratePromise();
+        return !!(p && typeof p.then === "function");
+      } catch (_) {
+        return false;
+      }
+    }, TRAFFIC_MOD);
+    if (runtime.fullCount >= 1 && alive) {
+      runtime.midFlight.promiseAliveAtClick = true;
+      break;
+    }
+    await page.waitForTimeout(100);
+  }
+  runtime.midFlight.fullAtClick = reqLog.filter((r) => r.kind === "full").length;
+
+  // Mid-flight: open settings → Doprava → Události → only Nehody (real UI filter).
+  await page.evaluate(() => {
+    const s = document.querySelector("[data-act='open-settings']");
+    if (s) s.click();
+  });
+  await page.waitForSelector("#iuPdSettings", { timeout: 15000 });
+  await page.evaluate(() => {
+    const open = document.querySelector("[data-act='feed-open-detail'][data-kind='traffic']");
+    if (open) open.click();
+  });
+  await page.waitForTimeout(400);
+  await page.evaluate(() => {
+    const acc = [...document.querySelectorAll("[data-act='feed-acc-toggle']")].find((el) =>
+      /Události/i.test(el.textContent || "")
+    );
+    if (acc) acc.click();
+  });
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    const all = document.querySelector("[data-act='feed-events-all']");
+    if (all) all.click();
+  });
+  await page.waitForTimeout(700);
+  await page.evaluate(() => {
+    const box =
+      document.querySelector("input[data-act='feed-event-toggle'][data-value='nehody']") ||
+      document.querySelector("[data-act='feed-event-toggle'][data-value='nehody']");
+    if (box && !box.checked) box.click();
+  });
+  // Vault persist is async — join must fire before hydrate finishes.
+  await page.waitForTimeout(1200);
+  runtime.midFlight.fullAfterFilter = reqLog.filter((r) => r.kind === "full").length;
+  runtime.filterJoined = runtime.midFlight.fullAfterFilter === runtime.midFlight.fullAtClick;
+
+  await page.evaluate(() => {
+    const c = document.querySelector("#iuPdSettings [data-act='settings-close']");
+    if (c) c.click();
   });
 
-  // Wait for hydrate event / uncapped mem without clicking Další/filter.
-  await page.waitForFunction(
-    () => {
+  // Wait hydrate finish + filtered paint over full catalog.
+  const expectedNehoda = Math.ceil(FULL_N / 5);
+  const doneDeadline = Date.now() + FULL_LATENCY_MS + 20000;
+  while (Date.now() < doneDeadline) {
+    const st = await page.evaluate(async (modUrl) => {
       try {
-        const m = window.__IU_TRAFFIC_OVERVIEW_MOD || null;
-      } catch (_) {}
-      return true;
-    },
-    null,
-    { timeout: 1000 }
-  ).catch(() => {});
-
-  // Poll until one full request observed (auto hydrate) — max ~20s.
-  const hydrateDeadline = Date.now() + 20000;
-  while (Date.now() < hydrateDeadline && runtime.fullCount < 1) {
-    runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
-    await page.waitForTimeout(200);
+        const mod = await import(modUrl);
+        const snap = mod.loadOfflineTrafficSnapshot();
+        const t = document.querySelector("#iuPdCount");
+        const m = t && String(t.textContent || "").match(/(\d+)/);
+        return {
+          capped: mod.isTrafficSnapshotCapped(snap),
+          n: snap && Array.isArray(snap.cards) ? snap.cards.length : 0,
+          listed: m ? Number(m[1]) : null,
+        };
+      } catch (_) {
+        return { capped: true, n: 0, listed: null };
+      }
+    }, TRAFFIC_MOD);
+    if (st && st.capped === false && st.n >= FULL_N) {
+      runtime.fullReady = true;
+      runtime.midFlight.fullRecordCount = st.n;
+      runtime.midFlight.filterResultCount = st.listed;
+      if (st.listed === expectedNehoda) break;
+    }
+    await page.waitForTimeout(150);
   }
-  runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
+  await page.waitForTimeout(400);
 
-  await page.waitForTimeout(1200);
   runtime.domAfterHydrate = await page.evaluate(() => {
     const feed = document.querySelector("#iuPrehledDneTimeline");
     if (!feed) return 0;
     return feed.querySelectorAll("li").length;
   });
+  runtime.midFlight.filterResultCount = await page.evaluate(() => {
+    const t = document.querySelector("#iuPdCount");
+    const m = t && String(t.textContent || "").match(/(\d+)/);
+    return m ? Number(m[1]) : null;
+  });
+  const headOnlyNehoda = Math.ceil(HEAD_N / 5);
+  runtime.midFlight.overFullCatalog =
+    runtime.midFlight.filterResultCount === expectedNehoda &&
+    runtime.midFlight.filterResultCount > headOnlyNehoda;
 
-  // Toggle CHMU ↔ Doprava during/after hydrate.
+  runtime.fullCount = reqLog.filter((r) => r.kind === "full").length;
+  runtime.headCount = reqLog.filter((r) => r.kind === "head").length;
+
+  // Toggle CHMU ↔ Doprava after hydrate.
   const fullBeforeToggle = runtime.fullCount;
   for (let i = 0; i < 3; i++) {
-    await page.click("[data-act='feed-quick-view'][data-view='chmu']");
+    await page.evaluate(() => {
+      const c = document.querySelector("[data-act='feed-quick-view'][data-view='chmu']");
+      if (c) c.click();
+    });
     await page.waitForTimeout(200);
-    await page.click("[data-act='feed-quick-view'][data-view='traffic']");
+    await page.evaluate(() => {
+      const t = document.querySelector("[data-act='feed-quick-view'][data-view='traffic']");
+      if (t) t.click();
+    });
     await page.waitForTimeout(200);
   }
   runtime.toggleFullCount = reqLog.filter((r) => r.kind === "full").length - fullBeforeToggle;
-
-  // Filter during a forced re-hydrate scenario is hard once full is cached.
-  // Verify ensureFull joins: call schedule twice from page — must not add GETs.
-  const fullBeforeJoin = reqLog.filter((r) => r.kind === "full").length;
-  await page.evaluate(async () => {
-    const mod = await import(
-      "/assets/iu-traffic-overview-v1.js?v=traffic-auto-bg-full-hydrate-v1-20260906"
-    ).catch(() => null);
-    if (!mod) return;
-    const a = mod.scheduleTrafficBackgroundFullHydrate();
-    const b = mod.ensureFullTrafficOfflineSnapshot();
-    await Promise.all([a, b]);
-  });
-  await page.waitForTimeout(500);
-  runtime.filterJoined = reqLog.filter((r) => r.kind === "full").length === fullBeforeJoin;
 
   // Další should add DOM page, not dump full catalog.
   const more = await page.$("[data-act='more']");
@@ -241,7 +381,13 @@ try {
   ok("runtime_no_toggle_storm", runtime.toggleFullCount === 0, "extra=" + runtime.toggleFullCount);
   ok("runtime_dom_not_full", runtime.domAfterHydrate > 0 && runtime.domAfterHydrate < FULL_N);
   ok("runtime_dom_page_bound", runtime.domAfterFirst > 0 && runtime.domAfterFirst <= 60);
-  ok("runtime_join_no_extra_full", runtime.filterJoined);
+  ok("runtime_midflight_promise", runtime.midFlight.promiseAliveAtClick === true);
+  ok("runtime_midflight_join_no_extra_full", runtime.filterJoined);
+  ok(
+    "runtime_midflight_filter_full_catalog",
+    runtime.midFlight.overFullCatalog === true,
+    "listed=" + runtime.midFlight.filterResultCount
+  );
   if (more) {
     ok(
       "runtime_more_not_full_dom",
@@ -261,3 +407,4 @@ report.fails = fails;
 report.TRAFFIC_AUTO_BG_FULL_HYDRATE_GUARD = fails.length ? "FAIL" : "PASS";
 console.log(JSON.stringify(report, null, 2));
 if (fails.length) process.exit(1);
+
