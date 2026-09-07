@@ -345,6 +345,7 @@ async function runViewport(page, w, h) {
   let tasksOk = false;
   let notesOk = false;
   let calendarFlowDetail = "";
+  let calendarFlowOpenPath = "";
   const calendarFlowProbe = () => {
     const overlay = document.getElementById("iuCalendarOverlay");
     if (!overlay) return false;
@@ -367,12 +368,91 @@ async function runViewport(page, w, h) {
     if (composeAux && vis(composeAux)) return false;
     return true;
   };
+  const captureCalendarFlowDiag = async (reason, attempt, openPath) => {
+    try {
+      const dump = await page.evaluate(() => {
+        const btn = document.getElementById("iuHeroQuickCal");
+        const overlay = document.getElementById("iuCalendarOverlay");
+        const consent = document.getElementById("iuConsentLayer");
+        const tpl = document.getElementById("iuLazyOverlayTpl-calendar");
+        function vis(el) {
+          if (!el) return false;
+          const st = window.getComputedStyle(el);
+          if (st.display === "none" || st.visibility === "hidden") return false;
+          const r = el.getBoundingClientRect();
+          return r.width > 2 && r.height > 2;
+        }
+        function box(el) {
+          if (!el) return null;
+          const r = el.getBoundingClientRect();
+          const st = window.getComputedStyle(el);
+          return {
+            w: Math.round(r.width),
+            h: Math.round(r.height),
+            t: Math.round(r.top),
+            l: Math.round(r.left),
+            display: st.display,
+            visibility: st.visibility,
+            pointerEvents: st.pointerEvents,
+          };
+        }
+        let hitId = null;
+        let hitTag = null;
+        let hitIsBtnOrChild = false;
+        if (btn) {
+          const r = btn.getBoundingClientRect();
+          const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+          hitId = top && top.id ? top.id : "";
+          hitTag = top ? top.tagName : null;
+          hitIsBtnOrChild = !!(top && (top === btn || btn.contains(top)));
+        }
+        const ovSt = overlay ? window.getComputedStyle(overlay) : null;
+        return {
+          hasBtn: !!btn,
+          btnVisible: vis(btn),
+          btnBox: box(btn),
+          hitId: hitId,
+          hitTag: hitTag,
+          hitIsBtnOrChild: hitIsBtnOrChild,
+          hasEntry: typeof window.iuSilverCalEntryQuick,
+          hasEnsure: typeof window.__iuEnsureCalendarOverlay,
+          hasSvc: !!window.iuCalendarService,
+          stub: !!(window.iuCalendarService && window.iuCalendarService.__iuCalendarLazyStub),
+          inited: !!window.__iuCalendarOverlayInited,
+          hasTpl: !!tpl,
+          hasOv: !!overlay,
+          hidden: overlay ? overlay.hidden : null,
+          aria: overlay ? overlay.getAttribute("aria-hidden") : null,
+          ovDisplay: ovSt ? ovSt.display : null,
+          ovVisibility: ovSt ? ovSt.visibility : null,
+          bodyCalOpen: document.body.classList.contains("iu-calendarOverlay-open"),
+          calUi: document.documentElement.getAttribute("data-iu-silver-cal-ui"),
+          consentHidden: consent ? !!consent.hidden : null,
+          consentVisible: vis(consent),
+        };
+      });
+      dump.reason = reason;
+      dump.attempt = attempt;
+      dump.openPath = openPath || null;
+      dump.consoleErrorsSample = (rawConsoleErrors || []).slice(0, 5).map(function (t) {
+        return String(t).slice(0, 240);
+      });
+      calendarFlowDetail = JSON.stringify(dump);
+    } catch (_) {
+      calendarFlowDetail = JSON.stringify({
+        reason: reason,
+        attempt: attempt,
+        openPath: openPath || null,
+        diag: "diag_failed",
+      });
+    }
+  };
   try {
-    /* Preload calendar module so CI cold open is not racing lazy import.
-       Prefer a real (non-force) click when the button is the top hit target;
-       Playwright force-clicks use coordinates and miss when #iuConsentLayer
-       (or another sheet) covers the hero. DOM click / openOverlay remain as
-       deterministic fallbacks — probe invariants are unchanged. */
+    /* Root cause class (proved): #iuConsentLayer covers #iuHeroQuickCal at 390×844,
+       so Playwright coordinate/force clicks hit consent text and never open calendar.
+       Fix: dismiss consent + wait for clickable readiness, then USER CLICK only.
+       Contract (Variant C): preload via __iuEnsureCalendarOverlay is OK; PASS requires
+       trigger click → overlay open. Direct svc.openOverlay is forbidden as PASS path. */
     await page.waitForFunction(
       () =>
         !!document.getElementById("iuHeroQuickCal") &&
@@ -387,6 +467,10 @@ async function runViewport(page, w, h) {
     } catch (_) {}
     try {
       await page.evaluate(() => {
+        try {
+          localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+          localStorage.setItem("iu:consent:analytics:v1", "denied");
+        } catch (_) {}
         const layer = document.getElementById("iuConsentLayer");
         if (layer && !layer.hidden) {
           try {
@@ -403,70 +487,59 @@ async function runViewport(page, w, h) {
         }
       });
     } catch (_) {}
+    /* Condition-based readiness: service installed (not stub) + mount template or overlay. */
+    await page.waitForFunction(
+      () => {
+        const svc = window.iuCalendarService;
+        if (!svc || svc.__iuCalendarLazyStub) return false;
+        if (typeof svc.openOverlay !== "function") return false;
+        return (
+          !!document.getElementById("iuCalendarOverlay") ||
+          !!document.getElementById("iuLazyOverlayTpl-calendar")
+        );
+      },
+      { timeout: 15000 }
+    );
+    await page.waitForFunction(
+      () => {
+        const btn = document.getElementById("iuHeroQuickCal");
+        if (!btn) return false;
+        const r = btn.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) return false;
+        const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return !!(top && (top === btn || btn.contains(top)));
+      },
+      { timeout: 10000 }
+    );
     for (let attempt = 0; attempt < 3 && !calendarFlowOk; attempt++) {
+      let openPath = "playwright_click";
       if (attempt === 0) {
-        const topIsCal = await page.evaluate(() => {
-          const btn = document.getElementById("iuHeroQuickCal");
-          if (!btn) return false;
-          const r = btn.getBoundingClientRect();
-          const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-          return !!(el && (el === btn || btn.contains(el)));
-        });
-        if (topIsCal) {
-          await page.click("#iuHeroQuickCal", { timeout: 15000 });
-        } else {
-          await page.evaluate(() => {
-            const btn = document.getElementById("iuHeroQuickCal");
-            if (btn && typeof btn.click === "function") btn.click();
-            else if (typeof window.iuSilverCalEntryQuick === "function") window.iuSilverCalEntryQuick();
-          });
-        }
+        openPath = "playwright_click";
+        await page.click("#iuHeroQuickCal", { timeout: 15000 });
       } else if (attempt === 1) {
+        openPath = "dom_btn_click";
         await page.evaluate(() => {
           const btn = document.getElementById("iuHeroQuickCal");
           if (btn && typeof btn.click === "function") btn.click();
-          else if (typeof window.iuSilverCalEntryQuick === "function") window.iuSilverCalEntryQuick();
         });
       } else {
-        await page.evaluate(async () => {
-          try {
-            if (typeof window.__iuEnsureCalendarOverlay === "function") {
-              await window.__iuEnsureCalendarOverlay();
-            }
-          } catch (_) {}
-          const svc = window.iuCalendarService;
-          const origin = document.getElementById("iuHeroQuickCal") || document.activeElement;
-          if (svc && typeof svc.openOverlay === "function") {
-            await Promise.resolve(svc.openOverlay(origin));
+        openPath = "entry_quick_click";
+        await page.evaluate(() => {
+          if (typeof window.iuSilverCalEntryQuick === "function") {
+            window.iuSilverCalEntryQuick();
+          } else {
+            const btn = document.getElementById("iuHeroQuickCal");
+            if (btn && typeof btn.click === "function") btn.click();
           }
         });
       }
       try {
         await page.waitForFunction(calendarFlowProbe, { timeout: 12000 });
         calendarFlowOk = true;
+        calendarFlowOpenPath = openPath;
       } catch (_) {
         calendarFlowOk = false;
-        try {
-          calendarFlowDetail = await page.evaluate(() => {
-            const overlay = document.getElementById("iuCalendarOverlay");
-            const consent = document.getElementById("iuConsentLayer");
-            return JSON.stringify({
-              hasBtn: !!document.getElementById("iuHeroQuickCal"),
-              hasEntry: typeof window.iuSilverCalEntryQuick,
-              hasEnsure: typeof window.__iuEnsureCalendarOverlay,
-              hasSvc: !!window.iuCalendarService,
-              stub: !!(window.iuCalendarService && window.iuCalendarService.__iuCalendarLazyStub),
-              inited: !!window.__iuCalendarOverlayInited,
-              hasOv: !!overlay,
-              hidden: overlay ? overlay.hidden : null,
-              aria: overlay ? overlay.getAttribute("aria-hidden") : null,
-              calUi: document.documentElement.getAttribute("data-iu-silver-cal-ui"),
-              consentHidden: consent ? !!consent.hidden : null,
-            });
-          });
-        } catch (_) {
-          calendarFlowDetail = "diag_failed";
-        }
+        await captureCalendarFlowDiag("probe_timeout", attempt, openPath);
         try {
           await page.keyboard.press("Escape");
         } catch (_) {}
@@ -477,8 +550,13 @@ async function runViewport(page, w, h) {
       await page.keyboard.press("Escape");
     } catch (_) {}
     await page.waitForTimeout(200);
-  } catch (_) {
+  } catch (e) {
     calendarFlowOk = false;
+    await captureCalendarFlowDiag(
+      "setup_or_readiness_timeout:" + String(e && e.message ? e.message : e).slice(0, 180),
+      -1,
+      null
+    );
   }
   try {
     await page.click("#iuHeroQuickTasks", { timeout: 15000, force: true });
@@ -549,6 +627,7 @@ async function runViewport(page, w, h) {
     button_gap_delta_px: g.button_gap_delta_px,
     button_gap_pass: buttonGapPass,
     calendar_flow_ok: calendarFlowOk,
+    calendar_flow_open_path: calendarFlowOk ? calendarFlowOpenPath || undefined : undefined,
     calendar_flow_detail: calendarFlowDetail || undefined,
     tasks_ok: tasksOk,
     notes_ok: notesOk,
@@ -589,6 +668,7 @@ function formatBlock(label, o) {
     "  button_gap_delta_px: " + o.button_gap_delta_px,
     "  button_gap_pass: " + o.button_gap_pass,
     "  calendar_flow_ok: " + o.calendar_flow_ok,
+    o.calendar_flow_open_path ? "  calendar_flow_open_path: " + o.calendar_flow_open_path : null,
     o.calendar_flow_detail ? "  calendar_flow_detail: " + o.calendar_flow_detail : null,
     "  tasks_ok: " + o.tasks_ok,
     "  notes_ok: " + o.notes_ok,
