@@ -50,11 +50,11 @@ function staticGate() {
   must(/\.iuSilverParcelWatch__cardCreated\s*\{/.test(css), "static_css_card_created");
   must(/flex-wrap:\s*wrap/.test(css), "static_css_flex_wrap");
   must(
-    /iu-silver-parcel-dashboard\.js\?v=parcel-seq-created-header-v1-20260905/.test(index),
+    /iu-silver-parcel-dashboard\.js\?v=parcel-carrier-picker-toggle-v1-20260907/.test(index),
     "static_index_js_cache_bust"
   );
   must(
-    /iu-silver-parcel-dashboard\.css\?v=parcel-seq-created-header-v1-20260905/.test(index),
+    /iu-silver-parcel-dashboard\.css\?v=parcel-carrier-picker-toggle-v1-20260907/.test(index),
     "static_index_css_cache_bust"
   );
 }

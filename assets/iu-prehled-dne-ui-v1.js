@@ -2448,6 +2448,8 @@ async function persistDraft() {
     if (state.prefs && !state.prefs.feedFilter) state.prefs.feedFilter = snapshot.feedFilter;
     state.draft = clonePrefs(state.prefs);
     clearSaveError();
+    // Join in-flight full hydrate when prefs now need the full catalog (no second GET).
+    void ensureTrafficCatalogForCurrentFilters(1).catch(() => null);
     if (state.settingsOpen) {
       state.feedDomDirty = true;
     } else {
@@ -2483,10 +2485,15 @@ function closeSettings() {
   const finish = () => {
     if (dirty) {
       state.feedDomDirty = false;
-      try {
-        paint();
-        wire();
-      } catch (_) {}
+      void (async () => {
+        try {
+          await ensureTrafficCatalogForCurrentFilters(1);
+        } catch (_) {}
+        try {
+          paint();
+          wire();
+        } catch (_) {}
+      })();
     }
     restoreFeedScroll();
     if (opener && typeof opener.focus === "function") {

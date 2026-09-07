@@ -400,6 +400,16 @@
     margin-top: 10px;
   }
 
+  #iuDesktopParcelWatchOverlay #iuSilverParcelWatch .iuSilverParcelWatch__picker[hidden] {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
   #iuDesktopParcelWatchOverlay #iuSilverParcelWatch .iuSilverParcelWatch__chip {
     min-height: 34px;
     padding: 6px 10px;

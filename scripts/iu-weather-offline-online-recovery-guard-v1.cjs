@@ -252,6 +252,9 @@ async function runtimeProof() {
         );
         localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
         localStorage.setItem("iu:consent:analytics:v1", "denied");
+        localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+        localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
+        localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
       } catch (_) {}
     }, BRNO);
 
@@ -262,36 +265,90 @@ async function runtimeProof() {
     await page.waitForFunction(() => typeof window.iuWeatherOnNetworkReconnect === "function", null, {
       timeout: 90000,
     });
+    await page.waitForFunction(() => window.__iuVaultHydrationComplete === true, null, {
+      timeout: 90000,
+    });
 
-    /* Re-assert manual city after vault/boot may briefly race location keys. */
-    await page.evaluate((city) => {
+    /* Re-assert manual city after vault/boot may briefly race location keys.
+       Prefer durableSet so vault-backed reads see the same values as localStorage. */
+    await page.evaluate(async (city) => {
+      const payload = JSON.stringify({
+        lat: city.lat,
+        lon: city.lon,
+        label: city.name,
+        name: city.name,
+      });
       try {
-        localStorage.setItem("iu_location_mode", "manual");
-        localStorage.setItem(
-          "iu_manual_location",
-          JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name, name: city.name })
-        );
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          await window.iuVault.durableSet("iu_location_mode", "manual");
+          await window.iuVault.durableSet("iu_manual_location", payload);
+        } else {
+          localStorage.setItem("iu_location_mode", "manual");
+          localStorage.setItem("iu_manual_location", payload);
+        }
+      } catch (_) {
         try {
-          window.__iuWeatherState = null;
+          localStorage.setItem("iu_location_mode", "manual");
+          localStorage.setItem("iu_manual_location", payload);
         } catch (_) {}
-        try {
-          window.__iuWeatherRuntimeCity = null;
-        } catch (_) {}
+      }
+      try {
+        window.__iuWeatherState = null;
+      } catch (_) {}
+      try {
+        window.__iuWeatherRuntimeCity = null;
       } catch (_) {}
     }, BRNO);
     await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForFunction(() => typeof window.iuWeatherOnNetworkReconnect === "function", null, {
       timeout: 90000,
     });
-    await page.evaluate((city) => {
+    await page.waitForFunction(() => window.__iuVaultHydrationComplete === true, null, {
+      timeout: 90000,
+    });
+    await page.evaluate(async (city) => {
+      const payload = JSON.stringify({
+        lat: city.lat,
+        lon: city.lon,
+        label: city.name,
+        name: city.name,
+      });
       try {
-        localStorage.setItem("iu_location_mode", "manual");
-        localStorage.setItem(
-          "iu_manual_location",
-          JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name, name: city.name })
-        );
+        if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+          await window.iuVault.durableSet("iu_location_mode", "manual");
+          await window.iuVault.durableSet("iu_manual_location", payload);
+        } else {
+          localStorage.setItem("iu_location_mode", "manual");
+          localStorage.setItem("iu_manual_location", payload);
+        }
+      } catch (_) {
+        try {
+          localStorage.setItem("iu_location_mode", "manual");
+          localStorage.setItem("iu_manual_location", payload);
+        } catch (_) {}
+      }
+      try {
+        window.__iuWeatherRuntimeCity = null;
       } catch (_) {}
     }, BRNO);
+    await page.waitForFunction(
+      (city) => {
+        try {
+          if (typeof window.iuWeatherLocationFingerprint !== "function") return false;
+          const fp = window.iuWeatherLocationFingerprint();
+          return (
+            !!fp &&
+            fp.mode === "manual" &&
+            Math.abs(Number(fp.lat) - city.lat) < 0.01 &&
+            Math.abs(Number(fp.lon) - city.lon) < 0.01
+          );
+        } catch (_) {
+          return false;
+        }
+      },
+      BRNO,
+      { timeout: 30000 }
+    );
 
     const before = await page.evaluate(() => {
       if (typeof window.iuWeatherLocationFingerprint === "function") return window.iuWeatherLocationFingerprint();

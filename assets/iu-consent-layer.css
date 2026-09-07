@@ -94,6 +94,7 @@
   gap: 8px;
   width: 100%;
   align-items: stretch;
+  flex-shrink: 0;
 }
 
 .iuConsentLayer__btn {
@@ -131,69 +132,164 @@
   background: rgba(56, 189, 248, 0.22);
 }
 
+/*
+ * ≤900: bottom nav visible (index.html) — sit above --bottom-nav-height, scroll if needed.
+ * 901–1023: tablet band without bottom nav — fit viewport, scroll if needed, wrap buttons.
+ * ≥1024: desktop invariant (unchanged look).
+ */
 @media (max-width: 900px) {
-  /* Bottom anchor above #iuMobileBottomNav (--bottom-nav-height from index.html inline). */
   .iuConsentLayer {
     top: auto;
     bottom: var(
       --bottom-nav-height,
       calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
     );
-    padding-top: 0;
-    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
-    align-items: stretch;
+    padding-top: max(8px, env(safe-area-inset-top, 0px));
+    padding-bottom: 8px;
+    align-items: flex-end;
+    max-height: calc(
+      100vh - var(
+        --bottom-nav-height,
+        calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
+      )
+    );
+    max-height: calc(
+      100dvh - var(
+        --bottom-nav-height,
+        calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)) + 32px)
+      )
+    );
+    overflow: hidden;
   }
 
   .iuConsentLayer__panel {
+    width: 100%;
+    max-width: min(920px, 100%);
     border-radius: 14px 14px 0 0;
     border-top: 1px solid rgba(148, 163, 184, 0.35);
     border-bottom: 0;
     box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.35);
-    max-height: min(36vh, 320px);
+    max-height: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Phone: compact bottom bar — must not cover Silver quick actions (smoke calendar_flow). */
-@media (max-width: 479px) {
-  .iuConsentLayer__panel {
-    gap: 4px;
-    padding: 8px 10px;
-    /* Allow wrapped longer deny label without clipping title/buttons. */
-    max-height: min(28vh, 132px);
-    overflow: hidden;
+    overscroll-behavior: contain;
+    min-height: 0;
   }
 
   .iuConsentLayer__title {
-    font-size: 0.72rem;
-    line-height: 1.15;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+    flex-shrink: 0;
   }
 
   .iuConsentLayer__text {
-    display: none;
+    display: block;
+    flex-shrink: 0;
   }
 
   .iuConsentLayer__actions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 4px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin-top: auto;
+    padding-top: 8px;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0) 0%, rgba(2, 6, 23, 0.98) 28%, rgba(2, 6, 23, 0.98) 100%);
   }
 
   .iuConsentLayer__btn {
-    min-height: 40px;
-    padding: 5px 4px;
-    font-size: 0.65rem;
-    line-height: 1.15;
-    border-radius: 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1023px) {
+  .iuConsentLayer {
+    top: auto;
+    bottom: 0;
+    padding-top: max(8px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    align-items: flex-end;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .iuConsentLayer__panel {
+    width: 100%;
+    max-width: min(920px, 100%);
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    min-height: 0;
+  }
+
+  .iuConsentLayer__text {
+    display: block;
+  }
+
+  .iuConsentLayer__actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin-top: auto;
+    padding-top: 8px;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0) 0%, rgba(2, 6, 23, 0.98) 28%, rgba(2, 6, 23, 0.98) 100%);
+  }
+
+  .iuConsentLayer__btn {
     white-space: normal;
     overflow-wrap: anywhere;
   }
 }
 
-@media (min-width: 901px) {
+@media (max-width: 479px) {
+  .iuConsentLayer__panel {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .iuConsentLayer__title {
+    font-size: 0.95rem;
+    line-height: 1.25;
+  }
+
+  .iuConsentLayer__text {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .iuConsentLayer__actions {
+    gap: 6px;
+  }
+
+  .iuConsentLayer__btn {
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    border-radius: 8px;
+  }
+}
+
+/* Short landscape / small available height with bottom nav */
+@media (max-width: 900px) and (max-height: 520px) {
+  .iuConsentLayer__panel {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .iuConsentLayer__title {
+    font-size: 0.9rem;
+  }
+
+  .iuConsentLayer__text {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1024px) {
   .iuConsentLayer {
     padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
   }

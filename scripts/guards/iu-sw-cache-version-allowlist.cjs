@@ -3,7 +3,17 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-07-tv-program-neutral-v1",
   "2026-09-06-tv-program-neutral-v1",
+  "2026-09-07-silver-desktop-premium-facelift-v1",
+  "2026-09-07-icentrum-desktop-panel-v1",
+  "2026-09-07-consent-layer-mobile-fit-v1",
+  "2026-09-07-external-open-dead-fix-v1",
+  "2026-09-07-icentrum-dph-wording-v1",
+  "2026-09-07-parcel-carrier-picker-toggle-v1",
+  "2026-09-07-silver-result-hide-chat-composer-v1",
+  "2026-09-07-weather-moje-mesto-autocomplete-v1",
+  "2026-09-07-affiliate-selected-services-neutral-v1",
   "2026-09-06-jr-neutral-v1",
   "2026-09-06-traffic-auto-bg-hydrate-v1",
   "2026-09-06-privacy-lock-intro-v1",
@@ -167,7 +177,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-06-tv-program-neutral-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-07-tv-program-neutral-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
