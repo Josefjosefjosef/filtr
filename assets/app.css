@@ -18007,6 +18007,15 @@ button.iuSilverWelcomeAddressSubmit:focus-visible{outline:2px solid #22c55ea8;ou
 .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatComposer{
   display: none !important;
 }
+/* Mobile/tablet/PWA result window: no follow-up chat composer (homepage Silver input remains). */
+@media (max-width: 1024px) {
+  #iuSilverChatOverlay .iuSilverChatComposer{
+    display: none !important;
+  }
+  #iuSilverChatOverlay .iuSilverChatMessages{
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
 .iuSilverChatOverlay--quickTemplateEmpty .iuSilverChatBackdrop{
   background: rgba(10, 16, 24, 0.55);
 }
