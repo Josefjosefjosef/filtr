@@ -1174,6 +1174,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-jr-neutral-presentation-guard
 
+      - name: Affiliate selected services neutral guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-affiliate-selected-services-neutral-guard
+
       - name: Radio neutral presentation guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-radio-neutral-presentation-guard
