@@ -1022,11 +1022,11 @@ require-trusted-types-for 'script';
     </style>
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-date-time-value-column-v4-20260901" />
     <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
-    <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" />
+    <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-mobile-fit-v1-20260907" />
     <link rel="stylesheet" data-iu-href="/assets/iu-tasks-premium.css?v=date-time-value-column-v4-20260813" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=gdpr-vop-section-v1-20260905" media="print" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-v1-20260609" media="print" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-mobile-fit-v1-20260907" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
        * FINÁLNÍ společný komponent — sekční oddělovníky mobil/tablet (≤1024px):
@@ -6939,7 +6939,7 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-vault-ui-v1.js?v=iu-icentrum-security-ux-v1-20260831"></script>
     <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-consent-layer.js?v=consent-layer-v1-20260609"></script>
+    <script defer src="/assets/iu-consent-layer.js?v=consent-layer-mobile-fit-v1-20260907"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-carrier-picker-toggle-v1-20260907"></script>
     <script>
     (function(){
@@ -8239,8 +8239,8 @@ require-trusted-types-for 'script';
 
     <aside id="iuConsentLayer" class="iuConsentLayer" role="region" aria-label="Volba soukromí a anonymní statistiky" hidden>
       <div class="iuConsentLayer__panel">
-        <h2 class="iuConsentLayer__title">Anonymní statistiky návštěvnosti</h2>
-        <p class="iuConsentLayer__text">Anonymní statistiky nám pomáhají pochopit návštěvnost a zlepšovat InfoUzel.cz. Neslouží k identifikaci konkrétních osob. Více v Informačním centru a na stránce <a class="iuConsentLayer__inlineLink" href="/statistiky/">Statistiky a transparentnost</a>.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
+        <h2 class="iuConsentLayer__title">Pomozte nám zlepšovat InfoUzel.cz</h2>
+        <p class="iuConsentLayer__text">Můžete nám povolit anonymní údaje o návštěvnosti. Nezjišťujeme, kdo jste, a nesledujeme vás napříč weby. Údaje používáme pouze ke zlepšování InfoUzel.cz.<button type="button" class="iuConsentLayer__infoBtn" id="iuConsentInfoBtn" aria-label="Otevřít Informační centrum"><span class="iuConsentLayer__infoGlyph" aria-hidden="true">i</span></button></p>
         <div class="iuConsentLayer__actions">
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--essential" id="iuConsentEssentialOnly">Nepovolit anonymní statistiky</button>
           <button type="button" class="iuConsentLayer__btn iuConsentLayer__btn--primary" id="iuConsentAllowStats">Povolit anonymní statistiky</button>
