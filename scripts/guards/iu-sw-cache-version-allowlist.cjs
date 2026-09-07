@@ -4,6 +4,8 @@
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
   "2026-09-07-tv-online-neutral-v1",
+  "2026-09-07-tv-program-neutral-v1",
+  "2026-09-06-tv-program-neutral-v1",
   "2026-09-07-silver-desktop-premium-facelift-v1",
   "2026-09-07-icentrum-desktop-panel-v1",
   "2026-09-07-consent-layer-mobile-fit-v1",

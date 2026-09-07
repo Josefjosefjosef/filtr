@@ -5470,10 +5470,10 @@ try {
 
   /** P0 TV program: explicit allowlist — žádné falešné stanice / sdílené URL bez přesného významu. */
   const IU_TV_PROGRAM_LINKS = [
-    { title: "Česká televize", label: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/", type: "OVĚŘENO" },
-    { title: "Nova", label: "TV program Nova Group", url: "https://tv.nova.cz/program", type: "OVĚŘENO" },
-    { title: "Prima", label: "Oficiální přehled Prima", url: "https://www.iprima.cz/tv-program", type: "OFICIÁLNÍ" },
-    { title: "Seznam TV", label: "Veřejný TV program", url: "https://tv.seznam.cz/", type: "OVĚŘENO" },
+    { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/", type: "OVĚŘENO" },
+    { title: "Nova", url: "https://tv.nova.cz/program", type: "OVĚŘENO" },
+    { title: "Prima", url: "https://www.iprima.cz/tv-program", type: "OFICIÁLNÍ" },
+    { title: "Seznam TV", url: "https://tv.seznam.cz/", type: "OVĚŘENO" },
   ];
 
   function iuMountTvProgramVerifiedLinks() {
@@ -5486,7 +5486,6 @@ try {
         const u = String(it && it.url ? it.url : "").trim();
         if (!/^https:\/\//i.test(u)) continue;
         const title = escapeHtml(it.title);
-        const label = escapeHtml(it.label);
         const aria = escapeHtml(String(it.title || "Externí odkaz"));
         parts.push(
           '<a class="iuTvPgHit iuTvPgHit--c" href="' +
@@ -5495,8 +5494,6 @@ try {
             aria +
             '"><span class="iuTvPgCard__name">' +
             title +
-            '</span><span class="iuTvPgCard__hint">' +
-            label +
             "</span></a>"
         );
       }
@@ -5513,78 +5510,56 @@ try {
     film: {
       title: "Film",
       items: [
-        {
-          title: "Česká televize",
-          hint: "Oficiální TV program ČT",
-          url: "https://www.ceskatelevize.cz/tv-program/",
-        },
-        {
-          title: "Nova",
-          hint: "TV program Nova Group",
-          url: "https://tv.nova.cz/program",
-        },
-        {
-          title: "Seznam TV",
-          hint: "Veřejný TV program",
-          url: "https://tv.seznam.cz/",
-        },
+        { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Nova", url: "https://tv.nova.cz/program" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
     serial: {
       title: "Seriál",
       items: [
-        { title: "Česká televize", hint: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/" },
-        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
+        { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Nova", url: "https://tv.nova.cz/program" },
         {
           title: "Prima",
-          hint: "Oficiální přehled Prima",
           url: "https://www.iprima.cz/tv-program",
           primaCaution: true,
         },
-        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
     sport: {
       title: "Sport",
       items: [
-        {
-          title: "Česká televize",
-          hint: "Oficiální TV program ČT",
-          url: "https://www.ceskatelevize.cz/tv-program/",
-        },
-        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
-        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+        { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Nova", url: "https://tv.nova.cz/program" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
     zpravy: {
       title: "Zprávy",
       items: [
-        {
-          title: "Česká televize",
-          hint: "Oficiální TV program ČT",
-          url: "https://www.ceskatelevize.cz/tv-program/",
-        },
-        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+        { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
     deti: {
       title: "Děti",
       items: [
-        { title: "Česká televize", hint: "Oficiální TV program ČT", url: "https://www.ceskatelevize.cz/tv-program/" },
-        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+        { title: "Česká televize", url: "https://www.ceskatelevize.cz/tv-program/" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
     zabava: {
       title: "Zábava",
       items: [
-        { title: "Nova", hint: "TV program Nova Group", url: "https://tv.nova.cz/program" },
+        { title: "Nova", url: "https://tv.nova.cz/program" },
         {
           title: "Prima",
-          hint: "Oficiální přehled Prima",
           url: "https://www.iprima.cz/tv-program",
           primaCaution: true,
         },
-        { title: "Seznam TV", hint: "Veřejný TV program", url: "https://tv.seznam.cz/" },
+        { title: "Seznam TV", url: "https://tv.seznam.cz/" },
       ],
     },
   };
@@ -5839,7 +5814,7 @@ try {
       const parts = [];
       if (emptyCategory) {
         parts.push(
-          '<div class="iuTvProgramChoiceOverlay__emptyMsg">Pro tuto kategorii nemáme dostupné ověřené odkazy.</div>'
+          '<div class="iuTvProgramChoiceOverlay__emptyMsg">Pro tuto kategorii nemáme dostupné odkazy.</div>'
         );
         parts.push(
           '<a class="iuTvProgramChoiceOverlay__row" href="' +
@@ -5848,8 +5823,6 @@ try {
             escapeHtml("Česká televize") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
             escapeHtml("Česká televize") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Oficiální TV program ČT") +
             "</span></a>"
         );
         parts.push(
@@ -5859,8 +5832,6 @@ try {
             escapeHtml("Seznam TV") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
             escapeHtml("Seznam TV") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Veřejný TV program") +
             "</span></a>"
         );
       } else {
@@ -5871,8 +5842,6 @@ try {
             escapeHtml("Česká televize") +
             '"><span class="iuTvProgramChoiceOverlay__rowName">' +
             escapeHtml("Česká televize") +
-            '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-            escapeHtml("Oficiální TV program ČT") +
             "</span></a>"
         );
         const seen = {};
@@ -5883,7 +5852,6 @@ try {
           if (seen[u]) continue;
           seen[u] = true;
           const t = escapeHtml(it.title);
-          const h = escapeHtml(it.hint || "");
           const aria = escapeHtml(String(it.title || "Otevřít"));
           const prima = it.primaCaution === true || u.indexOf("iprima.cz") >= 0;
           const warn = prima
@@ -5896,8 +5864,6 @@ try {
               aria +
               '"><span class="iuTvProgramChoiceOverlay__rowName">' +
               t +
-              '</span><span class="iuTvProgramChoiceOverlay__rowHint">' +
-              h +
               "</span>" +
               warn +
               "</a>"

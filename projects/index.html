@@ -2389,11 +2389,11 @@ require-trusted-types-for 'script';
       @media (min-width:700px){#iuTvProgramView .iuTvPgGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
       @media (min-width:1100px){#iuTvProgramView .iuTvPgGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
       #iuTvProgramView a.iuTvPgHit{box-sizing:border-box;text-decoration:none;color:inherit;border-radius:16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 2px 14px rgba(0,0,0,0.14)}
-      #iuTvProgramView a.iuTvPgHit--c{position:relative;gap:8px;min-height:118px;padding:16px 18px;justify-content:center;overflow:hidden;min-width:0}
+      #iuTvProgramView a.iuTvPgHit--c{position:relative;gap:0;min-height:96px;padding:16px 18px;justify-content:center;overflow:hidden;min-width:0}
       #iuTvProgramView a.iuTvPgHit:hover,#iuTvProgramView a.iuTvPgHit:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 42%,rgba(255,255,255,0.12));background:rgba(255,255,255,0.08);box-shadow:0 6px 20px rgba(0,0,0,0.18);transform:translateY(-1px)}
       #iuTvProgramView a.iuTvPgHit:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,#fff);outline-offset:2px}
       #iuTvProgramView .iuTvPgCard__name{font-size:16px;font-weight:900;line-height:1.25;overflow-wrap:anywhere;word-break:break-word;max-width:100%}
-      #iuTvProgramView .iuTvPgCard__hint{font-size:13px;opacity:0.78;line-height:1.4;overflow-wrap:anywhere;word-break:break-word;max-width:100%}
+      #iuTvProgramView .iuTvPgCard__hint{display:none!important}
       #iuTvProgramView .iuChip--accent{--iuChipAccent:var(--iuSectionAccent)}
       #iuTvProgramView .iuTvPgChoiceGrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:6px;width:100%;max-width:100%}
       @media(min-width:520px){#iuTvProgramView .iuTvPgChoiceGrid2{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
@@ -2404,14 +2404,14 @@ require-trusted-types-for 'script';
       #iuTvProgramView .iuTvPgChoiceBtn:active{transform:translateY(0);box-shadow:0 2px 10px rgba(0,0,0,0.12)}
       #iuTvProgramView .iuTvPgRecGrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px;width:100%;max-width:100%}
       @media(min-width:560px){#iuTvProgramView .iuTvPgRecGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}}
-      #iuTvProgramView .iuTvPgRecCard{box-sizing:border-box;width:100%;max-width:100%;min-height:128px;padding:16px 18px 18px;margin:0;border-radius:16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:inherit;font:inherit;text-align:center;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 14px rgba(0,0,0,0.12);min-width:0;-webkit-tap-highlight-color:transparent}
+      #iuTvProgramView .iuTvPgRecCard{box-sizing:border-box;width:100%;max-width:100%;min-height:108px;padding:16px 18px 18px;margin:0;border-radius:16px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:inherit;font:inherit;text-align:center;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s,transform .12s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 14px rgba(0,0,0,0.12);min-width:0;-webkit-tap-highlight-color:transparent}
       #iuTvProgramView .iuTvPgRecCard:hover,#iuTvProgramView .iuTvPgRecCard:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 40%,rgba(255,255,255,0.12));background:rgba(255,255,255,0.09);box-shadow:0 6px 20px rgba(0,0,0,0.16);transform:translateY(-1px)}
       #iuTvProgramView .iuTvPgRecCard:focus-visible{outline:2px solid color-mix(in srgb,var(--iuSectionAccent,#10B981) 55%,#fff);outline-offset:2px}
       #iuTvProgramView .iuTvPgRecCard:active{transform:translateY(0);box-shadow:0 2px 10px rgba(0,0,0,0.12)}
       #iuTvProgramView .iuTvPgRecCard__emoji{font-size:22px;line-height:1}
       #iuTvProgramView .iuTvPgRecCard__title{font-size:15px;font-weight:900;line-height:1.25}
-      #iuTvProgramView .iuTvPgRecCard__desc{font-size:12px;opacity:0.78;line-height:1.4;max-width:22rem;margin:0 auto}
-      #iuTvProgramView .iuTvPgRecCard__cta{margin-top:4px;font-size:12px;font-weight:800;color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 82%,#fff)}
+      #iuTvProgramView .iuTvPgRecCard__desc{display:none!important}
+      #iuTvProgramView .iuTvPgRecCard__cta{margin-top:2px;font-size:12px;font-weight:800;color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 82%,#fff)}
       #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay{position:fixed;inset:0;z-index:10050;display:flex;align-items:flex-end;justify-content:center;padding:0;box-sizing:border-box;pointer-events:none}
       #iuTvProgramChoiceOverlay.iuTvProgramChoiceOverlay[hidden]{display:none!important}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__backdrop{position:absolute;inset:0;background:rgba(7,12,19,0.55);pointer-events:auto;opacity:0;transition:opacity 140ms ease}
@@ -2433,7 +2433,7 @@ require-trusted-types-for 'script';
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:active{transform:scale(0.995)}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:hover,#iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__row:focus-visible{border-color:color-mix(in srgb,var(--iuSectionAccent,#10B981) 42%,rgba(226,232,240,0.25));background:rgba(255,255,255,0.12);box-shadow:0 4px 18px rgba(0,0,0,0.16)}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowName{display:block;font-size:15px;font-weight:800;color:#ffffff;line-height:1.3;overflow-wrap:anywhere;word-break:break-word}
-      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{display:block;font-size:13px;line-height:1.45;color:#cbd5e1;overflow-wrap:anywhere;word-break:break-word}
+      #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__rowHint{display:none!important}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaWarn{display:block;margin:0;font-size:12px;font-weight:700;line-height:1.45;color:#fde68a;padding-top:4px;border-top:1px solid rgba(253,224,71,0.22)}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;background:rgba(7,12,19,0.72);border-radius:0 0 12px 12px;z-index:2}
       #iuTvProgramChoiceOverlay .iuTvProgramChoiceOverlay__primaConfirm[hidden]{display:none!important}
@@ -4182,33 +4182,31 @@ require-trusted-types-for 'script';
                           </div>
                           <div class="iuTvPgHero__text">
                             <h2 class="iuTvPgHero__title">TV program</h2>
-                            <p class="iuTvPgHero__sub">Rychlé odkazy na hlavní TV programy.</p>
+                            <p class="iuTvPgHero__sub">Odkazy na vybrané televizní programy a externí služby.</p>
                           </div>
                         </div>
                       </div>
 
+                      <!-- tv-program-neutral-v1-20260906: neutral copy; no ranking/recommendation blurbs -->
                       <div class="iuSubSection" id="iuTvPg-evening" data-iu-tv-evening>
                         <div class="iuSubSectionHeader">
-                          <h3>Doporučení dnes večer</h3>
+                          <h3>Program podle typu obsahu</h3>
                           <div class="iuSubLine" aria-hidden="true"></div>
                         </div>
-                        <div class="iuTvPgRecGrid" role="list" aria-label="Doporučení dnes večer">
+                        <div class="iuTvPgRecGrid" role="list" aria-label="Program podle typu obsahu">
                           <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="film" data-iu-tv-choice="film" role="listitem">
                             <span class="iuTvPgRecCard__emoji" aria-hidden="true">🎬</span>
-                            <span class="iuTvPgRecCard__title">Film večer</span>
-                            <span class="iuTvPgRecCard__desc">Výběr filmů napříč hlavními stanicemi</span>
+                            <span class="iuTvPgRecCard__title">Filmy</span>
                             <span class="iuTvPgRecCard__cta">Zobrazit filmy</span>
                           </button>
                           <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="serial" data-iu-tv-choice="serial" role="listitem">
                             <span class="iuTvPgRecCard__emoji" aria-hidden="true">📺</span>
-                            <span class="iuTvPgRecCard__title">Seriál večer</span>
-                            <span class="iuTvPgRecCard__desc">Seriály a epizody dnes večer</span>
+                            <span class="iuTvPgRecCard__title">Seriály</span>
                             <span class="iuTvPgRecCard__cta">Zobrazit seriály</span>
                           </button>
                           <button type="button" class="iuTvPgRecCard" data-iu-tv-rec="sport" data-iu-tv-choice="sport" role="listitem">
                             <span class="iuTvPgRecCard__emoji" aria-hidden="true">⚽</span>
-                            <span class="iuTvPgRecCard__title">Sport dnes</span>
-                            <span class="iuTvPgRecCard__desc">Přehled sportovního vysílání</span>
+                            <span class="iuTvPgRecCard__title">Sport</span>
                             <span class="iuTvPgRecCard__cta">Zobrazit sport</span>
                           </button>
                         </div>
@@ -4235,7 +4233,7 @@ require-trusted-types-for 'script';
                           <h3>TV programy stanic</h3>
                           <div class="iuSubLine" aria-hidden="true"></div>
                         </div>
-                        <p class="iuTvPgLead">Rychlé odkazy na hlavní TV programy. Odkazy se otevřou v nové kartě.</p>
+                        <p class="iuTvPgLead">Odkazy na vybrané televizní programy. Odkazy se otevřou na externích stránkách.</p>
                         <div id="iuTvProgramVerifiedHost" class="iuTvPgGrid" role="list" aria-label="TV programy stanic"></div>
                       </div>
 
@@ -4248,7 +4246,7 @@ require-trusted-types-for 'script';
                             <h3 id="iuTvProgramChoiceTitle" class="iuTvProgramChoiceOverlay__title"></h3>
                             <button type="button" class="iuTvProgramChoiceOverlay__close" data-iu-tv-choice-close aria-label="Zavřít výběr">×</button>
                           </div>
-                          <p class="iuTvProgramChoiceOverlay__lead">Vyber službu. Odkazy se otevřou v nové kartě.</p>
+                          <p class="iuTvProgramChoiceOverlay__lead">Vyber službu. Odkazy se otevřou na externích stránkách.</p>
                           <div class="iuTvProgramChoiceOverlay__stack">
                             <div id="iuTvProgramChoiceOverlayLinks" class="iuTvProgramChoiceOverlay__links"></div>
                             <div id="iuTvProgramPrimaConfirm" class="iuTvProgramChoiceOverlay__primaConfirm" hidden aria-hidden="true">
@@ -4279,21 +4277,15 @@ require-trusted-types-for 'script';
     </template>
     <div data-iu-seo-stub="tvprogram" hidden>
 <aside class="iu-tv-seo-block" aria-label="Informace o sekci TV program">
-                        <h3 class="iu-tv-seo-block__title">TV program online přehledně</h3>
+                        <h3 class="iu-tv-seo-block__title">TV program – odkazy na vybrané externí zdroje</h3>
                         <p class="iu-tv-seo-block__lead">
-                          Najdi rychle aktuální TV program na dnes večer, filmy, seriály, sportovní přenosy, zprávy i pořady pro děti. Sekce TV program na
-                          infoUzel.cz slouží jako jednoduchý rozcestník na hlavní televizní programy a oficiální přehledy stanic. Vybereš typ obsahu nebo
-                          konkrétní stanici a otevřeš odpovídající TV program v nové kartě.
+                          Sekce TV program obsahuje odkazy na vybrané externí televizní programy a související zdroje. Obsah lze procházet podle vybraných kategorií nebo televizních stanic.
                         </p>
-                        <ul class="iu-tv-seo-block__list">
-                          <li>rychlý výběr filmů, seriálů, sportu, zpráv, dětského obsahu a zábavy</li>
-                          <li>odkazy na hlavní TV programy stanic</li>
-                          <li>čistý přehled vhodný pro mobil, tablet i počítač</li>
-                          <li>bez zbytečného hledání a bez zahlcení reklamními prvky</li>
-                        </ul>
+                        <p class="iu-tv-seo-block__lead">
+                          Po výběru je uživatel přesměrován na příslušnou externí stránku, kde jsou dostupné informace poskytované provozovatelem daného zdroje.
+                        </p>
                         <p class="iu-tv-seo-block__foot">
-                          TV program je určený jako praktický rozcestník. Samotné vysílací časy, změny programu a aktuální pořady se vždy řídí informacemi
-                          uvedenými na oficiálních stránkách jednotlivých televizních stanic.
+                          InfoUzel.cz televizní programy ani vysílání jednotlivých stanic neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím zdrojům. Nabídka není úplným výčtem televizních stanic, pořadů ani dostupných televizních programů.
                         </p>
                       </aside>
     </div>
