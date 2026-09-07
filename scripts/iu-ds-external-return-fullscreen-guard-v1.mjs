@@ -57,6 +57,7 @@ function auditStatic() {
     fails.push("index:missing cache bust token");
   }
   if (
+    !sw.includes('CACHE_VERSION = "2026-09-07-parcel-carrier-picker-toggle-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-silver-result-hide-chat-composer-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-weather-moje-mesto-autocomplete-v1"') &&
     !sw.includes('CACHE_VERSION = "2026-09-07-affiliate-selected-services-neutral-v1"') &&
