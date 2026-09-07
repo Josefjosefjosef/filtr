@@ -25784,6 +25784,7 @@ function buildVideoAsArticleCard(it) {
     a.href = url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
+    a.setAttribute("data-iu-skip-external-guard", "1");
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
