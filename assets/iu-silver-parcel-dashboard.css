@@ -1481,6 +1481,17 @@
 .iuSilverParcelWatch__confirmModal[hidden] {
   display: none !important;
 }
+/* display:flex on .picker overrides bare [hidden] in some engines — force hide */
+#silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__picker[hidden],
+#iuMobileSilverSlot #silver-slot #iuSilverParcelWatch .iuSilverParcelWatch__picker[hidden] {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
 .iuSilverParcelWatch__confirmCard {
   width: min(420px, 100%);
   max-width: 95vw;
