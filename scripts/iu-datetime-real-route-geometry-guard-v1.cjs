@@ -749,6 +749,9 @@ async function runEngine(browserType, engineName, url, viewports) {
         await context.addInitScript(() => {
           try {
             localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
             localStorage.setItem("iu:local-data-protection:notice-accepted-at:v1", String(Date.now()));
           } catch (_) {}
         });

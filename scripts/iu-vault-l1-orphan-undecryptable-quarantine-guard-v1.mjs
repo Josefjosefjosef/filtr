@@ -121,6 +121,9 @@ async function seedPhysicalTopology(base, profile, { envNote, envCal, envTask, e
       failClosed,
     }) => {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
       const { writeKeyRecord, writeRecord, writeMigrationCheckpoint } = await import("/assets/iu-vault-db-v1.js");
       const { importMdkRaw, b64ToBytes } = await import("/assets/iu-vault-core-v1.js");
@@ -331,6 +334,9 @@ async function main() {
     await pageO.evaluate(
       async ({ key, env, encPrefix, migrationId }) => {
         localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
         localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
         const { writeRecord, writeMigrationCheckpoint, deleteKeyRecord } = await import("/assets/iu-vault-db-v1.js");
         await deleteKeyRecord("mdk:level1").catch(() => {});
