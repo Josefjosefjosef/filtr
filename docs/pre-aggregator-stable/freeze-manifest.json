@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-pc-middle-feed-outer-border-v1-20260908",
+  "freezeId": "iu-pwa-traffic-resume-revalidate-v1-20260908",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-08T06:50:00.000Z",
-  "note": "PC: hide outer border stroke on #iuSilverWelcomeStack (transparent border-color; layout box preserved).",
+  "updatedAt": "2026-09-08T10:50:00.000Z",
+  "note": "PWA: warm resume/new-entry revalidates Doprava (head probe + gen-gated full hydrate) while keeping cached first paint.",
   "files": {
-    "projects/index.html": "8270af89925a34d67daee81eedb3baad1961671e345d7ca541e67922aa0e7089",
+    "projects/index.html": "7eb93e46d1a0f3b6bacd4e724a03704a3302be611b261ac78a1065627fb10c1e",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "313ec8ba30d101da993d61acc23fe4ccb91ce1cf7c635261910cbe5842634837",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "3d59f518cce36894e6b4564580b734cec9625933b18882ef1819df5d417ef54d",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "ec4a191018242d24456299debb5d525fbd63f8f7f867458726101e4ef143b4ba",
+    "sw.js": "05f000f7c744f89557bc2546db813f43116a80cbedc25aa75f472da3201b957f",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "3ee6461dd8a6c6c38bf4c5eced98f592ced57845b109ea31a5411f55ce81c641",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,11 +24,11 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "9eefeb1ba75307f888e9dd177d69957bedc1326cedd5b39940bb13cba030b15e",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "17f9bd58e89914ca213af3a364b21e22613f7d69205ad5588476e97185495b8a"
+    "assets/iu-prehled-dne-ui-v1.js": "d2acc51aa02c0707aecd5e328ac07aa3d1a4333815fe1a30bfb4cfa6fd74e447"
   },
   "requiredMarkers": {
     "sw.js": [
-      "CACHE_VERSION = \"2026-09-08-pc-middle-feed-outer-border-v1\"",
+      "CACHE_VERSION = \"2026-09-08-pwa-traffic-resume-revalidate-v1\"",
       "Layout-critical CSS: network-first",
       "/assets/app.css",
       "FEED_OFFLINE_CACHE = \"iu-feed-offline-v2\"",
@@ -108,7 +108,8 @@
       "mindmenu-lock-infouzel-v1-20260906",
       "radio-neutral-v1-20260906",
       "mapy-neutral-v1-20260906",
-      "pc-middle-feed-outer-border-v1-20260908"
+      "pc-middle-feed-outer-border-v1-20260908",
+      "pwa-traffic-resume-revalidate-v1-20260908"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",

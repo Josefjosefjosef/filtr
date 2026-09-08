@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -316,19 +316,41 @@ function scheduleTimelineBoundaryRefresh() {
 function bindTimelineLifecycleListeners() {
   if (state.timelineListenersBound) return;
   state.timelineListenersBound = true;
+  let trafficSawHidden = false;
+  try {
+    if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+      trafficSawHidden = true;
+    }
+  } catch (_) {}
   try {
     document.addEventListener("visibilitychange", () => {
+      try {
+        if (document.visibilityState === "hidden") {
+          trafficSawHidden = true;
+          return;
+        }
+      } catch (_) {}
       if (document.visibilityState !== "visible") return;
       captureFeedScroll();
       reapplyPrefsFromStore({ reason: "visibilitychange" });
       scheduleTimelineBoundaryRefresh();
+      if (trafficSawHidden) {
+        trafficSawHidden = false;
+        scheduleTrafficForegroundRevalidateIfNeeded("visibilitychange");
+      }
     });
   } catch (_) {}
   try {
-    window.addEventListener("pageshow", () => {
+    window.addEventListener("pageshow", (ev) => {
       captureFeedScroll();
       reapplyPrefsFromStore({ reason: "pageshow" });
       scheduleTimelineBoundaryRefresh();
+      // BFCache / PWA restore — not ordinary in-app navigation.
+      try {
+        if (ev && ev.persisted) {
+          scheduleTrafficForegroundRevalidateIfNeeded("pageshow-bfcache");
+        }
+      } catch (_) {}
     });
   } catch (_) {}
   try {
@@ -336,7 +358,36 @@ function bindTimelineLifecycleListeners() {
       captureFeedScroll();
       reapplyPrefsFromStore({ reason: "online" });
       scheduleTimelineBoundaryRefresh();
+      scheduleTrafficForegroundRevalidateIfNeeded("online");
     });
+  } catch (_) {}
+}
+
+/**
+ * Warm PWA resume / connectivity restore: keep painted cache, then revalidate traffic
+ * when Doprava is enabled. Single-flight lives in traffic-overview module.
+ */
+function scheduleTrafficForegroundRevalidateIfNeeded(reason) {
+  try {
+    if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return;
+    const ff = ensureFeedFilter(effectivePrefs());
+    if (ff.trafficEnabled === false) return;
+    void loadTrafficOverview()
+      .then((tm) => {
+        if (!tm || typeof tm.scheduleTrafficForegroundRevalidate !== "function") return null;
+        return tm.scheduleTrafficForegroundRevalidate(reason);
+      })
+      .then(() => {
+        if (!shouldRepaintForTrafficCatalogUpdate()) return;
+        try {
+          if (state.settingsOpen) updateFeedDom();
+          else {
+            paint();
+            wire();
+          }
+        } catch (_) {}
+      })
+      .catch(() => null);
   } catch (_) {}
 }
 
