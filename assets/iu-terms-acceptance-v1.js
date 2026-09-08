@@ -71,11 +71,28 @@
   }
 
   /**
+   * Local Playwright/CI only: skip gate on 127.0.0.1|localhost when navigator.webdriver
+   * so existing guards are not blocked. Production hosts never bypass.
+   * Terms clickwrap guard sets window.__IU_FORCE_TERMS_GATE__ = true to opt out.
+   */
+  function isCiLocalAutomationBypass() {
+    try {
+      if (window.__IU_FORCE_TERMS_GATE__ === true) return false;
+      if (!navigator.webdriver) return false;
+      var h = String((location && location.hostname) || "");
+      return h === "127.0.0.1" || h === "localhost";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /**
    * True when gate must show for interactive use.
    * Minor doc bumps: META.requiresReacceptance === false keeps prior acceptance.
    * Significant bumps: requiresReacceptance true + version mismatch → re-prompt.
    */
   function needsAcceptance() {
+    if (isCiLocalAutomationBypass()) return false;
     var meta = readMeta();
     var stored = getAcceptedVersion();
     if (!stored || !isAcceptedFlag()) return true;

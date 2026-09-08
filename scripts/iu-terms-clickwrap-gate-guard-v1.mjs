@@ -58,6 +58,8 @@ function staticGate() {
   must(/iu:terms:accepted-version:v1/.test(acc), "static:acc_key");
   must(/acceptCurrentVersion/.test(acc), "static:acc_accept");
   must(/recordDecline/.test(acc), "static:acc_decline_no_write_path");
+  must(/isCiLocalAutomationBypass/.test(acc), "static:ci_bypass_helper");
+  must(/__IU_FORCE_TERMS_GATE__/.test(acc), "static:force_gate_flag");
   must(/iu:terms-accepted/.test(gate) || /iu:terms-accepted/.test(acc), "static:event");
   must(/iu:terms-accepted/.test(layer), "static:consent_waits_terms");
   must(/iuConsentLayerShowIfNeeded/.test(layer), "static:consent_export_show");
@@ -68,6 +70,14 @@ function staticGate() {
   must(ver.versionId === VER, "static:version_json");
   must(ver.requiresReacceptance === true, "static:version_json_reaccept");
   must(fs.existsSync(path.join(ROOT, "projects/data/legal/archive/2026-09-05-v1.meta.json")), "static:archive_meta");
+}
+
+async function forceTermsGate(ctx) {
+  await ctx.addInitScript(() => {
+    try {
+      window.__IU_FORCE_TERMS_GATE__ = true;
+    } catch (_) {}
+  });
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -112,6 +122,7 @@ async function runtime() {
       // A: fresh user — terms yes, analytics no
       {
         const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+        await forceTermsGate(ctx);
         await ctx.addInitScript(() => {
           try {
             localStorage.clear();
@@ -178,6 +189,7 @@ async function runtime() {
       // B: returning visitor — no terms
       {
         const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+        await forceTermsGate(ctx);
         await ctx.addInitScript((v) => {
           try {
             localStorage.setItem("iu:terms:accepted:v1", "1");
@@ -208,6 +220,7 @@ async function runtime() {
       // C: decline — no acceptance
       {
         const ctx = await browser.newContext({ viewport: { width: 768, height: 1024 }, isMobile: true, hasTouch: true });
+        await forceTermsGate(ctx);
         await ctx.addInitScript(() => {
           try {
             localStorage.clear();
@@ -232,6 +245,7 @@ async function runtime() {
       // D: old version + requiresReacceptance → show again
       {
         const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+        await forceTermsGate(ctx);
         await ctx.addInitScript(() => {
           try {
             localStorage.setItem("iu:terms:accepted:v1", "1");
@@ -253,6 +267,7 @@ async function runtime() {
       // E: existing local-first data preserved after accept
       {
         const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+        await forceTermsGate(ctx);
         await ctx.addInitScript(() => {
           try {
             localStorage.clear();
