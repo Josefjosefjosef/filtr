@@ -1,5 +1,5 @@
 /**
- * InfoUzel — GDPR / VOP / InfoUzel Ads legal body (v2026-09-05-v1).
+ * InfoUzel — GDPR / VOP / InfoUzel Ads legal body (v2026-09-08-v1).
  * Mounted into iCentrum section `gdpr-vop` and public /gdpr-a-vop/.
  * Claims must stay aligned with production audit (local-first vault, consent analytics, contextual ads).
  */
@@ -7,17 +7,19 @@
   "use strict";
 
   var META = {
-    versionId: "2026-09-05-v1",
-    effectiveDate: "2026-09-05",
-    lastUpdated: "2026-09-05",
+    versionId: "2026-09-08-v1",
+    effectiveDate: "2026-09-08",
+    lastUpdated: "2026-09-08",
     documentId: "gdpr-vop-ads",
+    /** Significant legal/UX change → re-prompt clickwrap when stored version differs. */
+    requiresReacceptance: true,
   };
 
   function bodyHtml() {
     return [
-      '<div data-iu-legal-doc="gdpr-vop-ads" data-iu-legal-version="2026-09-05-v1">',
+      '<div data-iu-legal-doc="gdpr-vop-ads" data-iu-legal-version="2026-09-08-v1">',
       '<p class="iuInfoCenter__lead">Tento dokument popisuje zpracování osobních údajů a podmínky používání InfoUzel.cz a služby InfoUzel Ads podle skutečného provozu k datu účinnosti. Nejde o marketingový popis „ideálního stavu“. Identifikační údaje provozovatele jsou shodné se sekcí <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="contact">Provozovatel a kontakt</button>.</p>',
-      '<p class="iuInfoCenter__p"><strong>Verze dokumentu:</strong> <span data-iu-legal-version-id>2026-09-05-v1</span> · <strong>Účinnost:</strong> <span data-iu-legal-effective>5.&nbsp;9.&nbsp;2026</span> · <strong>Poslední aktualizace:</strong> <span data-iu-legal-updated>5.&nbsp;9.&nbsp;2026</span></p>',
+      '<p class="iuInfoCenter__p"><strong>Verze dokumentu:</strong> <span data-iu-legal-version-id>2026-09-08-v1</span> · <strong>Účinnost:</strong> <span data-iu-legal-effective>8.&nbsp;9.&nbsp;2026</span> · <strong>Poslední aktualizace:</strong> <span data-iu-legal-updated>8.&nbsp;9.&nbsp;2026</span></p>',
       '<p class="iuInfoCenter__p">Veřejná trvalá adresa: <a class="iuInfoCenter__link" href="/gdpr-a-vop/">https://infouzel.cz/gdpr-a-vop/</a></p>',
 
       '<nav class="iuInfoCenter__box" aria-label="Obsah dokumentu" data-iu-legal-toc="1">',
@@ -117,44 +119,70 @@
       '<h3 class="iuInfoCenter__h3">1. Základní ustanovení</h3>',
       '<p class="iuInfoCenter__p">Tyto VOP upravují užívání webu InfoUzel.cz (včetně PWA) a — ve spojení s částí III — službu InfoUzel Ads. Provozovatel: Media Uzel s.r.o. (údaje výše). „Uživatel“ je návštěvník webu; „Klient“ je objednatel reklamy; „Spotřebitel“ má význam dle občanského zákoníku.</p>',
 
-      '<h3 class="iuInfoCenter__h3">2. Předmět služby</h3>',
+      '<h3 class="iuInfoCenter__h3">2. Přijetí podmínek</h3>',
+      '<p class="iuInfoCenter__p">Používání interaktivních funkcí InfoUzel.cz je podmíněno přijetím těchto Všeobecných obchodních podmínek. Uživatel je před prvním použitím služby vyzván, aby se s aktuálním zněním podmínek seznámil a jejich přijetí aktivně potvrdil prostřednictvím rozhraní InfoUzel.cz (zaškrtnutí potvrzení a aktivní volba „Souhlasím a pokračuji“).</p>',
+      '<p class="iuInfoCenter__p">Potvrzením příslušného ovládacího prvku uživatel potvrzuje, že se s podmínkami před jejich přijetím seznámil a že je přijímá. Podmínky jsou přijímány elektronicky prostřednictvím rozhraní InfoUzel.cz. Aktuální znění musí být uživateli dostupné před přijetím a následně trvale dostupné prostřednictvím iCentra a veřejné adresy <a class="iuInfoCenter__link" href="/gdpr-a-vop/">/gdpr-a-vop/</a>.</p>',
+      '<p class="iuInfoCenter__p">U běžného bezplatného uživatele se standardně nevytváří uživatelský účet ani individuální serverová kopie přijetí podmínek. Informace o přijaté verzi (<code>versionId</code>) a čase přijetí může být uložena lokálně v zařízení uživatele výhradně pro účel zjištění, zda již aktuální znění VOP přijal.</p>',
+      '<p class="iuInfoCenter__p">Informace uvedené v části I. (ochrana osobních údajů) představují zejména splnění informačních povinností provozovatele. Přijetí těchto Všeobecných obchodních podmínek nenahrazuje samostatný souhlas se zpracováním osobních údajů nebo s použitím netechnického ukládání tam, kde je takový souhlas vyžadován (zejména volitelné anonymní statistiky návštěvnosti).</p>',
+
+      '<h3 class="iuInfoCenter__h3">3. Předmět služby</h3>',
       '<p class="iuInfoCenter__p">InfoUzel poskytuje přehledové informace (např. doprava, ČHMÚ), local-first nástroje (Silver, kalendář, úkoly, poznámky, faktury, generátor textu/PDF), rozcestníky externích služeb a volitelně reklamní plochy. Rozsah funkcí je popsán v <button type="button" class="iuInfoCenter__actionLink" data-iu-info-goto="about">O InfoUzel.cz</button>.</p>',
 
-      '<h3 class="iuInfoCenter__h3">3. Bezplatná část a placené služby</h3>',
+      '<h3 class="iuInfoCenter__h3">4. Bezplatná část a placené služby</h3>',
       '<p class="iuInfoCenter__p">Běžné užívání webu a local-first nástrojů je bez registrace a bez poplatku. Placenou službou je zejména InfoUzel Ads (reklama / klientský portál) dle aktuální nabídky a objednávky. Neuvádíme ceny služeb, které nejsou skutečně nabízeny.</p>',
 
-      '<h3 class="iuInfoCenter__h3">4. Local-first, PWA a záloha</h3>',
+      '<h3 class="iuInfoCenter__h3">5. Vztah k placeným a individuálně sjednaným službám</h3>',
+      '<p class="iuInfoCenter__p">Tyto Všeobecné obchodní podmínky upravují zejména běžné používání InfoUzel.cz a jeho funkcí. Placené reklamní, obchodní nebo jiné individuálně sjednané služby a spolupráce mohou být dále upraveny konkrétní objednávkou, potvrzením objednávky, smlouvou nebo zvláštními podmínkami příslušné služby.</p>',
+      '<p class="iuInfoCenter__p">V případě rozporu mezi těmito VOP a individuálním ujednáním týkajícím se konkrétní placené nebo jiné individuálně sjednané služby má přednost individuální ujednání, není-li závazným právním předpisem stanoveno jinak.</p>',
+      '<p class="iuInfoCenter__p">Přijetí VOP při běžném používání InfoUzel.cz samo o sobě nezakládá objednávku placené služby, reklamní spolupráci, povinnost k úhradě ani jiný individuálně sjednaný závazkový vztah. Evidence <code>terms_version</code> u Ads objednávek zůstává samostatná serverová evidence konkrétní placené objednávky a není nahrazena lokálním přijetím VOP běžným uživatelem.</p>',
+
+      '<h3 class="iuInfoCenter__h3">6. Local-first, PWA a záloha</h3>',
       '<ul class="iuInfoCenter__ul">',
-      "<li>Lokální úložiště není cloudový účet provozovatele.</li>",
-      "<li>Instalace PWA sama o sobě není záloha dat.</li>",
+      "<li>Osobní local-first obsah standardně zůstává v zařízení uživatele. Provozovatel jej standardně nepřijímá ani neukládá na svých serverech.</li>",
+      "<li>Pokud obsah nikdy neopustil zařízení uživatele, provozovatel jej standardně nemůže zobrazit, obnovit ani ze svých serverů odstranit.</li>",
+      "<li>Lokální úložiště není cloudové úložiště provozovatele. Instalace PWA sama o sobě není záloha dat.</li>",
+      "<li>Provozovatel standardně nevytváří serverovou zálohu local-first obsahu. Uživatel odpovídá za vytvoření vlastní dostupné zálohy tam, kde je funkce zálohování dostupná.</li>",
       "<li>Export/import šifrované zálohy je popsán v sekci Záloha a obnova dat.</li>",
-      "<li>Při ztrátě zařízení, smazání dat webu nebo poškození úložiště může dojít ke ztrátě local-first obsahu, pokud neexistuje vaše záloha.</li>",
+      "<li>Smazání dat webu (site data), změna nebo reset prohlížeče, ztráta či poškození zařízení nebo lokálního úložiště může vést ke ztrátě uloženého obsahu, pokud neexistuje vaše záloha.</li>",
       "</ul>",
 
-      '<h3 class="iuInfoCenter__h3">5. Orientační povaha výstupů</h3>',
-      '<p class="iuInfoCenter__p">Silver, kalkulačky, generátor smluv/PDF a fakturační pomůcka jsou nástroje. Nejde o advokátní, účetní, daňové, lékařské ani investiční poradenství. Výstupy ověřte před použitím. Externí data mohou být zpožděná, neúplná nebo dočasně nedostupná.</p>',
+      '<h3 class="iuInfoCenter__h3">7. Orientační povaha výstupů a vstupy uživatele</h3>',
+      '<p class="iuInfoCenter__p">Silver, kalkulačky, generátor textu/PDF, fakturační nástroje a obdobné funkce jsou pomocné a informační nástroje. Nejde o advokátní službu, právní, daňové, účetní, zdravotní ani investiční poradenství ani jinou regulovanou odbornou službu, pokud konkrétní funkce výslovně nestanoví něco jiného.</p>',
+      '<p class="iuInfoCenter__p">Výstupy mohou obsahovat chyby, nepřesnosti nebo nemusí odpovídat konkrétní situaci uživatele. Uživatel je před významným použitím povinen posoudit jejich správnost, úplnost a vhodnost pro zamýšlený účel a v případě potřeby je ověřit u příslušného odborníka. Rozhodnutí nebo jednání uživatele učiněné na základě těchto informačních výstupů je odpovědností uživatele v rozsahu, v jakém to dovoluje závazné právo.</p>',
+      '<p class="iuInfoCenter__p">Uživatel odpovídá za správnost, úplnost a oprávněnost údajů, které do nástrojů InfoUzel.cz zadává, a za posouzení vhodnosti výsledného výstupu. Provozovatel standardně nekontroluje správnost local-first obsahu vytvořeného nebo uloženého uživatelem.</p>',
 
-      '<h3 class="iuInfoCenter__h3">6. Externí odkazy a licence</h3>',
-      '<p class="iuInfoCenter__p">Po přechodu na externí web platí podmínky daného poskytovatele. Licence a zdroje: <a class="iuInfoCenter__link" href="/zdroje-a-licence/">Zdroje a licence</a>. Ochranné známky třetích stran zůstávají jejich majitelům.</p>',
+      '<h3 class="iuInfoCenter__h3">8. Externí data, odkazy a licence</h3>',
+      '<p class="iuInfoCenter__p">InfoUzel využívá také informace a služby třetích stran. Provozovatel nemůže zaručit správnost, úplnost, aktuálnost, přesnost ani nepřetržitou dostupnost externích dat a absenci chyb na straně externího poskytovatele. Pokud chyba vznikne výlučně u externího poskytovatele mimo přiměřenou kontrolu provozovatele, InfoUzel tuto externí službu negarantuje.</p>',
+      '<p class="iuInfoCenter__p">Po přechodu na externí web nebo službu se její poskytování řídí podmínkami jejího provozovatele. InfoUzel není automaticky smluvní stranou vztahu mezi uživatelem a externím poskytovatelem. Provozovatel InfoUzlu neodpovídá za jednání třetí osoby v rozsahu, v jakém mu takovou odpovědnost neukládá závazný právní předpis.</p>',
+      '<p class="iuInfoCenter__p">Licence a zdroje: <a class="iuInfoCenter__link" href="/zdroje-a-licence/">Zdroje a licence</a>. Ochranné známky třetích stran zůstávají jejich majitelům. Provozovatel nevytváří nárok na externí obsah, ke kterému práva nevlastní.</p>',
 
-      '<h3 class="iuInfoCenter__h3">7. Dostupnost a bezpečnost</h3>',
-      '<p class="iuInfoCenter__p">Nepřetržitá dostupnost není smluvně garantována, není-li sjednáno jinak. Zakázány jsou útoky, obcházení ochrany, zneužití API, šíření malware a neoprávněný přístup. Provozovatel může provádět údržbu, bezpečnostní a nouzové opravy.</p>',
+      '<h3 class="iuInfoCenter__h3">9. Dostupnost a bezpečnost</h3>',
+      '<p class="iuInfoCenter__p">Nepřetržitý a absolutně bezchybný provoz není smluvně garantován, není-li sjednáno jinak. Dostupnost nebo funkčnost může být ovlivněna zejména údržbou, aktualizací, technickou závadou, výpadkem připojení nebo infrastruktury, výpadkem externího API, zařízením uživatele, prohlížečem, operačním systémem, bezpečnostním opatřením nebo okolností mimo přiměřenou kontrolu provozovatele.</p>',
+      '<p class="iuInfoCenter__p">Provozovatel přijímá přiměřená bezpečnostní opatření. Provozovatel netvrdí absolutní nebo úplnou bezpečnost služby. Bezpečnostní upozornění nesnižují existující technická opatření. Provozovatel může provádět údržbu, bezpečnostní a nouzové opravy.</p>',
 
-      '<h3 class="iuInfoCenter__h3">8. Odpovědnost</h3>',
-      '<p class="iuInfoCenter__p">Odpovědnost provozovatele se omezuje v rozsahu dovoleném právem. Nevylučujeme odpovědnost tam, kde to kogentní právo nepřipouští (zejména vůči spotřebiteli, za úmysl nebo hrubou nedbalost). Za obsah third-party služeb a dostupnost externích API provozovatel neodpovídá nad rámec zákonných povinností.</p>',
+      '<h3 class="iuInfoCenter__h3">10. Duševní vlastnictví</h3>',
+      '<p class="iuInfoCenter__p">Programové řešení, vlastní texty, grafické prvky, databázová struktura, označení InfoUzel, Silver a další vlastní obsah mohou být chráněny autorským právem, právem k databázi, ochrannými známkami nebo dalšími právy duševního vlastnictví.</p>',
+      '<p class="iuInfoCenter__p">Uživatel je oprávněn InfoUzel využívat v rozsahu zpřístupněných funkcí pro běžné užívání. Bez oprávnění není dovoleno chráněné části služby neoprávněně rozmnožovat, distribuovat, prodávat, zpřístupňovat nebo jinak komerčně využívat, pokud takové jednání není dovoleno závazným právním předpisem.</p>',
 
-      '<h3 class="iuInfoCenter__h3">9. Spotřebitel a B2B</h3>',
+      '<h3 class="iuInfoCenter__h3">11. Zakázané jednání</h3>',
+      '<p class="iuInfoCenter__p">Zakázány jsou útoky, obcházení ochrany, zneužití API, šíření malware a neoprávněný přístup. Bez předchozího oprávnění provozovatele je zakázáno nepřiměřené automatizované vytěžování služby, hromadné scrapingové požadavky, obcházení technických omezení, pokusy o získání neveřejných údajů, záměrné narušování dostupnosti služby nebo jiné používání infrastruktury v rozporu s jejím určením. Tím nejsou dotčena oprávnění, která uživateli přiznávají závazné právní předpisy.</p>',
+
+      '<h3 class="iuInfoCenter__h3">12. Odpovědnost</h3>',
+      '<p class="iuInfoCenter__p">Odpovědnost provozovatele se omezuje v maximálním rozsahu dovoleném závaznými právními předpisy. Nevylučujeme odpovědnost tam, kde to kogentní právo nepřipouští (zejména vůči spotřebiteli, za úmysl nebo hrubou nedbalost). Za obsah third-party služeb a dostupnost externích API provozovatel neodpovídá nad rámec zákonných povinností. Alokace rizik u local-first úložiště, uživatelských vstupů, automatických výstupů, zařízení uživatele a externích dat je upravena výše.</p>',
+
+      '<h3 class="iuInfoCenter__h3">13. Spotřebitel a B2B</h3>',
       '<p class="iuInfoCenter__p">InfoUzel Ads je primárně určena podnikatelům (B2B). Pokud by konkrétní smlouva naplnila znaky spotřebitelské smlouvy, použijí se kogentní ustanovení na ochranu spotřebitele a nelze je smluvně vyloučit. Samotné zaškrtnutí „jsem firma“ neobchází zákon, pokud fakticky jde o spotřebitele.</p>',
 
-      '<h3 class="iuInfoCenter__h3">10. Objednávka, odstoupení, reklamace, ADR</h3>',
+      '<h3 class="iuInfoCenter__h3">14. Objednávka, odstoupení, reklamace, ADR</h3>',
       '<p class="iuInfoCenter__p">U placených služeb Ads vzniká smlouva potvrzením objednávky / aktivací dle procesu portálu. Před vytvořením platební povinnosti musí být dostupné podstatné informace o službě a ceně. Právo odstoupit od smlouvy se posuzuje podle konkrétního plnění (digitální služba / zahájení plnění). Reklamace: <a class="iuInfoCenter__link" href="mailto:info@infouzel.cz">info@infouzel.cz</a> s identifikací objednávky. Mimosoudní řešení spotřebitelských sporů: Česká obchodní inspekce (<a class="iuInfoCenter__link" href="https://www.coi.cz" rel="noopener noreferrer">www.coi.cz</a>), jsou-li splněny zákonné podmínky.</p>',
       '<p class="iuInfoCenter__p"><strong>Formulář odstoupení (vzor):</strong> Adresát Media Uzel s.r.o., Kněžická 96, 190 12 Praha 9, info@infouzel.cz — „Oznamuji, že odstupuji od smlouvy ze dne …, číslo objednávky …, jméno/firma …, adresa …, datum, podpis (u listiny).“</p>',
 
-      '<h3 class="iuInfoCenter__h3">11. Rozhodné právo</h3>',
+      '<h3 class="iuInfoCenter__h3">15. Rozhodné právo</h3>',
       '<p class="iuInfoCenter__p">Vztahy se řídí právem České republiky. Spotřebitele volba práva nezbavuje ochrany, kterou mu poskytují kogentní ustanovení státu jeho obvyklého bydliště, pokud se uplatní.</p>',
 
-      '<h3 class="iuInfoCenter__h3">12. Změny VOP</h3>',
-      '<p class="iuInfoCenter__p">Znění pro nové smlouvy se zveřejní s novým <code>versionId</code> a datem účinnosti. U již uzavřených Ads smluv se změny řídí sjednaným procesem; provozovatel nezavádí jednostrannou možnost „okamžitě měnit cokoli“. Pro doložení podmínek objednávky se používá <code>versionId</code> tohoto dokumentu (pole <code>terms_version</code> v evidenci práv/objednávek Ads). Veřejná adresa aktuálního znění: <a class="iuInfoCenter__link" href="/gdpr-a-vop/">/gdpr-a-vop/</a>.</p>',
+      '<h3 class="iuInfoCenter__h3">16. Změny VOP</h3>',
+      '<p class="iuInfoCenter__p">Znění pro nové smlouvy a pro běžné užívání webu se zveřejní s novým <code>versionId</code> a datem účinnosti. Významná změna práv nebo povinností může vyžadovat nové aktivní přijetí prostřednictvím rozhraní InfoUzel.cz. Pouhá oprava překlepu nebo formální úprava bez změny právního významu nemusí nové přijetí vyžadovat (viz příznak <code>requiresReacceptance</code> u verze dokumentu).</p>',
+      '<p class="iuInfoCenter__p">U již uzavřených Ads smluv se změny řídí sjednaným procesem; provozovatel nezavádí jednostrannou možnost „okamžitě měnit cokoli“. Pro doložení podmínek objednávky se používá <code>versionId</code> tohoto dokumentu (pole <code>terms_version</code> v evidenci práv/objednávek Ads). Veřejná adresa aktuálního znění: <a class="iuInfoCenter__link" href="/gdpr-a-vop/">/gdpr-a-vop/</a>. Historie účinných znění je doložitelná verzováním repozitáře a archivními metadaty v <code>projects/data/legal/archive/</code>.</p>',
 
       // ADS
       '<h2 class="iuInfoCenter__h2" id="iu-legal-ads">III. Pravidla reklamy a InfoUzel Ads</h2>',
@@ -220,7 +248,7 @@
       '<button type="button" class="iuInfoCenter__crossNavItem" data-iu-info-goto="data-storage"><span class="iuInfoCenter__crossNavLabel">🛡️ Ukládání a ochrana dat →</span></button>',
       "</div>",
 
-      '<footer class="iuInfoCenter__meta">Dokument <span data-iu-legal-version-id>2026-09-05-v1</span> · účinnost <span data-iu-legal-effective>5.&nbsp;9.&nbsp;2026</span></footer>',
+      '<footer class="iuInfoCenter__meta">Dokument <span data-iu-legal-version-id>2026-09-08-v1</span> · účinnost <span data-iu-legal-effective>8.&nbsp;9.&nbsp;2026</span></footer>',
       "</div>",
     ].join("");
   }

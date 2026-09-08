@@ -53,17 +53,11 @@
     }
   }
 
-  function boot() {
-    var bar = document.getElementById("iuConsentLayer");
-    if (!bar) return;
+  var handlersBound = false;
 
-    var consent = window.iuConsent;
-    if (!consent || consent.isLayerDismissed()) {
-      bar.hidden = true;
-      return;
-    }
-
-    bar.hidden = false;
+  function bindHandlers(bar) {
+    if (handlersBound) return;
+    handlersBound = true;
 
     var allowBtn = document.getElementById("iuConsentAllowStats");
     var essentialBtn = document.getElementById("iuConsentEssentialOnly");
@@ -105,6 +99,47 @@
         openInfoCenter("menu");
       });
     }
+  }
+
+  /** Existing analytics UI/persistence unchanged — only delayed until TERMS gate resolves. */
+  function showConsentLayerIfNeeded() {
+    var bar = document.getElementById("iuConsentLayer");
+    if (!bar) return;
+
+    var consent = window.iuConsent;
+    if (!consent || consent.isLayerDismissed()) {
+      bar.hidden = true;
+      return;
+    }
+
+    bar.hidden = false;
+    bindHandlers(bar);
+  }
+
+  // Allow TERMS gate to nudge analytics sheet after accept (same helper; no UI change).
+  window.iuConsentLayerShowIfNeeded = showConsentLayerIfNeeded;
+
+  function boot() {
+    var bar = document.getElementById("iuConsentLayer");
+    if (!bar) return;
+
+    var terms = window.iuTermsAcceptance;
+    if (terms && typeof terms.needsAcceptance === "function" && terms.needsAcceptance()) {
+      bar.hidden = true;
+      document.addEventListener(
+        "iu:terms-accepted",
+        function onTermsAccepted() {
+          document.removeEventListener("iu:terms-accepted", onTermsAccepted);
+          window.setTimeout(function () {
+            showConsentLayerIfNeeded();
+          }, 0);
+        },
+        false
+      );
+      return;
+    }
+
+    showConsentLayerIfNeeded();
   }
 
   if (document.readyState === "loading") {

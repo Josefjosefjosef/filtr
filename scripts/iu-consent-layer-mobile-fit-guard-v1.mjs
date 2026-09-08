@@ -43,7 +43,7 @@ function staticGate() {
   must(!index.includes("Anonymní statistiky nám pomáhají pochopit návštěvnost"), "static:no_old_body");
   must(!/>Anonymní statistiky návštěvnosti</.test(index), "static:no_old_title");
   must(new RegExp("iu-consent-layer\\.css\\?v=" + CACHE).test(index), "static:css_cache");
-  must(new RegExp("iu-consent-layer\\.js\\?v=" + CACHE).test(index), "static:js_cache");
+  must(/iu-consent-layer\.js\?v=consent-layer-terms-priority-v1-20260908/.test(index), "static:js_cache");
 
   must(/@media\s*\(\s*max-width:\s*900px\s*\)/.test(css), "static:css_le900");
   must(/@media\s*\(\s*min-width:\s*901px\s*\)\s*and\s*\(\s*max-width:\s*1023px\s*\)/.test(css), "static:css_tablet_band");
