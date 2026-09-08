@@ -180,7 +180,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-08-pc-mindmenu-privacy-stack-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-08-pc-middle-feed-outer-border-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
