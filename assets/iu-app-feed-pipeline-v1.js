@@ -26005,6 +26005,8 @@ function buildVideoAsArticleCard(it) {
   const IU_MAILBOX_DEFAULT_SOCIAL = ["facebook", "instagram", "x", "tiktok"];
   const IU_MAILBOX_MIN = 1;
   const IU_MAILBOX_MAX = 10;
+  /** Fresh-user factory size only — never used to truncate a stored custom count. */
+  const IU_MAILBOX_DEFAULT_COUNT = 4;
   const IU_MAILBOX_LABEL_MAX = 25;
   const IU_MM_EDIT_INPUT_PLACEHOLDER = "Nastavit e-mail";
   const MAILBOX_PLACEHOLDERS = Array.from({ length: IU_MAILBOX_MAX }, () => IU_MM_EDIT_INPUT_PLACEHOLDER);
@@ -26038,7 +26040,15 @@ function buildVideoAsArticleCard(it) {
     }
   }
   function iuMailboxDefaultItems() {
-    return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, hidden: false, index: i, slot: i + 1 }));
+    const n = Math.max(IU_MAILBOX_MIN, Math.min(IU_MAILBOX_DEFAULT_COUNT, IU_MAILBOX_MAX));
+    return Array.from({ length: n }, (_, i) => ({
+      label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER,
+      url: "",
+      social: null,
+      hidden: false,
+      index: i,
+      slot: i + 1,
+    }));
   }
   function iuMmIsPlaceholderLabel(label) {
     const s = String(label ?? "").trim();
@@ -26151,7 +26161,7 @@ function buildVideoAsArticleCard(it) {
       fixed.sort((a, b) => (a.slot || 0) - (b.slot || 0));
       return fixed;
     }catch{
-      return MAILBOX_PLACEHOLDERS.map((label, i) => ({ label, url: "", social: null, index: i, slot: i + 1 }));
+      return iuMailboxDefaultItems();
     }
   }
 
