@@ -474,10 +474,11 @@ async function runViewport(page, w, h) {
           localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
           localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
         } catch (_) {}
-        const terms = document.getElementById("iuTermsGateLayer");
+        const terms = document.getElementById("iuTermsGate");
         if (terms && !terms.hidden) {
           try {
             terms.hidden = true;
+            terms.setAttribute("aria-hidden", "true");
           } catch (_) {}
         }
         const layer = document.getElementById("iuConsentLayer");
