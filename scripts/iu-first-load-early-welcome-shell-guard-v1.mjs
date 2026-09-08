@@ -14,7 +14,11 @@ function must(cond, id) {
 }
 
 must(/iuEarlyWelcomeShellV1/.test(index), "index:activator");
-must(/early-welcome-shell-v1-20260822/.test(index), "index:cache_bust");
+must(/early-welcome-shell-v1-20260822-wx-boot-no-flash-v1-20260908/.test(index), "index:cache_bust");
+must(/iu:nameday:cache:v1/.test(index), "index:nameday_cache_early");
+must(/data-iu-silver-wx-boot/.test(index) && /initializing/.test(index), "index:wx_boot_initializing");
+must(/data-iu-silver-wx-phase="boot"/.test(index), "index:wx_default_boot_phase");
+must(!/data-iu-silver-wx-phase="firstVisit"/.test(index), "index:no_static_firstVisit_cta");
 must(/data-iu-early-welcome/.test(index), "index:early_attr");
 must(/id="iuSilverWelcomeGreet"/.test(index) && /iuEarlyWelcomeShellV1/.test(index), "index:greet_and_shell");
 must(/Dobré ráno/.test(index) && /Hezké dopoledne/.test(index), "index:phrases");

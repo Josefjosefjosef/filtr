@@ -15565,25 +15565,49 @@ function buildVideoAsArticleCard(it) {
 
     async function iuSilverWeatherTryAutoGpsOnLoad(){
       try{
+        try{
+          if (window.__iuSilverWxGeoPerm == null) window.__iuSilverWxGeoPerm = "pending";
+        }catch{}
         if (typeof window.iuWeatherScheduleGpsRefreshIfNeeded === "function") {
           window.iuWeatherScheduleGpsRefreshIfNeeded("silver-load");
-          return;
         }
-        if (typeof window.iuWeatherActivateGpsViaGeolocation !== "function") return;
-        if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) return;
         if (navigator.permissions && typeof navigator.permissions.query === "function") {
           try{
             const perm = await navigator.permissions.query({ name: "geolocation" });
-            if (perm && perm.state === "granted") {
-              window.iuWeatherActivateGpsViaGeolocation();
+            const st = perm && perm.state ? String(perm.state) : "unknown";
+            try{ window.__iuSilverWxGeoPerm = st; }catch{}
+            if (st === "granted") {
+              try{ iuSilverWeatherRefresh(); }catch{}
+              if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") {
+                if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() === IU_WEATHER_MODE_GPS) {
+                  if (!iuSilverWeatherHasPersonalizedLocation()) {
+                    window.iuWeatherActivateGpsViaGeolocation();
+                  }
+                }
+              }
               return;
             }
-            if (perm && perm.state === "denied") return;
+            if (st === "denied") {
+              try{ iuSilverWeatherRefresh(); }catch{}
+              return;
+            }
+            try{ iuSilverWeatherRefresh(); }catch{}
+            return;
           }catch{}
+        }
+        try{ window.__iuSilverWxGeoPerm = "unknown"; }catch{}
+        if (typeof window.iuWeatherActivateGpsViaGeolocation !== "function") {
+          try{ iuSilverWeatherRefresh(); }catch{}
+          return;
+        }
+        if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) {
+          try{ iuSilverWeatherRefresh(); }catch{}
+          return;
         }
         if (typeof iuWeatherReadGpsSelected === "function" && iuWeatherReadGpsSelected()) {
           window.iuWeatherActivateGpsViaGeolocation();
         }
+        try{ iuSilverWeatherRefresh(); }catch{}
       }catch{}
     }
 
@@ -15636,13 +15660,22 @@ function buildVideoAsArticleCard(it) {
         if (iuSilverWeatherGeoDeniedVisible() && iuWeatherReadLocationMode() === IU_WEATHER_MODE_GPS && !iuWeatherReadGpsSelected()) return "denied";
       }catch{}
       try{
-        if (!iuSilverWeatherHasPersonalizedLocation()) return "firstVisit";
+        if (iuSilverWeatherHasPersonalizedLocation()) {
+          try{
+            const st = window.__iuWeatherState;
+            if (st && iuWeatherStateMatchesActiveCity(st) && st.current) return "data";
+          }catch{}
+          return "loading";
+        }
       }catch{}
+      /* No saved coords yet: never treat unknown/pending/granted as firstVisit CTA. */
       try{
-        const st = window.__iuWeatherState;
-        if (st && iuWeatherStateMatchesActiveCity(st) && st.current) return "data";
-      }catch{}
-      return "loading";
+        const perm = String(window.__iuSilverWxGeoPerm || "pending");
+        if (perm === "pending" || perm === "granted") return "loading";
+      }catch{
+        return "loading";
+      }
+      return "firstVisit";
     }
 
     function iuSilverWeatherBestPrecipSoon(st){
@@ -16038,13 +16071,16 @@ function buildVideoAsArticleCard(it) {
     }catch{}
     window.iuSilverWeatherRefresh = iuSilverWeatherRefresh;
     iuSilverWeatherSyncPrivacyText();
+    try{
+      if (window.__iuSilverWxGeoPerm == null) window.__iuSilverWxGeoPerm = "pending";
+    }catch{}
+    try{ iuSilverWeatherTryAutoGpsOnLoad(); }catch{}
     iuSilverWeatherRefresh();
     try{
       if (iuSilverWeatherHasPersonalizedLocation() && typeof iuLoadPickerLocalities === "function") {
         void iuLoadPickerLocalities();
       }
     }catch{}
-    try{ iuSilverWeatherTryAutoGpsOnLoad(); }catch{}
     try{ setInterval(() => { try{ iuSilverWeatherRefresh(); }catch{} }, 45000); }catch{}
   }
 
