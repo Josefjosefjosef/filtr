@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-09-08T11:23:00.615Z",
-    "lastSuccessAt": "2026-09-08T11:23:04.098Z",
-    "lastChangedAt": "2026-09-08T08:40:41.554Z",
+    "lastRunAt": "2026-09-08T23:27:12.324Z",
+    "lastSuccessAt": "2026-09-08T23:27:17.505Z",
+    "lastChangedAt": "2026-09-08T23:27:16.162Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a9fbf74-17a8a6\"",
-    "lastModified": "Tue, 08 Sep 2026 07:55:32 GMT",
+    "etag": "\"6a9ff596-e93c\"",
+    "lastModified": "Tue, 08 Sep 2026 11:46:30 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -428,16 +428,16 @@
     "expiredCount": 0,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 4,
-    "visibleCount": 4,
+    "publishableCount": 3,
+    "visibleCount": 3,
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -445,28 +445,28 @@
     "discoveryMaxFiles": null,
     "discoveryFixedLimit": false,
     "productStreams": [
-      "50",
-      "70"
+      "70",
+      "50"
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 4,
+      "capMessages": 1,
+      "infoBlocks": 4,
+      "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 186,
-      "mappedAreas": 186,
+      "totalAreas": 33,
+      "mappedAreas": 196,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 0,
-      "publishableCount": 4,
+      "publishableCount": 3,
       "productStreams": [
-        "50",
-        "70"
+        "70",
+        "50"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -475,38 +475,38 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-09-08T09:54:58+02:00",
+    "lastCapSent": "2026-09-08T14:00:00+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5946,
+    "runMs": 7859,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-09-08T11:23:00.615Z",
+    "lastSnapshotAt": "2026-09-08T23:27:12.324Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-09-05T15:59:38.264Z",
-      "officialLatestSentAt": "2026-09-01T14:00:00+02:00",
-      "officialLatestValidFrom": "2026-09-01T14:00:00+02:00",
-      "discoveredAt": "2026-09-08T11:23:00.615Z",
-      "fetchedAt": "2026-09-08T11:23:00.615Z",
-      "transformedAt": "2026-09-08T11:23:06.561Z",
-      "validatedAt": "2026-09-08T11:23:06.561Z",
-      "publishedAt": "2026-09-08T11:23:00.615Z",
-      "endToEndLagMs": 359978264
+      "officialFirstSeenAt": "2026-09-08T23:27:12.324Z",
+      "officialLatestSentAt": "2026-09-08T14:00:00+02:00",
+      "officialLatestValidFrom": "2026-09-08T14:00:00+02:00",
+      "discoveredAt": "2026-09-08T23:27:12.324Z",
+      "fetchedAt": "2026-09-08T23:27:12.324Z",
+      "transformedAt": "2026-09-08T23:27:20.183Z",
+      "validatedAt": "2026-09-08T23:27:20.183Z",
+      "publishedAt": "2026-09-08T23:27:12.324Z",
+      "endToEndLagMs": 41232324
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080754.xml",
-          "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_081200.xml",
+          "productKey": "70",
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_011200.xml",
-          "productKey": "70",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080754.xml",
+          "productKey": "50",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
@@ -516,23 +516,23 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
-          "logicalAlerts": 4,
+          "capMessages": 1,
+          "infoBlocks": 4,
+          "logicalAlerts": 3,
           "uniqueEvents": [
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 186,
-          "mappedAreas": 186,
+          "totalAreas": 33,
+          "mappedAreas": 196,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 4,
+          "publishedActive": 3,
           "publishedScheduled": 0,
-          "publishableCount": 4,
+          "publishableCount": 3,
           "productStreams": [
-            "50",
-            "70"
+            "70",
+            "50"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
@@ -543,9 +543,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-09-08T23:27:12.324Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7859,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-09-08T11:23:00.615Z",
         "status": "not_modified",
@@ -1058,17 +1082,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7148,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 4
-      },
-      {
-        "at": "2026-09-07T21:05:33.951Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 8014,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
