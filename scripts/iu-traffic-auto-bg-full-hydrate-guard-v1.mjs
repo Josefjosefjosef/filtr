@@ -49,6 +49,16 @@ ok(
   /ensureFullTrafficOfflineSnapshot[\s\S]{0,400}scheduleTrafficSnapshotFullHydrate/.test(overview)
 );
 ok("static_bg_export", /export function scheduleTrafficBackgroundFullHydrate/.test(overview));
+ok(
+  "static_fg_revalidate_export",
+  /export function scheduleTrafficForegroundRevalidate/.test(overview),
+  "PWA resume revalidate API"
+);
+ok(
+  "static_fg_revalidate_wired",
+  /scheduleTrafficForegroundRevalidateIfNeeded/.test(prehled),
+  "prehled must wire foreground revalidate"
+);
 ok("static_event", /iu-traffic-snap-hydrated/.test(overview) && /iu-traffic-snap-hydrated/.test(prehled));
 ok(
   "static_settings_join_on_persist",
@@ -127,7 +137,7 @@ const FULL_N = 120;
 const HEAD_N = 40;
 const FULL_LATENCY_MS = 1800;
 const TRAFFIC_MOD =
-  "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906";
+  "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908";
 
 const browser = await chromium.launch({ headless: true });
 const runtime = {

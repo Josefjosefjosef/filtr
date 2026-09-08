@@ -804,10 +804,11 @@ function trafficSnapshotGenKey(snap) {
 function shouldAcceptTrafficFullSnapshot(full, current) {
   if (!full || isTrafficSnapshotCapped(full)) return false;
   if (!current) return true;
-  if (isTrafficSnapshotCapped(current)) return true;
   const fullMs = trafficSnapshotGeneratedMs(full);
   const curMs = trafficSnapshotGeneratedMs(current);
+  // Reject stale full GETs that finish after a newer resume-head replaced mem.
   if (fullMs && curMs && fullMs < curMs) return false;
+  if (isTrafficSnapshotCapped(current)) return true;
   return true;
 }
 
@@ -873,6 +874,89 @@ export function scheduleTrafficBackgroundFullHydrate() {
 
 export function getTrafficFullHydratePromise() {
   return _trafficFullHydratePromise;
+}
+
+/**
+ * PWA/warm-resume revalidation: keep cached snap for instant paint, then network-check
+ * head (?iu_head=1) and full-hydrate only when generation changed.
+ * Single-flight across visibilitychange + pageshow(persisted) + online.
+ */
+let _trafficForegroundRevalidatePromise = null;
+
+export function getTrafficForegroundRevalidatePromise() {
+  return _trafficForegroundRevalidatePromise;
+}
+
+export function scheduleTrafficForegroundRevalidate(reason) {
+  if (TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true) return Promise.resolve(null);
+  if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return Promise.resolve(null);
+  try {
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      return Promise.resolve(loadOfflineTrafficSnapshot());
+    }
+  } catch (_) {}
+  if (_trafficForegroundRevalidatePromise) return _trafficForegroundRevalidatePromise;
+  const why = reason ? String(reason) : "foreground";
+  _trafficForegroundRevalidatePromise = (async () => {
+    try {
+      const prev = loadOfflineTrafficSnapshot();
+      const prevKey = trafficSnapshotGenKey(prev);
+      const prevMs = trafficSnapshotGeneratedMs(prev);
+      // Cheap network probe — never await full catalog on the resume critical path.
+      const head = await fetchTrafficSnapshotParsed(
+        TRAFFIC_UI_SNAPSHOT_HEAD_URL,
+        TRAFFIC_UI_FIRST_PAINT_CARD_CAP,
+        null
+      );
+      if (!head) return prev;
+      const headKey = trafficSnapshotGenKey(head);
+      const headMs = trafficSnapshotGeneratedMs(head);
+      const genChanged =
+        !prev ||
+        (headKey && prevKey && headKey !== prevKey) ||
+        (headMs && prevMs && headMs > prevMs) ||
+        (!prevKey && !!headKey);
+      if (genChanged) {
+        invalidateTrafficFeedItemsCache();
+        // Allow a new full GET even if a previous hydrate promise resolved this session.
+        _trafficFullHydratePromise = null;
+        // Instant UI from head; full catalog follows via single-flight hydrate.
+        _trafficSnapMem = head;
+        saveOfflineTrafficSnapshot(head);
+        try {
+          if (typeof window !== "undefined" && typeof window.dispatchEvent === "function") {
+            window.dispatchEvent(
+              new CustomEvent("iu-traffic-snap-hydrated", {
+                detail: {
+                  cardCount: Array.isArray(head.cards) ? head.cards.length : 0,
+                  generatedAt: head.generatedAt || null,
+                  generationId: head.generationId || null,
+                  reason: why,
+                  phase: "resume-head",
+                },
+              })
+            );
+          }
+        } catch (_) {}
+        return await scheduleTrafficSnapshotFullHydrate(TRAFFIC_UI_SNAPSHOT_URL);
+      }
+      // Same generation: network confirmed fresh — keep mem, no second full GET.
+      return prev;
+    } catch (_) {
+      return loadOfflineTrafficSnapshot();
+    }
+  })();
+  _trafficForegroundRevalidatePromise = _trafficForegroundRevalidatePromise.then(
+    (snap) => {
+      _trafficForegroundRevalidatePromise = null;
+      return snap;
+    },
+    () => {
+      _trafficForegroundRevalidatePromise = null;
+      return null;
+    }
+  );
+  return _trafficForegroundRevalidatePromise;
 }
 
 async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
