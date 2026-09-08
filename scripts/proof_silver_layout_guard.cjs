@@ -470,7 +470,16 @@ async function runViewport(page, w, h) {
         try {
           localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
           localStorage.setItem("iu:consent:analytics:v1", "denied");
+          localStorage.setItem("iu:terms:accepted:v1", "1");
+          localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+          localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
         } catch (_) {}
+        const terms = document.getElementById("iuTermsGateLayer");
+        if (terms && !terms.hidden) {
+          try {
+            terms.hidden = true;
+          } catch (_) {}
+        }
         const layer = document.getElementById("iuConsentLayer");
         if (layer && !layer.hidden) {
           try {
@@ -727,6 +736,11 @@ async function main() {
          #iuHeroQuickCal), so calendar_flow waits out attempt-0 and flakes in CI. */
       localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
       localStorage.setItem("iu:consent:analytics:v1", "denied");
+      /* Terms clickwrap gate (z-index above analytics) must be pre-accepted in
+         layout guards; otherwise elementFromPoint hits modal copy (<p>), not Cal. */
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
     } catch (_) {}
   });
   await installClsObserver(ctx);
