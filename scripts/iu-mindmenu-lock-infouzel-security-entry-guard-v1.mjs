@@ -23,6 +23,8 @@ function auditStatic() {
   const feed = fs.readFileSync(path.join(ROOT, "assets", "iu-app-feed-pipeline-v1.js"), "utf8");
   const mobileCss = fs.readFileSync(path.join(ROOT, "assets", "iu-mindmenu-mobile-tablet-v61.css"), "utf8");
   const deskCss = fs.readFileSync(path.join(ROOT, "assets", "iu-myinfouzel-premium-overlay.css"), "utf8");
+  const infoCss = fs.readFileSync(path.join(ROOT, "assets", "iu-info-center.css"), "utf8");
+  const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
 
   ok("feed:open_privacy", /iuInfoCenterOpenSection\(["']privacy["']\)/.test(feed));
   ok("feed:no_duplicate_vault_ui", !/Aktivovat zabezpečení InfoUzlu/.test(feed));
@@ -34,6 +36,20 @@ function auditStatic() {
   ok("css:mobile_grid_lock", /iuMmLockInfoUzelBtn--mobile/.test(mobileCss) && /grid-column:\s*1/.test(mobileCss));
   ok("css:desktop_btn", /iuMmLockInfoUzelBtn--desktop/.test(deskCss));
   ok("css:two_line_mobile", /iuMmLockInfoUzelBtn__line/.test(mobileCss));
+  ok(
+    "css:pc_privacy_above_mindmenu",
+    /@media\s*\(\s*min-width:\s*1025px\s*\)[\s\S]{0,400}body\.iu-myinfouzel-open\s+\.iuInfoCenterV2\.iuTopbarInfoOverlay:not\(\[hidden\]\)\s*\{[\s\S]{0,80}z-index:\s*12200/.test(
+      infoCss
+    )
+  );
+  ok(
+    "css:mobile_info_center_not_raised_with_myinfouzel",
+    !/@media\s*\(\s*max-width:\s*1024px\s*\)[\s\S]{0,800}body\.iu-myinfouzel-open\s+\.iuInfoCenterV2/.test(infoCss)
+  );
+  ok(
+    "index:info_center_css_cache",
+    /iu-info-center\.css\?v=pc-mindmenu-privacy-stack-v1-20260908/.test(index)
+  );
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -254,13 +270,121 @@ try {
       await page.waitForTimeout(1200);
       const snap = await page.evaluate(() => {
         const overlay = document.getElementById("iuTopbarInfoOverlay");
-        const privacy = document.querySelector('[data-iu-info-section="privacy"]');
+        const privacy = document.getElementById("iuInfoCenterDetailPrivacy");
+        const mind = document.getElementById("iuMyInfoUzelOverlay");
+        const panel = overlay && overlay.querySelector(".iuTopbarInfoOverlay__panel");
+        const backdrop = overlay && overlay.querySelector(".iuTopbarInfoOverlay__backdrop");
+        const zOf = (el) => {
+          if (!el) return null;
+          const z = getComputedStyle(el).zIndex;
+          const n = Number(z);
+          return Number.isFinite(n) ? n : z;
+        };
+        const mindZ = zOf(mind);
+        const infoZ = zOf(overlay);
+        let hit = null;
+        if (panel) {
+          const r = panel.getBoundingClientRect();
+          const x = Math.min(window.innerWidth - 2, Math.max(2, r.left + Math.min(40, r.width / 2)));
+          const y = Math.min(window.innerHeight - 2, Math.max(2, r.top + Math.min(40, r.height / 2)));
+          const topEl = document.elementFromPoint(x, y);
+          hit = {
+            inInfo: !!(topEl && overlay.contains(topEl)),
+            inMind: !!(topEl && mind && mind.contains(topEl) && !(overlay && overlay.contains(topEl))),
+            tag: topEl ? topEl.tagName : null,
+          };
+        }
+        const unlockChoices = [...document.querySelectorAll('#iuInfoCenterDetailPrivacy input[type="radio"], #iuInfoCenterDetailPrivacy [name="iuVaultMindMenuMethod"], #iuVaultMindMenuMethodNone, #iuVaultMindMenuMethodDevice, #iuVaultMindMenuMethodPin')];
+        const back = document.querySelector('#iuTopbarInfoOverlay [data-iu-info-back], #iuTopbarInfoOverlay [data-act="info-back"], .iuInfoCenter__backBtn');
+        const close = document.getElementById("iuTopbarInfoOverlayClose");
         return {
           overlayOpen: !!(overlay && !overlay.hidden),
           privacyVisible: !!(privacy && !privacy.hidden),
+          mindOpen: !!(mind && !mind.hidden && document.body.classList.contains("iu-myinfouzel-open")),
+          mindZ,
+          infoZ,
+          infoAboveMind: typeof infoZ === "number" && typeof mindZ === "number" ? infoZ > mindZ : null,
+          hit,
+          hasBackdrop: !!(backdrop && getComputedStyle(backdrop).display !== "none"),
+          unlockUiCount: unlockChoices.length,
+          hasBack: !!back,
+          hasClose: !!close,
         };
       });
       ok("desktop:opens_privacy", snap.overlayOpen && snap.privacyVisible, JSON.stringify(snap));
+      ok("desktop:mindmenu_still_open_under", snap.mindOpen === true);
+      ok("desktop:info_z_above_mind", snap.infoAboveMind === true, JSON.stringify({ mindZ: snap.mindZ, infoZ: snap.infoZ }));
+      ok("desktop:hit_info_not_mind", snap.hit && snap.hit.inInfo === true && snap.hit.inMind !== true, JSON.stringify(snap.hit));
+      ok("desktop:backdrop_present", snap.hasBackdrop === true);
+      ok("desktop:unlock_ui_present", snap.unlockUiCount >= 1, String(snap.unlockUiCount));
+      ok("desktop:close_present", snap.hasClose === true);
+
+      // Close via × then reopen — no duplicate overlays.
+      await page.locator("#iuTopbarInfoOverlayClose").click({ force: true });
+      await page.waitForTimeout(500);
+      const closed = await page.evaluate(() => {
+        const overlay = document.getElementById("iuTopbarInfoOverlay");
+        return {
+          overlayHidden: !overlay || overlay.hidden,
+          mindOpen: document.body.classList.contains("iu-myinfouzel-open"),
+          infoCount: document.querySelectorAll("#iuTopbarInfoOverlay, .iuInfoCenterV2.iuTopbarInfoOverlay").length,
+        };
+      });
+      ok("desktop:close_x_returns_mindmenu", closed.overlayHidden && closed.mindOpen, JSON.stringify(closed));
+      ok("desktop:no_duplicate_info_root", closed.infoCount <= 1, String(closed.infoCount));
+
+      await page.locator("#iuMyInfoUzelOverlay [data-iu-mm-lock-infouzel]").click({ force: true });
+      await page.waitForTimeout(1000);
+      const reopen = await page.evaluate(() => {
+        const overlay = document.getElementById("iuTopbarInfoOverlay");
+        const mind = document.getElementById("iuMyInfoUzelOverlay");
+        const panel = overlay && overlay.querySelector(".iuTopbarInfoOverlay__panel");
+        let hitOk = false;
+        if (panel && overlay && !overlay.hidden) {
+          const r = panel.getBoundingClientRect();
+          const topEl = document.elementFromPoint(
+            Math.min(window.innerWidth - 2, Math.max(2, r.left + 24)),
+            Math.min(window.innerHeight - 2, Math.max(2, r.top + 24))
+          );
+          hitOk = !!(topEl && overlay.contains(topEl));
+        }
+        const infoZ = Number(getComputedStyle(overlay).zIndex);
+        const mindZ = Number(getComputedStyle(mind).zIndex);
+        return {
+          open: !!(overlay && !overlay.hidden),
+          hitOk,
+          above: infoZ > mindZ,
+          roots: document.querySelectorAll("#iuTopbarInfoOverlay").length,
+        };
+      });
+      ok("desktop:reopen_above_mind", reopen.open && reopen.above && reopen.hitOk, JSON.stringify(reopen));
+      ok("desktop:reopen_no_dup", reopen.roots === 1, String(reopen.roots));
+
+      // Back navigation if present
+      const backBtn = page.locator(
+        '#iuTopbarInfoOverlay [data-iu-info-back], #iuTopbarInfoOverlay .iuInfoCenter__backBtn, #iuTopbarInfoOverlay [aria-label*="Zpět"]'
+      );
+      if ((await backBtn.count()) > 0) {
+        await backBtn.first().click({ force: true });
+        await page.waitForTimeout(600);
+        const afterBack = await page.evaluate(() => {
+          const overlay = document.getElementById("iuTopbarInfoOverlay");
+          const view = overlay && overlay.getAttribute("data-iu-info-view");
+          return {
+            mindOpen: document.body.classList.contains("iu-myinfouzel-open"),
+            view,
+            privacyHidden: (() => {
+              const p = document.getElementById("iuInfoCenterDetailPrivacy");
+              return !p || p.hidden;
+            })(),
+          };
+        });
+        ok(
+          "desktop:back_keeps_mindmenu",
+          afterBack.mindOpen === true,
+          JSON.stringify(afterBack)
+        );
+      }
     }
     await context.close();
   }
