@@ -5,6 +5,18 @@
   z-index: 10032;
 }
 
+/*
+ * PC-only: MindMenu (#iuMyInfoUzelOverlay) uses z-index 12050.
+ * Opening iCentrum „Ochrana soukromí a data“ from „Zamknout InfoUzel“ must stack
+ * above MindMenu (same family as body.iu-myinfouzel-open .iu-tool-privacy-modal → 12200).
+ * Mobile/tablet keep the max-width:1024px rule below (10024 under bottom nav) — do not raise.
+ */
+@media (min-width: 1025px){
+  body.iu-myinfouzel-open .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]){
+    z-index: 12200;
+  }
+}
+
 /* iu-info-center-bottom-nav-restore-v1: mobil/tablet pod #iuMobileBottomNav (z-index 10025), panel končí nad lištou */
 @media (max-width: 1024px){
   .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]){
