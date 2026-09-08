@@ -4,6 +4,7 @@
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
   "2026-09-08-mindmenu-email-default-4-v1",
+  "2026-09-08-silver-wx-boot-no-flash-v1",
   "2026-09-08-pc-middle-feed-outer-border-v1",
   "2026-09-08-pc-mindmenu-privacy-stack-v1",
   "2026-09-07-tv-online-neutral-v1",

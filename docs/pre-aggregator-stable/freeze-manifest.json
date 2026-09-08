@@ -2,14 +2,14 @@
   "freezeId": "iu-mindmenu-email-default-4-v1-20260908",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-08T08:00:00.000Z",
-  "note": "MindMenu: fresh-user mailbox factory default count = 4 (stored custom counts unchanged).",
+  "updatedAt": "2026-09-08T14:00:00.000Z",
+  "note": "MindMenu: fresh mailbox default count is 4; stored custom counts preserved.",
   "files": {
-    "projects/index.html": "8270af89925a34d67daee81eedb3baad1961671e345d7ca541e67922aa0e7089",
+    "projects/index.html": "4e800964506510f003cd4c3089edc9455395c94c1e9758f42093082cf43eaea8",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "5759e74c9dc0bc85b6bbc0fc759a6beb2557cefa08888cf9a9f4da2558983cbc",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "f086f50fc330a94777db85a3ff885a5ac0fbf6b9116c2f458a727d764be940b5",
-    "assets/iu-app-feed-pipeline-v1.js": "fed889dafc5dbf3e1de778f9848aa0a0a54d745b435d846c835fec64a4aec348",
+    "assets/iu-app-feed-pipeline-v1.js": "20cd13a65af56eb9a5207651abb0663ae7dd70d87324c2c75c341dc481942389",
     "assets/iu-calendar-overlay-v1.js": "d33bc5862bf6c390d946a4f14955c1f135c43155dd30134e30c90f5ce0993403",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
@@ -22,7 +22,7 @@
     "assets/iu-user-data-backup-v1.js": "51a894bf146f3f7cdc9dc7ddd62a36e0811805f0fb982e43d066ce02fba8f246",
     "assets/iu-user-data-backup-core.js": "b349b4a391e5c2c928ba50330df57eac40a46dbeeabedbc4c4a8cce490c9620b",
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
-    "assets/iu-desktop-home-premium.css": "9eefeb1ba75307f888e9dd177d69957bedc1326cedd5b39940bb13cba030b15e",
+    "assets/iu-desktop-home-premium.css": "e2b1adfdd05a6ae5dad435f578e1785edc68817f72ddf43d111399bf9985f84d",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
     "assets/iu-prehled-dne-ui-v1.js": "17f9bd58e89914ca213af3a364b21e22613f7d69205ad5588476e97185495b8a"
   },
@@ -65,7 +65,7 @@
       "first-load-preserve-prehled-shell-v1-20260821",
       "first-load-stable-home-v1-20260821",
       "defer-desktop-js-mobile-v1-20260822",
-      "early-welcome-shell-v1-20260822",
+      "early-welcome-shell-v1-20260822-wx-boot-no-flash-v1-20260908",
       "chmi-first-home-boot-v1-20260822",
       "chmi-lane-fast-paint-v1-20260822",
       "chmi-asset-waterfall-v1-20260822",
@@ -108,15 +108,16 @@
       "mindmenu-lock-infouzel-v1-20260906",
       "radio-neutral-v1-20260906",
       "mapy-neutral-v1-20260906",
-      "pc-middle-feed-outer-border-v1-20260908"
+      "pc-middle-feed-outer-border-v1-20260908",
+      "wx-boot-no-flash-v1-20260908",
+      "data-iu-silver-wx-phase=\"boot\""
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
       "iuWeatherPrepareLiveRetryAfterReconnect",
       "iuWeatherNeedsNetworkRecovery",
       "iuOpenInfoCenterSecuritySettings",
-      "data-iu-mm-lock-infouzel",
-      "IU_MAILBOX_DEFAULT_COUNT"
+      "data-iu-mm-lock-infouzel"
     ],
     "assets/app.js": [
       "radio-neutral-v1-20260906",

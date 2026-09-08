@@ -73,12 +73,14 @@
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card,
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-layout="ready"],
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="loading"],
+  body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="boot"],
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="firstVisit"],
   body.iu-desktop-home-grid #silver-slot #iuSilverWeatherCard.silver-weather-card[data-iu-silver-wx-phase="setup"] {
     width: var(--iu-dhp-weather-col-w);
     min-width: var(--iu-dhp-weather-col-w);
     max-width: var(--iu-dhp-weather-col-w);
-    min-height: 0;
+    /* Match welcome row floor so loading↔data does not reflow Silver below. CTA/setup still grows naturally. */
+    min-height: calc(var(--iu-dhp-hero-row-min-h) + 48px);
     height: auto;
     padding-top: 10px;
     padding-bottom: 8px;
