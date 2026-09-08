@@ -66,6 +66,9 @@ async function runtimeProof() {
         localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
         localStorage.setItem("iu:consent:analytics:v1", "denied");
         localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
         localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
       } catch (_) {}
     });

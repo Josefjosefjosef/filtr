@@ -59,6 +59,9 @@ async function dismiss(page) {
   await page.evaluate(() => {
     try {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
     } catch (_) {}
     document.querySelectorAll(".iu-ldp-backdrop").forEach((el) => el.remove());
   });

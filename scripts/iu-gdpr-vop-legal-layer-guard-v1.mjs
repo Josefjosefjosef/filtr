@@ -48,10 +48,10 @@ try {
   ver = {};
 }
 
-const VERSION = "2026-09-05-v1";
+const VERSION = "2026-09-08-v1";
 if (ver.versionId !== VERSION) fail("version_json_versionId");
 else ok("version_json_versionId");
-if (ver.effectiveDate !== "2026-09-05") fail("version_json_effectiveDate");
+if (ver.effectiveDate !== "2026-09-08") fail("version_json_effectiveDate");
 else ok("version_json_effectiveDate");
 if (ver.publicPath !== "/gdpr-a-vop/") fail("version_json_publicPath");
 else ok("version_json_publicPath");
