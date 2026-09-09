@@ -51,7 +51,8 @@
     align-self: stretch;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* flex-start + reserved CTA zone: avoids recenter CLS when #iuMyInfoUzelOpenBtn is injected. */
+    justify-content: flex-start;
     width: 100%;
     max-width: 100%;
     justify-self: start;
@@ -61,6 +62,11 @@
     gap: 5px;
     min-height: var(--iu-dhp-welcome-text-min-h);
     contain: layout style;
+    margin-bottom: var(--iu-dhp-welcome-btn-zone-h);
+  }
+
+  body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard:has(#iuMyInfoUzelOpenBtn) #iuSilverWelcomeTextBlock {
+    margin-bottom: 0;
   }
 
   body.iu-desktop-home-grid #silver-slot #iuSilverWelcomeCard .iuSilverWelcomeMeta {
@@ -155,7 +161,7 @@
     row-gap: 2px;
     width: 100%;
     min-width: 0;
-    min-height: 0;
+    min-height: 56px;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -488,9 +494,9 @@
     border-radius: 12px;
   }
 
-  /* â”€â”€ Desktop homecards: height follows content (no fixed floor slack below last row) â”€â”€ */
+  /* Desktop cold-start: keep a floor so tall-scroll/home-cards do not expand #iuSilverTopCardsStack after first paint (CLS ~0.08). */
   body.iu-desktop-home-grid[data-iu-fc="1"] #iuSilverTopCardsStack {
-    min-height: 0 !important;
+    min-height: 1100px !important;
     height: auto !important;
     contain: layout style;
   }

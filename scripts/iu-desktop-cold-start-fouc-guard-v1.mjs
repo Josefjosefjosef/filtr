@@ -211,7 +211,7 @@ async function runtime() {
       must(snap.termsFixed, "rt:terms_fixed");
       must(snap.termsZ >= 10050, "rt:terms_z");
       /* Layout CLS budget: ignore tiny content reflows; stop 2↔3 column jumps. */
-      must(snap.cls < 0.12, "rt:cls_low:" + String(snap.cls));
+      must(snap.cls < 0.05, "rt:cls_low:" + String(snap.cls));
       must(snap.weatherW >= 300 && snap.weatherW <= 380, "rt:weather_desktop_width:" + snap.weatherW);
 
       const early = (snap.samples || []).filter(
