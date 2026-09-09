@@ -22,17 +22,14 @@
     --iu-dhp-welcome-btn-zone-h: 48px;
   }
 
+  /* Default stage offset before JS gap sync — avoids opacity hide / post-FCP pop-in (cold-start CLS). */
   body.iu-desktop-home-grid[data-iu-fc="1"] {
     --iu-dhp-center-stage-mt: 1140px;
   }
 
   body.iu-desktop-home-grid #newsList > #iuCenterStage {
-    opacity: 0;
-    transition: none;
-  }
-
-  body.iu-desktop-home-grid[data-iu-gap-synced="1"] #newsList > #iuCenterStage {
     opacity: 1;
+    transition: none;
   }
 
   /* â”€â”€ Hero row: welcome left + weather right (340px), compact vertical rhythm â”€â”€ */
