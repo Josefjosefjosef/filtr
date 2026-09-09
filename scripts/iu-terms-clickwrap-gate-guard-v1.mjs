@@ -54,6 +54,11 @@ function staticGate() {
   must(index.includes(PAID_SPLIT), "static:paid_split_kept");
   must(index.includes('id="iuTermsAcceptCheck"'), "static:checkbox");
   must(index.includes('id="iuTermsGateConfirm"'), "static:confirm_footer");
+  must(index.includes('id="iuTermsGateDeclined"'), "static:declined_panel");
+  must(index.includes("Znovu zobrazit podmínky"), "static:show_again");
+  must(!index.includes('id="iuTermsOpenPublicBtn"'), "static:no_open_public_btn");
+  must(!index.includes("Otevřít GDPR a Všeobecné obchodní podmínky"), "static:no_open_gdpr_text");
+  must(!/iuTermsOpenPublicBtn/.test(gate), "static:gate_no_open_public");
   {
     const confirmPos = index.indexOf('id="iuTermsGateConfirm"');
     const checkPos = index.indexOf('id="iuTermsAcceptCheck"');
@@ -370,21 +375,42 @@ async function runtime() {
         await page.waitForSelector("#iuTermsGate:not([hidden])", { timeout: 60000 });
         await page.click("#iuTermsDeclineBtn");
         await page.waitForSelector("#iuTermsGateDeclined:not([hidden])", { timeout: 10000 });
-        const d = await page.evaluate(() => ({
-          accepted: localStorage.getItem("iu:terms:accepted:v1"),
-          ver: localStorage.getItem("iu:terms:accepted-version:v1"),
-          consVisible: !!(document.getElementById("iuConsentLayer") && !document.getElementById("iuConsentLayer").hidden),
-        }));
-        must(d.accepted !== "1", "rt:decline_no_accept");
-        must(!d.ver, "rt:decline_no_version");
-        must(!d.consVisible, "rt:decline_no_analytics");
+        const declinedUi = await page.evaluate(() => {
+          const panel = document.getElementById("iuTermsGateDeclined");
+          const text = panel ? panel.textContent || "" : "";
+          const openPublic = document.getElementById("iuTermsOpenPublicBtn");
+          const again = document.getElementById("iuTermsShowAgainBtn");
+          const hit = text.includes("Otevřít GDPR a Všeobecné obchodní podmínky");
+          return {
+            hit,
+            hasOpenPublic: !!openPublic,
+            hasAgain: !!(again && again.offsetParent !== null),
+            accepted: localStorage.getItem("iu:terms:accepted:v1"),
+            ver: localStorage.getItem("iu:terms:accepted-version:v1"),
+            consVisible: !!(document.getElementById("iuConsentLayer") && !document.getElementById("iuConsentLayer").hidden),
+          };
+        });
+        must(!declinedUi.hit, "rt:decline_no_open_gdpr_text");
+        must(!declinedUi.hasOpenPublic, "rt:decline_no_open_public_btn");
+        must(declinedUi.hasAgain, "rt:decline_show_again_visible");
+        must(declinedUi.accepted !== "1", "rt:decline_no_accept");
+        must(!declinedUi.ver, "rt:decline_no_version");
+        must(!declinedUi.consVisible, "rt:decline_no_analytics");
         await page.click("#iuTermsShowAgainBtn");
         await page.waitForSelector("#iuTermsGateMain:not([hidden])", { timeout: 10000 });
-        const againScroll = await page.evaluate(() => {
+        const againState = await page.evaluate(() => {
           const scroll = document.querySelector("#iuTermsGateMain .iuTermsGate__scroll");
-          return scroll ? scroll.scrollTop : -1;
+          const read = document.getElementById("iuTermsReadBtn");
+          const readText = read ? (read.textContent || "").trim() : "";
+          return {
+            scrollTop: scroll ? scroll.scrollTop : -1,
+            accepted: localStorage.getItem("iu:terms:accepted:v1"),
+            readOk: readText === "Přečíst GDPR a Všeobecné obchodní podmínky",
+          };
         });
-        must(againScroll === 0, "rt:again_scroll_top");
+        must(againState.scrollTop === 0, "rt:again_scroll_top");
+        must(againState.accepted !== "1", "rt:again_no_accept");
+        must(againState.readOk, "rt:again_read_btn_intact");
         await ctx.close();
       }
 

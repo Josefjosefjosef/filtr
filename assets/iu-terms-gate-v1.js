@@ -296,7 +296,6 @@
     var readBtn = qs("iuTermsReadBtn");
     var again = qs("iuTermsShowAgainBtn");
     var back = qs("iuTermsDocBackBtn");
-    var openPublic = qs("iuTermsOpenPublicBtn");
 
     if (cb) {
       cb.checked = false;
@@ -345,11 +344,6 @@
         showPanel("main");
         syncCheckboxUi();
         scheduleScrollReset();
-      });
-    }
-    if (openPublic) {
-      openPublic.addEventListener("click", function () {
-        /* native link — keep checkbox state in main panel */
       });
     }
     document.addEventListener("keydown", trapFocus, true);
