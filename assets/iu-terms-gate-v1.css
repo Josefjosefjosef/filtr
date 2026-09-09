@@ -5,6 +5,13 @@ body.iu-terms-gate-open {
   overflow: hidden !important;
 }
 
+/* Keep chrome under the blocking terms gate (no bottom-nav bypass). */
+html.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav,
+body.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav {
+  z-index: 10040 !important;
+  pointer-events: none !important;
+}
+
 .iuTermsGate {
   position: fixed;
   inset: 0;

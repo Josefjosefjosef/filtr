@@ -77,6 +77,7 @@
     var overlay = open ? mountOverlay() : getOverlay();
     if (!overlay) return;
     var closeBtn = document.getElementById("iuTopbarInfoOverlayClose");
+    var wasOpen = isOpen;
     isOpen = !!open;
     if (isOpen) {
       try { overlay.hidden = false; } catch (_) {}
@@ -89,13 +90,18 @@
       try { overlay.setAttribute("aria-hidden", "true"); } catch (_) {}
       setTriggersExpanded(false);
       try {
-        if (lastFocus && typeof lastFocus.focus === "function") {
+        if (window.__IU_TERMS_ICENTRUM_READ__ && window.iuTermsGate && typeof window.iuTermsGate.onIcentrumClosed === "function") {
+          window.iuTermsGate.onIcentrumClosed();
+        } else if (lastFocus && typeof lastFocus.focus === "function") {
           lastFocus.focus({ preventScroll: true });
         } else {
           var fb = lastTrigger || getTriggers()[0];
           if (fb && typeof fb.focus === "function") fb.focus({ preventScroll: true });
         }
       } catch (_) {}
+    }
+    if (wasOpen && !isOpen) {
+      /* close complete */
     }
   }
 
@@ -156,4 +162,8 @@
     };
     window.iuInfoCenterOpenSection = stub;
   }
+
+  window.iuInfoCenterClose = function () {
+    setOpen(false);
+  };
 })();

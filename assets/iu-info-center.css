@@ -17,6 +17,31 @@
   }
 }
 
+/*
+ * Pre-acceptance: real iCentrum is an informational layer ABOVE the terms gate (z=10050).
+ * Full-bleed over bottom nav; nav stays non-interactive via iu-terms-gate-v1.css.
+ */
+html.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]),
+body.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]){
+  z-index: 10120 !important;
+}
+@media (max-width: 1024px){
+  html.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]),
+  body.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]){
+    z-index: 10120 !important;
+  }
+  html.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2 .iuTopbarInfoOverlay__backdrop,
+  body.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2 .iuTopbarInfoOverlay__backdrop{
+    bottom: 0 !important;
+  }
+  html.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2 .iuTopbarInfoOverlay__panel,
+  body.iu-terms-gate-open.iu-terms-icentrum-read .iuInfoCenterV2 .iuTopbarInfoOverlay__panel{
+    bottom: 0 !important;
+    height: 100% !important;
+    max-height: none !important;
+  }
+}
+
 /* iu-info-center-bottom-nav-restore-v1: mobil/tablet pod #iuMobileBottomNav (z-index 10025), panel končí nad lištou */
 @media (max-width: 1024px){
   .iuInfoCenterV2.iuTopbarInfoOverlay:not([hidden]){

@@ -23,6 +23,10 @@ const TITLE = "Podmínky používání InfoUzel.cz";
 const ACCEPT = "Souhlasím a pokračuji";
 const DECLINE = "Nesouhlasím";
 const READ = "Přečíst GDPR a Všeobecné obchodní podmínky";
+const FREE =
+  "Běžné používání InfoUzel.cz a jeho local-first nástrojů je zdarma a nevyžaduje registraci ani vytvoření uživatelského účtu.";
+const PAID_SPLIT =
+  "Placené reklamní, obchodní nebo jiné individuálně sjednané služby a spolupráce";
 const A_TITLE = "Pomozte nám zlepšovat InfoUzel.cz";
 const A_DENY = "Nepovolit anonymní statistiky";
 const A_ALLOW = "Povolit anonymní statistiky";
@@ -33,6 +37,8 @@ function staticGate() {
   const index = fs.readFileSync(path.join(ROOT, "projects/index.html"), "utf8");
   const acc = fs.readFileSync(path.join(ROOT, "assets/iu-terms-acceptance-v1.js"), "utf8");
   const gate = fs.readFileSync(path.join(ROOT, "assets/iu-terms-gate-v1.js"), "utf8");
+  const gateCss = fs.readFileSync(path.join(ROOT, "assets/iu-terms-gate-v1.css"), "utf8");
+  const infoCss = fs.readFileSync(path.join(ROOT, "assets/iu-info-center.css"), "utf8");
   const layer = fs.readFileSync(path.join(ROOT, "assets/iu-consent-layer.js"), "utf8");
   const legal = fs.readFileSync(path.join(ROOT, "assets/iu-gdpr-vop-legal-body-v1.js"), "utf8");
   const ver = JSON.parse(
@@ -44,6 +50,8 @@ function staticGate() {
   must(index.includes(ACCEPT), "static:accept_btn");
   must(index.includes(DECLINE), "static:decline_btn");
   must(index.includes(READ), "static:read_btn");
+  must(index.includes(FREE), "static:free_text");
+  must(index.includes(PAID_SPLIT), "static:paid_split_kept");
   must(index.includes('id="iuTermsAcceptCheck"'), "static:checkbox");
   must(index.includes("iu-terms-acceptance-v1.js"), "static:acc_script");
   must(index.includes("iu-terms-gate-v1.js"), "static:gate_script");
@@ -61,6 +69,11 @@ function staticGate() {
   must(/isCiLocalAutomationBypass/.test(acc), "static:ci_bypass_helper");
   must(/__IU_FORCE_TERMS_GATE__/.test(acc), "static:force_gate_flag");
   must(/iu:terms-accepted/.test(gate) || /iu:terms-accepted/.test(acc), "static:event");
+  must(/iuInfoCenterOpenSection/.test(gate), "static:gate_opens_icentrum");
+  must(/scrollTop\s*=\s*0/.test(gate), "static:scroll_reset");
+  must(/preventScroll/.test(gate), "static:focus_prevent_scroll");
+  must(/iu-terms-icentrum-read/.test(gate), "static:icentrum_read_flag");
+  must(/iu-terms-icentrum-read/.test(gateCss) || /iu-terms-icentrum-read/.test(infoCss), "static:icentrum_stack_css");
   must(/iu:terms-accepted/.test(layer), "static:consent_waits_terms");
   must(/iuConsentLayerShowIfNeeded/.test(layer), "static:consent_export_show");
   must(/showConsentLayerIfNeeded/.test(layer), "static:consent_deferred_helper");
@@ -119,7 +132,7 @@ async function runtime() {
   const browser = await chromium.launch({ headless: true });
   try {
     await withServer(async (origin) => {
-      // A: fresh user — terms yes, analytics no
+      // A: fresh user — terms yes, analytics no + icentrum pre-accept path
       {
         const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
         await forceTermsGate(ctx);
@@ -136,27 +149,96 @@ async function runtime() {
           const cons = document.getElementById("iuConsentLayer");
           const cb = document.getElementById("iuTermsAcceptCheck");
           const acc = document.getElementById("iuTermsAcceptBtn");
+          const scroll = terms && terms.querySelector(".iuTermsGate__scroll");
+          const title = document.getElementById("iuTermsGateTitle");
+          const bodyText = scroll ? String(scroll.textContent || "") : "";
           return {
             termsVisible: !!(terms && !terms.hidden),
             consVisible: !!(cons && !cons.hidden),
             checked: !!(cb && cb.checked),
             acceptDisabled: !!(acc && acc.disabled),
+            scrollTop: scroll ? scroll.scrollTop : -1,
+            titleTop: title ? title.getBoundingClientRect().top : -1,
+            scrollTopBound: scroll ? scroll.getBoundingClientRect().top : -1,
+            freeOk: bodyText.indexOf("je zdarma a nevyžaduje registraci") !== -1,
           };
         });
         must(snap.termsVisible, "rt:fresh_terms_visible");
         must(!snap.consVisible, "rt:fresh_analytics_hidden");
         must(!snap.checked, "rt:checkbox_false");
         must(snap.acceptDisabled, "rt:accept_disabled");
+        must(snap.scrollTop === 0, "rt:scroll_top_zero");
+        must(snap.freeOk, "rt:free_text_visible");
+        must(
+          snap.titleTop >= snap.scrollTopBound - 2 && snap.titleTop < snap.scrollTopBound + 80,
+          "rt:title_near_top"
+        );
 
         await page.click("#iuTermsReadBtn");
-        await page.waitForSelector("#iuTermsGateDoc:not([hidden])", { timeout: 15000 });
-        await page.click("#iuTermsDocBackBtn");
-        await page.waitForSelector("#iuTermsGateMain:not([hidden])", { timeout: 15000 });
-        const stillUnchecked = await page.evaluate(() => {
-          const cb = document.getElementById("iuTermsAcceptCheck");
-          return !(cb && cb.checked);
+        await page.waitForSelector("#iuTopbarInfoOverlay:not([hidden])", { timeout: 20000 });
+        const ic = await page.evaluate(() => {
+          const overlay = document.getElementById("iuTopbarInfoOverlay");
+          const terms = document.getElementById("iuTermsGate");
+          const gdpr = document.getElementById("iuInfoCenterDetailGdprVop");
+          const menu = document.getElementById("iuInfoCenterMenu");
+          const back = document.getElementById("iuInfoCenterBack");
+          return {
+            overlayOpen: !!(overlay && !overlay.hidden),
+            termsStill: !!(terms && !terms.hidden),
+            gdprOpen: !!(gdpr && !gdpr.hidden),
+            menuHidden: !!(menu && menu.hidden),
+            backVisible: !!(back && !back.hidden),
+            accepted: localStorage.getItem("iu:terms:accepted:v1"),
+            readMode: !!window.__IU_TERMS_ICENTRUM_READ__,
+          };
         });
-        must(stillUnchecked, "rt:read_does_not_check");
+        must(ic.overlayOpen, "rt:icentrum_open");
+        must(ic.termsStill, "rt:terms_under_icentrum");
+        must(ic.gdprOpen, "rt:gdpr_detail_open");
+        must(ic.menuHidden, "rt:menu_hidden_on_detail");
+        must(ic.backVisible, "rt:back_visible");
+        must(ic.accepted !== "1", "rt:read_no_accept");
+        must(ic.readMode, "rt:read_mode_flag");
+
+        await page.click("#iuInfoCenterBack");
+        await page.waitForFunction(() => {
+          const menu = document.getElementById("iuInfoCenterMenu");
+          return menu && !menu.hidden;
+        }, null, { timeout: 10000 });
+        await page.click('.iuInfoCenter__tile[data-iu-info-section="about"]');
+        const aboutOk = await page.evaluate(() => {
+          const about = document.querySelector('.iuInfoCenter__detail[data-iu-info-section="about"]');
+          return !!(about && !about.hidden);
+        });
+        must(aboutOk, "rt:other_section_open");
+
+        await page.click("#iuTopbarInfoOverlayClose");
+        await page.waitForFunction(() => {
+          const overlay = document.getElementById("iuTopbarInfoOverlay");
+          return !overlay || overlay.hidden;
+        }, null, { timeout: 10000 });
+        const backToTerms = await page.evaluate(() => {
+          const terms = document.getElementById("iuTermsGate");
+          const main = document.getElementById("iuTermsGateMain");
+          const cb = document.getElementById("iuTermsAcceptCheck");
+          const scroll = terms && terms.querySelector("#iuTermsGateMain .iuTermsGate__scroll");
+          return {
+            termsVisible: !!(terms && !terms.hidden),
+            mainVisible: !!(main && !main.hidden),
+            checked: !!(cb && cb.checked),
+            accepted: localStorage.getItem("iu:terms:accepted:v1"),
+            readMode: !!window.__IU_TERMS_ICENTRUM_READ__,
+            scrollTop: scroll ? scroll.scrollTop : -1,
+            unlocked: !document.documentElement.classList.contains("iu-terms-gate-open"),
+          };
+        });
+        must(backToTerms.termsVisible, "rt:close_returns_terms");
+        must(backToTerms.mainVisible, "rt:main_after_close");
+        must(!backToTerms.checked, "rt:close_does_not_check");
+        must(backToTerms.accepted !== "1", "rt:close_no_accept");
+        must(!backToTerms.readMode, "rt:read_mode_cleared");
+        must(backToTerms.scrollTop === 0, "rt:scroll_reset_after_icentrum");
+        must(!backToTerms.unlocked, "rt:gate_still_locked");
 
         await page.check("#iuTermsAcceptCheck");
         await page.waitForFunction(() => {
@@ -239,6 +321,13 @@ async function runtime() {
         must(d.accepted !== "1", "rt:decline_no_accept");
         must(!d.ver, "rt:decline_no_version");
         must(!d.consVisible, "rt:decline_no_analytics");
+        await page.click("#iuTermsShowAgainBtn");
+        await page.waitForSelector("#iuTermsGateMain:not([hidden])", { timeout: 10000 });
+        const againScroll = await page.evaluate(() => {
+          const scroll = document.querySelector("#iuTermsGateMain .iuTermsGate__scroll");
+          return scroll ? scroll.scrollTop : -1;
+        });
+        must(againScroll === 0, "rt:again_scroll_top");
         await ctx.close();
       }
 

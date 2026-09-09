@@ -48,7 +48,7 @@ function auditStatic() {
   );
   ok(
     "index:info_center_css_cache",
-    /iu-info-center\.css\?v=pc-mindmenu-privacy-stack-v1-20260908/.test(index)
+    /iu-info-center\.css\?v=terms-preaccept-icentrum-v1-20260909/.test(index)
   );
 }
 
