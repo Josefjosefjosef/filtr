@@ -45,6 +45,7 @@ function staticGate() {
     {
       id: "index_cache_bust",
       pass:
+        /iu-info-center\.css\?v=terms-preaccept-icentrum-v1-20260909/.test(index) ||
         /iu-info-center\.css\?v=pc-mindmenu-privacy-stack-v1-20260908/.test(index) ||
         /iu-info-center\.css\?v=icentrum-desktop-panel-v1-20260907/.test(index) ||
         /iu-info-center\.css\?v=gdpr-vop-section-v1-20260905/.test(index) ||

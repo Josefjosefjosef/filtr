@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CACHE = "pc-mindmenu-privacy-stack-v1-20260908";
+const CACHE = "terms-preaccept-icentrum-v1-20260909";
 const fails = [];
 function must(cond, id) {
   if (!cond) fails.push(id);
