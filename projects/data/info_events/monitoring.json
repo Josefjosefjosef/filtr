@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-09-09T07:37:05.435Z",
-    "lastSuccessAt": "2026-09-09T07:37:08.883Z",
-    "lastChangedAt": "2026-09-08T23:27:16.162Z",
+    "lastRunAt": "2026-09-09T08:18:58.640Z",
+    "lastSuccessAt": "2026-09-09T08:19:02.345Z",
+    "lastChangedAt": "2026-09-09T08:00:25.840Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6a9ff596-e93c\"",
-    "lastModified": "Tue, 08 Sep 2026 11:46:30 GMT",
+    "etag": "\"6aa110f5-17a8a6\"",
+    "lastModified": "Wed, 09 Sep 2026 07:55:33 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -445,8 +445,8 @@
     "discoveryMaxFiles": null,
     "discoveryFixedLimit": false,
     "productStreams": [
-      "70",
-      "50"
+      "50",
+      "70"
     ],
     "streamCount": 2,
     "completeness": {
@@ -465,8 +465,8 @@
       "publishedScheduled": 0,
       "publishableCount": 3,
       "productStreams": [
-        "70",
-        "50"
+        "50",
+        "70"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -475,38 +475,38 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-09-08T14:00:00+02:00",
+    "lastCapSent": "2026-09-09T09:55:00+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5799,
+    "runMs": 6347,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-09-09T07:37:05.435Z",
+    "lastSnapshotAt": "2026-09-09T08:18:58.640Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-09-08T23:27:12.324Z",
       "officialLatestSentAt": "2026-09-08T14:00:00+02:00",
       "officialLatestValidFrom": "2026-09-08T14:00:00+02:00",
-      "discoveredAt": "2026-09-09T07:37:05.435Z",
-      "fetchedAt": "2026-09-09T07:37:05.435Z",
-      "transformedAt": "2026-09-09T07:37:11.235Z",
-      "validatedAt": "2026-09-09T07:37:11.235Z",
-      "publishedAt": "2026-09-09T07:37:05.435Z",
+      "discoveredAt": "2026-09-09T08:18:58.640Z",
+      "fetchedAt": "2026-09-09T08:18:58.640Z",
+      "transformedAt": "2026-09-09T08:19:04.988Z",
+      "validatedAt": "2026-09-09T08:19:04.988Z",
+      "publishedAt": "2026-09-09T08:18:58.640Z",
       "endToEndLagMs": 41232324
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_081200.xml",
-          "productKey": "70",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_090755.xml",
+          "productKey": "50",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
         },
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080754.xml",
-          "productKey": "50",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_081200.xml",
+          "productKey": "70",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
@@ -531,8 +531,8 @@
           "publishedScheduled": 0,
           "publishableCount": 3,
           "productStreams": [
-            "70",
-            "50"
+            "50",
+            "70"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
@@ -546,6 +546,72 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-09-09T08:18:58.640Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6347,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
+      {
+        "at": "2026-09-09T08:10:26.466Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4940,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
+      {
+        "at": "2026-09-09T08:05:23.212Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6160,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
+      {
+        "at": "2026-09-09T08:00:22.298Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7321,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
+      {
+        "at": "2026-09-09T07:53:52.869Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 5797,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
+      {
+        "at": "2026-09-09T07:49:23.154Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4870,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-09-09T07:37:05.435Z",
         "status": "not_modified",
@@ -1003,72 +1069,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 5721,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T01:51:07.140Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6394,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T01:43:14.272Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 7013,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T01:34:59.532Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5499,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T00:58:27.185Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5569,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T00:54:52.033Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5332,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-09T00:41:34.164Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5673,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
