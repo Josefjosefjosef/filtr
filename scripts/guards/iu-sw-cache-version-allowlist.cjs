@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-09-terms-confirm-fixed-footer-v1",
   "2026-09-09-terms-preaccept-icentrum-v1",
   "2026-09-08-terms-clickwrap-v1",
   "2026-09-08-pwa-traffic-resume-revalidate-v1",
@@ -185,7 +186,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-09-terms-preaccept-icentrum-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-09-terms-confirm-fixed-footer-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

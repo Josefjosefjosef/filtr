@@ -53,6 +53,14 @@ function staticGate() {
   must(index.includes(FREE), "static:free_text");
   must(index.includes(PAID_SPLIT), "static:paid_split_kept");
   must(index.includes('id="iuTermsAcceptCheck"'), "static:checkbox");
+  must(index.includes('id="iuTermsGateConfirm"'), "static:confirm_footer");
+  {
+    const confirmPos = index.indexOf('id="iuTermsGateConfirm"');
+    const checkPos = index.indexOf('id="iuTermsAcceptCheck"');
+    const readPos = index.indexOf('id="iuTermsReadBtn"');
+    must(confirmPos > 0 && checkPos > confirmPos, "static:check_in_confirm");
+    must(readPos > 0 && confirmPos > readPos, "static:read_before_confirm");
+  }
   must(index.includes("iu-terms-acceptance-v1.js"), "static:acc_script");
   must(index.includes("iu-terms-gate-v1.js"), "static:gate_script");
   must(index.includes(A_TITLE), "static:analytics_title_unchanged");
@@ -74,6 +82,7 @@ function staticGate() {
   must(/preventScroll/.test(gate), "static:focus_prevent_scroll");
   must(/iu-terms-icentrum-read/.test(gate), "static:icentrum_read_flag");
   must(/iu-terms-icentrum-read/.test(gateCss) || /iu-terms-icentrum-read/.test(infoCss), "static:icentrum_stack_css");
+  must(/iuTermsGate__confirm/.test(gateCss), "static:confirm_css");
   must(/iu:terms-accepted/.test(layer), "static:consent_waits_terms");
   must(/iuConsentLayerShowIfNeeded/.test(layer), "static:consent_export_show");
   must(/showConsentLayerIfNeeded/.test(layer), "static:consent_deferred_helper");
@@ -174,6 +183,49 @@ async function runtime() {
           "rt:title_near_top"
         );
 
+        const fixedLayout = await page.evaluate(async () => {
+          const main = document.getElementById("iuTermsGateMain");
+          const scroll = main && main.querySelector(".iuTermsGate__scroll");
+          const confirm = document.getElementById("iuTermsGateConfirm");
+          const cb = document.getElementById("iuTermsAcceptCheck");
+          const read = document.getElementById("iuTermsReadBtn");
+          const acc = document.getElementById("iuTermsAcceptBtn");
+          const decline = document.getElementById("iuTermsDeclineBtn");
+          if (!scroll || !confirm || !cb || !read || !acc || !decline) {
+            return { ok: false, reason: "missing_nodes" };
+          }
+          const checkOutsideScroll = !scroll.contains(cb) && confirm.contains(cb);
+          const readInsideScroll = scroll.contains(read);
+          const actionsInConfirm = confirm.contains(acc) && confirm.contains(decline);
+          const y0 = confirm.getBoundingClientRect().top;
+          const maxScroll = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
+          scroll.scrollTop = maxScroll;
+          await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+          const y1 = confirm.getBoundingClientRect().top;
+          const scrolled = scroll.scrollTop > 0 || maxScroll === 0;
+          const readVisible =
+            read.getBoundingClientRect().bottom <= scroll.getBoundingClientRect().bottom + 2 ||
+            scroll.scrollTop >= maxScroll - 2;
+          scroll.scrollTop = 0;
+          return {
+            ok: true,
+            checkOutsideScroll,
+            readInsideScroll,
+            actionsInConfirm,
+            confirmFixed: Math.abs(y1 - y0) < 1.5,
+            scrolled,
+            readReachable: readVisible,
+            maxScroll,
+          };
+        });
+        must(fixedLayout.ok, "rt:fixed_layout_nodes");
+        must(fixedLayout.checkOutsideScroll, "rt:check_outside_scroll");
+        must(fixedLayout.readInsideScroll, "rt:read_inside_scroll");
+        must(fixedLayout.actionsInConfirm, "rt:actions_in_confirm");
+        must(fixedLayout.confirmFixed, "rt:confirm_fixed_on_scroll");
+        must(fixedLayout.scrolled || fixedLayout.maxScroll === 0, "rt:content_can_scroll");
+        must(fixedLayout.readReachable, "rt:read_btn_reachable");
+
         await page.click("#iuTermsReadBtn");
         await page.waitForSelector("#iuTopbarInfoOverlay:not([hidden])", { timeout: 20000 });
         const ic = await page.evaluate(() => {
@@ -222,6 +274,7 @@ async function runtime() {
           const main = document.getElementById("iuTermsGateMain");
           const cb = document.getElementById("iuTermsAcceptCheck");
           const scroll = terms && terms.querySelector("#iuTermsGateMain .iuTermsGate__scroll");
+          const confirm = document.getElementById("iuTermsGateConfirm");
           return {
             termsVisible: !!(terms && !terms.hidden),
             mainVisible: !!(main && !main.hidden),
@@ -230,6 +283,8 @@ async function runtime() {
             readMode: !!window.__IU_TERMS_ICENTRUM_READ__,
             scrollTop: scroll ? scroll.scrollTop : -1,
             unlocked: !document.documentElement.classList.contains("iu-terms-gate-open"),
+            confirmVisible: !!(confirm && confirm.getBoundingClientRect().height > 0),
+            checkOutsideScroll: !!(scroll && cb && !scroll.contains(cb)),
           };
         });
         must(backToTerms.termsVisible, "rt:close_returns_terms");
@@ -239,6 +294,8 @@ async function runtime() {
         must(!backToTerms.readMode, "rt:read_mode_cleared");
         must(backToTerms.scrollTop === 0, "rt:scroll_reset_after_icentrum");
         must(!backToTerms.unlocked, "rt:gate_still_locked");
+        must(backToTerms.confirmVisible, "rt:confirm_visible_after_icentrum");
+        must(backToTerms.checkOutsideScroll, "rt:check_still_outside_scroll");
 
         await page.check("#iuTermsAcceptCheck");
         await page.waitForFunction(() => {
