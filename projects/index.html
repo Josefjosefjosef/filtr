@@ -1081,12 +1081,12 @@ require-trusted-types-for 'script';
     <link rel="stylesheet" href="/assets/iu-silver-premium-draft.css?v=silver-desktop-premium-facelift-v1-20260907" />
     <!-- P0 perf: overlay CSS non-blocking (media=print onload swap) — open guards in iuOverlayCssDeferGuard below app.js -->
     <link rel="preload" as="style" href="/assets/iu-consent-layer.css?v=consent-layer-mobile-fit-v1-20260907" />
-    <link rel="preload" as="style" href="/assets/iu-terms-gate-v1.css?v=terms-preaccept-icentrum-v1-20260909" />
+    <link rel="preload" as="style" href="/assets/iu-terms-gate-v1.css?v=terms-confirm-fixed-footer-v1-20260909" />
     <link rel="stylesheet" data-iu-href="/assets/iu-tasks-premium.css?v=date-time-value-column-v4-20260813" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" data-iu-href="/assets/iu-notes-premium.css?v=mindmenu-overlay-bottom-gap-unified-v1-20260705" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-info-center.css?v=terms-preaccept-icentrum-v1-20260909" media="print" data-iu-defer-overlay-css="1" />
     <link rel="stylesheet" href="/assets/iu-consent-layer.css?v=consent-layer-mobile-fit-v1-20260907" media="print" data-iu-defer-overlay-css="1" />
-    <link rel="stylesheet" href="/assets/iu-terms-gate-v1.css?v=terms-preaccept-icentrum-v1-20260909" media="print" data-iu-defer-overlay-css="1" />
+    <link rel="stylesheet" href="/assets/iu-terms-gate-v1.css?v=terms-confirm-fixed-footer-v1-20260909" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuFeedNewsSplitCss">
       /*
        * FINÁLNÍ společný komponent — sekční oddělovníky mobil/tablet (≤1024px):
@@ -7027,7 +7027,7 @@ require-trusted-types-for 'script';
     <script defer src="/assets/iu-vault-ui-v1.js?v=iu-icentrum-security-ux-v1-20260831"></script>
     <script type="module" src="/assets/iu-user-data-backup-v1.js?v=user-data-backup-encrypted-v1-20260831"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-terms-gate-v1.js?v=terms-preaccept-icentrum-v1-20260909"></script>
+    <script defer src="/assets/iu-terms-gate-v1.js?v=terms-confirm-fixed-footer-v1-20260909"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-terms-priority-v1-20260908"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-carrier-picker-toggle-v1-20260907"></script>
     <script>
@@ -8344,14 +8344,16 @@ require-trusted-types-for 'script';
           <p class="iuTermsGate__p">Před používáním InfoUzel.cz se s těmito informacemi seznamte. Používáním konkrétní funkce uživatel bere na vědomí také informace, omezení a upozornění, které jsou u této funkce výslovně uvedeny.</p>
           <p class="iuTermsGate__p">Tyto Všeobecné obchodní podmínky se vztahují zejména na běžné používání InfoUzel.cz. Placené reklamní, obchodní nebo jiné individuálně sjednané služby a spolupráce se řídí také příslušnou objednávkou, smlouvou, potvrzením objednávky nebo zvláštními podmínkami dané služby. Přijetí těchto podmínek při běžném používání InfoUzel.cz samo o sobě nezakládá objednávku placené služby, reklamní spolupráci ani jiný individuálně sjednaný závazek.</p>
           <button type="button" class="iuTermsGate__readBtn" id="iuTermsReadBtn">Přečíst GDPR a Všeobecné obchodní podmínky</button>
+        </div>
+        <div class="iuTermsGate__confirm" id="iuTermsGateConfirm">
           <div class="iuTermsGate__checkRow">
             <input type="checkbox" class="iuTermsGate__check" id="iuTermsAcceptCheck" name="iuTermsAcceptCheck" />
             <label class="iuTermsGate__checkLabel" for="iuTermsAcceptCheck">Potvrzuji, že jsem se seznámil/a s GDPR a Všeobecnými obchodními podmínkami InfoUzel.cz, s důležitými informacemi o fungování služby dostupnými v iCentru a že Všeobecné obchodní podmínky přijímám.</label>
           </div>
-        </div>
-        <div class="iuTermsGate__actions">
-          <button type="button" class="iuTermsGate__btn iuTermsGate__btn--primary" id="iuTermsAcceptBtn" disabled aria-disabled="true">Souhlasím a pokračuji</button>
-          <button type="button" class="iuTermsGate__btn" id="iuTermsDeclineBtn">Nesouhlasím</button>
+          <div class="iuTermsGate__actions">
+            <button type="button" class="iuTermsGate__btn iuTermsGate__btn--primary" id="iuTermsAcceptBtn" disabled aria-disabled="true">Souhlasím a pokračuji</button>
+            <button type="button" class="iuTermsGate__btn" id="iuTermsDeclineBtn">Nesouhlasím</button>
+          </div>
         </div>
       </div>
       <div id="iuTermsGateDeclined" class="iuTermsGate__dialog" hidden>

@@ -50,11 +50,13 @@ body.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav {
 
 .iuTermsGate__scroll {
   flex: 1 1 auto;
-  min-height: 0;
+  /* Keep a usable reading pane when confirmation+CTA are fixed below. */
+  min-height: min(28dvh, 180px);
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 16px 16px 8px;
+  overscroll-behavior: contain;
+  padding: 16px 16px 12px;
   box-sizing: border-box;
 }
 
@@ -84,7 +86,7 @@ body.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav {
   justify-content: center;
   width: 100%;
   min-height: 44px;
-  margin: 8px 0 12px;
+  margin: 8px 0 4px;
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid rgba(125, 211, 252, 0.55);
@@ -103,11 +105,23 @@ body.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav {
   outline-offset: 2px;
 }
 
+/* Fixed confirmation + CTA: outside scrollable content. */
+.iuTermsGate__confirm {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(2, 6, 23, 0.92);
+  padding: 10px 16px 0;
+  box-sizing: border-box;
+}
+
 .iuTermsGate__checkRow {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  margin: 4px 0 8px;
+  margin: 0 0 8px;
   padding: 10px 10px;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.35);
@@ -136,11 +150,17 @@ body.iu-terms-gate-open #iuMobileBottomNav.iu-mobileBottomNav {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  padding: 2px 0 max(12px, env(safe-area-inset-bottom, 0px));
+  border-top: none;
+  background: transparent;
+  position: static;
+}
+
+/* Declined panel keeps actions as the sole footer strip. */
+#iuTermsGateDeclined > .iuTermsGate__actions {
   padding: 10px 16px max(12px, env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(2, 6, 23, 0.92);
-  position: sticky;
-  bottom: 0;
 }
 
 .iuTermsGate__btn {
