@@ -9,6 +9,8 @@
     'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])';
   var lastFocus = null;
   var bound = false;
+  var icentrumHistoryPushed = false;
+  var ignoreNextPopstate = false;
 
   function qs(id) {
     return document.getElementById(id);
@@ -31,6 +33,71 @@
       document.documentElement.classList.toggle("iu-terms-gate-open", !!on);
       document.body.classList.toggle("iu-terms-gate-open", !!on);
     } catch (_) {}
+  }
+
+  function setIcentrumReadMode(on) {
+    try {
+      document.documentElement.classList.toggle("iu-terms-icentrum-read", !!on);
+      document.body.classList.toggle("iu-terms-icentrum-read", !!on);
+      window.__IU_TERMS_ICENTRUM_READ__ = !!on;
+    } catch (_) {}
+  }
+
+  function setTermsInertForIcentrum(on) {
+    var root = qs("iuTermsGate");
+    if (!root) return;
+    try {
+      if (on) {
+        root.setAttribute("aria-hidden", "true");
+        if ("inert" in root) root.inert = true;
+      } else {
+        root.setAttribute("aria-hidden", "false");
+        if ("inert" in root) root.inert = false;
+      }
+    } catch (_) {}
+  }
+
+  function resetScrollContainers() {
+    var root = qs("iuTermsGate");
+    if (!root) return;
+    try {
+      var scrolls = root.querySelectorAll(".iuTermsGate__scroll");
+      for (var i = 0; i < scrolls.length; i++) {
+        scrolls[i].scrollTop = 0;
+      }
+    } catch (_) {}
+    var docMount = qs("iuTermsGateDocMount");
+    if (docMount) {
+      try {
+        docMount.scrollTop = 0;
+      } catch (_) {}
+    }
+  }
+
+  function scheduleScrollReset() {
+    resetScrollContainers();
+    try {
+      window.requestAnimationFrame(function () {
+        resetScrollContainers();
+        window.requestAnimationFrame(resetScrollContainers);
+      });
+    } catch (_) {
+      try {
+        window.setTimeout(resetScrollContainers, 0);
+        window.setTimeout(resetScrollContainers, 50);
+      } catch (_) {}
+    }
+  }
+
+  function focusEl(el) {
+    if (!el || typeof el.focus !== "function") return;
+    try {
+      el.focus({ preventScroll: true });
+    } catch (_) {
+      try {
+        el.focus();
+      } catch (_) {}
+    }
   }
 
   function setAcceptEnabled(on) {
@@ -61,11 +128,13 @@
     if (main) main.hidden = mode !== "main";
     if (declined) declined.hidden = mode !== "declined";
     if (doc) doc.hidden = mode !== "doc";
+    scheduleScrollReset();
   }
 
   function hideGate() {
     var root = qs("iuTermsGate");
     if (!root) return;
+    clearIcentrumReadSession(true);
     root.hidden = true;
     try {
       root.setAttribute("aria-hidden", "true");
@@ -73,8 +142,12 @@
     setBodyLock(false);
     if (lastFocus && typeof lastFocus.focus === "function") {
       try {
-        lastFocus.focus();
-      } catch (_) {}
+        lastFocus.focus({ preventScroll: true });
+      } catch (_) {
+        try {
+          lastFocus.focus();
+        } catch (_) {}
+      }
     }
   }
 
@@ -98,14 +171,76 @@
     mountLegalDoc();
     showPanel("doc");
     var back = qs("iuTermsDocBackBtn");
-    if (back) {
-      try {
-        back.focus();
-      } catch (_) {}
+    focusEl(back);
+  }
+
+  function closeInfoOverlayQuiet() {
+    var overlay = qs("iuTopbarInfoOverlay");
+    if (!overlay || overlay.hidden) return;
+    try {
+      if (typeof window.iuInfoCenterClose === "function") {
+        window.iuInfoCenterClose();
+        return;
+      }
+    } catch (_) {}
+    try {
+      var closeBtn = document.getElementById("iuTopbarInfoOverlayClose");
+      if (closeBtn) closeBtn.click();
+    } catch (_) {}
+  }
+
+  function clearIcentrumReadSession(fromHideGate) {
+    if (!window.__IU_TERMS_ICENTRUM_READ__ && !icentrumHistoryPushed) {
+      setIcentrumReadMode(false);
+      setTermsInertForIcentrum(false);
+      return;
+    }
+    setIcentrumReadMode(false);
+    setTermsInertForIcentrum(false);
+    if (icentrumHistoryPushed) {
+      icentrumHistoryPushed = false;
+      if (!fromHideGate) {
+        try {
+          ignoreNextPopstate = true;
+          history.replaceState(null, "", location.href);
+        } catch (_) {}
+      }
     }
   }
 
+  function onIcentrumClosed() {
+    if (!window.__IU_TERMS_ICENTRUM_READ__) return;
+    clearIcentrumReadSession(false);
+    var root = qs("iuTermsGate");
+    if (!root || root.hidden) return;
+    showPanel("main");
+    syncCheckboxUi();
+    scheduleScrollReset();
+    focusEl(qs("iuTermsReadBtn") || qs("iuTermsAcceptCheck"));
+  }
+
+  function openIcentrumFromTerms() {
+    setIcentrumReadMode(true);
+    setTermsInertForIcentrum(true);
+    try {
+      if (!icentrumHistoryPushed) {
+        history.pushState({ iuTermsIcentrum: 1 }, "", location.href);
+        icentrumHistoryPushed = true;
+      }
+    } catch (_) {}
+    try {
+      if (typeof window.iuInfoCenterOpenSection === "function") {
+        window.iuInfoCenterOpenSection("gdpr-vop");
+        return;
+      }
+    } catch (_) {}
+    // Fallback if iCentrum API is unavailable: keep previous inline doc panel.
+    clearIcentrumReadSession(false);
+    openDocPanel();
+  }
+
   function trapFocus(e) {
+    if (window.__IU_TERMS_ICENTRUM_READ__) return;
     var root = qs("iuTermsGate");
     if (!root || root.hidden || e.key !== "Tab") return;
     var panel = root.querySelector(".iuTermsGate__dialog:not([hidden])") || root;
@@ -149,12 +284,7 @@
       syncCheckboxUi();
     }
     showPanel("declined");
-    var again = qs("iuTermsShowAgainBtn");
-    if (again) {
-      try {
-        again.focus();
-      } catch (_) {}
-    }
+    focusEl(qs("iuTermsShowAgainBtn"));
   }
 
   function bindOnce() {
@@ -193,7 +323,7 @@
         try {
           e.preventDefault();
         } catch (_) {}
-        openDocPanel();
+        openIcentrumFromTerms();
       });
     }
     if (again) {
@@ -203,11 +333,8 @@
         } catch (_) {}
         showPanel("main");
         syncCheckboxUi();
-        if (cb) {
-          try {
-            cb.focus();
-          } catch (_) {}
-        }
+        scheduleScrollReset();
+        focusEl(cb);
       });
     }
     if (back) {
@@ -217,6 +344,7 @@
         } catch (_) {}
         showPanel("main");
         syncCheckboxUi();
+        scheduleScrollReset();
       });
     }
     if (openPublic) {
@@ -225,6 +353,15 @@
       });
     }
     document.addEventListener("keydown", trapFocus, true);
+    window.addEventListener("popstate", function () {
+      if (ignoreNextPopstate) {
+        ignoreNextPopstate = false;
+        return;
+      }
+      if (!window.__IU_TERMS_ICENTRUM_READ__) return;
+      icentrumHistoryPushed = false;
+      closeInfoOverlayQuiet();
+    });
   }
 
   function openGate() {
@@ -239,11 +376,9 @@
       lastFocus = null;
     }
     showPanel("main");
-    if (cb) {
-      try {
-        cb.focus();
-      } catch (_) {}
-    }
+    scheduleScrollReset();
+    focusEl(cb);
+    scheduleScrollReset();
   }
 
   function boot() {
@@ -270,6 +405,10 @@
   window.iuTermsGate = {
     open: openGate,
     hide: hideGate,
+    onIcentrumClosed: onIcentrumClosed,
+    isIcentrumReadMode: function () {
+      return !!window.__IU_TERMS_ICENTRUM_READ__;
+    },
     needsAcceptance: function () {
       var api = termsApi();
       return !!(api && api.needsAcceptance && api.needsAcceptance());

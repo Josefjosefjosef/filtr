@@ -80,6 +80,11 @@
         try {
           e.preventDefault();
         } catch (_) {}
+        // Pre-acceptance iCentrum is informational only — do not write analytics consent yet.
+        if (window.__IU_TERMS_ICENTRUM_READ__) {
+          announce("Nejdříve přijměte podmínky používání InfoUzel.cz.");
+          return;
+        }
         var consent = window.iuConsent;
         if (!consent) return;
         var val = onRadio && onRadio.checked ? "granted" : "denied";
@@ -267,6 +272,30 @@
       }
       showSection(key || "menu");
     };
+
+    // Pre-acceptance: same-tab navigation out of InfoUzel must not drop the terms gate.
+    overlay.addEventListener(
+      "click",
+      function (e) {
+        if (!window.__IU_TERMS_ICENTRUM_READ__) return;
+        var a = null;
+        try {
+          a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+        } catch (_) {}
+        if (!a) return;
+        var href = a.getAttribute("href") || "";
+        if (!href || href.charAt(0) === "#" || href.indexOf("mailto:") === 0 || href.indexOf("tel:") === 0) {
+          return;
+        }
+        var target = (a.getAttribute("target") || "").toLowerCase();
+        if (target === "_blank") return;
+        try {
+          e.preventDefault();
+          window.open(href, "_blank", "noopener,noreferrer");
+        } catch (_) {}
+      },
+      true
+    );
 
     tiles.forEach(function (tile) {
       tile.addEventListener("click", function (e) {
