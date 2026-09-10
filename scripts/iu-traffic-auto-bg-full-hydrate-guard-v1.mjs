@@ -38,6 +38,21 @@ ok("static_hydrate_gate", /opts\.hydrate === true/.test(overview));
 ok("static_schedule_void", /void scheduleTrafficSnapshotFullHydrate\(TRAFFIC_UI_SNAPSHOT_URL\)/.test(overview));
 ok("static_prehled_schedules_on_open", /scheduleTrafficBackgroundFullHydrate/.test(prehled));
 ok(
+  "static_hydrate_before_presenter",
+  /scheduleTrafficBackgroundFullHydrate[\s\S]{0,400}ensureTrafficPresenter/.test(prehled),
+  "full hydrate must kick before awaiting presenter on Doprava open"
+);
+ok(
+  "static_no_idle_defer_hydrate",
+  !/requestIdleCallback\(kickHydrate,\s*\{\s*timeout:\s*1200\s*\}\)/.test(prehled),
+  "must not delay full hydrate up to 1200ms via requestIdleCallback"
+);
+ok(
+  "static_bg_prep_prefetch_full",
+  /traffic-bg-ready[\s\S]{0,500}scheduleTrafficBackgroundFullHydrate/.test(prehled),
+  "background prep must prefetch full catalog after head settles"
+);
+ok(
   "static_boot_head_no_hydrate_true",
   /fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true\s*\}/.test(prehled) &&
     !/fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true,\s*hydrate:\s*true\s*\}/.test(prehled)

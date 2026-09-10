@@ -1102,12 +1102,21 @@ async function fetchTrafficSnapshotParsed(url, maxCards, signal) {
   return acceptTrafficSnapshot(parsed);
 }
 
+function markTrafficHydratePhase(phase) {
+  try {
+    if (typeof performance !== "undefined" && performance.mark) {
+      performance.mark("iu:traffic-" + phase);
+    }
+  } catch (_) {}
+}
+
 function scheduleTrafficSnapshotFullHydrate(url) {
   const ready = loadOfflineTrafficSnapshot();
   if (ready && !isTrafficSnapshotCapped(ready)) return Promise.resolve(ready);
   if (_trafficFullHydratePromise) return _trafficFullHydratePromise;
   const targetUrl = url || TRAFFIC_UI_SNAPSHOT_URL;
   const headGenKey = trafficSnapshotGenKey(_trafficSnapMem);
+  markTrafficHydratePhase("full-hydrate-start");
   _trafficFullHydratePromise = (async () => {
     try {
       const full = await fetchTrafficSnapshotParsed(targetUrl, 0, null);
@@ -1117,6 +1126,16 @@ function scheduleTrafficSnapshotFullHydrate(url) {
       _trafficSnapMem = full;
       // Memory-only for multi‑MB full catalog (saveOfflineTrafficSnapshot already guards LS size).
       saveOfflineTrafficSnapshot(full);
+      markTrafficHydratePhase("full-dataset-ready");
+      try {
+        if (typeof performance !== "undefined" && performance.measure) {
+          performance.measure(
+            "iu:traffic-full-hydrate",
+            "iu:traffic-full-hydrate-start",
+            "iu:traffic-full-dataset-ready"
+          );
+        }
+      } catch (_) {}
       try {
         if (typeof window !== "undefined" && typeof window.dispatchEvent === "function") {
           window.dispatchEvent(
@@ -1127,6 +1146,7 @@ function scheduleTrafficSnapshotFullHydrate(url) {
                 generationId: full.generationId || null,
                 headGenerationKey: headGenKey || null,
                 fullGenerationKey: trafficSnapshotGenKey(full),
+                phase: "full",
               },
             })
           );
