@@ -534,6 +534,87 @@ require-trusted-types-for 'script';
         #iuTopbarInfoBtn {
           display: none !important;
         }
+        /*
+          P0 mobile/tablet/PWA cold-start: #iuSilverWelcomeInfoBtn.iuTopbarInfoBtn--mobileFloat lives in HTML
+          before deferred app.css (media=print → all). Without these rules the first paint shows a browser-default
+          light button at top-left (static), then jumps to fixed top-right — FOUC + CLS.
+          Keep in sync with assets/app.css @media (max-width: 1024px) mobileFloat block.
+          mobile-icentrum-boot-fouc-v1-20260910
+        */
+        .iuTopbarInfoBtn--mobileFloat{
+          display:none!important;
+        }
+        body.iu-mobileMainVisible:not(.iu-mobileGateOverlayOpen) .iuTopbarInfoBtn--mobileFloat,
+        body:not(.iu-home):not(.iu-mobileGateOverlayOpen) .iuTopbarInfoBtn--mobileFloat{
+          display:none!important;
+        }
+        body.iu-home:not(.iu-mobileMainVisible) .iuTopbarInfoBtn--mobileFloat,
+        body.iu-mobileGateOverlayOpen .iuTopbarInfoBtn--mobileFloat{
+          position:fixed!important;
+          top:calc(env(safe-area-inset-top,0px) + 6px)!important;
+          right:calc(env(safe-area-inset-right,0px) + 14px)!important;
+          z-index:10030!important;
+          grid-column:auto!important;
+          grid-row:auto!important;
+          justify-self:auto!important;
+          align-self:auto!important;
+          width:auto;
+          height:28px;
+          margin:0;
+          padding:0 9px;
+          border:0;
+          background:transparent;
+          color:var(--iu-brand-blue,#003CFF);
+          cursor:pointer;
+          display:inline-flex!important;
+          align-items:center;
+          justify-content:center;
+          gap:5px;
+          border-radius:0;
+          box-sizing:border-box;
+          -webkit-tap-highlight-color:transparent;
+          transform:none!important;
+          transform-origin:center;
+          box-shadow:none;
+          appearance:none;
+          -webkit-appearance:none;
+        }
+        .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__burger,
+        .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__burger{
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          flex:0 0 auto;
+          width:15px;
+          height:13px;
+          line-height:0;
+        }
+        .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__burger svg,
+        .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__burger svg{
+          display:block;
+          width:15px;
+          height:13px;
+        }
+        .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__icon,
+        .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__icon{
+          display:none!important;
+        }
+        .iuTopbarInfoBtn--mobileFloat .iuTopbarInfoBtn__label,
+        .iuTopbarInfoBtn--mobileGateInline .iuTopbarInfoBtn__label{
+          display:inline-flex;
+          align-items:center;
+          flex:0 0 auto;
+          height:13px;
+          font-size:13px;
+          font-weight:600;
+          line-height:1;
+          letter-spacing:-0.02em;
+          white-space:nowrap;
+        }
+        body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="nav"]) .iuTopbarInfoBtn--mobileFloat,
+        body.iu-mobileGateOverlayOpen:has(#iuMobileGateWrap[data-iu-mobile-gate="tools"]) .iuTopbarInfoBtn--mobileFloat{
+          display:none!important;
+        }
       }
       /* P0 CLS desktop: první dítě .iuTopbarFlowSpacer drží in-flow výšku — fixed #topbarWrap se z flow nepočítá; bez reálného boxu může obal ustát později (.mainCol y 0→30). */
       @media (min-width: 901px) {
