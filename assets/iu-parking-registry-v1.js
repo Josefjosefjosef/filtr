@@ -307,6 +307,52 @@ export const PARKING_REGISTRY = Object.freeze([
     ]),
     lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
   }),
+  Object.freeze({
+    parkingId: "praha-pr-roztyly",
+    canonicalName: "P+R Roztyly",
+    municipality: "Praha",
+    cityPart: null,
+    street: "Tomíčkova",
+    addressLine: "Tomíčkova, Praha",
+    postalCode: null,
+    coordinates: Object.freeze({ lat: 50.0385269, lon: 14.4770414 }),
+    parkingType: "P+R",
+    parkAndRide: true,
+    shortExplanation: null,
+    aliases: Object.freeze(["p+r roztyly", "pr roztyly", "roztyly"]),
+    sources: Object.freeze([
+      {
+        label: "Parking.praha.eu — P+R Roztyly (Roztyly Plaza a.s.)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/roztyly/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
+  Object.freeze({
+    parkingId: "praha-pr-nove-butovice",
+    canonicalName: "P+R Nové Butovice",
+    municipality: "Praha",
+    cityPart: null,
+    street: "Petržílkova",
+    addressLine: "Petržílkova, Praha",
+    postalCode: null,
+    coordinates: Object.freeze({ lat: 50.0521031, lon: 14.3503411 }),
+    parkingType: "P+R",
+    parkAndRide: true,
+    shortExplanation: null,
+    aliases: Object.freeze([
+      "p+r nove butovice",
+      "pr nove butovice",
+      "nove butovice",
+    ]),
+    sources: Object.freeze([
+      {
+        label: "Parking.praha.eu — P+R Nové Butovice (TSK / hl. m. Praha)",
+        url: "https://parking.praha.eu/cs/moznosti-parkovani-v-praze/pr-park-ride/nove-butovice/",
+      },
+    ]),
+    lastVerified: PARKING_REGISTRY_LAST_VERIFIED,
+  }),
   // Not listed on parking.praha.eu P+R table — operator Kongresové centrum Praha, a.s. (TSK as manager).
   Object.freeze({
     parkingId: "praha-pr-kongresove-centrum",

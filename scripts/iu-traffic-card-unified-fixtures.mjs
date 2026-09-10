@@ -2978,6 +2978,8 @@ ok(
     "P+R Holešovice",
     "P+R Skalka",
     "P+R Skalka II",
+    "P+R Roztyly",
+    "P+R Nové Butovice",
     "Smetanovo náměstí",
     "pod Ostravskou univerzitou",
     "Parkovací dům DK POKLAD I.",
@@ -2998,6 +3000,14 @@ ok(
   const skalka2 = buildTrafficCardPresentation({
     eventType: "doprava",
     impact: "P+R Skalka II, 60% obsazeno, méně než 30 volných parkovacích míst",
+  });
+  const roztyly = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "P+R Roztyly, 55% obsazeno, méně než 30 volných parkovacích míst",
+  });
+  const noveButovice = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "P+R Nové Butovice, 45% obsazeno, méně než 30 volných parkovacích míst",
   });
   const prokes = buildTrafficCardPresentation({
     eventType: "doprava",
@@ -3034,10 +3044,21 @@ ok(
     zlicin.communication.municipalitySignLabel === "PRAHA" &&
       skalka.communication.municipalitySignLabel === "PRAHA" &&
       skalka2.communication.municipalitySignLabel === "PRAHA" &&
+      roztyly.communication.municipalitySignLabel === "PRAHA" &&
+      noveButovice.communication.municipalitySignLabel === "PRAHA" &&
       prokes.communication.municipalitySignLabel === "OSTRAVA" &&
       poklad.communication.municipalitySignLabel === "OSTRAVA" &&
       pgLive.communication.municipalitySignLabel === "OSTRAVA" &&
       hlNadrazi.communication.municipalitySignLabel === "PRAHA"
+  );
+  ok(
+    "PARKING_ROZTYLY_BUTOVICE_SIGN_PASS",
+    roztyly.communication.municipalitySignLabel === "PRAHA" &&
+      /Roztyly/i.test(roztyly.communication.besideLocality || "") &&
+      noveButovice.communication.municipalitySignLabel === "PRAHA" &&
+      /Nové Butovice/i.test(noveButovice.communication.besideLocality || "") &&
+      titleOnce(roztyly) &&
+      titleOnce(noveButovice)
   );
   ok(
     "PARKING_MUNICIPALITY_NO_GUESS_PASS",
@@ -3071,6 +3092,8 @@ ok(
       "praha-pr-zlicin",
       "praha-pr-skalka-1",
       "praha-pr-skalka-2",
+      "praha-pr-roztyly",
+      "praha-pr-nove-butovice",
       "praha-pr-kongresove-centrum",
       "praha-pr-kotlarka",
       "praha-pr-opatov",
@@ -3086,12 +3109,15 @@ ok(
       "ostrava-cerna-louka-pg",
     ].filter((id) => PARKING_REGISTRY.some((e) => e.parkingId === id))
   );
-  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 16 && PARKING_REGISTRY.length >= 21);
+  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 18 && PARKING_REGISTRY.length >= 23);
 
   ok(
     "PARKING_REGISTRY_EXACT_ALIAS_PASS",
     matchParkingRegistry({ parkingName: "P+R Skalka" })?.parkingId === "praha-pr-skalka-1" &&
       matchParkingRegistry({ parkingName: "P+R Skalka II" })?.parkingId === "praha-pr-skalka-2" &&
+      matchParkingRegistry({ parkingName: "P+R Roztyly" })?.parkingId === "praha-pr-roztyly" &&
+      matchParkingRegistry({ parkingName: "P+R Nové Butovice" })?.parkingId ===
+        "praha-pr-nove-butovice" &&
       matchParkingRegistry({ parkingName: "P+R Zličín" })?.parkingId === "praha-pr-zlicin" &&
       matchParkingRegistry({ parkingName: "Prokešovo náměstí" })?.parkingId ===
         "ostrava-prokesovo-namesti"
@@ -3165,7 +3191,7 @@ ok(
     }
     if (m && m.municipality) covered++;
   }
-  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 15);
+  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 17);
 
   void liveNames;
 }
@@ -3326,6 +3352,7 @@ console.log(
           "PARKING_TITLE_SINGLE_RENDER_PASS",
           "PARKING_TITLE_NO_DUPLICATE_WITHOUT_MUNICIPALITY_PASS",
           "PARKING_MUNICIPALITY_REGISTRY_PASS",
+          "PARKING_ROZTYLY_BUTOVICE_SIGN_PASS",
           "PARKING_MUNICIPALITY_NO_GUESS_PASS",
           "HL_NADRAZI_MUNICIPALITY_SIGN_PASS",
           "HL_NADRAZI_LIVE_STATUS_UNCHANGED",
