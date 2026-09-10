@@ -32,5 +32,11 @@ if [ -f "$IU_NDIC_LIVE_ROOT/cron.log" ]; then
     mv -f "$IU_NDIC_LIVE_ROOT/cron.log.tmp" "$IU_NDIC_LIVE_ROOT/cron.log" || true
   fi
 fi
+# Soft-refresh scripts from origin/main so snapshot pipeline fixes (e.g. situation
+# dedupe before R2 publish) land without a manual install-units. Failures keep last checkout.
+if [ -d "$LIVE_REPO/.git" ]; then
+  git -C "$LIVE_REPO" fetch --depth 1 origin main >/dev/null 2>&1 || true
+  git -C "$LIVE_REPO" checkout -f FETCH_HEAD >/dev/null 2>&1 || true
+fi
 cd "$LIVE_REPO"
 exec "$NODE_BIN" scripts/ndic-datex-v1-live-60s-run.mjs

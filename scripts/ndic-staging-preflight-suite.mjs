@@ -35,6 +35,7 @@ const REQUIRED_WHEN_ANY_PRODUCT = [
   "iu-ndic-location-presentation-policy-fixtures",
   "iu-ndic-traffic-publication-fixtures",
   "iu-ndic-traffic-ui-snapshot-persist-fixtures",
+  "iu-traffic-server-situation-dedupe-fixtures",
   "iu-ndic-data-pr-rest-runtime-fixtures",
   "iu-data-pr-anti-loop-fixtures",
   "iu-data-pr-anti-loop-meta-fixtures",
