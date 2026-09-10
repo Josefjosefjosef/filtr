@@ -105,6 +105,100 @@ export function orderTrafficCardsNewestFirst(cards) {
   return list;
 }
 
+/**
+ * One NDIC DATEX situation often yields multiple SituationRecords (prace + omezeni + …)
+ * with distinct publicEventId / stableRecordId but the same stableSituationId and
+ * near-identical impact text. Feed identity for UI cards is the situation.
+ *
+ * Primary key: stableSituationId (official NDIC situation id).
+ * Fallback: publicEventId when situation id is missing.
+ * Never collapses different situations that share only road/city/type/text.
+ *
+ * Among records of one situation, keep the most informative / newest card.
+ * Insertion order follows first encounter in the already-sorted newest-first list.
+ */
+const TRAFFIC_SITUATION_TYPE_PRIORITY = Object.freeze({
+  nehoda: 100,
+  uzavirka: 90,
+  closure: 90,
+  prace: 80,
+  prace_na_silnici: 80,
+  prekazka: 70,
+  kolona: 60,
+  omezeni: 50,
+  objizdka: 45,
+  sjizdnost: 40,
+  pozar: 95,
+  doprava: 10,
+});
+
+function trafficSituationIdentityKey(card) {
+  if (!card || typeof card !== "object") return "";
+  const sit = String(card.stableSituationId || "").trim();
+  if (sit) return "sit:" + sit;
+  const pid = String(card.publicEventId || "").trim();
+  if (pid) return "pid:" + pid;
+  return "";
+}
+
+function trafficSituationTypeRank(card) {
+  const t = String((card && (card.eventType || card.category)) || "")
+    .trim()
+    .toLowerCase();
+  if (TRAFFIC_SITUATION_TYPE_PRIORITY[t] != null) return TRAFFIC_SITUATION_TYPE_PRIORITY[t];
+  return 0;
+}
+
+function pickPreferredTrafficSituationCard(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  const pr = trafficSituationTypeRank(b) - trafficSituationTypeRank(a);
+  if (pr !== 0) return pr > 0 ? b : a;
+  const ms = trafficCardSortMs(b) - trafficCardSortMs(a);
+  if (ms !== 0) return ms > 0 ? b : a;
+  const pidCmp = String(a.publicEventId || "").localeCompare(String(b.publicEventId || ""));
+  return pidCmp <= 0 ? a : b;
+}
+
+/**
+ * Deduplicate offline snapshot cards to one card per real NDIC situation (O(n)).
+ * @param {object[]} cards already ordered newest-first when possible
+ * @returns {object[]}
+ */
+export function dedupeTrafficCardsBySituationIdentity(cards) {
+  const list = Array.isArray(cards) ? cards : [];
+  /** @type {Map<string, object>} */
+  const bestByKey = new Map();
+  /** @type {string[]} */
+  const order = [];
+  for (let i = 0; i < list.length; i++) {
+    const card = list[i];
+    if (!card) continue;
+    const key = trafficSituationIdentityKey(card);
+    if (!key) {
+      // Fail-closed: keep unkeyed cards (should not happen for published cards).
+      const fallback = "row:" + i;
+      if (!bestByKey.has(fallback)) {
+        bestByKey.set(fallback, card);
+        order.push(fallback);
+      }
+      continue;
+    }
+    if (!bestByKey.has(key)) {
+      bestByKey.set(key, card);
+      order.push(key);
+      continue;
+    }
+    bestByKey.set(key, pickPreferredTrafficSituationCard(bestByKey.get(key), card));
+  }
+  const out = [];
+  for (let i = 0; i < order.length; i++) {
+    const hit = bestByKey.get(order[i]);
+    if (hit) out.push(hit);
+  }
+  return out;
+}
+
 export function isTrafficNewBadgeEligible(trafficV1, nowMs) {
   const now = Number.isFinite(nowMs) ? nowMs : Date.now();
   const iso = String(
@@ -689,11 +783,25 @@ let _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
 const LS_SNAPSHOT_MAX_CHARS = 262144; // 256 KiB — larger payloads stay memory-only
 
 function trafficFeedItemsCacheKey(snapshot, opts, cardLen, cap) {
+  const cards = Array.isArray(snapshot && snapshot.cards)
+    ? snapshot.cards
+    : Array.isArray(snapshot && snapshot.projections)
+      ? snapshot.projections
+      : [];
+  const tip =
+    cards.length > 0
+      ? String((cards[0] && cards[0].publicEventId) || "") +
+        ":" +
+        String((cards[cards.length - 1] && cards[cards.length - 1].publicEventId) || "") +
+        ":" +
+        String((cards[0] && cards[0].stableSituationId) || "")
+      : "";
   return [
     String((snapshot && snapshot.generatedAt) || ""),
     String((snapshot && snapshot.snapshotVersion) || ""),
     String(cardLen),
     String(cap == null ? "all" : cap),
+    tip,
   ].join("|");
 }
 
@@ -1134,7 +1242,7 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
   if (_trafficFeedItemsCache.key === cacheKey && Array.isArray(_trafficFeedItemsCache.items)) {
     return _trafficFeedItemsCache.items;
   }
-  const ordered = orderTrafficCardsNewestFirst(cards);
+  const ordered = dedupeTrafficCardsBySituationIdentity(orderTrafficCardsNewestFirst(cards));
   const built = [];
   for (let i = 0; i < ordered.length; i++) {
     if (cap != null && built.length >= cap) break;

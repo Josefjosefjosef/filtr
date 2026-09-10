@@ -1,9 +1,9 @@
 {
-  "freezeId": "iu-parking-muni-sign-registry-v1-20260910",
+  "freezeId": "iu-traffic-situation-dedupe-v1-20260910",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-10T07:40:00.000Z",
-  "note": "Parking municipality sign: add verified P+R Roztyly and P+R Nové Butovice to parking registry; SW cache bump for PWA.",
+  "updatedAt": "2026-09-10T08:30:00.000Z",
+  "note": "Traffic feed: one NDIC situation = one card (dedupe by stableSituationId before page/render); SW cache bump.",
   "files": {
     "projects/index.html": "cb23fcab95b6c14e3140555b073d2a096f078ea537909c97c12a93068cbc0bd7",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "9ae49879fd92477d8454d39717a93a270ca7a648359d9d92ac90fa32e696aee7",
+    "sw.js": "2b23ade03201456fd963a3f3a7f5f671d3d3e05ce0b1c0ef2ddddf05d23f2826",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "3ee6461dd8a6c6c38bf4c5eced98f592ced57845b109ea31a5411f55ce81c641",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-10-parking-muni-sign-registry-v1\""
+      "CACHE_VERSION = \"2026-09-10-traffic-situation-dedupe-v1\""
     ],
     "projects/version.json": [
       "chmi-multibrowser-console-v1-20260731"
