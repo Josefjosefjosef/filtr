@@ -7830,6 +7830,16 @@ try {
                 if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
               } catch (_) {}
               document.body.classList.add("iu-mobileMainVisible");
+              try {
+                /* P0: tablet Menu hard-nav arms return in sessionStorage; restore detail-from-gate chrome after cold assign. */
+                if (
+                  typeof sessionStorage !== "undefined" &&
+                  sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1"
+                ) {
+                  document.body.classList.add("iu-webnavDetailFromGate");
+                  if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = true;
+                }
+              } catch (_) {}
               var mbVisSync = document.getElementById("iuMobileMainBackBar");
               if (mbVisSync) mbVisSync.hidden = true;
               try {
@@ -7932,6 +7942,24 @@ try {
   }
 
   /**
+   * P0: Menu overlay hash (#iu-nav / #nav) must not coexist with ?section= tool/affiliate URLs.
+   * Otherwise cold load / router re-opens the fullscreen gate (overflow:hidden) and the subsection
+   * stays unscrollable behind it (tablet hard-nav regression).
+   */
+  function iuWebNavOverlayHashYieldToSectionQuery() {
+    try {
+      var h = String(location.hash || "").toLowerCase();
+      if (h !== "#iu-nav" && h !== "#nav") return false;
+      var u = new URL(location.href);
+      if (!u.searchParams.has("section")) return false;
+      u.hash = "";
+      history.replaceState(history.state, "", u.toString());
+      return true;
+    } catch (_) {}
+    return false;
+  }
+
+  /**
    * P0 CLS (tablet 768–900 Menu overlay → tool/affiliate): gate wrap stays ~2860px in document flow during
    * overlay; SPA applySection hides it (~0.86 shift on #leftContent). Cold ?section= avoids overlay paint —
    * hard-assign to target section from open Menu so early inline shell runs before first paint.
@@ -7944,11 +7972,18 @@ try {
       if (!sec || sec === "travel" || iuArticleHubSectionP(sec)) return false;
       var toolSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
       if (!(toolSec[sec] || sec.indexOf("aff-") === 0)) return false;
+      try {
+        if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
+          window.iuMobileWebNavReturnArmForTile(mediaTopicKey || accentKey || "");
+        }
+      } catch (_) {}
       var u = new URL(window.location.href);
       u.searchParams.set("section", sec);
       if (mediaTopicKey) u.searchParams.set("topic", mediaTopicKey);
       else u.searchParams.delete("topic");
       u.searchParams.delete("panel");
+      /* P0: strip Menu overlay hash — retaining #iu-nav reopens gate scroll-lock after assign. */
+      u.hash = "";
       window.location.assign(u.toString());
       return true;
     } catch (_) {}
@@ -8802,6 +8837,10 @@ try {
           return true;
         }
         if (hNav === "#iu-nav" || hNav === "#nav") {
+          /* P0: ?section= tool URL + leftover #iu-nav → yield to section (do not keep gate scroll-lock). */
+          try {
+            if (iuWebNavOverlayHashYieldToSectionQuery()) return false;
+          } catch (_) {}
           try { applyPanelFromUrl(); } catch (_){}
           try{
             if (typeof window.iuDesktopHomeSectionGridGuardApply === "function") window.iuDesktopHomeSectionGridGuardApply();
@@ -8943,7 +8982,17 @@ try {
         } catch (_mi) {}
         try { applyPanelFromUrl(); } catch (_){}
       } else if (hInit === "#iu-nav" || hInit === "#nav") {
-        try { applyPanelFromUrl(); } catch (_){}
+        /* P0: cold ?section=…#iu-nav (tablet Menu hard-nav) must apply section, not re-open gate. */
+        try {
+          if (iuWebNavOverlayHashYieldToSectionQuery()) {
+            applySectionFromURL();
+            applyPanelFromUrl();
+          } else {
+            try { applyPanelFromUrl(); } catch (_){}
+          }
+        } catch (_) {
+          try { applyPanelFromUrl(); } catch (_p) {}
+        }
       } else {
         applySectionFromURL();
         applyPanelFromUrl();

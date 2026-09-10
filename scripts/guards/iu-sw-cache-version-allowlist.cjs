@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-10-menu-subsection-scroll-lock-v1",
   "2026-09-10-traffic-situation-dedupe-v1",
   "2026-09-10-parking-muni-sign-registry-v1",
   "2026-09-09-desktop-cold-start-fouc-v1",

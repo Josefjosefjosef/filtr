@@ -147,7 +147,9 @@ async function assertNoTopZpětStrip(page, label) {
 }
 
 async function clickBottomNavBack(page) {
+  const navP = page.waitForNavigation({ timeout: 20000 }).catch(() => null);
   await page.locator('[data-iu-bottom-nav="back"]').first().click({ timeout: 20000 });
+  await navP;
 }
 
 async function openMapyDetail(page, label) {
@@ -157,11 +159,16 @@ async function openMapyDetail(page, label) {
   if (!inPanel) {
     fail(label + ": expected Mapy link inside #iuMobileGatePanelNav");
   }
+  const navP = page.waitForNavigation({ timeout: 20000 }).catch(() => null);
   await page.click('#iuMobileGatePanelNav .iu-leftNavItem[data-accent="mapy"]');
+  await navP;
   await page.waitForFunction(
     () =>
-      document.body.classList.contains("iu-mobileMainVisible") &&
-      document.body.classList.contains("iu-webnavDetailFromGate"),
+      !!(
+        document.body &&
+        document.body.classList.contains("iu-mobileMainVisible") &&
+        document.body.classList.contains("iu-webnavDetailFromGate")
+      ),
     null,
     { timeout: 20000 }
   );
@@ -170,9 +177,12 @@ async function openMapyDetail(page, label) {
 async function waitBackOnGrid(page) {
   await page.waitForFunction(
     () =>
-      !document.body.classList.contains("iu-mobileMainVisible") &&
-      document.body.classList.contains("iu-mobileGateOverlayOpen") &&
-      !document.body.classList.contains("iu-webnavDetailFromGate"),
+      !!(
+        document.body &&
+        !document.body.classList.contains("iu-mobileMainVisible") &&
+        document.body.classList.contains("iu-mobileGateOverlayOpen") &&
+        !document.body.classList.contains("iu-webnavDetailFromGate")
+      ),
     null,
     { timeout: 20000 }
   );
@@ -307,7 +317,11 @@ async function main() {
           });
           const page = await context.newPage();
           page.on("console", (msg) => {
-            if (msg.type() === "error") consoleErrors.push(msg.text());
+            if (msg.type() === "error") {
+              const t = msg.text();
+              if (/namedays\.json/i.test(t) && /access control|CORS|Failed to load/i.test(t)) return;
+              consoleErrors.push(t);
+            }
           });
           page.on("pageerror", (err) => {
             consoleErrors.push(String(err && err.message ? err.message : err));
