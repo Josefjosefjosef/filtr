@@ -959,6 +959,15 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       try {
         window.dispatchEvent(new CustomEvent("iu-traffic-background-ready"));
       } catch (_) {}
+      // Prefetch full catalog after ČHMÚ/first-batch settled — never await.
+      // Warm Doprava open then joins the same single-flight (or finds catalog ready).
+      try {
+        const tm = await loadTrafficOverview().catch(() => null);
+        if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
+          markPrehledBootPhase("traffic-full-hydrate-prefetch");
+          void tm.scheduleTrafficBackgroundFullHydrate();
+        }
+      } catch (_) {}
     } catch (_) {
       state.trafficSnapSettled = true;
     }
@@ -2888,25 +2897,16 @@ function wire() {
         void (async () => {
           try {
             const tm = await loadTrafficOverview().catch(() => null);
+            // Kick full-catalog GET immediately (never await). Do not wait for presenter
+            // or requestIdleCallback — filters need DATASET READY ASAP; DOM stays paged.
+            if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
+              try {
+                markPrehledBootPhase("traffic-full-hydrate-kick");
+                void tm.scheduleTrafficBackgroundFullHydrate();
+              } catch (_) {}
+            }
             if (tm && typeof tm.ensureTrafficPresenter === "function") {
               await tm.ensureTrafficPresenter().catch(() => null);
-            }
-            // Auto full hydrate after first-batch path — never await; defer slightly so first paint wins.
-            if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
-              const kickHydrate = () => {
-                try {
-                  void tm.scheduleTrafficBackgroundFullHydrate();
-                } catch (_) {}
-              };
-              try {
-                if (typeof requestIdleCallback === "function") {
-                  requestIdleCallback(kickHydrate, { timeout: 1200 });
-                } else {
-                  setTimeout(kickHydrate, 0);
-                }
-              } catch (_) {
-                setTimeout(kickHydrate, 0);
-              }
             }
             await ensureTrafficCatalogForCurrentFilters(1);
           } catch (_) {}

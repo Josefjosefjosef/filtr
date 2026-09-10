@@ -107,8 +107,20 @@ ok(
 ok(
   "prehled_auto_hydrate_on_traffic_open",
   /scheduleTrafficBackgroundFullHydrate/.test(prehled) &&
-    /paintTrafficQuick[\s\S]{0,800}scheduleTrafficBackgroundFullHydrate/.test(prehled),
+    /paintTrafficQuick[\s\S]{0,1200}scheduleTrafficBackgroundFullHydrate/.test(prehled),
   "Doprava open must schedule background full hydrate (not wait for filter/Další)"
+);
+ok(
+  "prehled_hydrate_before_presenter",
+  /paintTrafficQuick[\s\S]{0,900}scheduleTrafficBackgroundFullHydrate[\s\S]{0,400}ensureTrafficPresenter/.test(
+    prehled
+  ),
+  "hydrate GET must start before presenter await"
+);
+ok(
+  "prehled_bg_prep_prefetch_full",
+  /scheduleTrafficBackgroundPrep[\s\S]{0,2500}scheduleTrafficBackgroundFullHydrate/.test(prehled),
+  "after head settles, bg prep must prefetch full catalog"
 );
 ok(
   "prehled_head_fetch_not_await_full",
