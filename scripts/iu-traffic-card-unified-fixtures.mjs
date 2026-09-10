@@ -2981,11 +2981,19 @@ ok(
     "P+R Roztyly",
     "P+R Nové Butovice",
     "Smetanovo náměstí",
+    "Garáže Dubina",
+    "Patrové garáže Dubina",
     "pod Ostravskou univerzitou",
     "Parkovací dům DK POKLAD I.",
+    "Parkovací dům DK POKLAD II.",
     "Nám. Msgre Šrámka",
     "Prokešovo náměstí",
     "Poděbradova",
+    "Janáčkova",
+    "Seidlerovo nábřeží",
+    "P+R Hlučínská",
+    "P+R Hranečník",
+    "Parkovací dům u MNOF",
     "Hlavní nádraží - jižní přednádraží",
   ];
 
@@ -3009,6 +3017,18 @@ ok(
     eventType: "doprava",
     impact: "P+R Nové Butovice, 45% obsazeno, méně než 30 volných parkovacích míst",
   });
+  const smetanovo = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Smetanovo náměstí, 55% obsazeno, 12.08.2026 17:40:51",
+  });
+  const garazeDubina = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Garáže Dubina, 40% obsazeno, 12.08.2026 17:40:51",
+  });
+  const patroveDubina = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Patrové garáže Dubina, 35% obsazeno",
+  });
   const prokes = buildTrafficCardPresentation({
     eventType: "doprava",
     impact: "Prokešovo náměstí, 50% obsazeno, 12.08.2026 17:40:51",
@@ -3016,6 +3036,10 @@ ok(
   const poklad = buildTrafficCardPresentation({
     eventType: "doprava",
     impact: "Parkovací dům DK POKLAD I., méně než 50 volných parkovacích míst, 40% obsazeno",
+  });
+  const poklad2 = buildTrafficCardPresentation({
+    eventType: "doprava",
+    impact: "Parkovací dům DK POKLAD II., 45% obsazeno",
   });
   const hlNadrazi = buildTrafficCardPresentation({
     eventType: "doprava",
@@ -3046,10 +3070,25 @@ ok(
       skalka2.communication.municipalitySignLabel === "PRAHA" &&
       roztyly.communication.municipalitySignLabel === "PRAHA" &&
       noveButovice.communication.municipalitySignLabel === "PRAHA" &&
+      smetanovo.communication.municipalitySignLabel === "OSTRAVA" &&
+      garazeDubina.communication.municipalitySignLabel === "OSTRAVA" &&
+      patroveDubina.communication.municipalitySignLabel === "OSTRAVA" &&
       prokes.communication.municipalitySignLabel === "OSTRAVA" &&
       poklad.communication.municipalitySignLabel === "OSTRAVA" &&
+      poklad2.communication.municipalitySignLabel === "OSTRAVA" &&
       pgLive.communication.municipalitySignLabel === "OSTRAVA" &&
       hlNadrazi.communication.municipalitySignLabel === "PRAHA"
+  );
+  ok(
+    "PARKING_OSTRAVA_DUBINA_SIGN_PASS",
+    garazeDubina.communication.municipalitySignLabel === "OSTRAVA" &&
+      /Dubina/i.test(garazeDubina.communication.besideLocality || "") &&
+      patroveDubina.communication.municipalitySignLabel === "OSTRAVA" &&
+      matchParkingRegistry({ parkingName: "Garáže Dubina" })?.parkingId ===
+        "ostrava-garaze-dubina" &&
+      matchParkingRegistry({ parkingName: "Patrové garáže Dubina" })?.parkingId ===
+        "ostrava-garaze-dubina" &&
+      titleOnce(garazeDubina)
   );
   ok(
     "PARKING_ROZTYLY_BUTOVICE_SIGN_PASS",
@@ -3103,13 +3142,20 @@ ok(
       "ostrava-smetanovo-namesti",
       "ostrava-pod-ostravskou-univerzitou",
       "ostrava-dk-poklad-1",
+      "ostrava-dk-poklad-2",
       "ostrava-nam-msgre-sramka",
       "ostrava-prokesovo-namesti",
       "ostrava-podebradova",
       "ostrava-cerna-louka-pg",
+      "ostrava-garaze-dubina",
+      "ostrava-janackova",
+      "ostrava-seidlerovo-nabrezi",
+      "ostrava-pr-hlucinska",
+      "ostrava-pr-hranecnik",
+      "ostrava-parkovaci-dum-u-mnof",
     ].filter((id) => PARKING_REGISTRY.some((e) => e.parkingId === id))
   );
-  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 18 && PARKING_REGISTRY.length >= 23);
+  ok("PARKING_REGISTRY_INVENTORY_PASS", inventoryIds.size >= 25 && PARKING_REGISTRY.length >= 30);
 
   ok(
     "PARKING_REGISTRY_EXACT_ALIAS_PASS",
@@ -3120,7 +3166,10 @@ ok(
         "praha-pr-nove-butovice" &&
       matchParkingRegistry({ parkingName: "P+R Zličín" })?.parkingId === "praha-pr-zlicin" &&
       matchParkingRegistry({ parkingName: "Prokešovo náměstí" })?.parkingId ===
-        "ostrava-prokesovo-namesti"
+        "ostrava-prokesovo-namesti" &&
+      matchParkingRegistry({ parkingName: "Smetanovo náměstí" })?.parkingId ===
+        "ostrava-smetanovo-namesti" &&
+      matchParkingRegistry({ parkingName: "Garáže Dubina" })?.parkingId === "ostrava-garaze-dubina"
   );
   ok(
     "PARKING_SKALKA_SKALKA_II_DISTINCT_PASS",
@@ -3191,7 +3240,7 @@ ok(
     }
     if (m && m.municipality) covered++;
   }
-  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 17);
+  ok("PARKING_LIVE_INVENTORY_COVERED", covered >= 24);
 
   void liveNames;
 }
