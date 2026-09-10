@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-desktop-cold-start-fouc-v1-20260909",
+  "freezeId": "iu-mobile-icentrum-boot-fouc-v1-20260910",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-09T17:00:00.000Z",
-  "note": "Desktop cold-start FOUC fix: CSS before paint + welcome CTA slot CLS reserve; terms decline no public link retained.",
+  "updatedAt": "2026-09-10T00:35:00.000Z",
+  "note": "Mobile/tablet/PWA iCentrum boot FOUC: critical CSS for #iuSilverWelcomeInfoBtn before deferred app.css; desktop cold-start markers retained.",
   "files": {
-    "projects/index.html": "e8371374e86336207586a6b582cfd74d289095344b5d4aeb097357525ddeefd1",
+    "projects/index.html": "cb23fcab95b6c14e3140555b073d2a096f078ea537909c97c12a93068cbc0bd7",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "5759e74c9dc0bc85b6bbc0fc759a6beb2557cefa08888cf9a9f4da2558983cbc",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "f086f50fc330a94777db85a3ff885a5ac0fbf6b9116c2f458a727d764be940b5",
@@ -111,6 +111,7 @@
       "pc-middle-feed-outer-border-v1-20260908",
       "desktop-cold-start-app-css-media-v1-20260909",
       "desktop-css-before-paint-v1-20260909",
+      "mobile-icentrum-boot-fouc-v1-20260910",
       "pwa-traffic-resume-revalidate-v1-20260908",
       "wx-boot-no-flash-v1-20260908",
       "data-iu-silver-wx-phase=\"boot\"",
