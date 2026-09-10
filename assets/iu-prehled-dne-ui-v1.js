@@ -843,9 +843,7 @@ function ensureTrafficFetchPromise() {
     return state.trafficFetchPromise;
   }
   markPrehledBootPhase("traffic-fetch-start");
-  // Head/first-batch only — full hydrate is scheduled from background prep (before presenter)
-  // and again on Doprava open (single-flight). Do not pass hydrate:true here: boot must not
-  // contend the wire with FULL while ČHMÚ/first paint settle (guard: boot_head_no_hydrate_true).
+  // Head/first-batch only here — full hydrate is scheduled after Doprava can paint (see paintTrafficQuick).
   state.trafficFetchPromise = loadTrafficOverview()
     .then((m) => m.fetchHostedTrafficOfflineSnapshot({ persist: true }))
     .catch(() => null)
@@ -948,15 +946,6 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root || !root.isConnected) return;
       state.trafficSnapSettled = true;
-      // FULL GET may already be in-flight from head hydrate:true — join single-flight ASAP
-      // before presenter work so download overlaps module load.
-      try {
-        const tmEarly = await loadTrafficOverview().catch(() => null);
-        if (tmEarly && typeof tmEarly.scheduleTrafficBackgroundFullHydrate === "function") {
-          markPrehledBootPhase("traffic-full-hydrate-prefetch");
-          void tmEarly.scheduleTrafficBackgroundFullHydrate();
-        }
-      } catch (_) {}
       await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root.isConnected) return;
@@ -970,10 +959,12 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       try {
         window.dispatchEvent(new CustomEvent("iu-traffic-background-ready"));
       } catch (_) {}
-      // Prefetch again (no-op if hydrate already running/ready).
+      // Prefetch full catalog after ČHMÚ/first-batch settled — never await.
+      // Warm Doprava open then joins the same single-flight (or finds catalog ready).
       try {
         const tm = await loadTrafficOverview().catch(() => null);
         if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
+          markPrehledBootPhase("traffic-full-hydrate-prefetch");
           void tm.scheduleTrafficBackgroundFullHydrate();
         }
       } catch (_) {}
@@ -3867,28 +3858,46 @@ async function boot() {
       } else {
         state.trafficSnapSettled = true;
       }
-      // Full catalog hydrate — warm filter cache off the click path, then refresh if traffic visible.
+      // Full catalog hydrate after first-paint cap — refresh feed only when traffic is visible.
       try {
         window.addEventListener("iu-traffic-snap-hydrated", (ev) => {
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!root || !root.isConnected) return;
           const phase = ev && ev.detail ? ev.detail.phase : "";
-          void (async () => {
-            if (phase === "full") {
+          if (phase === "full") {
+            // Rebuild overview filter cache after FULL invalidate. Gate on vault unlocked —
+            // ~2s sync filter on ~3k cards breaks shared-session join (desktop no-lock-flash).
+            const warmFilters = () => {
               try {
-                // Pre-build overview filter cache (~2s cold on ~3k cards) before user opens Doprava.
-                state.trafficBackgroundFilteredCount = (
-                  await computeTrafficFilteredCandidates()
-                ).length;
+                if (window.iuVault && typeof window.iuVault.getState === "function") {
+                  const locked = document.documentElement.classList.contains("iu-vault-app-locked");
+                  const init = document.documentElement.classList.contains("iu-vault-app-init");
+                  const boot = String(window.__iuVaultBootPhase || "");
+                  const st = window.iuVault.getState();
+                  const unlocked = !!(st && st.unlocked);
+                  if (locked || init || !unlocked || boot === "initializing" || boot === "locked") {
+                    setTimeout(warmFilters, 750);
+                    return;
+                  }
+                }
               } catch (_) {}
-            }
-            if (!shouldRepaintForTrafficCatalogUpdate()) return;
-            try {
-              if (state.settingsOpen) updateFeedDom();
-              else paint();
-              wire();
-            } catch (_) {}
-          })();
+              // Extra settle after unlock so BroadcastChannel join is not starved.
+              setTimeout(() => {
+                void computeTrafficFilteredCandidates()
+                  .then((list) => {
+                    state.trafficBackgroundFilteredCount = Array.isArray(list) ? list.length : 0;
+                  })
+                  .catch(() => {});
+              }, 1500);
+            };
+            setTimeout(warmFilters, 2000);
+          }
+          if (!shouldRepaintForTrafficCatalogUpdate()) return;
+          try {
+            if (state.settingsOpen) updateFeedDom();
+            else paint();
+            wire();
+          } catch (_) {}
         });
       } catch (_) {}
       window.addEventListener(

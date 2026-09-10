@@ -53,14 +53,12 @@ ok(
   "background prep must prefetch full catalog after head settles"
 );
 ok(
-  "static_bg_prep_full_before_presenter",
-  /scheduleTrafficBackgroundFullHydrate[\s\S]{0,500}ensureTrafficPresenter/.test(prehled),
-  "background prep must start FULL GET before awaiting presenter"
-);
-ok(
   "static_warm_filter_cache_on_full",
-  /phase === \"full\"[\s\S]{0,400}computeTrafficFilteredCandidates/.test(prehled),
-  "full hydrate must warm overview filter cache off the click path"
+  /phase === \"full\"[\s\S]{0,1400}computeTrafficFilteredCandidates/.test(prehled) &&
+    /iu-vault-app-locked/.test(prehled) &&
+    /getState\(\)/.test(prehled) &&
+    /setTimeout\(warmFilters,\s*2000\)/.test(prehled),
+  "full hydrate must vault-gate delayed warm of overview filter cache"
 );
 ok(
   "static_boot_head_no_hydrate_true",
