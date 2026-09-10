@@ -9,6 +9,10 @@ import {
   PUBLICATION_ERROR,
 } from "./traffic-publication-constants.mjs";
 import { scanPublicationCanaries } from "./traffic-publication-projection.mjs";
+import {
+  dedupeTrafficCardsBySituationIdentity,
+  orderTrafficCardsNewestFirst,
+} from "../../assets/iu-traffic-overview-v1.js";
 
 export const SNAPSHOT_SCHEMA_VERSION = "iu-traffic-offline-snapshot-v1";
 /**
@@ -85,16 +89,23 @@ export function measureSnapshotSizeBreakdown(snapshot) {
 /**
  * Compact UI-hosted snapshot: cards + metadata only.
  * Drops duplicate projections/feed/history/filterIndexes and empty fieldProvenance.
+ * Collapses multi-SituationRecord cards to one card per NDIC situation (same rules as
+ * browser `dedupeTrafficCardsBySituationIdentity`) so R2/full hydrate does not ship
+ * records the UI would discard. Client keeps defensive dedupe.
  * Does not change publication-layer projection/card builders.
  */
 export function compactTrafficUiSnapshotPayload(payload, opts = {}) {
   const cardsIn = Array.isArray(payload && payload.cards) ? payload.cards : [];
-  const cards = cardsIn.map((c) => {
+  const stripped = cardsIn.map((c) => {
     if (!c || typeof c !== "object") return c;
     // Keep schema-compatible empty provenance object (UI tolerates {}).
     const next = { ...c, fieldProvenance: {} };
     return next;
   });
+  const cards =
+    opts.skipSituationDedupe === true
+      ? stripped
+      : dedupeTrafficCardsBySituationIdentity(orderTrafficCardsNewestFirst(stripped));
   const nowIso = opts.nowIso || (payload && payload.generatedAt) || new Date().toISOString();
   return {
     sourceFreshness: (payload && payload.sourceFreshness) || "UNKNOWN",
@@ -112,8 +123,9 @@ export function compactTrafficUiSnapshotPayload(payload, opts = {}) {
     cards,
     historyItems: [],
     filterIndexes: {},
-    eventCountHint:
-      payload && Array.isArray(payload.projections) ? payload.projections.length : cards.length,
+    // Prefer post-dedupe card count for hosted UI metadata (eventCount → cardCount).
+    eventCountHint: cards.length,
+    cardCountBeforeSituationDedupe: stripped.length,
   };
 }
 
