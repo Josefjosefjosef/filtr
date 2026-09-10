@@ -53,9 +53,24 @@ ok(
   "background prep must prefetch full catalog after head settles"
 );
 ok(
+  "static_bg_prep_full_before_presenter",
+  /scheduleTrafficBackgroundFullHydrate[\s\S]{0,500}ensureTrafficPresenter/.test(prehled),
+  "background prep must start FULL GET before awaiting presenter"
+);
+ok(
+  "static_warm_filter_cache_on_full",
+  /phase === \"full\"[\s\S]{0,400}computeTrafficFilteredCandidates/.test(prehled),
+  "full hydrate must warm overview filter cache off the click path"
+);
+ok(
   "static_boot_head_no_hydrate_true",
   /fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true\s*\}/.test(prehled) &&
     !/fetchHostedTrafficOfflineSnapshot\(\{\s*persist:\s*true,\s*hydrate:\s*true\s*\}/.test(prehled)
+);
+ok(
+  "static_warm_feed_cache_on_full",
+  /saveOfflineTrafficSnapshot\(full\)[\s\S]{0,300}trafficItemsFromOfflineSnapshot\(full\)/.test(overview),
+  "full hydrate must warm feed-items cache before snap-hydrated event"
 );
 ok("static_single_flight", /if \(_trafficFullHydratePromise\) return _trafficFullHydratePromise/.test(overview));
 ok("static_page_size_50", /const PAGE_SIZE\s*=\s*50/.test(prehled));
@@ -152,7 +167,7 @@ const FULL_N = 120;
 const HEAD_N = 40;
 const FULL_LATENCY_MS = 1800;
 const TRAFFIC_MOD =
-  "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908";
+  "/assets/iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910";
 
 const browser = await chromium.launch({ headless: true });
 const runtime = {

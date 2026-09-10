@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -843,7 +843,9 @@ function ensureTrafficFetchPromise() {
     return state.trafficFetchPromise;
   }
   markPrehledBootPhase("traffic-fetch-start");
-  // Head/first-batch only here — full hydrate is scheduled after Doprava can paint (see paintTrafficQuick).
+  // Head/first-batch only — full hydrate is scheduled from background prep (before presenter)
+  // and again on Doprava open (single-flight). Do not pass hydrate:true here: boot must not
+  // contend the wire with FULL while ČHMÚ/first paint settle (guard: boot_head_no_hydrate_true).
   state.trafficFetchPromise = loadTrafficOverview()
     .then((m) => m.fetchHostedTrafficOfflineSnapshot({ persist: true }))
     .catch(() => null)
@@ -946,6 +948,15 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root || !root.isConnected) return;
       state.trafficSnapSettled = true;
+      // FULL GET may already be in-flight from head hydrate:true — join single-flight ASAP
+      // before presenter work so download overlaps module load.
+      try {
+        const tmEarly = await loadTrafficOverview().catch(() => null);
+        if (tmEarly && typeof tmEarly.scheduleTrafficBackgroundFullHydrate === "function") {
+          markPrehledBootPhase("traffic-full-hydrate-prefetch");
+          void tmEarly.scheduleTrafficBackgroundFullHydrate();
+        }
+      } catch (_) {}
       await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
       if (bootAbort && bootAbort.signal.aborted) return;
       if (!root.isConnected) return;
@@ -959,12 +970,10 @@ function scheduleTrafficBackgroundPrep(bootAbort, root) {
       try {
         window.dispatchEvent(new CustomEvent("iu-traffic-background-ready"));
       } catch (_) {}
-      // Prefetch full catalog after ČHMÚ/first-batch settled — never await.
-      // Warm Doprava open then joins the same single-flight (or finds catalog ready).
+      // Prefetch again (no-op if hydrate already running/ready).
       try {
         const tm = await loadTrafficOverview().catch(() => null);
         if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
-          markPrehledBootPhase("traffic-full-hydrate-prefetch");
           void tm.scheduleTrafficBackgroundFullHydrate();
         }
       } catch (_) {}
@@ -3858,17 +3867,28 @@ async function boot() {
       } else {
         state.trafficSnapSettled = true;
       }
-      // Full catalog hydrate after first-paint cap — refresh feed only when traffic is visible.
+      // Full catalog hydrate — warm filter cache off the click path, then refresh if traffic visible.
       try {
-        window.addEventListener("iu-traffic-snap-hydrated", () => {
+        window.addEventListener("iu-traffic-snap-hydrated", (ev) => {
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!root || !root.isConnected) return;
-          if (!shouldRepaintForTrafficCatalogUpdate()) return;
-          try {
-            if (state.settingsOpen) updateFeedDom();
-            else paint();
-            wire();
-          } catch (_) {}
+          const phase = ev && ev.detail ? ev.detail.phase : "";
+          void (async () => {
+            if (phase === "full") {
+              try {
+                // Pre-build overview filter cache (~2s cold on ~3k cards) before user opens Doprava.
+                state.trafficBackgroundFilteredCount = (
+                  await computeTrafficFilteredCandidates()
+                ).length;
+              } catch (_) {}
+            }
+            if (!shouldRepaintForTrafficCatalogUpdate()) return;
+            try {
+              if (state.settingsOpen) updateFeedDom();
+              else paint();
+              wire();
+            } catch (_) {}
+          })();
         });
       } catch (_) {}
       window.addEventListener(
