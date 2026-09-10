@@ -10,6 +10,7 @@ import http from "node:http";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "module";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -45,7 +46,7 @@ function staticGate() {
     "static:no_center_opacity0"
   );
   must(/iu-terms-gate-v1\.css/.test(sw), "static:sw_terms_css_network_first");
-  must(/2026-09-09-desktop-cold-start-fouc-v1/.test(sw), "static:sw_cache_version");
+  must(swHasAllowedCacheVersion(sw), "static:sw_cache_version");
 }
 
 function waitForPort(host, port, timeoutMs) {
