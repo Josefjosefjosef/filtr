@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-11-traffic-filter-warm-max-retry-v1",
   "2026-09-10-traffic-full-hydrate-after-dedupe-v1",
   "2026-09-10-traffic-full-hydrate-speed-v1",
   "2026-09-10-parking-muni-registry-coverage-v1",
@@ -194,7 +195,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-10-traffic-full-hydrate-after-dedupe-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-11-traffic-filter-warm-max-retry-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
