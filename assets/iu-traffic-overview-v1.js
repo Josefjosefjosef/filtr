@@ -407,6 +407,11 @@ const ALLOWED_CARD_KEYS = Object.freeze([
   "parkingCapacity",
   "parkingOccupancy",
   "freeSpaces",
+  "eventKind",
+  "presentationKind",
+  "parkingName",
+  "parkingRegistryId",
+  "parkingId",
   "motorVehicleRoadConfirmed",
   "isMotorVehicleRoad",
   "motorVehicleRoadStatus",
@@ -623,6 +628,11 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     parkingCapacity: c.parkingCapacity != null ? c.parkingCapacity : null,
     parkingOccupancy: c.parkingOccupancy != null ? c.parkingOccupancy : null,
     freeSpaces: c.freeSpaces != null ? c.freeSpaces : null,
+    parkingName: c.parkingName || null,
+    parkingRegistryId: c.parkingRegistryId || c.parkingId || null,
+    parkingId: c.parkingId || c.parkingRegistryId || null,
+    eventKind: c.eventKind || c.presentationKind || null,
+    presentationKind: c.presentationKind || c.eventKind || null,
     motorVehicleRoadConfirmed: c.motorVehicleRoadConfirmed === true,
     isMotorVehicleRoad: c.isMotorVehicleRoad === true,
     motorVehicleRoadStatus: c.motorVehicleRoadStatus || null,
@@ -632,6 +642,22 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
     queueLengthMeters: c.queueLengthMeters != null ? c.queueLengthMeters : null,
     publicationEnabled: false,
   };
+
+  // Stamp parking kind from structured occupancy metadata so filter/render stay aligned
+  // (isParkingTrafficEvent reads eventKind; presenter also uses occupancy fields).
+  if (!trafficV1.eventKind && !trafficV1.presentationKind) {
+    const et = String(trafficV1.eventType || trafficV1.category || "").toLowerCase();
+    const ill = String(trafficV1.illustrationKey || "").toLowerCase();
+    const structuredOcc =
+      trafficV1.parkingAvailableSpaces != null ||
+      trafficV1.parkingCapacity != null ||
+      trafficV1.freeSpaces != null ||
+      trafficV1.parkingOccupancy != null;
+    if (structuredOcc || et === "parking" || et === "parkoviste" || ill === "parking") {
+      trafficV1.eventKind = "parking";
+      trafficV1.presentationKind = "parking";
+    }
+  }
 
   for (const k of Object.keys(trafficV1)) {
     if (!ALLOWED_CARD_KEYS.includes(k) && k !== "publicationEnabled") {

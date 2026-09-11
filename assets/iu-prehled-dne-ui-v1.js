@@ -51,10 +51,10 @@ import {
   sanitizeFeedFilter,
   quickViewBarHtml,
   emptyFeedStateHtml,
-} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 

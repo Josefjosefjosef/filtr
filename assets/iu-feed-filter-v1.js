@@ -266,11 +266,44 @@ export function mapEventTypeToUserCategory(eventType, eventKind) {
 
 export function isParkingTrafficEvent(ev) {
   if (!(ev && ev.trafficV1)) return false;
-  const tv = ev.trafficV1;
+  return isParkingTrafficView(ev.trafficV1);
+}
+
+/**
+ * Align filter-time parking detection with presenter occupancy situations.
+ * Prefer structured metadata (kind/type/illustration/occupancy fields); P+R facility
+ * markers are authoritative NDIC type cues, not free-text keyword hacks.
+ */
+export function isParkingTrafficView(tv) {
+  if (!tv || typeof tv !== "object") return false;
   const kind = String(tv.eventKind || tv.presentationKind || "").toLowerCase();
   if (kind === "parking") return true;
   const t = String(tv.eventType || tv.category || "").toLowerCase();
-  return t === "parking" || t === "parkoviste";
+  if (t === "parking" || t === "parkoviste") return true;
+  const ill = String(tv.illustrationKey || "").toLowerCase();
+  if (ill === "parking") return true;
+  if (
+    tv.parkingAvailableSpaces != null ||
+    tv.parkingCapacity != null ||
+    tv.freeSpaces != null ||
+    tv.parkingOccupancy != null
+  ) {
+    return true;
+  }
+  // NDIC P+R / P+G facility status (same contract as presenter occupancy detector).
+  const blob = [
+    tv.impactFull,
+    tv.impact,
+    tv.summaryFull,
+    tv.summary,
+    tv.location,
+    tv.parkingName,
+    tv.subjectScopeLabel,
+  ]
+    .filter((x) => x != null && String(x).trim())
+    .join("\n");
+  if (/\bP\s*\+\s*[RG]\b/i.test(blob)) return true;
+  return false;
 }
 
 export function resolveTrafficParkingId(ev) {
