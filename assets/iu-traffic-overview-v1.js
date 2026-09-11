@@ -1126,6 +1126,11 @@ function scheduleTrafficSnapshotFullHydrate(url) {
       _trafficSnapMem = full;
       // Memory-only for multi‑MB full catalog (saveOfflineTrafficSnapshot already guards LS size).
       saveOfflineTrafficSnapshot(full);
+      // Warm feed-items cache now (defensive dedupe + projection) so Doprava click
+      // does not pay ~100–200ms+ rebuild on the critical path.
+      try {
+        trafficItemsFromOfflineSnapshot(full);
+      } catch (_) {}
       markTrafficHydratePhase("full-dataset-ready");
       try {
         if (typeof performance !== "undefined" && performance.measure) {

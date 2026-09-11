@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -3860,9 +3860,38 @@ async function boot() {
       }
       // Full catalog hydrate after first-paint cap — refresh feed only when traffic is visible.
       try {
-        window.addEventListener("iu-traffic-snap-hydrated", () => {
+        window.addEventListener("iu-traffic-snap-hydrated", (ev) => {
           if (bootAbort && bootAbort.signal.aborted) return;
           if (!root || !root.isConnected) return;
+          const phase = ev && ev.detail ? ev.detail.phase : "";
+          if (phase === "full") {
+            // Rebuild overview filter cache after FULL invalidate. Gate on vault unlocked —
+            // ~2s sync filter on ~3k cards breaks shared-session join (desktop no-lock-flash).
+            const warmFilters = () => {
+              try {
+                if (window.iuVault && typeof window.iuVault.getState === "function") {
+                  const locked = document.documentElement.classList.contains("iu-vault-app-locked");
+                  const init = document.documentElement.classList.contains("iu-vault-app-init");
+                  const boot = String(window.__iuVaultBootPhase || "");
+                  const st = window.iuVault.getState();
+                  const unlocked = !!(st && st.unlocked);
+                  if (locked || init || !unlocked || boot === "initializing" || boot === "locked") {
+                    setTimeout(warmFilters, 750);
+                    return;
+                  }
+                }
+              } catch (_) {}
+              // Extra settle after unlock so BroadcastChannel join is not starved.
+              setTimeout(() => {
+                void computeTrafficFilteredCandidates()
+                  .then((list) => {
+                    state.trafficBackgroundFilteredCount = Array.isArray(list) ? list.length : 0;
+                  })
+                  .catch(() => {});
+              }, 1500);
+            };
+            setTimeout(warmFilters, 2000);
+          }
           if (!shouldRepaintForTrafficCatalogUpdate()) return;
           try {
             if (state.settingsOpen) updateFeedDom();
