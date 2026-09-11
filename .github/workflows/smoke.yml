@@ -234,6 +234,8 @@ jobs:
         run: npm run iu-traffic-auto-bg-full-hydrate-guard
       - name: Traffic filter correctness guard
         run: npm run iu-traffic-filter-correctness-guard
+      - name: Traffic freeze contract guard
+        run: npm run iu-traffic-freeze-contract-guard
       - name: PWA traffic resume revalidate guard
         run: npm run iu-pwa-traffic-resume-revalidate-guard
       - name: NDIC live freshness watchdog guard
