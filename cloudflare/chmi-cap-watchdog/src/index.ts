@@ -3,7 +3,7 @@
  * Dispatches update-chmi-cap-v2.yml when production feed.json is stale.
  * Does not write production data directly — GitHub workflow remains the engine.
  */
-import { decideWatchdog, parseIsoToMs } from "./decision";
+import { decideWatchdog, parseIsoToMs } from "./decision.ts";
 
 export interface Env {
   GITHUB_TOKEN: string;
@@ -162,12 +162,30 @@ async function cancelStaleQueued(env: Env, staleMin: number): Promise<number> {
   return cancelled;
 }
 
-async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Record<string, unknown>> {
+export type RunCycleOpts = {
+  /** Force decision=dispatch (authorized /probe?dispatch=1 and POST /run). */
+  force?: boolean;
+  /**
+   * When false: observe-only — decide + report, but never cancel queued runs
+   * and never workflow_dispatch. Used by anonymous GET /probe.
+   * Default true (scheduled + authorized mutating paths).
+   */
+  allowMutations?: boolean;
+};
+
+/** Exported for deterministic unit/regression tests (mock global fetch). */
+export async function runCycle(
+  env: Env,
+  opts: RunCycleOpts = {},
+): Promise<Record<string, unknown>> {
+  const allowMutations = opts.allowMutations !== false;
   const staleAfter = Math.max(1, Number(env.STALE_AFTER_MINUTES) || 8);
   const snap = await fetchFreshnessSnapshot(env.FRESHNESS_URL);
   const generatedAt = snap.generatedAt;
   const runs = await listRuns(env);
-  await cancelStaleQueued(env, Math.max(staleAfter, 20));
+  if (allowMutations) {
+    await cancelStaleQueued(env, Math.max(staleAfter, 20));
+  }
 
   const decision = opts.force
     ? ({
@@ -189,13 +207,15 @@ async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Recor
     workflowState?: string | null;
     reason?: string;
   } | null = null;
-  if (decision.action === "dispatch") {
+  // Observe vs act: decision may still be "dispatch" while mutations are suppressed.
+  if (decision.action === "dispatch" && allowMutations) {
     dispatch = await dispatchWorkflow(env);
   }
 
   const report = {
     service: "infouzel-chmi-cap-watchdog",
-    ok: decision.action !== "dispatch" || !!(dispatch && dispatch.ok),
+    ok: decision.action !== "dispatch" || !allowMutations || !!(dispatch && dispatch.ok),
+    observeOnly: !allowMutations,
     triggerAt: new Date().toISOString(),
     generatedAt,
     production: {
@@ -211,7 +231,7 @@ async function runCycle(env: Env, opts: { force?: boolean } = {}): Promise<Recor
     // Never include token value.
   };
   console.log(`[chmi-cap-watchdog] REPORT=${JSON.stringify(report)}`);
-  if (decision.action === "dispatch" && dispatch && !dispatch.ok) {
+  if (allowMutations && decision.action === "dispatch" && dispatch && !dispatch.ok) {
     throw new Error(dispatch.reason || `dispatch_failed status=${dispatch.status}`);
   }
   return report;
@@ -243,7 +263,13 @@ export default {
           const denied = requireManualTriggerAuth(env, request);
           if (denied) return denied;
         }
-        const report = await runCycle(env, { force: doDispatch });
+        // Anonymous GET /probe is observe-only (no cancel / no workflow_dispatch),
+        // even when decision would be stale + non-busy. Mutating recovery stays on
+        // scheduled(), authorized ?dispatch=1, and POST /run.
+        const report = await runCycle(env, {
+          force: doDispatch,
+          allowMutations: doDispatch,
+        });
         return jsonResponse(report, report.ok ? 200 : 503);
       } catch (err) {
         return jsonResponse(
