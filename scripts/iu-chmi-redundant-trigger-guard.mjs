@@ -26,8 +26,17 @@ ok("index_no_token_log", !/GITHUB_TOKEN\}/.test(index) && !/console\.log\([^\)]*
 ok("index_dispatch_204", /status === 204/.test(index));
 ok("index_concurrency_busy", /busy/.test(decision));
 ok("index_health_probe", /\/health/.test(index) && /\/probe/.test(index));
+ok(
+  "index_probe_dispatch_requires_manual_secret",
+  /searchParams\.get\("dispatch"\) === "1"/.test(index) && /requireManualTriggerAuth/.test(index),
+);
 ok("deploy_secret_put", /wrangler secret put GITHUB_TOKEN/.test(deploy));
+ok("deploy_manual_trigger_secret_put", /wrangler secret put MANUAL_TRIGGER_SECRET/.test(deploy));
 ok("fallback_probe", /chmi-cap-watchdog.*probe|WATCHDOG_PROBE_URL/.test(fallback));
+ok(
+  "fallback_probe_auth_bearer",
+  /Authorization: Bearer/.test(fallback) && /CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET/.test(fallback),
+);
 ok("cap_workflow_dispatch", /workflow_dispatch/.test(capWf));
 
 if (fails.length) {

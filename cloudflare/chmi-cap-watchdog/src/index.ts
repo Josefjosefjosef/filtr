@@ -44,6 +44,15 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+/** Same gate as POST /run — used for /probe?dispatch=1 (force workflow_dispatch). */
+function requireManualTriggerAuth(env: Env, request: Request): Response | null {
+  const secret = (env.MANUAL_TRIGGER_SECRET || "").trim();
+  if (!secret) return jsonResponse({ ok: false, error: "manual_trigger_disabled" }, 403);
+  const auth = request.headers.get("Authorization") || "";
+  if (auth !== `Bearer ${secret}`) return jsonResponse({ ok: false, error: "unauthorized" }, 401);
+  return null;
+}
+
 async function fetchFreshnessSnapshot(url: string): Promise<{
   generatedAt: string | null;
   chmiCount: number | null;
@@ -229,6 +238,11 @@ export default {
     if (url.pathname === "/probe") {
       try {
         const doDispatch = url.searchParams.get("dispatch") === "1";
+        // Unauthenticated force-dispatch was SEC-HIGH-01 (Actions abuse). Cron scheduled() unchanged.
+        if (doDispatch) {
+          const denied = requireManualTriggerAuth(env, request);
+          if (denied) return denied;
+        }
         const report = await runCycle(env, { force: doDispatch });
         return jsonResponse(report, report.ok ? 200 : 503);
       } catch (err) {
@@ -242,10 +256,8 @@ export default {
       }
     }
     if (url.pathname === "/run" && request.method === "POST") {
-      const secret = (env.MANUAL_TRIGGER_SECRET || "").trim();
-      if (!secret) return jsonResponse({ ok: false, error: "manual_trigger_disabled" }, 403);
-      const auth = request.headers.get("Authorization") || "";
-      if (auth !== `Bearer ${secret}`) return jsonResponse({ ok: false, error: "unauthorized" }, 401);
+      const denied = requireManualTriggerAuth(env, request);
+      if (denied) return denied;
       try {
         const report = await runCycle(env, { force: true });
         return jsonResponse(report, report.ok ? 200 : 503);

@@ -23,13 +23,25 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Probe CHMI CAP watchdog (worker decides dispatch)
+        env:
+          MANUAL_TRIGGER_SECRET: ${{ secrets.CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET }}
         run: |
           set -euo pipefail
+          if [ -z "${MANUAL_TRIGGER_SECRET:-}" ]; then
+            echo "ERROR: CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET repo secret missing"
+            exit 1
+          fi
           OUT="${RUNNER_TEMP}/chmi_cap_watchdog_probe.json"
-          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" "${WATCHDOG_PROBE_URL}?dispatch=1" || true)
+          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" \
+            -H "Authorization: Bearer ${MANUAL_TRIGGER_SECRET}" \
+            "${WATCHDOG_PROBE_URL}?dispatch=1" || true)
           echo "probe_http=$code"
           head -c 4000 "$OUT" || true
           echo ""
+          if [ "$code" = "401" ] || [ "$code" = "403" ]; then
+            echo "WATCHDOG_PROBE_AUTH_FAILED=$code"
+            exit 1
+          fi
           if [ "$code" != "200" ] && [ "$code" != "503" ]; then
             echo "WATCHDOG_PROBE_UNEXPECTED_HTTP=$code"
             exit 1
