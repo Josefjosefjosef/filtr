@@ -238,6 +238,8 @@ jobs:
         run: npm run iu-traffic-freeze-contract-guard
       - name: PWA traffic resume revalidate guard
         run: npm run iu-pwa-traffic-resume-revalidate-guard
+      - name: Traffic reload panel lifecycle guard
+        run: npm run iu-traffic-reload-panel-lifecycle-guard
       - name: NDIC live freshness watchdog guard
         run: npm run iu-ndic-live-freshness-watchdog-guard
       - name: First-load CHMI lane fast paint guard

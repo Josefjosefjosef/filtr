@@ -22,6 +22,11 @@ must(/function scheduleTrafficBackgroundPrep/.test(ui), "ui:bg_prep_fn");
 must(/iu-traffic-background-ready/.test(ui), "ui:bg_ready_event");
 must(/trafficBackgroundReady/.test(ui), "ui:bg_ready_state");
 must(!/feedQuickView:\s*"all"/.test(ui), "ui:no_default_all");
+must(
+  /restoreFeedQuickViewFromSession\(\);[\s\S]{0,120}reapplyPrefsFromStore\(/.test(ui),
+  "ui:restore_quick_view_before_paint"
+);
+must(/iu\.prehled\.feedQuickView\.pwa\.v1/.test(ui), "ui:pwa_panel_ls_key");
 must(/chmi-first-home-boot-v1-20260822/.test(index), "index:cache_bust");
 must(/PAGE_SIZE\s*=\s*50/.test(ui), "ui:page_size_50");
 

@@ -392,8 +392,22 @@ function scheduleTrafficForegroundRevalidateIfNeeded(reason) {
 }
 
 const FEED_QUICK_VIEW_SS = "iu.prehled.feedQuickView.v1";
+/** PWA-only durable quick view (web new browser session must stay ČHMÚ). */
+const FEED_QUICK_VIEW_PWA_LS = "iu.prehled.feedQuickView.pwa.v1";
+
+/** Reuse existing standalone detection pattern (matchMedia + iOS navigator.standalone). */
+function isPrehledPwaStandalone() {
+  try {
+    if (typeof window !== "undefined" && window.matchMedia) {
+      if (window.matchMedia("(display-mode: standalone)").matches) return true;
+    }
+    if (typeof navigator !== "undefined" && navigator.standalone === true) return true;
+  } catch (_) {}
+  return false;
+}
 
 function restoreFeedQuickViewFromSession() {
+  // 1) Same browser tab/session reload → sessionStorage (web + PWA).
   try {
     const q = sessionStorage.getItem(FEED_QUICK_VIEW_SS);
     if (q === "all" || q === "traffic" || q === "chmu") {
@@ -401,14 +415,35 @@ function restoreFeedQuickViewFromSession() {
       return;
     }
   } catch (_) {}
+  // 2) PWA cold start after close → durable localStorage only when standalone.
+  if (isPrehledPwaStandalone()) {
+    try {
+      const pq = localStorage.getItem(FEED_QUICK_VIEW_PWA_LS);
+      if (pq === "all" || pq === "traffic" || pq === "chmu") {
+        state.feedQuickView = pq;
+        try {
+          sessionStorage.setItem(FEED_QUICK_VIEW_SS, pq);
+        } catch (_) {}
+        return;
+      }
+    } catch (_) {}
+  }
+  // 3) Ordinary web new browser session → product default ČHMÚ.
   state.feedQuickView = "chmu";
 }
 
 function persistFeedQuickViewToSession() {
   try {
     const q = state.feedQuickView;
-    if (q === "all" || q === "traffic" || q === "chmu") {
+    if (q !== "all" && q !== "traffic" && q !== "chmu") return;
+    try {
       sessionStorage.setItem(FEED_QUICK_VIEW_SS, q);
+    } catch (_) {}
+    // PWA close/reopen must restore last panel; web must NOT survive new browser session.
+    if (isPrehledPwaStandalone()) {
+      try {
+        localStorage.setItem(FEED_QUICK_VIEW_PWA_LS, q);
+      } catch (_) {}
     }
   } catch (_) {}
 }
@@ -3577,9 +3612,10 @@ async function boot() {
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
   // Match final shell ids so the first paint() can updateFeedDom() without replacing hero (CLS=0).
   state.prefs = ensurePrefsHaveFeedFilter(getPrefs());
-  reapplyPrefsFromStore({ reason: "boot-after-hydrate-wait" });
-  // Reload: restore last quick view from sessionStorage. Cold session → ČHMÚ.
+  // Restore panel BEFORE first paint — avoids ČHMÚ→Doprava flicker on reload/PWA.
+  // Web: sessionStorage only (new browser session → ČHMÚ). PWA: + durable LS.
   restoreFeedQuickViewFromSession();
+  reapplyPrefsFromStore({ reason: "boot-after-hydrate-wait" });
   state.trafficSnapSettled = TRAFFIC_OVERVIEW_FLAGS.TRAFFIC_UI_ENABLED !== true;
   // FIRST LOAD: never wipe the static HTML shell (banner/feed skeleton). A full
   // root.innerHTML replace was collapsing reserved feed geometry (~520px → tiny
@@ -3828,22 +3864,76 @@ async function boot() {
           // ČHMÚ-first: fetch snapshot in parallel; defer presenter + traffic DOM until Doprava or idle bg prep.
           scheduleTrafficBackgroundPrep(bootAbort, root);
         } else {
+          // Reload/PWA restore with Doprava (or all): same contract as click → head fetch +
+          // full hydrate kick + refilter. Never await undeclared trafficPromise (false empty).
           void (async () => {
             try {
-              await trafficPromise;
-              if (bootAbort && bootAbort.signal.aborted) return;
-              state.trafficSnapSettled = true;
-              await loadTrafficOverview().then((tm) => tm.ensureTrafficPresenter()).catch(() => null);
+              if (!loadOfflineTrafficSnapshotSync()) {
+                try {
+                  const feedQ = root.querySelector("#iuPrehledDneTimeline");
+                  if (feedQ) {
+                    feedQ.innerHTML =
+                      `<li class="iuPdEmpty iuPrehledDne__empty" aria-busy="true">Načítám dopravu…</li>`;
+                    feedQ.setAttribute("aria-busy", "true");
+                  }
+                } catch (_) {}
+              }
+              const pending = ensureTrafficFetchPromise();
+              let done = false;
+              const tracked = Promise.resolve(pending)
+                .catch(() => null)
+                .finally(() => {
+                  done = true;
+                });
+              const deadline = Date.now() + 30000;
+              while (!loadOfflineTrafficSnapshotSync() && Date.now() < deadline) {
+                if (bootAbort && bootAbort.signal.aborted) return;
+                if (done) break;
+                await new Promise((r) => setTimeout(r, 40));
+              }
+              await tracked;
               if (bootAbort && bootAbort.signal.aborted) return;
               if (!root.isConnected) return;
-              setTimeout(() => {
-                if (bootAbort && bootAbort.signal.aborted) return;
-                if (!root.isConnected) return;
-                try {
-                  if (state.settingsOpen) updateFeedDom();
-                  else paint();
-                } catch (_) {}
-              }, 0);
+              state.trafficSnapSettled = true;
+              try {
+                const tm = await loadTrafficOverview().catch(() => null);
+                if (tm && typeof tm.scheduleTrafficBackgroundFullHydrate === "function") {
+                  try {
+                    markPrehledBootPhase("traffic-full-hydrate-kick");
+                    void tm.scheduleTrafficBackgroundFullHydrate();
+                  } catch (_) {}
+                }
+                if (tm && typeof tm.ensureTrafficPresenter === "function") {
+                  await tm.ensureTrafficPresenter().catch(() => null);
+                }
+                await ensureTrafficCatalogForCurrentFilters(1);
+              } catch (_) {}
+              if (bootAbort && bootAbort.signal.aborted) return;
+              if (!root.isConnected) return;
+              if (!feedQuickViewIncludesTraffic()) return;
+              state.trafficQuickFirstCap = state.feedQuickView === "traffic" ? 12 : 0;
+              try {
+                if (state.settingsOpen) updateFeedDom();
+                else {
+                  paint();
+                  wire();
+                }
+              } catch (_) {}
+              if (state.trafficQuickFirstCap > 0) {
+                state.trafficQuickFirstCap = 0;
+                setTimeout(() => {
+                  if (bootAbort && bootAbort.signal.aborted) return;
+                  if (!root.isConnected) return;
+                  if (!feedQuickViewIncludesTraffic()) return;
+                  try {
+                    if (state.settingsOpen) updateFeedDom();
+                    else {
+                      paint();
+                      wire();
+                    }
+                  } catch (_) {}
+                }, 0);
+              }
             } catch (_) {
               state.trafficSnapSettled = true;
               try {

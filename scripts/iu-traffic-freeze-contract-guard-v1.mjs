@@ -43,6 +43,7 @@ const REPORT = {
   DOM_PAGINATION: "FAIL",
   PARKING_CLASSIFICATION: "FAIL",
   PWA_LIFECYCLE: "FAIL",
+  RELOAD_PANEL_LIFECYCLE: "FAIL",
   SNAPSHOT_SCHEMA: "FAIL",
   LKG: "FAIL",
   ANOMALY_GUARD: "FAIL",
@@ -121,6 +122,9 @@ if (!/TRAFFIC_FILTER_CORRECTNESS_GUARD["']?\s*:\s*["']?PASS/.test(filterOut) && 
 
 runNpm("iu-pwa-traffic-resume-revalidate-guard", "PWA_LIFECYCLE");
 mark(["PWA_LIFECYCLE"]);
+
+runNpm("iu-traffic-reload-panel-lifecycle-guard", "RELOAD_PANEL_LIFECYCLE");
+mark(["RELOAD_PANEL_LIFECYCLE"]);
 
 runNpm("iu-parking-registry-known-facilities-guard", "PARKING_CLASSIFICATION");
 // PARKING_CLASSIFICATION also needs cross-layer matrix
@@ -701,6 +705,7 @@ console.log("");
 console.log("PARKING_CLASSIFICATION=" + REPORT.PARKING_CLASSIFICATION);
 console.log("");
 console.log("PWA_LIFECYCLE=" + REPORT.PWA_LIFECYCLE);
+console.log("RELOAD_PANEL_LIFECYCLE=" + REPORT.RELOAD_PANEL_LIFECYCLE);
 console.log("");
 console.log("SNAPSHOT_SCHEMA=" + REPORT.SNAPSHOT_SCHEMA);
 console.log("LKG=" + REPORT.LKG);
