@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-traffic-filter-warm-max-retry-v1-20260911",
+  "freezeId": "iu-traffic-filter-correctness-v1-20260911",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-11T00:30:42.344Z",
-  "note": "Vault-gated filter warm after FULL with max-retry so non-unlocked sessions still warm for Doprava.",
+  "updatedAt": "2026-09-11T04:49:15.173Z",
+  "note": "Align parking filter detection with structured occupancy/presenter; stamp eventKind; correctness guard.",
   "files": {
-    "projects/index.html": "4ec2d1f8cad4d1a0f842f86719a6296aa718076f8d2a75bfe5741ae8e4ffe5d2",
+    "projects/index.html": "800cdfc0230559abe9f379ac05f6f1a863310e045f91712153ab1b4138e1f53e",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "3784e30e47b5d4ca7e63713f6a283ff10b176a012bc500a79a1076b1acae9a71",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "f086f50fc330a94777db85a3ff885a5ac0fbf6b9116c2f458a727d764be940b5",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "72f6d4f67ca28047f04cffb312516fb4b2bbec43e1a1731b5c0d03c64cd5c8c1",
+    "sw.js": "e12742c412156505ad42cc9252da5ff0a29e4328222d30f0d7959b0699492a71",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "3ee6461dd8a6c6c38bf4c5eced98f592ced57845b109ea31a5411f55ce81c641",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "11b2dd787778c6d041e148c795357b6ef2d26347bb2b69fdaac1c83693e01e02"
+    "assets/iu-prehled-dne-ui-v1.js": "4da82250d03c7e0cea4eb053ced6388c05129e32438bad013a8f8444fb3a1a49"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-11-traffic-filter-warm-max-retry-v1\""
+      "CACHE_VERSION = \"2026-09-11-traffic-filter-correctness-v1\""
     ],
     "projects/version.json": [
       "chmi-multibrowser-console-v1-20260731"
@@ -123,7 +123,8 @@
       "je zdarma a nevyžaduje registraci",
       "Povolit anonymní statistiky",
       "traffic-full-hydrate-after-dedupe-v1-20260910",
-      "traffic-filter-warm-max-retry-v1-20260911"
+      "traffic-filter-warm-max-retry-v1-20260911",
+      "traffic-filter-correctness-v1-20260911"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
