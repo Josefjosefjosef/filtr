@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --experimental-strip-types --test src/decision.test.ts",
+    "test": "node --experimental-strip-types --test src/decision.test.ts src/index.test.ts",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {

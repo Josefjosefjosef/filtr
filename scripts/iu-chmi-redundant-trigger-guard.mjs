@@ -30,6 +30,10 @@ ok(
   "index_probe_dispatch_requires_manual_secret",
   /searchParams\.get\("dispatch"\) === "1"/.test(index) && /requireManualTriggerAuth/.test(index),
 );
+ok(
+  "index_anonymous_probe_observe_only",
+  /allowMutations:\s*doDispatch/.test(index) && /observeOnly/.test(index),
+);
 ok("deploy_secret_put", /wrangler secret put GITHUB_TOKEN/.test(deploy));
 ok("deploy_manual_trigger_secret_put", /wrangler secret put MANUAL_TRIGGER_SECRET/.test(deploy));
 ok("fallback_probe", /chmi-cap-watchdog.*probe|WATCHDOG_PROBE_URL/.test(fallback));
