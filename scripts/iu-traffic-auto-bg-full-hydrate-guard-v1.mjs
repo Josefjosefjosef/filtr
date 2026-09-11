@@ -54,11 +54,12 @@ ok(
 );
 ok(
   "static_warm_filter_cache_on_full",
-  /phase === \"full\"[\s\S]{0,1400}computeTrafficFilteredCandidates/.test(prehled) &&
+  /phase === \"full\"[\s\S]{0,1600}computeTrafficFilteredCandidates/.test(prehled) &&
     /iu-vault-app-locked/.test(prehled) &&
     /getState\(\)/.test(prehled) &&
+    /warmFilters\._tries/.test(prehled) &&
     /setTimeout\(warmFilters,\s*2000\)/.test(prehled),
-  "full hydrate must vault-gate delayed warm of overview filter cache"
+  "full hydrate must vault-gate delayed warm with max-retry fallback"
 );
 ok(
   "static_boot_head_no_hydrate_true",

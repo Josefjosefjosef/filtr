@@ -3869,13 +3869,18 @@ async function boot() {
             // ~2s sync filter on ~3k cards breaks shared-session join (desktop no-lock-flash).
             const warmFilters = () => {
               try {
+                warmFilters._tries = (warmFilters._tries || 0) + 1;
                 if (window.iuVault && typeof window.iuVault.getState === "function") {
                   const locked = document.documentElement.classList.contains("iu-vault-app-locked");
                   const init = document.documentElement.classList.contains("iu-vault-app-init");
                   const boot = String(window.__iuVaultBootPhase || "");
                   const st = window.iuVault.getState();
                   const unlocked = !!(st && st.unlocked);
-                  if (locked || init || !unlocked || boot === "initializing" || boot === "locked") {
+                  // Cap waits: locked/home-without-unlock must still warm for Doprava.
+                  if (
+                    warmFilters._tries < 40 &&
+                    (locked || init || !unlocked || boot === "initializing" || boot === "locked")
+                  ) {
                     setTimeout(warmFilters, 750);
                     return;
                   }
