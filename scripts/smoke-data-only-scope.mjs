@@ -1,10 +1,18 @@
 #!/usr/bin/env node
 /**
- * Detect data-only scope for smoke fast path (projects/data/** only).
- * Data-only PRs must not block on unrelated UI Playwright guards.
+ * Detect data-only / fast-path scope for smoke.
  *
- * Writes GITHUB_OUTPUT: data_only=true|false
- * Prints: SMOKE_DATA_ONLY_SCOPE=YES|NO
+ * IMPORTANT:
+ * - `data_only` output remains the browser/UI skip flag (allowFastPath).
+ * - Generated-data allowlist is positive (path prefix + known extensions).
+ * - `run_info_events_contract` forces non-browser CHMI/info_events guards
+ *   even when browser steps are skipped.
+ *
+ * Writes GITHUB_OUTPUT:
+ *   data_only=true|false
+ *   skip_browser=true|false   (alias of data_only / allowFastPath)
+ *   run_info_events_contract=true|false
+ * Prints: SMOKE_DATA_ONLY_SCOPE=YES|NO, SMOKE_SKIP_BROWSER=..., SMOKE_RUN_INFO_EVENTS_CONTRACT=...
  */
 import { execSync } from "child_process";
 import fs from "fs";
@@ -43,10 +51,58 @@ function listChangedFiles() {
   return run("git diff --name-only origin/main...HEAD").split("\n");
 }
 
+/**
+ * Positive allowlist of generated data extensions under projects/data/.
+ * Derived from live tree: json/geojson/xml (+ txt/bak/gitkeep helpers).
+ * Executable/runtime (.js/.mjs/.html/.css/.ts) are NEVER data-only.
+ */
+export const GENERATED_DATA_EXTENSIONS = new Set([
+  ".json",
+  ".geojson",
+  ".xml",
+  ".txt",
+  ".bak",
+  ".gitkeep",
+]);
+
+/** Normalize + reject traversal / absolute / empty segments. */
+export function normalizeRepoPath(f) {
+  let p = String(f || "").trim().replace(/\\/g, "/");
+  if (!p) return "";
+  if (p.includes("\0") || p.includes("://")) return "";
+  if (p.startsWith("/") || /^[A-Za-z]:/.test(p)) return "";
+  while (p.startsWith("./")) p = p.slice(2);
+  const parts = p.split("/");
+  if (!parts.length || parts.some((seg) => !seg || seg === "." || seg === "..")) return "";
+  return parts.join("/");
+}
+
+/** True for known generated data artifacts under projects/data/ only. */
+export function isAllowedGeneratedDataPath(f) {
+  const p = normalizeRepoPath(f);
+  if (!p.startsWith("projects/data/")) return false;
+  const base = p.slice(p.lastIndexOf("/") + 1);
+  if (!base || base === "." || base === "..") return false;
+  if (base === ".gitkeep") return true;
+  const dot = base.lastIndexOf(".");
+  if (dot <= 0) return false;
+  const ext = base.slice(dot).toLowerCase();
+  return GENERATED_DATA_EXTENSIONS.has(ext);
+}
+
 export function isDataOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
-  return paths.every((f) => f.startsWith("projects/data/"));
+  return paths.every((f) => isAllowedGeneratedDataPath(f));
+}
+
+/** True when diff touches generated files under projects/data/info_events/. */
+export function touchesInfoEventsGeneratedData(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  return paths.some((f) => {
+    const p = normalizeRepoPath(f);
+    return p.startsWith("projects/data/info_events/") && isAllowedGeneratedDataPath(f);
+  });
 }
 
 /** Production vault/security runtime — must never use data-only smoke fast path. */
@@ -88,7 +144,7 @@ export function isFastPoolPipelineScope(files) {
   if (hasWorkflow && hasAppUi) return false;
   return paths.every(
     (f) =>
-      f.startsWith("projects/data/") ||
+      isAllowedGeneratedDataPath(f) ||
       f === "scripts/css_debt_baseline.json" ||
       f === "package.json" ||
       f === ".github/workflows/update-articles-fast-pool.yml" ||
@@ -517,6 +573,7 @@ function main() {
   }
 
   const dataOnly = isDataOnlyScope(files);
+  const runInfoEventsContract = touchesInfoEventsGeneratedData(files);
   const vaultRuntime = isVaultSecurityRuntimeScope(files);
   const workflowOnly = isWorkflowOnlyScope(files);
   const pipelineOnly = isFastPoolPipelineScope(files);
@@ -554,7 +611,10 @@ function main() {
     console.log(`[smoke-data-only-scope] ... and ${files.length - 20} more`);
   }
 
+  // data_only = browser/UI skip (historical name). Alias skip_browser for clarity.
   writeOutput("data_only", allowFastPath ? "true" : "false");
+  writeOutput("skip_browser", allowFastPath ? "true" : "false");
+  writeOutput("run_info_events_contract", runInfoEventsContract ? "true" : "false");
   writeOutput("vault_runtime_scope", vaultRuntime ? "true" : "false");
   writeOutput("info_panel_only", infoPanelOnly ? "true" : "false");
   writeOutput("fin_calc_header_only", finCalcHeaderOnly ? "true" : "false");
@@ -576,6 +636,8 @@ function main() {
   writeOutput("calendar_allday_pinned_limit_only", calendarAllDayPinnedLimitOnly ? "true" : "false");
   writeOutput("desktop_article_read_mark_only", desktopArticleReadMarkOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
+  console.log(`SMOKE_SKIP_BROWSER=${allowFastPath ? "YES" : "NO"}`);
+  console.log(`SMOKE_RUN_INFO_EVENTS_CONTRACT=${runInfoEventsContract ? "YES" : "NO"}`);
   console.log(`SMOKE_VAULT_RUNTIME_SCOPE=${vaultRuntime ? "YES" : "NO"}`);
   console.log(`SMOKE_INFO_PANEL_ONLY_SCOPE=${infoPanelOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_FIN_CALC_HEADER_ONLY_SCOPE=${finCalcHeaderOnly ? "YES" : "NO"}`);

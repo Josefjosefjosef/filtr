@@ -82,6 +82,21 @@ jobs:
           node scripts/smoke_data_only_scope_proof.mjs
           echo "SMOKE_DATA_ONLY_FAST_PATH=YES"
           echo "UI_GUARDS_SKIPPED=YES"
+          echo "SMOKE_SKIP_BROWSER=YES"
+
+      # Non-browser CHMI/info_events contract: RUN even when Playwright/FOUC are skipped.
+      - name: Info events / CHMI data-contract suite (non-browser)
+        if: steps.scope.outputs.data_only == 'true' && steps.scope.outputs.run_info_events_contract == 'true'
+        run: |
+          set -euo pipefail
+          npm run iu-chmi-cap-v2-guard
+          npm run iu-chmi-cap-v2-architecture-validation
+          npm run iu-chmi-cap-no-segment-dedupe-guard
+          npm run iu-chmi-cap-monitoring-refuse-wipe-guard
+          npm run iu-info-events-preserve-chmi-namespaces-guard
+          npm run iu-info-events-legal-whitelist-guard
+          echo "IU_INFO_EVENTS_DATA_CONTRACT=PASS"
+          echo "IU_BROWSER_SKIPPED_FOR_PURE_DATA=YES"
 
       - name: Silver calendar.create regression
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
