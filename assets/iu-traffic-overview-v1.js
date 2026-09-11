@@ -644,7 +644,7 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
   };
 
   // Stamp parking kind from structured occupancy metadata so filter/render stay aligned
-  // (isParkingTrafficEvent reads eventKind; presenter also uses occupancy fields).
+  // (isParkingTrafficEvent reads eventKind; presenter also uses occupancy fields/clauses).
   if (!trafficV1.eventKind && !trafficV1.presentationKind) {
     const et = String(trafficV1.eventType || trafficV1.category || "").toLowerCase();
     const ill = String(trafficV1.illustrationKey || "").toLowerCase();
@@ -653,7 +653,19 @@ export function trafficProjectionToFeedItem(cardOrProj, opts = {}) {
       trafficV1.parkingCapacity != null ||
       trafficV1.freeSpaces != null ||
       trafficV1.parkingOccupancy != null;
-    if (structuredOcc || et === "parking" || et === "parkoviste" || ill === "parking") {
+    const blob = [trafficV1.impactFull, trafficV1.impact, trafficV1.summaryFull, trafficV1.summary]
+      .filter(Boolean)
+      .join(" | ");
+    const hasOccClause =
+      /(?:\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných|posledních\s+pár\s+volných)/i.test(
+        blob
+      );
+    const facilityOcc =
+      (/\bP\s*\+\s*[RG]\b/i.test(blob) ||
+        (/\bparkovací\s+dům\b/i.test(blob) && hasOccClause) ||
+        (/\bparkovišt/i.test(blob) && hasOccClause)) &&
+      !/\bparkovací(?:ho)?\s+pruhu?\b/i.test(blob);
+    if (structuredOcc || et === "parking" || et === "parkoviste" || ill === "parking" || facilityOcc) {
       trafficV1.eventKind = "parking";
       trafficV1.presentationKind = "parking";
     }

@@ -264,15 +264,58 @@ export function mapEventTypeToUserCategory(eventType, eventKind) {
   return "ostatni";
 }
 
+/**
+ * Align filter-time parking detection with presenter occupancy situations.
+ * Live NDIC cards often carry occupancy only in impact text (no structured fields).
+ */
+const PARKING_OCCUPANCY_CLAUSE_RE =
+  /(?:\d{1,3}\s*%\s*obsazeno|pln[eě]\s+obsazeno|méně než\s+\d+\s+volných|posledních\s+pár\s+volných)/i;
+
+function parkingSourceBlob(tv) {
+  return [tv.impactFull, tv.summaryFull, tv.impact, tv.summary, tv.location, tv.parkingName]
+    .filter((x) => x != null && String(x).trim())
+    .join(" | ")
+    .trim();
+}
+
+function isParkingFalsePositiveRoadEventForFilter(rawText, tv) {
+  const text = String(rawText || "").trim();
+  if (!text) return false;
+  const type = String(tv.eventType || tv.category || "")
+    .trim()
+    .toLowerCase();
+  const hasOccClause = PARKING_OCCUPANCY_CLAUSE_RE.test(text);
+  if (type === "nehoda" || type === "prace" || type === "uzavirka" || type === "kolona") {
+    if (!hasOccClause && !/\bP\s*\+\s*[RG]\b/i.test(text)) return true;
+  }
+  if (/\bparkovací(?:ho)?\s+pruhu?\b/i.test(text)) return true;
+  if (
+    !hasOccClause &&
+    /\bparkovac/i.test(text) &&
+    /\b(uzavřen[íýáo]|uzavírk|neprůjezdn|objížďk|stavební práce|práce na silnici|oprava povrchu)\b/i.test(text)
+  ) {
+    return true;
+  }
+  if (/\b(uzavřen[íýáo]|uzavírk).{0,40}parkovac/i.test(text) && !hasOccClause) return true;
+  if (
+    /\b(stavební práce|práce na silnici|oprava povrchu|práce na inženýrských).{0,60}parkovišt/i.test(text) &&
+    !hasOccClause
+  ) {
+    return true;
+  }
+  if (/\bparkovišt.{0,40}(uzavřen|neprůjezdn|objížďk)/i.test(text) && !hasOccClause) return true;
+  if (/\bnehoda\b/i.test(text) && !hasOccClause) return true;
+  if (/\búpln[áa]\s+uzavírk/i.test(text) && !hasOccClause) return true;
+  return false;
+}
+
 export function isParkingTrafficEvent(ev) {
   if (!(ev && ev.trafficV1)) return false;
   return isParkingTrafficView(ev.trafficV1);
 }
 
 /**
- * Align filter-time parking detection with presenter occupancy situations.
- * Prefer structured metadata (kind/type/illustration/occupancy fields); P+R facility
- * markers are authoritative NDIC type cues, not free-text keyword hacks.
+ * Same contract as presenter isParkingOccupancySituation (structured + occupancy clauses).
  */
 export function isParkingTrafficView(tv) {
   if (!tv || typeof tv !== "object") return false;
@@ -290,19 +333,18 @@ export function isParkingTrafficView(tv) {
   ) {
     return true;
   }
-  // NDIC P+R / P+G facility status (same contract as presenter occupancy detector).
-  const blob = [
-    tv.impactFull,
-    tv.impact,
-    tv.summaryFull,
-    tv.summary,
-    tv.location,
-    tv.parkingName,
-    tv.subjectScopeLabel,
-  ]
-    .filter((x) => x != null && String(x).trim())
-    .join("\n");
+
+  const blob = parkingSourceBlob(tv);
+  if (!blob) return false;
+  if (isParkingFalsePositiveRoadEventForFilter(blob, tv)) return false;
+
+  const hasOcc = PARKING_OCCUPANCY_CLAUSE_RE.test(blob);
   if (/\bP\s*\+\s*[RG]\b/i.test(blob)) return true;
+  if (/\bparkovací\s+dům\b/i.test(blob) && hasOcc) return true;
+  if (/\bparkovišt/i.test(blob) && hasOcc) return true;
+  if (hasOcc && !/\b(silnice|dálnice|km\s+\d|ve směru|uzavírk|kolona|nehoda|objížďk)\b/i.test(blob)) {
+    return true;
+  }
   return false;
 }
 
