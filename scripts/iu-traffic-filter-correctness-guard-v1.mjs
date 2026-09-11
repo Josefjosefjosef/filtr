@@ -64,6 +64,19 @@ const FIXTURE_CARDS = [
     publicationEnabled: true,
   },
   {
+    id: "park-text-occ-3",
+    publicEventId: "iu-te-11111111111111111111111111111111",
+    stableSituationId: "sit-park-3",
+    eventType: "doprava",
+    category: "doprava",
+    impact: "Parkovaci dum DK POKLAD I., mene nez 10 volnych parkovacich mist, 90% obsazeno",
+    impactFull: "Parkovací dům DK POKLAD I., méně než 10 volných parkovacích míst, 90% obsazeno, 11.09.2026 07:42:39",
+    municipality: "Praha",
+    district: "Praha",
+    lifecycleStatus: "ACTIVE",
+    publicationEnabled: true,
+  },
+  {
     id: "park-type-2",
     publicEventId: "iu-te-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     stableSituationId: "sit-park-2",
@@ -163,6 +176,7 @@ function byFixture(id) {
 
 const parkOcc = byFixture("park-occ-1");
 const parkType = byFixture("park-type-2");
+const parkText = byFixture("park-text-occ-3");
 const roadPraha = byFixture("road-praha-nehoda");
 const roadBrno = byFixture("road-brno-prace");
 const roadOstrava = byFixture("road-ostrava-kolona");
@@ -170,6 +184,7 @@ const roadClosure = byFixture("road-closure-no-park");
 
 ok("fixture_park_occ", !!parkOcc);
 ok("fixture_park_type", !!parkType);
+ok("fixture_park_text", !!parkText);
 ok("fixture_road_praha", !!roadPraha);
 ok("fixture_road_brno", !!roadBrno);
 
@@ -180,9 +195,19 @@ ok(
   "occupancy card must be parking for presenter"
 );
 ok(
+  "presenter_park_text",
+  isParkingOccupancySituation(parkText.trafficV1) === true,
+  "text occupancy card must be parking for presenter"
+);
+ok(
   "filter_park_occ_detect",
   isParkingTrafficEvent(parkOcc) === true,
   "filter must detect occupancy parking card"
+);
+ok(
+  "filter_park_text_detect",
+  isParkingTrafficEvent(parkText) === true,
+  "filter must detect text-only occupancy parking"
 );
 ok(
   "filter_park_type_detect",
@@ -203,7 +228,7 @@ const parkingOnVisible = items.filter((ev) => matchesTrafficDetailFilter(ev, tfP
 const parkingOffPass = items.filter((ev) => matchesTrafficDetailFilter(ev, tfParkOff));
 
 ok("TRAFFIC_FILTER_PARKING_OFF_PASS", parkingOffVisible.length === 0, String(parkingOffVisible.length));
-ok("TRAFFIC_FILTER_PARKING_ON_PASS", parkingOnVisible.length >= 2, String(parkingOnVisible.length));
+ok("TRAFFIC_FILTER_PARKING_ON_PASS", parkingOnVisible.length >= 3, String(parkingOnVisible.length));
 ok(
   "parking_off_keeps_roads",
   parkingOffPass.some((ev) => ev._fixtureId === "road-praha-nehoda") &&
@@ -372,7 +397,7 @@ const report = {
     ? "NO"
     : "YES",
   TRAFFIC_FILTER_PARKING_OFF_PASS: parkingOffVisible.length === 0 ? "YES" : "NO",
-  TRAFFIC_FILTER_PARKING_ON_PASS: parkingOnVisible.length >= 2 ? "YES" : "NO",
+  TRAFFIC_FILTER_PARKING_ON_PASS: parkingOnVisible.length >= 3 ? "YES" : "NO",
   TRAFFIC_FILTER_REGION_PASS: regionOffInvalid.length === 0 ? "YES" : "NO",
   TRAFFIC_FILTER_TYPE_PASS: fails.some((f) => f.startsWith("TRAFFIC_FILTER_TYPE")) ? "NO" : "YES",
   TRAFFIC_FILTER_COMBINATION_PASS: fails.some((f) => f.startsWith("TRAFFIC_FILTER_COMBINATION"))
