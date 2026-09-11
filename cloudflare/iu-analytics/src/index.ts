@@ -2,6 +2,12 @@ import { applyEvent, rejectEvent } from "./aggregate";
 import { isTestAdCampaignId } from "./ads-policy";
 import { buildCorsHeaders } from "./cors";
 import { privacyGuard, todayUtc } from "./privacy";
+import {
+  assertIngestBodyByteLength,
+  assertIngestContentLengthHeader,
+  checkIngestRateLimit,
+  clientKeyFromRequest,
+} from "./rate-limit";
 import { AnalyticsStore, createStore } from "./store";
 import { Env } from "./types";
 
@@ -149,9 +155,35 @@ async function publicStats(store: AnalyticsStore, from: string, to: string, seri
 }
 
 async function handleIngest(env: Env, req: Request, store: AnalyticsStore): Promise<Response> {
+  const clCheck = assertIngestContentLengthHeader(req);
+  if (!clCheck.ok) {
+    return json({ ok: false, error: clCheck.error }, 413);
+  }
+
+  const rate = checkIngestRateLimit(clientKeyFromRequest(req));
+  if (!rate.ok) {
+    return json(
+      { ok: false, error: "rate_limited" },
+      429,
+      { "Retry-After": String(rate.retryAfterSec) }
+    );
+  }
+
+  let rawText: string;
+  try {
+    rawText = await req.text();
+  } catch {
+    return json({ ok: false, error: "invalid_json" }, 400);
+  }
+  const bodyBytes = new TextEncoder().encode(rawText).byteLength;
+  const sizeCheck = assertIngestBodyByteLength(bodyBytes);
+  if (!sizeCheck.ok) {
+    return json({ ok: false, error: sizeCheck.error }, 413);
+  }
+
   let body: unknown;
   try {
-    body = await req.json();
+    body = JSON.parse(rawText);
   } catch {
     return json({ ok: false, error: "invalid_json" }, 400);
   }
