@@ -62,8 +62,13 @@ function extractClassedRoadFromOfficialComment(rawText) {
   const re =
     /\b(?:(?:na\s+)?silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)\b/i;
   const m = text.match(re);
-  if (!m) return "";
-  return clean(m[1]).replace(/\s+/g, "").replace(/^(i{1,3}|ii|iii)\//i, (x) => x.toUpperCase());
+  if (m) {
+    return clean(m[1]).replace(/\s+/g, "").replace(/^(i{1,3}|ii|iii)\//i, (x) => x.toUpperCase());
+  }
+  // Narrow bare classed-road fallback (weather / short NDIC): "I/42 MUK …", "I/35 Town".
+  const bare = text.match(/\b((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)\b/i);
+  if (!bare) return "";
+  return clean(bare[1]).replace(/\s+/g, "").replace(/^(i{1,3}|ii|iii)\//i, (x) => x.toUpperCase());
 }
 
 /**

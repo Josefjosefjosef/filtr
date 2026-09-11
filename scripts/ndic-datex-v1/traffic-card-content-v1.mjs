@@ -166,9 +166,9 @@ export function extractLocalityFromOfficialComment(summary) {
     }
   }
 
+  // Bare ", Town, okr." / ", Town,, okr." when no explicit "v obci" marker.
   if (!municipality) {
-    // ", České Budějovice, okr. ..." / ", Postřelmov, okr. Šumperk"
-    const mTown = s.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    const mTown = s.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
     if (mTown) {
       const town = stripMunicipalityParentheticalDetail(mTown[1]);
       if (town && !/(ská|cká|ovská)$/i.test(town) && !looksLikeContaminatedLocalityToken(town)) {

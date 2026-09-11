@@ -1973,11 +1973,24 @@ export function composeRoadNumberWithClass(roadRaw, classHint) {
  * Morphology heuristic for rejecting municipality-board candidates.
  * NEVER alone sufficient to invent a street ("ulice: …").
  */
+/**
+ * Worksite / operational adjectives that share street-like -ní/-ná morphology
+ * but must never become Ulice (e.g. parenthetical "(mobilní)" on D7/D49).
+ */
+export function looksLikeWorksiteOrOperationalStreetNoise(raw) {
+  const t = clean(raw);
+  if (!t) return false;
+  return /^(?:mobilní|pohyblivé|pohyblivý|krátkodobé|krátkodobý|stabilní|dlouhodobé|dlouhodobý|dočasné|dočasný|stacionární)$/i.test(
+    t
+  );
+}
+
 export function looksLikeStreetName(raw) {
   const t = clean(raw);
   if (!t) return false;
   // Squares / embankments are named places — not streets.
   if (/náměstí|nábřeží/i.test(t)) return false;
+  if (looksLikeWorksiteOrOperationalStreetNoise(t)) return false;
   if (
     /tunel|\bmost\b|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
       t
@@ -2076,6 +2089,8 @@ export function normalizeExtractedMunicipalityName(raw) {
   // Strip parenthetical locality contamination (complete or dangling open paren).
   city = clean(city.replace(/\s*\([^)]*$/u, ""));
   city = clean(city.replace(/\s*\([^)]*\)\s*$/u, ""));
+  // Strip middle-dot / bullet leakage from list-style NDIC joins ("Moravany ·").
+  city = clean(city.replace(/[·•]+/g, " "));
   city = clean(city);
   if (!city) return null;
   if (!/^[A-ZÁ-Ž]/u.test(city)) return null;
@@ -2083,6 +2098,9 @@ export function normalizeExtractedMunicipalityName(raw) {
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
   if (/^ulice\b|\btřída\b/i.test(city)) return null;
   if (/^okres\b|^okr\./i.test(city)) return null;
+  // Settlement parts are not municipalities (white-sign role).
+  if (/^část\s+obce\b/i.test(city) || /^městská\s+část\b/i.test(city)) return null;
+  if (/[|·]/.test(city) || /srážk|přeháň/i.test(city)) return null;
   if (looksLikeNonMunicipalityPlace(city)) return null;
   // Reject dangling delimiter contamination.
   if (/[()]$/.test(city) || /\($/.test(city)) return null;
@@ -2322,10 +2340,36 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
   for (const mw of extractMotorwayNumbersFromOfficialComment(text)) {
     if (!found.some((x) => x.toLowerCase() === mw.toLowerCase())) found.push(mw);
   }
+  // Narrow bare classed-road fallback: only when no silnice-prefixed hit yet, and the
+  // token is an explicit I/II/III form (weather / short NDIC lines like "I/42 MUK …").
+  // Never invents; never overrides structured silnice-prefixed identities.
+  if (!found.length) {
+    for (const bare of extractBareClassedRoadNumbersFromOfficialComment(text)) {
+      if (!found.some((x) => x.toLowerCase() === bare.toLowerCase())) found.push(bare);
+    }
+  }
   return found.map((r) => {
     const m = r.match(/^(I{1,3}|II|III|D)\/(\d{1,6}[A-Za-z]?)$/i);
     return m ? m[1].toUpperCase() + "/" + m[2] : r;
   });
+}
+
+/**
+ * Explicit bare classed road tokens (I/42, III/1234) without a "silnice" prefix.
+ * Fail-closed: only clear I/II/III slash forms — never bare digits alone.
+ */
+export function extractBareClassedRoadNumbersFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const re = /\b((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)\b/gi;
+  let m;
+  while ((m = re.exec(text))) {
+    const norm = clean(m[1]).replace(/\s+/g, "");
+    const canon = norm.replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
+    if (canon && !found.some((x) => x.toLowerCase() === canon.toLowerCase())) found.push(canon);
+  }
+  return found;
 }
 
 /** Structured road, else safe comment extraction. Prefer classed identity when evidence exists. */
@@ -2429,7 +2473,7 @@ export function classifyLocationKindFromName(name) {
   if (/tunel/i.test(t)) return LOCATION_KIND.TUNNEL;
   if (looksLikeBridgeObjectToken(t)) return LOCATION_KIND.BRIDGE;
   if (/železniční(?:ho)?\s+přejezd|přejezd/i.test(t)) return LOCATION_KIND.RAILWAY_CROSSING;
-  if (/MÚK\b|křižovatka/i.test(t)) return LOCATION_KIND.INTERSECTION;
+  if (/M[ÚU]K\b|křižovatka/i.test(t)) return LOCATION_KIND.INTERSECTION;
   if (/\bnájezd\b/i.test(t)) return LOCATION_KIND.RAMP;
   if (/\bsjezd\b/i.test(t)) return LOCATION_KIND.EXIT_RAMP;
   if (/odpočívk/i.test(t)) return LOCATION_KIND.REST_AREA;
@@ -2466,7 +2510,7 @@ export function extractNamedTransportObject(rawText) {
     !looksLikeRoadNumberToken(lead) &&
     !isPrahaCityPartName(lead) &&
     !/^od\s+\d/i.test(lead) &&
-    /tunel|MÚK\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+    /tunel|M[ÚU]K\b|křižovatka|nádraží|terminál|náměstí|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
       lead
     ) || looksLikeBridgeObjectToken(lead)
   ) {
@@ -2513,8 +2557,11 @@ export function extractNamedTransportObject(rawText) {
       return { name, kind: LOCATION_KIND.BRIDGE };
     }
   }
-  const muk = scan.match(/\b(MÚK\s+[^,;.]{2,60})/i);
-  if (muk) return { name: clean(muk[1]), kind: LOCATION_KIND.INTERSECTION };
+  const muk = scan.match(/\b(M[ÚU]K\s+[^,;.(]{2,60})/i);
+  if (muk) {
+    const name = clean(muk[1]).replace(/^MUK\b/i, "MÚK");
+    return { name, kind: LOCATION_KIND.INTERSECTION };
+  }
   const intersection = scan.match(
     /\bkřižovatk[ay]\s+([A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+){0,3})\b/u
   );
@@ -3250,6 +3297,7 @@ export function extractMunicipalityPartsFromOfficialComment(rawText) {
 /**
  * Parenthetical locality / street tokens in NDIC location chains, e.g. "(Rožnovská)".
  * Only morphology-safe street-like tokens — never municipalities / districts.
+ * Never promotes worksite adjectives "(mobilní)" / lowercase operational tags.
  */
 export function extractParentheticalStreetNamesFromOfficialComment(rawText) {
   const text = clean(rawText);
@@ -3262,6 +3310,9 @@ export function extractParentheticalStreetNamesFromOfficialComment(rawText) {
     let tok = sanitizeExtractedValueToken(m[1]);
     tok = clean(tok);
     if (!tok || /\s/.test(tok)) continue;
+    // NDIC street parentheticals are Proper-case; reject lowercase ops tags.
+    if (!/^[A-ZÁ-Ž]/u.test(tok)) continue;
+    if (looksLikeWorksiteOrOperationalStreetNoise(tok)) continue;
     if (looksLikeRoadNumberToken(tok)) continue;
     if (/^\d/.test(tok)) continue;
     if (!looksLikeStreetName(tok) && !/(?:ská|cká|ovská)$/i.test(tok)) continue;
@@ -4452,9 +4503,10 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  // Bare ", Town, okr." municipality when no "v obci" marker exists.
+  // Bare ", Town, okr." / ", Town,, okr." municipality when no "v obci" marker exists.
+  // NDIC occasionally emits doubled commas before okr. (Tábor,, okr. Tábor).
   if (!out.city) {
-    const mTown = locationScanText.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    const mTown = locationScanText.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
     if (mTown) {
       const town = normalizeExtractedMunicipalityName(mTown[1]);
       if (
@@ -4464,6 +4516,26 @@ export function parseOfficialCommentFacts(rawText) {
         !looksLikeRoadNumberToken(town)
       ) {
         out.city = town;
+      }
+    }
+  }
+
+  // Short weather / bare-road form: "I/35 Valašské Meziříčí" (no silnice / v obci).
+  // Never promotes MÚK/tunnel/object tails into municipality.
+  // Stop before sourceBlob field joins (" | ") so duplicated impact cannot leak.
+  if (!out.city) {
+    const afterBareRoad = locationScanText.match(
+      /\b(?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?\s+(?!M[ÚU]K\b)([A-ZÁ-Ž][^,;()|]{2,60}?)(?=\s*(?:\(|$|,|;|\|))/u
+    );
+    if (afterBareRoad) {
+      const tail = clean(afterBareRoad[1]);
+      if (
+        tail &&
+        !/tunel|přejezd|most|křižovatk|nájezd|sjezd|odpočívk|srážk|přeháň/i.test(tail) &&
+        !looksLikeStreetName(tail)
+      ) {
+        const town = normalizeExtractedMunicipalityName(tail);
+        if (town) out.city = town;
       }
     }
   }
@@ -4570,6 +4642,9 @@ export function parseOfficialCommentFacts(rawText) {
         out.namedObjectKind = sk;
         out.locationKind = sk;
       }
+      out.street = null;
+    } else if (looksLikeWorksiteOrOperationalStreetNoise(streetBareName(out.street))) {
+      // "(mobilní)" worksite tags must never become Ulice.
       out.street = null;
     } else {
       out.street = sanitizeExtractedValueToken(out.street);
@@ -5172,10 +5247,17 @@ export function analyzePrimaryCause(rawText, input = {}) {
   if (hasExplicitOversizeLoad(text)) {
     return PRIMARY_CAUSE.OVERSIZE_LOAD;
   }
+  // Weather / sjízdnost surface conditions must not become PŘEKÁŽKA solely because
+  // publication maps sjizdnost → illustrationKey "prekazka".
+  const weatherSurface =
+    type === "sjizdnost" ||
+    /^Srážky\s*:/i.test(text) ||
+    (/\bpřeháňk/i.test(text) && !/překážka\s+na\s+vozovce/i.test(text));
   if (
-    type === "prekazka" ||
-    illustrationKey === "prekazka" ||
-    /překážka\s+na\s+vozovce/i.test(text)
+    !weatherSurface &&
+    (type === "prekazka" ||
+      illustrationKey === "prekazka" ||
+      /překážka\s+na\s+vozovce/i.test(text))
   ) {
     return PRIMARY_CAUSE.OBSTACLE;
   }
@@ -5309,7 +5391,14 @@ export function classifyEventPresentation(input = {}) {
   ) {
     return pack(EVENT_KIND.CLOSURE);
   }
-  if (type === "prekazka" || illustrationKey === "prekazka") return pack(EVENT_KIND.OBSTACLE);
+  if (type === "prekazka" || illustrationKey === "prekazka") {
+    // Weather cards publish illustrationKey=prekazka via sjizdnost map — do not retitle.
+    const weatherSurface =
+      type === "sjizdnost" ||
+      /^Srážky\s*:/i.test(blob) ||
+      (/\bpřeháňk/i.test(blob) && !/překážka\s+na\s+vozovce/i.test(blob));
+    if (!weatherSurface) return pack(EVENT_KIND.OBSTACLE);
+  }
   if (type === "kolona" || illustrationKey === "kolona") {
     if (hasExplicitQueueSource(blob)) return pack(EVENT_KIND.QUEUE);
     // NDIC type=kolona must not upgrade silný provoz / zdržení into KOLONA.
@@ -7286,6 +7375,7 @@ export function resolveMunicipalitySignName(input = {}) {
   }
   if (!city) return null;
   if (isKilometerLocationPhrase(city)) return null;
+  if (/^část\s+obce\b/i.test(city) || /^městská\s+část\b/i.test(city)) return null;
   if (/^p\s*\+\s*r\b/i.test(city)) return null;
   if (/\b(ulice|okres|okr\.)\b/i.test(city)) return null;
   if (looksLikeRoadNumberToken(city)) return null;
@@ -7719,6 +7809,16 @@ export function buildPlaceAndDirectionLine(input = {}) {
     else if (section) bits.push(section);
     if (street) {
       bits.push("ulice " + street.replace(/^ulice\s+/i, ""));
+    } else if (
+      !km &&
+      facts.namedObject &&
+      facts.namedObjectKind === LOCATION_KIND.INTERSECTION &&
+      !namedObjectDuplicatesExitNumber(facts.namedObject, facts.exitNumber) &&
+      !bits.some((b) => samePlaceName(b, facts.namedObject))
+    ) {
+      // Weather / bare-road MÚK cards have no km — keep MÚK on place. Do not
+      // re-attach bridges/tunnels when road+km already localize the event.
+      bits.push(streetBareName(facts.namedObject));
     }
     if (facts.municipalityRelation !== "u_obce") {
       if (muni && !bits.includes(muni)) bits.push(muni);
@@ -7757,12 +7857,17 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
 
   if (facts.namedObject) {
-    const placeBits = [streetBareName(facts.namedObject)];
-    if (km) pushUniqueBit(placeBits, km);
-    if (dir) pushUniqueBit(placeBits, "směr " + dir);
-    if (cityPart) placeBits.push(cityPart);
-    else if (muni) placeBits.push(muni);
-    return placeBits.join(" · ");
+    // Street (geographic) beats object-only place. Bare namedObject+muni
+    // (tunnels/bridges without street) keeps prior object-first place.
+    if (!street) {
+      const placeBits = [streetBareName(facts.namedObject)];
+      if (km) pushUniqueBit(placeBits, km);
+      if (dir) pushUniqueBit(placeBits, "směr " + dir);
+      if (cityPart) placeBits.push(cityPart);
+      else if (muni) placeBits.push(muni);
+      return placeBits.join(" · ");
+    }
+    // Fall through: street + municipality compose place; object stays in detail.
   }
 
   // Explicit source intersection — never let weaker TMC segment locality overwrite place line.

@@ -54,6 +54,7 @@ const SUITES = [
   "iu-traffic-primary-vs-detour-location-guard",
   "iu-traffic-exit-object-direction-collision-guard",
   "iu-traffic-street-in-municipality-guard",
+  "iu-traffic-localization-edge-cards-guard",
 ];
 
 const rows = [];
