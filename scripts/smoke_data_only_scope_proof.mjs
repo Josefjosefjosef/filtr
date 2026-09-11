@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { allowsDataOnlyFastPath, isDataOnlyScope, isFastPoolPipelineScope, isVaultSecurityRuntimeScope, isWorkflowOnlyScope } from "./smoke-data-only-scope.mjs";
 
 let failed = 0;
@@ -8,6 +11,27 @@ function assert(cond, msg) {
     failed += 1;
   }
 }
+
+/** Prevent data-only + skipped Playwright install from still running UI browser guards. */
+function assertSmokeYmlDataOnlyGatesPlaywrightUiSteps() {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const smokePath = path.join(here, "..", ".github", "workflows", "smoke.yml");
+  const text = fs.readFileSync(smokePath, "utf8");
+  const required = [
+    "Install Playwright browsers",
+    "Desktop cold-start FOUC guard",
+    "Mobile iCentrum boot FOUC guard",
+    "Traffic auto background full hydrate guard",
+  ];
+  for (const name of required) {
+    const re = new RegExp(
+      String.raw`- name:\s*${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\s*\n\s*if:\s*steps\.scope\.outputs\.data_only\s*!=\s*'true'`,
+      "m"
+    );
+    assert(re.test(text), `smoke.yml step "${name}" must gate on data_only != true (Playwright binary skip path)`);
+  }
+}
+assertSmokeYmlDataOnlyGatesPlaywrightUiSteps();
 
 assert(isDataOnlyScope(["projects/data/publishable_pool.json"]), "pool file is data-only");
 assert(isDataOnlyScope(["projects/data/articles/index.json", "projects/data/article_feed_chunks/feed/init.json"]), "chunks are data-only");
