@@ -157,7 +157,7 @@ async function publicStats(store: AnalyticsStore, from: string, to: string, seri
 async function handleIngest(env: Env, req: Request, store: AnalyticsStore): Promise<Response> {
   const clCheck = assertIngestContentLengthHeader(req);
   if (!clCheck.ok) {
-    return json({ ok: false, error: clCheck.error }, 413);
+    return json({ ok: false, error: "body_too_large" }, 413);
   }
 
   const rate = checkIngestRateLimit(clientKeyFromRequest(req));
@@ -178,7 +178,7 @@ async function handleIngest(env: Env, req: Request, store: AnalyticsStore): Prom
   const bodyBytes = new TextEncoder().encode(rawText).byteLength;
   const sizeCheck = assertIngestBodyByteLength(bodyBytes);
   if (!sizeCheck.ok) {
-    return json({ ok: false, error: sizeCheck.error }, 413);
+    return json({ ok: false, error: "body_too_large" }, 413);
   }
 
   let body: unknown;
