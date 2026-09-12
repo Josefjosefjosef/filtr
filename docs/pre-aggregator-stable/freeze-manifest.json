@@ -1,21 +1,21 @@
 {
-  "freezeId": "iu-traffic-reload-panel-lifecycle-v1-20260911",
+  "freezeId": "iu-startup-single-paint-v1-20260912",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-11T08:30:00.000Z",
-  "note": "Freeze Doprava reload/PWA panel lifecycle: no false empty; web session vs PWA durable panel; hydrate reapply.",
+  "updatedAt": "2026-09-12T11:35:00.000Z",
+  "note": "Freeze startup single-paint: weather authority gating + shared SW/PWA reload latch + splash bg match.",
   "files": {
-    "projects/index.html": "ed84e1a174a59f3be48f233a4c8f8df68ce179e2fa6038e714b0051edd350ffa",
+    "projects/index.html": "d99a1976d1c76095ea6e4428112bb31cc3cf5b717f8bba3e57aa5797fd405ad0",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
-    "assets/app.js": "3784e30e47b5d4ca7e63713f6a283ff10b176a012bc500a79a1076b1acae9a71",
+    "assets/app.js": "9e11cc39bdf0cc389d086aefedf6691baeccefe18bce8671ca6556533432b59e",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "f086f50fc330a94777db85a3ff885a5ac0fbf6b9116c2f458a727d764be940b5",
-    "assets/iu-app-feed-pipeline-v1.js": "20cd13a65af56eb9a5207651abb0663ae7dd70d87324c2c75c341dc481942389",
+    "assets/iu-app-feed-pipeline-v1.js": "5c3ef34f3fdb7aad8c0dad328d88ee56bfaec941ce42a946f4a1984e5a91faa0",
     "assets/iu-calendar-overlay-v1.js": "d33bc5862bf6c390d946a4f14955c1f135c43155dd30134e30c90f5ce0993403",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "fd778a9ff17e129f2958bc55a9bb7b5b80603a78756f80cc758357d35dcce429",
+    "sw.js": "54f52ba8cd76f264ad8b4a5155df7a10d68b25b872a880fb7c75e32762ba2695",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "3ee6461dd8a6c6c38bf4c5eced98f592ced57845b109ea31a5411f55ce81c641",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-11-traffic-reload-panel-lifecycle-v1\""
+      "CACHE_VERSION = \"2026-09-12-startup-single-paint-v1\""
     ],
     "projects/version.json": [
       "chmi-multibrowser-console-v1-20260731"

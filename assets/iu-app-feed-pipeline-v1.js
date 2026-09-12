@@ -15576,6 +15576,9 @@ function buildVideoAsArticleCard(it) {
             const perm = await navigator.permissions.query({ name: "geolocation" });
             const st = perm && perm.state ? String(perm.state) : "unknown";
             try{ window.__iuSilverWxGeoPerm = st; }catch{}
+            if (st === "granted" || st === "denied" || st === "prompt") {
+              iuSilverWeatherMarkGeoAuthorityResolved();
+            }
             if (st === "granted") {
               try{ iuSilverWeatherRefresh(); }catch{}
               if (typeof window.iuWeatherActivateGpsViaGeolocation === "function") {
@@ -15597,18 +15600,26 @@ function buildVideoAsArticleCard(it) {
         }
         try{ window.__iuSilverWxGeoPerm = "unknown"; }catch{}
         if (typeof window.iuWeatherActivateGpsViaGeolocation !== "function") {
+          iuSilverWeatherMarkGeoAuthorityResolved();
           try{ iuSilverWeatherRefresh(); }catch{}
           return;
         }
         if (typeof iuWeatherReadLocationMode === "function" && iuWeatherReadLocationMode() !== IU_WEATHER_MODE_GPS) {
+          iuSilverWeatherMarkGeoAuthorityResolved();
           try{ iuSilverWeatherRefresh(); }catch{}
           return;
         }
         if (typeof iuWeatherReadGpsSelected === "function" && iuWeatherReadGpsSelected()) {
           window.iuWeatherActivateGpsViaGeolocation();
+          /* GPS path in flight — keep authority unresolved so UI stays loading, not CTA. */
+          try{ iuSilverWeatherRefresh(); }catch{}
+          return;
         }
+        iuSilverWeatherMarkGeoAuthorityResolved();
         try{ iuSilverWeatherRefresh(); }catch{}
-      }catch{}
+      }catch{
+        try{ iuSilverWeatherMarkGeoAuthorityResolved(); }catch{}
+      }
     }
 
     function iuSilverWeatherSyncLayoutAttr(phase){
@@ -15643,13 +15654,19 @@ function buildVideoAsArticleCard(it) {
         const fb = window.__iuWeatherGeoFlowFeedback;
         if (!fb || String(fb.kind || "") !== "error") return false;
         const m = String(fb.message || "");
+        /* Only explicit denial / geo-block copy — generic errors must not paint denied CTA. */
         if (m.indexOf("povolte") !== -1) return true;
         if (m.indexOf("Nelze získat polohu") !== -1) return true;
         if (m.indexOf("geolokace") !== -1) return true;
-        return true;
+        if (m.indexOf("odmít") !== -1) return true;
+        return false;
       }catch{
         return false;
       }
+    }
+
+    function iuSilverWeatherMarkGeoAuthorityResolved(){
+      try{ window.__iuSilverWxGeoAuthorityResolved = true; }catch{}
     }
 
     function iuSilverWeatherComputePhase(){
@@ -15668,10 +15685,17 @@ function buildVideoAsArticleCard(it) {
           return "loading";
         }
       }catch{}
-      /* No saved coords yet: never treat unknown/pending/granted as firstVisit CTA. */
+      /* No saved coords yet: pending/granted/unknown must never paint firstVisit/denied CTA.
+         unknown stays loading until authority settles (iOS often lacks Permissions API).
+         denied → denied UI; prompt (or settled unknown) → firstVisit. */
       try{
         const perm = String(window.__iuSilverWxGeoPerm || "pending");
         if (perm === "pending" || perm === "granted") return "loading";
+        if (perm === "unknown") {
+          if (window.__iuSilverWxGeoAuthorityResolved !== true) return "loading";
+          return "firstVisit";
+        }
+        if (perm === "denied") return "denied";
       }catch{
         return "loading";
       }
