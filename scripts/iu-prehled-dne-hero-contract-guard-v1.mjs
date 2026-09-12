@@ -530,7 +530,7 @@ function assertMeasure(prefix, m) {
   must(m.borderTopRightRadius === "0px", prefix + ":tr_radius:" + m.borderTopRightRadius);
   must(m.borderBottomLeftRadius === "14px", prefix + ":bl_radius_14:" + m.borderBottomLeftRadius);
   must(m.borderBottomRightRadius === "14px", prefix + ":br_radius_14:" + m.borderBottomRightRadius);
-  must(/infouzel-prehled-dne-banner\.png/.test(m.src), prefix + ":img_src");
+  must(/infouzel-prehled-dne-banner\.webp/.test(m.src), prefix + ":img_src");
   must(m.showExists, prefix + ":zobrazit_exists");
   if (m.sample) {
     must(m.sample.bannerMidDark, prefix + ":visual_banner_dark");

@@ -39,8 +39,9 @@ function staticGate() {
   must(fs.existsSync(BANNER_WEBP), "asset:banner_webp_exists");
   must(/<html[^>]*class="[^"]*iu-info-system-cutover/.test(index), "index:html_cutover_class");
   must(/__iuInfoSystemCutoverEarlyBoot/.test(index), "index:early_cutover_boot");
-  must(/infouzel-prehled-dne-banner\.png/.test(index), "index:banner_path");
+  must(/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "index:banner_path");
   must(/infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_webp_path");
+  must(!/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.png"/.test(index), "index:banner_no_png_src");
   must(/data-iu-pd-banner="1"/.test(index), "index:static_banner_shell");
   must(/preload[^>]+infouzel-prehled-dne-banner\.webp/.test(index), "index:banner_preload");
   must(/type="image\/webp"\s+srcset="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "index:banner_picture_source");
@@ -236,7 +237,7 @@ async function runPlaywright() {
       if (layout.overflowX) pwFails.push(vp.name + ":overflow_x");
       if (layout.imgWidth < 40 || layout.imgHeight < 10) pwFails.push(vp.name + ":img_size");
       if (layout.objectFit !== "contain") pwFails.push(vp.name + ":object_fit");
-      if (!/infouzel-prehled-dne-banner\.png/.test(layout.src)) pwFails.push(vp.name + ":img_src");
+      if (!/infouzel-prehled-dne-banner\.webp/.test(layout.src)) pwFails.push(vp.name + ":img_src");
       if (!/InfoUzel/.test(layout.alt)) pwFails.push(vp.name + ":img_alt");
       if (layout.newsExists) pwFails.push(vp.name + ":news_still_in_dom");
       if (layout.mountExists) pwFails.push(vp.name + ":mount_still_in_dom");

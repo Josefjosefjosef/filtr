@@ -102,6 +102,14 @@ async function runBrowser(browserType, name, withTtMeta) {
       );
       run("safe_yt", '<iframe src="https://www.youtube-nocookie.com/embed/abc" title="t" loading="lazy" allowfullscreen></iframe>');
       run("evil_yt_host", '<iframe src="https://evil.example/embed"></iframe>');
+      run(
+        "safe_picture_banner",
+        '<div class="iuPd__banner"><picture><source type="image/webp" srcset="/assets/images/infouzel-prehled-dne-banner.webp"><img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.webp" width="10" height="10" fetchpriority="high" loading="eager"></picture></div>'
+      );
+      run(
+        "evil_source_js",
+        '<picture><source type="image/webp" srcset="javascript:alert(1)"><img src="/x.webp"></picture>'
+      );
       return out;
     });
 
@@ -158,6 +166,18 @@ async function runBrowser(browserType, name, withTtMeta) {
     }
     if (!cases.safe_yt || !/youtube-nocookie/.test(cases.safe_yt.inner || "")) fails.push("safe_yt_lost");
     if (cases.evil_yt_host && /evil\.example/.test(cases.evil_yt_host.inner || "")) fails.push("evil_iframe_kept");
+    if (!cases.safe_picture_banner || !/<picture/i.test(cases.safe_picture_banner.inner || "")) {
+      fails.push("safe_picture_lost");
+    }
+    if (!cases.safe_picture_banner || !/source[^>]*srcset=/i.test(cases.safe_picture_banner.inner || "")) {
+      fails.push("safe_picture_source_lost");
+    }
+    if (
+      cases.evil_source_js &&
+      /javascript:/i.test(cases.evil_source_js.inner || "")
+    ) {
+      fails.push("evil_srcset_kept");
+    }
 
     // Click entity js if any href left
     if (cases.entity_js && cases.entity_js.href) {

@@ -150,9 +150,10 @@ function staticGate() {
 
   must(index.includes("iu-prehled-dne-v1.css?v=" + CACHE_BUST), "index:css_cache_bust");
   must(index.includes("iu-prehled-dne-ui-v1.js?v=" + readPrehledDneUiCacheBust(ROOT)), "index:js_cache_bust");
-  must(/infouzel-prehled-dne-banner\.png/.test(ui), "ui:banner_asset");
+  must(/infouzel-prehled-dne-banner\.webp/.test(ui), "ui:banner_asset");
   must(/data-iu-pd-banner=\"1\"/.test(ui), "ui:banner_marker");
-  must(/infouzel-prehled-dne-banner\.png/.test(index), "index:banner_asset");
+  must(/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "index:banner_asset");
+  must(!/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.png"/.test(index), "index:banner_no_png_src");
   must(/class=\"iu-info-system-cutover\"/.test(index), "index:cutover_class_first_byte");
   must(/__iuInfoSystemCutoverEarlyBoot/.test(index), "index:cutover_early_boot");
   must(/\.iuPd__bannerImg/.test(css) && /aspect-ratio:\s*1661\s*\/\s*616/.test(css), "css:banner_aspect");

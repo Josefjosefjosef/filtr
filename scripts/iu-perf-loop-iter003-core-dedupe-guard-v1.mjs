@@ -22,6 +22,13 @@ function must(cond, id) {
 const CORE_BUST =
   "iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820";
 
+const htmlRewriteBlock = String(pages.split("Rewrite HTML to versioned")[1] || "").split(
+  "ES module relative imports"
+)[0];
+must(
+  htmlRewriteBlock.includes("iu-info-system-core-v1.${ASSET_VER}.js"),
+  "pages:html_modulepreload_core_hash_rewrite"
+);
 must(pages.includes("without rewriting those, the browser downloads core twice"), "pages:dedupe_comment");
 must(
   /find assets -type f -name '\*\.js'/.test(pages) &&

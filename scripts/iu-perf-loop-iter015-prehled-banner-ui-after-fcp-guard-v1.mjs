@@ -19,8 +19,12 @@ const hasPrehledPreload = /<link[^>]*rel="modulepreload"[^>]*iu-prehled-dne-ui-v
 must(chmiAssetWaterfall && hasPrehledPreload || !hasPrehledPreload, "no_modulepreload");
 must(!/<script[^>]*type="module"[^>]*src="[^"]*iu-prehled-dne-ui-v1\.js/.test(index), "no_early_module_src");
 must(/infouzel-prehled-dne-banner\.webp"[^>]*media="\(min-width: 768px\)"/.test(index), "banner_preload_media");
-must(/iuPd__bannerImg[^>]*fetchpriority="low"/.test(index), "banner_fetchpriority_low");
-must(/iuPd__bannerImg[^>]*loading="lazy"/.test(index), "banner_loading_lazy");
+/* Forensic 2026-09-12: TT unwrap of <picture> + lazy/low + PNG fallback caused 1MB late paint.
+   Critical banner must stay webp + eager/high (72KB) so first stable frame keeps homepage graphics. */
+must(/iuPd__bannerImg[^>]*fetchpriority="high"/.test(index), "banner_fetchpriority_high");
+must(/iuPd__bannerImg[^>]*loading="eager"/.test(index), "banner_loading_eager");
+must(/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.webp"/.test(index), "banner_img_webp");
+must(!/iuPd__bannerImg[^>]*src="\/assets\/images\/infouzel-prehled-dne-banner\.png"/.test(index), "banner_img_no_png");
 /* Banner stays deferred; CHMI module may start in early head for first-real-card P0. */
 must(/first-load-early-chmi-boot-v1-20260821/.test(index), "early_chmi_boot_marker");
 

@@ -2207,7 +2207,7 @@ function bannerHtml() {
     `<div class="iuPd__banner" data-iu-pd-banner="1" data-testid="prehled-dne-homecard">` +
     `<picture>` +
     `<source type="image/webp" srcset="/assets/images/infouzel-prehled-dne-banner.webp" />` +
-    `<img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.png" width="1661" height="616" ` +
+    `<img class="iuPd__bannerImg" src="/assets/images/infouzel-prehled-dne-banner.webp" width="1661" height="616" ` +
     `alt="InfoUzel – přehled dne podle vybraných témat, regionů a zdrojů" ` +
     `decoding="async" fetchpriority="high" loading="eager" />` +
     `</picture>` +
