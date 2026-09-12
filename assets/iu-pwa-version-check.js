@@ -121,6 +121,10 @@
       var serverVer =
         data && typeof data.version === "string" ? data.version.trim() : "";
       if (shouldSkipReload(serverVer, bootVer)) return;
+      try {
+        if (sessionStorage.getItem(SS_SW_DEPLOY_RELOAD) === "1") return;
+        sessionStorage.setItem(SS_SW_DEPLOY_RELOAD, "1");
+      } catch (_) {}
 
       markReloadFor(serverVer);
       safeReload();

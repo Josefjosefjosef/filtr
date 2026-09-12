@@ -202,6 +202,9 @@ function iuSilentSwReloadFromWorker(worker) {
     sessionStorage.setItem("iu_sw_update_reload_used", "1");
   } catch (_) {}
   try {
+    sessionStorage.setItem("iu:pwa:sw-deploy-reload", "1");
+  } catch (_) {}
+  try {
     worker.postMessage({ type: "SKIP_WAITING" });
   } catch (_) {}
   try {

@@ -200,6 +200,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-silver-wx-boot-no-flash-guard
 
+      - name: Startup single-paint guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-startup-single-paint-guard
+
       - name: Weather offline → online recovery guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-weather-offline-online-recovery-guard

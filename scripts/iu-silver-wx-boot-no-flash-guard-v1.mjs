@@ -39,11 +39,20 @@ function staticContract() {
   const compute = pipe.indexOf("function iuSilverWeatherComputePhase");
   if (compute < 0) fails.push("static_missing_ComputePhase");
   else {
-    const slice = pipe.slice(compute, compute + 1200);
+    const slice = pipe.slice(compute, compute + 1800);
     if (slice.indexOf('perm === "pending"') < 0 && slice.indexOf('perm === "granted"') < 0) {
       fails.push("static_ComputePhase_missing_perm_gate");
     }
+    if (slice.indexOf('perm === "unknown"') < 0) {
+      fails.push("static_ComputePhase_missing_unknown_gate");
+    }
+    if (slice.indexOf('perm === "denied"') < 0) {
+      fails.push("static_ComputePhase_missing_denied_gate");
+    }
     if (!/return "loading"/.test(slice)) fails.push("static_ComputePhase_missing_loading_for_pending");
+    if (slice.indexOf("__iuSilverWxGeoAuthorityResolved") < 0) {
+      fails.push("static_ComputePhase_missing_authority_resolved");
+    }
   }
   if (pkg.indexOf("iu-silver-wx-boot-no-flash-guard") < 0) fails.push("package_json_missing_script");
   if (smoke.indexOf("iu-silver-wx-boot-no-flash-guard") < 0) fails.push("smoke_yml_missing_guard");
