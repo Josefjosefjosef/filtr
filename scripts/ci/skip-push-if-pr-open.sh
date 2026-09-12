@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # On push to fix/**, if an open PR already covers this branch, skip the heavy job.
 # PR workflow owns required checks; a cancelled sibling push must not be created.
+# merge_group is NEVER skipped — Merge Queue owns required CI for that SHA.
 # Outputs: skip=true|false (GITHUB_OUTPUT)
 set -euo pipefail
 
@@ -10,7 +11,9 @@ HEAD_REF="${GITHUB_HEAD_REF:-}"
 
 SKIP="false"
 
-if [ "$EVENT_NAME" = "push" ] && [[ "$REF_NAME" == fix/* ]]; then
+if [ "$EVENT_NAME" = "merge_group" ]; then
+  echo "skip_push_if_pr_open=NO event=merge_group (merge queue owns required checks)"
+elif [ "$EVENT_NAME" = "push" ] && [[ "$REF_NAME" == fix/* ]]; then
   if [ -z "${GH_TOKEN:-}" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
     GH_TOKEN="$GITHUB_TOKEN"
     export GH_TOKEN

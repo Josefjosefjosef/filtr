@@ -16,10 +16,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
+  merge_group:
 
 concurrency:
-  # Event-scoped: push must not cancel pull_request (cancelled checks blocked merge).
-  group: repo-guard-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
+  # Event-scoped: push must not cancel pull_request / merge_group (cancelled checks blocked merge).
+  group: repo-guard-${{ github.event.merge_group.head_sha || github.head_ref || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -106,6 +107,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
           PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha }}
           TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail

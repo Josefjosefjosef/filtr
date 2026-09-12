@@ -19,23 +19,28 @@ on:
       # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
       - "fix/**"
   workflow_dispatch:
+  # Merge Queue: required CI must run on the merge-group SHA (PR head + current main).
+  merge_group:
 
 concurrency:
-  # Event-scoped group: push+pull_request must NOT cancel each other on the same
-  # head SHA. Cross-event cancel left cancelled check runs that blocked merge
-  # ("2 of 3 required status checks are cancelled") even after a valid PASS.
-  group: smoke-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
+  # Event-scoped: push / pull_request / merge_group must NOT cancel each other.
+  # merge_group keyed by head_sha so CHMI/feature pushes cannot cancel queue CI.
+  group: smoke-${{ github.event.merge_group.head_sha || github.head_ref || github.ref_name }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
-  smoke:
+  # Real early-exit for duplicate push when an open PR owns required smoke.
+  # Must NOT run npm ci / Playwright — only gate. Does NOT post required status.
+  smoke-gate:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      skip: ${{ steps.prgate.outputs.skip }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Full history clones hang/timeout on this large repo; scope script fetches main --depth=64.
-          fetch-depth: 64
+          fetch-depth: 1
 
       - name: Skip redundant push when open PR covers branch
         id: prgate
@@ -46,18 +51,47 @@ jobs:
           chmod +x scripts/ci/skip-push-if-pr-open.sh
           scripts/ci/skip-push-if-pr-open.sh
 
+      - name: Duplicate push early-exit ack (PR owns required smoke)
+        if: steps.prgate.outputs.skip == 'true'
+        run: |
+          set -euo pipefail
+          echo "SMOKE_PUSH_PR_OWNS_CHECK=YES"
+          echo "SMOKE_PUSH_SKIPPED_PR_OWNS_CHECK=YES"
+          echo "SMOKE_EARLY_EXIT=YES"
+          # Do NOT post required status — false-greens SHA before pull_request smoke finishes.
+
+  smoke:
+    needs: smoke-gate
+    if: needs.smoke-gate.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Full history clones hang/timeout on this large repo; scope script fetches main --depth=64.
+          fetch-depth: 64
+
+      - name: Merge-group SHA contract
+        if: github.event_name == 'merge_group'
+        run: |
+          set -euo pipefail
+          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          CHECKED_OUT_SHA="$(git rev-parse HEAD)"
+          echo "CHECKED_OUT_SHA=${CHECKED_OUT_SHA}"
+          test "${GITHUB_SHA}" = "${CHECKED_OUT_SHA}"
+          test -n "${{ github.event.merge_group.head_sha }}"
+          test "${GITHUB_SHA}" = "${{ github.event.merge_group.head_sha }}"
+          echo "MERGE_GROUP_SHA_CONTRACT=PASS"
+
       - name: Detect data-only scope (fast pool / data PR fast path)
         id: scope
         env:
-          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
-          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          SMOKE_BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha || '' }}
+          SMOKE_HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha || github.sha }}
           GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-          IU_SKIP_PUSH_IF_PR_OPEN: ${{ steps.prgate.outputs.skip }}
         run: |
           set -euo pipefail
-          if [ "${IU_SKIP_PUSH_IF_PR_OPEN}" = "true" ]; then
-            echo "SMOKE_PUSH_PR_OWNS_CHECK=YES"
-          fi
           node scripts/smoke-data-only-scope.mjs
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -65,6 +99,8 @@ jobs:
           node-version: "24"
 
       - run: npm ci
+      - name: Merge-group / duplicate-push CI contract proof
+        run: node scripts/ci/merge-group-ci-contract-proof.mjs
       - name: GHA immutable pin guard (SC-GHA-02)
         run: npm run iu-gha-immutable-pin-guard
       - name: Permissions-Policy guard (EXT-HDR-PERM-01)
@@ -1416,14 +1452,14 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run travel-article-feed-regression-guard
 
-      # Skip-push (PR owns full smoke) must NOT post required status — that false-greens the SHA
-      # before pull_request smoke finishes.
+      # Required status owner: pull_request or merge_group (this job). Duplicate push is gated out.
       - name: Set required status context (smoke)
-        if: always() && steps.prgate.outputs.skip != 'true'
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
           PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha }}
           TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail

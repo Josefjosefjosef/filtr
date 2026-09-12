@@ -32,8 +32,14 @@ function listChangedFiles() {
     /* best effort */
   }
 
+  // Prefer explicit base/head (pull_request + merge_group). Scope is always real diff,
+  // never branch/PR title heuristics.
   if (baseSha && headSha) {
     return run(`git diff --name-only ${baseSha}...${headSha}`).split("\n");
+  }
+  if (event === "merge_group") {
+    // Defensive: merge_group without env should still classify vs main tip of checkout.
+    return run("git diff --name-only origin/main...HEAD").split("\n");
   }
   if (event === "push") {
     const refName = (process.env.GITHUB_REF_NAME || process.env.GITHUB_HEAD_REF || "").trim();
@@ -127,6 +133,7 @@ export function isWorkflowOnlyScope(files) {
   if (!paths.length) return false;
   const allowed = (f) =>
     f.startsWith(".github/workflows/") ||
+    f.startsWith("scripts/ci/") ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === "scripts/smoke_data_only_scope_proof.mjs" ||
     // Ads post-migration verify / Admin E2E tooling (no app UI surface)
