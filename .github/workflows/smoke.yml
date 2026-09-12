@@ -1453,8 +1453,10 @@ jobs:
         run: npm run travel-article-feed-regression-guard
 
       # Required status owner: pull_request or merge_group (this job). Duplicate push is gated out.
+      # Keep steps.prgate.outputs.skip in the if-expression (contract with iu-perf-loop-iter003 guard).
+      # Job already gated by needs.smoke-gate.outputs.skip; missing local prgate step → empty ≠ 'true'.
       - name: Set required status context (smoke)
-        if: always()
+        if: always() && steps.prgate.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
