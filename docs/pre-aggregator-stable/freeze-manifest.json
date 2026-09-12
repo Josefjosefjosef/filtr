@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-startup-single-paint-v1-20260912",
+  "freezeId": "iu-startup-forensic-stability-v1-20260912",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-12T11:35:00.000Z",
-  "note": "Freeze startup single-paint: weather authority gating + shared SW/PWA reload latch + splash bg match.",
+  "updatedAt": "2026-09-12T18:20:00.000Z",
+  "note": "Freeze startup forensic stability: TT picture allowlist + critical banner webp + modulepreload dedupe (PR #10657).",
   "files": {
-    "projects/index.html": "d99a1976d1c76095ea6e4428112bb31cc3cf5b717f8bba3e57aa5797fd405ad0",
+    "projects/index.html": "9190ceae351adee900a5f30bd9398411922271a6a5d3d8455b17d36c1aaa8445",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "9e11cc39bdf0cc389d086aefedf6691baeccefe18bce8671ca6556533432b59e",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "f086f50fc330a94777db85a3ff885a5ac0fbf6b9116c2f458a727d764be940b5",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "de758ce7f8fb3dedd672994138bfb0bf8f3120196602aa4cb290851c6903491d"
+    "assets/iu-prehled-dne-ui-v1.js": "dc660eff647a48688b442dcf8b0008aaa5a8ea5f5eced5db4f0558a04ab163ae"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -43,7 +43,7 @@
     "projects/index.html": [
       "Reload visual stability: hold viewport height",
       "iu-trusted-types-v1.js",
-      "iu-security-tt-svg-viewbox-v1-20260902",
+      "iu-security-tt-picture-banner-v1-20260912",
       "trusted-types iu-default iu-escape iu-tt-parser",
       "require-trusted-types-for 'script'",
       "iu-vault-bootstrap-v1.js",
