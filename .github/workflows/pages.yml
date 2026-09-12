@@ -72,6 +72,7 @@ jobs:
             -e "s#/assets/iu-silver-premium-draft\\.css?v=[A-Za-z0-9._-]*#/assets/iu-silver-premium-draft.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-prehled-dne-v1\\.css?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-v1.${ASSET_VER}.css#g" \
             -e "s#/assets/iu-prehled-dne-ui-v1\\.js?v=[A-Za-z0-9._-]*#/assets/iu-prehled-dne-ui-v1.${ASSET_VER}.js#g" \
+            -e "s#/assets/iu-info-system-core-v1\\.js?v=[A-Za-z0-9._-]*#/assets/iu-info-system-core-v1.${ASSET_VER}.js#g" \
             -e "s#<meta name=\"iu-data-ver\" content=\"iu-data-ver-placeholder\"#<meta name=\"iu-data-ver\" content=\"${ASSET_VER}\"#g"
 
           # ES module relative imports must resolve to the same deploy SHA core copy.

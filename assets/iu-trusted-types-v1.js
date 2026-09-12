@@ -82,6 +82,8 @@
     COL: 1,
     A: 1,
     IMG: 1,
+    PICTURE: 1,
+    SOURCE: 1,
     FIGURE: 1,
     FIGCAPTION: 1,
     TIME: 1,
@@ -151,7 +153,9 @@
 
   var TAG_ATTRS = {
     A: { href: 1, target: 1, rel: 1, download: 1 },
-    IMG: { src: 1, alt: 1, width: 1, height: 1, loading: 1, decoding: 1 },
+    IMG: { src: 1, alt: 1, width: 1, height: 1, loading: 1, decoding: 1, fetchpriority: 1, srcset: 1, sizes: 1 },
+    PICTURE: {},
+    SOURCE: { type: 1, srcset: 1, sizes: 1, media: 1 },
     IFRAME: {
       src: 1,
       title: 1,
@@ -345,6 +349,20 @@
     return isSafeHttpUrl(s);
   }
 
+  /** srcset: "url [descriptor], url [descriptor]" — each URL must pass isSafeImgSrc. */
+  function isSafeSrcset(raw) {
+    var s = String(raw || "").replace(/[\u0000-\u001F\u007F]/g, "").trim();
+    if (!s) return false;
+    var parts = s.split(",");
+    for (var i = 0; i < parts.length; i += 1) {
+      var token = String(parts[i] || "").trim();
+      if (!token) return false;
+      var url = token.split(/\s+/)[0];
+      if (!isSafeImgSrc(url)) return false;
+    }
+    return true;
+  }
+
   function isSafeIframeSrc(raw) {
     var u = parseUrlSafe(raw);
     if (!u || u.protocol !== "https:") return false;
@@ -391,6 +409,14 @@
       if (tag === "IMG") return isSafeImgSrc(v) ? v : null;
       if (tag === "IFRAME") return isSafeIframeSrc(v) ? v : null;
       return null;
+    }
+    if (attr === "srcset") {
+      if (tag === "IMG" || tag === "SOURCE") return isSafeSrcset(v) ? v : null;
+      return null;
+    }
+    if (attr === "type" && tag === "SOURCE") {
+      var st = v.toLowerCase();
+      return /^image\/(png|jpe?g|gif|webp|avif|svg\+xml)$/i.test(st) ? st : null;
     }
     if (attr === "action" || attr === "formaction") {
       return isSafeFormAction(v) ? v : null;
