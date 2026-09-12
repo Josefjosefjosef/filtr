@@ -402,6 +402,63 @@ export function normalizeRoadLabel(road) {
 }
 
 /**
+ * Compose bare digits + trusted CLASS_I/II/III hint → I/38 etc.
+ * Never invents class. Never double-prefixes. Mirrors presenter composeRoadNumberWithClass
+ * (kept local so filter module stays free of the heavy presenter import).
+ */
+export function composeRoadNumberWithClassHint(roadRaw, classHint) {
+  const road = normalizeRoadLabel(roadRaw);
+  if (!road) return "";
+  if (/^(I|II|III)\//.test(road)) return road;
+  if (/^D\d+/.test(road)) return road;
+  const bare = road.match(/^(\d{1,6}[A-Z]?)$/);
+  if (!bare) return road;
+  const hint = String(classHint || "").trim();
+  if (!hint) return road;
+  let prefix = null;
+  if (/^CLASS_III$/i.test(hint) || /^III$/i.test(hint) || /Silnice\s+III(?:\.|\s|$)/i.test(hint)) {
+    prefix = "III";
+  } else if (/^CLASS_II$/i.test(hint) || /^II$/i.test(hint) || /Silnice\s+II(?:\.|\s|$)/i.test(hint)) {
+    prefix = "II";
+  } else if (/^CLASS_I$/i.test(hint) || /^I$/i.test(hint) || /Silnice\s+I(?:\.|\s|$)/i.test(hint)) {
+    prefix = "I";
+  }
+  if (!prefix) return road;
+  return prefix + "/" + bare[1];
+}
+
+/**
+ * Canonical filter/card road identity for one traffic view.
+ * Uses structured roadClass when present — never digit-count invention for compose.
+ */
+export function canonicalRoadLabelForTrafficView(tv) {
+  const direct = normalizeRoadLabel((tv && (tv.road || tv.roadNumber)) || "");
+  const classHint = (tv && (tv.roadClass || tv.roadClassLabel)) || "";
+  if (direct) {
+    const composed = composeRoadNumberWithClassHint(direct, classHint);
+    return normalizeRoadLabel(composed || direct);
+  }
+  return roadFromTrafficView(tv || {});
+}
+
+/** Match keys so bare "38" and classed "I/38" can align when class evidence exists. */
+function roadMatchKeys(road, classHint) {
+  const n = normalizeRoadLabel(road);
+  if (!n) return [];
+  const keys = new Set([n]);
+  const composed = normalizeRoadLabel(composeRoadNumberWithClassHint(n, classHint));
+  if (composed) keys.add(composed);
+  const m = n.match(/^(I|II|III)\/(\d{1,6}[A-Z]?)$/);
+  if (m) keys.add(m[2]);
+  const bare = n.match(/^(\d{1,6}[A-Z]?)$/);
+  if (bare && classHint) {
+    const c = normalizeRoadLabel(composeRoadNumberWithClassHint(bare[1], classHint));
+    if (c) keys.add(c);
+  }
+  return Array.from(keys);
+}
+
+/**
  * Build road catalog from offline snapshot / visible traffic items (data-derived, no brief hardcode).
  * @returns {{ byClass: Record<string, string[]>, all: string[], smv: string[] }}
  */
@@ -415,10 +472,11 @@ export function buildRoadCatalogFromTrafficItems(items) {
   }
   for (const ev of items || []) {
     const tv = (ev && ev.trafficV1) || ev || {};
-    const road = normalizeRoadLabel(tv.road || tv.roadNumber || "");
+    const road = canonicalRoadLabelForTrafficView(tv);
     if (!road) continue;
     all.add(road);
     let rc = String(tv.roadClass || "").toUpperCase();
+    // Prefer structured class; only fall back to token shape of the *canonical* label.
     if (!rc || rc === "UNKNOWN" || rc === "LOCAL") rc = classifyRoadNumberClient(road);
     if (rc === "LOCAL" || rc === "UNKNOWN") {
       // Keep in all, but do not invent a LOCAL UI group.
@@ -449,7 +507,11 @@ export function buildRoadCatalogFromTrafficItems(items) {
 
 function roadFromTrafficView(tv) {
   const direct = normalizeRoadLabel(tv.road || tv.roadNumber || "");
-  if (direct) return direct;
+  if (direct) {
+    return normalizeRoadLabel(
+      composeRoadNumberWithClassHint(direct, tv.roadClass || tv.roadClassLabel) || direct
+    );
+  }
   // Existing offline cards may lack structured road while official impact names D1 / EXIT.
   // Fail-closed: leading motorway token or "dálnice Dx" / "Dx … EXIT" only.
   const blob = String(tv.impactFull || tv.impact || tv.summaryFull || tv.summary || "").trim();
@@ -470,9 +532,12 @@ function roadMatchesSelection(tv, selectedRoads) {
   if (!selectedRoads.length) return true;
   const road = roadFromTrafficView(tv);
   if (!road) return false;
-  const set = new Set(selectedRoads.map(normalizeRoadLabel));
-  if (set.has(road)) return true;
-  // SMV-named roads may appear without classic D/I labels — allow exact match only.
+  const classHint = tv.roadClass || tv.roadClassLabel || "";
+  const eventKeys = new Set(roadMatchKeys(road, classHint));
+  for (const sel of selectedRoads) {
+    const selKeys = roadMatchKeys(sel, classHint);
+    if (selKeys.some((k) => eventKeys.has(k))) return true;
+  }
   return false;
 }
 

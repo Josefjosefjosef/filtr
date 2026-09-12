@@ -1454,7 +1454,7 @@ jobs:
 
       # Required status owner: pull_request or merge_group (this job). Duplicate push is gated out.
       - name: Set required status context (smoke)
-        if: always()
+        if: always() && needs.smoke-gate.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}

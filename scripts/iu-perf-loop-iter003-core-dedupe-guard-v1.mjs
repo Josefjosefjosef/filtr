@@ -31,7 +31,9 @@ must(
 must(traffic.includes(CORE_BUST), "traffic:core_cache_bust_iter003");
 must(ui.includes(CORE_BUST), "ui:core_cache_bust_iter003");
 must(
-  /Set required status context \(smoke\)[\s\S]{0,200}steps\.prgate\.outputs\.skip != 'true'/.test(smoke),
+  /Set required status context \(smoke\)[\s\S]{0,200}(?:steps\.prgate\.outputs\.skip|needs\.smoke-gate\.outputs\.skip) != 'true'/.test(
+    smoke
+  ),
   "smoke:skip_push_no_required_status"
 );
 
