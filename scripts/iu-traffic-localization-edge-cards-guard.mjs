@@ -201,6 +201,146 @@ function base(extra) {
   ok("CAST_OBCE_PARTS", (facts.municipalityParts || []).some((p) => /Žipotín/i.test(p)), JSON.stringify(facts.municipalityParts));
 }
 
+// --- NOČNÍ worksite tag is not a street (same family as mobilní) ---
+{
+  const NOC =
+    "D5, mezi km 10 a 12, ve směru Praha, práce na silnici, Od 14.09.2026 20:00 Do 15.09.2026 05:00, pracovní místo DN - Noční stabilní (NOČNÍ), Vydal: Test s.r.o.";
+  const facts = parseOfficialCommentFacts(NOC);
+  const paren = extractParentheticalStreetNamesFromOfficialComment(NOC);
+  const hdr = buildLocalityHeaderModel(
+    base({ impact: NOC, impactFull: NOC, road: "D5", eventType: "prace", illustrationKey: "prace" })
+  );
+  const place = buildPlaceAndDirectionLine(
+    base({ impact: NOC, impactFull: NOC, road: "D5", eventType: "prace" })
+  );
+  ok("NOCNI_WORKSITE_NOISE", looksLikeWorksiteOrOperationalStreetNoise("NOČNÍ") === true);
+  ok("NOCNI_PAREN_REJECTED", !paren.some((p) => /^NOČNÍ$/i.test(p)), JSON.stringify(paren));
+  ok("NOCNI_FACTS_STREET_EMPTY", !facts.street || !/^NOČNÍ$/i.test(facts.street), facts.street);
+  ok("NOCNI_HEADER_NO_ULICE", !/ulice:\s*NOČNÍ/i.test(hdr.besideLocality || ""), hdr.besideLocality);
+  ok("NOCNI_PLACE_NO_ULICE", !/ulice\s+NOČNÍ/i.test(place || ""), place);
+  ok("MOBILNI_STILL_NOISE", looksLikeWorksiteOrOperationalStreetNoise("mobilní") === true);
+}
+
+// --- Canonical bare road + class ---
+{
+  const I38 =
+    "silnice I/38, v katastru obce Nové Dvory, okr. Kutná Hora, stavební práce";
+  const III =
+    "silnice III/29810, v katastru obce Sample, okr. Sample, stavební práce";
+  const card38 = buildTrafficCardPresentation(
+    base({
+      impact: I38,
+      impactFull: I38,
+      road: "38",
+      roadClass: "CLASS_I",
+      roadClassLabel: "Silnice I. třídy",
+      municipality: "Nové Dvory",
+      eventType: "prace",
+    })
+  );
+  const card29810 = buildTrafficCardPresentation(
+    base({
+      impact: III,
+      impactFull: III,
+      road: "29810",
+      roadClass: "CLASS_III",
+      roadClassLabel: "Silnice III. třídy",
+      eventType: "prace",
+    })
+  );
+  const cardII = buildTrafficCardPresentation(
+    base({
+      impact: "silnice II/486, u obce Kopřivnice, okr. Sample",
+      impactFull: "silnice II/486, u obce Kopřivnice, okr. Sample",
+      road: "II/486",
+      roadClass: "CLASS_II",
+      eventType: "prace",
+    })
+  );
+  const r38 = card38.communication?.roadPresentations?.[0]?.road || card38.roadPresentation?.road;
+  const r29810 =
+    card29810.communication?.roadPresentations?.[0]?.road || card29810.roadPresentation?.road;
+  const rII = cardII.communication?.roadPresentations?.[0]?.road || cardII.roadPresentation?.road;
+  ok("CANON_38_TO_I38", r38 === "I/38", r38);
+  ok("CANON_29810_TO_III", r29810 === "III/29810", r29810);
+  ok("CANON_II486_STABLE", rII === "II/486", rII);
+  ok("CANON_III_STABLE", r29810 === "III/29810");
+}
+
+// --- Road number must not become Lokalita ---
+{
+  const S = "silnice I/20, v katastru obce Pištín, okr. České Budějovice, omezení";
+  const card = buildTrafficCardPresentation(
+    base({
+      impact: S,
+      impactFull: S,
+      road: "20",
+      roadClass: "CLASS_I",
+      roadClassLabel: "Silnice I. třídy",
+      location: "20",
+      municipality: "Pištín",
+      eventType: "omezeni",
+    })
+  );
+  const locRow = (card.expanded?.rows || []).find((r) => r.key === "location");
+  ok("LOC_NOT_ROAD_DIGITS", !locRow || locRow.value !== "20", JSON.stringify(locRow));
+}
+
+// --- Liberec) parenthesis artefact ---
+{
+  const KS =
+    "V obci Krásná Studánka(okres Liberec) ulice: Dětřichovská, silnice: místní komunikace, Od 14.09.2026 00:00, Do 22.09.2026 23:59, Vydal: Magistrát města Liberec";
+  const facts = parseOfficialCommentFacts(KS);
+  const card = buildTrafficCardPresentation(
+    base({
+      impact: KS,
+      impactFull: KS,
+      road: "",
+      location: "okres Liberec)",
+      district: "Liberec)",
+      eventType: "omezeni",
+    })
+  );
+  const distRow = (card.expanded?.rows || []).find((r) => r.key === "district");
+  ok("KS_CITY", /Krásná\s+Studánka/i.test(facts.city || ""), facts.city);
+  ok("KS_DISTRICT_NO_PAREN", facts.district === "Liberec", facts.district);
+  ok("KS_DISTRICT_ROW_CLEAN", !distRow || distRow.value === "Liberec", JSON.stringify(distRow));
+  ok("KS_PLACE_NO_PAREN", !/Liberec\)/i.test(card.placeLine || ""), card.placeLine);
+  ok("KS_SERVER_DISTRICT", (extractLocalityFromOfficialComment(KS).district || "") === "Liberec");
+}
+
+// --- Klatovy / Točník keeps Místo (katastr + část obce) ---
+{
+  const KT =
+    "místní komunikace, v katastru obce Klatovy, část obce Točník, okr. Klatovy, uzavřeno, stavební práce, Od 14.09.2026 00:01 Do 14.11.2026 23:59, Vydal: Městský úřad Klatovy";
+  const facts = parseOfficialCommentFacts(KT);
+  const hdr = buildLocalityHeaderModel(
+    base({
+      impact: KT,
+      impactFull: KT,
+      road: "",
+      municipality: "Klatovy",
+      district: "Klatovy",
+      eventType: "prace",
+    })
+  );
+  const card = buildTrafficCardPresentation(
+    base({
+      impact: KT,
+      impactFull: KT,
+      road: "",
+      municipality: "Klatovy",
+      district: "Klatovy",
+      eventType: "prace",
+    })
+  );
+  ok("KT_RELATION_KATASTR", facts.municipalityRelation === "v_katastru_obce", facts.municipalityRelation);
+  ok("KT_PART_TOCNIK", (facts.municipalityParts || []).some((p) => /Točník/i.test(p)), JSON.stringify(facts.municipalityParts));
+  ok("KT_SIGN_OBEC", /Klatovy/i.test(hdr.municipalitySign || ""), hdr.municipalitySign);
+  ok("KT_PLACE_HAS_PART", /Točník/i.test(card.placeLine || ""), card.placeLine);
+  ok("KT_PLACE_NOT_EMPTY", !!(card.placeLine && String(card.placeLine).trim()), card.placeLine);
+}
+
 const passN = results.filter((r) => r.pass).length;
 const failN = results.length - passN;
 const out = {

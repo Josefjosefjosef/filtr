@@ -177,8 +177,14 @@ export function extractLocalityFromOfficialComment(summary) {
     }
   }
 
-  const mOkr = s.match(/okr\.\s*([^,;]{2,60})/u);
-  if (mOkr) district = clean(mOkr[1]);
+  const mOkrParen = s.match(/\(\s*okres\s+([^)]{2,60}?)\)/iu);
+  const mOkr = mOkrParen || s.match(/okr\.\s*([^,;)]{2,60})/u) || s.match(/\bokres\s+([^,;)]{2,60})/u);
+  if (mOkr) {
+    let dist = clean(mOkr[1]);
+    dist = clean(dist.replace(/\)+$/g, ""));
+    dist = clean(dist.split(/\s+ulice:?/i)[0]);
+    if (dist) district = dist;
+  }
 
   const mStreet =
     s.match(/\bv\s+ulici\s+([^,;]{2,60})/i) || s.match(/\bulice:?\s+([^,;]{2,60})/i);

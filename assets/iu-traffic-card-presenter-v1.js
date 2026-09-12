@@ -1980,9 +1980,23 @@ export function composeRoadNumberWithClass(roadRaw, classHint) {
 export function looksLikeWorksiteOrOperationalStreetNoise(raw) {
   const t = clean(raw);
   if (!t) return false;
-  return /^(?:mobilní|pohyblivé|pohyblivý|krátkodobé|krátkodobý|stabilní|dlouhodobé|dlouhodobý|dočasné|dočasný|stacionární)$/i.test(
+  // Worksite / regime adjectives (incl. time-of-day tags like NOČNÍ) — never Ulice.
+  // Same family as "(mobilní)": operational attribute of "pracovní místo …", not geography.
+  return /^(?:mobilní|pohyblivé|pohyblivý|krátkodobé|krátkodobý|stabilní|dlouhodobé|dlouhodobý|dočasné|dočasný|stacionární|noční|denní)$/i.test(
     t
   );
+}
+
+/**
+ * Parenthetical token sits inside an NDIC worksite clause ("pracovní místo …").
+ * Those parentheses carry regime tags (mobilní, NOČNÍ, …), not street names.
+ */
+export function isParentheticalInsideWorksiteClause(rawText, matchIndex) {
+  const text = String(rawText || "");
+  if (!text || matchIndex == null || matchIndex < 0) return false;
+  const from = Math.max(0, matchIndex - 100);
+  const window = text.slice(from, matchIndex);
+  return /pracovní\s+místo\b/i.test(window);
 }
 
 export function looksLikeStreetName(raw) {
@@ -3307,6 +3321,8 @@ export function extractParentheticalStreetNamesFromOfficialComment(rawText) {
   const re = /\(([^)]{2,40})\)/gu;
   let m;
   while ((m = re.exec(cut))) {
+    // Worksite clause parentheses are regime tags, never streets — check before morphology.
+    if (isParentheticalInsideWorksiteClause(cut, m.index)) continue;
     let tok = sanitizeExtractedValueToken(m[1]);
     tok = clean(tok);
     if (!tok || /\s/.test(tok)) continue;
@@ -4433,8 +4449,20 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  const okr = locationScanText.match(/\bokr\.\s*([^,;]{2,60})/i) || locationScanText.match(/\bokres\s+([^,;]{2,60})/i);
-  if (okr) out.district = clean(okr[1]);
+  // Prefer explicit "(okres X)" / "okr. X" — never keep a leaked closing ")" from
+  // constructions like "Krásná Studánka(okres Liberec)".
+  const okrParen = locationScanText.match(/\(\s*okres\s+([^)]{2,60}?)\)/iu);
+  const okr =
+    okrParen ||
+    locationScanText.match(/\bokr\.\s*([^,;)]{2,60})/i) ||
+    locationScanText.match(/\bokres\s+([^,;)]{2,60})/i);
+  if (okr) {
+    let dist = clean(okr[1]);
+    dist = clean(dist.replace(/\)+$/g, ""));
+    dist = clean(dist.split(/\s+ulice:?/i)[0]);
+    dist = clean(dist.split(/\s*,\s*/)[0]);
+    if (dist && !/^ulice\b/i.test(dist)) out.district = dist;
+  }
 
   // Multi-street lists: never pick one street as the whole-event locality.
   const multiStreetBlob = locationScanText.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
@@ -7389,6 +7417,16 @@ export function resolveMunicipalitySignName(input = {}) {
   return city;
 }
 
+function sanitizeDistrictToken(raw) {
+  let d = clean(raw);
+  if (!d) return "";
+  d = clean(d.replace(/\)+$/g, ""));
+  d = clean(d.split(/\s+ulice:?/i)[0]);
+  d = clean(d.split(/\s*,\s*/)[0]);
+  if (!d || /^ulice\b/i.test(d) || looksLikeRoadNumberToken(d)) return "";
+  return d;
+}
+
 /**
  * Locality header parts: [municipality sign] [road] [street/beside].
  * Priority: municipality → road → named object → confirmed street → other locality.
@@ -7402,7 +7440,7 @@ export function buildLocalityHeaderModel(input = {}) {
   const location = clean(input.location);
   const blob = sourceBlob(input);
   const weakLocationEnrichment = isWeakDerivedRampEnrichmentLabel(location, blob);
-  const district = clean(input.district) || facts.district || "";
+  const district = sanitizeDistrictToken(input.district) || sanitizeDistrictToken(facts.district) || "";
   let cityPart = clean(facts.cityPart || input.cityPart);
   if (!cityPart && isPrahaCityPartName(input.municipality)) {
     cityPart = clean(input.municipality);
@@ -7772,7 +7810,7 @@ export function buildPlaceAndDirectionLine(input = {}) {
       facts.municipalityRelation
     ) ||
     "";
-  const district = clean(input.district) || facts.district || "";
+  const district = sanitizeDistrictToken(input.district) || sanitizeDistrictToken(facts.district) || "";
   const street = resolveConfirmedStreet(input, facts);
   const location = clean(input.location);
   const blob = sourceBlob(input);
@@ -7851,7 +7889,15 @@ export function buildPlaceAndDirectionLine(input = {}) {
     }
     if (district) {
       const distLabel = "okres " + district;
-      if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
+      if (
+        !bits.some(
+          (b) =>
+            /^okres\s+/i.test(String(b)) &&
+            samePlaceName(String(b).replace(/^okres\s+/i, ""), district)
+        )
+      ) {
+        bits.push(distLabel);
+      }
     }
     return bits.join(" · ");
   }
@@ -7905,6 +7951,13 @@ export function buildPlaceAndDirectionLine(input = {}) {
   if (km) bits.push(km);
   else if (section) bits.push(section);
   if (dir) bits.push("směr " + dir);
+  // Local / MK events: keep část obce on MÍSTO when there is no street/road bit.
+  const muniParts = Array.isArray(facts.municipalityParts)
+    ? facts.municipalityParts.map(clean).filter(Boolean)
+    : [];
+  for (const part of muniParts) {
+    if (part && !bits.some((b) => samePlaceName(b, part))) bits.push(part);
+  }
   if (muni && !bits.includes(muni)) bits.push(muni);
   else if (
     location &&
@@ -7915,10 +7968,20 @@ export function buildPlaceAndDirectionLine(input = {}) {
   }
   if (district) {
     const distLabel = "okres " + district;
-    if (!bits.some((b) => String(b).includes(district))) bits.push(distLabel);
+    // Municipality name equal to district (Klatovy / Klatovy) must NOT suppress okres.
+    if (
+      !bits.some(
+        (b) =>
+          /^okres\s+/i.test(String(b)) &&
+          samePlaceName(String(b).replace(/^okres\s+/i, ""), district)
+      )
+    ) {
+      bits.push(distLabel);
+    }
   }
 
   if (bits.length) return bits.join(" · ");
+  if (muniParts.length && muni) return muniParts.join(", ") + " · " + muni;
   if (muni && district) return muni + " · okres " + district;
   return muni || location || clean(input.subjectScopeLabel) || "";
 }
@@ -8162,7 +8225,7 @@ export function buildTrafficExpandedDetail(input = {}) {
       push("municipalityParts", "Část obce", filtered.join(", "));
     }
   }
-  push("district", "Okres", input.district || facts.district);
+  push("district", "Okres", sanitizeDistrictToken(input.district) || sanitizeDistrictToken(facts.district));
   {
     const locQ = clean(facts.locationQualifier);
     if (locQ) push("locationQualifier", "Upřesnění místa", locQ);
@@ -8190,13 +8253,16 @@ export function buildTrafficExpandedDetail(input = {}) {
       .replace(/\s+/g, "");
     const named = facts.namedObject ? streetBareName(facts.namedObject) : null;
     const namedKind = facts.namedObjectKind || (named ? classifyLocationKindFromName(named) : null);
-    // Hide LOKALITA when it only echoes the road number (e.g. location=D0).
+    // Hide LOKALITA when it only echoes the road number (e.g. location=D0 or "20" vs I/20).
+    const locRoadNum = ((locNorm.match(/^(?:i{1,3}|ii|iii|d)?\/?(\d{1,6}[a-z]?)$/i) || [])[1] || "").toLowerCase();
+    const roadNumOnly = ((roadNorm.match(/^(?:i{1,3}|ii|iii|d)?\/?(\d{1,6}[a-z]?)$/i) || [])[1] || "").toLowerCase();
     const locIsRoadEcho =
       !!(roadNorm && locNorm && locNorm === roadNorm) ||
       (!!locNorm &&
         looksLikeRoadNumberToken(input.location) &&
         !!roadNorm &&
-        locNorm === roadNorm);
+        locNorm === roadNorm) ||
+      !!(locRoadNum && roadNumOnly && locRoadNum === roadNumOnly);
     const locIsStreetEcho = !!(locNorm && streetNorm && locNorm === streetNorm);
     const locIsMuniEcho = !!(locNorm && muniNorm && locNorm === muniNorm);
     const locIsPartEcho = !!(locNorm && partNorm && locNorm === partNorm);
