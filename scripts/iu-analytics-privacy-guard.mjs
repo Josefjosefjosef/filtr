@@ -45,6 +45,12 @@ if (!/Zaznamenané instalace PWA/.test(publicPage) || !/sPwaInstalls/.test(publi
 }
 if (!/CREATE INDEX IF NOT EXISTS idx_ads_campaign/.test(migration)) fail("migration:missing_ad_indexes");
 if (!/d1_binding_missing|d1_unreachable/.test(indexTs)) fail("worker:missing_d1_failure_mode");
+if (!/checkIngestRateLimit|rate_limited/.test(indexTs)) fail("worker:missing_ingest_rate_limit");
+if (!/body_too_large|413/.test(indexTs)) fail("worker:missing_ingest_body_limit");
+const rateLimitTs = fs.readFileSync(path.join(ROOT, "cloudflare/iu-analytics/src/rate-limit.ts"), "utf8");
+if (!/INGEST_MAX_BODY_BYTES/.test(rateLimitTs)) fail("rate_limit:missing_body_bytes_const");
+if (/\bprepare\s*\(|INSERT\s+INTO/i.test(rateLimitTs)) fail("rate_limit:must_not_touch_d1");
+if (!/CF-Connecting-IP/.test(rateLimitTs)) fail("rate_limit:missing_cf_connecting_ip_key");
 if (!/Cloudflare D1/.test(arch)) fail("docs:d1_source_of_truth_missing");
 if (/Cache API fallback|Workers KV \(preferred\)/.test(arch)) fail("docs:stale_cache_kv_primary_claim");
 
