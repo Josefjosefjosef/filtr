@@ -2,7 +2,7 @@
 # Post (or intentionally skip) a required commit status.
 # Args: CONTEXT
 # Env: GH_TOKEN, GITHUB_REPOSITORY, GITHUB_SHA, GITHUB_EVENT_NAME,
-#      JOB_STATUS, PULL_REQUEST_HEAD_SHA (optional), TARGET_URL
+#      JOB_STATUS, PULL_REQUEST_HEAD_SHA (optional), MERGE_GROUP_HEAD_SHA (optional), TARGET_URL
 set -euo pipefail
 
 CONTEXT="${1:?context required}"
@@ -10,6 +10,7 @@ JOB_STATUS="${JOB_STATUS:?JOB_STATUS required}"
 EVENT_NAME="${GITHUB_EVENT_NAME:-}"
 GITHUB_SHA_VAL="${GITHUB_SHA:-}"
 HEAD_SHA="${PULL_REQUEST_HEAD_SHA:-}"
+MERGE_GROUP_SHA="${MERGE_GROUP_HEAD_SHA:-}"
 TARGET_URL="${TARGET_URL:-}"
 
 if [ "$JOB_STATUS" = "cancelled" ] || [ "$JOB_STATUS" = "skipped" ]; then
@@ -23,7 +24,13 @@ if [ "$JOB_STATUS" != "success" ]; then
 fi
 
 SHA="$GITHUB_SHA_VAL"
-if [ "$EVENT_NAME" = "pull_request" ] || [ "$EVENT_NAME" = "pull_request_target" ]; then
+if [ "$EVENT_NAME" = "merge_group" ]; then
+  # Merge Queue must authorize the merge-group SHA, never the raw PR head alone.
+  if [ -n "$MERGE_GROUP_SHA" ]; then
+    SHA="$MERGE_GROUP_SHA"
+  fi
+  echo "status_post_merge_group_sha=${SHA}"
+elif [ "$EVENT_NAME" = "pull_request" ] || [ "$EVENT_NAME" = "pull_request_target" ]; then
   if [ -z "$HEAD_SHA" ]; then
     echo "status_post_skip=missing_pull_request_head_sha context=${CONTEXT}"
     exit 1
@@ -52,7 +59,7 @@ for attempt in 1 2 3 4 5 6; do
     -f context="$CONTEXT" \
     -f description="Required status context (${CONTEXT})" \
     -f target_url="$TARGET_URL"; then
-    echo "status_post_ok context=${CONTEXT} state=${STATE} sha=${SHA}"
+    echo "status_post_ok context=${CONTEXT} state=${STATE} sha=${SHA} event=${EVENT_NAME}"
     exit 0
   fi
   echo "status_post_retry=$attempt"
