@@ -3738,9 +3738,28 @@ export function isParkingOccupancySituation(input = {}, factsIn = null) {
 
 /**
  * Extract only facts that appear in trusted NDIC publicComment / impact text.
+ * Memoized by cleaned source text — buildTrafficCardPresentation calls this many
+ * times per card with the same blob; without cache Doprava PAGE_SIZE paint was ~1s.
  */
+const _iuParseOfficialCommentFactsCache = new Map();
+const IU_PARSE_FACTS_CACHE_MAX = 4096;
+
+function iuParseFactsCacheSet(text, out) {
+  try {
+    if (_iuParseOfficialCommentFactsCache.size >= IU_PARSE_FACTS_CACHE_MAX) {
+      const oldest = _iuParseOfficialCommentFactsCache.keys().next().value;
+      if (oldest !== undefined) _iuParseOfficialCommentFactsCache.delete(oldest);
+    }
+    _iuParseOfficialCommentFactsCache.set(text, out);
+  } catch (_) {}
+}
+
 export function parseOfficialCommentFacts(rawText) {
   const text = clean(rawText);
+  try {
+    const hit = _iuParseOfficialCommentFactsCache.get(text);
+    if (hit) return hit;
+  } catch (_) {}
   const out = {
     kilometerFrom: null,
     kilometerTo: null,
@@ -3867,9 +3886,13 @@ export function parseOfficialCommentFacts(rawText) {
     detour: null,
     segmentBetweenIntersections: null,
   };
-  if (!text) return out;
+  if (!text) {
+    iuParseFactsCacheSet(text, out);
+    return out;
+  }
   if (EMPTY_IMPACT_RE.test(text)) {
     out.isEmptyTemplate = true;
+    iuParseFactsCacheSet(text, out);
     return out;
   }
 
@@ -4816,6 +4839,7 @@ export function parseOfficialCommentFacts(rawText) {
     if (m) out.situationPhrases.push(clean(m[0]));
   }
 
+  iuParseFactsCacheSet(text, out);
   return out;
 }
 

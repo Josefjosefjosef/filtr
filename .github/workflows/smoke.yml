@@ -318,6 +318,9 @@ jobs:
       - name: Traffic full hydrate responsiveness guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-traffic-full-hydrate-responsiveness-guard
+      - name: Late long-task root-cause guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-late-long-task-root-cause-guard
       - name: Traffic filter correctness guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-traffic-filter-correctness-guard

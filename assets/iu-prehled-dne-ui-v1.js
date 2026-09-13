@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -2955,13 +2955,35 @@ function wire() {
           } catch (_) {}
           if (state.trafficQuickFirstCap > 0) {
             state.trafficQuickFirstCap = 0;
-            setTimeout(() => {
+            // Yield so the first 12-card paint can commit; full PAGE_SIZE paint then
+            // reuses parseOfficialCommentFacts memo filled during hydrate/stamp.
+            const expandFullPage = () => {
               if (state.feedQuickView !== "traffic") return;
               try {
+                try {
+                  performance.mark("iu:pd-traffic-quick-expand-start");
+                } catch (_) {}
                 paint();
                 wire();
+                try {
+                  performance.mark("iu:pd-traffic-quick-expand-end");
+                  performance.measure(
+                    "iu:pd-traffic-quick-expand",
+                    "iu:pd-traffic-quick-expand-start",
+                    "iu:pd-traffic-quick-expand-end"
+                  );
+                } catch (_) {}
               } catch (_) {}
-            }, 0);
+            };
+            try {
+              if (typeof scheduler !== "undefined" && typeof scheduler.yield === "function") {
+                void scheduler.yield().then(expandFullPage, () => setTimeout(expandFullPage, 0));
+              } else {
+                setTimeout(expandFullPage, 0);
+              }
+            } catch (_) {
+              setTimeout(expandFullPage, 0);
+            }
           }
         })();
       };
@@ -3921,7 +3943,7 @@ async function boot() {
               } catch (_) {}
               if (state.trafficQuickFirstCap > 0) {
                 state.trafficQuickFirstCap = 0;
-                setTimeout(() => {
+                const expandBootFullPage = () => {
                   if (bootAbort && bootAbort.signal.aborted) return;
                   if (!root.isConnected) return;
                   if (!feedQuickViewIncludesTraffic()) return;
@@ -3932,7 +3954,16 @@ async function boot() {
                       wire();
                     }
                   } catch (_) {}
-                }, 0);
+                };
+                try {
+                  if (typeof scheduler !== "undefined" && typeof scheduler.yield === "function") {
+                    void scheduler.yield().then(expandBootFullPage, () => setTimeout(expandBootFullPage, 0));
+                  } else {
+                    setTimeout(expandBootFullPage, 0);
+                  }
+                } catch (_) {
+                  setTimeout(expandBootFullPage, 0);
+                }
               }
             } catch (_) {
               state.trafficSnapSettled = true;
