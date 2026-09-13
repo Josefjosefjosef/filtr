@@ -43,14 +43,19 @@ if (!/const IU_MAILBOX_MIN\s*=\s*1\s*;/.test(FEED)) fail("static_min_not_1");
 
 // Static: hydrate/unlock must refresh controls via render return (not render-only)
 if (
-  !/iu-vault-hydrated[\s\S]{0,220}mailboxCount\s*=\s*iuMailboxRender\s*\(\s*\)/.test(FEED)
+  !/iu-vault-hydrated[\s\S]{0,320}mailboxCount\s*=\s*iuMailboxRender\s*\(\s*\)/.test(FEED)
 ) {
   fail("static_hydrate_must_sync_mailboxCount_from_render");
 }
 if (
-  !/iu-vault-unlocked[\s\S]{0,220}mailboxCount\s*=\s*iuMailboxRender\s*\(\s*\)/.test(FEED)
+  !/iu-vault-unlocked[\s\S]{0,320}mailboxCount\s*=\s*iuMailboxRender\s*\(\s*\)/.test(FEED)
 ) {
   fail("static_unlock_must_sync_mailboxCount_from_render");
+}
+if (
+  !/iu-vault-hydrated[\s\S]{0,320}iuMailboxInvalidateCanonical\s*\(\s*\)/.test(FEED)
+) {
+  fail("static_hydrate_must_invalidate_canonical");
 }
 
 // Static: render itself must update Add/Remove visibility
