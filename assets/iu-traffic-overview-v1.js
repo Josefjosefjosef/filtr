@@ -63,6 +63,51 @@ function isTrafficCardInformative(tv) {
   if (!_iuTrafficPresenter) return false;
   return iuTrafficPresenter().isTrafficCardInformative(tv);
 }
+
+/**
+ * P2: parseOfficialCommentFacts inside isTrafficCardInformative is ~0.7–0.8ms/card.
+ * Full-catalog filter (~3k) was a ~2s main-thread freeze. Stamp once during chunked hydrate warm.
+ */
+const TRAFFIC_INFORMATIVE_CACHE_KEY = "_iuInf";
+/** Target ~40ms chunks on mid-tier CPU (project + informative stamp). */
+const TRAFFIC_HYDRATE_CHUNK_SIZE = 40;
+
+function stampTrafficInformativeFlag(tv) {
+  if (!tv || typeof tv !== "object") return false;
+  if (typeof tv[TRAFFIC_INFORMATIVE_CACHE_KEY] === "boolean") return tv[TRAFFIC_INFORMATIVE_CACHE_KEY];
+  const ok = isTrafficCardInformative(tv);
+  try {
+    tv[TRAFFIC_INFORMATIVE_CACHE_KEY] = ok;
+  } catch (_) {}
+  return ok;
+}
+
+function resolveTrafficItemInformative(ev) {
+  const tv = ev && (ev.trafficV1 || ev);
+  if (!tv || typeof tv !== "object") return false;
+  if (typeof tv[TRAFFIC_INFORMATIVE_CACHE_KEY] === "boolean") return tv[TRAFFIC_INFORMATIVE_CACHE_KEY];
+  return isTrafficCardInformative(tv);
+}
+
+function yieldToMainThread() {
+  return new Promise((resolve) => {
+    try {
+      if (
+        typeof window !== "undefined" &&
+        typeof scheduler !== "undefined" &&
+        typeof scheduler.yield === "function"
+      ) {
+        scheduler.yield().then(resolve, () => {
+          setTimeout(resolve, 0);
+        });
+        return;
+      }
+    } catch (_) {}
+    // Prefer setTimeout over MessageChannel: some Node CI runners never deliver
+    // MessageChannel port messages, which permanently hangs await-yield loops.
+    setTimeout(resolve, 0);
+  });
+}
 function normalizeDirectionHuman(s) {
   if (!_iuTrafficPresenter) return String(s || "").trim() || null;
   return iuTrafficPresenter().normalizeDirectionHuman(s);
@@ -894,7 +939,8 @@ export function filterOfflineTrafficCandidatesForOverview(items, prefs, opts) {
     const tv = ev.trafficV1 || ev;
     if (!isTrafficMainOverviewVisible(tv, nowMs)) continue;
     // Presentation filter: hide empty template-only cards (backend data kept).
-    if (!isTrafficCardInformative(tv)) continue;
+    // Prefer hydrate-stamped boolean — avoids re-running parseOfficialCommentFacts × N.
+    if (!resolveTrafficItemInformative(ev)) continue;
     if (locActive && !eventMatchesLocationFilter(ev, f)) continue;
     out.push(ev);
   }
@@ -1159,17 +1205,35 @@ function scheduleTrafficSnapshotFullHydrate(url) {
     try {
       const full = await fetchTrafficSnapshotParsed(targetUrl, 0, null);
       if (!shouldAcceptTrafficFullSnapshot(full, _trafficSnapMem)) return null;
-      // Atomic take-over: only replace after a complete valid full catalog parse.
-      invalidateTrafficFeedItemsCache();
+      // Chunked warm BEFORE publishing full mem — avoids mid-warm paint sync-rebuilding
+      // the full catalog without informative stamps (that path reintroduced the ~2s freeze).
+      let warmed = null;
+      try {
+        warmed = await warmTrafficFeedItemsCacheChunked(full);
+      } catch (_) {
+        try {
+          warmed = trafficItemsFromOfflineSnapshot(full);
+        } catch (_) {
+          warmed = null;
+        }
+      }
+      // Atomic take-over only after warm (or sync fallback).
       _trafficSnapMem = full;
       // Memory-only for multi‑MB full catalog (saveOfflineTrafficSnapshot already guards LS size).
       saveOfflineTrafficSnapshot(full);
-      // Warm feed-items cache now (defensive dedupe + projection) so Doprava click
-      // does not pay ~100–200ms+ rebuild on the critical path.
-      try {
-        trafficItemsFromOfflineSnapshot(full);
-      } catch (_) {}
+      // saveOfflineTrafficSnapshot invalidates feed cache — restore stamped warm result.
+      if (Array.isArray(warmed) && warmed.length) {
+        const cards = Array.isArray(full.cards)
+          ? full.cards
+          : Array.isArray(full.projections)
+            ? full.projections
+            : [];
+        const cacheKey = trafficFeedItemsCacheKey(full, {}, cards.length, null);
+        _trafficFeedItemsCache = { key: cacheKey, items: warmed };
+      }
+      _trafficOverviewFilterCache = { key: "", items: null, itemsRef: null };
       markTrafficHydratePhase("full-dataset-ready");
+      markTrafficHydratePhase("hydrate-complete");
       try {
         if (typeof performance !== "undefined" && performance.measure) {
           performance.measure(
@@ -1291,6 +1355,8 @@ export function clearOfflineTrafficSnapshot() {
 
 /**
  * Convert offline snapshot → feed items (no parallel filtering — caller uses filterEvents).
+ * Sync path: projection only. Informative stamps happen in warmTrafficFeedItemsCacheChunked
+ * (full hydrate) so a cold full rebuild never runs parseOfficialCommentFacts × N unbroken.
  */
 export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
   if (!snapshot || snapshot.publicationEnabled === true) return [];
@@ -1305,13 +1371,82 @@ export function trafficItemsFromOfflineSnapshot(snapshot, opts = {}) {
   if (_trafficFeedItemsCache.key === cacheKey && Array.isArray(_trafficFeedItemsCache.items)) {
     return _trafficFeedItemsCache.items;
   }
+  markTrafficHydratePhase("normalize-start");
   const ordered = dedupeTrafficCardsBySituationIdentity(orderTrafficCardsNewestFirst(cards));
+  markTrafficHydratePhase("normalize-end");
+  markTrafficHydratePhase("dedupe-end");
+  markTrafficHydratePhase("presenter-start");
   const built = [];
   for (let i = 0; i < ordered.length; i++) {
     if (cap != null && built.length >= cap) break;
     const r = trafficProjectionToFeedItem(ordered[i], opts);
-    if (r.ok) built.push(r.item);
+    if (r.ok) {
+      // Small head/first-batch: stamp sync when presenter already loaded (cheap at ≤200).
+      if (_iuTrafficPresenter && r.item && r.item.trafficV1 && (cap != null || ordered.length <= 250)) {
+        stampTrafficInformativeFlag(r.item.trafficV1);
+      }
+      built.push(r.item);
+    }
   }
+  markTrafficHydratePhase("presenter-end");
+  _trafficFeedItemsCache = { key: cacheKey, items: built };
+  return built;
+}
+
+/**
+ * Full-catalog warm used by background hydrate: chunked project + informative stamp.
+ * Keeps single-flight caller responsive; fills the same feed-items cache as sync path.
+ */
+export async function warmTrafficFeedItemsCacheChunked(snapshot, opts = {}) {
+  if (!snapshot || snapshot.publicationEnabled === true) return [];
+  if (TRAFFIC_OVERVIEW_FLAGS.PUBLICATION_ENABLED === true) return [];
+  const cards = Array.isArray(snapshot.cards) && snapshot.cards.length
+    ? snapshot.cards
+    : Array.isArray(snapshot.projections)
+      ? snapshot.projections
+      : [];
+  const cap = resolveTrafficCardCap(opts.maxCards != null ? opts.maxCards : TRAFFIC_UI_INITIAL_CARD_CAP);
+  const cacheKey = trafficFeedItemsCacheKey(snapshot, opts, cards.length, cap);
+  if (_trafficFeedItemsCache.key === cacheKey && Array.isArray(_trafficFeedItemsCache.items)) {
+    const cached = _trafficFeedItemsCache.items;
+    let needsStamp = false;
+    for (let i = 0; i < cached.length; i++) {
+      const tv = cached[i] && cached[i].trafficV1;
+      if (tv && typeof tv[TRAFFIC_INFORMATIVE_CACHE_KEY] !== "boolean") {
+        needsStamp = true;
+        break;
+      }
+    }
+    if (!needsStamp) return cached;
+  }
+  markTrafficHydratePhase("normalize-start");
+  const ordered = dedupeTrafficCardsBySituationIdentity(orderTrafficCardsNewestFirst(cards));
+  markTrafficHydratePhase("normalize-end");
+  markTrafficHydratePhase("dedupe-end");
+  await ensureTrafficPresenter();
+  markTrafficHydratePhase("presenter-start");
+  const built = [];
+  const chunk = TRAFFIC_HYDRATE_CHUNK_SIZE;
+  for (let i = 0; i < ordered.length; i++) {
+    if (cap != null && built.length >= cap) break;
+    const r = trafficProjectionToFeedItem(ordered[i], opts);
+    if (r.ok) {
+      if (r.item && r.item.trafficV1) stampTrafficInformativeFlag(r.item.trafficV1);
+      built.push(r.item);
+    }
+    if (chunk > 0 && built.length > 0 && built.length % chunk === 0) {
+      await yieldToMainThread();
+    }
+  }
+  markTrafficHydratePhase("presenter-end");
+  markTrafficHydratePhase("filter-prep-start");
+  // Warm overview filter cache once stamps exist (cheap visibility + bool).
+  try {
+    filterOfflineTrafficCandidatesForOverview(built, opts.prefs || {}, {
+      nowMs: opts.nowMs != null ? opts.nowMs : Date.now(),
+    });
+  } catch (_) {}
+  markTrafficHydratePhase("filter-prep-end");
   _trafficFeedItemsCache = { key: cacheKey, items: built };
   return built;
 }
