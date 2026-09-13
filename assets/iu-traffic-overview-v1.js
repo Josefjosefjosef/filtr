@@ -92,21 +92,19 @@ function resolveTrafficItemInformative(ev) {
 function yieldToMainThread() {
   return new Promise((resolve) => {
     try {
-      if (typeof scheduler !== "undefined" && typeof scheduler.yield === "function") {
+      if (
+        typeof window !== "undefined" &&
+        typeof scheduler !== "undefined" &&
+        typeof scheduler.yield === "function"
+      ) {
         scheduler.yield().then(resolve, () => {
           setTimeout(resolve, 0);
         });
         return;
       }
     } catch (_) {}
-    try {
-      if (typeof MessageChannel !== "undefined") {
-        const ch = new MessageChannel();
-        ch.port1.onmessage = () => resolve();
-        ch.port2.postMessage(0);
-        return;
-      }
-    } catch (_) {}
+    // Prefer setTimeout over MessageChannel: some Node CI runners never deliver
+    // MessageChannel port messages, which permanently hangs await-yield loops.
     setTimeout(resolve, 0);
   });
 }
