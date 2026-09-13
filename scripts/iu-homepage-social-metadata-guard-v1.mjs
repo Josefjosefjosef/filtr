@@ -1,6 +1,6 @@
 /**
- * IU_HOMEPAGE_SOCIAL_METADATA_GUARD — P1-A OG/Twitter/JSON-LD contract.
- * Locks truthful homepage social + structured metadata without title/H1/body changes.
+ * IU_HOMEPAGE_SOCIAL_METADATA_GUARD — P1-A/B homepage SEO/social/JSON-LD contract.
+ * Locks title + description positioning sync with OG/Twitter; JSON-LD and images frozen.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -13,13 +13,15 @@ const must = (c, id) => {
   if (!c) fails.push(id);
 };
 
+const EXPECTED_TITLE = "InfoUzel.cz – internet v internetu";
 const EXPECTED_DESCRIPTION =
-  "infoUzel.cz — přehled zpráv, počasí, kalendáře a nástrojů na jednom místě. Rychlé odkazy, zprávy, počasí a nástroje na jednom místě.";
+  "InfoUzel.cz je internet v internetu. Každodenní informace a nástroje máte na jednom místě a váš osobní obsah zůstává uložený ve vašem zařízení.";
 const EXPECTED_OG_IMAGE =
   "https://infouzel.cz/assets/images/infouzel-prehled-dne-banner.webp";
-const EXPECTED_TITLE = "infoUzel.cz";
 const EXPECTED_CANONICAL = "https://infouzel.cz/";
 const ALLOWED_LD_TYPES = new Set(["WebSite", "Organization"]);
+const EXPECTED_JSONLD_BODY =
+  '{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"InfoUzel.cz","url":"https://infouzel.cz/"},{"@type":"Organization","name":"Media Uzel s.r.o.","url":"https://infouzel.cz/","email":"info@infouzel.cz","logo":"https://infouzel.cz/icons/icon-512.png","address":{"@type":"PostalAddress","streetAddress":"Kněžická 96","postalCode":"190 12","addressLocality":"Praha 9","addressCountry":"CZ"},"identifier":{"@type":"PropertyValue","name":"IČO","value":"29482241"}}]}';
 
 const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
 const headers = fs.readFileSync(path.join(ROOT, "_headers"), "utf8");
@@ -43,14 +45,17 @@ function metaContent(attr, name) {
   return cm ? cm[1] : null;
 }
 
-must((index.match(/<title>\s*infoUzel\.cz\s*<\/title>/i) || []).length === 1, "title_exactly_infouzel");
-must(!/InfoUzel\.cz\s*[–-]\s*internet v internetu/i.test(index), "no_p1b_title_candidate");
+const titleMatches = [...index.matchAll(/<title>([^<]*)<\/title>/gi)];
+must(titleMatches.length === 1, "title_count_1");
+must(titleMatches[0][1] === EXPECTED_TITLE, "title_exact_p1b");
+must(EXPECTED_TITLE.includes("\u2013"), "title_uses_en_dash");
+must(!/<title>\s*infoUzel\.cz\s*<\/title>/i.test(index), "old_short_title_absent");
 
 const descMatches = [
   ...index.matchAll(/<meta\b[^>]*\bname=["']description["'][^>]*>/gi),
 ];
 must(descMatches.length === 1, "meta_description_count_1");
-must(metaContent("name", "description") === EXPECTED_DESCRIPTION, "meta_description_unchanged");
+must(metaContent("name", "description") === EXPECTED_DESCRIPTION, "meta_description_exact");
 
 const canon = [...index.matchAll(/<link\b[^>]*\brel=["']canonical["'][^>]*>/gi)];
 must(canon.length === 1, "canonical_count_1");
@@ -67,8 +72,8 @@ must(countMeta("property", "og:image") === 1, "og_image_count");
 
 must(metaContent("property", "og:type") === "website", "og_type_value");
 must(metaContent("property", "og:site_name") === "InfoUzel.cz", "og_site_name_value");
-must(metaContent("property", "og:title") === EXPECTED_TITLE, "og_title_value");
-must(metaContent("property", "og:description") === EXPECTED_DESCRIPTION, "og_description_value");
+must(metaContent("property", "og:title") === EXPECTED_TITLE, "og_title_sync");
+must(metaContent("property", "og:description") === EXPECTED_DESCRIPTION, "og_description_sync");
 must(metaContent("property", "og:url") === EXPECTED_CANONICAL, "og_url_value");
 must(metaContent("property", "og:image") === EXPECTED_OG_IMAGE, "og_image_value");
 must(metaContent("property", "og:image:type") === "image/webp", "og_image_type");
@@ -80,13 +85,14 @@ must(countMeta("name", "twitter:title") === 1, "twitter_title_count");
 must(countMeta("name", "twitter:description") === 1, "twitter_description_count");
 must(countMeta("name", "twitter:image") === 1, "twitter_image_count");
 must(metaContent("name", "twitter:card") === "summary_large_image", "twitter_card_value");
-must(metaContent("name", "twitter:title") === EXPECTED_TITLE, "twitter_title_value");
-must(metaContent("name", "twitter:description") === EXPECTED_DESCRIPTION, "twitter_description_value");
+must(metaContent("name", "twitter:title") === EXPECTED_TITLE, "twitter_title_sync");
+must(metaContent("name", "twitter:description") === EXPECTED_DESCRIPTION, "twitter_description_sync");
 must(metaContent("name", "twitter:image") === EXPECTED_OG_IMAGE, "twitter_image_value");
 must(!/name=["']twitter:site["']/.test(index), "no_twitter_site_unverified");
 
 const ldBlocks = [...index.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
 must(ldBlocks.length === 1, "jsonld_count_1");
+must(ldBlocks[0][1] === EXPECTED_JSONLD_BODY, "jsonld_body_unchanged");
 
 let parsed = null;
 try {
@@ -134,6 +140,10 @@ must(/iuPd__bannerImg[^>]*fetchpriority="high"/.test(index), "critical_banner_fp
 must(/iuPd__bannerImg[^>]*loading="eager"/.test(index), "critical_banner_eager_untouched");
 
 must(fs.existsSync(path.join(ROOT, "assets", "images", "infouzel-prehled-dne-banner.webp")), "og_image_asset_exists");
+
+// No body positioning injection (strip head first)
+const bodyOnly = index.replace(/<head[\s\S]*?<\/head>/i, "");
+must(!/internet v internetu/i.test(bodyOnly), "no_body_positioning_text");
 
 if (fails.length) {
   console.error("[iu-homepage-social-metadata-guard] FAIL");
