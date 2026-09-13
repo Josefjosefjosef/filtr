@@ -26063,6 +26063,55 @@ function buildVideoAsArticleCard(it) {
       return false;
     }
   }
+  /** Canonical in-memory mailbox list — single source of truth between user actions and persistence. */
+  let iuMailboxCanonical = null;
+  let iuMailboxMutating = false;
+  function iuMailboxNormalizeColorful(v) {
+    if (v === false || v === "false" || v === 0 || v === "0") return false;
+    return true;
+  }
+  function iuMailboxNormalizeItem(it, i) {
+    const validSocial = (s) => (IU_MAILBOX_SOCIAL_OPTIONS.includes(s) ? s : null);
+    const slot =
+      typeof it?.slot === "number" && it.slot >= 1 && it.slot <= IU_MAILBOX_MAX ? it.slot : i + 1;
+    return {
+      label:
+        String(it?.label ?? "")
+          .trim()
+          .slice(0, IU_MAILBOX_LABEL_MAX) ||
+        MAILBOX_PLACEHOLDERS[i] ||
+        IU_MM_EDIT_INPUT_PLACEHOLDER,
+      url: String(it?.url ?? "").trim(),
+      social: validSocial(it?.social),
+      hidden: it?.hidden === true,
+      colorful: iuMailboxNormalizeColorful(it?.colorful),
+      index: i,
+      slot,
+    };
+  }
+  /** Persist shape — MUST always include colorful boolean (migrations previously dropped it). */
+  function iuMailboxToPersistedItems(items) {
+    const sorted = (Array.isArray(items) ? items : []).slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
+    return sorted.map((it, i) => {
+      const n = iuMailboxNormalizeItem(it, i);
+      return {
+        label: n.label,
+        url: n.url,
+        social: n.social,
+        hidden: !!n.hidden,
+        colorful: iuMailboxNormalizeColorful(n.colorful),
+        slot: n.slot,
+      };
+    });
+  }
+  function iuMailboxSetCanonical(items) {
+    const sorted = (Array.isArray(items) ? items : []).slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
+    iuMailboxCanonical = sorted.map((it, i) => iuMailboxNormalizeItem(it, i));
+    return iuMailboxCanonical;
+  }
+  function iuMailboxInvalidateCanonical() {
+    iuMailboxCanonical = null;
+  }
   function iuMailboxDefaultItems() {
     const n = Math.max(IU_MAILBOX_MIN, Math.min(IU_MAILBOX_DEFAULT_COUNT, IU_MAILBOX_MAX));
     return Array.from({ length: n }, (_, i) => ({
@@ -26070,6 +26119,7 @@ function buildVideoAsArticleCard(it) {
       url: "",
       social: null,
       hidden: false,
+      colorful: true,
       index: i,
       slot: i + 1,
     }));
@@ -26121,7 +26171,11 @@ function buildVideoAsArticleCard(it) {
     return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#fff\" d=\"" + pathD + "\"/></svg>";
   }
 
-  function iuMailboxLoad(){
+  function iuMailboxPersistPayload(items) {
+    return JSON.stringify({ items: iuMailboxToPersistedItems(items) });
+  }
+
+  function iuMailboxLoadFromStorage(){
     try{
       const txt = localStorage.getItem(MAILBOX_STORAGE_KEY);
       if (!txt) {
@@ -26132,27 +26186,24 @@ function buildVideoAsArticleCard(it) {
       const parsed = JSON.parse(txt);
       const items = Array.isArray(parsed?.items) ? parsed.items : [];
       const raw = items.slice(0, IU_MAILBOX_MAX);
-      const validSocial = (s) => IU_MAILBOX_SOCIAL_OPTIONS.includes(s) ? s : null;
-      let fixed = raw.map((it, i) => {
-        const slot = (typeof it?.slot === "number" && it.slot >= 1 && it.slot <= IU_MAILBOX_MAX) ? it.slot : (i + 1);
-        return {
-          label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX) || (MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER),
-          url: String(it?.url ?? "").trim(),
-          social: validSocial(it?.social),
-          hidden: it?.hidden === true,
-          colorful: it?.colorful !== false,
-          index: i,
-          slot
-        };
-      });
-      if (items.length > IU_MAILBOX_MAX) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
-      }
+      let fixed = raw.map((it, i) => iuMailboxNormalizeItem(it, i));
+      let dirty = false;
+      /* One-shot repair: older migration writes omitted colorful and wiped false → default true. */
+      const missingColorful = raw.some((it) => it && !Object.prototype.hasOwnProperty.call(it, "colorful"));
+      if (missingColorful) dirty = true;
+      if (items.length > IU_MAILBOX_MAX) dirty = true;
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER, url: "", social: null, hidden: false, index: i, slot: i + 1 });
+          fixed.push(iuMailboxNormalizeItem({
+            label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER,
+            url: "",
+            social: null,
+            hidden: false,
+            colorful: true,
+            slot: i + 1
+          }, i));
         }
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        dirty = true;
       }
       if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
@@ -26163,9 +26214,7 @@ function buildVideoAsArticleCard(it) {
         const onlyPlaceholders = fixed.every(
           (it) => iuMmIsPlaceholderLabel(it && it.label) && !String((it && it.url) || "").trim()
         );
-        if (onlyPlaceholders) {
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
-        }
+        if (onlyPlaceholders) dirty = true;
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
       let migrated56 = false;
@@ -26175,40 +26224,38 @@ function buildVideoAsArticleCard(it) {
           migrated56 = true;
         }
       }
-      if (migrated56) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
-      }
-      const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > IU_MAILBOX_MAX);
-      if (hadSlotMigration) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
-      }
+      if (migrated56) dirty = true;
+      const hadSlotMigration = raw.some((it) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > IU_MAILBOX_MAX);
+      if (hadSlotMigration) dirty = true;
       fixed.sort((a, b) => (a.slot || 0) - (b.slot || 0));
+      fixed = fixed.map((it, i) => iuMailboxNormalizeItem(it, i));
+      if (dirty) {
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, iuMailboxPersistPayload(fixed));
+      }
       return fixed;
     }catch{
       return iuMailboxDefaultItems();
     }
   }
 
+  function iuMailboxLoad(){
+    if (Array.isArray(iuMailboxCanonical)) return iuMailboxCanonical;
+    return iuMailboxSetCanonical(iuMailboxLoadFromStorage());
+  }
+
   function iuMailboxSave(items){
     try{
+      const canonical = iuMailboxSetCanonical(items);
       if (iuVaultIsPersistBlocked(MAILBOX_STORAGE_KEY)) return;
-      const sorted = items.slice().sort((a, b) => (a.slot || 0) - (b.slot || 0));
-      const toSave = sorted.map((it) => ({
-        label: String(it?.label ?? "").trim().slice(0, IU_MAILBOX_LABEL_MAX),
-        url: String(it?.url ?? "").trim(),
-        social: IU_MAILBOX_SOCIAL_OPTIONS.includes(it?.social) ? it.social : null,
-        hidden: !!it?.hidden,
-        colorful: it?.colorful !== false,
-        slot: typeof it?.slot === "number" ? it.slot : 0
-      }));
+      const payload = iuMailboxPersistPayload(canonical);
       if (!isLocalDataProtectionNoticeAccepted()) {
         void ensureLocalDataProtectionBeforeSave().then(function (ok) {
           if (!ok) return;
-          try { localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave })); } catch {}
+          try { localStorage.setItem(MAILBOX_STORAGE_KEY, payload); } catch {}
         });
         return;
       }
-      localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: toSave }));
+      localStorage.setItem(MAILBOX_STORAGE_KEY, payload);
     }catch{}
   }
 
@@ -26259,11 +26306,12 @@ function buildVideoAsArticleCard(it) {
       const isPlaceholderLabel = iuMmIsPlaceholderLabel(it.label);
       const social = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialUrl = social && IU_MAILBOX_SOCIAL_URLS[social] ? IU_MAILBOX_SOCIAL_URLS[social] : "";
+      const isColorful = iuMailboxNormalizeColorful(it.colorful);
       const socialSlotHtml = social && socialUrl
-        ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-social="${i}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
+        ? `<a href="${escapeHtml(socialUrl)}" class="iu-pill-social-slot" data-mailbox-slot="${slot}" data-mailbox-social="${slot}" data-social="${escapeHtml(social)}" aria-label="${escapeHtml(social)}" rel="noopener noreferrer" target="_blank"><span class="iu-pill-social-icon iu-social-ios40">${iuMailboxSocialIconSvg(social)}</span></a>`
         : "";
-      row.innerHTML = `<button class="iu-mailbox-pill${it.colorful === false ? " iu-mailbox-pill--plain" : ""}${isPlaceholderLabel ? " iu-mailbox-pill--placeholder" : ""}" type="button" data-mailbox-index="${i}" data-mailbox-open>${escapeHtml(label)}</button>` +
-        `<button class="iu-mailbox-gear" type="button" data-mailbox-gear="${i}" aria-label="Nastavení schránky ${i + 1}" title="Nastavení"><svg class="iu-mailbox-gear-svg" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` +
+      row.innerHTML = `<button class="iu-mailbox-pill${isColorful ? "" : " iu-mailbox-pill--plain"}${isPlaceholderLabel ? " iu-mailbox-pill--placeholder" : ""}" type="button" data-mailbox-slot="${slot}" data-mailbox-index="${slot}" data-mailbox-open>${escapeHtml(label)}</button>` +
+        `<button class="iu-mailbox-gear" type="button" data-mailbox-slot="${slot}" data-mailbox-gear="${slot}" aria-label="Nastavení schránky ${slot}" title="Nastavení"><svg class="iu-mailbox-gear-svg" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>` +
         socialSlotHtml;
       frag.appendChild(row);
     });
@@ -26286,67 +26334,116 @@ function buildVideoAsArticleCard(it) {
     let mailboxCount = iuMailboxRender();
     try {
       window.addEventListener("iu-vault-hydrated", function iuMailboxVaultHydrated() {
-        try { mailboxCount = iuMailboxRender(); } catch (_) {}
+        try {
+          iuMailboxInvalidateCanonical();
+          mailboxCount = iuMailboxRender();
+        } catch (_) {}
       });
       window.addEventListener("iu-vault-unlocked", function iuMailboxVaultUnlocked() {
-        try { mailboxCount = iuMailboxRender(); } catch (_) {}
+        try {
+          iuMailboxInvalidateCanonical();
+          mailboxCount = iuMailboxRender();
+        } catch (_) {}
       });
     } catch (_) {}
     iuPositionMailboxControls();
 
-    document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
-      const items = iuMailboxLoad();
-      const visibleCount = iuMailboxVisibleCount(items);
-      mailboxCount = visibleCount;
-      if (visibleCount >= IU_MAILBOX_MAX) return;
-      const next = items.filter((x) => x && x.hidden).sort((a, b) => (a.slot || 0) - (b.slot || 0))[0];
-      let restored = false;
-      if (next) {
-        next.hidden = false;
-        restored = true;
+    function iuMailboxFindBySlot(items, slot) {
+      const s = Number(slot);
+      if (!Number.isFinite(s)) return -1;
+      return items.findIndex((it) => Number(it && it.slot) === s);
+    }
+
+    function iuMailboxAddOne() {
+      if (iuMailboxMutating) return;
+      iuMailboxMutating = true;
+      try {
+        const items = iuMailboxLoad().slice();
+        const visibleCount = iuMailboxVisibleCount(items);
+        mailboxCount = visibleCount;
+        if (visibleCount >= IU_MAILBOX_MAX) return;
+        const next = items.filter((x) => x && x.hidden).sort((a, b) => (a.slot || 0) - (b.slot || 0))[0];
+        let restored = false;
+        if (next) {
+          next.hidden = false;
+          restored = true;
+        }
+        if (!restored) {
+          const used = new Set(items.map((x) => x.slot).filter((n) => typeof n === "number"));
+          let free = null;
+          for (let s = 1; s <= IU_MAILBOX_MAX; s++) {
+            if (!used.has(s)) {
+              free = s;
+              break;
+            }
+          }
+          if (free != null) {
+            const defaultSocial = free === 5 ? "linkedin" : free === 6 ? "youtube" : null;
+            items.push({
+              label: "",
+              url: "",
+              social: defaultSocial,
+              hidden: false,
+              colorful: true,
+              index: items.length,
+              slot: free,
+            });
+          }
+        }
+        iuMailboxSave(items);
+        mailboxCount = iuMailboxRender();
+        requestAnimationFrame(() => {
+          const rail = document.querySelector(".layout > aside.accordionCol");
+          if (rail) rail.style.height = "auto";
+        });
+      } finally {
+        iuMailboxMutating = false;
       }
-      if (!restored) {
-        const used = new Set(items.map((x) => x.slot).filter((n) => typeof n === "number"));
-        let free = null;
-        for (let s = 1; s <= IU_MAILBOX_MAX; s++) {
-          if (!used.has(s)) {
-            free = s;
+    }
+
+    function iuMailboxRemoveOne() {
+      if (iuMailboxMutating) return;
+      iuMailboxMutating = true;
+      try {
+        const items = iuMailboxLoad().slice();
+        const visibleCount = iuMailboxVisibleCount(items);
+        mailboxCount = visibleCount;
+        if (visibleCount <= IU_MAILBOX_MIN) return;
+        for (let i = items.length - 1; i >= 0; i--) {
+          if (!items[i].hidden) {
+            items[i].hidden = true;
             break;
           }
         }
-        if (free != null) {
-          const defaultSocial = free === 5 ? "linkedin" : free === 6 ? "youtube" : null;
-          items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: items.length, slot: free });
-        }
+        iuMailboxSave(items);
+        mailboxCount = iuMailboxRender();
+        requestAnimationFrame(() => {
+          const rail = document.querySelector(".layout > aside.accordionCol");
+          if (rail) rail.style.height = "auto";
+        });
+      } finally {
+        iuMailboxMutating = false;
       }
-      iuMailboxSave(items);
-      mailboxCount = iuMailboxRender();
-      requestAnimationFrame(() => {
-        const rail = document.querySelector(".layout > aside.accordionCol");
-        if (rail) rail.style.height = "auto";
-      });
+    }
+
+    /* Event delegation: Add/Remove spans move in DOM on every render; direct listeners on
+       getElementById at init-time are fragile if the node is ever replaced. */
+    const mailboxesRoot = list.closest(".iu-mailboxes") || list.parentElement || document;
+    mailboxesRoot.addEventListener("click", (e) => {
+      const t = e.target;
+      if (!t || typeof t.closest !== "function") return;
+      if (t.closest("#iuMailboxAdd")) {
+        e.preventDefault();
+        iuMailboxAddOne();
+        return;
+      }
+      if (t.closest("#iuMailboxRemove")) {
+        e.preventDefault();
+        iuMailboxRemoveOne();
+      }
     });
 
-    document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
-      const items = iuMailboxLoad();
-      const visibleCount = iuMailboxVisibleCount(items);
-      mailboxCount = visibleCount;
-      if (visibleCount <= IU_MAILBOX_MIN) return;
-      for (let i = items.length - 1; i >= 0; i--) {
-        if (!items[i].hidden) {
-          items[i].hidden = true;
-          break;
-        }
-      }
-      iuMailboxSave(items);
-      mailboxCount = iuMailboxRender();
-      requestAnimationFrame(() => {
-        const rail = document.querySelector(".layout > aside.accordionCol");
-        if (rail) rail.style.height = "auto";
-      });
-    });
-
-    function iuMailboxOpenEditDialog(idx, it, onDone){
+    function iuMailboxOpenEditDialog(slot, it, onDone){
       const MAX = IU_MAILBOX_LABEL_MAX;
       let selectedSocial = it.social && IU_MAILBOX_SOCIAL_OPTIONS.includes(it.social) ? it.social : null;
       const socialRowHtml = IU_MAILBOX_SOCIAL_OPTIONS.map((key) => {
@@ -26359,7 +26456,7 @@ function buildVideoAsArticleCard(it) {
       overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:" + mailboxEditZ + ";";
       const form = document.createElement("form");
       form.style.cssText = "background:#fff;padding:20px;border-radius:12px;min-width:360px;max-width:min(480px,calc(100vw - 32px));box-shadow:0 10px 40px rgba(0,0,0,0.2);";
-      const colorfulChecked = it.colorful !== false ? " checked" : "";
+      const colorfulChecked = iuMailboxNormalizeColorful(it.colorful) ? " checked" : "";
       form.innerHTML = `
         <p style="margin:0 0 12px 0;font-weight:600;">Název tlačítka (max ${MAX} znaků)</p>
         <input type="text" id="iu-mailbox-edit-label" maxlength="${MAX}" autocomplete="off" placeholder="${escapeHtml(IU_MM_EDIT_INPUT_PLACEHOLDER)}" value="${escapeHtml(iuMmInputValueFromLabel(it.label))}" style="width:100%;min-width:280px;box-sizing:border-box;padding:8px 10px;margin-bottom:12px;border:1px solid #ccc;border-radius:6px;" />
@@ -26422,14 +26519,23 @@ function buildVideoAsArticleCard(it) {
       const gearBtn = e.target.closest?.("[data-mailbox-gear]");
       if (gearBtn) {
         e.preventDefault();
-        const idx = parseInt(gearBtn.getAttribute("data-mailbox-gear") || "0", 10);
+        const slot = parseInt(gearBtn.getAttribute("data-mailbox-slot") || gearBtn.getAttribute("data-mailbox-gear") || "0", 10);
         const items = iuMailboxLoad();
-        const it = items[idx];
+        const idx = iuMailboxFindBySlot(items, slot);
+        const it = idx >= 0 ? items[idx] : null;
         if (!it) return;
-        iuMailboxOpenEditDialog(idx, it, (label, url, social, colorful) => {
-          const items = iuMailboxLoad();
+        iuMailboxOpenEditDialog(slot, it, (label, url, social, colorful) => {
+          const items = iuMailboxLoad().slice();
+          const editIdx = iuMailboxFindBySlot(items, slot);
+          if (editIdx < 0) return;
           const labelNorm = String(label).trim().slice(0, IU_MAILBOX_LABEL_MAX);
-          items[idx] = { ...items[idx], label: labelNorm, url: String(url).trim(), social: social && IU_MAILBOX_SOCIAL_OPTIONS.includes(social) ? social : null, colorful: colorful !== false };
+          items[editIdx] = {
+            ...items[editIdx],
+            label: labelNorm,
+            url: String(url).trim(),
+            social: social && IU_MAILBOX_SOCIAL_OPTIONS.includes(social) ? social : null,
+            colorful: iuMailboxNormalizeColorful(colorful),
+          };
           iuMailboxSave(items);
           iuMailboxRender();
         });
@@ -26437,9 +26543,10 @@ function buildVideoAsArticleCard(it) {
       }
       const pillBtn = e.target.closest?.("[data-mailbox-open]");
       if (pillBtn) {
-        const idx = parseInt(pillBtn.getAttribute("data-mailbox-index") || "0", 10);
+        const slot = parseInt(pillBtn.getAttribute("data-mailbox-slot") || pillBtn.getAttribute("data-mailbox-index") || "0", 10);
         const items = iuMailboxLoad();
-        const it = items[idx];
+        const idx = iuMailboxFindBySlot(items, slot);
+        const it = idx >= 0 ? items[idx] : null;
         const urlVal = it?.url && String(it.url).trim();
         if (urlVal) {
           e.preventDefault();
@@ -26447,7 +26554,7 @@ function buildVideoAsArticleCard(it) {
           iuMindMenuOpenExternalUrl(urlVal);
         } else {
           e.preventDefault();
-          const gear = list.querySelector(`[data-mailbox-gear="${idx}"]`);
+          const gear = list.querySelector(`[data-mailbox-slot="${slot}"][data-mailbox-gear]`);
           if (gear) gear.click();
         }
       }
