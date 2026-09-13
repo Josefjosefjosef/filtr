@@ -295,8 +295,15 @@ async function main() {
     st = await snap(page);
     const alphaAfterMig = (st.storage && st.storage.items || []).find((it) => it.label === "AlphaKeep");
     if (!alphaAfterMig || alphaAfterMig.colorful !== false) fail("migration_stripped_alpha_colorful_false");
+    // Missing colorful on sibling must NOT force a load-time rewrite of AlphaKeep.
+    // After a user-visible mutation (add), persist must include colorful on all items.
+    await page.locator("#iuMailboxAdd").click({ force: true });
+    await page.waitForTimeout(120);
+    st = await snap(page);
+    const alphaAfterSave = (st.storage && st.storage.items || []).find((it) => it.label === "AlphaKeep");
+    if (!alphaAfterSave || alphaAfterSave.colorful !== false) fail("post_add_stripped_alpha_colorful_false");
     if ((st.storage && st.storage.items || []).some((it) => it && !Object.prototype.hasOwnProperty.call(it, "colorful"))) {
-      fail("migration_left_items_without_colorful");
+      fail("user_save_left_items_without_colorful");
     }
 
     console.log(

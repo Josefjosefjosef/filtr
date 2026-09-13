@@ -26188,9 +26188,9 @@ function buildVideoAsArticleCard(it) {
       const raw = items.slice(0, IU_MAILBOX_MAX);
       let fixed = raw.map((it, i) => iuMailboxNormalizeItem(it, i));
       let dirty = false;
-      /* One-shot repair: older migration writes omitted colorful and wiped false → default true. */
-      const missingColorful = raw.some((it) => it && !Object.prototype.hasOwnProperty.call(it, "colorful"));
-      if (missingColorful) dirty = true;
+      /* Missing colorful is normalized in-memory only (default true). Do NOT durable-rewrite
+         solely for that — silent load-time rewrite breaks vault byte-preservation proofs and
+         can race user/IDB hydration. colorful is always included when any other dirty write runs. */
       if (items.length > IU_MAILBOX_MAX) dirty = true;
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
