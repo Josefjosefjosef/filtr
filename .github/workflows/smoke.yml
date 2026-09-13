@@ -315,6 +315,9 @@ jobs:
       - name: Traffic auto background full hydrate guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-traffic-auto-bg-full-hydrate-guard
+      - name: Traffic full hydrate responsiveness guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-traffic-full-hydrate-responsiveness-guard
       - name: Traffic filter correctness guard
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-traffic-filter-correctness-guard

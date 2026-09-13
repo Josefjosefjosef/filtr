@@ -68,9 +68,14 @@ ok(
 );
 ok(
   "static_warm_feed_cache_on_full",
-  /saveOfflineTrafficSnapshot\(full\)[\s\S]{0,300}trafficItemsFromOfflineSnapshot\(full\)/.test(overview),
-  "full hydrate must warm feed-items cache before snap-hydrated event"
+  /await warmTrafficFeedItemsCacheChunked\(full\)[\s\S]{0,800}_trafficSnapMem\s*=\s*full/.test(overview) &&
+    /saveOfflineTrafficSnapshot\(full\)[\s\S]{0,500}_trafficFeedItemsCache\s*=/.test(overview) &&
+    /export async function warmTrafficFeedItemsCacheChunked/.test(overview) &&
+    /yieldToMainThread/.test(overview) &&
+    /TRAFFIC_HYDRATE_CHUNK_SIZE/.test(overview),
+  "full hydrate must chunked-warm before publish and restore cache after save invalidate"
 );
+
 ok("static_single_flight", /if \(_trafficFullHydratePromise\) return _trafficFullHydratePromise/.test(overview));
 ok("static_page_size_50", /const PAGE_SIZE\s*=\s*50/.test(prehled));
 ok(
