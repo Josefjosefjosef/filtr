@@ -24,7 +24,7 @@ export { TRAFFIC_OVERVIEW_FLAGS, TRAFFIC_UI_INITIAL_CARD_CAP, TRAFFIC_UI_FIRST_P
  * into the homepage module graph. Browser loads it on demand; Node fixtures prime via TLA.
  */
 const IU_TRAFFIC_PRESENTER_URL =
-  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820";
+  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-parse-facts-memo-v1-20260913";
 
 let _iuTrafficPresenter = null;
 let _iuTrafficPresenterPromise = null;
