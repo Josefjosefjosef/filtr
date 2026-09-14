@@ -3261,6 +3261,12 @@ export function extractStreetRangeFromOfficialComment(rawText) {
   };
 
   const pairs = [
+    // Road parenthetical first street: "silnice I/20 (ulice A) - ulice B"
+    text.match(/\(\s*ulice:?\s+([^,;()]+?)\s*\)\s*[-–—]\s*ulice\s+([^,;()]+)/i),
+    text.match(/\(\s*ul\.\s*([^,;()]+?)\s*\)\s*[-–—]\s*ul\.\s*([^,;()]+)/i),
+    // Full range inside road paren: "(ulice A - ulice B)"
+    text.match(/\(\s*ulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+?)\s*\)/i),
+    text.match(/\(\s*ul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+?)\s*\)/i),
     text.match(/\bulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+)/i),
     text.match(/\bul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+)/i),
     text.match(/\bmezi\s+ulicemi\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/i),
@@ -4869,7 +4875,9 @@ export function parseOfficialCommentFacts(rawText) {
           out.locationKind = s0Kind;
         }
         out.street = null;
-      } else if (s2) {
+      } else if (s2 && !out.streetRange) {
+        // Never overwrite an authoritative street-range with the raw locTrip blob
+        // (e.g. "Mikulášská) - ulice Nepomucká").
         out.street = s0;
       }
       if (midIsSegment) {
