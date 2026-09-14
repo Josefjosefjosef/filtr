@@ -1,0 +1,170 @@
+/**
+ * Mobile/tablet/PWA — combined RYCHLÝ PŘEHLED ⇄ SLEDOVÁNÍ ZÁSILEK switcher.
+ * Header-only gesture arbitration; content keeps native scroll.
+ */
+@media (min-width: 1025px) {
+  #iuHomeQuickParcelModule {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuHomeQuickParcelModule {
+    --iu-home-section-gap: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: var(--iu-home-section-gap) 0;
+    padding: 0 10px;
+  }
+
+  body.iu-mobileMainVisible #iuHomeQuickParcelModule,
+  body.iu-mobileGateOverlayOpen #iuHomeQuickParcelModule,
+  body[data-iu-fc="0"] #iuHomeQuickParcelModule {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Switcher bar: +8px touch target vs standard 32px home section bars. */
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    > .iuHomeSectionBar--switcher {
+    --iu-home-section-bar-h: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    pointer-events: auto;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y;
+    justify-content: center;
+    gap: 8px;
+    user-select: none;
+    -webkit-user-select: none;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    > .iuHomeSectionBar--switcher:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -3px;
+  }
+
+  .iuHomeQuickParcelModule__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .iuHomeQuickParcelModule__chevron {
+    flex: 0 0 auto;
+    font-weight: 700;
+    opacity: 0.92;
+    line-height: 1;
+  }
+
+  .iuHomeQuickParcelModule__dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+    opacity: 0.9;
+  }
+
+  .iuHomeQuickParcelModule__dots > i {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.38);
+  }
+
+  .iuHomeQuickParcelModule__dots > i.is-on {
+    background: #fff;
+  }
+
+  .iuHomeQuickParcelModule__body {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .iuHomeQuickParcelModule__panel {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .iuHomeQuickParcelModule__panel[hidden] {
+    display: none !important;
+  }
+
+  /* Active panel: optional soft slide when reduced-motion allows. */
+  @media (prefers-reduced-motion: no-preference) {
+    #iuHomeQuickParcelModule.is-animating .iuHomeQuickParcelModule__panel.is-enter {
+      animation: iuHomeQuickParcelEnter 180ms ease-out;
+    }
+  }
+
+  @keyframes iuHomeQuickParcelEnter {
+    from {
+      opacity: 0.35;
+      transform: translateX(var(--iu-qp-enter-x, 12px));
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Info unit inside module: no extra outer margin (module owns gap). */
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    .iuHomeSectionUnit--info {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+  }
+
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    #iuMobileInfoPanelMount {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    .iuMobileInfoPanel.iuDesktopInfoPanel,
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    .iuMobileInfoPanelReserve {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  /* Parcel card attached under shared blue bar (no own section bar). */
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    #iuHomeQuickParcelModule
+    #iuSilverParcelWatch {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0 !important;
+  }
+
+  /* Cards → combined module spacing (replaces cards → parcel). */
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot)
+    .iu-info-cards-mobile-tablet
+    + #iuHomeQuickParcelModule {
+    margin-top: 16px !important;
+  }
+}

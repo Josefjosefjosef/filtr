@@ -53,7 +53,12 @@ if (/touch-action:\s*pan-x\s*;/.test(DESKTOP_CSS)) fail("static_desktop_sole_pan
 if (/addEventListener\(\s*["']touchmove["']/.test(PANEL_JS)) fail("static_js_touchmove_listener");
 
 // Markup + cache bust
-if (!/data-iu-home-section-bar="rychly-prehled"/.test(INDEX)) fail("static_rychly_prehled_bar_missing");
+if (
+  !/data-iu-home-section-bar="rychly-prehled"/.test(INDEX) &&
+  !/data-iu-home-section-bar="quick-parcel-switcher"/.test(INDEX)
+) {
+  fail("static_rychly_prehled_bar_missing");
+}
 if (!/iu-mobile-info-panel\.css\?v=[^"']*rychly-prehled-vertical-scroll/.test(INDEX)) {
   fail("static_css_cache_bust_missing");
 }

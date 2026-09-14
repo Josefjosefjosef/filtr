@@ -48,10 +48,12 @@ function staticGate() {
   );
   must(/--iu-home-section-gap/.test(mobileCss) || /--iu-home-section-gap/.test(index), "static:gap_token");
   must(
-    /#iuSilverParcelWatch \+ \.iuHomeSectionUnit--info\s*\{[^}]*margin-top:\s*var\(--iu-home-section-gap/s.test(
-      mobileCss
-    ),
-    "static:parcel_info_gap_token"
+    /#iuHomeQuickParcelModule/.test(mobileCss) &&
+      (/margin-top:\s*var\(--iu-home-section-gap/s.test(mobileCss) ||
+        /#iuSilverParcelWatch \+ \.iuHomeSectionUnit--info\s*\{[^}]*margin-top:\s*var\(--iu-home-section-gap/s.test(
+          mobileCss
+        )),
+    "static:module_or_parcel_info_gap_token"
   );
   must(
     !/#iuSilverParcelWatch\s*\{[^}]*min-height:\s*176px/s.test(index) &&
@@ -62,6 +64,7 @@ function staticGate() {
   must(/parcel-carrier-picker-toggle-v1-20260907/.test(index), "static:parcel_js_cache_bust");
   must(/home-section-gap-unify-v1-20260904/.test(index), "static:info_css_cache_bust");
   must(/rychly-prehled-vertical-scroll-v1-20260903/.test(index), "static:info_css_vertical_scroll_bust");
+  must(/home-quick-parcel-switcher-v1-20260914/.test(index), "static:switcher_cache_bust");
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -84,28 +87,30 @@ function waitForPort(host, port, timeoutMs) {
 
 async function measure(page) {
   return page.evaluate(() => {
+    if (typeof window.iuHomeQuickParcelSetMode === "function") {
+      window.iuHomeQuickParcelSetMode("parcel");
+    }
+    const mod = document.getElementById("iuHomeQuickParcelModule");
     const card = document.getElementById("iuSilverParcelWatch");
     const hero = card ? card.querySelector(".iuSilverParcelWatch__hero") : null;
     const illus = card ? card.querySelector(".iuSilverParcelWatch__illus") : null;
     const illusImg = card ? card.querySelector(".iuSilverParcelWatch__illusImg") : null;
     const list = document.getElementById("iuSilverParcelWatchList");
     const completed = document.getElementById("iuSilverParcelWatchCompleted");
-    const info = document.querySelector(".iuHomeSectionUnit--info");
     const pd = document.getElementById("iuSilverTallScrollSection");
-    if (!card || !hero || !info || !pd) {
+    if (!mod || !card || !hero || !pd) {
       return { ok: false, reason: "missing_nodes" };
     }
     const cr = card.getBoundingClientRect();
+    const mr = mod.getBoundingClientRect();
     const hr = hero.getBoundingClientRect();
     const ir = illus ? illus.getBoundingClientRect() : hr;
     const cs = getComputedStyle(card);
     const padB = parseFloat(cs.paddingBottom) || 0;
     const contentBottom = Math.max(hr.bottom, ir.bottom);
     const emptyBelow = cr.bottom - padB - contentBottom;
-    const infoR = info.getBoundingClientRect();
     const pdR = pd.getBoundingClientRect();
-    const gap1 = infoR.top - cr.bottom;
-    const gap2 = pdR.top - infoR.bottom;
+    const gapModToPd = pdR.top - mr.bottom;
     const listMt = list ? parseFloat(getComputedStyle(list).marginTop) || 0 : 0;
     const completedMt = completed ? parseFloat(getComputedStyle(completed).marginTop) || 0 : 0;
     const listEmpty = !!(list && list.childElementCount === 0);
@@ -124,8 +129,7 @@ async function measure(page) {
       cardH: Math.round(cr.height),
       minHeight: cs.minHeight,
       emptyBelow: Math.round(emptyBelow * 10) / 10,
-      gapParcelToInfo: Math.round(gap1 * 10) / 10,
-      gapInfoToPd: Math.round(gap2 * 10) / 10,
+      gapModToPd: Math.round(gapModToPd * 10) / 10,
       listEmpty,
       completedEmpty,
       listMt,
@@ -133,6 +137,7 @@ async function measure(page) {
       illusFullyVisible,
       shellInside,
       illusH: Math.round(ir.height),
+      mode: mod.getAttribute("data-iu-mode"),
     };
   });
 }
@@ -186,11 +191,8 @@ async function runPlaywright() {
           continue;
         }
         must(m.emptyBelow <= EMPTY_BELOW_MAX_PX, p + ":empty_below:" + m.emptyBelow);
-        must(
-          Math.abs(m.gapParcelToInfo - m.gapInfoToPd) <= GAP_TOL_PX,
-          p + ":gap_mismatch:" + m.gapParcelToInfo + "!=" + m.gapInfoToPd
-        );
-        must(m.gapParcelToInfo >= 12 && m.gapParcelToInfo <= 22, p + ":gap_range:" + m.gapParcelToInfo);
+        must(m.gapModToPd >= 12 && m.gapModToPd <= 22, p + ":gap_mod_pd:" + m.gapModToPd);
+        must(m.mode === "parcel", p + ":mode_parcel:" + m.mode);
         if (m.listEmpty) must(m.listMt === 0, p + ":list_empty_mt:" + m.listMt);
         if (m.completedEmpty) must(m.completedMt === 0, p + ":completed_empty_mt:" + m.completedMt);
         must(m.illusFullyVisible, p + ":illus_visible");

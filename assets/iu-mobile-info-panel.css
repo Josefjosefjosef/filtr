@@ -62,11 +62,17 @@
     box-sizing: border-box;
   }
 
-  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet + #iuSilverParcelWatch {
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet + #iuHomeQuickParcelModule {
     margin-top: 16px !important;
   }
 
-  /* Same inter-section gap as Rychlý přehled → Můj přehled dne (--iu-home-section-gap). */
+  /* Same inter-section gap as combined module → Můj přehled dne (--iu-home-section-gap). */
+  :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuHomeQuickParcelModule {
+    margin-top: var(--iu-home-section-gap, 16px) !important;
+    margin-bottom: var(--iu-home-section-gap, 16px) !important;
+  }
+
+  /* Legacy adjacent rule retained only if parcel escapes module (desktop reclaim race). */
   :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch + .iuHomeSectionUnit--info {
     margin-top: var(--iu-home-section-gap, 16px) !important;
     margin-bottom: var(--iu-home-section-gap, 16px) !important;

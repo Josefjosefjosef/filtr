@@ -115,6 +115,21 @@ async function runtimeGate() {
       });
       const page = await bootstrapGuardPage(context);
 
+      async function showParcelPanel() {
+        await page.evaluate(() => {
+          try {
+            if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+            if (typeof window.iuHomeQuickParcelSetMode === "function") {
+              window.iuHomeQuickParcelSetMode("parcel");
+            }
+          } catch (_) {}
+        });
+        await page.waitForSelector("#iuSilverParcelWatchInput", {
+          state: "visible",
+          timeout: 20000,
+        }).catch(() => {});
+      }
+
       async function seedList(payload) {
         await waitForVaultReady(page, 90000).catch(() => {});
         await page.evaluate(
@@ -135,6 +150,7 @@ async function runtimeGate() {
           timeout: 45000,
         });
         await waitForVaultReady(page, 90000).catch(() => {});
+        await showParcelPanel();
         await page.waitForTimeout(1000);
         const n = await page.locator(".iuSilverParcelWatch__card").count();
         if (n < payload.length) {
@@ -156,6 +172,7 @@ async function runtimeGate() {
             timeout: 45000,
           });
           await waitForVaultReady(page, 90000).catch(() => {});
+          await showParcelPanel();
           await page.waitForTimeout(1000);
         }
       }
@@ -164,12 +181,14 @@ async function runtimeGate() {
       await page.waitForFunction(() => document.getElementById("iuSilverParcelWatch"), {
         timeout: 45000,
       });
+      await showParcelPanel();
 
       const two = [
         seedParcel("p_toggle_a", "TOGGLEAA11"),
         seedParcel("p_toggle_b", "TOGGLEBB22"),
       ];
       await seedList(two);
+      await showParcelPanel();
 
       const cards = page.locator(".iuSilverParcelWatch__card");
       must((await cards.count()) >= 2, "rt_" + vp.label + "_two_cards");

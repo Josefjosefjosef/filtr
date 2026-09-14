@@ -272,7 +272,13 @@ async function runViewport(page, w, h, label, guardUrl) {
   await page.waitForTimeout(600);
   await page.setViewportSize({ width: w, height: h });
   await page.waitForTimeout(400);
-  await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: 45000 });
+  await page.evaluate(() => {
+    try {
+      if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+      if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+    } catch (_) {}
+  });
+  await page.waitForSelector("#iuSilverParcelWatchInput", { state: "visible", timeout: 45000 });
   await page.waitForFunction(
     () => !!(window.IU_SILVER_PARCEL_FACADE && window.IU_PARCEL_TRACKING_ENGINE),
     { timeout: 20000 },
@@ -307,7 +313,13 @@ async function runViewport(page, w, h, label, guardUrl) {
   await page.waitForTimeout(400);
   await page.setViewportSize({ width: w, height: h });
   await page.waitForTimeout(400);
-  await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: 45000 });
+  await page.evaluate(() => {
+    try {
+      if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+      if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+    } catch (_) {}
+  });
+  await page.waitForSelector("#iuSilverParcelWatchInput", { state: "visible", timeout: 45000 });
   await page.waitForFunction(
     () => !!(window.IU_SILVER_PARCEL_FACADE && window.IU_PARCEL_TRACKING_ENGINE),
     { timeout: 20000 },
