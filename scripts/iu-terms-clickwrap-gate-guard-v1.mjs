@@ -28,8 +28,8 @@ const FREE =
 const PAID_SPLIT =
   "Placené reklamní, obchodní nebo jiné individuálně sjednané služby a spolupráce";
 const A_TITLE = "Pomozte nám zlepšovat InfoUzel.cz";
-const A_DENY = "Nepovolit anonymní statistiky";
-const A_ALLOW = "Povolit anonymní statistiky";
+const A_DENY = "Anonymní statistiky nepovolit";
+const A_ALLOW = "Anonymní statistiky povolit";
 const A_SETTINGS = "Nastavení";
 const VER = "2026-09-08-v1";
 

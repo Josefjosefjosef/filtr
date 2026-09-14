@@ -23,8 +23,8 @@ function must(cond, id) {
 const TITLE = "Pomozte nám zlepšovat InfoUzel.cz";
 const BODY =
   "Můžete nám povolit anonymní údaje o návštěvnosti. Nezjišťujeme, kdo jste, a nesledujeme vás napříč weby. Údaje používáme pouze ke zlepšování InfoUzel.cz.";
-const BTN_DENY = "Nepovolit anonymní statistiky";
-const BTN_ALLOW = "Povolit anonymní statistiky";
+const BTN_DENY = "Anonymní statistiky nepovolit";
+const BTN_ALLOW = "Anonymní statistiky povolit";
 const BTN_SETTINGS = "Nastavení";
 const CACHE = "consent-layer-mobile-fit-v1-20260907";
 
