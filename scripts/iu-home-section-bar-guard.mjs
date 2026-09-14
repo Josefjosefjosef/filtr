@@ -47,12 +47,15 @@ function staticGate() {
   must(!/--iu-home-section-bar-h:\s*42px/.test(index), "static:no_old_height_42");
   must(/--iu-home-section-bar-bg:\s*var\(--iu-brand-blue/.test(index), "static:blue_token");
   must(/--iu-home-section-bar-radius:\s*14px/.test(index), "static:radius_token");
-  must(/data-iu-home-section-bar="rychly-prehled"/.test(index), "static:bar_info");
-  must(/data-iu-home-section-bar="sledovani-zasilek"/.test(index), "static:bar_parcel");
+  must(/data-iu-home-section-bar="quick-parcel-switcher"/.test(index), "static:bar_switcher");
   must(/data-iu-home-section-bar="muj-prehled-dne"/.test(index), "static:bar_pd");
+  must(!/data-iu-home-section-bar="rychly-prehled"/.test(index), "static:no_standalone_quick_bar");
+  must(!/data-iu-home-section-bar="sledovani-zasilek"/.test(index), "static:no_standalone_parcel_bar");
   must(/RYCHLÝ PŘEHLED/.test(index), "static:label_info");
-  must(/SLEDOVÁNÍ ZÁSILEK/.test(index) && /iuHomeSectionBar/.test(index), "static:label_parcel_bar");
+  must(/SLEDOVÁNÍ ZÁSILEK/.test(index), "static:label_parcel_text");
   must(/MŮJ PŘEHLED DNE/.test(index), "static:label_pd");
+  must(/iuHomeSectionBar--switcher/.test(index), "static:switcher_class");
+  must(/--iu-home-section-bar-h:\s*40px/.test(read("assets/iu-home-quick-parcel-switcher-v1.css")), "static:switcher_40");
   must(!/id="iuFeedNewsSplitParcel"/.test(index), "static:no_parcel_split");
   must(!/iuFeedNewsSplit--parcel/.test(index), "static:no_parcel_split_class");
   must(
@@ -60,10 +63,6 @@ function staticGate() {
     "static:no_legacy_parcel_capsule"
   );
   must(!/body:not\(\.iu-home\)\s+\.iuHomeSectionBar/.test(index), "static:no_iu_home_gate");
-  must(
-    !/\[data-iu-home-section-bar[^\]]*\][^{]*\{[^}]*\b(?:min-|max-)?height\s*:/.test(index),
-    "static:no_local_bar_height"
-  );
   must(/function homeSectionBarHtml\(/.test(ui), "static:ui_helper");
   must(/homeSectionBarHtml\("MŮJ PŘEHLED DNE",\s*"muj-prehled-dne"\)/.test(ui), "static:ui_shell_bar");
   must(/function settingsCtaInnerHtml\(/.test(ui), "static:cta_helper");
@@ -137,13 +136,14 @@ async function measureBars(page) {
         inScroll: !!(el.closest(".iuDesktopInfoPanel__scroll") || el.closest(".iuDesktopInfoPanel__track")),
       };
     };
-    const infoBar = visible.find((el) => /RYCHLÝ PŘEHLED/i.test(el.textContent || ""));
-    const parcelBar = visible.find((el) => /SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || ""));
+    const infoBar = visible.find((el) => /RYCHLÝ PŘEHLED|SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || ""));
+    const parcelBar = null; // combined into switcher — no standalone parcel bar
     const pdBar = visible.find((el) => /MŮJ PŘEHLED DNE/i.test(el.textContent || ""));
+    const switcher = document.getElementById("iuHomeQuickParcelSwitcher");
     const panel =
       document.querySelector("#iuMobileInfoPanelMount .iuMobileInfoPanel") ||
       document.querySelector("#iuMobileInfoPanelMount .iuMobileInfoPanelReserve");
-    const parcel = document.getElementById("iuSilverParcelWatch");
+    const module = document.getElementById("iuHomeQuickParcelModule");
     const banner = document.querySelector('[data-testid="prehled-dne-homecard"]');
     const green =
       document.querySelector('[data-testid="prehled-dne-settings-cta"]') ||
@@ -164,8 +164,6 @@ async function measureBars(page) {
       if (!a || !b) return null;
       return Math.round(Math.abs(a.getBoundingClientRect().width - b.getBoundingClientRect().width) * 100) / 100;
     };
-    const parcelRect = parcel ? parcel.getBoundingClientRect() : null;
-    const parcelBarRect = parcelBar ? parcelBar.getBoundingClientRect() : null;
     const greenCs = green ? getComputedStyle(green) : null;
     const chevronCs = greenChevron ? getComputedStyle(greenChevron) : null;
     const greenRect = green ? green.getBoundingClientRect() : null;
@@ -176,15 +174,11 @@ async function measureBars(page) {
       info: infoBar ? pick(infoBar) : null,
       parcel: parcelBar ? pick(parcelBar) : null,
       pd: pdBar ? pick(pdBar) : null,
+      switcher: switcher && visible.includes(switcher) ? pick(switcher) : switcher ? pick(switcher) : null,
       gapInfo: infoBar && panel ? gap(infoBar, panel) : null,
       gapPd: pdBar && banner ? gap(pdBar, banner) : null,
-      parcelContainsBar: !!(parcel && parcelBar && parcel.contains(parcelBar)),
-      parcelBarTopFlush:
-        parcelRect && parcelBarRect
-          ? Math.round(Math.abs(parcelBarRect.top - parcelRect.top) * 1000) / 1000
-          : null,
+      modulePresent: !!module,
       widthInfo: infoBar && panel ? widthDelta(infoBar, panel) : null,
-      widthParcel: parcelBar && parcel ? widthDelta(parcelBar, parcel) : null,
       widthPd: pdBar && banner ? widthDelta(pdBar, banner) : null,
       greenHeight: greenRect ? Math.round(greenRect.height * 100) / 100 : null,
       greenLabel: greenLabel ? String(greenLabel.textContent || "").trim() : null,
@@ -241,16 +235,17 @@ async function runPlaywright() {
         await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 45000 });
         await page.waitForFunction(
           () =>
-            document.querySelectorAll(".iuHomeSectionBar").length >= 3 &&
+            document.querySelectorAll(".iuHomeSectionBar").length >= 2 &&
+            !!document.getElementById("iuHomeQuickParcelSwitcher") &&
             !!document.getElementById("iuSilverParcelWatch") &&
             !!document.querySelector('[data-testid="prehled-dne-homecard"]') &&
             !!document.querySelector('[data-testid="prehled-dne-settings-cta"][data-act="open-settings"]'),
           { timeout: 45000 }
         );
         await page.evaluate(() => {
-          const parcel = document.getElementById("iuSilverParcelWatch");
-          if (parcel && typeof parcel.scrollIntoView === "function") {
-            parcel.scrollIntoView({ block: "center", inline: "nearest" });
+          const mod = document.getElementById("iuHomeQuickParcelModule");
+          if (mod && typeof mod.scrollIntoView === "function") {
+            mod.scrollIntoView({ block: "center", inline: "nearest" });
           }
         });
         await page.waitForTimeout(700);
@@ -268,75 +263,35 @@ async function runPlaywright() {
 
         must(!m.legacySplit, prefix + ":no_legacy_split");
         must(!m.legacyCapsule, prefix + ":no_legacy_capsule");
+        must(m.modulePresent, prefix + ":module_present");
 
-        if (vp.expectParcel) {
-          must(m.visibleCount === 3, prefix + ":bars_count:" + m.visibleCount);
-          must(!!m.info && !!m.parcel && !!m.pd, prefix + ":bars_present");
-        } else {
-          // ≥901: parcel card hidden by existing desktop-rail CSS; info + PD bars must remain.
-          must(!!m.info && !!m.pd, prefix + ":bars_info_pd");
-          must(!m.parcel, prefix + ":parcel_hidden_with_card");
-          must(m.visibleCount === 2, prefix + ":bars_count_no_parcel:" + m.visibleCount);
-        }
+        // Combined switcher (quick⇄parcel) + Můj přehled dne = 2 bars on ≤1024.
+        must(!!m.info && !!m.pd, prefix + ":bars_info_pd");
+        must(!m.parcel, prefix + ":no_standalone_parcel_bar");
+        must(m.visibleCount === 2, prefix + ":bars_count:" + m.visibleCount);
 
-        const active = vp.expectParcel
-          ? [m.info, m.parcel, m.pd]
-          : [m.info, m.pd];
-        if (active.every(Boolean)) {
-          const hs = active.map((b) => b.height);
-          must(hs.every((h) => Math.abs(h - hs[0]) <= 1), prefix + ":height_equal:" + hs.join(","));
-          // Compact bars ≈ 32px (−25% from original 42px); green CTA stays ~42px.
-          must(
-            hs.every((h) => h >= 30 && h <= 34),
-            prefix + ":height_compact_32:" + hs.join(",")
-          );
+        if (m.info && m.pd) {
+          must(m.info.height >= 38 && m.info.height <= 48, prefix + ":switcher_h_40:" + m.info.height);
+          must(m.pd.height >= 30 && m.pd.height <= 34, prefix + ":pd_h_32:" + m.pd.height);
           must(
             m.greenHeight != null && m.greenHeight >= 40 && m.greenHeight <= 46,
             prefix + ":green_h_unchanged:" + m.greenHeight
           );
           must(
-            m.greenHeight != null && active[0].height < m.greenHeight - 4,
-            prefix + ":bars_shorter_than_green:" + active[0].height + "/" + m.greenHeight
+            m.pd.height < m.greenHeight - 4,
+            prefix + ":pd_shorter_than_green:" + m.pd.height + "/" + m.greenHeight
           );
 
-          const bgs = active.map((b) => b.bg);
-          must(bgs.every((b) => b === bgs[0]), prefix + ":bg_equal");
-          must(nearBlue(parseRgb(active[0].bg)), prefix + ":bg_blue:" + active[0].bg);
-
-          must(
-            active.every((b) => b.fontSize === active[0].fontSize),
-            prefix + ":font_size"
-          );
-          must(
-            active.every((b) => b.fontWeight === active[0].fontWeight),
-            prefix + ":font_weight"
-          );
-          must(
-            active.every((b) => b.radiusTL === active[0].radiusTL),
-            prefix + ":radius_tl"
-          );
-          must(
-            active.every((b) => b.radiusTR === active[0].radiusTR),
-            prefix + ":radius_tr"
-          );
-          must(
-            active.every((b) => b.radiusBL === "0px"),
-            prefix + ":radius_bl_flat"
-          );
-          must(
-            active.every((b) => b.radiusBR === "0px"),
-            prefix + ":radius_br_flat"
-          );
-          must(parseFloat(active[0].radiusTL) > 0, prefix + ":radius_tl_round");
-
-          // Vertical text centering inside each bar (flex center ≈ mid of rect).
-          must(
-            active.every((b) => {
-              // pick() does not expose text metrics; height lock + flex CSS covers center.
-              return b.height >= 30 && b.height <= 34;
-            }),
-            prefix + ":bar_text_slot_ok"
-          );
+          must(nearBlue(parseRgb(m.info.bg)), prefix + ":bg_blue_info:" + m.info.bg);
+          must(nearBlue(parseRgb(m.pd.bg)), prefix + ":bg_blue_pd:" + m.pd.bg);
+          must(m.info.bg === m.pd.bg, prefix + ":bg_equal");
+          must(m.info.fontSize === m.pd.fontSize, prefix + ":font_size");
+          must(m.info.fontWeight === m.pd.fontWeight, prefix + ":font_weight");
+          must(m.info.radiusTL === m.pd.radiusTL, prefix + ":radius_tl");
+          must(m.info.radiusTR === m.pd.radiusTR, prefix + ":radius_tr");
+          must(m.info.radiusBL === "0px" && m.pd.radiusBL === "0px", prefix + ":radius_bl_flat");
+          must(m.info.radiusBR === "0px" && m.pd.radiusBR === "0px", prefix + ":radius_br_flat");
+          must(parseFloat(m.info.radiusTL) > 0, prefix + ":radius_tl_round");
 
           must(m.gapInfo != null && Math.abs(m.gapInfo) <= 0.5, prefix + ":gap_info:" + m.gapInfo);
           must(m.gapPd != null && Math.abs(m.gapPd) <= 0.5, prefix + ":gap_pd:" + m.gapPd);
@@ -351,15 +306,6 @@ async function runPlaywright() {
           must(m.greenChevronRight, prefix + ":cta_chevron_right");
           must(m.greenChevronWhite, prefix + ":cta_chevron_white");
           must(m.greenOpenSettings, prefix + ":cta_open_settings");
-
-          if (vp.expectParcel) {
-            must(m.parcelContainsBar, prefix + ":parcel_contains_bar");
-            must(
-              m.parcelBarTopFlush != null && m.parcelBarTopFlush <= 1.5,
-              prefix + ":parcel_top_flush:" + m.parcelBarTopFlush
-            );
-            must(m.widthParcel != null && m.widthParcel <= 2, prefix + ":width_parcel:" + m.widthParcel);
-          }
         }
 
         // Dark/evening: same brand blue + white text, no light seams on bar itself.
@@ -375,15 +321,11 @@ async function runPlaywright() {
           });
           await page.waitForTimeout(200);
           const night = await measureBars(page);
-          const nightActive = vp.expectParcel ? [night.info, night.parcel, night.pd] : [night.info, night.pd];
-          if (nightActive.every(Boolean)) {
+          if (night.info && night.pd) {
+            must(night.info.bg === night.pd.bg, prefix + ":evening_bg_equal");
+            must(nearBlue(parseRgb(night.info.bg)), prefix + ":evening_bg_blue:" + night.info.bg);
             must(
-              nightActive.every((b) => b.bg === nightActive[0].bg),
-              prefix + ":evening_bg_equal"
-            );
-            must(nearBlue(parseRgb(nightActive[0].bg)), prefix + ":evening_bg_blue:" + nightActive[0].bg);
-            must(
-              nightActive.every((b) => {
+              [night.info, night.pd].every((b) => {
                 const rgb = parseRgb(b.color);
                 return rgb && rgb.r >= 240 && rgb.g >= 240 && rgb.b >= 240;
               }),

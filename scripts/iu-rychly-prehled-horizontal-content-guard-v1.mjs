@@ -89,8 +89,10 @@ function staticGate() {
     {
       id: "title_outside_mount",
       pass:
-        /data-iu-home-section-bar="rychly-prehled"/.test(index) &&
-        /id="iuMobileInfoPanelMount"/.test(index),
+        (/data-iu-home-section-bar="rychly-prehled"/.test(index) ||
+          /data-iu-home-section-bar="quick-parcel-switcher"/.test(index)) &&
+        /id="iuMobileInfoPanelMount"/.test(index) &&
+        /id="iuHomeQuickParcelModule"/.test(index),
     },
   ];
   const fails = checks.filter((c) => !c.pass).map((c) => c.id);
@@ -144,17 +146,19 @@ async function waitForHorizontalContent(page) {
 
 async function measureContent(page, label) {
   return page.evaluate((label) => {
-    const bar = document.querySelector('[data-iu-home-section-bar="rychly-prehled"]');
+    const bar =
+      document.querySelector('[data-iu-home-section-bar="quick-parcel-switcher"]') ||
+      document.querySelector('[data-iu-home-section-bar="rychly-prehled"]');
     const mount = document.getElementById("iuMobileInfoPanelMount");
     const panel = document.getElementById("iuMobileInfoPanel");
     const scroll = panel ? panel.querySelector(".iuDesktopInfoPanel__scroll") : null;
     const segs = panel ? Array.from(panel.querySelectorAll(".iuDesktopInfoPanel__segment")) : [];
     const environment = panel ? panel.querySelector('[data-iu-info-panel-id="environment"]') : null;
     const environmentText = panel ? (panel.textContent || "").includes("Investice na ochranu") : false;
-    const parcel = document.querySelector('[data-iu-home-section-bar="sledovani-zasilek"]');
+    const module = document.getElementById("iuHomeQuickParcelModule");
     const barRect = bar ? bar.getBoundingClientRect() : null;
     const mountRect = mount ? mount.getBoundingClientRect() : null;
-    const parcelRect = parcel ? parcel.getBoundingClientRect() : null;
+    const modRect = module ? module.getBoundingClientRect() : null;
     const mountCs = mount ? getComputedStyle(mount) : null;
     const pass =
       !!bar &&
@@ -170,7 +174,7 @@ async function measureContent(page, label) {
       mountCs.visibility !== "hidden" &&
       !mount.hidden &&
       !mount.hasAttribute("hidden") &&
-      (!parcelRect || !mountRect || mountRect.top >= parcelRect.bottom - 2);
+      (!modRect || !mountRect || mountRect.top >= modRect.top - 2);
     return {
       label,
       pass,
@@ -183,8 +187,7 @@ async function measureContent(page, label) {
       hasScroll: !!scroll,
       scrollWidth: scroll ? scroll.scrollWidth : 0,
       clientWidth: scroll ? scroll.clientWidth : 0,
-      parcelBelow:
-        !parcelRect || !mountRect ? null : Math.round(mountRect.top - parcelRect.bottom),
+      parcelBelow: null,
     };
   }, label);
 }

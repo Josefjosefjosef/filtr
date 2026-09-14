@@ -1483,18 +1483,10 @@ require-trusted-types-for 'script';
           border-top-left-radius: 0 !important;
           border-top-right-radius: 0 !important;
         }
-        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch:has(> .iuHomeSectionBar) {
+        /* Shared switcher module owns the blue bar; parcel no longer has its own section bar. */
+        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuHomeQuickParcelModule:has(> .iuHomeSectionBar--switcher) {
           border-top-left-radius: 14px;
           border-top-right-radius: 14px;
-        }
-        :is(#silver-slot, #iuMobileSilverSlot #silver-slot) #iuSilverParcelWatch > .iuHomeSectionBar {
-          --iu-home-section-bar-pad-x: var(--iuSilverStackPadX, 12px);
-          box-sizing: border-box;
-          width: calc(100% + (2 * var(--iu-home-section-bar-pad-x)));
-          max-width: none;
-          margin: -10px calc(-1 * var(--iu-home-section-bar-pad-x)) 10px;
-          position: relative;
-          z-index: 1;
         }
         .iuHomeSectionStack {
           display: flex;
@@ -2795,7 +2787,8 @@ require-trusted-types-for 'script';
     <link rel="stylesheet" href="/assets/iu-desktop-section-close-v1.css?v=desktop-left-rail-section-close-v1-20260707" data-iu-desktop-css="1" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-tool-window-shell-v1.css?v=pc-topbar-height-unify-v1-20260716" data-iu-desktop-css="1" media="(min-width: 1025px)" />
     <link rel="stylesheet" href="/assets/iu-desktop-info-panel.css?v=info-panel-polish-v1-20260705" data-iu-desktop-css="1" media="(min-width: 1025px)" />
-    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=rychly-prehled-vertical-scroll-v1-20260903-home-section-gap-unify-v1-20260904" />
+    <link rel="stylesheet" href="/assets/iu-mobile-info-panel.css?v=rychly-prehled-vertical-scroll-v1-20260903-home-section-gap-unify-v1-20260904-quick-parcel-switcher-v1-20260914" />
+    <link rel="stylesheet" href="/assets/iu-home-quick-parcel-switcher-v1.css?v=home-quick-parcel-switcher-v1-20260914" />
     <link rel="stylesheet" data-iu-href="/assets/iu-myinfouzel-premium-overlay.css?v=mindmenu-mailbox-gear-track-v1-20260707-mindmenu-articles-removed-v1-20260803-mindmenu-lock-infouzel-v1-20260906" media="print" data-iu-defer-overlay-css="1" />
     <style id="iuParcelWatchFirstPaintClsGuard">
       /* P0 CLS: post parcel-dashboard.css — fixed illus sizes stabilize height; card height is content-driven (no artificial min-height slack). */
@@ -3638,33 +3631,54 @@ require-trusted-types-for 'script';
                           </div>
                         </div>
                         </div>
-                        <!-- home-mobile-parcel-quick-swap-v1-20260822 -->
-                        <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
-                          <div class="iuHomeSectionBar" data-iu-home-section-bar="sledovani-zasilek" aria-hidden="true">SLEDOVÁNÍ ZÁSILEK</div>
-                          <div class="iuSilverParcelWatch__hero">
-                            <div class="iuSilverParcelWatch__content">
-                              <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
-                              <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a sleduj její pohyb.</p>
-                              <div class="iuSilverParcelWatch__mainShell">
-                                <div class="iuSilverParcelWatch__row">
-                                  <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
-                                  <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Vyhledat zásilku</button>
+                        <!-- home-quick-parcel-switcher-v1-20260914: one module, header toggles quick⇄parcel (≤1024) -->
+                        <div id="iuHomeQuickParcelModule" class="iuHomeQuickParcelModule" data-iu-home-quick-parcel-module="1" data-iu-mode="quick">
+                          <button
+                            type="button"
+                            id="iuHomeQuickParcelSwitcher"
+                            class="iuHomeSectionBar iuHomeSectionBar--switcher"
+                            data-iu-home-section-bar="quick-parcel-switcher"
+                            aria-label="Rychlý přehled. Přepnout na Sledování zásilek"
+                            aria-pressed="false"
+                          >
+                            <span class="iuHomeQuickParcelModule__dots" aria-hidden="true">
+                              <i data-iu-switcher-dot="0" class="is-on"></i>
+                              <i data-iu-switcher-dot="1"></i>
+                            </span>
+                            <span class="iuHomeQuickParcelModule__label" data-iu-switcher-label>RYCHLÝ PŘEHLED</span>
+                            <span class="iuHomeQuickParcelModule__chevron" data-iu-switcher-chevron aria-hidden="true">›</span>
+                          </button>
+                          <div class="iuHomeQuickParcelModule__body">
+                            <div id="iuHomeQuickParcelPanelQuick" class="iuHomeQuickParcelModule__panel iuHomeQuickParcelModule__panel--quick is-active" data-iu-panel="quick">
+                              <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
+                                <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
+                                  <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
                                 </div>
                               </div>
                             </div>
-                            <div class="iuSilverParcelWatch__illus" aria-hidden="true">
-                              <img class="iuSilverParcelWatch__illusImg" src="/assets/images/parcel-tracking-illustration.webp" alt="" width="480" height="640" decoding="async" loading="lazy" fetchpriority="low" />
+                            <div id="iuHomeQuickParcelPanelParcel" class="iuHomeQuickParcelModule__panel iuHomeQuickParcelModule__panel--parcel" data-iu-panel="parcel" hidden>
+                              <section id="iuSilverParcelWatch" class="iuSilverParcelWatch" aria-label="Vyhledej mi zásilku" data-iu-silver-parcel-watch="1">
+                                <div class="iuSilverParcelWatch__hero">
+                                  <div class="iuSilverParcelWatch__content">
+                                    <h3 class="iuSilverParcelWatch__title">📦 Vyhledej mi zásilku</h3>
+                                    <p class="iuSilverParcelWatch__lead">Zadej číslo zásilky a sleduj její pohyb.</p>
+                                    <div class="iuSilverParcelWatch__mainShell">
+                                      <div class="iuSilverParcelWatch__row">
+                                        <input id="iuSilverParcelWatchInput" class="iuSilverParcelWatch__input" type="text" inputmode="text" autocomplete="off" maxlength="80" placeholder="Zadej číslo zásilky" aria-label="Zadej číslo zásilky" />
+                                        <button type="button" id="iuSilverParcelWatchSave" class="iuSilverParcelWatch__save">Vyhledat zásilku</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="iuSilverParcelWatch__illus" aria-hidden="true">
+                                    <img class="iuSilverParcelWatch__illusImg" src="/assets/images/parcel-tracking-illustration.webp" alt="" width="480" height="640" decoding="async" loading="lazy" fetchpriority="low" />
+                                  </div>
+                                </div>
+                                <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
+                                <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
+                                <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
+                                <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
+                              </section>
                             </div>
-                          </div>
-                          <p id="iuSilverParcelWatchErr" class="iuSilverParcelWatch__err" hidden role="alert"></p>
-                          <div id="iuSilverParcelWatchList" class="iuSilverParcelWatch__list"></div>
-                          <button type="button" id="iuSilverParcelWatchShowAll" class="iuSilverParcelWatch__showall" hidden>Zobrazit všechny zásilky</button>
-                          <div id="iuSilverParcelWatchCompleted" class="iuSilverParcelWatch__completed"></div>
-                        </section>
-                        <div class="iuHomeSectionUnit iuHomeSectionUnit--info" data-iu-home-section-unit="info">
-                          <div class="iuHomeSectionBar" data-iu-home-section-bar="rychly-prehled" aria-hidden="true">RYCHLÝ PŘEHLED</div>
-                          <div id="iuMobileInfoPanelMount" class="iuMobileInfoPanelMount" data-iu-mobile-info-panel-mount="1" aria-busy="true">
-                            <div class="iuMobileInfoPanelReserve" aria-hidden="true"></div>
                           </div>
                         </div>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorHolidayWeather" aria-hidden="true"></div>
@@ -6605,6 +6619,7 @@ require-trusted-types-for 'script';
         var overlay = document.getElementById("iuDesktopParcelWatchOverlay");
         var stack = document.getElementById("iuSilverWelcomeStack");
         var infoUnit = stack ? stack.querySelector(".iuHomeSectionUnit--info") : null;
+        var parcelPanel = document.getElementById("iuHomeQuickParcelPanelParcel");
         var feedAnchor = document.getElementById("iuSilverWelcomeStackSeparatorHolidayWeather");
         if (!parcel || !stack || !feedAnchor) return;
         function iuDesktopParcelWatchPlacementApply(){
@@ -6614,10 +6629,17 @@ require-trusted-types-for 'script';
               if (!mount.contains(parcel)) mount.appendChild(parcel);
               return;
             }
-            if (infoUnit && infoUnit !== parcel && !infoUnit.contains(parcel)) {
+            /* Mobile/tablet: keep parcel inside combined quick⇄parcel module panel. */
+            if (parcelPanel && !parcelPanel.contains(parcel)) {
+              parcelPanel.appendChild(parcel);
+            } else if (infoUnit && infoUnit !== parcel && !infoUnit.contains(parcel) && !parcelPanel) {
               stack.insertBefore(parcel, infoUnit);
             } else if (mount && mount.contains(parcel)) {
-              stack.insertBefore(parcel, feedAnchor);
+              if (parcelPanel) parcelPanel.appendChild(parcel);
+              else stack.insertBefore(parcel, feedAnchor);
+            }
+            if (typeof window.iuHomeQuickParcelEnsure === "function") {
+              try { window.iuHomeQuickParcelEnsure(); } catch (_) {}
             }
             if (overlay) {
               overlay.hidden = true;
@@ -7214,6 +7236,7 @@ require-trusted-types-for 'script';
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="install-box" data-iu-src="/assets/iu-home-premium-install-box.js?v=1-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script defer src="/assets/iu-terms-gate-v1.js?v=terms-decline-no-public-link-v1-20260909"></script>
     <script defer src="/assets/iu-consent-layer.js?v=consent-layer-terms-priority-v1-20260908"></script>
+    <script defer src="/assets/iu-home-quick-parcel-switcher-v1.js?v=home-quick-parcel-switcher-v1-20260914"></script>
     <script defer src="/assets/iu-silver-parcel-dashboard.js?v=parcel-carrier-picker-toggle-v1-20260907"></script>
     <script>
     (function(){

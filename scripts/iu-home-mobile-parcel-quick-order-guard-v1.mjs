@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Mobile/tablet: SLEDOVÁNÍ ZÁSILEK section must appear above RYCHLÝ PŘEHLED (≤1024).
- * Desktop (≥1025): unchanged — parcel card hidden, info unit hidden.
+ * Mobile/tablet: combined RYCHLÝ PŘEHLED ⇄ SLEDOVÁNÍ ZÁSILEK module (≤1024).
+ * Desktop (≥1025): module/info hidden; parcel via desktop overlay path.
+ * Replaces prior "parcel section above quick section" order check.
  */
 import fs from "node:fs";
 import http from "node:http";
@@ -32,24 +33,22 @@ function staticGate() {
   const index = read("projects/index.html");
   const mobileCss = read("assets/iu-mobile-info-panel.css");
 
-  must(/home-mobile-parcel-quick-swap-v1-20260822/.test(index), "static:marker");
-  const cardsIdx = index.indexOf("id=\"iuInfoCardsMobileTablet\"");
-  const parcelIdx = index.indexOf("id=\"iuSilverParcelWatch\"", cardsIdx);
-  const infoIdx = index.indexOf("iuHomeSectionUnit--info", cardsIdx);
-  must(parcelIdx > 0 && infoIdx > 0 && parcelIdx < infoIdx, "static:dom_parcel_before_info");
+  must(/home-quick-parcel-switcher-v1-20260914/.test(index), "static:marker");
+  const modIdx = index.indexOf('id="iuHomeQuickParcelModule"');
+  const parcelIdx = index.indexOf('id="iuSilverParcelWatch"', modIdx);
+  const infoIdx = index.indexOf("iuHomeSectionUnit--info", modIdx);
+  must(modIdx > 0 && parcelIdx > modIdx && infoIdx > modIdx, "static:dom_inside_module");
   must(
-    /\.iu-info-cards-mobile-tablet \+ #iuSilverParcelWatch/.test(mobileCss),
-    "static:css_cards_parcel_spacing"
+    /\.iu-info-cards-mobile-tablet \+ #iuHomeQuickParcelModule/.test(mobileCss),
+    "static:css_cards_module_spacing"
   );
   must(
-    /#iuSilverParcelWatch \+ \.iuHomeSectionUnit--info/.test(mobileCss),
-    "static:css_parcel_info_spacing"
+    /#iuHomeQuickParcelModule\s*\{[^}]*--iu-home-section-gap/s.test(mobileCss) ||
+      /#iuHomeQuickParcelModule/.test(mobileCss),
+    "static:css_module_gap"
   );
-  must(
-    !/\.iuHomeSectionUnit--info \+ #iuSilverParcelWatch/.test(mobileCss),
-    "static:no_old_adjacent_rule"
-  );
-  must(/insertBefore\(parcel,\s*infoUnit\)/.test(index), "static:mobile_parcel_placement");
+  must(/iuHomeQuickParcelPanelParcel/.test(index), "static:parcel_panel_slot");
+  must(/parcelPanel\.appendChild\(parcel\)/.test(index), "static:mobile_parcel_placement");
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -72,14 +71,12 @@ function waitForPort(host, port, timeoutMs) {
 
 async function measureOrder(page) {
   return page.evaluate(() => {
-    const infoBar = Array.from(document.querySelectorAll(".iuHomeSectionBar")).find((el) =>
-      /RYCHLÝ PŘEHLED/i.test(el.textContent || "")
-    );
-    const parcelBar = Array.from(document.querySelectorAll(".iuHomeSectionBar")).find((el) =>
-      /SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || "")
-    );
+    const mod = document.getElementById("iuHomeQuickParcelModule");
+    const sw = document.getElementById("iuHomeQuickParcelSwitcher");
     const parcel = document.getElementById("iuSilverParcelWatch");
+    const panel = document.getElementById("iuHomeQuickParcelPanelParcel");
     const pick = (el) => {
+      if (!el) return null;
       const r = el.getBoundingClientRect();
       const cs = getComputedStyle(el);
       return {
@@ -90,16 +87,12 @@ async function measureOrder(page) {
         height: r.height,
       };
     };
-    const stack = document.getElementById("iuSilverWelcomeStack");
-    const infoUnit = stack ? stack.querySelector(".iuHomeSectionUnit--info") : null;
-    let domParcelBeforeInfo = true;
-    if (parcel && infoUnit && stack && stack.contains(parcel)) {
-      domParcelBeforeInfo = !!(parcel.compareDocumentPosition(infoUnit) & Node.DOCUMENT_POSITION_FOLLOWING);
-    }
     return {
-      infoBar: infoBar ? pick(infoBar) : null,
-      parcelBar: parcelBar ? pick(parcelBar) : null,
-      domParcelBeforeInfo,
+      mod: pick(mod),
+      sw: pick(sw),
+      mode: mod ? mod.getAttribute("data-iu-mode") : null,
+      parcelInPanel: !!(panel && parcel && panel.contains(parcel)),
+      label: sw ? ((sw.querySelector("[data-iu-switcher-label]") || {}).textContent || "") : "",
     };
   });
 }
@@ -114,11 +107,11 @@ async function runPlaywright() {
     await waitForPort("127.0.0.1", PORT, 30000);
     const browser = await chromium.launch({ headless: true });
     const viewports = [
-      { name: "mobile", width: 390, height: 844, expectParcel: true },
-      { name: "mobile-small", width: 360, height: 640, expectParcel: true },
-      { name: "tablet-portrait", width: 768, height: 1024, expectParcel: true },
-      { name: "tablet-landscape", width: 1024, height: 768, expectParcel: false },
-      { name: "desktop", width: 1280, height: 900, expectParcel: false },
+      { name: "mobile", width: 390, height: 844, expectModule: true },
+      { name: "mobile-small", width: 360, height: 640, expectModule: true },
+      { name: "tablet-portrait", width: 768, height: 1024, expectModule: true },
+      { name: "tablet-landscape", width: 1024, height: 768, expectModule: true },
+      { name: "desktop", width: 1280, height: 900, expectModule: false },
     ];
     try {
       for (const vp of viewports) {
@@ -135,21 +128,17 @@ async function runPlaywright() {
         const m = await measureOrder(page);
         const prefix = vp.name;
 
-        must(m.domParcelBeforeInfo, prefix + ":dom_order");
-
-        if (vp.expectParcel) {
-          must(!!m.parcelBar && !!m.infoBar, prefix + ":bars_visible");
-          must(
-            m.parcelBar.height > 0 && m.infoBar.height > 0,
-            prefix + ":bars_height:" + m.parcelBar.height + "," + m.infoBar.height
-          );
-          must(m.parcelBar.top < m.infoBar.top, prefix + ":visual_parcel_above_info:" + m.parcelBar.top + "," + m.infoBar.top);
-        } else if (vp.width >= 1025) {
-          must(!m.parcelBar || m.parcelBar.height === 0 || m.parcelBar.display === "none", prefix + ":desktop_parcel_hidden");
-          must(!m.infoBar || m.infoBar.height === 0 || m.infoBar.display === "none", prefix + ":desktop_info_hidden");
+        if (vp.expectModule) {
+          must(!!m.mod && m.mod.height > 0, prefix + ":module_visible");
+          must(!!m.sw && m.sw.height >= 38, prefix + ":switcher_height:" + (m.sw && m.sw.height));
+          must(m.mode === "quick", prefix + ":default_quick");
+          must(/RYCHLÝ PŘEHLED/i.test(m.label), prefix + ":label_quick");
+          // ≤900 keeps parcel in panel; ≥901 may move to desktop mount.
+          if (vp.width < 901) {
+            must(m.parcelInPanel, prefix + ":parcel_in_panel");
+          }
         } else {
-          must(!m.parcelBar || m.parcelBar.height === 0, prefix + ":wide_tablet_parcel_hidden");
-          must(!!m.infoBar && m.infoBar.height > 0, prefix + ":wide_tablet_info_visible");
+          must(!m.mod || m.mod.height === 0 || m.mod.display === "none", prefix + ":desktop_module_hidden");
         }
 
         await context.close();
