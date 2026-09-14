@@ -16418,12 +16418,6 @@ function buildVideoAsArticleCard(it) {
           mindMenuFlow.style.maxWidth = "100%";
           mindMenuFlow.style.minWidth = "0";
           var mindMenu = document.querySelector(".mindMenu");
-          if (mindMenu) {
-            /* Keep in sync with live custom-button grid growth (do not freeze first-open height). */
-            mindMenuFlow.style.minHeight = "";
-            var reserveH = Math.ceil(mindMenu.getBoundingClientRect().height || mindMenu.offsetHeight || 0);
-            if (reserveH > 0) mindMenuFlow.style.minHeight = reserveH + "px";
-          }
           if (mindMenu && mindMenu.parentElement !== mindMenuFlow) {
             mindMenuFlow.insertBefore(mindMenu, mindMenuFlow.firstChild || null);
           }
@@ -16464,6 +16458,8 @@ function buildVideoAsArticleCard(it) {
           if (staleWrapper && !staleWrapper.querySelector(".mindMenu")) {
             staleWrapper.remove();
           }
+          /* After mount + clearing stale section minHeights: sync flow to live content height. */
+          try { iuQuickToolsSyncMobileMindMenuFlowHeight(); } catch (_) {}
         }
         iuMobileGateEnsureInfoButtons();
       } else {
@@ -26282,6 +26278,23 @@ function buildVideoAsArticleCard(it) {
     return visibleCount;
   }
 
+  /** After mailbox count changes: shrink/grow #iuMobileMindMenuFlow minHeight (same path as custom buttons). */
+  function iuMailboxSyncLayoutAfterCountChange() {
+    try {
+      const rail = document.querySelector(".layout > aside.accordionCol");
+      if (rail) rail.style.height = "auto";
+    } catch (_) {}
+    try {
+      iuQuickToolsSyncMobileMindMenuFlowHeight();
+      window.requestAnimationFrame(function () {
+        try { iuQuickToolsSyncMobileMindMenuFlowHeight(); } catch (_) {}
+        window.requestAnimationFrame(function () {
+          try { iuQuickToolsSyncMobileMindMenuFlowHeight(); } catch (_) {}
+        });
+      });
+    } catch (_) {}
+  }
+
   function iuMailboxesInit(){
     if (window.__iuMailboxesInitDone) return;
     window.__iuMailboxesInitDone = 1;
@@ -26291,10 +26304,16 @@ function buildVideoAsArticleCard(it) {
     let mailboxCount = iuMailboxRender();
     try {
       window.addEventListener("iu-vault-hydrated", function iuMailboxVaultHydrated() {
-        try { mailboxCount = iuMailboxRender(); } catch (_) {}
+        try {
+          mailboxCount = iuMailboxRender();
+          iuMailboxSyncLayoutAfterCountChange();
+        } catch (_) {}
       });
       window.addEventListener("iu-vault-unlocked", function iuMailboxVaultUnlocked() {
-        try { mailboxCount = iuMailboxRender(); } catch (_) {}
+        try {
+          mailboxCount = iuMailboxRender();
+          iuMailboxSyncLayoutAfterCountChange();
+        } catch (_) {}
       });
     } catch (_) {}
     iuPositionMailboxControls();
@@ -26326,10 +26345,7 @@ function buildVideoAsArticleCard(it) {
       }
       iuMailboxSave(items);
       mailboxCount = iuMailboxRender();
-      requestAnimationFrame(() => {
-        const rail = document.querySelector(".layout > aside.accordionCol");
-        if (rail) rail.style.height = "auto";
-      });
+      iuMailboxSyncLayoutAfterCountChange();
     });
 
     document.getElementById("iuMailboxRemove")?.addEventListener("click", () => {
@@ -26345,10 +26361,7 @@ function buildVideoAsArticleCard(it) {
       }
       iuMailboxSave(items);
       mailboxCount = iuMailboxRender();
-      requestAnimationFrame(() => {
-        const rail = document.querySelector(".layout > aside.accordionCol");
-        if (rail) rail.style.height = "auto";
-      });
+      iuMailboxSyncLayoutAfterCountChange();
     });
 
     function iuMailboxOpenEditDialog(idx, it, onDone){
@@ -28332,6 +28345,7 @@ function buildVideoAsArticleCard(it) {
   try { window.iuQuickToolsScheduleLockAll = iuQuickToolsScheduleLockAll; } catch (_) {}
   try { window.iuQuickToolsApplyConfig = iuQuickToolsApplyConfig; } catch (_) {}
   try { window.iuQuickToolsForceGridLayout = iuQuickToolsLockGridLayout; } catch (_) {}
+  try { window.iuQuickToolsSyncMobileMindMenuFlowHeight = iuQuickToolsSyncMobileMindMenuFlowHeight; } catch (_) {}
 
   function initRightPanel() {
     const root = document.querySelector(".mindMenu") || document.querySelector("aside.accordionCol") || null;

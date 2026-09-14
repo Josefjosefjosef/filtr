@@ -1,15 +1,15 @@
 {
-  "freezeId": "iu-mindmenu-colorful-default-off-v1-20260914",
+  "freezeId": "iu-mindmenu-mailbox-height-sync-v1-20260914",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-14T00:50:00.000Z",
-  "note": "Freeze bump: MindMenu mailbox fresh-user Barevný input default OFF (legacy stored colorful preserved).",
+  "updatedAt": "2026-09-14T09:45:00.000Z",
+  "note": "Freeze bump: MindMenu mailbox add/remove instantly syncs #iuMobileMindMenuFlow minHeight (mobile/tablet/PWA).",
   "files": {
     "projects/index.html": "6a9c54e6eeea7b717d4c98a2eb4b2850ac85092c91741b6def5642a6030d817a",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "722f93c679be8b1cbae2fb147359dfffc97fa1820a53be6e90c0ec40a269d15f",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "bb82cecacc9c8e362e5dd645af593fa4989c5091b86e8b077b7d9990ceb02a65",
-    "assets/iu-app-feed-pipeline-v1.js": "48f9aa021d82c7a9cc965789b2c1a00772bd073400d0f8e3b0a6342be11f6915",
+    "assets/iu-app-feed-pipeline-v1.js": "1baf3fe77a8a1b78586dac1e3f2cb149351598347352b0c542c63a1ea1d373b2",
     "assets/iu-calendar-overlay-v1.js": "d33bc5862bf6c390d946a4f14955c1f135c43155dd30134e30c90f5ce0993403",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
@@ -134,7 +134,8 @@
       "iuWeatherNeedsNetworkRecovery",
       "iuOpenInfoCenterSecuritySettings",
       "data-iu-mm-lock-infouzel",
-      "Missing colorful in stored JSON = legacy colorful ON"
+      "Missing colorful in stored JSON = legacy colorful ON",
+      "iuMailboxSyncLayoutAfterCountChange"
     ],
     "assets/app.js": [
       "radio-neutral-v1-20260906",
