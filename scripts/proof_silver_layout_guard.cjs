@@ -249,6 +249,20 @@ async function runViewport(page, w, h) {
     } catch (_) {}
   });
   await page.waitForTimeout(200);
+  /* Baseline height AFTER parcel is visible — ignore 0px while panel was hidden in quick mode. */
+  await page.evaluate(() => {
+    const t = window.__iuParcelHeightTrack;
+    if (!t) return;
+    const el = document.getElementById("iuSilverParcelWatch");
+    const h = el ? el.getBoundingClientRect().height : null;
+    if (h == null) return;
+    t.first = h;
+    t.last = h;
+    t.min = h;
+    t.max = h;
+    t.shiftDelta = 0;
+  });
+  await page.waitForTimeout(400);
 
   const geom = await page.evaluate(() => {
     const hero =
