@@ -93,6 +93,21 @@ async function runtimeGate() {
     });
     const page = await bootstrapGuardPage(context);
 
+    async function showParcelPanel() {
+      await page.evaluate(() => {
+        try {
+          if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+          if (typeof window.iuHomeQuickParcelSetMode === "function") {
+            window.iuHomeQuickParcelSetMode("parcel");
+          }
+        } catch (_) {}
+      });
+      await page.waitForSelector("#iuSilverParcelWatchInput", {
+        state: "visible",
+        timeout: 20000,
+      }).catch(() => {});
+    }
+
     async function seedList(payload) {
       await waitForVaultReady(page, 90000).catch(() => {});
       await page.evaluate(
@@ -113,6 +128,7 @@ async function runtimeGate() {
         timeout: 45000,
       });
       await waitForVaultReady(page, 90000).catch(() => {});
+      await showParcelPanel();
       // Parcel module re-renders after vault hydrate; give it a beat then force reload list via soft wait.
       await page.waitForTimeout(1200);
       const n = await page.locator(".iuSilverParcelWatch__card").count();
@@ -136,6 +152,7 @@ async function runtimeGate() {
           timeout: 45000,
         });
         await waitForVaultReady(page, 90000).catch(() => {});
+        await showParcelPanel();
         await page.waitForTimeout(1200);
       }
     }
@@ -162,6 +179,7 @@ async function runtimeGate() {
     await page.waitForFunction(() => document.getElementById("iuSilverParcelWatch"), {
       timeout: 45000,
     });
+    await showParcelPanel();
     await seedList(legacy);
 
     const afterMigrate = await readStored();
