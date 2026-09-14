@@ -844,10 +844,22 @@ async function runSmoke() {
         if (typeof window.iuDesktopParcelWatchPlacementApply === "function") {
           window.iuDesktopParcelWatchPlacementApply();
         }
+        if (typeof window.iuHomeQuickParcelEnsure === "function") {
+          window.iuHomeQuickParcelEnsure();
+        }
+        if (typeof window.iuHomeQuickParcelSetMode === "function") {
+          window.iuHomeQuickParcelSetMode("parcel");
+        } else {
+          var sw = document.getElementById("iuHomeQuickParcelSwitcher");
+          if (sw && typeof sw.click === "function") sw.click();
+        }
       } catch (_) {}
     });
     try {
-      await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+      await page.waitForSelector("#iuSilverParcelWatchInput", {
+        state: "visible",
+        timeout: PREVIEW_SELECTOR_TIMEOUT_MS,
+      });
     } catch (e) {
       fail(`Silver parcel watch input missing: ${e && e.message ? e.message : String(e)}`);
     }
@@ -1022,7 +1034,15 @@ async function runSmoke() {
     });
     await gotoDomContentLoaded(page, `${BASE}/?section=media&iuInfoSystem=off`);
     await gotoProjectsMediaForSmoke(page);
-    await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+      } catch (_) {}
+    });
+    await page.waitForSelector("#iuSilverParcelWatchInput", {
+      state: "visible",
+      timeout: PREVIEW_SELECTOR_TIMEOUT_MS,
+    });
     await page.waitForFunction(
       () => !!(window.IU_SILVER_PARCEL_FACADE && window.IU_PARCEL_TRACKING_ENGINE),
       { timeout: 15000 },
@@ -1168,7 +1188,15 @@ async function runSmoke() {
     await gotoProjectsMediaForSmoke(page);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(400);
-    await page.waitForSelector("#iuSilverParcelWatchInput", { timeout: PREVIEW_SELECTOR_TIMEOUT_MS });
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+      } catch (_) {}
+    });
+    await page.waitForSelector("#iuSilverParcelWatchInput", {
+      state: "visible",
+      timeout: PREVIEW_SELECTOR_TIMEOUT_MS,
+    });
     const parcelReloadLayout390 = await page.evaluate(() => {
       const watch = document.getElementById("iuSilverParcelWatch");
       const shell = document.querySelector(".iuSilverParcelWatch__mainShell");
