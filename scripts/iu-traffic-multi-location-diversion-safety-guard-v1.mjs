@@ -68,6 +68,12 @@ const DREVES = "Stav vozovky: nebezpečí akvaplaningu, Dřeveš";
 const BILOVICE =
   "silnice II/383 (ulice Havlíčkova), Bílovice nad Svitavou, okr. Brno-venkov, , Od 01.01.2026 08:00, Do 01.01.2026 16:00, práce na silnici u p.p.č. 123/4, k.ú. Bílovice nad Svitavou, Vydal: Test";
 
+const I20_MIKULAS =
+  "silnice I/20 (ulice Mikulášská) - ulice Nepomucká, Plzeň 2-Slovany, Plzeň, oprava vodorovného dopravního značení, práce na silnici";
+
+const SINGLE_STREET =
+  "silnice II/383 (ulice Havlíčkova), Bílovice nad Svitavou, okr. Brno-venkov, práce na silnici";
+
 const BREHOV =
   "Od 1.1.2026 12:00 do 13:00; na silnici 145 u obce Břehov okres České Budějovice; práce na silnici.";
 
@@ -211,6 +217,41 @@ const D8 =
   ok("BIL_CITY", /Bílovice\s+nad\s+Svitavou/i.test(f.city || ""), f.city);
   ok("BIL_DISTRICT", /Brno-venkov/i.test(f.district || ""), f.district);
   ok("BIL_PLACE_HAS_CITY", /Bílovice/i.test(place || ""), place);
+}
+
+// --- G3 I/20 paren street-range: (ulice A) - ulice B ---
+{
+  const f = parseOfficialCommentFacts(I20_MIKULAS);
+  const street = resolveConfirmedStreet(
+    base({ impact: I20_MIKULAS, impactFull: I20_MIKULAS, road: "I/20", municipality: "Plzeň" }),
+    f
+  );
+  const place = buildPlaceAndDirectionLine(
+    base({ impact: I20_MIKULAS, impactFull: I20_MIKULAS, road: "I/20", municipality: "Plzeň" })
+  );
+  ok("I20_ROAD", (f.roadNumbers || []).some((r) => /I\/20/i.test(r)), JSON.stringify(f.roadNumbers));
+  ok("I20_RANGE", f.streetRange === true, JSON.stringify({ from: f.streetFrom, to: f.streetTo }));
+  ok("I20_FROM", /Mikulášská/i.test(f.streetFrom || ""), f.streetFrom);
+  ok("I20_TO", /Nepomucká/i.test(f.streetTo || ""), f.streetTo);
+  ok("I20_STREET_BOTH", /Mikulášská/i.test(street || "") && /Nepomucká/i.test(street || ""), street);
+  ok(
+    "I20_NO_CITYPART_IN_STREET",
+    !/Slovany|Plzeň\s*2/i.test(street || "") && !(f.streets || []).some((s) => /Slovany|Plzeň\s*2/i.test(s)),
+    street
+  );
+  ok("I20_NO_CITY_IN_STREET", !(f.streets || []).some((s) => /^Plzeň$/i.test(s)), JSON.stringify(f.streets));
+  ok("I20_CITYPART", /Plzeň\s*2-Slovany/i.test(f.cityPart || ""), f.cityPart);
+  ok("I20_CITY", /Plzeň/i.test(f.city || ""), f.city);
+  ok("I20_PLACE_BOTH", /Mikulášská/i.test(place || "") && /Nepomucká/i.test(place || ""), place);
+}
+
+// --- G4 single-street negative: must NOT invent a range ---
+{
+  const f = parseOfficialCommentFacts(SINGLE_STREET);
+  ok("SINGLE_NO_RANGE", f.streetRange !== true, String(f.streetRange));
+  ok("SINGLE_STREET", /Havlíčkova/i.test(f.street || ""), f.street);
+  ok("SINGLE_NO_FAKE_TO", !f.streetTo, f.streetTo);
+  ok("SINGLE_STREETS_LEN", !f.streets || f.streets.length <= 1, JSON.stringify(f.streets));
 }
 
 // --- H/I/J/K/L do-not-break ---
