@@ -241,6 +241,15 @@ async function runViewport(page, w, h) {
   await waitForDeferredAppCss(page);
   await page.waitForTimeout(2600);
 
+  /* Mobile/tablet: parcel lives in quick⇄parcel switcher; show parcel panel for layout asserts. */
+  await page.evaluate(() => {
+    try {
+      if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+      if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+    } catch (_) {}
+  });
+  await page.waitForTimeout(200);
+
   const geom = await page.evaluate(() => {
     const hero =
       document.getElementById("iuSilverHeroPremium") ||
