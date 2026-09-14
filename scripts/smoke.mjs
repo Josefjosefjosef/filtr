@@ -1245,6 +1245,16 @@ async function runSmoke() {
 
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.waitForTimeout(200);
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuHomeQuickParcelEnsure === "function") window.iuHomeQuickParcelEnsure();
+        if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+      } catch (_) {}
+    });
+    await page.waitForSelector("#iuSilverParcelWatchInput", {
+      state: "visible",
+      timeout: PREVIEW_SELECTOR_TIMEOUT_MS,
+    });
     const overflow768 = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
     );
@@ -1264,6 +1274,15 @@ async function runSmoke() {
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(200);
+    await page.evaluate(() => {
+      try {
+        if (typeof window.iuHomeQuickParcelSetMode === "function") window.iuHomeQuickParcelSetMode("parcel");
+      } catch (_) {}
+    });
+    await page.waitForSelector("#iuSilverParcelWatchInput", {
+      state: "visible",
+      timeout: PREVIEW_SELECTOR_TIMEOUT_MS,
+    });
 
     await page.locator(".iuSilverParcelWatch__btnDetailAdd").first().click();
     await page.waitForTimeout(300);

@@ -275,14 +275,19 @@
     }
   }
 
-  function init() {
+  /** Slot + listeners + availability. Does NOT reset mode (resize/placement safe). */
+  function ensure() {
     var module = $(MODULE_ID);
     var switcher = $(SWITCHER_ID);
     if (!module || !switcher) return;
     ensureParcelSlot();
     bindSwitcher(module, switcher);
     syncSwitcherAvailability(module, switcher);
-    setMode(module, "quick", { force: true });
+  }
+
+  function init() {
+    ensure();
+    setMode($(MODULE_ID), "quick", { force: true });
   }
 
   if (document.readyState === "loading") {
@@ -295,6 +300,6 @@
     window.iuHomeQuickParcelSetMode = function (mode) {
       setMode($(MODULE_ID), mode, { animate: false, force: true });
     };
-    window.iuHomeQuickParcelEnsure = init;
+    window.iuHomeQuickParcelEnsure = ensure;
   } catch (_) {}
 })();
