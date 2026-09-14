@@ -2028,6 +2028,8 @@ export function looksLikeStreetName(raw) {
     ) {
       return true;
     }
+    // Prepositional Czech streets: "Pod Chalupami", "U Mlýna", "Na Hradčanech".
+    if (/^(?:Pod|U|Na|Ke|K|Za|Nad|Podél|Při)\s+[A-ZÁ-Ž]/u.test(t)) return true;
     return /(?:ská|cká|ovská)(?:\s|$)/i.test(t);
   }
   return STREET_END.test(t);
@@ -2090,14 +2092,14 @@ export function normalizeExtractedMunicipalityName(raw) {
   if (!city) return null;
   if (isKilometerLocationPhrase(city)) return null;
   if (
-    /^(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d)/i.test(
+    /^(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d)/i.test(
       city
     )
   ) {
     return null;
   }
   city = city.replace(
-    /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+    /\s+(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
     ""
   );
   // Strip parenthetical locality contamination (complete or dangling open paren).
@@ -2105,6 +2107,8 @@ export function normalizeExtractedMunicipalityName(raw) {
   city = clean(city.replace(/\s*\([^)]*\)\s*$/u, ""));
   // Strip middle-dot / bullet leakage from list-style NDIC joins ("Moravany ·").
   city = clean(city.replace(/[·•]+/g, " "));
+  // Multi-location chain glue: "Bílý Kostel nad Nisou -" before next katastr/paren.
+  city = clean(city.replace(/\s*[-–—]\s*$/u, ""));
   city = clean(city);
   if (!city) return null;
   if (!/^[A-ZÁ-Ž]/u.test(city)) return null;
@@ -2171,6 +2175,72 @@ export function splitPrimaryVsDetourComment(rawText) {
   return {
     primaryText: clean(text.slice(0, m.index)),
     detourText: clean(text.slice(m.index)),
+  };
+}
+
+/**
+ * Clip official-comment location scan to the location header / chain only.
+ * Excludes: detour blocks, validity windows, closure/works body that re-lists roads,
+ * and reason leads — those must not feed primary municipality/parts/roads/streets.
+ */
+export function clipOfficialCommentLocationScanText(rawText) {
+  const { primaryText } = splitPrimaryVsDetourComment(rawText);
+  let t = clean(primaryText);
+  if (!t) return "";
+  const cutters = [
+    /,\s*,?\s*Od\s+\d{1,2}[./]\d{1,2}[./]\d{2,4}\b/i,
+    /,\s*Platnost\s+od\b/i,
+    /,\s*Uzavírka\s+silnice\b/i,
+    /,\s*úpln[áa]\s+uzavírk/i,
+    /,\s*Pozor!\b/i,
+    /,\s*z\s+důvodu\b/i,
+    /,\s*Z\s+důvodu\b/,
+  ];
+  for (const re of cutters) {
+    const m = t.search(re);
+    if (m > 20) t = clean(t.slice(0, m));
+  }
+  return t;
+}
+
+/**
+ * All explicit "v katastru obce X" municipalities in location-scan text (order preserved).
+ * Never invents names; never pulls diversion/body towns.
+ */
+export function extractAllKatastrMunicipalitiesFromOfficialComment(rawText) {
+  const text = clipOfficialCommentLocationScanText(rawText) || clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const re =
+    /(?:^|[^\p{L}])[Vv]\s+katastru\s+obce\s+([^,;]{2,80}?)(?=\s*(?:-\s*(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci)|okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;(]|$))/gu;
+  let m;
+  while ((m = re.exec(text))) {
+    let name = normalizeExtractedMunicipalityName(m[1]);
+    name = clean(String(name || "").replace(/\s*[-–—]\s*$/u, ""));
+    if (!name) continue;
+    if (!found.some((x) => samePlaceName(x, name))) found.push(name);
+  }
+  return found;
+}
+
+/**
+ * "mezi obcemi A a B" — distinct from u_obce / v_obce / v_katastru_obce.
+ */
+export function extractBetweenMunicipalitiesSegment(rawText) {
+  const text = clipOfficialCommentLocationScanText(rawText) || clean(rawText);
+  if (!text) return null;
+  const m = text.match(
+    /\bmezi\s+obcemi\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/iu
+  );
+  if (!m) return null;
+  const from = normalizeExtractedMunicipalityName(m[1]);
+  const to = normalizeExtractedMunicipalityName(m[2]);
+  if (!from || !to || samePlaceName(from, to)) return null;
+  return {
+    segmentType: "betweenMunicipalities",
+    fromMunicipality: from,
+    toMunicipality: to,
+    presentation: "mezi obcemi " + from + " a " + to,
   };
 }
 
@@ -2325,6 +2395,41 @@ export function extractMotorwayNumbersFromOfficialComment(rawText) {
 /**
  * All explicit classed road identities present in official comment text (order preserved).
  */
+/**
+ * Affected roads for the primary event (not diversion).
+ * Header roads always win. Body "Uzavírka/Úplná uzavírka silnice č. X … a silnice Y"
+ * is kept only when X matches the header road (same multi-road event). When the
+ * uzavírka clause opens with a different road (cross-notice paste), keep header only.
+ */
+export function extractPrimaryAffectedRoadNumbersFromOfficialComment(rawText) {
+  const { primaryText } = splitPrimaryVsDetourComment(rawText);
+  const headerText =
+    clipOfficialCommentLocationScanText(rawText) || primaryText || clean(rawText);
+  const headerRoads = extractAllRoadNumbersFromOfficialComment(headerText);
+  const bodyRoads = extractAllRoadNumbersFromOfficialComment(primaryText || clean(rawText));
+  if (!headerRoads.length) return bodyRoads;
+  const clause = (primaryText || "").match(
+    /(?:úpln[áa]\s+)?uzavírk[ay]\s+silnice\s+(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)/i
+  );
+  if (!clause) {
+    return bodyRoads.length ? bodyRoads : headerRoads;
+  }
+  const clauseFirst = clean(clause[1])
+    .replace(/\s+/g, "")
+    .replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
+  const headerFirst = headerRoads[0];
+  if (clauseFirst && headerFirst && clauseFirst.toLowerCase() === headerFirst.toLowerCase()) {
+    // Same-event multi-road: union header + body (primary segment only).
+    const merged = headerRoads.slice();
+    for (const r of bodyRoads) {
+      if (!merged.some((x) => x.toLowerCase() === r.toLowerCase())) merged.push(r);
+    }
+    return merged;
+  }
+  // Cross-notice / adjacent closure paste — do not promote foreign body roads.
+  return headerRoads;
+}
+
 export function extractAllRoadNumbersFromOfficialComment(rawText) {
   const text = clean(rawText);
   if (!text) return [];
@@ -3780,6 +3885,8 @@ export function parseOfficialCommentFacts(rawText) {
     city: null,
     cityPart: null,
     municipalityParts: [],
+    additionalMunicipalities: [],
+    betweenMunicipalities: null,
     district: null,
     localityDetail: null,
     parkingName: null,
@@ -3897,10 +4004,16 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const { primaryText } = splitPrimaryVsDetourComment(text);
-  const locationScanText = primaryText || text;
+  const locationScanText =
+    clipOfficialCommentLocationScanText(text) || primaryText || text;
+  // Streets / multi-road body: detour-clipped primary (not place-header clip).
+  // Place fields (obec/část/okres) stay on locationScanText to block diversion bleed.
+  const primaryScanText = primaryText || text;
 
   // Primary roads only — detour "přes silnice II/…" must not become the event road badge.
-  out.roadNumbers = extractAllRoadNumbersFromOfficialComment(locationScanText);
+  // Header-aligned: adjacent "Uzavírka silnice č. OTHER" does not contaminate; same-event
+  // "Úplná uzavírka silnice č. HEADER … a silnice SECONDARY" keeps both.
+  out.roadNumbers = extractPrimaryAffectedRoadNumbersFromOfficialComment(text);
   out.roadNumber = out.roadNumbers.length ? out.roadNumbers[0] : null;
   out.detour = extractDetourRouteFactsFromOfficialComment(text);
 
@@ -4382,7 +4495,7 @@ export function parseOfficialCommentFacts(rawText) {
   if (dirHuman) out.directionHuman = dirHuman;
 
   // Explicit event localization "u obce X" (not diversion "přes X", not "v katastru obce").
-  const mUObce = text.match(
+  const mUObce = locationScanText.match(
     /\bu\s+obce\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;]|$))/iu
   );
   if (mUObce) {
@@ -4396,8 +4509,8 @@ export function parseOfficialCommentFacts(rawText) {
   // Locative form used by NDIC urban events: "v ulici Ještědská v obci …"
   // Do not use \\b before "v" — Czech letters before "v obci"/"v ulici" kill ASCII word boundaries.
   if (!out.city) {
-    const mObci = text.match(
-      /(?:^|[^\p{L}])(?:([Vv]\s+katastru\s+obce)|([Vv]\s+obci)|(\bobec))\s+([^,;]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;]|$))/u
+    const mObci = locationScanText.match(
+      /(?:^|[^\p{L}])(?:([Vv]\s+katastru\s+obce)|([Vv]\s+obci)|(\bobec))\s+([^,;]{2,80}?)(?=\s*(?:-\s*(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci)|okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|část\s+obce\b|[,;(]|$))/u
     );
     if (mObci) {
       const city = normalizeExtractedMunicipalityName(mObci[4]);
@@ -4410,9 +4523,35 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
-  // Settlement parts ("část obce X") — never promote to primary municipality.
+  // Multi-katastr chain: keep additional municipalities without stuffing them into district.
   {
-    const parts = extractMunicipalityPartsFromOfficialComment(text);
+    const kats = extractAllKatastrMunicipalitiesFromOfficialComment(locationScanText);
+    if (kats.length) {
+      if (!out.city) {
+        out.city = kats[0];
+        out.municipalityRelation = out.municipalityRelation || "v_katastru_obce";
+      }
+      if (kats.length > 1) {
+        out.additionalMunicipalities = kats.filter((n) => !samePlaceName(n, out.city));
+      }
+    }
+  }
+
+  // "mezi obcemi A a B" — never rewrite as u_obce / v_obce.
+  {
+    const between = extractBetweenMunicipalitiesSegment(locationScanText);
+    if (between) {
+      out.betweenMunicipalities = between;
+      out.municipalityRelation = "mezi_obcemi";
+      out.localityDetail = between.presentation;
+      if (!out.city) out.city = null;
+    }
+  }
+
+  // Settlement parts ("část obce X") — never promote to primary municipality.
+  // Primary location scan only — diversion "část obce Křižatky" must not contaminate.
+  {
+    const parts = extractMunicipalityPartsFromOfficialComment(locationScanText);
     if (parts.length) {
       out.municipalityParts = parts;
       // Keep cityPart for a single urban-style part only when no multi-part list and
@@ -4425,7 +4564,7 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Parenthetical street/locality tokens: "(Rožnovská)" in cadastral location chains.
   {
-    const parenStreets = extractParentheticalStreetNamesFromOfficialComment(text);
+    const parenStreets = extractParentheticalStreetNamesFromOfficialComment(primaryScanText);
     if (parenStreets.length) {
       for (const s of parenStreets) {
         if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
@@ -4441,9 +4580,9 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const streetIn =
-    locationScanText.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
-    locationScanText.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
-    locationScanText.match(/\bul\.\s*([^,;()]{2,80})/i);
+    primaryScanText.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
+    primaryScanText.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
+    primaryScanText.match(/\bul\.\s*([^,;()]{2,80})/i);
   if (streetIn) {
     let sn = streetBareName(streetIn[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
@@ -4474,6 +4613,7 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Prefer explicit "(okres X)" / "okr. X" — never keep a leaked closing ")" from
   // constructions like "Krásná Studánka(okres Liberec)".
+  // Never keep "Česká Lípa - v katastru obce Úštěk" as a single district value.
   const okrParen = locationScanText.match(/\(\s*okres\s+([^)]{2,60}?)\)/iu);
   const okr =
     okrParen ||
@@ -4482,13 +4622,15 @@ export function parseOfficialCommentFacts(rawText) {
   if (okr) {
     let dist = clean(okr[1]);
     dist = clean(dist.replace(/\)+$/g, ""));
+    dist = clean(dist.split(/\s*-\s*v\s+katastru\s+obce\b/i)[0]);
+    dist = clean(dist.split(/\s*-\s*v\s+obci\b/i)[0]);
     dist = clean(dist.split(/\s+ulice:?/i)[0]);
     dist = clean(dist.split(/\s*,\s*/)[0]);
-    if (dist && !/^ulice\b/i.test(dist)) out.district = dist;
+    if (dist && !/^ulice\b/i.test(dist) && !/^v\s+katastru\b/i.test(dist)) out.district = dist;
   }
 
   // Multi-street lists: never pick one street as the whole-event locality.
-  const multiStreetBlob = locationScanText.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
+  const multiStreetBlob = primaryScanText.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
   if (multiStreetBlob) {
     const parts = splitStreetList(multiStreetBlob[1]);
     const streetish = parts.filter((p) => looksLikeStreetName(p) || /náměstí/i.test(p));
@@ -4501,11 +4643,11 @@ export function parseOfficialCommentFacts(rawText) {
   // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C",
   // or leading "StreetA x StreetB" intersection (never vehicle OA x MOTO).
   {
-    const range = extractStreetRangeFromOfficialComment(locationScanText);
-    const intersection = extractStreetIntersectionFromOfficialComment(locationScanText);
-    const crossStreet = extractCrossStreetFromOfficialComment(locationScanText);
-    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(locationScanText);
-    const streets = extractStreetNamesFromOfficialComment(locationScanText);
+    const range = extractStreetRangeFromOfficialComment(primaryScanText);
+    const intersection = extractStreetIntersectionFromOfficialComment(primaryScanText);
+    const crossStreet = extractCrossStreetFromOfficialComment(primaryScanText);
+    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(primaryScanText);
+    const streets = extractStreetNamesFromOfficialComment(primaryScanText);
     out.crossStreet = crossStreet;
     if (range) {
       out.streetFrom = range.streetFrom;
@@ -4560,6 +4702,23 @@ export function parseOfficialCommentFacts(rawText) {
     const mTown = locationScanText.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
     if (mTown) {
       const town = normalizeExtractedMunicipalityName(mTown[1]);
+      if (
+        town &&
+        !looksLikeStreetName(town) &&
+        !looksLikeNonMunicipalityPlace(town) &&
+        !looksLikeRoadNumberToken(town)
+      ) {
+        out.city = town;
+      }
+    }
+  }
+  // ", Town, část obce Part, okr." — municipality sits before the settlement-part token.
+  if (!out.city) {
+    const mTownBeforePart = locationScanText.match(
+      /,\s*([A-ZÁ-Ž][^,;]{1,60}?)\s*,\s*část\s+obce\b[^,]*,\s*okr\./u
+    );
+    if (mTownBeforePart) {
+      const town = normalizeExtractedMunicipalityName(mTownBeforePart[1]);
       if (
         town &&
         !looksLikeStreetName(town) &&
@@ -4649,7 +4808,7 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   if (!out.city) {
-    const cityHint = text.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
+    const cityHint = locationScanText.match(/,\s*([^,;]+?)\s*,\s*okr\./u);
     if (cityHint) {
       const hint = normalizeExtractedMunicipalityName(cityHint[1]);
       if (hint) out.city = hint;
@@ -4671,11 +4830,16 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Urban district after street/road: ", Plzeň 4," / ", Brno 1," — demote to city + cityPart.
   // Never treat kilometrage crumbs (", Na km 46," from "Na km 46,0") as urban districts.
+  // Never match closure bodies like ", Uzavírka silnice … (km 1,030" via Czech decimal commas.
   if (!out.cityPart || !out.city) {
-    const urbanDist = text.match(
+    const urbanDist = locationScanText.match(
       /,\s*([A-ZÁ-Ž][^,;]{1,40}?\s+\d{1,2}[A-Za-z]?)\s*,/u
     );
-    if (urbanDist && !isKilometerLocationPhrase(urbanDist[1])) {
+    if (
+      urbanDist &&
+      !isKilometerLocationPhrase(urbanDist[1]) &&
+      !/uzavírk|silnice|dálnice|\bkm\b|ulice\b/i.test(urbanDist[1])
+    ) {
       const split = splitMunicipalityAndCityPart(urbanDist[1]);
       if (split) {
         if (!out.cityPart) out.cityPart = split.cityPart;
@@ -5298,6 +5462,15 @@ export function analyzePrimaryCause(rawText, input = {}) {
   }
   if (hasExplicitOversizeLoad(text)) {
     return PRIMARY_CAUSE.OVERSIZE_LOAD;
+  }
+  // Oil / concrete obstruction phrases are obstacles even without DATEX type=prekazka.
+  if (
+    /olej\s+na\s+vozovce/i.test(text) ||
+    /osoba\s+na\s+vozovce/i.test(text) ||
+    /zvíře\s+na\s+vozovce|zvěř\s+na\s+vozovce/i.test(text) ||
+    /předmět\s+na\s+vozovce|překážka\s+na\s+vozovce/i.test(text)
+  ) {
+    return PRIMARY_CAUSE.OBSTACLE;
   }
   // Weather / sjízdnost surface conditions must not become PŘEKÁŽKA solely because
   // publication maps sjizdnost → illustrationKey "prekazka".
@@ -7862,7 +8035,9 @@ export function buildPlaceAndDirectionLine(input = {}) {
       const roadDisplayName = resolveRoadDisplayName(r);
       if (roadDisplayName) bits.push(roadDisplayName);
     }
-    if (facts.municipalityRelation === "u_obce") {
+    if (facts.municipalityRelation === "mezi_obcemi" && facts.betweenMunicipalities) {
+      bits.push(facts.betweenMunicipalities.presentation);
+    } else if (facts.municipalityRelation === "u_obce") {
       const nearCity =
         preferFullerMunicipalityName(muni, facts.city) || facts.city || muni || "";
       if (nearCity) bits.push("u obce " + nearCity);
@@ -7882,7 +8057,10 @@ export function buildPlaceAndDirectionLine(input = {}) {
       // re-attach bridges/tunnels when road+km already localize the event.
       bits.push(streetBareName(facts.namedObject));
     }
-    if (facts.municipalityRelation !== "u_obce") {
+    if (
+      facts.municipalityRelation !== "u_obce" &&
+      facts.municipalityRelation !== "mezi_obcemi"
+    ) {
       if (muni && !bits.includes(muni)) bits.push(muni);
       else if (
         location &&
@@ -7894,6 +8072,12 @@ export function buildPlaceAndDirectionLine(input = {}) {
       ) {
         // Keep named bridge/tunnel out of place line when road+km already localize the event.
         if (!(km && facts.namedObject)) bits.push(location);
+      }
+      const extras = Array.isArray(facts.additionalMunicipalities)
+        ? facts.additionalMunicipalities.map(clean).filter(Boolean)
+        : [];
+      for (const extra of extras) {
+        if (extra && !bits.some((b) => samePlaceName(b, extra))) bits.push(extra);
       }
     }
     // Precedence: road → direction → EXIT (never EXIT before směr).

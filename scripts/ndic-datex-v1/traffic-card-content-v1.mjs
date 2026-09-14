@@ -57,6 +57,8 @@ export function looksLikeContaminatedLocalityToken(raw) {
   if (/\([^)]*$/.test(s) && !/\([^)]+\)$/.test(s)) return true;
   if (/\s*[-–—]\s*(?:ulice\s+|ul\.\s*)/i.test(s)) return true;
   if (/\bulice\s+.+\s*[-–—]/i.test(s)) return true;
+  if (/^uzavírk/i.test(s)) return true;
+  if (/^část\s+obce\b/i.test(s)) return true;
   return false;
 }
 
@@ -116,7 +118,25 @@ export function humanDirectionOrNull(raw) {
  * @param {string|null|undefined} summary
  */
 export function extractLocalityFromOfficialComment(summary) {
-  const s = clean(summary);
+  const raw = clean(summary);
+  if (!raw) return { municipality: null, district: null, streetHint: null };
+
+  // Mirror presenter location-scan clip: never parse municipality from diversion/works body.
+  let s = raw;
+  const detourM = s.match(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i);
+  if (detourM && detourM.index != null && detourM.index > 20) {
+    s = clean(s.slice(0, detourM.index));
+  }
+  for (const re of [
+    /,\s*,?\s*Od\s+\d{1,2}[./]\d{1,2}[./]\d{2,4}\b/i,
+    /,\s*Platnost\s+od\b/i,
+    /,\s*Uzavírka\s+silnice\b/i,
+    /,\s*úpln[áa]\s+uzavírk/i,
+    /,\s*Pozor!\b/i,
+  ]) {
+    const idx = s.search(re);
+    if (idx > 20) s = clean(s.slice(0, idx));
+  }
   if (!s) return { municipality: null, district: null, streetHint: null };
 
   let municipality = null;
@@ -130,13 +150,14 @@ export function extractLocalityFromOfficialComment(summary) {
   if (mUObce) {
     let city = clean(mUObce[1]);
     city = city.replace(
-      /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+      /\s+(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
       ""
     );
     city = stripMunicipalityParentheticalDetail(city);
+    city = clean(city.replace(/\s*[-–—]\s*$/u, ""));
     if (
       city &&
-      !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
+      !/^(?:ulice|okres|okr\.|p\s*\+\s*r|uzavírk)\b/i.test(city) &&
       !/^\d/.test(city) &&
       /^[A-ZÁ-Ž]/u.test(city)
     ) {
@@ -146,19 +167,21 @@ export function extractLocalityFromOfficialComment(summary) {
 
   if (!municipality) {
     // Stop before "(" so house-number parentheticals are never part of obec.
+    // Stop before next "v katastru obce" so multi-location second town stays out of name.
     const mObci = s.match(
-      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;(]{2,80}?)(?=\s*(?:okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;(]|$))/u
+      /\b(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci|\bobec)\s+([^,;(]{2,80}?)(?=\s*(?:-\s*(?:[Vv]\s+katastru\s+obce|[Vv]\s+obci)|okres\b|okr\.|kraj\b|ulice\b|v\s+ulici\b|[,;(]|$))/u
     );
     if (mObci) {
       let city = clean(mObci[1]);
       city = city.replace(
-        /\s+(?:nehoda|uzavř|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+        /\s+(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
         ""
       );
       city = stripMunicipalityParentheticalDetail(city);
+      city = clean(city.replace(/\s*[-–—]\s*$/u, ""));
       if (
         city &&
-        !/^(?:ulice|okres|okr\.|p\s*\+\s*r)\b/i.test(city) &&
+        !/^(?:ulice|okres|okr\.|p\s*\+\s*r|uzavírk)\b/i.test(city) &&
         !/^\d/.test(city)
       ) {
         municipality = city;
@@ -171,9 +194,23 @@ export function extractLocalityFromOfficialComment(summary) {
     const mTown = s.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
     if (mTown) {
       const town = stripMunicipalityParentheticalDetail(mTown[1]);
-      if (town && !/(ská|cká|ovská)$/i.test(town) && !looksLikeContaminatedLocalityToken(town)) {
+      if (
+        town &&
+        !/(ská|cká|ovská)$/i.test(town) &&
+        !looksLikeContaminatedLocalityToken(town) &&
+        !/^uzavírk|^část\s+obce\b/i.test(town)
+      ) {
         municipality = town;
       }
+    }
+  }
+  if (!municipality) {
+    const mTownBeforePart = s.match(
+      /,\s*([A-ZÁ-Ž][^,;]{1,60}?)\s*,\s*část\s+obce\b[^,]*,\s*okr\./u
+    );
+    if (mTownBeforePart) {
+      const town = stripMunicipalityParentheticalDetail(mTownBeforePart[1]);
+      if (town && !looksLikeContaminatedLocalityToken(town)) municipality = town;
     }
   }
 
@@ -182,8 +219,11 @@ export function extractLocalityFromOfficialComment(summary) {
   if (mOkr) {
     let dist = clean(mOkr[1]);
     dist = clean(dist.replace(/\)+$/g, ""));
+    dist = clean(dist.split(/\s*-\s*v\s+katastru\s+obce\b/i)[0]);
+    dist = clean(dist.split(/\s*-\s*v\s+obci\b/i)[0]);
     dist = clean(dist.split(/\s+ulice:?/i)[0]);
-    if (dist) district = dist;
+    dist = clean(dist.split(/\s*,\s*/)[0]);
+    if (dist && !/^v\s+katastru\b/i.test(dist)) district = dist;
   }
 
   const mStreet =
