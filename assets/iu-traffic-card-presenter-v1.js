@@ -2063,7 +2063,16 @@ export function looksLikeNonMunicipalityPlace(raw) {
     return true;
   }
   if (looksLikeBridgeObjectToken(t)) return true;
-  return looksLikeStreetName(t);
+  // Strong street signals that are almost never municipalities.
+  // Do NOT use full looksLikeStreetName here: Czech municipalities often share
+  // feminine adjective endings (-ná/-ní) with street names (Třemošná vs Luční).
+  // Role is decided by structural parsers (ulice / , Town, okr. / v obci).
+  // Still reject possessive / -ská street morphology so "Jandova" cannot become obec.
+  // Bare "-ová" (Višňová) is intentionally NOT matched by ASCII "ova".
+  if (/\btřída\b/i.test(t)) return true;
+  if (/^(?:Pod|U|Na|Ke|K|Za|Nad|Podél|Při)\s+[A-ZÁ-Ž]/u.test(t)) return true;
+  if (/(?:ská|cká|ovská|ova|ského|ckého|kého|ého|ího)$/i.test(t)) return true;
+  return false;
 }
 
 /** Named non-street transport object kinds that must never become Ulice. */
@@ -2796,6 +2805,24 @@ export function resolveConfirmedStreet(input = {}, factsIn = null) {
     ? { name: facts.namedObject, kind: facts.namedObjectKind }
     : extractNamedTransportObject(sourceBlob(input));
 
+  // Authoritative street-range pair beats a contaminated streets[] list
+  // (e.g. municipality-before-okr wrongly pushed as a third "street").
+  // When the range is accompanied by additional confirmed streets (Přerovská),
+  // keep the full list — do not collapse to A–B only.
+  if (facts.streetRange === true && facts.streetFrom && facts.streetTo) {
+    const extras = (Array.isArray(facts.streets) ? facts.streets : []).filter(
+      (s) => !samePlaceName(s, facts.streetFrom) && !samePlaceName(s, facts.streetTo)
+    );
+    if (!extras.length) {
+      const range = formatStreetDisplayList([facts.streetFrom, facts.streetTo], {
+        asRange: true,
+      });
+      if (range && !looksLikeTruncatedFragment(range) && !/[()]$/.test(range)) {
+        return range;
+      }
+    }
+  }
+
   if (Array.isArray(facts.streets) && facts.streets.length >= 1) {
     const joined = formatStreetDisplayList(facts.streets, {
       asRange: facts.streetRange === true && facts.streets.length === 2,
@@ -2964,10 +2991,64 @@ function isCrossStreetLandmarkContext(text, matchIndex) {
  * Cross-street landmarks ("… křižovatky s ul. B") are excluded — use
  * extractCrossStreetFromOfficialComment.
  */
+/**
+ * Municipality token in the structural NDIC slot ", Town, okr." / ", Town,, okr.".
+ * Structural evidence beats street-morphology heuristics: Czech municipalities often
+ * share feminine adjective endings (-ná/-ní) with street names (e.g. Třemošná).
+ * Never invents — only returns the captured name when present.
+ */
+export function extractMunicipalityBeforeOkrToken(rawText) {
+  const text = clean(rawText);
+  if (!text) return null;
+  const m = text.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
+  if (!m) return null;
+  let town = clean(m[1]);
+  if (!town) return null;
+  if (isKilometerLocationPhrase(town)) return null;
+  if (
+    /^(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d)/i.test(
+      town
+    )
+  ) {
+    return null;
+  }
+  town = town.replace(
+    /\s+(?:nehoda|uzavř|uzavírk|práce|silný|kolona|porouchan|mimořádn|havarovan|překážk|průjezd|stavební|omezen|zúžení|provoz|Od\s+\d|Do\s+\d).*$/i,
+    ""
+  );
+  town = clean(town.replace(/\s*\([^)]*$/u, ""));
+  town = clean(town.replace(/\s*\([^)]*\)\s*$/u, ""));
+  town = clean(town.replace(/[·•]+/g, " "));
+  town = clean(town.replace(/\s*[-–—]\s*$/u, ""));
+  if (!town) return null;
+  if (!/^[A-ZÁ-Ž]/u.test(town)) return null;
+  if (looksLikeRoadNumberToken(town)) return null;
+  if (/^p\s*\+\s*r\b/i.test(town)) return null;
+  if (/^ulice\b|\btřída\b/i.test(town)) return null;
+  if (/^okres\b|^okr\./i.test(town)) return null;
+  if (/^část\s+obce\b/i.test(town) || /^městská\s+část\b/i.test(town)) return null;
+  if (/[|·]/.test(town) || /srážk|přeháň/i.test(town)) return null;
+  if (/[()]$/.test(town) || /\($/.test(town)) return null;
+  // Hard non-municipality objects (not street-morphology).
+  if (isPrahaCityPartName(town) || isNumericCityPartName(town)) return null;
+  if (
+    /náměstí|nábřeží|tunel|MÚK\b|křižovatka|nádraží|terminál|parkovišt|parkovací\s+dům|přejezd|nájezd|sjezd|odpočívk/i.test(
+      town
+    )
+  ) {
+    return null;
+  }
+  if (looksLikeBridgeObjectToken(town)) return null;
+  // Align with server locality: reject clear street-adjective morphology in this slot.
+  if (/(ská|cká|ovská)$/i.test(town)) return null;
+  return town;
+}
+
 export function extractStreetNamesFromOfficialComment(rawText) {
   const text = clean(rawText);
   if (!text) return [];
   const found = [];
+  const muniBeforeOkr = extractMunicipalityBeforeOkrToken(text);
   const push = (raw) => {
     let sn = sanitizeExtractedValueToken(streetBareName(raw));
     if (!sn) return;
@@ -2991,6 +3072,8 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     ) {
       return;
     }
+    // ", Town, okr." municipality must never enter the street list.
+    if (muniBeforeOkr && samePlaceName(sn, muniBeforeOkr)) return;
     if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return;
     if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return;
     if (!found.some((x) => samePlaceName(x, sn))) found.push(sn);
@@ -4698,19 +4781,11 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Bare ", Town, okr." / ", Town,, okr." municipality when no "v obci" marker exists.
   // NDIC occasionally emits doubled commas before okr. (Tábor,, okr. Tábor).
+  // Structural municipality-before-okr evidence wins over street-morphology heuristics:
+  // municipalities like "Třemošná" share -ná endings with feminine street adjectives.
   if (!out.city) {
-    const mTown = locationScanText.match(/,\s*([^,;]+?)\s*,+\s*okr\./u);
-    if (mTown) {
-      const town = normalizeExtractedMunicipalityName(mTown[1]);
-      if (
-        town &&
-        !looksLikeStreetName(town) &&
-        !looksLikeNonMunicipalityPlace(town) &&
-        !looksLikeRoadNumberToken(town)
-      ) {
-        out.city = town;
-      }
-    }
+    const town = extractMunicipalityBeforeOkrToken(locationScanText);
+    if (town) out.city = town;
   }
   // ", Town, část obce Part, okr." — municipality sits before the settlement-part token.
   if (!out.city) {
@@ -4718,15 +4793,34 @@ export function parseOfficialCommentFacts(rawText) {
       /,\s*([A-ZÁ-Ž][^,;]{1,60}?)\s*,\s*část\s+obce\b[^,]*,\s*okr\./u
     );
     if (mTownBeforePart) {
-      const town = normalizeExtractedMunicipalityName(mTownBeforePart[1]);
-      if (
-        town &&
-        !looksLikeStreetName(town) &&
-        !looksLikeNonMunicipalityPlace(town) &&
-        !looksLikeRoadNumberToken(town)
-      ) {
-        out.city = town;
-      }
+      // Reuse structural before-okr sanitizer (avoids street-morphology false reject).
+      const synthetic = ", " + clean(mTownBeforePart[1]) + ", okr. X";
+      const town = extractMunicipalityBeforeOkrToken(synthetic);
+      if (town) out.city = town;
+    }
+  }
+
+  // Scrub municipality / district tokens that leaked into streets[] via comma lists.
+  if (out.city && Array.isArray(out.streets) && out.streets.length) {
+    out.streets = out.streets.filter((s) => !samePlaceName(s, out.city));
+    if (out.streetRange === true && out.streetFrom && out.streetTo) {
+      const extras = out.streets.filter(
+        (s) => !samePlaceName(s, out.streetFrom) && !samePlaceName(s, out.streetTo)
+      );
+      out.streets = [out.streetFrom, out.streetTo].concat(extras);
+      out.street = formatStreetDisplayList(
+        extras.length ? out.streets : [out.streetFrom, out.streetTo],
+        {
+          asRange: extras.length === 0,
+        }
+      );
+    } else if (out.streets.length === 1) {
+      out.street = out.streets[0];
+    } else if (out.streets.length >= 2) {
+      out.street = formatStreetDisplayList(out.streets, {
+        asRange: out.streetRange === true && out.streets.length === 2,
+        asIntersection: out.streetIntersection === true && out.streets.length === 2,
+      });
     }
   }
 

@@ -17,6 +17,8 @@ import {
   clipOfficialCommentLocationScanText,
   extractBetweenMunicipalitiesSegment,
   extractAllKatastrMunicipalitiesFromOfficialComment,
+  resolveConfirmedStreet,
+  resolveMunicipalitySignName,
 } from "../assets/iu-traffic-card-presenter-v1.js";
 import { extractLocalityFromOfficialComment } from "../scripts/ndic-datex-v1/traffic-card-content-v1.mjs";
 
@@ -58,7 +60,13 @@ const HUNT =
 const PLZEN =
   "ulice Pod Chalupami - ulice U Mlýna, Plzeň 2-Slovany, Plzeň, , Od 04.10.2026 00:00, Do 04.10.2026 23:59, Medový Jarmark - kulturní akce, Vydal: ÚMO Plzeň 02 Slovany";
 
+const TREMOSNA =
+  "ulice K Platince - ulice Luční, Třemošná, okr. Plzeň-sever";
+
 const DREVES = "Stav vozovky: nebezpečí akvaplaningu, Dřeveš";
+
+const BILOVICE =
+  "silnice II/383 (ulice Havlíčkova), Bílovice nad Svitavou, okr. Brno-venkov, , Od 01.01.2026 08:00, Do 01.01.2026 16:00, práce na silnici u p.p.č. 123/4, k.ú. Bílovice nad Svitavou, Vydal: Test";
 
 const BREHOV =
   "Od 1.1.2026 12:00 do 13:00; na silnici 145 u obce Břehov okres České Budějovice; práce na silnici.";
@@ -164,11 +172,45 @@ const D8 =
   ok("PLZEN_CITY", /Plzeň/i.test(f.city || ""), f.city);
 }
 
+// --- F2 Třemošná street-range (municipality-before-okr must not enter street) ---
+{
+  const f = parseOfficialCommentFacts(TREMOSNA);
+  const street = resolveConfirmedStreet(base({ impact: TREMOSNA, impactFull: TREMOSNA }), f);
+  const place = buildPlaceAndDirectionLine(base({ impact: TREMOSNA, impactFull: TREMOSNA }));
+  const sign = resolveMunicipalitySignName(base({ impact: TREMOSNA, impactFull: TREMOSNA }));
+  const server = extractLocalityFromOfficialComment(TREMOSNA);
+  ok("TRE_RANGE", f.streetRange === true, JSON.stringify({ from: f.streetFrom, to: f.streetTo }));
+  ok("TRE_FROM", /K\s+Platince/i.test(f.streetFrom || ""), f.streetFrom);
+  ok("TRE_TO", /Luční/i.test(f.streetTo || ""), f.streetTo);
+  ok("TRE_STREET_HAS_BOTH", /K\s+Platince/i.test(street || "") && /Luční/i.test(street || ""), street);
+  ok("TRE_STREET_NO_MUNI", !/Třemošná/i.test(street || "") && !(f.streets || []).some((s) => /Třemošná/i.test(s)), JSON.stringify(f.streets));
+  ok("TRE_CITY", f.city === "Třemošná", f.city);
+  ok("TRE_SIGN", sign === "Třemošná", sign);
+  ok("TRE_DISTRICT", f.district === "Plzeň-sever", f.district);
+  ok("TRE_NO_DISTRICT_IN_STREET", !/Plzeň-sever|okr\./i.test(street || ""), street);
+  ok("TRE_PLACE_HAS_MUNI", /Třemošná/i.test(place || ""), place);
+  ok("TRE_NO_SLASH_MUNI", !/Luční\s*\/\s*Třemošná/i.test(street || "") && !/Luční\s*\/\s*Třemošná/i.test(place || ""), place);
+  ok("TRE_SERVER_MUNI", server.municipality === "Třemošná", server.municipality);
+}
+
 // --- G Dřeveš negative control ---
 {
   const f = parseOfficialCommentFacts(DREVES);
   ok("DREVES_NO_CITY", !f.city, f.city);
   ok("DREVES_SERVER_NO_CITY", !extractLocalityFromOfficialComment(DREVES).municipality);
+}
+
+// --- G2 Bílovice parcel / k.ú. locality retained ---
+{
+  const f = parseOfficialCommentFacts(BILOVICE);
+  const place = buildPlaceAndDirectionLine(
+    base({ impact: BILOVICE, impactFull: BILOVICE, road: "II/383", municipality: "Bílovice nad Svitavou" })
+  );
+  ok("BIL_ROAD", (f.roadNumbers || []).some((r) => /II\/383/i.test(r)), JSON.stringify(f.roadNumbers));
+  ok("BIL_STREET", /Havlíčkova/i.test(f.street || ""), f.street);
+  ok("BIL_CITY", /Bílovice\s+nad\s+Svitavou/i.test(f.city || ""), f.city);
+  ok("BIL_DISTRICT", /Brno-venkov/i.test(f.district || ""), f.district);
+  ok("BIL_PLACE_HAS_CITY", /Bílovice/i.test(place || ""), place);
 }
 
 // --- H/I/J/K/L do-not-break ---
