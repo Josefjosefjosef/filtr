@@ -5,7 +5,7 @@
  */
 (function iuMobileBottomNavShellV1() {
   "use strict";
-  var FEED_MOD = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pin-mbox-module-write-v1-20260830-wx-offline-online-reconnect-v1-20260904-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914";
+  var FEED_MOD = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pin-mbox-module-write-v1-20260830-wx-offline-online-reconnect-v1-20260904-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914";
 
   function prefetchFeed() {
     try {

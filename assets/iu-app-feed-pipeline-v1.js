@@ -26068,7 +26068,9 @@ function buildVideoAsArticleCard(it) {
     return Array.from({ length: n }, (_, i) => ({
       label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER,
       url: "",
-      social: null,
+      /* Fresh first-visit: social icons must be present on the first MindMenu render
+         even when iu_mailboxes_v1 is absent (no durable write on read-miss). */
+      social: IU_MAILBOX_DEFAULT_SOCIAL[i] || null,
       hidden: false,
       /* Fresh first-visit default: white pills; colorful only after user opt-in. */
       colorful: false,
