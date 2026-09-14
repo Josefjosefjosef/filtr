@@ -26070,6 +26070,8 @@ function buildVideoAsArticleCard(it) {
       url: "",
       social: null,
       hidden: false,
+      /* Fresh first-visit default: white pills; colorful only after user opt-in. */
+      colorful: false,
       index: i,
       slot: i + 1,
     }));
@@ -26140,19 +26142,20 @@ function buildVideoAsArticleCard(it) {
           url: String(it?.url ?? "").trim(),
           social: validSocial(it?.social),
           hidden: it?.hidden === true,
+          // Missing colorful in stored JSON = legacy colorful ON (do not flip existing users off).
           colorful: it?.colorful !== false,
           index: i,
           slot
         };
       });
       if (items.length > IU_MAILBOX_MAX) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, colorful: it.colorful !== false, slot: it.slot })) }));
       }
       if (fixed.length < IU_MAILBOX_MIN) {
         for (let i = fixed.length; i < IU_MAILBOX_MIN; i++) {
-          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER, url: "", social: null, hidden: false, index: i, slot: i + 1 });
+          fixed.push({ label: MAILBOX_PLACEHOLDERS[i] || IU_MM_EDIT_INPUT_PLACEHOLDER, url: "", social: null, hidden: false, colorful: false, index: i, slot: i + 1 });
         }
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, colorful: it.colorful !== false, slot: it.slot })) }));
       }
       if (!localStorage.getItem(IU_MM_SOCIAL_DEFAULTS_FLAG)) {
         for (let i = 0; i < 4 && i < fixed.length; i++) {
@@ -26164,7 +26167,7 @@ function buildVideoAsArticleCard(it) {
           (it) => iuMmIsPlaceholderLabel(it && it.label) && !String((it && it.url) || "").trim()
         );
         if (onlyPlaceholders) {
-          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+          iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, colorful: it.colorful !== false, slot: it.slot })) }));
         }
         try{ localStorage.setItem(IU_MM_SOCIAL_DEFAULTS_FLAG, "1"); }catch{}
       }
@@ -26176,11 +26179,11 @@ function buildVideoAsArticleCard(it) {
         }
       }
       if (migrated56) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, colorful: it.colorful !== false, slot: it.slot })) }));
       }
       const hadSlotMigration = raw.some((it, i) => typeof it?.slot !== "number" || it.slot < 1 || it.slot > IU_MAILBOX_MAX);
       if (hadSlotMigration) {
-        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, slot: it.slot })) }));
+        iuVaultTrySetItem(MAILBOX_STORAGE_KEY, JSON.stringify({ items: fixed.map((it) => ({ label: it.label, url: it.url, social: it.social, hidden: !!it.hidden, colorful: it.colorful !== false, slot: it.slot })) }));
       }
       fixed.sort((a, b) => (a.slot || 0) - (b.slot || 0));
       return fixed;
@@ -26316,7 +26319,7 @@ function buildVideoAsArticleCard(it) {
         }
         if (free != null) {
           const defaultSocial = free === 5 ? "linkedin" : free === 6 ? "youtube" : null;
-          items.push({ label: "", url: "", social: defaultSocial, hidden: false, index: items.length, slot: free });
+          items.push({ label: "", url: "", social: defaultSocial, hidden: false, colorful: false, index: items.length, slot: free });
         }
       }
       iuMailboxSave(items);
@@ -26411,7 +26414,7 @@ function buildVideoAsArticleCard(it) {
         const label = String(labelInput.value).trim().slice(0, MAX);
         const url = String(urlInput.value).trim();
         const colorfulEl = form.querySelector("#iu-mailbox-edit-colorful");
-        const colorful = colorfulEl ? !!colorfulEl.checked : true;
+        const colorful = colorfulEl ? !!colorfulEl.checked : false;
         overlay.remove();
         onDone(label, url, selectedSocial, colorful);
       });
