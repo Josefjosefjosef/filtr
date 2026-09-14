@@ -2616,6 +2616,55 @@ html.iu-time-evening .iuPrehledDne .iuPdSuggest button {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Mobile/tablet PD strip switcher (desktop keeps .iuPdQuickView buttons; bar hidden ≥1025). */
+@media (max-width: 1024px) {
+  .iuHomeSectionBar.iuHomeSectionBar--pdQuick {
+    --iu-home-section-bar-h: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    pointer-events: auto;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y;
+    justify-content: center;
+    gap: 8px;
+  }
+  .iuHomeSectionBar.iuHomeSectionBar--pdQuick[data-iu-pd-quick-active="chmu"],
+  .iuPrehledDne[data-iu-pd-quick-view="chmu"] .iuHomeSectionBar.iuHomeSectionBar--pdQuick {
+    --iu-home-section-bar-bg: var(--iu-pd-chmu, #38bdf8);
+    background: var(--iu-pd-chmu, #38bdf8);
+    color: #0f172a;
+  }
+  .iuHomeSectionBar.iuHomeSectionBar--pdQuick[data-iu-pd-quick-active="traffic"],
+  .iuPrehledDne[data-iu-pd-quick-view="traffic"] .iuHomeSectionBar.iuHomeSectionBar--pdQuick {
+    --iu-home-section-bar-bg: var(--iu-pd-traffic, #ea580c);
+    background: var(--iu-pd-traffic, #ea580c);
+    color: #fff;
+  }
+  .iuPdQuickSwitcher__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .iuPdQuickSwitcher__chevron {
+    flex: 0 0 auto;
+    font-weight: 700;
+    opacity: 0.92;
+    line-height: 1;
+  }
+  .iuPdQuickSwitcher__chevron[hidden] {
+    display: none !important;
+  }
+  .iuPrehledDne .iuPdQuickView--primary {
+    display: none !important;
+  }
+}
+@media (min-width: 1025px) {
+  .iuPrehledDne .iuPdQuickView--primary {
+    display: grid;
+  }
+}
 .iuPdFeedEmpty {
   padding: 28px 16px;
   text-align: center;
