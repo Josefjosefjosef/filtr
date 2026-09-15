@@ -1354,6 +1354,17 @@ html.iu-info-system-cutover #feed .iuArticleCard {
   object-fit: contain;
   flex: 0 0 auto;
   display: block;
+  align-self: center;
+}
+/* Tunnel object header: icon + name on first row; direction on its own row below. */
+.iuPdTrafficComm[data-iu-tunnel-header="1"] .iuPdTrafficComm__tunnelDir {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
+  max-width: 100%;
 }
 .iuPdTrafficComm__dir,
 .iuPdTrafficComm__place,
