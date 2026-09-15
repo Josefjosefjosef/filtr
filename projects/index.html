@@ -335,6 +335,88 @@
       }catch(_){}
     })();
     </script>
+    <script>
+    (function(){
+      /* P0: Silver Kalendář+Úkoly collapse — sync LS before first paint (no FOUC). Default collapsed. */
+      if(window.__iuInfoCardsExpandedEarlyBoot)return;
+      window.__iuInfoCardsExpandedEarlyBoot=1;
+      try{
+        var v=String(localStorage.getItem("iu.infoCards.expanded.v1")||"").trim();
+        if(v==="1"){
+          document.documentElement.setAttribute("data-iu-info-cards-expanded","1");
+        }else{
+          document.documentElement.removeAttribute("data-iu-info-cards-expanded");
+        }
+      }catch(_){
+        try{document.documentElement.removeAttribute("data-iu-info-cards-expanded");}catch(__){}
+      }
+    })();
+    </script>
+    <style id="iuInfoCardsCollapseCriticalCss">
+      /* silver-info-cards-collapse-v1-20260915 — FOUC-safe: default collapsed ≤1023; desktop ≥1024 untouched. */
+      @media (max-width: 1023px) {
+        html:not([data-iu-info-cards-expanded="1"]) #silver-slot #iuInfoCardsMobileTablet,
+        html:not([data-iu-info-cards-expanded="1"]) #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet,
+        html:not([data-iu-info-cards-expanded="1"]) :is(#silver-slot,#iuMobileSilverSlot #silver-slot) .iu-info-cards-mobile-tablet {
+          display: none !important;
+          min-height: 0 !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow: hidden !important;
+          border: 0 !important;
+          gap: 0 !important;
+          pointer-events: none !important;
+        }
+        #iuSilverHeroPremium .iu-info-cards-expand-toggle {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          width: calc(100% + 2 * var(--iuSilverStackPadX, 12px));
+          margin: 2px calc(-1 * var(--iuSilverStackPadX, 12px)) -6px;
+          min-height: 40px;
+          padding: 6px 10px 8px;
+          border: 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 0 0 14px 14px;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.12) 100%);
+          color: rgba(226, 232, 240, 0.9);
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+        #iuSilverHeroPremium .iu-info-cards-expand-toggle:focus-visible {
+          outline: 2px solid rgba(147, 197, 253, 0.85);
+          outline-offset: -2px;
+        }
+        #iuSilverHeroPremium .iu-info-cards-expand-toggle__chevron {
+          display: block;
+          width: 14px;
+          height: 14px;
+          border-right: 2.5px solid currentColor;
+          border-bottom: 2.5px solid currentColor;
+          transform: rotate(45deg);
+          margin-top: -4px;
+          opacity: 0.92;
+        }
+        html[data-iu-info-cards-expanded="1"] #iuSilverHeroPremium .iu-info-cards-expand-toggle__chevron {
+          transform: rotate(-135deg);
+          margin-top: 4px;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          #iuSilverHeroPremium .iu-info-cards-expand-toggle__chevron {
+            transition: transform 0.2s ease, margin-top 0.2s ease;
+          }
+        }
+      }
+      @media (min-width: 1024px) {
+        #iuSilverHeroPremium .iu-info-cards-expand-toggle {
+          display: none !important;
+        }
+      }
+    </style>
     <!-- FIRST LOAD: CHMI boot must run in early <head> — late-body script only ran after multi‑MB HTML parse (~+5s).
          first-load-feed-lanes-not-feedjson-v1-20260821
          first-load-prehled-bootstrap-before-appjs-v1-20260821
@@ -1570,7 +1652,23 @@ require-trusted-types-for 'script';
     </style>
     <style id="iuInfoCardsMobileTabletPostAppCss">
       /* P0 info cards Kalendář+Úkoly ≤1023: post app.css — beats #iuInfoCardsMobileTablet min-height:160px (assets/app.css CLS reserve). */
+      /* silver-info-cards-collapse-v1-20260915 — collapsed must zero height (no leftover CLS reserve). */
       @media (max-width: 1023px) {
+        html:not([data-iu-info-cards-expanded="1"]) #silver-slot #iuInfoCardsMobileTablet,
+        html:not([data-iu-info-cards-expanded="1"]) #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet {
+          display: none !important;
+          min-height: 0 !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow: hidden !important;
+          border: 0 !important;
+          gap: 0 !important;
+          pointer-events: none !important;
+        }
+        html[data-iu-info-cards-expanded="1"] #silver-slot #iuInfoCardsMobileTablet,
+        html[data-iu-info-cards-expanded="1"] #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet,
         #silver-slot #iuInfoCardsMobileTablet,
         #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet {
           min-height: 70px !important;
@@ -1578,6 +1676,12 @@ require-trusted-types-for 'script';
           max-height: 70px !important;
           overflow: hidden !important;
           grid-auto-rows: auto !important;
+        }
+        html:not([data-iu-info-cards-expanded="1"]) #silver-slot #iuInfoCardsMobileTablet,
+        html:not([data-iu-info-cards-expanded="1"]) #iuMobileSilverSlot #silver-slot #iuInfoCardsMobileTablet {
+          min-height: 0 !important;
+          height: 0 !important;
+          max-height: 0 !important;
         }
         #silver-slot #iuInfoCardsMobileTablet #iuSilverCalendarSummaryCard.silver-calendar-summary-card,
         #silver-slot #iuInfoCardsMobileTablet #iuSilverTasksSummaryCard.silver-calendar-summary-card,
@@ -3634,10 +3738,33 @@ require-trusted-types-for 'script';
                                 </button>
                               </div>
                               </div>
+                              <button type="button" id="iuInfoCardsExpandToggle" class="iu-info-cards-expand-toggle" data-iu-info-cards-expand-toggle aria-expanded="false" aria-controls="iuInfoCardsMobileTablet" aria-label="Zobrazit Kalendář a Úkoly">
+                                <span class="iu-info-cards-expand-toggle__chevron" aria-hidden="true"></span>
+                              </button>
+                              <script>
+                              (function(){
+                                try{
+                                  var ex=document.documentElement.getAttribute("data-iu-info-cards-expanded")==="1";
+                                  var b=document.getElementById("iuInfoCardsExpandToggle");
+                                  if(!b)return;
+                                  b.setAttribute("aria-expanded",ex?"true":"false");
+                                  b.setAttribute("aria-label",ex?"Skrýt Kalendář a Úkoly":"Zobrazit Kalendář a Úkoly");
+                                }catch(_){}
+                              })();
+                              </script>
                             </div>
                           </div>
                         </section>
                         <div class="iu-info-cards-mobile-tablet" id="iuInfoCardsMobileTablet" data-iu-info-cards-mobile-tablet>
+                        <script>
+                        (function(){
+                          try{
+                            var ex=document.documentElement.getAttribute("data-iu-info-cards-expanded")==="1";
+                            var p=document.getElementById("iuInfoCardsMobileTablet");
+                            if(p) p.setAttribute("aria-hidden",ex?"false":"true");
+                          }catch(_){}
+                        })();
+                        </script>
                         <div class="silver-welcome-stack__separator" id="iuSilverWelcomeStackSeparatorWeatherCal" aria-hidden="true"></div>
                         <div class="silver-calendar-summary-card iu-mini-overview-card iu-mini-overview-card--calendar iu-info-card" id="iuSilverCalendarSummaryCard" data-iu-silver-calendar-summary>
                           <div class="silver-calendar-summary-row silver-calendar-summary-row--1">
@@ -6829,7 +6956,7 @@ require-trusted-types-for 'script';
 
     <script type="module" src="/assets/iu-vault-bootstrap-v1.js?v=iu-vault-killswitch-restrict-v1-20260831"></script>
     <script defer src="/assets/iu-vault-physical-diag-overlay-v1.js?v=iu-vault-pin-rotate-fence-v1-20260830"></script>
-    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-wx-boot-no-flash-v1-20260908-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824-iu-vault-hydrated-owns-ui-v1-20260829-iu-vault-post-hydrate-shim-v1-20260830-pin-mbox-module-write-v1-20260830-iu-calendar-persist-ack-v1-20260830-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-mindmenu-lock-infouzel-v1-20260906-radio-neutral-v1-20260906-mapy-neutral-v1-20260906-menu-subsection-scroll-lock-v1-20260910-pwa-mindmenu-external-return-v1-20260915"></script>
+    <script type="module" src="/assets/app.js?v=ds-mobile-scroll-bottom-clearance-v1-20260707-desktop-left-rail-section-close-v1-20260707-svatek-pill-inline-layout-v1-20260707-bakalari-card-count-persist-v1-20260707-silver-pc-top-input-action-menu-v1-20260708-ds-mobile-delete-confirm-anchor-v2-20260710-silver-pc-action-menu-fixed-topbar-v1-20260709-custom-buttons-empty-fields-v1-20260710-pc-left-rail-new-window-v1-20260711-calendar-allday-pinned-limit-v1-20260713-pc-tool-window-left-rail-layout-v1-20260714-notes-unified-field-v1-20260714-pwa-offline-resilience-v1-20260714-pwa-offline-completion-v2-20260714-quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-pwa-offline-menu-articles-v4-20260716-bottom-nav-keyboard-hide-v1-20260802-mindmenu-articles-removed-v1-20260803-kb-restore-v3-20260803-custom-buttons-dynamic-bottom-clearance-v1-20260804-bottom-nav-unify-v1-20260804-perf-stage4-calendar-v1-20260818-perf-stage5-notes-v1-20260819-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter002-hero-webp-v1-20260820-perf-loop-iter003-core-dedupe-v1-20260820-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-perf-loop-iter006-defer-pipeline-v1-20260820-perf-loop-iter007-demote-silver-img-v1-20260820-perf-loop-iter008-defer-secondary-css-v1-20260820-perf-loop-iter010-overlay-css-after-fcp-v1-20260820-perf-loop-iter011-desktop-css-after-fcp-v1-20260820-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820-perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821-perf-stage7-calendar-hero-prefetch-v1-20260819-early-wx-v1-20260822-defer-desktop-js-mobile-v1-20260822-early-welcome-shell-v1-20260822-wx-boot-no-flash-v1-20260908-iu-vault-security-v1-20260822-pc-vault-mindmenu-persist-v1-20260824-iu-vault-hydrated-owns-ui-v1-20260829-iu-vault-post-hydrate-shim-v1-20260830-pin-mbox-module-write-v1-20260830-iu-calendar-persist-ack-v1-20260830-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-mindmenu-lock-infouzel-v1-20260906-radio-neutral-v1-20260906-mapy-neutral-v1-20260906-menu-subsection-scroll-lock-v1-20260910-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915"></script>
     <!-- FIRST LOAD: desktop-only JS must not compete with mobile first-screen bandwidth (hero/weather). -->
     <!-- Desktop rail/tool-window only — deferred until min-width 1025px (mobile first-screen bandwidth). -->
     <script data-iu-desktop-js="1" data-iu-src="/assets/iu-desktop-section-close-v1.js?v=desktop-tool-window-no-close-v1-20260712"></script>
