@@ -12,6 +12,7 @@ const root = path.resolve(__dirname, "..");
 
 const SUITES = [
   "iu-traffic-card-unified-fixtures",
+  "iu-traffic-source-fidelity-guard",
   "iu-traffic-collapsed-km-guard",
   "iu-traffic-object-preservation-guard",
   "iu-traffic-urban-numbered-road-parse-guard",
