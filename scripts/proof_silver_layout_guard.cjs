@@ -301,6 +301,17 @@ async function runViewport(page, w, h) {
       buttonsBottom = r.bottom;
     }
     if (hero) cardBottom = hero.getBoundingClientRect().bottom;
+    /* Expand toggle is Silver bottom-edge chrome: measure padding to toggle top, not past it. */
+    try {
+      const expandToggle = document.getElementById("iuInfoCardsExpandToggle");
+      if (expandToggle) {
+        const st = getComputedStyle(expandToggle);
+        if (st.display !== "none" && st.visibility !== "hidden") {
+          const tr = expandToggle.getBoundingClientRect();
+          if (tr.height > 2) cardBottom = tr.top;
+        }
+      }
+    } catch (_) {}
 
     const imageToInputGap =
       imageBottom != null && inputTop != null ? Math.round(inputTop - imageBottom) : null;
