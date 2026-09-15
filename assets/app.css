@@ -9421,6 +9421,13 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     display: inline-flex !important;
     align-items: center !important;
   }
+  /*
+   * Root cause: touch-action:pan-y alone on the full-bleed Menu/MindMenu gate panels
+   * told WebKit/Blink to accept ONLY vertical pan — pinch-zoom was excluded, while
+   * the main page (no pan-y on the shell) kept native pinch-in/out.
+   * Fix: pan-y pinch-zoom — keep scroll containment; restore native browser pinch.
+   * Do NOT use maximum-scale / user-scalable=no and do not invent a custom zoom.
+   */
   body.iu-mobileGateOverlayOpen #iuMobileGateContent .iu-mobileGatePanel:not([hidden]){
     flex: 1 1 0% !important;
     min-height: 0 !important;
@@ -9428,7 +9435,7 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-y: contain !important;
-    touch-action: pan-y !important;
+    touch-action: pan-y pinch-zoom !important;
     display: flex !important;
     flex-direction: column !important;
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 28px)) !important;
