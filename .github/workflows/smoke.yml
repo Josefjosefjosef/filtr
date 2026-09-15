@@ -172,6 +172,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-offline-resilience-guard
 
+      - name: PWA MindMenu external-return guard (no reset to Domů)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-mindmenu-external-return-guard
+
       - name: External open no blank/duplicate context guard (mobile/PWA)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-external-open-no-blank-duplicate-guard

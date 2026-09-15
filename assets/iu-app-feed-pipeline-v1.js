@@ -25818,6 +25818,36 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /**
+   * Re-assert MindMenu history marker without pushing a new entry.
+   * PWA return from an external page often drops #iu-mindmenu / history.state;
+   * without this, SyncGate closes tools → Home (flicker).
+   */
+  function iuMindMenuEnsureHistoryEntry() {
+    try {
+      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
+      var u = new URL(window.location.href);
+      var hash = String(u.hash || "").replace("#", "");
+      var st = false;
+      try {
+        st = !!(history.state && history.state.iu_mindmenu_overlay === true);
+      } catch (_st) {}
+      if (hash === "iu-mindmenu" && st) return;
+      u.hash = "iu-mindmenu";
+      var nextState = {};
+      try {
+        if (history.state && typeof history.state === "object") {
+          for (var k in history.state) {
+            if (Object.prototype.hasOwnProperty.call(history.state, k)) nextState[k] = history.state[k];
+          }
+        }
+      } catch (_copy) {}
+      nextState.iu_mindmenu_overlay = true;
+      if (!nextState.iu_mindmenu_origin) nextState.iu_mindmenu_origin = "homepage";
+      history.replaceState(nextState, "", u.toString());
+    } catch (_) {}
+  }
+
   function iuMindMenuArmReturnState() {
     if (!iuMindMenuIsExternalOpenContext()) return;
     try { sessionStorage.setItem(IU_MINDMENU_RETURN_ARMED_KEY, "1"); } catch (_) {}
@@ -25923,6 +25953,9 @@ function buildVideoAsArticleCard(it) {
         wrap.__iuMobileGateSetTab("tools");
       }
     } catch (_) {}
+    /* Must re-assert history BEFORE clearing armed: SyncGate on the same resume
+       tick would otherwise see tools without #iu-mindmenu and close → Home. */
+    iuMindMenuEnsureHistoryEntry();
     try {
       var y = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "0", 10);
       if (Number.isFinite(y) && y >= 0) {
@@ -25932,7 +25965,12 @@ function buildVideoAsArticleCard(it) {
     try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
   }
 
-  function iuMindMenuSyncGateFromHistory() {
+  /**
+   * @param {{ allowClose?: boolean }=} opts
+   * allowClose=true only for popstate (user Back). pageshow/visibility/external
+   * return must never close tools solely because the PWA dropped the hash.
+   */
+  function iuMindMenuSyncGateFromHistory(opts) {
     try {
       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return;
       var wrap = document.getElementById("iuMobileGateWrap");
@@ -25957,7 +25995,13 @@ function buildVideoAsArticleCard(it) {
       try {
         if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return;
       } catch (_a) {}
-      if (String(wrap.getAttribute("data-iu-mobile-gate") || "") === "tools" && hash !== "iu-mindmenu" && !st) {
+      var allowClose = !!(opts && opts.allowClose === true);
+      if (
+        allowClose &&
+        String(wrap.getAttribute("data-iu-mobile-gate") || "") === "tools" &&
+        hash !== "iu-mindmenu" &&
+        !st
+      ) {
         wrap.__iuMobileGateSetTab("");
       }
     } catch (_) {}
@@ -25980,7 +26024,7 @@ function buildVideoAsArticleCard(it) {
       iuMindMenuRestoreIfArmed();
     });
     window.addEventListener("popstate", function () {
-      iuMindMenuSyncGateFromHistory();
+      iuMindMenuSyncGateFromHistory({ allowClose: true });
     });
     document.addEventListener("click", function (e) {
       try {
