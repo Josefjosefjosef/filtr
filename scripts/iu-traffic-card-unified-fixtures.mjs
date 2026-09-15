@@ -918,7 +918,7 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   ok(
     "SIT_BROKEN_SHOULDER_CARE_PASS",
     broken ===
-      "Porouchané vozidlo. Zpevněná krajnice je neprůjezdná. Průjezd se zvýšenou opatrností."
+      "Porouchané vozidlo. Zpevněná krajnice (odstavný pruh) je neprůjezdná. Průjezd se zvýšenou opatrností."
   );
 
   const careOnly = buildTrafficSituationSummary({
@@ -951,7 +951,7 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
   });
   ok(
     "SIT_SHOULDER_NOT_FULL_ROAD_PASS",
-    /Zpevněná krajnice je uzavřena|Uzavřený odstavný pruh/.test(shoulderOnly) &&
+    /Zpevněná krajnice \(odstavný pruh\) je uzavřena|Uzavřený odstavný pruh/.test(shoulderOnly) &&
       !/Silnice je uzavřena/.test(shoulderOnly)
   );
 
@@ -984,9 +984,12 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
     /Zpevněná krajnice \(odstavný pruh\) je uzavřena/.test(shoulderParenActive)
   );
   ok(
-    "SHOULDER_NO_PAREN_NO_INVENTION",
-    /Zpevněná krajnice je uzavřena/.test(shoulderNoParen) &&
-      !/\(odstavný pruh\)/.test(shoulderNoParen)
+    "SHOULDER_ZPEVNENA_ALWAYS_ODSTAVNY_PRUH",
+    /Zpevněná krajnice \(odstavný pruh\) je uzavřena/.test(shoulderNoParen)
+  );
+  ok(
+    "SHOULDER_LANE_NEGATIVE_NO_ODSTAVNY",
+    /Pravý jízdní pruh je uzavřen/.test(laneOnly) && !/\(odstavný pruh\)/.test(laneOnly)
   );
 
   const extraordinary = buildTrafficSituationSummary({
