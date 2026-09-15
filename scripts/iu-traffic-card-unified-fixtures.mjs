@@ -2949,6 +2949,85 @@ ok(
       bubCity.municipalitySignLabel === "PRAHA" &&
       ambEnrich == null
   );
+
+  // --- Stav tunelu: Name (NDIC primary title) → tunnel icon, preserve title ---
+  {
+    const stavPrack = {
+      location: "Stav tunelu: Prackovice",
+      eventType: "omezeni",
+      impact: "Stav tunelu: Prackovice, směr Drážďany",
+      impactFull: "Stav tunelu: Prackovice, směr Drážďany",
+      direction: "Drážďany",
+    };
+    const stavRadej = {
+      location: "Stav tunelu: Radejčín",
+      eventType: "omezeni",
+      impact: "Stav tunelu: Radejčín, směr Praha",
+      impactFull: "Stav tunelu: Radejčín, směr Praha",
+      direction: "Praha",
+    };
+    const stavPrackHdr = buildLocalityHeaderModel(stavPrack);
+    const stavRadejHdr = buildLocalityHeaderModel(stavRadej);
+    const stavPrackVm = buildTrafficCardViewModel({
+      ...stavPrack,
+      publicEventId: PEID,
+      road: "",
+    });
+    const stavRadejVm = buildTrafficCardViewModel({
+      ...stavRadej,
+      publicEventId: PEID,
+      road: "",
+    });
+    const buriedStav = resolveOutsideCityTunnelEnrichment({
+      location: "D8",
+      impact:
+        "Uzavírka sjezdu, objížďka přes obec. Stav tunelu: Prackovice je zmíněn v dodatku",
+      impactFull:
+        "Uzavírka sjezdu, objížďka přes obec. Stav tunelu: Prackovice je zmíněn v dodatku",
+      eventType: "omezeni",
+    });
+    const diversionMention = resolveOutsideCityTunnelEnrichment({
+      location: "Brno",
+      impact: "Objížďka od Pisáreckého tunelu je nařízena druhým sjezdem",
+      impactFull: "Objížďka od Pisáreckého tunelu je nařízena druhým sjezdem",
+      eventType: "omezeni",
+    });
+    const normalRoad = resolveOutsideCityTunnelEnrichment({
+      location: "I/20",
+      impact: "I/20, Plzeň, práce na silnici, jízdní pruh uzavřen",
+      impactFull: "I/20, Plzeň, práce na silnici, jízdní pruh uzavřen",
+      eventType: "omezeni",
+    });
+    ok(
+      "STAV_TUNELU_PRACKOVICE_ICON",
+      stavPrackHdr.outsideCityTunnelMode === true &&
+        stavPrackHdr.besideLocality === "Stav tunelu: Prackovice" &&
+        stavPrackHdr.tunnelObjectIcon === TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+        stavPrackVm.outsideCityTunnelMode === true &&
+        stavPrackVm.tunnelObjectIcon === TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+        stavPrackVm.besideLocality === "Stav tunelu: Prackovice" &&
+        stavPrackVm.eventSignSrc !== TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT
+    );
+    ok(
+      "STAV_TUNELU_RADEJCIN_ICON",
+      stavRadejHdr.outsideCityTunnelMode === true &&
+        stavRadejHdr.besideLocality === "Stav tunelu: Radejčín" &&
+        stavRadejHdr.tunnelObjectIcon === TRAFFIC_SIGN_ASSET.TUNNEL_OBJECT &&
+        stavRadejVm.besideLocality === "Stav tunelu: Radejčín"
+    );
+    ok(
+      "STAV_TUNELU_NO_FALSE_POSITIVE_BURIED_OR_DIVERSION",
+      buriedStav == null && diversionMention == null && normalRoad == null
+    );
+    ok(
+      "STAV_TUNELU_UI_DIR_BELOW_NAME",
+      /data-iu-tunnel-header="1"/.test(uiSrc) &&
+        /iuPdTrafficComm__tunnelDir/.test(uiSrc) &&
+        /\.iuPdTrafficComm\[data-iu-tunnel-header="1"\]\s+\.iuPdTrafficComm__tunnelDir/.test(
+          cssSrc
+        )
+    );
+  }
 }
 
 // --- Parking municipality registry + title single-render (2026-08-12) ---

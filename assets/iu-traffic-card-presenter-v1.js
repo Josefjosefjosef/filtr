@@ -17,7 +17,7 @@ import {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813-traffic-tunnel-status-icon-v1-20260915";
 import {
   matchSmvNamedRoadRegistry,
   SMV_NAMED_ROAD_REGISTRY,
@@ -37,6 +37,8 @@ export {
   matchTunnelRegistry,
   matchOutsideCityTunnelRegistry,
   resolveTunnelDisplayName,
+  extractTunnelStatusPlaceName,
+  tunnelStatusRegistryHints,
   TUNNEL_REGISTRY,
   OUTSIDE_CITY_TUNNEL_REGISTRY,
   OUTSIDE_CITY_TUNNEL_SOURCE,
@@ -44,7 +46,7 @@ export {
   normalizeTunnelAliasKey,
   isAmbiguousTunnelName,
   isAmbiguousOutsideCityTunnelName,
-} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813";
+} from "./iu-tunnel-registry-v1.js?v=ndic-info-loss-forensic-v1-20260813-traffic-tunnel-status-icon-v1-20260915";
 
 export {
   matchSmvNamedRoadRegistry,

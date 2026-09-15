@@ -54,7 +54,7 @@ import {
 } from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -1362,12 +1362,17 @@ function renderTrafficCardBody(ev, url) {
   // Outside-city tunnel: ICON → tunnel name → road badge (existing road badge system).
   const outsideTunnelHeader = !!(outsideCityTunnelMode && tunnelObjectIcon && besideBit);
   // Motorway + direction + EXIT: icon → badge → (beside) → direction → EXIT.
+  // Tunnel cards: keep direction/exit on a full-width row under the title.
+  const tunnelDirExit =
+    outsideTunnelHeader && (dirBit || exitBit)
+      ? `<span class="iuPdTrafficComm__tunnelDir">${dirBit}${exitBit}</span>`
+      : dirBit + exitBit;
   const commBits = roadThenNearMuni
     ? roadTypeIcon + roadBadge + nearBit + muniSign + districtBit + dirBit + exitBit
     : nearMuniOnly
       ? nearBit + muniSign + districtBit + dirBit + exitBit
       : outsideTunnelHeader
-        ? tunnelObjectIcon + besideBit + roadBadge + districtBit + dirBit + exitBit
+        ? tunnelObjectIcon + besideBit + roadBadge + districtBit + tunnelDirExit
         : smvFirst
           ? roadTypeIcon + muniSign + roadBadge + besideBit + districtBit + dirBit + exitBit + localityFallback
           : muniSign + roadTypeIcon + roadBadge + besideBit + districtBit + dirBit + exitBit + localityFallback;
@@ -1440,7 +1445,7 @@ function renderTrafficCardBody(ev, url) {
     `<div class="iuPdTrafficTop">` +
     `<div class="iuPdTrafficTop__main">` +
     (warnBadge ? `<div class="iuPdTrafficTop__badge">${warnBadge}</div>` : "") +
-    `<div class="iuPdTrafficComm">` +
+    `<div class="iuPdTrafficComm"${outsideTunnelHeader ? ' data-iu-tunnel-header="1"' : ""}>` +
     commBits +
     `</div>` +
     cityPartBit +

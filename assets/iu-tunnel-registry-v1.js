@@ -398,6 +398,39 @@ function isIndexableOutsideCityAliasKey(key) {
   return /\btunel\b/.test(key);
 }
 
+/**
+ * Conservative primary-title pattern: "Stav tunelu: Prackovice".
+ * Returns the place name with source spelling, or null.
+ * Does not scan long diversion / secondary prose — callers must pass a primary field or lead clause.
+ * @param {string|null|undefined} raw
+ * @returns {string|null}
+ */
+export function extractTunnelStatusPlaceName(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return null;
+  const m = s.match(/^\s*stav\s+tunelu\s*:\s*(.+?)\s*$/iu);
+  if (!m) return null;
+  const place = String(m[1] || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!place || place.length < 2) return null;
+  if (/^(tunel|stav)\b/i.test(place)) return null;
+  // Reject multi-clause leftovers that are not a place name.
+  if (/[,;|]/.test(place)) return null;
+  return place;
+}
+
+/**
+ * Build registry match hints from a primary "Stav tunelu: Name" title.
+ * @param {string|null|undefined} raw
+ * @returns {string[]}
+ */
+export function tunnelStatusRegistryHints(raw) {
+  const place = extractTunnelStatusPlaceName(raw);
+  if (!place) return [];
+  return ["Tunel " + place, place + " tunel"];
+}
+
 function aliasCandidatesFromName(name) {
   const key = normalizeTunnelAliasKey(name);
   if (!key || isAmbiguousTunnelName(key)) return [];
@@ -460,6 +493,10 @@ export function matchTunnelRegistry(input = {}) {
     String(blob).match(/\b([A-ZÁ-Ž][\p{L}\-]*(?:\s+[A-ZÁ-Ž][\p{L}\-]*){0,3}\s+[Tt]unel)\b/u) ||
     String(blob).match(/\b([Tt]unel\s+[A-ZÁ-Ž][\p{L}0-9\-]+)\b/u);
   if (tunelPhrase) nameHints.push(String(tunelPhrase[1]).trim());
+  // Primary "Stav tunelu: Name" (field or lead only — never deep secondary prose).
+  for (const primary of [input.namedObject, input.tunnelName, input.location, lead]) {
+    for (const h of tunnelStatusRegistryHints(primary)) nameHints.push(h);
+  }
 
   /** @type {Map<string, TunnelRegistryEntry>} */
   const hits = new Map();
@@ -545,6 +582,10 @@ export function matchOutsideCityTunnelRegistry(input = {}) {
     String(blob).match(/\b([A-ZÁ-Ž][\p{L}\-]*(?:\s+[A-ZÁ-Ž][\p{L}\-]*){0,3}\s+[Tt]unel)\b/u) ||
     String(blob).match(/\b([Tt]unel\s+[A-ZÁ-Ž][\p{L}0-9\-]+(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)\b/u);
   if (tunelPhrase) nameHints.push(String(tunelPhrase[1]).trim());
+  // Primary "Stav tunelu: Name" (field or lead only — never deep secondary prose).
+  for (const primary of [input.namedObject, input.tunnelName, input.location, lead]) {
+    for (const h of tunnelStatusRegistryHints(primary)) nameHints.push(h);
+  }
 
   /** @type {Map<string, OutsideCityTunnelRegistryEntry>} */
   const hits = new Map();
@@ -571,6 +612,9 @@ export function resolveTunnelDisplayName(entry, sourceName) {
   const src = String(sourceName || "")
     .replace(/^ulice:?\s+/i, "")
     .trim();
+  // Preserve primary NDIC tunnel-status title: "Stav tunelu: Prackovice".
+  const statusPlace = extractTunnelStatusPlaceName(src);
+  if (statusPlace) return "Stav tunelu: " + statusPlace;
   if (!src) return entry.canonicalName;
   const srcKey = normalizeTunnelAliasKey(src);
   if (!srcKey || isAmbiguousTunnelName(srcKey)) return entry.canonicalName;
