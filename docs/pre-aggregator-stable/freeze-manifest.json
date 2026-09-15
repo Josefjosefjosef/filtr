@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-traffic-primary-vs-referenced-road-v1-20260915",
+  "freezeId": "iu-traffic-primary-vs-referenced-street-v1-20260915",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-15T07:22:25.814Z",
-  "note": "Freeze bump: primary vs referenced road; motorway+km recovery.",
+  "updatedAt": "2026-09-15T10:18:23.352Z",
+  "note": "Freeze bump: primary vs referenced/secondary streets; Trebic body-catalog isolation.",
   "files": {
-    "projects/index.html": "3fe10f806300b0b4e0626bceeabb2f98bc76be233d2f715ac869aa47cd233600",
+    "projects/index.html": "2844b2cbb18bb361af60016262430087b26d0d769e4acc0ac13cded9ea87140f",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "623c0b895888def881152caacc26567d4d6e43444e87e821b7c5013bba39ac25",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "bb82cecacc9c8e362e5dd645af593fa4989c5091b86e8b077b7d9990ceb02a65",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "b1293363342848bbc30f58d40c3998b8ecc9d39370d356c9ffd8fc1f3174b749"
+    "assets/iu-prehled-dne-ui-v1.js": "40e430874ca514802c8fcf39386a927e9f36cbfa0cd596d158bb7c96399ed930"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -131,7 +131,8 @@
       "traffic-reload-panel-lifecycle-v1-20260911",
       "traffic-tunnel-status-icon-v1-20260915",
       "traffic-bare-road-i3-shoulder-v1-20260915",
-      "traffic-primary-vs-referenced-road-v1-20260915"
+      "traffic-primary-vs-referenced-road-v1-20260915",
+      "traffic-primary-vs-referenced-street-v1-20260915"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",

@@ -56,6 +56,7 @@ const SUITES = [
   "iu-traffic-street-in-municipality-guard",
   "iu-traffic-localization-edge-cards-guard",
   "iu-traffic-primary-vs-referenced-road-guard",
+  "iu-traffic-primary-vs-referenced-street-guard",
   "iu-traffic-multi-location-diversion-safety-guard-v1",
 ];
 
