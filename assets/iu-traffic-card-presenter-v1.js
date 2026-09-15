@@ -2383,7 +2383,7 @@ export function extractRoadNumberFromOfficialComment(rawText) {
 
 /**
  * Explicit motorway / expressway tokens from official NDIC comment (order preserved).
- * Fail-closed: leading "D1," / "D1 " / "dálnice D1" / EXIT-paired forms only — never invents.
+ * Fail-closed: leading "D1," / "dálnice D1" / EXIT-paired / "D5 km 145,8" only — never invents.
  */
 export function extractMotorwayNumbersFromOfficialComment(rawText) {
   const text = clean(rawText);
@@ -2400,7 +2400,95 @@ export function extractMotorwayNumbersFromOfficialComment(rawText) {
   while ((dm = dalniceRe.exec(text))) push(dm[1]);
   const exitPaired = text.match(/\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd|nájezd)?\s*EXIT(?:u|e)?\s+\d{1,4}[A-Za-z]?\b/i);
   if (exitPaired) push(exitPaired[1]);
+  // Same NDIC chainage pairing as lead "D1, km …", also mid-sentence (weather lines).
+  const kmPairedRe = /\b([DER]\d{1,3}[A-Za-z]?)\s+km\s+\d{1,4}(?:[.,]\d+)?\b/gi;
+  let km;
+  while ((km = kmPairedRe.exec(text))) push(km[1]);
   return found;
+}
+
+/**
+ * Roads mentioned only as location landmarks (intersection / junction bounds).
+ * Not primary event roads — e.g. "od křižovatky se sil. č. I/2".
+ */
+export function extractReferencedRoadNumbersFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const push = (raw) => {
+    let canon = clean(raw).replace(/\s+/g, "");
+    if (!canon) return;
+    if (/^(?:I{1,3}|II|III)\//i.test(canon)) {
+      canon = canon.replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
+    } else if (/^[DER]\d/i.test(canon)) {
+      canon = normalizeMotorwayRoadToken(canon) || canon.toUpperCase();
+    } else if (/^\d{1,6}[A-Za-z]?$/i.test(canon)) {
+      // Bare digit after "sil. č." inside a křižovatka phrase — keep as-is (caller matches classed).
+      canon = canon;
+    } else return;
+    if (canon && !found.some((x) => x.toLowerCase() === canon.toLowerCase())) found.push(canon);
+  };
+  const patterns = [
+    /(?:od|po|u|před|za)\s+křižovatk[ay]\s+se\s+(?:silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?|[DER]\d{1,3}[A-Za-z]?|\d{1,6}[A-Za-z]?)\b/gi,
+    /křižovatk[ay]\s+se\s+(?:silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?|[DER]\d{1,3}[A-Za-z]?)\b/gi,
+    /(?:u\s+)?napojen[íi]\s+na\s+(?:silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?|[DER]\d{1,3}[A-Za-z]?)\b/gi,
+    /(?:od|po)\s+křižovatk[ay]\s+s\s+(?:silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)\b/gi,
+  ];
+  for (const re of patterns) {
+    let m;
+    while ((m = re.exec(text))) push(m[1]);
+  }
+  return found;
+}
+
+/** True when road also appears as an affected/header identity, not only as a landmark. */
+export function roadHasIndependentPrimaryEvidence(rawText, roadCanon) {
+  const text = clean(rawText);
+  const road = clean(roadCanon);
+  if (!text || !road) return false;
+  const escaped = road
+    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\//g, "\\s*\\/\\s*");
+  const silniceRe = new RegExp(
+    `(?:(?:na\\s+)?silnici|silnice|sil\\.)\\s*(?:č\\.\\s*)?${escaped}\\b`,
+    "gi"
+  );
+  let m;
+  while ((m = silniceRe.exec(text))) {
+    const before = text.slice(Math.max(0, m.index - 56), m.index);
+    if (/(?:křižovatk[ay]\s+se|napojen[íi]\s+na|křížen[íi]\s+s)\s*$/i.test(before)) continue;
+    if (/(?:od|po|u|před|za)\s+křižovatk[ay]\s+se\s*$/i.test(before)) continue;
+    return true;
+  }
+  if (/^[DER]\d/i.test(road)) {
+    const mwEsc = road.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (new RegExp("^\\s*" + mwEsc + "\\b", "i").test(text)) return true;
+    if (new RegExp("\\bdálnice\\s+" + mwEsc + "\\b", "i").test(text)) return true;
+    if (new RegExp("\\b" + mwEsc + "\\s+km\\s+\\d", "i").test(text)) return true;
+    if (
+      new RegExp(
+        "\\b" + mwEsc + "\\s+(?:výjezd|sjezd|nájezd)?\\s*EXIT(?:u|e)?\\s+\\d",
+        "i"
+      ).test(text)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function dropReferencedOnlyRoads(rawText, roads) {
+  const list = Array.isArray(roads) ? roads : [];
+  if (!list.length) return list;
+  const referenced = new Set(
+    extractReferencedRoadNumbersFromOfficialComment(rawText).map((r) => String(r).toLowerCase())
+  );
+  if (!referenced.size) return list;
+  return list.filter((r) => {
+    const key = String(r || "").toLowerCase();
+    if (!key || !referenced.has(key)) return true;
+    return roadHasIndependentPrimaryEvidence(rawText, r);
+  });
 }
 
 /**
@@ -2418,27 +2506,35 @@ export function extractPrimaryAffectedRoadNumbersFromOfficialComment(rawText) {
     clipOfficialCommentLocationScanText(rawText) || primaryText || clean(rawText);
   const headerRoads = extractAllRoadNumbersFromOfficialComment(headerText);
   const bodyRoads = extractAllRoadNumbersFromOfficialComment(primaryText || clean(rawText));
-  if (!headerRoads.length) return bodyRoads;
-  const clause = (primaryText || "").match(
-    /(?:úpln[áa]\s+)?uzavírk[ay]\s+silnice\s+(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)/i
-  );
-  if (!clause) {
-    return bodyRoads.length ? bodyRoads : headerRoads;
-  }
-  const clauseFirst = clean(clause[1])
-    .replace(/\s+/g, "")
-    .replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
-  const headerFirst = headerRoads[0];
-  if (clauseFirst && headerFirst && clauseFirst.toLowerCase() === headerFirst.toLowerCase()) {
-    // Same-event multi-road: union header + body (primary segment only).
-    const merged = headerRoads.slice();
-    for (const r of bodyRoads) {
-      if (!merged.some((x) => x.toLowerCase() === r.toLowerCase())) merged.push(r);
+  let out;
+  if (!headerRoads.length) {
+    out = bodyRoads;
+  } else {
+    const clause = (primaryText || "").match(
+      /(?:úpln[áa]\s+)?uzavírk[ay]\s+silnice\s+(?:č\.\s*)?((?:I{1,3}|II|III)\s*\/\s*\d{1,6}[A-Za-z]?)/i
+    );
+    if (!clause) {
+      out = bodyRoads.length ? bodyRoads : headerRoads;
+    } else {
+      const clauseFirst = clean(clause[1])
+        .replace(/\s+/g, "")
+        .replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
+      const headerFirst = headerRoads[0];
+      if (clauseFirst && headerFirst && clauseFirst.toLowerCase() === headerFirst.toLowerCase()) {
+        // Same-event multi-road: union header + body (primary segment only).
+        const merged = headerRoads.slice();
+        for (const r of bodyRoads) {
+          if (!merged.some((x) => x.toLowerCase() === r.toLowerCase())) merged.push(r);
+        }
+        out = merged;
+      } else {
+        // Cross-notice / adjacent closure paste — do not promote foreign body roads.
+        out = headerRoads;
+      }
     }
-    return merged;
   }
-  // Cross-notice / adjacent closure paste — do not promote foreign body roads.
-  return headerRoads;
+  // Drop landmark-only roads ("od křižovatky se sil. I/2") unless independently evidenced.
+  return dropReferencedOnlyRoads(rawText, out);
 }
 
 export function extractAllRoadNumbersFromOfficialComment(rawText) {
