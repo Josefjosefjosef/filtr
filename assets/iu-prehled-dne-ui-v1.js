@@ -42,6 +42,7 @@ import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-re
 import {
   applyFeedSourceAndQuickView,
   buildRoadCatalogFromTrafficItems,
+  canonicalRoadLabelForTrafficView,
   ensureFeedFilter,
   isChmiFeedEvent,
   matchesTrafficDetailFilter,
@@ -51,10 +52,10 @@ import {
   sanitizeFeedFilter,
   quickViewBarHtml,
   emptyFeedStateHtml,
-} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-bare-road-i3-v1-20260915";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
-  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915";
+  "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915-traffic-bare-road-i3-shoulder-v1-20260915";
 const FEED_SETTINGS_MOD_URL =
   "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
 
@@ -740,8 +741,9 @@ function toggleTrafficFilterValue(arr, value) {
 function collectVisibleTrafficRoadPicks(items) {
   const counts = new Map();
   for (const ev of items || []) {
-    if (!(ev && ev.trafficV1 && ev.trafficV1.road)) continue;
-    const r = String(ev.trafficV1.road).trim().toUpperCase();
+    if (!(ev && ev.trafficV1)) continue;
+    // Same canonical identity as filters/cards (#10601) — never raw bare "3".
+    const r = canonicalRoadLabelForTrafficView(ev.trafficV1);
     if (!r) continue;
     counts.set(r, (counts.get(r) || 0) + 1);
   }

@@ -123,9 +123,16 @@ const GENERIC_RAW =
     sit
   );
   ok("SHOULDER_CLOSURE_STRUCTURED", /zpevněná\s+krajnice/i.test(sit) && /uzavřen/i.test(sit), sit);
+  // Source carries "zpevněná krajnice (odstavný pruh)" — keep that synonym once;
+  // do not also emit a separate "Uzavřený odstavný pruh" bit (true duplicate).
+  ok(
+    "SHOULDER_ODSTAVNY_FROM_SOURCE",
+    /zpevněná\s+krajnice\s*\(\s*odstavný\s+pruh\s*\)/i.test(sit),
+    sit
+  );
   ok(
     "NO_DUPLICATE_ODSTAVNY_PRUH",
-    !(/zpevněná\s+krajnice/i.test(sit) && /odstavn/i.test(sit)),
+    (sit.match(/odstavn/gi) || []).length === 1 && !/uzavřený\s+odstavný\s+pruh/i.test(sit),
     sit
   );
   ok("DELAY_STRUCTURED", /zdržení/i.test(sit), sit);

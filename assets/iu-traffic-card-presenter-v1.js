@@ -5118,7 +5118,16 @@ function sourceBlob(input) {
 }
 
 export function classifyRoadPresentation(roadNumber, opts = {}) {
-  const road = clean(roadNumber);
+  let road = clean(roadNumber);
+  // Bare numeric + authoritative class → I/x (same compose as resolvePresentationRoadNumber).
+  // Prevents badge/detail drift when a caller passes raw snapshot road before compose.
+  if (road) {
+    const composed = composeRoadNumberWithClass(
+      road,
+      opts.roadClass || opts.roadClassLabel || null
+    );
+    if (composed) road = composed;
+  }
   const motorVehicleConfirmed =
     opts.motorVehicleRoadConfirmed === true ||
     opts.isMotorVehicleRoad === true ||
@@ -6929,10 +6938,19 @@ export function buildTrafficSituationSummary(input = {}) {
 
   // --- 2) Restriction scope (never invent direction closure from a single lane) ---
   if (scope === RESTRICTION_SCOPE.HARD_SHOULDER_CLOSED) {
-    if (/neprůjezdn/i.test(source)) {
-      scopeBits.push(formatImpactBePredicate("Zpevněná krajnice", "neprůjezdná", lifecycle));
-    } else if (/uzavřen/i.test(source) && /zpevněn/i.test(source)) {
-      scopeBits.push(formatImpactBePredicate("Zpevněná krajnice", "uzavřena", lifecycle));
+    // Source-driven: keep "(odstavný pruh)" when NDIC text carries that synonym.
+    // Do not invent the parenthetical from HARD_SHOULDER alone.
+    const hardShoulderNoun = /zpevněn[áa]\s+krajnice\s*\(\s*odstavn[ýáé]\s+pruh\s*\)/i.test(
+      source
+    )
+      ? "Zpevněná krajnice (odstavný pruh)"
+      : /zpevněn[áa]\s+krajnice/i.test(source)
+        ? "Zpevněná krajnice"
+        : null;
+    if (hardShoulderNoun && /neprůjezdn/i.test(source)) {
+      scopeBits.push(formatImpactBePredicate(hardShoulderNoun, "neprůjezdná", lifecycle));
+    } else if (hardShoulderNoun && /uzavřen/i.test(source)) {
+      scopeBits.push(formatImpactBePredicate(hardShoulderNoun, "uzavřena", lifecycle));
     } else scopeBits.push("Uzavřený odstavný pruh");
   } else if (scope === RESTRICTION_SCOPE.SHOULDER_CLOSED || scope === RESTRICTION_SCOPE.VERGE_CLOSED) {
     if (/neprůjezdn/i.test(source)) {
