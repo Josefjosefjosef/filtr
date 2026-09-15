@@ -49,6 +49,10 @@ export function extractMotorwayNumbersFromOfficialCommentLite(rawText) {
     /\b([DER]\d{1,3}[A-Za-z]?)\s+(?:výjezd|sjezd|nájezd)?\s*EXIT(?:u|e)?\s+\d{1,4}[A-Za-z]?\b/i
   );
   if (exitPaired) push(exitPaired[1]);
+  // Mid-sentence NDIC chainage: "…, D5 km 145,8" (same evidence class as lead "D5, km …").
+  const kmPairedRe = /\b([DER]\d{1,3}[A-Za-z]?)\s+km\s+\d{1,4}(?:[.,]\d+)?\b/gi;
+  let km;
+  while ((km = kmPairedRe.exec(text))) push(km[1]);
   return found;
 }
 
