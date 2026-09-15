@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 /**
- * Regression: unified top blue home section bars (mobile/tablet ≤1024).
- * - Three sections share .iuHomeSectionBar (compact ~32px ≈ −25% vs original 42px)
- * - Equal height / blue / radii / typography; no per-section local height
- * - Flush join (no gap) to attached card
- * - Info bar outside horizontal scroll
- * - Legacy SLEDOVÁNÍ ZÁSILEK capsule-between-lines removed
- * - Green CTA label "Nastavení" + › chevron; open-settings behavior unchanged
- * - PC (≥1025) bars hidden; green CTA height stays ~42px
+ * Regression: unified top home section bars (mobile/tablet ≤1024).
+ * - Quick⇄parcel switcher bar ~40px
+ * - PD Dopravní⇄ČHMÚ switcher bar ~40px (+8 vs compact 32)
+ * - Info (quick) stays brand blue; PD bar follows active quick-view color
+ * - Flush join to attached card; PC (≥1025) bars hidden
  * Run: npm run iu-home-section-bar-guard
  */
 import fs from "node:fs";
@@ -49,13 +46,18 @@ function staticGate() {
   must(/--iu-home-section-bar-radius:\s*14px/.test(index), "static:radius_token");
   must(/data-iu-home-section-bar="quick-parcel-switcher"/.test(index), "static:bar_switcher");
   must(/data-iu-home-section-bar="muj-prehled-dne"/.test(index), "static:bar_pd");
+  must(/data-iu-pd-quick-switcher="1"/.test(index), "static:pd_switcher_attr");
+  must(/data-iu-pd-quick-active="chmu"/.test(index), "static:pd_default_chmu");
+  must(/VÝSTRAHY ČHMÚ/.test(index), "static:label_pd_chmu");
+  must(!/>MŮJ PŘEHLED DNE</.test(index), "static:no_muj_prehled_label");
   must(!/data-iu-home-section-bar="rychly-prehled"/.test(index), "static:no_standalone_quick_bar");
   must(!/data-iu-home-section-bar="sledovani-zasilek"/.test(index), "static:no_standalone_parcel_bar");
   must(/RYCHLÝ PŘEHLED/.test(index), "static:label_info");
   must(/SLEDOVÁNÍ ZÁSILEK/.test(index), "static:label_parcel_text");
-  must(/MŮJ PŘEHLED DNE/.test(index), "static:label_pd");
   must(/iuHomeSectionBar--switcher/.test(index), "static:switcher_class");
+  must(/iuHomeSectionBar--pdQuick/.test(index), "static:pd_switcher_class");
   must(/--iu-home-section-bar-h:\s*40px/.test(read("assets/iu-home-quick-parcel-switcher-v1.css")), "static:switcher_40");
+  must(/iuHomeSectionBar--pdQuick[\s\S]{0,200}--iu-home-section-bar-h:\s*40px/.test(index), "static:pd_switcher_40");
   must(!/id="iuFeedNewsSplitParcel"/.test(index), "static:no_parcel_split");
   must(!/iuFeedNewsSplit--parcel/.test(index), "static:no_parcel_split_class");
   must(
@@ -64,7 +66,9 @@ function staticGate() {
   );
   must(!/body:not\(\.iu-home\)\s+\.iuHomeSectionBar/.test(index), "static:no_iu_home_gate");
   must(/function homeSectionBarHtml\(/.test(ui), "static:ui_helper");
-  must(/homeSectionBarHtml\("MŮJ PŘEHLED DNE",\s*"muj-prehled-dne"\)/.test(ui), "static:ui_shell_bar");
+  must(/function pdQuickSwitcherHtml\(/.test(ui), "static:ui_pd_switcher_helper");
+  must(/pdQuickSwitcherHtml\(state\.feedQuickView\)/.test(ui), "static:ui_shell_pd_switcher");
+  must(!/homeSectionBarHtml\("MŮJ PŘEHLED DNE",\s*"muj-prehled-dne"\)/.test(ui), "static:ui_no_legacy_pd_bar");
   must(/function settingsCtaInnerHtml\(/.test(ui), "static:cta_helper");
   must(/iuPdBtn__label">Nastavení<\/span>/.test(ui), "static:cta_label_nastaveni");
   must(/iuPdBtn__chevron"[^>]*>›<\/span>/.test(ui), "static:cta_chevron");
@@ -106,6 +110,18 @@ function nearBlue(rgb, tol = 28) {
   return Math.abs(rgb.r - 0) <= tol && Math.abs(rgb.g - 60) <= tol + 10 && rgb.b >= 200;
 }
 
+/** ČHMÚ sky #38bdf8 ≈ rgb(56,189,248) */
+function nearChmuSky(rgb) {
+  if (!rgb) return false;
+  return rgb.r >= 30 && rgb.r <= 90 && rgb.g >= 160 && rgb.b >= 200;
+}
+
+/** Doprava orange #ea580c ≈ rgb(234,88,12) */
+function nearTrafficOrange(rgb) {
+  if (!rgb) return false;
+  return rgb.r > 180 && rgb.g < 140 && rgb.b < 80;
+}
+
 async function measureBars(page) {
   return page.evaluate(() => {
     const bars = Array.from(document.querySelectorAll(".iuHomeSectionBar"));
@@ -134,11 +150,16 @@ async function measureBars(page) {
         radiusBL: cs.borderBottomLeftRadius,
         radiusBR: cs.borderBottomRightRadius,
         inScroll: !!(el.closest(".iuDesktopInfoPanel__scroll") || el.closest(".iuDesktopInfoPanel__track")),
+        touchAction: cs.touchAction,
+        pointerEvents: cs.pointerEvents,
+        active: el.getAttribute("data-iu-pd-quick-active") || "",
       };
     };
     const infoBar = visible.find((el) => /RYCHLÝ PŘEHLED|SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || ""));
-    const parcelBar = null; // combined into switcher — no standalone parcel bar
-    const pdBar = visible.find((el) => /MŮJ PŘEHLED DNE/i.test(el.textContent || ""));
+    const parcelBar = null;
+    const pdBar =
+      visible.find((el) => el.getAttribute("data-iu-pd-quick-switcher") === "1") ||
+      visible.find((el) => /VÝSTRAHY ČHMÚ|DOPRAVNÍ INFORMACE/i.test(el.textContent || ""));
     const switcher = document.getElementById("iuHomeQuickParcelSwitcher");
     const panel =
       document.querySelector("#iuMobileInfoPanelMount .iuMobileInfoPanel") ||
@@ -154,6 +175,7 @@ async function measureBars(page) {
     const legacyCapsule = Array.from(document.querySelectorAll(".iuFeedNewsSplit__capsule")).some((el) =>
       /SLEDOVÁNÍ ZÁSILEK/i.test(el.textContent || "")
     );
+    const duplicateQuick = !!document.querySelector(".iuPrehledDne .iuPdQuickView--primary");
     const gap = (a, b) => {
       if (!a || !b) return null;
       const ar = a.getBoundingClientRect();
@@ -202,6 +224,7 @@ async function measureBars(page) {
       greenMinHeight: greenCs ? greenCs.minHeight : null,
       legacySplit: !!legacySplit,
       legacyCapsule,
+      duplicateQuick,
     };
   });
 }
@@ -215,7 +238,6 @@ async function runPlaywright() {
   try {
     await waitForPort("127.0.0.1", PORT, 30000);
     const browser = await chromium.launch({ headless: true });
-    // Parcel card is display:none on ≥901 (desktop rail layout). Full 3-bar checks use ≤900.
     const viewports = [
       { name: "mobile", width: 390, height: 844, expectParcel: true },
       { name: "tablet", width: 768, height: 1024, expectParcel: true },
@@ -264,27 +286,26 @@ async function runPlaywright() {
         must(!m.legacySplit, prefix + ":no_legacy_split");
         must(!m.legacyCapsule, prefix + ":no_legacy_capsule");
         must(m.modulePresent, prefix + ":module_present");
+        must(!m.duplicateQuick, prefix + ":no_duplicate_quick_btns");
 
-        // Combined switcher (quick⇄parcel) + Můj přehled dne = 2 bars on ≤1024.
         must(!!m.info && !!m.pd, prefix + ":bars_info_pd");
         must(!m.parcel, prefix + ":no_standalone_parcel_bar");
         must(m.visibleCount === 2, prefix + ":bars_count:" + m.visibleCount);
 
         if (m.info && m.pd) {
           must(m.info.height >= 38 && m.info.height <= 48, prefix + ":switcher_h_40:" + m.info.height);
-          must(m.pd.height >= 30 && m.pd.height <= 34, prefix + ":pd_h_32:" + m.pd.height);
+          must(m.pd.height >= 38 && m.pd.height <= 48, prefix + ":pd_h_40:" + m.pd.height);
           must(
             m.greenHeight != null && m.greenHeight >= 40 && m.greenHeight <= 46,
             prefix + ":green_h_unchanged:" + m.greenHeight
           );
-          must(
-            m.pd.height < m.greenHeight - 4,
-            prefix + ":pd_shorter_than_green:" + m.pd.height + "/" + m.greenHeight
-          );
+          must(/VÝSTRAHY ČHMÚ/i.test(m.pd.text), prefix + ":pd_default_label:" + m.pd.text);
+          must(m.pd.active === "chmu", prefix + ":pd_default_active:" + m.pd.active);
+          must(/pan-y/i.test(m.pd.touchAction || ""), prefix + ":pd_touch_pan_y:" + m.pd.touchAction);
+          must(m.pd.pointerEvents === "auto", prefix + ":pd_pointer_auto:" + m.pd.pointerEvents);
 
           must(nearBlue(parseRgb(m.info.bg)), prefix + ":bg_blue_info:" + m.info.bg);
-          must(nearBlue(parseRgb(m.pd.bg)), prefix + ":bg_blue_pd:" + m.pd.bg);
-          must(m.info.bg === m.pd.bg, prefix + ":bg_equal");
+          must(nearChmuSky(parseRgb(m.pd.bg)), prefix + ":bg_chmu_pd:" + m.pd.bg);
           must(m.info.fontSize === m.pd.fontSize, prefix + ":font_size");
           must(m.info.fontWeight === m.pd.fontWeight, prefix + ":font_weight");
           must(m.info.radiusTL === m.pd.radiusTL, prefix + ":radius_tl");
@@ -308,7 +329,7 @@ async function runPlaywright() {
           must(m.greenOpenSettings, prefix + ":cta_open_settings");
         }
 
-        // Dark/evening: same brand blue + white text, no light seams on bar itself.
+        // Evening: info bar stays brand blue + white; PD keeps mode colors (ČHMÚ sky / traffic orange).
         if (vp.name === "mobile" || vp.name === "tablet") {
           await page.evaluate(() => {
             const root = document.documentElement;
@@ -322,17 +343,21 @@ async function runPlaywright() {
           await page.waitForTimeout(200);
           const night = await measureBars(page);
           if (night.info && night.pd) {
-            must(night.info.bg === night.pd.bg, prefix + ":evening_bg_equal");
             must(nearBlue(parseRgb(night.info.bg)), prefix + ":evening_bg_blue:" + night.info.bg);
+            must(nearChmuSky(parseRgb(night.pd.bg)), prefix + ":evening_pd_chmu:" + night.pd.bg);
+            const infoRgb = parseRgb(night.info.color);
             must(
-              [night.info, night.pd].every((b) => {
-                const rgb = parseRgb(b.color);
-                return rgb && rgb.r >= 240 && rgb.g >= 240 && rgb.b >= 240;
-              }),
-              prefix + ":evening_text_white"
+              infoRgb && infoRgb.r >= 240 && infoRgb.g >= 240 && infoRgb.b >= 240,
+              prefix + ":evening_info_text_white"
             );
             must(night.gapInfo != null && Math.abs(night.gapInfo) <= 0.5, prefix + ":evening_gap_info:" + night.gapInfo);
             must(night.gapPd != null && Math.abs(night.gapPd) <= 0.5, prefix + ":evening_gap_pd:" + night.gapPd);
+
+            await page.click('[data-iu-pd-quick-switcher="1"]');
+            await page.waitForTimeout(250);
+            const after = await measureBars(page);
+            must(/DOPRAVNÍ INFORMACE/i.test(after.pd && after.pd.text), prefix + ":evening_tap_traffic_label");
+            must(nearTrafficOrange(parseRgb(after.pd && after.pd.bg)), prefix + ":evening_tap_traffic_bg:" + (after.pd && after.pd.bg));
           } else {
             fails.push(prefix + ":evening_bars_missing");
           }
@@ -365,6 +390,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.log("FAIL exception:" + String(err && err.message ? err.message : err));
+  console.error(err);
   process.exit(1);
 });

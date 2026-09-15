@@ -2224,6 +2224,106 @@ function homeSectionBarHtml(label, barId) {
   );
 }
 
+/** Mobile/tablet/PWA: top strip is the Dopravní ⇄ ČHMÚ switcher (desktop keeps inline buttons). */
+function isPdDesktopQuickViewLayout() {
+  try {
+    return !!(window.matchMedia && window.matchMedia("(min-width: 1025px)").matches);
+  } catch (_) {
+    return false;
+  }
+}
+
+function pdQuickViewActive(view) {
+  return view === "traffic" || view === "chmu" ? view : "chmu";
+}
+
+function setPdQuickViewDomAttr(host, quickView) {
+  const q = pdQuickViewActive(quickView);
+  const targets = [];
+  if (host) targets.push(host);
+  try {
+    const section =
+      (host && host.querySelector && host.querySelector(".iuPrehledDne")) ||
+      document.querySelector(".iuPrehledDne");
+    if (section && section !== host) targets.push(section);
+  } catch (_) {}
+  for (const el of targets) {
+    try {
+      el.setAttribute("data-iu-pd-quick-view", q);
+    } catch (_) {}
+  }
+}
+
+/** Top-bar switcher HTML — drives existing feed-quick-view state (no parallel logic). */
+function pdQuickSwitcherHtml(quickView) {
+  const q = pdQuickViewActive(quickView);
+  const isTraffic = q === "traffic";
+  const label = isTraffic ? "DOPRAVNÍ INFORMACE" : "VÝSTRAHY ČHMÚ";
+  const next = isTraffic ? "chmu" : "traffic";
+  const aria = isTraffic
+    ? "Dopravní informace. Přepnout na Výstrahy ČHMÚ"
+    : "Výstrahy ČHMÚ. Přepnout na Dopravní informace";
+  return (
+    `<button type="button" class="iuHomeSectionBar iuHomeSectionBar--switcher iuHomeSectionBar--pdQuick"` +
+    ` data-iu-home-section-bar="muj-prehled-dne" data-iu-pd-quick-switcher="1"` +
+    ` data-iu-pd-quick-active="${isTraffic ? "traffic" : "chmu"}"` +
+    ` data-act="feed-quick-view" data-view="${next}"` +
+    ` aria-label="${esc(aria)}" aria-pressed="${isTraffic ? "true" : "false"}">` +
+    `<span class="iuPdQuickSwitcher__chevron iuPdQuickSwitcher__chevron--prev" aria-hidden="true"${
+      isTraffic ? " hidden" : ""
+    }>‹</span>` +
+    `<span class="iuPdQuickSwitcher__label" data-iu-pd-quick-label>${esc(label)}</span>` +
+    `<span class="iuPdQuickSwitcher__chevron iuPdQuickSwitcher__chevron--next" aria-hidden="true"${
+      isTraffic ? "" : " hidden"
+    }>›</span>` +
+    `</button>`
+  );
+}
+
+function syncPdQuickSwitcher(root, quickView) {
+  if (!root) return;
+  const q = pdQuickViewActive(quickView);
+  const isTraffic = q === "traffic";
+  let btn = root.querySelector("[data-iu-pd-quick-switcher='1']");
+  if (!btn) {
+    const stack = root.querySelector('[data-iu-home-section-stack="pd"]');
+    const legacy = root.querySelector('[data-iu-home-section-bar="muj-prehled-dne"]');
+    if (legacy && !legacy.matches("button")) {
+      legacy.outerHTML = pdQuickSwitcherHtml(q);
+      btn = root.querySelector("[data-iu-pd-quick-switcher='1']");
+    } else if (stack && !legacy) {
+      stack.insertAdjacentHTML("afterbegin", pdQuickSwitcherHtml(q));
+      btn = root.querySelector("[data-iu-pd-quick-switcher='1']");
+    }
+  }
+  if (!btn) return;
+  const label = btn.querySelector("[data-iu-pd-quick-label]");
+  const prev = btn.querySelector(".iuPdQuickSwitcher__chevron--prev");
+  const nextEl = btn.querySelector(".iuPdQuickSwitcher__chevron--next");
+  if (label) label.textContent = isTraffic ? "DOPRAVNÍ INFORMACE" : "VÝSTRAHY ČHMÚ";
+  if (prev) prev.hidden = !!isTraffic;
+  if (nextEl) nextEl.hidden = !isTraffic;
+  btn.setAttribute("data-iu-pd-quick-active", isTraffic ? "traffic" : "chmu");
+  btn.setAttribute("data-view", isTraffic ? "chmu" : "traffic");
+  btn.setAttribute(
+    "aria-label",
+    isTraffic
+      ? "Dopravní informace. Přepnout na Výstrahy ČHMÚ"
+      : "Výstrahy ČHMÚ. Přepnout na Dopravní informace"
+  );
+  btn.setAttribute("aria-pressed", isTraffic ? "true" : "false");
+  try {
+    const ff = ensureFeedFilter(effectivePrefs());
+    const next = isTraffic ? "chmu" : "traffic";
+    const nextDisabled =
+      (next === "traffic" && ff.trafficEnabled === false) ||
+      (next === "chmu" && ff.chmuEnabled === false);
+    btn.disabled = !!nextDisabled;
+    if (nextDisabled) btn.setAttribute("aria-disabled", "true");
+    else btn.removeAttribute("aria-disabled");
+  } catch (_) {}
+}
+
 /** Green hero CTA under banner — label centered, › as navigation affordance (right). */
 function settingsCtaInnerHtml() {
   return `<span class="iuPdBtn__label">Nastavení</span><span class="iuPdBtn__chevron" aria-hidden="true">›</span>`;
@@ -2238,14 +2338,16 @@ function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
     fresh && ff.trafficEnabled
       ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
       : "";
-  const filterBar = quickViewBarHtml(ff, state.feedQuickView);
+  const filterBar = isPdDesktopQuickViewLayout() ? quickViewBarHtml(ff, state.feedQuickView) : "";
   const hasTraffic = (listForFilters || []).some((ev) => ev && ev.trafficV1);
   const listOrEmpty =
     !(listForFilters || []).length && mode === "home" ? emptyFeedStateHtml() : null;
   return (
-    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean"${hasTraffic ? ' data-iu-has-traffic="1"' : ""}>` +
+    `<section class="iuPrehledDne iuPd" data-iu-ui="v6-clean" data-iu-pd-quick-view="${esc(
+      pdQuickViewActive(state.feedQuickView)
+    )}"${hasTraffic ? ' data-iu-has-traffic="1"' : ""}>` +
     `<div class="iuHomeSectionStack" data-iu-home-section-stack="pd">` +
-    homeSectionBarHtml("MŮJ PŘEHLED DNE", "muj-prehled-dne") +
+    pdQuickSwitcherHtml(state.feedQuickView) +
     `<div class="iuPd__hero" data-iu-pd-hero="1" data-testid="prehled-dne-hero">` +
     bannerHtml() +
     `<div class="iuPd__top">` +
@@ -2341,7 +2443,7 @@ function updateFeedDom() {
   if (!root) return;
   void ensureCzMapSprite();
   try {
-    root.setAttribute("data-iu-pd-quick-view", String(state.feedQuickView || "chmu"));
+    setPdQuickViewDomAttr(root, state.feedQuickView);
   } catch (_) {}
   const list = filteredList();
   const pageItems = list.slice(0, pageItemsLimit());
@@ -2350,14 +2452,21 @@ function updateFeedDom() {
   const moreWrap = root.querySelector("#iuPdMoreWrap");
   const ff = ensureFeedFilter(effectivePrefs());
   if (count) count.textContent = `${list.length} položek`;
-  // Keep quick-view bar in sync with persistent enable flags (disabled when category OFF).
-  const quickHtml = quickViewBarHtml(ff, state.feedQuickView);
+  // Mobile/tablet/PWA: top strip switcher only. Desktop (≥1025): keep inline quick-view buttons.
+  try {
+    syncPdQuickSwitcher(root, state.feedQuickView);
+  } catch (_) {}
   const existingQuick = root.querySelector("[data-iu-feed-quick]");
-  if (existingQuick) existingQuick.outerHTML = quickHtml;
-  else {
-    const show = root.querySelector(".iuPd__show");
-    if (show) show.insertAdjacentHTML("beforebegin", quickHtml);
-    else if (count) count.insertAdjacentHTML("beforebegin", quickHtml);
+  if (isPdDesktopQuickViewLayout()) {
+    const quickHtml = quickViewBarHtml(ff, state.feedQuickView);
+    if (existingQuick) existingQuick.outerHTML = quickHtml;
+    else {
+      const show = root.querySelector(".iuPd__show");
+      if (show) show.insertAdjacentHTML("beforebegin", quickHtml);
+      else if (count) count.insertAdjacentHTML("beforebegin", quickHtml);
+    }
+  } else if (existingQuick) {
+    existingQuick.remove();
   }
   // Empty presentation state only after feed + traffic snapshot hydrate settle.
   const feedHydrated = !!(state.data && state.data.feed && Array.isArray(state.data.feed.items));
@@ -2421,7 +2530,7 @@ function paint(opts) {
   const root = ensureRoot();
   if (!root) return;
   try {
-    root.setAttribute("data-iu-pd-quick-view", String(state.feedQuickView || "chmu"));
+    setPdQuickViewDomAttr(root, state.feedQuickView);
   } catch (_) {}
   const list = filteredList();
   const pageItems = list.slice(0, pageItemsLimit());
@@ -2444,7 +2553,7 @@ function paint(opts) {
         btn.classList.toggle("is-active", mode === state.viewMode);
       });
     } catch (_) {}
-    // Sync quick-view active button without full shell rebuild.
+    // Sync quick-view active button without full shell rebuild (desktop inline buttons).
     try {
       const ffQuick = ensureFeedFilter(effectivePrefs());
       root.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
@@ -2457,6 +2566,7 @@ function paint(opts) {
         if (disabled) btn.setAttribute("aria-disabled", "true");
         else btn.removeAttribute("aria-disabled");
       });
+      syncPdQuickSwitcher(root, state.feedQuickView);
     } catch (_) {}
   } else {
     root.innerHTML = homeShellHtml(listHtml, `${list.length} položek`, moreHtml, list);
@@ -2924,6 +3034,10 @@ function wire() {
           rootQ.querySelectorAll(".iuPdQuickView__btn[data-act='feed-quick-view']").forEach((btn) => {
             btn.classList.toggle("is-on", (btn.getAttribute("data-view") || "") === view);
           });
+          syncPdQuickSwitcher(rootQ, view);
+          try {
+            setPdQuickViewDomAttr(rootQ, view);
+          } catch (_) {}
         }
       } catch (_) {}
 

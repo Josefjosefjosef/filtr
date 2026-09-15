@@ -289,30 +289,19 @@ async function runPlaywright() {
             return (0.2126 * Number(m[1]) + 0.7152 * Number(m[2]) + 0.0722 * Number(m[3])) / 255;
           };
 
-          const inactive = [...document.querySelectorAll(".iuPdQuickView__btn")].filter(
-            (b) => !b.classList.contains("is-on")
-          );
-          const inactiveBgs = inactive.map((b) => getComputedStyle(b).backgroundColor);
-          const inactiveOk = inactive.length > 0 && inactiveBgs.every((bg) => !nearWhite(bg));
+          // Mobile/tablet: top strip switcher owns colors; large quick buttons must be absent.
+          const duplicateQuick = !!document.querySelector(".iuPrehledDne .iuPdQuickView--primary");
+          const switcher = document.querySelector("[data-iu-pd-quick-switcher='1']");
+          if (!switcher) {
+            return { inactiveOk: false, inactiveBgs: [], trafficOrange: false, trafficBg: "", chmuBlue: false, chmuBg: "", inactiveLumOk: false, duplicateQuick };
+          }
 
-          const traffic = document.querySelector(".iuPdQuickView__btn--traffic");
-          if (traffic) traffic.click();
-          const trafficLive = document.querySelector(".iuPdQuickView__btn--traffic");
-          const trafficBg = trafficLive ? getComputedStyle(trafficLive).backgroundColor : "";
-          const trafficOn = trafficLive && trafficLive.classList.contains("is-on");
-          const trafficOrange =
-            trafficOn &&
-            (() => {
-              const m = String(trafficBg).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-              if (!m) return false;
-              return Number(m[1]) > 180 && Number(m[2]) < 140 && Number(m[3]) < 80;
-            })();
-
-          const chmu = document.querySelector(".iuPdQuickView__btn--chmu");
-          if (chmu) chmu.click();
-          const chmuLive = document.querySelector(".iuPdQuickView__btn--chmu");
+          // Ensure ČHMÚ first, then tap → traffic → orange, tap → ČHMÚ → sky.
+          const active = switcher.getAttribute("data-iu-pd-quick-active") || "";
+          if (active === "traffic") switcher.click();
+          const chmuLive = document.querySelector("[data-iu-pd-quick-switcher='1']");
           const chmuBg = chmuLive ? getComputedStyle(chmuLive).backgroundColor : "";
-          const chmuOn = chmuLive && chmuLive.classList.contains("is-on");
+          const chmuOn = chmuLive && chmuLive.getAttribute("data-iu-pd-quick-active") === "chmu";
           const chmuBlue =
             chmuOn &&
             (() => {
@@ -321,8 +310,24 @@ async function runPlaywright() {
               return Number(m[3]) > Number(m[1]) && Number(m[3]) > 140;
             })();
 
-          const allBtn = document.querySelector(".iuPdQuickView__btn--all");
-          if (allBtn) allBtn.click();
+          if (chmuLive) chmuLive.click();
+          const trafficLive = document.querySelector("[data-iu-pd-quick-switcher='1']");
+          const trafficBg = trafficLive ? getComputedStyle(trafficLive).backgroundColor : "";
+          const trafficOn = trafficLive && trafficLive.getAttribute("data-iu-pd-quick-active") === "traffic";
+          const trafficOrange =
+            trafficOn &&
+            (() => {
+              const m = String(trafficBg).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+              if (!m) return false;
+              return Number(m[1]) > 180 && Number(m[2]) < 140 && Number(m[3]) < 80;
+            })();
+
+          // No inactive white pills under hero (buttons removed).
+          const inactive = [...document.querySelectorAll(".iuPdQuickView__btn")].filter(
+            (b) => !b.classList.contains("is-on")
+          );
+          const inactiveBgs = inactive.map((b) => getComputedStyle(b).backgroundColor);
+          const inactiveOk = !duplicateQuick && inactive.length === 0;
 
           return {
             inactiveOk,
@@ -331,12 +336,14 @@ async function runPlaywright() {
             trafficBg,
             chmuBlue,
             chmuBg,
-            inactiveLumOk: inactiveBgs.every((bg) => {
+            duplicateQuick,
+            inactiveLumOk: inactive.length === 0 || inactiveBgs.every((bg) => {
               const L = luminance(bg);
-              return L >= 0 && L < 0.85;
+              return L >= 0 && L < 0.85 && !nearWhite(bg);
             }),
           };
         });
+        if (eveningPills.duplicateQuick) pwFails.push(vp.name + ":evening_duplicate_quick_btns");
         if (!eveningPills.inactiveOk || !eveningPills.inactiveLumOk) {
           pwFails.push(vp.name + ":evening_inactive_quick_view_not_white");
         }
@@ -619,15 +626,22 @@ async function runPlaywright() {
       await page.evaluate(() => document.querySelector('.iuPdSettings__head [data-act="settings-close"]')?.click());
       await page.waitForFunction(() => !document.getElementById("iuPdSettings"), { timeout: 8000 });
       await page.waitForFunction(() => {
-        const chmuBtn = document.querySelector('[data-act="feed-quick-view"][data-view="chmu"]');
+        // Desktop: dedicated ČHMÚ button. Mobile: top switcher next-target is ČHMÚ when traffic is active.
+        const chmuBtn =
+          document.querySelector('.iuPdQuickView__btn[data-act="feed-quick-view"][data-view="chmu"]') ||
+          document.querySelector('[data-iu-pd-quick-switcher="1"][data-view="chmu"]');
         return !!(chmuBtn && (chmuBtn.disabled || chmuBtn.getAttribute("aria-disabled") === "true"));
       }, { timeout: 5000 });
 
       const quick = await page.evaluate(() => {
         const bar = document.querySelector("[data-iu-feed-quick]");
-        const chmuBtn = document.querySelector('[data-act="feed-quick-view"][data-view="chmu"]');
+        const switcher = document.querySelector("[data-iu-pd-quick-switcher='1']");
+        const chmuBtn =
+          document.querySelector('.iuPdQuickView__btn[data-act="feed-quick-view"][data-view="chmu"]') ||
+          document.querySelector('[data-iu-pd-quick-switcher="1"][data-view="chmu"]');
+        const mobile = window.matchMedia("(max-width: 1024px)").matches;
         return {
-          bar: !!bar,
+          bar: mobile ? !!switcher : !!bar,
           chmuDisabled: !!(chmuBtn && (chmuBtn.disabled || chmuBtn.getAttribute("aria-disabled") === "true")),
         };
       });
