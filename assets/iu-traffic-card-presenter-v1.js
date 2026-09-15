@@ -3172,7 +3172,7 @@ export function extractStreetNamesFromOfficialComment(rawText) {
     }
     // ", Town, okr." municipality must never enter the street list.
     if (muniBeforeOkr && samePlaceName(sn, muniBeforeOkr)) return;
-    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return;
+    if (!looksLikeStreetNameInUliceContext(sn)) return;
     if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return;
     if (!found.some((x) => samePlaceName(x, sn))) found.push(sn);
   };
@@ -3338,6 +3338,53 @@ export function parseTmcStyleLocationRange(raw) {
  * "mezi ulicemi A a B", "od ulice A k ulici B".
  * Returns { streetFrom, streetTo } or null. Never invents names.
  */
+/**
+ * Street-name acceptance inside an explicit "ulice …" / "ul. …" structural context.
+ * Broader than global looksLikeStreetName: allows -ová (Okrajová) and nám./náměstí
+ * abbreviations (Vaňkovo nám.) that are unsafe as free municipality heuristics.
+ */
+export function looksLikeStreetNameInUliceContext(raw) {
+  const sn = clean(raw);
+  if (!sn) return false;
+  if (looksLikeStreetName(sn)) return true;
+  if (/náměstí|\bnám\.?\s*$/i.test(sn)) return true;
+  // Feminine -ová streets are common; global looksLikeStreetName excludes them to
+  // avoid municipality false positives (Višňová). Explicit ulice context is safe.
+  if (/ová$/i.test(sn) && /^[A-ZÁ-Ž]/u.test(sn) && !/\s/.test(sn)) return true;
+  return false;
+}
+
+/**
+ * Secondary municipal work catalogs: "Třebíč ul. Znojemská, Riegrova, Hálkova…".
+ * These must not rewrite an already identified primary street / street-range.
+ * Returns bare street names found only in such catalog blobs (source order).
+ */
+export function extractMunicipalStreetCatalogNames(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const re =
+    /\b[A-ZÁ-Ž][^,]{0,40}?\s+ul\.\s*([A-ZÁ-Ž][^.]{3,240}?)(?=\s*(?:,\s*(?:Od\s+\d|Do\s+\d|stavební|úpln|Vydal|Objížď)|$))/giu;
+  let m;
+  while ((m = re.exec(text))) {
+    const chunk = clean(m[1]);
+    if (!chunk || !/,/.test(chunk)) continue;
+    const parts = chunk.split(/\s*,\s*/).map((p) => clean(p)).filter(Boolean);
+    if (parts.length < 3) continue;
+    const names = [];
+    for (const p of parts) {
+      const sn = sanitizeExtractedValueToken(streetBareName(p));
+      if (!sn || !looksLikeStreetNameInUliceContext(sn)) continue;
+      if (!names.some((x) => samePlaceName(x, sn))) names.push(sn);
+    }
+    if (names.length < 3) continue;
+    for (const sn of names) {
+      if (!found.some((x) => samePlaceName(x, sn))) found.push(sn);
+    }
+  }
+  return found;
+}
+
 export function extractStreetRangeFromOfficialComment(rawText) {
   const text = clean(rawText);
   if (!text) return null;
@@ -3347,13 +3394,13 @@ export function extractStreetRangeFromOfficialComment(rawText) {
     if (!sn) return null;
     sn = clean(
       sn.split(
-        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|před\s+křižovatk|od\s+\d)/i
+        /\s+(?:v\s+obci|za\s+účelem|ve\s+směru|v\s+souvislosti|z\s+důvodu|v\s+rámci|před\s+křižovatk|od\s+\d|část\s+obce\b)/i
       )[0]
     );
     sn = sanitizeExtractedValueToken(sn);
     if (!sn || looksLikeTruncatedFragment(sn) || /[()]$/.test(sn)) return null;
     if (/\s-\s*ulice\s+/i.test(sn) || /\sulice\s+/i.test(sn)) return null;
-    if (!looksLikeStreetName(sn) && !/náměstí/i.test(sn)) return null;
+    if (!looksLikeStreetNameInUliceContext(sn)) return null;
     if (isNamedNonStreetKind(classifyLocationKindFromName(sn))) return null;
     return sn;
   };
@@ -3365,6 +3412,13 @@ export function extractStreetRangeFromOfficialComment(rawText) {
     // Full range inside road paren: "(ulice A - ulice B)"
     text.match(/\(\s*ulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+?)\s*\)/i),
     text.match(/\(\s*ul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+?)\s*\)/i),
+    // "ulice A, část obce X - ulice B, část obce Y" (settlement-part between ends)
+    text.match(
+      /\bulice:?\s+([^,;()]+?)(?:\s*,\s*část\s+obce\s+[^,;()-]+)?\s*[-–—]\s*ulice\s+([^,;()]+)/i
+    ),
+    text.match(
+      /\bul\.\s*([^,;()]+?)(?:\s*,\s*část\s+obce\s+[^,;()-]+)?\s*[-–—]\s*ul\.\s*([^,;()]+)/i
+    ),
     text.match(/\bulice:?\s+([^,;()]+?)\s*[-–—]\s*ulice\s+([^,;()]+)/i),
     text.match(/\bul\.\s*([^,;()]+?)\s*[-–—]\s*ul\.\s*([^,;()]+)/i),
     text.match(/\bmezi\s+ulicemi\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*[,;]|$)/i),
@@ -4750,8 +4804,11 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   // Parenthetical street/locality tokens: "(Rožnovská)" in cadastral location chains.
+  // Location-header scan only — body catalogs must not feed primary streets.
   {
-    const parenStreets = extractParentheticalStreetNamesFromOfficialComment(primaryScanText);
+    const parenStreets = extractParentheticalStreetNamesFromOfficialComment(
+      locationScanText || primaryScanText
+    );
     if (parenStreets.length) {
       for (const s of parenStreets) {
         if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
@@ -4767,9 +4824,9 @@ export function parseOfficialCommentFacts(rawText) {
   }
 
   const streetIn =
-    primaryScanText.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
-    primaryScanText.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
-    primaryScanText.match(/\bul\.\s*([^,;()]{2,80})/i);
+    locationScanText.match(/\bv\s+ulici\s+([^,;()]{2,80})/i) ||
+    locationScanText.match(/\bulice:?\s+([^,;()]{2,80})/i) ||
+    locationScanText.match(/\bul\.\s*([^,;()]{2,80})/i);
   if (streetIn) {
     let sn = streetBareName(streetIn[1]);
     sn = clean(sn.split(/\s+v\s+obci\b/i)[0]);
@@ -4816,11 +4873,15 @@ export function parseOfficialCommentFacts(rawText) {
     if (dist && !/^ulice\b/i.test(dist) && !/^v\s+katastru\b/i.test(dist)) out.district = dist;
   }
 
-  // Multi-street lists: never pick one street as the whole-event locality.
-  const multiStreetBlob = primaryScanText.match(/\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i);
+  // Multi-street lists in the location header only — never from body catalogs.
+  const multiStreetBlob = (locationScanText || primaryScanText).match(
+    /\bulice:?\s+((?:[^,;]+,\s*){2,}[^,;.]+)/i
+  );
   if (multiStreetBlob) {
     const parts = splitStreetList(multiStreetBlob[1]);
-    const streetish = parts.filter((p) => looksLikeStreetName(p) || /náměstí/i.test(p));
+    const streetish = parts.filter(
+      (p) => looksLikeStreetNameInUliceContext(p) || /náměstí/i.test(p)
+    );
     if (streetish.length >= 2 && streetish.length >= Math.ceil(parts.length * 0.6)) {
       out.streetMulti = true;
       out.street = null;
@@ -4829,26 +4890,38 @@ export function parseOfficialCommentFacts(rawText) {
 
   // Explicit multi-street parse: "(ulice A - ulice B)", "ul. A, B", "ul. C",
   // or leading "StreetA x StreetB" intersection (never vehicle OA x MOTO).
+  // Prefer location-header scan (clip before Od / body catalogs) so secondary
+  // "Město ul. A, B, C…" lists cannot rewrite primary street / street-range.
   {
-    const range = extractStreetRangeFromOfficialComment(primaryScanText);
-    const intersection = extractStreetIntersectionFromOfficialComment(primaryScanText);
-    const crossStreet = extractCrossStreetFromOfficialComment(primaryScanText);
-    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(primaryScanText);
-    const streets = extractStreetNamesFromOfficialComment(primaryScanText);
+    const streetScanText = locationScanText || primaryScanText;
+    const range =
+      extractStreetRangeFromOfficialComment(streetScanText) ||
+      extractStreetRangeFromOfficialComment(primaryScanText);
+    const intersection = extractStreetIntersectionFromOfficialComment(streetScanText);
+    const crossStreet = extractCrossStreetFromOfficialComment(streetScanText);
+    const primaryPhrase = extractPrimaryStreetPhraseFromOfficialComment(streetScanText);
+    const streets = extractStreetNamesFromOfficialComment(streetScanText);
+    const betweenIx = extractBetweenIntersectionsSegment(streetScanText);
     out.crossStreet = crossStreet;
     if (range) {
       out.streetFrom = range.streetFrom;
       out.streetTo = range.streetTo;
       out.streetRange = true;
+      // Display locks to the location-header range ends.
+      out.street = formatStreetDisplayList([range.streetFrom, range.streetTo], {
+        asRange: true,
+      });
       out.streets = [range.streetFrom, range.streetTo];
-      // Prefer range names; merge any extra confirmed streets after the pair.
-      for (const s of streets) {
+      // Merge legitimate extra closed streets from the full comment (e.g. Přerovská
+      // on a second road) but never municipal body catalogs ("Město ul. A, B, C…").
+      const catalog = extractMunicipalStreetCatalogNames(primaryScanText);
+      const allStreets = extractStreetNamesFromOfficialComment(primaryScanText);
+      for (const s of allStreets) {
+        if (!s) continue;
+        if (samePlaceName(s, range.streetFrom) || samePlaceName(s, range.streetTo)) continue;
+        if (catalog.some((c) => samePlaceName(c, s))) continue;
         if (!out.streets.some((x) => samePlaceName(x, s))) out.streets.push(s);
       }
-      out.street = formatStreetDisplayList(
-        [range.streetFrom, range.streetTo],
-        { asRange: true }
-      );
       out.streetMulti = out.streets.length >= 4;
     } else if (intersection) {
       out.streetIntersection = true;
@@ -4868,17 +4941,24 @@ export function parseOfficialCommentFacts(rawText) {
       out.streets = [primaryPhrase];
       out.streetMulti = false;
     } else if (streets.length) {
-      out.streets = streets;
-      if (streets.length === 1) {
-        // multiStreetBlob may already know a longer comma list — do not demote.
-        if (!out.streetMulti) {
-          out.street = streets[0];
-          out.streetMulti = false;
-        }
+      // Drop referenced cross-streets from "mezi křižovatkami ulic A a B".
+      let primaryStreets = streets;
+      if (betweenIx) {
+        primaryStreets = streets.filter(
+          (s) =>
+            !samePlaceName(s, betweenIx.fromCrossStreet) &&
+            !samePlaceName(s, betweenIx.toCrossStreet)
+        );
+        if (!primaryStreets.length) primaryStreets = streets.slice(0, 1);
+      }
+      out.streets = primaryStreets;
+      if (primaryStreets.length === 1) {
+        // Location-header primary wins over any body-driven streetMulti flag.
+        out.street = primaryStreets[0];
+        out.streetMulti = false;
       } else {
-        // Prefer readable joined form over opaque "více ulic" for 2–3 streets.
-        out.street = formatStreetDisplayList(streets);
-        out.streetMulti = streets.length >= 4 || out.streetMulti === true;
+        out.street = formatStreetDisplayList(primaryStreets);
+        out.streetMulti = primaryStreets.length >= 4;
       }
     }
   }
@@ -4908,16 +4988,15 @@ export function parseOfficialCommentFacts(rawText) {
   if (out.city && Array.isArray(out.streets) && out.streets.length) {
     out.streets = out.streets.filter((s) => !samePlaceName(s, out.city));
     if (out.streetRange === true && out.streetFrom && out.streetTo) {
+      // Keep range ends first; preserve any non-catalog extras already merged.
       const extras = out.streets.filter(
         (s) => !samePlaceName(s, out.streetFrom) && !samePlaceName(s, out.streetTo)
       );
       out.streets = [out.streetFrom, out.streetTo].concat(extras);
-      out.street = formatStreetDisplayList(
-        extras.length ? out.streets : [out.streetFrom, out.streetTo],
-        {
-          asRange: extras.length === 0,
-        }
-      );
+      // Public street row stays the location-header range (not a slash list of extras).
+      out.street = formatStreetDisplayList([out.streetFrom, out.streetTo], {
+        asRange: true,
+      });
     } else if (out.streets.length === 1) {
       out.street = out.streets[0];
     } else if (out.streets.length >= 2) {
