@@ -465,6 +465,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-menu-mindmenu-pinch-zoom-guard
 
+      - name: Silver Kalendář+Úkoly info cards collapse guard (mobile/tablet/PWA)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-silver-info-cards-collapse-guard
+
       - name: Home section blue bars guard (mobile/tablet unified headers)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-home-section-bar-guard

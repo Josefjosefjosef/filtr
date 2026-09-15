@@ -16308,6 +16308,93 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  /** P0 Mobile/tablet/PWA: collapse Kalendář+Úkoly info cards under Silver (local pref, FOUC via early LS). */
+  var IU_INFO_CARDS_EXPANDED_KEY = "iu.infoCards.expanded.v1";
+
+  function iuInfoCardsExpandedRead() {
+    try {
+      return String(localStorage.getItem(IU_INFO_CARDS_EXPANDED_KEY) || "").trim() === "1";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuInfoCardsExpandedWrite(expanded) {
+    var v = expanded ? "1" : "0";
+    try {
+      localStorage.setItem(IU_INFO_CARDS_EXPANDED_KEY, v);
+    } catch (_) {}
+    try {
+      if (window.iuVault && typeof window.iuVault.durableSet === "function") {
+        void window.iuVault.durableSet(IU_INFO_CARDS_EXPANDED_KEY, v).catch(function () {});
+      }
+    } catch (_) {}
+  }
+
+  function iuInfoCardsExpandedApply(expanded) {
+    try {
+      var html = document.documentElement;
+      if (expanded) html.setAttribute("data-iu-info-cards-expanded", "1");
+      else html.removeAttribute("data-iu-info-cards-expanded");
+    } catch (_) {}
+    try {
+      var btn = document.getElementById("iuInfoCardsExpandToggle");
+      if (btn) {
+        btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+        btn.setAttribute(
+          "aria-label",
+          expanded ? "Skrýt Kalendář a Úkoly" : "Zobrazit Kalendář a Úkoly"
+        );
+      }
+    } catch (_) {}
+    try {
+      var panel = document.getElementById("iuInfoCardsMobileTablet");
+      if (panel) panel.setAttribute("aria-hidden", expanded ? "false" : "true");
+    } catch (_) {}
+  }
+
+  function iuInfoCardsExpandToggleInit() {
+    try {
+      if (window.__iuInfoCardsExpandToggleInit) return;
+      window.__iuInfoCardsExpandToggleInit = 1;
+    } catch (_) {}
+    try {
+      iuInfoCardsExpandedApply(iuInfoCardsExpandedRead());
+    } catch (_) {}
+    try {
+      var btn = document.getElementById("iuInfoCardsExpandToggle");
+      if (btn && !btn.__iuInfoCardsExpandBound) {
+        btn.__iuInfoCardsExpandBound = 1;
+        btn.addEventListener(
+          "click",
+          function (e) {
+            try {
+              if (e && typeof e.preventDefault === "function") e.preventDefault();
+            } catch (_) {}
+            try {
+              var cur =
+                document.documentElement.getAttribute("data-iu-info-cards-expanded") ===
+                "1";
+              var next = !cur;
+              iuInfoCardsExpandedApply(next);
+              iuInfoCardsExpandedWrite(next);
+            } catch (_) {}
+          },
+          false
+        );
+      }
+    } catch (_) {}
+    try {
+      var resync = function () {
+        try {
+          iuInfoCardsExpandedApply(iuInfoCardsExpandedRead());
+        } catch (_) {}
+      };
+      window.addEventListener("iu-vault-hydrated", resync);
+      if (window.__iuVaultHydrationComplete === true) resync();
+    } catch (_) {}
+  }
+
   /** P0 Hero quick actions (≤1024): stejné cíle jako MindMenu dlaždice Kalendář / Úkoly / Poznámky. */
   function iuSilverHeroQuickActionsInit() {
     try {
@@ -28489,6 +28576,7 @@ function buildVideoAsArticleCard(it) {
     try{ iuNamedayWishInit(); }catch{}
     try{ iuSvatekOverlayInit(); }catch{}
     try{ iuSilverHeroQuickActionsInit(); }catch{}
+    try{ iuInfoCardsExpandToggleInit(); }catch{}
     try{ iuSilverSpeechBubbleInit(); }catch{}
 
     if (btnToggleDebug) {
