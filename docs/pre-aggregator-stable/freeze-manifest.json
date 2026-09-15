@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-traffic-tunnel-status-icon-v1-20260915",
+  "freezeId": "iu-traffic-bare-road-i3-shoulder-v1-20260915",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-15T04:54:02.046Z",
-  "note": "Freeze bump: tunnel status cards show traffic-road-tunnel.png before Stav tunelu title.",
+  "updatedAt": "2026-09-15T06:21:22.926Z",
+  "note": "Freeze bump: bare road+class → I/x compose hardening; shoulder (odstavný pruh) in summary.",
   "files": {
-    "projects/index.html": "8446b41f60a0784f5ea039f8fb10a04092b67d294c8dfe8460e2dae0e211223c",
+    "projects/index.html": "2591b0f7b692f27f00ef1743cf260a4f516bc8ba1d23a8729a36d125b6aff660",
     "assets/app.css": "9e8f49e31ea2ad5dc2e2b516ee91564f4755028dd408d559d576992ec7e1880b",
     "assets/app.js": "623c0b895888def881152caacc26567d4d6e43444e87e821b7c5013bba39ac25",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "bb82cecacc9c8e362e5dd645af593fa4989c5091b86e8b077b7d9990ceb02a65",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "88d17a9df4e0d9eb3245b1737b5f8905daaed94a8e4619b5914da9cc06f91a6e"
+    "assets/iu-prehled-dne-ui-v1.js": "ae29101e2abd3f64d5314f9095e68f15350947da21e8a8b102065d3d729e339e"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -129,7 +129,8 @@
       "traffic-filter-correctness-v1-20260911",
       "traffic-filter-parking-text-occ-v1-20260911",
       "traffic-reload-panel-lifecycle-v1-20260911",
-      "traffic-tunnel-status-icon-v1-20260915"
+      "traffic-tunnel-status-icon-v1-20260915",
+      "traffic-bare-road-i3-shoulder-v1-20260915"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",

@@ -9,6 +9,7 @@ import {
   buildLocalityHeaderModel,
   buildTrafficCardPresentation,
   buildPlaceAndDirectionLine,
+  classifyRoadPresentation,
   extractNamedTransportObject,
   extractParentheticalStreetNamesFromOfficialComment,
   extractBareClassedRoadNumbersFromOfficialComment,
@@ -265,6 +266,85 @@ function base(extra) {
   ok("CANON_29810_TO_III", r29810 === "III/29810", r29810);
   ok("CANON_II486_STABLE", rII === "II/486", rII);
   ok("CANON_III_STABLE", r29810 === "III/29810");
+
+  // A) Kamenný Újezd — bare 3 + CLASS_I must become I/3 (not stay "3")
+  const kamenImpact =
+    "na silnici 3 u obce Kamenný Újezd okres České Budějovice; práce na silnici";
+  const kamen = buildTrafficCardPresentation(
+    base({
+      impact: kamenImpact,
+      impactFull: kamenImpact,
+      road: "3",
+      roadClass: "CLASS_I",
+      roadClassLabel: "Silnice I. třídy",
+      municipality: "Kamenný Újezd",
+      municipalityRelation: "u_obce",
+      eventType: "prace",
+    })
+  );
+  const kamenRoad =
+    kamen.communication?.roadPresentations?.[0]?.road || kamen.roadPresentation?.road;
+  const kamenDetail = (kamen.expanded?.rows || []).find((r) => r.key === "road");
+  const kamenPlace = buildPlaceAndDirectionLine(
+    base({
+      impact: kamenImpact,
+      impactFull: kamenImpact,
+      road: "3",
+      roadClass: "CLASS_I",
+      roadClassLabel: "Silnice I. třídy",
+      municipality: "Kamenný Újezd",
+      municipalityRelation: "u_obce",
+      eventType: "prace",
+    })
+  );
+  const kamenHdr = buildLocalityHeaderModel(
+    base({
+      impact: kamenImpact,
+      impactFull: kamenImpact,
+      road: "3",
+      roadClass: "CLASS_I",
+      municipality: "Kamenný Újezd",
+      municipalityRelation: "u_obce",
+      eventType: "prace",
+    })
+  );
+  ok("KAMENNY_UJEZD_ROAD_I3", kamenRoad === "I/3", kamenRoad);
+  ok("KAMENNY_UJEZD_DETAIL_I3", kamenDetail && kamenDetail.value === "I/3", JSON.stringify(kamenDetail));
+  ok(
+    "KAMENNY_UJEZD_PLACE_I3",
+    /^I\/3\b/.test(kamenPlace || "") && /u obce\s+Kamenný\s+Újezd/i.test(kamenPlace || ""),
+    kamenPlace
+  );
+  ok("KAMENNY_UJEZD_NEAR", kamenHdr.nearMunicipalityPrefix === "u obce", kamenHdr.nearMunicipalityPrefix);
+
+  // B) Mrač regression — already classed I/3 stays I/3
+  const mracImpact = "na silnici 3 u obce Mrač okres Benešov; práce na silnici";
+  const mrac = buildTrafficCardPresentation(
+    base({
+      impact: mracImpact,
+      impactFull: mracImpact,
+      road: "I/3",
+      roadClass: "CLASS_I",
+      roadClassLabel: "Silnice I. třídy",
+      municipality: "Mrač",
+      municipalityRelation: "u_obce",
+      eventType: "prace",
+    })
+  );
+  const mracRoad = mrac.communication?.roadPresentations?.[0]?.road || mrac.roadPresentation?.road;
+  ok("MRAC_ROAD_I3_STABLE", mracRoad === "I/3", mracRoad);
+
+  // C/D) classifyRoadPresentation must compose bare+class (no bypass of #10601)
+  const bareViaClassify = classifyRoadPresentation("171", {
+    roadClass: "CLASS_II",
+    roadClassLabel: "Silnice II. třídy",
+  });
+  const bareIii = classifyRoadPresentation("29810", {
+    roadClass: "CLASS_III",
+    roadClassLabel: "Silnice III. třídy",
+  });
+  ok("CLASSIFY_BARE_II_COMPOSES", bareViaClassify.road === "II/171", bareViaClassify.road);
+  ok("CLASSIFY_BARE_III_COMPOSES", bareIii.road === "III/29810", bareIii.road);
 }
 
 // --- Road number must not become Lokalita ---

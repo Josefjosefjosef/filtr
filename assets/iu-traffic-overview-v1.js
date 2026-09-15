@@ -24,7 +24,7 @@ export { TRAFFIC_OVERVIEW_FLAGS, TRAFFIC_UI_INITIAL_CARD_CAP, TRAFFIC_UI_FIRST_P
  * into the homepage module graph. Browser loads it on demand; Node fixtures prime via TLA.
  */
 const IU_TRAFFIC_PRESENTER_URL =
-  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915";
+  "./iu-traffic-card-presenter-v1.js?v=ndic-velky-ujezd-locality-sanitize-v1-20260814-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915-traffic-bare-road-i3-shoulder-v1-20260915";
 
 let _iuTrafficPresenter = null;
 let _iuTrafficPresenterPromise = null;
@@ -1666,7 +1666,19 @@ export function buildTrafficCardViewModel(trafficV1) {
       presentation.communication.roadPresentations.length
       ? presentation.communication.roadPresentations
       : null) || [roadPres];
-  const road = roadPres.road || (tv.road != null ? String(tv.road) : "");
+  const road = roadPres.road
+    ? roadPres.road
+    : tv.road != null
+      ? String(
+          // Keep overview fallback on the same compose path as the presenter.
+          (typeof _iuTrafficPresenter.composeRoadNumberWithClass === "function"
+            ? _iuTrafficPresenter.composeRoadNumberWithClass(
+                tv.road,
+                tv.roadClass || tv.roadClassLabel || null
+              )
+            : null) || tv.road
+        )
+      : "";
   const roadClass = roadPres.roadClass || tv.roadClass || "UNKNOWN";
   const roadClassLabel =
     tv.roadClassLabel || ROAD_CLASS_LABEL_CS[roadClass] || ROAD_CLASS_LABEL_CS.UNKNOWN;

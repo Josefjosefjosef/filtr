@@ -955,6 +955,40 @@ ok("css_responsive_blocks", cssSrc.includes(".iuPdTrafficBlock"));
       !/Silnice je uzavřena/.test(shoulderOnly)
   );
 
+  const shoulderParenFuture = buildTrafficSituationSummary({
+    eventType: "prace",
+    lifecycleStatus: "FUTURE",
+    impact: "D49, zpevněná krajnice (odstavný pruh) uzavřená, Od 20.09.2026 08:00 Do 20.09.2026 18:00",
+    impactFull:
+      "D49, zpevněná krajnice (odstavný pruh) uzavřená, Od 20.09.2026 08:00 Do 20.09.2026 18:00",
+    validity: { validFrom: "2026-09-20T06:00:00.000Z", expectedEnd: "2026-09-20T16:00:00.000Z" },
+  });
+  const shoulderParenActive = buildTrafficSituationSummary({
+    eventType: "prace",
+    lifecycleStatus: "ACTIVE",
+    impact: "D2, zpevněná krajnice (odstavný pruh) uzavřená",
+    impactFull: "D2, zpevněná krajnice (odstavný pruh) uzavřená",
+  });
+  const shoulderNoParen = buildTrafficSituationSummary({
+    eventType: "prace",
+    lifecycleStatus: "ACTIVE",
+    impact: "zpevněná krajnice uzavřená",
+    impactFull: "zpevněná krajnice uzavřená",
+  });
+  ok(
+    "SHOULDER_PAREN_FUTURE",
+    /Zpevněná krajnice \(odstavný pruh\) bude uzavřena/.test(shoulderParenFuture)
+  );
+  ok(
+    "SHOULDER_PAREN_ACTIVE",
+    /Zpevněná krajnice \(odstavný pruh\) je uzavřena/.test(shoulderParenActive)
+  );
+  ok(
+    "SHOULDER_NO_PAREN_NO_INVENTION",
+    /Zpevněná krajnice je uzavřena/.test(shoulderNoParen) &&
+      !/\(odstavný pruh\)/.test(shoulderNoParen)
+  );
+
   const extraordinary = buildTrafficSituationSummary({
     eventType: "omezeni",
     impact: "mimořádná událost",
