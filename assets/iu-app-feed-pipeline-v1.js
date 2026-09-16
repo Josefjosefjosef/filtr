@@ -16842,6 +16842,14 @@ function buildVideoAsArticleCard(it) {
       sessionStorage.removeItem("iuMindMenuReturnArmed");
       sessionStorage.removeItem("iuMindMenuReturnScrollY");
       sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+      try {
+        localStorage.removeItem("iuMindMenuReturnPendingV1");
+      } catch (_pend) {}
+      try {
+        if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+          window.iuMindMenuClearAllReturnMarkers();
+        }
+      } catch (_clr) {}
     } catch (_) {}
     try {
       window.__iuMobileWebNavReturnArmed = false;
@@ -17627,6 +17635,16 @@ function buildVideoAsArticleCard(it) {
         if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
         var cur = wrap.getAttribute("data-iu-mobile-gate");
         if (cur === "tools") {
+          try {
+            if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+              window.iuMindMenuClearAllReturnMarkers();
+            } else {
+              sessionStorage.removeItem("iuMindMenuReturnArmed");
+              sessionStorage.removeItem("iuMindMenuReturnScrollY");
+              sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+              localStorage.removeItem("iuMindMenuReturnPendingV1");
+            }
+          } catch (_clrMm) {}
           setTab("");
           iuMindMenuToolsTabCloseHistory();
         } else {
@@ -25865,6 +25883,10 @@ function buildVideoAsArticleCard(it) {
      Latch covers that burst so SyncGate(allowClose) cannot close tools → Home. */
   const IU_MINDMENU_RETURN_LATCH_KEY = "iuMindMenuReturnLatchTs";
   const IU_MINDMENU_RETURN_LATCH_MS = 2500;
+  /* Standalone PWA may be process-killed while the external page is open.
+     sessionStorage (armed/latch) is wiped; localStorage pending survives for cold resume. */
+  const IU_MINDMENU_RETURN_PENDING_KEY = "iuMindMenuReturnPendingV1";
+  const IU_MINDMENU_RETURN_PENDING_TTL_MS = 30 * 60 * 1000;
 
   function iuMindMenuIsMobileGateOpen() {
     try {
@@ -25898,6 +25920,63 @@ function buildVideoAsArticleCard(it) {
     try {
       sessionStorage.removeItem(IU_MINDMENU_RETURN_LATCH_KEY);
     } catch (_) {}
+  }
+
+  function iuMindMenuWriteReturnPending(scrollY) {
+    try {
+      var y = Number.isFinite(scrollY) && scrollY >= 0 ? scrollY : iuMindMenuCapturePanelScrollY();
+      localStorage.setItem(
+        IU_MINDMENU_RETURN_PENDING_KEY,
+        JSON.stringify({ t: Date.now(), y: y })
+      );
+    } catch (_) {}
+  }
+
+  function iuMindMenuReadReturnPending() {
+    try {
+      var raw = localStorage.getItem(IU_MINDMENU_RETURN_PENDING_KEY);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object") {
+        localStorage.removeItem(IU_MINDMENU_RETURN_PENDING_KEY);
+        return null;
+      }
+      var ts = Number(obj.t);
+      if (!Number.isFinite(ts) || ts <= 0 || Date.now() - ts > IU_MINDMENU_RETURN_PENDING_TTL_MS) {
+        localStorage.removeItem(IU_MINDMENU_RETURN_PENDING_KEY);
+        return null;
+      }
+      var y = Number(obj.y);
+      return { t: ts, y: Number.isFinite(y) && y >= 0 ? y : 0 };
+    } catch (_) {
+      try {
+        localStorage.removeItem(IU_MINDMENU_RETURN_PENDING_KEY);
+      } catch (_c) {}
+      return null;
+    }
+  }
+
+  function iuMindMenuClearReturnPending() {
+    try {
+      localStorage.removeItem(IU_MINDMENU_RETURN_PENDING_KEY);
+    } catch (_) {}
+  }
+
+  function iuMindMenuClearAllReturnMarkers() {
+    try {
+      sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY);
+      sessionStorage.removeItem(IU_MINDMENU_RETURN_SCROLL_KEY);
+    } catch (_) {}
+    iuMindMenuClearReturnLatch();
+    iuMindMenuClearReturnPending();
+  }
+
+  function iuMindMenuHasReturnGuard() {
+    try {
+      if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return true;
+    } catch (_) {}
+    if (iuMindMenuIsReturnLatchActive()) return true;
+    return !!iuMindMenuReadReturnPending();
   }
 
   /** MindMenu gate scroller is #iuMobileGatePanelTools (window.scrollY is locked at 0). */
@@ -25994,8 +26073,10 @@ function buildVideoAsArticleCard(it) {
 
   function iuMindMenuArmReturnState() {
     if (!iuMindMenuIsExternalOpenContext()) return;
+    var scrollY = iuMindMenuCapturePanelScrollY();
     try { sessionStorage.setItem(IU_MINDMENU_RETURN_ARMED_KEY, "1"); } catch (_) {}
-    try { sessionStorage.setItem(IU_MINDMENU_RETURN_SCROLL_KEY, String(iuMindMenuCapturePanelScrollY())); } catch (_) {}
+    try { sessionStorage.setItem(IU_MINDMENU_RETURN_SCROLL_KEY, String(scrollY)); } catch (_) {}
+    iuMindMenuWriteReturnPending(scrollY);
     iuMindMenuTouchReturnLatch();
     iuMindMenuPushHistoryEntryIfMobile();
   }
@@ -26066,11 +26147,15 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuMindMenuRestoreIfArmed() {
+    var pending = null;
+    var sessionArmed = false;
     try {
-      if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) !== "1") return;
-    } catch (_) {
-      return;
-    }
+      sessionArmed = sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1";
+    } catch (_) {}
+    try {
+      pending = iuMindMenuReadReturnPending();
+    } catch (_) {}
+    if (!sessionArmed && !pending) return;
     try {
       if (typeof window.iuIsProjectsRoute === "function" && !window.iuIsProjectsRoute()) return;
     } catch (_) {
@@ -26084,6 +26169,7 @@ function buildVideoAsArticleCard(it) {
         typeof window.iuNetwork.hasIntentionalToolOverlayOpen === "function" &&
         window.iuNetwork.hasIntentionalToolOverlayOpen()
       ) {
+        /* Keep durable pending — overlay may dismiss later; do not wipe process-death resume. */
         try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_arm) {}
         return;
       }
@@ -26092,25 +26178,30 @@ function buildVideoAsArticleCard(it) {
         return;
       }
     } catch (_) {}
+    var scrollY = 0;
+    try {
+      var ySs = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "", 10);
+      if (Number.isFinite(ySs) && ySs >= 0) scrollY = ySs;
+      else if (pending && Number.isFinite(pending.y) && pending.y >= 0) scrollY = pending.y;
+    } catch (_) {
+      if (pending && Number.isFinite(pending.y) && pending.y >= 0) scrollY = pending.y;
+    }
     try {
       var wrap = document.getElementById("iuMobileGateWrap");
       if (wrap && typeof wrap.__iuMobileGateSetTab === "function" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-        /* Already-open tools: skip setTab — it zeros panel scrollTop and re-runs
-           quicktools/reorder (visible flicker) on every PWA resume. */
-        var gateNow = String(wrap.getAttribute("data-iu-mobile-gate") || "");
-        if (gateNow !== "tools") {
-          wrap.__iuMobileGateSetTab("tools");
-        }
+        /* Always re-assert tools chrome (overlay classes). setTab zeros panel scrollTop —
+           scroll is re-applied below. Skipping setTab left a Home-looking shell after kill. */
+        wrap.__iuMobileGateSetTab("tools");
       }
     } catch (_) {}
     /* Must re-assert history BEFORE clearing armed: SyncGate on the same resume
        tick would otherwise see tools without #iu-mindmenu and close → Home. */
     iuMindMenuEnsureHistoryEntry();
     iuMindMenuTouchReturnLatch();
+    iuMindMenuWriteReturnPending(scrollY);
     try {
-      var y = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "0", 10);
-      if (Number.isFinite(y) && y >= 0) {
-        iuMindMenuApplyPanelScrollY(y);
+      if (Number.isFinite(scrollY) && scrollY >= 0) {
+        iuMindMenuApplyPanelScrollY(scrollY);
       }
     } catch (_) {}
     try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
@@ -26147,13 +26238,16 @@ function buildVideoAsArticleCard(it) {
         if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return;
       } catch (_a) {}
       var allowClose = !!(opts && opts.allowClose === true);
-      /* PWA external return can surface as popstate with dropped hash AFTER restore
-         cleared armed. Latch keeps tools open and re-asserts history instead of Home. */
-      if (allowClose && iuMindMenuIsReturnLatchActive()) {
+      /* Durable pending (process-death) or short latch: keep tools + re-assert history. */
+      if (allowClose && iuMindMenuHasReturnGuard()) {
         wrap.__iuMobileGateSetTab("tools");
         iuMindMenuEnsureHistoryEntry();
         try {
-          var yLatch = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "0", 10);
+          var yLatch = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "", 10);
+          if (!Number.isFinite(yLatch) || yLatch < 0) {
+            var pendY = iuMindMenuReadReturnPending();
+            yLatch = pendY && Number.isFinite(pendY.y) ? pendY.y : -1;
+          }
           if (Number.isFinite(yLatch) && yLatch >= 0) iuMindMenuApplyPanelScrollY(yLatch);
         } catch (_ys) {}
         return;
@@ -26186,14 +26280,11 @@ function buildVideoAsArticleCard(it) {
       iuMindMenuRestoreIfArmed();
     });
     window.addEventListener("popstate", function () {
-      /* External Done/return may arrive as popstate; prefer restore/latch over close. */
+      /* External Done/return may arrive as popstate; prefer restore/pending over close. */
       try {
-        if (
-          sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1" ||
-          iuMindMenuIsReturnLatchActive()
-        ) {
+        if (iuMindMenuHasReturnGuard()) {
           iuMindMenuRestoreIfArmed();
-          if (iuMindMenuIsReturnLatchActive()) {
+          if (iuMindMenuHasReturnGuard()) {
             iuMindMenuSyncGateFromHistory({ allowClose: true });
             return;
           }
@@ -26228,6 +26319,14 @@ function buildVideoAsArticleCard(it) {
         iuMindMenuOpenExternalUrl(href);
       } catch (_) {}
     }, true);
+    /* Cold resume after process death: drain durable pending once gate APIs exist. */
+    try {
+      if (document.visibilityState === "visible") {
+        setTimeout(function () {
+          try { iuMindMenuRestoreIfArmed(); } catch (_) {}
+        }, 0);
+      }
+    } catch (_) {}
   }
 
   try {
@@ -26236,6 +26335,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuRestoreIfArmed = iuMindMenuRestoreIfArmed;
     window.iuMindMenuSyncGateFromHistory = iuMindMenuSyncGateFromHistory;
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
+    window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
   } catch (_) {}
 
   // === MOJE SCHRÁNKY (MindMenu): min 1, max 10, controls follow last pill ===
@@ -28634,6 +28734,11 @@ function buildVideoAsArticleCard(it) {
       if (mq && mq.addEventListener) mq.addEventListener("change", function() { iuMobileLayoutReorder(); });
     } catch (_) {}
     iuMobileGateTabInit();
+    try {
+      if (typeof window.iuMindMenuRestoreIfArmed === "function") {
+        window.iuMindMenuRestoreIfArmed();
+      }
+    } catch (_) {}
     try {
       iuMobileBottomNavInit();
     } catch (_) {}

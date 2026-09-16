@@ -238,6 +238,15 @@
     try {
       sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
     } catch (_) {}
+    /* PWA MindMenu: network-boundary arm so process-death pending survives even if
+       a caller skipped iuMindMenuOpenExternalUrl. */
+    try {
+      if (typeof window.iuMindMenuArmReturnState === "function") {
+        var wrapArm = document.getElementById("iuMobileGateWrap");
+        var gateArm = wrapArm ? String(wrapArm.getAttribute("data-iu-mobile-gate") || "") : "";
+        if (gateArm === "tools") window.iuMindMenuArmReturnState();
+      }
+    } catch (_) {}
   }
 
   function openExternalViaAnchor(url) {
