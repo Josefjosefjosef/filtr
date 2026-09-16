@@ -16841,6 +16841,7 @@ function buildVideoAsArticleCard(it) {
       sessionStorage.removeItem("iuMobileWebNavLastTarget");
       sessionStorage.removeItem("iuMindMenuReturnArmed");
       sessionStorage.removeItem("iuMindMenuReturnScrollY");
+      sessionStorage.removeItem("iuMindMenuReturnLatchTs");
     } catch (_) {}
     try {
       window.__iuMobileWebNavReturnArmed = false;
@@ -25860,6 +25861,10 @@ function buildVideoAsArticleCard(it) {
   // === MindMenu: preserve gate/state when opening external pages (new tab / return) ===
   const IU_MINDMENU_RETURN_ARMED_KEY = "iuMindMenuReturnArmed";
   const IU_MINDMENU_RETURN_SCROLL_KEY = "iuMindMenuReturnScrollY";
+  /* PWA return often arrives as a delayed popstate after pageshow cleared armed.
+     Latch covers that burst so SyncGate(allowClose) cannot close tools → Home. */
+  const IU_MINDMENU_RETURN_LATCH_KEY = "iuMindMenuReturnLatchTs";
+  const IU_MINDMENU_RETURN_LATCH_MS = 2500;
 
   function iuMindMenuIsMobileGateOpen() {
     try {
@@ -25870,6 +25875,58 @@ function buildVideoAsArticleCard(it) {
       return !!(panel && !panel.hidden);
     } catch (_) {
       return false;
+    }
+  }
+
+  function iuMindMenuTouchReturnLatch() {
+    try {
+      sessionStorage.setItem(IU_MINDMENU_RETURN_LATCH_KEY, String(Date.now()));
+    } catch (_) {}
+  }
+
+  function iuMindMenuIsReturnLatchActive() {
+    try {
+      var ts = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_LATCH_KEY) || "0", 10);
+      if (!Number.isFinite(ts) || ts <= 0) return false;
+      return Date.now() - ts < IU_MINDMENU_RETURN_LATCH_MS;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuMindMenuClearReturnLatch() {
+    try {
+      sessionStorage.removeItem(IU_MINDMENU_RETURN_LATCH_KEY);
+    } catch (_) {}
+  }
+
+  /** MindMenu gate scroller is #iuMobileGatePanelTools (window.scrollY is locked at 0). */
+  function iuMindMenuCapturePanelScrollY() {
+    try {
+      var panel = document.getElementById("iuMobileGatePanelTools");
+      if (panel && typeof panel.scrollTop === "number") return panel.scrollTop || 0;
+    } catch (_) {}
+    return 0;
+  }
+
+  function iuMindMenuApplyPanelScrollY(y) {
+    if (!Number.isFinite(y) || y < 0) return;
+    var apply = function () {
+      try {
+        var panel = document.getElementById("iuMobileGatePanelTools");
+        if (panel) panel.scrollTop = y;
+      } catch (_) {}
+    };
+    apply();
+    try {
+      requestAnimationFrame(function () {
+        apply();
+        requestAnimationFrame(apply);
+      });
+    } catch (_) {
+      try {
+        setTimeout(apply, 0);
+      } catch (_t) {}
     }
   }
 
@@ -25938,7 +25995,8 @@ function buildVideoAsArticleCard(it) {
   function iuMindMenuArmReturnState() {
     if (!iuMindMenuIsExternalOpenContext()) return;
     try { sessionStorage.setItem(IU_MINDMENU_RETURN_ARMED_KEY, "1"); } catch (_) {}
-    try { sessionStorage.setItem(IU_MINDMENU_RETURN_SCROLL_KEY, String(window.scrollY || 0)); } catch (_) {}
+    try { sessionStorage.setItem(IU_MINDMENU_RETURN_SCROLL_KEY, String(iuMindMenuCapturePanelScrollY())); } catch (_) {}
+    iuMindMenuTouchReturnLatch();
     iuMindMenuPushHistoryEntryIfMobile();
   }
 
@@ -26037,16 +26095,22 @@ function buildVideoAsArticleCard(it) {
     try {
       var wrap = document.getElementById("iuMobileGateWrap");
       if (wrap && typeof wrap.__iuMobileGateSetTab === "function" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-        wrap.__iuMobileGateSetTab("tools");
+        /* Already-open tools: skip setTab — it zeros panel scrollTop and re-runs
+           quicktools/reorder (visible flicker) on every PWA resume. */
+        var gateNow = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        if (gateNow !== "tools") {
+          wrap.__iuMobileGateSetTab("tools");
+        }
       }
     } catch (_) {}
     /* Must re-assert history BEFORE clearing armed: SyncGate on the same resume
        tick would otherwise see tools without #iu-mindmenu and close → Home. */
     iuMindMenuEnsureHistoryEntry();
+    iuMindMenuTouchReturnLatch();
     try {
       var y = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "0", 10);
       if (Number.isFinite(y) && y >= 0) {
-        requestAnimationFrame(function () { try { window.scrollTo(0, y); } catch (_s) {} });
+        iuMindMenuApplyPanelScrollY(y);
       }
     } catch (_) {}
     try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
@@ -26083,6 +26147,17 @@ function buildVideoAsArticleCard(it) {
         if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return;
       } catch (_a) {}
       var allowClose = !!(opts && opts.allowClose === true);
+      /* PWA external return can surface as popstate with dropped hash AFTER restore
+         cleared armed. Latch keeps tools open and re-asserts history instead of Home. */
+      if (allowClose && iuMindMenuIsReturnLatchActive()) {
+        wrap.__iuMobileGateSetTab("tools");
+        iuMindMenuEnsureHistoryEntry();
+        try {
+          var yLatch = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "0", 10);
+          if (Number.isFinite(yLatch) && yLatch >= 0) iuMindMenuApplyPanelScrollY(yLatch);
+        } catch (_ys) {}
+        return;
+      }
       if (
         allowClose &&
         String(wrap.getAttribute("data-iu-mobile-gate") || "") === "tools" &&
@@ -26111,6 +26186,19 @@ function buildVideoAsArticleCard(it) {
       iuMindMenuRestoreIfArmed();
     });
     window.addEventListener("popstate", function () {
+      /* External Done/return may arrive as popstate; prefer restore/latch over close. */
+      try {
+        if (
+          sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1" ||
+          iuMindMenuIsReturnLatchActive()
+        ) {
+          iuMindMenuRestoreIfArmed();
+          if (iuMindMenuIsReturnLatchActive()) {
+            iuMindMenuSyncGateFromHistory({ allowClose: true });
+            return;
+          }
+        }
+      } catch (_) {}
       iuMindMenuSyncGateFromHistory({ allowClose: true });
     });
     document.addEventListener("click", function (e) {
