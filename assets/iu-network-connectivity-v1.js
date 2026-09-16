@@ -124,6 +124,7 @@
     "iu-pojistovna-desktop-overlay-open",
     "iu-wordpdf-desktop-overlay-open",
     "iu-ai-narrow-fullscreen",
+    "iu-calendarOverlay-open",
   ];
 
   function hasIntentionalToolOverlayOpen() {
@@ -141,6 +142,8 @@
       if (leg && String(leg.dataset.open || "") === "1" && !leg.hasAttribute("hidden")) return true;
       var inv = document.getElementById("iuInvoicePanel");
       if (inv && String(inv.dataset.open || "") === "1" && !inv.hasAttribute("hidden")) return true;
+      var cal = document.getElementById("iuCalendarOverlay");
+      if (cal && !cal.hidden && !cal.hasAttribute("hidden")) return true;
     } catch (_) {}
     return false;
   }

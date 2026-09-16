@@ -2271,6 +2271,36 @@ export function initIuCalendarOverlay() {
     }
   }
 
+  /**
+   * Calendar "📍 Spustit navigaci": one click → one external open via shared iuNetwork.
+   * HTTPS mapy.cz zakladni stays web-fallback; OS may hand off via Universal/App Link.
+   * Never window.open(noopener) here — that path left about:blank / PWA Hotovo.
+   */
+  function openCalendarAddressNavigation(rawAddr){
+    const q = String(rawAddr || "").trim();
+    if (!q) return false;
+    const url = "https://mapy.cz/zakladni?q=" + encodeURIComponent(q);
+    try{
+      if (window.iuNetwork && typeof window.iuNetwork.openExternalUrl === "function"){
+        void window.iuNetwork.openExternalUrl(url);
+        return true;
+      }
+    }catch{}
+    try{
+      if (window.iuNetwork && typeof window.iuNetwork.openExternalSync === "function"){
+        const res = window.iuNetwork.openExternalSync(url, false);
+        return !!(res && res.ok);
+      }
+    }catch{}
+    /* Last resort without iuNetwork: one open only; noopener null must not trigger a 2nd open. */
+    try{
+      window.open(url, "_blank", "noopener,noreferrer");
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
   function bindDayTimelineUi(root, iso){
     if (!root) return;
     root.querySelectorAll("[data-iu-cal-open-event]").forEach((el)=>{
@@ -2293,9 +2323,12 @@ export function initIuCalendarOverlay() {
       btn.addEventListener("click", (ev)=>{
         ev.preventDefault();
         ev.stopPropagation();
-        const q = btn.getAttribute("data-iu-cal-pin") || "";
+        const q = String(btn.getAttribute("data-iu-cal-pin") || "").trim();
         if (!q) return;
-        try{ window.open("https://mapy.cz/z?q=" + encodeURIComponent(q), "_blank", "noopener,noreferrer"); }catch{}
+        /* P0: must use iuNetwork.openExternalUrl (single <a target=_blank> on mobile/PWA).
+           Raw window.open with noopener returns null and historically double-fired /
+           left about:blank + PWA "Hotovo" while map UL still opened → blink + orphan tab. */
+        openCalendarAddressNavigation(q);
       });
     });
     root.querySelectorAll("[data-iu-cal-slot-empty]").forEach((emptySlotEl)=>{
