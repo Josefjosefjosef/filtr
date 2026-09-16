@@ -17,6 +17,7 @@ import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -64,8 +65,9 @@ function staticGate() {
   };
 
   ok("cache_bust_index_app_css", index.includes(APP_CSS_BUST) && /app\.css\?v=/.test(index));
-  ok("sw_cache_token", sw.includes(CACHE_TOKEN));
-  ok("allowlist_token", allow.includes(CACHE_TOKEN));
+  // SW may advance after this freeze; keep lineage token on allowlist + current must be allowed.
+  ok("sw_cache_allowed", swHasAllowedCacheVersion(sw));
+  ok("allowlist_lineage_chmu_flush", allow.includes(CACHE_TOKEN) || allow.includes("chmu-box-nav-flush-v1"));
   const gatePadBlock = css.match(
     /body:not\(\.iu-mobileMainVisible\):not\(\.iu-mobileGateOverlayOpen\)\s+#iuMobileGateWrap\s*\{[^}]*\}/
   );
