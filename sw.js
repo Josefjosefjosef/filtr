@@ -26,8 +26,9 @@
 // 2026-08-03: Silver date/time fit v2 â€” bust shell so premium-draft + app CSS reach PWAs (SWR pathname key)
 // 2026-08-24: PC MindMenu lock UX â€” unified ZamknutĂ­ MindMenu + single unlock method
 // 2026-09-01: remove environment info panel â€” bust shell + network-first info-panel modules (SWR stale catalog)
-// 2026-09-04: Reload FOUC â€” layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
-// 2026-09-04: Calendar NovĂˇ udĂˇlost bottom-nav sheet stability (merge onto FOUC SW)
+// 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
+// 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
+// 2026-09-12-startup-single-paint-v1 — lineage token retained for iu-startup-single-paint-guard
 const CACHE_VERSION = "2026-09-16-chmu-box-nav-flush-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
