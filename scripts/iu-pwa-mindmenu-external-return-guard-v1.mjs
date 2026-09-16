@@ -6,10 +6,17 @@
  *   iuMindMenuRestoreIfArmed() reopened tools then cleared iuMindMenuReturnArmed;
  *   iuMindMenuSyncGateFromHistory() then saw tools without #iu-mindmenu and closed → Home.
  *
+ * Regression class (2026-09-16):
+ *   Real PWA return often fires a delayed popstate AFTER restore cleared armed;
+ *   SyncGate(allowClose) then closed tools → Home (flicker). Guard previously never
+ *   simulated that popstate. Scroll lived on #iuMobileGatePanelTools, not window.scrollY;
+ *   setTab("tools") on already-open tools wiped panel scrollTop and re-rendered.
+ *
  * Contract:
  *   - Restore re-asserts #iu-mindmenu history before clearing armed
- *   - Sync may close tools only on popstate (allowClose), never on pageshow/external return
- *   - Simulated PWA return: MindMenu stays open (not Domů)
+ *   - Sync may close tools only on popstate (allowClose) outside return latch
+ *   - Delayed popstate during latch keeps MindMenu + panel scroll (not Domů)
+ *   - Repeated external return cycles keep tools + scroll
  *
  * Run: npm run iu-pwa-mindmenu-external-return-guard
  */
@@ -28,6 +35,7 @@ const { chromium } = require("playwright");
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8941", 10);
 const BASE = `http://127.0.0.1:${PORT}/projects/?section=media&iuInfoSystem=cutover&nosw=1`;
 const fails = [];
+const SCROLL_TARGET = 420;
 
 function must(cond, id) {
   if (!cond) fails.push(id);
@@ -45,15 +53,16 @@ function staticGate() {
   must(/function iuMindMenuEnsureHistoryEntry\s*\(/.test(feed), "static:ensure_history_fn");
   must(/history\.replaceState/.test(feed) && /iu_mindmenu_overlay/.test(feed), "static:replaceState_overlay");
   must(
-    /__iuMobileGateSetTab\("tools"\)[\s\S]{0,800}iuMindMenuEnsureHistoryEntry\(\)[\s\S]{0,500}removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)/.test(
-      feed
-    ),
+    /iuMindMenuEnsureHistoryEntry\(\)[\s\S]{0,500}removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)/.test(feed),
     "static:ensure_before_clear_armed"
   );
   must(/function iuMindMenuSyncGateFromHistory\s*\(\s*opts\s*\)/.test(feed), "static:sync_opts");
   must(/allowClose\s*===\s*true/.test(feed), "static:allow_close_gate");
+  must(/IU_MINDMENU_RETURN_LATCH_KEY/.test(feed) && /iuMindMenuIsReturnLatchActive/.test(feed), "static:return_latch");
+  must(/iuMindMenuCapturePanelScrollY/.test(feed) && /iuMobileGatePanelTools/.test(feed), "static:panel_scroll_capture");
+  must(/gateNow\s*!==\s*"tools"/.test(feed), "static:skip_setTab_when_already_tools");
   must(
-    /addEventListener\("popstate"[\s\S]{0,120}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true\s*\}\s*\)/.test(
+    /addEventListener\("popstate"[\s\S]{0,800}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true\s*\}\s*\)/.test(
       feed
     ),
     "static:popstate_allow_close"
@@ -64,8 +73,11 @@ function staticGate() {
     "static:pageshow_no_allow_close"
   );
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
-  must(/pwa-mindmenu-external-return-v1-20260915/.test(app), "static:app_cache_bust");
-  must(!/__iuMobileGateSetTab\("tools"\)[\s\S]{0,80}removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,40}iuMindMenuEnsureHistoryEntry/.test(feed), "static:not_clear_before_ensure");
+  must(/pwa-mindmenu-external-return-v1-20260916/.test(app), "static:app_cache_bust");
+  must(
+    !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),
+    "static:not_clear_before_ensure"
+  );
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -110,33 +122,52 @@ async function openMindMenu(page) {
   );
 }
 
+async function scrollMindMenuPanel(page, y) {
+  return page.evaluate((targetY) => {
+    const panel = document.getElementById("iuMobileGatePanelTools");
+    if (!panel) return { ok: false, scrollTop: 0, max: 0 };
+    panel.scrollTop = targetY;
+    const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+    return { ok: true, scrollTop: panel.scrollTop || 0, max };
+  }, y);
+}
+
 async function snap(page) {
   return page.evaluate(() => {
     const wrap = document.getElementById("iuMobileGateWrap");
+    const panel = document.getElementById("iuMobileGatePanelTools");
     const hash = String(location.hash || "").replace("#", "");
     let st = false;
     try {
       st = !!(history.state && history.state.iu_mindmenu_overlay === true);
     } catch (_) {}
     let armed = "";
+    let latch = "";
     try {
       armed = sessionStorage.getItem("iuMindMenuReturnArmed") || "";
+      latch = sessionStorage.getItem("iuMindMenuReturnLatchTs") || "";
     } catch (_) {}
     return {
       gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
       hash,
       overlayState: st,
       armed,
+      latch,
+      panelScroll: panel ? panel.scrollTop || 0 : -1,
       bodyGate: document.body.classList.contains("iu-mobileGateOverlayOpen"),
     };
   });
 }
 
-/** Simulate PWA return: history marker lost, armed flag set, resume handlers fire. */
-async function simulatePwaExternalReturn(page) {
-  return page.evaluate(() => {
+/**
+ * Simulate PWA return including the delayed popstate that previously closed MindMenu
+ * after restore cleared the armed flag.
+ */
+async function simulatePwaExternalReturn(page, scrollY) {
+  return page.evaluate((y) => {
     const transitions = [];
     const wrap = document.getElementById("iuMobileGateWrap");
+    const panel = document.getElementById("iuMobileGatePanelTools");
     const orig = wrap && wrap.__iuMobileGateSetTab;
     if (wrap && typeof orig === "function") {
       wrap.__iuMobileGateSetTab = function (tab) {
@@ -144,10 +175,16 @@ async function simulatePwaExternalReturn(page) {
         return orig.apply(this, arguments);
       };
     }
+    if (panel) {
+      try {
+        panel.scrollTop = y;
+      } catch (_) {}
+    }
     try {
       sessionStorage.setItem("iuMindMenuReturnArmed", "1");
       sessionStorage.setItem("iu_external_nav_armed", "1");
-      sessionStorage.setItem("iuMindMenuReturnScrollY", String(window.scrollY || 120));
+      sessionStorage.setItem("iuMindMenuReturnScrollY", String(y));
+      sessionStorage.setItem("iuMindMenuReturnLatchTs", String(Date.now()));
     } catch (_) {}
     // PWA often drops hash/state on return from system browser.
     try {
@@ -165,13 +202,26 @@ async function simulatePwaExternalReturn(page) {
     if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
     if (typeof window.iuMindMenuSyncGateFromHistory === "function") window.iuMindMenuSyncGateFromHistory();
 
+    // Delayed popstate AFTER armed cleared (real iOS/Android PWA Done path).
+    try {
+      const u2 = new URL(window.location.href);
+      u2.hash = "";
+      history.replaceState({}, "", u2.toString());
+    } catch (_) {}
+    window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
+    if (typeof window.iuMindMenuSyncGateFromHistory === "function") {
+      window.iuMindMenuSyncGateFromHistory({ allowClose: true });
+    }
+
     if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab = orig;
+    const panelAfter = document.getElementById("iuMobileGatePanelTools");
     return {
       transitions,
       visitedHome: transitions.includes(""),
       finalGate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      panelScroll: panelAfter ? panelAfter.scrollTop || 0 : -1,
     };
-  });
+  }, scrollY);
 }
 
 async function runPlaywright() {
@@ -227,12 +277,19 @@ async function runPlaywright() {
       );
 
       await openMindMenu(page);
+      const scrolled = await scrollMindMenuPanel(page, SCROLL_TARGET);
+      must(scrolled.ok, "before:panel_exists");
+      const scrollExpect = Math.min(SCROLL_TARGET, scrolled.max || SCROLL_TARGET);
+      if (scrollExpect > 40) {
+        must(scrolled.scrollTop >= Math.floor(scrollExpect * 0.5), "before:scrolled:" + scrolled.scrollTop);
+      }
+
       const before = await snap(page);
       must(before.gate === "tools", "before:gate_tools:" + before.gate);
       must(before.hash === "iu-mindmenu", "before:hash:" + before.hash);
 
-      const sim = await simulatePwaExternalReturn(page);
-      await page.waitForTimeout(250);
+      const sim = await simulatePwaExternalReturn(page, scrollExpect);
+      await page.waitForTimeout(300);
       const after = await snap(page);
 
       must(after.gate === "tools", "after:gate_tools:" + after.gate);
@@ -241,6 +298,29 @@ async function runPlaywright() {
       must(after.armed !== "1", "after:armed_cleared:" + after.armed);
       must(!sim.visitedHome, "after:no_home_transition:" + JSON.stringify(sim.transitions));
       must(sim.finalGate === "tools", "after:sim_final_tools:" + sim.finalGate);
+      if (scrollExpect > 40) {
+        must(
+          after.panelScroll >= Math.floor(scrollExpect * 0.5),
+          "after:scroll_kept:" + after.panelScroll + "/expect~" + scrollExpect
+        );
+      }
+
+      // Multi-cycle: open external return again (deep scroll) ×3
+      for (let i = 0; i < 3; i++) {
+        await scrollMindMenuPanel(page, scrollExpect);
+        const cycle = await simulatePwaExternalReturn(page, scrollExpect);
+        await page.waitForTimeout(200);
+        const cSnap = await snap(page);
+        must(cSnap.gate === "tools", "cycle" + i + ":gate:" + cSnap.gate);
+        must(cSnap.hash === "iu-mindmenu", "cycle" + i + ":hash:" + cSnap.hash);
+        must(!cycle.visitedHome, "cycle" + i + ":no_home:" + JSON.stringify(cycle.transitions));
+        if (scrollExpect > 40) {
+          must(
+            cSnap.panelScroll >= Math.floor(scrollExpect * 0.5),
+            "cycle" + i + ":scroll:" + cSnap.panelScroll
+          );
+        }
+      }
 
       // Sync without allowClose must NOT close tools when hash is missing.
       const syncNoClose = await page.evaluate(() => {
@@ -256,11 +336,13 @@ async function runPlaywright() {
       });
       must(syncNoClose === "tools", "sync:no_close_without_allow:" + syncNoClose);
 
-      // popstate allowClose may close when marker gone (Back semantics).
+      // Intentional Back: clear latch first, then allowClose may close.
       const syncClose = await page.evaluate(() => {
         const wrap = document.getElementById("iuMobileGateWrap");
         wrap.__iuMobileGateSetTab("tools");
         try {
+          sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+          sessionStorage.removeItem("iuMindMenuReturnArmed");
           const u = new URL(window.location.href);
           u.hash = "";
           history.replaceState({}, "", u.toString());

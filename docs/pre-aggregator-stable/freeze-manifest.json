@@ -1,15 +1,15 @@
 {
-  "freezeId": "iu-pwa-hide-traffic-offline-banner-v1-20260916",
+  "freezeId": "iu-pwa-mindmenu-external-return-regression-v1-20260916",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-16T03:17:01.428Z",
-  "note": "Freeze bump: hide PWA traffic offline banner + CSP hash for prehled defer cache-bust.",
+  "updatedAt": "2026-09-16T06:30:00.000Z",
+  "note": "Freeze bump: PWA MindMenu external-return latch + panel scroll restore (popstate regression).",
   "files": {
-    "projects/index.html": "bffcea5006bebac076bcf2bb557133fd59fb9f414147b3e77021b43006627b20",
+    "projects/index.html": "e57370fc191fd84a6e398e3cfedfd71fc8ce1e212d46dfa63d7a433611e39839",
     "assets/app.css": "e6b499fa487321a720818b6aa5792058fb22bc64e6f7accfc6af8440ab6982e7",
-    "assets/app.js": "1f6aafbb52d5beee42523fd9a84c8096b2ff1ddd7bba33b1cbbca696d643a9d6",
+    "assets/app.js": "ed8704aa78b24874b252c329d8a4f0356b3e315bd21b3d37b705f8a372451c52",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "bb82cecacc9c8e362e5dd645af593fa4989c5091b86e8b077b7d9990ceb02a65",
-    "assets/iu-app-feed-pipeline-v1.js": "c814c6abc6a3edfca28ed04e5ee8860be025e4a76c45977c09e21f4eae3b1989",
+    "assets/iu-app-feed-pipeline-v1.js": "84b95584231f26e25e0521c025c485dcadce8db7ea7c9bcdc685ddca67caad6c",
     "assets/iu-calendar-overlay-v1.js": "d33bc5862bf6c390d946a4f14955c1f135c43155dd30134e30c90f5ce0993403",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
@@ -72,6 +72,7 @@
       "home-quick-parcel-switcher-v1-20260914",
       "pd-quick-top-switcher-v1-20260914",
       "pwa-mindmenu-external-return-v1-20260915",
+      "pwa-mindmenu-external-return-v1-20260916",
       "perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821",
       "perf-loop-iter014-secondary-js-batch2-v1-20260820",
       "perf-loop-iter012-secondary-js-after-fcp-v1-20260820",
@@ -147,6 +148,8 @@
       "iuMailboxSyncLayoutAfterCountChange",
       "iuMindMenuEnsureHistoryEntry",
       "allowClose",
+      "iuMindMenuReturnLatchTs",
+      "iuMindMenuCapturePanelScrollY",
       "iuInfoCardsExpandToggleInit"
     ],
     "assets/app.js": [
@@ -154,6 +157,7 @@
       "iuRadioChip--nameOnly",
       "mindmenu-colorful-default-off-v1-20260914",
       "pwa-mindmenu-external-return-v1-20260915",
+      "pwa-mindmenu-external-return-v1-20260916",
       "silver-info-cards-collapse-v1-20260915"
     ]
   }
