@@ -2338,13 +2338,9 @@ function settingsCtaInnerHtml() {
 
 function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
   const mode = state.viewMode;
-  const offlineSnap = loadOfflineTrafficSnapshotSync();
-  const fresh = trafficOverviewMod ? trafficOverviewMod.trafficFreshnessBanner(offlineSnap) : null;
   const ff = ensureFeedFilter(effectivePrefs());
-  const trafficOfflineBanner =
-    fresh && ff.trafficEnabled
-      ? `<div class="iuPdTrafficOffline" data-iu-traffic-offline="1" role="status">${esc(fresh.label)}</div>`
-      : "";
+  // Offline snapshot / freshness stay in trafficOverviewMod for merge + PWA resume.
+  // Do not inject technical offline freshness status into user UI.
   const filterBar = isPdDesktopQuickViewLayout() ? quickViewBarHtml(ff, state.feedQuickView) : "";
   const hasTraffic = (listForFilters || []).some((ev) => ev && ev.trafficV1);
   const listOrEmpty =
@@ -2372,7 +2368,6 @@ function homeShellHtml(listHtml, countLabel, moreHtml, listForFilters) {
     `<button type="button" class="iuPdToggle${mode === "hidden" ? " is-active" : ""}" data-act="mode" data-mode="hidden">Skryté</button>` +
     `</div></div>` +
     `<div class="iuPd__count" id="iuPdCount">${esc(countLabel)}</div>` +
-    trafficOfflineBanner +
     (listOrEmpty
       ? listOrEmpty
       : `<ul class="iuPdFeed iuPrehledDne__timeline${hasTraffic ? " iuPdFeed--trafficPad" : ""}" id="iuPrehledDneTimeline">${listHtml}</ul>`) +
