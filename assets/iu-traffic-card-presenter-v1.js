@@ -3794,6 +3794,28 @@ export function hasExplicitLaneRestrictionSource(rawText) {
  * Distinguishes impassable vs closed wording; never invents L/R/C side.
  * Shoulder / odstavný are not travel-lane facts.
  */
+/**
+ * NDIC often inserts a lane qualifier between "jízdní pruh" and "uzavřen"
+ * (e.g. "jízdní pruh pro pomalá vozidla uzavřen"). Treat as single-lane impact.
+ */
+export function hasSlowVehicleLaneClosedSource(rawText) {
+  const text = clean(rawText);
+  if (!text) return false;
+  if (
+    /jízdní\s+pruh\s+pro\s+pomalá\s+vozidla.{0,24}(?:uzavřen|neprůjezdn)/i.test(text)
+  ) {
+    return true;
+  }
+  if (
+    /(?:uzavřen[ýáo]?|neprůjezdn[ýáo]?)\s+jízdní\s+pruh\s+pro\s+pomalá\s+vozidla/i.test(
+      text
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function parseLaneImpactFactsFromText(rawText) {
   const text = clean(rawText);
   const out = { laneImpassable: false, laneSide: null, laneClosed: false };
@@ -3813,22 +3835,24 @@ export function parseLaneImpactFactsFromText(rawText) {
   const impassable =
     /\bneprůjezdn[ýáo]?\s+(?:jízdní\s+)?pruh\b/i.test(text) ||
     /\b(?:jízdní\s+)?pruh\s+(?:je\s+)?neprůjezdn/i.test(text) ||
+    (hasSlowVehicleLaneClosedSource(text) && /neprůjezdn/i.test(text)) ||
     (namedSide &&
       new RegExp(
         namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}neprůjezdn",
         "i"
       ).test(text));
   const closed =
-    /\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
-    /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
+    /\bjízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\s+uzavřen/i.test(text) ||
+    /\buzavřen[ýáo]?\s+jízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\b/i.test(text) ||
+    hasSlowVehicleLaneClosedSource(text) ||
     (namedSide &&
       new RegExp(
         namedSide[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ".{0,40}uzavřen",
         "i"
       ).test(text));
-  out.laneImpassable = impassable;
-  out.laneClosed = closed && !impassable;
-  if ((impassable || closed) && !out.laneSide) out.laneSide = "UNKNOWN";
+  out.laneImpassable = !!impassable;
+  out.laneClosed = !!closed && !out.laneImpassable;
+  if ((out.laneImpassable || out.laneClosed) && !out.laneSide) out.laneSide = "UNKNOWN";
   return out;
 }
 
@@ -4649,6 +4673,10 @@ export function parseOfficialCommentFacts(rawText) {
       out.obstructionType = "ANIMAL";
     } else if (/olej\s+na\s+vozovce/i.test(text)) {
       out.obstructionType = "OIL_ON_ROAD";
+    } else if (/pomalu\s+jedoucí\s+vozidl[oa]\s+údržby/i.test(text)) {
+      out.obstructionType = "SLOW_MAINTENANCE_VEHICLE";
+    } else if (/upadl[éeý]\s+kolo\b/i.test(text)) {
+      out.obstructionType = "FALLEN_OBJECT";
     }
     {
       const struck = parseStruckAnimalObstacleFromText(text);
@@ -5631,13 +5659,15 @@ export function isSingleLaneRestriction(rawText) {
     return true;
   }
   // NDIC bare clause: "jízdní pruh uzavřen" (no L/R) — still a single-lane impact.
+  // Also: "jízdní pruh pro pomalá vozidla uzavřen" (qualifier between noun and closed).
   // Do not treat plural "jízdní pruhy" / "všechny jízdní pruhy" as single-lane.
   if (
     !/\bvšechny\s+jízdní\s+pruhy\b/i.test(text) &&
     !/\bjízdní\s+pruhy\b/i.test(text) &&
-    (/\bjízdní\s+pruh\s+uzavřen/i.test(text) ||
-      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(text) ||
-      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(text))
+    (/\bjízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\s+uzavřen/i.test(text) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\b/i.test(text) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\b/i.test(text) ||
+      hasSlowVehicleLaneClosedSource(text))
   ) {
     return true;
   }
@@ -6463,6 +6493,10 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
     return formatBrokenDownVehicleSituationLead(facts, text);
   }
   if (type === "FALLEN_TREE") return "Spadlý strom";
+  if (type === "FALLEN_OBJECT") {
+    const fallen = formatFallenRoadObjectLead(facts, text);
+    if (fallen) return fallen;
+  }
   if (type === "LOST_CARGO") {
     if (/ztracen/i.test(text) || /ztráta\s+nákladu/i.test(text)) return "Ztracený náklad";
     return "Spadlý náklad";
@@ -6476,6 +6510,22 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
   if (type === "OIL_ON_ROAD" || facts.oilOnRoad) {
     const meters = formatMetersCs(facts.impactLengthMeters);
     return meters ? "Olej na vozovce v délce " + meters : "Olej na vozovce";
+  }
+
+  // Slow maintenance vehicle — DATEX often publishes as type=prekazka; keep taxonomy,
+  // but never collapse the concrete participant into bare "Překážka na vozovce".
+  if (
+    type === "SLOW_MAINTENANCE_VEHICLE" ||
+    /pomalu\s+jedoucí\s+vozidl[oa]\s+údržby/i.test(text)
+  ) {
+    return "Pomalu jedoucí vozidlo údržby";
+  }
+
+  // Specific fallen object on roadway (wheel / cargo piece) — never invent from
+  // bare "předmět na vozovce" alone.
+  {
+    const fallenObj = formatFallenRoadObjectLead(facts, text);
+    if (fallenObj) return fallenObj;
   }
 
   // Source fallbacks when structured type was not filled but phrase is explicit.
@@ -6504,6 +6554,51 @@ export function formatObstructionSituationLead(facts = {}, source = "") {
       }
     }
     return meters ? "Olej na vozovce v délce " + meters : "Olej na vozovce";
+  }
+  if (/pomalu\s+jedoucí\s+vozidl[oa]\s+údržby/i.test(text)) {
+    return "Pomalu jedoucí vozidlo údržby";
+  }
+  {
+    const fallenObj = formatFallenRoadObjectLead(facts, text);
+    if (fallenObj) return fallenObj;
+  }
+  return null;
+}
+
+/**
+ * Concrete fallen object on the roadway from explicit NDIC phrasing.
+ * Never invents an object from bare "předmět / překážka na vozovce".
+ */
+export function formatFallenRoadObjectLead(facts = {}, source = "") {
+  const text = clean(source);
+  if (!text) return null;
+  // "upadlé kolo od NA" / after abbrev expand: "od nákladní automobil" / "od nákladního automobilu"
+  if (/upadl[éeý]\s+kolo\b/i.test(text)) {
+    const fromTruck =
+      /upadl[éeý]\s+kolo\s+(?:od|z)\s+(?:NA|nákladního(?:\s+automobilu)?|nákladní(?:\s+automobil)?)\b/i.test(
+        text
+      ) ||
+      /upadl[éeý]\s+kolo.{0,48}\b(?:od|z)\s+(?:NA|nákladního(?:\s+automobilu)?|nákladní(?:\s+automobil)?)\b/i.test(
+        text
+      );
+    if (fromTruck) {
+      return "Překážka na vozovce – upadlé kolo z nákladního automobilu";
+    }
+    return "Překážka na vozovce – upadlé kolo";
+  }
+  // Explicit "předmět na vozovce" + named fallen piece in same comment.
+  if (
+    /předmět\s+na\s+vozovce/i.test(text) &&
+    /upadl[éeý]\s+(?:pneumatik|náklad|část\s+vozidla)/i.test(text)
+  ) {
+    const piece = text.match(/upadl[éeý]\s+(pneumatik\w*|náklad\w*|část\s+vozidla)/i);
+    if (piece) {
+      return (
+        "Překážka na vozovce – upadl" +
+        (/\bpneumatik/i.test(piece[1]) ? "á " : "ý ") +
+        clean(piece[1]).toLocaleLowerCase("cs")
+      );
+    }
   }
   return null;
 }
@@ -6894,9 +6989,22 @@ export function buildTrafficSituationSummary(input = {}) {
     } else {
       causeBits.push("Překážka na vozovce");
     }
+    // Additive: inspection ride is a separate user-relevant fact when source states it.
+    if (
+      /inspekční\s+jízda/i.test(source) &&
+      !causeBits.some((b) => /inspekční\s+jízda/i.test(b))
+    ) {
+      causeBits.push("Inspekční jízda");
+    }
   } else if (cause === PRIMARY_CAUSE.ROADWORKS || event.kind === EVENT_KIND.ROADWORKS) {
-    if (/pomalu jedoucí vozidlo údržby/i.test(source)) {
+    if (/pomalu jedoucí vozidlo údržby/i.test(source) || /pomalu\s+jedoucí\s+vozidl[oa]\s+údržby/i.test(source)) {
       causeBits.push("Pomalu jedoucí vozidlo údržby");
+    }
+    if (
+      /inspekční\s+jízda/i.test(source) &&
+      !causeBits.some((b) => /inspekční\s+jízda/i.test(b))
+    ) {
+      causeBits.push("Inspekční jízda");
     }
     if (/sekání\s+trávy|údržba\s+trav/i.test(source)) {
       causeBits.push("Probíhá sekání trávy a údržba travních porostů");
@@ -7353,19 +7461,27 @@ export function buildTrafficSituationSummary(input = {}) {
     } else if (/\bjeden\s+jízdní\s+pruh\b/i.test(source)) {
       scopeBits.push(formatLaneClosedImpact("jeden jízdní pruh", lifecycle, null));
     } else if (
-      /\bjízdní\s+pruh\s+uzavřen/i.test(source) ||
-      /\buzavřen[ýáo]?\s+jízdní\s+pruh\b/i.test(source) ||
-      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh\b/i.test(source)
+      hasSlowVehicleLaneClosedSource(source) ||
+      /\bjízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\s+uzavřen/i.test(source) ||
+      /\buzavřen[ýáo]?\s+jízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\b/i.test(source) ||
+      /\bneprůjezdn[ýáo]?\s+jízdní\s+pruh(?:\s+pro\s+pomalá\s+vozidla)?\b/i.test(source)
     ) {
-      // Bare NDIC "jízdní pruh uzavřen" — do not invent "jeden" / L/R.
+      // Bare NDIC "jízdní pruh uzavřen" / "jízdní pruh pro pomalá vozidla uzavřen".
+      // Prefer the explicit slow-vehicle lane noun when source states it — never invent.
+      const slowLane = hasSlowVehicleLaneClosedSource(source);
+      const laneNoun = slowLane ? "jízdní pruh pro pomalá vozidla" : "jízdní pruh";
       if (/neprůjezdn/i.test(source)) {
         scopeBits.push(
           lifecycle === EVENT_LIFECYCLE.FUTURE
-            ? "Jízdní pruh bude neprůjezdný"
-            : "Neprůjezdný jízdní pruh"
+            ? (slowLane
+                ? "Jízdní pruh pro pomalá vozidla bude neprůjezdný"
+                : "Jízdní pruh bude neprůjezdný")
+            : (slowLane
+                ? "Neprůjezdný jízdní pruh pro pomalá vozidla"
+                : "Neprůjezdný jízdní pruh")
         );
       } else {
-        scopeBits.push(formatLaneClosedImpact("jízdní pruh", lifecycle, null));
+        scopeBits.push(formatLaneClosedImpact(laneNoun, lifecycle, null));
       }
     } else if (
       facts.laneImpassable ||
