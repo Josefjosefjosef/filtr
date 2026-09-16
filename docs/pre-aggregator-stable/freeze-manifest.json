@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-traffic-source-fidelity-v1-20260915",
+  "freezeId": "iu-pwa-hide-traffic-offline-banner-v1-20260916",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-15T17:10:00.000Z",
-  "note": "Freeze bump: NDIC traffic source-fidelity (participants/safety/shoulder + cache-bust).",
+  "updatedAt": "2026-09-16T03:17:01.428Z",
+  "note": "Freeze bump: hide PWA traffic offline banner + CSP hash for prehled defer cache-bust.",
   "files": {
-    "projects/index.html": "52c5570c12f169809dd5fac0223cd0a7898e7c965fabae75aaa0e8bbf2fc6ac6",
+    "projects/index.html": "bffcea5006bebac076bcf2bb557133fd59fb9f414147b3e77021b43006627b20",
     "assets/app.css": "e6b499fa487321a720818b6aa5792058fb22bc64e6f7accfc6af8440ab6982e7",
     "assets/app.js": "1f6aafbb52d5beee42523fd9a84c8096b2ff1ddd7bba33b1cbbca696d643a9d6",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "bb82cecacc9c8e362e5dd645af593fa4989c5091b86e8b077b7d9990ceb02a65",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "a7284a8f5655a32e03201c3c7376c43994ebdf6213871149a7c3cd631e0ce255"
+    "assets/iu-prehled-dne-ui-v1.js": "e3466ebca07e772138ad2748cab7be07bcb3e9578b9919540a934dcde7ee7e80"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -134,7 +134,8 @@
       "traffic-primary-vs-referenced-road-v1-20260915",
       "traffic-primary-vs-referenced-street-v1-20260915",
       "menu-mindmenu-pinch-zoom-v1-20260915",
-      "silver-info-cards-collapse-v1-20260915"
+      "silver-info-cards-collapse-v1-20260915",
+      "pwa-hide-traffic-offline-banner-v1-20260916"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
