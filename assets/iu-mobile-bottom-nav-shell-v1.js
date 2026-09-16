@@ -176,6 +176,16 @@
       } catch (_) {}
       var cur = wrap.getAttribute("data-iu-mobile-gate");
       if (cur === "tools") {
+        try {
+          if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+            window.iuMindMenuClearAllReturnMarkers();
+          } else {
+            sessionStorage.removeItem("iuMindMenuReturnArmed");
+            sessionStorage.removeItem("iuMindMenuReturnScrollY");
+            sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+            localStorage.removeItem("iuMindMenuReturnPendingV1");
+          }
+        } catch (_clr) {}
         setTab("");
         try {
           var st = history.state && history.state.iu_mindmenu_overlay === true;
