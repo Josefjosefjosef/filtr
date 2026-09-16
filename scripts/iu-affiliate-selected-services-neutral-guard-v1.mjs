@@ -85,7 +85,9 @@ function auditStatic() {
   const itemCount = (catalog.match(/affItem\(/g) || []).length;
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
-  ok("catalog:cedok_slug", catalog.includes('affItem("Čedok", "cedok")'));
+  ok("catalog:cedok_slug", catalog.includes('affItem("", "cedok")'));
+  const namedItems = (catalog.match(/affItem\("[^"]+",/g) || []).length;
+  ok("catalog:partner_labels_empty", namedItems === 0, "named=" + namedItems);
   ok("catalog:ready_gate", catalog.includes("affiliateUrlReady === true"));
   ok("catalog:nofollow_sponsored", catalog.includes("nofollow sponsored noopener noreferrer"));
   for (const b of FORBIDDEN) {
@@ -261,6 +263,8 @@ try {
       const tag = vp.name + ":" + section;
       ok(tag + ":disclosure", snap.disclosureOk, snap.disclosure);
       ok(tag + ":chips", snap.chipCount >= 1, "chips=" + snap.chipCount);
+      const nonEmptyChip = (snap.chips || []).find((c) => (c.text || "").trim() !== "");
+      ok(tag + ":chips_labels_empty", !nonEmptyChip, nonEmptyChip ? nonEmptyChip.text : "");
       ok(tag + ":no_forbidden", !snap.forbiddenHit, snap.forbiddenHit);
       ok(tag + ":no_h_overflow", !snap.overflow);
       ok(tag + ":seo_has_neprovozuje", /neprovozuje/.test(snap.seoText));
