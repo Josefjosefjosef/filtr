@@ -228,7 +228,10 @@ export function localityPickerHtml(opts) {
 }
 
 function roadsBodyHtml(traffic, catalog, roadQuery, openRoadGroups) {
-  const selected = new Set((traffic.roads || []).map((r) => String(r).toUpperCase()));
+  const roadsList = traffic.roads || [];
+  // Feed semantics: empty roads [] = all roads active — UI must mirror that.
+  const isAllRoads = !roadsList.length;
+  const selected = new Set(roadsList.map((r) => String(r).toUpperCase()));
   const q = String(roadQuery || "")
     .trim()
     .toUpperCase();
@@ -238,7 +241,7 @@ function roadsBodyHtml(traffic, catalog, roadQuery, openRoadGroups) {
     if (q) roads = roads.filter((r) => r.includes(q));
     // Searching must surface matches even when the group was collapsed.
     const isOpen = !!open[g.id] || (q.length > 0 && roads.length > 0);
-    const allSelected = roads.length > 0 && roads.every((r) => selected.has(r));
+    const allSelected = isAllRoads || (roads.length > 0 && roads.every((r) => selected.has(r)));
     const body = isOpen
       ? `<div class="iuPdFeedRoadGroup__body">` +
         `<div class="iuPdFeedQuickActs">` +
@@ -249,7 +252,15 @@ function roadsBodyHtml(traffic, catalog, roadQuery, openRoadGroups) {
         (roads.length
           ? roads
               .slice(0, 400)
-              .map((r) => checkItem("feed-road-toggle", r, r, selected.has(r), ` data-group="${esc(g.id)}"`))
+              .map((r) =>
+                checkItem(
+                  "feed-road-toggle",
+                  r,
+                  r,
+                  isAllRoads || selected.has(r),
+                  ` data-group="${esc(g.id)}"`
+                )
+              )
               .join("")
           : `<p class="iuPdFeedHint">Žádné komunikace v aktuálních datech.</p>`) +
         (roads.length > 400
@@ -299,14 +310,17 @@ function eventsBodyHtml(traffic) {
 
 function parkingBodyHtml(traffic, openParkingCities) {
   const enabled = !!traffic.parkingEnabled;
-  const selected = new Set(traffic.parkingIds || []);
+  const idsList = traffic.parkingIds || [];
+  // Feed: parkingEnabled + empty ids [] = all registry lots — UI must mirror that.
+  const isAllLots = enabled && !idsList.length;
+  const selected = new Set(idsList);
   const cities = parkingCitiesFromRegistry();
   const open = openParkingCities || {};
   const cityBlocks = cities
     .map((city) => {
       const isOpen = !!open[city.city];
       const lotIds = city.lots.map((l) => l.id);
-      const allOn = lotIds.length > 0 && lotIds.every((id) => selected.has(id));
+      const allOn = isAllLots || (lotIds.length > 0 && lotIds.every((id) => selected.has(id)));
       const body = isOpen
         ? `<div class="iuPdFeedParkCity__body">` +
           `<div class="iuPdFeedQuickActs">` +
@@ -315,7 +329,15 @@ function parkingBodyHtml(traffic, openParkingCities) {
           )}">${allOn ? "Zrušit všechna" : "Vybrat všechna"}</button>` +
           `</div>` +
           city.lots
-            .map((l) => checkItem("feed-park-toggle", l.id, l.name, selected.has(l.id), ` data-city="${esc(city.city)}"`))
+            .map((l) =>
+              checkItem(
+                "feed-park-toggle",
+                l.id,
+                l.name,
+                isAllLots || selected.has(l.id),
+                ` data-city="${esc(city.city)}"`
+              )
+            )
             .join("") +
           `</div>`
         : "";
@@ -483,22 +505,67 @@ export function removeCityLocality(ff, kind, name, id) {
   );
 }
 
-export function toggleRoad(ff, road, on) {
-  const r = String(road || "").toUpperCase();
-  let roads = (ff.traffic.roads || []).map((x) => String(x).toUpperCase());
-  roads = roads.filter((x) => x !== r);
-  if (on) roads.push(r);
-  ff.traffic.roads = roads;
+function normalizeRoadCatalog(allRoadsCatalog) {
+  return (allRoadsCatalog || [])
+    .map((x) => String(x || "").toUpperCase())
+    .filter(Boolean);
 }
 
-export function setRoadsGroup(ff, roadsInGroup, selectAll) {
-  const set = new Set((ff.traffic.roads || []).map((x) => String(x).toUpperCase()));
-  for (const r of roadsInGroup || []) {
-    const u = String(r).toUpperCase();
+function collapseRoadsIfFull(roads, allRoadsCatalog) {
+  const all = normalizeRoadCatalog(allRoadsCatalog);
+  if (!all.length || !roads.length) return roads;
+  if (roads.length < all.length) return roads;
+  const set = new Set(roads);
+  if (all.every((r) => set.has(r))) return [];
+  return roads;
+}
+
+/**
+ * @param {object} ff
+ * @param {string} road
+ * @param {boolean} on
+ * @param {string[]} [allRoadsCatalog] full catalog (for empty=all materialize / collapse)
+ */
+export function toggleRoad(ff, road, on, allRoadsCatalog) {
+  const r = String(road || "").toUpperCase();
+  let roads = (ff.traffic.roads || []).map((x) => String(x).toUpperCase());
+  const all = normalizeRoadCatalog(allRoadsCatalog);
+  // empty = all: first uncheck materializes full catalog minus one
+  if (!roads.length) {
+    if (on) return;
+    if (!all.length) return;
+    roads = all.filter((x) => x !== r);
+    ff.traffic.roads = roads;
+    return;
+  }
+  roads = roads.filter((x) => x !== r);
+  if (on) roads.push(r);
+  ff.traffic.roads = collapseRoadsIfFull(roads, all);
+}
+
+/**
+ * @param {object} ff
+ * @param {string[]} roadsInGroup
+ * @param {boolean} selectAll
+ * @param {string[]} [allRoadsCatalog]
+ */
+export function setRoadsGroup(ff, roadsInGroup, selectAll, allRoadsCatalog) {
+  const group = (roadsInGroup || []).map((x) => String(x).toUpperCase()).filter(Boolean);
+  let roads = (ff.traffic.roads || []).map((x) => String(x).toUpperCase());
+  const all = normalizeRoadCatalog(allRoadsCatalog);
+  if (!roads.length) {
+    if (selectAll) return;
+    if (!all.length) return;
+    const drop = new Set(group);
+    ff.traffic.roads = all.filter((x) => !drop.has(x));
+    return;
+  }
+  const set = new Set(roads);
+  for (const u of group) {
     if (selectAll) set.add(u);
     else set.delete(u);
   }
-  ff.traffic.roads = Array.from(set);
+  ff.traffic.roads = collapseRoadsIfFull(Array.from(set), all);
 }
 
 export function toggleEventCategory(ff, id, on) {
@@ -531,23 +598,61 @@ export function toggleParkingEnabled(ff, on) {
   }
 }
 
+function allRegistryParkingIds() {
+  const out = [];
+  for (const city of parkingCitiesFromRegistry()) {
+    for (const lot of city.lots || []) {
+      if (lot && lot.id) out.push(lot.id);
+    }
+  }
+  return out;
+}
+
+function collapseParkingIfFull(ids) {
+  const all = allRegistryParkingIds();
+  if (!all.length || !ids.length) return ids;
+  if (ids.length < all.length) return ids;
+  const set = new Set(ids);
+  if (all.every((id) => set.has(id))) return [];
+  return ids;
+}
+
+/**
+ * @param {object} ff
+ * @param {string} id
+ * @param {boolean} on
+ */
 export function toggleParkingId(ff, id, on) {
   let ids = (ff.traffic.parkingIds || []).slice();
+  // enabled + empty ids = all lots: first uncheck materializes registry minus one
+  if (ff.traffic.parkingEnabled && !ids.length) {
+    if (on) return;
+    ids = allRegistryParkingIds().filter((x) => x !== id);
+    ff.traffic.parkingIds = ids;
+    return;
+  }
   ids = ids.filter((x) => x !== id);
   if (on) ids.push(id);
-  ff.traffic.parkingIds = ids;
-  if (ids.length) ff.traffic.parkingEnabled = true;
+  ff.traffic.parkingIds = collapseParkingIfFull(ids);
+  if (ff.traffic.parkingIds.length || on) ff.traffic.parkingEnabled = true;
 }
 
 export function setParkingCity(ff, cityLots, selectAll) {
   const lotIds = (cityLots || []).map((l) => l.id);
-  let ids = new Set(ff.traffic.parkingIds || []);
-  for (const id of lotIds) {
-    if (selectAll) ids.add(id);
-    else ids.delete(id);
+  let ids = ff.traffic.parkingIds || [];
+  if (ff.traffic.parkingEnabled && !ids.length) {
+    if (selectAll) return;
+    const drop = new Set(lotIds);
+    ff.traffic.parkingIds = allRegistryParkingIds().filter((x) => !drop.has(x));
+    return;
   }
-  ff.traffic.parkingIds = Array.from(ids);
-  if (ff.traffic.parkingIds.length) ff.traffic.parkingEnabled = true;
+  const set = new Set(ids);
+  for (const id of lotIds) {
+    if (selectAll) set.add(id);
+    else set.delete(id);
+  }
+  ff.traffic.parkingIds = collapseParkingIfFull(Array.from(set));
+  if (ff.traffic.parkingIds.length || selectAll) ff.traffic.parkingEnabled = true;
 }
 
 export function resetTraffic(ff) {
