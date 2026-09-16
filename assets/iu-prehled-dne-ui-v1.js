@@ -2727,8 +2727,9 @@ function focusSettingsCloseBtn() {
 }
 
 /**
- * Open Settings immediately. Do not await traffic/CHMU datasets — main panel only
- * needs feed-settings HTML module; traffic overview is for detail catalogs.
+ * Open Settings immediately. Do not await (or even kick) traffic/CHMU datasets —
+ * main panel only needs the feed-settings HTML module. Traffic overview loads
+ * when the user opens the traffic detail (road catalog).
  */
 function openSettings(opener) {
   captureFeedScroll();
@@ -2745,6 +2746,7 @@ function openSettings(opener) {
   state.openParkingCities = {};
   state.saveError = "";
   state.openSourceGroups = {};
+  const needBodyFill = !feedSettingsMod;
   // Mount shell synchronously — first open must not wait on traffic overview import/data.
   mountSettingsOverlay();
   setBodyScrollLock(true);
@@ -2753,13 +2755,12 @@ function openSettings(opener) {
   focusSettingsCloseBtn();
   void loadFeedSettings().then(() => {
     if (!state.settingsOpen) return;
+    if (!needBodyFill && document.querySelector("[data-iu-pd-feed-main]")) return;
     paintSettingsOnly({ resetSettingsScroll: true });
     wire();
     resetSettingsScroll();
     focusSettingsCloseBtn();
   });
-  // Prefetch for traffic detail road catalog only (non-blocking).
-  void loadTrafficOverview();
 }
 
 function refreshSettingsKeepingScroll() {
@@ -3197,6 +3198,13 @@ function wire() {
       paintSettingsOnly({ resetSettingsScroll: true });
       wire();
       resetSettingsScroll();
+      if (kind === "traffic") {
+        // Lazy: road catalog needs traffic overview — do not block Settings open.
+        void loadTrafficOverview().then(() => {
+          if (!state.settingsOpen || state.activeSection !== "traffic") return;
+          refreshSettingsKeepingScroll();
+        });
+      }
       return;
     }
     if (act === "feed-coming-soon") {

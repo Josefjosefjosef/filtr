@@ -74,14 +74,8 @@ function staticGate() {
     !/Promise\.all\(\[\s*loadFeedSettings\(\)\s*,\s*loadTrafficOverview\(\)\s*\]\)/.test(openSlice)
   );
   ok(
-    "open_mount_before_traffic_await",
-    (() => {
-      const mountAt = openSlice.indexOf("mountSettingsOverlay()");
-      const trafficAt = openSlice.indexOf("loadTrafficOverview()");
-      if (mountAt < 0) return false;
-      // traffic prefetch after mount is OK; blocking await-before-mount is not
-      return trafficAt < 0 || mountAt < trafficAt;
-    })()
+    "open_no_traffic_kick",
+    !/loadTrafficOverview\(\)/.test(openSlice)
   );
   ok(
     "open_mount_sync_not_only_in_then",
