@@ -57,7 +57,7 @@ import {
 const TRAFFIC_OVERVIEW_MOD_URL =
   "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915-traffic-bare-road-i3-shoulder-v1-20260915-traffic-primary-vs-referenced-road-v1-20260915-traffic-primary-vs-referenced-street-v1-20260915-traffic-source-fidelity-v1-20260915";
 const FEED_SETTINGS_MOD_URL =
-  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903";
+  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903-pd-settings-first-open-sync-v1-20260916";
 
 let trafficOverviewMod = null;
 let trafficOverviewPromise = null;
@@ -2713,6 +2713,24 @@ function closeSettings() {
   else finish();
 }
 
+function focusSettingsCloseBtn() {
+  const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
+  if (closeBtn && typeof closeBtn.focus === "function") {
+    try {
+      closeBtn.focus({ preventScroll: true });
+    } catch (_) {
+      try {
+        closeBtn.focus();
+      } catch (_2) {}
+    }
+  }
+}
+
+/**
+ * Open Settings immediately. Do not await (or even kick) traffic/CHMU datasets —
+ * main panel only needs the feed-settings HTML module. Traffic overview loads
+ * when the user opens the traffic detail (road catalog).
+ */
 function openSettings(opener) {
   captureFeedScroll();
   state.settingsOpener = opener || null;
@@ -2728,22 +2746,20 @@ function openSettings(opener) {
   state.openParkingCities = {};
   state.saveError = "";
   state.openSourceGroups = {};
-  void Promise.all([loadFeedSettings(), loadTrafficOverview()]).then(() => {
-    mountSettingsOverlay();
-    setBodyScrollLock(true);
+  const needBodyFill = !feedSettingsMod;
+  // Mount shell synchronously — first open must not wait on traffic overview import/data.
+  mountSettingsOverlay();
+  setBodyScrollLock(true);
+  wire();
+  resetSettingsScroll();
+  focusSettingsCloseBtn();
+  void loadFeedSettings().then(() => {
+    if (!state.settingsOpen) return;
+    if (!needBodyFill && document.querySelector("[data-iu-pd-feed-main]")) return;
+    paintSettingsOnly({ resetSettingsScroll: true });
     wire();
     resetSettingsScroll();
-    const closeBtn = document.querySelector('#iuPdSettings [data-act="settings-close"].iuPdIconBtn');
-    if (closeBtn && typeof closeBtn.focus === "function") {
-      try {
-        closeBtn.focus({ preventScroll: true });
-      } catch (_) {
-        try {
-          closeBtn.focus();
-        } catch (_2) {}
-      }
-    }
-    resetSettingsScroll();
+    focusSettingsCloseBtn();
   });
 }
 
@@ -3182,6 +3198,13 @@ function wire() {
       paintSettingsOnly({ resetSettingsScroll: true });
       wire();
       resetSettingsScroll();
+      if (kind === "traffic") {
+        // Lazy: road catalog needs traffic overview — do not block Settings open.
+        void loadTrafficOverview().then(() => {
+          if (!state.settingsOpen || state.activeSection !== "traffic") return;
+          refreshSettingsKeepingScroll();
+        });
+      }
       return;
     }
     if (act === "feed-coming-soon") {
@@ -3276,9 +3299,16 @@ function wire() {
         void loadFeedSettings().then(() => wire());
         return;
       }
-      mutateFeedFilter((ff) => feedSettingsMod.toggleRoad(ff, t.getAttribute("data-value"), !!t.checked), {
-        keepSettingsDom: true,
-      });
+      const catalog = buildRoadCatalogFromTrafficItems(
+        trafficItemsForSettingsDraft(state.draft || state.prefs)
+      );
+      mutateFeedFilter(
+        (ff) =>
+          feedSettingsMod.toggleRoad(ff, t.getAttribute("data-value"), !!t.checked, catalog.all || []),
+        {
+          keepSettingsDom: true,
+        }
+      );
       return;
     }
     if (act === "feed-roads-all") {
@@ -3291,11 +3321,11 @@ function wire() {
         trafficItemsForSettingsDraft(state.draft || state.prefs)
       );
       const roads = (catalog.byClass && catalog.byClass[g]) || [];
-      const selected = new Set(
-        (ensureFeedFilter(state.draft).traffic.roads || []).map((x) => String(x).toUpperCase())
-      );
-      const allOn = roads.length > 0 && roads.every((r) => selected.has(r));
-      mutateFeedFilter((ff) => feedSettingsMod.setRoadsGroup(ff, roads, !allOn));
+      const roadsList = ensureFeedFilter(state.draft).traffic.roads || [];
+      const isAllRoads = !roadsList.length;
+      const selected = new Set(roadsList.map((x) => String(x).toUpperCase()));
+      const allOn = isAllRoads || (roads.length > 0 && roads.every((r) => selected.has(r)));
+      mutateFeedFilter((ff) => feedSettingsMod.setRoadsGroup(ff, roads, !allOn, catalog.all || []));
       return;
     }
     if (act === "feed-event-toggle") {
@@ -3352,8 +3382,11 @@ function wire() {
       const cityName = t.getAttribute("data-city");
       const city = parkingCitiesFromRegistry().find((c) => c.city === cityName);
       if (!city) return;
-      const ids = new Set(ensureFeedFilter(state.draft).traffic.parkingIds || []);
-      const allOn = city.lots.every((l) => ids.has(l.id));
+      const tf = ensureFeedFilter(state.draft).traffic;
+      const idsList = tf.parkingIds || [];
+      const isAllLots = !!tf.parkingEnabled && !idsList.length;
+      const ids = new Set(idsList);
+      const allOn = isAllLots || city.lots.every((l) => ids.has(l.id));
       mutateFeedFilter((ff) => feedSettingsMod.setParkingCity(ff, city.lots, !allOn));
       return;
     }
@@ -3745,6 +3778,16 @@ async function boot() {
     }
   };
   scheduleCzMapSprite();
+  // Warm settings HTML module so first open does not wait on import (still lazy; not traffic).
+  try {
+    if (typeof requestIdleCallback === "function") {
+      requestIdleCallback(() => void loadFeedSettings(), { timeout: 6000 });
+    } else {
+      setTimeout(() => void loadFeedSettings(), 1200);
+    }
+  } catch (_) {
+    setTimeout(() => void loadFeedSettings(), 1200);
+  }
   const root = ensureRoot();
   if (!root) return;
   // Interactive hero/CTA must exist BEFORE feed hydrate (feed.json can be tens of MB).
