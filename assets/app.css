@@ -3916,9 +3916,22 @@ body[data-iu-fc="1"] #iuCenterStage[data-iu-view="articles"] .iuArticlesStage:ha
    DoplĹuje stĂˇvajĂ­cĂ­ konzumenty (#feed â‰¤767, tool hosty, gate panely, tasks/notes/kalendĂˇĹ™)
    o chybÄ›jĂ­cĂ­ scroll rooty â€” ĹľĂˇdnĂ© per-page hardcody. */
 @media (max-width: 900px) {
+  /* Home gate (Přehled / Výstrahy ČHMÚ): flush white-box bottom to top of fixed
+     #iuMobileBottomNav. Use live --bottom-nav-height (not safe-space +40) so
+     scroll-end has no empty strip under the box; card count is dynamic. */
   body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap{
-    padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 52px)) !important;
+    padding-bottom: var(
+      --bottom-nav-height,
+      calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)))
+    ) !important;
     box-sizing: border-box !important;
+  }
+  /* Trailing silver chrome after PD root stacked on gate pad → visible gap above nav. */
+  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap #iuMobileSilverSlot .silver-slot{
+    margin-bottom: 0 !important;
+  }
+  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) #iuMobileGateWrap .iuSilverTallScrollSection{
+    padding-bottom: 0 !important;
   }
 }
 @media (min-width: 768px) and (max-width: 900px),
@@ -15858,7 +15871,11 @@ body .accordionCol .mindMenu section.iu-mmQuickLinks:not(.iu-mojeSluzby)[class] 
   }
   .iuSilverTallScrollSection{
     padding-top: 5px !important;
+    /* Bottom pad zeroed on home gate (see #iuMobileGateWrap flush rule); keep 5px elsewhere. */
     padding-bottom: 5px !important;
+  }
+  body:not(.iu-mobileMainVisible):not(.iu-mobileGateOverlayOpen) .iuSilverTallScrollSection{
+    padding-bottom: 0 !important;
   }
 }
 
