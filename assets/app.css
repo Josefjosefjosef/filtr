@@ -9454,6 +9454,43 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     padding-bottom: var(--iu-mobile-bottom-nav-safe-space, calc(56px + env(safe-area-inset-bottom, 0px) + 12px + 28px)) !important;
     box-sizing: border-box !important;
   }
+  /* P0 MindMenu tools gate: flush white .mindMenu box bottom to top of fixed
+     #iuMobileBottomNav (same contract as home CHMU flush). safe-space +40 left
+     an empty strip under the box. Button count is dynamic — min-height fills
+     short content above the nav; panel pad clears tall scroll-end. */
+  body.iu-mobileGateOverlayOpen #iuMobileGateContent #iuMobileGatePanelTools.iu-mobileGatePanel:not([hidden]){
+    padding-bottom: var(
+      --bottom-nav-height,
+      calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)))
+    ) !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelTools #iuMobileMindMenuFlow{
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    /* Kill stale inline minHeight from iuQuickToolsSyncMobileMindMenuFlowHeight —
+       it left empty space under the white .mindMenu box after tile remove. */
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  body.iu-mobileGateOverlayOpen #iuMobileGatePanelTools .mindMenu{
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    /* Fill above fixed nav (shell may force flow display:block — avoid flex-only fill). */
+    min-height: calc(
+      100dvh
+      - env(safe-area-inset-top, 0px)
+      - env(safe-area-inset-bottom, 0px)
+      - var(
+        --bottom-nav-height,
+        calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)))
+      )
+    ) !important;
+  }
   
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelNav.iu-mobileGatePanel:not([hidden]){
     display: block !important;
