@@ -18,6 +18,8 @@
  *   - Real arm path writes durable localStorage pending (survives session wipe)
  *   - Process-death resume (session cleared, pending kept) restores MindMenu+scroll
  *   - Late popstate after latch window must not force Home while pending/guard active
+ *   - Post-restore shell/nav CloseForMainNav must NOT force Home while pending/guard active
+ *     (device FAIL class: MindMenu OK → Home flash → MindMenu again)
  *   - Intentional tools close / Domů still reaches Home
  *   - ≥3 external-return cycles
  *
@@ -86,6 +88,17 @@ function staticGate() {
     must(/iu_mindmenu_overlay\s*===\s*true/.test(app), "static:router_mindmenu_state");
     must(/iuMindMenuReturnPendingV1/.test(app) || /mindPending/.test(app), "static:router_mindmenu_pending");
     must(/pwa-mindmenu-external-return-v1-20260916b/.test(app), "static:app_cache_bust");
+    must(/iuMindMenuHasReturnGuard/.test(feed), "static:has_return_guard_export");
+    must(/window\.iuMindMenuHasReturnGuard\s*=\s*iuMindMenuHasReturnGuard/.test(feed), "static:has_return_guard_window");
+    must(
+      /function iuMobileGateCloseForMainNav\s*\(\s*\)\s*\{[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(feed),
+      "static:close_for_main_nav_respects_return_guard"
+    );
+    const shell = read("assets/iu-mobile-bottom-nav-shell-v1.js");
+    must(
+      /iuMobileGateCloseForMainNav\s*=\s*function[\s\S]{0,500}iuMindMenuHasReturnGuard/.test(shell),
+      "static:shell_close_respects_return_guard"
+    );
   }
 }
 
@@ -239,6 +252,9 @@ async function simulateProcessDeathResume(page) {
     document.dispatchEvent(new Event("visibilitychange"));
     if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
 
+    const gateAfterRestore = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    const idxAfterRestore = transitions.length;
+
     // Late synthetic popstate AFTER resume (OS history quirk), with latch expired.
     try {
       sessionStorage.removeItem("iuMindMenuReturnLatchTs");
@@ -249,14 +265,31 @@ async function simulateProcessDeathResume(page) {
     } catch (_) {}
     window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
 
+    /* Post-#10873 device FAIL class: restore already reopened MindMenu, then a late
+       shell/nav CloseForMainNav (section chrome / hub apply) forced Home while durable
+       pending was still live — second restore then jumped back to MindMenu. */
+    if (typeof window.iuMobileGateCloseForMainNav === "function") {
+      window.iuMobileGateCloseForMainNav();
+    }
+    const gateAfterClose = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    const postRestoreTransitions = transitions.slice(idxAfterRestore);
+    const homeFlashAfterRestore = postRestoreTransitions.includes("");
+
+    // Second restore tick (visibility/pageshow class) — must recover if sink misfired.
+    if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
+
     if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab = orig;
     const panelAfter = document.getElementById("iuMobileGatePanelTools");
     return {
       transitions,
       visitedHome: transitions.includes(""),
+      gateAfterRestore,
+      gateAfterClose,
+      homeFlashAfterRestore,
       finalGate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
       panelScroll: panelAfter ? panelAfter.scrollTop || 0 : -1,
       hash: String(location.hash || "").replace("#", ""),
+      pendingAlive: !!localStorage.getItem("iuMindMenuReturnPendingV1"),
     };
   });
 }
@@ -339,6 +372,12 @@ async function runPlaywright() {
       must(after.overlayState === true, "after:overlay_state");
       must(after.bodyGate === true, "after:body_overlay_class");
       must(death.finalGate === "tools", "after:death_final_tools:" + death.finalGate);
+      must(death.gateAfterRestore === "tools", "after:restore_first_tools:" + death.gateAfterRestore);
+      must(
+        death.homeFlashAfterRestore !== true,
+        "after:no_home_flash_after_restore:gateAfterClose=" + death.gateAfterClose
+      );
+      must(death.gateAfterClose === "tools", "after:close_sink_kept_tools:" + death.gateAfterClose);
       if (scrollExpect > 40) {
         must(
           after.panelScroll >= Math.floor(scrollExpect * 0.5),
@@ -357,6 +396,10 @@ async function runPlaywright() {
         must(cSnap.gate === "tools", "cycle" + i + ":gate:" + cSnap.gate);
         must(cSnap.hash === "iu-mindmenu", "cycle" + i + ":hash:" + cSnap.hash);
         must(cycle.finalGate === "tools", "cycle" + i + ":death_tools:" + cycle.finalGate);
+        must(
+          cycle.homeFlashAfterRestore !== true,
+          "cycle" + i + ":no_home_flash:afterClose=" + cycle.gateAfterClose
+        );
         if (scrollExpect > 40) {
           must(
             cSnap.panelScroll >= Math.floor(scrollExpect * 0.5),
