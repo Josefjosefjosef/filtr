@@ -49,6 +49,7 @@ const EXPECTED_CAT_IDS = [
   "aff-drogerie",
   "aff-moda",
   "aff-boty",
+  "aff-deti-hracky",
   "aff-sportovni-obleceni",
   "aff-sport-outdoor",
   "aff-dum-zahrada",
@@ -61,6 +62,20 @@ const EXPECTED_CAT_IDS = [
   "aff-jidlo",
   "aff-zvirata",
 ];
+
+const EXPECTED_CAT_TITLES = {
+  "aff-letenky": "Doprava a cestování",
+  "aff-moda": "Móda a doplňky",
+  "aff-deti-hracky": "Děti a hračky",
+  "aff-nabytek": "Bydlení a vybavení",
+};
+
+const EXPECTED_CAT_ICONS = {
+  "aff-letenky": "iu-aff-transport",
+  "aff-moda": "iu-aff-shirt",
+  "aff-deti-hracky": "iu-aff-blocks",
+  "aff-nabytek": "iu-aff-sofa",
+};
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -82,6 +97,33 @@ function auditStatic() {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
     ok("catalog:seo:" + id, catalog.includes('"' + id + '": affSeo('));
   }
+  ok("catalog:count_26", EXPECTED_CAT_IDS.length === 26, "n=" + EXPECTED_CAT_IDS.length);
+  const catalogMarker = catalog.indexOf("var IU_AFFILIATE_CATALOG");
+  const catalogSlice = catalogMarker >= 0 ? catalog.slice(catalogMarker) : catalog;
+  const catalogIds = [];
+  const catIdRe = /id:\s*"(aff-[^"]+)"/g;
+  let cm;
+  while ((cm = catIdRe.exec(catalogSlice))) catalogIds.push(cm[1]);
+  ok("catalog:order_len", catalogIds.length === EXPECTED_CAT_IDS.length, "got=" + catalogIds.length);
+  ok(
+    "catalog:order_exact",
+    catalogIds.length === EXPECTED_CAT_IDS.length &&
+      EXPECTED_CAT_IDS.every((id, i) => catalogIds[i] === id),
+    catalogIds.join(",")
+  );
+  for (const [id, title] of Object.entries(EXPECTED_CAT_TITLES)) {
+    ok("catalog:title:" + id, catalog.includes('title: "' + title + '"'), title);
+    ok("catalog:seo_title:" + id, catalog.includes(title + " – odkazy"), title);
+  }
+  for (const [id, icon] of Object.entries(EXPECTED_CAT_ICONS)) {
+    const blockRe = new RegExp('id:\\s*"' + id + '"[\\s\\S]*?icon:\\s*"' + icon + '"');
+    ok("catalog:icon:" + id, blockRe.test(catalog), icon);
+  }
+  const sprite = fs.readFileSync(path.join(ROOT, "assets", "icons", "iu-sprite.svg"), "utf8");
+  for (const icon of Object.values(EXPECTED_CAT_ICONS)) {
+    ok("sprite:symbol:" + icon, sprite.includes('id="' + icon + '"'));
+  }
+  ok("css:deti_accent", fs.readFileSync(path.join(ROOT, "assets", "app.css"), "utf8").includes("--iuAff-aff-deti-hracky"));
   const itemCount = (catalog.match(/affItem\(/g) || []).length;
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
@@ -95,7 +137,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-selected-services-neutral-v1-20260907"));
+  ok("index:cache_bust", index.includes("affiliate-categories-26-structure-v1-20260917"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
   ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));
@@ -205,6 +247,7 @@ await waitForPort("127.0.0.1", PORT, 10000);
 
 const sampleSections = [
   "aff-cestovni-kancelare",
+  "aff-letenky",
   "aff-finance",
   "aff-pojisteni",
   "aff-energie-uspor",
@@ -213,6 +256,7 @@ const sampleSections = [
   "aff-software",
   "aff-elektro",
   "aff-moda",
+  "aff-deti-hracky",
   "aff-nabytek",
 ];
 
@@ -273,8 +317,44 @@ try {
         ok(tag + ":travel_intro", snap.subtitle === TRAVEL_INTRO, snap.subtitle);
         ok(tag + ":travel_seo_h2", snap.seoText.includes(TRAVEL_SEO_H2));
       }
+      if (section === "aff-letenky") {
+        ok(tag + ":title_doprava", snap.title === "Doprava a cestování", snap.title);
+      }
+      if (section === "aff-moda") {
+        ok(tag + ":title_moda", snap.title === "Móda a doplňky", snap.title);
+      }
+      if (section === "aff-nabytek") {
+        ok(tag + ":title_bydleni", snap.title === "Bydlení a vybavení", snap.title);
+      }
+      if (section === "aff-deti-hracky") {
+        ok(tag + ":title_deti", snap.title === "Děti a hračky", snap.title);
+      }
       if (vp.name === "desktop" && section === "aff-cestovni-kancelare") {
         ok(tag + ":rail_title", snap.railTitle === SECTION_TITLE || /Vybrané služby a odkazy/i.test(snap.railTitle), snap.railTitle);
+        const railSnap = await page.evaluate((expectedIds) => {
+          const items = Array.from(
+            document.querySelectorAll('#iuLeftRail .iu-leftNavItem[data-rail="affiliate"]')
+          );
+          return {
+            count: items.length,
+            ids: items.map((el) => el.getAttribute("data-accent") || ""),
+            labels: items.map((el) => {
+              const lab = el.querySelector(".iu-leftNavLabel");
+              return lab ? (lab.textContent || "").replace(/\s+/g, " ").trim() : "";
+            }),
+          };
+        }, EXPECTED_CAT_IDS);
+        ok(tag + ":rail_count_26", railSnap.count === 26, "count=" + railSnap.count);
+        ok(
+          tag + ":rail_order",
+          railSnap.ids.length === EXPECTED_CAT_IDS.length &&
+            EXPECTED_CAT_IDS.every((id, i) => railSnap.ids[i] === id),
+          railSnap.ids.join(",")
+        );
+        ok(tag + ":rail_label_doprava", railSnap.labels[2] === "Doprava a cestování", railSnap.labels[2]);
+        ok(tag + ":rail_label_moda", railSnap.labels[12] === "Móda a doplňky", railSnap.labels[12]);
+        ok(tag + ":rail_label_deti", railSnap.labels[14] === "Děti a hračky", railSnap.labels[14]);
+        ok(tag + ":rail_label_bydleni", railSnap.labels[18] === "Bydlení a vybavení", railSnap.labels[18]);
       }
       await context.close();
     }
