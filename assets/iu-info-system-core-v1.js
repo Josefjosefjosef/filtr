@@ -1444,14 +1444,58 @@ function uniqueSelectedOrpCodes(cities) {
 function cityMatchesWarning(city, warning, links, orpSet) {
   if (!city) return false;
   const code = normalizeOrpCode(city.orpCode);
-  if (code) {
-    if (orpSet.has(code)) return true;
-    return false;
-  }
+  if (code && orpSet.has(code)) return true;
   const name = String(city.name || "").trim();
   if (!name) return false;
-  // Legacy / ORP-seat name only — never invent obec→ORP from free text.
+  // ORP-seat name (also when obec has an orpCode that this warning omits as a bare code).
+  // Never invent obec→ORP from free text / searchText.
   return (links || []).some((l) => locNamesEqual(l.orpName, name));
+}
+
+/**
+ * Match a selected city against traffic / non-CAP region fields (municipality, district, region.name).
+ * Used only when the event has no structured CAP ORP geo — never widens CAP ORP matching.
+ */
+function cityMatchesUnstructuredLocation(city, ev) {
+  const name = String((city && city.name) || "").trim();
+  if (!name) return false;
+  const foldCity = foldLocName(name);
+  if (!foldCity) return false;
+  const candidates = [];
+  const push = (raw) => {
+    const s = String(raw == null ? "" : raw).trim();
+    if (s) candidates.push(s);
+  };
+  const tv = ev && ev.trafficV1;
+  if (tv) {
+    push(tv.municipality);
+    push(tv.district);
+    push(tv.location);
+  }
+  const r = ev && ev.region;
+  if (r) {
+    push(r.name);
+    push(r.summary);
+    push(r.orpName);
+    push(r.okresName);
+    if (Array.isArray(r.orpNames)) r.orpNames.forEach(push);
+    if (Array.isArray(r.okresNames)) r.okresNames.forEach(push);
+    if (Array.isArray(r.areaDescs)) r.areaDescs.forEach(push);
+  }
+  for (let i = 0; i < candidates.length; i++) {
+    const p = candidates[i];
+    if (locNamesEqual(p, name)) return true;
+    const fp = foldLocName(p);
+    if (!fp) continue;
+    // "Ostrava-město", "Ostrava-Poruba", "Hlavní město Praha"
+    if (fp === foldCity) return true;
+    if (fp.startsWith(foldCity + "-") || fp.startsWith(foldCity + " ")) return true;
+    if (foldCity.length >= 4) {
+      const parts = fp.split(/[^a-z0-9]+/).filter(Boolean);
+      if (parts.indexOf(foldCity) >= 0) return true;
+    }
+  }
+  return false;
 }
 
 function relevantSelectedCities(warning, active) {
@@ -1644,8 +1688,8 @@ function selectionRepresentedOrpCodes(selection, links, orpSet) {
   if (!selection) return out;
   if (selection.type === "city") {
     const code = normalizeOrpCode(selection.orpCode);
-    if (code) {
-      if (orpSet.has(code)) out.add(code);
+    if (code && orpSet.has(code)) {
+      out.add(code);
       return out;
     }
     const name = String(selection.name || "").trim();
@@ -1747,13 +1791,21 @@ function resolveWarningLocalityMatch(warning, activeLocationFilter) {
     }
   }
 
-  // Structured geo missing: allow kraj/okres text hit, but title still uses user selection names only.
+  // No structured CAP ORP geo (traffic cards, text-only regions): match cities by
+  // municipality / region name, and kraj/okres by text. CAP warnings with ORP links
+  // stay on the ORP path above — do not widen them with free-text city matching.
   if (!matchingSelections.length && !queryMatched && !hasStructuredGeo) {
-    const textNeedles = [...active.okresy, ...active.kraje].filter(Boolean).map((s) => String(s).toLowerCase());
-    if (textNeedles.length && regionMatches(warning, textNeedles)) {
-      for (const sel of selections) {
-        if (sel.type !== "kraj" && sel.type !== "okres") continue;
-        if (regionMatches(warning, [String(sel.name).toLowerCase()])) matchingSelections.push(sel);
+    for (const sel of selections) {
+      if (sel.type !== "city") continue;
+      if (cityMatchesUnstructuredLocation(sel, warning)) matchingSelections.push(sel);
+    }
+    if (!matchingSelections.length) {
+      const textNeedles = [...active.okresy, ...active.kraje].filter(Boolean).map((s) => String(s).toLowerCase());
+      if (textNeedles.length && regionMatches(warning, textNeedles)) {
+        for (const sel of selections) {
+          if (sel.type !== "kraj" && sel.type !== "okres") continue;
+          if (regionMatches(warning, [String(sel.name).toLowerCase()])) matchingSelections.push(sel);
+        }
       }
     }
   }

@@ -95,7 +95,7 @@ async function runViewport(page, base, viewportLabel, fails) {
   const seeded = await page.evaluate(
     async ({ payload }) => {
       const mod = await import(
-        "/assets/iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822"
+        "/assets/iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822-pd-city-filter-feed-match-v1-20260917"
       );
       const setPrefs = mod.setPrefs || (mod.default && mod.default.setPrefs);
       const awaitPrefsDurable =
@@ -119,7 +119,7 @@ async function runViewport(page, base, viewportLabel, fails) {
   // Simulate post-hydrate default pin + pageshow (Safari physical class).
   const afterPageshow = await page.evaluate(async (marker) => {
     const mod = await import(
-      "/assets/iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822"
+      "/assets/iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822-pd-city-filter-feed-match-v1-20260917"
     );
     const getPrefs = mod.getPrefs || (mod.default && mod.default.getPrefs);
     // Poison UI snapshot to defaults (physical race class).

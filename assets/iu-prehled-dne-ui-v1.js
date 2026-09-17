@@ -36,7 +36,7 @@ import {
   rollbackChmiCapV2UserStates,
   iuInfoDataUrl,
   MAX_CITY_LOCALITIES,
-} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822";
+} from "./iu-info-system-core-v1.js?v=evening-theme-settings-v1-20260818-perf-loop-iter001-parallel-boot-v1-20260819-perf-loop-iter003-core-dedupe-v1-20260820-chmi-asset-waterfall-v1-20260822-pd-city-filter-feed-match-v1-20260917";
 import { TRAFFIC_OVERVIEW_FLAGS } from "./iu-traffic-overview-flags-v1.js?v=chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906";
 import { ROAD_BADGE_CLASS } from "./iu-traffic-event-art-v1.js?v=ndic-smv-uls-resolver-v1-20260812";
 import {
@@ -52,12 +52,12 @@ import {
   sanitizeFeedFilter,
   quickViewBarHtml,
   emptyFeedStateHtml,
-} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-bare-road-i3-shoulder-v1-20260915";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-bare-road-i3-shoulder-v1-20260915-pd-city-filter-feed-match-v1-20260917";
 
 const TRAFFIC_OVERVIEW_MOD_URL =
   "./iu-traffic-overview-v1.js?v=ndic-info-loss-forensic-v1-20260813-perf-loop-iter004-lazy-presenter-v1-20260820-perf-loop-iter005-defer-presenter-v1-20260820-doprava-snap-first-paint-hydrate-v1-20260821-chmi-asset-waterfall-v1-20260822-traffic-first-batch-v1-20260906-traffic-auto-bg-full-hydrate-v1-20260906-pwa-traffic-resume-revalidate-v1-20260908-traffic-full-hydrate-after-dedupe-v1-20260910-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-full-hydrate-responsiveness-v1-20260913-parse-facts-memo-v1-20260913-traffic-tunnel-status-icon-v1-20260915-traffic-bare-road-i3-shoulder-v1-20260915-traffic-primary-vs-referenced-road-v1-20260915-traffic-primary-vs-referenced-street-v1-20260915-traffic-source-fidelity-v1-20260915-traffic-specific-facts-v1-20260917";
 const FEED_SETTINGS_MOD_URL =
-  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903-pd-settings-first-open-sync-v1-20260916";
+  "./iu-prehled-dne-feed-settings-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-coming-soon-v1-20260903-pd-settings-first-open-sync-v1-20260916-pd-city-filter-feed-match-v1-20260917";
 
 let trafficOverviewMod = null;
 let trafficOverviewPromise = null;

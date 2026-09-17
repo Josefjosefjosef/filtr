@@ -168,19 +168,29 @@ export function sanitizeFeedFilter(raw) {
     eventCategories.includes("__none__") && eventCategories.length > 1
       ? eventCategories.filter((id) => id !== "__none__")
       : eventCategories;
+  let trafficLocs = asLocalities(trafficIn.localities).filter((l) => l.level !== "kraj");
+  let chmuLocs = asLocalities(chmuIn.localities);
+  const trafficCities = trafficLocs.filter((l) => l.level === "mesto");
+  const chmuCities = chmuLocs.filter((l) => l.level === "mesto");
+  // Heal one-sided city selections so Doprava and ČHMÚ share the same city set.
+  if (trafficCities.length && !chmuCities.length) {
+    chmuLocs = chmuLocs.concat(trafficCities.map((c) => Object.assign({}, c)));
+  } else if (chmuCities.length && !trafficCities.length) {
+    trafficLocs = trafficLocs.concat(chmuCities.map((c) => Object.assign({}, c)));
+  }
   return {
     version: FEED_FILTER_VERSION,
     trafficEnabled: src.trafficEnabled !== false,
     chmuEnabled: src.chmuEnabled !== false,
     traffic: {
-      localities: asLocalities(trafficIn.localities).filter((l) => l.level !== "kraj"),
+      localities: trafficLocs,
       roads: asStringArray(trafficIn.roads).map((r) => r.toUpperCase()),
       eventCategories: eventCategoriesFinal,
       parkingEnabled: !!trafficIn.parkingEnabled,
       parkingIds: asStringArray(trafficIn.parkingIds),
     },
     chmu: {
-      localities: asLocalities(chmuIn.localities),
+      localities: chmuLocs,
     },
   };
 }

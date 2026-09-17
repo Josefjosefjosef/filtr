@@ -17,7 +17,7 @@ import {
   summarizeRoads,
   quickViewBarHtml as _quickViewBarHtml,
   emptyFeedStateHtml as _emptyFeedStateHtml,
-} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-bare-road-i3-shoulder-v1-20260915";
+} from "./iu-feed-filter-v1.js?v=evening-theme-settings-v1-20260818-chmi-asset-waterfall-v1-20260822-traffic-filter-correctness-v1-20260911-traffic-filter-parking-text-occ-v1-20260911-traffic-bare-road-i3-shoulder-v1-20260915-pd-city-filter-feed-match-v1-20260917";
 
 function esc(s) {
   return String(s ?? "")
@@ -481,28 +481,41 @@ export function toggleLocOkres(ff, okresName, on) {
 }
 
 export function addCityLocality(ff, kind, city, maxCities) {
-  const target = kind === "chmu" ? ff.chmu : ff.traffic;
-  const locs = Array.isArray(target.localities) ? target.localities.slice() : [];
-  const cities = locs.filter((l) => l.level === "mesto");
-  if (cities.length >= maxCities) return { ok: false, reason: "limit" };
-  if (cities.some((c) => c.name === city.name && String(c.id || "") === String(city.id || ""))) {
-    return { ok: true };
-  }
-  locs.push({
-    name: city.name,
-    level: "mesto",
-    id: city.id || "",
-    orpCode: city.orpCode || "",
-  });
-  target.localities = locs;
+  const primary = kind === "chmu" ? ff.chmu : ff.traffic;
+  const mirror = kind === "chmu" ? ff.traffic : ff.chmu;
+  const apply = (target) => {
+    const locs = Array.isArray(target.localities) ? target.localities.slice() : [];
+    const cities = locs.filter((l) => l.level === "mesto");
+    if (cities.length >= maxCities) return { ok: false, reason: "limit" };
+    if (cities.some((c) => c.name === city.name && String(c.id || "") === String(city.id || ""))) {
+      return { ok: true, locs };
+    }
+    locs.push({
+      name: city.name,
+      level: "mesto",
+      id: city.id || "",
+      orpCode: city.orpCode || "",
+    });
+    return { ok: true, locs };
+  };
+  const primaryRes = apply(primary);
+  if (!primaryRes.ok) return primaryRes;
+  primary.localities = primaryRes.locs;
+  // Keep city selection shared across Doprava ↔ ČHMÚ (kraje/okresy remain ČHMÚ-only).
+  const mirrorRes = apply(mirror);
+  if (mirrorRes.ok && mirrorRes.locs) mirror.localities = mirrorRes.locs;
   return { ok: true };
 }
 
 export function removeCityLocality(ff, kind, name, id) {
-  const target = kind === "chmu" ? ff.chmu : ff.traffic;
-  target.localities = (target.localities || []).filter(
-    (l) => !(l.level === "mesto" && l.name === name && String(l.id || "") === String(id || ""))
-  );
+  const drop = (target) => {
+    target.localities = (target.localities || []).filter(
+      (l) => !(l.level === "mesto" && l.name === name && String(l.id || "") === String(id || ""))
+    );
+  };
+  drop(kind === "chmu" ? ff.chmu : ff.traffic);
+  // Mirror remove so Doprava and ČHMÚ keep the same city set.
+  drop(kind === "chmu" ? ff.traffic : ff.chmu);
 }
 
 function normalizeRoadCatalog(allRoadsCatalog) {

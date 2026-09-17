@@ -1,11 +1,11 @@
 {
-  "freezeId": "iu-affiliate-categories-26-structure-v1-20260917",
+  "freezeId": "iu-pd-city-filter-feed-match-v1-20260917",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-17T16:40:00.000Z",
-  "note": "Freeze bump: affiliate selected services — 26 categories structure (renames + Děti a hračky + order/icons).",
+  "updatedAt": "2026-09-17T18:35:00.000Z",
+  "note": "Freeze bump: PD Nastavení city filter must drive Doprava + ČHMÚ feed match (unstructured city + ORP-seat fallback + shared cities).",
   "files": {
-    "projects/index.html": "ea7b11b429c35d53cea80868a7e865bc7b981e85bfbcaf7ebd4961364b8f7704",
+    "projects/index.html": "94aa300f9ff4dadd4dcaeb06f9c790382664436abd6f5ff260bf85fa30f2d725",
     "assets/app.css": "03e14a18aa73591a500e334845f03a15d12d2ed70b23763f95bd23cfdac4663f",
     "assets/app.js": "7d2790abc15809372d02e59ee89568979a91abf6a0bbba5faf3be3370cf3dc5e",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "6a46e8ddfcbfca2d70ecf9f0764e09ee3ef7426cd9fff87f1cce9a7dd9fff39f",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "df79f7a6571e7b9f9b4f582b804de189bc6c9ab41ad180a4dc991c15e497c69a",
+    "sw.js": "c8b0516d151ead2ad3a8e6a3a81a9de9b9e321533621e059c8863cac9760bf2e",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "b4e0fea2c3c8f9b192cc61d21257ff4203d64de32d32d843c0241b196248ec09",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -24,7 +24,7 @@
     "assets/iu-local-data-protection.js": "4d2133ea4b4da26057c28777658c31342cd62fa49d54bcb2e4cf4c774e9f32b9",
     "assets/iu-desktop-home-premium.css": "75e70e2dfa69f2213e54edcdd8db7e7cc99034ff9270e1e87faa9e46dec16b0c",
     "assets/iu-tasks-premium.css": "76fd48e920b10b2642f2ecc1c6910685fa1dd2586bc7ff4dd11fcf2347d45cb0",
-    "assets/iu-prehled-dne-ui-v1.js": "f63299961371c2ea52bbfd21344bb3edd90eeedb3da6998cfce480f890c46837"
+    "assets/iu-prehled-dne-ui-v1.js": "9ab3026defcefb7748abceb3ffd613e0521ac425d005918b03d55ee2aa753498"
   },
   "requiredMarkers": {
     "sw.js": [
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-17-affiliate-categories-26-v1\""
+      "CACHE_VERSION = \"2026-09-17-pd-city-filter-feed-match-v1\""
     ],
     "projects/version.json": [
       "chmi-multibrowser-console-v1-20260731"
@@ -144,7 +144,8 @@
       "pwa-hide-traffic-offline-banner-v1-20260916",
       "chmu-box-nav-flush-v1-20260916",
       "pd-settings-first-open-sync-v1-20260916",
-      "traffic-specific-facts-v1-20260917"
+      "traffic-specific-facts-v1-20260917",
+      "pd-city-filter-feed-match-v1-20260917"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
