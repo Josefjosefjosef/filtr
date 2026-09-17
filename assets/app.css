@@ -22723,6 +22723,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   --iuAff-aff-drogerie:#C4B5FD;
   --iuAff-aff-moda:#A78BFA;
   --iuAff-aff-boty:#A8A29E;
+  --iuAff-aff-deti-hracky:#F472B6;
   --iuAff-aff-sportovni-obleceni:#3B82F6;
   --iuAff-aff-sport-outdoor:#4ADE80;
   --iuAff-aff-dum-zahrada:#65A30D;
@@ -22753,6 +22754,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 #iuAffiliateView[data-aff-category="aff-drogerie"]{ --iuSectionAccent: var(--iuAff-aff-drogerie); }
 #iuAffiliateView[data-aff-category="aff-moda"]{ --iuSectionAccent: var(--iuAff-aff-moda); }
 #iuAffiliateView[data-aff-category="aff-boty"]{ --iuSectionAccent: var(--iuAff-aff-boty); }
+#iuAffiliateView[data-aff-category="aff-deti-hracky"]{ --iuSectionAccent: var(--iuAff-aff-deti-hracky); }
 #iuAffiliateView[data-aff-category="aff-sportovni-obleceni"]{ --iuSectionAccent: var(--iuAff-aff-sportovni-obleceni); }
 #iuAffiliateView[data-aff-category="aff-sport-outdoor"]{ --iuSectionAccent: var(--iuAff-aff-sport-outdoor); }
 #iuAffiliateView[data-aff-category="aff-dum-zahrada"]{ --iuSectionAccent: var(--iuAff-aff-dum-zahrada); }
@@ -22839,6 +22841,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 .iu-leftNav .iu-leftNavItem[data-accent="aff-drogerie"]{ --iuNavAccent: var(--iuAff-aff-drogerie); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-moda"]{ --iuNavAccent: var(--iuAff-aff-moda); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-boty"]{ --iuNavAccent: var(--iuAff-aff-boty); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-deti-hracky"]{ --iuNavAccent: var(--iuAff-aff-deti-hracky); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-sportovni-obleceni"]{ --iuNavAccent: var(--iuAff-aff-sportovni-obleceni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-sport-outdoor"]{ --iuNavAccent: var(--iuAff-aff-sport-outdoor); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-dum-zahrada"]{ --iuNavAccent: var(--iuAff-aff-dum-zahrada); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }

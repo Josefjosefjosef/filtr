@@ -60,9 +60,9 @@
       ]
     ),
     "aff-letenky": affSeo(
-      "Letenky a cestovní pomoc – odkazy na vybrané externí služby",
+      "Doprava a cestování – odkazy na vybrané externí služby",
       [
-        "Sekce Letenky a cestovní pomoc obsahuje odkazy na vybrané externí služby související s letenkami, dopravou a cestovní podporou. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Sekce Doprava a cestování obsahuje odkazy na vybrané externí služby související s dopravou a cestováním, například leteckou, vlakovou nebo autobusovou dopravou a další cestovní podporou. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -140,9 +140,9 @@
       ]
     ),
     "aff-moda": affSeo(
-      "Móda – odkazy na vybrané externí služby",
+      "Móda a doplňky – odkazy na vybrané externí služby",
       [
-        "Sekce Móda obsahuje odkazy na vybrané externí obchody s oblečením a módním sortimentem. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Sekce Móda a doplňky obsahuje odkazy na vybrané externí obchody s oblečením, módou a souvisejícími doplňky. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -151,6 +151,14 @@
       "Boty a tenisky – odkazy na vybrané externí služby",
       [
         "Sekce Boty a tenisky obsahuje odkazy na vybrané externí obchody s obuví. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-deti-hracky": affSeo(
+      "Děti a hračky – odkazy na vybrané externí služby",
+      [
+        "Sekce Děti a hračky obsahuje odkazy na vybrané externí obchody se sortimentem pro děti a hračkami. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -180,9 +188,9 @@
       ]
     ),
     "aff-nabytek": affSeo(
-      "Nábytek a bydlení – odkazy na vybrané externí služby",
+      "Bydlení a vybavení – odkazy na vybrané externí služby",
       [
-        "Sekce Nábytek a bydlení obsahuje odkazy na vybrané externí obchody s nábytkem a vybavením interiéru. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Sekce Bydlení a vybavení obsahuje odkazy na vybrané externí obchody s vybavením bydlení a interiéru. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -280,9 +288,9 @@
     },
     {
       id: "aff-letenky",
-      title: "Letenky a cestovní pomoc",
-      icon: "iu-aff-plane",
-      description: "Odkazy na vybrané služby související s letenkami a cestovní pomocí.",
+      title: "Doprava a cestování",
+      icon: "iu-aff-transport",
+      description: "Odkazy na vybrané služby související s dopravou a cestováním.",
       items: [
         affItem("", "airhelp"),
         affItem("", "refundio"),
@@ -438,9 +446,9 @@
     },
     {
       id: "aff-moda",
-      title: "Móda",
+      title: "Móda a doplňky",
       icon: "iu-aff-shirt",
-      description: "Odkazy na vybrané obchody s módou a oblečením.",
+      description: "Odkazy na vybrané obchody s módou, oblečením a doplňky.",
       items: [
         affItem("", "answear"),
         affItem("", "reserved"),
@@ -466,6 +474,22 @@
         affItem("", "belenka"),
         affItem("", "barebarics"),
         affItem("", "skinners"),
+      ],
+    },
+    {
+      id: "aff-deti-hracky",
+      title: "Děti a hračky",
+      icon: "iu-aff-blocks",
+      description: "Odkazy na vybrané obchody se sortimentem pro děti a hračkami.",
+      items: [
+        affItem("", "deti-hracky-1"),
+        affItem("", "deti-hracky-2"),
+        affItem("", "deti-hracky-3"),
+        affItem("", "deti-hracky-4"),
+        affItem("", "deti-hracky-5"),
+        affItem("", "deti-hracky-6"),
+        affItem("", "deti-hracky-7"),
+        affItem("", "deti-hracky-8"),
       ],
     },
     {
@@ -518,9 +542,9 @@
     },
     {
       id: "aff-nabytek",
-      title: "Nábytek a bydlení",
-      icon: "iu-aff-chair",
-      description: "Odkazy na vybrané obchody s nábytkem a bydlením.",
+      title: "Bydlení a vybavení",
+      icon: "iu-aff-sofa",
+      description: "Odkazy na vybrané obchody s vybavením bydlení a interiéru.",
       items: [
         affItem("", "asko-nabytek"),
         affItem("", "benlemi"),
