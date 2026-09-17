@@ -61,7 +61,12 @@ function staticGate() {
   };
 
   ok("index_ui_bust", index.includes(UI_BUST) && /iu-prehled-dne-ui-v1\.js\?v=/.test(index));
-  ok("sw_cache_token", sw.includes(CACHE_TOKEN));
+  // Historical PD-settings SW token must stay allowlisted; CURRENT may advance on later freezes.
+  const allowlistSrc = fs.readFileSync(
+    path.join(REPO, "scripts", "guards", "iu-sw-cache-version-allowlist.cjs"),
+    "utf8"
+  );
+  ok("sw_cache_token", allowlistSrc.includes(`"${CACHE_TOKEN}"`));
   ok("sw_allowlist", swHasAllowedCacheVersion(sw));
   ok("feed_settings_mod_bust", /pd-settings-first-open-sync-v1-20260916/.test(ui));
 

@@ -258,6 +258,111 @@ ok(
     TRAFFIC_CONDITION.PASS_WITH_CARE
 );
 
+// === Specific-over-generic (2026-09-16 live regression evidence) ===
+
+// A2 — maintenance + slow-vehicle lane closed (not bare "Práce údržby.")
+{
+  const s = sit({
+    eventType: "prace",
+    impactFull:
+      "D1, mezi km 31.5 a 31.6, ve směru Brno, práce údržby jízdní pruh pro pomalá vozidla uzavřen; jiný důvod (odst. OA), pracovní místo DN – nouze nebo nehoda",
+  });
+  ok(
+    "A2_MAINT_SLOW_LANE",
+    /Práce údržby/i.test(s) && /jízdní pruh pro pomalá vozidla/i.test(s) && /uzavřen/i.test(s),
+    s
+  );
+  ok("A2_NO_INVENTED_ACCIDENT", !/nehoda/i.test(s), s);
+}
+
+// B2 — typed prekazka + slow maintenance vehicle (keep taxonomy, keep specific)
+{
+  const pres = buildTrafficCardPresentation({
+    eventType: "prekazka",
+    impactFull:
+      "D4 ve směru Písek, 68,8 - 72,3 km, pomalu jedoucí vozidlo údržby ... Inspekční jízda",
+  });
+  const s = String(pres.situationSummary || "");
+  ok(
+    "B2_SLOW_MAINT_VEHICLE",
+    /Pomalu jedoucí vozidlo údržby/i.test(s) && !/^Překážka na vozovce\.?$/i.test(s.trim()),
+    s
+  );
+  ok("B2_INSPECTION", /Inspekční jízda/i.test(s), s);
+  ok(
+    "B2_CATEGORY_STAYS_OBSTACLE",
+    pres.event &&
+      pres.event.titleCs === "PŘEKÁŽKA NA VOZOVCE" &&
+      pres.event.primaryCause === "OBSTACLE",
+    JSON.stringify(pres.event && { title: pres.event.titleCs, cause: pres.event.primaryCause })
+  );
+}
+
+// C2 — descending km preserved on D4 Praha
+{
+  const place = buildTrafficCardPresentation({
+    eventType: "prekazka",
+    impactFull: "D4 ve směru Praha, 69,6 - 66 km, pomalu jedoucí vozidlo údržby",
+    kilometer: "69.6",
+    kilometerTo: "66",
+  }).placeLine;
+  ok(
+    "C2_DESCENDING_KM_696_66",
+    /69[,.]6/.test(place) && /66/.test(place) && !/66.?69[,.]6/.test(place),
+    place
+  );
+}
+
+// D2 — specific fallen wheel + lane closed
+{
+  const s = sit({
+    eventType: "prekazka",
+    impactFull:
+      "Pozor! Předmět na vozovce; jízdní pruh uzavřen; na vozovce upadlé kolo od NA.",
+  });
+  ok(
+    "D2_FALLEN_WHEEL_TRUCK",
+    /upadlé kolo z nákladního automobilu/i.test(s) && /jízdní pruh/i.test(s) && /uzavřen/i.test(s),
+    s
+  );
+}
+
+// E2 — generic obstacle negative (no invented object)
+{
+  const s = sit({ eventType: "prekazka", impactFull: "překážka na vozovce" });
+  ok(
+    "E2_GENERIC_OBSTACLE_NO_OBJECT",
+    /^Překážka na vozovce\.?$/i.test(s.trim()) && !/kolo|náklad|pneumatik/i.test(s),
+    s
+  );
+}
+
+// F2 — generic maintenance negative
+{
+  const s = sit({ eventType: "prace", impactFull: "práce údržby" });
+  ok(
+    "F2_GENERIC_MAINT_NO_LANE",
+    /^Práce údržby\.?$/i.test(s.trim()) && !/pomalá vozidla|pruh/i.test(s),
+    s
+  );
+}
+
+// G2 — Rádelský Mlýn: no invented road/location from name alone
+{
+  const pres = buildTrafficCardPresentation({
+    eventType: "sjizdnost",
+    impactFull: "Viditelnost: snížená viditelnost na méně než 30 m, Rádelský Mlýn.",
+  });
+  const place = String(pres.placeLine || "");
+  const s = String(pres.situationSummary || "");
+  ok(
+    "G2_RADELSKY_NO_INVENTED_ROAD",
+    !/\bD\d+\b|\bI\/\d+|\bII\/\d+|\bIII\/\d+/.test(place) &&
+      !/km\s+\d/i.test(place + s),
+    place + "|" + s
+  );
+}
+
 const pass = fails.length === 0;
 console.log(
   JSON.stringify(
