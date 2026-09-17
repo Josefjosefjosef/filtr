@@ -233,6 +233,11 @@
         try {
           if (window.__iuNavOverlayLock === true) return;
         } catch (_) {}
+        /* P0: same MindMenu return guard as feed-pipeline CloseForMainNav — bottom-nav
+           shell may overwrite the window hook; must not force Home during pending return. */
+        try {
+          if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+        } catch (_mmg) {}
         setTab("");
       };
     } catch (_) {}
@@ -296,6 +301,11 @@
           if (k === "home") {
             dismissLdp();
             closeToolOverlaysIfPossible();
+            try {
+              if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+                window.iuMindMenuClearAllReturnMarkers();
+              }
+            } catch (_clrHome) {}
             try {
               if (typeof window.iuMobileGateCloseForMainNav === "function") window.iuMobileGateCloseForMainNav();
             } catch (_) {}

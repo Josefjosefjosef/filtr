@@ -17668,6 +17668,12 @@ function buildVideoAsArticleCard(it) {
     try {
       if (typeof window !== "undefined" && window.__iuMobileWebNavReturnSuppress === true) return;
     } catch (_){}
+    /* P0 PWA MindMenu external-return: after #10873 restore, late section/shell CloseForMainNav
+       must not force Home while armed/latch/durable pending is live (MindMenu→Home→MindMenu flash).
+       Intentional Domů / tools-close clears markers first. */
+    try {
+      if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+    } catch (_mmg) {}
     try {
       var w = document.getElementById("iuMobileGateWrap");
       if (w && typeof w.__iuMobileGateSetTab === "function") {
@@ -17882,6 +17888,11 @@ function buildVideoAsArticleCard(it) {
               try {
                 iuMindMenuCloseToolOverlaysIfOpen();
               } catch (_) {}
+              try {
+                if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+                  window.iuMindMenuClearAllReturnMarkers();
+                }
+              } catch (_clrHome) {}
               try {
                 if (typeof iuMobileGateCloseForMainNav === "function") iuMobileGateCloseForMainNav();
               } catch (_) {}
@@ -26336,6 +26347,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuSyncGateFromHistory = iuMindMenuSyncGateFromHistory;
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
+    window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
   } catch (_) {}
 
   // === MOJE SCHRÁNKY (MindMenu): min 1, max 10, controls follow last pill ===
