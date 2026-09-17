@@ -956,6 +956,11 @@ jobs:
         timeout-minutes: 15
         run: npm run iu-pd-settings-first-open-filter-sync-guard
 
+      - name: PD city filter feed-match freeze guard (Doprava + ČHMÚ)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 8
+        run: npm run iu-pd-city-filter-feed-match-guard
+
       - name: Desktop MindMenu calendar polish guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-desktop-mindmenu-calendar-polish-guard
