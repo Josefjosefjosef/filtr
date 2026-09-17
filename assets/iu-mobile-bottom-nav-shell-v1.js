@@ -56,6 +56,10 @@
         try {
           if (window.__iuNavOverlayLock === true) return;
         } catch (_) {}
+        /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard (same as feed-pipeline). */
+        try {
+          if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+        } catch (_mmSetTab) {}
       }
       wrap.setAttribute("data-iu-mobile-gate", gateVal);
       if (!gateVal) {

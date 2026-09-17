@@ -29,7 +29,7 @@
 // 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
 // 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
 // 2026-09-12-startup-single-paint-v1 — lineage token retained for iu-startup-single-paint-guard
-const CACHE_VERSION = "2026-09-17-pd-city-filter-feed-match-v1";
+const CACHE_VERSION = "2026-09-18-pwa-mindmenu-return-settab-v1";
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL
@@ -935,6 +935,34 @@ self.addEventListener("fetch", (event) => {
     path.includes("/assets/iu-desktop-home-premium.css") ||
     path.includes("/assets/iu-terms-gate-v1.css") ||
     path.includes("/assets/iu-tasks-premium.css")
+  ) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(APP_SHELL_CACHE);
+        const cacheKey = new Request(url.origin + url.pathname);
+        try {
+          const res = await fetch(event.request, { cache: "no-store" });
+          if (res && res.ok) {
+            event.waitUntil(cache.put(cacheKey, res.clone()).catch(() => {}));
+            return res;
+          }
+        } catch (_) {}
+        const cached = (await cache.match(cacheKey)) || (await caches.match(event.request));
+        if (cached) return cached;
+        return new Response("", { status: 503, statusText: "Offline", headers: { "Cache-Control": "no-store" } });
+      })()
+    );
+    return;
+  }
+
+  /* PWA MindMenu external-return lifecycle modules: network-first.
+     Generic SWR below returns cached feed-pipeline / bottom-nav-shell first — installed PWAs
+     could keep pre-#10903 CloseForMainNav (no setTab return guard) after deploy until a second
+     navigation, so Home meziskok survived on real standalone despite HTTP showing new assets. */
+  if (
+    path.includes("/assets/iu-app-feed-pipeline-v1.js") ||
+    path.includes("/assets/iu-mobile-bottom-nav-shell-v1.js") ||
+    path.includes("/assets/iu-network-connectivity-v1.js")
   ) {
     event.respondWith(
       (async () => {

@@ -20,6 +20,10 @@
  *   - Late popstate after latch window must not force Home while pending/guard active
  *   - Post-restore shell/nav CloseForMainNav must NOT force Home while pending/guard active
  *     (device FAIL class: MindMenu OK → Home flash → MindMenu again)
+ *   - Post-restore setTab("") / hub hard-reset must NOT force Home while pending
+ *     (#10903 only patched CloseForMainNav — real standalone still flashed Home)
+ *   - SW must network-first feed-pipeline + bottom-nav-shell + network-connectivity
+ *     (SWR pathname cache could keep pre-fix JS on installed PWA)
  *   - Intentional tools close / Domů still reaches Home
  *   - ≥3 external-return cycles
  *
@@ -94,11 +98,33 @@ function staticGate() {
       /function iuMobileGateCloseForMainNav\s*\(\s*\)\s*\{[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(feed),
       "static:close_for_main_nav_respects_return_guard"
     );
+    must(
+      /function setTab\s*\(\s*value\s*\)\s*\{[\s\S]{0,550}iuMindMenuHasReturnGuard/.test(feed),
+      "static:settab_empty_respects_return_guard"
+    );
+    must(
+      /function iuProjectsHubNavigateHardResetFromHomeOrBack\s*\(\s*\)\s*\{[\s\S]{0,750}iuMindMenuHasReturnGuard/.test(
+        feed
+      ),
+      "static:hub_hard_reset_respects_return_guard"
+    );
     const shell = read("assets/iu-mobile-bottom-nav-shell-v1.js");
     must(
       /iuMobileGateCloseForMainNav\s*=\s*function[\s\S]{0,500}iuMindMenuHasReturnGuard/.test(shell),
       "static:shell_close_respects_return_guard"
     );
+    must(
+      /if \(!gateVal\)\s*\{[\s\S]{0,280}iuMindMenuHasReturnGuard/.test(shell),
+      "static:shell_settab_empty_respects_return_guard"
+    );
+    const sw = read("sw.js");
+    must(
+      /iu-app-feed-pipeline-v1\.js[\s\S]{0,200}iu-mobile-bottom-nav-shell-v1\.js[\s\S]{0,200}iu-network-connectivity-v1\.js/.test(
+        sw
+      ) && /PWA MindMenu external-return lifecycle modules: network-first/.test(sw),
+      "static:sw_network_first_mindmenu_lifecycle_modules"
+    );
+    must(/CACHE_VERSION = "2026-09-18-pwa-mindmenu-return-settab-v1"/.test(sw), "static:sw_cache_token");
   }
 }
 
@@ -219,8 +245,12 @@ async function simulateProcessDeathResume(page) {
     const orig = wrap && wrap.__iuMobileGateSetTab;
     if (wrap && typeof orig === "function") {
       wrap.__iuMobileGateSetTab = function (tab) {
-        transitions.push(String(tab || ""));
-        return orig.apply(this, arguments);
+        const beforeGate = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        const result = orig.apply(this, arguments);
+        const afterGate = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        /* Count only applied transitions — blocked setTab("") (return-guard) must not count as Home. */
+        if (afterGate !== beforeGate) transitions.push(afterGate);
+        return result;
       };
     }
     // Wipe session (process death) — keep localStorage.
@@ -265,15 +295,26 @@ async function simulateProcessDeathResume(page) {
     } catch (_) {}
     window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
 
-    /* Post-#10873 device FAIL class: restore already reopened MindMenu, then a late
-       shell/nav CloseForMainNav (section chrome / hub apply) forced Home while durable
-       pending was still live — second restore then jumped back to MindMenu. */
+    /* Post-#10873 / #10903 device FAIL class: restore already reopened MindMenu, then a late
+       Home sink forced Home while durable pending was still live — second restore jumped back.
+       Cover CloseForMainNav AND hub hard-reset AND raw setTab("") (not only CloseForMainNav). */
     if (typeof window.iuMobileGateCloseForMainNav === "function") {
       window.iuMobileGateCloseForMainNav();
+    }
+    if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+      window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+    }
+    /* Must go through live setTab (not orig) so return-guard inside setTab is exercised. */
+    if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
+      wrap.__iuMobileGateSetTab("");
     }
     const gateAfterClose = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
     const postRestoreTransitions = transitions.slice(idxAfterRestore);
     const homeFlashAfterRestore = postRestoreTransitions.includes("");
+    const overlayAfter = document.body.classList.contains("iu-mobileGateOverlayOpen");
+    const mainAfter = document.body.classList.contains("iu-mobileMainVisible");
+    const visualHomeAfter =
+      gateAfterClose !== "tools" || (!overlayAfter && mainAfter);
 
     // Second restore tick (visibility/pageshow class) — must recover if sink misfired.
     if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
@@ -286,6 +327,8 @@ async function simulateProcessDeathResume(page) {
       gateAfterRestore,
       gateAfterClose,
       homeFlashAfterRestore,
+      visualHomeAfter,
+      homeTransitionsDuringReturn: postRestoreTransitions.filter((t) => t === "").length,
       finalGate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
       panelScroll: panelAfter ? panelAfter.scrollTop || 0 : -1,
       hash: String(location.hash || "").replace("#", ""),
@@ -378,6 +421,11 @@ async function runPlaywright() {
         "after:no_home_flash_after_restore:gateAfterClose=" + death.gateAfterClose
       );
       must(death.gateAfterClose === "tools", "after:close_sink_kept_tools:" + death.gateAfterClose);
+      must(death.visualHomeAfter !== true, "after:no_visual_home_after_sinks");
+      must(
+        (death.homeTransitionsDuringReturn || 0) === 0,
+        "after:HOME_TRANSITIONS_DURING_RETURN=" + death.homeTransitionsDuringReturn
+      );
       if (scrollExpect > 40) {
         must(
           after.panelScroll >= Math.floor(scrollExpect * 0.5),
@@ -438,6 +486,29 @@ async function runPlaywright() {
         return wrap.getAttribute("data-iu-mobile-gate") || "";
       });
       must(syncClose === "", "sync:allow_close_home:" + syncClose);
+
+      /* Negative control: no return pending → setTab("") / hub hard-reset must reach Home. */
+      const neg = await page.evaluate(() => {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        try {
+          sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+          sessionStorage.removeItem("iuMindMenuReturnArmed");
+          localStorage.removeItem("iuMindMenuReturnPendingV1");
+        } catch (_) {}
+        wrap.__iuMobileGateSetTab("tools");
+        wrap.__iuMobileGateSetTab("");
+        const afterSetTab = wrap.getAttribute("data-iu-mobile-gate") || "";
+        wrap.__iuMobileGateSetTab("tools");
+        if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+          window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+        } else {
+          wrap.__iuMobileGateSetTab("");
+        }
+        const afterHub = wrap.getAttribute("data-iu-mobile-gate") || "";
+        return { afterSetTab, afterHub };
+      });
+      must(neg.afterSetTab === "", "neg:cold_settab_home:" + neg.afterSetTab);
+      must(neg.afterHub === "", "neg:hub_home_without_pending:" + neg.afterHub);
     } finally {
       await browser.close();
     }
