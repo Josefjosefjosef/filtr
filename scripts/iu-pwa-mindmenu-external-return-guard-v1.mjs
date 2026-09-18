@@ -36,6 +36,7 @@ import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -124,7 +125,7 @@ function staticGate() {
       ) && /PWA MindMenu external-return lifecycle modules: network-first/.test(sw),
       "static:sw_network_first_mindmenu_lifecycle_modules"
     );
-    must(/CACHE_VERSION = "2026-09-18-menu-nav-scroll-restore-v1"/.test(sw), "static:sw_cache_token");
+    must(swHasAllowedCacheVersion(sw), "static:sw_cache_token");
   }
 }
 

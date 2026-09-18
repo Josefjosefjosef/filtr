@@ -1,12 +1,12 @@
 {
-  "freezeId": "iu-mindmenu-pwa-box-nav-flush-v1-20260918",
+  "freezeId": "iu-affiliate-header-frame-v1-20260918",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-18T12:09:03.326Z",
-  "note": "Freeze bump: MindMenu tools gate PWA standalone — no double safe-area pad under white box.",
+  "updatedAt": "2026-09-18T13:15:00.000Z",
+  "note": "Freeze bump: Affiliate category accent frame on title+description; disclosure plain.",
   "files": {
-    "projects/index.html": "e9e3f1406e68f36a74ff54cd4cf96a6b0ef51bf59330250dbbc5d8aa489c2245",
-    "assets/app.css": "1bfc23330d8ee3759e993df3aa135d56cf4330ff5561b87e6ba983f1ecd3a191",
+    "projects/index.html": "1035ae6650ab18215f053aff3c26d05825f5b0ea44c573d575c115489c653021",
+    "assets/app.css": "59d98e8d84270d3eb9e34478d3dd899e0ba86159bd35da42f1cfbfeb99be82ce",
     "assets/app.js": "dcf0c4190a479bb27f6ae85c4714f1df95f2b202560626b3892b452b07f9eca2",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "acf01228fa854d94d2a9af3ab6eedc1fabdbbbf2f445f768601791b24337ec13",
     "assets/iu-app-feed-pipeline-v1.js": "3f0695a9c510a79f3f2c077252c139ee02aee95571ec3d62c6bc99dd27f0cfe0",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "80119bf964ce0d00d981e7cbc637a184ab5ff439f9f78c0243e35340cf0aead7",
+    "sw.js": "720e792f8fe8dc2f877529c9fb41f92e33595a66f42f0e2bb4d7a47f6c9c6afe",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "b4e0fea2c3c8f9b192cc61d21257ff4203d64de32d32d843c0241b196248ec09",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-18-menu-nav-scroll-restore-v1\"",
+      "CACHE_VERSION = \"2026-09-18-affiliate-header-frame-v1\"",
       "PWA MindMenu external-return lifecycle modules: network-first"
     ],
     "projects/version.json": [
@@ -151,7 +151,8 @@
       "pwa-mindmenu-return-settab-v1-20260918",
       "traffic-bus-participant-e-route-v1-20260918",
       "menu-nav-scroll-restore-v1-20260918",
-      "mindmenu-pwa-box-nav-flush-v1-20260918"
+      "mindmenu-pwa-box-nav-flush-v1-20260918",
+      "affiliate-header-frame-v1-20260918"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -189,7 +190,8 @@
     ],
     "assets/app.css": [
       "mindmenu-pwa-box-nav-flush-v1-20260918",
-      "P0 PWA MindMenu gap"
+      "P0 PWA MindMenu gap",
+      "affiliate-header-frame-v1-20260918"
     ]
   }
 }
