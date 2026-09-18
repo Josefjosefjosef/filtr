@@ -9464,6 +9464,18 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
       calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)))
     ) !important;
   }
+  /*
+   * P0 PWA MindMenu gap (browser OK, standalone broken):
+   * mindmenu-pwa-box-nav-flush-v1-20260918
+   * #iuMobileGateContent padding-bottom: env(safe-area-inset-bottom) PLUS panel
+   * padding-bottom: --bottom-nav-height (measured nav already includes safe-area
+   * padding) double-counted the home-indicator strip → empty band under the white
+   * box. Tools gate: content pad-bottom must be 0; panel pad alone clears the nav.
+   * Safari/browser with safe=0 is unchanged; non-zero safe no longer double-pads.
+   */
+  body.iu-mobileGateOverlayOpen #iuMobileGateWrap[data-iu-mobile-gate="tools"] #iuMobileGateContent.iu-mobileGateContent[aria-hidden="false"]{
+    padding-bottom: 0 !important;
+  }
   body.iu-mobileGateOverlayOpen #iuMobileGatePanelTools #iuMobileMindMenuFlow{
     width: 100% !important;
     max-width: 100% !important;
@@ -9480,11 +9492,12 @@ html.iuRailHidden #iuRailToggleBtn:hover::before{
     max-width: 100% !important;
     margin: 0 !important;
     box-sizing: border-box !important;
-    /* Fill above fixed nav (shell may force flow display:block — avoid flex-only fill). */
+    /* Fill above fixed nav. Do NOT also subtract env(safe-area-inset-bottom):
+       --bottom-nav-height (measured) already includes the nav's safe-area padding;
+       subtracting both shortened the box by ~safe-area in standalone PWA. */
     min-height: calc(
       100dvh
       - env(safe-area-inset-top, 0px)
-      - env(safe-area-inset-bottom, 0px)
       - var(
         --bottom-nav-height,
         calc(var(--iu-mobile-bottom-nav-h, 56px) + var(--iu-mobile-bottom-safe, env(safe-area-inset-bottom, 0px)))
