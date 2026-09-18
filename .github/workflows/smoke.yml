@@ -933,6 +933,11 @@ jobs:
         timeout-minutes: 15
         run: npm run iu-menu-subsection-scroll-guard
 
+      - name: Menu nav scroll restore guard (Menu → item → Back keeps Y)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        timeout-minutes: 15
+        run: npm run iu-menu-nav-scroll-restore-guard
+
       - name: MindMenu keyboard scroll-pad allowance guard (anti-#10184)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-mindmenu-kb-scroll-pad-guard

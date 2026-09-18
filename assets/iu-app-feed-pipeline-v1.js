@@ -17105,6 +17105,89 @@ function buildVideoAsArticleCard(it) {
     window.iuMobileGateEnsureInfoButtons = iuMobileGateEnsureInfoButtons;
   } catch (_) {}
 
+  /** P0 Menu (≤900): preserve #iuMobileGatePanelNav scroll across leave → section → return. */
+  var IU_MENU_NAV_SCROLL_KEY = "iuMenuNavPanelScrollY";
+  function iuMenuNavIsMobileBand() {
+    try {
+      return !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+    } catch (_) {
+      return false;
+    }
+  }
+  function iuMenuNavCaptureScroll() {
+    try {
+      if (!iuMenuNavIsMobileBand()) return;
+      var panel = document.getElementById("iuMobileGatePanelNav");
+      if (!panel || typeof panel.scrollTop !== "number") return;
+      var y = panel.scrollTop || 0;
+      /* Never clobber a saved mid/deep Y with 0 (hidden panel / hard-nav teardown). */
+      if (!(y > 0)) return;
+      window.__iuMenuNavScrollY = y;
+      try {
+        sessionStorage.setItem(IU_MENU_NAV_SCROLL_KEY, String(Math.round(y)));
+      } catch (_ss) {}
+    } catch (_) {}
+  }
+  function iuMenuNavReadScroll() {
+    try {
+      var mem = Number(window.__iuMenuNavScrollY);
+      if (Number.isFinite(mem) && mem > 0) return Math.round(mem);
+    } catch (_) {}
+    try {
+      var raw = sessionStorage.getItem(IU_MENU_NAV_SCROLL_KEY);
+      var y = parseInt(raw || "0", 10);
+      if (Number.isFinite(y) && y > 0) return y;
+    } catch (_) {}
+    return 0;
+  }
+  function iuMenuNavApplyScroll(y) {
+    if (!(Number.isFinite(y) && y > 0)) return;
+    var target = Math.round(y);
+    var until = Date.now() + 1200;
+    var apply = function () {
+      try {
+        var panel = document.getElementById("iuMobileGatePanelNav");
+        if (!panel) return false;
+        var max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+        if (max < target - 2 && Date.now() < until) {
+          /* Layout not ready yet — keep holding so we never paint at 0 then jump. */
+          return false;
+        }
+        panel.scrollTop = target;
+        return Math.abs((panel.scrollTop || 0) - target) <= 2 || max < target;
+      } catch (_) {
+        return true;
+      }
+    };
+    apply();
+    var tick = function () {
+      try {
+        if (apply()) return;
+        if (Date.now() >= until) {
+          apply();
+          return;
+        }
+        requestAnimationFrame(tick);
+      } catch (_) {}
+    };
+    try {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(tick);
+      });
+    } catch (_) {
+      try {
+        setTimeout(function () {
+          apply();
+        }, 0);
+      } catch (_t) {}
+    }
+  }
+  try {
+    window.iuMenuNavCaptureScroll = iuMenuNavCaptureScroll;
+    window.iuMenuNavApplyScroll = iuMenuNavApplyScroll;
+    window.iuMenuNavReadScroll = iuMenuNavReadScroll;
+  } catch (_) {}
+
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
   function iuMobileGateTabInit() {
     try {
@@ -17155,8 +17238,9 @@ function buildVideoAsArticleCard(it) {
           } catch (_mmSetTab) {}
         }
         /* P0 perf: only run narrow-AI teardown when leaving tools — opening nav from hub (prev "") must not scan/close AI every tap. */
+        var prevGateTab = "";
         try {
-          var prevGateTab = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+          prevGateTab = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
           if (prevGateTab === "tools" && gateVal !== "tools") {
             iuCloseNarrowAiOverlayWhenLeavingTools();
           }
@@ -17165,6 +17249,10 @@ function buildVideoAsArticleCard(it) {
             iuCloseNarrowAiOverlayWhenLeavingTools();
           }
         }
+        /* P0 Menu scroll: capture before leave (CloseForMainNav / tools / Domů) so return can restore without flash. */
+        try {
+          if (prevGateTab === "nav" && gateVal !== "nav") iuMenuNavCaptureScroll();
+        } catch (_cap) {}
         wrap.setAttribute("data-iu-mobile-gate", value || "");
         if (!value) {
           try {
@@ -17196,13 +17284,77 @@ function buildVideoAsArticleCard(it) {
           tabNav.setAttribute("aria-selected", "true");
           tabTools.setAttribute("aria-selected", "false");
           content.setAttribute("aria-hidden", "false");
+          var restoreNavY = 0;
+          try {
+            restoreNavY = iuMenuNavIsMobileBand() ? iuMenuNavReadScroll() : 0;
+          } catch (_ry) {
+            restoreNavY = 0;
+          }
+          /* Anti-flash: hide visually until scroll can stick (layout maxY ready). */
+          try {
+            if (restoreNavY > 0 && iuMenuNavIsMobileBand()) {
+              panelNav.style.visibility = "hidden";
+            }
+          } catch (_vis) {}
           panelNav.hidden = false;
           panelTools.hidden = true;
           try {
             if (content.scrollTop) content.scrollTop = 0;
-            if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
+            /* Do not force panelNav to 0 on mobile/tablet — that wiped Menu position on every return. */
+            if (restoreNavY > 0) {
+              panelNav.scrollTop = restoreNavY;
+            } else if (!iuMenuNavIsMobileBand() && panelNav && panelNav.scrollTop) {
+              panelNav.scrollTop = 0;
+            }
             if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
           } catch (_) {}
+          if (restoreNavY > 0) {
+            try {
+              iuMenuNavApplyScroll(restoreNavY);
+            } catch (_ap) {}
+            try {
+              var reveal = function () {
+                try {
+                  panelNav.style.removeProperty("visibility");
+                } catch (_rv) {}
+              };
+              var holdReveal = function () {
+                try {
+                  var panel = panelNav;
+                  var max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+                  var top = panel.scrollTop || 0;
+                  if (max >= restoreNavY - 2 && Math.abs(top - restoreNavY) <= 8) {
+                    reveal();
+                    return true;
+                  }
+                } catch (_) {}
+                return false;
+              };
+              if (!holdReveal()) {
+                var untilReveal = Date.now() + 1200;
+                var tickReveal = function () {
+                  if (holdReveal() || Date.now() >= untilReveal) {
+                    reveal();
+                    return;
+                  }
+                  try {
+                    requestAnimationFrame(tickReveal);
+                  } catch (_) {
+                    reveal();
+                  }
+                };
+                try {
+                  requestAnimationFrame(tickReveal);
+                } catch (_) {
+                  reveal();
+                }
+              }
+            } catch (_rev) {
+              try {
+                panelNav.style.removeProperty("visibility");
+              } catch (_rv2) {}
+            }
+          }
           iuMobileGatePerfMark("iu-gate-nav-visible-sync");
         } else if (value === "tools") {
           tabNav.setAttribute("aria-selected", "false");
@@ -17212,7 +17364,8 @@ function buildVideoAsArticleCard(it) {
           panelTools.hidden = false;
           try {
             if (content.scrollTop) content.scrollTop = 0;
-            if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
+            /* Keep panelNav scrollTop intact while Menu is hidden (≤900 restore on return). */
+            if (!iuMenuNavIsMobileBand() && panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
             if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
           } catch (_) {}
           try {
@@ -17265,8 +17418,22 @@ function buildVideoAsArticleCard(it) {
             window.requestAnimationFrame(function () {
               try {
                 if (content.scrollTop) content.scrollTop = 0;
-                if (panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
-                if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
+                if (value === "nav" && iuMenuNavIsMobileBand()) {
+                  var holdY = iuMenuNavReadScroll();
+                  if (holdY > 0 && panelNav) panelNav.scrollTop = holdY;
+                } else if (panelNav && panelNav.scrollTop && !iuMenuNavIsMobileBand()) {
+                  panelNav.scrollTop = 0;
+                }
+                if (value === "tools" && panelTools && panelTools.scrollTop) {
+                  /* MindMenu has its own restore; only zero when no pending MindMenu scroll. */
+                  var mmArmed = false;
+                  try {
+                    mmArmed = sessionStorage.getItem("iuMindMenuReturnArmed") === "1";
+                  } catch (_mmA) {}
+                  if (!mmArmed) panelTools.scrollTop = 0;
+                } else if (value !== "tools" && panelTools && panelTools.scrollTop) {
+                  panelTools.scrollTop = 0;
+                }
               } catch (_) {}
               try {
                 var bb = document.getElementById("iuMobileGateBack");
@@ -17665,6 +17832,12 @@ function buildVideoAsArticleCard(it) {
       try {
         wrap.__iuMobileGateSetTab = setTab;
       } catch (_) {}
+      try {
+        if (String(wrap.getAttribute("data-iu-mobile-gate") || "").trim() === "nav") {
+          var yBoot = iuMenuNavReadScroll();
+          if (yBoot > 0) iuMenuNavApplyScroll(yBoot);
+        }
+      } catch (_bootScr) {}
       if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
       window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}

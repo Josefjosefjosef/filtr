@@ -124,7 +124,7 @@ function staticGate() {
       ) && /PWA MindMenu external-return lifecycle modules: network-first/.test(sw),
       "static:sw_network_first_mindmenu_lifecycle_modules"
     );
-    must(/CACHE_VERSION = "2026-09-18-traffic-bus-participant-e-route-v1"/.test(sw), "static:sw_cache_token");
+    must(/CACHE_VERSION = "2026-09-18-menu-nav-scroll-restore-v1"/.test(sw), "static:sw_cache_token");
   }
 }
 

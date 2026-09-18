@@ -515,7 +515,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-menu-nav-scroll-restore-v1-20260918";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -7979,6 +7979,9 @@ try {
       var toolSec = { pocasi: 1, mapy: 1, maps: 1, jr: 1, tvprogram: 1, tvonline: 1, radio: 1 };
       if (!(toolSec[sec] || sec.indexOf("aff-") === 0)) return false;
       try {
+        if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+      } catch (_capHn) {}
+      try {
         if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
           window.iuMobileWebNavReturnArmForTile(mediaTopicKey || accentKey || "");
         }
@@ -8526,6 +8529,9 @@ try {
         gateWrapNavEarly && String(gateWrapNavEarly.getAttribute("data-iu-mobile-gate") || "") === "nav";
       if (fromWebNavGateNav) {
         try {
+          if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+        } catch (_menuScr) {}
+        try {
           var armKeyNav = mediaTopic || accentEarly || "";
           if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
             window.iuMobileWebNavReturnArmForTile(armKeyNav);
@@ -8625,6 +8631,9 @@ try {
         if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = !!fromWebNavGateHex;
       } catch (_) {}
       if (fromWebNavGateHex) {
+        try {
+          if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+        } catch (_menuScrH) {}
         try {
           if (typeof window.iuMobileWebNavReturnArmForTile === "function") {
             window.iuMobileWebNavReturnArmForTile(rawHexKey);

@@ -88,6 +88,24 @@
         content.setAttribute("aria-hidden", "false");
         panelNav.hidden = false;
         panelTools.hidden = true;
+        /* P0 Menu scroll: early shell restore before feed-pipeline boots (tablet hard-nav return). */
+        try {
+          if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+            var yShell = 0;
+            try {
+              if (typeof window.iuMenuNavReadScroll === "function") yShell = window.iuMenuNavReadScroll() || 0;
+            } catch (_rd) {}
+            if (!(yShell > 0)) {
+              try {
+                yShell = parseInt(sessionStorage.getItem("iuMenuNavPanelScrollY") || "0", 10) || 0;
+              } catch (_ss) {}
+            }
+            if (yShell > 0) {
+              panelNav.scrollTop = yShell;
+              if (typeof window.iuMenuNavApplyScroll === "function") window.iuMenuNavApplyScroll(yShell);
+            }
+          }
+        } catch (_menuShell) {}
       } else if (gateVal === "tools") {
         tabNav.setAttribute("aria-selected", "false");
         tabTools.setAttribute("aria-selected", "true");
