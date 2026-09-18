@@ -22795,16 +22795,19 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   opacity:1;
   background:linear-gradient(90deg,color-mix(in srgb,var(--iuSectionAccent) 72%,transparent) 0%,color-mix(in srgb,var(--iuSectionAccent) 28%,transparent) 38%,transparent 100%);
 }
-#iuAffiliateView>.iuSectionSubtitle{margin:2px 0 12px;line-height:1.38}
-.iuAffiliateDisclosure{
-  margin: 0 0 14px 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--iuSectionAccent, #64748B) 8%, rgba(255,255,255,0.98));
-  border: 1px solid color-mix(in srgb, var(--iuSectionAccent, #64748B) 22%, rgba(11,27,43,0.08));
-  color: rgba(15, 23, 42, 0.88);
-  font-size: 14px;
-  line-height: 1.45;
+/* P0 affiliate-header-frame-v1-20260918: frame on title+desc; disclosure plain */
+#iuAffiliateView .iuAffiliateIntro{
+  margin:0 0 12px;padding:12px 14px;border-radius:12px;box-sizing:border-box;min-width:0;max-width:100%;
+  background:color-mix(in srgb,var(--iuSectionAccent,#64748B) 8%,rgba(255,255,255,.98));
+  border:1px solid color-mix(in srgb,var(--iuSectionAccent,#64748B) 22%,rgba(11,27,43,.08));
+  overflow-wrap:anywhere;
+}
+#iuAffiliateView .iuAffiliateIntro .iuSectionHeader--affiliate{margin:0 0 6px}
+#iuAffiliateView .iuAffiliateIntro .iuSectionSubtitle{margin:0;line-height:1.38;color:rgba(15,23,42,.82)}
+#iuAffiliateView .iuAffiliateDisclosure{
+  margin:0 0 14px;padding:0;border:0;border-radius:0;background:transparent;
+  color:rgba(15,23,42,.78);font-size:14px;line-height:1.45;box-sizing:border-box;min-width:0;max-width:100%;
+  overflow-wrap:anywhere;
 }
 #newsList #iuAffiliateView .iuJRGrid a.iuAffiliateChip,
 #newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip{
