@@ -13,7 +13,8 @@ const must = (c, id) => {
   if (!c) fails.push(id);
 };
 
-const EXPECTED_TITLE = "InfoUzel.cz – internet v internetu";
+const EXPECTED_DOCUMENT_TITLE = "infoUzel.cz – internet v internetu";
+const EXPECTED_OG_TITLE = "InfoUzel.cz – internet v internetu";
 const EXPECTED_DESCRIPTION =
   "InfoUzel.cz je internet v internetu. Každodenní informace a nástroje máte na jednom místě a váš osobní obsah zůstává uložený ve vašem zařízení.";
 const EXPECTED_OG_IMAGE =
@@ -25,6 +26,8 @@ const EXPECTED_JSONLD_BODY =
 
 const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
 const headers = fs.readFileSync(path.join(ROOT, "_headers"), "utf8");
+const manifest = fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8");
+const projectsManifest = fs.readFileSync(path.join(ROOT, "projects", "manifest.json"), "utf8");
 
 function countMeta(attr, name) {
   const re = new RegExp(
@@ -47,9 +50,32 @@ function metaContent(attr, name) {
 
 const titleMatches = [...index.matchAll(/<title>([^<]*)<\/title>/gi)];
 must(titleMatches.length === 1, "title_count_1");
-must(titleMatches[0][1] === EXPECTED_TITLE, "title_exact_p1b");
-must(EXPECTED_TITLE.includes("\u2013"), "title_uses_en_dash");
+must(titleMatches[0][1] === EXPECTED_DOCUMENT_TITLE, "title_exact_p1b");
+must(EXPECTED_DOCUMENT_TITLE.includes("\u2013"), "title_uses_en_dash");
+must(!/<title>InfoUzel\.cz\s*[–-]/.test(index), "title_no_Info_casing_dup_risk");
+must(titleMatches[0][1].startsWith("infoUzel.cz"), "title_prefixes_manifest_short_name");
 must(!/<title>\s*infoUzel\.cz\s*<\/title>/i.test(index), "old_short_title_absent");
+must(metaContent("name", "application-title") === "internet v internetu", "application_title_subtitle");
+must(metaContent("name", "application-name") === "infoUzel.cz", "application_name_value");
+must(metaContent("name", "apple-mobile-web-app-title") === "infoUzel.cz", "apple_web_app_title");
+must(/iu-pwa-window-title-v1\.js/.test(index), "pwa_window_title_script");
+
+function manifestName(src) {
+  try {
+    const j = JSON.parse(src);
+    return { name: j.name, short_name: j.short_name };
+  } catch (_) {
+    return { name: null, short_name: null };
+  }
+}
+const rootMf = manifestName(manifest);
+const projMf = manifestName(projectsManifest);
+must(rootMf.name === "infoUzel.cz" && rootMf.short_name === "infoUzel.cz", "manifest_root_names");
+must(projMf.name === "infoUzel.cz" && projMf.short_name === "infoUzel.cz", "manifest_projects_names");
+must(
+  !/InfoUzel\.cz\s*[–-]\s*InfoUzel\.cz|infoUzel\.cz\s*[–-]\s*InfoUzel\.cz/i.test(index),
+  "no_doubled_brand_in_index_source"
+);
 
 const descMatches = [
   ...index.matchAll(/<meta\b[^>]*\bname=["']description["'][^>]*>/gi),
@@ -72,7 +98,7 @@ must(countMeta("property", "og:image") === 1, "og_image_count");
 
 must(metaContent("property", "og:type") === "website", "og_type_value");
 must(metaContent("property", "og:site_name") === "InfoUzel.cz", "og_site_name_value");
-must(metaContent("property", "og:title") === EXPECTED_TITLE, "og_title_sync");
+must(metaContent("property", "og:title") === EXPECTED_OG_TITLE, "og_title_sync");
 must(metaContent("property", "og:description") === EXPECTED_DESCRIPTION, "og_description_sync");
 must(metaContent("property", "og:url") === EXPECTED_CANONICAL, "og_url_value");
 must(metaContent("property", "og:image") === EXPECTED_OG_IMAGE, "og_image_value");
@@ -85,7 +111,7 @@ must(countMeta("name", "twitter:title") === 1, "twitter_title_count");
 must(countMeta("name", "twitter:description") === 1, "twitter_description_count");
 must(countMeta("name", "twitter:image") === 1, "twitter_image_count");
 must(metaContent("name", "twitter:card") === "summary_large_image", "twitter_card_value");
-must(metaContent("name", "twitter:title") === EXPECTED_TITLE, "twitter_title_sync");
+must(metaContent("name", "twitter:title") === EXPECTED_OG_TITLE, "twitter_title_sync");
 must(metaContent("name", "twitter:description") === EXPECTED_DESCRIPTION, "twitter_description_sync");
 must(metaContent("name", "twitter:image") === EXPECTED_OG_IMAGE, "twitter_image_value");
 must(!/name=["']twitter:site["']/.test(index), "no_twitter_site_unverified");

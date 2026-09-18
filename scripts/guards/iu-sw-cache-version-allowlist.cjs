@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-18-pwa-title-no-dup-v1",
   "2026-09-18-affiliate-header-frame-v1",
   "2026-09-18-menu-nav-scroll-restore-v1",
   "2026-09-18-traffic-bus-participant-e-route-v1",
@@ -213,7 +214,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-18-affiliate-header-frame-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-18-pwa-title-no-dup-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
