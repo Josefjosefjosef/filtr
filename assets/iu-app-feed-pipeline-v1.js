@@ -16810,6 +16810,11 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
         else window.__iuNavOverlayLock = false;
       } catch (_) {}
+    /* P0 PWA MindMenu external-return: hub hard-reset must not force Home while return pending
+       (Domů clears markers before calling this; return lifecycle must not). */
+    try {
+      if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+    } catch (_mmHub) {}
     try {
       window.__iuHubResetSeq = (typeof window.__iuHubResetSeq === "number" ? window.__iuHubResetSeq : 0) + 1;
       hubSeq = window.__iuHubResetSeq;
@@ -17143,6 +17148,11 @@ function buildVideoAsArticleCard(it) {
           try {
             if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
           } catch (_){}
+          /* P0 PWA MindMenu external-return (#10903 incomplete): any setTab("") sink must refuse Home
+             while armed/latch/durable pending is live. Domů / tools-close clear markers first. */
+          try {
+            if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+          } catch (_mmSetTab) {}
         }
         /* P0 perf: only run narrow-AI teardown when leaving tools — opening nav from hub (prev "") must not scan/close AI every tap. */
         try {
