@@ -1,21 +1,21 @@
 {
-  "freezeId": "iu-traffic-bus-participant-e-route-v1-20260918",
+  "freezeId": "iu-menu-nav-scroll-restore-v1-20260918",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-18T07:30:00.000Z",
-  "note": "Freeze bump: traffic BUS participant completeness (OA x BUS / BUS x OA) + silnici-scoped multi E-route preservation (E55 E65).",
+  "updatedAt": "2026-09-18T08:49:42.929Z",
+  "note": "Freeze bump: Menu (#iuMobileGatePanelNav) scroll restore on mobile/tablet/PWA return from any Menu item.",
   "files": {
-    "projects/index.html": "cb3efb20541be3694b709f200378bec61c2ae528d1f8e07401edcfc9de00771c",
+    "projects/index.html": "16489096de2fc4cdc13677c36a2004df882f110f9193322c6c38606c980a4a24",
     "assets/app.css": "03e14a18aa73591a500e334845f03a15d12d2ed70b23763f95bd23cfdac4663f",
-    "assets/app.js": "8e1968034c60ab8ffc3d110ca28c9842eecfdcf93152d0e804b63fa8806797ac",
-    "assets/iu-mobile-bottom-nav-shell-v1.js": "7714e195d98bfd6e2d7634fa331d0d3353c46fd8f91ea8285c69e5c03e31e77a",
-    "assets/iu-app-feed-pipeline-v1.js": "09b6eb9e2b98fb7dc2d19fe0028ac8b780cc1ea95b8c27840a391666f2c24fc2",
+    "assets/app.js": "dcf0c4190a479bb27f6ae85c4714f1df95f2b202560626b3892b452b07f9eca2",
+    "assets/iu-mobile-bottom-nav-shell-v1.js": "acf01228fa854d94d2a9af3ab6eedc1fabdbbbf2f445f768601791b24337ec13",
+    "assets/iu-app-feed-pipeline-v1.js": "3f0695a9c510a79f3f2c077252c139ee02aee95571ec3d62c6bc99dd27f0cfe0",
     "assets/iu-calendar-overlay-v1.js": "d96efddb6b3b85843babbf942859d8aefbb66fa1429a162ffeb3bf75546bdda2",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "bc4b2d93ef23d5f7bc7aa0ab970725b6edaf0fc38755b8e31ab2387c68e1f732",
+    "sw.js": "80119bf964ce0d00d981e7cbc637a184ab5ff439f9f78c0243e35340cf0aead7",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "b4e0fea2c3c8f9b192cc61d21257ff4203d64de32d32d843c0241b196248ec09",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-18-traffic-bus-participant-e-route-v1\"",
+      "CACHE_VERSION = \"2026-09-18-menu-nav-scroll-restore-v1\"",
       "PWA MindMenu external-return lifecycle modules: network-first"
     ],
     "projects/version.json": [
@@ -149,7 +149,8 @@
       "traffic-specific-facts-v1-20260917",
       "pd-city-filter-feed-match-v1-20260917",
       "pwa-mindmenu-return-settab-v1-20260918",
-      "traffic-bus-participant-e-route-v1-20260918"
+      "traffic-bus-participant-e-route-v1-20260918",
+      "menu-nav-scroll-restore-v1-20260918"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -167,7 +168,10 @@
       "iuMindMenuHasReturnGuard",
       "any setTab(\"\") sink must refuse Home",
       "hub hard-reset must not force Home while return pending",
-      "iuInfoCardsExpandToggleInit"
+      "iuInfoCardsExpandToggleInit",
+      "iuMenuNavCaptureScroll",
+      "iuMenuNavApplyScroll",
+      "restoreNavY"
     ],
     "assets/app.js": [
       "radio-neutral-v1-20260906",
@@ -179,7 +183,8 @@
       "pwa-mindmenu-external-return-no-home-flash-v1-20260917",
       "pwa-mindmenu-return-settab-v1-20260918",
       "silver-info-cards-collapse-v1-20260915",
-      "calendar-nav-external-open-v1-20260916"
+      "calendar-nav-external-open-v1-20260916",
+      "menu-nav-scroll-restore-v1-20260918"
     ]
   }
 }
