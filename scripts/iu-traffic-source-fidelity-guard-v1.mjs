@@ -14,6 +14,10 @@ import {
   buildTrafficCardPresentation,
   analyzeTrafficCondition,
   TRAFFIC_CONDITION,
+  parseAccidentParticipantsFromText,
+  extractAllRoadNumbersFromOfficialComment,
+  extractERoadNumbersFromOfficialComment,
+  ACCIDENT_PARTICIPANT,
 } from "../assets/iu-traffic-card-presenter-v1.js";
 
 const fails = [];
@@ -360,6 +364,134 @@ ok(
     !/\bD\d+\b|\bI\/\d+|\bII\/\d+|\bIII\/\d+/.test(place) &&
       !/km\s+\d/i.test(place + s),
     place + "|" + s
+  );
+}
+
+// === Multi-participant completeness + silnici-scoped E-route preservation (2026-09-17 live) ===
+
+// H2 — OA x BUS keeps both (Blatná-class)
+{
+  const input = {
+    eventType: "nehoda",
+    road: "175",
+    roadClass: "CLASS_II",
+    roadClassLabel: "Silnice II. třídy",
+    impactFull:
+      "Od 17.9.2026 19:50 do 20:50; na silnici 175 u obce Blatná okres Strakonice; nehoda; překážka na vozovce, průjezd se zvýšenou opatrností; OA x BUS.",
+  };
+  const parts = parseAccidentParticipantsFromText(input.impactFull);
+  const s = sit(input);
+  const place = buildTrafficCardPresentation(input).placeLine;
+  ok(
+    "H2_OA_BUS_BOTH",
+    parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR) &&
+      parts.includes(ACCIDENT_PARTICIPANT.BUS) &&
+      /osobního automobilu a autobusu/i.test(s),
+    JSON.stringify(parts) + "|" + s
+  );
+  ok(
+    "H2_BLATNA_PLACE",
+    /II\/175/.test(place) && /u obce Blatná/i.test(place) && /Strakonice/i.test(place),
+    place
+  );
+  ok("H2_OBSTACLE_CAUTION", /Překážka na vozovce/i.test(s) && /zvýšenou opatrností/i.test(s), s);
+}
+
+// I2 — nehoda autobusu + BUS x OA (Opletalova-class)
+{
+  const input = {
+    eventType: "nehoda",
+    impactFull:
+      "Od 17.9.2026 18:35 do 21:40; v ulici Opletalova v obci Praha okres území Hlavního města Prahy; nehoda autobusu; Pozor! Tvoří se kolona vozidel; BUS x OA.",
+  };
+  const parts = parseAccidentParticipantsFromText(input.impactFull);
+  const s = sit(input);
+  const place = buildTrafficCardPresentation(input).placeLine;
+  ok(
+    "I2_BUS_OA_BOTH",
+    parts.includes(ACCIDENT_PARTICIPANT.BUS) &&
+      parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR) &&
+      /autobusu a osobního automobilu/i.test(s),
+    JSON.stringify(parts) + "|" + s
+  );
+  ok("I2_QUEUE", /kolona/i.test(s), s);
+  ok(
+    "I2_OPLETALOVA_STREET",
+    /Opletalova/i.test(place) && /Praha/i.test(place),
+    place
+  );
+}
+
+// J2 — NA x OA positive control unchanged
+{
+  const s = sit({
+    eventType: "nehoda",
+    impactFull: "na silnici E55 E65 v obci Praha; nehoda; NA x OA.",
+  });
+  ok("J2_NA_OA", /nákladního a osobního automobilu/i.test(s), s);
+}
+
+// K2 — single OA must not invent BUS
+{
+  const parts = parseAccidentParticipantsFromText("nehoda; OA.");
+  const s = sit({ eventType: "nehoda", impactFull: "nehoda; OA." });
+  ok(
+    "K2_SINGLE_OA_NO_BUS",
+    parts.length === 1 &&
+      parts[0] === ACCIDENT_PARTICIPANT.PASSENGER_CAR &&
+      /osobního automobilu/i.test(s) &&
+      !/autobus/i.test(s),
+    JSON.stringify(parts) + "|" + s
+  );
+}
+
+// L2 — silnici-scoped multi E-route preserved (Praha E55 E65)
+{
+  const text =
+    "Od 17.9.2026 18:15 do 21:20; na silnici E55 E65 v obci Praha okres území Hlavního města Prahy; nehoda; překážka na vozovce, průjezd se zvýšenou opatrností; NA x OA.";
+  const roads = extractAllRoadNumbersFromOfficialComment(text);
+  const eRoads = extractERoadNumbersFromOfficialComment(text);
+  const place = buildTrafficCardPresentation({
+    eventType: "nehoda",
+    impactFull: text,
+    summaryFull: text,
+  }).placeLine;
+  ok(
+    "L2_E55_E65_BOTH",
+    roads.includes("E55") &&
+      roads.includes("E65") &&
+      eRoads.includes("E55") &&
+      eRoads.includes("E65") &&
+      /E55/.test(place) &&
+      /E65/.test(place) &&
+      /Praha/i.test(place),
+    JSON.stringify(roads) + "|" + place
+  );
+}
+
+// M2 — national + E overlay: national stays primary, E preserved
+{
+  const text = "na silnici I/8 (E55) u obce Lovosice; nehoda; OA.";
+  // Only silnici-prefixed E is in-scope; parenthetical E without silnici prefix stays NO CHANGE.
+  const eRoads = extractERoadNumbersFromOfficialComment(text);
+  const roads = extractAllRoadNumbersFromOfficialComment(text);
+  ok("M2_NATIONAL_PRIMARY", roads.some((r) => /^I\/8$/i.test(r)), JSON.stringify(roads));
+  ok(
+    "M2_PAREN_E_NO_INVENT",
+    !eRoads.includes("E55"),
+    JSON.stringify(eRoads)
+  );
+}
+
+// N2 — prose-only E-route without silnici context → no invent
+{
+  const text = "v obci Praha; nehoda; zmínka E55 někde bez silnice.";
+  const eRoads = extractERoadNumbersFromOfficialComment(text);
+  const roads = extractAllRoadNumbersFromOfficialComment(text);
+  ok(
+    "N2_PROSE_ONLY_E_NO_CHANGE",
+    eRoads.length === 0 && !roads.includes("E55"),
+    JSON.stringify({ eRoads, roads })
   );
 }
 

@@ -53,6 +53,14 @@ export function extractMotorwayNumbersFromOfficialCommentLite(rawText) {
   const kmPairedRe = /\b([DER]\d{1,3}[A-Za-z]?)\s+km\s+\d{1,4}(?:[.,]\d+)?\b/gi;
   let km;
   while ((km = kmPairedRe.exec(text))) push(km[1]);
+  // Silnici-scoped E-routes (same provenance as classed silnice I/II/III).
+  const eSil =
+    /\b(?:(?:na\s+)?silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:E\d{1,3}[A-Za-z]?)(?:\s+E\d{1,3}[A-Za-z]?)*)\b/gi;
+  let em;
+  while ((em = eSil.exec(text))) {
+    const toks = clean(em[1]).match(/E\d{1,3}[A-Za-z]?/gi) || [];
+    for (const t of toks) push(t);
+  }
   return found;
 }
 

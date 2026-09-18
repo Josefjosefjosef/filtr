@@ -246,6 +246,7 @@ export const ACCIDENT_PARTICIPANT = Object.freeze({
   CYCLIST: "CYCLIST",
   PEDESTRIAN: "PEDESTRIAN",
   TRAM: "TRAM",
+  BUS: "BUS",
   AGRICULTURAL_VEHICLE: "AGRICULTURAL_VEHICLE",
 });
 
@@ -256,10 +257,11 @@ export const TRAFFIC_VEHICLE_ABBREV_TO_PARTICIPANT = Object.freeze({
   DOD: ACCIDENT_PARTICIPANT.VAN,
   MOTO: ACCIDENT_PARTICIPANT.MOTORCYCLE,
   TRAM: ACCIDENT_PARTICIPANT.TRAM,
+  BUS: ACCIDENT_PARTICIPANT.BUS,
 });
 
 /** Shared abbrev class for collision pairs / chains (source tokens only). */
-const TRAFFIC_VEHICLE_ABBREV_CLASS = "DOD|MOTO|OA|NA|TRAM";
+const TRAFFIC_VEHICLE_ABBREV_CLASS = "DOD|MOTO|OA|NA|TRAM|BUS";
 
 /**
  * Animal / wildlife in abbrev collision pairs (DOD x divočák).
@@ -293,6 +295,7 @@ const ACCIDENT_PARTICIPANT_NOMINATIVE_CS = Object.freeze({
   [ACCIDENT_PARTICIPANT.VAN]: "Dodávka",
   [ACCIDENT_PARTICIPANT.MOTORCYCLE]: "Motocykl",
   [ACCIDENT_PARTICIPANT.TRAM]: "Tramvaj",
+  [ACCIDENT_PARTICIPANT.BUS]: "Autobus",
   [ACCIDENT_PARTICIPANT.AGRICULTURAL_VEHICLE]: "Zemědělský stroj",
 });
 
@@ -1300,6 +1303,15 @@ export function expandTrafficAbbreviationsCs(text) {
   });
   s = s.replace(/\bMOTO\b/g, "motocykl");
   s = s.replace(/\bTRAM\b/g, "tramvaj");
+  s = s.replace(/\b(\d+)\s*[×xX]\s*BUS\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "autobus", "autobusy", "autobusů");
+  });
+  s = s.replace(/\b(\d+)\s+BUS\b/g, (_, n) => {
+    const num = Number(n);
+    return num + " " + czechPlural(num, "autobus", "autobusy", "autobusů");
+  });
+  s = s.replace(/\bBUS\b/g, "autobus");
   return s;
 }
 
@@ -1480,6 +1492,14 @@ export function parseAccidentParticipantsFromText(rawText) {
     if (/\btramvaj|\bTRAM\b/i.test(text)) {
       add(ACCIDENT_PARTICIPANT.TRAM);
     }
+    if (
+      /\bautobus/i.test(text) ||
+      /nehoda\s+autobusu/i.test(text) ||
+      /\b\d+\s*[x×X]\s*BUS\b/.test(text) ||
+      /\bBUS\b/.test(text)
+    ) {
+      add(ACCIDENT_PARTICIPANT.BUS);
+    }
     if (/zemědělsk(?:ý|ého)\s+stroj/i.test(text)) {
       add(ACCIDENT_PARTICIPANT.AGRICULTURAL_VEHICLE);
     }
@@ -1503,6 +1523,7 @@ const ACCIDENT_PARTICIPANT_GENITIVE_CS = Object.freeze({
   [ACCIDENT_PARTICIPANT.CYCLIST]: "cyklisty",
   [ACCIDENT_PARTICIPANT.PEDESTRIAN]: "chodce",
   [ACCIDENT_PARTICIPANT.TRAM]: "tramvaje",
+  [ACCIDENT_PARTICIPANT.BUS]: "autobusu",
   [ACCIDENT_PARTICIPANT.AGRICULTURAL_VEHICLE]: "zemědělského stroje",
 });
 
@@ -1512,6 +1533,7 @@ const ACCIDENT_PARTICIPANT_GENITIVE_PLURAL_CS = Object.freeze({
   [ACCIDENT_PARTICIPANT.TRUCK]: "nákladních automobilů",
   [ACCIDENT_PARTICIPANT.VAN]: "dodávek",
   [ACCIDENT_PARTICIPANT.TRAM]: "tramvají",
+  [ACCIDENT_PARTICIPANT.BUS]: "autobusů",
 });
 
 /**
@@ -1552,6 +1574,17 @@ export function formatAccidentLeadFromParticipants(participants, sourceText = ""
   ) {
     return appendInjuryIfPresent("Nehoda tramvaje a osobního automobilu", text);
   }
+  if (
+    parts.includes(ACCIDENT_PARTICIPANT.BUS) &&
+    parts.includes(ACCIDENT_PARTICIPANT.PASSENGER_CAR) &&
+    parts.length === 2
+  ) {
+    // Preserve source order (BUS x OA vs OA x BUS).
+    if (parts[0] === ACCIDENT_PARTICIPANT.BUS) {
+      return appendInjuryIfPresent("Nehoda autobusu a osobního automobilu", text);
+    }
+    return appendInjuryIfPresent("Nehoda osobního automobilu a autobusu", text);
+  }
   if (parts.length === 1) {
     if (parts[0] === ACCIDENT_PARTICIPANT.TRUCK) {
       return appendInjuryIfPresent("Nehoda nákladního vozidla", text);
@@ -1567,6 +1600,9 @@ export function formatAccidentLeadFromParticipants(participants, sourceText = ""
     }
     if (parts[0] === ACCIDENT_PARTICIPANT.TRAM) {
       return appendInjuryIfPresent("Nehoda tramvaje", text);
+    }
+    if (parts[0] === ACCIDENT_PARTICIPANT.BUS) {
+      return appendInjuryIfPresent("Nehoda autobusu", text);
     }
     if (parts[0] === ACCIDENT_PARTICIPANT.AGRICULTURAL_VEHICLE) {
       return appendInjuryIfPresent("Nehoda zemědělského stroje", text);
@@ -2660,6 +2696,11 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
   for (const mw of extractMotorwayNumbersFromOfficialComment(text)) {
     if (!found.some((x) => x.toLowerCase() === mw.toLowerCase())) found.push(mw);
   }
+  // E-routes in the same silnice/silnici provenance class as I/II/III
+  // ("na silnici E55 E65") — never invent from bare prose without silnice context.
+  for (const er of extractERoadNumbersFromOfficialComment(text)) {
+    if (!found.some((x) => x.toLowerCase() === er.toLowerCase())) found.push(er);
+  }
   // Narrow bare classed-road fallback: only when no silnice-prefixed hit yet, and the
   // token is an explicit I/II/III form (weather / short NDIC lines like "I/42 MUK …").
   // Never invents; never overrides structured silnice-prefixed identities.
@@ -2672,6 +2713,32 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
     const m = r.match(/^(I{1,3}|II|III|D)\/(\d{1,6}[A-Za-z]?)$/i);
     return m ? m[1].toUpperCase() + "/" + m[2] : r;
   });
+}
+
+/**
+ * Explicit European route numbers from official NDIC comment when tied to silnice context.
+ * Fail-closed: requires silnice/silnici/sil. prefix — never invents E-routes from bare prose
+ * (e.g. load-rating "E 13" or incidental tokens). Preserves multi-E clusters (E55 E65).
+ */
+export function extractERoadNumbersFromOfficialComment(rawText) {
+  const text = clean(rawText);
+  if (!text) return [];
+  const found = [];
+  const push = (tok) => {
+    const n = normalizeMotorwayRoadToken(tok);
+    if (n && /^E\d/i.test(n) && !found.some((x) => x.toLowerCase() === n.toLowerCase())) {
+      found.push(n);
+    }
+  };
+  const re =
+    /\b(?:(?:na\s+)?silnici|silnice|sil\.)\s*(?:č\.\s*)?((?:E\d{1,3}[A-Za-z]?)(?:\s+E\d{1,3}[A-Za-z]?)*)\b/gi;
+  let m;
+  while ((m = re.exec(text))) {
+    const cluster = clean(m[1]);
+    const toks = cluster.match(/E\d{1,3}[A-Za-z]?/gi) || [];
+    for (const t of toks) push(t);
+  }
+  return found;
 }
 
 /**
