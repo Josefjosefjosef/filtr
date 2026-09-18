@@ -1,12 +1,12 @@
 {
-  "freezeId": "iu-menu-nav-scroll-restore-v1-20260918",
+  "freezeId": "iu-mindmenu-pwa-box-nav-flush-v1-20260918",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-18T08:49:42.929Z",
-  "note": "Freeze bump: Menu (#iuMobileGatePanelNav) scroll restore on mobile/tablet/PWA return from any Menu item.",
+  "updatedAt": "2026-09-18T12:09:03.326Z",
+  "note": "Freeze bump: MindMenu tools gate PWA standalone — no double safe-area pad under white box.",
   "files": {
-    "projects/index.html": "16489096de2fc4cdc13677c36a2004df882f110f9193322c6c38606c980a4a24",
-    "assets/app.css": "03e14a18aa73591a500e334845f03a15d12d2ed70b23763f95bd23cfdac4663f",
+    "projects/index.html": "e9e3f1406e68f36a74ff54cd4cf96a6b0ef51bf59330250dbbc5d8aa489c2245",
+    "assets/app.css": "1bfc23330d8ee3759e993df3aa135d56cf4330ff5561b87e6ba983f1ecd3a191",
     "assets/app.js": "dcf0c4190a479bb27f6ae85c4714f1df95f2b202560626b3892b452b07f9eca2",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "acf01228fa854d94d2a9af3ab6eedc1fabdbbbf2f445f768601791b24337ec13",
     "assets/iu-app-feed-pipeline-v1.js": "3f0695a9c510a79f3f2c077252c139ee02aee95571ec3d62c6bc99dd27f0cfe0",
@@ -150,7 +150,8 @@
       "pd-city-filter-feed-match-v1-20260917",
       "pwa-mindmenu-return-settab-v1-20260918",
       "traffic-bus-participant-e-route-v1-20260918",
-      "menu-nav-scroll-restore-v1-20260918"
+      "menu-nav-scroll-restore-v1-20260918",
+      "mindmenu-pwa-box-nav-flush-v1-20260918"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -185,6 +186,10 @@
       "silver-info-cards-collapse-v1-20260915",
       "calendar-nav-external-open-v1-20260916",
       "menu-nav-scroll-restore-v1-20260918"
+    ],
+    "assets/app.css": [
+      "mindmenu-pwa-box-nav-flush-v1-20260918",
+      "P0 PWA MindMenu gap"
     ]
   }
 }

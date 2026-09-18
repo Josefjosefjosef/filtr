@@ -1,13 +1,23 @@
 #!/usr/bin/env node
 /**
  * Freeze guard: MindMenu white-box bottom flush to fixed bottom nav
- * (mobile / tablet / PWA). Geometry contract — not screenshot soft-match.
+ * (mobile / tablet browser + standalone PWA).
  *
- * At scroll-end for dynamic button counts (4 / 10 / 20) and after live
- * add/remove without reload:
+ * Root cause of PWA-only gap (browser OK): #iuMobileGateContent
+ * padding-bottom: env(safe-area-inset-bottom) + panel padding-bottom:
+ * --bottom-nav-height (measured nav already includes safe-area) double-counted
+ * the home-indicator strip under the white .mindMenu box.
+ *
+ * Modes:
+ *  - browser: viewport only (safe≈0 path that Safari already passed)
+ *  - pwa-standalone: navigator.standalone + display-mode:standalone PLUS
+ *    injected safe-area (34px) on content+nav so Chromium cannot false-PASS
+ *    without exercising the double-count path
+ *
+ * Geometry at scroll-end (4 / 10 / 20 + live add/remove):
  *   |box.bottom − nav.top| ≤ GAP_MAX_PX
- *   last content not under nav
- *   natural inner pad (last tile → box bottom) preserved (≥ INNER_PAD_MIN)
+ *   last.bottom < box.bottom ≤ nav.top (+tol)
+ *   inner pad (last → box bottom) ≥ INNER_PAD_MIN
  *
  * Run: npm run iu-mindmenu-box-bottom-nav-flush-guard
  */
@@ -30,10 +40,12 @@ const ALLOW = path.join(REPO, "scripts", "guards", "iu-sw-cache-version-allowlis
 const REPORT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_mindmenu_box_bottom_nav_flush_guard.json");
 const CACHE_TOKEN = "2026-09-17-mindmenu-box-nav-flush-v1";
 const APP_CSS_BUST = "mindmenu-box-nav-flush-v1-20260917";
+const PWA_FLUSH_BUST = "mindmenu-pwa-box-nav-flush-v1-20260918";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8847", 10);
 const GAP_MAX_PX = 2;
 const INNER_PAD_MIN = 8;
 const OVERLAP_TOL = 1;
+const PWA_SAFE_BOTTOM_PX = 34;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -49,9 +61,9 @@ const MIME = {
 };
 
 const VIEWPORTS = [
-  { id: "mobile", width: 390, height: 844, isMobile: true, pwa: false },
-  { id: "tablet", width: 820, height: 1180, isMobile: false, pwa: false },
-  { id: "pwa", width: 390, height: 844, isMobile: true, pwa: true },
+  { id: "browser-phone", width: 390, height: 844, isMobile: true, mode: "browser" },
+  { id: "browser-tablet", width: 820, height: 1180, isMobile: false, mode: "browser" },
+  { id: "pwa-standalone", width: 390, height: 844, isMobile: true, mode: "pwa" },
 ];
 
 function staticGate() {
@@ -65,6 +77,7 @@ function staticGate() {
   };
 
   ok("cache_bust_index_app_css", index.includes(APP_CSS_BUST) && /app\.css\?v=/.test(index));
+  ok("cache_bust_pwa_flush_token", index.includes(PWA_FLUSH_BUST) || css.includes("P0 PWA MindMenu gap"));
   ok("sw_cache_allowed", swHasAllowedCacheVersion(sw));
   ok("allowlist_lineage_mm_flush", allow.includes(CACHE_TOKEN) || allow.includes("mindmenu-box-nav-flush-v1"));
 
@@ -74,6 +87,21 @@ function staticGate() {
   const toolsPadCss = toolsPadBlock ? toolsPadBlock[0] : "";
   ok("tools_pad_uses_bottom_nav_height", /--bottom-nav-height/.test(toolsPadCss));
   ok("tools_pad_not_safe_space_plus40", !/--iu-mobile-bottom-nav-safe-space/.test(toolsPadCss));
+  ok(
+    "tools_content_pad_bottom_zero",
+    /data-iu-mobile-gate="tools"[\s\S]{0,220}#iuMobileGateContent[\s\S]{0,180}padding-bottom:\s*0\s*!important/.test(
+      css
+    )
+  );
+  ok(
+    "mm_minheight_no_double_safe_bottom",
+    /body\.iu-mobileGateOverlayOpen\s+#iuMobileGatePanelTools\s+\.mindMenu\s*\{[\s\S]{0,700}min-height:\s*calc\(\s*100dvh[\s\S]{0,200}?--bottom-nav-height/.test(
+      css
+    ) &&
+      !/body\.iu-mobileGateOverlayOpen\s+#iuMobileGatePanelTools\s+\.mindMenu\s*\{[\s\S]{0,500}min-height:\s*calc\(\s*100dvh\s*-\s*env\(safe-area-inset-top[\s\S]{0,80}env\(safe-area-inset-bottom/.test(
+        css
+      )
+  );
   ok(
     "mm_flow_no_stale_minheight",
     /body\.iu-mobileGateOverlayOpen\s+#iuMobileGatePanelTools\s+#iuMobileMindMenuFlow\s*\{[\s\S]{0,400}min-height:\s*0\s*!important/.test(
@@ -87,7 +115,6 @@ function staticGate() {
     )
   );
   ok("scoped_max_900", /@media\s*\(max-width:\s*900px\)/.test(css));
-  // Home CHMU flush must remain intact (do not weaken sibling contract).
   ok(
     "home_chmu_flush_intact",
     /body:not\(\.iu-mobileMainVisible\):not\(\.iu-mobileGateOverlayOpen\)\s+#iuMobileGateWrap\s*\{[^}]*--bottom-nav-height/.test(
@@ -181,6 +208,44 @@ async function openMindMenu(page) {
   throw lastErr || new Error("openMindMenu_timeout");
 }
 
+/** Force iOS-PWA-like safe-area geometry Chromium does not expose via env(). */
+async function applyStandaloneSafeArea(page, safePx) {
+  await page.evaluate((sb) => {
+    const style = document.createElement("style");
+    style.id = "iu-mm-flush-guard-safe-area";
+    style.textContent =
+      "#iuMobileBottomNav.iu-mobileBottomNav{" +
+      "padding-bottom:calc(10px + " +
+      sb +
+      "px + 6px)!important}" +
+      "/* Simulate env(safe-area-inset-bottom) on the generic gate content rule. " +
+      "Production tools-gate CSS must override to 0 with higher specificity — " +
+      "do NOT force tools=0 here or a broken build would false-PASS. */" +
+      "body.iu-mobileGateOverlayOpen #iuMobileGateContent.iu-mobileGateContent[aria-hidden=\"false\"]{" +
+      "padding-bottom:" +
+      sb +
+      "px!important}";
+    document.documentElement.appendChild(style);
+    const nav = document.getElementById("iuMobileBottomNav");
+    if (nav) {
+      const r = nav.getBoundingClientRect();
+      const h = Math.round(r.height || 0);
+      if (h > 24) {
+        const root = document.documentElement;
+        root.style.setProperty("--bottom-nav-height", h + "px");
+        root.style.setProperty("--iu-mobile-bottom-nav-total-h", h + "px");
+        root.style.setProperty("--iu-mobile-bottom-nav-measured-h", h + "px");
+        root.style.setProperty("--iu-tool-overlay-panel-bottom", h + "px");
+        root.style.setProperty("--iu-mobile-bottom-nav-safe-space", h + 40 + "px");
+      }
+    }
+    try {
+      window.dispatchEvent(new Event("resize"));
+    } catch (_) {}
+  }, safePx);
+  await page.waitForTimeout(120);
+}
+
 async function setTileCount(page, n) {
   await page.evaluate((keep) => {
     const grid =
@@ -240,6 +305,7 @@ async function measure(page) {
   return page.evaluate((overlapTol) => {
     const panel = document.getElementById("iuMobileGatePanelTools");
     const nav = document.getElementById("iuMobileBottomNav");
+    const content = document.getElementById("iuMobileGateContent");
     const box =
       document.querySelector("#iuMobileGatePanelTools .mindMenu") ||
       document.querySelector("#iuMobileMindMenuFlow .mindMenu") ||
@@ -256,7 +322,6 @@ async function measure(page) {
         tileCount: document.querySelectorAll(".mindMenu .iuTile, .mindMenu .iu-mailbox-row").length,
       };
     }
-    // Short content: stay at 0 (box already fills above nav). Tall: scroll to end.
     const overflows = panel.scrollHeight > panel.clientHeight + 2;
     panel.scrollTop = overflows ? 1e9 : 0;
     window.scrollTo(0, overflows ? 1e9 : 0);
@@ -266,24 +331,37 @@ async function measure(page) {
     const gapBoxToNav = navR.top - boxR.bottom;
     const innerPad = boxR.bottom - lastR.bottom;
     const underNav = lastR.bottom > navR.top + overlapTol;
+    const boxAboveOrFlushNav = boxR.bottom <= navR.top + overlapTol;
+    const lastInsideBox = lastR.bottom < boxR.bottom - 0.5;
     const cs = getComputedStyle(panel);
+    const contentCs = content ? getComputedStyle(content) : null;
     const rootCs = getComputedStyle(document.documentElement);
+    let standalone = false;
+    try {
+      standalone =
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+        navigator.standalone === true;
+    } catch (_) {}
     return {
       ok: true,
       tileCount: document.querySelectorAll(".mindMenu .iuTile, .mindMenu .iu-mailbox-row").length,
       gapBoxToNav: Number(gapBoxToNav.toFixed(2)),
       innerPad: Number(innerPad.toFixed(2)),
       underNav,
+      lastInsideBox,
+      boxAboveOrFlushNav,
       overflows,
+      standalone,
       navH: Number(navR.height.toFixed(2)),
       panelPad: Number((parseFloat(cs.paddingBottom) || 0).toFixed(2)),
+      contentPad: contentCs ? Number((parseFloat(contentCs.paddingBottom) || 0).toFixed(2)) : null,
       bottomNavVar: rootCs.getPropertyValue("--bottom-nav-height").trim(),
       safeSpaceVar: rootCs.getPropertyValue("--iu-mobile-bottom-nav-safe-space").trim(),
     };
   }, OVERLAP_TOL);
 }
 
-function verdict(m, tag) {
+function verdict(m, tag, mode) {
   const fails = [];
   if (!m || !m.ok) {
     fails.push(tag + ":missing");
@@ -291,8 +369,21 @@ function verdict(m, tag) {
   }
   if (Math.abs(m.gapBoxToNav) > GAP_MAX_PX) fails.push(tag + ":gap_" + m.gapBoxToNav);
   if (m.underNav) fails.push(tag + ":under_nav");
+  if (!m.boxAboveOrFlushNav) fails.push(tag + ":box_past_nav");
+  if (!m.lastInsideBox) fails.push(tag + ":last_not_inside_box");
   if (!(m.innerPad >= INNER_PAD_MIN)) fails.push(tag + ":inner_pad_" + m.innerPad);
   if (!(m.tileCount > 0)) fails.push(tag + ":no_tiles");
+  if (mode === "pwa") {
+    if (!m.standalone) fails.push(tag + ":not_standalone_flag");
+    /* Tools content pad must be 0 even when safe-area is simulated. */
+    if (!(m.contentPad === 0)) fails.push(tag + ":content_pad_" + m.contentPad);
+    /* Guard must not accept tens-of-px gaps that looked like "PASS" before. */
+    if (Math.abs(m.gapBoxToNav) > GAP_MAX_PX) {
+      /* already recorded */
+    } else if (m.gapBoxToNav > 8) {
+      fails.push(tag + ":pwa_large_gap_" + m.gapBoxToNav);
+    }
+  }
   return fails;
 }
 
@@ -309,16 +400,11 @@ function verdict(m, tag) {
         viewport: { width: vp.width, height: vp.height },
         isMobile: vp.isMobile,
         hasTouch: true,
-        userAgent: vp.isMobile
-          ? "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
-          : undefined,
+        userAgent:
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
       };
-      if (vp.pwa) {
-        ctxOpts.userAgent =
-          "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
-      }
       const context = await bootstrapGuardContext(browser, ctxOpts);
-      if (vp.pwa) {
+      if (vp.mode === "pwa") {
         await context.addInitScript(() => {
           try {
             Object.defineProperty(navigator, "standalone", { configurable: true, get: () => true });
@@ -350,25 +436,30 @@ function verdict(m, tag) {
       await waitForVaultReady(page, 120000).catch(() => {});
       await page.waitForTimeout(2500);
       await openMindMenu(page);
+      if (vp.mode === "pwa") {
+        await applyStandaloneSafeArea(page, PWA_SAFE_BOTTOM_PX);
+      }
 
       for (const n of [4, 10, 20]) {
         await setTileCount(page, n);
+        if (vp.mode === "pwa") await applyStandaloneSafeArea(page, PWA_SAFE_BOTTOM_PX);
         await page.waitForTimeout(200);
         const m = await measure(page);
         const tag = vp.id + "_n" + n;
-        const f = verdict(m, tag);
+        const f = verdict(m, tag, vp.mode);
         fails.push(...f);
-        results.push({ tag, ...m, fails: f });
+        results.push({ tag, mode: vp.mode, ...m, fails: f });
       }
 
       await liveAddRemove(page);
       await setTileCount(page, 10);
+      if (vp.mode === "pwa") await applyStandaloneSafeArea(page, PWA_SAFE_BOTTOM_PX);
       await page.waitForTimeout(200);
       const live = await measure(page);
       const liveTag = vp.id + "_live_add_remove";
-      const liveFails = verdict(live, liveTag);
+      const liveFails = verdict(live, liveTag, vp.mode);
       fails.push(...liveFails);
-      results.push({ tag: liveTag, ...live, fails: liveFails });
+      results.push({ tag: liveTag, mode: vp.mode, ...live, fails: liveFails });
 
       await context.close();
     }
@@ -380,6 +471,7 @@ function verdict(m, tag) {
   const report = {
     gapMaxPx: GAP_MAX_PX,
     innerPadMin: INNER_PAD_MIN,
+    pwaSafeBottomPx: PWA_SAFE_BOTTOM_PX,
     static: staticResult,
     results,
     fails,
