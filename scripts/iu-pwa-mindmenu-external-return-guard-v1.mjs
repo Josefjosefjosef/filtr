@@ -100,7 +100,7 @@ function staticGate() {
       "static:close_for_main_nav_respects_return_guard"
     );
     must(
-      /function setTab\s*\(\s*value\s*\)\s*\{[\s\S]{0,550}iuMindMenuHasReturnGuard/.test(feed),
+      /function setTab\s*\(\s*value\s*\)\s*\{[\s\S]{0,900}iuMindMenuHasReturnGuard/.test(feed),
       "static:settab_empty_respects_return_guard"
     );
     must(
@@ -111,13 +111,18 @@ function staticGate() {
     );
     const shell = read("assets/iu-mobile-bottom-nav-shell-v1.js");
     must(
-      /iuMobileGateCloseForMainNav\s*=\s*function[\s\S]{0,500}iuMindMenuHasReturnGuard/.test(shell),
+      /iuMobileGateCloseForMainNav\s*=\s*function[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(shell),
       "static:shell_close_respects_return_guard"
     );
     must(
-      /if \(!gateVal\)\s*\{[\s\S]{0,280}iuMindMenuHasReturnGuard/.test(shell),
+      /if \(!gateVal\)\s*\{[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(shell),
       "static:shell_settab_empty_respects_return_guard"
     );
+    must(/iu-mm-return-boot/.test(shell), "static:shell_boot_class");
+    const html = read("projects/index.html");
+    must(/pwa-mindmenu-cold-document-no-home-v1-20260919/.test(html), "static:cold_document_marker");
+    must(/iu-mm-return-boot/.test(html) && /window\.iuMindMenuHasReturnGuard\s*=\s*function/.test(html), "static:head_early_guard");
+    must(/data-iu-mobile-gate", "tools"/.test(html), "static:head_pin_tools");
     const sw = read("sw.js");
     must(
       /iu-app-feed-pipeline-v1\.js[\s\S]{0,200}iu-mobile-bottom-nav-shell-v1\.js[\s\S]{0,200}iu-network-connectivity-v1\.js/.test(
@@ -510,6 +515,49 @@ async function runPlaywright() {
       });
       must(neg.afterSetTab === "", "neg:cold_settab_home:" + neg.afterSetTab);
       must(neg.afterHub === "", "neg:hub_home_without_pending:" + neg.afterHub);
+
+      /* New document, no hash, durable pending, session wiped.
+         #10939 same-document setTab guards false-PASS this. Real PWA history.back / process
+         death loads start URL and the default view is Home until late restore. */
+      await page.evaluate(() => {
+        localStorage.setItem(
+          "iuMindMenuReturnPendingV1",
+          JSON.stringify({ t: Date.now(), y: 360 })
+        );
+        sessionStorage.clear();
+      });
+      const coldUrl = new URL(page.url());
+      coldUrl.hash = "";
+      await page.goto(coldUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
+      await page.waitForFunction(
+        () => {
+          const wrap = document.getElementById("iuMobileGateWrap");
+          return !!(wrap && window.__iuMmReturnBootDiag && window.__iuMmReturnBootDiag.applied === true);
+        },
+        { timeout: 20000 }
+      );
+      const cold = await page.evaluate(() => {
+        const d = window.__iuMmReturnBootDiag || {};
+        const wrap = document.getElementById("iuMobileGateWrap");
+        const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+        return {
+          applied: d.applied === true,
+          beforeBody: d.bootClassBeforeBody === true,
+          sawHome: d.sawUnguardedHome === true,
+          clearedBy: d.clearedBy || "",
+          gate,
+          overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+          boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+          guard: typeof window.iuMindMenuHasReturnGuard === "function" ? window.iuMindMenuHasReturnGuard() : false,
+        };
+      });
+      must(cold.applied === true, "colddoc:boot_applied");
+      must(cold.beforeBody === true, "colddoc:class_before_body");
+      must(cold.sawHome !== true, "colddoc:HOME_VISIBLE");
+      must(cold.gate === "tools", "colddoc:gate_tools:" + cold.gate);
+      must(cold.overlay === true, "colddoc:overlay");
+      must(cold.guard === true, "colddoc:guard_still_true");
+      must(cold.sawHome !== true && cold.gate === "tools", "colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
     } finally {
       await browser.close();
     }
