@@ -818,9 +818,15 @@ export function parseOversizeLoadFactsFromText(rawText) {
     const n = parseCsDecimalNumber(weight[1]);
     if (n != null && n > 0 && n < 100000) out.loadWeightTons = n;
   }
-  const dims = text.match(
-    /\bd(?:3)?\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*š\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*v\s*(\d+(?:[.,]\d+)?)\s*m\b/i
-  );
+  // Prefer full "d30,90" capture. Optional OCR form "d3 4,0" requires whitespace after d3
+  // so "d30,90" cannot lose the leading digit via optional (?:3)?.
+  const dims =
+    text.match(
+      /\bd\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*š\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*v\s*(\d+(?:[.,]\d+)?)\s*m\b/i
+    ) ||
+    text.match(
+      /\bd3\s+(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*š\s*(\d+(?:[.,]\d+)?)\s*m\s*[;,]?\s*v\s*(\d+(?:[.,]\d+)?)\s*m\b/i
+    );
   if (dims) {
     out.loadLengthDisplay = formatCsDecimalDisplay(dims[1]);
     out.loadWidthDisplay = formatCsDecimalDisplay(dims[2]);
@@ -1942,6 +1948,15 @@ export function normalizeDirectionHuman(raw) {
 }
 
 /**
+ * True when "ve směru X" sits in a traffic-arrangement clause (provoz/doprava…),
+ * not in the primary location lead ("D11 … ve směru Jaroměř").
+ */
+function isArrangementOnlyDirectionContext(src, matchStart) {
+  const before = String(src || "").slice(Math.max(0, matchStart - 48), matchStart);
+  return /(?:^|[^\p{L}])(?:provoz|doprava|veden[ayo]?|převeden[ayo]?)\s+$/iu.test(before);
+}
+
+/**
  * Collect safe destination tokens from comment. When multiple distinct destinations
  * appear (typical urban multi-way routing), structured SMĚR stays null — facts go
  * into DOPRAVNÍ SITUACE instead.
@@ -1967,20 +1982,25 @@ function collectDirectionDestinationsFromComment(text) {
     chunk = clean(chunk.split(/\s+až\b/i)[0]);
     chunk = normalizeInitialDotSpacing(chunk);
     const norm = normalizeDirectionHuman(chunk);
-    if (norm) found.push(norm);
+    if (norm) {
+      found.push({
+        dest: norm,
+        arrangementOnly: isArrangementOnlyDirectionContext(src, matchStart),
+      });
+    }
     // Rewind past marker + kept chunk so a nested direction marker still matches.
     const advance = Math.max(1, bodyOffset + (chunk ? chunk.length : 1));
     re.lastIndex = Math.min(src.length, matchStart + advance);
   }
   const uniq = [];
-  for (const d of found) {
-    if (!uniq.some((x) => samePlaceName(x, d))) uniq.push(d);
+  for (const entry of found) {
+    if (!uniq.some((x) => samePlaceName(x.dest, entry.dest))) uniq.push(entry);
   }
   return uniq;
 }
 
 function extractDirectionHumanFromComment(text) {
-  const dests = collectDirectionDestinationsFromComment(text);
+  const entries = collectDirectionDestinationsFromComment(text);
   // "D1 sjezd EXIT 282 na Prahu" / "EXIT 76 na Brno" — destination after EXIT, not "ve směru".
   // Do NOT use \b after the place token — JS \b is ASCII-only and truncates "Ústí" → "Úst".
   const exitDest = text.match(
@@ -2000,22 +2020,25 @@ function extractDirectionHumanFromComment(text) {
     if (norm) {
       // Prefer bare place for header/place ("směr Praha"), not "na Prahu".
       const placeOnly = norm.replace(/^(?:na|do|z)\s+/i, "").trim();
-      if (placeOnly && !dests.some((d) => samePlaceName(d, placeOnly))) {
-        dests.unshift(placeOnly);
-      } else if (!placeOnly && !dests.some((d) => samePlaceName(d, norm))) {
-        dests.unshift(norm);
+      const token = placeOnly || norm;
+      if (token && !entries.some((e) => samePlaceName(e.dest, token))) {
+        entries.unshift({ dest: token, arrangementOnly: false });
       }
     }
   }
-  if (!dests.length) return null;
+  if (!entries.length) return null;
   const isTurnSide = (d) => /^(?:na\s+|do\s+|z\s+)?(?:vlevo|vpravo)$/i.test(d);
-  const placeLike = dests.filter((d) => !isTurnSide(d));
-  const turnLike = dests.filter((d) => isTurnSide(d));
-  // Prefer a single place/centrum destination over turn-side "vlevo/vpravo".
-  if (placeLike.length === 1) return placeLike[0];
-  // Multiple distinct place destinations (urban multi-way routing) → no single SMĚR.
+  const placeLike = entries.filter((e) => !isTurnSide(e.dest));
+  const turnLike = entries.filter((e) => isTurnSide(e.dest));
+  // Primary location direction beats later arrangement-only "provoz ve směru …".
+  const primaryPlaces = placeLike.filter((e) => !e.arrangementOnly);
+  if (primaryPlaces.length === 1) return primaryPlaces[0].dest;
+  // Multiple distinct primary place destinations (urban multi-way) → no single SMĚR.
+  if (primaryPlaces.length > 1) return null;
+  // No primary location direction: keep a single arrangement direction if that is all we have.
+  if (placeLike.length === 1) return placeLike[0].dest;
   if (placeLike.length > 1) return null;
-  if (turnLike.length === 1) return turnLike[0];
+  if (turnLike.length === 1) return turnLike[0].dest;
   return null;
 }
 
@@ -2171,13 +2194,21 @@ export function looksLikeStreetName(raw) {
  * True when a token looks like a bridge *object* (not the Czech municipality "Most").
  * Bare "Most" alone is insufficient — NDIC bridge objects are "X most", "most X",
  * "most ev. č. …", etc.
+ * Rejects mid-word residues ("ání most" from "zametání mostů") and maintenance wording.
  */
 export function looksLikeBridgeObjectToken(raw) {
   const t = clean(raw);
   if (!t) return false;
-  if (!/\bmost\b/i.test(t)) return false;
   if (/^most$/i.test(t)) return false;
-  return true;
+  if (/^most(?:ů|u|em|ě)$/i.test(t)) return false;
+  // Mid-word / maintenance fragments must never become named bridge objects.
+  if (/^(?:ání|etí|ení|avy|ba)\s+most/i.test(t)) return false;
+  if (/(?:zametání|čištění|opravy|údržba)\s+most/i.test(t)) return false;
+  if (!/[Mm]ost/.test(t)) return false;
+  // Require a proper-name capital alongside "most" (not bare mostů).
+  const withoutMost = clean(t.replace(/\bmost(?:ů|u|em|ě)?\b/gi, " "));
+  if (!withoutMost) return false;
+  return /[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]/.test(withoutMost);
 }
 
 /** True when a token must not become the white municipality entrance board. */
@@ -2311,7 +2342,10 @@ export function looksLikeBetweenIntersectionsPhrase(raw) {
 export function splitPrimaryVsDetourComment(rawText) {
   const text = clean(rawText);
   if (!text) return { primaryText: "", detourText: "" };
-  const m = text.match(/\bObjížďk[ay]\b|\bObjízdn[áa]\s+tras|\bObjizdka\b/i);
+  // Cover Objížďka / Objízdná trasa / "Využijte objízdnou trasu …" (accusative).
+  const m = text.match(
+    /\bObjížďk[ay]\b|\b[Oo]bjízdn\w*\s+tras|\bObjizdka\b|\b[Vv]yužijte\s+objízdn/i
+  );
   if (!m || m.index == null) return { primaryText: text, detourText: "" };
   return {
     primaryText: clean(text.slice(0, m.index)),
@@ -2383,6 +2417,25 @@ export function extractBetweenMunicipalitiesSegment(rawText) {
     toMunicipality: to,
     presentation: "mezi obcemi " + from + " a " + to,
   };
+}
+
+/**
+ * Explicit multi-municipality event locality: "v obcích Halenkovice a Napajedla".
+ * Never pulls diversion towns ("přes Spytihněv nebo Žlutavu").
+ */
+export function extractInMunicipalitiesListFromOfficialComment(rawText) {
+  const text = clipOfficialCommentLocationScanText(rawText) || clean(rawText);
+  if (!text) return [];
+  const m = text.match(
+    /\bv\s+obcích\s+([^,;]+?)\s+a\s+([^,;]+?)(?=\s*(?:okres\b|okr\.|kraj\b|[,;]|$))/iu
+  );
+  if (!m) return [];
+  const a = normalizeExtractedMunicipalityName(m[1]);
+  const b = normalizeExtractedMunicipalityName(m[2]);
+  const out = [];
+  if (a) out.push(a);
+  if (b && !out.some((x) => samePlaceName(x, b))) out.push(b);
+  return out;
 }
 
 /**
@@ -2679,6 +2732,25 @@ export function extractAllRoadNumbersFromOfficialComment(rawText) {
     const canon = norm.replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
     if (canon && !found.some((x) => x.toLowerCase() === canon.toLowerCase())) found.push(canon);
   }
+  // Multi bare / classed roads in silnice list context:
+  // "na silnicích 36748, 36747" / "na silnici III/1234 a 5678".
+  // Never invents III/ from digit count — keeps bare digits when class absent.
+  {
+    const listRe =
+      /\bna\s+silnic(?:i|ích)\s+((?:(?:I{1,3}|II|III)\s*\/\s*)?\d{1,6}[A-Za-z]?(?:\s*,\s*(?:(?:I{1,3}|II|III)\s*\/\s*)?\d{1,6}[A-Za-z]?|\s+a\s+(?:(?:I{1,3}|II|III)\s*\/\s*)?\d{1,6}[A-Za-z]?)*)/gi;
+    let lm;
+    while ((lm = listRe.exec(text))) {
+      const cluster = clean(lm[1]);
+      const toks =
+        cluster.match(/(?:(?:I{1,3}|II|III)\s*\/\s*)?\d{1,6}[A-Za-z]?/gi) || [];
+      for (const tok of toks) {
+        const raw = clean(tok).replace(/\s+/g, "");
+        if (!raw) continue;
+        const canon = raw.replace(/^(I{1,3}|II|III)\//i, (_, cls) => String(cls).toUpperCase() + "/");
+        if (canon && !found.some((x) => x.toLowerCase() === canon.toLowerCase())) found.push(canon);
+      }
+    }
+  }
   // Also bare "III/03554" after "silnice č." already covered; catch remaining classed tokens
   // only when preceded by silnice/sil. context nearby (avoid random fractions).
   if (!found.length) {
@@ -2934,13 +3006,24 @@ export function extractNamedTransportObject(rawText) {
     const name = streetBareName(tunnel[1]);
     return { name, kind: LOCATION_KIND.TUNNEL };
   }
-  const bridge = scan.match(
-    /\b((?:[A-ZÁ-Ž][\p{L}\-]+(?:ský|cký|ický)?\s+)?[Mm]ost(?:\s+[A-ZÁ-Ž][\p{L}0-9\-]+)?)\b/u
-  );
-  if (bridge) {
-    const name = clean(bridge[1]);
-    // Reject bare "most" (e.g. "most ev. č. D0-202") — need a proper bridge name.
-    if (!/^most$/i.test(name) && name.length >= 4) {
+  // Named bridges only. Do NOT use JS \b + [A-ZÁ-Ž] range: Á–Ž includes lowercase á,
+  // so "zametání mostů" falsely yields "ání most". Require Unicode letter boundary +
+  // explicit Czech uppercase class; reject maintenance wording.
+  {
+    const bridgeRe =
+      /(?:^|[^\p{L}\p{N}_])((?:[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][\p{L}\-]+(?:ský|cký|ický)?\s+)?[Mm]ost(?:\s+[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][\p{L}0-9\-]+)?)/gu;
+    let bm;
+    while ((bm = bridgeRe.exec(scan))) {
+      const name = clean(bm[1]);
+      if (!name || /^most$/i.test(name) || name.length < 4) continue;
+      if (!looksLikeBridgeObjectToken(name)) continue;
+      const around = scan.slice(Math.max(0, bm.index - 36), bm.index + bm[0].length + 12);
+      if (
+        /(?:zametání|čištění|opravy|údržba(?:\s+a\s+opravy)?)\s+most/i.test(around) ||
+        /mostů?\s*[-–—,]?\s*(?:strojně|ručně)/i.test(around)
+      ) {
+        continue;
+      }
       return { name, kind: LOCATION_KIND.BRIDGE };
     }
   }
@@ -4968,6 +5051,27 @@ export function parseOfficialCommentFacts(rawText) {
     }
   }
 
+  // Explicit "v obcích A a B" — both are event localities (not diversion towns).
+  {
+    const inList = extractInMunicipalitiesListFromOfficialComment(locationScanText);
+    if (inList.length) {
+      if (!out.city) {
+        out.city = inList[0];
+        out.municipalityRelation = out.municipalityRelation || "v_obce";
+      }
+      const extras = inList.filter((n) => !samePlaceName(n, out.city));
+      if (extras.length) {
+        const merged = Array.isArray(out.additionalMunicipalities)
+          ? out.additionalMunicipalities.slice()
+          : [];
+        for (const e of extras) {
+          if (!merged.some((x) => samePlaceName(x, e))) merged.push(e);
+        }
+        out.additionalMunicipalities = merged;
+      }
+    }
+  }
+
   // "mezi obcemi A a B" — never rewrite as u_obce / v_obce.
   {
     const between = extractBetweenMunicipalitiesSegment(locationScanText);
@@ -5060,6 +5164,9 @@ export function parseOfficialCommentFacts(rawText) {
     dist = clean(dist.split(/\s*-\s*v\s+obci\b/i)[0]);
     dist = clean(dist.split(/\s+ulice:?/i)[0]);
     dist = clean(dist.split(/\s*,\s*/)[0]);
+    // Stop at sentence / diversion lead so "Zlín. Využijte objízdnou…" stays "Zlín".
+    dist = clean(dist.split(/[.!?]/)[0]);
+    dist = clean(dist.split(/\s+(?:Využijte|Objížďk|Objízdn)/i)[0]);
     if (dist && !/^ulice\b/i.test(dist) && !/^v\s+katastru\b/i.test(dist)) out.district = dist;
   }
 

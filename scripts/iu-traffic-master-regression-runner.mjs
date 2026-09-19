@@ -59,6 +59,7 @@ const SUITES = [
   "iu-traffic-primary-vs-referenced-road-guard",
   "iu-traffic-primary-vs-referenced-street-guard",
   "iu-traffic-multi-location-diversion-safety-guard-v1",
+  "iu-traffic-live-audit-20260918-dimensions-bridge-direction-guard",
 ];
 
 const rows = [];
