@@ -61,6 +61,10 @@ const EXPECTED_CAT_IDS = [
   "aff-knihy",
   "aff-jidlo",
   "aff-zvirata",
+  "aff-kvetiny-darky",
+  "aff-sperky-hodinky",
+  "aff-tv-streamovani",
+  "aff-dilna-naradi",
 ];
 
 const EXPECTED_CAT_TITLES = {
@@ -68,6 +72,11 @@ const EXPECTED_CAT_TITLES = {
   "aff-moda": "Móda a doplňky",
   "aff-deti-hracky": "Děti a hračky",
   "aff-nabytek": "Bydlení a vybavení",
+  "aff-knihy": "Knihy, hudba a hry",
+  "aff-kvetiny-darky": "Květiny a dárky",
+  "aff-sperky-hodinky": "Šperky a hodinky",
+  "aff-tv-streamovani": "TV a streamování",
+  "aff-dilna-naradi": "Dílna a nářadí",
 };
 
 const EXPECTED_CAT_ICONS = {
@@ -75,6 +84,11 @@ const EXPECTED_CAT_ICONS = {
   "aff-moda": "iu-aff-shirt",
   "aff-deti-hracky": "iu-aff-blocks",
   "aff-nabytek": "iu-aff-sofa",
+  "aff-knihy": "iu-aff-book",
+  "aff-kvetiny-darky": "iu-aff-flower",
+  "aff-sperky-hodinky": "iu-aff-watch",
+  "aff-tv-streamovani": "iu-aff-tv",
+  "aff-dilna-naradi": "iu-aff-hammer",
 };
 
 const fails = [];
@@ -97,7 +111,9 @@ function auditStatic() {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
     ok("catalog:seo:" + id, catalog.includes('"' + id + '": affSeo('));
   }
-  ok("catalog:count_26", EXPECTED_CAT_IDS.length === 26, "n=" + EXPECTED_CAT_IDS.length);
+  ok("catalog:count_30", EXPECTED_CAT_IDS.length === 30, "n=" + EXPECTED_CAT_IDS.length);
+  ok("catalog:no_old_knihy_label", !catalog.includes("Knihy, filmy a hry"));
+  ok("catalog:new_knihy_label", catalog.includes("Knihy, hudba a hry"));
   const catalogMarker = catalog.indexOf("var IU_AFFILIATE_CATALOG");
   const catalogSlice = catalogMarker >= 0 ? catalog.slice(catalogMarker) : catalog;
   const catalogIds = [];
@@ -137,7 +153,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-categories-26-structure-v1-20260917"));
+  ok("index:cache_bust", index.includes("affiliate-categories-30-structure-v1-20260919"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
   ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));
@@ -344,7 +360,7 @@ try {
             }),
           };
         }, EXPECTED_CAT_IDS);
-        ok(tag + ":rail_count_26", railSnap.count === 26, "count=" + railSnap.count);
+        ok(tag + ":rail_count_30", railSnap.count === 30, "count=" + railSnap.count);
         ok(
           tag + ":rail_order",
           railSnap.ids.length === EXPECTED_CAT_IDS.length &&

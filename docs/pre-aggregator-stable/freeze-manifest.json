@@ -1,12 +1,12 @@
 {
-  "freezeId": "iu-pwa-mindmenu-cold-document-v1-20260919",
+  "freezeId": "iu-affiliate-categories-30-structure-v1-20260919",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-19T00:20:00.000Z",
-  "note": "Freeze bump: MindMenu external return must pin tools before first paint of a recreated PWA document.",
+  "updatedAt": "2026-09-19T10:30:00.000Z",
+  "note": "Freeze bump: affiliate selected services 26→30 categories + Knihy, hudba a hry rename.",
   "files": {
-    "projects/index.html": "5040a286f0d562ecca4e82219273212a0cf77980aaa541d3f68ceb491e3ea140",
-    "assets/app.css": "59d98e8d84270d3eb9e34478d3dd899e0ba86159bd35da42f1cfbfeb99be82ce",
+    "projects/index.html": "e1fe790ec44752040d16561faa332f0989bed2e5b18050cf777905897b7e4de8",
+    "assets/app.css": "dc28f95ecdbaa24472336cbd9d385e1f5f1c45ae46fa3d7cc255f121784e17ae",
     "assets/app.js": "dcf0c4190a479bb27f6ae85c4714f1df95f2b202560626b3892b452b07f9eca2",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "fef744965e4591540a1f3ee9b4016b85276f0abd4d113a07ff63f999c127cd31",
     "assets/iu-app-feed-pipeline-v1.js": "cc6b462b80c542cf90287aee1d2783c225da5136f0e269ecd8292a0fb3101716",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "4a5afa03241203f2b3cf0626d12a0b121a3a8e81e8950d89b890b000bae80117",
+    "sw.js": "6ff0e0a03d5e368234608cb7f549600285c00b8d40c3f06125b29420aeddb20f",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "b4e0fea2c3c8f9b192cc61d21257ff4203d64de32d32d843c0241b196248ec09",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-19-pwa-mindmenu-cold-document-v1\"",
+      "CACHE_VERSION = \"2026-09-19-affiliate-categories-30-v1\"",
       "PWA MindMenu external-return lifecycle modules: network-first"
     ],
     "projects/version.json": [
@@ -80,6 +80,7 @@
       "pwa-mindmenu-cold-document-no-home-v1-20260919",
       "mindmenu-box-nav-flush-v1-20260917",
       "affiliate-categories-26-structure-v1-20260917",
+      "affiliate-categories-30-structure-v1-20260919",
       "perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821",
       "perf-loop-iter014-secondary-js-batch2-v1-20260820",
       "perf-loop-iter012-secondary-js-after-fcp-v1-20260820",
