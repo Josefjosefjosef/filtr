@@ -15,6 +15,138 @@
       } catch (_) {}
     })();
     </script>
+    <!-- pwa-mindmenu-cold-document-no-home-v1-20260919
+         Process-death / history.back recreates the document. Default gate is Home until the
+         feed chunk exports iuMindMenuHasReturnGuard — #10939 checks that window fn and miss
+         this boot. Pending is already in localStorage; pin MindMenu before first paint. -->
+    <script>
+    (function(){
+      var KEY = "iuMindMenuReturnPendingV1";
+      var ARMED = "iuMindMenuReturnArmed";
+      var LATCH = "iuMindMenuReturnLatchTs";
+      var LATCH_MS = 2500;
+      var TTL = 30 * 60 * 1000;
+      var diag = {
+        bootId: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+        pendingAtHead: false,
+        applied: false,
+        bootClassBeforeBody: false,
+        sawUnguardedHome: false,
+        documentRecreated: true,
+        clearedBy: ""
+      };
+      try { window.__iuMmReturnBootDiag = diag; } catch (e0) {}
+      function pendingAlive() {
+        try {
+          if (sessionStorage.getItem(ARMED) === "1") return true;
+        } catch (e1) {}
+        try {
+          var latch = parseInt(sessionStorage.getItem(LATCH) || "0", 10);
+          if (isFinite(latch) && latch > 0 && Date.now() - latch < LATCH_MS) return true;
+        } catch (e2) {}
+        try {
+          var raw = localStorage.getItem(KEY);
+          if (!raw) return false;
+          var obj = JSON.parse(raw);
+          var ts = Number(obj && obj.t);
+          if (!isFinite(ts) || ts <= 0) return false;
+          var age = Date.now() - ts;
+          return age < TTL && age > -60000;
+        } catch (e3) {
+          return false;
+        }
+      }
+      try {
+        if (typeof window.iuMindMenuHasReturnGuard !== "function") {
+          window.iuMindMenuHasReturnGuard = function () { return pendingAlive(); };
+        }
+      } catch (e4) {}
+      function standaloneOrMobile() {
+        try {
+          if (navigator.standalone === true) return true;
+          if (window.matchMedia("(display-mode: standalone)").matches) return true;
+          if (window.matchMedia("(display-mode: fullscreen)").matches) return true;
+          if (window.matchMedia("(display-mode: minimal-ui)").matches) return true;
+          if (window.matchMedia("(display-mode: window-controls-overlay)").matches) return true;
+        } catch (e5) {}
+        try {
+          if (window.matchMedia("(max-width: 1023px)").matches) return true;
+        } catch (e6) {}
+        return false;
+      }
+      if (!pendingAlive() || !standaloneOrMobile()) return;
+      diag.pendingAtHead = true;
+      diag.applied = true;
+      diag.bootClassBeforeBody = !document.body;
+      document.documentElement.classList.add("iu-mm-return-boot");
+      document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+      var mo = null;
+      var pinScheduled = false;
+      function schedulePin() {
+        if (pinScheduled) return;
+        pinScheduled = true;
+        var run = function () {
+          pinScheduled = false;
+          pin();
+        };
+        if (typeof queueMicrotask === "function") queueMicrotask(run);
+        else setTimeout(run, 0);
+      }
+      function noteHome() {
+        try {
+          if (!document.body) return;
+          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+          if (document.body.classList.contains("iu-mobileGateOverlayOpen")) return;
+          var wrap = document.getElementById("iuMobileGateWrap");
+          var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+          if (gate !== "tools" && pendingAlive()) diag.sawUnguardedHome = true;
+        } catch (e7) {}
+      }
+      function pin() {
+        noteHome();
+        if (!document.documentElement.classList.contains("iu-mm-return-boot")) return;
+        var body = document.body;
+        if (!body) return;
+        body.classList.add("iu-mobileGateOverlayOpen");
+        document.documentElement.classList.add("iu-mobileGateOverlayOpen");
+        var wrap = document.getElementById("iuMobileGateWrap");
+        if (wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools") {
+          wrap.setAttribute("data-iu-mobile-gate", "tools");
+        }
+        var tools = document.getElementById("iuMobileGatePanelTools");
+        var nav = document.getElementById("iuMobileGatePanelNav");
+        var content = document.getElementById("iuMobileGateContent");
+        if (tools) tools.hidden = false;
+        if (nav) nav.hidden = true;
+        if (content) content.setAttribute("aria-hidden", "false");
+        var flow = document.getElementById("iuMobileMindMenuFlow");
+        var mind = document.getElementById("iuMindMenuView");
+        if (tools && flow && mind) {
+          try {
+            if (!tools.contains(flow)) tools.appendChild(flow);
+            if (mind.parentElement !== flow) flow.insertBefore(mind, flow.firstChild || null);
+          } catch (e8) {}
+        }
+      }
+      window.__iuMmReturnBootRelease = function (reason) {
+        diag.clearedBy = String(reason || "");
+        try { document.documentElement.classList.remove("iu-mm-return-boot"); } catch (e9) {}
+        try { document.documentElement.removeAttribute("data-iu-mm-return-boot"); } catch (e10) {}
+        try { if (mo) mo.disconnect(); } catch (e11) {}
+      };
+      try {
+        mo = new MutationObserver(function () { schedulePin(); });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+      } catch (e12) {}
+      if (document.body) pin();
+    })();
+    </script>
+    <style id="iuMmReturnBootCriticalCss">
+      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #feed,
+      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #leftContent {
+        visibility: hidden !important;
+      }
+    </style>
     <style id="iuVaultAppLockCriticalCss">
       html.iu-vault-app-init,
       html.iu-vault-app-locked { background: #0b1f33; }
