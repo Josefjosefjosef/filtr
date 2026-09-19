@@ -56,7 +56,11 @@
         try {
           if (window.__iuNavOverlayLock === true) return;
         } catch (_) {}
-        /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard (same as feed-pipeline). */
+        /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard (same as feed-pipeline).
+           Head boot installs the guard before this module; iu-mm-return-boot is the pre-paint hold. */
+        try {
+          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+        } catch (_mmBoot) {}
         try {
           if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
         } catch (_mmSetTab) {}
@@ -143,6 +147,9 @@
         if (gateVal === "nav" || gateVal === "tools") {
           document.documentElement.classList.add("iu-mobileGateOverlayOpen");
           document.body.classList.add("iu-mobileGateOverlayOpen");
+          if (gateVal === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
+            window.__iuMmReturnBootRelease("shell-setTab-tools");
+          }
         } else {
           document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
           document.body.classList.remove("iu-mobileGateOverlayOpen");
@@ -198,6 +205,9 @@
       } catch (_) {}
       var cur = wrap.getAttribute("data-iu-mobile-gate");
       if (cur === "tools") {
+        try {
+          if (typeof window.__iuMmReturnBootRelease === "function") window.__iuMmReturnBootRelease("shell-toggle-tools");
+        } catch (_relT) {}
         try {
           if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
             window.iuMindMenuClearAllReturnMarkers();
@@ -258,11 +268,23 @@
         /* P0: same MindMenu return guard as feed-pipeline CloseForMainNav — bottom-nav
            shell may overwrite the window hook; must not force Home during pending return. */
         try {
+          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+        } catch (_mmBoot) {}
+        try {
           if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
         } catch (_mmg) {}
         setTab("");
       };
     } catch (_) {}
+    try {
+      if (
+        (document.documentElement.classList.contains("iu-mm-return-boot") ||
+          (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard())) &&
+        String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools"
+      ) {
+        setTab("tools");
+      }
+    } catch (_bootTab) {}
     return { wrap: wrap, setTab: setTab, toggleNav: toggleNav, toggleTools: toggleTools, tabNav: tabNav, tabTools: tabTools };
   }
 
@@ -323,6 +345,9 @@
           if (k === "home") {
             dismissLdp();
             closeToolOverlaysIfPossible();
+            try {
+              if (typeof window.__iuMmReturnBootRelease === "function") window.__iuMmReturnBootRelease("shell-bottom-home");
+            } catch (_relH) {}
             try {
               if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
                 window.iuMindMenuClearAllReturnMarkers();

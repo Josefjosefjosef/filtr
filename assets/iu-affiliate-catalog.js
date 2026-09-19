@@ -228,9 +228,9 @@
       ]
     ),
     "aff-knihy": affSeo(
-      "Knihy, filmy a hry – odkazy na vybrané externí služby",
+      "Knihy, hudba a hry – odkazy na vybrané externí služby",
       [
-        "Sekce Knihy, filmy a hry obsahuje odkazy na vybrané externí obchody a služby se sortimentem knih, filmů a her. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Sekce Knihy, hudba a hry obsahuje odkazy na vybrané externí obchody a služby se sortimentem knih, hudby a her. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -247,6 +247,38 @@
       "Zvířata a chovatelství – odkazy na vybrané externí služby",
       [
         "Sekce Zvířata a chovatelství obsahuje odkazy na vybrané externí obchody se sortimentem pro domácí mazlíčky. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-kvetiny-darky": affSeo(
+      "Květiny a dárky – odkazy na vybrané externí služby",
+      [
+        "Sekce Květiny a dárky obsahuje odkazy na vybrané externí obchody s květinami a dárky. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-sperky-hodinky": affSeo(
+      "Šperky a hodinky – odkazy na vybrané externí služby",
+      [
+        "Sekce Šperky a hodinky obsahuje odkazy na vybrané externí obchody se šperky a hodinkami. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-tv-streamovani": affSeo(
+      "TV a streamování – odkazy na vybrané externí služby",
+      [
+        "Sekce TV a streamování obsahuje odkazy na vybrané externí služby televizního a streamovacího obsahu. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-dilna-naradi": affSeo(
+      "Dílna a nářadí – odkazy na vybrané externí služby",
+      [
+        "Sekce Dílna a nářadí obsahuje odkazy na vybrané externí obchody s nářadím a vybavením dílny. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
         "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
@@ -622,9 +654,9 @@
     },
     {
       id: "aff-knihy",
-      title: "Knihy, filmy a hry",
+      title: "Knihy, hudba a hry",
       icon: "iu-aff-book",
-      description: "Odkazy na vybrané obchody s knihami, filmy a hrami.",
+      description: "Odkazy na vybrané obchody s knihami, hudbou a hrami.",
       items: [
         affItem("", "dobrovsky"),
         affItem("", "martinus"),
@@ -667,6 +699,34 @@
         affItem("", "demix"),
         affItem("", "zoohit"),
       ],
+    },
+    {
+      id: "aff-kvetiny-darky",
+      title: "Květiny a dárky",
+      icon: "iu-aff-flower",
+      description: "Odkazy na vybrané obchody s květinami a dárky.",
+      items: [],
+    },
+    {
+      id: "aff-sperky-hodinky",
+      title: "Šperky a hodinky",
+      icon: "iu-aff-watch",
+      description: "Odkazy na vybrané obchody se šperky a hodinkami.",
+      items: [],
+    },
+    {
+      id: "aff-tv-streamovani",
+      title: "TV a streamování",
+      icon: "iu-aff-tv",
+      description: "Odkazy na vybrané televizní a streamovací služby.",
+      items: [],
+    },
+    {
+      id: "aff-dilna-naradi",
+      title: "Dílna a nářadí",
+      icon: "iu-aff-hammer",
+      description: "Odkazy na vybrané obchody s nářadím a vybavením dílny.",
+      items: [],
     },
   ];
 

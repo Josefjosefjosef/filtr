@@ -192,7 +192,19 @@ async function openAff(page, baseUrl, section) {
       } catch (_) {}
     }
   });
-  await page.waitForSelector("#iuAffiliateGrid .iuAffiliateChip", { state: "attached", timeout: 90000 });
+  await page.waitForFunction(
+    () => {
+      const title = document.getElementById("iuAffiliateTitle");
+      const grid = document.getElementById("iuAffiliateGrid");
+      return !!(title && title.textContent && grid);
+    },
+    null,
+    { timeout: 90000 }
+  );
+  const expectChips = (catalogSnap.itemCounts && catalogSnap.itemCounts[section] > 0) || false;
+  if (expectChips) {
+    await page.waitForSelector("#iuAffiliateGrid .iuAffiliateChip", { state: "attached", timeout: 90000 });
+  }
 }
 
 const catIds = readCatalogCategoryIds();
@@ -344,7 +356,7 @@ try {
       ok(tag + ":disclosure_text", snap.disclosureOk, snap.disclosure);
       ok(tag + ":no_h_overflow", !snap.overflow);
       ok(tag + ":accent_set", !!snap.accent, snap.accent);
-      ok(tag + ":grid", snap.gridPresent && snap.chipCount >= 1, "chips=" + snap.chipCount);
+      ok(tag + ":grid", snap.gridPresent && (catalogSnap.itemCounts[section] === 0 ? snap.chipCount === 0 : snap.chipCount >= 1), "chips=" + snap.chipCount);
 
       const expectedTitle = catalogSnap.titles[section];
       const expectedDesc = catalogSnap.descs[section];
@@ -355,9 +367,11 @@ try {
         ok(tag + ":chip_count", snap.chipCount === expectedCount, "got=" + snap.chipCount + " exp=" + expectedCount);
       }
       const hrefsPlaceholder =
-        snap.chipHrefs.length > 0 && snap.chipHrefs.every((h) => h === "#" || /^#affiliate-placeholder-/.test(h) || /^https:\/\//.test(h));
+        snap.chipHrefs.length === 0 ||
+        snap.chipHrefs.every((h) => h === "#" || /^#affiliate-placeholder-/.test(h) || /^https:\/\//.test(h));
       ok(tag + ":hrefs_shape", hrefsPlaceholder, snap.chipHrefs.join("|"));
       const noHttpsLeak =
+        snap.chipHrefs.length === 0 ||
         snap.chipReady.every((r) => r === "0") ||
         snap.chipHrefs.every((h, i) => (snap.chipReady[i] === "1" ? /^https:\/\//.test(h) : h === "#" || /^#affiliate-placeholder-/.test(h)));
       ok(tag + ":hrefs_ready_gate", noHttpsLeak);

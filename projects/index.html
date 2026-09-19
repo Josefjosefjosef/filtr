@@ -15,6 +15,138 @@
       } catch (_) {}
     })();
     </script>
+    <!-- pwa-mindmenu-cold-document-no-home-v1-20260919
+         Process-death / history.back recreates the document. Default gate is Home until the
+         feed chunk exports iuMindMenuHasReturnGuard — #10939 checks that window fn and miss
+         this boot. Pending is already in localStorage; pin MindMenu before first paint. -->
+    <script>
+    (function(){
+      var KEY = "iuMindMenuReturnPendingV1";
+      var ARMED = "iuMindMenuReturnArmed";
+      var LATCH = "iuMindMenuReturnLatchTs";
+      var LATCH_MS = 2500;
+      var TTL = 30 * 60 * 1000;
+      var diag = {
+        bootId: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+        pendingAtHead: false,
+        applied: false,
+        bootClassBeforeBody: false,
+        sawUnguardedHome: false,
+        documentRecreated: true,
+        clearedBy: ""
+      };
+      try { window.__iuMmReturnBootDiag = diag; } catch (e0) {}
+      function pendingAlive() {
+        try {
+          if (sessionStorage.getItem(ARMED) === "1") return true;
+        } catch (e1) {}
+        try {
+          var latch = parseInt(sessionStorage.getItem(LATCH) || "0", 10);
+          if (isFinite(latch) && latch > 0 && Date.now() - latch < LATCH_MS) return true;
+        } catch (e2) {}
+        try {
+          var raw = localStorage.getItem(KEY);
+          if (!raw) return false;
+          var obj = JSON.parse(raw);
+          var ts = Number(obj && obj.t);
+          if (!isFinite(ts) || ts <= 0) return false;
+          var age = Date.now() - ts;
+          return age < TTL && age > -60000;
+        } catch (e3) {
+          return false;
+        }
+      }
+      try {
+        if (typeof window.iuMindMenuHasReturnGuard !== "function") {
+          window.iuMindMenuHasReturnGuard = function () { return pendingAlive(); };
+        }
+      } catch (e4) {}
+      function standaloneOrMobile() {
+        try {
+          if (navigator.standalone === true) return true;
+          if (window.matchMedia("(display-mode: standalone)").matches) return true;
+          if (window.matchMedia("(display-mode: fullscreen)").matches) return true;
+          if (window.matchMedia("(display-mode: minimal-ui)").matches) return true;
+          if (window.matchMedia("(display-mode: window-controls-overlay)").matches) return true;
+        } catch (e5) {}
+        try {
+          if (window.matchMedia("(max-width: 1023px)").matches) return true;
+        } catch (e6) {}
+        return false;
+      }
+      if (!pendingAlive() || !standaloneOrMobile()) return;
+      diag.pendingAtHead = true;
+      diag.applied = true;
+      diag.bootClassBeforeBody = !document.body;
+      document.documentElement.classList.add("iu-mm-return-boot");
+      document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+      var mo = null;
+      var pinScheduled = false;
+      function schedulePin() {
+        if (pinScheduled) return;
+        pinScheduled = true;
+        var run = function () {
+          pinScheduled = false;
+          pin();
+        };
+        if (typeof queueMicrotask === "function") queueMicrotask(run);
+        else setTimeout(run, 0);
+      }
+      function noteHome() {
+        try {
+          if (!document.body) return;
+          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+          if (document.body.classList.contains("iu-mobileGateOverlayOpen")) return;
+          var wrap = document.getElementById("iuMobileGateWrap");
+          var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+          if (gate !== "tools" && pendingAlive()) diag.sawUnguardedHome = true;
+        } catch (e7) {}
+      }
+      function pin() {
+        noteHome();
+        if (!document.documentElement.classList.contains("iu-mm-return-boot")) return;
+        var body = document.body;
+        if (!body) return;
+        body.classList.add("iu-mobileGateOverlayOpen");
+        document.documentElement.classList.add("iu-mobileGateOverlayOpen");
+        var wrap = document.getElementById("iuMobileGateWrap");
+        if (wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools") {
+          wrap.setAttribute("data-iu-mobile-gate", "tools");
+        }
+        var tools = document.getElementById("iuMobileGatePanelTools");
+        var nav = document.getElementById("iuMobileGatePanelNav");
+        var content = document.getElementById("iuMobileGateContent");
+        if (tools) tools.hidden = false;
+        if (nav) nav.hidden = true;
+        if (content) content.setAttribute("aria-hidden", "false");
+        var flow = document.getElementById("iuMobileMindMenuFlow");
+        var mind = document.getElementById("iuMindMenuView");
+        if (tools && flow && mind) {
+          try {
+            if (!tools.contains(flow)) tools.appendChild(flow);
+            if (mind.parentElement !== flow) flow.insertBefore(mind, flow.firstChild || null);
+          } catch (e8) {}
+        }
+      }
+      window.__iuMmReturnBootRelease = function (reason) {
+        diag.clearedBy = String(reason || "");
+        try { document.documentElement.classList.remove("iu-mm-return-boot"); } catch (e9) {}
+        try { document.documentElement.removeAttribute("data-iu-mm-return-boot"); } catch (e10) {}
+        try { if (mo) mo.disconnect(); } catch (e11) {}
+      };
+      try {
+        mo = new MutationObserver(function () { schedulePin(); });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+      } catch (e12) {}
+      if (document.body) pin();
+    })();
+    </script>
+    <style id="iuMmReturnBootCriticalCss">
+      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #feed,
+      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #leftContent {
+        visibility: hidden !important;
+      }
+    </style>
     <style id="iuVaultAppLockCriticalCss">
       html.iu-vault-app-init,
       html.iu-vault-app-locked { background: #0b1f33; }
@@ -558,7 +690,7 @@ upgrade-insecure-requests;
 connect-src 'self' https://api.open-meteo.com https://infouzel-analytics.josef-zmrhal.workers.dev https://ads.infouzel.cz;
 frame-src https://www.youtube.com https://www.youtube-nocookie.com;
 img-src 'self' data: blob: https://i.ytimg.com https:;
-script-src 'self' 'sha256-y/gHjPxdrfPzrq55nAImQPGCVV2cnPXJku726ZRML5E=' 'sha256-1/YhDkRDugZIPP6KzwBjSgM/8u6kkOlGZifiKfqJ27I=' 'sha256-fBll8DrnlWM0wGCvs64gcTNDLE6z+M7ekXkmef5lnDc=' 'sha256-qOQ0J1e3KCjLe1xbcO1t7PJ04sKjNlHIlEgG4qXBDfo=' 'sha256-DNbU1YfizwJmMz9owd6t48GinqUYX4HavRZibnpJbQU=' 'sha256-NlnL1ch3NdOvqhU/3nrqnwSyAdQ+nIkpUAISby4EdzA=' 'sha256-zJEMI4mgoXsSPCTchDgMEZFYP2aq6cSGfWj/P+YjIz4=' 'sha256-OZmwmtF3729800oHtlsZsiTzkLlBTLaRVzNh33ZSyDc=' 'sha256-rI8NbhbRVo0Ukmli7vfXGxMFdl4GIvHHqeFgVbj3TNk=' 'sha256-KCYKngv27/vlWsPC3GVtFV77QAZhRXrbJz3RaPygdUA=' 'sha256-+8mEH8RmFW+2sU8zP29vVOFgnvm0IVTIpGe0K7ghpZg=' 'sha256-KItzXEZxv9ILTVCzs5JnijY2lzLam4+1Ga4fjIhiQG0=' 'sha256-DIcjHOLe3X8SuMAyKVX5ug9F5/l0ci/V5tq2R3DXUkE=' 'sha256-sOG/yFbdn1Y/5MRhu9HV3XDjpPuX0mpgZKXpYxuY/z4=' 'sha256-LYlA3xp8qFbcrYRlc2EpWOmvOMMSCRCCEIMc6ILXB1w=' 'sha256-r0wilEDvNM5vg+X4LDkpFzds/wsHTSEEJYsrl+YEI/k=' 'sha256-YFOKYJML96ApYzbdPgJSu89P8jyfjQU5z84DV19LV8E=' 'sha256-BVcMd0sa5mp4+XAIxrR7jSrwNsiOUtogCPXg8ZMcr7c=' 'sha256-T227DKXEZcjkv4rAFcENwXGqfOhZoYP3MAVHaeB9pOw=' 'sha256-mP6UIFk9mu84gqXErtPHOpF4SgpMg2RBPqmAVuyfy1U=' 'sha256-gbmfo+DXTicISJxYPkna3OTTtNdbMkmvPfpKQ0mNXbM=' 'sha256-CKs4vHpdkyHMqTmBvsB3xnEMQ9UeUyIXfq7kJvhaFa8=' 'sha256-ixQRftoPMKFpdpVYVChiNCMSnI+kFDyPQzsS5tHQ/xo=' 'sha256-3Ay61nECVulrZHYW2qKKDQ7N2vG3t+6Nj4EzvPeWzOY=' 'sha256-4TMV377UcP5E7/jdMsNUYhmyY254Rl3WnwCZLcB9FGw=' 'sha256-8pQXErgN20vTGjCpjZ2Uz5nQbMTw1agVLk8jVbF1sVw=' 'sha256-8LZzV1p9rlggQAcTdR+uOwslOfLOKRNyxHYhXk2Tu6c=' 'sha256-0kRSl3BiCF9tl6QWyKqVwLRNiA2iPGGZagrIPCbx44s=' 'sha256-56NFuf1jc3HDonDkrl+5uFC1iAdmYq10povHdxtSStY=' 'sha256-ZBybLVzjilAqtkNLIVKiqmR6nyNnsgJZOPyD66miwao=' 'sha256-YNf6j6j06zsmT0U4bRggWbzBRmNCeoAIaDbR0pLVB08=' 'sha256-BSvNkc1hjEQIQwpP9HCdbqkurevT1TQ5sCJ8nxs048Q=' 'sha256-5hz1slGW95+ZO7+Qagu3XOLpnMHkpq59/AJTAaIY2no=' 'sha256-4Lpfjhur8PnLrkV/aAJIVuvx69vgh+Qjbil0Xd12IVY=' 'sha256-FLEF1tBUOd1JEYAojudmjXDaTg1dzYtA2LalJTwDA3Q=' 'sha256-B0tmMDL+dwV2NsJ4OCOaUAHCJij/a9+sqGVRmYI0CU8=' 'sha256-XWcS2yrrSwADaUmqUfUC1BN99Hhr74aunDyyoi7D3e0=' 'sha256-0CCEs2C/OdqRu8SoRB6GS3y6oVqXbSfjDh03E2AYIIw=' 'sha256-Zk718dpQkZqpQLy41vb4suqOijEWRxxpnui8hDvPA5s=' 'sha256-YLysJE2S/kUFWCB+ZyP24tJpVBewbER/m1/9w0hnrJs=' 'sha256-LCrb5E6BoXzjN6loluUi2GDm7ndEgQYsLyXwkzZQd+8=' 'sha256-VJFAqsWnHU4P7XLDZdKEEFUihrXtfXz3cFsrJYMQnJI=' 'sha256-OiEifSbhIWdlykqntwHKIhHJJIVOF2x30wdEuRye7Bs=' 'sha256-TQZk8ptt3aIR64U5VqBS+IitddJ/ApJLQhEVhXq9SEk=' 'sha256-ZNskZOXjcxrlI5h8pGEBeIer+n2ucqWqhdCRd0quEgg=' 'sha256-Z5z+63huezxyKrXDOoJo8tLu713g/h6yjHH8lazRJPk=' 'sha256-Uh8Hrn+Qz6BxI4+YGcPOll4qG+g2DzogO3K+BP9zxEo=' 'sha256-yVHN8pcIBwrH7SE4Q5N6lggDL+uUG8nHLxQx08DF2iY=' 'sha256-oX1kSzfXJifVKOqxZsp7RLox62p8io6bdeqETU/KRgw=' 'wasm-unsafe-eval';
+script-src 'self' 'sha256-1/YhDkRDugZIPP6KzwBjSgM/8u6kkOlGZifiKfqJ27I=' 'sha256-6PijZthL1vHoALKUYPmjjgIwM0dhTWa1eYPaQdNXpXE=' 'sha256-fBll8DrnlWM0wGCvs64gcTNDLE6z+M7ekXkmef5lnDc=' 'sha256-qOQ0J1e3KCjLe1xbcO1t7PJ04sKjNlHIlEgG4qXBDfo=' 'sha256-DNbU1YfizwJmMz9owd6t48GinqUYX4HavRZibnpJbQU=' 'sha256-y/gHjPxdrfPzrq55nAImQPGCVV2cnPXJku726ZRML5E=' 'sha256-zJEMI4mgoXsSPCTchDgMEZFYP2aq6cSGfWj/P+YjIz4=' 'sha256-OZmwmtF3729800oHtlsZsiTzkLlBTLaRVzNh33ZSyDc=' 'sha256-rI8NbhbRVo0Ukmli7vfXGxMFdl4GIvHHqeFgVbj3TNk=' 'sha256-KCYKngv27/vlWsPC3GVtFV77QAZhRXrbJz3RaPygdUA=' 'sha256-+8mEH8RmFW+2sU8zP29vVOFgnvm0IVTIpGe0K7ghpZg=' 'sha256-KItzXEZxv9ILTVCzs5JnijY2lzLam4+1Ga4fjIhiQG0=' 'sha256-DIcjHOLe3X8SuMAyKVX5ug9F5/l0ci/V5tq2R3DXUkE=' 'sha256-sOG/yFbdn1Y/5MRhu9HV3XDjpPuX0mpgZKXpYxuY/z4=' 'sha256-LYlA3xp8qFbcrYRlc2EpWOmvOMMSCRCCEIMc6ILXB1w=' 'sha256-r0wilEDvNM5vg+X4LDkpFzds/wsHTSEEJYsrl+YEI/k=' 'sha256-YFOKYJML96ApYzbdPgJSu89P8jyfjQU5z84DV19LV8E=' 'sha256-BVcMd0sa5mp4+XAIxrR7jSrwNsiOUtogCPXg8ZMcr7c=' 'sha256-T227DKXEZcjkv4rAFcENwXGqfOhZoYP3MAVHaeB9pOw=' 'sha256-mP6UIFk9mu84gqXErtPHOpF4SgpMg2RBPqmAVuyfy1U=' 'sha256-gbmfo+DXTicISJxYPkna3OTTtNdbMkmvPfpKQ0mNXbM=' 'sha256-CKs4vHpdkyHMqTmBvsB3xnEMQ9UeUyIXfq7kJvhaFa8=' 'sha256-ixQRftoPMKFpdpVYVChiNCMSnI+kFDyPQzsS5tHQ/xo=' 'sha256-3Ay61nECVulrZHYW2qKKDQ7N2vG3t+6Nj4EzvPeWzOY=' 'sha256-4TMV377UcP5E7/jdMsNUYhmyY254Rl3WnwCZLcB9FGw=' 'sha256-8pQXErgN20vTGjCpjZ2Uz5nQbMTw1agVLk8jVbF1sVw=' 'sha256-8LZzV1p9rlggQAcTdR+uOwslOfLOKRNyxHYhXk2Tu6c=' 'sha256-0kRSl3BiCF9tl6QWyKqVwLRNiA2iPGGZagrIPCbx44s=' 'sha256-56NFuf1jc3HDonDkrl+5uFC1iAdmYq10povHdxtSStY=' 'sha256-ZBybLVzjilAqtkNLIVKiqmR6nyNnsgJZOPyD66miwao=' 'sha256-YNf6j6j06zsmT0U4bRggWbzBRmNCeoAIaDbR0pLVB08=' 'sha256-BSvNkc1hjEQIQwpP9HCdbqkurevT1TQ5sCJ8nxs048Q=' 'sha256-5hz1slGW95+ZO7+Qagu3XOLpnMHkpq59/AJTAaIY2no=' 'sha256-4Lpfjhur8PnLrkV/aAJIVuvx69vgh+Qjbil0Xd12IVY=' 'sha256-FLEF1tBUOd1JEYAojudmjXDaTg1dzYtA2LalJTwDA3Q=' 'sha256-B0tmMDL+dwV2NsJ4OCOaUAHCJij/a9+sqGVRmYI0CU8=' 'sha256-XWcS2yrrSwADaUmqUfUC1BN99Hhr74aunDyyoi7D3e0=' 'sha256-0CCEs2C/OdqRu8SoRB6GS3y6oVqXbSfjDh03E2AYIIw=' 'sha256-Zk718dpQkZqpQLy41vb4suqOijEWRxxpnui8hDvPA5s=' 'sha256-YLysJE2S/kUFWCB+ZyP24tJpVBewbER/m1/9w0hnrJs=' 'sha256-LCrb5E6BoXzjN6loluUi2GDm7ndEgQYsLyXwkzZQd+8=' 'sha256-VJFAqsWnHU4P7XLDZdKEEFUihrXtfXz3cFsrJYMQnJI=' 'sha256-OiEifSbhIWdlykqntwHKIhHJJIVOF2x30wdEuRye7Bs=' 'sha256-TQZk8ptt3aIR64U5VqBS+IitddJ/ApJLQhEVhXq9SEk=' 'sha256-ZNskZOXjcxrlI5h8pGEBeIer+n2ucqWqhdCRd0quEgg=' 'sha256-Z5z+63huezxyKrXDOoJo8tLu713g/h6yjHH8lazRJPk=' 'sha256-Uh8Hrn+Qz6BxI4+YGcPOll4qG+g2DzogO3K+BP9zxEo=' 'sha256-yVHN8pcIBwrH7SE4Q5N6lggDL+uUG8nHLxQx08DF2iY=' 'sha256-oX1kSzfXJifVKOqxZsp7RLox62p8io6bdeqETU/KRgw=' 'wasm-unsafe-eval';
 worker-src 'self' blob:;
 style-src 'self' 'unsafe-inline';
 font-src 'self' data:;
@@ -1305,11 +1437,11 @@ require-trusted-types-for 'script';
          first-load-app-css-nonblocking-v1-20260821
          Desktop cold-start (≥1025): matching-media link is render-blocking so PC first paint is not FOUC.
          desktop-cold-start-app-css-media-v1-20260909 -->
-    <link rel="preload" as="style" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918" />
+    <link rel="preload" as="style" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918-affiliate-categories-30-structure-v1-20260919" />
     <script src="/assets/iu-defer-stylesheet-v1.js?v=csp-defer-link-no-onload-v1-20260823"></script>
-    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918" media="(min-width: 1025px)" data-iu-desktop-app-css="1" />
-    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918" media="print" data-iu-defer-app-css="1" />
-    <noscript><link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918" /></noscript>
+    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918-affiliate-categories-30-structure-v1-20260919" media="(min-width: 1025px)" data-iu-desktop-app-css="1" />
+    <link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918-affiliate-categories-30-structure-v1-20260919" media="print" data-iu-defer-app-css="1" />
+    <noscript><link rel="stylesheet" href="/assets/app.css?v=quicktools-fixed-width-v5-20260714-article-read-mark-return-spacing-v1-20260715-jr-section-header-line-color-v1-20260715-complete-v1-20260716-ci-guard-v1-20260716-mindmenu-articles-removed-v1-20260803-date-time-fit-v2-20260803-silver-date-time-value-column-v4-20260901-ai-assistants-neutral-v1-20260906-menu-mindmenu-pinch-zoom-v1-20260915-chmu-box-nav-flush-v1-20260916-mindmenu-box-nav-flush-v1-20260917-affiliate-categories-26-structure-v1-20260917-mindmenu-pwa-box-nav-flush-v1-20260918-affiliate-header-frame-v1-20260918-affiliate-categories-30-structure-v1-20260919" /></noscript>
     <style id="iuDesktopLayoutV3PostAppCss">
       /* Desktop Layout V3 — post app.css (beats assets/app.css 2-column .layout !important). */
       @media (max-width: 900px) {
@@ -6924,7 +7056,7 @@ require-trusted-types-for 'script';
     </script>
     <script defer src="/assets/iu-info-center-lazy-mount.js?v=terms-preaccept-icentrum-v1-20260909"></script>
     <script defer src="/assets/iu-section-views-lazy-mount.js?v=section-views-lazy-mount-v1-20260611"></script>
-    <script data-iu-defer-secondary-js="1" data-iu-secondary-id="affiliate" data-iu-src="/assets/iu-affiliate-catalog.js?v=affiliate-categories-26-structure-v1-20260917"></script>
+    <script data-iu-defer-secondary-js="1" data-iu-secondary-id="affiliate" data-iu-src="/assets/iu-affiliate-catalog.js?v=affiliate-categories-30-structure-v1-20260919"></script>
     <script defer src="/assets/iu-silver-quick-panel.js?v=silver-quick-panel-notes-focus-v1-20260904"></script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="privacy" data-iu-src="/assets/iu-tool-privacy-info.js?v=unified-overlay-header-v73-20260701-perf-loop-iter012-secondary-js-after-fcp-v1-20260820-perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
     <script type="module" src="/assets/iu-mobile-bottom-nav-shell-v1.js?v=perf-stage3-bottom-nav-shell-v1-20260818"></script>

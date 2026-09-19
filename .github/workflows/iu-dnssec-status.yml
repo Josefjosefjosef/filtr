@@ -1,0 +1,97 @@
+# DNSSEC status for infouzel.cz — read / enable (Cloudflare) only.
+# Manual workflow_dispatch. Does not touch CSP/HSTS/TLS/app code.
+# Required: CLOUDFLARE_API_TOKEN with Zone DNSSEC Read (and Edit for enable).
+name: iu-dnssec-status
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "read = forensic only; enable = turn on Cloudflare DNSSEC signing (does NOT write DS at registrar)"
+        required: true
+        type: choice
+        options:
+          - read
+          - enable
+        default: read
+      zone_name:
+        description: Cloudflare zone name
+        required: true
+        type: string
+        default: infouzel.cz
+
+permissions:
+  contents: read
+
+jobs:
+  dnssec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cloudflare DNSSEC forensic / enable
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MODE: ${{ inputs.mode }}
+          ZONE_NAME: ${{ inputs.zone_name }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "BLOCKER=CLOUDFLARE_API_TOKEN_MISSING"
+            exit 1
+          fi
+          AUTH="Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+          echo "MODE=${MODE}"
+          echo "ZONE_NAME=${ZONE_NAME}"
+
+          ZONE_JSON=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
+            "https://api.cloudflare.com/client/v4/zones?name=${ZONE_NAME}")
+          echo "$ZONE_JSON" | python3 -c 'import json,sys; d=json.load(sys.stdin); print("ZONE_API_SUCCESS=", d.get("success")); print("ZONE_ERRORS=", d.get("errors")); r=d.get("result") or []; print("ZONE_COUNT=", len(r)); print("ZONE_ID=", (r[0]["id"] if r else "")); print("ZONE_STATUS=", (r[0].get("status") if r else "")); print("ZONE_NAME_SERVERS=", (r[0].get("name_servers") if r else ""))'
+          ZONE_ID=$(echo "$ZONE_JSON" | python3 -c 'import json,sys; r=(json.load(sys.stdin).get("result") or []); print(r[0]["id"] if r else "")')
+          if [ -z "$ZONE_ID" ]; then
+            echo "BLOCKER=ZONE_NOT_FOUND_OR_TOKEN_LACKS_ZONE_READ"
+            exit 1
+          fi
+
+          echo "=== BEFORE /zones/{id}/dnssec ==="
+          BEFORE=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
+            "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dnssec")
+          echo "$BEFORE" | node scripts/iu-dnssec-cf-dump-v1.mjs
+          STATUS=$(echo "$BEFORE" | python3 -c 'import json,sys; print(((json.load(sys.stdin).get("result") or {}).get("status") or ""))')
+          echo "DNSSEC_STATUS_BEFORE=${STATUS}"
+
+          if [ "$MODE" = "read" ]; then
+            echo "IU_DNSSEC_MODE=READ_ONLY"
+            exit 0
+          fi
+
+          if [ "$MODE" != "enable" ]; then
+            echo "BLOCKER=UNKNOWN_MODE"
+            exit 1
+          fi
+
+          if [ "$STATUS" = "active" ] || [ "$STATUS" = "pending" ]; then
+            echo "STOP=DNSSEC_ALREADY_${STATUS}"
+            echo "IU_DNSSEC_MODE=NOOP"
+            echo "NOTE=If parent DS missing: paste REGISTRAR_* into REG-INTERNET-CZ now (CZ.NIC AUTO CDNSKEY for unsigned domains waits ~7 days)."
+            exit 0
+          fi
+
+          echo "=== PATCH status=active ==="
+          AFTER=$(curl -sS -X PATCH -H "$AUTH" -H "Content-Type: application/json" \
+            --data '{"status":"active"}' \
+            "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dnssec")
+          echo "$AFTER" | node scripts/iu-dnssec-cf-dump-v1.mjs
+          OK=$(echo "$AFTER" | python3 -c 'import json,sys; print("1" if json.load(sys.stdin).get("success") else "0")')
+          if [ "$OK" != "1" ]; then
+            echo "BLOCKER=DNSSEC_ENABLE_FAILED"
+            exit 1
+          fi
+          echo "IU_DNSSEC_MODE=ENABLED"
+          echo "NOTE=Parent DS required at REG-INTERNET-CZ using REGISTRAR_* above (exact Cloudflare values). CZ.NIC AUTO CDNSKEY for unsigned domains waits ~7 days — prefer manual DS for immediate SECURE."
+
+      - name: DoH DNSSEC status guard (informational until parent DS exists)
+        if: inputs.mode == 'enable'
+        continue-on-error: true
+        run: node scripts/iu-dnssec-status-guard-v1.mjs

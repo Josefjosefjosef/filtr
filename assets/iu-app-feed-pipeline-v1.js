@@ -17232,7 +17232,11 @@ function buildVideoAsArticleCard(it) {
             if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
           } catch (_){}
           /* P0 PWA MindMenu external-return (#10903 incomplete): any setTab("") sink must refuse Home
-             while armed/latch/durable pending is live. Domů / tools-close clear markers first. */
+             while armed/latch/durable pending is live. Domů / tools-close clear markers first.
+             Head script installs the guard before this chunk; boot class covers the pre-export gap. */
+          try {
+            if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+          } catch (_mmBoot) {}
           try {
             if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
           } catch (_mmSetTab) {}
@@ -17403,6 +17407,9 @@ function buildVideoAsArticleCard(it) {
           if (value === "nav" || value === "tools") {
             document.documentElement.classList.add("iu-mobileGateOverlayOpen");
             document.body.classList.add("iu-mobileGateOverlayOpen");
+            if (value === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
+              window.__iuMmReturnBootRelease("feed-setTab-tools");
+            }
           } else {
             document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
             document.body.classList.remove("iu-mobileGateOverlayOpen");
@@ -17838,7 +17845,12 @@ function buildVideoAsArticleCard(it) {
           if (yBoot > 0) iuMenuNavApplyScroll(yBoot);
         }
       } catch (_bootScr) {}
-      if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
+      if (
+        (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
+        document.documentElement.classList.contains("iu-mm-return-boot")
+      ) {
+        if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("tools");
+      } else if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
       window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}
   }
@@ -18071,6 +18083,9 @@ function buildVideoAsArticleCard(it) {
               try {
                 iuMindMenuCloseToolOverlaysIfOpen();
               } catch (_) {}
+              try {
+                if (typeof window.__iuMmReturnBootRelease === "function") window.__iuMmReturnBootRelease("feed-bottom-home");
+              } catch (_relHome) {}
               try {
                 if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
                   window.iuMindMenuClearAllReturnMarkers();
@@ -26157,6 +26172,9 @@ function buildVideoAsArticleCard(it) {
   }
 
   function iuMindMenuClearAllReturnMarkers() {
+    try {
+      if (typeof window.__iuMmReturnBootRelease === "function") window.__iuMmReturnBootRelease("clear-markers");
+    } catch (_rel) {}
     try {
       sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY);
       sessionStorage.removeItem(IU_MINDMENU_RETURN_SCROLL_KEY);
