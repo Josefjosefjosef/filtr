@@ -158,23 +158,27 @@ function auditStatic() {
   ok("sw_allowed", swHasAllowedCacheVersion(sw));
   ok("allowlist_token", allow.includes(SW_TOKEN));
   ok("sw_token", sw.includes(SW_TOKEN));
-  ok("empty_slots_helper", /function affEmptySlots\(prefix\)[\s\S]{0,280}n <= 8/.test(catalog));
-  const slotMap = {
-    "aff-kvetiny-darky": "kvetiny",
-    "aff-sperky-hodinky": "sperky",
-    "aff-tv-streamovani": "streamovani",
-    "aff-dilna-naradi": "dilna",
+  const slotSlugs = {
+    "aff-kvetiny-darky": "kvetiny-empty-",
+    "aff-sperky-hodinky": "sperky-empty-",
+    "aff-tv-streamovani": "streamovani-empty-",
+    "aff-dilna-naradi": "dilna-empty-",
   };
-  for (const id of Object.keys(slotMap)) {
-    const prefix = slotMap[id];
-    const call = 'items: affEmptySlots("' + prefix + '")';
-    ok("slots8:" + id, catalog.includes(call), call);
+  for (const id of Object.keys(slotSlugs)) {
+    const prefix = slotSlugs[id];
     const start = catalog.indexOf('id: "' + id + '"');
     const next = catalog.indexOf("\n    {", start + 10);
-    const block = start >= 0 ? catalog.slice(start, next > start ? next : start + 500) : "";
+    const block = start >= 0 ? catalog.slice(start, next > start ? next : start + 1200) : "";
+    const n = (block.match(/affItem\(/g) || []).length;
+    ok("slots8:" + id, n === 8, "n=" + n);
     ok("slots_no_https:" + id, !/https:\/\//i.test(block));
     ok("slots_no_named_partner:" + id, !/affItem\(\s*"[^"]+"/.test(block));
-    ok("slots_no_empty_array:" + id, !/items:\s*\[\s*\]/.test(block));
+    ok("slots_wrapper:" + id, /items:\s*\[/.test(block));
+    let i = 1;
+    while (i <= 8) {
+      ok("slot_slug:" + id + ":" + i, block.includes('affItem("", "' + prefix + i + '")'));
+      i += 1;
+    }
   }
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
