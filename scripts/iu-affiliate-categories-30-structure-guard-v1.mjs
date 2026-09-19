@@ -376,14 +376,22 @@ try {
         return (lab ? lab.textContent : a.textContent || "").replace(/\s+/g, " ").trim();
       });
       const ids = items.map((a) => a.getAttribute("data-accent") || "");
-      const tops = new Map();
+      const tops = [];
       for (const a of items) {
         const r = a.getBoundingClientRect();
         if (r.width < 2 && r.height < 2) continue;
-        const t = Math.round(r.top / 4) * 4;
-        tops.set(t, (tops.get(t) || 0) + 1);
+        const top = r.top;
+        let placed = false;
+        for (let ti = 0; ti < tops.length; ti++) {
+          if (Math.abs(tops[ti].top - top) <= 8) {
+            tops[ti].n += 1;
+            placed = true;
+            break;
+          }
+        }
+        if (!placed) tops.push({ top: top, n: 1 });
       }
-      const rowSizes = [...tops.values()];
+      const rowSizes = tops.map((row) => row.n);
       const overflow = items.some((a) => a.scrollWidth > a.clientWidth + 1);
       const lefts = [
         ...new Set(
