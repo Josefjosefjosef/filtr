@@ -27,6 +27,9 @@ jobs:
   dnssec:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Cloudflare DNSSEC forensic / enable
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -51,22 +54,10 @@ jobs:
             exit 1
           fi
 
-          DUMP_PY='import json,sys
-d=json.load(sys.stdin)
-print("SUCCESS=", d.get("success"))
-print("ERRORS=", d.get("errors"))
-r=d.get("result") or {}
-for k in sorted(r.keys()):
-  print("DNSSEC_%s=" % k.upper(), r.get(k))
-for k in ("status","flags","algorithm","key_tag","digest_type","digest","ds","public_key"):
-  if k in r and r.get(k) is not None:
-    print("REGISTRAR_%s=" % k.upper(), r.get(k))
-'
-
           echo "=== BEFORE /zones/{id}/dnssec ==="
           BEFORE=$(curl -sS -H "$AUTH" -H "Content-Type: application/json" \
             "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dnssec")
-          echo "$BEFORE" | python3 -c "$DUMP_PY"
+          echo "$BEFORE" | node scripts/iu-dnssec-cf-dump-v1.mjs
           STATUS=$(echo "$BEFORE" | python3 -c 'import json,sys; print(((json.load(sys.stdin).get("result") or {}).get("status") or ""))')
           echo "DNSSEC_STATUS_BEFORE=${STATUS}"
 
@@ -91,7 +82,7 @@ for k in ("status","flags","algorithm","key_tag","digest_type","digest","ds","pu
           AFTER=$(curl -sS -X PATCH -H "$AUTH" -H "Content-Type: application/json" \
             --data '{"status":"active"}' \
             "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dnssec")
-          echo "$AFTER" | python3 -c "$DUMP_PY"
+          echo "$AFTER" | node scripts/iu-dnssec-cf-dump-v1.mjs
           OK=$(echo "$AFTER" | python3 -c 'import json,sys; print("1" if json.load(sys.stdin).get("success") else "0")')
           if [ "$OK" != "1" ]; then
             echo "BLOCKER=DNSSEC_ENABLE_FAILED"
@@ -99,10 +90,6 @@ for k in ("status","flags","algorithm","key_tag","digest_type","digest","ds","pu
           fi
           echo "IU_DNSSEC_MODE=ENABLED"
           echo "NOTE=Parent DS required at REG-INTERNET-CZ using REGISTRAR_* above (exact Cloudflare values). CZ.NIC AUTO CDNSKEY for unsigned domains waits ~7 days — prefer manual DS for immediate SECURE."
-
-      - name: Checkout (DoH guard)
-        if: inputs.mode == 'enable'
-        uses: actions/checkout@v4
 
       - name: DoH DNSSEC status guard (informational until parent DS exists)
         if: inputs.mode == 'enable'
