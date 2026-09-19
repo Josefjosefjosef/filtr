@@ -127,6 +127,18 @@
     "iu-calendarOverlay-open",
   ];
 
+  function isAiAssistantsOverlayOpen() {
+    try {
+      var pan = document.getElementById("iu-aiPanel");
+      if (!pan) return false;
+      if (pan.hasAttribute("hidden")) return false;
+      if (String(pan.dataset.open || "") === "1") return true;
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function hasIntentionalToolOverlayOpen() {
     try {
       var b = document.body;
@@ -134,6 +146,10 @@
       for (var i = 0; i < INTENTIONAL_TOOL_OVERLAY_BODY_CLASSES.length; i++) {
         if (b.classList.contains(INTENTIONAL_TOOL_OVERLAY_BODY_CLASSES[i])) return true;
       }
+      /* Desktop AI asistenti use iu-modal-open without iu-ai-narrow-fullscreen.
+         Missing this check made restoreAppShellAfterReturn strip iu-modal-open and
+         collapse #iu-aiPanel from inset:0/100dvh back to top:84px/max-height clip. */
+      if (isAiAssistantsOverlayOpen()) return true;
       var ds = document.getElementById("iuDsPanel");
       if (ds && String(ds.dataset.open || "") === "1" && !ds.hasAttribute("hidden")) return true;
       var fin = document.getElementById("iuFinancialCalcPanel");
@@ -191,7 +207,45 @@
   function reassertIntentionalOverlayShell() {
     try {
       if (!hasIntentionalToolOverlayOpen()) return;
+      var aiScrollY = 0;
+      try {
+        if (isAiAssistantsOverlayOpen()) {
+          var aiBody0 = document.querySelector("#iu-aiPanel .iu-aiPanelBody, #iu-aiPanel .iu-ai-scroll-host");
+          if (aiBody0) aiScrollY = aiBody0.scrollTop || 0;
+        }
+      } catch (_sy) {}
       document.body.classList.add("iu-modal-open");
+      if (isAiAssistantsOverlayOpen()) {
+        try {
+          if (typeof window.ensureAiModalInBody === "function") window.ensureAiModalInBody();
+          if (typeof window.iuAiEnsureGuardClasses === "function") window.iuAiEnsureGuardClasses();
+        } catch (_ai) {}
+        try {
+          var aiPan = document.getElementById("iu-aiPanel");
+          var aiOv = document.getElementById("iu-aiOverlay");
+          if (aiPan) {
+            aiPan.dataset.open = "1";
+            if (typeof window.iuSetElOpenVisible === "function") window.iuSetElOpenVisible(aiPan, true);
+            else {
+              aiPan.hidden = false;
+              aiPan.removeAttribute("hidden");
+            }
+          }
+          if (aiOv) {
+            if (typeof window.iuSetElOpenVisible === "function") window.iuSetElOpenVisible(aiOv, true);
+            else {
+              aiOv.hidden = false;
+              aiOv.removeAttribute("hidden");
+            }
+          }
+          /* Force a layout pass against current viewport — no timeout reopen. */
+          if (aiPan) void aiPan.offsetHeight;
+          try {
+            var aiBody1 = document.querySelector("#iu-aiPanel .iu-aiPanelBody, #iu-aiPanel .iu-ai-scroll-host");
+            if (aiBody1 && aiScrollY > 0) aiBody1.scrollTop = aiScrollY;
+          } catch (_sy2) {}
+        } catch (_ai2) {}
+      }
       if (document.body.classList.contains("iu-ds-overlay-open") ||
           (function () {
             var ds = document.getElementById("iuDsPanel");
@@ -459,6 +513,7 @@
     probeReachability: probeReachability,
     openExternalUrl: openExternalUrl,
     openExternalSync: openExternalSync,
+    armExternalReturn: armExternalReturn,
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
     hasIntentionalToolOverlayOpen: hasIntentionalToolOverlayOpen,
     showOfflineHint: showOfflineHint,

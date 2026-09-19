@@ -15,10 +15,13 @@
       } catch (_) {}
     })();
     </script>
-    <!-- pwa-mindmenu-cold-document-no-home-v1-20260919
+    <!-- pwa-mindmenu-visible-home-overlay-v1-20260919
          Process-death / history.back recreates the document. Default gate is Home until the
          feed chunk exports iuMindMenuHasReturnGuard — #10939 checks that window fn and miss
-         this boot. Pending is already in localStorage; pin MindMenu before first paint. -->
+         this boot. Pending is already in localStorage; pin MindMenu before first paint.
+         #11037 left a CSS hole: once pin() added iu-mobileGateOverlayOpen, feed un-hid and
+         painted VISIBLE_HOME_FRAMES while HOME_TRANSITIONS stayed 0. Keep Home shell hidden
+         for the entire iu-mm-return-boot window. -->
     <script>
     (function(){
       var KEY = "iuMindMenuReturnPendingV1";
@@ -95,11 +98,35 @@
       function noteHome() {
         try {
           if (!document.body) return;
-          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
-          if (document.body.classList.contains("iu-mobileGateOverlayOpen")) return;
-          var wrap = document.getElementById("iuMobileGateWrap");
-          var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
-          if (gate !== "tools" && pendingAlive()) diag.sawUnguardedHome = true;
+          /* Count a *visible* Home frame even while boot class is present.
+             Router may never setTab("") yet #feed can paint (VISIBLE_HOME_FRAMES). */
+          var feed = document.getElementById("feed");
+          var left = document.getElementById("leftContent");
+          var boot = document.documentElement.classList.contains("iu-mm-return-boot");
+          var gateWrap = document.getElementById("iuMobileGateWrap");
+          var gate = gateWrap ? String(gateWrap.getAttribute("data-iu-mobile-gate") || "") : "";
+          function isPaintedHome(el) {
+            if (!el) return false;
+            var st = window.getComputedStyle(el);
+            if (!st || st.display === "none" || st.visibility === "hidden" || Number(st.opacity || "1") < 0.05) {
+              return false;
+            }
+            var r = el.getBoundingClientRect();
+            return r.width > 8 && r.height > 8 && r.bottom > 0 && r.top < (window.innerHeight || 0);
+          }
+          var homePainted = isPaintedHome(feed) || isPaintedHome(left);
+          if (!homePainted) return;
+          diag.visibleHomeFrames = (diag.visibleHomeFrames || 0) + 1;
+          diag.sawUnguardedHome = true;
+          if (!diag.firstVisibleHome) {
+            diag.firstVisibleHome = {
+              t: Date.now(),
+              gate: gate,
+              boot: boot,
+              overlayOpen: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+              pending: pendingAlive()
+            };
+          }
         } catch (e7) {}
       }
       function pin() {
@@ -142,9 +169,22 @@
     })();
     </script>
     <style id="iuMmReturnBootCriticalCss">
-      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #feed,
-      html.iu-mm-return-boot:not(.iu-mobileGateOverlayOpen) #leftContent {
+      /* Keep Home shell invisible for the whole return-boot window.
+         Do NOT stop hiding when iu-mobileGateOverlayOpen is added — that was the
+         #11037 false-PASS: feed became visible for paint frames before MindMenu
+         covered it (VISIBLE_HOME_FRAMES > 0 while HOME_TRANSITIONS stayed 0). */
+      html.iu-mm-return-boot #feed,
+      html.iu-mm-return-boot #leftContent,
+      html.iu-mm-return-boot #iuCenterStage,
+      html.iu-mm-return-boot #iuMobileGatePanelNav {
         visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      html.iu-mm-return-boot #iuMobileGatePanelTools,
+      html.iu-mm-return-boot #iuMindMenuView,
+      html.iu-mm-return-boot #iuMobileMindMenuFlow {
+        visibility: visible !important;
+        pointer-events: auto !important;
       }
     </style>
     <style id="iuVaultAppLockCriticalCss">

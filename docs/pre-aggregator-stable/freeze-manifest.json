@@ -1,23 +1,23 @@
 {
-  "freezeId": "iu-pwa-title-no-dup-v1-20260919",
+  "freezeId": "iu-pwa-mm-visible-home-overlay-v1-20260919",
   "preStabilizationProductionSha": "6129c1062a35922f809ec5e0465852525d4bc782",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-19T14:50:00.000Z",
-  "note": "Freeze bump: PWA/desktop titlebar no double brand (title case + application-title), synced onto current main.",
+  "updatedAt": "2026-09-19T15:50:00.000Z",
+  "note": "Freeze bump: PWA MindMenu external return — hide Home for entire iu-mm-return-boot (VISIBLE_HOME_FRAMES); PC AI overlay keep iu-modal-open + reassert (no clip).",
   "files": {
-    "projects/index.html": "f18f6a50fd5e3dacf72697ecd3e371755ed6f15dff8a17bbfae2e4967bf075ff",
+    "projects/index.html": "5eb8cb64579dee05ef95245a0b68933a0071c3307fdcc82be48aab4cc2f44aee",
     "assets/app.css": "dc28f95ecdbaa24472336cbd9d385e1f5f1c45ae46fa3d7cc255f121784e17ae",
-    "assets/app.js": "dcf0c4190a479bb27f6ae85c4714f1df95f2b202560626b3892b452b07f9eca2",
+    "assets/app.js": "99e1816c79e2ce507738057df408703a2a1b70ceee0d6bae3a361012abcdc0f0",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "fef744965e4591540a1f3ee9b4016b85276f0abd4d113a07ff63f999c127cd31",
-    "assets/iu-app-feed-pipeline-v1.js": "cc6b462b80c542cf90287aee1d2783c225da5136f0e269ecd8292a0fb3101716",
+    "assets/iu-app-feed-pipeline-v1.js": "f85695ffbccf0ea3d616539032c0671bfe5986a3cf20ee34a74e4a665ee3ec88",
     "assets/iu-calendar-overlay-v1.js": "d96efddb6b3b85843babbf942859d8aefbb66fa1429a162ffeb3bf75546bdda2",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "7a2a8ebbb238f8528cf925f49b403bf52a785033ae2ec3fc57f8df756216cafb",
+    "sw.js": "512207dd0d9985e69f9890b737684d9420e45ab680f5f777a9bf3b6eabb3b3a9",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
-    "assets/iu-network-connectivity-v1.js": "b4e0fea2c3c8f9b192cc61d21257ff4203d64de32d32d843c0241b196248ec09",
+    "assets/iu-network-connectivity-v1.js": "0ae7acf07082709d87c47315f07c89030cd4e73fa0b0fc825d59a7aebff8d540",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "51a894bf146f3f7cdc9dc7ddd62a36e0811805f0fb982e43d066ce02fba8f246",
     "assets/iu-user-data-backup-core.js": "b349b4a391e5c2c928ba50330df57eac40a46dbeeabedbc4c4a8cce490c9620b",
@@ -35,7 +35,7 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-19-pwa-title-no-dup-v1\"",
+      "CACHE_VERSION = \"2026-09-19-pwa-mm-visible-home-overlay-v1\"",
       "PWA MindMenu external-return lifecycle modules: network-first"
     ],
     "projects/version.json": [
@@ -78,6 +78,7 @@
       "pwa-mindmenu-external-return-no-home-flash-v1-20260917",
       "pwa-mindmenu-return-settab-v1-20260918",
       "pwa-mindmenu-cold-document-no-home-v1-20260919",
+      "pwa-mindmenu-visible-home-overlay-v1-20260919",
       "mindmenu-box-nav-flush-v1-20260917",
       "affiliate-categories-26-structure-v1-20260917",
       "affiliate-categories-30-structure-v1-20260919",
@@ -175,7 +176,9 @@
       "iuInfoCardsExpandToggleInit",
       "iuMenuNavCaptureScroll",
       "iuMenuNavApplyScroll",
-      "restoreNavY"
+      "restoreNavY",
+      "iuMindMenuCaptureAiOverlayState",
+      "pending.ai"
     ],
     "assets/app.js": [
       "radio-neutral-v1-20260906",
@@ -188,12 +191,18 @@
       "pwa-mindmenu-return-settab-v1-20260918",
       "silver-info-cards-collapse-v1-20260915",
       "calendar-nav-external-open-v1-20260916",
-      "menu-nav-scroll-restore-v1-20260918"
+      "menu-nav-scroll-restore-v1-20260918",
+      "Keep overlay open for PWA return"
     ],
     "assets/app.css": [
       "mindmenu-pwa-box-nav-flush-v1-20260918",
       "P0 PWA MindMenu gap",
       "affiliate-header-frame-v1-20260918"
+    ],
+    "assets/iu-network-connectivity-v1.js": [
+      "isAiAssistantsOverlayOpen",
+      "reassertIntentionalOverlayShell",
+      "armExternalReturn"
     ]
   }
 }
