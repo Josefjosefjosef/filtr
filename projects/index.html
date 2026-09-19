@@ -644,10 +644,16 @@
     })();
     </script>
     <script src="/assets/iu-pwa-version-check.js?v=pwa-ver-check-v3"></script>
-    <title>InfoUzel.cz – internet v internetu</title>
+    <title>infoUzel.cz – internet v internetu</title>
+    <!-- P0 pwa-title-no-dup-v1-20260918: PWA titlebar = manifest.name + subtitle.
+         Keep document.title prefix case-identical to short_name; set application-title
+         to the tagline only so Windows does not stack brand twice. -->
+    <meta name="application-title" content="internet v internetu" />
+    <script src="/assets/iu-pwa-window-title-v1.js?v=pwa-title-no-dup-v1-20260918"></script>
     <meta name="description" content="InfoUzel.cz je internet v internetu. Každodenní informace a nástroje máte na jednom místě a váš osobní obsah zůstává uložený ve vašem zařízení." />
     <link rel="canonical" href="https://infouzel.cz/" />
     <meta name="theme-color" content="#003CFF" />
+    <meta name="application-name" content="infoUzel.cz" />
     <meta name="apple-mobile-web-app-title" content="infoUzel.cz" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
