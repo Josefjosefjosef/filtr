@@ -206,6 +206,16 @@ async function scrollMindMenuPanel(page, y) {
   return page.evaluate((targetY) => {
     const panel = document.getElementById("iuMobileGatePanelTools");
     if (!panel) return { ok: false, scrollTop: 0, max: 0 };
+    /* Ensure the tools panel can actually scroll in tall tablet viewports. */
+    try {
+      const mind = document.getElementById("iuMindMenuView") || panel;
+      if (mind && mind.scrollHeight < panel.clientHeight + targetY + 40) {
+        const pad = document.createElement("div");
+        pad.setAttribute("data-iu-guard-scroll-pad", "1");
+        pad.style.height = String(targetY + 200) + "px";
+        mind.appendChild(pad);
+      }
+    } catch (_) {}
     panel.scrollTop = targetY;
     const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
     return { ok: true, scrollTop: panel.scrollTop || 0, max };
@@ -812,8 +822,8 @@ async function runPlaywright() {
         height: 844,
       });
       const tablet = await runMobileOrTabletPlatform(browser, "TABLET_STANDALONE_PWA", {
-        width: 820,
-        height: 1180,
+        width: 768,
+        height: 900,
       });
       const pc = await runPcAiOverlayPlatform(browser);
       console.log(

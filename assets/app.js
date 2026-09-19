@@ -4376,7 +4376,7 @@ try {
       if (e.key === 'Escape') closePanel();
     });
 
-    // 7) Klik na "Otevřít" — external _blank: keep overlay open for PWA return
+    // 7) Klik na "Otevřít" — external _blank: Keep overlay open for PWA return
     //    (closing + restore used to leave a clipped shell after iu-modal-open strip).
     //    Same-document / non-external links still close.
     aiPanel.addEventListener('click', e => {
