@@ -17845,16 +17845,12 @@ function buildVideoAsArticleCard(it) {
           if (yBoot > 0) iuMenuNavApplyScroll(yBoot);
         }
       } catch (_bootScr) {}
-      if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) {
-        if (
-          (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
-          document.documentElement.classList.contains("iu-mm-return-boot")
-        ) {
-          setTab("tools");
-        } else {
-          setTab("");
-        }
-      }
+      if (
+        (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
+        document.documentElement.classList.contains("iu-mm-return-boot")
+      ) {
+        if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("tools");
+      } else if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
       window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}
   }
