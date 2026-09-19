@@ -215,7 +215,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-19-pwa-mindmenu-cold-document-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-19-affiliate-categories-30-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
