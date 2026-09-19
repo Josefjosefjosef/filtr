@@ -24,6 +24,17 @@
     };
   }
 
+  /* Eight empty chips. Same affItem shape as Cestovní kanceláře. No partner title, no https URL. */
+  function affEmptySlots(prefix) {
+    var out = [];
+    var n = 1;
+    while (n <= 8) {
+      out.push(affItem("", String(prefix || "slot") + "-empty-" + n));
+      n += 1;
+    }
+    return out;
+  }
+
   function affSeo(title, paragraphs) {
     return {
       title: title,
@@ -705,28 +716,28 @@
       title: "Květiny a dárky",
       icon: "iu-aff-flower",
       description: "Odkazy na vybrané obchody s květinami a dárky.",
-      items: [],
+      items: affEmptySlots("kvetiny"),
     },
     {
       id: "aff-sperky-hodinky",
       title: "Šperky a hodinky",
       icon: "iu-aff-watch",
       description: "Odkazy na vybrané obchody se šperky a hodinkami.",
-      items: [],
+      items: affEmptySlots("sperky"),
     },
     {
       id: "aff-tv-streamovani",
       title: "TV a streamování",
       icon: "iu-aff-tv",
       description: "Odkazy na vybrané televizní a streamovací služby.",
-      items: [],
+      items: affEmptySlots("streamovani"),
     },
     {
       id: "aff-dilna-naradi",
       title: "Dílna a nářadí",
       icon: "iu-aff-hammer",
       description: "Odkazy na vybrané obchody s nářadím a vybavením dílny.",
-      items: [],
+      items: affEmptySlots("dilna"),
     },
   ];
 
