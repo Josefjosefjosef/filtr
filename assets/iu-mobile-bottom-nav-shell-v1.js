@@ -56,13 +56,20 @@
         try {
           if (window.__iuNavOverlayLock === true) return;
         } catch (_) {}
-        /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard (same as feed-pipeline).
-           Head boot installs the guard before this module; iu-mm-return-boot is the pre-paint hold. */
+        /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard only while
+           tools gate is open (same as feed-pipeline). Global block broke section Back. */
         try {
           if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
         } catch (_mmBoot) {}
         try {
-          if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+          var curGateForReturn = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+          if (
+            curGateForReturn === "tools" &&
+            typeof window.iuMindMenuHasReturnGuard === "function" &&
+            window.iuMindMenuHasReturnGuard()
+          ) {
+            return;
+          }
         } catch (_mmSetTab) {}
       }
       wrap.setAttribute("data-iu-mobile-gate", gateVal);
@@ -265,22 +272,28 @@
         try {
           if (window.__iuNavOverlayLock === true) return;
         } catch (_) {}
-        /* P0: same MindMenu return guard as feed-pipeline CloseForMainNav — bottom-nav
-           shell may overwrite the window hook; must not force Home during pending return. */
+        /* P0: same MindMenu return guard as feed-pipeline CloseForMainNav — only while tools. */
         try {
           if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
         } catch (_mmBoot) {}
         try {
-          if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+          var gClose = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+          if (
+            gClose === "tools" &&
+            typeof window.iuMindMenuHasReturnGuard === "function" &&
+            window.iuMindMenuHasReturnGuard()
+          ) {
+            return;
+          }
         } catch (_mmg) {}
         setTab("");
       };
     } catch (_) {}
     try {
+      /* Always setTab("tools") when boot/guard live — even if pin already wrote tools. */
       if (
-        (document.documentElement.classList.contains("iu-mm-return-boot") ||
-          (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard())) &&
-        String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools"
+        document.documentElement.classList.contains("iu-mm-return-boot") ||
+        (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard())
       ) {
         setTab("tools");
       }

@@ -78,15 +78,15 @@ function staticGate() {
     must(/iuMindMenuHasReturnGuard/.test(feed), "static:has_return_guard_export");
     must(/window\.iuMindMenuHasReturnGuard\s*=\s*iuMindMenuHasReturnGuard/.test(feed), "static:has_return_guard_window");
     must(
-      /function iuMobileGateCloseForMainNav\s*\(\s*\)\s*\{[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(feed),
+      /function iuMobileGateCloseForMainNav\s*\(\s*\)\s*\{[\s\S]{0,1200}iuMindMenuHasReturnGuard/.test(feed),
       "static:close_for_main_nav_respects_return_guard"
     );
     must(
-      /function setTab\s*\(\s*value\s*\)\s*\{[\s\S]{0,900}iuMindMenuHasReturnGuard/.test(feed),
+      /function setTab\s*\(\s*value\s*\)\s*\{[\s\S]{0,1400}iuMindMenuHasReturnGuard/.test(feed),
       "static:settab_empty_respects_return_guard"
     );
     must(
-      /function iuProjectsHubNavigateHardResetFromHomeOrBack\s*\(\s*\)\s*\{[\s\S]{0,750}iuMindMenuHasReturnGuard/.test(
+      /function iuProjectsHubNavigateHardResetFromHomeOrBack\s*\(\s*\)\s*\{[\s\S]{0,1200}iuMindMenuHasReturnGuard/.test(
         feed
       ),
       "static:hub_hard_reset_respects_return_guard"
@@ -102,14 +102,37 @@ function staticGate() {
     );
     must(/iu-mm-return-boot/.test(shell), "static:shell_boot_class");
     const html = read("projects/index.html");
+    must(/pwa-mindmenu-return-boot-release-v1-20260920/.test(html), "static:boot_release_marker");
     must(/pwa-mindmenu-visible-home-overlay-v1-20260919/.test(html), "static:visible_home_overlay_marker");
     must(/iu-mm-return-boot/.test(html) && /window\.iuMindMenuHasReturnGuard\s*=\s*function/.test(html), "static:head_early_guard");
     must(/data-iu-mobile-gate", "tools"/.test(html), "static:head_pin_tools");
+    must(/skippedDesktop/.test(html) && /min-width:\s*1024px/.test(html), "static:head_skips_desktop_pin");
     must(/visibleHomeFrames/.test(html), "static:visible_home_frames_diag");
     must(
       /html\.iu-mm-return-boot #feed/.test(html) &&
         !/html\.iu-mm-return-boot:not\(\.iu-mobileGateOverlayOpen\)\s*#feed/.test(html),
       "static:boot_css_hides_feed_for_entire_boot"
+    );
+    must(
+      /classList\.contains\("iu-mm-return-boot"\)[\s\S]{0,120}setTab\("tools"\)/.test(feed),
+      "static:gate_init_always_setTab_tools_on_boot"
+    );
+    must(
+      !/iu-mm-return-boot[\s\S]{0,200}if\s*\(\s*!String\(wrap\.getAttribute\("data-iu-mobile-gate"\)[\s\S]{0,80}setTab\("tools"\)/.test(
+        feed
+      ),
+      "static:gate_init_no_empty_gate_skip_on_boot"
+    );
+    must(
+      /curGateForReturn\s*===\s*"tools"[\s\S]{0,180}iuMindMenuHasReturnGuard/.test(feed),
+      "static:setTab_empty_only_blocks_tools_return"
+    );
+    must(
+      /Do NOT rewrite pending\.t here/.test(feed) ||
+        /iuMindMenuTouchReturnLatch\(\);\s*\n\s*\/\* Do NOT rewrite pending/.test(feed) ||
+        (/iuMindMenuTouchReturnLatch\(\)/.test(feed) &&
+          !/iuMindMenuTouchReturnLatch\(\);\s*\n\s*iuMindMenuWriteReturnPending\(scrollY\)/.test(feed)),
+      "static:restore_does_not_rewrite_pending_ttl"
     );
     must(/function isAiAssistantsOverlayOpen/.test(net), "static:ai_overlay_detect");
     must(/isAiAssistantsOverlayOpen\(\)/.test(net), "static:ai_counts_as_intentional");
@@ -605,6 +628,7 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     must(cold.gate === "tools", label + ":colddoc:gate_tools:" + cold.gate);
     must(cold.overlay === true, label + ":colddoc:overlay");
     must(cold.guard === true, label + ":colddoc:guard_still_true");
+    must(cold.boot !== true, label + ":colddoc:boot_released_after_setTab_tools");
     must(cold.sawHome !== true && cold.gate === "tools", label + ":colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
 
     return { platform: label, visibleHomeFrames: cold.visibleHomeFrames || 0 };
@@ -800,6 +824,50 @@ async function runPcAiOverlayPlatform(browser) {
       });
       must(cyc.open === true && cyc.layoutValid === true, "PC:cycle" + i + ":layout");
     }
+
+    /* Freeze: PC desktop pending must NOT apply iu-mm-return-boot / kill #leftContent. */
+    await page.evaluate(() => {
+      try {
+        localStorage.setItem(
+          "iuMindMenuReturnPendingV1",
+          JSON.stringify({ t: Date.now(), y: 0, ai: 0 })
+        );
+        sessionStorage.clear();
+      } catch (_) {}
+    });
+    const pcColdUrl = new URL(page.url());
+    pcColdUrl.hash = "";
+    await page.goto(pcColdUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await waitRuntime(page);
+    await page.waitForTimeout(300);
+    const pcLeft = await page.evaluate(() => {
+      const d = window.__iuMmReturnBootDiag || {};
+      const left = document.getElementById("leftContent");
+      const rail = document.getElementById("iuLeftRail");
+      const item = document.querySelector("#iuLeftRail .iu-leftNavItem");
+      let pe = "";
+      let railPe = "";
+      try {
+        if (left) pe = getComputedStyle(left).pointerEvents || "";
+        if (rail) railPe = getComputedStyle(rail).pointerEvents || "";
+      } catch (_) {}
+      return {
+        skippedDesktop: d.skippedDesktop === true,
+        applied: d.applied === true,
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        leftPe: pe,
+        railPe,
+        hasRail: !!rail,
+        hasItem: !!item,
+        mailboxRows: document.querySelectorAll("#iuMailboxList .iu-mailbox-row").length,
+      };
+    });
+    must(pcLeft.skippedDesktop === true, "PC:pending_skips_mobile_boot_pin");
+    must(pcLeft.applied !== true, "PC:boot_not_applied_on_desktop");
+    must(pcLeft.boot !== true, "PC:no_stuck_boot_class");
+    must(pcLeft.leftPe !== "none", "PC:leftContent_pointer_events:" + pcLeft.leftPe);
+    must(pcLeft.hasRail === true && pcLeft.hasItem === true, "PC:left_rail_present");
+    must(pcLeft.mailboxRows >= 1, "PC:mindmenu_mailbox_rows_first_run:" + pcLeft.mailboxRows);
 
     return { platform: "PC_STANDALONE_PWA", clipped: false };
   } finally {
