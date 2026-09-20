@@ -16810,10 +16810,18 @@ function buildVideoAsArticleCard(it) {
         if (typeof window.iuNavOverlayLockForceClear === "function") window.iuNavOverlayLockForceClear();
         else window.__iuNavOverlayLock = false;
       } catch (_) {}
-    /* P0 PWA MindMenu external-return: hub hard-reset must not force Home while return pending
-       (Domů clears markers before calling this; return lifecycle must not). */
+    /* P0 PWA MindMenu external-return: hub hard-reset must not force Home while tools
+       return is live (Domů clears markers before calling this; return lifecycle must not). */
     try {
-      if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+      var wrapHub = document.getElementById("iuMobileGateWrap");
+      var gateHub = wrapHub ? String(wrapHub.getAttribute("data-iu-mobile-gate") || "").trim() : "";
+      if (
+        gateHub === "tools" &&
+        typeof window.iuMindMenuHasReturnGuard === "function" &&
+        window.iuMindMenuHasReturnGuard()
+      ) {
+        return;
+      }
     } catch (_mmHub) {}
     try {
       window.__iuHubResetSeq = (typeof window.__iuHubResetSeq === "number" ? window.__iuHubResetSeq : 0) + 1;
@@ -17231,14 +17239,23 @@ function buildVideoAsArticleCard(it) {
           try {
             if (typeof window !== "undefined" && window.__iuNavOverlayLock === true) return;
           } catch (_){}
-          /* P0 PWA MindMenu external-return (#10903 incomplete): any setTab("") sink must refuse Home
-             while armed/latch/durable pending is live. Domů / tools-close clear markers first.
-             Head script installs the guard before this chunk; boot class covers the pre-export gap. */
+          /* P0 PWA MindMenu external-return (#10903 incomplete): refuse Home only while tools
+             gate is open and return markers are live. Domů / tools-close clear markers first.
+             Do NOT block setTab("") globally — that broke Back from Weather/sections while
+             durable pending was still alive after external return (#11037/#11090). */
           try {
             if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
           } catch (_mmBoot) {}
           try {
-            if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+            var curGateForReturn =
+              String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+            if (
+              curGateForReturn === "tools" &&
+              typeof window.iuMindMenuHasReturnGuard === "function" &&
+              window.iuMindMenuHasReturnGuard()
+            ) {
+              return;
+            }
           } catch (_mmSetTab) {}
         }
         /* P0 perf: only run narrow-AI teardown when leaving tools — opening nav from hub (prev "") must not scan/close AI every tap. */
@@ -17845,11 +17862,14 @@ function buildVideoAsArticleCard(it) {
           if (yBoot > 0) iuMenuNavApplyScroll(yBoot);
         }
       } catch (_bootScr) {}
+      /* Always call setTab("tools") when boot/guard is live — even if pin() already wrote
+         data-iu-mobile-gate=tools. Skipping left iu-mm-return-boot stuck and #leftContent
+         pointer-events:none on PC/tablet after #11037/#11090. */
       if (
         (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
         document.documentElement.classList.contains("iu-mm-return-boot")
       ) {
-        if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("tools");
+        setTab("tools");
       } else if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
       window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}
@@ -17864,10 +17884,22 @@ function buildVideoAsArticleCard(it) {
       if (typeof window !== "undefined" && window.__iuMobileWebNavReturnSuppress === true) return;
     } catch (_){}
     /* P0 PWA MindMenu external-return: after #10873 restore, late section/shell CloseForMainNav
-       must not force Home while armed/latch/durable pending is live (MindMenu→Home→MindMenu flash).
-       Intentional Domů / tools-close clears markers first. */
+       must not force Home while tools return is live (MindMenu→Home→MindMenu flash).
+       Intentional Domů / tools-close clears markers first. Do not block close when gate is
+       already nav/empty — that broke section Back while durable pending lingered. */
     try {
-      if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+      if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+    } catch (_mmBootClose) {}
+    try {
+      var wGuard = document.getElementById("iuMobileGateWrap");
+      var gGuard = wGuard ? String(wGuard.getAttribute("data-iu-mobile-gate") || "").trim() : "";
+      if (
+        gGuard === "tools" &&
+        typeof window.iuMindMenuHasReturnGuard === "function" &&
+        window.iuMindMenuHasReturnGuard()
+      ) {
+        return;
+      }
     } catch (_mmg) {}
     try {
       var w = document.getElementById("iuMobileGateWrap");
@@ -26435,7 +26467,8 @@ function buildVideoAsArticleCard(it) {
        tick would otherwise see tools without #iu-mindmenu and close → Home. */
     iuMindMenuEnsureHistoryEntry();
     iuMindMenuTouchReturnLatch();
-    iuMindMenuWriteReturnPending(scrollY);
+    /* Do NOT rewrite pending.t here — that immortalized the 30min TTL across every
+       pageshow/focus and left Back/setTab("") blocked after external return. */
     try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
     try {
       if (Number.isFinite(scrollY) && scrollY >= 0) {
@@ -26459,6 +26492,11 @@ function buildVideoAsArticleCard(it) {
         } catch (_mo) {}
       }
     } catch (_aiRest) {}
+    try {
+      if (typeof window.__iuMmReturnBootRelease === "function") {
+        window.__iuMmReturnBootRelease("restore-if-armed");
+      }
+    } catch (_relBoot) {}
   }
 
   /**
