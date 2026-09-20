@@ -24,6 +24,15 @@
     };
   }
 
+  /* Ready partner with live CJ / affiliate tracking URL (text-only chip). */
+  function affPartner(title, url) {
+    return {
+      title: title,
+      url: url,
+      affiliateUrlReady: true,
+    };
+  }
+
   function affSeo(title, paragraphs) {
     return {
       title: title,
@@ -340,7 +349,10 @@
       icon: "iu-aff-hotel",
       description: "Odkazy na vybrané služby pro ubytování a hotely.",
       items: [
-        affItem("", "booking"),
+        affPartner(
+          "Booking.com",
+          "https://www.anrdoezrs.net/click-101883843-13323565"
+        ),
         affItem("", "agoda"),
         affItem("", "hotels-com"),
         affItem("", "spa-cz"),
@@ -1067,8 +1079,8 @@
           (ready ? "1" : "0") +
           '"';
         if (ready) {
-          attrs +=
-            ' target="_blank" rel="nofollow sponsored noopener noreferrer"';
+          /* Affiliate contract: sponsored + noopener, new tab. No nofollow / noreferrer. */
+          attrs += ' target="_blank" rel="sponsored noopener"';
         } else {
           attrs += ' aria-disabled="true"';
         }

@@ -156,16 +156,24 @@ function auditStatic() {
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
   ok("catalog:cedok_slug", catalog.includes('affItem("", "cedok")'));
-  const namedItems = (catalog.match(/affItem\("[^"]+",/g) || []).length;
-  ok("catalog:partner_labels_empty", namedItems === 0, "named=" + namedItems);
+  const namedPlaceholders = (catalog.match(/affItem\("([^"]*)",/g) || [])
+    .map((s) => {
+      const m = s.match(/affItem\("([^"]*)",/);
+      return m ? m[1] : "";
+    })
+    .filter((t) => t !== "");
+  ok("catalog:placeholder_labels_empty", namedPlaceholders.length === 0, "named=" + namedPlaceholders.join("|"));
+  ok("catalog:booking_partner", /affPartner\(\s*"Booking\.com"/.test(catalog));
+  ok("catalog:booking_cj_url", catalog.includes("https://www.anrdoezrs.net/click-101883843-13323565"));
   ok("catalog:ready_gate", catalog.includes("affiliateUrlReady === true"));
-  ok("catalog:nofollow_sponsored", catalog.includes("nofollow sponsored noopener noreferrer"));
+  ok("catalog:sponsored_noopener", catalog.includes('rel="sponsored noopener"'));
+  ok("catalog:no_legacy_nofollow_rel", !catalog.includes('rel="nofollow sponsored noopener noreferrer"'));
   for (const b of FORBIDDEN) {
     ok("catalog:no:" + b.slice(0, 36), !catalog.includes(b));
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-categories-34-structure-v1-20260920"));
+  ok("index:cache_bust", index.includes("affiliate-booking-com-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
   ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));

@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-20-affiliate-booking-com-slot1-v1",
   "2026-09-20-affiliate-categories-34-v1",
   "2026-09-20-pwa-return-boot-release-v1",
   "2026-09-19-pwa-mm-visible-home-overlay-v1",
@@ -221,7 +222,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-20-affiliate-categories-34-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-20-affiliate-booking-com-slot1-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");

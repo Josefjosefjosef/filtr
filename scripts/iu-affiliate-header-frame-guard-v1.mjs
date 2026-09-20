@@ -64,7 +64,7 @@ function readCatalogSnapshot() {
     titles[id] = m[2];
     descs[id] = m[3];
     const itemSlice = m[4];
-    const n = (itemSlice.match(/affItem\(/g) || []).length;
+    const n = (itemSlice.match(/aff(?:Item|Partner)\(/g) || []).length;
     itemCounts[id] = n;
   }
   return {
