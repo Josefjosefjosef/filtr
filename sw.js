@@ -29,8 +29,8 @@
 // 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
 // 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
 // 2026-09-12-startup-single-paint-v1 — lineage token retained for iu-startup-single-paint-guard
-const CACHE_VERSION = "2026-09-19-pwa-title-no-dup-v1";
-/* CACHE_VERSION lineage: 2026-09-19-affiliate-categories-30-v1 | 2026-09-19-pwa-mindmenu-cold-document-v1 | 2026-09-18-pwa-title-no-dup-v1 */
+const CACHE_VERSION = "2026-09-19-affiliate-empty-slots-v1";
+/* CACHE_VERSION lineage: 2026-09-19-affiliate-empty-slots-v1 | 2026-09-19-pwa-title-no-dup-v1 | 2026-09-19-affiliate-categories-30-v1 | 2026-09-19-pwa-mindmenu-cold-document-v1 | 2026-09-18-pwa-title-no-dup-v1 */
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
 const DATA_META_CACHE = `iu-data-meta-${CACHE_VERSION}`; // Metadata for TTL

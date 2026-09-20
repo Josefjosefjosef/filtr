@@ -158,6 +158,33 @@ function auditStatic() {
   ok("sw_allowed", swHasAllowedCacheVersion(sw));
   ok("allowlist_token", allow.includes(SW_TOKEN));
   ok("sw_token", sw.includes(SW_TOKEN));
+  const slotSlugs = {
+    "aff-kvetiny-darky": "kvetiny-empty-",
+    "aff-sperky-hodinky": "sperky-empty-",
+    "aff-tv-streamovani": "streamovani-empty-",
+    "aff-dilna-naradi": "dilna-empty-",
+  };
+  for (const id of Object.keys(slotSlugs)) {
+    const prefix = slotSlugs[id];
+    const start = catalog.indexOf('id: "' + id + '"');
+    const next = catalog.indexOf("\n    {", start + 10);
+    const block = start >= 0 ? catalog.slice(start, next > start ? next : start + 1200) : "";
+    const n = (block.match(/affItem\(/g) || []).length;
+    ok("slots8:" + id, n === 8, "n=" + n);
+    ok("slots_no_https:" + id, !/https:\/\//i.test(block));
+    ok("slots_no_named_partner:" + id, !/affItem\(\s*"[^"]+"/.test(block));
+    ok("slots_wrapper:" + id, /items:\s*\[/.test(block));
+    let i = 1;
+    while (i <= 8) {
+      ok("slot_slug:" + id + ":" + i, block.includes('affItem("", "' + prefix + i + '")'));
+      i += 1;
+    }
+  }
+  const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
+  const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
+  const travelBlock = travelStart >= 0 && travelEnd > travelStart ? catalog.slice(travelStart, travelEnd) : "";
+  const travelItems = (travelBlock.match(/affItem\(/g) || []).length;
+  ok("reference_slots_8", travelItems === 8, "n=" + travelItems);
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -436,6 +463,19 @@ try {
 
     if (vp.name === "desktop") {
       ok(vp.name + ":one_col", layout.maxPerRow === 1 && layout.colCount === 1, "max=" + layout.maxPerRow + ";cols=" + layout.colCount);
+      const icons = await page.evaluate((ids) => {
+        const out = {};
+        for (const id of ids) {
+          const a = document.querySelector('.iu-leftNavItem[data-accent="' + id + '"] .iu-leftNavIcon');
+          const svg = a ? a.querySelector("svg") : null;
+          const r = svg ? svg.getBoundingClientRect() : { width: 0, height: 0 };
+          out[id] = !!(svg && r.width > 2 && r.height > 2);
+        }
+        return out;
+      }, NEW_IDS);
+      for (const id of NEW_IDS) {
+        ok("desktop:icon:" + id, icons[id] === true);
+      }
     } else {
       const twoColCss = (layout.gridCols || "").split(/\s+/).filter(Boolean).length >= 2;
       ok(vp.name + ":two_col_css", twoColCss, layout.gridCols);
@@ -457,15 +497,19 @@ try {
     await context.close();
   }
 
-  for (const section of NEW_IDS.concat(["aff-knihy"])) {
-    for (const vp of [
-      { name: "mobile", width: 390, height: 844, hasTouch: true },
-      { name: "desktop", width: 1280, height: 900, hasTouch: false },
-    ]) {
+  for (const section of NEW_IDS.concat(["aff-knihy", "aff-cestovni-kancelare"])) {
+    for (const vp of VIEWPORTS) {
       const context = await bootstrapGuardContext(browser, {
         viewport: { width: vp.width, height: vp.height },
         hasTouch: vp.hasTouch,
       });
+      if (vp.pwa) {
+        await context.addInitScript(() => {
+          try {
+            Object.defineProperty(navigator, "standalone", { get: () => true });
+          } catch (_) {}
+        });
+      }
       const page = await bootstrapGuardPage(context);
       await openAff(page, `http://127.0.0.1:${PORT}/projects/`, section);
       const snap = await page.evaluate((sec) => {
@@ -476,11 +520,27 @@ try {
           document.getElementById("iuSectionBack"),
           document.querySelector(".iuSectionBack"),
         ].filter(Boolean);
+        const grid = document.getElementById("iuAffiliateGrid");
+        const seo = document.getElementById("iuAffiliateSeo");
+        const chips = grid ? Array.from(grid.querySelectorAll("a.iuAffiliateChip")) : [];
+        const titles = chips.map((c) => (c.textContent || "").replace(/\s+/g, " ").trim());
+        const hrefs = chips.map((c) => c.getAttribute("href") || "");
+        const ready = chips.map((c) => c.getAttribute("data-aff-ready") || "");
+        let seoAfterGrid = false;
+        if (grid && seo && grid.compareDocumentPosition) {
+          seoAfterGrid = (grid.compareDocumentPosition(seo) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        }
         return {
           title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
           cat: view ? view.getAttribute("data-aff-category") || "" : "",
           overflow: view ? view.scrollWidth > view.clientWidth + 1 : false,
           hasBackHint: backCandidates.length > 0 || !!(view && view.offsetParent !== null),
+          slots: chips.length,
+          emptyTitles: titles.every((t) => t === ""),
+          noHttps: hrefs.every((h) => !/^https?:/i.test(h)),
+          allNeutral: ready.every((r) => r === "0"),
+          seoAfterGrid,
+          seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").trim().length > 0),
         };
       }, section);
       const expectedTitle = EXPECTED_TITLES[EXPECTED_ORDER.indexOf(section)];
@@ -488,6 +548,14 @@ try {
       ok(vp.name + ":" + section + ":cat", snap.cat === section, snap.cat);
       ok(vp.name + ":" + section + ":no_overflow", !snap.overflow);
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
+      if (NEW_IDS.includes(section)) {
+        ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+        ok(vp.name + ":" + section + ":partners_0", snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true);
+        ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
+      }
+      if (section === "aff-cestovni-kancelare") {
+        ok(vp.name + ":reference_slots_8", snap.slots === 8, "n=" + snap.slots);
+      }
       await context.close();
     }
   }
