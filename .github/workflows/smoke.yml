@@ -1431,7 +1431,7 @@ jobs:
 
       - name: Affiliate categories 30 structure guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
-        run: npm run iu-affiliate-categories-30-structure-guard
+        run: npm run iu-affiliate-categories-34-structure-guard
 
       - name: TV program neutral presentation guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

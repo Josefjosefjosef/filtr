@@ -283,6 +283,38 @@
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
     ),
+    "aff-inzerce-bazary": affSeo(
+      "Inzerce a bazary – odkazy na vybrané externí služby",
+      [
+        "Sekce Inzerce a bazary obsahuje odkazy na vybrané externí inzertní portály, bazary, online tržiště a související služby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídky, ceny, dostupnost, podmínky, informace o nabízeném zboží a další obsah určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-realitni-kancelare": affSeo(
+      "Realitní kanceláře – odkazy na vybrané externí služby",
+      [
+        "Sekce Realitní kanceláře obsahuje odkazy na vybrané externí realitní kanceláře a společnosti poskytující realitní služby. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídky nemovitostí, ceny, dostupnost, podmínky a další obsah určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-reality-nemovitosti": affSeo(
+      "Reality a nemovitosti – odkazy na vybrané externí služby",
+      [
+        "Sekce Reality a nemovitosti obsahuje odkazy na vybrané externí realitní portály a služby související s nabídkou, prodejem a pronájmem nemovitostí. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídky nemovitostí, ceny, dostupnost, podmínky a další obsah určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
+    "aff-kancelarske-potreby": affSeo(
+      "Kancelářské potřeby a vybavení – odkazy na vybrané externí služby",
+      [
+        "Sekce Kancelářské potřeby a vybavení obsahuje odkazy na vybrané externí obchody a služby zaměřené na kancelářské potřeby a vybavení. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídky, ceny, dostupnost, podmínky, informace o produktech a další obsah určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
   };
 
   var IU_AFFILIATE_CATALOG = [
@@ -762,6 +794,70 @@
         affItem("", "dilna-empty-6"),
         affItem("", "dilna-empty-7"),
         affItem("", "dilna-empty-8"),
+      ],
+    },
+    {
+      id: "aff-inzerce-bazary",
+      title: "Inzerce a bazary",
+      icon: "iu-aff-marketplace",
+      description: "Odkazy na vybrané inzertní portály, bazary, online tržiště a související služby.",
+      items: [
+        affItem("", "inzerce-empty-1"),
+        affItem("", "inzerce-empty-2"),
+        affItem("", "inzerce-empty-3"),
+        affItem("", "inzerce-empty-4"),
+        affItem("", "inzerce-empty-5"),
+        affItem("", "inzerce-empty-6"),
+        affItem("", "inzerce-empty-7"),
+        affItem("", "inzerce-empty-8"),
+      ],
+    },
+    {
+      id: "aff-realitni-kancelare",
+      title: "Realitní kanceláře",
+      icon: "iu-aff-agency",
+      description: "Odkazy na vybrané realitní kanceláře a společnosti poskytující realitní služby.",
+      items: [
+        affItem("", "realitni-kancelare-empty-1"),
+        affItem("", "realitni-kancelare-empty-2"),
+        affItem("", "realitni-kancelare-empty-3"),
+        affItem("", "realitni-kancelare-empty-4"),
+        affItem("", "realitni-kancelare-empty-5"),
+        affItem("", "realitni-kancelare-empty-6"),
+        affItem("", "realitni-kancelare-empty-7"),
+        affItem("", "realitni-kancelare-empty-8"),
+      ],
+    },
+    {
+      id: "aff-reality-nemovitosti",
+      title: "Reality a nemovitosti",
+      icon: "iu-aff-property",
+      description: "Odkazy na vybrané realitní portály a služby související s nabídkou, prodejem a pronájmem nemovitostí.",
+      items: [
+        affItem("", "reality-empty-1"),
+        affItem("", "reality-empty-2"),
+        affItem("", "reality-empty-3"),
+        affItem("", "reality-empty-4"),
+        affItem("", "reality-empty-5"),
+        affItem("", "reality-empty-6"),
+        affItem("", "reality-empty-7"),
+        affItem("", "reality-empty-8"),
+      ],
+    },
+    {
+      id: "aff-kancelarske-potreby",
+      title: "Kancelářské potřeby a vybavení",
+      icon: "iu-aff-office",
+      description: "Odkazy na vybrané obchody a služby zaměřené na kancelářské potřeby a vybavení.",
+      items: [
+        affItem("", "kancelarske-empty-1"),
+        affItem("", "kancelarske-empty-2"),
+        affItem("", "kancelarske-empty-3"),
+        affItem("", "kancelarske-empty-4"),
+        affItem("", "kancelarske-empty-5"),
+        affItem("", "kancelarske-empty-6"),
+        affItem("", "kancelarske-empty-7"),
+        affItem("", "kancelarske-empty-8"),
       ],
     },
   ];
