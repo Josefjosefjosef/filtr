@@ -501,7 +501,12 @@
       if (p) parts[p] = 1;
     });
     parts.noopener = 1;
-    parts.noreferrer = 1;
+    /* Affiliate/sponsored chips: keep Referer for CJ tracking; still force noopener. */
+    if (parts.sponsored) {
+      delete parts.noreferrer;
+    } else {
+      parts.noreferrer = 1;
+    }
     nativeSetAttribute.call(el, "rel", Object.keys(parts).join(" "));
   }
 
