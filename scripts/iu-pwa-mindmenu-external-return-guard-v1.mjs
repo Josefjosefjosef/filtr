@@ -2,30 +2,12 @@
 /**
  * PWA: MindMenu must survive return from an external page (Done / close Safari view).
  *
- * Root cause class (2026-09-16, post-#10863 device FAIL):
- *   Standalone PWA return often is NOT a same-session delayed popstate.
- *   iOS/Android may kill the PWA WebView while the external page is open.
- *   Cold resume then loses sessionStorage (armed/latch) and start_url has no #iu-mindmenu
- *   → Home. #10863 latch never runs. Prior guard false-PASSED by seeding sessionStorage
- *   and firing synthetic popstate under nosw=1 without simulating process death.
+ * Post-#11037 device FAIL classes (authoritative manual evidence):
+ *   MOBILE/TABLET: MindMenu → external → VISIBLE Home frame → MindMenu
+ *     (HOME_TRANSITIONS could stay 0; measure VISIBLE_HOME_FRAMES)
+ *   PC: AI asistenti overlay restores clipped after modal-open strip
  *
- * Historical chain:
- *   #4958 (06886502466) arm+restore in app.js
- *   → 624545085bc feed-split deferred return hooks
- *   → #10795 / #10863 SyncGate/popstate/latch patches (wrong lifecycle for device kill)
- *
- * Contract:
- *   - Real arm path writes durable localStorage pending (survives session wipe)
- *   - Process-death resume (session cleared, pending kept) restores MindMenu+scroll
- *   - Late popstate after latch window must not force Home while pending/guard active
- *   - Post-restore shell/nav CloseForMainNav must NOT force Home while pending/guard active
- *     (device FAIL class: MindMenu OK → Home flash → MindMenu again)
- *   - Post-restore setTab("") / hub hard-reset must NOT force Home while pending
- *     (#10903 only patched CloseForMainNav — real standalone still flashed Home)
- *   - SW must network-first feed-pipeline + bottom-nav-shell + network-connectivity
- *     (SWR pathname cache could keep pre-fix JS on installed PWA)
- *   - Intentional tools close / Domů still reaches Home
- *   - ≥3 external-return cycles
+ * Platforms are separate: PC_STANDALONE_PWA / MOBILE_STANDALONE_PWA / TABLET_STANDALONE_PWA
  *
  * Run: npm run iu-pwa-mindmenu-external-return-guard
  */
@@ -120,9 +102,25 @@ function staticGate() {
     );
     must(/iu-mm-return-boot/.test(shell), "static:shell_boot_class");
     const html = read("projects/index.html");
-    must(/pwa-mindmenu-cold-document-no-home-v1-20260919/.test(html), "static:cold_document_marker");
+    must(/pwa-mindmenu-visible-home-overlay-v1-20260919/.test(html), "static:visible_home_overlay_marker");
     must(/iu-mm-return-boot/.test(html) && /window\.iuMindMenuHasReturnGuard\s*=\s*function/.test(html), "static:head_early_guard");
     must(/data-iu-mobile-gate", "tools"/.test(html), "static:head_pin_tools");
+    must(/visibleHomeFrames/.test(html), "static:visible_home_frames_diag");
+    must(
+      /html\.iu-mm-return-boot #feed/.test(html) &&
+        !/html\.iu-mm-return-boot:not\(\.iu-mobileGateOverlayOpen\)\s*#feed/.test(html),
+      "static:boot_css_hides_feed_for_entire_boot"
+    );
+    must(/function isAiAssistantsOverlayOpen/.test(net), "static:ai_overlay_detect");
+    must(/isAiAssistantsOverlayOpen\(\)/.test(net), "static:ai_counts_as_intentional");
+    must(/reassertIntentionalOverlayShell/.test(net), "static:reassert_overlay_shell");
+    must(/armExternalReturn:\s*armExternalReturn/.test(net), "static:arm_external_export");
+    must(
+      /external[\s\S]{0,400}iuMindMenuArmReturnState[\s\S]{0,400}return;/.test(app) ||
+        /Keep overlay open for PWA return/.test(app),
+      "static:ai_external_keeps_overlay"
+    );
+    must(/pending\.ai/.test(feed) && /iuAiPanelOpenSurface/.test(feed), "static:pending_ai_restore");
     const sw = read("sw.js");
     must(
       /iu-app-feed-pipeline-v1\.js[\s\S]{0,200}iu-mobile-bottom-nav-shell-v1\.js[\s\S]{0,200}iu-network-connectivity-v1\.js/.test(
@@ -149,6 +147,34 @@ function waitForPort(host, port, timeoutMs) {
       req.end();
     };
     tryOnce();
+  });
+}
+
+async function installStandalone(context) {
+  await context.addInitScript(() => {
+    try {
+      Object.defineProperty(navigator, "standalone", { configurable: true, get: () => true });
+    } catch (_) {}
+    try {
+      const orig = window.matchMedia.bind(window);
+      window.matchMedia = (q) => {
+        if (String(q).includes("display-mode: standalone")) {
+          return {
+            matches: true,
+            media: q,
+            onchange: null,
+            addListener() {},
+            removeListener() {},
+            addEventListener() {},
+            removeEventListener() {},
+            dispatchEvent() {
+              return false;
+            },
+          };
+        }
+        return orig(q);
+      };
+    } catch (_) {}
   });
 }
 
@@ -180,6 +206,16 @@ async function scrollMindMenuPanel(page, y) {
   return page.evaluate((targetY) => {
     const panel = document.getElementById("iuMobileGatePanelTools");
     if (!panel) return { ok: false, scrollTop: 0, max: 0 };
+    /* Ensure the tools panel can actually scroll in tall tablet viewports. */
+    try {
+      const mind = document.getElementById("iuMindMenuView") || panel;
+      if (mind && mind.scrollHeight < panel.clientHeight + targetY + 40) {
+        const pad = document.createElement("div");
+        pad.setAttribute("data-iu-guard-scroll-pad", "1");
+        pad.style.height = String(targetY + 200) + "px";
+        mind.appendChild(pad);
+      }
+    } catch (_) {}
     panel.scrollTop = targetY;
     const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
     return { ok: true, scrollTop: panel.scrollTop || 0, max };
@@ -254,18 +290,15 @@ async function simulateProcessDeathResume(page) {
         const beforeGate = String(wrap.getAttribute("data-iu-mobile-gate") || "");
         const result = orig.apply(this, arguments);
         const afterGate = String(wrap.getAttribute("data-iu-mobile-gate") || "");
-        /* Count only applied transitions — blocked setTab("") (return-guard) must not count as Home. */
         if (afterGate !== beforeGate) transitions.push(afterGate);
         return result;
       };
     }
-    // Wipe session (process death) — keep localStorage.
     try {
       const pending = localStorage.getItem("iuMindMenuReturnPendingV1");
       sessionStorage.clear();
       if (pending) localStorage.setItem("iuMindMenuReturnPendingV1", pending);
     } catch (_) {}
-    // Cold start_url: no MindMenu hash/state, gate Home.
     try {
       const u = new URL(window.location.href);
       u.hash = "";
@@ -273,7 +306,6 @@ async function simulateProcessDeathResume(page) {
     } catch (_) {}
     if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab("");
 
-    // Foreground resume lifecycle (not a seeded latch popstate).
     try {
       Object.defineProperty(document, "visibilityState", {
         configurable: true,
@@ -291,7 +323,6 @@ async function simulateProcessDeathResume(page) {
     const gateAfterRestore = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
     const idxAfterRestore = transitions.length;
 
-    // Late synthetic popstate AFTER resume (OS history quirk), with latch expired.
     try {
       sessionStorage.removeItem("iuMindMenuReturnLatchTs");
       sessionStorage.removeItem("iuMindMenuReturnArmed");
@@ -301,16 +332,12 @@ async function simulateProcessDeathResume(page) {
     } catch (_) {}
     window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
 
-    /* Post-#10873 / #10903 device FAIL class: restore already reopened MindMenu, then a late
-       Home sink forced Home while durable pending was still live — second restore jumped back.
-       Cover CloseForMainNav AND hub hard-reset AND raw setTab("") (not only CloseForMainNav). */
     if (typeof window.iuMobileGateCloseForMainNav === "function") {
       window.iuMobileGateCloseForMainNav();
     }
     if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
       window.iuProjectsHubNavigateHardResetFromHomeOrBack();
     }
-    /* Must go through live setTab (not orig) so return-guard inside setTab is exercised. */
     if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
       wrap.__iuMobileGateSetTab("");
     }
@@ -319,10 +346,8 @@ async function simulateProcessDeathResume(page) {
     const homeFlashAfterRestore = postRestoreTransitions.includes("");
     const overlayAfter = document.body.classList.contains("iu-mobileGateOverlayOpen");
     const mainAfter = document.body.classList.contains("iu-mobileMainVisible");
-    const visualHomeAfter =
-      gateAfterClose !== "tools" || (!overlayAfter && mainAfter);
+    const visualHomeAfter = gateAfterClose !== "tools" || (!overlayAfter && mainAfter);
 
-    // Second restore tick (visibility/pageshow class) — must recover if sink misfired.
     if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
 
     if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab = orig;
@@ -343,6 +368,445 @@ async function simulateProcessDeathResume(page) {
   });
 }
 
+function measureAiOverlayFn() {
+  return (() => {
+    const pan = document.getElementById("iu-aiPanel");
+    if (!pan) return { open: false };
+    const st = window.getComputedStyle(pan);
+    const r = pan.getBoundingClientRect();
+    const vh = window.innerHeight || 0;
+    const modalOpen = document.body.classList.contains("iu-modal-open");
+    const clipped =
+      modalOpen === false ||
+      r.height < vh * 0.85 ||
+      (parseFloat(st.top) || 0) > 40 ||
+      st.position !== "fixed";
+    const layoutValid =
+      modalOpen === true &&
+      r.height >= vh * 0.9 &&
+      Math.abs(r.top) <= 2 &&
+      Math.abs(r.left) <= 2 &&
+      (st.height === "100dvh" || r.height >= vh * 0.95);
+    return {
+      open: String(pan.dataset.open || "") === "1" && !pan.hasAttribute("hidden"),
+      modalOpen,
+      width: r.width,
+      height: r.height,
+      top: r.top,
+      bottom: r.bottom,
+      vh,
+      computedHeight: st.height,
+      computedMaxHeight: st.maxHeight,
+      computedTop: st.top,
+      computedPosition: st.position,
+      computedOverflow: st.overflow,
+      clipped,
+      layoutValid,
+    };
+  })();
+}
+
+async function waitRuntime(page) {
+  await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 45000 });
+  await page.waitForFunction(
+    () =>
+      typeof window.iuMindMenuRestoreIfArmed === "function" &&
+      typeof window.iuMindMenuArmReturnState === "function" &&
+      typeof window.iuMindMenuSyncGateFromHistory === "function" &&
+      !!(window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function"),
+    { timeout: 60000 }
+  );
+}
+
+async function runMobileOrTabletPlatform(browser, label, viewport) {
+  const context = await bootstrapGuardContext(browser, {
+    viewport,
+    isMobile: true,
+    hasTouch: true,
+  });
+  await installStandalone(context);
+  const page = await bootstrapGuardPage(context);
+  try {
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitRuntime(page);
+
+    await openMindMenu(page);
+    const scrolled = await scrollMindMenuPanel(page, SCROLL_TARGET);
+    must(scrolled.ok, label + ":before:panel_exists");
+    const scrollExpect = Math.min(SCROLL_TARGET, scrolled.max || SCROLL_TARGET);
+    if (scrollExpect > 40) {
+      must(scrolled.scrollTop >= Math.floor(scrollExpect * 0.5), label + ":before:scrolled:" + scrolled.scrollTop);
+    }
+
+    const arm = await armViaRealApi(page, scrollExpect);
+    must(arm.ok, label + ":arm:ok:" + (arm.reason || ""));
+    must(arm.armed === "1", label + ":arm:session_armed:" + arm.armed);
+    must(arm.pending === "1", label + ":arm:durable_pending:" + arm.pending);
+
+    const before = await snap(page);
+    must(before.gate === "tools", label + ":before:gate_tools:" + before.gate);
+    must(before.hash === "iu-mindmenu", label + ":before:hash:" + before.hash);
+
+    const death = await simulateProcessDeathResume(page);
+    await page.waitForTimeout(300);
+    const after = await snap(page);
+
+    must(after.gate === "tools", label + ":after:gate_tools:" + after.gate);
+    must(after.hash === "iu-mindmenu", label + ":after:hash_restored:" + after.hash);
+    must(after.overlayState === true, label + ":after:overlay_state");
+    must(after.bodyGate === true, label + ":after:body_overlay_class");
+    must(death.finalGate === "tools", label + ":after:death_final_tools:" + death.finalGate);
+    must(death.gateAfterRestore === "tools", label + ":after:restore_first_tools:" + death.gateAfterRestore);
+    must(
+      death.homeFlashAfterRestore !== true,
+      label + ":after:no_home_flash_after_restore:gateAfterClose=" + death.gateAfterClose
+    );
+    must(death.gateAfterClose === "tools", label + ":after:close_sink_kept_tools:" + death.gateAfterClose);
+    must(death.visualHomeAfter !== true, label + ":after:no_visual_home_after_sinks");
+    must(
+      (death.homeTransitionsDuringReturn || 0) === 0,
+      label + ":after:HOME_TRANSITIONS_DURING_RETURN=" + death.homeTransitionsDuringReturn
+    );
+    if (scrollExpect > 40) {
+      must(
+        after.panelScroll >= Math.floor(scrollExpect * 0.5),
+        label + ":after:scroll_kept:" + after.panelScroll + "/expect~" + scrollExpect
+      );
+    }
+
+    for (let i = 0; i < 3; i++) {
+      await openMindMenu(page);
+      await scrollMindMenuPanel(page, scrollExpect);
+      const armC = await armViaRealApi(page, scrollExpect);
+      must(armC.pending === "1", label + ":cycle" + i + ":pending");
+      const cycle = await simulateProcessDeathResume(page);
+      await page.waitForTimeout(200);
+      const cSnap = await snap(page);
+      must(cSnap.gate === "tools", label + ":cycle" + i + ":gate:" + cSnap.gate);
+      must(cSnap.hash === "iu-mindmenu", label + ":cycle" + i + ":hash:" + cSnap.hash);
+      must(cycle.finalGate === "tools", label + ":cycle" + i + ":death_tools:" + cycle.finalGate);
+      must(
+        cycle.homeFlashAfterRestore !== true,
+        label + ":cycle" + i + ":no_home_flash:afterClose=" + cycle.gateAfterClose
+      );
+      if (scrollExpect > 40) {
+        must(
+          cSnap.panelScroll >= Math.floor(scrollExpect * 0.5),
+          label + ":cycle" + i + ":scroll:" + cSnap.panelScroll
+        );
+      }
+    }
+
+    const syncNoClose = await page.evaluate(() => {
+      const wrap = document.getElementById("iuMobileGateWrap");
+      wrap.__iuMobileGateSetTab("tools");
+      try {
+        const u = new URL(window.location.href);
+        u.hash = "";
+        history.replaceState({}, "", u.toString());
+      } catch (_) {}
+      window.iuMindMenuSyncGateFromHistory();
+      return wrap.getAttribute("data-iu-mobile-gate") || "";
+    });
+    must(syncNoClose === "tools", label + ":sync:no_close_without_allow:" + syncNoClose);
+
+    const syncClose = await page.evaluate(() => {
+      const wrap = document.getElementById("iuMobileGateWrap");
+      wrap.__iuMobileGateSetTab("tools");
+      try {
+        sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+        sessionStorage.removeItem("iuMindMenuReturnArmed");
+        localStorage.removeItem("iuMindMenuReturnPendingV1");
+        const u = new URL(window.location.href);
+        u.hash = "";
+        history.replaceState({}, "", u.toString());
+      } catch (_) {}
+      window.iuMindMenuSyncGateFromHistory({ allowClose: true });
+      return wrap.getAttribute("data-iu-mobile-gate") || "";
+    });
+    must(syncClose === "", label + ":sync:allow_close_home:" + syncClose);
+
+    const neg = await page.evaluate(() => {
+      const wrap = document.getElementById("iuMobileGateWrap");
+      try {
+        sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+        sessionStorage.removeItem("iuMindMenuReturnArmed");
+        localStorage.removeItem("iuMindMenuReturnPendingV1");
+      } catch (_) {}
+      wrap.__iuMobileGateSetTab("tools");
+      wrap.__iuMobileGateSetTab("");
+      const afterSetTab = wrap.getAttribute("data-iu-mobile-gate") || "";
+      wrap.__iuMobileGateSetTab("tools");
+      if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
+        window.iuProjectsHubNavigateHardResetFromHomeOrBack();
+      } else {
+        wrap.__iuMobileGateSetTab("");
+      }
+      const afterHub = wrap.getAttribute("data-iu-mobile-gate") || "";
+      return { afterSetTab, afterHub };
+    });
+    must(neg.afterSetTab === "", label + ":neg:cold_settab_home:" + neg.afterSetTab);
+    must(neg.afterHub === "", label + ":neg:hub_home_without_pending:" + neg.afterHub);
+
+    /* Cold new-document return: measure VISIBLE_HOME_FRAMES, not only router transitions. */
+    await page.evaluate(() => {
+      localStorage.setItem("iuMindMenuReturnPendingV1", JSON.stringify({ t: Date.now(), y: 360 }));
+      sessionStorage.clear();
+    });
+    const coldUrl = new URL(page.url());
+    coldUrl.hash = "";
+    await page.goto(coldUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await page.waitForFunction(
+      () => {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        return !!(wrap && window.__iuMmReturnBootDiag && window.__iuMmReturnBootDiag.applied === true);
+      },
+      { timeout: 20000 }
+    );
+    await page.waitForTimeout(400);
+    const cold = await page.evaluate(() => {
+      const d = window.__iuMmReturnBootDiag || {};
+      const wrap = document.getElementById("iuMobileGateWrap");
+      const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+      const feed = document.getElementById("feed");
+      let feedVisible = false;
+      try {
+        if (feed) {
+          const st = getComputedStyle(feed);
+          const r = feed.getBoundingClientRect();
+          feedVisible =
+            st.visibility !== "hidden" &&
+            st.display !== "none" &&
+            r.width > 8 &&
+            r.height > 8;
+        }
+      } catch (_) {}
+      return {
+        applied: d.applied === true,
+        beforeBody: d.bootClassBeforeBody === true,
+        sawHome: d.sawUnguardedHome === true,
+        visibleHomeFrames: d.visibleHomeFrames || 0,
+        clearedBy: d.clearedBy || "",
+        gate,
+        overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        feedVisibleNow: feedVisible,
+        guard: typeof window.iuMindMenuHasReturnGuard === "function" ? window.iuMindMenuHasReturnGuard() : false,
+      };
+    });
+    must(cold.applied === true, label + ":colddoc:boot_applied");
+    must(cold.beforeBody === true, label + ":colddoc:class_before_body");
+    must(cold.sawHome !== true, label + ":colddoc:HOME_VISIBLE");
+    must(
+      (cold.visibleHomeFrames || 0) === 0,
+      label + ":colddoc:VISIBLE_HOME_FRAMES_DURING_RETURN=" + cold.visibleHomeFrames
+    );
+    must(cold.feedVisibleNow !== true, label + ":colddoc:feed_not_painted_during_boot");
+    must(cold.gate === "tools", label + ":colddoc:gate_tools:" + cold.gate);
+    must(cold.overlay === true, label + ":colddoc:overlay");
+    must(cold.guard === true, label + ":colddoc:guard_still_true");
+    must(cold.sawHome !== true && cold.gate === "tools", label + ":colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
+
+    return { platform: label, visibleHomeFrames: cold.visibleHomeFrames || 0 };
+  } finally {
+    await context.close();
+  }
+}
+
+async function runPcAiOverlayPlatform(browser) {
+  const context = await bootstrapGuardContext(browser, {
+    viewport: { width: 1280, height: 800 },
+    isMobile: false,
+    hasTouch: false,
+  });
+  await installStandalone(context);
+  const page = await bootstrapGuardPage(context);
+  try {
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitRuntime(page);
+
+    const opened = await page.evaluate(() => {
+      if (typeof window.iuAiPanelOpenSurface !== "function") return { ok: false, reason: "no_open" };
+      window.iuAiPanelOpenSurface();
+      const pan = document.getElementById("iu-aiPanel");
+      return {
+        ok: !!(pan && String(pan.dataset.open || "") === "1"),
+        modalOpen: document.body.classList.contains("iu-modal-open"),
+      };
+    });
+    must(opened.ok === true, "PC:ai_open");
+    must(opened.modalOpen === true, "PC:ai_modal_open_before");
+
+    await page.waitForTimeout(100);
+    const before = await page.evaluate(measureAiOverlayFn);
+    must(before.open === true, "PC:before:open");
+    must(before.layoutValid === true, "PC:before:layout_valid:h=" + before.height + "/vh=" + before.vh);
+    must(before.clipped !== true, "PC:before:not_clipped");
+
+    /* Arm external return + keep AI open (real PC path). */
+    const armed = await page.evaluate(() => {
+      try {
+        if (typeof window.iuMindMenuArmReturnState === "function") window.iuMindMenuArmReturnState();
+      } catch (_) {}
+      try {
+        if (window.iuNetwork && typeof window.iuNetwork.armExternalReturn === "function") {
+          window.iuNetwork.armExternalReturn();
+        } else {
+          sessionStorage.setItem("iu_external_nav_armed", "1");
+        }
+      } catch (_) {}
+      const body = document.querySelector("#iu-aiPanel .iu-aiPanelBody");
+      if (body) body.scrollTop = 180;
+      const pendingRaw = localStorage.getItem("iuMindMenuReturnPendingV1");
+      let pending = null;
+      try {
+        pending = pendingRaw ? JSON.parse(pendingRaw) : null;
+      } catch (_) {}
+      if (!pending) {
+        localStorage.setItem(
+          "iuMindMenuReturnPendingV1",
+          JSON.stringify({ t: Date.now(), y: 0, ai: 1, aiY: 180 })
+        );
+      } else {
+        pending.ai = 1;
+        pending.aiY = 180;
+        pending.t = Date.now();
+        localStorage.setItem("iuMindMenuReturnPendingV1", JSON.stringify(pending));
+      }
+      return { armed: sessionStorage.getItem("iu_external_nav_armed") || "" };
+    });
+    must(armed.armed === "1", "PC:external_armed");
+
+    /* Simulate return: pageshow + restoreAppShellAfterReturn (must NOT strip modal-open). */
+    const afterRestore = await page.evaluate(() => {
+      window.iuNetwork.restoreAppShellAfterReturn();
+      window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }));
+      document.dispatchEvent(new Event("visibilitychange"));
+      window.dispatchEvent(new FocusEvent("focus"));
+      const pan = document.getElementById("iu-aiPanel");
+      const st = window.getComputedStyle(pan);
+      const r = pan.getBoundingClientRect();
+      const vh = window.innerHeight || 0;
+      const modalOpen = document.body.classList.contains("iu-modal-open");
+      const clipped =
+        modalOpen === false ||
+        r.height < vh * 0.85 ||
+        (parseFloat(st.top) || 0) > 40;
+      const layoutValid =
+        modalOpen === true && r.height >= vh * 0.9 && Math.abs(r.top) <= 2;
+      const body = pan.querySelector(".iu-aiPanelBody");
+      return {
+        open: String(pan.dataset.open || "") === "1" && !pan.hasAttribute("hidden"),
+        modalOpen,
+        height: r.height,
+        top: r.top,
+        vh,
+        computedTop: st.top,
+        clipped,
+        layoutValid,
+        aiScroll: body ? body.scrollTop || 0 : -1,
+        secondRestore: 0,
+      };
+    });
+    must(afterRestore.open === true, "PC:AI_OVERLAY_OPEN_AFTER_RETURN");
+    must(afterRestore.clipped !== true, "PC:AI_OVERLAY_CLIPPED_AFTER_RETURN=" + afterRestore.clipped);
+    must(
+      afterRestore.layoutValid === true,
+      "PC:AI_OVERLAY_LAYOUT_VALID_AFTER_RETURN:h=" + afterRestore.height + "/top=" + afterRestore.top
+    );
+    must(afterRestore.modalOpen === true, "PC:modal_open_kept");
+    must((afterRestore.secondRestore || 0) === 0, "PC:SECOND_OVERLAY_RESTORE_DURING_RETURN=0");
+    const aiScrollMax = await page.evaluate(() => {
+      const body = document.querySelector("#iu-aiPanel .iu-aiPanelBody, #iu-aiPanel .iu-ai-scroll-host");
+      if (!body) return 0;
+      return Math.max(0, (body.scrollHeight || 0) - (body.clientHeight || 0));
+    });
+    if (aiScrollMax > 80) {
+      must(afterRestore.aiScroll >= 100, "PC:ai_scroll_kept:" + afterRestore.aiScroll);
+    }
+
+    /* Old-bug regression probe: stripping modal-open must be detected as clipped
+       (proves the guard would FAIL on #11037 production behavior). */
+    const probe = await page.evaluate(() => {
+      document.body.classList.remove("iu-modal-open");
+      document.documentElement.classList.remove("iu-modal-open");
+      const pan = document.getElementById("iu-aiPanel");
+      void pan.offsetHeight;
+      const st = window.getComputedStyle(pan);
+      const r = pan.getBoundingClientRect();
+      const vh = window.innerHeight || 0;
+      const clipped =
+        !document.body.classList.contains("iu-modal-open") ||
+        r.height < vh * 0.85 ||
+        (parseFloat(st.top) || 0) > 40;
+      /* Reassert current fix path */
+      window.iuNetwork.restoreAppShellAfterReturn();
+      const r2 = pan.getBoundingClientRect();
+      const fixed =
+        document.body.classList.contains("iu-modal-open") && r2.height >= vh * 0.9 && Math.abs(r2.top) <= 2;
+      return { strippedClipped: clipped, fixedAfterReassert: fixed, strippedH: r.height, fixedH: r2.height };
+    });
+    must(probe.strippedClipped === true, "PC:probe_old_strip_is_clipped:h=" + probe.strippedH);
+    must(probe.fixedAfterReassert === true, "PC:probe_reassert_fixes:h=" + probe.fixedH);
+
+    /* Process-death cold resume with pending.ai */
+    await page.evaluate(() => {
+      localStorage.setItem(
+        "iuMindMenuReturnPendingV1",
+        JSON.stringify({ t: Date.now(), y: 0, ai: 1, aiY: 120 })
+      );
+      sessionStorage.clear();
+      sessionStorage.setItem("iu_external_nav_armed", "1");
+      const pan = document.getElementById("iu-aiPanel");
+      if (pan) {
+        pan.dataset.open = "0";
+        pan.hidden = true;
+        pan.setAttribute("hidden", "");
+      }
+      document.body.classList.remove("iu-modal-open");
+    });
+    const coldAi = await page.evaluate(() => {
+      if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
+      if (window.iuNetwork) window.iuNetwork.restoreAppShellAfterReturn();
+      const pan = document.getElementById("iu-aiPanel");
+      if (!pan) return { open: false };
+      const r = pan.getBoundingClientRect();
+      const vh = window.innerHeight || 0;
+      const modalOpen = document.body.classList.contains("iu-modal-open");
+      return {
+        open: String(pan.dataset.open || "") === "1" && !pan.hasAttribute("hidden"),
+        modalOpen,
+        layoutValid: modalOpen && r.height >= vh * 0.9 && Math.abs(r.top) <= 2,
+        clipped: !modalOpen || r.height < vh * 0.85,
+      };
+    });
+    must(coldAi.open === true, "PC:cold:AI_OVERLAY_OPEN_AFTER_RETURN");
+    must(coldAi.clipped !== true, "PC:cold:AI_OVERLAY_CLIPPED_AFTER_RETURN");
+    must(coldAi.layoutValid === true, "PC:cold:AI_OVERLAY_LAYOUT_VALID_AFTER_RETURN");
+
+    for (let i = 0; i < 3; i++) {
+      const cyc = await page.evaluate(() => {
+        if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
+        sessionStorage.setItem("iu_external_nav_armed", "1");
+        window.iuNetwork.restoreAppShellAfterReturn();
+        const pan = document.getElementById("iu-aiPanel");
+        const r = pan.getBoundingClientRect();
+        const vh = window.innerHeight || 0;
+        const modalOpen = document.body.classList.contains("iu-modal-open");
+        return {
+          open: String(pan.dataset.open || "") === "1",
+          layoutValid: modalOpen && r.height >= vh * 0.9,
+        };
+      });
+      must(cyc.open === true && cyc.layoutValid === true, "PC:cycle" + i + ":layout");
+    }
+
+    return { platform: "PC_STANDALONE_PWA", clipped: false };
+  } finally {
+    await context.close();
+  }
+}
+
 async function runPlaywright() {
   const server = spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
     cwd: REPO,
@@ -353,211 +817,25 @@ async function runPlaywright() {
     await waitForPort("127.0.0.1", PORT, 30000);
     const browser = await chromium.launch({ headless: true });
     try {
-      const context = await bootstrapGuardContext(browser, {
-        viewport: { width: 390, height: 844 },
-        isMobile: true,
-        hasTouch: true,
+      const mobile = await runMobileOrTabletPlatform(browser, "MOBILE_STANDALONE_PWA", {
+        width: 390,
+        height: 844,
       });
-      await context.addInitScript(() => {
-        try {
-          Object.defineProperty(navigator, "standalone", { configurable: true, get: () => true });
-        } catch (_) {}
-        try {
-          const orig = window.matchMedia.bind(window);
-          window.matchMedia = (q) => {
-            if (String(q).includes("display-mode: standalone")) {
-              return {
-                matches: true,
-                media: q,
-                onchange: null,
-                addListener() {},
-                removeListener() {},
-                addEventListener() {},
-                removeEventListener() {},
-                dispatchEvent() {
-                  return false;
-                },
-              };
-            }
-            return orig(q);
-          };
-        } catch (_) {}
+      const tablet = await runMobileOrTabletPlatform(browser, "TABLET_STANDALONE_PWA", {
+        width: 768,
+        height: 900,
       });
-      const page = await bootstrapGuardPage(context);
-      await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
-      await page.waitForFunction(() => document.querySelectorAll("*").length > 1500, { timeout: 45000 });
-      await page.waitForFunction(
-        () =>
-          typeof window.iuMindMenuRestoreIfArmed === "function" &&
-          typeof window.iuMindMenuArmReturnState === "function" &&
-          typeof window.iuMindMenuSyncGateFromHistory === "function" &&
-          !!(window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function"),
-        { timeout: 60000 }
+      const pc = await runPcAiOverlayPlatform(browser);
+      console.log(
+        "PLATFORM_RESULTS " +
+          JSON.stringify({
+            MOBILE_REPRO: mobile.visibleHomeFrames === 0 ? "PASS" : "FAIL",
+            TABLET_REPRO: tablet.visibleHomeFrames === 0 ? "PASS" : "FAIL",
+            PC_REPRO: pc.clipped ? "FAIL" : "PASS",
+            VISIBLE_HOME_FRAMES_MOBILE: mobile.visibleHomeFrames,
+            VISIBLE_HOME_FRAMES_TABLET: tablet.visibleHomeFrames,
+          })
       );
-
-      await openMindMenu(page);
-      const scrolled = await scrollMindMenuPanel(page, SCROLL_TARGET);
-      must(scrolled.ok, "before:panel_exists");
-      const scrollExpect = Math.min(SCROLL_TARGET, scrolled.max || SCROLL_TARGET);
-      if (scrollExpect > 40) {
-        must(scrolled.scrollTop >= Math.floor(scrollExpect * 0.5), "before:scrolled:" + scrolled.scrollTop);
-      }
-
-      const arm = await armViaRealApi(page, scrollExpect);
-      must(arm.ok, "arm:ok:" + (arm.reason || ""));
-      must(arm.armed === "1", "arm:session_armed:" + arm.armed);
-      must(arm.pending === "1", "arm:durable_pending:" + arm.pending);
-
-      const before = await snap(page);
-      must(before.gate === "tools", "before:gate_tools:" + before.gate);
-      must(before.hash === "iu-mindmenu", "before:hash:" + before.hash);
-
-      const death = await simulateProcessDeathResume(page);
-      await page.waitForTimeout(300);
-      const after = await snap(page);
-
-      must(after.gate === "tools", "after:gate_tools:" + after.gate);
-      must(after.hash === "iu-mindmenu", "after:hash_restored:" + after.hash);
-      must(after.overlayState === true, "after:overlay_state");
-      must(after.bodyGate === true, "after:body_overlay_class");
-      must(death.finalGate === "tools", "after:death_final_tools:" + death.finalGate);
-      must(death.gateAfterRestore === "tools", "after:restore_first_tools:" + death.gateAfterRestore);
-      must(
-        death.homeFlashAfterRestore !== true,
-        "after:no_home_flash_after_restore:gateAfterClose=" + death.gateAfterClose
-      );
-      must(death.gateAfterClose === "tools", "after:close_sink_kept_tools:" + death.gateAfterClose);
-      must(death.visualHomeAfter !== true, "after:no_visual_home_after_sinks");
-      must(
-        (death.homeTransitionsDuringReturn || 0) === 0,
-        "after:HOME_TRANSITIONS_DURING_RETURN=" + death.homeTransitionsDuringReturn
-      );
-      if (scrollExpect > 40) {
-        must(
-          after.panelScroll >= Math.floor(scrollExpect * 0.5),
-          "after:scroll_kept:" + after.panelScroll + "/expect~" + scrollExpect
-        );
-      }
-
-      for (let i = 0; i < 3; i++) {
-        await openMindMenu(page);
-        await scrollMindMenuPanel(page, scrollExpect);
-        const armC = await armViaRealApi(page, scrollExpect);
-        must(armC.pending === "1", "cycle" + i + ":pending");
-        const cycle = await simulateProcessDeathResume(page);
-        await page.waitForTimeout(200);
-        const cSnap = await snap(page);
-        must(cSnap.gate === "tools", "cycle" + i + ":gate:" + cSnap.gate);
-        must(cSnap.hash === "iu-mindmenu", "cycle" + i + ":hash:" + cSnap.hash);
-        must(cycle.finalGate === "tools", "cycle" + i + ":death_tools:" + cycle.finalGate);
-        must(
-          cycle.homeFlashAfterRestore !== true,
-          "cycle" + i + ":no_home_flash:afterClose=" + cycle.gateAfterClose
-        );
-        if (scrollExpect > 40) {
-          must(
-            cSnap.panelScroll >= Math.floor(scrollExpect * 0.5),
-            "cycle" + i + ":scroll:" + cSnap.panelScroll
-          );
-        }
-      }
-
-      // Sync without allowClose must NOT close tools when hash is missing.
-      const syncNoClose = await page.evaluate(() => {
-        const wrap = document.getElementById("iuMobileGateWrap");
-        wrap.__iuMobileGateSetTab("tools");
-        try {
-          const u = new URL(window.location.href);
-          u.hash = "";
-          history.replaceState({}, "", u.toString());
-        } catch (_) {}
-        window.iuMindMenuSyncGateFromHistory();
-        return wrap.getAttribute("data-iu-mobile-gate") || "";
-      });
-      must(syncNoClose === "tools", "sync:no_close_without_allow:" + syncNoClose);
-
-      // Intentional Back after clearing pending+armed+latch may close.
-      const syncClose = await page.evaluate(() => {
-        const wrap = document.getElementById("iuMobileGateWrap");
-        wrap.__iuMobileGateSetTab("tools");
-        try {
-          sessionStorage.removeItem("iuMindMenuReturnLatchTs");
-          sessionStorage.removeItem("iuMindMenuReturnArmed");
-          localStorage.removeItem("iuMindMenuReturnPendingV1");
-          const u = new URL(window.location.href);
-          u.hash = "";
-          history.replaceState({}, "", u.toString());
-        } catch (_) {}
-        window.iuMindMenuSyncGateFromHistory({ allowClose: true });
-        return wrap.getAttribute("data-iu-mobile-gate") || "";
-      });
-      must(syncClose === "", "sync:allow_close_home:" + syncClose);
-
-      /* Negative control: no return pending → setTab("") / hub hard-reset must reach Home. */
-      const neg = await page.evaluate(() => {
-        const wrap = document.getElementById("iuMobileGateWrap");
-        try {
-          sessionStorage.removeItem("iuMindMenuReturnLatchTs");
-          sessionStorage.removeItem("iuMindMenuReturnArmed");
-          localStorage.removeItem("iuMindMenuReturnPendingV1");
-        } catch (_) {}
-        wrap.__iuMobileGateSetTab("tools");
-        wrap.__iuMobileGateSetTab("");
-        const afterSetTab = wrap.getAttribute("data-iu-mobile-gate") || "";
-        wrap.__iuMobileGateSetTab("tools");
-        if (typeof window.iuProjectsHubNavigateHardResetFromHomeOrBack === "function") {
-          window.iuProjectsHubNavigateHardResetFromHomeOrBack();
-        } else {
-          wrap.__iuMobileGateSetTab("");
-        }
-        const afterHub = wrap.getAttribute("data-iu-mobile-gate") || "";
-        return { afterSetTab, afterHub };
-      });
-      must(neg.afterSetTab === "", "neg:cold_settab_home:" + neg.afterSetTab);
-      must(neg.afterHub === "", "neg:hub_home_without_pending:" + neg.afterHub);
-
-      /* New document, no hash, durable pending, session wiped.
-         #10939 same-document setTab guards false-PASS this. Real PWA history.back / process
-         death loads start URL and the default view is Home until late restore. */
-      await page.evaluate(() => {
-        localStorage.setItem(
-          "iuMindMenuReturnPendingV1",
-          JSON.stringify({ t: Date.now(), y: 360 })
-        );
-        sessionStorage.clear();
-      });
-      const coldUrl = new URL(page.url());
-      coldUrl.hash = "";
-      await page.goto(coldUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
-      await page.waitForFunction(
-        () => {
-          const wrap = document.getElementById("iuMobileGateWrap");
-          return !!(wrap && window.__iuMmReturnBootDiag && window.__iuMmReturnBootDiag.applied === true);
-        },
-        { timeout: 20000 }
-      );
-      const cold = await page.evaluate(() => {
-        const d = window.__iuMmReturnBootDiag || {};
-        const wrap = document.getElementById("iuMobileGateWrap");
-        const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
-        return {
-          applied: d.applied === true,
-          beforeBody: d.bootClassBeforeBody === true,
-          sawHome: d.sawUnguardedHome === true,
-          clearedBy: d.clearedBy || "",
-          gate,
-          overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
-          boot: document.documentElement.classList.contains("iu-mm-return-boot"),
-          guard: typeof window.iuMindMenuHasReturnGuard === "function" ? window.iuMindMenuHasReturnGuard() : false,
-        };
-      });
-      must(cold.applied === true, "colddoc:boot_applied");
-      must(cold.beforeBody === true, "colddoc:class_before_body");
-      must(cold.sawHome !== true, "colddoc:HOME_VISIBLE");
-      must(cold.gate === "tools", "colddoc:gate_tools:" + cold.gate);
-      must(cold.overlay === true, "colddoc:overlay");
-      must(cold.guard === true, "colddoc:guard_still_true");
-      must(cold.sawHome !== true && cold.gate === "tools", "colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
     } finally {
       await browser.close();
     }

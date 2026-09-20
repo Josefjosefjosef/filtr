@@ -4376,10 +4376,29 @@ try {
       if (e.key === 'Escape') closePanel();
     });
 
-    // 7) Klik na "Otevřít" zavře
+    // 7) Klik na "Otevřít" — external _blank: Keep overlay open for PWA return
+    //    (closing + restore used to leave a clipped shell after iu-modal-open strip).
+    //    Same-document / non-external links still close.
     aiPanel.addEventListener('click', e => {
       const a = e.target.closest('a');
-      if (a) closePanel();
+      if (!a) return;
+      const href = String(a.getAttribute("href") || "").trim();
+      const tgt = String(a.getAttribute("target") || "").toLowerCase();
+      const external =
+        /^https?:\/\//i.test(href) &&
+        (tgt === "_blank" || tgt === "_blank noopener" || /noopener/i.test(String(a.rel || "")));
+      if (external || (tgt === "_blank" && /^https?:\/\//i.test(href))) {
+        try {
+          if (typeof window.iuMindMenuArmReturnState === "function") window.iuMindMenuArmReturnState();
+        } catch (_) {}
+        try {
+          if (window.iuNetwork && typeof window.iuNetwork.armExternalReturn === "function") {
+            window.iuNetwork.armExternalReturn();
+          }
+        } catch (_) {}
+        return;
+      }
+      closePanel();
     });
 
     // init (guard lives later in bundle — use window)

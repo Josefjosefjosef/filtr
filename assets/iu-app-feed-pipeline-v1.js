@@ -26131,12 +26131,27 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
   }
 
+  function iuMindMenuCaptureAiOverlayState() {
+    try {
+      var pan = document.getElementById("iu-aiPanel");
+      if (!pan) return { ai: 0, aiY: 0 };
+      if (pan.hasAttribute("hidden")) return { ai: 0, aiY: 0 };
+      if (String(pan.dataset.open || "") !== "1") return { ai: 0, aiY: 0 };
+      var body = pan.querySelector(".iu-aiPanelBody");
+      var aiY = body && Number.isFinite(body.scrollTop) ? body.scrollTop || 0 : 0;
+      return { ai: 1, aiY: aiY };
+    } catch (_) {
+      return { ai: 0, aiY: 0 };
+    }
+  }
+
   function iuMindMenuWriteReturnPending(scrollY) {
     try {
       var y = Number.isFinite(scrollY) && scrollY >= 0 ? scrollY : iuMindMenuCapturePanelScrollY();
+      var aiSt = iuMindMenuCaptureAiOverlayState();
       localStorage.setItem(
         IU_MINDMENU_RETURN_PENDING_KEY,
-        JSON.stringify({ t: Date.now(), y: y })
+        JSON.stringify({ t: Date.now(), y: y, ai: aiSt.ai, aiY: aiSt.aiY })
       );
     } catch (_) {}
   }
@@ -26156,7 +26171,13 @@ function buildVideoAsArticleCard(it) {
         return null;
       }
       var y = Number(obj.y);
-      return { t: ts, y: Number.isFinite(y) && y >= 0 ? y : 0 };
+      var aiY = Number(obj.aiY);
+      return {
+        t: ts,
+        y: Number.isFinite(y) && y >= 0 ? y : 0,
+        ai: obj.ai ? 1 : 0,
+        aiY: Number.isFinite(aiY) && aiY >= 0 ? aiY : 0,
+      };
     } catch (_) {
       try {
         localStorage.removeItem(IU_MINDMENU_RETURN_PENDING_KEY);
@@ -26223,6 +26244,10 @@ function buildVideoAsArticleCard(it) {
 
   function iuMindMenuIsExternalOpenContext() {
     if (iuMindMenuIsMobileGateOpen()) return true;
+    try {
+      var pan = document.getElementById("iu-aiPanel");
+      if (pan && String(pan.dataset.open || "") === "1" && !pan.hasAttribute("hidden")) return true;
+    } catch (_) {}
     try {
       if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
         var root = document.getElementById("iuMobileFocus");
@@ -26411,12 +26436,29 @@ function buildVideoAsArticleCard(it) {
     iuMindMenuEnsureHistoryEntry();
     iuMindMenuTouchReturnLatch();
     iuMindMenuWriteReturnPending(scrollY);
+    try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
     try {
       if (Number.isFinite(scrollY) && scrollY >= 0) {
         iuMindMenuApplyPanelScrollY(scrollY);
       }
     } catch (_) {}
-    try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
+    /* PC/desktop AI asistenti: reopen from durable pending after process-death return.
+       Do not use a second timed restore — open once against the current viewport. */
+    try {
+      if (pending && pending.ai) {
+        if (typeof window.iuAiPanelOpenSurface === "function") window.iuAiPanelOpenSurface();
+        var aiBody = document.querySelector("#iu-aiPanel .iu-aiPanelBody");
+        if (aiBody && Number.isFinite(pending.aiY) && pending.aiY >= 0) {
+          aiBody.scrollTop = pending.aiY;
+        }
+        try {
+          if (typeof window.ensureAiModalInBody === "function") window.ensureAiModalInBody();
+        } catch (_ens) {}
+        try {
+          document.body.classList.add("iu-modal-open");
+        } catch (_mo) {}
+      }
+    } catch (_aiRest) {}
   }
 
   /**
