@@ -22752,6 +22752,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   --iuAff-aff-sperky-hodinky:#F59E0B;
   --iuAff-aff-tv-streamovani:#6366F1;
   --iuAff-aff-dilna-naradi:#78716C;
+  --iuAff-aff-inzerce-bazary:#EA580C;
+  --iuAff-aff-realitni-kancelare:#0EA5E9;
+  --iuAff-aff-reality-nemovitosti:#16A34A;
+  --iuAff-aff-kancelarske-potreby:#64748B;
 }
 #iuAffiliateView{
   --iuSectionAccent: var(--iuAff-aff-cestovni-kancelare, #64748B);
@@ -22787,6 +22791,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 #iuAffiliateView[data-aff-category="aff-sperky-hodinky"]{ --iuSectionAccent: var(--iuAff-aff-sperky-hodinky); }
 #iuAffiliateView[data-aff-category="aff-tv-streamovani"]{ --iuSectionAccent: var(--iuAff-aff-tv-streamovani); }
 #iuAffiliateView[data-aff-category="aff-dilna-naradi"]{ --iuSectionAccent: var(--iuAff-aff-dilna-naradi); }
+#iuAffiliateView[data-aff-category="aff-inzerce-bazary"]{ --iuSectionAccent: var(--iuAff-aff-inzerce-bazary); }
+#iuAffiliateView[data-aff-category="aff-realitni-kancelare"]{ --iuSectionAccent: var(--iuAff-aff-realitni-kancelare); }
+#iuAffiliateView[data-aff-category="aff-reality-nemovitosti"]{ --iuSectionAccent: var(--iuAff-aff-reality-nemovitosti); }
+#iuAffiliateView[data-aff-category="aff-kancelarske-potreby"]{ --iuSectionAccent: var(--iuAff-aff-kancelarske-potreby); }
 #iuAffiliateGrid{ min-height: 240px; }
 #iuAffiliateView.iuAffiliateView{padding:14px 12px 16px}
 #iuAffiliateView .iuSectionHeader--affiliate{margin:0 0 8px;align-items:center}
@@ -22805,6 +22813,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 }
 /* P0 affiliate-header-frame-v1-20260918: frame on title+desc; disclosure plain */
 /* P0 affiliate-categories-30-structure-v1-20260919: +4 cats accents */
+/* P0 affiliate-categories-34-structure-v1-20260920: +4 cats (31-34) */
 #iuAffiliateView .iuAffiliateIntro{
   margin:0 0 12px;padding:12px 14px;border-radius:12px;box-sizing:border-box;min-width:0;max-width:100%;
   background:color-mix(in srgb,var(--iuSectionAccent,#64748B) 8%,rgba(255,255,255,.98));
@@ -22882,6 +22891,10 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 .iu-leftNav .iu-leftNavItem[data-accent="aff-sperky-hodinky"]{ --iuNavAccent: var(--iuAff-aff-sperky-hodinky); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-tv-streamovani"]{ --iuNavAccent: var(--iuAff-aff-tv-streamovani); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-dilna-naradi"]{ --iuNavAccent: var(--iuAff-aff-dilna-naradi); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-inzerce-bazary"]{ --iuNavAccent: var(--iuAff-aff-inzerce-bazary); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-realitni-kancelare"]{ --iuNavAccent: var(--iuAff-aff-realitni-kancelare); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-reality-nemovitosti"]{ --iuNavAccent: var(--iuAff-aff-reality-nemovitosti); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-kancelarske-potreby"]{ --iuNavAccent: var(--iuAff-aff-kancelarske-potreby); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"] .iu-leftNavIcon,
 body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"]:hover .iu-leftNavIcon,
 body #iuLeftRail .iu-leftNav .iu-leftNavItem[data-accent^="aff-"].is-active .iu-leftNavIcon,

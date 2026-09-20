@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Affiliate selected services — base 30 categories prefix preserved (≥30).
- * Run: npm run iu-affiliate-categories-30-structure-guard
+ * Freeze guard: Affiliate selected services — base 30 preserved + 4 new cats (31–34).
+ * Does NOT require exact total count (future 35+ allowed). Protects the four new categories.
+ * Run: npm run iu-affiliate-categories-34-structure-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -17,13 +18,14 @@ const { chromium } = require("playwright");
 
 const MARKER = "affiliate-categories-34-structure-v1-20260920";
 const SW_TOKEN = "2026-09-20-affiliate-categories-34-v1";
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu_affiliate_categories_30_structure_guard.json"
+  "iu_affiliate_categories_34_structure_guard.json"
 );
 
-const EXPECTED_ORDER = [
+/** Original 30 — must remain prefix in this order. */
+const BASE_ORDER = [
   "aff-cestovni-kancelare",
   "aff-ubytovani-hotely",
   "aff-letenky",
@@ -56,7 +58,7 @@ const EXPECTED_ORDER = [
   "aff-dilna-naradi",
 ];
 
-const EXPECTED_TITLES = [
+const BASE_TITLES = [
   "Cestovní kanceláře",
   "Ubytování a hotely",
   "Doprava a cestování",
@@ -89,12 +91,31 @@ const EXPECTED_TITLES = [
   "Dílna a nářadí",
 ];
 
-const NEW_IDS = [
-  "aff-kvetiny-darky",
-  "aff-sperky-hodinky",
-  "aff-tv-streamovani",
-  "aff-dilna-naradi",
+/** Positions 31–34 (0-based 30–33). Future cats may follow. */
+const NEW_ORDER = [
+  "aff-inzerce-bazary",
+  "aff-realitni-kancelare",
+  "aff-reality-nemovitosti",
+  "aff-kancelarske-potreby",
 ];
+
+const NEW_TITLES = [
+  "Inzerce a bazary",
+  "Realitní kanceláře",
+  "Reality a nemovitosti",
+  "Kancelářské potřeby a vybavení",
+];
+
+const NEW_ICONS = [
+  "iu-aff-marketplace",
+  "iu-aff-agency",
+  "iu-aff-property",
+  "iu-aff-office",
+];
+
+const NEW_IDS = NEW_ORDER.slice();
+const EXPECTED_ORDER = BASE_ORDER.concat(NEW_ORDER);
+const EXPECTED_TITLES = BASE_TITLES.concat(NEW_TITLES);
 
 const fails = [];
 function ok(id, cond, detail) {
@@ -127,29 +148,41 @@ function auditStatic() {
     "utf8"
   );
 
-  ok("count_gte_30", ids.length >= 30, "n=" + ids.length);
+  ok("count_gte_34", ids.length >= 34, "n=" + ids.length);
   ok(
-    "order_prefix_30",
-    ids.length >= EXPECTED_ORDER.length && EXPECTED_ORDER.every((id, i) => ids[i] === id),
+    "base30_prefix",
+    ids.length >= 30 && BASE_ORDER.every((id, i) => ids[i] === id),
     ids.slice(0, 30).join(",")
   );
   ok(
-    "titles_prefix_30",
-    titles.length >= EXPECTED_TITLES.length && EXPECTED_TITLES.every((t, i) => titles[i] === t),
+    "base30_titles",
+    titles.length >= 30 && BASE_TITLES.every((t, i) => titles[i] === t),
     titles.slice(0, 30).join("|")
+  );
+  ok(
+    "new4_positions_31_34",
+    ids.length >= 34 && NEW_ORDER.every((id, i) => ids[30 + i] === id),
+    ids.slice(30, 34).join(",")
+  );
+  ok(
+    "new4_titles",
+    titles.length >= 34 && NEW_TITLES.every((t, i) => titles[30 + i] === t),
+    titles.slice(30, 34).join("|")
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
-  for (const id of NEW_IDS) {
+  ok("no_wrong_office_name", !titles.includes("Kancelář a škola") && !titles.includes("Škola a kancelář"));
+  for (let ni = 0; ni < NEW_IDS.length; ni++) {
+    const id = NEW_IDS[ni];
     ok("new_id:" + id, ids.includes(id));
     ok("seo:" + id, catalog.includes('"' + id + '": affSeo('));
     ok("css_var:" + id, css.includes("--iuAff-" + id));
     ok("css_view:" + id, css.includes('data-aff-category="' + id + '"'));
     ok("css_nav:" + id, css.includes('data-accent="' + id + '"'));
+    ok("icon_ref:" + id, catalog.includes('icon: "' + NEW_ICONS[ni] + '"'));
+    ok("sprite:" + NEW_ICONS[ni], sprite.includes('id="' + NEW_ICONS[ni] + '"'));
   }
-  for (const icon of ["iu-aff-flower", "iu-aff-watch", "iu-aff-tv", "iu-aff-hammer", "iu-aff-book"]) {
-    ok("sprite:" + icon, sprite.includes('id="' + icon + '"'));
-  }
+  ok("icons_distinct_agency_property", NEW_ICONS[1] !== NEW_ICONS[2]);
   const uniq = new Set(ids);
   ok("no_dup_ids", uniq.size === ids.length, "uniq=" + uniq.size);
   ok("index_marker", index.includes(MARKER));
@@ -159,10 +192,10 @@ function auditStatic() {
   ok("allowlist_token", allow.includes(SW_TOKEN));
   ok("sw_token", sw.includes(SW_TOKEN));
   const slotSlugs = {
-    "aff-kvetiny-darky": "kvetiny-empty-",
-    "aff-sperky-hodinky": "sperky-empty-",
-    "aff-tv-streamovani": "streamovani-empty-",
-    "aff-dilna-naradi": "dilna-empty-",
+    "aff-inzerce-bazary": "inzerce-empty-",
+    "aff-realitni-kancelare": "realitni-kancelare-empty-",
+    "aff-reality-nemovitosti": "reality-empty-",
+    "aff-kancelarske-potreby": "kancelarske-empty-",
   };
   for (const id of Object.keys(slotSlugs)) {
     const prefix = slotSlugs[id];
@@ -298,7 +331,7 @@ async function openAff(page, baseUrl, section) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_CATEGORIES_30_STRUCTURE_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -446,17 +479,22 @@ try {
       };
     }, vp.name === "desktop");
 
-    ok(vp.name + ":rail_count_gte_30", layout.count >= 30, "n=" + layout.count);
+    ok(vp.name + ":rail_count_gte_34", layout.count >= 34, "n=" + layout.count);
     ok(
-      vp.name + ":rail_order_prefix",
-      layout.ids.length >= EXPECTED_ORDER.length && EXPECTED_ORDER.every((id, i) => layout.ids[i] === id),
+      vp.name + ":rail_base30",
+      layout.ids.length >= 30 && BASE_ORDER.every((id, i) => layout.ids[i] === id),
       layout.ids.slice(0, 30).join(",")
     );
     ok(
-      vp.name + ":rail_titles_prefix",
-      layout.labels.length >= EXPECTED_TITLES.length &&
+      vp.name + ":rail_new4",
+      layout.ids.length >= 34 && NEW_ORDER.every((id, i) => layout.ids[30 + i] === id),
+      layout.ids.slice(30, 34).join(",")
+    );
+    ok(
+      vp.name + ":rail_titles_prefix34",
+      layout.labels.length >= 34 &&
         EXPECTED_TITLES.every((t, i) => layout.labels[i] === t),
-      layout.labels.slice(0, 30).join("|")
+      layout.labels.slice(0, 34).join("|")
     );
     ok(vp.name + ":no_old_label_ui", !layout.labels.includes("Knihy, filmy a hry"));
     ok(vp.name + ":no_h_overflow", !layout.overflow);
@@ -481,11 +519,13 @@ try {
       ok(vp.name + ":two_col_css", twoColCss, layout.gridCols);
       ok(vp.name + ":two_col", layout.colCount === 2 || layout.maxPerRow === 2, "colCount=" + layout.colCount + ";max=" + layout.maxPerRow);
       const expectRows = Math.ceil(layout.count / 2);
-      ok(vp.name + ":rows_half", layout.rowSizes.length === expectRows, "rows=" + layout.rowSizes.length);
+      ok(vp.name + ":rows_half", layout.rowSizes.length === expectRows, "rows=" + layout.rowSizes.length + ";expect=" + expectRows);
       ok(
-        vp.name + ":pairs_ok",
+        vp.name + ":pairs_or_last",
         layout.rowSizes.length === expectRows &&
-          layout.rowSizes.slice(0, -1).every((n) => n === 2),
+          layout.rowSizes.slice(0, -1).every((n) => n === 2) &&
+          (layout.rowSizes[layout.rowSizes.length - 1] === 2 ||
+            layout.rowSizes[layout.rowSizes.length - 1] === 1),
         layout.rowSizes.join(",")
       );
     }
@@ -570,8 +610,9 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_CATEGORIES_30_STRUCTURE_GUARD: pass ? "PASS" : "FAIL",
-  count: EXPECTED_ORDER.length,
+  IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD: pass ? "PASS" : "FAIL",
+  countMin: 34,
+  protectedNew: NEW_IDS,
   samples,
   fails,
 };
