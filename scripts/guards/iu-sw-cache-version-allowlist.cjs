@@ -4,6 +4,7 @@
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
   "2026-09-19-pwa-mm-visible-home-overlay-v1",
+  "2026-09-19-affiliate-empty-slots-v1",
   "2026-09-19-pwa-title-no-dup-v1",
   "2026-09-19-affiliate-categories-30-v1",
   "2026-09-19-pwa-mindmenu-cold-document-v1",
