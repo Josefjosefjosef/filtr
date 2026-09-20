@@ -16,8 +16,9 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const STRUCTURE_MARKER = "affiliate-categories-34-structure-v1-20260920";
-const MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-20-affiliate-booking-com-slot1-v1";
+const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
+const MARKER = "affiliate-leo-express-slot1-v1-20260920";
+const SW_TOKEN = "2026-09-20-affiliate-leo-express-slot1-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -154,7 +155,8 @@ function auditStatic() {
   const uniq = new Set(ids);
   ok("no_dup_ids", uniq.size === ids.length, "uniq=" + uniq.size);
   ok("index_structure_marker", index.includes(STRUCTURE_MARKER));
-  ok("index_booking_marker", index.includes(MARKER));
+  ok("index_booking_marker", index.includes(BOOKING_MARKER));
+  ok("index_leo_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));

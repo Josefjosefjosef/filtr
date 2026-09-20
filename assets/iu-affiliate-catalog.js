@@ -368,13 +368,16 @@
       icon: "iu-aff-transport",
       description: "Odkazy na vybrané služby související s dopravou a cestováním.",
       items: [
+        affPartner(
+          "Leo Express",
+          "https://www.jdoqocy.com/click-101883843-15736211"
+        ),
         affItem("", "airhelp"),
         affItem("", "refundio"),
         affItem("", "kiwi"),
         affItem("", "letuska"),
         affItem("", "pelikan"),
         affItem("", "lot"),
-        affItem("", "leo-express"),
         affItem("", "flixbus"),
       ],
     },
