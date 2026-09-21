@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Doprava a cestování → slot 1 = Leo Express (CJ tracking).
- * Allows future partners in slots 2–8. Does not lock total partner count.
- * Run: npm run iu-affiliate-leo-express-slot1-guard
+ * Freeze guard: Pneu a pneuservis — structure + 8 empty slots (partners may be added later).
+ * Protects category order / Booking + Leo regression. Does not require empty slots forever.
+ * Run: npm run iu-affiliate-pneu-pneuservis-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,18 +15,21 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const CATALOG_BUST = "affiliate-pneu-pneuservis-v1-20260921";
+const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
 const SW_TOKEN = "2026-09-21-affiliate-pneu-pneuservis-v1";
-const SECTION = "aff-letenky";
-const SECTION_TITLE = "Doprava a cestování";
-const PARTNER_TITLE = "Leo Express";
-const CJ_URL = "https://www.jdoqocy.com/click-101883843-15736211";
+const SECTION = "aff-pneu-pneuservis";
+const SECTION_TITLE = "Pneu a pneuservis";
+const INTRO = "Odkazy na vybrané prodejce pneumatik, pneuservisy a související služby.";
+const SEO_H2 = "Pneu a pneuservis – odkazy na vybrané externí služby";
+const SEO_P1 =
+  "Sekce Pneu a pneuservis obsahuje odkazy na vybrané externí prodejce pneumatik, pneuservisy a služby související s pneumatikami, přezutím a servisem kol. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
+const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-leo-express-slot1-guard-report.json"
+  "iu-affiliate-pneu-pneuservis-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -38,6 +41,7 @@ function ok(id, cond, detail) {
 function auditStatic() {
   const catalog = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
   const index = fs.readFileSync(path.join(ROOT, "projects", "index.html"), "utf8");
+  const css = fs.readFileSync(path.join(ROOT, "assets", "app.css"), "utf8");
   const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
   const allow = fs.readFileSync(
     path.join(ROOT, "scripts", "guards", "iu-sw-cache-version-allowlist.cjs"),
@@ -46,37 +50,39 @@ function auditStatic() {
 
   ok("catalog:section_id", catalog.includes('id: "' + SECTION + '"'));
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
+  ok("catalog:intro", catalog.includes(INTRO));
+  ok("catalog:seo_h2", catalog.includes(SEO_H2));
+  ok("catalog:seo_p1", catalog.includes(SEO_P1));
   ok("catalog:disclosure", catalog.includes(DISCLOSURE));
-  ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
-  ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
-  ok(
-    "catalog:no_direct_leo_href",
-    !/affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/(?:www\.)?leoexpress\./i.test(catalog)
-  );
-  ok(
-    "catalog:slot1_leo",
-    /id:\s*"aff-letenky"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15736211"\s*\)/.test(
-      catalog
-    )
-  );
-  ok(
-    "catalog:ready_rel",
-    catalog.includes('rel="sponsored noopener"') &&
-      !catalog.includes('rel="nofollow sponsored noopener noreferrer"')
-  );
-  ok("catalog:target_blank", catalog.includes('target="_blank"'));
+  ok("catalog:icon_wheel", catalog.includes('id: "' + SECTION + '"') && catalog.includes('icon: "iu-aff-wheel"'));
+  ok("catalog:after_auto_moto", catalog.indexOf('id: "' + SECTION + '"') > catalog.indexOf('id: "aff-auto-moto"'));
+  ok("catalog:before_pojisteni", catalog.indexOf('id: "aff-pojisteni"') > catalog.indexOf('id: "' + SECTION + '"'));
+  ok("catalog:auto_moto_bestdrive", /id:\s*"aff-auto-moto"[\s\S]*?affItem\("", "bestdrive"\)/.test(catalog));
 
-  const blockStart = catalog.indexOf('id: "aff-letenky"');
-  const blockEnd = catalog.indexOf('id: "aff-letenky-letecka-doprava"', blockStart);
+  const blockStart = catalog.indexOf('id: "' + SECTION + '"');
+  const blockEnd = catalog.indexOf('id: "aff-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
-  const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
+  const slotCalls = (block.match(/affItem\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  const emptySlots = (block.match(/affItem\(""/g) || []).length;
-  ok("catalog:empty_slots_7", emptySlots === 7, "n=" + emptySlots);
-  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  ok("catalog:no_affPartner", !/affPartner\(/i.test(block));
+  ok("catalog:no_https", !/https:\/\//i.test(block));
+  ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
+  for (let i = 1; i <= 8; i++) {
+    ok("catalog:slot_slug_" + i, block.includes('affItem("", "pneu-pneuservis-empty-' + i + '")'));
+  }
 
-  ok("index:marker", index.includes(LEO_MARKER));
-  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
+  ok("catalog:booking_preserved", /affPartner\(\s*"Booking\.com"[\s\S]*?13323565/.test(catalog));
+  ok("catalog:leo_preserved", /affPartner\(\s*"Leo Express"[\s\S]*?15736211/.test(catalog));
+  ok("catalog:leo_in_doprava", /id:\s*"aff-letenky"[\s\S]*?affPartner\(\s*"Leo Express"/.test(catalog));
+
+  ok("css:accent", css.includes("--iuAff-aff-pneu-pneuservis"));
+  ok("css:view", css.includes('data-aff-category="aff-pneu-pneuservis"'));
+  ok("css:nav", css.includes('data-accent="aff-pneu-pneuservis"'));
+  const sprite = fs.readFileSync(path.join(ROOT, "assets", "icons", "iu-sprite.svg"), "utf8");
+  ok("sprite:wheel", sprite.includes('id="iu-aff-wheel"'));
+  ok("css:marker", css.includes(MARKER));
+  ok("index:marker", index.includes(MARKER));
+  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=affiliate-pneu-pneuservis-v1-20260921"));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
@@ -116,9 +122,9 @@ async function dismissConsent(page) {
   });
 }
 
-async function openAff(page, baseUrl) {
+async function openAff(page, baseUrl, section) {
   await dismissConsent(page);
-  await page.goto(`${baseUrl}?section=${SECTION}&nosw=1&cb=${Date.now()}`, {
+  await page.goto(`${baseUrl}?section=${section}&nosw=1&cb=${Date.now()}`, {
     waitUntil: "domcontentloaded",
     timeout: 90000,
   });
@@ -131,7 +137,7 @@ async function openAff(page, baseUrl) {
       if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection(sec);
       if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
     } catch (_) {}
-  }, SECTION);
+  }, section);
   await page.waitForSelector("#iuAffiliateView", { state: "attached", timeout: 90000 });
   await page.evaluate(() => {
     const v = document.getElementById("iuAffiliateView");
@@ -148,14 +154,14 @@ async function openAff(page, baseUrl) {
       const t = document.getElementById("iuAffiliateTitle");
       return v && v.getAttribute("data-aff-category") === sec && t && (t.textContent || "").trim().length > 0;
     },
-    SECTION,
+    section,
     { timeout: 90000 }
   );
 }
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_LEO_EXPRESS_SLOT1_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_PNEU_PNEUSERVIS_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -214,99 +220,64 @@ try {
       });
     }
     const page = await bootstrapGuardPage(context);
-    const pageErrors = [];
-    page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
-
-    await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
+    await openAff(page, `http://127.0.0.1:${PORT}/projects/`, SECTION);
 
     const snap = await page.evaluate((args) => {
       const title = document.getElementById("iuAffiliateTitle");
+      const intro = document.getElementById("iuAffiliateIntro");
       const disc = document.getElementById("iuAffiliateDisclosure");
       const grid = document.getElementById("iuAffiliateGrid");
+      const seo = document.getElementById("iuAffiliateSeo");
       const chips = grid ? Array.from(grid.querySelectorAll("a.iuAffiliateChip")) : [];
-      const first = chips[0] || null;
-      const rest = chips.slice(1);
-      const firstTitle = first ? first.querySelector(".iuRadioChipTitle") : null;
-      let centered = false;
-      if (first) {
-        const cs = getComputedStyle(first);
-        centered =
-          cs.display.includes("flex") &&
-          (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
-          (cs.alignItems === "center" || cs.alignItems === "safe center") &&
-          (cs.textAlign === "center" || cs.textAlign === "start" || cs.textAlign === "-webkit-center" || true);
+      const titles = chips.map((c) => (c.textContent || "").replace(/\s+/g, " ").trim());
+      const hrefs = chips.map((c) => c.getAttribute("href") || "");
+      const ready = chips.map((c) => c.getAttribute("data-aff-ready") || "");
+      let seoAfterGrid = false;
+      if (grid && seo && grid.compareDocumentPosition) {
+        seoAfterGrid = (grid.compareDocumentPosition(seo) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
       }
-      const hasImg = first ? !!first.querySelector("img, svg, picture, canvas") : false;
       return {
         title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
+        intro: (intro ? intro.textContent : "").replace(/\s+/g, " ").trim(),
         disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
         slots: chips.length,
-        firstText: firstTitle
-          ? (firstTitle.textContent || "").replace(/\s+/g, " ").trim()
-          : first
-            ? (first.textContent || "").replace(/\s+/g, " ").trim()
-            : "",
-        firstHref: first ? first.getAttribute("href") || "" : "",
-        firstTarget: first ? first.getAttribute("target") || "" : "",
-        firstRel: first ? first.getAttribute("rel") || "" : "",
-        firstReady: first ? first.getAttribute("data-aff-ready") || "" : "",
-        restEmpty: rest.every((c) => {
-          const t = (c.textContent || "").replace(/\s+/g, " ").trim();
-          const ready = c.getAttribute("data-aff-ready") || "0";
-          const href = c.getAttribute("href") || "";
-          return t === "" && ready === "0" && (href === "#" || href === "");
-        }),
-        hasImg,
-        centered,
-        tagName: first ? first.tagName : "",
+        emptyTitles: titles.every((t) => t === ""),
+        noHttps: hrefs.every((h) => !/^https?:/i.test(h)),
+        allNeutral: ready.every((r) => r === "0"),
+        seoAfterGrid,
+        seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").includes(args.seoH2)),
+        seoHasP1: !!(seo && (seo.textContent || "").includes("pneuservisy a služby související s pneumatikami")),
       };
-    }, { disclosure: DISCLOSURE });
+    }, { disclosure: DISCLOSURE, seoH2: SEO_H2 });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
+    ok(tag + ":intro", snap.intro.includes("prodejce pneumatik"), snap.intro);
     ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
-    ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);
-    ok(tag + ":slot1_rel_sponsored", /\bsponsored\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_noopener", /\bnoopener\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_no_nofollow", !/\bnofollow\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_ready", snap.firstReady === "1", snap.firstReady);
-    ok(tag + ":slot1_is_anchor", snap.tagName === "A");
-    ok(tag + ":slot1_no_img", snap.hasImg === false);
-    ok(tag + ":slot1_no_direct_leo", !/^https?:\/\/(www\.)?leoexpress\./i.test(snap.firstHref));
-    ok(tag + ":slots_2_8_empty", snap.restEmpty === true);
-    ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
+    ok(tag + ":empty_slots", snap.emptyTitles && snap.noHttps && snap.allNeutral);
+    ok(tag + ":seo_after_slots", snap.seoAfterGrid && snap.seoVisible && snap.seoHasP1);
+    samples.push({ vp: vp.name, slots: snap.slots, title: snap.title });
+    await context.close();
+  }
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page.click("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']");
-    const popup = await popupPromise;
-    ok(tag + ":popup_opened", !!popup);
-    if (popup) {
-      try {
-        await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
-      } catch (_) {}
-      const popupUrl = popup.url();
-      ok(
-        tag + ":popup_cj_or_leo",
-        /jdoqocy\.com\/click-101883843-15736211/i.test(popupUrl) ||
-          /leoexpress\./i.test(popupUrl),
-        popupUrl
-      );
-      await popup.close().catch(() => {});
-    }
-
-    samples.push({
-      vp: vp.name,
-      title: snap.title,
-      firstText: snap.firstText,
-      firstHref: snap.firstHref,
-      firstRel: snap.firstRel,
-      slots: snap.slots,
+  for (const [sec, partner, cj] of [
+    ["aff-ubytovani-hotely", "Booking.com", BOOKING_CJ],
+    ["aff-letenky", "Leo Express", LEO_CJ],
+  ]) {
+    const context = await bootstrapGuardContext(browser, { viewport: { width: 390, height: 844 }, hasTouch: true });
+    const page = await bootstrapGuardPage(context);
+    await openAff(page, `http://127.0.0.1:${PORT}/projects/`, sec);
+    const partnerSnap = await page.evaluate(() => {
+      const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']");
+      const t = chip ? chip.querySelector(".iuRadioChipTitle") : null;
+      return {
+        text: t ? (t.textContent || "").trim() : "",
+        href: chip ? chip.getAttribute("href") || "" : "",
+      };
     });
+    ok("regression:" + sec + ":text", partnerSnap.text === partner, partnerSnap.text);
+    ok("regression:" + sec + ":href", partnerSnap.href === cj, partnerSnap.href);
     await context.close();
   }
 } catch (err) {
@@ -318,7 +289,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_LEO_EXPRESS_SLOT1_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_PNEU_PNEUSERVIS_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };

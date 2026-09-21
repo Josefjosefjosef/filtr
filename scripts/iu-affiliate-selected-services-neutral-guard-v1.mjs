@@ -41,6 +41,7 @@ const EXPECTED_CAT_IDS = [
   "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
+  "aff-pneu-pneuservis",
   "aff-pojisteni",
   "aff-finance",
   "aff-energie-uspor",
@@ -126,7 +127,7 @@ function auditStatic() {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
     ok("catalog:seo:" + id, catalog.includes('"' + id + '": affSeo('));
   }
-  ok("catalog:count_gte_35", EXPECTED_CAT_IDS.length >= 35, "n=" + EXPECTED_CAT_IDS.length);
+  ok("catalog:count_gte_36", EXPECTED_CAT_IDS.length >= 36, "n=" + EXPECTED_CAT_IDS.length);
   ok("catalog:no_old_knihy_label", !catalog.includes("Knihy, filmy a hry"));
   ok("catalog:new_knihy_label", catalog.includes("Knihy, hudba a hry"));
   const catalogMarker = catalog.indexOf("var IU_AFFILIATE_CATALOG");
@@ -178,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-klik-cz-cestovni-pojisteni-v1-20260921"));
+  ok("index:cache_bust", index.includes("affiliate-pneu-pneuservis-v1-20260921"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -407,9 +408,12 @@ try {
           railSnap.labels[3] === "Letenky a letecká doprava",
           railSnap.labels[3]
         );
-        ok(tag + ":rail_label_moda", railSnap.labels[13] === "Móda a doplňky", railSnap.labels[13]);
-        ok(tag + ":rail_label_deti", railSnap.labels[15] === "Děti a hračky", railSnap.labels[15]);
-        ok(tag + ":rail_label_bydleni", railSnap.labels[19] === "Bydlení a vybavení", railSnap.labels[19]);
+        ok(tag + ":rail_label_auto", railSnap.labels[5] === "Auto a moto", railSnap.labels[5]);
+        ok(tag + ":rail_label_pneu", railSnap.labels[6] === "Pneu a pneuservis", railSnap.labels[6]);
+        ok(tag + ":rail_label_pojisteni", railSnap.labels[7] === "Pojištění", railSnap.labels[7]);
+        ok(tag + ":rail_label_moda", railSnap.labels[14] === "Móda a doplňky", railSnap.labels[14]);
+        ok(tag + ":rail_label_deti", railSnap.labels[16] === "Děti a hračky", railSnap.labels[16]);
+        ok(tag + ":rail_label_bydleni", railSnap.labels[20] === "Bydlení a vybavení", railSnap.labels[20]);
       }
       await context.close();
     }

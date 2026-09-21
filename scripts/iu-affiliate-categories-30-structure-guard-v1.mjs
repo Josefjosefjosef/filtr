@@ -20,8 +20,9 @@ const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
 const LETENKY_MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const SW_TOKEN = "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1";
+const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
+const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-pneu-pneuservis-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -35,6 +36,7 @@ const EXPECTED_ORDER = [
   "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
+  "aff-pneu-pneuservis",
   "aff-pojisteni",
   "aff-finance",
   "aff-energie-uspor",
@@ -69,6 +71,7 @@ const EXPECTED_TITLES = [
   "Letenky a letecká doprava",
   "Cestovní pojištění",
   "Auto a moto",
+  "Pneu a pneuservis",
   "Pojištění",
   "Finance",
   "Energie a úspory",
@@ -134,16 +137,16 @@ function auditStatic() {
     "utf8"
   );
 
-  ok("count_gte_31", ids.length >= 31, "n=" + ids.length);
+  ok("count_gte_32", ids.length >= 32, "n=" + ids.length);
   ok(
-    "order_prefix_31",
+    "order_prefix_32",
     ids.length >= EXPECTED_ORDER.length && EXPECTED_ORDER.every((id, i) => ids[i] === id),
-    ids.slice(0, 31).join(",")
+    ids.slice(0, 32).join(",")
   );
   ok(
-    "titles_prefix_31",
+    "titles_prefix_32",
     titles.length >= EXPECTED_TITLES.length && EXPECTED_TITLES.every((t, i) => titles[i] === t),
-    titles.slice(0, 31).join("|")
+    titles.slice(0, 32).join("|")
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
@@ -164,7 +167,8 @@ function auditStatic() {
   ok("index_leo_marker", index.includes(LEO_MARKER));
   ok("index_letenky_marker", index.includes(LETENKY_MARKER));
   ok("index_axa_marker", index.includes(AXA_MARKER));
-  ok("index_klik_marker", index.includes(MARKER));
+  ok("index_klik_marker", index.includes(KLIK_MARKER));
+  ok("index_pneu_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));

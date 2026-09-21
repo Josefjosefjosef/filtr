@@ -100,6 +100,14 @@
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
     ),
+    "aff-pneu-pneuservis": affSeo(
+      "Pneu a pneuservis – odkazy na vybrané externí služby",
+      [
+        "Sekce Pneu a pneuservis obsahuje odkazy na vybrané externí prodejce pneumatik, pneuservisy a služby související s pneumatikami, přezutím a servisem kol. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky, rozsah poskytovaných služeb a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
     "aff-pojisteni": affSeo(
       "Pojištění – odkazy na vybrané externí služby",
       [
@@ -441,6 +449,23 @@
         affItem("", "pneuboss"),
         affItem("", "pneuleader"),
         affItem("", "motozem"),
+      ],
+    },
+    {
+      id: "aff-pneu-pneuservis",
+      title: "Pneu a pneuservis",
+      icon: "iu-aff-wheel",
+      description:
+        "Odkazy na vybrané prodejce pneumatik, pneuservisy a související služby.",
+      items: [
+        affItem("", "pneu-pneuservis-empty-1"),
+        affItem("", "pneu-pneuservis-empty-2"),
+        affItem("", "pneu-pneuservis-empty-3"),
+        affItem("", "pneu-pneuservis-empty-4"),
+        affItem("", "pneu-pneuservis-empty-5"),
+        affItem("", "pneu-pneuservis-empty-6"),
+        affItem("", "pneu-pneuservis-empty-7"),
+        affItem("", "pneu-pneuservis-empty-8"),
       ],
     },
     {

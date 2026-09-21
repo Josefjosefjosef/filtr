@@ -22728,6 +22728,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   --iuAff-aff-letenky-letecka-doprava:#0EA5E9;
   --iuAff-aff-cestovni-pojisteni:#34D399;
   --iuAff-aff-auto-moto:#FB923C;
+  --iuAff-aff-pneu-pneuservis:#78716C;
   --iuAff-aff-pojisteni:#059669;
   --iuAff-aff-finance:#10B981;
   --iuAff-aff-energie-uspor:#A3E635;
@@ -22768,6 +22769,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 #iuAffiliateView[data-aff-category="aff-letenky-letecka-doprava"]{ --iuSectionAccent: var(--iuAff-aff-letenky-letecka-doprava); }
 #iuAffiliateView[data-aff-category="aff-cestovni-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-cestovni-pojisteni); }
 #iuAffiliateView[data-aff-category="aff-auto-moto"]{ --iuSectionAccent: var(--iuAff-aff-auto-moto); }
+#iuAffiliateView[data-aff-category="aff-pneu-pneuservis"]{ --iuSectionAccent: var(--iuAff-aff-pneu-pneuservis); }
 #iuAffiliateView[data-aff-category="aff-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-pojisteni); }
 #iuAffiliateView[data-aff-category="aff-finance"]{ --iuSectionAccent: var(--iuAff-aff-finance); }
 #iuAffiliateView[data-aff-category="aff-energie-uspor"]{ --iuSectionAccent: var(--iuAff-aff-energie-uspor); }
@@ -22821,6 +22823,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 /* P0 affiliate-letenky-letecka-doprava-v1-20260921: Letenky a letecká doprava cat (8 empty slots) */
 /* P0 affiliate-axa-assistance-cestovni-pojisteni-v1-20260921: Cestovní pojištění slot1 AXA CJ */
 /* P0 affiliate-klik-cz-cestovni-pojisteni-v1-20260921: Cestovní pojištění Klik.cz CJ */
+/* P0 affiliate-pneu-pneuservis-v1-20260921: Pneu a pneuservis cat (8 empty slots) */
 #iuAffiliateView .iuAffiliateIntro{
   margin:0 0 12px;padding:12px 14px;border-radius:12px;box-sizing:border-box;min-width:0;max-width:100%;
   background:color-mix(in srgb,var(--iuSectionAccent,#64748B) 8%,rgba(255,255,255,.98));
@@ -22874,6 +22877,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 .iu-leftNav .iu-leftNavItem[data-accent="aff-letenky-letecka-doprava"]{ --iuNavAccent: var(--iuAff-aff-letenky-letecka-doprava); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-cestovni-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-cestovni-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-auto-moto"]{ --iuNavAccent: var(--iuAff-aff-auto-moto); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-pneu-pneuservis"]{ --iuNavAccent: var(--iuAff-aff-pneu-pneuservis); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-finance"]{ --iuNavAccent: var(--iuAff-aff-finance); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-energie-uspor"]{ --iuNavAccent: var(--iuAff-aff-energie-uspor); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
