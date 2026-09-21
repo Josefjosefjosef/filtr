@@ -41,6 +41,7 @@ const EXPECTED_CAT_IDS = [
   "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
+  "aff-pneu-pneuservis",
   "aff-pojisteni",
   "aff-finance",
   "aff-energie-uspor",
@@ -126,7 +127,7 @@ function auditStatic() {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
     ok("catalog:seo:" + id, catalog.includes('"' + id + '": affSeo('));
   }
-  ok("catalog:count_gte_35", EXPECTED_CAT_IDS.length >= 35, "n=" + EXPECTED_CAT_IDS.length);
+  ok("catalog:count_gte_36", EXPECTED_CAT_IDS.length >= 36, "n=" + EXPECTED_CAT_IDS.length);
   ok("catalog:no_old_knihy_label", !catalog.includes("Knihy, filmy a hry"));
   ok("catalog:new_knihy_label", catalog.includes("Knihy, hudba a hry"));
   const catalogMarker = catalog.indexOf("var IU_AFFILIATE_CATALOG");
@@ -178,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-klik-cz-cestovni-pojisteni-v1-20260921"));
+  ok("index:cache_bust", index.includes("affiliate-pneu-pneuservis-v1-20260921"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));

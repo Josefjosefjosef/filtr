@@ -21,8 +21,9 @@ const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
 const LETENKY_MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const SW_TOKEN = "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1";
+const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
+const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-pneu-pneuservis-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -37,6 +38,7 @@ const BASE_ORDER = [
   "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
+  "aff-pneu-pneuservis",
   "aff-pojisteni",
   "aff-finance",
   "aff-energie-uspor",
@@ -71,6 +73,7 @@ const BASE_TITLES = [
   "Letenky a letecká doprava",
   "Cestovní pojištění",
   "Auto a moto",
+  "Pneu a pneuservis",
   "Pojištění",
   "Finance",
   "Energie a úspory",
@@ -155,26 +158,26 @@ function auditStatic() {
     "utf8"
   );
 
-  ok("count_gte_35", ids.length >= 35, "n=" + ids.length);
+  ok("count_gte_36", ids.length >= 36, "n=" + ids.length);
   ok(
-    "base31_prefix",
-    ids.length >= 31 && BASE_ORDER.every((id, i) => ids[i] === id),
-    ids.slice(0, 31).join(",")
+    "base32_prefix",
+    ids.length >= 32 && BASE_ORDER.every((id, i) => ids[i] === id),
+    ids.slice(0, 32).join(",")
   );
   ok(
-    "base31_titles",
-    titles.length >= 31 && BASE_TITLES.every((t, i) => titles[i] === t),
-    titles.slice(0, 31).join("|")
+    "base32_titles",
+    titles.length >= 32 && BASE_TITLES.every((t, i) => titles[i] === t),
+    titles.slice(0, 32).join("|")
   );
   ok(
-    "new4_positions_32_35",
-    ids.length >= 35 && NEW_ORDER.every((id, i) => ids[31 + i] === id),
-    ids.slice(31, 35).join(",")
+    "new4_positions_33_36",
+    ids.length >= 36 && NEW_ORDER.every((id, i) => ids[32 + i] === id),
+    ids.slice(32, 36).join(",")
   );
   ok(
     "new4_titles",
-    titles.length >= 35 && NEW_TITLES.every((t, i) => titles[31 + i] === t),
-    titles.slice(31, 35).join("|")
+    titles.length >= 36 && NEW_TITLES.every((t, i) => titles[32 + i] === t),
+    titles.slice(32, 36).join("|")
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
@@ -197,7 +200,8 @@ function auditStatic() {
   ok("index_leo_marker", index.includes(LEO_MARKER));
   ok("index_letenky_marker", index.includes(LETENKY_MARKER));
   ok("index_axa_marker", index.includes(AXA_MARKER));
-  ok("index_klik_marker", index.includes(MARKER));
+  ok("index_klik_marker", index.includes(KLIK_MARKER));
+  ok("index_pneu_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));
@@ -212,6 +216,10 @@ function auditStatic() {
   ok("letenky_slots_8", (letBlock.match(/affItem\(/g) || []).length === 8, "n=" + (letBlock.match(/affItem\(/g) || []).length);
   ok("letenky_no_https", !/https:\/\//i.test(letBlock));
   ok("letenky_after_doprava", catalog.indexOf('id: "aff-letenky-letecka-doprava"') > catalog.indexOf('id: "aff-letenky"'));
+  ok("pneu_icon", catalog.includes('id: "aff-pneu-pneuservis"') && catalog.includes('icon: "iu-aff-wheel"'));
+  ok("pneu_after_auto", catalog.indexOf('id: "aff-pneu-pneuservis"') > catalog.indexOf('id: "aff-auto-moto"'));
+  ok("pneu_before_pojisteni", catalog.indexOf('id: "aff-pojisteni"') > catalog.indexOf('id: "aff-pneu-pneuservis"'));
+  ok("sprite_wheel", sprite.includes('id="iu-aff-wheel"'));
   const slotSlugs = {
     "aff-inzerce-bazary": "inzerce-empty-",
     "aff-realitni-kancelare": "realitni-kancelare-empty-",
@@ -500,22 +508,22 @@ try {
       };
     }, vp.name === "desktop");
 
-    ok(vp.name + ":rail_count_gte_35", layout.count >= 35, "n=" + layout.count);
+    ok(vp.name + ":rail_count_gte_36", layout.count >= 36, "n=" + layout.count);
     ok(
-      vp.name + ":rail_base31",
-      layout.ids.length >= 31 && BASE_ORDER.every((id, i) => layout.ids[i] === id),
-      layout.ids.slice(0, 31).join(",")
+      vp.name + ":rail_base32",
+      layout.ids.length >= 32 && BASE_ORDER.every((id, i) => layout.ids[i] === id),
+      layout.ids.slice(0, 32).join(",")
     );
     ok(
       vp.name + ":rail_new4",
-      layout.ids.length >= 35 && NEW_ORDER.every((id, i) => layout.ids[31 + i] === id),
-      layout.ids.slice(31, 35).join(",")
+      layout.ids.length >= 36 && NEW_ORDER.every((id, i) => layout.ids[32 + i] === id),
+      layout.ids.slice(32, 36).join(",")
     );
     ok(
-      vp.name + ":rail_titles_prefix35",
-      layout.labels.length >= 35 &&
+      vp.name + ":rail_titles_prefix36",
+      layout.labels.length >= 36 &&
         EXPECTED_TITLES.every((t, i) => layout.labels[i] === t),
-      layout.labels.slice(0, 35).join("|")
+      layout.labels.slice(0, 36).join("|")
     );
     ok(vp.name + ":no_old_label_ui", !layout.labels.includes("Knihy, filmy a hry"));
     ok(vp.name + ":no_h_overflow", !layout.overflow);
