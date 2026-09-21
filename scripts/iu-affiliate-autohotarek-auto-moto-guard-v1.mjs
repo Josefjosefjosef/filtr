@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
-const CATALOG_BUST = "affiliate-autohotarek-auto-moto-v1-20260921";
-const SW_TOKEN = "2026-09-21-affiliate-autohotarek-auto-moto-v1";
+const CATALOG_BUST = "affiliate-ahifi-auto-moto-v1-20260922";
+const SW_TOKEN = "2026-09-22-affiliate-ahifi-auto-moto-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
 const PARTNER_TITLE = "Autohotarek.cz";
@@ -75,7 +75,8 @@ function auditStatic() {
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  const partnerCount = (block.match(/affPartner\(/g) || []).length;
+  ok("catalog:ready_partners_gte_1", partnerCount >= 1, "n=" + partnerCount);
   ok("catalog:autohotarek_in_auto_moto", block.includes("Autohotarek.cz"));
   ok("catalog:not_in_pneu", !/id:\s*"aff-pneu-pneuservis"[\s\S]*Autohotarek\.cz/.test(catalog));
 
