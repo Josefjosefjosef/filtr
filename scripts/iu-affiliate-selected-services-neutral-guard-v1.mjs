@@ -408,9 +408,12 @@ try {
           railSnap.labels[3] === "Letenky a letecká doprava",
           railSnap.labels[3]
         );
-        ok(tag + ":rail_label_moda", railSnap.labels[13] === "Móda a doplňky", railSnap.labels[13]);
-        ok(tag + ":rail_label_deti", railSnap.labels[15] === "Děti a hračky", railSnap.labels[15]);
-        ok(tag + ":rail_label_bydleni", railSnap.labels[19] === "Bydlení a vybavení", railSnap.labels[19]);
+        ok(tag + ":rail_label_auto", railSnap.labels[5] === "Auto a moto", railSnap.labels[5]);
+        ok(tag + ":rail_label_pneu", railSnap.labels[6] === "Pneu a pneuservis", railSnap.labels[6]);
+        ok(tag + ":rail_label_pojisteni", railSnap.labels[7] === "Pojištění", railSnap.labels[7]);
+        ok(tag + ":rail_label_moda", railSnap.labels[14] === "Móda a doplňky", railSnap.labels[14]);
+        ok(tag + ":rail_label_deti", railSnap.labels[16] === "Děti a hračky", railSnap.labels[16]);
+        ok(tag + ":rail_label_bydleni", railSnap.labels[20] === "Bydlení a vybavení", railSnap.labels[20]);
       }
       await context.close();
     }
