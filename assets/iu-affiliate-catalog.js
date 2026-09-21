@@ -76,6 +76,14 @@
         "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
       ]
     ),
+    "aff-letenky-letecka-doprava": affSeo(
+      "Letenky a letecká doprava – odkazy na vybrané externí služby",
+      [
+        "Sekce Letenky a letecká doprava obsahuje odkazy na vybrané externí služby pro vyhledávání a rezervaci letenek a služby související s leteckou dopravou. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.",
+        "Nabídku, ceny, dostupnost, podmínky a další informace určuje provozovatel příslušné externí služby a mohou se v čase měnit.",
+        "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.",
+      ]
+    ),
     "aff-cestovni-pojisteni": affSeo(
       "Cestovní pojištění – odkazy na vybrané externí služby",
       [
@@ -379,6 +387,22 @@
         affItem("", "pelikan"),
         affItem("", "lot"),
         affItem("", "flixbus"),
+      ],
+    },
+    {
+      id: "aff-letenky-letecka-doprava",
+      title: "Letenky a letecká doprava",
+      icon: "iu-aff-plane",
+      description: "Odkazy na vybrané služby pro letenky a leteckou dopravu.",
+      items: [
+        affItem("", "letenky-letecka-empty-1"),
+        affItem("", "letenky-letecka-empty-2"),
+        affItem("", "letenky-letecka-empty-3"),
+        affItem("", "letenky-letecka-empty-4"),
+        affItem("", "letenky-letecka-empty-5"),
+        affItem("", "letenky-letecka-empty-6"),
+        affItem("", "letenky-letecka-empty-7"),
+        affItem("", "letenky-letecka-empty-8"),
       ],
     },
     {

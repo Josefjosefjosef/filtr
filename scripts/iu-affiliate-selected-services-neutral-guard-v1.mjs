@@ -38,6 +38,7 @@ const EXPECTED_CAT_IDS = [
   "aff-cestovni-kancelare",
   "aff-ubytovani-hotely",
   "aff-letenky",
+  "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
   "aff-pojisteni",
@@ -73,6 +74,7 @@ const EXPECTED_CAT_IDS = [
 
 const EXPECTED_CAT_TITLES = {
   "aff-letenky": "Doprava a cestování",
+  "aff-letenky-letecka-doprava": "Letenky a letecká doprava",
   "aff-moda": "Móda a doplňky",
   "aff-deti-hracky": "Děti a hračky",
   "aff-nabytek": "Bydlení a vybavení",
@@ -89,6 +91,7 @@ const EXPECTED_CAT_TITLES = {
 
 const EXPECTED_CAT_ICONS = {
   "aff-letenky": "iu-aff-transport",
+  "aff-letenky-letecka-doprava": "iu-aff-plane",
   "aff-moda": "iu-aff-shirt",
   "aff-deti-hracky": "iu-aff-blocks",
   "aff-nabytek": "iu-aff-sofa",
@@ -123,7 +126,7 @@ function auditStatic() {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
     ok("catalog:seo:" + id, catalog.includes('"' + id + '": affSeo('));
   }
-  ok("catalog:count_gte_34", EXPECTED_CAT_IDS.length >= 34, "n=" + EXPECTED_CAT_IDS.length);
+  ok("catalog:count_gte_35", EXPECTED_CAT_IDS.length >= 35, "n=" + EXPECTED_CAT_IDS.length);
   ok("catalog:no_old_knihy_label", !catalog.includes("Knihy, filmy a hry"));
   ok("catalog:new_knihy_label", catalog.includes("Knihy, hudba a hry"));
   const catalogMarker = catalog.indexOf("var IU_AFFILIATE_CATALOG");
@@ -175,7 +178,8 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-leo-express-slot1-v1-20260920"));
+  ok("index:cache_bust", index.includes("affiliate-letenky-letecka-doprava-v1-20260921"));
+  ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
   ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));
@@ -398,9 +402,14 @@ try {
           railSnap.ids.join(",")
         );
         ok(tag + ":rail_label_doprava", railSnap.labels[2] === "Doprava a cestování", railSnap.labels[2]);
-        ok(tag + ":rail_label_moda", railSnap.labels[12] === "Móda a doplňky", railSnap.labels[12]);
-        ok(tag + ":rail_label_deti", railSnap.labels[14] === "Děti a hračky", railSnap.labels[14]);
-        ok(tag + ":rail_label_bydleni", railSnap.labels[18] === "Bydlení a vybavení", railSnap.labels[18]);
+        ok(
+          tag + ":rail_label_letenky",
+          railSnap.labels[3] === "Letenky a letecká doprava",
+          railSnap.labels[3]
+        );
+        ok(tag + ":rail_label_moda", railSnap.labels[13] === "Móda a doplňky", railSnap.labels[13]);
+        ok(tag + ":rail_label_deti", railSnap.labels[15] === "Děti a hračky", railSnap.labels[15]);
+        ok(tag + ":rail_label_bydleni", railSnap.labels[19] === "Bydlení a vybavení", railSnap.labels[19]);
       }
       await context.close();
     }

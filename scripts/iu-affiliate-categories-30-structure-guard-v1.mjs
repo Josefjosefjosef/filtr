@@ -17,8 +17,9 @@ const { chromium } = require("playwright");
 
 const STRUCTURE_MARKER = "affiliate-categories-34-structure-v1-20260920";
 const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-20-affiliate-leo-express-slot1-v1";
+const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
+const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-letenky-letecka-doprava-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -29,6 +30,7 @@ const EXPECTED_ORDER = [
   "aff-cestovni-kancelare",
   "aff-ubytovani-hotely",
   "aff-letenky",
+  "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
   "aff-pojisteni",
@@ -62,6 +64,7 @@ const EXPECTED_TITLES = [
   "Cestovní kanceláře",
   "Ubytování a hotely",
   "Doprava a cestování",
+  "Letenky a letecká doprava",
   "Cestovní pojištění",
   "Auto a moto",
   "Pojištění",
@@ -129,16 +132,16 @@ function auditStatic() {
     "utf8"
   );
 
-  ok("count_gte_30", ids.length >= 30, "n=" + ids.length);
+  ok("count_gte_31", ids.length >= 31, "n=" + ids.length);
   ok(
-    "order_prefix_30",
+    "order_prefix_31",
     ids.length >= EXPECTED_ORDER.length && EXPECTED_ORDER.every((id, i) => ids[i] === id),
-    ids.slice(0, 30).join(",")
+    ids.slice(0, 31).join(",")
   );
   ok(
-    "titles_prefix_30",
+    "titles_prefix_31",
     titles.length >= EXPECTED_TITLES.length && EXPECTED_TITLES.every((t, i) => titles[i] === t),
-    titles.slice(0, 30).join("|")
+    titles.slice(0, 31).join("|")
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
@@ -156,7 +159,8 @@ function auditStatic() {
   ok("no_dup_ids", uniq.size === ids.length, "uniq=" + uniq.size);
   ok("index_structure_marker", index.includes(STRUCTURE_MARKER));
   ok("index_booking_marker", index.includes(BOOKING_MARKER));
-  ok("index_leo_marker", index.includes(MARKER));
+  ok("index_leo_marker", index.includes(LEO_MARKER));
+  ok("index_letenky_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));

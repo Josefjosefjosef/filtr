@@ -15,8 +15,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-20-affiliate-leo-express-slot1-v1";
+const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
+const CATALOG_BUST = "affiliate-letenky-letecka-doprava-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-letenky-letecka-doprava-v1";
 const SECTION = "aff-letenky";
 const SECTION_TITLE = "Doprava a cestování";
 const PARTNER_TITLE = "Leo Express";
@@ -66,7 +67,7 @@ function auditStatic() {
   ok("catalog:target_blank", catalog.includes('target="_blank"'));
 
   const blockStart = catalog.indexOf('id: "aff-letenky"');
-  const blockEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', blockStart);
+  const blockEnd = catalog.indexOf('id: "aff-letenky-letecka-doprava"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
@@ -74,8 +75,8 @@ function auditStatic() {
   ok("catalog:empty_slots_7", emptySlots === 7, "n=" + emptySlots);
   ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
 
-  ok("index:marker", index.includes(MARKER));
-  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
+  ok("index:marker", index.includes(LEO_MARKER));
+  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));

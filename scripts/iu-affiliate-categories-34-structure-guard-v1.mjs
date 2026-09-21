@@ -18,8 +18,9 @@ const { chromium } = require("playwright");
 
 const STRUCTURE_MARKER = "affiliate-categories-34-structure-v1-20260920";
 const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-20-affiliate-leo-express-slot1-v1";
+const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
+const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-letenky-letecka-doprava-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -31,6 +32,7 @@ const BASE_ORDER = [
   "aff-cestovni-kancelare",
   "aff-ubytovani-hotely",
   "aff-letenky",
+  "aff-letenky-letecka-doprava",
   "aff-cestovni-pojisteni",
   "aff-auto-moto",
   "aff-pojisteni",
@@ -64,6 +66,7 @@ const BASE_TITLES = [
   "Cestovní kanceláře",
   "Ubytování a hotely",
   "Doprava a cestování",
+  "Letenky a letecká doprava",
   "Cestovní pojištění",
   "Auto a moto",
   "Pojištění",
@@ -150,26 +153,26 @@ function auditStatic() {
     "utf8"
   );
 
-  ok("count_gte_34", ids.length >= 34, "n=" + ids.length);
+  ok("count_gte_35", ids.length >= 35, "n=" + ids.length);
   ok(
-    "base30_prefix",
-    ids.length >= 30 && BASE_ORDER.every((id, i) => ids[i] === id),
-    ids.slice(0, 30).join(",")
+    "base31_prefix",
+    ids.length >= 31 && BASE_ORDER.every((id, i) => ids[i] === id),
+    ids.slice(0, 31).join(",")
   );
   ok(
-    "base30_titles",
-    titles.length >= 30 && BASE_TITLES.every((t, i) => titles[i] === t),
-    titles.slice(0, 30).join("|")
+    "base31_titles",
+    titles.length >= 31 && BASE_TITLES.every((t, i) => titles[i] === t),
+    titles.slice(0, 31).join("|")
   );
   ok(
-    "new4_positions_31_34",
-    ids.length >= 34 && NEW_ORDER.every((id, i) => ids[30 + i] === id),
-    ids.slice(30, 34).join(",")
+    "new4_positions_32_35",
+    ids.length >= 35 && NEW_ORDER.every((id, i) => ids[31 + i] === id),
+    ids.slice(31, 35).join(",")
   );
   ok(
     "new4_titles",
-    titles.length >= 34 && NEW_TITLES.every((t, i) => titles[30 + i] === t),
-    titles.slice(30, 34).join("|")
+    titles.length >= 35 && NEW_TITLES.every((t, i) => titles[31 + i] === t),
+    titles.slice(31, 35).join("|")
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
@@ -189,12 +192,22 @@ function auditStatic() {
   ok("no_dup_ids", uniq.size === ids.length, "uniq=" + uniq.size);
   ok("index_structure_marker", index.includes(STRUCTURE_MARKER));
   ok("index_booking_marker", index.includes(BOOKING_MARKER));
-  ok("index_leo_marker", index.includes(MARKER));
+  ok("index_leo_marker", index.includes(LEO_MARKER));
+  ok("index_letenky_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));
   ok("allowlist_token", allow.includes(SW_TOKEN));
   ok("sw_token", sw.includes(SW_TOKEN));
+  ok("letenky_icon", catalog.includes('id: "aff-letenky-letecka-doprava"') && catalog.includes('icon: "iu-aff-plane"'));
+  ok("letenky_css", css.includes("--iuAff-aff-letenky-letecka-doprava"));
+  ok("sprite:iu-aff-plane", sprite.includes('id="iu-aff-plane"'));
+  const letStart = catalog.indexOf('id: "aff-letenky-letecka-doprava"');
+  const letEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', letStart);
+  const letBlock = letStart >= 0 && letEnd > letStart ? catalog.slice(letStart, letEnd) : "";
+  ok("letenky_slots_8", (letBlock.match(/affItem\(/g) || []).length === 8, "n=" + (letBlock.match(/affItem\(/g) || []).length);
+  ok("letenky_no_https", !/https:\/\//i.test(letBlock));
+  ok("letenky_after_doprava", catalog.indexOf('id: "aff-letenky-letecka-doprava"') > catalog.indexOf('id: "aff-letenky"'));
   const slotSlugs = {
     "aff-inzerce-bazary": "inzerce-empty-",
     "aff-realitni-kancelare": "realitni-kancelare-empty-",
@@ -483,22 +496,22 @@ try {
       };
     }, vp.name === "desktop");
 
-    ok(vp.name + ":rail_count_gte_34", layout.count >= 34, "n=" + layout.count);
+    ok(vp.name + ":rail_count_gte_35", layout.count >= 35, "n=" + layout.count);
     ok(
-      vp.name + ":rail_base30",
-      layout.ids.length >= 30 && BASE_ORDER.every((id, i) => layout.ids[i] === id),
-      layout.ids.slice(0, 30).join(",")
+      vp.name + ":rail_base31",
+      layout.ids.length >= 31 && BASE_ORDER.every((id, i) => layout.ids[i] === id),
+      layout.ids.slice(0, 31).join(",")
     );
     ok(
       vp.name + ":rail_new4",
-      layout.ids.length >= 34 && NEW_ORDER.every((id, i) => layout.ids[30 + i] === id),
-      layout.ids.slice(30, 34).join(",")
+      layout.ids.length >= 35 && NEW_ORDER.every((id, i) => layout.ids[31 + i] === id),
+      layout.ids.slice(31, 35).join(",")
     );
     ok(
-      vp.name + ":rail_titles_prefix34",
-      layout.labels.length >= 34 &&
+      vp.name + ":rail_titles_prefix35",
+      layout.labels.length >= 35 &&
         EXPECTED_TITLES.every((t, i) => layout.labels[i] === t),
-      layout.labels.slice(0, 34).join("|")
+      layout.labels.slice(0, 35).join("|")
     );
     ok(vp.name + ":no_old_label_ui", !layout.labels.includes("Knihy, filmy a hry"));
     ok(vp.name + ":no_h_overflow", !layout.overflow);
@@ -543,7 +556,7 @@ try {
     await context.close();
   }
 
-  for (const section of NEW_IDS.concat(["aff-knihy", "aff-cestovni-kancelare"])) {
+  for (const section of NEW_IDS.concat(["aff-knihy", "aff-cestovni-kancelare", "aff-letenky-letecka-doprava"])) {
     for (const vp of VIEWPORTS) {
       const context = await bootstrapGuardContext(browser, {
         viewport: { width: vp.width, height: vp.height },
@@ -594,7 +607,7 @@ try {
       ok(vp.name + ":" + section + ":cat", snap.cat === section, snap.cat);
       ok(vp.name + ":" + section + ":no_overflow", !snap.overflow);
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
-      if (NEW_IDS.includes(section)) {
+      if (NEW_IDS.includes(section) || section === "aff-letenky-letecka-doprava") {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
         ok(vp.name + ":" + section + ":partners_0", snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true);
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
@@ -615,7 +628,7 @@ try {
 const pass = fails.length === 0;
 const out = {
   IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD: pass ? "PASS" : "FAIL",
-  countMin: 34,
+  countMin: 35,
   protectedNew: NEW_IDS,
   samples,
   fails,

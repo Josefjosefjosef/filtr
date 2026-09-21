@@ -22725,6 +22725,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   --iuAff-aff-cestovni-kancelare:#C9A227;
   --iuAff-aff-ubytovani-hotely:#60A5FA;
   --iuAff-aff-letenky:#2DD4BF;
+  --iuAff-aff-letenky-letecka-doprava:#0EA5E9;
   --iuAff-aff-cestovni-pojisteni:#34D399;
   --iuAff-aff-auto-moto:#FB923C;
   --iuAff-aff-pojisteni:#059669;
@@ -22764,6 +22765,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 #iuAffiliateView[data-aff-category="aff-cestovni-kancelare"]{ --iuSectionAccent: var(--iuAff-aff-cestovni-kancelare); }
 #iuAffiliateView[data-aff-category="aff-ubytovani-hotely"]{ --iuSectionAccent: var(--iuAff-aff-ubytovani-hotely); }
 #iuAffiliateView[data-aff-category="aff-letenky"]{ --iuSectionAccent: var(--iuAff-aff-letenky); }
+#iuAffiliateView[data-aff-category="aff-letenky-letecka-doprava"]{ --iuSectionAccent: var(--iuAff-aff-letenky-letecka-doprava); }
 #iuAffiliateView[data-aff-category="aff-cestovni-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-cestovni-pojisteni); }
 #iuAffiliateView[data-aff-category="aff-auto-moto"]{ --iuSectionAccent: var(--iuAff-aff-auto-moto); }
 #iuAffiliateView[data-aff-category="aff-pojisteni"]{ --iuSectionAccent: var(--iuAff-aff-pojisteni); }
@@ -22816,6 +22818,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 /* P0 affiliate-categories-34-structure-v1-20260920: +4 cats (31-34) */
 /* P0 affiliate-booking-com-slot1-v1-20260920: Ubytování slot1 Booking.com CJ */
 /* P0 affiliate-leo-express-slot1-v1-20260920: Doprava slot1 Leo Express CJ */
+/* P0 affiliate-letenky-letecka-doprava-v1-20260921: Letenky a letecká doprava cat (8 empty slots) */
 #iuAffiliateView .iuAffiliateIntro{
   margin:0 0 12px;padding:12px 14px;border-radius:12px;box-sizing:border-box;min-width:0;max-width:100%;
   background:color-mix(in srgb,var(--iuSectionAccent,#64748B) 8%,rgba(255,255,255,.98));
@@ -22866,6 +22869,7 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
 .iu-leftNav .iu-leftNavItem[data-accent="aff-cestovni-kancelare"]{ --iuNavAccent: var(--iuAff-aff-cestovni-kancelare); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-ubytovani-hotely"]{ --iuNavAccent: var(--iuAff-aff-ubytovani-hotely); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-letenky"]{ --iuNavAccent: var(--iuAff-aff-letenky); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
+.iu-leftNav .iu-leftNavItem[data-accent="aff-letenky-letecka-doprava"]{ --iuNavAccent: var(--iuAff-aff-letenky-letecka-doprava); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-cestovni-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-cestovni-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-auto-moto"]{ --iuNavAccent: var(--iuAff-aff-auto-moto); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
 .iu-leftNav .iu-leftNavItem[data-accent="aff-pojisteni"]{ --iuNavAccent: var(--iuAff-aff-pojisteni); border-color: color-mix(in srgb, var(--iuNavAccent) 36%, rgba(0,0,0,0.06)) !important; }
