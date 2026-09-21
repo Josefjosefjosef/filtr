@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Cestovní pojištění → Klik.cz (CJ tracking), any occupied slot.
- * Does not lock slot index. Section stays at 8 partner slots.
- * Run: npm run iu-affiliate-klik-cz-cestovni-pojisteni-guard
+ * Freeze guard: Auto a moto → Autohotarek.cz (CJ tracking), first occupied partner slot.
+ * Allows future partners in remaining slots. Does not lock total partner count.
+ * Run: npm run iu-affiliate-autohotarek-auto-moto-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,18 +15,18 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
+const MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
 const CATALOG_BUST = "affiliate-autohotarek-auto-moto-v1-20260921";
 const SW_TOKEN = "2026-09-21-affiliate-autohotarek-auto-moto-v1";
-const SECTION = "aff-cestovni-pojisteni";
-const SECTION_TITLE = "Cestovní pojištění";
-const PARTNER_TITLE = "Klik.cz";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15024030";
+const SECTION = "aff-auto-moto";
+const SECTION_TITLE = "Auto a moto";
+const PARTNER_TITLE = "Autohotarek.cz";
+const CJ_URL = "https://www.dpbolvw.net/click-101883843-15802025";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-klik-cz-cestovni-pojisteni-guard-report.json"
+  "iu-affiliate-autohotarek-auto-moto-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -50,14 +50,18 @@ function auditStatic() {
   ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_klik_href",
-    !/affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/(?:www\.)?klik\.cz/i.test(catalog)
+    "catalog:no_direct_autohotarek_href",
+    !/affPartner\(\s*"Autohotarek\.cz"\s*,\s*"https:\/\/(?:www\.)?autohotarek\.cz/i.test(catalog)
   );
   ok(
-    "catalog:klik_partner",
-    /id:\s*"aff-cestovni-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024030"\s*\)/.test(
+    "catalog:autohotarek_partner",
+    /id:\s*"aff-auto-moto"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"Autohotarek\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15802025"\s*\)/.test(
       catalog
     )
+  );
+  ok(
+    "catalog:slot1_autohotarek",
+    /id:\s*"aff-auto-moto"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Autohotarek\.cz"/.test(catalog)
   );
   ok(
     "catalog:ready_rel",
@@ -66,14 +70,16 @@ function auditStatic() {
   );
   ok("catalog:target_blank", catalog.includes('target="_blank"'));
 
-  const blockStart = catalog.indexOf('id: "aff-cestovni-pojisteni"');
-  const blockEnd = catalog.indexOf('id: "aff-auto-moto"', blockStart);
+  const blockStart = catalog.indexOf('id: "aff-auto-moto"');
+  const blockEnd = catalog.indexOf('id: "aff-pneu-pneuservis"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:klik_in_block", block.includes('affPartner(\n          "Klik.cz"') || block.includes('affPartner("Klik.cz"'));
+  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  ok("catalog:autohotarek_in_auto_moto", block.includes("Autohotarek.cz"));
+  ok("catalog:not_in_pneu", !/id:\s*"aff-pneu-pneuservis"[\s\S]*Autohotarek\.cz/.test(catalog));
 
-  ok("index:marker", index.includes(KLIK_MARKER));
+  ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
@@ -153,7 +159,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_KLIK_CZ_CESTOVNI_POJISTENI_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_AUTOHOTAREK_AUTO_MOTO_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -226,28 +232,30 @@ try {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const klik = chips.find((c) => chipText(c) === args.partner) || null;
+      const partner = chips.find((c) => chipText(c) === args.partner) || null;
+      const firstChip = chips[0] || null;
       let centered = false;
-      if (klik) {
-        const cs = getComputedStyle(klik);
+      if (partner) {
+        const cs = getComputedStyle(partner);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
           (cs.alignItems === "center" || cs.alignItems === "safe center");
       }
-      const hasImg = klik ? !!klik.querySelector("img, svg, picture, canvas") : false;
+      const hasImg = partner ? !!partner.querySelector("img, svg, picture, canvas") : false;
       return {
         title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
         disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
         slots: chips.length,
-        klikText: klik ? chipText(klik) : "",
-        klikHref: klik ? klik.getAttribute("href") || "" : "",
-        klikTarget: klik ? klik.getAttribute("target") || "" : "",
-        klikRel: klik ? klik.getAttribute("rel") || "" : "",
-        klikReady: klik ? klik.getAttribute("data-aff-ready") || "" : "",
+        partnerText: partner ? chipText(partner) : "",
+        partnerHref: partner ? partner.getAttribute("href") || "" : "",
+        partnerTarget: partner ? partner.getAttribute("target") || "" : "",
+        partnerRel: partner ? partner.getAttribute("rel") || "" : "",
+        partnerReady: partner ? partner.getAttribute("data-aff-ready") || "" : "",
+        firstText: firstChip ? chipText(firstChip) : "",
         hasImg,
         centered,
-        tagName: klik ? klik.tagName : "",
+        tagName: partner ? partner.tagName : "",
       };
     }, { disclosure: DISCLOSURE, partner: PARTNER_TITLE });
 
@@ -255,17 +263,18 @@ try {
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":klik_text", snap.klikText === PARTNER_TITLE, snap.klikText);
-    ok(tag + ":klik_href", snap.klikHref === CJ_URL, snap.klikHref);
-    ok(tag + ":klik_target", snap.klikTarget === "_blank", snap.klikTarget);
-    ok(tag + ":klik_rel_sponsored", /\bsponsored\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_noopener", /\bnoopener\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_nofollow", !/\bnofollow\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_ready", snap.klikReady === "1", snap.klikReady);
-    ok(tag + ":klik_is_anchor", snap.tagName === "A");
-    ok(tag + ":klik_no_img", snap.hasImg === false);
-    ok(tag + ":klik_no_direct_klik", !/^https?:\/\/(www\.)?klik\.cz/i.test(snap.klikHref));
+    ok(tag + ":first_slot_partner", snap.firstText === PARTNER_TITLE, snap.firstText);
+    ok(tag + ":partner_text", snap.partnerText === PARTNER_TITLE, snap.partnerText);
+    ok(tag + ":partner_href", snap.partnerHref === CJ_URL, snap.partnerHref);
+    ok(tag + ":partner_target", snap.partnerTarget === "_blank", snap.partnerTarget);
+    ok(tag + ":partner_rel_sponsored", /\bsponsored\b/.test(snap.partnerRel), snap.partnerRel);
+    ok(tag + ":partner_rel_noopener", /\bnoopener\b/.test(snap.partnerRel), snap.partnerRel);
+    ok(tag + ":partner_rel_no_nofollow", !/\bnofollow\b/.test(snap.partnerRel), snap.partnerRel);
+    ok(tag + ":partner_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.partnerRel), snap.partnerRel);
+    ok(tag + ":partner_ready", snap.partnerReady === "1", snap.partnerReady);
+    ok(tag + ":partner_is_anchor", snap.tagName === "A");
+    ok(tag + ":partner_no_img", snap.hasImg === false);
+    ok(tag + ":no_direct_autohotarek", !/^https?:\/\/(www\.)?autohotarek\.cz/i.test(snap.partnerHref));
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
 
@@ -282,8 +291,8 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       ok(
-        tag + ":popup_cj_or_klik",
-        /dpbolvw\.net\/click-101883843-15024030/i.test(popupUrl) || /klik\.cz/i.test(popupUrl),
+        tag + ":popup_cj_or_dest",
+        /dpbolvw\.net\/click-101883843-15802025/i.test(popupUrl) || /autohotarek\.cz/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -292,10 +301,11 @@ try {
     samples.push({
       vp: vp.name,
       title: snap.title,
-      klikText: snap.klikText,
-      klikHref: snap.klikHref,
-      klikRel: snap.klikRel,
+      partnerText: snap.partnerText,
+      partnerHref: snap.partnerHref,
+      partnerRel: snap.partnerRel,
       slots: snap.slots,
+      firstText: snap.firstText,
     });
     await context.close();
   }
@@ -308,7 +318,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_KLIK_CZ_CESTOVNI_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_AUTOHOTAREK_AUTO_MOTO_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };
