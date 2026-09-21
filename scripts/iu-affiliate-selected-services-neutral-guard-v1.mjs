@@ -165,6 +165,8 @@ function auditStatic() {
   ok("catalog:placeholder_labels_empty", namedPlaceholders.length === 0, "named=" + namedPlaceholders.join("|"));
   ok("catalog:booking_partner", /affPartner\(\s*"Booking\.com"/.test(catalog));
   ok("catalog:booking_cj_url", catalog.includes("https://www.anrdoezrs.net/click-101883843-13323565"));
+  ok("catalog:leo_partner", /affPartner\(\s*"Leo Express"/.test(catalog));
+  ok("catalog:leo_cj_url", catalog.includes("https://www.jdoqocy.com/click-101883843-15736211"));
   ok("catalog:ready_gate", catalog.includes("affiliateUrlReady === true"));
   ok("catalog:sponsored_noopener", catalog.includes('rel="sponsored noopener"'));
   ok("catalog:no_legacy_nofollow_rel", !catalog.includes('rel="nofollow sponsored noopener noreferrer"'));
@@ -173,7 +175,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-booking-com-slot1-v1-20260920"));
+  ok("index:cache_bust", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
   ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));
@@ -343,8 +345,16 @@ try {
       const tag = vp.name + ":" + section;
       ok(tag + ":disclosure", snap.disclosureOk, snap.disclosure);
       ok(tag + ":chips", snap.chipCount >= 1, "chips=" + snap.chipCount);
-      const nonEmptyChip = (snap.chips || []).find((c) => (c.text || "").trim() !== "");
-      ok(tag + ":chips_labels_empty", !nonEmptyChip, nonEmptyChip ? nonEmptyChip.text : "");
+      const namedChips = (snap.chips || []).filter((c) => (c.text || "").trim() !== "");
+      if (section === "aff-letenky") {
+        ok(
+          tag + ":chips_named_leo_only",
+          namedChips.length === 1 && namedChips[0].text === "Leo Express",
+          namedChips.map((c) => c.text).join("|")
+        );
+      } else {
+        ok(tag + ":chips_labels_empty", namedChips.length === 0, namedChips[0] ? namedChips[0].text : "");
+      }
       ok(tag + ":no_forbidden", !snap.forbiddenHit, snap.forbiddenHit);
       ok(tag + ":no_h_overflow", !snap.overflow);
       ok(tag + ":seo_has_neprovozuje", /neprovozuje/.test(snap.seoText));

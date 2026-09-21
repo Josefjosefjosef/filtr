@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Ubytování a hotely → slot 1 = Booking.com (CJ tracking).
+ * Freeze guard: Doprava a cestování → slot 1 = Leo Express (CJ tracking).
  * Allows future partners in slots 2–8. Does not lock total partner count.
- * Run: npm run iu-affiliate-booking-com-slot1-guard
+ * Run: npm run iu-affiliate-leo-express-slot1-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,17 +15,17 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-20-affiliate-booking-com-slot1-v1";
-const SECTION = "aff-ubytovani-hotely";
-const SECTION_TITLE = "Ubytování a hotely";
-const PARTNER_TITLE = "Booking.com";
-const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13323565";
+const MARKER = "affiliate-leo-express-slot1-v1-20260920";
+const SW_TOKEN = "2026-09-20-affiliate-leo-express-slot1-v1";
+const SECTION = "aff-letenky";
+const SECTION_TITLE = "Doprava a cestování";
+const PARTNER_TITLE = "Leo Express";
+const CJ_URL = "https://www.jdoqocy.com/click-101883843-15736211";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-booking-com-slot1-guard-report.json"
+  "iu-affiliate-leo-express-slot1-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -48,10 +48,13 @@ function auditStatic() {
   ok("catalog:disclosure", catalog.includes(DISCLOSURE));
   ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
-  ok("catalog:no_direct_booking_href", !/affPartner\(\s*"Booking\.com"\s*,\s*"https:\/\/www\.booking\.com/i.test(catalog));
   ok(
-    "catalog:slot1_booking",
-    /id:\s*"aff-ubytovani-hotely"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"Booking\.com"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-13323565"\s*\)/.test(
+    "catalog:no_direct_leo_href",
+    !/affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/(?:www\.)?leoexpress\./i.test(catalog)
+  );
+  ok(
+    "catalog:slot1_leo",
+    /id:\s*"aff-letenky"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15736211"\s*\)/.test(
       catalog
     )
   );
@@ -62,8 +65,8 @@ function auditStatic() {
   );
   ok("catalog:target_blank", catalog.includes('target="_blank"'));
 
-  const blockStart = catalog.indexOf('id: "aff-ubytovani-hotely"');
-  const blockEnd = catalog.indexOf('id: "aff-letenky"', blockStart);
+  const blockStart = catalog.indexOf('id: "aff-letenky"');
+  const blockEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
@@ -72,8 +75,10 @@ function auditStatic() {
   ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
 
   ok("index:marker", index.includes(MARKER));
-  ok("sw_allowed", /CACHE_VERSION\s*=\s*"2026-09-20-/.test(sw));
+  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
+  ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
+  ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -149,7 +154,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_BOOKING_COM_SLOT1_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_LEO_EXPRESS_SLOT1_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -270,12 +275,11 @@ try {
     ok(tag + ":slot1_ready", snap.firstReady === "1", snap.firstReady);
     ok(tag + ":slot1_is_anchor", snap.tagName === "A");
     ok(tag + ":slot1_no_img", snap.hasImg === false);
-    ok(tag + ":slot1_no_direct_booking", !/^https?:\/\/(www\.)?booking\.com/i.test(snap.firstHref));
+    ok(tag + ":slot1_no_direct_leo", !/^https?:\/\/(www\.)?leoexpress\./i.test(snap.firstHref));
     ok(tag + ":slots_2_8_empty", snap.restEmpty === true);
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
 
-    // Click opens new page; CJ may redirect to Booking.com (expected).
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page.click("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']");
     const popup = await popupPromise;
@@ -286,9 +290,9 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       ok(
-        tag + ":popup_cj_or_booking",
-        /anrdoezrs\.net\/click-101883843-13323565/i.test(popupUrl) ||
-          /(?:^https?:\/\/)?(?:[\w.-]+\.)?booking\.com/i.test(popupUrl),
+        tag + ":popup_cj_or_leo",
+        /jdoqocy\.com\/click-101883843-15736211/i.test(popupUrl) ||
+          /leoexpress\./i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -313,7 +317,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_BOOKING_COM_SLOT1_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_LEO_EXPRESS_SLOT1_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };
