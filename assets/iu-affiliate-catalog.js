@@ -415,7 +415,10 @@
           "AXA Assistance",
           "https://www.tkqlhce.com/click-101883843-12585182"
         ),
-        affItem("", "direct-cestovni"),
+        affPartner(
+          "Klik.cz",
+          "https://www.dpbolvw.net/click-101883843-15024030"
+        ),
         affItem("", "ergo-cestovni"),
         affItem("", "generali-cestovni"),
         affItem("", "csob-cestovni"),
