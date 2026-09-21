@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const SW_TOKEN = "2026-09-21-affiliate-axa-assistance-cestovni-pojisteni-v1";
+const CATALOG_BUST = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
 const PARTNER_TITLE = "AXA Assistance";
@@ -76,8 +76,8 @@ function auditStatic() {
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
   const emptySlots = (block.match(/affItem\(""/g) || []).length;
-  ok("catalog:empty_slots_7", emptySlots === 7, "n=" + emptySlots);
-  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  ok("catalog:empty_slots_max_6", emptySlots <= 6, "n=" + emptySlots);
+  ok("catalog:axa_still_first_partner", /items:\s*\[[\s\S]*?affPartner\(\s*"AXA Assistance"/.test(block));
 
   ok("index:marker", index.includes(AXA_MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
@@ -281,7 +281,6 @@ try {
     ok(tag + ":slot1_is_anchor", snap.tagName === "A");
     ok(tag + ":slot1_no_img", snap.hasImg === false);
     ok(tag + ":slot1_no_direct_axa", !/^https?:\/\/(www\.)?axa\./i.test(snap.firstHref));
-    ok(tag + ":slots_2_8_empty", snap.restEmpty === true);
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
 

@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-21-affiliate-axa-assistance-cestovni-pojisteni-v1";
+const SW_TOKEN = "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1";
 const SECTION = "aff-ubytovani-hotely";
 const SECTION_TITLE = "Ubytování a hotely";
 const PARTNER_TITLE = "Booking.com";

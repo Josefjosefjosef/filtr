@@ -20,8 +20,9 @@ const STRUCTURE_MARKER = "affiliate-categories-34-structure-v1-20260920";
 const BOOKING_MARKER = "affiliate-booking-com-slot1-v1-20260920";
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
 const LETENKY_MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const SW_TOKEN = "2026-09-21-affiliate-axa-assistance-cestovni-pojisteni-v1";
+const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
+const MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
+const SW_TOKEN = "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -195,7 +196,8 @@ function auditStatic() {
   ok("index_booking_marker", index.includes(BOOKING_MARKER));
   ok("index_leo_marker", index.includes(LEO_MARKER));
   ok("index_letenky_marker", index.includes(LETENKY_MARKER));
-  ok("index_axa_marker", index.includes(MARKER));
+  ok("index_axa_marker", index.includes(AXA_MARKER));
+  ok("index_klik_marker", index.includes(MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + MARKER));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));
