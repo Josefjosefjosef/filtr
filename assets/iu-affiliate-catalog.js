@@ -411,12 +411,17 @@
       icon: "iu-aff-shield",
       description: "Odkazy na vybrané služby cestovního pojištění.",
       items: [
-        affItem("", "axa"),
+        affPartner(
+          "AXA Assistance",
+          "https://www.tkqlhce.com/click-101883843-12585182"
+        ),
         affItem("", "direct-cestovni"),
         affItem("", "ergo-cestovni"),
         affItem("", "generali-cestovni"),
         affItem("", "csob-cestovni"),
         affItem("", "slavia-cestovni"),
+        affItem("", "cestovni-pojisteni-empty-7"),
+        affItem("", "cestovni-pojisteni-empty-8"),
       ],
     },
     {
