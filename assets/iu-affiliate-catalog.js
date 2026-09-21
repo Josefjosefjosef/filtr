@@ -441,7 +441,10 @@
       icon: "iu-aff-car",
       description: "Odkazy na vybrané obchody a služby v kategorii auto a moto.",
       items: [
-        affItem("", "24mx"),
+        affPartner(
+          "Autohotarek.cz",
+          "https://www.dpbolvw.net/click-101883843-15802025"
+        ),
         affItem("", "ahifi"),
         affItem("", "autohotarek"),
         affItem("", "bestdrive"),
