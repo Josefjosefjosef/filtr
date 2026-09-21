@@ -25,7 +25,7 @@ function ok(id, cond, detail) {
 }
 
 const FUTURE_RAW =
-  "D11, mezi km 16.7 a 16.3, ve směru Praha, práce na silnici; pravý jízdní pruh uzavřen, Od 20.09.2026 19:30 Do 21.09.2026 06:00, Oprava výtluků a příčných hrbolů, údržba a opravy vozovek AB, pracovní místo DK - Krátkodobé stabilní, Vydal: SSÚD 13 - Poříčany";
+  "D11, mezi km 16.7 a 16.3, ve směru Praha, práce na silnici; pravý jízdní pruh uzavřen, Od 01.06.2030 19:30 Do 02.06.2030 06:00, Oprava výtluků a příčných hrbolů, údržba a opravy vozovek AB, pracovní místo DK - Krátkodobé stabilní, Vydal: SSÚD 13 - Poříčany";
 
 const ACTIVE_RAW =
   "D8, mezi km 10.0 a 10.2, ve směru Ústí nad Labem, práce na silnici; pravý jízdní pruh uzavřen, Od 01.01.2026 08:00 Do 31.12.2026 18:00, Oprava výtluků, údržba a opravy vozovek, Vydal: SSÚD test";
@@ -61,8 +61,8 @@ function hasValidityEcho(sit) {
     kmFrom: 16.7,
     kmTo: 16.3,
     lifecycleStatus: "FUTURE",
-    validFrom: "2026-09-20T19:30:00+02:00",
-    validTo: "2026-09-21T06:00:00+02:00",
+    validFrom: "2030-06-01T19:30:00+02:00",
+    validTo: "2030-06-02T06:00:00+02:00",
     illustrationKey: "prace",
   };
   const facts = parseOfficialCommentFacts(FUTURE_RAW);
@@ -226,7 +226,7 @@ function hasValidityEcho(sit) {
 // --- Full road closure FUTURE ---
 {
   const raw =
-    "silnice II/101, obec Sampleville, uzavřeno; silnice je uzavřena; Od 20.09.2026 22:00 Do 21.09.2026 05:00";
+    "silnice II/101, obec Sampleville, uzavřeno; silnice je uzavřena; Od 01.06.2030 22:00 Do 02.06.2030 05:00";
   const input = {
     impact: raw,
     impactFull: raw,
