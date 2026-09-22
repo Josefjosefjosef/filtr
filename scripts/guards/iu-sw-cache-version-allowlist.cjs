@@ -4,6 +4,7 @@
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
   "2026-09-22-affiliate-klik-pojisteni-v1",
+  "2026-09-22-affiliate-ahifi-auto-moto-v1",
   "2026-09-21-affiliate-autohotarek-auto-moto-v1",
   "2026-09-21-affiliate-pneu-pneuservis-v1",
   "2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1",

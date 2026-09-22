@@ -23,6 +23,7 @@ const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
 const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
 const PNEU_MARKER = "affiliate-pneu-pneuservis-v1-20260921";
 const AUTOHOTAREK_MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
+const AHIFI_MARKER = "affiliate-ahifi-auto-moto-v1-20260922";
 const KLIK_POJISTENI_MARKER = "affiliate-klik-pojisteni-v1-20260922";
 const CATALOG_BUST = KLIK_POJISTENI_MARKER;
 const SW_TOKEN = "2026-09-22-affiliate-klik-pojisteni-v1";
@@ -173,6 +174,7 @@ function auditStatic() {
   ok("index_klik_marker", index.includes(KLIK_MARKER));
   ok("index_pneu_marker", index.includes(PNEU_MARKER));
   ok("index_autohotarek_marker", index.includes(AUTOHOTAREK_MARKER));
+  ok("index_ahifi_marker", index.includes(AHIFI_MARKER));
   ok("index_klik_pojisteni_marker", index.includes(KLIK_POJISTENI_MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));

@@ -445,7 +445,10 @@
           "Autohotarek.cz",
           "https://www.dpbolvw.net/click-101883843-15802025"
         ),
-        affItem("", "ahifi"),
+        affPartner(
+          "Ahifi.cz",
+          "https://www.dpbolvw.net/click-101883843-17006948"
+        ),
         affItem("", "autohotarek"),
         affItem("", "bestdrive"),
         affItem("", "xl-moto"),
