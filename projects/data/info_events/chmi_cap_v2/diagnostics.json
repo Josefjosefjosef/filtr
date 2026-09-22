@@ -1,6 +1,6 @@
 {
-  "runId": "618cb3ebf2658778",
-  "started": "2026-09-22T11:30:52.681Z",
+  "runId": "d2e5c0c7c3a5cd4e",
+  "started": "2026-09-22T12:04:39.843Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -9,22 +9,22 @@
     "maxFiles": null,
     "fixedLimit": false,
     "productStreams": [
-      "50",
-      "70"
+      "70",
+      "50"
     ],
     "streamCount": 2
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml",
-      "productKey": "50",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_221200.xml",
+      "productKey": "70",
       "status": 200,
       "action": "process",
       "cacheHit": false
     },
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_151200.xml",
-      "productKey": "70",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml",
+      "productKey": "50",
       "status": 304,
       "action": "not_modified",
       "cacheHit": true
@@ -49,22 +49,22 @@
     "reason": "ok",
     "completeness": {
       "capMessages": 1,
-      "infoBlocks": 18,
+      "infoBlocks": 4,
       "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 34,
-      "mappedAreas": 192,
+      "totalAreas": 32,
+      "mappedAreas": 164,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 3,
       "publishedScheduled": 0,
       "publishableCount": 3,
       "productStreams": [
-        "50",
-        "70"
+        "70",
+        "50"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -81,13 +81,12 @@
     "before": 3,
     "after": 3,
     "ledgerKeys": 2,
-    "ledgerFingerprint": "e59bb0e042a3612a",
+    "ledgerFingerprint": "2c3a4fbb0a8b24bb",
     "history": {
-      "fetched": 0,
-      "cached": 32,
+      "fetched": 1,
+      "cached": 31,
       "skipped": 0,
       "urls": [
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_261200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_021200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_091200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_231200.xml",
@@ -118,19 +117,14 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_190732.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_200940.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210735.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml"
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml",
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_221200.xml"
       ],
       "recentCount": 32,
       "refCount": 2,
       "window": 16
     },
     "chainSteps": [
-      {
-        "sent": "2026-05-26T14:00:00+02:00",
-        "msgType": "Update",
-        "openEndedCount": 3,
-        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_261200.xml"
-      },
       {
         "sent": "2026-06-02T14:00:00+02:00",
         "msgType": "Update",
@@ -316,6 +310,12 @@
         "msgType": "Update",
         "openEndedCount": 0,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml"
+      },
+      {
+        "sent": "2026-09-22T14:00:00+02:00",
+        "msgType": "Update",
+        "openEndedCount": 3,
+        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_221200.xml"
       }
     ],
     "fixtureSeed": false,
@@ -333,22 +333,22 @@
   },
   "completeness": {
     "capMessages": 1,
-    "infoBlocks": 18,
+    "infoBlocks": 4,
     "logicalAlerts": 3,
     "uniqueEvents": [
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 34,
-    "mappedAreas": 192,
+    "totalAreas": 32,
+    "mappedAreas": 164,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
     "publishedActive": 3,
     "publishedScheduled": 0,
     "publishableCount": 3,
     "productStreams": [
-      "50",
-      "70"
+      "70",
+      "50"
     ],
     "streamCount": 2,
     "missingStreamCache": 0,
@@ -361,7 +361,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 192,
+    "headAreas": 164,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -369,6 +369,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-09-22T11:30:59.779Z",
-  "runMs": 7097
+  "finished": "2026-09-22T12:04:49.139Z",
+  "runMs": 9296
 }
