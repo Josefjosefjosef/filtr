@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-klik-pojisteni-v1-20260922"));
+  ok("index:cache_bust", index.includes("affiliate-kalkulator-pojisteni-v1-20260922"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -358,12 +358,17 @@ try {
           namedChips.map((c) => c.text).join("|")
         );
       } else if (section === "aff-pojisteni") {
+        const klikChip = namedChips.find((c) => c.text === "Klik.cz");
+        const kalkChip = namedChips.find((c) => c.text === "Kalkulator.cz");
         ok(
-          tag + ":chips_named_klik_only",
-          namedChips.length === 1 &&
-            namedChips[0].text === "Klik.cz" &&
-            namedChips[0].href === "https://www.dpbolvw.net/click-101883843-15024026" &&
-            namedChips[0].ready === "1",
+          tag + ":chips_named_pojisteni_partners",
+          namedChips.length === 2 &&
+            klikChip &&
+            kalkChip &&
+            klikChip.href === "https://www.dpbolvw.net/click-101883843-15024026" &&
+            kalkChip.href === "https://www.kqzyfj.com/click-101883843-15616442" &&
+            klikChip.ready === "1" &&
+            kalkChip.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {

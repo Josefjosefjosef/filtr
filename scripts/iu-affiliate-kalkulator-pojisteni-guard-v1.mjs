@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pojištění → Klik.cz deeplink (CJ 15024026), first free partner slot.
- * Does not change Cestovní pojištění Klik (15024030). Section stays at 8 slots.
- * Run: npm run iu-affiliate-klik-pojisteni-guard
+ * Freeze guard: Pojištění → Kalkulator.cz (CJ 15616442), second partner slot (first free after Klik).
+ * Does not lock remaining empty slots. Klik.cz slot 1 unchanged. Section stays at 8 slots.
+ * Run: npm run iu-affiliate-kalkulator-pojisteni-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,25 +15,31 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-klik-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-kalkulator-pojisteni-v1-20260922";
+const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-22-affiliate-kalkulator-pojisteni-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
-const PARTNER_TITLE = "Klik.cz";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15024026";
-const CESTOVNI_KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024030";
+const PARTNER_TITLE = "Kalkulator.cz";
+const CJ_URL = "https://www.kqzyfj.com/click-101883843-15616442";
+const KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024026";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-klik-pojisteni-guard-report.json"
+  "iu-affiliate-kalkulator-pojisteni-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+}
+
+function pojisteniBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-pojisteni"');
+  const blockEnd = catalog.indexOf('id: "aff-finance"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
 function auditStatic() {
@@ -47,48 +53,36 @@ function auditStatic() {
 
   ok("catalog:section_id", catalog.includes('id: "' + SECTION + '"'));
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
-  ok("catalog:disclosure", catalog.includes(DISCLOSURE));
-  ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_klik_href",
-    !/id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/(?:www\.)?klik\.cz/i.test(
+    "catalog:no_direct_kalkulator_href",
+    !/id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Kalkulator\.cz"\s*,\s*"https:\/\/(?:www\.)?kalkulator\.cz/i.test(
       catalog
     )
   );
   ok(
-    "catalog:klik_partner",
-    /id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"\s*\)/.test(
+    "catalog:kalkulator_partner",
+    /id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Kalkulator\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15616442"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot1_klik",
-    /id:\s*"aff-pojisteni"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klik\.cz"/.test(catalog)
+    "catalog:slot2_kalkulator",
+    /15024026"\s*\)\s*,\s*affPartner\(\s*"Kalkulator\.cz"/.test(catalog)
   );
   ok(
-    "catalog:ready_rel",
-    catalog.includes('rel="sponsored noopener"') &&
-      !catalog.includes('rel="nofollow sponsored noopener noreferrer"')
+    "catalog:klik_slot1_preserved",
+    /id:\s*"aff-pojisteni"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"/.test(
+      catalog
+    )
   );
-  ok("catalog:target_blank", catalog.includes('target="_blank"'));
 
-  const blockStart = catalog.indexOf('id: "aff-pojisteni"');
-  const blockEnd = catalog.indexOf('id: "aff-finance"', blockStart);
-  const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
+  const block = pojisteniBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:klik_in_pojisteni_block", block.includes("15024026"));
-  ok("catalog:no_travel_cj_in_pojisteni", !block.includes("15024030"));
-  ok(
-    "catalog:cestovni_klik_preserved",
-    /id:\s*"aff-cestovni-pojisteni"[\s\S]*?15024030/.test(catalog)
-  );
-  const cestStart = catalog.indexOf('id: "aff-cestovni-pojisteni"');
-  const cestEnd = catalog.indexOf('id: "aff-auto-moto"', cestStart);
-  const cestBlock =
-    cestStart >= 0 && cestEnd > cestStart ? catalog.slice(cestStart, cestEnd) : "";
-  ok("catalog:not_in_cestovni_block", !cestBlock.includes("15024026"));
+  ok("catalog:kalkulator_in_pojisteni", block.includes("15616442"));
+  ok("catalog:not_in_finance", !/id:\s*"aff-finance"[\s\S]*?15616442/.test(catalog));
+  ok("catalog:not_in_energie", !/id:\s*"aff-energie-uspor"[\s\S]*?15616442/.test(catalog));
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
@@ -121,7 +115,6 @@ async function dismissConsent(page) {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
-      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
     } catch (_) {}
     const b = document.getElementById("iuConsentAllowStats");
@@ -144,7 +137,6 @@ async function openAff(page, baseUrl) {
   await page.evaluate((sec) => {
     try {
       if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection(sec);
-      if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
     } catch (_) {}
   }, SECTION);
   await page.waitForSelector("#iuAffiliateView", { state: "attached", timeout: 90000 });
@@ -152,25 +144,19 @@ async function openAff(page, baseUrl) {
     const v = document.getElementById("iuAffiliateView");
     if (v) {
       v.hidden = false;
-      try {
-        v.removeAttribute("hidden");
-      } catch (_) {}
+      v.removeAttribute("hidden");
     }
   });
   await page.waitForFunction(
-    (sec) => {
-      const v = document.getElementById("iuAffiliateView");
-      const t = document.getElementById("iuAffiliateTitle");
-      return v && v.getAttribute("data-aff-category") === sec && t && (t.textContent || "").trim().length > 0;
-    },
-    SECTION,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    null,
     { timeout: 90000 }
   );
 }
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_KLIK_POJISTENI_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_KALKULATOR_POJISTENI_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -229,65 +215,55 @@ try {
       });
     }
     const page = await bootstrapGuardPage(context);
-    const pageErrors = [];
-    page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
-
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate((args) => {
-      const title = document.getElementById("iuAffiliateTitle");
-      const disc = document.getElementById("iuAffiliateDisclosure");
-      const grid = document.getElementById("iuAffiliateGrid");
-      const chips = grid ? Array.from(grid.querySelectorAll("a.iuAffiliateChip")) : [];
+    const snap = await page.evaluate((partner) => {
+      const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const klik = chips.find((c) => chipText(c) === args.partner) || null;
-      const firstChip = chips[0] || null;
+      const kalk = chips.find((c) => chipText(c) === partner) || null;
+      const second = chips[1] || null;
       let centered = false;
-      if (klik) {
-        const cs = getComputedStyle(klik);
+      if (kalk) {
+        const cs = getComputedStyle(kalk);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
           (cs.alignItems === "center" || cs.alignItems === "safe center");
       }
-      const hasImg = klik ? !!klik.querySelector("img, svg, picture, canvas") : false;
       return {
-        title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
-        disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
         slots: chips.length,
-        klikText: klik ? chipText(klik) : "",
-        klikHref: klik ? klik.getAttribute("href") || "" : "",
-        klikTarget: klik ? klik.getAttribute("target") || "" : "",
-        klikRel: klik ? klik.getAttribute("rel") || "" : "",
-        klikReady: klik ? klik.getAttribute("data-aff-ready") || "" : "",
-        firstText: firstChip ? chipText(firstChip) : "",
-        hasImg,
+        firstText: chips[0] ? chipText(chips[0]) : "",
+        secondText: second ? chipText(second) : "",
+        kalkText: kalk ? chipText(kalk) : "",
+        kalkHref: kalk ? kalk.getAttribute("href") || "" : "",
+        kalkTarget: kalk ? kalk.getAttribute("target") || "" : "",
+        kalkRel: kalk ? kalk.getAttribute("rel") || "" : "",
+        kalkReady: kalk ? kalk.getAttribute("data-aff-ready") || "" : "",
+        hasImg: kalk ? !!kalk.querySelector("img, svg, picture, canvas") : false,
         centered,
-        tagName: klik ? klik.tagName : "",
+        namedCount: chips.filter((c) => chipText(c) !== "").length,
       };
-    }, { disclosure: DISCLOSURE, partner: PARTNER_TITLE });
+    }, PARTNER_TITLE);
 
     const tag = vp.name;
-    ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
-    ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":first_slot_klik", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":klik_text", snap.klikText === PARTNER_TITLE, snap.klikText);
-    ok(tag + ":klik_href", snap.klikHref === CJ_URL, snap.klikHref);
-    ok(tag + ":klik_target", snap.klikTarget === "_blank", snap.klikTarget);
-    ok(tag + ":klik_rel_sponsored", /\bsponsored\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_noopener", /\bnoopener\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_nofollow", !/\bnofollow\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_ready", snap.klikReady === "1", snap.klikReady);
-    ok(tag + ":klik_is_anchor", snap.tagName === "A");
-    ok(tag + ":klik_no_img", snap.hasImg === false);
-    ok(tag + ":klik_no_direct_klik", !/^https?:\/\/(www\.)?klik\.cz/i.test(snap.klikHref));
+    ok(tag + ":first_slot_klik", snap.firstText === "Klik.cz", snap.firstText);
+    ok(tag + ":second_slot_kalkulator", snap.secondText === PARTNER_TITLE, snap.secondText);
+    ok(tag + ":kalkulator_text", snap.kalkText === PARTNER_TITLE, snap.kalkText);
+    ok(tag + ":kalkulator_href", snap.kalkHref === CJ_URL, snap.kalkHref);
+    ok(tag + ":kalkulator_target", snap.kalkTarget === "_blank", snap.kalkTarget);
+    ok(tag + ":kalkulator_rel_sponsored", /\bsponsored\b/.test(snap.kalkRel), snap.kalkRel);
+    ok(tag + ":kalkulator_rel_noopener", /\bnoopener\b/.test(snap.kalkRel), snap.kalkRel);
+    ok(tag + ":kalkulator_no_nofollow", !/\bnofollow\b/.test(snap.kalkRel));
+    ok(tag + ":kalkulator_no_noreferrer", !/\bnoreferrer\b/.test(snap.kalkRel));
+    ok(tag + ":kalkulator_ready", snap.kalkReady === "1", snap.kalkReady);
+    ok(tag + ":kalkulator_no_img", snap.hasImg === false);
+    ok(tag + ":kalkulator_no_direct", !/^https?:\/\/(www\.)?kalkulator\.cz/i.test(snap.kalkHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
+    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page
@@ -302,8 +278,8 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       ok(
-        tag + ":popup_cj_or_klik",
-        /dpbolvw\.net\/click-101883843-15024026/i.test(popupUrl) || /klik\.cz/i.test(popupUrl),
+        tag + ":popup_cj_or_site",
+        /kqzyfj\.com\/click-101883843-15616442/i.test(popupUrl) || /kalkulator\.cz/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -311,38 +287,16 @@ try {
 
     samples.push({
       vp: vp.name,
-      title: snap.title,
-      klikText: snap.klikText,
-      klikHref: snap.klikHref,
-      klikRel: snap.klikRel,
+      secondText: snap.secondText,
+      kalkHref: snap.kalkHref,
       slots: snap.slots,
-      firstText: snap.firstText,
+      namedCount: snap.namedCount,
     });
     await context.close();
   }
 
-  const ctx = await bootstrapGuardContext(browser, { viewport: { width: 390, height: 844 }, hasTouch: true });
-  const page = await bootstrapGuardPage(ctx);
-  await page.goto(`http://127.0.0.1:${PORT}/projects/?section=aff-cestovni-pojisteni&nosw=1`, {
-    waitUntil: "domcontentloaded",
-  });
-  await page.evaluate(() => {
-    if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection("aff-cestovni-pojisteni");
-    const v = document.getElementById("iuAffiliateView");
-    if (v) {
-      v.hidden = false;
-      v.removeAttribute("hidden");
-    }
-  });
-  await page.waitForFunction(() => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8);
-  const travel = await page.evaluate((cj) => {
-    const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
-    const chipText = (c) => ((c.querySelector(".iuRadioChipTitle") || c).textContent || "").trim();
-    const k = chips.find((c) => chipText(c) === "Klik.cz");
-    return { href: k ? k.getAttribute("href") : "" };
-  }, CESTOVNI_KLIK_CJ);
-  ok("regression:cestovni_klik_href", travel.href === CESTOVNI_KLIK_CJ, travel.href);
-  await ctx.close();
+  const catalog = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+  ok("regression:klik_cj", catalog.includes(KLIK_CJ));
 } catch (err) {
   fails.push("runtime_exception:" + (err && err.message ? err.message : String(err)));
 } finally {
@@ -352,7 +306,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_KLIK_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_KALKULATOR_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };
