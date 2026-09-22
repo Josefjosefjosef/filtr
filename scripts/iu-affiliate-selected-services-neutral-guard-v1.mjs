@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-ahifi-auto-moto-v1-20260922"));
+  ok("index:cache_bust", index.includes("affiliate-klik-pojisteni-v1-20260922"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -356,6 +356,15 @@ try {
           tag + ":chips_named_leo_only",
           namedChips.length === 1 && namedChips[0].text === "Leo Express",
           namedChips.map((c) => c.text).join("|")
+        );
+      } else if (section === "aff-pojisteni") {
+        ok(
+          tag + ":chips_named_klik_only",
+          namedChips.length === 1 &&
+            namedChips[0].text === "Klik.cz" &&
+            namedChips[0].href === "https://www.dpbolvw.net/click-101883843-15024026" &&
+            namedChips[0].ready === "1",
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
         ok(tag + ":chips_labels_empty", namedChips.length === 0, namedChips[0] ? namedChips[0].text : "");

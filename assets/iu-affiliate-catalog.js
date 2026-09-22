@@ -480,7 +480,10 @@
       icon: "iu-aff-shield",
       description: "Odkazy na vybrané pojišťovny a srovnávací služby.",
       items: [
-        affItem("", "direct-pojisteni"),
+        affPartner(
+          "Klik.cz",
+          "https://www.dpbolvw.net/click-101883843-15024026"
+        ),
         affItem("", "klikpojisteni"),
         affItem("", "kalkulator-pojisteni"),
         affItem("", "generali-pojisteni"),
