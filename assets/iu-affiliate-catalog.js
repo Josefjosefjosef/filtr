@@ -484,7 +484,10 @@
           "Klik.cz",
           "https://www.dpbolvw.net/click-101883843-15024026"
         ),
-        affItem("", "klikpojisteni"),
+        affPartner(
+          "Kalkulator.cz",
+          "https://www.kqzyfj.com/click-101883843-15616442"
+        ),
         affItem("", "kalkulator-pojisteni"),
         affItem("", "generali-pojisteni"),
         affItem("", "csob-pojisteni"),
