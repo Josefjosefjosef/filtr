@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pojištění → Kalkulator.cz (CJ 15616442), second partner slot (first free after Klik).
- * Does not lock remaining empty slots. Klik.cz slot 1 unchanged. Section stays at 8 slots.
- * Run: npm run iu-affiliate-kalkulator-pojisteni-guard
+ * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
+ * Does not lock remaining empty slots. Section stays at 8 slots.
+ * Run: npm run iu-affiliate-lekarna-lekarny-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,19 +15,18 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-lekarna-lekarny-v1-20260922";
+const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-22-affiliate-lekarna-lekarny-v1";
-const SECTION = "aff-pojisteni";
-const SECTION_TITLE = "Pojištění";
-const PARTNER_TITLE = "Kalkulator.cz";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15616442";
-const KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024026";
+const SECTION = "aff-lekarny";
+const SECTION_TITLE = "Lékárny";
+const PARTNER_TITLE = "Lékárna.cz";
+const CJ_URL = "https://www.kqzyfj.com/click-101883843-15734937";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-kalkulator-pojisteni-guard-report.json"
+  "iu-affiliate-lekarna-lekarny-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -36,9 +35,9 @@ function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
-function pojisteniBlock(catalog) {
-  const blockStart = catalog.indexOf('id: "aff-pojisteni"');
-  const blockEnd = catalog.indexOf('id: "aff-finance"', blockStart);
+function lekarnyBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-lekarny"');
+  const blockEnd = catalog.indexOf('id: "aff-zdravi-doplnky"', blockStart);
   return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
@@ -55,34 +54,27 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_kalkulator_href",
-    !/id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Kalkulator\.cz"\s*,\s*"https:\/\/(?:www\.)?kalkulator\.cz/i.test(
+    "catalog:no_direct_lekarna_href",
+    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/(?:www\.)?lekarna\.cz/i.test(
       catalog
     )
   );
   ok(
-    "catalog:kalkulator_partner",
-    /id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Kalkulator\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15616442"\s*\)/.test(
+    "catalog:lekarna_partner",
+    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15734937"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot2_kalkulator",
-    /15024026"\s*\)\s*,\s*affPartner\(\s*"Kalkulator\.cz"/.test(catalog)
-  );
-  ok(
-    "catalog:klik_slot1_preserved",
-    /id:\s*"aff-pojisteni"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"/.test(
-      catalog
-    )
+    "catalog:slot1_lekarna",
+    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Lékárna\.cz"/.test(catalog)
   );
 
-  const block = pojisteniBlock(catalog);
+  const block = lekarnyBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:kalkulator_in_pojisteni", block.includes("15616442"));
-  ok("catalog:not_in_finance", !/id:\s*"aff-finance"[\s\S]*?15616442/.test(catalog));
-  ok("catalog:not_in_energie", !/id:\s*"aff-energie-uspor"[\s\S]*?15616442/.test(catalog));
+  ok("catalog:lekarna_in_block", block.includes("15734937"));
+  ok("catalog:not_in_zdravi", !/id:\s*"aff-zdravi-doplnky"[\s\S]*?15734937/.test(catalog));
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
@@ -156,7 +148,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_KALKULATOR_POJISTENI_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -223,47 +215,47 @@ try {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const kalk = chips.find((c) => chipText(c) === partner) || null;
-      const second = chips[1] || null;
+      const lek = chips.find((c) => chipText(c) === partner) || null;
+      const first = chips[0] || null;
       let centered = false;
-      if (kalk) {
-        const cs = getComputedStyle(kalk);
+      if (lek) {
+        const cs = getComputedStyle(lek);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
           (cs.alignItems === "center" || cs.alignItems === "safe center");
       }
       return {
+        title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
-        firstText: chips[0] ? chipText(chips[0]) : "",
-        secondText: second ? chipText(second) : "",
-        kalkText: kalk ? chipText(kalk) : "",
-        kalkHref: kalk ? kalk.getAttribute("href") || "" : "",
-        kalkTarget: kalk ? kalk.getAttribute("target") || "" : "",
-        kalkRel: kalk ? kalk.getAttribute("rel") || "" : "",
-        kalkReady: kalk ? kalk.getAttribute("data-aff-ready") || "" : "",
-        hasImg: kalk ? !!kalk.querySelector("img, svg, picture, canvas") : false,
+        firstText: first ? chipText(first) : "",
+        lekText: lek ? chipText(lek) : "",
+        lekHref: lek ? lek.getAttribute("href") || "" : "",
+        lekTarget: lek ? lek.getAttribute("target") || "" : "",
+        lekRel: lek ? lek.getAttribute("rel") || "" : "",
+        lekReady: lek ? lek.getAttribute("data-aff-ready") || "" : "",
+        hasImg: lek ? !!lek.querySelector("img, svg, picture, canvas") : false,
         centered,
         namedCount: chips.filter((c) => chipText(c) !== "").length,
       };
     }, PARTNER_TITLE);
 
     const tag = vp.name;
+    ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":first_slot_klik", snap.firstText === "Klik.cz", snap.firstText);
-    ok(tag + ":second_slot_kalkulator", snap.secondText === PARTNER_TITLE, snap.secondText);
-    ok(tag + ":kalkulator_text", snap.kalkText === PARTNER_TITLE, snap.kalkText);
-    ok(tag + ":kalkulator_href", snap.kalkHref === CJ_URL, snap.kalkHref);
-    ok(tag + ":kalkulator_target", snap.kalkTarget === "_blank", snap.kalkTarget);
-    ok(tag + ":kalkulator_rel_sponsored", /\bsponsored\b/.test(snap.kalkRel), snap.kalkRel);
-    ok(tag + ":kalkulator_rel_noopener", /\bnoopener\b/.test(snap.kalkRel), snap.kalkRel);
-    ok(tag + ":kalkulator_no_nofollow", !/\bnofollow\b/.test(snap.kalkRel));
-    ok(tag + ":kalkulator_no_noreferrer", !/\bnoreferrer\b/.test(snap.kalkRel));
-    ok(tag + ":kalkulator_ready", snap.kalkReady === "1", snap.kalkReady);
-    ok(tag + ":kalkulator_no_img", snap.hasImg === false);
-    ok(tag + ":kalkulator_no_direct", !/^https?:\/\/(www\.)?kalkulator\.cz/i.test(snap.kalkHref));
+    ok(tag + ":first_slot_lekarna", snap.firstText === PARTNER_TITLE, snap.firstText);
+    ok(tag + ":lekarna_text", snap.lekText === PARTNER_TITLE, snap.lekText);
+    ok(tag + ":lekarna_href", snap.lekHref === CJ_URL, snap.lekHref);
+    ok(tag + ":lekarna_target", snap.lekTarget === "_blank", snap.lekTarget);
+    ok(tag + ":lekarna_rel_sponsored", /\bsponsored\b/.test(snap.lekRel), snap.lekRel);
+    ok(tag + ":lekarna_rel_noopener", /\bnoopener\b/.test(snap.lekRel), snap.lekRel);
+    ok(tag + ":lekarna_no_nofollow", !/\bnofollow\b/.test(snap.lekRel));
+    ok(tag + ":lekarna_no_noreferrer", !/\bnoreferrer\b/.test(snap.lekRel));
+    ok(tag + ":lekarna_ready", snap.lekReady === "1", snap.lekReady);
+    ok(tag + ":lekarna_no_img", snap.hasImg === false);
+    ok(tag + ":lekarna_no_direct", !/^https?:\/\/(www\.)?lekarna\.cz/i.test(snap.lekHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount === 1, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page
@@ -279,7 +271,7 @@ try {
       const popupUrl = popup.url();
       ok(
         tag + ":popup_cj_or_site",
-        /kqzyfj\.com\/click-101883843-15616442/i.test(popupUrl) || /kalkulator\.cz/i.test(popupUrl),
+        /kqzyfj\.com\/click-101883843-15734937/i.test(popupUrl) || /lekarna\.cz/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -287,16 +279,13 @@ try {
 
     samples.push({
       vp: vp.name,
-      secondText: snap.secondText,
-      kalkHref: snap.kalkHref,
+      firstText: snap.firstText,
+      lekHref: snap.lekHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
     await context.close();
   }
-
-  const catalog = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
-  ok("regression:klik_cj", catalog.includes(KLIK_CJ));
 } catch (err) {
   fails.push("runtime_exception:" + (err && err.message ? err.message : String(err)));
 } finally {
@@ -306,7 +295,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_KALKULATOR_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };

@@ -534,7 +534,10 @@
       icon: "iu-aff-cross",
       description: "Odkazy na vybrané externí lékárny a související obchody.",
       items: [
-        affItem("", "dr-max"),
+        affPartner(
+          "Lékárna.cz",
+          "https://www.kqzyfj.com/click-101883843-15734937"
+        ),
         affItem("", "pilulka"),
         affItem("", "lekarna-cz"),
         affItem("", "benu"),

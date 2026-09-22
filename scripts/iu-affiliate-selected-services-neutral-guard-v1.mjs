@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-kalkulator-pojisteni-v1-20260922"));
+  ok("index:cache_bust", index.includes("affiliate-lekarna-lekarny-v1-20260922"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -356,6 +356,15 @@ try {
           tag + ":chips_named_leo_only",
           namedChips.length === 1 && namedChips[0].text === "Leo Express",
           namedChips.map((c) => c.text).join("|")
+        );
+      } else if (section === "aff-lekarny") {
+        ok(
+          tag + ":chips_named_lekarna_only",
+          namedChips.length === 1 &&
+            namedChips[0].text === "Lékárna.cz" &&
+            namedChips[0].href === "https://www.kqzyfj.com/click-101883843-15734937" &&
+            namedChips[0].ready === "1",
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {
         const klikChip = namedChips.find((c) => c.text === "Klik.cz");
