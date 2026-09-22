@@ -357,6 +357,15 @@ try {
           namedChips.length === 1 && namedChips[0].text === "Leo Express",
           namedChips.map((c) => c.text).join("|")
         );
+      } else if (section === "aff-pojisteni") {
+        ok(
+          tag + ":chips_named_klik_only",
+          namedChips.length === 1 &&
+            namedChips[0].text === "Klik.cz" &&
+            namedChips[0].href === "https://www.dpbolvw.net/click-101883843-15024026" &&
+            namedChips[0].ready === "1",
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
+        );
       } else {
         ok(tag + ":chips_labels_empty", namedChips.length === 0, namedChips[0] ? namedChips[0].text : "");
       }
