@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Cestovní pojištění → Klik.cz (CJ tracking), any occupied slot.
- * Does not lock slot index. Section stays at 8 partner slots.
- * Run: npm run iu-affiliate-klik-cz-cestovni-pojisteni-guard
+ * Freeze guard: Zdraví a doplňky → Klub zdraví (CJ 13884010), first free partner slot.
+ * Does not lock remaining empty slots. Section stays at 8 slots.
+ * Run: npm run iu-affiliate-klub-zdravi-zdravi-doplnky-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,24 +15,34 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
+const MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-24-affiliate-klub-zdravi-zdravi-doplnky-v1";
-const SECTION = "aff-cestovni-pojisteni";
-const SECTION_TITLE = "Cestovní pojištění";
-const PARTNER_TITLE = "Klik.cz";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15024030";
-const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+const SECTION = "aff-zdravi-doplnky";
+const SECTION_TITLE = "Zdraví a doplňky";
+const PARTNER_TITLE = "Klub zdraví";
+const CJ_URL = "https://www.dpbolvw.net/click-101883843-13884010";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-klik-cz-cestovni-pojisteni-guard-report.json"
+  "iu-affiliate-klub-zdravi-zdravi-doplnky-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+}
+
+function zdraviBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
+  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
+}
+
+function lekarnyBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-lekarny"');
+  const blockEnd = catalog.indexOf('id: "aff-zdravi-doplnky"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
 function auditStatic() {
@@ -46,42 +56,31 @@ function auditStatic() {
 
   ok("catalog:section_id", catalog.includes('id: "' + SECTION + '"'));
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
-  ok("catalog:disclosure", catalog.includes(DISCLOSURE));
-  ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_klik_href",
-    !/affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/(?:www\.)?klik\.cz/i.test(catalog)
-  );
-  ok(
-    "catalog:klik_partner",
-    /id:\s*"aff-cestovni-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024030"\s*\)/.test(
+    "catalog:no_direct_klubzdravi_href",
+    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"\s*,\s*"https:\/\/(?:www\.)?klubzdravi\.cz/i.test(
       catalog
     )
   );
   ok(
-    "catalog:ready_rel",
-    catalog.includes('rel="sponsored noopener"') &&
-      !catalog.includes('rel="nofollow sponsored noopener noreferrer"')
+    "catalog:klub_partner",
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-13884010"\s*\)/.test(
+      catalog
+    )
   );
-  ok("catalog:target_blank", catalog.includes('target="_blank"'));
+  ok(
+    "catalog:slot1_klub",
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klub zdraví"/.test(catalog)
+  );
 
-  const blockStart = catalog.indexOf('id: "aff-cestovni-pojisteni"');
-  const blockEnd = catalog.indexOf('id: "aff-auto-moto"', blockStart);
-  const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
+  const block = zdraviBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:klik_in_block", block.includes('affPartner(\n          "Klik.cz"') || block.includes('affPartner("Klik.cz"'));
-  ok(
-    "catalog:pojisteni_klik_deeplink",
-    /id:\s*"aff-pojisteni"[\s\S]*?15024026/.test(catalog)
-  );
-  ok(
-    "catalog:pojisteni_no_travel_cj",
-    !/id:\s*"aff-pojisteni"[\s\S]*?15024030/.test(catalog)
-  );
+  ok("catalog:klub_in_block", block.includes("13884010"));
+  ok("catalog:not_in_lekarny", !lekarnyBlock(catalog).includes("13884010"));
 
-  ok("index:marker", index.includes(KLIK_MARKER));
+  ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
@@ -112,7 +111,6 @@ async function dismissConsent(page) {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
-      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
     } catch (_) {}
     const b = document.getElementById("iuConsentAllowStats");
@@ -135,7 +133,6 @@ async function openAff(page, baseUrl) {
   await page.evaluate((sec) => {
     try {
       if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection(sec);
-      if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
     } catch (_) {}
   }, SECTION);
   await page.waitForSelector("#iuAffiliateView", { state: "attached", timeout: 90000 });
@@ -143,25 +140,19 @@ async function openAff(page, baseUrl) {
     const v = document.getElementById("iuAffiliateView");
     if (v) {
       v.hidden = false;
-      try {
-        v.removeAttribute("hidden");
-      } catch (_) {}
+      v.removeAttribute("hidden");
     }
   });
   await page.waitForFunction(
-    (sec) => {
-      const v = document.getElementById("iuAffiliateView");
-      const t = document.getElementById("iuAffiliateTitle");
-      return v && v.getAttribute("data-aff-category") === sec && t && (t.textContent || "").trim().length > 0;
-    },
-    SECTION,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    null,
     { timeout: 90000 }
   );
 }
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_KLIK_CZ_CESTOVNI_POJISTENI_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_KLUB_ZDRAVI_ZDRAVI_DOPLNKY_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -220,62 +211,55 @@ try {
       });
     }
     const page = await bootstrapGuardPage(context);
-    const pageErrors = [];
-    page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
-
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate((args) => {
-      const title = document.getElementById("iuAffiliateTitle");
-      const disc = document.getElementById("iuAffiliateDisclosure");
-      const grid = document.getElementById("iuAffiliateGrid");
-      const chips = grid ? Array.from(grid.querySelectorAll("a.iuAffiliateChip")) : [];
+    const snap = await page.evaluate((partner) => {
+      const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const klik = chips.find((c) => chipText(c) === args.partner) || null;
+      const klub = chips.find((c) => chipText(c) === partner) || null;
+      const first = chips[0] || null;
       let centered = false;
-      if (klik) {
-        const cs = getComputedStyle(klik);
+      if (klub) {
+        const cs = getComputedStyle(klub);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
           (cs.alignItems === "center" || cs.alignItems === "safe center");
       }
-      const hasImg = klik ? !!klik.querySelector("img, svg, picture, canvas") : false;
       return {
-        title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
-        disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
+        title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
-        klikText: klik ? chipText(klik) : "",
-        klikHref: klik ? klik.getAttribute("href") || "" : "",
-        klikTarget: klik ? klik.getAttribute("target") || "" : "",
-        klikRel: klik ? klik.getAttribute("rel") || "" : "",
-        klikReady: klik ? klik.getAttribute("data-aff-ready") || "" : "",
-        hasImg,
+        firstText: first ? chipText(first) : "",
+        klubText: klub ? chipText(klub) : "",
+        klubHref: klub ? klub.getAttribute("href") || "" : "",
+        klubTarget: klub ? klub.getAttribute("target") || "" : "",
+        klubRel: klub ? klub.getAttribute("rel") || "" : "",
+        klubReady: klub ? klub.getAttribute("data-aff-ready") || "" : "",
+        hasImg: klub ? !!klub.querySelector("img, svg, picture, canvas") : false,
         centered,
-        tagName: klik ? klik.tagName : "",
+        namedCount: chips.filter((c) => chipText(c) !== "").length,
       };
-    }, { disclosure: DISCLOSURE, partner: PARTNER_TITLE });
+    }, PARTNER_TITLE);
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
-    ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":klik_text", snap.klikText === PARTNER_TITLE, snap.klikText);
-    ok(tag + ":klik_href", snap.klikHref === CJ_URL, snap.klikHref);
-    ok(tag + ":klik_target", snap.klikTarget === "_blank", snap.klikTarget);
-    ok(tag + ":klik_rel_sponsored", /\bsponsored\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_noopener", /\bnoopener\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_nofollow", !/\bnofollow\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.klikRel), snap.klikRel);
-    ok(tag + ":klik_ready", snap.klikReady === "1", snap.klikReady);
-    ok(tag + ":klik_is_anchor", snap.tagName === "A");
-    ok(tag + ":klik_no_img", snap.hasImg === false);
-    ok(tag + ":klik_no_direct_klik", !/^https?:\/\/(www\.)?klik\.cz/i.test(snap.klikHref));
+    ok(tag + ":first_slot_klub", snap.firstText === PARTNER_TITLE, snap.firstText);
+    ok(tag + ":klub_text", snap.klubText === PARTNER_TITLE, snap.klubText);
+    ok(tag + ":klub_href", snap.klubHref === CJ_URL, snap.klubHref);
+    ok(tag + ":klub_target", snap.klubTarget === "_blank", snap.klubTarget);
+    ok(tag + ":klub_rel_sponsored", /\bsponsored\b/.test(snap.klubRel), snap.klubRel);
+    ok(tag + ":klub_rel_noopener", /\bnoopener\b/.test(snap.klubRel), snap.klubRel);
+    ok(tag + ":klub_no_nofollow", !/\bnofollow\b/.test(snap.klubRel));
+    ok(tag + ":klub_no_noreferrer", !/\bnoreferrer\b/.test(snap.klubRel));
+    ok(tag + ":klub_ready", snap.klubReady === "1", snap.klubReady);
+    ok(tag + ":klub_no_img", snap.hasImg === false);
+    ok(tag + ":klub_no_direct", !/^https?:\/\/(?:www\.)?klubzdravi\.cz/i.test(snap.klubHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
+    ok(tag + ":empty_slots_remain", snap.namedCount === 1, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page
@@ -290,8 +274,8 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       ok(
-        tag + ":popup_cj_or_klik",
-        /dpbolvw\.net\/click-101883843-15024030/i.test(popupUrl) || /klik\.cz/i.test(popupUrl),
+        tag + ":popup_cj_or_site",
+        /dpbolvw\.net\/click-101883843-13884010/i.test(popupUrl) || /klubzdravi\.cz/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -299,11 +283,10 @@ try {
 
     samples.push({
       vp: vp.name,
-      title: snap.title,
-      klikText: snap.klikText,
-      klikHref: snap.klikHref,
-      klikRel: snap.klikRel,
+      firstText: snap.firstText,
+      klubHref: snap.klubHref,
       slots: snap.slots,
+      namedCount: snap.namedCount,
     });
     await context.close();
   }
@@ -316,7 +299,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_KLIK_CZ_CESTOVNI_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_KLUB_ZDRAVI_ZDRAVI_DOPLNKY_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };
