@@ -28,8 +28,9 @@ const AHIFI_MARKER = "affiliate-ahifi-auto-moto-v1-20260922";
 const KLIK_POJISTENI_MARKER = "affiliate-klik-pojisteni-v1-20260922";
 const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = LEKARNA_LEKARNY_MARKER;
-const SW_TOKEN = "2026-09-22-affiliate-lekarna-lekarny-v1";
+const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
+const CATALOG_BUST = LEKARNA_LEMON_MARKER;
+const SW_TOKEN = "2026-09-23-affiliate-lekarna-lemon-lekarny-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -213,6 +214,7 @@ function auditStatic() {
   ok("index_klik_pojisteni_marker", index.includes(KLIK_POJISTENI_MARKER));
   ok("index_kalkulator_pojisteni_marker", index.includes(KALKULATOR_POJISTENI_MARKER));
   ok("index_lekarna_lekarny_marker", index.includes(LEKARNA_LEKARNY_MARKER));
+  ok("index_lekarna_lemon_marker", index.includes(LEKARNA_LEMON_MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));

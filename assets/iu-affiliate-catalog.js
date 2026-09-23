@@ -538,7 +538,10 @@
           "Lékárna.cz",
           "https://www.kqzyfj.com/click-101883843-15734937"
         ),
-        affItem("", "pilulka"),
+        affPartner(
+          "Lékárna Lemon",
+          "https://www.jdoqocy.com/click-101883843-14563148"
+        ),
         affItem("", "lekarna-cz"),
         affItem("", "benu"),
         affItem("", "lekarna-lemon"),

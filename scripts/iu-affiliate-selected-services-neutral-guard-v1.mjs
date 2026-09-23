@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-lekarna-lekarny-v1-20260922"));
+  ok("index:cache_bust", index.includes("affiliate-lekarna-lemon-lekarny-v1-20260923"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -358,12 +358,17 @@ try {
           namedChips.map((c) => c.text).join("|")
         );
       } else if (section === "aff-lekarny") {
+        const lekCz = namedChips.find((c) => c.text === "Lékárna.cz");
+        const lemon = namedChips.find((c) => c.text === "Lékárna Lemon");
         ok(
-          tag + ":chips_named_lekarna_only",
-          namedChips.length === 1 &&
-            namedChips[0].text === "Lékárna.cz" &&
-            namedChips[0].href === "https://www.kqzyfj.com/click-101883843-15734937" &&
-            namedChips[0].ready === "1",
+          tag + ":chips_named_lekarny_partners",
+          namedChips.length === 2 &&
+            lekCz &&
+            lemon &&
+            lekCz.href === "https://www.kqzyfj.com/click-101883843-15734937" &&
+            lemon.href === "https://www.jdoqocy.com/click-101883843-14563148" &&
+            lekCz.ready === "1" &&
+            lemon.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {

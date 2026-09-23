@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-lekarna-lekarny-v1-20260922";
-const SW_TOKEN = "2026-09-22-affiliate-lekarna-lekarny-v1";
+const CATALOG_BUST = "affiliate-lekarna-lemon-lekarny-v1-20260923";
+const SW_TOKEN = "2026-09-23-affiliate-lekarna-lemon-lekarny-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
 const PARTNER_TITLE = "AXA Assistance";

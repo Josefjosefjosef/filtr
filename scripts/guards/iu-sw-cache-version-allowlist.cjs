@@ -3,6 +3,7 @@
  * When bumping CACHE_VERSION in sw.js, add the new token here once.
  */
 const IU_SW_CACHE_VERSION_TOKENS = [
+  "2026-09-23-affiliate-lekarna-lemon-lekarny-v1",
   "2026-09-22-affiliate-lekarna-lekarny-v1",
   "2026-09-22-affiliate-kalkulator-pojisteni-v1",
   "2026-09-22-affiliate-klik-pojisteni-v1",
@@ -232,7 +233,7 @@ const IU_SW_CACHE_VERSION_TOKENS = [
 ];
 
 /** Current production CACHE_VERSION string inside sw.js */
-const IU_SW_CACHE_VERSION_CURRENT = "2026-09-22-affiliate-lekarna-lekarny-v1";
+const IU_SW_CACHE_VERSION_CURRENT = "2026-09-23-affiliate-lekarna-lemon-lekarny-v1";
 
 function swHasAllowedCacheVersion(swSrc) {
   const src = String(swSrc || "");
