@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
- * Does not lock remaining empty slots. Section stays at 8 slots.
- * Run: npm run iu-affiliate-lekarna-lekarny-guard
+ * Freeze guard: Lékárny → Lékárna Lemon (CJ 14563148), second partner slot (first free after Lékárna.cz).
+ * Does not lock remaining empty slots. Lékárna.cz slot 1 unchanged. Section stays at 8 slots.
+ * Run: npm run iu-affiliate-lekarna-lemon-lekarny-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,18 +15,17 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-lekarna-lemon-lekarny-v1-20260923";
+const MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-23-affiliate-lekarna-lemon-lekarny-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";
-const PARTNER_TITLE = "Lékárna.cz";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15734937";
-const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+const PARTNER_TITLE = "Lékárna Lemon";
+const CJ_URL = "https://www.jdoqocy.com/click-101883843-14563148";
+const LEKARNA_CZ_CJ = "https://www.kqzyfj.com/click-101883843-15734937";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-lekarna-lekarny-guard-report.json"
+  "iu-affiliate-lekarna-lemon-lekarny-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -54,27 +53,30 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_lekarna_href",
-    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/(?:www\.)?lekarna\.cz/i.test(
+    "catalog:no_direct_lemon_href",
+    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/(?:www\.)?lekarnalemon\.cz/i.test(
       catalog
     )
   );
   ok(
-    "catalog:lekarna_partner",
-    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15734937"\s*\)/.test(
+    "catalog:lemon_partner",
+    /affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-14563148"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot1_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Lékárna\.cz"/.test(catalog)
+    "catalog:slot2_lemon_after_lekarna",
+    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"[\s\S]*?affPartner\(\s*"Lékárna Lemon"/.test(
+      catalog
+    )
   );
+  ok("catalog:lekarna_cz_unchanged", catalog.includes(LEKARNA_CZ_CJ));
 
   const block = lekarnyBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:lekarna_in_block", block.includes("15734937"));
-  ok("catalog:not_in_zdravi", !/id:\s*"aff-zdravi-doplnky"[\s\S]*?15734937/.test(catalog));
+  ok("catalog:lemon_in_block", block.includes("14563148"));
+  ok("catalog:not_in_zdravi", !/id:\s*"aff-zdravi-doplnky"[\s\S]*?14563148/.test(catalog));
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
@@ -148,7 +150,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_LEKARNA_LEMON_LEKARNY_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -209,17 +211,18 @@ try {
     const page = await bootstrapGuardPage(context);
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate((partner) => {
+    const snap = await page.evaluate(({ partner, lekarnaCz }) => {
       const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const lek = chips.find((c) => chipText(c) === partner) || null;
+      const lemon = chips.find((c) => chipText(c) === partner) || null;
       const first = chips[0] || null;
+      const second = chips[1] || null;
       let centered = false;
-      if (lek) {
-        const cs = getComputedStyle(lek);
+      if (lemon) {
+        const cs = getComputedStyle(lemon);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
@@ -229,37 +232,39 @@ try {
         title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
         firstText: first ? chipText(first) : "",
-        lekText: lek ? chipText(lek) : "",
-        lekHref: lek ? lek.getAttribute("href") || "" : "",
-        lekTarget: lek ? lek.getAttribute("target") || "" : "",
-        lekRel: lek ? lek.getAttribute("rel") || "" : "",
-        lekReady: lek ? lek.getAttribute("data-aff-ready") || "" : "",
-        hasImg: lek ? !!lek.querySelector("img, svg, picture, canvas") : false,
+        secondText: second ? chipText(second) : "",
+        lemonText: lemon ? chipText(lemon) : "",
+        lemonHref: lemon ? lemon.getAttribute("href") || "" : "",
+        lemonTarget: lemon ? lemon.getAttribute("target") || "" : "",
+        lemonRel: lemon ? lemon.getAttribute("rel") || "" : "",
+        lemonReady: lemon ? lemon.getAttribute("data-aff-ready") || "" : "",
+        hasImg: lemon ? !!lemon.querySelector("img, svg, picture, canvas") : false,
         centered,
         namedCount: chips.filter((c) => chipText(c) !== "").length,
+        lekarnaCzStillFirst: first ? chipText(first) === lekarnaCz : false,
       };
-    }, PARTNER_TITLE);
+    }, { partner: PARTNER_TITLE, lekarnaCz: "Lékárna.cz" });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":first_slot_lekarna", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":lekarna_text", snap.lekText === PARTNER_TITLE, snap.lekText);
-    ok(tag + ":lekarna_href", snap.lekHref === CJ_URL, snap.lekHref);
-    ok(tag + ":lekarna_target", snap.lekTarget === "_blank", snap.lekTarget);
-    ok(tag + ":lekarna_rel_sponsored", /\bsponsored\b/.test(snap.lekRel), snap.lekRel);
-    ok(tag + ":lekarna_rel_noopener", /\bnoopener\b/.test(snap.lekRel), snap.lekRel);
-    ok(tag + ":lekarna_no_nofollow", !/\bnofollow\b/.test(snap.lekRel));
-    ok(tag + ":lekarna_no_noreferrer", !/\bnoreferrer\b/.test(snap.lekRel));
-    ok(tag + ":lekarna_ready", snap.lekReady === "1", snap.lekReady);
-    ok(tag + ":lekarna_no_img", snap.hasImg === false);
-    ok(tag + ":lekarna_no_direct", !/^https?:\/\/(www\.)?lekarna\.cz/i.test(snap.lekHref));
-    ok(tag + ":centered", snap.centered === true);
+    ok(tag + ":lekarna_cz_slot1", snap.lekarnaCzStillFirst && snap.firstText === "Lékárna.cz", snap.firstText);
+    ok(tag + ":second_slot_lemon", snap.secondText === PARTNER_TITLE, snap.secondText);
+    ok(tag + ":lemon_text", snap.lemonText === PARTNER_TITLE, snap.lemonText);
+    ok(tag + ":lemon_href", snap.lemonHref === CJ_URL, snap.lemonHref);
+    ok(tag + ":lemon_target", snap.lemonTarget === "_blank", snap.lemonTarget);
+    ok(tag + ":lemon_rel_sponsored", /\bsponsored\b/.test(snap.lemonRel), snap.lemonRel);
+    ok(tag + ":lemon_rel_noopener", /\bnoopener\b/.test(snap.lemonRel), snap.lemonRel);
+    ok(tag + ":lemon_no_nofollow", !/\bnofollow\b/.test(snap.lemonRel));
+    ok(tag + ":lemon_no_noreferrer", !/\bnoreferrer\b/.test(snap.lemonRel));
+    ok(tag + ":lemon_ready", snap.lemonReady === "1", snap.lemonReady);
+    ok(tag + ":lemon_no_img", snap.hasImg === false);
     ok(
-      tag + ":empty_slots_remain",
-      snap.namedCount >= 1 && snap.namedCount < 8,
-      "named=" + snap.namedCount
+      tag + ":lemon_no_direct",
+      !/^https?:\/\/(?:www\.)?lekarnalemon\.cz/i.test(snap.lemonHref)
     );
+    ok(tag + ":centered", snap.centered === true);
+    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page
@@ -275,7 +280,7 @@ try {
       const popupUrl = popup.url();
       ok(
         tag + ":popup_cj_or_site",
-        /kqzyfj\.com\/click-101883843-15734937/i.test(popupUrl) || /lekarna\.cz/i.test(popupUrl),
+        /jdoqocy\.com\/click-101883843-14563148/i.test(popupUrl) || /lekarnalemon\.cz/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -283,8 +288,8 @@ try {
 
     samples.push({
       vp: vp.name,
-      firstText: snap.firstText,
-      lekHref: snap.lekHref,
+      secondText: snap.secondText,
+      lemonHref: snap.lemonHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
@@ -299,7 +304,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_LEKARNA_LEMON_LEKARNY_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };
