@@ -29,8 +29,9 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_BUST = KLUB_ZDRAVI_MARKER;
-const SW_TOKEN = "2026-09-24-affiliate-klub-zdravi-zdravi-doplnky-v1";
+const BODYWORLD_MARKER = "affiliate-bodyworld-zdravi-doplnky-v1-20260924";
+const CATALOG_BUST = BODYWORLD_MARKER;
+const SW_TOKEN = "2026-09-24-affiliate-bodyworld-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -184,6 +185,7 @@ function auditStatic() {
   ok("index_lekarna_lekarny_marker", index.includes(LEKARNA_LEKARNY_MARKER));
   ok("index_lekarna_lemon_marker", index.includes(LEKARNA_LEMON_MARKER));
   ok("index_klub_zdravi_marker", index.includes(KLUB_ZDRAVI_MARKER));
+  ok("index_bodyworld_marker", index.includes(BODYWORLD_MARKER));
   ok("css_structure_marker", css.includes(STRUCTURE_MARKER));
   ok("js_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw_allowed", swHasAllowedCacheVersion(sw));

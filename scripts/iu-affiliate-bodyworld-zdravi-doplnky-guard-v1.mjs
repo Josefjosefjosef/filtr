@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Cestovní pojištění → first free slot = AXA Assistance (CJ tracking).
- * Allows future partners in remaining slots. Protects Booking + Leo regression.
- * Run: npm run iu-affiliate-axa-assistance-cestovni-pojisteni-guard
+ * Freeze guard: Zdraví a doplňky → BodyWorld (CJ 15735791), second partner slot (first free after Klub zdraví).
+ * Does not lock remaining empty slots. Klub zdraví slot 1 unchanged. Section stays at 8 slots.
+ * Run: npm run iu-affiliate-bodyworld-zdravi-doplnky-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,26 +15,35 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-bodyworld-zdravi-doplnky-v1-20260924";
+const MARKER = "affiliate-bodyworld-zdravi-doplnky-v1-20260924";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-24-affiliate-bodyworld-zdravi-doplnky-v1";
-const SECTION = "aff-cestovni-pojisteni";
-const SECTION_TITLE = "Cestovní pojištění";
-const PARTNER_TITLE = "AXA Assistance";
-const CJ_URL = "https://www.tkqlhce.com/click-101883843-12585182";
-const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
-const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
-const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+const SECTION = "aff-zdravi-doplnky";
+const SECTION_TITLE = "Zdraví a doplňky";
+const PARTNER_TITLE = "BodyWorld";
+const CJ_URL = "https://www.tkqlhce.com/click-101883843-15735791";
+const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-axa-assistance-cestovni-pojisteni-guard-report.json"
+  "iu-affiliate-bodyworld-zdravi-doplnky-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+}
+
+function zdraviBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
+  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
+}
+
+function lekarnyBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-lekarny"');
+  const blockEnd = catalog.indexOf('id: "aff-zdravi-doplnky"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
 function auditStatic() {
@@ -48,38 +57,34 @@ function auditStatic() {
 
   ok("catalog:section_id", catalog.includes('id: "' + SECTION + '"'));
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
-  ok("catalog:disclosure", catalog.includes(DISCLOSURE));
-  ok("catalog:affPartner_helper", catalog.includes("function affPartner("));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_axa_href",
-    !/affPartner\(\s*"AXA Assistance"\s*,\s*"https:\/\/(?:www\.)?axa\.(cz|com)/i.test(catalog)
-  );
-  ok(
-    "catalog:slot1_axa",
-    /id:\s*"aff-cestovni-pojisteni"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"AXA Assistance"\s*,\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-12585182"\s*\)/.test(
+    "catalog:no_direct_bodyworld_href",
+    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"BodyWorld"\s*,\s*"https:\/\/(?:www\.)?bodyworld\.eu/i.test(
       catalog
     )
   );
-  ok("catalog:booking_preserved", catalog.includes(BOOKING_CJ));
-  ok("catalog:leo_preserved", catalog.includes(LEO_CJ));
   ok(
-    "catalog:ready_rel",
-    catalog.includes('rel="sponsored noopener"') &&
-      !catalog.includes('rel="nofollow sponsored noopener noreferrer"')
+    "catalog:bodyworld_partner",
+    /affPartner\(\s*"BodyWorld"\s*,\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-15735791"\s*\)/.test(
+      catalog
+    )
   );
-  ok("catalog:target_blank", catalog.includes('target="_blank"'));
+  ok(
+    "catalog:slot2_bodyworld_after_klub",
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"[\s\S]*?affPartner\(\s*"BodyWorld"/.test(
+      catalog
+    )
+  );
+  ok("catalog:klub_unchanged", catalog.includes(KLUB_CJ));
 
-  const blockStart = catalog.indexOf('id: "aff-cestovni-pojisteni"');
-  const blockEnd = catalog.indexOf('id: "aff-auto-moto"', blockStart);
-  const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
+  const block = zdraviBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  const emptySlots = (block.match(/affItem\(""/g) || []).length;
-  ok("catalog:empty_slots_max_6", emptySlots <= 6, "n=" + emptySlots);
-  ok("catalog:axa_still_first_partner", /items:\s*\[[\s\S]*?affPartner\(\s*"AXA Assistance"/.test(block));
+  ok("catalog:bodyworld_in_block", block.includes("15735791"));
+  ok("catalog:not_in_lekarny", !lekarnyBlock(catalog).includes("15735791"));
 
-  ok("index:marker", index.includes(AXA_MARKER));
+  ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
@@ -110,7 +115,6 @@ async function dismissConsent(page) {
       localStorage.setItem("iu:local-data-protection:notice-accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted:v1", "1");
       localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
-      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
       localStorage.setItem("iu:tool-local-storage-consent:v1", "granted");
     } catch (_) {}
     const b = document.getElementById("iuConsentAllowStats");
@@ -133,7 +137,6 @@ async function openAff(page, baseUrl) {
   await page.evaluate((sec) => {
     try {
       if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection(sec);
-      if (typeof window.iuApplySectionFromURL === "function") window.iuApplySectionFromURL();
     } catch (_) {}
   }, SECTION);
   await page.waitForSelector("#iuAffiliateView", { state: "attached", timeout: 90000 });
@@ -141,25 +144,19 @@ async function openAff(page, baseUrl) {
     const v = document.getElementById("iuAffiliateView");
     if (v) {
       v.hidden = false;
-      try {
-        v.removeAttribute("hidden");
-      } catch (_) {}
+      v.removeAttribute("hidden");
     }
   });
   await page.waitForFunction(
-    (sec) => {
-      const v = document.getElementById("iuAffiliateView");
-      const t = document.getElementById("iuAffiliateTitle");
-      return v && v.getAttribute("data-aff-category") === sec && t && (t.textContent || "").trim().length > 0;
-    },
-    SECTION,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    null,
     { timeout: 90000 }
   );
 }
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_AXA_ASSISTANCE_CESTOVNI_POJISTENI_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_BODYWORLD_ZDRAVI_DOPLNKY_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -218,74 +215,65 @@ try {
       });
     }
     const page = await bootstrapGuardPage(context);
-    const pageErrors = [];
-    page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
-
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate((args) => {
-      const title = document.getElementById("iuAffiliateTitle");
-      const disc = document.getElementById("iuAffiliateDisclosure");
-      const grid = document.getElementById("iuAffiliateGrid");
-      const chips = grid ? Array.from(grid.querySelectorAll("a.iuAffiliateChip")) : [];
+    const snap = await page.evaluate(({ partner, klubTitle }) => {
+      const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+      const chipText = (c) => {
+        const t = c.querySelector(".iuRadioChipTitle");
+        return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
+      };
+      const bw = chips.find((c) => chipText(c) === partner) || null;
       const first = chips[0] || null;
-      const rest = chips.slice(1);
-      const firstTitle = first ? first.querySelector(".iuRadioChipTitle") : null;
+      const second = chips[1] || null;
       let centered = false;
-      if (first) {
-        const cs = getComputedStyle(first);
+      if (bw) {
+        const cs = getComputedStyle(bw);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
-          (cs.alignItems === "center" || cs.alignItems === "safe center") &&
-          (cs.textAlign === "center" || cs.textAlign === "start" || cs.textAlign === "-webkit-center" || true);
+          (cs.alignItems === "center" || cs.alignItems === "safe center");
       }
-      const hasImg = first ? !!first.querySelector("img, svg, picture, canvas") : false;
       return {
-        title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
-        disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
+        title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
-        firstText: firstTitle
-          ? (firstTitle.textContent || "").replace(/\s+/g, " ").trim()
-          : first
-            ? (first.textContent || "").replace(/\s+/g, " ").trim()
-            : "",
-        firstHref: first ? first.getAttribute("href") || "" : "",
-        firstTarget: first ? first.getAttribute("target") || "" : "",
-        firstRel: first ? first.getAttribute("rel") || "" : "",
-        firstReady: first ? first.getAttribute("data-aff-ready") || "" : "",
-        restEmpty: rest.every((c) => {
-          const t = (c.textContent || "").replace(/\s+/g, " ").trim();
-          const ready = c.getAttribute("data-aff-ready") || "0";
-          const href = c.getAttribute("href") || "";
-          return t === "" && ready === "0" && (href === "#" || href === "");
-        }),
-        hasImg,
+        firstText: first ? chipText(first) : "",
+        secondText: second ? chipText(second) : "",
+        bwText: bw ? chipText(bw) : "",
+        bwHref: bw ? bw.getAttribute("href") || "" : "",
+        bwTarget: bw ? bw.getAttribute("target") || "" : "",
+        bwRel: bw ? bw.getAttribute("rel") || "" : "",
+        bwReady: bw ? bw.getAttribute("data-aff-ready") || "" : "",
+        hasImg: bw ? !!bw.querySelector("img, svg, picture, canvas") : false,
         centered,
-        tagName: first ? first.tagName : "",
+        namedCount: chips.filter((c) => chipText(c) !== "").length,
+        klubStillFirst: first ? chipText(first) === klubTitle : false,
       };
-    }, { disclosure: DISCLOSURE });
+    }, { partner: PARTNER_TITLE, klubTitle: "Klub zdraví" });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
-    ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
-    ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);
-    ok(tag + ":slot1_rel_sponsored", /\bsponsored\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_noopener", /\bnoopener\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_no_nofollow", !/\bnofollow\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_rel_no_noreferrer", !/\bnoreferrer\b/.test(snap.firstRel), snap.firstRel);
-    ok(tag + ":slot1_ready", snap.firstReady === "1", snap.firstReady);
-    ok(tag + ":slot1_is_anchor", snap.tagName === "A");
-    ok(tag + ":slot1_no_img", snap.hasImg === false);
-    ok(tag + ":slot1_no_direct_axa", !/^https?:\/\/(www\.)?axa\./i.test(snap.firstHref));
+    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
+    ok(tag + ":second_slot_bodyworld", snap.secondText === PARTNER_TITLE, snap.secondText);
+    ok(tag + ":bodyworld_text", snap.bwText === PARTNER_TITLE, snap.bwText);
+    ok(tag + ":bodyworld_href", snap.bwHref === CJ_URL, snap.bwHref);
+    ok(tag + ":bodyworld_target", snap.bwTarget === "_blank", snap.bwTarget);
+    ok(tag + ":bodyworld_rel_sponsored", /\bsponsored\b/.test(snap.bwRel), snap.bwRel);
+    ok(tag + ":bodyworld_rel_noopener", /\bnoopener\b/.test(snap.bwRel), snap.bwRel);
+    ok(tag + ":bodyworld_no_nofollow", !/\bnofollow\b/.test(snap.bwRel));
+    ok(tag + ":bodyworld_no_noreferrer", !/\bnoreferrer\b/.test(snap.bwRel));
+    ok(tag + ":bodyworld_ready", snap.bwReady === "1", snap.bwReady);
+    ok(tag + ":bodyworld_no_img", snap.hasImg === false);
+    ok(tag + ":bodyworld_no_direct", !/^https?:\/\/(?:www\.)?bodyworld\.eu/i.test(snap.bwHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
+    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page.click("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']");
+    await page
+      .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
+      .filter({ hasText: PARTNER_TITLE })
+      .click();
     const popup = await popupPromise;
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
@@ -294,9 +282,9 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       ok(
-        tag + ":popup_cj_or_axa",
-        /tkqlhce\.com\/click-101883843-12585182/i.test(popupUrl) ||
-          /axa-assistance\.(cz|com)/i.test(popupUrl),
+        tag + ":popup_cj_or_site",
+        /tkqlhce\.com\/click-101883843-15735791/i.test(popupUrl) ||
+          /bodyworld/i.test(popupUrl),
         popupUrl
       );
       await popup.close().catch(() => {});
@@ -304,11 +292,10 @@ try {
 
     samples.push({
       vp: vp.name,
-      title: snap.title,
-      firstText: snap.firstText,
-      firstHref: snap.firstHref,
-      firstRel: snap.firstRel,
+      secondText: snap.secondText,
+      bwHref: snap.bwHref,
       slots: snap.slots,
+      namedCount: snap.namedCount,
     });
     await context.close();
   }
@@ -321,7 +308,7 @@ try {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_AXA_ASSISTANCE_CESTOVNI_POJISTENI_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_BODYWORLD_ZDRAVI_DOPLNKY_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
 };

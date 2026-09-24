@@ -560,7 +560,10 @@
           "Klub zdraví",
           "https://www.dpbolvw.net/click-101883843-13884010"
         ),
-        affItem("", "gs-klub"),
+        affPartner(
+          "BodyWorld",
+          "https://www.tkqlhce.com/click-101883843-15735791"
+        ),
         affItem("", "terezia"),
         affItem("", "sensilab"),
         affItem("", "prodietix"),
