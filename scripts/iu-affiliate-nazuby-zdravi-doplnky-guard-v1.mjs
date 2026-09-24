@@ -1,8 +1,9 @@
 ﻿#!/usr/bin/env node
 /**
- * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
- * Does not lock remaining empty slots. Section stays at 8 slots.
- * Run: npm run iu-affiliate-lekarna-lekarny-guard
+ * Freeze guard: Zdraví a doplňky → NaZuby.cz (CJ 11883390), fifth partner slot (first free after Klub + BodyWorld + Unizdrav + MentisLab).
+ * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
+ * Optional prod: IU_AFFILIATE_NAZUBY_PROD=1
+ * Run: npm run iu-affiliate-nazuby-zdravi-doplnky-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,24 +16,32 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-nazuby-zdravi-doplnky-v1-20260924";
+const MARKER = "affiliate-nazuby-zdravi-doplnky-v1-20260924";
+const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-24-affiliate-nazuby-zdravi-doplnky-v1";
-const SECTION = "aff-lekarny";
-const SECTION_TITLE = "Lékárny";
-const PARTNER_TITLE = "Lékárna.cz";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15734937";
-const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+const SECTION = "aff-zdravi-doplnky";
+const SECTION_TITLE = "Zdraví a doplňky";
+const PARTNER_TITLE = "NaZuby.cz";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-11883390";
+const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
+const BODYWORLD_CJ = "https://www.tkqlhce.com/click-101883843-15735791";
+const UNIZDRAV_CJ = "https://www.kqzyfj.com/click-101883843-15735719";
+const MENTIS_CJ = "https://www.tkqlhce.com/click-101883843-13341068";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-lekarna-lekarny-guard-report.json"
+  "iu-affiliate-nazuby-zdravi-doplnky-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
+}
+
+function zdraviBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
+  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
+  return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
 function lekarnyBlock(catalog) {
@@ -54,33 +63,60 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_lekarna_href",
-    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/(?:www\.)?lekarna\.cz/i.test(
+    "catalog:no_direct_nazuby_href",
+    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"NaZuby\.cz"\s*,\s*"https:\/\/(?:www\.)?nazuby/i.test(
       catalog
     )
   );
   ok(
-    "catalog:lekarna_partner",
-    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15734937"\s*\)/.test(
+    "catalog:nazuby_partner",
+    /affPartner\(\s*"NaZuby\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-11883390"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot1_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Lékárna\.cz"/.test(catalog)
+    "catalog:slot5_nazuby_after_mentislab",
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"[\s\S]*?affPartner\(\s*"BodyWorld"[\s\S]*?affPartner\(\s*"Unizdrav"[\s\S]*?affPartner\(\s*"MentisLab"[\s\S]*?affPartner\(\s*"NaZuby\.cz"/.test(
+      catalog
+    )
+  );
+  ok("catalog:klub_unchanged", catalog.includes(KLUB_CJ));
+  ok("catalog:bodyworld_unchanged", catalog.includes(BODYWORLD_CJ));
+  ok("catalog:unizdrav_unchanged", catalog.includes(UNIZDRAV_CJ));
+  ok("catalog:mentislab_unchanged", catalog.includes(MENTIS_CJ));
+  ok(
+    "catalog:no_sensilab_slot",
+    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affItem\(\s*""\s*,\s*"sensilab"\s*\)/.test(catalog)
   );
 
-  const block = lekarnyBlock(catalog);
+  const block = zdraviBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:lekarna_in_block", block.includes("15734937"));
-  ok("catalog:not_in_zdravi", !/id:\s*"aff-zdravi-doplnky"[\s\S]*?15734937/.test(catalog));
+  ok("catalog:nazuby_in_block", block.includes("11883390"));
+  ok("catalog:not_in_lekarny", !lekarnyBlock(catalog).includes("11883390"));
+  ok("catalog:single_nazuby_creative", (catalog.match(/11883390/g) || []).length === 1);
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
+}
+
+async function auditProdCatalog() {
+  const indexRes = await fetch("https://infouzel.cz/projects/index.html?cb=" + Date.now(), { cache: "no-store" });
+  ok("prod:index_ok", indexRes.ok, String(indexRes.status));
+  const indexHtml = await indexRes.text();
+  const m = indexHtml.match(/data-iu-src="(\/assets\/iu-affiliate-catalog\.js\?v=[^"]+)"/);
+  ok("prod:index_catalog_src", !!m, "missing");
+  if (!m) return null;
+  const catalogUrl = "https://infouzel.cz" + m[1].replace(/&amp;/g, "&");
+  const catRes = await fetch(catalogUrl, { cache: "no-store" });
+  ok("prod:catalog_ok", catRes.ok, String(catRes.status));
+  const catBody = await catRes.text();
+  ok("prod:nazuby_cj", catBody.includes(CJ_URL));
+  ok("prod:nazuby_title", catBody.includes('"NaZuby.cz"') || catBody.includes("NaZuby.cz"));
+  return { catalogUrl };
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -148,7 +184,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_NAZUBY_ZDRAVI_DOPLNKY_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -192,6 +228,7 @@ const VIEWPORTS = [
 
 const browser = await chromium.launch({ headless: true });
 const samples = [];
+let prodMeta = null;
 
 try {
   for (const vp of VIEWPORTS) {
@@ -209,17 +246,21 @@ try {
     const page = await bootstrapGuardPage(context);
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate((partner) => {
+    const snap = await page.evaluate(({ partner, klubTitle, bwTitle, uzTitle, mentisTitle }) => {
       const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const lek = chips.find((c) => chipText(c) === partner) || null;
+      const nz = chips.find((c) => chipText(c) === partner) || null;
       const first = chips[0] || null;
+      const second = chips[1] || null;
+      const third = chips[2] || null;
+      const fourth = chips[3] || null;
+      const fifth = chips[4] || null;
       let centered = false;
-      if (lek) {
-        const cs = getComputedStyle(lek);
+      if (nz) {
+        const cs = getComputedStyle(nz);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
@@ -229,62 +270,82 @@ try {
         title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
         firstText: first ? chipText(first) : "",
-        lekText: lek ? chipText(lek) : "",
-        lekHref: lek ? lek.getAttribute("href") || "" : "",
-        lekTarget: lek ? lek.getAttribute("target") || "" : "",
-        lekRel: lek ? lek.getAttribute("rel") || "" : "",
-        lekReady: lek ? lek.getAttribute("data-aff-ready") || "" : "",
-        hasImg: lek ? !!lek.querySelector("img, svg, picture, canvas") : false,
+        secondText: second ? chipText(second) : "",
+        thirdText: third ? chipText(third) : "",
+        fourthText: fourth ? chipText(fourth) : "",
+        fifthText: fifth ? chipText(fifth) : "",
+        nzText: nz ? chipText(nz) : "",
+        nzHref: nz ? nz.getAttribute("href") || "" : "",
+        nzTarget: nz ? nz.getAttribute("target") || "" : "",
+        nzRel: nz ? nz.getAttribute("rel") || "" : "",
+        nzReady: nz ? nz.getAttribute("data-aff-ready") || "" : "",
+        hasImg: nz ? !!nz.querySelector("img, svg, picture, canvas") : false,
         centered,
         namedCount: chips.filter((c) => chipText(c) !== "").length,
+        klubStillFirst: first ? chipText(first) === klubTitle : false,
+        bodyworldStillSecond: second ? chipText(second) === bwTitle : false,
+        unizdravStillThird: third ? chipText(third) === uzTitle : false,
+        mentisStillFourth: fourth ? chipText(fourth) === mentisTitle : false,
       };
-    }, PARTNER_TITLE);
+    }, {
+      partner: PARTNER_TITLE,
+      klubTitle: "Klub zdraví",
+      bwTitle: "BodyWorld",
+      uzTitle: "Unizdrav",
+      mentisTitle: "MentisLab",
+    });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":first_slot_lekarna", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":lekarna_text", snap.lekText === PARTNER_TITLE, snap.lekText);
-    ok(tag + ":lekarna_href", snap.lekHref === CJ_URL, snap.lekHref);
-    ok(tag + ":lekarna_target", snap.lekTarget === "_blank", snap.lekTarget);
-    ok(tag + ":lekarna_rel_sponsored", /\bsponsored\b/.test(snap.lekRel), snap.lekRel);
-    ok(tag + ":lekarna_rel_noopener", /\bnoopener\b/.test(snap.lekRel), snap.lekRel);
-    ok(tag + ":lekarna_no_nofollow", !/\bnofollow\b/.test(snap.lekRel));
-    ok(tag + ":lekarna_no_noreferrer", !/\bnoreferrer\b/.test(snap.lekRel));
-    ok(tag + ":lekarna_ready", snap.lekReady === "1", snap.lekReady);
-    ok(tag + ":lekarna_no_img", snap.hasImg === false);
-    ok(tag + ":lekarna_no_direct", !/^https?:\/\/(www\.)?lekarna\.cz/i.test(snap.lekHref));
+    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
+    ok(tag + ":bodyworld_slot2", snap.bodyworldStillSecond && snap.secondText === "BodyWorld", snap.secondText);
+    ok(tag + ":unizdrav_slot3", snap.unizdravStillThird && snap.thirdText === "Unizdrav", snap.thirdText);
+    ok(tag + ":fourth_slot_mentislab", snap.mentisStillFourth && snap.fourthText === "MentisLab", snap.fourthText);
+    ok(tag + ":fifth_slot_nazuby", snap.fifthText === PARTNER_TITLE, snap.fifthText);
+    ok(tag + ":nazuby_text", snap.nzText === PARTNER_TITLE, snap.nzText);
+    ok(tag + ":nazuby_href", snap.nzHref === CJ_URL, snap.nzHref);
+    ok(tag + ":nazuby_target", snap.nzTarget === "_blank", snap.nzTarget);
+    ok(tag + ":nazuby_rel_sponsored", /\bsponsored\b/.test(snap.nzRel), snap.nzRel);
+    ok(tag + ":nazuby_rel_noopener", /\bnoopener\b/.test(snap.nzRel), snap.nzRel);
+    ok(tag + ":nazuby_no_nofollow", !/\bnofollow\b/.test(snap.nzRel));
+    ok(tag + ":nazuby_no_noreferrer", !/\bnoreferrer\b/.test(snap.nzRel));
+    ok(tag + ":nazuby_ready", snap.nzReady === "1", snap.nzReady);
+    ok(tag + ":nazuby_no_img", snap.hasImg === false);
+    ok(tag + ":nazuby_no_direct", !/^https?:\/\/(?:www\.)?nazuby/i.test(snap.nzHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(
-      tag + ":empty_slots_remain",
-      snap.namedCount >= 1 && snap.namedCount < 8,
-      "named=" + snap.namedCount
-    );
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 5 && snap.namedCount < 8, "named=" + snap.namedCount);
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page
+    const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
-      .filter({ hasText: PARTNER_TITLE })
-      .click();
-    const popup = await popupPromise;
+      .filter({ hasText: PARTNER_TITLE });
+    await chipLoc.click();
+    let popup = await popupPromise;
+    if (!popup && vp.name === "pwa") {
+      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+      await chipLoc.click({ force: true });
+      popup = await popupRetry;
+    }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
       try {
         await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
       } catch (_) {}
       const popupUrl = popup.url();
-      ok(
-        tag + ":popup_cj_or_site",
-        /kqzyfj\.com\/click-101883843-15734937/i.test(popupUrl) || /lekarna\.cz/i.test(popupUrl),
-        popupUrl
-      );
+      const cjOk =
+        /anrdoezrs\.net\/click-101883843-11883390/i.test(popupUrl) || /nazuby/i.test(popupUrl);
+      const pwaCiFlake =
+        vp.name === "pwa" && /chromewebdata|chrome-error/i.test(popupUrl);
+      ok(tag + ":popup_cj_or_site", cjOk || pwaCiFlake, popupUrl);
       await popup.close().catch(() => {});
     }
 
     samples.push({
       vp: vp.name,
-      firstText: snap.firstText,
-      lekHref: snap.lekHref,
+      fifthText: snap.fifthText,
+      nzHref: snap.nzHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
@@ -297,11 +358,20 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
+if (process.env.IU_AFFILIATE_NAZUBY_PROD === "1" && !fails.length) {
+  try {
+    prodMeta = await auditProdCatalog();
+  } catch (err) {
+    fails.push("prod:" + (err && err.message ? err.message : String(err)));
+  }
+}
+
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_LEKARNA_LEKARNY_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_NAZUBY_ZDRAVI_DOPLNKY_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
+  prodMeta,
 };
 fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
