@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-mentislab-zdravi-doplnky-v1-20260924 */
+/* iu-affiliate-catalog-bust: affiliate-nazuby-zdravi-doplnky-v1-20260924 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -573,7 +573,10 @@
           "MentisLab",
           "https://www.tkqlhce.com/click-101883843-13341068"
         ),
-        affItem("", "prodietix"),
+        affPartner(
+          "NaZuby.cz",
+          "https://www.anrdoezrs.net/click-101883843-11883390"
+        ),
         affItem("", "rehabilitacni-pomucky"),
         affItem("", "prozdravi"),
         affItem("", "brainmarket"),
