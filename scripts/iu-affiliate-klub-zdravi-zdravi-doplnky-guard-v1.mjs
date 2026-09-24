@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_BUST = "affiliate-nazuby-zdravi-doplnky-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-nazuby-zdravi-doplnky-v1";
+const CATALOG_BUST = "affiliate-natures-finest-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-natures-finest-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "Klub zdraví";

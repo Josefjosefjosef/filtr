@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-nazuby-zdravi-doplnky-v1-20260924 */
+/* iu-affiliate-catalog-bust: affiliate-natures-finest-zdravi-doplnky-v1-20260924 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -577,7 +577,10 @@
           "NaZuby.cz",
           "https://www.anrdoezrs.net/click-101883843-11883390"
         ),
-        affItem("", "rehabilitacni-pomucky"),
+        affPartner(
+          "Nature\u2019s Finest",
+          "https://www.dpbolvw.net/click-101883843-15037573"
+        ),
         affItem("", "prozdravi"),
         affItem("", "brainmarket"),
       ],

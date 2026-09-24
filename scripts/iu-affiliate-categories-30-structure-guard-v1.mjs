@@ -29,9 +29,9 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-nazuby-zdravi-doplnky-v1-20260924";
+const CATALOG_DELIVERY_MARKER = "affiliate-natures-finest-zdravi-doplnky-v1-20260924";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
-const SW_TOKEN = "2026-09-24-affiliate-nazuby-zdravi-doplnky-v1";
+const SW_TOKEN = "2026-09-24-affiliate-natures-finest-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
