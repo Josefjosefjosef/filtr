@@ -1,12 +1,12 @@
 {
-  "freezeId": "iu-affiliate-unizdrav-zdravi-doplnky-v1-20260924",
-  "preStabilizationProductionSha": "6b559ed1f623903d5ab3916ce95e34c268b88915",
+  "freezeId": "iu-affiliate-catalog-network-first-v1-20260924",
+  "preStabilizationProductionSha": "35025ff7bbaeed6ba89417c4620e939fba1b91b0",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-09-24T05:00:00.000Z",
-  "note": "Freeze bump: Zdraví a doplňky Unizdrav CJ (15735719), slot 3; Klub + BodyWorld unchanged.",
+  "updatedAt": "2026-09-24T06:20:00.000Z",
+  "note": "Freeze bump: affiliate catalog SW network-first + HTML bust sync (Leo/partners delivery).",
   "files": {
-    "projects/index.html": "77a1ecdb2a58a63b8c2f98513992ea1969a323ee16ed94afeecb69383ed3c090",
-    "assets/app.css": "602bb00354de341c47548b78caf094555e029627362755dcafbc0b1cecda237b",
+    "projects/index.html": "13f94d973f2c526d39580330e1f93ed5aa4de619c4a36ffcbd378e642c72d7b1",
+    "assets/app.css": "864e52930bcc81ad4a24029d15487e2bc7f1578c26cb8364a1c1cdbb76d0c37c",
     "assets/app.js": "123379ca995050759f3411d3515e6787b2a1d9d0b0fffc0c7545b1cd6644e023",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "eb5857e3da4429b24ed1ae1ac0ff91531367557152c0ad150f304c63e02a6944",
     "assets/iu-app-feed-pipeline-v1.js": "2dc16b22f952a0005631c6469db23647c131dfa19d5ef3e1794ab8db599421f1",
@@ -15,7 +15,7 @@
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
     "assets/iu-pdf-convert-module.js": "058a2213e771db6ff4397648fb7b8197826712a49a827449e5316582bfb03adc",
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
-    "sw.js": "19ea0e636bed50a07e9f71e9fa6603c0677926c851de77210d6848fbd9467e09",
+    "sw.js": "93bffa25b055232929fb620d25f8d5a0171260acf6d4070f4b423aea6217c62c",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
     "assets/iu-network-connectivity-v1.js": "0ae7acf07082709d87c47315f07c89030cd4e73fa0b0fc825d59a7aebff8d540",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
@@ -35,7 +35,8 @@
       "OFFLINE_DOC_CACHE",
       "offlineNavigationFallback",
       "warmOfflineAssets",
-      "CACHE_VERSION = \"2026-09-24-affiliate-unizdrav-zdravi-doplnky-v1\"",
+      "CACHE_VERSION = \"2026-09-24-affiliate-catalog-network-first-v1\"",
+      "iu-affiliate-catalog.js",
       "PWA MindMenu external-return lifecycle modules: network-first"
     ],
     "projects/version.json": [
@@ -95,7 +96,7 @@
       "affiliate-kalkulator-pojisteni-v1-20260922",
       "affiliate-lekarna-lekarny-v1-20260922",
       "affiliate-lekarna-lemon-lekarny-v1-20260923",
-      "affiliate-unizdrav-zdravi-doplnky-v1-20260924",
+      "affiliate-catalog-network-first-v1-20260924",
       "perf-loop-iter015-prehled-banner-ui-after-fcp-v1-20260821",
       "perf-loop-iter014-secondary-js-batch2-v1-20260820",
       "perf-loop-iter012-secondary-js-after-fcp-v1-20260820",
@@ -226,7 +227,7 @@
       "affiliate-kalkulator-pojisteni-v1-20260922",
       "affiliate-lekarna-lekarny-v1-20260922",
       "affiliate-lekarna-lemon-lekarny-v1-20260923",
-      "affiliate-unizdrav-zdravi-doplnky-v1-20260924"
+      "affiliate-catalog-network-first-v1-20260924"
     ],
     "assets/iu-network-connectivity-v1.js": [
       "isAiAssistantsOverlayOpen",
