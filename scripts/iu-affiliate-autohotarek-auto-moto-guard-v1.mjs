@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Auto a moto → Autohotarek.cz (CJ tracking), first occupied partner slot.
  * Allows future partners in remaining slots. Does not lock total partner count.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
-const CATALOG_BUST = "affiliate-catalog-network-first-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const CATALOG_BUST = "affiliate-mentislab-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
 const PARTNER_TITLE = "Autohotarek.cz";

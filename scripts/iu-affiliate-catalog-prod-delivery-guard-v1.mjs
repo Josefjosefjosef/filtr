@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Guard: prod HTML catalog ?v= must match repo catalog bust comment; SW network-first for catalog;
  * prod catalog URL from live HTML must contain Leo Express CJ (15736211). Playwright prod smoke without ?nosw=1.
@@ -15,8 +15,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-catalog-network-first-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const CATALOG_BUST = "affiliate-mentislab-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const PROD_INDEX = "https://infouzel.cz/projects/index.html";
 const SECTION = "aff-letenky";

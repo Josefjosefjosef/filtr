@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Cestovní pojištění → Klik.cz (CJ tracking), any occupied slot.
  * Does not lock slot index. Section stays at 8 partner slots.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-catalog-network-first-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const CATALOG_BUST = "affiliate-mentislab-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
 const PARTNER_TITLE = "Klik.cz";
