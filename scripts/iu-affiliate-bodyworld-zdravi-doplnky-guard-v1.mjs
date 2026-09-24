@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Zdraví a doplňky → BodyWorld (CJ 15735791), second partner slot (first free after Klub zdraví).
  * Does not lock remaining empty slots. Klub zdraví slot 1 unchanged. Section stays at 8 slots.
@@ -15,9 +15,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-catalog-network-first-v1-20260924";
+const MARKER = "affiliate-mentislab-zdravi-doplnky-v1-20260924";
 const CATALOG_BUST = MARKER;
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "BodyWorld";

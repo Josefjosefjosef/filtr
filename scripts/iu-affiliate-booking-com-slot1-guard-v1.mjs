@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Ubytování a hotely → slot 1 = Booking.com (CJ tracking).
  * Allows future partners in slots 2–8. Does not lock total partner count.
@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-booking-com-slot1-v1-20260920";
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const SECTION = "aff-ubytovani-hotely";
 const SECTION_TITLE = "Ubytování a hotely";
 const PARTNER_TITLE = "Booking.com";

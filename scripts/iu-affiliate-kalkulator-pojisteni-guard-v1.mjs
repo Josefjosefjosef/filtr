@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Pojištění → Kalkulator.cz (CJ 15616442), second partner slot (first free after Klik).
  * Does not lock remaining empty slots. Klik.cz slot 1 unchanged. Section stays at 8 slots.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-catalog-network-first-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-catalog-network-first-v1";
+const CATALOG_BUST = "affiliate-mentislab-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-mentislab-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
 const PARTNER_TITLE = "Kalkulator.cz";
