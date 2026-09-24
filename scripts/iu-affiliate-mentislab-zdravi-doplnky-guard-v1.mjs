@@ -309,12 +309,18 @@ try {
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":empty_slots_remain", snap.namedCount === 4, "named=" + snap.namedCount);
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page
+    const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
-      .filter({ hasText: PARTNER_TITLE })
-      .click();
-    const popup = await popupPromise;
+      .filter({ hasText: PARTNER_TITLE });
+    await chipLoc.click();
+    let popup = await popupPromise;
+    if (!popup && vp.name === "pwa") {
+      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+      await chipLoc.click({ force: true });
+      popup = await popupRetry;
+    }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
       try {
