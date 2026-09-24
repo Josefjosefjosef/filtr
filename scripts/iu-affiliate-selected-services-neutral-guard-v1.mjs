@@ -375,18 +375,22 @@ try {
         const klub = namedChips.find((c) => c.text === "Klub zdraví");
         const bw = namedChips.find((c) => c.text === "BodyWorld");
         const uniz = namedChips.find((c) => c.text === "Unizdrav");
+        const mentis = namedChips.find((c) => c.text === "MentisLab");
         ok(
           tag + ":chips_named_zdravi_partners",
-          namedChips.length === 3 &&
+          namedChips.length === 4 &&
             klub &&
             bw &&
             uniz &&
+            mentis &&
             klub.href === "https://www.dpbolvw.net/click-101883843-13884010" &&
             bw.href === "https://www.tkqlhce.com/click-101883843-15735791" &&
             uniz.href === "https://www.kqzyfj.com/click-101883843-15735719" &&
+            mentis.href === "https://www.tkqlhce.com/click-101883843-13341068" &&
             klub.ready === "1" &&
             bw.ready === "1" &&
-            uniz.ready === "1",
+            uniz.ready === "1" &&
+            mentis.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {
