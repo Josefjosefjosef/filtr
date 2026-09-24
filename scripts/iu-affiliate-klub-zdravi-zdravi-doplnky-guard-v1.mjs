@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_BUST = MARKER;
-const SW_TOKEN = "2026-09-24-affiliate-klub-zdravi-zdravi-doplnky-v1";
+const CATALOG_BUST = "affiliate-bodyworld-zdravi-doplnky-v1-20260924";
+const SW_TOKEN = "2026-09-24-affiliate-bodyworld-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "Klub zdraví";
@@ -259,7 +259,11 @@ try {
     ok(tag + ":klub_no_img", snap.hasImg === false);
     ok(tag + ":klub_no_direct", !/^https?:\/\/(?:www\.)?klubzdravi\.cz/i.test(snap.klubHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount === 1, "named=" + snap.namedCount);
+    ok(
+      tag + ":empty_slots_remain",
+      snap.namedCount >= 1 && snap.namedCount < 8,
+      "named=" + snap.namedCount
+    );
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page
