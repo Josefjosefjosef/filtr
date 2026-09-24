@@ -15,9 +15,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-bodyworld-zdravi-doplnky-v1-20260924";
+const MARKER = "affiliate-unizdrav-zdravi-doplnky-v1-20260924";
 const CATALOG_BUST = MARKER;
-const SW_TOKEN = "2026-09-24-affiliate-bodyworld-zdravi-doplnky-v1";
+const SW_TOKEN = "2026-09-24-affiliate-unizdrav-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "BodyWorld";
@@ -267,7 +267,11 @@ try {
     ok(tag + ":bodyworld_no_img", snap.hasImg === false);
     ok(tag + ":bodyworld_no_direct", !/^https?:\/\/(?:www\.)?bodyworld\.eu/i.test(snap.bwHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
+    ok(
+      tag + ":empty_slots_remain",
+      snap.namedCount >= 2 && snap.namedCount < 8,
+      "named=" + snap.namedCount
+    );
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page

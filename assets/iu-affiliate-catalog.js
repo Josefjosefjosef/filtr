@@ -564,7 +564,10 @@
           "BodyWorld",
           "https://www.tkqlhce.com/click-101883843-15735791"
         ),
-        affItem("", "terezia"),
+        affPartner(
+          "Unizdrav",
+          "https://www.kqzyfj.com/click-101883843-15735719"
+        ),
         affItem("", "sensilab"),
         affItem("", "prodietix"),
         affItem("", "rehabilitacni-pomucky"),
