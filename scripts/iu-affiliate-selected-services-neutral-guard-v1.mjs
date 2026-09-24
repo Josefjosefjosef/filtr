@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-bodyworld-zdravi-doplnky-v1-20260924"));
+  ok("index:cache_bust", index.includes("affiliate-unizdrav-zdravi-doplnky-v1-20260924"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -374,15 +374,19 @@ try {
       } else if (section === "aff-zdravi-doplnky") {
         const klub = namedChips.find((c) => c.text === "Klub zdraví");
         const bw = namedChips.find((c) => c.text === "BodyWorld");
+        const uniz = namedChips.find((c) => c.text === "Unizdrav");
         ok(
           tag + ":chips_named_zdravi_partners",
-          namedChips.length === 2 &&
+          namedChips.length === 3 &&
             klub &&
             bw &&
+            uniz &&
             klub.href === "https://www.dpbolvw.net/click-101883843-13884010" &&
             bw.href === "https://www.tkqlhce.com/click-101883843-15735791" &&
+            uniz.href === "https://www.kqzyfj.com/click-101883843-15735719" &&
             klub.ready === "1" &&
-            bw.ready === "1",
+            bw.ready === "1" &&
+            uniz.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {
