@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-lekarna-lemon-lekarny-v1-20260923"));
+  ok("index:cache_bust", index.includes("affiliate-klub-zdravi-zdravi-doplnky-v1-20260924"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -369,6 +369,15 @@ try {
             lemon.href === "https://www.jdoqocy.com/click-101883843-14563148" &&
             lekCz.ready === "1" &&
             lemon.ready === "1",
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
+        );
+      } else if (section === "aff-zdravi-doplnky") {
+        ok(
+          tag + ":chips_named_klub_zdravi_only",
+          namedChips.length === 1 &&
+            namedChips[0].text === "Klub zdraví" &&
+            namedChips[0].href === "https://www.dpbolvw.net/click-101883843-13884010" &&
+            namedChips[0].ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {

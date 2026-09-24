@@ -556,7 +556,10 @@
       icon: "iu-health",
       description: "Odkazy na vybrané obchody se sortimentem zdraví a doplňků.",
       items: [
-        affItem("", "klub-zdravi"),
+        affPartner(
+          "Klub zdraví",
+          "https://www.dpbolvw.net/click-101883843-13884010"
+        ),
         affItem("", "gs-klub"),
         affItem("", "terezia"),
         affItem("", "sensilab"),
