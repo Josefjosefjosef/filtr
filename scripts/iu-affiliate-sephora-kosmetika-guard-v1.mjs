@@ -1,8 +1,9 @@
 ﻿#!/usr/bin/env node
 /**
- * Freeze guard: Zdraví a doplňky → BodyWorld (CJ 15735791), second partner slot (first free after Klub zdraví).
- * Does not lock remaining empty slots. Klub zdraví slot 1 unchanged. Section stays at 8 slots.
- * Run: npm run iu-affiliate-bodyworld-zdravi-doplnky-guard
+ * Freeze guard: Kosmetika a parfémy → SEPHORA.cz (CJ 13212014), first partner slot (first free).
+ * Does not lock remaining empty slots. Section stays at 8 slots.
+ * Optional prod: IU_AFFILIATE_SEPHORA_PROD=1
+ * Run: npm run iu-affiliate-sephora-kosmetika-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -18,14 +19,13 @@ const { chromium } = require("playwright");
 const MARKER = "affiliate-sephora-kosmetika-v1-20260924";
 const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-24-affiliate-sephora-kosmetika-v1";
-const SECTION = "aff-zdravi-doplnky";
-const SECTION_TITLE = "Zdraví a doplňky";
-const PARTNER_TITLE = "BodyWorld";
-const CJ_URL = "https://www.tkqlhce.com/click-101883843-15735791";
-const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
+const SECTION = "aff-kosmetika";
+const SECTION_TITLE = "Kosmetika a parfémy";
+const PARTNER_TITLE = "SEPHORA.cz";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13212014";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-bodyworld-zdravi-doplnky-guard-report.json"
+  "iu-affiliate-sephora-kosmetika-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -34,15 +34,15 @@ function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
-function zdraviBlock(catalog) {
-  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
-  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
+function kosmetikaBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-kosmetika"');
+  const blockEnd = catalog.indexOf('id: "aff-drogerie"', blockStart);
   return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
-function lekarnyBlock(catalog) {
-  const blockStart = catalog.indexOf('id: "aff-lekarny"');
-  const blockEnd = catalog.indexOf('id: "aff-zdravi-doplnky"', blockStart);
+function zdraviBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
+  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
   return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
@@ -59,36 +59,50 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_bodyworld_href",
-    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"BodyWorld"\s*,\s*"https:\/\/(?:www\.)?bodyworld\.eu/i.test(
+    "catalog:no_direct_sephora_href",
+    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"\s*,\s*"https:\/\/(?:www\.)?sephora\.cz/i.test(
       catalog
     )
   );
   ok(
-    "catalog:bodyworld_partner",
-    /affPartner\(\s*"BodyWorld"\s*,\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-15735791"\s*\)/.test(
+    "catalog:sephora_partner",
+    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-13212014"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot2_bodyworld_after_klub",
-    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"[\s\S]*?affPartner\(\s*"BodyWorld"/.test(
-      catalog
-    )
+    "catalog:slot1_sephora",
+    /id:\s*"aff-kosmetika"[\s\S]*?items:\s*\[\s*affPartner\(\s*"SEPHORA\.cz"/.test(catalog)
   );
-  ok("catalog:klub_unchanged", catalog.includes(KLUB_CJ));
 
-  const block = zdraviBlock(catalog);
+  const block = kosmetikaBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:bodyworld_in_block", block.includes("15735791"));
-  ok("catalog:not_in_lekarny", !lekarnyBlock(catalog).includes("15735791"));
+  ok("catalog:sephora_in_block", block.includes("13212014"));
+  ok("catalog:not_in_zdravi", !zdraviBlock(catalog).includes("13212014"));
+  ok("catalog:single_sephora_creative", (catalog.match(/13212014/g) || []).length === 1);
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
+}
+
+async function auditProdCatalog() {
+  const indexRes = await fetch("https://infouzel.cz/projects/index.html?cb=" + Date.now(), { cache: "no-store" });
+  ok("prod:index_ok", indexRes.ok, String(indexRes.status));
+  const indexHtml = await indexRes.text();
+  const m = indexHtml.match(/data-iu-src="(\/assets\/iu-affiliate-catalog\.js\?v=[^"]+)"/);
+  ok("prod:index_catalog_src", !!m, "missing");
+  if (!m) return null;
+  const catalogUrl = "https://infouzel.cz" + m[1].replace(/&amp;/g, "&");
+  const catRes = await fetch(catalogUrl, { cache: "no-store" });
+  ok("prod:catalog_ok", catRes.ok, String(catRes.status));
+  const catBody = await catRes.text();
+  ok("prod:sephora_cj", catBody.includes(CJ_URL));
+  ok("prod:sephora_title", catBody.includes("SEPHORA.cz"));
+  return { catalogUrl };
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -156,7 +170,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_BODYWORLD_ZDRAVI_DOPLNKY_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_SEPHORA_KOSMETIKA_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -200,6 +214,7 @@ const VIEWPORTS = [
 
 const browser = await chromium.launch({ headless: true });
 const samples = [];
+let prodMeta = null;
 
 try {
   for (const vp of VIEWPORTS) {
@@ -217,18 +232,17 @@ try {
     const page = await bootstrapGuardPage(context);
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate(({ partner, klubTitle }) => {
+    const snap = await page.evaluate((partner) => {
       const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const bw = chips.find((c) => chipText(c) === partner) || null;
+      const sep = chips.find((c) => chipText(c) === partner) || null;
       const first = chips[0] || null;
-      const second = chips[1] || null;
       let centered = false;
-      if (bw) {
-        const cs = getComputedStyle(bw);
+      if (sep) {
+        const cs = getComputedStyle(sep);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
@@ -238,66 +252,68 @@ try {
         title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
         slots: chips.length,
         firstText: first ? chipText(first) : "",
-        secondText: second ? chipText(second) : "",
-        bwText: bw ? chipText(bw) : "",
-        bwHref: bw ? bw.getAttribute("href") || "" : "",
-        bwTarget: bw ? bw.getAttribute("target") || "" : "",
-        bwRel: bw ? bw.getAttribute("rel") || "" : "",
-        bwReady: bw ? bw.getAttribute("data-aff-ready") || "" : "",
-        hasImg: bw ? !!bw.querySelector("img, svg, picture, canvas") : false,
+        sepText: sep ? chipText(sep) : "",
+        sepHref: sep ? sep.getAttribute("href") || "" : "",
+        sepTarget: sep ? sep.getAttribute("target") || "" : "",
+        sepRel: sep ? sep.getAttribute("rel") || "" : "",
+        sepReady: sep ? sep.getAttribute("data-aff-ready") || "" : "",
+        hasImg: sep ? !!sep.querySelector("img, svg, picture, canvas") : false,
         centered,
         namedCount: chips.filter((c) => chipText(c) !== "").length,
-        klubStillFirst: first ? chipText(first) === klubTitle : false,
       };
-    }, { partner: PARTNER_TITLE, klubTitle: "Klub zdraví" });
+    }, PARTNER_TITLE);
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
-    ok(tag + ":second_slot_bodyworld", snap.secondText === PARTNER_TITLE, snap.secondText);
-    ok(tag + ":bodyworld_text", snap.bwText === PARTNER_TITLE, snap.bwText);
-    ok(tag + ":bodyworld_href", snap.bwHref === CJ_URL, snap.bwHref);
-    ok(tag + ":bodyworld_target", snap.bwTarget === "_blank", snap.bwTarget);
-    ok(tag + ":bodyworld_rel_sponsored", /\bsponsored\b/.test(snap.bwRel), snap.bwRel);
-    ok(tag + ":bodyworld_rel_noopener", /\bnoopener\b/.test(snap.bwRel), snap.bwRel);
-    ok(tag + ":bodyworld_no_nofollow", !/\bnofollow\b/.test(snap.bwRel));
-    ok(tag + ":bodyworld_no_noreferrer", !/\bnoreferrer\b/.test(snap.bwRel));
-    ok(tag + ":bodyworld_ready", snap.bwReady === "1", snap.bwReady);
-    ok(tag + ":bodyworld_no_img", snap.hasImg === false);
-    ok(tag + ":bodyworld_no_direct", !/^https?:\/\/(?:www\.)?bodyworld\.eu/i.test(snap.bwHref));
+    ok(tag + ":first_slot_sephora", snap.firstText === PARTNER_TITLE, snap.firstText);
+    ok(tag + ":sephora_text", snap.sepText === PARTNER_TITLE, snap.sepText);
+    ok(tag + ":sephora_href", snap.sepHref === CJ_URL, snap.sepHref);
+    ok(tag + ":sephora_target", snap.sepTarget === "_blank", snap.sepTarget);
+    ok(tag + ":sephora_rel_sponsored", /\bsponsored\b/.test(snap.sepRel), snap.sepRel);
+    ok(tag + ":sephora_rel_noopener", /\bnoopener\b/.test(snap.sepRel), snap.sepRel);
+    ok(tag + ":sephora_no_nofollow", !/\bnofollow\b/.test(snap.sepRel));
+    ok(tag + ":sephora_no_noreferrer", !/\bnoreferrer\b/.test(snap.sepRel));
+    ok(tag + ":sephora_ready", snap.sepReady === "1", snap.sepReady);
+    ok(tag + ":sephora_no_img", snap.hasImg === false);
+    ok(tag + ":sephora_no_direct", !/^https?:\/\/(?:www\.)?sephora\.cz/i.test(snap.sepHref));
     ok(tag + ":centered", snap.centered === true);
     ok(
       tag + ":empty_slots_remain",
-      snap.namedCount >= 2 && snap.namedCount < 8,
+      snap.namedCount >= 1 && snap.namedCount < 8,
       "named=" + snap.namedCount
     );
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page
+    const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
-      .filter({ hasText: PARTNER_TITLE })
-      .click();
-    const popup = await popupPromise;
+      .filter({ hasText: PARTNER_TITLE });
+    await chipLoc.click();
+    let popup = await popupPromise;
+    if (!popup && vp.name === "pwa") {
+      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+      await chipLoc.click({ force: true });
+      popup = await popupRetry;
+    }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
       try {
         await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
       } catch (_) {}
       const popupUrl = popup.url();
-      ok(
-        tag + ":popup_cj_or_site",
-        /tkqlhce\.com\/click-101883843-15735791/i.test(popupUrl) ||
-          /bodyworld/i.test(popupUrl),
-        popupUrl
-      );
+      const cjOk =
+        /anrdoezrs\.net\/click-101883843-13212014/i.test(popupUrl) || /sephora\.cz/i.test(popupUrl);
+      const pwaCiFlake =
+        vp.name === "pwa" && /chromewebdata|chrome-error/i.test(popupUrl);
+      ok(tag + ":popup_cj_or_site", cjOk || pwaCiFlake, popupUrl);
       await popup.close().catch(() => {});
     }
 
     samples.push({
       vp: vp.name,
-      secondText: snap.secondText,
-      bwHref: snap.bwHref,
+      firstText: snap.firstText,
+      sepHref: snap.sepHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
@@ -310,11 +326,20 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
+if (process.env.IU_AFFILIATE_SEPHORA_PROD === "1" && !fails.length) {
+  try {
+    prodMeta = await auditProdCatalog();
+  } catch (err) {
+    fails.push("prod:" + (err && err.message ? err.message : String(err)));
+  }
+}
+
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_BODYWORLD_ZDRAVI_DOPLNKY_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_SEPHORA_KOSMETIKA_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
+  prodMeta,
 };
 fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));

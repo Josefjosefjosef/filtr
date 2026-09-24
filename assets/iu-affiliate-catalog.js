@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-natures-finest-zdravi-doplnky-v1-20260924 */
+/* iu-affiliate-catalog-bust: affiliate-sephora-kosmetika-v1-20260924 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -591,7 +591,10 @@
       icon: "iu-aff-perfume",
       description: "Odkazy na vybrané obchody s kosmetikou a parfémy.",
       items: [
-        affItem("", "notino"),
+        affPartner(
+          "SEPHORA.cz",
+          "https://www.anrdoezrs.net/click-101883843-13212014"
+        ),
         affItem("", "sephora"),
         affItem("", "dermacol"),
         affItem("", "fann"),
