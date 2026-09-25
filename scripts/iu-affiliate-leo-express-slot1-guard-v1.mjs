@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const CATALOG_BUST = "affiliate-yves-rocher-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-yves-rocher-kosmetika-v1";
+const CATALOG_BUST = "affiliate-brasty-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-brasty-kosmetika-v1";
 const SECTION = "aff-letenky";
 const SECTION_TITLE = "Doprava a cestování";
 const PARTNER_TITLE = "Leo Express";
