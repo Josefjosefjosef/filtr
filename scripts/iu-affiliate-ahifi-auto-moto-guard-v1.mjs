@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Auto a moto → Ahifi.cz (CJ tracking), second partner slot.
  * Allows future partners in remaining slots. Does not lock total partner count.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-ahifi-auto-moto-v1-20260922";
-const CATALOG_BUST = "affiliate-dermacol-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-dermacol-kosmetika-v1";
+const CATALOG_BUST = "affiliate-foreo-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
 const PARTNER_TITLE = "Ahifi.cz";

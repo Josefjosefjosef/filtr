@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Guard: Affiliate / selected services — neutral presentation + ad disclosure.
  * Run: npm run iu-affiliate-selected-services-neutral-guard
@@ -179,7 +179,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-dermacol-kosmetika-v1-20260925"));
+  ok("index:cache_bust", index.includes("affiliate-foreo-kosmetika-v1-20260925"));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
