@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-foreo-kosmetika-v1-20260925 */
+/* iu-affiliate-catalog-bust: affiliate-yves-rocher-kosmetika-v1-20260925 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -603,7 +603,10 @@
           "FOREO",
           "https://www.anrdoezrs.net/click-101883843-15527432"
         ),
-        affItem("", "fann"),
+        affPartner(
+          "Yves Rocher",
+          "https://www.dpbolvw.net/click-101883843-15734904"
+        ),
         affItem("", "marionnaud"),
         affItem("", "loccitane"),
         affItem("", "brasty"),

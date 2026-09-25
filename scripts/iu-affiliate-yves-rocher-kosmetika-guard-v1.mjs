@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Kosmetika a parfémy → Dermacol (CJ 17173455), second partner slot (first free after SEPHORA.cz).
+ * Freeze guard: Kosmetika a parfémy → Yves Rocher (CJ 15734904), fourth partner slot (first free after SEPHORA + Dermacol + FOREO).
  * Does not lock remaining empty slots. Section stays at 8 slots.
- * Optional prod: IU_AFFILIATE_DERMACOL_PROD=1
- * Run: npm run iu-affiliate-dermacol-kosmetika-guard
+ * Optional prod: IU_AFFILIATE_YVES_ROCHER_PROD=1
+ * Run: npm run iu-affiliate-yves-rocher-kosmetika-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -21,12 +21,14 @@ const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-25-affiliate-yves-rocher-kosmetika-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
-const PARTNER_TITLE = "Dermacol";
-const CJ_URL = "https://www.jdoqocy.com/click-101883843-17173455";
+const PARTNER_TITLE = "Yves Rocher";
+const CJ_URL = "https://www.dpbolvw.net/click-101883843-15734904";
 const SEPHORA_CJ = "https://www.anrdoezrs.net/click-101883843-13212014";
+const DERMACOL_CJ = "https://www.jdoqocy.com/click-101883843-17173455";
+const FOREO_CJ = "https://www.anrdoezrs.net/click-101883843-15527432";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-dermacol-kosmetika-guard-report.json"
+  "iu-affiliate-yves-rocher-kosmetika-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -60,31 +62,33 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_dermacol_href",
-    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"Dermacol"\s*,\s*"https:\/\/(?:www\.)?dermacol/i.test(
+    "catalog:no_direct_yves_rocher_href",
+    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"Yves Rocher"\s*,\s*"https:\/\/(?:www\.)?yves[- ]?rocher/i.test(
       catalog
     )
   );
   ok(
-    "catalog:dermacol_partner",
-    /affPartner\(\s*"Dermacol"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-17173455"\s*\)/.test(
+    "catalog:yves_rocher_partner",
+    /affPartner\(\s*"Yves Rocher"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15734904"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot2_dermacol_after_sephora",
-    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"[\s\S]*?affPartner\(\s*"Dermacol"/.test(
+    "catalog:slot4_yves_rocher_after_foreo",
+    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"[\s\S]*?affPartner\(\s*"Dermacol"[\s\S]*?affPartner\(\s*"FOREO"[\s\S]*?affPartner\(\s*"Yves Rocher"/.test(
       catalog
     )
   );
   ok("catalog:sephora_unchanged", catalog.includes(SEPHORA_CJ));
+  ok("catalog:dermacol_unchanged", catalog.includes(DERMACOL_CJ));
+  ok("catalog:foreo_unchanged", catalog.includes(FOREO_CJ));
 
   const block = kosmetikaBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:dermacol_in_block", block.includes("17173455"));
-  ok("catalog:not_in_drogerie", !drogerieBlock(catalog).includes("17173455"));
-  ok("catalog:single_dermacol_creative", (catalog.match(/17173455/g) || []).length === 1);
+  ok("catalog:yves_rocher_in_block", block.includes("15734904"));
+  ok("catalog:not_in_drogerie", !drogerieBlock(catalog).includes("15734904"));
+  ok("catalog:single_yves_rocher_creative", (catalog.match(/15734904/g) || []).length === 1);
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
@@ -104,8 +108,8 @@ async function auditProdCatalog() {
   const catRes = await fetch(catalogUrl, { cache: "no-store" });
   ok("prod:catalog_ok", catRes.ok, String(catRes.status));
   const catBody = await catRes.text();
-  ok("prod:dermacol_cj", catBody.includes(CJ_URL));
-  ok("prod:dermacol_title", catBody.includes('"Dermacol"') || catBody.includes("Dermacol"));
+  ok("prod:yves_rocher_cj", catBody.includes(CJ_URL));
+  ok("prod:yves_rocher_title", catBody.includes('"Yves Rocher"') || catBody.includes("Yves Rocher"));
   return { catalogUrl };
 }
 
@@ -174,7 +178,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_DERMACOL_KOSMETIKA_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_YVES_ROCHER_KOSMETIKA_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -236,57 +240,76 @@ try {
     const page = await bootstrapGuardPage(context);
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate(({ partner, sephoraTitle }) => {
-      const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
-      const chipText = (c) => {
-        const t = c.querySelector(".iuRadioChipTitle");
-        return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
-      };
-      const dc = chips.find((c) => chipText(c) === partner) || null;
-      const first = chips[0] || null;
-      const second = chips[1] || null;
-      let centered = false;
-      if (dc) {
-        const cs = getComputedStyle(dc);
-        centered =
-          cs.display.includes("flex") &&
-          (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
-          (cs.alignItems === "center" || cs.alignItems === "safe center");
+    const snap = await page.evaluate(
+      ({ partner, sephoraTitle, dermacolTitle, foreoTitle }) => {
+        const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+        const chipText = (c) => {
+          const t = c.querySelector(".iuRadioChipTitle");
+          return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
+        };
+        const yr = chips.find((c) => chipText(c) === partner) || null;
+        const first = chips[0] || null;
+        const second = chips[1] || null;
+        const third = chips[2] || null;
+        const fourth = chips[3] || null;
+        let centered = false;
+        if (yr) {
+          const cs = getComputedStyle(yr);
+          centered =
+            cs.display.includes("flex") &&
+            (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
+            (cs.alignItems === "center" || cs.alignItems === "safe center");
+        }
+        return {
+          title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
+          slots: chips.length,
+          firstText: first ? chipText(first) : "",
+          secondText: second ? chipText(second) : "",
+          thirdText: third ? chipText(third) : "",
+          fourthText: fourth ? chipText(fourth) : "",
+          yrText: yr ? chipText(yr) : "",
+          yrHref: yr ? yr.getAttribute("href") || "" : "",
+          yrTarget: yr ? yr.getAttribute("target") || "" : "",
+          yrRel: yr ? yr.getAttribute("rel") || "" : "",
+          yrReady: yr ? yr.getAttribute("data-aff-ready") || "" : "",
+          hasImg: yr ? !!yr.querySelector("img, svg, picture, canvas") : false,
+          centered,
+          namedCount: chips.filter((c) => chipText(c) !== "").length,
+          sephoraStillFirst: first ? chipText(first) === sephoraTitle : false,
+          dermacolStillSecond: second ? chipText(second) === dermacolTitle : false,
+          foreoStillThird: third ? chipText(third) === foreoTitle : false,
+        };
+      },
+      {
+        partner: PARTNER_TITLE,
+        sephoraTitle: "SEPHORA.cz",
+        dermacolTitle: "Dermacol",
+        foreoTitle: "FOREO",
       }
-      return {
-        title: (document.getElementById("iuAffiliateTitle")?.textContent || "").trim(),
-        slots: chips.length,
-        firstText: first ? chipText(first) : "",
-        secondText: second ? chipText(second) : "",
-        dcText: dc ? chipText(dc) : "",
-        dcHref: dc ? dc.getAttribute("href") || "" : "",
-        dcTarget: dc ? dc.getAttribute("target") || "" : "",
-        dcRel: dc ? dc.getAttribute("rel") || "" : "",
-        dcReady: dc ? dc.getAttribute("data-aff-ready") || "" : "",
-        hasImg: dc ? !!dc.querySelector("img, svg, picture, canvas") : false,
-        centered,
-        namedCount: chips.filter((c) => chipText(c) !== "").length,
-        sephoraStillFirst: first ? chipText(first) === sephoraTitle : false,
-      };
-    }, { partner: PARTNER_TITLE, sephoraTitle: "SEPHORA.cz" });
+    );
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
     ok(tag + ":sephora_slot1", snap.sephoraStillFirst && snap.firstText === "SEPHORA.cz", snap.firstText);
-    ok(tag + ":second_slot_dermacol", snap.secondText === PARTNER_TITLE, snap.secondText);
-    ok(tag + ":dermacol_text", snap.dcText === PARTNER_TITLE, snap.dcText);
-    ok(tag + ":dermacol_href", snap.dcHref === CJ_URL, snap.dcHref);
-    ok(tag + ":dermacol_target", snap.dcTarget === "_blank", snap.dcTarget);
-    ok(tag + ":dermacol_rel_sponsored", /\bsponsored\b/.test(snap.dcRel), snap.dcRel);
-    ok(tag + ":dermacol_rel_noopener", /\bnoopener\b/.test(snap.dcRel), snap.dcRel);
-    ok(tag + ":dermacol_no_nofollow", !/\bnofollow\b/.test(snap.dcRel));
-    ok(tag + ":dermacol_no_noreferrer", !/\bnoreferrer\b/.test(snap.dcRel));
-    ok(tag + ":dermacol_ready", snap.dcReady === "1", snap.dcReady);
-    ok(tag + ":dermacol_no_img", snap.hasImg === false);
-    ok(tag + ":dermacol_no_direct", !/^https?:\/\/(?:www\.)?dermacol/i.test(snap.dcHref));
+    ok(tag + ":dermacol_slot2", snap.dermacolStillSecond && snap.secondText === "Dermacol", snap.secondText);
+    ok(tag + ":foreo_slot3", snap.foreoStillThird && snap.thirdText === "FOREO", snap.thirdText);
+    ok(tag + ":fourth_slot_yves_rocher", snap.fourthText === PARTNER_TITLE, snap.fourthText);
+    ok(tag + ":yves_rocher_text", snap.yrText === PARTNER_TITLE, snap.yrText);
+    ok(tag + ":yves_rocher_href", snap.yrHref === CJ_URL, snap.yrHref);
+    ok(tag + ":yves_rocher_target", snap.yrTarget === "_blank", snap.yrTarget);
+    ok(tag + ":yves_rocher_rel_sponsored", /\bsponsored\b/.test(snap.yrRel), snap.yrRel);
+    ok(tag + ":yves_rocher_rel_noopener", /\bnoopener\b/.test(snap.yrRel), snap.yrRel);
+    ok(tag + ":yves_rocher_no_nofollow", !/\bnofollow\b/.test(snap.yrRel));
+    ok(tag + ":yves_rocher_no_noreferrer", !/\bnoreferrer\b/.test(snap.yrRel));
+    ok(tag + ":yves_rocher_ready", snap.yrReady === "1", snap.yrReady);
+    ok(tag + ":yves_rocher_no_img", snap.hasImg === false);
+    ok(
+      tag + ":yves_rocher_no_direct",
+      !/^https?:\/\/(?:www\.)?yves[- ]?rocher/i.test(snap.yrHref)
+    );
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 2 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 4 && snap.namedCount < 8, "named=" + snap.namedCount);
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
     const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
@@ -307,7 +330,8 @@ try {
       } catch (_) {}
       const popupUrl = popup.url();
       const cjOk =
-        /jdoqocy\.com\/click-101883843-17173455/i.test(popupUrl) || /dermacol/i.test(popupUrl);
+        /dpbolvw\.net\/click-101883843-15734904/i.test(popupUrl) ||
+        /yves[- ]?rocher/i.test(popupUrl);
       const pwaCiFlake =
         vp.name === "pwa" && /chromewebdata|chrome-error/i.test(popupUrl);
       ok(tag + ":popup_cj_or_site", cjOk || pwaCiFlake, popupUrl);
@@ -316,8 +340,8 @@ try {
 
     samples.push({
       vp: vp.name,
-      secondText: snap.secondText,
-      dcHref: snap.dcHref,
+      fourthText: snap.fourthText,
+      yrHref: snap.yrHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
@@ -330,7 +354,7 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
-if (process.env.IU_AFFILIATE_DERMACOL_PROD === "1" && !fails.length) {
+if (process.env.IU_AFFILIATE_YVES_ROCHER_PROD === "1" && !fails.length) {
   try {
     prodMeta = await auditProdCatalog();
   } catch (err) {
@@ -340,7 +364,7 @@ if (process.env.IU_AFFILIATE_DERMACOL_PROD === "1" && !fails.length) {
 
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_DERMACOL_KOSMETIKA_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_YVES_ROCHER_KOSMETIKA_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
   prodMeta,

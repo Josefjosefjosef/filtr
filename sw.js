@@ -29,7 +29,7 @@
 // 2026-09-04: Reload FOUC — layout-critical CSS network-first (SWR pathname key served stale app.css with fresh HTML)
 // 2026-09-04: Calendar Nová událost bottom-nav sheet stability (merge onto FOUC SW)
 // 2026-09-12-startup-single-paint-v1 — lineage token retained for iu-startup-single-paint-guard
-const CACHE_VERSION = "2026-09-25-affiliate-foreo-kosmetika-v1";
+const CACHE_VERSION = "2026-09-25-affiliate-yves-rocher-kosmetika-v1";
 /* CACHE_VERSION lineage: 2026-09-24-affiliate-bodyworld-zdravi-doplnky-v1 | 2026-09-24-affiliate-klub-zdravi-zdravi-doplnky-v1 | 2026-09-23-affiliate-lekarna-lemon-lekarny-v1 | 2026-09-22-affiliate-lekarna-lekarny-v1 | 2026-09-22-affiliate-kalkulator-pojisteni-v1 | 2026-09-22-affiliate-klik-pojisteni-v1 | 2026-09-22-affiliate-ahifi-auto-moto-v1 | 2026-09-21-affiliate-autohotarek-auto-moto-v1 | 2026-09-21-affiliate-pneu-pneuservis-v1 | 2026-09-21-affiliate-klik-cz-cestovni-pojisteni-v1 | 2026-09-21-affiliate-axa-assistance-cestovni-pojisteni-v1 | 2026-09-21-affiliate-letenky-letecka-doprava-v1 | 2026-09-20-affiliate-leo-express-slot1-v1 | 2026-09-20-affiliate-booking-com-slot1-v1 | 2026-09-20-affiliate-categories-34-v1 | 2026-09-20-pwa-return-boot-release-v1 | 2026-09-19-pwa-mm-visible-home-overlay-v1 | 2026-09-19-affiliate-empty-slots-v1 | 2026-09-19-pwa-title-no-dup-v1 | 2026-09-19-affiliate-categories-30-v1 | 2026-09-19-pwa-mindmenu-cold-document-v1 | 2026-09-18-pwa-title-no-dup-v1 */
 const APP_SHELL_CACHE = `iu-app-${CACHE_VERSION}`;
 const DATA_CACHE = `iu-data-${CACHE_VERSION}`;
