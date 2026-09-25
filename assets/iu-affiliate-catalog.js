@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-yves-rocher-kosmetika-v1-20260925 */
+/* iu-affiliate-catalog-bust: affiliate-brasty-kosmetika-v1-20260925 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -607,7 +607,10 @@
           "Yves Rocher",
           "https://www.dpbolvw.net/click-101883843-15734904"
         ),
-        affItem("", "marionnaud"),
+        affPartner(
+          "Brasty.cz",
+          "https://www.kqzyfj.com/click-101883843-14095529"
+        ),
         affItem("", "loccitane"),
         affItem("", "brasty"),
         affItem("", "pinkpanda"),
