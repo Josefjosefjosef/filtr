@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-sephora-kosmetika-v1-20260924";
-const SW_TOKEN = "2026-09-24-affiliate-sephora-kosmetika-v1";
+const CATALOG_BUST = "affiliate-dermacol-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-dermacol-kosmetika-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
 const PARTNER_TITLE = "Kalkulator.cz";
