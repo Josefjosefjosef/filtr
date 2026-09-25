@@ -15,8 +15,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-foreo-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
+const CATALOG_BUST = "affiliate-yves-rocher-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-yves-rocher-kosmetika-v1";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const PROD_INDEX = "https://infouzel.cz/projects/index.html";
 const SECTION = "aff-letenky";
