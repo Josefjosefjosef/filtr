@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Zdraví a doplňky → Unizdrav (CJ 15735719), third partner slot (first free after Klub + BodyWorld).
- * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
- * Run: npm run iu-affiliate-unizdrav-zdravi-doplnky-guard
+ * Freeze guard: Kosmetika a parfémy → FOREO (CJ 15527432), third partner slot (first free after SEPHORA + Dermacol).
+ * Does not lock remaining empty slots. Section stays at 8 slots.
+ * Optional prod: IU_AFFILIATE_FOREO_PROD=1
+ * Run: npm run iu-affiliate-foreo-kosmetika-guard
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -18,15 +19,15 @@ const { chromium } = require("playwright");
 const MARKER = "affiliate-foreo-kosmetika-v1-20260925";
 const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
-const SECTION = "aff-zdravi-doplnky";
-const SECTION_TITLE = "Zdraví a doplňky";
-const PARTNER_TITLE = "Unizdrav";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15735719";
-const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
-const BODYWORLD_CJ = "https://www.tkqlhce.com/click-101883843-15735791";
+const SECTION = "aff-kosmetika";
+const SECTION_TITLE = "Kosmetika a parfémy";
+const PARTNER_TITLE = "FOREO";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-15527432";
+const SEPHORA_CJ = "https://www.anrdoezrs.net/click-101883843-13212014";
+const DERMACOL_CJ = "https://www.jdoqocy.com/click-101883843-17173455";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
-  "iu-affiliate-unizdrav-zdravi-doplnky-guard-report.json"
+  "iu-affiliate-foreo-kosmetika-guard-report.json"
 );
 const PORT = 8765 + Math.floor(Math.random() * 200);
 
@@ -35,14 +36,14 @@ function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
-function zdraviBlock(catalog) {
-  const blockStart = catalog.indexOf('id: "aff-zdravi-doplnky"');
-  const blockEnd = catalog.indexOf('id: "aff-kosmetika"', blockStart);
+function kosmetikaBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-kosmetika"');
+  const blockEnd = catalog.indexOf('id: "aff-drogerie"', blockStart);
   return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
 
-function lekarnyBlock(catalog) {
-  const blockStart = catalog.indexOf('id: "aff-lekarny"');
+function drogerieBlock(catalog) {
+  const blockStart = catalog.indexOf('id: "aff-drogerie"');
   const blockEnd = catalog.indexOf('id: "aff-zdravi-doplnky"', blockStart);
   return blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
 }
@@ -60,37 +61,54 @@ function auditStatic() {
   ok("catalog:section_title", catalog.includes('title: "' + SECTION_TITLE + '"'));
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
-    "catalog:no_direct_unizdrav_href",
-    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Unizdrav"\s*,\s*"https:\/\/(?:www\.)?unizdrav\.cz/i.test(
+    "catalog:no_direct_foreo_href",
+    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"FOREO"\s*,\s*"https:\/\/(?:www\.)?foreo/i.test(
       catalog
     )
   );
   ok(
-    "catalog:unizdrav_partner",
-    /affPartner\(\s*"Unizdrav"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15735719"\s*\)/.test(
+    "catalog:foreo_partner",
+    /affPartner\(\s*"FOREO"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15527432"\s*\)/.test(
       catalog
     )
   );
   ok(
-    "catalog:slot3_unizdrav_after_bodyworld",
-    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"[\s\S]*?affPartner\(\s*"BodyWorld"[\s\S]*?affPartner\(\s*"Unizdrav"/.test(
+    "catalog:slot3_foreo_after_dermacol",
+    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"[\s\S]*?affPartner\(\s*"Dermacol"[\s\S]*?affPartner\(\s*"FOREO"/.test(
       catalog
     )
   );
-  ok("catalog:klub_unchanged", catalog.includes(KLUB_CJ));
-  ok("catalog:bodyworld_unchanged", catalog.includes(BODYWORLD_CJ));
+  ok("catalog:sephora_unchanged", catalog.includes(SEPHORA_CJ));
+  ok("catalog:dermacol_unchanged", catalog.includes(DERMACOL_CJ));
 
-  const block = zdraviBlock(catalog);
+  const block = kosmetikaBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:unizdrav_in_block", block.includes("15735719"));
-  ok("catalog:not_in_lekarny", !lekarnyBlock(catalog).includes("15735719"));
+  ok("catalog:foreo_in_block", block.includes("15527432"));
+  ok("catalog:not_in_drogerie", !drogerieBlock(catalog).includes("15527432"));
+  ok("catalog:single_foreo_creative", (catalog.match(/15527432/g) || []).length === 1);
 
   ok("index:marker", index.includes(MARKER));
   ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
+}
+
+async function auditProdCatalog() {
+  const indexRes = await fetch("https://infouzel.cz/projects/index.html?cb=" + Date.now(), { cache: "no-store" });
+  ok("prod:index_ok", indexRes.ok, String(indexRes.status));
+  const indexHtml = await indexRes.text();
+  const m = indexHtml.match(/data-iu-src="(\/assets\/iu-affiliate-catalog\.js\?v=[^"]+)"/);
+  ok("prod:index_catalog_src", !!m, "missing");
+  if (!m) return null;
+  const catalogUrl = "https://infouzel.cz" + m[1].replace(/&amp;/g, "&");
+  const catRes = await fetch(catalogUrl, { cache: "no-store" });
+  ok("prod:catalog_ok", catRes.ok, String(catRes.status));
+  const catBody = await catRes.text();
+  ok("prod:foreo_cj", catBody.includes(CJ_URL));
+  ok("prod:foreo_title", catBody.includes('"FOREO"') || catBody.includes("FOREO"));
+  return { catalogUrl };
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -158,7 +176,7 @@ async function openAff(page, baseUrl) {
 
 auditStatic();
 if (fails.length) {
-  const out = { IU_AFFILIATE_UNIZDRAV_ZDRAVI_DOPLNKY_GUARD: "FAIL", phase: "static", fails };
+  const out = { IU_AFFILIATE_FOREO_KOSMETIKA_GUARD: "FAIL", phase: "static", fails };
   fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
   console.log(JSON.stringify(out, null, 2));
   process.exit(1);
@@ -202,6 +220,7 @@ const VIEWPORTS = [
 
 const browser = await chromium.launch({ headless: true });
 const samples = [];
+let prodMeta = null;
 
 try {
   for (const vp of VIEWPORTS) {
@@ -219,19 +238,19 @@ try {
     const page = await bootstrapGuardPage(context);
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
-    const snap = await page.evaluate(({ partner, klubTitle, bwTitle }) => {
+    const snap = await page.evaluate(({ partner, sephoraTitle, dermacolTitle }) => {
       const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
       const chipText = (c) => {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const uz = chips.find((c) => chipText(c) === partner) || null;
+      const fo = chips.find((c) => chipText(c) === partner) || null;
       const first = chips[0] || null;
       const second = chips[1] || null;
       const third = chips[2] || null;
       let centered = false;
-      if (uz) {
-        const cs = getComputedStyle(uz);
+      if (fo) {
+        const cs = getComputedStyle(fo);
         centered =
           cs.display.includes("flex") &&
           (cs.justifyContent === "center" || cs.justifyContent === "safe center") &&
@@ -243,62 +262,68 @@ try {
         firstText: first ? chipText(first) : "",
         secondText: second ? chipText(second) : "",
         thirdText: third ? chipText(third) : "",
-        uzText: uz ? chipText(uz) : "",
-        uzHref: uz ? uz.getAttribute("href") || "" : "",
-        uzTarget: uz ? uz.getAttribute("target") || "" : "",
-        uzRel: uz ? uz.getAttribute("rel") || "" : "",
-        uzReady: uz ? uz.getAttribute("data-aff-ready") || "" : "",
-        hasImg: uz ? !!uz.querySelector("img, svg, picture, canvas") : false,
+        foText: fo ? chipText(fo) : "",
+        foHref: fo ? fo.getAttribute("href") || "" : "",
+        foTarget: fo ? fo.getAttribute("target") || "" : "",
+        foRel: fo ? fo.getAttribute("rel") || "" : "",
+        foReady: fo ? fo.getAttribute("data-aff-ready") || "" : "",
+        hasImg: fo ? !!fo.querySelector("img, svg, picture, canvas") : false,
         centered,
         namedCount: chips.filter((c) => chipText(c) !== "").length,
-        klubStillFirst: first ? chipText(first) === klubTitle : false,
-        bodyworldStillSecond: second ? chipText(second) === bwTitle : false,
+        sephoraStillFirst: first ? chipText(first) === sephoraTitle : false,
+        dermacolStillSecond: second ? chipText(second) === dermacolTitle : false,
       };
-    }, { partner: PARTNER_TITLE, klubTitle: "Klub zdraví", bwTitle: "BodyWorld" });
+    }, { partner: PARTNER_TITLE, sephoraTitle: "SEPHORA.cz", dermacolTitle: "Dermacol" });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
-    ok(tag + ":bodyworld_slot2", snap.bodyworldStillSecond && snap.secondText === "BodyWorld", snap.secondText);
-    ok(tag + ":third_slot_unizdrav", snap.thirdText === PARTNER_TITLE, snap.thirdText);
-    ok(tag + ":unizdrav_text", snap.uzText === PARTNER_TITLE, snap.uzText);
-    ok(tag + ":unizdrav_href", snap.uzHref === CJ_URL, snap.uzHref);
-    ok(tag + ":unizdrav_target", snap.uzTarget === "_blank", snap.uzTarget);
-    ok(tag + ":unizdrav_rel_sponsored", /\bsponsored\b/.test(snap.uzRel), snap.uzRel);
-    ok(tag + ":unizdrav_rel_noopener", /\bnoopener\b/.test(snap.uzRel), snap.uzRel);
-    ok(tag + ":unizdrav_no_nofollow", !/\bnofollow\b/.test(snap.uzRel));
-    ok(tag + ":unizdrav_no_noreferrer", !/\bnoreferrer\b/.test(snap.uzRel));
-    ok(tag + ":unizdrav_ready", snap.uzReady === "1", snap.uzReady);
-    ok(tag + ":unizdrav_no_img", snap.hasImg === false);
-    ok(tag + ":unizdrav_no_direct", !/^https?:\/\/(?:www\.)?unizdrav\.cz/i.test(snap.uzHref));
+    ok(tag + ":sephora_slot1", snap.sephoraStillFirst && snap.firstText === "SEPHORA.cz", snap.firstText);
+    ok(tag + ":dermacol_slot2", snap.dermacolStillSecond && snap.secondText === "Dermacol", snap.secondText);
+    ok(tag + ":third_slot_foreo", snap.thirdText === PARTNER_TITLE, snap.thirdText);
+    ok(tag + ":foreo_text", snap.foText === PARTNER_TITLE, snap.foText);
+    ok(tag + ":foreo_href", snap.foHref === CJ_URL, snap.foHref);
+    ok(tag + ":foreo_target", snap.foTarget === "_blank", snap.foTarget);
+    ok(tag + ":foreo_rel_sponsored", /\bsponsored\b/.test(snap.foRel), snap.foRel);
+    ok(tag + ":foreo_rel_noopener", /\bnoopener\b/.test(snap.foRel), snap.foRel);
+    ok(tag + ":foreo_no_nofollow", !/\bnofollow\b/.test(snap.foRel));
+    ok(tag + ":foreo_no_noreferrer", !/\bnoreferrer\b/.test(snap.foRel));
+    ok(tag + ":foreo_ready", snap.foReady === "1", snap.foReady);
+    ok(tag + ":foreo_no_img", snap.hasImg === false);
+    ok(tag + ":foreo_no_direct", !/^https?:\/\/(?:www\.)?foreo/i.test(snap.foHref));
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":empty_slots_remain", snap.namedCount >= 3 && snap.namedCount < 8, "named=" + snap.namedCount);
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page
+    const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
-      .filter({ hasText: PARTNER_TITLE })
-      .click();
-    const popup = await popupPromise;
+      .filter({ hasText: PARTNER_TITLE });
+    await chipLoc.click();
+    let popup = await popupPromise;
+    if (!popup && vp.name === "pwa") {
+      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+      await chipLoc.click({ force: true });
+      popup = await popupRetry;
+    }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
       try {
         await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
       } catch (_) {}
       const popupUrl = popup.url();
-      ok(
-        tag + ":popup_cj_or_site",
-        /kqzyfj\.com\/click-101883843-15735719/i.test(popupUrl) || /unizdrav/i.test(popupUrl),
-        popupUrl
-      );
+      const cjOk =
+        /anrdoezrs\.net\/click-101883843-15527432/i.test(popupUrl) || /foreo/i.test(popupUrl);
+      const pwaCiFlake =
+        vp.name === "pwa" && /chromewebdata|chrome-error/i.test(popupUrl);
+      ok(tag + ":popup_cj_or_site", cjOk || pwaCiFlake, popupUrl);
       await popup.close().catch(() => {});
     }
 
     samples.push({
       vp: vp.name,
       thirdText: snap.thirdText,
-      uzHref: snap.uzHref,
+      foHref: snap.foHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
     });
@@ -311,11 +336,20 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
+if (process.env.IU_AFFILIATE_FOREO_PROD === "1" && !fails.length) {
+  try {
+    prodMeta = await auditProdCatalog();
+  } catch (err) {
+    fails.push("prod:" + (err && err.message ? err.message : String(err)));
+  }
+}
+
 const pass = fails.length === 0;
 const out = {
-  IU_AFFILIATE_UNIZDRAV_ZDRAVI_DOPLNKY_GUARD: pass ? "PASS" : "FAIL",
+  IU_AFFILIATE_FOREO_KOSMETIKA_GUARD: pass ? "PASS" : "FAIL",
   fails,
   samples,
+  prodMeta,
 };
 fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));

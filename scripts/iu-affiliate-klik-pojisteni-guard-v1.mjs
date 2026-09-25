@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Pojištění → Klik.cz deeplink (CJ 15024026), first free partner slot.
  * Does not change Cestovní pojištění Klik (15024030). Section stays at 8 slots.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klik-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-dermacol-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-dermacol-kosmetika-v1";
+const CATALOG_BUST = "affiliate-foreo-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
 const PARTNER_TITLE = "Klik.cz";

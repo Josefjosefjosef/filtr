@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Cestovní pojištění → first free slot = AXA Assistance (CJ tracking).
  * Allows future partners in remaining slots. Protects Booking + Leo regression.
@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-dermacol-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-dermacol-kosmetika-v1";
+const CATALOG_BUST = "affiliate-foreo-kosmetika-v1-20260925";
+const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
 const PARTNER_TITLE = "AXA Assistance";

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Zdraví a doplňky → NaZuby.cz (CJ 11883390), fifth partner slot (first free after Klub + BodyWorld + Unizdrav + MentisLab).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
@@ -16,9 +16,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-dermacol-kosmetika-v1-20260925";
+const MARKER = "affiliate-foreo-kosmetika-v1-20260925";
 const CATALOG_BUST = MARKER;
-const SW_TOKEN = "2026-09-25-affiliate-dermacol-kosmetika-v1";
+const SW_TOKEN = "2026-09-25-affiliate-foreo-kosmetika-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "NaZuby.cz";
