@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-sephora-kosmetika-v1-20260924 */
+/* iu-affiliate-catalog-bust: affiliate-dermacol-kosmetika-v1-20260925 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -595,8 +595,11 @@
           "SEPHORA.cz",
           "https://www.anrdoezrs.net/click-101883843-13212014"
         ),
+        affPartner(
+          "Dermacol",
+          "https://www.jdoqocy.com/click-101883843-17173455"
+        ),
         affItem("", "sephora"),
-        affItem("", "dermacol"),
         affItem("", "fann"),
         affItem("", "marionnaud"),
         affItem("", "loccitane"),
