@@ -378,27 +378,31 @@ try {
         const mentis = namedChips.find((c) => c.text === "MentisLab");
         const nazuby = namedChips.find((c) => c.text === "NaZuby.cz");
         const natures = namedChips.find((c) => c.text === "Nature\u2019s Finest");
+        const brainmarket = namedChips.find((c) => c.text === "BrainMarket");
         ok(
           tag + ":chips_named_zdravi_partners",
-          namedChips.length === 6 &&
+          namedChips.length === 7 &&
             klub &&
             bw &&
             uniz &&
             mentis &&
             nazuby &&
             natures &&
+            brainmarket &&
             klub.href === "https://www.dpbolvw.net/click-101883843-13884010" &&
             bw.href === "https://www.tkqlhce.com/click-101883843-15735791" &&
             uniz.href === "https://www.kqzyfj.com/click-101883843-15735719" &&
             mentis.href === "https://www.tkqlhce.com/click-101883843-13341068" &&
             nazuby.href === "https://www.anrdoezrs.net/click-101883843-11883390" &&
             natures.href === "https://www.dpbolvw.net/click-101883843-15037573" &&
+            brainmarket.href === "https://www.anrdoezrs.net/click-101883843-17053829" &&
             klub.ready === "1" &&
             bw.ready === "1" &&
             uniz.ready === "1" &&
             mentis.ready === "1" &&
             nazuby.ready === "1" &&
-            natures.ready === "1",
+            natures.ready === "1" &&
+            brainmarket.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {
