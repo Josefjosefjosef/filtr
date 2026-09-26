@@ -16,8 +16,8 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-brasty-kosmetika-v1-20260925";
-const SW_TOKEN = "2026-09-25-affiliate-brasty-kosmetika-v1";
+const CATALOG_BUST = "affiliate-brainmarket-zdravi-doplnky-v1-20260926";
+const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
 const PARTNER_TITLE = "Klik.cz";

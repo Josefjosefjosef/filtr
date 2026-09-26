@@ -14,6 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
+const CATALOG_BUST = "affiliate-brainmarket-zdravi-doplnky-v1-20260926";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -179,7 +180,7 @@ function auditStatic() {
   }
 
   ok("index:default_title", index.includes(">" + SECTION_TITLE + "<") || index.includes('iuAffiliateTitle">' + SECTION_TITLE));
-  ok("index:cache_bust", index.includes("affiliate-brasty-kosmetika-v1-20260925"));
+  ok("index:cache_bust", index.includes(CATALOG_BUST));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
   ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
@@ -378,27 +379,31 @@ try {
         const mentis = namedChips.find((c) => c.text === "MentisLab");
         const nazuby = namedChips.find((c) => c.text === "NaZuby.cz");
         const natures = namedChips.find((c) => c.text === "Nature\u2019s Finest");
+        const brainmarket = namedChips.find((c) => c.text === "BrainMarket");
         ok(
           tag + ":chips_named_zdravi_partners",
-          namedChips.length === 6 &&
+          namedChips.length === 7 &&
             klub &&
             bw &&
             uniz &&
             mentis &&
             nazuby &&
             natures &&
+            brainmarket &&
             klub.href === "https://www.dpbolvw.net/click-101883843-13884010" &&
             bw.href === "https://www.tkqlhce.com/click-101883843-15735791" &&
             uniz.href === "https://www.kqzyfj.com/click-101883843-15735719" &&
             mentis.href === "https://www.tkqlhce.com/click-101883843-13341068" &&
             nazuby.href === "https://www.anrdoezrs.net/click-101883843-11883390" &&
             natures.href === "https://www.dpbolvw.net/click-101883843-15037573" &&
+            brainmarket.href === "https://www.anrdoezrs.net/click-101883843-17053829" &&
             klub.ready === "1" &&
             bw.ready === "1" &&
             uniz.ready === "1" &&
             mentis.ready === "1" &&
             nazuby.ready === "1" &&
-            natures.ready === "1",
+            natures.ready === "1" &&
+            brainmarket.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-pojisteni") {
