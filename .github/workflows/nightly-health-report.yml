@@ -501,7 +501,7 @@ jobs:
       - name: Send email
         if: success() && env.HEALTH_EMAIL_CONFIGURED == 'true'
         # CI-003: pin third-party action to commit SHA (v3.8.0)
-        uses: dawidd6/action-send-mail@3c0bbc53efa3786dff33fedbb0d03c3eb7e92df1
+        uses: dawidd6/action-send-mail@2cea9617b09d79a095af21254fbcb7ae95903dde
         with:
           server_address: ${{ secrets.HEALTH_SMTP_SERVER }}
           server_port: ${{ secrets.HEALTH_SMTP_PORT }}
