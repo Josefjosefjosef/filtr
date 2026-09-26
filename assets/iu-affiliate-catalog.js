@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-brasty-kosmetika-v1-20260925 */
+/* iu-affiliate-catalog-bust: affiliate-brainmarket-zdravi-doplnky-v1-20260926 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -581,7 +581,10 @@
           "Nature\u2019s Finest",
           "https://www.dpbolvw.net/click-101883843-15037573"
         ),
-        affItem("", "prozdravi"),
+        affPartner(
+          "BrainMarket",
+          "https://www.anrdoezrs.net/click-101883843-17053829"
+        ),
         affItem("", "brainmarket"),
       ],
     },

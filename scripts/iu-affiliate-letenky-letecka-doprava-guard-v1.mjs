@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const SW_TOKEN = "2026-09-25-affiliate-brasty-kosmetika-v1";
+const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
 const SECTION_TITLE = "Letenky a letecká doprava";
 const INTRO = "Odkazy na vybrané služby pro letenky a leteckou dopravu.";
