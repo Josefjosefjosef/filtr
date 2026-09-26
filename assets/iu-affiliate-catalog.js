@@ -625,7 +625,7 @@
       icon: "iu-aff-bottle",
       description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
-        affItem("", "rossmann"),
+        affPartner("Ecomodi", "https://www.dpbolvw.net/click-101883843-15736124"),
         affItem("", "teta-drogerie"),
         affItem("", "drogerko"),
         affItem("", "dedra"),
