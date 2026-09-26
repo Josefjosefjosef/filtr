@@ -16,6 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
+const CATALOG_BUST = "affiliate-brainmarket-zdravi-doplnky-v1-20260926";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pneu-pneuservis";
 const SECTION_TITLE = "Pneu a pneuservis";
@@ -82,7 +83,7 @@ function auditStatic() {
   ok("sprite:wheel", sprite.includes('id="iu-aff-wheel"'));
   ok("css:marker", css.includes(MARKER));
   ok("index:marker", index.includes(MARKER));
-  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=affiliate-brasty-kosmetika-v1-20260925"));
+  ok("index:catalog_bust", index.includes("iu-affiliate-catalog.js?v=" + CATALOG_BUST));
   ok("sw:token", sw.includes('CACHE_VERSION = "' + SW_TOKEN + '"'));
   ok("allowlist:token", allow.includes('"' + SW_TOKEN + '"'));
   ok("allowlist:current", allow.includes('IU_SW_CACHE_VERSION_CURRENT = "' + SW_TOKEN + '"'));
