@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-brainmarket-zdravi-doplnky-v1-20260926 */
+/* iu-affiliate-catalog-bust: affiliate-ecomodi-drogerie-v1-20260926 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -625,7 +625,7 @@
       icon: "iu-aff-bottle",
       description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
-        affItem("", "rossmann"),
+        affPartner("Ecomodi", "https://www.dpbolvw.net/click-101883843-15736124"),
         affItem("", "teta-drogerie"),
         affItem("", "drogerko"),
         affItem("", "dedra"),

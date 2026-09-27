@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-brainmarket-zdravi-doplnky-v1-20260926";
+const CATALOG_BUST = "affiliate-ecomodi-drogerie-v1-20260926";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
