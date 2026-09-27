@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-ecomodi-drogerie-v1-20260926 */
+/* iu-affiliate-catalog-bust: affiliate-skytours-letenky-letecka-doprava-v1-20260927 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -404,7 +404,7 @@
       icon: "iu-aff-plane",
       description: "Odkazy na vybrané služby pro letenky a leteckou dopravu.",
       items: [
-        affItem("", "letenky-letecka-empty-1"),
+        affPartner("Skytours", "https://www.jdoqocy.com/click-101883843-15733491"),
         affItem("", "letenky-letecka-empty-2"),
         affItem("", "letenky-letecka-empty-3"),
         affItem("", "letenky-letecka-empty-4"),
