@@ -30,7 +30,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-ecomodi-drogerie-v1-20260926";
+const CATALOG_DELIVERY_MARKER = "affiliate-skytours-letenky-letecka-doprava-v1-20260927";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
@@ -230,8 +230,16 @@ function auditStatic() {
   const letStart = catalog.indexOf('id: "aff-letenky-letecka-doprava"');
   const letEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', letStart);
   const letBlock = letStart >= 0 && letEnd > letStart ? catalog.slice(letStart, letEnd) : "";
-  ok("letenky_slots_8", (letBlock.match(/affItem\(/g) || []).length === 8, "n=" + (letBlock.match(/affItem\(/g) || []).length);
-  ok("letenky_no_https", !/https:\/\//i.test(letBlock));
+  ok(
+    "letenky_slots_8",
+    (letBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
+    "n=" + (letBlock.match(/aff(?:Item|Partner)\(/g) || []).length
+  );
+  ok(
+    "letenky_skytours_slot1",
+    /items:\s*\[\s*affPartner\(\s*"Skytours"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15733491"\s*\)/.test(letBlock)
+  );
+  ok("letenky_ready_partners_1", (letBlock.match(/affPartner\(/g) || []).length === 1);
   ok("letenky_after_doprava", catalog.indexOf('id: "aff-letenky-letecka-doprava"') > catalog.indexOf('id: "aff-letenky"'));
   ok("pneu_icon", catalog.includes('id: "aff-pneu-pneuservis"') && catalog.includes('icon: "iu-aff-wheel"'));
   ok("pneu_after_auto", catalog.indexOf('id: "aff-pneu-pneuservis"') > catalog.indexOf('id: "aff-auto-moto"'));
@@ -618,6 +626,11 @@ try {
         if (grid && seo && grid.compareDocumentPosition) {
           seoAfterGrid = (grid.compareDocumentPosition(seo) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
         }
+        const first = chips[0] || null;
+        const tail = chips.slice(1);
+        const tailTitles = tail.map((c) => (c.textContent || "").replace(/\s+/g, " ").trim());
+        const tailHrefs = tail.map((c) => c.getAttribute("href") || "");
+        const tailReady = tail.map((c) => c.getAttribute("data-aff-ready") || "");
         return {
           title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
           cat: view ? view.getAttribute("data-aff-category") || "" : "",
@@ -627,6 +640,11 @@ try {
           emptyTitles: titles.every((t) => t === ""),
           noHttps: hrefs.every((h) => !/^https?:/i.test(h)),
           allNeutral: ready.every((r) => r === "0"),
+          firstText: first ? (first.textContent || "").replace(/\s+/g, " ").trim() : "",
+          firstHref: first ? first.getAttribute("href") || "" : "",
+          tailEmpty: tailTitles.every((t) => t === ""),
+          tailNoHttps: tailHrefs.every((h) => !/^https?:/i.test(h)),
+          tailNeutral: tailReady.every((r) => r === "0"),
           seoAfterGrid,
           seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").trim().length > 0),
         };
@@ -636,9 +654,20 @@ try {
       ok(vp.name + ":" + section + ":cat", snap.cat === section, snap.cat);
       ok(vp.name + ":" + section + ":no_overflow", !snap.overflow);
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
-      if (NEW_IDS.includes(section) || section === "aff-letenky-letecka-doprava") {
+      if (NEW_IDS.includes(section)) {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
         ok(vp.name + ":" + section + ":partners_0", snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true);
+        ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
+      }
+      if (section === "aff-letenky-letecka-doprava") {
+        ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+        ok(vp.name + ":" + section + ":skytours_slot1", snap.firstText === "Skytours", snap.firstText);
+        ok(
+          vp.name + ":" + section + ":skytours_href",
+          snap.firstHref === "https://www.jdoqocy.com/click-101883843-15733491",
+          snap.firstHref
+        );
+        ok(vp.name + ":" + section + ":tail_empty", snap.tailEmpty === true && snap.tailNoHttps === true && snap.tailNeutral === true);
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
       }
       if (section === "aff-cestovni-kancelare") {
