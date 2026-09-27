@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-skytours-letenky-letecka-doprava-v1-20260927 */
+/* iu-affiliate-catalog-bust: affiliate-bestdrive-pneu-pneuservis-v1-20260927 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -465,7 +465,7 @@
       description:
         "Odkazy na vybrané prodejce pneumatik, pneuservisy a související služby.",
       items: [
-        affItem("", "pneu-pneuservis-empty-1"),
+        affPartner("BestDrive", "https://www.jdoqocy.com/click-101883843-17045434"),
         affItem("", "pneu-pneuservis-empty-2"),
         affItem("", "pneu-pneuservis-empty-3"),
         affItem("", "pneu-pneuservis-empty-4"),

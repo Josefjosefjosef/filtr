@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pneu a pneuservis — structure + 8 empty slots (partners may be added later).
- * Protects category order / Booking + Leo regression. Does not require empty slots forever.
+ * Freeze guard: Pneu a pneuservis — BestDrive slot 1 + 7 empty slots.
+ * Protects category order / Booking + Leo regression. Future partners in slots 2–8 allowed.
  * Run: npm run iu-affiliate-pneu-pneuservis-guard
  */
 import fs from "node:fs";
@@ -16,10 +16,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
-const CATALOG_BUST = "affiliate-skytours-letenky-letecka-doprava-v1-20260927";
+const CATALOG_BUST = "affiliate-bestdrive-pneu-pneuservis-v1-20260927";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pneu-pneuservis";
 const SECTION_TITLE = "Pneu a pneuservis";
+const PARTNER_TITLE = "BestDrive";
+const CJ_URL = "https://www.jdoqocy.com/click-101883843-17045434";
 const INTRO = "Odkazy na vybrané prodejce pneumatik, pneuservisy a související služby.";
 const SEO_H2 = "Pneu a pneuservis – odkazy na vybrané externí služby";
 const SEO_P1 =
@@ -63,12 +65,16 @@ function auditStatic() {
   const blockStart = catalog.indexOf('id: "' + SECTION + '"');
   const blockEnd = catalog.indexOf('id: "aff-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
-  const slotCalls = (block.match(/affItem\(/g) || []).length;
+  const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  ok("catalog:no_affPartner", !/affPartner\(/i.test(block));
-  ok("catalog:no_https", !/https:\/\//i.test(block));
+  ok("catalog:cj_url_exact", block.includes(CJ_URL));
+  ok(
+    "catalog:slot1_bestdrive",
+    /items:\s*\[\s*affPartner\(\s*"BestDrive"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-17045434"\s*\)/.test(block)
+  );
+  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
   ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
-  for (let i = 1; i <= 8; i++) {
+  for (let i = 2; i <= 8; i++) {
     ok("catalog:slot_slug_" + i, block.includes('affItem("", "pneu-pneuservis-empty-' + i + '")'));
   }
 
@@ -237,14 +243,24 @@ try {
       if (grid && seo && grid.compareDocumentPosition) {
         seoAfterGrid = (grid.compareDocumentPosition(seo) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
       }
+      const first = chips[0] || null;
+      const tail = chips.slice(1);
+      const tailTitles = tail.map((c) => (c.textContent || "").replace(/\s+/g, " ").trim());
+      const tailHrefs = tail.map((c) => c.getAttribute("href") || "");
+      const tailReady = tail.map((c) => c.getAttribute("data-aff-ready") || "");
       return {
         title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
         intro: (intro ? intro.textContent : "").replace(/\s+/g, " ").trim(),
         disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
         slots: chips.length,
-        emptyTitles: titles.every((t) => t === ""),
-        noHttps: hrefs.every((h) => !/^https?:/i.test(h)),
-        allNeutral: ready.every((r) => r === "0"),
+        firstText: first ? (first.textContent || "").replace(/\s+/g, " ").trim() : "",
+        firstHref: first ? first.getAttribute("href") || "" : "",
+        firstTarget: first ? first.getAttribute("target") || "" : "",
+        firstRel: first ? first.getAttribute("rel") || "" : "",
+        firstReady: first ? first.getAttribute("data-aff-ready") || "" : "",
+        tailEmpty: tailTitles.every((t) => t === ""),
+        tailNoHttps: tailHrefs.every((h) => !/^https?:/i.test(h)),
+        tailNeutral: tailReady.every((r) => r === "0"),
         seoAfterGrid,
         seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").includes(args.seoH2)),
         seoHasP1: !!(seo && (seo.textContent || "").includes("pneuservisy a služby související s pneumatikami")),
@@ -256,7 +272,12 @@ try {
     ok(tag + ":intro", snap.intro.includes("prodejce pneumatik"), snap.intro);
     ok(tag + ":disclosure", snap.disclosureOk);
     ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-    ok(tag + ":empty_slots", snap.emptyTitles && snap.noHttps && snap.allNeutral);
+    ok(tag + ":bestdrive_slot1", snap.firstText === PARTNER_TITLE, snap.firstText);
+    ok(tag + ":bestdrive_href", snap.firstHref === CJ_URL, snap.firstHref);
+    ok(tag + ":bestdrive_target", snap.firstTarget === "_blank", snap.firstTarget);
+    ok(tag + ":bestdrive_rel", snap.firstRel === "sponsored noopener", snap.firstRel);
+    ok(tag + ":bestdrive_ready", snap.firstReady === "1", snap.firstReady);
+    ok(tag + ":empty_tail_slots", snap.tailEmpty && snap.tailNoHttps && snap.tailNeutral);
     ok(tag + ":seo_after_slots", snap.seoAfterGrid && snap.seoVisible && snap.seoHasP1);
     samples.push({ vp: vp.name, slots: snap.slots, title: snap.title });
     await context.close();
