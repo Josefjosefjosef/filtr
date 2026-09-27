@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-bestdrive-pneu-pneuservis-v1-20260927 */
+/* iu-affiliate-catalog-bust: affiliate-rossmann-drogerie-v1-20260927 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -626,7 +626,7 @@
       description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
         affPartner("Ecomodi", "https://www.dpbolvw.net/click-101883843-15736124"),
-        affItem("", "teta-drogerie"),
+        affPartner("Rossmann", "https://www.dpbolvw.net/click-101883843-17204802"),
         affItem("", "drogerko"),
         affItem("", "dedra"),
         affItem("", "tierra-verde"),

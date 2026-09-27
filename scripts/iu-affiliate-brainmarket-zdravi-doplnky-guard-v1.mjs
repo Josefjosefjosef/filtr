@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-bestdrive-pneu-pneuservis-v1-20260927";
+const MARKER = "affiliate-rossmann-drogerie-v1-20260927";
 const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
