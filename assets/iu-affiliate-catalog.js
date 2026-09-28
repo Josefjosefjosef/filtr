@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-parys-sport-outdoor-v1-20260928 */
+/* iu-affiliate-catalog-bust: affiliate-elenys-sperky-hodinky-v1-20260928 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -881,7 +881,7 @@
       icon: "iu-aff-watch",
       description: "Odkazy na vybrané obchody se šperky a hodinkami.",
       items: [
-        affItem("", "sperky-empty-1"),
+        affPartner("ELENYS", "https://www.dpbolvw.net/click-101883843-15735899"),
         affItem("", "sperky-empty-2"),
         affItem("", "sperky-empty-3"),
         affItem("", "sperky-empty-4"),

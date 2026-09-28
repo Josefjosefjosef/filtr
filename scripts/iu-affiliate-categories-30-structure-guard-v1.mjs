@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-parys-sport-outdoor-v1-20260928";
+const CATALOG_DELIVERY_MARKER = "affiliate-elenys-sperky-hodinky-v1-20260928";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -193,7 +193,6 @@ function auditStatic() {
   ok("sw_token", sw.includes(SW_TOKEN));
   const slotSlugs = {
     "aff-kvetiny-darky": "kvetiny-empty-",
-    "aff-sperky-hodinky": "sperky-empty-",
     "aff-tv-streamovani": "streamovani-empty-",
     "aff-dilna-naradi": "dilna-empty-",
   };
@@ -212,6 +211,29 @@ function auditStatic() {
       ok("slot_slug:" + id + ":" + i, block.includes('affItem("", "' + prefix + i + '")'));
       i += 1;
     }
+  }
+  const sperkyStart = catalog.indexOf('id: "aff-sperky-hodinky"');
+  const sperkyEnd = catalog.indexOf('id: "aff-tv-streamovani"', sperkyStart);
+  const sperkyBlock =
+    sperkyStart >= 0 && sperkyEnd > sperkyStart ? catalog.slice(sperkyStart, sperkyEnd) : "";
+  ok(
+    "sperky_slots_8",
+    (sperkyBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
+    "n=" + (sperkyBlock.match(/aff(?:Item|Partner)\(/g) || []).length
+  );
+  ok(
+    "sperky_elenys_slot1",
+    /items:\s*\[\s*affPartner\(\s*"ELENYS",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15735899"\)/.test(
+      sperkyBlock
+    )
+  );
+  let sperkySlot = 2;
+  while (sperkySlot <= 8) {
+    ok(
+      "sperky_slot_slug:" + sperkySlot,
+      sperkyBlock.includes('affItem("", "sperky-empty-' + sperkySlot + '")')
+    );
+    sperkySlot += 1;
   }
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
@@ -585,7 +607,35 @@ try {
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
       if (NEW_IDS.includes(section)) {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-        ok(vp.name + ":" + section + ":partners_0", snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true);
+        if (section === "aff-sperky-hodinky") {
+          const chipSnap = await page.evaluate(() => {
+            const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+            const first = chips[0];
+            return first
+              ? {
+                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
+                  href: first.getAttribute("href") || "",
+                  target: first.getAttribute("target") || "",
+                  rel: first.getAttribute("rel") || "",
+                  ready: first.getAttribute("data-aff-ready") || "",
+                }
+              : null;
+          });
+          ok(
+            vp.name + ":" + section + ":elenys_slot1",
+            chipSnap &&
+              chipSnap.text === "ELENYS" &&
+              chipSnap.href === "https://www.dpbolvw.net/click-101883843-15735899" &&
+              chipSnap.target === "_blank" &&
+              chipSnap.rel === "sponsored noopener" &&
+              chipSnap.ready === "1"
+          );
+        } else {
+          ok(
+            vp.name + ":" + section + ":partners_0",
+            snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true
+          );
+        }
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
       }
       if (section === "aff-cestovni-kancelare") {
