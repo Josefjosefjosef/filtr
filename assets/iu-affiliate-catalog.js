@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-decathlon-sport-outdoor-v1-20260928 */
+/* iu-affiliate-catalog-bust: affiliate-insportline-sport-outdoor-v1-20260928 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -707,7 +707,7 @@
       items: [
         affPartner("Bushman", "https://www.kqzyfj.com/click-101883843-15734377"),
         affPartner("Decathlon", "https://www.tkqlhce.com/click-101883843-15698594"),
-        affItem("", "sportobchod"),
+        affPartner("inSPORTline", "https://www.dpbolvw.net/click-101883843-15734406"),
         affItem("", "2sport"),
         affItem("", "bauer-hockey"),
         affItem("", "d-sport"),
