@@ -1,9 +1,171 @@
 {
   "version": "2.0.0",
   "lane": "pocasi",
-  "generatedAt": "2026-09-29T07:51:19.704Z",
-  "itemCount": 3,
+  "generatedAt": "2026-09-29T08:11:23.462Z",
+  "itemCount": 4,
   "items": [
+    {
+      "id": "ie-chmi-v2-89eba0c2c002a72e",
+      "title": "Silný vítr — Frýdlant",
+      "description": "Silný jihovýchodní až jižní vítr s nárazy kolem 18 m/s (65 km/h). Možné komplikace v energetice, lesním hospodářství a dopravě. Možná poškození stromů a lesních porostů. Možné menší škody na energetické infrastruktuře, majetku a zejména starších budovách. Riziko úrazu uvolněnými předměty a zlomenými větvemi. Možné komplikace v dopravě.",
+      "instruction": "Zajistit okna, dveře, odstranit nebo zabezpečit volně uložené předměty, stany, skleníky apod. Dbát zvýšené opatrnosti při pohybu venku a při řízení vozidel. Na horách omezit túry a nevydávat se zejména do hřebenových partií.",
+      "sourceId": "chmi",
+      "sourceLabel": "ČHMÚ",
+      "sourceGroup": "pocasi",
+      "url": "https://vystrahy-cr.chmi.cz/",
+      "originalUrl": "https://vystrahy-cr.chmi.cz/",
+      "publicUrl": "https://vystrahy-cr.chmi.cz/",
+      "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
+      "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
+      "canonicalUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290808.xml?hid=89eba0c2c002a72e",
+      "urlKind": "cap_public_web",
+      "listingUrl": "https://vystrahy-cr.chmi.cz/",
+      "sectionId": "pocasi",
+      "subsectionId": "vystrahy",
+      "eventType": "mimoradne",
+      "status": "naplanovano",
+      "lifecycle": "naplanovano",
+      "publishable": true,
+      "untilRevoked": false,
+      "importance": 3,
+      "impact": 3,
+      "region": {
+        "level": "orp",
+        "name": "Frýdlant",
+        "summary": "Frýdlant",
+        "extraAreaCount": 0,
+        "orpId": "orp:5102",
+        "orpCode": "5102",
+        "orpName": "Frýdlant",
+        "okresId": "okres:CZ0513",
+        "okresName": "Liberec",
+        "krajId": "kraj:CZ051",
+        "krajName": "Liberecký kraj",
+        "orpIds": [
+          "orp:5102"
+        ],
+        "orpCodes": [
+          "5102"
+        ],
+        "orpNames": [
+          "Frýdlant"
+        ],
+        "okresIds": [
+          "okres:CZ0513"
+        ],
+        "okresNames": [
+          "Liberec"
+        ],
+        "krajIds": [
+          "kraj:CZ051"
+        ],
+        "krajNames": [
+          "Liberecký kraj"
+        ],
+        "areaDescs": [
+          "Liberecký kraj (Frýdlant)"
+        ],
+        "assignmentSource": "cisorp",
+        "precise": true
+      },
+      "lane": "pocasi",
+      "connectorType": "opendata",
+      "orgType": "meteo",
+      "publishedAtSource": "2026-09-29T10:08:50+02:00",
+      "publishedAt": "2026-09-29T10:08:50+02:00",
+      "updatedAt": "2026-09-29T08:10:55.618Z",
+      "validFrom": "2026-09-30T00:00:00+02:00",
+      "validTo": "2026-10-01T12:00:00+02:00",
+      "resolvedAt": null,
+      "groupKey": "2026-09-29:silny-vitr-sivs-v-1",
+      "tags": [
+        "cap",
+        "vystraha",
+        "cap-v2"
+      ],
+      "links": [],
+      "legal": {
+        "providerId": "chmi",
+        "datasetId": "chmi-opendata-national-hydromet-db",
+        "distributionId": "chmi-opendata-portal-primary",
+        "legalRecordVersion": "2026-07-20.phase2.1",
+        "approvalStatus": "APPROVED_CC_BY",
+        "attributionTemplateId": "attr-open-data-by-v1",
+        "attributionText": "Data: Český hydrometeorologický ústav — Národní databáze hydrometeorologických údajů a produktů / výstrahy (Creative Commons Attribution 4.0 International (CC BY 4.0)). Licence: https://creativecommons.org/licenses/by/4.0/. Zdroj: https://vystrahy-cr.chmi.cz/. Provedené změny: normalizace metadat a zařazení do Přehledu dne.",
+        "fetchedAt": "2026-09-29T08:10:55.618Z",
+        "sourceUrl": "https://vystrahy-cr.chmi.cz/",
+        "modifications": [
+          "normalized-metadata-link-only"
+        ],
+        "fieldAllowlist": [
+          "id",
+          "sourceId",
+          "title",
+          "url",
+          "originalUrl",
+          "publishedAt",
+          "sourceLabel",
+          "region",
+          "importance",
+          "eventType",
+          "sectionId"
+        ]
+      },
+      "capV2": {
+        "cap_message_id": "capmsg:chmi@chmi.cz|2.49.0.0.203.0.CZ.260929080850.XOCZ50_OKPR_000367|2026-09-29T10:08:50+02:00",
+        "alert_thread_id": "thread:6aa75e4eea93e73e",
+        "hazard_instance_id": "haz:89eba0c2c002a72e",
+        "msgType": "Alert",
+        "change_type": "new",
+        "event": "Silný vítr",
+        "severity": "Moderate",
+        "urgency": "Future",
+        "certainty": "Likely",
+        "badgeActive": false,
+        "temporalState": "scheduled",
+        "temporalReason": "before_validFrom",
+        "publishable": true,
+        "untilRevoked": false,
+        "openEnded": false,
+        "productExcluded": false,
+        "sourceDocumentUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290808.xml?hid=89eba0c2c002a72e",
+        "publicUrl": "https://vystrahy-cr.chmi.cz/",
+        "publicClickUrl": "https://vystrahy-cr.chmi.cz/",
+        "publisherWebUrl": "https://vystrahy-cr.chmi.cz/",
+        "listingUrl": "https://vystrahy-cr.chmi.cz/",
+        "urlKind": "cap_public_web",
+        "expiresSource": "cap",
+        "geo": {
+          "links": [
+            {
+              "hazard_instance_id": "haz:89eba0c2c002a72e",
+              "orpId": "orp:5102",
+              "orpCode": "5102",
+              "orpName": "Frýdlant",
+              "okresId": "okres:CZ0513",
+              "okresName": "Liberec",
+              "krajId": "kraj:CZ051",
+              "krajName": "Liberecký kraj",
+              "assignmentSource": "cisorp",
+              "precise": true
+            }
+          ],
+          "quarantine": [],
+          "totalAreas": 1,
+          "mappedAreas": 1,
+          "unmappedAreas": 0,
+          "mappingCoveragePercent": 100
+        },
+        "searchText": "vystraha chmu silny vitr frydlant silny vitr silny vitr silny jihovychodni az jizni vitr s narazy kolem 18 m s 65 km h mozne komplikace v energetice lesnim hospodarstvi a doprave mozna poskozeni stromu a lesnich porostu mozne mensi skody na energeticke infrastrukture majetku a zejmena starsich budovach riziko urazu uvolnenymi predmety a zlomenymi vetvemi mozne komplikace v doprave zajistit okna dvere odstranit nebo zabezpecit volne ulozene predmety stany skleniky apod dbat zvysene opatrnosti pri pohybu venku a pri rizeni vozidel na horach omezit tury a nevydavat se zejmena do hrebenovych partii frydlant frydlant liberec liberecky kraj liberecky kraj frydlant chmu cesky hydrometeorologicky ustav moderate future likely",
+        "significantUnreadReset": true
+      },
+      "firstSeenByInfoUzel": "2026-09-29T08:10:55.618Z",
+      "lastProcessedAt": "2026-09-29T08:10:55.618Z",
+      "sortAt": "2026-09-29T10:08:50+02:00",
+      "timeSource": "cap_sent",
+      "timeConfidence": "high",
+      "isNewCapture": true
+    },
     {
       "id": "ie-chmi-v2-8e91ddef0224d2ab",
       "title": "Stav sucha — Mladá Boleslav a dalších 20 oblastí",
