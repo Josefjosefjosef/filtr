@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-kabea-moda-v1-20260929 */
+/* iu-affiliate-catalog-bust: affiliate-demix-moda-v1-20260929 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -643,7 +643,7 @@
       items: [
         affPartner("Meatfly.cz", "https://www.jdoqocy.com/click-101883843-15735649"),
         affPartner("Kabea.cz", "https://www.jdoqocy.com/click-101883843-15735243"),
-        affItem("", "cropp"),
+        affPartner("Demix.cz", "https://www.tkqlhce.com/click-101883843-15202259"),
         affItem("", "housebrand"),
         affItem("", "factcool"),
         affItem("", "bushman"),
