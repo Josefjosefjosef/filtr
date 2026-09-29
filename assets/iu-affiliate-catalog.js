@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-elenys-sperky-hodinky-v1-20260928 */
+/* iu-affiliate-catalog-bust: affiliate-meatfly-moda-v1-20260929 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -641,7 +641,7 @@
       icon: "iu-aff-shirt",
       description: "Odkazy na vybrané obchody s módou, oblečením a doplňky.",
       items: [
-        affItem("", "answear"),
+        affPartner("Meatfly.cz", "https://www.jdoqocy.com/click-101883843-15735649"),
         affItem("", "reserved"),
         affItem("", "cropp"),
         affItem("", "housebrand"),
