@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-kabea-moda-v1-20260929";
+const CATALOG_DELIVERY_MARKER = "affiliate-demix-moda-v1-20260929";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -260,11 +260,21 @@ function auditStatic() {
       modaBlock
     )
   );
-  const modaPlaceholders = ["cropp", "housebrand", "factcool", "bushman", "prm", "gant"];
+  ok(
+    "moda_demix_slot3",
+    /affPartner\(\s*"Demix\.cz",\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-15202259"\)/.test(modaBlock)
+  );
+  ok(
+    "moda_demix_after_kabea",
+    /affPartner\(\s*"Kabea\.cz"[\s\S]*?affPartner\(\s*"Demix\.cz",\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-15202259"\)/.test(
+      modaBlock
+    )
+  );
+  const modaPlaceholders = ["housebrand", "factcool", "bushman", "prm", "gant"];
   let modaSlot = 0;
   while (modaSlot < modaPlaceholders.length) {
     ok(
-      "moda_slot_slug:" + (modaSlot + 3),
+      "moda_slot_slug:" + (modaSlot + 4),
       modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
     );
     modaSlot += 1;
@@ -667,28 +677,19 @@ try {
         } else if (section === "aff-moda") {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
-            const first = chips[0];
-            const second = chips[1];
-            return {
-              first: first
+            const chipAt = (idx) => {
+              const el = chips[idx];
+              return el
                 ? {
-                    text: (first.textContent || "").replace(/\s+/g, " ").trim(),
-                    href: first.getAttribute("href") || "",
-                    target: first.getAttribute("target") || "",
-                    rel: first.getAttribute("rel") || "",
-                    ready: first.getAttribute("data-aff-ready") || "",
+                    text: (el.textContent || "").replace(/\s+/g, " ").trim(),
+                    href: el.getAttribute("href") || "",
+                    target: el.getAttribute("target") || "",
+                    rel: el.getAttribute("rel") || "",
+                    ready: el.getAttribute("data-aff-ready") || "",
                   }
-                : null,
-              second: second
-                ? {
-                    text: (second.textContent || "").replace(/\s+/g, " ").trim(),
-                    href: second.getAttribute("href") || "",
-                    target: second.getAttribute("target") || "",
-                    rel: second.getAttribute("rel") || "",
-                    ready: second.getAttribute("data-aff-ready") || "",
-                  }
-                : null,
+                : null;
             };
+            return { first: chipAt(0), second: chipAt(1), third: chipAt(2) };
           });
           ok(
             vp.name + ":" + section + ":meatfly_slot1",
@@ -707,6 +708,15 @@ try {
               chipSnap.second.target === "_blank" &&
               chipSnap.second.rel === "sponsored noopener" &&
               chipSnap.second.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":demix_slot3",
+            chipSnap.third &&
+              chipSnap.third.text === "Demix.cz" &&
+              chipSnap.third.href === "https://www.tkqlhce.com/click-101883843-15202259" &&
+              chipSnap.third.target === "_blank" &&
+              chipSnap.third.rel === "sponsored noopener" &&
+              chipSnap.third.ready === "1"
           );
         } else if (NEW_IDS.includes(section)) {
           ok(
