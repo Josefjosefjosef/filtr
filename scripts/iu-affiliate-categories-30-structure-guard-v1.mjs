@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-elenys-sperky-hodinky-v1-20260928";
+const CATALOG_DELIVERY_MARKER = "affiliate-meatfly-moda-v1-20260929";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -234,6 +234,30 @@ function auditStatic() {
       sperkyBlock.includes('affItem("", "sperky-empty-' + sperkySlot + '")')
     );
     sperkySlot += 1;
+  }
+  const modaStart = catalog.indexOf('id: "aff-moda"');
+  const modaEnd = catalog.indexOf('id: "aff-boty"', modaStart);
+  const modaBlock =
+    modaStart >= 0 && modaEnd > modaStart ? catalog.slice(modaStart, modaEnd) : "";
+  ok(
+    "moda_slots_8",
+    (modaBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
+    "n=" + (modaBlock.match(/aff(?:Item|Partner)\(/g) || []).length
+  );
+  ok(
+    "moda_meatfly_slot1",
+    /items:\s*\[\s*affPartner\(\s*"Meatfly\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15735649"\)/.test(
+      modaBlock
+    )
+  );
+  const modaPlaceholders = ["reserved", "cropp", "housebrand", "factcool", "bushman", "prm", "gant"];
+  let modaSlot = 0;
+  while (modaSlot < modaPlaceholders.length) {
+    ok(
+      "moda_slot_slug:" + (modaSlot + 2),
+      modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
+    );
+    modaSlot += 1;
   }
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
@@ -554,7 +578,7 @@ try {
     await context.close();
   }
 
-  for (const section of NEW_IDS.concat(["aff-knihy", "aff-cestovni-kancelare"])) {
+  for (const section of NEW_IDS.concat(["aff-knihy", "aff-cestovni-kancelare", "aff-moda"])) {
     for (const vp of VIEWPORTS) {
       const context = await bootstrapGuardContext(browser, {
         viewport: { width: vp.width, height: vp.height },
@@ -605,7 +629,7 @@ try {
       ok(vp.name + ":" + section + ":cat", snap.cat === section, snap.cat);
       ok(vp.name + ":" + section + ":no_overflow", !snap.overflow);
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
-      if (NEW_IDS.includes(section)) {
+      if (NEW_IDS.includes(section) || section === "aff-moda") {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
         if (section === "aff-sperky-hodinky") {
           const chipSnap = await page.evaluate(() => {
@@ -630,7 +654,30 @@ try {
               chipSnap.rel === "sponsored noopener" &&
               chipSnap.ready === "1"
           );
-        } else {
+        } else if (section === "aff-moda") {
+          const chipSnap = await page.evaluate(() => {
+            const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+            const first = chips[0];
+            return first
+              ? {
+                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
+                  href: first.getAttribute("href") || "",
+                  target: first.getAttribute("target") || "",
+                  rel: first.getAttribute("rel") || "",
+                  ready: first.getAttribute("data-aff-ready") || "",
+                }
+              : null;
+          });
+          ok(
+            vp.name + ":" + section + ":meatfly_slot1",
+            chipSnap &&
+              chipSnap.text === "Meatfly.cz" &&
+              chipSnap.href === "https://www.jdoqocy.com/click-101883843-15735649" &&
+              chipSnap.target === "_blank" &&
+              chipSnap.rel === "sponsored noopener" &&
+              chipSnap.ready === "1"
+          );
+        } else if (NEW_IDS.includes(section)) {
           ok(
             vp.name + ":" + section + ":partners_0",
             snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true
