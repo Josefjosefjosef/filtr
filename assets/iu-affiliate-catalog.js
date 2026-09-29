@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-demix-moda-v1-20260929 */
+/* iu-affiliate-catalog-bust: affiliate-urbane-sport-outdoor-v1-20260929 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -710,7 +710,7 @@
         affPartner("inSPORTline", "https://www.dpbolvw.net/click-101883843-15734406"),
         affPartner("Bauerhockey.cz", "https://www.tkqlhce.com/click-101883843-15735817"),
         affPartner("PARYS.CZ", "https://www.jdoqocy.com/click-101883843-12905804"),
-        affItem("", "d-sport"),
+        affPartner("Urbane.cz", "https://www.kqzyfj.com/click-101883843-15359455"),
         affItem("", "chytapust"),
         affItem("", "parys"),
       ],
