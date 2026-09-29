@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-urbane-sport-outdoor-v1-20260929";
+const CATALOG_DELIVERY_MARKER = "affiliate-trenyrkarna-moda-v1-20260929";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -270,11 +270,22 @@ function auditStatic() {
       modaBlock
     )
   );
-  const modaPlaceholders = ["housebrand", "factcool", "bushman", "prm", "gant"];
+  ok(
+    "moda_trenyrkarna_slot4",
+    /affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(modaBlock)
+  );
+  ok(
+    "moda_trenyrkarna_after_demix",
+    /affPartner\(\s*"Demix\.cz"[\s\S]*?affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(
+      modaBlock
+    )
+  );
+  ok("moda_trenyrkarna_label_not_europe", !/Trenyrkarna Europe/i.test(modaBlock));
+  const modaPlaceholders = ["factcool", "bushman", "prm", "gant"];
   let modaSlot = 0;
   while (modaSlot < modaPlaceholders.length) {
     ok(
-      "moda_slot_slug:" + (modaSlot + 4),
+      "moda_slot_slug:" + (modaSlot + 5),
       modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
     );
     modaSlot += 1;
@@ -714,7 +725,7 @@ try {
                   }
                 : null;
             };
-            return { first: chipAt(0), second: chipAt(1), third: chipAt(2) };
+            return { first: chipAt(0), second: chipAt(1), third: chipAt(2), fourth: chipAt(3) };
           });
           ok(
             vp.name + ":" + section + ":meatfly_slot1",
@@ -742,6 +753,16 @@ try {
               chipSnap.third.target === "_blank" &&
               chipSnap.third.rel === "sponsored noopener" &&
               chipSnap.third.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":trenyrkarna_slot4",
+            chipSnap.fourth &&
+              chipSnap.fourth.text === "Trenýrkárna.cz" &&
+              chipSnap.fourth.href === "https://www.dpbolvw.net/click-101883843-15736041" &&
+              chipSnap.fourth.target === "_blank" &&
+              chipSnap.fourth.rel === "sponsored noopener" &&
+              chipSnap.fourth.ready === "1" &&
+              !/Trenyrkarna Europe/i.test(chipSnap.fourth.text)
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {
