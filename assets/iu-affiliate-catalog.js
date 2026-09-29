@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-urbane-sport-outdoor-v1-20260929 */
+/* iu-affiliate-catalog-bust: affiliate-trenyrkarna-moda-v1-20260929 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -644,7 +644,7 @@
         affPartner("Meatfly.cz", "https://www.jdoqocy.com/click-101883843-15735649"),
         affPartner("Kabea.cz", "https://www.jdoqocy.com/click-101883843-15735243"),
         affPartner("Demix.cz", "https://www.tkqlhce.com/click-101883843-15202259"),
-        affItem("", "housebrand"),
+        affPartner("Trenýrkárna.cz", "https://www.dpbolvw.net/click-101883843-15736041"),
         affItem("", "factcool"),
         affItem("", "bushman"),
         affItem("", "prm"),

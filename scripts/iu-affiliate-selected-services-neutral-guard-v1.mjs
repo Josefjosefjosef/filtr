@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-urbane-sport-outdoor-v1-20260929";
+const CATALOG_BUST = "affiliate-trenyrkarna-moda-v1-20260929";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -424,18 +424,23 @@ try {
         const meatfly = namedChips.find((c) => c.text === "Meatfly.cz");
         const kabea = namedChips.find((c) => c.text === "Kabea.cz");
         const demix = namedChips.find((c) => c.text === "Demix.cz");
+        const trenyrkarna = namedChips.find((c) => c.text === "Trenýrkárna.cz");
         ok(
           tag + ":chips_named_moda_partners",
-          namedChips.length === 3 &&
+          namedChips.length === 4 &&
             meatfly &&
             kabea &&
             demix &&
+            trenyrkarna &&
             meatfly.href === "https://www.jdoqocy.com/click-101883843-15735649" &&
             kabea.href === "https://www.jdoqocy.com/click-101883843-15735243" &&
             demix.href === "https://www.tkqlhce.com/click-101883843-15202259" &&
+            trenyrkarna.href === "https://www.dpbolvw.net/click-101883843-15736041" &&
             meatfly.ready === "1" &&
             kabea.ready === "1" &&
-            demix.ready === "1",
+            demix.ready === "1" &&
+            trenyrkarna.ready === "1" &&
+            !namedChips.some((c) => /Trenyrkarna Europe/i.test(c.text || "")),
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
