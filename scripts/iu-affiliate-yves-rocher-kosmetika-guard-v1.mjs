@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-meatfly-moda-v1-20260929";
+const CATALOG_BUST = "affiliate-kabea-moda-v1-20260929";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";

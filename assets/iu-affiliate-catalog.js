@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-meatfly-moda-v1-20260929 */
+/* iu-affiliate-catalog-bust: affiliate-kabea-moda-v1-20260929 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -642,7 +642,7 @@
       description: "Odkazy na vybrané obchody s módou, oblečením a doplňky.",
       items: [
         affPartner("Meatfly.cz", "https://www.jdoqocy.com/click-101883843-15735649"),
-        affItem("", "reserved"),
+        affPartner("Kabea.cz", "https://www.jdoqocy.com/click-101883843-15735243"),
         affItem("", "cropp"),
         affItem("", "housebrand"),
         affItem("", "factcool"),

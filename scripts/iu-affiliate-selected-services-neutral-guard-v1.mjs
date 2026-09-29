@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-meatfly-moda-v1-20260929";
+const CATALOG_BUST = "affiliate-kabea-moda-v1-20260929";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -421,12 +421,17 @@ try {
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-moda") {
+        const meatfly = namedChips.find((c) => c.text === "Meatfly.cz");
+        const kabea = namedChips.find((c) => c.text === "Kabea.cz");
         ok(
-          tag + ":chips_named_meatfly_only",
-          namedChips.length === 1 &&
-            namedChips[0].text === "Meatfly.cz" &&
-            namedChips[0].href === "https://www.jdoqocy.com/click-101883843-15735649" &&
-            namedChips[0].ready === "1",
+          tag + ":chips_named_moda_partners",
+          namedChips.length === 2 &&
+            meatfly &&
+            kabea &&
+            meatfly.href === "https://www.jdoqocy.com/click-101883843-15735649" &&
+            kabea.href === "https://www.jdoqocy.com/click-101883843-15735243" &&
+            meatfly.ready === "1" &&
+            kabea.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
