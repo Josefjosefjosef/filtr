@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const CATALOG_BUST = "affiliate-meatfly-moda-v1-20260929";
+const CATALOG_BUST = "affiliate-kabea-moda-v1-20260929";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky";
 const SECTION_TITLE = "Doprava a cestování";

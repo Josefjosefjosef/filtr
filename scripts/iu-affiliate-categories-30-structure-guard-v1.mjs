@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-meatfly-moda-v1-20260929";
+const CATALOG_DELIVERY_MARKER = "affiliate-kabea-moda-v1-20260929";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -250,11 +250,21 @@ function auditStatic() {
       modaBlock
     )
   );
-  const modaPlaceholders = ["reserved", "cropp", "housebrand", "factcool", "bushman", "prm", "gant"];
+  ok(
+    "moda_kabea_slot2",
+    /affPartner\(\s*"Kabea\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15735243"\)/.test(modaBlock)
+  );
+  ok(
+    "moda_kabea_after_meatfly",
+    /affPartner\(\s*"Meatfly\.cz"[\s\S]*?affPartner\(\s*"Kabea\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15735243"\)/.test(
+      modaBlock
+    )
+  );
+  const modaPlaceholders = ["cropp", "housebrand", "factcool", "bushman", "prm", "gant"];
   let modaSlot = 0;
   while (modaSlot < modaPlaceholders.length) {
     ok(
-      "moda_slot_slug:" + (modaSlot + 2),
+      "moda_slot_slug:" + (modaSlot + 3),
       modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
     );
     modaSlot += 1;
@@ -658,24 +668,45 @@ try {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
             const first = chips[0];
-            return first
-              ? {
-                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
-                  href: first.getAttribute("href") || "",
-                  target: first.getAttribute("target") || "",
-                  rel: first.getAttribute("rel") || "",
-                  ready: first.getAttribute("data-aff-ready") || "",
-                }
-              : null;
+            const second = chips[1];
+            return {
+              first: first
+                ? {
+                    text: (first.textContent || "").replace(/\s+/g, " ").trim(),
+                    href: first.getAttribute("href") || "",
+                    target: first.getAttribute("target") || "",
+                    rel: first.getAttribute("rel") || "",
+                    ready: first.getAttribute("data-aff-ready") || "",
+                  }
+                : null,
+              second: second
+                ? {
+                    text: (second.textContent || "").replace(/\s+/g, " ").trim(),
+                    href: second.getAttribute("href") || "",
+                    target: second.getAttribute("target") || "",
+                    rel: second.getAttribute("rel") || "",
+                    ready: second.getAttribute("data-aff-ready") || "",
+                  }
+                : null,
+            };
           });
           ok(
             vp.name + ":" + section + ":meatfly_slot1",
-            chipSnap &&
-              chipSnap.text === "Meatfly.cz" &&
-              chipSnap.href === "https://www.jdoqocy.com/click-101883843-15735649" &&
-              chipSnap.target === "_blank" &&
-              chipSnap.rel === "sponsored noopener" &&
-              chipSnap.ready === "1"
+            chipSnap.first &&
+              chipSnap.first.text === "Meatfly.cz" &&
+              chipSnap.first.href === "https://www.jdoqocy.com/click-101883843-15735649" &&
+              chipSnap.first.target === "_blank" &&
+              chipSnap.first.rel === "sponsored noopener" &&
+              chipSnap.first.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":kabea_slot2",
+            chipSnap.second &&
+              chipSnap.second.text === "Kabea.cz" &&
+              chipSnap.second.href === "https://www.jdoqocy.com/click-101883843-15735243" &&
+              chipSnap.second.target === "_blank" &&
+              chipSnap.second.rel === "sponsored noopener" &&
+              chipSnap.second.ready === "1"
           );
         } else if (NEW_IDS.includes(section)) {
           ok(
