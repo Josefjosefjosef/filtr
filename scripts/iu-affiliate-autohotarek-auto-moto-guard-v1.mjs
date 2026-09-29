@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
-const CATALOG_BUST = "affiliate-trenyrkarna-moda-v1-20260929";
+const CATALOG_BUST = "affiliate-vip-pradlo-moda-v1-20260930";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
