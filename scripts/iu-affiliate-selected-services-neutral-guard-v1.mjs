@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-zdrava-obuv-eshop-boty-v1-20260930";
+const CATALOG_BUST = "affiliate-bambule-deti-hracky-v1-20260930";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -459,6 +459,16 @@ try {
             zdrava.href === "https://www.jdoqocy.com/click-101883843-17274691" &&
             rejnok.ready === "1" &&
             zdrava.ready === "1",
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
+        );
+      } else if (section === "aff-deti-hracky") {
+        const bambule = namedChips.find((c) => c.text === "Bambule.cz");
+        ok(
+          tag + ":chips_named_deti_partners",
+          namedChips.length === 1 &&
+            bambule &&
+            bambule.href === "https://www.jdoqocy.com/click-101883843-12990634" &&
+            bambule.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
