@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-trenyrkarna-moda-v1-20260929";
+const CATALOG_DELIVERY_MARKER = "affiliate-vip-pradlo-moda-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -281,11 +281,21 @@ function auditStatic() {
     )
   );
   ok("moda_trenyrkarna_label_not_europe", !/Trenyrkarna Europe/i.test(modaBlock));
-  const modaPlaceholders = ["factcool", "bushman", "prm", "gant"];
+  ok(
+    "moda_vip_pradlo_slot5",
+    /affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(modaBlock)
+  );
+  ok(
+    "moda_vip_pradlo_after_trenyrkarna",
+    /affPartner\(\s*"Trenýrkárna\.cz"[\s\S]*?affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(
+      modaBlock
+    )
+  );
+  const modaPlaceholders = ["bushman", "prm", "gant"];
   let modaSlot = 0;
   while (modaSlot < modaPlaceholders.length) {
     ok(
-      "moda_slot_slug:" + (modaSlot + 5),
+      "moda_slot_slug:" + (modaSlot + 6),
       modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
     );
     modaSlot += 1;
@@ -725,7 +735,13 @@ try {
                   }
                 : null;
             };
-            return { first: chipAt(0), second: chipAt(1), third: chipAt(2), fourth: chipAt(3) };
+            return {
+              first: chipAt(0),
+              second: chipAt(1),
+              third: chipAt(2),
+              fourth: chipAt(3),
+              fifth: chipAt(4),
+            };
           });
           ok(
             vp.name + ":" + section + ":meatfly_slot1",
@@ -763,6 +779,15 @@ try {
               chipSnap.fourth.rel === "sponsored noopener" &&
               chipSnap.fourth.ready === "1" &&
               !/Trenyrkarna Europe/i.test(chipSnap.fourth.text)
+          );
+          ok(
+            vp.name + ":" + section + ":vip_pradlo_slot5",
+            chipSnap.fifth &&
+              chipSnap.fifth.text === "VIP-pradlo.cz" &&
+              chipSnap.fifth.href === "https://www.jdoqocy.com/click-101883843-15769149" &&
+              chipSnap.fifth.target === "_blank" &&
+              chipSnap.fifth.rel === "sponsored noopener" &&
+              chipSnap.fifth.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {

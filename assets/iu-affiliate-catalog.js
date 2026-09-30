@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-trenyrkarna-moda-v1-20260929 */
+/* iu-affiliate-catalog-bust: affiliate-vip-pradlo-moda-v1-20260930 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -645,7 +645,7 @@
         affPartner("Kabea.cz", "https://www.jdoqocy.com/click-101883843-15735243"),
         affPartner("Demix.cz", "https://www.tkqlhce.com/click-101883843-15202259"),
         affPartner("Trenýrkárna.cz", "https://www.dpbolvw.net/click-101883843-15736041"),
-        affItem("", "factcool"),
+        affPartner("VIP-pradlo.cz", "https://www.jdoqocy.com/click-101883843-15769149"),
         affItem("", "bushman"),
         affItem("", "prm"),
         affItem("", "gant"),
