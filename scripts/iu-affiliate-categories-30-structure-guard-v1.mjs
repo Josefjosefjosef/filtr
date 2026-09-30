@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Affiliate selected services — base 30 categories prefix preserved (≥30).
  * Run: npm run iu-affiliate-categories-30-structure-guard
@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-vip-pradlo-moda-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-rejnok-obuv-boty-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -300,6 +300,31 @@ function auditStatic() {
     );
     modaSlot += 1;
   }
+  const botyStart = catalog.indexOf('id: "aff-boty"');
+  const botyEnd = catalog.indexOf('id: "aff-deti-hracky"', botyStart);
+  const botyBlock =
+    botyStart >= 0 && botyEnd > botyStart ? catalog.slice(botyStart, botyEnd) : "";
+  ok(
+    "boty_slots_8",
+    (botyBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
+    "n=" + (botyBlock.match(/aff(?:Item|Partner)\(/g) || []).length
+  );
+  ok(
+    "boty_rejnok_slot1",
+    /items:\s*\[\s*affPartner\(\s*"Rejnok obuv",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-12939731"\)/.test(
+      botyBlock
+    )
+  );
+  const botyPlaceholders = ["queens", "shooos", "rejnok", "realfoot", "belenka", "barebarics", "skinners"];
+  let botySlot = 0;
+  while (botySlot < botyPlaceholders.length) {
+    ok(
+      "boty_slot_slug:" + (botySlot + 2),
+      botyBlock.includes('affItem("", "' + botyPlaceholders[botySlot] + '")')
+    );
+    botySlot += 1;
+  }
+  ok("boty_no_footshop_placeholder", !botyBlock.includes('affItem("", "footshop")'));
   const sportStart = catalog.indexOf('id: "aff-sport-outdoor"');
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
   const sportBlock =
@@ -695,7 +720,12 @@ try {
       ok(vp.name + ":" + section + ":cat", snap.cat === section, snap.cat);
       ok(vp.name + ":" + section + ":no_overflow", !snap.overflow);
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
-      if (NEW_IDS.includes(section) || section === "aff-moda" || section === "aff-sport-outdoor") {
+      if (
+        NEW_IDS.includes(section) ||
+        section === "aff-moda" ||
+        section === "aff-boty" ||
+        section === "aff-sport-outdoor"
+      ) {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
         if (section === "aff-sperky-hodinky") {
           const chipSnap = await page.evaluate(() => {
@@ -788,6 +818,29 @@ try {
               chipSnap.fifth.target === "_blank" &&
               chipSnap.fifth.rel === "sponsored noopener" &&
               chipSnap.fifth.ready === "1"
+          );
+        } else if (section === "aff-boty") {
+          const chipSnap = await page.evaluate(() => {
+            const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+            const first = chips[0];
+            return first
+              ? {
+                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
+                  href: first.getAttribute("href") || "",
+                  target: first.getAttribute("target") || "",
+                  rel: first.getAttribute("rel") || "",
+                  ready: first.getAttribute("data-aff-ready") || "",
+                }
+              : null;
+          });
+          ok(
+            vp.name + ":" + section + ":rejnok_slot1",
+            chipSnap &&
+              chipSnap.text === "Rejnok obuv" &&
+              chipSnap.href === "https://www.dpbolvw.net/click-101883843-12939731" &&
+              chipSnap.target === "_blank" &&
+              chipSnap.rel === "sponsored noopener" &&
+              chipSnap.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {

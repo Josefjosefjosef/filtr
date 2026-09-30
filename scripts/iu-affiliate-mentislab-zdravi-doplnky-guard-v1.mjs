@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Zdraví a doplňky → MentisLab (CJ 13341068), fourth partner slot (first free after Klub + BodyWorld + Unizdrav).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-vip-pradlo-moda-v1-20260930";
+const CATALOG_BUST = "affiliate-rejnok-obuv-boty-v1-20260930";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";

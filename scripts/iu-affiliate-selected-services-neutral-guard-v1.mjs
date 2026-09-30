@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Guard: Affiliate / selected services — neutral presentation + ad disclosure.
  * Run: npm run iu-affiliate-selected-services-neutral-guard
@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-vip-pradlo-moda-v1-20260930";
+const CATALOG_BUST = "affiliate-rejnok-obuv-boty-v1-20260930";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -445,6 +445,16 @@ try {
             trenyrkarna.ready === "1" &&
             vipPradlo.ready === "1" &&
             !namedChips.some((c) => /Trenyrkarna Europe/i.test(c.text || "")),
+          namedChips.map((c) => c.text + ":" + c.href).join("|")
+        );
+      } else if (section === "aff-boty") {
+        const rejnok = namedChips.find((c) => c.text === "Rejnok obuv");
+        ok(
+          tag + ":chips_named_boty_partners",
+          namedChips.length === 1 &&
+            rejnok &&
+            rejnok.href === "https://www.dpbolvw.net/click-101883843-12939731" &&
+            rejnok.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
