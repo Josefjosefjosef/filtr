@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-09-30T06:01:12.320Z",
-    "lastSuccessAt": "2026-09-30T06:01:16.032Z",
-    "lastChangedAt": "2026-09-29T12:41:04.256Z",
+    "lastRunAt": "2026-09-30T11:25:52.516Z",
+    "lastSuccessAt": "2026-09-30T11:25:56.301Z",
+    "lastChangedAt": "2026-09-30T11:25:55.583Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6abbace1-e894\"",
-    "lastModified": "Tue, 29 Sep 2026 12:19:45 GMT",
+    "etag": "\"6abcbf0b-17bea2\"",
+    "lastModified": "Wed, 30 Sep 2026 07:49:31 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 4,
@@ -433,11 +433,11 @@
     "totalItems": 4,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -445,18 +445,18 @@
     "discoveryMaxFiles": null,
     "discoveryFixedLimit": false,
     "productStreams": [
-      "70",
-      "50"
+      "50",
+      "70"
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 20,
       "logicalAlerts": 4,
       "uniqueEvents": [
+        "Silný vítr",
         "Stav sucha",
-        "Hydrologické sucho",
-        "Silný vítr"
+        "Hydrologické sucho"
       ],
       "totalAreas": 32,
       "mappedAreas": 196,
@@ -466,8 +466,8 @@
       "publishedScheduled": 0,
       "publishableCount": 4,
       "productStreams": [
-        "70",
-        "50"
+        "50",
+        "70"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -476,38 +476,38 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-09-29T14:00:00+02:00",
+    "lastCapSent": "2026-09-30T09:49:11+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6237,
+    "runMs": 6550,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-09-30T06:01:12.320Z",
+    "lastSnapshotAt": "2026-09-30T11:25:52.516Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-09-29T12:41:01.211Z",
-      "officialLatestSentAt": "2026-09-29T14:00:00+02:00",
-      "officialLatestValidFrom": "2026-09-30T00:00:00+02:00",
-      "discoveredAt": "2026-09-30T06:01:12.320Z",
-      "fetchedAt": "2026-09-30T06:01:12.320Z",
-      "transformedAt": "2026-09-30T06:01:18.557Z",
-      "validatedAt": "2026-09-30T06:01:18.557Z",
-      "publishedAt": "2026-09-30T06:01:12.320Z",
-      "endToEndLagMs": 2461211
+      "officialFirstSeenAt": "2026-09-30T11:25:52.516Z",
+      "officialLatestSentAt": "2026-09-30T09:49:11+02:00",
+      "officialLatestValidFrom": "2026-09-30T09:46:47+02:00",
+      "discoveredAt": "2026-09-30T11:25:52.516Z",
+      "fetchedAt": "2026-09-30T11:25:52.516Z",
+      "transformedAt": "2026-09-30T11:25:59.066Z",
+      "validatedAt": "2026-09-30T11:25:59.066Z",
+      "publishedAt": "2026-09-30T11:25:52.516Z",
+      "endToEndLagMs": 13001516
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_291200.xml",
-          "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_300749.xml",
+          "productKey": "50",
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_290808.xml",
-          "productKey": "50",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_291200.xml",
+          "productKey": "70",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
@@ -517,13 +517,13 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 20,
           "logicalAlerts": 4,
           "uniqueEvents": [
+            "Silný vítr",
             "Stav sucha",
-            "Hydrologické sucho",
-            "Silný vítr"
+            "Hydrologické sucho"
           ],
           "totalAreas": 32,
           "mappedAreas": 196,
@@ -533,8 +533,8 @@
           "publishedScheduled": 0,
           "publishableCount": 4,
           "productStreams": [
-            "70",
-            "50"
+            "50",
+            "70"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
@@ -545,9 +545,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-09-30T11:25:52.516Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 6550,
+        "error": null,
+        "activeCount": 4,
+        "scheduledCount": 0,
+        "publishableCount": 4
+      },
       {
         "at": "2026-09-30T06:01:12.320Z",
         "status": "not_modified",
@@ -1060,17 +1084,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 5553,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-27T13:40:57.462Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5437,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
