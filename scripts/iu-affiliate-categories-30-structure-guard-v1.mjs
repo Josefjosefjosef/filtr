@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-zdrava-obuv-eshop-boty-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-bambule-deti-hracky-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -338,6 +338,39 @@ function auditStatic() {
   }
   ok("boty_no_queens_placeholder", !botyBlock.includes('affItem("", "queens")'));
   ok("boty_no_footshop_placeholder", !botyBlock.includes('affItem("", "footshop")'));
+  const detiStart = catalog.indexOf('id: "aff-deti-hracky"');
+  const detiEnd = catalog.indexOf('id: "aff-sportovni-obleceni"', detiStart);
+  const detiBlock =
+    detiStart >= 0 && detiEnd > detiStart ? catalog.slice(detiStart, detiEnd) : "";
+  ok(
+    "deti_slots_8",
+    (detiBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
+    "n=" + (detiBlock.match(/aff(?:Item|Partner)\(/g) || []).length
+  );
+  ok(
+    "deti_bambule_slot1",
+    /items:\s*\[\s*affPartner\(\s*"Bambule\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-12990634"\)/.test(
+      detiBlock
+    )
+  );
+  const detiPlaceholders = [
+    "deti-hracky-2",
+    "deti-hracky-3",
+    "deti-hracky-4",
+    "deti-hracky-5",
+    "deti-hracky-6",
+    "deti-hracky-7",
+    "deti-hracky-8",
+  ];
+  let detiSlot = 0;
+  while (detiSlot < detiPlaceholders.length) {
+    ok(
+      "deti_slot_slug:" + (detiSlot + 2),
+      detiBlock.includes('affItem("", "' + detiPlaceholders[detiSlot] + '")')
+    );
+    detiSlot += 1;
+  }
+  ok("deti_no_deti_hracky_1_placeholder", !detiBlock.includes('affItem("", "deti-hracky-1")'));
   const sportStart = catalog.indexOf('id: "aff-sport-outdoor"');
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
   const sportBlock =
@@ -737,6 +770,7 @@ try {
         NEW_IDS.includes(section) ||
         section === "aff-moda" ||
         section === "aff-boty" ||
+        section === "aff-deti-hracky" ||
         section === "aff-sport-outdoor"
       ) {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
@@ -866,6 +900,29 @@ try {
               chipSnap.second.target === "_blank" &&
               chipSnap.second.rel === "sponsored noopener" &&
               chipSnap.second.ready === "1"
+          );
+        } else if (section === "aff-deti-hracky") {
+          const chipSnap = await page.evaluate(() => {
+            const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+            const first = chips[0];
+            return first
+              ? {
+                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
+                  href: first.getAttribute("href") || "",
+                  target: first.getAttribute("target") || "",
+                  rel: first.getAttribute("rel") || "",
+                  ready: first.getAttribute("data-aff-ready") || "",
+                }
+              : null;
+          });
+          ok(
+            vp.name + ":" + section + ":bambule_slot1",
+            chipSnap &&
+              chipSnap.text === "Bambule.cz" &&
+              chipSnap.href === "https://www.jdoqocy.com/click-101883843-12990634" &&
+              chipSnap.target === "_blank" &&
+              chipSnap.rel === "sponsored noopener" &&
+              chipSnap.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {
