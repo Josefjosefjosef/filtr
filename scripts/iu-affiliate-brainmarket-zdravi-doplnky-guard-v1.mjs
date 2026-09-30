@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Zdraví a doplňky → BrainMarket (CJ 17053829), seventh partner slot (first free after Nature's Finest on current main).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const MARKER = "affiliate-vip-pradlo-moda-v1-20260930";
+const MARKER = "affiliate-rejnok-obuv-boty-v1-20260930";
 const CATALOG_BUST = MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";

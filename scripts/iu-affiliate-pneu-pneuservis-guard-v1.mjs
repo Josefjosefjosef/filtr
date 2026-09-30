@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Freeze guard: Pneu a pneuservis — BestDrive slot 1 + 7 empty slots.
  * Protects category order / Booking + Leo regression. Future partners in slots 2–8 allowed.
@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
-const CATALOG_BUST = "affiliate-vip-pradlo-moda-v1-20260930";
+const CATALOG_BUST = "affiliate-rejnok-obuv-boty-v1-20260930";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pneu-pneuservis";
 const SECTION_TITLE = "Pneu a pneuservis";

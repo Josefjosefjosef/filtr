@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-vip-pradlo-moda-v1-20260930 */
+/* iu-affiliate-catalog-bust: affiliate-rejnok-obuv-boty-v1-20260930 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -657,7 +657,7 @@
       icon: "iu-aff-shoe",
       description: "Odkazy na vybrané obchody s obuví.",
       items: [
-        affItem("", "footshop"),
+        affPartner("Rejnok obuv", "https://www.dpbolvw.net/click-101883843-12939731"),
         affItem("", "queens"),
         affItem("", "shooos"),
         affItem("", "rejnok"),
