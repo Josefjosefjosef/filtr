@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Affiliate selected services — base 30 categories prefix preserved (≥30).
  * Run: npm run iu-affiliate-categories-30-structure-guard
@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-bambule-deti-hracky-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-feedo-deti-hracky-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -353,8 +353,19 @@ function auditStatic() {
       detiBlock
     )
   );
+  ok(
+    "deti_feedo_slot2",
+    /affPartner\(\s*"Feedo\.cz",\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-12984087"\)/.test(
+      detiBlock
+    )
+  );
+  ok(
+    "deti_feedo_after_bambule",
+    /affPartner\(\s*"Bambule\.cz"[\s\S]*?affPartner\(\s*"Feedo\.cz",\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-12984087"\)/.test(
+      detiBlock
+    )
+  );
   const detiPlaceholders = [
-    "deti-hracky-2",
     "deti-hracky-3",
     "deti-hracky-4",
     "deti-hracky-5",
@@ -365,12 +376,13 @@ function auditStatic() {
   let detiSlot = 0;
   while (detiSlot < detiPlaceholders.length) {
     ok(
-      "deti_slot_slug:" + (detiSlot + 2),
+      "deti_slot_slug:" + (detiSlot + 3),
       detiBlock.includes('affItem("", "' + detiPlaceholders[detiSlot] + '")')
     );
     detiSlot += 1;
   }
   ok("deti_no_deti_hracky_1_placeholder", !detiBlock.includes('affItem("", "deti-hracky-1")'));
+  ok("deti_no_deti_hracky_2_placeholder", !detiBlock.includes('affItem("", "deti-hracky-2")'));
   const sportStart = catalog.indexOf('id: "aff-sport-outdoor"');
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
   const sportBlock =
@@ -904,25 +916,37 @@ try {
         } else if (section === "aff-deti-hracky") {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
-            const first = chips[0];
-            return first
-              ? {
-                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
-                  href: first.getAttribute("href") || "",
-                  target: first.getAttribute("target") || "",
-                  rel: first.getAttribute("rel") || "",
-                  ready: first.getAttribute("data-aff-ready") || "",
-                }
-              : null;
+            const chipAt = (idx) => {
+              const el = chips[idx];
+              return el
+                ? {
+                    text: (el.textContent || "").replace(/\s+/g, " ").trim(),
+                    href: el.getAttribute("href") || "",
+                    target: el.getAttribute("target") || "",
+                    rel: el.getAttribute("rel") || "",
+                    ready: el.getAttribute("data-aff-ready") || "",
+                  }
+                : null;
+            };
+            return { first: chipAt(0), second: chipAt(1) };
           });
           ok(
             vp.name + ":" + section + ":bambule_slot1",
-            chipSnap &&
-              chipSnap.text === "Bambule.cz" &&
-              chipSnap.href === "https://www.jdoqocy.com/click-101883843-12990634" &&
-              chipSnap.target === "_blank" &&
-              chipSnap.rel === "sponsored noopener" &&
-              chipSnap.ready === "1"
+            chipSnap.first &&
+              chipSnap.first.text === "Bambule.cz" &&
+              chipSnap.first.href === "https://www.jdoqocy.com/click-101883843-12990634" &&
+              chipSnap.first.target === "_blank" &&
+              chipSnap.first.rel === "sponsored noopener" &&
+              chipSnap.first.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":feedo_slot2",
+            chipSnap.second &&
+              chipSnap.second.text === "Feedo.cz" &&
+              chipSnap.second.href === "https://www.anrdoezrs.net/click-101883843-12984087" &&
+              chipSnap.second.target === "_blank" &&
+              chipSnap.second.rel === "sponsored noopener" &&
+              chipSnap.second.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {
