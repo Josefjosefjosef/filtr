@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-bambule-deti-hracky-v1-20260930 */
+/* iu-affiliate-catalog-bust: affiliate-feedo-deti-hracky-v1-20260930 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -674,7 +674,7 @@
       description: "Odkazy na vybrané obchody se sortimentem pro děti a hračkami.",
       items: [
         affPartner("Bambule.cz", "https://www.jdoqocy.com/click-101883843-12990634"),
-        affItem("", "deti-hracky-2"),
+        affPartner("Feedo.cz", "https://www.anrdoezrs.net/click-101883843-12984087"),
         affItem("", "deti-hracky-3"),
         affItem("", "deti-hracky-4"),
         affItem("", "deti-hracky-5"),

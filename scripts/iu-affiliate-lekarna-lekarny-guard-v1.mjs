@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
  * Does not lock remaining empty slots. Section stays at 8 slots.
@@ -16,7 +16,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-bambule-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-feedo-deti-hracky-v1-20260930";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";

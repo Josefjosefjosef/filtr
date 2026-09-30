@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Freeze guard: Kosmetika a parfémy → Brasty.cz (CJ 14095529), fifth partner slot (first free after prior partners).
  * Does not lock remaining empty slots. Section stays at 8 slots.
@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-bambule-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-feedo-deti-hracky-v1-20260930";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";

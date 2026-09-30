@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Guard: Affiliate / selected services — neutral presentation + ad disclosure.
  * Run: npm run iu-affiliate-selected-services-neutral-guard
@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-bambule-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-feedo-deti-hracky-v1-20260930";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -463,12 +463,16 @@ try {
         );
       } else if (section === "aff-deti-hracky") {
         const bambule = namedChips.find((c) => c.text === "Bambule.cz");
+        const feedo = namedChips.find((c) => c.text === "Feedo.cz");
         ok(
           tag + ":chips_named_deti_partners",
-          namedChips.length === 1 &&
+          namedChips.length === 2 &&
             bambule &&
+            feedo &&
             bambule.href === "https://www.jdoqocy.com/click-101883843-12990634" &&
-            bambule.ready === "1",
+            feedo.href === "https://www.anrdoezrs.net/click-101883843-12984087" &&
+            bambule.ready === "1" &&
+            feedo.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
