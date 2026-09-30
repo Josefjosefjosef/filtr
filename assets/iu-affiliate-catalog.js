@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-feedo-deti-hracky-v1-20260930 */
+/* iu-affiliate-catalog-bust: affiliate-4kids-deti-hracky-v1-20260930 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -675,7 +675,7 @@
       items: [
         affPartner("Bambule.cz", "https://www.jdoqocy.com/click-101883843-12990634"),
         affPartner("Feedo.cz", "https://www.anrdoezrs.net/click-101883843-12984087"),
-        affItem("", "deti-hracky-3"),
+        affPartner("4KIDS.cz", "https://www.kqzyfj.com/click-101883843-14299748"),
         affItem("", "deti-hracky-4"),
         affItem("", "deti-hracky-5"),
         affItem("", "deti-hracky-6"),

@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-feedo-deti-hracky-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-4kids-deti-hracky-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -365,8 +365,19 @@ function auditStatic() {
       detiBlock
     )
   );
+  ok(
+    "deti_4kids_slot3",
+    /affPartner\(\s*"4KIDS\.cz",\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-14299748"\)/.test(
+      detiBlock
+    )
+  );
+  ok(
+    "deti_4kids_after_feedo",
+    /affPartner\(\s*"Feedo\.cz"[\s\S]*?affPartner\(\s*"4KIDS\.cz",\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-14299748"\)/.test(
+      detiBlock
+    )
+  );
   const detiPlaceholders = [
-    "deti-hracky-3",
     "deti-hracky-4",
     "deti-hracky-5",
     "deti-hracky-6",
@@ -376,13 +387,14 @@ function auditStatic() {
   let detiSlot = 0;
   while (detiSlot < detiPlaceholders.length) {
     ok(
-      "deti_slot_slug:" + (detiSlot + 3),
+      "deti_slot_slug:" + (detiSlot + 4),
       detiBlock.includes('affItem("", "' + detiPlaceholders[detiSlot] + '")')
     );
     detiSlot += 1;
   }
   ok("deti_no_deti_hracky_1_placeholder", !detiBlock.includes('affItem("", "deti-hracky-1")'));
   ok("deti_no_deti_hracky_2_placeholder", !detiBlock.includes('affItem("", "deti-hracky-2")'));
+  ok("deti_no_deti_hracky_3_placeholder", !detiBlock.includes('affItem("", "deti-hracky-3")'));
   const sportStart = catalog.indexOf('id: "aff-sport-outdoor"');
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
   const sportBlock =
@@ -928,7 +940,7 @@ try {
                   }
                 : null;
             };
-            return { first: chipAt(0), second: chipAt(1) };
+            return { first: chipAt(0), second: chipAt(1), third: chipAt(2) };
           });
           ok(
             vp.name + ":" + section + ":bambule_slot1",
@@ -947,6 +959,15 @@ try {
               chipSnap.second.target === "_blank" &&
               chipSnap.second.rel === "sponsored noopener" &&
               chipSnap.second.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":4kids_slot3",
+            chipSnap.third &&
+              chipSnap.third.text === "4KIDS.cz" &&
+              chipSnap.third.href === "https://www.kqzyfj.com/click-101883843-14299748" &&
+              chipSnap.third.target === "_blank" &&
+              chipSnap.third.rel === "sponsored noopener" &&
+              chipSnap.third.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {
