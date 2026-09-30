@@ -29,7 +29,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-rejnok-obuv-boty-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-zdrava-obuv-eshop-boty-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8963", 10);
@@ -315,15 +315,28 @@ function auditStatic() {
       botyBlock
     )
   );
-  const botyPlaceholders = ["queens", "shooos", "rejnok", "realfoot", "belenka", "barebarics", "skinners"];
+  ok(
+    "boty_zdrava_slot2",
+    /affPartner\(\s*"Zdrava-obuv-eshop\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-17274691"\)/.test(
+      botyBlock
+    )
+  );
+  ok(
+    "boty_zdrava_after_rejnok",
+    /affPartner\(\s*"Rejnok obuv"[\s\S]*?affPartner\(\s*"Zdrava-obuv-eshop\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-17274691"\)/.test(
+      botyBlock
+    )
+  );
+  const botyPlaceholders = ["shooos", "rejnok", "realfoot", "belenka", "barebarics", "skinners"];
   let botySlot = 0;
   while (botySlot < botyPlaceholders.length) {
     ok(
-      "boty_slot_slug:" + (botySlot + 2),
+      "boty_slot_slug:" + (botySlot + 3),
       botyBlock.includes('affItem("", "' + botyPlaceholders[botySlot] + '")')
     );
     botySlot += 1;
   }
+  ok("boty_no_queens_placeholder", !botyBlock.includes('affItem("", "queens")'));
   ok("boty_no_footshop_placeholder", !botyBlock.includes('affItem("", "footshop")'));
   const sportStart = catalog.indexOf('id: "aff-sport-outdoor"');
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
@@ -822,25 +835,37 @@ try {
         } else if (section === "aff-boty") {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
-            const first = chips[0];
-            return first
-              ? {
-                  text: (first.textContent || "").replace(/\s+/g, " ").trim(),
-                  href: first.getAttribute("href") || "",
-                  target: first.getAttribute("target") || "",
-                  rel: first.getAttribute("rel") || "",
-                  ready: first.getAttribute("data-aff-ready") || "",
-                }
-              : null;
+            const chipAt = (idx) => {
+              const el = chips[idx];
+              return el
+                ? {
+                    text: (el.textContent || "").replace(/\s+/g, " ").trim(),
+                    href: el.getAttribute("href") || "",
+                    target: el.getAttribute("target") || "",
+                    rel: el.getAttribute("rel") || "",
+                    ready: el.getAttribute("data-aff-ready") || "",
+                  }
+                : null;
+            };
+            return { first: chipAt(0), second: chipAt(1) };
           });
           ok(
             vp.name + ":" + section + ":rejnok_slot1",
-            chipSnap &&
-              chipSnap.text === "Rejnok obuv" &&
-              chipSnap.href === "https://www.dpbolvw.net/click-101883843-12939731" &&
-              chipSnap.target === "_blank" &&
-              chipSnap.rel === "sponsored noopener" &&
-              chipSnap.ready === "1"
+            chipSnap.first &&
+              chipSnap.first.text === "Rejnok obuv" &&
+              chipSnap.first.href === "https://www.dpbolvw.net/click-101883843-12939731" &&
+              chipSnap.first.target === "_blank" &&
+              chipSnap.first.rel === "sponsored noopener" &&
+              chipSnap.first.ready === "1"
+          );
+          ok(
+            vp.name + ":" + section + ":zdrava_slot2",
+            chipSnap.second &&
+              chipSnap.second.text === "Zdrava-obuv-eshop.cz" &&
+              chipSnap.second.href === "https://www.jdoqocy.com/click-101883843-17274691" &&
+              chipSnap.second.target === "_blank" &&
+              chipSnap.second.rel === "sponsored noopener" &&
+              chipSnap.second.ready === "1"
           );
         } else if (section === "aff-sport-outdoor") {
           const chipSnap = await page.evaluate(() => {

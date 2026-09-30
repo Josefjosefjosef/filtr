@@ -14,7 +14,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-rejnok-obuv-boty-v1-20260930";
+const CATALOG_BUST = "affiliate-zdrava-obuv-eshop-boty-v1-20260930";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -449,12 +449,16 @@ try {
         );
       } else if (section === "aff-boty") {
         const rejnok = namedChips.find((c) => c.text === "Rejnok obuv");
+        const zdrava = namedChips.find((c) => c.text === "Zdrava-obuv-eshop.cz");
         ok(
           tag + ":chips_named_boty_partners",
-          namedChips.length === 1 &&
+          namedChips.length === 2 &&
             rejnok &&
+            zdrava &&
             rejnok.href === "https://www.dpbolvw.net/click-101883843-12939731" &&
-            rejnok.ready === "1",
+            zdrava.href === "https://www.jdoqocy.com/click-101883843-17274691" &&
+            rejnok.ready === "1" &&
+            zdrava.ready === "1",
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
