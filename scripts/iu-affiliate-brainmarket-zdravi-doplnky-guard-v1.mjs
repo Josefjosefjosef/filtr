@@ -227,6 +227,9 @@ const VIEWPORTS = [
   { name: "pwa", width: 390, height: 844, hasTouch: true, pwa: true },
 ];
 
+const PREMIUM_SELECTED_OPEN_ALLOW =
+  /^https:\/\/ads\.infouzel\.cz\/v1\/public\/premium\/selected-services\/(catalog|render)\?category=/;
+
 const browser = await chromium.launch({ headless: true });
 const samples = [];
 let prodMeta = null;
@@ -248,7 +251,13 @@ try {
     const extOnOpen = [];
     page.on("request", (req) => {
       const u = req.url();
-      if (/^https?:\/\//i.test(u) && !u.includes("127.0.0.1")) extOnOpen.push(u);
+      if (
+        /^https?:\/\//i.test(u) &&
+        !u.includes("127.0.0.1") &&
+        !PREMIUM_SELECTED_OPEN_ALLOW.test(u)
+      ) {
+        extOnOpen.push(u);
+      }
     });
     await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
 
