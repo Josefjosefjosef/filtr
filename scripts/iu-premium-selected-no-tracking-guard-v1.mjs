@@ -115,16 +115,28 @@ try {
     hasTouch: true,
   });
   const page = await bootstrapGuardPage(context);
-  await page.route("**/v1/public/premium/selected-services/**", async (route) => {
+  const fulfillPremiumApi = async (route) => {
     const url = route.request().url();
     const body = url.includes("/render") ? JSON.stringify(stubRender) : JSON.stringify(stubCatalog);
     await route.fulfill({ status: 200, contentType: "application/json", body });
-  });
+  };
+  await page.route("**/v1/public/premium/selected-services/**", fulfillPremiumApi);
+  await page.route("https://ads.infouzel.cz/v1/public/premium/selected-services/**", fulfillPremiumApi);
 
   const base = `http://127.0.0.1:${PORT}`;
   await page.goto(`${base}/projects/?section=media&iuInfoSystem=off&nosw=1`, {
     waitUntil: "domcontentloaded",
     timeout: 120000,
+  });
+  await page.evaluate(() => {
+    if (!document.getElementById("iuAffiliateGrid")) {
+      const g = document.createElement("div");
+      g.id = "iuAffiliateGrid";
+      document.body.appendChild(g);
+    }
+  });
+  await page.addScriptTag({
+    url: `${base}/assets/iu-premium-selected-services-v1.js?v=premium-selected-v1-20261001`,
   });
   await page
     .waitForFunction(() => typeof window.iuPremiumSelectedMount === "function", null, { timeout: 90000 })
@@ -137,6 +149,8 @@ try {
       trackingUrls.push(u);
     }
   });
+
+  ok("boot:mount_fn", await page.evaluate(() => typeof window.iuPremiumSelectedMount === "function"));
 
   for (const consent of ["allowed", "denied", "unset"]) {
     await page.evaluate((mode) => {
