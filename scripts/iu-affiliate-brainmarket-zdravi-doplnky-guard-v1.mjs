@@ -6,10 +6,14 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import {
+  pickGuardPort,
+  startGuardStaticServer,
+  stopGuardProcess,
+} from "./guards/guard-playwright-lifecycle.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -31,8 +35,6 @@ const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-brainmarket-zdravi-doplnky-guard-report.json"
 );
-const PORT = 8765 + Math.floor(Math.random() * 200);
-
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
@@ -120,24 +122,6 @@ async function auditProdCatalog() {
   return { catalogUrl };
 }
 
-function waitForPort(host, port, timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
-  return new Promise((resolve, reject) => {
-    const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
-        res.resume();
-        resolve();
-      });
-      req.on("error", () => {
-        if (Date.now() > deadline) reject(new Error("port_timeout"));
-        else setTimeout(tryOnce, 120);
-      });
-      req.end();
-    };
-    tryOnce();
-  });
-}
-
 async function dismissConsent(page) {
   await page.evaluate(() => {
     try {
@@ -191,34 +175,8 @@ if (fails.length) {
   process.exit(1);
 }
 
-const server = http.createServer((req, res) => {
-  try {
-    let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
-    if (p.endsWith("/")) p += "index.html";
-    const fp = path.join(ROOT, p.replace(/^\/+/, ""));
-    if (!fp.startsWith(ROOT) || !fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
-      res.writeHead(404);
-      res.end("not found");
-      return;
-    }
-    const mime =
-      fp.endsWith(".css")
-        ? "text/css; charset=utf-8"
-        : fp.endsWith(".js")
-          ? "text/javascript; charset=utf-8"
-          : fp.endsWith(".html")
-            ? "text/html; charset=utf-8"
-            : "application/octet-stream";
-    res.writeHead(200, { "content-type": mime });
-    res.end(fs.readFileSync(fp));
-  } catch (_) {
-    res.writeHead(500);
-    res.end("err");
-  }
-});
-
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
-await waitForPort("127.0.0.1", PORT, 10000);
+const started = await startGuardStaticServer(pickGuardPort(8800, 400));
+const guardBase = `http://127.0.0.1:${started.port}/projects/`;
 
 const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844, hasTouch: true },
@@ -259,7 +217,7 @@ try {
         extOnOpen.push(u);
       }
     });
-    await openAff(page, `http://127.0.0.1:${PORT}/projects/`);
+    await openAff(page, guardBase);
 
     const snap = await page.evaluate(({ partner, klubTitle, bwTitle, uzTitle, mentisTitle, nazubyTitle, naturesTitle }) => {
       const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
@@ -383,7 +341,7 @@ try {
   fails.push("runtime_exception:" + (err && err.message ? err.message : String(err)));
 } finally {
   await browser.close().catch(() => {});
-  await new Promise((resolve) => server.close(resolve));
+  await stopGuardProcess(started.proc);
 }
 
 if (process.env.IU_AFFILIATE_BRAINMARKET_PROD === "1" && !fails.length) {
