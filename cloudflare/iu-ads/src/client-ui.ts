@@ -37,6 +37,10 @@ export function buildClientShellHtml(nonce: string): string {
     .widget{border:1px solid var(--line);border-radius:10px;padding:.65rem;background:#fff}
     .widget-k{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
     .widget-v{font-size:1.05rem;margin-top:.2rem;word-break:break-word}
+    .iuPremiumPreviewWrap{max-width:220px;margin:.75rem 0}
+    .iuPremiumPreviewWrap .iuPremiumSlot{display:flex;width:100%;height:110px;border-radius:12px;border:1px solid var(--line);overflow:hidden;background:#f5f5f4;align-items:center;justify-content:center}
+    .iuPremiumPreviewWrap .iuPremiumSlotImg{width:100%;height:100%;object-fit:contain}
+    .iuPremiumPreviewWrap .iuPremiumSlot--banner .iuPremiumSlotImg{object-fit:cover}
     pre.json{white-space:pre-wrap;word-break:break-word;font:12px/1.4 ui-monospace,Consolas,monospace;background:#f7f4ee;padding:.75rem;border-radius:8px;max-height:360px;overflow:auto}
     #login-view{display:block}
     #app-view{display:none}
@@ -75,7 +79,7 @@ export function buildClientShellHtml(nonce: string): string {
 <script nonce="${nonce}">
 (function(){
   "use strict";
-  var state={health:null,me:null,report:null,view:"overview",flash:null};
+  var state={health:null,me:null,report:null,premium:null,view:"overview",flash:null};
   function el(id){return document.getElementById(id);}
   function esc(s){
     return String(s==null?"":s).replace(/[&<>"']/g,function(c){
@@ -139,7 +143,7 @@ export function buildClientShellHtml(nonce: string): string {
     state.me=null; state.report=null; setLoggedIn(false);
   }
   function renderTabs(){
-    var items=[["overview","Přehled"],["campaigns","Kampaně"],["creatives","Kreativy"],["documents","Dokumenty"],["stats","Statistiky"],["export","Export"]];
+    var items=[["overview","Přehled"],["premium","Prémiové služby"],["campaigns","Kampaně"],["creatives","Kreativy"],["documents","Dokumenty"],["stats","Statistiky"],["export","Export"]];
     el("tabs").innerHTML=items.map(function(it){
       return '<button type="button" data-v="'+it[0]+'" class="'+(state.view===it[0]?"active":"")+'">'+esc(it[1])+'</button>';
     }).join("");
@@ -151,6 +155,12 @@ export function buildClientShellHtml(nonce: string): string {
         renderPanel();
       }
     };
+  }
+  async function loadPremium(){
+    var r=await api("/v1/client/premium/summary",{method:"GET",headers:{}});
+    if(!r.res.ok) return {ok:false,error:apiError(r.body)};
+    state.premium=r.body;
+    return {ok:true};
   }
   async function loadReport(){
     var q="";
@@ -192,7 +202,63 @@ export function buildClientShellHtml(nonce: string): string {
     }
     var rep=state.report;
     var v=state.view;
-    if(v==="overview"){
+    if(v==="premium"){
+      panel.innerHTML=flash+'<p class="muted">Načítám prémiové služby…</p>';
+      if(!state.premium){
+        var pl=await loadPremium();
+        if(!pl.ok){ panel.innerHTML=flash+'<p class="err">'+esc(pl.error)+'</p>'; return; }
+      }
+      var prem=state.premium;
+      var periods=(prem&&prem.periods)||[];
+      var offers=(prem&&prem.renewal_offers)||[];
+      var periodRows=periods.map(function(p){
+        return {
+          order_id:p.order_id,
+          placement:p.placement_id,
+          position:p.position_label,
+          category:p.category_slug,
+          status:(p.campaign&&p.campaign.status)||p.workflow_status,
+          start:(p.campaign&&p.campaign.start_at)||"—",
+          end:(p.campaign&&p.campaign.end_at)||"—",
+          remaining:p.remaining_days!=null?String(p.remaining_days)+" dní":"—",
+          price:(p.price_snapshot&&p.price_snapshot.price_label_cs)||"—",
+          invoice:(p.invoice&&p.invoice.invoice_number)||"—",
+          payment:(p.invoice&&p.invoice.status)||"—"
+        };
+      });
+      var offerHtml=offers.length?listTable(offers.map(function(o){
+        return {
+          offer_id:o.offer_id,
+          status:o.status,
+          price:o.price_label_cs,
+          deadline:o.window_end_at,
+          action:o.status==="offered"?o.offer_id:""
+        };
+      }),[["offer_id","Nabídka"],["status","Stav"],["price","Cena"],["deadline","Lhůta"],["action","ID"]]):"<p class='muted'>Žádná renewal nabídka.</p>";
+      panel.innerHTML=flash+
+        '<div class="card"><h2>Prémiové pozice — Vybrané služby</h2>'+
+        '<p class="muted">'+esc(prem&&prem.disclosure||"")+'</p>'+
+        '<p class="muted"><strong>Bez impresí, kliků a CTR.</strong></p></div>'+
+        '<div class="card"><h3>Období</h3>'+listTable(periodRows,[["order_id","Objednávka"],["category","Kategorie"],["position","Pozice"],["status","Stav"],["start","Od"],["end","Do"],["remaining","Zbývá"],["price","Cena období"],["invoice","Faktura"],["payment","Evidovaná úhrada"]])+'</div>'+
+        '<div class="card"><h3>Prodloužení (renewal)</h3>'+offerHtml+
+        '<div id="renewal-actions"></div></div>';
+      var act=el("renewal-actions");
+      if(act){
+        act.innerHTML=offers.filter(function(o){return o.status==="offered";}).map(function(o){
+          return '<div class="row"><button type="button" class="btn" data-renew="'+esc(o.offer_id)+'">Přijmout prodloužení — '+esc(o.price_label_cs)+'</button></div>';
+        }).join("");
+        Array.prototype.forEach.call(act.querySelectorAll("[data-renew]"),function(btn){
+          btn.onclick=async function(){
+            var oid=btn.getAttribute("data-renew");
+            var acc=await api("/v1/client/premium/renewals/"+encodeURIComponent(oid)+"/accept",{method:"POST",body:"{}"});
+            state.flash=acc.res.ok?"Prodloužení přijato.":"Chyba: "+apiError(acc.body);
+            state.premium=null;
+            renderPanel();
+          };
+        });
+      }
+      return;
+    } else if(v==="overview"){
       panel.innerHTML=flash+filterBar(rep)+
         '<div class="card"><h2>Profil</h2><p>client_id: <strong>'+esc(rep.client&&rep.client.client_id)+
         '</strong></p><p class="muted">code_id: '+esc(rep.code&&rep.code.code_id)+
@@ -210,7 +276,8 @@ export function buildClientShellHtml(nonce: string): string {
       panel.innerHTML=flash+'<div class="card"><h2>Dokumenty (client_visible)</h2><p class="muted">Bez interních cen a bez veřejných R2 URL — jen metadata ve scope.</p>'+
         listTable(rep.documents,[["document_id","ID"],["title","Název"],["doc_type","Typ"],["visibility","Viditelnost"],["created_at","Vytvořeno"]])+'</div>';
     } else if(v==="stats"){
-      panel.innerHTML=flash+filterBar(rep)+'<div class="card"><h2>Statistiky</h2>'+totalsWidgets(rep.stats&&rep.stats.totals)+
+      var premNote=rep.stats&&rep.stats.premium_product_note?'<p class="muted">'+esc(rep.stats.premium_product_note)+'</p>':"";
+      panel.innerHTML=flash+filterBar(rep)+'<div class="card"><h2>Statistiky</h2>'+premNote+totalsWidgets(rep.stats&&rep.stats.totals)+
         listTable((rep.stats&&rep.stats.rows)||[],[["campaign_id","Kampaň"],["impressions","Imp"],["clicks","Kliky"],["date","Datum"]])+
         '<details><summary class="muted">Raw JSON</summary><pre class="json">'+esc(JSON.stringify(rep.stats,null,2))+'</pre></details></div>';
     } else if(v==="export"){

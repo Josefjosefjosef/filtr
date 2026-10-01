@@ -192,11 +192,19 @@ async function setColorfulAndSave(page, on) {
 }
 
 async function closeEditor(page) {
+  const overlaySel = "#iu-mailbox-edit-overlay";
+  if ((await page.locator(overlaySel).count()) === 0) return;
   const cancel = page.locator("#iu-mailbox-edit-cancel");
-  if (await cancel.count()) {
-    await cancel.click({ force: true });
-    await page.waitForSelector("#iu-mailbox-edit-overlay", { state: "detached", timeout: 15000 });
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (await cancel.count()) await cancel.click({ force: true });
+    try {
+      await page.waitForSelector(overlaySel, { state: "detached", timeout: 20000 });
+      return;
+    } catch (_) {
+      await page.waitForTimeout(150);
+    }
   }
+  await page.waitForSelector(overlaySel, { state: "detached", timeout: 20000 });
 }
 
 async function seedAndHydrate(page, payload) {

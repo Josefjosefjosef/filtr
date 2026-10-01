@@ -22,6 +22,7 @@ export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "clients", label_cs: "Klienti", href: "/v1/admin/clients", permission: "clients.read" },
   { id: "inquiries", label_cs: "Poptávky", href: "/v1/admin/inquiries", permission: "inquiries.read" },
   { id: "orders", label_cs: "Objednávky", href: "/v1/admin/orders", permission: "orders.read" },
+  { id: "premium", label_cs: "Premium — Vybrané služby", href: "/v1/admin/premium/orders", permission: "orders.read" },
   { id: "contracts", label_cs: "Smlouvy", href: "/v1/admin/contracts", permission: "contracts.read" },
   { id: "invoices", label_cs: "Faktury", href: "/v1/admin/invoices", permission: "invoices.read" },
   { id: "campaigns", label_cs: "Kampaně", href: "/v1/admin/campaigns", permission: "campaigns.read" },
