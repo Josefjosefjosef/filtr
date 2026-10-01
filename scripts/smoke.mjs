@@ -175,7 +175,43 @@ async function gotoProjectsMediaForSmoke(page) {
   await page.waitForTimeout(600);
 }
 
+const PREHLED_DNE_FEED_URL_RE = /\/projects\/data\/info_events\/feed\.json(?:\?|$)/;
+
+function freshenInfoEventsFeedForSmoke(feed, now = new Date()) {
+  if (!feed || !Array.isArray(feed.items)) return feed;
+  const nowMs = now.getTime();
+  const items = feed.items.map((item, idx) => {
+    const ev = { ...item };
+    const pub = new Date(nowMs - (idx + 1) * 3600000).toISOString();
+    ev.publishedAt = pub;
+    ev.publishedAtSource = pub;
+    ev.validFrom = new Date(nowMs - 3600000).toISOString();
+    ev.validTo = new Date(nowMs + 72 * 3600000).toISOString();
+    ev.status = "aktivni";
+    return ev;
+  });
+  return { ...feed, items };
+}
+
+async function installPrehledDneFeedFreshRoute(page) {
+  const feedPath = path.join(ROOT, "projects/data/info_events/feed.json");
+  await page.route(PREHLED_DNE_FEED_URL_RE, async (route) => {
+    try {
+      const raw = JSON.parse(fs.readFileSync(feedPath, "utf8"));
+      const body = JSON.stringify(freshenInfoEventsFeedForSmoke(raw));
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json; charset=utf-8",
+        body,
+      });
+    } catch (_) {
+      await route.continue();
+    }
+  });
+}
+
 async function smokePrehledDneCutover(page) {
+  await installPrehledDneFeedFreshRoute(page);
   // Shell paints `.iuPrehledDne` before feed.json hydrate; waiting only for the shell flakes.
   // Wait for feed fetch + items (or explicit empty/error) with one reload retry.
   let lastItemErr = null;
