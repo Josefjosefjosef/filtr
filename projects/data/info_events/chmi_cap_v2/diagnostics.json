@@ -1,6 +1,6 @@
 {
-  "runId": "ad906034b0b9d911",
-  "started": "2026-10-01T09:00:26.942Z",
+  "runId": "3d6039e2c0c36358",
+  "started": "2026-10-01T12:35:26.618Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,19 +37,18 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 4,
+      "logicalAlerts": 3,
       "uniqueEvents": [
-        "Silný vítr",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 32,
-      "mappedAreas": 196,
+      "totalAreas": 31,
+      "mappedAreas": 195,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 0,
-      "publishableCount": 4,
+      "publishableCount": 3,
       "productStreams": [
         "50",
         "70"
@@ -57,7 +56,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -66,13 +65,13 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 4,
-    "after": 4,
+    "before": 3,
+    "after": 3,
     "ledgerKeys": 2,
     "ledgerFingerprint": "e98dc38f64400e90",
     "history": {
-      "fetched": 1,
-      "cached": 31,
+      "fetched": 0,
+      "cached": 32,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_091200.xml",
@@ -311,30 +310,29 @@
   },
   "temporalCounts": {
     "totalItems": 4,
-    "activeCount": 4,
+    "activeCount": 3,
     "scheduledCount": 0,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 4,
-    "visibleCount": 4
+    "publishableCount": 3,
+    "visibleCount": 3
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 4,
+    "logicalAlerts": 3,
     "uniqueEvents": [
-      "Silný vítr",
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 32,
-    "mappedAreas": 196,
+    "totalAreas": 31,
+    "mappedAreas": 195,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 4,
+    "publishedActive": 3,
     "publishedScheduled": 0,
-    "publishableCount": 4,
+    "publishableCount": 3,
     "productStreams": [
       "50",
       "70"
@@ -342,7 +340,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -350,7 +348,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 196,
+    "headAreas": 195,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -358,6 +356,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-01T09:00:33.642Z",
-  "runMs": 6699
+  "finished": "2026-10-01T12:35:31.136Z",
+  "runMs": 4517
 }
