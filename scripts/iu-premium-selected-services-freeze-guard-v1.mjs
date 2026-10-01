@@ -23,6 +23,9 @@ const affiliateJs = read("assets/iu-affiliate-catalog.js");
 const appCss = read("assets/app.css");
 const indexTs = read("cloudflare/iu-ads/src/index.ts");
 const publishTs = read("cloudflare/iu-ads/src/premium-publish.ts");
+const clientPremiumTs = read("cloudflare/iu-ads/src/client-premium.ts");
+const clientUi = read("cloudflare/iu-ads/src/client-ui.ts");
+const adminPreviewTs = read("cloudflare/iu-ads/src/admin-premium-preview.ts");
 
 must(/selected_services\./.test(premiumTs), "stable placement id prefix");
 must(/resolveAuthoritativePriceCents/.test(premiumTs), "price tampering guard");
@@ -44,6 +47,11 @@ must(/executePremiumApproveAndPublish/.test(publishTs), "approve and publish wor
 must(/premium_publish_events/.test(publishTs), "publish idempotency");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0011_premium_selected_services.sql")), "migration 0011");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0012_premium_selected_ops.sql")), "migration 0012");
+must(/measurement:\s*\{\s*impressions:\s*false/.test(clientPremiumTs), "client portal no impressions");
+must(/\/v1\/client\/premium\/summary/.test(clientUi), "client portal premium tab");
+must(/preview_html/.test(adminPreviewTs), "admin creative preview");
+must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");
+must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guard-v1.mjs")), "browser no-tracking guard");
 
 if (failures.length) {
   console.error("FAIL");

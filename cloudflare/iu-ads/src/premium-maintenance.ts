@@ -25,6 +25,31 @@ export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number
     .bind(nowIso)
     .all<{ placement_id: string; active_campaign_id: string }>();
 
+  const dueScheduled = await db
+    .prepare(
+      `SELECT campaign_id, order_id FROM campaigns
+       WHERE pricing_model = 'premium_selected_services_v1' AND status = 'scheduled' AND start_at <= ?`
+    )
+    .bind(nowIso)
+    .all<{ campaign_id: string; order_id: string | null }>();
+
+  for (const row of dueScheduled.results || []) {
+    await db
+      .prepare("UPDATE campaigns SET status = 'active', actual_start_at = ?, updated_at = ? WHERE campaign_id = ?")
+      .bind(nowIso, nowIso, row.campaign_id)
+      .run();
+    const po = await db
+      .prepare("SELECT placement_id FROM premium_selected_orders WHERE published_campaign_id = ? OR order_id = ?")
+      .bind(row.campaign_id, row.order_id || "")
+      .first<{ placement_id: string }>();
+    if (po?.placement_id) {
+      await db
+        .prepare("UPDATE premium_selected_placements SET active_campaign_id = ?, updated_at = ? WHERE placement_id = ?")
+        .bind(row.campaign_id, nowIso, po.placement_id)
+        .run();
+    }
+  }
+
   let cleared = 0;
   for (const row of expired.results || []) {
     await db.prepare("UPDATE campaigns SET status = 'ended', updated_at = ? WHERE campaign_id = ? AND status IN ('active','paused','scheduled')")

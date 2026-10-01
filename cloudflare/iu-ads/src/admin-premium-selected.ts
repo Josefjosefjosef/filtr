@@ -251,9 +251,22 @@ export async function handleClientPremiumRenewalAccept(request: Request, env: En
     .bind(orderId, nowIso, offerId)
     .run();
 
+  const { executePremiumApproveAndPublish } = await import("./premium-publish");
+  const publish = await executePremiumApproveAndPublish(env, {
+    orderId,
+    actorUserId: "renewal:client_accept",
+    idempotencyKey: "renewal_publish:" + offerId,
+  });
+  if (!publish.ok) {
+    return json({ ok: false, error: publish.error, order_id: orderId }, publish.status);
+  }
+
   return json({
     ok: true,
     order_id: orderId,
+    campaign_id: publish.campaign_id,
+    invoice_id: publish.invoice_id,
+    idempotent: publish.already,
     offered_price_cents: offer.offered_price_cents,
     price_label_cs: (offer.offered_price_cents / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců",
   });

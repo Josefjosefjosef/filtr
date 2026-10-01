@@ -32,6 +32,8 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/inquiries",
   "/v1/admin/orders",
   "/v1/admin/premium/orders",
+  "/v1/client/premium/summary",
+  "/v1/client/premium/renewals",
   "/v1/admin/contracts",
   "/v1/admin/invoices",
   "/v1/admin/campaigns",
@@ -85,6 +87,7 @@ function pathIsKnown(path: string): boolean {
     /^\/v1\/admin\/alerts\/.+/,
     /^\/v1\/admin\/stats\/campaigns\/.+/,
     /^\/v1\/admin\/premium\/orders\/.+/,
+    /^\/v1\/client\/premium\/renewals\/.+/,
   ];
   return dynamic.some((re) => re.test(path));
 }

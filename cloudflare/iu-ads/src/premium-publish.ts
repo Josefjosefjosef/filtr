@@ -117,6 +117,45 @@ export async function executePremiumApproveAndPublish(
     .first<{ order_id: string; client_id: string; order_number: string }>();
   if (!order) return { ok: false, status: 404, error: "order_not_found" };
 
+  let renewalOfferId: string | null = null;
+  let renewalPredecessorCampaignId: string | null = null;
+  let renewalOfferedPriceCents: number | null = null;
+  const orderPayloadRow = await db
+    .prepare("SELECT payload_json FROM orders WHERE order_id = ?")
+    .bind(input.orderId)
+    .first<{ payload_json: string | null }>();
+  if (orderPayloadRow?.payload_json) {
+    try {
+      const payload = JSON.parse(orderPayloadRow.payload_json) as {
+        product?: string;
+        renewal_offer_id?: string;
+        agreed_price_cents?: number;
+      };
+      if (payload.product === "premium_selected_services_renewal_v1" && payload.renewal_offer_id) {
+        renewalOfferId = payload.renewal_offer_id;
+        const offer = await db
+          .prepare(
+            "SELECT offer_id, campaign_id, offered_price_cents, status, accepted_order_id FROM premium_renewal_offers WHERE offer_id = ?"
+          )
+          .bind(renewalOfferId)
+          .first<{
+            offer_id: string;
+            campaign_id: string;
+            offered_price_cents: number;
+            status: string;
+            accepted_order_id: string | null;
+          }>();
+        if (!offer || offer.status !== "accepted" || offer.accepted_order_id !== input.orderId) {
+          return { ok: false, status: 409, error: "renewal_offer_not_accepted" };
+        }
+        renewalPredecessorCampaignId = offer.campaign_id;
+        renewalOfferedPriceCents = Math.round(offer.offered_price_cents);
+      }
+    } catch {
+      return { ok: false, status: 400, error: "invalid_order_payload" };
+    }
+  }
+
   const placementRow = await db
     .prepare("SELECT current_price_cents, currency FROM premium_selected_placements WHERE placement_id = ?")
     .bind(po.placement_id)
@@ -125,18 +164,44 @@ export async function executePremiumApproveAndPublish(
 
   const parsedPlacement = parsePremiumPlacementId(po.placement_id);
   const position = (parsedPlacement?.position ?? po.position) as 1 | 2 | 3 | 4;
-  const priceCents = resolveAuthoritativePriceCents(
+  let priceCents = resolveAuthoritativePriceCents(
     po.placement_id,
     position,
     placementRow.current_price_cents,
     null
   );
+  if (renewalOfferedPriceCents != null && renewalOfferedPriceCents > 0) {
+    priceCents = renewalOfferedPriceCents;
+  }
 
   const slotFree = await placementIsAvailable(db, po.placement_id, nowIso);
-  if (!slotFree.ok) return { ok: false, status: 409, error: slotFree.reason };
+  let scheduledRenewalSuccessor = false;
+  if (!slotFree.ok) {
+    if (renewalPredecessorCampaignId) {
+      const occ = await db
+        .prepare("SELECT active_campaign_id FROM premium_selected_placements WHERE placement_id = ?")
+        .bind(po.placement_id)
+        .first<{ active_campaign_id: string | null }>();
+      if (occ?.active_campaign_id === renewalPredecessorCampaignId) {
+        scheduledRenewalSuccessor = true;
+      } else {
+        return { ok: false, status: 409, error: slotFree.reason };
+      }
+    } else {
+      return { ok: false, status: 409, error: slotFree.reason };
+    }
+  }
 
-  const startAt = nowIso;
+  let startAt = nowIso;
+  if (renewalPredecessorCampaignId) {
+    const prevEnd = await db
+      .prepare("SELECT end_at FROM campaigns WHERE campaign_id = ?")
+      .bind(renewalPredecessorCampaignId)
+      .first<{ end_at: string | null }>();
+    if (prevEnd?.end_at) startAt = prevEnd.end_at;
+  }
   const endAt = addCalendarMonthsFromIso(startAt, 6);
+  const campaignStatus = scheduledRenewalSuccessor && startAt > nowIso ? "scheduled" : "active";
   const campaignId = newId("cmp");
   const evidenceCode = generateEvidenceCode();
   const title = "Premium " + po.category_slug + " P" + String(po.position);
@@ -156,11 +221,11 @@ export async function executePremiumApproveAndPublish(
       order.client_id,
       order.order_id,
       title,
-      "active",
+      campaignStatus,
       "Reklama",
       startAt,
       endAt,
-      startAt,
+      campaignStatus === "active" ? startAt : null,
       urlCheck.normalized,
       priceCents,
       priceCents,
@@ -180,7 +245,7 @@ export async function executePremiumApproveAndPublish(
     .prepare(
       "INSERT INTO campaign_status_events (event_id, campaign_id, from_status, to_status, actor_user_id, reason, created_at) VALUES (?,?,?,?,?,?,?)"
     )
-    .bind(newId("cse"), campaignId, null, "active", input.actorUserId, "premium_publish", nowIso)
+    .bind(newId("cse"), campaignId, null, campaignStatus, input.actorUserId, "premium_publish", nowIso)
     .run();
 
   await db
@@ -219,20 +284,22 @@ export async function executePremiumApproveAndPublish(
       po.position,
       startAt,
       endAt,
-      "active",
+      campaignStatus,
       nowIso,
       nowIso
     )
     .run();
 
-  const occupied = await db
-    .prepare(
-      "UPDATE premium_selected_placements SET active_campaign_id = ?, updated_at = ? WHERE placement_id = ? AND (active_campaign_id IS NULL OR active_campaign_id = ?)"
-    )
-    .bind(campaignId, nowIso, po.placement_id, campaignId)
-    .run();
-  if (!occupied.meta.changes) {
-    return { ok: false, status: 409, error: "placement_race" };
+  if (!scheduledRenewalSuccessor) {
+    const occupied = await db
+      .prepare(
+        "UPDATE premium_selected_placements SET active_campaign_id = ?, updated_at = ? WHERE placement_id = ? AND (active_campaign_id IS NULL OR active_campaign_id = ?)"
+      )
+      .bind(campaignId, nowIso, po.placement_id, campaignId)
+      .run();
+    if (!occupied.meta.changes) {
+      return { ok: false, status: 409, error: "placement_race" };
+    }
   }
 
   if (po.position === 2) {

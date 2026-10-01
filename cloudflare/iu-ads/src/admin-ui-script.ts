@@ -849,10 +849,29 @@ export const ADMIN_UI_SCRIPT = String.raw`
         var rows=(po.body&&po.body.premium_orders)||[];
         panel('<div class="card"><h2>Premium — Vybrané služby</h2><p class="muted">Schválit a zveřejnit = okamžitá publikace + faktura (splatnost +3 kalendářní dny).</p>'+
           listTable(rows,[["order_id","Objednávka"],["company_name","Firma"],["placement_id","Placement"],["workflow_status","Stav"],["target_url","URL"]],function(row){
-            if(row.workflow_status!=="submitted"&&row.workflow_status!=="under_review") return "";
-            return '<button type="button" class="btn" data-premium-publish="'+esc(row.order_id)+'">Schválit a zveřejnit</button> '+
+            var btns='<button type="button" class="btn secondary" data-premium-detail="'+esc(row.order_id)+'">Náhled</button> ';
+            if(row.workflow_status!=="submitted"&&row.workflow_status!=="under_review") return btns;
+            return btns+'<button type="button" class="btn" data-premium-publish="'+esc(row.order_id)+'">Schválit a zveřejnit</button> '+
               '<button type="button" class="btn secondary" data-premium-reject="'+esc(row.order_id)+'">Zamítnout</button>';
-          })+'</div>');
+          })+'<div id="premium-detail-host"></div></div>');
+        Array.prototype.forEach.call(document.querySelectorAll("[data-premium-detail]"),function(b){
+          b.onclick=async function(){
+            var id=b.getAttribute("data-premium-detail");
+            var host=document.getElementById("premium-detail-host");
+            if(!host) return;
+            host.innerHTML='<p class="muted">Načítám náhled…</p>';
+            var d=await api("/v1/admin/premium/orders/"+encodeURIComponent(id),{method:"GET",headers:{}});
+            if(!d.res.ok){ host.innerHTML='<p class="err">'+esc(apiError(d.body))+'</p>'; return; }
+            var body=d.body||{};
+            var ord=body.order||{};
+            var css=body.preview_css_href?'<link rel="stylesheet" href="'+esc(body.preview_css_href)+'">':"";
+            host.innerHTML=css+'<div class="card"><h3>Náhled — '+esc(ord.company_name)+' · '+esc(ord.placement_id)+'</h3>'+
+              '<p class="muted">P'+esc(ord.position)+' · '+esc(ord.creative_mode)+' · '+esc(ord.price_label_cs||"")+'</p>'+
+              '<p>URL: <a href="'+esc(ord.target_url||"#")+'" rel="noopener" target="_blank">'+esc(ord.target_url||"")+'</a></p>'+
+              (body.placement_conflict?'<p class="err">Konflikt placementu: '+esc(body.placement_conflict.active_campaign_id)+'</p>':"")+
+              '<div style="max-width:220px">'+String(body.preview_html||"")+'</div></div>';
+          };
+        });
         Array.prototype.forEach.call(document.querySelectorAll("[data-premium-publish]"),function(b){
           b.onclick=async function(){
             var id=b.getAttribute("data-premium-publish");

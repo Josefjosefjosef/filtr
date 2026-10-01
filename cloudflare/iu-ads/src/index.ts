@@ -131,6 +131,8 @@ import {
   handleAdminPremiumUpdatePlacementPrice,
   handleClientPremiumRenewalAccept,
 } from "./admin-premium-selected";
+import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
+import { handleClientPremiumSummary } from "./client-premium";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
 import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
@@ -537,6 +539,8 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (backupIdMatch && method === "GET") return handleGetBackup(request, env, backupIdMatch[1]);
 
       if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
+      const premiumDetailMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
+      if (premiumDetailMatch && method === "GET") return handleAdminPremiumOrderDetail(request, env, premiumDetailMatch[1]);
       const premiumApproveMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/approve-publish$/);
       if (premiumApproveMatch && method === "POST") return handleAdminPremiumApprovePublish(request, env, premiumApproveMatch[1]);
       const premiumRejectMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/reject$/);
@@ -567,6 +571,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (path === "/v1/client/auth/me" && method === "GET") return handleClientMe(request, env);
       if (path === "/v1/client/report" && method === "GET") return handleClientReport(request, env, url);
       if (path === "/v1/client/report/export" && method === "GET") return handleClientReportExport(request, env, url);
+      if (path === "/v1/client/premium/summary" && method === "GET") return handleClientPremiumSummary(request, env, url);
       const renewalAcceptMatch = path.match(/^\/v1\/client\/premium\/renewals\/([^/]+)\/accept$/);
       if (renewalAcceptMatch && method === "POST") return handleClientPremiumRenewalAccept(request, env, renewalAcceptMatch[1]);
 
