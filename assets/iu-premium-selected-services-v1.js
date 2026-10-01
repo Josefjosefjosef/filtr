@@ -103,6 +103,36 @@
     });
   }
 
+  function syncPremiumFromAffiliateView() {
+    try {
+      var view = global.document.getElementById("iuAffiliateView");
+      if (!view || view.hidden) return;
+      var cat = view.getAttribute("data-aff-category");
+      if (!cat) return;
+      mountPremium(cat);
+    } catch (_) {}
+  }
+
+  if (typeof global.MutationObserver === "function") {
+    try {
+      var obs = new global.MutationObserver(syncPremiumFromAffiliateView);
+      var boot = function () {
+        if (!global.document.body) return;
+        obs.observe(global.document.body, {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["hidden", "data-aff-category"],
+        });
+        syncPremiumFromAffiliateView();
+      };
+      if (global.document.readyState === "loading") {
+        global.document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+    } catch (_) {}
+  }
+
   global.iuPremiumSelectedMount = mountPremium;
 })(
   typeof window !== "undefined" ? window : globalThis
