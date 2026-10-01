@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-01T09:00:26.942Z",
-    "lastSuccessAt": "2026-10-01T09:00:29.921Z",
+    "lastRunAt": "2026-10-01T12:35:26.618Z",
+    "lastSuccessAt": "2026-10-01T12:35:29.494Z",
     "lastChangedAt": "2026-10-01T08:45:25.866Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,13 +423,13 @@
     "lastModified": "Thu, 01 Oct 2026 07:57:28 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 4,
+    "activeCount": 3,
     "scheduledCount": 0,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 4,
-    "visibleCount": 4,
+    "publishableCount": 3,
+    "visibleCount": 3,
     "totalItems": 4,
     "sourceCount": 2,
     "activeSourceCount": 1,
@@ -452,19 +452,18 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 4,
+      "logicalAlerts": 3,
       "uniqueEvents": [
-        "Silný vítr",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 32,
-      "mappedAreas": 196,
+      "totalAreas": 31,
+      "mappedAreas": 195,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 0,
-      "publishableCount": 4,
+      "publishableCount": 3,
       "productStreams": [
         "50",
         "70"
@@ -472,7 +471,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -481,20 +480,20 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 6698,
+    "runMs": 4517,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-10-01T09:00:26.942Z",
+    "lastSnapshotAt": "2026-10-01T12:35:26.618Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-10-01T08:45:23.071Z",
-      "officialLatestSentAt": "2026-10-01T09:57:19+02:00",
-      "officialLatestValidFrom": "2026-10-01T09:55:31+02:00",
-      "discoveredAt": "2026-10-01T09:00:26.942Z",
-      "fetchedAt": "2026-10-01T09:00:26.942Z",
-      "transformedAt": "2026-10-01T09:00:33.641Z",
-      "validatedAt": "2026-10-01T09:00:33.641Z",
-      "publishedAt": "2026-10-01T09:00:26.942Z",
-      "endToEndLagMs": 2884071
+      "officialFirstSeenAt": "2026-09-29T12:41:01.211Z",
+      "officialLatestSentAt": "2026-09-29T14:00:00+02:00",
+      "officialLatestValidFrom": "2026-09-29T14:00:00+02:00",
+      "discoveredAt": "2026-10-01T12:35:26.618Z",
+      "fetchedAt": "2026-10-01T12:35:26.618Z",
+      "transformedAt": "2026-10-01T12:35:31.136Z",
+      "validatedAt": "2026-10-01T12:35:31.136Z",
+      "publishedAt": "2026-10-01T12:35:26.618Z",
+      "endToEndLagMs": 2461211
     },
     "audit": {
       "http": [
@@ -519,19 +518,18 @@
         "completeness": {
           "capMessages": null,
           "infoBlocks": null,
-          "logicalAlerts": 4,
+          "logicalAlerts": 3,
           "uniqueEvents": [
-            "Silný vítr",
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 32,
-          "mappedAreas": 196,
+          "totalAreas": 31,
+          "mappedAreas": 195,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
-          "publishedActive": 4,
+          "publishedActive": 3,
           "publishedScheduled": 0,
-          "publishableCount": 4,
+          "publishableCount": 3,
           "productStreams": [
             "50",
             "70"
@@ -539,7 +537,7 @@
           "streamCount": 2,
           "missingStreamCache": 0,
           "invalidCount": 0,
-          "expiredCount": 0,
+          "expiredCount": 1,
           "cancelledCount": 0
         },
         "alarms": [],
@@ -548,6 +546,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-10-01T12:35:26.618Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 4517,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-01T09:00:26.942Z",
         "status": "not_modified",
@@ -1060,17 +1069,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 5169,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-09-27T17:05:52.349Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5805,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
