@@ -47,6 +47,7 @@ must(/executePremiumApproveAndPublish/.test(publishTs), "approve and publish wor
 must(/premium_publish_events/.test(publishTs), "publish idempotency");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0011_premium_selected_services.sql")), "migration 0011");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0012_premium_selected_ops.sql")), "migration 0012");
+must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0013_premium_selected_placements_reseed.sql")), "migration 0013");
 must(/measurement:\s*\{\s*impressions:\s*false/.test(clientPremiumTs), "client portal no impressions");
 must(/\/v1\/client\/premium\/summary/.test(clientUi), "client portal premium tab");
 must(/preview_html/.test(adminPreviewTs), "admin creative preview");
