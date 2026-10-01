@@ -59,6 +59,10 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Premium freeze guard
+        working-directory: .
+        run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
+
       - name: Token source (no values)
         run: |
           set -euo pipefail

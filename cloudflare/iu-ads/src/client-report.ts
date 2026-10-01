@@ -28,6 +28,7 @@ type CampaignClientRow = {
   note_public: string | null;
   client_report_enabled: number;
   client_export_enabled: number;
+  pricing_model: string | null;
   devices_json: string | null;
   sections_json: string | null;
   created_at: string;
@@ -72,7 +73,7 @@ type DocumentRow = {
 };
 
 const CLIENT_CAMPAIGN_COLUMNS =
-  "campaign_id, evidence_code, client_id, title, status, label_type, start_at, end_at, actual_start_at, actual_end_at, target_url, note_client, note_public, client_report_enabled, client_export_enabled, devices_json, sections_json, created_at, updated_at";
+  "campaign_id, evidence_code, client_id, title, status, label_type, start_at, end_at, actual_start_at, actual_end_at, target_url, note_client, note_public, client_report_enabled, client_export_enabled, pricing_model, devices_json, sections_json, created_at, updated_at";
 
 function parseJsonArray(raw: string | null): unknown[] | null {
   if (!raw) return null;
@@ -98,8 +99,10 @@ function serializeClientCampaign(row: CampaignClientRow) {
     target_url: row.target_url,
     note_client: row.note_client,
     note_public: row.note_public,
+    pricing_model: row.pricing_model,
     devices: parseJsonArray(row.devices_json),
     sections: parseJsonArray(row.sections_json),
+    client_report_enabled: row.client_report_enabled === 1,
     client_export_enabled: row.client_export_enabled === 1,
     created_at: row.created_at,
     updated_at: row.updated_at,
@@ -276,12 +279,15 @@ export async function handleClientReport(request: Request, env: Env, url: URL): 
     campaigns = campaigns.filter((c) => c.campaign_id === campaignFilter);
   }
   const campaignIds = campaigns.map((c) => c.campaign_id);
+  const statsCampaignIds = campaigns
+    .filter((c) => c.client_report_enabled === 1 && c.pricing_model !== "premium_selected_services_v1")
+    .map((c) => c.campaign_id);
 
   const [placements, creatives, documents, stats] = await Promise.all([
     loadPlacements(env.DB, campaignIds),
     loadCreatives(env.DB, campaignIds),
     loadClientDocuments(env.DB, ctx, campaignIds),
-    loadStatsForScope(env, campaignIds, from, to),
+    loadStatsForScope(env, statsCampaignIds, from, to),
   ]);
   if (!stats.ok) return json({ error: stats.error }, stats.status);
 
@@ -318,6 +324,8 @@ export async function handleClientReport(request: Request, env: Env, url: URL): 
       configured: stats.configured,
       totals: stats.totals,
       rows: stats.rows,
+      premium_product_note:
+        "Prémiové pozice ve Vybraných službách neevidují impresse, kliky ani CTR.",
     },
     // 38.13 snapshot persistence deferred (no client_report_snapshots writes in Etapa 7 Worker API).
     snapshot: { persisted: false },

@@ -843,6 +843,32 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ],
         emptyHint:"Žádné poptávky."
       });
+      else if(v==="premium"){
+        var po=await api("/v1/admin/premium/orders",{method:"GET",headers:{}});
+        if(!po.res.ok){ panel('<p class="err">'+esc(apiError(po.body))+'</p>'); return; }
+        var rows=(po.body&&po.body.premium_orders)||[];
+        panel('<div class="card"><h2>Premium — Vybrané služby</h2><p class="muted">Schválit a zveřejnit = okamžitá publikace + faktura (splatnost +3 kalendářní dny).</p>'+
+          listTable(rows,[["order_id","Objednávka"],["company_name","Firma"],["placement_id","Placement"],["workflow_status","Stav"],["target_url","URL"]],function(row){
+            if(row.workflow_status!=="submitted"&&row.workflow_status!=="under_review") return "";
+            return '<button type="button" class="btn" data-premium-publish="'+esc(row.order_id)+'">Schválit a zveřejnit</button> '+
+              '<button type="button" class="btn secondary" data-premium-reject="'+esc(row.order_id)+'">Zamítnout</button>';
+          })+'</div>');
+        Array.prototype.forEach.call(document.querySelectorAll("[data-premium-publish]"),function(b){
+          b.onclick=async function(){
+            var id=b.getAttribute("data-premium-publish");
+            var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/approve-publish",{method:"POST",body:JSON.stringify({idempotency_key:"ui:"+id})});
+            state.flash=r.res.ok?"Publikováno.":"Chyba: "+apiError(r.body);
+            render();
+          };
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-premium-reject]"),function(b){
+          b.onclick=async function(){
+            var id=b.getAttribute("data-premium-reject");
+            await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reject",{method:"POST",body:"{}"});
+            render();
+          };
+        });
+      }
       else if(v==="orders") return renderSimpleCrud({
         title:"Objednávky", listPath:"/v1/admin/orders", listKey:"orders", createPath:"/v1/admin/orders",
         cols:[["order_id","ID"],["order_number","Číslo"],["status","Stav"],["client_id","Klient"]],

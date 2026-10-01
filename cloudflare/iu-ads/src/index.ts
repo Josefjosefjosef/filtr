@@ -113,6 +113,26 @@ import { isDeviceCategory, selectPublicAds } from "./delivery-engine";
 import { resolveFeatureFlags, isPublicDeliveryActive } from "./feature-flags";
 import { emptyPublicDelivery, sanitizePublicAds, assertNoForbiddenPublicKeys } from "./isolation";
 import { parseAccessQuery, verifyObjectAccess } from "./signed-access";
+import {
+  handlePublicPremiumSelectedCatalog,
+  handlePublicPremiumSelectedRender,
+} from "./public-premium-selected";
+import {
+  handlePublicPremiumOrderGet,
+  handlePublicPremiumOrderSubmit,
+  handlePublicPremiumOrderUpload,
+} from "./public-premium-order";
+import {
+  handleAdminPremiumListOrders,
+  handleAdminPremiumApprovePublish,
+  handleAdminPremiumReject,
+  handleAdminPremiumSuspend,
+  handleAdminPremiumReactivate,
+  handleAdminPremiumUpdatePlacementPrice,
+  handleClientPremiumRenewalAccept,
+} from "./admin-premium-selected";
+import { buildPremiumOrderShellHtml } from "./premium-order-ui";
+import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
 
@@ -131,14 +151,31 @@ async function pingDb(env: Env): Promise<boolean> {
   }
 }
 
-function corsHeaders(env: Env): HeadersInit {
-  const origin = env.CORS_ALLOW_ORIGIN || "https://infouzel.cz";
+function corsHeaders(env: Env, request?: Request): HeadersInit {
+  const allowed = new Set(["https://infouzel.cz", "https://www.infouzel.cz", "https://ads.infouzel.cz"]);
+  const reqOrigin = request?.headers.get("Origin") || "";
+  const origin = allowed.has(reqOrigin) ? reqOrigin : env.CORS_ALLOW_ORIGIN || "https://infouzel.cz";
   return {
     "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-IU-Premium-Order-Token",
     Vary: "Origin",
   };
+}
+
+function jsonCors(data: unknown, env: Env, request: Request, status = 200): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...NO_STORE, ...corsHeaders(env, request), "Content-Type": "application/json; charset=utf-8" },
+  });
+}
+
+async function withPublicCors(res: Response, env: Env, request: Request): Promise<Response> {
+  const headers = new Headers(res.headers);
+  for (const [k, v] of Object.entries(corsHeaders(env, request))) {
+    headers.set(k, String(v));
+  }
+  return new Response(res.body, { status: res.status, headers });
 }
 
 export default {
@@ -149,8 +186,12 @@ export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
     ctx.waitUntil(
       runAlertsCron(env).then((result) => {
-        // Structured log only — never secrets.
         console.log("iu-ads alerts cron", JSON.stringify(result));
+      })
+    );
+    ctx.waitUntil(
+      runPremiumMaintenance(env).then((result) => {
+        console.log("iu-ads premium maintenance", JSON.stringify(result));
       })
     );
   },
@@ -162,7 +203,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     const flags = resolveFeatureFlags(env);
 
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: { ...corsHeaders(env), ...NO_STORE } });
+      return new Response(null, { status: 204, headers: { ...corsHeaders(env, request), ...NO_STORE } });
     }
 
     if (path === "/health" || path === "/") {
@@ -176,7 +217,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0010",
+          schemaVersion: "0012",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -211,6 +252,15 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     }
 
     // Client portal SPA-lite. Always GET-able; live API calls still require ADS_CLIENT_API_ENABLED + secrets.
+    if (path === "/premium/order" || path === "/premium/order/") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const nonce = generateNonce();
+      return new Response(buildPremiumOrderShellHtml(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
+    }
+
     if (path === "/client" || path === "/client/index.html") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       const nonce = generateNonce();
@@ -218,6 +268,29 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
         status: 200,
         headers: htmlSecurityHeaders(request, nonce),
       });
+    }
+
+    if (path === "/v1/public/premium/selected-services/catalog") {
+      const res = await handlePublicPremiumSelectedCatalog(request, env, url);
+      return withPublicCors(res, env, request);
+    }
+    if (path === "/v1/public/premium/selected-services/render") {
+      const res = await handlePublicPremiumSelectedRender(request, env, url);
+      return withPublicCors(res, env, request);
+    }
+    if (path === "/v1/public/premium/orders" && request.method === "POST") {
+      const res = await handlePublicPremiumOrderSubmit(request, env);
+      return withPublicCors(res, env, request);
+    }
+    const premiumOrderUploadMatch = path.match(/^\/v1\/public\/premium\/orders\/([^/]+)\/upload$/);
+    if (premiumOrderUploadMatch && request.method === "POST") {
+      const res = await handlePublicPremiumOrderUpload(request, env, premiumOrderUploadMatch[1]);
+      return withPublicCors(res, env, request);
+    }
+    const premiumOrderGetMatch = path.match(/^\/v1\/public\/premium\/orders\/([^/]+)$/);
+    if (premiumOrderGetMatch && request.method === "GET") {
+      const res = await handlePublicPremiumOrderGet(request, env, premiumOrderGetMatch[1]);
+      return withPublicCors(res, env, request);
     }
 
     if (path === "/v1/public/ads/delivery") {
@@ -463,6 +536,18 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       const backupIdMatch = path.match(/^\/v1\/admin\/backups\/([^/]+)$/);
       if (backupIdMatch && method === "GET") return handleGetBackup(request, env, backupIdMatch[1]);
 
+      if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
+      const premiumApproveMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/approve-publish$/);
+      if (premiumApproveMatch && method === "POST") return handleAdminPremiumApprovePublish(request, env, premiumApproveMatch[1]);
+      const premiumRejectMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/reject$/);
+      if (premiumRejectMatch && method === "POST") return handleAdminPremiumReject(request, env, premiumRejectMatch[1]);
+      const premiumSuspendMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/suspend$/);
+      if (premiumSuspendMatch && method === "POST") return handleAdminPremiumSuspend(request, env, premiumSuspendMatch[1]);
+      const premiumReactivateMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/reactivate$/);
+      if (premiumReactivateMatch && method === "POST") return handleAdminPremiumReactivate(request, env, premiumReactivateMatch[1]);
+      const premiumPriceMatch = path.match(/^\/v1\/admin\/premium\/placements\/([^/]+)\/price$/);
+      if (premiumPriceMatch && method === "PATCH") return handleAdminPremiumUpdatePlacementPrice(request, env, premiumPriceMatch[1]);
+
       return json({ error: "not_found" }, 404);
     }
 
@@ -482,6 +567,8 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (path === "/v1/client/auth/me" && method === "GET") return handleClientMe(request, env);
       if (path === "/v1/client/report" && method === "GET") return handleClientReport(request, env, url);
       if (path === "/v1/client/report/export" && method === "GET") return handleClientReportExport(request, env, url);
+      const renewalAcceptMatch = path.match(/^\/v1\/client\/premium\/renewals\/([^/]+)\/accept$/);
+      if (renewalAcceptMatch && method === "POST") return handleClientPremiumRenewalAccept(request, env, renewalAcceptMatch[1]);
 
       return json({ error: "not_found" }, 404);
     }

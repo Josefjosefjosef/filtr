@@ -39,6 +39,8 @@ export type Env = {
    * (see secrets.contract.md, 03-security-threat-model.md). Missing → 503 stats_not_configured.
    */
   ANALYTICS_ADMIN_TOKEN?: string;
+  /** Optional MailChannels From address for premium transactional mail. */
+  ADS_MAIL_FROM?: string;
 };
 
 /** Fields forever forbidden on Public Ad Delivery responses. */

@@ -1213,6 +1213,9 @@
     view.setAttribute("data-aff-category", cat.id);
     renderAffiliateSeo(cat);
     ensureAffiliateViewMountPoint();
+    try {
+      if (typeof window.iuPremiumSelectedMount === "function") window.iuPremiumSelectedMount(cat.id);
+    } catch (_) {}
     return true;
   }
 
