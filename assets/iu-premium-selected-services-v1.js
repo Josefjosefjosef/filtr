@@ -115,15 +115,26 @@
 
   if (typeof global.MutationObserver === "function") {
     try {
-      var obs = new global.MutationObserver(syncPremiumFromAffiliateView);
-      var boot = function () {
-        if (!global.document.body) return;
-        obs.observe(global.document.body, {
-          subtree: true,
+      var affObs = null;
+      var attachAffiliateObserver = function () {
+        var view = global.document.getElementById("iuAffiliateView");
+        if (!view || affObs) return;
+        affObs = new global.MutationObserver(syncPremiumFromAffiliateView);
+        affObs.observe(view, {
           attributes: true,
           attributeFilter: ["hidden", "data-aff-category"],
         });
         syncPremiumFromAffiliateView();
+      };
+      var boot = function () {
+        attachAffiliateObserver();
+        if (!affObs && global.document.body) {
+          var rootObs = new global.MutationObserver(function () {
+            attachAffiliateObserver();
+            if (affObs) rootObs.disconnect();
+          });
+          rootObs.observe(global.document.body, { childList: true, subtree: true });
+        }
       };
       if (global.document.readyState === "loading") {
         global.document.addEventListener("DOMContentLoaded", boot, { once: true });
