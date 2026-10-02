@@ -6,13 +6,14 @@
 
   var API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
   var CSS_ID = "iu-premium-selected-v1-css";
+  var mountSeq = 0;
 
   function ensureCss() {
     if (global.document.getElementById(CSS_ID)) return;
     var link = global.document.createElement("link");
     link.id = CSS_ID;
     link.rel = "stylesheet";
-    link.href = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261001";
+    link.href = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261002";
     global.document.head.appendChild(link);
   }
 
@@ -66,6 +67,23 @@
     return a;
   }
 
+  function affiliateSelectedSectionVisible() {
+    try {
+      var secBody =
+        global.document.body && global.document.body.dataset
+          ? String(global.document.body.dataset.section || "")
+          : "";
+      var secHtml =
+        global.document.documentElement && global.document.documentElement.dataset
+          ? String(global.document.documentElement.dataset.section || "")
+          : "";
+      if (secBody.indexOf("aff-") === 0 || secHtml.indexOf("aff-") === 0) return true;
+      var cs = global.document.getElementById("iuCenterStage");
+      if (cs && cs.getAttribute("data-view") === "affiliate") return true;
+    } catch (_) {}
+    return false;
+  }
+
   function mountPremium(category) {
     var gridEl = global.document.getElementById("iuAffiliateGrid");
     if (!gridEl || !category) return;
@@ -81,10 +99,12 @@
     }
     while (host.firstChild) host.removeChild(host.firstChild);
 
+    var seq = ++mountSeq;
     Promise.all([
       fetchJson(API + "/catalog?category=" + encodeURIComponent(category)),
       fetchJson(API + "/render?category=" + encodeURIComponent(category)),
     ]).then(function (pair) {
+      if (seq !== mountSeq) return;
       var catalog = pair[0];
       var render = pair[1];
       if (!catalog || !catalog.slots) return;
@@ -106,10 +126,41 @@
   function syncPremiumFromAffiliateView() {
     try {
       var view = global.document.getElementById("iuAffiliateView");
-      if (!view || view.hidden) return;
+      if (!view || !affiliateSelectedSectionVisible()) return;
       var cat = view.getAttribute("data-aff-category");
       if (!cat) return;
       mountPremium(cat);
+    } catch (_) {}
+  }
+
+  function attachPremiumSectionListeners() {
+    try {
+      global.document.addEventListener("iu:section-view-mounted", function (ev) {
+        if (ev && ev.detail && ev.detail.key === "affiliate") syncPremiumFromAffiliateView();
+      });
+    } catch (_) {}
+    try {
+      var body = global.document.body;
+      if (body) {
+        new global.MutationObserver(syncPremiumFromAffiliateView).observe(body, {
+          attributes: true,
+          attributeFilter: ["data-section"],
+        });
+      }
+      var html = global.document.documentElement;
+      if (html) {
+        new global.MutationObserver(syncPremiumFromAffiliateView).observe(html, {
+          attributes: true,
+          attributeFilter: ["data-section"],
+        });
+      }
+      var center = global.document.getElementById("iuCenterStage");
+      if (center) {
+        new global.MutationObserver(syncPremiumFromAffiliateView).observe(center, {
+          attributes: true,
+          attributeFilter: ["data-view"],
+        });
+      }
     } catch (_) {}
   }
 
@@ -127,6 +178,7 @@
         syncPremiumFromAffiliateView();
       };
       var boot = function () {
+        attachPremiumSectionListeners();
         attachAffiliateObserver();
         if (!affObs && global.document.body) {
           var rootObs = new global.MutationObserver(function () {

@@ -53,6 +53,10 @@ must(/\/v1\/client\/premium\/summary/.test(clientUi), "client portal premium tab
 must(/preview_html/.test(adminPreviewTs), "admin creative preview");
 must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guard-v1.mjs")), "browser no-tracking guard");
+must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
+must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
+must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
+must(/premium-selected-v1-20261002/.test(read("projects/index.html")), "premium asset cache bust");
 must(/schemaVersion:\s*"0013"/.test(indexTs), "health schemaVersion 0013");
 
 const mig0013 = read("cloudflare/iu-ads/migrations/0013_premium_selected_placements_reseed.sql");
