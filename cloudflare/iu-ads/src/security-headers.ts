@@ -33,7 +33,7 @@ export function buildHtmlContentSecurityPolicy(nonce: string): string {
     "default-src 'self'",
     "script-src " + n,
     "style-src " + n,
-    "img-src 'self'",
+    "img-src 'self' blob: data:",
     "font-src 'self'",
     "connect-src 'self'",
     "worker-src 'none'",

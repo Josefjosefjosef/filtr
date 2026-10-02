@@ -5,9 +5,13 @@ import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId } from "./admin-auth";
 import { hashClientAccessCode } from "./admin-codes";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
+import { validateCzechIco } from "./czech-ico";
+import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "./premium-terms";
 import {
+  buildPriceSnapshot,
   isKnownAffiliateCategorySlug,
   parsePremiumPlacementId,
+  PREMIUM_DURATION_MONTHS,
   PREMIUM_PRODUCT_TYPE,
   resolveAuthoritativePriceCents,
 } from "./premium-selected-services";
@@ -36,12 +40,26 @@ function readOrderToken(request: Request): string | null {
   return h && h.trim() ? h.trim() : null;
 }
 
+function composeBillingInfo(input: {
+  street: string;
+  city: string;
+  zip: string;
+  country: string;
+  dic: string | null;
+}): string {
+  const lines = [input.street, input.zip + " " + input.city, input.country];
+  if (input.dic) lines.push("DIČ: " + input.dic);
+  return lines.join("\n");
+}
+
 async function findOrCreateClient(
   db: D1Database,
   input: {
     companyName: string;
-    ico: string | null;
-    billingInfo: string | null;
+    ico: string;
+    dic: string | null;
+    address: string;
+    billingInfo: string;
     contactName: string;
     email: string;
     phone: string | null;
@@ -51,8 +69,8 @@ async function findOrCreateClient(
     const byIco = await db.prepare("SELECT client_id FROM clients WHERE ico = ?").bind(input.ico).first<{ client_id: string }>();
     if (byIco) {
       await db
-        .prepare("UPDATE clients SET updated_at = ? WHERE client_id = ?")
-        .bind(new Date().toISOString(), byIco.client_id)
+        .prepare("UPDATE clients SET company_name = ?, dic = ?, address = ?, billing_info = ?, updated_at = ? WHERE client_id = ?")
+        .bind(input.companyName, input.dic, input.address, input.billingInfo, new Date().toISOString(), byIco.client_id)
         .run();
       return byIco.client_id;
     }
@@ -61,9 +79,9 @@ async function findOrCreateClient(
   const nowIso = new Date().toISOString();
   await db
     .prepare(
-      "INSERT INTO clients (client_id, company_name, ico, billing_info, created_at, updated_at) VALUES (?,?,?,?,?,?)"
+      "INSERT INTO clients (client_id, company_name, ico, dic, address, billing_info, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)"
     )
-    .bind(clientId, input.companyName, input.ico, input.billingInfo, nowIso, nowIso)
+    .bind(clientId, input.companyName, input.ico, input.dic, input.address, input.billingInfo, nowIso, nowIso)
     .run();
   const contactId = newId("ctc");
   await db
@@ -113,10 +131,32 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   const creativeMode = typeof body.creative_mode === "string" ? body.creative_mode.trim().toLowerCase() : "";
   if (!CREATIVE_MODES.has(creativeMode)) return json({ error: "invalid_creative_mode" }, 400);
 
-  const ico = typeof body.ico === "string" && body.ico.trim() ? body.ico.trim() : null;
+  const icoRaw = typeof body.ico === "string" ? body.ico.trim() : "";
+  if (!icoRaw) return json({ error: "ico_required" }, 400);
+  const icoCheck = validateCzechIco(icoRaw);
+  if (!icoCheck.ok) return json({ error: icoCheck.reason }, 400);
+
+  const street = typeof body.billing_street === "string" ? body.billing_street.trim() : "";
+  const city = typeof body.billing_city === "string" ? body.billing_city.trim() : "";
+  const zip = typeof body.billing_zip === "string" ? body.billing_zip.trim() : "";
+  const country = typeof body.billing_country === "string" ? body.billing_country.trim() : "";
+  if (!street || !city || !zip || !country) return json({ error: "missing_billing_address" }, 400);
+
+  const dic = typeof body.dic === "string" && body.dic.trim() ? body.dic.trim() : null;
   const phone = typeof body.phone === "string" && body.phone.trim() ? body.phone.trim() : null;
-  const billingInfo = typeof body.billing_info === "string" ? body.billing_info.trim() : null;
+  const billingInfo = composeBillingInfo({ street, city, zip, country, dic });
+  const address = street + ", " + zip + " " + city + ", " + country;
   const note = typeof body.note === "string" ? body.note.trim() : null;
+
+  const termsVersion =
+    typeof body.terms_version === "string" && body.terms_version.trim() ? body.terms_version.trim() : PREMIUM_TERMS_VERSION;
+  if (termsVersion !== PREMIUM_TERMS_VERSION) return json({ error: "invalid_terms_version" }, 400);
+  const termsEffective =
+    typeof body.terms_effective_at === "string" && body.terms_effective_at.trim()
+      ? body.terms_effective_at.trim()
+      : PREMIUM_TERMS_EFFECTIVE_AT;
+  if (termsEffective !== PREMIUM_TERMS_EFFECTIVE_AT) return json({ error: "invalid_terms_effective_at" }, 400);
+  if (body.b2b_only !== true) return json({ error: "b2b_required" }, 400);
 
   const position = placement.position as 1 | 2 | 3 | 4;
   const priceCents = resolveAuthoritativePriceCents(
@@ -128,7 +168,9 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
 
   const clientId = await findOrCreateClient(env.DB, {
     companyName,
-    ico,
+    ico: icoCheck.ico,
+    dic,
+    address,
     billingInfo,
     contactName,
     email,
@@ -138,6 +180,13 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   const nowIso = new Date().toISOString();
   const orderId = newId("ord");
   const orderNumber = "PO-" + String(new Date().getFullYear()) + "-" + crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase();
+  const priceSnapshot = buildPriceSnapshot({
+    placementId,
+    catalogPriceCents: placement.current_price_cents,
+    agreedPriceCents: priceCents,
+    currency: placement.currency || "CZK",
+    orderedAt: nowIso,
+  });
   const payload = {
     product: PREMIUM_PRODUCT_TYPE,
     placement_id: placementId,
@@ -147,6 +196,13 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     target_url: urlCheck.normalized,
     agreed_price_cents: priceCents,
     currency: placement.currency || "CZK",
+    duration_months: PREMIUM_DURATION_MONTHS,
+    b2b_only: true,
+    ico: icoCheck.ico,
+    terms_version: termsVersion,
+    terms_effective_at: termsEffective,
+    price_snapshot: priceSnapshot,
+    billing: { street, city, zip, country, dic },
   };
 
   await env.DB.prepare(
