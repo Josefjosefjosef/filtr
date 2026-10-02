@@ -136,7 +136,7 @@ try {
     }
   });
   await page.addScriptTag({
-    url: `${base}/assets/iu-premium-selected-services-v1.js?v=premium-selected-v1-20261001`,
+    url: `${base}/assets/iu-premium-selected-services-v1.js?v=premium-selected-v1-20261002`,
   });
   await page
     .waitForFunction(() => typeof window.iuPremiumSelectedMount === "function", null, { timeout: 90000 })
