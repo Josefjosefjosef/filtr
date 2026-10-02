@@ -53,6 +53,13 @@ must(/\/v1\/client\/premium\/summary/.test(clientUi), "client portal premium tab
 must(/preview_html/.test(adminPreviewTs), "admin creative preview");
 must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guard-v1.mjs")), "browser no-tracking guard");
+must(/schemaVersion:\s*"0013"/.test(indexTs), "health schemaVersion 0013");
+
+const mig0013 = read("cloudflare/iu-ads/migrations/0013_premium_selected_placements_reseed.sql");
+const placementIds = [...mig0013.matchAll(/\('(selected_services\.[^']+\.premium\.0[1-4])'/g)].map((m) => m[1]);
+must(placementIds.length >= 140, "0013 reseed row count");
+must(placementIds.length === new Set(placementIds).size, "0013 placement_id values must be unique");
+must(!mig0013.includes("('3256',"), "0013 must not reintroduce literal 3256 placement_id rows");
 
 if (failures.length) {
   console.error("FAIL");
