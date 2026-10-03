@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { handlePublicPremiumOrderSubmit } from "../src/public-premium-order";
 import { premiumPlacementId } from "../src/premium-selected-services";
-import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "../src/premium-terms";
+import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_V1_VERSION, PREMIUM_TERMS_VERSION } from "../src/premium-terms";
 import type { Env } from "../src/types";
 
 const placementId = premiumPlacementId("aff-zdravi-doplnky", 1);
@@ -85,6 +85,46 @@ describe("premium order B2B / IČO", () => {
     expect(res.status).toBe(400);
     const j = await res.json();
     expect(j.error).toBe("invalid_ico_checksum");
+  });
+
+  it("accepts valid IČO checksum", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ ico: "27074358" })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(201);
+  });
+
+  it("rejects invalid IČO format", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ ico: "123456789" })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.error).toBe("invalid_ico_format");
+  });
+
+  it("rejects wrong terms version", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ terms_version: PREMIUM_TERMS_V1_VERSION })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.error).toBe("invalid_terms_version");
   });
 
   it("rejects when b2b_only is not true", async () => {

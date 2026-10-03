@@ -6,14 +6,23 @@ import { premiumPlacementId } from "../src/premium-selected-services";
 import type { Env } from "../src/types";
 
 describe("premium order UI shell", () => {
-  it("includes B2B, IČO, structured billing, preview script, terms link", () => {
+  it("includes B2B, IČO, structured billing, live-slot preview, terms link", () => {
     const html = buildPremiumOrderShellHtml("nonce-test", "<p>summary ok</p>");
     expect(html).toContain("summary ok");
     expect(html).toContain("Obchodní firma / jméno podnikatele");
     expect(html).toContain('id="ico"');
+    expect(html).toContain('id="ico_err"');
     expect(html).toContain("IČO *");
     expect(html).toContain("billing_street");
-    expect(html).toContain("readAsDataURL");
+    expect(html).toContain('id="previewSlot"');
+    expect(html).toContain("iuPremiumSlot--sold");
+    expect(html).toContain("iuPremiumSlotImg");
+    expect(html).toContain("invalid_ico_checksum");
+    expect(html).toContain("Zadané IČO není platné");
+    expect(html).not.toContain('err.textContent=(j1&&j1.error)');
+    expect(html).toContain('id="submit_btn"');
+    expect(html).toContain("Odesílám");
+    expect(html).toContain('id="keyterms"');
     expect(html).toContain("/premium/terms");
     expect(html).toContain(PREMIUM_TERMS_VERSION);
     expect(html).toContain("výhradně podnikatelům");
