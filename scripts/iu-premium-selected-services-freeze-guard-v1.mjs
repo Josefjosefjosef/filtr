@@ -104,8 +104,12 @@ const freezeContract = {
   EMPTY_PREMIUM_PUBLICLY_HIDDEN: !/buildFreeSlot/.test(publicJs),
   ACTIVE_PREMIUM_PUBLICLY_VISIBLE: /iuPremiumSlot--sold/.test(publicJs),
   ACTIVE_PREMIUM_COMPACT_ORDER: /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/premium-display.ts")),
-  CONTRACTED_POSITION_IMMUTABLE: /contracted_position|contractedPosition/.test(read("cloudflare/iu-ads/src/premium-display.ts")),
-  DISPLAY_RANK_DYNAMIC: /display_rank|displayRank/.test(publicSelectedTs),
+  CONTRACTED_POSITION_IMMUTABLE:
+    /contracted position stays immutable/.test(read("cloudflare/iu-ads/src/premium-display.ts")) &&
+    /display ranks without changing contracted position/.test(read("cloudflare/iu-ads/test/premium-display-compaction.test.ts")),
+  DISPLAY_RANK_DYNAMIC:
+    /display_rank/.test(read("cloudflare/iu-ads/src/premium-display.ts")) &&
+    /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/public-premium-selected.ts")),
   SALES_LINK_PRESENT: /Chci zde mít vlastní tlačítko/.test(publicJs),
   SALES_PANEL_SERVER_AUTHORITATIVE: /sale_state/.test(publicSelectedTs) && /iuPremiumSalesPanel/.test(publicJs),
   PREVIEW_EQUALS_LIVE_SLOT: /id="previewSlot"/.test(orderUiTs) && /PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs),
