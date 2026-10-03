@@ -100,9 +100,26 @@ must(placementIds.length >= 140, "0013 reseed row count");
 must(placementIds.length === new Set(placementIds).size, "0013 placement_id values must be unique");
 must(!mig0013.includes("('3256',"), "0013 must not reintroduce literal 3256 placement_id rows");
 
+const freezeContract = {
+  EMPTY_PREMIUM_PUBLICLY_HIDDEN: !/buildFreeSlot/.test(publicJs),
+  ACTIVE_PREMIUM_PUBLICLY_VISIBLE: /iuPremiumSlot--sold/.test(publicJs),
+  ACTIVE_PREMIUM_COMPACT_ORDER: /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/premium-display.ts")),
+  CONTRACTED_POSITION_IMMUTABLE: /contracted_position|contractedPosition/.test(read("cloudflare/iu-ads/src/premium-display.ts")),
+  DISPLAY_RANK_DYNAMIC: /display_rank|displayRank/.test(publicSelectedTs),
+  SALES_LINK_PRESENT: /Chci zde mít vlastní tlačítko/.test(publicJs),
+  SALES_PANEL_SERVER_AUTHORITATIVE: /sale_state/.test(publicSelectedTs) && /iuPremiumSalesPanel/.test(publicJs),
+  PREVIEW_EQUALS_LIVE_SLOT: /id="previewSlot"/.test(orderUiTs) && /PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs),
+  ICO_REQUIRED: /validateCzechIco/.test(publicOrderTs),
+  B2B_ONLY: /b2b_only:\s*true/.test(publicOrderTs),
+  NO_TRACKING: !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs),
+  PREVIOUSLY_CORRECT_BROKEN: failures.length,
+};
+
 if (failures.length) {
   console.error("FAIL");
   for (const f of failures) console.error(f);
+  console.error(JSON.stringify(freezeContract, null, 2));
   process.exit(1);
 }
 console.log("PASS premium-selected-services-freeze-guard-v1");
+console.log(JSON.stringify(freezeContract, null, 2));
