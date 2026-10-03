@@ -63,6 +63,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
 
+      - name: Premium order preview parity guard
+        working-directory: .
+        run: npm run iu-premium-order-preview-parity-guard
+
       - name: Token source (no values)
         run: |
           set -euo pipefail

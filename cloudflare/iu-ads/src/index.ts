@@ -135,7 +135,7 @@ import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
 import { handleClientPremiumSummary } from "./client-premium";
 import { buildPremiumOrderMetaHtml } from "./premium-order-meta";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
-import { buildPremiumTermsHtml } from "./premium-terms";
+import { buildPremiumTermsHtml, buildPremiumTermsV1Html } from "./premium-terms";
 import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
@@ -256,6 +256,15 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     }
 
     // Client portal SPA-lite. Always GET-able; live API calls still require ADS_CLIENT_API_ENABLED + secrets.
+    if (path === "/premium/terms/v1" || path === "/premium/terms/v1/") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const nonce = generateNonce();
+      return new Response(buildPremiumTermsV1Html(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
+    }
+
     if (path === "/premium/terms" || path === "/premium/terms/") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       const nonce = generateNonce();
