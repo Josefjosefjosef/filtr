@@ -71,6 +71,11 @@ describe("security headers — HTML shells", () => {
     expect(res.headers.get("Permissions-Policy")).toBe(PERMISSIONS_POLICY_VALUE);
   });
 
+  it("allows blob/data images for local creative preview in HTML shells", () => {
+    const csp = buildHtmlContentSecurityPolicy(generateNonce());
+    expect(csp).toContain("img-src 'self' blob: data:");
+  });
+
   it("rotates CSP nonce between HTML responses", async () => {
     const a = await worker.fetch(new Request("https://ads.test/admin"), env);
     const b = await worker.fetch(new Request("https://ads.test/admin"), env);
@@ -114,7 +119,7 @@ describe("CSP builder invariants", () => {
         "default-src 'self'",
         "script-src 'nonce-" + nonce + "'",
         "style-src 'nonce-" + nonce + "'",
-        "img-src 'self'",
+        "img-src 'self' blob: data:",
         "font-src 'self'",
         "connect-src 'self'",
         "worker-src 'none'",

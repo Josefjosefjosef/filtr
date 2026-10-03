@@ -144,3 +144,20 @@ export const PREMIUM_AFFILIATE_CATEGORY_SLUGS: readonly string[] = [
 export function isKnownAffiliateCategorySlug(slug: string): boolean {
   return PREMIUM_AFFILIATE_CATEGORY_SLUGS.includes(slug);
 }
+
+const PREMIUM_CATEGORY_TITLES_CS: Record<string, string> = {
+  "aff-cestovni-kancelare": "Cestovní kanceláře",
+  "aff-zdravi-doplnky": "Zdraví a doplňky",
+  "aff-finance": "Finance",
+  "aff-lekarny": "Lékárny",
+};
+
+export function premiumCategoryTitleCs(slug: string): string {
+  const key = slug.trim();
+  if (PREMIUM_CATEGORY_TITLES_CS[key]) return PREMIUM_CATEGORY_TITLES_CS[key];
+  return key
+    .replace(/^aff-/, "")
+    .split("-")
+    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}

@@ -16,7 +16,7 @@ export function buildAdminShellHtml(nonce: string): string {
   <style nonce="${nonce}">
     :root{--bg:#f4f1ea;--ink:#1a221e;--muted:#5c675f;--accent:#0f6b5c;--line:#d6d0c4;--card:#fffdf9;--danger:#9b2c2c;--ok:#1b6b3a}
     *{box-sizing:border-box}
-    body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#ebe4d8,#f7f5f1 42%,#e4efe9);color:var(--ink);min-height:100vh}
+    body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#ebe4d8,#f7f5f1 42%,#e4efe9);color:var(--ink);min-height:100vh;overflow-x:hidden}
     a{color:var(--accent)}
     header{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line);background:rgba(255,255,255,.72);backdrop-filter:blur(6px);position:sticky;top:0;z-index:5}
     header h1{font-size:1.15rem;margin:0;letter-spacing:-.02em}
@@ -50,25 +50,38 @@ export function buildAdminShellHtml(nonce: string): string {
     .empty{padding:.5rem 0}
     #login-view,#app-view{display:none}
     #login-view.show,#app-view.show{display:block}
+    .nav-toggle{display:none}
+    #nav-backdrop{display:none}
     @media (max-width:860px){
-      .layout{grid-template-columns:1fr}
+      .layout{grid-template-columns:1fr;display:block}
+      .nav-toggle{display:inline-block}
+      header{padding:.65rem 1rem;padding-top:calc(.65rem + env(safe-area-inset-top,0px))}
       nav{
-        border-right:0;border-bottom:1px solid var(--line);
-        display:flex;flex-wrap:wrap;gap:.25rem;max-height:none;
-        position:sticky;top:64px;z-index:4;background:rgba(255,253,249,.96);
-        max-height:42vh;overflow:auto;-webkit-overflow-scrolling:touch
+        position:fixed;top:0;left:0;bottom:0;width:min(88vw,320px);max-width:100%;
+        border-right:1px solid var(--line);border-bottom:0;
+        display:block;max-height:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+        z-index:30;background:rgba(255,253,249,.98);
+        transform:translateX(-105%);transition:transform .2s ease;
+        padding:calc(3.25rem + env(safe-area-inset-top,0px)) .75rem 1rem
       }
-      nav button{width:auto;flex:1 1 auto;min-width:42%}
+      nav.open{transform:translateX(0)}
+      nav button{width:100%;min-width:0;flex:none;margin-bottom:.15rem}
+      #nav-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:25}
+      #nav-backdrop.show{display:block}
       .grid2{grid-template-columns:1fr}
-      main{padding:1rem}
+      main{padding:1rem;max-width:100%;overflow-x:auto}
+      .table-wrap{max-width:100%}
     }
   </style>
 </head>
 <body>
 <header>
   <h1>InfoUzel Ads — Admin</h1>
-  <div class="row" id="header-actions"></div>
+  <div class="row" id="header-actions">
+    <button type="button" class="btn secondary nav-toggle" id="btn-nav-toggle" aria-label="Otevřít navigaci">Menu</button>
+  </div>
 </header>
+<div id="nav-backdrop" hidden aria-hidden="true"></div>
 <div id="gate-banner" class="banner warn" hidden></div>
 <section id="login-view">
   <main>

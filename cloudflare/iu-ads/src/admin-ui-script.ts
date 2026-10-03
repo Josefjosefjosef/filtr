@@ -63,19 +63,39 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ". Shell je dostupný; live API volání zůstávají gated. Veřejné reklamy zůstávají OFF.";
     } else { b.hidden=true; }
   }
+  function setupMobileNav(){
+    var toggle=el("btn-nav-toggle");
+    var backdrop=el("nav-backdrop");
+    var nav=el("nav");
+    if(!toggle||!nav) return;
+    function closeNav(){
+      nav.classList.remove("open");
+      if(backdrop){ backdrop.hidden=true; backdrop.classList.remove("show"); }
+    }
+    function openNav(){
+      nav.classList.add("open");
+      if(backdrop){ backdrop.hidden=false; backdrop.classList.add("show"); }
+    }
+    toggle.onclick=function(){
+      if(nav.classList.contains("open")) closeNav(); else openNav();
+    };
+    if(backdrop) backdrop.onclick=closeNav;
+  }
   function setLoggedIn(on){
     el("login-view").className = on ? "" : "show";
     el("app-view").className = on ? "show" : "";
     var ha = el("header-actions");
+    var navBtn='<button type="button" class="btn secondary nav-toggle" id="btn-nav-toggle" aria-label="Otevřít navigaci">Menu</button> ';
     if(on){
-      ha.innerHTML='<span class="muted">'+esc(state.me&&(state.me.email||state.me.user_id)||"")+
+      ha.innerHTML=navBtn+'<span class="muted">'+esc(state.me&&(state.me.email||state.me.user_id)||"")+
         '</span> <button class="btn secondary" type="button" id="btn-account">Účet</button>'+
         ' <button class="btn secondary" type="button" id="btn-logout">Odhlásit</button>'+
         ' <button class="btn secondary" type="button" id="btn-logout-all">Odhlásit všechny relace</button>';
       el("btn-logout").onclick=logout;
       el("btn-logout-all").onclick=logoutAll;
       el("btn-account").onclick=function(){ state.view="account"; renderNavActive(); render(); };
-    } else ha.innerHTML="";
+    } else ha.innerHTML=navBtn;
+    setupMobileNav();
   }
   function renderNavActive(){
     var nav=el("nav");
@@ -106,8 +126,12 @@ export const ADMIN_UI_SCRIPT = String.raw`
         state.view=t.getAttribute("data-id");
         renderNavActive();
         render();
+        nav.classList.remove("open");
+        var backdrop=el("nav-backdrop");
+        if(backdrop){ backdrop.hidden=true; backdrop.classList.remove("show"); }
       }
     };
+    setupMobileNav();
   }
   async function bootstrap(){
     await loadHealth();

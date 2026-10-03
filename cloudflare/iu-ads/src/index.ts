@@ -133,7 +133,9 @@ import {
 } from "./admin-premium-selected";
 import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
 import { handleClientPremiumSummary } from "./client-premium";
+import { buildPremiumOrderMetaHtml } from "./premium-order-meta";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
+import { buildPremiumTermsHtml } from "./premium-terms";
 import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
@@ -254,10 +256,22 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     }
 
     // Client portal SPA-lite. Always GET-able; live API calls still require ADS_CLIENT_API_ENABLED + secrets.
+    if (path === "/premium/terms" || path === "/premium/terms/") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const nonce = generateNonce();
+      return new Response(buildPremiumTermsHtml(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
+    }
+
     if (path === "/premium/order" || path === "/premium/order/") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       const nonce = generateNonce();
-      return new Response(buildPremiumOrderShellHtml(nonce), {
+      const category = url.searchParams.get("category") || "";
+      const placement = url.searchParams.get("placement") || "";
+      const metaHtml = await buildPremiumOrderMetaHtml(env, category, placement);
+      return new Response(buildPremiumOrderShellHtml(nonce, metaHtml), {
         status: 200,
         headers: htmlSecurityHeaders(request, nonce),
       });

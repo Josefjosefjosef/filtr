@@ -93,6 +93,48 @@ describe("admin + client SPA shells", () => {
     expect(html).not.toMatch(/Vyhledávání[\s\S]*JSON\.stringify\(r\.body/);
   });
 
+  it("admin shell includes mobile drawer navigation (no sticky nav overlap)", () => {
+    expect(ADMIN_SHELL_HTML).toContain('id="btn-nav-toggle"');
+    expect(ADMIN_SHELL_HTML).toContain('id="nav-backdrop"');
+    expect(ADMIN_SHELL_HTML).toContain("overflow-x:hidden");
+    expect(ADMIN_SHELL_HTML).toContain("nav.open");
+  });
+
+  it("GET /premium/order returns summary slot and B2B order form", async () => {
+    const placement = "selected_services.aff-zdravi-doplnky.premium.01";
+    const res = await worker.fetch(
+      new Request(`https://ads.test/premium/order?category=aff-zdravi-doplnky&placement=${encodeURIComponent(placement)}`),
+      {
+        ...env,
+        DB: {
+          prepare() {
+            return {
+              bind() {
+                return {
+                  async first() {
+                    return {
+                      placement_id: placement,
+                      category_slug: "aff-zdravi-doplnky",
+                      position: 1,
+                      current_price_cents: 599000,
+                      currency: "CZK",
+                    };
+                  },
+                };
+              },
+            };
+          },
+        } as Env["DB"],
+      } as Env
+    );
+    expect(res.status).toBe(200);
+    const html = await res.text();
+    expect(html).toContain("Prémiová reklamní pozice");
+    expect(html).toContain("P1");
+    expect(html).toContain('id="ico"');
+    expect(html).toContain("/premium/terms");
+  });
+
   it("shells contain no hardcoded secrets or credential literals", () => {
     const combined = ADMIN_SHELL_HTML + CLIENT_SHELL_HTML;
     expect(combined.toLowerCase()).not.toMatch(/ads_session_secret|ads_password_pepper|ads_code_pepper|ads_backup_encryption/);

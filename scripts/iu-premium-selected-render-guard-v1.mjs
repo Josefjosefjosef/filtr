@@ -182,6 +182,31 @@ try {
   ok("render:prem_before_standard", snap.orderOk);
   ok("render:section_key", snap.section === SECTION, snap.section);
   ok("render:p1_buy_href", snap.p1Href === "https://example.test/order-p1", snap.p1Href);
+
+  const mobileContext = await bootstrapGuardContext(browser, {
+    viewport: { width: 390, height: 844 },
+    hasTouch: true,
+  });
+  const mobilePage = await bootstrapGuardPage(mobileContext);
+  await mobilePage.route("**/v1/public/premium/selected-services/**", fulfillPremiumApi);
+  await mobilePage.route("https://ads.infouzel.cz/v1/public/premium/selected-services/**", fulfillPremiumApi);
+  await mobilePage.goto(`${base}/projects/?section=${SECTION}&iuInfoSystem=off&nosw=1`, {
+    waitUntil: "domcontentloaded",
+    timeout: 120000,
+  });
+  await mobilePage
+    .waitForSelector("#iuPremiumSelectedGrid a.iuPremiumSlot", { timeout: 60000 })
+    .catch(() => null);
+  const mobileGeom = await mobilePage.evaluate(() => {
+    const prem = document.querySelector("#iuPremiumSelectedGrid a.iuPremiumSlot");
+    const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
+    if (!prem || !chip) return { ok: false, reason: "missing" };
+    const ph = prem.getBoundingClientRect().height;
+    const ch = chip.getBoundingClientRect().height;
+    return { ok: Math.abs(ph - ch) <= 1.5, ph, ch };
+  });
+  ok("mobile:prem_footprint_matches_chip", mobileGeom.ok, JSON.stringify(mobileGeom));
+  await mobileContext.close();
 } finally {
   await browser.close();
   server.close();

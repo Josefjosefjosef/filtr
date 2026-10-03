@@ -13,7 +13,7 @@
     var link = global.document.createElement("link");
     link.id = CSS_ID;
     link.rel = "stylesheet";
-    link.href = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261002";
+    link.href = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261003";
     global.document.head.appendChild(link);
   }
 
@@ -92,7 +92,7 @@
     if (!host) {
       host = global.document.createElement("div");
       host.id = "iuPremiumSelectedGrid";
-      host.className = "iuRadioGrid iuPremiumGrid";
+      host.className = "iuRadioGrid iuJRGrid iuPremiumGrid";
       host.setAttribute("role", "list");
       host.setAttribute("aria-label", "Prémiové reklamní pozice");
       gridEl.parentNode.insertBefore(host, gridEl);
