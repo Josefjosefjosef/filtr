@@ -63,6 +63,14 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
 
+      - name: Install root deps for preview parity gate
+        working-directory: .
+        run: npm ci --ignore-scripts
+
+      - name: Install Playwright chromium for preview parity gate
+        working-directory: .
+        run: node node_modules/playwright/cli.js install chromium
+
       - name: Premium order preview parity guard
         working-directory: .
         run: npm run iu-premium-order-preview-parity-guard
