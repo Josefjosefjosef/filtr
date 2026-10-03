@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-03T07:51:02.741Z",
-    "lastSuccessAt": "2026-10-03T07:51:05.884Z",
-    "lastChangedAt": "2026-10-02T11:21:02.404Z",
+    "lastRunAt": "2026-10-03T12:46:14.763Z",
+    "lastSuccessAt": "2026-10-03T12:46:19.676Z",
+    "lastChangedAt": "2026-10-03T12:46:18.684Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6abf9340-17a8a6\"",
-    "lastModified": "Fri, 02 Oct 2026 11:19:28 GMT",
+    "etag": "\"6ac0b43d-17a8a6\"",
+    "lastModified": "Sat, 03 Oct 2026 07:52:29 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -433,11 +433,11 @@
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 18,
       "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
@@ -475,34 +475,34 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-10-02T13:19:20+02:00",
+    "lastCapSent": "2026-10-03T09:51:57+02:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5596,
+    "runMs": 7699,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-10-03T07:51:02.741Z",
+    "lastSnapshotAt": "2026-10-03T12:46:14.763Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-09-29T12:41:01.211Z",
       "officialLatestSentAt": "2026-09-29T14:00:00+02:00",
       "officialLatestValidFrom": "2026-09-29T14:00:00+02:00",
-      "discoveredAt": "2026-10-03T07:51:02.741Z",
-      "fetchedAt": "2026-10-03T07:51:02.741Z",
-      "transformedAt": "2026-10-03T07:51:08.338Z",
-      "validatedAt": "2026-10-03T07:51:08.338Z",
-      "publishedAt": "2026-10-03T07:51:02.741Z",
+      "discoveredAt": "2026-10-03T12:46:14.763Z",
+      "fetchedAt": "2026-10-03T12:46:14.763Z",
+      "transformedAt": "2026-10-03T12:46:22.462Z",
+      "validatedAt": "2026-10-03T12:46:22.462Z",
+      "publishedAt": "2026-10-03T12:46:14.763Z",
       "endToEndLagMs": 2461211
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_021119.xml",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_030751.xml",
           "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_291200.xml",
@@ -516,8 +516,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 18,
           "logicalAlerts": 3,
           "uniqueEvents": [
             "Stav sucha",
@@ -543,9 +543,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-10-03T12:46:14.763Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7699,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-03T07:51:02.741Z",
         "status": "not_modified",
@@ -1058,17 +1082,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6389,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 1,
-        "publishableCount": 4
-      },
-      {
-        "at": "2026-09-29T13:00:56.954Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 7350,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 1,
