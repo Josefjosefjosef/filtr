@@ -6,6 +6,7 @@ import { insertAuditLog, json, newId } from "./admin-auth";
 import { hashClientAccessCode } from "./admin-codes";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
 import { validateCzechIco } from "./czech-ico";
+import { isPremiumCampaignLiveNow } from "./premium-display";
 import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "./premium-terms";
 import {
   buildPriceSnapshot,
@@ -111,13 +112,45 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   }
 
   const placement = await env.DB.prepare(
-    "SELECT placement_id, category_slug, position, current_price_cents, currency FROM premium_selected_placements WHERE placement_id = ?"
+    `SELECT p.placement_id, p.category_slug, p.position, p.current_price_cents, p.currency, p.active_campaign_id,
+            c.status AS campaign_status, c.target_url, c.start_at, c.end_at
+     FROM premium_selected_placements p
+     LEFT JOIN campaigns c ON c.campaign_id = p.active_campaign_id
+     WHERE p.placement_id = ?`
   )
     .bind(placementId)
-    .first<{ placement_id: string; category_slug: string; position: number; current_price_cents: number; currency: string }>();
+    .first<{
+      placement_id: string;
+      category_slug: string;
+      position: number;
+      current_price_cents: number;
+      currency: string;
+      active_campaign_id: string | null;
+      campaign_status: string | null;
+      target_url: string | null;
+      start_at: string | null;
+      end_at: string | null;
+    }>();
   if (!placement || placement.category_slug !== parsed.categorySlug) {
     return json({ error: "placement_mismatch" }, 400);
   }
+
+  const nowIso = new Date().toISOString();
+  const live = isPremiumCampaignLiveNow({
+    campaign_status: placement.campaign_status,
+    target_url: placement.target_url,
+    start_at: placement.start_at,
+    end_at: placement.end_at,
+    nowIso,
+  });
+  if (live) return json({ error: "placement_occupied" }, 409);
+  if (placement.active_campaign_id) return json({ error: "placement_unavailable" }, 409);
+  const pending = await env.DB.prepare(
+    "SELECT 1 AS ok FROM premium_selected_orders WHERE placement_id = ? AND workflow_status IN ('submitted', 'under_review') LIMIT 1"
+  )
+    .bind(placementId)
+    .first<{ ok: number }>();
+  if (pending) return json({ error: "placement_reserved" }, 409);
 
   const companyName = typeof body.company_name === "string" ? body.company_name.trim() : "";
   const contactName = typeof body.contact_name === "string" ? body.contact_name.trim() : "";
@@ -177,7 +210,6 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     phone,
   });
 
-  const nowIso = new Date().toISOString();
   const orderId = newId("ord");
   const orderNumber = "PO-" + String(new Date().getFullYear()) + "-" + crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase();
   const priceSnapshot = buildPriceSnapshot({

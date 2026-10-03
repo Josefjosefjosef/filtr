@@ -3,6 +3,13 @@
  */
 import { json } from "./admin-auth";
 import {
+  assignPremiumDisplayRanks,
+  isPremiumCampaignLiveNow,
+  premiumOrderPositionExplanationCs,
+  premiumPositionRankLabelCs,
+  resolvePremiumPublicSaleState,
+} from "./premium-display";
+import {
   PREMIUM_DURATION_MONTHS,
   defaultPriceCentsForPosition,
   isKnownAffiliateCategorySlug,
@@ -44,11 +51,38 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
     .first<CategoryRow>();
   const capacity = normalizeCapacity(cat?.premium_capacity ?? 2);
 
+  const nowIso = new Date().toISOString();
   const placements = await env.DB.prepare(
-    "SELECT placement_id, category_slug, position, current_price_cents, currency FROM premium_selected_placements WHERE category_slug = ? ORDER BY position ASC"
+    `SELECT p.placement_id, p.category_slug, p.position, p.current_price_cents, p.currency, p.active_campaign_id,
+            c.status AS campaign_status, c.target_url, c.start_at, c.end_at
+     FROM premium_selected_placements p
+     LEFT JOIN campaigns c ON c.campaign_id = p.active_campaign_id
+     WHERE p.category_slug = ?
+     ORDER BY p.position ASC`
   )
     .bind(category)
-    .all<PlacementRow>();
+    .all<
+      PlacementRow & {
+        active_campaign_id: string | null;
+        campaign_status: string | null;
+        target_url: string | null;
+        start_at: string | null;
+        end_at: string | null;
+      }
+    >();
+
+  const pendingRows = await env.DB.prepare(
+    `SELECT placement_id, COUNT(*) AS pending_count
+     FROM premium_selected_orders
+     WHERE category_slug = ? AND workflow_status IN ('submitted', 'under_review')
+     GROUP BY placement_id`
+  )
+    .bind(category)
+    .all<{ placement_id: string; pending_count: number }>();
+  const pendingByPlacement = new Map<string, number>();
+  for (const row of pendingRows.results || []) {
+    pendingByPlacement.set(row.placement_id, Number(row.pending_count) || 0);
+  }
 
   const slots = (placements.results || [])
     .filter((p) => p.position >= 1 && p.position <= 4)
@@ -56,10 +90,27 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
       const position = p.position as 1 | 2 | 3 | 4;
       const listed = isPremiumSlotPubliclyListed(capacity, position);
       const priceCents = p.current_price_cents > 0 ? p.current_price_cents : defaultPriceCentsForPosition(position);
+      const campaignLive = isPremiumCampaignLiveNow({
+        campaign_status: p.campaign_status,
+        target_url: p.target_url,
+        start_at: p.start_at,
+        end_at: p.end_at,
+        nowIso,
+      });
+      const saleState = resolvePremiumPublicSaleState({
+        publicly_listed: listed,
+        active_campaign_id: p.active_campaign_id,
+        campaign_live: campaignLive,
+        pending_order_count: pendingByPlacement.get(p.placement_id) || 0,
+      });
       return {
         placement_id: p.placement_id,
         position,
         publicly_listed: listed,
+        sale_state: saleState,
+        buyable: saleState === "available",
+        position_label_cs: premiumPositionRankLabelCs(position),
+        position_explanation_cs: premiumOrderPositionExplanationCs(position),
         current_price_cents: priceCents,
         currency: p.currency || "CZK",
         duration_months: PREMIUM_DURATION_MONTHS,
@@ -76,6 +127,8 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
     product: "premium_selected_services_v1",
     category,
     premium_capacity: capacity,
+    sales_panel_hint_cs:
+      "Pořadí reklam se automaticky posouvá nahoru, pokud před nimi není obsazená vyšší pozice. Zakoupená pozice určuje nejzazší pořadí, na kterém se může reklama zobrazit.",
     slots,
     measurement: { impressions: false, clicks: false, ctr: false },
   });
@@ -124,20 +177,27 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
       end_at: string | null;
     }>();
 
-  const items: unknown[] = [];
+  const rawActive: {
+    placement_id: string;
+    position: 1 | 2 | 3 | 4;
+    target_url: string;
+    creative_format: string | null;
+    accessible_name: string;
+    creative_cdn_url: string | null;
+  }[] = [];
   for (const row of rows.results || []) {
     const position = row.position as 1 | 2 | 3 | 4;
     if (!isPremiumSlotPubliclyListed(capacity, position)) continue;
-    const active =
-      row.campaign_status === "active" &&
-      row.target_url &&
-      row.start_at &&
-      row.end_at &&
-      row.start_at <= nowIso &&
-      row.end_at > nowIso;
-    if (!active) continue;
+    const active = isPremiumCampaignLiveNow({
+      campaign_status: row.campaign_status,
+      target_url: row.target_url,
+      start_at: row.start_at,
+      end_at: row.end_at,
+      nowIso,
+    });
+    if (!active || !row.target_url) continue;
     const cdnUrl = row.r2_key ? await signedCreativeUrl(origin, env, row.r2_key) : null;
-    items.push({
+    rawActive.push({
       placement_id: row.placement_id,
       position,
       target_url: row.target_url,
@@ -146,6 +206,7 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
       creative_cdn_url: cdnUrl,
     });
   }
+  const items = assignPremiumDisplayRanks(rawActive);
 
   return json({
     product: "premium_selected_services_v1",

@@ -103,7 +103,20 @@ const stubCatalog = {
   ],
   measurement: { impressions: false, clicks: false, ctr: false },
 };
-const stubRender = { active: [], measurement: { impressions: false, clicks: false, ctr: false } };
+const stubRender = {
+  active: [
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.01",
+      position: 1,
+      display_rank: 1,
+      target_url: "https://example.test/ad-p1",
+      creative_format: "logo",
+      accessible_name: "Test P1",
+      creative_cdn_url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E",
+    },
+  ],
+  measurement: { impressions: false, clicks: false, ctr: false },
+};
 
 const browser = await chromium.launch({ headless: true });
 try {
@@ -146,14 +159,16 @@ try {
 
   await page
     .waitForFunction(
-      () => document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot").length >= 2,
+      () => document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot--sold").length >= 1,
       null,
       { timeout: 60000 }
     )
     .catch(() => null);
 
   const snap = await page.evaluate(() => {
-    const prem = Array.from(document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot"));
+    const prem = Array.from(document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot--sold"));
+    const freePublic = document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot--free").length;
+    const salesLink = document.getElementById("iuPremiumSalesToggle");
     const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
     function vis(el) {
       if (!el) return false;
@@ -173,15 +188,19 @@ try {
       orderOk: !!orderOk,
       p1Href: prem[0] ? prem[0].getAttribute("href") : "",
       section: document.body && document.body.dataset ? document.body.dataset.section : "",
+      freePublic: freePublic,
+      salesLink: !!salesLink,
     };
   });
 
-  ok("render:prem_count_2", snap.premCount === 2, "n=" + snap.premCount);
-  ok("render:prem_visible_2", snap.premVisible === 2, "vis=" + snap.premVisible);
+  ok("render:active_only_count", snap.premCount === 1, "n=" + snap.premCount);
+  ok("render:active_visible", snap.premVisible === 1, "vis=" + snap.premVisible);
+  ok("render:no_free_public", snap.freePublic === 0, "free=" + snap.freePublic);
+  ok("render:sales_link", snap.salesLink);
   ok("render:chips_8", snap.chipCount === 8, "n=" + snap.chipCount);
   ok("render:prem_before_standard", snap.orderOk);
   ok("render:section_key", snap.section === SECTION, snap.section);
-  ok("render:p1_buy_href", snap.p1Href === "https://example.test/order-p1", snap.p1Href);
+  ok("render:p1_live_href", snap.p1Href === "https://example.test/ad-p1", snap.p1Href);
 
   const mobileContext = await bootstrapGuardContext(browser, {
     viewport: { width: 390, height: 844 },
@@ -195,10 +214,10 @@ try {
     timeout: 120000,
   });
   await mobilePage
-    .waitForSelector("#iuPremiumSelectedGrid a.iuPremiumSlot", { timeout: 60000 })
+    .waitForSelector("#iuPremiumSelectedGrid a.iuPremiumSlot--sold", { timeout: 60000 })
     .catch(() => null);
   const mobileGeom = await mobilePage.evaluate(() => {
-    const prem = document.querySelector("#iuPremiumSelectedGrid a.iuPremiumSlot");
+    const prem = document.querySelector("#iuPremiumSelectedGrid a.iuPremiumSlot--sold");
     const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
     if (!prem || !chip) return { ok: false, reason: "missing" };
     const ph = prem.getBoundingClientRect().height;

@@ -66,3 +66,35 @@
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg {
   object-fit: cover;
 }
+#iuAffiliateView .iuPremiumSalesLink {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--iuLink, #0f6b5c);
+  text-decoration: underline;
+  cursor: pointer;
+}
+#iuAffiliateView .iuPremiumSalesLink:focus-visible {
+  outline: 2px solid rgba(11, 27, 43, 0.35);
+  outline-offset: 2px;
+}
+#iuAffiliateView .iuPremiumSalesPanel {
+  margin: 0 0 10px;
+}
+#iuAffiliateView .iuPremiumSalesHint {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0 0 0.5rem;
+  color: rgba(11, 27, 43, 0.78);
+}
+#iuAffiliateView .iuPremiumSlot--held.iuPremiumSlot--sale {
+  cursor: default;
+  opacity: 0.85;
+  background: #f1f5f9;
+}
+#iuAffiliateView .iuPremiumSlot--sale .iuPremiumSlotBuy {
+  font-weight: 650;
+}
