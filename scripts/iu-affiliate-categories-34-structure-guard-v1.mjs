@@ -10,6 +10,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -33,7 +34,7 @@ const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
 const CATALOG_DELIVERY_MARKER = "affiliate-4kids-deti-hracky-v1-20260930";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8964", 10);
+let PORT;
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu_affiliate_categories_34_structure_guard.json"
@@ -417,7 +418,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+PORT = await listenGuardServer(server);
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const VIEWPORTS = [

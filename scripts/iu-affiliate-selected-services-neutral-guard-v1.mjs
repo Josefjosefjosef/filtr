@@ -9,6 +9,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -259,7 +260,7 @@ if (fails.length) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8957", 10);
+let PORT;
 const server = http.createServer((req, res) => {
   try {
     let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
@@ -286,7 +287,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+PORT = await listenGuardServer(server);
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const sampleSections = [
