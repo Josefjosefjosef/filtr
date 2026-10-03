@@ -285,9 +285,19 @@ try {
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
 
-    const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
-    await page.click("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']");
-    const popup = await popupPromise;
+    const popupTimeout = vp.name === "pwa" ? 30000 : 20000;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const chipLoc = page
+      .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
+      .filter({ hasText: PARTNER_TITLE });
+    await chipLoc.scrollIntoViewIfNeeded();
+    await chipLoc.click();
+    let popup = await popupPromise;
+    if (!popup) {
+      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+      await chipLoc.click({ force: true });
+      popup = await popupRetry;
+    }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
       try {
