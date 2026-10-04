@@ -3,28 +3,26 @@
  * When commercial aggregation is off (structural media removal), those guards
  * must SKIP — not FAIL — while the universal engine + Přehled dne remain tested elsewhere.
  */
-import fs from "fs";
-import path from "path";
+import {
+  describeMediaArticleAggregationState,
+  isMediaArticleAggregationEnabled,
+  MEDIA_ARTICLE_CUTOVER_REL,
+} from "./media-article-aggregation-state.mjs";
 import { fileURLToPath } from "url";
+import path from "path";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+export { isMediaArticleAggregationEnabled, describeMediaArticleAggregationState, MEDIA_ARTICLE_CUTOVER_REL };
+
 export function mediaArticlesGuardsShouldSkip(root = REPO) {
-  const reasons = [];
-  try {
-    const cut = JSON.parse(
-      fs.readFileSync(path.join(root, "projects/data/info_events/cutover_state.json"), "utf8")
-    );
-    if (cut.commercialAggregationActive === false) reasons.push("commercialAggregationActive=false");
-  } catch (_) {}
-  try {
-    const arts = JSON.parse(fs.readFileSync(path.join(root, "projects/data/articles.json"), "utf8"));
-    if (!Array.isArray(arts.articles) || arts.articles.length === 0) reasons.push("articles.json_empty");
-  } catch (_) {
-    reasons.push("articles.json_unreadable");
+  if (!isMediaArticleAggregationEnabled(root)) {
+    return {
+      skip: true,
+      reason: `commercialAggregationActive=false (${MEDIA_ARTICLE_CUTOVER_REL})`,
+    };
   }
-  if (!reasons.length) return { skip: false, reason: "" };
-  return { skip: true, reason: reasons.join(";") };
+  return { skip: false, reason: "" };
 }
 
 export function exitIfMediaArticlesGuardsSkipped(label) {

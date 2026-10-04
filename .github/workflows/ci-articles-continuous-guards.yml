@@ -16,6 +16,9 @@ on:
       - "scripts/source-rotation-guard.mjs"
       - "scripts/source-frequency-guard.mjs"
       - "scripts/incremental-publish-guard.mjs"
+      - "scripts/incremental-publish-guard-policy-unit.mjs"
+      - "scripts/media-article-aggregation-state.mjs"
+      - "scripts/media-articles-cutover-skip.mjs"
       - "scripts/priority-source-freshness-guard.mjs"
       - "scripts/crawler-identity-guard.mjs"
       - "scripts/robots-compliance-guard.mjs"
@@ -61,6 +64,9 @@ on:
       - "scripts/source-rotation-guard.mjs"
       - "scripts/source-frequency-guard.mjs"
       - "scripts/incremental-publish-guard.mjs"
+      - "scripts/incremental-publish-guard-policy-unit.mjs"
+      - "scripts/media-article-aggregation-state.mjs"
+      - "scripts/media-articles-cutover-skip.mjs"
       - "scripts/priority-source-freshness-guard.mjs"
       - "scripts/crawler-identity-guard.mjs"
       - "scripts/robots-compliance-guard.mjs"
@@ -165,6 +171,8 @@ jobs:
         run: node scripts/source-rotation-guard.mjs
       - name: Source frequency guard
         run: node scripts/source-frequency-guard.mjs
+      - name: Incremental publish guard policy unit
+        run: node scripts/incremental-publish-guard-policy-unit.mjs
       - name: Incremental publish guard
         env:
           REQUIRE_INCREMENTAL_PUBLISH_ENV: "1"
