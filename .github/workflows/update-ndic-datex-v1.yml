@@ -547,7 +547,7 @@ jobs:
           echo "FEATURE_HELPER_AVAILABLE_DURING_MAIN_REREAD=YES"
 
       - name: Download NDIC candidate
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: ndic-ie-candidate-${{ github.run_id }}
           path: ${{ runner.temp }}/ndic-ie-candidate

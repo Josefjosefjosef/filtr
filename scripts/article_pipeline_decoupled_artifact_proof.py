@@ -174,7 +174,7 @@ class DecoupledArtifactProofTests(unittest.TestCase):
         wf = _read_repo_file(".github/workflows/update-articles.yml")
         agg_block = wf.split("article_pipeline_aggregate:", 1)[1].split("article_data_release:", 1)[0]
         self.assertIn("iu_article_pipeline_decoupled_artifact.py build", agg_block)
-        self.assertIn("upload-artifact@v4", agg_block)
+        self.assertIn("upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a", agg_block)
         self.assertIn("ingest-aggregate-success", agg_block)
 
     def test_release_finalize_always_and_handoff_telemetry(self) -> None:
