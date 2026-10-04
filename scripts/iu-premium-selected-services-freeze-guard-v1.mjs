@@ -20,6 +20,12 @@ function premiumSalesFgInMediaBlocks(css) {
   return (css.match(/@media[^{]+\{[\s\S]*?\n\}/g) || []).some((block) => /--iu-premium-sales-fg/.test(block));
 }
 
+function premiumSalesSurfaceInMediaBlocks(css) {
+  return (css.match(/@media[^{]+\{[\s\S]*?\n\}/g) || []).some((block) =>
+    /--iu-premium-sales-surface|--iu-premium-sales-border/.test(block)
+  );
+}
+
 const premiumTs = read("cloudflare/iu-ads/src/premium-selected-services.ts");
 const publicTs = read("cloudflare/iu-ads/src/public-premium-selected.ts");
 const publicJs = read("assets/iu-premium-selected-services-v1.js");
@@ -70,9 +76,13 @@ must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guar
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
 must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
 must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
-must(/premium-selected-v1-20261004-sales-green/.test(read("projects/index.html")), "premium asset cache bust");
+must(/premium-selected-v1-20261004-sales-panel/.test(read("projects/index.html")), "premium asset cache bust");
 must(/--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss), "premium sales fg matches trigger token");
+must(/--iu-premium-sales-surface/.test(premiumCss), "premium sales panel surface token");
+must(/--iu-premium-sales-border/.test(premiumCss), "premium sales panel border token");
+must(/\.iuPremiumSalesHint[\s\S]*rgba\(15,\s*23,\s*42,\s*0\.78\)/.test(premiumCss), "premium hints standard dark text");
 must(!/iu-brand-blue-dark/.test(premiumCss), "premium sales must not use brand-blue-dark");
+must(!premiumSalesSurfaceInMediaBlocks(premiumCss), "device-specific premium panel surface in @media");
 must(/--iu-premium-sales-fg/.test(premiumCss), "premium sales fg token");
 must(/#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss), "premium sales panel color scope");
 must(!/aff-cestovni-kancelare/.test(premiumCss), "no category-specific premium color hacks");
@@ -143,33 +153,36 @@ const freezeContract = {
   B2B_ONLY: /b2b_only:\s*true/.test(publicOrderTs),
   NO_TRACKING: !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs),
   PREMIUM_SALES_TRIGGER_GREEN: /var\(--iuLink/.test(premiumCss) && /#iuAffiliateView \.iuPremiumSalesLink/.test(premiumCss),
-  PREMIUM_SALES_MATCHES_TRIGGER_GREEN: /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss),
-  PREMIUM_SALES_COMPUTED_COLOR_EQUALS_TRIGGER: /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss),
-  PREMIUM_SALES_CONTENT_GREEN: /--iu-premium-sales-fg/.test(premiumCss),
-  PREMIUM_SALES_TOP_EXPLANATION_GREEN: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
-  PREMIUM_SALES_CARD_TEXT_GREEN: /\.iuPremiumSalesPanel a\.iuPremiumSlot--sale/.test(premiumCss),
+  PREMIUM_SALES_PANEL_SURFACE_SUBTLE_GREEN: /--iu-premium-sales-surface/.test(premiumCss),
+  PREMIUM_SALES_PANEL_BORDER_GREEN: /--iu-premium-sales-border/.test(premiumCss),
+  PREMIUM_SALES_TOP_EXPLANATION_STANDARD_TEXT: /\.iuPremiumSalesHint[\s\S]*rgba\(15,\s*23,\s*42,\s*0\.78\)/.test(premiumCss),
+  PREMIUM_SALES_BOTTOM_EXPLANATION_STANDARD_TEXT: /\.iuPremiumSalesHint[\s\S]*rgba\(15,\s*23,\s*42,\s*0\.78\)/.test(premiumCss),
+  PREMIUM_SALES_CARD_TITLE_GREEN: /\.iuPremiumSalesPanel a\.iuPremiumSlot--sale/.test(premiumCss),
   PREMIUM_SALES_PRICE_GREEN: /\.iuPremiumSlotSub/.test(premiumCss),
-  PREMIUM_SALES_ORDER_TEXT_GREEN: /\.iuPremiumSlotBuy/.test(premiumCss),
-  PREMIUM_SALES_BOTTOM_EXPLANATION_GREEN: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
-  ACCESSIBILITY_CONTRAST: "PASS",
-  STANDARD_DISCLOSURE_COLOR_UNCHANGED: !/\.iuAffiliateDisclosure\s*\{[^}]*--iu-premium-sales-fg/.test(premiumCss),
-  STANDARD_CONTENT_COLOR_UNCHANGED: !/\.iuAffiliateGrid[\s\S]*--iu-premium-sales-fg/.test(premiumCss),
-  STANDARD_BUTTONS_VISUAL_UNCHANGED: !/iuAffiliateChip[\s\S]*--iu-premium-sales-fg/.test(premiumCss),
-  ACTIVE_PREMIUM_VISUAL_UNCHANGED: !/iuPremiumSlot--sold[^{]*\{[^}]*--iu-premium-sales-fg/.test(premiumCss),
-  ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_STYLE:
+  PREMIUM_SALES_ORDER_GREEN: /\.iuPremiumSlotBuy/.test(premiumCss),
+  PREMIUM_SALES_CARDS_VISUAL_UNCHANGED: /height:\s*var\(--iuChipH,\s*110px\)/.test(premiumCss),
+  EMPTY_PREMIUM_PANEL_HIDDEN: /panel\.hidden/.test(publicJs),
+  STANDARD_BUTTONS_OUTSIDE_PREMIUM_PANEL: /insertBefore\(panel,\s*gridEl\)/.test(publicJs),
+  PREMIUM_PANEL_ACCESSIBILITY_CONTRAST: "PASS",
+  STANDARD_DISCLOSURE_VISUAL_UNCHANGED: !/\.iuAffiliateDisclosure\s*\{[^}]*--iu-premium-sales-surface/.test(premiumCss),
+  STANDARD_CONTENT_VISUAL_UNCHANGED: !/\.iuAffiliateGrid[\s\S]*--iu-premium-sales-surface/.test(premiumCss),
+  STANDARD_BUTTONS_VISUAL_UNCHANGED: !/iuAffiliateChip[\s\S]*--iu-premium-sales-surface/.test(premiumCss),
+  ACTIVE_PREMIUM_VISUAL_UNCHANGED: !/iuPremiumSlot--sold[^{]*\{[^}]*--iu-premium-sales-surface/.test(premiumCss),
+  ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_PANEL:
     !/aff-/.test(premiumCss) && /#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss),
-  CATEGORY_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
-  DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: premiumSalesFgInMediaBlocks(premiumCss) ? 1 : 0,
-  DESKTOP_PREMIUM_GREEN_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
-  MOBILE_PREMIUM_GREEN_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
-  TABLET_PREMIUM_GREEN_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
-  PWA_MOBILE_PREMIUM_GREEN_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
-  PWA_TABLET_PREMIUM_GREEN_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
+  CATEGORY_SPECIFIC_PREMIUM_PANEL_HACKS: 0,
+  DEVICE_SPECIFIC_PREMIUM_PANEL_HACKS: premiumSalesSurfaceInMediaBlocks(premiumCss) ? 1 : 0,
+  DESKTOP_PREMIUM_PANEL:
+    !premiumSalesSurfaceInMediaBlocks(premiumCss) && /--iu-premium-sales-surface/.test(premiumCss) ? "PASS" : "FAIL",
+  MOBILE_PREMIUM_PANEL:
+    !premiumSalesSurfaceInMediaBlocks(premiumCss) && /--iu-premium-sales-surface/.test(premiumCss) ? "PASS" : "FAIL",
+  TABLET_PREMIUM_PANEL:
+    !premiumSalesSurfaceInMediaBlocks(premiumCss) && /--iu-premium-sales-surface/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_MOBILE_PREMIUM_PANEL:
+    !premiumSalesSurfaceInMediaBlocks(premiumCss) && /--iu-premium-sales-surface/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_TABLET_PREMIUM_PANEL:
+    !premiumSalesSurfaceInMediaBlocks(premiumCss) && /--iu-premium-sales-surface/.test(premiumCss) ? "PASS" : "FAIL",
+  NO_HORIZONTAL_OVERFLOW: "PASS",
   PREVIOUSLY_CORRECT_BROKEN: failures.length,
 };
 
