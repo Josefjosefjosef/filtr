@@ -6,7 +6,7 @@
 
   var API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
   var CSS_ID = "iu-premium-selected-v1-css";
-  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261003-sales";
+  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261004-independent";
   var mountSeq = 0;
   var salesOpen = false;
   var lastCatalog = null;
@@ -102,7 +102,6 @@
     var slots = sortByPosition(catalog.slots);
     for (var i = 0; i < slots.length; i++) {
       var slot = slots[i];
-      if (!slot.publicly_listed) continue;
       var posLabel = slot.position_label_cs || "P" + slot.position;
       if (slot.buyable) {
         parts.push(

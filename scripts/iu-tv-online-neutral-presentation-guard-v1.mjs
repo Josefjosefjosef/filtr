@@ -9,6 +9,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { closeGuardServer, createRepoStaticServer, listenGuardServer } from "./guards/guard-repo-static-server.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -158,34 +159,8 @@ if (fails.length) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8955", 10);
-const server = http.createServer((req, res) => {
-  try {
-    let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
-    if (p.endsWith("/")) p += "index.html";
-    const fp = path.join(ROOT, p.replace(/^\/+/, ""));
-    if (!fp.startsWith(ROOT) || !fs.existsSync(fp) || !fs.statSync(fp).isFile()) {
-      res.writeHead(404);
-      res.end("not found");
-      return;
-    }
-    const mime =
-      fp.endsWith(".css")
-        ? "text/css; charset=utf-8"
-        : fp.endsWith(".js")
-          ? "text/javascript; charset=utf-8"
-          : fp.endsWith(".html")
-            ? "text/html; charset=utf-8"
-            : "application/octet-stream";
-    res.writeHead(200, { "content-type": mime });
-    res.end(fs.readFileSync(fp));
-  } catch (_) {
-    res.writeHead(500);
-    res.end("err");
-  }
-});
-
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+const server = createRepoStaticServer(ROOT);
+const PORT = await listenGuardServer(server);
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const browser = await chromium.launch({ headless: true });
@@ -263,7 +238,7 @@ try {
   fails.push("runtime_exception:" + (err && err.message ? err.message : String(err)));
 } finally {
   await browser.close().catch(() => {});
-  await new Promise((resolve) => server.close(resolve));
+  await closeGuardServer(server);
 }
 
 const pass = fails.length === 0;

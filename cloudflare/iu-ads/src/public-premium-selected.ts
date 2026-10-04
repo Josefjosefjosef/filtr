@@ -7,6 +7,7 @@ import {
   isPremiumCampaignLiveNow,
   premiumOrderPositionExplanationCs,
   premiumPositionRankLabelCs,
+  premiumSalesPanelHintCs,
   resolvePremiumPublicSaleState,
 } from "./premium-display";
 import {
@@ -98,7 +99,6 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
         nowIso,
       });
       const saleState = resolvePremiumPublicSaleState({
-        publicly_listed: listed,
         active_campaign_id: p.active_campaign_id,
         campaign_live: campaignLive,
         pending_order_count: pendingByPlacement.get(p.placement_id) || 0,
@@ -127,8 +127,8 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
     product: "premium_selected_services_v1",
     category,
     premium_capacity: capacity,
-    sales_panel_hint_cs:
-      "Pořadí reklam se automaticky posouvá nahoru, pokud před nimi není obsazená vyšší pozice. Zakoupená pozice určuje nejzazší pořadí, na kterém se může reklama zobrazit.",
+    sales_panel_hint_cs: premiumSalesPanelHintCs(),
+    sales_catalog_positions: 4,
     slots,
     measurement: { impressions: false, clicks: false, ctr: false },
   });
@@ -145,10 +145,6 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
   const category = (url.searchParams.get("category") || "").trim();
   if (!category || !isKnownAffiliateCategorySlug(category)) return json({ error: "invalid_category" }, 400);
 
-  const cat = await env.DB.prepare("SELECT category_slug, premium_capacity FROM premium_selected_categories WHERE category_slug = ?")
-    .bind(category)
-    .first<CategoryRow>();
-  const capacity = normalizeCapacity(cat?.premium_capacity ?? 2);
   const nowIso = new Date().toISOString();
   const origin = url.origin;
 
@@ -187,7 +183,7 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
   }[] = [];
   for (const row of rows.results || []) {
     const position = row.position as 1 | 2 | 3 | 4;
-    if (!isPremiumSlotPubliclyListed(capacity, position)) continue;
+    if (position < 1 || position > 4) continue;
     const active = isPremiumCampaignLiveNow({
       campaign_status: row.campaign_status,
       target_url: row.target_url,
@@ -211,7 +207,6 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
   return json({
     product: "premium_selected_services_v1",
     category,
-    premium_capacity: capacity,
     as_of: nowIso,
     active: items,
     measurement: { impressions: false, clicks: false, ctr: false },

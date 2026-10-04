@@ -8,7 +8,6 @@ import {
   addCalendarDaysFromIso,
   addCalendarMonthsFromIso,
   buildPriceSnapshot,
-  capacityAfterP2FirstPublish,
   parsePremiumPlacementId,
   PREMIUM_INVOICE_DUE_CALENDAR_DAYS,
   PREMIUM_PRODUCT_TYPE,
@@ -299,23 +298,6 @@ export async function executePremiumApproveAndPublish(
       .run();
     if (!occupied.meta.changes) {
       return { ok: false, status: 409, error: "placement_race" };
-    }
-  }
-
-  if (po.position === 2) {
-    const cat = await db
-      .prepare("SELECT premium_capacity FROM premium_selected_categories WHERE category_slug = ?")
-      .bind(po.category_slug)
-      .first<{ premium_capacity: number }>();
-    const cap = cat?.premium_capacity === 4 ? 4 : 2;
-    const nextCap = capacityAfterP2FirstPublish(cap);
-    if (nextCap === 4 && cap !== 4) {
-      await db
-        .prepare(
-          "UPDATE premium_selected_categories SET premium_capacity = 4, p2_first_published_at = ?, updated_at = ? WHERE category_slug = ?"
-        )
-        .bind(nowIso, nowIso, po.category_slug)
-        .run();
     }
   }
 

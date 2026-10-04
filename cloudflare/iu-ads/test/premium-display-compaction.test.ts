@@ -47,7 +47,6 @@ describe("premium display compaction", () => {
   it("sale state authority", () => {
     expect(
       resolvePremiumPublicSaleState({
-        publicly_listed: true,
         active_campaign_id: null,
         campaign_live: false,
         pending_order_count: 0,
@@ -55,7 +54,6 @@ describe("premium display compaction", () => {
     ).toBe("available");
     expect(
       resolvePremiumPublicSaleState({
-        publicly_listed: true,
         active_campaign_id: "c1",
         campaign_live: true,
         pending_order_count: 0,
@@ -63,7 +61,6 @@ describe("premium display compaction", () => {
     ).toBe("live");
     expect(
       resolvePremiumPublicSaleState({
-        publicly_listed: true,
         active_campaign_id: "c1",
         campaign_live: false,
         pending_order_count: 0,
