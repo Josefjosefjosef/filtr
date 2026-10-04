@@ -1,19 +1,22 @@
 /**
- * InfoUzel.cz — Premium selected-services slots (fail-soft, no ad tracking).
+ * InfoUzel.cz — Premium selected-services (compact public display + sales panel).
  */
 (function (global) {
   "use strict";
 
   var API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
   var CSS_ID = "iu-premium-selected-v1-css";
+  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261003-sales";
   var mountSeq = 0;
+  var salesOpen = false;
+  var lastCatalog = null;
 
   function ensureCss() {
     if (global.document.getElementById(CSS_ID)) return;
     var link = global.document.createElement("link");
     link.id = CSS_ID;
     link.rel = "stylesheet";
-    link.href = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261003";
+    link.href = CSS_HREF;
     global.document.head.appendChild(link);
   }
 
@@ -32,18 +35,6 @@
       .catch(function () {
         return null;
       });
-  }
-
-  function buildFreeSlot(slot) {
-    var a = global.document.createElement("a");
-    a.className = "iuPremiumSlot iuPremiumSlot--free";
-    a.href = slot.order_url || "#";
-    a.setAttribute("rel", "noopener");
-    a.innerHTML =
-      '<span class="iuPremiumSlotCta">Vaše logo zde</span><span class="iuPremiumSlotSub">' +
-      esc(slot.price_label_cs || "") +
-      "</span>";
-    return a;
   }
 
   function buildSoldSlot(item) {
@@ -67,6 +58,100 @@
     return a;
   }
 
+  function sortByPosition(list) {
+    return list.slice().sort(function (a, b) {
+      return (a.position || 0) - (b.position || 0);
+    });
+  }
+
+  function ensureSalesLink() {
+    var disclosure = global.document.getElementById("iuAffiliateDisclosure");
+    if (!disclosure || disclosure.querySelector(".iuPremiumSalesLink")) return;
+    disclosure.appendChild(global.document.createTextNode(" "));
+    var btn = global.document.createElement("button");
+    btn.type = "button";
+    btn.className = "iuPremiumSalesLink";
+    btn.id = "iuPremiumSalesToggle";
+    btn.setAttribute("aria-expanded", salesOpen ? "true" : "false");
+    btn.setAttribute("aria-controls", "iuPremiumSalesPanel");
+    btn.textContent = "Chci zde mít vlastní tlačítko.";
+    btn.addEventListener("click", toggleSalesPanel);
+    disclosure.appendChild(btn);
+  }
+
+  function ensureSalesPanelHost(gridEl) {
+    var panel = global.document.getElementById("iuPremiumSalesPanel");
+    if (!panel) {
+      panel = global.document.createElement("div");
+      panel.id = "iuPremiumSalesPanel";
+      panel.className = "iuPremiumSalesPanel";
+      panel.hidden = true;
+      panel.setAttribute("role", "region");
+      panel.setAttribute("aria-label", "Nabídka prémiových pozic");
+      gridEl.parentNode.insertBefore(panel, gridEl);
+    }
+    return panel;
+  }
+
+  function renderSalesPanel(catalog) {
+    var gridEl = global.document.getElementById("iuAffiliateGrid");
+    if (!gridEl || !catalog || !catalog.slots) return;
+    var panel = ensureSalesPanelHost(gridEl);
+    var parts = ['<p class="iuPremiumSalesHint">', esc(catalog.sales_panel_hint_cs || ""), "</p>"];
+    parts.push('<div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumSalesGrid" role="list">');
+    var slots = sortByPosition(catalog.slots);
+    for (var i = 0; i < slots.length; i++) {
+      var slot = slots[i];
+      if (!slot.publicly_listed) continue;
+      var posLabel = slot.position_label_cs || "P" + slot.position;
+      if (slot.buyable) {
+        parts.push(
+          '<a class="iuPremiumSlot iuPremiumSlot--free iuPremiumSlot--sale" role="listitem" href="' +
+            esc(slot.order_url || "#") +
+            '" rel="noopener"><span class="iuPremiumSlotCta">P' +
+            esc(String(slot.position)) +
+            " — " +
+            esc(posLabel) +
+            '</span><span class="iuPremiumSlotSub">' +
+            esc(slot.price_label_cs || "") +
+            '</span><span class="iuPremiumSlotSub iuPremiumSlotBuy">Objednat</span></a>'
+        );
+      } else if (slot.sale_state === "live") {
+        parts.push(
+          '<div class="iuPremiumSlot iuPremiumSlot--held iuPremiumSlot--sale" role="listitem" aria-disabled="true"><span class="iuPremiumSlotCta">P' +
+            esc(String(slot.position)) +
+            " — obsazeno (aktivní reklama)</span></div>"
+        );
+      } else {
+        parts.push(
+          '<div class="iuPremiumSlot iuPremiumSlot--held iuPremiumSlot--sale" role="listitem" aria-disabled="true"><span class="iuPremiumSlotCta">P' +
+            esc(String(slot.position)) +
+            " — momentálně nedostupné</span></div>"
+        );
+      }
+    }
+    parts.push("</div>");
+    if (slots.length) {
+      var hintPos = slots[0].position_explanation_cs;
+      if (hintPos) parts.push('<p class="iuPremiumSalesHint muted">', esc(hintPos), "</p>");
+    }
+    panel.innerHTML = parts.join("");
+    panel.hidden = !salesOpen;
+    var toggle = global.document.getElementById("iuPremiumSalesToggle");
+    if (toggle) toggle.setAttribute("aria-expanded", salesOpen ? "true" : "false");
+  }
+
+  function toggleSalesPanel() {
+    salesOpen = !salesOpen;
+    if (lastCatalog) renderSalesPanel(lastCatalog);
+    else {
+      var panel = global.document.getElementById("iuPremiumSalesPanel");
+      if (panel) panel.hidden = !salesOpen;
+    }
+    var toggle = global.document.getElementById("iuPremiumSalesToggle");
+    if (toggle) toggle.setAttribute("aria-expanded", salesOpen ? "true" : "false");
+  }
+
   function affiliateSelectedSectionVisible() {
     try {
       var secBody =
@@ -88,16 +173,27 @@
     var gridEl = global.document.getElementById("iuAffiliateGrid");
     if (!gridEl || !category) return;
 
+    ensureSalesLink();
+    salesOpen = false;
+    lastCatalog = null;
+
     var host = global.document.getElementById("iuPremiumSelectedGrid");
     if (!host) {
       host = global.document.createElement("div");
       host.id = "iuPremiumSelectedGrid";
       host.className = "iuRadioGrid iuJRGrid iuPremiumGrid";
       host.setAttribute("role", "list");
-      host.setAttribute("aria-label", "Prémiové reklamní pozice");
+      host.setAttribute("aria-label", "Aktivní prémiové reklamy");
       gridEl.parentNode.insertBefore(host, gridEl);
     }
     while (host.firstChild) host.removeChild(host.firstChild);
+    host.hidden = true;
+
+    var panel = global.document.getElementById("iuPremiumSalesPanel");
+    if (panel) {
+      panel.hidden = true;
+      panel.innerHTML = "";
+    }
 
     var seq = ++mountSeq;
     Promise.all([
@@ -109,17 +205,21 @@
       var render = pair[1];
       if (!catalog || !catalog.slots) return;
       ensureCss();
-      var activeMap = {};
-      if (render && render.active) {
-        for (var i = 0; i < render.active.length; i++) activeMap[render.active[i].placement_id] = render.active[i];
+      lastCatalog = catalog;
+
+      var activeList = render && render.active ? sortByPosition(render.active) : [];
+      if (activeList.length) {
+        host.hidden = false;
+        for (var ai = 0; ai < activeList.length; ai++) {
+          var node = buildSoldSlot(activeList[ai]);
+          node.setAttribute("role", "listitem");
+          host.appendChild(node);
+        }
+      } else {
+        host.hidden = true;
       }
-      for (var si = 0; si < catalog.slots.length; si++) {
-        var slot = catalog.slots[si];
-        if (!slot.publicly_listed) continue;
-        var node = activeMap[slot.placement_id] ? buildSoldSlot(activeMap[slot.placement_id]) : buildFreeSlot(slot);
-        node.setAttribute("role", "listitem");
-        host.appendChild(node);
-      }
+
+      renderSalesPanel(catalog);
     });
   }
 

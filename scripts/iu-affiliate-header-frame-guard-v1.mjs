@@ -12,6 +12,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -22,7 +23,7 @@ const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const CACHE_TOKEN = "2026-09-18-affiliate-header-frame-v1";
 const APP_CSS_BUST = "affiliate-header-frame-v1-20260918";
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8961", 10);
+let PORT;
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu_affiliate_header_frame_guard.json"
@@ -243,7 +244,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+PORT = await listenGuardServer(server);
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const browser = await chromium.launch({ headless: true });

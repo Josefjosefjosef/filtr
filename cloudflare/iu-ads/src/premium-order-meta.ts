@@ -1,3 +1,4 @@
+import { premiumOrderPositionExplanationCs, premiumPositionRankLabelCs } from "./premium-display";
 import {
   isKnownAffiliateCategorySlug,
   parsePremiumPlacementId,
@@ -49,6 +50,8 @@ export async function buildPremiumOrderMetaHtml(env: Env, category: string, plac
     "</dd>" +
     "<dt>Pozice</dt><dd>" +
     esc(posLabel) +
+    " — " +
+    esc(premiumPositionRankLabelCs(position)) +
     "</dd>" +
     "<dt>Cena</dt><dd>" +
     esc(formatPriceLabelCs(priceCents)) +
@@ -58,6 +61,9 @@ export async function buildPremiumOrderMetaHtml(env: Env, category: string, plac
     " měsíců</dd>" +
     "<dt>Prodloužení</dt><dd>Není automatické</dd>" +
     "</dl>" +
-    '<p class="muted b2b">Reklamní služba je určena <strong>výhradně podnikatelům</strong> (IČO povinné).</p>'
+    '<p class="muted b2b">Reklamní služba je určena <strong>výhradně podnikatelům</strong> (IČO povinné).</p>' +
+    '<p class="muted legal">' +
+    esc(premiumOrderPositionExplanationCs(position)) +
+    "</p>"
   );
 }

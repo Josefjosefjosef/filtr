@@ -15,6 +15,9 @@ export const PREMIUM_ORDER_ERROR_CS: Record<string, string> = {
   invalid_body: "Neplatná data formuláře.",
   not_configured: "Objednávkový systém dočasně nedostupný.",
   missing_file: "Vyberte soubor s kreativou.",
+  placement_occupied: "Tato pozice je obsazená aktivní reklamou a nelze ji nyní objednat.",
+  placement_unavailable: "Tato pozice není momentálně k dispozici k objednání.",
+  placement_reserved: "Na této pozici již probíhá jiná objednávka k posouzení.",
 };
 
 export function premiumOrderErrorMessageCs(code: string | undefined | null): string {

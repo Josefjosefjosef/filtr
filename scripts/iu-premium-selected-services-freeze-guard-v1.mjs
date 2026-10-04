@@ -28,6 +28,7 @@ const termsTs = read("cloudflare/iu-ads/src/premium-terms.ts");
 const orderErrorsTs = read("cloudflare/iu-ads/src/premium-order-errors.ts");
 const orderUiScriptTs = read("cloudflare/iu-ads/src/premium-order-ui-script.ts");
 const publicOrderTs = read("cloudflare/iu-ads/src/public-premium-order.ts");
+const publicSelectedTs = read("cloudflare/iu-ads/src/public-premium-selected.ts");
 const secHeadersTs = read("cloudflare/iu-ads/src/security-headers.ts");
 const adminUiTs = read("cloudflare/iu-ads/src/admin-ui.ts");
 const publishTs = read("cloudflare/iu-ads/src/premium-publish.ts");
@@ -64,7 +65,13 @@ must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guar
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
 must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
 must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
-must(/premium-selected-v1-20261003/.test(read("projects/index.html")), "premium asset cache bust");
+must(/premium-selected-v1-20261003-sales/.test(read("projects/index.html")), "premium asset cache bust");
+must(/Chci zde mít vlastní tlačítko/.test(publicJs), "premium sales link in client JS");
+must(/iuPremiumSalesPanel/.test(publicJs), "premium sales panel in client JS");
+must(!/buildFreeSlot/.test(publicJs), "no public free-slot renderer");
+must(/assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/premium-display.ts")), "display rank helper");
+must(/sale_state/.test(publicSelectedTs), "catalog sale_state in public API");
+must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-display-compaction-guard-v1.mjs")), "display compaction guard");
 must(/buildPremiumOrderMetaHtml/.test(indexTs), "order page SSR summary wired");
 must(/\/premium\/terms/.test(indexTs), "premium terms route");
 must(/validateCzechIco/.test(publicOrderTs), "server-side IČO validation");
@@ -93,9 +100,30 @@ must(placementIds.length >= 140, "0013 reseed row count");
 must(placementIds.length === new Set(placementIds).size, "0013 placement_id values must be unique");
 must(!mig0013.includes("('3256',"), "0013 must not reintroduce literal 3256 placement_id rows");
 
+const freezeContract = {
+  EMPTY_PREMIUM_PUBLICLY_HIDDEN: !/buildFreeSlot/.test(publicJs),
+  ACTIVE_PREMIUM_PUBLICLY_VISIBLE: /iuPremiumSlot--sold/.test(publicJs),
+  ACTIVE_PREMIUM_COMPACT_ORDER: /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/premium-display.ts")),
+  CONTRACTED_POSITION_IMMUTABLE:
+    /contracted position stays immutable/.test(read("cloudflare/iu-ads/src/premium-display.ts")) &&
+    /display ranks without changing contracted position/.test(read("cloudflare/iu-ads/test/premium-display-compaction.test.ts")),
+  DISPLAY_RANK_DYNAMIC:
+    /display_rank/.test(read("cloudflare/iu-ads/src/premium-display.ts")) &&
+    /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/public-premium-selected.ts")),
+  SALES_LINK_PRESENT: /Chci zde mít vlastní tlačítko/.test(publicJs),
+  SALES_PANEL_SERVER_AUTHORITATIVE: /sale_state/.test(publicSelectedTs) && /iuPremiumSalesPanel/.test(publicJs),
+  PREVIEW_EQUALS_LIVE_SLOT: /id="previewSlot"/.test(orderUiTs) && /PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs),
+  ICO_REQUIRED: /validateCzechIco/.test(publicOrderTs),
+  B2B_ONLY: /b2b_only:\s*true/.test(publicOrderTs),
+  NO_TRACKING: !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs),
+  PREVIOUSLY_CORRECT_BROKEN: failures.length,
+};
+
 if (failures.length) {
   console.error("FAIL");
   for (const f of failures) console.error(f);
+  console.error(JSON.stringify(freezeContract, null, 2));
   process.exit(1);
 }
 console.log("PASS premium-selected-services-freeze-guard-v1");
+console.log(JSON.stringify(freezeContract, null, 2));

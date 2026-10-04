@@ -118,6 +118,7 @@ ${providerBlock()}
 
 <h2>5. Reklamní pozice P1–P4</h2>
 <p>Konkrétní pozice a kategorie jsou uvedeny v rekapitulaci objednávky. Ceníkové ceny jsou uvedeny bez DPH; aktuální ceník platí pro nové objednávky v okamžiku jejich odeslání.</p>
+<p>P1–P4 jsou smluvně zakoupené Premium pozice (placement). Veřejné pořadí se počítá pouze mezi aktivními Premium reklamami; volné pozice nevytvářejí prázdné místo. Reklama na nižší zakoupené pozici se může dočasně zobrazovat výše, dokud nejsou obsazeny vyšší pozice; po jejich obsazení se posune nejvýše na svou zakoupenou P1/P2/P3/P4. Dočasně lepší zobrazení nezakládá nárok na jiný produkt, slevu, refund ani trvalé udržení vyšší pozice.</p>
 
 <h2>6. Objednávka a vznik smlouvy</h2>
 <p>Odesláním objednávkového formuláře klient činí <strong>návrh objednávky k posouzení</strong>. Poskytovatel objednávku posoudí včetně kreativy a cílové URL. Smlouva o poskytnutí služby a závazek k úhradě vznikají až po manuálním schválení administrátorem a zveřejnění reklamy (Schválit a zveřejnit).</p>
