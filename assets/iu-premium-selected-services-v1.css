@@ -83,12 +83,23 @@
 }
 #iuAffiliateView .iuPremiumSalesPanel {
   margin: 0 0 10px;
+  --iu-premium-sales-fg: var(--iu-brand-blue-dark, #0b2a4a);
+  color: var(--iu-premium-sales-fg);
 }
-#iuAffiliateView .iuPremiumSalesHint {
+#iuAffiliateView .iuPremiumSalesPanel .iuPremiumSalesHint {
   font-size: 0.9rem;
   line-height: 1.45;
   margin: 0 0 0.5rem;
-  color: rgba(11, 27, 43, 0.78);
+  color: var(--iu-premium-sales-fg);
+}
+#iuAffiliateView .iuPremiumSalesPanel a.iuPremiumSlot--sale,
+#iuAffiliateView .iuPremiumSalesPanel .iuPremiumSlot--held.iuPremiumSlot--sale {
+  color: var(--iu-premium-sales-fg);
+}
+#iuAffiliateView .iuPremiumSalesPanel a.iuPremiumSlot--sale .iuPremiumSlotCta,
+#iuAffiliateView .iuPremiumSalesPanel a.iuPremiumSlot--sale .iuPremiumSlotSub,
+#iuAffiliateView .iuPremiumSalesPanel .iuPremiumSlot--held.iuPremiumSlot--sale .iuPremiumSlotCta {
+  color: inherit;
 }
 #iuAffiliateView .iuPremiumSlot--held.iuPremiumSlot--sale {
   cursor: default;

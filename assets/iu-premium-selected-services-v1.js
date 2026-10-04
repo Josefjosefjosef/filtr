@@ -6,7 +6,7 @@
 
   var API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
   var CSS_ID = "iu-premium-selected-v1-css";
-  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261004-independent";
+  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261004-sales-blue";
   var mountSeq = 0;
   var salesOpen = false;
   var lastCatalog = null;
