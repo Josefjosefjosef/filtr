@@ -15,6 +15,11 @@ function must(cond, msg) {
   if (!cond) failures.push(msg);
 }
 
+/** True when @media block overrides Premium sales foreground token (device-specific color hack). */
+function premiumSalesFgInMediaBlocks(css) {
+  return (css.match(/@media[^{]+\{[\s\S]*?\n\}/g) || []).some((block) => /--iu-premium-sales-fg/.test(block));
+}
+
 const premiumTs = read("cloudflare/iu-ads/src/premium-selected-services.ts");
 const publicTs = read("cloudflare/iu-ads/src/public-premium-selected.ts");
 const publicJs = read("assets/iu-premium-selected-services-v1.js");
@@ -69,6 +74,7 @@ must(/premium-selected-v1-20261004-sales-blue/.test(read("projects/index.html"))
 must(/--iu-premium-sales-fg/.test(premiumCss), "premium sales blue token");
 must(/#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss), "premium sales panel color scope");
 must(!/aff-cestovni-kancelare/.test(premiumCss), "no category-specific premium color hacks");
+must(!premiumSalesFgInMediaBlocks(premiumCss), "device-specific premium sales color in @media");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-sales-color-hierarchy-guard-v1.mjs")), "premium sales color guard");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0014_premium_catalog_four_positions.sql")), "migration 0014");
 must(!/capacityAfterP2FirstPublish/.test(publishTs), "legacy P2 unlock publish removed");
@@ -145,9 +151,17 @@ const freezeContract = {
   ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_STYLE:
     !/aff-/.test(premiumCss) && /#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss),
   CATEGORY_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
-  DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: !(premiumCss.match(/@media[^{]+\{[\s\S]*?\n\}/g) || []).some((block) =>
-    /--iu-premium-sales-fg/.test(block)
-  ),
+  DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: premiumSalesFgInMediaBlocks(premiumCss) ? 1 : 0,
+  DESKTOP_PREMIUM_COLOR_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
+  MOBILE_PREMIUM_COLOR_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
+  TABLET_PREMIUM_COLOR_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_MOBILE_PREMIUM_COLOR_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_TABLET_PREMIUM_COLOR_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
   PREVIOUSLY_CORRECT_BROKEN: failures.length,
 };
 

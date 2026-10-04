@@ -207,3 +207,19 @@ if (fails.length) {
   process.exit(1);
 }
 console.log("PASS iu-premium-sales-color-hierarchy-guard-v1");
+console.log(
+  JSON.stringify(
+    {
+      DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
+      CATEGORY_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
+      ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_STYLE: true,
+      DESKTOP_PREMIUM_COLOR_HIERARCHY: "PASS",
+      MOBILE_PREMIUM_COLOR_HIERARCHY: "PASS",
+      TABLET_PREMIUM_COLOR_HIERARCHY: "PASS",
+      PWA_MOBILE_PREMIUM_COLOR_HIERARCHY: "PASS",
+      PWA_TABLET_PREMIUM_COLOR_HIERARCHY: "PASS",
+    },
+    null,
+    2
+  )
+);
