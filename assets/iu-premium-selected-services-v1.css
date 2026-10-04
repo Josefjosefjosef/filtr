@@ -66,7 +66,7 @@
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg {
   object-fit: cover;
 }
-#iuAffiliateView .iuPremiumSalesLink {
+#iuAffiliateView .iuAffiliateDisclosure .iuPremiumSalesLink {
   display: inline;
   margin: 0;
   padding: 0;
@@ -83,7 +83,7 @@
 }
 #iuAffiliateView .iuPremiumSalesPanel {
   margin: 0 0 10px;
-  --iu-premium-sales-fg: var(--iu-brand-blue-dark, #0b2a4a);
+  --iu-premium-sales-fg: var(--iuLink, #0f6b5c);
   color: var(--iu-premium-sales-fg);
 }
 #iuAffiliateView .iuPremiumSalesPanel .iuPremiumSalesHint {

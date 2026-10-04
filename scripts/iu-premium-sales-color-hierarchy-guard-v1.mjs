@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Premium sales panel — green trigger + blue expanded content (all affiliate sections).
+ * Premium sales panel — expanded content matches trigger green (all affiliate sections).
  * Run: npm run iu-premium-sales-color-hierarchy-guard
  */
 import fs from "node:fs";
@@ -14,15 +14,47 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const SECTIONS = ["aff-cestovni-kancelare", "aff-lekarny", "aff-zdravi-doplnky"];
+const SECTIONS = ["aff-cestovni-kancelare", "aff-lekarny", "aff-zdravi-doplnky", "aff-moda"];
 const fails = [];
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
+function parseRgb(color) {
+  const m = String(color || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return null;
+  return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) };
+}
+
+function rgbEqual(a, b) {
+  return a && b && a.r === b.r && a.g === b.g && a.b === b.b;
+}
+
+function isPremiumBlue(rgb) {
+  return rgb && rgb.r === 11 && rgb.g === 42 && rgb.b === 74;
+}
+
+function relLuminance({ r, g, b }) {
+  const srgb = [r, g, b].map((v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+}
+
+function contrastRatio(fg, bg) {
+  const l1 = relLuminance(fg);
+  const l2 = relLuminance(bg);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 function auditStatic() {
   const css = fs.readFileSync(path.join(ROOT, "assets/iu-premium-selected-services-v1.css"), "utf8");
   ok("static:premium_sales_fg_token", /--iu-premium-sales-fg/.test(css));
+  ok("static:panel_uses_iuLink", /--iu-premium-sales-fg:\s*var\(--iuLink/.test(css));
+  ok("static:no_blue_dark_in_premium_css", !/iu-brand-blue-dark/.test(css));
   ok("static:panel_scope", /#iuAffiliateView \.iuPremiumSalesPanel/.test(css));
   ok("static:trigger_green_separate", /#iuAffiliateView \.iuPremiumSalesLink[\s\S]*var\(--iuLink/.test(css));
   ok("static:no_category_color_hack", !/aff-cestovni|aff-zdravi|data-category|data-section=/.test(css));
@@ -31,6 +63,13 @@ function auditStatic() {
     "static:no_device_color_media",
     !mediaBlocks.some((block) => /--iu-premium-sales-fg/.test(block))
   );
+  const triggerGreen = parseRgb("rgb(15, 107, 92)");
+  const whiteBg = { r: 255, g: 255, b: 255 };
+  const cardBg = { r: 248, g: 250, b: 252 };
+  const crWhite = contrastRatio(triggerGreen, whiteBg);
+  const crCard = contrastRatio(triggerGreen, cardBg);
+  ok("static:accessibility_contrast_white", crWhite >= 4.5, "ratio=" + crWhite.toFixed(2));
+  ok("static:accessibility_contrast_card", crCard >= 4.5, "ratio=" + crCard.toFixed(2));
 }
 
 auditStatic();
@@ -63,26 +102,22 @@ const stubRender = {
   measurement: { impressions: false, clicks: false, ctr: false },
 };
 
-function parseRgb(color) {
-  const m = String(color || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (!m) return null;
-  return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) };
-}
-
-function isPremiumBlue(rgb) {
-  return rgb && rgb.r === 11 && rgb.g === 42 && rgb.b === 74;
-}
-
-function isTriggerGreen(rgb) {
-  return rgb && rgb.r === 15 && rgb.g === 107 && rgb.b === 92;
-}
-
 async function installPwaStandaloneStub(context) {
   await context.addInitScript(() => {
     const orig = window.matchMedia.bind(window);
     window.matchMedia = (q) => {
       if (String(q).includes("display-mode: standalone")) {
-        return { matches: true, media: q, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return true; } };
+        return {
+          matches: true,
+          media: q,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return true;
+          },
+        };
       }
       return orig(q);
     };
@@ -93,30 +128,47 @@ async function auditHierarchy(page, label) {
   await page
     .waitForFunction(() => typeof window.iuAffiliateApplySection === "function", null, { timeout: 120000 })
     .catch(() => null);
+  await page.waitForSelector("#iuAffiliateDisclosure", { timeout: 60000 }).catch(() => null);
+  await page.waitForSelector("#iuPremiumSalesToggle", { timeout: 90000 }).catch(() => null);
   await page
-    .waitForSelector("#iuAffiliateDisclosure", { timeout: 60000 })
-    .catch(() => null);
-  await page
-    .waitForSelector("#iuPremiumSalesToggle", { timeout: 90000 })
+    .waitForFunction(
+      () => {
+        const link = document.getElementById("iu-premium-selected-v1-css");
+        if (!link) return false;
+        try {
+          if (!link.sheet || link.sheet.cssRules.length < 1) return false;
+        } catch {
+          return false;
+        }
+        const toggle = document.getElementById("iuPremiumSalesToggle");
+        if (!toggle) return false;
+        const m = window.getComputedStyle(toggle).color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        return m && Number(m[1]) === 15 && Number(m[2]) === 107 && Number(m[3]) === 92;
+      },
+      null,
+      { timeout: 90000 }
+    )
     .catch(() => null);
 
   const before = await page.evaluate(() => {
     const disclosure = document.getElementById("iuAffiliateDisclosure");
     const toggle = document.getElementById("iuPremiumSalesToggle");
     const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
-    const disclosureCs = disclosure ? window.getComputedStyle(disclosure) : null;
-    const toggleCs = toggle ? window.getComputedStyle(toggle) : null;
-    const chipCs = chip ? window.getComputedStyle(chip) : null;
+    const cs = (el) => (el ? window.getComputedStyle(el).color : "");
     return {
-      disclosureColor: disclosureCs ? disclosureCs.color : "",
-      toggleColor: toggleCs ? toggleCs.color : "",
-      chipColor: chipCs ? chipCs.color : "",
+      disclosureColor: cs(disclosure),
+      toggleColor: cs(toggle),
+      chipColor: cs(chip),
     };
   });
 
-  ok(label + ":disclosure_unchanged", !isPremiumBlue(parseRgb(before.disclosureColor)), before.disclosureColor);
-  ok(label + ":trigger_green", isTriggerGreen(parseRgb(before.toggleColor)), before.toggleColor);
-  ok(label + ":chip_unchanged", !isPremiumBlue(parseRgb(before.chipColor)), before.chipColor);
+  const toggleRgb = parseRgb(before.toggleColor);
+  ok(label + ":trigger_green_before", toggleRgb && toggleRgb.r === 15 && toggleRgb.g === 107 && toggleRgb.b === 92, before.toggleColor);
+  ok(
+    label + ":disclosure_not_trigger_green",
+    before.disclosureColor && toggleRgb && !rgbEqual(parseRgb(before.disclosureColor), toggleRgb),
+    before.disclosureColor
+  );
 
   await page.click("#iuPremiumSalesToggle").catch(() => null);
   await page
@@ -129,33 +181,40 @@ async function auditHierarchy(page, label) {
 
   const after = await page.evaluate(() => {
     const toggle = document.getElementById("iuPremiumSalesToggle");
-    const topHint = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint");
-    const p1 = document.querySelector("#iuPremiumSalesPanel a.iuPremiumSlot--sale .iuPremiumSlotCta");
-    const price = document.querySelector("#iuPremiumSalesPanel a.iuPremiumSlot--sale .iuPremiumSlotSub");
-    const order = document.querySelector("#iuPremiumSalesPanel a.iuPremiumSlot--sale .iuPremiumSlotBuy");
+    const topHint = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint:not(.muted)");
+    const cards = Array.from(document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale"));
     const bottom = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint.muted");
     const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
     const cs = (el) => (el ? window.getComputedStyle(el).color : "");
+    const perPos = cards.map((card) => {
+      const cta = card.querySelector(".iuPremiumSlotCta");
+      const price = card.querySelector(".iuPremiumSlotSub:not(.iuPremiumSlotBuy)");
+      const order = card.querySelector(".iuPremiumSlotBuy");
+      return { cta: cs(cta), price: cs(price), order: cs(order) };
+    });
     return {
       toggle: cs(toggle),
       top: cs(topHint),
-      p1: cs(p1),
-      price: cs(price),
-      order: cs(order),
       bottom: cs(bottom),
       chip: cs(chip),
-      count: document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale").length,
+      count: cards.length,
+      perPos,
     };
   });
 
+  const afterToggle = parseRgb(after.toggle);
   ok(label + ":sales_count_4", after.count === 4, "n=" + after.count);
-  ok(label + ":trigger_still_green", isTriggerGreen(parseRgb(after.toggle)), after.toggle);
-  ok(label + ":top_hint_blue", isPremiumBlue(parseRgb(after.top)), after.top);
-  ok(label + ":p1_blue", isPremiumBlue(parseRgb(after.p1)), after.p1);
-  ok(label + ":price_blue", isPremiumBlue(parseRgb(after.price)), after.price);
-  ok(label + ":order_blue", isPremiumBlue(parseRgb(after.order)), after.order);
-  if (after.bottom) ok(label + ":bottom_blue", isPremiumBlue(parseRgb(after.bottom)), after.bottom);
-  ok(label + ":chip_still_not_blue", !isPremiumBlue(parseRgb(after.chip)), after.chip);
+  ok(label + ":computed_equals_trigger_top", rgbEqual(afterToggle, parseRgb(after.top)), after.top);
+  ok(label + ":computed_equals_trigger_bottom", !after.bottom || rgbEqual(afterToggle, parseRgb(after.bottom)), after.bottom);
+  ok(label + ":not_premium_blue_top", !isPremiumBlue(parseRgb(after.top)), after.top);
+  for (let i = 0; i < after.perPos.length; i++) {
+    const row = after.perPos[i];
+    const pos = i + 1;
+    ok(label + ":p" + pos + "_cta_equals_trigger", rgbEqual(afterToggle, parseRgb(row.cta)), row.cta);
+    ok(label + ":p" + pos + "_price_equals_trigger", rgbEqual(afterToggle, parseRgb(row.price)), row.price);
+    ok(label + ":p" + pos + "_order_equals_trigger", rgbEqual(afterToggle, parseRgb(row.order)), row.order);
+  }
+  ok(label + ":chip_not_trigger_green", !rgbEqual(afterToggle, parseRgb(after.chip)), after.chip);
 }
 
 const server = createRepoStaticServer(ROOT);
@@ -210,14 +269,17 @@ console.log("PASS iu-premium-sales-color-hierarchy-guard-v1");
 console.log(
   JSON.stringify(
     {
+      PREMIUM_SALES_MATCHES_TRIGGER_GREEN: true,
+      PREMIUM_SALES_COMPUTED_COLOR_EQUALS_TRIGGER: true,
+      ACCESSIBILITY_CONTRAST: "PASS",
       DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
       CATEGORY_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
       ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_STYLE: true,
-      DESKTOP_PREMIUM_COLOR_HIERARCHY: "PASS",
-      MOBILE_PREMIUM_COLOR_HIERARCHY: "PASS",
-      TABLET_PREMIUM_COLOR_HIERARCHY: "PASS",
-      PWA_MOBILE_PREMIUM_COLOR_HIERARCHY: "PASS",
-      PWA_TABLET_PREMIUM_COLOR_HIERARCHY: "PASS",
+      DESKTOP_PREMIUM_GREEN_HIERARCHY: "PASS",
+      MOBILE_PREMIUM_GREEN_HIERARCHY: "PASS",
+      TABLET_PREMIUM_GREEN_HIERARCHY: "PASS",
+      PWA_MOBILE_PREMIUM_GREEN_HIERARCHY: "PASS",
+      PWA_TABLET_PREMIUM_GREEN_HIERARCHY: "PASS",
     },
     null,
     2

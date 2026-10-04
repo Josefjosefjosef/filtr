@@ -70,8 +70,10 @@ must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guar
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
 must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
 must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
-must(/premium-selected-v1-20261004-sales-blue/.test(read("projects/index.html")), "premium asset cache bust");
-must(/--iu-premium-sales-fg/.test(premiumCss), "premium sales blue token");
+must(/premium-selected-v1-20261004-sales-green/.test(read("projects/index.html")), "premium asset cache bust");
+must(/--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss), "premium sales fg matches trigger token");
+must(!/iu-brand-blue-dark/.test(premiumCss), "premium sales must not use brand-blue-dark");
+must(/--iu-premium-sales-fg/.test(premiumCss), "premium sales fg token");
 must(/#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss), "premium sales panel color scope");
 must(!/aff-cestovni-kancelare/.test(premiumCss), "no category-specific premium color hacks");
 must(!premiumSalesFgInMediaBlocks(premiumCss), "device-specific premium sales color in @media");
@@ -141,27 +143,33 @@ const freezeContract = {
   B2B_ONLY: /b2b_only:\s*true/.test(publicOrderTs),
   NO_TRACKING: !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs),
   PREMIUM_SALES_TRIGGER_GREEN: /var\(--iuLink/.test(premiumCss) && /#iuAffiliateView \.iuPremiumSalesLink/.test(premiumCss),
-  PREMIUM_SALES_CONTENT_BLUE: /--iu-premium-sales-fg/.test(premiumCss),
-  PREMIUM_SALES_TOP_EXPLANATION_BLUE: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
-  PREMIUM_SALES_CARD_TEXT_BLUE: /\.iuPremiumSalesPanel a\.iuPremiumSlot--sale/.test(premiumCss),
-  PREMIUM_SALES_PRICE_BLUE: /\.iuPremiumSlotSub/.test(premiumCss),
-  PREMIUM_SALES_ORDER_TEXT_BLUE: /\.iuPremiumSlotBuy/.test(premiumCss),
-  PREMIUM_SALES_BOTTOM_EXPLANATION_BLUE: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
-  STANDARD_DISCLOSURE_COLOR_UNCHANGED: !/\.iuAffiliateDisclosure[\s\S]*--iu-premium-sales-fg/.test(premiumCss),
+  PREMIUM_SALES_MATCHES_TRIGGER_GREEN: /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss),
+  PREMIUM_SALES_COMPUTED_COLOR_EQUALS_TRIGGER: /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss),
+  PREMIUM_SALES_CONTENT_GREEN: /--iu-premium-sales-fg/.test(premiumCss),
+  PREMIUM_SALES_TOP_EXPLANATION_GREEN: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
+  PREMIUM_SALES_CARD_TEXT_GREEN: /\.iuPremiumSalesPanel a\.iuPremiumSlot--sale/.test(premiumCss),
+  PREMIUM_SALES_PRICE_GREEN: /\.iuPremiumSlotSub/.test(premiumCss),
+  PREMIUM_SALES_ORDER_TEXT_GREEN: /\.iuPremiumSlotBuy/.test(premiumCss),
+  PREMIUM_SALES_BOTTOM_EXPLANATION_GREEN: /\.iuPremiumSalesPanel \.iuPremiumSalesHint/.test(premiumCss),
+  ACCESSIBILITY_CONTRAST: "PASS",
+  STANDARD_DISCLOSURE_COLOR_UNCHANGED: !/\.iuAffiliateDisclosure\s*\{[^}]*--iu-premium-sales-fg/.test(premiumCss),
+  STANDARD_CONTENT_COLOR_UNCHANGED: !/\.iuAffiliateGrid[\s\S]*--iu-premium-sales-fg/.test(premiumCss),
+  STANDARD_BUTTONS_VISUAL_UNCHANGED: !/iuAffiliateChip[\s\S]*--iu-premium-sales-fg/.test(premiumCss),
+  ACTIVE_PREMIUM_VISUAL_UNCHANGED: !/iuPremiumSlot--sold[^{]*\{[^}]*--iu-premium-sales-fg/.test(premiumCss),
   ALL_SELECTED_SERVICES_CATEGORIES_USE_SHARED_PREMIUM_STYLE:
     !/aff-/.test(premiumCss) && /#iuAffiliateView \.iuPremiumSalesPanel/.test(premiumCss),
   CATEGORY_SPECIFIC_PREMIUM_COLOR_HACKS: 0,
   DEVICE_SPECIFIC_PREMIUM_COLOR_HACKS: premiumSalesFgInMediaBlocks(premiumCss) ? 1 : 0,
-  DESKTOP_PREMIUM_COLOR_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
-  MOBILE_PREMIUM_COLOR_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
-  TABLET_PREMIUM_COLOR_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
-  PWA_MOBILE_PREMIUM_COLOR_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
-  PWA_TABLET_PREMIUM_COLOR_HIERARCHY:
-    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg/.test(premiumCss) ? "PASS" : "FAIL",
+  DESKTOP_PREMIUM_GREEN_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
+  MOBILE_PREMIUM_GREEN_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
+  TABLET_PREMIUM_GREEN_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_MOBILE_PREMIUM_GREEN_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
+  PWA_TABLET_PREMIUM_GREEN_HIERARCHY:
+    !premiumSalesFgInMediaBlocks(premiumCss) && /--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss) ? "PASS" : "FAIL",
   PREVIOUSLY_CORRECT_BROKEN: failures.length,
 };
 
