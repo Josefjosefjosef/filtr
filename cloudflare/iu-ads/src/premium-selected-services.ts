@@ -34,16 +34,9 @@ export function defaultPriceCentsForPosition(position: 1 | 2 | 3 | 4): number {
   return DEFAULT_POSITION_PRICES_CZK[position] * 100;
 }
 
-/** Positions 3–4 are hidden until category premium_capacity becomes 4 (monotonic). */
-export function isPremiumSlotPubliclyListed(capacity: PremiumCapacity, position: 1 | 2 | 3 | 4): boolean {
-  if (position <= 2) return true;
-  return capacity === 4;
-}
-
-/** Monotonic: first successful P2 publish permanently unlocks P3/P4 for the category. */
-export function capacityAfterP2FirstPublish(current: PremiumCapacity): PremiumCapacity {
-  if (current === 4) return 4;
-  return 4;
+/** Sales catalog always offers P1–P4; availability is occupancy-only (not premium_capacity). */
+export function isPremiumSlotPubliclyListed(_capacity: PremiumCapacity, position: 1 | 2 | 3 | 4): boolean {
+  return position >= 1 && position <= 4;
 }
 
 export function resolveAuthoritativePriceCents(

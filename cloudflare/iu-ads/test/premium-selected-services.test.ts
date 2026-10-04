@@ -3,7 +3,6 @@ import {
   PREMIUM_DURATION_MONTHS,
   addCalendarDaysFromIso,
   addCalendarMonthsFromIso,
-  capacityAfterP2FirstPublish,
   defaultPriceCentsForPosition,
   isPremiumSlotPubliclyListed,
   parsePremiumPlacementId,
@@ -21,22 +20,11 @@ describe("premium placement ids", () => {
   });
 });
 
-describe("capacity listing", () => {
-  it("lists P1+P2 only when capacity=2", () => {
-    expect(isPremiumSlotPubliclyListed(2, 1)).toBe(true);
-    expect(isPremiumSlotPubliclyListed(2, 2)).toBe(true);
-    expect(isPremiumSlotPubliclyListed(2, 3)).toBe(false);
-    expect(isPremiumSlotPubliclyListed(2, 4)).toBe(false);
-  });
-
-  it("lists all four when capacity=4", () => {
-    expect(isPremiumSlotPubliclyListed(4, 3)).toBe(true);
-    expect(isPremiumSlotPubliclyListed(4, 4)).toBe(true);
-  });
-
-  it("unlock is monotonic to 4", () => {
-    expect(capacityAfterP2FirstPublish(2)).toBe(4);
-    expect(capacityAfterP2FirstPublish(4)).toBe(4);
+describe("sales catalog listing", () => {
+  it("always lists P1–P4 (independent of premium_capacity)", () => {
+    expect(isPremiumSlotPubliclyListed(2, 3)).toBe(true);
+    expect(isPremiumSlotPubliclyListed(2, 4)).toBe(true);
+    expect(isPremiumSlotPubliclyListed(4, 1)).toBe(true);
   });
 });
 

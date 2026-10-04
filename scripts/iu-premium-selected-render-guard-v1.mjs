@@ -85,20 +85,47 @@ const stubCatalog = {
   product: "premium_selected_services_v1",
   category: SECTION,
   premium_capacity: 2,
+  sales_catalog_positions: 4,
   slots: [
     {
       placement_id: "selected_services.aff-zdravi-doplnky.premium.01",
       position: 1,
       publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
       order_url: "https://example.test/order-p1",
       price_label_cs: "5 990 Kč bez DPH / 6 měsíců",
+      position_label_cs: "1. pozice v této sekci",
     },
     {
       placement_id: "selected_services.aff-zdravi-doplnky.premium.02",
       position: 2,
       publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
       order_url: "https://example.test/order-p2",
       price_label_cs: "4 990 Kč bez DPH / 6 měsíců",
+      position_label_cs: "2. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.03",
+      position: 3,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p3",
+      price_label_cs: "3 990 Kč bez DPH / 6 měsíců",
+      position_label_cs: "3. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.04",
+      position: 4,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p4",
+      price_label_cs: "2 990 Kč bez DPH / 6 měsíců",
+      position_label_cs: "4. pozice v této sekci",
     },
   ],
   measurement: { impressions: false, clicks: false, ctr: false },
@@ -201,6 +228,27 @@ try {
   ok("render:prem_before_standard", snap.orderOk);
   ok("render:section_key", snap.section === SECTION, snap.section);
   ok("render:p1_live_href", snap.p1Href === "https://example.test/ad-p1", snap.p1Href);
+
+  await page.click("#iuPremiumSalesToggle").catch(() => null);
+  await page
+    .waitForFunction(
+      () => document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale").length >= 4,
+      null,
+      { timeout: 30000 }
+    )
+    .catch(() => null);
+  const salesSnap = await page.evaluate(() => {
+    const cards = document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale");
+    const hrefs = Array.from(cards).map((a) => a.getAttribute("href") || "");
+    return { count: cards.length, hrefs };
+  });
+  ok("sales_panel:card_count_4", salesSnap.count === 4, "n=" + salesSnap.count);
+  ok(
+    "sales_panel:p3_p4_buyable",
+    salesSnap.hrefs.includes("https://example.test/order-p3") &&
+      salesSnap.hrefs.includes("https://example.test/order-p4"),
+    JSON.stringify(salesSnap.hrefs)
+  );
 
   const mobileContext = await bootstrapGuardContext(browser, {
     viewport: { width: 390, height: 844 },

@@ -61,12 +61,10 @@ export function isPremiumCampaignLiveNow(input: {
 }
 
 export function resolvePremiumPublicSaleState(input: {
-  publicly_listed: boolean;
   active_campaign_id: string | null;
   campaign_live: boolean;
   pending_order_count: number;
 }): PremiumPublicSaleState {
-  if (!input.publicly_listed) return "held";
   if (input.campaign_live) return "live";
   if (input.active_campaign_id || input.pending_order_count > 0) return "held";
   return "available";
