@@ -82,15 +82,35 @@
   outline-offset: 2px;
 }
 #iuAffiliateView .iuPremiumSalesPanel {
-  margin: 0 0 10px;
+  box-sizing: border-box;
+  margin: 10px 0 14px;
+  padding: 12px 14px;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: 12px;
   --iu-premium-sales-fg: var(--iuLink, #0f6b5c);
-  color: var(--iu-premium-sales-fg);
+  --iu-premium-sales-surface: rgba(15, 107, 92, 0.05);
+  --iu-premium-sales-border: rgba(15, 107, 92, 0.16);
+  background: var(--iu-premium-sales-surface);
+  border: 1px solid var(--iu-premium-sales-border);
+}
+@media (max-width: 1024px) {
+  #iuAffiliateView .iuPremiumSalesPanel {
+    padding: 10px 12px;
+    margin: 8px 0 12px;
+  }
 }
 #iuAffiliateView .iuPremiumSalesPanel .iuPremiumSalesHint {
   font-size: 0.9rem;
   line-height: 1.45;
   margin: 0 0 0.5rem;
-  color: var(--iu-premium-sales-fg);
+  color: rgba(15, 23, 42, 0.78);
+}
+#iuAffiliateView .iuPremiumSalesPanel .iuPremiumSalesHint.muted {
+  margin-bottom: 0;
+}
+#iuAffiliateView .iuPremiumSalesPanel .iuPremiumSalesGrid {
+  margin-bottom: 0.25rem;
 }
 #iuAffiliateView .iuPremiumSalesPanel a.iuPremiumSlot--sale,
 #iuAffiliateView .iuPremiumSalesPanel .iuPremiumSlot--held.iuPremiumSlot--sale {
