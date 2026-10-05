@@ -97,7 +97,7 @@
     var gridEl = global.document.getElementById("iuAffiliateGrid");
     if (!gridEl || !catalog || !catalog.slots) return;
     var panel = ensureSalesPanelHost(gridEl);
-    var parts = ['<p class="iuPremiumSalesHint">', esc(catalog.sales_panel_hint_cs || ""), "</p>"];
+    var parts = [];
     parts.push('<div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumSalesGrid" role="list">');
     var slots = sortByPosition(catalog.slots);
     for (var i = 0; i < slots.length; i++) {
@@ -130,6 +130,7 @@
       }
     }
     parts.push("</div>");
+    parts.push('<p class="iuPremiumSalesHint">', esc(catalog.sales_panel_hint_cs || ""), "</p>");
     if (slots.length) {
       var hintPos = slots[0].position_explanation_cs;
       if (hintPos) parts.push('<p class="iuPremiumSalesHint muted">', esc(hintPos), "</p>");
