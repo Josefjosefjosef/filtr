@@ -121,9 +121,12 @@ function liveFixtureHtml(mode) {
 .iuRadioGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(max-width:520px){.iuRadioGrid{grid-template-columns:1fr}}
 ${affiliateGridProdRule}
-.wrap{max-width:720px;margin:0 auto;padding:16px}
+body{margin:0}
+.stage{width:calc(100vw - 24px);margin:0 auto;box-sizing:border-box}
+@media(min-width:521px){.stage{width:calc(100vw - 39px)}}
+@media(min-width:1240px){.stage{width:608px}}
 </style>
-</head><body><div class="wrap"><div id="iuAffiliateView">${gridBlock}</div></div></body></html>`;
+</head><body><div class="stage"><div id="iuAffiliateView">${gridBlock}</div></div></body></html>`;
 }
 
 function orderFixtureHtml(pos, mode) {
@@ -136,10 +139,12 @@ function orderFixtureHtml(pos, mode) {
 <meta charset="utf-8"/>
 <style>
 :root{--iuChipH:110px;--iuChipPadX:12px}
-.wrap{max-width:720px;margin:0 auto;padding:16px}
+body{margin:0}
+.shell{max-width:720px;margin:0 auto;padding:1.25rem;box-sizing:border-box}
+.card{padding:1rem;box-sizing:border-box}
 ${previewCssInline}
 </style>
-</head><body><div class="wrap"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></body></html>`;
+</head><body><div class="shell"><div class="card"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div></body></html>`;
 }
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8969", 10);
