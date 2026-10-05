@@ -20,14 +20,26 @@ export const PREMIUM_LIVE_SLOT_CSS = `
 .previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-column:2;grid-row:1}
 .previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-column:1;grid-row:2}
 .previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-column:2;grid-row:2}
+.previewWrap .iuPremiumPreviewGrid--p5 #previewSlot{grid-column:1;grid-row:3}
+.previewWrap .iuPremiumPreviewGrid--p6 #previewSlot{grid-column:2;grid-row:3}
+.previewWrap .iuPremiumPreviewGrid--p7 #previewSlot{grid-column:1;grid-row:4}
+.previewWrap .iuPremiumPreviewGrid--p8 #previewSlot{grid-column:2;grid-row:4}
 @media(max-width:520px){
 .previewWrap .iuPremiumPreviewGrid--p1 #previewSlot,
 .previewWrap .iuPremiumPreviewGrid--p2 #previewSlot,
 .previewWrap .iuPremiumPreviewGrid--p3 #previewSlot,
-.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-column:1}
+.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p5 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p6 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p7 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p8 #previewSlot{grid-column:1}
 .previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-row:2}
 .previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-row:3}
 .previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-row:4}
+.previewWrap .iuPremiumPreviewGrid--p5 #previewSlot{grid-row:5}
+.previewWrap .iuPremiumPreviewGrid--p6 #previewSlot{grid-row:6}
+.previewWrap .iuPremiumPreviewGrid--p7 #previewSlot{grid-row:7}
+.previewWrap .iuPremiumPreviewGrid--p8 #previewSlot{grid-row:8}
 }
 .previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;width:100%;max-width:100%;box-sizing:border-box;justify-self:stretch}
 .previewHint{font-size:.85rem;margin:0 0 .35rem}

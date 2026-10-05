@@ -12,6 +12,7 @@ import {
   PREMIUM_INVOICE_DUE_CALENDAR_DAYS,
   PREMIUM_PRODUCT_TYPE,
   resolveAuthoritativePriceCents,
+  type PremiumPosition,
 } from "./premium-selected-services";
 import { enqueuePremiumEmail } from "./premium-email";
 import { validateTargetUrl } from "./url-safety";
@@ -162,7 +163,7 @@ export async function executePremiumApproveAndPublish(
   if (!placementRow) return { ok: false, status: 404, error: "placement_not_found" };
 
   const parsedPlacement = parsePremiumPlacementId(po.placement_id);
-  const position = (parsedPlacement?.position ?? po.position) as 1 | 2 | 3 | 4;
+  const position = (parsedPlacement?.position ?? po.position) as PremiumPosition;
   let priceCents = resolveAuthoritativePriceCents(
     po.placement_id,
     position,

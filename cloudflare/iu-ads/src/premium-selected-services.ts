@@ -7,41 +7,56 @@ export const PREMIUM_PRODUCT_TYPE = "premium_selected_services_v1" as const;
 export const PREMIUM_DURATION_MONTHS = 6;
 export const PREMIUM_INVOICE_DUE_CALENDAR_DAYS = 3;
 
-export const DEFAULT_POSITION_PRICES_CZK: Readonly<Record<1 | 2 | 3 | 4, number>> = {
-  1: 5990,
-  2: 4990,
-  3: 3990,
-  4: 2990,
-};
+export const PREMIUM_MAX_POSITION = 8 as const;
+export const PREMIUM_POSITION_COUNT = PREMIUM_MAX_POSITION;
+export const PREMIUM_PRICE_STEP_CZK = 300;
+export const PREMIUM_PRICE_STEP_CENTS = PREMIUM_PRICE_STEP_CZK * 100;
+export const PREMIUM_BASE_PRICE_CZK = 5990;
 
-export type PremiumCapacity = 2 | 4;
+export type PremiumPosition = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
-export function premiumPlacementId(categorySlug: string, position: 1 | 2 | 3 | 4): string {
+const POSITIONS: PremiumPosition[] = [1, 2, 3, 4, 5, 6, 7, 8];
+
+export function isPremiumPosition(value: number): value is PremiumPosition {
+  return Number.isInteger(value) && value >= 1 && value <= PREMIUM_MAX_POSITION;
+}
+
+function priceCzkForPosition(position: PremiumPosition): number {
+  return PREMIUM_BASE_PRICE_CZK - (position - 1) * PREMIUM_PRICE_STEP_CZK;
+}
+
+export const DEFAULT_POSITION_PRICES_CZK: Readonly<Record<PremiumPosition, number>> = Object.fromEntries(
+  POSITIONS.map((p) => [p, priceCzkForPosition(p)])
+) as Readonly<Record<PremiumPosition, number>>;
+
+export type PremiumCapacity = 2 | 4 | 8;
+
+export function premiumPlacementId(categorySlug: string, position: PremiumPosition): string {
   const slug = categorySlug.trim();
   const pos = String(position).padStart(2, "0");
   return "selected_services." + slug + ".premium." + pos;
 }
 
-export function parsePremiumPlacementId(placementId: string): { categorySlug: string; position: 1 | 2 | 3 | 4 } | null {
-  const m = /^selected_services\.(.+)\.premium\.(0[1-4])$/.exec(placementId);
+export function parsePremiumPlacementId(placementId: string): { categorySlug: string; position: PremiumPosition } | null {
+  const m = /^selected_services\.(.+)\.premium\.(0[1-8])$/.exec(placementId);
   if (!m) return null;
-  const position = Number(m[2]) as 1 | 2 | 3 | 4;
-  if (position < 1 || position > 4) return null;
+  const position = Number(m[2]);
+  if (!isPremiumPosition(position)) return null;
   return { categorySlug: m[1], position };
 }
 
-export function defaultPriceCentsForPosition(position: 1 | 2 | 3 | 4): number {
+export function defaultPriceCentsForPosition(position: PremiumPosition): number {
   return DEFAULT_POSITION_PRICES_CZK[position] * 100;
 }
 
-/** Sales catalog always offers P1–P4; availability is occupancy-only (not premium_capacity). */
-export function isPremiumSlotPubliclyListed(_capacity: PremiumCapacity, position: 1 | 2 | 3 | 4): boolean {
-  return position >= 1 && position <= 4;
+/** Sales catalog always offers P1–P8; availability is occupancy-only (not premium_capacity). */
+export function isPremiumSlotPubliclyListed(_capacity: PremiumCapacity, position: PremiumPosition): boolean {
+  return isPremiumPosition(position);
 }
 
 export function resolveAuthoritativePriceCents(
   placementId: string,
-  position: 1 | 2 | 3 | 4,
+  position: PremiumPosition,
   catalogPriceCents: number | null,
   clientSubmittedPriceCents: unknown
 ): number {

@@ -5,7 +5,7 @@ export const PREMIUM_ORDER_ERROR_CS: Record<string, string> = {
   invalid_ico_checksum: "Zadané IČO není platné. Zkontrolujte jej prosím.",
   missing_contact: "Vyplňte prosím kontaktní údaje.",
   missing_billing_address: "Vyplňte prosím fakturační adresu.",
-  invalid_placement: "Neplatná reklamní pozice. Otevřete objednávku z tlačítka P1–P4 na InfoUzel.cz.",
+  invalid_placement: "Neplatná reklamní pozice. Otevřete objednávku z tlačítka P1–P8 na InfoUzel.cz.",
   placement_mismatch: "Pozice neodpovídá kategorii.",
   invalid_target_url: "Cílová URL není platná (povoleno https://).",
   invalid_creative_mode: "Neplatný typ kreativy.",

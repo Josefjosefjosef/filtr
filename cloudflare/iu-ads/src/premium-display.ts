@@ -1,9 +1,20 @@
 /** Public Premium display order (compact active-only) — contracted position stays immutable. */
 
-export type PremiumContractedPosition = 1 | 2 | 3 | 4;
+import type { PremiumPosition } from "./premium-selected-services";
+
+export type PremiumContractedPosition = PremiumPosition;
 
 export function premiumPositionRankLabelCs(position: PremiumContractedPosition): string {
   return position + ". pozice v této sekci";
+}
+
+function premiumHigherPositionsLabelCs(position: PremiumContractedPosition): string {
+  const labels: string[] = [];
+  for (let i = 1; i < position; i++) labels.push("P" + i);
+  if (labels.length === 0) return "";
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return labels[0] + " a " + labels[1];
+  return labels.slice(0, -1).join(", ") + " a " + labels[labels.length - 1];
 }
 
 export function premiumOrderPositionExplanationCs(position: PremiumContractedPosition): string {
@@ -12,7 +23,7 @@ export function premiumOrderPositionExplanationCs(position: PremiumContractedPos
       "Zakoupená P1 je v rámci Premium pozic vždy první. Pořadí se počítá pouze mezi aktivními Premium reklamami; volné pozice nevytvářejí prázdné místo."
     );
   }
-  const higher = position === 2 ? "P1" : position === 3 ? "P1 a P2" : "P1, P2 a P3";
+  const higher = premiumHigherPositionsLabelCs(position);
   return (
     "Pokud nejsou vyšší Premium pozice (" +
     higher +

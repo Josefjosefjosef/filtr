@@ -15,11 +15,11 @@ function buyableFor(input: {
   return resolvePremiumPublicSaleState(input) === "available";
 }
 
-describe("premium sales catalog — P1–P4 always listed", () => {
-  it("lists all four positions regardless of legacy premium_capacity", () => {
-    for (const cap of [2, 4] as const) {
-      for (const pos of [1, 2, 3, 4] as const) {
-        expect(isPremiumSlotPubliclyListed(cap, pos)).toBe(true);
+describe("premium sales catalog — P1–P8 always listed", () => {
+  it("lists all eight positions regardless of legacy premium_capacity", () => {
+    for (const cap of [2, 4, 8] as const) {
+      for (let pos = 1; pos <= 8; pos++) {
+        expect(isPremiumSlotPubliclyListed(cap, pos as import("../src/premium-selected-services").PremiumPosition)).toBe(true);
       }
     }
   });
@@ -32,8 +32,8 @@ describe("FREE category invariant", () => {
     pending_order_count: 0,
   };
 
-  it("P1–P4 buyable when unoccupied", () => {
-    for (const _ of [1, 2, 3, 4]) {
+  it("P1–P8 buyable when unoccupied", () => {
+    for (let _ = 0; _ < 8; _++) {
       expect(buyableFor(freeSlot)).toBe(true);
     }
   });
@@ -50,37 +50,37 @@ describe("position independence", () => {
     campaign_live: true,
     pending_order_count: 0,
   };
+  const reserved = {
+    active_campaign_id: null,
+    campaign_live: false,
+    pending_order_count: 1,
+  };
 
   it("FREE slots stay buyable when another position is ACTIVE", () => {
     expect(buyableFor(free)).toBe(true);
     expect(buyableFor(occupied)).toBe(false);
   });
 
-  it("OCCUPIED P3 blocks only P3", () => {
-    expect(buyableFor(occupied)).toBe(false);
+  it("pending order holds slot only for that placement", () => {
+    expect(buyableFor(reserved)).toBe(false);
     expect(buyableFor(free)).toBe(true);
   });
 
-  it("pending order holds slot only for that placement", () => {
-    expect(
-      buyableFor({
-        active_campaign_id: null,
-        campaign_live: false,
-        pending_order_count: 1,
-      })
-    ).toBe(false);
+  it("mixed occupancy scenario", () => {
     expect(buyableFor(free)).toBe(true);
+    expect(buyableFor(occupied)).toBe(false);
+    expect(buyableFor(reserved)).toBe(false);
   });
 });
 
 describe("order routing prices (server defaults)", () => {
-  it("P3/P4 use independent placement ids and prices", () => {
+  it("P5–P8 use independent placement ids and prices", () => {
     const cat = "aff-cestovni-kancelare";
-    const p3 = premiumPlacementId(cat, 3);
-    const p4 = premiumPlacementId(cat, 4);
-    expect(parsePremiumPlacementId(p3)?.position).toBe(3);
-    expect(parsePremiumPlacementId(p4)?.position).toBe(4);
-    expect(defaultPriceCentsForPosition(3)).toBe(399000);
-    expect(defaultPriceCentsForPosition(4)).toBe(299000);
+    const p5 = premiumPlacementId(cat, 5);
+    const p8 = premiumPlacementId(cat, 8);
+    expect(parsePremiumPlacementId(p5)?.position).toBe(5);
+    expect(parsePremiumPlacementId(p8)?.position).toBe(8);
+    expect(defaultPriceCentsForPosition(5)).toBe(479000);
+    expect(defaultPriceCentsForPosition(8)).toBe(389000);
   });
 });

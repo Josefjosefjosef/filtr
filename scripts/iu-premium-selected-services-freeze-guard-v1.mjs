@@ -76,7 +76,7 @@ must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guar
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
 must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
 must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
-must(/premium-selected-v1-20261005-order-form/.test(read("projects/index.html")), "premium asset cache bust");
+must(/premium-selected-v1-20261005-p1-p8/.test(read("projects/index.html")), "premium asset cache bust");
 must(/--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss), "premium sales fg matches trigger token");
 must(/--iu-premium-sales-surface/.test(premiumCss), "premium sales panel surface token");
 must(/--iu-premium-sales-border/.test(premiumCss), "premium sales panel border token");
@@ -89,9 +89,12 @@ must(!/aff-cestovni-kancelare/.test(premiumCss), "no category-specific premium c
 must(!premiumSalesFgInMediaBlocks(premiumCss), "device-specific premium sales color in @media");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-sales-color-hierarchy-guard-v1.mjs")), "premium sales color guard");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0014_premium_catalog_four_positions.sql")), "migration 0014");
+must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0015_premium_eight_positions.sql")), "migration 0015");
 must(!/capacityAfterP2FirstPublish/.test(publishTs), "legacy P2 unlock publish removed");
-must(/sales_catalog_positions:\s*4/.test(publicSelectedTs), "catalog always four positions");
-must(!/if\s*\(\s*!slot\.publicly_listed\s*\)\s*continue/.test(publicJs), "sales panel must not filter P3/P4");
+must(/PREMIUM_MAX_POSITION\s*=\s*8/.test(premiumTs), "catalog eight positions constant");
+must(/PREMIUM_POSITION_COUNT\s*=\s*PREMIUM_MAX_POSITION/.test(premiumTs), "position count alias");
+must(/sales_catalog_positions:\s*PREMIUM_POSITION_COUNT/.test(publicSelectedTs), "catalog always eight positions");
+must(!/if\s*\(\s*!slot\.publicly_listed\s*\)\s*continue/.test(publicJs), "sales panel must not filter listed slots");
 must(/Chci zde mít vlastní tlačítko/.test(publicJs), "premium sales link in client JS");
 must(/iuPremiumSalesPanel/.test(publicJs), "premium sales panel in client JS");
 must(!/buildFreeSlot/.test(publicJs), "no public free-slot renderer");
@@ -106,9 +109,14 @@ must(/readAsDataURL/.test(orderUiScriptTs), "creative preview uses data URL");
 must(/id="previewSlot"/.test(orderUiTs), "order preview uses production slot markup");
 must(/PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs), "order preview injects live slot CSS");
 must(/height:var\(--iuChipH,110px\)/.test(liveSlotCssTs.replace(/\s/g, "")), "live slot CSS height token");
-must(/premium-selected-services-b2b-v2-/.test(termsTs), "premium terms v2 current");
+must(/premium-selected-services-b2b-v3-/.test(termsTs), "premium terms v3 current");
 must(/buildPremiumTermsV1Html/.test(termsTs), "premium terms v1 archive");
+must(/buildPremiumTermsV2Html/.test(termsTs), "premium terms v2 archive");
 must(/\/premium\/terms\/v1/.test(indexTs), "premium terms v1 route");
+must(/\/premium\/terms\/v2/.test(indexTs), "premium terms v2 route");
+must(/569000/.test(read("cloudflare/iu-ads/migrations/0015_premium_eight_positions.sql")), "P2 price in migration");
+must(/389000/.test(read("cloudflare/iu-ads/migrations/0015_premium_eight_positions.sql")), "P8 price in migration");
+must(/iuPremiumPreviewGrid--p8/.test(liveSlotCssTs), "preview grid P8");
 must(/invalid_ico_checksum/.test(orderErrorsTs), "IČO checksum error map exists");
 must(/Zadané IČO není platné/.test(orderErrorsTs), "IČO checksum Czech message");
 must(/id="ico_err"/.test(orderUiTs), "inline IČO error element");
@@ -125,7 +133,7 @@ must(/iuJRGrid iuPremiumGrid/.test(publicJs), "premium grid matches affiliate JR
 must(/btn-nav-toggle/.test(adminUiTs), "admin mobile nav drawer");
 must(/#nav-backdrop/.test(adminUiTs), "admin nav backdrop");
 must(/max-width:\s*1024px/.test(premiumCss), "mobile/tablet premium compact rules");
-must(/schemaVersion:\s*"0014"/.test(indexTs), "health schemaVersion 0014");
+must(/schemaVersion:\s*"0015"/.test(indexTs), "health schemaVersion 0015");
 
 const mig0013 = read("cloudflare/iu-ads/migrations/0013_premium_selected_placements_reseed.sql");
 const placementIds = [...mig0013.matchAll(/\('(selected_services\.[^']+\.premium\.0[1-4])'/g)].map((m) => m[1]);
@@ -145,7 +153,8 @@ const freezeContract = {
     /assignPremiumDisplayRanks/.test(read("cloudflare/iu-ads/src/public-premium-selected.ts")),
   SALES_LINK_PRESENT: /Chci zde mít vlastní tlačítko/.test(publicJs),
   SALES_PANEL_SERVER_AUTHORITATIVE: /sale_state/.test(publicSelectedTs) && /iuPremiumSalesPanel/.test(publicJs),
-  SALES_PANEL_ALL_POSITIONS_VISIBLE: /sales_catalog_positions:\s*4/.test(publicSelectedTs),
+  SALES_PANEL_ALL_POSITIONS_VISIBLE: /sales_catalog_positions:\s*PREMIUM_POSITION_COUNT/.test(publicSelectedTs),
+  PREMIUM_SELECTED_SERVICES_POSITION_COUNT: 8,
   P1_FREE_BUYABLE: /buyable:\s*saleState === "available"/.test(publicSelectedTs),
   P2_FREE_BUYABLE: /buyable:\s*saleState === "available"/.test(publicSelectedTs),
   P3_FREE_BUYABLE: /isPremiumSlotPubliclyListed\(capacity,\s*position\)/.test(publicSelectedTs),

@@ -12,10 +12,12 @@ import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "./premium-ter
 import {
   buildPriceSnapshot,
   isKnownAffiliateCategorySlug,
+  isPremiumPosition,
   parsePremiumPlacementId,
   PREMIUM_DURATION_MONTHS,
   PREMIUM_PRODUCT_TYPE,
   resolveAuthoritativePriceCents,
+  type PremiumPosition,
 } from "./premium-selected-services";
 import { validateTargetUrl } from "./url-safety";
 import type { Env } from "./types";
@@ -195,7 +197,8 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   if (termsEffective !== PREMIUM_TERMS_EFFECTIVE_AT) return json({ error: "invalid_terms_effective_at" }, 400);
   if (body.b2b_only !== true) return json({ error: "b2b_required" }, 400);
 
-  const position = placement.position as 1 | 2 | 3 | 4;
+  if (!isPremiumPosition(placement.position)) return json({ error: "invalid_placement" }, 400);
+  const position = placement.position as PremiumPosition;
   const priceCents = resolveAuthoritativePriceCents(
     placementId,
     position,

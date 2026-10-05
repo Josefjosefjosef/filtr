@@ -5,6 +5,7 @@ import {
   premiumCategoryTitleCs,
   PREMIUM_DURATION_MONTHS,
   resolveAuthoritativePriceCents,
+  type PremiumPosition,
 } from "./premium-selected-services";
 import type { Env } from "./types";
 
@@ -37,7 +38,7 @@ export async function buildPremiumOrderMetaHtml(env: Env, category: string, plac
   if (!row) {
     return '<p class="err">Pozice není v katalogu.</p>';
   }
-  const position = row.position as 1 | 2 | 3 | 4;
+  const position = row.position as PremiumPosition;
   const priceCents = resolveAuthoritativePriceCents(placement, position, row.current_price_cents, null);
   const title = premiumCategoryTitleCs(cat);
   const posLabel = "P" + position;
