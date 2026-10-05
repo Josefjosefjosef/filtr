@@ -27,7 +27,10 @@ ${PREMIUM_AFFILIATE_SLOT_GRID_CSS}
 #iuAffiliateView a.iuPremiumSlot--sold img.iuPremiumSlotImg{display:block;width:100%;height:100%}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--logo img.iuPremiumSlotImg{object-fit:contain;padding:10px;box-sizing:border-box}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg{object-fit:cover}
-.previewWrap{margin:.35rem 0 .75rem;max-width:100%}
+.previewWrap{margin:.35rem 0 .75rem;max-width:100%;box-sizing:border-box}
+@media(max-width:520px){.previewWrap{width:calc(100vw - 24px);max-width:none;margin-left:calc(50% - 50vw + 12px);margin-right:calc(50% - 50vw + 12px)}}
+@media(min-width:521px) and (max-width:1239px){.previewWrap{width:calc(100vw - 39px);max-width:none;margin-left:calc(50% - 50vw + 19.5px);margin-right:calc(50% - 50vw + 19.5px)}}
+@media(min-width:1240px){.previewWrap{width:608px;max-width:100%;margin-left:0;margin-right:auto}}
 .previewWrap .iuPremiumPreviewGrid--p1 #previewSlot{grid-column:1;grid-row:1}
 .previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-column:2;grid-row:1}
 .previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-column:1;grid-row:2}
