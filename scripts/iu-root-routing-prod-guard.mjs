@@ -63,14 +63,28 @@ function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function fetchNoFollow(url) {
-  const res = await fetch(url, { redirect: "manual", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } });
-  return {
-    status: res.status,
-    location: res.headers.get("location") || "",
-    cache: res.headers.get("cf-cache-status") || "",
-    type: res.headers.get("content-type") || "",
-  };
+  const maxAttempts = 6;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const res = await fetch(url, {
+      redirect: "manual",
+      headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+    });
+    if (res.status !== 429 || attempt === maxAttempts - 1) {
+      return {
+        status: res.status,
+        location: res.headers.get("location") || "",
+        cache: res.headers.get("cf-cache-status") || "",
+        type: res.headers.get("content-type") || "",
+      };
+    }
+    await sleep(4000 * (attempt + 1));
+  }
+  return { status: 429, location: "", cache: "", type: "" };
 }
 
 async function main() {
