@@ -1,5 +1,5 @@
 -- Premium catalog P1-P8 + new price list (P1=5990 CZK, step -300 CZK per position)
--- D1 ignores PRAGMA foreign_keys=OFF; drop child tables before parents.
+-- D1 ignores PRAGMA foreign_keys=OFF; drop child tables before parents (orders, placements, categories).
 
 CREATE TABLE premium_selected_categories_backup AS
   SELECT * FROM premium_selected_categories;
