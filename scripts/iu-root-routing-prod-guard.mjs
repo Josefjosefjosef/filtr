@@ -67,8 +67,18 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function retryAfterMs(res) {
+  const raw = res.headers.get("retry-after");
+  if (!raw) return 0;
+  const sec = Number(raw);
+  if (Number.isFinite(sec) && sec > 0) return Math.min(120000, sec * 1000);
+  const when = Date.parse(raw);
+  if (Number.isFinite(when)) return Math.min(120000, Math.max(0, when - Date.now()));
+  return 0;
+}
+
 async function fetchNoFollow(url) {
-  const maxAttempts = 6;
+  const maxAttempts = 10;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const res = await fetch(url, {
       redirect: "manual",
@@ -82,38 +92,91 @@ async function fetchNoFollow(url) {
         type: res.headers.get("content-type") || "",
       };
     }
-    await sleep(4000 * (attempt + 1));
+    const ra = retryAfterMs(res);
+    const backoff = ra > 0 ? ra : Math.min(60000, 3000 * 2 ** attempt);
+    await sleep(backoff);
   }
   return { status: 429, location: "", cache: "", type: "" };
 }
 
-async function main() {
+async function prodPace() {
+  await sleep(2500);
+}
+
+const RATE_LIMIT_CASCADE_IDS = new Set([
+  "www_to_apex",
+  "www_not_projects",
+  "projects_to_root",
+  "projects_stat_to_root",
+  "projects_query_kept",
+  "root_no_location_projects",
+]);
+
+function failuresAreRateLimitedOnly() {
+  if (!fails.length) return false;
+  const has429 = fails.some((f) => /:429$/.test(f) || /status of 429/i.test(f));
+  if (!has429) return false;
+  return fails.every((f) => {
+    const id = f.split(":")[0];
+    if (/:429$/.test(f) || /status of 429/i.test(f)) return true;
+    return RATE_LIMIT_CASCADE_IDS.has(id);
+  });
+}
+
+async function fetchJsonWithRetry(url) {
+  const maxAttempts = 10;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const res = await fetch(url, { headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } });
+    if (res.status !== 429 || attempt === maxAttempts - 1) {
+      const json = res.ok ? await res.json().catch(() => ({})) : {};
+      return { status: res.status, json };
+    }
+    const ra = retryAfterMs(res);
+    const backoff = ra > 0 ? ra : Math.min(60000, 3000 * 2 ** attempt);
+    await sleep(backoff);
+  }
+  return { status: 429, json: {} };
+}
+
+async function runChecks() {
+  fails.length = 0;
+  report.steps = [];
+  if (process.env.GITHUB_ACTIONS === "true") {
+    await sleep(10000 + Math.floor(Math.random() * 20000));
+  }
+
   const root = await fetchNoFollow(PROD + "/");
   ok("root_200", root.status === 200, String(root.status));
   ok("root_no_location_projects", !/\/projects\//i.test(root.location), root.location);
 
+  await prodPace();
   const www = await fetchNoFollow("https://www.infouzel.cz/");
   ok("www_3xx", www.status >= 301 && www.status < 400, String(www.status));
   ok("www_to_apex", /^https:\/\/infouzel\.cz\/?(\?|$)/i.test(www.location) || www.location === "https://infouzel.cz/", www.location);
   ok("www_not_projects", !/\/projects\//i.test(www.location), www.location);
 
+  await prodPace();
   const projects = await fetchNoFollow(PROD + "/projects/");
   ok("projects_permanent", projects.status === 301 || projects.status === 308, String(projects.status));
   ok("projects_to_root", /^https:\/\/infouzel\.cz\/?(\?|$)/i.test(projects.location), projects.location);
 
+  await prodPace();
   const projectsStat = await fetchNoFollow(PROD + "/projects/statistiky/");
   ok("projects_stat_permanent", projectsStat.status === 301 || projectsStat.status === 308, String(projectsStat.status));
   ok("projects_stat_to_root", /^https:\/\/infouzel\.cz\/statistiky\/?(\?|$)/i.test(projectsStat.location), projectsStat.location);
 
+  await prodPace();
   const projectsQ = await fetchNoFollow(PROD + "/projects/?view=saved");
   ok("projects_query_permanent", projectsQ.status === 301 || projectsQ.status === 308, String(projectsQ.status));
   ok("projects_query_kept", /view=saved/.test(projectsQ.location) && !/\/projects\//.test(new URL(projectsQ.location, PROD).pathname), projectsQ.location);
 
+  await prodPace();
   const data = await fetchNoFollow(PROD + "/projects/version.json");
   ok("data_passthrough", data.status === 200, String(data.status));
 
-  const man = await fetch(PROD + "/manifest.json?cb=" + Date.now(), { headers: { "Cache-Control": "no-cache" } });
-  const manJson = man.ok ? await man.json() : {};
+  await prodPace();
+  const man = await fetchJsonWithRetry(PROD + "/manifest.json?cb=" + Date.now());
+  const manJson = man.json || {};
   ok("manifest_200", man.status === 200, String(man.status));
   ok("manifest_start", String(manJson.start_url || "") === "/" || String(manJson.start_url || "").startsWith("/?"), String(manJson.start_url));
   ok("manifest_scope", String(manJson.scope || "") === "/", String(manJson.scope));
@@ -140,7 +203,19 @@ async function main() {
     });
     page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
 
-    await page.goto(PROD + "/?cb=" + Date.now(), { waitUntil: "domcontentloaded", timeout: 90000 });
+    let gotoOk = false;
+    for (let attempt = 0; attempt < 8 && !gotoOk; attempt++) {
+      const resp = await page.goto(PROD + "/?cb=" + Date.now(), {
+        waitUntil: "domcontentloaded",
+        timeout: 90000,
+      });
+      const st = resp ? resp.status() : 0;
+      if (st === 429) {
+        await sleep(Math.min(60000, 5000 * (attempt + 1)));
+        continue;
+      }
+      gotoOk = true;
+    }
     await page.waitForTimeout(3500);
     const info = await page.evaluate(async () => {
       let sw = null;
@@ -192,6 +267,15 @@ async function main() {
     await browser.close();
   } else {
     ok("playwright", false, "missing");
+  }
+}
+
+async function main() {
+  await runChecks();
+  if (fails.length && failuresAreRateLimitedOnly() && process.env.GITHUB_ACTIONS === "true") {
+    report.rateLimitRetry = true;
+    await sleep(90000);
+    await runChecks();
   }
 
   const out = path.join(process.env.TEMP || "/tmp", "iu-root-routing-prod-guard-report.json");
