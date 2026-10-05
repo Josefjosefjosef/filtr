@@ -351,27 +351,25 @@ try {
     })),
   });
 
+  const catPage = await bootstrapGuardPage(context);
+  let categoryLoopSection = SECTION;
+  const fulfillPremiumApiForSection = async (route) => {
+    const url = route.request().url();
+    const body = url.includes("/render")
+      ? JSON.stringify(stubRender)
+      : JSON.stringify(stubCatalogForSection(categoryLoopSection));
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  };
+  await catPage.route("**/v1/public/premium/selected-services/**", fulfillPremiumApiForSection);
+  await catPage.route("https://ads.infouzel.cz/v1/public/premium/selected-services/**", fulfillPremiumApiForSection);
+
   for (const section of premiumSlugs) {
-    const catPage = await bootstrapGuardPage(context);
-    await catPage.route("**/v1/public/premium/selected-services/**", async (route) => {
-      const url = route.request().url();
-      const body = url.includes("/render")
-        ? JSON.stringify(stubRender)
-        : JSON.stringify(stubCatalogForSection(section));
-      await route.fulfill({ status: 200, contentType: "application/json", body });
-    });
-    await catPage.route("https://ads.infouzel.cz/v1/public/premium/selected-services/**", async (route) => {
-      const url = route.request().url();
-      const body = url.includes("/render")
-        ? JSON.stringify(stubRender)
-        : JSON.stringify(stubCatalogForSection(section));
-      await route.fulfill({ status: 200, contentType: "application/json", body });
-    });
+    categoryLoopSection = section;
     await catPage.goto(`${base}/projects/?section=${section}&iuInfoSystem=off&nosw=1`, {
       waitUntil: "domcontentloaded",
-      timeout: 120000,
+      timeout: 60000,
     });
-    await catPage.waitForSelector("#iuPremiumSalesToggle", { timeout: 60000 }).catch(() => null);
+    await catPage.waitForSelector("#iuPremiumSalesToggle", { timeout: 30000 }).catch(() => null);
     const beforeExpand = await catPage.evaluate(() => {
       const panel = document.getElementById("iuPremiumSalesPanel");
       function vis(el) {
@@ -411,8 +409,8 @@ try {
     });
     ok(section + ":p1_p8_present", catSnap.pCount === 8, "n=" + catSnap.pCount);
     ok(section + ":p1_p8_before_explanation", catSnap.orderOk);
-    await catPage.close();
   }
+  await catPage.close();
 
   const mobileContext = await bootstrapGuardContext(browser, {
     viewport: { width: 390, height: 844 },
