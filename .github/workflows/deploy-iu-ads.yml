@@ -75,6 +75,10 @@ jobs:
         working-directory: .
         run: npm run iu-premium-order-preview-parity-guard
 
+      - name: Premium order form guard
+        working-directory: .
+        run: npm run iu-premium-order-form-guard
+
       - name: Token source (no values)
         run: |
           set -euo pipefail
