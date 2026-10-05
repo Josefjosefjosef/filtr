@@ -77,12 +77,15 @@ function retryAfterMs(res) {
   return 0;
 }
 
+const FETCH_TIMEOUT_MS = 45000;
+
 async function fetchNoFollow(url) {
-  const maxAttempts = 10;
+  const maxAttempts = 6;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const res = await fetch(url, {
       redirect: "manual",
       headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     if (res.status !== 429 || attempt === maxAttempts - 1) {
       return {
@@ -93,14 +96,14 @@ async function fetchNoFollow(url) {
       };
     }
     const ra = retryAfterMs(res);
-    const backoff = ra > 0 ? ra : Math.min(60000, 3000 * 2 ** attempt);
+    const backoff = ra > 0 ? Math.min(45000, ra) : Math.min(15000, 2000 * (attempt + 1));
     await sleep(backoff);
   }
   return { status: 429, location: "", cache: "", type: "" };
 }
 
 async function prodPace() {
-  await sleep(2500);
+  await sleep(1500);
 }
 
 const RATE_LIMIT_CASCADE_IDS = new Set([
@@ -124,15 +127,18 @@ function failuresAreRateLimitedOnly() {
 }
 
 async function fetchJsonWithRetry(url) {
-  const maxAttempts = 10;
+  const maxAttempts = 6;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const res = await fetch(url, { headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } });
+    const res = await fetch(url, {
+      headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
     if (res.status !== 429 || attempt === maxAttempts - 1) {
       const json = res.ok ? await res.json().catch(() => ({})) : {};
       return { status: res.status, json };
     }
     const ra = retryAfterMs(res);
-    const backoff = ra > 0 ? ra : Math.min(60000, 3000 * 2 ** attempt);
+    const backoff = ra > 0 ? Math.min(45000, ra) : Math.min(15000, 2000 * (attempt + 1));
     await sleep(backoff);
   }
   return { status: 429, json: {} };
@@ -142,7 +148,7 @@ async function runChecks() {
   fails.length = 0;
   report.steps = [];
   if (process.env.GITHUB_ACTIONS === "true") {
-    await sleep(10000 + Math.floor(Math.random() * 20000));
+    await sleep(3000 + Math.floor(Math.random() * 7000));
   }
 
   const root = await fetchNoFollow(PROD + "/");
@@ -204,14 +210,14 @@ async function runChecks() {
     page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
 
     let gotoOk = false;
-    for (let attempt = 0; attempt < 8 && !gotoOk; attempt++) {
+    for (let attempt = 0; attempt < 5 && !gotoOk; attempt++) {
       const resp = await page.goto(PROD + "/?cb=" + Date.now(), {
         waitUntil: "domcontentloaded",
-        timeout: 90000,
+        timeout: 60000,
       });
       const st = resp ? resp.status() : 0;
       if (st === 429) {
-        await sleep(Math.min(60000, 5000 * (attempt + 1)));
+        await sleep(Math.min(20000, 4000 * (attempt + 1)));
         continue;
       }
       gotoOk = true;
@@ -274,7 +280,7 @@ async function main() {
   await runChecks();
   if (fails.length && failuresAreRateLimitedOnly() && process.env.GITHUB_ACTIONS === "true") {
     report.rateLimitRetry = true;
-    await sleep(90000);
+    await sleep(45000);
     await runChecks();
   }
 
