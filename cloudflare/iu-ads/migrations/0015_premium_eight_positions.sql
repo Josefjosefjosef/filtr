@@ -1,24 +1,37 @@
 -- Premium catalog P1-P8 + new price list (P1=5990 CZK, step -300 CZK per position)
-PRAGMA foreign_keys = OFF;
+-- D1 ignores PRAGMA foreign_keys=OFF; drop child tables before parents (orders, placements, categories).
 
-CREATE TABLE premium_selected_categories_new (
+CREATE TABLE premium_selected_categories_backup AS
+  SELECT * FROM premium_selected_categories;
+
+CREATE TABLE premium_selected_placements_backup AS
+  SELECT * FROM premium_selected_placements;
+
+CREATE TABLE premium_selected_orders_backup AS
+  SELECT * FROM premium_selected_orders;
+
+DROP TABLE premium_selected_orders;
+DROP TABLE premium_selected_placements;
+DROP TABLE premium_selected_categories;
+
+CREATE TABLE premium_selected_categories (
   category_slug TEXT PRIMARY KEY,
   premium_capacity INTEGER NOT NULL DEFAULT 8 CHECK (premium_capacity IN (2, 4, 8)),
   p2_first_published_at TEXT,
   updated_at TEXT NOT NULL
 );
 
-INSERT INTO premium_selected_categories_new
+INSERT INTO premium_selected_categories
   SELECT category_slug, premium_capacity, p2_first_published_at, updated_at
-FROM premium_selected_categories;
+FROM premium_selected_categories_backup;
 
-DROP TABLE premium_selected_categories;
-ALTER TABLE premium_selected_categories_new RENAME TO premium_selected_categories;
 UPDATE premium_selected_categories
 SET premium_capacity = 8, updated_at = datetime('now')
 WHERE premium_capacity IN (2, 4);
 
-CREATE TABLE premium_selected_placements_new (
+DROP TABLE premium_selected_categories_backup;
+
+CREATE TABLE premium_selected_placements (
   placement_id TEXT PRIMARY KEY,
   category_slug TEXT NOT NULL,
   position INTEGER NOT NULL CHECK (position BETWEEN 1 AND 8),
@@ -29,16 +42,16 @@ CREATE TABLE premium_selected_placements_new (
   FOREIGN KEY (category_slug) REFERENCES premium_selected_categories(category_slug)
 );
 
-INSERT INTO premium_selected_placements_new
+INSERT INTO premium_selected_placements
   (placement_id, category_slug, position, current_price_cents, currency, active_campaign_id, updated_at)
 SELECT placement_id, category_slug, position, current_price_cents, currency, active_campaign_id, updated_at
-FROM premium_selected_placements;
+FROM premium_selected_placements_backup;
 
-UPDATE premium_selected_placements_new SET current_price_cents = 569000, updated_at = datetime('now') WHERE position = 2;
-UPDATE premium_selected_placements_new SET current_price_cents = 539000, updated_at = datetime('now') WHERE position = 3;
-UPDATE premium_selected_placements_new SET current_price_cents = 509000, updated_at = datetime('now') WHERE position = 4;
+UPDATE premium_selected_placements SET current_price_cents = 569000, updated_at = datetime('now') WHERE position = 2;
+UPDATE premium_selected_placements SET current_price_cents = 539000, updated_at = datetime('now') WHERE position = 3;
+UPDATE premium_selected_placements SET current_price_cents = 509000, updated_at = datetime('now') WHERE position = 4;
 
-INSERT OR IGNORE INTO premium_selected_placements_new
+INSERT OR IGNORE INTO premium_selected_placements
   (placement_id, category_slug, position, current_price_cents, currency, active_campaign_id, updated_at)
 VALUES
   ('selected_services.aff-cestovni-kancelare.premium.05', 'aff-cestovni-kancelare', 5, 479000, 'CZK', NULL, datetime('now')),
@@ -186,12 +199,12 @@ VALUES
   ('selected_services.aff-kancelarske-potreby.premium.07', 'aff-kancelarske-potreby', 7, 419000, 'CZK', NULL, datetime('now')),
   ('selected_services.aff-kancelarske-potreby.premium.08', 'aff-kancelarske-potreby', 8, 389000, 'CZK', NULL, datetime('now'));
 
-DROP TABLE premium_selected_placements;
-ALTER TABLE premium_selected_placements_new RENAME TO premium_selected_placements;
+DROP TABLE premium_selected_placements_backup;
+
 CREATE UNIQUE INDEX IF NOT EXISTS idx_premium_selected_placements_cat_pos
   ON premium_selected_placements(category_slug, position);
 
-CREATE TABLE premium_selected_orders_new (
+CREATE TABLE premium_selected_orders (
   order_id TEXT PRIMARY KEY,
   placement_id TEXT NOT NULL,
   category_slug TEXT NOT NULL,
@@ -212,13 +225,11 @@ CREATE TABLE premium_selected_orders_new (
   FOREIGN KEY (placement_id) REFERENCES premium_selected_placements(placement_id)
 );
 
-INSERT INTO premium_selected_orders_new SELECT * FROM premium_selected_orders;
-DROP TABLE premium_selected_orders;
-ALTER TABLE premium_selected_orders_new RENAME TO premium_selected_orders;
+INSERT INTO premium_selected_orders SELECT * FROM premium_selected_orders_backup;
+DROP TABLE premium_selected_orders_backup;
+
 CREATE INDEX IF NOT EXISTS idx_premium_selected_orders_status ON premium_selected_orders(workflow_status);
 CREATE INDEX IF NOT EXISTS idx_premium_selected_orders_placement ON premium_selected_orders(placement_id);
-
-PRAGMA foreign_keys = ON;
 
 UPDATE system_settings SET value = '0015', updated_at = datetime('now') WHERE key = 'SCHEMA_VERSION';
 INSERT OR IGNORE INTO system_settings (key, value, updated_at) VALUES ('SCHEMA_VERSION', '0015', datetime('now'));
