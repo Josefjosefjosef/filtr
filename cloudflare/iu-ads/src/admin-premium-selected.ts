@@ -4,7 +4,11 @@
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { handleAdminPremiumApprovePublish } from "./premium-publish";
-import { parsePremiumPlacementId, resolveAuthoritativePriceCents } from "./premium-selected-services";
+import {
+  formatPremiumTotalPriceLabelCs,
+  parsePremiumPlacementId,
+  resolveAuthoritativePriceCents,
+} from "./premium-selected-services";
 import type { Env } from "./types";
 
 export { handleAdminPremiumApprovePublish };
@@ -268,6 +272,6 @@ export async function handleClientPremiumRenewalAccept(request: Request, env: En
     invoice_id: publish.invoice_id,
     idempotent: publish.already,
     offered_price_cents: offer.offered_price_cents,
-    price_label_cs: (offer.offered_price_cents / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců",
+    price_label_cs: formatPremiumTotalPriceLabelCs(offer.offered_price_cents),
   });
 }

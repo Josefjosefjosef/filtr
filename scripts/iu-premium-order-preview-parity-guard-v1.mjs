@@ -52,6 +52,10 @@ function staticParity() {
   ok("static:order_injects_live_css", /PREMIUM_LIVE_SLOT_CSS/.test(orderUi));
   ok("static:no_previewBox", !/previewBox/.test(orderUi));
   const gridSrc = read("cloudflare/iu-ads/src/premium-live-slot-css.ts");
+  ok("static:preview_block_center", /previewBlock/.test(orderUi));
+  ok("static:preview_desktop_centered", /margin-left:auto;margin-right:auto/.test(gridSrc.replace(/\s/g, "")));
+  ok("static:banner_slot_padding_zero", /iuPremiumSlot--banner\{padding:0\}/.test(gridSrc.replace(/\s/g, "")));
+  ok("static:banner_object_position_center", /object-position:centercenter/.test(gridSrc.replace(/\s/g, "")));
   ok(
     "static:affiliate_grid_two_col",
     /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/.test(gridSrc.replace(/\s/g, ""))
@@ -144,7 +148,7 @@ body{margin:0}
 .card{padding:1rem;box-sizing:border-box}
 ${previewCssInline}
 </style>
-</head><body><div class="shell"><div class="card"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div></body></html>`;
+</head><body><div class="shell"><div class="card"><div class="previewBlock"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div></div></body></html>`;
 }
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8969", 10);
@@ -263,6 +267,17 @@ try {
         orderGeom.img &&
         liveGeom.img.objectFit === orderGeom.img.objectFit;
       ok("geom:" + vp.id + ":p" + pos, geomOk, JSON.stringify({ liveGeom, orderGeom }));
+      const centerSnap = await page.evaluate(() => {
+        const wrap = document.querySelector(".previewWrap");
+        const block = document.querySelector(".previewBlock");
+        if (!wrap || !block) return null;
+        const br = block.getBoundingClientRect();
+        const wr = wrap.getBoundingClientRect();
+        const left = wr.left - br.left;
+        const right = br.right - wr.right;
+        return { left, right, delta: Math.abs(left - right) };
+      });
+      ok("center:" + vp.id + ":p" + pos, centerSnap && centerSnap.delta <= 2, JSON.stringify(centerSnap));
       if (vp.id === "mobile" && pos === 1 && liveGeom && orderGeom) {
         const fullWidth = orderGeom.w >= liveGeom.gridW * 0.92;
         ok("regression:mobile_not_full_width", !fullWidth, JSON.stringify({ liveGeom, orderGeom }));
@@ -290,7 +305,9 @@ try {
       near(liveBanner.w, previewBanner.w, GEOMETRY_TOLERANCE_PX) &&
       near(liveBanner.h, previewBanner.h, GEOMETRY_TOLERANCE_PX) &&
       liveBanner.img?.objectFit === "cover" &&
-      previewBanner.img?.objectFit === "cover",
+      previewBanner.img?.objectFit === "cover" &&
+      /center|50%\s*50%/.test(String(liveBanner.img?.objectPosition || "")) &&
+      /center|50%\s*50%/.test(String(previewBanner.img?.objectPosition || "")),
     JSON.stringify({ liveBanner, previewBanner })
   );
   await bctx.close();

@@ -14,6 +14,7 @@ import {
   PREMIUM_DURATION_MONTHS,
   PREMIUM_POSITION_COUNT,
   defaultPriceCentsForPosition,
+  formatPremiumTotalPriceLabelCs,
   isKnownAffiliateCategorySlug,
   isPremiumPosition,
   isPremiumSlotPubliclyListed,
@@ -118,7 +119,7 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
         current_price_cents: priceCents,
         currency: p.currency || "CZK",
         duration_months: PREMIUM_DURATION_MONTHS,
-        price_label_cs: formatPriceLabelCs(priceCents),
+        price_label_cs: formatPremiumTotalPriceLabelCs(priceCents),
         order_url:
           "https://ads.infouzel.cz/premium/order?category=" +
           encodeURIComponent(category) +
@@ -136,10 +137,6 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
     slots,
     measurement: { impressions: false, clicks: false, ctr: false },
   });
-}
-
-function formatPriceLabelCs(cents: number): string {
-  return (Math.round(cents / 100)).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců";
 }
 
 export async function handlePublicPremiumSelectedRender(request: Request, env: Env, url: URL): Promise<Response> {

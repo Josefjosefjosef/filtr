@@ -22,6 +22,8 @@ function baseBody(overrides: Record<string, unknown> = {}) {
     terms_version: PREMIUM_TERMS_VERSION,
     terms_effective_at: PREMIUM_TERMS_EFFECTIVE_AT,
     b2b_only: true,
+    authorization_confirmed: true,
+    ordering_person_name: "Marie Objednávková",
     ico: "27074358",
     ...overrides,
   };
@@ -140,6 +142,34 @@ describe("premium order B2B / IČO", () => {
     expect(res.status).toBe(400);
     const j = await res.json();
     expect(j.error).toBe("phone_required");
+  });
+
+  it("rejects missing authorization confirmation", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ authorization_confirmed: false })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.error).toBe("authorization_required");
+  });
+
+  it("rejects missing ordering person name", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ ordering_person_name: "  " })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.error).toBe("ordering_person_required");
   });
 
   it("rejects when b2b_only is not true", async () => {

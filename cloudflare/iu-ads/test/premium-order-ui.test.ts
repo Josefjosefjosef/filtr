@@ -22,6 +22,12 @@ describe("premium order UI shell", () => {
     expect(html).toContain('id="cancel_btn"');
     expect(html).toContain("Zrušit a zavřít");
     expect(html).toContain('id="previewSlot"');
+    expect(html).toContain("previewBlock");
+    expect(html).toContain('id="authorization_confirmed"');
+    expect(html).toContain("oprávněn/a objednat tuto reklamu");
+    expect(html).toContain('id="ordering_person_name"');
+    expect(html).toContain("Jméno a příjmení objednávající osoby");
+    expect(html).not.toMatch(/<h1>Prémiová reklamní pozice<\/h1>\s*<p class="muted">infoUzel\.cz nesleduje/);
     expect(html).toContain("iuPremiumPreviewGrid--p2");
     expect(html).toContain("Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.");
     expect(html).toContain("invalid_ico_checksum");
@@ -64,7 +70,8 @@ describe("premium order UI shell", () => {
     expect(meta).toContain("P1");
     expect(meta).toContain("5");
     expect(meta).toContain("990");
-    expect(meta).toContain("6 měsíců");
+    expect(meta).toContain("Celková cena za 6 měsíců");
+    expect(meta).toContain("6 kalendářních měsíců");
     expect(meta).toContain("výhradně podnikatelům");
   });
 });

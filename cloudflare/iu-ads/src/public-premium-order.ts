@@ -11,6 +11,7 @@ import { isPremiumCampaignLiveNow } from "./premium-display";
 import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "./premium-terms";
 import {
   buildPriceSnapshot,
+  formatPremiumTotalPriceLabelCs,
   isKnownAffiliateCategorySlug,
   isPremiumPosition,
   parsePremiumPlacementId,
@@ -196,6 +197,14 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
       : PREMIUM_TERMS_EFFECTIVE_AT;
   if (termsEffective !== PREMIUM_TERMS_EFFECTIVE_AT) return json({ error: "invalid_terms_effective_at" }, 400);
   if (body.b2b_only !== true) return json({ error: "b2b_required" }, 400);
+  if (body.authorization_confirmed !== true) return json({ error: "authorization_required" }, 400);
+  const orderingPersonRaw = body.ordering_person_name;
+  const orderingPersonName =
+    typeof orderingPersonRaw === "string" ? orderingPersonRaw.trim().replace(/\s+/g, " ") : "";
+  if (!orderingPersonName || orderingPersonName.length < 2 || orderingPersonName.length > 200) {
+    return json({ error: "ordering_person_required" }, 400);
+  }
+  if (/[<>]/.test(orderingPersonName)) return json({ error: "ordering_person_invalid" }, 400);
 
   if (!isPremiumPosition(placement.position)) return json({ error: "invalid_placement" }, 400);
   const position = placement.position as PremiumPosition;
@@ -242,6 +251,8 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     terms_effective_at: termsEffective,
     price_snapshot: priceSnapshot,
     billing: { street, city, zip, country, dic },
+    ordering_person_name: orderingPersonName,
+    authorization_confirmed: true,
   };
 
   await env.DB.prepare(
@@ -311,7 +322,7 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
       order_access_token: orderToken,
       placement_id: placementId,
       price_cents: priceCents,
-      price_label_cs: (priceCents / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců",
+      price_label_cs: formatPremiumTotalPriceLabelCs(priceCents),
       creative_mode: creativeMode,
       measurement: { impressions: false, clicks: false },
     },

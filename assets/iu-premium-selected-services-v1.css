@@ -33,11 +33,17 @@
   }
   #iuAffiliateView a.iuPremiumSlot--free .iuPremiumSlotSub {
     font-size: 11px;
-    line-height: 1.15;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.2;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
     max-width: 100%;
+  }
+  #iuAffiliateView a.iuPremiumSlot--sale .iuPremiumSlotSub {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.2;
   }
 }
 #iuAffiliateView a.iuPremiumSlot:focus-visible {
@@ -63,8 +69,14 @@
   padding: 10px;
   box-sizing: border-box;
 }
+#iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner {
+  padding: 0;
+}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg {
   object-fit: cover;
+  object-position: center center;
+  padding: 0;
+  box-sizing: border-box;
 }
 #iuAffiliateView .iuAffiliateDisclosure .iuPremiumSalesLink {
   display: inline;

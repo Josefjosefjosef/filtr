@@ -2,6 +2,7 @@
  * Admin premium order detail + creative preview (same geometry as public card).
  */
 import { json, requireAdminPermission } from "./admin-auth";
+import { formatPremiumTotalPriceLabelCs } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import type { Env } from "./types";
 
@@ -97,10 +98,22 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   });
 
   const agreed = row.agreed_price_cents ?? row.catalog_price_cents;
-  const priceLabel =
-    agreed != null
-      ? (Number(agreed) / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců"
-      : null;
+  const priceLabel = agreed != null ? formatPremiumTotalPriceLabelCs(Number(agreed)) : null;
+
+  let orderingPersonName: string | null = null;
+  let authorizationConfirmed = false;
+  try {
+    const payload =
+      typeof row.payload_json === "string" ? JSON.parse(row.payload_json) : row.payload_json;
+    if (payload && typeof payload === "object") {
+      if (typeof payload.ordering_person_name === "string" && payload.ordering_person_name.trim()) {
+        orderingPersonName = payload.ordering_person_name.trim();
+      }
+      authorizationConfirmed = payload.authorization_confirmed === true;
+    }
+  } catch {
+    /* historical orders may omit fields */
+  }
 
   return json({
     order: {
@@ -116,6 +129,8 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       creative_mode: row.creative_mode,
       price_label_cs: priceLabel,
       duration_months: 6,
+      ordering_person_name: orderingPersonName,
+      authorization_confirmed: authorizationConfirmed,
     },
     creative,
     preview_html: previewHtml,

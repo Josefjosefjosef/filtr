@@ -7,6 +7,7 @@ import {
   addCalendarDaysFromIso,
   addCalendarMonthsFromIso,
   defaultPriceCentsForPosition,
+  formatPremiumTotalPriceLabelCs,
   isPremiumPosition,
   isPremiumSlotPubliclyListed,
   type PremiumPosition,
@@ -43,6 +44,16 @@ describe("sales catalog listing", () => {
         expect(isPremiumSlotPubliclyListed(cap, pos as PremiumPosition)).toBe(true);
       }
     }
+  });
+});
+
+describe("customer price labels", () => {
+  it("states total price for full 6-month period", () => {
+    expect(formatPremiumTotalPriceLabelCs(599000)).toContain("Celková cena za 6 měsíců:");
+    expect(formatPremiumTotalPriceLabelCs(599000)).toContain("990");
+    expect(formatPremiumTotalPriceLabelCs(599000)).toContain("bez DPH");
+    expect(formatPremiumTotalPriceLabelCs(389000)).toContain("890");
+    expect(formatPremiumTotalPriceLabelCs(389000)).not.toMatch(/\/\s*6 měsíců/);
   });
 });
 

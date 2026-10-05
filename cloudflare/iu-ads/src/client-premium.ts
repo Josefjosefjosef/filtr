@@ -4,7 +4,11 @@
 import { json } from "./admin-auth";
 import { requireClientSession } from "./client-auth";
 import { signObjectAccess } from "./signed-access";
-import { PREMIUM_DURATION_MONTHS, PREMIUM_PRODUCT_TYPE } from "./premium-selected-services";
+import {
+  formatPremiumTotalPriceLabelCs,
+  PREMIUM_DURATION_MONTHS,
+  PREMIUM_PRODUCT_TYPE,
+} from "./premium-selected-services";
 import type { Env } from "./types";
 
 async function signedCreativePreviewUrl(origin: string, env: Env, r2Key: string): Promise<string | null> {
@@ -137,8 +141,7 @@ export async function handleClientPremiumSummary(request: Request, env: Env, url
             catalog_price_cents: snap.catalog_price_cents,
             currency: snap.currency,
             duration_months: snap.duration_months,
-            price_label_cs:
-              (Number(snap.agreed_price_cents) / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců",
+            price_label_cs: formatPremiumTotalPriceLabelCs(Number(snap.agreed_price_cents)),
           }
         : null,
       invoice: inv
@@ -162,8 +165,7 @@ export async function handleClientPremiumSummary(request: Request, env: Env, url
     campaign_id: o.campaign_id,
     placement_id: o.placement_id,
     offered_price_cents: o.offered_price_cents,
-    price_label_cs:
-      (Number(o.offered_price_cents) / 100).toLocaleString("cs-CZ") + " Kč bez DPH / 6 měsíců",
+    price_label_cs: formatPremiumTotalPriceLabelCs(Number(o.offered_price_cents)),
     currency: o.currency,
     window_start_at: o.window_start_at,
     window_end_at: o.window_end_at,
