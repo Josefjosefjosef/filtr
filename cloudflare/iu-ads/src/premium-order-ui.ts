@@ -7,11 +7,17 @@ import {
   PREMIUM_TERMS_EFFECTIVE_AT,
   PREMIUM_TERMS_VERSION,
 } from "./premium-terms";
+import type { PremiumContractedPosition } from "./premium-display";
 
-export function buildPremiumOrderShellHtml(nonce: string, metaHtml: string): string {
+export function buildPremiumOrderShellHtml(
+  nonce: string,
+  metaHtml: string,
+  previewPosition: PremiumContractedPosition = 1
+): string {
   const privacy = buildPremiumPrivacyNoticeHtml();
   const keyTerms = buildPremiumOrderKeyTermsHtml();
   const clientScript = buildPremiumOrderClientScript(PREMIUM_TERMS_VERSION, PREMIUM_TERMS_EFFECTIVE_AT);
+  const previewPosClass = "iuPremiumPreviewGrid--p" + String(previewPosition);
   return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -31,9 +37,14 @@ input.invalid{border-color:#9b2c2c}
 @media(max-width:560px){.grid2{grid-template-columns:1fr}}
 button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:.6rem 1rem;font:inherit;cursor:pointer;width:100%;margin-top:.75rem}
 button:disabled{opacity:.65;cursor:wait}
+button.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);margin-top:.5rem}
 .muted{color:var(--muted);font-size:.9rem}
 .err{color:#9b2c2c;font-size:.9rem;margin:.35rem 0 0}
 .field-err{color:#9b2c2c;font-size:.85rem;margin:.2rem 0 0}
+.field-hint{color:var(--muted);font-size:.85rem;margin:.15rem 0 .35rem}
+.lookup-status{font-size:.85rem;margin:.2rem 0 .35rem;color:var(--muted)}
+.lookup-status.is-ok{color:#0f6b5c}
+.lookup-status.is-err{color:#9b2c2c}
 .summary-h{margin:0 0 .5rem;font-size:1.05rem}
 .summary-dl{display:grid;grid-template-columns:9rem 1fr;gap:.25rem .75rem;margin:0}
 .summary-dl dt{color:var(--muted);margin:0}
@@ -42,56 +53,80 @@ button:disabled{opacity:.65;cursor:wait}
 .legal{margin-top:.5rem;font-size:.85rem}
 .keyterms-ul{margin:.35rem 0 .5rem;padding-left:1.15rem}
 .keyterms-ul li{margin:.25rem 0}
+.creative-req{font-size:.85rem;margin:.25rem 0 .5rem;padding-left:1rem}
+.creative-req li{margin:.2rem 0}
 ${PREMIUM_LIVE_SLOT_CSS}
 </style>
 </head>
 <body>
 <main>
 <h1>Prémiová reklamní pozice</h1>
-<p class="muted">InfoUzel.cz nesleduje zobrazení ani prokliky prémiových reklamních pozic. Cena je sjednána vždy na jedno reklamní období v délce 6 měsíců. Prodloužení není automatické.</p>
+<p class="muted">infoUzel.cz nesleduje zobrazení ani prokliky prémiových reklamních pozic. Respektujeme soukromí našich uživatelů a nechceme sledovat, co si prohlížejí nebo na co klikají. Ochrana soukromí je součástí naší filozofie. Cena je sjednána vždy na jedno reklamní období v délce 6 měsíců. Prodloužení není automatické.</p>
 <div class="card" id="meta">${metaHtml}</div>
 ${keyTerms}
 <form id="form" class="card">
-<p class="muted b2b"><strong>B2B only:</strong> služba je určena výhradně podnikatelům. IČO je povinné.</p>
+<p class="muted b2b">Reklamní služba je určena výhradně podnikatelům a firmám. Pro objednání a následné zveřejnění reklamy je nutné vyplnit následující údaje včetně IČO.</p>
+<p class="field-hint">Pole označená <strong>*</strong> jsou povinná. Odesláním žádosti nedojde automaticky ke zveřejnění — nejdříve proběhne posouzení.</p>
+<label for="ico">IČO *</label>
+<input id="ico" name="ico" required type="text" inputmode="numeric" autocomplete="off" aria-describedby="ico_hint ico_lookup ico_err"/>
+<p id="ico_hint" class="field-hint">Nejprve zadejte IČO. Název a sídlo firmy nebo podnikatele se automaticky doplní podle dostupných údajů v registru. Údaje prosím zkontrolujte.</p>
+<p id="ico_lookup" class="lookup-status" hidden role="status" aria-live="polite"></p>
+<p id="ico_err" class="field-err" hidden role="alert"></p>
 <label for="company_name">Obchodní firma / jméno podnikatele *</label>
 <input id="company_name" name="company_name" required autocomplete="organization"/>
-<label for="ico">IČO *</label>
-<input id="ico" name="ico" required inputmode="numeric" pattern="[0-9\\s]{8,}" autocomplete="off" aria-describedby="ico_err"/>
-<p id="ico_err" class="field-err" hidden role="alert"></p>
 <div class="grid2">
-<div><label for="billing_street">Ulice a číslo *</label><input id="billing_street" required autocomplete="street-address"/></div>
-<div><label for="billing_city">Město *</label><input id="billing_city" required autocomplete="address-level2"/></div>
+<div><label for="billing_street">Ulice a číslo *</label><input id="billing_street" name="billing_street" required autocomplete="street-address"/></div>
+<div><label for="billing_city">Město *</label><input id="billing_city" name="billing_city" required autocomplete="address-level2"/></div>
 </div>
 <div class="grid2">
-<div><label for="billing_zip">PSČ *</label><input id="billing_zip" required inputmode="numeric" autocomplete="postal-code"/></div>
-<div><label for="billing_country">Země *</label><input id="billing_country" value="Česká republika" required/></div>
+<div><label for="billing_zip">PSČ *</label><input id="billing_zip" name="billing_zip" required inputmode="numeric" autocomplete="postal-code"/></div>
+<div><label for="billing_country">Země *</label><input id="billing_country" name="billing_country" value="Česká republika" required/></div>
 </div>
 <label for="dic">DIČ</label>
 <input id="dic" name="dic" autocomplete="off" placeholder="Volitelné"/>
 <label for="contact_name">Kontaktní osoba *</label>
-<input id="contact_name" required autocomplete="name"/>
+<input id="contact_name" name="contact_name" required autocomplete="name"/>
 <label for="email">E-mail *</label>
-<input id="email" type="email" required autocomplete="email"/>
-<label for="phone">Telefon</label>
-<input id="phone" type="tel" autocomplete="tel"/>
+<input id="email" name="email" type="email" required autocomplete="email"/>
+<label for="phone">Telefon *</label>
+<input id="phone" name="phone" type="tel" required autocomplete="tel" aria-describedby="phone_err"/>
+<p id="phone_err" class="field-err" hidden role="alert"></p>
 <label for="target_url">Cílová URL *</label>
-<input id="target_url" type="url" required placeholder="https://"/>
+<input id="target_url" name="target_url" type="url" required placeholder="https://"/>
 <label for="creative_mode">Typ kreativy *</label>
-<select id="creative_mode"><option value="logo">Logo</option><option value="full_bleed_banner">Banner (celá plocha)</option></select>
-<label for="file">Soubor (PNG/JPG/WebP) *</label>
-<input id="file" type="file" accept="image/png,image/jpeg,image/webp" required/>
-<label for="previewSlot">Náhled reklamní pozice</label>
-<p class="previewHint muted">Náhled odpovídá skutečné prémiové pozici na tomto zařízení (stejná geometrie jako P1–P4 na InfoUzel.cz).</p>
+<select id="creative_mode" name="creative_mode"><option value="logo">Logo</option><option value="full_bleed_banner">Banner (celá plocha)</option></select>
+<label for="file">Soubor s kreativou *</label>
+<div id="creative_req_logo" class="creative-req-wrap">
+<ul class="creative-req muted">
+<li><strong>Logo:</strong> formáty PNG, JPG/JPEG nebo WebP; max. 5 MB.</li>
+<li>Doporučené rozměry cca 800×400 px (poměr stran cca 2:1 až 3:1).</li>
+<li>Logo se v tlačítku zobrazí celé (object-fit: contain) s vnitřním okrajem 10 px — nesmí se deformovat; průhlednost PNG/WebP zůstává.</li>
+<li>Příliš malý soubor může působit neostře; doporučené rozměry nejsou povinné, ale zlepšují čitelnost.</li>
+</ul>
+</div>
+<div id="creative_req_banner" class="creative-req-wrap" hidden>
+<ul class="creative-req muted">
+<li><strong>Banner:</strong> formáty PNG, JPG/JPEG nebo WebP; max. 5 MB.</li>
+<li>Doporučené rozměry cca 1200×370 px (poměr stran odpovídá prémiovému tlačítku cca 3,2:1).</li>
+<li>Banner vyplní celou plochu tlačítka (object-fit: cover) v rámci zaoblení 12 px — okraje mohou být oříznuty; náhled ukazuje skutečné zobrazení.</li>
+<li>Na mobilu a tabletu se šířka tlačítka liší; stejný banner se může mírně odlišně oříznout — náhled odpovídá vašemu zařízení a zvolené pozici.</li>
+</ul>
+</div>
+<input id="file" name="file" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="file_err"/>
+<p id="file_err" class="field-err" hidden role="alert"></p>
+<h2 class="summary-h">Náhled reklamní pozice</h2>
+<p class="previewHint muted">Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.</p>
 <div class="previewWrap" id="iuAffiliateView">
-<div class="iuRadioGrid iuJRGrid iuPremiumGrid">
+<div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${previewPosClass}">
 <a id="previewSlot" class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--logo" href="#" tabindex="-1" aria-hidden="true"></a>
 </div>
 </div>
 <label for="note">Poznámka</label>
-<textarea id="note" rows="2"></textarea>
+<textarea id="note" name="note" rows="2"></textarea>
 <p class="legal">Odesláním žádosti souhlasíte s <a href="/premium/terms" target="_blank" rel="noopener">Obchodními podmínkami Premium</a> (verze ${PREMIUM_TERMS_VERSION}, účinnost ${PREMIUM_TERMS_EFFECTIVE_AT}).</p>
 ${privacy}
 <button type="submit" id="submit_btn">Odeslat k posouzení</button>
+<button type="button" class="btn-secondary" id="cancel_btn">Zrušit a zavřít</button>
 <p id="err" class="err" hidden role="alert"></p>
 </form>
 <div id="done" class="card" hidden><p class="muted">Objednávka odeslána k posouzení. Po schválení a zveřejnění obdržíte e-mail.</p></div>

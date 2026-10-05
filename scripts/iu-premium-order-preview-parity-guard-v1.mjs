@@ -92,6 +92,8 @@ const liveFixtureHtml = `<!DOCTYPE html>
 .wrap{max-width:720px;margin:0 auto;padding:16px}
 </style>
 </head><body><div class="wrap"><div id="iuAffiliateView">${gridBlock}</div></div></body></html>`;
+const previewOnlySlot =
+  '<a class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--logo" id="previewSlot" href="#"><img class="iuPremiumSlotImg" alt="" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\'/%3E"/></a>';
 const orderFixtureHtml = `<!DOCTYPE html>
 <html lang="cs"><head>
 <meta charset="utf-8"/>
@@ -100,7 +102,7 @@ const orderFixtureHtml = `<!DOCTYPE html>
 .wrap{max-width:720px;margin:0 auto;padding:16px}
 ${previewCssInline}
 </style>
-</head><body><div class="wrap"><div class="previewWrap" id="iuAffiliateView">${gridBlock.replace('id="slot"', 'id="previewSlot"')}</div></div></body></html>`;
+</head><body><div class="wrap"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid iuPremiumPreviewGrid--p1">${previewOnlySlot}</div></div></div></body></html>`;
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8969", 10);
 const server = http.createServer((req, res) => {

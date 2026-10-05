@@ -18,6 +18,13 @@ export const PREMIUM_ORDER_ERROR_CS: Record<string, string> = {
   placement_occupied: "Tato pozice je obsazená aktivní reklamou a nelze ji nyní objednat.",
   placement_unavailable: "Tato pozice není momentálně k dispozici k objednání.",
   placement_reserved: "Na této pozici již probíhá jiná objednávka k posouzení.",
+  phone_required: "Zadejte prosím telefonní číslo.",
+  invalid_phone: "Telefonní číslo není platné (min. 9 číslic).",
+  ares_not_found: "Subjekt v registru nenalezen — vyplňte údaje ručně.",
+  ares_unavailable: "Registr dočasně nedostupný — vyplňte údaje ručně.",
+  rate_limited: "Příliš mnoho požadavků. Zkuste to prosím za chvíli.",
+  file_too_large: "Soubor je příliš velký (max. 5 MB).",
+  file_type_invalid: "Nepodporovaný formát souboru (povoleno PNG, JPG, WebP).",
 };
 
 export function premiumOrderErrorMessageCs(code: string | undefined | null): string {

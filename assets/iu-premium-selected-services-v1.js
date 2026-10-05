@@ -6,7 +6,7 @@
 
   var API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
   var CSS_ID = "iu-premium-selected-v1-css";
-  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261004-sales-panel";
+  var CSS_HREF = "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261005-order-form";
   var mountSeq = 0;
   var salesOpen = false;
   var lastCatalog = null;
@@ -276,7 +276,28 @@
         });
         syncPremiumFromAffiliateView();
       };
+      var restoreOrderReturnUi = function () {
+        try {
+          var scrollRaw = global.sessionStorage.getItem("iuPremiumOrderRestoreScroll");
+          if (scrollRaw) {
+            global.sessionStorage.removeItem("iuPremiumOrderRestoreScroll");
+            var y = parseInt(scrollRaw, 10);
+            if (!isNaN(y)) {
+              global.requestAnimationFrame(function () {
+                global.scrollTo(0, y);
+              });
+            }
+          }
+          var focusId = global.sessionStorage.getItem("iuPremiumOrderRestoreFocus");
+          if (focusId) {
+            global.sessionStorage.removeItem("iuPremiumOrderRestoreFocus");
+            var el = global.document.getElementById(focusId);
+            if (el && el.focus) el.focus({ preventScroll: true });
+          }
+        } catch (_) {}
+      };
       var boot = function () {
+        restoreOrderReturnUi();
         attachPremiumSectionListeners();
         attachAffiliateObserver();
         if (!affObs && global.document.body) {
@@ -294,6 +315,32 @@
       }
     } catch (_) {}
   }
+
+  try {
+    global.document.addEventListener(
+      "click",
+      function (ev) {
+        var t = ev.target;
+        if (!t || !t.closest) return;
+        var a = t.closest("a.iuPremiumSlot--sale[href*='premium/order']");
+        if (!a) return;
+        try {
+          var focusId = "";
+          var ae = global.document.activeElement;
+          if (ae && ae.id) focusId = ae.id;
+          global.sessionStorage.setItem(
+            "iuPremiumOrderReturn",
+            JSON.stringify({
+              href: global.location.href,
+              scrollY: global.scrollY,
+              focusId: focusId || "iuPremiumSalesToggle",
+            })
+          );
+        } catch (_) {}
+      },
+      true
+    );
+  } catch (_) {}
 
   global.iuPremiumSelectedMount = mountPremium;
 })(

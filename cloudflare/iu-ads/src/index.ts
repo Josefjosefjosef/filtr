@@ -135,6 +135,8 @@ import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
 import { handleClientPremiumSummary } from "./client-premium";
 import { buildPremiumOrderMetaHtml } from "./premium-order-meta";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
+import { handlePublicAresIcoLookup } from "./public-ares-ico";
+import { parsePremiumPlacementId } from "./premium-selected-services";
 import { buildPremiumTermsHtml, buildPremiumTermsV1Html } from "./premium-terms";
 import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
@@ -280,7 +282,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       const category = url.searchParams.get("category") || "";
       const placement = url.searchParams.get("placement") || "";
       const metaHtml = await buildPremiumOrderMetaHtml(env, category, placement);
-      return new Response(buildPremiumOrderShellHtml(nonce, metaHtml), {
+      const parsedPlacement = parsePremiumPlacementId(placement);
+      const previewPosition = parsedPlacement?.position ?? 1;
+      return new Response(buildPremiumOrderShellHtml(nonce, metaHtml, previewPosition), {
         status: 200,
         headers: htmlSecurityHeaders(request, nonce),
       });
@@ -305,6 +309,10 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     }
     if (path === "/v1/public/premium/orders" && request.method === "POST") {
       const res = await handlePublicPremiumOrderSubmit(request, env);
+      return withPublicCors(res, env, request);
+    }
+    if (path === "/v1/public/ares/ico" && request.method === "GET") {
+      const res = await handlePublicAresIcoLookup(request);
       return withPublicCors(res, env, request);
     }
     const premiumOrderUploadMatch = path.match(/^\/v1\/public\/premium\/orders\/([^/]+)\/upload$/);

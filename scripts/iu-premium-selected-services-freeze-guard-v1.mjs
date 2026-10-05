@@ -76,7 +76,7 @@ must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guar
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");
 must(/function affiliateSelectedSectionVisible\(\)/.test(publicJs), "premium mount when affiliate view is CSS-visible with hidden attr");
 must(!/if\s*\(\s*!view\s*\|\|\s*view\.hidden\s*\)\s*return/.test(publicJs), "premium must not gate on hidden attribute alone");
-must(/premium-selected-v1-20261004-sales-panel/.test(read("projects/index.html")), "premium asset cache bust");
+must(/premium-selected-v1-20261005-order-form/.test(read("projects/index.html")), "premium asset cache bust");
 must(/--iu-premium-sales-fg:\s*var\(--iuLink/.test(premiumCss), "premium sales fg matches trigger token");
 must(/--iu-premium-sales-surface/.test(premiumCss), "premium sales panel surface token");
 must(/--iu-premium-sales-border/.test(premiumCss), "premium sales panel border token");
@@ -113,6 +113,13 @@ must(/invalid_ico_checksum/.test(orderErrorsTs), "IČO checksum error map exists
 must(/Zadané IČO není platné/.test(orderErrorsTs), "IČO checksum Czech message");
 must(/id="ico_err"/.test(orderUiTs), "inline IČO error element");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-order-preview-parity-guard-v1.mjs")), "preview parity guard");
+must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-order-form-guard-v1.mjs")), "order form guard");
+must(/validatePremiumPhone/.test(publicOrderTs), "server-side phone validation");
+must(/\/v1\/public\/ares\/ico/.test(indexTs), "ARES proxy route");
+const icoPos = orderUiTs.indexOf('id="ico"');
+const companyPos = orderUiTs.indexOf('id="company_name"');
+must(icoPos > 0 && companyPos > icoPos, "IČO field before company name in DOM");
+must(/id="cancel_btn"/.test(orderUiTs), "cancel button in order form");
 must(/img-src 'self' blob: data:/.test(secHeadersTs), "CSP allows preview blobs");
 must(/iuJRGrid iuPremiumGrid/.test(publicJs), "premium grid matches affiliate JR grid");
 must(/btn-nav-toggle/.test(adminUiTs), "admin mobile nav drawer");
