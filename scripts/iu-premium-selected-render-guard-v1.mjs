@@ -80,7 +80,7 @@ if (fails.length) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8968", 10);
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8972", 10);
 const server = http.createServer((req, res) => {
   try {
     let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
