@@ -1,6 +1,23 @@
 -- Premium catalog P1-P8 + new price list (P1=5990 CZK, step -300 CZK per position)
 PRAGMA foreign_keys = OFF;
 
+CREATE TABLE premium_selected_categories_new (
+  category_slug TEXT PRIMARY KEY,
+  premium_capacity INTEGER NOT NULL DEFAULT 8 CHECK (premium_capacity IN (2, 4, 8)),
+  p2_first_published_at TEXT,
+  updated_at TEXT NOT NULL
+);
+
+INSERT INTO premium_selected_categories_new
+  SELECT category_slug, premium_capacity, p2_first_published_at, updated_at
+FROM premium_selected_categories;
+
+DROP TABLE premium_selected_categories;
+ALTER TABLE premium_selected_categories_new RENAME TO premium_selected_categories;
+UPDATE premium_selected_categories
+SET premium_capacity = 8, updated_at = datetime('now')
+WHERE premium_capacity IN (2, 4);
+
 CREATE TABLE premium_selected_placements_new (
   placement_id TEXT PRIMARY KEY,
   category_slug TEXT NOT NULL,
@@ -200,18 +217,6 @@ DROP TABLE premium_selected_orders;
 ALTER TABLE premium_selected_orders_new RENAME TO premium_selected_orders;
 CREATE INDEX IF NOT EXISTS idx_premium_selected_orders_status ON premium_selected_orders(workflow_status);
 CREATE INDEX IF NOT EXISTS idx_premium_selected_orders_placement ON premium_selected_orders(placement_id);
-
-CREATE TABLE premium_selected_categories_new (
-  category_slug TEXT PRIMARY KEY,
-  premium_capacity INTEGER NOT NULL DEFAULT 8 CHECK (premium_capacity IN (2, 4, 8)),
-  p2_first_published_at TEXT,
-  updated_at TEXT NOT NULL
-);
-
-INSERT INTO premium_selected_categories_new SELECT category_slug, premium_capacity, p2_first_published_at, updated_at FROM premium_selected_categories;
-DROP TABLE premium_selected_categories;
-ALTER TABLE premium_selected_categories_new RENAME TO premium_selected_categories;
-UPDATE premium_selected_categories SET premium_capacity = 8, updated_at = datetime('now') WHERE premium_capacity IN (2, 4);
 
 PRAGMA foreign_keys = ON;
 
