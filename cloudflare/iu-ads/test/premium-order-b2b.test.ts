@@ -12,6 +12,7 @@ function baseBody(overrides: Record<string, unknown> = {}) {
     company_name: "Podnikatel s.r.o.",
     contact_name: "Jan Novák",
     email: "jan@example.test",
+    phone: "+420 777 123 456",
     target_url: "https://example.test/",
     creative_mode: "logo",
     billing_street: "Ulice 1",
@@ -125,6 +126,20 @@ describe("premium order B2B / IČO", () => {
     expect(res.status).toBe(400);
     const j = await res.json();
     expect(j.error).toBe("invalid_terms_version");
+  });
+
+  it("rejects missing phone", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ phone: "" })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.error).toBe("phone_required");
   });
 
   it("rejects when b2b_only is not true", async () => {

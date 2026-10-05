@@ -6,6 +6,7 @@ import { insertAuditLog, json, newId } from "./admin-auth";
 import { hashClientAccessCode } from "./admin-codes";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
 import { validateCzechIco } from "./czech-ico";
+import { validatePremiumPhone } from "./czech-phone";
 import { isPremiumCampaignLiveNow } from "./premium-display";
 import { PREMIUM_TERMS_EFFECTIVE_AT, PREMIUM_TERMS_VERSION } from "./premium-terms";
 import {
@@ -176,7 +177,10 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   if (!street || !city || !zip || !country) return json({ error: "missing_billing_address" }, 400);
 
   const dic = typeof body.dic === "string" && body.dic.trim() ? body.dic.trim() : null;
-  const phone = typeof body.phone === "string" && body.phone.trim() ? body.phone.trim() : null;
+  const phoneRaw = typeof body.phone === "string" ? body.phone : "";
+  const phoneCheck = validatePremiumPhone(phoneRaw);
+  if (!phoneCheck.ok) return json({ error: phoneCheck.reason }, 400);
+  const phone = phoneCheck.phone;
   const billingInfo = composeBillingInfo({ street, city, zip, country, dic });
   const address = street + ", " + zip + " " + city + ", " + country;
   const note = typeof body.note === "string" ? body.note.trim() : null;

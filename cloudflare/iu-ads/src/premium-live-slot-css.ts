@@ -13,7 +13,22 @@ export const PREMIUM_LIVE_SLOT_CSS = `
 #iuAffiliateView a.iuPremiumSlot--sold img.iuPremiumSlotImg{display:block;width:100%;height:100%}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--logo img.iuPremiumSlotImg{object-fit:contain;padding:10px;box-sizing:border-box}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg{object-fit:cover}
-.previewWrap{margin:.35rem 0 .75rem}
-.previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;width:100%}
+.previewWrap{margin:.35rem 0 .75rem;max-width:100%}
+.previewWrap .iuPremiumPreviewGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:100%}
+@media(max-width:520px){.previewWrap .iuPremiumPreviewGrid{grid-template-columns:1fr}}
+.previewWrap .iuPremiumPreviewGrid--p1 #previewSlot{grid-column:1;grid-row:1}
+.previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-column:2;grid-row:1}
+.previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-column:1;grid-row:2}
+.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-column:2;grid-row:2}
+@media(max-width:520px){
+.previewWrap .iuPremiumPreviewGrid--p1 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p2 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p3 #previewSlot,
+.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-column:1}
+.previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-row:2}
+.previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-row:3}
+.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-row:4}
+}
+.previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;width:100%;max-width:100%;box-sizing:border-box;justify-self:stretch}
 .previewHint{font-size:.85rem;margin:0 0 .35rem}
 `;

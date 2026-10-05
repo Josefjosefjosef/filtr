@@ -6,17 +6,24 @@ import { premiumPlacementId } from "../src/premium-selected-services";
 import type { Env } from "../src/types";
 
 describe("premium order UI shell", () => {
-  it("includes B2B, IČO, structured billing, live-slot preview, terms link", () => {
-    const html = buildPremiumOrderShellHtml("nonce-test", "<p>summary ok</p>");
+  it("includes B2B, IČO first, phone required, preview, cancel, ARES hint", () => {
+    const html = buildPremiumOrderShellHtml("nonce-test", "<p>summary ok</p>", 2);
     expect(html).toContain("summary ok");
-    expect(html).toContain("Obchodní firma / jméno podnikatele");
-    expect(html).toContain('id="ico"');
+    const icoIdx = html.indexOf('id="ico"');
+    const companyIdx = html.indexOf('id="company_name"');
+    expect(icoIdx).toBeGreaterThan(0);
+    expect(companyIdx).toBeGreaterThan(icoIdx);
+    expect(html).toContain("infoUzel.cz nesleduje zobrazení ani prokliky");
+    expect(html).toContain("Reklamní služba je určena výhradně podnikatelům a firmám");
+    expect(html).toContain("Nejprve zadejte IČO");
     expect(html).toContain('id="ico_err"');
-    expect(html).toContain("IČO *");
-    expect(html).toContain("billing_street");
+    expect(html).toContain("Telefon *");
+    expect(html).toContain('id="phone"');
+    expect(html).toContain('id="cancel_btn"');
+    expect(html).toContain("Zrušit a zavřít");
     expect(html).toContain('id="previewSlot"');
-    expect(html).toContain("iuPremiumSlot--sold");
-    expect(html).toContain("iuPremiumSlotImg");
+    expect(html).toContain("iuPremiumPreviewGrid--p2");
+    expect(html).toContain("Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.");
     expect(html).toContain("invalid_ico_checksum");
     expect(html).toContain("Zadané IČO není platné");
     expect(html).not.toContain('err.textContent=(j1&&j1.error)');
@@ -25,7 +32,8 @@ describe("premium order UI shell", () => {
     expect(html).toContain('id="keyterms"');
     expect(html).toContain("/premium/terms");
     expect(html).toContain(PREMIUM_TERMS_VERSION);
-    expect(html).toContain("výhradně podnikatelům");
+    expect(html).toContain("/v1/public/ares/ico");
+    expect(html).toContain("max. 5 MB");
   });
 
   it("builds server-side order summary from placement row", async () => {
