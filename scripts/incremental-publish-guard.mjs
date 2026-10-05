@@ -5,6 +5,11 @@
 import fs from "fs";
 import path from "path";
 import { root } from "./source-rotation-guard-lib.mjs";
+import {
+  describeMediaArticleAggregationState,
+  isMediaArticleAggregationEnabled,
+  MEDIA_ARTICLE_CUTOVER_REL,
+} from "./media-article-aggregation-state.mjs";
 
 const articlesPath =
   process.env.ARTICLES_JSON_PATH || path.join(root, "projects", "data", "articles.json");
@@ -27,29 +32,113 @@ function parseTs(v) {
   return Number.isFinite(t) ? t : null;
 }
 
+/**
+ * @param {object} options
+ * @param {boolean} [options.aggregationEnabled]
+ * @param {object} [options.articlesDoc]
+ * @param {number} [options.nowMs]
+ * @param {number} [options.maxGeneratedAgeH]
+ * @param {boolean} [options.requireIncrementalPublishEnv]
+ * @param {string} [options.updateArticlesWorkflowText]
+ */
+export function evaluateIncrementalPublishGuard(options = {}) {
+  const aggregationEnabled =
+    options.aggregationEnabled ?? isMediaArticleAggregationEnabled(options.root ?? root);
+  const nowMs = options.nowMs ?? Date.now();
+  const maxAgeH = options.maxGeneratedAgeH ?? maxGeneratedAgeH;
+  const failures = [];
+
+  if (!aggregationEnabled) {
+    return {
+      ok: true,
+      skipped: true,
+      aggregationEnabled: false,
+      mediaArticleAggregation: "DISABLED",
+      mediaArticleFreshnessCheck: "NOT_APPLICABLE",
+      authoritativePath: MEDIA_ARTICLE_CUTOVER_REL,
+      failures: [],
+    };
+  }
+
+  const doc = options.articlesDoc;
+  if (!doc || typeof doc !== "object") {
+    failures.push("articles_doc_missing");
+    return { ok: false, skipped: false, aggregationEnabled: true, failures };
+  }
+
+  const genTs = parseTs(doc.generatedAt);
+  const arts = Array.isArray(doc.articles) ? doc.articles : [];
+
+  if (!genTs) {
+    failures.push("articles.json missing valid generatedAt");
+  } else {
+    const ageH = (nowMs - genTs) / 3_600_000;
+    if (ageH > maxAgeH) {
+      failures.push(`generatedAt older than ${maxAgeH}h`);
+    }
+    if (arts.length === 0) {
+      failures.push("articles.json empty while media aggregation enabled");
+    }
+  }
+
+  if (options.requireIncrementalPublishEnv) {
+    const wf = options.updateArticlesWorkflowText ?? "";
+    if (!/IU_INCREMENTAL_PUBLISH:\s*["']?1/.test(wf)) {
+      failures.push("update-articles.yml missing IU_INCREMENTAL_PUBLISH=1 on ingest");
+    }
+  }
+
+  return {
+    ok: failures.length === 0,
+    skipped: false,
+    aggregationEnabled: true,
+    mediaArticleAggregation: "ENABLED",
+    mediaArticleFreshnessCheck: "ACTIVE",
+    articlesCount: arts.length,
+    generatedAt: doc.generatedAt || null,
+    failures,
+  };
+}
+
 function main() {
-  let failed = false;
+  const state = describeMediaArticleAggregationState();
+  log(`MEDIA_ARTICLE_AGGREGATION=${state.mediaArticleAggregation}`);
+  log(`AUTHORITATIVE_FEATURE_STATE=${state.authoritativePath}`);
+
+  if (!state.enabled) {
+    log(`MEDIA_ARTICLE_FRESHNESS_CHECK=${state.freshnessCheck}`);
+    log("incremental_publish_freshness NOT_APPLICABLE_BECAUSE_FEATURE_DISABLED");
+    log("RESULT=PASS");
+    return;
+  }
+
+  log(`MEDIA_ARTICLE_FRESHNESS_CHECK=${state.freshnessCheck}`);
 
   if (!fs.existsSync(articlesPath)) {
     fail(`missing ${articlesPath}`);
     process.exit(1);
   }
   const doc = JSON.parse(fs.readFileSync(articlesPath, "utf8"));
-  const genTs = parseTs(doc.generatedAt);
   const arts = Array.isArray(doc.articles) ? doc.articles : [];
   log(`articles=${arts.length} generatedAt=${doc.generatedAt || "n/a"}`);
 
-  if (!genTs) {
-    fail("articles.json missing valid generatedAt");
-    failed = true;
-  } else {
-    const ageH = (Date.now() - genTs) / 3_600_000;
-    log(`generatedAt age_hours=${ageH.toFixed(2)}`);
-    if (ageH > maxGeneratedAgeH) {
-      fail(`generatedAt older than ${maxGeneratedAgeH}h`);
-      failed = true;
-    } else {
-      log("generatedAt freshness PASS");
+  let wfText = "";
+  if (process.env.REQUIRE_INCREMENTAL_PUBLISH_ENV === "1") {
+    wfText = fs.readFileSync(path.join(root, ".github", "workflows", "update-articles.yml"), "utf8");
+  }
+
+  const result = evaluateIncrementalPublishGuard({
+    aggregationEnabled: true,
+    articlesDoc: doc,
+    requireIncrementalPublishEnv: process.env.REQUIRE_INCREMENTAL_PUBLISH_ENV === "1",
+    updateArticlesWorkflowText: wfText,
+  });
+
+  if (doc.generatedAt) {
+    const genTs = parseTs(doc.generatedAt);
+    if (genTs) {
+      const ageH = (Date.now() - genTs) / 3_600_000;
+      log(`generatedAt age_hours=${ageH.toFixed(2)}`);
     }
   }
 
@@ -66,23 +155,18 @@ function main() {
     log("ingest telemetry missing (optional locally)");
   }
 
-  if (process.env.REQUIRE_INCREMENTAL_PUBLISH_ENV === "1") {
-    const wf = fs.readFileSync(
-      path.join(root, ".github", "workflows", "update-articles.yml"),
-      "utf8",
-    );
-    if (!/IU_INCREMENTAL_PUBLISH:\s*["']?1/.test(wf)) {
-      fail("update-articles.yml missing IU_INCREMENTAL_PUBLISH=1 on ingest");
-      failed = true;
-    } else {
-      log("workflow incremental publish env PASS");
-    }
+  if (process.env.REQUIRE_INCREMENTAL_PUBLISH_ENV === "1" && result.ok) {
+    log("workflow incremental publish env PASS");
   }
 
-  if (failed) {
+  if (!result.ok) {
+    for (const msg of result.failures) {
+      fail(msg);
+    }
     console.error("[incremental-publish-guard] RESULT=FAIL");
     process.exit(1);
   }
+  log("generatedAt freshness PASS");
   log("RESULT=PASS");
 }
 
