@@ -97,7 +97,7 @@ if (fails.length) {
 const stubCatalog = {
   product: "premium_selected_services_v1",
   category: "stub",
-  sales_catalog_positions: 4,
+  sales_catalog_positions: 8,
   sales_panel_hint_cs: "Pořadí reklam se automaticky posouvá nahoru.",
   slots: [1, 2, 3, 4].map((pos) => ({
     placement_id: "selected_services.stub.premium.0" + pos,

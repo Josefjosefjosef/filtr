@@ -19,29 +19,42 @@ describe("premium display compaction", () => {
     expect(ranked[1].position).toBe(3);
   });
 
-  it("covers matrix examples", () => {
-    const onlyP3 = assignPremiumDisplayRanks([{ position: 3, id: "a" }]);
-    expect(onlyP3[0].display_rank).toBe(1);
+  it("covers matrix examples A-E", () => {
+    const onlyP8 = assignPremiumDisplayRanks([{ position: 8, id: "a" }]);
+    expect(onlyP8.map((x) => x.position)).toEqual([8]);
+    expect(onlyP8[0].display_rank).toBe(1);
 
-    const p1p3 = assignPremiumDisplayRanks([
-      { position: 3, id: "b" },
-      { position: 1, id: "a" },
+    const p2p8 = assignPremiumDisplayRanks([
+      { position: 8, id: "b" },
+      { position: 2, id: "a" },
     ]);
-    expect(p1p3.map((x) => x.display_rank)).toEqual([1, 2]);
+    expect(p2p8.map((x) => x.position)).toEqual([2, 8]);
 
-    const all = assignPremiumDisplayRanks([
-      { position: 4, id: "d" },
-      { position: 2, id: "b" },
+    const p1p4p7 = assignPremiumDisplayRanks([
+      { position: 7, id: "c" },
       { position: 1, id: "a" },
-      { position: 3, id: "c" },
+      { position: 4, id: "b" },
     ]);
-    expect(sortPremiumByContractedPosition(all).map((x) => x.position)).toEqual([1, 2, 3, 4]);
-    expect(all.find((x) => x.position === 4)?.display_rank).toBe(4);
+    expect(p1p4p7.map((x) => x.position)).toEqual([1, 4, 7]);
+
+    const p3p5p6p8 = assignPremiumDisplayRanks([
+      { position: 8, id: "d" },
+      { position: 5, id: "b" },
+      { position: 3, id: "a" },
+      { position: 6, id: "c" },
+    ]);
+    expect(p3p5p6p8.map((x) => x.position)).toEqual([3, 5, 6, 8]);
+
+    const all = assignPremiumDisplayRanks(
+      [1, 2, 3, 4, 5, 6, 7, 8].map((position) => ({ position, id: "p" + position }))
+    );
+    expect(sortPremiumByContractedPosition(all).map((x) => x.position)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(all.find((x) => x.position === 8)?.display_rank).toBe(8);
   });
 
-  it("position labels", () => {
+  it("position labels through P8", () => {
     expect(premiumPositionRankLabelCs(1)).toBe("1. pozice v této sekci");
-    expect(premiumPositionRankLabelCs(4)).toBe("4. pozice v této sekci");
+    expect(premiumPositionRankLabelCs(8)).toBe("8. pozice v této sekci");
   });
 
   it("sale state authority", () => {

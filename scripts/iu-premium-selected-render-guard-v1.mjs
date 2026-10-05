@@ -85,7 +85,7 @@ const stubCatalog = {
   product: "premium_selected_services_v1",
   category: SECTION,
   premium_capacity: 2,
-  sales_catalog_positions: 4,
+  sales_catalog_positions: 8,
   slots: [
     {
       placement_id: "selected_services.aff-zdravi-doplnky.premium.01",
@@ -104,7 +104,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p2",
-      price_label_cs: "4 990 Kč bez DPH / 6 měsíců",
+      price_label_cs: "5 690 Kč bez DPH / 6 měsíců",
       position_label_cs: "2. pozice v této sekci",
     },
     {
@@ -114,7 +114,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p3",
-      price_label_cs: "3 990 Kč bez DPH / 6 měsíců",
+      price_label_cs: "5 390 Kč bez DPH / 6 měsíců",
       position_label_cs: "3. pozice v této sekci",
     },
     {
@@ -124,8 +124,48 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p4",
-      price_label_cs: "2 990 Kč bez DPH / 6 měsíců",
+      price_label_cs: "5 090 Kč bez DPH / 6 měsíců",
       position_label_cs: "4. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.05",
+      position: 5,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p5",
+      price_label_cs: "4 790 Kč bez DPH / 6 měsíců",
+      position_label_cs: "5. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.06",
+      position: 6,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p6",
+      price_label_cs: "4 490 Kč bez DPH / 6 měsíců",
+      position_label_cs: "6. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.07",
+      position: 7,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p7",
+      price_label_cs: "4 190 Kč bez DPH / 6 měsíců",
+      position_label_cs: "7. pozice v této sekci",
+    },
+    {
+      placement_id: "selected_services.aff-zdravi-doplnky.premium.08",
+      position: 8,
+      publicly_listed: true,
+      buyable: true,
+      sale_state: "available",
+      order_url: "https://example.test/order-p8",
+      price_label_cs: "3 890 Kč bez DPH / 6 měsíců",
+      position_label_cs: "8. pozice v této sekci",
     },
   ],
   measurement: { impressions: false, clicks: false, ctr: false },
@@ -232,7 +272,7 @@ try {
   await page.click("#iuPremiumSalesToggle").catch(() => null);
   await page
     .waitForFunction(
-      () => document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale").length >= 4,
+      () => document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale").length >= 8,
       null,
       { timeout: 30000 }
     )
@@ -242,7 +282,7 @@ try {
     const hrefs = Array.from(cards).map((a) => a.getAttribute("href") || "");
     return { count: cards.length, hrefs };
   });
-  ok("sales_panel:card_count_4", salesSnap.count === 4, "n=" + salesSnap.count);
+  ok("sales_panel:card_count_8", salesSnap.count === 8, "n=" + salesSnap.count);
   ok(
     "sales_panel:p3_p4_buyable",
     salesSnap.hrefs.includes("https://example.test/order-p3") &&

@@ -4,8 +4,11 @@ import { INFOUZEL_PROVIDER } from "./info-uzel-provider";
 export const PREMIUM_TERMS_V1_VERSION = "premium-selected-services-b2b-v1-20261003";
 export const PREMIUM_TERMS_V1_EFFECTIVE_AT = "2026-10-03";
 
-export const PREMIUM_TERMS_VERSION = "premium-selected-services-b2b-v2-20261003";
-export const PREMIUM_TERMS_EFFECTIVE_AT = "2026-10-03";
+export const PREMIUM_TERMS_V2_VERSION = "premium-selected-services-b2b-v2-20261003";
+export const PREMIUM_TERMS_V2_EFFECTIVE_AT = "2026-10-03";
+
+export const PREMIUM_TERMS_VERSION = "premium-selected-services-b2b-v3-20261005";
+export const PREMIUM_TERMS_EFFECTIVE_AT = "2026-10-05";
 
 const TERMS_BASE_STYLE = `
 body{margin:0;font:15px/1.55 system-ui,sans-serif;background:#f7f5f1;color:#1a221e;padding:1rem}
@@ -45,7 +48,7 @@ export function buildPremiumOrderKeyTermsHtml(): string {
     "<h2 class=\"summary-h\">Nejdůležitější podmínky</h2>" +
     "<ul class=\"keyterms-ul\">" +
     "<li>Služba je určena <strong>výhradně podnikatelům</strong> (IČO povinné, včetně OSVČ).</li>" +
-    "<li>Objednáváte konkrétní prémiovou pozici P1–P4 ve vybrané kategorii na InfoUzel.cz.</li>" +
+    "<li>Objednáváte konkrétní prémiovou pozici P1–P8 ve vybrané kategorii na InfoUzel.cz.</li>" +
     "<li>Cena a pozice jsou uvedeny v rekapitulaci; cena je <strong>bez DPH</strong> dle ceníku v okamžiku odeslání.</li>" +
     "<li>Reklamní období činí <strong>6 kalendářních měsíců</strong>; prodloužení <strong>není automatické</strong>.</li>" +
     "<li>Odesláním činíte <strong>návrh objednávky k posouzení</strong>. Smlouva a závazek k úhradě vznikají až po schválení a zveřejnění administrátorem.</li>" +
@@ -74,7 +77,29 @@ export function buildPremiumTermsV1Html(nonce: string): string {
 <main>
 <h1>Obchodní podmínky — Premium (archiv)</h1>
 <p class="meta">Verze ${PREMIUM_TERMS_V1_VERSION} · účinnost od ${PREMIUM_TERMS_V1_EFFECTIVE_AT}</p>
-<p>Toto je archivní znění nahrazené verzí ${PREMIUM_TERMS_VERSION}. Nové objednávky se řídí aktuálními podmínkami.</p>
+<p>Toto je archivní znění nahrazené novějšími verzemi. Nové objednávky se řídí aktuálními podmínkami.</p>
+<p><a href="/premium/terms">Aktuální obchodní podmínky</a> · <a href="/premium/order">Objednávka</a></p>
+</main>
+</body>
+</html>`;
+}
+
+/** Archived v2 (P1–P4 catalog; historical orders). */
+export function buildPremiumTermsV2Html(nonce: string): string {
+  return `<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Obchodní podmínky Premium (archiv v2)</title>
+<style nonce="${nonce}">${TERMS_BASE_STYLE}</style>
+</head>
+<body>
+<main>
+<h1>Obchodní podmínky — Premium (archiv v2)</h1>
+<p class="meta">Verze ${PREMIUM_TERMS_V2_VERSION} · účinnost od ${PREMIUM_TERMS_V2_EFFECTIVE_AT}</p>
+<p>Toto je archivní znění pro katalog P1–P4, nahrazené verzí ${PREMIUM_TERMS_VERSION}. Nové objednávky se řídí aktuálními podmínkami.</p>
 <p><a href="/premium/terms">Aktuální obchodní podmínky</a> · <a href="/premium/order">Objednávka</a></p>
 </main>
 </body>
@@ -106,7 +131,7 @@ ${providerBlock()}
 
 <h2>2. Definice</h2>
 <p><strong>Klient</strong> — podnikatel (právnická osoba, OSVČ nebo jiný podnikající subjekt) objednávající službu v souvislosti s podnikatelskou činností.</p>
-<p><strong>Prémiová pozice</strong> — reklamní slot P1, P2, P3 nebo P4 ve vybrané kategorii Vybraných služeb a odkazů.</p>
+<p><strong>Prémiová pozice</strong> — reklamní slot P1 až P8 ve vybrané kategorii Vybraných služeb a odkazů.</p>
 <p><strong>Kreativa</strong> — logo nebo banner dodaný klientem ve formátech PNG, JPG/JPEG nebo WebP.</p>
 <p><strong>Reklamní období</strong> — sjednaných 6 kalendářních měsíců od zveřejnění, pokud není dohodnuto jinak.</p>
 
@@ -116,9 +141,9 @@ ${providerBlock()}
 <h2>4. Předmět reklamní služby</h2>
 <p>Předmětem je zobrazení schválené kreativy klienta na sjednané prémiové pozici v konkrétní kategorii na InfoUzel.cz, s odkazem na schválenou cílovou URL.</p>
 
-<h2>5. Reklamní pozice P1–P4</h2>
+<h2>5. Reklamní pozice P1–P8</h2>
 <p>Konkrétní pozice a kategorie jsou uvedeny v rekapitulaci objednávky. Ceníkové ceny jsou uvedeny bez DPH; aktuální ceník platí pro nové objednávky v okamžiku jejich odeslání.</p>
-<p>P1–P4 jsou smluvně zakoupené Premium pozice (placement). Veřejné pořadí se počítá pouze mezi aktivními Premium reklamami; volné pozice nevytvářejí prázdné místo. Reklama na nižší zakoupené pozici se může dočasně zobrazovat výše, dokud nejsou obsazeny vyšší pozice; po jejich obsazení se posune nejvýše na svou zakoupenou P1/P2/P3/P4. Dočasně lepší zobrazení nezakládá nárok na jiný produkt, slevu, refund ani trvalé udržení vyšší pozice.</p>
+<p>P1–P8 jsou samostatné smluvně zakoupené Premium pozice (placement). Veřejné pořadí se počítá pouze mezi aktivními Premium reklamami; volné pozice nevytvářejí prázdné místo. Reklama na nižší zakoupené pozici se může dočasně zobrazovat výše, dokud nejsou obsazeny vyšší pozice; po jejich obsazení se posune nejvýše na svou zakoupenou smluvní pozici. Dočasně lepší zobrazení nezakládá nárok na jiný produkt, slevu, refund ani trvalé udržení vyšší pozice.</p>
 
 <h2>6. Objednávka a vznik smlouvy</h2>
 <p>Odesláním objednávkového formuláře klient činí <strong>návrh objednávky k posouzení</strong>. Poskytovatel objednávku posoudí včetně kreativy a cílové URL. Smlouva o poskytnutí služby a závazek k úhradě vznikají až po manuálním schválení administrátorem a zveřejnění reklamy (Schválit a zveřejnit).</p>
@@ -184,7 +209,7 @@ ${providerBlock()}
 <p>Vztahy se řídí právním řádem České republiky. Příslušnost soudů dle sídla poskytovatele, není-li mezi podnikateli dohodnuto jinak.</p>
 
 <h2>27. Závěrečná ustanovení</h2>
-<p>Archiv předchozí verze: <a href="/premium/terms/v1">${PREMIUM_TERMS_V1_VERSION}</a>.</p>
+<p>Archiv předchozích verzí: <a href="/premium/terms/v1">${PREMIUM_TERMS_V1_VERSION}</a> · <a href="/premium/terms/v2">${PREMIUM_TERMS_V2_VERSION}</a>.</p>
 <p><a href="/premium/order">Zpět na objednávku</a></p>
 </main>
 </body>

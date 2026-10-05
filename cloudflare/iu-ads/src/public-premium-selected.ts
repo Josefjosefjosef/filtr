@@ -12,10 +12,13 @@ import {
 } from "./premium-display";
 import {
   PREMIUM_DURATION_MONTHS,
+  PREMIUM_POSITION_COUNT,
   defaultPriceCentsForPosition,
   isKnownAffiliateCategorySlug,
+  isPremiumPosition,
   isPremiumSlotPubliclyListed,
   type PremiumCapacity,
+  type PremiumPosition,
 } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import type { Env } from "./types";
@@ -30,6 +33,7 @@ type PlacementRow = {
 };
 
 function normalizeCapacity(raw: number): PremiumCapacity {
+  if (raw === 8) return 8;
   return raw === 4 ? 4 : 2;
 }
 
@@ -86,9 +90,9 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
   }
 
   const slots = (placements.results || [])
-    .filter((p) => p.position >= 1 && p.position <= 4)
+    .filter((p) => isPremiumPosition(p.position))
     .map((p) => {
-      const position = p.position as 1 | 2 | 3 | 4;
+      const position = p.position as PremiumPosition;
       const listed = isPremiumSlotPubliclyListed(capacity, position);
       const priceCents = p.current_price_cents > 0 ? p.current_price_cents : defaultPriceCentsForPosition(position);
       const campaignLive = isPremiumCampaignLiveNow({
@@ -128,7 +132,7 @@ export async function handlePublicPremiumSelectedCatalog(request: Request, env: 
     category,
     premium_capacity: capacity,
     sales_panel_hint_cs: premiumSalesPanelHintCs(),
-    sales_catalog_positions: 4,
+    sales_catalog_positions: PREMIUM_POSITION_COUNT,
     slots,
     measurement: { impressions: false, clicks: false, ctr: false },
   });
@@ -175,15 +179,15 @@ export async function handlePublicPremiumSelectedRender(request: Request, env: E
 
   const rawActive: {
     placement_id: string;
-    position: 1 | 2 | 3 | 4;
+    position: PremiumPosition;
     target_url: string;
     creative_format: string | null;
     accessible_name: string;
     creative_cdn_url: string | null;
   }[] = [];
   for (const row of rows.results || []) {
-    const position = row.position as 1 | 2 | 3 | 4;
-    if (position < 1 || position > 4) continue;
+    if (!isPremiumPosition(row.position)) continue;
+    const position = row.position;
     const active = isPremiumCampaignLiveNow({
       campaign_status: row.campaign_status,
       target_url: row.target_url,

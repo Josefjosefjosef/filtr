@@ -137,7 +137,7 @@ import { buildPremiumOrderMetaHtml } from "./premium-order-meta";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
 import { handlePublicAresIcoLookup } from "./public-ares-ico";
 import { parsePremiumPlacementId } from "./premium-selected-services";
-import { buildPremiumTermsHtml, buildPremiumTermsV1Html } from "./premium-terms";
+import { buildPremiumTermsHtml, buildPremiumTermsV1Html, buildPremiumTermsV2Html } from "./premium-terms";
 import { runPremiumMaintenance } from "./premium-maintenance";
 import { finalizeSecurityHeaders, generateNonce, htmlSecurityHeaders } from "./security-headers";
 import type { Env, PublicAd, PublicDeliveryResponse } from "./types";
@@ -223,7 +223,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0014",
+          schemaVersion: "0015",
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,
@@ -262,6 +262,15 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       const nonce = generateNonce();
       return new Response(buildPremiumTermsV1Html(nonce), {
+        status: 200,
+        headers: htmlSecurityHeaders(request, nonce),
+      });
+    }
+
+    if (path === "/premium/terms/v2" || path === "/premium/terms/v2/") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const nonce = generateNonce();
+      return new Response(buildPremiumTermsV2Html(nonce), {
         status: 200,
         headers: htmlSecurityHeaders(request, nonce),
       });
