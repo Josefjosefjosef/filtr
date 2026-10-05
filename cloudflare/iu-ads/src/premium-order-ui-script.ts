@@ -45,7 +45,32 @@ function clearFieldErrors(){
   if(phoneErr){phoneErr.hidden=true;phoneErr.textContent="";}
   var fileErr=document.getElementById("file_err");
   if(fileErr){fileErr.hidden=true;fileErr.textContent="";}
+  var orderingErr=document.getElementById("ordering_person_err");
+  if(orderingErr){orderingErr.hidden=true;orderingErr.textContent="";}
+  var orderingEl=document.getElementById("ordering_person_name");
+  if(orderingEl){orderingEl.removeAttribute("aria-invalid");orderingEl.classList.remove("invalid");}
   var err=document.getElementById("err");if(err)err.hidden=true;
+}
+function validateOrderingPersonClient(raw){
+  var name=String(raw||"").trim();
+  if(!name)return {ok:false,reason:"ordering_person_required"};
+  if(name.length<2||name.length>200)return {ok:false,reason:"ordering_person_invalid"};
+  if(/[<>]/.test(name))return {ok:false,reason:"ordering_person_invalid"};
+  return {ok:true,name:name};
+}
+function showOrderingPersonError(reason){
+  var el=document.getElementById("ordering_person_name");
+  var orderingErr=document.getElementById("ordering_person_err");
+  var msg=userMsg(reason);
+  if(el){el.setAttribute("aria-invalid","true");el.classList.add("invalid");el.focus({preventScroll:false});}
+  if(orderingErr){orderingErr.textContent=msg;orderingErr.hidden=false;}
+  var err=document.getElementById("err");if(err){err.textContent=msg;err.hidden=false;}
+}
+function showAuthorizationError(reason){
+  var authCb=document.getElementById("authorization_confirmed");
+  var msg=userMsg(reason);
+  if(authCb){authCb.focus({preventScroll:false});}
+  var err=document.getElementById("err");if(err){err.textContent=msg;err.hidden=false;}
 }
 function showIcoError(reason){
   var icoEl=document.getElementById("ico");
@@ -78,6 +103,8 @@ function showPhoneError(reason){
 function showApiError(code,field){
   if(field==="ico"||(code&&code.indexOf("ico")===0)){showIcoError(code||"invalid_ico_checksum");return;}
   if(field==="phone"||code==="phone_required"||code==="invalid_phone"){showPhoneError(code||"invalid_phone");return;}
+  if(code==="authorization_required"){showAuthorizationError(code);return;}
+  if(code==="ordering_person_required"||code==="ordering_person_invalid"){showOrderingPersonError(code);return;}
   var err=document.getElementById("err");
   if(err){err.textContent=userMsg(code);err.hidden=false;}
 }
@@ -87,6 +114,19 @@ var previewSlot=document.getElementById("previewSlot");
 var fileEl=document.getElementById("file");
 var modeEl=document.getElementById("creative_mode");
 var submitBtn=document.getElementById("submit_btn");
+var authCb=document.getElementById("authorization_confirmed");
+var orderingWrap=document.getElementById("ordering_person_wrap");
+var orderingPersonEl=document.getElementById("ordering_person_name");
+function syncOrderingPersonField(){
+  if(!authCb||!orderingWrap)return;
+  var on=!!authCb.checked;
+  orderingWrap.hidden=!on;
+  if(orderingPersonEl){
+    if(on)orderingPersonEl.setAttribute("required","required");
+    else orderingPersonEl.removeAttribute("required");
+  }
+}
+if(authCb){authCb.addEventListener("change",syncOrderingPersonField);syncOrderingPersonField();}
 var reqLogo=document.getElementById("creative_req_logo");
 var reqBanner=document.getElementById("creative_req_banner");
 function syncCreativeReq(){
@@ -242,6 +282,9 @@ document.getElementById("form").onsubmit=async function(ev){
   var file=fileEl.files[0];
   var fileCheck=validateFileClient(file);
   if(!fileCheck.ok){showFileError(fileCheck.reason);return;}
+  if(!authCb||!authCb.checked){showAuthorizationError("authorization_required");return;}
+  var orderingCheck=validateOrderingPersonClient(orderingPersonEl?orderingPersonEl.value:"");
+  if(!orderingCheck.ok){showOrderingPersonError(orderingCheck.reason);return;}
   submitting=true;
   if(submitBtn){submitBtn.disabled=true;submitBtn.textContent="Odesílám…";}
   try{
@@ -264,7 +307,9 @@ document.getElementById("form").onsubmit=async function(ev){
       note:document.getElementById("note").value.trim()||null,
       terms_version:termsVersion,
       terms_effective_at:termsEffective,
-      b2b_only:true
+      b2b_only:true,
+      authorization_confirmed:true,
+      ordering_person_name:orderingCheck.name
     };
     var r1=await fetch("/v1/public/premium/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(submitBody)});
     var j1=await r1.json().catch(function(){return {};});

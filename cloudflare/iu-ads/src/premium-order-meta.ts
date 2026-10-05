@@ -16,10 +16,6 @@ function esc(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function formatPriceLabelCs(cents: number): string {
-  return (cents / 100).toLocaleString("cs-CZ") + " Kč bez DPH / " + PREMIUM_DURATION_MONTHS + " měsíců";
-}
-
 export async function buildPremiumOrderMetaHtml(env: Env, category: string, placementId: string): Promise<string> {
   const cat = category.trim();
   const placement = placementId.trim();
@@ -54,12 +50,14 @@ export async function buildPremiumOrderMetaHtml(env: Env, category: string, plac
     " — " +
     esc(premiumPositionRankLabelCs(position)) +
     "</dd>" +
-    "<dt>Cena</dt><dd>" +
-    esc(formatPriceLabelCs(priceCents)) +
+    "<dt>Celková cena za " +
+    PREMIUM_DURATION_MONTHS +
+    " měsíců</dt><dd>" +
+    esc((priceCents / 100).toLocaleString("cs-CZ") + " Kč bez DPH") +
     "</dd>" +
     "<dt>Reklamní období</dt><dd>" +
     PREMIUM_DURATION_MONTHS +
-    " měsíců</dd>" +
+    " kalendářních měsíců (celé období)</dd>" +
     "<dt>Prodloužení</dt><dd>Není automatické</dd>" +
     "</dl>" +
     '<p class="muted b2b">Reklamní služba je určena <strong>výhradně podnikatelům</strong> (IČO povinné).</p>' +

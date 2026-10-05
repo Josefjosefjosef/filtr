@@ -25,6 +25,9 @@ export const PREMIUM_ORDER_ERROR_CS: Record<string, string> = {
   rate_limited: "Příliš mnoho požadavků. Zkuste to prosím za chvíli.",
   file_too_large: "Soubor je příliš velký (max. 5 MB).",
   file_type_invalid: "Nepodporovaný formát souboru (povoleno PNG, JPG, WebP).",
+  authorization_required: "Potvrďte prosím, že jste oprávněni objednat reklamu za uvedenou firmu nebo podnikatele.",
+  ordering_person_required: "Vyplňte prosím jméno a příjmení objednávající osoby.",
+  ordering_person_invalid: "Jméno a příjmení objednávající osoby není platné.",
 };
 
 export function premiumOrderErrorMessageCs(code: string | undefined | null): string {

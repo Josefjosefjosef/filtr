@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   PREMIUM_TERMS_V1_VERSION,
   PREMIUM_TERMS_V2_VERSION,
+  PREMIUM_ORDER_PRIVACY_PERIOD_PARAGRAPH_CS,
   PREMIUM_TERMS_VERSION,
   buildPremiumOrderKeyTermsHtml,
   buildPremiumTermsHtml,
@@ -40,6 +41,11 @@ describe("premium B2B terms", () => {
     expect(html).toContain("6 kalendářních měsíců");
     expect(html).toContain("nesleduje");
     expect(html).toContain("P1–P8");
+    expect(html).toContain(PREMIUM_ORDER_PRIVACY_PERIOD_PARAGRAPH_CS);
+    const ctrIdx = html.indexOf("negarantuje obchodní výsledek");
+    const privacyIdx = html.indexOf("Ochrana soukromí je součástí naší filozofie");
+    expect(privacyIdx).toBeGreaterThan(0);
+    expect(ctrIdx).toBeGreaterThan(privacyIdx);
   });
 
   it("v2 archive is preserved", () => {

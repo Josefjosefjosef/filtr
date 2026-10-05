@@ -7,6 +7,12 @@ export const PREMIUM_PRODUCT_TYPE = "premium_selected_services_v1" as const;
 export const PREMIUM_DURATION_MONTHS = 6;
 export const PREMIUM_INVOICE_DUE_CALENDAR_DAYS = 3;
 
+/** Customer-facing total price for the full premium period (not monthly). */
+export function formatPremiumTotalPriceLabelCs(cents: number): string {
+  const amount = Math.round(cents / 100).toLocaleString("cs-CZ");
+  return "Celková cena za " + PREMIUM_DURATION_MONTHS + " měsíců: " + amount + " Kč bez DPH";
+}
+
 export const PREMIUM_MAX_POSITION = 8 as const;
 export const PREMIUM_POSITION_COUNT = PREMIUM_MAX_POSITION;
 export const PREMIUM_PRICE_STEP_CZK = 300;
