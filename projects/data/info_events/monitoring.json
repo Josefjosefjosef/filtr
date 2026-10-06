@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-06T13:05:55.385Z",
-    "lastSuccessAt": "2026-10-06T13:05:59.203Z",
+    "lastRunAt": "2026-10-06T13:20:59.008Z",
+    "lastSuccessAt": "2026-10-06T13:21:02.404Z",
     "lastChangedAt": "2026-10-06T13:05:58.334Z",
     "lastError": null,
     "status": "not_modified",
@@ -433,11 +433,11 @@
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 1,
+    "updateCount": 0,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 0,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 0,
       "uniqueEvents": [],
       "totalAreas": 0,
@@ -471,19 +471,13 @@
       "expiredCount": 0,
       "cancelledCount": 0
     },
-    "alarms": [
-      {
-        "code": "SUSPICIOUS_ACTIVE_DROP",
-        "prev": 3,
-        "next": 0
-      }
-    ],
+    "alarms": [],
     "lastCapSent": "2026-10-06T14:00:00+02:00",
     "bulletinCacheSize": 2,
     "publish": false,
-    "publishReason": "suspicious_drop",
+    "publishReason": "validation_failed",
     "productionVerified": false,
-    "runMs": 6030,
+    "runMs": 5415,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
     "lastSnapshotAt": "2026-10-06T09:01:36.252Z",
     "freshness": {
@@ -491,10 +485,10 @@
       "officialFirstSeenAt": null,
       "officialLatestSentAt": null,
       "officialLatestValidFrom": null,
-      "discoveredAt": "2026-10-06T13:05:55.385Z",
-      "fetchedAt": "2026-10-06T13:05:55.385Z",
-      "transformedAt": "2026-10-06T13:06:01.415Z",
-      "validatedAt": "2026-10-06T13:06:01.415Z",
+      "discoveredAt": "2026-10-06T13:20:59.008Z",
+      "fetchedAt": "2026-10-06T13:20:59.008Z",
+      "transformedAt": "2026-10-06T13:21:04.424Z",
+      "validatedAt": "2026-10-06T13:21:04.424Z",
       "publishedAt": "2026-10-06T09:01:36.252Z",
       "endToEndLagMs": null
     },
@@ -503,9 +497,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
           "productKey": "70",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060759.xml",
@@ -517,10 +511,10 @@
       ],
       "publish": {
         "publish": false,
-        "reason": "suspicious_drop",
+        "reason": "validation_failed",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 0,
+          "capMessages": null,
+          "infoBlocks": null,
           "logicalAlerts": 0,
           "uniqueEvents": [],
           "totalAreas": 0,
@@ -540,31 +534,23 @@
           "expiredCount": 0,
           "cancelledCount": 0
         },
-        "alarms": [
-          {
-            "code": "SUSPICIOUS_ACTIVE_DROP",
-            "prev": 3,
-            "next": 0
-          }
-        ],
+        "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 0,
-        "update": 1,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-10-06T13:20:59.008Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": false,
+        "runMs": 5415,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-06T13:05:55.385Z",
         "status": "not_modified",
@@ -1077,17 +1063,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 4345,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-03T20:25:56.767Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4595,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,

@@ -1,6 +1,6 @@
 {
-  "runId": "1666c815750855c8",
-  "started": "2026-10-06T13:05:55.385Z",
+  "runId": "5fc51fe1c24b6f0c",
+  "started": "2026-10-06T13:20:59.008Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
       "productKey": "70",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060759.xml",
@@ -30,26 +30,13 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 0,
-    "update": 1,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": false,
-    "reason": "suspicious_drop",
+    "reason": "validation_failed",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 0,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 0,
       "uniqueEvents": [],
       "totalAreas": 0,
@@ -69,16 +56,10 @@
       "expiredCount": 0,
       "cancelledCount": 0
     },
-    "alarms": [
-      {
-        "code": "SUSPICIOUS_ACTIVE_DROP",
-        "prev": 3,
-        "next": 0
-      }
-    ],
+    "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
     "before": 0,
@@ -86,8 +67,8 @@
     "ledgerKeys": 0,
     "ledgerFingerprint": "da39a3ee5e6b4b0d",
     "history": {
-      "fetched": 0,
-      "cached": 32,
+      "fetched": 1,
+      "cached": 31,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_231200.xml",
@@ -124,7 +105,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml"
       ],
       "recentCount": 32,
-      "refCount": 2,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -335,8 +316,8 @@
     "visibleCount": 0
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 0,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 0,
     "uniqueEvents": [],
     "totalAreas": 0,
@@ -356,13 +337,7 @@
     "expiredCount": 0,
     "cancelledCount": 0
   },
-  "alarms": [
-    {
-      "code": "SUSPICIOUS_ACTIVE_DROP",
-      "prev": 3,
-      "next": 0
-    }
-  ],
+  "alarms": [],
   "snapshot": {
     "model": "chmi_product_supersession",
     "streamCount": 2,
@@ -375,6 +350,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-06T13:06:01.416Z",
-  "runMs": 6031
+  "finished": "2026-10-06T13:21:04.425Z",
+  "runMs": 5416
 }
