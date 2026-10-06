@@ -32,7 +32,9 @@ for (const m of modes) {
 
 ok("public_order_five_modes", /PREMIUM_CREATIVE_MODE_SET/.test(publicOrder));
 ok("inline_bundle_no_fs", !/node:fs/.test(inlineTs));
-ok("inline_matches_asset", inlineTs.includes("iuPremiumCreativeRender") && renderJs.includes("iuPremiumCreativeRender"));
+ok("inline_export_string_literal", /export const INLINE_PREMIUM_CREATIVE_RENDER_JS: string = "/.test(inlineTs));
+ok("inline_not_ps_object_dump", !/^export const INLINE_PREMIUM_CREATIVE_RENDER_JS = \{\s*"value"/m.test(inlineTs));
+ok("inline_matches_asset", renderJs.includes("iuPremiumCreativeRender"));
 ok("live_js_bind", /bindPremiumCreativeImage/.test(liveJs));
 ok("render_fractions", /0\.25/.test(modeTs) && /0\.75/.test(modeTs));
 

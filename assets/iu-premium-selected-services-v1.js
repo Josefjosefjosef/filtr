@@ -82,8 +82,7 @@
     slot.classList.add("iuPremiumSlot--" + creativeModeClassSuffix(mode));
     slot.setAttribute("data-creative-mode", normalizeCreativeMode(mode));
     clearCreativeBlendStyles(slot, img);
-    if (layout.endpoint && layout.mode === "logo") return;
-    if (layout.endpoint && layout.mode === "full_bleed_banner") return;
+    if (layout.endpoint) return;
     var sp = layout.slotPad;
     slot.style.padding = sp.top + "px " + sp.right + "px " + sp.bottom + "px " + sp.left + "px";
     slot.style.position = "relative";

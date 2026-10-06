@@ -1,9 +1,17 @@
 import { PREMIUM_ORDER_ERROR_CS } from "./premium-order-errors";
 import { INLINE_PREMIUM_CREATIVE_RENDER_JS } from "./premium-creative-render-inline";
 
+function premiumOrderRenderBundleJs(): string {
+  const inline = INLINE_PREMIUM_CREATIVE_RENDER_JS;
+  if (typeof inline !== "string" || !inline.includes("iuPremiumCreativeRender")) {
+    throw new Error("INLINE_PREMIUM_CREATIVE_RENDER_JS must be a synced JS string");
+  }
+  return inline;
+}
+
 export function buildPremiumOrderClientScript(termsVersion: string, termsEffective: string): string {
   return (
-    INLINE_PREMIUM_CREATIVE_RENDER_JS +
+    premiumOrderRenderBundleJs() +
     "\n;(function(){\n" +
     '"use strict";\n' +
     "var ERR_CS=" +
