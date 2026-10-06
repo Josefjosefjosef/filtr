@@ -3,6 +3,7 @@
  * so CI guards are not blocked by the one-time LDP dialog overlay.
  */
 import { createRequire } from "module";
+import { installPremiumSelectedServicesStubOnContext } from "./premium-selected-services-playwright-stub.mjs";
 
 const require = createRequire(import.meta.url);
 const {
@@ -27,6 +28,7 @@ export async function bootstrapGuardContext(browser, contextOptions = {}) {
   delete playwrightOptions.isMobile;
   const context = await browser.newContext(playwrightOptions);
   await installLocalDataProtectionAccepted(context);
+  await installPremiumSelectedServicesStubOnContext(context);
   if (contextOptions.webauthnStub === true) {
     await installGuardWebAuthnStub(context);
   }
