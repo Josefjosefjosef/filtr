@@ -105,7 +105,7 @@ must(/buildPremiumOrderMetaHtml/.test(indexTs), "order page SSR summary wired");
 must(/\/premium\/terms/.test(indexTs), "premium terms route");
 must(/validateCzechIco/.test(publicOrderTs), "server-side IČO validation");
 must(/b2b_only:\s*true/.test(publicOrderTs), "B2B flag enforced server-side");
-must(/readAsDataURL/.test(orderUiScriptTs), "creative preview uses data URL");
+must(/createObjectURL/.test(orderUiScriptTs), "creative preview uses object URL");
 must(/id="previewSlot"/.test(orderUiTs), "order preview uses production slot markup");
 must(/PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs), "order preview injects live slot CSS");
 must(/height:var\(--iuChipH,110px\)/.test(liveSlotCssTs.replace(/\s/g, "")), "live slot CSS height token");
