@@ -6,8 +6,7 @@
  * 2 columns at all viewports (overrides generic `.iuRadioGrid` 520px → 1fr).
  */
 export const PREMIUM_AFFILIATE_SLOT_GRID_CSS = `
-#iuAffiliateView .iuJRGrid,
-#iuAffiliateView .iuPremiumPreviewGrid{
+#iuAffiliateView .iuJRGrid{
   width:100%;
   max-width:none;
   margin-left:0;
@@ -28,19 +27,14 @@ ${PREMIUM_AFFILIATE_SLOT_GRID_CSS}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--logo img.iuPremiumSlotImg{object-fit:contain;padding:10px;box-sizing:border-box}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner,#iuAffiliateView a.iuPremiumSlot.iuPremiumSlot--banner{padding:0}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--banner img.iuPremiumSlotImg,#iuAffiliateView a.iuPremiumSlot--banner img.iuPremiumSlotImg{object-fit:cover;object-position:center center;padding:0;box-sizing:border-box}
+#iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--blend img.iuPremiumSlotImg{display:block;padding:0;box-sizing:border-box}
 .previewBlock{display:flex;flex-direction:column;align-items:center;width:100%;box-sizing:border-box}
-.previewWrap{margin:.35rem 0 .75rem;max-width:100%;box-sizing:border-box}
-@media(max-width:520px){.previewWrap{width:calc(100vw - 24px);max-width:none;margin-left:calc(50% - 50vw + 12px);margin-right:calc(50% - 50vw + 12px)}}
-@media(min-width:521px) and (max-width:1239px){.previewWrap{width:calc(100vw - 39px);max-width:none;margin-left:calc(50% - 50vw + 19.5px);margin-right:calc(50% - 50vw + 19.5px)}}
-@media(min-width:1240px){.previewWrap{width:608px;max-width:100%;margin-left:auto;margin-right:auto}}
-.previewWrap .iuPremiumPreviewGrid--p1 #previewSlot{grid-column:1;grid-row:1}
-.previewWrap .iuPremiumPreviewGrid--p2 #previewSlot{grid-column:2;grid-row:1}
-.previewWrap .iuPremiumPreviewGrid--p3 #previewSlot{grid-column:1;grid-row:2}
-.previewWrap .iuPremiumPreviewGrid--p4 #previewSlot{grid-column:2;grid-row:2}
-.previewWrap .iuPremiumPreviewGrid--p5 #previewSlot{grid-column:1;grid-row:3}
-.previewWrap .iuPremiumPreviewGrid--p6 #previewSlot{grid-column:2;grid-row:3}
-.previewWrap .iuPremiumPreviewGrid--p7 #previewSlot{grid-column:1;grid-row:4}
-.previewWrap .iuPremiumPreviewGrid--p8 #previewSlot{grid-column:2;grid-row:4}
-.previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;width:100%;max-width:100%;box-sizing:border-box;justify-self:stretch}
+.previewWrap{margin:.35rem 0 .75rem;width:100%;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto}
+@media(max-width:520px){.previewWrap{width:min(calc(100vw - 24px),100%)}}
+@media(min-width:521px) and (max-width:1239px){.previewWrap{width:min(calc(100vw - 39px),100%)}}
+@media(min-width:1240px){.previewWrap{width:min(608px,100%)}}
+#iuAffiliateView.previewWrap .iuPremiumPreviewGrid,#iuAffiliateView .previewWrap .iuPremiumPreviewGrid{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:100%;box-sizing:border-box;gap:10px}
+.previewWrap .iuPremiumPreviewGrid #previewSlot{flex:0 0 calc((100% - 10px) / 2);width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2);min-width:0}
+.previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;box-sizing:border-box}
 .previewHint{font-size:.85rem;margin:0 0 .35rem}
 `;

@@ -889,13 +889,36 @@ export const ADMIN_UI_SCRIPT = String.raw`
             var body=d.body||{};
             var ord=body.order||{};
             var css=body.preview_css_href?'<link rel="stylesheet" href="'+esc(body.preview_css_href)+'">':"";
+            var modeLabel=ord.creative_mode_label_cs||ord.creative_mode||"";
             host.innerHTML=css+'<div class="card"><h3>Náhled — '+esc(ord.company_name)+' · '+esc(ord.placement_id)+'</h3>'+
-              '<p class="muted">P'+esc(ord.position)+' · '+esc(ord.creative_mode)+' · '+esc(ord.price_label_cs||"")+'</p>'+
+              '<p class="muted">P'+esc(ord.position)+' · Typ kreativy: '+esc(modeLabel)+' · '+esc(ord.price_label_cs||"")+'</p>'+
               (ord.ordering_person_name?'<p><strong>Objednávající osoba:</strong> '+esc(ord.ordering_person_name)+
               (ord.authorization_confirmed?' <span class="muted">(potvrzeno oprávnění objednat)</span>':"")+'</p>':"")+
               '<p>URL: <a href="'+esc(ord.target_url||"#")+'" rel="noopener" target="_blank">'+esc(ord.target_url||"")+'</a></p>'+
               (body.placement_conflict?'<p class="err">Konflikt placementu: '+esc(body.placement_conflict.active_campaign_id)+'</p>':"")+
               '<div style="max-width:220px">'+String(body.preview_html||"")+'</div></div>';
+            var renderJs=body.preview_render_js_href;
+            if(renderJs){
+              var existing=document.getElementById("iu-premium-creative-render-js");
+              function initPreviewCreative(){
+                var slot=host.querySelector(".iuPremiumSlot--preview");
+                var img=slot&&slot.querySelector("img.iuPremiumSlotImg");
+                if(slot&&img&&window.iuPremiumCreativeRender){
+                  window.iuPremiumCreativeRender.bindPremiumCreativeImage(slot,img,ord.creative_mode||"logo");
+                }
+              }
+              if(window.iuPremiumCreativeRender){ initPreviewCreative(); }
+              else if(!existing){
+                var s=document.createElement("script");
+                s.id="iu-premium-creative-render-js";
+                s.src=renderJs;
+                s.onload=initPreviewCreative;
+                document.head.appendChild(s);
+              } else {
+                existing.addEventListener("load",initPreviewCreative,{once:true});
+                if(window.iuPremiumCreativeRender) initPreviewCreative();
+              }
+            }
           };
         });
         Array.prototype.forEach.call(document.querySelectorAll("[data-premium-publish]"),function(b){

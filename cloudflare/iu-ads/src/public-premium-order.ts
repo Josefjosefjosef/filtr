@@ -20,10 +20,9 @@ import {
   resolveAuthoritativePriceCents,
   type PremiumPosition,
 } from "./premium-selected-services";
+import { PREMIUM_CREATIVE_MODE_SET, premiumCreativeModeToCreativeFormat } from "./premium-creative-mode";
 import { validateTargetUrl } from "./url-safety";
 import type { Env } from "./types";
-
-const CREATIVE_MODES = new Set(["logo", "full_bleed_banner"]);
 
 function base64ToBytes(b64: string): Uint8Array | null {
   try {
@@ -166,7 +165,7 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   if (!urlCheck.ok) return json({ error: urlCheck.reason }, 400);
 
   const creativeMode = typeof body.creative_mode === "string" ? body.creative_mode.trim().toLowerCase() : "";
-  if (!CREATIVE_MODES.has(creativeMode)) return json({ error: "invalid_creative_mode" }, 400);
+  if (!PREMIUM_CREATIVE_MODE_SET.has(creativeMode)) return json({ error: "invalid_creative_mode" }, 400);
 
   const icoRaw = typeof body.ico === "string" ? body.ico.trim() : "";
   if (!icoRaw) return json({ error: "ico_required" }, 400);
@@ -364,7 +363,7 @@ export async function handlePublicPremiumOrderUpload(request: Request, env: Env,
   const order = await env.DB.prepare("SELECT client_id FROM orders WHERE order_id = ?").bind(orderId).first<{ client_id: string }>();
   if (!order) return json({ error: "order_not_found" }, 404);
 
-  const format = po.creative_mode === "logo" ? "logo" : "full_bleed_banner";
+  const format = premiumCreativeModeToCreativeFormat(po.creative_mode);
   const contentBase64 = typeof body.content_base64 === "string" ? body.content_base64 : "";
   const declaredMime = typeof body.declared_mime === "string" ? body.declared_mime : "";
   const filename = typeof body.filename === "string" ? body.filename : "upload.bin";

@@ -130,6 +130,18 @@ describe("premium order B2B / IČO", () => {
     expect(j.error).toBe("invalid_terms_version");
   });
 
+  it("accepts intermediate creative mode image_medium", async () => {
+    const res = await handlePublicPremiumOrderSubmit(
+      new Request("https://ads.test/v1/public/premium/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(baseBody({ creative_mode: "image_medium" })),
+      }),
+      mockEnv()
+    );
+    expect(res.status).toBe(201);
+  });
+
   it("rejects missing phone", async () => {
     const res = await handlePublicPremiumOrderSubmit(
       new Request("https://ads.test/v1/public/premium/orders", {
