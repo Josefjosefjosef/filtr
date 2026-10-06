@@ -52,6 +52,10 @@ ok("return_session_storage", /iuPremiumOrderReturn/.test(publicJs) && /iuPremium
 ok("creative_requirements", /max\. 5 MB/.test(orderUi) && /Logo<\/span>/.test(orderUi));
 ok("creative_mode_five", /image_small/.test(orderUi) && /image_medium/.test(orderUi) && /image_large/.test(orderUi));
 ok("premium_file_picker", /iuPremiumFilePick/.test(orderUi) && /Vybrat obrázek/.test(orderUi));
+ok("upload_before_creative_mode", orderUi.indexOf('id="file"') > 0 && orderUi.indexOf("creative_mode_label") > orderUi.indexOf('id="file"'));
+ok("creative_confirm_flow", /id="creative_confirm_btn"/.test(orderUi) && /Potvrdit vzhled/.test(orderUi) && /Upravit vzhled/.test(orderUi));
+ok("client_file_flow", /resolveCreativeMime/.test(orderScript) && /ensureCreativeConfirmedForSubmit/.test(orderScript) && /createObjectURL/.test(orderScript));
+ok("inline_render_string", /export const INLINE_PREMIUM_CREATIVE_RENDER_JS = "/.test(read("cloudflare/iu-ads/src/premium-creative-render-inline.ts")));
 ok("creative_mode_server_five", /PREMIUM_CREATIVE_MODE_SET/.test(publicOrder));
 ok("shared_creative_render", /bindPremiumCreativeImage/.test(read("assets/iu-premium-creative-render-v1.js")));
 ok("no_tracking_endpoint", !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs));

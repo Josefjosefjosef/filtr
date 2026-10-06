@@ -79,6 +79,10 @@ jobs:
         working-directory: .
         run: npm run iu-premium-order-form-guard
 
+      - name: Premium order file flow guard
+        working-directory: .
+        run: npm run iu-premium-order-file-flow-guard
+
       - name: Token source (no values)
         run: |
           set -euo pipefail
