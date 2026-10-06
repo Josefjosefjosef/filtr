@@ -55,13 +55,16 @@ button.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--lin
 .keyterms-ul li{margin:.25rem 0}
 .creative-req{font-size:.85rem;margin:.25rem 0 .5rem;padding-left:1rem}
 .creative-req li{margin:.2rem 0}
+.auth-block{margin:.75rem 0;padding:.65rem;border:1px solid var(--line);border-radius:8px;background:#faf9f7}
+.auth-check{display:flex;align-items:flex-start;gap:.55rem;font-size:.95rem;line-height:1.35;cursor:pointer;margin:0}
+.auth-check input[type=checkbox]{width:1.15rem;height:1.15rem;margin:.15rem 0 0;flex-shrink:0;cursor:pointer}
+#ordering_person_wrap{margin-top:.65rem}
 ${PREMIUM_LIVE_SLOT_CSS}
 </style>
 </head>
 <body>
 <main>
 <h1>Prémiová reklamní pozice</h1>
-<p class="muted">infoUzel.cz nesleduje zobrazení ani prokliky prémiových reklamních pozic. Respektujeme soukromí našich uživatelů a nechceme sledovat, co si prohlížejí nebo na co klikají. Ochrana soukromí je součástí naší filozofie. Cena je sjednána vždy na jedno reklamní období v délce 6 měsíců. Prodloužení není automatické.</p>
 <div class="card" id="meta">${metaHtml}</div>
 ${keyTerms}
 <form id="form" class="card">
@@ -114,6 +117,7 @@ ${keyTerms}
 </div>
 <input id="file" name="file" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="file_err"/>
 <p id="file_err" class="field-err" hidden role="alert"></p>
+<div class="previewBlock">
 <h2 class="summary-h">Náhled reklamní pozice</h2>
 <p class="previewHint muted">Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.</p>
 <div class="previewWrap" id="iuAffiliateView">
@@ -121,8 +125,17 @@ ${keyTerms}
 <a id="previewSlot" class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--logo" href="#" tabindex="-1" aria-hidden="true"></a>
 </div>
 </div>
+</div>
 <label for="note">Poznámka</label>
 <textarea id="note" name="note" rows="2"></textarea>
+<div class="auth-block" id="auth_block">
+<label class="auth-check" for="authorization_confirmed"><input type="checkbox" id="authorization_confirmed" name="authorization_confirmed" value="1"/>Potvrzuji, že jsem oprávněn/a objednat tuto reklamu za uvedenou firmu nebo podnikatele.</label>
+<div id="ordering_person_wrap" hidden>
+<label for="ordering_person_name">Jméno a příjmení objednávající osoby *</label>
+<input id="ordering_person_name" name="ordering_person_name" autocomplete="name" aria-describedby="ordering_person_err"/>
+<p id="ordering_person_err" class="field-err" hidden role="alert"></p>
+</div>
+</div>
 <p class="legal">Odesláním žádosti souhlasíte s <a href="/premium/terms" target="_blank" rel="noopener">Obchodními podmínkami Premium</a> (verze ${PREMIUM_TERMS_VERSION}, účinnost ${PREMIUM_TERMS_EFFECTIVE_AT}).</p>
 ${privacy}
 <button type="submit" id="submit_btn">Odeslat k posouzení</button>

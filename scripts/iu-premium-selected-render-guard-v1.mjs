@@ -123,7 +123,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p1",
-      price_label_cs: "5 990 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 5 990 Kč bez DPH",
       position_label_cs: "1. pozice v této sekci",
     },
     {
@@ -133,7 +133,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p2",
-      price_label_cs: "5 690 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 5 690 Kč bez DPH",
       position_label_cs: "2. pozice v této sekci",
     },
     {
@@ -143,7 +143,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p3",
-      price_label_cs: "5 390 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 5 390 Kč bez DPH",
       position_label_cs: "3. pozice v této sekci",
     },
     {
@@ -153,7 +153,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p4",
-      price_label_cs: "5 090 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 5 090 Kč bez DPH",
       position_label_cs: "4. pozice v této sekci",
     },
     {
@@ -163,7 +163,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p5",
-      price_label_cs: "4 790 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 4 790 Kč bez DPH",
       position_label_cs: "5. pozice v této sekci",
     },
     {
@@ -173,7 +173,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p6",
-      price_label_cs: "4 490 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 4 490 Kč bez DPH",
       position_label_cs: "6. pozice v této sekci",
     },
     {
@@ -183,7 +183,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p7",
-      price_label_cs: "4 190 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 4 190 Kč bez DPH",
       position_label_cs: "7. pozice v této sekci",
     },
     {
@@ -193,7 +193,7 @@ const stubCatalog = {
       buyable: true,
       sale_state: "available",
       order_url: "https://example.test/order-p8",
-      price_label_cs: "3 890 Kč bez DPH / 6 měsíců",
+      price_label_cs: "Celková cena za 6 měsíců: 3 890 Kč bez DPH",
       position_label_cs: "8. pozice v této sekci",
     },
   ],

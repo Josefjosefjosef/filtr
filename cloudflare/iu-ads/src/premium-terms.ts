@@ -42,6 +42,9 @@ function providerBlock(): string {
   );
 }
 
+export const PREMIUM_ORDER_PRIVACY_PERIOD_PARAGRAPH_CS =
+  "infoUzel.cz nesleduje zobrazení ani prokliky prémiových reklamních pozic. Respektujeme soukromí našich uživatelů a nechceme sledovat, co si prohlížejí nebo na co klikají. Ochrana soukromí je součástí naší filozofie. Cena je sjednána vždy na jedno reklamní období v délce 6 měsíců. Prodloužení není automatické.";
+
 export function buildPremiumOrderKeyTermsHtml(): string {
   return (
     '<div class="card keyterms" id="keyterms">' +
@@ -54,6 +57,9 @@ export function buildPremiumOrderKeyTermsHtml(): string {
     "<li>Odesláním činíte <strong>návrh objednávky k posouzení</strong>. Smlouva a závazek k úhradě vznikají až po schválení a zveřejnění administrátorem.</li>" +
     "<li>Po schválení se vystaví faktura; splatnost obvykle <strong>3 kalendářní dny</strong>.</li>" +
     "<li>Neuhrazení samo o sobě <strong>neukončuje</strong> zveřejněnou reklamu; případné pozastavení rozhoduje administrátor.</li>" +
+    "<li>" +
+    PREMIUM_ORDER_PRIVACY_PERIOD_PARAGRAPH_CS +
+    "</li>" +
     "<li>InfoUzel <strong>nesleduje</strong> zobrazení, prokliky ani CTR; negarantuje obchodní výsledek.</li>" +
     "</ul>" +
     '<p class="legal">Plné znění: <a href="/premium/terms" target="_blank" rel="noopener">Obchodní podmínky Premium</a> · ' +
