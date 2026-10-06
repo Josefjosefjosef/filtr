@@ -55,6 +55,18 @@ button.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--lin
 .keyterms-ul li{margin:.25rem 0}
 .creative-req{font-size:.85rem;margin:.25rem 0 .5rem;padding-left:1rem}
 .creative-req li{margin:.2rem 0}
+.creative-mode-label{display:block;font-size:.85rem;color:var(--muted);margin:.5rem 0 .35rem}
+.creative-mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.45rem;margin:0 0 .65rem;width:100%;box-sizing:border-box}
+.creative-mode-option{display:flex;align-items:center;gap:.45rem;border:1px solid var(--line);border-radius:8px;padding:.45rem .55rem;font-size:.88rem;line-height:1.25;cursor:pointer;background:#faf9f7;min-width:0}
+.creative-mode-option:has(input:checked){border-color:var(--accent);background:#f0faf8;box-shadow:0 0 0 1px rgba(15,107,92,.25)}
+.creative-mode-option input{width:1rem;height:1rem;margin:0;flex-shrink:0;cursor:pointer}
+.creative-mode-option span{min-width:0;word-break:break-word}
+.iuPremiumFilePick{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .75rem;margin:.25rem 0 .5rem;width:100%;box-sizing:border-box}
+.iuPremiumFilePick-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.iuPremiumFilePick-btn{display:inline-flex;align-items:center;justify-content:center;padding:.55rem .85rem;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;cursor:pointer;flex-shrink:0}
+.iuPremiumFilePick-btn:hover{border-color:var(--accent);color:var(--accent)}
+.iuPremiumFilePick-btn:focus-visible{outline:2px solid rgba(15,107,92,.45);outline-offset:2px}
+.iuPremiumFilePick-name{flex:1 1 8rem;min-width:0;font-size:.88rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .auth-block{margin:.75rem 0;padding:.65rem;border:1px solid var(--line);border-radius:8px;background:#faf9f7}
 .auth-check{display:flex;align-items:flex-start;gap:.55rem;font-size:.95rem;line-height:1.35;cursor:pointer;margin:0}
 .auth-check input[type=checkbox]{width:1.15rem;height:1.15rem;margin:.15rem 0 0;flex-shrink:0;cursor:pointer}
@@ -96,32 +108,35 @@ ${keyTerms}
 <p id="phone_err" class="field-err" hidden role="alert"></p>
 <label for="target_url">Cílová URL *</label>
 <input id="target_url" name="target_url" type="url" required placeholder="https://"/>
-<label for="creative_mode">Typ kreativy *</label>
-<select id="creative_mode" name="creative_mode"><option value="logo">Logo</option><option value="full_bleed_banner">Banner (celá plocha)</option></select>
+<span id="creative_mode_label" class="creative-mode-label">Typ kreativy *</span>
+<div class="creative-mode-grid" role="radiogroup" aria-labelledby="creative_mode_label">
+<label class="creative-mode-option"><input type="radio" name="creative_mode_choice" value="logo" checked/><span>Logo</span></label>
+<label class="creative-mode-option"><input type="radio" name="creative_mode_choice" value="image_small"/><span>Menší obrázek</span></label>
+<label class="creative-mode-option"><input type="radio" name="creative_mode_choice" value="image_medium"/><span>Střední obrázek</span></label>
+<label class="creative-mode-option"><input type="radio" name="creative_mode_choice" value="image_large"/><span>Velký obrázek</span></label>
+<label class="creative-mode-option"><input type="radio" name="creative_mode_choice" value="full_bleed_banner"/><span>Banner (celá plocha)</span></label>
+</div>
+<input type="hidden" id="creative_mode" name="creative_mode" value="logo"/>
 <label for="file">Soubor s kreativou *</label>
-<div id="creative_req_logo" class="creative-req-wrap">
-<ul class="creative-req muted">
-<li><strong>Logo:</strong> formáty PNG, JPG/JPEG nebo WebP; max. 5 MB.</li>
-<li>Doporučené rozměry cca 800×400 px (poměr stran cca 2:1 až 3:1).</li>
-<li>Logo se v tlačítku zobrazí celé (object-fit: contain) s vnitřním okrajem 10 px — nesmí se deformovat; průhlednost PNG/WebP zůstává.</li>
-<li>Příliš malý soubor může působit neostře; doporučené rozměry nejsou povinné, ale zlepšují čitelnost.</li>
+<ul class="creative-req muted" id="creative_req_common">
+<li>Formáty PNG, JPG/JPEG nebo WebP; max. 5 MB.</li>
+<li>Doporučené rozměry: logo cca 800×400 px, banner cca 1200×370 px (nejsou povinné).</li>
+<li><strong>Logo</strong> zobrazí celý obrázek bez ořezu.</li>
+<li><strong>Menší / střední / velký obrázek</strong> postupně zvětšují plochu — s rostoucí velikostí může dojít k mírnému symetrickému ořezu okrajů.</li>
+<li><strong>Banner (celá plocha)</strong> vyplní celou reklamní plochu; podle poměru stran mohou být okraje oříznuty.</li>
+<li>Náhled níže odpovídá skutečnému zobrazení na infoUzel.cz na tomto zařízení.</li>
 </ul>
+<div class="iuPremiumFilePick">
+<input id="file" class="iuPremiumFilePick-input" name="file" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="file_err file_name_display"/>
+<label for="file" class="iuPremiumFilePick-btn">Vybrat obrázek</label>
+<span id="file_name_display" class="iuPremiumFilePick-name">Zatím není vybraný žádný soubor</span>
 </div>
-<div id="creative_req_banner" class="creative-req-wrap" hidden>
-<ul class="creative-req muted">
-<li><strong>Banner:</strong> formáty PNG, JPG/JPEG nebo WebP; max. 5 MB.</li>
-<li>Doporučené rozměry cca 1200×370 px (poměr stran odpovídá prémiovému tlačítku cca 3,2:1).</li>
-<li>Banner vyplní celou plochu tlačítka (object-fit: cover) v rámci zaoblení 12 px — okraje mohou být oříznuty; náhled ukazuje skutečné zobrazení.</li>
-<li>Na mobilu a tabletu se šířka tlačítka liší; stejný banner se může mírně odlišně oříznout — náhled odpovídá vašemu zařízení a zvolené pozici.</li>
-</ul>
-</div>
-<input id="file" name="file" type="file" accept="image/png,image/jpeg,image/webp" required aria-describedby="file_err"/>
 <p id="file_err" class="field-err" hidden role="alert"></p>
 <div class="previewBlock">
 <h2 class="summary-h">Náhled reklamní pozice</h2>
 <p class="previewHint muted">Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.</p>
 <div class="previewWrap" id="iuAffiliateView">
-<div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${previewPosClass}">
+<div class="iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${previewPosClass}">
 <a id="previewSlot" class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--logo" href="#" tabindex="-1" aria-hidden="true"></a>
 </div>
 </div>

@@ -42,14 +42,18 @@ ok("cancel_button", /id="cancel_btn"/.test(orderUi) && /Zrušit a zavřít/.test
 ok("preview_hint_device", /Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení/.test(orderUi));
 ok("preview_position_grid", /iuPremiumPreviewGrid--p/.test(orderUi));
 ok("no_preview_fullwidth_hack", !/previewWrap[\s\S]*\.iuPremiumSlot\{[^}]*width:100%/.test(liveSlot.replace(/\n/g, "")) || /justify-self:stretch/.test(liveSlot));
-ok("preview_grid_placement_css", /iuPremiumPreviewGrid--p2[\s\S]*#previewSlot[\s\S]*grid-column:\s*2/.test(liveSlot));
+ok("preview_grid_centered_slot", /iuPremiumPreviewGrid[\s\S]*justify-content:center/.test(liveSlot));
 ok("server_phone_validation", /validatePremiumPhone/.test(publicOrder));
 ok("ares_route", /\/v1\/public\/ares\/ico/.test(indexTs));
 ok("client_ares_lookup", /\/v1\/public\/ares\/ico/.test(orderScript));
 ok("client_phone_validation", /validatePhoneClient/.test(orderScript));
 ok("client_cancel_close", /closeOrderForm/.test(orderScript) && /cancel_btn/.test(orderScript));
 ok("return_session_storage", /iuPremiumOrderReturn/.test(publicJs) && /iuPremiumOrderReturn/.test(orderScript));
-ok("creative_requirements", /max\. 5 MB/.test(orderUi) && /object-fit: contain/.test(orderUi));
+ok("creative_requirements", /max\. 5 MB/.test(orderUi) && /Logo<\/span>/.test(orderUi));
+ok("creative_mode_five", /image_small/.test(orderUi) && /image_medium/.test(orderUi) && /image_large/.test(orderUi));
+ok("premium_file_picker", /iuPremiumFilePick/.test(orderUi) && /Vybrat obrázek/.test(orderUi));
+ok("creative_mode_server_five", /PREMIUM_CREATIVE_MODE_SET/.test(publicOrder));
+ok("shared_creative_render", /bindPremiumCreativeImage/.test(read("assets/iu-premium-creative-render-v1.js")));
 ok("no_tracking_endpoint", !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs));
 
 if (fails.length) {

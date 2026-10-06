@@ -2,6 +2,7 @@
  * Admin premium order detail + creative preview (same geometry as public card).
  */
 import { json, requireAdminPermission } from "./admin-auth";
+import { premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
 import { formatPremiumTotalPriceLabelCs } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import type { Env } from "./types";
@@ -11,7 +12,8 @@ function previewCardHtml(input: {
   previewUrl: string | null;
   targetUrl: string | null;
 }): string {
-  const modeClass = input.mode === "full_bleed_banner" ? "iuPremiumSlot--banner" : "iuPremiumSlot--logo";
+  const modeNorm = input.mode || "logo";
+  const modeClass = "iuPremiumSlot--" + premiumCreativeSlotClassSuffix(modeNorm);
   const img = input.previewUrl
     ? '<img class="iuPremiumSlotImg" src="' +
       input.previewUrl.replace(/"/g, "&quot;") +
@@ -20,6 +22,8 @@ function previewCardHtml(input: {
   return (
     '<a class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--preview ' +
     modeClass +
+    '" data-creative-mode="' +
+    modeNorm.replace(/"/g, "&quot;") +
     '" href="' +
     (input.targetUrl || "#").replace(/"/g, "&quot;") +
     '" rel="noopener" target="_blank" style="pointer-events:none">' +
@@ -127,6 +131,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       workflow_status: row.workflow_status,
       target_url: row.target_url,
       creative_mode: row.creative_mode,
+      creative_mode_label_cs: premiumCreativeModeLabelCs(String(row.creative_mode || "logo")),
       price_label_cs: priceLabel,
       duration_months: 6,
       ordering_person_name: orderingPersonName,
@@ -134,7 +139,8 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     },
     creative,
     preview_html: previewHtml,
-    preview_css_href: "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261001",
+    preview_css_href: "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261006-five-modes",
+    preview_render_js_href: "https://infouzel.cz/assets/iu-premium-creative-render-v1.js?v=premium-creative-v1-20261006",
     placement_conflict: placementConflict?.active_campaign_id
       ? { active_campaign_id: placementConflict.active_campaign_id }
       : null,

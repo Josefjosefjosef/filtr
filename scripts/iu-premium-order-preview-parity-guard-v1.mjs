@@ -133,11 +133,23 @@ body{margin:0}
 </head><body><div class="stage"><div id="iuAffiliateView">${gridBlock}</div></div></body></html>`;
 }
 
-function orderFixtureHtml(pos, mode) {
+function orderFixtureHtml(pos, mode, layout) {
   const modeClass = mode === "banner" ? "iuPremiumSlot--banner" : "iuPremiumSlot--logo";
   const src = mode === "banner" ? bannerSvg : logoSvg;
   const posClass = "iuPremiumPreviewGrid--p" + String(pos);
   const previewOnlySlot = `<a class="iuPremiumSlot iuPremiumSlot--sold ${modeClass}" id="previewSlot" href="#"><img class="iuPremiumSlotImg" alt="" src="${src}"/></a>`;
+  const stageShell =
+    layout === "center"
+      ? `<div class="shell"><div class="card"><div class="previewBlock"><div class="previewWrap" id="iuAffiliateView"><div class="iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div></div>`
+      : `<div class="stage"><div class="previewBlock"><div class="previewWrap" id="iuAffiliateView"><div class="iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div>`;
+  const stageCss =
+    layout === "center"
+      ? ""
+      : `
+.stage{width:calc(100vw - 24px);margin:0 auto;box-sizing:border-box}
+@media(min-width:521px){.stage{width:calc(100vw - 39px)}}
+@media(min-width:1240px){.stage{width:608px}}
+`;
   return `<!DOCTYPE html>
 <html lang="cs"><head>
 <meta charset="utf-8"/>
@@ -146,9 +158,10 @@ function orderFixtureHtml(pos, mode) {
 body{margin:0}
 .shell{max-width:720px;margin:0 auto;padding:1.25rem;box-sizing:border-box}
 .card{padding:1rem;box-sizing:border-box}
+${stageCss}
 ${previewCssInline}
 </style>
-</head><body><div class="shell"><div class="card"><div class="previewBlock"><div class="previewWrap" id="iuAffiliateView"><div class="iuRadioGrid iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${posClass}">${previewOnlySlot}</div></div></div></div></div></body></html>`;
+</head><body>${stageShell}</body></html>`;
 }
 
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8969", 10);
@@ -164,8 +177,9 @@ const server = http.createServer((req, res) => {
     if (url.pathname === "/fixture-order.html") {
       const pos = Math.min(8, Math.max(1, parseInt(url.searchParams.get("pos") || "1", 10) || 1));
       const mode = url.searchParams.get("mode") === "banner" ? "banner" : "logo";
+      const layout = url.searchParams.get("layout") === "center" ? "center" : "geom";
       res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-      res.end(orderFixtureHtml(pos, mode));
+      res.end(orderFixtureHtml(pos, mode, layout));
       return;
     }
     let p = decodeURIComponent(url.pathname);
@@ -205,6 +219,11 @@ const viewports = [
 
 function near(a, b, tol) {
   return Math.abs(a - b) <= tol;
+}
+
+function expectedPremiumCellWidth(gridW) {
+  if (gridW == null || !Number.isFinite(gridW)) return null;
+  return (gridW - 10) / 2;
 }
 
 async function measureSlotGeometry(page, slotId) {
@@ -251,22 +270,32 @@ try {
       const base = `http://127.0.0.1:${PORT}`;
       await page.goto(`${base}/fixture-live.html?mode=logo`, { waitUntil: "networkidle", timeout: 60000 });
       const liveGeom = await measureSlotGeometry(page, "slot");
-      await page.goto(`${base}/fixture-order.html?pos=${pos}&mode=logo`, {
+      await page.goto(`${base}/fixture-order.html?pos=${pos}&mode=logo&layout=geom`, {
         waitUntil: "networkidle",
         timeout: 60000,
       });
       const orderGeom = await measureSlotGeometry(page, "previewSlot");
       const tol = GEOMETRY_TOLERANCE_PX;
+      const liveCell = expectedPremiumCellWidth(liveGeom && liveGeom.gridW);
+      const orderCell = expectedPremiumCellWidth(orderGeom && orderGeom.gridW);
       const geomOk =
         liveGeom &&
         orderGeom &&
+        liveCell != null &&
+        orderCell != null &&
+        near(liveGeom.w, liveCell, tol) &&
+        near(orderGeom.w, orderCell, tol) &&
         near(liveGeom.w, orderGeom.w, tol) &&
         near(liveGeom.h, orderGeom.h, tol) &&
         near(liveGeom.br, orderGeom.br, tol) &&
         liveGeom.img &&
         orderGeom.img &&
         liveGeom.img.objectFit === orderGeom.img.objectFit;
-      ok("geom:" + vp.id + ":p" + pos, geomOk, JSON.stringify({ liveGeom, orderGeom }));
+      ok("geom:" + vp.id + ":p" + pos, geomOk, JSON.stringify({ liveGeom, orderGeom, liveCell, orderCell }));
+      await page.goto(`${base}/fixture-order.html?pos=${pos}&mode=logo&layout=center`, {
+        waitUntil: "networkidle",
+        timeout: 60000,
+      });
       const centerSnap = await page.evaluate(() => {
         const wrap = document.querySelector(".previewWrap");
         const block = document.querySelector(".previewBlock");
@@ -277,7 +306,7 @@ try {
         const right = br.right - wr.right;
         return { left, right, delta: Math.abs(left - right) };
       });
-      ok("center:" + vp.id + ":p" + pos, centerSnap && centerSnap.delta <= 2, JSON.stringify(centerSnap));
+      ok("center:" + vp.id + ":p" + pos, centerSnap && centerSnap.delta <= 1, JSON.stringify(centerSnap));
       if (vp.id === "mobile" && pos === 1 && liveGeom && orderGeom) {
         const fullWidth = orderGeom.w >= liveGeom.gridW * 0.92;
         ok("regression:mobile_not_full_width", !fullWidth, JSON.stringify({ liveGeom, orderGeom }));
@@ -296,7 +325,10 @@ try {
   const base = `http://127.0.0.1:${PORT}`;
   await bpage.goto(`${base}/fixture-live.html?mode=banner`, { waitUntil: "networkidle", timeout: 60000 });
   const liveBanner = await measureSlotGeometry(bpage, "slot");
-  await bpage.goto(`${base}/fixture-order.html?pos=1&mode=banner`, { waitUntil: "networkidle", timeout: 60000 });
+  await bpage.goto(`${base}/fixture-order.html?pos=1&mode=banner&layout=geom`, {
+    waitUntil: "networkidle",
+    timeout: 60000,
+  });
   const previewBanner = await measureSlotGeometry(bpage, "previewSlot");
   ok(
     "banner_crop_parity",
