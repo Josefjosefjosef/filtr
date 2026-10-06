@@ -9,8 +9,8 @@ import {
   quotaBlockerFailMessage,
 } from "./guards/prod-request-budget.mjs";
 
-const PROD_SMOKE_REQUEST_BUDGET = 4;
-const HEALTH_URL = "https://infouzel.cz/";
+/** Root routing prod guard (earlier in smoke) already probes infouzel.cz — ads Worker budget is catalog+render only. */
+const PROD_SMOKE_REQUEST_BUDGET = 2;
 const SAMPLE_CATEGORY = "aff-auto-moto";
 const API = "https://ads.infouzel.cz/v1/public/premium/selected-services";
 
@@ -22,7 +22,12 @@ async function fetchBounded(url) {
     headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
     signal: AbortSignal.timeout(25000),
   });
-  const text = await res.text().catch(() => "");
+  let text = "";
+  try {
+    text = await res.text();
+  } catch (_) {
+    text = "";
+  }
   if (isCloudflareQuotaResponse(res.status, text)) {
     console.log(quotaBlockerFailMessage("premium_prod_smoke:" + res.status));
     console.log("CLOUDFLARE_QUOTA_BLOCKER=true");
@@ -32,13 +37,6 @@ async function fetchBounded(url) {
 }
 
 async function main() {
-  const health = await fetchBounded(HEALTH_URL);
-  if (health.status !== 200) {
-    console.log("FAIL health_not_200 status=" + health.status);
-    console.log("CLOUDFLARE_QUOTA_BLOCKER=" + (health.status === 429 ? "true" : "false"));
-    process.exit(1);
-  }
-
   const catalog = await fetchBounded(API + "/catalog?category=" + encodeURIComponent(SAMPLE_CATEGORY));
   if (catalog.status !== 200) {
     console.log("FAIL catalog status=" + catalog.status);
