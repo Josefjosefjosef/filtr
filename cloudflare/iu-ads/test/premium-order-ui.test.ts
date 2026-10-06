@@ -40,6 +40,17 @@ describe("premium order UI shell", () => {
     expect(html).toContain(PREMIUM_TERMS_VERSION);
     expect(html).toContain("/v1/public/ares/ico");
     expect(html).toContain("max. 5 MB");
+    const fileIdx = html.indexOf('id="file"');
+    const modeIdx = html.indexOf("creative_mode_label");
+    expect(fileIdx).toBeGreaterThan(0);
+    expect(modeIdx).toBeGreaterThan(fileIdx);
+    expect(html).toContain('id="creative_confirm_btn"');
+    expect(html).toContain("Potvrdit vzhled");
+    expect(html).toContain("Upravit vzhled");
+    expect(html).toContain('id="file_pick_btn"');
+    expect(html).toContain("creative_appearance_unconfirmed");
+    expect(html).toContain("resolveCreativeMime");
+    expect(html).toContain("bindPremiumCreativeImage");
   });
 
   it("builds server-side order summary from placement row", async () => {
