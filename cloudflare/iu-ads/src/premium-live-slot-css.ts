@@ -34,7 +34,7 @@ ${PREMIUM_AFFILIATE_SLOT_GRID_CSS}
 @media(min-width:521px) and (max-width:1239px){.previewWrap{width:min(calc(100vw - 39px),100%)}}
 @media(min-width:1240px){.previewWrap{width:min(608px,100%)}}
 #iuAffiliateView.previewWrap .iuPremiumPreviewGrid,#iuAffiliateView .previewWrap .iuPremiumPreviewGrid{display:flex;justify-content:center;align-items:flex-start;width:100%;max-width:100%;box-sizing:border-box;gap:10px}
-.previewWrap .iuPremiumPreviewGrid #previewSlot{flex:0 0 calc((100% - 10px) / 2);width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2);min-width:0}
+.previewWrap .iuPremiumPreviewGrid #previewSlot,.previewWrap .iuPremiumPreviewGrid--p8 #previewSlot{flex:0 0 calc((100% - 10px) / 2);width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2);min-width:0}
 .previewWrap .iuPremiumSlot{cursor:default;pointer-events:none;box-sizing:border-box}
 .previewHint{font-size:.85rem;margin:0 0 .35rem}
 `;
