@@ -185,8 +185,9 @@ async function auditHierarchy(page, label) {
     const panel = document.getElementById("iuPremiumSalesPanel");
     const toggle = document.getElementById("iuPremiumSalesToggle");
     const disclosure = document.getElementById("iuAffiliateDisclosure");
-    const topHint = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint:not(.muted)");
+    const panelHint = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint:not(.muted)");
     const bottom = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesHint.muted");
+    const salesGrid = document.querySelector("#iuPremiumSalesPanel .iuPremiumSalesGrid");
     const grid = document.getElementById("iuAffiliateGrid");
     const chip = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
     const cards = Array.from(document.querySelectorAll("#iuPremiumSalesPanel a.iuPremiumSlot--sale"));
@@ -201,7 +202,11 @@ async function auditHierarchy(page, label) {
     return {
       toggle: cs(toggle),
       disclosure: cs(disclosure),
-      top: cs(topHint),
+      panelHint: cs(panelHint),
+      salesGridBeforePanelHint:
+        salesGrid && panelHint
+          ? !!(salesGrid.compareDocumentPosition(panelHint) & Node.DOCUMENT_POSITION_FOLLOWING)
+          : false,
       bottom: cs(bottom),
       chip: cs(chip),
       count: cards.length,
@@ -224,9 +229,14 @@ async function auditHierarchy(page, label) {
   ok(label + ":sales_count_4", after.count === 4, "n=" + after.count);
   ok(label + ":panel_surface_visible", after.panelBorderW && after.panelBorderW !== "0px", after.panelBorderW);
   ok(label + ":panel_subtle_bg", after.panelBg && after.panelBg !== "rgba(0, 0, 0, 0)", after.panelBg);
-  ok(label + ":top_explanation_standard", isStandardExplanatory(parseRgb(after.top), disclosureRgb), after.top);
+  ok(
+    label + ":panel_hint_explanation_standard",
+    isStandardExplanatory(parseRgb(after.panelHint), disclosureRgb),
+    after.panelHint
+  );
   ok(label + ":bottom_explanation_standard", !after.bottom || isStandardExplanatory(parseRgb(after.bottom), disclosureRgb), after.bottom);
-  ok(label + ":top_not_green", !isTriggerGreen(parseRgb(after.top)), after.top);
+  ok(label + ":sales_grid_before_panel_hint", after.salesGridBeforePanelHint === true);
+  ok(label + ":panel_hint_not_green", !isTriggerGreen(parseRgb(after.panelHint)), after.panelHint);
   ok(label + ":bottom_not_green", !after.bottom || !isTriggerGreen(parseRgb(after.bottom)), after.bottom);
   for (let i = 0; i < after.perPos.length; i++) {
     const row = after.perPos[i];
