@@ -366,6 +366,19 @@ export async function executePremiumApproveAndPublish(
     .bind(campaignId, nowIso, input.idempotencyKey, nowIso, input.orderId)
     .run();
 
+  try {
+    const { appendPremiumOrderEvent } = await import("./premium-order-history");
+    await appendPremiumOrderEvent(db, {
+      orderId: input.orderId,
+      eventType: "order_approved_published",
+      actorUserId: input.actorUserId,
+      payload: { campaign_id: campaignId, actor_label: input.actorUserId },
+      createdAt: nowIso,
+    });
+  } catch {
+    /* events table optional until migration */
+  }
+
   await db
     .prepare("UPDATE orders SET status = 'completed', updated_at = ? WHERE order_id = ?")
     .bind(nowIso, order.order_id)

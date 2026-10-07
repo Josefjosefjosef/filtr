@@ -89,6 +89,7 @@ export type PremiumOrderPayloadSnapshot = {
   creative_mode: string | null;
   billing: { street: string; city: string; zip: string; country: string; dic: string | null } | null;
   note: string | null;
+  contact_phone: string | null;
 };
 
 export function parsePremiumOrderPayload(payloadJson: string | null | undefined): PremiumOrderPayloadSnapshot {
@@ -103,6 +104,7 @@ export function parsePremiumOrderPayload(payloadJson: string | null | undefined)
     creative_mode: null,
     billing: null,
     note: null,
+    contact_phone: null,
   };
   if (!payloadJson) return empty;
   try {
@@ -136,6 +138,8 @@ export function parsePremiumOrderPayload(payloadJson: string | null | undefined)
       creative_mode: typeof p.creative_mode === "string" ? p.creative_mode : null,
       billing,
       note: typeof p.note === "string" && p.note.trim() ? p.note.trim() : null,
+      contact_phone:
+        typeof p.contact_phone === "string" && p.contact_phone.trim() ? p.contact_phone.trim() : null,
     };
   } catch {
     return empty;
@@ -175,10 +179,18 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     creative_id: creativeId,
     target_url: targetUrl,
   });
+  const contactPerson =
+    typeof row.contact_person === "string" && row.contact_person.trim() ? row.contact_person.trim() : null;
+  const customerCode =
+    typeof row.customer_order_code === "string" && row.customer_order_code.trim()
+      ? row.customer_order_code.trim()
+      : null;
   return {
     order_id: row.order_id,
     client_id: row.client_id,
     order_number: row.order_number,
+    customer_order_code: customerCode,
+    contact_person_name: contactPerson,
     company_name: row.company_name,
     ico: row.ico ?? payload.ico,
     category_slug: categorySlug,

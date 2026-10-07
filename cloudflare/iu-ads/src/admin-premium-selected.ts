@@ -28,6 +28,8 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const status = url.searchParams.get("status");
+  const q = (url.searchParams.get("q") || "").trim();
+  const payment = url.searchParams.get("payment");
   const limit = Math.min(200, Number(url.searchParams.get("limit") || "100") || 100);
   const conditions: string[] = [];
   const params: unknown[] = [];
@@ -35,11 +37,22 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
     conditions.push("po.workflow_status = ?");
     params.push(status);
   }
+  if (payment === "paid" || payment === "unpaid") {
+    conditions.push("COALESCE(po.payment_status,'unpaid') = ?");
+    params.push(payment);
+  }
+  if (q) {
+    conditions.push(
+      "(o.order_number LIKE ? OR o.customer_order_code LIKE ? OR c.company_name LIKE ? OR c.ico LIKE ? OR o.contact_person LIKE ? OR po.client_contact_email LIKE ?)"
+    );
+    const like = "%" + q + "%";
+    params.push(like, like, like, like, like, like);
+  }
   const where = conditions.length ? "WHERE " + conditions.join(" AND ") : "";
   params.push(limit);
 
   const res = await env.DB.prepare(
-    `SELECT po.*, o.client_id, o.order_number, o.payload_json, c.company_name, c.ico, c.dic,
+    `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.contact_person, o.payload_json, c.company_name, c.ico, c.dic,
             ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
@@ -64,10 +77,31 @@ export async function handleAdminPremiumReject(request: Request, env: Env, order
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  let body: { reason?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const reason =
+    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : null;
   const nowIso = new Date().toISOString();
-  await env.DB.prepare("UPDATE premium_selected_orders SET workflow_status = 'rejected', updated_at = ? WHERE order_id = ?")
-    .bind(nowIso, orderId)
+  await env.DB.prepare(
+    "UPDATE premium_selected_orders SET workflow_status = 'rejected', rejection_reason = ?, updated_at = ? WHERE order_id = ?"
+  )
+    .bind(reason, nowIso, orderId)
     .run();
+  try {
+    const { appendPremiumOrderEvent } = await import("./premium-order-history");
+    await appendPremiumOrderEvent(env.DB, {
+      orderId,
+      eventType: "order_rejected",
+      actorUserId: guard.userId,
+      payload: { reason, actor_label: guard.userId },
+    });
+  } catch {
+    /* events table optional until migration */
+  }
   await insertAuditLog(
     env.DB,
     buildAuditEntry({
@@ -77,7 +111,7 @@ export async function handleAdminPremiumReject(request: Request, env: Env, order
       objectType: "premium_order",
       objectId: orderId,
       before: null,
-      after: { workflow_status: "rejected" },
+      after: { workflow_status: "rejected", rejection_reason: reason },
       result: "success",
     })
   );
@@ -89,6 +123,15 @@ export async function handleAdminPremiumSuspend(request: Request, env: Env, orde
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
+  let body: { reason?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const reason =
+    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : null;
+
   const po = await env.DB.prepare("SELECT published_campaign_id FROM premium_selected_orders WHERE order_id = ?")
     .bind(orderId)
     .first<{ published_campaign_id: string | null }>();
@@ -98,6 +141,19 @@ export async function handleAdminPremiumSuspend(request: Request, env: Env, orde
   await env.DB.prepare("UPDATE campaigns SET status = 'paused', updated_at = ? WHERE campaign_id = ?")
     .bind(nowIso, po.published_campaign_id)
     .run();
+  await env.DB.prepare(
+    `UPDATE premium_selected_orders SET admin_paused_at = ?, admin_paused_by = ?, admin_pause_reason = ?, updated_at = ? WHERE order_id = ?`
+  )
+    .bind(nowIso, guard.userId, reason, nowIso, orderId)
+    .run();
+
+  const { appendPremiumOrderEvent } = await import("./premium-order-history");
+  await appendPremiumOrderEvent(env.DB, {
+    orderId,
+    eventType: "campaign_paused",
+    actorUserId: guard.userId,
+    payload: { reason, actor_label: guard.userId },
+  });
 
   await insertAuditLog(
     env.DB,
@@ -134,6 +190,18 @@ export async function handleAdminPremiumReactivate(request: Request, env: Env, o
   await env.DB.prepare("UPDATE campaigns SET status = 'active', updated_at = ? WHERE campaign_id = ?")
     .bind(nowIso, po.published_campaign_id)
     .run();
+  await env.DB.prepare(
+    `UPDATE premium_selected_orders SET admin_resumed_at = ?, admin_resumed_by = ?, updated_at = ? WHERE order_id = ?`
+  )
+    .bind(nowIso, guard.userId, nowIso, orderId)
+    .run();
+  const { appendPremiumOrderEvent } = await import("./premium-order-history");
+  await appendPremiumOrderEvent(env.DB, {
+    orderId,
+    eventType: "campaign_resumed",
+    actorUserId: guard.userId,
+    payload: { actor_label: guard.userId },
+  });
   return json({ ok: true });
 }
 

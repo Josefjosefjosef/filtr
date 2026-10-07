@@ -4,6 +4,8 @@
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId } from "./admin-auth";
 import { hashClientAccessCode } from "./admin-codes";
+import { generateCustomerOrderCode, hashOrderPortalCode } from "./premium-order-access-code";
+import { appendPremiumOrderEvent } from "./premium-order-history";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
 import { validateCzechIco } from "./czech-ico";
 import { validatePremiumPhone } from "./czech-phone";
@@ -226,7 +228,8 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   });
 
   const orderId = newId("ord");
-  const orderNumber = "PO-" + String(new Date().getFullYear()) + "-" + crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase();
+  const customerCode = generateCustomerOrderCode();
+  const orderNumber = customerCode.plaintext;
   const priceSnapshot = buildPriceSnapshot({
     placementId,
     catalogPriceCents: placement.current_price_cents,
@@ -252,13 +255,37 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     billing: { street, city, zip, country, dic },
     ordering_person_name: orderingPersonName,
     authorization_confirmed: true,
+    contact_phone: phone,
   };
 
   await env.DB.prepare(
-    "INSERT INTO orders (order_id, client_id, order_number, status, contact_person, payload_json, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)"
+    "INSERT INTO orders (order_id, client_id, order_number, status, contact_person, customer_order_code, payload_json, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?)"
   )
-    .bind(orderId, clientId, orderNumber, "confirmed", contactName, JSON.stringify(payload), nowIso, nowIso)
+    .bind(
+      orderId,
+      clientId,
+      orderNumber,
+      "confirmed",
+      contactName,
+      orderNumber,
+      JSON.stringify(payload),
+      nowIso,
+      nowIso
+    )
     .run();
+
+  if (env.ADS_CODE_PEPPER) {
+    const portalHash = await hashOrderPortalCode(orderNumber, env.ADS_CODE_PEPPER);
+    try {
+      await env.DB.prepare(
+        "INSERT INTO premium_order_portal_codes (order_id, code_hash, code_prefix, created_at) VALUES (?,?,?,?)"
+      )
+        .bind(orderId, portalHash, customerCode.prefix, nowIso)
+        .run();
+    } catch {
+      /* migration pending */
+    }
+  }
 
   const inquiryId = newId("inq");
   await env.DB.prepare(
@@ -314,10 +341,23 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     })
   );
 
+  try {
+    await appendPremiumOrderEvent(env.DB, {
+      orderId,
+      eventType: "order_submitted",
+      actorUserId: null,
+      payload: { actor_label: "Objednatel" },
+      createdAt: nowIso,
+    });
+  } catch {
+    /* schema not migrated yet in local stub */
+  }
+
   return json(
     {
       order_id: orderId,
       order_number: orderNumber,
+      customer_order_code: orderNumber,
       order_access_token: orderToken,
       placement_id: placementId,
       price_cents: priceCents,

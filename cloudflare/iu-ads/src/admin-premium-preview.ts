@@ -10,6 +10,8 @@ import {
   premiumOrderMissingPublishFields,
   premiumWorkflowStatusLabelCs,
 } from "./premium-order-workflow";
+import { buildAdminPremiumPreviewScopedCss, wrapAdminPremiumPreviewHtml } from "./premium-admin-preview-css";
+import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium-order-history";
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import type { Env } from "./types";
@@ -26,7 +28,7 @@ function previewCardHtml(input: {
       input.previewUrl.replace(/"/g, "&quot;") +
       '" alt="Náhled kreativity" loading="lazy"/>'
     : '<span class="iuPremiumSlotCta">Bez náhledu</span>';
-  return (
+  const inner =
     '<a class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--preview ' +
     modeClass +
     '" data-creative-mode="' +
@@ -35,8 +37,8 @@ function previewCardHtml(input: {
     (input.targetUrl || "#").replace(/"/g, "&quot;") +
     '" rel="noopener" target="_blank" style="pointer-events:none">' +
     img +
-    "</a>"
-  );
+    "</a>";
+  return wrapAdminPremiumPreviewHtml(inner);
 }
 
 export async function handleAdminPremiumOrderDetail(request: Request, env: Env, orderId: string): Promise<Response> {
@@ -45,15 +47,16 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const row = await env.DB.prepare(
-    `SELECT po.*, o.client_id, o.order_number, o.payload_json, o.contact_person, o.created_at AS order_created_at,
+    `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.payload_json, o.contact_person,
+            o.created_at AS order_created_at,
             c.company_name, c.ico, c.dic, c.address, c.billing_info,
             ps.agreed_price_cents, ps.catalog_price_cents, ps.currency AS snap_currency,
-            ct.full_name AS contact_full_name, ct.email AS contact_email, ct.phone AS contact_phone
+            camp.status AS campaign_status, camp.start_at AS campaign_start_at, camp.end_at AS campaign_end_at
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id
      LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
-     LEFT JOIN client_contacts ct ON ct.client_id = c.client_id AND ct.is_primary = 1
+     LEFT JOIN campaigns camp ON camp.campaign_id = po.published_campaign_id
      WHERE po.order_id = ?`
   )
     .bind(orderId)
@@ -98,11 +101,20 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     }
   }
 
-  const placementConflict = await env.DB.prepare(
+  const placementRow = await env.DB.prepare(
     "SELECT active_campaign_id FROM premium_selected_placements WHERE placement_id = ?"
   )
     .bind(row.placement_id)
     .first<{ active_campaign_id: string | null }>();
+  const publishedCampaignId =
+    typeof row.published_campaign_id === "string" ? row.published_campaign_id : null;
+  const activeOnPlacement = placementRow?.active_campaign_id ?? null;
+  const placementConflict =
+    activeOnPlacement &&
+    publishedCampaignId &&
+    activeOnPlacement !== publishedCampaignId
+      ? { active_campaign_id: activeOnPlacement, foreign_owner: true }
+      : null;
 
   const mode = String(row.creative_mode || "logo");
   const previewHtml = previewCardHtml({
@@ -143,19 +155,67 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     target_url: targetUrlStr,
   });
 
+  const contactPersonOrder =
+    typeof row.contact_person === "string" && row.contact_person.trim() ? row.contact_person.trim() : null;
+  const contactPhonePayload = payloadSnap.contact_phone;
+  const paymentStatus = String(row.payment_status || "unpaid");
+  const campaignEndAt = row.campaign_end_at != null ? String(row.campaign_end_at) : null;
+  const campaignStatus = row.campaign_status != null ? String(row.campaign_status) : null;
+  const nowMs = Date.now();
+  let endingSoonDays: number | null = null;
+  if (campaignEndAt) {
+    const endMs = Date.parse(campaignEndAt);
+    if (Number.isFinite(endMs)) {
+      const days = Math.ceil((endMs - nowMs) / 86400000);
+      if (days >= 0 && days <= 30) endingSoonDays = days;
+    }
+  }
+
+  const historyEvents = await listPremiumOrderEvents(env.DB, orderId);
+  const history = historyEvents.map((ev) => ({
+    ...ev,
+    summary_cs: formatPremiumOrderEventLineCs(ev),
+  }));
+
+  const notesRes = await env.DB.prepare(
+    "SELECT note_id, body_text, author_user_id, author_label, created_at FROM premium_order_notes WHERE order_id = ? ORDER BY created_at DESC LIMIT 50"
+  )
+    .bind(orderId)
+    .all();
+  const internal_notes = (notesRes.results || []).map((n) => ({
+    note_id: (n as Record<string, unknown>).note_id,
+    body_text: (n as Record<string, unknown>).body_text,
+    author_label: (n as Record<string, unknown>).author_label || (n as Record<string, unknown>).author_user_id,
+    created_at: (n as Record<string, unknown>).created_at,
+    created_at_label_cs: formatAdminPragueDateTime(String((n as Record<string, unknown>).created_at || "")),
+  }));
+
+  const customerCode =
+    typeof row.customer_order_code === "string" && row.customer_order_code.trim()
+      ? row.customer_order_code.trim()
+      : typeof row.order_number === "string"
+        ? row.order_number
+        : null;
+
   return json({
+    preview_scoped_css: buildAdminPremiumPreviewScopedCss(),
     order: {
       order_id: row.order_id,
       order_number: row.order_number,
+      customer_order_code: customerCode,
       client_id: row.client_id,
       company_name: row.company_name,
       ico: row.ico ?? payloadSnap.ico,
       dic: row.dic ?? payloadSnap.dic,
       address: row.address,
       billing_info: row.billing_info,
-      contact_name: row.contact_full_name ?? row.contact_person,
-      contact_email: row.client_contact_email ?? row.contact_email,
-      contact_phone: row.contact_phone,
+      contact_person_name: contactPersonOrder,
+      contact_name: contactPersonOrder,
+      contact_email:
+        typeof row.client_contact_email === "string" && row.client_contact_email.trim()
+          ? row.client_contact_email.trim()
+          : null,
+      contact_phone: contactPhonePayload,
       placement_id: row.placement_id,
       category_slug: row.category_slug,
       category_title_cs: premiumCategoryTitleCs(String(row.category_slug || "")),
@@ -183,16 +243,28 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       published_at_label_cs: formatAdminPragueDateTime(
         row.published_at != null ? String(row.published_at) : null
       ),
+      campaign_end_at: campaignEndAt,
+      campaign_end_at_label_cs: formatAdminPragueDateTime(campaignEndAt),
+      campaign_status: campaignStatus,
+      is_paused: campaignStatus === "paused",
+      payment_status: paymentStatus,
+      payment_status_label_cs: paymentStatus === "paid" ? "Uhrazeno" : "Neuhrazeno",
+      paid_at: row.paid_at ?? null,
+      payment_received_at: row.payment_received_at ?? null,
+      ending_soon_days: endingSoonDays,
+      admin_paused_at: row.admin_paused_at ?? null,
+      admin_pause_reason: row.admin_pause_reason ?? null,
       note_client: noteClient,
       published_campaign_id: row.published_campaign_id ?? null,
       creative_id: row.creative_id ?? null,
+      submitted_label_cs: "Odesláno ke schválení a zveřejnění objednatelem",
     },
     creative,
     preview_html: previewHtml,
     preview_css_href: "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261006-five-modes",
     preview_render_js_href: "https://infouzel.cz/assets/iu-premium-creative-render-v1.js?v=premium-creative-v1-20261006",
-    placement_conflict: placementConflict?.active_campaign_id
-      ? { active_campaign_id: placementConflict.active_campaign_id }
-      : null,
+    placement_conflict: placementConflict,
+    history,
+    internal_notes,
   });
 }
