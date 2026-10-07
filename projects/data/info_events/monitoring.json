@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-07T07:55:49.156Z",
-    "lastSuccessAt": "2026-10-07T07:55:52.441Z",
-    "lastChangedAt": "2026-10-06T13:05:58.334Z",
+    "lastRunAt": "2026-10-07T08:15:47.318Z",
+    "lastSuccessAt": "2026-10-07T08:15:52.407Z",
+    "lastChangedAt": "2026-10-07T08:15:51.504Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6ac4e456-1bc\"",
-    "lastModified": "Tue, 06 Oct 2026 12:06:46 GMT",
+    "etag": "\"6ac5fba3-17a8a6\"",
+    "lastModified": "Wed, 07 Oct 2026 07:58:27 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -433,11 +433,11 @@
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -445,13 +445,13 @@
     "discoveryMaxFiles": null,
     "discoveryFixedLimit": false,
     "productStreams": [
-      "70",
-      "50"
+      "50",
+      "70"
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 18,
       "logicalAlerts": 0,
       "uniqueEvents": [],
       "totalAreas": 0,
@@ -462,8 +462,8 @@
       "publishedScheduled": 0,
       "publishableCount": 0,
       "productStreams": [
-        "70",
-        "50"
+        "50",
+        "70"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -471,13 +471,19 @@
       "expiredCount": 0,
       "cancelledCount": 0
     },
-    "alarms": [],
-    "lastCapSent": "2026-10-06T14:00:00+02:00",
+    "alarms": [
+      {
+        "code": "SUSPICIOUS_ACTIVE_DROP",
+        "prev": 3,
+        "next": 0
+      }
+    ],
+    "lastCapSent": "2026-10-07T09:58:19+02:00",
     "bulletinCacheSize": 2,
     "publish": false,
-    "publishReason": "validation_failed",
+    "publishReason": "suspicious_drop",
     "productionVerified": false,
-    "runMs": 5475,
+    "runMs": 6433,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
     "lastSnapshotAt": "2026-10-06T09:01:36.252Z",
     "freshness": {
@@ -485,25 +491,25 @@
       "officialFirstSeenAt": null,
       "officialLatestSentAt": null,
       "officialLatestValidFrom": null,
-      "discoveredAt": "2026-10-07T07:55:49.156Z",
-      "fetchedAt": "2026-10-07T07:55:49.156Z",
-      "transformedAt": "2026-10-07T07:55:54.631Z",
-      "validatedAt": "2026-10-07T07:55:54.631Z",
+      "discoveredAt": "2026-10-07T08:15:47.318Z",
+      "fetchedAt": "2026-10-07T08:15:47.318Z",
+      "transformedAt": "2026-10-07T08:15:53.752Z",
+      "validatedAt": "2026-10-07T08:15:53.752Z",
       "publishedAt": "2026-10-06T09:01:36.252Z",
       "endToEndLagMs": null
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
-          "productKey": "70",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_070758.xml",
+          "productKey": "50",
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060759.xml",
-          "productKey": "50",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
+          "productKey": "70",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
@@ -511,10 +517,10 @@
       ],
       "publish": {
         "publish": false,
-        "reason": "validation_failed",
+        "reason": "suspicious_drop",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 18,
           "logicalAlerts": 0,
           "uniqueEvents": [],
           "totalAreas": 0,
@@ -525,8 +531,8 @@
           "publishedScheduled": 0,
           "publishableCount": 0,
           "productStreams": [
-            "70",
-            "50"
+            "50",
+            "70"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
@@ -534,12 +540,42 @@
           "expiredCount": 0,
           "cancelledCount": 0
         },
-        "alarms": [],
+        "alarms": [
+          {
+            "code": "SUSPICIOUS_ACTIVE_DROP",
+            "prev": 3,
+            "next": 0
+          }
+        ],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-10-07T08:15:47.318Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": false,
+        "runMs": 6433,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-07T07:55:49.156Z",
         "status": "not_modified",
@@ -1052,17 +1088,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6554,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-05T12:31:08.603Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6302,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
