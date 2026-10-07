@@ -30,16 +30,57 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
   const status = url.searchParams.get("status");
   const q = (url.searchParams.get("q") || "").trim();
   const payment = url.searchParams.get("payment");
+  const filter = url.searchParams.get("filter");
+  const categorySlug = url.searchParams.get("category");
+  const positionParam = url.searchParams.get("position");
+  const endingDays = url.searchParams.get("ending_days");
   const limit = Math.min(200, Number(url.searchParams.get("limit") || "100") || 100);
+  const nowIso = new Date().toISOString();
   const conditions: string[] = [];
   const params: unknown[] = [];
   if (status) {
     conditions.push("po.workflow_status = ?");
     params.push(status);
   }
+  if (filter === "pending_review") {
+    conditions.push("po.workflow_status IN ('submitted','under_review')");
+  } else if (filter === "published_active") {
+    conditions.push("po.workflow_status = 'published'");
+    conditions.push("EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND c.status = 'active' AND c.end_at > ?)");
+    params.push(nowIso);
+  } else if (filter === "paused") {
+    conditions.push("EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND c.status = 'paused')");
+  } else if (filter === "ended") {
+    conditions.push(
+      "EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND (c.status = 'ended' OR c.end_at <= ?))"
+    );
+    params.push(nowIso);
+  } else if (filter === "rejected") {
+    conditions.push("po.workflow_status = 'rejected'");
+  }
   if (payment === "paid" || payment === "unpaid") {
     conditions.push("COALESCE(po.payment_status,'unpaid') = ?");
     params.push(payment);
+  }
+  if (categorySlug) {
+    conditions.push("po.category_slug = ?");
+    params.push(categorySlug);
+  }
+  if (positionParam) {
+    const pos = Number(positionParam);
+    if (pos >= 1 && pos <= 8) {
+      conditions.push("po.position = ?");
+      params.push(pos);
+    }
+  }
+  if (endingDays === "30" || endingDays === "14" || endingDays === "7") {
+    const days = Number(endingDays);
+    const until = new Date(Date.now() + days * 86400000).toISOString();
+    conditions.push("po.workflow_status = 'published'");
+    conditions.push(
+      "EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND c.end_at > ? AND c.end_at <= ?)"
+    );
+    params.push(nowIso, until);
   }
   if (q) {
     conditions.push(

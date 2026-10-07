@@ -79,6 +79,12 @@ must(/contact_person_name/.test(adminPreviewTs), "admin detail exposes order con
 must(!/is_primary = 1/.test(adminPreviewTs), "admin must not prefer client primary contact over order");
 must(/generateCustomerOrderCode/.test(publicOrderTs), "secure customer order code on submit");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0016_premium_order_admin_lifecycle.sql")), "migration 0016 admin lifecycle");
+must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0017_premium_order_portal_scope_revisions.sql")), "migration 0017 portal scope revisions");
+must(/ensurePremiumOrderPortalAccess/.test(publicOrderTs), "portal client_access_codes on submit");
+must(/scopedPremiumOrderId/.test(read("cloudflare/iu-ads/src/client-auth.ts")), "client session premium order scope");
+must(/handleAdminPremiumDeleteOrder/.test(indexTs), "admin delete/archive order");
+must(/Interní poznámky/.test(adminUiScriptTs), "admin internal notes section");
+must(!/internal_notes/.test(clientPremiumTs), "client portal must not expose internal notes");
 must(/Objednávky — Vybrané služby a odkazy/.test(adminNavTs), "premium orders nav label");
 must(/handleAdminPremiumExtend/.test(indexTs), "admin renewal extend endpoint");
 must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");

@@ -101,6 +101,12 @@ export function formatPremiumOrderEventLineCs(event: {
         " → " +
         formatAdminPragueDateTime(String(event.payload.new_end_at || ""))
       );
+    case "creative_change_requested":
+      return "Požadována změna reklamy (verze " + String(event.payload.version || "?") + ", čeká na schválení)";
+    case "order_deleted":
+      return event.payload.mode === "archived" ? "Objednávka stornována/archivována" : "Objednávka odstraněna";
+    case "admin_edit":
+      return "Administrativní úprava" + (event.payload.field ? ": " + String(event.payload.field) : "");
     default:
       return event.event_type;
   }

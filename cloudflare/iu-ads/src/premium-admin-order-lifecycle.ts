@@ -232,19 +232,39 @@ export async function handleAdminPremiumPatchOrder(request: Request, env: Env, o
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
-  let body: { contact_person?: unknown; client_contact_email?: unknown };
+  let body: {
+    contact_person?: unknown;
+    client_contact_email?: unknown;
+    contact_phone?: unknown;
+    billing_info?: unknown;
+    confirm?: unknown;
+  };
   try {
     body = await request.json();
   } catch {
     return json({ error: "invalid_body" }, 400);
   }
+  if (body.confirm !== true) return json({ error: "confirmation_required" }, 400);
 
   const orderRow = await env.DB.prepare(
-    "SELECT o.contact_person, po.client_contact_email FROM premium_selected_orders po JOIN orders o ON o.order_id = po.order_id WHERE po.order_id = ?"
+    "SELECT o.contact_person, o.payload_json, o.client_id, po.client_contact_email FROM premium_selected_orders po JOIN orders o ON o.order_id = po.order_id WHERE po.order_id = ?"
   )
     .bind(orderId)
-    .first<{ contact_person: string | null; client_contact_email: string | null }>();
+    .first<{
+      contact_person: string | null;
+      client_contact_email: string | null;
+      payload_json: string | null;
+      client_id: string;
+    }>();
   if (!orderRow) return json({ error: "not_found" }, 404);
+
+  let payload: Record<string, unknown> = {};
+  try {
+    payload = JSON.parse(orderRow.payload_json || "{}") as Record<string, unknown>;
+  } catch {
+    payload = {};
+  }
+  const prevPhone = typeof payload.contact_phone === "string" ? payload.contact_phone : null;
 
   const nowIso = new Date().toISOString();
   if (typeof body.contact_person === "string") {
@@ -280,6 +300,43 @@ export async function handleAdminPremiumPatchOrder(request: Request, env: Env, o
           field: "E-mail",
           from: orderRow.client_contact_email,
           to: em,
+          actor_label: guard.userId,
+        },
+      });
+    }
+  }
+  if (typeof body.contact_phone === "string") {
+    const ph = body.contact_phone.trim();
+    if (ph.length >= 6 && ph.length <= 40) {
+      payload.contact_phone = ph;
+      await env.DB.prepare("UPDATE orders SET payload_json = ?, updated_at = ? WHERE order_id = ?")
+        .bind(JSON.stringify(payload), nowIso, orderId)
+        .run();
+      await appendPremiumOrderEvent(env.DB, {
+        orderId,
+        eventType: "contact_updated",
+        actorUserId: guard.userId,
+        payload: { field: "Telefon", from: prevPhone, to: ph, actor_label: guard.userId },
+      });
+    }
+  }
+  if (typeof body.billing_info === "string") {
+    const bill = body.billing_info.trim();
+    if (bill.length >= 5 && bill.length <= 4000) {
+      const clientRow = await env.DB.prepare("SELECT billing_info FROM clients WHERE client_id = ?")
+        .bind(orderRow.client_id)
+        .first<{ billing_info: string | null }>();
+      await env.DB.prepare("UPDATE clients SET billing_info = ?, updated_at = ? WHERE client_id = ?")
+        .bind(bill, nowIso, orderRow.client_id)
+        .run();
+      await appendPremiumOrderEvent(env.DB, {
+        orderId,
+        eventType: "admin_edit",
+        actorUserId: guard.userId,
+        payload: {
+          field: "Fakturační údaje",
+          from: clientRow?.billing_info || null,
+          to: bill,
           actor_label: guard.userId,
         },
       });

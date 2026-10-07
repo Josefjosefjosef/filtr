@@ -13,6 +13,7 @@ import {
   resolveCodeStatus,
   type ClientAccessCodeRow,
 } from "./admin-codes";
+import { parsePremiumPortalScope } from "./premium-order-portal";
 import { buildAuditEntry } from "./audit";
 import {
   DEFAULT_SESSION_TTL_SECONDS,
@@ -78,6 +79,8 @@ export type ClientSessionContext = {
   codeId: string;
   clientId: string;
   campaignIds: string[];
+  /** When set, client portal is scoped to a single premium order (IDOR guard). */
+  scopedPremiumOrderId: string | null;
 };
 
 export type ClientSessionResult =
@@ -129,6 +132,7 @@ export async function requireClientSession(request: Request, env: Env): Promise<
   }
 
   const campaignIds = await loadScopedCampaignIds(env.DB, codeRow.code_id);
+  const scope = parsePremiumPortalScope(codeRow.data_scope_json);
   return {
     ok: true,
     context: {
@@ -136,6 +140,7 @@ export async function requireClientSession(request: Request, env: Env): Promise<
       codeId: codeRow.code_id,
       clientId: codeRow.client_id,
       campaignIds,
+      scopedPremiumOrderId: scope?.premium_order_id ?? null,
     },
   };
 }
