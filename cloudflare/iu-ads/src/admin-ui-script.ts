@@ -625,6 +625,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
       sel("premium-filter-position","Pozice",[
         ["","Vše"],["1","P1"],["2","P2"],["3","P3"],["4","P4"],["5","P5"],["6","P6"],["7","P7"],["8","P8"]
       ],f.position||"")+
+      '<label>Sekce (slug)<input id="premium-filter-category" type="text" value="'+esc(f.category||"")+'" placeholder="např. cestovni-kancelare"></label>'+
       '</div><div class="row"><button type="button" class="btn" id="premium-filter-apply">Použít filtry</button></div></div>';
   }
   function premiumSummaryWidgetsHtml(s){
@@ -666,7 +667,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         q:val("premium-filter-q").trim(),
         filter:val("premium-filter-bucket"),
         payment:val("premium-filter-payment"),
-        category:f.category||"",
+        category:val("premium-filter-category").trim(),
         position:val("premium-filter-position"),
         ending_days:val("premium-filter-ending")
       };
