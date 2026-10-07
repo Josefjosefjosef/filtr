@@ -32,6 +32,7 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/inquiries",
   "/v1/admin/orders",
   "/v1/admin/premium/orders",
+  "/v1/admin/premium/orders/pending-count",
   "/v1/client/premium/summary",
   "/v1/client/premium/renewals",
   "/v1/admin/contracts",
@@ -93,6 +94,17 @@ function pathIsKnown(path: string): boolean {
 }
 
 describe("UI ↔ API contracts (PR #7711)", () => {
+  it("premium orders admin uses human list, badge, confirm publish", () => {
+    expect(ADMIN_UI_SCRIPT).toContain("nav-badge");
+    expect(ADMIN_UI_SCRIPT).toContain("order-cards");
+    expect(ADMIN_UI_SCRIPT).toContain("order-table-desktop");
+    expect(ADMIN_UI_SCRIPT).toContain("premium-publish-modal");
+    expect(ADMIN_UI_SCRIPT).toContain("Finální kontrola před zveřejněním");
+    expect(ADMIN_UI_SCRIPT).toContain("renderPremiumOrdersAdmin");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders");
+    expect(ADMIN_UI_SCRIPT).not.toContain('listTable(rows,[["order_id","Objednávka"]');
+  });
+
   it("password change uses camelCase body keys expected by admin-auth", () => {
     expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/auth/password/change");
     expect(ADMIN_UI_SCRIPT).toMatch(/currentPassword\s*:\s*val\("pw-cur"\)/);

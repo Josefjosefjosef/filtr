@@ -3,7 +3,12 @@
  */
 import { json, requireAdminPermission } from "./admin-auth";
 import { premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
-import { formatPremiumTotalPriceLabelCs } from "./premium-selected-services";
+import {
+  formatAdminPragueDateTime,
+  parsePremiumOrderPayload,
+  premiumWorkflowStatusLabelCs,
+} from "./premium-order-workflow";
+import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import type { Env } from "./types";
 
@@ -38,12 +43,15 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const row = await env.DB.prepare(
-    `SELECT po.*, o.client_id, o.order_number, o.payload_json, c.company_name,
-            ps.agreed_price_cents, ps.catalog_price_cents, ps.currency AS snap_currency
+    `SELECT po.*, o.client_id, o.order_number, o.payload_json, o.contact_person, o.created_at AS order_created_at,
+            c.company_name, c.ico, c.dic, c.address, c.billing_info,
+            ps.agreed_price_cents, ps.catalog_price_cents, ps.currency AS snap_currency,
+            ct.full_name AS contact_full_name, ct.email AS contact_email, ct.phone AS contact_phone
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id
      LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
+     LEFT JOIN client_contacts ct ON ct.client_id = c.client_id AND ct.is_primary = 1
      WHERE po.order_id = ?`
   )
     .bind(orderId)
@@ -104,20 +112,20 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const agreed = row.agreed_price_cents ?? row.catalog_price_cents;
   const priceLabel = agreed != null ? formatPremiumTotalPriceLabelCs(Number(agreed)) : null;
 
-  let orderingPersonName: string | null = null;
-  let authorizationConfirmed = false;
-  try {
-    const payload =
-      typeof row.payload_json === "string" ? JSON.parse(row.payload_json) : row.payload_json;
-    if (payload && typeof payload === "object") {
-      if (typeof payload.ordering_person_name === "string" && payload.ordering_person_name.trim()) {
-        orderingPersonName = payload.ordering_person_name.trim();
-      }
-      authorizationConfirmed = payload.authorization_confirmed === true;
-    }
-  } catch {
-    /* historical orders may omit fields */
-  }
+  const payloadSnap = parsePremiumOrderPayload(
+    typeof row.payload_json === "string" ? row.payload_json : null
+  );
+  const agreedCents =
+    row.agreed_price_cents != null
+      ? Number(row.agreed_price_cents)
+      : payloadSnap.agreed_price_cents ?? row.catalog_price_cents;
+  const priceLabelDetail =
+    agreedCents != null && Number.isFinite(Number(agreedCents))
+      ? formatPremiumTotalPriceLabelCs(Number(agreedCents))
+      : priceLabel;
+
+  const noteClient =
+    typeof row.note_client === "string" && row.note_client.trim() ? row.note_client.trim() : payloadSnap.note;
 
   return json({
     order: {
@@ -125,17 +133,38 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       order_number: row.order_number,
       client_id: row.client_id,
       company_name: row.company_name,
+      ico: row.ico ?? payloadSnap.ico,
+      dic: row.dic ?? payloadSnap.dic,
+      address: row.address,
+      billing_info: row.billing_info,
+      contact_name: row.contact_full_name ?? row.contact_person,
+      contact_email: row.client_contact_email ?? row.contact_email,
+      contact_phone: row.contact_phone,
       placement_id: row.placement_id,
       category_slug: row.category_slug,
+      category_title_cs: premiumCategoryTitleCs(String(row.category_slug || "")),
       position: row.position,
+      position_label: "P" + String(row.position),
       workflow_status: row.workflow_status,
+      workflow_status_label_cs: premiumWorkflowStatusLabelCs(String(row.workflow_status || "")),
       target_url: row.target_url,
       creative_mode: row.creative_mode,
       creative_mode_label_cs: premiumCreativeModeLabelCs(String(row.creative_mode || "logo")),
-      price_label_cs: priceLabel,
-      duration_months: 6,
-      ordering_person_name: orderingPersonName,
-      authorization_confirmed: authorizationConfirmed,
+      price_label_cs: priceLabelDetail,
+      duration_months: PREMIUM_DURATION_MONTHS,
+      ordering_person_name: payloadSnap.ordering_person_name,
+      authorization_confirmed: payloadSnap.authorization_confirmed,
+      terms_version: payloadSnap.terms_version,
+      terms_effective_at: payloadSnap.terms_effective_at,
+      submitted_at: row.created_at,
+      submitted_at_label_cs: formatAdminPragueDateTime(String(row.created_at || "")),
+      published_at: row.published_at ?? null,
+      published_at_label_cs: formatAdminPragueDateTime(
+        row.published_at != null ? String(row.published_at) : null
+      ),
+      note_client: noteClient,
+      published_campaign_id: row.published_campaign_id ?? null,
+      creative_id: row.creative_id ?? null,
     },
     creative,
     preview_html: previewHtml,

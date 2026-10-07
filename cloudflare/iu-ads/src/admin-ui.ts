@@ -52,7 +52,26 @@ export function buildAdminShellHtml(nonce: string): string {
     #login-view.show,#app-view.show{display:block}
     .nav-toggle{display:none}
     #nav-backdrop{display:none}
+    .nav-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.35rem;padding:0 .35rem;margin-left:.35rem;border-radius:999px;background:var(--danger);color:#fff;font-size:.72rem;font-weight:600;line-height:1.35;vertical-align:middle}
+    .order-table-desktop{display:block}
+    .order-cards{display:none}
+    .order-card{border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;margin:.65rem 0;background:#fff;cursor:pointer}
+    .order-card:focus-visible,.order-row-click:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .order-card-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+    .order-status{font-size:.85rem;font-weight:600;color:var(--accent)}
+    .order-card-actions{margin-top:.65rem}
+    .detail-dl{display:grid;grid-template-columns:minmax(8rem,11rem) 1fr;gap:.35rem .75rem;margin:0}
+    .detail-dl dt{color:var(--muted);margin:0}
+    .detail-dl dd{margin:0}
+    .preview-box{max-width:220px;margin-top:.75rem}
+    .tech-ids{margin-top:.75rem}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:center;justify-content:center;padding:1rem}
+    .modal-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.15rem;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+    .confirm-list{margin:.5rem 0 1rem;padding-left:1.2rem}
     @media (max-width:860px){
+      .order-table-desktop{display:none}
+      .order-cards{display:block}
+      main{overflow-x:hidden}
       .layout{grid-template-columns:1fr;display:block}
       .nav-toggle{display:inline-block}
       header{padding:.65rem 1rem;padding-top:calc(.65rem + env(safe-area-inset-top,0px))}

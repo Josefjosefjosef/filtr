@@ -124,6 +124,7 @@ import {
 } from "./public-premium-order";
 import {
   handleAdminPremiumListOrders,
+  handleAdminPremiumPendingCount,
   handleAdminPremiumApprovePublish,
   handleAdminPremiumReject,
   handleAdminPremiumSuspend,
@@ -578,6 +579,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       const backupIdMatch = path.match(/^\/v1\/admin\/backups\/([^/]+)$/);
       if (backupIdMatch && method === "GET") return handleGetBackup(request, env, backupIdMatch[1]);
 
+      if (path === "/v1/admin/premium/orders/pending-count" && method === "GET") {
+        return handleAdminPremiumPendingCount(request, env);
+      }
       if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
       const premiumDetailMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
       if (premiumDetailMatch && method === "GET") return handleAdminPremiumOrderDetail(request, env, premiumDetailMatch[1]);
