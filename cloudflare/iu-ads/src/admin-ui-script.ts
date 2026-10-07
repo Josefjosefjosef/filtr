@@ -5,7 +5,11 @@
 export const ADMIN_UI_SCRIPT = String.raw`
 (function(){
   "use strict";
-  var state = { health:null, me:null, nav:[], view:"dashboard", roles:[], flash:null, orderDetailId:null, publishConfirmRow:null, publishBusy:false };
+  var state = {
+    health:null, me:null, nav:[], view:"dashboard", roles:[], flash:null,
+    orderDetailId:null, publishConfirmRow:null, publishBusy:false,
+    premiumFilters:{ q:"", filter:"", payment:"", category:"", position:"", ending_days:"" }
+  };
   var el = function(id){ return document.getElementById(id); };
   function esc(s){
     return String(s==null?"":s).replace(/[&<>"']/g,function(c){
@@ -387,9 +391,18 @@ export const ADMIN_UI_SCRIPT = String.raw`
       b.onclick=async function(ev){
         ev.stopPropagation();
         var id=b.getAttribute("data-premium-extend");
-        if(!window.confirm("Prodloužit reklamu o 6 měsíců od současného konce?")) return;
+        var row=rowsById[id]||{};
+        var msg="Prodloužit reklamu o 6 kalendářních měsíců od současného konce?\n\n"+
+          "Firma: "+(row.company_name||"—")+"\n"+
+          "Kód: "+(row.customer_order_code||row.order_number||id)+"\n"+
+          "Sekce: "+(row.category_title_cs||row.category_slug||"—")+"\n"+
+          "Pozice: "+(row.position_label||("P"+row.position))+"\n"+
+          "Konec: "+(row.campaign_end_at_label_cs||"—");
+        if(!window.confirm(msg)) return;
         var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/extend",{method:"POST",body:JSON.stringify({idempotency_key:"ui:extend:"+id})});
-        state.flash=r.res.ok?"Reklama prodloužena.":"Chyba: "+apiError(r.body);
+        if(r.res.ok&&r.body){
+          state.flash="Prodlouženo: "+formatCsDate(r.body.old_end_at)+" → "+formatCsDate(r.body.new_end_at)+", cena "+formatKc(r.body.price_cents);
+        } else state.flash="Chyba: "+apiError(r.body);
         if(r.res.ok) state.orderDetailId=id;
         render();
       };
@@ -417,6 +430,55 @@ export const ADMIN_UI_SCRIPT = String.raw`
         render();
       };
     });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-delete]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-delete");
+        if(!id) return;
+        if(!window.confirm("Odstranit objednávku? Tato akce je nevratná (u účetních záznamů proběhne archivace).")) return;
+        var reason=window.prompt("Důvod (volitelné):","");
+        if(reason===null) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/delete",{method:"POST",body:JSON.stringify({confirm:true,reason:String(reason||"").trim()})});
+        state.flash=r.res.ok?(r.body&&r.body.message_cs?r.body.message_cs:"Objednávka odstraněna."):"Chyba: "+apiError(r.body);
+        if(r.res.ok){ state.orderDetailId=null; await loadNav(); }
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-edit]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-edit");
+        var cp=window.prompt("Kontaktní osoba:",b.getAttribute("data-cp")||"");
+        if(cp===null) return;
+        var em=window.prompt("E-mail:",b.getAttribute("data-em")||"");
+        if(em===null) return;
+        var ph=window.prompt("Telefon:",b.getAttribute("data-ph")||"");
+        if(ph===null) return;
+        var bill=window.prompt("Fakturační údaje:",b.getAttribute("data-bill")||"");
+        if(bill===null) return;
+        var summary="Uložit změny?\nKontakt: "+cp+"\nE-mail: "+em+"\nTelefon: "+ph;
+        if(!window.confirm(summary)) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id),{method:"PATCH",body:JSON.stringify({
+          confirm:true, contact_person:cp, client_contact_email:em, contact_phone:ph, billing_info:bill
+        })});
+        state.flash=r.res.ok?"Údaje uloženy.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    var noteBtn=el("premium-add-note-btn");
+    if(noteBtn){
+      noteBtn.onclick=async function(){
+        var id=noteBtn.getAttribute("data-order-id");
+        var ta=el("premium-note-text");
+        var text=ta&&ta.value?String(ta.value).trim():"";
+        if(!text){ state.flash="Zadejte text poznámky."; render(); return; }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/notes",{method:"POST",body:JSON.stringify({body_text:text})});
+        state.flash=r.res.ok?"Poznámka přidána.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    }
     var cancel=el("premium-publish-cancel");
     if(cancel) cancel.onclick=function(){ state.publishConfirmRow=null; render(); };
     var confirmBtn=el("premium-publish-confirm");
@@ -499,7 +561,16 @@ export const ADMIN_UI_SCRIPT = String.raw`
         (ord.payment_status==="paid"?
           '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
           '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
+      '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'" data-cp="'+esc(ord.contact_person_name||ord.contact_name||"")+'" data-em="'+esc(ord.contact_email||"")+'" data-ph="'+esc(ord.contact_phone||"")+'" data-bill="'+esc(ord.billing_info||"")+'">Upravit objednávku</button> '+
+      '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit objednávku</button> '+
       "</div></div>"+
+      '<div class="card"><h3>Interní poznámky</h3>'+
+      (body.internal_notes&&body.internal_notes.length?
+        '<ul class="history-list">'+body.internal_notes.map(function(n){
+          return "<li><strong>"+esc(n.created_at_label_cs||formatCsDate(n.created_at))+"</strong> — "+esc(n.author_label||n.author_user_id||"Admin")+"<br>"+esc(n.body_text)+"</li>";
+        }).join("")+"</ul>":'<p class="muted empty">Zatím žádné interní poznámky.</p>')+
+      '<label for="premium-note-text">Nová poznámka</label><textarea id="premium-note-text" rows="3" maxlength="4000"></textarea>'+
+      '<button type="button" class="btn secondary" id="premium-add-note-btn" data-order-id="'+esc(ord.order_id)+'">Přidat poznámku</button></div>'+
       (body.history&&body.history.length?'<div class="card"><h3>Historie objednávky</h3><ul class="history-list">'+
         body.history.map(function(h){ return "<li><strong>"+esc(h.created_at_label_cs)+"</strong> — "+esc(h.summary_cs)+"</li>"; }).join("")+
         "</ul></div>":"")+
@@ -531,15 +602,76 @@ export const ADMIN_UI_SCRIPT = String.raw`
       }
     }
   }
+  function premiumOrdersFilterBarHtml(){
+    var f=state.premiumFilters||{};
+    return '<div class="card filters-card"><h3>Filtry objednávek</h3>'+
+      '<div class="filter-grid">'+
+      '<label>Hledat<input id="premium-filter-q" type="search" value="'+esc(f.q||"")+'" placeholder="firma, IČO, kód, kontakt, e-mail"></label>'+
+      sel("premium-filter-bucket","Stav",[
+        ["","Vše"],
+        ["pending_review","Čeká na posouzení"],
+        ["published_active","Schváleno a zveřejněno"],
+        ["paused","Pozastaveno"],
+        ["ended","Ukončeno"],
+        ["rejected","Zamítnuto"]
+      ],f.filter||"")+
+      sel("premium-filter-payment","Platba",[["","Vše"],["unpaid","Neuhrazeno"],["paid","Uhrazeno"]],f.payment||"")+
+      sel("premium-filter-ending","Konec do",[
+        ["","—"],
+        ["30","30 dnů"],
+        ["14","14 dnů"],
+        ["7","7 dnů"]
+      ],f.ending_days||"")+
+      sel("premium-filter-position","Pozice",[
+        ["","Vše"],["1","P1"],["2","P2"],["3","P3"],["4","P4"],["5","P5"],["6","P6"],["7","P7"],["8","P8"]
+      ],f.position||"")+
+      '</div><div class="row"><button type="button" class="btn" id="premium-filter-apply">Použít filtry</button></div></div>';
+  }
+  function premiumSummaryWidgetsHtml(s){
+    if(!s||typeof s!=="object") return "";
+    return '<div class="widgets">'+[
+      ["Čeká na schválení",s.pending_review],
+      ["Aktivní",s.active_published],
+      ["Pozastavené",s.paused],
+      ["Končí do 30 dnů",s.ending_within_30_days],
+      ["Neuhrazené",s.unpaid]
+    ].map(function(pair){
+      return '<div class="widget"><div class="widget-k">'+esc(pair[0])+'</div><div class="widget-v">'+esc(String(pair[1]||0))+'</div></div>';
+    }).join("")+"</div>";
+  }
   async function renderPremiumOrdersAdmin(){
     if(state.orderDetailId) return renderPremiumOrderDetail(state.orderDetailId);
-    var po=await api("/v1/admin/premium/orders",{method:"GET",headers:{}});
+    var f=state.premiumFilters||{};
+    var qs=new URLSearchParams();
+    if(f.q) qs.set("q",f.q);
+    if(f.filter) qs.set("filter",f.filter);
+    if(f.payment) qs.set("payment",f.payment);
+    if(f.category) qs.set("category",f.category);
+    if(f.position) qs.set("position",f.position);
+    if(f.ending_days) qs.set("ending_days",f.ending_days);
+    var sum=await api("/v1/admin/premium/orders/summary",{method:"GET",headers:{}});
+    var path="/v1/admin/premium/orders"+(qs.toString()?"?"+qs.toString():"");
+    var po=await api(path,{method:"GET",headers:{}});
     if(!po.res.ok){ panel('<p class="err">'+esc(apiError(po.body))+'</p>'); return; }
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
     panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
-      premiumOrdersTableHtml(rows)+premiumOrdersCardsHtml(rows)+"</div>"+publishConfirmDialogHtml(state.publishConfirmRow));
+      premiumSummaryWidgetsHtml(sum.body)+"</div>"+
+      premiumOrdersFilterBarHtml()+
+      '<div class="card">'+premiumOrdersTableHtml(rows)+premiumOrdersCardsHtml(rows)+"</div>"+publishConfirmDialogHtml(state.publishConfirmRow));
+    var apply=el("premium-filter-apply");
+    if(apply) apply.onclick=function(){
+      state.premiumFilters={
+        q:val("premium-filter-q").trim(),
+        filter:val("premium-filter-bucket"),
+        payment:val("premium-filter-payment"),
+        category:f.category||"",
+        position:val("premium-filter-position"),
+        ending_days:val("premium-filter-ending")
+      };
+      render();
+    };
     wirePremiumOrderInteractions(rowsById);
   }
   function auditLabel(op){

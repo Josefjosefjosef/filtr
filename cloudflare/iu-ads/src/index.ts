@@ -140,6 +140,12 @@ import {
   handleAdminPremiumPatchOrder,
   handleAdminPremiumSetPayment,
 } from "./premium-admin-order-lifecycle";
+import { handleAdminPremiumBackfillCodes } from "./premium-order-backfill";
+import { handleAdminPremiumDeleteOrder } from "./premium-order-delete";
+import {
+  handleAdminPremiumApproveRevision,
+  handleAdminPremiumRequestRevision,
+} from "./premium-order-revisions";
 import { handleClientPremiumSummary } from "./client-premium";
 import { buildPremiumOrderMetaHtml } from "./premium-order-meta";
 import { buildPremiumOrderShellHtml } from "./premium-order-ui";
@@ -593,6 +599,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
         return handleAdminPremiumOrderSummary(request, env);
       }
       if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
+      if (path === "/v1/admin/premium/orders/backfill-codes" && method === "POST") {
+        return handleAdminPremiumBackfillCodes(request, env);
+      }
       const premiumDetailMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
       if (premiumDetailMatch && method === "GET") return handleAdminPremiumOrderDetail(request, env, premiumDetailMatch[1]);
       const premiumApproveMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/approve-publish$/);
@@ -611,6 +620,16 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (premiumNoteMatch && method === "POST") return handleAdminPremiumAddNote(request, env, premiumNoteMatch[1]);
       const premiumPatchMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
       if (premiumPatchMatch && method === "PATCH") return handleAdminPremiumPatchOrder(request, env, premiumPatchMatch[1]);
+      const premiumDeleteMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/delete$/);
+      if (premiumDeleteMatch && method === "POST") return handleAdminPremiumDeleteOrder(request, env, premiumDeleteMatch[1]);
+      const premiumRevisionMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/revisions$/);
+      if (premiumRevisionMatch && method === "POST") {
+        return handleAdminPremiumRequestRevision(request, env, premiumRevisionMatch[1]);
+      }
+      const premiumRevisionApproveMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/revisions\/([^/]+)\/approve$/);
+      if (premiumRevisionApproveMatch && method === "POST") {
+        return handleAdminPremiumApproveRevision(request, env, premiumRevisionApproveMatch[1], premiumRevisionApproveMatch[2]);
+      }
       const premiumPriceMatch = path.match(/^\/v1\/admin\/premium\/placements\/([^/]+)\/price$/);
       if (premiumPriceMatch && method === "PATCH") return handleAdminPremiumUpdatePlacementPrice(request, env, premiumPriceMatch[1]);
 

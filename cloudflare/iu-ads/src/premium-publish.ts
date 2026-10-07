@@ -3,7 +3,8 @@
  */
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
-import { hashClientAccessCode, generateClientAccessCode } from "./admin-codes";
+import { ensurePremiumOrderPortalAccess, linkCampaignToPremiumPortalCode } from "./premium-order-portal";
+import { normalizeCustomerOrderCode } from "./premium-order-access-code";
 import {
   addCalendarDaysFromIso,
   addCalendarMonthsFromIso,
@@ -117,9 +118,9 @@ export async function executePremiumApproveAndPublish(
   if (!creative) return { ok: false, status: 404, error: "creative_not_found" };
 
   const order = await db
-    .prepare("SELECT order_id, client_id, order_number FROM orders WHERE order_id = ?")
+    .prepare("SELECT order_id, client_id, order_number, customer_order_code FROM orders WHERE order_id = ?")
     .bind(input.orderId)
-    .first<{ order_id: string; client_id: string; order_number: string }>();
+    .first<{ order_id: string; client_id: string; order_number: string; customer_order_code: string | null }>();
   if (!order) return { ok: false, status: 404, error: "order_not_found" };
 
   let renewalOfferId: string | null = null;
@@ -392,30 +393,21 @@ export async function executePremiumApproveAndPublish(
 
   let accessCodePlain: string | null = null;
   if (env.ADS_CODE_PEPPER) {
-    const existingCode = await db
-      .prepare("SELECT code_id FROM client_access_codes WHERE client_id = ? AND status = 'active' LIMIT 1")
-      .bind(order.client_id)
-      .first<{ code_id: string }>();
-    if (!existingCode) {
-      const gen = generateClientAccessCode();
-      accessCodePlain = gen.plaintext;
-      const codeHash = await hashClientAccessCode(gen.plaintext, env.ADS_CODE_PEPPER);
-      const codeId = newId("cod");
-      await db
-        .prepare(
-          "INSERT INTO client_access_codes (code_id, client_id, code_hash, code_prefix, status, created_at, created_by) VALUES (?,?,?,?,?,?,?)"
-        )
-        .bind(codeId, order.client_id, codeHash, gen.prefix, "active", nowIso, input.actorUserId)
-        .run();
-      await db
-        .prepare("INSERT INTO client_code_campaigns (code_id, campaign_id) VALUES (?,?)")
-        .bind(codeId, campaignId)
-        .run();
-    } else {
-      await db
-        .prepare("INSERT OR IGNORE INTO client_code_campaigns (code_id, campaign_id) VALUES (?,?)")
-        .bind(existingCode.code_id, campaignId)
-        .run();
+    const rawCode =
+      typeof order.customer_order_code === "string" && order.customer_order_code.trim()
+        ? order.customer_order_code
+        : order.order_number;
+    try {
+      await ensurePremiumOrderPortalAccess(db, env.ADS_CODE_PEPPER, {
+        orderId: input.orderId,
+        clientId: order.client_id,
+        customerOrderCode: rawCode,
+        createdBy: input.actorUserId,
+      });
+      await linkCampaignToPremiumPortalCode(db, input.orderId, campaignId);
+      accessCodePlain = normalizeCustomerOrderCode(rawCode);
+    } catch {
+      accessCodePlain = null;
     }
   }
 

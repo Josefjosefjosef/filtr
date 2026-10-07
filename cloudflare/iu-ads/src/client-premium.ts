@@ -32,17 +32,28 @@ export async function handleClientPremiumSummary(request: Request, env: Env, url
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const clientId = session.context.clientId;
+  const scopedOrderId = session.context.scopedPremiumOrderId;
   const origin = url.origin;
 
-  const orders = await env.DB.prepare(
-    `SELECT po.*, o.order_number, o.status AS order_status, o.payload_json
-     FROM premium_selected_orders po
-     JOIN orders o ON o.order_id = po.order_id
-     WHERE o.client_id = ?
-     ORDER BY po.created_at DESC`
-  )
-    .bind(clientId)
-    .all<Record<string, unknown>>();
+  const orders = scopedOrderId
+    ? await env.DB.prepare(
+        `SELECT po.*, o.order_number, o.customer_order_code, o.status AS order_status, o.payload_json
+         FROM premium_selected_orders po
+         JOIN orders o ON o.order_id = po.order_id
+         WHERE o.client_id = ? AND po.order_id = ?
+         ORDER BY po.created_at DESC`
+      )
+        .bind(clientId, scopedOrderId)
+        .all<Record<string, unknown>>()
+    : await env.DB.prepare(
+        `SELECT po.*, o.order_number, o.customer_order_code, o.status AS order_status, o.payload_json
+         FROM premium_selected_orders po
+         JOIN orders o ON o.order_id = po.order_id
+         WHERE o.client_id = ?
+         ORDER BY po.created_at DESC`
+      )
+        .bind(clientId)
+        .all<Record<string, unknown>>();
 
   const campaigns = await env.DB.prepare(
     "SELECT campaign_id, order_id, title, status, start_at, end_at, target_url, price_ex_vat_cents, invoice_id FROM campaigns WHERE client_id = ? AND pricing_model = ?"

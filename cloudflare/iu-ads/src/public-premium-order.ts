@@ -4,7 +4,8 @@
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId } from "./admin-auth";
 import { hashClientAccessCode } from "./admin-codes";
-import { generateCustomerOrderCode, hashOrderPortalCode } from "./premium-order-access-code";
+import { generateCustomerOrderCode } from "./premium-order-access-code";
+import { ensurePremiumOrderPortalAccess } from "./premium-order-portal";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
 import { validateCzechIco } from "./czech-ico";
@@ -275,13 +276,13 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     .run();
 
   if (env.ADS_CODE_PEPPER) {
-    const portalHash = await hashOrderPortalCode(orderNumber, env.ADS_CODE_PEPPER);
     try {
-      await env.DB.prepare(
-        "INSERT INTO premium_order_portal_codes (order_id, code_hash, code_prefix, created_at) VALUES (?,?,?,?)"
-      )
-        .bind(orderId, portalHash, customerCode.prefix, nowIso)
-        .run();
+      await ensurePremiumOrderPortalAccess(env.DB, env.ADS_CODE_PEPPER, {
+        orderId,
+        clientId,
+        customerOrderCode: orderNumber,
+        createdBy: null,
+      });
     } catch {
       /* migration pending */
     }
