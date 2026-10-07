@@ -42,6 +42,9 @@ const publicOrderTs = read("cloudflare/iu-ads/src/public-premium-order.ts");
 const publicSelectedTs = read("cloudflare/iu-ads/src/public-premium-selected.ts");
 const secHeadersTs = read("cloudflare/iu-ads/src/security-headers.ts");
 const adminUiTs = read("cloudflare/iu-ads/src/admin-ui.ts");
+const adminUiScriptTs = read("cloudflare/iu-ads/src/admin-ui-script.ts");
+const adminNavTs = read("cloudflare/iu-ads/src/admin-nav.ts");
+const premiumOrderWorkflowTs = read("cloudflare/iu-ads/src/premium-order-workflow.ts");
 const publishTs = read("cloudflare/iu-ads/src/premium-publish.ts");
 const clientPremiumTs = read("cloudflare/iu-ads/src/client-premium.ts");
 const clientUi = read("cloudflare/iu-ads/src/client-ui.ts");
@@ -132,6 +135,15 @@ must(/img-src 'self' blob: data:/.test(secHeadersTs), "CSP allows preview blobs"
 must(/iuJRGrid iuPremiumGrid/.test(publicJs), "premium grid matches affiliate JR grid");
 must(/btn-nav-toggle/.test(adminUiTs), "admin mobile nav drawer");
 must(/#nav-backdrop/.test(adminUiTs), "admin nav backdrop");
+must(/nav-badge/.test(adminUiScriptTs), "admin pending orders nav badge");
+must(/renderPremiumOrdersAdmin/.test(adminUiScriptTs), "admin premium orders list view");
+must(/premium-publish-modal/.test(adminUiScriptTs), "admin publish confirmation modal");
+must(/order-table-desktop/.test(adminUiScriptTs), "admin desktop orders table");
+must(/order-cards/.test(adminUiScriptTs), "admin mobile order cards");
+must(/countPendingPremiumOrders/.test(adminNavTs), "admin nav badge from D1 pending count");
+must(/countPendingPremiumOrders/.test(premiumOrderWorkflowTs), "pending count helper");
+must(/serializePremiumOrderAdminListRow/.test(premiumOrderWorkflowTs), "human-readable admin list rows");
+must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/test/premium-admin-lifecycle.test.ts")), "premium admin lifecycle tests");
 must(/max-width:\s*1024px/.test(premiumCss), "mobile/tablet premium compact rules");
 must(/schemaVersion:\s*"0015"/.test(indexTs), "health schemaVersion 0015");
 
