@@ -390,7 +390,7 @@ export async function handlePublicPremiumOrderUpload(request: Request, env: Env,
   const height = typeof body.height === "number" ? body.height : null;
 
   await env.DB.prepare(
-    "INSERT INTO creatives (creative_id, client_id, campaign_id, version, device_category, format, mime_type, width, height, byte_size, content_hash, r2_key, review_status, uploaded_by, created_at, updated_at) VALUES (?,?,?,1,'universal',?,?,?,?,?,?,'pending',NULL,?,?)"
+    "INSERT INTO creatives (creative_id, client_id, campaign_id, version, device_category, format, mime_type, width, height, byte_size, content_hash, r2_key, review_status, uploaded_by, created_at, updated_at) VALUES (?,?,?,1,'universal',?,?,?,?,?,?,?,'pending',NULL,?,?)"
   )
     .bind(creativeId, order.client_id, null, format, validation.mime, width, height, bytes.length, contentHash, r2Key, nowIso, nowIso)
     .run();
