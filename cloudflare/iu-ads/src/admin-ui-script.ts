@@ -264,8 +264,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(!row.pending_review && row.workflow_status!=="submitted" && row.workflow_status!=="under_review"){
       return btns;
     }
-    btns+='<button type="button" class="btn" data-premium-publish="'+id+'"'+stop+'>Schválit a zveřejnit</button> '+
-      '<button type="button" class="btn secondary" data-premium-reject="'+id+'"'+stop+'>Zamítnout</button>';
+    if(row.publishable){
+      btns+='<button type="button" class="btn" data-premium-publish="'+id+'"'+stop+'>Schválit a zveřejnit</button> ';
+    }
+    btns+='<button type="button" class="btn secondary" data-premium-reject="'+id+'"'+stop+'>Zamítnout</button>';
     return btns;
   }
   function premiumOrdersTableHtml(rows){
@@ -365,7 +367,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
       var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(row.order_id)+"/approve-publish",{method:"POST",body:JSON.stringify({idempotency_key:"ui:"+row.order_id})});
       state.publishBusy=false;
       state.publishConfirmRow=null;
-      state.flash=r.res.ok?"Reklama schválena a zveřejněna.":"Chyba: "+apiError(r.body);
+      var errMsg=apiError(r.body);
+      if(r.body&&r.body.error==="missing_creative_or_url"&&Array.isArray(r.body.missing)){
+        errMsg="Nelze zveřejnit — chybí: "+r.body.missing.map(function(f){return f==="creative"?"kreativa (upload)":"cílová URL";}).join(", ");
+      }
+      state.flash=r.res.ok?"Reklama schválena a zveřejněna.":"Chyba: "+errMsg;
       if(r.res.ok) state.orderDetailId=row.order_id;
       await loadNav();
       render();
@@ -416,7 +422,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<div class="card">'+tech+
       '<div class="row">'+
       (ord.workflow_status==="submitted"||ord.workflow_status==="under_review"?
-        '<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> '+
+        (ord.publishable?'<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> ':"")+
+        (ord.missing_publish_fields&&ord.missing_publish_fields.length?
+          '<p class="err">Nelze zveřejnit — chybí: '+esc(ord.missing_publish_fields.map(function(f){return f==="creative"?"nahraná kreativa":"cílová URL";}).join(", "))+'</p>':"")+
         '<button type="button" class="btn secondary" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
       "</div></div>"+css+publishConfirmDialogHtml(state.publishConfirmRow)
     );

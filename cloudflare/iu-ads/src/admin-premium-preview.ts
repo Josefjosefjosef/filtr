@@ -5,7 +5,9 @@ import { json, requireAdminPermission } from "./admin-auth";
 import { premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
 import {
   formatAdminPragueDateTime,
+  isPremiumOrderPublishable,
   parsePremiumOrderPayload,
+  premiumOrderMissingPublishFields,
   premiumWorkflowStatusLabelCs,
 } from "./premium-order-workflow";
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
@@ -127,6 +129,20 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const noteClient =
     typeof row.note_client === "string" && row.note_client.trim() ? row.note_client.trim() : payloadSnap.note;
 
+  const creativeIdStr =
+    typeof row.creative_id === "string" && row.creative_id.trim() ? row.creative_id.trim() : null;
+  const targetUrlStr = typeof row.target_url === "string" ? row.target_url : null;
+  const workflowStatusStr = String(row.workflow_status || "");
+  const missingPublishFields = premiumOrderMissingPublishFields({
+    creative_id: creativeIdStr,
+    target_url: targetUrlStr,
+  });
+  const publishable = isPremiumOrderPublishable({
+    workflow_status: workflowStatusStr,
+    creative_id: creativeIdStr,
+    target_url: targetUrlStr,
+  });
+
   return json({
     order: {
       order_id: row.order_id,
@@ -146,7 +162,12 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       position: row.position,
       position_label: "P" + String(row.position),
       workflow_status: row.workflow_status,
-      workflow_status_label_cs: premiumWorkflowStatusLabelCs(String(row.workflow_status || "")),
+      workflow_status_label_cs: premiumWorkflowStatusLabelCs(workflowStatusStr, {
+        creative_id: creativeIdStr,
+        target_url: targetUrlStr,
+      }),
+      publishable,
+      missing_publish_fields: missingPublishFields,
       target_url: row.target_url,
       creative_mode: row.creative_mode,
       creative_mode_label_cs: premiumCreativeModeLabelCs(String(row.creative_mode || "logo")),

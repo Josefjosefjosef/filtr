@@ -71,6 +71,7 @@ function auditStatic() {
     "static:no_panel_hint_before_sales_grid",
     !/function renderSalesPanel[\s\S]{0,500}<p class="iuPremiumSalesHint">/.test(js)
   );
+  ok("static:premium_grid_before_affiliate", /insertBefore\(host,\s*gridEl\)/.test(js));
 }
 
 auditStatic();
