@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-07T07:20:51.098Z",
-    "lastSuccessAt": "2026-10-07T07:20:54.617Z",
+    "lastRunAt": "2026-10-07T07:35:53.053Z",
+    "lastSuccessAt": "2026-10-07T07:35:56.189Z",
     "lastChangedAt": "2026-10-06T13:05:58.334Z",
     "lastError": null,
     "status": "not_modified",
@@ -477,7 +477,7 @@
     "publish": false,
     "publishReason": "validation_failed",
     "productionVerified": false,
-    "runMs": 5804,
+    "runMs": 5109,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
     "lastSnapshotAt": "2026-10-06T09:01:36.252Z",
     "freshness": {
@@ -485,10 +485,10 @@
       "officialFirstSeenAt": null,
       "officialLatestSentAt": null,
       "officialLatestValidFrom": null,
-      "discoveredAt": "2026-10-07T07:20:51.098Z",
-      "fetchedAt": "2026-10-07T07:20:51.098Z",
-      "transformedAt": "2026-10-07T07:20:56.902Z",
-      "validatedAt": "2026-10-07T07:20:56.902Z",
+      "discoveredAt": "2026-10-07T07:35:53.053Z",
+      "fetchedAt": "2026-10-07T07:35:53.053Z",
+      "transformedAt": "2026-10-07T07:35:58.163Z",
+      "validatedAt": "2026-10-07T07:35:58.163Z",
       "publishedAt": "2026-10-06T09:01:36.252Z",
       "endToEndLagMs": null
     },
@@ -540,6 +540,17 @@
       "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-10-07T07:35:53.053Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": false,
+        "runMs": 5109,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-07T07:20:51.098Z",
         "status": "not_modified",
@@ -1052,17 +1063,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 6439,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-05T11:50:47.928Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4361,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
