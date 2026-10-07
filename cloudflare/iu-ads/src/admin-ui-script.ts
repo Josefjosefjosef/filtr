@@ -349,10 +349,71 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ev.stopPropagation();
         var id=b.getAttribute("data-premium-reject");
         if(!id) return;
-        if(!window.confirm("Opravdu zamítnout tuto objednávku?")) return;
-        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reject",{method:"POST",body:"{}"});
+        var row=rowsById[id]||{};
+        var ref=row.customer_order_code||row.order_number||id;
+        var reason=window.prompt("Opravdu zamítnout objednávku "+ref+"?\n\nDůvod zamítnutí (povinný):","");
+        if(reason===null) return;
+        if(!String(reason).trim()){ state.flash="Zadejte důvod zamítnutí."; render(); return; }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reject",{method:"POST",body:JSON.stringify({reason:String(reason).trim()})});
         state.flash=r.res.ok?"Objednávka zamítnuta.":"Chyba: "+apiError(r.body);
         await loadNav();
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-suspend]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-suspend");
+        var reason=window.prompt("Důvod pozastavení reklamy:","");
+        if(reason===null) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/suspend",{method:"POST",body:JSON.stringify({reason:String(reason||"").trim()})});
+        state.flash=r.res.ok?"Reklama pozastavena.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-resume]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-resume");
+        if(!window.confirm("Znovu spustit reklamu?")) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reactivate",{method:"POST",body:"{}"});
+        state.flash=r.res.ok?"Reklama znovu spuštěna.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-extend]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-extend");
+        if(!window.confirm("Prodloužit reklamu o 6 měsíců od současného konce?")) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/extend",{method:"POST",body:JSON.stringify({idempotency_key:"ui:extend:"+id})});
+        state.flash=r.res.ok?"Reklama prodloužena.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-pay]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-pay");
+        var received=window.prompt("Datum přijetí platby (ISO nebo prázdné = nyní):","");
+        if(received===null) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/payment",{method:"PATCH",body:JSON.stringify({payment_status:"paid",payment_received_at:received.trim()||undefined})});
+        state.flash=r.res.ok?"Označeno uhrazeno.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-unpay]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-unpay");
+        if(!window.confirm("Označit objednávku jako neuhrazeno?")) return;
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/payment",{method:"PATCH",body:JSON.stringify({payment_status:"unpaid"})});
+        state.flash=r.res.ok?"Označeno neuhrazeno.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
         render();
       };
     });
@@ -383,6 +444,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var body=d.body||{};
     var ord=body.order||{};
     var css=body.preview_css_href?'<link rel="stylesheet" href="'+esc(body.preview_css_href)+'">':"";
+    if(body.preview_scoped_css){ css+='<style>'+String(body.preview_scoped_css)+"</style>"; }
     var modeLabel=ord.creative_mode_label_cs||ord.creative_mode||"";
     var tech='<details class="tech-ids"><summary>Technické údaje</summary><ul class="muted">'+
       "<li>Order ID: "+esc(ord.order_id)+"</li>"+
@@ -392,13 +454,15 @@ export const ADMIN_UI_SCRIPT = String.raw`
       "<li>Placement: "+esc(ord.placement_id)+"</li></ul></details>";
     panel(
       '<div class="card"><div class="row"><button type="button" class="btn secondary" id="order-detail-back">← Zpět na seznam</button></div>'+
-      "<h2>Objednávka — "+esc(ord.company_name)+"</h2>"+
-      '<p><span class="order-status">'+esc(ord.workflow_status_label_cs||ord.workflow_status)+"</span></p></div>"+
+      "<h2>"+esc(ord.customer_order_code||ord.order_number||"Objednávka")+" — "+esc(ord.company_name)+"</h2>"+
+      '<p><span class="order-status">'+esc(ord.workflow_status_label_cs||ord.workflow_status)+"</span> "+
+      (ord.payment_status==="paid"?'<span class="pay-paid">Uhrazeno</span>':'<span class="pay-unpaid">Neuhrazeno</span>')+
+      "</p></div>"+
       '<div class="card"><h3>Zákazník</h3><dl class="detail-dl">'+
       "<dt>Firma</dt><dd>"+esc(ord.company_name)+"</dd>"+
       "<dt>IČO</dt><dd>"+esc(ord.ico||"—")+"</dd>"+
       (ord.dic?"<dt>DIČ</dt><dd>"+esc(ord.dic)+"</dd>":"")+
-      "<dt>Kontakt</dt><dd>"+esc(ord.contact_name||"—")+"</dd>"+
+      "<dt>Kontaktní osoba</dt><dd>"+esc(ord.contact_person_name||ord.contact_name||"—")+"</dd>"+
       "<dt>E-mail</dt><dd>"+esc(ord.contact_email||"—")+"</dd>"+
       (ord.contact_phone?"<dt>Telefon</dt><dd>"+esc(ord.contact_phone)+"</dd>":"")+
       "<dt>Fakturační údaje</dt><dd>"+esc(ord.billing_info||ord.address||"—").replace(/\n/g,"<br>")+"</dd>"+
@@ -409,13 +473,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
       "<dt>Pozice</dt><dd>"+esc(ord.position_label||("P"+ord.position))+"</dd>"+
       "<dt>Období</dt><dd>"+esc(ord.duration_months||6)+" měsíců</dd>"+
       "<dt>Cena</dt><dd>"+esc(ord.price_label_cs||"—")+"</dd>"+
-      "<dt>Odesláno</dt><dd>"+esc(ord.submitted_at_label_cs||formatCsDate(ord.submitted_at))+"</dd>"+
-      (ord.published_at_label_cs && ord.published_at_label_cs!=="—" ? "<dt>Schváleno a zveřejněno</dt><dd>"+esc(ord.published_at_label_cs)+"</dd>" : "")+
+      "<dt>Odesláno ke schválení a zveřejnění</dt><dd>"+esc(ord.submitted_at_label_cs||formatCsDate(ord.submitted_at))+" · objednatelem</dd>"+
+      (ord.published_at_label_cs && ord.published_at_label_cs!=="—" ? '<dt>Schváleno a zveřejněno</dt><dd class="ts-published">'+esc(ord.published_at_label_cs)+"</dd>" : "")+
+      (ord.campaign_end_at_label_cs && ord.campaign_end_at_label_cs!=="—" ? '<dt>Konec reklamy</dt><dd class="ts-end">'+esc(ord.campaign_end_at_label_cs)+"</dd>" : "")+
       "<dt>Stav</dt><dd>"+esc(ord.workflow_status_label_cs||ord.workflow_status)+"</dd></dl></div>"+
       '<div class="card"><h3>Reklama</h3><p>URL: <a href="'+esc(ord.target_url||"#")+'" rel="noopener" target="_blank">'+esc(ord.target_url||"")+'</a></p>'+
       '<p>Typ kreativy: <strong>'+esc(modeLabel)+"</strong></p>"+
       (ord.note_client?'<p>Poznámka: '+esc(ord.note_client)+"</p>":"")+
-      (body.placement_conflict?'<p class="err">Konflikt placementu: '+esc(body.placement_conflict.active_campaign_id)+"</p>":"")+
+      (body.placement_conflict&&body.placement_conflict.foreign_owner?'<p class="err">Skutečný konflikt placementu — aktivní cizí kampaň.</p>':"")+
       '<div class="preview-box">'+String(body.preview_html||"")+"</div></div>"+
       (ord.terms_version?'<div class="card"><h3>Souhlasy</h3><p class="muted">Premium podmínky: '+esc(ord.terms_version)+
       (ord.terms_effective_at?" · účinnost "+esc(ord.terms_effective_at):"")+"</p></div>":"")+
@@ -425,8 +490,20 @@ export const ADMIN_UI_SCRIPT = String.raw`
         (ord.publishable?'<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> ':"")+
         (ord.missing_publish_fields&&ord.missing_publish_fields.length?
           '<p class="err">Nelze zveřejnit — chybí: '+esc(ord.missing_publish_fields.map(function(f){return f==="creative"?"nahraná kreativa":"cílová URL";}).join(", "))+'</p>':"")+
-        '<button type="button" class="btn secondary" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
-      "</div></div>"+css+publishConfirmDialogHtml(state.publishConfirmRow)
+        '<button type="button" class="btn danger" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
+      (ord.workflow_status==="published"?
+        (ord.is_paused?
+          '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
+          '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
+        '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> '+
+        (ord.payment_status==="paid"?
+          '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
+          '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
+      "</div></div>"+
+      (body.history&&body.history.length?'<div class="card"><h3>Historie objednávky</h3><ul class="history-list">'+
+        body.history.map(function(h){ return "<li><strong>"+esc(h.created_at_label_cs)+"</strong> — "+esc(h.summary_cs)+"</li>"; }).join("")+
+        "</ul></div>":"")+
+      css+publishConfirmDialogHtml(state.publishConfirmRow)
     );
     el("order-detail-back").onclick=function(){ state.orderDetailId=null; render(); };
     var rowsById={}; rowsById[ord.order_id]=ord;
@@ -461,7 +538,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
-    panel('<div class="card"><h2>Objednávky</h2><p class="muted">Prémiové objednávky „Vybrané služby a odkazy“. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
+    panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
       premiumOrdersTableHtml(rows)+premiumOrdersCardsHtml(rows)+"</div>"+publishConfirmDialogHtml(state.publishConfirmRow));
     wirePremiumOrderInteractions(rowsById);
   }

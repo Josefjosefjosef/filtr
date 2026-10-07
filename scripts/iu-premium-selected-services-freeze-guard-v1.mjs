@@ -74,6 +74,13 @@ must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0013_premium_se
 must(/measurement:\s*\{\s*impressions:\s*false/.test(clientPremiumTs), "client portal no impressions");
 must(/\/v1\/client\/premium\/summary/.test(clientUi), "client portal premium tab");
 must(/preview_html/.test(adminPreviewTs), "admin creative preview");
+must(/buildAdminPremiumPreviewScopedCss/.test(adminPreviewTs), "admin preview uses live slot geometry scope");
+must(/contact_person_name/.test(adminPreviewTs), "admin detail exposes order contact person");
+must(!/is_primary = 1/.test(adminPreviewTs), "admin must not prefer client primary contact over order");
+must(/generateCustomerOrderCode/.test(publicOrderTs), "secure customer order code on submit");
+must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/migrations/0016_premium_order_admin_lifecycle.sql")), "migration 0016 admin lifecycle");
+must(/Objednávky — Vybrané služby a odkazy/.test(adminNavTs), "premium orders nav label");
+must(/handleAdminPremiumExtend/.test(indexTs), "admin renewal extend endpoint");
 must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guard-v1.mjs")), "browser no-tracking guard");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-render-guard-v1.mjs")), "browser render guard");

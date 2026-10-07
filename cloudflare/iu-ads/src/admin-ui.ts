@@ -35,6 +35,13 @@ export function buildAdminShellHtml(nonce: string): string {
     .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.75rem}
     button.btn,a.btn{appearance:none;border:0;background:var(--accent);color:#fff;padding:.55rem .9rem;border-radius:8px;cursor:pointer;font:inherit;text-decoration:none;display:inline-block}
     button.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+    button.btn.danger{background:var(--danger);color:#fff}
+    button.btn.warning{background:#c45c00;color:#fff}
+    button.btn.success{background:var(--ok);color:#fff}
+    .ts-published{color:var(--ok);font-weight:600}
+    .ts-end{color:var(--danger);font-weight:600}
+    .pay-paid{color:var(--ok);font-weight:600}
+    .pay-unpaid{color:var(--danger);font-weight:600}
     button.linkish{border:0;background:transparent;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline}
     .table-wrap{overflow:auto}
     .table-wrap.mt{margin-top:.75rem}
