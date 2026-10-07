@@ -135,7 +135,7 @@ function placementId(category, position) {
 }
 
 const PNG_B64 =
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+  "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC";
 
 async function pickAvailablePlacement() {
   const url =
@@ -226,17 +226,37 @@ async function main() {
         content_base64: PNG_B64,
         declared_mime: "image/png",
         filename: "iu-test.png",
-        width: 1,
-        height: 1,
+        width: 12,
+        height: 12,
       }),
     }
   );
-  const uploadJson = await uploadRes.json().catch(() => ({}));
+  const uploadText = await uploadRes.text();
+  let uploadJson = {};
+  try {
+    uploadJson = uploadText ? JSON.parse(uploadText) : {};
+  } catch (_) {
+    uploadJson = { raw_len: uploadText.length };
+  }
   if (uploadRes.status !== 200 || !uploadJson.creative_id) {
     fail("APPROVE_PUBLISH_REQUEST", false);
     fail("PRODUCTION_APPROVE_PUBLISH_E2E", false);
     fail("TASK_COMPLETE", false);
-    console.log("UPLOAD_FAIL status=" + uploadRes.status + " err=" + (uploadJson.error || "?"));
+    console.log(
+      "UPLOAD_FAIL status=" +
+        uploadRes.status +
+        " err=" +
+        (uploadJson.error || uploadJson.raw_len || "?")
+    );
+    try {
+      d1(
+        "UPDATE premium_selected_orders SET workflow_status='rejected', updated_at='" +
+          sqlEscape(new Date().toISOString()) +
+          "' WHERE order_id='" +
+          sqlEscape(orderId) +
+          "'"
+      );
+    } catch (_) {}
     process.exit(1);
   }
 
