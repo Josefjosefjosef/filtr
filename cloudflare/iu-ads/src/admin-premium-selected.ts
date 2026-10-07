@@ -9,9 +9,18 @@ import {
   parsePremiumPlacementId,
   resolveAuthoritativePriceCents,
 } from "./premium-selected-services";
+import { countPendingPremiumOrders, serializePremiumOrderAdminListRow } from "./premium-order-workflow";
 import type { Env } from "./types";
 
 export { handleAdminPremiumApprovePublish };
+
+export async function handleAdminPremiumPendingCount(request: Request, env: Env): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.read");
+  if (!guard.ok) return guard.response;
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  const pending_count = await countPendingPremiumOrders(env.DB);
+  return json({ pending_count });
+}
 
 export async function handleAdminPremiumListOrders(request: Request, env: Env, url: URL): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.read");
@@ -19,7 +28,7 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const status = url.searchParams.get("status");
-  const limit = Math.min(200, Number(url.searchParams.get("limit") || "50") || 50);
+  const limit = Math.min(200, Number(url.searchParams.get("limit") || "100") || 100);
   const conditions: string[] = [];
   const params: unknown[] = [];
   if (status) {
@@ -30,17 +39,25 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
   params.push(limit);
 
   const res = await env.DB.prepare(
-    `SELECT po.*, o.client_id, o.order_number, c.company_name
+    `SELECT po.*, o.client_id, o.order_number, o.payload_json, c.company_name, c.ico, c.dic,
+            ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id
+     LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
      ${where}
-     ORDER BY po.created_at DESC LIMIT ?`
+     ORDER BY CASE WHEN po.workflow_status IN ('submitted', 'under_review') THEN 0 ELSE 1 END,
+              po.created_at DESC
+     LIMIT ?`
   )
     .bind(...params)
     .all();
 
-  return json({ premium_orders: res.results || [] });
+  const premium_orders = (res.results || []).map((row) =>
+    serializePremiumOrderAdminListRow(row as Record<string, unknown>)
+  );
+  const pending_count = await countPendingPremiumOrders(env.DB);
+  return json({ premium_orders, pending_count });
 }
 
 export async function handleAdminPremiumReject(request: Request, env: Env, orderId: string): Promise<Response> {

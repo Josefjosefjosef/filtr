@@ -3,6 +3,7 @@
  * future public-site UI. UI hiding never substitutes for server-side RBAC on the target routes.
  */
 import { json, requireAdminSession } from "./admin-auth";
+import { countPendingPremiumOrders } from "./premium-order-workflow";
 import { hasPermission, type Permission } from "./rbac";
 import type { Env } from "./types";
 
@@ -55,10 +56,16 @@ export function filterNavForRoles(roles: readonly string[]): NavEntry[] {
 export async function handleGetAdminNav(request: Request, env: Env): Promise<Response> {
   const session = await requireAdminSession(request, env);
   if (!session.ok) return json({ error: session.error }, session.status);
+  let pendingPremiumOrders = 0;
+  if (env.DB && hasPermission(session.context.roles, "orders.read")) {
+    pendingPremiumOrders = await countPendingPremiumOrders(env.DB);
+  }
   const items = filterNavForRoles(session.context.roles).map((e) => ({
     id: e.id,
     label_cs: e.label_cs,
     href: e.href,
+    badge_count:
+      e.id === "orders" && pendingPremiumOrders > 0 ? pendingPremiumOrders : undefined,
   }));
-  return json({ nav: items, roles: session.context.roles });
+  return json({ nav: items, roles: session.context.roles, pending_premium_orders: pendingPremiumOrders });
 }
