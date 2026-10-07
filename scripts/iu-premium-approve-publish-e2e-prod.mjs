@@ -172,6 +172,28 @@ async function main() {
   process.env.CLOUDFLARE_ACCOUNT_ID = ACCOUNT;
   resolveAdsDatabaseId();
 
+  try {
+    const stale = d1Query(
+      "SELECT c.campaign_id FROM campaigns c JOIN orders o ON o.order_id = c.order_id JOIN clients cl ON cl.client_id = o.client_id WHERE cl.company_name LIKE 'IU_TEST Premium E2E%' AND c.status IN ('active','paused','scheduled') LIMIT 5"
+    );
+    const rows = (stale[0] || {}).results || [];
+    const endIso = new Date().toISOString();
+    for (const row of rows) {
+      if (!row.campaign_id) continue;
+      try {
+        d1(
+          "UPDATE campaigns SET status='ended', end_at='" +
+            sqlEscape(endIso) +
+            "', updated_at='" +
+            sqlEscape(endIso) +
+            "' WHERE campaign_id='" +
+            sqlEscape(row.campaign_id) +
+            "';"
+        );
+      } catch (_) {}
+    }
+  } catch (_) {}
+
   const picked = await pickAvailablePlacement();
   pass("TEST_CONTRACTED_POSITION", "P" + String(picked.position));
 
