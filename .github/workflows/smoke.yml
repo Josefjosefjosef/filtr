@@ -120,6 +120,18 @@ jobs:
           echo "UI_GUARDS_SKIPPED=YES"
           echo "SMOKE_SKIP_BROWSER=YES"
 
+      - name: IU Ads deploy unblock guards (vitest + freeze contract)
+        if: steps.scope.outputs.iu_ads_deploy_unblock_only == 'true'
+        run: |
+          set -euo pipefail
+          cd cloudflare/iu-ads
+          npm ci
+          npm test
+          cd ../..
+          node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
+          npm run iu-premium-order-form-guard
+          echo "IU_ADS_DEPLOY_UNBLOCK_SMOKE=PASS"
+
       # Non-browser CHMI/info_events contract: RUN even when Playwright/FOUC are skipped.
       - name: Info events / CHMI data-contract suite (non-browser)
         if: steps.scope.outputs.data_only == 'true' && steps.scope.outputs.run_info_events_contract == 'true'

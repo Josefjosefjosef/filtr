@@ -14,6 +14,7 @@ import {
   isDataOnlyScope,
   isFastPoolPipelineScope,
   isVaultSecurityRuntimeScope,
+  isIuAdsDeployUnblockScope,
   isWorkflowOnlyScope,
   normalizeRepoPath,
   touchesInfoEventsGeneratedData,
@@ -108,6 +109,28 @@ assert(
   "Ads E2E/verify tooling is workflow-only scope"
 );
 assert(!isWorkflowOnlyScope([".github/workflows/smoke.yml", "assets/app.js"]), "mixed workflow+assets not workflow scope");
+assert(
+  isIuAdsDeployUnblockScope([
+    "cloudflare/iu-ads/vitest.config.ts",
+    "scripts/iu-premium-selected-services-freeze-guard-v1.mjs",
+  ]),
+  "iu-ads vitest+freeze is deploy-unblock scope"
+);
+assert(
+  allowsDataOnlyFastPath([
+    "cloudflare/iu-ads/vitest.config.ts",
+    "scripts/iu-premium-selected-services-freeze-guard-v1.mjs",
+  ]),
+  "iu-ads deploy unblock allows smoke fast path"
+);
+assert(
+  !isIuAdsDeployUnblockScope(["cloudflare/iu-ads/vitest.config.ts", "assets/app.js"]),
+  "iu-ads unblock rejects mixed UI diff"
+);
+assert(
+  /IU Ads deploy unblock guards \(vitest \+ freeze contract\)/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
+  "smoke.yml defines IU Ads deploy unblock guard step"
+);
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope(["package.json", "projects/data/evil.js"]), "pipeline rejects evil.js data path");
 assert(!isFastPoolPipelineScope([".github/workflows/update-articles-fast-pool.yml", "assets/app.js"]), "mixed workflow+assets not pipeline scope");
