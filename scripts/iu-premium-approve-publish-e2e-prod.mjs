@@ -396,31 +396,29 @@ async function main() {
   pass("NO_MANUAL_ACTIVATION_REQUIRED", true);
 
   const cleanupNow = new Date().toISOString();
-  d1(
-    "UPDATE campaigns SET status='ended', end_at='" +
-      sqlEscape(cleanupNow) +
-      "', updated_at='" +
-      sqlEscape(cleanupNow) +
-      "' WHERE campaign_id='" +
-      sqlEscape(campaignId) +
-      "' AND client_id IN (SELECT client_id FROM orders WHERE order_id='" +
-      sqlEscape(orderId) +
-      "');" +
-      "UPDATE premium_selected_placements SET active_campaign_id=NULL, updated_at='" +
-      sqlEscape(cleanupNow) +
-      "' WHERE placement_id='" +
-      sqlEscape(picked.placement_id) +
-      "' AND active_campaign_id='" +
-      sqlEscape(campaignId) +
-      "';"
-  );
-  d1(
-    "DELETE FROM admin_user_roles WHERE user_id='" +
-      sqlEscape(USER_ID) +
-      "'; DELETE FROM admin_users WHERE user_id='" +
-      sqlEscape(USER_ID) +
-      "';"
-  );
+  await prodFetch(
+    BASE + "/v1/admin/premium/orders/" + encodeURIComponent(orderId) + "/suspend",
+    { method: "POST", headers: { Cookie: cookie } }
+  ).catch(() => null);
+  try {
+    d1(
+      "UPDATE campaigns SET status='ended', end_at='" +
+        sqlEscape(cleanupNow) +
+        "', updated_at='" +
+        sqlEscape(cleanupNow) +
+        "' WHERE campaign_id='" +
+        sqlEscape(campaignId) +
+        "';"
+    );
+  } catch (cleanupErr) {
+    console.log("CLEANUP_CAMPAIGN_END_WARN=1");
+  }
+  try {
+    d1("DELETE FROM admin_user_roles WHERE user_id='" + sqlEscape(USER_ID) + "';");
+    d1("DELETE FROM admin_users WHERE user_id='" + sqlEscape(USER_ID) + "';");
+  } catch (_) {
+    console.log("CLEANUP_ADMIN_WARN=1");
+  }
 
   const renderAfter = await prodFetch(
     BASE + "/v1/public/premium/selected-services/render?category=" + encodeURIComponent(CATEGORY),
