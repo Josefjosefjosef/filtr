@@ -16,8 +16,12 @@ import type { Env } from "../src/types";
 
 describe("premium admin workflow presentation", () => {
   it("labels pending and published states in Czech", () => {
-    expect(premiumWorkflowStatusLabelCs("submitted")).toBe("Čeká na posouzení");
-    expect(premiumWorkflowStatusLabelCs("under_review")).toBe("Čeká na posouzení");
+    expect(premiumWorkflowStatusLabelCs("submitted", { creative_id: null, target_url: "https://x.test/" })).toBe(
+      "Čeká na nahrání kreativy"
+    );
+    expect(premiumWorkflowStatusLabelCs("under_review", { creative_id: "crv_x", target_url: "https://x.test/" })).toBe(
+      "Čeká na posouzení"
+    );
     expect(premiumWorkflowStatusLabelCs("published")).toBe("Schváleno a zveřejněno");
     expect(isPremiumOrderPendingStatus("submitted")).toBe(true);
     expect(isPremiumOrderPendingStatus("published")).toBe(false);
@@ -47,7 +51,9 @@ describe("premium admin workflow presentation", () => {
     expect(row.ico).toBe("27074358");
     expect(row.category_title_cs).toContain("Auto");
     expect(row.position_label).toBe("P1");
-    expect(row.workflow_status_label_cs).toBe("Čeká na posouzení");
+    expect(row.workflow_status_label_cs).toBe("Čeká na nahrání kreativy");
+    expect(row.publishable).toBe(false);
+    expect(row.missing_publish_fields).toContain("creative");
     expect(row.price_label_cs).toContain("990");
     expect(row.pending_review).toBe(true);
   });

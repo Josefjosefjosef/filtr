@@ -15,10 +15,40 @@ export function isPremiumOrderPendingStatus(status: string): boolean {
   return (PREMIUM_ORDER_PENDING_STATUSES as readonly string[]).includes(status);
 }
 
-export function premiumWorkflowStatusLabelCs(status: string): string {
+export function premiumOrderMissingPublishFields(input: {
+  creative_id: string | null | undefined;
+  target_url: string | null | undefined;
+}): ("creative" | "target_url")[] {
+  const missing: ("creative" | "target_url")[] = [];
+  if (!input.target_url || !String(input.target_url).trim()) missing.push("target_url");
+  if (!input.creative_id || !String(input.creative_id).trim()) missing.push("creative");
+  return missing;
+}
+
+/** Authoritative: approve-publish requires uploaded creative + target URL from order row. */
+export function isPremiumOrderPublishable(input: {
+  workflow_status: string;
+  creative_id: string | null | undefined;
+  target_url: string | null | undefined;
+}): boolean {
+  if (!isPremiumOrderPendingStatus(input.workflow_status)) return false;
+  return premiumOrderMissingPublishFields(input).length === 0;
+}
+
+export function premiumWorkflowStatusLabelCs(
+  status: string,
+  opts?: { creative_id?: string | null; target_url?: string | null }
+): string {
   switch (status) {
     case "submitted":
+      if (opts && premiumOrderMissingPublishFields(opts).includes("creative")) {
+        return "Čeká na nahrání kreativy";
+      }
+      return "Čeká na posouzení";
     case "under_review":
+      if (opts && premiumOrderMissingPublishFields(opts).length > 0) {
+        return "Neúplná — nelze zveřejnit";
+      }
       return "Čeká na posouzení";
     case "published":
       return "Schváleno a zveřejněno";
@@ -134,6 +164,17 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
   });
   const categorySlug = String(row.category_slug || "");
   const workflowStatus = String(row.workflow_status || "");
+  const creativeId = row.creative_id != null ? String(row.creative_id) : null;
+  const targetUrl = row.target_url != null ? String(row.target_url) : null;
+  const missingPublishFields = premiumOrderMissingPublishFields({
+    creative_id: creativeId,
+    target_url: targetUrl,
+  });
+  const publishable = isPremiumOrderPublishable({
+    workflow_status: workflowStatus,
+    creative_id: creativeId,
+    target_url: targetUrl,
+  });
   return {
     order_id: row.order_id,
     client_id: row.client_id,
@@ -148,9 +189,15 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     duration_label_cs: PREMIUM_DURATION_MONTHS + " měsíců",
     price_label_cs: priceLabel,
     workflow_status: workflowStatus,
-    workflow_status_label_cs: premiumWorkflowStatusLabelCs(workflowStatus),
+    workflow_status_label_cs: premiumWorkflowStatusLabelCs(workflowStatus, {
+      creative_id: creativeId,
+      target_url: targetUrl,
+    }),
+    creative_id: creativeId,
     target_url: row.target_url,
     creative_mode: row.creative_mode ?? payload.creative_mode,
+    publishable,
+    missing_publish_fields: missingPublishFields,
     submitted_at: row.created_at,
     submitted_at_label_cs: formatAdminPragueDateTime(String(row.created_at || "")),
     published_at: row.published_at ?? null,
@@ -166,6 +213,20 @@ export async function countPendingPremiumOrders(db: D1Database): Promise<number>
   const row = await db
     .prepare(
       `SELECT COUNT(*) AS cnt FROM premium_selected_orders WHERE workflow_status IN (${placeholders})`
+    )
+    .bind(...PREMIUM_ORDER_PENDING_STATUSES)
+    .first<{ cnt: number }>();
+  return Number(row?.cnt) || 0;
+}
+
+export async function countPublishablePremiumOrders(db: D1Database): Promise<number> {
+  const placeholders = PREMIUM_ORDER_PENDING_STATUSES.map(() => "?").join(", ");
+  const row = await db
+    .prepare(
+      `SELECT COUNT(*) AS cnt FROM premium_selected_orders
+       WHERE workflow_status IN (${placeholders})
+         AND creative_id IS NOT NULL AND TRIM(creative_id) != ''
+         AND target_url IS NOT NULL AND TRIM(target_url) != ''`
     )
     .bind(...PREMIUM_ORDER_PENDING_STATUSES)
     .first<{ cnt: number }>();

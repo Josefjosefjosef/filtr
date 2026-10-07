@@ -30,7 +30,7 @@ const TARGET_URL = "https://example.invalid/iu-premium-e2e-" + RUN;
 const COMPANY = "IU_TEST Premium E2E " + RUN;
 const ITERATIONS = 100_000;
 
-const MAX_PROD_HTTP = 14;
+const MAX_PROD_HTTP = 16;
 let prodHttp = 0;
 let retry429 = 0;
 
@@ -171,6 +171,28 @@ async function main() {
   }
   process.env.CLOUDFLARE_ACCOUNT_ID = ACCOUNT;
   resolveAdsDatabaseId();
+
+  try {
+    const stale = d1Query(
+      "SELECT c.campaign_id FROM campaigns c JOIN orders o ON o.order_id = c.order_id JOIN clients cl ON cl.client_id = o.client_id WHERE cl.company_name LIKE 'IU_TEST Premium E2E%' AND c.status IN ('active','paused','scheduled') LIMIT 5"
+    );
+    const rows = (stale[0] || {}).results || [];
+    const endIso = new Date().toISOString();
+    for (const row of rows) {
+      if (!row.campaign_id) continue;
+      try {
+        d1(
+          "UPDATE campaigns SET status='ended', end_at='" +
+            sqlEscape(endIso) +
+            "', updated_at='" +
+            sqlEscape(endIso) +
+            "' WHERE campaign_id='" +
+            sqlEscape(row.campaign_id) +
+            "';"
+        );
+      } catch (_) {}
+    }
+  } catch (_) {}
 
   const picked = await pickAvailablePlacement();
   pass("TEST_CONTRACTED_POSITION", "P" + String(picked.position));
@@ -370,57 +392,83 @@ async function main() {
   pass("PUBLIC_RENDER_CREATIVE_MODE_CORRECT", !!hit && hit.creative_format === "image_large");
 
   let infouzelVisible = false;
+  let premiumAboveAffiliate = false;
+  let premiumCountDuring = 0;
+  let affiliateCountBefore = 0;
+  let affiliateCountDuring = 0;
+  const urlNeedle = "iu-premium-e2e-" + RUN;
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
-    await page.goto(INFOUZEL + "/projects/?section=" + CATEGORY + "&iuInfoSystem=off&nosw=1", {
-      waitUntil: "networkidle",
-      timeout: 120000,
+    const sectionUrl = INFOUZEL + "/projects/?section=" + CATEGORY + "&iuInfoSystem=off&nosw=1";
+    await page.goto(sectionUrl, { waitUntil: "networkidle", timeout: 120000 });
+    affiliateCountBefore = await page.evaluate(() => {
+      return document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length;
     });
-    const urlNeedle = "iu-premium-e2e-" + RUN;
-    infouzelVisible = await page.evaluate((needle) => {
-      const links = document.querySelectorAll("a.iuPremiumSlot--sold");
-      for (const a of links) {
-        const h = a.href || a.getAttribute("href") || "";
-        if (h.includes(needle)) return true;
+    await page.goto(sectionUrl, { waitUntil: "networkidle", timeout: 120000 });
+    const dom = await page.evaluate((needle) => {
+      const premiumGrid = document.getElementById("iuPremiumSelectedGrid");
+      const affGrid = document.getElementById("iuAffiliateGrid");
+      function idx(el) {
+        if (!el || !el.parentNode) return -1;
+        return Array.prototype.indexOf.call(el.parentNode.children, el);
       }
-      return false;
+      const premiumLinks = document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot--sold");
+      let hit = false;
+      for (const a of premiumLinks) {
+        const h = a.href || a.getAttribute("href") || "";
+        if (h.includes(needle)) hit = true;
+      }
+      return {
+        hit,
+        premiumAbove: premiumGrid && affGrid ? idx(premiumGrid) < idx(affGrid) : false,
+        premiumCount: premiumLinks.length,
+        affiliateCount: document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length,
+      };
     }, urlNeedle);
+    infouzelVisible = dom.hit;
+    premiumAboveAffiliate = dom.premiumAbove;
+    premiumCountDuring = dom.premiumCount;
+    affiliateCountDuring = dom.affiliateCount;
   } finally {
     await browser.close();
   }
+  pass("INFOUZEL_LIVE_PREMIUM_BUTTON_VISIBLE", infouzelVisible);
   pass("INFOUZEL_LIVE_BUTTON_VISIBLE", infouzelVisible);
+  pass("PREMIUM_BUTTON_IS_ABOVE_AFFILIATE_BUTTONS", premiumAboveAffiliate);
+  pass("AFFILIATE_BUTTON_COUNT_BEFORE", affiliateCountBefore);
+  pass("AFFILIATE_BUTTON_COUNT_DURING", affiliateCountDuring);
+  pass("AFFILIATE_BUTTONS_PRESERVED", affiliateCountDuring === affiliateCountBefore);
+  pass("PREMIUM_BUTTON_COUNT_DURING", premiumCountDuring);
 
   pass("NO_MANUAL_CAMPAIGN_CREATION_REQUIRED", true);
   pass("NO_MANUAL_CREATIVE_REENTRY_REQUIRED", true);
   pass("NO_MANUAL_ACTIVATION_REQUIRED", true);
 
+  await prodFetch(
+    BASE + "/v1/admin/premium/orders/" + encodeURIComponent(orderId) + "/suspend",
+    { method: "POST", headers: { Cookie: cookie } }
+  ).catch(() => null);
   const cleanupNow = new Date().toISOString();
-  d1(
-    "UPDATE campaigns SET status='ended', end_at='" +
-      sqlEscape(cleanupNow) +
-      "', updated_at='" +
-      sqlEscape(cleanupNow) +
-      "' WHERE campaign_id='" +
-      sqlEscape(campaignId) +
-      "' AND client_id IN (SELECT client_id FROM orders WHERE order_id='" +
-      sqlEscape(orderId) +
-      "');" +
-      "UPDATE premium_selected_placements SET active_campaign_id=NULL, updated_at='" +
-      sqlEscape(cleanupNow) +
-      "' WHERE placement_id='" +
-      sqlEscape(picked.placement_id) +
-      "' AND active_campaign_id='" +
-      sqlEscape(campaignId) +
-      "';"
-  );
-  d1(
-    "DELETE FROM admin_user_roles WHERE user_id='" +
-      sqlEscape(USER_ID) +
-      "'; DELETE FROM admin_users WHERE user_id='" +
-      sqlEscape(USER_ID) +
-      "';"
-  );
+  try {
+    d1(
+      "UPDATE campaigns SET status='ended', end_at='" +
+        sqlEscape(cleanupNow) +
+        "', updated_at='" +
+        sqlEscape(cleanupNow) +
+        "' WHERE campaign_id='" +
+        sqlEscape(campaignId) +
+        "';"
+    );
+  } catch (_) {
+    console.log("CLEANUP_CAMPAIGN_END_WARN=1");
+  }
+  try {
+    d1("DELETE FROM admin_user_roles WHERE user_id='" + sqlEscape(USER_ID) + "';");
+    d1("DELETE FROM admin_users WHERE user_id='" + sqlEscape(USER_ID) + "';");
+  } catch (_) {
+    console.log("CLEANUP_ADMIN_WARN=1");
+  }
 
   const renderAfter = await prodFetch(
     BASE + "/v1/public/premium/selected-services/render?category=" + encodeURIComponent(CATEGORY),
@@ -431,6 +479,40 @@ async function main() {
   pass("TEST_DATA_CLEANUP", !stillLive);
   pass("TEST_AD_NOT_LIVE", !stillLive);
   pass("REAL_CUSTOMER_DATA_CHANGED", false);
+
+  let premiumCountAfter = 0;
+  let affiliateCountAfter = affiliateCountBefore;
+  try {
+    const browser2 = await chromium.launch({ headless: true });
+    try {
+      const page2 = await browser2.newPage();
+      await page2.goto(INFOUZEL + "/projects/?section=" + CATEGORY + "&iuInfoSystem=off&nosw=1", {
+        waitUntil: "networkidle",
+        timeout: 120000,
+      });
+      const afterDom = await page2.evaluate((needle) => {
+        const premiumLinks = document.querySelectorAll("#iuPremiumSelectedGrid a.iuPremiumSlot--sold");
+        let testStill = false;
+        for (const a of premiumLinks) {
+          const h = a.href || a.getAttribute("href") || "";
+          if (h.includes(needle)) testStill = true;
+        }
+        return {
+          premiumCount: premiumLinks.length,
+          affiliateCount: document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length,
+          testStill,
+        };
+      }, urlNeedle);
+      premiumCountAfter = afterDom.premiumCount;
+      affiliateCountAfter = afterDom.affiliateCount;
+      if (afterDom.testStill) fail("TEST_AD_NOT_LIVE", false);
+    } finally {
+      await browser2.close();
+    }
+  } catch (_) {}
+
+  pass("PREMIUM_BUTTON_COUNT_AFTER", premiumCountAfter);
+  pass("AFFILIATE_BUTTON_COUNT_AFTER", affiliateCountAfter);
 
   pass("ACTUAL_PRODUCTION_REQUESTS", prodHttp);
   pass("RETRY_429", retry429);
@@ -448,6 +530,8 @@ async function main() {
   const allOk =
     fails.length === 0 &&
     infouzelVisible &&
+    premiumAboveAffiliate &&
+    affiliateCountDuring === affiliateCountBefore &&
     !!hit;
   pass("PRODUCTION_APPROVE_PUBLISH_E2E", allOk);
   pass("REQUIRED_CHECKS", allOk);

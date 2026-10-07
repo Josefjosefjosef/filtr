@@ -68,7 +68,7 @@ export async function executePremiumApproveAndPublish(
   }
 ): Promise<
   | { ok: true; campaign_id: string; invoice_id: string; already: boolean }
-  | { ok: false; status: number; error: string }
+  | { ok: false; status: number; error: string; missing?: string[] }
 > {
   if (!env.DB) return { ok: false, status: 503, error: "auth_not_configured" };
   const db = env.DB;
@@ -100,7 +100,12 @@ export async function executePremiumApproveAndPublish(
   if (!["submitted", "under_review"].includes(po.workflow_status)) {
     return { ok: false, status: 409, error: "invalid_workflow_status" };
   }
-  if (!po.creative_id || !po.target_url) return { ok: false, status: 400, error: "missing_creative_or_url" };
+  if (!po.creative_id || !po.target_url) {
+    const missing: string[] = [];
+    if (!po.target_url) missing.push("target_url");
+    if (!po.creative_id) missing.push("creative");
+    return { ok: false, status: 400, error: "missing_creative_or_url", missing };
+  }
 
   const urlCheck = validateTargetUrl(po.target_url);
   if (!urlCheck.ok) return { ok: false, status: 400, error: urlCheck.reason };
@@ -465,7 +470,12 @@ export async function handleAdminPremiumApprovePublish(request: Request, env: En
     actorUserId: guard.userId,
     idempotencyKey,
   });
-  if (!result.ok) return json({ error: result.error }, result.status);
+  if (!result.ok) {
+    if ("missing" in result && result.missing) {
+      return json({ error: result.error, missing: result.missing }, result.status);
+    }
+    return json({ error: result.error }, result.status);
+  }
   return json({ ok: true, campaign_id: result.campaign_id, invoice_id: result.invoice_id, idempotent: result.already });
 }
 
