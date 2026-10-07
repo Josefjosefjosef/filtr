@@ -102,6 +102,11 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).toContain("Finální kontrola před zveřejněním");
     expect(ADMIN_UI_SCRIPT).toContain("renderPremiumOrdersAdmin");
     expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders");
+    expect(ADMIN_UI_SCRIPT).toContain("Interní poznámky");
+    expect(ADMIN_UI_SCRIPT).toContain("Odstranit objednávku");
+    expect(ADMIN_UI_SCRIPT).toContain("Filtry objednávek");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders/summary");
+    expect(ADMIN_UI_SCRIPT).toContain("/revisions");
     expect(ADMIN_UI_SCRIPT).not.toContain('listTable(rows,[["order_id","Objednávka"]');
   });
 

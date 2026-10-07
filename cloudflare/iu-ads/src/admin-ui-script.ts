@@ -430,6 +430,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
         render();
       };
     });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-revision-url]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-revision-url");
+        var url=window.prompt("Nová cílová URL (vznikne pending verze, veřejně až po schválení):",rowsById[id]&&rowsById[id].target_url?rowsById[id].target_url:"");
+        if(url===null) return;
+        if(!String(url).trim()){ state.flash="Zadejte URL."; render(); return; }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/revisions",{method:"POST",body:JSON.stringify({target_url:String(url).trim()})});
+        state.flash=r.res.ok?"Požadavek na novou verzi URL odeslán (pending).":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
     Array.prototype.forEach.call(document.querySelectorAll("[data-premium-delete]"),function(b){
       b.onclick=async function(ev){
         ev.stopPropagation();
@@ -558,6 +571,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
           '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
         '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> '+
+        '<button type="button" class="btn secondary" data-premium-revision-url="'+esc(ord.order_id)+'">Požádat změnu URL (verze)</button> '+
         (ord.payment_status==="paid"?
           '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
           '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
