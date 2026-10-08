@@ -49,7 +49,8 @@ function drawBrandLogo(page: PDFPage, fonts: PremiumPdfFonts, rightX: number, to
 }
 
 /** Footer band for order confirmation (3 note lines + page number). */
-export const PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y = PREMIUM_INVOICE_MARGIN + 30;
+/** Reserved bottom band for footer notes (content must end above). */
+export const PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y = PREMIUM_INVOICE_MARGIN + 58;
 
 const FOOTER_NOTES = [
   "Potvrzení objednávky vzniklo automaticky po schválení a zveřejnění reklamní služby.",
@@ -345,25 +346,31 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
   const labelW = 138;
   const valueW = leftW - labelW;
 
-  const rowTexts: { label: string; value: string; link?: boolean }[] = [
+  const besidePeriodRows: { label: string; value: string }[] = [
     { label: "Kategorie:", value: ctx.category_title_cs },
     { label: "Reklamní pozice:", value: ctx.position_label },
-    { label: "Webové umístění reklamy:", value: placementUrl, link: true },
-    { label: "Cílová URL reklamního tlačítka:", value: ctx.target_url, link: true },
-    { label: "Délka poskytování reklamní služby:", value: String(ctx.duration_months) + " měsíců" },
+    { label: "Délka poskytování:", value: String(ctx.duration_months) + " měsíců" },
     {
       label: "Režim kreativy:",
       value: ctx.creative_mode_label_cs || premiumCreativeModeLabelCs(ctx.creative_mode),
     },
   ];
+  const fullWidthRows: { label: string; value: string; link?: boolean }[] = [
+    { label: "Webové umístění reklamy:", value: placementUrl, link: true },
+    { label: "Cílová URL reklamního tlačítka:", value: ctx.target_url, link: true },
+  ];
 
   let bodyH = 10;
-  for (const row of rowTexts) {
+  for (const row of besidePeriodRows) {
     const lines = wrapTextLines(fonts.regular, row.value, bodySize, valueW);
     bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 4;
   }
   const periodH = 64;
   bodyH = Math.max(bodyH, periodH + 8);
+  for (const row of fullWidthRows) {
+    const lines = wrapTextLines(fonts.regular, row.value, bodySize, innerW - labelW);
+    bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 4;
+  }
   const blockH = headH + bodyH + 6;
   cursor.ensureSpace(blockH + 6);
   const x = PREMIUM_INVOICE_MARGIN;
@@ -424,10 +431,17 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
   );
 
   let y = yTop - headH - 8;
-  for (const row of rowTexts) {
+  for (const row of besidePeriodRows) {
+    cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
+    y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, valueW, bodySize, TEXT_MAIN, 1.28);
+    y -= 4;
+  }
+  const urlStartY = yTop - headH - periodH - 12;
+  y = Math.min(y, urlStartY);
+  for (const row of fullWidthRows) {
     cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
     const color = row.link ? brand : TEXT_MAIN;
-    y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, valueW, bodySize, color, 1.28);
+    y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, innerW - labelW, bodySize, color, 1.28);
     y -= 4;
   }
 
@@ -677,7 +691,18 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   ];
   if (ctx.creative_id) techRows.push({ label: "ID kreativy:", value: ctx.creative_id });
   if (ctx.creative_content_hash) techRows.push({ label: "Hash kreativy:", value: ctx.creative_content_hash });
-  drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, { bodySize: 7.5, labelW: 100 });
+  const techBodySize = 7;
+  const techInner = PREMIUM_INVOICE_CONTENT_W - 16;
+  const techEst = 10.5 * 1.4 + 5 + 6 + measureSectionBody(techRows, fonts, techInner - 96, techBodySize) + 8;
+  if (cursor.y - techEst < PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y) {
+    cursor.lockPageCount = false;
+    const summaryCont = pdfDoc.addPage([PREMIUM_INVOICE_PAGE.w, PREMIUM_INVOICE_PAGE.h]);
+    pages.push(summaryCont);
+    cursor.page = summaryCont;
+    cursor.pages = pages;
+    cursor.y = PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN;
+  }
+  drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, { bodySize: techBodySize, labelW: 96 });
 
   cursor.lockPageCount = false;
   cursor.blocks = [];
@@ -690,23 +715,21 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   cursor.y = PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN;
 
   drawPage2Header(cursor, fonts, brand, ctx);
-  cursor.lockPageCount = true;
 
-  const creativeTop = cursor.y;
-  const minBottom = PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y + 130;
-  const maxH = Math.max(120, creativeTop - minBottom);
+  const creativeZoneTop = cursor.y;
+  const creativeZoneH = 300;
+  const creativeZoneBottom = creativeZoneTop - creativeZoneH;
   const maxW = PREMIUM_INVOICE_CONTENT_W;
   let creativeNote = "Reklamní podklad není k dispozici v evidenci.";
   if (creativeBytes && creativeBytes.length > 0 && creativeMime) {
     const embedded = await embedCreativeImage(pdfDoc, creativeBytes, creativeMime);
     if (embedded) {
-      const scale = Math.min(maxW / embedded.w, maxH / embedded.h, 1);
+      const scale = Math.min(maxW / embedded.w, creativeZoneH / embedded.h, 1);
       const w = embedded.w * scale;
       const h = embedded.h * scale;
       const ix = PREMIUM_INVOICE_MARGIN + (maxW - w) / 2;
-      const iy = creativeTop - h - 8;
+      const iy = creativeZoneTop - (creativeZoneH - h) / 2 - h;
       cursor.page.drawImage(embedded.img, { x: ix, y: iy, width: w, height: h });
-      cursor.y = iy - 12;
       creativeNote = "";
     } else {
       creativeNote = "Náhled v PDF není pro tento typ souboru — originál je uložen v systému.";
@@ -715,14 +738,15 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   if (creativeNote) {
     cursor.page.drawText(creativeNote, {
       x: PREMIUM_INVOICE_MARGIN,
-      y: creativeTop - 24,
+      y: creativeZoneTop - creativeZoneH / 2,
       size: 10,
       font: fonts.regular,
       color: TEXT_MUTED,
       maxWidth: maxW,
     });
-    cursor.y = creativeTop - 40;
   }
+  cursor.y = creativeZoneBottom - 8;
+  cursor.lockPageCount = true;
 
   const placementUrl = premiumOrderAdWebPlacementForPdf(ctx) || "—";
   drawSectionBox(cursor, fonts, brand, "Identifikace reklamního podkladu", [
