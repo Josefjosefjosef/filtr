@@ -94,6 +94,15 @@ function pathIsKnown(path: string): boolean {
 }
 
 describe("UI ↔ API contracts (PR #7711)", () => {
+  it("premium order detail documents section and document access paths", () => {
+    expect(ADMIN_UI_SCRIPT).toContain("Dokumenty objednávky");
+    expect(ADMIN_UI_SCRIPT).toContain("order-doc-actions");
+    expect(ADMIN_UI_SCRIPT).toContain("data-premium-doc-preview");
+    expect(ADMIN_UI_SCRIPT).toContain("/documents/");
+    expect(ADMIN_UI_SCRIPT).toContain("Interní poznámky");
+    expect(ADMIN_SHELL_HTML).toContain("order-docs-card");
+  });
+
   it("premium orders admin uses human list, badge, confirm publish", () => {
     expect(ADMIN_UI_SCRIPT).toContain("nav-badge");
     expect(ADMIN_UI_SCRIPT).toContain("order-cards");

@@ -14,6 +14,7 @@ import { buildAdminPremiumPreviewScopedCss, wrapAdminPremiumPreviewHtml } from "
 import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium-order-history";
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
+import { listPremiumOrderDocumentsForAdmin } from "./premium-order-documents";
 import type { Env } from "./types";
 
 function previewCardHtml(input: {
@@ -197,6 +198,9 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         ? row.order_number
         : null;
 
+  const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
+  const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
+
   return json({
     preview_scoped_css: buildAdminPremiumPreviewScopedCss(),
     order: {
@@ -266,5 +270,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     placement_conflict: placementConflict,
     history,
     internal_notes,
+    order_documents,
+    order_documents_pdf_count,
   });
 }

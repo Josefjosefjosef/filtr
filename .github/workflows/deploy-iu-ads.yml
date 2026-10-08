@@ -63,6 +63,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
 
+      - name: Premium order documents freeze guard
+        working-directory: .
+        run: node scripts/iu-premium-order-documents-freeze-guard-v1.mjs
+
       - name: Install root deps for preview parity gate
         working-directory: .
         run: npm ci --ignore-scripts

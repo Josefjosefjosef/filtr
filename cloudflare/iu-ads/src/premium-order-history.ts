@@ -16,7 +16,11 @@ export type PremiumOrderEventType =
   | "campaign_resumed"
   | "renewal_applied"
   | "creative_change_requested"
-  | "order_deleted";
+  | "order_deleted"
+  | "order_confirmation_pdf_created"
+  | "invoice_pdf_created"
+  | "document_generation_failed"
+  | "document_generation_retried";
 
 export async function appendPremiumOrderEvent(
   db: D1Database,
@@ -107,6 +111,14 @@ export function formatPremiumOrderEventLineCs(event: {
       return event.payload.mode === "archived" ? "Objednávka stornována/archivována" : "Objednávka odstraněna";
     case "admin_edit":
       return "Administrativní úprava" + (event.payload.field ? ": " + String(event.payload.field) : "");
+    case "order_confirmation_pdf_created":
+      return "Potvrzení objednávky (PDF) vytvořeno";
+    case "invoice_pdf_created":
+      return "PDF faktury vytvořeno a uloženo";
+    case "document_generation_failed":
+      return "Chyba generování dokumentu" + (event.payload.error ? ": " + String(event.payload.error) : "");
+    case "document_generation_retried":
+      return "Opakované generování dokumentů dokončeno";
     default:
       return event.event_type;
   }
