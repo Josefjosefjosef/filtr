@@ -553,8 +553,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
           '<button type="button" class="btn secondary" data-premium-doc-preview="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Náhled</button>'+
           '<button type="button" class="btn secondary" data-premium-doc-download="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Stáhnout</button>'+
           "</div>";
-      } else if(d.status==="error"){
-        actions='<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(orderId)+'">Opakovat chybějící PDF</button></div>';
+      } else if(d.status==="error"||d.status==="generating"||d.status==="pending"){
+        actions='<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(orderId)+'">Dokončit / opakovat PDF</button></div>';
       }
       var icon=d.kind==="invoice_pdf"?"🧾":"📄";
       cards+='<div class="order-doc-item"><div class="order-doc-icon" aria-hidden="true">'+icon+'</div><div class="order-doc-body"><strong>'+esc(d.title)+'</strong><p class="muted">'+esc(d.subtitle)+"</p>"+statusMsg+actions+"</div></div>";

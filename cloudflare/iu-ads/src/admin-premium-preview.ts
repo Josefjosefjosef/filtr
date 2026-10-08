@@ -14,7 +14,7 @@ import { buildAdminPremiumPreviewScopedCss, wrapAdminPremiumPreviewHtml } from "
 import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium-order-history";
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
-import { listPremiumOrderDocumentsForAdmin } from "./premium-order-documents";
+import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
 import type { Env } from "./types";
 
 function previewCardHtml(input: {
@@ -197,6 +197,15 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       : typeof row.order_number === "string"
         ? row.order_number
         : null;
+
+  const workflowPublished = String(row.workflow_status || "") === "published";
+  if (workflowPublished && env.DOCUMENTS) {
+    try {
+      await resumePremiumOrderDocuments(env, orderId, guard.userId);
+    } catch {
+      /* non-blocking — listing still reconciles job↔document links */
+    }
+  }
 
   const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;

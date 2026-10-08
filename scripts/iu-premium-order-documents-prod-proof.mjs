@@ -383,6 +383,28 @@ async function main() {
   }
   pass("ADMIN_LOGIN", true);
 
+  const stuckBefore = (((d1Query(
+    "SELECT order_id, doc_kind, status, updated_at FROM premium_order_document_jobs WHERE status IN ('generating','pending','error') ORDER BY updated_at ASC LIMIT 8"
+  )[0] || {}).results) || []);
+  pass("STUCK_OR_INCOMPLETE_DOC_JOBS_BEFORE", stuckBefore.length);
+  let stuckRecovered = 0;
+  const stuckOrderIds = [...new Set(stuckBefore.map((r) => r && r.order_id).filter(Boolean))];
+  for (const oid of stuckOrderIds.slice(0, 3)) {
+    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
+      headers: { Cookie: cookie },
+    });
+    pass("STUCK_ORDER_DETAIL_HTTP_" + oid.slice(-8), detailRes.status === 200);
+    const retryRes = await prodFetch(
+      BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid) + "/documents/retry",
+      { method: "POST", headers: { "content-type": "application/json", Cookie: cookie }, body: "{}" }
+    );
+    if (retryRes.status === 200) {
+      const retryJson = await retryRes.json().catch(() => ({}));
+      if (retryJson.ok) stuckRecovered += 1;
+    }
+  }
+  pass("STUCK_GENERATING_RECOVERED_ORDERS", stuckRecovered);
+
   const dryRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-documents", {
     method: "POST",
     headers: { "content-type": "application/json", Cookie: cookie },
