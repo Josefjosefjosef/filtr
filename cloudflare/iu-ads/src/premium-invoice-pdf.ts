@@ -63,8 +63,13 @@ function fmtMoneyCents(cents: number, currency: string): string {
 
 function isoToCsDate(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ""));
-  if (!m) return formatAdminPragueDateTime(iso).split(" ")[0] || iso;
-  return m[3] + "." + m[2] + "." + m[1];
+  if (!m) {
+    const fallback = formatAdminPragueDateTime(iso).split(" ")[0] || iso;
+    const dm = /^(\d{1,2})\.(\d{1,2})\.(\d{4})/.exec(fallback);
+    if (dm) return dm[1] + ". " + dm[2] + ". " + dm[3];
+    return fallback;
+  }
+  return parseInt(m[3], 10) + ". " + m[2] + ". " + m[1];
 }
 
 function drawBrandLogo(page: PremiumInvoicePdfCursor["page"], fonts: PremiumPdfFonts, rightX: number, topY: number) {
@@ -93,19 +98,23 @@ function measurePartyBlock(
   return headH + bodyH + 10;
 }
 
+type PartyLineStyle = { text: string; bold?: boolean; linkBlue?: boolean };
+
 function drawPartyBox(
   cursor: PremiumInvoicePdfCursor,
   fonts: PremiumPdfFonts,
+  brand: ReturnType<typeof hexRgb>,
   x: number,
   w: number,
   title: string,
-  lines: string[]
+  lines: PartyLineStyle[]
 ): number {
   const titleSize = 11;
   const bodySize = 9.5;
   const pad = 10;
   const innerW = w - pad * 2;
-  const blockH = measurePartyBlock(fonts, innerW, lines, titleSize, bodySize);
+  const plainLines = lines.map((l) => l.text);
+  const blockH = measurePartyBlock(fonts, innerW, plainLines, titleSize, bodySize);
   cursor.ensureSpace(blockH + 8);
   const yTop = cursor.y;
   const yBottom = yTop - blockH;
@@ -119,11 +128,12 @@ function drawPartyBox(
     borderWidth: 0.6,
     color: rgb(1, 1, 1),
   });
+  const headH = titleSize * 1.6 + 6;
   cursor.page.drawRectangle({
     x,
-    y: yTop - titleSize * 1.6 - 6,
+    y: yTop - headH,
     width: w,
-    height: titleSize * 1.6 + 6,
+    height: headH,
     color: BG_BOX_HEAD,
     borderColor: LINE_GRAY,
     borderWidth: 0.6,
@@ -133,44 +143,49 @@ function drawPartyBox(
     y: yTop - titleSize - 4,
     size: titleSize,
     font: fonts.bold,
-    color: TEXT_MAIN,
+    color: brand,
   });
 
-  let y = yTop - titleSize * 1.6 - 14;
+  let y = yTop - headH - 8;
   for (const line of lines) {
-    y = drawWrappedText(cursor.page, fonts.regular, line, x + pad, y, innerW, bodySize, TEXT_MAIN, 1.32);
+    const font = line.bold ? fonts.bold : fonts.regular;
+    const color = line.linkBlue ? brand : TEXT_MAIN;
+    y = drawWrappedText(cursor.page, font, line.text, x + pad, y, innerW, bodySize, color, 1.32);
     y -= 2;
   }
   return yBottom;
 }
 
-function supplierLines(): string[] {
+function supplierLines(): PartyLineStyle[] {
   const sup = PREMIUM_INVOICE_SUPPLIER;
   return [
-    sup.companyName,
-    sup.street + ", " + sup.zip + " " + sup.city,
-    "IČO: " + sup.ico,
-    "Zapsána v obchodním rejstříku vedeném " +
-      sup.commercialRegisterCourt +
-      ", oddíl " +
-      sup.commercialRegisterSection +
-      ", vložka " +
-      sup.commercialRegisterInsert +
-      ".",
-    sup.nonVatNotice,
-    "E-mail: " + sup.email,
-    "Web: www.infouzel.cz",
+    { text: sup.companyName, bold: true },
+    { text: sup.street + ", " + sup.zip + " " + sup.city },
+    { text: "IČO: " + sup.ico },
+    {
+      text:
+        "Zapsána v obchodním rejstříku vedeném " +
+        sup.commercialRegisterCourt +
+        ", oddíl " +
+        sup.commercialRegisterSection +
+        ", vložka " +
+        sup.commercialRegisterInsert +
+        ".",
+    },
+    { text: sup.nonVatNotice },
+    { text: "E-mail: " + sup.email, linkBlue: true },
+    { text: "Web: www.infouzel.cz", linkBlue: true },
   ];
 }
 
-function buyerLines(input: PremiumInvoicePdfInput): string[] {
-  const out: string[] = [input.buyer_company, "IČO: " + input.buyer_ico];
-  if (input.buyer_dic) out.push("DIČ: " + input.buyer_dic);
+function buyerLines(input: PremiumInvoicePdfInput): PartyLineStyle[] {
+  const out: PartyLineStyle[] = [{ text: input.buyer_company, bold: true }, { text: "IČO: " + input.buyer_ico }];
+  if (input.buyer_dic) out.push({ text: "DIČ: " + input.buyer_dic });
   for (const line of input.buyer_address_lines) {
-    if (line && line.trim()) out.push(line.trim());
+    if (line && line.trim()) out.push({ text: line.trim() });
   }
   const reg = input.buyer_registry?.display_line_cs;
-  if (reg && reg.trim()) out.push(reg.trim());
+  if (reg && reg.trim()) out.push({ text: reg.trim() });
   return out;
 }
 
@@ -247,8 +262,8 @@ export async function buildPremiumInvoicePdfWithLayout(
   const xL = PREMIUM_INVOICE_MARGIN;
   const xR = PREMIUM_INVOICE_MARGIN + colW + colGap;
   const partyTop = cursor.y;
-  const supBottom = drawPartyBox(cursor, fonts, xL, colW, "Dodavatel", supplierLines());
-  const buyBottom = drawPartyBox(cursor, fonts, xR, colW, "Odběratel", buyerLines(input));
+  const supBottom = drawPartyBox(cursor, fonts, brand, xL, colW, "Dodavatel", supplierLines());
+  const buyBottom = drawPartyBox(cursor, fonts, brand, xR, colW, "Odběratel", buyerLines(input));
   const partyBottom = Math.min(supBottom, buyBottom);
   cursor.y = partyBottom - 14;
   cursor.recordBlock("party_columns", partyTop, partyBottom, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
@@ -277,7 +292,16 @@ export async function buildPremiumInvoicePdfWithLayout(
   const colCount = 5;
   const colInner = PREMIUM_INVOICE_CONTENT_W / colCount;
   let mx = PREMIUM_INVOICE_MARGIN;
-  for (const cell of metaCols) {
+  for (let i = 0; i < metaCols.length; i++) {
+    const cell = metaCols[i];
+    if (i > 0) {
+      cursor.page.drawLine({
+        start: { x: mx, y: metaBottom + 4 },
+        end: { x: mx, y: metaTop - 4 },
+        thickness: 0.4,
+        color: LINE_GRAY,
+      });
+    }
     cursor.page.drawText(cell.label, { x: mx + 6, y: metaTop - 14, size: 8.5, font: fonts.regular, color: TEXT_MUTED });
     cursor.page.drawText(cell.value, {
       x: mx + 6,
@@ -312,26 +336,28 @@ export async function buildPremiumInvoicePdfWithLayout(
     y: cursor.y - headH,
     width: PREMIUM_INVOICE_CONTENT_W,
     height: headH,
-    color: brand,
+    color: BG_BOX_HEAD,
+    borderColor: LINE_GRAY,
+    borderWidth: 0.5,
   });
   const headY = cursor.y - 14;
-  cursor.page.drawText("Popis", { x: tableX + 8, y: headY, size: 9.5, font: fonts.bold, color: rgb(1, 1, 1) });
-  cursor.page.drawText("Období", { x: tableX + colDescW + 8, y: headY, size: 9.5, font: fonts.bold, color: rgb(1, 1, 1) });
+  cursor.page.drawText("Popis", { x: tableX + 8, y: headY, size: 9.5, font: fonts.bold, color: TEXT_MAIN });
+  cursor.page.drawText("Období", { x: tableX + colDescW + 8, y: headY, size: 9.5, font: fonts.bold, color: TEXT_MAIN });
   cursor.page.drawText("Cena", {
     x: tableX + colDescW + colPeriodW + colPriceW - 8 - fonts.bold.widthOfTextAtSize("Cena", 9.5),
     y: headY,
     size: 9.5,
     font: fonts.bold,
-    color: rgb(1, 1, 1),
+    color: TEXT_MAIN,
   });
   cursor.y -= headH;
 
-  const descLines = [
-    "Reklamní umístění — Vybrané služby a odkazy",
-    "Webové umístění reklamy: " + PREMIUM_AD_WEB_PLACEMENT,
-    "Kategorie: " + input.category_title_cs,
-    "Reklamní pozice: " + input.position_label,
-    "Délka poskytování reklamní služby: " + String(input.duration_months) + " měsíců",
+  const descLines: PartyLineStyle[] = [
+    { text: "Reklamní umístění — Vybrané služby a odkazy", bold: true },
+    { text: "Webové umístění reklamy: " + PREMIUM_AD_WEB_PLACEMENT, linkBlue: true },
+    { text: "Kategorie: " + input.category_title_cs },
+    { text: "Reklamní pozice: " + input.position_label },
+    { text: "Délka poskytování reklamní služby: " + String(input.duration_months) + " měsíců" },
   ];
   const periodText =
     formatAdminPragueDateTime(input.service_period_start) + " – " + formatAdminPragueDateTime(input.service_period_end);
@@ -340,7 +366,8 @@ export async function buildPremiumInvoicePdfWithLayout(
   const bodySize = 9.5;
   let descH = 8;
   for (const dl of descLines) {
-    descH += measureWrappedHeight(wrapTextLines(fonts.regular, dl, bodySize, colDescW - 16).length, bodySize, 1.32);
+    const f = dl.bold ? fonts.bold : fonts.regular;
+    descH += measureWrappedHeight(wrapTextLines(f, dl.text, bodySize, colDescW - 16).length, bodySize, 1.32);
   }
   const periodWrapped = wrapTextLines(fonts.regular, periodText, bodySize, colPeriodW - 12);
   const periodH = measureWrappedHeight(periodWrapped.length, bodySize, 1.32) + 8;
@@ -361,7 +388,9 @@ export async function buildPremiumInvoicePdfWithLayout(
 
   let dy = rowTop - 12;
   for (const dl of descLines) {
-    dy = drawWrappedText(cursor.page, fonts.regular, dl, tableX + 8, dy, colDescW - 16, bodySize, TEXT_MAIN, 1.32);
+    const f = dl.bold ? fonts.bold : fonts.regular;
+    const c = dl.linkBlue ? brand : TEXT_MAIN;
+    dy = drawWrappedText(cursor.page, f, dl.text, tableX + 8, dy, colDescW - 16, bodySize, c, 1.32);
     dy -= 1;
   }
   let py = rowTop - 12;
@@ -425,19 +454,38 @@ export async function buildPremiumInvoicePdfWithLayout(
   cursor.y = totalBottom - 18;
   cursor.recordBlock("total_panel", totalTop, totalBottom, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
 
-  const payBlockH = 140;
+  const payBlockH = 148;
   cursor.ensureSpace(payBlockH);
   const payTop = cursor.y;
+  const payBoxBottom = payTop - payBlockH;
   const payLeftW = PREMIUM_INVOICE_CONTENT_W * 0.55;
   const payRightX = PREMIUM_INVOICE_MARGIN + payLeftW + 12;
   const payRightW = PREMIUM_INVOICE_CONTENT_W - payLeftW - 12;
 
-  cursor.page.drawText("Platební údaje", {
+  cursor.page.drawRectangle({
     x: PREMIUM_INVOICE_MARGIN,
-    y: payTop,
+    y: payBoxBottom,
+    width: PREMIUM_INVOICE_CONTENT_W,
+    height: payBlockH,
+    borderColor: LINE_GRAY,
+    borderWidth: 0.6,
+    color: rgb(1, 1, 1),
+  });
+  cursor.page.drawRectangle({
+    x: PREMIUM_INVOICE_MARGIN,
+    y: payTop - 22,
+    width: PREMIUM_INVOICE_CONTENT_W,
+    height: 22,
+    color: BG_BOX_HEAD,
+    borderColor: LINE_GRAY,
+    borderWidth: 0.6,
+  });
+  cursor.page.drawText("Platební údaje", {
+    x: PREMIUM_INVOICE_MARGIN + 10,
+    y: payTop - 16,
     size: 11,
     font: fonts.bold,
-    color: TEXT_MAIN,
+    color: brand,
   });
   const accountLine = "Číslo účtu: " + sup.accountNumber + "/" + sup.bankCode;
   const payLines: { text: string; bold: boolean }[] = [
@@ -448,7 +496,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     { text: "Způsob úhrady: převodem", bold: false },
     { text: "Měna: " + input.currency, bold: false },
   ];
-  let pyPay = payTop - 16;
+  let pyPay = payTop - 34;
   for (const pl of payLines) {
     cursor.page.drawText(pl.text, {
       x: PREMIUM_INVOICE_MARGIN,
@@ -460,10 +508,10 @@ export async function buildPremiumInvoicePdfWithLayout(
     pyPay -= 13;
   }
 
-  cursor.page.drawText("QR Platba", { x: payRightX, y: payTop, size: 11, font: fonts.bold, color: TEXT_MAIN });
-  cursor.page.drawText("Naskenujte QR kód mobilním bankovnictvím.", {
+  cursor.page.drawText("QR Platba", { x: payRightX, y: payTop - 16, size: 11, font: fonts.bold, color: TEXT_MAIN });
+  cursor.page.drawText("Naskenujte v mobilním bankovnictví.", {
     x: payRightX,
-    y: payTop - 14,
+    y: payTop - 30,
     size: 8.5,
     font: fonts.regular,
     color: TEXT_MUTED,
@@ -485,7 +533,7 @@ export async function buildPremiumInvoicePdfWithLayout(
   }
   const qrImg = await pdfDoc.embedPng(qrPng);
   const qrSize = Math.min(108, payRightW - 8);
-  const qrY = payTop - 28 - qrSize;
+  const qrY = payTop - 42 - qrSize;
   cursor.page.drawImage(qrImg, { x: payRightX, y: qrY, width: qrSize, height: qrSize });
 
   cursor.y = Math.min(pyPay, qrY) - 20;
@@ -499,7 +547,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     thickness: 0.5,
     color: LINE_GRAY,
   });
-  cursor.page.drawText("Děkujeme za vaši objednávku.", {
+  cursor.page.drawText("Děkujeme za vaši objednávku a podporu infoUzel.cz!", {
     x: PREMIUM_INVOICE_MARGIN,
     y: footY - 6,
     size: 9,
