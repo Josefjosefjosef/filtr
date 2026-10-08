@@ -118,11 +118,23 @@ describe("premium order form browser e2e", () => {
     }
   });
 
+  function isBenignExternalConsoleError(text: string): boolean {
+    const t = String(text || "");
+    if (t.includes("static.cloudflareinsights.com")) return true;
+    if (t.includes("cloudflareinsights.com/beacon")) return true;
+    return false;
+  }
+
   function trackPage(page: import("playwright").Page) {
     runtimeErrors.length = 0;
-    page.on("pageerror", (e) => runtimeErrors.push(String(e.message || e)));
+    page.on("pageerror", (e) => {
+      const msg = String(e.message || e);
+      if (!isBenignExternalConsoleError(msg)) runtimeErrors.push(msg);
+    });
     page.on("console", (msg) => {
-      if (msg.type() === "error") runtimeErrors.push(msg.text());
+      if (msg.type() !== "error") return;
+      const text = msg.text();
+      if (!isBenignExternalConsoleError(text)) runtimeErrors.push(text);
     });
   }
 
