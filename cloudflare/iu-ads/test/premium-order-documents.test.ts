@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeAll } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   PREMIUM_ORDER_SUBMIT_PAYLOAD_KEYS,
   assertOrderPdfContainsCustomerFields,
@@ -10,7 +10,6 @@ import {
   buildOrderConfirmationPlainLines,
   buildPremiumOrderConfirmationPdf,
 } from "../src/premium-order-confirmation-pdf";
-import { setPremiumPdfFontBytesForTests } from "../src/premium-pdf-font";
 import { PREMIUM_INVOICE_DUE_CALENDAR_DAYS } from "../src/premium-selected-services";
 import { PREMIUM_INVOICE_SUPPLIER } from "../src/premium-invoice-supplier";
 
@@ -75,15 +74,6 @@ describe("premium order PDF fields guard", () => {
 });
 
 describe("premium PDF generation (content)", () => {
-  beforeAll(async () => {
-    try {
-      const res = await fetch("https://infouzel.cz/assets/fonts/noto-sans-latin-ext-400-normal.ttf");
-      if (res.ok) setPremiumPdfFontBytesForTests(await res.arrayBuffer());
-    } catch {
-      /* network optional in CI — skip bytes tests below */
-    }
-  });
-
   it("order confirmation plain lines include all customer snippets", () => {
     const lines = buildOrderConfirmationPlainLines(sampleCtx);
     const missing = assertOrderPdfContainsCustomerFields(lines, sampleCtx);
@@ -91,21 +81,14 @@ describe("premium PDF generation (content)", () => {
   });
 
   it("builds order confirmation PDF bytes", async () => {
-    try {
-      const pdf = await buildPremiumOrderConfirmationPdf(sampleCtx, null, null);
-      expect(pdf[0]).toBe(0x25);
-      expect(pdf[1]).toBe(0x50);
-      expect(pdf.byteLength).toBeGreaterThan(400);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("premium_pdf_font_fetch_failed")) return;
-      throw err;
-    }
+    const pdf = await buildPremiumOrderConfirmationPdf(sampleCtx, null, null);
+    expect(pdf[0]).toBe(0x25);
+    expect(pdf[1]).toBe(0x50);
+    expect(pdf.byteLength).toBeGreaterThan(400);
   });
 
   it("builds non-VAT invoice PDF bytes", async () => {
-    try {
-      const pdf = await buildPremiumInvoicePdf({
+    const pdf = await buildPremiumInvoicePdf({
         invoice_number: "INV-2026-ABC",
         variable_symbol: "2026ABC",
         issued_at: "2026-03-02T09:00:00.000Z",
@@ -122,11 +105,6 @@ describe("premium PDF generation (content)", () => {
         currency: "CZK",
       });
       expect(pdf.byteLength).toBeGreaterThan(500);
-      expect(PREMIUM_INVOICE_SUPPLIER.vatPayer).toBe(false);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("premium_pdf_font_fetch_failed")) return;
-      throw err;
-    }
+    expect(PREMIUM_INVOICE_SUPPLIER.vatPayer).toBe(false);
   });
 });

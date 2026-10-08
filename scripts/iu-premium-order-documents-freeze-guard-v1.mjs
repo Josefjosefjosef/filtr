@@ -24,6 +24,12 @@ const checks = [
   ["ADMIN_DOCUMENTS_SECTION", ui.includes("Dokumenty objednávky")],
   ["INVOICE_DUE_3", read("premium-selected-services.ts").includes("PREMIUM_INVOICE_DUE_CALENDAR_DAYS = 3")],
   ["ORDER_PDF_FIELDS_GUARD", fs.existsSync(path.join(ads, "premium-order-pdf-fields.ts"))],
+  [
+    "ORDER_PDF_FONT_BUNDLED",
+    fs.existsSync(path.join(ads, "..", "assets", "fonts", "noto-sans-latin-ext-400-normal.ttf")) &&
+      read("premium-pdf-font-bundled.ts").includes("noto-sans-latin-ext-400-normal.ttf") &&
+      !read("premium-pdf-font.ts").includes("infouzel.cz/assets/fonts"),
+  ],
 ];
 
 let fail = 0;
