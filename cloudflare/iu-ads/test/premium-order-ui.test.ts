@@ -39,6 +39,7 @@ describe("premium order UI shell", () => {
     expect(html).toContain("/premium/terms");
     expect(html).toContain(PREMIUM_TERMS_VERSION);
     expect(html).toContain("/v1/public/ares/ico");
+    expect(html).toContain('id="registry_lookup"');
     expect(html).toContain("max. 5 MB");
     const fileIdx = html.indexOf('id="file"');
     const modeIdx = html.indexOf("creative_mode_label");

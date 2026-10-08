@@ -1,3 +1,5 @@
+import type { CustomerRegistrySnapshot } from "./premium-ares-registry";
+
 /**
  * Customer-visible order payload keys — must appear in order confirmation PDF (regression guard).
  * Excludes internal secrets (portal codes, token hashes, order_token).
@@ -47,6 +49,7 @@ export type PremiumOrderPdfContext = {
   billing_city: string;
   billing_zip: string;
   billing_country: string;
+  customer_registry: CustomerRegistrySnapshot | null;
   note: string | null;
   category_title_cs: string;
   category_slug: string;
@@ -109,6 +112,7 @@ export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext
   ];
   if (ctx.approver_display_name) out.push(ctx.approver_display_name);
   if (ctx.dic) out.push(ctx.dic);
+  if (ctx.customer_registry?.display_line_cs) out.push(ctx.customer_registry.display_line_cs);
   if (ctx.ordering_person_name) out.push(ctx.ordering_person_name);
   if (ctx.contact_phone) out.push(ctx.contact_phone);
   if (ctx.note) out.push(ctx.note);

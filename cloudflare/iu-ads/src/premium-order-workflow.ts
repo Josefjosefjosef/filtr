@@ -7,6 +7,8 @@ import {
   premiumCategoryTitleCs,
   type PremiumPosition,
 } from "./premium-selected-services";
+import type { CustomerRegistrySnapshot } from "./premium-ares-registry";
+import { isEmptyRegistrySnapshot } from "./premium-ares-registry";
 
 export const PREMIUM_ORDER_PENDING_STATUSES = ["submitted", "under_review"] as const;
 export type PremiumOrderPendingStatus = (typeof PREMIUM_ORDER_PENDING_STATUSES)[number];
@@ -88,6 +90,7 @@ export type PremiumOrderPayloadSnapshot = {
   agreed_price_cents: number | null;
   creative_mode: string | null;
   billing: { street: string; city: string; zip: string; country: string; dic: string | null } | null;
+  customer_registry: CustomerRegistrySnapshot | null;
   note: string | null;
   contact_phone: string | null;
 };
@@ -103,6 +106,7 @@ export function parsePremiumOrderPayload(payloadJson: string | null | undefined)
     agreed_price_cents: null,
     creative_mode: null,
     billing: null,
+    customer_registry: null,
     note: null,
     contact_phone: null,
   };
@@ -121,6 +125,10 @@ export function parsePremiumOrderPayload(payloadJson: string | null | undefined)
         dic: typeof b.dic === "string" && b.dic.trim() ? b.dic.trim() : null,
       };
     }
+    let customer_registry: CustomerRegistrySnapshot | null = null;
+    if (p.customer_registry && typeof p.customer_registry === "object") {
+      customer_registry = p.customer_registry as CustomerRegistrySnapshot;
+    }
     return {
       ico: typeof p.ico === "string" && p.ico.trim() ? p.ico.trim() : null,
       dic: typeof p.dic === "string" && p.dic.trim() ? p.dic.trim() : null,
@@ -137,6 +145,7 @@ export function parsePremiumOrderPayload(payloadJson: string | null | undefined)
           : null,
       creative_mode: typeof p.creative_mode === "string" ? p.creative_mode : null,
       billing,
+      customer_registry: isEmptyRegistrySnapshot(customer_registry) ? null : customer_registry,
       note: typeof p.note === "string" && p.note.trim() ? p.note.trim() : null,
       contact_phone:
         typeof p.contact_phone === "string" && p.contact_phone.trim() ? p.contact_phone.trim() : null,

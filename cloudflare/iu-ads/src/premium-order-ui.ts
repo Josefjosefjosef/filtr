@@ -95,6 +95,7 @@ ${keyTerms}
 <p id="ico_err" class="field-err" hidden role="alert"></p>
 <label for="company_name">Obchodní firma / jméno podnikatele *</label>
 <input id="company_name" name="company_name" required autocomplete="organization"/>
+<p id="registry_lookup" class="lookup-status muted" hidden role="status" aria-live="polite"></p>
 <div class="grid2">
 <div><label for="billing_street">Ulice a číslo *</label><input id="billing_street" name="billing_street" required autocomplete="street-address"/></div>
 <div><label for="billing_city">Město *</label><input id="billing_city" name="billing_city" required autocomplete="address-level2"/></div>

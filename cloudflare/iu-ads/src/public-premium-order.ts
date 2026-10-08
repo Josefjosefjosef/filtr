@@ -8,6 +8,7 @@ import { generateCustomerOrderCode } from "./premium-order-access-code";
 import { ensurePremiumOrderPortalAccess } from "./premium-order-portal";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { buildObjectKey, contentHashHex, extForMime, validateUploadObject } from "./r2-security";
+import { fetchAresByIco } from "./ares-lookup";
 import { validateCzechIco } from "./czech-ico";
 import { validatePremiumPhone } from "./czech-phone";
 import { isPremiumCampaignLiveNow } from "./premium-display";
@@ -238,6 +239,16 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     currency: placement.currency || "CZK",
     orderedAt: nowIso,
   });
+  let customer_registry: Record<string, unknown> | null = null;
+  try {
+    const ares = await fetchAresByIco(icoCheck.ico);
+    if (ares.ok && ares.data.customer_registry?.display_line_cs) {
+      customer_registry = ares.data.customer_registry as unknown as Record<string, unknown>;
+    }
+  } catch {
+    /* registry optional — order proceeds without OR line */
+  }
+
   const payload = {
     product: PREMIUM_PRODUCT_TYPE,
     placement_id: placementId,
@@ -254,6 +265,7 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     terms_effective_at: termsEffective,
     price_snapshot: priceSnapshot,
     billing: { street, city, zip, country, dic },
+    ...(customer_registry ? { customer_registry } : {}),
     ordering_person_name: orderingPersonName,
     authorization_confirmed: true,
     contact_phone: phone,
