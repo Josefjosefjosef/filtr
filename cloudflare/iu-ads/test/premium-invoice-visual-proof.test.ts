@@ -31,18 +31,22 @@ const referenceLikeInput = {
 describe("premium invoice visual proof", () => {
   it("renders reference-like invoice PDF and optional PNG export", async () => {
     const { pdfBytes, layoutBlocks } = await buildPremiumInvoicePdfWithLayout(referenceLikeInput);
-    expect(pdfBytes.byteLength).toBeGreaterThan(4000);
+    const pdfSnapshot = Uint8Array.from(pdfBytes);
+    expect(pdfSnapshot.byteLength).toBeGreaterThan(4000);
     expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(layoutBlocks)).toEqual([]);
-    const spayd = await decodeSpaydFromInvoicePdfBytes(pdfBytes);
-    expect(spayd).toContain("SPD*1.0");
-    expect(spayd).toContain("4490.00");
 
     const outDir = process.env.IU_INVOICE_VISUAL_OUT;
     if (outDir) {
       fs.mkdirSync(outDir, { recursive: true });
-      const pdfPath = path.join(outDir, "invoice-reference-like.pdf");
-      fs.writeFileSync(pdfPath, Buffer.from(pdfBytes));
-      const pngBuffer = await renderInvoicePdfFirstPagePng(pdfBytes, 2);
+      fs.writeFileSync(path.join(outDir, "invoice-reference-like.pdf"), Buffer.from(pdfSnapshot));
+    }
+
+    const spayd = await decodeSpaydFromInvoicePdfBytes(Uint8Array.from(pdfSnapshot));
+    expect(spayd).toContain("SPD*1.0");
+    expect(spayd).toContain("4490.00");
+
+    if (outDir) {
+      const pngBuffer = await renderInvoicePdfFirstPagePng(Uint8Array.from(pdfSnapshot), 2);
       if (pngBuffer) {
         fs.writeFileSync(path.join(outDir, "invoice-reference-like.png"), pngBuffer);
       }
