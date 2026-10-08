@@ -147,6 +147,7 @@ export function isIuAdsDeployUnblockScope(files) {
     if (p === "scripts/iu-premium-order-form-guard-v1.mjs") return true;
     if (p === "scripts/iu-premium-order-documents-freeze-guard-v1.mjs") return true;
     if (p === "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs") return true;
+    if (p === "scripts/iu-premium-invoice-visual-proof.mjs") return true;
     if (p === "scripts/iu-premium-order-documents-prod-proof.mjs") return true;
     if (p.startsWith("scripts/lib/iu-invoice-pdf-qr-decode.mjs")) return true;
     if (p === "scripts/iu-commercial-register-ares-verify.mjs") return true;

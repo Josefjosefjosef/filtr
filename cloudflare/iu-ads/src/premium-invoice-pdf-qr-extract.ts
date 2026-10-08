@@ -1,6 +1,7 @@
 import zlib from "node:zlib";
 import { PNG } from "pngjs";
 import jsQR from "jsqr";
+import { renderInvoicePdfFirstPagePng } from "./premium-invoice-pdf-page-png";
 
 const PNG_SIG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 const IEND = [0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82];
@@ -80,51 +81,10 @@ export async function decodeSpaydFromInvoicePdfBytes(pdfBytes: Uint8Array): Prom
     if (hit) return hit;
   }
 
-  try {
-    const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-    const { join } = await import("node:path");
-    const { fileURLToPath, pathToFileURL } = await import("node:url");
-    const adsRoot = join(fileURLToPath(import.meta.url), "..", "..");
-    pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
-      join(adsRoot, "node_modules", "pdfjs-dist", "legacy", "build", "pdf.worker.mjs")
-    ).href;
-    const napiCanvas = await import("@napi-rs/canvas");
-    const canvasFactory = {
-      create(width: number, height: number) {
-        const canvas = napiCanvas.createCanvas(width, height);
-        return { canvas, context: canvas.getContext("2d") };
-      },
-      reset(entry: { canvas: { width: number; height: number } }, width: number, height: number) {
-        entry.canvas.width = width;
-        entry.canvas.height = height;
-      },
-      destroy(entry: { canvas: { width: number; height: number } }) {
-        entry.canvas.width = 0;
-        entry.canvas.height = 0;
-      },
-    };
-    const loadingTask = pdfjs.getDocument({ data: pdfBytes, useSystemFonts: true });
-    const doc = await loadingTask.promise;
-    const page = await doc.getPage(1);
-    const viewport = page.getViewport({ scale: 3 });
-    const canvasEntry = canvasFactory.create(Math.ceil(viewport.width), Math.ceil(viewport.height));
-    await page.render({
-      canvasContext: canvasEntry.context,
-      viewport,
-      canvasFactory,
-    }).promise;
-    const imageData = canvasEntry.context.getImageData(
-      0,
-      0,
-      canvasEntry.canvas.width,
-      canvasEntry.canvas.height
-    );
-    canvasFactory.destroy(canvasEntry);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-    const data = code?.data?.trim();
-    if (data && data.startsWith("SPD*")) return data;
-  } catch {
-    /* render path unavailable (e.g. worker runtime) */
+  const renderedPng = await renderInvoicePdfFirstPagePng(pdfBytes, 3);
+  if (renderedPng) {
+    const hit = decodeSpaydFromPngBytes(renderedPng);
+    if (hit) return hit;
   }
   return null;
 }

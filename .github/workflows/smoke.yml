@@ -132,7 +132,19 @@ jobs:
           npm run iu-premium-order-form-guard
           node scripts/iu-premium-order-documents-freeze-guard-v1.mjs
           node scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs
+          export IU_INVOICE_VISUAL_OUT="${RUNNER_TEMP}/iu-invoice-visual"
+          npm test -- test/premium-invoice-visual-proof.test.ts
+          test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.png"
+          echo "IU_PREMIUM_INVOICE_PNG_RENDER=PASS"
           echo "IU_ADS_DEPLOY_UNBLOCK_SMOKE=PASS"
+
+      - name: Upload premium invoice visual artifacts (IU Ads unblock)
+        if: steps.scope.outputs.iu_ads_deploy_unblock_only == 'true'
+        uses: actions/upload-artifact@6.0.0
+        with:
+          name: premium-invoice-visual-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-invoice-visual/
+          if-no-files-found: error
 
       # Non-browser CHMI/info_events contract: RUN even when Playwright/FOUC are skipped.
       - name: Info events / CHMI data-contract suite (non-browser)
@@ -465,6 +477,25 @@ jobs:
       - name: Info panel CNB EUR/USD rates guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-info-panel-cnb-rates-guard
+
+      - name: Premium invoice PDF visual proof (Linux PNG)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
+        run: |
+          set -euo pipefail
+          cd cloudflare/iu-ads
+          npm ci
+          export IU_INVOICE_VISUAL_OUT="${RUNNER_TEMP}/iu-invoice-visual"
+          npm test -- test/premium-invoice-visual-proof.test.ts
+          test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.png"
+          echo "IU_PREMIUM_INVOICE_PNG_RENDER=PASS"
+
+      - name: Upload premium invoice visual artifacts
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
+        uses: actions/upload-artifact@6.0.0
+        with:
+          name: premium-invoice-visual-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-invoice-visual/
+          if-no-files-found: error
 
       - name: Info panel change math + MPSV wiring guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'

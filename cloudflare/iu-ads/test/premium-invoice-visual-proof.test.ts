@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { buildPremiumInvoicePdfWithLayout } from "../src/premium-invoice-pdf";
 import { PremiumInvoicePdfCursor } from "../src/premium-invoice-pdf-layout";
 import { decodeSpaydFromInvoicePdfBytes } from "../src/premium-invoice-pdf-qr-extract";
+import { renderInvoicePdfFirstPagePng } from "../src/premium-invoice-pdf-page-png";
 
 const referenceLikeInput = {
   invoice_number: "INV-2026-8342EA45",
@@ -36,54 +37,22 @@ describe("premium invoice visual proof", () => {
     expect(spayd).toContain("SPD*1.0");
     expect(spayd).toContain("4490.00");
 
+    const pngBuffer = await renderInvoicePdfFirstPagePng(pdfBytes, 2);
+    const ci = process.env.GITHUB_ACTIONS === "true" || process.env.CI === "true";
+    if (ci) {
+      expect(pngBuffer).not.toBeNull();
+      expect(pngBuffer!.length).toBeGreaterThan(20_000);
+    }
+
     const outDir = process.env.IU_INVOICE_VISUAL_OUT;
     if (outDir) {
       fs.mkdirSync(outDir, { recursive: true });
       const pdfPath = path.join(outDir, "invoice-reference-like.pdf");
-      fs.writeFileSync(pdfPath, pdfBytes);
-      try {
-        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-        const { join } = await import("node:path");
-        const { fileURLToPath, pathToFileURL } = await import("node:url");
-        const adsRoot = join(fileURLToPath(import.meta.url), "..", "..");
-        pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
-          join(adsRoot, "node_modules", "pdfjs-dist", "legacy", "build", "pdf.worker.mjs")
-        ).href;
-        const napiCanvas = await import("@napi-rs/canvas");
-        const canvasFactory = {
-          create(width: number, height: number) {
-            const canvas = napiCanvas.createCanvas(width, height);
-            return { canvas, context: canvas.getContext("2d") };
-          },
-          reset(entry: { canvas: { width: number; height: number } }, width: number, height: number) {
-            entry.canvas.width = width;
-            entry.canvas.height = height;
-          },
-          destroy(entry: { canvas: { width: number; height: number } }) {
-            entry.canvas.width = 0;
-            entry.canvas.height = 0;
-          },
-        };
-        const loadingTask = pdfjs.getDocument({ data: pdfBytes, useSystemFonts: true });
-        const doc = await loadingTask.promise;
-        const page = await doc.getPage(1);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvasEntry = canvasFactory.create(Math.ceil(viewport.width), Math.ceil(viewport.height));
-        await page.render({
-          canvasContext: canvasEntry.context,
-          viewport,
-          canvasFactory,
-        }).promise;
-        const pngPath = path.join(outDir, "invoice-reference-like.png");
-        fs.writeFileSync(pngPath, canvasEntry.canvas.toBuffer("image/png"));
-        canvasFactory.destroy(canvasEntry);
-      } catch (err) {
-        if (outDir) {
-          fs.writeFileSync(
-            path.join(outDir, "invoice-png-render-error.txt"),
-            err instanceof Error ? err.message + "\n" + err.stack : String(err)
-          );
-        }
+      fs.writeFileSync(pdfPath, Buffer.from(pdfBytes));
+      if (pngBuffer) {
+        fs.writeFileSync(path.join(outDir, "invoice-reference-like.png"), pngBuffer);
+      } else if (ci) {
+        throw new Error("PNG raster failed on CI");
       }
     }
   });
