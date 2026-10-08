@@ -748,8 +748,8 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   const techInnerW = PREMIUM_INVOICE_CONTENT_W - techPad * 2;
   let techBodySize = 6.8;
   let techBlockH = measureSectionBlockHeight(techRows, fonts, techInnerW, techBodySize, 92);
-  while (cursor.y - techBlockH < PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y && techBodySize > 5.5) {
-    techBodySize -= 0.15;
+  while (cursor.y - techBlockH < PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y && techBodySize > 5.35) {
+    techBodySize -= 0.12;
     techBlockH = measureSectionBlockHeight(techRows, fonts, techInnerW, techBodySize, 92);
   }
   const techFitsPage1 = cursor.y - techBlockH >= PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y;
