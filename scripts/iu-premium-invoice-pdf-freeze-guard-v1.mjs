@@ -33,6 +33,15 @@ const checks = [
   ["VAT_NON_PAYER_DEFAULT", vat.includes('mode: "non_payer"')],
   ["VAT_FUTURE_PAYER_RESOLVER", vat.includes("resolvePremiumInvoiceVat")],
   ["PUBLISH_APPROVER_SNAPSHOT", read("premium-publish.ts").includes("published_by_display_name")],
+  ["INVOICE_PDF_QR_EXTRACT", fs.existsSync(path.join(ads, "premium-invoice-pdf-qr-extract.ts"))],
+  [
+    "PROD_PROOF_QR_VERIFY",
+    fs.readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8").includes("PRODUCTION_QR_PAYMENT_PASS"),
+  ],
+  [
+    "INVOICE_PDF_QR_DECODE_SCRIPT",
+    fs.existsSync(path.join(root, "cloudflare", "iu-ads", "scripts", "decode-invoice-pdf-spayd.mjs")),
+  ],
 ];
 
 let fail = 0;
