@@ -31,7 +31,11 @@ const checks = [
   ["ORDER_PRICE_ONCE", orderPdf.includes("Celková cena reklamní služby za")],
   ["ORDER_APPROVER_NAME", orderPdf.includes("Schválil:")],
   ["ORDER_PAGE_NUMBERING", orderPdf.includes("FOOTER_NOTES") && orderPdf.includes('" / "')],
-  ["ORDER_CREATIVE_ASPECT", orderPdf.includes("Math.min(maxW / embedded.w, maxH / embedded.h")],
+  [
+    "ORDER_CREATIVE_ASPECT",
+    orderPdf.includes("Math.min(maxW / embedded.w, creativeZoneH / embedded.h") ||
+      orderPdf.includes("Math.min(maxW / embedded.w, maxH / embedded.h"),
+  ],
   ["ORDER_NO_PORTAL_CODE_FOOTER", orderPdf.includes("Přístupový kód klientského portálu není")],
   [
     "ORDER_CONFIRMATION_VISUAL_FREEZE_TEST",
