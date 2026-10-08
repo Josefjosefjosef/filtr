@@ -3,8 +3,12 @@ import type { PDFFont, PDFPage, RGB } from "pdf-lib";
 export const PREMIUM_INVOICE_PAGE = { w: 595.28, h: 841.89 } as const;
 export const PREMIUM_INVOICE_MARGIN = 48;
 export const PREMIUM_INVOICE_CONTENT_W = PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN * 2;
-export const PREMIUM_INVOICE_FOOTER_RESERVE = 56;
-export const PREMIUM_INVOICE_MIN_Y = PREMIUM_INVOICE_MARGIN + PREMIUM_INVOICE_FOOTER_RESERVE;
+/** Band at page bottom reserved for thank-you footer (content must not overlap). */
+export const PREMIUM_INVOICE_FOOTER_BAND_H = 44;
+export const PREMIUM_INVOICE_FOOTER_Y = PREMIUM_INVOICE_MARGIN + 18;
+export const PREMIUM_INVOICE_CONTENT_MIN_Y = PREMIUM_INVOICE_MARGIN + PREMIUM_INVOICE_FOOTER_BAND_H;
+/** @deprecated use PREMIUM_INVOICE_CONTENT_MIN_Y */
+export const PREMIUM_INVOICE_MIN_Y = PREMIUM_INVOICE_CONTENT_MIN_Y;
 
 export type LayoutRect = { x: number; yTop: number; yBottom: number; w: number };
 
@@ -71,7 +75,7 @@ export class PremiumInvoicePdfCursor {
   }
 
   ensureSpace(needPt: number): void {
-    if (this.y - needPt >= PREMIUM_INVOICE_MIN_Y) return;
+    if (this.y - needPt >= PREMIUM_INVOICE_CONTENT_MIN_Y) return;
     const newPage = this.pdfDoc.addPage([PREMIUM_INVOICE_PAGE.w, PREMIUM_INVOICE_PAGE.h]);
     this.pages.push(newPage);
     this.page = newPage;

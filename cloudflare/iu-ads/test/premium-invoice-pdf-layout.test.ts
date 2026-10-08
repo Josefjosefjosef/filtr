@@ -1,8 +1,14 @@
 import { describe, expect, it } from "vitest";
+import { PDFDocument } from "pdf-lib";
 import { buildPremiumInvoicePdfWithLayout } from "../src/premium-invoice-pdf";
 import { PremiumInvoicePdfCursor } from "../src/premium-invoice-pdf-layout";
 import { decodeSpaydFromInvoicePdfBytes } from "../src/premium-invoice-pdf-qr-extract";
 import { resolvePremiumInvoiceVat } from "../src/premium-invoice-vat";
+
+async function countPdfPages(pdfBytes: Uint8Array): Promise<number> {
+  const doc = await PDFDocument.load(pdfBytes);
+  return doc.getPageCount();
+}
 
 const base = {
   invoice_number: "INV-2026-LAYOUT",
@@ -103,6 +109,21 @@ describe("premium invoice PDF layout scenarios", () => {
       expect(overlaps).toEqual([]);
     });
   }
+
+  it("standard invoice is exactly one page including footer", async () => {
+    const input = {
+      ...base,
+      buyer_company: "A s.r.o.",
+      buyer_address_lines: ["Krátká 1", "110 00 Praha"],
+    };
+    const { pdfBytes, layoutBlocks, pageCount } = await buildPremiumInvoicePdfWithLayout(input);
+    expect(pageCount).toBe(1);
+    expect(await countPdfPages(pdfBytes)).toBe(1);
+    expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(layoutBlocks)).toEqual([]);
+    const blocks = layoutBlocks.map((b) => b.id);
+    expect(blocks).toContain("footer");
+    expect(blocks).toContain("payment_section");
+  });
 
   it("QR SPAYD decodes on layout scenario", async () => {
     const input = {
