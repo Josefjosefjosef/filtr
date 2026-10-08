@@ -691,18 +691,7 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   ];
   if (ctx.creative_id) techRows.push({ label: "ID kreativy:", value: ctx.creative_id });
   if (ctx.creative_content_hash) techRows.push({ label: "Hash kreativy:", value: ctx.creative_content_hash });
-  const techBodySize = 7;
-  const techInner = PREMIUM_INVOICE_CONTENT_W - 16;
-  const techEst = 10.5 * 1.4 + 5 + 6 + measureSectionBody(techRows, fonts, techInner - 96, techBodySize) + 8;
-  if (cursor.y - techEst < PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y) {
-    cursor.lockPageCount = false;
-    const summaryCont = pdfDoc.addPage([PREMIUM_INVOICE_PAGE.w, PREMIUM_INVOICE_PAGE.h]);
-    pages.push(summaryCont);
-    cursor.page = summaryCont;
-    cursor.pages = pages;
-    cursor.y = PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN;
-  }
-  drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, { bodySize: techBodySize, labelW: 96 });
+  drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, { bodySize: 6.8, labelW: 92 });
 
   cursor.lockPageCount = false;
   cursor.blocks = [];
