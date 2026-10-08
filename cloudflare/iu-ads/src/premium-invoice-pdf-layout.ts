@@ -66,16 +66,27 @@ export class PremiumInvoicePdfCursor {
   pdfDoc: { addPage: (size: [number, number]) => PDFPage };
   y: number;
   blocks: LayoutBlockMetric[] = [];
+  contentMinY: number;
+  /** When true, ensureSpace will not add pages (single-page layout phases). */
+  lockPageCount = false;
 
-  constructor(page: PDFPage, pages: PDFPage[], pdfDoc: { addPage: (size: [number, number]) => PDFPage }, startY: number) {
+  constructor(
+    page: PDFPage,
+    pages: PDFPage[],
+    pdfDoc: { addPage: (size: [number, number]) => PDFPage },
+    startY: number,
+    contentMinY = PREMIUM_INVOICE_CONTENT_MIN_Y
+  ) {
     this.page = page;
     this.pages = pages;
     this.pdfDoc = pdfDoc;
     this.y = startY;
+    this.contentMinY = contentMinY;
   }
 
   ensureSpace(needPt: number): void {
-    if (this.y - needPt >= PREMIUM_INVOICE_CONTENT_MIN_Y) return;
+    if (this.y - needPt >= this.contentMinY) return;
+    if (this.lockPageCount) return;
     const newPage = this.pdfDoc.addPage([PREMIUM_INVOICE_PAGE.w, PREMIUM_INVOICE_PAGE.h]);
     this.pages.push(newPage);
     this.page = newPage;

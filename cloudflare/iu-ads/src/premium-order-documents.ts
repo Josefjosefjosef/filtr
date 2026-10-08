@@ -13,6 +13,7 @@ import {
   buildPremiumOrderConfirmationPdf,
 } from "./premium-order-confirmation-pdf";
 import { buildPremiumInvoicePdf } from "./premium-invoice-pdf";
+import { resolvePremiumAdWebPlacementUrl } from "./premium-ad-web-placement";
 import { assertOrderPdfContainsCustomerFields, type PremiumOrderPdfContext } from "./premium-order-pdf-fields";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { archiveDocumentRevisionBeforeReplace } from "./premium-order-document-revisions";
@@ -124,7 +125,7 @@ async function loadOrderDocumentContext(
   const row = await db
     .prepare(
       `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.payload_json, o.contact_person, o.created_at AS order_created_at,
-              c.company_name, c.ico, c.dic, c.address, c.billing_info,
+              c.company_name, c.ico, c.dic, c.address, c.billing_info, c.email AS client_email,
               camp.evidence_code, camp.start_at, camp.end_at,
               inv.invoice_number, inv.issued_at, inv.due_at, inv.total_cents, inv.currency,
               ps.agreed_price_cents AS snap_agreed
@@ -156,21 +157,38 @@ async function loadOrderDocumentContext(
   const creativeId = typeof row.creative_id === "string" ? row.creative_id : null;
   let creativeFormat: string | null = null;
   let creativeHash: string | null = null;
+  let creativeUploadedAt: string | null = null;
+  let creativeApprovedAt: string | null = null;
   if (creativeId) {
     const cr = await db
-      .prepare("SELECT format, content_hash, mime_type FROM creatives WHERE creative_id = ?")
+      .prepare("SELECT format, content_hash, mime_type, created_at, approved_at FROM creatives WHERE creative_id = ?")
       .bind(creativeId)
-      .first<{ format: string; content_hash: string; mime_type: string }>();
+      .first<{
+        format: string;
+        content_hash: string;
+        mime_type: string;
+        created_at: string;
+        approved_at: string | null;
+      }>();
     if (cr) {
       creativeFormat = cr.format;
       creativeHash = cr.content_hash;
+      creativeUploadedAt = cr.created_at || null;
+      creativeApprovedAt = cr.approved_at || null;
     }
   }
 
   const categorySlug = String(row.category_slug || "");
   const position = Number(row.position) || 0;
-  const publishedAt = String(row.published_at || row.published_at || new Date().toISOString());
+  const publishedAt = String(row.published_at || new Date().toISOString());
+  const approvedAt = creativeApprovedAt || publishedAt;
   const evidence = typeof row.evidence_code === "string" ? row.evidence_code : input.campaignId;
+  const adSnapshot =
+    typeof payloadRaw.ad_web_placement_url === "string" ? payloadRaw.ad_web_placement_url.trim() : null;
+  const adWebPlacementUrl = resolvePremiumAdWebPlacementUrl({
+    category_slug: categorySlug,
+    snapshot_url: adSnapshot,
+  });
 
   return {
     order_id: orderId,
@@ -180,7 +198,7 @@ async function loadOrderDocumentContext(
     ico: String(row.ico || payload.ico || ""),
     dic: (row.dic as string) || payload.dic,
     contact_name: String(row.contact_person || ""),
-    contact_email: String(row.client_contact_email || ""),
+    contact_email: String(row.client_contact_email || row.client_email || ""),
     contact_phone: payload.contact_phone,
     ordering_person_name: payload.ordering_person_name,
     authorization_confirmed: payload.authorization_confirmed,
@@ -198,17 +216,21 @@ async function loadOrderDocumentContext(
     currency: String(row.currency || payloadRaw.currency || "CZK"),
     duration_months: Number(payloadRaw.duration_months) || 6,
     target_url: String(row.target_url || ""),
+    ad_web_placement_url: adWebPlacementUrl,
+    b2b_only: payloadRaw.b2b_only === true || payloadRaw.b2b_only === undefined,
     creative_mode: String(row.creative_mode || payload.creative_mode || "logo"),
     creative_mode_label_cs: premiumCreativeModeLabelCs(String(row.creative_mode || "logo")),
     creative_id: creativeId,
     creative_format: creativeFormat,
     creative_original_filename: null,
     creative_content_hash: creativeHash,
+    creative_uploaded_at: creativeUploadedAt,
+    creative_approved_at: creativeApprovedAt,
     terms_version: payload.terms_version,
     terms_effective_at: payload.terms_effective_at,
     order_created_at: String(row.order_created_at || ""),
     order_submitted_at: String(row.created_at || row.order_created_at || ""),
-    approved_at: publishedAt,
+    approved_at: approvedAt,
     published_at: publishedAt,
     campaign_start_at: String(row.start_at || publishedAt),
     campaign_end_at: String(row.end_at || ""),

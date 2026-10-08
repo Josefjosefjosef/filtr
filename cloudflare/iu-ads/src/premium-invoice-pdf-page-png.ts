@@ -1,8 +1,5 @@
-/** Render invoice PDF page 1 to PNG (Node / Linux CI). Worker runtime: skip. */
-export async function renderInvoicePdfFirstPagePng(
-  pdfBytes: Uint8Array,
-  scale = 2
-): Promise<Buffer | null> {
+/** Render a PDF page to PNG (Node / Linux CI). Worker runtime: skip. */
+export async function renderPdfPagePng(pdfBytes: Uint8Array, pageNumber: number, scale = 2): Promise<Buffer | null> {
   try {
     const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const { join } = await import("node:path");
@@ -28,7 +25,7 @@ export async function renderInvoicePdfFirstPagePng(
     };
     const loadingTask = pdfjs.getDocument({ data: pdfBytes, useSystemFonts: true });
     const doc = await loadingTask.promise;
-    const page = await doc.getPage(1);
+    const page = await doc.getPage(pageNumber);
     const viewport = page.getViewport({ scale });
     const canvasEntry = canvasFactory.create(Math.ceil(viewport.width), Math.ceil(viewport.height));
     await page.render({
@@ -43,8 +40,16 @@ export async function renderInvoicePdfFirstPagePng(
   } catch (err) {
     if (process.env.IU_INVOICE_PNG_DEBUG === "1") {
       const msg = err instanceof Error ? err.stack ?? err.message : String(err);
-      console.error("IU_INVOICE_PNG_RENDER_ERROR=" + msg);
+      console.error("IU_PDF_PNG_RENDER_ERROR=" + msg);
     }
     return null;
   }
+}
+
+/** Render invoice PDF page 1 to PNG (Node / Linux CI). Worker runtime: skip. */
+export async function renderInvoicePdfFirstPagePng(
+  pdfBytes: Uint8Array,
+  scale = 2
+): Promise<Buffer | null> {
+  return renderPdfPagePng(pdfBytes, 1, scale);
 }

@@ -91,6 +91,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs
 
+      - name: Premium order confirmation PDF freeze guard
+        working-directory: .
+        run: node scripts/iu-premium-order-confirmation-pdf-freeze-guard-v1.mjs
+
       - name: Install root deps for preview parity gate
         working-directory: .
         run: npm ci --ignore-scripts

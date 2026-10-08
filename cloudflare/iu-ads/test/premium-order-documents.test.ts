@@ -9,7 +9,9 @@ import { buildPremiumInvoicePdf } from "../src/premium-invoice-pdf";
 import {
   buildOrderConfirmationPlainLines,
   buildPremiumOrderConfirmationPdf,
+  buildPremiumOrderConfirmationPdfWithLayout,
 } from "../src/premium-order-confirmation-pdf";
+import { PremiumInvoicePdfCursor } from "../src/premium-invoice-pdf-layout";
 import { PREMIUM_INVOICE_DUE_CALENDAR_DAYS } from "../src/premium-selected-services";
 import { PREMIUM_INVOICE_SUPPLIER } from "../src/premium-invoice-supplier";
 
@@ -39,12 +41,16 @@ const sampleCtx: PremiumOrderPdfContext = {
   currency: "CZK",
   duration_months: 6,
   target_url: "https://example.test/premium",
+  ad_web_placement_url: "https://infouzel.cz/?section=aff-ubytovani-hotely",
+  b2b_only: true,
   creative_mode: "logo",
   creative_mode_label_cs: "Logo",
   creative_id: "crv_test",
   creative_format: "logo",
   creative_original_filename: "logo.png",
   creative_content_hash: "abc123hash",
+  creative_uploaded_at: "2026-03-01T11:00:00.000Z",
+  creative_approved_at: "2026-03-02T09:00:00.000Z",
   terms_version: "premium-selected-v1",
   terms_effective_at: "2026-01-01T00:00:00Z",
   order_created_at: "2026-03-01T10:00:00.000Z",
@@ -89,11 +95,17 @@ describe("premium PDF generation (content)", () => {
     expect(pdf.byteLength).toBeGreaterThan(400);
   });
 
+  it("standard order confirmation is exactly two pages without layout overlap", async () => {
+    const { pageCount, blocks } = await buildPremiumOrderConfirmationPdfWithLayout(sampleCtx, null, null);
+    expect(pageCount).toBe(2);
+    expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(blocks)).toEqual([]);
+  });
+
   it("order price appears once in plain lines", () => {
     const lines = buildOrderConfirmationPlainLines(sampleCtx);
     const priceLines = lines.filter((l) => l.includes("Celková cena reklamní služby"));
     expect(priceLines.length).toBe(1);
-    expect(lines.some((l) => l.includes("www.infouzel.cz"))).toBe(true);
+    expect(lines.some((l) => l.includes("aff-ubytovani-hotely"))).toBe(true);
     expect(lines.some((l) => l.includes("Schválil: Jan Admin"))).toBe(true);
   });
 
