@@ -494,6 +494,28 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }
     var cancel=el("premium-publish-cancel");
     if(cancel) cancel.onclick=function(){ state.publishConfirmRow=null; render(); };
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-preview]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-preview"), b.getAttribute("data-doc-kind"), "inline");
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-download]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-download"), b.getAttribute("data-doc-kind"), "attachment");
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-retry]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-doc-retry");
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/documents/retry",{method:"POST",body:"{}"});
+        state.flash=r.res.ok?"Generování dokumentů dokončeno.":"Chyba: "+apiError(r.body);
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
     var confirmBtn=el("premium-publish-confirm");
     if(confirmBtn) confirmBtn.onclick=async function(){
       var row=state.publishConfirmRow;
@@ -512,6 +534,42 @@ export const ADMIN_UI_SCRIPT = String.raw`
       await loadNav();
       render();
     };
+  }
+  function premiumOrderDocumentsSectionHtml(orderId, body){
+    var docs=body.order_documents||[];
+    var count=Number(body.order_documents_pdf_count)||0;
+    var headRight=count>0?String(count)+" PDF":"";
+    if(!docs.length){
+      return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div><p class="muted">Dokumenty vzniknou po schválení a zveřejnění reklamy.</p></div>';
+    }
+    var cards="";
+    docs.forEach(function(d){
+      var statusMsg="";
+      if(d.status==="error") statusMsg='<p class="err">'+esc(d.last_error||"Generování selhalo")+"</p>";
+      else if(d.status!=="ready") statusMsg='<p class="muted">Stav: '+esc(d.status||"pending")+"</p>";
+      var actions="";
+      if(d.status==="ready"){
+        actions='<div class="order-doc-actions">'+
+          '<button type="button" class="btn secondary" data-premium-doc-preview="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Náhled</button>'+
+          '<button type="button" class="btn secondary" data-premium-doc-download="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Stáhnout</button>'+
+          "</div>";
+      } else if(d.status==="error"){
+        actions='<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(orderId)+'">Opakovat chybějící PDF</button></div>';
+      }
+      var icon=d.kind==="invoice_pdf"?"🧾":"📄";
+      cards+='<div class="order-doc-item"><div class="order-doc-icon" aria-hidden="true">'+icon+'</div><div class="order-doc-body"><strong>'+esc(d.title)+'</strong><p class="muted">'+esc(d.subtitle)+"</p>"+statusMsg+actions+"</div></div>";
+    });
+    return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3>'+
+      (headRight?'<span class="order-docs-count">'+esc(headRight)+"</span>":"")+
+      '</div><div class="order-doc-grid">'+cards+"</div></div>";
+  }
+  async function openPremiumOrderDocument(orderId, kind, disposition){
+    var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId)+"/documents/"+encodeURIComponent(kind)+"/access?disposition="+encodeURIComponent(disposition),{method:"GET",headers:{}});
+    if(!r.res.ok){ state.flash="Dokument: "+apiError(r.body); render(); return; }
+    var path=r.body&&r.body.path;
+    if(!path){ state.flash="Chybí bezpečný odkaz na PDF."; render(); return; }
+    if(disposition==="attachment") window.location.href=path;
+    else window.open(path,"_blank","noopener,noreferrer");
   }
   async function renderPremiumOrderDetail(orderId){
     var d=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId),{method:"GET",headers:{}});
@@ -578,6 +636,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'" data-cp="'+esc(ord.contact_person_name||ord.contact_name||"")+'" data-em="'+esc(ord.contact_email||"")+'" data-ph="'+esc(ord.contact_phone||"")+'" data-bill="'+esc(ord.billing_info||"")+'">Upravit objednávku</button> '+
       '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit objednávku</button> '+
       "</div></div>"+
+      premiumOrderDocumentsSectionHtml(ord.order_id, body)+
       '<div class="card"><h3>Interní poznámky</h3>'+
       (body.internal_notes&&body.internal_notes.length?
         '<ul class="history-list">'+body.internal_notes.map(function(n){

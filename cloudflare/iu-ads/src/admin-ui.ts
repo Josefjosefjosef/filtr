@@ -70,6 +70,17 @@ export function buildAdminShellHtml(nonce: string): string {
     .detail-dl{display:grid;grid-template-columns:minmax(8rem,11rem) 1fr;gap:.35rem .75rem;margin:0}
     .detail-dl dt{color:var(--muted);margin:0}
     .detail-dl dd{margin:0}
+    .order-docs-card{overflow-x:hidden;max-width:100%}
+    .order-docs-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.75rem}
+    .order-docs-head h3{margin:0}
+    .order-docs-count{font-size:.85rem;color:var(--muted);font-weight:600}
+    .order-doc-grid{display:flex;flex-direction:column;gap:.75rem}
+    .order-doc-item{display:flex;gap:.75rem;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;background:#fff;max-width:100%;box-sizing:border-box}
+    .order-doc-icon{font-size:1.35rem;line-height:1;flex-shrink:0}
+    .order-doc-body{flex:1;min-width:0}
+    .order-doc-body strong{display:block;margin-bottom:.15rem}
+    .order-doc-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.65rem}
+    .order-doc-actions .btn{min-height:2.5rem;flex:1 1 auto;max-width:100%}
     .preview-box{max-width:220px;margin-top:.75rem}
     .tech-ids{margin-top:.75rem}
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:center;justify-content:center;padding:1rem}

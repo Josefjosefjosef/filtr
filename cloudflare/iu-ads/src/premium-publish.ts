@@ -82,6 +82,25 @@ export async function executePremiumApproveAndPublish(
   if (prior) {
     try {
       const parsed = JSON.parse(prior.result_json) as { campaign_id: string; invoice_id: string };
+      try {
+        const orderRow = await db
+          .prepare("SELECT client_id FROM orders WHERE order_id = ?")
+          .bind(input.orderId)
+          .first<{ client_id: string }>();
+        if (orderRow) {
+          const { ensurePremiumOrderDocumentsAfterPublish } = await import("./premium-order-documents");
+          await ensurePremiumOrderDocumentsAfterPublish(env, {
+            orderId: input.orderId,
+            campaignId: parsed.campaign_id,
+            invoiceId: parsed.invoice_id,
+            clientId: orderRow.client_id,
+            actorUserId: input.actorUserId,
+            publishIdempotencyKey: input.idempotencyKey,
+          });
+        }
+      } catch {
+        /* non-blocking */
+      }
       return { ok: true, campaign_id: parsed.campaign_id, invoice_id: parsed.invoice_id, already: true };
     } catch {
       return { ok: false, status: 409, error: "idempotency_corrupt" };
@@ -450,6 +469,20 @@ export async function executePremiumApproveAndPublish(
       result: "success",
     })
   );
+
+  try {
+    const { ensurePremiumOrderDocumentsAfterPublish } = await import("./premium-order-documents");
+    await ensurePremiumOrderDocumentsAfterPublish(env, {
+      orderId: input.orderId,
+      campaignId,
+      invoiceId,
+      clientId: order.client_id,
+      actorUserId: input.actorUserId,
+      publishIdempotencyKey: input.idempotencyKey,
+    });
+  } catch {
+    /* PDF generation must not roll back publish */
+  }
 
   return { ok: true, campaign_id: campaignId, invoice_id: invoiceId, already: false };
 }
