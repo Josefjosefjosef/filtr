@@ -78,12 +78,6 @@ function formatServicePeriodLines(startIso: string, endIso: string): string[] {
 }
 
 function drawInvoiceFooterBand(page: PDFPage, fonts: PremiumPdfFonts, footY: number = PREMIUM_INVOICE_FOOTER_Y): void {
-  page.drawLine({
-    start: { x: PREMIUM_INVOICE_MARGIN, y: footY + 8 },
-    end: { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, y: footY + 8 },
-    thickness: 0.5,
-    color: LINE_GRAY,
-  });
   page.drawText("Děkujeme za vaši objednávku a podporu infoUzel.cz!", {
     x: PREMIUM_INVOICE_MARGIN,
     y: footY - 6,
