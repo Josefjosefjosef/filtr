@@ -165,6 +165,12 @@ async function main() {
   });
   const applyJson = await applyRes.json().catch(() => ({}));
   pass("HISTORICAL_DOCUMENTS_BACKFILL", applyRes.status === 200 && applyJson.ok === true);
+  if (Array.isArray(applyJson.outcomes)) {
+    pass(
+      "BACKFILL_OUTCOME_ERRORS",
+      applyJson.outcomes.filter((o) => o && (o.ok === false || (o.order_confirmation && o.order_confirmation.ok === false))).length
+    );
+  }
 
   const invBefore = d1Query(
     "SELECT COUNT(*) AS c FROM invoices i JOIN premium_selected_orders po ON po.order_id = i.order_id WHERE po.workflow_status='published'"
@@ -221,8 +227,17 @@ async function main() {
 
   pass("PRODUCTION_ADMIN_PASS", !!verifiedOrder);
   if (!verifiedOrder) {
+    try {
+      const snap = d1Query(
+        "SELECT order_id, doc_kind, status, substr(COALESCE(last_error,''),1,160) AS err FROM premium_order_document_jobs ORDER BY updated_at DESC LIMIT 8"
+      );
+      pass("DOCUMENT_JOB_SNAPSHOT", JSON.stringify(snap));
+    } catch (_) {
+      pass("DOCUMENT_JOB_SNAPSHOT", "unavailable");
+    }
     fail("PRODUCTION_ORDER_PDF_PASS", false);
     fail("PRODUCTION_INVOICE_PDF_PASS", false);
+    fail("PREVIOUSLY_CORRECT_BROKEN", 1);
     fail("TASK_COMPLETE", false);
     pass("ACTUAL_PRODUCTION_REQUESTS", prodHttp);
     process.exit(1);
