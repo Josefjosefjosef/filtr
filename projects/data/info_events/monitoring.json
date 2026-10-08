@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-08T09:10:18.494Z",
-    "lastSuccessAt": "2026-10-08T09:10:23.274Z",
+    "lastRunAt": "2026-10-08T09:27:59.874Z",
+    "lastSuccessAt": "2026-10-08T09:28:03.662Z",
     "lastChangedAt": "2026-10-08T09:10:22.176Z",
     "lastError": null,
     "status": "not_modified",
@@ -423,7 +423,7 @@
     "lastModified": "Thu, 08 Oct 2026 08:43:27 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
-    "activeCount": 3,
+    "activeCount": 0,
     "scheduledCount": 2,
     "expiredCount": 0,
     "cancelledCount": 0,
@@ -434,10 +434,10 @@
     "sourceCount": 2,
     "activeSourceCount": 1,
     "updateCount": 0,
-    "alertCount": 1,
+    "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 24,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 2,
       "uniqueEvents": [
         "Silný vítr"
@@ -479,19 +479,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7587,
+    "runMs": 7431,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-10-08T09:10:18.494Z",
+    "lastSnapshotAt": "2026-10-08T09:27:59.874Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-10-08T09:10:18.494Z",
       "officialLatestSentAt": "2026-10-08T10:42:52+02:00",
       "officialLatestValidFrom": "2026-10-08T20:00:00+02:00",
-      "discoveredAt": "2026-10-08T09:10:18.494Z",
-      "fetchedAt": "2026-10-08T09:10:18.494Z",
-      "transformedAt": "2026-10-08T09:10:26.082Z",
-      "validatedAt": "2026-10-08T09:10:26.082Z",
-      "publishedAt": "2026-10-08T09:10:18.494Z",
+      "discoveredAt": "2026-10-08T09:27:59.874Z",
+      "fetchedAt": "2026-10-08T09:27:59.874Z",
+      "transformedAt": "2026-10-08T09:28:07.306Z",
+      "validatedAt": "2026-10-08T09:28:07.306Z",
+      "publishedAt": "2026-10-08T09:27:59.874Z",
       "endToEndLagMs": 1646494
     },
     "audit": {
@@ -499,9 +499,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml",
           "productKey": "50",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
@@ -515,8 +515,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 24,
+          "capMessages": null,
+          "infoBlocks": null,
           "logicalAlerts": 2,
           "uniqueEvents": [
             "Silný vítr"
@@ -541,22 +541,20 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 1,
-        "update": 0,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-10-08T09:27:59.874Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 7431,
+        "error": null,
+        "activeCount": 0,
+        "scheduledCount": 2,
+        "publishableCount": 2
+      },
       {
         "at": "2026-10-08T09:10:18.494Z",
         "status": "not_modified",
@@ -1069,17 +1067,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 7678,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-06T08:45:46.451Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 6821,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
