@@ -39,6 +39,16 @@ const checks = [
     fs.readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8").includes("PRODUCTION_QR_PAYMENT_PASS"),
   ],
   [
+    "PROD_PROOF_DOCUMENT_CREATED_AT",
+    fs
+      .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
+      .includes("document_created_at"),
+  ],
+  [
+    "CURRENT_GENERATOR_QR_INTEGRATION",
+    fs.existsSync(path.join(root, "cloudflare", "iu-ads", "test", "premium-invoice-pdf-qr-extract.test.ts")),
+  ],
+  [
     "INVOICE_PDF_QR_DECODE_SCRIPT",
     fs.existsSync(path.join(root, "cloudflare", "iu-ads", "scripts", "decode-invoice-pdf-spayd.mjs")),
   ],
