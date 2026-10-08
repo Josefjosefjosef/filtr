@@ -77,11 +77,21 @@ describe("premium order confirmation visual freeze", () => {
     const doc = await PDFDocument.load(pdfBytes);
     expect(doc.getPageCount()).toBe(pageCount);
 
-    const page1Png = await renderPdfPagePng(pdfBytes, 1);
-    const page2Png = await renderPdfPagePng(pdfBytes, 2);
-    if (page1Png && page2Png) {
-      expect(page1Png.byteLength).toBeGreaterThan(5000);
-      expect(page2Png.byteLength).toBeGreaterThan(5000);
+    const page1Png = await renderPdfPagePng(Uint8Array.from(pdfBytes), 1, 2);
+    const page2Png = await renderPdfPagePng(Uint8Array.from(pdfBytes), 2, 2);
+    expect(page1Png).not.toBeNull();
+    expect(page2Png).not.toBeNull();
+    expect(page1Png!.byteLength).toBeGreaterThan(8000);
+    expect(page2Png!.byteLength).toBeGreaterThan(8000);
+
+    const outDir = process.env.IU_ORDER_CONFIRMATION_VISUAL_OUT;
+    if (outDir) {
+      const fs = await import("node:fs");
+      const path = await import("node:path");
+      fs.mkdirSync(outDir, { recursive: true });
+      fs.writeFileSync(path.join(outDir, "order-confirmation-freeze.pdf"), Buffer.from(pdfBytes));
+      fs.writeFileSync(path.join(outDir, "order-confirmation-freeze-page-1.png"), page1Png!);
+      fs.writeFileSync(path.join(outDir, "order-confirmation-freeze-page-2.png"), page2Png!);
     }
 
     const plain = buildOrderConfirmationPlainLines(referenceCtx).join("\n");

@@ -334,19 +334,105 @@ function drawPriceBand(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFonts, 
 
 function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFonts, brand: ReturnType<typeof hexRgb>, ctx: PremiumOrderPdfContext) {
   const placementUrl = premiumOrderAdWebPlacementForPdf(ctx) || "—";
-  drawSectionBox(cursor, fonts, brand, "Objednaná reklamní služba", [
+  const periodBoxW = 162;
+  const pad = 8;
+  const w = PREMIUM_INVOICE_CONTENT_W;
+  const innerW = w - pad * 2;
+  const leftW = innerW - periodBoxW - 10;
+  const titleSize = 10.5;
+  const bodySize = 9;
+  const headH = titleSize * 1.4 + 5;
+  const labelW = 138;
+  const valueW = leftW - labelW;
+
+  const rowTexts: { label: string; value: string; link?: boolean }[] = [
     { label: "Kategorie:", value: ctx.category_title_cs },
     { label: "Reklamní pozice:", value: ctx.position_label },
-    { label: "Webové umístění reklamy:", value: placementUrl, linkBlue: true },
-    { label: "Cílová URL tlačítka:", value: ctx.target_url, linkBlue: true },
-    { label: "Délka poskytování:", value: String(ctx.duration_months) + " měsíců" },
+    { label: "Webové umístění reklamy:", value: placementUrl, link: true },
+    { label: "Cílová URL reklamního tlačítka:", value: ctx.target_url, link: true },
+    { label: "Délka poskytování reklamní služby:", value: String(ctx.duration_months) + " měsíců" },
     {
       label: "Režim kreativy:",
       value: ctx.creative_mode_label_cs || premiumCreativeModeLabelCs(ctx.creative_mode),
     },
-    { label: "Období — od:", value: formatAdminPragueDateTime(ctx.campaign_start_at) },
-    { label: "Období — do:", value: formatAdminPragueDateTime(ctx.campaign_end_at) },
-  ], { labelW: 138 });
+  ];
+
+  let bodyH = 10;
+  for (const row of rowTexts) {
+    const lines = wrapTextLines(fonts.regular, row.value, bodySize, valueW);
+    bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 4;
+  }
+  const periodH = 64;
+  bodyH = Math.max(bodyH, periodH + 8);
+  const blockH = headH + bodyH + 6;
+  cursor.ensureSpace(blockH + 6);
+  const x = PREMIUM_INVOICE_MARGIN;
+  const yTop = cursor.y;
+  const yBottom = yTop - blockH;
+
+  cursor.page.drawRectangle({ x, y: yBottom, width: w, height: blockH, borderColor: LINE_GRAY, borderWidth: 0.6, color: rgb(1, 1, 1) });
+  cursor.page.drawRectangle({ x, y: yTop - headH, width: w, height: headH, color: BG_BOX_HEAD, borderColor: LINE_GRAY, borderWidth: 0.6 });
+  cursor.page.drawText("Objednaná reklamní služba", {
+    x: x + pad,
+    y: yTop - titleSize - 5,
+    size: titleSize,
+    font: fonts.bold,
+    color: brand,
+  });
+
+  const periodX = x + w - pad - periodBoxW;
+  const periodTop = yTop - headH - 6;
+  cursor.page.drawRectangle({
+    x: periodX,
+    y: periodTop - periodH,
+    width: periodBoxW,
+    height: periodH,
+    borderColor: LINE_GRAY,
+    borderWidth: 0.5,
+    color: rgb(0.98, 0.99, 1),
+  });
+  cursor.page.drawText("Období poskytování", {
+    x: periodX + 8,
+    y: periodTop - 13,
+    size: 8.5,
+    font: fonts.bold,
+    color: brand,
+  });
+  cursor.page.drawText("Od:", { x: periodX + 8, y: periodTop - 27, size: 8, font: fonts.regular, color: TEXT_MUTED });
+  drawWrappedText(
+    cursor.page,
+    fonts.regular,
+    formatAdminPragueDateTime(ctx.campaign_start_at),
+    periodX + 26,
+    periodTop - 27,
+    periodBoxW - 34,
+    8,
+    TEXT_MAIN,
+    1.22
+  );
+  cursor.page.drawText("Do:", { x: periodX + 8, y: periodTop - 46, size: 8, font: fonts.regular, color: TEXT_MUTED });
+  drawWrappedText(
+    cursor.page,
+    fonts.regular,
+    formatAdminPragueDateTime(ctx.campaign_end_at),
+    periodX + 26,
+    periodTop - 46,
+    periodBoxW - 34,
+    8,
+    TEXT_MAIN,
+    1.22
+  );
+
+  let y = yTop - headH - 8;
+  for (const row of rowTexts) {
+    cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
+    const color = row.link ? brand : TEXT_MAIN;
+    y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, valueW, bodySize, color, 1.28);
+    y -= 4;
+  }
+
+  cursor.y = yBottom - 6;
+  cursor.recordBlock("service_section", yTop, yBottom, x, w);
 }
 
 function drawPage1Header(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFonts, brand: ReturnType<typeof hexRgb>, ctx: PremiumOrderPdfContext) {
