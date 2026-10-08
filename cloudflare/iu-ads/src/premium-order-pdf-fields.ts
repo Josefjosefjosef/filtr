@@ -72,9 +72,12 @@ export type PremiumOrderPdfContext = {
   campaign_end_at: string;
   workflow_status_label: string;
   approver_user_id: string | null;
+  approver_display_name: string | null;
   invoice_number: string | null;
   invoice_id: string | null;
 };
+
+export const PREMIUM_ORDER_AD_WEB_PLACEMENT = "www.infouzel.cz";
 
 export function listRequiredCustomerPayloadKeys(payload: Record<string, unknown>): string[] {
   const keys: string[] = [];
@@ -94,6 +97,7 @@ export function listRequiredCustomerPayloadKeys(payload: Record<string, unknown>
 export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext): string[] {
   const out: string[] = [
     ctx.evidence_reference,
+    PREMIUM_ORDER_AD_WEB_PLACEMENT,
     ctx.company_name,
     ctx.ico,
     ctx.contact_name,
@@ -103,6 +107,7 @@ export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext
     ctx.target_url,
     ctx.creative_mode_label_cs || ctx.creative_mode,
   ];
+  if (ctx.approver_display_name) out.push(ctx.approver_display_name);
   if (ctx.dic) out.push(ctx.dic);
   if (ctx.ordering_person_name) out.push(ctx.ordering_person_name);
   if (ctx.contact_phone) out.push(ctx.contact_phone);

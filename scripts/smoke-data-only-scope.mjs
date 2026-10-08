@@ -129,16 +129,31 @@ export function allowsDataOnlyFastPath(files) {
 }
 
 /** CI-only workflow edits — no UI surface; skip Playwright guards. */
-/** IU Ads deploy unblock: vitest exclude + freeze guard contract only (no UI surface). */
+/** IU Ads worker-only diff — no infoUzel.cz UI surface; vitest + freeze guards in smoke. */
 export function isIuAdsDeployUnblockScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
-  const allowed = (f) =>
-    f === "cloudflare/iu-ads/vitest.config.ts" ||
-    f === "scripts/iu-premium-selected-services-freeze-guard-v1.mjs" ||
-    f === "scripts/smoke-data-only-scope.mjs" ||
-    f === "scripts/smoke_data_only_scope_proof.mjs" ||
-    f === ".github/workflows/smoke.yml";
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p.startsWith("cloudflare/iu-ads/")) {
+      if (p.includes("/.wrangler/")) return false;
+      return true;
+    }
+    if (p === ".github/workflows/deploy-iu-ads.yml") return true;
+    if (p === ".github/workflows/iu-premium-order-documents-prod-proof.yml") return true;
+    if (p === ".github/workflows/iu-premium-approve-publish-e2e-prod.yml") return true;
+    if (p === "scripts/iu-premium-selected-services-freeze-guard-v1.mjs") return true;
+    if (p === "scripts/iu-premium-order-form-guard-v1.mjs") return true;
+    if (p === "scripts/iu-premium-order-documents-freeze-guard-v1.mjs") return true;
+    if (p === "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs") return true;
+    if (p === "scripts/iu-premium-order-documents-prod-proof.mjs") return true;
+    if (p === "scripts/iu-premium-approve-publish-e2e-prod.mjs") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    return false;
+  };
   return paths.every(allowed);
 }
 

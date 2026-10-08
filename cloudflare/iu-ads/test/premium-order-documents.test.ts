@@ -54,6 +54,7 @@ const sampleCtx: PremiumOrderPdfContext = {
   campaign_end_at: "2026-09-02T09:00:00.000Z",
   workflow_status_label: "Schváleno a zveřejněno",
   approver_user_id: "admin_test",
+  approver_display_name: "Jan Admin",
   invoice_number: "INV-2026-TEST",
   invoice_id: "inv_test",
 };
@@ -87,24 +88,37 @@ describe("premium PDF generation (content)", () => {
     expect(pdf.byteLength).toBeGreaterThan(400);
   });
 
+  it("order price appears once in plain lines", () => {
+    const lines = buildOrderConfirmationPlainLines(sampleCtx);
+    const priceLines = lines.filter((l) => l.includes("Celková cena reklamní služby"));
+    expect(priceLines.length).toBe(1);
+    expect(lines.some((l) => l.includes("www.infouzel.cz"))).toBe(true);
+    expect(lines.some((l) => l.includes("Schválil: Jan Admin"))).toBe(true);
+  });
+
   it("builds non-VAT invoice PDF bytes", async () => {
     const pdf = await buildPremiumInvoicePdf({
-        invoice_number: "INV-2026-ABC",
-        variable_symbol: "2026ABC",
-        issued_at: "2026-03-02T09:00:00.000Z",
-        due_at: "2026-03-05T09:00:00.000Z",
-        taxable_date: "2026-03-02T09:00:00.000Z",
-        buyer_company: sampleCtx.company_name,
-        buyer_ico: sampleCtx.ico,
-        buyer_dic: sampleCtx.dic,
-        buyer_address_lines: [sampleCtx.billing_street, sampleCtx.billing_zip + " " + sampleCtx.billing_city],
-        line_description: "Reklamní umístění — test",
-        service_period_start: sampleCtx.campaign_start_at,
-        service_period_end: sampleCtx.campaign_end_at,
-        total_cents: sampleCtx.price_cents,
-        currency: "CZK",
-      });
-      expect(pdf.byteLength).toBeGreaterThan(500);
+      invoice_number: "INV-2026-ABC",
+      variable_symbol: "2026ABC",
+      issued_at: "2026-03-02T09:00:00.000Z",
+      due_at: "2026-03-05T09:00:00.000Z",
+      taxable_date: "2026-03-02T09:00:00.000Z",
+      buyer_company: sampleCtx.company_name,
+      buyer_ico: sampleCtx.ico,
+      buyer_dic: sampleCtx.dic,
+      buyer_address_lines: [sampleCtx.billing_street, sampleCtx.billing_zip + " " + sampleCtx.billing_city],
+      line_description: "Reklamní umístění — test",
+      service_period_start: sampleCtx.campaign_start_at,
+      service_period_end: sampleCtx.campaign_end_at,
+      total_cents: sampleCtx.price_cents,
+      currency: "CZK",
+      order_reference: sampleCtx.evidence_reference,
+      category_title_cs: sampleCtx.category_title_cs,
+      position_label: sampleCtx.position_label,
+      duration_months: sampleCtx.duration_months,
+    });
+    expect(pdf[0]).toBe(0x25);
+    expect(pdf.byteLength).toBeGreaterThan(800);
     expect(PREMIUM_INVOICE_SUPPLIER.vatPayer).toBe(false);
   });
 });

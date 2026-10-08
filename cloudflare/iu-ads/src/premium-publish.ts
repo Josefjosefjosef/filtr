@@ -379,11 +379,18 @@ export async function executePremiumApproveAndPublish(
     .bind(invoiceId, campaignId)
     .run();
 
+  const actorRow = await db
+    .prepare("SELECT display_name FROM admin_users WHERE user_id = ?")
+    .bind(input.actorUserId)
+    .first<{ display_name: string }>();
+  const publishedByDisplayName =
+    typeof actorRow?.display_name === "string" && actorRow.display_name.trim() ? actorRow.display_name.trim() : null;
+
   await db
     .prepare(
-      "UPDATE premium_selected_orders SET workflow_status = 'published', published_campaign_id = ?, published_at = ?, publish_idempotency_key = ?, updated_at = ? WHERE order_id = ?"
+      "UPDATE premium_selected_orders SET workflow_status = 'published', published_campaign_id = ?, published_at = ?, publish_idempotency_key = ?, published_by_display_name = ?, updated_at = ? WHERE order_id = ?"
     )
-    .bind(campaignId, nowIso, input.idempotencyKey, nowIso, input.orderId)
+    .bind(campaignId, nowIso, input.idempotencyKey, publishedByDisplayName, nowIso, input.orderId)
     .run();
 
   try {

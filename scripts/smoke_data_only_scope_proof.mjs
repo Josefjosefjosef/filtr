@@ -117,11 +117,27 @@ assert(
   "iu-ads vitest+freeze is deploy-unblock scope"
 );
 assert(
+  isIuAdsDeployUnblockScope([
+    "cloudflare/iu-ads/src/premium-invoice-pdf.ts",
+    "cloudflare/iu-ads/migrations/0019_premium_order_publish_snapshot.sql",
+    ".github/workflows/deploy-iu-ads.yml",
+    "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs",
+  ]),
+  "iu-ads worker PDF diff is deploy-unblock scope"
+);
+assert(
   allowsDataOnlyFastPath([
     "cloudflare/iu-ads/vitest.config.ts",
     "scripts/iu-premium-selected-services-freeze-guard-v1.mjs",
   ]),
   "iu-ads deploy unblock allows smoke fast path"
+);
+assert(
+  allowsDataOnlyFastPath([
+    "cloudflare/iu-ads/src/premium-invoice-pdf.ts",
+    "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs",
+  ]),
+  "iu-ads worker-only allows smoke fast path"
 );
 assert(
   !isIuAdsDeployUnblockScope(["cloudflare/iu-ads/vitest.config.ts", "assets/app.js"]),
