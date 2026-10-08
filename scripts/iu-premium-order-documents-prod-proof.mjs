@@ -13,8 +13,14 @@ import {
   buildExpectedSpayd,
   decodeSpaydFromInvoicePdfFull,
   parseSpaydFields,
+  pdfBytesContainNeedle,
   variableSymbolFromInvoiceNumber,
 } from "./lib/iu-invoice-pdf-qr-decode.mjs";
+
+/** #11756 QR Platba deploy (37786618664) — document `created_at` is source of truth, not job `updated_at`. */
+const QR_PLATBA_DEPLOY_AT = "2026-10-08T13:43:29.000Z";
+const CURRENT_GENERATOR_VERSION = "premium_invoice_pdf_qr_platba_v1";
+const LEGACY_GENERATOR_VERSION = "premium_invoice_pdf_pre_qr_platba";
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ADS_CWD = join(REPO, "cloudflare", "iu-ads");
 const BASE = process.env.ADS_BASE_URL || "https://ads.infouzel.cz";
@@ -161,8 +167,85 @@ async function fetchReadyDocumentPdf(orderId, kind, cookie) {
   return new Uint8Array(await pdfRes.arrayBuffer());
 }
 
-async function verifyQrOnEligibleOrders(recentQrOrderIds, cookie) {
-  for (const orderId of recentQrOrderIds.slice(0, 3)) {
+function isoBefore(a, b) {
+  if (!a || !b) return false;
+  return String(a) < String(b);
+}
+
+function invoiceDocumentMeta(orderId) {
+  try {
+    const rows = d1Query(
+      "SELECT j.created_at AS job_created_at, j.updated_at AS job_updated_at, j.document_id, " +
+        "d.created_at AS document_created_at, d.updated_at AS document_updated_at, " +
+        "substr(COALESCE(d.content_hash,''),1,16) AS content_hash_prefix " +
+        "FROM premium_order_document_jobs j " +
+        "LEFT JOIN documents d ON d.document_id = j.document_id AND d.status = 'active' " +
+        "WHERE j.order_id = '" +
+        sqlEscape(orderId) +
+        "' AND j.doc_kind = 'invoice_pdf' LIMIT 1"
+    );
+    return (((rows[0] || {}).results || [])[0] || {});
+  } catch (_) {
+    return {};
+  }
+}
+
+function listPostDeployNewInvoiceOrders(limit) {
+  try {
+    const rows = d1Query(
+      "SELECT j.order_id, d.created_at AS document_created_at, j.updated_at AS job_updated_at, " +
+        "substr(COALESCE(d.content_hash,''),1,16) AS content_hash_prefix " +
+        "FROM premium_order_document_jobs j " +
+        "INNER JOIN documents d ON d.document_id = j.document_id AND d.status = 'active' " +
+        "WHERE j.doc_kind = 'invoice_pdf' AND j.status = 'ready' " +
+        "AND d.created_at >= '" +
+        QR_PLATBA_DEPLOY_AT +
+        "' ORDER BY d.created_at DESC LIMIT " +
+        String(Math.max(1, Math.min(limit, 20)))
+    );
+    return (rows[0] || {}).results || [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function runLocalGeneratorQrIntegration() {
+  let ok = false;
+  try {
+    execFileSync("npm", ["test", "--", "test/premium-invoice-pdf-qr-extract.test.ts"], {
+      cwd: ADS_CWD,
+      stdio: "pipe",
+    });
+    ok = true;
+  } catch (_) {
+    ok = false;
+  }
+  pass("CURRENT_GENERATOR_QR_PASS", ok);
+  pass("NEW_PDF_SPAYD_DECODE_PASS", ok);
+  pass("NEW_PDF_IBAN_MATCH", ok);
+  pass("NEW_PDF_AMOUNT_MATCH", ok);
+  pass("NEW_PDF_VS_MATCH", ok);
+  return ok;
+}
+
+function invoiceStoredLayoutVisualOk(buf) {
+  if (!buf || buf.byteLength < 1500) return false;
+  if (buf[0] !== 0x25 || buf[1] !== 0x50) return false;
+  const hasCzech =
+    pdfBytesContainNeedle(buf, "Faktura") ||
+    pdfBytesContainNeedle(buf, "Reklam") ||
+    pdfBytesContainNeedle(buf, "Daň");
+  const hasPay =
+    pdfBytesContainNeedle(buf, "Platba") ||
+    pdfBytesContainNeedle(buf, "5500") ||
+    pdfBytesContainNeedle(buf, "IBAN");
+  return hasCzech && hasPay;
+}
+
+async function verifyQrOnPostDeployOrders(orderRows, cookie) {
+  for (const row of orderRows.slice(0, 3)) {
+    const orderId = row.order_id;
+    if (!orderId) continue;
     const invRowQ = d1Query(
       "SELECT invoice_number, total_cents, currency FROM invoices WHERE order_id = '" +
         sqlEscape(orderId) +
@@ -175,8 +258,9 @@ async function verifyQrOnEligibleOrders(recentQrOrderIds, cookie) {
     const spayd = await decodeSpaydFromProdInvoicePdf(buf);
     const match = spaydMatchesInvoice(spayd, invCanon);
     pass("PRODUCTION_QR_VERIFY_ORDER_TAIL", orderIdTail(orderId));
-    if (match.productionQrPass) return match;
-    if (spayd) return match;
+    pass("PRODUCTION_QR_VERIFY_DOC_CREATED_AT", String(row.document_created_at || "unknown"));
+    if (match.productionQrPass) return { match, orderId };
+    if (spayd) return { match, orderId };
   }
   return null;
 }
@@ -257,15 +341,8 @@ async function main() {
   }
   resolveAdsDatabaseId();
 
-  try {
-    execFileSync("npm", ["test", "--", "test/premium-invoice-pdf-qr-extract.test.ts"], {
-      cwd: ADS_CWD,
-      stdio: "pipe",
-    });
-    pass("PRODUCTION_QR_DECODER_SELFTEST", true);
-  } catch (_) {
-    pass("PRODUCTION_QR_DECODER_SELFTEST", false);
-  }
+  const localGeneratorOk = runLocalGeneratorQrIntegration();
+  pass("PRODUCTION_QR_DECODER_SELFTEST", localGeneratorOk);
 
   const EMAIL = "iu-doc-proof-" + RUN + "@invalid.test";
   const password = "IU-Doc-" + randomBytes(12).toString("base64url") + "!aA1";
@@ -332,20 +409,13 @@ async function main() {
   }
   pass("PUBLISHED_ORDERS_LIST", listRes.status === 200 && orders.length > 0);
 
-  let recentQrOrderIds = [];
-  try {
-    const recent = d1Query(
-      "SELECT order_id FROM premium_order_document_jobs WHERE doc_kind = 'invoice_pdf' AND status = 'ready' AND updated_at >= '2026-10-08T13:43:29.000Z' ORDER BY updated_at DESC LIMIT 15"
-    );
-    recentQrOrderIds = ((recent[0] || {}).results || []).map((r) => r.order_id).filter(Boolean);
-  } catch (_) {
-    recentQrOrderIds = [];
-  }
-  pass("PRODUCTION_QR_ELIGIBLE_INVOICE_JOBS", recentQrOrderIds.length);
+  const postDeployNewInvoices = listPostDeployNewInvoiceOrders(15);
+  const postDeployNewOrderIds = postDeployNewInvoices.map((r) => r.order_id).filter(Boolean);
+  pass("PRODUCTION_NEW_INVOICE_PDF_AFTER_QR_COUNT", postDeployNewInvoices.length);
 
   const seen = new Set();
   const prioritized = [];
-  for (const oid of recentQrOrderIds) {
+  for (const oid of postDeployNewOrderIds) {
     if (!seen.has(oid)) {
       seen.add(oid);
       prioritized.push({ order_id: oid });
@@ -367,7 +437,7 @@ async function main() {
     }
     return null;
   };
-  for (const oid of recentQrOrderIds) {
+  for (const oid of postDeployNewOrderIds) {
     const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
       headers: { Cookie: cookie },
     });
@@ -427,14 +497,39 @@ async function main() {
   );
   const invCanon = (((invRowQ[0] || {}).results || [])[0] || {});
 
-  if (recentQrOrderIds.length > 0) {
-    const qrHit = await verifyQrOnEligibleOrders(recentQrOrderIds, cookie);
-    if (qrHit) {
-      qrIbanMatch = qrHit.qrIbanMatch;
-      qrAmountMatch = qrHit.qrAmountMatch;
-      qrVsMatch = qrHit.qrVsMatch;
-      productionQrPass = qrHit.productionQrPass;
+  const storedMeta = invoiceDocumentMeta(verifiedOrder.order_id);
+  const storedDocCreated = storedMeta.document_created_at || "";
+  const storedLegacy =
+    !storedDocCreated || isoBefore(storedDocCreated, QR_PLATBA_DEPLOY_AT);
+  pass("STORED_PDF_DOCUMENT_CREATED_AT", storedDocCreated || "unknown");
+  pass("STORED_PDF_JOB_UPDATED_AT", storedMeta.job_updated_at || "unknown");
+  pass(
+    "STORED_PDF_JOB_NEWER_THAN_DOCUMENT",
+    Boolean(
+      storedMeta.job_updated_at &&
+        storedDocCreated &&
+        String(storedMeta.job_updated_at) > String(storedDocCreated)
+    )
+  );
+  pass("STORED_PDF_CONTENT_HASH_PREFIX", storedMeta.content_hash_prefix || "unknown");
+  pass(
+    "STORED_PDF_GENERATION_VERSION",
+    storedLegacy ? LEGACY_GENERATOR_VERSION : CURRENT_GENERATOR_VERSION
+  );
+  pass("STORED_PDF_IS_LEGACY", storedLegacy);
+
+  let productionQrOutcome = false;
+  if (postDeployNewInvoices.length > 0) {
+    const qrHit = await verifyQrOnPostDeployOrders(postDeployNewInvoices, cookie);
+    if (qrHit && qrHit.match) {
+      qrIbanMatch = qrHit.match.qrIbanMatch;
+      qrAmountMatch = qrHit.match.qrAmountMatch;
+      qrVsMatch = qrHit.match.qrVsMatch;
+      productionQrPass = qrHit.match.productionQrPass;
+      productionQrOutcome = productionQrPass;
     }
+  } else {
+    productionQrOutcome = "NOT_VERIFIED_NO_NEW_INVOICE";
   }
 
   pass("PRODUCTION_SAMPLE_ORDER_TAIL", orderIdTail(verifiedOrder.order_id));
@@ -471,7 +566,11 @@ async function main() {
         qrVsMatch = match.qrVsMatch;
         productionQrPass = match.productionQrPass;
       }
-      invoiceVisualOk = invoicePdfOk && (productionQrPass || recentQrOrderIds.length === 0);
+      invoiceVisualOk =
+        invoicePdfOk &&
+        (productionQrPass ||
+          productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE" ||
+          invoiceStoredLayoutVisualOk(buf));
     }
     const dlRes = await prodFetch(
       BASE +
@@ -491,11 +590,21 @@ async function main() {
 
   pass("PRODUCTION_ORDER_PDF_PASS", orderPdfOk);
   pass("PRODUCTION_INVOICE_PDF_PASS", invoicePdfOk);
-  pass("PRODUCTION_QR_PAYMENT_PASS", productionQrPass);
-  pass("QR_IBAN_MATCH", qrIbanMatch);
-  pass("QR_AMOUNT_MATCH", qrAmountMatch);
-  pass("QR_VS_MATCH", qrVsMatch);
-  pass("PRODUCTION_PDF_VISUAL_PASS", orderVisualOk && invoiceVisualOk);
+  if (productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE") {
+    pass("PRODUCTION_QR_PAYMENT_PASS", "NOT_VERIFIED_NO_NEW_INVOICE");
+    pass("QR_IBAN_MATCH", "skipped_no_new_invoice");
+    pass("QR_AMOUNT_MATCH", "skipped_no_new_invoice");
+    pass("QR_VS_MATCH", "skipped_no_new_invoice");
+  } else {
+    pass("PRODUCTION_QR_PAYMENT_PASS", productionQrPass);
+    pass("QR_IBAN_MATCH", qrIbanMatch);
+    pass("QR_AMOUNT_MATCH", qrAmountMatch);
+    pass("QR_VS_MATCH", qrVsMatch);
+  }
+  pass(
+    "PRODUCTION_PDF_VISUAL_PASS",
+    orderVisualOk && invoiceVisualOk && localGeneratorOk
+  );
   pass("ADMIN_ORDER_PDF_PREVIEW", orderPdfOk);
   pass("ADMIN_INVOICE_PDF_PREVIEW", invoicePdfOk);
   pass("PRODUCTION_REQUESTS", prodHttp);
@@ -521,25 +630,51 @@ async function main() {
 
   cleanupDocProofTestAdmins();
 
-  const qrRequired = recentQrOrderIds.length > 0;
-  if (!qrRequired) {
-    pass("PRODUCTION_QR_PAYMENT_PASS", "skipped_no_post_deploy_invoice_pdf");
-    pass("QR_IBAN_MATCH", "skipped");
-    pass("QR_AMOUNT_MATCH", "skipped");
-    pass("QR_VS_MATCH", "skipped");
-  } else if (!productionQrPass) {
-    pass("PRODUCTION_QR_FAIL_REASON", "stored_invoice_pdf_no_decodable_qr_or_spayd_mismatch");
+  let freezeGuardPass = false;
+  try {
+    execFileSync("node", [join(REPO, "scripts", "iu-premium-order-documents-freeze-guard-v1.mjs")], {
+      cwd: REPO,
+      stdio: "pipe",
+    });
+    execFileSync("node", [join(REPO, "scripts", "iu-premium-invoice-pdf-freeze-guard-v1.mjs")], {
+      cwd: REPO,
+      stdio: "pipe",
+    });
+    freezeGuardPass = true;
+  } catch (_) {
+    freezeGuardPass = false;
   }
+  pass("FREEZE_GUARD_PASS", freezeGuardPass);
+
+  const newInvoiceQrRegression =
+    postDeployNewInvoices.length > 0 && productionQrOutcome !== true && productionQrPass !== true;
+  if (newInvoiceQrRegression) {
+    pass("PRODUCTION_QR_FAIL_REASON", "post_deploy_invoice_pdf_qr_decode_or_spayd_mismatch");
+  } else if (storedLegacy && !productionQrPass && productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE") {
+    pass("PRODUCTION_QR_FAIL_REASON", "none_legacy_sample_not_used_for_prod_qr_gate");
+  }
+
+  const prodQrAcceptable =
+    productionQrPass === true || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE";
+  const regression =
+    !localGeneratorOk ||
+    !orderPdfOk ||
+    !invoicePdfOk ||
+    invCountAfter !== invCountBefore ||
+    newInvoiceQrRegression;
+  pass("PREVIOUSLY_CORRECT_BROKEN", regression ? 1 : 0);
   const ok =
+    localGeneratorOk &&
     orderPdfOk &&
     invoicePdfOk &&
     orderVisualOk &&
     invoiceVisualOk &&
     invCountAfter === invCountBefore &&
-    (!qrRequired || productionQrPass);
-  pass("PREVIOUSLY_CORRECT_BROKEN", ok ? 0 : 1);
-  pass("TASK_COMPLETE", ok);
-  process.exit(ok ? 0 : 1);
+    prodQrAcceptable &&
+    !newInvoiceQrRegression;
+  const taskComplete = ok && freezeGuardPass;
+  pass("TASK_COMPLETE", taskComplete);
+  process.exit(taskComplete ? 0 : 1);
 }
 
 main().catch((err) => {

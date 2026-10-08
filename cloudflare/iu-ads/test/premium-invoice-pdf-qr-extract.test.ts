@@ -59,4 +59,11 @@ describe("premium invoice PDF QR extract", () => {
     const out = execFileSync("node", [script], { input: Buffer.from(pdf), encoding: "utf8" });
     expect(String(out).trim()).toContain("SPD*1.0");
   });
+
+  it("current generator invoice PDF layout (size, QR image, decodable SPAYD)", async () => {
+    const pdf = await buildPremiumInvoicePdf(sampleInvoiceInput);
+    expect(pdf.byteLength).toBeGreaterThan(2500);
+    const spayd = await decodeSpaydFromInvoicePdfBytes(pdf);
+    expect(spayd).toContain("SPD*1.0");
+  });
 });

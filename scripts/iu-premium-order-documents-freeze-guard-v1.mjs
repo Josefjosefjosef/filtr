@@ -47,6 +47,18 @@ const checks = [
       .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
       .includes("decodeSpaydFromProdInvoicePdf"),
   ],
+  [
+    "PROD_PROOF_LEGACY_PDF_GATE",
+    fs
+      .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
+      .includes("STORED_PDF_IS_LEGACY"),
+  ],
+  [
+    "PROD_PROOF_QR_NOT_VERIFIED",
+    fs
+      .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
+      .includes("NOT_VERIFIED_NO_NEW_INVOICE"),
+  ],
 ];
 
 let fail = 0;
