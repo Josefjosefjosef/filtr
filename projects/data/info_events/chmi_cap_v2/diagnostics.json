@@ -1,6 +1,6 @@
 {
-  "runId": "91fd33805bb98bc0",
-  "started": "2026-10-08T08:25:18.895Z",
+  "runId": "aee517aed331da4b",
+  "started": "2026-10-08T09:10:18.494Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,11 +16,11 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_070758.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
@@ -30,22 +30,37 @@
       "cacheHit": true
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 1,
+    "valid": 1,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 1,
+    "status": "healthy",
+    "alert": 1,
+    "update": 0,
+    "cancel": 0
+  },
   "publish": {
-    "publish": false,
-    "reason": "validation_failed",
+    "publish": true,
+    "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
-      "logicalAlerts": 0,
-      "uniqueEvents": [],
-      "totalAreas": 0,
-      "mappedAreas": 0,
+      "capMessages": 1,
+      "infoBlocks": 24,
+      "logicalAlerts": 2,
+      "uniqueEvents": [
+        "Silný vítr"
+      ],
+      "totalAreas": 7,
+      "mappedAreas": 46,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 0,
-      "publishedScheduled": 0,
-      "publishableCount": 0,
+      "publishedScheduled": 2,
+      "publishableCount": 2,
       "productStreams": [
         "50",
         "70"
@@ -59,11 +74,11 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
   "onsetSplit": {
-    "before": 0,
-    "after": 0,
+    "before": 2,
+    "after": 2,
     "ledgerKeys": 0,
     "ledgerFingerprint": "da39a3ee5e6b4b0d",
     "history": {
@@ -84,7 +99,6 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_011200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_081200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_151200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_200940.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210735.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220739.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_221200.xml",
@@ -102,10 +116,11 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050905.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060759.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_070758.xml"
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_070758.xml",
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml"
       ],
       "recentCount": 32,
-      "refCount": 0,
+      "refCount": 1,
       "window": 16
     },
     "chainSteps": [
@@ -186,12 +201,6 @@
         "msgType": "Update",
         "openEndedCount": 3,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_151200.xml"
-      },
-      {
-        "sent": "2026-09-20T11:40:05+02:00",
-        "msgType": "Update",
-        "openEndedCount": 0,
-        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_200940.xml"
       },
       {
         "sent": "2026-09-21T09:35:55+02:00",
@@ -300,33 +309,41 @@
         "msgType": "Update",
         "openEndedCount": 0,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_070758.xml"
+      },
+      {
+        "sent": "2026-10-08T10:42:52+02:00",
+        "msgType": "Alert",
+        "openEndedCount": 0,
+        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml"
       }
     ],
     "fixtureSeed": false,
     "referencesTraversal": true
   },
   "temporalCounts": {
-    "totalItems": 0,
+    "totalItems": 2,
     "activeCount": 0,
-    "scheduledCount": 0,
+    "scheduledCount": 2,
     "expiredCount": 0,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 0,
-    "visibleCount": 0
+    "publishableCount": 2,
+    "visibleCount": 2
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
-    "logicalAlerts": 0,
-    "uniqueEvents": [],
-    "totalAreas": 0,
-    "mappedAreas": 0,
+    "capMessages": 1,
+    "infoBlocks": 24,
+    "logicalAlerts": 2,
+    "uniqueEvents": [
+      "Silný vítr"
+    ],
+    "totalAreas": 7,
+    "mappedAreas": 46,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
     "publishedActive": 0,
-    "publishedScheduled": 0,
-    "publishableCount": 0,
+    "publishedScheduled": 2,
+    "publishableCount": 2,
     "productStreams": [
       "50",
       "70"
@@ -342,7 +359,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 0,
+    "headAreas": 46,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -350,6 +367,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-08T08:25:24.047Z",
-  "runMs": 5152
+  "finished": "2026-10-08T09:10:26.082Z",
+  "runMs": 7588
 }
