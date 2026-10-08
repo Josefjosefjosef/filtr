@@ -11,6 +11,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   buildExpectedSpayd,
+  decodeSpaydFromInvoicePdfFull,
   parseSpaydFields,
   variableSymbolFromInvoiceNumber,
 } from "./lib/iu-invoice-pdf-qr-decode.mjs";
@@ -98,7 +99,9 @@ function d1(sql) {
   }
 }
 
-function decodeSpaydFromProdInvoicePdf(pdfBuf) {
+async function decodeSpaydFromProdInvoicePdf(pdfBuf) {
+  const fromLib = await decodeSpaydFromInvoicePdfFull(pdfBuf);
+  if (fromLib) return fromLib;
   try {
     const out = execFileSync("node", [join(ADS_CWD, "scripts", "decode-invoice-pdf-spayd.mjs")], {
       input: Buffer.from(pdfBuf),
@@ -111,6 +114,77 @@ function decodeSpaydFromProdInvoicePdf(pdfBuf) {
   } catch (_) {
     return null;
   }
+}
+
+function orderIdTail(orderId) {
+  const s = String(orderId || "");
+  return s.length > 8 ? s.slice(-8) : s;
+}
+
+function spaydMatchesInvoice(spayd, invCanon) {
+  if (!spayd || !invCanon || !invCanon.invoice_number) {
+    return { qrIbanMatch: false, qrAmountMatch: false, qrVsMatch: false, productionQrPass: false };
+  }
+  const vs = variableSymbolFromInvoiceNumber(invCanon.invoice_number);
+  const expected = buildExpectedSpayd({
+    amountCents: invCanon.total_cents,
+    currency: invCanon.currency || "CZK",
+    variableSymbol: vs,
+  });
+  const got = parseSpaydFields(spayd);
+  const exp = parseSpaydFields(expected);
+  const qrIbanMatch = got.ACC === exp.ACC;
+  const qrAmountMatch = got.AM === exp.AM && got.CC === exp.CC;
+  const qrVsMatch = got["X-VS"] === exp["X-VS"];
+  return {
+    qrIbanMatch,
+    qrAmountMatch,
+    qrVsMatch,
+    productionQrPass: qrIbanMatch && qrAmountMatch && qrVsMatch,
+  };
+}
+
+async function fetchReadyDocumentPdf(orderId, kind, cookie) {
+  const accRes = await prodFetch(
+    BASE +
+      "/v1/admin/premium/orders/" +
+      encodeURIComponent(orderId) +
+      "/documents/" +
+      encodeURIComponent(kind) +
+      "/access?disposition=inline",
+    { headers: { Cookie: cookie } }
+  );
+  const acc = await accRes.json().catch(() => ({}));
+  if (!acc.path) return null;
+  const pdfRes = await prodFetch(BASE + acc.path, { headers: { Cookie: cookie } });
+  if (!pdfRes.ok) return null;
+  return new Uint8Array(await pdfRes.arrayBuffer());
+}
+
+async function verifyQrOnEligibleOrders(recentQrOrderIds, cookie) {
+  for (const orderId of recentQrOrderIds.slice(0, 3)) {
+    const invRowQ = d1Query(
+      "SELECT invoice_number, total_cents, currency FROM invoices WHERE order_id = '" +
+        sqlEscape(orderId) +
+        "' LIMIT 1"
+    );
+    const invCanon = (((invRowQ[0] || {}).results || [])[0] || {});
+    if (!invCanon.invoice_number) continue;
+    const buf = await fetchReadyDocumentPdf(orderId, "invoice_pdf", cookie);
+    if (!buf || buf.byteLength < 500) continue;
+    const spayd = await decodeSpaydFromProdInvoicePdf(buf);
+    const match = spaydMatchesInvoice(spayd, invCanon);
+    pass("PRODUCTION_QR_VERIFY_ORDER_TAIL", orderIdTail(orderId));
+    if (match.productionQrPass) return match;
+    if (spayd) return match;
+  }
+  return null;
+}
+
+function detailHasReadyKinds(detail, kinds) {
+  const docs = detail.order_documents || [];
+  const ready = docs.filter((d) => d && d.status === "ready");
+  return kinds.every((k) => ready.some((d) => d.kind === k));
 }
 
 function d1Query(sql) {
@@ -285,16 +359,30 @@ async function main() {
   }
 
   let verifiedOrder = null;
-  for (const row of prioritized.slice(0, 8)) {
-    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(row.order_id), {
+  const pickFromDetail = (orderId, detail) => {
+    const docs = detail.order_documents || [];
+    const ready = docs.filter((d) => d && d.status === "ready");
+    if (detailHasReadyKinds(detail, ["invoice_pdf", "order_confirmation"])) {
+      return { order_id: orderId, docs: ready, order: detail.order || {} };
+    }
+    return null;
+  };
+  for (const oid of recentQrOrderIds) {
+    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
       headers: { Cookie: cookie },
     });
     const detail = await detailRes.json().catch(() => ({}));
-    const docs = detail.order_documents || [];
-    const ready = docs.filter((d) => d.status === "ready");
-    if (ready.length >= 2) {
-      verifiedOrder = { order_id: row.order_id, docs: ready, order: detail.order || {} };
-      break;
+    verifiedOrder = pickFromDetail(oid, detail);
+    if (verifiedOrder) break;
+  }
+  if (!verifiedOrder) {
+    for (const row of prioritized.slice(0, 8)) {
+      const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(row.order_id), {
+        headers: { Cookie: cookie },
+      });
+      const detail = await detailRes.json().catch(() => ({}));
+      verifiedOrder = pickFromDetail(row.order_id, detail);
+      if (verifiedOrder) break;
     }
   }
 
@@ -339,6 +427,18 @@ async function main() {
   );
   const invCanon = (((invRowQ[0] || {}).results || [])[0] || {});
 
+  if (recentQrOrderIds.length > 0) {
+    const qrHit = await verifyQrOnEligibleOrders(recentQrOrderIds, cookie);
+    if (qrHit) {
+      qrIbanMatch = qrHit.qrIbanMatch;
+      qrAmountMatch = qrHit.qrAmountMatch;
+      qrVsMatch = qrHit.qrVsMatch;
+      productionQrPass = qrHit.productionQrPass;
+    }
+  }
+
+  pass("PRODUCTION_SAMPLE_ORDER_TAIL", orderIdTail(verifiedOrder.order_id));
+
   for (const doc of verifiedOrder.docs) {
     const accRes = await prodFetch(
       BASE +
@@ -363,20 +463,13 @@ async function main() {
     }
     if (doc.kind === "invoice_pdf") {
       invoicePdfOk = bytesOk && apiCustomerOk;
-      const spayd = decodeSpaydFromProdInvoicePdf(buf);
-      if (spayd && invCanon.invoice_number) {
-        const vs = variableSymbolFromInvoiceNumber(invCanon.invoice_number);
-        const expected = buildExpectedSpayd({
-          amountCents: invCanon.total_cents,
-          currency: invCanon.currency || "CZK",
-          variableSymbol: vs,
-        });
-        const got = parseSpaydFields(spayd);
-        const exp = parseSpaydFields(expected);
-        qrIbanMatch = got.ACC === exp.ACC;
-        qrAmountMatch = got.AM === exp.AM && got.CC === exp.CC;
-        qrVsMatch = got["X-VS"] === exp["X-VS"];
-        productionQrPass = qrIbanMatch && qrAmountMatch && qrVsMatch;
+      if (!productionQrPass) {
+        const spayd = await decodeSpaydFromProdInvoicePdf(buf);
+        const match = spaydMatchesInvoice(spayd, invCanon);
+        qrIbanMatch = match.qrIbanMatch;
+        qrAmountMatch = match.qrAmountMatch;
+        qrVsMatch = match.qrVsMatch;
+        productionQrPass = match.productionQrPass;
       }
       invoiceVisualOk = invoicePdfOk && (productionQrPass || recentQrOrderIds.length === 0);
     }
@@ -434,6 +527,8 @@ async function main() {
     pass("QR_IBAN_MATCH", "skipped");
     pass("QR_AMOUNT_MATCH", "skipped");
     pass("QR_VS_MATCH", "skipped");
+  } else if (!productionQrPass) {
+    pass("PRODUCTION_QR_FAIL_REASON", "stored_invoice_pdf_no_decodable_qr_or_spayd_mismatch");
   }
   const ok =
     orderPdfOk &&

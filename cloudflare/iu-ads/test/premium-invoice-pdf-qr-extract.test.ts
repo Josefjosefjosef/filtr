@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildPremiumInvoicePdf } from "../src/premium-invoice-pdf";
 import { buildPremiumInvoiceSpayd, parseSpaydFields } from "../src/premium-invoice-spayd";
@@ -49,5 +51,12 @@ describe("premium invoice PDF QR extract", () => {
   it("PDF embeds decodable QR image stream", async () => {
     const pdf = await buildPremiumInvoicePdf(sampleInvoiceInput);
     expect(await decodeSpaydFromInvoicePdfBytes(pdf)).toContain("SPD*1.0");
+  });
+
+  it("CLI decode script matches extract helper on same PDF", async () => {
+    const pdf = await buildPremiumInvoicePdf(sampleInvoiceInput);
+    const script = join(process.cwd(), "scripts", "decode-invoice-pdf-spayd.mjs");
+    const out = execFileSync("node", [script], { input: Buffer.from(pdf), encoding: "utf8" });
+    expect(String(out).trim()).toContain("SPD*1.0");
   });
 });

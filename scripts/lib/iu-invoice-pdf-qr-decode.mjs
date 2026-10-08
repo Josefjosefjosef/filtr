@@ -85,6 +85,64 @@ export function decodeSpaydFromInvoicePdfBytes(pdfBytes) {
   return null;
 }
 
+/** pdfjs render path (pdf-lib QR uses split RGB streams). Node / CI only. */
+export async function decodeSpaydFromInvoicePdfWithRender(pdfBytes) {
+  const pdfjs = await import(join(adsRoot, "node_modules", "pdfjs-dist", "legacy", "build", "pdf.mjs"));
+  const { pathToFileURL } = await import("node:url");
+  const napiCanvas = require(join(adsRoot, "node_modules", "@napi-rs", "canvas"));
+  pdfjs.GlobalWorkerOptions.workerSrc = pathToFileURL(
+    join(adsRoot, "node_modules", "pdfjs-dist", "legacy", "build", "pdf.worker.mjs")
+  ).href;
+  const canvasFactory = {
+    create(width, height) {
+      const canvas = napiCanvas.createCanvas(width, height);
+      return { canvas, context: canvas.getContext("2d") };
+    },
+    reset(entry, width, height) {
+      entry.canvas.width = width;
+      entry.canvas.height = height;
+    },
+    destroy(entry) {
+      entry.canvas.width = 0;
+      entry.canvas.height = 0;
+    },
+  };
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(pdfBytes), useSystemFonts: true }).promise;
+  const page = await doc.getPage(1);
+  for (const scale of [3, 4, 5, 6]) {
+    const viewport = page.getViewport({ scale });
+    const canvasEntry = canvasFactory.create(Math.ceil(viewport.width), Math.ceil(viewport.height));
+    await page.render({ canvasContext: canvasEntry.context, viewport, canvasFactory }).promise;
+    const w = canvasEntry.canvas.width;
+    const h = canvasEntry.canvas.height;
+    const attempts = [
+      [0, 0, w, h],
+      [Math.floor(w * 0.35), Math.floor(h * 0.45), Math.ceil(w * 0.65), Math.ceil(h * 0.55)],
+    ];
+    for (const [x, y, cw, ch] of attempts) {
+      const imageData = canvasEntry.context.getImageData(x, y, cw, ch);
+      const code = jsQR(imageData.data, cw, ch);
+      const data = code?.data?.trim();
+      if (data && data.startsWith("SPD*")) {
+        canvasFactory.destroy(canvasEntry);
+        return data;
+      }
+    }
+    canvasFactory.destroy(canvasEntry);
+  }
+  return null;
+}
+
+export async function decodeSpaydFromInvoicePdfFull(pdfBytes) {
+  const sync = decodeSpaydFromInvoicePdfBytes(pdfBytes);
+  if (sync) return sync;
+  try {
+    return await decodeSpaydFromInvoicePdfWithRender(pdfBytes);
+  } catch {
+    return null;
+  }
+}
+
 export function pdfBytesContainNeedle(pdfBytes, needle) {
   const n = String(needle || "").trim();
   if (!n) return false;
