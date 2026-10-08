@@ -40,7 +40,11 @@ export async function renderInvoicePdfFirstPagePng(
     canvasFactory.destroy(canvasEntry);
     await doc.destroy();
     return png;
-  } catch {
+  } catch (err) {
+    if (process.env.IU_INVOICE_PNG_DEBUG === "1") {
+      const msg = err instanceof Error ? err.stack ?? err.message : String(err);
+      console.error("IU_INVOICE_PNG_RENDER_ERROR=" + msg);
+    }
     return null;
   }
 }

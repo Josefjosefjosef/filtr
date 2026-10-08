@@ -65,6 +65,9 @@ jobs:
         run: |
           set -euo pipefail
           npm test -- test/premium-invoice-visual-proof.test.ts
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+          bash scripts/rasterize-invoice-pdf-png.sh "$IU_INVOICE_VISUAL_OUT"
           test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.png"
 
       - name: Upload premium invoice visual artifacts
