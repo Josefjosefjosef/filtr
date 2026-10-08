@@ -7,6 +7,11 @@ main = "src/index.ts"
 compatibility_date = "2024-11-01"
 account_id = "577868e9aac9c289e9323100f68fad16"
 
+[[rules]]
+type = "Data"
+globs = ["**/*.ttf"]
+fallthrough = true
+
 # Official public origin: https://ads.infouzel.cz
 # Personal *.workers.dev must not be the public Ads surface.
 workers_dev = false
