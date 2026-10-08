@@ -140,7 +140,7 @@ jobs:
 
       - name: Upload premium invoice visual artifacts (IU Ads unblock)
         if: steps.scope.outputs.iu_ads_deploy_unblock_only == 'true'
-        uses: actions/upload-artifact@6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
         with:
           name: premium-invoice-visual-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-invoice-visual/
@@ -491,7 +491,7 @@ jobs:
 
       - name: Upload premium invoice visual artifacts
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
-        uses: actions/upload-artifact@6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
         with:
           name: premium-invoice-visual-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-invoice-visual/

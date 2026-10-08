@@ -68,7 +68,7 @@ jobs:
           test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.png"
 
       - name: Upload premium invoice visual artifacts
-        uses: actions/upload-artifact@6.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
         with:
           name: premium-invoice-visual-deploy-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-invoice-visual/
