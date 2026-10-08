@@ -30,6 +30,11 @@ const checks = [
       read("premium-pdf-font-bundled.ts").includes("noto-sans-latin-ext-400-normal.ttf") &&
       !read("premium-pdf-font.ts").includes("infouzel.cz/assets/fonts"),
   ],
+  [
+    "ORDER_PDF_FONT_WRANGLER_DATA_RULE",
+    fs.readFileSync(path.join(ads, "..", "wrangler.toml"), "utf8").includes('type = "Data"') &&
+      fs.readFileSync(path.join(ads, "..", "wrangler.toml"), "utf8").includes("**/*.ttf"),
+  ],
 ];
 
 let fail = 0;
