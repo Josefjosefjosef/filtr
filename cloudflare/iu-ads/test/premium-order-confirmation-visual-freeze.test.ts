@@ -96,6 +96,8 @@ describe("premium order confirmation visual freeze", () => {
     expect(page1Png!.byteLength).toBeGreaterThan(8000);
     expect(page2Png!.byteLength).toBeGreaterThan(8000);
 
+    expect(page1Blocks.some((block) => block.id.includes("Technické"))).toBe(true);
+    expect(blocks.some((block) => block.id.includes("Technické"))).toBe(false);
     expect(assertOrderConfirmationContentAboveFooter(page1Blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y, 0)).toEqual([]);
     expect(await orderConfirmationPage1FooterBandContentOverlap(page1Png!)).toBe(false);
     expect(assertOrderConfirmationContentAboveFooter(blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y, 1)).toEqual([]);
