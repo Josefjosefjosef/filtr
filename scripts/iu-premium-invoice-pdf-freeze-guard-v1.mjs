@@ -37,6 +37,12 @@ const checks = [
     "INVOICE_SERVICE_PERIOD_LINES",
     invoicePdf.includes("formatServicePeriodLines") && invoicePdf.includes('"Od: "'),
   ],
+  [
+    "INVOICE_DOC_STUCK_GENERATING_GUARD",
+    read("premium-order-documents.ts").includes("PREMIUM_DOC_GENERATING_STALE_MS") &&
+      read("premium-order-documents.ts").includes("reconcilePremiumOrderDocumentJob") &&
+      read("premium-order-documents.ts").includes("resumePremiumOrderDocuments"),
+  ],
   ["INVOICE_BOLD_FONT", read("premium-pdf-font.ts").includes("registerPremiumPdfFonts")],
   ["CUSTOMER_REGISTRY_ARES", read("premium-ares-registry.ts").includes("extractCustomerRegistryFromAresBody")],
   [

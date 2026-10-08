@@ -2,6 +2,7 @@
  * Premium maintenance: expiry sync, renewal offers (cron-safe).
  */
 import { addCalendarDaysFromIso } from "./premium-selected-services";
+import { resumePremiumOrderDocuments } from "./premium-order-documents";
 import type { Env } from "./types";
 
 async function getSetting(db: D1Database, key: string, fallback: number): Promise<number> {
@@ -10,10 +11,35 @@ async function getSetting(db: D1Database, key: string, fallback: number): Promis
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number; offers: number }> {
-  if (!env.DB) return { cleared: 0, offers: 0 };
+export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number; offers: number; document_jobs_healed: number }> {
+  if (!env.DB) return { cleared: 0, offers: 0, document_jobs_healed: 0 };
   const db = env.DB;
   const nowIso = new Date().toISOString();
+  let document_jobs_healed = 0;
+
+  if (env.DOCUMENTS) {
+    const staleCutoff = new Date(Date.now() - 90_000).toISOString();
+    const stuck = await db
+      .prepare(
+        `SELECT j.order_id FROM premium_order_document_jobs j
+         JOIN premium_selected_orders po ON po.order_id = j.order_id
+         WHERE po.workflow_status = 'published'
+         AND j.status IN ('generating', 'pending', 'error')
+         AND (j.status != 'generating' OR j.updated_at <= ?)
+         ORDER BY j.updated_at ASC
+         LIMIT 3`
+      )
+      .bind(staleCutoff)
+      .all<{ order_id: string }>();
+    for (const row of stuck.results || []) {
+      try {
+        const r = await resumePremiumOrderDocuments(env, row.order_id, "system:premium_maintenance");
+        if (r.ok) document_jobs_healed++;
+      } catch {
+        /* cron-safe */
+      }
+    }
+  }
 
   const expired = await db
     .prepare(
@@ -116,5 +142,5 @@ export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number
     offers++;
   }
 
-  return { cleared, offers };
+  return { cleared, offers, document_jobs_healed };
 }

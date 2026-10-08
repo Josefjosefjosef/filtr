@@ -23,6 +23,24 @@ export const PREMIUM_DOC_TYPE_INVOICE = "premium_invoice_pdf";
 
 export type PremiumOrderDocKind = "order_confirmation" | "invoice_pdf";
 
+/** Jobs in `generating` longer than this are treated as interrupted (Worker CPU/time limit). */
+export const PREMIUM_DOC_GENERATING_STALE_MS = 90_000;
+
+export function docTypeForPremiumOrderDocKind(kind: PremiumOrderDocKind): string {
+  return kind === "order_confirmation" ? PREMIUM_DOC_TYPE_ORDER : PREMIUM_DOC_TYPE_INVOICE;
+}
+
+export function premiumDocJobIsStaleGenerating(
+  status: string,
+  updatedAtIso: string | null | undefined,
+  nowMs = Date.now()
+): boolean {
+  if (status !== "generating") return false;
+  const t = Date.parse(String(updatedAtIso || ""));
+  if (!Number.isFinite(t)) return true;
+  return nowMs - t >= PREMIUM_DOC_GENERATING_STALE_MS;
+}
+
 type JobRow = {
   job_id: string;
   order_id: string;
@@ -30,7 +48,64 @@ type JobRow = {
   status: string;
   document_id: string | null;
   last_error: string | null;
+  updated_at?: string | null;
 };
+
+async function fetchActiveOrderDocument(
+  db: D1Database,
+  orderId: string,
+  docType: string
+): Promise<{ document_id: string } | null> {
+  return db
+    .prepare("SELECT document_id FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active' LIMIT 1")
+    .bind(orderId, docType)
+    .first<{ document_id: string }>();
+}
+
+/** Link job row to an already-stored PDF (R2+D1) without regenerating. */
+export async function linkPremiumOrderDocumentJobToActiveDocument(
+  db: D1Database,
+  jobId: string,
+  documentId: string
+): Promise<void> {
+  const doneIso = new Date().toISOString();
+  await db
+    .prepare(
+      "UPDATE premium_order_document_jobs SET status = ?, document_id = ?, updated_at = ?, last_error = NULL WHERE job_id = ?"
+    )
+    .bind("ready", documentId, doneIso, jobId)
+    .run();
+}
+
+/**
+ * If PDF exists but job is not ready, or job is stale `generating`, reconcile state.
+ * Returns linked document_id when job can be considered ready without new PDF bytes.
+ */
+export async function reconcilePremiumOrderDocumentJob(
+  db: D1Database,
+  orderId: string,
+  kind: PremiumOrderDocKind,
+  job: JobRow
+): Promise<{ linked_document_id: string | null; stale_generating: boolean }> {
+  const docType = docTypeForPremiumOrderDocKind(kind);
+  const active = await fetchActiveOrderDocument(db, orderId, docType);
+  if (active) {
+    if (job.status !== "ready" || job.document_id !== active.document_id) {
+      await linkPremiumOrderDocumentJobToActiveDocument(db, job.job_id, active.document_id);
+    }
+    return { linked_document_id: active.document_id, stale_generating: false };
+  }
+  const stale = premiumDocJobIsStaleGenerating(job.status, job.updated_at);
+  if (stale) {
+    await db
+      .prepare(
+        "UPDATE premium_order_document_jobs SET status = ?, last_error = ?, updated_at = ? WHERE job_id = ? AND status = 'generating'"
+      )
+      .bind("pending", "stale_generating_recovered", new Date().toISOString(), job.job_id)
+      .run();
+  }
+  return { linked_document_id: null, stale_generating: stale };
+}
 
 function idempotencyForPublish(orderId: string, kind: PremiumOrderDocKind, publishKey: string): string {
   return "premium_doc:" + kind + ":" + orderId + ":" + publishKey;
@@ -173,7 +248,9 @@ async function upsertJob(
   nowIso: string
 ): Promise<JobRow> {
   const existing = await db
-    .prepare("SELECT job_id, order_id, doc_kind, status, document_id, last_error FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = ?")
+    .prepare(
+      "SELECT job_id, order_id, doc_kind, status, document_id, last_error, updated_at FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = ?"
+    )
     .bind(orderId, kind)
     .first<JobRow>();
   if (existing) return existing;
@@ -324,6 +401,10 @@ async function generateOneDocument(
   const nowIso = new Date().toISOString();
   const idem = idempotencyForPublish(orderId, kind, input.publishIdempotencyKey);
   const job = await upsertJob(db, orderId, kind, idem, nowIso);
+  const reconciled = await reconcilePremiumOrderDocumentJob(db, orderId, kind, job);
+  if (reconciled.linked_document_id && !input.forceRegenerate) {
+    return { ok: true, document_id: reconciled.linked_document_id };
+  }
   if (!input.forceRegenerate && job.status === "ready" && job.document_id) {
     const still = await db
       .prepare("SELECT document_id FROM documents WHERE document_id = ? AND status = 'active'")
@@ -332,10 +413,32 @@ async function generateOneDocument(
     if (still) return { ok: true, document_id: job.document_id };
   }
 
-  await db
-    .prepare("UPDATE premium_order_document_jobs SET status = ?, updated_at = ?, last_error = NULL WHERE job_id = ?")
-    .bind("generating", nowIso, job.job_id)
+  const staleCutoffIso = new Date(Date.now() - PREMIUM_DOC_GENERATING_STALE_MS).toISOString();
+  const claim = await db
+    .prepare(
+      `UPDATE premium_order_document_jobs SET status = ?, updated_at = ?, last_error = NULL
+       WHERE job_id = ?
+       AND (status IN ('pending', 'error') OR (status = 'generating' AND updated_at <= ?))`
+    )
+    .bind("generating", nowIso, job.job_id, staleCutoffIso)
     .run();
+  const claimed = Number((claim as { meta?: { changes?: number } }).meta?.changes ?? 0) > 0;
+  if (!claimed) {
+    const fresh = await db
+      .prepare("SELECT status, document_id FROM premium_order_document_jobs WHERE job_id = ?")
+      .bind(job.job_id)
+      .first<{ status: string; document_id: string | null }>();
+    if (fresh?.status === "ready" && fresh.document_id) {
+      return { ok: true, document_id: fresh.document_id };
+    }
+    if (fresh?.status === "generating" && !input.forceRegenerate) {
+      return { ok: false, error: "generation_in_progress" };
+    }
+    await db
+      .prepare("UPDATE premium_order_document_jobs SET status = ?, updated_at = ?, last_error = NULL WHERE job_id = ?")
+      .bind("generating", nowIso, job.job_id)
+      .run();
+  }
 
   try {
     let pdfBytes: Uint8Array;
@@ -465,14 +568,25 @@ export async function ensurePremiumOrderDocumentsAfterPublish(
   });
   if (!ctx) return;
 
-  await generateOneDocument(env, input.orderId, "order_confirmation", ctx, input);
-  await generateOneDocument(env, input.orderId, "invoice_pdf", ctx, input);
+  const base = {
+    campaignId: input.campaignId,
+    invoiceId: input.invoiceId,
+    clientId: input.clientId,
+    actorUserId: input.actorUserId,
+    publishIdempotencyKey: input.publishIdempotencyKey,
+  };
+  const r1 = await generateOneDocument(env, input.orderId, "order_confirmation", ctx, base);
+  const r2 = await generateOneDocument(env, input.orderId, "invoice_pdf", ctx, base);
+  if (!r1.ok || !r2.ok) {
+    await resumePremiumOrderDocuments(env, input.orderId, input.actorUserId);
+  }
 }
 
-export async function retryPremiumOrderDocuments(
+export async function resumePremiumOrderDocuments(
   env: Env,
   orderId: string,
-  actorUserId: string
+  actorUserId: string,
+  opts?: { forceRegenerateReady?: boolean }
 ): Promise<{ ok: boolean; results: Record<string, unknown> }> {
   if (!env.DB) return { ok: false, results: { error: "no_db" } };
   const po = await env.DB.prepare(
@@ -484,9 +598,9 @@ export async function retryPremiumOrderDocuments(
     .bind(orderId)
     .first<{ published_campaign_id: string | null; client_id: string; publish_idempotency_key: string | null }>();
   if (!po?.published_campaign_id) return { ok: false, results: { error: "not_published" } };
-  const inv = await env.DB.prepare("SELECT invoice_id FROM invoices WHERE order_id = ? AND campaign_id = ? LIMIT 1")
+  const inv = await env.DB.prepare("SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? AND campaign_id = ? LIMIT 1")
     .bind(orderId, po.published_campaign_id)
-    .first<{ invoice_id: string }>();
+    .first<{ invoice_id: string; invoice_number: string }>();
   if (!inv) return { ok: false, results: { error: "invoice_missing" } };
 
   const publishKey = po.publish_idempotency_key || "retry:" + orderId;
@@ -505,10 +619,54 @@ export async function retryPremiumOrderDocuments(
     actorUserId,
     publishIdempotencyKey: publishKey,
   };
-  const force = { ...base, forceRegenerate: true };
-  const a = await generateOneDocument(env, orderId, "order_confirmation", ctx, force);
-  const b = await generateOneDocument(env, orderId, "invoice_pdf", ctx, force);
-  return { ok: a.ok && b.ok, results: { order_confirmation: a, invoice_pdf: b } };
+
+  const results: Record<string, unknown> = {
+    invoice_id: inv.invoice_id,
+    invoice_number: inv.invoice_number,
+  };
+  const kinds: PremiumOrderDocKind[] = ["order_confirmation", "invoice_pdf"];
+  let allOk = true;
+  for (const kind of kinds) {
+    const job = await env.DB.prepare(
+      "SELECT job_id, order_id, doc_kind, status, document_id, last_error, updated_at FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = ?"
+    )
+      .bind(orderId, kind)
+      .first<JobRow>();
+    if (job) {
+      const linked = await reconcilePremiumOrderDocumentJob(env.DB, orderId, kind, job);
+      if (linked.linked_document_id && !opts?.forceRegenerateReady) {
+        results[kind] = { ok: true, document_id: linked.linked_document_id, recovered: "linked_active_document" };
+        continue;
+      }
+    }
+    if (
+      !opts?.forceRegenerateReady &&
+      job?.status === "ready" &&
+      job.document_id &&
+      !(await fetchActiveOrderDocument(env.DB, orderId, docTypeForPremiumOrderDocKind(kind)))
+    ) {
+      results[kind] = await generateOneDocument(env, orderId, kind, ctx, { ...base, forceRegenerate: true });
+    } else if (!opts?.forceRegenerateReady && job?.status === "ready" && job.document_id) {
+      results[kind] = { ok: true, document_id: job.document_id, skipped: true };
+      continue;
+    } else {
+      results[kind] = await generateOneDocument(env, orderId, kind, ctx, {
+        ...base,
+        forceRegenerate: Boolean(opts?.forceRegenerateReady),
+      });
+    }
+    if (!(results[kind] as { ok?: boolean }).ok) allOk = false;
+  }
+  return { ok: allOk, results };
+}
+
+/** Admin retry — completes missing/stuck docs; does not force-regenerate ready PDFs. */
+export async function retryPremiumOrderDocuments(
+  env: Env,
+  orderId: string,
+  actorUserId: string
+): Promise<{ ok: boolean; results: Record<string, unknown> }> {
+  return resumePremiumOrderDocuments(env, orderId, actorUserId, { forceRegenerateReady: false });
 }
 
 export type AdminOrderDocumentCard = {
@@ -524,18 +682,47 @@ export type AdminOrderDocumentCard = {
 
 export async function listPremiumOrderDocumentsForAdmin(
   env: Env,
-  request: Request,
+  _request: Request,
   orderId: string
 ): Promise<AdminOrderDocumentCard[]> {
   if (!env.DB) return [];
   const jobs = await env.DB.prepare(
+    "SELECT job_id, doc_kind, status, document_id, last_error, updated_at FROM premium_order_document_jobs WHERE order_id = ?"
+  )
+    .bind(orderId)
+    .all<{
+      job_id: string;
+      doc_kind: PremiumOrderDocKind;
+      status: string;
+      document_id: string | null;
+      last_error: string | null;
+      updated_at: string | null;
+    }>();
+
+  for (const row of jobs.results || []) {
+    try {
+      await reconcilePremiumOrderDocumentJob(env.DB, orderId, row.doc_kind, {
+        job_id: row.job_id,
+        order_id: orderId,
+        doc_kind: row.doc_kind,
+        status: row.status,
+        document_id: row.document_id,
+        last_error: row.last_error,
+        updated_at: row.updated_at,
+      });
+    } catch {
+      /* non-blocking */
+    }
+  }
+
+  const jobsRefreshed = await env.DB.prepare(
     "SELECT doc_kind, status, document_id, last_error FROM premium_order_document_jobs WHERE order_id = ?"
   )
     .bind(orderId)
     .all<{ doc_kind: PremiumOrderDocKind; status: string; document_id: string | null; last_error: string | null }>();
 
   const byKind = new Map<PremiumOrderDocKind, { status: string; document_id: string | null; last_error: string | null }>();
-  for (const row of jobs.results || []) {
+  for (const row of jobsRefreshed.results || []) {
     byKind.set(row.doc_kind, row);
   }
 
