@@ -203,16 +203,29 @@ async function storePdfDocument(
     title: string;
     pdfBytes: Uint8Array;
     actorUserId: string;
+    replaceExisting?: boolean;
   }
 ): Promise<string> {
   if (!env.DB || !env.DOCUMENTS) throw new Error("documents_storage_not_configured");
   const hash = await contentHashHex(input.pdfBytes);
   const existing = await env.DB.prepare(
-    "SELECT document_id FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active'"
+    "SELECT document_id, r2_key FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active'"
   )
     .bind(input.orderId, input.docType)
-    .first<{ document_id: string }>();
-  if (existing) return existing.document_id;
+    .first<{ document_id: string; r2_key: string }>();
+  if (existing) {
+    if (!input.replaceExisting) return existing.document_id;
+    const nowIso = new Date().toISOString();
+    await env.DOCUMENTS.put(existing.r2_key, input.pdfBytes, {
+      httpMetadata: { contentType: "application/pdf" },
+    });
+    await env.DB.prepare(
+      "UPDATE documents SET content_hash = ?, updated_at = ?, uploaded_by = ? WHERE document_id = ?"
+    )
+      .bind(hash, nowIso, input.actorUserId, existing.document_id)
+      .run();
+    return existing.document_id;
+  }
 
   const documentId = newId("doc");
   const r2Key = buildObjectKey({ kind: "document", id: documentId, version: 1, ext: "pdf" });
@@ -256,6 +269,7 @@ async function generateOneDocument(
     clientId: string;
     actorUserId: string;
     publishIdempotencyKey: string;
+    forceRegenerate?: boolean;
   }
 ): Promise<{ ok: true; document_id: string } | { ok: false; error: string }> {
   if (!env.DB) return { ok: false, error: "no_db" };
@@ -263,7 +277,7 @@ async function generateOneDocument(
   const nowIso = new Date().toISOString();
   const idem = idempotencyForPublish(orderId, kind, input.publishIdempotencyKey);
   const job = await upsertJob(db, orderId, kind, idem, nowIso);
-  if (job.status === "ready" && job.document_id) {
+  if (!input.forceRegenerate && job.status === "ready" && job.document_id) {
     const still = await db
       .prepare("SELECT document_id FROM documents WHERE document_id = ? AND status = 'active'")
       .bind(job.document_id)
@@ -339,6 +353,7 @@ async function generateOneDocument(
       title,
       pdfBytes,
       actorUserId: input.actorUserId,
+      replaceExisting: Boolean(input.forceRegenerate),
     });
 
     const doneIso = new Date().toISOString();
@@ -441,8 +456,9 @@ export async function retryPremiumOrderDocuments(
     actorUserId,
     publishIdempotencyKey: publishKey,
   };
-  const a = await generateOneDocument(env, orderId, "order_confirmation", ctx, base);
-  const b = await generateOneDocument(env, orderId, "invoice_pdf", ctx, base);
+  const force = { ...base, forceRegenerate: true };
+  const a = await generateOneDocument(env, orderId, "order_confirmation", ctx, force);
+  const b = await generateOneDocument(env, orderId, "invoice_pdf", ctx, force);
   return { ok: a.ok && b.ok, results: { order_confirmation: a, invoice_pdf: b } };
 }
 

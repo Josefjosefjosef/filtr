@@ -49,6 +49,15 @@ const checks = [
     fs.existsSync(path.join(root, "cloudflare", "iu-ads", "test", "premium-invoice-pdf-qr-extract.test.ts")),
   ],
   [
+    "WORKER_QR_PNG_SAFE",
+    read("premium-invoice-qr.ts").includes("qrcode/lib/core/qrcode") &&
+      read("premium-invoice-qr.ts").includes("PNG.sync.write"),
+  ],
+  [
+    "WRANGLER_NODEJS_COMPAT",
+    fs.readFileSync(path.join(root, "cloudflare", "iu-ads", "wrangler.toml"), "utf8").includes("nodejs_compat"),
+  ],
+  [
     "INVOICE_PDF_QR_DECODE_SCRIPT",
     fs.existsSync(path.join(root, "cloudflare", "iu-ads", "scripts", "decode-invoice-pdf-spayd.mjs")),
   ],
