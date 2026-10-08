@@ -1,6 +1,6 @@
 {
-  "runId": "aee517aed331da4b",
-  "started": "2026-10-08T09:10:18.494Z",
+  "runId": "b2a2b2647a15e2dc",
+  "started": "2026-10-08T09:27:59.874Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,9 +18,9 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_061200.xml",
@@ -30,26 +30,13 @@
       "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 1,
-    "valid": 1,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 1,
-    "status": "healthy",
-    "alert": 1,
-    "update": 0,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 24,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 2,
       "uniqueEvents": [
         "Silný vítr"
@@ -74,7 +61,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
     "before": 2,
@@ -82,8 +69,8 @@
     "ledgerKeys": 0,
     "ledgerFingerprint": "da39a3ee5e6b4b0d",
     "history": {
-      "fetched": 0,
-      "cached": 32,
+      "fetched": 1,
+      "cached": 31,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_231200.xml",
@@ -120,7 +107,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_080842.xml"
       ],
       "recentCount": 32,
-      "refCount": 1,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -331,8 +318,8 @@
     "visibleCount": 2
   },
   "completeness": {
-    "capMessages": 1,
-    "infoBlocks": 24,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 2,
     "uniqueEvents": [
       "Silný vítr"
@@ -367,6 +354,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-08T09:10:26.082Z",
-  "runMs": 7588
+  "finished": "2026-10-08T09:28:07.319Z",
+  "runMs": 7445
 }
