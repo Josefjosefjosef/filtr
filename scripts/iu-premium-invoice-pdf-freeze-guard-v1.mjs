@@ -33,6 +33,34 @@ const checks = [
       invoicePdf.includes("drawInvoiceFooterBand") &&
       !invoicePdf.includes("ensureSpace(36)"),
   ],
+  (() => {
+    const footerFn = invoicePdf.match(/function drawInvoiceFooterBand[\s\S]*?\n}/);
+    const footerSrc = footerFn ? footerFn[0] : "";
+    return [
+      "INVOICE_FOOTER_NO_HORIZONTAL_LINE",
+      footerSrc.length > 0 && !footerSrc.includes("drawLine"),
+    ];
+  })(),
+  [
+    "INVOICE_FOOTER_THANKS_AND_LOGO",
+    invoicePdf.includes("Děkujeme za vaši objednávku") && invoicePdf.includes("drawBrandLogo"),
+  ],
+  [
+    "INVOICE_VISUAL_FREEZE_TEST",
+    fs.existsSync(path.join(root, "cloudflare", "iu-ads", "test", "premium-invoice-visual-freeze.test.ts")),
+  ],
+  [
+    "INVOICE_VISUAL_FOOTER_RULE_SCAN",
+    fs
+      .readFileSync(path.join(root, "cloudflare", "iu-ads", "test", "premium-invoice-visual-freeze.test.ts"), "utf8")
+      .includes("footerBandHasHorizontalGrayRule"),
+  ],
+  [
+    "INVOICE_SINGLE_PAGE_LAYOUT_TEST",
+    fs
+      .readFileSync(path.join(root, "cloudflare", "iu-ads", "test", "premium-invoice-pdf-layout.test.ts"), "utf8")
+      .includes("standard invoice is exactly one page"),
+  ],
   [
     "INVOICE_SERVICE_PERIOD_LINES",
     invoicePdf.includes("formatServicePeriodLines") && invoicePdf.includes('"Od: "'),
