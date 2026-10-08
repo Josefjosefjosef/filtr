@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { PDFDocument } from "pdf-lib";
 import { buildPremiumInvoicePdfWithLayout } from "../src/premium-invoice-pdf";
 import { PremiumInvoicePdfCursor } from "../src/premium-invoice-pdf-layout";
 import { decodeSpaydFromInvoicePdfBytes } from "../src/premium-invoice-pdf-qr-extract";
@@ -30,9 +31,12 @@ const referenceLikeInput = {
 
 describe("premium invoice visual proof", () => {
   it("renders reference-like invoice PDF and optional PNG export", async () => {
-    const { pdfBytes, layoutBlocks } = await buildPremiumInvoicePdfWithLayout(referenceLikeInput);
+    const { pdfBytes, layoutBlocks, pageCount } = await buildPremiumInvoicePdfWithLayout(referenceLikeInput);
     const pdfSnapshot = Uint8Array.from(pdfBytes);
     expect(pdfSnapshot.byteLength).toBeGreaterThan(4000);
+    expect(pageCount).toBe(1);
+    const loaded = await PDFDocument.load(pdfSnapshot);
+    expect(loaded.getPageCount()).toBe(1);
     expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(layoutBlocks)).toEqual([]);
 
     const outDir = process.env.IU_INVOICE_VISUAL_OUT;

@@ -27,6 +27,16 @@ const checks = [
   ["INVOICE_TEXT_LOGO", invoicePdf.includes('"info"') && invoicePdf.includes("Uzel.cz")],
   ["INVOICE_SERVICE_SECTION", invoicePdf.includes("Fakturovaná služba")],
   ["INVOICE_LAYOUT_ENGINE", fs.existsSync(path.join(ads, "premium-invoice-pdf-layout.ts"))],
+  [
+    "INVOICE_FOOTER_FIRST_PAGE",
+    invoicePdf.includes("PREMIUM_INVOICE_FOOTER_Y") &&
+      invoicePdf.includes("drawInvoiceFooterBand") &&
+      !invoicePdf.includes("ensureSpace(36)"),
+  ],
+  [
+    "INVOICE_SERVICE_PERIOD_LINES",
+    invoicePdf.includes("formatServicePeriodLines") && invoicePdf.includes('"Od: "'),
+  ],
   ["INVOICE_BOLD_FONT", read("premium-pdf-font.ts").includes("registerPremiumPdfFonts")],
   ["CUSTOMER_REGISTRY_ARES", read("premium-ares-registry.ts").includes("extractCustomerRegistryFromAresBody")],
   [

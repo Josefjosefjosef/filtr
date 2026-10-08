@@ -1,4 +1,4 @@
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, type PDFPage } from "pdf-lib";
 import type { CustomerRegistrySnapshot } from "./premium-ares-registry";
 import { PREMIUM_AD_WEB_PLACEMENT, PREMIUM_INVOICE_BRAND_HEX } from "./premium-invoice-brand";
 import {
@@ -6,6 +6,7 @@ import {
   measureWrappedHeight,
   PremiumInvoicePdfCursor,
   PREMIUM_INVOICE_CONTENT_W,
+  PREMIUM_INVOICE_FOOTER_Y,
   PREMIUM_INVOICE_MARGIN,
   PREMIUM_INVOICE_PAGE,
   wrapTextLines,
@@ -70,6 +71,27 @@ function isoToCsDate(iso: string): string {
     return fallback;
   }
   return parseInt(m[3], 10) + ". " + m[2] + ". " + m[1];
+}
+
+function formatServicePeriodLines(startIso: string, endIso: string): string[] {
+  return ["Od: " + formatAdminPragueDateTime(startIso), "Do: " + formatAdminPragueDateTime(endIso)];
+}
+
+function drawInvoiceFooterBand(page: PDFPage, fonts: PremiumPdfFonts, footY: number = PREMIUM_INVOICE_FOOTER_Y): void {
+  page.drawLine({
+    start: { x: PREMIUM_INVOICE_MARGIN, y: footY + 8 },
+    end: { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, y: footY + 8 },
+    thickness: 0.5,
+    color: LINE_GRAY,
+  });
+  page.drawText("Děkujeme za vaši objednávku a podporu infoUzel.cz!", {
+    x: PREMIUM_INVOICE_MARGIN,
+    y: footY - 6,
+    size: 9,
+    font: fonts.regular,
+    color: TEXT_MUTED,
+  });
+  drawBrandLogo(page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, footY - 8);
 }
 
 function drawBrandLogo(page: PremiumInvoicePdfCursor["page"], fonts: PremiumPdfFonts, rightX: number, topY: number) {
@@ -359,8 +381,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     { text: "Reklamní pozice: " + input.position_label },
     { text: "Délka poskytování reklamní služby: " + String(input.duration_months) + " měsíců" },
   ];
-  const periodText =
-    formatAdminPragueDateTime(input.service_period_start) + " – " + formatAdminPragueDateTime(input.service_period_end);
+  const periodLines = formatServicePeriodLines(input.service_period_start, input.service_period_end);
   const priceText = fmtMoneyCents(input.total_cents, input.currency);
 
   const bodySize = 9.5;
@@ -369,8 +390,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     const f = dl.bold ? fonts.bold : fonts.regular;
     descH += measureWrappedHeight(wrapTextLines(f, dl.text, bodySize, colDescW - 16).length, bodySize, 1.32);
   }
-  const periodWrapped = wrapTextLines(fonts.regular, periodText, bodySize, colPeriodW - 12);
-  const periodH = measureWrappedHeight(periodWrapped.length, bodySize, 1.32) + 8;
+  const periodH = measureWrappedHeight(periodLines.length, bodySize, 1.32) + 8;
   const rowH = Math.max(descH, periodH, 28) + 12;
 
   cursor.ensureSpace(rowH + 80);
@@ -394,7 +414,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     dy -= 1;
   }
   let py = rowTop - 12;
-  for (const pl of periodWrapped) {
+  for (const pl of periodLines) {
     cursor.page.drawText(pl, { x: tableX + colDescW + 8, y: py, size: bodySize, font: fonts.regular, color: TEXT_MAIN });
     py -= bodySize * 1.32;
   }
@@ -451,7 +471,7 @@ export async function buildPremiumInvoicePdfWithLayout(
     font: fonts.bold,
     color: brand,
   });
-  cursor.y = totalBottom - 18;
+  cursor.y = totalBottom - 14;
   cursor.recordBlock("total_panel", totalTop, totalBottom, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
 
   const payBlockH = 148;
@@ -536,25 +556,13 @@ export async function buildPremiumInvoicePdfWithLayout(
   const qrY = payTop - 42 - qrSize;
   cursor.page.drawImage(qrImg, { x: payRightX, y: qrY, width: qrSize, height: qrSize });
 
-  cursor.y = Math.min(pyPay, qrY) - 20;
-  cursor.recordBlock("payment_section", payTop, cursor.y, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
+  cursor.y = payBoxBottom;
+  cursor.recordBlock("payment_section", payTop, payBoxBottom, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
 
-  cursor.ensureSpace(36);
-  const footY = Math.max(PREMIUM_INVOICE_MARGIN + 20, cursor.y);
-  cursor.page.drawLine({
-    start: { x: PREMIUM_INVOICE_MARGIN, y: footY + 8 },
-    end: { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, y: footY + 8 },
-    thickness: 0.5,
-    color: LINE_GRAY,
-  });
-  cursor.page.drawText("Děkujeme za vaši objednávku a podporu infoUzel.cz!", {
-    x: PREMIUM_INVOICE_MARGIN,
-    y: footY - 6,
-    size: 9,
-    font: fonts.regular,
-    color: TEXT_MUTED,
-  });
-  drawBrandLogo(cursor.page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, footY - 8);
+  const footY = PREMIUM_INVOICE_FOOTER_Y;
+  const footerPage = pages.length === 1 ? pages[0]! : pages[pages.length - 1]!;
+  drawInvoiceFooterBand(footerPage, fonts, footY);
+  cursor.recordBlock("footer", footY + 10, footY - 18, PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_W);
 
   const pdfBytes = await pdfDoc.save();
   return { pdfBytes, layoutBlocks: cursor.blocks, pageCount: pages.length };
