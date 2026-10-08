@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { PDFDocument } from "pdf-lib";
 import {
+  assertOrderConfirmationContentAboveFooter,
   buildOrderConfirmationPlainLines,
   buildPremiumOrderConfirmationPdfWithLayout,
+  PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y,
 } from "../src/premium-order-confirmation-pdf";
+import { buildOrderConfirmationSampleCreativePng } from "./order-confirmation-creative-fixture";
+import {
+  orderConfirmationPage1FooterBandContentOverlap,
+  orderConfirmationPage2HasEmbeddedCreative,
+} from "./order-confirmation-png-guards";
 import type { PremiumOrderPdfContext } from "../src/premium-order-pdf-fields";
 import { renderPdfPagePng } from "../src/premium-invoice-pdf-page-png";
 import { PREMIUM_INVOICE_BRAND_HEX } from "../src/premium-invoice-brand";
@@ -72,7 +79,12 @@ const referenceCtx: PremiumOrderPdfContext = {
 
 describe("premium order confirmation visual freeze", () => {
   it("renders two pages with required headings and section URL", async () => {
-    const { pdfBytes, pageCount } = await buildPremiumOrderConfirmationPdfWithLayout(referenceCtx, null, null);
+    const sampleCreative = buildOrderConfirmationSampleCreativePng();
+    const { pdfBytes, pageCount, page1Blocks, blocks } = await buildPremiumOrderConfirmationPdfWithLayout(
+      referenceCtx,
+      sampleCreative,
+      "image/png"
+    );
     expect(pageCount).toBe(2);
     const doc = await PDFDocument.load(pdfBytes);
     expect(doc.getPageCount()).toBe(pageCount);
@@ -83,6 +95,14 @@ describe("premium order confirmation visual freeze", () => {
     expect(page2Png).not.toBeNull();
     expect(page1Png!.byteLength).toBeGreaterThan(8000);
     expect(page2Png!.byteLength).toBeGreaterThan(8000);
+
+    expect(assertOrderConfirmationContentAboveFooter(page1Blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y, 0)).toEqual([]);
+    expect(await orderConfirmationPage1FooterBandContentOverlap(page1Png!)).toBe(false);
+    expect(assertOrderConfirmationContentAboveFooter(blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y, 1)).toEqual([]);
+    expect(await orderConfirmationPage1FooterBandContentOverlap(page2Png!)).toBe(false);
+    const creativeProbe = await orderConfirmationPage2HasEmbeddedCreative(page2Png!);
+    expect(creativeProbe.ok).toBe(true);
+    expect(creativeProbe.blueRatio).toBeGreaterThan(0.04);
 
     const outDir = process.env.IU_ORDER_CONFIRMATION_VISUAL_OUT;
     if (outDir) {

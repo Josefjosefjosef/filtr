@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { PDFDocument } from "pdf-lib";
 import {
+  assertOrderConfirmationContentAboveFooter,
   buildPremiumOrderConfirmationPdfWithLayout,
   buildOrderConfirmationPlainLines,
+  PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y,
 } from "../src/premium-order-confirmation-pdf";
+import { buildOrderConfirmationSampleCreativePng } from "./order-confirmation-creative-fixture";
+import { orderConfirmationPage1FooterBandContentOverlap } from "./order-confirmation-png-guards";
 import type { PremiumOrderPdfContext } from "../src/premium-order-pdf-fields";
 import { PremiumInvoicePdfCursor } from "../src/premium-invoice-pdf-layout";
 import { assertOrderPdfContainsCustomerFields } from "../src/premium-order-pdf-fields";
@@ -63,13 +67,7 @@ function baseCtx(overrides: Partial<PremiumOrderPdfContext> = {}): PremiumOrderP
   };
 }
 
-/** 1×1 red PNG */
-const TINY_PNG = Uint8Array.from(
-  atob(
-    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-  ),
-  (c) => c.charCodeAt(0)
-);
+const SAMPLE_CREATIVE = buildOrderConfirmationSampleCreativePng();
 
 describe("premium order confirmation PDF layout scenarios", () => {
   const scenarios: { name: string; ctx: PremiumOrderPdfContext }[] = [
@@ -136,15 +134,21 @@ describe("premium order confirmation PDF layout scenarios", () => {
 
   for (const scenario of scenarios) {
     it("renders " + scenario.name + " on two pages without block overlap on attachment page", async () => {
-      const { pdfBytes, pageCount, blocks } = await buildPremiumOrderConfirmationPdfWithLayout(
+      const { pdfBytes, pageCount, blocks, page1Blocks } = await buildPremiumOrderConfirmationPdfWithLayout(
         scenario.ctx,
-        TINY_PNG,
+        SAMPLE_CREATIVE,
         "image/png"
       );
       expect(pageCount).toBeGreaterThanOrEqual(2);
       expect(pageCount).toBeLessThanOrEqual(3);
       expect(pdfBytes.byteLength).toBeGreaterThan(2000);
       expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(blocks)).toEqual([]);
+      expect(assertOrderConfirmationContentAboveFooter(page1Blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y)).toEqual(
+        []
+      );
+      const page1Png = await renderPdfPagePng(Uint8Array.from(pdfBytes), 1, 2);
+      expect(page1Png).not.toBeNull();
+      expect(await orderConfirmationPage1FooterBandContentOverlap(page1Png!)).toBe(false);
       const plain = buildOrderConfirmationPlainLines(scenario.ctx);
       expect(assertOrderPdfContainsCustomerFields(plain, scenario.ctx)).toEqual([]);
       const doc = await PDFDocument.load(pdfBytes);
@@ -154,7 +158,7 @@ describe("premium order confirmation PDF layout scenarios", () => {
 
   it("embeds supplied creative bytes (not a placeholder asset)", async () => {
     const ctx = baseCtx();
-    const { pdfBytes } = await buildPremiumOrderConfirmationPdfWithLayout(ctx, TINY_PNG, "image/png");
+    const { pdfBytes } = await buildPremiumOrderConfirmationPdfWithLayout(ctx, SAMPLE_CREATIVE, "image/png");
     const doc = await PDFDocument.load(pdfBytes);
     const page2 = doc.getPage(1);
     const ops = page2.node.Contents()?.asArray?.()?.length ?? 0;
@@ -163,7 +167,7 @@ describe("premium order confirmation PDF layout scenarios", () => {
 
   it("renders PNG page 1 and page 2 for reference layout", async () => {
     const ctx = baseCtx();
-    const { pdfBytes } = await buildPremiumOrderConfirmationPdfWithLayout(ctx, TINY_PNG, "image/png");
+    const { pdfBytes } = await buildPremiumOrderConfirmationPdfWithLayout(ctx, SAMPLE_CREATIVE, "image/png");
     const p1 = await renderPdfPagePng(Uint8Array.from(pdfBytes), 1, 2);
     const p2 = await renderPdfPagePng(Uint8Array.from(pdfBytes), 2, 2);
     expect(p1).not.toBeNull();

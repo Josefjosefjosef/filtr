@@ -79,6 +79,24 @@ jobs:
           path: ${{ runner.temp }}/iu-invoice-visual/
           if-no-files-found: error
 
+      - name: Premium order confirmation PDF visual proof (PNG artifact)
+        env:
+          IU_ORDER_CONFIRMATION_VISUAL_OUT: ${{ runner.temp }}/iu-order-confirmation-visual
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_ORDER_CONFIRMATION_VISUAL_OUT"
+          IU_ORDER_CONFIRMATION_VISUAL_OUT="$IU_ORDER_CONFIRMATION_VISUAL_OUT" npm test -- test/premium-order-confirmation-visual-freeze.test.ts
+          test -s "$IU_ORDER_CONFIRMATION_VISUAL_OUT/order-confirmation-freeze.pdf"
+          test -s "$IU_ORDER_CONFIRMATION_VISUAL_OUT/order-confirmation-freeze-page-1.png"
+          test -s "$IU_ORDER_CONFIRMATION_VISUAL_OUT/order-confirmation-freeze-page-2.png"
+
+      - name: Upload premium order confirmation visual artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        with:
+          name: premium-order-confirmation-visual-deploy-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-order-confirmation-visual/
+          if-no-files-found: error
+
       - name: Premium freeze guard
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs

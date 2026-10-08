@@ -32,6 +32,26 @@ export function wrapTextLines(font: PDFFont, text: string, size: number, maxWidt
   return lines;
 }
 
+/** Break long tokens (e.g. hex hashes) into lines that fit maxWidth. */
+export function wrapTextLinesBreakAll(font: PDFFont, text: string, size: number, maxWidth: number): string[] {
+  const normalized = String(text || "").trim();
+  if (!normalized) return [];
+  const lines: string[] = [];
+  let chunk = "";
+  for (const ch of normalized) {
+    const candidate = chunk + ch;
+    const width = font.widthOfTextAtSize(candidate, size);
+    if (width <= maxWidth || chunk.length === 0) {
+      chunk = candidate;
+      continue;
+    }
+    lines.push(chunk);
+    chunk = ch;
+  }
+  if (chunk) lines.push(chunk);
+  return lines;
+}
+
 export function measureWrappedHeight(lineCount: number, size: number, leadingMult = 1.35): number {
   if (lineCount <= 0) return 0;
   return lineCount * size * leadingMult;
@@ -58,7 +78,28 @@ export function drawWrappedText(
   return yTop - measureWrappedHeight(lines.length, size, leadingMult);
 }
 
-export type LayoutBlockMetric = { id: string; rect: LayoutRect };
+export function drawWrappedTextBreakAll(
+  page: PDFPage,
+  font: PDFFont,
+  text: string,
+  x: number,
+  yTop: number,
+  maxWidth: number,
+  size: number,
+  color: RGB,
+  leadingMult = 1.35
+): number {
+  const lines = wrapTextLinesBreakAll(font, text, size, maxWidth);
+  let y = yTop;
+  const step = size * leadingMult;
+  for (const line of lines) {
+    page.drawText(line, { x, y, size, font, color, maxWidth });
+    y -= step;
+  }
+  return yTop - measureWrappedHeight(lines.length, size, leadingMult);
+}
+
+export type LayoutBlockMetric = { id: string; rect: LayoutRect; pageIndex?: number };
 
 export class PremiumInvoicePdfCursor {
   page: PDFPage;
@@ -94,7 +135,8 @@ export class PremiumInvoicePdfCursor {
   }
 
   recordBlock(id: string, yTop: number, yBottom: number, x: number, w: number): void {
-    this.blocks.push({ id, rect: { x, yTop, yBottom, w } });
+    const pageIndex = this.pages.indexOf(this.page);
+    this.blocks.push({ id, rect: { x, yTop, yBottom, w }, pageIndex: pageIndex >= 0 ? pageIndex : 0 });
   }
 
   /** Assert no vertical overlap between recorded blocks (test helper). */
