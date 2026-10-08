@@ -141,6 +141,11 @@ import {
   handleAdminPremiumSetPayment,
 } from "./premium-admin-order-lifecycle";
 import { handleAdminPremiumBackfillCodes } from "./premium-order-backfill";
+import {
+  handleAdminPremiumBackfillDocuments,
+  handleAdminPremiumOrderDocumentAccess,
+  handleAdminPremiumRetryDocuments,
+} from "./premium-order-documents";
 import { handleAdminPremiumDeleteOrder } from "./premium-order-delete";
 import {
   handleAdminPremiumApproveRevision,
@@ -601,6 +606,24 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
       if (path === "/v1/admin/premium/orders/backfill-codes" && method === "POST") {
         return handleAdminPremiumBackfillCodes(request, env);
+      }
+      if (path === "/v1/admin/premium/orders/backfill-documents" && method === "POST") {
+        return handleAdminPremiumBackfillDocuments(request, env);
+      }
+      const premiumDocAccessMatch = path.match(
+        /^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/(order_confirmation|invoice_pdf)\/access$/
+      );
+      if (premiumDocAccessMatch && method === "GET") {
+        return handleAdminPremiumOrderDocumentAccess(
+          request,
+          env,
+          premiumDocAccessMatch[1],
+          premiumDocAccessMatch[2] as "order_confirmation" | "invoice_pdf"
+        );
+      }
+      const premiumDocRetryMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/retry$/);
+      if (premiumDocRetryMatch && method === "POST") {
+        return handleAdminPremiumRetryDocuments(request, env, premiumDocRetryMatch[1]);
       }
       const premiumDetailMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
       if (premiumDetailMatch && method === "GET") return handleAdminPremiumOrderDetail(request, env, premiumDetailMatch[1]);
