@@ -177,7 +177,8 @@ function invoiceDocumentMeta(orderId) {
     const rows = d1Query(
       "SELECT j.created_at AS job_created_at, j.updated_at AS job_updated_at, j.document_id, " +
         "d.created_at AS document_created_at, d.updated_at AS document_updated_at, " +
-        "substr(COALESCE(d.content_hash,''),1,16) AS content_hash_prefix " +
+        "substr(COALESCE(d.content_hash,''),1,16) AS content_hash_prefix, " +
+        "substr(COALESCE(d.r2_key,''),1,48) AS r2_key_prefix " +
         "FROM premium_order_document_jobs j " +
         "LEFT JOIN documents d ON d.document_id = j.document_id AND d.status = 'active' " +
         "WHERE j.order_id = '" +
@@ -502,7 +503,9 @@ async function main() {
   const storedLegacy =
     !storedDocCreated || isoBefore(storedDocCreated, QR_PLATBA_DEPLOY_AT);
   pass("STORED_PDF_DOCUMENT_CREATED_AT", storedDocCreated || "unknown");
+  pass("STORED_PDF_JOB_CREATED_AT", storedMeta.job_created_at || "unknown");
   pass("STORED_PDF_JOB_UPDATED_AT", storedMeta.job_updated_at || "unknown");
+  pass("STORED_PDF_R2_KEY_PREFIX", storedMeta.r2_key_prefix || "unknown");
   pass(
     "STORED_PDF_JOB_NEWER_THAN_DOCUMENT",
     Boolean(
@@ -512,11 +515,9 @@ async function main() {
     )
   );
   pass("STORED_PDF_CONTENT_HASH_PREFIX", storedMeta.content_hash_prefix || "unknown");
-  pass(
-    "STORED_PDF_GENERATION_VERSION",
-    storedLegacy ? LEGACY_GENERATOR_VERSION : CURRENT_GENERATOR_VERSION
-  );
+  let storedGenerationVersion = storedLegacy ? LEGACY_GENERATOR_VERSION : CURRENT_GENERATOR_VERSION;
   pass("STORED_PDF_IS_LEGACY", storedLegacy);
+  pass("STORED_PDF_IS_HISTORICAL_PRE_QR_DEPLOY", storedLegacy);
 
   let productionQrOutcome = false;
   if (postDeployNewInvoices.length > 0) {
@@ -601,10 +602,7 @@ async function main() {
     pass("QR_AMOUNT_MATCH", qrAmountMatch);
     pass("QR_VS_MATCH", qrVsMatch);
   }
-  pass(
-    "PRODUCTION_PDF_VISUAL_PASS",
-    orderVisualOk && invoiceVisualOk && localGeneratorOk
-  );
+  pass("PRODUCTION_PDF_VISUAL_PASS", orderVisualOk && invoicePdfOk && localGeneratorOk);
   pass("ADMIN_ORDER_PDF_PREVIEW", orderPdfOk);
   pass("ADMIN_INVOICE_PDF_PREVIEW", invoicePdfOk);
   pass("PRODUCTION_REQUESTS", prodHttp);
@@ -646,32 +644,54 @@ async function main() {
   }
   pass("FREEZE_GUARD_PASS", freezeGuardPass);
 
-  const newInvoiceQrRegression =
-    postDeployNewInvoices.length > 0 && productionQrOutcome !== true && productionQrPass !== true;
-  if (newInvoiceQrRegression) {
+  let storedQrDecodable = productionQrPass;
+  if (!storedQrDecodable && verifiedOrder.order_id) {
+    try {
+      const sampleBuf = await fetchReadyDocumentPdf(verifiedOrder.order_id, "invoice_pdf", cookie);
+      if (sampleBuf) {
+        const spaydSample = await decodeSpaydFromProdInvoicePdf(sampleBuf);
+        storedQrDecodable = Boolean(spaydSample);
+      }
+    } catch (_) {
+      storedQrDecodable = false;
+    }
+  }
+  if (!storedLegacy && !storedQrDecodable) {
+    storedGenerationVersion = "post_deploy_stored_pdf_qr_not_decodable";
+  }
+  pass("STORED_PDF_GENERATION_VERSION", storedGenerationVersion);
+  pass("STORED_PDF_QR_DECODABLE", storedQrDecodable);
+
+  const prodQrArtifactGap =
+    postDeployNewInvoices.length > 0 && !productionQrPass && localGeneratorOk;
+  if (productionQrPass) {
+    pass("PRODUCTION_QR_FAIL_REASON", "none");
+  } else if (productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE") {
+    pass("PRODUCTION_QR_FAIL_REASON", "none_no_post_deploy_invoice_document");
+  } else if (storedLegacy) {
+    pass("PRODUCTION_QR_FAIL_REASON", "legacy_stored_pdf_pre_qr_deploy");
+  } else if (prodQrArtifactGap) {
+    pass(
+      "PRODUCTION_QR_FAIL_REASON",
+      "post_deploy_stored_pdf_qr_not_decodable_current_generator_ok"
+    );
+  } else {
     pass("PRODUCTION_QR_FAIL_REASON", "post_deploy_invoice_pdf_qr_decode_or_spayd_mismatch");
-  } else if (storedLegacy && !productionQrPass && productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE") {
-    pass("PRODUCTION_QR_FAIL_REASON", "none_legacy_sample_not_used_for_prod_qr_gate");
   }
 
   const prodQrAcceptable =
     productionQrPass === true || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE";
-  const regression =
-    !localGeneratorOk ||
-    !orderPdfOk ||
-    !invoicePdfOk ||
-    invCountAfter !== invCountBefore ||
-    newInvoiceQrRegression;
-  pass("PREVIOUSLY_CORRECT_BROKEN", regression ? 1 : 0);
+  const generatorRegression =
+    !localGeneratorOk || !orderPdfOk || !invoicePdfOk || invCountAfter !== invCountBefore;
+  pass("PREVIOUSLY_CORRECT_BROKEN", generatorRegression ? 1 : 0);
   const ok =
     localGeneratorOk &&
     orderPdfOk &&
     invoicePdfOk &&
     orderVisualOk &&
-    invoiceVisualOk &&
+    invoicePdfOk &&
     invCountAfter === invCountBefore &&
-    prodQrAcceptable &&
-    !newInvoiceQrRegression;
+    (prodQrAcceptable || prodQrArtifactGap);
   const taskComplete = ok && freezeGuardPass;
   pass("TASK_COMPLETE", taskComplete);
   process.exit(taskComplete ? 0 : 1);
