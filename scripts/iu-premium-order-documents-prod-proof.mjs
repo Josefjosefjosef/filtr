@@ -296,8 +296,18 @@ async function main() {
   pass("ACTUAL_PRODUCTION_REQUESTS", prodHttp);
   pass("RETRY_429", 0);
 
-  d1("DELETE FROM admin_user_roles WHERE user_id='" + sqlEscape(USER_ID) + "'; DELETE FROM admin_users WHERE user_id='" + sqlEscape(USER_ID) + "';");
-  pass("TEST_DATA_CLEANED", true);
+  try {
+    d1(
+      "DELETE FROM admin_user_roles WHERE user_id='" +
+        sqlEscape(USER_ID) +
+        "'; DELETE FROM admin_users WHERE user_id='" +
+        sqlEscape(USER_ID) +
+        "';"
+    );
+    pass("TEST_DATA_CLEANED", true);
+  } catch (_) {
+    pass("TEST_DATA_CLEANED", false);
+  }
 
   const ok = orderPdfOk && invoicePdfOk && invCountAfter === invCountBefore;
   pass("PREVIOUSLY_CORRECT_BROKEN", ok ? 0 : 1);
