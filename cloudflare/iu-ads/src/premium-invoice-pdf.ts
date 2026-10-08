@@ -200,8 +200,9 @@ export async function buildPremiumInvoicePdf(input: PremiumInvoicePdfInput): Pro
     const qrImg = await pdfDoc.embedPng(qrPng);
     const qrSize = 110;
     page.drawImage(qrImg, { x: 400, y: payY - 8, width: qrSize, height: qrSize });
-  } catch {
-    page.drawText("QR Platba není k dispozici.", { x: 400, y: payY + 20, size: 8, font, color: rgb(0.5, 0.5, 0.5) });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error("invoice_qr_embed_failed:" + msg.slice(0, 200));
   }
 
   page.drawText("Splatnost: 3 kalendářní dny od vystavení.", { x: 48, y: 40, size: 8.5, font, color: rgb(0.4, 0.4, 0.45) });

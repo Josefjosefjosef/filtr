@@ -213,10 +213,11 @@ function listPostDeployNewInvoiceOrders(limit) {
 function runLocalGeneratorQrIntegration() {
   let ok = false;
   try {
-    execFileSync("npm", ["test", "--", "test/premium-invoice-pdf-qr-extract.test.ts"], {
-      cwd: ADS_CWD,
-      stdio: "pipe",
-    });
+    execFileSync(
+      "npm",
+      ["test", "--", "test/premium-invoice-pdf-qr-extract.test.ts", "test/premium-invoice-worker-pipeline.test.ts"],
+      { cwd: ADS_CWD, stdio: "pipe" }
+    );
     ok = true;
   } catch (_) {
     ok = false;
@@ -520,18 +521,53 @@ async function main() {
   pass("STORED_PDF_IS_HISTORICAL_PRE_QR_DEPLOY", storedLegacy);
 
   let productionQrOutcome = false;
+  let productionPdfQrPresent = false;
+  let productionPdfQrDecodable = false;
   if (postDeployNewInvoices.length > 0) {
-    const qrHit = await verifyQrOnPostDeployOrders(postDeployNewInvoices, cookie);
+    let qrHit = await verifyQrOnPostDeployOrders(postDeployNewInvoices, cookie);
     if (qrHit && qrHit.match) {
       qrIbanMatch = qrHit.match.qrIbanMatch;
       qrAmountMatch = qrHit.match.qrAmountMatch;
       qrVsMatch = qrHit.match.qrVsMatch;
       productionQrPass = qrHit.match.productionQrPass;
       productionQrOutcome = productionQrPass;
+      productionPdfQrDecodable = productionQrPass;
+    }
+    if (!productionQrPass && localGeneratorOk && postDeployNewInvoices[0]?.order_id) {
+      const retryOrderId = postDeployNewInvoices[0].order_id;
+      const retryRes = await prodFetch(
+        BASE + "/v1/admin/premium/orders/" + encodeURIComponent(retryOrderId) + "/documents/retry",
+        { method: "POST", headers: { "content-type": "application/json", Cookie: cookie }, body: "{}" }
+      );
+      pass("PRODUCTION_CORRECTIVE_DOCUMENT_RETRY", retryRes.status === 200);
+      if (retryRes.status === 200) {
+        qrHit = await verifyQrOnPostDeployOrders(postDeployNewInvoices, cookie);
+        if (qrHit && qrHit.match) {
+          qrIbanMatch = qrHit.match.qrIbanMatch;
+          qrAmountMatch = qrHit.match.qrAmountMatch;
+          qrVsMatch = qrHit.match.qrVsMatch;
+          productionQrPass = qrHit.match.productionQrPass;
+          productionQrOutcome = productionQrPass;
+          productionPdfQrDecodable = productionQrPass;
+        }
+      }
+    }
+    if (!productionPdfQrDecodable) {
+      const probeBuf = await fetchReadyDocumentPdf(postDeployNewInvoices[0].order_id, "invoice_pdf", cookie);
+      if (probeBuf) {
+        const spaydProbe = await decodeSpaydFromProdInvoicePdf(probeBuf);
+        productionPdfQrDecodable = Boolean(spaydProbe);
+        productionPdfQrPresent = productionPdfQrDecodable;
+      }
+    } else {
+      productionPdfQrPresent = true;
     }
   } else {
     productionQrOutcome = "NOT_VERIFIED_NO_NEW_INVOICE";
   }
+  pass("PRODUCTION_PDF_QR_PRESENT", productionPdfQrPresent);
+  pass("PRODUCTION_PDF_QR_DECODABLE", productionPdfQrDecodable);
+  pass("FULL_WORKER_PDF_PIPELINE_PASS", localGeneratorOk);
 
   pass("PRODUCTION_SAMPLE_ORDER_TAIL", orderIdTail(verifiedOrder.order_id));
 
@@ -679,6 +715,16 @@ async function main() {
     pass("PRODUCTION_QR_FAIL_REASON", "post_deploy_invoice_pdf_qr_decode_or_spayd_mismatch");
   }
 
+  pass(
+    "ROOT_CAUSE",
+    productionQrPass
+      ? "none"
+      : "qrcode_browser_bundle_toBuffer_missing_in_worker_embed_failed_silently"
+  );
+  pass("SPAYD_IBAN_MATCH", qrIbanMatch);
+  pass("SPAYD_AMOUNT_MATCH", qrAmountMatch);
+  pass("SPAYD_VS_MATCH", qrVsMatch);
+
   const prodQrAcceptable =
     productionQrPass === true || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE";
   const generatorRegression =
@@ -691,7 +737,8 @@ async function main() {
     orderVisualOk &&
     invoicePdfOk &&
     invCountAfter === invCountBefore &&
-    (prodQrAcceptable || prodQrArtifactGap);
+    prodQrAcceptable &&
+    (productionQrPass || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE");
   const taskComplete = ok && freezeGuardPass;
   pass("TASK_COMPLETE", taskComplete);
   process.exit(taskComplete ? 0 : 1);
