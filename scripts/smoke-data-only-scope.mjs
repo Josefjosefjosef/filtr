@@ -148,6 +148,8 @@ export function isIuAdsDeployUnblockScope(files) {
     if (p === "scripts/iu-premium-order-documents-freeze-guard-v1.mjs") return true;
     if (p === "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs") return true;
     if (p === "scripts/iu-premium-order-documents-prod-proof.mjs") return true;
+    if (p.startsWith("scripts/lib/iu-invoice-pdf-qr-decode.mjs")) return true;
+    if (p === "scripts/iu-commercial-register-ares-verify.mjs") return true;
     if (p === "scripts/iu-premium-approve-publish-e2e-prod.mjs") return true;
     if (p === "scripts/smoke-data-only-scope.mjs") return true;
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;

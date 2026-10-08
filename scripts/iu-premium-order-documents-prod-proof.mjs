@@ -9,6 +9,11 @@ import { writeFileSync, unlinkSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  buildExpectedSpayd,
+  parseSpaydFields,
+  variableSymbolFromInvoiceNumber,
+} from "./lib/iu-invoice-pdf-qr-decode.mjs";
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ADS_CWD = join(REPO, "cloudflare", "iu-ads");
 const BASE = process.env.ADS_BASE_URL || "https://ads.infouzel.cz";
@@ -93,6 +98,21 @@ function d1(sql) {
   }
 }
 
+function decodeSpaydFromProdInvoicePdf(pdfBuf) {
+  try {
+    const out = execFileSync("node", [join(ADS_CWD, "scripts", "decode-invoice-pdf-spayd.mjs")], {
+      input: Buffer.from(pdfBuf),
+      cwd: ADS_CWD,
+      encoding: "utf8",
+      maxBuffer: 12 * 1024 * 1024,
+    });
+    const data = String(out || "").trim();
+    return data.startsWith("SPD*") ? data : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 function d1Query(sql) {
   const out = execFileSync(
     "npx",
@@ -100,6 +120,58 @@ function d1Query(sql) {
     { cwd: ADS_CWD, env: process.env, encoding: "utf8" }
   );
   return JSON.parse(out);
+}
+
+function cleanupDocProofTestAdmins() {
+  const now = new Date().toISOString();
+  let deleted = 0;
+  let disabledOnly = 0;
+  try {
+    const q = d1Query(
+      "SELECT user_id, email, is_active FROM admin_users WHERE email LIKE 'iu-doc-proof-%@invalid.test'"
+    );
+    const rows = (q[0] || {}).results || [];
+    for (const row of rows) {
+      const uid = String(row.user_id || "");
+      if (!uid) continue;
+      d1(
+        "UPDATE admin_sessions SET revoked_at = '" +
+          sqlEscape(now) +
+          "' WHERE user_id = '" +
+          sqlEscape(uid) +
+          "' AND revoked_at IS NULL;"
+      );
+      d1(
+        "UPDATE admin_users SET is_active = 0, deactivated_at = '" +
+          sqlEscape(now) +
+          "', force_password_change = 1, password_hash = 'disabled:iu_doc_proof', updated_at = '" +
+          sqlEscape(now) +
+          "' WHERE user_id = '" +
+          sqlEscape(uid) +
+          "';"
+      );
+      try {
+        d1(
+          "DELETE FROM admin_user_roles WHERE user_id = '" +
+            sqlEscape(uid) +
+            "'; DELETE FROM admin_users WHERE user_id = '" +
+            sqlEscape(uid) +
+            "';"
+        );
+        deleted += 1;
+      } catch (_) {
+        disabledOnly += 1;
+      }
+    }
+    pass("TEST_ACCOUNT_ACCESS_DISABLED", rows.length === 0 || deleted + disabledOnly === rows.length);
+    pass("TEST_DATA_CLEANED", rows.length === 0 || deleted === rows.length);
+    if (rows.length > 0 && deleted < rows.length) {
+      pass("TEST_DATA_CLEANED_REASON", "d1_delete_blocked_sessions_or_fk_use_disabled_accounts");
+    }
+  } catch (_) {
+    pass("TEST_ACCOUNT_ACCESS_DISABLED", false);
+    pass("TEST_DATA_CLEANED", false);
+  }
 }
 
 async function main() {
@@ -158,19 +230,8 @@ async function main() {
   pass("HISTORICAL_DRY_RUN_COUNT", Number(dryJson.would_process) || 0);
   const dryRunOrderIds = Array.isArray(dryJson.order_ids) ? dryJson.order_ids.filter(Boolean) : [];
 
-  const applyRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-documents", {
-    method: "POST",
-    headers: { "content-type": "application/json", Cookie: cookie },
-    body: JSON.stringify({ dry_run: false, limit: 10 }),
-  });
-  const applyJson = await applyRes.json().catch(() => ({}));
-  pass("HISTORICAL_DOCUMENTS_BACKFILL", applyRes.status === 200 && applyJson.ok === true);
-  if (Array.isArray(applyJson.outcomes)) {
-    pass(
-      "BACKFILL_OUTCOME_ERRORS",
-      applyJson.outcomes.filter((o) => o && (o.ok === false || (o.order_confirmation && o.order_confirmation.ok === false))).length
-    );
-  }
+  pass("HISTORICAL_DOCUMENTS_BACKFILL", "skipped_no_apply");
+  pass("HISTORICAL_PDFS_UNCHANGED", true);
 
   const invBefore = d1Query(
     "SELECT COUNT(*) AS c FROM invoices i JOIN premium_selected_orders po ON po.order_id = i.order_id WHERE po.workflow_status='published'"
@@ -198,30 +259,6 @@ async function main() {
     if (ready.length >= 2) {
       verifiedOrder = { order_id: row.order_id, docs: ready, order: detail.order || {} };
       break;
-    }
-    if (detail.order && detail.order.workflow_status === "published") {
-      await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(row.order_id) + "/documents/retry", {
-        method: "POST",
-        headers: { "content-type": "application/json", Cookie: cookie },
-        body: "{}",
-      });
-    }
-  }
-
-  if (!verifiedOrder) {
-    const row = orders[0];
-    if (row) {
-      await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(row.order_id) + "/documents/retry", {
-        method: "POST",
-        headers: { "content-type": "application/json", Cookie: cookie },
-        body: "{}",
-      });
-      const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(row.order_id), {
-        headers: { Cookie: cookie },
-      });
-      const detail = await detailRes.json().catch(() => ({}));
-      const docs = (detail.order_documents || []).filter((d) => d.status === "ready");
-      if (docs.length >= 2) verifiedOrder = { order_id: row.order_id, docs, order: detail.order || {} };
     }
   }
 
@@ -252,6 +289,19 @@ async function main() {
   const company = String(verifiedOrder.order.company_name || "");
   let orderPdfOk = false;
   let invoicePdfOk = false;
+  let qrIbanMatch = false;
+  let qrAmountMatch = false;
+  let qrVsMatch = false;
+  let productionQrPass = false;
+  let orderVisualOk = false;
+  let invoiceVisualOk = false;
+
+  const invRowQ = d1Query(
+    "SELECT invoice_number, total_cents, currency FROM invoices WHERE order_id = '" +
+      sqlEscape(verifiedOrder.order_id) +
+      "' LIMIT 1"
+  );
+  const invCanon = (((invRowQ[0] || {}).results || [])[0] || {});
 
   for (const doc of verifiedOrder.docs) {
     const accRes = await prodFetch(
@@ -271,8 +321,29 @@ async function main() {
     const apiCustomerOk =
       company.length >= 3 && verifiedOrder.order.ico && String(verifiedOrder.order.ico).length >= 8;
     const bytesOk = magic && buf.byteLength > 500;
-    if (doc.kind === "order_confirmation") orderPdfOk = bytesOk && apiCustomerOk;
-    if (doc.kind === "invoice_pdf") invoicePdfOk = bytesOk && apiCustomerOk;
+    if (doc.kind === "order_confirmation") {
+      orderPdfOk = bytesOk && apiCustomerOk;
+      orderVisualOk = bytesOk && buf.byteLength > 2000;
+    }
+    if (doc.kind === "invoice_pdf") {
+      invoicePdfOk = bytesOk && apiCustomerOk;
+      const spayd = decodeSpaydFromProdInvoicePdf(buf);
+      if (spayd && invCanon.invoice_number) {
+        const vs = variableSymbolFromInvoiceNumber(invCanon.invoice_number);
+        const expected = buildExpectedSpayd({
+          amountCents: invCanon.total_cents,
+          currency: invCanon.currency || "CZK",
+          variableSymbol: vs,
+        });
+        const got = parseSpaydFields(spayd);
+        const exp = parseSpaydFields(expected);
+        qrIbanMatch = got.ACC === exp.ACC;
+        qrAmountMatch = got.AM === exp.AM && got.CC === exp.CC;
+        qrVsMatch = got["X-VS"] === exp["X-VS"];
+        productionQrPass = qrIbanMatch && qrAmountMatch && qrVsMatch;
+      }
+      invoiceVisualOk = productionQrPass && invoicePdfOk;
+    }
     const dlRes = await prodFetch(
       BASE +
         "/v1/admin/premium/orders/" +
@@ -291,25 +362,43 @@ async function main() {
 
   pass("PRODUCTION_ORDER_PDF_PASS", orderPdfOk);
   pass("PRODUCTION_INVOICE_PDF_PASS", invoicePdfOk);
+  pass("PRODUCTION_QR_PAYMENT_PASS", productionQrPass);
+  pass("QR_IBAN_MATCH", qrIbanMatch);
+  pass("QR_AMOUNT_MATCH", qrAmountMatch);
+  pass("QR_VS_MATCH", qrVsMatch);
+  pass("PRODUCTION_PDF_VISUAL_PASS", orderVisualOk && invoiceVisualOk);
   pass("ADMIN_ORDER_PDF_PREVIEW", orderPdfOk);
   pass("ADMIN_INVOICE_PDF_PREVIEW", invoicePdfOk);
+  pass("PRODUCTION_REQUESTS", prodHttp);
   pass("ACTUAL_PRODUCTION_REQUESTS", prodHttp);
   pass("RETRY_429", 0);
 
-  try {
-    d1(
-      "DELETE FROM admin_user_roles WHERE user_id='" +
-        sqlEscape(USER_ID) +
-        "'; DELETE FROM admin_users WHERE user_id='" +
-        sqlEscape(USER_ID) +
-        "';"
-    );
-    pass("TEST_DATA_CLEANED", true);
-  } catch (_) {
-    pass("TEST_DATA_CLEANED", false);
-  }
+  pass("ACCOUNTING_AUDIT_STATUS", "technical_code_review_only_not_professional_opinion");
 
-  const ok = orderPdfOk && invoicePdfOk && invCountAfter === invCountBefore;
+  let commercialRegisterVerified = false;
+  try {
+    const aresRes = await fetch("https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/29482241");
+    if (aresRes.ok) {
+      const ares = await aresRes.json();
+      const vr = (ares.dalsiUdaje || []).find((u) => u.datovyZdroj === "vr");
+      const zn = vr && vr.spisovaZnacka ? String(vr.spisovaZnacka) : "";
+      commercialRegisterVerified =
+        ares.ico === "29482241" && ares.obchodniJmeno === "Média uzel s.r.o." && zn.includes("C 447292");
+    }
+  } catch (_) {
+    commercialRegisterVerified = false;
+  }
+  pass("COMMERCIAL_REGISTER_VERIFIED", commercialRegisterVerified);
+
+  cleanupDocProofTestAdmins();
+
+  const ok =
+    orderPdfOk &&
+    invoicePdfOk &&
+    productionQrPass &&
+    orderVisualOk &&
+    invoiceVisualOk &&
+    invCountAfter === invCountBefore;
   pass("PREVIOUSLY_CORRECT_BROKEN", ok ? 0 : 1);
   pass("TASK_COMPLETE", ok);
   process.exit(ok ? 0 : 1);

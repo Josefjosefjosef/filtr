@@ -35,6 +35,18 @@ const checks = [
     fs.readFileSync(path.join(ads, "..", "wrangler.toml"), "utf8").includes('type = "Data"') &&
       fs.readFileSync(path.join(ads, "..", "wrangler.toml"), "utf8").includes("**/*.ttf"),
   ],
+  [
+    "PROD_PROOF_NO_BACKFILL_APPLY",
+    fs
+      .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
+      .includes("skipped_no_apply"),
+  ],
+  [
+    "PROD_PROOF_QR_DECODE",
+    fs
+      .readFileSync(path.join(root, "scripts", "iu-premium-order-documents-prod-proof.mjs"), "utf8")
+      .includes("decodeSpaydFromProdInvoicePdf"),
+  ],
 ];
 
 let fail = 0;
