@@ -137,6 +137,10 @@ async function loadOrderDocumentContext(
     campaign_end_at: String(row.end_at || ""),
     workflow_status_label: premiumWorkflowStatusLabelCs("published"),
     approver_user_id: input.actorUserId,
+    approver_display_name:
+      typeof row.published_by_display_name === "string" && row.published_by_display_name.trim()
+        ? row.published_by_display_name.trim()
+        : null,
     invoice_number: String(row.invoice_number || ""),
     invoice_id: input.invoiceId,
   };
@@ -317,6 +321,10 @@ async function generateOneDocument(
         service_period_end: ctx.campaign_end_at,
         total_cents: inv.total_cents,
         currency: inv.currency || ctx.currency,
+        order_reference: ctx.evidence_reference,
+        category_title_cs: ctx.category_title_cs,
+        position_label: ctx.position_label,
+        duration_months: ctx.duration_months,
       });
       docType = PREMIUM_DOC_TYPE_INVOICE;
       title = "Faktura " + inv.invoice_number;

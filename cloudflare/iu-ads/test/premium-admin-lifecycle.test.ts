@@ -139,14 +139,18 @@ class PremiumPublishTestDb {
         end_at: camp?.end_at ?? null,
       };
     }
+    if (sql.includes("FROM admin_users WHERE user_id = ?") && sql.includes("display_name")) {
+      return mode === "first" ? { display_name: "Test Admin" } : null;
+    }
     if (sql.includes("UPDATE premium_selected_orders SET workflow_status = 'published'")) {
-      const [campaignId, publishedAt, idem, updatedAt, orderId] = params;
+      const [campaignId, publishedAt, idem, publishedByName, updatedAt, orderId] = params;
       const po = this.premiumOrders.get(String(orderId));
       if (po) {
         po.workflow_status = "published";
         po.published_campaign_id = campaignId;
         po.published_at = publishedAt;
         po.publish_idempotency_key = idem;
+        po.published_by_display_name = publishedByName;
         po.updated_at = updatedAt;
       }
       return mode === "run" ? { success: true } : null;
