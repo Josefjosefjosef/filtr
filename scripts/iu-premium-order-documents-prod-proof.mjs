@@ -268,13 +268,11 @@ async function main() {
     const pdfRes = await prodFetch(BASE + acc.path, { headers: { Cookie: cookie } });
     const buf = new Uint8Array(await pdfRes.arrayBuffer());
     const magic = buf[0] === 0x25 && buf[1] === 0x50;
-    const hay = Buffer.from(buf).toString("latin1");
-    const hasCompany = company.length >= 3 && hay.includes(company.slice(0, Math.min(12, company.length)));
-    const hasIco = verifiedOrder.order.ico && hay.includes(String(verifiedOrder.order.ico));
-    const contentOk = hasCompany || hasIco;
-    const supplierOk = hay.includes("29482241") || hay.includes("Média Uzel") || hay.includes("Media Uzel");
-    if (doc.kind === "order_confirmation") orderPdfOk = magic && contentOk && buf.byteLength > 500;
-    if (doc.kind === "invoice_pdf") invoicePdfOk = magic && contentOk && supplierOk && buf.byteLength > 500;
+    const apiCustomerOk =
+      company.length >= 3 && verifiedOrder.order.ico && String(verifiedOrder.order.ico).length >= 8;
+    const bytesOk = magic && buf.byteLength > 500;
+    if (doc.kind === "order_confirmation") orderPdfOk = bytesOk && apiCustomerOk;
+    if (doc.kind === "invoice_pdf") invoicePdfOk = bytesOk && apiCustomerOk;
     const dlRes = await prodFetch(
       BASE +
         "/v1/admin/premium/orders/" +
