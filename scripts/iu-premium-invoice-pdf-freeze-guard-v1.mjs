@@ -25,6 +25,15 @@ const checks = [
     invoicePdf.includes("Webové umístění reklamy") && read("premium-invoice-brand.ts").includes("www.infouzel.cz"),
   ],
   ["INVOICE_TEXT_LOGO", invoicePdf.includes('"info"') && invoicePdf.includes("Uzel.cz")],
+  ["INVOICE_SERVICE_SECTION", invoicePdf.includes("Fakturovaná služba")],
+  ["INVOICE_LAYOUT_ENGINE", fs.existsSync(path.join(ads, "premium-invoice-pdf-layout.ts"))],
+  ["INVOICE_BOLD_FONT", read("premium-pdf-font.ts").includes("registerPremiumPdfFonts")],
+  ["CUSTOMER_REGISTRY_ARES", read("premium-ares-registry.ts").includes("extractCustomerRegistryFromAresBody")],
+  [
+    "DOCUMENT_REVISION_ARCHIVE",
+    read("premium-order-document-revisions.ts").includes("archiveDocumentRevisionBeforeReplace") &&
+      fs.existsSync(path.join(root, "cloudflare", "iu-ads", "migrations", "0020_document_content_revisions.sql")),
+  ],
   ["INVOICE_BRAND_HEX", read("premium-invoice-brand.ts").includes("#003cff")],
   ["INVOICE_COMMERCIAL_REGISTER", read("premium-invoice-supplier.ts").includes("447292")],
   ["ORDER_WEB_PLACEMENT", orderPdf.includes("Webové umístění reklamy")],

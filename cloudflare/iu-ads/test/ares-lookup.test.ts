@@ -23,6 +23,7 @@ describe("ares lookup mapping", () => {
     expect(mapped!.billing_city).toBe("Praha");
     expect(mapped!.billing_zip).toBe("110 00");
     expect(mapped!.dic).toBe("CZ27074358");
+    expect(mapped!.customer_registry.registry_kind).toBe("none");
   });
 
   it("returns null without address parts", () => {

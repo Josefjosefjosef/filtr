@@ -14,6 +14,7 @@ const pipelineInput = {
   buyer_ico: "12345678",
   buyer_dic: null,
   buyer_address_lines: ["Ulice 1", "110 00 Praha"],
+  buyer_registry: null,
   line_description: "Reklamní umístění — pipeline",
   service_period_start: "2026-03-02T09:00:00.000Z",
   service_period_end: "2026-09-02T09:00:00.000Z",

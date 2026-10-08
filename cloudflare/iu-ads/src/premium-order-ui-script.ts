@@ -358,7 +358,15 @@ function clearAresPopulatedFields(){
   document.getElementById("billing_zip").value="";
   document.getElementById("billing_country").value="Česká republika";
   document.getElementById("dic").value="";
+  var regEl=document.getElementById("registry_lookup");
+  if(regEl){regEl.textContent="";regEl.hidden=true;}
   aresFilled={company:false,street:false,city:false,zip:false,country:false,dic:false};
+}
+function setRegistryLookup(text){
+  var el=document.getElementById("registry_lookup");
+  if(!el)return;
+  el.textContent=text||"";
+  el.hidden=!text;
 }
 function setLookupStatus(text,kind){
   var el=document.getElementById("ico_lookup");
@@ -377,6 +385,11 @@ function applyAresData(data,reqIco){
   if(!aresFilled.zip)document.getElementById("billing_zip").value=data.billing_zip||"";
   if(!aresFilled.country)document.getElementById("billing_country").value=data.billing_country||"Česká republika";
   if(!aresFilled.dic&&data.dic)document.getElementById("dic").value=data.dic;
+  if(data.customer_registry&&data.customer_registry.display_line_cs){
+    setRegistryLookup(data.customer_registry.display_line_cs);
+  }else{
+    setRegistryLookup("");
+  }
   setLookupStatus("Údaje doplněny z registru pro IČO "+reqIco+". Zkontrolujte je prosím.","ok");
 }
 async function lookupAresFromIco(raw){

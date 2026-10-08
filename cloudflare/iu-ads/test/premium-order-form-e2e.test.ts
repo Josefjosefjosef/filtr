@@ -65,6 +65,11 @@ describe("premium order form browser e2e", () => {
             billing_zip: "11000",
             billing_country: "Česká republika",
             dic: "CZ27074358",
+            customer_registry: {
+              registry_kind: "commercial_register",
+              display_line_cs:
+                "Společnost zapsaná v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 123456.",
+            },
           })
         );
         return;
@@ -159,6 +164,13 @@ describe("premium order form browser e2e", () => {
       () => (document.getElementById("company_name") as HTMLInputElement).value.includes("Test Firma"),
       { timeout: 8000 }
     );
+    await page.waitForFunction(
+      () => {
+        const el = document.getElementById("registry_lookup");
+        return el && !el.hidden && el.textContent && el.textContent.includes("obchodním rejstříku");
+      },
+      { timeout: 8000 }
+    );
 
     expect(await page.locator("#ordering_person_wrap").isHidden()).toBe(true);
     await page.check("#authorization_confirmed");
@@ -210,6 +222,36 @@ describe("premium order form browser e2e", () => {
     expect(lastUploadBody?.filename).toContain(".png");
     expect(runtimeErrors).toEqual([]);
     await context.close();
+  });
+
+  it("viewport — IČO first and ARES fill on tablet and desktop", async () => {
+    const viewports = [
+      { name: "tablet", width: 834, height: 1112 },
+      { name: "desktop", width: 1280, height: 900 },
+    ] as const;
+    for (const vp of viewports) {
+      const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
+      const page = await context.newPage();
+      trackPage(page);
+      await openForm(page);
+      const icoIdx = await page.evaluate(() => {
+        const nodes = Array.from(document.querySelectorAll("#form label"));
+        return nodes.findIndex((n) => n.getAttribute("for") === "ico");
+      });
+      const companyIdx = await page.evaluate(() => {
+        const nodes = Array.from(document.querySelectorAll("#form label"));
+        return nodes.findIndex((n) => n.getAttribute("for") === "company_name");
+      });
+      expect(icoIdx).toBeGreaterThanOrEqual(0);
+      expect(companyIdx).toBeGreaterThan(icoIdx);
+      await page.fill("#ico", TEST_ICO);
+      await page.waitForFunction(
+        () => (document.getElementById("company_name") as HTMLInputElement).value.includes("Test Firma"),
+        { timeout: 8000 }
+      );
+      expect(runtimeErrors).toEqual([]);
+      await context.close();
+    }
   });
 
   it("negative — blocks unconfirmed creative and missing auth", async () => {

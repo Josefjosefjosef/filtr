@@ -4,6 +4,10 @@
  */
 
 import { validateCzechIco } from "./czech-ico";
+import {
+  extractCustomerRegistryFromAresBody,
+  type CustomerRegistrySnapshot,
+} from "./premium-ares-registry";
 
 const ARES_REST_BASE = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty";
 
@@ -15,6 +19,7 @@ export type AresCompanyLookup = {
   billing_zip: string;
   billing_country: string;
   dic: string | null;
+  customer_registry: CustomerRegistrySnapshot;
 };
 
 type AresSidlo = {
@@ -31,6 +36,7 @@ type AresSubject = {
   obchodniJmeno?: string;
   dic?: string;
   sidlo?: AresSidlo;
+  dalsiUdaje?: { datovyZdroj?: string; spisovaZnacka?: string }[];
 };
 
 function formatStreet(sidlo: AresSidlo): string {
@@ -53,7 +59,7 @@ function formatZip(psc: number | undefined): string {
   return s;
 }
 
-export function mapAresSubject(subject: AresSubject, ico: string): AresCompanyLookup | null {
+export function mapAresSubject(subject: AresSubject, ico: string, verifiedAtIso?: string): AresCompanyLookup | null {
   const name = typeof subject.obchodniJmeno === "string" ? subject.obchodniJmeno.trim() : "";
   if (!name) return null;
   const sidlo = subject.sidlo || {};
@@ -62,6 +68,8 @@ export function mapAresSubject(subject: AresSubject, ico: string): AresCompanyLo
   const zip = formatZip(sidlo.psc);
   if (!street || !city || !zip) return null;
   const dic = typeof subject.dic === "string" && subject.dic.trim() ? subject.dic.trim() : null;
+  const at = verifiedAtIso || new Date().toISOString();
+  const customer_registry = extractCustomerRegistryFromAresBody(subject, at);
   return {
     ico,
     company_name: name,
@@ -70,6 +78,7 @@ export function mapAresSubject(subject: AresSubject, ico: string): AresCompanyLo
     billing_zip: zip,
     billing_country: "Česká republika",
     dic,
+    customer_registry,
   };
 }
 

@@ -32,6 +32,7 @@ export function buildOrderConfirmationPlainLines(ctx: PremiumOrderPdfContext): s
     "Město: " + ctx.billing_city,
     "PSČ: " + ctx.billing_zip,
     "Stát: " + ctx.billing_country,
+    ctx.customer_registry?.display_line_cs ? ctx.customer_registry.display_line_cs : "",
     ctx.note ? "Poznámka objednatele: " + ctx.note : "",
     "Kategorie: " + ctx.category_title_cs,
     "Pozice: " + ctx.position_label,
@@ -128,6 +129,7 @@ export async function buildPremiumOrderConfirmationPdf(
       "Město: " + ctx.billing_city,
       "PSČ: " + ctx.billing_zip,
       "Stát: " + ctx.billing_country,
+      ctx.customer_registry?.display_line_cs ? ctx.customer_registry.display_line_cs : "",
       ctx.note ? "Poznámka objednatele: " + ctx.note : "",
     ].filter(Boolean),
     { title: "Objednatel" }

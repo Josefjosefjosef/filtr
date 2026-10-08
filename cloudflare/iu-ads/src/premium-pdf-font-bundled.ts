@@ -1,5 +1,6 @@
 /** Same Noto file as infoUzel.cz invoice PDFs — bundled via wrangler Data rule (no runtime fetch). */
 import notoSansLatinExt from "../assets/fonts/noto-sans-latin-ext-400-normal.ttf";
+import notoSansLatinExtBold from "../assets/fonts/noto-sans-latin-ext-700-normal.ttf";
 
 function unwrapFontModule(raw: unknown): unknown {
   if (raw && typeof raw === "object" && "default" in raw) {
@@ -23,4 +24,8 @@ function fontBytesToArrayBuffer(raw: unknown): ArrayBuffer {
 
 export function bundledPremiumPdfFontArrayBuffer(): ArrayBuffer {
   return fontBytesToArrayBuffer(notoSansLatinExt);
+}
+
+export function bundledPremiumPdfFontBoldArrayBuffer(): ArrayBuffer {
+  return fontBytesToArrayBuffer(notoSansLatinExtBold);
 }

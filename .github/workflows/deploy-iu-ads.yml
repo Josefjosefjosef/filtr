@@ -59,6 +59,26 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Premium invoice PDF visual proof (PNG artifact)
+        env:
+          IU_INVOICE_VISUAL_OUT: ${{ runner.temp }}/iu-invoice-visual
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_INVOICE_VISUAL_OUT"
+          IU_INVOICE_VISUAL_OUT="$IU_INVOICE_VISUAL_OUT" npm test -- test/premium-invoice-visual-proof.test.ts
+          test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.pdf"
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+          pdftoppm -png -singlefile -r 150 "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.pdf" "$IU_INVOICE_VISUAL_OUT/invoice-reference-like"
+          test -s "$IU_INVOICE_VISUAL_OUT/invoice-reference-like.png"
+
+      - name: Upload premium invoice visual artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        with:
+          name: premium-invoice-visual-deploy-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-invoice-visual/
+          if-no-files-found: error
+
       - name: Premium freeze guard
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs

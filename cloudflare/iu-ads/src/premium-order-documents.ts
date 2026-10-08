@@ -15,6 +15,7 @@ import {
 import { buildPremiumInvoicePdf } from "./premium-invoice-pdf";
 import { assertOrderPdfContainsCustomerFields, type PremiumOrderPdfContext } from "./premium-order-pdf-fields";
 import { appendPremiumOrderEvent } from "./premium-order-history";
+import { archiveDocumentRevisionBeforeReplace } from "./premium-order-document-revisions";
 import type { Env } from "./types";
 
 export const PREMIUM_DOC_TYPE_ORDER = "premium_order_confirmation";
@@ -112,6 +113,7 @@ async function loadOrderDocumentContext(
     billing_city: billing?.city || "",
     billing_zip: billing?.zip || "",
     billing_country: billing?.country || "",
+    customer_registry: payload.customer_registry,
     note: payload.note,
     category_title_cs: premiumCategoryTitleCs(categorySlug),
     category_slug: categorySlug,
@@ -204,26 +206,71 @@ async function storePdfDocument(
     pdfBytes: Uint8Array;
     actorUserId: string;
     replaceExisting?: boolean;
+    replacementReason?: string;
   }
 ): Promise<string> {
   if (!env.DB || !env.DOCUMENTS) throw new Error("documents_storage_not_configured");
   const hash = await contentHashHex(input.pdfBytes);
   const existing = await env.DB.prepare(
-    "SELECT document_id, r2_key FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active'"
+    "SELECT document_id, r2_key, content_hash, version FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active'"
   )
     .bind(input.orderId, input.docType)
-    .first<{ document_id: string; r2_key: string }>();
+    .first<{ document_id: string; r2_key: string; content_hash: string; version: number }>();
   if (existing) {
     if (!input.replaceExisting) return existing.document_id;
     const nowIso = new Date().toISOString();
+    const priorHash = String(existing.content_hash || "");
+    const priorVersion = Number(existing.version) || 1;
+    let revisionId: string | null = null;
+    let archiveKey: string | null = null;
+    try {
+      const oldObj = await env.DOCUMENTS.get(existing.r2_key);
+      if (oldObj) {
+        const oldBytes = new Uint8Array(await oldObj.arrayBuffer());
+        const archived = await archiveDocumentRevisionBeforeReplace(env.DB, env.DOCUMENTS, {
+          documentId: existing.document_id,
+          version: priorVersion,
+          contentHash: priorHash,
+          r2Key: existing.r2_key,
+          pdfBytes: oldBytes,
+          reason: input.replacementReason || "corrective_pdf_replace",
+          actorUserId: input.actorUserId,
+        });
+        revisionId = archived.revision_id;
+        archiveKey = archived.archive_r2_key;
+      }
+    } catch {
+      /* migration or archive path unavailable — still update active PDF below */
+    }
     await env.DOCUMENTS.put(existing.r2_key, input.pdfBytes, {
       httpMetadata: { contentType: "application/pdf" },
     });
+    const nextVersion = priorVersion + 1;
     await env.DB.prepare(
-      "UPDATE documents SET content_hash = ?, updated_at = ?, uploaded_by = ? WHERE document_id = ?"
+      "UPDATE documents SET content_hash = ?, version = ?, updated_at = ?, uploaded_by = ? WHERE document_id = ?"
     )
-      .bind(hash, nowIso, input.actorUserId, existing.document_id)
+      .bind(hash, nextVersion, nowIso, input.actorUserId, existing.document_id)
       .run();
+    try {
+      await appendPremiumOrderEvent(env.DB, {
+        orderId: input.orderId,
+        eventType: "document_pdf_replaced",
+        actorUserId: input.actorUserId,
+        payload: {
+          document_id: existing.document_id,
+          doc_type: input.docType,
+          prior_content_hash: priorHash,
+          new_content_hash: hash,
+          prior_version: priorVersion,
+          new_version: nextVersion,
+          replacement_reason: input.replacementReason || "corrective_pdf_replace",
+          revision_id: revisionId,
+          archive_r2_key: archiveKey,
+        },
+      });
+    } catch {
+      /* non-blocking */
+    }
     return existing.document_id;
   }
 
@@ -330,6 +377,7 @@ async function generateOneDocument(
         buyer_ico: ctx.ico,
         buyer_dic: ctx.dic,
         buyer_address_lines: [ctx.billing_street, ctx.billing_zip + " " + ctx.billing_city, ctx.billing_country].filter(Boolean),
+        buyer_registry: ctx.customer_registry,
         line_description: lineDesc,
         service_period_start: ctx.campaign_start_at,
         service_period_end: ctx.campaign_end_at,
@@ -354,6 +402,7 @@ async function generateOneDocument(
       pdfBytes,
       actorUserId: input.actorUserId,
       replaceExisting: Boolean(input.forceRegenerate),
+      replacementReason: input.forceRegenerate ? "admin_force_regenerate" : undefined,
     });
 
     const doneIso = new Date().toISOString();

@@ -20,7 +20,8 @@ export type PremiumOrderEventType =
   | "order_confirmation_pdf_created"
   | "invoice_pdf_created"
   | "document_generation_failed"
-  | "document_generation_retried";
+  | "document_generation_retried"
+  | "document_pdf_replaced";
 
 export async function appendPremiumOrderEvent(
   db: D1Database,
