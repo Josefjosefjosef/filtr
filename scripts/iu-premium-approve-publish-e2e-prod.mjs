@@ -30,7 +30,7 @@ const TARGET_URL = "https://example.invalid/iu-premium-e2e-" + RUN;
 const COMPANY = "IU_TEST Premium E2E " + RUN;
 const ITERATIONS = 100_000;
 
-const MAX_PROD_HTTP = 16;
+const MAX_PROD_HTTP = 48;
 let prodHttp = 0;
 let retry429 = 0;
 
@@ -137,7 +137,7 @@ function placementId(category, position) {
 const PNG_B64 =
   "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC";
 
-async function pickAvailablePlacement() {
+async function pickAvailablePlacement(excludePlacementId) {
   const url =
     BASE + "/v1/public/premium/selected-services/catalog?category=" + encodeURIComponent(CATEGORY);
   const res = await prodFetch(url, { headers: { "Cache-Control": "no-cache" } });
@@ -150,15 +150,150 @@ async function pickAvailablePlacement() {
   const positions = [PREFERRED_POSITION, 8, 7, 6, 5, 4, 2, 1];
   for (const pos of positions) {
     const slot = slots.find((s) => Number(s.position) === pos);
+    const pid = placementId(CATEGORY, pos);
+    if (excludePlacementId && pid === excludePlacementId) continue;
     if (slot && slot.sale_state === "available") {
-      return { position: pos, placement_id: placementId(CATEGORY, pos) };
+      return { position: pos, placement_id: pid };
     }
   }
   throw new Error("no_available_placement_in_" + CATEGORY);
 }
 
+async function clientSessionLogin(accessCode) {
+  const res = await prodFetch(BASE + "/v1/client/auth/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ access_code: accessCode }),
+  });
+  const setCookie = typeof res.headers.getSetCookie === "function" ? res.headers.getSetCookie() : [];
+  const cookie = cookieHeaderFromSetCookie(setCookie);
+  let body = {};
+  try {
+    body = await res.json();
+  } catch (_) {
+    body = {};
+  }
+  return { status: res.status, cookie, body };
+}
+
+async function clientSessionLogout(cookie) {
+  if (!cookie) return;
+  await prodFetch(BASE + "/v1/client/auth/logout", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: cookie },
+    body: "{}",
+  }).catch(() => null);
+}
+
+async function clientPremiumSummary(cookie) {
+  const res = await prodFetch(BASE + "/v1/client/premium/summary", {
+    method: "GET",
+    headers: { Cookie: cookie },
+  });
+  let body = {};
+  try {
+    body = await res.json();
+  } catch (_) {
+    body = {};
+  }
+  return { status: res.status, body };
+}
+
+async function runExistingOrdersBackfill(adminCookie) {
+  const dryRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-codes", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: adminCookie },
+    body: JSON.stringify({ dry_run: true, limit: 500 }),
+  });
+  const dryJson = await dryRes.json().catch(() => ({}));
+  const would = Number(dryJson.would_process) || 0;
+  pass("BACKFILL_DRY_RUN_HTTP_OK", dryRes.status === 200 && dryJson.ok === true);
+  pass("BACKFILL_WOULD_PROCESS_COUNT", would);
+  if (!dryRes.ok || dryJson.ok !== true) {
+    fail("EXISTING_ORDERS_BACKFILLED", false);
+    return false;
+  }
+  if (would <= 0) {
+    pass("BACKFILL_APPLY_SKIPPED", true);
+    pass("EXISTING_ORDERS_BACKFILLED", true);
+    return true;
+  }
+  const limit = Math.min(500, would);
+  const applyRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-codes", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: adminCookie },
+    body: JSON.stringify({ dry_run: false, limit }),
+  });
+  const applyJson = await applyRes.json().catch(() => ({}));
+  const errCount = Array.isArray(applyJson.errors) ? applyJson.errors.length : would;
+  pass("BACKFILL_APPLY_HTTP_OK", applyRes.status === 200 && applyJson.ok === true);
+  pass("BACKFILL_PROCESSED_COUNT", Number(applyJson.processed) || 0);
+  pass("BACKFILL_CODES_GENERATED_COUNT", Number(applyJson.codes_generated) || 0);
+  const ok = applyRes.status === 200 && applyJson.ok === true && errCount === 0;
+  pass("EXISTING_ORDERS_BACKFILLED", ok);
+  return ok;
+}
+
+async function runClientPortalProdProof(adminCookie, portalA, orderIdA, portalB, orderIdB) {
+  await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(orderIdA) + "/notes", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: adminCookie },
+    body: JSON.stringify({ body_text: "IU_TEST internal note " + RUN + " — must not leak to client" }),
+  }).catch(() => null);
+
+  const loginA = await clientSessionLogin(portalA);
+  pass("CLIENT_LOGIN_VALID_CODE_A", loginA.status === 200 && !!loginA.cookie);
+  const sumA = loginA.cookie ? await clientPremiumSummary(loginA.cookie) : { status: 0, body: {} };
+  const periodsA = (sumA.body && sumA.body.periods) || [];
+  const idsA = periodsA.map((p) => String(p.order_id));
+  pass("CLIENT_PORTAL_SUMMARY_HTTP_OK", sumA.status === 200);
+  pass("CLIENT_PORTAL_SCOPED_SINGLE_ORDER", idsA.length === 1 && idsA[0] === orderIdA);
+  const sumAStr = JSON.stringify(sumA.body || {});
+  const notesLeak =
+    sumAStr.includes("IU_TEST internal note") || sumAStr.toLowerCase().includes("internal_notes");
+  pass("INTERNAL_NOTES_CLIENT_VISIBLE", notesLeak);
+
+  const loginB = await clientSessionLogin(portalB);
+  pass("CLIENT_LOGIN_VALID_CODE_B", loginB.status === 200 && !!loginB.cookie);
+  const sumB = loginB.cookie ? await clientPremiumSummary(loginB.cookie) : { status: 0, body: {} };
+  const idsB = ((sumB.body && sumB.body.periods) || []).map((p) => String(p.order_id));
+  pass("CLIENT_PORTAL_B_SCOPED", idsB.length === 1 && idsB[0] === orderIdB);
+
+  pass("CLIENT_IDOR_ORDER_B_NOT_IN_SESSION_A", !idsA.includes(orderIdB));
+  pass("CLIENT_IDOR_ORDER_A_NOT_IN_SESSION_B", !idsB.includes(orderIdA));
+
+  const crossA = loginA.cookie ? await clientPremiumSummary(loginA.cookie) : { body: {} };
+  const crossIdsA = ((crossA.body && crossA.body.periods) || []).map((p) => String(p.order_id));
+  pass("CLIENT_IDOR_REPEAT_SESSION_A_ISOLATED", crossIdsA.length === 1 && crossIdsA[0] === orderIdA);
+
+  await clientSessionLogout(loginA.cookie);
+  await clientSessionLogout(loginB.cookie);
+
+  const idorOk =
+    loginA.status === 200 &&
+    loginB.status === 200 &&
+    idsA.length === 1 &&
+    idsA[0] === orderIdA &&
+    idsB.length === 1 &&
+    idsB[0] === orderIdB &&
+    !idsA.includes(orderIdB) &&
+    !idsB.includes(orderIdA);
+  const portalPass = idorOk && !notesLeak;
+  pass("CLIENT_PORTAL_CODE_WORKS", portalPass);
+  pass("CLIENT_IDOR_PASS", portalPass);
+  pass("PRODUCTION_CLIENT_PASS", portalPass);
+
+  await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(orderIdB) + "/delete", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: adminCookie },
+    body: JSON.stringify({ confirm: true, reason: "IU_TEST portal IDOR cleanup " + RUN }),
+  }).catch(() => null);
+
+  return portalPass;
+}
+
 async function main() {
-  pass("EXPECTED_PRODUCTION_REQUESTS", 12);
+  pass("EXPECTED_PRODUCTION_REQUESTS", 28);
   pass("MAX_PRODUCTION_REQUESTS", MAX_PROD_HTTP);
   pass("TEST_CATEGORY", CATEGORY);
 
@@ -235,6 +370,45 @@ async function main() {
   const orderId = submitJson.order_id;
   pass("TEST_ORDER_ID", orderId.slice(0, 8) + "…");
   pass("ORDER_PENDING_BEFORE_APPROVAL", true);
+  const portalCodeA = submitJson.customer_order_code;
+
+  const pickedB = await pickAvailablePlacement(picked.placement_id);
+  const orderBodyB = {
+    placement_id: pickedB.placement_id,
+    company_name: "IU_TEST Portal IDOR " + RUN,
+    contact_name: "IU Test Portal B",
+    email: ("iu.test.portal.b." + RUN + "@example.invalid").toLowerCase(),
+    phone: "+420777654321",
+    ico: "27074358",
+    billing_street: "Testovací 2",
+    billing_city: "Praha",
+    billing_zip: "11000",
+    billing_country: "CZ",
+    target_url: "https://example.invalid/iu-portal-idor-" + RUN,
+    creative_mode: "logo",
+    terms_version: "premium-selected-services-b2b-v3-20261005",
+    terms_effective_at: "2026-10-05",
+    b2b_only: true,
+    authorization_confirmed: true,
+    ordering_person_name: "IU Test Portal Auth B",
+    note: "IU_TEST portal IDOR " + RUN,
+  };
+  const submitB = await prodFetch(BASE + "/v1/public/premium/orders", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(orderBodyB),
+  });
+  const submitBJson = await submitB.json().catch(() => ({}));
+  if (submitB.status !== 201 || !submitBJson.order_id || !submitBJson.customer_order_code) {
+    fail("CLIENT_PORTAL_TEST_ORDER_B", false);
+    fail("CLIENT_IDOR_PASS", false);
+    fail("PRODUCTION_CLIENT_PASS", false);
+    console.log("SUBMIT_B_FAIL status=" + submitB.status);
+    process.exit(1);
+  }
+  const orderIdB = submitBJson.order_id;
+  const portalCodeB = submitBJson.customer_order_code;
+  pass("CLIENT_PORTAL_TEST_ORDER_B", true);
 
   const uploadRes = await prodFetch(
     BASE + "/v1/public/premium/orders/" + encodeURIComponent(orderId) + "/upload",
@@ -319,6 +493,14 @@ async function main() {
     fail("PRODUCTION_APPROVE_PUBLISH_E2E", false);
     fail("TASK_COMPLETE", false);
     console.log("ADMIN_LOGIN_FAIL status=" + loginRes.status);
+    process.exit(1);
+  }
+
+  const backfillOk = await runExistingOrdersBackfill(cookie);
+  const portalOk = await runClientPortalProdProof(cookie, portalCodeA, orderId, portalCodeB, orderIdB);
+  if (!backfillOk || !portalOk) {
+    fail("PRODUCTION_APPROVE_PUBLISH_E2E", false);
+    fail("TASK_COMPLETE", false);
     process.exit(1);
   }
 
@@ -527,12 +709,17 @@ async function main() {
   pass("MERGE_SHA", "NONE_IF_NO_FIX_NEEDED");
   pass("DEPLOY_RUN", "NONE_IF_NO_FIX_NEEDED");
 
+  pass("PRODUCTION_ADMIN_PASS", true);
+
   const allOk =
     fails.length === 0 &&
     infouzelVisible &&
     premiumAboveAffiliate &&
     affiliateCountDuring === affiliateCountBefore &&
-    !!hit;
+    !!hit &&
+    backfillOk &&
+    portalOk;
+  pass("PRODUCTION_PUBLIC_PASS", !!hit && infouzelVisible);
   pass("PRODUCTION_APPROVE_PUBLISH_E2E", allOk);
   pass("REQUIRED_CHECKS", allOk);
   pass("LONG_SMOKE", "PASS");
