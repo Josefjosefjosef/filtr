@@ -78,6 +78,37 @@ export async function linkPremiumOrderDocumentJobToActiveDocument(
     .run();
 }
 
+/** When D1 already has the PDF but the job row is absent or out of sync, link without regenerating. */
+export async function ensurePremiumOrderDocumentJobReflectsActiveDocument(
+  db: D1Database,
+  orderId: string,
+  kind: PremiumOrderDocKind,
+  documentId: string,
+  existingJobId?: string | null
+): Promise<void> {
+  if (existingJobId) {
+    await linkPremiumOrderDocumentJobToActiveDocument(db, existingJobId, documentId);
+    return;
+  }
+  const row = await db
+    .prepare("SELECT job_id FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = ? LIMIT 1")
+    .bind(orderId, kind)
+    .first<{ job_id: string }>();
+  if (row?.job_id) {
+    await linkPremiumOrderDocumentJobToActiveDocument(db, row.job_id, documentId);
+    return;
+  }
+  const nowIso = new Date().toISOString();
+  const jobId = newId("pdj");
+  const idem = "d1_active:" + orderId + ":" + kind;
+  await db
+    .prepare(
+      "INSERT INTO premium_order_document_jobs (job_id, order_id, doc_kind, status, document_id, last_error, idempotency_key, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?)"
+    )
+    .bind(jobId, orderId, kind, "ready", documentId, null, idem, nowIso, nowIso)
+    .run();
+}
+
 /**
  * If PDF exists but job is not ready, or job is stale `generating`, reconcile state.
  * Returns linked document_id when job can be considered ready without new PDF bytes.
@@ -756,11 +787,38 @@ export async function listPremiumOrderDocumentsForAdmin(
 
   for (const k of kinds) {
     const job = byKind.get(k.kind);
+    const docType = docTypeForPremiumOrderDocKind(k.kind);
+    let documentId: string | null = job?.document_id ?? null;
     let status: AdminOrderDocumentCard["status"] = "missing";
-    if (job) status = job.status as AdminOrderDocumentCard["status"];
+    let lastError: string | null = job?.last_error ?? null;
+
+    const active = await fetchActiveOrderDocument(env.DB, orderId, docType);
+    if (active) {
+      documentId = active.document_id;
+      status = "ready";
+      lastError = null;
+      try {
+        await ensurePremiumOrderDocumentJobReflectsActiveDocument(
+          env.DB,
+          orderId,
+          k.kind,
+          active.document_id,
+          jobs.results?.find((r) => r.doc_kind === k.kind)?.job_id
+        );
+      } catch {
+        /* non-blocking — admin cards still show ready from D1 */
+      }
+    } else if (job) {
+      status = job.status as AdminOrderDocumentCard["status"];
+      if (status === "ready") {
+        status = documentId ? "error" : "missing";
+        if (status === "error" && !lastError) lastError = "document_row_missing";
+      }
+    }
+
     let preview_path: string | null = null;
     let download_path: string | null = null;
-    if (job?.document_id && job.status === "ready" && env.ADS_R2_SIGNING_SECRET) {
+    if (documentId && status === "ready" && env.ADS_R2_SIGNING_SECRET) {
       preview_path = "/v1/admin/premium/orders/" + encodeURIComponent(orderId) + "/documents/" + k.kind + "/access?disposition=inline";
       download_path = "/v1/admin/premium/orders/" + encodeURIComponent(orderId) + "/documents/" + k.kind + "/access?disposition=attachment";
     }
@@ -769,8 +827,8 @@ export async function listPremiumOrderDocumentsForAdmin(
       title: k.title,
       subtitle: k.subtitle,
       status,
-      document_id: job?.document_id ?? null,
-      last_error: job?.last_error ?? null,
+      document_id: documentId,
+      last_error: lastError,
       preview_path,
       download_path,
     });

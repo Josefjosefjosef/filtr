@@ -101,6 +101,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-public-admin-consistency-guard-v1.mjs
 
+      - name: Premium admin order documents guard
+        working-directory: .
+        run: node scripts/iu-premium-admin-order-documents-guard-v1.mjs
+
       - name: Premium freeze guard
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
