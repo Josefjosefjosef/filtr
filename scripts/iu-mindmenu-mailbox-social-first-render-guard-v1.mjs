@@ -220,7 +220,9 @@ async function main() {
       expectFreshSocials(reloaded, "fresh_reload");
 
       // C) Add → LinkedIn on 5th
-      await page.locator("#iuMailboxAdd").click({ force: true });
+      const addBtn = page.locator("#iuMailboxAdd");
+      await addBtn.waitFor({ state: "visible", timeout: 45000 });
+      await addBtn.click({ force: true });
       await page.waitForTimeout(120);
       const afterAdd = await snapSocial(page);
       if (afterAdd.pillCount !== 5) fail("add_pill_count_" + afterAdd.pillCount);
@@ -230,7 +232,9 @@ async function main() {
       }
 
       // Remove back to 4
-      await page.locator("#iuMailboxRemove").click({ force: true });
+      const remBtn = page.locator("#iuMailboxRemove");
+      await remBtn.waitFor({ state: "visible", timeout: 45000 });
+      await remBtn.click({ force: true });
       await page.waitForTimeout(120);
       const afterRem = await snapSocial(page);
       expectFreshSocials(afterRem, "after_remove");
