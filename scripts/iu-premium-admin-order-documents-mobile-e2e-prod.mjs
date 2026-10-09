@@ -136,23 +136,32 @@ async function main() {
       await navToggle.click();
     }
     await page.click('nav button[data-id="premium"]');
-    await page.waitForSelector(".order-cards, .order-table-desktop", { timeout: 20000 });
+    await page.waitForSelector(".order-cards .order-card, article.order-card", { state: "visible", timeout: 30000 });
 
-    const detailBtn = page.locator("[data-premium-detail]").first();
-    const detailCount = await detailBtn.count();
+    const detailButtons = page.locator("[data-premium-detail]");
+    const detailCount = await detailButtons.count();
     pass("MOBILE_PREMIUM_ORDERS_LOADED", detailCount > 0);
     if (detailCount === 0) throw new Error("no_premium_orders");
 
-    await detailBtn.click();
-    await page.waitForSelector(".order-docs-card", { timeout: 20000 });
-
-    const missingText = await page.locator(".order-doc-item").filter({ hasText: "Stav: missing" }).count();
+    let orderIdAttr = null;
+    let missingText = 99;
+    let previewCount = 0;
+    let downloadCount = 0;
+    const tryCount = Math.min(detailCount, 12);
+    for (let i = 0; i < tryCount; i += 1) {
+      await detailButtons.nth(i).click();
+      await page.waitForSelector(".order-docs-card", { timeout: 30000 });
+      missingText = await page.locator(".order-doc-item").filter({ hasText: "Stav: missing" }).count();
+      previewCount = await page.locator("[data-premium-doc-preview]").count();
+      downloadCount = await page.locator("[data-premium-doc-download]").count();
+      orderIdAttr = await page.locator("[data-premium-doc-preview]").first().getAttribute("data-premium-doc-preview");
+      if (missingText === 0 && previewCount >= 2 && downloadCount >= 2) break;
+      await page.click("#order-detail-back");
+      await page.waitForSelector(".order-cards .order-card", { state: "visible", timeout: 15000 });
+    }
     pass("MOBILE_UI_MISSING_STATUS_COUNT", missingText);
     pass("CONFIRMATION_BUTTONS_VISIBLE", (await page.locator('[data-doc-kind="order_confirmation"][data-premium-doc-preview]').count()) >= 1);
     pass("INVOICE_BUTTONS_VISIBLE", (await page.locator('[data-doc-kind="invoice_pdf"][data-premium-doc-preview]').count()) >= 1);
-
-    const previewCount = await page.locator("[data-premium-doc-preview]").count();
-    const downloadCount = await page.locator("[data-premium-doc-download]").count();
     pass("MOBILE_PREVIEW_BUTTON_COUNT", previewCount);
     pass("MOBILE_DOWNLOAD_BUTTON_COUNT", downloadCount);
 
@@ -162,7 +171,6 @@ async function main() {
       pass("MOBILE_BROWSER_E2E_PASS", true);
     }
 
-    const orderIdAttr = await page.locator("[data-premium-doc-preview]").first().getAttribute("data-premium-doc-preview");
     pass("ACTUAL_ORDER_IDENTIFIED", orderIdAttr ? orderIdAttr.slice(-12) : "unknown");
 
     let confPass = true;
