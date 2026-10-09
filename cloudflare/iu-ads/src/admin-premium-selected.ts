@@ -94,11 +94,15 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
 
   const res = await env.DB.prepare(
     `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.contact_person, o.payload_json, c.company_name, c.ico, c.dic,
-            ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog
+            ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog,
+            ppl.active_campaign_id AS placement_active_campaign_id,
+            camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id
      LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
+     LEFT JOIN premium_selected_placements ppl ON ppl.placement_id = po.placement_id
+     LEFT JOIN campaigns camp ON camp.campaign_id = po.published_campaign_id
      ${where}
      ORDER BY CASE WHEN po.workflow_status IN ('submitted', 'under_review') THEN 0 ELSE 1 END,
               po.created_at DESC
@@ -114,11 +118,39 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
   return json({ premium_orders, pending_count });
 }
 
-export async function handleAdminPremiumReject(request: Request, env: Env, orderId: string): Promise<Response> {
+export async function handleAdminPremiumPublicationConsistency(request: Request, env: Env): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.read");
+  if (!guard.ok) return guard.response;
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  const nowIso = new Date().toISOString();
+  const { scanPremiumPublicationConsistency } = await import("./premium-publication-consistency");
+  const scan = await scanPremiumPublicationConsistency(env.DB, nowIso);
+  return json({
+    ok: scan.ok,
+    as_of: nowIso,
+    issues: scan.issues,
+    measurement: { impressions: false, clicks: false, ctr: false },
+  });
+}
+
+export async function handleAdminPremiumPublicationRepair(request: Request, env: Env): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
-  let body: { reason?: unknown } = {};
+  const { repairPremiumPublicationConsistency } = await import("./premium-publication-consistency");
+  const result = await repairPremiumPublicationConsistency(env, { actorUserId: guard.userId });
+  return json({
+    ok: true,
+    repaired: result.repaired,
+    incidents: result.incidents,
+    measurement: { impressions: false, clicks: false, ctr: false },
+  });
+}
+
+export async function handleAdminPremiumReject(request: Request, env: Env, orderId: string): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.write");
+  if (!guard.ok) return guard.response;
+  let body: { reason?: unknown; idempotency_key?: unknown } = {};
   try {
     body = await request.json();
   } catch {
@@ -126,37 +158,17 @@ export async function handleAdminPremiumReject(request: Request, env: Env, order
   }
   const reason =
     typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : null;
-  const nowIso = new Date().toISOString();
-  await env.DB.prepare(
-    "UPDATE premium_selected_orders SET workflow_status = 'rejected', rejection_reason = ?, updated_at = ? WHERE order_id = ?"
-  )
-    .bind(reason, nowIso, orderId)
-    .run();
-  try {
-    const { appendPremiumOrderEvent } = await import("./premium-order-history");
-    await appendPremiumOrderEvent(env.DB, {
-      orderId,
-      eventType: "order_rejected",
-      actorUserId: guard.userId,
-      payload: { reason, actor_label: guard.userId },
-    });
-  } catch {
-    /* events table optional until migration */
-  }
-  await insertAuditLog(
-    env.DB,
-    buildAuditEntry({
-      auditId: newId("aud"),
-      actorUserId: guard.userId,
-      operation: "premium_order_rejected",
-      objectType: "premium_order",
-      objectId: orderId,
-      before: null,
-      after: { workflow_status: "rejected", rejection_reason: reason },
-      result: "success",
-    })
-  );
-  return json({ ok: true });
+  const idempotencyKey =
+    typeof body.idempotency_key === "string" && body.idempotency_key.trim() ? body.idempotency_key.trim() : undefined;
+  const { executePremiumOrderReject } = await import("./premium-publication-consistency");
+  const result = await executePremiumOrderReject(env, {
+    orderId,
+    actorUserId: guard.userId,
+    reason,
+    idempotencyKey,
+  });
+  if (!result.ok) return json({ error: result.error }, result.status);
+  return json({ ok: true, idempotent: result.idempotent, unpublished_campaign_ids: result.unpublished_campaign_ids });
 }
 
 export async function handleAdminPremiumSuspend(request: Request, env: Env, orderId: string): Promise<Response> {

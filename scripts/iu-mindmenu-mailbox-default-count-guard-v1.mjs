@@ -34,6 +34,12 @@ function fail(id) {
   FAILS.push(id);
 }
 
+async function clickWhenVisible(page, selector) {
+  const loc = page.locator(selector);
+  await loc.waitFor({ state: "visible", timeout: 45000 });
+  await loc.click({ force: true });
+}
+
 function staticContract() {
   const feed = fs.readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8");
   const pkg = fs.readFileSync(path.join(REPO, "package.json"), "utf8");
@@ -199,9 +205,9 @@ async function runFresh(browser, base, name, viewport) {
     if (!st.addVisible) fail(`${name}_fresh_add_missing`);
 
     /* Persistence of growth: +2 → 6 after reload */
-    await page.locator("#iuMailboxAdd").click({ force: true });
+    await clickWhenVisible(page, "#iuMailboxAdd");
     await page.waitForTimeout(120);
-    await page.locator("#iuMailboxAdd").click({ force: true });
+    await clickWhenVisible(page, "#iuMailboxAdd");
     await page.waitForTimeout(120);
     let mid = await snapshot(page);
     if (mid.count !== 6) fail(`${name}_after_add_got_${mid.count}`);

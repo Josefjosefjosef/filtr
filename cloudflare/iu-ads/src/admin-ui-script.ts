@@ -258,7 +258,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }catch(_){ return String(iso); }
   }
   function premiumRowStatus(row){
-    return row.workflow_status_label_cs || row.workflow_status || "—";
+    var base=row.workflow_status_label_cs || row.workflow_status || "—";
+    if(row.publication && row.publication.consistency_mismatch){
+      return base+" · nesoulad veřejné publikace";
+    }
+    return base;
   }
   function premiumOrderActions(row, opts){
     opts=opts||{};
@@ -614,6 +618,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<p>Typ kreativy: <strong>'+esc(modeLabel)+"</strong></p>"+
       (ord.note_client?'<p>Poznámka: '+esc(ord.note_client)+"</p>":"")+
       (body.placement_conflict&&body.placement_conflict.foreign_owner?'<p class="err">Skutečný konflikt placementu — aktivní cizí kampaň.</p>':"")+
+      (body.publication_visibility?'<dl class="detail-dl">'+
+        "<dt>Schválená objednávka (zveřejněno)</dt><dd>"+(body.publication_visibility.order_approved_published?"Ano":"Ne")+"</dd>"+
+        "<dt>Publikovaná kampaň na pozici</dt><dd>"+esc(body.publication_visibility.placement_active_campaign_id||"—")+"</dd>"+
+        "<dt>Očekáváno ve veřejném výstupu</dt><dd>"+(body.publication_visibility.expected_in_public_output?"Ano":"Ne")+"</dd>"+
+        "<dt>Veřejný výstup ověřen (DB)</dt><dd>"+(body.publication_visibility.public_output_verified?"Ano":"Ne")+"</dd>"+
+        (body.publication_visibility.consistency_mismatch?'<dt class="err">Nesoulad</dt><dd class="err">'+esc(body.publication_visibility.mismatch_reason_cs||"Ano")+"</dd>":"")+
+        "</dl>":"")+
       '<div class="preview-box">'+String(body.preview_html||"")+"</div></div>"+
       (ord.terms_version?'<div class="card"><h3>Souhlasy</h3><p class="muted">Premium podmínky: '+esc(ord.terms_version)+
       (ord.terms_effective_at?" · účinnost "+esc(ord.terms_effective_at):"")+"</p></div>":"")+

@@ -40,6 +40,12 @@ function fail(id) {
   FAILS.push(id);
 }
 
+async function clickWhenVisible(page, selector) {
+  const loc = page.locator(selector);
+  await loc.waitFor({ state: "visible", timeout: 45000 });
+  await loc.click({ force: true });
+}
+
 const FEED = fs.readFileSync(path.join(REPO, "assets", "iu-app-feed-pipeline-v1.js"), "utf8");
 
 // Static: MAX remains project constant 10
@@ -330,7 +336,7 @@ async function runControlViewport(browser, base, name, viewport) {
       fail(`${name}_hydrate_labels_lost`);
     }
 
-    await page.locator("#iuMailboxAdd").click({ force: true });
+    await clickWhenVisible(page, "#iuMailboxAdd");
     await page.waitForTimeout(150);
     st = await controlState(page);
     if (st.rowCount !== 4) fail(`${name}_add_3to4_got_${st.rowCount}`);
@@ -340,7 +346,7 @@ async function runControlViewport(browser, base, name, viewport) {
     }
 
     for (let c = 4; c < MAX; c++) {
-      await page.locator("#iuMailboxAdd").click({ force: true });
+      await clickWhenVisible(page, "#iuMailboxAdd");
       await page.waitForTimeout(80);
     }
     st = await controlState(page);
@@ -359,7 +365,7 @@ async function runControlViewport(browser, base, name, viewport) {
     st = await controlState(page);
     if (st.rowCount !== MAX) fail(`${name}_exceeded_max_got_${st.rowCount}`);
 
-    await page.locator("#iuMailboxRemove").click({ force: true });
+    await clickWhenVisible(page, "#iuMailboxRemove");
     await page.waitForTimeout(150);
     st = await controlState(page);
     if (st.rowCount !== MAX - 1) fail(`${name}_remove_from_max_got_${st.rowCount}`);
@@ -477,7 +483,7 @@ async function runGeometryViewport(browser, base, name, viewport, opts) {
     assertGeometryOk(name, { count: 1, tag: "n1", dir: null }, prev, null);
 
     for (let n = 2; n <= MAX; n++) {
-      await page.locator("#iuMailboxAdd").click({ force: true });
+      await clickWhenVisible(page, "#iuMailboxAdd");
       await page.waitForTimeout(120);
       const g = await layoutGeometry(page);
       assertGeometryOk(name, { count: n, tag: `add_${n}`, dir: "up" }, g, prev);
@@ -485,7 +491,7 @@ async function runGeometryViewport(browser, base, name, viewport, opts) {
     }
 
     for (let n = MAX - 1; n >= 1; n--) {
-      await page.locator("#iuMailboxRemove").click({ force: true });
+      await clickWhenVisible(page, "#iuMailboxRemove");
       await page.waitForTimeout(120);
       const g = await layoutGeometry(page);
       assertGeometryOk(name, { count: n, tag: `rem_${n}`, dir: "down" }, g, prev);
@@ -497,7 +503,7 @@ async function runGeometryViewport(browser, base, name, viewport, opts) {
     let cur = 1;
     for (const target of stress) {
       while (cur < target) {
-        await page.locator("#iuMailboxAdd").click({ force: true });
+        await clickWhenVisible(page, "#iuMailboxAdd");
         cur += 1;
         await page.waitForTimeout(70);
         const g = await layoutGeometry(page);
@@ -505,7 +511,7 @@ async function runGeometryViewport(browser, base, name, viewport, opts) {
         prev = g;
       }
       while (cur > target) {
-        await page.locator("#iuMailboxRemove").click({ force: true });
+        await clickWhenVisible(page, "#iuMailboxRemove");
         cur -= 1;
         await page.waitForTimeout(70);
         const g = await layoutGeometry(page);

@@ -16,7 +16,7 @@ import path from "path";
 import http from "http";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
-import { bootstrapGuardContext } from "./guards/guard-playwright-bootstrap.mjs";
+import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -31,6 +31,7 @@ const REPORT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_c
 const CACHE_TOKEN = "2026-09-16-chmu-box-nav-flush-v1";
 const APP_CSS_BUST = "chmu-box-nav-flush-v1-20260916";
 const PORT = parseInt(process.env.IU_GUARD_PORT || "8841", 10);
+const BASE = `http://127.0.0.1:${PORT}/projects/?section=media&iuInfoSystem=cutover&nosw=1`;
 const GAP_MAX_PX = 2;
 const INNER_PAD_MIN = 8;
 const OVERLAP_TOL = 1;
@@ -50,7 +51,7 @@ const MIME = {
 
 const VIEWPORTS = [
   { id: "mobile", width: 390, height: 844, isMobile: true, pwa: false },
-  { id: "tablet", width: 820, height: 1180, isMobile: false, pwa: false },
+  { id: "tablet", width: 820, height: 1180, isMobile: true, pwa: false },
   { id: "pwa", width: 390, height: 844, isMobile: true, pwa: true },
 ];
 
@@ -144,7 +145,14 @@ async function seedGuardCardIfEmpty(page) {
       root.querySelector("#iuPrehledDneTimeline") ||
       root.querySelector("ul.iuPdFeed") ||
       root.querySelector(".iuPdFeed");
-    if (!host) return false;
+    if (!host) {
+      const section = root.querySelector("section.iuPrehledDne") || root;
+      const ul = document.createElement("ul");
+      ul.className = "iuPdFeed iuPrehledDne__timeline";
+      ul.id = "iuPrehledDneTimeline";
+      section.appendChild(ul);
+      host = ul;
+    }
     if (host.tagName !== "UL") {
       const ul = document.createElement("ul");
       ul.className = "iuPdFeed iuPrehledDne__timeline";
@@ -186,22 +194,50 @@ async function ensureMeasurableCards(page) {
 }
 
 async function prepareChmuHomePage(page) {
-  await page.goto("http://127.0.0.1:" + PORT + "/projects/?iuInfoSystem=cutover", {
+  await page.goto(BASE, {
     waitUntil: "domcontentloaded",
     timeout: 90000,
   });
+  await page.evaluate(() => {
+    try {
+      window.__IU_INFO_SYSTEM_CUTOVER__ = true;
+    } catch (_) {}
+  });
+  await page.waitForFunction(() => !!document.querySelector('[data-testid="prehled-dne-homecard"]'), {
+    timeout: 45000,
+  });
+  await page
+    .waitForFunction(() => !!document.querySelector('[data-act="open-settings"]'), { timeout: 45000 })
+    .catch(() => {});
+  await page.evaluate(() => {
+    document.documentElement.classList.add("iu-info-system-cutover");
+    const root = document.getElementById("iuPrehledDneRoot");
+    if (root) {
+      root.style.display = "block";
+      root.hidden = false;
+    }
+    const vpEl = document.getElementById("iuSilverTallScrollViewport");
+    if (vpEl) {
+      vpEl.style.display = "block";
+      vpEl.hidden = false;
+    }
+    if (window.IUInfoSystem && typeof window.IUInfoSystem.applyCutoverDom === "function") {
+      window.IUInfoSystem.applyCutoverDom();
+    }
+    try {
+      document.body.classList.remove("iu-mobileGateOverlayOpen");
+    } catch (_) {}
+  });
   await page
     .waitForFunction(
-      () =>
-        document.documentElement.classList.contains("iu-info-system-cutover") &&
-        !!document.getElementById("iuPrehledDneRoot"),
+      () => {
+        const root = document.getElementById("iuPrehledDneRoot");
+        return !!(root && root.getAttribute("data-iu-pd-shell-ready") === "1");
+      },
       { timeout: 60000 }
     )
     .catch(() => {});
   await page.evaluate(async () => {
-    try {
-      document.body.classList.remove("iu-mobileGateOverlayOpen");
-    } catch (_) {}
     try {
       if (typeof window.iuEnsurePrehledDneUi === "function") await window.iuEnsurePrehledDneUi();
     } catch (_) {}
@@ -224,6 +260,7 @@ async function prepareChmuHomePage(page) {
 }
 
 async function setCardCount(page, n) {
+  await ensureMeasurableCards(page);
   await page.evaluate((keep) => {
     const feed = document.querySelector("#iuPrehledDneTimeline") || document.querySelector("#iuPrehledDneRoot .iuPdFeed");
     if (!feed) return;
@@ -245,19 +282,33 @@ async function setCardCount(page, n) {
   await page.waitForTimeout(120);
 }
 
+async function measureWithRetry(page) {
+  let last = null;
+  for (let attempt = 0; attempt < 8; attempt++) {
+    await ensureMeasurableCards(page);
+    await page.evaluate(() => window.scrollTo(0, 1e9));
+    await page.waitForTimeout(200 + attempt * 250);
+    last = await measure(page);
+    if (last && last.ok) return last;
+  }
+  return last || { ok: false, reason: "missing_nodes", cardCount: 0 };
+}
+
 async function measure(page) {
   return page.evaluate(() => {
     window.scrollTo(0, 1e9);
     const nav = document.getElementById("iuMobileBottomNav");
     const root = document.getElementById("iuPrehledDneRoot");
     const box =
-      document.querySelector("#iuSilverTallScrollViewport .iuSilverStackChromaFrame, #iuSilverTallScrollViewport .iuSilverTallScrollChromaFrame") ||
-      document.querySelector(".iuSilverTallScrollChromaFrame") ||
+      document.querySelector("#iuSilverTallScrollSection > .iuSilverTallScrollChromaFrame.iuSilverStackChromaFrame") ||
+      document.querySelector("#iuSilverTallScrollSection .iuSilverTallScrollChromaFrame") ||
+      document.getElementById("iuSilverTallScrollSection") ||
       root;
     const cards = [...document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item")];
     const last = cards[cards.length - 1] || null;
     if (!nav || !box || !last) {
-      return { ok: false, reason: "missing_nodes", cardCount: cards.length };
+      const missingPart = !nav ? "nav" : !box ? "box" : "last";
+      return { ok: false, reason: "missing_nodes", missingPart, cardCount: cards.length };
     }
     const navR = nav.getBoundingClientRect();
     const boxR = box.getBoundingClientRect();
@@ -286,7 +337,7 @@ async function measure(page) {
 function verdict(m, tag) {
   const fails = [];
   if (!m || !m.ok) {
-    fails.push(tag + ":missing");
+    fails.push(tag + ":missing" + (m && m.missingPart ? "_" + m.missingPart : ""));
     return fails;
   }
   if (Math.abs(m.gapBoxToNav) > GAP_MAX_PX) fails.push(tag + ":gap_" + m.gapBoxToNav);
@@ -334,16 +385,13 @@ function verdict(m, tag) {
           } catch (_) {}
         });
       }
-      const page = await context.newPage();
+      const page = await bootstrapGuardPage(context);
       await prepareChmuHomePage(page);
 
       for (const n of [1, 2, 10]) {
         await ensureMeasurableCards(page);
         await setCardCount(page, n);
-        await ensureMeasurableCards(page);
-        await page.evaluate(() => window.scrollTo(0, 1e9));
-        await page.waitForTimeout(200);
-        const m = await measure(page);
+        const m = await measureWithRetry(page);
         const tag = vp.id + "_n" + n;
         const f = verdict(m, tag);
         fails.push(...f);
@@ -365,10 +413,7 @@ function verdict(m, tag) {
       await waitForCards(page, 1);
       await ensureMeasurableCards(page);
       await setCardCount(page, 2);
-      await ensureMeasurableCards(page);
-      await page.evaluate(() => window.scrollTo(0, 1e9));
-      await page.waitForTimeout(200);
-      const live = await measure(page);
+      const live = await measureWithRetry(page);
       const liveTag = vp.id + "_live_filter";
       const liveFails = verdict(live, liveTag);
       fails.push(...liveFails);

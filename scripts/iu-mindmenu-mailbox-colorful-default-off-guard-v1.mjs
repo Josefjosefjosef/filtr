@@ -170,7 +170,9 @@ function snap(page) {
 }
 
 async function openFirstGear(page) {
-  await page.locator("#iuMailboxList [data-mailbox-gear]").first().click({ force: true });
+  const gear = page.locator("#iuMailboxList [data-mailbox-gear]").first();
+  await gear.waitFor({ state: "visible", timeout: 45000 });
+  await gear.click({ force: true });
   await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
 }
 

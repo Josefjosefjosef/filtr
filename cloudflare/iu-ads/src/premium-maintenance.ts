@@ -3,6 +3,7 @@
  */
 import { addCalendarDaysFromIso } from "./premium-selected-services";
 import { resumePremiumOrderDocuments } from "./premium-order-documents";
+import { repairPremiumPublicationConsistency } from "./premium-publication-consistency";
 import type { Env } from "./types";
 
 async function getSetting(db: D1Database, key: string, fallback: number): Promise<number> {
@@ -11,8 +12,14 @@ async function getSetting(db: D1Database, key: string, fallback: number): Promis
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number; offers: number; document_jobs_healed: number }> {
-  if (!env.DB) return { cleared: 0, offers: 0, document_jobs_healed: 0 };
+export async function runPremiumMaintenance(env: Env): Promise<{
+  cleared: number;
+  offers: number;
+  document_jobs_healed: number;
+  publication_repaired: number;
+  publication_incidents: number;
+}> {
+  if (!env.DB) return { cleared: 0, offers: 0, document_jobs_healed: 0, publication_repaired: 0, publication_incidents: 0 };
   const db = env.DB;
   const nowIso = new Date().toISOString();
   let document_jobs_healed = 0;
@@ -142,5 +149,15 @@ export async function runPremiumMaintenance(env: Env): Promise<{ cleared: number
     offers++;
   }
 
-  return { cleared, offers, document_jobs_healed };
+  const publicationRepair = await repairPremiumPublicationConsistency(env, {
+    actorUserId: "system:premium_maintenance",
+  });
+
+  return {
+    cleared,
+    offers,
+    document_jobs_healed,
+    publication_repaired: publicationRepair.repaired,
+    publication_incidents: publicationRepair.incidents.length,
+  };
 }
