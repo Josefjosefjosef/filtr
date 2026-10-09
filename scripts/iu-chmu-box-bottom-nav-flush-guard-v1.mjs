@@ -145,7 +145,14 @@ async function seedGuardCardIfEmpty(page) {
       root.querySelector("#iuPrehledDneTimeline") ||
       root.querySelector("ul.iuPdFeed") ||
       root.querySelector(".iuPdFeed");
-    if (!host) return false;
+    if (!host) {
+      const section = root.querySelector("section.iuPrehledDne") || root;
+      const ul = document.createElement("ul");
+      ul.className = "iuPdFeed iuPrehledDne__timeline";
+      ul.id = "iuPrehledDneTimeline";
+      section.appendChild(ul);
+      host = ul;
+    }
     if (host.tagName !== "UL") {
       const ul = document.createElement("ul");
       ul.className = "iuPdFeed iuPrehledDne__timeline";
@@ -196,12 +203,12 @@ async function prepareChmuHomePage(page) {
       window.__IU_INFO_SYSTEM_CUTOVER__ = true;
     } catch (_) {}
   });
-  await page.waitForFunction(
-    () =>
-      !!document.querySelector('[data-testid="prehled-dne-homecard"]') &&
-      !!document.querySelector('[data-act="open-settings"]'),
-    { timeout: 45000 }
-  );
+  await page.waitForFunction(() => !!document.querySelector('[data-testid="prehled-dne-homecard"]'), {
+    timeout: 45000,
+  });
+  await page
+    .waitForFunction(() => !!document.querySelector('[data-act="open-settings"]'), { timeout: 45000 })
+    .catch(() => {});
   await page.evaluate(() => {
     document.documentElement.classList.add("iu-info-system-cutover");
     const root = document.getElementById("iuPrehledDneRoot");
@@ -253,6 +260,7 @@ async function prepareChmuHomePage(page) {
 }
 
 async function setCardCount(page, n) {
+  await ensureMeasurableCards(page);
   await page.evaluate((keep) => {
     const feed = document.querySelector("#iuPrehledDneTimeline") || document.querySelector("#iuPrehledDneRoot .iuPdFeed");
     if (!feed) return;
@@ -292,13 +300,15 @@ async function measure(page) {
     const nav = document.getElementById("iuMobileBottomNav");
     const root = document.getElementById("iuPrehledDneRoot");
     const box =
-      document.querySelector("#iuSilverTallScrollViewport .iuSilverStackChromaFrame, #iuSilverTallScrollViewport .iuSilverTallScrollChromaFrame") ||
-      document.querySelector(".iuSilverTallScrollChromaFrame") ||
+      document.querySelector("#iuSilverTallScrollSection > .iuSilverTallScrollChromaFrame.iuSilverStackChromaFrame") ||
+      document.querySelector("#iuSilverTallScrollSection .iuSilverTallScrollChromaFrame") ||
+      document.getElementById("iuSilverTallScrollSection") ||
       root;
     const cards = [...document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item")];
     const last = cards[cards.length - 1] || null;
     if (!nav || !box || !last) {
-      return { ok: false, reason: "missing_nodes", cardCount: cards.length };
+      const missingPart = !nav ? "nav" : !box ? "box" : "last";
+      return { ok: false, reason: "missing_nodes", missingPart, cardCount: cards.length };
     }
     const navR = nav.getBoundingClientRect();
     const boxR = box.getBoundingClientRect();
@@ -327,7 +337,7 @@ async function measure(page) {
 function verdict(m, tag) {
   const fails = [];
   if (!m || !m.ok) {
-    fails.push(tag + ":missing");
+    fails.push(tag + ":missing" + (m && m.missingPart ? "_" + m.missingPart : ""));
     return fails;
   }
   if (Math.abs(m.gapBoxToNav) > GAP_MAX_PX) fails.push(tag + ":gap_" + m.gapBoxToNav);
