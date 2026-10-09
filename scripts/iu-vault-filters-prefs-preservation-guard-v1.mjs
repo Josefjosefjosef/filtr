@@ -95,7 +95,7 @@ async function main() {
     });
     await waitVaultApi(page);
 
-    const after = await page.evaluate(async ({ pin, prefsKey, forceEmpty }) => {
+    const after = await page.evaluate(async ({ pin, prefsKey, forceEmpty, marker }) => {
       await window.iuVault.unlockPin(pin);
       if (forceEmpty) {
         try {
@@ -116,7 +116,11 @@ async function main() {
         await window.iuVault.flushPendingWrites();
       }
       await window.iuVault.afterUnlock();
-      await new Promise((r) => setTimeout(r, 300));
+      for (let i = 0; i < 60; i++) {
+        const cur = localStorage.getItem(prefsKey);
+        if (cur && String(cur).includes(marker + "_OBEC")) break;
+        await new Promise((r) => setTimeout(r, 100));
+      }
       // Simulate late empty write after hydrate (mobile module init).
       localStorage.setItem(
         prefsKey,
@@ -132,7 +136,7 @@ async function main() {
       );
       await window.iuVault.flushPendingWrites();
       return localStorage.getItem(prefsKey);
-    }, { pin: PIN, prefsKey: PREFS_KEY, forceEmpty: FORCE_EMPTY });
+    }, { pin: PIN, prefsKey: PREFS_KEY, forceEmpty: FORCE_EMPTY, marker: MARKER });
 
     if (!after || !String(after).includes(MARKER + "_OBEC")) fails.push("prefs_obec_lost");
     if (!after || !String(after).includes(MARKER + "_ROAD")) fails.push("prefs_road_lost");
