@@ -15,6 +15,7 @@ import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
+import { buildPremiumOrderPublicationVisibility } from "./premium-publication-consistency";
 import type { Env } from "./types";
 
 function previewCardHtml(input: {
@@ -210,6 +211,22 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
 
+  const nowIso = new Date().toISOString();
+  const publication_visibility = await buildPremiumOrderPublicationVisibility(env.DB, {
+    orderId: String(row.order_id || ""),
+    placementId: String(row.placement_id || ""),
+    workflowStatus: workflowStatusStr,
+    publishedCampaignId:
+      row.published_campaign_id != null && String(row.published_campaign_id).trim()
+        ? String(row.published_campaign_id)
+        : null,
+    campaignStatus: campaignStatus,
+    campaignEndAt: campaignEndAt,
+    campaignStartAt: row.campaign_start_at != null ? String(row.campaign_start_at) : null,
+    targetUrl: targetUrlStr,
+    nowIso,
+  });
+
   return json({
     preview_scoped_css: buildAdminPremiumPreviewScopedCss(),
     order: {
@@ -277,6 +294,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     preview_css_href: "/assets/iu-premium-selected-services-v1.css?v=premium-selected-v1-20261006-five-modes",
     preview_render_js_href: "https://infouzel.cz/assets/iu-premium-creative-render-v1.js?v=premium-creative-v1-20261006",
     placement_conflict: placementConflict,
+    publication_visibility,
     history,
     internal_notes,
     order_documents,

@@ -130,6 +130,8 @@ import {
   handleAdminPremiumSuspend,
   handleAdminPremiumReactivate,
   handleAdminPremiumUpdatePlacementPrice,
+  handleAdminPremiumPublicationConsistency,
+  handleAdminPremiumPublicationRepair,
   handleClientPremiumRenewalAccept,
 } from "./admin-premium-selected";
 import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
@@ -602,6 +604,12 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       }
       if (path === "/v1/admin/premium/orders/summary" && method === "GET") {
         return handleAdminPremiumOrderSummary(request, env);
+      }
+      if (path === "/v1/admin/premium/publication-consistency" && method === "GET") {
+        return handleAdminPremiumPublicationConsistency(request, env);
+      }
+      if (path === "/v1/admin/premium/publication-consistency/repair" && method === "POST") {
+        return handleAdminPremiumPublicationRepair(request, env);
       }
       if (path === "/v1/admin/premium/orders" && method === "GET") return handleAdminPremiumListOrders(request, env, url);
       if (path === "/v1/admin/premium/orders/backfill-codes" && method === "POST") {

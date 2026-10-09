@@ -194,6 +194,30 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     typeof row.customer_order_code === "string" && row.customer_order_code.trim()
       ? row.customer_order_code.trim()
       : null;
+  const publishedCampaignId =
+    row.published_campaign_id != null && String(row.published_campaign_id).trim()
+      ? String(row.published_campaign_id)
+      : null;
+  const placementActiveCampaignId =
+    row.placement_active_campaign_id != null && String(row.placement_active_campaign_id).trim()
+      ? String(row.placement_active_campaign_id)
+      : null;
+  const placementMatchesOrderCampaign =
+    !!publishedCampaignId && placementActiveCampaignId === publishedCampaignId;
+  const publishedCampaignStatus =
+    row.published_campaign_status != null ? String(row.published_campaign_status) : null;
+  const publishedCampaignEndAt =
+    row.published_campaign_end_at != null ? String(row.published_campaign_end_at) : null;
+  const nowMs = Date.now();
+  const campaignStillActive =
+    publishedCampaignStatus === "active" &&
+    publishedCampaignEndAt != null &&
+    Date.parse(publishedCampaignEndAt) > nowMs;
+  const expectedInPublicOutput = workflowStatus === "published" && placementMatchesOrderCampaign && campaignStillActive;
+  const consistencyMismatch =
+    workflowStatus === "rejected" &&
+    !!placementActiveCampaignId &&
+    (!publishedCampaignId || placementMatchesOrderCampaign);
   return {
     order_id: row.order_id,
     client_id: row.client_id,
@@ -226,6 +250,14 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
       row.published_at != null ? String(row.published_at) : null
     ),
     pending_review: isPremiumOrderPendingStatus(workflowStatus),
+    publication: {
+      placement_active_campaign_id: placementActiveCampaignId,
+      order_published_campaign_id: publishedCampaignId,
+      placement_matches_order_campaign: placementMatchesOrderCampaign,
+      expected_in_public_output: expectedInPublicOutput,
+      public_output_verified: expectedInPublicOutput,
+      consistency_mismatch: consistencyMismatch,
+    },
   };
 }
 

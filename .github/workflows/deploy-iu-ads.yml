@@ -97,6 +97,10 @@ jobs:
           path: ${{ runner.temp }}/iu-order-confirmation-visual/
           if-no-files-found: error
 
+      - name: Premium public/admin consistency guard
+        working-directory: .
+        run: node scripts/iu-premium-public-admin-consistency-guard-v1.mjs
+
       - name: Premium freeze guard
         working-directory: .
         run: node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
