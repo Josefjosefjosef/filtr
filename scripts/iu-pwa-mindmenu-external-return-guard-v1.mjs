@@ -58,10 +58,15 @@ function staticGate() {
     "static:popstate_allow_close"
   );
   must(
-    /addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\)/.test(feed) &&
-      !/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true/.test(feed),
+    (/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\)/.test(feed) &&
+      !/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true/.test(feed)) ||
+      (/iu-network restoreAppShellAfterReturn/.test(feed) &&
+        /addEventListener\("pageshow"[\s\S]{0,120}restoreAppShellAfterReturn/.test(net)),
     "static:pageshow_no_allow_close"
   );
+  must(/externalRestoreInFlight/.test(net) && /capturePwaExternalReturnSnapshot/.test(net), "static:net_external_coalesce");
+  must(/iuMobileWebNavArmForExternalFromMenu/.test(app), "static:app_menu_external_arm");
+  must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
   must(
     !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),

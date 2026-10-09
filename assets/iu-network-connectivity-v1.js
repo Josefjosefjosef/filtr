@@ -9,7 +9,10 @@
   var PROBE_TIMEOUT_MS = 3500;
   var DEFAULT_FETCH_TIMEOUT_MS = 9000;
   var EXTERNAL_ARMED_KEY = "iu_external_nav_armed";
+  var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
+  var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var lastProbe = { ok: null, ts: 0 };
+  var externalRestoreInFlight = false;
   var reconnectTimer = null;
   var reconnectCallbacks = [];
   var hintTimer = null;
@@ -257,6 +260,55 @@
     } catch (_) {}
   }
 
+  function capturePwaExternalReturnSnapshot() {
+    try {
+      if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+    } catch (_) {}
+    try {
+      var y = 0;
+      if (typeof window.iuPwaGetMainScrollY === "function") y = window.iuPwaGetMainScrollY();
+      else y = window.scrollY || 0;
+      if (Number.isFinite(y) && y > 0) {
+        sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(y)));
+      }
+    } catch (_) {}
+    try {
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var gateTab = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+      if (gateTab) sessionStorage.setItem(EXTERNAL_RETURN_GATE_KEY, gateTab);
+    } catch (_) {}
+    try {
+      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+    } catch (_) {}
+    try {
+      if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
+        window.iuMobileWebNavArmForExternalFromMenu();
+      }
+    } catch (_) {}
+  }
+
+  function restorePwaExternalMainScrollIfNeeded() {
+    try {
+      var raw = sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY);
+      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
+      var y = parseInt(raw || "0", 10);
+      if (!Number.isFinite(y) || y <= 0) return;
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var gateOpen = wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "";
+      if (gateOpen || document.body.classList.contains("iu-mobileGateOverlayOpen")) return;
+      if (typeof window.iuPwaApplyMainScrollY === "function") {
+        window.iuPwaApplyMainScrollY(y);
+        try {
+          requestAnimationFrame(function () {
+            try {
+              window.iuPwaApplyMainScrollY(y);
+            } catch (_) {}
+          });
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
   function invokeReturnNavigationRestore() {
     /* P0: while a fullscreen tool overlay is open, do not remount MindMenu tools chrome
        (would surface MindMenu/iCentrum header around Datové schránky after external return). */
@@ -273,22 +325,39 @@
     try {
       if (typeof window.iuMobileWebNavSyncFromHistory === "function") window.iuMobileWebNavSyncFromHistory();
     } catch (_) {}
+    restorePwaExternalMainScrollIfNeeded();
+    try {
+      sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+    } catch (_) {}
   }
 
   function restoreAppShellAfterReturn() {
+    if (externalRestoreInFlight) return;
     if (!shouldRestoreShell()) {
       reassertIntentionalOverlayShell();
       return;
     }
+    externalRestoreInFlight = true;
     clearShellErrorUiOnly();
     try {
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
     } catch (_) {}
     reassertIntentionalOverlayShell();
-    invokeReturnNavigationRestore();
+    try {
+      invokeReturnNavigationRestore();
+    } finally {
+      try {
+        requestAnimationFrame(function () {
+          externalRestoreInFlight = false;
+        });
+      } catch (_) {
+        externalRestoreInFlight = false;
+      }
+    }
   }
 
   function armExternalReturn() {
+    capturePwaExternalReturnSnapshot();
     try {
       sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
     } catch (_) {}
@@ -457,6 +526,14 @@
         if (!/^https?:\/\//i.test(href)) return;
         if (isSameOriginHttp(href)) return;
         if (a.target !== "_blank" && !a.hasAttribute("data-iu-external-link")) return;
+        try {
+          if (a.closest && a.closest("#iuMobileGatePanelNav")) {
+            if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+            if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
+              window.iuMobileWebNavArmForExternalFromMenu();
+            }
+          }
+        } catch (_) {}
         e.preventDefault();
         e.stopPropagation();
         void openExternalUrl(href);
