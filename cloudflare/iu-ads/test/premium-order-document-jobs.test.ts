@@ -29,7 +29,7 @@ describe("premium order document job reconciliation", () => {
       prepare: (sql: string) => ({
         bind: (...args: unknown[]) => ({
           first: async () => {
-            if (sql.includes("FROM documents")) return { document_id: "doc_existing" };
+            if (sql.includes("FROM documents")) return { document_id: "doc_existing", r2_key: "document/doc_existing.pdf" };
             return null;
           },
           run: async () => {

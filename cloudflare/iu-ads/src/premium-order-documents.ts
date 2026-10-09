@@ -52,15 +52,50 @@ type JobRow = {
   updated_at?: string | null;
 };
 
-async function fetchActiveOrderDocument(
+type ActiveOrderDocumentRow = { document_id: string; r2_key: string };
+
+/**
+ * Resolve active premium PDF for an order. Primary key is documents.order_id; many historical rows
+ * only have campaign_id (published_campaign_id) — without this fallback admin UI stays "missing".
+ */
+export async function fetchActiveOrderDocument(
   db: D1Database,
   orderId: string,
   docType: string
-): Promise<{ document_id: string } | null> {
-  return db
-    .prepare("SELECT document_id FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active' LIMIT 1")
+): Promise<ActiveOrderDocumentRow | null> {
+  const direct = await db
+    .prepare(
+      "SELECT document_id, r2_key FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active' LIMIT 1"
+    )
     .bind(orderId, docType)
-    .first<{ document_id: string }>();
+    .first<ActiveOrderDocumentRow>();
+  if (direct?.document_id && direct.r2_key) return direct;
+
+  const viaCampaign = await db
+    .prepare(
+      `SELECT d.document_id, d.r2_key, d.order_id AS linked_order_id
+       FROM documents d
+       INNER JOIN premium_selected_orders po ON po.published_campaign_id = d.campaign_id
+       WHERE po.order_id = ? AND d.doc_type = ? AND d.status = 'active'
+       LIMIT 1`
+    )
+    .bind(orderId, docType)
+    .first<ActiveOrderDocumentRow & { linked_order_id: string | null }>();
+
+  if (!viaCampaign?.document_id || !viaCampaign.r2_key) return null;
+
+  const linked = viaCampaign.linked_order_id;
+  if (linked && linked !== orderId) return null;
+
+  if (!linked) {
+    const nowIso = new Date().toISOString();
+    await db
+      .prepare("UPDATE documents SET order_id = ?, updated_at = ? WHERE document_id = ? AND order_id IS NULL")
+      .bind(orderId, nowIso, viaCampaign.document_id)
+      .run();
+  }
+
+  return { document_id: viaCampaign.document_id, r2_key: viaCampaign.r2_key };
 }
 
 /** Link job row to an already-stored PDF (R2+D1) without regenerating. */
@@ -847,10 +882,12 @@ export async function handleAdminPremiumOrderDocumentAccess(
   if (!env.DB || !env.ADS_R2_SIGNING_SECRET) return json({ error: "auth_not_configured" }, 503);
 
   const docType = kind === "order_confirmation" ? PREMIUM_DOC_TYPE_ORDER : PREMIUM_DOC_TYPE_INVOICE;
+  const active = await fetchActiveOrderDocument(env.DB, orderId, docType);
+  if (!active) return json({ error: "document_not_ready" }, 404);
   const row = await env.DB.prepare(
-    "SELECT document_id, r2_key, title, content_hash FROM documents WHERE order_id = ? AND doc_type = ? AND status = 'active' LIMIT 1"
+    "SELECT document_id, r2_key, title, content_hash FROM documents WHERE document_id = ? AND status = 'active' LIMIT 1"
   )
-    .bind(orderId, docType)
+    .bind(active.document_id)
     .first<{ document_id: string; r2_key: string; title: string; content_hash: string }>();
   if (!row) return json({ error: "document_not_ready" }, 404);
 

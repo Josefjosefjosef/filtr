@@ -35,3 +35,7 @@ jobs:
           npm ci
       - name: Bounded documents prod proof
         run: node scripts/iu-premium-order-documents-prod-proof.mjs
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+      - name: Mobile admin order documents E2E (prod)
+        run: node scripts/iu-premium-admin-order-documents-mobile-e2e-prod.mjs
