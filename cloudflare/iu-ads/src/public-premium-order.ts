@@ -24,6 +24,7 @@ import {
   resolveAuthoritativePriceCents,
   type PremiumPosition,
 } from "./premium-selected-services";
+import { buildPremiumAdWebPlacementUrl } from "./premium-ad-web-placement";
 import { PREMIUM_CREATIVE_MODE_SET, premiumCreativeModeToCreativeFormat } from "./premium-creative-mode";
 import { validateTargetUrl } from "./url-safety";
 import type { Env } from "./types";
@@ -249,10 +250,16 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     /* registry optional — order proceeds without OR line */
   }
 
+  const adWebPlacementUrl = buildPremiumAdWebPlacementUrl(parsed.categorySlug);
+  if (!adWebPlacementUrl) {
+    return json({ ok: false, error: "unknown_category_section" }, 400);
+  }
+
   const payload = {
     product: PREMIUM_PRODUCT_TYPE,
     placement_id: placementId,
     category_slug: parsed.categorySlug,
+    ad_web_placement_url: adWebPlacementUrl,
     position,
     creative_mode: creativeMode,
     target_url: urlCheck.normalized,

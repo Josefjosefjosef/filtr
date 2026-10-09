@@ -1,4 +1,5 @@
 import type { CustomerRegistrySnapshot } from "./premium-ares-registry";
+import { resolvePremiumAdWebPlacementUrl } from "./premium-ad-web-placement";
 
 /**
  * Customer-visible order payload keys — must appear in order confirmation PDF (regression guard).
@@ -31,6 +32,7 @@ export const PREMIUM_ORDER_SUBMIT_PAYLOAD_KEYS = [
   "ordering_person_name",
   "authorization_confirmed",
   "contact_phone",
+  "ad_web_placement_url",
 ] as const;
 
 export type PremiumOrderPdfContext = {
@@ -59,12 +61,16 @@ export type PremiumOrderPdfContext = {
   currency: string;
   duration_months: number;
   target_url: string;
+  ad_web_placement_url: string | null;
+  b2b_only: boolean;
   creative_mode: string;
   creative_mode_label_cs: string;
   creative_id: string | null;
   creative_format: string | null;
   creative_original_filename: string | null;
   creative_content_hash: string | null;
+  creative_uploaded_at: string | null;
+  creative_approved_at: string | null;
   terms_version: string | null;
   terms_effective_at: string | null;
   order_created_at: string;
@@ -80,7 +86,12 @@ export type PremiumOrderPdfContext = {
   invoice_id: string | null;
 };
 
-export const PREMIUM_ORDER_AD_WEB_PLACEMENT = "www.infouzel.cz";
+export function premiumOrderAdWebPlacementForPdf(ctx: PremiumOrderPdfContext): string | null {
+  return resolvePremiumAdWebPlacementUrl({
+    category_slug: ctx.category_slug,
+    snapshot_url: ctx.ad_web_placement_url,
+  });
+}
 
 export function listRequiredCustomerPayloadKeys(payload: Record<string, unknown>): string[] {
   const keys: string[] = [];
@@ -98,9 +109,9 @@ export function listRequiredCustomerPayloadKeys(payload: Record<string, unknown>
 
 /** Flattened searchable strings that must exist inside order confirmation PDF bytes. */
 export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext): string[] {
+  const placementUrl = premiumOrderAdWebPlacementForPdf(ctx);
   const out: string[] = [
     ctx.evidence_reference,
-    PREMIUM_ORDER_AD_WEB_PLACEMENT,
     ctx.company_name,
     ctx.ico,
     ctx.contact_name,
@@ -110,6 +121,8 @@ export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext
     ctx.target_url,
     ctx.creative_mode_label_cs || ctx.creative_mode,
   ];
+  if (placementUrl) out.push(placementUrl);
+  if (ctx.creative_content_hash) out.push(ctx.creative_content_hash);
   if (ctx.approver_display_name) out.push(ctx.approver_display_name);
   if (ctx.dic) out.push(ctx.dic);
   if (ctx.customer_registry?.display_line_cs) out.push(ctx.customer_registry.display_line_cs);

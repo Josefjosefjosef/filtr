@@ -133,6 +133,96 @@ async function waitForCards(page, min = 1) {
   return 0;
 }
 
+/** When CAP feed has no active cards (time window), seed one DOM card so geometry checks still run. */
+async function seedGuardCardIfEmpty(page) {
+  const seeded = await page.evaluate(() => {
+    const existing = document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item").length;
+    if (existing > 0) return false;
+    const root = document.getElementById("iuPrehledDneRoot");
+    if (!root) return false;
+    let host =
+      root.querySelector("#iuPrehledDneTimeline") ||
+      root.querySelector("ul.iuPdFeed") ||
+      root.querySelector(".iuPdFeed");
+    if (!host) return false;
+    if (host.tagName !== "UL") {
+      const ul = document.createElement("ul");
+      ul.className = "iuPdFeed iuPrehledDne__timeline";
+      ul.id = "iuPrehledDneTimeline";
+      while (host.firstChild) ul.appendChild(host.firstChild);
+      host.replaceWith(ul);
+      host = ul;
+    }
+    host.setAttribute("aria-busy", "false");
+    host.removeAttribute("data-iu-pd-feed-skeleton");
+    const li = document.createElement("li");
+    li.className = "iuPdCard iuPrehledDne__item";
+    li.setAttribute("data-iu-flush-guard-seed", "1");
+    li.style.setProperty("--iu-pd-dot", "#0EA5E9");
+    li.innerHTML =
+      '<div class="iuPrehledDne__timeCol"><div class="iuPdCard__time iuPrehledDne__time">12:00</div></div>' +
+      '<div class="iuPrehledDne__axis" aria-hidden="true"><span class="iuPrehledDne__dot"></span></div>' +
+      '<article class="iuPrehledDne__card iuPdCard__body">' +
+      '<span class="iuPdCard__title iuPrehledDne__cardTitle">Guard seed — výstraha ČHMÚ</span>' +
+      '<div class="iuPdCard__meta iuPrehledDne__meta"><span class="iuPdCard__pill iuPrehledDne__pill">ČHMÚ</span></div>' +
+      "</article>";
+    host.appendChild(li);
+    return true;
+  });
+  if (seeded) await page.waitForTimeout(120);
+  return seeded;
+}
+
+async function ensureMeasurableCards(page) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await seedGuardCardIfEmpty(page);
+    const n = await page.evaluate(
+      () => document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item").length
+    );
+    if (n > 0) return n;
+    await page.waitForTimeout(350);
+  }
+  return 0;
+}
+
+async function prepareChmuHomePage(page) {
+  await page.goto("http://127.0.0.1:" + PORT + "/projects/?iuInfoSystem=cutover", {
+    waitUntil: "domcontentloaded",
+    timeout: 90000,
+  });
+  await page
+    .waitForFunction(
+      () =>
+        document.documentElement.classList.contains("iu-info-system-cutover") &&
+        !!document.getElementById("iuPrehledDneRoot"),
+      { timeout: 60000 }
+    )
+    .catch(() => {});
+  await page.evaluate(async () => {
+    try {
+      document.body.classList.remove("iu-mobileGateOverlayOpen");
+    } catch (_) {}
+    try {
+      if (typeof window.iuEnsurePrehledDneUi === "function") await window.iuEnsurePrehledDneUi();
+    } catch (_) {}
+  });
+  await page
+    .waitForFunction(
+      () => {
+        const cards = document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item").length;
+        if (cards > 0) return true;
+        const feed = document.querySelector("#iuPrehledDneRoot #iuPrehledDneTimeline, #iuPrehledDneRoot .iuPdFeed");
+        if (!feed) return false;
+        return feed.getAttribute("data-iu-pd-feed-skeleton") !== "1" && feed.getAttribute("aria-busy") !== "true";
+      },
+      { timeout: 45000 }
+    )
+    .catch(() => {});
+  await ensureChmu(page);
+  await waitForCards(page, 1);
+  await ensureMeasurableCards(page);
+}
+
 async function setCardCount(page, n) {
   await page.evaluate((keep) => {
     const feed = document.querySelector("#iuPrehledDneTimeline") || document.querySelector("#iuPrehledDneRoot .iuPdFeed");
@@ -245,13 +335,12 @@ function verdict(m, tag) {
         });
       }
       const page = await context.newPage();
-      await page.goto("http://127.0.0.1:" + PORT + "/projects/", { waitUntil: "networkidle", timeout: 90000 });
-      await page.waitForTimeout(4000);
-      await ensureChmu(page);
-      await waitForCards(page, 1);
+      await prepareChmuHomePage(page);
 
       for (const n of [1, 2, 10]) {
+        await ensureMeasurableCards(page);
         await setCardCount(page, n);
+        await ensureMeasurableCards(page);
         await page.evaluate(() => window.scrollTo(0, 1e9));
         await page.waitForTimeout(200);
         const m = await measure(page);
@@ -274,7 +363,9 @@ function verdict(m, tag) {
       await page.waitForTimeout(1000);
       await ensureChmu(page);
       await waitForCards(page, 1);
+      await ensureMeasurableCards(page);
       await setCardCount(page, 2);
+      await ensureMeasurableCards(page);
       await page.evaluate(() => window.scrollTo(0, 1e9));
       await page.waitForTimeout(200);
       const live = await measure(page);
