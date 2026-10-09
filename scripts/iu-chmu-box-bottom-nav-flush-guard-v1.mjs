@@ -173,6 +173,18 @@ async function seedGuardCardIfEmpty(page) {
   return seeded;
 }
 
+async function ensureMeasurableCards(page) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await seedGuardCardIfEmpty(page);
+    const n = await page.evaluate(
+      () => document.querySelectorAll("#iuPrehledDneRoot .iuPdCard.iuPrehledDne__item").length
+    );
+    if (n > 0) return n;
+    await page.waitForTimeout(350);
+  }
+  return 0;
+}
+
 async function prepareChmuHomePage(page) {
   await page.goto("http://127.0.0.1:" + PORT + "/projects/?iuInfoSystem=cutover", {
     waitUntil: "domcontentloaded",
@@ -208,7 +220,7 @@ async function prepareChmuHomePage(page) {
     .catch(() => {});
   await ensureChmu(page);
   await waitForCards(page, 1);
-  await seedGuardCardIfEmpty(page);
+  await ensureMeasurableCards(page);
 }
 
 async function setCardCount(page, n) {
@@ -326,8 +338,9 @@ function verdict(m, tag) {
       await prepareChmuHomePage(page);
 
       for (const n of [1, 2, 10]) {
-        await seedGuardCardIfEmpty(page);
+        await ensureMeasurableCards(page);
         await setCardCount(page, n);
+        await ensureMeasurableCards(page);
         await page.evaluate(() => window.scrollTo(0, 1e9));
         await page.waitForTimeout(200);
         const m = await measure(page);
@@ -350,8 +363,9 @@ function verdict(m, tag) {
       await page.waitForTimeout(1000);
       await ensureChmu(page);
       await waitForCards(page, 1);
-      await seedGuardCardIfEmpty(page);
+      await ensureMeasurableCards(page);
       await setCardCount(page, 2);
+      await ensureMeasurableCards(page);
       await page.evaluate(() => window.scrollTo(0, 1e9));
       await page.waitForTimeout(200);
       const live = await measure(page);
