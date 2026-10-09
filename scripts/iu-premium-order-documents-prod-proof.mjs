@@ -433,6 +433,44 @@ async function main() {
   }
   pass("PUBLISHED_ORDERS_LIST", listRes.status === 200 && orders.length > 0);
 
+  const publishedScanLimit = Math.min(50, orders.length);
+  let publishedMissingReadyUi = 0;
+  let publishedCampaignPdfButUiMissing = 0;
+  const campaignPdfMissingSamples = [];
+  for (const row of orders.slice(0, publishedScanLimit)) {
+    const oid = row.order_id;
+    if (!oid) continue;
+    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
+      headers: { Cookie: cookie },
+    });
+    const detail = await detailRes.json().catch(() => ({}));
+    if (detailHasReadyKinds(detail, ["invoice_pdf", "order_confirmation"])) continue;
+    publishedMissingReadyUi += 1;
+    try {
+      const cntRow = d1Query(
+        "SELECT COUNT(*) AS c FROM documents d INNER JOIN premium_selected_orders po ON po.published_campaign_id = d.campaign_id WHERE po.order_id = '" +
+          sqlEscape(oid) +
+          "' AND d.status = 'active' AND d.doc_type IN ('premium_order_confirmation','premium_invoice_pdf')"
+      );
+      const c = Number((((cntRow[0] || {}).results || [])[0] || {}).c) || 0;
+      if (c >= 2) {
+        publishedCampaignPdfButUiMissing += 1;
+        if (campaignPdfMissingSamples.length < 5) campaignPdfMissingSamples.push(orderIdTail(oid));
+      }
+    } catch (_) {
+      /* non-blocking */
+    }
+  }
+  pass("PUBLISHED_ORDERS_SCAN_LIMIT", publishedScanLimit);
+  pass("PUBLISHED_ORDERS_MISSING_READY_UI", publishedMissingReadyUi);
+  pass("PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING", publishedCampaignPdfButUiMissing);
+  pass("PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING_SAMPLE", campaignPdfMissingSamples.join(",") || "none");
+  if (publishedCampaignPdfButUiMissing > 0) {
+    fail("PRODUCTION_ALL_PUBLISHED_DOCS_CONSISTENT", false);
+  } else {
+    pass("PRODUCTION_ALL_PUBLISHED_DOCS_CONSISTENT", true);
+  }
+
   const postDeployNewInvoices = listPostDeployNewInvoiceOrders(15);
   const postDeployNewOrderIds = postDeployNewInvoices.map((r) => r.order_id).filter(Boolean);
   pass("PRODUCTION_NEW_INVOICE_PDF_AFTER_QR_COUNT", postDeployNewInvoices.length);
@@ -760,6 +798,7 @@ async function main() {
     invoicePdfOk &&
     invCountAfter === invCountBefore &&
     prodQrAcceptable &&
+    publishedCampaignPdfButUiMissing === 0 &&
     (productionQrPass || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE");
   const taskComplete = ok && freezeGuardPass;
   pass("TASK_COMPLETE", taskComplete);

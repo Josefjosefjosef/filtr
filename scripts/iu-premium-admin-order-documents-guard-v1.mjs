@@ -22,6 +22,14 @@ ok(
   "list:uses_fetchActiveOrderDocument",
   /listPremiumOrderDocumentsForAdmin[\s\S]*fetchActiveOrderDocument/.test(docsSrc)
 );
+ok(
+  "fetch:campaign_id_fallback",
+  /published_campaign_id = d\.campaign_id/.test(docsSrc)
+);
+ok(
+  "access:uses_fetchActiveOrderDocument",
+  /handleAdminPremiumOrderDocumentAccess[\s\S]*fetchActiveOrderDocument/.test(docsSrc)
+);
 ok("list:ready_from_d1_not_job_only", /if \(active\)[\s\S]*status = "ready"/.test(docsSrc));
 ok("ui:preview_download_buttons_when_ready", /d\.status==="ready"[\s\S]*data-premium-doc-preview/.test(uiSrc));
 ok(
