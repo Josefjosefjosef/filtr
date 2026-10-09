@@ -85,12 +85,16 @@ export async function fetchActiveOrderDocument(
   if (!viaCampaign?.document_id || !viaCampaign.r2_key) return null;
 
   const linked = viaCampaign.linked_order_id;
-  if (linked && linked !== orderId) return null;
-
+  const nowIso = new Date().toISOString();
   if (!linked) {
-    const nowIso = new Date().toISOString();
     await db
       .prepare("UPDATE documents SET order_id = ?, updated_at = ? WHERE document_id = ? AND order_id IS NULL")
+      .bind(orderId, nowIso, viaCampaign.document_id)
+      .run();
+  } else if (linked !== orderId) {
+    // Campaign belongs to this order (JOIN); repair mis-linked document.order_id without regenerating PDF.
+    await db
+      .prepare("UPDATE documents SET order_id = ?, updated_at = ? WHERE document_id = ?")
       .bind(orderId, nowIso, viaCampaign.document_id)
       .run();
   }
@@ -686,10 +690,17 @@ export async function resumePremiumOrderDocuments(
     .bind(orderId)
     .first<{ published_campaign_id: string | null; client_id: string; publish_idempotency_key: string | null }>();
   if (!po?.published_campaign_id) return { ok: false, results: { error: "not_published" } };
-  const inv = await env.DB.prepare("SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? AND campaign_id = ? LIMIT 1")
+  let inv = await env.DB.prepare("SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? AND campaign_id = ? LIMIT 1")
     .bind(orderId, po.published_campaign_id)
     .first<{ invoice_id: string; invoice_number: string }>();
-  if (!inv) return { ok: false, results: { error: "invoice_missing" } };
+  if (!inv?.invoice_id) {
+    inv = await env.DB.prepare(
+      "SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+    )
+      .bind(orderId)
+      .first<{ invoice_id: string; invoice_number: string }>();
+  }
+  if (!inv?.invoice_id) return { ok: false, results: { error: "invoice_missing" } };
 
   const publishKey = po.publish_idempotency_key || "retry:" + orderId;
   const ctx = await loadOrderDocumentContext(env.DB, orderId, {

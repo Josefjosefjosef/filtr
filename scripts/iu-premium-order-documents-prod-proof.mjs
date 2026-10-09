@@ -470,6 +470,14 @@ async function main() {
   } else {
     pass("PRODUCTION_ALL_PUBLISHED_DOCS_CONSISTENT", true);
   }
+  const publishedListAllMissingReady =
+    publishedScanLimit > 0 && publishedMissingReadyUi >= publishedScanLimit;
+  pass("PUBLISHED_LIST_ALL_MISSING_READY_DOCS", publishedListAllMissingReady);
+  if (publishedListAllMissingReady) {
+    fail("PUBLISHED_ADMIN_LIST_HAS_READY_DOCS", false);
+  } else {
+    pass("PUBLISHED_ADMIN_LIST_HAS_READY_DOCS", true);
+  }
 
   const postDeployNewInvoices = listPostDeployNewInvoiceOrders(15);
   const postDeployNewOrderIds = postDeployNewInvoices.map((r) => r.order_id).filter(Boolean);
@@ -799,6 +807,7 @@ async function main() {
     invCountAfter === invCountBefore &&
     prodQrAcceptable &&
     publishedCampaignPdfButUiMissing === 0 &&
+    !publishedListAllMissingReady &&
     (productionQrPass || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE");
   const taskComplete = ok && freezeGuardPass;
   pass("TASK_COMPLETE", taskComplete);
