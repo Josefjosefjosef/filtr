@@ -105,6 +105,177 @@ function countFromQuery(q) {
   return Number(row && (row.c ?? row.cnt ?? row.C));
 }
 
+function rowsFromQuery(q) {
+  return (((q || [])[0] || {}).results || []).slice();
+}
+
+const IAF_PLACEMENT = "selected_services.aff-cestovni-kancelare.premium.01";
+
+function logPremiumIafD1Diagnostics() {
+  try {
+    const placementRows = rowsFromQuery(
+      d1Query(
+        "SELECT placement_id, active_campaign_id FROM premium_selected_placements WHERE placement_id = '" +
+          IAF_PLACEMENT +
+          "'"
+      )
+    );
+    const activeCampaignId =
+      placementRows[0] && placementRows[0].active_campaign_id
+        ? String(placementRows[0].active_campaign_id)
+        : "";
+    console.log("IAF_PLACEMENT_ACTIVE_CAMPAIGN=" + (activeCampaignId || "none"));
+
+    const orderRows = rowsFromQuery(
+      d1Query(
+        "SELECT order_id, workflow_status, published_campaign_id FROM premium_selected_orders WHERE placement_id = '" +
+          IAF_PLACEMENT +
+          "' ORDER BY updated_at DESC LIMIT 20"
+      )
+    );
+    console.log("IAF_PREMIUM_ORDERS_COUNT=" + orderRows.length);
+    for (const row of orderRows) {
+      console.log(
+        "IAF_PREMIUM_ORDER row=" +
+          String(row.order_id || "") +
+          " status=" +
+          String(row.workflow_status || "") +
+          " published_campaign=" +
+          String(row.published_campaign_id || "none")
+      );
+    }
+
+    if (activeCampaignId) {
+      const campRows = rowsFromQuery(
+        d1Query(
+          "SELECT campaign_id, order_id, status FROM campaigns WHERE campaign_id = '" +
+            activeCampaignId.replace(/'/g, "''") +
+            "'"
+        )
+      );
+      const camp = campRows[0] || {};
+      console.log(
+        "IAF_ACTIVE_CAMPAIGN row=" +
+          String(camp.campaign_id || activeCampaignId) +
+          " order_id=" +
+          String(camp.order_id || "none") +
+          " status=" +
+          String(camp.status || "")
+      );
+    }
+    pass("premium_iaf_d1_diagnostics");
+  } catch (_) {
+    fail("premium_iaf_d1_diagnostics");
+  }
+}
+
+async function logPremiumPublicationConsistency(authed) {
+  const r = await authed("/v1/admin/premium/publication-consistency");
+  if (r.status !== 200) {
+    fail("read_premium_publication_consistency_status_" + r.status);
+    return;
+  }
+  pass("read_premium_publication_consistency");
+  let body = {};
+  try {
+    body = await r.json();
+  } catch (_) {
+    fail("read_premium_publication_consistency_json");
+    return;
+  }
+  const issues = Array.isArray(body.issues) ? body.issues : [];
+  console.log("PREMIUM_PUB_CONSISTENCY_OK=" + (body.ok === true ? "true" : "false"));
+  console.log("PREMIUM_PUB_ISSUES_COUNT=" + issues.length);
+  let iafIssues = 0;
+  for (const issue of issues) {
+    const placementId = String(issue.placement_id || "");
+    if (placementId !== IAF_PLACEMENT && !placementId.includes("aff-cestovni-kancelare")) continue;
+    iafIssues++;
+    console.log(
+      "PREMIUM_PUB_ISSUE_IAF reason=" +
+        String(issue.reason_code || "") +
+        " auto_repair=" +
+        (issue.auto_repair_eligible === true ? "true" : "false") +
+        " governing_order=" +
+        String(issue.governing_order_id || "none") +
+        " campaign=" +
+        String(issue.active_campaign_id || "")
+    );
+  }
+  console.log("PREMIUM_PUB_ISSUES_IAF_COUNT=" + iafIssues);
+  if (body.ok === true && iafIssues === 0) pass("premium_pub_consistency_iaf_clean");
+  else if (iafIssues > 0) pass("premium_pub_consistency_iaf_issues_documented");
+  else pass("premium_pub_consistency_scan_recorded");
+  return body;
+}
+
+async function runPremiumPublicationRepairIfRequested() {
+  if (process.env.IU_ADS_E2E_PREMIUM_PUB_REPAIR !== "1") return;
+  const repairUserId = USER_ID + "_sales";
+  const repairEmail = ("iu.test.sales." + RUN + "@example.invalid").toLowerCase();
+  const repairPassword = generatePassword();
+  const repairPasswordHash = hashPassword(repairPassword, PEPPER);
+  d1(
+    [
+      "INSERT INTO admin_users (user_id, email, password_hash, display_name, is_active, force_password_change, created_at, updated_at) VALUES (",
+      "'" + repairUserId + "',",
+      "'" + repairEmail + "',",
+      "'" + repairPasswordHash.replace(/'/g, "''") + "',",
+      "'IU_TEST Sales " + RUN.replace(/'/g, "''") + "',",
+      "1, 0,",
+      "'" + NOW + "',",
+      "'" + NOW + "'",
+      ");",
+      "INSERT INTO admin_user_roles (user_id, role_code, assigned_at, assigned_by) VALUES (",
+      "'" + repairUserId + "', 'sales', '" + NOW + "', 'IU_TEST_e2e');",
+    ].join(" ")
+  );
+  pass("seed_sales_repair_admin");
+  let repairCookie = "";
+  {
+    const r = await fetch(BASE + "/v1/admin/auth/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: repairEmail, password: repairPassword }),
+    });
+    if (r.status !== 200) {
+      fail("repair_login_status_" + r.status);
+      return;
+    }
+    pass("repair_login");
+    const sc = typeof r.headers.getSetCookie === "function" ? r.headers.getSetCookie() : [];
+    const fallback = r.headers.get("set-cookie");
+    const list = sc && sc.length ? sc : fallback ? [fallback] : [];
+    repairCookie = cookieHeaderFromSetCookie(list);
+  }
+  const r = await fetch(BASE + "/v1/admin/premium/publication-consistency/repair", {
+    method: "POST",
+    headers: { Cookie: repairCookie, "content-type": "application/json" },
+    body: "{}",
+  });
+  if (r.status !== 200) {
+    fail("premium_publication_repair_status_" + r.status);
+  } else {
+    pass("premium_publication_repair");
+    const body = await r.json().catch(() => ({}));
+    console.log("PREMIUM_PUB_REPAIR_REPAIRED=" + Number(body.repaired || 0));
+    console.log("PREMIUM_PUB_REPAIR_INCIDENTS=" + (Array.isArray(body.incidents) ? body.incidents.length : 0));
+  }
+  try {
+    d1(
+      [
+        "DELETE FROM admin_sessions WHERE user_id = '" + repairUserId + "';",
+        "DELETE FROM admin_user_roles WHERE user_id = '" + repairUserId + "';",
+        "DELETE FROM admin_users WHERE user_id = '" + repairUserId + "';",
+        "DELETE FROM admin_login_attempts WHERE email_normalized = '" + repairEmail + "';",
+      ].join("\n")
+    );
+    pass("repair_admin_cleanup");
+  } catch (_) {
+    fail("repair_admin_cleanup");
+  }
+}
+
 function cookieHeaderFromSetCookie(setCookieHeaders) {
   const parts = [];
   for (const raw of setCookieHeaders || []) {
@@ -164,6 +335,7 @@ async function main() {
   }
 
   resolveAdsDatabaseId();
+  logPremiumIafD1Diagnostics();
 
   const password = generatePassword();
   const passwordHash = hashPassword(password, PEPPER);
@@ -254,6 +426,9 @@ async function main() {
       "calendar",
     ],
   ];
+
+  await logPremiumPublicationConsistency(authed);
+  await runPremiumPublicationRepairIfRequested();
 
   for (const [path, label] of readOk) {
     const r = await authed(path);

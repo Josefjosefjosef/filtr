@@ -7,6 +7,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      premium_publication_repair:
+        description: "Run POST /v1/admin/premium/publication-consistency/repair (temporary sales admin; auto-eligible issues only)"
+        type: boolean
+        default: false
   workflow_call:
 
 concurrency:
@@ -25,6 +30,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
       ADS_PASSWORD_PEPPER: ${{ secrets.ADS_PASSWORD_PEPPER }}
       ADS_BASE_URL: "https://ads.infouzel.cz"
+      IU_ADS_E2E_PREMIUM_PUB_REPAIR: ${{ github.event_name == 'workflow_dispatch' && inputs.premium_publication_repair == true && '1' || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@v5
