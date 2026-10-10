@@ -197,22 +197,62 @@ async function gearDiag(page) {
 }
 
 async function openFirstGear(page) {
-  await page.locator("#iuMailboxList .iu-mailbox-row").first().hover({ timeout: 5000 }).catch(() => {});
-  const opened = await page.evaluate(() => {
-    const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
-    if (!g || typeof g.click !== "function") return { ok: false, reason: "no_gear_node" };
-    const st = getComputedStyle(g);
-    const r = g.getBoundingClientRect();
-    if (r.width < 1 || r.height < 1) return { ok: false, reason: "zero_rect", display: st.display, visibility: st.visibility };
-    g.click();
-    return { ok: true };
-  });
-  if (!opened.ok) {
-    const dbg = await gearDiag(page);
-    fail("gear_open_failed:" + JSON.stringify(opened) + ":" + JSON.stringify(dbg));
-    throw new Error("gear_open_failed");
+  let lastOpened = { ok: false, reason: "not_tried" };
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await page.locator("#iuMailboxList .iu-mailbox-row").first().hover({ timeout: 5000 }).catch(() => {});
+    try {
+      await page.waitForFunction(
+        () => {
+          const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+          if (!g) return false;
+          const r = g.getBoundingClientRect();
+          return r.width >= 1 && r.height >= 1;
+        },
+        null,
+        { timeout: attempt === 0 ? 8000 : 15000 }
+      );
+    } catch (_) {
+      if (attempt < 4) {
+        await openMindMenu(page);
+        await page.waitForTimeout(400);
+        continue;
+      }
+    }
+    await page.evaluate(() => {
+      const row = document.querySelector("#iuMailboxList .iu-mailbox-row");
+      if (row) row.scrollIntoView({ block: "center", inline: "nearest" });
+    });
+    lastOpened = await page.evaluate(() => {
+      const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+      if (!g || typeof g.click !== "function") return { ok: false, reason: "no_gear_node" };
+      const st = getComputedStyle(g);
+      const r = g.getBoundingClientRect();
+      if (r.width < 1 || r.height < 1) {
+        return { ok: false, reason: "zero_rect", display: st.display, visibility: st.visibility };
+      }
+      g.click();
+      return { ok: true };
+    });
+    if (lastOpened.ok) {
+      try {
+        await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
+        return;
+      } catch (_) {
+        lastOpened = { ok: false, reason: "overlay_not_opened" };
+      }
+    }
+    if (lastOpened.reason === "no_gear_node" && attempt < 4) {
+      await openMindMenu(page);
+      await page.waitForTimeout(400);
+      continue;
+    }
+    await page.waitForTimeout(350);
   }
-  await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
+  const dbg = await gearDiag(page);
+  const msg = "gear_open_failed:" + JSON.stringify(lastOpened) + ":" + JSON.stringify(dbg);
+  fail(msg);
+  console.error("IU_MM_MAILBOX_COLORFUL_DEFAULT_OFF_FAIL=" + msg);
+  throw new Error("gear_open_failed");
 }
 
 async function readColorfulCheckbox(page) {
