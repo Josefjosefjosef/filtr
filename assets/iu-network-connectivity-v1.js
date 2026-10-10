@@ -12,7 +12,7 @@
   var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v1-20261010";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v2-20261010";
   var lastProbe = { ok: null, ts: 0 };
   var externalRestoreInFlight = false;
   var reconnectTimer = null;

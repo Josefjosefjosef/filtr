@@ -69,7 +69,7 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-section-guard-v1-20261010/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-section-guard-v2-20261010/.test(net), "static:pwa_build_id");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
   must(
     !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),
@@ -575,6 +575,16 @@ async function runBehaviorNavMenuExternalLink(page, label) {
 
 /** Hub applySection must not wipe Menu return arm while nav overlay is open (regression #11803). */
 async function runBehaviorHubApplySectionArmPreserved(page, label) {
+  await page.evaluate(() => {
+    const u = new URL(location.href);
+    u.searchParams.delete("section");
+    u.searchParams.delete("topic");
+    u.searchParams.delete("mode");
+    u.searchParams.delete("panel");
+    u.hash = "";
+    history.replaceState(history.state, "", u.toString());
+  });
+  await page.waitForTimeout(400);
   await openNavMenu(page);
   await scrollNavPanel(page, 280);
   const probe = await page.evaluate(() => {
@@ -600,6 +610,22 @@ async function runBehaviorHubApplySectionArmPreserved(page, label) {
   must(probe.blocked === true, label + ":hub_arm:apply_blocked");
   must(probe.armedAfter === "1", label + ":hub_arm:after:" + probe.armedAfter);
   must(probe.gate === "nav", label + ":hub_arm:gate_nav:" + probe.gate);
+}
+
+/** Menu → ?section= must not stay blocked while return arm is set (forward nav regression). */
+async function runBehaviorMenuForwardSectionApplyAllowed(page, label) {
+  const probe = await page.evaluate(() => {
+    sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+    const u = new URL(location.href);
+    u.searchParams.set("section", "mapy");
+    history.replaceState(history.state, "", u.toString());
+    const blocked =
+      typeof window.iuPwaExternalReturnBlocksSectionApply === "function" &&
+      window.iuPwaExternalReturnBlocksSectionApply() === true;
+    return { blocked, section: u.searchParams.get("section") || "" };
+  });
+  must(probe.section === "mapy", label + ":forward:section_query");
+  must(probe.blocked === false, label + ":forward:apply_not_blocked");
 }
 
 /** Hub scroll: external open → return; detect transient jump to top during restore. */
@@ -780,6 +806,7 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     await waitRuntime(page);
 
     await runBehaviorHubApplySectionArmPreserved(page, label);
+    await runBehaviorMenuForwardSectionApplyAllowed(page, label);
     await runBehaviorNavMenuExternalLink(page, label);
     await runBehaviorHomeScrollExternalReturn(page, label);
     await runBehaviorSequentialReturnCoalesce(page, label);

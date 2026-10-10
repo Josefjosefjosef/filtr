@@ -525,7 +525,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-menu-nav-scroll-restore-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v1-20261010";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-menu-nav-scroll-restore-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v2-20261010";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -8016,10 +8016,19 @@ try {
         return true;
       }
       if (sessionStorage.getItem("iuPwaExternalReturnRestoringV1") === "1") return true;
-      if (sessionStorage.getItem("iu_external_nav_armed") === "1") return true;
-      if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return true;
+      var hasSection = false;
+      try {
+        hasSection = new URL(location.href).searchParams.has("section");
+      } catch (_hs) {}
+      /* Hub-only: external return arms must not trigger applySection that collapses Menu/MindMenu overlay. */
+      if (!hasSection) {
+        if (sessionStorage.getItem("iu_external_nav_armed") === "1") return true;
+        if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return true;
+      }
       if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return true;
       if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") {
+        /* Menu tile → ?section= must still run apply (return arm is for Back/external return, not forward nav). */
+        if (hasSection) return false;
         var wrap = document.getElementById("iuMobileGateWrap");
         var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
         var h = String(location.hash || "");
