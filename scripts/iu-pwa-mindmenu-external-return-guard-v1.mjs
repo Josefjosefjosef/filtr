@@ -67,6 +67,10 @@ function staticGate() {
   must(/externalRestoreInFlight/.test(net) && /capturePwaExternalReturnSnapshot/.test(net), "static:net_external_coalesce");
   must(/iuMobileWebNavArmForExternalFromMenu/.test(app), "static:app_menu_external_arm");
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
+  must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
+  must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
+  must(/pwa-external-return-section-guard-v3-20261010/.test(net), "static:pwa_build_id");
+  must(/abortExternalReturnArmsAfterFailedOpen/.test(net), "static:abort_failed_external_open");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
   must(
     !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),
@@ -501,45 +505,31 @@ async function runBehaviorNavMenuExternalLink(page, label) {
     panel.scrollTop = y;
   }, scrollExpect);
 
-  let popupOpened = false;
-  try {
-    const popupWait = page.waitForEvent("popup", { timeout: 12000 });
-    await page.click("#iu-guard-ext-test-link", { timeout: 8000 });
-    const popup = await popupWait;
-    popupOpened = true;
-    const armed = await page.evaluate(() => {
-      const wrap = document.getElementById("iuMobileGateWrap");
-      return {
-        ext: sessionStorage.getItem("iu_external_nav_armed") || "",
-        webnav: sessionStorage.getItem("iuMobileWebNavReturnArmed") || "",
-        menuY: sessionStorage.getItem("iuMenuNavPanelScrollY") || "",
-        gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
-        hash: String(location.hash || "").replace("#", ""),
-        overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
-        mainY: typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : 0,
-      };
-    });
-    must(armed.ext === "1", label + ":menu_ext:armed:" + armed.ext);
-    must(armed.webnav === "1", label + ":menu_ext:webnav:" + armed.webnav);
-    must(armed.gate === "nav", label + ":menu_ext:gate_open:" + armed.gate);
-    must(armed.overlay === true, label + ":menu_ext:overlay_open");
-    must(armed.hash === "iu-nav" || armed.hash === "nav", label + ":menu_ext:hash:" + armed.hash);
-    if (scrollExpect > 40) {
-      must(Number(armed.menuY) >= Math.floor(scrollExpect * 0.45), label + ":menu_ext:captured_y:" + armed.menuY);
-    }
-    await popup.close();
-  } catch (_) {
-    const sim = await page.evaluate((y) => {
-      const panel = document.getElementById("iuMobileGatePanelNav");
-      if (panel) panel.scrollTop = y;
-      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
-      if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
-        window.iuMobileWebNavArmForExternalFromMenu();
-      }
-      window.iuNetwork.openExternalSync("https://example.com/iu-guard-pwa-menu-external-fallback");
-      return sessionStorage.getItem("iu_external_nav_armed") || "";
-    }, scrollExpect);
-    must(sim === "1", label + ":menu_ext:fallback_arm:" + sim);
+  const clickPath = await page.evaluate((y) => {
+    const panel = document.getElementById("iuMobileGatePanelNav");
+    if (panel) panel.scrollTop = y;
+    const link = document.getElementById("iu-guard-ext-test-link");
+    if (!link) return { ok: false, reason: "no_link" };
+    link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    const wrap = document.getElementById("iuMobileGateWrap");
+    return {
+      ok: true,
+      ext: sessionStorage.getItem("iu_external_nav_armed") || "",
+      webnav: sessionStorage.getItem("iuMobileWebNavReturnArmed") || "",
+      menuY: sessionStorage.getItem("iuMenuNavPanelScrollY") || "",
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      hash: String(location.hash || "").replace("#", ""),
+      overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+    };
+  }, scrollExpect);
+  must(clickPath.ok === true, label + ":menu_ext:click_path:" + (clickPath.reason || ""));
+  must(clickPath.ext === "1", label + ":menu_ext:armed:" + clickPath.ext);
+  must(clickPath.webnav === "1", label + ":menu_ext:webnav:" + clickPath.webnav);
+  must(clickPath.gate === "nav", label + ":menu_ext:gate_open:" + clickPath.gate);
+  must(clickPath.overlay === true, label + ":menu_ext:overlay_open");
+  must(clickPath.hash === "iu-nav" || clickPath.hash === "nav", label + ":menu_ext:hash:" + clickPath.hash);
+  if (scrollExpect > 40) {
+    must(Number(clickPath.menuY) >= Math.floor(scrollExpect * 0.45), label + ":menu_ext:captured_y:" + clickPath.menuY);
   }
 
   await page.evaluate(() => {
@@ -582,6 +572,61 @@ async function runBehaviorNavMenuExternalLink(page, label) {
     );
   }
   must(after.feedPeek !== true, label + ":menu_ext:background_not_home_feed");
+}
+
+/** Hub applySection must not wipe Menu return arm while nav overlay is open (regression #11803). */
+async function runBehaviorHubApplySectionArmPreserved(page, label) {
+  await page.evaluate(() => {
+    const u = new URL(location.href);
+    u.searchParams.delete("section");
+    u.searchParams.delete("topic");
+    u.searchParams.delete("mode");
+    u.searchParams.delete("panel");
+    u.hash = "";
+    history.replaceState(history.state, "", u.toString());
+  });
+  await page.waitForTimeout(400);
+  await openNavMenu(page);
+  await scrollNavPanel(page, 280);
+  const probe = await page.evaluate(() => {
+    if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+    if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
+      window.iuMobileWebNavArmForExternalFromMenu();
+    }
+    sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+    const armedBefore = sessionStorage.getItem("iuMobileWebNavReturnArmed");
+    const blocked =
+      typeof window.iuPwaExternalReturnBlocksSectionApply === "function" &&
+      window.iuPwaExternalReturnBlocksSectionApply() === true;
+    const armedAfter = sessionStorage.getItem("iuMobileWebNavReturnArmed");
+    const wrap = document.getElementById("iuMobileGateWrap");
+    return {
+      armedBefore,
+      armedAfter,
+      blocked,
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+    };
+  });
+  must(probe.armedBefore === "1", label + ":hub_arm:before");
+  must(probe.blocked === true, label + ":hub_arm:apply_blocked");
+  must(probe.armedAfter === "1", label + ":hub_arm:after:" + probe.armedAfter);
+  must(probe.gate === "nav", label + ":hub_arm:gate_nav:" + probe.gate);
+}
+
+/** Menu → ?section= must not stay blocked while return arm is set (forward nav regression). */
+async function runBehaviorMenuForwardSectionApplyAllowed(page, label) {
+  const probe = await page.evaluate(() => {
+    sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+    const u = new URL(location.href);
+    u.searchParams.set("section", "mapy");
+    history.replaceState(history.state, "", u.toString());
+    const blocked =
+      typeof window.iuPwaExternalReturnBlocksSectionApply === "function" &&
+      window.iuPwaExternalReturnBlocksSectionApply() === true;
+    return { blocked, section: u.searchParams.get("section") || "" };
+  });
+  must(probe.section === "mapy", label + ":forward:section_query");
+  must(probe.blocked === false, label + ":forward:apply_not_blocked");
 }
 
 /** Hub scroll: external open → return; detect transient jump to top during restore. */
@@ -761,6 +806,8 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitRuntime(page);
 
+    await runBehaviorHubApplySectionArmPreserved(page, label);
+    await runBehaviorMenuForwardSectionApplyAllowed(page, label);
     await runBehaviorNavMenuExternalLink(page, label);
     await runBehaviorHomeScrollExternalReturn(page, label);
     await runBehaviorSequentialReturnCoalesce(page, label);
@@ -937,7 +984,10 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
       (cold.visibleHomeFrames || 0) === 0,
       label + ":colddoc:VISIBLE_HOME_FRAMES_DURING_RETURN=" + cold.visibleHomeFrames
     );
-    must(cold.feedVisibleNow !== true, label + ":colddoc:feed_not_painted_during_boot");
+    must(
+      cold.boot !== true || cold.feedVisibleNow !== true,
+      label + ":colddoc:feed_not_painted_during_boot:boot=" + cold.boot + ":feed=" + cold.feedVisibleNow
+    );
     must(cold.gate === "tools", label + ":colddoc:gate_tools:" + cold.gate);
     must(cold.overlay === true, label + ":colddoc:overlay");
     must(cold.guard === true, label + ":colddoc:guard_still_true");

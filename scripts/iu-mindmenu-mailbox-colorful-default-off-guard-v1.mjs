@@ -140,9 +140,13 @@ async function openMindMenu(page) {
         });
         await page.waitForFunction(
           () => {
+            const ov = document.getElementById("iuMyInfoUzelOverlay");
             const list = document.getElementById("iuMailboxList");
             const add = document.getElementById("iuMailboxAdd");
-            return !!(list && add);
+            return (
+              !!(ov && ov.hidden === false && document.body.classList.contains("iu-myinfouzel-open")) &&
+              !!(list && add)
+            );
           },
           null,
           { timeout: 45000 }
@@ -169,11 +173,86 @@ function snap(page) {
   });
 }
 
+async function gearDiag(page) {
+  return page.evaluate(() => {
+    const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+    const list = document.getElementById("iuMailboxList");
+    const ov = document.getElementById("iuMyInfoUzelOverlay");
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const st = g ? getComputedStyle(g) : null;
+    const gr = g ? g.getBoundingClientRect() : null;
+    return {
+      href: location.href,
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      bodyMyiu: document.body.classList.contains("iu-myinfouzel-open"),
+      overlayHidden: ov ? !!ov.hidden : null,
+      listCount: list ? list.querySelectorAll(".iu-mailbox-row").length : 0,
+      gearDisplay: st ? st.display : null,
+      gearVisibility: st ? st.visibility : null,
+      gearOpacity: st ? st.opacity : null,
+      gearRect: gr ? { w: gr.width, h: gr.height, top: gr.top } : null,
+      mailInitDone: window.__iuMailboxesInitDone,
+    };
+  });
+}
+
 async function openFirstGear(page) {
-  const gear = page.locator("#iuMailboxList [data-mailbox-gear]").first();
-  await gear.waitFor({ state: "visible", timeout: 45000 });
-  await gear.click({ force: true });
-  await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
+  let lastOpened = { ok: false, reason: "not_tried" };
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await page.locator("#iuMailboxList .iu-mailbox-row").first().hover({ timeout: 5000 }).catch(() => {});
+    try {
+      await page.waitForFunction(
+        () => {
+          const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+          if (!g) return false;
+          const r = g.getBoundingClientRect();
+          return r.width >= 1 && r.height >= 1;
+        },
+        null,
+        { timeout: attempt === 0 ? 8000 : 15000 }
+      );
+    } catch (_) {
+      if (attempt < 4) {
+        await openMindMenu(page);
+        await page.waitForTimeout(400);
+        continue;
+      }
+    }
+    await page.evaluate(() => {
+      const row = document.querySelector("#iuMailboxList .iu-mailbox-row");
+      if (row) row.scrollIntoView({ block: "center", inline: "nearest" });
+    });
+    lastOpened = await page.evaluate(() => {
+      const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+      if (!g || typeof g.click !== "function") return { ok: false, reason: "no_gear_node" };
+      const st = getComputedStyle(g);
+      const r = g.getBoundingClientRect();
+      if (r.width < 1 || r.height < 1) {
+        return { ok: false, reason: "zero_rect", display: st.display, visibility: st.visibility };
+      }
+      g.click();
+      return { ok: true };
+    });
+    if (lastOpened.ok) {
+      try {
+        await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
+        return;
+      } catch (_) {
+        lastOpened = { ok: false, reason: "overlay_not_opened" };
+      }
+    }
+    if (lastOpened.reason === "no_gear_node" && attempt < 4) {
+      await openMindMenu(page);
+      await page.waitForTimeout(400);
+      continue;
+    }
+    await page.waitForTimeout(350);
+  }
+  const dbg = await gearDiag(page);
+  const msg = "gear_open_failed:" + JSON.stringify(lastOpened) + ":" + JSON.stringify(dbg);
+  fail(msg);
+  console.error("IU_MM_MAILBOX_COLORFUL_DEFAULT_OFF_FAIL=" + msg);
+  throw new Error("gear_open_failed");
 }
 
 async function readColorfulCheckbox(page) {

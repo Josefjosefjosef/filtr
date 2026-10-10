@@ -9,6 +9,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { pickGuardPort } from "./guards/guard-playwright-lifecycle.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -127,7 +128,10 @@ if (fails.length) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8948", 10);
+let PORT =
+  parseInt(process.env.IU_GUARD_PORT || "0", 10) > 0
+    ? parseInt(process.env.IU_GUARD_PORT || "0", 10)
+    : pickGuardPort(8948, 400);
 const server = http.createServer((req, res) => {
   try {
     let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
@@ -154,7 +158,18 @@ const server = http.createServer((req, res) => {
   }
 });
 
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+for (let attempt = 0; attempt < 8; attempt++) {
+  try {
+    await new Promise((resolve, reject) => {
+      server.once("error", reject);
+      server.listen(PORT, "127.0.0.1", resolve);
+    });
+    break;
+  } catch (err) {
+    if (!err || err.code !== "EADDRINUSE" || attempt >= 7) throw err;
+    PORT = pickGuardPort(8948, 400);
+  }
+}
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const browser = await chromium.launch({ headless: true });
