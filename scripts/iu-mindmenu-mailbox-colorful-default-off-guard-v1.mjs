@@ -198,15 +198,20 @@ async function gearDiag(page) {
 
 async function openFirstGear(page) {
   await page.locator("#iuMailboxList .iu-mailbox-row").first().hover({ timeout: 5000 }).catch(() => {});
-  const gear = page.locator("#iuMailboxList [data-mailbox-gear]").first();
-  try {
-    await gear.waitFor({ state: "visible", timeout: 45000 });
-  } catch (err) {
+  const opened = await page.evaluate(() => {
+    const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+    if (!g || typeof g.click !== "function") return { ok: false, reason: "no_gear_node" };
+    const st = getComputedStyle(g);
+    const r = g.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return { ok: false, reason: "zero_rect", display: st.display, visibility: st.visibility };
+    g.click();
+    return { ok: true };
+  });
+  if (!opened.ok) {
     const dbg = await gearDiag(page);
-    fail("gear_not_visible:" + JSON.stringify(dbg));
-    throw err;
+    fail("gear_open_failed:" + JSON.stringify(opened) + ":" + JSON.stringify(dbg));
+    throw new Error("gear_open_failed");
   }
-  await gear.click({ force: true });
   await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
 }
 
