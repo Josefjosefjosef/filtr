@@ -274,18 +274,35 @@ export async function handleAdminPremiumAccountingCancel(
 ): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "invoices.write");
   if (!guard.ok) return guard.response;
-  let body: { reason?: unknown; correction_cents?: unknown; idempotency_key?: unknown } = {};
+  let body: {
+    reason?: unknown;
+    correction_cents?: unknown;
+    storno_amount_cents?: unknown;
+    payment_settlement?: unknown;
+    amount_paid_cents?: unknown;
+    idempotency_key?: unknown;
+  } = {};
   try {
     body = await request.json();
   } catch {
     body = {};
   }
-  const reason =
-    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : "";
-  if (!reason) return json({ error: "reason_required", message_cs: "Důvod storna je povinný." }, 400);
+  const reason = typeof body.reason === "string" ? body.reason : "";
+  const paymentSettlement =
+    body.payment_settlement === "paid" || body.payment_settlement === "partial" || body.payment_settlement === "unpaid"
+      ? body.payment_settlement
+      : undefined;
+  const stornoAmountCents =
+    body.storno_amount_cents != null && Number.isFinite(Number(body.storno_amount_cents))
+      ? Math.round(Math.abs(Number(body.storno_amount_cents)))
+      : undefined;
   const correctionCents =
     body.correction_cents != null && Number.isFinite(Number(body.correction_cents))
       ? Math.round(Number(body.correction_cents))
+      : undefined;
+  const amountPaidCents =
+    body.amount_paid_cents != null && Number.isFinite(Number(body.amount_paid_cents))
+      ? Math.round(Number(body.amount_paid_cents))
       : undefined;
   const idempotencyKey =
     typeof body.idempotency_key === "string" && body.idempotency_key.trim() ? body.idempotency_key.trim() : undefined;
@@ -295,6 +312,9 @@ export async function handleAdminPremiumAccountingCancel(
     actorUserId: guard.userId,
     reason,
     correctionCents,
+    stornoAmountCents,
+    paymentSettlement,
+    amountPaidCents,
     idempotencyKey,
   });
   if (!result.ok) {

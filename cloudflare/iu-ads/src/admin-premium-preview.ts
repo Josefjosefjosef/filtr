@@ -15,6 +15,7 @@ import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium
 import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
+import { sumPriorCreditCorrectionsCents } from "./premium-accounting-settlement";
 import { buildPremiumOrderPublicationVisibility } from "./premium-publication-consistency";
 import type { Env } from "./types";
 
@@ -209,10 +210,48 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   }
 
   const invoiceRow = await env.DB.prepare(
-    "SELECT invoice_id, invoice_number, total_cents, currency, status FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+    "SELECT invoice_id, invoice_number, total_cents, currency, status, paid_at FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
   )
     .bind(orderId)
-    .first<{ invoice_id: string; invoice_number: string; total_cents: number; currency: string; status: string }>();
+    .first<{
+      invoice_id: string;
+      invoice_number: string;
+      total_cents: number;
+      currency: string;
+      status: string;
+      paid_at: string | null;
+    }>();
+
+  let invoiceAccounting: {
+    prior_corrected_cents: number;
+    remaining_correctable_cents: number;
+    suggested_payment_settlement: "unpaid" | "paid" | "partial";
+  } | null = null;
+  if (invoiceRow) {
+    const priorRes = await env.DB.prepare(
+      "SELECT correction_cents FROM premium_credit_notes WHERE invoice_id = ?"
+    )
+      .bind(invoiceRow.invoice_id)
+      .all<{ correction_cents: number }>();
+    const priorCorrected = sumPriorCreditCorrectionsCents(priorRes.results || []);
+    const totalCents = Math.round(Number(invoiceRow.total_cents) || 0);
+    const suggestedPayment: "unpaid" | "paid" | "partial" =
+      paymentStatus === "paid" || invoiceRow.status === "paid" || invoiceRow.paid_at ? "paid" : "unpaid";
+    invoiceAccounting = {
+      prior_corrected_cents: priorCorrected,
+      remaining_correctable_cents: Math.max(0, totalCents - priorCorrected),
+      suggested_payment_settlement: suggestedPayment,
+    };
+  }
+
+  const campaignStartAt = row.campaign_start_at != null ? String(row.campaign_start_at) : null;
+  const isAdTurnedOff = !!row.ad_turned_off_at;
+  const accountingCancelBlockedReason =
+    workflowStatusStr === "published" && !isAdTurnedOff
+      ? "Před stornem musí být reklama definitivně vypnutá (tlačítko „Vypnout reklamu“). Dočasné pozastavení nestačí."
+      : workflowStatusStr !== "published"
+        ? "Storno objednávky a faktury je dostupné pouze u schválené a dříve zveřejněné objednávky."
+        : null;
 
   const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
@@ -279,8 +318,16 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       published_at_label_cs: formatAdminPragueDateTime(
         row.published_at != null ? String(row.published_at) : null
       ),
+      campaign_start_at: campaignStartAt,
+      campaign_start_at_label_cs: formatAdminPragueDateTime(campaignStartAt),
       campaign_end_at: campaignEndAt,
       campaign_end_at_label_cs: formatAdminPragueDateTime(campaignEndAt),
+      service_period_label_cs:
+        campaignStartAt && campaignEndAt
+          ? formatAdminPragueDateTime(campaignStartAt) + " – " + formatAdminPragueDateTime(campaignEndAt)
+          : null,
+      accounting_cancel_blocked_reason_cs: accountingCancelBlockedReason,
+      accounting_cancel_allowed: workflowStatusStr === "published" && isAdTurnedOff,
       campaign_status: campaignStatus,
       is_paused: campaignStatus === "paused" && !row.ad_turned_off_at,
       ad_turned_off_at: row.ad_turned_off_at ?? null,
@@ -321,5 +368,6 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
           status: invoiceRow.status,
         }
       : null,
+    invoice_accounting: invoiceAccounting,
   });
 }

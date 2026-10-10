@@ -85,6 +85,14 @@ export function buildAdminShellHtml(nonce: string): string {
     .tech-ids{margin-top:.75rem}
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:center;justify-content:center;padding:1rem}
     .modal-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.15rem;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+    .modal-card.modal-wide{max-width:min(720px,100%);max-height:min(92vh,920px);overflow:auto;-webkit-overflow-scrolling:touch}
+    .acct-cancel-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem .85rem;margin:.75rem 0}
+    .acct-cancel-grid .full{grid-column:1/-1}
+    .acct-recap{background:var(--bg-soft,#f6f8fb);border:1px solid var(--line);border-radius:8px;padding:.75rem .85rem;margin:.75rem 0;font-size:.92rem}
+    .acct-recap dl{display:grid;grid-template-columns:1fr auto;gap:.25rem .75rem;margin:0}
+    .acct-recap dt{color:var(--muted);margin:0}
+    .acct-recap dd{margin:0;font-weight:600;text-align:right}
+    @media (max-width:640px){.acct-cancel-grid{grid-template-columns:1fr}}
     .confirm-list{margin:.5rem 0 1rem;padding-left:1.2rem}
     @media (max-width:860px){
       .order-table-desktop{display:none}

@@ -11,6 +11,15 @@ import {
   newCreditNoteId,
   newStornoRecordId,
 } from "./premium-document-numbers";
+import {
+  computeAccountingSettlementRecap,
+  sumPriorCreditCorrectionsCents,
+} from "./premium-accounting-settlement";
+import {
+  paymentSettlementLabelCs,
+  validatePremiumStornoReason,
+  type PremiumPaymentSettlementMode,
+} from "./premium-czech-money";
 import { enqueuePremiumStornoDocuments } from "./premium-storno-documents";
 import type { Env } from "./types";
 
@@ -18,7 +27,12 @@ export type PremiumAccountingCancelInput = {
   orderId: string;
   actorUserId: string;
   reason: string;
+  /** Legacy: negative haléře. Prefer storno_amount_cents (positive Kč). */
   correctionCents?: number;
+  /** Positive haléře to credit (storno amount). */
+  stornoAmountCents?: number;
+  paymentSettlement?: PremiumPaymentSettlementMode;
+  amountPaidCents?: number;
   idempotencyKey?: string;
 };
 
@@ -55,8 +69,16 @@ export async function executePremiumOrderAccountingCancel(
   input: PremiumAccountingCancelInput
 ): Promise<PremiumAccountingCancelResult> {
   if (!env.DB) return { ok: false, status: 503, error: "auth_not_configured" };
-  const reason = input.reason.trim();
-  if (!reason) return { ok: false, status: 400, error: "reason_required" };
+  const reasonCheck = validatePremiumStornoReason(input.reason);
+  if (!reasonCheck.ok) {
+    return {
+      ok: false,
+      status: 400,
+      error: reasonCheck.error,
+      message_cs: "Zadejte srozumitelný důvod storna (min. 12 znaků, smysluplný text).",
+    };
+  }
+  const reason = reasonCheck.reason;
 
   const db = env.DB;
   const nowIso = new Date().toISOString();
@@ -186,24 +208,86 @@ export async function executePremiumOrderAccountingCancel(
     }>();
 
   const originalTotal = invoice ? Math.round(Number(invoice.total_cents) || 0) : 0;
-  let correctionCents =
-    input.correctionCents != null && Number.isFinite(input.correctionCents)
-      ? Math.round(input.correctionCents)
-      : invoice
-        ? -originalTotal
-        : 0;
+  let priorCorrected = 0;
+  if (invoice?.invoice_id) {
+    const priorRows = await db
+      .prepare("SELECT correction_cents FROM premium_credit_notes WHERE invoice_id = ?")
+      .bind(invoice.invoice_id)
+      .all<{ correction_cents: number }>();
+    priorCorrected = sumPriorCreditCorrectionsCents(priorRows.results || []);
+  }
+  const remainingCorrectable = Math.max(0, originalTotal - priorCorrected);
 
-  if (correctionCents > 0) correctionCents = -Math.abs(correctionCents);
-  if (invoice && Math.abs(correctionCents) > originalTotal) {
+  let stornoAmountCents = 0;
+  if (input.stornoAmountCents != null && Number.isFinite(input.stornoAmountCents)) {
+    stornoAmountCents = Math.round(Math.abs(Number(input.stornoAmountCents)));
+  } else if (input.correctionCents != null && Number.isFinite(input.correctionCents)) {
+    stornoAmountCents = Math.abs(Math.round(Number(input.correctionCents)));
+  } else if (invoice) {
     return {
       ok: false,
       status: 400,
-      error: "correction_exceeds_invoice",
-      message_cs: "Opravovaná částka nesmí překročit původně fakturovanou částku.",
+      error: "storno_amount_required",
+      message_cs: "Zadejte částku ke stornování (Kč).",
     };
   }
-  if (invoice && correctionCents === 0) {
-    return { ok: false, status: 400, error: "correction_zero", message_cs: "Zadejte nenulovou opravovanou částku." };
+
+  let correctionCents = invoice ? -stornoAmountCents : 0;
+
+  if (invoice && stornoAmountCents <= 0) {
+    return { ok: false, status: 400, error: "correction_zero", message_cs: "Částka ke stornování musí být vyšší než 0 Kč." };
+  }
+  if (invoice && stornoAmountCents > remainingCorrectable) {
+    return {
+      ok: false,
+      status: 400,
+      error: "correction_exceeds_remaining",
+      message_cs:
+        "Částka ke stornování nesmí překročit zbývající neopravenou částku faktury (" +
+        (remainingCorrectable / 100).toFixed(2) +
+        " Kč).",
+    };
+  }
+
+  const paymentSettlement: PremiumPaymentSettlementMode =
+    input.paymentSettlement === "paid" || input.paymentSettlement === "partial" || input.paymentSettlement === "unpaid"
+      ? input.paymentSettlement
+      : po.payment_status === "paid" || invoice?.status === "paid" || invoice?.paid_at
+        ? "paid"
+        : "unpaid";
+
+  let amountPaidDeclared = Math.max(0, Math.round(Number(input.amountPaidCents) || 0));
+  if (paymentSettlement === "unpaid") amountPaidDeclared = 0;
+  if (paymentSettlement === "paid") amountPaidDeclared = originalTotal;
+  if (paymentSettlement === "partial") {
+    if (amountPaidDeclared <= 0 || amountPaidDeclared >= originalTotal) {
+      return {
+        ok: false,
+        status: 400,
+        error: "partial_payment_invalid",
+        message_cs: "U částečné úhrady zadejte skutečně uhrazenou částku větší než 0 a menší než fakturovaná částka.",
+      };
+    }
+  }
+
+  const settlementRecap = invoice
+    ? computeAccountingSettlementRecap({
+        originalInvoiceCents: originalTotal,
+        priorCorrectedCents: priorCorrected,
+        stornoAmountCents,
+        paymentMode: paymentSettlement,
+        amountPaidCents: amountPaidDeclared,
+      })
+    : null;
+
+  if (
+    settlementRecap &&
+    paymentSettlement === "paid" &&
+    po.payment_status !== "paid" &&
+    !invoice?.paid_at &&
+    invoice?.status !== "paid"
+  ) {
+    /* Admin explicitly confirms full payment — allowed with audit trail below. */
   }
 
   const stornoId = newStornoRecordId();
@@ -216,10 +300,8 @@ export async function executePremiumOrderAccountingCancel(
     creditNoteId = newCreditNoteId();
     const creditNoteNumber = await allocatePremiumCreditNoteNumber(db, nowIso);
     const newTotal = originalTotal + correctionCents;
-    const paidSnapshot =
-      po.payment_status === "paid" || invoice.status === "paid" || invoice.paid_at ? "paid" : "unpaid";
-    let amountPaid = 0;
-    if (paidSnapshot === "paid") amountPaid = originalTotal;
+    const paidSnapshot = paymentSettlement;
+    const amountPaid = settlementRecap?.amount_paid_cents ?? 0;
 
     await db
       .prepare(
@@ -280,10 +362,35 @@ export async function executePremiumOrderAccountingCancel(
     .run();
 
   if (invoice && correctionCents !== 0) {
-    await db
-      .prepare("UPDATE invoices SET status = 'cancelled', updated_at = ? WHERE invoice_id = ? AND status != 'cancelled'")
-      .bind(nowIso, invoice.invoice_id)
-      .run();
+    const newTotal = originalTotal + correctionCents;
+    if (newTotal <= 0) {
+      await db
+        .prepare("UPDATE invoices SET status = 'cancelled', updated_at = ? WHERE invoice_id = ? AND status != 'cancelled'")
+        .bind(nowIso, invoice.invoice_id)
+        .run();
+    }
+  }
+
+  const paymentChanged =
+    (paymentSettlement === "paid" && po.payment_status !== "paid") ||
+    (paymentSettlement === "unpaid" && po.payment_status === "paid") ||
+    paymentSettlement === "partial";
+  if (paymentSettlement === "paid" || paymentSettlement === "unpaid") {
+    const nextPay = paymentSettlement;
+    if (po.payment_status !== nextPay) {
+      await db
+        .prepare(
+          `UPDATE premium_selected_orders SET payment_status = ?, paid_at = ?, paid_by = ?, updated_at = ? WHERE order_id = ?`
+        )
+        .bind(
+          nextPay,
+          nextPay === "paid" ? nowIso : null,
+          nextPay === "paid" ? input.actorUserId : null,
+          nowIso,
+          input.orderId
+        )
+        .run();
+    }
   }
 
   await appendPremiumOrderEvent(db, {
@@ -295,9 +402,31 @@ export async function executePremiumOrderAccountingCancel(
       storno_number: stornoNumber,
       credit_note_id: creditNoteId,
       correction_cents: correctionCents,
+      storno_amount_cents: stornoAmountCents,
+      payment_settlement: paymentSettlement,
+      payment_settlement_label: paymentSettlementLabelCs(paymentSettlement),
+      amount_paid_cents: settlementRecap?.amount_paid_cents ?? null,
+      overpayment_cents: settlementRecap?.overpayment_cents ?? null,
+      remaining_due_cents: settlementRecap?.remaining_due_cents ?? null,
+      payment_changed: paymentChanged,
       actor_label: input.actorUserId,
     },
   });
+
+  if (paymentChanged && (paymentSettlement === "paid" || paymentSettlement === "unpaid" || paymentSettlement === "partial")) {
+    await appendPremiumOrderEvent(db, {
+      orderId: input.orderId,
+      eventType: "payment_status_changed",
+      actorUserId: input.actorUserId,
+      payload: {
+        from: po.payment_status || "unpaid",
+        to: paymentSettlement === "partial" ? "partial_declared" : paymentSettlement,
+        amount_paid_cents: settlementRecap?.amount_paid_cents ?? 0,
+        context: "accounting_cancel",
+        actor_label: input.actorUserId,
+      },
+    });
+  }
 
   await insertAuditLog(
     db,
