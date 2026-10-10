@@ -138,52 +138,81 @@ async function main() {
     await page.click('nav button[data-id="premium"]');
     await page.waitForSelector(".order-cards .order-card", { state: "visible", timeout: 30000 });
 
-    const openTargets = page.locator(".order-cards .order-card[data-order-open], [data-premium-detail]");
-    const detailCount = await openTargets.count();
-    pass("MOBILE_PREMIUM_ORDERS_LOADED", detailCount > 0);
-    if (detailCount === 0) throw new Error("no_premium_orders");
+    const cookies = await context.cookies();
+    const cookieHeader = cookies.map((c) => c.name + "=" + c.value).join("; ");
+    const listRes = await fetch(BASE + "/v1/admin/premium/orders?status=published&limit=20", {
+      headers: { Cookie: cookieHeader },
+    });
+    const listJson = await listRes.json().catch(() => ({}));
+    const publishedIds = (listJson.premium_orders || []).map((o) => o && o.order_id).filter(Boolean);
+    pass("MOBILE_PUBLISHED_ORDER_COUNT", publishedIds.length);
+    pass("MOBILE_PUBLISHED_ORDER_TAILS", publishedIds.map((id) => id.slice(-12)).join(",") || "none");
+    if (publishedIds.length === 0) throw new Error("no_published_orders");
 
-    let orderIdAttr = null;
-    let missingText = 99;
-    let previewCount = 0;
-    let downloadCount = 0;
-    const tryCount = Math.min(detailCount, 12);
-    for (let i = 0; i < tryCount; i += 1) {
-      await openTargets.nth(i).click();
+    let mobileAllPass = true;
+    let lastVerifiedOrderId = null;
+    let lastPreviewCount = 0;
+    let lastDownloadCount = 0;
+    for (const oid of publishedIds) {
+      const openSel = '[data-order-open="' + oid + '"], [data-premium-detail="' + oid + '"]';
+      const openBtn = page.locator(openSel).first();
+      if ((await openBtn.count()) === 0) {
+        pass("MOBILE_OPEN_ORDER_" + oid.slice(-12), false);
+        mobileAllPass = false;
+        continue;
+      }
+      await openBtn.click();
       await page.waitForSelector(".order-docs-card", { timeout: 30000 });
-      missingText = await page.locator(".order-doc-item").filter({ hasText: "Stav: missing" }).count();
-      previewCount = await page.locator("[data-premium-doc-preview]").count();
-      downloadCount = await page.locator("[data-premium-doc-download]").count();
-      orderIdAttr = await page.locator("[data-premium-doc-preview]").first().getAttribute("data-premium-doc-preview");
-      if (missingText === 0 && previewCount >= 2 && downloadCount >= 2) break;
+      const missingText = await page.locator(".order-doc-item").filter({ hasText: "Stav: missing" }).count();
+      const previewCount = await page.locator("[data-premium-doc-preview]").count();
+      const downloadCount = await page.locator("[data-premium-doc-download]").count();
+      const tail = oid.slice(-12);
+      pass("MOBILE_ORDER_" + tail + "_MISSING_COUNT", missingText);
+      pass("MOBILE_ORDER_" + tail + "_PREVIEW_COUNT", previewCount);
+      pass("MOBILE_ORDER_" + tail + "_DOWNLOAD_COUNT", downloadCount);
+      const orderOk = missingText === 0 && previewCount >= 2 && downloadCount >= 2;
+      pass("MOBILE_ORDER_" + tail + "_UI_PASS", orderOk);
+      if (!orderOk) {
+        mobileAllPass = false;
+      } else {
+        lastVerifiedOrderId = oid;
+        lastPreviewCount = previewCount;
+        lastDownloadCount = downloadCount;
+      }
       await page.click("#order-detail-back");
       await page.waitForSelector(".order-cards .order-card", { state: "visible", timeout: 15000 });
     }
-    pass("MOBILE_UI_MISSING_STATUS_COUNT", missingText);
-    pass("CONFIRMATION_BUTTONS_VISIBLE", (await page.locator('[data-doc-kind="order_confirmation"][data-premium-doc-preview]').count()) >= 1);
-    pass("INVOICE_BUTTONS_VISIBLE", (await page.locator('[data-doc-kind="invoice_pdf"][data-premium-doc-preview]').count()) >= 1);
-    pass("MOBILE_PREVIEW_BUTTON_COUNT", previewCount);
-    pass("MOBILE_DOWNLOAD_BUTTON_COUNT", downloadCount);
 
-    if (missingText > 0 || previewCount < 2 || downloadCount < 2) {
-      fail("MOBILE_BROWSER_E2E_PASS", false);
-    } else {
+    pass("MOBILE_UI_MISSING_STATUS_COUNT", mobileAllPass ? 0 : 1);
+    pass("CONFIRMATION_BUTTONS_VISIBLE", mobileAllPass && lastPreviewCount >= 1);
+    pass("INVOICE_BUTTONS_VISIBLE", mobileAllPass && lastPreviewCount >= 2);
+    pass("MOBILE_PREVIEW_BUTTON_COUNT", lastPreviewCount);
+    pass("MOBILE_DOWNLOAD_BUTTON_COUNT", lastDownloadCount);
+
+    if (mobileAllPass) {
       pass("MOBILE_BROWSER_E2E_PASS", true);
+    } else {
+      fail("MOBILE_BROWSER_E2E_PASS", false);
     }
 
-    pass("ACTUAL_ORDER_IDENTIFIED", orderIdAttr ? orderIdAttr.slice(-12) : "unknown");
+    pass(
+      "ACTUAL_ORDER_IDENTIFIED",
+      mobileAllPass
+        ? publishedIds.map((id) => id.slice(-12)).join(",")
+        : lastVerifiedOrderId
+          ? lastVerifiedOrderId.slice(-12)
+          : "none"
+    );
 
-    let confPass = true;
-    let invPass = true;
-    if (orderIdAttr) {
-      const cookies = await context.cookies();
-      const cookieHeader = cookies.map((c) => c.name + "=" + c.value).join("; ");
+    let confPass = mobileAllPass;
+    let invPass = mobileAllPass;
+    if (mobileAllPass && lastVerifiedOrderId) {
       for (const kind of ["order_confirmation", "invoice_pdf"]) {
         for (const disposition of ["inline", "attachment"]) {
           const acc = await fetch(
             BASE +
               "/v1/admin/premium/orders/" +
-              encodeURIComponent(orderIdAttr) +
+              encodeURIComponent(lastVerifiedOrderId) +
               "/documents/" +
               kind +
               "/access?disposition=" +
@@ -191,9 +220,7 @@ async function main() {
             { headers: { Cookie: cookieHeader } }
           );
           const accJson = await acc.json().catch(() => ({}));
-          const pdfOk =
-            accJson.path &&
-            (await fetch(BASE + accJson.path, { headers: { Cookie: cookieHeader } })).ok;
+          const pdfOk = accJson.path && (await fetch(BASE + accJson.path, { headers: { Cookie: cookieHeader } })).ok;
           pass("MOBILE_" + kind + "_" + disposition.toUpperCase() + "_PDF", pdfOk);
           if (!pdfOk) {
             if (kind === "order_confirmation") confPass = false;
@@ -201,7 +228,7 @@ async function main() {
           }
         }
       }
-    } else {
+    } else if (!mobileAllPass) {
       confPass = false;
       invPass = false;
     }
