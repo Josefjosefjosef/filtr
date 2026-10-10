@@ -578,6 +578,8 @@ async function generateOneDocument(
     actorUserId: string;
     publishIdempotencyKey: string;
     forceRegenerate?: boolean;
+    /** Admin recovery: generate PDF even when legacy payload omitted optional confirmation fields. */
+    relaxedCustomerPdfAssert?: boolean;
   }
 ): Promise<{ ok: true; document_id: string } | { ok: false; error: string }> {
   if (!env.DB) return { ok: false, error: "no_db" };
@@ -635,7 +637,9 @@ async function generateOneDocument(
       const plainLines = buildOrderConfirmationPlainLines(ctx);
       const missing = assertOrderPdfContainsCustomerFields(plainLines, ctx);
       pdfBytes = await buildPremiumOrderConfirmationPdf(ctx, creative.bytes, creative.mime);
-      if (missing.length) throw new Error("order_pdf_incomplete:" + missing.slice(0, 5).join("|"));
+      if (!input.relaxedCustomerPdfAssert && missing.length) {
+        throw new Error("order_pdf_incomplete:" + missing.slice(0, 5).join("|"));
+      }
       docType = PREMIUM_DOC_TYPE_ORDER;
       title = "Potvrzení objednávky";
       invoiceId = null;
@@ -840,7 +844,11 @@ export async function resumePremiumOrderDocuments(
       job.document_id &&
       !(await fetchActiveOrderDocument(env.DB, orderId, docTypeForPremiumOrderDocKind(kind)))
     ) {
-      results[kind] = await generateOneDocument(env, orderId, kind, ctx, { ...base, forceRegenerate: true });
+      results[kind] = await generateOneDocument(env, orderId, kind, ctx, {
+        ...base,
+        forceRegenerate: true,
+        relaxedCustomerPdfAssert: true,
+      });
     } else if (!opts?.forceRegenerateReady && job?.status === "ready" && job.document_id) {
       results[kind] = { ok: true, document_id: job.document_id, skipped: true };
       continue;
@@ -848,6 +856,7 @@ export async function resumePremiumOrderDocuments(
       results[kind] = await generateOneDocument(env, orderId, kind, ctx, {
         ...base,
         forceRegenerate: Boolean(opts?.forceRegenerateReady),
+        relaxedCustomerPdfAssert: true,
       });
     }
     if (!(results[kind] as { ok?: boolean }).ok) allOk = false;
@@ -1016,8 +1025,13 @@ export async function handleAdminPremiumOrderDocumentAccess(
 export async function handleAdminPremiumRetryDocuments(request: Request, env: Env, orderId: string): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
-  const result = await retryPremiumOrderDocuments(env, orderId, guard.userId);
-  return json(result, result.ok ? 200 : 502);
+  try {
+    const result = await retryPremiumOrderDocuments(env, orderId, guard.userId);
+    return json(result, result.ok ? 200 : 502);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return json({ ok: false, results: { error: "retry_unhandled", detail: msg.slice(0, 500) } }, 500);
+  }
 }
 
 export async function handleAdminPremiumBackfillDocuments(request: Request, env: Env): Promise<Response> {

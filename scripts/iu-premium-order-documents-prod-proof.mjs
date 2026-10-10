@@ -387,6 +387,9 @@ async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCou
   pass("PUBLISHED_BACKFILL_HTTP_STATUS", bfRes.status);
   pass("PUBLISHED_BACKFILL_APPLY_HTTP", bfRes.status === 200 && bfJson.ok === true);
   pass("PUBLISHED_BACKFILL_PROCESSED", Number(bfJson.processed) || 0);
+  if (Array.isArray(bfJson.outcomes)) {
+    pass("PUBLISHED_BACKFILL_OUTCOMES", JSON.stringify(bfJson.outcomes).slice(0, 1200));
+  }
   const invAfterRecovery = d1Query(
     "SELECT COUNT(*) AS c FROM invoices i JOIN premium_selected_orders po ON po.order_id = i.order_id WHERE po.workflow_status='published'"
   );
