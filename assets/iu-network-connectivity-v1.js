@@ -11,6 +11,8 @@
   var EXTERNAL_ARMED_KEY = "iu_external_nav_armed";
   var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
+  var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v1-20261010";
   var lastProbe = { ok: null, ts: 0 };
   var externalRestoreInFlight = false;
   var reconnectTimer = null;
@@ -327,7 +329,16 @@
     } catch (_) {}
     restorePwaExternalMainScrollIfNeeded();
     try {
+      var wrapNav = document.getElementById("iuMobileGateWrap");
+      var gateNav = wrapNav ? String(wrapNav.getAttribute("data-iu-mobile-gate") || "") : "";
+      if (gateNav === "nav" && typeof window.iuMenuNavApplyScroll === "function" && typeof window.iuMenuNavReadScroll === "function") {
+        var menuY = window.iuMenuNavReadScroll();
+        if (menuY > 0) window.iuMenuNavApplyScroll(menuY);
+      }
+    } catch (_) {}
+    try {
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+      sessionStorage.removeItem("iuMobileWebNavReturnArmed");
     } catch (_) {}
   }
 
@@ -338,14 +349,18 @@
       return;
     }
     externalRestoreInFlight = true;
-    clearShellErrorUiOnly();
     try {
-      sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+      sessionStorage.setItem(EXTERNAL_RESTORE_ACTIVE_KEY, "1");
     } catch (_) {}
+    clearShellErrorUiOnly();
     reassertIntentionalOverlayShell();
     try {
       invokeReturnNavigationRestore();
     } finally {
+      try {
+        sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+        sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      } catch (_) {}
       try {
         requestAnimationFrame(function () {
           externalRestoreInFlight = false;
@@ -354,6 +369,15 @@
         externalRestoreInFlight = false;
       }
     }
+  }
+
+  function isExternalReturnRestoreActive() {
+    try {
+      if (externalRestoreInFlight) return true;
+      if (sessionStorage.getItem(EXTERNAL_RESTORE_ACTIVE_KEY) === "1") return true;
+      if (sessionStorage.getItem(EXTERNAL_ARMED_KEY) === "1") return true;
+    } catch (_) {}
+    return false;
   }
 
   function armExternalReturn() {
@@ -592,6 +616,8 @@
     openExternalSync: openExternalSync,
     armExternalReturn: armExternalReturn,
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
+    isExternalReturnRestoreActive: isExternalReturnRestoreActive,
+    pwaExternalReturnBuildId: PWA_EXTERNAL_RETURN_BUILD_ID,
     hasIntentionalToolOverlayOpen: hasIntentionalToolOverlayOpen,
     showOfflineHint: showOfflineHint,
     hideOfflineHint: hideOfflineHint,
