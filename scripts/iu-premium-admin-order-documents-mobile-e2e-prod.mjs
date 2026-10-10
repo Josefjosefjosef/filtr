@@ -154,7 +154,12 @@ async function main() {
     let lastPreviewCount = 0;
     let lastDownloadCount = 0;
     for (const oid of publishedIds) {
-      const openSel = '[data-order-open="' + oid + '"], [data-premium-detail="' + oid + '"]';
+      const openSel =
+        '.order-cards .order-card[data-order-open="' +
+        oid +
+        '"], .order-cards [data-premium-detail="' +
+        oid +
+        '"]';
       const openBtn = page.locator(openSel).first();
       if ((await openBtn.count()) === 0) {
         pass("MOBILE_OPEN_ORDER_" + oid.slice(-12), false);
