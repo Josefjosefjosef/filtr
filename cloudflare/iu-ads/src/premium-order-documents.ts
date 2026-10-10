@@ -197,43 +197,103 @@ async function loadOrderDocumentContext(
   input: { campaignId: string; invoiceId: string; actorUserId: string; publishIdempotencyKey: string },
   opts?: { campaignFallbackAttempted?: boolean }
 ): Promise<PremiumOrderPdfContext | null> {
-  const row = await db
-    .prepare(
-      `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.payload_json, o.contact_person, o.created_at AS order_created_at,
-              c.company_name, c.ico, c.dic, c.address, c.billing_info, c.email AS client_email,
-              camp.evidence_code, camp.start_at, camp.end_at,
-              inv.invoice_number, inv.issued_at, inv.due_at, inv.total_cents, inv.currency, inv.campaign_id AS invoice_campaign_id,
-              ps.agreed_price_cents AS snap_agreed
-       FROM premium_selected_orders po
-       JOIN orders o ON o.order_id = po.order_id
-       JOIN clients c ON c.client_id = o.client_id
-       LEFT JOIN campaigns camp ON camp.campaign_id = ?
-       JOIN invoices inv ON inv.invoice_id = ?
-       LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
-       WHERE po.order_id = ?`
-    )
-    .bind(input.campaignId, input.invoiceId, orderId)
+  const po = await db
+    .prepare("SELECT * FROM premium_selected_orders WHERE order_id = ? LIMIT 1")
+    .bind(orderId)
     .first<Record<string, unknown>>();
-  if (!row) {
+  if (!po) return null;
+
+  const order = await db
+    .prepare(
+      "SELECT client_id, order_number, customer_order_code, payload_json, contact_person, created_at FROM orders WHERE order_id = ? LIMIT 1"
+    )
+    .bind(orderId)
+    .first<Record<string, unknown>>();
+  if (!order?.client_id) return null;
+
+  const client = await db
+    .prepare(
+      "SELECT company_name, ico, dic, address, billing_info, email FROM clients WHERE client_id = ? LIMIT 1"
+    )
+    .bind(order.client_id)
+    .first<Record<string, unknown>>();
+  if (!client) return null;
+
+  const inv = await db
+    .prepare(
+      "SELECT invoice_id, invoice_number, issued_at, due_at, total_cents, currency, campaign_id FROM invoices WHERE invoice_id = ? LIMIT 1"
+    )
+    .bind(input.invoiceId)
+    .first<Record<string, unknown>>();
+  if (!inv?.invoice_id) {
     if (opts?.campaignFallbackAttempted) return null;
-    const invRow = await db
-      .prepare("SELECT campaign_id FROM invoices WHERE invoice_id = ? LIMIT 1")
-      .bind(input.invoiceId)
-      .first<{ campaign_id: string | null }>();
-    const altCampaign =
-      typeof invRow?.campaign_id === "string" && invRow.campaign_id.trim() && invRow.campaign_id !== input.campaignId
-        ? invRow.campaign_id.trim()
-        : null;
-    if (altCampaign) {
+    const invByOrder = await db
+      .prepare(
+        "SELECT invoice_id, campaign_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+      )
+      .bind(orderId)
+      .first<{ invoice_id: string; campaign_id: string | null }>();
+    if (invByOrder?.invoice_id && invByOrder.invoice_id !== input.invoiceId) {
+      const altCampaign =
+        typeof invByOrder.campaign_id === "string" && invByOrder.campaign_id.trim()
+          ? invByOrder.campaign_id.trim()
+          : input.campaignId;
       return loadOrderDocumentContext(
         db,
         orderId,
-        { ...input, campaignId: altCampaign },
+        { ...input, invoiceId: invByOrder.invoice_id, campaignId: altCampaign },
         { campaignFallbackAttempted: true }
       );
     }
     return null;
   }
+
+  let campaignId = input.campaignId;
+  const invCampaign =
+    typeof inv.campaign_id === "string" && inv.campaign_id.trim() ? inv.campaign_id.trim() : null;
+  if (!opts?.campaignFallbackAttempted && invCampaign && invCampaign !== campaignId) {
+    return loadOrderDocumentContext(
+      db,
+      orderId,
+      { ...input, campaignId: invCampaign },
+      { campaignFallbackAttempted: true }
+    );
+  }
+
+  const camp = await db
+    .prepare("SELECT evidence_code, start_at, end_at FROM campaigns WHERE campaign_id = ? LIMIT 1")
+    .bind(campaignId)
+    .first<{ evidence_code: string | null; start_at: string | null; end_at: string | null }>();
+
+  const snap = await db
+    .prepare("SELECT agreed_price_cents FROM premium_order_price_snapshots WHERE order_id = ? LIMIT 1")
+    .bind(orderId)
+    .first<{ agreed_price_cents: number | null }>();
+
+  const row: Record<string, unknown> = {
+    ...po,
+    client_id: order.client_id,
+    order_number: order.order_number,
+    customer_order_code: order.customer_order_code,
+    payload_json: order.payload_json,
+    contact_person: order.contact_person,
+    order_created_at: order.created_at,
+    company_name: client.company_name,
+    ico: client.ico,
+    dic: client.dic,
+    address: client.address,
+    billing_info: client.billing_info,
+    client_email: client.email,
+    evidence_code: camp?.evidence_code ?? null,
+    start_at: camp?.start_at ?? null,
+    end_at: camp?.end_at ?? null,
+    invoice_number: inv.invoice_number,
+    issued_at: inv.issued_at,
+    due_at: inv.due_at,
+    total_cents: inv.total_cents,
+    currency: inv.currency,
+    snap_agreed: snap?.agreed_price_cents ?? null,
+  };
 
   const payload = parsePremiumOrderPayload(typeof row.payload_json === "string" ? row.payload_json : null);
   let payloadRaw: Record<string, unknown> = {};
@@ -280,7 +340,7 @@ async function loadOrderDocumentContext(
   const position = Number(row.position) || 0;
   const publishedAt = String(row.published_at || new Date().toISOString());
   const approvedAt = creativeApprovedAt || publishedAt;
-  const evidence = typeof row.evidence_code === "string" ? row.evidence_code : input.campaignId;
+  const evidence = typeof row.evidence_code === "string" ? row.evidence_code : campaignId;
   const adSnapshot =
     typeof payloadRaw.ad_web_placement_url === "string" ? payloadRaw.ad_web_placement_url.trim() : null;
   const adWebPlacementUrl = resolvePremiumAdWebPlacementUrl({
@@ -713,6 +773,7 @@ export async function resumePremiumOrderDocuments(
   opts?: { forceRegenerateReady?: boolean }
 ): Promise<{ ok: boolean; results: Record<string, unknown> }> {
   if (!env.DB) return { ok: false, results: { error: "no_db" } };
+  if (!env.DOCUMENTS) return { ok: false, results: { error: "documents_not_configured" } };
   const po = await env.DB.prepare(
     `SELECT po.published_campaign_id, po.publish_idempotency_key, o.client_id
      FROM premium_selected_orders po
@@ -721,30 +782,33 @@ export async function resumePremiumOrderDocuments(
   )
     .bind(orderId)
     .first<{ published_campaign_id: string | null; client_id: string; publish_idempotency_key: string | null }>();
-  if (!po?.published_campaign_id) return { ok: false, results: { error: "not_published" } };
-  let inv = await env.DB.prepare("SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? AND campaign_id = ? LIMIT 1")
-    .bind(orderId, po.published_campaign_id)
-    .first<{ invoice_id: string; invoice_number: string }>();
-  if (!inv?.invoice_id) {
-    inv = await env.DB.prepare(
-      "SELECT invoice_id, invoice_number FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
-    )
-      .bind(orderId)
-      .first<{ invoice_id: string; invoice_number: string }>();
-  }
+  if (!po) return { ok: false, results: { error: "premium_order_not_found" } };
+  let inv = await env.DB.prepare(
+    "SELECT invoice_id, invoice_number, campaign_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+  )
+    .bind(orderId)
+    .first<{ invoice_id: string; invoice_number: string; campaign_id: string | null }>();
   if (!inv?.invoice_id) return { ok: false, results: { error: "invoice_missing" } };
+
+  const publishedCampaignId =
+    po?.published_campaign_id && String(po.published_campaign_id).trim()
+      ? String(po.published_campaign_id).trim()
+      : inv.campaign_id && String(inv.campaign_id).trim()
+        ? String(inv.campaign_id).trim()
+        : null;
+  if (!publishedCampaignId) return { ok: false, results: { error: "not_published" } };
 
   const publishKey = po.publish_idempotency_key || "retry:" + orderId;
   const ctx = await loadOrderDocumentContext(env.DB, orderId, {
-    campaignId: po.published_campaign_id,
+    campaignId: publishedCampaignId,
     invoiceId: inv.invoice_id,
     actorUserId,
     publishIdempotencyKey: publishKey,
   });
-  if (!ctx) return { ok: false, results: { error: "context_failed" } };
+  if (!ctx) return { ok: false, results: { error: "context_failed", invoice_id: inv.invoice_id, campaign_id: publishedCampaignId } };
 
   const base = {
-    campaignId: po.published_campaign_id,
+    campaignId: publishedCampaignId,
     invoiceId: inv.invoice_id,
     clientId: po.client_id,
     actorUserId,
@@ -989,8 +1053,13 @@ export async function handleAdminPremiumBackfillDocuments(request: Request, env:
 
   const outcomes: unknown[] = [];
   for (const orderId of ids) {
-    const r = await retryPremiumOrderDocuments(env, orderId, guard.userId);
-    outcomes.push({ order_id: orderId, ...r });
+    try {
+      const r = await retryPremiumOrderDocuments(env, orderId, guard.userId);
+      outcomes.push({ order_id: orderId, ...r });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      outcomes.push({ order_id: orderId, ok: false, results: { error: msg.slice(0, 500) } });
+    }
   }
   return json({ ok: true, processed: ids.length, outcomes });
 }
