@@ -824,6 +824,15 @@ export async function resumePremiumOrderDocuments(
     invoice_number: inv.invoice_number,
   };
   const kinds: PremiumOrderDocKind[] = ["order_confirmation", "invoice_pdf"];
+  const resetIso = new Date().toISOString();
+  for (const kind of kinds) {
+    await env.DB.prepare(
+      `UPDATE premium_order_document_jobs SET status = ?, last_error = NULL, updated_at = ?
+       WHERE order_id = ? AND doc_kind = ? AND status IN ('generating', 'error')`
+    )
+      .bind("pending", resetIso, orderId, kind)
+      .run();
+  }
   let allOk = true;
   for (const kind of kinds) {
     const job = await env.DB.prepare(
