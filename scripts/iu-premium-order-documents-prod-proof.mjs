@@ -27,7 +27,7 @@ const BASE = process.env.ADS_BASE_URL || "https://ads.infouzel.cz";
 const PEPPER = process.env.ADS_PASSWORD_PEPPER || "";
 const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID || "577868e9aac9c289e9323100f68fad16";
 const RUN = Date.now().toString(36);
-const MAX_PROD_HTTP = 24;
+const MAX_PROD_HTTP = 52;
 let prodHttp = 0;
 const fails = [];
 
@@ -273,6 +273,114 @@ function detailHasReadyKinds(detail, kinds) {
   return kinds.every((k) => ready.some((d) => d.kind === k));
 }
 
+function d1PublishedOrderDiag(orderId) {
+  const oid = sqlEscape(orderId);
+  const inv = (((d1Query(
+    "SELECT invoice_id, invoice_number, campaign_id FROM invoices WHERE order_id = '" + oid + "' ORDER BY created_at DESC LIMIT 3"
+  )[0] || {}).results) || []);
+  const docs = (((d1Query(
+    "SELECT document_id, doc_type, status, order_id, campaign_id, substr(r2_key,1,48) AS r2_prefix FROM documents WHERE order_id = '" +
+      oid +
+      "' OR campaign_id IN (SELECT published_campaign_id FROM premium_selected_orders WHERE order_id = '" +
+      oid +
+      "' AND published_campaign_id IS NOT NULL) ORDER BY doc_type"
+  )[0] || {}).results) || []);
+  const jobs = (((d1Query(
+    "SELECT doc_kind, status, document_id, substr(COALESCE(last_error,''),1,160) AS err FROM premium_order_document_jobs WHERE order_id = '" +
+      oid +
+      "'"
+  )[0] || {}).results) || []);
+  return { invoice_rows: inv.length, document_rows: docs.length, job_rows: jobs.length, invoices: inv, documents: docs, jobs: jobs };
+}
+
+async function scanPublishedOrdersReady(cookie, orderRows, limit) {
+  let publishedMissingReadyUi = 0;
+  let publishedCampaignPdfButUiMissing = 0;
+  const campaignPdfMissingSamples = [];
+  const missingOrderIds = [];
+  for (const row of orderRows.slice(0, limit)) {
+    const oid = row.order_id;
+    if (!oid) continue;
+    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
+      headers: { Cookie: cookie },
+    });
+    const detail = await detailRes.json().catch(() => ({}));
+    if (detailHasReadyKinds(detail, ["invoice_pdf", "order_confirmation"])) continue;
+    publishedMissingReadyUi += 1;
+    missingOrderIds.push(oid);
+    try {
+      const cntRow = d1Query(
+        "SELECT COUNT(*) AS c FROM documents d INNER JOIN premium_selected_orders po ON po.published_campaign_id = d.campaign_id WHERE po.order_id = '" +
+          sqlEscape(oid) +
+          "' AND d.status = 'active' AND d.doc_type IN ('premium_order_confirmation','premium_invoice_pdf')"
+      );
+      const c = Number((((cntRow[0] || {}).results || [])[0] || {}).c) || 0;
+      if (c >= 2) {
+        publishedCampaignPdfButUiMissing += 1;
+        if (campaignPdfMissingSamples.length < 5) campaignPdfMissingSamples.push(orderIdTail(oid));
+      }
+    } catch (_) {
+      /* non-blocking */
+    }
+  }
+  return {
+    publishedMissingReadyUi,
+    publishedCampaignPdfButUiMissing,
+    campaignPdfMissingSamples,
+    missingOrderIds,
+  };
+}
+
+async function adminOrderDocAccessOk(cookie, orderId, kind, disposition) {
+  const acc = await prodFetch(
+    BASE +
+      "/v1/admin/premium/orders/" +
+      encodeURIComponent(orderId) +
+      "/documents/" +
+      kind +
+      "/access?disposition=" +
+      disposition,
+    { headers: { Cookie: cookie } }
+  );
+  const accJson = await acc.json().catch(() => ({}));
+  if (!accJson.path) return false;
+  const pdf = await prodFetch(BASE + accJson.path, { headers: { Cookie: cookie } });
+  return pdf.ok;
+}
+
+async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCountBeforeRecovery) {
+  if (!missingOrderIds.length) return { ok: true, skipped: true };
+  for (const oid of missingOrderIds) {
+    try {
+      const diag = d1PublishedOrderDiag(oid);
+      pass("D1_DIAG_ORDER_" + orderIdTail(oid), JSON.stringify(diag));
+    } catch (err) {
+      pass("D1_DIAG_ORDER_" + orderIdTail(oid), "error:" + (err && err.message ? err.message : String(err)));
+    }
+    const retryRes = await prodFetch(
+      BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid) + "/documents/retry",
+      { method: "POST", headers: { "content-type": "application/json", Cookie: cookie }, body: "{}" }
+    );
+    pass("PUBLISHED_RETRY_HTTP_" + orderIdTail(oid), retryRes.status === 200);
+    await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), { headers: { Cookie: cookie } });
+  }
+  const bfRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-documents", {
+    method: "POST",
+    headers: { "content-type": "application/json", Cookie: cookie },
+    body: JSON.stringify({ dry_run: false, limit: Math.min(20, missingOrderIds.length) }),
+  });
+  const bfJson = await bfRes.json().catch(() => ({}));
+  pass("PUBLISHED_BACKFILL_APPLY_HTTP", bfRes.status === 200 && bfJson.ok === true);
+  pass("PUBLISHED_BACKFILL_PROCESSED", Number(bfJson.processed) || 0);
+  const invAfterRecovery = d1Query(
+    "SELECT COUNT(*) AS c FROM invoices i JOIN premium_selected_orders po ON po.order_id = i.order_id WHERE po.workflow_status='published'"
+  );
+  const invCountAfterRecovery = Number((((invAfterRecovery[0] || {}).results || [])[0] || {}).c) || 0;
+  const noDupInv = invCountAfterRecovery === invCountBeforeRecovery;
+  pass("NO_DUPLICATE_INVOICES_AFTER_RECOVERY", noDupInv);
+  return { ok: noDupInv && bfRes.status === 200, invCountAfterRecovery };
+}
+
 function d1Query(sql) {
   const out = execFileSync(
     "npx",
@@ -434,42 +542,37 @@ async function main() {
   pass("PUBLISHED_ORDERS_LIST", listRes.status === 200 && orders.length > 0);
 
   const publishedScanLimit = Math.min(50, orders.length);
-  let publishedMissingReadyUi = 0;
-  let publishedCampaignPdfButUiMissing = 0;
-  const campaignPdfMissingSamples = [];
-  for (const row of orders.slice(0, publishedScanLimit)) {
-    const oid = row.order_id;
-    if (!oid) continue;
-    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
-      headers: { Cookie: cookie },
-    });
-    const detail = await detailRes.json().catch(() => ({}));
-    if (detailHasReadyKinds(detail, ["invoice_pdf", "order_confirmation"])) continue;
-    publishedMissingReadyUi += 1;
-    try {
-      const cntRow = d1Query(
-        "SELECT COUNT(*) AS c FROM documents d INNER JOIN premium_selected_orders po ON po.published_campaign_id = d.campaign_id WHERE po.order_id = '" +
-          sqlEscape(oid) +
-          "' AND d.status = 'active' AND d.doc_type IN ('premium_order_confirmation','premium_invoice_pdf')"
-      );
-      const c = Number((((cntRow[0] || {}).results || [])[0] || {}).c) || 0;
-      if (c >= 2) {
-        publishedCampaignPdfButUiMissing += 1;
-        if (campaignPdfMissingSamples.length < 5) campaignPdfMissingSamples.push(orderIdTail(oid));
-      }
-    } catch (_) {
-      /* non-blocking */
-    }
-  }
+  let publishedScan = await scanPublishedOrdersReady(cookie, orders, publishedScanLimit);
   pass("PUBLISHED_ORDERS_SCAN_LIMIT", publishedScanLimit);
-  pass("PUBLISHED_ORDERS_MISSING_READY_UI", publishedMissingReadyUi);
-  pass("PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING", publishedCampaignPdfButUiMissing);
-  pass("PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING_SAMPLE", campaignPdfMissingSamples.join(",") || "none");
-  if (publishedCampaignPdfButUiMissing > 0) {
+  pass(
+    "PUBLISHED_ORDER_TAILS",
+    orders
+      .slice(0, publishedScanLimit)
+      .map((r) => orderIdTail(r.order_id))
+      .join(",") || "none"
+  );
+  pass("PUBLISHED_ORDERS_MISSING_READY_UI", publishedScan.publishedMissingReadyUi);
+  pass("PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING", publishedScan.publishedCampaignPdfButUiMissing);
+  pass(
+    "PUBLISHED_ORDERS_CAMPAIGN_PDF_BUT_UI_MISSING_SAMPLE",
+    publishedScan.campaignPdfMissingSamples.join(",") || "none"
+  );
+  if (publishedScan.publishedCampaignPdfButUiMissing > 0) {
     fail("PRODUCTION_ALL_PUBLISHED_DOCS_CONSISTENT", false);
   } else {
     pass("PRODUCTION_ALL_PUBLISHED_DOCS_CONSISTENT", true);
   }
+  if (publishedScan.missingOrderIds.length > 0) {
+    pass("PUBLISHED_RECOVERY_MISSING_IDS", publishedScan.missingOrderIds.map(orderIdTail).join(","));
+    await recoverPublishedOrdersMissingDocs(cookie, publishedScan.missingOrderIds, invCountBefore);
+    publishedScan = await scanPublishedOrdersReady(cookie, orders, publishedScanLimit);
+    pass("PUBLISHED_ORDERS_MISSING_READY_UI_AFTER_RECOVERY", publishedScan.publishedMissingReadyUi);
+  } else {
+    pass("PUBLISHED_RECOVERY_SKIPPED", true);
+  }
+  let publishedMissingReadyUi = publishedScan.publishedMissingReadyUi;
+  let publishedCampaignPdfButUiMissing = publishedScan.publishedCampaignPdfButUiMissing;
+  pass("PUBLISHED_ORDERS_MISSING_READY_UI", publishedMissingReadyUi);
   const publishedListAllMissingReady =
     publishedScanLimit > 0 && publishedMissingReadyUi >= publishedScanLimit;
   pass("PUBLISHED_LIST_ALL_MISSING_READY_DOCS", publishedListAllMissingReady);
@@ -478,6 +581,36 @@ async function main() {
   } else {
     pass("PUBLISHED_ADMIN_LIST_HAS_READY_DOCS", true);
   }
+  let publishedEachOrderPass = true;
+  for (const row of orders.slice(0, publishedScanLimit)) {
+    const oid = row.order_id;
+    if (!oid) continue;
+    const tail = orderIdTail(oid);
+    const detailRes = await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), {
+      headers: { Cookie: cookie },
+    });
+    const detail = await detailRes.json().catch(() => ({}));
+    const ready = detailHasReadyKinds(detail, ["invoice_pdf", "order_confirmation"]);
+    pass("PUBLISHED_ORDER_" + tail + "_UI_READY", ready);
+    if (!ready) {
+      publishedEachOrderPass = false;
+      continue;
+    }
+    let confOk = true;
+    let invOk = true;
+    for (const disposition of ["inline", "attachment"]) {
+      const c1 = await adminOrderDocAccessOk(cookie, oid, "order_confirmation", disposition);
+      const c2 = await adminOrderDocAccessOk(cookie, oid, "invoice_pdf", disposition);
+      pass("PUBLISHED_ORDER_" + tail + "_CONF_" + disposition.toUpperCase(), c1);
+      pass("PUBLISHED_ORDER_" + tail + "_INV_" + disposition.toUpperCase(), c2);
+      if (!c1) confOk = false;
+      if (!c2) invOk = false;
+    }
+    pass("PUBLISHED_ORDER_" + tail + "_CONFIRMATION_ACCESS", confOk);
+    pass("PUBLISHED_ORDER_" + tail + "_INVOICE_ACCESS", invOk);
+    if (!confOk || !invOk) publishedEachOrderPass = false;
+  }
+  pass("PUBLISHED_ALL_ORDERS_DOCS_PASS", publishedEachOrderPass);
 
   const postDeployNewInvoices = listPostDeployNewInvoiceOrders(15);
   const postDeployNewOrderIds = postDeployNewInvoices.map((r) => r.order_id).filter(Boolean);
@@ -808,6 +941,7 @@ async function main() {
     prodQrAcceptable &&
     publishedCampaignPdfButUiMissing === 0 &&
     !publishedListAllMissingReady &&
+    publishedEachOrderPass === true &&
     (productionQrPass || productionQrOutcome === "NOT_VERIFIED_NO_NEW_INVOICE");
   const taskComplete = ok && freezeGuardPass;
   pass("TASK_COMPLETE", taskComplete);
