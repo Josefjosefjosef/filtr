@@ -583,6 +583,7 @@ async function main() {
   if (publishedScan.missingOrderIds.length > 0) {
     pass("PUBLISHED_RECOVERY_MISSING_IDS", publishedScan.missingOrderIds.map(orderIdTail).join(","));
     await recoverPublishedOrdersMissingDocs(cookie, publishedScan.missingOrderIds, invCountBefore);
+    await new Promise((r) => setTimeout(r, 8000));
     publishedScan = await scanPublishedOrdersReady(cookie, orders, publishedScanLimit);
     pass("PUBLISHED_ORDERS_MISSING_READY_UI_AFTER_RECOVERY", publishedScan.publishedMissingReadyUi);
   } else {
