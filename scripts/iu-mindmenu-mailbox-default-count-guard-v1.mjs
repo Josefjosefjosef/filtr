@@ -35,9 +35,16 @@ function fail(id) {
 }
 
 async function clickWhenVisible(page, selector) {
-  const loc = page.locator(selector);
-  await loc.waitFor({ state: "visible", timeout: 45000 });
-  await loc.click({ force: true });
+  const ok = await page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el || typeof el.click !== "function") return { ok: false, reason: "missing" };
+    const r = el.getBoundingClientRect();
+    if (r.width < 1 && r.height < 1) return { ok: false, reason: "zero_rect" };
+    el.click();
+    return { ok: true };
+  }, selector);
+  if (!ok.ok) fail("click_dom_failed:" + selector + ":" + (ok.reason || ""));
+  if (!ok.ok) throw new Error("click_dom_failed");
 }
 
 function staticContract() {
@@ -145,9 +152,13 @@ async function openMindMenu(page) {
         });
         await page.waitForFunction(
           () => {
+            const ov = document.getElementById("iuMyInfoUzelOverlay");
             const list = document.getElementById("iuMailboxList");
             const add = document.getElementById("iuMailboxAdd");
-            return !!(list && add);
+            return (
+              !!(ov && ov.hidden === false && document.body.classList.contains("iu-myinfouzel-open")) &&
+              !!(list && add)
+            );
           },
           null,
           { timeout: 45000 }
