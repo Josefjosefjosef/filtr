@@ -213,7 +213,7 @@ async function loadOrderDocumentContext(
 
   const client = await db
     .prepare(
-      "SELECT company_name, ico, dic, address, billing_info, email FROM clients WHERE client_id = ? LIMIT 1"
+      "SELECT company_name, ico, dic, address, billing_info FROM clients WHERE client_id = ? LIMIT 1"
     )
     .bind(order.client_id)
     .first<Record<string, unknown>>();
@@ -283,7 +283,7 @@ async function loadOrderDocumentContext(
     dic: client.dic,
     address: client.address,
     billing_info: client.billing_info,
-    client_email: client.email,
+    client_email: null,
     evidence_code: camp?.evidence_code ?? null,
     start_at: camp?.start_at ?? null,
     end_at: camp?.end_at ?? null,
