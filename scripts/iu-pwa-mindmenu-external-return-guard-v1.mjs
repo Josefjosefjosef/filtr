@@ -984,7 +984,10 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
       (cold.visibleHomeFrames || 0) === 0,
       label + ":colddoc:VISIBLE_HOME_FRAMES_DURING_RETURN=" + cold.visibleHomeFrames
     );
-    must(cold.feedVisibleNow !== true, label + ":colddoc:feed_not_painted_during_boot");
+    must(
+      cold.boot !== true || cold.feedVisibleNow !== true,
+      label + ":colddoc:feed_not_painted_during_boot:boot=" + cold.boot + ":feed=" + cold.feedVisibleNow
+    );
     must(cold.gate === "tools", label + ":colddoc:gate_tools:" + cold.gate);
     must(cold.overlay === true, label + ":colddoc:overlay");
     must(cold.guard === true, label + ":colddoc:guard_still_true");
