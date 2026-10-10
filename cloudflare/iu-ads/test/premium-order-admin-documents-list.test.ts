@@ -114,6 +114,33 @@ describe("listPremiumOrderDocumentsForAdmin", () => {
     expect(cards[1]?.download_path).toContain("/access?disposition=attachment");
   });
 
+  it("shows ready when campaign PDF is linked to a different order_id (repair without regenerate)", async () => {
+    let campaignLookup = false;
+    const wrapped = {
+      prepare: (sql: string) => ({
+        bind: (...args: unknown[]) => ({
+          all: async () => ({ results: [] }),
+          first: async () => {
+            if (sql.includes("FROM documents") && sql.includes("order_id = ?") && !sql.includes("premium_selected_orders")) {
+              return null;
+            }
+            if (sql.includes("premium_selected_orders") && sql.includes("published_campaign_id")) {
+              campaignLookup = true;
+              return { document_id: "doc_wrong_link", r2_key: "document/x.pdf", linked_order_id: "ord_other" };
+            }
+            return null;
+          },
+          run: async () => ({ meta: { changes: 1 } }),
+        }),
+      }),
+    } as unknown as D1Database;
+
+    const env = { DB: wrapped, ADS_R2_SIGNING_SECRET: "secret" } as Env;
+    const cards = await listPremiumOrderDocumentsForAdmin(env, new Request("https://x"), "ord_camp");
+    expect(campaignLookup).toBe(true);
+    expect(cards.find((c) => c.kind === "order_confirmation")?.status).toBe("ready");
+  });
+
   it("shows ready when PDF is linked only via published campaign_id (missing order_id on document row)", async () => {
     let campaignLookup = false;
     const { db } = mockDbForAdminList({
