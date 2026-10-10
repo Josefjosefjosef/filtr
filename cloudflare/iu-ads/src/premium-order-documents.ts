@@ -14,7 +14,11 @@ import {
 } from "./premium-order-confirmation-pdf";
 import { buildPremiumInvoicePdf } from "./premium-invoice-pdf";
 import { resolvePremiumAdWebPlacementUrl } from "./premium-ad-web-placement";
-import { assertOrderPdfContainsCustomerFields, type PremiumOrderPdfContext } from "./premium-order-pdf-fields";
+import {
+  assertOrderPdfContainsCustomerFields,
+  resolvePremiumOrderPdfBillingFields,
+  type PremiumOrderPdfContext,
+} from "./premium-order-pdf-fields";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { archiveDocumentRevisionBeforeReplace } from "./premium-order-document-revisions";
 import type { Env } from "./types";
@@ -190,26 +194,46 @@ function variableSymbolFromInvoiceNumber(invoiceNumber: string): string {
 async function loadOrderDocumentContext(
   db: D1Database,
   orderId: string,
-  input: { campaignId: string; invoiceId: string; actorUserId: string; publishIdempotencyKey: string }
+  input: { campaignId: string; invoiceId: string; actorUserId: string; publishIdempotencyKey: string },
+  opts?: { campaignFallbackAttempted?: boolean }
 ): Promise<PremiumOrderPdfContext | null> {
   const row = await db
     .prepare(
       `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.payload_json, o.contact_person, o.created_at AS order_created_at,
               c.company_name, c.ico, c.dic, c.address, c.billing_info, c.email AS client_email,
               camp.evidence_code, camp.start_at, camp.end_at,
-              inv.invoice_number, inv.issued_at, inv.due_at, inv.total_cents, inv.currency,
+              inv.invoice_number, inv.issued_at, inv.due_at, inv.total_cents, inv.currency, inv.campaign_id AS invoice_campaign_id,
               ps.agreed_price_cents AS snap_agreed
        FROM premium_selected_orders po
        JOIN orders o ON o.order_id = po.order_id
        JOIN clients c ON c.client_id = o.client_id
-       JOIN campaigns camp ON camp.campaign_id = ?
+       LEFT JOIN campaigns camp ON camp.campaign_id = ?
        JOIN invoices inv ON inv.invoice_id = ?
        LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
        WHERE po.order_id = ?`
     )
     .bind(input.campaignId, input.invoiceId, orderId)
     .first<Record<string, unknown>>();
-  if (!row) return null;
+  if (!row) {
+    if (opts?.campaignFallbackAttempted) return null;
+    const invRow = await db
+      .prepare("SELECT campaign_id FROM invoices WHERE invoice_id = ? LIMIT 1")
+      .bind(input.invoiceId)
+      .first<{ campaign_id: string | null }>();
+    const altCampaign =
+      typeof invRow?.campaign_id === "string" && invRow.campaign_id.trim() && invRow.campaign_id !== input.campaignId
+        ? invRow.campaign_id.trim()
+        : null;
+    if (altCampaign) {
+      return loadOrderDocumentContext(
+        db,
+        orderId,
+        { ...input, campaignId: altCampaign },
+        { campaignFallbackAttempted: true }
+      );
+    }
+    return null;
+  }
 
   const payload = parsePremiumOrderPayload(typeof row.payload_json === "string" ? row.payload_json : null);
   let payloadRaw: Record<string, unknown> = {};
@@ -218,7 +242,11 @@ async function loadOrderDocumentContext(
   } catch {
     payloadRaw = {};
   }
-  const billing = payload.billing;
+  const billing = resolvePremiumOrderPdfBillingFields({
+    billing: payload.billing,
+    clientAddress: typeof row.address === "string" ? row.address : null,
+    clientBillingInfo: typeof row.billing_info === "string" ? row.billing_info : null,
+  });
   const agreed =
     row.snap_agreed != null
       ? Number(row.snap_agreed)
@@ -267,15 +295,19 @@ async function loadOrderDocumentContext(
     company_name: String(row.company_name || ""),
     ico: String(row.ico || payload.ico || ""),
     dic: (row.dic as string) || payload.dic,
-    contact_name: String(row.contact_person || ""),
-    contact_email: String(row.client_contact_email || row.client_email || ""),
+    contact_name: String(row.contact_person || payload.ordering_person_name || row.company_name || ""),
+    contact_email: String(
+      row.client_contact_email ||
+        row.client_email ||
+        (typeof payloadRaw.contact_email === "string" ? payloadRaw.contact_email : "")
+    ),
     contact_phone: payload.contact_phone,
     ordering_person_name: payload.ordering_person_name,
     authorization_confirmed: payload.authorization_confirmed,
-    billing_street: billing?.street || "",
-    billing_city: billing?.city || "",
-    billing_zip: billing?.zip || "",
-    billing_country: billing?.country || "",
+    billing_street: billing.street,
+    billing_city: billing.city,
+    billing_zip: billing.zip,
+    billing_country: billing.country,
     customer_registry: payload.customer_registry,
     note: payload.note,
     category_title_cs: premiumCategoryTitleCs(categorySlug),
@@ -941,8 +973,11 @@ export async function handleAdminPremiumBackfillDocuments(request: Request, env:
   const res = await env.DB.prepare(
     `SELECT po.order_id
      FROM premium_selected_orders po
-     LEFT JOIN premium_order_document_jobs j ON j.order_id = po.order_id AND j.doc_kind = 'order_confirmation' AND j.status = 'ready'
-     WHERE po.workflow_status = 'published' AND j.job_id IS NULL
+     WHERE po.workflow_status = 'published'
+       AND NOT EXISTS (
+         SELECT 1 FROM premium_order_document_jobs j
+         WHERE j.order_id = po.order_id AND j.doc_kind = 'order_confirmation' AND j.status = 'ready'
+       )
      ORDER BY po.published_at ASC
      LIMIT ?`
   )
