@@ -362,6 +362,7 @@ async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCou
       { method: "POST", headers: { "content-type": "application/json", Cookie: cookie }, body: "{}" }
     );
     const retryJson = await retryRes.json().catch(() => ({}));
+    pass("PUBLISHED_RETRY_HTTP_STATUS_" + orderIdTail(oid), retryRes.status);
     pass("PUBLISHED_RETRY_HTTP_" + orderIdTail(oid), retryRes.status === 200);
     pass(
       "PUBLISHED_RETRY_OK_" + orderIdTail(oid),
@@ -371,6 +372,9 @@ async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCou
       pass("PUBLISHED_RETRY_RESULTS_" + orderIdTail(oid), JSON.stringify(retryJson.results).slice(0, 400));
     } else if (retryJson.error) {
       pass("PUBLISHED_RETRY_ERROR_" + orderIdTail(oid), String(retryJson.error).slice(0, 200));
+    }
+    if (!retryJson.results && !retryJson.error && !retryJson.ok) {
+      pass("PUBLISHED_RETRY_BODY_" + orderIdTail(oid), JSON.stringify(retryJson).slice(0, 400));
     }
     await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), { headers: { Cookie: cookie } });
   }
