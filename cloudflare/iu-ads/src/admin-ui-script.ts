@@ -363,8 +363,101 @@ export const ADMIN_UI_SCRIPT = String.raw`
         if(reason===null) return;
         if(!String(reason).trim()){ state.flash="Zadejte důvod zamítnutí."; render(); return; }
         var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reject",{method:"POST",body:JSON.stringify({reason:String(reason).trim()})});
-        state.flash=r.res.ok?"Objednávka zamítnuta.":"Chyba: "+apiError(r.body);
+        if(r.res.ok){
+          state.flash=r.body&&r.body.accounting_invoice_settlement_required?
+            "Objednávka zamítnuta. Existuje faktura — dobropis vystavte explicitně tlačítkem „Vystavit dobropis“.":
+            "Objednávka zamítnuta.";
+        } else {
+          state.flash=(r.body&&r.body.message_cs)?r.body.message_cs:("Chyba: "+apiError(r.body));
+        }
         await loadNav();
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-turn-off]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-turn-off");
+        var ord=rowsById[id]||{};
+        var ref=ord.customer_order_code||ord.order_number||id;
+        var msg="Vypnout reklamu (definitivně)?\n\n"+
+          "Objednávka: "+ref+"\n"+
+          "Zákazník: "+(ord.company_name||"—")+"\n"+
+          "Kategorie: "+(ord.category_title_cs||ord.category_slug||"—")+"\n"+
+          "Pozice: "+(ord.position_label||"—")+"\n"+
+          "Stav kampaně: "+(ord.workflow_status_label_cs||ord.workflow_status||"—")+"\n\n"+
+          "Reklama přestane být veřejně dostupná a pozice se uvolní.\nObjednávka a faktura zůstanou beze změny.";
+        if(!window.confirm(msg)) return;
+        var reason=window.prompt("Důvod vypnutí reklamy (povinný):","");
+        if(reason===null) return;
+        if(!String(reason).trim()){ state.flash="Zadejte důvod vypnutí."; render(); return; }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/turn-off-ad",{method:"POST",body:JSON.stringify({reason:String(reason).trim()})});
+        state.flash=r.res.ok?(r.body&&r.body.idempotent?"Reklama již byla vypnutá.":"Reklama vypnuta, pozice uvolněna."):(r.body&&r.body.message_cs?r.body.message_cs:"Chyba: "+apiError(r.body));
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-rejected-credit]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-rejected-credit");
+        var detail=await api("/v1/admin/premium/orders/"+encodeURIComponent(id),{method:"GET",headers:{}});
+        var inv=detail.body&&detail.body.invoice;
+        if(!inv){ state.flash="U objednávky není faktura."; render(); return; }
+        var reason=window.prompt("Důvod opravy / dobropisu (povinný):","");
+        if(reason===null||!String(reason).trim()){ state.flash="Důvod je povinný."; render(); return; }
+        var full=window.confirm("Úplná oprava faktury (−"+formatKc(inv.total_cents)+")?\n\nNe = zadáte částečnou opravu v haléřích.");
+        var correctionCents;
+        if(full){ correctionCents=-Math.abs(Number(inv.total_cents)||0); }
+        else {
+          var partial=window.prompt("Opravovaná částka v haléřích (záporné, např. -599000):","");
+          if(partial===null) return;
+          correctionCents=Math.round(Number(partial));
+        }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/rejected-invoice-settlement",{
+          method:"POST",
+          body:JSON.stringify({reason:String(reason).trim(),correction_cents:correctionCents})
+        });
+        state.flash=r.res.ok?"Dobropis vystaven, PDF se generuje.":(r.body&&r.body.message_cs?r.body.message_cs:"Chyba: "+apiError(r.body));
+        if(r.res.ok) state.orderDetailId=id;
+        render();
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-premium-accounting-cancel]"),function(b){
+      b.onclick=async function(ev){
+        ev.stopPropagation();
+        var id=b.getAttribute("data-premium-accounting-cancel");
+        var detail=await api("/v1/admin/premium/orders/"+encodeURIComponent(id),{method:"GET",headers:{}});
+        var ord=(detail.body&&detail.body.order)||rowsById[id]||{};
+        var inv=detail.body&&detail.body.invoice;
+        var ref=ord.customer_order_code||ord.order_number||id;
+        var msg="Stornovat objednávku a fakturu?\n\n"+
+          "Objednávka: "+ref+"\n"+
+          (inv?"Faktura: "+inv.invoice_number+"\n":"")+
+          "Zákazník: "+(ord.company_name||"—")+"\nIČO: "+(ord.ico||"—")+"\n"+
+          "Kategorie: "+(ord.category_title_cs||"—")+" · Pozice: "+(ord.position_label||"—")+"\n"+
+          (inv?"Fakturovaná částka: "+formatKc(inv.total_cents)+"\n":"")+
+          "Platba: "+(ord.payment_status_label_cs||ord.payment_status||"—")+"\n"+
+          "Reklama vypnuta: "+(ord.is_ad_turned_off?"Ano":"Ne")+"\n\n"+
+          "Vznikne potvrzení o stornování a případně dobropis.";
+        if(!window.confirm(msg)) return;
+        var reason=window.prompt("Důvod storna (povinný):","");
+        if(reason===null) return;
+        if(!String(reason).trim()){ state.flash="Zadejte důvod storna."; render(); return; }
+        var correctionBody={reason:String(reason).trim()};
+        if(inv){
+          var full=window.confirm("Úplná oprava faktury (−"+formatKc(inv.total_cents)+")?\n\nNe = zadáte částečnou opravovanou částku.");
+          if(full){
+            correctionBody.correction_cents=-Math.abs(Number(inv.total_cents)||0);
+          } else {
+            var partial=window.prompt("Opravovaná částka v haléřích (záporné číslo, např. -299000):","");
+            if(partial===null) return;
+            correctionBody.correction_cents=Math.round(Number(partial));
+          }
+        }
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/accounting-cancel",{method:"POST",body:JSON.stringify(correctionBody)});
+        state.flash=r.res.ok?"Storno zaevidováno, PDF se generují.":(r.body&&r.body.message_cs?r.body.message_cs:"Chyba: "+apiError(r.body));
+        if(r.res.ok) state.orderDetailId=id;
         render();
       };
     });
@@ -630,20 +723,32 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (ord.terms_effective_at?" · účinnost "+esc(ord.terms_effective_at):"")+"</p></div>":"")+
       '<div class="card">'+tech+
       '<div class="row">'+
+      (ord.workflow_status==="rejected"&&body.invoice?
+        '<button type="button" class="btn danger" data-premium-rejected-credit="'+esc(ord.order_id)+'">Vystavit dobropis (zamítnutá + faktura)</button> ':"")+
       (ord.workflow_status==="submitted"||ord.workflow_status==="under_review"?
         (ord.publishable?'<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> ':"")+
         (ord.missing_publish_fields&&ord.missing_publish_fields.length?
           '<p class="err">Nelze zveřejnit — chybí: '+esc(ord.missing_publish_fields.map(function(f){return f==="creative"?"nahraná kreativa":"cílová URL";}).join(", "))+'</p>':"")+
         '<button type="button" class="btn danger" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
       (ord.workflow_status==="published"?
-        (ord.is_paused?
-          '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
-          '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
-        '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> '+
+        (ord.is_ad_turned_off?
+          '<p class="muted">Reklama definitivně vypnuta'+(ord.ad_turned_off_at_label_cs?" · "+esc(ord.ad_turned_off_at_label_cs):"")+'.</p> ':
+          (ord.is_paused?
+            '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
+            '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
+          '<button type="button" class="btn danger" data-premium-turn-off="'+esc(ord.order_id)+'">Vypnout reklamu</button> ')+
+        (!ord.is_ad_turned_off?
+          '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> ':"")+
         '<button type="button" class="btn secondary" data-premium-revision-url="'+esc(ord.order_id)+'">Požádat změnu URL (verze)</button> '+
         (ord.payment_status==="paid"?
           '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
           '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
+      (ord.workflow_status==="published"||ord.workflow_status==="cancelled"?
+        (ord.workflow_status==="cancelled"?
+          '<p class="muted">Objednávka a faktura stornovány (účetně).</p> ':
+          (ord.is_ad_turned_off?
+            '<button type="button" class="btn danger" data-premium-accounting-cancel="'+esc(ord.order_id)+'">Stornovat objednávku a fakturu</button> ':
+            '<p class="muted">Před účetním stornem nejdříve vypněte reklamu.</p> ')):"")+
       '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'" data-cp="'+esc(ord.contact_person_name||ord.contact_name||"")+'" data-em="'+esc(ord.contact_email||"")+'" data-ph="'+esc(ord.contact_phone||"")+'" data-bill="'+esc(ord.billing_info||"")+'">Upravit objednávku</button> '+
       '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit objednávku</button> '+
       "</div></div>"+

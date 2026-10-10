@@ -21,6 +21,8 @@ describe("premium order document job reconciliation", () => {
   it("maps doc kinds to doc_type", () => {
     expect(docTypeForPremiumOrderDocKind("invoice_pdf")).toBe(PREMIUM_DOC_TYPE_INVOICE);
     expect(docTypeForPremiumOrderDocKind("order_confirmation")).toBe("premium_order_confirmation");
+    expect(docTypeForPremiumOrderDocKind("order_cancellation")).toBe("premium_order_cancellation");
+    expect(docTypeForPremiumOrderDocKind("credit_note_pdf")).toBe("premium_credit_note_pdf");
   });
 
   it("links job to active document when PDF already in D1", async () => {

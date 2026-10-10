@@ -208,6 +208,12 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     }
   }
 
+  const invoiceRow = await env.DB.prepare(
+    "SELECT invoice_id, invoice_number, total_cents, currency, status FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+  )
+    .bind(orderId)
+    .first<{ invoice_id: string; invoice_number: string; total_cents: number; currency: string; status: string }>();
+
   const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
 
@@ -276,7 +282,14 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       campaign_end_at: campaignEndAt,
       campaign_end_at_label_cs: formatAdminPragueDateTime(campaignEndAt),
       campaign_status: campaignStatus,
-      is_paused: campaignStatus === "paused",
+      is_paused: campaignStatus === "paused" && !row.ad_turned_off_at,
+      ad_turned_off_at: row.ad_turned_off_at ?? null,
+      ad_turned_off_at_label_cs: formatAdminPragueDateTime(
+        row.ad_turned_off_at != null ? String(row.ad_turned_off_at) : null
+      ),
+      is_ad_turned_off: !!row.ad_turned_off_at,
+      ad_turn_off_reason: row.ad_turn_off_reason ?? null,
+      accounting_cancelled_at: row.accounting_cancelled_at ?? null,
       payment_status: paymentStatus,
       payment_status_label_cs: paymentStatus === "paid" ? "Uhrazeno" : "Neuhrazeno",
       paid_at: row.paid_at ?? null,
@@ -299,5 +312,14 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     internal_notes,
     order_documents,
     order_documents_pdf_count,
+    invoice: invoiceRow
+      ? {
+          invoice_id: invoiceRow.invoice_id,
+          invoice_number: invoiceRow.invoice_number,
+          total_cents: invoiceRow.total_cents,
+          currency: invoiceRow.currency,
+          status: invoiceRow.status,
+        }
+      : null,
   });
 }

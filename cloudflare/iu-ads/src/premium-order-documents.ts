@@ -12,6 +12,8 @@ import {
   buildOrderConfirmationPlainLines,
   buildPremiumOrderConfirmationPdf,
 } from "./premium-order-confirmation-pdf";
+import { buildPremiumCreditNotePdf } from "./premium-credit-note-pdf";
+import { buildPremiumOrderCancellationPdf } from "./premium-order-cancellation-pdf";
 import { buildPremiumInvoicePdf } from "./premium-invoice-pdf";
 import { resolvePremiumAdWebPlacementUrl } from "./premium-ad-web-placement";
 import {
@@ -25,14 +27,31 @@ import type { Env } from "./types";
 
 export const PREMIUM_DOC_TYPE_ORDER = "premium_order_confirmation";
 export const PREMIUM_DOC_TYPE_INVOICE = "premium_invoice_pdf";
+export const PREMIUM_DOC_TYPE_CANCELLATION = "premium_order_cancellation";
+export const PREMIUM_DOC_TYPE_CREDIT_NOTE = "premium_credit_note_pdf";
 
-export type PremiumOrderDocKind = "order_confirmation" | "invoice_pdf";
+export type PremiumOrderDocKind =
+  | "order_confirmation"
+  | "invoice_pdf"
+  | "order_cancellation"
+  | "credit_note_pdf";
 
 /** Jobs in `generating` longer than this are treated as interrupted (Worker CPU/time limit). */
 export const PREMIUM_DOC_GENERATING_STALE_MS = 90_000;
 
 export function docTypeForPremiumOrderDocKind(kind: PremiumOrderDocKind): string {
-  return kind === "order_confirmation" ? PREMIUM_DOC_TYPE_ORDER : PREMIUM_DOC_TYPE_INVOICE;
+  switch (kind) {
+    case "order_confirmation":
+      return PREMIUM_DOC_TYPE_ORDER;
+    case "invoice_pdf":
+      return PREMIUM_DOC_TYPE_INVOICE;
+    case "order_cancellation":
+      return PREMIUM_DOC_TYPE_CANCELLATION;
+    case "credit_note_pdf":
+      return PREMIUM_DOC_TYPE_CREDIT_NOTE;
+    default:
+      return PREMIUM_DOC_TYPE_ORDER;
+  }
 }
 
 export function premiumDocJobIsStaleGenerating(
@@ -195,7 +214,7 @@ async function loadOrderDocumentContext(
   db: D1Database,
   orderId: string,
   input: { campaignId: string; invoiceId: string; actorUserId: string; publishIdempotencyKey: string },
-  opts?: { campaignFallbackAttempted?: boolean }
+  opts?: { campaignFallbackAttempted?: boolean; allowMissingInvoice?: boolean }
 ): Promise<PremiumOrderPdfContext | null> {
   const po = await db
     .prepare("SELECT * FROM premium_selected_orders WHERE order_id = ? LIMIT 1")
@@ -226,7 +245,7 @@ async function loadOrderDocumentContext(
     .bind(input.invoiceId)
     .first<Record<string, unknown>>();
   if (!inv?.invoice_id) {
-    if (opts?.campaignFallbackAttempted) return null;
+    if (opts?.campaignFallbackAttempted && !opts?.allowMissingInvoice) return null;
     const invByOrder = await db
       .prepare(
         "SELECT invoice_id, campaign_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
@@ -242,15 +261,15 @@ async function loadOrderDocumentContext(
         db,
         orderId,
         { ...input, invoiceId: invByOrder.invoice_id, campaignId: altCampaign },
-        { campaignFallbackAttempted: true }
+        { campaignFallbackAttempted: true, allowMissingInvoice: opts?.allowMissingInvoice }
       );
     }
-    return null;
+    if (!opts?.allowMissingInvoice) return null;
   }
 
   let campaignId = input.campaignId;
   const invCampaign =
-    typeof inv.campaign_id === "string" && inv.campaign_id.trim() ? inv.campaign_id.trim() : null;
+    inv && typeof inv.campaign_id === "string" && inv.campaign_id.trim() ? inv.campaign_id.trim() : null;
   if (!opts?.campaignFallbackAttempted && invCampaign && invCampaign !== campaignId) {
     return loadOrderDocumentContext(
       db,
@@ -287,11 +306,11 @@ async function loadOrderDocumentContext(
     evidence_code: camp?.evidence_code ?? null,
     start_at: camp?.start_at ?? null,
     end_at: camp?.end_at ?? null,
-    invoice_number: inv.invoice_number,
-    issued_at: inv.issued_at,
-    due_at: inv.due_at,
-    total_cents: inv.total_cents,
-    currency: inv.currency,
+    invoice_number: inv?.invoice_number ?? null,
+    issued_at: inv?.issued_at ?? null,
+    due_at: inv?.due_at ?? null,
+    total_cents: inv?.total_cents ?? snap?.agreed_price_cents ?? null,
+    currency: inv?.currency ?? "CZK",
     snap_agreed: snap?.agreed_price_cents ?? null,
   };
 
@@ -405,6 +424,41 @@ async function loadOrderDocumentContext(
     invoice_number: String(row.invoice_number || ""),
     invoice_id: input.invoiceId,
   };
+}
+
+/** Load PDF context for storno/credit-note generation (post-publish or rejection). */
+export async function loadPremiumOrderPdfContextByOrderId(
+  db: D1Database,
+  orderId: string
+): Promise<{ ctx: PremiumOrderPdfContext; campaignId: string; invoiceId: string | null; clientId: string } | null> {
+  const po = await db
+    .prepare("SELECT published_campaign_id, publish_idempotency_key FROM premium_selected_orders WHERE order_id = ?")
+    .bind(orderId)
+    .first<{ published_campaign_id: string | null; publish_idempotency_key: string | null }>();
+  const invoice = await db
+    .prepare("SELECT invoice_id, campaign_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1")
+    .bind(orderId)
+    .first<{ invoice_id: string; campaign_id: string | null }>();
+  const campaignId =
+    (typeof po?.published_campaign_id === "string" && po.published_campaign_id.trim()) ||
+    (typeof invoice?.campaign_id === "string" && invoice.campaign_id.trim()) ||
+    "camp_storno_" + orderId;
+  const invoiceId = invoice?.invoice_id ?? null;
+  const ctx = await loadOrderDocumentContext(
+    db,
+    orderId,
+    {
+      campaignId,
+      invoiceId: invoiceId || "inv_missing_" + orderId,
+      actorUserId: "system",
+      publishIdempotencyKey: po?.publish_idempotency_key || "storno:" + orderId,
+    },
+    { allowMissingInvoice: !invoiceId }
+  );
+  if (!ctx) return null;
+  const order = await db.prepare("SELECT client_id FROM orders WHERE order_id = ?").bind(orderId).first<{ client_id: string }>();
+  if (!order?.client_id) return null;
+  return { ctx, campaignId, invoiceId, clientId: order.client_id };
 }
 
 async function fetchCreativeBytes(
@@ -943,6 +997,8 @@ export async function listPremiumOrderDocumentsForAdmin(
   const kinds: { kind: PremiumOrderDocKind; title: string; subtitle: string }[] = [
     { kind: "order_confirmation", title: "Potvrzení objednávky", subtitle: "PDF · Automaticky vytvořeno při schválení" },
     { kind: "invoice_pdf", title: "Faktura", subtitle: "PDF · Splatnost 3 kalendářní dny" },
+    { kind: "order_cancellation", title: "Potvrzení o stornování objednávky", subtitle: "PDF · Storno / zamítnutí" },
+    { kind: "credit_note_pdf", title: "Dobropis k faktuře", subtitle: "PDF · Opravný účetní doklad" },
   ];
 
   for (const k of kinds) {
@@ -1006,7 +1062,7 @@ export async function handleAdminPremiumOrderDocumentAccess(
   if (!guard.ok) return guard.response;
   if (!env.DB || !env.ADS_R2_SIGNING_SECRET) return json({ error: "auth_not_configured" }, 503);
 
-  const docType = kind === "order_confirmation" ? PREMIUM_DOC_TYPE_ORDER : PREMIUM_DOC_TYPE_INVOICE;
+  const docType = docTypeForPremiumOrderDocKind(kind);
   const active = await fetchActiveOrderDocument(env.DB, orderId, docType);
   if (!active) return json({ error: "document_not_ready" }, 404);
   const row = await env.DB.prepare(
@@ -1085,6 +1141,230 @@ export async function handleAdminPremiumBackfillDocuments(request: Request, env:
     }
   }
   return json({ ok: true, processed: ids.length, outcomes });
+}
+
+async function generateStornoKindDocument(
+  env: Env,
+  orderId: string,
+  kind: Extract<PremiumOrderDocKind, "order_cancellation" | "credit_note_pdf">,
+  input: {
+    campaignId: string;
+    clientId: string;
+    invoiceId: string | null;
+    actorUserId: string;
+    idempotencyKey: string;
+    forceRegenerate?: boolean;
+  }
+): Promise<{ ok: true; document_id: string } | { ok: false; error: string }> {
+  if (!env.DB) return { ok: false, error: "no_db" };
+  const db = env.DB;
+  const loaded = await loadPremiumOrderPdfContextByOrderId(db, orderId);
+  if (!loaded) return { ok: false, error: "context_not_found" };
+  const { ctx, campaignId, invoiceId, clientId } = loaded;
+  const nowIso = new Date().toISOString();
+  const job = await upsertJob(db, orderId, kind, input.idempotencyKey, nowIso);
+  const reconciled = await reconcilePremiumOrderDocumentJob(db, orderId, kind, job);
+  if (reconciled.linked_document_id && !input.forceRegenerate) {
+    return { ok: true, document_id: reconciled.linked_document_id };
+  }
+
+  const staleCutoffIso = new Date(Date.now() - PREMIUM_DOC_GENERATING_STALE_MS).toISOString();
+  await db
+    .prepare(
+      `UPDATE premium_order_document_jobs SET status = ?, updated_at = ?, last_error = NULL
+       WHERE job_id = ? AND (status IN ('pending', 'error') OR (status = 'generating' AND updated_at <= ?))`
+    )
+    .bind("generating", nowIso, job.job_id, staleCutoffIso)
+    .run();
+
+  try {
+    const storno = await db
+      .prepare(
+        `SELECT storno_number, storno_kind, reason, invoice_id, credit_note_id FROM premium_order_storno_records WHERE order_id = ?`
+      )
+      .bind(orderId)
+      .first<{
+        storno_number: string;
+        storno_kind: string;
+        reason: string | null;
+        invoice_id: string | null;
+        credit_note_id: string | null;
+      }>();
+    if (!storno) throw new Error("storno_record_missing");
+
+    const poExtra = await db
+      .prepare(
+        "SELECT ad_turned_off_at, payment_status, published_at, workflow_status FROM premium_selected_orders WHERE order_id = ?"
+      )
+      .bind(orderId)
+      .first<{
+        ad_turned_off_at: string | null;
+        payment_status: string | null;
+        published_at: string | null;
+        workflow_status: string;
+      }>();
+
+    let pdfBytes: Uint8Array;
+    let docType: string;
+    let title: string;
+    let linkInvoiceId: string | null = invoiceId ?? storno.invoice_id;
+
+    if (kind === "order_cancellation") {
+      let invoiceNumber: string | null = ctx.invoice_number;
+      if (storno.invoice_id) {
+        const invRow = await db
+          .prepare("SELECT invoice_number FROM invoices WHERE invoice_id = ?")
+          .bind(storno.invoice_id)
+          .first<{ invoice_number: string }>();
+        invoiceNumber = invRow?.invoice_number ?? invoiceNumber;
+      }
+      let creditNoteNumber: string | null = null;
+      if (storno.credit_note_id) {
+        const cn = await db
+          .prepare("SELECT credit_note_number FROM premium_credit_notes WHERE credit_note_id = ?")
+          .bind(storno.credit_note_id)
+          .first<{ credit_note_number: string }>();
+        creditNoteNumber = cn?.credit_note_number ?? null;
+      }
+      const actorRow = await db
+        .prepare("SELECT display_name FROM admin_users WHERE user_id = ?")
+        .bind(input.actorUserId)
+        .first<{ display_name: string }>();
+      pdfBytes = await buildPremiumOrderCancellationPdf({
+        ctx,
+        storno_number: storno.storno_number,
+        storno_kind: storno.storno_kind === "cancellation" ? "cancellation" : "rejection",
+        reason: storno.reason || "—",
+        issued_at: nowIso,
+        issuer_display_name: actorRow?.display_name?.trim() || input.actorUserId,
+        invoice_number: invoiceNumber,
+        credit_note_number: creditNoteNumber,
+        order_was_approved: poExtra?.workflow_status === "published" || poExtra?.workflow_status === "cancelled",
+        ad_was_published: !!poExtra?.published_at,
+        ad_turned_off_at: poExtra?.ad_turned_off_at ?? null,
+        payment_status_label: poExtra?.payment_status === "paid" ? "Uhrazeno" : "Neuhrazeno",
+      });
+      docType = PREMIUM_DOC_TYPE_CANCELLATION;
+      title = "Storno objednávky " + storno.storno_number;
+      linkInvoiceId = storno.invoice_id;
+    } else {
+      const creditNoteId = storno.credit_note_id;
+      if (!creditNoteId) throw new Error("credit_note_not_applicable");
+      const cn = await db
+        .prepare(
+          `SELECT credit_note_number, correction_cents, original_total_cents, new_total_cents, reason, issued_at,
+                  correction_effective_at, payment_status_snapshot, amount_paid_cents_snapshot, invoice_id
+           FROM premium_credit_notes WHERE credit_note_id = ?`
+        )
+        .bind(creditNoteId)
+        .first<{
+          credit_note_number: string;
+          correction_cents: number;
+          original_total_cents: number;
+          new_total_cents: number;
+          reason: string | null;
+          issued_at: string;
+          correction_effective_at: string;
+          payment_status_snapshot: string;
+          amount_paid_cents_snapshot: number;
+          invoice_id: string;
+        }>();
+      if (!cn) throw new Error("credit_note_row_missing");
+      const inv = await db
+        .prepare("SELECT invoice_number, issued_at, currency FROM invoices WHERE invoice_id = ?")
+        .bind(cn.invoice_id)
+        .first<{ invoice_number: string; issued_at: string; currency: string }>();
+      if (!inv) throw new Error("invoice_not_found");
+      pdfBytes = await buildPremiumCreditNotePdf({
+        ctx,
+        credit_note_number: cn.credit_note_number,
+        invoice_number: inv.invoice_number,
+        invoice_issued_at: inv.issued_at,
+        issued_at: cn.issued_at,
+        correction_effective_at: cn.correction_effective_at,
+        original_total_cents: cn.original_total_cents,
+        correction_cents: cn.correction_cents,
+        new_total_cents: cn.new_total_cents,
+        currency: inv.currency || ctx.currency,
+        reason: cn.reason || storno.reason || "—",
+        payment_status_label: cn.payment_status_snapshot === "paid" ? "Uhrazeno" : "Neuhrazeno",
+        amount_paid_cents: cn.amount_paid_cents_snapshot,
+      });
+      docType = PREMIUM_DOC_TYPE_CREDIT_NOTE;
+      title = "Dobropis " + cn.credit_note_number;
+      linkInvoiceId = cn.invoice_id;
+    }
+
+    const documentId = await storePdfDocument(env, {
+      orderId,
+      clientId,
+      campaignId: input.campaignId || campaignId,
+      invoiceId: linkInvoiceId,
+      docType,
+      title,
+      pdfBytes,
+      actorUserId: input.actorUserId,
+      replaceExisting: Boolean(input.forceRegenerate),
+      replacementReason: input.forceRegenerate ? "storno_regenerate" : undefined,
+    });
+
+    await db
+      .prepare("UPDATE premium_order_document_jobs SET status = ?, document_id = ?, updated_at = ?, last_error = NULL WHERE job_id = ?")
+      .bind("ready", documentId, new Date().toISOString(), job.job_id)
+      .run();
+    return { ok: true, document_id: documentId };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    await db
+      .prepare("UPDATE premium_order_document_jobs SET status = ?, last_error = ?, updated_at = ? WHERE job_id = ?")
+      .bind("error", msg.slice(0, 2000), new Date().toISOString(), job.job_id)
+      .run();
+    return { ok: false, error: msg };
+  }
+}
+
+export async function ensurePremiumStornoDocuments(
+  env: Env,
+  orderId: string,
+  actorUserId: string,
+  opts?: { forceRetryIncomplete?: boolean }
+): Promise<{ ok: boolean; results: Record<string, unknown> }> {
+  if (!env.DB) return { ok: false, results: { error: "no_db" } };
+  const loaded = await loadPremiumOrderPdfContextByOrderId(env.DB, orderId);
+  if (!loaded) return { ok: false, results: { error: "context_not_found" } };
+
+  const storno = await env.DB.prepare(
+    "SELECT storno_id, credit_note_id FROM premium_order_storno_records WHERE order_id = ?"
+  )
+    .bind(orderId)
+    .first<{ storno_id: string; credit_note_id: string | null }>();
+  if (!storno) return { ok: false, results: { error: "storno_record_missing" } };
+
+  const baseKey = "storno_doc:" + orderId + ":" + storno.storno_id;
+  const results: Record<string, unknown> = {};
+  const cancel = await generateStornoKindDocument(env, orderId, "order_cancellation", {
+    campaignId: loaded.campaignId,
+    clientId: loaded.clientId,
+    invoiceId: loaded.invoiceId,
+    actorUserId,
+    idempotencyKey: baseKey + ":cancellation",
+    forceRegenerate: opts?.forceRetryIncomplete,
+  });
+  results.order_cancellation = cancel;
+  let allOk = cancel.ok;
+  if (storno.credit_note_id) {
+    const credit = await generateStornoKindDocument(env, orderId, "credit_note_pdf", {
+      campaignId: loaded.campaignId,
+      clientId: loaded.clientId,
+      invoiceId: loaded.invoiceId,
+      actorUserId,
+      idempotencyKey: baseKey + ":credit",
+      forceRegenerate: opts?.forceRetryIncomplete,
+    });
+    results.credit_note_pdf = credit;
+    allOk = allOk && credit.ok;
+  }
+  return { ok: allOk, results };
 }
 
 export async function auditPremiumDocumentGeneration(

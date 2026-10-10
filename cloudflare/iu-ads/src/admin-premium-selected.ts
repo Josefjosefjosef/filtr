@@ -167,8 +167,140 @@ export async function handleAdminPremiumReject(request: Request, env: Env, order
     reason,
     idempotencyKey,
   });
-  if (!result.ok) return json({ error: result.error }, result.status);
+  if (!result.ok) {
+    const message_cs =
+      result.error === "cannot_reject_published"
+        ? "Schválenou objednávku nelze zamítnout. Nejdříve vypněte reklamu, poté stornujte objednávku a fakturu."
+        : undefined;
+    return json({ error: result.error, message_cs }, result.status);
+  }
+  let storno: { storno_id: string; storno_number: string } | null = null;
+  let invoiceSettlementRequired = false;
+  try {
+    const inv = await env.DB?.prepare(
+      "SELECT invoice_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+    )
+      .bind(orderId)
+      .first<{ invoice_id: string }>();
+    invoiceSettlementRequired = !!inv?.invoice_id;
+    const { ensurePremiumRejectionStornoRecord } = await import("./premium-order-accounting-cancel");
+    storno = await ensurePremiumRejectionStornoRecord(env, {
+      orderId,
+      actorUserId: guard.userId,
+      reason,
+      idempotencyKey,
+    });
+  } catch {
+    /* rejection stands even if storno PDF enqueue fails */
+  }
+  return json({
+    ok: true,
+    idempotent: result.idempotent,
+    unpublished_campaign_ids: result.unpublished_campaign_ids,
+    storno,
+    accounting_invoice_settlement_required: invoiceSettlementRequired,
+  });
+}
+
+export async function handleAdminPremiumRejectedInvoiceSettlement(
+  request: Request,
+  env: Env,
+  orderId: string
+): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "invoices.write");
+  if (!guard.ok) return guard.response;
+  let body: { reason?: unknown; correction_cents?: unknown; idempotency_key?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const reason =
+    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : "";
+  if (!reason) return json({ error: "reason_required", message_cs: "Důvod opravy je povinný." }, 400);
+  if (body.correction_cents == null || !Number.isFinite(Number(body.correction_cents))) {
+    return json({ error: "correction_required", message_cs: "Zadejte opravovanou částku (correction_cents)." }, 400);
+  }
+  const idempotencyKey =
+    typeof body.idempotency_key === "string" && body.idempotency_key.trim() ? body.idempotency_key.trim() : undefined;
+  const { executePremiumRejectedOrderInvoiceSettlement } = await import("./premium-order-accounting-cancel");
+  const result = await executePremiumRejectedOrderInvoiceSettlement(env, {
+    orderId,
+    actorUserId: guard.userId,
+    reason,
+    correctionCents: Math.round(Number(body.correction_cents)),
+    idempotencyKey,
+  });
+  if (!result.ok) {
+    return json({ error: result.error, message_cs: result.message_cs }, result.status);
+  }
+  return json(result);
+}
+
+export async function handleAdminPremiumTurnOffAd(request: Request, env: Env, orderId: string): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "campaigns.write");
+  if (!guard.ok) return guard.response;
+  let body: { reason?: unknown; idempotency_key?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const reason =
+    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : "";
+  if (!reason) return json({ error: "reason_required", message_cs: "Důvod vypnutí reklamy je povinný." }, 400);
+  const idempotencyKey =
+    typeof body.idempotency_key === "string" && body.idempotency_key.trim() ? body.idempotency_key.trim() : undefined;
+  const { executePremiumAdTurnOff } = await import("./premium-ad-turnoff");
+  const result = await executePremiumAdTurnOff(env, {
+    orderId,
+    actorUserId: guard.userId,
+    reason,
+    idempotencyKey,
+  });
+  if (!result.ok) {
+    return json(
+      { error: result.error, message_cs: result.message_cs },
+      result.status
+    );
+  }
   return json({ ok: true, idempotent: result.idempotent, unpublished_campaign_ids: result.unpublished_campaign_ids });
+}
+
+export async function handleAdminPremiumAccountingCancel(
+  request: Request,
+  env: Env,
+  orderId: string
+): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "invoices.write");
+  if (!guard.ok) return guard.response;
+  let body: { reason?: unknown; correction_cents?: unknown; idempotency_key?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const reason =
+    typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : "";
+  if (!reason) return json({ error: "reason_required", message_cs: "Důvod storna je povinný." }, 400);
+  const correctionCents =
+    body.correction_cents != null && Number.isFinite(Number(body.correction_cents))
+      ? Math.round(Number(body.correction_cents))
+      : undefined;
+  const idempotencyKey =
+    typeof body.idempotency_key === "string" && body.idempotency_key.trim() ? body.idempotency_key.trim() : undefined;
+  const { executePremiumOrderAccountingCancel } = await import("./premium-order-accounting-cancel");
+  const result = await executePremiumOrderAccountingCancel(env, {
+    orderId,
+    actorUserId: guard.userId,
+    reason,
+    correctionCents,
+    idempotencyKey,
+  });
+  if (!result.ok) {
+    return json({ error: result.error, message_cs: result.message_cs }, result.status);
+  }
+  return json(result);
 }
 
 export async function handleAdminPremiumSuspend(request: Request, env: Env, orderId: string): Promise<Response> {
@@ -185,10 +317,18 @@ export async function handleAdminPremiumSuspend(request: Request, env: Env, orde
   const reason =
     typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : null;
 
-  const po = await env.DB.prepare("SELECT published_campaign_id FROM premium_selected_orders WHERE order_id = ?")
+  const po = await env.DB.prepare(
+    "SELECT published_campaign_id, ad_turned_off_at FROM premium_selected_orders WHERE order_id = ?"
+  )
     .bind(orderId)
-    .first<{ published_campaign_id: string | null }>();
+    .first<{ published_campaign_id: string | null; ad_turned_off_at: string | null }>();
   if (!po?.published_campaign_id) return json({ error: "not_published" }, 400);
+  if (po.ad_turned_off_at) {
+    return json(
+      { error: "ad_turned_off", message_cs: "Reklama byla definitivně vypnuta — obnovení není možné." },
+      409
+    );
+  }
 
   const nowIso = new Date().toISOString();
   await env.DB.prepare("UPDATE campaigns SET status = 'paused', updated_at = ? WHERE campaign_id = ?")
@@ -229,10 +369,18 @@ export async function handleAdminPremiumReactivate(request: Request, env: Env, o
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
-  const po = await env.DB.prepare("SELECT published_campaign_id FROM premium_selected_orders WHERE order_id = ?")
+  const po = await env.DB.prepare(
+    "SELECT published_campaign_id, ad_turned_off_at FROM premium_selected_orders WHERE order_id = ?"
+  )
     .bind(orderId)
-    .first<{ published_campaign_id: string | null }>();
+    .first<{ published_campaign_id: string | null; ad_turned_off_at: string | null }>();
   if (!po?.published_campaign_id) return json({ error: "not_published" }, 400);
+  if (po.ad_turned_off_at) {
+    return json(
+      { error: "ad_turned_off", message_cs: "Reklama byla definitivně vypnuta — obnovení není možné." },
+      409
+    );
+  }
 
   const camp = await env.DB.prepare("SELECT end_at FROM campaigns WHERE campaign_id = ?")
     .bind(po.published_campaign_id)

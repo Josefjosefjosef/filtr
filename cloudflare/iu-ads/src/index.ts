@@ -127,6 +127,9 @@ import {
   handleAdminPremiumPendingCount,
   handleAdminPremiumApprovePublish,
   handleAdminPremiumReject,
+  handleAdminPremiumTurnOffAd,
+  handleAdminPremiumAccountingCancel,
+  handleAdminPremiumRejectedInvoiceSettlement,
   handleAdminPremiumSuspend,
   handleAdminPremiumReactivate,
   handleAdminPremiumUpdatePlacementPrice,
@@ -619,15 +622,29 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
         return handleAdminPremiumBackfillDocuments(request, env);
       }
       const premiumDocAccessMatch = path.match(
-        /^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/(order_confirmation|invoice_pdf)\/access$/
+        /^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/(order_confirmation|invoice_pdf|order_cancellation|credit_note_pdf)\/access$/
       );
       if (premiumDocAccessMatch && method === "GET") {
         return handleAdminPremiumOrderDocumentAccess(
           request,
           env,
           premiumDocAccessMatch[1],
-          premiumDocAccessMatch[2] as "order_confirmation" | "invoice_pdf"
+          premiumDocAccessMatch[2] as "order_confirmation" | "invoice_pdf" | "order_cancellation" | "credit_note_pdf"
         );
+      }
+      const premiumTurnOffMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/turn-off-ad$/);
+      if (premiumTurnOffMatch && method === "POST") {
+        return handleAdminPremiumTurnOffAd(request, env, premiumTurnOffMatch[1]);
+      }
+      const premiumAccountingCancelMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/accounting-cancel$/);
+      if (premiumAccountingCancelMatch && method === "POST") {
+        return handleAdminPremiumAccountingCancel(request, env, premiumAccountingCancelMatch[1]);
+      }
+      const premiumRejectedSettlementMatch = path.match(
+        /^\/v1\/admin\/premium\/orders\/([^/]+)\/rejected-invoice-settlement$/
+      );
+      if (premiumRejectedSettlementMatch && method === "POST") {
+        return handleAdminPremiumRejectedInvoiceSettlement(request, env, premiumRejectedSettlementMatch[1]);
       }
       const premiumDocRetryMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/retry$/);
       if (premiumDocRetryMatch && method === "POST") {

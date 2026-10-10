@@ -21,7 +21,12 @@ export type PremiumOrderEventType =
   | "invoice_pdf_created"
   | "document_generation_failed"
   | "document_generation_retried"
-  | "document_pdf_replaced";
+  | "document_pdf_replaced"
+  | "ad_turned_off"
+  | "order_accounting_cancelled"
+  | "storno_pdf_created"
+  | "credit_note_pdf_created"
+  | "rejected_order_credit_note_issued";
 
 export async function appendPremiumOrderEvent(
   db: D1Database,
@@ -120,6 +125,19 @@ export function formatPremiumOrderEventLineCs(event: {
       return "Chyba generování dokumentu" + (event.payload.error ? ": " + String(event.payload.error) : "");
     case "document_generation_retried":
       return "Opakované generování dokumentů dokončeno";
+    case "ad_turned_off":
+      return "Reklama definitivně vypnuta" + (event.payload.reason ? ": " + String(event.payload.reason) : "");
+    case "order_accounting_cancelled":
+      return (
+        "Účetní storno objednávky" +
+        (event.payload.storno_number ? " (" + String(event.payload.storno_number) + ")" : "")
+      );
+    case "storno_pdf_created":
+      return "Potvrzení o stornování (PDF) vytvořeno";
+    case "credit_note_pdf_created":
+      return "Dobropis (PDF) vytvořen";
+    case "rejected_order_credit_note_issued":
+      return "Dobropis k zamítnuté objednávce vystaven" + (event.payload.correction_cents != null ? "" : "");
     default:
       return event.event_type;
   }
