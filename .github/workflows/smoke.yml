@@ -1526,6 +1526,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-affiliate-categories-34-structure-guard
 
+      - name: Premium affiliate catalog titles parity guard
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-premium-affiliate-catalog-titles-parity-guard
+
       - name: Affiliate Booking.com slot1 guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-affiliate-booking-com-slot1-guard

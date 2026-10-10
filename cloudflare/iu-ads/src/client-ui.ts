@@ -216,7 +216,7 @@ export function buildClientShellHtml(nonce: string): string {
           order_id:p.order_id,
           placement:p.placement_id,
           position:p.position_label,
-          category:p.category_slug,
+          category:p.category_title_cs||p.category_slug,
           status:(p.campaign&&p.campaign.status)||p.workflow_status,
           start:(p.campaign&&p.campaign.start_at)||"—",
           end:(p.campaign&&p.campaign.end_at)||"—",
