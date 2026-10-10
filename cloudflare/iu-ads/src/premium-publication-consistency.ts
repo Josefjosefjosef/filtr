@@ -69,6 +69,19 @@ export async function assessPremiumCampaignPublicAuthority(
   }
 
   if (publishedApproved.length === 1) {
+    const governing = publishedApproved[0];
+    const turnOffRow = await db
+      .prepare("SELECT ad_turned_off_at FROM premium_selected_orders WHERE order_id = ?")
+      .bind(governing.order_id)
+      .first<{ ad_turned_off_at: string | null }>();
+    if (turnOffRow?.ad_turned_off_at) {
+      return {
+        authorized: false,
+        reason_code: "ad_turned_off",
+        governing_order_id: governing.order_id,
+        workflow_status: "published",
+      };
+    }
     const live = isPremiumCampaignLiveNow({
       campaign_status: camp.status,
       target_url: camp.target_url,
@@ -102,6 +115,16 @@ export async function assessPremiumCampaignPublicAuthority(
     };
   }
 
+  const cancelledLink = (linked.results || []).find((row) => row.workflow_status === "cancelled");
+  if (cancelledLink) {
+    return {
+      authorized: false,
+      reason_code: "linked_order_cancelled",
+      governing_order_id: cancelledLink.order_id,
+      workflow_status: "cancelled",
+    };
+  }
+
   if (camp.order_id) {
     const po = await db
       .prepare("SELECT order_id, workflow_status FROM premium_selected_orders WHERE order_id = ?")
@@ -113,6 +136,14 @@ export async function assessPremiumCampaignPublicAuthority(
         reason_code: "order_rejected",
         governing_order_id: po.order_id,
         workflow_status: "rejected",
+      };
+    }
+    if (po?.workflow_status === "cancelled") {
+      return {
+        authorized: false,
+        reason_code: "order_cancelled",
+        governing_order_id: po.order_id,
+        workflow_status: "cancelled",
       };
     }
     if (po && po.workflow_status !== "published") {
@@ -176,7 +207,7 @@ export async function detachPremiumCampaignFromPublicPlacement(
   return true;
 }
 
-async function collectCampaignIdsToStopForOrder(
+export async function collectCampaignIdsToStopForOrder(
   db: D1Database,
   input: { orderId: string; placementId: string; publishedCampaignId: string | null }
 ): Promise<string[]> {
@@ -232,6 +263,22 @@ export async function executePremiumOrderReject(
 
   if (po.workflow_status === "rejected") {
     return { ok: true, idempotent: true, unpublished_campaign_ids: [] };
+  }
+
+  if (po.workflow_status === "cancelled") {
+    return { ok: false, status: 409, error: "order_already_cancelled" };
+  }
+
+  if (po.workflow_status === "published") {
+    return {
+      ok: false,
+      status: 409,
+      error: "cannot_reject_published",
+    };
+  }
+
+  if (!["submitted", "under_review"].includes(po.workflow_status)) {
+    return { ok: false, status: 409, error: "invalid_workflow_status" };
   }
 
   const campaignIds = await collectCampaignIdsToStopForOrder(db, {

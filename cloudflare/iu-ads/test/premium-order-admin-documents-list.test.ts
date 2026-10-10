@@ -108,10 +108,11 @@ describe("listPremiumOrderDocumentsForAdmin", () => {
     });
     const env = { DB: db, ADS_R2_SIGNING_SECRET: "test-signing" } as Env;
     const cards = await listPremiumOrderDocumentsForAdmin(env, new Request("https://x"), "ord_list");
-    expect(cards).toHaveLength(2);
-    expect(cards.every((c) => c.status === "ready")).toBe(true);
-    expect(cards[0]?.preview_path).toContain("/access?disposition=inline");
-    expect(cards[1]?.download_path).toContain("/access?disposition=attachment");
+    expect(cards).toHaveLength(4);
+    const core = cards.filter((c) => c.kind === "order_confirmation" || c.kind === "invoice_pdf");
+    expect(core.every((c) => c.status === "ready")).toBe(true);
+    expect(core[0]?.preview_path).toContain("/access?disposition=inline");
+    expect(core[1]?.download_path).toContain("/access?disposition=attachment");
   });
 
   it("shows ready when campaign PDF is linked to a different order_id (repair without regenerate)", async () => {

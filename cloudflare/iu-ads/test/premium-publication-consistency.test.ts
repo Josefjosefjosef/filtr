@@ -167,6 +167,22 @@ describe("premium publication consistency", () => {
     expect(auth.reason_code).toBe("linked_order_rejected");
   });
 
+  it("blocks reject on published workflow", async () => {
+    db.premiumOrders.set("ord_pub", {
+      order_id: "ord_pub",
+      placement_id: "pl_ck_p1",
+      workflow_status: "published",
+      published_campaign_id: "cmp_iaf",
+    });
+    const blocked = await executePremiumOrderReject(env, {
+      orderId: "ord_pub",
+      actorUserId: "admin_test",
+      reason: "x",
+    });
+    expect(blocked.ok).toBe(false);
+    if (!blocked.ok) expect(blocked.error).toBe("cannot_reject_published");
+  });
+
   it("reject unpublishes active campaign and clears placement", async () => {
     seedLiveCampaign(db, "cmp_iaf", "ord_iaf");
     db.placements.set("pl_ck_p1", {
@@ -177,7 +193,7 @@ describe("premium publication consistency", () => {
     db.premiumOrders.set("ord_iaf", {
       order_id: "ord_iaf",
       placement_id: "pl_ck_p1",
-      workflow_status: "published",
+      workflow_status: "under_review",
       published_campaign_id: "cmp_iaf",
     });
 
