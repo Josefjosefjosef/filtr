@@ -6,6 +6,7 @@ import { requireClientSession } from "./client-auth";
 import { signObjectAccess } from "./signed-access";
 import {
   formatPremiumTotalPriceLabelCs,
+  premiumCategoryTitleCs,
   PREMIUM_DURATION_MONTHS,
   PREMIUM_PRODUCT_TYPE,
 } from "./premium-selected-services";
@@ -130,6 +131,7 @@ export async function handleClientPremiumSummary(request: Request, env: Env, url
       order_number: po.order_number,
       placement_id: po.placement_id,
       category_slug: po.category_slug,
+      category_title_cs: premiumCategoryTitleCs(String(po.category_slug || "")),
       position: po.position,
       position_label: "P" + String(po.position),
       workflow_status: po.workflow_status,

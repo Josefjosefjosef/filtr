@@ -27,7 +27,11 @@ const checks = [
   ["ORDER_SUBMIT_URL_SNAPSHOT", publicOrder.includes("ad_web_placement_url") && publicOrder.includes("buildPremiumAdWebPlacementUrl")],
   ["ORDER_WEB_PLACEMENT_LABEL", orderPdf.includes("Webové umístění reklamy")],
   ["ORDER_SERVICE_PERIOD_BOX", orderPdf.includes("Období poskytování")],
-  ["ORDER_CATALOG_SECTION_MAP", fs.existsSync(path.join(ads, "premium-affiliate-catalog-ids.ts"))],
+  [
+    "ORDER_CATALOG_SECTION_MAP",
+    fs.existsSync(path.join(ads, "premium-affiliate-catalog-ids.ts")) &&
+      fs.existsSync(path.join(ads, "premium-affiliate-catalog-titles.ts")),
+  ],
   ["ORDER_PRICE_ONCE", orderPdf.includes("Celková cena reklamní služby za")],
   ["ORDER_APPROVER_NAME", orderPdf.includes("Schválil:")],
   ["ORDER_PAGE_NUMBERING", orderPdf.includes("FOOTER_NOTES") && orderPdf.includes('" / "')],

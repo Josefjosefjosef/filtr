@@ -4,15 +4,20 @@ import { fileURLToPath } from "node:url";
 
 /** Parse `id: "aff-…"` entries from assets/iu-affiliate-catalog.js (authoritative public site sections). */
 export function readAffiliateCatalogSectionIdsFromRepo(repoRoot: string): string[] {
+  return Object.keys(readAffiliateCatalogSectionTitlesFromRepo(repoRoot)).sort();
+}
+
+/** Parse public `title` for each affiliate section id from assets/iu-affiliate-catalog.js. */
+export function readAffiliateCatalogSectionTitlesFromRepo(repoRoot: string): Record<string, string> {
   const catalogPath = path.join(repoRoot, "assets", "iu-affiliate-catalog.js");
   const src = fs.readFileSync(catalogPath, "utf8");
-  const ids: string[] = [];
-  const re = /\bid:\s*"(aff-[a-z0-9-]+)"/g;
+  const titles: Record<string, string> = {};
+  const re = /\bid:\s*"(aff-[a-z0-9-]+)"[\s\S]*?\btitle:\s*"([^"]+)"/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(src)) !== null) {
-    if (!ids.includes(m[1])) ids.push(m[1]);
+    titles[m[1]] = m[2];
   }
-  return ids.sort();
+  return titles;
 }
 
 export function defaultRepoRootFromAdsModule(): string {

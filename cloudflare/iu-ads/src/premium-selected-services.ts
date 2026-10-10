@@ -3,6 +3,8 @@
  * No impression/click analytics; direct target URLs only at render time (wired in public handler).
  */
 
+import { PREMIUM_AFFILIATE_CATEGORY_TITLES_CS } from "./premium-affiliate-catalog-titles";
+
 export const PREMIUM_PRODUCT_TYPE = "premium_selected_services_v1" as const;
 export const PREMIUM_DURATION_MONTHS = 6;
 export const PREMIUM_INVOICE_DUE_CALENDAR_DAYS = 3;
@@ -159,19 +161,10 @@ export function isKnownAffiliateCategorySlug(slug: string): boolean {
   return PREMIUM_AFFILIATE_CATEGORY_SLUGS.includes(slug);
 }
 
-const PREMIUM_CATEGORY_TITLES_CS: Record<string, string> = {
-  "aff-cestovni-kancelare": "Cestovní kanceláře",
-  "aff-zdravi-doplnky": "Zdraví a doplňky",
-  "aff-finance": "Finance",
-  "aff-lekarny": "Lékárny",
-};
-
+/** Czech public title for an affiliate section slug (matches assets/iu-affiliate-catalog.js). */
 export function premiumCategoryTitleCs(slug: string): string {
   const key = slug.trim();
-  if (PREMIUM_CATEGORY_TITLES_CS[key]) return PREMIUM_CATEGORY_TITLES_CS[key];
-  return key
-    .replace(/^aff-/, "")
-    .split("-")
-    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
-    .join(" ");
+  const title = PREMIUM_AFFILIATE_CATEGORY_TITLES_CS[key];
+  if (title) return title;
+  return key;
 }
