@@ -361,7 +361,17 @@ async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCou
       BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid) + "/documents/retry",
       { method: "POST", headers: { "content-type": "application/json", Cookie: cookie }, body: "{}" }
     );
+    const retryJson = await retryRes.json().catch(() => ({}));
     pass("PUBLISHED_RETRY_HTTP_" + orderIdTail(oid), retryRes.status === 200);
+    pass(
+      "PUBLISHED_RETRY_OK_" + orderIdTail(oid),
+      retryRes.status === 200 && retryJson.ok === true
+    );
+    if (retryJson.results && typeof retryJson.results === "object") {
+      pass("PUBLISHED_RETRY_RESULTS_" + orderIdTail(oid), JSON.stringify(retryJson.results).slice(0, 400));
+    } else if (retryJson.error) {
+      pass("PUBLISHED_RETRY_ERROR_" + orderIdTail(oid), String(retryJson.error).slice(0, 200));
+    }
     await prodFetch(BASE + "/v1/admin/premium/orders/" + encodeURIComponent(oid), { headers: { Cookie: cookie } });
   }
   const bfRes = await prodFetch(BASE + "/v1/admin/premium/orders/backfill-documents", {
@@ -370,6 +380,7 @@ async function recoverPublishedOrdersMissingDocs(cookie, missingOrderIds, invCou
     body: JSON.stringify({ dry_run: false, limit: Math.min(20, missingOrderIds.length) }),
   });
   const bfJson = await bfRes.json().catch(() => ({}));
+  pass("PUBLISHED_BACKFILL_HTTP_STATUS", bfRes.status);
   pass("PUBLISHED_BACKFILL_APPLY_HTTP", bfRes.status === 200 && bfJson.ok === true);
   pass("PUBLISHED_BACKFILL_PROCESSED", Number(bfJson.processed) || 0);
   const invAfterRecovery = d1Query(

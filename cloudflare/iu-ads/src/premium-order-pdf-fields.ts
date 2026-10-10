@@ -135,6 +135,41 @@ export function orderConfirmationPdfRequiredSnippets(ctx: PremiumOrderPdfContext
   return out.filter((s) => typeof s === "string" && s.trim().length >= 2);
 }
 
+/** Legacy published orders may lack structured payload.billing — fall back to client address / billing_info. */
+export function resolvePremiumOrderPdfBillingFields(input: {
+  billing: { street: string; city: string; zip: string; country: string } | null;
+  clientAddress: string | null;
+  clientBillingInfo: string | null;
+}): { street: string; city: string; zip: string; country: string } {
+  const b = input.billing;
+  if (b && b.street.trim() && b.city.trim() && b.zip.trim()) {
+    return {
+      street: b.street.trim(),
+      city: b.city.trim(),
+      zip: b.zip.trim(),
+      country: (b.country || "CZ").trim() || "CZ",
+    };
+  }
+  const raw = (input.clientBillingInfo || input.clientAddress || "").trim();
+  if (raw) {
+    const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const street = (b?.street || lines[0] || raw).trim();
+    const rest = lines.slice(1).join(", ").trim();
+    return {
+      street: street.length >= 2 ? street : raw,
+      city: (b?.city || rest || "neuvedeno").trim(),
+      zip: (b?.zip || "000 00").trim(),
+      country: (b?.country || "CZ").trim() || "CZ",
+    };
+  }
+  return {
+    street: (b?.street || "neuvedeno").trim(),
+    city: (b?.city || "neuvedeno").trim(),
+    zip: (b?.zip || "000 00").trim(),
+    country: (b?.country || "CZ").trim() || "CZ",
+  };
+}
+
 export function assertOrderPdfContainsCustomerFields(plainLines: string[], ctx: PremiumOrderPdfContext): string[] {
   const hay = plainLines.join("\n");
   const missing: string[] = [];
