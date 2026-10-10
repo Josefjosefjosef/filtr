@@ -85,7 +85,7 @@ describe("storno PDF generators", () => {
       ad_turned_off_at: null,
       payment_status_label: "Neuhrazeno",
     });
-    expect(pdf.byteLength).toBeGreaterThan(1500);
+    expect(pdf.byteLength).toBeGreaterThan(8000);
   });
 
   it("builds credit note PDF", async () => {
@@ -104,6 +104,6 @@ describe("storno PDF generators", () => {
       payment_status_label: "Neuhrazeno",
       amount_paid_cents: 0,
     });
-    expect(pdf.byteLength).toBeGreaterThan(1500);
+    expect(pdf.byteLength).toBeGreaterThan(8000);
   });
 });

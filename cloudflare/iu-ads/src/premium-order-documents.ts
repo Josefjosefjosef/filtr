@@ -1,6 +1,8 @@
 /**
  * Auto-generated premium order PDFs (confirmation + invoice) — idempotent, non-blocking on publish errors.
  */
+import { computeAccountingSettlementRecap } from "./premium-accounting-settlement";
+import { paymentSettlementLabelCs } from "./premium-czech-money";
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { buildSignedDocumentAccess } from "./visibility";
@@ -1180,7 +1182,7 @@ async function generateStornoKindDocument(
   try {
     const storno = await db
       .prepare(
-        `SELECT storno_number, storno_kind, reason, invoice_id, credit_note_id FROM premium_order_storno_records WHERE order_id = ?`
+        `SELECT storno_number, storno_kind, reason, invoice_id, credit_note_id, correction_cents FROM premium_order_storno_records WHERE order_id = ?`
       )
       .bind(orderId)
       .first<{
@@ -1189,6 +1191,7 @@ async function generateStornoKindDocument(
         reason: string | null;
         invoice_id: string | null;
         credit_note_id: string | null;
+        correction_cents: number | null;
       }>();
     if (!storno) throw new Error("storno_record_missing");
 
@@ -1242,7 +1245,15 @@ async function generateStornoKindDocument(
         order_was_approved: poExtra?.workflow_status === "published" || poExtra?.workflow_status === "cancelled",
         ad_was_published: !!poExtra?.published_at,
         ad_turned_off_at: poExtra?.ad_turned_off_at ?? null,
-        payment_status_label: poExtra?.payment_status === "paid" ? "Uhrazeno" : "Neuhrazeno",
+        payment_status_label:
+          poExtra?.payment_status === "paid"
+            ? "Uhrazeno"
+            : poExtra?.payment_status === "partial"
+              ? "Uhrazeno částečně"
+              : "Neuhrazeno",
+        storno_amount_cents:
+          storno.correction_cents != null ? Math.abs(Math.round(Number(storno.correction_cents))) : null,
+        variable_symbol: ctx.invoice_number ? ctx.invoice_number.replace(/\D/g, "").slice(-10) : null,
       });
       docType = PREMIUM_DOC_TYPE_CANCELLATION;
       title = "Storno objednávky " + storno.storno_number;
@@ -1275,6 +1286,16 @@ async function generateStornoKindDocument(
         .bind(cn.invoice_id)
         .first<{ invoice_number: string; issued_at: string; currency: string }>();
       if (!inv) throw new Error("invoice_not_found");
+      const snap = String(cn.payment_status_snapshot || "unpaid");
+      const payMode = snap === "paid" || snap === "partial" || snap === "unpaid" ? snap : "unpaid";
+      const stornoAbs = Math.abs(Math.round(Number(cn.correction_cents) || 0));
+      const settlement = computeAccountingSettlementRecap({
+        originalInvoiceCents: cn.original_total_cents,
+        priorCorrectedCents: 0,
+        stornoAmountCents: stornoAbs,
+        paymentMode: payMode,
+        amountPaidCents: cn.amount_paid_cents_snapshot,
+      });
       pdfBytes = await buildPremiumCreditNotePdf({
         ctx,
         credit_note_number: cn.credit_note_number,
@@ -1287,8 +1308,10 @@ async function generateStornoKindDocument(
         new_total_cents: cn.new_total_cents,
         currency: inv.currency || ctx.currency,
         reason: cn.reason || storno.reason || "—",
-        payment_status_label: cn.payment_status_snapshot === "paid" ? "Uhrazeno" : "Neuhrazeno",
+        payment_status_label: paymentSettlementLabelCs(payMode),
         amount_paid_cents: cn.amount_paid_cents_snapshot,
+        remaining_due_cents: settlement.remaining_due_cents,
+        overpayment_cents: settlement.overpayment_cents,
       });
       docType = PREMIUM_DOC_TYPE_CREDIT_NOTE;
       title = "Dobropis " + cn.credit_note_number;
