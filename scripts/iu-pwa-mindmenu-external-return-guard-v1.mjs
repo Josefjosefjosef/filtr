@@ -69,7 +69,8 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-section-guard-v2-20261010/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-section-guard-v3-20261010/.test(net), "static:pwa_build_id");
+  must(/abortExternalReturnArmsAfterFailedOpen/.test(net), "static:abort_failed_external_open");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
   must(
     !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),

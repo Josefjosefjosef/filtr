@@ -140,9 +140,13 @@ async function openMindMenu(page) {
         });
         await page.waitForFunction(
           () => {
+            const ov = document.getElementById("iuMyInfoUzelOverlay");
             const list = document.getElementById("iuMailboxList");
             const add = document.getElementById("iuMailboxAdd");
-            return !!(list && add);
+            return (
+              !!(ov && ov.hidden === false && document.body.classList.contains("iu-myinfouzel-open")) &&
+              !!(list && add)
+            );
           },
           null,
           { timeout: 45000 }
@@ -169,9 +173,39 @@ function snap(page) {
   });
 }
 
+async function gearDiag(page) {
+  return page.evaluate(() => {
+    const g = document.querySelector("#iuMailboxList [data-mailbox-gear]");
+    const list = document.getElementById("iuMailboxList");
+    const ov = document.getElementById("iuMyInfoUzelOverlay");
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const st = g ? getComputedStyle(g) : null;
+    const gr = g ? g.getBoundingClientRect() : null;
+    return {
+      href: location.href,
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      bodyMyiu: document.body.classList.contains("iu-myinfouzel-open"),
+      overlayHidden: ov ? !!ov.hidden : null,
+      listCount: list ? list.querySelectorAll(".iu-mailbox-row").length : 0,
+      gearDisplay: st ? st.display : null,
+      gearVisibility: st ? st.visibility : null,
+      gearOpacity: st ? st.opacity : null,
+      gearRect: gr ? { w: gr.width, h: gr.height, top: gr.top } : null,
+      mailInitDone: window.__iuMailboxesInitDone,
+    };
+  });
+}
+
 async function openFirstGear(page) {
+  await page.locator("#iuMailboxList .iu-mailbox-row").first().hover({ timeout: 5000 }).catch(() => {});
   const gear = page.locator("#iuMailboxList [data-mailbox-gear]").first();
-  await gear.waitFor({ state: "visible", timeout: 45000 });
+  try {
+    await gear.waitFor({ state: "visible", timeout: 45000 });
+  } catch (err) {
+    const dbg = await gearDiag(page);
+    fail("gear_not_visible:" + JSON.stringify(dbg));
+    throw err;
+  }
   await gear.click({ force: true });
   await page.waitForSelector("#iu-mailbox-edit-overlay #iu-mailbox-edit-colorful", { timeout: 15000 });
 }

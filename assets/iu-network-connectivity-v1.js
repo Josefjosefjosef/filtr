@@ -12,7 +12,7 @@
   var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v2-20261010";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v3-20261010";
   var lastProbe = { ok: null, ts: 0 };
   var externalRestoreInFlight = false;
   var reconnectTimer = null;
@@ -262,6 +262,20 @@
     } catch (_) {}
   }
 
+  /** Drop return arms when external open never left the app (popup blocked, aborted gesture). */
+  function abortExternalReturnArmsAfterFailedOpen() {
+    try {
+      sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+      sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+      sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+    } catch (_) {}
+    try {
+      externalRestoreInFlight = false;
+    } catch (_) {}
+  }
+
   function capturePwaExternalReturnSnapshot() {
     try {
       if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
@@ -484,6 +498,9 @@
         opened = false;
         reason = "blocked";
       }
+    }
+    if (!opened && reason !== "deduped") {
+      abortExternalReturnArmsAfterFailedOpen();
     }
     return { ok: !!opened, reason: reason };
   }
