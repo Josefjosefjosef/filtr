@@ -26388,11 +26388,6 @@ function buildVideoAsArticleCard(it) {
       window.__iuMindMenuLastExternalOpen = { url: url, ts: now };
     } catch (_) {}
     iuMindMenuArmReturnState();
-    try {
-      if (window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function") {
-        window.iuNetwork.restoreAppShellAfterReturn();
-      }
-    } catch (_) {}
     var opened = false;
     try {
       if (/^mailto:/i.test(url) || /^tel:/i.test(url)) {
@@ -26558,19 +26553,7 @@ function buildVideoAsArticleCard(it) {
   function iuMindMenuReturnInit() {
     if (window.__iuMindMenuReturnInit) return;
     window.__iuMindMenuReturnInit = 1;
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "visible") iuMindMenuRestoreIfArmed();
-    });
-    window.addEventListener("pageshow", function () {
-      iuMindMenuRestoreIfArmed();
-      iuMindMenuSyncGateFromHistory();
-      try {
-        if (typeof window.iuMobileWebNavSyncFromHistory === "function") window.iuMobileWebNavSyncFromHistory();
-      } catch (_) {}
-    });
-    window.addEventListener("focus", function () {
-      iuMindMenuRestoreIfArmed();
-    });
+    /* visibility/pageshow/focus restore: iu-network restoreAppShellAfterReturn (single flight). */
     window.addEventListener("popstate", function () {
       /* External Done/return may arrive as popstate; prefer restore/pending over close. */
       try {

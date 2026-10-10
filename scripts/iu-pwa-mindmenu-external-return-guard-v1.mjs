@@ -58,10 +58,15 @@ function staticGate() {
     "static:popstate_allow_close"
   );
   must(
-    /addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\)/.test(feed) &&
-      !/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true/.test(feed),
+    (/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\)/.test(feed) &&
+      !/addEventListener\("pageshow"[\s\S]{0,200}iuMindMenuSyncGateFromHistory\(\s*\{\s*allowClose:\s*true/.test(feed)) ||
+      (/iu-network restoreAppShellAfterReturn/.test(feed) &&
+        /addEventListener\("pageshow"[\s\S]{0,120}restoreAppShellAfterReturn/.test(net)),
     "static:pageshow_no_allow_close"
   );
+  must(/externalRestoreInFlight/.test(net) && /capturePwaExternalReturnSnapshot/.test(net), "static:net_external_coalesce");
+  must(/iuMobileWebNavArmForExternalFromMenu/.test(app), "static:app_menu_external_arm");
+  must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net) && /iuMindMenuSyncGateFromHistory\(\)/.test(net), "static:net_invoke_order");
   must(
     !/removeItem\(IU_MINDMENU_RETURN_ARMED_KEY\)[\s\S]{0,80}iuMindMenuEnsureHistoryEntry/.test(feed),
@@ -441,6 +446,309 @@ async function waitRuntime(page) {
   );
 }
 
+async function openNavMenu(page) {
+  await page.evaluate(() => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    if (wrap && typeof wrap.__iuMobileGateSetTab === "function") wrap.__iuMobileGateSetTab("nav");
+    else document.getElementById("iuMobileGateTabNav")?.click();
+  });
+  await page.waitForFunction(
+    () => document.getElementById("iuMobileGateWrap")?.getAttribute("data-iu-mobile-gate") === "nav",
+    { timeout: 15000 }
+  );
+}
+
+async function scrollNavPanel(page, targetY) {
+  return page.evaluate((y) => {
+    const panel = document.getElementById("iuMobileGatePanelNav");
+    if (!panel) return { ok: false, scrollTop: 0 };
+    try {
+      const rail = document.getElementById("iuLeftRail");
+      if (rail && rail.scrollHeight < panel.clientHeight + y + 40) {
+        const pad = document.createElement("div");
+        pad.setAttribute("data-iu-guard-nav-scroll-pad", "1");
+        pad.style.height = String(y + 240) + "px";
+        rail.appendChild(pad);
+      }
+    } catch (_) {}
+    panel.scrollTop = y;
+    const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+    return { ok: true, scrollTop: panel.scrollTop || 0, max };
+  }, targetY);
+}
+
+/** Web nav menu: external _blank from open panel → popup close → return (not Zpět). */
+async function runBehaviorNavMenuExternalLink(page, label) {
+  await openNavMenu(page);
+  const NAV_SCROLL = 300;
+  const scrolled = await scrollNavPanel(page, NAV_SCROLL);
+  must(scrolled.ok, label + ":menu_ext:panel");
+  const scrollExpect = Math.min(NAV_SCROLL, scrolled.max || NAV_SCROLL);
+
+  await page.evaluate((y) => {
+    const panel = document.getElementById("iuMobileGatePanelNav");
+    if (!panel) return;
+    let link = document.getElementById("iu-guard-ext-test-link");
+    if (!link) {
+      link = document.createElement("a");
+      link.id = "iu-guard-ext-test-link";
+      link.href = "https://example.com/iu-guard-pwa-menu-external";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "IU guard external";
+      panel.appendChild(link);
+    }
+    panel.scrollTop = y;
+  }, scrollExpect);
+
+  let popupOpened = false;
+  try {
+    const popupWait = page.waitForEvent("popup", { timeout: 12000 });
+    await page.click("#iu-guard-ext-test-link", { timeout: 8000 });
+    const popup = await popupWait;
+    popupOpened = true;
+    const armed = await page.evaluate(() => {
+      const wrap = document.getElementById("iuMobileGateWrap");
+      return {
+        ext: sessionStorage.getItem("iu_external_nav_armed") || "",
+        webnav: sessionStorage.getItem("iuMobileWebNavReturnArmed") || "",
+        menuY: sessionStorage.getItem("iuMenuNavPanelScrollY") || "",
+        gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+        hash: String(location.hash || "").replace("#", ""),
+        overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+        mainY: typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : 0,
+      };
+    });
+    must(armed.ext === "1", label + ":menu_ext:armed:" + armed.ext);
+    must(armed.webnav === "1", label + ":menu_ext:webnav:" + armed.webnav);
+    must(armed.gate === "nav", label + ":menu_ext:gate_open:" + armed.gate);
+    must(armed.overlay === true, label + ":menu_ext:overlay_open");
+    must(armed.hash === "iu-nav" || armed.hash === "nav", label + ":menu_ext:hash:" + armed.hash);
+    if (scrollExpect > 40) {
+      must(Number(armed.menuY) >= Math.floor(scrollExpect * 0.45), label + ":menu_ext:captured_y:" + armed.menuY);
+    }
+    await popup.close();
+  } catch (_) {
+    const sim = await page.evaluate((y) => {
+      const panel = document.getElementById("iuMobileGatePanelNav");
+      if (panel) panel.scrollTop = y;
+      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+      if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
+        window.iuMobileWebNavArmForExternalFromMenu();
+      }
+      window.iuNetwork.openExternalSync("https://example.com/iu-guard-pwa-menu-external-fallback");
+      return sessionStorage.getItem("iu_external_nav_armed") || "";
+    }, scrollExpect);
+    must(sim === "1", label + ":menu_ext:fallback_arm:" + sim);
+  }
+
+  await page.evaluate(() => {
+    window.iuNetwork.restoreAppShellAfterReturn();
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: false }));
+    window.dispatchEvent(new FocusEvent("focus"));
+  });
+  await page.waitForTimeout(350);
+
+  const after = await page.evaluate(() => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const panel = document.getElementById("iuMobileGatePanelNav");
+    const feed = document.getElementById("feed");
+    let feedPeek = false;
+    try {
+      if (feed) {
+        const st = getComputedStyle(feed);
+        const r = feed.getBoundingClientRect();
+        feedPeek =
+          st.display !== "none" && st.visibility !== "hidden" && r.width > 20 && r.height > 20 && r.top < 120;
+      }
+    } catch (_) {}
+    return {
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      hash: String(location.hash || "").replace("#", ""),
+      panelScroll: panel ? panel.scrollTop || 0 : -1,
+      overlay: document.body.classList.contains("iu-mobileGateOverlayOpen"),
+      mainY: typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : 0,
+      feedPeek,
+    };
+  });
+  must(after.gate === "nav", label + ":menu_ext:after_gate:" + after.gate);
+  must(after.overlay === true, label + ":menu_ext:after_overlay");
+  must(after.hash === "iu-nav" || after.hash === "nav", label + ":menu_ext:after_hash:" + after.hash);
+  if (scrollExpect > 40) {
+    must(
+      after.panelScroll >= Math.floor(scrollExpect * 0.45),
+      label + ":menu_ext:after_scroll:" + after.panelScroll + "/~" + scrollExpect
+    );
+  }
+  must(after.feedPeek !== true, label + ":menu_ext:background_not_home_feed");
+}
+
+/** Hub scroll: external open → return; detect transient jump to top during restore. */
+async function runBehaviorHomeScrollExternalReturn(page, label) {
+  await page.evaluate(() => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    if (wrap && typeof wrap.__iuMobileGateSetTab === "function") wrap.__iuMobileGateSetTab("");
+  });
+  await page.waitForTimeout(200);
+  const HOME_Y = 520;
+  const result = await page.evaluate(async (targetY) => {
+    const samples = [];
+    const record = () => {
+      try {
+        samples.push(
+          typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : window.scrollY || 0
+        );
+      } catch (_) {
+        samples.push(0);
+      }
+    };
+    try {
+      const lc = document.getElementById("leftContent");
+      if (lc && lc.scrollHeight <= lc.clientHeight + targetY + 20) {
+        const pad = document.createElement("div");
+        pad.setAttribute("data-iu-guard-home-pad", "1");
+        pad.style.height = String(targetY + 420) + "px";
+        lc.appendChild(pad);
+      }
+    } catch (_) {}
+    if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(targetY);
+    else window.scrollTo(0, targetY);
+    record();
+    const yBefore = samples[samples.length - 1];
+    window.iuNetwork.openExternalSync("https://example.com/iu-guard-pwa-home-scroll");
+    record();
+    window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: false }));
+    record();
+    window.iuNetwork.restoreAppShellAfterReturn();
+    record();
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    record();
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    record();
+    const minY = Math.min.apply(null, samples);
+    const finalY = samples[samples.length - 1];
+    const transientTop =
+      yBefore > 80 && minY < Math.min(24, yBefore * 0.12) && finalY >= Math.floor(yBefore * 0.45);
+    return { yBefore, minY, finalY, transientTop, samplesLen: samples.length };
+  }, HOME_Y);
+  must(result.yBefore >= HOME_Y * 0.35, label + ":home_ext:before_y:" + result.yBefore);
+  must(result.finalY >= HOME_Y * 0.35, label + ":home_ext:final_y:" + result.finalY);
+  must(result.transientTop !== true, label + ":home_ext:transient_top:min=" + result.minY);
+}
+
+/** MindMenu: burst visibility/pageshow restore must not re-run gate flips after first flight completes. */
+async function runBehaviorSequentialReturnCoalesce(page, label) {
+  await openMindMenu(page);
+  const scrolled = await scrollMindMenuPanel(page, SCROLL_TARGET);
+  const scrollExpect = Math.min(SCROLL_TARGET, scrolled.max || SCROLL_TARGET);
+  const arm = await armViaRealApi(page, scrollExpect);
+  must(arm.ok && arm.pending === "1", label + ":coalesce:arm");
+
+  const burst = await page.evaluate(async () => {
+    const transitions = [];
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const orig = wrap && wrap.__iuMobileGateSetTab;
+    if (wrap && typeof orig === "function") {
+      wrap.__iuMobileGateSetTab = function (tab) {
+        const before = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        const out = orig.apply(this, arguments);
+        const after = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        if (before !== after) transitions.push(before + ">" + after);
+        return out;
+      };
+    }
+    let restoreCalls = 0;
+    const net = window.iuNetwork;
+    const origRestore = net.restoreAppShellAfterReturn;
+    net.restoreAppShellAfterReturn = function () {
+      restoreCalls += 1;
+      return origRestore.apply(this, arguments);
+    };
+    try {
+      sessionStorage.setItem("iu_external_nav_armed", "1");
+      for (let i = 0; i < 8; i++) {
+        net.restoreAppShellAfterReturn();
+        document.dispatchEvent(new Event("visibilitychange"));
+        window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: false }));
+      }
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r))));
+      const gateMid = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+      const transMid = transitions.slice();
+      transitions.length = 0;
+      sessionStorage.removeItem("iu_external_nav_armed");
+      try {
+        localStorage.removeItem("iuMindMenuReturnPendingV1");
+        sessionStorage.removeItem("iuMindMenuReturnArmed");
+      } catch (_) {}
+      for (let j = 0; j < 4; j++) {
+        net.restoreAppShellAfterReturn();
+        document.dispatchEvent(new Event("visibilitychange"));
+      }
+      await new Promise((r) => requestAnimationFrame(r));
+      if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab = orig;
+      net.restoreAppShellAfterReturn = origRestore;
+      return {
+        restoreCalls,
+        gateMid,
+        transMid,
+        transStale: transitions.slice(),
+        gateFinal: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+        homeInMid: transMid.filter((t) => t.includes(">") && (t.endsWith(">") || t.includes(">tools") === false)).length,
+      };
+    } catch (err) {
+      if (wrap && typeof orig === "function") wrap.__iuMobileGateSetTab = orig;
+      net.restoreAppShellAfterReturn = origRestore;
+      return { error: String(err) };
+    }
+  });
+  must(!burst.error, label + ":coalesce:err:" + burst.error);
+  must(burst.gateMid === "tools", label + ":coalesce:gate_mid:" + burst.gateMid);
+  must(burst.restoreCalls >= 1, label + ":coalesce:restore_called:" + burst.restoreCalls);
+  must(
+    !burst.transMid.some((t) => t === ">tools" || t.endsWith(">")),
+    label + ":coalesce:mid_transitions:" + (burst.transMid || []).join(",")
+  );
+  must(
+    !burst.transStale.some((t) => t === "tools>" || t.endsWith(">")),
+    label + ":coalesce:stale_transitions:" + (burst.transStale || []).join(",")
+  );
+}
+
+/** Return latch lifecycle: user close clears markers; expired pending does not reopen tools. */
+async function runBehaviorReturnLifecycle(page, label) {
+  const life = await page.evaluate(() => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    try {
+      wrap.__iuMobileGateSetTab("tools");
+      if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+        window.iuMindMenuClearAllReturnMarkers();
+      }
+      wrap.__iuMobileGateSetTab("");
+      window.iuMindMenuRestoreIfArmed();
+      const gateAfterUserClose = wrap.getAttribute("data-iu-mobile-gate") || "";
+      const pendingAfterUserClose = localStorage.getItem("iuMindMenuReturnPendingV1");
+      localStorage.setItem(
+        "iuMindMenuReturnPendingV1",
+        JSON.stringify({ t: Date.now() - 7200000, y: 400 })
+      );
+      window.iuMindMenuRestoreIfArmed();
+      const gateAfterExpired = wrap.getAttribute("data-iu-mobile-gate") || "";
+      return {
+        gateAfterUserClose,
+        pendingAfterUserClose: pendingAfterUserClose ? "1" : "",
+        gateAfterExpired,
+      };
+    } catch (err) {
+      return { error: String(err) };
+    }
+  });
+  must(!life.error, label + ":life:err:" + life.error);
+  must(life.gateAfterUserClose === "", label + ":life:user_close_gate:" + life.gateAfterUserClose);
+  must(life.pendingAfterUserClose === "", label + ":life:pending_cleared:" + life.pendingAfterUserClose);
+  must(life.gateAfterExpired === "", label + ":life:expired_pending_no_reopen:" + life.gateAfterExpired);
+}
+
 async function runMobileOrTabletPlatform(browser, label, viewport) {
   const context = await bootstrapGuardContext(browser, {
     viewport,
@@ -452,6 +760,11 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
   try {
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitRuntime(page);
+
+    await runBehaviorNavMenuExternalLink(page, label);
+    await runBehaviorHomeScrollExternalReturn(page, label);
+    await runBehaviorSequentialReturnCoalesce(page, label);
+    await runBehaviorReturnLifecycle(page, label);
 
     await openMindMenu(page);
     const scrolled = await scrollMindMenuPanel(page, SCROLL_TARGET);

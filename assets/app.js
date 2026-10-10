@@ -247,6 +247,12 @@ try {
        forcing top here erased scroll on Back from an external page. Reload stays top via "load". */
     window.addEventListener("pageshow", function(ev){
       if (ev && ev.persisted) return;
+      try {
+        if (sessionStorage.getItem("iu_external_nav_armed") === "1") return;
+        if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return;
+        if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") return;
+        if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return;
+      } catch (_) {}
       window.scrollTo(0, 0);
     });
   }
@@ -448,6 +454,8 @@ try {
   try {
     window.iuScrollRestoreSaveNow = iuSrSaveNow;
     window.iuScrollRestoreRequest = function (key) { return iuSrRequestRestore(key); };
+    window.iuPwaGetMainScrollY = iuSrGetY;
+    window.iuPwaApplyMainScrollY = iuSrSetY;
   } catch (_) {}
 
   /* popstate fires after location changed; scroll listener saved the left route continuously.
@@ -515,7 +523,7 @@ try {
 (function iuBootFeedPipelineLazy() {
   // Perf-loop iter-006: keep 240KB feed-pipeline off the slow-net / early-mobile critical path.
   // FIRST LOAD 20260822: weather paints via HEAD early Open-Meteo; pipeline still deferred but not 20s.
-  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-menu-nav-scroll-restore-v1-20260918";
+  var FEED_URL = "./iu-app-feed-pipeline-v1.js?v=perf-stage3-feed-split-v1-20260818-perf-loop-iter006-defer-pipeline-v1-20260820-early-wx-v1-20260822-pc-vault-mindmenu-lock-ux-v1-20260824-pin-mbox-module-write-v1-20260830-ds-external-return-fullscreen-v1-20260903-wx-offline-online-reconnect-v1-20260904-mindmenu-lock-infouzel-v1-20260906-external-open-dead-fix-v1-20260907-mindmenu-email-default-4-v1-20260908-mindmenu-colorful-default-off-v1-20260914-mindmenu-social-first-render-v1-20260914-pwa-mindmenu-external-return-v1-20260915-silver-info-cards-collapse-v1-20260915-pwa-mindmenu-external-return-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-menu-nav-scroll-restore-v1-20260918-pwa-external-return-coalesce-v1-20261009";
   var p = null;
   function ensure() {
     if (p) return p;
@@ -7420,6 +7428,34 @@ try {
     window.iuMobileWebNavReturnArmForTile = iuMobileWebNavReturnArmForTile;
   } catch (_) {}
 
+  /** Menu overlay open: external link must keep #iu-nav + scroll snapshot (PWA return). */
+  function iuMobileWebNavArmForExternalFromMenu() {
+    try {
+      if (typeof window.matchMedia !== "function" || !window.matchMedia("(max-width: 900px)").matches) return;
+      var wrapArm = document.getElementById("iuMobileGateWrap");
+      if (!wrapArm || String(wrapArm.getAttribute("data-iu-mobile-gate") || "") !== "nav") return;
+      try {
+        window.__iuMobileWebNavReturnArmed = true;
+        window.__iuMobileWebNavOrigin = "overlay";
+      } catch (_) {}
+      try {
+        sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+      } catch (_) {}
+      try {
+        if (typeof window.iuNavOverlayLockArm === "function") window.iuNavOverlayLockArm();
+      } catch (_) {}
+      var h = String(location.hash || "");
+      if (h !== "#iu-nav" && h !== "#nav") {
+        var u = new URL(location.href);
+        u.hash = "iu-nav";
+        history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      }
+    } catch (_) {}
+  }
+  try {
+    window.iuMobileWebNavArmForExternalFromMenu = iuMobileWebNavArmForExternalFromMenu;
+  } catch (_) {}
+
   function persistNavState(o){
     try{
       const u = new URL(window.location.href);
@@ -8838,6 +8874,9 @@ try {
         } catch (_){}
         var gateH = String(wrapH.getAttribute("data-iu-mobile-gate") || "");
         if (gateH === "nav") {
+          try {
+            if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") return;
+          } catch (_navExt) {}
           wrapH.__iuMobileGateSetTab("");
         }
       } catch (_){}
