@@ -46,8 +46,11 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
     conditions.push("po.workflow_status IN ('submitted','under_review')");
   } else if (filter === "published_active") {
     conditions.push("po.workflow_status = 'published'");
+    conditions.push("po.ad_turned_off_at IS NULL");
     conditions.push("EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND c.status = 'active' AND c.end_at > ?)");
     params.push(nowIso);
+  } else if (filter === "ad_turned_off") {
+    conditions.push("po.ad_turned_off_at IS NOT NULL");
   } else if (filter === "paused") {
     conditions.push("EXISTS (SELECT 1 FROM campaigns c WHERE c.campaign_id = po.published_campaign_id AND c.status = 'paused')");
   } else if (filter === "ended") {

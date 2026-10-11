@@ -25,6 +25,7 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/nav",
   "/v1/admin/dashboard",
   "/v1/admin/search",
+  "/v1/admin/search/suggest",
   "/v1/admin/calendar",
   "/v1/admin/alerts",
   "/v1/admin/alerts/generate",
@@ -34,7 +35,9 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/ad-orders",
   "/v1/admin/banner-pc",
   "/v1/admin/invoices/registry",
+  "/v1/admin/invoices/registry/export-zip",
   "/v1/admin/order-confirmations/registry",
+  "/v1/admin/order-confirmations/registry/export-zip",
   "/v1/admin/premium/orders",
   "/v1/admin/premium/orders/pending-count",
   "/v1/admin/premium/test-data/reset",
@@ -137,7 +140,12 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).toContain("/extend-new-order");
     expect(ADMIN_UI_SCRIPT).toContain("Prodloužit reklamu");
     expect(ADMIN_UI_SCRIPT).not.toContain("Prodloužit reklamu – nová objednávka");
-    expect(ADMIN_UI_SCRIPT).not.toContain("extendNewOrderModal");
+    expect(ADMIN_UI_SCRIPT).toContain("extendNewOrderModal");
+    expect(ADMIN_UI_SCRIPT).toContain("ext-target-url");
+    expect(ADMIN_UI_SCRIPT).toContain("Globální vyhledávání reklamních objednávek");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/search/suggest");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/invoices/registry/export-zip");
+    expect(ADMIN_UI_SCRIPT).toContain("ad_turned_off");
     expect(ADMIN_UI_SCRIPT).toContain("Potvrdit úhradu faktury");
     expect(ADMIN_UI_SCRIPT).toContain("invoice-pay-badge");
     expect(ADMIN_UI_SCRIPT).not.toMatch(/id=\"en-category\"/);
