@@ -379,6 +379,8 @@ export async function handleAdminPremiumOrderAmend(request: Request, env: Env, o
     service_start_at: typeof body.service_start_at === "string" ? body.service_start_at : undefined,
     service_end_at: typeof body.service_end_at === "string" ? body.service_end_at : undefined,
     price_kc: typeof body.price_kc === "string" ? body.price_kc : undefined,
+    ordering_person_name:
+      typeof body.ordering_person_name === "string" ? body.ordering_person_name : undefined,
     idempotencyKey: typeof body.idempotency_key === "string" ? body.idempotency_key : undefined,
   });
   if (!result.ok) return json({ error: result.error, message_cs: result.message_cs }, result.status);

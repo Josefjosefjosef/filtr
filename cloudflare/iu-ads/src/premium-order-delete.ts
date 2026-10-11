@@ -5,7 +5,7 @@ import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
-import { purgePremiumOrderPhysically } from "./premium-order-purge";
+import { premiumOrderEligibleForSystemPurge, purgePremiumOrderPhysically } from "./premium-order-purge";
 import type { Env } from "./types";
 
 async function orderHasProtectedAccounting(db: D1Database, orderId: string): Promise<boolean> {
@@ -63,6 +63,10 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
         },
         409
       );
+    }
+    const purgeEligible = await premiumOrderEligibleForSystemPurge(env.DB, orderId);
+    if (!purgeEligible.ok) {
+      return json({ error: purgeEligible.error, message_cs: purgeEligible.message_cs }, 403);
     }
   }
 

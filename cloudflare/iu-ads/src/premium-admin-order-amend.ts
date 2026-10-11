@@ -42,6 +42,7 @@ export type PremiumOrderAmendInput = {
   service_end_at?: string | null;
   price_kc?: string;
   idempotencyKey?: string;
+  ordering_person_name?: string;
 };
 
 export type PremiumOrderAmendResult =
@@ -108,6 +109,24 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
   if (Object.keys(billing).length) {
     payloadRaw.billing = billing;
     changes.push("billing");
+    const street = typeof billing.street === "string" ? billing.street : "";
+    const city = typeof billing.city === "string" ? billing.city : "";
+    const zip = typeof billing.zip === "string" ? billing.zip : "";
+    const country = typeof billing.country === "string" ? billing.country : "CZ";
+    const dicVal = payloadRaw.dic != null ? String(payloadRaw.dic) : null;
+    const address = [street, zip + " " + city, country].filter(Boolean).join(", ");
+    const billingInfo = [street, zip + " " + city, country, dicVal ? "DIČ: " + dicVal : null]
+      .filter(Boolean)
+      .join("\n");
+    await db
+      .prepare("UPDATE clients SET address = ?, billing_info = ?, updated_at = ? WHERE client_id = ?")
+      .bind(address, billingInfo, nowIso, clientId)
+      .run();
+  }
+
+  if (typeof input.ordering_person_name === "string" && input.ordering_person_name.trim().length >= 2) {
+    payloadRaw.ordering_person_name = input.ordering_person_name.trim().slice(0, 200);
+    changes.push("ordering_person");
   }
 
   if (typeof input.contact_person === "string" && input.contact_person.trim().length >= 2) {
@@ -209,6 +228,23 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
       .bind(start, end, nowIso, input.orderId)
       .run();
     changes.push("service_period");
+    const campId = typeof row.published_campaign_id === "string" ? row.published_campaign_id : null;
+    if (workflow === "published" && campId && (start || end)) {
+      if (start) {
+        await db.prepare("UPDATE campaigns SET start_at = ?, updated_at = ? WHERE campaign_id = ?").bind(start, nowIso, campId).run();
+        await db
+          .prepare("UPDATE campaign_placements SET start_at = ?, updated_at = ? WHERE campaign_id = ?")
+          .bind(start, nowIso, campId)
+          .run();
+      }
+      if (end) {
+        await db.prepare("UPDATE campaigns SET end_at = ?, updated_at = ? WHERE campaign_id = ?").bind(end, nowIso, campId).run();
+        await db
+          .prepare("UPDATE campaign_placements SET end_at = ?, updated_at = ? WHERE campaign_id = ?")
+          .bind(end, nowIso, campId)
+          .run();
+      }
+    }
   }
 
   if (input.price_kc != null && String(input.price_kc).trim()) {

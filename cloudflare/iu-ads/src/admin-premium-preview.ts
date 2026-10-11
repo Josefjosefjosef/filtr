@@ -2,7 +2,7 @@
  * Admin premium order detail + creative preview (same geometry as public card).
  */
 import { json, requireAdminPermission } from "./admin-auth";
-import { premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
+import { PREMIUM_CREATIVE_MODES, premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
 import {
   formatAdminPragueDateTime,
   isPremiumOrderPublishable,
@@ -12,7 +12,12 @@ import {
 } from "./premium-order-workflow";
 import { buildAdminPremiumPreviewScopedCss, wrapAdminPremiumPreviewHtml } from "./premium-admin-preview-css";
 import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium-order-history";
-import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
+import {
+  formatPremiumTotalPriceLabelCs,
+  premiumCategoryTitleCs,
+  PREMIUM_AFFILIATE_CATEGORY_SLUGS,
+  PREMIUM_DURATION_MONTHS,
+} from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
 import { premiumOrderEligibleForExtendNewOrder } from "./premium-admin-extend-new-order";
@@ -378,6 +383,12 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       billing_zip: payloadSnap.billing?.zip ?? null,
       billing_country: payloadSnap.billing?.country ?? "CZ",
       ad_title: payloadSnap.ad_title ?? null,
+      service_start_at:
+        (row.billed_service_start_at as string | null) ??
+        (row.campaign_start_at as string | null) ??
+        null,
+      service_end_at:
+        (row.billed_service_end_at as string | null) ?? (row.campaign_end_at as string | null) ?? null,
       paid_at: row.paid_at ?? null,
       payment_received_at: row.payment_received_at ?? null,
       ending_soon_days: endingSoonDays,
@@ -430,5 +441,16 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
       reason: r.replacement_reason ?? null,
     })),
+    edit_form_options: {
+      categories: PREMIUM_AFFILIATE_CATEGORY_SLUGS.map((slug) => ({
+        slug,
+        title_cs: premiumCategoryTitleCs(slug),
+      })),
+      creative_modes: PREMIUM_CREATIVE_MODES.map((mode) => ({
+        id: mode,
+        label_cs: premiumCreativeModeLabelCs(mode),
+      })),
+      positions: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
   });
 }

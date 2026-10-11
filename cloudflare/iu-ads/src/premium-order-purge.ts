@@ -1,7 +1,65 @@
 /**
  * Physical purge of a premium test order (D1 + R2). Main admin only.
  */
+import { parsePremiumOrderPayload } from "./premium-order-workflow";
 import type { Env } from "./types";
+
+export type PremiumSystemPurgeEligibility =
+  | { ok: true }
+  | { ok: false; error: string; message_cs: string };
+
+/** Only dev/test markers — blocks purge of likely production accounting evidence. */
+export async function premiumOrderEligibleForSystemPurge(
+  db: D1Database,
+  orderId: string
+): Promise<PremiumSystemPurgeEligibility> {
+  const row = await db
+    .prepare(
+      `SELECT po.target_url, o.payload_json, c.company_name, c.billing_info,
+              cc.email AS contact_email
+       FROM premium_selected_orders po
+       JOIN orders o ON o.order_id = po.order_id
+       JOIN clients c ON c.client_id = o.client_id
+       LEFT JOIN client_contacts cc ON cc.client_id = c.client_id AND cc.is_primary = 1
+       WHERE po.order_id = ?`
+    )
+    .bind(orderId)
+    .first<{
+      target_url: string | null;
+      payload_json: string | null;
+      company_name: string | null;
+      contact_email: string | null;
+    }>();
+  if (!row) return { ok: false, error: "not_found", message_cs: "Objednávka nenalezena." };
+
+  let payloadRaw: Record<string, unknown> = {};
+  try {
+    payloadRaw = JSON.parse(String(row.payload_json || "{}")) as Record<string, unknown>;
+  } catch {
+    payloadRaw = {};
+  }
+  const snap = parsePremiumOrderPayload(typeof row.payload_json === "string" ? row.payload_json : null);
+  void snap;
+
+  const email = String(row.contact_email || "").toLowerCase();
+  const company = String(row.company_name || "");
+  const target = String(row.target_url || "");
+  const devTest =
+    payloadRaw.iu_dev_test === true ||
+    email.endsWith("@example.invalid") ||
+    /IU_TEST|iu-premium-e2e|E2E/i.test(company) ||
+    target.includes("example.invalid");
+
+  if (!devTest) {
+    return {
+      ok: false,
+      error: "purge_not_eligible",
+      message_cs:
+        "Úplné odstranění je povoleno pouze u prokazatelně testovacích záznamů (dev/E2E). Pro běžné objednávky použijte archivaci.",
+    };
+  }
+  return { ok: true };
+}
 
 async function deleteDocumentRowsAndR2(
   db: D1Database,

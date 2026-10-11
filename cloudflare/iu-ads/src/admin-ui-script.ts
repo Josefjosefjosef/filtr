@@ -491,23 +491,45 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var em=state.orderEditModal;
     if(em&&em.detail){
       var o=em.detail.order||{};
+      var opts=em.detail.edit_form_options||{};
+      var catOpts=(opts.categories||[]).map(function(c){
+        var sel=c.slug===o.category_slug?' selected="selected"':"";
+        return '<option value="'+esc(c.slug)+'"'+sel+'>'+esc(c.title_cs||c.slug)+"</option>";
+      }).join("");
+      var modeOpts=(opts.creative_modes||[]).map(function(m){
+        var sel=m.id===o.creative_mode?' selected="selected"':"";
+        return '<option value="'+esc(m.id)+'"'+sel+'>'+esc(m.label_cs||m.id)+"</option>";
+      }).join("");
+      var posOpts=(opts.positions||[1,2,3,4,5,6,7,8]).map(function(p){
+        var sel=Number(o.position)===Number(p)?' selected="selected"':"";
+        return '<option value="'+esc(String(p))+'"'+sel+">P"+esc(String(p))+"</option>";
+      }).join("");
       h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Upravit objednávku</h3>'+
         '<div class="acct-cancel-grid">'+
-        '<div class="full"><label>Firma<input id="oe-company" type="text" value="'+esc(o.company_name||"")+'"></label></div>'+
+        '<div class="full"><label>Obchodní firma / jméno podnikatele<input id="oe-company" type="text" value="'+esc(o.company_name||"")+'"></label></div>'+
         '<div><label>IČO<input id="oe-ico" type="text" value="'+esc(o.ico||"")+'"></label></div>'+
         '<div><label>DIČ<input id="oe-dic" type="text" value="'+esc(o.dic||"")+'"></label></div>'+
-        '<div><label>Kontakt<input id="oe-contact" type="text" value="'+esc(o.contact_person_name||o.contact_name||"")+'"></label></div>'+
+        '<div><label>Kontaktní osoba<input id="oe-contact" type="text" value="'+esc(o.contact_person_name||o.contact_name||"")+'"></label></div>'+
+        '<div><label>Osoba oprávněná objednat<input id="oe-ordering" type="text" value="'+esc(o.ordering_person_name||"")+'"></label></div>'+
         '<div><label>E-mail<input id="oe-email" type="email" value="'+esc(o.contact_email||"")+'"></label></div>'+
         '<div><label>Telefon<input id="oe-phone" type="text" value="'+esc(o.contact_phone||"")+'"></label></div>'+
-        '<div class="full"><label>Ulice<input id="oe-street" type="text" value="'+esc(o.billing_street||"")+'"></label></div>'+
+        '<div class="full"><label>Ulice (fakturační adresa)<input id="oe-street" type="text" value="'+esc(o.billing_street||"")+'"></label></div>'+
         '<div><label>Město<input id="oe-city" type="text" value="'+esc(o.billing_city||"")+'"></label></div>'+
         '<div><label>PSČ<input id="oe-zip" type="text" value="'+esc(o.billing_zip||"")+'"></label></div>'+
+        '<div><label>Země<input id="oe-country" type="text" value="'+esc(o.billing_country||"CZ")+'"></label></div>'+
+        '<div><label>Reklamní kategorie<select id="oe-category">'+catOpts+'</select></label></div>'+
+        '<div><label>Reklamní pozice<select id="oe-position">'+posOpts+'</select></label></div>'+
         '<div class="full"><label>Název reklamy<input id="oe-ad-title" type="text" value="'+esc(o.ad_title||"")+'"></label></div>'+
         '<div class="full"><label>Cílová URL<input id="oe-url" type="url" value="'+esc(o.target_url||"")+'"></label></div>'+
-        '<div><label>Režim kreativy<input id="oe-mode" type="text" value="'+esc(o.creative_mode||"logo")+'"></label></div>'+
+        '<div><label>Režim kreativy<select id="oe-mode">'+modeOpts+'</select></label></div>'+
         '<div><label>Cena reklamní služby (Kč)<input id="oe-price" type="text" inputmode="decimal" value="'+esc(o.price_cents!=null?String(Number(o.price_cents)/100).replace(".",","):"")+'"></label></div>'+
-        '<div class="full"><label>Důvod / poznámka (interní)<textarea id="oe-note" rows="2">'+esc(o.note_client||"")+'</textarea></label></div>'+
-        '</div><p class="muted">Uložením vznikne nová verze potvrzení objednávky. Faktura se nemění.</p>'+
+        '<div><label>Začátek reklamního období<input id="oe-svc-start" type="datetime-local" value="'+esc(isoToDatetimeLocal(o.service_start_at||""))+'"></label></div>'+
+        '<div><label>Konec reklamního období<input id="oe-svc-end" type="datetime-local" value="'+esc(isoToDatetimeLocal(o.service_end_at||""))+'"></label></div>'+
+        '<div class="full"><label>Nový reklamní podklad (volitelné)<input id="oe-creative-file" type="file" accept="image/png,image/jpeg,image/webp"></label>'+
+        (o.creative_id?'<p class="muted">Aktuální kreativa: '+esc(o.creative_id)+"</p>":"")+
+        '</div>'+
+        '<div class="full"><label>Poznámka zákazníka<textarea id="oe-note" rows="2">'+esc(o.note_client||"")+'</textarea></label></div>'+
+        '</div><p class="muted">Uložením vznikne nová verze potvrzení objednávky. Vystavená faktura se nemění.</p>'+
         (em.formError?'<p class="err">'+esc(em.formError)+'</p>':"")+
         '<div class="row"><button type="button" class="btn" id="oe-save" '+(em.submitBusy?"disabled":"")+'>Uložit změny</button> '+
         '<button type="button" class="btn secondary" id="oe-cancel">Zrušit</button></div></div></div>';
@@ -564,21 +586,53 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(es) es.onclick=async function(){
       var m=state.orderEditModal; if(!m||m.submitBusy) return;
       m.submitBusy=true; render();
+      var ord=m.detail&&m.detail.order||{};
+      var creativeId=ord.creative_id||null;
+      var fileInput=el("oe-creative-file");
+      if(fileInput&&fileInput.files&&fileInput.files[0]){
+        var f=fileInput.files[0];
+        var b64=await new Promise(function(resolve,reject){
+          var reader=new FileReader();
+          reader.onload=function(){ var s=String(reader.result||""); resolve(s.indexOf(",")>=0?s.split(",")[1]:s); };
+          reader.onerror=reject;
+          reader.readAsDataURL(f);
+        });
+        var up=await api("/v1/admin/creatives",{method:"POST",body:JSON.stringify({
+          client_id:ord.client_id,
+          campaign_id:ord.published_campaign_id||null,
+          format:"image",
+          filename:f.name,
+          declared_mime:f.type||"image/png",
+          content_base64:b64,
+          device_category:"universal"
+        })});
+        if(!up.res.ok){ m.submitBusy=false; m.formError=up.body&&up.body.message_cs?up.body.message_cs:apiError(up.body); render(); return; }
+        creativeId=up.body&&up.body.creative_id?up.body.creative_id:creativeId;
+      }
+      var svcStart=el("oe-svc-start")&&el("oe-svc-start").value;
+      var svcEnd=el("oe-svc-end")&&el("oe-svc-end").value;
       var body={
         company_name:el("oe-company")&&el("oe-company").value,
         ico:el("oe-ico")&&el("oe-ico").value,
         dic:el("oe-dic")&&el("oe-dic").value,
         contact_person:el("oe-contact")&&el("oe-contact").value,
+        ordering_person_name:el("oe-ordering")&&el("oe-ordering").value,
         client_contact_email:el("oe-email")&&el("oe-email").value,
         contact_phone:el("oe-phone")&&el("oe-phone").value,
         billing_street:el("oe-street")&&el("oe-street").value,
         billing_city:el("oe-city")&&el("oe-city").value,
         billing_zip:el("oe-zip")&&el("oe-zip").value,
+        billing_country:el("oe-country")&&el("oe-country").value,
+        category_slug:el("oe-category")&&el("oe-category").value,
+        position:el("oe-position")&&Number(el("oe-position").value),
         ad_title:el("oe-ad-title")&&el("oe-ad-title").value,
         target_url:el("oe-url")&&el("oe-url").value,
         creative_mode:el("oe-mode")&&el("oe-mode").value,
+        creative_id:creativeId,
         price_kc:el("oe-price")&&el("oe-price").value,
-        note_client:el("oe-note")&&el("oe-note").value
+        note_client:el("oe-note")&&el("oe-note").value,
+        service_start_at:svcStart?new Date(svcStart).toISOString():undefined,
+        service_end_at:svcEnd?new Date(svcEnd).toISOString():undefined
       };
       var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(m.orderId)+"/amend",{method:"POST",body:JSON.stringify(body)});
       m.submitBusy=false;

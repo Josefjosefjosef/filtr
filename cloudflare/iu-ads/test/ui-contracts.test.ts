@@ -115,6 +115,9 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).toContain("Odstranit celý záznam ze systému");
     expect(ADMIN_UI_SCRIPT).toContain("Odstranit objednávku");
     expect(ADMIN_UI_SCRIPT).toContain("/amend");
+    expect(ADMIN_UI_SCRIPT).toContain("oe-category");
+    expect(ADMIN_UI_SCRIPT).toContain("oe-creative-file");
+    expect(ADMIN_UI_SCRIPT).toContain("oe-svc-start");
     expect(ADMIN_UI_SCRIPT).toContain("/extend-new-order");
     expect(ADMIN_UI_SCRIPT).toContain("Prodloužit reklamu – nová objednávka");
     expect(ADMIN_UI_SCRIPT).toContain("Filtry objednávek");
