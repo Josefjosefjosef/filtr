@@ -97,6 +97,25 @@ jobs:
           path: ${{ runner.temp }}/iu-order-confirmation-visual/
           if-no-files-found: error
 
+      - name: Premium storno + credit note PDF visual proof
+        env:
+          IU_STORNO_CREDIT_VISUAL_OUT: ${{ runner.temp }}/iu-storno-credit-visual
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_STORNO_CREDIT_VISUAL_OUT"
+          IU_STORNO_CREDIT_VISUAL_OUT="$IU_STORNO_CREDIT_VISUAL_OUT" npm test -- test/premium-storno-credit-visual-proof.test.ts
+          test -s "$IU_STORNO_CREDIT_VISUAL_OUT/storno-order-reference.pdf"
+          test -s "$IU_STORNO_CREDIT_VISUAL_OUT/credit-note-reference.pdf"
+          test -s "$IU_STORNO_CREDIT_VISUAL_OUT/storno-order-page-1.png"
+          test -s "$IU_STORNO_CREDIT_VISUAL_OUT/credit-note-page-1.png"
+
+      - name: Upload storno/credit visual artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        with:
+          name: premium-storno-credit-visual-deploy-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-storno-credit-visual/
+          if-no-files-found: error
+
       - name: Premium public/admin consistency guard
         working-directory: .
         run: node scripts/iu-premium-public-admin-consistency-guard-v1.mjs

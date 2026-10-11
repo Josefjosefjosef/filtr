@@ -39,6 +39,17 @@ class PurgeIntegrationDb {
     const sql = sqlRaw.replace(/\s+/g, " ").trim();
     const orderId = String(params[0] ?? "");
 
+    if (sql.includes("COALESCE(payment_status") && sql.includes("premium_selected_orders WHERE order_id")) {
+      const po = this.premiumOrders.get(orderId);
+      if (!po) return null;
+      return { payment_status: po.payment_status ?? "unpaid", paid_at: po.paid_at ?? null };
+    }
+
+    if (sql.includes("FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1")) {
+      const inv = this.invoices.find((i) => i.order_id === orderId);
+      return inv ? { status: inv.status, paid_at: inv.paid_at ?? null } : null;
+    }
+
     if (sql.includes("JOIN clients c ON") && sql.includes("WHERE po.order_id = ?")) {
       const po = this.premiumOrders.get(orderId);
       const ord = this.orders.get(orderId);
@@ -81,6 +92,10 @@ class PurgeIntegrationDb {
       return mode === "all" ? invs : invs[0] || null;
     }
 
+    if (sql.includes("DELETE FROM premium_credit_notes WHERE invoice_id = ?")) {
+      return mode === "run" ? { success: true } : null;
+    }
+
     if (sql.includes("DELETE FROM premium_order_document_jobs") || sql.includes("DELETE FROM premium_credit_notes")) {
       return mode === "run" ? { success: true } : null;
     }
@@ -118,6 +133,19 @@ describe("premium system purge integration", () => {
     db.contacts[0].email = "real@firma.cz";
     const blocked = await premiumOrderEligibleForSystemPurge(db as unknown as D1Database, orderId);
     expect(blocked.ok).toBe(false);
+
+    const explicit = await premiumOrderEligibleForSystemPurge(db as unknown as D1Database, orderId, {
+      explicitTestPurgeConfirmed: true,
+    });
+    expect(explicit.ok).toBe(true);
+    if (explicit.ok) expect(explicit.via).toBe("explicit_test_confirmed");
+
+    db.premiumOrders.get(orderId)!.payment_status = "paid";
+    const paidBlock = await premiumOrderEligibleForSystemPurge(db as unknown as D1Database, orderId, {
+      explicitTestPurgeConfirmed: true,
+    });
+    expect(paidBlock.ok).toBe(false);
+    if (!paidBlock.ok) expect(paidBlock.error).toBe("purge_paid_accounting");
   });
 
   it("removes D1 document rows and R2 keys for order", async () => {

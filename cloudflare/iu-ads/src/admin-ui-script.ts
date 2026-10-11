@@ -565,6 +565,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         '<li>'+esc(po.company_name||"—")+' · IČO '+esc(po.ico||"—")+'</li>'+
         '<li>'+esc(po.category_title_cs||"—")+' · '+esc(po.position_label||"—")+'</li>'+
         '<li>Dokumentů: '+esc(String(pu.docCount||0))+'</li></ul>'+
+        '<p><label><input type="checkbox" id="pu-test-ack"> Potvrzuji, že jde o testovací záznam bez úhrady, který lze fyzicky odstranit (ne archivovat).</label></p>'+
         (pu.formError?'<p class="err">'+esc(pu.formError)+'</p>':"")+
         '<div class="row"><button type="button" class="btn danger" id="pu-confirm" '+(pu.submitBusy?"disabled":"")+'>Definitivně odstranit</button> '+
         '<button type="button" class="btn secondary" id="pu-cancel">Zrušit</button></div></div></div>';
@@ -681,8 +682,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var pcf=el("pu-confirm");
     if(pcf) pcf.onclick=async function(){
       var m=state.purgeOrderModal; if(!m||m.submitBusy) return;
+      var ack=el("pu-test-ack");
+      if(!ack||!ack.checked){ m.formError="Zaškrtněte potvrzení testovacího záznamu bez úhrady."; render(); return; }
       m.submitBusy=true; render();
-      var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(m.orderId)+"/delete",{method:"POST",body:JSON.stringify({confirm:true,purge_system_record:true})});
+      var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(m.orderId)+"/delete",{method:"POST",body:JSON.stringify({confirm:true,purge_system_record:true,explicit_test_purge_confirmed:true})});
       m.submitBusy=false;
       if(r.res.ok){ state.purgeOrderModal=null; state.orderDetailId=null; state.flash="Záznam byl odstraněn ze systému."; await loadNav(); render(); return; }
       m.formError=r.body&&r.body.message_cs?r.body.message_cs:apiError(r.body); render();

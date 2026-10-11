@@ -52,10 +52,9 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   const brand = premiumPdfBrandRgb();
 
   let cursor = new PremiumInvoicePdfCursor(page, pages, pdf, PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_MIN_Y);
-  cursor.lockPageCount = true;
 
-  drawPremiumPdfBrandLogo(page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
-  page.drawText("DOBROPIS – OPRAVNÝ ÚČETNÍ DOKLAD", {
+  drawPremiumPdfBrandLogo(cursor.page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
+  cursor.page.drawText("DOBROPIS – OPRAVNÝ ÚČETNÍ DOKLAD", {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 16,
@@ -63,7 +62,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     color: brand,
   });
   cursor.y -= 18;
-  page.drawText("Neplátce DPH – nejedná se o opravný daňový doklad", {
+  cursor.page.drawText("Neplátce DPH – nejedná se o opravný daňový doklad", {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 9,
@@ -88,11 +87,11 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   let yL = cursor.y;
   let yR = cursor.y;
   for (const line of leftMeta) {
-    page.drawText(line, { x: leftX, y: yL, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
+    cursor.page.drawText(line, { x: leftX, y: yL, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
     yL -= 12;
   }
   for (const line of rightMeta) {
-    page.drawText(line, { x: rightX, y: yR, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
+    cursor.page.drawText(line, { x: rightX, y: yR, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
     yR -= 12;
   }
   cursor.y = Math.min(yL, yR) - 10;
@@ -114,11 +113,11 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   ];
   let ySvc = cursor.y;
   for (const line of svc) {
-    ySvc = drawWrappedText(page, fonts.regular, line, leftX, ySvc, colW + 20, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.25);
+    ySvc = drawWrappedText(cursor.page, fonts.regular, line, leftX, ySvc, colW + 20, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.25);
     ySvc -= 2;
   }
   const periodH = 48;
-  page.drawRectangle({
+  cursor.page.drawRectangle({
     x: rightX,
     y: cursor.y - periodH,
     width: colW,
@@ -127,7 +126,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     borderWidth: 0.6,
     color: rgb(0.97, 0.98, 1),
   });
-  page.drawText("Období poskytování (původní)", { x: rightX + 8, y: cursor.y - 14, size: 9, font: fonts.bold, color: brand });
+  cursor.page.drawText("Období poskytování (původní)", { x: rightX + 8, y: cursor.y - 14, size: 9, font: fonts.bold, color: brand });
   const period =
     input.ctx.campaign_start_at && input.ctx.campaign_end_at
       ? [
@@ -137,7 +136,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
       : ["—"];
   let yPer = cursor.y - 28;
   for (const p of period) {
-    page.drawText(p, { x: rightX + 8, y: yPer, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
+    cursor.page.drawText(p, { x: rightX + 8, y: yPer, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
     yPer -= 12;
   }
   cursor.y = Math.min(ySvc, cursor.y - periodH) - 8;
@@ -145,7 +144,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Položky dobropisu", PREMIUM_INVOICE_CONTENT_W);
   const tableTop = cursor.y;
   const tableH = 52;
-  page.drawRectangle({
+  cursor.page.drawRectangle({
     x: leftX,
     y: tableTop - tableH,
     width: PREMIUM_INVOICE_CONTENT_W,
@@ -153,7 +152,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     borderColor: PREMIUM_PDF_LINE_GRAY,
     borderWidth: 0.6,
   });
-  page.drawRectangle({
+  cursor.page.drawRectangle({
     x: leftX,
     y: tableTop - 18,
     width: PREMIUM_INVOICE_CONTENT_W,
@@ -162,25 +161,29 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     borderColor: PREMIUM_PDF_LINE_GRAY,
     borderWidth: 0.6,
   });
-  page.drawText("Popis", { x: leftX + 8, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
-  page.drawText("Období", { x: leftX + 280, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
-  page.drawText("Částka", { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 70, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
+  cursor.page.drawText("Popis", { x: leftX + 8, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
+  cursor.page.drawText("Období", { x: leftX + 280, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
+  cursor.page.drawText("Částka", { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 70, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
   const periodShort =
     input.ctx.campaign_start_at && input.ctx.campaign_end_at
       ? formatAdminPragueDateTime(input.ctx.campaign_start_at) + " – " + formatAdminPragueDateTime(input.ctx.campaign_end_at)
       : "—";
-  page.drawText("Původně fakturováno", { x: leftX + 8, y: tableTop - 32, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
-  page.drawText(periodShort, { x: leftX + 280, y: tableTop - 32, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
-  page.drawText(fmtPremiumPdfMoney(input.original_total_cents, input.currency), {
+  cursor.page.drawText("Původně fakturováno", { x: leftX + 8, y: tableTop - 32, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
+  cursor.page.drawText(periodShort, { x: leftX + 280, y: tableTop - 32, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
+  cursor.page.drawText(fmtPremiumPdfMoney(input.original_total_cents, input.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 72,
     y: tableTop - 32,
     size: 8.5,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MAIN,
   });
-  page.drawText("Oprava – storno / snížení", { x: leftX + 8, y: tableTop - 46, size: 8.5, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
-  page.drawText(periodShort, { x: leftX + 280, y: tableTop - 46, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
-  page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
+  const correctionLabel =
+    input.new_total_cents === 0 && input.correction_cents === -input.original_total_cents
+      ? "Oprava – storno celé služby"
+      : "Oprava – storno / snížení";
+  cursor.page.drawText(correctionLabel, { x: leftX + 8, y: tableTop - 46, size: 8.5, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
+  cursor.page.drawText(periodShort, { x: leftX + 280, y: tableTop - 46, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
+  cursor.page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 72,
     y: tableTop - 46,
     size: 9.5,
@@ -189,8 +192,8 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   });
   cursor.y = tableTop - tableH - 8;
 
-  page.drawText("CELKOVÁ OPRAVA", { x: leftX, y: cursor.y, size: 10, font: fonts.bold, color: brand });
-  page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
+  cursor.page.drawText("CELKOVÁ OPRAVA", { x: leftX, y: cursor.y, size: 10, font: fonts.bold, color: brand });
+  cursor.page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 90,
     y: cursor.y - 2,
     size: 14,
@@ -198,8 +201,8 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     color: brand,
   });
   cursor.y -= 20;
-  page.drawText("Nová cena služby po opravě:", { x: leftX, y: cursor.y, size: 9, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
-  page.drawText(fmtPremiumPdfMoney(input.new_total_cents, input.currency), {
+  cursor.page.drawText("Nová cena služby po opravě:", { x: leftX, y: cursor.y, size: 9, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
+  cursor.page.drawText(fmtPremiumPdfMoney(input.new_total_cents, input.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 90,
     y: cursor.y,
     size: 10,
@@ -209,16 +212,20 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   cursor.y -= 22;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důvod opravy", PREMIUM_INVOICE_CONTENT_W);
-  cursor.y = drawWrappedText(page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 8;
+  cursor.y = drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 8;
 
+  cursor.ensureSpace(110);
   const finTop = cursor.y;
-  drawPremiumPdfSectionHeader(cursor, fonts, brand, "Finanční vypořádání", PREMIUM_INVOICE_CONTENT_W / 2 - 6);
-  cursor.y = finTop - 28;
+  cursor.page.drawText("Finanční vypořádání", { x: leftX, y: finTop, size: 10, font: fonts.bold, color: brand });
+  cursor.page.drawText("Účetní evidence", { x: rightX, y: finTop, size: 10, font: fonts.bold, color: brand });
+  let yFinL = finTop - 16;
+  let yFinR = finTop - 16;
   const finLines = [
     "Stav úhrady původní faktury: " + input.payment_status_label,
     input.amount_paid_cents > 0
       ? "Skutečně přijatá úhrada: " + fmtPremiumPdfMoney(input.amount_paid_cents, input.currency)
       : "Přijatá úhrada nebyla evidována (0 Kč).",
+    "Způsob vypořádání: dle dohody (nutno ověřit).",
     "Zbývající cena služby po opravě: " + fmtPremiumPdfMoney(input.new_total_cents, input.currency),
   ];
   if ((input.remaining_due_cents ?? 0) > 0) {
@@ -229,22 +236,21 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   }
   finLines.push("Vystavení dobropisu neznamená automatické vrácení peněz — ověřte skutečné finanční vypořádání mimo tento doklad.");
   for (const line of finLines) {
-    cursor.y = drawWrappedText(page, fonts.regular, line, leftX, cursor.y, colW, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
+    yFinL = drawWrappedText(cursor.page, fonts.regular, line, leftX, yFinL, colW, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
   }
-
-  cursor.y = finTop - 28;
-  drawPremiumPdfSectionHeader(cursor, fonts, brand, "Účetní evidence", PREMIUM_INVOICE_CONTENT_W / 2 - 6);
-  cursor.y = finTop - 52;
   const accLines = [
     "Datum zaúčtování: dle interní účetní evidence",
     "Odpovědná osoba: dle podpisového záznamu v účetním systému",
     "Podpisové záznamy jsou vedeny v prokazatelně propojené účetní evidenci.",
   ];
   for (const line of accLines) {
-    cursor.y = drawWrappedText(page, fonts.regular, line, rightX, cursor.y, colW, 8.5, PREMIUM_PDF_TEXT_MUTED, 1.28) - 2;
+    yFinR = drawWrappedText(cursor.page, fonts.regular, line, rightX, yFinR, colW, 8.5, PREMIUM_PDF_TEXT_MUTED, 1.28) - 2;
   }
+  cursor.y = Math.min(yFinL, yFinR) - 6;
+  cursor.ensureSpace(PREMIUM_INVOICE_FOOTER_Y - PREMIUM_INVOICE_CONTENT_MIN_Y + 36);
+  const footerPage = cursor.page;
 
-  page.drawRectangle({
+  footerPage.drawRectangle({
     x: PREMIUM_INVOICE_MARGIN,
     y: PREMIUM_INVOICE_FOOTER_Y + 18,
     width: PREMIUM_INVOICE_CONTENT_W,
@@ -253,7 +259,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     borderColor: PREMIUM_PDF_LINE_GRAY,
     borderWidth: 0.5,
   });
-  page.drawText("Původní faktura zůstává zachována. Tento doklad opravuje fakturovanou částku a stornuje odpovídající část objednané služby.", {
+  footerPage.drawText("Původní faktura zůstává zachována. Tento doklad opravuje fakturovanou částku a stornuje odpovídající část objednané služby.", {
     x: PREMIUM_INVOICE_MARGIN + 8,
     y: PREMIUM_INVOICE_FOOTER_Y + 28,
     size: 8,
@@ -262,14 +268,14 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     maxWidth: PREMIUM_INVOICE_CONTENT_W - 16,
   });
 
-  page.drawText("Děkujeme za spolupráci.", {
+  footerPage.drawText("Děkujeme za spolupráci.", {
     x: PREMIUM_INVOICE_MARGIN,
     y: PREMIUM_INVOICE_FOOTER_Y - 2,
     size: 8,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MUTED,
   });
-  drawPremiumPdfBrandLogo(page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y - 8);
+  drawPremiumPdfBrandLogo(footerPage, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y - 8);
 
   return pdf.save();
 }

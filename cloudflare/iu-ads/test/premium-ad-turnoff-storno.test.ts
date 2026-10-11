@@ -1,3 +1,4 @@
+import { PDFDocument } from "pdf-lib";
 import { describe, expect, it, vi } from "vitest";
 import { executePremiumAdTurnOff, premiumAdTurnOffBlocksResume } from "../src/premium-ad-turnoff";
 import { buildPremiumOrderCancellationPdf } from "../src/premium-order-cancellation-pdf";
@@ -86,6 +87,30 @@ describe("storno PDF generators", () => {
       payment_status_label: "Neuhrazeno",
     });
     expect(pdf.byteLength).toBeGreaterThan(8000);
+    const doc = await PDFDocument.load(pdf);
+    expect(doc.getPageCount()).toBeLessThanOrEqual(2);
+  });
+
+  it("builds full cancellation PDF with consequences section", async () => {
+    const pdf = await buildPremiumOrderCancellationPdf({
+      ctx: sampleCtx,
+      storno_number: "STO-2026-000123",
+      storno_kind: "cancellation",
+      reason: "Klient požádal o zrušení objednávky. Reklamní službu již nechce.",
+      issued_at: "2026-10-12T12:27:00.000Z",
+      issuer_display_name: "Hlavní administrátor",
+      invoice_number: "INV-2026-1FE6BE48",
+      credit_note_number: "DOB-2026-000001",
+      order_was_approved: true,
+      ad_was_published: true,
+      ad_turned_off_at: "2026-10-12T11:00:00.000Z",
+      payment_status_label: "Neuhrazeno",
+      storno_amount_cents: 599000,
+      variable_symbol: "20261648",
+    });
+    const doc = await PDFDocument.load(pdf);
+    expect(doc.getPageCount()).toBeGreaterThanOrEqual(1);
+    expect(doc.getPageCount()).toBeLessThanOrEqual(2);
   });
 
   it("builds credit note PDF", async () => {
@@ -105,5 +130,7 @@ describe("storno PDF generators", () => {
       amount_paid_cents: 0,
     });
     expect(pdf.byteLength).toBeGreaterThan(8000);
+    const doc = await PDFDocument.load(pdf);
+    expect(doc.getPageCount()).toBeLessThanOrEqual(2);
   });
 });
