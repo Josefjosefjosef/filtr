@@ -2,7 +2,7 @@
  * Admin premium order detail + creative preview (same geometry as public card).
  */
 import { json, requireAdminPermission } from "./admin-auth";
-import { premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
+import { PREMIUM_CREATIVE_MODES, premiumCreativeModeLabelCs, premiumCreativeSlotClassSuffix } from "./premium-creative-mode";
 import {
   formatAdminPragueDateTime,
   isPremiumOrderPublishable,
@@ -12,11 +12,18 @@ import {
 } from "./premium-order-workflow";
 import { buildAdminPremiumPreviewScopedCss, wrapAdminPremiumPreviewHtml } from "./premium-admin-preview-css";
 import { listPremiumOrderEvents, formatPremiumOrderEventLineCs } from "./premium-order-history";
-import { formatPremiumTotalPriceLabelCs, premiumCategoryTitleCs, PREMIUM_DURATION_MONTHS } from "./premium-selected-services";
+import {
+  formatPremiumTotalPriceLabelCs,
+  premiumCategoryTitleCs,
+  PREMIUM_AFFILIATE_CATEGORY_SLUGS,
+  PREMIUM_DURATION_MONTHS,
+} from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
+import { premiumOrderEligibleForExtendNewOrder } from "./premium-admin-extend-new-order";
 import { sumPriorCreditCorrectionsCents } from "./premium-accounting-settlement";
 import { buildPremiumOrderPublicationVisibility } from "./premium-publication-consistency";
+import { addCalendarMonthsFromIso } from "./premium-selected-services";
 import type { Env } from "./types";
 
 function previewCardHtml(input: {
@@ -162,6 +169,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     typeof row.contact_person === "string" && row.contact_person.trim() ? row.contact_person.trim() : null;
   const contactPhonePayload = payloadSnap.contact_phone;
   const paymentStatus = String(row.payment_status || "unpaid");
+  const nowIso = new Date().toISOString();
   const campaignEndAt = row.campaign_end_at != null ? String(row.campaign_end_at) : null;
   const campaignStatus = row.campaign_status != null ? String(row.campaign_status) : null;
   const nowMs = Date.now();
@@ -256,7 +264,32 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
 
-  const nowIso = new Date().toISOString();
+  const extendEligible = await premiumOrderEligibleForExtendNewOrder(env.DB, orderId, nowIso);
+  const suggestedExtendEnd =
+    campaignEndAt && extendEligible.ok ? addCalendarMonthsFromIso(campaignEndAt, 6) : null;
+
+  const relatedOrdersRes = await env.DB.prepare(
+    `SELECT po.order_id, o.customer_order_code, o.order_number, po.billed_service_start_at, po.billed_service_end_at, po.created_at,
+            inv.invoice_number
+     FROM premium_selected_orders po
+     JOIN orders o ON o.order_id = po.order_id
+     LEFT JOIN invoices inv ON inv.order_id = po.order_id
+     WHERE po.parent_order_id = ? OR po.order_id = (SELECT parent_order_id FROM premium_selected_orders WHERE order_id = ? LIMIT 1)
+     ORDER BY po.created_at ASC`
+  )
+    .bind(orderId, orderId)
+    .all<Record<string, unknown>>();
+
+  const confirmationRevisionsRes = await env.DB.prepare(
+    `SELECT d.version AS current_version, dcr.version AS revision_version, dcr.created_at, dcr.replacement_reason
+     FROM documents d
+     LEFT JOIN document_content_revisions dcr ON dcr.document_id = d.document_id
+     WHERE d.order_id = ? AND d.doc_type = 'premium_order_confirmation' AND d.status = 'active'
+     ORDER BY COALESCE(dcr.version, d.version) ASC`
+  )
+    .bind(orderId)
+    .all<Record<string, unknown>>();
+
   const publication_visibility = await buildPremiumOrderPublicationVisibility(env.DB, {
     orderId: String(row.order_id || ""),
     placementId: String(row.placement_id || ""),
@@ -338,7 +371,24 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       ad_turn_off_reason: row.ad_turn_off_reason ?? null,
       accounting_cancelled_at: row.accounting_cancelled_at ?? null,
       payment_status: paymentStatus,
-      payment_status_label_cs: paymentStatus === "paid" ? "Uhrazeno" : "Neuhrazeno",
+      payment_status_label_cs:
+        paymentStatus === "paid"
+          ? "Uhrazeno"
+          : paymentStatus === "partial"
+            ? "Uhrazeno částečně"
+            : "Neuhrazeno",
+      price_cents: agreedCents != null && Number.isFinite(Number(agreedCents)) ? Number(agreedCents) : null,
+      billing_street: payloadSnap.billing?.street ?? null,
+      billing_city: payloadSnap.billing?.city ?? null,
+      billing_zip: payloadSnap.billing?.zip ?? null,
+      billing_country: payloadSnap.billing?.country ?? "CZ",
+      ad_title: payloadSnap.ad_title ?? null,
+      service_start_at:
+        (row.billed_service_start_at as string | null) ??
+        (row.campaign_start_at as string | null) ??
+        null,
+      service_end_at:
+        (row.billed_service_end_at as string | null) ?? (row.campaign_end_at as string | null) ?? null,
       paid_at: row.paid_at ?? null,
       payment_received_at: row.payment_received_at ?? null,
       ending_soon_days: endingSoonDays,
@@ -369,5 +419,38 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         }
       : null,
     invoice_accounting: invoiceAccounting,
+    extend_new_order_allowed: extendEligible.ok,
+    extend_new_order_blocked_reason_cs: extendEligible.ok ? null : extendEligible.message_cs,
+    extend_suggested_period: extendEligible.ok
+      ? { start_at: campaignEndAt, end_at: suggestedExtendEnd }
+      : null,
+    related_orders: (relatedOrdersRes.results || []).map((r) => ({
+      order_id: r.order_id,
+      order_reference: r.customer_order_code || r.order_number,
+      invoice_number: r.invoice_number ?? null,
+      service_period_label_cs:
+        r.billed_service_start_at && r.billed_service_end_at
+          ? formatAdminPragueDateTime(String(r.billed_service_start_at)) +
+            " – " +
+            formatAdminPragueDateTime(String(r.billed_service_end_at))
+          : null,
+      created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
+    })),
+    order_confirmation_revisions: (confirmationRevisionsRes.results || []).map((r) => ({
+      version: r.revision_version ?? r.current_version,
+      created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
+      reason: r.replacement_reason ?? null,
+    })),
+    edit_form_options: {
+      categories: PREMIUM_AFFILIATE_CATEGORY_SLUGS.map((slug) => ({
+        slug,
+        title_cs: premiumCategoryTitleCs(slug),
+      })),
+      creative_modes: PREMIUM_CREATIVE_MODES.map((mode) => ({
+        id: mode,
+        label_cs: premiumCreativeModeLabelCs(mode),
+      })),
+      positions: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
   });
 }

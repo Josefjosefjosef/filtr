@@ -260,6 +260,13 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
       public_output_verified: expectedInPublicOutput,
       consistency_mismatch: consistencyMismatch,
     },
+    payment_status: String(row.payment_status || "unpaid"),
+    payment_status_label_cs:
+      String(row.payment_status || "unpaid") === "paid"
+        ? "Uhrazeno"
+        : String(row.payment_status || "unpaid") === "partial"
+          ? "Uhrazeno částečně"
+          : "Neuhrazeno",
   };
 }
 
