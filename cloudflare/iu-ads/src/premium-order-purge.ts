@@ -25,7 +25,7 @@ export function sanitizePurgeDbHint(message: string): string | undefined {
   return undefined;
 }
 
-async function purgeDbStep(step: string, fn: () => Promise<void>): Promise<void> {
+export async function purgeDbStep(step: string, fn: () => Promise<void>): Promise<void> {
   try {
     await fn();
   } catch (err) {
