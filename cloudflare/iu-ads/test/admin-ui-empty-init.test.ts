@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import worker from "../src/index";
 import { ADMIN_UI_SCRIPT } from "../src/admin-ui-script";
+import { createAdminUiHarness } from "./helpers/admin-ui-dom-harness";
 import { createIuAdsSchemaDb } from "./helpers/apply-iu-ads-migrations";
 import { d1FromSqlite } from "./helpers/d1-sqlite-shim";
 import { generateSessionId, hashOpaqueToken, nowSeconds, signSessionToken } from "../src/session";
@@ -77,5 +78,88 @@ describe("admin UI empty D1 init", () => {
     const listBody = (await list.json()) as { premium_orders?: unknown[] };
     expect(Array.isArray(listBody.premium_orders)).toBe(true);
     expect(listBody.premium_orders?.length).toBe(0);
+  });
+
+  it("render() finishes premium and dashboard panels (no stuck Načítám)", async () => {
+    const jsonResponse = (data: unknown) =>
+      Promise.resolve(
+        new Response(JSON.stringify(data), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        })
+      );
+
+    const harness = createAdminUiHarness(async (path) => {
+      if (path === "/health") {
+        return jsonResponse({ ok: true, adminApiEnabled: true, safeMode: true, publicDeliveryEnabled: false });
+      }
+      if (path === "/v1/admin/premium/orders/summary") {
+        return jsonResponse({
+          pending_review: 0,
+          active_published: 0,
+          paused: 0,
+          unpaid: 0,
+          ending_within_30_days: 0,
+        });
+      }
+      if (path.startsWith("/v1/admin/premium/orders")) {
+        return jsonResponse({ premium_orders: [], pending_count: 0 });
+      }
+      if (path === "/v1/admin/dashboard") {
+        return jsonResponse({ widgets: { open_orders: 0 } });
+      }
+      if (path === "/v1/admin/campaigns") {
+        return jsonResponse({ campaigns: [] });
+      }
+      if (path === "/v1/admin/clients") {
+        return jsonResponse({ clients: [] });
+      }
+      return jsonResponse({ error: "unexpected_path", path });
+    });
+
+    await harness.renderView("dashboard");
+    let html = harness.getPanelHtml();
+    expect(html).toContain("Dashboard");
+    expect(html).not.toMatch(/^<p class="muted">Načítám…<\/p>$/);
+
+    await harness.renderView("premium");
+    html = harness.getPanelHtml();
+    expect(html).toContain("Vybrané služby a odkazy");
+    expect(html).toContain("Žádné objednávky k zobrazení");
+    expect(html).not.toMatch(/^<p class="muted">Načítám…<\/p>$/);
+
+    await harness.renderView("orders");
+    html = harness.getPanelHtml();
+    expect(html).toContain("Vybrané služby a odkazy");
+    expect(html).not.toContain("Načtení panelu se nezdařilo");
+  });
+
+  it("ReferenceError in premium render shows failure UI (regression for isMainAdmin typo)", async () => {
+    const brokenScript = ADMIN_UI_SCRIPT.replace(
+      "var resetBar=isMainAdminUser()",
+      "var resetBar=isMainAdmin()"
+    );
+    const jsonResponse = (data: unknown) =>
+      Promise.resolve(
+        new Response(JSON.stringify(data), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        })
+      );
+    const harness = createAdminUiHarness(async (path) => {
+      if (path.startsWith("/v1/admin/premium/orders/summary")) {
+        return jsonResponse({ pending_review: 0, active_published: 0, paused: 0, unpaid: 0, ending_within_30_days: 0 });
+      }
+      if (path.startsWith("/v1/admin/premium/orders")) {
+        return jsonResponse({ premium_orders: [], pending_count: 0 });
+      }
+      return jsonResponse({});
+    }, brokenScript);
+
+    await harness.renderView("premium");
+    const html = harness.getPanelHtml();
+    expect(html).toContain("Načtení panelu se nezdařilo");
+    expect(html).toContain("panel-retry");
+    expect(html).not.toMatch(/^<p class="muted">Načítám…<\/p>$/);
   });
 });
