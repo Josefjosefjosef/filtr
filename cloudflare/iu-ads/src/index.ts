@@ -141,6 +141,8 @@ import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
 import {
   handleAdminPremiumAddNote,
   handleAdminPremiumExtend,
+  handleAdminPremiumExtendNewOrder,
+  handleAdminPremiumOrderAmend,
   handleAdminPremiumOrderSummary,
   handleAdminPremiumPatchOrder,
   handleAdminPremiumSetPayment,
@@ -664,6 +666,12 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (premiumPaymentMatch && method === "PATCH") return handleAdminPremiumSetPayment(request, env, premiumPaymentMatch[1]);
       const premiumExtendMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/extend$/);
       if (premiumExtendMatch && method === "POST") return handleAdminPremiumExtend(request, env, premiumExtendMatch[1]);
+      const premiumExtendNewMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/extend-new-order$/);
+      if (premiumExtendNewMatch && method === "POST") {
+        return handleAdminPremiumExtendNewOrder(request, env, premiumExtendNewMatch[1]);
+      }
+      const premiumAmendMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/amend$/);
+      if (premiumAmendMatch && method === "POST") return handleAdminPremiumOrderAmend(request, env, premiumAmendMatch[1]);
       const premiumNoteMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/notes$/);
       if (premiumNoteMatch && method === "POST") return handleAdminPremiumAddNote(request, env, premiumNoteMatch[1]);
       const premiumPatchMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);

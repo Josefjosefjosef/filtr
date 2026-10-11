@@ -4,6 +4,8 @@
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { appendPremiumOrderEvent } from "./premium-order-history";
+import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
+import { purgePremiumOrderPhysically } from "./premium-order-purge";
 import type { Env } from "./types";
 
 async function orderHasProtectedAccounting(db: D1Database, orderId: string): Promise<boolean> {
@@ -24,13 +26,17 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
-  let body: { confirm?: unknown; reason?: unknown };
+  let body: { confirm?: unknown; reason?: unknown; purge_system_record?: unknown };
   try {
     body = await request.json();
   } catch {
     return json({ error: "invalid_body" }, 400);
   }
   if (body.confirm !== true) return json({ error: "confirmation_required" }, 400);
+  const purgeSystem = body.purge_system_record === true;
+  if (purgeSystem && !adminRolesIncludeMainAdmin(guard.roles)) {
+    return json({ error: "main_admin_required", message_cs: "Úplné odstranění smí provést pouze hlavní administrátor." }, 403);
+  }
 
   const po = await env.DB.prepare(
     `SELECT po.*, o.client_id, o.customer_order_code, o.order_number
@@ -45,7 +51,22 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
   const reason =
     typeof body.reason === "string" && body.reason.trim() ? body.reason.trim().slice(0, 2000) : null;
 
-  if (protectedAccounting) {
+  if (purgeSystem) {
+    const child = await env.DB.prepare("SELECT order_id FROM premium_selected_orders WHERE parent_order_id = ? LIMIT 1")
+      .bind(orderId)
+      .first();
+    if (child) {
+      return json(
+        {
+          error: "has_child_orders",
+          message_cs: "Objednávka má navazující prodloužení — nejdříve odstraňte podřízené záznamy.",
+        },
+        409
+      );
+    }
+  }
+
+  if (protectedAccounting && !purgeSystem) {
     await env.DB.prepare(
       "UPDATE orders SET status = 'cancelled', archived_at = ?, archive_reason = ?, updated_at = ? WHERE order_id = ?"
     )
@@ -84,6 +105,10 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
 
   const clientId = String(po.client_id || "");
   const campId = typeof po.published_campaign_id === "string" ? po.published_campaign_id : null;
+
+  if (purgeSystem) {
+    await purgePremiumOrderPhysically(env, orderId);
+  }
 
   if (campId) {
     await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
@@ -134,5 +159,5 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
     })
   );
 
-  return json({ ok: true, mode: "hard_delete" });
+  return json({ ok: true, mode: purgeSystem ? "purge_system" : "hard_delete" });
 }

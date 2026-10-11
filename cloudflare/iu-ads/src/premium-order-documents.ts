@@ -415,8 +415,8 @@ async function loadOrderDocumentContext(
     order_submitted_at: String(row.created_at || row.order_created_at || ""),
     approved_at: approvedAt,
     published_at: publishedAt,
-    campaign_start_at: String(row.start_at || publishedAt),
-    campaign_end_at: String(row.end_at || ""),
+    campaign_start_at: String(row.billed_service_start_at || row.start_at || publishedAt),
+    campaign_end_at: String(row.billed_service_end_at || row.end_at || ""),
     workflow_status_label: premiumWorkflowStatusLabelCs("published"),
     approver_user_id: input.actorUserId,
     approver_display_name:
@@ -1009,12 +1009,24 @@ export async function listPremiumOrderDocumentsForAdmin(
     let documentId: string | null = job?.document_id ?? null;
     let status: AdminOrderDocumentCard["status"] = "missing";
     let lastError: string | null = job?.last_error ?? null;
+    let cardSubtitle = k.subtitle;
 
     const active = await fetchActiveOrderDocument(env.DB, orderId, docType);
     if (active) {
       documentId = active.document_id;
       status = "ready";
       lastError = null;
+      try {
+        const verRow = await env.DB.prepare("SELECT version FROM documents WHERE document_id = ?")
+          .bind(documentId)
+          .first<{ version: number }>();
+        const ver = Number(verRow?.version) || 1;
+        if (k.kind === "order_confirmation" && ver > 1) {
+          cardSubtitle = cardSubtitle + " · Aktuální verze " + ver;
+        }
+      } catch {
+        /* optional */
+      }
       try {
         await ensurePremiumOrderDocumentJobReflectsActiveDocument(
           env.DB,
@@ -1043,7 +1055,7 @@ export async function listPremiumOrderDocumentsForAdmin(
     cards.push({
       kind: k.kind,
       title: k.title,
-      subtitle: k.subtitle,
+      subtitle: cardSubtitle,
       status,
       document_id: documentId,
       last_error: lastError,
@@ -1410,6 +1422,41 @@ export async function auditPremiumDocumentGeneration(
       result: "success",
     })
   );
+}
+
+export async function regeneratePremiumOrderConfirmationPdf(
+  env: Env,
+  input: {
+    orderId: string;
+    campaignId: string;
+    invoiceId: string;
+    clientId: string;
+    actorUserId: string;
+    replacementReason?: string;
+  }
+): Promise<{ ok: boolean; document_id?: string; error?: string }> {
+  if (!env.DB) return { ok: false, error: "no_db" };
+  const po = await env.DB.prepare("SELECT publish_idempotency_key FROM premium_selected_orders WHERE order_id = ?")
+    .bind(input.orderId)
+    .first<{ publish_idempotency_key: string | null }>();
+  const publishKey = (po?.publish_idempotency_key || "amend:" + input.orderId) + ":regen:" + Date.now();
+  const ctx = await loadOrderDocumentContext(env.DB, input.orderId, {
+    campaignId: input.campaignId,
+    invoiceId: input.invoiceId,
+    actorUserId: input.actorUserId,
+    publishIdempotencyKey: publishKey,
+  });
+  if (!ctx) return { ok: false, error: "context_failed" };
+  const result = await generateOneDocument(env, input.orderId, "order_confirmation", ctx, {
+    campaignId: input.campaignId,
+    invoiceId: input.invoiceId,
+    clientId: input.clientId,
+    actorUserId: input.actorUserId,
+    publishIdempotencyKey: publishKey,
+    forceRegenerate: true,
+  });
+  if (!result.ok) return { ok: false, error: result.error };
+  return { ok: true, document_id: result.document_id };
 }
 
 export function premiumProductTypeGuard(): string {

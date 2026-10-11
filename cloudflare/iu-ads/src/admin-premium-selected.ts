@@ -94,6 +94,7 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
 
   const res = await env.DB.prepare(
     `SELECT po.*, o.client_id, o.order_number, o.customer_order_code, o.contact_person, o.payload_json, c.company_name, c.ico, c.dic,
+            po.payment_status,
             ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog,
             ppl.active_campaign_id AS placement_active_campaign_id,
             camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at

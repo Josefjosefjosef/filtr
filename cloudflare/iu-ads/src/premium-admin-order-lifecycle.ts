@@ -345,3 +345,71 @@ export async function handleAdminPremiumPatchOrder(request: Request, env: Env, o
 
   return json({ ok: true });
 }
+
+export async function handleAdminPremiumOrderAmend(request: Request, env: Env, orderId: string): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.write");
+  if (!guard.ok) return guard.response;
+  let body: Record<string, unknown> = {};
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "invalid_body" }, 400);
+  }
+  const { executePremiumOrderAmend } = await import("./premium-admin-order-amend");
+  const result = await executePremiumOrderAmend(env, {
+    orderId,
+    actorUserId: guard.userId,
+    company_name: typeof body.company_name === "string" ? body.company_name : undefined,
+    ico: typeof body.ico === "string" ? body.ico : undefined,
+    dic: body.dic === null || typeof body.dic === "string" ? (body.dic as string | null) : undefined,
+    billing_street: typeof body.billing_street === "string" ? body.billing_street : undefined,
+    billing_city: typeof body.billing_city === "string" ? body.billing_city : undefined,
+    billing_zip: typeof body.billing_zip === "string" ? body.billing_zip : undefined,
+    billing_country: typeof body.billing_country === "string" ? body.billing_country : undefined,
+    contact_person: typeof body.contact_person === "string" ? body.contact_person : undefined,
+    client_contact_email: typeof body.client_contact_email === "string" ? body.client_contact_email : undefined,
+    contact_phone: typeof body.contact_phone === "string" ? body.contact_phone : undefined,
+    category_slug: typeof body.category_slug === "string" ? body.category_slug : undefined,
+    position: body.position != null ? Number(body.position) : undefined,
+    target_url: typeof body.target_url === "string" ? body.target_url : undefined,
+    creative_mode: typeof body.creative_mode === "string" ? body.creative_mode : undefined,
+    creative_id: body.creative_id === null || typeof body.creative_id === "string" ? (body.creative_id as string | null) : undefined,
+    note_client: body.note_client === null || typeof body.note_client === "string" ? (body.note_client as string | null) : undefined,
+    ad_title: typeof body.ad_title === "string" ? body.ad_title : undefined,
+    service_start_at: typeof body.service_start_at === "string" ? body.service_start_at : undefined,
+    service_end_at: typeof body.service_end_at === "string" ? body.service_end_at : undefined,
+    price_kc: typeof body.price_kc === "string" ? body.price_kc : undefined,
+    idempotencyKey: typeof body.idempotency_key === "string" ? body.idempotency_key : undefined,
+  });
+  if (!result.ok) return json({ error: result.error, message_cs: result.message_cs }, result.status);
+  return json(result);
+}
+
+export async function handleAdminPremiumExtendNewOrder(request: Request, env: Env, orderId: string): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.write");
+  if (!guard.ok) return guard.response;
+  let body: { period_start_at?: unknown; period_end_at?: unknown; price_kc?: unknown; idempotency_key?: unknown } = {};
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "invalid_body" }, 400);
+  }
+  const periodStart = typeof body.period_start_at === "string" ? body.period_start_at.trim() : "";
+  const periodEnd = typeof body.period_end_at === "string" ? body.period_end_at.trim() : "";
+  const priceKc = typeof body.price_kc === "string" ? body.price_kc : "";
+  const idempotencyKey =
+    typeof body.idempotency_key === "string" && body.idempotency_key.trim()
+      ? body.idempotency_key.trim()
+      : "extend-new:" + orderId + ":" + periodEnd;
+  const { executePremiumExtendNewOrder } = await import("./premium-admin-extend-new-order");
+  const result = await executePremiumExtendNewOrder(env, {
+    sourceOrderId: orderId,
+    actorUserId: guard.userId,
+    periodStartAt: periodStart,
+    periodEndAt: periodEnd,
+    priceKc,
+    idempotencyKey,
+  });
+  if (!result.ok) return json({ error: result.error, message_cs: result.message_cs }, result.status);
+  return json(result);
+}
