@@ -283,32 +283,71 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }
     return base;
   }
+  function premiumWorkflowUiTone(row){
+    var ws=row.workflow_status||"";
+    if(ws==="submitted"||ws==="under_review") return "pending";
+    if(ws==="rejected") return "rejected";
+    if(ws==="published") return "published";
+    if(ws==="cancelled") return "cancelled";
+    return "neutral";
+  }
+  function premiumWorkflowStatusClass(tone){
+    if(tone==="pending") return "order-status--pending";
+    if(tone==="rejected") return "order-status--rejected";
+    if(tone==="published") return "order-status--published";
+    if(tone==="cancelled") return "order-status--cancelled";
+    return "";
+  }
+  function premiumOrderCardBorderClass(row){
+    var t=premiumWorkflowUiTone(row);
+    if(t==="pending") return "order-card--pending";
+    if(t==="rejected") return "order-card--rejected";
+    if(t==="published") return "order-card--published";
+    if(t==="cancelled") return "order-card--cancelled";
+    return "";
+  }
+  function premiumOrderRowBorderClass(row){
+    var t=premiumWorkflowUiTone(row);
+    if(t==="pending") return "order-row--pending";
+    if(t==="rejected") return "order-row--rejected";
+    if(t==="published") return "order-row--published";
+    if(t==="cancelled") return "order-row--cancelled";
+    return "";
+  }
+  function premiumPaymentStatusSpan(ord){
+    var ps=ord.payment_status||"unpaid";
+    if(ps==="paid") return '<span class="pay-status--paid">'+esc(premiumPaymentLabel("paid"))+"</span>";
+    if(ps==="partial") return '<span class="pay-status--partial">'+esc(premiumPaymentLabel("partial"))+"</span>";
+    return '<span class="pay-status--unpaid">'+esc(premiumPaymentLabel("unpaid"))+"</span>";
+  }
+  function premiumDetailStatusHeaderHtml(ord){
+    var ws=ord.workflow_status||"";
+    var wfTone=premiumWorkflowUiTone(ord);
+    var wfCls=premiumWorkflowStatusClass(wfTone);
+    if(ws==="rejected"){
+      return '<p class="detail-status-line"><span class="order-status '+wfCls+'">Zamítnuto</span> – '+premiumPaymentStatusSpan(ord)+"</p>";
+    }
+    var wfLabel=ord.workflow_status_label_cs||ws||"—";
+    return '<p class="detail-status-line"><span class="order-status '+wfCls+'">'+esc(wfLabel)+"</span> "+premiumPaymentStatusSpan(ord)+"</p>";
+  }
   function premiumOrderActions(row, opts){
     opts=opts||{};
     var id=esc(row.order_id);
     var stop=opts.stopPropagation ? ' data-stop-row="1"' : "";
-    var btns='<button type="button" class="btn secondary" data-premium-detail="'+id+'"'+stop+'>Detail</button> ';
-    if(!row.pending_review && row.workflow_status!=="submitted" && row.workflow_status!=="under_review"){
-      return btns;
-    }
-    if(row.publishable){
-      btns+='<button type="button" class="btn" data-premium-publish="'+id+'"'+stop+'>Schválit a zveřejnit</button> ';
-    }
-    btns+='<button type="button" class="btn secondary" data-premium-reject="'+id+'"'+stop+'>Zamítnout</button>';
-    return btns;
+    return '<button type="button" class="btn detail" data-premium-detail="'+id+'"'+stop+'>Detail</button>';
   }
   function premiumOrdersTableHtml(rows){
     if(!rows||!rows.length) return '<p class="muted empty">Žádné objednávky k zobrazení.</p>';
     var head=["Firma","IČO","Sekce","Pozice","Období","Cena","Stav","Přijato","Akce"].map(function(h){return "<th>"+esc(h)+"</th>";}).join("");
     var body=rows.map(function(row){
-      return '<tr class="order-row-click" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
+      return '<tr class="order-row-click '+esc(premiumOrderRowBorderClass(row))+'" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
         "<td>"+esc(row.company_name)+"</td>"+
         "<td>"+esc(row.ico||"—")+"</td>"+
         "<td>"+esc(row.category_title_cs||row.category_slug)+"</td>"+
         "<td>"+esc(row.position_label||("P"+row.position))+"</td>"+
         "<td>"+esc(row.duration_label_cs||"6 měsíců")+"</td>"+
         "<td>"+esc(row.price_label_cs||"—")+"</td>"+
-        "<td>"+esc(premiumRowStatus(row))+"</td>"+
+        '<td><span class="order-status '+esc(premiumWorkflowStatusClass(premiumWorkflowUiTone(row)))+'">'+esc(premiumRowStatus(row))+"</span></td>"+
         "<td>"+esc(row.submitted_at_label_cs||formatCsDate(row.submitted_at))+"</td>"+
         '<td class="order-actions">'+premiumOrderActions(row,{stopPropagation:true})+"</td></tr>";
     }).join("");
@@ -317,8 +356,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
   function premiumOrdersCardsHtml(rows){
     if(!rows||!rows.length) return "";
     return '<div class="order-cards">'+rows.map(function(row){
-      return '<article class="order-card" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
-        '<div class="order-card-head"><strong>'+esc(row.company_name)+'</strong><span class="order-status">'+esc(premiumRowStatus(row))+'</span></div>'+
+      return '<article class="order-card '+esc(premiumOrderCardBorderClass(row))+'" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
+        '<div class="order-card-head"><strong>'+esc(row.company_name)+'</strong><span class="order-status '+esc(premiumWorkflowStatusClass(premiumWorkflowUiTone(row)))+'">'+esc(premiumRowStatus(row))+'</span></div>'+
         '<p class="muted">IČO: '+esc(row.ico||"—")+'</p>'+
         '<p>'+esc(row.category_title_cs||row.category_slug)+' · '+esc(row.position_label||("P"+row.position))+'</p>'+
         '<p>'+esc(row.duration_label_cs||"6 měsíců")+' · '+esc(row.price_label_cs||"—")+'</p>'+
@@ -377,11 +416,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var invTotal=inv?Number(inv.total_cents)||0:0;
     var remain=acct.remaining_correctable_cents!=null?Number(acct.remaining_correctable_cents):invTotal;
     var payMode=m.form.payment_settlement||acct.suggested_payment_settlement||"unpaid";
-    var stornoCents=parseKcInputToCents(m.form.storno_kc);
+    var stornoCents=remain;
     var paidCents=parseKcInputToCents(m.form.paid_kc);
-    var recap=inv?computeAcctRecap(invTotal,remain,stornoCents||0,payMode,paidCents||0):null;
+    var recap=inv?computeAcctRecap(invTotal,remain,stornoCents,payMode,paidCents||0):null;
     var reasonOk=String(m.form.reason||"").trim().length>=12;
-    var canSubmit=!blocked&&inv&&stornoCents&&stornoCents<=remain&&reasonOk&&
+    var canSubmit=!blocked&&inv&&stornoCents>0&&reasonOk&&
       (payMode!=="partial"||(paidCents&&paidCents>0&&paidCents<invTotal))&&!m.submitBusy;
     return '<div class="modal-backdrop" id="premium-acct-cancel-modal" role="dialog" aria-modal="true" aria-labelledby="premium-acct-cancel-title">'+
       '<div class="modal-card modal-wide"><h3 id="premium-acct-cancel-title">Stornovat objednávku a fakturu</h3>'+
@@ -404,20 +443,17 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<label><input type="radio" name="acct-pay" value="partial" '+(payMode==="partial"?"checked":"")+' data-acct-pay> Uhrazeno částečně</label>'+
       (payMode==="partial"?('<p><label for="acct-paid-kc">Skutečně uhrazená částka (Kč)</label><input id="acct-paid-kc" type="text" inputmode="decimal" autocomplete="off" value="'+esc(m.form.paid_kc||"")+'" data-acct-paid-kc></p>'):"")+
       "</section>"+
-      '<section><h4>3. Částka ke stornování a důvod</h4>'+
-      '<p><label for="acct-storno-kc">Částka ke stornování (Kč) *</label><input id="acct-storno-kc" type="text" inputmode="decimal" autocomplete="off" placeholder="např. 3 000,00" value="'+esc(m.form.storno_kc||"")+'" data-acct-storno-kc>'+
-      (remain<invTotal?('<span class="muted">Max. zbývající neopravená částka: '+esc(formatKc(remain))+"</span>"):"")+'</p>'+
+      '<section><h4>3. Důvod storna</h4>'+
+      '<p class="muted">Storno se vztahuje vždy na celou zbývající neopravenou fakturovanou částku ('+esc(formatKc(stornoCents))+').</p>'+
       '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" data-acct-reason>'+esc(m.form.reason||"")+'</textarea></p></section>'+
       '<section><h4>4. Rekapitulace</h4><div class="acct-recap"><dl>'+
       '<dt>Původní faktura</dt><dd>'+esc(formatKc(invTotal))+'</dd>'+
-      (stornoCents?(
-        '<dt>Částka ke stornování</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
-        '<dt>Dobropis</dt><dd>− '+esc(formatKc(stornoCents))+'</dd>'+
-        '<dt>Zbývající cena služby</dt><dd>'+esc(formatKc(recap.new_service_price_cents))+'</dd>'+
-        '<dt>Skutečně zaplaceno</dt><dd>'+esc(formatKc(recap.amount_paid_cents))+'</dd>'+
-        (recap.remaining_due_cents?('<dt>Zbývá k úhradě</dt><dd>'+esc(formatKc(recap.remaining_due_cents))+'</dd>'):"")+
-        (recap.overpayment_cents?('<dt>Přeplatek k vypořádání</dt><dd>'+esc(formatKc(recap.overpayment_cents))+'</dd>'):"")
-      ):"")+
+      '<dt>Stornovaná částka (100 % zbývající)</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
+      '<dt>Dobropis</dt><dd>− '+esc(formatKc(stornoCents))+'</dd>'+
+      '<dt>Zbývající cena služby</dt><dd>'+esc(formatKc(recap.new_service_price_cents))+'</dd>'+
+      '<dt>Skutečně zaplaceno</dt><dd>'+esc(formatKc(recap.amount_paid_cents))+'</dd>'+
+      (recap.remaining_due_cents?('<dt>Zbývá k úhradě</dt><dd>'+esc(formatKc(recap.remaining_due_cents))+'</dd>'):"")+
+      (recap.overpayment_cents?('<dt>Přeplatek k vypořádání</dt><dd>'+esc(formatKc(recap.overpayment_cents))+'</dd>'):"")+
       '</dl><p class="muted">Vystavení dobropisu neznamená automatické vrácení peněz.</p></div>'+
       (ord.is_ad_turned_off?'<p class="muted">✓ Reklama byla definitivně vypnuta.</p>':'')+
       "</section>"):"")+
@@ -438,11 +474,6 @@ export const ADMIN_UI_SCRIPT = String.raw`
         render();
       };
     });
-    var st=el("acct-storno-kc");
-    if(st){
-      st.oninput=function(){ state.accountingCancelModal.form.storno_kc=st.value; };
-      st.onchange=function(){ render(); };
-    }
     var paid=el("acct-paid-kc");
     if(paid){
       paid.oninput=function(){ state.accountingCancelModal.form.paid_kc=paid.value; };
@@ -461,13 +492,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
       var acct=modal.detail&&modal.detail.invoice_accounting||{};
       var invTotal=inv?Number(inv.total_cents)||0:0;
       var remain=acct.remaining_correctable_cents!=null?Number(acct.remaining_correctable_cents):invTotal;
-      var stornoCents=parseKcInputToCents(modal.form.storno_kc);
       var payMode=modal.form.payment_settlement||"unpaid";
       var paidCents=parseKcInputToCents(modal.form.paid_kc);
       var reasonText=String(modal.form.reason||"").trim();
       if(!inv){ modal.formError="Chybí faktura."; render(); return; }
-      if(!stornoCents){ modal.formError="Zadejte platnou částku ke stornování."; render(); return; }
-      if(stornoCents>remain){ modal.formError="Částka překračuje zbývající neopravenou částku faktury."; render(); return; }
+      if(!remain){ modal.formError="Faktura již nemá zbývající částku ke stornu."; render(); return; }
       if(reasonText.length<12){ modal.formError="Důvod storna musí být srozumitelný (min. 12 znaků)."; render(); return; }
       if(payMode==="partial"&&(!paidCents||paidCents<=0||paidCents>=invTotal)){
         modal.formError="U částečné úhrady zadejte skutečně zaplacenou částku."; render(); return;
@@ -477,16 +506,22 @@ export const ADMIN_UI_SCRIPT = String.raw`
       render();
       var body={
         reason:reasonText,
-        storno_amount_cents:stornoCents,
         payment_settlement:payMode,
-        idempotency_key:"ui-acct-cancel:"+modal.orderId+":"+Date.now()
+        idempotency_key:"ui-acct-cancel:"+modal.orderId
       };
       if(payMode==="partial") body.amount_paid_cents=paidCents;
       var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(modal.orderId)+"/accounting-cancel",{method:"POST",body:JSON.stringify(body)});
       modal.submitBusy=false;
       if(r.res.ok){
         state.accountingCancelModal=null;
-        state.flash=r.body&&r.body.idempotent?"Storno již bylo zaevidováno — dokončuji PDF.":"Storno zaevidováno, PDF se generují.";
+        var docsOk=r.body&&r.body.document_enqueue&&r.body.document_enqueue.ok;
+        if(docsOk){
+          state.flash=r.body&&r.body.idempotent?"Storno již bylo zaevidováno — PDF jsou k dispozici.":"Storno dokončeno včetně PDF dokumentů.";
+        } else if(r.body&&r.body.idempotent){
+          state.flash="Storno již bylo zaevidováno — dokončuji PDF (nouzové tlačítko v sekci Dokumenty).";
+        } else {
+          state.flash="Storno zaevidováno, ale generování PDF selhalo — použijte nouzové dokončení v sekci Dokumenty.";
+        }
         state.orderDetailId=modal.orderId;
         render();
         return;
@@ -1062,8 +1097,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
           '<button type="button" class="btn secondary" data-premium-doc-preview="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Náhled</button>'+
           '<button type="button" class="btn secondary" data-premium-doc-download="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Stáhnout</button>'+
           "</div>";
-      } else if(d.status==="error"||d.status==="generating"||d.status==="pending"||d.status==="missing"){
+      } else if(d.status==="error"){
         actions='<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Dokončit / opakovat PDF</button></div>';
+      } else if(d.status==="missing"||d.status==="generating"||d.status==="pending"){
+        statusMsg+='<p class="muted">PDF se dokončuje automaticky — obnovte detail za chvíli.</p>';
       }
       var icon=d.kind==="invoice_pdf"?"🧾":"📄";
       cards+='<div class="order-doc-item"><div class="order-doc-icon" aria-hidden="true">'+icon+'</div><div class="order-doc-body"><strong>'+esc(d.title)+'</strong><p class="muted">'+esc(d.subtitle)+"</p>"+statusMsg+actions+"</div></div>";
@@ -1094,12 +1131,56 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (ord.creative_id?"<li>Creative ID: "+esc(ord.creative_id)+"</li>":"")+
       (ord.published_campaign_id?"<li>Campaign ID: "+esc(ord.published_campaign_id)+"</li>":"")+
       "<li>Placement: "+esc(ord.placement_id)+"</li></ul></details>";
+    var orderActionsHtml="";
+    if(ord.workflow_status!=="rejected"){
+      orderActionsHtml=
+      '<div class="card">'+tech+
+      '<div class="row">'+
+      (ord.workflow_status==="submitted"||ord.workflow_status==="under_review"?
+        (ord.publishable?'<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> ':"")+
+        (ord.missing_publish_fields&&ord.missing_publish_fields.length?
+          '<p class="err">Nelze zveřejnit — chybí: '+esc(ord.missing_publish_fields.map(function(f){return f==="creative"?"nahraná kreativa":"cílová URL";}).join(", "))+'</p>':"")+
+        '<button type="button" class="btn danger" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
+      (ord.workflow_status==="published"?
+        (ord.is_ad_turned_off?
+          '<p class="muted">Reklama definitivně vypnuta'+(ord.ad_turned_off_at_label_cs?" · "+esc(ord.ad_turned_off_at_label_cs):"")+'.</p> ':
+          (ord.is_paused?
+            '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
+            '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
+          '<button type="button" class="btn danger" data-premium-turn-off="'+esc(ord.order_id)+'">Vypnout reklamu</button> ')+
+        (!ord.is_ad_turned_off?
+          '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> ':"")+
+        (body.extend_new_order_allowed?
+          '<button type="button" class="btn success" data-premium-extend-new-order="'+esc(ord.order_id)+'">Prodloužit reklamu – nová objednávka</button> ':
+          (body.extend_new_order_blocked_reason_cs?'<p class="muted">'+esc(body.extend_new_order_blocked_reason_cs)+"</p> ":""))+
+        '<button type="button" class="btn secondary" data-premium-revision-url="'+esc(ord.order_id)+'">Požádat změnu URL (verze)</button> '+
+        (ord.payment_status==="paid"?
+          '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
+          '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
+      (ord.workflow_status==="published"||ord.workflow_status==="cancelled"?
+        (ord.workflow_status==="cancelled"?
+          '<p class="muted">Objednávka a faktura stornovány (účetně).</p> ':
+          (ord.is_ad_turned_off?
+            '<button type="button" class="btn danger" data-premium-accounting-cancel="'+esc(ord.order_id)+'">Stornovat objednávku a fakturu</button> ':
+            '<p class="muted">Před účetním stornem nejdříve vypněte reklamu.</p> ')):"")+
+      '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'">Upravit objednávku</button> '+
+      "</div></div>";
+    }
+    var termsCard="";
+    if(ord.terms_version){
+      termsCard='<div class="card"><h3>Souhlasy</h3><p class="muted">Premium podmínky: '+esc(ord.terms_version)+
+      (ord.terms_effective_at?" · účinnost "+esc(ord.terms_effective_at):"")+"</p>"+
+      (body.terms_archive_warning_cs?'<p class="err">'+esc(body.terms_archive_warning_cs)+"</p>":"")+
+      (body.terms_archive_available?
+        '<button type="button" class="btn secondary" id="premium-terms-view" data-order-id="'+esc(ord.order_id)+'">Zobrazit podmínky</button>':
+        (body.terms_archive_warning_cs?"":'<p class="muted">Archiv podmínek se připravuje.</p>'))+
+      "</div>";
+    }
     panel(
       '<div class="card"><div class="row"><button type="button" class="btn secondary" id="order-detail-back">← Zpět na seznam</button></div>'+
       "<h2>"+esc(ord.customer_order_code||ord.order_number||"Objednávka")+" — "+esc(ord.company_name)+"</h2>"+
-      '<p><span class="order-status">'+esc(ord.workflow_status_label_cs||ord.workflow_status)+"</span> "+
-      (ord.payment_status==="paid"?'<span class="pay-paid">'+esc(premiumPaymentLabel("paid"))+'</span>':(ord.payment_status==="partial"?'<span class="pay-unpaid">'+esc(premiumPaymentLabel("partial"))+'</span>':'<span class="pay-unpaid">'+esc(premiumPaymentLabel("unpaid"))+'</span>'))+
-      "</p></div>"+
+      premiumDetailStatusHeaderHtml(ord)+
+      "</div>"+
       '<div class="card"><h3>Zákazník</h3><dl class="detail-dl">'+
       "<dt>Firma</dt><dd>"+esc(ord.company_name)+"</dd>"+
       "<dt>IČO</dt><dd>"+esc(ord.ico||"—")+"</dd>"+
@@ -1131,44 +1212,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
         (body.publication_visibility.consistency_mismatch?'<dt class="err">Nesoulad</dt><dd class="err">'+esc(body.publication_visibility.mismatch_reason_cs||"Ano")+"</dd>":"")+
         "</dl>":"")+
       '<div class="preview-box">'+String(body.preview_html||"")+"</div></div>"+
-      (ord.terms_version?'<div class="card"><h3>Souhlasy</h3><p class="muted">Premium podmínky: '+esc(ord.terms_version)+
-      (ord.terms_effective_at?" · účinnost "+esc(ord.terms_effective_at):"")+"</p></div>":"")+
-      '<div class="card">'+tech+
-      '<div class="row">'+
-      (ord.workflow_status==="rejected"&&body.invoice?
-        '<button type="button" class="btn danger" data-premium-rejected-credit="'+esc(ord.order_id)+'">Vystavit dobropis (zamítnutá + faktura)</button> ':"")+
-      (ord.workflow_status==="submitted"||ord.workflow_status==="under_review"?
-        (ord.publishable?'<button type="button" class="btn" data-premium-publish="'+esc(ord.order_id)+'">Schválit a zveřejnit</button> ':"")+
-        (ord.missing_publish_fields&&ord.missing_publish_fields.length?
-          '<p class="err">Nelze zveřejnit — chybí: '+esc(ord.missing_publish_fields.map(function(f){return f==="creative"?"nahraná kreativa":"cílová URL";}).join(", "))+'</p>':"")+
-        '<button type="button" class="btn danger" data-premium-reject="'+esc(ord.order_id)+'">Zamítnout</button> ':"")+
-      (ord.workflow_status==="published"?
-        (ord.is_ad_turned_off?
-          '<p class="muted">Reklama definitivně vypnuta'+(ord.ad_turned_off_at_label_cs?" · "+esc(ord.ad_turned_off_at_label_cs):"")+'.</p> ':
-          (ord.is_paused?
-            '<button type="button" class="btn success" data-premium-resume="'+esc(ord.order_id)+'">Znovu spustit reklamu</button> ':
-            '<button type="button" class="btn warning" data-premium-suspend="'+esc(ord.order_id)+'">Pozastavit reklamu</button> ')+
-          '<button type="button" class="btn danger" data-premium-turn-off="'+esc(ord.order_id)+'">Vypnout reklamu</button> ')+
-        (!ord.is_ad_turned_off?
-          '<button type="button" class="btn success" data-premium-extend="'+esc(ord.order_id)+'">Prodloužit reklamu</button> ':"")+
-        (body.extend_new_order_allowed?
-          '<button type="button" class="btn success" data-premium-extend-new-order="'+esc(ord.order_id)+'">Prodloužit reklamu – nová objednávka</button> ':
-          (body.extend_new_order_blocked_reason_cs?'<p class="muted">'+esc(body.extend_new_order_blocked_reason_cs)+"</p> ":""))+
-        '<button type="button" class="btn secondary" data-premium-revision-url="'+esc(ord.order_id)+'">Požádat změnu URL (verze)</button> '+
-        (ord.payment_status==="paid"?
-          '<button type="button" class="btn secondary" data-premium-unpay="'+esc(ord.order_id)+'">Označit neuhrazeno</button> ':
-          '<button type="button" class="btn success" data-premium-pay="'+esc(ord.order_id)+'">Označit uhrazeno</button> '):"")+
-      (ord.workflow_status==="published"||ord.workflow_status==="cancelled"?
-        (ord.workflow_status==="cancelled"?
-          '<p class="muted">Objednávka a faktura stornovány (účetně).</p> ':
-          (ord.is_ad_turned_off?
-            '<button type="button" class="btn danger" data-premium-accounting-cancel="'+esc(ord.order_id)+'">Stornovat objednávku a fakturu</button> ':
-            '<p class="muted">Před účetním stornem nejdříve vypněte reklamu.</p> ')):"")+
-      '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'">Upravit objednávku</button> '+
-      (isMainAdminUser()?
-        '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit celý záznam ze systému</button> ':
-        '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit objednávku</button> ')+
-      "</div></div>"+
+      termsCard+
+      orderActionsHtml+
       premiumOrderDocumentsSectionHtml(ord.order_id, body)+
       (body.related_orders&&body.related_orders.length?'<div class="card"><h3>Navazující objednávky</h3><ul class="history-list">'+
         body.related_orders.map(function(ro){
@@ -1194,6 +1239,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
       css+publishConfirmDialogHtml(state.publishConfirmRow)+accountingCancelModalHtml()+auxiliaryModalsHtml()
     );
     el("order-detail-back").onclick=function(){ state.orderDetailId=null; render(); };
+    var termsView=el("premium-terms-view");
+    if(termsView){
+      termsView.onclick=function(){
+        var oid=termsView.getAttribute("data-order-id");
+        if(!oid) return;
+        window.open("/v1/admin/premium/orders/"+encodeURIComponent(oid)+"/terms-archive","_blank","noopener,noreferrer");
+      };
+    }
     var rowsById={}; rowsById[ord.order_id]=ord;
     wirePremiumOrderInteractions(rowsById);
     wireAccountingCancelModal();

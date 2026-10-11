@@ -347,6 +347,13 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
     )
     .run();
 
+  try {
+    const { bindPremiumOrderTermsArchive } = await import("./premium-terms-archive");
+    await bindPremiumOrderTermsArchive(env, orderId, termsVersion, termsEffective);
+  } catch {
+    /* migration pending — order still accepted */
+  }
+
   await insertAuditLog(
     env.DB,
     buildAuditEntry({

@@ -218,18 +218,12 @@ export async function executePremiumOrderAccountingCancel(
   }
   const remainingCorrectable = Math.max(0, originalTotal - priorCorrected);
 
+  /** Full storno always credits the entire remaining uncorrected invoice total (never browser-supplied amounts). */
   let stornoAmountCents = 0;
-  if (input.stornoAmountCents != null && Number.isFinite(input.stornoAmountCents)) {
-    stornoAmountCents = Math.round(Math.abs(Number(input.stornoAmountCents)));
+  if (invoice) {
+    stornoAmountCents = remainingCorrectable;
   } else if (input.correctionCents != null && Number.isFinite(input.correctionCents)) {
     stornoAmountCents = Math.abs(Math.round(Number(input.correctionCents)));
-  } else if (invoice) {
-    return {
-      ok: false,
-      status: 400,
-      error: "storno_amount_required",
-      message_cs: "Zadejte částku ke stornování (Kč).",
-    };
   }
 
   let correctionCents = invoice ? -stornoAmountCents : 0;
@@ -249,12 +243,35 @@ export async function executePremiumOrderAccountingCancel(
     };
   }
 
+  const systemPaidEvidence =
+    po.payment_status === "paid" || invoice?.status === "paid" || !!invoice?.paid_at;
+  const systemPartialEvidence = po.payment_status === "partial";
+
   const paymentSettlement: PremiumPaymentSettlementMode =
     input.paymentSettlement === "paid" || input.paymentSettlement === "partial" || input.paymentSettlement === "unpaid"
       ? input.paymentSettlement
-      : po.payment_status === "paid" || invoice?.status === "paid" || invoice?.paid_at
+      : systemPaidEvidence
         ? "paid"
-        : "unpaid";
+        : systemPartialEvidence
+          ? "partial"
+          : "unpaid";
+
+  if (paymentSettlement === "paid" && !systemPaidEvidence) {
+    return {
+      ok: false,
+      status: 409,
+      error: "payment_evidence_unpaid",
+      message_cs: "Evidence systému ukazuje neuhrazenou fakturu — nelze zvolit „Uhrazeno“. Nejdříve označte úhradu v detailu objednávky.",
+    };
+  }
+  if (paymentSettlement === "unpaid" && systemPaidEvidence) {
+    return {
+      ok: false,
+      status: 409,
+      error: "payment_evidence_paid",
+      message_cs: "Evidence systému ukazuje uhrazenou fakturu — nelze zvolit „Neuhrazeno“.",
+    };
+  }
 
   let amountPaidDeclared = Math.max(0, Math.round(Number(input.amountPaidCents) || 0));
   if (paymentSettlement === "unpaid") amountPaidDeclared = 0;

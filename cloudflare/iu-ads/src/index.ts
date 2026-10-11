@@ -137,7 +137,7 @@ import {
   handleAdminPremiumPublicationRepair,
   handleClientPremiumRenewalAccept,
 } from "./admin-premium-selected";
-import { handleAdminPremiumOrderDetail } from "./admin-premium-preview";
+import { handleAdminPremiumOrderDetail, handleAdminPremiumOrderTermsArchive } from "./admin-premium-preview";
 import {
   handleAdminPremiumAddNote,
   handleAdminPremiumExtend,
@@ -653,6 +653,10 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       const premiumDocRetryMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/documents\/retry$/);
       if (premiumDocRetryMatch && method === "POST") {
         return handleAdminPremiumRetryDocuments(request, env, premiumDocRetryMatch[1]);
+      }
+      const premiumTermsArchiveMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/terms-archive$/);
+      if (premiumTermsArchiveMatch && method === "GET") {
+        return handleAdminPremiumOrderTermsArchive(request, env, premiumTermsArchiveMatch[1]);
       }
       const premiumDetailMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)$/);
       if (premiumDetailMatch && method === "GET") return handleAdminPremiumOrderDetail(request, env, premiumDetailMatch[1]);
