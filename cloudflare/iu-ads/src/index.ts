@@ -37,8 +37,15 @@ import { handleCreateOrder, handleGetOrder, handleListOrders, handleUpdateOrder 
 import { handleCreateContract, handleGetContract, handleListContracts, handleUpdateContract } from "./admin-contracts";
 import { handleCreateInvoice, handleGetInvoice, handleListInvoices, handleUpdateInvoice } from "./admin-invoices";
 import { handleAdminAdOrdersList } from "./admin-ad-orders";
-import { handleAdminBannerPcPlaceholder, handleAdminInvoicesRegistry } from "./admin-invoices-registry";
-import { handleAdminOrderConfirmationsRegistry } from "./admin-order-confirmations-registry";
+import {
+  handleAdminBannerPcPlaceholder,
+  handleAdminInvoicesRegistry,
+  handleAdminInvoicesRegistrySuggest,
+} from "./admin-invoices-registry";
+import {
+  handleAdminOrderConfirmationsRegistry,
+  handleAdminOrderConfirmationsRegistrySuggest,
+} from "./admin-order-confirmations-registry";
 import { handleAdminAdSearchSuggest } from "./admin-ad-search-suggest";
 import {
   handleAdminInvoicesRegistryZipExport,
@@ -501,6 +508,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (contractIdMatch && method === "PATCH") return handleUpdateContract(request, env, contractIdMatch[1]);
 
       if (path === "/v1/admin/invoices" && method === "GET") return handleListInvoices(request, env, url);
+      if (path === "/v1/admin/invoices/registry/suggest" && method === "GET") {
+        return handleAdminInvoicesRegistrySuggest(request, env, url);
+      }
       if (path === "/v1/admin/invoices/registry" && method === "GET") return handleAdminInvoicesRegistry(request, env, url);
       if (path === "/v1/admin/invoices/registry/export-zip" && method === "POST") {
         return handleAdminInvoicesRegistryZipExport(request, env);
@@ -508,6 +518,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (path === "/v1/admin/invoices" && method === "POST") return handleCreateInvoice(request, env);
       if (path === "/v1/admin/ad-orders" && method === "GET") return handleAdminAdOrdersList(request, env, url);
       if (path === "/v1/admin/banner-pc" && method === "GET") return handleAdminBannerPcPlaceholder(request, env);
+      if (path === "/v1/admin/order-confirmations/registry/suggest" && method === "GET") {
+        return handleAdminOrderConfirmationsRegistrySuggest(request, env, url);
+      }
       if (path === "/v1/admin/order-confirmations/registry" && method === "GET") {
         return handleAdminOrderConfirmationsRegistry(request, env, url);
       }

@@ -23,9 +23,17 @@ export function buildAdminShellHtml(nonce: string): string {
     .layout{display:grid;grid-template-columns:220px 1fr;gap:0;min-height:calc(100vh - 64px)}
     nav{padding:1rem .75rem;border-right:1px solid var(--line);background:rgba(255,255,255,.4);max-height:calc(100vh - 64px);overflow:auto}
     nav button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.55rem .7rem;border-radius:8px;cursor:pointer;color:var(--ink);font:inherit}
-    nav button:hover,nav button.active{background:rgba(15,107,92,.12);color:var(--accent)}
+    nav button:hover{background:rgba(15,107,92,.08)}
+    nav button.active{background:rgba(15,107,92,.12);color:var(--accent)}
     nav button.nav-primary{font-weight:700;color:#1565c0}
-    nav button.nav-primary.active{color:var(--accent)}
+    nav button.nav-primary:hover{color:#1565c0}
+    nav button.nav-primary.active{color:#1565c0;font-weight:700;background:rgba(15,107,92,.12)}
+    .registry-search-wrap{position:relative}
+    .registry-suggest-panel{position:absolute;left:0;right:0;top:100%;z-index:6;margin-top:.2rem;max-height:min(40vh,320px);overflow:auto;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    .registry-suggest-item{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.55rem .65rem;font:inherit;cursor:pointer;color:var(--ink)}
+    .registry-suggest-item:hover,.registry-suggest-item:focus-visible{background:rgba(15,107,92,.08);outline:none}
+    .registry-suggest-empty{margin:.45rem .65rem;font-size:.9rem}
+    .ad-corner-badge--off{background:#5c675f}
     .ad-corner-badge{position:absolute;top:.45rem;right:.45rem;z-index:2;padding:.22rem .45rem;border-radius:4px;font-size:.68rem;font-weight:700;line-height:1.2;color:#fff;letter-spacing:.02em;max-width:46%;text-align:center}
     .ad-corner-badge--active{background:#1b6b3a}
     .ad-corner-badge--pending{background:#e65100}
@@ -128,6 +136,7 @@ export function buildAdminShellHtml(nonce: string): string {
     @media (max-width:640px){.acct-cancel-grid{grid-template-columns:1fr}}
     .confirm-list{margin:.5rem 0 1rem;padding-left:1.2rem}
     @media (max-width:860px){
+      input,select,textarea{font-size:16px}
       .order-table-desktop{display:none}
       .order-cards{display:block}
       main{overflow-x:hidden}

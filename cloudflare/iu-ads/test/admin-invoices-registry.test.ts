@@ -14,8 +14,15 @@ describe("admin invoices registry UI contract", () => {
     expect(ADMIN_UI_SCRIPT).toContain("inv-payment");
   });
 
-  it("surfaces storno validation hint and click feedback", () => {
+  it("surfaces storno validation hint and inline field errors", () => {
     expect(ADMIN_UI_SCRIPT).toContain("acct-reason-hint");
-    expect(ADMIN_UI_SCRIPT).toContain("Vyplňte důvod storna (min. 12 znaků)");
+    expect(ADMIN_UI_SCRIPT).toContain("acct-reason-err");
+    expect(ADMIN_UI_SCRIPT).toContain("Důvod storna musí mít alespoň 12 znaků");
+  });
+
+  it("wires registry suggest panels for invoices and confirmations", () => {
+    expect(ADMIN_UI_SCRIPT).toContain("wireRegistrySuggest");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/invoices/registry/suggest");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/order-confirmations/registry/suggest");
   });
 });
