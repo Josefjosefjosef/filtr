@@ -4,6 +4,35 @@
 import { parsePremiumOrderPayload } from "./premium-order-workflow";
 import type { Env } from "./types";
 
+/** Thrown when a purge SQL step fails; step is safe to expose to main admins. */
+export class PurgeDatabaseError extends Error {
+  readonly step: string;
+
+  constructor(step: string, cause: unknown) {
+    const msg = cause instanceof Error ? cause.message : String(cause);
+    super(msg);
+    this.name = "PurgeDatabaseError";
+    this.step = step;
+  }
+}
+
+export function sanitizePurgeDbHint(message: string): string | undefined {
+  const m = message;
+  if (/no such table:\s*(\S+)/i.test(m)) return "sqlite_no_such_table";
+  if (/FOREIGN KEY constraint failed/i.test(m)) return "sqlite_foreign_key";
+  if (/SQLITE_CONSTRAINT/i.test(m)) return "sqlite_constraint";
+  if (/UNIQUE constraint failed/i.test(m)) return "sqlite_unique";
+  return undefined;
+}
+
+async function purgeDbStep(step: string, fn: () => Promise<void>): Promise<void> {
+  try {
+    await fn();
+  } catch (err) {
+    throw new PurgeDatabaseError(step, err);
+  }
+}
+
 export type PremiumSystemPurgeEligibility =
   | { ok: true; via: "dev_marker" | "explicit_test_confirmed" }
   | { ok: false; error: string; message_cs: string };
@@ -98,14 +127,31 @@ export async function premiumOrderEligibleForSystemPurge(
 async function deleteDocumentRowsAndR2(
   db: D1Database,
   bucket: R2Bucket | undefined,
-  orderId: string
+  orderId: string,
+  campaignId?: string | null
 ): Promise<number> {
-  const docs = await db
+  const byOrder = await db
     .prepare("SELECT document_id, r2_key FROM documents WHERE order_id = ?")
     .bind(orderId)
     .all<{ document_id: string; r2_key: string }>();
+  const byCampaign =
+    campaignId && campaignId.length
+      ? await db
+          .prepare(
+            "SELECT document_id, r2_key FROM documents WHERE campaign_id = ? AND (order_id IS NULL OR order_id != ?)"
+          )
+          .bind(campaignId, orderId)
+          .all<{ document_id: string; r2_key: string }>()
+      : { results: [] as { document_id: string; r2_key: string }[] };
+  const seen = new Set<string>();
+  const docs: { document_id: string; r2_key: string }[] = [];
+  for (const row of [...(byOrder.results || []), ...(byCampaign.results || [])]) {
+    if (seen.has(row.document_id)) continue;
+    seen.add(row.document_id);
+    docs.push(row);
+  }
   let n = 0;
-  for (const doc of docs.results || []) {
+  for (const doc of docs) {
     const revs = await db
       .prepare("SELECT r2_key FROM document_content_revisions WHERE document_id = ?")
       .bind(doc.document_id)
@@ -152,12 +198,24 @@ export async function deleteExclusiveCampaignForPurge(
     return;
   }
 
-  await db.prepare("DELETE FROM client_code_campaigns WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM client_report_snapshots WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM campaign_state_events WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM placement_reservations WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM rights_confirmations WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM premium_renewal_offers WHERE campaign_id = ?").bind(campId).run();
+  await purgeDbStep("campaign_client_code_links", () =>
+    db.prepare("DELETE FROM client_code_campaigns WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_report_snapshots", () =>
+    db.prepare("DELETE FROM client_report_snapshots WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_status_events", () =>
+    db.prepare("DELETE FROM campaign_status_events WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_placement_reservations", () =>
+    db.prepare("DELETE FROM placement_reservations WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_rights_confirmations", () =>
+    db.prepare("DELETE FROM rights_confirmations WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_renewal_offers", () =>
+    db.prepare("DELETE FROM premium_renewal_offers WHERE campaign_id = ?").bind(campId).run()
+  );
 
   const creatives = await db
     .prepare("SELECT creative_id, r2_key, client_id FROM creatives WHERE campaign_id = ?")
@@ -182,11 +240,15 @@ export async function deleteExclusiveCampaignForPurge(
         /* best effort */
       }
     }
-    await db.prepare("DELETE FROM creatives WHERE creative_id = ?").bind(cr.creative_id).run();
+    await purgeDbStep("campaign_creative", () =>
+      db.prepare("DELETE FROM creatives WHERE creative_id = ?").bind(cr.creative_id).run()
+    );
   }
 
-  await db.prepare("DELETE FROM campaign_placements WHERE campaign_id = ?").bind(campId).run();
-  await db.prepare("DELETE FROM campaigns WHERE campaign_id = ?").bind(campId).run();
+  await purgeDbStep("campaign_placements", () =>
+    db.prepare("DELETE FROM campaign_placements WHERE campaign_id = ?").bind(campId).run()
+  );
+  await purgeDbStep("campaign_row", () => db.prepare("DELETE FROM campaigns WHERE campaign_id = ?").bind(campId).run());
 }
 
 export async function purgePremiumOrderPhysically(env: Env, orderId: string): Promise<{ documents_removed: number }> {
@@ -194,28 +256,55 @@ export async function purgePremiumOrderPhysically(env: Env, orderId: string): Pr
   const db = env.DB;
   const bucket = env.DOCUMENTS;
 
-  await db.prepare("DELETE FROM contracts WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_document_jobs WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_credit_notes WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_storno_records WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_publish_events WHERE order_id = ?").bind(orderId).run();
+  const poRow = await db
+    .prepare("SELECT published_campaign_id FROM premium_selected_orders WHERE order_id = ?")
+    .bind(orderId)
+    .first<{ published_campaign_id: string | null }>();
+  const campaignId = poRow?.published_campaign_id ?? null;
+
+  await purgeDbStep("order_contracts", () => db.prepare("DELETE FROM contracts WHERE order_id = ?").bind(orderId).run());
+  await purgeDbStep("order_document_jobs", () =>
+    db.prepare("DELETE FROM premium_order_document_jobs WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_credit_notes", () =>
+    db.prepare("DELETE FROM premium_credit_notes WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_storno_records", () =>
+    db.prepare("DELETE FROM premium_order_storno_records WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_publish_events", () =>
+    db.prepare("DELETE FROM premium_publish_events WHERE order_id = ?").bind(orderId).run()
+  );
 
   const invRows = await db.prepare("SELECT invoice_id FROM invoices WHERE order_id = ?").bind(orderId).all<{ invoice_id: string }>();
   for (const inv of invRows.results || []) {
-    await db.prepare("DELETE FROM premium_credit_notes WHERE invoice_id = ?").bind(inv.invoice_id).run();
-    await db.prepare("DELETE FROM invoices WHERE invoice_id = ?").bind(inv.invoice_id).run();
+    await purgeDbStep("order_invoice_credit_notes", () =>
+      db.prepare("DELETE FROM premium_credit_notes WHERE invoice_id = ?").bind(inv.invoice_id).run()
+    );
+    await purgeDbStep("order_invoices", () =>
+      db.prepare("DELETE FROM invoices WHERE invoice_id = ?").bind(inv.invoice_id).run()
+    );
   }
 
-  const docsRemoved = await deleteDocumentRowsAndR2(db, bucket, orderId);
+  let docsRemoved = 0;
+  await purgeDbStep("order_documents", async () => {
+    docsRemoved = await deleteDocumentRowsAndR2(db, bucket, orderId, campaignId);
+  });
 
-  await db.prepare("DELETE FROM premium_order_notes WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_events WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_renewals WHERE order_id = ? OR follow_up_order_id = ?")
-    .bind(orderId, orderId)
-    .run();
-  await db.prepare("DELETE FROM premium_order_public_revisions WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_portal_codes WHERE order_id = ?").bind(orderId).run();
-  await db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run();
+  await purgeDbStep("order_notes", () => db.prepare("DELETE FROM premium_order_notes WHERE order_id = ?").bind(orderId).run());
+  await purgeDbStep("order_events", () => db.prepare("DELETE FROM premium_order_events WHERE order_id = ?").bind(orderId).run());
+  await purgeDbStep("order_renewals", () =>
+    db.prepare("DELETE FROM premium_order_renewals WHERE order_id = ? OR follow_up_order_id = ?").bind(orderId, orderId).run()
+  );
+  await purgeDbStep("order_public_revisions", () =>
+    db.prepare("DELETE FROM premium_order_public_revisions WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_portal_codes", () =>
+    db.prepare("DELETE FROM premium_order_portal_codes WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_price_snapshots", () =>
+    db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run()
+  );
 
   return { documents_removed: docsRemoved };
 }

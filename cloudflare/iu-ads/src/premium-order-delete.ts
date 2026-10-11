@@ -8,7 +8,9 @@ import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
 import {
   deleteExclusiveCampaignForPurge,
   premiumOrderEligibleForSystemPurge,
+  PurgeDatabaseError,
   purgePremiumOrderPhysically,
+  sanitizePurgeDbHint,
 } from "./premium-order-purge";
 import type { Env } from "./types";
 
@@ -213,14 +215,21 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
     message_cs: purgeSystem ? "Záznam byl odstraněn ze systému." : undefined,
   });
   } catch (err) {
-    const code =
-      err && typeof err === "object" && "message" in err && String((err as Error).message).includes("SQLITE")
-        ? "purge_db_failed"
-        : "purge_failed";
-    console.error("premium_order_delete_failed", { orderId, purgeSystem, code });
+    const msg = err instanceof Error ? err.message : String(err);
+    const sqliteLike =
+      msg.includes("SQLITE") ||
+      /no such table/i.test(msg) ||
+      /FOREIGN KEY constraint failed/i.test(msg) ||
+      /UNIQUE constraint failed/i.test(msg);
+    const code = sqliteLike ? "purge_db_failed" : "purge_failed";
+    const purgeStep = err instanceof PurgeDatabaseError ? err.step : undefined;
+    const dbHint = sanitizePurgeDbHint(msg);
+    console.error("premium_order_delete_failed", { orderId, purgeSystem, code, purgeStep, dbHint });
     return json(
       {
         error: code,
+        purge_step: purgeStep,
+        db_hint: dbHint,
         message_cs: purgeSystem
           ? purgeFailureMessage(code === "purge_db_failed" ? "purge_db_failed" : "purge_failed")
           : "Odstranění objednávky selhalo — zkuste archivaci nebo kontaktujte podporu.",
