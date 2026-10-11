@@ -163,12 +163,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
     } else {
       state.nav = [{id:"dashboard",label_cs:"Dashboard"}];
     }
+    var navPrimary={"dashboard":1,"search":1,"orders_all":1,"premium":1,"banner_pc":1,"order_confirmations":1,"invoices":1};
     var nav = el("nav");
     nav.innerHTML = state.nav.map(function(item){
       var badge = item.badge_count && Number(item.badge_count) > 0
         ? ' <span class="nav-badge" aria-label="Počet objednávek čekajících na posouzení">'+esc(String(item.badge_count))+'</span>'
         : "";
-      return '<button type="button" data-id="'+esc(item.id)+'" class="'+(state.view===item.id?"active":"")+'">'+esc(item.label_cs)+badge+'</button>';
+      var cls=(state.view===item.id?"active":"")+(navPrimary[item.id]?" nav-primary":"");
+      return '<button type="button" data-id="'+esc(item.id)+'" class="'+cls+'">'+esc(item.label_cs)+badge+'</button>';
     }).join("")+'<button type="button" data-id="account">Účet / heslo</button>';
     nav.onclick=function(ev){
       var t=ev.target;
@@ -335,6 +337,17 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(tone==="turned-off") return "order-status--turned-off";
     return "";
   }
+  function premiumCardCornerBadgeHtml(row){
+    if(row.is_ad_turned_off||row.workflow_status==="cancelled"||row.workflow_status==="rejected") return "";
+    if(row.workflow_status==="submitted"||row.workflow_status==="under_review"){
+      return '<span class="ad-corner-badge ad-corner-badge--pending">ČEKÁ NA VYŘÍZENÍ</span>';
+    }
+    var pub=row.publication||{};
+    if(row.workflow_status==="published"&&pub.expected_in_public_output&&!row.is_ad_turned_off){
+      return '<span class="ad-corner-badge ad-corner-badge--active">AKTIVNÍ</span>';
+    }
+    return "";
+  }
   function premiumOrderCardBorderClass(row){
     var t=premiumWorkflowUiTone(row);
     if(t==="pending") return "order-card--pending";
@@ -419,6 +432,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(!rows||!rows.length) return "";
     return '<div class="order-cards">'+rows.map(function(row){
       return '<article class="order-card '+esc(premiumOrderCardBorderClass(row))+'" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
+        premiumCardCornerBadgeHtml(row)+
         '<div class="order-card-head"><strong>'+esc(row.company_name)+'</strong><div class="order-card-badges">'+
         premiumInvoicePaymentBadgeHtml(row,true)+
         '<span class="order-status '+esc(premiumWorkflowStatusClass(premiumWorkflowUiTone(row)))+'">'+esc(premiumRowStatus(row))+'</span></div></div>'+
@@ -510,7 +524,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
       "</section>"+
       '<section><h4>3. Důvod storna</h4>'+
       '<p class="muted">Storno se vztahuje vždy na celou zbývající neopravenou fakturovanou částku ('+esc(formatKc(stornoCents))+').</p>'+
-      '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" data-acct-reason>'+esc(m.form.reason||"")+'</textarea></p></section>'+
+      '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" data-acct-reason>'+esc(m.form.reason||"")+'</textarea></p>'+
+      '<p class="muted" id="acct-reason-hint" '+(reasonOk?"hidden":"")+'>Důvod musí mít alespoň 12 znaků.</p></section>'+
       '<section><h4>4. Rekapitulace</h4><div class="acct-recap"><dl>'+
       '<dt>Původní faktura</dt><dd>'+esc(formatKc(invTotal))+'</dd>'+
       '<dt>Stornovaná částka (100 % zbývající)</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
@@ -544,6 +559,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (payMode!=="partial"||(paidCents&&paidCents>0&&paidCents<invTotal))&&!m.submitBusy;
     var confirmBtn=el("premium-acct-cancel-confirm");
     if(confirmBtn) confirmBtn.disabled=!canSubmit;
+    var hint=el("acct-reason-hint");
+    if(hint) hint.hidden=!!reasonOk;
   }
   function extendNewOrderModalHtml(){
     var m=state.extendNewOrderModal;
@@ -670,6 +687,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var confirmBtn=el("premium-acct-cancel-confirm");
     if(confirmBtn) confirmBtn.onclick=async function(){
       if(!state.accountingCancelModal||state.accountingCancelModal.submitBusy) return;
+      syncAccountingCancelConfirmButton();
+      var liveConfirm=el("premium-acct-cancel-confirm");
+      if(liveConfirm&&liveConfirm.disabled){
+        var modalEarly=state.accountingCancelModal;
+        if(modalEarly) modalEarly.formError="Vyplňte důvod storna (min. 12 znaků) a zkontrolujte rekapitulaci.";
+        render();
+        return;
+      }
       var modal=state.accountingCancelModal;
       var inv=modal.detail&&modal.detail.invoice;
       var acct=modal.detail&&modal.detail.invoice_accounting||{};
@@ -1280,15 +1305,52 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (headRight?'<span class="order-docs-count">'+esc(headRight)+"</span>":"")+
       '</div>'+chainHint+'<div class="order-doc-grid">'+cards+"</div></div>";
   }
+  function triggerPdfDownload(path, title){
+    var a=document.createElement("a");
+    a.href=path;
+    a.rel="noopener noreferrer";
+    a.target="_blank";
+    var safe=String(title||"dokument").replace(/[^\w\d\-_. áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]+/g,"_").trim()||"dokument";
+    if(!/\.pdf$/i.test(safe)) safe+=".pdf";
+    a.download=safe;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  async function openAdminDocumentAccess(accessPath){
+    var disposition="inline";
+    try{
+      var qIdx=accessPath.indexOf("?");
+      if(qIdx>=0){
+        var sp=new URLSearchParams(accessPath.slice(qIdx+1));
+        if(sp.get("disposition")==="attachment") disposition="attachment";
+      }
+    }catch(_){}
+    var popup=disposition==="inline"?window.open("about:blank","_blank"):null;
+    if(popup){ try{ popup.opener=null; }catch(_){ } }
+    var r=await api(accessPath,{method:"GET",headers:{}});
+    if(!r.res.ok){
+      if(popup){ try{ popup.close(); }catch(_){ } }
+      state.flash="Dokument: "+apiError(r.body);
+      render();
+      return;
+    }
+    var path=r.body&&r.body.path;
+    var title=r.body&&r.body.title;
+    if(!path){
+      if(popup){ try{ popup.close(); }catch(_){ } }
+      state.flash="Chybí bezpečný odkaz na PDF.";
+      render();
+      return;
+    }
+    if(disposition==="attachment") triggerPdfDownload(path, title);
+    else if(popup) popup.location.href=path;
+    else window.location.href=path;
+  }
   async function openPremiumOrderDocument(orderId, kind, disposition, version){
     var qs="disposition="+encodeURIComponent(disposition);
     if(version!=null&&String(version).trim()!=="") qs+="&version="+encodeURIComponent(String(version));
-    var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId)+"/documents/"+encodeURIComponent(kind)+"/access?"+qs,{method:"GET",headers:{}});
-    if(!r.res.ok){ state.flash="Dokument: "+apiError(r.body); render(); return; }
-    var path=r.body&&r.body.path;
-    if(!path){ state.flash="Chybí bezpečný odkaz na PDF."; render(); return; }
-    if(disposition==="attachment") window.location.href=path;
-    else window.open(path,"_blank","noopener,noreferrer");
+    await openAdminDocumentAccess("/v1/admin/premium/orders/"+encodeURIComponent(orderId)+"/documents/"+encodeURIComponent(kind)+"/access?"+qs);
   }
   async function renderPremiumOrderDetail(orderId){
     var d=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId),{method:"GET",headers:{}});
@@ -2340,25 +2402,46 @@ export const ADMIN_UI_SCRIPT = String.raw`
         panel('<div class="card"><h2>Bannerová reklama – pravý sloupec PC</h2><p class="muted">'+esc((bp.body&&bp.body.message_cs)||"")+'</p><p><strong>Stav:</strong> '+esc((bp.body&&bp.body.product_status_cs)||"Připravuje se")+"</p></div>");
       }
       else if(v==="order_confirmations"){
-        var oc=await api("/v1/admin/order-confirmations/registry",{method:"GET",headers:{}});
-        if(!oc.res.ok){ panel('<p class="err">'+esc(apiError(oc.body))+'</p>'); return; }
-        var confs=(oc.body&&oc.body.confirmations)||[];
-        var zipTo=new Date().toISOString().slice(0,10);
-        var zipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
-        panel('<div class="card"><h2>Potvrzení objednávek</h2><p class="muted">Centrální archiv PDF potvrzení a storno dokumentů (reklamní tlačítka).</p>'+
-          (confs.length?('<div class="table-wrap"><table><thead><tr><th>Objednávka</th><th>Zákazník</th><th>Produkt</th><th>Dokument</th><th>Datum</th><th>PDF</th></tr></thead><tbody>'+
+        async function loadConfRegistry(){
+          var qs="?limit=200&q="+encodeURIComponent(val("conf-q"))+
+            "&doc_kind="+encodeURIComponent(val("conf-doc-kind"))+
+            "&from="+encodeURIComponent(val("conf-from"))+
+            "&to="+encodeURIComponent(val("conf-to"));
+          var oc=await api("/v1/admin/order-confirmations/registry"+qs,{method:"GET",headers:{}});
+          if(!oc.res.ok){ el("conf-out").innerHTML='<p class="err">'+esc(apiError(oc.body))+"</p>"; return; }
+          var confs=(oc.body&&oc.body.confirmations)||[];
+          if(!confs.length){ el("conf-out").innerHTML='<p class="muted empty">Žádné záznamy pro zadané filtry.</p>'; return; }
+          el("conf-out").innerHTML='<div class="table-wrap"><table><thead><tr><th>Objednávka</th><th>Zákazník</th><th>Produkt</th><th>Dokument</th><th>Datum</th><th>PDF</th></tr></thead><tbody>'+
             confs.map(function(c){
               return "<tr><td>"+esc(c.order_reference||"—")+"</td><td>"+esc(c.company_name||"—")+" · "+esc(c.ico||"—")+"</td><td>"+esc(c.ad_product_label_cs||"—")+"</td><td>"+esc(c.document_title_cs||"—")+"</td><td>"+esc(c.created_at_label_cs||"—")+"</td><td>"+
                 (c.preview_path?'<button type="button" class="btn secondary" data-conf-preview="'+esc(c.preview_path)+'">Náhled</button> ':"")+
                 (c.download_path?'<button type="button" class="btn secondary" data-conf-download="'+esc(c.download_path)+'">Stáhnout</button>':"")+
                 "</td></tr>";
-            }).join("")+"</tbody></table></div>"):'<p class="muted empty">Zatím žádná potvrzení.</p>')+
-          '</div><div class="card"><h3>Export ZIP (uložená PDF)</h3><div class="grid2">'+
+            }).join("")+"</tbody></table></div>";
+          Array.prototype.forEach.call(document.querySelectorAll("[data-conf-preview]"),function(b){
+            b.onclick=function(){ openAdminDocumentAccess(b.getAttribute("data-conf-preview")); };
+          });
+          Array.prototype.forEach.call(document.querySelectorAll("[data-conf-download]"),function(b){
+            b.onclick=function(){ openAdminDocumentAccess(b.getAttribute("data-conf-download")); };
+          });
+        }
+        var zipTo=new Date().toISOString().slice(0,10);
+        var zipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
+        var confFrom=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
+        panel('<div class="card"><h2>Potvrzení objednávek</h2><p class="muted">Centrální archiv PDF potvrzení a storno dokumentů (reklamní tlačítka).</p>'+
+          '<div class="grid2">'+inp("conf-q","Hledat (objednávka, firma, IČO, e-mail)","search","")+
+          sel("conf-doc-kind","Typ dokumentu",[["all","Vše"],["order_confirmation","Potvrzení objednávky"],["order_cancellation","Potvrzení storna"]],"all")+
+          inp("conf-from","Vytvořeno od","date",confFrom)+inp("conf-to","Vytvořeno do","date",zipTo)+
+          '</div><div class="row"><button type="button" class="btn" id="conf-search-go">Vyhledat</button></div>'+
+          '<div id="conf-out"><p class="muted">Načítám…</p></div></div>'+
+          '<div class="card"><h3>Export ZIP (uložená PDF)</h3><p class="muted">ZIP exportuje PDF podle období a typů níže (ne podle textového filtru tabulky).</p><div class="grid2">'+
           inp("conf-zip-from","Od", "date", zipFrom)+inp("conf-zip-to","Do", "date", zipTo)+
           '</div><p class="muted"><label><input type="checkbox" id="conf-zip-kind-conf" checked> Potvrzení objednávek</label> '+
           '<label><input type="checkbox" id="conf-zip-kind-cancel" checked> Storno potvrzení</label></p>'+
           '<div class="row"><button type="button" class="btn" id="conf-zip-go">Stáhnout ZIP</button></div>'+
           '<p id="conf-zip-msg" class="muted" hidden></p></div>');
+        el("conf-search-go").onclick=loadConfRegistry;
+        await loadConfRegistry();
         var confZipGo=el("conf-zip-go");
         if(confZipGo) confZipGo.onclick=async function(){
           var kinds=[];
@@ -2376,12 +2459,6 @@ export const ADMIN_UI_SCRIPT = String.raw`
           state.flash=out.warnings?"ZIP stažen (některá PDF chyběla: "+out.warnings+")":"ZIP potvrzení stažen.";
           render();
         };
-        Array.prototype.forEach.call(document.querySelectorAll("[data-conf-preview]"),function(b){
-          b.onclick=function(){ window.open(b.getAttribute("data-conf-preview"),"_blank","noopener"); };
-        });
-        Array.prototype.forEach.call(document.querySelectorAll("[data-conf-download]"),function(b){
-          b.onclick=function(){ window.location.href=b.getAttribute("data-conf-download"); };
-        });
       }
       else if(v==="premium"||v==="orders") { await renderPremiumOrdersAdmin(); return; }
       else if(v==="contracts") return renderSimpleCrud({
@@ -2394,25 +2471,48 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ]
       });
       else if(v==="invoices"){
-        var ir=await api("/v1/admin/invoices/registry",{method:"GET",headers:{}});
-        if(!ir.res.ok){ panel('<p class="err">'+esc(apiError(ir.body))+'</p>'); return; }
-        var docs=(ir.body&&ir.body.documents)||[];
-        var invZipTo=new Date().toISOString().slice(0,10);
-        var invZipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
-        panel('<div class="card"><h2>Faktury</h2><p class="muted">Centrální evidence faktur a dobropisů (reklamní objednávky).</p>'+
-          (docs.length?('<div class="table-wrap"><table><thead><tr><th>Číslo dokladu</th><th>Zákazník</th><th>Objednávka</th><th>Vystaveno</th><th>Částka</th><th>Platba</th><th>PDF</th></tr></thead><tbody>'+
+        async function loadInvRegistry(){
+          var qs="?limit=200&q="+encodeURIComponent(val("inv-q"))+
+            "&doc_kind="+encodeURIComponent(val("inv-doc-kind"))+
+            "&payment="+encodeURIComponent(val("inv-payment"))+
+            "&from="+encodeURIComponent(val("inv-from"))+
+            "&to="+encodeURIComponent(val("inv-to"));
+          var ir=await api("/v1/admin/invoices/registry"+qs,{method:"GET",headers:{}});
+          if(!ir.res.ok){ el("inv-out").innerHTML='<p class="err">'+esc(apiError(ir.body))+"</p>"; return; }
+          var docs=(ir.body&&ir.body.documents)||[];
+          if(!docs.length){ el("inv-out").innerHTML='<p class="muted empty">Žádné záznamy pro zadané filtry.</p>'; return; }
+          el("inv-out").innerHTML='<div class="table-wrap"><table><thead><tr><th>Číslo dokladu</th><th>Zákazník</th><th>Objednávka</th><th>Vystaveno</th><th>Částka</th><th>Platba</th><th>PDF</th></tr></thead><tbody>'+
             docs.map(function(d){
               var num=d.document_kind==="credit_note"?d.credit_note_number:d.invoice_number;
               return "<tr><td>"+esc(num||"—")+(d.linked_invoice_number?" → faktura "+esc(d.linked_invoice_number):"")+"</td><td>"+esc(d.company_name||"—")+" · "+esc(d.ico||"—")+"</td><td>"+esc(d.order_reference||"—")+"</td><td>"+esc(d.issued_at_label_cs||"—")+"</td><td>"+esc(formatKc(d.total_cents||0))+"</td><td>"+esc(d.payment_label_cs||"—")+"</td><td>"+
                 (d.preview_path?'<button type="button" class="btn secondary" data-inv-preview="'+esc(d.preview_path)+'">Náhled</button> ':"")+
                 (d.download_path?'<button type="button" class="btn secondary" data-inv-download="'+esc(d.download_path)+'">Stáhnout</button>':"")+
                 "</td></tr>";
-            }).join("")+"</tbody></table></div>"):'<p class="muted empty">Žádné faktury.</p>')+
-          '</div><div class="card"><h3>Export ZIP (uložená PDF)</h3><div class="grid2">'+
+            }).join("")+"</tbody></table></div>";
+          Array.prototype.forEach.call(document.querySelectorAll("[data-inv-preview]"),function(b){
+            b.onclick=function(){ openAdminDocumentAccess(b.getAttribute("data-inv-preview")); };
+          });
+          Array.prototype.forEach.call(document.querySelectorAll("[data-inv-download]"),function(b){
+            b.onclick=function(){ openAdminDocumentAccess(b.getAttribute("data-inv-download")); };
+          });
+        }
+        var invZipTo=new Date().toISOString().slice(0,10);
+        var invZipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
+        var invFrom=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
+        panel('<div class="card"><h2>Faktury</h2><p class="muted">Centrální evidence faktur a dobropisů (reklamní objednávky).</p>'+
+          '<div class="grid2">'+inp("inv-q","Hledat (číslo dokladu, objednávka, firma, IČO, e-mail)","search","")+
+          sel("inv-doc-kind","Typ dokladu",[["all","Vše"],["invoices","Faktury"],["credit_notes","Dobropisy"]],"all")+
+          sel("inv-payment","Platba",[["all","Vše"],["paid","Uhrazeno"],["unpaid","Neuhrazeno"]],"all")+
+          inp("inv-from","Vystaveno od","date",invFrom)+inp("inv-to","Vystaveno do","date",invZipTo)+
+          '</div><div class="row"><button type="button" class="btn" id="inv-search-go">Vyhledat</button></div>'+
+          '<div id="inv-out"><p class="muted">Načítám…</p></div></div>'+
+          '<div class="card"><h3>Export ZIP (uložená PDF)</h3><p class="muted">ZIP exportuje PDF podle období a typů níže (ne podle textového filtru tabulky).</p><div class="grid2">'+
           inp("inv-zip-from","Od", "date", invZipFrom)+inp("inv-zip-to","Do", "date", invZipTo)+
           '</div><p class="muted"><label><input type="checkbox" id="inv-zip-kind-inv" checked> Faktury</label> '+
           '<label><input type="checkbox" id="inv-zip-kind-credit" checked> Dobropisy</label></p>'+
           '<div class="row"><button type="button" class="btn" id="inv-zip-go">Stáhnout ZIP</button></div></div>');
+        el("inv-search-go").onclick=loadInvRegistry;
+        await loadInvRegistry();
         var invZipGo=el("inv-zip-go");
         if(invZipGo) invZipGo.onclick=async function(){
           var kinds=[];
@@ -2431,12 +2531,6 @@ export const ADMIN_UI_SCRIPT = String.raw`
           state.flash=out.warnings?"ZIP stažen (některá PDF chyběla: "+out.warnings+")":"ZIP faktur stažen.";
           render();
         };
-        Array.prototype.forEach.call(document.querySelectorAll("[data-inv-preview]"),function(b){
-          b.onclick=function(){ window.open(b.getAttribute("data-inv-preview"),"_blank","noopener"); };
-        });
-        Array.prototype.forEach.call(document.querySelectorAll("[data-inv-download]"),function(b){
-          b.onclick=function(){ window.location.href=b.getAttribute("data-inv-download"); };
-        });
         return;
       }
       else if(v==="placements"){

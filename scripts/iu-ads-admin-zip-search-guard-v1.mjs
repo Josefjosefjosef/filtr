@@ -26,6 +26,11 @@ const uiNeedles = [
   "downloadZipExport",
   "extendNewOrderModal",
   "ext-target-url",
+  "openAdminDocumentAccess",
+  "inv-search-go",
+  "conf-search-go",
+  "ad-corner-badge--active",
+  "nav-primary",
 ];
 for (const needle of uiNeedles) {
   if (!uiSrc.includes(needle)) {

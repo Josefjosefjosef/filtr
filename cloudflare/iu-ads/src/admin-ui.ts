@@ -24,6 +24,11 @@ export function buildAdminShellHtml(nonce: string): string {
     nav{padding:1rem .75rem;border-right:1px solid var(--line);background:rgba(255,255,255,.4);max-height:calc(100vh - 64px);overflow:auto}
     nav button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:.55rem .7rem;border-radius:8px;cursor:pointer;color:var(--ink);font:inherit}
     nav button:hover,nav button.active{background:rgba(15,107,92,.12);color:var(--accent)}
+    nav button.nav-primary{font-weight:700;color:#1565c0}
+    nav button.nav-primary.active{color:var(--accent)}
+    .ad-corner-badge{position:absolute;top:.45rem;right:.45rem;z-index:2;padding:.22rem .45rem;border-radius:4px;font-size:.68rem;font-weight:700;line-height:1.2;color:#fff;letter-spacing:.02em;max-width:46%;text-align:center}
+    .ad-corner-badge--active{background:#1b6b3a}
+    .ad-corner-badge--pending{background:#e65100}
     main{padding:1.25rem;max-width:1100px}
     .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:0 0 1rem}
     .muted{color:var(--muted)} .err{color:var(--danger);margin:.5rem 0} .ok{color:var(--ok)}
@@ -66,7 +71,7 @@ export function buildAdminShellHtml(nonce: string): string {
     .nav-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.35rem;padding:0 .35rem;margin-left:.35rem;border-radius:999px;background:var(--danger);color:#fff;font-size:.72rem;font-weight:600;line-height:1.35;vertical-align:middle}
     .order-table-desktop{display:block}
     .order-cards{display:none}
-    .order-card{border:2px solid var(--line);border-radius:10px;padding:.85rem 1rem;margin:.65rem 0;background:#fff;cursor:pointer}
+    .order-card{position:relative;border:2px solid var(--line);border-radius:10px;padding:2rem .85rem .85rem 1rem;margin:.65rem 0;background:#fff;cursor:pointer}
     .order-card--pending{border-color:var(--order-pending)}
     .order-card--rejected{border-color:var(--order-rejected)}
     .order-card--published{border-color:var(--order-published)}
