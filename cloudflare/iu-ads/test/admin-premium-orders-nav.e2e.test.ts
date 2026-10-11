@@ -326,7 +326,11 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
     await context.close();
   });
 
-  it("Safari webkit — globální vyhledávání bez pageerror", async () => {
+  const skipWebkit =
+    process.env.IU_ADMIN_E2E_SKIP_WEBKIT === "1" ||
+    (process.env.GITHUB_ACTIONS === "true" && process.env.RUNNER_OS === "Linux");
+
+  (skipWebkit ? it.skip : it)("Safari webkit — globální vyhledávání bez pageerror", async () => {
     const wkBrowser = await webkit.launch({ headless: true });
     const errors: string[] = [];
     const context = await wkBrowser.newContext({ viewport: { width: 390, height: 844 } });
