@@ -154,6 +154,12 @@ class ExtendIntegrationDb {
       return mode === "run" ? { success: true } : null;
     }
 
+    if (sql.includes("UPDATE campaigns SET target_url = ?")) {
+      const [url, , campId] = params;
+      const c = this.campaigns.get(String(campId));
+      if (c) c.target_url = url;
+      return mode === "run" ? { success: true } : null;
+    }
     if (sql.includes("UPDATE campaigns SET end_at = ?")) {
       const [endAt, , campId] = params;
       const c = this.campaigns.get(String(campId));
@@ -234,6 +240,7 @@ describe("premium extend new order integration", () => {
       target_url: "https://example.invalid/ad",
       creative_id: "crv_1",
       creative_mode: "image_large",
+      parent_order_id: null,
     });
   });
 
@@ -296,6 +303,11 @@ describe("premium extend new order integration", () => {
     expect(db.countChildOrders()).toBe(1);
     expect(db.invoices.length).toBe(1);
     expect(db.placements.get(placementId)?.active_campaign_id).toBe(campaignId);
+    const child = [...db.premiumOrders.values()].find((po) => po.parent_order_id === sourceOrderId);
+    expect(child?.placement_id).toBe(placementId);
+    expect(child?.creative_id).toBe("crv_1");
+    expect(child?.category_slug).toBe("aff-auto-moto");
+    expect(child?.position).toBe(2);
   });
 
   it("chains second extension from updated campaign end", async () => {
