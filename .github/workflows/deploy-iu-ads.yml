@@ -157,10 +157,6 @@ jobs:
         working-directory: .
         run: node node_modules/playwright/cli.js install chromium
 
-      - name: Install Playwright webkit for admin Safari e2e
-        working-directory: .
-        run: node node_modules/playwright/cli.js install webkit
-
       - name: Premium order preview parity guard
         working-directory: .
         run: npm run iu-premium-order-preview-parity-guard
@@ -175,6 +171,9 @@ jobs:
 
       - name: Premium order form e2e guard
         working-directory: .
+        env:
+          # GitHub-hosted Ubuntu lacks WebKit system libs; apt install-deps hangs (see smoke.yml).
+          IU_ADMIN_E2E_SKIP_WEBKIT: "1"
         run: npm run iu-premium-order-form-e2e-guard
 
       - name: Token source (no values)
