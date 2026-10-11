@@ -36,7 +36,12 @@ const SNIPPET = `(function iuPwaReturnDiag(){
 async function main() {
   console.log("=== PWA external return — device verification ===");
   console.log("");
-  console.log("Expected build id: pwa-external-return-unified-v4-20261011");
+  console.log("Expected build id: pwa-external-return-unified-v5-20261011");
+  console.log("Installed PWA (same origin, no Safari tab):");
+  console.log("  A) 7× tap logo infoUzel.cz (a.iuBrand) within 4 s → panel + trace ON");
+  console.log("  B) In-PWA navigation to hash #iu-pwa-return-diag-enable (e.g. internal link / bookmark in PWA)");
+  console.log("  C) After enable: Kopírovat in panel — no remote upload, no data wipe");
+  console.log("Browser tab only: ?iuPwaReturnDiag=1 (does not enable standalone PWA shell by itself).");
   console.log("Production #11803 only (b6a9ed2): no iuNetwork.pwaExternalReturnBuildId; HTML cache token ends coalesce-v1-20261009");
   console.log("");
   console.log("Equipment: iPhone/iPad with installed PWA + USB + Mac Safari Develop menu, OR Android Chrome remote debugging.");

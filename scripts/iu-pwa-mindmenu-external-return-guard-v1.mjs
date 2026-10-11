@@ -69,7 +69,10 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v4-20261011/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v5-20261011/.test(net), "static:pwa_build_id");
+  must(/cancelExternalReturnRestore/.test(net), "static:cancel_external_return");
+  must(/enableExternalReturnDiagPanel/.test(net), "static:diag_enable_api");
+  must(/iu-pwa-return-diag-enable/.test(net), "static:diag_hash_route");
   must(/abortExternalReturnArmsAfterFailedOpen/.test(net), "static:abort_failed_external_open");
   must(/iuMindMenuRestoreIfArmed\(\)/.test(net), "static:net_restore_if_armed");
   must(/ensureWebNavHistoryForExternalReturn/.test(net), "static:net_webnav_history_reassert");
@@ -685,6 +688,160 @@ async function runBehaviorHomeScrollExternalReturn(page, label) {
   must(result.transientTop !== true, label + ":home_ext:transient_top:min=" + result.minY);
 }
 
+/** b6a9ed2 invoke order: restoreIfArmed then SyncGate() with NO opts (not allowClose). */
+async function runBehaviorLegacyB6InvokeSyncOrder(page, label) {
+  await openMindMenu(page);
+  const b6 = await page.evaluate(async () => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const transitions = [];
+    const origSetTab = wrap && wrap.__iuMobileGateSetTab;
+    if (wrap && typeof origSetTab === "function") {
+      wrap.__iuMobileGateSetTab = function (tab) {
+        const before = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        const out = origSetTab.apply(this, arguments);
+        const after = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        if (before !== after) transitions.push(before + ">" + after);
+        return out;
+      };
+    }
+    try {
+      localStorage.setItem("iuMindMenuReturnPendingV1", JSON.stringify({ t: Date.now(), y: 360 }));
+      sessionStorage.setItem("iuMindMenuReturnArmed", "1");
+      const u = new URL(window.location.href);
+      u.hash = "";
+      history.replaceState({}, "", u.toString());
+      if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
+      if (typeof window.iuMindMenuSyncGateFromHistory === "function") window.iuMindMenuSyncGateFromHistory();
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+      const hash = String(location.hash || "").replace("#", "");
+      return { gate, hash, transitions, syncNoOpts: true };
+    } finally {
+      if (wrap && typeof origSetTab === "function") wrap.__iuMobileGateSetTab = origSetTab;
+    }
+  });
+  must(b6.syncNoOpts === true, label + ":b6_order_ran");
+  must(b6.gate === "tools", label + ":b6_after_sync_no_opts_gate:" + b6.gate);
+  must(b6.hash === "iu-mindmenu", label + ":b6_hash_reasserted:" + b6.hash);
+}
+
+/** Function-level: SyncGate({allowClose:true}) closes tools when hash/state guard absent. */
+async function runBehaviorSyncGateCloseMechanism(page, label) {
+  await openMindMenu(page);
+  const mech = await page.evaluate(async () => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    try {
+      localStorage.removeItem("iuMindMenuReturnPendingV1");
+      sessionStorage.removeItem("iuMindMenuReturnArmed");
+      sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+    } catch (_) {}
+    wrap.__iuMobileGateSetTab("tools");
+    const u = new URL(window.location.href);
+    u.hash = "";
+    history.replaceState({}, "", u.toString());
+    if (typeof window.iuMindMenuSyncGateFromHistory === "function") {
+      window.iuMindMenuSyncGateFromHistory({ allowClose: true });
+    }
+    await new Promise((r) => requestAnimationFrame(r));
+    return { gate: wrap.getAttribute("data-iu-mobile-gate") || "" };
+  });
+  must(mech.gate === "", label + ":sync_allow_close_closes_tools:" + mech.gate);
+}
+
+/** v5 restore path: no SyncGate on invokeReturnNavigationRestore tick. */
+async function runBehaviorV5RestoreWithoutSyncClose(page, label) {
+  await page.evaluate(() => {
+    try {
+      localStorage.removeItem("iuMindMenuReturnPendingV1");
+      sessionStorage.clear();
+      if (window.iuNetwork && typeof window.iuNetwork.cancelExternalReturnRestore === "function") {
+        window.iuNetwork.cancelExternalReturnRestore("guard_reset");
+      }
+    } catch (_) {}
+  });
+  await openMindMenu(page);
+  const v4 = await page.evaluate(async () => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const transitions = [];
+    const origSetTab = wrap && wrap.__iuMobileGateSetTab;
+    if (wrap && typeof origSetTab === "function") {
+      wrap.__iuMobileGateSetTab = function (tab) {
+        const before = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        const out = origSetTab.apply(this, arguments);
+        const after = String(wrap.getAttribute("data-iu-mobile-gate") || "");
+        if (before !== after) transitions.push(before + ">" + after);
+        return out;
+      };
+    }
+    try {
+      localStorage.setItem("iuMindMenuReturnPendingV1", JSON.stringify({ t: Date.now(), y: 360 }));
+      sessionStorage.setItem("iuMindMenuReturnArmed", "1");
+      sessionStorage.setItem("iu_external_nav_armed", "1");
+      if (window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function") {
+        window.iuNetwork.restoreAppShellAfterReturn();
+      }
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+      return { gate, transitions };
+    } finally {
+      if (wrap && typeof origSetTab === "function") wrap.__iuMobileGateSetTab = origSetTab;
+    }
+  });
+  must(v4.gate === "tools", label + ":v5_restore_gate:" + v4.gate);
+  must(
+    !(v4.transitions || []).some((t) => t === "tools>" || t.endsWith(">")),
+    label + ":v5_no_home_transition:" + (v4.transitions || []).join(",")
+  );
+}
+
+async function runBehaviorV5CancelAndStaleCallback(page, label) {
+  const out = await page.evaluate(async () => {
+    sessionStorage.setItem("iu_external_nav_armed", "1");
+    sessionStorage.setItem("iuPwaExternalReturnRestoringV1", "1");
+    const gen0 = window.iuNetwork.getExternalReturnDiagSnapshot().gen;
+    window.iuNetwork.cancelExternalReturnRestore("guard_user_nav");
+    const gen1 = window.iuNetwork.getExternalReturnDiagSnapshot().gen;
+    const active = window.iuNetwork.isExternalReturnRestoreActive();
+    const scrollGen = gen0;
+    sessionStorage.setItem("iuPwaExternalReturnMainScrollY", "800");
+    window.iuNetwork.cancelExternalReturnRestore("guard_scroll_cancel");
+    let rafRan = false;
+    await new Promise((resolve) => {
+      requestAnimationFrame(function () {
+        if (scrollGen === window.iuNetwork.getExternalReturnDiagSnapshot().gen) rafRan = true;
+        resolve();
+      });
+    });
+    return { gen0, gen1, active, rafRan };
+  });
+  must(out.gen1 > out.gen0, label + ":cancel_bumps_gen");
+  must(out.active === false, label + ":cancel_clears_active");
+  must(out.rafRan === false, label + ":stale_gen_skips_raf");
+}
+
+async function runBehaviorV5SettleBeforeCap(page, label) {
+  await openMindMenu(page);
+  const settle = await page.evaluate(async () => {
+    sessionStorage.setItem("iu_external_nav_armed", "1");
+    const t0 = Date.now();
+    window.iuNetwork.restoreAppShellAfterReturn();
+    for (let i = 0; i < 120; i++) {
+      if (!window.iuNetwork.isExternalReturnRestoreActive()) break;
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    const ms = Date.now() - t0;
+    const wrap = document.getElementById("iuMobileGateWrap");
+    return {
+      ms,
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      stillActive: window.iuNetwork.isExternalReturnRestoreActive(),
+    };
+  });
+  must(settle.gate === "tools", label + ":settle_gate_tools:" + settle.gate);
+  must(settle.stillActive === false, label + ":settle_released");
+  must(settle.ms < 1500, label + ":settle_before_cap_ms:" + settle.ms);
+}
+
 /** MindMenu: burst visibility/pageshow restore must not re-run gate flips after first flight completes. */
 async function runBehaviorSequentialReturnCoalesce(page, label) {
   await openMindMenu(page);
@@ -813,6 +970,11 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     await runBehaviorMenuForwardSectionApplyAllowed(page, label);
     await runBehaviorNavMenuExternalLink(page, label);
     await runBehaviorHomeScrollExternalReturn(page, label);
+    await runBehaviorLegacyB6InvokeSyncOrder(page, label);
+    await runBehaviorSyncGateCloseMechanism(page, label);
+    await runBehaviorV5RestoreWithoutSyncClose(page, label);
+    await runBehaviorV5CancelAndStaleCallback(page, label);
+    await runBehaviorV5SettleBeforeCap(page, label);
     await runBehaviorSequentialReturnCoalesce(page, label);
     await runBehaviorReturnLifecycle(page, label);
 
