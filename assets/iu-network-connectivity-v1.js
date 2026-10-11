@@ -12,9 +12,12 @@
   var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-section-guard-v3-20261010";
+  var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
+  var EXTERNAL_RETURN_SETTLE_MS = 1600;
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v4-20261011";
   var lastProbe = { ok: null, ts: 0 };
   var externalRestoreInFlight = false;
+  var externalReturnSettleTimer = null;
   var reconnectTimer = null;
   var reconnectCallbacks = [];
   var hintTimer = null;
@@ -267,16 +270,60 @@
     try {
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
       sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
       sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
       sessionStorage.removeItem("iuMobileWebNavReturnArmed");
     } catch (_) {}
     try {
-      externalRestoreInFlight = false;
+      if (externalReturnSettleTimer) clearTimeout(externalReturnSettleTimer);
+    } catch (_) {}
+    finishExternalReturnRestore();
+  }
+
+  function touchExternalReturnHoldUntil() {
+    try {
+      sessionStorage.setItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY, String(Date.now() + EXTERNAL_RETURN_SETTLE_MS));
     } catch (_) {}
   }
 
+  function isExternalReturnHoldActive() {
+    try {
+      var until = parseInt(sessionStorage.getItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY) || "0", 10);
+      if (Number.isFinite(until) && until > Date.now()) return true;
+    } catch (_) {}
+    return false;
+  }
+
+  function finishExternalReturnRestore() {
+    try {
+      sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+      sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
+    } catch (_) {}
+    externalRestoreInFlight = false;
+    externalReturnSettleTimer = null;
+  }
+
+  function scheduleExternalReturnSettle() {
+    touchExternalReturnHoldUntil();
+    if (externalReturnSettleTimer) {
+      try {
+        clearTimeout(externalReturnSettleTimer);
+      } catch (_) {}
+    }
+    var delay = EXTERNAL_RETURN_SETTLE_MS;
+    try {
+      var until = parseInt(sessionStorage.getItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY) || "0", 10);
+      if (Number.isFinite(until) && until > Date.now()) {
+        delay = Math.max(delay, until - Date.now() + 32);
+      }
+    } catch (_) {}
+    externalReturnSettleTimer = setTimeout(finishExternalReturnRestore, delay);
+  }
+
   function capturePwaExternalReturnSnapshot() {
+    touchExternalReturnHoldUntil();
     try {
       if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
     } catch (_) {}
@@ -325,6 +372,25 @@
     } catch (_) {}
   }
 
+  function ensureWebNavHistoryForExternalReturn() {
+    try {
+      var armed = false;
+      try {
+        armed = sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1";
+      } catch (_) {}
+      var gateHint = "";
+      try {
+        gateHint = sessionStorage.getItem(EXTERNAL_RETURN_GATE_KEY) || "";
+      } catch (_) {}
+      if (!armed && gateHint !== "nav") return;
+      var h = String(location.hash || "");
+      if (h === "#iu-nav" || h === "#nav") return;
+      var u = new URL(location.href);
+      u.hash = "iu-nav";
+      history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+    } catch (_) {}
+  }
+
   function invokeReturnNavigationRestore() {
     /* P0: while a fullscreen tool overlay is open, do not remount MindMenu tools chrome
        (would surface MindMenu/iCentrum header around Datové schránky after external return). */
@@ -332,12 +398,12 @@
       reassertIntentionalOverlayShell();
       return;
     }
+    ensureWebNavHistoryForExternalReturn();
     try {
       if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
     } catch (_) {}
-    try {
-      if (typeof window.iuMindMenuSyncGateFromHistory === "function") window.iuMindMenuSyncGateFromHistory();
-    } catch (_) {}
+    /* Do not call iuMindMenuSyncGateFromHistory here — restoreIfArmed + EnsureHistoryEntry
+       already re-open tools; SyncGate on the same tick closed tools → Home (visible flicker). */
     try {
       if (typeof window.iuMobileWebNavSyncFromHistory === "function") window.iuMobileWebNavSyncFromHistory();
     } catch (_) {}
@@ -351,13 +417,20 @@
       }
     } catch (_) {}
     try {
+      if (typeof window.iuMindMenuTouchReturnLatch === "function") window.iuMindMenuTouchReturnLatch();
+    } catch (_) {}
+    try {
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
       sessionStorage.removeItem("iuMobileWebNavReturnArmed");
     } catch (_) {}
+    touchExternalReturnHoldUntil();
   }
 
   function restoreAppShellAfterReturn() {
-    if (externalRestoreInFlight) return;
+    if (externalRestoreInFlight) {
+      reassertIntentionalOverlayShell();
+      return;
+    }
     if (!shouldRestoreShell()) {
       reassertIntentionalOverlayShell();
       return;
@@ -372,16 +445,10 @@
       invokeReturnNavigationRestore();
     } finally {
       try {
-        sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
-        sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+        sessionStorage.setItem(EXTERNAL_RESTORE_ACTIVE_KEY, "1");
+        sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
       } catch (_) {}
-      try {
-        requestAnimationFrame(function () {
-          externalRestoreInFlight = false;
-        });
-      } catch (_) {
-        externalRestoreInFlight = false;
-      }
+      scheduleExternalReturnSettle();
     }
   }
 
@@ -390,6 +457,7 @@
       if (externalRestoreInFlight) return true;
       if (sessionStorage.getItem(EXTERNAL_RESTORE_ACTIVE_KEY) === "1") return true;
       if (sessionStorage.getItem(EXTERNAL_ARMED_KEY) === "1") return true;
+      if (isExternalReturnHoldActive()) return true;
     } catch (_) {}
     return false;
   }
@@ -456,7 +524,7 @@
 
   function openExternalSync(url, isMailTel) {
     armExternalReturn();
-    clearShellErrorUiOnly();
+    /* Do not clear shell/modal locks on depart — menu/MindMenu overlay must stay armed until return settle. */
     try {
       var now = Date.now();
       var last = window.__iuMindMenuLastExternalOpen || null;
@@ -634,6 +702,7 @@
     armExternalReturn: armExternalReturn,
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
     isExternalReturnRestoreActive: isExternalReturnRestoreActive,
+    isExternalReturnHoldActive: isExternalReturnHoldActive,
     pwaExternalReturnBuildId: PWA_EXTERNAL_RETURN_BUILD_ID,
     hasIntentionalToolOverlayOpen: hasIntentionalToolOverlayOpen,
     showOfflineHint: showOfflineHint,

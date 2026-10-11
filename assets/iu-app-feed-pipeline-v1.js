@@ -26612,6 +26612,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
     window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
+    window.iuMindMenuTouchReturnLatch = iuMindMenuTouchReturnLatch;
   } catch (_) {}
 
   // === MOJE SCHRÁNKY (MindMenu): min 1, max 10, controls follow last pill ===
@@ -29875,6 +29876,16 @@ function buildVideoAsArticleCard(it) {
   document.addEventListener("visibilitychange", () => {
     debugLog("[VIS]", document.visibilityState);
     if (document.visibilityState === "visible") {
+      var skipScrollRestoreOnReturn = false;
+      try {
+        if (
+          window.iuNetwork &&
+          typeof window.iuNetwork.isExternalReturnRestoreActive === "function" &&
+          window.iuNetwork.isExternalReturnRestoreActive()
+        ) {
+          skipScrollRestoreOnReturn = true;
+        }
+      } catch (_) {}
       try {
         if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
       } catch (_) {}
@@ -29894,9 +29905,11 @@ function buildVideoAsArticleCard(it) {
         }
         startAutoRefresh();
       }
-      try {
-        if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
-      } catch (_) {}
+      if (!skipScrollRestoreOnReturn) {
+        try {
+          if (typeof window.iuScrollRestoreRequest === "function") window.iuScrollRestoreRequest();
+        } catch (_) {}
+      }
     } else if (iuRefreshTimer) {
       clearInterval(iuRefreshTimer);
       iuRefreshTimer = null;
