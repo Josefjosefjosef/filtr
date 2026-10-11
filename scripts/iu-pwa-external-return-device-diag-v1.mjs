@@ -36,7 +36,7 @@ const SNIPPET = `(function iuPwaReturnDiag(){
 async function main() {
   console.log("=== PWA external return — device verification ===");
   console.log("");
-  console.log("Expected build id after merge #11816: pwa-external-return-section-guard-v3-20261010");
+  console.log("Expected build id: pwa-external-return-unified-v4-20261011");
   console.log("Production #11803 only (b6a9ed2): no iuNetwork.pwaExternalReturnBuildId; HTML cache token ends coalesce-v1-20261009");
   console.log("");
   console.log("Equipment: iPhone/iPad with installed PWA + USB + Mac Safari Develop menu, OR Android Chrome remote debugging.");
