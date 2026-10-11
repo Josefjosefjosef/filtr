@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import worker from "../src/index";
 import { ADMIN_SHELL_HTML } from "../src/admin-ui";
+import { ADMIN_UI_SCRIPT } from "../src/admin-ui-script";
 import { CLIENT_SHELL_HTML } from "../src/client-ui";
 import type { Env } from "../src/types";
 
@@ -12,6 +13,12 @@ const env = {
 } as Env;
 
 describe("admin + client SPA shells", () => {
+  it("admin inline script is valid JavaScript (prevents blank /admin shell)", () => {
+    expect(() => new Function(ADMIN_UI_SCRIPT)).not.toThrow();
+    expect(ADMIN_UI_SCRIPT).toContain("bootstrap");
+    expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/auth/login");
+  });
+
   it("GET /admin returns HTML 200 with login markers, noindex, and security headers", async () => {
     const res = await worker.fetch(new Request("https://ads.test/admin"), env);
     expect(res.status).toBe(200);

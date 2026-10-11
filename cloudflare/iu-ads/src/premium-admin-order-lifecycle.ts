@@ -390,7 +390,15 @@ export async function handleAdminPremiumOrderAmend(request: Request, env: Env, o
 export async function handleAdminPremiumExtendNewOrder(request: Request, env: Env, orderId: string): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
-  let body: { period_start_at?: unknown; period_end_at?: unknown; price_kc?: unknown; idempotency_key?: unknown } = {};
+  let body: {
+    period_start_at?: unknown;
+    period_end_at?: unknown;
+    price_kc?: unknown;
+    idempotency_key?: unknown;
+    target_url?: unknown;
+    client_contact_email?: unknown;
+    contact_phone?: unknown;
+  } = {};
   try {
     body = await request.json();
   } catch {
@@ -411,6 +419,9 @@ export async function handleAdminPremiumExtendNewOrder(request: Request, env: En
     periodEndAt: periodEnd,
     priceKc,
     idempotencyKey,
+    targetUrl: typeof body.target_url === "string" ? body.target_url : undefined,
+    clientContactEmail: typeof body.client_contact_email === "string" ? body.client_contact_email : undefined,
+    contactPhone: typeof body.contact_phone === "string" ? body.contact_phone : undefined,
   });
   if (!result.ok) return json({ error: result.error, message_cs: result.message_cs }, result.status);
   return json(result);

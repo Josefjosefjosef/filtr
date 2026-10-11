@@ -403,12 +403,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" data-acct-reason>'+esc(m.form.reason||"")+'</textarea></p></section>'+
       '<section><h4>4. Rekapitulace</h4><div class="acct-recap"><dl>'+
       '<dt>Původní faktura</dt><dd>'+esc(formatKc(invTotal))+'</dd>'+
-      (stornoCents?('<dt>Částka ke stornování</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
-      '<dt>Dobropis</dt><dd>− '+esc(formatKc(stornoCents))+'</dd>'+
-      '<dt>Zbývající cena služby</dt><dd>'+esc(formatKc(recap.new_service_price_cents))+'</dd>'+
-      '<dt>Skutečně zaplaceno</dt><dd>'+esc(formatKc(recap.amount_paid_cents))+'</dd>'+
-      (recap.remaining_due_cents?('<dt>Zbývá k úhradě</dt><dd>'+esc(formatKc(recap.remaining_due_cents))+'</dd>'):"")+
-      (recap.overpayment_cents?('<dt>Přeplatek k vypořádání</dt><dd>'+esc(formatKc(recap.overpayment_cents))+'</dd>'):""):"")+
+      (stornoCents?(
+        '<dt>Částka ke stornování</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
+        '<dt>Dobropis</dt><dd>− '+esc(formatKc(stornoCents))+'</dd>'+
+        '<dt>Zbývající cena služby</dt><dd>'+esc(formatKc(recap.new_service_price_cents))+'</dd>'+
+        '<dt>Skutečně zaplaceno</dt><dd>'+esc(formatKc(recap.amount_paid_cents))+'</dd>'+
+        (recap.remaining_due_cents?('<dt>Zbývá k úhradě</dt><dd>'+esc(formatKc(recap.remaining_due_cents))+'</dd>'):"")+
+        (recap.overpayment_cents?('<dt>Přeplatek k vypořádání</dt><dd>'+esc(formatKc(recap.overpayment_cents))+'</dd>'):"")
+      ):"")+
       '</dl><p class="muted">Vystavení dobropisu neznamená automatické vrácení peněz.</p></div>'+
       (ord.is_ad_turned_off?'<p class="muted">✓ Reklama byla definitivně vypnuta.</p>':'')+
       "</section>"):"")+
@@ -537,11 +539,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var ex=state.extendNewOrderModal;
     if(ex&&ex.detail){
       var sug=ex.detail.extend_suggested_period||{};
+      var eo=ex.detail.order||{};
       h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Prodloužit reklamu – nová objednávka</h3>'+
-        '<p class="muted">Vznikne nová objednávka, faktura a prodlouží se aktivní kampaň.</p>'+
-        '<p><label>Začátek období<input id="en-start" type="datetime-local" value="'+esc(ex.form.start_local||"")+'"></label></p>'+
-        '<p><label>Konec období<input id="en-end" type="datetime-local" value="'+esc(ex.form.end_local||"")+'"></label></p>'+
-        '<p><label>Cena nového období (Kč)<input id="en-price" type="text" inputmode="decimal" value="'+esc(ex.form.price_kc||"")+'"></label></p>'+
+        '<p class="muted">Navazující objednávka a faktura pro stejnou kategorii, pozici a reklamní podklad. Kampaň se prodlouží bez přerušení.</p>'+
+        '<div class="acct-cancel-grid">'+
+        '<div><span class="muted">Kategorie · pozice</span><br><strong>'+esc(eo.category_title_cs||eo.category_slug||"—")+" · "+esc(eo.position_label||"—")+'</strong></div>'+
+        '<div><span class="muted">Reklamní podklad</span><br>'+esc(eo.creative_id||"—")+' · '+esc(eo.creative_mode_label_cs||eo.creative_mode||"")+'</div>'+
+        '<div class="full"><label>Cílová URL (volitelná úprava)<input id="en-url" type="url" value="'+esc(ex.form.target_url||eo.target_url||"")+'"></label></div>'+
+        '<div><label>Začátek nového období<input id="en-start" type="datetime-local" value="'+esc(ex.form.start_local||"")+'"></label></div>'+
+        '<div><label>Konec nového období<input id="en-end" type="datetime-local" value="'+esc(ex.form.end_local||"")+'"></label></div>'+
+        '<div><label>Cena nového období (Kč)<input id="en-price" type="text" inputmode="decimal" value="'+esc(ex.form.price_kc||"")+'"></label></div>'+
+        '<div class="full"><label>Kontaktní e-mail<input id="en-email" type="email" value="'+esc(ex.form.contact_email||eo.contact_email||"")+'"></label></div>'+
+        '<div><label>Telefon<input id="en-phone" type="text" value="'+esc(ex.form.contact_phone||eo.contact_phone||"")+'"></label></div>'+
+        '</div>'+
         (ex.formError?'<p class="err">'+esc(ex.formError)+'</p>':"")+
         '<div class="row"><button type="button" class="btn success" id="en-save" '+(ex.submitBusy?"disabled":"")+'>Uložit novou objednávku</button> '+
         '<button type="button" class="btn secondary" id="en-cancel">Zrušit</button></div></div></div>';
@@ -652,6 +662,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
           period_start_at:start?new Date(start).toISOString():start,
           period_end_at:end?new Date(end).toISOString():end,
           price_kc:el("en-price")&&el("en-price").value,
+          target_url:el("en-url")&&el("en-url").value,
+          client_contact_email:el("en-email")&&el("en-email").value,
+          contact_phone:el("en-phone")&&el("en-phone").value,
           idempotency_key:"ui-ext-new:"+m.sourceOrderId+":"+start+":"+end
         })
       });
@@ -791,7 +804,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
           form:{
             start_local:isoToDatetimeLocal(sug.start_at),
             end_local:isoToDatetimeLocal(sug.end_at),
-            price_kc:priceCents!=null?String(Number(priceCents)/100).replace(".",","):""
+            price_kc:priceCents!=null?String(Number(priceCents)/100).replace(".",","):"",
+            target_url:detail.body.order&&detail.body.order.target_url||"",
+            contact_email:detail.body.order&&detail.body.order.contact_email||"",
+            contact_phone:detail.body.order&&detail.body.order.contact_phone||""
           },
           submitBusy:false,
           formError:null

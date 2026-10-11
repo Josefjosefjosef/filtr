@@ -14,6 +14,7 @@ import {
   PREMIUM_PRODUCT_TYPE,
 } from "./premium-selected-services";
 import { parsePremiumOrderPayload } from "./premium-order-workflow";
+import { validateTargetUrl } from "./url-safety";
 import type { Env } from "./types";
 
 export type ExtendNewOrderInput = {
@@ -23,6 +24,9 @@ export type ExtendNewOrderInput = {
   periodEndAt: string;
   priceKc: string;
   idempotencyKey: string;
+  targetUrl?: string;
+  clientContactEmail?: string;
+  contactPhone?: string;
 };
 
 export type ExtendNewOrderResult =
@@ -257,6 +261,35 @@ export async function executePremiumExtendNewOrder(env: Env, input: ExtendNewOrd
     )
     .bind(invoiceId, clientId, newOrderId, campaignId, invoiceNumber, "issued", nowIso, dueAt, priceCents, 0, priceCents, "CZK", nowIso, nowIso)
     .run();
+
+  let targetUrl = typeof src.target_url === "string" ? src.target_url : null;
+  if (typeof input.targetUrl === "string" && input.targetUrl.trim()) {
+    const urlCheck = validateTargetUrl(input.targetUrl);
+    if (!urlCheck.ok) {
+      return { ok: false, status: 400, error: "invalid_url", message_cs: "Neplatná cílová URL." };
+    }
+    targetUrl = urlCheck.normalized;
+    await db
+      .prepare("UPDATE premium_selected_orders SET target_url = ?, updated_at = ? WHERE order_id = ?")
+      .bind(targetUrl, nowIso, newOrderId)
+      .run();
+    await db
+      .prepare("UPDATE campaigns SET target_url = ?, updated_at = ? WHERE campaign_id = ?")
+      .bind(targetUrl, nowIso, campaignId)
+      .run();
+  }
+  if (typeof input.clientContactEmail === "string" && input.clientContactEmail.includes("@")) {
+    await db
+      .prepare("UPDATE premium_selected_orders SET client_contact_email = ?, updated_at = ? WHERE order_id = ?")
+      .bind(input.clientContactEmail.trim().slice(0, 200), nowIso, newOrderId)
+      .run();
+  }
+  if (typeof input.contactPhone === "string" && input.contactPhone.trim().length >= 6) {
+    await db
+      .prepare("UPDATE orders SET contact_person = COALESCE(contact_person, ?), updated_at = ? WHERE order_id = ?")
+      .bind(input.contactPhone.trim().slice(0, 40), nowIso, newOrderId)
+      .run();
+  }
 
   await db.prepare("UPDATE campaigns SET end_at = ?, updated_at = ? WHERE campaign_id = ?").bind(input.periodEndAt, nowIso, campaignId).run();
   await db
