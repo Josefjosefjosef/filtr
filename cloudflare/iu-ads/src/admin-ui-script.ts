@@ -502,6 +502,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         '<div class="full"><label>Ulice<input id="oe-street" type="text" value="'+esc(o.billing_street||"")+'"></label></div>'+
         '<div><label>Město<input id="oe-city" type="text" value="'+esc(o.billing_city||"")+'"></label></div>'+
         '<div><label>PSČ<input id="oe-zip" type="text" value="'+esc(o.billing_zip||"")+'"></label></div>'+
+        '<div class="full"><label>Název reklamy<input id="oe-ad-title" type="text" value="'+esc(o.ad_title||"")+'"></label></div>'+
         '<div class="full"><label>Cílová URL<input id="oe-url" type="url" value="'+esc(o.target_url||"")+'"></label></div>'+
         '<div><label>Režim kreativy<input id="oe-mode" type="text" value="'+esc(o.creative_mode||"logo")+'"></label></div>'+
         '<div><label>Cena reklamní služby (Kč)<input id="oe-price" type="text" inputmode="decimal" value="'+esc(o.price_cents!=null?String(Number(o.price_cents)/100).replace(".",","):"")+'"></label></div>'+
@@ -573,6 +574,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         billing_street:el("oe-street")&&el("oe-street").value,
         billing_city:el("oe-city")&&el("oe-city").value,
         billing_zip:el("oe-zip")&&el("oe-zip").value,
+        ad_title:el("oe-ad-title")&&el("oe-ad-title").value,
         target_url:el("oe-url")&&el("oe-url").value,
         creative_mode:el("oe-mode")&&el("oe-mode").value,
         price_kc:el("oe-price")&&el("oe-price").value,
