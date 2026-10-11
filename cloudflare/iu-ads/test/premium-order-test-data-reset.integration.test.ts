@@ -90,4 +90,24 @@ describe("premium test data reset", () => {
       .get() as { c: number };
     expect(Number(activePl.c)).toBe(0);
   });
+
+  it("reset removes orders even when admin marked payment_status paid (bulk operator reset)", async () => {
+    const sqlite = createIuAdsSchemaDb();
+    seedMinimalCatalog(sqlite);
+    seedOrder(sqlite, "ord_paid", "IU-26-P", "camp_p", null);
+    sqlite
+      .prepare("UPDATE premium_selected_orders SET payment_status = 'paid', paid_at = ? WHERE order_id = 'ord_paid'")
+      .run(NOW);
+
+    const env = {
+      DB: d1FromSqlite(sqlite),
+      DOCUMENTS: { delete: async () => undefined },
+      CREATIVES: { delete: async () => undefined },
+    } as Env;
+
+    const stats = await resetAllPremiumTestOperationalData(env, "adm_test");
+    expect(stats.orders_removed).toBe(1);
+    const poCount = sqlite.prepare("SELECT COUNT(*) AS c FROM premium_selected_orders").get() as { c: number };
+    expect(Number(poCount.c)).toBe(0);
+  });
 });
