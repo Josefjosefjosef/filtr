@@ -9,6 +9,7 @@ import {
   PREMIUM_INVOICE_FOOTER_Y,
   PREMIUM_INVOICE_MARGIN,
   PREMIUM_INVOICE_PAGE,
+  PREMIUM_PDF_HEADER_BODY_GAP_PT,
   wrapTextLines,
   type LayoutBlockMetric,
 } from "./premium-invoice-pdf-layout";
@@ -111,7 +112,7 @@ function measurePartyBlock(
     const wrapped = wrapTextLines(fonts.regular, line, bodySize, innerW);
     bodyH += measureWrappedHeight(wrapped.length || 1, bodySize, 1.32);
   }
-  return headH + bodyH + 10;
+  return headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 10;
 }
 
 type PartyLineStyle = { text: string; bold?: boolean; linkBlue?: boolean };
@@ -162,7 +163,7 @@ function drawPartyBox(
     color: brand,
   });
 
-  let y = yTop - headH - 8;
+  let y = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   for (const line of lines) {
     const font = line.bold ? fonts.bold : fonts.regular;
     const color = line.linkBlue ? brand : TEXT_MAIN;
@@ -510,10 +511,11 @@ export async function buildPremiumInvoicePdfWithLayout(
     { text: "Způsob úhrady: převodem", bold: false },
     { text: "Měna: " + input.currency, bold: false },
   ];
-  let pyPay = payTop - 34;
+  const payTextX = PREMIUM_INVOICE_MARGIN + 10;
+  let pyPay = payTop - 22 - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   for (const pl of payLines) {
     cursor.page.drawText(pl.text, {
-      x: PREMIUM_INVOICE_MARGIN,
+      x: payTextX,
       y: pyPay,
       size: 10,
       font: pl.bold ? fonts.bold : fonts.regular,

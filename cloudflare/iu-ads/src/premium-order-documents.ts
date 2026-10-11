@@ -1016,11 +1016,21 @@ export async function listPremiumOrderDocumentsForAdmin(
     byKind.set(row.doc_kind, row);
   }
 
+  const stornoMeta = await env.DB.prepare(
+    "SELECT storno_kind FROM premium_order_storno_records WHERE order_id = ? LIMIT 1"
+  )
+    .bind(orderId)
+    .first<{ storno_kind: string }>();
+  const cancellationTitle =
+    stornoMeta?.storno_kind === "rejection"
+      ? "Potvrzení o zamítnutí objednávky"
+      : "Potvrzení o stornování objednávky";
+
   const cards: AdminOrderDocumentCard[] = [];
   const kinds: { kind: PremiumOrderDocKind; title: string; subtitle: string }[] = [
     { kind: "order_confirmation", title: "Potvrzení objednávky", subtitle: "PDF · Automaticky vytvořeno při schválení" },
     { kind: "invoice_pdf", title: "Faktura", subtitle: "PDF · Splatnost 3 kalendářní dny" },
-    { kind: "order_cancellation", title: "Potvrzení o stornování objednávky", subtitle: "PDF · Storno / zamítnutí" },
+    { kind: "order_cancellation", title: cancellationTitle, subtitle: "PDF · Storno / zamítnutí" },
     { kind: "credit_note_pdf", title: "Dobropis k faktuře", subtitle: "PDF · Opravný účetní doklad" },
   ];
 

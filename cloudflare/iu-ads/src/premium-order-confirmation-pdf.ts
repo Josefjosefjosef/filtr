@@ -11,6 +11,7 @@ import {
   PREMIUM_INVOICE_CONTENT_W,
   PREMIUM_INVOICE_MARGIN,
   PREMIUM_INVOICE_PAGE,
+  PREMIUM_PDF_HEADER_BODY_GAP_PT,
   PremiumInvoicePdfCursor,
   drawWrappedText,
   drawWrappedTextBreakAll,
@@ -106,16 +107,17 @@ function measureSectionBody(
   let h = 8;
   for (const row of rows) {
     if (row.valueStackFullWidth) {
-      h += bodySize * 1.32 + 2;
       const valueFont = row.valueBold ? fonts.bold : fonts.regular;
       const lines = wrapTextLinesBreakAll(valueFont, row.value, bodySize, innerW);
-      h += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.32) + 4;
+      h += measureWrappedHeight(1, bodySize, 1.32);
+      h += 2;
+      h += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.32) + 3;
       continue;
     }
     const valueFont = row.valueBold ? fonts.bold : fonts.regular;
     const valueW = Math.max(80, innerW - labelW - 8);
     const lines = wrapTextLines(valueFont, row.value, bodySize, valueW);
-    h += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.32) + 3;
+    h += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.32) + 2;
   }
   return h;
 }
@@ -138,7 +140,7 @@ function drawSectionBox(
   const labelWDefault = opts?.labelW ?? 132;
   const headH = titleSize * 1.4 + 3;
   const bodyH = measureSectionBody(rows, fonts, innerW, bodySize, labelWDefault);
-  const blockH = headH + bodyH + 4;
+  const blockH = headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 2;
   if (!opts?.skipEnsureSpace) cursor.ensureSpace(blockH + PAGE1_SECTION_GAP);
   const yTop = cursor.y;
   const yBottom = yTop - blockH;
@@ -169,7 +171,7 @@ function drawSectionBox(
     color: brand,
   });
 
-  let y = yTop - headH - 6;
+  let y = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   const labelW = labelWDefault;
   for (const row of rows) {
     cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
@@ -182,7 +184,7 @@ function drawSectionBox(
       const valueW = innerW - labelW - 8;
       y = drawWrappedText(cursor.page, valueFont, row.value, x + pad + labelW, y, valueW, bodySize, valueColor, 1.32);
     }
-    y -= 4;
+    y -= 3;
   }
   const drawnBottom = Math.min(yBottom, y);
   cursor.y = drawnBottom - PAGE1_SECTION_GAP;
@@ -197,9 +199,9 @@ function measureSectionBlockHeight(
   labelW: number
 ): number {
   const titleSize = 10.5;
-  const headH = titleSize * 1.4 + 5;
+  const headH = titleSize * 1.4 + 3;
   const bodyH = measureSectionBody(rows, fonts, innerW, bodySize, labelW);
-  return headH + bodyH + 4;
+  return headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 2;
 }
 
 function drawMetaLine(
@@ -234,7 +236,7 @@ function measurePartyBlock(fonts: PremiumPdfFonts, innerW: number, lines: PartyL
     const wrapped = wrapTextLines(fonts.regular, line.text, bodySize, innerW);
     bodyH += measureWrappedHeight(wrapped.length || 1, bodySize, 1.32);
   }
-  return headH + bodyH + 8;
+  return headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 8;
 }
 
 function drawPartyBox(
@@ -289,7 +291,7 @@ function drawPartyBox(
     color: brand,
   });
 
-  let y = yTop - headH - 8;
+  let y = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   for (const line of lines) {
     const font = line.bold ? fonts.bold : fonts.regular;
     const color = line.linkBlue ? brand : TEXT_MAIN;
@@ -419,7 +421,7 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
     const lines = wrapTextLines(fonts.regular, row.value, bodySize, innerW - labelW);
     bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 3;
   }
-  const blockH = headH + bodyH + 4;
+  const blockH = headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 4;
   cursor.ensureSpace(blockH + PAGE1_SECTION_GAP);
   const x = PREMIUM_INVOICE_MARGIN;
   const yTop = cursor.y;
@@ -436,7 +438,7 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
   });
 
   const periodX = x + w - pad - periodBoxW;
-  const periodTop = yTop - headH - 6;
+  const periodTop = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   cursor.page.drawRectangle({
     x: periodX,
     y: periodTop - periodH,
@@ -478,13 +480,13 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
     1.22
   );
 
-  let y = yTop - headH - 8;
+  let y = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   for (const row of besidePeriodRows) {
     cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
     y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, valueW, bodySize, TEXT_MAIN, 1.28);
     y -= 4;
   }
-  const urlStartY = yTop - headH - periodH - 12;
+  const urlStartY = yTop - headH - periodH - PREMIUM_PDF_HEADER_BODY_GAP_PT - 6;
   y = Math.min(y, urlStartY);
   for (const row of fullWidthRows) {
     cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
@@ -708,8 +710,10 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   ];
   const termsInner = halfW - 16;
   const twinHeadH = 10.5 * 1.4 + 3;
-  const termsH = twinHeadH + 4 + measureSectionBody(termsRows, fonts, termsInner, 8.5, 72) + 4;
-  const approvalH = twinHeadH + 4 + measureSectionBody(approvalRows, fonts, termsInner, 8.5, 72) + 4;
+  const termsH =
+    twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(termsRows, fonts, termsInner, 8.5, 72) + 2;
+  const approvalH =
+    twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(approvalRows, fonts, termsInner, 8.5, 72) + 2;
   cursor.ensureSpace(Math.max(termsH, approvalH) + PAGE1_SECTION_GAP);
   cursor.y = twinRowY;
   drawSectionBox(cursor, fonts, brand, "Obchodní podmínky a souhlasy", termsRows, {
