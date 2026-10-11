@@ -106,3 +106,62 @@ export async function handleAdminOrderConfirmationsRegistry(
     export_zip_available: true,
   });
 }
+
+export async function handleAdminOrderConfirmationsRegistrySuggest(
+  request: Request,
+  env: Env,
+  url: URL
+): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "documents.read");
+  if (!guard.ok) return guard.response;
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+
+  const q = (url.searchParams.get("q") || "").trim();
+  const limit = Math.min(12, Math.max(1, Number(url.searchParams.get("limit") || "12") || 12));
+  if (!q) return json({ suggestions: [] });
+
+  const like = "%" + q + "%";
+  const res = await env.DB.prepare(
+    `SELECT d.doc_type, d.version, c.company_name, o.customer_order_code, o.order_number
+     FROM documents d
+     JOIN orders o ON o.order_id = d.order_id
+     JOIN clients c ON c.client_id = o.client_id
+     LEFT JOIN client_contacts cc ON cc.client_id = c.client_id
+     WHERE d.status = 'active'
+       AND d.doc_type IN ('premium_order_confirmation','premium_order_cancellation')
+       AND (o.customer_order_code LIKE ? OR o.order_number LIKE ? OR c.company_name LIKE ?
+            OR IFNULL(c.ico,'') LIKE ? OR IFNULL(o.client_contact_email,'') LIKE ? OR IFNULL(cc.email,'') LIKE ?)
+     ORDER BY d.created_at DESC
+     LIMIT ?`
+  )
+    .bind(like, like, like, like, like, like, limit)
+    .all<{
+      doc_type: string;
+      version: number;
+      company_name: string;
+      customer_order_code: string | null;
+      order_number: string | null;
+    }>();
+
+  const suggestions = (res.results || []).map((row) => {
+    const ref =
+      (row.customer_order_code && String(row.customer_order_code).trim()) ||
+      (row.order_number && String(row.order_number).trim()) ||
+      "";
+    const isCancel = String(row.doc_type) === "premium_order_cancellation";
+    const title = isCancel ? "Storno potvrzení" : "Potvrzení objednávky";
+    const ver = Number(row.version) || 1;
+    return {
+      kind: isCancel ? "order_cancellation" : "order_confirmation",
+      value: ref,
+      label:
+        title +
+        (ver > 1 ? " v" + String(ver) : "") +
+        " · " +
+        String(row.company_name || "") +
+        (ref ? " · " + ref : ""),
+    };
+  });
+
+  return json({ q, suggestions });
+}

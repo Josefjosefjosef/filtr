@@ -47,10 +47,10 @@ export async function handleAdminInvoicesRegistry(request: Request, env: Env, ur
 
   if (q) {
     invConditions.push(
-      "(inv.invoice_number LIKE ? OR c.company_name LIKE ? OR c.ico LIKE ? OR o.customer_order_code LIKE ? OR o.order_number LIKE ? OR IFNULL(o.client_contact_email,'') LIKE ? OR IFNULL(cc.email,'') LIKE ?)"
+      "(inv.invoice_number LIKE ? OR c.company_name LIKE ? OR c.ico LIKE ? OR o.customer_order_code LIKE ? OR o.order_number LIKE ? OR IFNULL(o.client_contact_email,'') LIKE ? OR IFNULL(cc.email,'') LIKE ? OR inv.invoice_id IN (SELECT cn.invoice_id FROM premium_credit_notes cn WHERE cn.credit_note_number LIKE ?))"
     );
     const like = "%" + q + "%";
-    invParams.push(like, like, like, like, like, like, like);
+    invParams.push(like, like, like, like, like, like, like, like);
   }
   if (fromIso) {
     invConditions.push("inv.issued_at >= ?");
@@ -200,6 +200,91 @@ export async function handleAdminInvoicesRegistry(request: Request, env: Env, ur
     documents,
     export_zip_available: true,
   });
+}
+
+export async function handleAdminInvoicesRegistrySuggest(
+  request: Request,
+  env: Env,
+  url: URL
+): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "invoices.read");
+  if (!guard.ok) return guard.response;
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+
+  const q = (url.searchParams.get("q") || "").trim();
+  const limit = Math.min(12, Math.max(1, Number(url.searchParams.get("limit") || "12") || 12));
+  if (!q) return json({ suggestions: [] });
+
+  const like = "%" + q + "%";
+  const suggestions: { label: string; value: string; kind: string }[] = [];
+
+  const invRows = await env.DB.prepare(
+    `SELECT inv.invoice_number, c.company_name, o.customer_order_code, o.order_number
+     FROM invoices inv
+     JOIN clients c ON c.client_id = inv.client_id
+     LEFT JOIN orders o ON o.order_id = inv.order_id
+     WHERE inv.invoice_number LIKE ? OR o.customer_order_code LIKE ? OR o.order_number LIKE ?
+       OR c.company_name LIKE ? OR IFNULL(c.ico,'') LIKE ?
+     ORDER BY inv.issued_at DESC
+     LIMIT ?`
+  )
+    .bind(like, like, like, like, like, limit)
+    .all<{ invoice_number: string; company_name: string; customer_order_code: string | null; order_number: string | null }>();
+
+  for (const row of invRows.results || []) {
+    const ref =
+      (row.customer_order_code && String(row.customer_order_code).trim()) ||
+      (row.order_number && String(row.order_number).trim()) ||
+      "";
+    suggestions.push({
+      kind: "invoice",
+      value: String(row.invoice_number || ""),
+      label:
+        "Faktura " +
+        String(row.invoice_number || "") +
+        " · " +
+        String(row.company_name || "") +
+        (ref ? " · obj. " + ref : ""),
+    });
+  }
+
+  if (suggestions.length < limit) {
+    const cnRows = await env.DB.prepare(
+      `SELECT cn.credit_note_number, c.company_name, o.customer_order_code, o.order_number
+       FROM premium_credit_notes cn
+       JOIN invoices inv ON inv.invoice_id = cn.invoice_id
+       JOIN clients c ON c.client_id = inv.client_id
+       LEFT JOIN orders o ON o.order_id = inv.order_id
+       WHERE cn.credit_note_number LIKE ? OR c.company_name LIKE ? OR o.customer_order_code LIKE ?
+       ORDER BY cn.created_at DESC
+       LIMIT ?`
+    )
+      .bind(like, like, like, limit - suggestions.length)
+      .all<{
+        credit_note_number: string;
+        company_name: string;
+        customer_order_code: string | null;
+        order_number: string | null;
+      }>();
+    for (const row of cnRows.results || []) {
+      const ref =
+        (row.customer_order_code && String(row.customer_order_code).trim()) ||
+        (row.order_number && String(row.order_number).trim()) ||
+        "";
+      suggestions.push({
+        kind: "credit_note",
+        value: String(row.credit_note_number || ""),
+        label:
+          "Dobropis " +
+          String(row.credit_note_number || "") +
+          " · " +
+          String(row.company_name || "") +
+          (ref ? " · obj. " + ref : ""),
+      });
+    }
+  }
+
+  return json({ q, suggestions: suggestions.slice(0, limit) });
 }
 
 export async function handleAdminBannerPcPlaceholder(request: Request, env: Env): Promise<Response> {

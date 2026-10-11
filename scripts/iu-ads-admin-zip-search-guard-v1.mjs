@@ -10,6 +10,8 @@ const uiSrc = fs.readFileSync(uiPath, "utf8");
 
 const routes = [
   "/v1/admin/search/suggest",
+  "/v1/admin/invoices/registry/suggest",
+  "/v1/admin/order-confirmations/registry/suggest",
   "/v1/admin/invoices/registry/export-zip",
   "/v1/admin/order-confirmations/registry/export-zip",
 ];
@@ -31,6 +33,11 @@ const uiNeedles = [
   "conf-search-go",
   "ad-corner-badge--active",
   "nav-primary",
+  "wireRegistrySuggest",
+  "inv-suggest-panel",
+  "conf-suggest-panel",
+  "acct-reason-err",
+  "NAV_PRIMARY_IDS",
 ];
 for (const needle of uiNeedles) {
   if (!uiSrc.includes(needle)) {

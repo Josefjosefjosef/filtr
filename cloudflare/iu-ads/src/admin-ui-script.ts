@@ -144,10 +144,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
     } else ha.innerHTML=navBtn;
     setupMobileNav();
   }
+  var NAV_PRIMARY_IDS={"dashboard":1,"search":1,"orders_all":1,"premium":1,"banner_pc":1,"order_confirmations":1,"invoices":1};
+  function navButtonClassName(itemId){
+    var parts=[];
+    if(NAV_PRIMARY_IDS[itemId]) parts.push("nav-primary");
+    if(itemId===state.view) parts.push("active");
+    return parts.join(" ");
+  }
   function renderNavActive(){
     var nav=el("nav");
     Array.prototype.forEach.call(nav.querySelectorAll("button"),function(b){
-      b.className=b.getAttribute("data-id")===state.view?"active":"";
+      var id=b.getAttribute("data-id");
+      if(!id) return;
+      b.className=navButtonClassName(id);
     });
   }
   async function loadHealth(){
@@ -163,14 +172,12 @@ export const ADMIN_UI_SCRIPT = String.raw`
     } else {
       state.nav = [{id:"dashboard",label_cs:"Dashboard"}];
     }
-    var navPrimary={"dashboard":1,"search":1,"orders_all":1,"premium":1,"banner_pc":1,"order_confirmations":1,"invoices":1};
     var nav = el("nav");
     nav.innerHTML = state.nav.map(function(item){
       var badge = item.badge_count && Number(item.badge_count) > 0
         ? ' <span class="nav-badge" aria-label="Počet objednávek čekajících na posouzení">'+esc(String(item.badge_count))+'</span>'
         : "";
-      var cls=(state.view===item.id?"active":"")+(navPrimary[item.id]?" nav-primary":"");
-      return '<button type="button" data-id="'+esc(item.id)+'" class="'+cls+'">'+esc(item.label_cs)+badge+'</button>';
+      return '<button type="button" data-id="'+esc(item.id)+'" class="'+navButtonClassName(item.id)+'">'+esc(item.label_cs)+badge+'</button>';
     }).join("")+'<button type="button" data-id="account">Účet / heslo</button>';
     nav.onclick=function(ev){
       var t=ev.target;
@@ -285,6 +292,50 @@ export const ADMIN_UI_SCRIPT = String.raw`
     return '<label for="'+id+'">'+esc(label)+'</label><select id="'+id+'">'+opts+'</select>';
   }
   function val(id){ var n=el(id); return n ? n.value : ""; }
+  function wireRegistrySuggest(inputId,panelId,suggestPath,onApply){
+    var input=el(inputId);
+    var panel=el(panelId);
+    if(!input||!panel) return;
+    var timer=null;
+    var lastItems=[];
+    async function fetchSuggest(q){
+      if(q.length<1){ panel.innerHTML=""; panel.hidden=true; lastItems=[]; return; }
+      var r=await api(suggestPath+"?q="+encodeURIComponent(q)+"&limit=12",{method:"GET",headers:{}});
+      if(!r.res.ok){ panel.innerHTML=""; panel.hidden=true; lastItems=[]; return; }
+      lastItems=(r.body&&r.body.suggestions)||[];
+      if(!lastItems.length){
+        panel.innerHTML='<p class="muted registry-suggest-empty">Žádné shody</p>';
+        panel.hidden=false;
+        return;
+      }
+      panel.innerHTML=lastItems.map(function(it,idx){
+        return '<button type="button" class="registry-suggest-item" data-suggest-idx="'+String(idx)+'">'+esc(it.label||"")+"</button>";
+      }).join("");
+      panel.hidden=false;
+      Array.prototype.forEach.call(panel.querySelectorAll(".registry-suggest-item"),function(btn){
+        btn.onclick=function(){
+          var i=Number(btn.getAttribute("data-suggest-idx"));
+          var pick=lastItems[i];
+          if(pick&&pick.value!=null&&String(pick.value)!=="") input.value=String(pick.value);
+          else if(pick&&pick.label) input.value=String(pick.label);
+          panel.innerHTML="";
+          panel.hidden=true;
+          if(onApply) onApply();
+        };
+      });
+    }
+    input.oninput=function(){
+      if(timer) clearTimeout(timer);
+      timer=setTimeout(function(){ fetchSuggest(input.value.trim()); },220);
+    };
+    input.onkeydown=function(ev){
+      if(ev.key==="Enter"){ ev.preventDefault(); panel.innerHTML=""; panel.hidden=true; if(onApply) onApply(); }
+      if(ev.key==="Escape"){ panel.innerHTML=""; panel.hidden=true; }
+    };
+    input.onblur=function(){
+      setTimeout(function(){ if(panel) panel.hidden=true; },180);
+    };
+  }
   function numOrNull(id){ var v=val(id).trim(); if(v==="") return null; var n=Number(v); return isFinite(n)?n:null; }
   function csvArr(id){ var v=val(id).trim(); if(!v) return []; return v.split(/[,;\s]+/).map(function(x){return x.trim();}).filter(Boolean); }
   function isMainAdminUser(){
@@ -338,8 +389,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
     return "";
   }
   function premiumCardCornerBadgeHtml(row){
-    if(row.is_ad_turned_off||row.workflow_status==="cancelled"||row.workflow_status==="rejected") return "";
-    if(row.workflow_status==="submitted"||row.workflow_status==="under_review"){
+    if(row.is_ad_turned_off){
+      return '<span class="ad-corner-badge ad-corner-badge--off">VYPNUTO ADMINISTRÁTOREM</span>';
+    }
+    if(row.workflow_status==="cancelled"||row.workflow_status==="rejected") return "";
+    if(row.workflow_status==="submitted"){
+      return '<span class="ad-corner-badge ad-corner-badge--pending">ČEKÁ NA SCHVÁLENÍ</span>';
+    }
+    if(row.workflow_status==="under_review"){
       return '<span class="ad-corner-badge ad-corner-badge--pending">ČEKÁ NA VYŘÍZENÍ</span>';
     }
     var pub=row.publication||{};
@@ -524,8 +581,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
       "</section>"+
       '<section><h4>3. Důvod storna</h4>'+
       '<p class="muted">Storno se vztahuje vždy na celou zbývající neopravenou fakturovanou částku ('+esc(formatKc(stornoCents))+').</p>'+
-      '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" data-acct-reason>'+esc(m.form.reason||"")+'</textarea></p>'+
-      '<p class="muted" id="acct-reason-hint" '+(reasonOk?"hidden":"")+'>Důvod musí mít alespoň 12 znaků.</p></section>'+
+      '<p><label for="acct-reason">Důvod storna objednávky a faktury *</label><textarea id="acct-reason" rows="3" maxlength="2000" minlength="12" data-acct-reason aria-describedby="acct-reason-hint acct-reason-err" '+(reasonOk?"":"aria-invalid=\"true\"")+'>'+esc(m.form.reason||"")+'</textarea></p>'+
+      '<p class="muted" id="acct-reason-hint">Minimálně 12 znaků (srozumitelný důvod storna).</p>'+
+      '<p class="err" id="acct-reason-err" '+(m.formError&&String(m.form.reason||"").trim().length<12?"":"hidden")+'>'+(m.formError&&String(m.form.reason||"").trim().length<12?esc(m.formError):"")+'</p></section>'+
       '<section><h4>4. Rekapitulace</h4><div class="acct-recap"><dl>'+
       '<dt>Původní faktura</dt><dd>'+esc(formatKc(invTotal))+'</dd>'+
       '<dt>Stornovaná částka (100 % zbývající)</dt><dd>'+esc(formatKc(stornoCents))+'</dd>'+
@@ -559,8 +617,22 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (payMode!=="partial"||(paidCents&&paidCents>0&&paidCents<invTotal))&&!m.submitBusy;
     var confirmBtn=el("premium-acct-cancel-confirm");
     if(confirmBtn) confirmBtn.disabled=!canSubmit;
-    var hint=el("acct-reason-hint");
-    if(hint) hint.hidden=!!reasonOk;
+    var errEl=el("acct-reason-err");
+    var reasonText=String(m.form.reason||"").trim();
+    if(errEl){
+      if(!reasonOk&&reasonText.length>0){
+        errEl.hidden=false;
+        errEl.textContent="Důvod storna musí mít alespoň 12 znaků (aktuálně "+String(reasonText.length)+").";
+      } else if(!reasonOk&&m.formError&&reasonText.length===0){
+        errEl.hidden=false;
+        errEl.textContent=m.formError;
+      } else {
+        errEl.hidden=true;
+        errEl.textContent="";
+      }
+    }
+    var ta=el("acct-reason");
+    if(ta) ta.setAttribute("aria-invalid",reasonOk?"false":"true");
   }
   function extendNewOrderModalHtml(){
     var m=state.extendNewOrderModal;
@@ -691,7 +763,15 @@ export const ADMIN_UI_SCRIPT = String.raw`
       var liveConfirm=el("premium-acct-cancel-confirm");
       if(liveConfirm&&liveConfirm.disabled){
         var modalEarly=state.accountingCancelModal;
-        if(modalEarly) modalEarly.formError="Vyplňte důvod storna (min. 12 znaků) a zkontrolujte rekapitulaci.";
+        if(modalEarly){
+          var rtEarly=String(modalEarly.form.reason||"").trim();
+          if(rtEarly.length<12){
+            modalEarly.formError=null;
+            syncAccountingCancelConfirmButton();
+          } else {
+            modalEarly.formError="Storno nelze dokončit — zkontrolujte stav faktury a rekapitulaci.";
+          }
+        }
         render();
         return;
       }
@@ -2429,7 +2509,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
         var zipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
         var confFrom=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
         panel('<div class="card"><h2>Potvrzení objednávek</h2><p class="muted">Centrální archiv PDF potvrzení a storno dokumentů (reklamní tlačítka).</p>'+
-          '<div class="grid2">'+inp("conf-q","Hledat (objednávka, firma, IČO, e-mail)","search","")+
+          '<div class="grid2"><div class="registry-search-wrap">'+inp("conf-q","Hledat (objednávka, firma, IČO, e-mail)","search","")+
+          '<div id="conf-suggest-panel" class="registry-suggest-panel" hidden></div></div>'+
           sel("conf-doc-kind","Typ dokumentu",[["all","Vše"],["order_confirmation","Potvrzení objednávky"],["order_cancellation","Potvrzení storna"]],"all")+
           inp("conf-from","Vytvořeno od","date",confFrom)+inp("conf-to","Vytvořeno do","date",zipTo)+
           '</div><div class="row"><button type="button" class="btn" id="conf-search-go">Vyhledat</button></div>'+
@@ -2441,6 +2522,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           '<div class="row"><button type="button" class="btn" id="conf-zip-go">Stáhnout ZIP</button></div>'+
           '<p id="conf-zip-msg" class="muted" hidden></p></div>');
         el("conf-search-go").onclick=loadConfRegistry;
+        wireRegistrySuggest("conf-q","conf-suggest-panel","/v1/admin/order-confirmations/registry/suggest",loadConfRegistry);
         await loadConfRegistry();
         var confZipGo=el("conf-zip-go");
         if(confZipGo) confZipGo.onclick=async function(){
@@ -2500,7 +2582,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
         var invZipFrom=new Date(Date.now()-30*864e5).toISOString().slice(0,10);
         var invFrom=new Date(Date.now()-365*864e5).toISOString().slice(0,10);
         panel('<div class="card"><h2>Faktury</h2><p class="muted">Centrální evidence faktur a dobropisů (reklamní objednávky).</p>'+
-          '<div class="grid2">'+inp("inv-q","Hledat (číslo dokladu, objednávka, firma, IČO, e-mail)","search","")+
+          '<div class="grid2"><div class="registry-search-wrap">'+inp("inv-q","Hledat (číslo dokladu, objednávka, firma, IČO, e-mail)","search","")+
+          '<div id="inv-suggest-panel" class="registry-suggest-panel" hidden></div></div>'+
           sel("inv-doc-kind","Typ dokladu",[["all","Vše"],["invoices","Faktury"],["credit_notes","Dobropisy"]],"all")+
           sel("inv-payment","Platba",[["all","Vše"],["paid","Uhrazeno"],["unpaid","Neuhrazeno"]],"all")+
           inp("inv-from","Vystaveno od","date",invFrom)+inp("inv-to","Vystaveno do","date",invZipTo)+
@@ -2512,6 +2595,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           '<label><input type="checkbox" id="inv-zip-kind-credit" checked> Dobropisy</label></p>'+
           '<div class="row"><button type="button" class="btn" id="inv-zip-go">Stáhnout ZIP</button></div></div>');
         el("inv-search-go").onclick=loadInvRegistry;
+        wireRegistrySuggest("inv-q","inv-suggest-panel","/v1/admin/invoices/registry/suggest",loadInvRegistry);
         await loadInvRegistry();
         var invZipGo=el("inv-zip-go");
         if(invZipGo) invZipGo.onclick=async function(){

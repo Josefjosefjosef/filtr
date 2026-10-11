@@ -107,6 +107,11 @@ describe("admin + client SPA shells", () => {
     expect(ADMIN_SHELL_HTML).toContain("nav.open");
   });
 
+  it("keeps primary nav blue when active and avoids iOS input zoom", () => {
+    expect(ADMIN_SHELL_HTML).toContain("nav button.nav-primary.active{color:#1565c0");
+    expect(ADMIN_SHELL_HTML).toContain("input,select,textarea{font-size:16px}");
+  });
+
   it("GET /premium/order returns summary slot and B2B order form", async () => {
     const placement = "selected_services.aff-zdravi-doplnky.premium.01";
     const res = await worker.fetch(
