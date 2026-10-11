@@ -220,6 +220,16 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     workflowStatus === "rejected" &&
     !!placementActiveCampaignId &&
     (!publishedCampaignId || placementMatchesOrderCampaign);
+  const paymentStatusStr = String(row.payment_status || "unpaid");
+  const latestInvoiceId =
+    row.latest_invoice_id != null && String(row.latest_invoice_id).trim()
+      ? String(row.latest_invoice_id)
+      : null;
+  const invoicePaid =
+    !!latestInvoiceId &&
+    (paymentStatusStr === "paid" ||
+      String(row.latest_invoice_status || "") === "paid" ||
+      (row.latest_invoice_paid_at != null && String(row.latest_invoice_paid_at).trim()));
   return {
     order_id: row.order_id,
     client_id: row.client_id,
@@ -260,13 +270,20 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
       public_output_verified: expectedInPublicOutput,
       consistency_mismatch: consistencyMismatch,
     },
-    payment_status: String(row.payment_status || "unpaid"),
+    payment_status: paymentStatusStr,
     payment_status_label_cs:
-      String(row.payment_status || "unpaid") === "paid"
+      paymentStatusStr === "paid"
         ? "Uhrazeno"
-        : String(row.payment_status || "unpaid") === "partial"
+        : paymentStatusStr === "partial"
           ? "Uhrazeno částečně"
           : "Neuhrazeno",
+    invoice_issued: !!latestInvoiceId,
+    invoice_paid: invoicePaid,
+    invoice_payment_label_cs: !latestInvoiceId
+      ? null
+      : invoicePaid
+        ? "Faktura uhrazena"
+        : "Faktura neuhrazena",
   };
 }
 

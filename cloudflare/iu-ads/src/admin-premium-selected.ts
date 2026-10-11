@@ -97,13 +97,21 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
             po.payment_status,
             ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog,
             ppl.active_campaign_id AS placement_active_campaign_id,
-            camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at
+            camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at,
+            li.invoice_id AS latest_invoice_id,
+            li.status AS latest_invoice_status,
+            li.paid_at AS latest_invoice_paid_at
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id
      LEFT JOIN premium_order_price_snapshots ps ON ps.order_id = po.order_id
      LEFT JOIN premium_selected_placements ppl ON ppl.placement_id = po.placement_id
      LEFT JOIN campaigns camp ON camp.campaign_id = po.published_campaign_id
+     LEFT JOIN (
+       SELECT order_id, invoice_id, status, paid_at,
+              ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY created_at DESC) AS rn
+       FROM invoices
+     ) li ON li.order_id = po.order_id AND li.rn = 1
      ${where}
      ORDER BY CASE WHEN po.workflow_status IN ('submitted', 'under_review') THEN 0 ELSE 1 END,
               po.created_at DESC

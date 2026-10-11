@@ -361,7 +361,15 @@ async function loadOrderDocumentContext(
   const position = Number(row.position) || 0;
   const publishedAt = String(row.published_at || new Date().toISOString());
   const approvedAt = creativeApprovedAt || publishedAt;
-  const evidence = typeof row.evidence_code === "string" ? row.evidence_code : campaignId;
+  const customerRef =
+    typeof order.customer_order_code === "string" && order.customer_order_code.trim()
+      ? order.customer_order_code.trim()
+      : typeof order.order_number === "string" && order.order_number.trim()
+        ? order.order_number.trim()
+        : null;
+  const evidence =
+    customerRef ||
+    (typeof row.evidence_code === "string" && row.evidence_code.trim() ? row.evidence_code : campaignId);
   const adSnapshot =
     typeof payloadRaw.ad_web_placement_url === "string" ? payloadRaw.ad_web_placement_url.trim() : null;
   const adWebPlacementUrl = resolvePremiumAdWebPlacementUrl({
@@ -1089,28 +1097,46 @@ export async function handleAdminPremiumOrderDocumentAccess(
   if (!guard.ok) return guard.response;
   if (!env.DB || !env.ADS_R2_SIGNING_SECRET) return json({ error: "auth_not_configured" }, 503);
 
+  const url = new URL(request.url);
+  const disposition = url.searchParams.get("disposition") === "attachment" ? "attachment" : "inline";
+  const versionParam = url.searchParams.get("version");
   const docType = docTypeForPremiumOrderDocKind(kind);
   const active = await fetchActiveOrderDocument(env.DB, orderId, docType);
   if (!active) return json({ error: "document_not_ready" }, 404);
   const row = await env.DB.prepare(
-    "SELECT document_id, r2_key, title, content_hash FROM documents WHERE document_id = ? AND status = 'active' LIMIT 1"
+    "SELECT document_id, version, r2_key, title, content_hash FROM documents WHERE document_id = ? AND status = 'active' LIMIT 1"
   )
     .bind(active.document_id)
-    .first<{ document_id: string; r2_key: string; title: string; content_hash: string }>();
+    .first<{ document_id: string; version: number; r2_key: string; title: string; content_hash: string }>();
   if (!row) return json({ error: "document_not_ready" }, 404);
 
-  const url = new URL(request.url);
-  const disposition = url.searchParams.get("disposition") === "attachment" ? "attachment" : "inline";
+  let r2Key = row.r2_key;
+  let title = row.title;
+  if (versionParam && kind === "order_confirmation") {
+    const version = Math.round(Number(versionParam));
+    if (!Number.isFinite(version) || version < 1) return json({ error: "invalid_version" }, 400);
+    if (Number(row.version) !== version) {
+      const archived = await env.DB.prepare(
+        "SELECT r2_key FROM document_content_revisions WHERE document_id = ? AND version = ? LIMIT 1"
+      )
+        .bind(row.document_id, version)
+        .first<{ r2_key: string }>();
+      if (!archived?.r2_key) return json({ error: "revision_not_found" }, 404);
+      r2Key = archived.r2_key;
+      title = row.title + " – verze " + String(version);
+    }
+  }
   const ttlRow = await env.DB.prepare("SELECT value FROM system_settings WHERE key = 'DOCUMENT_SIGNED_URL_MAX_TTL_SECONDS'")
     .first<{ value: string }>();
   const ttl = Number(ttlRow?.value) || 3600;
-  const access = await buildSignedDocumentAccess(env.ADS_R2_SIGNING_SECRET, row.r2_key, ttl);
+  const access = await buildSignedDocumentAccess(env.ADS_R2_SIGNING_SECRET, r2Key, ttl);
   return json({
     document_id: row.document_id,
     path: access.path,
     expires_at: access.expiresAt,
     disposition,
-    title: row.title,
+    title,
+    version: versionParam ? Math.round(Number(versionParam)) : Number(row.version),
   });
 }
 

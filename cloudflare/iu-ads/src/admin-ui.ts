@@ -74,7 +74,11 @@ export function buildAdminShellHtml(nonce: string): string {
     .order-row--published td:first-child{border-left:4px solid var(--order-published)}
     .order-row--cancelled td:first-child{border-left:4px solid var(--order-rejected)}
     .order-card:focus-visible,.order-row-click:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-    .order-card-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+    .order-card-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-start;justify-content:space-between;margin-bottom:.35rem}
+    .order-card-badges{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex-shrink:0}
+    .invoice-pay-badge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.78rem;font-weight:700;line-height:1.25;text-align:right;max-width:100%}
+    .invoice-pay-badge--unpaid{background:#fde8e8;color:#b42318;border:1px solid #fecdca}
+    .invoice-pay-badge--paid{background:#e6f4ea;color:#137333;border:1px solid #b7dfc5}
     .order-status{font-size:.85rem;font-weight:600;color:var(--accent)}
     .order-status--pending{color:var(--order-pending)}
     .order-status--rejected{color:var(--order-rejected)}
