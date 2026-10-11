@@ -42,7 +42,7 @@ export type PremiumSystemPurgeOptions = {
   explicitTestPurgeConfirmed?: boolean;
 };
 
-async function premiumOrderHasPaidAccountingEvidence(db: D1Database, orderId: string): Promise<boolean> {
+export async function premiumOrderHasPaidAccountingEvidence(db: D1Database, orderId: string): Promise<boolean> {
   const pay = await db
     .prepare(
       `SELECT COALESCE(payment_status, 'unpaid') AS payment_status, paid_at
@@ -179,24 +179,16 @@ async function deleteDocumentRowsAndR2(
   return n;
 }
 
-/** Remove campaign graph when no other premium order still references the campaign (purge only). */
-export async function deleteExclusiveCampaignForPurge(
+/** Hard-delete campaign graph (R2 creatives + D1 dependents). Used for exclusive purge and operator reset. */
+export async function hardDeleteCampaignGraph(
   env: Env,
   campId: string,
-  orderId: string
+  options?: { orderIdForCreativeSharing?: string | null; skipSharedCreativeCheck?: boolean }
 ): Promise<void> {
   if (!env.DB) throw new Error("auth_not_configured");
   const db = env.DB;
-  const nowIso = new Date().toISOString();
-
-  const otherOrder = await db
-    .prepare("SELECT order_id FROM premium_selected_orders WHERE published_campaign_id = ? AND order_id != ? LIMIT 1")
-    .bind(campId, orderId)
-    .first();
-  if (otherOrder) {
-    await db.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
-    return;
-  }
+  const orderId = options?.orderIdForCreativeSharing ?? "";
+  const skipShared = options?.skipSharedCreativeCheck === true;
 
   await purgeDbStep("campaign_client_code_links", () =>
     db.prepare("DELETE FROM client_code_campaigns WHERE campaign_id = ?").bind(campId).run()
@@ -221,17 +213,20 @@ export async function deleteExclusiveCampaignForPurge(
     .prepare("SELECT creative_id, r2_key, client_id FROM creatives WHERE campaign_id = ?")
     .bind(campId)
     .all<{ creative_id: string; r2_key: string; client_id: string }>();
+  const nowIso = new Date().toISOString();
   for (const cr of creatives.results || []) {
-    const shared = await db
-      .prepare("SELECT COUNT(*) AS c FROM premium_selected_orders WHERE creative_id = ? AND order_id != ?")
-      .bind(cr.creative_id, orderId)
-      .first<{ c: number }>();
-    if (Number(shared?.c)) {
-      await db
-        .prepare("UPDATE creatives SET campaign_id = NULL, updated_at = ? WHERE creative_id = ?")
-        .bind(nowIso, cr.creative_id)
-        .run();
-      continue;
+    if (!skipShared) {
+      const shared = await db
+        .prepare("SELECT COUNT(*) AS c FROM premium_selected_orders WHERE creative_id = ? AND order_id != ?")
+        .bind(cr.creative_id, orderId)
+        .first<{ c: number }>();
+      if (Number(shared?.c)) {
+        await db
+          .prepare("UPDATE creatives SET campaign_id = NULL, updated_at = ? WHERE creative_id = ?")
+          .bind(nowIso, cr.creative_id)
+          .run();
+        continue;
+      }
     }
     if (cr.r2_key && env.CREATIVES) {
       try {
@@ -249,6 +244,28 @@ export async function deleteExclusiveCampaignForPurge(
     db.prepare("DELETE FROM campaign_placements WHERE campaign_id = ?").bind(campId).run()
   );
   await purgeDbStep("campaign_row", () => db.prepare("DELETE FROM campaigns WHERE campaign_id = ?").bind(campId).run());
+}
+
+/** Remove campaign graph when no other premium order still references the campaign (purge only). */
+export async function deleteExclusiveCampaignForPurge(
+  env: Env,
+  campId: string,
+  orderId: string
+): Promise<void> {
+  if (!env.DB) throw new Error("auth_not_configured");
+  const db = env.DB;
+  const nowIso = new Date().toISOString();
+
+  const otherOrder = await db
+    .prepare("SELECT order_id FROM premium_selected_orders WHERE published_campaign_id = ? AND order_id != ? LIMIT 1")
+    .bind(campId, orderId)
+    .first();
+  if (otherOrder) {
+    await db.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
+    return;
+  }
+
+  await hardDeleteCampaignGraph(env, campId, { orderIdForCreativeSharing: orderId, skipSharedCreativeCheck: false });
 }
 
 export async function purgePremiumOrderPhysically(env: Env, orderId: string): Promise<{ documents_removed: number }> {
