@@ -6,6 +6,14 @@ import { formatAdminPragueDateTime } from "./premium-order-workflow";
 import { AD_PRODUCT_LABEL_CS, AD_PRODUCT_PREMIUM_BUTTONS } from "./admin-ad-products";
 import type { Env } from "./types";
 
+function parseDateBound(raw: string | null, endOfDay: boolean): string | null {
+  if (!raw || !raw.trim()) return null;
+  const t = Date.parse(raw.trim());
+  if (!Number.isFinite(t)) return null;
+  if (endOfDay) return new Date(t + 86400000 - 1).toISOString();
+  return new Date(t).toISOString();
+}
+
 export async function handleAdminOrderConfirmationsRegistry(
   request: Request,
   env: Env,
@@ -16,16 +24,36 @@ export async function handleAdminOrderConfirmationsRegistry(
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
   const q = (url.searchParams.get("q") || "").trim();
+  const docKind = url.searchParams.get("doc_kind") || "all";
+  const fromIso = parseDateBound(url.searchParams.get("from"), false);
+  const toIso = parseDateBound(url.searchParams.get("to"), true);
   const limit = Math.min(200, Number(url.searchParams.get("limit") || "100") || 100);
-  const conditions: string[] = [
-    "d.doc_type IN ('premium_order_confirmation','premium_order_cancellation')",
-    "d.status = 'active'",
-  ];
+
+  const docTypes: string[] = [];
+  if (docKind === "order_confirmation") docTypes.push("premium_order_confirmation");
+  else if (docKind === "order_cancellation") docTypes.push("premium_order_cancellation");
+  else docTypes.push("premium_order_confirmation", "premium_order_cancellation");
+
+  const conditions: string[] = ["d.status = 'active'"];
   const params: unknown[] = [];
+
+  conditions.push(`d.doc_type IN (${docTypes.map(() => "?").join(",")})`);
+  params.push(...docTypes);
+
   if (q) {
-    conditions.push("(c.company_name LIKE ? OR c.ico LIKE ? OR o.customer_order_code LIKE ? OR o.order_number LIKE ?)");
+    conditions.push(
+      "(c.company_name LIKE ? OR c.ico LIKE ? OR o.customer_order_code LIKE ? OR o.order_number LIKE ? OR IFNULL(o.client_contact_email,'') LIKE ? OR IFNULL(cc.email,'') LIKE ?)"
+    );
     const like = "%" + q + "%";
-    params.push(like, like, like, like);
+    params.push(like, like, like, like, like, like);
+  }
+  if (fromIso) {
+    conditions.push("d.created_at >= ?");
+    params.push(fromIso);
+  }
+  if (toIso) {
+    conditions.push("d.created_at <= ?");
+    params.push(toIso);
   }
   params.push(limit);
 
@@ -36,6 +64,7 @@ export async function handleAdminOrderConfirmationsRegistry(
      FROM documents d
      JOIN orders o ON o.order_id = d.order_id
      JOIN clients c ON c.client_id = o.client_id
+     LEFT JOIN client_contacts cc ON cc.client_id = c.client_id
      LEFT JOIN premium_selected_orders po ON po.order_id = d.order_id
      WHERE ${conditions.join(" AND ")}
      ORDER BY d.created_at DESC

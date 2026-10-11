@@ -16,15 +16,11 @@ const ids = [...orderMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 const requiredPrefix = [
   "dashboard",
   "search",
-  "calendar",
-  "alerts",
-  "clients",
-  "inquiries",
   "orders_all",
   "premium",
   "banner_pc",
-  "invoices",
   "order_confirmations",
+  "invoices",
 ];
 
 for (let i = 0; i < requiredPrefix.length; i++) {

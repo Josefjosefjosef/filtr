@@ -18,15 +18,15 @@ export type NavEntry = {
 export const ADMIN_NAV_ORDER_IDS: readonly string[] = [
   "dashboard",
   "search",
+  "orders_all",
+  "premium",
+  "banner_pc",
+  "order_confirmations",
+  "invoices",
   "calendar",
   "alerts",
   "clients",
   "inquiries",
-  "orders_all",
-  "premium",
-  "banner_pc",
-  "invoices",
-  "order_confirmations",
   "contracts",
   "campaigns",
   "placements",
@@ -94,8 +94,13 @@ export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "users", label_cs: "Uživatelé", href: "/v1/admin/users", permission: "users.read" },
 ];
 
+function navOrderIndex(id: string): number {
+  const i = ADMIN_NAV_ORDER_IDS.indexOf(id);
+  return i >= 0 ? i : 9999;
+}
+
 export function filterNavForRoles(roles: readonly string[]): NavEntry[] {
-  return ADMIN_NAV_CATALOG.filter((entry) => {
+  const filtered = ADMIN_NAV_CATALOG.filter((entry) => {
     if (!entry.permission) return true;
     // Calendar also useful with placements.read alone.
     if (entry.id === "calendar") {
@@ -103,6 +108,7 @@ export function filterNavForRoles(roles: readonly string[]): NavEntry[] {
     }
     return hasPermission(roles, entry.permission);
   });
+  return filtered.slice().sort((a, b) => navOrderIndex(a.id) - navOrderIndex(b.id));
 }
 
 export async function handleGetAdminNav(request: Request, env: Env): Promise<Response> {
