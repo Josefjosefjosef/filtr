@@ -19,7 +19,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
     });
   }
   function apiError(body){
-    if(!body||typeof body!=="object") return "Požadavek se nezdařil.";
+    if(!body||typeof body!=="object") return "Požadavek se nezdařil — server nevrátil detail chyby (zkuste obnovit stránku).";
+    if(typeof body.message_cs==="string"&&body.message_cs.trim()) return body.message_cs.trim();
     var e = body.error;
     var map = {
       admin_api_disabled:"Admin API je vypnuté.",
@@ -42,7 +43,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
       client_id_required:"client_id je povinné.",
       campaign_ids_required:"campaign_ids jsou povinné.",
       client_not_found:"Klient nenalezen.",
-      already_reviewed:"Kreativa už byla posouzena."
+      already_reviewed:"Kreativa už byla posouzena.",
+      main_admin_required:"Nemáte oprávnění k úplnému odstranění (vyžadován hlavní administrátor).",
+      purge_paid_accounting:"Objednávku nelze odstranit, protože je evidována úhrada.",
+      purge_not_eligible:"Objednávku nelze odstranit — chybí potvrzení testovacího záznamu.",
+      has_child_orders:"Objednávka má navazující prodloužení — nejdříve odstraňte podřízené záznamy.",
+      purge_db_failed:"Odstranění nebylo dokončeno kvůli chybě databáze.",
+      purge_failed:"Nepodařilo se odstranit související provozní záznamy."
     };
     if(map[e]) return map[e];
     if(e) return "Chyba: "+e;

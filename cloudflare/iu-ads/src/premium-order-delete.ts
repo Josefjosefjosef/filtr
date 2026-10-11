@@ -5,7 +5,11 @@ import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { appendPremiumOrderEvent } from "./premium-order-history";
 import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
-import { premiumOrderEligibleForSystemPurge, purgePremiumOrderPhysically } from "./premium-order-purge";
+import {
+  deleteExclusiveCampaignForPurge,
+  premiumOrderEligibleForSystemPurge,
+  purgePremiumOrderPhysically,
+} from "./premium-order-purge";
 import type { Env } from "./types";
 
 async function orderHasProtectedAccounting(db: D1Database, orderId: string): Promise<boolean> {
@@ -21,10 +25,24 @@ async function countClientOrders(db: D1Database, clientId: string): Promise<numb
   return Number(row?.c) || 0;
 }
 
+function purgeFailureMessage(errorCode: string): string {
+  const map: Record<string, string> = {
+    purge_paid_accounting:
+      "Objednávku nelze odstranit, protože je evidována úhrada. Použijte archivaci a zachovejte účetní doklady.",
+    purge_not_eligible:
+      "Objednávku nelze odstranit — chybí potvrzení testovacího záznamu nebo jde o provozní případ mimo povolený rozsah.",
+    main_admin_required: "Nemáte oprávnění k úplnému odstranění (vyžadován hlavní administrátor).",
+    has_child_orders: "Objednávka má navazující prodloužení — nejdříve odstraňte podřízené záznamy.",
+    purge_db_failed: "Odstranění nebylo dokončeno kvůli chybě databáze — objednávka mohla zůstat v systému. Obnovte detail a zkuste znovu.",
+    purge_failed: "Nepodařilo se odstranit související provozní záznamy (kampaň, kreativa nebo dokumenty).",
+  };
+  return map[errorCode] || "Odstranění nebylo dokončeno kvůli chybě databáze nebo souvisejících záznamů.";
+}
+
 export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, orderId: string): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
-  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  if (!env.DB) return json({ error: "auth_not_configured", message_cs: "Databáze není dostupná." }, 503);
 
   let body: {
     confirm?: unknown;
@@ -35,21 +53,24 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
   try {
     body = await request.json();
   } catch {
-    return json({ error: "invalid_body" }, 400);
+    return json({ error: "invalid_body", message_cs: "Neplatné tělo požadavku." }, 400);
   }
-  if (body.confirm !== true) return json({ error: "confirmation_required" }, 400);
+  if (body.confirm !== true) {
+    return json({ error: "confirmation_required", message_cs: "Potvrzení odstranění je povinné." }, 400);
+  }
   const purgeSystem = body.purge_system_record === true;
   if (purgeSystem && !adminRolesIncludeMainAdmin(guard.roles)) {
     return json({ error: "main_admin_required", message_cs: "Úplné odstranění smí provést pouze hlavní administrátor." }, 403);
   }
 
+  try {
   const po = await env.DB.prepare(
     `SELECT po.*, o.client_id, o.customer_order_code, o.order_number
      FROM premium_selected_orders po JOIN orders o ON o.order_id = po.order_id WHERE po.order_id = ?`
   )
     .bind(orderId)
     .first<Record<string, unknown>>();
-  if (!po) return json({ error: "not_found" }, 404);
+  if (!po) return json({ error: "not_found", message_cs: "Objednávka nenalezena." }, 404);
 
   const protectedAccounting = await orderHasProtectedAccounting(env.DB, orderId);
   const nowIso = new Date().toISOString();
@@ -128,49 +149,39 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
       .bind(nowIso, po.placement_id, campId)
       .run();
     if (purgeSystem) {
-      const otherOrder = await env.DB.prepare(
-        "SELECT order_id FROM premium_selected_orders WHERE published_campaign_id = ? AND order_id != ? LIMIT 1"
-      )
-        .bind(campId, orderId)
-        .first();
-      if (!otherOrder) {
-        await env.DB.prepare("DELETE FROM campaign_placements WHERE campaign_id = ?").bind(campId).run();
-        await env.DB.prepare("DELETE FROM campaigns WHERE campaign_id = ?").bind(campId).run();
-      } else {
-        await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?")
-          .bind(nowIso, campId)
-          .run();
-      }
+      await deleteExclusiveCampaignForPurge(env, campId, orderId);
     } else {
       await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
     }
-  }
-
-  const creativeId = typeof po.creative_id === "string" ? po.creative_id : null;
-  if (creativeId) {
-    const shared = await env.DB.prepare(
-      "SELECT COUNT(*) AS c FROM premium_selected_orders WHERE creative_id = ? AND order_id != ?"
-    )
-      .bind(creativeId, orderId)
-      .first<{ c: number }>();
-    if (!Number(shared?.c)) {
-      const cr = await env.DB.prepare("SELECT r2_key FROM creatives WHERE creative_id = ? AND client_id = ?")
-        .bind(creativeId, clientId)
-        .first<{ r2_key: string | null }>();
-      if (cr?.r2_key && env.CREATIVES) {
-        try {
-          await env.CREATIVES.delete(cr.r2_key);
-        } catch {
-          /* best effort */
+  } else if (purgeSystem) {
+    const creativeIdOnly = typeof po.creative_id === "string" ? po.creative_id : null;
+    if (creativeIdOnly) {
+      const shared = await env.DB.prepare(
+        "SELECT COUNT(*) AS c FROM premium_selected_orders WHERE creative_id = ? AND order_id != ?"
+      )
+        .bind(creativeIdOnly, orderId)
+        .first<{ c: number }>();
+      if (!Number(shared?.c)) {
+        const cr = await env.DB.prepare("SELECT r2_key FROM creatives WHERE creative_id = ? AND client_id = ?")
+          .bind(creativeIdOnly, clientId)
+          .first<{ r2_key: string | null }>();
+        if (cr?.r2_key && env.CREATIVES) {
+          try {
+            await env.CREATIVES.delete(cr.r2_key);
+          } catch {
+            /* best effort */
+          }
         }
+        await env.DB.prepare("DELETE FROM creatives WHERE creative_id = ? AND client_id = ?").bind(creativeIdOnly, clientId).run();
       }
-      await env.DB.prepare("DELETE FROM creatives WHERE creative_id = ? AND client_id = ?").bind(creativeId, clientId).run();
     }
   }
 
   await env.DB.prepare("DELETE FROM premium_order_notes WHERE order_id = ?").bind(orderId).run();
   await env.DB.prepare("DELETE FROM premium_order_events WHERE order_id = ?").bind(orderId).run();
-  await env.DB.prepare("DELETE FROM premium_order_renewals WHERE order_id = ?").bind(orderId).run();
+  await env.DB.prepare("DELETE FROM premium_order_renewals WHERE order_id = ? OR follow_up_order_id = ?")
+    .bind(orderId, orderId)
+    .run();
   await env.DB.prepare("DELETE FROM premium_order_public_revisions WHERE order_id = ?").bind(orderId).run();
   await env.DB.prepare("DELETE FROM premium_publish_events WHERE order_id = ?").bind(orderId).run();
   await env.DB.prepare("DELETE FROM premium_order_portal_codes WHERE order_id = ?").bind(orderId).run();
@@ -191,10 +202,30 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
       operation: "premium_order_hard_deleted",
       objectType: "premium_order",
       objectId: orderId,
-      after: { mode: "hard_delete", reason },
+      after: { mode: purgeSystem ? "purge_system" : "hard_delete", reason },
       result: "success",
     })
   );
 
-  return json({ ok: true, mode: purgeSystem ? "purge_system" : "hard_delete" });
+  return json({
+    ok: true,
+    mode: purgeSystem ? "purge_system" : "hard_delete",
+    message_cs: purgeSystem ? "Záznam byl odstraněn ze systému." : undefined,
+  });
+  } catch (err) {
+    const code =
+      err && typeof err === "object" && "message" in err && String((err as Error).message).includes("SQLITE")
+        ? "purge_db_failed"
+        : "purge_failed";
+    console.error("premium_order_delete_failed", { orderId, purgeSystem, code });
+    return json(
+      {
+        error: code,
+        message_cs: purgeSystem
+          ? purgeFailureMessage(code === "purge_db_failed" ? "purge_db_failed" : "purge_failed")
+          : "Odstranění objednávky selhalo — zkuste archivaci nebo kontaktujte podporu.",
+      },
+      500
+    );
+  }
 }
