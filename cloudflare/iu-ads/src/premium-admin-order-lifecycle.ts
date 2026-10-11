@@ -68,10 +68,24 @@ export async function handleAdminPremiumSetPayment(request: Request, env: Env, o
   const status = body.payment_status === "paid" ? "paid" : body.payment_status === "unpaid" ? "unpaid" : null;
   if (!status) return json({ error: "invalid_payment_status" }, 400);
 
-  const before = await env.DB.prepare("SELECT payment_status FROM premium_selected_orders WHERE order_id = ?")
+  const row = await env.DB.prepare(
+    `SELECT po.workflow_status, po.payment_status,
+            (SELECT invoice_id FROM invoices WHERE order_id = po.order_id ORDER BY created_at DESC LIMIT 1) AS invoice_id
+     FROM premium_selected_orders po WHERE po.order_id = ?`
+  )
     .bind(orderId)
-    .first<{ payment_status: string | null }>();
-  if (!before) return json({ error: "not_found" }, 404);
+    .first<{ workflow_status: string; payment_status: string | null; invoice_id: string | null }>();
+  if (!row) return json({ error: "not_found" }, 404);
+  if (row.workflow_status !== "published") {
+    return json({ error: "not_published", message_cs: "Úhradu lze potvrdit jen u schválené a zveřejněné objednávky." }, 409);
+  }
+  if (!row.invoice_id) {
+    return json({ error: "no_invoice", message_cs: "Objednávka nemá vystavenou fakturu." }, 409);
+  }
+  const beforeStatus = row.payment_status || "unpaid";
+  if (status === "paid" && beforeStatus === "paid") {
+    return json({ ok: true, payment_status: "paid", idempotent: true });
+  }
 
   const nowIso = new Date().toISOString();
   const receivedAt =
@@ -87,11 +101,24 @@ export async function handleAdminPremiumSetPayment(request: Request, env: Env, o
     .bind(status, status === "paid" ? nowIso : null, status === "paid" ? guard.userId : null, receivedAt, nowIso, orderId)
     .run();
 
+  const actorRow = await env.DB.prepare("SELECT display_name, email FROM admin_users WHERE user_id = ?")
+    .bind(guard.userId)
+    .first<{ display_name: string | null; email: string | null }>();
+  const actorLabel =
+    (actorRow?.display_name && actorRow.display_name.trim()) ||
+    (actorRow?.email && actorRow.email.trim()) ||
+    "Administrátor";
+
   await appendPremiumOrderEvent(env.DB, {
     orderId,
     eventType: "payment_status_changed",
     actorUserId: guard.userId,
-    payload: { from: before.payment_status || "unpaid", to: status, payment_received_at: receivedAt, actor_label: guard.userId },
+    payload: {
+      from: beforeStatus,
+      to: status,
+      payment_received_at: receivedAt,
+      actor_label: actorLabel,
+    },
   });
 
   return json({ ok: true, payment_status: status });
