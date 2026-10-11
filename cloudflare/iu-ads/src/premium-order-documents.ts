@@ -584,6 +584,7 @@ async function storePdfDocument(
         payload: {
           document_id: existing.document_id,
           doc_type: input.docType,
+          title: input.title,
           prior_content_hash: priorHash,
           new_content_hash: hash,
           prior_version: priorVersion,
@@ -771,7 +772,14 @@ async function generateOneDocument(
         orderId,
         eventType: kind === "order_confirmation" ? "order_confirmation_pdf_created" : "invoice_pdf_created",
         actorUserId: input.actorUserId,
-        payload: { document_id: documentId, doc_kind: kind, actor_label: "Systém" },
+        payload: {
+          document_id: documentId,
+          doc_kind: kind,
+          doc_type: docType,
+          title,
+          invoice_number: kind === "invoice_pdf" ? title.replace(/^Faktura\s+/, "").trim() : undefined,
+          actor_label: "Systém",
+        },
         createdAt: doneIso,
       });
     } catch {
@@ -1303,8 +1311,10 @@ async function generateStornoKindDocument(
         issuer_display_name: actorRow?.display_name?.trim() || input.actorUserId,
         invoice_number: invoiceNumber,
         credit_note_number: creditNoteNumber,
-        order_was_approved: poExtra?.workflow_status === "published" || poExtra?.workflow_status === "cancelled",
-        ad_was_published: !!poExtra?.published_at,
+        order_was_approved:
+          storno.storno_kind === "cancellation" &&
+          (poExtra?.workflow_status === "published" || poExtra?.workflow_status === "cancelled"),
+        ad_was_published: storno.storno_kind === "cancellation" && !!poExtra?.published_at,
         ad_turned_off_at: poExtra?.ad_turned_off_at ?? null,
         payment_status_label:
           poExtra?.payment_status === "paid"
@@ -1317,7 +1327,10 @@ async function generateStornoKindDocument(
         variable_symbol: ctx.invoice_number ? ctx.invoice_number.replace(/\D/g, "").slice(-10) : null,
       });
       docType = PREMIUM_DOC_TYPE_CANCELLATION;
-      title = "Storno objednávky " + storno.storno_number;
+      title =
+        storno.storno_kind === "rejection"
+          ? "Potvrzení o zamítnutí " + storno.storno_number
+          : "Storno objednávky " + storno.storno_number;
       linkInvoiceId = storno.invoice_id;
     } else {
       const creditNoteId = storno.credit_note_id;
@@ -1373,6 +1386,8 @@ async function generateStornoKindDocument(
         amount_paid_cents: cn.amount_paid_cents_snapshot,
         remaining_due_cents: settlement.remaining_due_cents,
         overpayment_cents: settlement.overpayment_cents,
+        ad_was_published: !!poExtra?.published_at,
+        ad_turned_off_at: poExtra?.ad_turned_off_at ?? null,
       });
       docType = PREMIUM_DOC_TYPE_CREDIT_NOTE;
       title = "Dobropis " + cn.credit_note_number;
@@ -1392,10 +1407,56 @@ async function generateStornoKindDocument(
       replacementReason: input.forceRegenerate ? "storno_regenerate" : undefined,
     });
 
+    const doneIso = new Date().toISOString();
     await db
       .prepare("UPDATE premium_order_document_jobs SET status = ?, document_id = ?, updated_at = ?, last_error = NULL WHERE job_id = ?")
-      .bind("ready", documentId, new Date().toISOString(), job.job_id)
+      .bind("ready", documentId, doneIso, job.job_id)
       .run();
+    try {
+      if (input.forceRegenerate) {
+        /* document_pdf_replaced event emitted inside storePdfDocument when archiving prior PDF */
+      } else {
+      const stornoMeta = await db
+        .prepare("SELECT storno_number, storno_kind FROM premium_order_storno_records WHERE order_id = ? LIMIT 1")
+        .bind(orderId)
+        .first<{ storno_number: string; storno_kind: string }>();
+      if (kind === "order_cancellation") {
+        await appendPremiumOrderEvent(db, {
+          orderId,
+          eventType: "storno_pdf_created",
+          actorUserId: input.actorUserId,
+          payload: {
+            document_id: documentId,
+            doc_kind: kind,
+            doc_type: docType,
+            title,
+            storno_number: stornoMeta?.storno_number,
+            storno_kind: stornoMeta?.storno_kind,
+            actor_label: "Systém",
+          },
+          createdAt: doneIso,
+        });
+      } else {
+        const cnNum = title.replace(/^Dobropis\s+/, "").trim();
+        await appendPremiumOrderEvent(db, {
+          orderId,
+          eventType: "credit_note_pdf_created",
+          actorUserId: input.actorUserId,
+          payload: {
+            document_id: documentId,
+            doc_kind: kind,
+            doc_type: docType,
+            title,
+            credit_note_number: cnNum,
+            actor_label: "Systém",
+          },
+          createdAt: doneIso,
+        });
+      }
+      }
+    } catch {
+      /* optional migration */
+    }
     return { ok: true, document_id: documentId };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

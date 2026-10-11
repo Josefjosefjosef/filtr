@@ -2,12 +2,14 @@ import { PDFDocument, rgb } from "pdf-lib";
 import { PREMIUM_AD_WEB_PLACEMENT } from "./premium-invoice-brand";
 import {
   drawWrappedText,
+  measureWrappedHeight,
   PremiumInvoicePdfCursor,
   PREMIUM_INVOICE_CONTENT_MIN_Y,
   PREMIUM_INVOICE_CONTENT_W,
   PREMIUM_INVOICE_FOOTER_Y,
   PREMIUM_INVOICE_MARGIN,
   PREMIUM_INVOICE_PAGE,
+  wrapTextLines,
 } from "./premium-invoice-pdf-layout";
 import {
   drawPremiumPdfBrandLogo,
@@ -42,6 +44,9 @@ export type PremiumCreditNotePdfInput = {
   amount_paid_cents: number;
   remaining_due_cents?: number;
   overpayment_cents?: number;
+  /** When set, reklama byla vypnuta na webu (provozní záznam). */
+  ad_turned_off_at?: string | null;
+  ad_was_published?: boolean;
 };
 
 export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput): Promise<Uint8Array> {
@@ -103,6 +108,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   cursor.y = Math.min(cursor.y, partyY - 130) - 6;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Původně fakturovaná reklamní služba", PREMIUM_INVOICE_CONTENT_W);
+  const svcTop = cursor.y;
   const svc = [
     "Kategorie: " + input.ctx.category_title_cs,
     "Reklamní pozice: " + input.ctx.position_label,
@@ -111,39 +117,55 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     "Webové umístění: " + (input.ctx.ad_web_placement_url || PREMIUM_AD_WEB_PLACEMENT),
     "Cílová URL: " + input.ctx.target_url,
   ];
-  let ySvc = cursor.y;
+  let ySvc = svcTop;
   for (const line of svc) {
     ySvc = drawWrappedText(cursor.page, fonts.regular, line, leftX, ySvc, colW + 20, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.25);
     ySvc -= 2;
   }
-  const periodH = 48;
+  const periodH = 56;
   cursor.page.drawRectangle({
     x: rightX,
-    y: cursor.y - periodH,
+    y: svcTop - periodH,
     width: colW,
     height: periodH,
     borderColor: PREMIUM_PDF_LINE_GRAY,
     borderWidth: 0.6,
     color: rgb(0.97, 0.98, 1),
   });
-  cursor.page.drawText("Období poskytování (původní)", { x: rightX + 8, y: cursor.y - 14, size: 9, font: fonts.bold, color: brand });
-  const period =
+  const periodBoxTop = svcTop;
+  cursor.page.drawText("Období poskytování (původní)", { x: rightX + 8, y: periodBoxTop - 14, size: 9, font: fonts.bold, color: brand });
+  const period: string[] =
     input.ctx.campaign_start_at && input.ctx.campaign_end_at
       ? [
           "Od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at),
           "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at),
         ]
       : ["—"];
-  let yPer = cursor.y - 28;
-  for (const p of period) {
-    cursor.page.drawText(p, { x: rightX + 8, y: yPer, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
-    yPer -= 12;
+  if (input.ad_was_published && input.ad_turned_off_at) {
+    period.push("Reklama vypnuta: " + formatAdminPragueDateTime(input.ad_turned_off_at));
   }
-  cursor.y = Math.min(ySvc, cursor.y - periodH) - 8;
+  let yPer = periodBoxTop - 28;
+  for (const p of period) {
+    yPer = drawWrappedText(cursor.page, fonts.regular, p, rightX + 8, yPer, colW - 16, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.22);
+    yPer -= 2;
+  }
+  cursor.y = Math.min(ySvc, periodBoxTop - periodH) - 8;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Položky dobropisu", PREMIUM_INVOICE_CONTENT_W);
   const tableTop = cursor.y;
-  const tableH = 52;
+  const descColW = 208;
+  const periodColW = 148;
+  const periodColX = leftX + 8 + descColW + 6;
+  const amtColX = PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 78;
+  const periodShort =
+    input.ctx.campaign_start_at && input.ctx.campaign_end_at
+      ? formatAdminPragueDateTime(input.ctx.campaign_start_at) + " – " + formatAdminPragueDateTime(input.ctx.campaign_end_at)
+      : "—";
+  const periodLines = wrapTextLines(fonts.regular, periodShort, 7.5, periodColW);
+  const periodBlockH = measureWrappedHeight(Math.max(1, periodLines.length), 7.5, 1.22);
+  const row1H = Math.max(14, periodBlockH + 4);
+  const row2H = Math.max(14, periodBlockH + 4);
+  const tableH = 18 + row1H + row2H + 6;
   cursor.page.drawRectangle({
     x: leftX,
     y: tableTop - tableH,
@@ -162,17 +184,14 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     borderWidth: 0.6,
   });
   cursor.page.drawText("Popis", { x: leftX + 8, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
-  cursor.page.drawText("Období", { x: leftX + 280, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
-  cursor.page.drawText("Částka", { x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 70, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
-  const periodShort =
-    input.ctx.campaign_start_at && input.ctx.campaign_end_at
-      ? formatAdminPragueDateTime(input.ctx.campaign_start_at) + " – " + formatAdminPragueDateTime(input.ctx.campaign_end_at)
-      : "—";
-  cursor.page.drawText("Původně fakturováno", { x: leftX + 8, y: tableTop - 32, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
-  cursor.page.drawText(periodShort, { x: leftX + 280, y: tableTop - 32, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
+  cursor.page.drawText("Období", { x: periodColX, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
+  cursor.page.drawText("Částka", { x: amtColX, y: tableTop - 13, size: 8.5, font: fonts.bold, color: brand });
+  const row1Y = tableTop - 18 - 12;
+  cursor.page.drawText("Původně fakturováno", { x: leftX + 8, y: row1Y, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN });
+  drawWrappedText(cursor.page, fonts.regular, periodShort, periodColX, row1Y, periodColW, 7.5, PREMIUM_PDF_TEXT_MUTED, 1.22);
   cursor.page.drawText(fmtPremiumPdfMoney(input.original_total_cents, input.currency), {
-    x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 72,
-    y: tableTop - 32,
+    x: amtColX,
+    y: row1Y,
     size: 8.5,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MAIN,
@@ -181,11 +200,12 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     input.new_total_cents === 0 && input.correction_cents === -input.original_total_cents
       ? "Oprava – storno celé služby"
       : "Oprava – storno / snížení";
-  cursor.page.drawText(correctionLabel, { x: leftX + 8, y: tableTop - 46, size: 8.5, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
-  cursor.page.drawText(periodShort, { x: leftX + 280, y: tableTop - 46, size: 8, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED, maxWidth: 120 });
+  const row2Y = tableTop - 18 - row1H - 12;
+  cursor.page.drawText(correctionLabel, { x: leftX + 8, y: row2Y, size: 8.5, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
+  drawWrappedText(cursor.page, fonts.regular, periodShort, periodColX, row2Y, periodColW, 7.5, PREMIUM_PDF_TEXT_MUTED, 1.22);
   cursor.page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
-    x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 72,
-    y: tableTop - 46,
+    x: amtColX,
+    y: row2Y,
     size: 9.5,
     font: fonts.bold,
     color: brand,
@@ -212,7 +232,9 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
   cursor.y -= 22;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důvod opravy", PREMIUM_INVOICE_CONTENT_W);
-  cursor.y = drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 8;
+  const reasonTop = cursor.y;
+  cursor.y =
+    drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, reasonTop, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 8;
 
   cursor.ensureSpace(110);
   const finTop = cursor.y;
@@ -275,7 +297,5 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MUTED,
   });
-  drawPremiumPdfBrandLogo(footerPage, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y - 8);
-
   return pdf.save();
 }

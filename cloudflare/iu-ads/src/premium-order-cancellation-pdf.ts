@@ -55,7 +55,9 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   let cursor = new PremiumInvoicePdfCursor(page, pages, pdf, PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_MIN_Y);
 
   drawPremiumPdfBrandLogo(cursor.page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
-  cursor.page.drawText("Storno objednávky", {
+  const docTitle =
+    input.storno_kind === "rejection" ? "Potvrzení o zamítnutí objednávky" : "Storno objednávky";
+  cursor.page.drawText(docTitle, {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 20,
@@ -63,13 +65,18 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     color: brand,
   });
   cursor.y -= 22;
-  cursor.page.drawText("— Potvrzení o zrušení objednávky reklamní služby", {
-    x: PREMIUM_INVOICE_MARGIN,
-    y: cursor.y,
-    size: 10,
-    font: fonts.regular,
-    color: brand,
-  });
+  cursor.page.drawText(
+    input.storno_kind === "rejection"
+      ? "— Objednávka nebyla schválena a reklama nebyla zveřejněna"
+      : "— Potvrzení o zrušení objednávky reklamní služby",
+    {
+      x: PREMIUM_INVOICE_MARGIN,
+      y: cursor.y,
+      size: 10,
+      font: fonts.regular,
+      color: brand,
+    }
+  );
   cursor.y -= 20;
 
   const boxW = 158;
@@ -131,6 +138,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   cursor.y = Math.min(leftBottom, rightBottom) - 6;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Předmět objednané reklamní služby", PREMIUM_INVOICE_CONTENT_W);
+  const serviceBodyTop = cursor.y;
   const serviceLeft = [
     "Kategorie: " + input.ctx.category_title_cs,
     "Reklamní pozice: " + input.ctx.position_label,
@@ -140,7 +148,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     "Cílová URL: " + input.ctx.target_url,
   ];
   cursor.ensureSpace(90);
-  const blockTop = cursor.y;
+  const blockTop = serviceBodyTop;
   let yLeft = blockTop;
   for (const line of serviceLeft) {
     yLeft = drawWrappedText(cursor.page, fonts.regular, line, leftX, yLeft, colW, 9, PREMIUM_PDF_TEXT_MAIN, 1.28);
@@ -159,25 +167,41 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     borderWidth: 0.6,
     color: rgb(0.97, 0.98, 1),
   });
-  cursor.page.drawText("Období poskytování (původní)", {
+  const periodTitle = input.ad_was_published
+    ? "Období poskytování (původní)"
+    : input.storno_kind === "rejection"
+      ? "Plánované období (neskutečně poskytnuto)"
+      : "Období poskytování (původní)";
+  cursor.page.drawText(periodTitle, {
     x: periodX + 8,
     y: periodTop - 14,
     size: 9,
     font: fonts.bold,
     color: brand,
   });
-  const periodLines =
-    input.ctx.campaign_start_at && input.ctx.campaign_end_at
-      ? [
-          "Od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at),
-          "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at),
-        ]
-      : input.ctx.order_created_at
-        ? [
-            "Od: " + formatAdminPragueDateTime(input.ctx.order_created_at),
-            "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at || input.ctx.order_created_at),
-          ]
-        : ["Období reklamní služby není v evidenci k dispozici."];
+  let periodLines: string[];
+  if (input.ad_was_published && input.ctx.campaign_start_at && input.ctx.campaign_end_at) {
+    periodLines = [
+      "Od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at),
+      "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at),
+    ];
+  } else if (input.storno_kind === "rejection") {
+    periodLines = [];
+    if (input.ctx.campaign_start_at && input.ctx.campaign_end_at) {
+      periodLines.push("Plánováno od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at));
+      periodLines.push("Plánováno do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at));
+    } else if (input.ctx.order_submitted_at) {
+      periodLines.push("Objednáno: " + formatAdminPragueDateTime(input.ctx.order_submitted_at));
+    }
+    periodLines.push("Reklamní služba nebyla zveřejněna ani poskytnuta.");
+  } else if (input.ctx.campaign_start_at && input.ctx.campaign_end_at) {
+    periodLines = [
+      "Od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at),
+      "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at),
+    ];
+  } else {
+    periodLines = ["Období reklamní služby není v evidenci k dispozici."];
+  }
   let yP = periodTop - 28;
   for (const pl of periodLines) {
     yP = drawWrappedText(cursor.page, fonts.regular, pl, periodX + 8, yP, periodW - 16, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.25);
@@ -186,27 +210,50 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   cursor.y = Math.min(yLeft, yP, periodTop - periodH) - 10;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Cena reklamní služby (původní objednávka)", PREMIUM_INVOICE_CONTENT_W);
+  const priceY = cursor.y;
   cursor.page.drawText("Cena je uvedena bez DPH (poskytovatel není plátce DPH).", {
     x: PREMIUM_INVOICE_MARGIN,
-    y: cursor.y,
+    y: priceY,
     size: 8,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MUTED,
   });
   cursor.page.drawText(fmtPremiumPdfMoney(input.ctx.price_cents, input.ctx.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 120,
-    y: cursor.y - 2,
+    y: priceY - 2,
     size: 16,
     font: fonts.bold,
     color: brand,
   });
   cursor.y -= 28;
 
-  const statusLeft: string[] = ["Stav objednávky:"];
-  statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
-  if (input.ctx.approved_at) statusLeft.push("Schváleno: " + formatAdminPragueDateTime(input.ctx.approved_at));
-  if (input.ctx.published_at) statusLeft.push("Zveřejněno: " + formatAdminPragueDateTime(input.ctx.published_at));
-  if (input.ctx.campaign_end_at) statusLeft.push("Plánované ukončení: " + formatAdminPragueDateTime(input.ctx.campaign_end_at));
+  const statusLeft: string[] = [];
+  if (input.storno_kind === "rejection") {
+    statusLeft.push("Stav: Objednávka zamítnuta");
+    if (input.ctx.order_created_at) {
+      statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
+    }
+    if (input.ctx.order_submitted_at) {
+      statusLeft.push("Odesláno ke schválení: " + formatAdminPragueDateTime(input.ctx.order_submitted_at));
+    }
+    statusLeft.push("Zamítnuto: " + formatAdminPragueDateTime(input.issued_at));
+  } else {
+    statusLeft.push("Stav objednávky:");
+    statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
+    if (input.order_was_approved && input.ctx.approved_at) {
+      statusLeft.push("Schváleno: " + formatAdminPragueDateTime(input.ctx.approved_at));
+    }
+    if (input.ad_was_published && input.ctx.published_at) {
+      statusLeft.push("Zveřejněno: " + formatAdminPragueDateTime(input.ctx.published_at));
+    }
+    if (input.ctx.campaign_end_at) {
+      statusLeft.push("Plánované ukončení služby: " + formatAdminPragueDateTime(input.ctx.campaign_end_at));
+    }
+    if (input.ad_was_published && input.ad_turned_off_at) {
+      statusLeft.push("Reklama vypnuta na webu: " + formatAdminPragueDateTime(input.ad_turned_off_at));
+    }
+    statusLeft.push("Datum storna (doklad): " + formatAdminPragueDateTime(input.issued_at));
+  }
 
   const statusRight: string[] = ["Související doklady:"];
   statusRight.push("Objednávka: " + input.ctx.evidence_reference);
@@ -220,7 +267,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   cursor.page.drawText("Související doklady", { x: rightX, y: stY, size: 10, font: fonts.bold, color: brand });
   let ySL = stY - 14;
   let ySR = stY - 14;
-  for (let i = 1; i < statusLeft.length; i++) {
+  for (let i = 0; i < statusLeft.length; i++) {
     ySL = drawWrappedText(cursor.page, fonts.regular, statusLeft[i]!, leftX, ySL, colW, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.25);
     ySL -= 2;
   }
@@ -230,30 +277,63 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   }
   cursor.y = Math.min(ySL, ySR) - 8;
 
-  drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důvod storna", PREMIUM_INVOICE_CONTENT_W);
-  cursor.y = drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 6;
-  cursor.page.drawText("Datum storna: " + formatAdminPragueDateTime(input.issued_at), {
-    x: PREMIUM_INVOICE_MARGIN,
-    y: cursor.y,
-    size: 8.5,
-    font: fonts.regular,
-    color: PREMIUM_PDF_TEXT_MAIN,
-  });
-  cursor.page.drawText("Storno provedl: " + input.issuer_display_name, {
-    x: PREMIUM_INVOICE_MARGIN + colW,
-    y: cursor.y,
-    size: 8.5,
-    font: fonts.regular,
-    color: PREMIUM_PDF_TEXT_MAIN,
-  });
+  drawPremiumPdfSectionHeader(
+    cursor,
+    fonts,
+    brand,
+    input.storno_kind === "rejection" ? "Důvod zamítnutí" : "Důvod storna",
+    PREMIUM_INVOICE_CONTENT_W
+  );
+  const reasonY = cursor.y;
+  cursor.y =
+    drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, reasonY, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 6;
+  cursor.page.drawText(
+    (input.storno_kind === "rejection" ? "Datum zamítnutí: " : "Datum storna: ") +
+      formatAdminPragueDateTime(input.issued_at),
+    {
+      x: PREMIUM_INVOICE_MARGIN,
+      y: cursor.y,
+      size: 8.5,
+      font: fonts.regular,
+      color: PREMIUM_PDF_TEXT_MAIN,
+    }
+  );
+  cursor.page.drawText(
+    (input.storno_kind === "rejection" ? "Zamítnutí provedl: " : "Storno provedl: ") + input.issuer_display_name,
+    {
+      x: PREMIUM_INVOICE_MARGIN + colW,
+      y: cursor.y,
+      size: 8.5,
+      font: fonts.regular,
+      color: PREMIUM_PDF_TEXT_MAIN,
+    }
+  );
   cursor.y -= 18;
 
-  if (input.storno_kind === "cancellation") {
+  if (input.storno_kind === "rejection") {
+    cursor.ensureSpace(60);
+    drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledek zamítnutí", PREMIUM_INVOICE_CONTENT_W);
+    const rejBullets = [
+      "Objednávka nebyla schválena a reklamní služba nebyla poskytnuta.",
+      "Reklama nebyla zveřejněna na webu infoUzel.cz.",
+      "Tento dokument slouží jako potvrzení o zamítnutí objednávky.",
+    ];
+    for (const b of rejBullets) {
+      cursor.y =
+        drawWrappedText(cursor.page, fonts.regular, "• " + b, PREMIUM_INVOICE_MARGIN + 4, cursor.y, PREMIUM_INVOICE_CONTENT_W - 8, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
+    }
+  } else if (input.storno_kind === "cancellation") {
     cursor.ensureSpace(95);
     drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledek storna", PREMIUM_INVOICE_CONTENT_W);
     const bullets = [
       "Objednávka je stornována a reklamní služba nebude poskytována.",
-      input.ad_turned_off_at ? "Reklama byla odstraněna z veřejného zobrazení." : "Reklamní zobrazení bylo ukončeno dle stavu objednávky.",
+      input.ad_turned_off_at
+        ? "Reklama byla odstraněna z veřejného zobrazení dne " +
+          formatAdminPragueDateTime(input.ad_turned_off_at) +
+          "."
+        : input.ad_was_published
+          ? "Reklamní zobrazení bylo ukončeno dle stavu objednávky (čas vypnutí není v evidenci k dispozici)."
+          : "Reklamní zobrazení nebylo aktivní v době storna.",
       "Reklamní pozice " + input.ctx.position_label + " v kategorii „" + input.ctx.category_title_cs + "“ byla uvolněna pro další objednávky.",
       "Tento dokument slouží jako potvrzení o stornování objednávky.",
       "Stav úhrady faktury: " + input.payment_status_label + (input.storno_amount_cents ? " · Stornovaná částka: " + fmtPremiumPdfMoney(input.storno_amount_cents, input.ctx.currency) : ""),
@@ -279,7 +359,5 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     PREMIUM_PDF_TEXT_MUTED,
     1.2
   );
-  drawPremiumPdfBrandLogo(footerPage, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y + 6);
-
   return pdf.save();
 }

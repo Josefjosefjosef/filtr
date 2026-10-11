@@ -5,6 +5,7 @@ import {
   drawWrappedText,
   measureWrappedHeight,
   PREMIUM_INVOICE_MARGIN,
+  PREMIUM_PDF_HEADER_BODY_GAP_PT,
   PremiumInvoicePdfCursor,
   wrapTextLines,
 } from "./premium-invoice-pdf-layout";
@@ -46,13 +47,13 @@ function measurePartyBlock(
   titleSize: number,
   bodySize: number
 ): number {
-  const headH = titleSize * 1.6 + 8;
-  let bodyH = 10;
+  const headH = titleSize * 1.6 + 6;
+  let bodyH = PREMIUM_PDF_HEADER_BODY_GAP_PT + 6;
   for (const line of lines) {
     const wrapped = wrapTextLines(fonts.regular, line, bodySize, innerW);
     bodyH += measureWrappedHeight(wrapped.length || 1, bodySize, 1.32);
   }
-  return headH + bodyH + 10;
+  return headH + bodyH + 8;
 }
 
 export function drawPremiumPdfPartyBox(
@@ -101,7 +102,7 @@ export function drawPremiumPdfPartyBox(
     color: brand,
   });
 
-  let y = yTop - headH - 8;
+  let y = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
   for (const line of lines) {
     const font = line.bold ? fonts.bold : fonts.regular;
     const color = line.linkBlue ? brand : PREMIUM_PDF_TEXT_MAIN;
@@ -165,7 +166,7 @@ export function drawPremiumPdfSectionHeader(
     borderWidth: 0.5,
   });
   cursor.page.drawText(title, { x: x + 10, y: yTop - 15, size: 10.5, font: fonts.bold, color: brand });
-  cursor.y = yTop - h - 6;
+  cursor.y = yTop - h - PREMIUM_PDF_HEADER_BODY_GAP_PT;
 }
 
 export function fmtPremiumPdfMoney(cents: number, currency: string): string {
