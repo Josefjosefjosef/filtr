@@ -77,6 +77,14 @@ function seedPublishedPremiumOrder(db: ReturnType<typeof createIuAdsSchemaDb>) {
     `INSERT INTO premium_publish_events (event_id, order_id, idempotency_key, result_json, created_at)
      VALUES ('pe_1', 'ord_u8b2', 'pub_idem', '{}', ?)`
   ).run(NOW);
+  db.prepare(
+    `INSERT INTO premium_terms_archives (archive_id, terms_version, effective_at, content_hash, r2_key, byte_size, created_at)
+     VALUES ('arch_u8', 'v1', ?, 'hash', 'terms/v1.pdf', 100, ?)`
+  ).run(NOW, NOW);
+  db.prepare(
+    `INSERT INTO premium_order_terms_bindings (order_id, archive_id, terms_version, content_hash, bound_at)
+     VALUES ('ord_u8b2', 'arch_u8', 'v1', 'hash', ?)`
+  ).run(NOW);
 }
 
 function countSql(db: ReturnType<typeof createIuAdsSchemaDb>, sql: string, ...params: unknown[]): number {
@@ -120,6 +128,7 @@ describe("premium purge on production D1 schema (migrations)", () => {
 
     const first = await purgePremiumOrderPhysically(env, "ord_u8b2");
     expect(first.documents_removed).toBe(4);
+    expect(countSql(sqlite, "SELECT COUNT(*) AS c FROM premium_order_terms_bindings WHERE order_id = ?", "ord_u8b2")).toBe(0);
     expect(countSql(sqlite, "SELECT COUNT(*) AS c FROM documents WHERE order_id = ?", "ord_u8b2")).toBe(0);
     expect(countSql(sqlite, "SELECT COUNT(*) AS c FROM invoices WHERE order_id = ?", "ord_u8b2")).toBe(0);
     expect(countSql(sqlite, "SELECT COUNT(*) AS c FROM premium_selected_orders WHERE order_id = ?", "ord_u8b2")).toBe(1);

@@ -136,6 +136,9 @@ jobs:
           if [ -f scripts/iu-ads-admin-zip-search-guard-v1.mjs ]; then
             node scripts/iu-ads-admin-zip-search-guard-v1.mjs
           fi
+          if [ -f scripts/iu-premium-test-data-reset-guard-v1.mjs ]; then
+            node scripts/iu-premium-test-data-reset-guard-v1.mjs
+          fi
 
       - name: Premium order documents freeze guard
         working-directory: .

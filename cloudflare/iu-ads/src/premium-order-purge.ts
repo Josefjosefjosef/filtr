@@ -58,6 +58,89 @@ export async function premiumOrderHasPaidAccountingEvidence(db: D1Database, orde
   return inv?.status === "paid" || !!inv?.paid_at;
 }
 
+export function orderReferenceLooksLikeOperatorTest(code: string | null | undefined): boolean {
+  const t = String(code || "").trim();
+  if (!t) return false;
+  return /(^IU[-_]?TEST|TESTOVAC|iu-premium-e2e|-E2E-|_E2E_)/i.test(t);
+}
+
+/** Shared markers for dev/E2E and operator-created test orders (not production customers). */
+export function premiumOrderRowHasOperatorTestMarker(row: {
+  payload_json: string | null;
+  company_name: string | null;
+  contact_email: string | null;
+  target_url: string | null;
+  customer_order_code: string | null;
+  order_number: string | null;
+}): { marked: boolean; via: string | null } {
+  let payloadRaw: Record<string, unknown> = {};
+  try {
+    payloadRaw = JSON.parse(String(row.payload_json || "{}")) as Record<string, unknown>;
+  } catch {
+    payloadRaw = {};
+  }
+  const email = String(row.contact_email || "").toLowerCase();
+  const company = String(row.company_name || "");
+  const target = String(row.target_url || "");
+  if (payloadRaw.iu_dev_test === true || payloadRaw.iu_operator_test === true) {
+    return { marked: true, via: "payload_flag" };
+  }
+  if (email.endsWith("@example.invalid")) return { marked: true, via: "test_email" };
+  if (/IU_TEST|iu-premium-e2e|E2E|TESTOVAC/i.test(company)) return { marked: true, via: "company_marker" };
+  if (target.includes("example.invalid")) return { marked: true, via: "test_url" };
+  if (orderReferenceLooksLikeOperatorTest(row.customer_order_code)) return { marked: true, via: "order_code" };
+  if (orderReferenceLooksLikeOperatorTest(row.order_number)) return { marked: true, via: "order_number" };
+  return { marked: false, via: null };
+}
+
+export async function premiumOrderEligibleForBulkTestReset(
+  db: D1Database,
+  orderId: string
+): Promise<
+  | { ok: true; via: string }
+  | { ok: false; reason: "not_found" | "paid_accounting" | "not_marked"; message_cs: string }
+> {
+  const row = await db
+    .prepare(
+      `SELECT po.target_url, o.payload_json, o.customer_order_code, o.order_number,
+              c.company_name, cc.email AS contact_email
+       FROM premium_selected_orders po
+       JOIN orders o ON o.order_id = po.order_id
+       JOIN clients c ON c.client_id = o.client_id
+       LEFT JOIN client_contacts cc ON cc.client_id = c.client_id AND cc.is_primary = 1
+       WHERE po.order_id = ?`
+    )
+    .bind(orderId)
+    .first<{
+      target_url: string | null;
+      payload_json: string | null;
+      customer_order_code: string | null;
+      order_number: string | null;
+      company_name: string | null;
+      contact_email: string | null;
+    }>();
+  if (!row) {
+    return { ok: false, reason: "not_found", message_cs: "Objednávka nenalezena." };
+  }
+  if (await premiumOrderHasPaidAccountingEvidence(db, orderId)) {
+    return {
+      ok: false,
+      reason: "paid_accounting",
+      message_cs: "Objednávka s evidovanou úhradou není součástí hromadného testovacího resetu.",
+    };
+  }
+  const marked = premiumOrderRowHasOperatorTestMarker(row);
+  if (!marked.marked) {
+    return {
+      ok: false,
+      reason: "not_marked",
+      message_cs:
+        "Objednávka není označena jako testovací (E2E/dev marker, IU_TEST, TESTOVAC v kódu, iu_operator_test v payload).",
+    };
+  }
+  return { ok: true, via: marked.via || "operator_test_marker" };
+}
+
 /** Dev/E2E markers, or main-admin explicit test confirm when nothing was paid. */
 export async function premiumOrderEligibleForSystemPurge(
   db: D1Database,
@@ -92,25 +175,16 @@ export async function premiumOrderEligibleForSystemPurge(
     };
   }
 
-  let payloadRaw: Record<string, unknown> = {};
-  try {
-    payloadRaw = JSON.parse(String(row.payload_json || "{}")) as Record<string, unknown>;
-  } catch {
-    payloadRaw = {};
-  }
-  const snap = parsePremiumOrderPayload(typeof row.payload_json === "string" ? row.payload_json : null);
-  void snap;
+  const devTest = premiumOrderRowHasOperatorTestMarker({
+    payload_json: row.payload_json,
+    company_name: row.company_name,
+    contact_email: row.contact_email,
+    target_url: row.target_url,
+    customer_order_code: null,
+    order_number: null,
+  });
 
-  const email = String(row.contact_email || "").toLowerCase();
-  const company = String(row.company_name || "");
-  const target = String(row.target_url || "");
-  const devTest =
-    payloadRaw.iu_dev_test === true ||
-    email.endsWith("@example.invalid") ||
-    /IU_TEST|iu-premium-e2e|E2E/i.test(company) ||
-    target.includes("example.invalid");
-
-  if (devTest) return { ok: true, via: "dev_marker" };
+  if (devTest.marked) return { ok: true, via: "dev_marker" };
 
   if (options?.explicitTestPurgeConfirmed === true) {
     return { ok: true, via: "explicit_test_confirmed" };
@@ -382,6 +456,9 @@ export async function purgePremiumOrderPhysically(env: Env, orderId: string): Pr
   );
   await purgeDbStep("order_price_snapshots", () =>
     db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run()
+  );
+  await purgeDbStep("order_terms_bindings", () =>
+    db.prepare("DELETE FROM premium_order_terms_bindings WHERE order_id = ?").bind(orderId).run()
   );
 
   return { documents_removed: docsRemoved };

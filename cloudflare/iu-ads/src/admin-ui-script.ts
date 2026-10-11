@@ -868,8 +868,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }
     var tr=state.testDataResetModal;
     if(tr){
+      var prev=tr.preview||{};
       h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Vyčistit všechny testovací záznamy</h3>'+
-        '<p class="err">Nevratné odstranění všech prémiových objednávek, kampaní, dokumentů a souvisejících dat v D1/R2.</p>'+
+        '<p class="err">Nevratné odstranění označených testovacích objednávek, kampaní, PDF a souvisejících dat v D1/R2.</p>'+
+        (tr.previewLoading?'<p class="muted">Načítám náhled rozsahu…</p>':
+          (tr.previewError?'<p class="err">'+esc(tr.previewError)+'</p>':
+            '<p class="muted">K odstranění: <strong>'+esc(String(prev.eligible_orders||0))+'</strong> objednávek, '+esc(String(prev.eligible_campaigns_estimate||0))+' kampaní (odhad). '+
+            'Chráněno: '+esc(String(prev.skipped_not_marked||0))+' neoznačených, '+esc(String(prev.skipped_paid_accounting||0))+' uhrazených.</p>'))+
         '<p class="muted">Zadejte přesně: <strong>VYMAZAT TESTOVACI DATA</strong></p>'+
         '<p><label>Potvrzení<input id="tr-phrase" type="text" autocomplete="off" value="'+esc(tr.phrase||"")+'"></label></p>'+
         '<p><label><input type="checkbox" id="tr-ack" '+(tr.ack?"checked":"")+'> Beru na vědomí, že jde o nevratnou operaci a všechny dosavadní testovací objednávky budou odstraněny.</label></p>'+
@@ -914,7 +919,16 @@ export const ADMIN_UI_SCRIPT = String.raw`
   }
   function wireAuxiliaryModals(){
     var trOpen=el("premium-test-reset-open");
-    if(trOpen) trOpen.onclick=function(){ state.testDataResetModal={phrase:"",ack:false,submitBusy:false}; render(); };
+    if(trOpen) trOpen.onclick=async function(){
+      state.testDataResetModal={phrase:"",ack:false,submitBusy:false,previewLoading:true,preview:null,previewError:""};
+      render();
+      var pr=await api("/v1/admin/premium/test-data/reset/preview",{method:"GET",headers:{}});
+      if(!state.testDataResetModal) return;
+      state.testDataResetModal.previewLoading=false;
+      if(pr.res.ok&&pr.body&&pr.body.preview) state.testDataResetModal.preview=pr.body.preview;
+      else state.testDataResetModal.previewError=pr.body&&pr.body.message_cs?pr.body.message_cs:apiError(pr.body);
+      render();
+    };
     var trCancel=el("tr-cancel");
     if(trCancel) trCancel.onclick=function(){ state.testDataResetModal=null; render(); };
     var trConfirm=el("tr-confirm");
@@ -927,10 +941,16 @@ export const ADMIN_UI_SCRIPT = String.raw`
       m.submitBusy=true; m.formError=""; render();
       var r=await api("/v1/admin/premium/test-data/reset",{method:"POST",body:JSON.stringify({confirm:true,confirm_phrase:m.phrase})});
       m.submitBusy=false;
-      if(!r.res.ok){ m.formError=r.body&&r.body.message_cs?r.body.message_cs:apiError(r.body); render(); return; }
+      if(!r.res.ok){
+        var errMsg=r.body&&r.body.message_cs?r.body.message_cs:apiError(r.body);
+        if(r.body&&r.body.reset_id) errMsg=errMsg+" (ID: "+String(r.body.reset_id)+")";
+        m.formError=errMsg;
+        render();
+        return;
+      }
       state.testDataResetModal=null;
       state.orderDetailId=null;
-      state.flash=r.body&&r.body.message_cs?r.body.message_cs:"Reset testovacích dat dokončen.";
+      state.flash=r.body&&r.body.message_cs?r.body.message_cs:(r.body&&r.body.nothing_to_remove?"Žádná testovací data k odstranění.":"Reset testovacích dat dokončen.");
       await loadNav();
       render();
     };
@@ -1687,7 +1707,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
-    var resetBar=isMainAdminUser()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
+    var resetBar=isMainAdminUser()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Opakovaně odstraní označené testovací objednávky (E2E/dev/IU_TEST/TESTOVAC), kampaně, PDF a související záznamy. Neoznačené a uhrazené objednávky zůstanou. Katalog P1–P8 a administrace zůstanou.</p>'+
       '<button type="button" class="btn danger" id="premium-test-reset-open">Vyčistit všechny testovací záznamy</button></div>'):"";
     panel('<div class="card"><h2>Reklamní tlačítka – Vybrané služby a odkazy (PC, mobil, tablet)</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
       premiumSummaryWidgetsHtml(sum.body)+"</div>"+resetBar+
