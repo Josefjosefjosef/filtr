@@ -8,7 +8,6 @@ import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
 import {
   deleteExclusiveCampaignForPurge,
   hardDeleteCampaignGraph,
-  premiumOrderHasPaidAccountingEvidence,
   purgePremiumOrderPhysically,
   PurgeDatabaseError,
   sanitizePurgeDbHint,
@@ -133,11 +132,8 @@ export async function resetAllPremiumTestOperationalData(
       client_id: string;
     }>();
 
-  for (const row of allPo.results || []) {
-    if (await premiumOrderHasPaidAccountingEvidence(db, row.order_id)) {
-      throw new Error("paid_order_blocks_reset:" + row.order_id);
-    }
-  }
+  // Bulk reset is main-admin + confirm phrase only (operator attests all rows are non-production tests).
+  // Per-order purge keeps paid-accounting guard via premiumOrderEligibleForSystemPurge.
 
   const orderIds = sortPremiumOrdersForPurge(allPo.results || []);
 
@@ -270,15 +266,6 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    if (msg.startsWith("paid_order_blocks_reset:")) {
-      return json(
-        {
-          error: "purge_paid_accounting",
-          message_cs: "Reset zastaven — v systému je objednávka s evidovanou úhradou.",
-        },
-        403
-      );
-    }
     const purgeStep = err instanceof PurgeDatabaseError ? err.step : undefined;
     const dbHint = sanitizePurgeDbHint(msg);
     console.error("premium_test_data_reset_failed", { purgeStep, dbHint });
