@@ -136,8 +136,6 @@ async function main() {
     ].join("\n")
   );
 
-  if (!rr.ok || body.ok !== true) process.exit(1);
-
   const { execFileSync } = await import("node:child_process");
   const countOut = execFileSync(
     "npx",
@@ -154,6 +152,7 @@ async function main() {
     { cwd: join(process.cwd()), env: process.env, encoding: "utf8" }
   );
   console.log("POST_RESET_COUNTS=" + countOut.trim());
+  if (!rr.ok || body.ok !== true) process.exit(1);
   console.log("OVERALL=PASS");
 }
 
