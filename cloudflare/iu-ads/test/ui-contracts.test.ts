@@ -31,6 +31,10 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/clients",
   "/v1/admin/inquiries",
   "/v1/admin/orders",
+  "/v1/admin/ad-orders",
+  "/v1/admin/banner-pc",
+  "/v1/admin/invoices/registry",
+  "/v1/admin/order-confirmations/registry",
   "/v1/admin/premium/orders",
   "/v1/admin/premium/orders/pending-count",
   "/v1/admin/premium/test-data/reset",
@@ -139,7 +143,8 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).not.toMatch(/id=\"en-category\"/);
     expect(ADMIN_UI_SCRIPT).toContain("Filtry objednávek");
     expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders/summary");
-    expect(ADMIN_UI_SCRIPT).toContain("order_confirmation_revisions");
+    expect(ADMIN_UI_SCRIPT).toContain("order_history_groups");
+    expect(ADMIN_UI_SCRIPT).toContain("Historie");
     expect(ADMIN_UI_SCRIPT).toContain("data-doc-version");
     expect(ADMIN_UI_SCRIPT).toContain("Promise.all");
     expect(ADMIN_UI_SCRIPT).not.toContain('listTable(rows,[["order_id","Objednávka"]');

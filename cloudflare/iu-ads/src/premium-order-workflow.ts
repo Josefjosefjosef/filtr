@@ -230,6 +230,15 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     (paymentStatusStr === "paid" ||
       String(row.latest_invoice_status || "") === "paid" ||
       (row.latest_invoice_paid_at != null && String(row.latest_invoice_paid_at).trim()));
+  const adTurnedOffAt =
+    row.ad_turned_off_at != null && String(row.ad_turned_off_at).trim() ? String(row.ad_turned_off_at) : null;
+  const isAdTurnedOff = !!adTurnedOffAt;
+  const workflowStatusLabelCs = isAdTurnedOff
+    ? "Vypnuto administrátorem"
+    : premiumWorkflowStatusLabelCs(workflowStatus, {
+        creative_id: creativeId,
+        target_url: targetUrl,
+      });
   return {
     order_id: row.order_id,
     client_id: row.client_id,
@@ -246,10 +255,10 @@ export function serializePremiumOrderAdminListRow(row: Record<string, unknown>) 
     duration_label_cs: PREMIUM_DURATION_MONTHS + " měsíců",
     price_label_cs: priceLabel,
     workflow_status: workflowStatus,
-    workflow_status_label_cs: premiumWorkflowStatusLabelCs(workflowStatus, {
-      creative_id: creativeId,
-      target_url: targetUrl,
-    }),
+    workflow_status_label_cs: workflowStatusLabelCs,
+    is_ad_turned_off: isAdTurnedOff,
+    ad_turned_off_at: adTurnedOffAt,
+    ad_turned_off_at_label_cs: formatAdminPragueDateTime(adTurnedOffAt),
     creative_id: creativeId,
     target_url: row.target_url,
     creative_mode: row.creative_mode ?? payload.creative_mode,

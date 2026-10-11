@@ -92,6 +92,14 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
   if (!row.published_campaign_id) {
     return { ok: false, status: 409, error: "no_campaign", message_cs: "Chybí zveřejněná kampaň." };
   }
+  if (row.ad_turned_off_at) {
+    return {
+      ok: false,
+      status: 409,
+      error: "ad_turned_off",
+      message_cs: "Reklama byla definitivně vypnuta — úprava objednávky není možná.",
+    };
+  }
   if (typeof input.ico === "string" && input.ico.trim()) {
     const icoEarly = validateCzechIco(input.ico.trim());
     if (!icoEarly.ok) return { ok: false, status: 400, error: "invalid_ico", message_cs: "Neplatné IČO." };

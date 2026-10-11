@@ -3,6 +3,7 @@
  * caller lacks a matching `*.read` permission for. No PII dumps; counts and coarse summaries only.
  */
 import { json, requireAdminSession } from "./admin-auth";
+import { loadAdminDashboardAttention, loadAdminDashboardOpsV1 } from "./admin-dashboard-ops";
 import { hasPermission } from "./rbac";
 import type { Env } from "./types";
 
@@ -102,18 +103,19 @@ export async function handleGetAdminDashboard(request: Request, env: Env): Promi
     widgets.open_alerts = Number(row?.cnt) || 0;
   }
 
-  if (hasPermission(roles, "audit.read")) {
-    const hours = Number(await loadSetting(env.DB, "ALERT_RECENT_AUDIT_HOURS", "24")) || 24;
-    const since = hoursAgoIso(hours);
-    const row = await env.DB.prepare("SELECT COUNT(*) AS cnt FROM audit_logs WHERE created_at >= ?")
-      .bind(since)
-      .first<{ cnt: number }>();
-    widgets.recent_audit = { count: Number(row?.cnt) || 0, hours };
+  const nowIso = new Date().toISOString();
+  let ops_v1 = null;
+  let attention: Awaited<ReturnType<typeof loadAdminDashboardAttention>> = [];
+  if (hasPermission(roles, "orders.read")) {
+    ops_v1 = await loadAdminDashboardOpsV1(env.DB, nowIso);
+    attention = await loadAdminDashboardAttention(env.DB, nowIso);
   }
 
   return json({
     widgets,
+    ops_v1,
+    attention,
     roles,
-    generated_at: new Date().toISOString(),
+    generated_at: nowIso,
   });
 }

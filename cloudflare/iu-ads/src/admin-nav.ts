@@ -14,6 +14,36 @@ export type NavEntry = {
   permission: Permission | null;
 };
 
+/** Pořadí položek menu — regresní guard (viz scripts/iu-ads-admin-menu-guard-v1.mjs). */
+export const ADMIN_NAV_ORDER_IDS: readonly string[] = [
+  "dashboard",
+  "search",
+  "calendar",
+  "alerts",
+  "clients",
+  "inquiries",
+  "orders_all",
+  "premium",
+  "banner_pc",
+  "invoices",
+  "order_confirmations",
+  "contracts",
+  "campaigns",
+  "placements",
+  "reservations",
+  "creatives",
+  "documents",
+  "rights",
+  "complaints",
+  "codes",
+  "stats",
+  "finance",
+  "exports",
+  "backups",
+  "audit",
+  "users",
+];
+
 /** Static catalog — filtered per request by the caller's effective permissions. */
 export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "dashboard", label_cs: "Dashboard", href: "/v1/admin/dashboard", permission: null },
@@ -22,10 +52,32 @@ export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "alerts", label_cs: "Upozornění", href: "/v1/admin/alerts", permission: "alerts.read" },
   { id: "clients", label_cs: "Klienti", href: "/v1/admin/clients", permission: "clients.read" },
   { id: "inquiries", label_cs: "Poptávky", href: "/v1/admin/inquiries", permission: "inquiries.read" },
-  { id: "orders", label_cs: "Objednávky", href: "/v1/admin/orders", permission: "orders.read" },
-  { id: "premium", label_cs: "Objednávky — Vybrané služby a odkazy", href: "/v1/admin/premium/orders", permission: "orders.read" },
+  {
+    id: "orders_all",
+    label_cs: "Všechny objednávky",
+    href: "/v1/admin/ad-orders",
+    permission: "orders.read",
+  },
+  {
+    id: "premium",
+    label_cs: "Reklamní tlačítka – Vybrané služby a odkazy (PC, mobil, tablet)",
+    href: "/v1/admin/premium/orders",
+    permission: "orders.read",
+  },
+  {
+    id: "banner_pc",
+    label_cs: "Bannerová reklama – pravý sloupec PC",
+    href: "/v1/admin/banner-pc",
+    permission: "orders.read",
+  },
+  { id: "invoices", label_cs: "Faktury", href: "/v1/admin/invoices/registry", permission: "invoices.read" },
+  {
+    id: "order_confirmations",
+    label_cs: "Potvrzení objednávek",
+    href: "/v1/admin/order-confirmations/registry",
+    permission: "documents.read",
+  },
   { id: "contracts", label_cs: "Smlouvy", href: "/v1/admin/contracts", permission: "contracts.read" },
-  { id: "invoices", label_cs: "Faktury", href: "/v1/admin/invoices", permission: "invoices.read" },
   { id: "campaigns", label_cs: "Kampaně", href: "/v1/admin/campaigns", permission: "campaigns.read" },
   { id: "placements", label_cs: "Umístění", href: "/v1/admin/placement-types", permission: "placements.read" },
   { id: "reservations", label_cs: "Rezervace", href: "/v1/admin/reservations", permission: "placements.read" },
@@ -65,7 +117,9 @@ export async function handleGetAdminNav(request: Request, env: Env): Promise<Res
     label_cs: e.label_cs,
     href: e.href,
     badge_count:
-      e.id === "orders" && pendingPremiumOrders > 0 ? pendingPremiumOrders : undefined,
+      (e.id === "orders_all" || e.id === "premium") && pendingPremiumOrders > 0
+        ? pendingPremiumOrders
+        : undefined,
   }));
   return json({ nav: items, roles: session.context.roles, pending_premium_orders: pendingPremiumOrders });
 }

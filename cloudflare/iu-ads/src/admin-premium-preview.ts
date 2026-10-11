@@ -32,7 +32,117 @@ import { premiumOrderEligibleForExtendNewOrder } from "./premium-admin-extend-ne
 import { sumPriorCreditCorrectionsCents } from "./premium-accounting-settlement";
 import { buildPremiumOrderPublicationVisibility } from "./premium-publication-consistency";
 import { addCalendarMonthsFromIso } from "./premium-selected-services";
+import {
+  loadPremiumOrderChainMembers,
+  loadPremiumOrderConfirmationRevisionRows,
+  premiumOrderChainArchive,
+  premiumOrderChainTip,
+  premiumOrderReference,
+  premiumOrderServicePeriodLabelCs,
+  type PremiumOrderChainMember,
+  type PremiumOrderConfirmationRevisionRow,
+} from "./premium-order-chain";
+import type { AdminOrderDocumentCard } from "./premium-order-documents";
 import type { Env } from "./types";
+
+function mapConfirmationRevisionsForAdminApi(
+  orderId: string,
+  rows: PremiumOrderConfirmationRevisionRow[]
+): {
+  version: number;
+  created_at_label_cs: string;
+  reason: string | null;
+  is_current: boolean;
+  preview_path: string;
+  download_path: string;
+}[] {
+  const accessBase =
+    "/v1/admin/premium/orders/" + encodeURIComponent(orderId) + "/documents/order_confirmation/access";
+  return rows.map((r) => {
+    const v = Number(r.version);
+    return {
+      version: v,
+      created_at_label_cs: formatAdminPragueDateTime(r.created_at),
+      reason: r.reason,
+      is_current: r.is_current,
+      preview_path: accessBase + "?disposition=inline&version=" + encodeURIComponent(String(v)),
+      download_path: accessBase + "?disposition=attachment&version=" + encodeURIComponent(String(v)),
+    };
+  });
+}
+
+function serializeAdminDocumentCards(cards: AdminOrderDocumentCard[]) {
+  return cards.map((d) => ({
+    kind: d.kind,
+    title: d.title,
+    subtitle: d.subtitle,
+    status: d.status,
+    last_error: d.last_error,
+    preview_path: d.preview_path,
+    download_path: d.download_path,
+  }));
+}
+
+async function buildPremiumOrderHistoryGroups(
+  env: Env,
+  request: Request,
+  members: PremiumOrderChainMember[],
+  tipOrderId: string
+): Promise<Record<string, unknown>[]> {
+  const groups: Record<string, unknown>[] = [];
+  const tipMember = members.find((m) => String(m.order_id) === String(tipOrderId));
+  const tipRevisions = await loadPremiumOrderConfirmationRevisionRows(env.DB!, tipOrderId);
+  const superseded = tipRevisions.filter((r) => !r.is_current);
+  if (superseded.length) {
+    groups.push({
+      group_kind: "confirmation_amendments",
+      order_id: tipOrderId,
+      order_reference: tipMember ? premiumOrderReference(tipMember) : tipOrderId,
+      title_cs: "Opravné verze potvrzení — aktuální období",
+      confirmation_revisions: mapConfirmationRevisionsForAdminApi(tipOrderId, superseded),
+    });
+  }
+
+  const archive = premiumOrderChainArchive(members, tipOrderId);
+  archive.sort((a, b) => {
+    const sa = Date.parse(String(a.billed_service_start_at || a.created_at || ""));
+    const sb = Date.parse(String(b.billed_service_start_at || b.created_at || ""));
+    return sb - sa;
+  });
+
+  for (const m of archive) {
+    const oid = String(m.order_id);
+    let docs = await listPremiumOrderDocumentsForAdmin(env, request, oid);
+    docs = filterPremiumOrderDocumentsForAdminView(docs, {
+      workflow_status: String(m.workflow_status || ""),
+      published_at: m.workflow_status === "published" ? "1" : null,
+    });
+    const inv = await env.DB!.prepare(
+      "SELECT invoice_number, status, paid_at FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+    )
+      .bind(oid)
+      .first<{ invoice_number: string; status: string; paid_at: string | null }>();
+    const payStatus = String(m.payment_status || "unpaid");
+    const invoicePaid = payStatus === "paid" || inv?.status === "paid" || !!inv?.paid_at;
+    const revs = await loadPremiumOrderConfirmationRevisionRows(env.DB!, oid);
+    const ws = String(m.workflow_status || "");
+    groups.push({
+      group_kind: "order_period",
+      order_id: oid,
+      order_reference: premiumOrderReference(m),
+      service_period_label_cs: premiumOrderServicePeriodLabelCs(m),
+      created_at_label_cs: formatAdminPragueDateTime(String(m.created_at || "")),
+      invoice_number: inv?.invoice_number ?? null,
+      invoice_payment_label_cs: inv ? (invoicePaid ? "Faktura uhrazena" : "Faktura neuhrazena") : null,
+      workflow_status_label_cs: m.accounting_cancelled_at
+        ? "Stornováno"
+        : premiumWorkflowStatusLabelCs(ws, {}),
+      documents: serializeAdminDocumentCards(docs),
+      confirmation_revisions: mapConfirmationRevisionsForAdminApi(oid, revs.filter((r) => !r.is_current)),
+    });
+  }
+  return groups;
+}
 
 function previewCardHtml(input: {
   mode: string;
@@ -229,7 +339,6 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const internal_notes = (notesRes.results || []).map((n) => ({
     note_id: (n as Record<string, unknown>).note_id,
     body_text: (n as Record<string, unknown>).body_text,
-    author_label: (n as Record<string, unknown>).author_label || (n as Record<string, unknown>).author_user_id,
     created_at: (n as Record<string, unknown>).created_at,
     created_at_label_cs: formatAdminPragueDateTime(String((n as Record<string, unknown>).created_at || "")),
   }));
@@ -332,14 +441,22 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         ? "Storno objednávky a faktury je dostupné pouze u schválené a dříve zveřejněné objednávky."
         : null;
 
-  let order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
-  order_documents = filterPremiumOrderDocumentsForAdminView(order_documents, {
-    workflow_status: workflowStatusStr,
-    published_at: row.published_at != null ? String(row.published_at) : null,
-  });
-  const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
+  const chainMembers = await loadPremiumOrderChainMembers(env.DB, orderId);
+  const chainTip = premiumOrderChainTip(chainMembers);
+  const documentsOrderId = chainTip?.order_id ?? orderId;
+  const extendSourceOrderId = documentsOrderId;
 
-  const extendEligible = await premiumOrderEligibleForExtendNewOrder(env.DB, orderId, nowIso);
+  const tipWorkflow = chainTip ? String(chainTip.workflow_status || "") : workflowStatusStr;
+  let order_documents = await listPremiumOrderDocumentsForAdmin(env, request, documentsOrderId);
+  order_documents = filterPremiumOrderDocumentsForAdminView(order_documents, {
+    workflow_status: tipWorkflow,
+    published_at: tipWorkflow === "published" ? "1" : null,
+  });
+  order_documents = order_documents.filter((d) => d.kind === "order_confirmation" || d.kind === "invoice_pdf");
+  const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
+  const order_history_groups = await buildPremiumOrderHistoryGroups(env, request, chainMembers, documentsOrderId);
+
+  const extendEligible = await premiumOrderEligibleForExtendNewOrder(env.DB, extendSourceOrderId, nowIso);
   const suggestedExtendEnd =
     campaignEndAt && extendEligible.ok ? addCalendarMonthsFromIso(campaignEndAt, 6) : null;
 
@@ -355,42 +472,6 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     .bind(orderId, orderId)
     .all<Record<string, unknown>>();
 
-  const activeConfDoc = await env.DB.prepare(
-    "SELECT document_id, version, created_at FROM documents WHERE order_id = ? AND doc_type = 'premium_order_confirmation' AND status = 'active' ORDER BY created_at DESC LIMIT 1"
-  )
-    .bind(orderId)
-    .first<{ document_id: string; version: number; created_at: string }>();
-  const archivedRevisions = activeConfDoc
-    ? await env.DB.prepare(
-        "SELECT version, created_at, replacement_reason FROM document_content_revisions WHERE document_id = ? ORDER BY version ASC"
-      )
-        .bind(activeConfDoc.document_id)
-        .all<{ version: number; created_at: string; replacement_reason: string | null }>()
-    : { results: [] as { version: number; created_at: string; replacement_reason: string | null }[] };
-  const confirmationRevisionRows: {
-    version: number;
-    created_at: string;
-    reason: string | null;
-    is_current: boolean;
-  }[] = [];
-  for (const rev of archivedRevisions.results || []) {
-    confirmationRevisionRows.push({
-      version: Number(rev.version),
-      created_at: String(rev.created_at),
-      reason: rev.replacement_reason,
-      is_current: false,
-    });
-  }
-  if (activeConfDoc) {
-    confirmationRevisionRows.push({
-      version: Number(activeConfDoc.version),
-      created_at: String(activeConfDoc.created_at),
-      reason: null,
-      is_current: true,
-    });
-  }
-  confirmationRevisionRows.sort((a, b) => a.version - b.version);
-
   const amendConfirmationReady = !!(
     await env.DB.prepare(
       "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = 'order_confirmation' AND status = 'ready' LIMIT 1"
@@ -399,7 +480,10 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       .first()
   );
   const order_amend_allowed =
-    workflowStatusStr === "published" && !!row.published_campaign_id && amendConfirmationReady;
+    workflowStatusStr === "published" &&
+    !!row.published_campaign_id &&
+    amendConfirmationReady &&
+    !isAdTurnedOff;
 
   let extendSuggestedPriceKc: string | null = null;
   if (extendEligible.ok) {
@@ -455,10 +539,12 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       position: row.position,
       position_label: "P" + String(row.position),
       workflow_status: row.workflow_status,
-      workflow_status_label_cs: premiumWorkflowStatusLabelCs(workflowStatusStr, {
-        creative_id: creativeIdStr,
-        target_url: targetUrlStr,
-      }),
+      workflow_status_label_cs: isAdTurnedOff
+        ? "Reklama vypnuta"
+        : premiumWorkflowStatusLabelCs(workflowStatusStr, {
+            creative_id: creativeIdStr,
+            target_url: targetUrlStr,
+          }),
       publishable,
       missing_publish_fields: missingPublishFields,
       target_url: row.target_url,
@@ -540,8 +626,11 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     publication_visibility,
     history,
     internal_notes,
+    documents_order_id: documentsOrderId,
+    extend_chain_source_order_id: extendSourceOrderId,
     order_documents,
     order_documents_pdf_count,
+    order_history_groups,
     invoice: invoiceRow
       ? {
           invoice_id: invoiceRow.invoice_id,
@@ -569,21 +658,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
           : null,
       created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
     })),
-    order_confirmation_revisions: confirmationRevisionRows.map((r) => {
-      const v = Number(r.version);
-      const accessBase =
-        "/v1/admin/premium/orders/" +
-        encodeURIComponent(orderId) +
-        "/documents/order_confirmation/access";
-      return {
-        version: v,
-        created_at_label_cs: formatAdminPragueDateTime(r.created_at),
-        reason: r.reason,
-        is_current: r.is_current,
-        preview_path: accessBase + "?disposition=inline&version=" + encodeURIComponent(String(v)),
-        download_path: accessBase + "?disposition=attachment&version=" + encodeURIComponent(String(v)),
-      };
-    }),
+    order_confirmation_revisions: [],
     edit_form_options: {
       categories: PREMIUM_AFFILIATE_CATEGORY_SLUGS.map((slug) => ({
         slug,
