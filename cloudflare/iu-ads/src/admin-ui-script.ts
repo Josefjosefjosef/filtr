@@ -357,13 +357,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
     return '<button type="button" class="btn detail" data-premium-detail="'+id+'" data-order-publishable="'+esc(publishableHint)+'"'+stop+
       ' aria-label="Detail objednávky'+(row.publishable?" (připraveno ke schválení)":"")+'">Detail</button>';
   }
-  function premiumOrdersTableHtml(rows){
+  function premiumOrdersTableHtml(rows,opts){
+    opts=opts||{};
     if(!rows||!rows.length) return '<p class="muted empty">Žádné objednávky k zobrazení.</p>';
-    var head=["Firma","IČO","Sekce","Pozice","Období","Cena","Stav","Přijato","Akce"].map(function(h){return "<th>"+esc(h)+"</th>";}).join("");
+    var head=["Firma","IČO"];
+    if(opts.showAdMeta){ head.push("Produkt","Číslo objednávky"); }
+    head=head.concat(["Sekce","Pozice","Období","Cena","Stav","Přijato","Akce"]);
+    var headHtml=head.map(function(h){return "<th>"+esc(h)+"</th>";}).join("");
     var body=rows.map(function(row){
+      var ref=row.order_reference||row.customer_order_code||row.order_number||"—";
       return '<tr class="order-row-click '+esc(premiumOrderRowBorderClass(row))+'" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
         "<td>"+esc(row.company_name)+"</td>"+
         "<td>"+esc(row.ico||"—")+"</td>"+
+        (opts.showAdMeta?("<td>"+esc(row.ad_product_label_cs||"—")+"</td><td>"+esc(ref)+"</td>"):"")+
         "<td>"+esc(row.category_title_cs||row.category_slug)+"</td>"+
         "<td>"+esc(row.position_label||("P"+row.position))+"</td>"+
         "<td>"+esc(row.duration_label_cs||"6 měsíců")+"</td>"+
@@ -372,9 +378,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
         "<td>"+esc(row.submitted_at_label_cs||formatCsDate(row.submitted_at))+"</td>"+
         '<td class="order-actions">'+premiumOrderActions(row,{stopPropagation:true})+"</td></tr>";
     }).join("");
-    return '<div class="table-wrap order-table-desktop"><table class="order-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+"</tbody></table></div>";
+    return '<div class="table-wrap order-table-desktop"><table class="order-table"><thead><tr>'+headHtml+'</tr></thead><tbody>'+body+"</tbody></table></div>";
   }
-  function premiumOrdersCardsHtml(rows){
+  function premiumOrdersCardsHtml(rows,opts){
+    opts=opts||{};
     if(!rows||!rows.length) return "";
     return '<div class="order-cards">'+rows.map(function(row){
       return '<article class="order-card '+esc(premiumOrderCardBorderClass(row))+'" tabindex="0" role="button" data-order-open="'+esc(row.order_id)+'" aria-label="Otevřít detail objednávky">'+
@@ -382,6 +389,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         premiumInvoicePaymentBadgeHtml(row,true)+
         '<span class="order-status '+esc(premiumWorkflowStatusClass(premiumWorkflowUiTone(row)))+'">'+esc(premiumRowStatus(row))+'</span></div></div>'+
         '<p class="muted">IČO: '+esc(row.ico||"—")+'</p>'+
+        (opts.showAdMeta?('<p class="muted">'+esc(row.ad_product_label_cs||"—")+' · '+esc(row.order_reference||row.customer_order_code||row.order_number||"—")+'</p>'):'')+
         '<p>'+esc(row.category_title_cs||row.category_slug)+' · '+esc(row.position_label||("P"+row.position))+'</p>'+
         '<p>'+esc(row.duration_label_cs||"6 měsíců")+' · '+esc(row.price_label_cs||"—")+'</p>'+
         '<p class="muted">Přijato: '+esc(row.submitted_at_label_cs||formatCsDate(row.submitted_at))+'</p>'+
@@ -1353,6 +1361,50 @@ export const ADMIN_UI_SCRIPT = String.raw`
       return '<div class="widget"><div class="widget-k">'+esc(pair[0])+'</div><div class="widget-v">'+esc(String(pair[1]||0))+'</div></div>';
     }).join("")+"</div>";
   }
+  async function renderAllAdOrdersAdmin(){
+    if(state.orderDetailId) { await renderPremiumOrderDetail(state.orderDetailId); return; }
+    var f=state.premiumFilters||{};
+    var qs=new URLSearchParams();
+    if(f.q) qs.set("q",f.q);
+    if(f.filter) qs.set("filter",f.filter);
+    if(f.payment) qs.set("payment",f.payment);
+    if(f.category) qs.set("category",f.category);
+    if(f.position) qs.set("position",f.position);
+    if(f.ending_days) qs.set("ending_days",f.ending_days);
+    if(f.ad_product) qs.set("ad_product",f.ad_product);
+    var path="/v1/admin/ad-orders"+(qs.toString()?"?"+qs.toString():"");
+    var po=await api(path,{method:"GET",headers:{}});
+    if(!po.res.ok){ panel('<p class="err">'+esc(apiError(po.body))+'</p>'); return; }
+    var rows=(po.body&&po.body.orders)||[];
+    var rowsById={};
+    rows.forEach(function(r){ rowsById[r.order_id]=r; });
+    panel('<div class="card"><h2>Všechny objednávky</h2><p class="muted">Společný přehled reklamních objednávek napříč produkty.</p></div>'+
+      premiumOrdersFilterBarHtml()+
+      '<details class="card"><summary class="muted">Reklamní produkt</summary>'+
+      sel("all-orders-ad-product","Produkt",[
+        ["","Všechny reklamní produkty"],
+        ["premium_buttons","Reklamní tlačítka – Vybrané služby a odkazy (PC, mobil, tablet)"],
+        ["banner_pc_right","Bannerová reklama – pravý sloupec PC"]
+      ],f.ad_product||"")+'</details>'+
+      '<div class="card">'+premiumOrdersTableHtml(rows,{showAdMeta:true})+premiumOrdersCardsHtml(rows,{showAdMeta:true})+"</div>"+
+      publishConfirmDialogHtml(state.publishConfirmRow)+accountingCancelModalHtml()+auxiliaryModalsHtml());
+    var apply=el("premium-filter-apply");
+    if(apply) apply.onclick=function(){
+      state.premiumFilters={
+        q:val("premium-filter-q").trim(),
+        filter:val("premium-filter-bucket"),
+        payment:val("premium-filter-payment"),
+        category:val("premium-filter-category").trim(),
+        position:val("premium-filter-position"),
+        ending_days:val("premium-filter-ending"),
+        ad_product:val("all-orders-ad-product")
+      };
+      render();
+    };
+    wirePremiumOrderInteractions(rowsById);
+    wireAccountingCancelModal();
+    wireAuxiliaryModals();
+  }
   async function renderPremiumOrdersAdmin(){
     if(state.orderDetailId) { await renderPremiumOrderDetail(state.orderDetailId); return; }
     var f=state.premiumFilters||{};
@@ -1376,7 +1428,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
     var resetBar=isMainAdminUser()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
       '<button type="button" class="btn danger" id="premium-test-reset-open">Vyčistit všechny testovací záznamy</button></div>'):"";
-    panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
+    panel('<div class="card"><h2>Reklamní tlačítka – Vybrané služby a odkazy (PC, mobil, tablet)</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
       premiumSummaryWidgetsHtml(sum.body)+"</div>"+resetBar+
       premiumOrdersFilterBarHtml()+
       '<div class="card">'+premiumOrdersTableHtml(rows)+premiumOrdersCardsHtml(rows)+"</div>"+publishConfirmDialogHtml(state.publishConfirmRow)+accountingCancelModalHtml()+auxiliaryModalsHtml());
@@ -1416,6 +1468,73 @@ export const ADMIN_UI_SCRIPT = String.raw`
       export_created:"Vytvoření exportu"
     };
     return map[op]||op||"—";
+  }
+  function opsDashboardHtml(body){
+    var ops=body&&body.ops_v1;
+    if(!ops||typeof ops!=="object") return widgetsHtml(body&&body.widgets);
+    function pushKpi(label,value,cls,clickAttr){
+      cls=cls||"";
+      var click=clickAttr?' data-dash-nav="'+esc(clickAttr)+'" role="button" tabindex="0"':"";
+      return '<div class="widget'+cls+'"'+click+'><div class="widget-k">'+esc(label)+'</div><div class="widget-v">'+esc(value)+"</div></div>";
+    }
+    var cards=[];
+    var pending=ops.new_orders_pending||{};
+    cards.push(pushKpi("Nové objednávky",String(pending.count||0),pending.highlight?" widget--alert":"",pending.count>0?"premium:pending_review":""));
+    var pay=ops.awaiting_payment||{};
+    cards.push(pushKpi("Čekají na platbu",(pay.count||0)+" · "+formatKc(pay.total_unpaid_cents||0),"","premium:payment:unpaid"));
+    cards.push(pushKpi("Aktivní reklamní tlačítka",String((ops.active_premium_buttons&&ops.active_premium_buttons.count)||0),"","premium:published_active"));
+    var banners=ops.active_banners||{};
+    cards.push(pushKpi("Aktivní bannery",(banners.status_cs||"0")+" ("+String(banners.count||0)+")","","banner_pc"));
+    cards.push(pushKpi("Reklamy končící do 14 dnů",String((ops.ending_within_14_days&&ops.ending_within_14_days.count)||0),"","premium:ending_14"));
+    cards.push(pushKpi("Vypnuté reklamy",String((ops.ads_turned_off&&ops.ads_turned_off.count)||0),"","premium:turned_off"));
+    var inv=ops.invoiced_this_month||{};
+    cards.push(pushKpi("Fakturováno tento měsíc",formatKc(inv.net_cents||0),"", "invoices"));
+    var paid=ops.paid_this_month||{};
+    cards.push(pushKpi("Uhrazeno tento měsíc",formatKc(paid.total_cents||0),"", "invoices"));
+    var notes=(inv.vat_note_cs||"")+" "+(paid.vat_note_cs||"");
+    return '<div class="widgets widgets-ops">'+cards.join("")+'</div>'+
+      (notes.trim()?'<p class="muted">'+esc(notes.trim())+"</p>":"");
+  }
+  function attentionSectionHtml(body){
+    var items=(body&&body.attention)||[];
+    if(!items.length) return "";
+    return '<div class="card"><h3>Vyžaduje pozornost</h3><ul class="history-list">'+
+      items.map(function(it){
+        var nav=it.nav_view||"premium";
+        var hint=it.filter_hint?" data-attention-filter='"+esc(it.filter_hint)+"'":"";
+        return "<li><strong>"+esc(it.label_cs)+"</strong> — "+esc(String(it.count||0))+
+          ' <button type="button" class="btn secondary" data-attention-nav="'+esc(nav)+'"'+hint+">Zobrazit</button></li>";
+      }).join("")+"</ul></div>";
+  }
+  function wireDashboardNav(body){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-dash-nav]"),function(el){
+      el.onclick=function(){ applyDashboardNav(el.getAttribute("data-dash-nav")); };
+      el.onkeydown=function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); applyDashboardNav(el.getAttribute("data-dash-nav")); } };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-attention-nav]"),function(b){
+      b.onclick=function(){
+        var v=b.getAttribute("data-attention-nav");
+        var f=b.getAttribute("data-attention-filter");
+        if(v){ state.view=v; if(f){ state.premiumFilters=state.premiumFilters||{}; state.premiumFilters.filter=f; } render(); }
+      };
+    });
+  }
+  function applyDashboardNav(token){
+    if(!token) return;
+    var parts=String(token).split(":");
+    var view=parts[0];
+    state.premiumFilters=state.premiumFilters||{};
+    if(view==="premium"){
+      state.view="premium";
+      if(parts[1]==="pending_review") state.premiumFilters.filter="pending_review";
+      else if(parts[1]==="published_active") state.premiumFilters.filter="published_active";
+      else if(parts[1]==="ending_14") state.premiumFilters.ending_days="14";
+      else if(parts[1]==="turned_off") state.premiumFilters.filter="published_active";
+      if(parts[1]==="payment"&&parts[2]) state.premiumFilters.payment=parts[2];
+    } else if(view==="invoices") state.view="invoices";
+    else if(view==="banner_pc") state.view="banner_pc";
+    else state.view=view;
+    render();
   }
   function widgetsHtml(w){
     if(!w||typeof w!=="object") return '<p class="muted empty">Žádné záznamy</p>';
@@ -1939,7 +2058,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
       if(v==="dashboard"){
         var d=await api("/v1/admin/dashboard",{method:"GET",headers:{}});
         if(!d.res.ok){ panel('<p class="err">'+esc(apiError(d.body))+'</p>'); return; }
-        panel('<div class="card"><h2>Dashboard</h2>'+widgetsHtml(d.body&&d.body.widgets||d.body)+'</div>');
+        panel('<div class="card"><h2>Dashboard</h2>'+opsDashboardHtml(d.body||{})+'</div>'+attentionSectionHtml(d.body||{}));
+        wireDashboardNav(d.body||{});
       } else if(v==="search"){
         panel('<div class="card"><h2>Vyhledávání</h2>'+
           '<div class="grid2">'+inp("q","Dotaz (min. 2 znaky)")+
@@ -2014,6 +2134,33 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ],
         emptyHint:"Žádné poptávky."
       });
+      else if(v==="orders_all") { await renderAllAdOrdersAdmin(); return; }
+      else if(v==="banner_pc"){
+        var bp=await api("/v1/admin/banner-pc",{method:"GET",headers:{}});
+        if(!bp.res.ok){ panel('<p class="err">'+esc(apiError(bp.body))+'</p>'); return; }
+        panel('<div class="card"><h2>Bannerová reklama – pravý sloupec PC</h2><p class="muted">'+esc((bp.body&&bp.body.message_cs)||"")+'</p><p><strong>Stav:</strong> '+esc((bp.body&&bp.body.product_status_cs)||"Připravuje se")+"</p></div>");
+      }
+      else if(v==="order_confirmations"){
+        var oc=await api("/v1/admin/order-confirmations/registry",{method:"GET",headers:{}});
+        if(!oc.res.ok){ panel('<p class="err">'+esc(apiError(oc.body))+'</p>'); return; }
+        var confs=(oc.body&&oc.body.confirmations)||[];
+        panel('<div class="card"><h2>Potvrzení objednávek</h2><p class="muted">Centrální archiv PDF potvrzení a storno dokumentů (reklamní tlačítka).</p>'+
+          (confs.length?('<div class="table-wrap"><table><thead><tr><th>Objednávka</th><th>Zákazník</th><th>Produkt</th><th>Dokument</th><th>Datum</th><th>PDF</th></tr></thead><tbody>'+
+            confs.map(function(c){
+              return "<tr><td>"+esc(c.order_reference||"—")+"</td><td>"+esc(c.company_name||"—")+" · "+esc(c.ico||"—")+"</td><td>"+esc(c.ad_product_label_cs||"—")+"</td><td>"+esc(c.document_title_cs||"—")+"</td><td>"+esc(c.created_at_label_cs||"—")+"</td><td>"+
+                (c.preview_path?'<button type="button" class="btn secondary" data-conf-preview="'+esc(c.preview_path)+'">Náhled</button> ':"")+
+                (c.download_path?'<button type="button" class="btn secondary" data-conf-download="'+esc(c.download_path)+'">Stáhnout</button>':"")+
+                "</td></tr>";
+            }).join("")+"</tbody></table></div>"):'<p class="muted empty">Zatím žádná potvrzení.</p>')+
+          (oc.body&&oc.body.export_zip_message_cs?'<p class="muted">'+esc(oc.body.export_zip_message_cs)+"</p>":"")+
+          "</div>");
+        Array.prototype.forEach.call(document.querySelectorAll("[data-conf-preview]"),function(b){
+          b.onclick=function(){ window.open(b.getAttribute("data-conf-preview"),"_blank","noopener"); };
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-conf-download]"),function(b){
+          b.onclick=function(){ window.location.href=b.getAttribute("data-conf-download"); };
+        });
+      }
       else if(v==="premium"||v==="orders") { await renderPremiumOrdersAdmin(); return; }
       else if(v==="contracts") return renderSimpleCrud({
         title:"Smlouvy", listPath:"/v1/admin/contracts", listKey:"contracts", createPath:"/v1/admin/contracts",
@@ -2024,15 +2171,29 @@ export const ADMIN_UI_SCRIPT = String.raw`
           {id:"co-num",key:"contract_number",label:"contract_number (auto pokud prázdné)",optional:true}
         ]
       });
-      else if(v==="invoices") return renderSimpleCrud({
-        title:"Faktury", listPath:"/v1/admin/invoices", listKey:"invoices", createPath:"/v1/admin/invoices",
-        cols:[["invoice_id","ID"],["invoice_number","Číslo"],["status","Stav"],["client_id","Klient"],["total_cents","Částka (cents)"]],
-        fields:[
-          {id:"in-client",key:"client_id",label:"client_id *"},
-          {id:"in-total",key:"total_cents",label:"total_cents",type:"number",asNumber:true},
-          {id:"in-cur",key:"currency",label:"Měna",value:"CZK"}
-        ]
-      });
+      else if(v==="invoices"){
+        var ir=await api("/v1/admin/invoices/registry",{method:"GET",headers:{}});
+        if(!ir.res.ok){ panel('<p class="err">'+esc(apiError(ir.body))+'</p>'); return; }
+        var docs=(ir.body&&ir.body.documents)||[];
+        panel('<div class="card"><h2>Faktury</h2><p class="muted">Centrální evidence faktur a dobropisů (reklamní objednávky).</p>'+
+          (docs.length?('<div class="table-wrap"><table><thead><tr><th>Číslo dokladu</th><th>Zákazník</th><th>Objednávka</th><th>Vystaveno</th><th>Částka</th><th>Platba</th><th>PDF</th></tr></thead><tbody>'+
+            docs.map(function(d){
+              var num=d.document_kind==="credit_note"?d.credit_note_number:d.invoice_number;
+              return "<tr><td>"+esc(num||"—")+(d.linked_invoice_number?" → faktura "+esc(d.linked_invoice_number):"")+"</td><td>"+esc(d.company_name||"—")+" · "+esc(d.ico||"—")+"</td><td>"+esc(d.order_reference||"—")+"</td><td>"+esc(d.issued_at_label_cs||"—")+"</td><td>"+esc(formatKc(d.total_cents||0))+"</td><td>"+esc(d.payment_label_cs||"—")+"</td><td>"+
+                (d.preview_path?'<button type="button" class="btn secondary" data-inv-preview="'+esc(d.preview_path)+'">Náhled</button> ':"")+
+                (d.download_path?'<button type="button" class="btn secondary" data-inv-download="'+esc(d.download_path)+'">Stáhnout</button>':"")+
+                "</td></tr>";
+            }).join("")+"</tbody></table></div>"):'<p class="muted empty">Žádné faktury.</p>')+
+          (ir.body&&ir.body.export_zip_message_cs?'<p class="muted">'+esc(ir.body.export_zip_message_cs)+"</p>":"")+
+          "</div>");
+        Array.prototype.forEach.call(document.querySelectorAll("[data-inv-preview]"),function(b){
+          b.onclick=function(){ window.open(b.getAttribute("data-inv-preview"),"_blank","noopener"); };
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-inv-download]"),function(b){
+          b.onclick=function(){ window.location.href=b.getAttribute("data-inv-download"); };
+        });
+        return;
+      }
       else if(v==="placements"){
         var pt=await api("/v1/admin/placement-types",{method:"GET",headers:{}});
         if(!pt.res.ok){ panel('<p class="err">'+esc(apiError(pt.body))+'</p>'); return; }

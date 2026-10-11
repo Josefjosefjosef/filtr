@@ -56,6 +56,8 @@ export function buildAdminShellHtml(nonce: string): string {
     .widget{border:1px solid var(--line);border-radius:10px;padding:.75rem;background:#fff}
     .widget-k{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
     .widget-v{font-size:1.05rem;margin-top:.25rem;word-break:break-word}
+    .widget--alert .widget-v{color:var(--order-rejected);font-weight:700}
+    .widgets-ops .widget{cursor:pointer}
     .empty{padding:.5rem 0}
     #login-view,#app-view{display:none}
     #login-view.show,#app-view.show{display:block}
