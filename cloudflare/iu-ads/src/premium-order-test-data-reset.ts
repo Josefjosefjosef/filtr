@@ -260,6 +260,9 @@ export async function resetAllPremiumTestOperationalData(
     await purgeDbStep("reset_orphan_client_contracts", () =>
       db.prepare("DELETE FROM contracts WHERE client_id = ?").bind(clientId).run()
     );
+    await purgeDbStep("reset_orphan_client_inquiries", () =>
+      db.prepare("DELETE FROM inquiries WHERE client_id = ?").bind(clientId).run()
+    );
     const clientDocs = await db
       .prepare("SELECT document_id, r2_key FROM documents WHERE client_id = ?")
       .bind(clientId)
