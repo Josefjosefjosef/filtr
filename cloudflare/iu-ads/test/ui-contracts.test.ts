@@ -111,6 +111,9 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).toContain("premium-publish-modal");
     expect(ADMIN_UI_SCRIPT).toContain("Finální kontrola před zveřejněním");
     expect(ADMIN_UI_SCRIPT).toContain("renderPremiumOrdersAdmin");
+    expect(ADMIN_UI_SCRIPT).not.toMatch(/\bisMainAdmin\s*\(/);
+    expect(ADMIN_UI_SCRIPT).toContain("isMainAdminUser()");
+    expect(ADMIN_UI_SCRIPT).toContain("render-retry");
     expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders");
     expect(ADMIN_UI_SCRIPT).toContain("Interní poznámky");
     const detailIdx = ADMIN_UI_SCRIPT.indexOf("async function renderPremiumOrderDetail");

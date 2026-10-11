@@ -1315,7 +1315,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }).join("")+"</div>";
   }
   async function renderPremiumOrdersAdmin(){
-    if(state.orderDetailId) return renderPremiumOrderDetail(state.orderDetailId);
+    if(state.orderDetailId) { await renderPremiumOrderDetail(state.orderDetailId); return; }
     var f=state.premiumFilters||{};
     var qs=new URLSearchParams();
     if(f.q) qs.set("q",f.q);
@@ -1331,7 +1331,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
-    var resetBar=isMainAdmin()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
+    var resetBar=isMainAdminUser()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
       '<button type="button" class="btn danger" id="premium-test-reset-open">Vyčistit všechny testovací záznamy</button></div>'):"";
     panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
       premiumSummaryWidgetsHtml(sum.body)+"</div>"+resetBar+
@@ -1971,7 +1971,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ],
         emptyHint:"Žádné poptávky."
       });
-      else if(v==="premium"||v==="orders") return renderPremiumOrdersAdmin();
+      else if(v==="premium"||v==="orders") { await renderPremiumOrdersAdmin(); return; }
       else if(v==="contracts") return renderSimpleCrud({
         title:"Smlouvy", listPath:"/v1/admin/contracts", listKey:"contracts", createPath:"/v1/admin/contracts",
         cols:[["contract_id","ID"],["contract_number","Číslo"],["status","Stav"],["client_id","Klient"]],
@@ -2152,7 +2152,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
         panel('<div class="card"><h2>'+esc(entry&&entry.label_cs||v)+'</h2><pre class="json">'+esc(JSON.stringify(raw.body,null,2))+'</pre></div>');
       }
     }catch(e){
-      panel('<p class="err">Síťová chyba.</p>');
+      var errMsg=(e&&e.message)?String(e.message):"";
+      panel('<p class="err">Nepodařilo se načíst obsah.'+(errMsg?" "+esc(errMsg):"")+'</p>'+
+        '<div class="row"><button type="button" class="btn" id="render-retry">Zkusit znovu</button></div>');
+      var retryBtn=el("render-retry");
+      if(retryBtn) retryBtn.onclick=function(){ render(); };
     }
   }
   bootstrap();
