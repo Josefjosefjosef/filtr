@@ -146,7 +146,9 @@ describe("premium order purge delete integration", () => {
     expect(db.campaigns.has("camp_1")).toBe(false);
     const campIdx = db.runLog.findIndex((l) => l.includes("DELETE FROM campaigns"));
     const crIdx = db.runLog.findIndex((l) => l.includes("DELETE FROM creatives"));
+    const statusEvIdx = db.runLog.findIndex((l) => l.includes("DELETE FROM campaign_status_events"));
     expect(crIdx).toBeGreaterThanOrEqual(0);
+    expect(statusEvIdx).toBeGreaterThanOrEqual(0);
     expect(campIdx).toBeGreaterThan(crIdx);
   });
 

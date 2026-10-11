@@ -154,6 +154,7 @@ import {
   handleAdminPremiumRetryDocuments,
 } from "./premium-order-documents";
 import { handleAdminPremiumDeleteOrder } from "./premium-order-delete";
+import { handleAdminPremiumOrderPurgeDiagnostics } from "./premium-order-purge-diagnostics";
 import {
   handleAdminPremiumApproveRevision,
   handleAdminPremiumRequestRevision,
@@ -678,6 +679,10 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (premiumPatchMatch && method === "PATCH") return handleAdminPremiumPatchOrder(request, env, premiumPatchMatch[1]);
       const premiumDeleteMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/delete$/);
       if (premiumDeleteMatch && method === "POST") return handleAdminPremiumDeleteOrder(request, env, premiumDeleteMatch[1]);
+      const premiumPurgeDiagMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/purge-diagnostics$/);
+      if (premiumPurgeDiagMatch && method === "GET") {
+        return handleAdminPremiumOrderPurgeDiagnostics(request, env, premiumPurgeDiagMatch[1]);
+      }
       const premiumRevisionMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/revisions$/);
       if (premiumRevisionMatch && method === "POST") {
         return handleAdminPremiumRequestRevision(request, env, premiumRevisionMatch[1]);
