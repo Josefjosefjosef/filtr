@@ -155,6 +155,7 @@ import {
 } from "./premium-order-documents";
 import { handleAdminPremiumDeleteOrder } from "./premium-order-delete";
 import { handleAdminPremiumOrderPurgeDiagnostics } from "./premium-order-purge-diagnostics";
+import { handleAdminPremiumTestDataReset } from "./premium-order-test-data-reset";
 import {
   handleAdminPremiumApproveRevision,
   handleAdminPremiumRequestRevision,
@@ -682,6 +683,9 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       const premiumPurgeDiagMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/purge-diagnostics$/);
       if (premiumPurgeDiagMatch && method === "GET") {
         return handleAdminPremiumOrderPurgeDiagnostics(request, env, premiumPurgeDiagMatch[1]);
+      }
+      if (path === "/v1/admin/premium/test-data/reset" && method === "POST") {
+        return handleAdminPremiumTestDataReset(request, env);
       }
       const premiumRevisionMatch = path.match(/^\/v1\/admin\/premium\/orders\/([^/]+)\/revisions$/);
       if (premiumRevisionMatch && method === "POST") {

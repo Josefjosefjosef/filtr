@@ -33,6 +33,7 @@ const KNOWN_ADMIN_CLIENT_PATHS = [
   "/v1/admin/orders",
   "/v1/admin/premium/orders",
   "/v1/admin/premium/orders/pending-count",
+  "/v1/admin/premium/test-data/reset",
   "/v1/client/premium/summary",
   "/v1/client/premium/renewals",
   "/v1/admin/contracts",

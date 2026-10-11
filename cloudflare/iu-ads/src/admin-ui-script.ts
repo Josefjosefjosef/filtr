@@ -563,6 +563,17 @@ export const ADMIN_UI_SCRIPT = String.raw`
         '<div class="row"><button type="button" class="btn success" id="en-save" '+(ex.submitBusy?"disabled":"")+'>Uložit novou objednávku</button> '+
         '<button type="button" class="btn secondary" id="en-cancel">Zrušit</button></div></div></div>';
     }
+    var tr=state.testDataResetModal;
+    if(tr){
+      h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Vyčistit všechny testovací záznamy</h3>'+
+        '<p class="err">Nevratné odstranění všech prémiových objednávek, kampaní, dokumentů a souvisejících dat v D1/R2.</p>'+
+        '<p class="muted">Zadejte přesně: <strong>VYMAZAT TESTOVACI DATA</strong></p>'+
+        '<p><label>Potvrzení<input id="tr-phrase" type="text" autocomplete="off" value="'+esc(tr.phrase||"")+'"></label></p>'+
+        '<p><label><input type="checkbox" id="tr-ack" '+(tr.ack?"checked":"")+'> Beru na vědomí, že jde o nevratnou operaci a všechny dosavadní testovací objednávky budou odstraněny.</label></p>'+
+        (tr.formError?'<p class="err">'+esc(tr.formError)+'</p>':"")+
+        '<div class="row"><button type="button" class="btn danger" id="tr-confirm" '+(tr.submitBusy?"disabled":"")+'>Provést reset</button> '+
+        '<button type="button" class="btn secondary" id="tr-cancel">Zrušit</button></div></div></div>';
+    }
     var pu=state.purgeOrderModal;
     if(pu&&pu.detail){
       var po=pu.detail.order||{};
@@ -599,6 +610,27 @@ export const ADMIN_UI_SCRIPT = String.raw`
     return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes());
   }
   function wireAuxiliaryModals(){
+    var trOpen=el("premium-test-reset-open");
+    if(trOpen) trOpen.onclick=function(){ state.testDataResetModal={phrase:"",ack:false,submitBusy:false}; render(); };
+    var trCancel=el("tr-cancel");
+    if(trCancel) trCancel.onclick=function(){ state.testDataResetModal=null; render(); };
+    var trConfirm=el("tr-confirm");
+    if(trConfirm) trConfirm.onclick=async function(){
+      var m=state.testDataResetModal; if(!m||m.submitBusy) return;
+      m.phrase=val("tr-phrase").trim();
+      m.ack=!!(el("tr-ack")&&el("tr-ack").checked);
+      if(!m.ack){ m.formError="Zaškrtněte potvrzení nevratné operace."; render(); return; }
+      if(m.phrase.toUpperCase()!=="VYMAZAT TESTOVACI DATA"){ m.formError="Neplatná potvrzovací fráze."; render(); return; }
+      m.submitBusy=true; m.formError=""; render();
+      var r=await api("/v1/admin/premium/test-data/reset",{method:"POST",body:JSON.stringify({confirm:true,confirm_phrase:m.phrase})});
+      m.submitBusy=false;
+      if(!r.res.ok){ m.formError=r.body&&r.body.message_cs?r.body.message_cs:apiError(r.body); render(); return; }
+      state.testDataResetModal=null;
+      state.orderDetailId=null;
+      state.flash=r.body&&r.body.message_cs?r.body.message_cs:"Reset testovacích dat dokončen.";
+      await loadNav();
+      render();
+    };
     var c=el("oe-cancel"); if(c) c.onclick=function(){ state.orderEditModal=null; render(); };
     var es=el("oe-save");
     if(es) es.onclick=async function(){
@@ -1244,8 +1276,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
+    var resetBar=isMainAdmin()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
+      '<button type="button" class="btn danger" id="premium-test-reset-open">Vyčistit všechny testovací záznamy</button></div>'):"";
     panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
-      premiumSummaryWidgetsHtml(sum.body)+"</div>"+
+      premiumSummaryWidgetsHtml(sum.body)+"</div>"+resetBar+
       premiumOrdersFilterBarHtml()+
       '<div class="card">'+premiumOrdersTableHtml(rows)+premiumOrdersCardsHtml(rows)+"</div>"+publishConfirmDialogHtml(state.publishConfirmRow)+accountingCancelModalHtml()+auxiliaryModalsHtml());
     var apply=el("premium-filter-apply");
