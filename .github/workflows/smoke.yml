@@ -135,6 +135,7 @@ jobs:
           node scripts/iu-premium-order-documents-freeze-guard-v1.mjs
           node scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs
           node scripts/iu-premium-order-confirmation-pdf-freeze-guard-v1.mjs
+          node scripts/iu-premium-dev-operational-reset-guard-v1.mjs
           export IU_INVOICE_VISUAL_OUT="${RUNNER_TEMP}/iu-invoice-visual"
           mkdir -p "$IU_INVOICE_VISUAL_OUT"
           cd cloudflare/iu-ads
