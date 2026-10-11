@@ -428,6 +428,7 @@
 
   function restoreAppShellAfterReturn() {
     if (externalRestoreInFlight) {
+      if (shouldRestoreShell()) clearShellErrorUiOnly();
       reassertIntentionalOverlayShell();
       return;
     }
@@ -446,7 +447,6 @@
     } finally {
       try {
         sessionStorage.setItem(EXTERNAL_RESTORE_ACTIVE_KEY, "1");
-        sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
       } catch (_) {}
       scheduleExternalReturnSettle();
     }
@@ -579,9 +579,8 @@
     var isMailTel = /^mailto:/i.test(url) || /^tel:/i.test(url);
     if (!isMailTel && isLikelyOfflineSignal()) {
       showOfflineHint("Tuto stránku nelze bez připojení k internetu otevřít.");
-      armExternalReturn();
+      abortExternalReturnArmsAfterFailedOpen();
       clearShellErrorUiOnly();
-      invokeReturnNavigationRestore();
       return Promise.resolve({ ok: false, reason: "offline" });
     }
     return Promise.resolve(openExternalSync(url, isMailTel));
