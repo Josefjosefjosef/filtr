@@ -239,6 +239,75 @@ export async function resetAllPremiumTestOperationalData(
     .all<{ client_id: string }>();
   for (const row of orphanClients.results || []) {
     const clientId = row.client_id;
+    await purgeDbStep("reset_orphan_client_renewal_offers", () =>
+      db.prepare("DELETE FROM premium_renewal_offers WHERE client_id = ?").bind(clientId).run()
+    );
+    await purgeDbStep("reset_orphan_client_complaints", () =>
+      db.prepare("DELETE FROM complaints WHERE client_id = ?").bind(clientId).run()
+    );
+    const invIds = await db
+      .prepare("SELECT invoice_id FROM invoices WHERE client_id = ?")
+      .bind(clientId)
+      .all<{ invoice_id: string }>();
+    for (const inv of invIds.results || []) {
+      await purgeDbStep("reset_orphan_client_credit_notes", () =>
+        db.prepare("DELETE FROM premium_credit_notes WHERE invoice_id = ?").bind(inv.invoice_id).run()
+      );
+    }
+    await purgeDbStep("reset_orphan_client_invoices", () =>
+      db.prepare("DELETE FROM invoices WHERE client_id = ?").bind(clientId).run()
+    );
+    await purgeDbStep("reset_orphan_client_contracts", () =>
+      db.prepare("DELETE FROM contracts WHERE client_id = ?").bind(clientId).run()
+    );
+    const clientDocs = await db
+      .prepare("SELECT document_id, r2_key FROM documents WHERE client_id = ?")
+      .bind(clientId)
+      .all<{ document_id: string; r2_key: string }>();
+    for (const doc of clientDocs.results || []) {
+      await purgeDbStep("reset_orphan_client_document_revisions", async () => {
+        const revs = await db
+          .prepare("SELECT r2_key FROM document_content_revisions WHERE document_id = ?")
+          .bind(doc.document_id)
+          .all<{ r2_key: string }>();
+        for (const rev of revs.results || []) {
+          if (env.DOCUMENTS && rev.r2_key) {
+            try {
+              await env.DOCUMENTS.delete(rev.r2_key);
+            } catch {
+              /* best effort */
+            }
+          }
+        }
+        await db.prepare("DELETE FROM document_content_revisions WHERE document_id = ?").bind(doc.document_id).run();
+      });
+      await purgeDbStep("reset_orphan_client_documents", async () => {
+        if (env.DOCUMENTS && doc.r2_key) {
+          try {
+            await env.DOCUMENTS.delete(doc.r2_key);
+          } catch {
+            /* best effort */
+          }
+        }
+        await db.prepare("DELETE FROM documents WHERE document_id = ?").bind(doc.document_id).run();
+      });
+    }
+    const clientCreatives = await db
+      .prepare("SELECT creative_id, r2_key FROM creatives WHERE client_id = ?")
+      .bind(clientId)
+      .all<{ creative_id: string; r2_key: string }>();
+    for (const cr of clientCreatives.results || []) {
+      await purgeDbStep("reset_orphan_client_creatives", async () => {
+        if (env.CREATIVES && cr.r2_key) {
+          try {
+            await env.CREATIVES.delete(cr.r2_key);
+          } catch {
+            /* best effort */
+          }
+        }
+        await db.prepare("DELETE FROM creatives WHERE creative_id = ?").bind(cr.creative_id).run();
+      });
+    }
     await purgeDbStep("reset_orphan_client_codes", () =>
       db
         .prepare("DELETE FROM client_code_campaigns WHERE code_id IN (SELECT code_id FROM client_access_codes WHERE client_id = ?)")
