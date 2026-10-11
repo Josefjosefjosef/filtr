@@ -4,24 +4,37 @@ import type { DatabaseSync } from "node:sqlite";
 export function d1FromSqlite(db: DatabaseSync): D1Database {
   return {
     prepare(sql: string) {
+      function bound(params: unknown[]) {
+        return {
+          async first<T>() {
+            const stmt = db.prepare(sql);
+            const row = params.length ? stmt.get(...params) : stmt.get();
+            return (row ?? null) as T | null;
+          },
+          async all<T>() {
+            const stmt = db.prepare(sql);
+            const rows = (params.length ? stmt.all(...params) : stmt.all()) as T[];
+            return { results: rows };
+          },
+          async run() {
+            if (params.length) db.prepare(sql).run(...params);
+            else db.prepare(sql).run();
+            return { success: true, meta: {} };
+          },
+        };
+      }
       return {
         bind(...params: unknown[]) {
-          return {
-            async first<T>() {
-              const stmt = db.prepare(sql);
-              const row = stmt.get(...params);
-              return (row ?? null) as T | null;
-            },
-            async all<T>() {
-              const stmt = db.prepare(sql);
-              const rows = stmt.all(...params) as T[];
-              return { results: rows };
-            },
-            async run() {
-              db.prepare(sql).run(...params);
-              return { success: true, meta: {} };
-            },
-          };
+          return bound(params);
+        },
+        async first<T>() {
+          return bound([]).first<T>();
+        },
+        async all<T>() {
+          return bound([]).all<T>();
+        },
+        async run() {
+          return bound([]).run();
         },
       };
     },
