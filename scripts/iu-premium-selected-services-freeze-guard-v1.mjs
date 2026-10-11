@@ -85,7 +85,8 @@ must(/scopedPremiumOrderId/.test(read("cloudflare/iu-ads/src/client-auth.ts")), 
 must(/handleAdminPremiumDeleteOrder/.test(indexTs), "admin delete/archive order");
 must(/Interní poznámky/.test(adminUiScriptTs), "admin internal notes section");
 must(!/internal_notes/.test(clientPremiumTs), "client portal must not expose internal notes");
-must(/Objednávky — Vybrané služby a odkazy/.test(adminNavTs), "premium orders nav label");
+must(/Reklamní tlačítka/.test(adminNavTs), "premium orders nav label");
+must(/orders_all/.test(adminNavTs), "admin all orders nav entry");
 must(/handleAdminPremiumExtend/.test(indexTs), "admin renewal extend endpoint");
 must(/renewal_publish:/.test(read("cloudflare/iu-ads/src/admin-premium-selected.ts")), "renewal publish idempotency");
 must(fs.existsSync(path.join(ROOT, "scripts/iu-premium-selected-no-tracking-guard-v1.mjs")), "browser no-tracking guard");
