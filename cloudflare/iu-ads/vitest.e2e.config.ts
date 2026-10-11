@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     environment: "node",
     setupFiles: ["test/vitest-font-setup.ts"],
-    include: ["test/premium-order-form-e2e.test.ts"],
+    include: ["test/premium-order-form-e2e.test.ts", "test/admin-premium-orders-nav.e2e.test.ts"],
     testTimeout: 120000,
   },
 });
