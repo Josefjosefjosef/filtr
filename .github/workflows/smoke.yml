@@ -503,6 +503,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-info-panel-cnb-rates-guard
 
+      - name: IU Ads admin menu regression guard (mainline smoke)
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
+        run: node scripts/iu-ads-admin-menu-guard-v1.mjs
+
       - name: Premium invoice PDF visual proof (Linux PNG)
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
         run: |
