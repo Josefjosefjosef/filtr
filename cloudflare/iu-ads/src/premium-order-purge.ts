@@ -5,13 +5,35 @@ import { parsePremiumOrderPayload } from "./premium-order-workflow";
 import type { Env } from "./types";
 
 export type PremiumSystemPurgeEligibility =
-  | { ok: true }
+  | { ok: true; via: "dev_marker" | "explicit_test_confirmed" }
   | { ok: false; error: string; message_cs: string };
 
-/** Only dev/test markers — blocks purge of likely production accounting evidence. */
+export type PremiumSystemPurgeOptions = {
+  /** Main admin confirms the record is a non-production test case without paid accounting evidence. */
+  explicitTestPurgeConfirmed?: boolean;
+};
+
+async function premiumOrderHasPaidAccountingEvidence(db: D1Database, orderId: string): Promise<boolean> {
+  const pay = await db
+    .prepare(
+      `SELECT COALESCE(payment_status, 'unpaid') AS payment_status, paid_at
+       FROM premium_selected_orders WHERE order_id = ?`
+    )
+    .bind(orderId)
+    .first<{ payment_status: string; paid_at: string | null }>();
+  if (pay?.payment_status === "paid" || pay?.paid_at) return true;
+  const inv = await db
+    .prepare("SELECT status, paid_at FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1")
+    .bind(orderId)
+    .first<{ status: string | null; paid_at: string | null }>();
+  return inv?.status === "paid" || !!inv?.paid_at;
+}
+
+/** Dev/E2E markers, or main-admin explicit test confirm when nothing was paid. */
 export async function premiumOrderEligibleForSystemPurge(
   db: D1Database,
-  orderId: string
+  orderId: string,
+  options?: PremiumSystemPurgeOptions
 ): Promise<PremiumSystemPurgeEligibility> {
   const row = await db
     .prepare(
@@ -32,6 +54,15 @@ export async function premiumOrderEligibleForSystemPurge(
     }>();
   if (!row) return { ok: false, error: "not_found", message_cs: "Objednávka nenalezena." };
 
+  if (await premiumOrderHasPaidAccountingEvidence(db, orderId)) {
+    return {
+      ok: false,
+      error: "purge_paid_accounting",
+      message_cs:
+        "Úplné odstranění není možné u objednávky s evidovanou úhradou. Zachovejte účetní doklady a použijte archivaci.",
+    };
+  }
+
   let payloadRaw: Record<string, unknown> = {};
   try {
     payloadRaw = JSON.parse(String(row.payload_json || "{}")) as Record<string, unknown>;
@@ -50,15 +81,18 @@ export async function premiumOrderEligibleForSystemPurge(
     /IU_TEST|iu-premium-e2e|E2E/i.test(company) ||
     target.includes("example.invalid");
 
-  if (!devTest) {
-    return {
-      ok: false,
-      error: "purge_not_eligible",
-      message_cs:
-        "Úplné odstranění je povoleno pouze u prokazatelně testovacích záznamů (dev/E2E). Pro běžné objednávky použijte archivaci.",
-    };
+  if (devTest) return { ok: true, via: "dev_marker" };
+
+  if (options?.explicitTestPurgeConfirmed === true) {
+    return { ok: true, via: "explicit_test_confirmed" };
   }
-  return { ok: true };
+
+  return {
+    ok: false,
+    error: "purge_not_eligible",
+    message_cs:
+      "Úplné odstranění vyžaduje potvrzení testovacího záznamu (dev/E2E marker nebo explicitní potvrzení hlavního administrátora u neuhrazené objednávky).",
+  };
 }
 
 async function deleteDocumentRowsAndR2(
@@ -111,6 +145,7 @@ export async function purgePremiumOrderPhysically(env: Env, orderId: string): Pr
 
   const invRows = await db.prepare("SELECT invoice_id FROM invoices WHERE order_id = ?").bind(orderId).all<{ invoice_id: string }>();
   for (const inv of invRows.results || []) {
+    await db.prepare("DELETE FROM premium_credit_notes WHERE invoice_id = ?").bind(inv.invoice_id).run();
     await db.prepare("DELETE FROM invoices WHERE invoice_id = ?").bind(inv.invoice_id).run();
   }
 

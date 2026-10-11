@@ -51,10 +51,9 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   const stornoRed = rgb(0.78, 0.12, 0.12);
 
   let cursor = new PremiumInvoicePdfCursor(page, pages, pdf, PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_MIN_Y);
-  cursor.lockPageCount = true;
 
-  drawPremiumPdfBrandLogo(page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
-  page.drawText("Storno objednávky", {
+  drawPremiumPdfBrandLogo(cursor.page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
+  cursor.page.drawText("Storno objednávky", {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 20,
@@ -62,7 +61,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     color: brand,
   });
   cursor.y -= 22;
-  page.drawText("— Potvrzení o zrušení objednávky reklamní služby", {
+  cursor.page.drawText("— Potvrzení o zrušení objednávky reklamní služby", {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 10,
@@ -82,8 +81,8 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     { label: "Vystavil:", value: input.issuer_display_name }
   );
   for (const row of metaLines) {
-    page.drawText(row.label, { x: PREMIUM_INVOICE_MARGIN, y: cursor.y, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED });
-    page.drawText(row.value, { x: PREMIUM_INVOICE_MARGIN + 118, y: cursor.y, size: 9, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
+    cursor.page.drawText(row.label, { x: PREMIUM_INVOICE_MARGIN, y: cursor.y, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MUTED });
+    cursor.page.drawText(row.value, { x: PREMIUM_INVOICE_MARGIN + 118, y: cursor.y, size: 9, font: fonts.bold, color: PREMIUM_PDF_TEXT_MAIN });
     cursor.y -= 13;
   }
 
@@ -91,13 +90,13 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   const boxH = 52;
   const boxX = PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - boxW;
   const boxY = metaStartY - boxH + 8;
-  page.drawRectangle({ x: boxX, y: boxY, width: boxW, height: boxH, borderColor: stornoRed, borderWidth: 1.6, color: rgb(1, 1, 1) });
-  page.drawText("STORNO", { x: boxX + 46, y: boxY + boxH - 26, size: 17, font: fonts.bold, color: stornoRed });
+  cursor.page.drawRectangle({ x: boxX, y: boxY, width: boxW, height: boxH, borderColor: stornoRed, borderWidth: 1.6, color: rgb(1, 1, 1) });
+  cursor.page.drawText("STORNO", { x: boxX + 46, y: boxY + boxH - 26, size: 17, font: fonts.bold, color: stornoRed });
   const stornoNote =
     input.storno_kind === "rejection"
       ? "Objednávka byla zamítnuta."
       : "Objednávka a reklamní služba byla zrušena.";
-  drawWrappedText(page, fonts.regular, stornoNote, boxX + 8, boxY + boxH - 40, boxW - 16, 7.5, PREMIUM_PDF_TEXT_MUTED, 1.2);
+  drawWrappedText(cursor.page, fonts.regular, stornoNote, boxX + 8, boxY + boxH - 40, boxW - 16, 7.5, PREMIUM_PDF_TEXT_MUTED, 1.2);
 
   cursor.y -= 8;
   const colW = (PREMIUM_INVOICE_CONTENT_W - 12) / 2;
@@ -122,14 +121,14 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   const blockTop = cursor.y;
   let yLeft = blockTop;
   for (const line of serviceLeft) {
-    yLeft = drawWrappedText(page, fonts.regular, line, leftX, yLeft, colW, 9, PREMIUM_PDF_TEXT_MAIN, 1.28);
+    yLeft = drawWrappedText(cursor.page, fonts.regular, line, leftX, yLeft, colW, 9, PREMIUM_PDF_TEXT_MAIN, 1.28);
     yLeft -= 2;
   }
   const periodW = colW - 8;
   const periodX = rightX + 4;
   const periodTop = blockTop;
   const periodH = 52;
-  page.drawRectangle({
+  cursor.page.drawRectangle({
     x: periodX,
     y: periodTop - periodH,
     width: periodW,
@@ -138,7 +137,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     borderWidth: 0.6,
     color: rgb(0.97, 0.98, 1),
   });
-  page.drawText("Období poskytování (původní)", {
+  cursor.page.drawText("Období poskytování (původní)", {
     x: periodX + 8,
     y: periodTop - 14,
     size: 9,
@@ -154,20 +153,20 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
       : ["Období bude doplněno z evidence kampaně."];
   let yP = periodTop - 28;
   for (const pl of periodLines) {
-    page.drawText(pl, { x: periodX + 8, y: yP, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: periodW - 16 });
+    cursor.page.drawText(pl, { x: periodX + 8, y: yP, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: periodW - 16 });
     yP -= 12;
   }
   cursor.y = Math.min(yLeft, periodTop - periodH) - 10;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Cena reklamní služby (původní objednávka)", PREMIUM_INVOICE_CONTENT_W);
-  page.drawText("Cena je uvedena bez DPH (poskytovatel není plátce DPH).", {
+  cursor.page.drawText("Cena je uvedena bez DPH (poskytovatel není plátce DPH).", {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 8,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MUTED,
   });
-  page.drawText(fmtPremiumPdfMoney(input.ctx.price_cents, input.ctx.currency), {
+  cursor.page.drawText(fmtPremiumPdfMoney(input.ctx.price_cents, input.ctx.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 120,
     y: cursor.y - 2,
     size: 16,
@@ -190,30 +189,30 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
 
   cursor.ensureSpace(70);
   const stY = cursor.y;
-  page.drawText("Stav objednávky", { x: leftX, y: stY, size: 10, font: fonts.bold, color: brand });
-  page.drawText("Související doklady", { x: rightX, y: stY, size: 10, font: fonts.bold, color: brand });
+  cursor.page.drawText("Stav objednávky", { x: leftX, y: stY, size: 10, font: fonts.bold, color: brand });
+  cursor.page.drawText("Související doklady", { x: rightX, y: stY, size: 10, font: fonts.bold, color: brand });
   let ySL = stY - 14;
   let ySR = stY - 14;
   for (let i = 1; i < statusLeft.length; i++) {
-    page.drawText(statusLeft[i]!, { x: leftX, y: ySL, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
+    cursor.page.drawText(statusLeft[i]!, { x: leftX, y: ySL, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
     ySL -= 12;
   }
   for (let i = 1; i < statusRight.length; i++) {
-    page.drawText(statusRight[i]!, { x: rightX, y: ySR, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
+    cursor.page.drawText(statusRight[i]!, { x: rightX, y: ySR, size: 8.5, font: fonts.regular, color: PREMIUM_PDF_TEXT_MAIN, maxWidth: colW });
     ySR -= 12;
   }
   cursor.y = Math.min(ySL, ySR) - 8;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důvod storna", PREMIUM_INVOICE_CONTENT_W);
-  cursor.y = drawWrappedText(page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 6;
-  page.drawText("Datum storna: " + formatAdminPragueDateTime(input.issued_at), {
+  cursor.y = drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, cursor.y, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 6;
+  cursor.page.drawText("Datum storna: " + formatAdminPragueDateTime(input.issued_at), {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
     size: 8.5,
     font: fonts.regular,
     color: PREMIUM_PDF_TEXT_MAIN,
   });
-  page.drawText("Storno provedl: " + input.issuer_display_name, {
+  cursor.page.drawText("Storno provedl: " + input.issuer_display_name, {
     x: PREMIUM_INVOICE_MARGIN + colW,
     y: cursor.y,
     size: 8.5,
@@ -223,6 +222,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   cursor.y -= 18;
 
   if (input.storno_kind === "cancellation") {
+    cursor.ensureSpace(95);
     drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledek storna", PREMIUM_INVOICE_CONTENT_W);
     const bullets = [
       "Objednávka je stornována a reklamní služba nebude poskytována.",
@@ -232,11 +232,13 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
       "Stav úhrady faktury: " + input.payment_status_label + (input.storno_amount_cents ? " · Stornovaná částka: " + fmtPremiumPdfMoney(input.storno_amount_cents, input.ctx.currency) : ""),
     ];
     for (const b of bullets) {
-      cursor.y = drawWrappedText(page, fonts.regular, "• " + b, PREMIUM_INVOICE_MARGIN + 4, cursor.y, PREMIUM_INVOICE_CONTENT_W - 8, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
+      cursor.y = drawWrappedText(cursor.page, fonts.regular, "• " + b, PREMIUM_INVOICE_MARGIN + 4, cursor.y, PREMIUM_INVOICE_CONTENT_W - 8, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
     }
   }
 
-  page.drawText(
+  cursor.ensureSpace(PREMIUM_INVOICE_FOOTER_Y - PREMIUM_INVOICE_CONTENT_MIN_Y + 8);
+  const footerPage = cursor.page;
+  footerPage.drawText(
     "Tento dokument byl automaticky vytvořen administrátorským systémem infoUzel.cz. Všechny uvedené údaje jsou v místním čase České republiky (Praha).",
     {
       x: PREMIUM_INVOICE_MARGIN,
@@ -247,7 +249,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
       maxWidth: PREMIUM_INVOICE_CONTENT_W - 80,
     }
   );
-  drawPremiumPdfBrandLogo(page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y - 8);
+  drawPremiumPdfBrandLogo(footerPage, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_FOOTER_Y - 8);
 
   return pdf.save();
 }

@@ -26,7 +26,12 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
   if (!guard.ok) return guard.response;
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
-  let body: { confirm?: unknown; reason?: unknown; purge_system_record?: unknown };
+  let body: {
+    confirm?: unknown;
+    reason?: unknown;
+    purge_system_record?: unknown;
+    explicit_test_purge_confirmed?: unknown;
+  };
   try {
     body = await request.json();
   } catch {
@@ -64,7 +69,9 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
         409
       );
     }
-    const purgeEligible = await premiumOrderEligibleForSystemPurge(env.DB, orderId);
+    const purgeEligible = await premiumOrderEligibleForSystemPurge(env.DB, orderId, {
+      explicitTestPurgeConfirmed: body.explicit_test_purge_confirmed === true,
+    });
     if (!purgeEligible.ok) {
       return json({ error: purgeEligible.error, message_cs: purgeEligible.message_cs }, 403);
     }
@@ -115,12 +122,28 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
   }
 
   if (campId) {
-    await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
     await env.DB.prepare(
       "UPDATE premium_selected_placements SET active_campaign_id = NULL, updated_at = ? WHERE placement_id = ? AND active_campaign_id = ?"
     )
       .bind(nowIso, po.placement_id, campId)
       .run();
+    if (purgeSystem) {
+      const otherOrder = await env.DB.prepare(
+        "SELECT order_id FROM premium_selected_orders WHERE published_campaign_id = ? AND order_id != ? LIMIT 1"
+      )
+        .bind(campId, orderId)
+        .first();
+      if (!otherOrder) {
+        await env.DB.prepare("DELETE FROM campaign_placements WHERE campaign_id = ?").bind(campId).run();
+        await env.DB.prepare("DELETE FROM campaigns WHERE campaign_id = ?").bind(campId).run();
+      } else {
+        await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?")
+          .bind(nowIso, campId)
+          .run();
+      }
+    } else {
+      await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
+    }
   }
 
   const creativeId = typeof po.creative_id === "string" ? po.creative_id : null;
@@ -131,6 +154,16 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
       .bind(creativeId, orderId)
       .first<{ c: number }>();
     if (!Number(shared?.c)) {
+      const cr = await env.DB.prepare("SELECT r2_key FROM creatives WHERE creative_id = ? AND client_id = ?")
+        .bind(creativeId, clientId)
+        .first<{ r2_key: string | null }>();
+      if (cr?.r2_key && env.CREATIVES) {
+        try {
+          await env.CREATIVES.delete(cr.r2_key);
+        } catch {
+          /* best effort */
+        }
+      }
       await env.DB.prepare("DELETE FROM creatives WHERE creative_id = ? AND client_id = ?").bind(creativeId, clientId).run();
     }
   }
