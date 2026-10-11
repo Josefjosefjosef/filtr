@@ -39,6 +39,7 @@ button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:.6
 button:disabled{opacity:.65;cursor:wait}
 button.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);margin-top:.5rem}
 .muted{color:var(--muted);font-size:.9rem}
+.order-success-msg{color:#1b6b3a;font-size:.95rem;line-height:1.55;font-weight:500;margin:0}
 .err{color:#9b2c2c;font-size:.9rem;margin:.35rem 0 0}
 .field-err{color:#9b2c2c;font-size:.85rem;margin:.2rem 0 0}
 .field-hint{color:var(--muted);font-size:.85rem;margin:.15rem 0 .35rem}
@@ -172,7 +173,7 @@ ${privacy}
 <button type="button" class="btn-secondary" id="cancel_btn">Zrušit a zavřít</button>
 <p id="err" class="err" hidden role="alert"></p>
 </form>
-<div id="done" class="card" hidden><p class="muted">Objednávka odeslána k posouzení. Po schválení a zveřejnění obdržíte e-mail.</p></div>
+<div id="done" class="card" hidden><p class="order-success-msg">Vaše objednávka byla úspěšně odeslána k posouzení. Schválení probíhá zpravidla do 24 hodin. Sledujte prosím svůj e-mail, na který Vám po schválení a zveřejnění reklamy zašleme příslušné dokumenty.</p></div>
 </main>
 <script nonce="${nonce}">${clientScript}</script>
 </body>

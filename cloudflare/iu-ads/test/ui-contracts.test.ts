@@ -113,8 +113,16 @@ describe("UI ↔ API contracts (PR #7711)", () => {
     expect(ADMIN_UI_SCRIPT).toContain("renderPremiumOrdersAdmin");
     expect(ADMIN_UI_SCRIPT).toContain("/v1/admin/premium/orders");
     expect(ADMIN_UI_SCRIPT).toContain("Interní poznámky");
-    expect(ADMIN_UI_SCRIPT).toContain("Odstranit celý záznam ze systému");
-    expect(ADMIN_UI_SCRIPT).toContain("Odstranit objednávku");
+    const detailIdx = ADMIN_UI_SCRIPT.indexOf("async function renderPremiumOrderDetail");
+    const detailEnd = ADMIN_UI_SCRIPT.indexOf("function premiumOrdersFilterBarHtml");
+    const detailBlock = ADMIN_UI_SCRIPT.slice(detailIdx, detailEnd);
+    expect(detailBlock).not.toContain("data-premium-delete");
+    expect(detailBlock).not.toContain("Odstranit celý záznam ze systému");
+    expect(ADMIN_UI_SCRIPT).toContain("Zobrazit podmínky");
+    expect(ADMIN_UI_SCRIPT).toContain("btn detail");
+    expect(ADMIN_UI_SCRIPT).toContain('class="btn detail" data-premium-detail');
+    expect(ADMIN_UI_SCRIPT).not.toContain("acct-storno-kc");
+    expect(ADMIN_UI_SCRIPT).toContain("/terms-archive");
     expect(ADMIN_UI_SCRIPT).toContain("/amend");
     expect(ADMIN_UI_SCRIPT).toContain("oe-category");
     expect(ADMIN_UI_SCRIPT).toContain("oe-creative-file");

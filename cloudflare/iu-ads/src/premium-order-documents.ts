@@ -949,6 +949,19 @@ export type AdminOrderDocumentCard = {
   download_path: string | null;
 };
 
+/** Rejected-before-publish orders only expose cancellation confirmation PDF in admin UI. */
+export function filterPremiumOrderDocumentsForAdminView(
+  cards: AdminOrderDocumentCard[],
+  input: { workflow_status: string; published_at: string | null | undefined }
+): AdminOrderDocumentCard[] {
+  const ws = String(input.workflow_status || "");
+  const wasPublished = !!input.published_at;
+  if (ws === "rejected" && !wasPublished) {
+    return cards.filter((c) => c.kind === "order_cancellation");
+  }
+  return cards;
+}
+
 export async function listPremiumOrderDocumentsForAdmin(
   env: Env,
   _request: Request,

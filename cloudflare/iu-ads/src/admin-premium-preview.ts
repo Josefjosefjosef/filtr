@@ -19,7 +19,12 @@ import {
   PREMIUM_DURATION_MONTHS,
 } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
-import { listPremiumOrderDocumentsForAdmin, resumePremiumOrderDocuments } from "./premium-order-documents";
+import {
+  filterPremiumOrderDocumentsForAdminView,
+  listPremiumOrderDocumentsForAdmin,
+  resumePremiumOrderDocuments,
+} from "./premium-order-documents";
+import { bindPremiumOrderTermsArchive, loadPremiumOrderTermsArchiveHtml } from "./premium-terms-archive";
 import { premiumOrderEligibleForExtendNewOrder } from "./premium-admin-extend-new-order";
 import { sumPriorCreditCorrectionsCents } from "./premium-accounting-settlement";
 import { buildPremiumOrderPublicationVisibility } from "./premium-publication-consistency";
@@ -208,12 +213,38 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         ? row.order_number
         : null;
 
-  const workflowPublished = String(row.workflow_status || "") === "published";
-  if (workflowPublished && env.DOCUMENTS) {
+  const workflowStatusStrEarly = String(row.workflow_status || "");
+  const workflowPublished = workflowStatusStrEarly === "published";
+  if (env.DOCUMENTS) {
     try {
-      await resumePremiumOrderDocuments(env, orderId, guard.userId);
+      if (workflowPublished) {
+        await resumePremiumOrderDocuments(env, orderId, guard.userId);
+      } else if (workflowStatusStrEarly === "cancelled" || workflowStatusStrEarly === "rejected") {
+        const { ensurePremiumStornoDocuments } = await import("./premium-order-documents");
+        await ensurePremiumStornoDocuments(env, orderId, guard.userId, { forceRetryIncomplete: true });
+      }
     } catch {
       /* non-blocking — listing still reconciles job↔document links */
+    }
+  }
+
+  let terms_archive_available = false;
+  let terms_archive_warning_cs: string | null = null;
+  if (payloadSnap.terms_version) {
+    try {
+      const bind = await bindPremiumOrderTermsArchive(
+        env,
+        orderId,
+        String(payloadSnap.terms_version),
+        payloadSnap.terms_effective_at
+      );
+      terms_archive_available = bind.ok && !bind.missing;
+      if (!terms_archive_available) {
+        terms_archive_warning_cs =
+          "Archivní znění obchodních podmínek pro tuto objednávku není k dispozici — nezobrazujeme aktuální verzi.";
+      }
+    } catch {
+      terms_archive_warning_cs = "Archiv podmínek není dostupný (chybí migrace nebo úložiště).";
     }
   }
 
@@ -261,7 +292,11 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         ? "Storno objednávky a faktury je dostupné pouze u schválené a dříve zveřejněné objednávky."
         : null;
 
-  const order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
+  let order_documents = await listPremiumOrderDocumentsForAdmin(env, request, orderId);
+  order_documents = filterPremiumOrderDocumentsForAdminView(order_documents, {
+    workflow_status: workflowStatusStr,
+    published_at: row.published_at != null ? String(row.published_at) : null,
+  });
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
 
   const extendEligible = await premiumOrderEligibleForExtendNewOrder(env.DB, orderId, nowIso);
@@ -451,6 +486,30 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
         label_cs: premiumCreativeModeLabelCs(mode),
       })),
       positions: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    terms_archive_available,
+    terms_archive_warning_cs,
+  });
+}
+
+export async function handleAdminPremiumOrderTermsArchive(
+  request: Request,
+  env: Env,
+  orderId: string
+): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.read");
+  if (!guard.ok) return guard.response;
+  const loaded = await loadPremiumOrderTermsArchiveHtml(env, orderId);
+  if (!loaded.ok || !loaded.html) {
+    return json({ ok: false, message_cs: loaded.message_cs || "Archiv podmínek není k dispozici." }, 404);
+  }
+  const nonce = crypto.randomUUID();
+  return new Response(loaded.html.replace(/nonce="archive"/g, 'nonce="' + nonce + '"'), {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "private, no-store",
+      "Content-Security-Policy": "default-src 'none'; style-src 'nonce-" + nonce + "'; base-uri 'none'",
     },
   });
 }

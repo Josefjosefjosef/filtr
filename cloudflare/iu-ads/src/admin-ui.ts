@@ -14,7 +14,7 @@ export function buildAdminShellHtml(nonce: string): string {
   <meta name="robots" content="noindex,nofollow"/>
   <title>InfoUzel Ads — Admin</title>
   <style nonce="${nonce}">
-    :root{--bg:#f4f1ea;--ink:#1a221e;--muted:#5c675f;--accent:#0f6b5c;--line:#d6d0c4;--card:#fffdf9;--danger:#9b2c2c;--ok:#1b6b3a}
+    :root{--bg:#f4f1ea;--ink:#1a221e;--muted:#5c675f;--accent:#0f6b5c;--line:#d6d0c4;--card:#fffdf9;--danger:#9b2c2c;--ok:#1b6b3a;--order-pending:#c45c00;--order-rejected:#b42318;--order-published:#1b6b3a}
     *{box-sizing:border-box}
     body{margin:0;font:15px/1.45 "Segoe UI",system-ui,sans-serif;background:linear-gradient(165deg,#ebe4d8,#f7f5f1 42%,#e4efe9);color:var(--ink);min-height:100vh;overflow-x:hidden}
     a{color:var(--accent)}
@@ -38,6 +38,8 @@ export function buildAdminShellHtml(nonce: string): string {
     button.btn.danger{background:var(--danger);color:#fff}
     button.btn.warning{background:#c45c00;color:#fff}
     button.btn.success{background:var(--ok);color:#fff}
+    button.btn.detail{background:var(--order-pending);color:#fff;border:0}
+    button.btn.detail:hover,button.btn.detail:focus-visible{filter:brightness(.95)}
     .ts-published{color:var(--ok);font-weight:600}
     .ts-end{color:var(--danger);font-weight:600}
     .pay-paid{color:var(--ok);font-weight:600}
@@ -62,10 +64,26 @@ export function buildAdminShellHtml(nonce: string): string {
     .nav-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.35rem;padding:0 .35rem;margin-left:.35rem;border-radius:999px;background:var(--danger);color:#fff;font-size:.72rem;font-weight:600;line-height:1.35;vertical-align:middle}
     .order-table-desktop{display:block}
     .order-cards{display:none}
-    .order-card{border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;margin:.65rem 0;background:#fff;cursor:pointer}
+    .order-card{border:2px solid var(--line);border-radius:10px;padding:.85rem 1rem;margin:.65rem 0;background:#fff;cursor:pointer}
+    .order-card--pending{border-color:var(--order-pending)}
+    .order-card--rejected{border-color:var(--order-rejected)}
+    .order-card--published{border-color:var(--order-published)}
+    .order-card--cancelled{border-color:var(--order-rejected)}
+    .order-row--pending td:first-child{border-left:4px solid var(--order-pending)}
+    .order-row--rejected td:first-child{border-left:4px solid var(--order-rejected)}
+    .order-row--published td:first-child{border-left:4px solid var(--order-published)}
+    .order-row--cancelled td:first-child{border-left:4px solid var(--order-rejected)}
     .order-card:focus-visible,.order-row-click:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
     .order-card-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin-bottom:.35rem}
     .order-status{font-size:.85rem;font-weight:600;color:var(--accent)}
+    .order-status--pending{color:var(--order-pending)}
+    .order-status--rejected{color:var(--order-rejected)}
+    .order-status--published{color:var(--order-published)}
+    .order-status--cancelled{color:var(--order-rejected)}
+    .pay-status--unpaid{color:var(--order-rejected);font-weight:600}
+    .pay-status--paid{color:var(--order-published);font-weight:600}
+    .pay-status--partial{color:var(--order-rejected);font-weight:600}
+    .detail-status-line{font-size:1rem;margin:.35rem 0 .15rem}
     .order-card-actions{margin-top:.65rem}
     .detail-dl{display:grid;grid-template-columns:minmax(8rem,11rem) 1fr;gap:.35rem .75rem;margin:0}
     .detail-dl dt{color:var(--muted);margin:0}
