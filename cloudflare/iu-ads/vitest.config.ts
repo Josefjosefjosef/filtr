@@ -6,7 +6,7 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["test/vitest-font-setup.ts"],
     include: ["test/**/*.test.ts"],
-    exclude: ["test/premium-order-form-e2e.test.ts"],
+    exclude: ["test/premium-order-form-e2e.test.ts", "test/admin-premium-orders-nav.e2e.test.ts"],
     testTimeout: 120000,
   },
 });
