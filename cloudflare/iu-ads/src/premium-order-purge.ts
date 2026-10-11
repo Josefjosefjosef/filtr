@@ -190,6 +190,37 @@ export async function hardDeleteCampaignGraph(
   const orderId = options?.orderIdForCreativeSharing ?? "";
   const skipShared = options?.skipSharedCreativeCheck === true;
 
+  await purgeDbStep("campaign_documents", async () => {
+    const campDocs = await db
+      .prepare("SELECT document_id, r2_key FROM documents WHERE campaign_id = ?")
+      .bind(campId)
+      .all<{ document_id: string; r2_key: string }>();
+    for (const doc of campDocs.results || []) {
+      const revs = await db
+        .prepare("SELECT r2_key FROM document_content_revisions WHERE document_id = ?")
+        .bind(doc.document_id)
+        .all<{ r2_key: string }>();
+      for (const rev of revs.results || []) {
+        if (env.DOCUMENTS && rev.r2_key) {
+          try {
+            await env.DOCUMENTS.delete(rev.r2_key);
+          } catch {
+            /* best effort */
+          }
+        }
+      }
+      await db.prepare("DELETE FROM document_content_revisions WHERE document_id = ?").bind(doc.document_id).run();
+      if (env.DOCUMENTS && doc.r2_key) {
+        try {
+          await env.DOCUMENTS.delete(doc.r2_key);
+        } catch {
+          /* best effort */
+        }
+      }
+      await db.prepare("DELETE FROM documents WHERE document_id = ?").bind(doc.document_id).run();
+    }
+  });
+
   await purgeDbStep("campaign_client_code_links", () =>
     db.prepare("DELETE FROM client_code_campaigns WHERE campaign_id = ?").bind(campId).run()
   );
@@ -295,6 +326,36 @@ export async function purgePremiumOrderPhysically(env: Env, orderId: string): Pr
 
   const invRows = await db.prepare("SELECT invoice_id FROM invoices WHERE order_id = ?").bind(orderId).all<{ invoice_id: string }>();
   for (const inv of invRows.results || []) {
+    await purgeDbStep("order_invoice_documents", async () => {
+      const invDocs = await db
+        .prepare("SELECT document_id, r2_key FROM documents WHERE invoice_id = ?")
+        .bind(inv.invoice_id)
+        .all<{ document_id: string; r2_key: string }>();
+      for (const doc of invDocs.results || []) {
+        const revs = await db
+          .prepare("SELECT r2_key FROM document_content_revisions WHERE document_id = ?")
+          .bind(doc.document_id)
+          .all<{ r2_key: string }>();
+        for (const rev of revs.results || []) {
+          if (bucket && rev.r2_key) {
+            try {
+              await bucket.delete(rev.r2_key);
+            } catch {
+              /* best effort */
+            }
+          }
+        }
+        await db.prepare("DELETE FROM document_content_revisions WHERE document_id = ?").bind(doc.document_id).run();
+        if (bucket && doc.r2_key) {
+          try {
+            await bucket.delete(doc.r2_key);
+          } catch {
+            /* best effort */
+          }
+        }
+        await db.prepare("DELETE FROM documents WHERE document_id = ?").bind(doc.document_id).run();
+      }
+    });
     await purgeDbStep("order_invoice_credit_notes", () =>
       db.prepare("DELETE FROM premium_credit_notes WHERE invoice_id = ?").bind(inv.invoice_id).run()
     );
