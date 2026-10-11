@@ -91,10 +91,11 @@ describe("premium test data reset", () => {
     expect(Number(activePl.c)).toBe(0);
   });
 
-  it("reset removes orders even when admin marked payment_status paid (bulk operator reset)", async () => {
+  it("reset skips orders with paid accounting evidence", async () => {
     const sqlite = createIuAdsSchemaDb();
     seedMinimalCatalog(sqlite);
     seedOrder(sqlite, "ord_paid", "IU-26-P", "camp_p", null);
+    seedOrder(sqlite, "ord_free", "IU-26-F", "camp_f", null);
     sqlite
       .prepare("UPDATE premium_selected_orders SET payment_status = 'paid', paid_at = ? WHERE order_id = 'ord_paid'")
       .run(NOW);
@@ -106,8 +107,40 @@ describe("premium test data reset", () => {
     } as Env;
 
     const stats = await resetAllPremiumTestOperationalData(env, "adm_test");
+    expect(stats.orders_skipped_paid).toBe(1);
     expect(stats.orders_removed).toBe(1);
     const poCount = sqlite.prepare("SELECT COUNT(*) AS c FROM premium_selected_orders").get() as { c: number };
-    expect(Number(poCount.c)).toBe(0);
+    expect(Number(poCount.c)).toBe(1);
+    const kept = sqlite.prepare("SELECT order_id FROM premium_selected_orders").get() as { order_id: string };
+    expect(kept.order_id).toBe("ord_paid");
+  });
+
+  it("reset succeeds when premium_order_terms_bindings exist (FK)", async () => {
+    const sqlite = createIuAdsSchemaDb();
+    seedMinimalCatalog(sqlite);
+    seedOrder(sqlite, "ord_tb", "IU-26-TB", null, null);
+    sqlite
+      .prepare(
+        `INSERT INTO premium_terms_archives (archive_id, terms_version, effective_at, content_hash, r2_key, byte_size, created_at)
+         VALUES ('arch_1', 'v1', ?, 'hash', 'terms/v1.pdf', 100, ?)`
+      )
+      .run(NOW, NOW);
+    sqlite
+      .prepare(
+        `INSERT INTO premium_order_terms_bindings (order_id, archive_id, terms_version, content_hash, bound_at)
+         VALUES ('ord_tb', 'arch_1', 'v1', 'hash', ?)`
+      )
+      .run(NOW);
+
+    const env = {
+      DB: d1FromSqlite(sqlite),
+      DOCUMENTS: { delete: async () => undefined },
+      CREATIVES: { delete: async () => undefined },
+    } as Env;
+
+    const stats = await resetAllPremiumTestOperationalData(env, "adm_test");
+    expect(stats.orders_removed).toBe(1);
+    const bindCount = sqlite.prepare("SELECT COUNT(*) AS c FROM premium_order_terms_bindings").get() as { c: number };
+    expect(Number(bindCount.c)).toBe(0);
   });
 });

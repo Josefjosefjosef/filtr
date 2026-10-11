@@ -7,6 +7,7 @@ import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-aut
 import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
 import {
   hardDeleteCampaignGraph,
+  premiumOrderHasPaidAccountingEvidence,
   purgePremiumOrderPhysically,
   PurgeDatabaseError,
   purgeDbStep,
@@ -18,12 +19,92 @@ export const PREMIUM_TEST_RESET_CONFIRM_PHRASE = "VYMAZAT TESTOVACI DATA";
 
 export type PremiumTestDataResetStats = {
   orders_removed: number;
+  orders_skipped_paid: number;
   campaigns_removed: number;
   documents_removed: number;
   orphan_campaigns_removed: number;
   orphan_documents_removed: number;
   placements_cleared: number;
 };
+
+export type PremiumTestDataResetPreview = {
+  total_premium_orders: number;
+  eligible_order_count: number;
+  skipped_paid_count: number;
+  sample_eligible_codes: string[];
+  skipped_paid_codes: string[];
+  active_placements_with_campaign: number;
+};
+
+const PREMIUM_TEST_RESET_LOCK_KEY = "premium_test_reset_lock";
+const PREMIUM_TEST_RESET_LOCK_TTL_MS = 20 * 60 * 1000;
+
+async function acquirePremiumTestResetLock(db: D1Database, actorUserId: string): Promise<boolean> {
+  const nowIso = new Date().toISOString();
+  const untilIso = new Date(Date.now() + PREMIUM_TEST_RESET_LOCK_TTL_MS).toISOString();
+  const row = await db
+    .prepare("SELECT value FROM system_settings WHERE key = ?")
+    .bind(PREMIUM_TEST_RESET_LOCK_KEY)
+    .first<{ value: string }>();
+  if (row?.value) {
+    try {
+      const parsed = JSON.parse(row.value) as { until?: string; by?: string };
+      if (parsed.until && String(parsed.until) > nowIso) {
+        return false;
+      }
+    } catch {
+      /* stale / corrupt lock — overwrite */
+    }
+  }
+  await db
+    .prepare("INSERT OR REPLACE INTO system_settings (key, value, updated_at) VALUES (?, ?, ?)")
+    .bind(PREMIUM_TEST_RESET_LOCK_KEY, JSON.stringify({ until: untilIso, by: actorUserId }), nowIso)
+    .run();
+  return true;
+}
+
+async function releasePremiumTestResetLock(db: D1Database): Promise<void> {
+  await db.prepare("DELETE FROM system_settings WHERE key = ?").bind(PREMIUM_TEST_RESET_LOCK_KEY).run();
+}
+
+export async function buildPremiumTestDataResetPreview(env: Env): Promise<PremiumTestDataResetPreview> {
+  if (!env.DB) throw new Error("auth_not_configured");
+  const db = env.DB;
+  const rows = await db
+    .prepare(
+      `SELECT po.order_id, o.customer_order_code, o.order_number
+       FROM premium_selected_orders po
+       JOIN orders o ON o.order_id = po.order_id
+       ORDER BY po.created_at ASC`
+    )
+    .bind()
+    .all<{ order_id: string; customer_order_code: string | null; order_number: string | null }>();
+
+  const eligible: string[] = [];
+  const skippedPaid: string[] = [];
+  for (const row of rows.results || []) {
+    const code = String(row.customer_order_code || row.order_number || row.order_id);
+    if (await premiumOrderHasPaidAccountingEvidence(db, row.order_id)) {
+      skippedPaid.push(code);
+    } else {
+      eligible.push(code);
+    }
+  }
+
+  const pl = await db
+    .prepare("SELECT COUNT(*) AS c FROM premium_selected_placements WHERE active_campaign_id IS NOT NULL")
+    .bind()
+    .first<{ c: number }>();
+
+  return {
+    total_premium_orders: (rows.results || []).length,
+    eligible_order_count: eligible.length,
+    skipped_paid_count: skippedPaid.length,
+    sample_eligible_codes: eligible.slice(0, 12),
+    skipped_paid_codes: skippedPaid.slice(0, 8),
+    active_placements_with_campaign: Number(pl?.c ?? 0) || 0,
+  };
+}
 
 /** Delete child premium orders before parents. */
 export function sortPremiumOrdersForPurge(
@@ -104,6 +185,7 @@ export async function resetAllPremiumTestOperationalData(
   const nowIso = new Date().toISOString();
   const stats: PremiumTestDataResetStats = {
     orders_removed: 0,
+    orders_skipped_paid: 0,
     campaigns_removed: 0,
     documents_removed: 0,
     orphan_campaigns_removed: 0,
@@ -127,13 +209,19 @@ export async function resetAllPremiumTestOperationalData(
       client_id: string;
     }>();
 
-  // Bulk reset is main-admin + confirm phrase only (operator attests all rows are non-production tests).
-  // Per-order purge keeps paid-accounting guard via premiumOrderEligibleForSystemPurge.
+  const eligibleRows = [];
+  for (const row of allPo.results || []) {
+    if (await premiumOrderHasPaidAccountingEvidence(db, row.order_id)) {
+      stats.orders_skipped_paid += 1;
+      continue;
+    }
+    eligibleRows.push(row);
+  }
 
-  const orderIds = sortPremiumOrdersForPurge(allPo.results || []);
+  const orderIds = sortPremiumOrdersForPurge(eligibleRows);
 
   for (const orderId of orderIds) {
-    const po = (allPo.results || []).find((r) => r.order_id === orderId);
+    const po = eligibleRows.find((r) => r.order_id === orderId);
     if (!po) continue;
 
     const phys = await purgePremiumOrderPhysically(env, orderId);
@@ -335,6 +423,22 @@ export async function resetAllPremiumTestOperationalData(
   return stats;
 }
 
+export async function handleAdminPremiumTestDataResetPreview(request: Request, env: Env): Promise<Response> {
+  const guard = await requireAdminPermission(request, env, "orders.read");
+  if (!guard.ok) return guard.response;
+  if (!adminRolesIncludeMainAdmin(guard.roles)) {
+    return json({ error: "main_admin_required", message_cs: "Náhled resetu smí zobrazit pouze hlavní administrátor." }, 403);
+  }
+  if (!env.DB) return json({ error: "auth_not_configured" }, 503);
+  try {
+    const preview = await buildPremiumTestDataResetPreview(env);
+    return json({ ok: true, preview });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return json({ error: "preview_failed", message_cs: "Nepodařilo se načíst rozsah resetu.", detail: msg.slice(0, 200) }, 500);
+  }
+}
+
 export async function handleAdminPremiumTestDataReset(request: Request, env: Env): Promise<Response> {
   const guard = await requireAdminPermission(request, env, "orders.write");
   if (!guard.ok) return guard.response;
@@ -363,6 +467,17 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
     );
   }
 
+  const lockAcquired = await acquirePremiumTestResetLock(env.DB, guard.userId);
+  if (!lockAcquired) {
+    return json(
+      {
+        error: "reset_in_progress",
+        message_cs: "Reset testovacích dat právě probíhá nebo byl nedávno spuštěn. Počkejte a zkuste znovu.",
+      },
+      409
+    );
+  }
+
   try {
     const stats = await resetAllPremiumTestOperationalData(env, guard.userId);
     await insertAuditLog(
@@ -377,9 +492,19 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
         result: "success",
       })
     );
+    let message_cs = "Testovací provozní data byla odstraněna. Katalog pozic a administrace zůstávají beze změny.";
+    if (stats.orders_skipped_paid > 0) {
+      message_cs +=
+        " Objednávky s evidovanou úhradou (" +
+        String(stats.orders_skipped_paid) +
+        ") byly zachovány (účetní evidence).";
+    }
+    if (stats.orders_removed === 0 && stats.orders_skipped_paid > 0) {
+      message_cs = "Žádná objednávka bez úhrady k odstranění. Účetně evidované objednávky (" + String(stats.orders_skipped_paid) + ") zůstaly beze změny.";
+    }
     return json({
       ok: true,
-      message_cs: "Testovací provozní data byla odstraněna. Katalog pozic a administrace zůstávají beze změny.",
+      message_cs,
       stats,
     });
   } catch (err) {
@@ -396,5 +521,7 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
       },
       500
     );
+  } finally {
+    await releasePremiumTestResetLock(env.DB);
   }
 }

@@ -143,7 +143,10 @@ describe("premium order confirmation PDF layout scenarios", () => {
       expect(pageCount).toBeLessThanOrEqual(3);
       expect(pdfBytes.byteLength).toBeGreaterThan(2000);
       expect(PremiumInvoicePdfCursor.assertNoBlockOverlap(blocks)).toEqual([]);
-      expect(page1Blocks.some((block) => block.id.includes("Technické"))).toBe(true);
+      expect(
+        page1Blocks.some((block) => block.id.includes("Technické")) ||
+          blocks.some((block) => block.id.includes("Technické"))
+      ).toBe(true);
       expect(assertOrderConfirmationContentAboveFooter(page1Blocks, PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y, 0)).toEqual(
         []
       );

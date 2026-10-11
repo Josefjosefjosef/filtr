@@ -868,11 +868,31 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }
     var tr=state.testDataResetModal;
     if(tr){
+      var prev=tr.preview;
+      var prevHtml="";
+      if(tr.previewLoading){ prevHtml='<p class="muted">Načítám rozsah mazání…</p>'; }
+      else if(tr.previewError){ prevHtml='<p class="err">'+esc(tr.previewError)+'</p>'; }
+      else if(prev){
+        prevHtml='<div class="panel"><p><strong>Rozsah resetu</strong></p><ul>'+
+          '<li>Prémiové objednávky celkem: '+esc(String(prev.total_premium_orders||0))+'</li>'+
+          '<li>K odstranění (bez účetní úhrady): <strong>'+esc(String(prev.eligible_order_count||0))+'</strong></li>'+
+          '<li>Zachováno (evidence úhrady): '+esc(String(prev.skipped_paid_count||0))+'</li>'+
+          '<li>Obsazené pozice (aktivní kampaň): '+esc(String(prev.active_placements_with_campaign||0))+'</li>'+
+          '</ul>';
+        if(prev.sample_eligible_codes&&prev.sample_eligible_codes.length){
+          prevHtml+='<p class="muted">Ukázka kódů k odstranění: '+esc(prev.sample_eligible_codes.join(", "))+'</p>';
+        }
+        if(prev.skipped_paid_codes&&prev.skipped_paid_codes.length){
+          prevHtml+='<p class="muted">Zachované (úhrada): '+esc(prev.skipped_paid_codes.join(", "))+'</p>';
+        }
+        prevHtml+='</div>';
+      }
       h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Vyčistit všechny testovací záznamy</h3>'+
-        '<p class="err">Nevratné odstranění všech prémiových objednávek, kampaní, dokumentů a souvisejících dat v D1/R2.</p>'+
+        '<p class="err">Nevratné odstranění prémiových objednávek bez evidované úhrady včetně kampaní, PDF a metadat v D1/R2. Účetně evidované objednávky zůstanou.</p>'+
+        prevHtml+
         '<p class="muted">Zadejte přesně: <strong>VYMAZAT TESTOVACI DATA</strong></p>'+
         '<p><label>Potvrzení<input id="tr-phrase" type="text" autocomplete="off" value="'+esc(tr.phrase||"")+'"></label></p>'+
-        '<p><label><input type="checkbox" id="tr-ack" '+(tr.ack?"checked":"")+'> Beru na vědomí, že jde o nevratnou operaci a všechny dosavadní testovací objednávky budou odstraněny.</label></p>'+
+        '<p><label><input type="checkbox" id="tr-ack" '+(tr.ack?"checked":"")+'> Beru na vědomí rozsah výše a nevratné odstranění uvedených testovacích záznamů.</label></p>'+
         (tr.formError?'<p class="err">'+esc(tr.formError)+'</p>':"")+
         '<div class="row"><button type="button" class="btn danger" id="tr-confirm" '+(tr.submitBusy?"disabled":"")+'>Provést reset</button> '+
         '<button type="button" class="btn secondary" id="tr-cancel">Zrušit</button></div></div></div>';
@@ -914,7 +934,17 @@ export const ADMIN_UI_SCRIPT = String.raw`
   }
   function wireAuxiliaryModals(){
     var trOpen=el("premium-test-reset-open");
-    if(trOpen) trOpen.onclick=function(){ state.testDataResetModal={phrase:"",ack:false,submitBusy:false}; render(); };
+    if(trOpen) trOpen.onclick=async function(){
+      state.testDataResetModal={phrase:"",ack:false,submitBusy:false,previewLoading:true,preview:null,previewError:""};
+      render();
+      var pr=await api("/v1/admin/premium/test-data/reset/preview",{method:"GET"});
+      var m=state.testDataResetModal;
+      if(!m) return;
+      m.previewLoading=false;
+      if(pr.res.ok&&pr.body&&pr.body.preview){ m.preview=pr.body.preview; m.previewError=""; }
+      else{ m.previewError=pr.body&&pr.body.message_cs?pr.body.message_cs:"Nepodařilo se načíst náhled resetu."; }
+      render();
+    };
     var trCancel=el("tr-cancel");
     if(trCancel) trCancel.onclick=function(){ state.testDataResetModal=null; render(); };
     var trConfirm=el("tr-confirm");
