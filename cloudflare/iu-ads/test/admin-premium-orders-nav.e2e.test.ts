@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import { buildAdminShellHtml } from "../src/admin-ui";
 
 const require = createRequire(path.join(import.meta.dirname, "../../../package.json"));
-const { chromium } = require("playwright") as typeof import("playwright");
+const { chromium, webkit } = require("playwright") as typeof import("playwright");
 
 const PORT = parseInt(process.env.IU_ADMIN_E2E_PORT || "8974", 10);
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -68,6 +68,7 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
         json(res, 200, {
           nav: [
             { id: "dashboard", label_cs: "Dashboard" },
+            { id: "search", label_cs: "Vyhledávání" },
             { id: "premium", label_cs: "Objednávky — Vybrané služby a odkazy", badge_count: 1 },
           ],
           roles: ["main_admin"],
@@ -88,32 +89,42 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
         });
         return;
       }
-      if (url.pathname === "/v1/admin/premium/orders") {
+      if (url.pathname === "/v1/admin/ad-orders" || url.pathname === "/v1/admin/premium/orders") {
         if (rejectOrdersList.on) {
           json(res, 500, { error: "internal", message_cs: "Simulovaná chyba seznamu." });
           return;
         }
+        const row = {
+          order_id: "ord_e2e_1",
+          company_name: "E2E Firma s.r.o.",
+          ico: "12345678",
+          category_slug: "cestovni-kancelare",
+          category_title_cs: "Cestovní kanceláře",
+          position: 1,
+          position_label: "P1",
+          duration_label_cs: "6 měsíců",
+          price_label_cs: "10 000 Kč",
+          workflow_status: "submitted",
+          workflow_status_label_cs: "Čeká na schválení",
+          submitted_at: "2026-01-01T10:00:00.000Z",
+          submitted_at_label_cs: "1. 1. 2026 11:00",
+          payment_status: "unpaid",
+          publishable: true,
+          ad_product_label_cs: "Reklamní tlačítka",
+        };
+        if (url.pathname === "/v1/admin/ad-orders") {
+          json(res, 200, { orders: [row], pending_count: 1 });
+          return;
+        }
         json(res, 200, {
           premium_orders: [
-            {
-              order_id: "ord_e2e_1",
-              company_name: "E2E Firma s.r.o.",
-              ico: "12345678",
-              category_slug: "cestovni-kancelare",
-              category_title_cs: "Cestovní kanceláře",
-              position: 1,
-              position_label: "P1",
-              duration_label_cs: "6 měsíců",
-              price_label_cs: "10 000 Kč",
-              workflow_status: "submitted",
-              workflow_status_label_cs: "Čeká na schválení",
-              submitted_at: "2026-01-01T10:00:00.000Z",
-              submitted_at_label_cs: "1. 1. 2026 11:00",
-              payment_status: "unpaid",
-              publishable: true,
-            },
+            row,
           ],
         });
+        return;
+      }
+      if (url.pathname === "/v1/admin/search/suggest") {
+        json(res, 200, { suggestions: [{ label: "E2E Firma s.r.o. · IČO 12345678", company_name: "E2E Firma s.r.o.", ico: "12345678" }] });
         return;
       }
       if (url.pathname === "/v1/admin/premium/orders/ord_e2e_1") {
@@ -174,9 +185,15 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
         if (!panel) return false;
         const t = panel.textContent || "";
         if (t.includes("Načítám…")) return false;
-        return t.includes("Objednávky — Vybrané služby") || t.includes("Simulovaná chyba");
+        return (
+          t.includes("Reklamní tlačítka") ||
+          t.includes("E2E Firma") ||
+          t.includes("Simulovaná chyba") ||
+          t.includes("Globální vyhledávání") ||
+          t.includes("Žádné objednávky")
+        );
       },
-      { timeout: 15000 }
+      { timeout: 45000 }
     );
   }
 
@@ -184,16 +201,22 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
     return (await page.locator("#panel").textContent()) || "";
   }
 
-  async function clickPremiumNav(page: import("playwright").Page) {
+  async function clickNavButton(page: import("playwright").Page, navId: string) {
     const toggle = page.locator("#btn-nav-toggle");
     if (await toggle.isVisible()) {
       await toggle.click();
       await page.waitForSelector("#nav.open", { timeout: 5000 });
     }
-    await page.evaluate(() => {
-      const btn = document.querySelector('#nav button[data-id="premium"]') as HTMLButtonElement | null;
+    await page.evaluate((id) => {
+      const btn = document.querySelector('#nav button[data-id="' + id + '"]') as HTMLButtonElement | null;
       if (btn) btn.click();
-    });
+    }, navId);
+  }
+  async function clickPremiumNav(page: import("playwright").Page) {
+    await clickNavButton(page, "premium");
+  }
+  async function clickSearchNav(page: import("playwright").Page) {
+    await clickNavButton(page, "search");
   }
 
   it("desktop — navigace na Objednávky dokončí render (bez Načítám…)", async () => {
@@ -257,6 +280,29 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
     await context.close();
   });
 
+  it("mobile — globální vyhledávání načte objednávky", async () => {
+    rejectOrdersList.on = false;
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
+    const page = await context.newPage();
+    trackPage(page);
+    await openLoggedInAdmin(page);
+    await clickSearchNav(page);
+    await page.waitForFunction(
+      () => (document.getElementById("panel")?.textContent || "").includes("Globální vyhledávání"),
+      { timeout: 15000 }
+    );
+    await page.fill("#search-filter-q", "E2E");
+    await page.click("#search-go");
+    await page.waitForFunction(
+      () => (document.getElementById("panel")?.textContent || "").includes("E2E Firma s.r.o."),
+      { timeout: 15000 }
+    );
+    const txt = await panelText(page);
+    expect(txt.includes("E2E Firma s.r.o.")).toBe(true);
+    expect(runtimeErrors).toEqual([]);
+    await context.close();
+  });
+
   it("detail objednávky a návrat na seznam", async () => {
     rejectOrdersList.on = false;
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -278,5 +324,23 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
     expect((await panelText(page)).includes("E2E Firma s.r.o.")).toBe(true);
     expect(runtimeErrors).toEqual([]);
     await context.close();
+  });
+
+  it("Safari webkit — globální vyhledávání bez pageerror", async () => {
+    const wkBrowser = await webkit.launch({ headless: true });
+    const errors: string[] = [];
+    const context = await wkBrowser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    page.on("pageerror", (e) => errors.push(String(e.message || e)));
+    await page.goto(`${BASE}/admin`, { waitUntil: "domcontentloaded", timeout: 60000 });
+    await page.waitForSelector("#app-view.show", { timeout: 15000 });
+    await clickSearchNav(page);
+    await page.waitForFunction(
+      () => (document.getElementById("panel")?.textContent || "").includes("Globální vyhledávání"),
+      { timeout: 15000 }
+    );
+    expect(errors).toEqual([]);
+    await context.close();
+    await wkBrowser.close();
   });
 });
