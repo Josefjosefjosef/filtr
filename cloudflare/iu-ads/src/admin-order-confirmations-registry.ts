@@ -74,7 +74,6 @@ export async function handleAdminOrderConfirmationsRegistry(
 
   return json({
     confirmations: items,
-    export_zip_available: false,
-    export_zip_message_cs: "Hromadný export ZIP bude dostupný v další verzi.",
+    export_zip_available: true,
   });
 }

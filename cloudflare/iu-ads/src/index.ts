@@ -39,6 +39,11 @@ import { handleCreateInvoice, handleGetInvoice, handleListInvoices, handleUpdate
 import { handleAdminAdOrdersList } from "./admin-ad-orders";
 import { handleAdminBannerPcPlaceholder, handleAdminInvoicesRegistry } from "./admin-invoices-registry";
 import { handleAdminOrderConfirmationsRegistry } from "./admin-order-confirmations-registry";
+import { handleAdminAdSearchSuggest } from "./admin-ad-search-suggest";
+import {
+  handleAdminInvoicesRegistryZipExport,
+  handleAdminOrderConfirmationsRegistryZipExport,
+} from "./admin-document-zip-export";
 import {
   handleGetDocument,
   handleGetDocumentAccess,
@@ -497,11 +502,17 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
 
       if (path === "/v1/admin/invoices" && method === "GET") return handleListInvoices(request, env, url);
       if (path === "/v1/admin/invoices/registry" && method === "GET") return handleAdminInvoicesRegistry(request, env, url);
+      if (path === "/v1/admin/invoices/registry/export-zip" && method === "POST") {
+        return handleAdminInvoicesRegistryZipExport(request, env);
+      }
       if (path === "/v1/admin/invoices" && method === "POST") return handleCreateInvoice(request, env);
       if (path === "/v1/admin/ad-orders" && method === "GET") return handleAdminAdOrdersList(request, env, url);
       if (path === "/v1/admin/banner-pc" && method === "GET") return handleAdminBannerPcPlaceholder(request, env);
       if (path === "/v1/admin/order-confirmations/registry" && method === "GET") {
         return handleAdminOrderConfirmationsRegistry(request, env, url);
+      }
+      if (path === "/v1/admin/order-confirmations/registry/export-zip" && method === "POST") {
+        return handleAdminOrderConfirmationsRegistryZipExport(request, env);
       }
       const invoiceIdMatch = path.match(/^\/v1\/admin\/invoices\/([^/]+)$/);
       if (invoiceIdMatch && method === "GET") return handleGetInvoice(request, env, invoiceIdMatch[1]);
@@ -596,6 +607,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
       if (path === "/v1/admin/nav" && method === "GET") return handleGetAdminNav(request, env);
       if (path === "/v1/admin/dashboard" && method === "GET") return handleGetAdminDashboard(request, env);
       if (path === "/v1/admin/search" && method === "GET") return handleAdminSearch(request, env, url);
+      if (path === "/v1/admin/search/suggest" && method === "GET") return handleAdminAdSearchSuggest(request, env, url);
       if (path === "/v1/admin/calendar" && method === "GET") return handleGetAdminCalendar(request, env, url);
       if (path === "/v1/admin/alerts" && method === "GET") return handleListAlerts(request, env, url);
       if (path === "/v1/admin/alerts/generate" && method === "POST") return handleGenerateAlerts(request, env);

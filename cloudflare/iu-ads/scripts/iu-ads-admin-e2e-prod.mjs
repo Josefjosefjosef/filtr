@@ -417,6 +417,10 @@ async function main() {
     ["/v1/admin/documents", "documents"],
     ["/v1/admin/codes", "codes"],
     ["/v1/admin/search?q=IU_TEST", "search"],
+    ["/v1/admin/search/suggest?q=IU", "search_suggest"],
+    ["/v1/admin/ad-orders?limit=5", "ad_orders"],
+    ["/v1/admin/invoices/registry", "invoices_registry"],
+    ["/v1/admin/order-confirmations/registry", "order_confirmations_registry"],
     ["/v1/admin/audit", "audit"],
     ["/v1/admin/exports", "exports"],
     ["/v1/admin/finance/summary", "finance"],
@@ -435,6 +439,34 @@ async function main() {
     if (r.status === 200) pass("read_" + label);
     else fail("read_" + label + "_status_" + r.status);
     const txt = await r.text();
+    if (label === "dashboard") {
+      try {
+        const dash = JSON.parse(txt);
+        if (dash && dash.ops_v1 && typeof dash.ops_v1 === "object") pass("dashboard_ops_v1");
+        else fail("dashboard_ops_v1_missing");
+      } catch (_) {
+        fail("dashboard_ops_v1_json");
+      }
+    }
+    if (label === "nav") {
+      try {
+        const navBody = JSON.parse(txt);
+        const ids = (navBody.nav || []).map((n) => n.id);
+        if (ids.includes("orders_all") && ids.includes("search")) pass("nav_orders_all_and_search");
+        else fail("nav_structure_epic");
+      } catch (_) {
+        fail("nav_structure_json");
+      }
+    }
+    if (label === "search_suggest") {
+      try {
+        const sug = JSON.parse(txt);
+        if (Array.isArray(sug.suggestions)) pass("search_suggest_shape");
+        else fail("search_suggest_shape");
+      } catch (_) {
+        fail("search_suggest_json");
+      }
+    }
     // Live Ads hostname must not appear. Historical audit_logs may still mention personal hosts —
     // document those without failing the migration gate (immutable audit trail).
     if (label === "audit") {
