@@ -134,8 +134,7 @@ export async function handleAdminInvoicesRegistry(request: Request, env: Env, ur
 
   return json({
     documents,
-    export_zip_available: false,
-    export_zip_message_cs: "Hromadný export ZIP bude dostupný v další verzi — zatím stáhněte jednotlivá PDF.",
+    export_zip_available: true,
   });
 }
 

@@ -128,6 +128,8 @@ jobs:
           npm ci
           npm test
           cd ../..
+          node scripts/iu-ads-admin-menu-guard-v1.mjs
+          node scripts/iu-ads-admin-zip-search-guard-v1.mjs
           node scripts/iu-premium-selected-services-freeze-guard-v1.mjs
           npm run iu-premium-order-form-guard
           node scripts/iu-premium-order-documents-freeze-guard-v1.mjs
