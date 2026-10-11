@@ -1053,7 +1053,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
             '<button type="button" class="btn danger" data-premium-accounting-cancel="'+esc(ord.order_id)+'">Stornovat objednávku a fakturu</button> ':
             '<p class="muted">Před účetním stornem nejdříve vypněte reklamu.</p> ')):"")+
       '<button type="button" class="btn secondary" data-premium-edit="'+esc(ord.order_id)+'">Upravit objednávku</button> '+
-      (isMainAdminUser()?'<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit celý záznam ze systému</button> ':"")+
+      (isMainAdminUser()?
+        '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit celý záznam ze systému</button> ':
+        '<button type="button" class="btn danger" data-premium-delete="'+esc(ord.order_id)+'">Odstranit objednávku</button> ')+
       "</div></div>"+
       premiumOrderDocumentsSectionHtml(ord.order_id, body)+
       (body.related_orders&&body.related_orders.length?'<div class="card"><h3>Navazující objednávky</h3><ul class="history-list">'+
