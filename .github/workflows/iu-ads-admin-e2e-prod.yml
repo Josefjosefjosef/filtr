@@ -40,6 +40,12 @@ jobs:
           cache-dependency-path: cloudflare/iu-ads/package-lock.json
       - name: Install
         run: npm ci
+      - name: Install Playwright Chromium (browser panel smoke)
+        working-directory: .
+        run: |
+          set -euo pipefail
+          npm ci
+          npx playwright install chromium
       - name: Secrets present (names only)
         run: |
           set -euo pipefail

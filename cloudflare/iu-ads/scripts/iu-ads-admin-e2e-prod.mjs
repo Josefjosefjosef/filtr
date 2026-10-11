@@ -285,6 +285,79 @@ function cookieHeaderFromSetCookie(setCookieHeaders) {
   return parts.join("; ");
 }
 
+async function browserAdminPanelSmoke(email, password) {
+  let chromium;
+  try {
+    ({ chromium } = await import("playwright"));
+  } catch (_) {
+    console.log("PLAYWRIGHT_SKIP=module_missing");
+    pass("browser_panel_skipped_no_playwright");
+    return;
+  }
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.goto(BASE + "/admin", { waitUntil: "domcontentloaded", timeout: 60000 });
+    await page.fill("#email", email);
+    await page.fill("#password", password);
+    await page.click('#login-form button[type="submit"]');
+    await page.waitForSelector("#app-view.show", { timeout: 30000 });
+    await page.waitForFunction(
+      () => {
+        const p = document.getElementById("panel");
+        if (!p) return false;
+        const t = (p.innerText || p.textContent || "").trim();
+        return t.length > 0 && t !== "Načítám…";
+      },
+      { timeout: 30000 }
+    );
+    pass("browser_initial_panel_not_loading_only");
+    const dashText = await page.locator("#panel").innerText();
+    if (/Dashboard|Widget|Kampaně|záznam/i.test(dashText)) pass("browser_dashboard_content");
+    else fail("browser_dashboard_content");
+    await page.click('nav button[data-id="premium"]');
+    await page.waitForFunction(
+      () => {
+        const p = document.getElementById("panel");
+        if (!p) return false;
+        const t = p.innerText || p.textContent || "";
+        return t.includes("Vybrané služby") && !/^Načítám…$/m.test(t.trim());
+      },
+      { timeout: 30000 }
+    );
+    pass("browser_premium_panel_rendered");
+    const premText = await page.locator("#panel").innerText();
+    if (/Načítám…/.test(premText) && !/Vybrané služby/.test(premText)) fail("browser_premium_stuck_loading");
+    else pass("browser_premium_not_stuck_loading");
+    await page.click('nav button[data-id="campaigns"]');
+    await page.waitForFunction(
+      () => {
+        const p = document.getElementById("panel");
+        if (!p) return false;
+        const t = (p.innerText || p.textContent || "").trim();
+        return t.includes("Kampaně") && t !== "Načítám…";
+      },
+      { timeout: 30000 }
+    );
+    pass("browser_campaigns_panel_rendered");
+    await page.click('nav button[data-id="clients"]');
+    await page.waitForFunction(
+      () => {
+        const p = document.getElementById("panel");
+        if (!p) return false;
+        const t = (p.innerText || p.textContent || "").trim();
+        return t.includes("Klienti") && t !== "Načítám…";
+      },
+      { timeout: 30000 }
+    );
+    pass("browser_clients_panel_rendered");
+  } catch (e) {
+    fail("browser_panel_smoke_" + (e && e.message ? e.message : String(e)));
+  } finally {
+    await browser.close();
+  }
+}
+
 function assertCookieAttrs(setCookie) {
   const s = String(setCookie || "");
   const checks = [
@@ -412,6 +485,8 @@ async function main() {
     ["/v1/admin/clients", "clients"],
     ["/v1/admin/campaigns", "campaigns"],
     ["/v1/admin/orders", "orders"],
+    ["/v1/admin/premium/orders/summary", "premium_orders_summary"],
+    ["/v1/admin/premium/orders", "premium_orders"],
     ["/v1/admin/contracts", "contracts"],
     ["/v1/admin/invoices", "invoices"],
     ["/v1/admin/documents", "documents"],
@@ -464,6 +539,8 @@ async function main() {
     if (r.status === 200) pass("session_survives_reload");
     else fail("session_survives_reload_status_" + r.status);
   }
+
+  await browserAdminPanelSmoke(EMAIL, password);
 
   {
     const r = await fetch(BASE + "/v1/admin/auth/logout", {

@@ -252,9 +252,19 @@ export const ADMIN_UI_SCRIPT = String.raw`
   function numOrNull(id){ var v=val(id).trim(); if(v==="") return null; var n=Number(v); return isFinite(n)?n:null; }
   function csvArr(id){ var v=val(id).trim(); if(!v) return []; return v.split(/[,;\s]+/).map(function(x){return x.trim();}).filter(Boolean); }
   function isMainAdminUser(){
-    var u=state.me||{};
-    var roles=u.roles||[];
+    var roles=state.roles&&state.roles.length?state.roles:[];
+    if(!roles.length){
+      var u=state.me||{};
+      roles=u.roles||[];
+    }
     return roles.indexOf("main_admin")>=0;
+  }
+  function renderPanelFailure(err){
+    var msg=(err&&err.message)?String(err.message):String(err||"");
+    panel('<p class="err">Načtení panelu se nezdařilo. '+esc(msg||"Neznámá chyba.")+'</p>'+
+      '<div class="row"><button type="button" class="btn secondary" id="panel-retry">Zkusit znovu</button></div>');
+    var retry=el("panel-retry");
+    if(retry) retry.onclick=function(){ render(); };
   }
   function premiumPaymentLabel(st){
     if(st==="paid") return "Uhrazeno";
@@ -1260,7 +1270,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }).join("")+"</div>";
   }
   async function renderPremiumOrdersAdmin(){
-    if(state.orderDetailId) return renderPremiumOrderDetail(state.orderDetailId);
+    if(state.orderDetailId){ await renderPremiumOrderDetail(state.orderDetailId); return; }
     var f=state.premiumFilters||{};
     var qs=new URLSearchParams();
     if(f.q) qs.set("q",f.q);
@@ -1276,7 +1286,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
     rows.forEach(function(r){ rowsById[r.order_id]=r; });
-    var resetBar=isMainAdmin()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
+    var resetBar=isMainAdminUser()?('<div class="card"><h3>Testovací data (hlavní administrátor)</h3><p class="muted">Jednorázově odstraní všechny prémiové objednávky, kampaně, PDF a související provozní záznamy. Katalog P1–P8 a administrace zůstanou.</p>'+
       '<button type="button" class="btn danger" id="premium-test-reset-open">Vyčistit všechny testovací záznamy</button></div>'):"";
     panel('<div class="card"><h2>Objednávky — Vybrané služby a odkazy</h2><p class="muted">Prémiová tlačítka P1–P8. Schválení a zveřejnění = okamžitá publikace na InfoUzel.cz.</p>'+
       premiumSummaryWidgetsHtml(sum.body)+"</div>"+resetBar+
@@ -1837,7 +1847,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var v=state.view;
     panel('<p class="muted">Načítám…</p>');
     try{
-      if(v==="account") return renderAccount();
+      if(v==="account"){ await renderAccount(); return; }
       if(v==="dashboard"){
         var d=await api("/v1/admin/dashboard",{method:"GET",headers:{}});
         if(!d.res.ok){ panel('<p class="err">'+esc(apiError(d.body))+'</p>'); return; }
@@ -1901,13 +1911,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
             render();
           };
         });
-      } else if(v==="campaigns") return renderCampaigns();
-      else if(v==="clients") return renderClients();
-      else if(v==="creatives") return renderCreatives();
-      else if(v==="documents") return renderDocuments();
-      else if(v==="codes") return renderCodes();
-      else if(v==="backups") return renderBackups();
-      else if(v==="inquiries") return renderSimpleCrud({
+      } else if(v==="campaigns"){ await renderCampaigns(); return; }
+      else if(v==="clients"){ await renderClients(); return; }
+      else if(v==="creatives"){ await renderCreatives(); return; }
+      else if(v==="documents"){ await renderDocuments(); return; }
+      else if(v==="codes"){ await renderCodes(); return; }
+      else if(v==="backups"){ await renderBackups(); return; }
+      else if(v==="inquiries") await renderSimpleCrud({
         title:"Poptávky", listPath:"/v1/admin/inquiries", listKey:"inquiries", createPath:"/v1/admin/inquiries",
         cols:[["inquiry_id","ID"],["status","Stav"],["client_id","Klient"],["title","Název"]],
         fields:[
@@ -1916,8 +1926,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ],
         emptyHint:"Žádné poptávky."
       });
-      else if(v==="premium"||v==="orders") return renderPremiumOrdersAdmin();
-      else if(v==="contracts") return renderSimpleCrud({
+      else if(v==="premium"||v==="orders"){ await renderPremiumOrdersAdmin(); return; }
+      else if(v==="contracts") await renderSimpleCrud({
         title:"Smlouvy", listPath:"/v1/admin/contracts", listKey:"contracts", createPath:"/v1/admin/contracts",
         cols:[["contract_id","ID"],["contract_number","Číslo"],["status","Stav"],["client_id","Klient"]],
         fields:[
@@ -1926,7 +1936,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           {id:"co-num",key:"contract_number",label:"contract_number (auto pokud prázdné)",optional:true}
         ]
       });
-      else if(v==="invoices") return renderSimpleCrud({
+      else if(v==="invoices") await renderSimpleCrud({
         title:"Faktury", listPath:"/v1/admin/invoices", listKey:"invoices", createPath:"/v1/admin/invoices",
         cols:[["invoice_id","ID"],["invoice_number","Číslo"],["status","Stav"],["client_id","Klient"],["total_cents","Částka (cents)"]],
         fields:[
@@ -1984,7 +1994,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           if(!r.res.ok){ el("rs-err").textContent=apiError(r.body); el("rs-err").hidden=false; return; }
           render();
         };
-      } else if(v==="rights") return renderSimpleCrud({
+      } else if(v==="rights") await renderSimpleCrud({
         title:"Autorská práva", listPath:"/v1/admin/rights", listKey:"confirmations", createPath:"/v1/admin/rights",
         cols:[["confirmation_id","ID"],["campaign_id","Kampaň"],["confirmed_by_name","Potvrdil"],["confirmed_at","Potvrzeno"]],
         fields:[
@@ -1995,7 +2005,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
           {id:"ri-doc",key:"document_id",label:"document_id (volitelné)",optional:true}
         ]
       });
-      else if(v==="complaints") return renderSimpleCrud({
+      else if(v==="complaints") await renderSimpleCrud({
         title:"Reklamace", listPath:"/v1/admin/complaints", listKey:"complaints", createPath:"/v1/admin/complaints",
         cols:[["complaint_id","ID"],["status","Stav"],["client_id","Klient"],["campaign_id","Kampaň"]],
         fields:[
@@ -2097,7 +2107,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         panel('<div class="card"><h2>'+esc(entry&&entry.label_cs||v)+'</h2><pre class="json">'+esc(JSON.stringify(raw.body,null,2))+'</pre></div>');
       }
     }catch(e){
-      panel('<p class="err">Síťová chyba.</p>');
+      renderPanelFailure(e);
     }
   }
   bootstrap();
