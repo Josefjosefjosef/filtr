@@ -569,12 +569,21 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
           : null,
       created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
     })),
-    order_confirmation_revisions: confirmationRevisionRows.map((r) => ({
-      version: r.version,
-      created_at_label_cs: formatAdminPragueDateTime(r.created_at),
-      reason: r.reason,
-      is_current: r.is_current,
-    })),
+    order_confirmation_revisions: confirmationRevisionRows.map((r) => {
+      const v = Number(r.version);
+      const accessBase =
+        "/v1/admin/premium/orders/" +
+        encodeURIComponent(orderId) +
+        "/documents/order_confirmation/access";
+      return {
+        version: v,
+        created_at_label_cs: formatAdminPragueDateTime(r.created_at),
+        reason: r.reason,
+        is_current: r.is_current,
+        preview_path: accessBase + "?disposition=inline&version=" + encodeURIComponent(String(v)),
+        download_path: accessBase + "?disposition=attachment&version=" + encodeURIComponent(String(v)),
+      };
+    }),
     edit_form_options: {
       categories: PREMIUM_AFFILIATE_CATEGORY_SLUGS.map((slug) => ({
         slug,

@@ -990,13 +990,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
     Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-preview]"),function(b){
       b.onclick=async function(ev){
         ev.stopPropagation();
-        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-preview"), b.getAttribute("data-doc-kind"), "inline");
+        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-preview"), b.getAttribute("data-doc-kind"), "inline", b.getAttribute("data-doc-version"));
       };
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-download]"),function(b){
       b.onclick=async function(ev){
         ev.stopPropagation();
-        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-download"), b.getAttribute("data-doc-kind"), "attachment");
+        await openPremiumOrderDocument(b.getAttribute("data-premium-doc-download"), b.getAttribute("data-doc-kind"), "attachment", b.getAttribute("data-doc-version"));
       };
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-premium-doc-retry]"),function(b){
@@ -1061,8 +1061,10 @@ export const ADMIN_UI_SCRIPT = String.raw`
       (headRight?'<span class="order-docs-count">'+esc(headRight)+"</span>":"")+
       '</div><div class="order-doc-grid">'+cards+"</div></div>";
   }
-  async function openPremiumOrderDocument(orderId, kind, disposition){
-    var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId)+"/documents/"+encodeURIComponent(kind)+"/access?disposition="+encodeURIComponent(disposition),{method:"GET",headers:{}});
+  async function openPremiumOrderDocument(orderId, kind, disposition, version){
+    var qs="disposition="+encodeURIComponent(disposition);
+    if(version!=null&&String(version).trim()!=="") qs+="&version="+encodeURIComponent(String(version));
+    var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(orderId)+"/documents/"+encodeURIComponent(kind)+"/access?"+qs,{method:"GET",headers:{}});
     if(!r.res.ok){ state.flash="Dokument: "+apiError(r.body); render(); return; }
     var path=r.body&&r.body.path;
     if(!path){ state.flash="Chybí bezpečný odkaz na PDF."; render(); return; }
@@ -1177,10 +1179,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
         }).join("")+"</ul></div>":"")+
       (body.order_confirmation_revisions&&body.order_confirmation_revisions.length?'<div class="card"><h3>Verze potvrzení objednávky</h3><ul class="history-list">'+
         body.order_confirmation_revisions.map(function(rv){
-          var acts=rv.is_current?(
-            ' <button type="button" class="btn secondary" data-premium-doc-preview="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation">Náhled</button>'+
-            ' <button type="button" class="btn secondary" data-premium-doc-download="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation">Stáhnout</button>'
-          ):"";
+          var ver=rv.version!=null?String(rv.version):"";
+          var acts=' <button type="button" class="btn secondary" data-premium-doc-preview="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Náhled</button>'+
+            ' <button type="button" class="btn secondary" data-premium-doc-download="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Stáhnout</button>';
           return "<li>Verze "+esc(String(rv.version||"—"))+" · "+esc(rv.created_at_label_cs||"—")+
             (rv.reason?" · "+esc(rv.reason):"")+acts+"</li>";
         }).join("")+"</ul></div>":"")+
@@ -1280,9 +1281,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(f.category) qs.set("category",f.category);
     if(f.position) qs.set("position",f.position);
     if(f.ending_days) qs.set("ending_days",f.ending_days);
-    var sum=await api("/v1/admin/premium/orders/summary",{method:"GET",headers:{}});
     var path="/v1/admin/premium/orders"+(qs.toString()?"?"+qs.toString():"");
-    var po=await api(path,{method:"GET",headers:{}});
+    var sumPo=await Promise.all([
+      api("/v1/admin/premium/orders/summary",{method:"GET",headers:{}}),
+      api(path,{method:"GET",headers:{}})
+    ]);
+    var sum=sumPo[0];
+    var po=sumPo[1];
     if(!po.res.ok){ panel('<p class="err">'+esc(apiError(po.body))+'</p>'); return; }
     var rows=(po.body&&po.body.premium_orders)||[];
     var rowsById={};
