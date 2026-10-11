@@ -14,10 +14,16 @@
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
   var EXTERNAL_RETURN_SETTLE_MS = 1600;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v4-20261011";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v5-20261011";
+  var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
+  var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
   var externalRestoreInFlight = false;
+  var externalReturnGeneration = 0;
   var externalReturnSettleTimer = null;
+  var externalReturnSettleRaf = 0;
+  var externalReturnTraceRing = [];
+  var externalReturnDiagEl = null;
   var reconnectTimer = null;
   var reconnectCallbacks = [];
   var hintTimer = null;
@@ -265,6 +271,198 @@
     } catch (_) {}
   }
 
+  function traceExternalReturn(tag, detail) {
+    try {
+      var entry = {
+        t: Date.now(),
+        tag: String(tag || ""),
+        detail: detail && typeof detail === "object" ? detail : {},
+      };
+      externalReturnTraceRing.push(entry);
+      if (externalReturnTraceRing.length > 48) externalReturnTraceRing.shift();
+      try {
+        if (localStorage.getItem(PWA_RETURN_TRACE_LS) === "1") {
+          refreshExternalReturnDiagPanel();
+        }
+      } catch (_) {}
+    } catch (_) {}
+  }
+
+  function isExternalReturnDiagEnabled() {
+    try {
+      if (localStorage.getItem(PWA_RETURN_DIAG_LS) === "1") return true;
+      if (localStorage.getItem(PWA_RETURN_TRACE_LS) === "1") return true;
+      var q = new URLSearchParams(location.search || "");
+      if (q.get("iuPwaReturnDiag") === "1") return true;
+    } catch (_) {}
+    return false;
+  }
+
+  function externalReturnDiagSnapshot() {
+    var wrap = document.getElementById("iuMobileGateWrap");
+    var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    var holdUntil = 0;
+    try {
+      holdUntil = parseInt(sessionStorage.getItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY) || "0", 10);
+    } catch (_) {}
+    return {
+      buildId: PWA_EXTERNAL_RETURN_BUILD_ID,
+      href: location.pathname + location.search + location.hash,
+      gate: gate,
+      gen: externalReturnGeneration,
+      inFlight: externalRestoreInFlight,
+      holdUntil: holdUntil,
+      holdActive: isExternalReturnHoldActive(),
+      restoreActive: isExternalReturnRestoreActive(),
+      session: {
+        ext: sessionStorage.getItem(EXTERNAL_ARMED_KEY) || "",
+        restoring: sessionStorage.getItem(EXTERNAL_RESTORE_ACTIVE_KEY) || "",
+        mainY: sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY) || "",
+        navArm: sessionStorage.getItem("iuMobileWebNavReturnArmed") || "",
+      },
+      trace: externalReturnTraceRing.slice(-24),
+    };
+  }
+
+  function refreshExternalReturnDiagPanel() {
+    if (!externalReturnDiagEl) return;
+    try {
+      externalReturnDiagEl.textContent = JSON.stringify(externalReturnDiagSnapshot(), null, 2);
+    } catch (_) {}
+  }
+
+  function enableExternalReturnDiagPanel() {
+    try {
+      localStorage.setItem(PWA_RETURN_DIAG_LS, "1");
+      localStorage.setItem(PWA_RETURN_TRACE_LS, "1");
+    } catch (_) {}
+    traceExternalReturn("diag_enable", { via: "api" });
+    ensureExternalReturnDiagPanel();
+  }
+
+  function ensureExternalReturnDiagPanel() {
+    if (!isExternalReturnDiagEnabled()) return;
+    if (externalReturnDiagEl) {
+      refreshExternalReturnDiagPanel();
+      return;
+    }
+    if (!document.body) return;
+    var panel = document.createElement("div");
+    panel.id = "iuPwaExternalReturnDiag";
+    panel.setAttribute("role", "complementary");
+    panel.style.cssText =
+      "position:fixed;left:8px;right:8px;bottom:calc(var(--iu-mobile-bottom-nav-safe-space,72px) + 8px);z-index:10040;max-height:42vh;overflow:auto;padding:8px 10px;border-radius:10px;background:rgba(12,16,24,.94);color:#e8eef8;font:11px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 6px 24px rgba(0,0,0,.35);";
+    var title = document.createElement("div");
+    title.textContent = "PWA return diag (no upload)";
+    title.style.cssText = "font-weight:600;margin-bottom:6px;font-family:system-ui,sans-serif;font-size:12px;";
+    panel.appendChild(title);
+    var pre = document.createElement("pre");
+    pre.style.cssText = "margin:0;white-space:pre-wrap;word-break:break-word;";
+    panel.appendChild(pre);
+    externalReturnDiagEl = pre;
+    var row = document.createElement("div");
+    row.style.cssText = "display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;";
+    function mkBtn(label, fn) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.style.cssText =
+        "padding:6px 10px;border-radius:8px;border:0;background:#3b82f6;color:#fff;font:12px system-ui,sans-serif;";
+      b.addEventListener("click", fn);
+      return b;
+    }
+    row.appendChild(
+      mkBtn("Kopírovat", function () {
+        try {
+          var txt = externalReturnDiagEl.textContent || "";
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            void navigator.clipboard.writeText(txt);
+          } else {
+            var ta = document.createElement("textarea");
+            ta.value = txt;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+          }
+        } catch (_) {}
+      })
+    );
+    row.appendChild(
+      mkBtn(localStorage.getItem(PWA_RETURN_TRACE_LS) === "1" ? "Trace ON" : "Trace OFF", function () {
+        try {
+          var on = localStorage.getItem(PWA_RETURN_TRACE_LS) === "1";
+          localStorage.setItem(PWA_RETURN_TRACE_LS, on ? "0" : "1");
+          localStorage.setItem(PWA_RETURN_DIAG_LS, "1");
+          traceExternalReturn("trace_toggle", { on: !on });
+          ensureExternalReturnDiagPanel();
+        } catch (_) {}
+      })
+    );
+    row.appendChild(
+      mkBtn("Skrýt", function () {
+        try {
+          localStorage.setItem(PWA_RETURN_DIAG_LS, "0");
+        } catch (_) {}
+        try {
+          panel.remove();
+        } catch (_) {}
+        externalReturnDiagEl = null;
+      })
+    );
+    panel.appendChild(row);
+    document.body.appendChild(panel);
+    try {
+      localStorage.setItem(PWA_RETURN_DIAG_LS, "1");
+    } catch (_) {}
+    refreshExternalReturnDiagPanel();
+  }
+
+  /** User navigation / new view — drop stale return arms so delayed restore cannot overwrite. */
+  function cancelExternalReturnRestore(reason) {
+    externalReturnGeneration += 1;
+    traceExternalReturn("cancel", { reason: String(reason || "") });
+    try {
+      if (externalReturnSettleTimer) clearTimeout(externalReturnSettleTimer);
+      externalReturnSettleTimer = null;
+      if (externalReturnSettleRaf) cancelAnimationFrame(externalReturnSettleRaf);
+      externalReturnSettleRaf = 0;
+    } catch (_) {}
+    try {
+      sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+      sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
+      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+      sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+    } catch (_) {}
+    externalRestoreInFlight = false;
+    refreshExternalReturnDiagPanel();
+  }
+
+  function externalReturnSettleReady() {
+    try {
+      if (document.documentElement.classList.contains("iu-mm-return-boot")) return false;
+      var pending = null;
+      try {
+        pending = localStorage.getItem("iuMindMenuReturnPendingV1");
+      } catch (_) {}
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+      if (pending) {
+        return gate === "tools" || gate === "nav";
+      }
+      try {
+        if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") {
+          return gate === "nav";
+        }
+      } catch (_) {}
+      return true;
+    } catch (_) {
+      return true;
+    }
+  }
+
   /** Drop return arms when external open never left the app (popup blocked, aborted gesture). */
   function abortExternalReturnArmsAfterFailedOpen() {
     try {
@@ -303,23 +501,49 @@
     } catch (_) {}
     externalRestoreInFlight = false;
     externalReturnSettleTimer = null;
+    try {
+      if (externalReturnSettleRaf) cancelAnimationFrame(externalReturnSettleRaf);
+    } catch (_) {}
+    externalReturnSettleRaf = 0;
   }
 
   function scheduleExternalReturnSettle() {
     touchExternalReturnHoldUntil();
+    traceExternalReturn("settle_schedule", {});
     if (externalReturnSettleTimer) {
       try {
         clearTimeout(externalReturnSettleTimer);
       } catch (_) {}
+      externalReturnSettleTimer = null;
     }
-    var delay = EXTERNAL_RETURN_SETTLE_MS;
-    try {
-      var until = parseInt(sessionStorage.getItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY) || "0", 10);
-      if (Number.isFinite(until) && until > Date.now()) {
-        delay = Math.max(delay, until - Date.now() + 32);
+    if (externalReturnSettleRaf) {
+      try {
+        cancelAnimationFrame(externalReturnSettleRaf);
+      } catch (_) {}
+      externalReturnSettleRaf = 0;
+    }
+    var gen = externalReturnGeneration;
+    var started = Date.now();
+    function finishIfCurrent() {
+      if (gen !== externalReturnGeneration) return;
+      finishExternalReturnRestore();
+      traceExternalReturn("settle_done", { ms: Date.now() - started });
+      refreshExternalReturnDiagPanel();
+    }
+    function poll() {
+      if (gen !== externalReturnGeneration) return;
+      if (Date.now() - started >= EXTERNAL_RETURN_SETTLE_MS) {
+        finishIfCurrent();
+        return;
       }
-    } catch (_) {}
-    externalReturnSettleTimer = setTimeout(finishExternalReturnRestore, delay);
+      if (externalReturnSettleReady()) {
+        finishIfCurrent();
+        return;
+      }
+      externalReturnSettleRaf = requestAnimationFrame(poll);
+    }
+    externalReturnSettleRaf = requestAnimationFrame(poll);
+    externalReturnSettleTimer = setTimeout(finishIfCurrent, EXTERNAL_RETURN_SETTLE_MS + 48);
   }
 
   function capturePwaExternalReturnSnapshot() {
@@ -351,6 +575,7 @@
   }
 
   function restorePwaExternalMainScrollIfNeeded() {
+    var scrollGen = externalReturnGeneration;
     try {
       var raw = sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY);
       sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
@@ -363,6 +588,7 @@
         window.iuPwaApplyMainScrollY(y);
         try {
           requestAnimationFrame(function () {
+            if (scrollGen !== externalReturnGeneration) return;
             try {
               window.iuPwaApplyMainScrollY(y);
             } catch (_) {}
@@ -392,6 +618,7 @@
   }
 
   function invokeReturnNavigationRestore() {
+    var restoreGen = externalReturnGeneration;
     /* P0: while a fullscreen tool overlay is open, do not remount MindMenu tools chrome
        (would surface MindMenu/iCentrum header around Datové schránky after external return). */
     if (hasIntentionalToolOverlayOpen()) {
@@ -423,6 +650,7 @@
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
       sessionStorage.removeItem("iuMobileWebNavReturnArmed");
     } catch (_) {}
+    if (restoreGen !== externalReturnGeneration) return;
     touchExternalReturnHoldUntil();
   }
 
@@ -436,6 +664,7 @@
       reassertIntentionalOverlayShell();
       return;
     }
+    traceExternalReturn("restore_start", {});
     externalRestoreInFlight = true;
     try {
       sessionStorage.setItem(EXTERNAL_RESTORE_ACTIVE_KEY, "1");
@@ -463,6 +692,8 @@
   }
 
   function armExternalReturn() {
+    externalReturnGeneration += 1;
+    traceExternalReturn("arm", { gen: externalReturnGeneration });
     capturePwaExternalReturnSnapshot();
     try {
       sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
@@ -650,6 +881,72 @@
     );
   }
 
+  function bindPwaReturnDiagHashRoute() {
+    function tryHash() {
+      try {
+        var h = String(location.hash || "").replace("#", "").toLowerCase();
+        if (h === "iu-pwa-return-diag-enable") {
+          enableExternalReturnDiagPanel();
+          var u = new URL(location.href);
+          u.hash = "";
+          history.replaceState(history.state, "", u.toString());
+        }
+      } catch (_) {}
+    }
+    window.addEventListener("hashchange", tryHash);
+    tryHash();
+  }
+
+  function bindPwaReturnDiagBrandGesture() {
+    if (window.__iuPwaReturnDiagGesture) return;
+    window.__iuPwaReturnDiagGesture = true;
+    var taps = [];
+    document.addEventListener(
+      "click",
+      function (e) {
+        try {
+          var brand = e.target && e.target.closest ? e.target.closest("a.iuBrand") : null;
+          if (!brand) return;
+          var now = Date.now();
+          taps = taps.filter(function (t) {
+            return now - t < 4000;
+          });
+          taps.push(now);
+          if (taps.length >= 7) {
+            taps = [];
+            enableExternalReturnDiagPanel();
+          }
+        } catch (_) {}
+      },
+      true
+    );
+  }
+
+  function bindUserNavigationCancel() {
+    if (window.__iuExternalReturnUserNavCancel) return;
+    window.__iuExternalReturnUserNavCancel = true;
+    document.addEventListener(
+      "click",
+      function (e) {
+        try {
+          if (!isExternalReturnRestoreActive() && !isExternalReturnHoldActive()) return;
+          var t = e.target && e.target.closest ? e.target.closest("[data-iu-bottom-nav], #iuLeftRail a, .iu-leftNavItem") : null;
+          if (!t) return;
+          cancelExternalReturnRestore("user_nav_click");
+        } catch (_) {}
+      },
+      true
+    );
+    window.addEventListener("hashchange", function () {
+      try {
+        if (!isExternalReturnRestoreActive() && !isExternalReturnHoldActive()) return;
+        var h = String(location.hash || "").toLowerCase();
+        if (h === "#iu-mindmenu" || h === "#iu-nav" || h === "#nav") return;
+        cancelExternalReturnRestore("hashchange");
+      } catch (_) {}
+    });
+  }
+
   function bindLifecycle() {
     window.addEventListener("pageshow", function () {
       restoreAppShellAfterReturn();
@@ -691,7 +988,14 @@
 
   function init() {
     bindGlobalExternalCapture();
+    bindPwaReturnDiagHashRoute();
+    bindPwaReturnDiagBrandGesture();
+    bindUserNavigationCancel();
     bindLifecycle();
+    try {
+      if (document.readyState === "complete") ensureExternalReturnDiagPanel();
+      else window.addEventListener("load", ensureExternalReturnDiagPanel, { once: true });
+    } catch (_) {}
   }
 
   window.iuNetwork = {
@@ -702,6 +1006,9 @@
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
     isExternalReturnRestoreActive: isExternalReturnRestoreActive,
     isExternalReturnHoldActive: isExternalReturnHoldActive,
+    cancelExternalReturnRestore: cancelExternalReturnRestore,
+    enableExternalReturnDiagPanel: enableExternalReturnDiagPanel,
+    getExternalReturnDiagSnapshot: externalReturnDiagSnapshot,
     pwaExternalReturnBuildId: PWA_EXTERNAL_RETURN_BUILD_ID,
     hasIntentionalToolOverlayOpen: hasIntentionalToolOverlayOpen,
     showOfflineHint: showOfflineHint,

@@ -26912,6 +26912,12 @@ function buildVideoAsArticleCard(it) {
         } catch (_) {}
       });
     } catch (_) {}
+    try {
+      if (window.__iuVaultHydrationComplete === true) {
+        mailboxCount = iuMailboxRender();
+        iuMailboxSyncLayoutAfterCountChange();
+      }
+    } catch (_) {}
     iuPositionMailboxControls();
 
     document.getElementById("iuMailboxAdd")?.addEventListener("click", () => {
