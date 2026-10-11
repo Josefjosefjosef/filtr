@@ -220,6 +220,22 @@ async function runFresh(browser, base, name, viewport) {
     await page.waitForTimeout(120);
     await clickWhenVisible(page, "#iuMailboxAdd");
     await page.waitForTimeout(120);
+    await page.waitForFunction(
+      () => {
+        try {
+          const raw = localStorage.getItem("iu_mailboxes_v1");
+          if (!raw) return false;
+          const items = JSON.parse(raw).items || [];
+          const vis = items.filter((it) => !it.hidden).length;
+          const rows = document.querySelectorAll("#iuMailboxList .iu-mailbox-row").length;
+          return vis >= 6 && rows >= 6;
+        } catch (_) {
+          return false;
+        }
+      },
+      null,
+      { timeout: 30000 }
+    );
     let mid = await snapshot(page);
     if (mid.count !== 6) fail(`${name}_after_add_got_${mid.count}`);
 
@@ -227,6 +243,11 @@ async function runFresh(browser, base, name, viewport) {
     await waitForVaultReady(page, 120000);
     await page.waitForFunction(() => window.__iuVaultHydrationComplete === true, null, { timeout: 90000 });
     await openMindMenu(page);
+    await page.waitForFunction(
+      () => document.querySelectorAll("#iuMailboxList .iu-mailbox-row").length >= 6,
+      null,
+      { timeout: 30000 }
+    );
     const after = await snapshot(page);
     if (after.count !== 6) fail(`${name}_reload_grew_got_${after.count}`);
   } finally {
