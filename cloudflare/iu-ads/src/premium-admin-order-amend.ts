@@ -70,6 +70,46 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
   if (workflow === "rejected") {
     return { ok: false, status: 409, error: "rejected", message_cs: "Zamítnutou objednávku upravte jiným postupem." };
   }
+  if (workflow === "cancelled") {
+    return { ok: false, status: 409, error: "cancelled", message_cs: "Stornovanou objednávku nelze upravovat." };
+  }
+  if (workflow === "submitted" || workflow === "under_review") {
+    return {
+      ok: false,
+      status: 409,
+      error: "pending_review",
+      message_cs: "Objednávku čekající na posouzení nelze upravovat — nejdříve schvalte nebo zamítněte.",
+    };
+  }
+  if (workflow !== "published") {
+    return {
+      ok: false,
+      status: 409,
+      error: "not_published",
+      message_cs: "Úprava je dostupná až po schválení a zveřejnění reklamy.",
+    };
+  }
+  if (!row.published_campaign_id) {
+    return { ok: false, status: 409, error: "no_campaign", message_cs: "Chybí zveřejněná kampaň." };
+  }
+  if (typeof input.ico === "string" && input.ico.trim()) {
+    const icoEarly = validateCzechIco(input.ico.trim());
+    if (!icoEarly.ok) return { ok: false, status: 400, error: "invalid_ico", message_cs: "Neplatné IČO." };
+  }
+  const confReady = await db
+    .prepare(
+      "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = 'order_confirmation' AND status = 'ready' LIMIT 1"
+    )
+    .bind(input.orderId)
+    .first();
+  if (!confReady) {
+    return {
+      ok: false,
+      status: 409,
+      error: "confirmation_missing",
+      message_cs: "Úprava vyžaduje hotové potvrzení objednávky (PDF).",
+    };
+  }
 
   let payload = parsePremiumOrderPayload(typeof row.payload_json === "string" ? row.payload_json : null);
   let payloadRaw: Record<string, unknown> = {};
@@ -282,12 +322,17 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
       .run();
   }
 
+  if (!changes.length) {
+    return { ok: false, status: 400, error: "no_changes", message_cs: "Nebyly zadány žádné změny." };
+  }
+
   await db
     .prepare("UPDATE orders SET payload_json = ?, updated_at = ? WHERE order_id = ?")
     .bind(JSON.stringify(payloadRaw), nowIso, input.orderId)
     .run();
 
   let confirmationRegenerated = false;
+  let confirmationVersion: number | null = null;
   if (workflow === "published" && row.published_campaign_id) {
     const inv = await db
       .prepare("SELECT invoice_id FROM invoices WHERE order_id = ? ORDER BY created_at DESC LIMIT 1")
@@ -303,15 +348,44 @@ export async function executePremiumOrderAmend(env: Env, input: PremiumOrderAmen
         replacementReason: "admin_order_amend",
       });
       confirmationRegenerated = regen.ok;
+      if (regen.ok && regen.document_id) {
+        const docVer = await db
+          .prepare("SELECT version FROM documents WHERE document_id = ?")
+          .bind(regen.document_id)
+          .first<{ version: number }>();
+        confirmationVersion = docVer?.version != null ? Number(docVer.version) : null;
+      }
     }
   }
+
+  const actorRow = await db
+    .prepare("SELECT display_name, email FROM admin_users WHERE user_id = ?")
+    .bind(input.actorUserId)
+    .first<{ display_name: string | null; email: string | null }>();
+  const actorLabel =
+    (actorRow?.display_name && actorRow.display_name.trim()) ||
+    (actorRow?.email && actorRow.email.trim()) ||
+    "Administrátor";
 
   await appendPremiumOrderEvent(db, {
     orderId: input.orderId,
     eventType: "admin_edit",
     actorUserId: input.actorUserId,
-    payload: { fields: changes, confirmation_regenerated: confirmationRegenerated, actor_label: input.actorUserId },
+    payload: {
+      fields: changes,
+      confirmation_regenerated: confirmationRegenerated,
+      confirmation_version: confirmationVersion,
+      actor_label: actorLabel,
+    },
   });
+  if (confirmationRegenerated && confirmationVersion) {
+    await appendPremiumOrderEvent(db, {
+      orderId: input.orderId,
+      eventType: "order_confirmation_pdf_created",
+      actorUserId: input.actorUserId,
+      payload: { version: confirmationVersion, actor_label: actorLabel },
+    });
+  }
 
   await insertAuditLog(
     db,

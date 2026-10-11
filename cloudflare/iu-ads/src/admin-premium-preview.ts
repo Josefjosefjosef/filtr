@@ -17,6 +17,9 @@ import {
   premiumCategoryTitleCs,
   PREMIUM_AFFILIATE_CATEGORY_SLUGS,
   PREMIUM_DURATION_MONTHS,
+  parsePremiumPlacementId,
+  resolveAuthoritativePriceCents,
+  type PremiumPosition,
 } from "./premium-selected-services";
 import { signObjectAccess } from "./signed-access";
 import {
@@ -188,10 +191,35 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   }
 
   const historyEvents = await listPremiumOrderEvents(env.DB, orderId);
-  const history = historyEvents.map((ev) => ({
-    ...ev,
-    summary_cs: formatPremiumOrderEventLineCs(ev),
-  }));
+  const actorIds = [
+    ...new Set(
+      historyEvents.map((ev) => ev.actor_user_id).filter((id): id is string => typeof id === "string" && id.length > 0)
+    ),
+  ];
+  const actorLabelById = new Map<string, string>();
+  if (actorIds.length) {
+    const placeholders = actorIds.map(() => "?").join(",");
+    const actorRows = await env.DB.prepare(
+      "SELECT user_id, display_name, email FROM admin_users WHERE user_id IN (" + placeholders + ")"
+    )
+      .bind(...actorIds)
+      .all<{ user_id: string; display_name: string | null; email: string | null }>();
+    for (const ar of actorRows.results || []) {
+      const label = (ar.display_name && ar.display_name.trim()) || (ar.email && ar.email.trim()) || "Administrátor";
+      actorLabelById.set(ar.user_id, label);
+    }
+  }
+  const history = historyEvents.map((ev) => {
+    const payload = { ...ev.payload };
+    if (ev.actor_user_id && !payload.actor_label) {
+      payload.actor_label = actorLabelById.get(ev.actor_user_id) || "Administrátor";
+    }
+    const enriched = { ...ev, payload };
+    return {
+      ...enriched,
+      summary_cs: formatPremiumOrderEventLineCs(enriched),
+    };
+  });
 
   const notesRes = await env.DB.prepare(
     "SELECT note_id, body_text, author_user_id, author_label, created_at FROM premium_order_notes WHERE order_id = ? ORDER BY created_at DESC LIMIT 50"
@@ -217,11 +245,23 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const workflowPublished = workflowStatusStrEarly === "published";
   if (env.DOCUMENTS) {
     try {
-      if (workflowPublished) {
+      const docJobPending = await env.DB.prepare(
+        "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND status IN ('pending','generating','missing','error') LIMIT 1"
+      )
+        .bind(orderId)
+        .first();
+      if (workflowPublished && docJobPending) {
         await resumePremiumOrderDocuments(env, orderId, guard.userId);
       } else if (workflowStatusStrEarly === "cancelled" || workflowStatusStrEarly === "rejected") {
-        const { ensurePremiumStornoDocuments } = await import("./premium-order-documents");
-        await ensurePremiumStornoDocuments(env, orderId, guard.userId, { forceRetryIncomplete: true });
+        const stornoPending = await env.DB.prepare(
+          "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind IN ('order_cancellation','credit_note_pdf') AND status IN ('pending','generating','missing','error') LIMIT 1"
+        )
+          .bind(orderId)
+          .first();
+        if (stornoPending) {
+          const { ensurePremiumStornoDocuments } = await import("./premium-order-documents");
+          await ensurePremiumStornoDocuments(env, orderId, guard.userId, { forceRetryIncomplete: true });
+        }
       }
     } catch {
       /* non-blocking — listing still reconciles job↔document links */
@@ -315,15 +355,65 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     .bind(orderId, orderId)
     .all<Record<string, unknown>>();
 
-  const confirmationRevisionsRes = await env.DB.prepare(
-    `SELECT d.version AS current_version, dcr.version AS revision_version, dcr.created_at, dcr.replacement_reason
-     FROM documents d
-     LEFT JOIN document_content_revisions dcr ON dcr.document_id = d.document_id
-     WHERE d.order_id = ? AND d.doc_type = 'premium_order_confirmation' AND d.status = 'active'
-     ORDER BY COALESCE(dcr.version, d.version) ASC`
+  const activeConfDoc = await env.DB.prepare(
+    "SELECT document_id, version, created_at FROM documents WHERE order_id = ? AND doc_type = 'premium_order_confirmation' AND status = 'active' ORDER BY created_at DESC LIMIT 1"
   )
     .bind(orderId)
-    .all<Record<string, unknown>>();
+    .first<{ document_id: string; version: number; created_at: string }>();
+  const archivedRevisions = activeConfDoc
+    ? await env.DB.prepare(
+        "SELECT version, created_at, replacement_reason FROM document_content_revisions WHERE document_id = ? ORDER BY version ASC"
+      )
+        .bind(activeConfDoc.document_id)
+        .all<{ version: number; created_at: string; replacement_reason: string | null }>()
+    : { results: [] as { version: number; created_at: string; replacement_reason: string | null }[] };
+  const confirmationRevisionRows: {
+    version: number;
+    created_at: string;
+    reason: string | null;
+    is_current: boolean;
+  }[] = [];
+  for (const rev of archivedRevisions.results || []) {
+    confirmationRevisionRows.push({
+      version: Number(rev.version),
+      created_at: String(rev.created_at),
+      reason: rev.replacement_reason,
+      is_current: false,
+    });
+  }
+  if (activeConfDoc) {
+    confirmationRevisionRows.push({
+      version: Number(activeConfDoc.version),
+      created_at: String(activeConfDoc.created_at),
+      reason: null,
+      is_current: true,
+    });
+  }
+  confirmationRevisionRows.sort((a, b) => a.version - b.version);
+
+  const amendConfirmationReady = !!(
+    await env.DB.prepare(
+      "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind = 'order_confirmation' AND status = 'ready' LIMIT 1"
+    )
+      .bind(orderId)
+      .first()
+  );
+  const order_amend_allowed =
+    workflowStatusStr === "published" && !!row.published_campaign_id && amendConfirmationReady;
+
+  let extendSuggestedPriceKc: string | null = null;
+  if (extendEligible.ok) {
+    const parsedPl = parsePremiumPlacementId(String(row.placement_id || ""));
+    if (parsedPl) {
+      const cents = resolveAuthoritativePriceCents(
+        String(row.placement_id),
+        parsedPl.position as PremiumPosition,
+        null,
+        null
+      );
+      extendSuggestedPriceKc = formatPremiumTotalPriceLabelCs(cents).replace(/\s*Kč\s*$/, "").trim();
+    }
+  }
 
   const publication_visibility = await buildPremiumOrderPublicationVisibility(env.DB, {
     orderId: String(row.order_id || ""),
@@ -412,6 +502,14 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
           : paymentStatus === "partial"
             ? "Uhrazeno částečně"
             : "Neuhrazeno",
+      invoice_issued: !!invoiceRow,
+      invoice_paid: !!(invoiceRow && (paymentStatus === "paid" || invoiceRow.status === "paid" || invoiceRow.paid_at)),
+      invoice_payment_label_cs: !invoiceRow
+        ? null
+        : paymentStatus === "paid" || invoiceRow.status === "paid" || invoiceRow.paid_at
+          ? "Faktura uhrazena"
+          : "Faktura neuhrazena",
+      order_amend_allowed,
       price_cents: agreedCents != null && Number.isFinite(Number(agreedCents)) ? Number(agreedCents) : null,
       billing_street: payloadSnap.billing?.street ?? null,
       billing_city: payloadSnap.billing?.city ?? null,
@@ -457,7 +555,7 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
     extend_new_order_allowed: extendEligible.ok,
     extend_new_order_blocked_reason_cs: extendEligible.ok ? null : extendEligible.message_cs,
     extend_suggested_period: extendEligible.ok
-      ? { start_at: campaignEndAt, end_at: suggestedExtendEnd }
+      ? { start_at: campaignEndAt, end_at: suggestedExtendEnd, price_kc: extendSuggestedPriceKc }
       : null,
     related_orders: (relatedOrdersRes.results || []).map((r) => ({
       order_id: r.order_id,
@@ -471,10 +569,11 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
           : null,
       created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
     })),
-    order_confirmation_revisions: (confirmationRevisionsRes.results || []).map((r) => ({
-      version: r.revision_version ?? r.current_version,
-      created_at_label_cs: formatAdminPragueDateTime(String(r.created_at || "")),
-      reason: r.replacement_reason ?? null,
+    order_confirmation_revisions: confirmationRevisionRows.map((r) => ({
+      version: r.version,
+      created_at_label_cs: formatAdminPragueDateTime(r.created_at),
+      reason: r.reason,
+      is_current: r.is_current,
     })),
     edit_form_options: {
       categories: PREMIUM_AFFILIATE_CATEGORY_SLUGS.map((slug) => ({

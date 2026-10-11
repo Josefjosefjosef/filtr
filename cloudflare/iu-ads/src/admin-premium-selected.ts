@@ -97,7 +97,10 @@ export async function handleAdminPremiumListOrders(request: Request, env: Env, u
             po.payment_status,
             ps.agreed_price_cents AS snap_agreed, ps.catalog_price_cents AS snap_catalog,
             ppl.active_campaign_id AS placement_active_campaign_id,
-            camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at
+            camp.status AS published_campaign_status, camp.end_at AS published_campaign_end_at,
+            (SELECT invoice_id FROM invoices WHERE order_id = po.order_id ORDER BY created_at DESC LIMIT 1) AS latest_invoice_id,
+            (SELECT status FROM invoices WHERE order_id = po.order_id ORDER BY created_at DESC LIMIT 1) AS latest_invoice_status,
+            (SELECT paid_at FROM invoices WHERE order_id = po.order_id ORDER BY created_at DESC LIMIT 1) AS latest_invoice_paid_at
      FROM premium_selected_orders po
      JOIN orders o ON o.order_id = po.order_id
      JOIN clients c ON c.client_id = o.client_id

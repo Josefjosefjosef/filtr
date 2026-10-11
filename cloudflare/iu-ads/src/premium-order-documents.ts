@@ -361,7 +361,15 @@ async function loadOrderDocumentContext(
   const position = Number(row.position) || 0;
   const publishedAt = String(row.published_at || new Date().toISOString());
   const approvedAt = creativeApprovedAt || publishedAt;
-  const evidence = typeof row.evidence_code === "string" ? row.evidence_code : campaignId;
+  const customerRef =
+    typeof order.customer_order_code === "string" && order.customer_order_code.trim()
+      ? order.customer_order_code.trim()
+      : typeof order.order_number === "string" && order.order_number.trim()
+        ? order.order_number.trim()
+        : null;
+  const evidence =
+    customerRef ||
+    (typeof row.evidence_code === "string" && row.evidence_code.trim() ? row.evidence_code : campaignId);
   const adSnapshot =
     typeof payloadRaw.ad_web_placement_url === "string" ? payloadRaw.ad_web_placement_url.trim() : null;
   const adWebPlacementUrl = resolvePremiumAdWebPlacementUrl({
