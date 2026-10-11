@@ -16,6 +16,7 @@ function ok(id, cond, detail) {
 
 const docsSrc = fs.readFileSync(path.join(ROOT, "cloudflare/iu-ads/src/premium-order-documents.ts"), "utf8");
 const uiSrc = fs.readFileSync(path.join(ROOT, "cloudflare/iu-ads/src/admin-ui-script.ts"), "utf8");
+const previewSrc = fs.readFileSync(path.join(ROOT, "cloudflare/iu-ads/src/admin-premium-preview.ts"), "utf8");
 
 ok("module:ensure_job_reflects_d1", /ensurePremiumOrderDocumentJobReflectsActiveDocument/.test(docsSrc));
 ok(
@@ -35,6 +36,22 @@ ok("ui:preview_download_buttons_when_ready", /d\.status==="ready"[\s\S]*data-pre
 ok(
   "test:admin_documents_list",
   fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/test/premium-order-admin-documents-list.test.ts"))
+);
+ok(
+  "test:order_detail_documents_filter",
+  fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/test/premium-order-detail-documents.test.ts"))
+);
+ok(
+  "preview:uses_filterPremiumOrderDocumentsForAdminView",
+  /filterPremiumOrderDocumentsForAdminView\(order_documents/.test(previewSrc)
+);
+ok(
+  "preview:no_invoice_only_kind_strip",
+  !/order_documents\s*=\s*order_documents\.filter\([\s\S]*order_confirmation[\s\S]*invoice_pdf/.test(previewSrc)
+);
+ok(
+  "preview:storno_retry_when_storno_record",
+  /premium_order_storno_records[\s\S]*ensurePremiumStornoDocuments/.test(previewSrc)
 );
 
 if (fails.length) {

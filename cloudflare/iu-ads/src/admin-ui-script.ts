@@ -1360,7 +1360,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var headRight=count>0?String(count)+" PDF":"";
     var chainHint=docOrderId!==orderId?'<p class="muted">Aktuální období řetězce — dokumenty nejnovější objednávky.</p>':"";
     if(!docs.length){
-      return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div>'+chainHint+'<p class="muted">Dokumenty vzniknou po schválení a zveřejnění reklamy.</p></div>';
+      var ws=body.order&&body.order.workflow_status;
+      var emptyMsg=(ws==="rejected"||ws==="cancelled")
+        ? "Dokumenty ke stornu nebo zamítnutí se dokončují — obnovte detail za chvíli, případně použijte dokončení PDF v administraci."
+        : "Dokumenty vzniknou po schválení a zveřejnění reklamy.";
+      return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div>'+chainHint+'<p class="muted">'+esc(emptyMsg)+'</p></div>';
     }
     var cards="";
     docs.forEach(function(d){

@@ -362,12 +362,12 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
       if (workflowPublished && docJobPending) {
         await resumePremiumOrderDocuments(env, orderId, guard.userId);
       } else if (workflowStatusStrEarly === "cancelled" || workflowStatusStrEarly === "rejected") {
-        const stornoPending = await env.DB.prepare(
-          "SELECT 1 FROM premium_order_document_jobs WHERE order_id = ? AND doc_kind IN ('order_cancellation','credit_note_pdf') AND status IN ('pending','generating','missing','error') LIMIT 1"
+        const stornoRow = await env.DB.prepare(
+          "SELECT 1 AS ok FROM premium_order_storno_records WHERE order_id = ? LIMIT 1"
         )
           .bind(orderId)
           .first();
-        if (stornoPending) {
+        if (stornoRow) {
           const { ensurePremiumStornoDocuments } = await import("./premium-order-documents");
           await ensurePremiumStornoDocuments(env, orderId, guard.userId, { forceRetryIncomplete: true });
         }
@@ -447,12 +447,17 @@ export async function handleAdminPremiumOrderDetail(request: Request, env: Env, 
   const extendSourceOrderId = documentsOrderId;
 
   const tipWorkflow = chainTip ? String(chainTip.workflow_status || "") : workflowStatusStr;
+  const tipPublishedAt =
+    chainTip && chainTip.published_at != null
+      ? String(chainTip.published_at)
+      : row.published_at != null
+        ? String(row.published_at)
+        : null;
   let order_documents = await listPremiumOrderDocumentsForAdmin(env, request, documentsOrderId);
   order_documents = filterPremiumOrderDocumentsForAdminView(order_documents, {
     workflow_status: tipWorkflow,
-    published_at: tipWorkflow === "published" ? "1" : null,
+    published_at: tipPublishedAt,
   });
-  order_documents = order_documents.filter((d) => d.kind === "order_confirmation" || d.kind === "invoice_pdf");
   const order_documents_pdf_count = order_documents.filter((d) => d.status === "ready").length;
   const order_history_groups = await buildPremiumOrderHistoryGroups(env, request, chainMembers, documentsOrderId);
 
