@@ -6,10 +6,10 @@ import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
 import {
-  deleteExclusiveCampaignForPurge,
   hardDeleteCampaignGraph,
   purgePremiumOrderPhysically,
   PurgeDatabaseError,
+  purgeDbStep,
   sanitizePurgeDbHint,
 } from "./premium-order-purge";
 import type { Env } from "./types";
@@ -24,11 +24,6 @@ export type PremiumTestDataResetStats = {
   orphan_documents_removed: number;
   placements_cleared: number;
 };
-
-async function countClientOrders(db: D1Database, clientId: string): Promise<number> {
-  const row = await db.prepare("SELECT COUNT(*) AS c FROM orders WHERE client_id = ?").bind(clientId).first<{ c: number }>();
-  return Number(row?.c) || 0;
-}
 
 /** Delete child premium orders before parents. */
 export function sortPremiumOrdersForPurge(
@@ -158,7 +153,7 @@ export async function resetAllPremiumTestOperationalData(
         )
         .bind(nowIso, orderId)
         .run();
-      await deleteExclusiveCampaignForPurge(env, campId, orderId);
+      await hardDeleteCampaignGraph(env, campId, { skipSharedCreativeCheck: true });
       stats.campaigns_removed += 1;
     } else if (po.creative_id) {
       const cr = await db
@@ -175,24 +170,31 @@ export async function resetAllPremiumTestOperationalData(
       await db.prepare("DELETE FROM creatives WHERE creative_id = ? AND client_id = ?").bind(po.creative_id, po.client_id).run();
     }
 
-    await db.prepare("DELETE FROM premium_order_notes WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_order_events WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_order_renewals WHERE order_id = ? OR follow_up_order_id = ?").bind(orderId, orderId).run();
-    await db.prepare("DELETE FROM premium_order_public_revisions WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_publish_events WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_order_portal_codes WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM premium_selected_orders WHERE order_id = ?").bind(orderId).run();
-    await db.prepare("DELETE FROM orders WHERE order_id = ?").bind(orderId).run();
-
-    const clientId = po.client_id;
-    if (clientId && (await countClientOrders(db, clientId)) === 0) {
-      await db.prepare("DELETE FROM client_code_campaigns WHERE code_id IN (SELECT code_id FROM client_access_codes WHERE client_id = ?)").bind(clientId).run();
-      await db.prepare("DELETE FROM client_sessions WHERE code_id IN (SELECT code_id FROM client_access_codes WHERE client_id = ?)").bind(clientId).run();
-      await db.prepare("DELETE FROM client_access_codes WHERE client_id = ?").bind(clientId).run();
-      await db.prepare("DELETE FROM client_contacts WHERE client_id = ?").bind(clientId).run();
-      await db.prepare("DELETE FROM clients WHERE client_id = ?").bind(clientId).run();
-    }
+    await purgeDbStep("reset_premium_order_notes", () =>
+      db.prepare("DELETE FROM premium_order_notes WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_order_events", () =>
+      db.prepare("DELETE FROM premium_order_events WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_order_renewals", () =>
+      db.prepare("DELETE FROM premium_order_renewals WHERE order_id = ? OR follow_up_order_id = ?").bind(orderId, orderId).run()
+    );
+    await purgeDbStep("reset_premium_order_public_revisions", () =>
+      db.prepare("DELETE FROM premium_order_public_revisions WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_publish_events", () =>
+      db.prepare("DELETE FROM premium_publish_events WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_order_portal_codes", () =>
+      db.prepare("DELETE FROM premium_order_portal_codes WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_order_price_snapshots", () =>
+      db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_premium_selected_orders", () =>
+      db.prepare("DELETE FROM premium_selected_orders WHERE order_id = ?").bind(orderId).run()
+    );
+    await purgeDbStep("reset_orders", () => db.prepare("DELETE FROM orders WHERE order_id = ?").bind(orderId).run());
 
     stats.orders_removed += 1;
   }
@@ -217,8 +219,46 @@ export async function resetAllPremiumTestOperationalData(
 
   stats.orphan_documents_removed = await deleteOrphanPremiumDocuments(env);
 
-  await db.prepare("DELETE FROM invoices WHERE order_id NOT IN (SELECT order_id FROM orders) OR order_id IS NULL").bind().run();
-  await db.prepare("DELETE FROM contracts WHERE order_id IS NOT NULL AND order_id NOT IN (SELECT order_id FROM orders)").bind().run();
+  await purgeDbStep("reset_orphan_credit_notes", () =>
+    db.prepare("DELETE FROM premium_credit_notes WHERE order_id NOT IN (SELECT order_id FROM premium_selected_orders)").bind().run()
+  );
+  await purgeDbStep("reset_orphan_invoices", () =>
+    db.prepare("DELETE FROM invoices WHERE order_id NOT IN (SELECT order_id FROM orders) OR order_id IS NULL").bind().run()
+  );
+  await purgeDbStep("reset_orphan_contracts", () =>
+    db.prepare("DELETE FROM contracts WHERE order_id IS NOT NULL AND order_id NOT IN (SELECT order_id FROM orders)").bind().run()
+  );
+
+  const orphanClients = await db
+    .prepare(
+      `SELECT client_id FROM clients
+       WHERE client_id NOT IN (SELECT client_id FROM orders)
+         AND client_id NOT IN (SELECT client_id FROM campaigns)`
+    )
+    .bind()
+    .all<{ client_id: string }>();
+  for (const row of orphanClients.results || []) {
+    const clientId = row.client_id;
+    await purgeDbStep("reset_orphan_client_codes", () =>
+      db
+        .prepare("DELETE FROM client_code_campaigns WHERE code_id IN (SELECT code_id FROM client_access_codes WHERE client_id = ?)")
+        .bind(clientId)
+        .run()
+    );
+    await purgeDbStep("reset_orphan_client_sessions", () =>
+      db
+        .prepare("DELETE FROM client_sessions WHERE code_id IN (SELECT code_id FROM client_access_codes WHERE client_id = ?)")
+        .bind(clientId)
+        .run()
+    );
+    await purgeDbStep("reset_orphan_client_access_codes", () =>
+      db.prepare("DELETE FROM client_access_codes WHERE client_id = ?").bind(clientId).run()
+    );
+    await purgeDbStep("reset_orphan_client_contacts", () =>
+      db.prepare("DELETE FROM client_contacts WHERE client_id = ?").bind(clientId).run()
+    );
+    await purgeDbStep("reset_orphan_clients", () => db.prepare("DELETE FROM clients WHERE client_id = ?").bind(clientId).run());
+  }
 
   return stats;
 }
