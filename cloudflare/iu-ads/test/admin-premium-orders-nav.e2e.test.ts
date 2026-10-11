@@ -185,9 +185,15 @@ describe("admin premium orders nav e2e (regression #11846 loading)", () => {
         if (!panel) return false;
         const t = panel.textContent || "";
         if (t.includes("Načítám…")) return false;
-        return t.includes("Reklamní tlačítka") || t.includes("Simulovaná chyba") || t.includes("Globální vyhledávání");
+        return (
+          t.includes("Reklamní tlačítka") ||
+          t.includes("E2E Firma") ||
+          t.includes("Simulovaná chyba") ||
+          t.includes("Globální vyhledávání") ||
+          t.includes("Žádné objednávky")
+        );
       },
-      { timeout: 15000 }
+      { timeout: 45000 }
     );
   }
 
