@@ -157,6 +157,10 @@ jobs:
         working-directory: .
         run: node node_modules/playwright/cli.js install chromium
 
+      - name: Install Playwright webkit for admin Safari e2e
+        working-directory: .
+        run: node node_modules/playwright/cli.js install webkit
+
       - name: Premium order preview parity guard
         working-directory: .
         run: npm run iu-premium-order-preview-parity-guard
