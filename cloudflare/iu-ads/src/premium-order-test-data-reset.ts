@@ -152,6 +152,12 @@ export async function resetAllPremiumTestOperationalData(
         )
         .bind(nowIso, po.placement_id, campId)
         .run();
+      await db
+        .prepare(
+          "UPDATE premium_selected_orders SET published_campaign_id = NULL, creative_id = NULL, updated_at = ? WHERE order_id = ?"
+        )
+        .bind(nowIso, orderId)
+        .run();
       await deleteExclusiveCampaignForPurge(env, campId, orderId);
       stats.campaigns_removed += 1;
     } else if (po.creative_id) {

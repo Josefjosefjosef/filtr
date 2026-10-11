@@ -151,6 +151,11 @@ export async function handleAdminPremiumDeleteOrder(request: Request, env: Env, 
       .bind(nowIso, po.placement_id, campId)
       .run();
     if (purgeSystem) {
+      await env.DB.prepare(
+        "UPDATE premium_selected_orders SET published_campaign_id = NULL, creative_id = NULL, updated_at = ? WHERE order_id = ?"
+      )
+        .bind(nowIso, orderId)
+        .run();
       await deleteExclusiveCampaignForPurge(env, campId, orderId);
     } else {
       await env.DB.prepare("UPDATE campaigns SET status = 'cancelled', updated_at = ? WHERE campaign_id = ?").bind(nowIso, campId).run();
