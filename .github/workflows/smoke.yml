@@ -155,7 +155,7 @@ jobs:
 
       - name: Upload premium invoice visual artifacts (IU Ads unblock)
         if: steps.scope.outputs.iu_ads_deploy_unblock_only == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.0
         with:
           name: premium-invoice-visual-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-invoice-visual/
@@ -163,7 +163,7 @@ jobs:
 
       - name: Upload premium order confirmation visual artifacts (IU Ads unblock)
         if: steps.scope.outputs.iu_ads_deploy_unblock_only == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.0
         with:
           name: premium-order-confirmation-visual-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-order-confirmation-visual/
@@ -519,7 +519,7 @@ jobs:
 
       - name: Upload premium invoice visual artifacts
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v4.6.0
         with:
           name: premium-invoice-visual-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-invoice-visual/
@@ -860,7 +860,7 @@ jobs:
 
       - name: Upload CHMI CZ map visual proof
         if: always() && steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: iu-chmi-cz-map-visual-proof
           path: iu-chmi-cz-map-visual-proof/
