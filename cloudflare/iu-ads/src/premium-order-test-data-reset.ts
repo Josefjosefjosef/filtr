@@ -1,13 +1,16 @@
 /**
- * Operator-confirmed one-shot reset of all premium test operational data (main admin).
+ * Operator-confirmed repeatable reset of all premium operational data during pre-launch development (main admin).
  * Preserves catalog, placements, admin users, system settings, placement types.
  */
 import { buildAuditEntry } from "./audit";
 import { insertAuditLog, json, newId, requireAdminPermission } from "./admin-auth";
 import { adminRolesIncludeMainAdmin } from "./premium-admin-main-guard";
 import {
+  isPremiumDevOperationalResetEnabled,
+  premiumDevOperationalResetDisabledMessage,
+} from "./premium-dev-operational-reset-guard";
+import {
   hardDeleteCampaignGraph,
-  premiumOrderHasPaidAccountingEvidence,
   purgePremiumOrderPhysically,
   PurgeDatabaseError,
   purgeDbStep,
@@ -19,7 +22,6 @@ export const PREMIUM_TEST_RESET_CONFIRM_PHRASE = "VYMAZAT TESTOVACI DATA";
 
 export type PremiumTestDataResetStats = {
   orders_removed: number;
-  orders_skipped_paid: number;
   campaigns_removed: number;
   documents_removed: number;
   orphan_campaigns_removed: number;
@@ -28,16 +30,16 @@ export type PremiumTestDataResetStats = {
 };
 
 export type PremiumTestDataResetPreview = {
+  dev_reset_enabled: boolean;
   total_premium_orders: number;
-  eligible_order_count: number;
-  skipped_paid_count: number;
-  sample_eligible_codes: string[];
-  skipped_paid_codes: string[];
+  orders_to_remove: number;
+  sample_order_codes: string[];
   active_placements_with_campaign: number;
 };
 
 const PREMIUM_TEST_RESET_LOCK_KEY = "premium_test_reset_lock";
-const PREMIUM_TEST_RESET_LOCK_TTL_MS = 20 * 60 * 1000;
+/** Stale lock after worker crash; concurrent runs only while lock held (released in finally). */
+const PREMIUM_TEST_RESET_LOCK_TTL_MS = 8 * 60 * 1000;
 
 async function acquirePremiumTestResetLock(db: D1Database, actorUserId: string): Promise<boolean> {
   const nowIso = new Date().toISOString();
@@ -69,6 +71,7 @@ async function releasePremiumTestResetLock(db: D1Database): Promise<void> {
 
 export async function buildPremiumTestDataResetPreview(env: Env): Promise<PremiumTestDataResetPreview> {
   if (!env.DB) throw new Error("auth_not_configured");
+  const devResetEnabled = await isPremiumDevOperationalResetEnabled(env);
   const db = env.DB;
   const rows = await db
     .prepare(
@@ -80,15 +83,9 @@ export async function buildPremiumTestDataResetPreview(env: Env): Promise<Premiu
     .bind()
     .all<{ order_id: string; customer_order_code: string | null; order_number: string | null }>();
 
-  const eligible: string[] = [];
-  const skippedPaid: string[] = [];
+  const codes: string[] = [];
   for (const row of rows.results || []) {
-    const code = String(row.customer_order_code || row.order_number || row.order_id);
-    if (await premiumOrderHasPaidAccountingEvidence(db, row.order_id)) {
-      skippedPaid.push(code);
-    } else {
-      eligible.push(code);
-    }
+    codes.push(String(row.customer_order_code || row.order_number || row.order_id));
   }
 
   const pl = await db
@@ -97,11 +94,10 @@ export async function buildPremiumTestDataResetPreview(env: Env): Promise<Premiu
     .first<{ c: number }>();
 
   return {
+    dev_reset_enabled: devResetEnabled,
     total_premium_orders: (rows.results || []).length,
-    eligible_order_count: eligible.length,
-    skipped_paid_count: skippedPaid.length,
-    sample_eligible_codes: eligible.slice(0, 12),
-    skipped_paid_codes: skippedPaid.slice(0, 8),
+    orders_to_remove: codes.length,
+    sample_order_codes: codes.slice(0, 12),
     active_placements_with_campaign: Number(pl?.c ?? 0) || 0,
   };
 }
@@ -185,7 +181,6 @@ export async function resetAllPremiumTestOperationalData(
   const nowIso = new Date().toISOString();
   const stats: PremiumTestDataResetStats = {
     orders_removed: 0,
-    orders_skipped_paid: 0,
     campaigns_removed: 0,
     documents_removed: 0,
     orphan_campaigns_removed: 0,
@@ -209,19 +204,11 @@ export async function resetAllPremiumTestOperationalData(
       client_id: string;
     }>();
 
-  const eligibleRows = [];
-  for (const row of allPo.results || []) {
-    if (await premiumOrderHasPaidAccountingEvidence(db, row.order_id)) {
-      stats.orders_skipped_paid += 1;
-      continue;
-    }
-    eligibleRows.push(row);
-  }
-
-  const orderIds = sortPremiumOrdersForPurge(eligibleRows);
+  const allRows = allPo.results || [];
+  const orderIds = sortPremiumOrdersForPurge(allRows);
 
   for (const orderId of orderIds) {
-    const po = eligibleRows.find((r) => r.order_id === orderId);
+    const po = allRows.find((r) => r.order_id === orderId);
     if (!po) continue;
 
     const phys = await purgePremiumOrderPhysically(env, orderId);
@@ -447,6 +434,16 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
   }
   if (!env.DB) return json({ error: "auth_not_configured" }, 503);
 
+  if (!(await isPremiumDevOperationalResetEnabled(env))) {
+    return json(
+      {
+        error: "dev_reset_disabled",
+        message_cs: await premiumDevOperationalResetDisabledMessage(env),
+      },
+      403
+    );
+  }
+
   let body: { confirm?: unknown; confirm_phrase?: unknown };
   try {
     body = await request.json();
@@ -472,7 +469,7 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
     return json(
       {
         error: "reset_in_progress",
-        message_cs: "Reset testovacích dat právě probíhá nebo byl nedávno spuštěn. Počkejte a zkuste znovu.",
+        message_cs: "Reset testovacích dat právě probíhá v jiné relaci. Počkejte na dokončení a zkuste znovu.",
       },
       409
     );
@@ -492,16 +489,10 @@ export async function handleAdminPremiumTestDataReset(request: Request, env: Env
         result: "success",
       })
     );
-    let message_cs = "Testovací provozní data byla odstraněna. Katalog pozic a administrace zůstávají beze změny.";
-    if (stats.orders_skipped_paid > 0) {
-      message_cs +=
-        " Objednávky s evidovanou úhradou (" +
-        String(stats.orders_skipped_paid) +
-        ") byly zachovány (účetní evidence).";
-    }
-    if (stats.orders_removed === 0 && stats.orders_skipped_paid > 0) {
-      message_cs = "Žádná objednávka bez úhrady k odstranění. Účetně evidované objednávky (" + String(stats.orders_skipped_paid) + ") zůstaly beze změny.";
-    }
+    const message_cs =
+      stats.orders_removed === 0
+        ? "Žádné prémiové objednávky k odstranění. Katalog pozic a administrace zůstávají beze změny."
+        : "Všechny prémiové testovací objednávky a související data byly odstraněny. Katalog pozic a administrace zůstávají beze změny.";
     return json({
       ok: true,
       message_cs,

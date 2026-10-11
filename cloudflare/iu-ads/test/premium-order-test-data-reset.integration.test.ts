@@ -91,11 +91,10 @@ describe("premium test data reset", () => {
     expect(Number(activePl.c)).toBe(0);
   });
 
-  it("reset skips orders with paid accounting evidence", async () => {
+  it("reset removes paid premium orders during dev bulk reset", async () => {
     const sqlite = createIuAdsSchemaDb();
     seedMinimalCatalog(sqlite);
     seedOrder(sqlite, "ord_paid", "IU-26-P", "camp_p", null);
-    seedOrder(sqlite, "ord_free", "IU-26-F", "camp_f", null);
     sqlite
       .prepare("UPDATE premium_selected_orders SET payment_status = 'paid', paid_at = ? WHERE order_id = 'ord_paid'")
       .run(NOW);
@@ -104,15 +103,32 @@ describe("premium test data reset", () => {
       DB: d1FromSqlite(sqlite),
       DOCUMENTS: { delete: async () => undefined },
       CREATIVES: { delete: async () => undefined },
+      PREMIUM_DEV_OPERATIONAL_RESET_ENABLED: "1",
     } as Env;
 
     const stats = await resetAllPremiumTestOperationalData(env, "adm_test");
-    expect(stats.orders_skipped_paid).toBe(1);
     expect(stats.orders_removed).toBe(1);
     const poCount = sqlite.prepare("SELECT COUNT(*) AS c FROM premium_selected_orders").get() as { c: number };
-    expect(Number(poCount.c)).toBe(1);
-    const kept = sqlite.prepare("SELECT order_id FROM premium_selected_orders").get() as { order_id: string };
-    expect(kept.order_id).toBe("ord_paid");
+    expect(Number(poCount.c)).toBe(0);
+  });
+
+  it("reset is idempotent when run twice in a row", async () => {
+    const sqlite = createIuAdsSchemaDb();
+    seedMinimalCatalog(sqlite);
+    seedOrder(sqlite, "ord_a", "IU-26-A", "camp_a", null);
+
+    const env = {
+      DB: d1FromSqlite(sqlite),
+      DOCUMENTS: { delete: async () => undefined },
+      CREATIVES: { delete: async () => undefined },
+    } as Env;
+
+    await resetAllPremiumTestOperationalData(env, "adm_test");
+    seedOrder(sqlite, "ord_b", "IU-26-B", "camp_b", null);
+    const stats2 = await resetAllPremiumTestOperationalData(env, "adm_test");
+    expect(stats2.orders_removed).toBe(1);
+    const poCount = sqlite.prepare("SELECT COUNT(*) AS c FROM premium_selected_orders").get() as { c: number };
+    expect(Number(poCount.c)).toBe(0);
   });
 
   it("reset succeeds when premium_order_terms_bindings exist (FK)", async () => {

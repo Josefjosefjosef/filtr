@@ -41,6 +41,14 @@ export type Env = {
   ANALYTICS_ADMIN_TOKEN?: string;
   /** Optional MailChannels From address for premium transactional mail. */
   ADS_MAIL_FROM?: string;
+  /**
+   * Pre-launch dev bulk reset of premium operational data (main admin + confirm phrase).
+   * Set to "0" / "false" to disable; "1" / "true" to enable explicitly.
+   * When unset, D1 `premium_dev_operational_reset_enabled` applies; default allows reset until commercial live.
+   */
+  PREMIUM_DEV_OPERATIONAL_RESET_ENABLED?: string;
+  /** When "1" / "true", bulk dev reset is always blocked (post commercial launch). */
+  PREMIUM_COMMERCIAL_LIVE?: string;
 };
 
 /** Fields forever forbidden on Public Ad Delivery responses. */
