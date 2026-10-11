@@ -69,10 +69,12 @@ export function buildAdminShellHtml(nonce: string): string {
     .order-card--rejected{border-color:var(--order-rejected)}
     .order-card--published{border-color:var(--order-published)}
     .order-card--cancelled{border-color:var(--order-rejected)}
+    .order-card--turned-off{border-color:var(--order-rejected)}
     .order-row--pending td:first-child{border-left:4px solid var(--order-pending)}
     .order-row--rejected td:first-child{border-left:4px solid var(--order-rejected)}
     .order-row--published td:first-child{border-left:4px solid var(--order-published)}
     .order-row--cancelled td:first-child{border-left:4px solid var(--order-rejected)}
+    .order-row--turned-off td:first-child{border-left:4px solid var(--order-rejected)}
     .order-card:focus-visible,.order-row-click:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
     .order-card-head{display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-start;justify-content:space-between;margin-bottom:.35rem}
     .order-card-badges{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex-shrink:0}
@@ -84,6 +86,8 @@ export function buildAdminShellHtml(nonce: string): string {
     .order-status--rejected{color:var(--order-rejected)}
     .order-status--published{color:var(--order-published)}
     .order-status--cancelled{color:var(--order-rejected)}
+    .order-status--turned-off{color:var(--order-rejected)}
+    .detail-status-line .order-status--turned-off{font-size:1.05rem}
     .pay-status--unpaid{color:var(--order-rejected);font-weight:600}
     .pay-status--paid{color:var(--order-published);font-weight:600}
     .pay-status--partial{color:var(--order-rejected);font-weight:600}

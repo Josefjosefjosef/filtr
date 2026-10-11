@@ -277,6 +277,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }catch(_){ return String(iso); }
   }
   function premiumRowStatus(row){
+    if(row.is_ad_turned_off) return "Vypnuto administrátorem";
     var base=row.workflow_status_label_cs || row.workflow_status || "—";
     if(row.publication && row.publication.consistency_mismatch){
       return base+" · nesoulad veřejné publikace";
@@ -284,6 +285,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     return base;
   }
   function premiumWorkflowUiTone(row){
+    if(row.is_ad_turned_off) return "turned-off";
     var ws=row.workflow_status||"";
     if(ws==="submitted"||ws==="under_review") return "pending";
     if(ws==="rejected") return "rejected";
@@ -296,6 +298,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(tone==="rejected") return "order-status--rejected";
     if(tone==="published") return "order-status--published";
     if(tone==="cancelled") return "order-status--cancelled";
+    if(tone==="turned-off") return "order-status--turned-off";
     return "";
   }
   function premiumOrderCardBorderClass(row){
@@ -304,6 +307,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(t==="rejected") return "order-card--rejected";
     if(t==="published") return "order-card--published";
     if(t==="cancelled") return "order-card--cancelled";
+    if(t==="turned-off") return "order-card--turned-off";
     return "";
   }
   function premiumOrderRowBorderClass(row){
@@ -312,6 +316,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(t==="rejected") return "order-row--rejected";
     if(t==="published") return "order-row--published";
     if(t==="cancelled") return "order-row--cancelled";
+    if(t==="turned-off") return "order-row--turned-off";
     return "";
   }
   function premiumPaymentStatusSpan(ord){
@@ -328,12 +333,15 @@ export const ADMIN_UI_SCRIPT = String.raw`
   }
   function premiumDetailStatusHeaderHtml(ord){
     var ws=ord.workflow_status||"";
-    var wfTone=premiumWorkflowUiTone(ord);
-    var wfCls=premiumWorkflowStatusClass(wfTone);
     var payPart=ord.invoice_issued?premiumInvoicePaymentBadgeHtml(ord,false):premiumPaymentStatusSpan(ord);
     if(ws==="rejected"){
-      return '<p class="detail-status-line"><span class="order-status '+wfCls+'">Zamítnuto</span> – '+payPart+"</p>";
+      return '<p class="detail-status-line"><span class="order-status order-status--rejected">Zamítnuto</span> – '+payPart+"</p>";
     }
+    if(ord.is_ad_turned_off){
+      return '<p class="detail-status-line"><span class="order-status order-status--turned-off">Reklama vypnuta</span> '+payPart+"</p>";
+    }
+    var wfTone=premiumWorkflowUiTone(ord);
+    var wfCls=premiumWorkflowStatusClass(wfTone);
     var wfLabel=ord.workflow_status_label_cs||ws||"—";
     return '<p class="detail-status-line"><span class="order-status '+wfCls+'">'+esc(wfLabel)+"</span> "+payPart+"</p>";
   }
@@ -477,6 +485,24 @@ export const ADMIN_UI_SCRIPT = String.raw`
       '<button type="button" class="btn danger" id="premium-acct-cancel-confirm" '+(canSubmit?"":"disabled")+'>Potvrdit storno objednávky a faktury</button> '+
       '<button type="button" class="btn secondary" id="premium-acct-cancel-dismiss">Zrušit</button></div></div></div>';
   }
+  function syncAccountingCancelConfirmButton(){
+    var m=state.accountingCancelModal;
+    if(!m||!m.detail) return;
+    var ord=m.detail.order||{};
+    var inv=m.detail.invoice;
+    var acct=m.detail.invoice_accounting||{};
+    var blocked=ord.accounting_cancel_blocked_reason_cs||(!ord.accounting_cancel_allowed?"Storno není povoleno.":null);
+    var invTotal=inv?Number(inv.total_cents)||0:0;
+    var remain=acct.remaining_correctable_cents!=null?Number(acct.remaining_correctable_cents):invTotal;
+    var payMode=m.form.payment_settlement||acct.suggested_payment_settlement||"unpaid";
+    var stornoCents=remain;
+    var paidCents=parseKcInputToCents(m.form.paid_kc);
+    var reasonOk=String(m.form.reason||"").trim().length>=12;
+    var canSubmit=!blocked&&inv&&stornoCents>0&&reasonOk&&
+      (payMode!=="partial"||(paidCents&&paidCents>0&&paidCents<invTotal))&&!m.submitBusy;
+    var confirmBtn=el("premium-acct-cancel-confirm");
+    if(confirmBtn) confirmBtn.disabled=!canSubmit;
+  }
   function wireAccountingCancelModal(){
     var m=state.accountingCancelModal;
     if(!m) return;
@@ -496,9 +522,13 @@ export const ADMIN_UI_SCRIPT = String.raw`
     }
     var reason=el("acct-reason");
     if(reason){
-      reason.oninput=function(){ state.accountingCancelModal.form.reason=reason.value; };
-      reason.onchange=function(){ render(); };
+      reason.oninput=function(){
+        if(!state.accountingCancelModal) return;
+        state.accountingCancelModal.form.reason=reason.value;
+        syncAccountingCancelConfirmButton();
+      };
     }
+    syncAccountingCancelConfirmButton();
     var confirmBtn=el("premium-acct-cancel-confirm");
     if(confirmBtn) confirmBtn.onclick=async function(){
       if(!state.accountingCancelModal||state.accountingCancelModal.submitBusy) return;
@@ -820,7 +850,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
         if(!String(reason).trim()){ state.flash="Zadejte důvod vypnutí."; render(); return; }
         var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/turn-off-ad",{method:"POST",body:JSON.stringify({reason:String(reason).trim()})});
         state.flash=r.res.ok?(r.body&&r.body.idempotent?"Reklama již byla vypnutá.":"Reklama vypnuta, pozice uvolněna."):(r.body&&r.body.message_cs?r.body.message_cs:"Chyba: "+apiError(r.body));
-        if(r.res.ok) state.orderDetailId=id;
+        if(r.res.ok){
+          state.orderDetailId=id;
+          if(rowsById[id]) rowsById[id].is_ad_turned_off=true;
+        }
+        await loadNav();
         render();
       };
     });
@@ -881,6 +915,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         var id=b.getAttribute("data-premium-extend");
         if(!id) return;
         var detail=await api("/v1/admin/premium/orders/"+encodeURIComponent(id),{method:"GET",headers:{}});
+        var extendFrom=(detail.body&&detail.body.extend_chain_source_order_id)||id;
         if(!detail.res.ok){ state.flash=apiError(detail.body); render(); return; }
         var ord=detail.body&&detail.body.order||{};
         var sug=detail.body&&detail.body.extend_suggested_period||{};
@@ -897,8 +932,8 @@ export const ADMIN_UI_SCRIPT = String.raw`
           "Nové období: "+formatCsDate(sug.start_at)+" → "+formatCsDate(sug.end_at)+
           (sug.price_kc?"\nCena: "+sug.price_kc+" Kč":"");
         if(!window.confirm(msg)) return;
-        var idem="ui-ext-new:"+id+":"+String(sug.start_at)+":"+String(sug.end_at);
-        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/extend-new-order",{
+        var idem="ui-ext-new:"+extendFrom+":"+String(sug.start_at)+":"+String(sug.end_at);
+        var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(extendFrom)+"/extend-new-order",{
           method:"POST",
           body:JSON.stringify({
             period_start_at:sug.start_at,
@@ -1028,12 +1063,75 @@ export const ADMIN_UI_SCRIPT = String.raw`
       render();
     };
   }
+  function premiumOrderDocActionsHtml(docOrderId, d){
+    if(d.status==="ready"){
+      return '<div class="order-doc-actions">'+
+        '<button type="button" class="btn secondary" data-premium-doc-preview="'+esc(docOrderId)+'" data-doc-kind="'+esc(d.kind)+'">Náhled</button>'+
+        '<button type="button" class="btn secondary" data-premium-doc-download="'+esc(docOrderId)+'" data-doc-kind="'+esc(d.kind)+'">Stáhnout</button>'+
+        "</div>";
+    }
+    if(d.status==="error"){
+      return '<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(docOrderId)+'" data-doc-kind="'+esc(d.kind)+'">Dokončit / opakovat PDF</button></div>';
+    }
+    return "";
+  }
+  function premiumOrderHistorySectionHtml(body){
+    var groups=body.order_history_groups||[];
+    if(!groups.length) return "";
+    var blocks=groups.map(function(g){
+      if(g.group_kind==="confirmation_amendments"){
+        var revs=g.confirmation_revisions||[];
+        if(!revs.length) return "";
+        return '<section class="history-group"><h4>'+esc(g.title_cs||"Opravné verze potvrzení")+'</h4><ul class="history-list">'+
+          revs.map(function(rv){
+            var ver=rv.version!=null?String(rv.version):"";
+            var oid=g.order_id;
+            return "<li>Verze "+esc(String(rv.version||"—"))+" · "+esc(rv.created_at_label_cs||"—")+
+              (rv.reason?" · "+esc(rv.reason):"")+
+              ' <button type="button" class="btn secondary" data-premium-doc-preview="'+esc(oid)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Náhled</button>'+
+              ' <button type="button" class="btn secondary" data-premium-doc-download="'+esc(oid)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Stáhnout</button></li>';
+          }).join("")+"</ul></section>";
+      }
+      var docs=g.documents||[];
+      var docHtml=docs.map(function(d){
+        var statusMsg="";
+        if(d.status==="error") statusMsg='<p class="err">'+esc(d.last_error||"Generování selhalo")+"</p>";
+        else if(d.status!=="ready"){
+          var stLabel={pending:"Ve frontě",generating:"Generuje se…",missing:"PDF zatím chybí — lze dokončit",error:"Chyba generování"}[d.status]||d.status;
+          statusMsg='<p class="muted">Stav: '+esc(stLabel)+"</p>";
+        }
+        return '<div class="order-doc-item history-doc-item"><strong>'+esc(d.title)+'</strong><p class="muted">'+esc(d.subtitle)+"</p>"+statusMsg+
+          premiumOrderDocActionsHtml(g.order_id,d)+"</div>";
+      }).join("");
+      var revBlock="";
+      var hRevs=g.confirmation_revisions||[];
+      if(hRevs.length){
+        revBlock='<ul class="history-list">'+hRevs.map(function(rv){
+          var ver=rv.version!=null?String(rv.version):"";
+          return "<li>Verze potvrzení "+esc(String(rv.version||"—"))+" · "+esc(rv.created_at_label_cs||"—")+
+            ' <button type="button" class="btn secondary" data-premium-doc-preview="'+esc(g.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Náhled</button>'+
+            ' <button type="button" class="btn secondary" data-premium-doc-download="'+esc(g.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Stáhnout</button></li>';
+        }).join("")+"</ul>";
+      }
+      return '<section class="history-group"><h4>'+esc(g.order_reference||g.order_id)+"</h4>"+
+        '<p class="muted">Období: '+esc(g.service_period_label_cs||"—")+" · Vytvořeno: "+esc(g.created_at_label_cs||"—")+
+        (g.invoice_number?" · Faktura "+esc(g.invoice_number):"")+
+        (g.invoice_payment_label_cs?" · "+esc(g.invoice_payment_label_cs):"")+
+        (g.workflow_status_label_cs?" · "+esc(g.workflow_status_label_cs):"")+"</p>"+
+        (docHtml?'<div class="order-doc-grid history-doc-grid">'+docHtml+"</div>":"")+
+        revBlock+
+        ' <button type="button" class="btn secondary" data-order-open="'+esc(g.order_id)+'">Otevřít objednávku</button></section>';
+    }).join("");
+    return '<div class="card"><h3>Historie</h3>'+blocks+"</div>";
+  }
   function premiumOrderDocumentsSectionHtml(orderId, body){
+    var docOrderId=body.documents_order_id||orderId;
     var docs=body.order_documents||[];
     var count=Number(body.order_documents_pdf_count)||0;
     var headRight=count>0?String(count)+" PDF":"";
+    var chainHint=docOrderId!==orderId?'<p class="muted">Aktuální období řetězce — dokumenty nejnovější objednávky.</p>':"";
     if(!docs.length){
-      return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div><p class="muted">Dokumenty vzniknou po schválení a zveřejnění reklamy.</p></div>';
+      return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div>'+chainHint+'<p class="muted">Dokumenty vzniknou po schválení a zveřejnění reklamy.</p></div>';
     }
     var cards="";
     docs.forEach(function(d){
@@ -1045,12 +1143,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
       }
       var actions="";
       if(d.status==="ready"){
-        actions='<div class="order-doc-actions">'+
-          '<button type="button" class="btn secondary" data-premium-doc-preview="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Náhled</button>'+
-          '<button type="button" class="btn secondary" data-premium-doc-download="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Stáhnout</button>'+
-          "</div>";
+        actions=premiumOrderDocActionsHtml(docOrderId,d);
       } else if(d.status==="error"){
-        actions='<div class="order-doc-actions"><button type="button" class="btn warning" data-premium-doc-retry="'+esc(orderId)+'" data-doc-kind="'+esc(d.kind)+'">Dokončit / opakovat PDF</button></div>';
+        actions=premiumOrderDocActionsHtml(docOrderId,d);
       } else if(d.status==="missing"||d.status==="generating"||d.status==="pending"){
         statusMsg+='<p class="muted">PDF se dokončuje automaticky — obnovte detail za chvíli.</p>';
       }
@@ -1059,7 +1154,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     });
     return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3>'+
       (headRight?'<span class="order-docs-count">'+esc(headRight)+"</span>":"")+
-      '</div><div class="order-doc-grid">'+cards+"</div></div>";
+      '</div>'+chainHint+'<div class="order-doc-grid">'+cards+"</div></div>";
   }
   async function openPremiumOrderDocument(orderId, kind, disposition, version){
     var qs="disposition="+encodeURIComponent(disposition);
@@ -1171,24 +1266,11 @@ export const ADMIN_UI_SCRIPT = String.raw`
       termsCard+
       orderActionsHtml+
       premiumOrderDocumentsSectionHtml(ord.order_id, body)+
-      (body.related_orders&&body.related_orders.length?'<div class="card"><h3>Navazující objednávky</h3><ul class="history-list">'+
-        body.related_orders.map(function(ro){
-          return "<li><strong>"+esc(ro.order_reference||ro.order_id)+"</strong> · "+esc(ro.service_period_label_cs||"—")+
-            (ro.invoice_number?" · Faktura "+esc(ro.invoice_number):"")+
-            ' <button type="button" class="btn secondary" data-order-open="'+esc(ro.order_id)+'">Otevřít</button></li>';
-        }).join("")+"</ul></div>":"")+
-      (body.order_confirmation_revisions&&body.order_confirmation_revisions.length?'<div class="card"><h3>Verze potvrzení objednávky</h3><ul class="history-list">'+
-        body.order_confirmation_revisions.map(function(rv){
-          var ver=rv.version!=null?String(rv.version):"";
-          var acts=' <button type="button" class="btn secondary" data-premium-doc-preview="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Náhled</button>'+
-            ' <button type="button" class="btn secondary" data-premium-doc-download="'+esc(ord.order_id)+'" data-doc-kind="order_confirmation" data-doc-version="'+esc(ver)+'">Stáhnout</button>';
-          return "<li>Verze "+esc(String(rv.version||"—"))+" · "+esc(rv.created_at_label_cs||"—")+
-            (rv.reason?" · "+esc(rv.reason):"")+acts+"</li>";
-        }).join("")+"</ul></div>":"")+
+      premiumOrderHistorySectionHtml(body)+
       '<div class="card"><h3>Interní poznámky</h3>'+
       (body.internal_notes&&body.internal_notes.length?
         '<ul class="history-list">'+body.internal_notes.map(function(n){
-          return "<li><strong>"+esc(n.created_at_label_cs||formatCsDate(n.created_at))+"</strong> — "+esc(n.author_label||n.author_user_id||"Admin")+"<br>"+esc(n.body_text)+"</li>";
+          return "<li><strong>"+esc(n.created_at_label_cs||formatCsDate(n.created_at))+"</strong><br>"+esc(n.body_text)+"</li>";
         }).join("")+"</ul>":'<p class="muted empty">Zatím žádné interní poznámky.</p>')+
       '<label for="premium-note-text">Nová poznámka</label><textarea id="premium-note-text" rows="3" maxlength="4000"></textarea>'+
       '<button type="button" class="btn secondary" id="premium-add-note-btn" data-order-id="'+esc(ord.order_id)+'">Přidat poznámku</button></div>'+
