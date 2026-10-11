@@ -329,6 +329,17 @@ async function main() {
   }
 
   {
+    const safariUa =
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
+    const r = await fetch(BASE + "/admin", { headers: { "User-Agent": safariUa } });
+    if (r.status === 200) pass("admin_shell_safari_ua");
+    else fail("admin_shell_safari_ua_" + r.status);
+    const html = await r.text();
+    if (html.includes("downloadZipExport") && html.includes("extendNewOrderModal")) pass("admin_shell_safari_markers");
+    else fail("admin_shell_safari_markers");
+  }
+
+  {
     const r = await fetch(BASE + "/v1/admin/dashboard");
     if (r.status === 401 || r.status === 403) pass("unauth_dashboard_denied");
     else fail("unauth_dashboard_status_" + r.status);
@@ -482,6 +493,45 @@ async function main() {
     } else {
       pass("read_" + label + "_clean_host");
     }
+  }
+
+  async function authedPost(path, jsonBody) {
+    return fetch(BASE + path, {
+      method: "POST",
+      headers: { Cookie: cookie, "content-type": "application/json" },
+      body: JSON.stringify(jsonBody),
+    });
+  }
+
+  // ZIP export: validate API without downloading production PDFs (empty / invalid period only).
+  {
+    const r = await authedPost("/v1/admin/invoices/registry/export-zip", { from: "not-a-date", to: "2030-01-01" });
+    if (r.status === 400) pass("zip_invoices_invalid_period");
+    else fail("zip_invoices_invalid_period_status_" + r.status);
+  }
+  {
+    const r = await authedPost("/v1/admin/invoices/registry/export-zip", {
+      from: "2099-01-01",
+      to: "2099-01-02",
+      kinds: ["all"],
+    });
+    if (r.status === 404) {
+      const j = await r.json().catch(() => ({}));
+      if (j && j.error === "no_documents") pass("zip_invoices_empty_period");
+      else fail("zip_invoices_empty_period_body");
+    } else fail("zip_invoices_empty_period_status_" + r.status);
+  }
+  {
+    const r = await authedPost("/v1/admin/order-confirmations/registry/export-zip", {
+      from: "2099-01-01",
+      to: "2099-01-02",
+      kinds: ["all"],
+    });
+    if (r.status === 404) {
+      const j = await r.json().catch(() => ({}));
+      if (j && j.error === "no_documents") pass("zip_confirmations_empty_period");
+      else fail("zip_confirmations_empty_period_body");
+    } else fail("zip_confirmations_empty_period_status_" + r.status);
   }
 
   // settings/users catalog is main_admin-only (users.read) — expect deny for read_only
