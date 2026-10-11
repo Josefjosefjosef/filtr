@@ -334,7 +334,9 @@ export const ADMIN_UI_SCRIPT = String.raw`
     opts=opts||{};
     var id=esc(row.order_id);
     var stop=opts.stopPropagation ? ' data-stop-row="1"' : "";
-    return '<button type="button" class="btn detail" data-premium-detail="'+id+'"'+stop+'>Detail</button>';
+    var publishableHint=row.publishable?"1":"0";
+    return '<button type="button" class="btn detail" data-premium-detail="'+id+'" data-order-publishable="'+esc(publishableHint)+'"'+stop+
+      ' aria-label="Detail objednávky'+(row.publishable?" (připraveno ke schválení)":"")+'">Detail</button>';
   }
   function premiumOrdersTableHtml(rows){
     if(!rows||!rows.length) return '<p class="muted empty">Žádné objednávky k zobrazení.</p>';
