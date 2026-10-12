@@ -5,10 +5,11 @@
  */
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = process.cwd();
-const WRANGLER_CWD = join(ROOT, "cloudflare", "iu-ads");
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const WRANGLER_CWD = join(REPO_ROOT, "cloudflare", "iu-ads");
 const INDEX_NAME = "idx_premium_selected_orders_pending_placement";
 const EXPECTED_FRAGMENT =
   "CREATE UNIQUE INDEX IF NOT EXISTS idx_premium_selected_orders_pending_placement";

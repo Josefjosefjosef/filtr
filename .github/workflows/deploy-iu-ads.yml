@@ -279,8 +279,8 @@ jobs:
           npx wrangler d1 migrations apply iu-ads --remote
 
       - name: Production D1 read-only verify index 0024
-        working-directory: cloudflare/iu-ads
-        run: node ../../scripts/iu-ads-prod-d1-index-0024-verify-v1.mjs
+        working-directory: .
+        run: node scripts/iu-ads-prod-d1-index-0024-verify-v1.mjs
 
       - name: Ensure R2 buckets
         run: |
