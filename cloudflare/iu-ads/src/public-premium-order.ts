@@ -44,6 +44,29 @@ async function hashOrderToken(token: string, pepper: string): Promise<string> {
   return hashClientAccessCode(token.trim().toUpperCase(), pepper);
 }
 
+function isPendingPlacementUniqueViolation(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return (
+    /idx_premium_selected_orders_pending_placement/i.test(msg) ||
+    (/UNIQUE constraint failed/i.test(msg) && /premium_selected_orders/i.test(msg))
+  );
+}
+
+async function rollbackDraftPremiumOrder(db: D1Database, orderId: string, inquiryId: string): Promise<void> {
+  try {
+    await db.prepare("DELETE FROM premium_order_terms_bindings WHERE order_id = ?").bind(orderId).run();
+  } catch {
+    /* schema optional */
+  }
+  try {
+    await db.prepare("DELETE FROM premium_order_portal_access WHERE order_id = ?").bind(orderId).run();
+  } catch {
+    /* schema optional */
+  }
+  await db.prepare("DELETE FROM inquiries WHERE inquiry_id = ?").bind(inquiryId).run();
+  await db.prepare("DELETE FROM orders WHERE order_id = ?").bind(orderId).run();
+}
+
 function readOrderToken(request: Request): string | null {
   const h = request.headers.get("X-IU-Premium-Order-Token");
   return h && h.trim() ? h.trim() : null;
@@ -325,27 +348,35 @@ export async function handlePublicPremiumOrderSubmit(request: Request, env: Env)
   const orderToken = "PO-" + crypto.randomUUID().replace(/-/g, "").toUpperCase();
   const tokenHash = await hashOrderToken(orderToken, env.ADS_CODE_PEPPER);
 
-  await env.DB.prepare(
-    `INSERT INTO premium_selected_orders (
+  try {
+    await env.DB.prepare(
+      `INSERT INTO premium_selected_orders (
       order_id, placement_id, category_slug, position, workflow_status, target_url, creative_mode,
       order_token_hash, client_contact_email, note_client, created_at, updated_at
     ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`
-  )
-    .bind(
-      orderId,
-      placementId,
-      parsed.categorySlug,
-      position,
-      "submitted",
-      urlCheck.normalized,
-      creativeMode,
-      tokenHash,
-      email,
-      note,
-      nowIso,
-      nowIso
     )
-    .run();
+      .bind(
+        orderId,
+        placementId,
+        parsed.categorySlug,
+        position,
+        "submitted",
+        urlCheck.normalized,
+        creativeMode,
+        tokenHash,
+        email,
+        note,
+        nowIso,
+        nowIso
+      )
+      .run();
+  } catch (err) {
+    if (isPendingPlacementUniqueViolation(err)) {
+      await rollbackDraftPremiumOrder(env.DB, orderId, inquiryId);
+      return json({ error: "placement_reserved" }, 409);
+    }
+    throw err;
+  }
 
   try {
     const { bindPremiumOrderTermsArchive } = await import("./premium-terms-archive");
