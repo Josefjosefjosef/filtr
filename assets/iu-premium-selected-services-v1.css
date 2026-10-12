@@ -20,6 +20,12 @@
   color: rgba(11, 27, 43, 0.88);
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
+@media (min-width: 1025px) {
+  #iuAffiliateView a.iuPremiumSlot--sold {
+    height: var(--iuPremiumSoldChipH, 124px);
+    max-height: var(--iuPremiumSoldChipH, 124px);
+  }
+}
 @media (max-width: 1024px) {
   #iuAffiliateView a.iuPremiumSlot {
     padding: 16px var(--iuChipPadX, 12px);

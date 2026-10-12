@@ -12,6 +12,7 @@ describe("premium admin order contact + preview", () => {
   it("admin preview scoped css constrains slot height", () => {
     const css = buildAdminPremiumPreviewScopedCss();
     expect(css).toContain("--iuChipH:110px");
+    expect(css).toContain("--iuPremiumSoldChipH,124px");
     expect(css).toContain(".admin-premium-preview-scope");
   });
 

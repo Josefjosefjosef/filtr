@@ -22,6 +22,7 @@ export const PREMIUM_LIVE_SLOT_CSS = `
 ${PREMIUM_AFFILIATE_SLOT_GRID_CSS}
 #iuAffiliateView .iuPremiumGrid{margin:0 0 10px}
 #iuAffiliateView a.iuPremiumSlot{box-sizing:border-box;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px var(--iuChipPadX,12px);height:var(--iuChipH,110px);min-height:0;max-height:var(--iuChipH,110px);border-radius:12px;overflow:hidden;text-decoration:none;border:1px solid rgba(11,27,43,.14);background:#f8fafc;color:rgba(11,27,43,.88)}
+@media(min-width:1025px){#iuAffiliateView a.iuPremiumSlot--sold{height:var(--iuPremiumSoldChipH,124px);max-height:var(--iuPremiumSoldChipH,124px)}}
 @media(max-width:1024px){#iuAffiliateView a.iuPremiumSlot{padding:16px var(--iuChipPadX,12px);height:var(--iuChipH,110px);max-height:var(--iuChipH,110px)}}
 #iuAffiliateView a.iuPremiumSlot--sold img.iuPremiumSlotImg{display:block;width:100%;height:100%}
 #iuAffiliateView a.iuPremiumSlot--sold.iuPremiumSlot--logo img.iuPremiumSlotImg{object-fit:contain;padding:10px;box-sizing:border-box}
