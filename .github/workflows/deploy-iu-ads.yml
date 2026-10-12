@@ -181,6 +181,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-dev-operational-reset-guard-v1.mjs
 
+      - name: Future PC banner boundary guard
+        working-directory: .
+        run: node scripts/iu-future-pc-banner-boundary-guard-v1.mjs
+
       - name: Install root deps for preview parity gate
         working-directory: .
         run: npm ci --ignore-scripts

@@ -163,7 +163,11 @@ must(/insertBefore\(host,\s*gridEl\)/.test(publicJs), "premium block mounted abo
 must(/row\.publishable/.test(adminUiScriptTs), "admin approve only when publishable");
 must(fs.existsSync(path.join(ROOT, "cloudflare/iu-ads/test/premium-admin-lifecycle.test.ts")), "premium admin lifecycle tests");
 must(/max-width:\s*1024px/.test(premiumCss), "mobile/tablet premium compact rules");
-must(/schemaVersion:\s*"0015"/.test(indexTs), "health schemaVersion 0015");
+must(
+  /readSchemaVersionFromDb/.test(indexTs) &&
+    /system_settings WHERE key = 'SCHEMA_VERSION'/.test(indexTs),
+  "health schemaVersion from D1 system_settings",
+);
 
 const mig0013 = read("cloudflare/iu-ads/migrations/0013_premium_selected_placements_reseed.sql");
 const placementIds = [...mig0013.matchAll(/\('(selected_services\.[^']+\.premium\.0[1-4])'/g)].map((m) => m[1]);
