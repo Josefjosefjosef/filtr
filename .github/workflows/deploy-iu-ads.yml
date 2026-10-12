@@ -140,6 +140,10 @@ jobs:
           path: ${{ runner.temp }}/iu-storno-credit-visual/
           if-no-files-found: warn
 
+      - name: IU Ads migration schema compat guard
+        working-directory: .
+        run: node scripts/iu-ads-migration-schema-compat-guard-v1.mjs
+
       - name: Premium public/admin consistency guard
         working-directory: .
         run: node scripts/iu-premium-public-admin-consistency-guard-v1.mjs

@@ -10,8 +10,8 @@ Legenda: **Required** = branch protection na `main` (`repo-guard`, `layout-guard
 | PDF | layout + `premium-pdf-seven-scenarios-visual`, freeze guard skripty | geometrie/vzhled #11869/#11870 | PR freeze, Deploy PNG | Deploy | existující |
 | Storno/dobropisy | `premium-order-cancellation-pdf-layout`, `premium-storno-credit-visual-proof`, `premium-order-accounting-cancel` | finanční storno, PDF | PR freeze, Deploy | Deploy | existující |
 | Administrace | `admin-premium-orders-nav.e2e`, `premium-admin-lifecycle` | UI + workflow stavy | PR freeze, Deploy | smoke (částečně) | B4 doplnit |
-| Vývojový reset | `premium-order-test-data-reset.integration`, reset guard | testovací purge, katalog zachován | PR freeze, Deploy | Deploy guard | B3 doplnit |
-| D1/R2 | `r2-security`, migrace `0024` pending placement unique | FK, race rezervace, R2 validace | PR freeze, Deploy | PR freeze (scope) | B2/B3 částečně |
+| Vývojový reset | `premium-order-test-data-reset.integration` (+ R2 fail), reset guard | faktura/storno/dobropis cyklus, D1 purge při výpadku R2 | PR freeze, Deploy | Deploy guard | B3 doplněno |
+| D1/R2 | `iu-ads-schema-migration-compat.test.ts`, `iu-ads-migration-schema-compat-guard-v1.mjs` | index pending placement, P1–P8 seed, zákaz DROP ceníku | PR freeze, Deploy | **Ano** | B3 doplněno |
 | Veřejné reklamy | `public-delivery`, `delivery-engine`, render guard | po schválení / po stornu | PR freeze, smoke | smoke | B4 doplnit |
 | Soukromí | `premium-security`, `iu-premium-selected-no-tracking-guard-v1.mjs` | žádné měření prokliků | PR freeze, smoke | smoke | existující |
 | Layout/PWA | smoke Silver/MindMenu guards (repo root) | CLS, mobil | smoke | **Ano** | existující |
@@ -22,11 +22,15 @@ Legenda: **Required** = branch protection na `main` (`repo-guard`, `layout-guard
 - **`migrations/0024_premium_pending_placement_unique.sql`**: partial unique index + rollback konceptu objednávky při kolizi.
 - **`public-premium-order.ts`**: zachyt `UNIQUE` na pending placement, rollback draft `orders`/`inquiries`.
 
-## Zbývá (B3–B4)
+## B3 — nově v tomto PR
 
-- Migrační compatibility guard (nebezpečná změna schématu před merge).
-- Rozšířený reset cyklus (faktura → úhrada → storno → dobropis → reset).
-- Admin E2E kritické operace s D1 výsledkem.
-- Veřejné doručování + architektonické hranice PC bannerů (bez implementace).
+- **`scripts/iu-ads-migration-schema-compat-guard-v1.mjs`**: CI + Deploy IU Ads před nasazením.
+- **`test/iu-ads-schema-migration-compat.test.ts`**: sqlite migrace + index + 8 pozic.
+- **Reset test**: D1 vyčištěno i když R2 `delete` hází chybu.
 
-**READY pro PC bannery:** NOT READY — dokončit B3 a B4 a ověřit produkci po merge.
+## Zbývá (B4)
+
+- Admin E2E kritické operace s D1 výsledkem (schválení/storno/faktura).
+- Veřejné doručování smoke + architektonické hranice PC bannerů (bez implementace).
+
+**READY pro PC bannery:** NOT READY — dokončit B4 a ověřit produkci po merge.

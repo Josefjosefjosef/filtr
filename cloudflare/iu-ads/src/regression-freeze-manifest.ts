@@ -23,6 +23,7 @@ export const REPO_REQUIRED_STATUS_CONTEXTS = ["layout-guard", "repo-guard", "smo
 
 /** Guards executed in Deploy IU Ads before wrangler deploy (see .github/workflows/deploy-iu-ads.yml). */
 export const DEPLOY_IU_ADS_GUARD_SCRIPTS = [
+  "scripts/iu-ads-migration-schema-compat-guard-v1.mjs",
   "scripts/iu-premium-public-admin-consistency-guard-v1.mjs",
   "scripts/iu-premium-admin-order-documents-guard-v1.mjs",
   "scripts/iu-premium-selected-services-freeze-guard-v1.mjs",
@@ -155,11 +156,12 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/backup-security.test.ts",
       "test/isolated-restore-drill.test.ts",
       "test/premium-order-delete.test.ts",
+      "test/iu-ads-schema-migration-compat.test.ts",
     ],
-    guard_scripts: [],
-    on_deploy_iu_ads: false,
+    guard_scripts: ["scripts/iu-ads-migration-schema-compat-guard-v1.mjs"],
+    on_deploy_iu_ads: true,
     on_pr_regression_workflow: true,
-    gaps: "Migrace kompatibility: spoléhat na apply-iu-ads-migrations v testech; samostatný gate před migrací v prod (iu-ads-post-migration-prod-verify.yml).",
+    gaps: "Prod migrace: iu-ads-post-migration-prod-verify.yml po apply migrace.",
   },
   {
     id: "public_delivery_web",
