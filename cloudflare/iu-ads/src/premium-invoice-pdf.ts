@@ -40,6 +40,8 @@ export type PremiumInvoicePdfInput = {
   category_title_cs: string;
   position_label: string;
   duration_months: number;
+  /** Resolved public URL for the ordered affiliate section (tool-window deep link). */
+  ad_web_placement_url?: string | null;
 };
 
 function hexRgb(hex: string) {
@@ -369,9 +371,10 @@ export async function buildPremiumInvoicePdfWithLayout(
   });
   cursor.y -= headH;
 
+  const placementDisplay = (input.ad_web_placement_url || "").trim() || PREMIUM_AD_WEB_PLACEMENT;
   const descLines: PartyLineStyle[] = [
     { text: "Reklamní umístění — Vybrané služby a odkazy", bold: true },
-    { text: "Webové umístění reklamy: " + PREMIUM_AD_WEB_PLACEMENT, linkBlue: true },
+    { text: "Webové umístění reklamy: " + placementDisplay, linkBlue: true },
     { text: "Kategorie: " + input.category_title_cs },
     { text: "Reklamní pozice: " + input.position_label },
     { text: "Délka poskytování reklamní služby: " + String(input.duration_months) + " měsíců" },
