@@ -33,6 +33,10 @@ ADS_PUBLIC_DELIVERY_ENABLED = "false"
 ADS_ADMIN_API_ENABLED = "false"
 ADS_CLIENT_API_ENABLED = "false"
 CORS_ALLOW_ORIGIN = "https://infouzel.cz"
+# Pre-launch: allow main-admin bulk reset of all premium test orders. Set to "0" before commercial live.
+PREMIUM_DEV_OPERATIONAL_RESET_ENABLED = "1"
+# When "1", bulk dev reset is blocked regardless of PREMIUM_DEV_OPERATIONAL_RESET_ENABLED.
+# PREMIUM_COMMERCIAL_LIVE = "0"
 
 # Placeholder id replaced by deploy workflow after D1 create/list.
 [[d1_databases]]

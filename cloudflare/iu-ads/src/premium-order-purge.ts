@@ -383,6 +383,9 @@ export async function purgePremiumOrderPhysically(env: Env, orderId: string): Pr
   await purgeDbStep("order_price_snapshots", () =>
     db.prepare("DELETE FROM premium_order_price_snapshots WHERE order_id = ?").bind(orderId).run()
   );
+  await purgeDbStep("order_terms_bindings", () =>
+    db.prepare("DELETE FROM premium_order_terms_bindings WHERE order_id = ?").bind(orderId).run()
+  );
 
   return { documents_removed: docsRemoved };
 }

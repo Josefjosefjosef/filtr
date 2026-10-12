@@ -8,8 +8,8 @@ export const PREMIUM_INVOICE_FOOTER_BAND_H = 44;
 export const PREMIUM_INVOICE_FOOTER_Y = PREMIUM_INVOICE_MARGIN + 18;
 export const PREMIUM_INVOICE_CONTENT_MIN_Y = PREMIUM_INVOICE_MARGIN + PREMIUM_INVOICE_FOOTER_BAND_H;
 /** Vertical gap between light-blue section header band and first body line (~3 mm). */
-/** ~2.1 mm at 72 dpi — header-to-body breathing room without breaking single-page confirmation layout. */
-export const PREMIUM_PDF_HEADER_BODY_GAP_PT = 6;
+/** ~2.8 mm at 72 dpi — header-to-body breathing room under light-blue band. */
+export const PREMIUM_PDF_HEADER_BODY_GAP_PT = 8;
 /** @deprecated use PREMIUM_INVOICE_CONTENT_MIN_Y */
 export const PREMIUM_INVOICE_MIN_Y = PREMIUM_INVOICE_CONTENT_MIN_Y;
 

@@ -230,8 +230,8 @@ function drawMetaLine(
 type PartyLine = { text: string; bold?: boolean; linkBlue?: boolean };
 
 function measurePartyBlock(fonts: PremiumPdfFonts, innerW: number, lines: PartyLine[], titleSize: number, bodySize: number): number {
-  const headH = titleSize * 1.6 + 8;
-  let bodyH = 8;
+  const headH = titleSize * 1.6 + 6;
+  let bodyH = PREMIUM_PDF_HEADER_BODY_GAP_PT + 4;
   for (const line of lines) {
     const wrapped = wrapTextLines(fonts.regular, line.text, bodySize, innerW);
     bodyH += measureWrappedHeight(wrapped.length || 1, bodySize, 1.32);
@@ -749,12 +749,17 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   const techInnerW = PREMIUM_INVOICE_CONTENT_W - techPad * 2;
   const techBodySize = PREMIUM_ORDER_CONFIRMATION_TECH_BODY_SIZE;
   const techBlockH = measureSectionBlockHeight(techRows, fonts, techInnerW, techBodySize, 92);
-  cursor.ensureSpace(techBlockH + PAGE1_SECTION_GAP);
-  drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, {
-    bodySize: techBodySize,
-    labelW: 92,
-    skipEnsureSpace: true,
-  });
+  const techFitsPage1 = cursor.y - techBlockH >= PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y;
+  let deferredTechRows: KvRow[] | null = null;
+  if (techFitsPage1) {
+    drawSectionBox(cursor, fonts, brand, "Technické údaje", techRows, {
+      bodySize: techBodySize,
+      labelW: 92,
+      skipEnsureSpace: true,
+    });
+  } else {
+    deferredTechRows = techRows;
+  }
 
   const page1Blocks = cursor.blocks.filter((block) => (block.pageIndex ?? 0) === 0);
   cursor.lockPageCount = false;
@@ -769,8 +774,48 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
 
   drawPage2Header(cursor, fonts, brand, ctx);
 
+  if (deferredTechRows) {
+    drawSectionBox(cursor, fonts, brand, "Technické údaje", deferredTechRows, {
+      bodySize: techBodySize,
+      labelW: 92,
+    });
+  }
+
+  const placementUrl = premiumOrderAdWebPlacementForPdf(ctx) || "—";
+  const attachmentIdentRows: KvRow[] = [
+    { label: "ID kreativity:", value: ctx.creative_id || "—" },
+    {
+      label: "Hash kreativity:",
+      value: ctx.creative_content_hash || "—",
+      valueStackFullWidth: !!ctx.creative_content_hash,
+    },
+    {
+      label: "Režim kreativity:",
+      value: ctx.creative_mode_label_cs || premiumCreativeModeLabelCs(ctx.creative_mode),
+    },
+    {
+      label: "Datum nahrání:",
+      value: ctx.creative_uploaded_at ? formatAdminPragueDateTime(ctx.creative_uploaded_at) : "—",
+    },
+    { label: "Datum schválení:", value: formatAdminPragueDateTime(ctx.approved_at) },
+    { label: "Schválil:", value: ctx.approver_display_name || "—" },
+  ];
+  const attachmentUseRows: KvRow[] = [
+    { label: "Umístění reklamy:", value: placementUrl, linkBlue: true },
+    { label: "Cílová URL tlačítka:", value: ctx.target_url, linkBlue: true },
+  ];
+  const attachmentInnerW = PREMIUM_INVOICE_CONTENT_W - 16;
+  const page2TailH =
+    measureSectionBlockHeight(attachmentIdentRows, fonts, attachmentInnerW, 9, 132) +
+    measureSectionBlockHeight(attachmentUseRows, fonts, attachmentInnerW, 8.5, 118) +
+    PAGE1_SECTION_GAP * 2 +
+    16;
+
   const creativeZoneTop = cursor.y;
-  const creativeZoneH = 300;
+  const creativeZoneH = Math.min(
+    300,
+    Math.max(72, creativeZoneTop - PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y - page2TailH)
+  );
   const creativeZoneBottom = creativeZoneTop - creativeZoneH;
   const maxW = PREMIUM_INVOICE_CONTENT_W;
   let creativeNote = "Reklamní podklad není k dispozici v evidenci.";
@@ -801,30 +846,9 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   cursor.y = creativeZoneBottom - 8;
   cursor.lockPageCount = true;
 
-  const placementUrl = premiumOrderAdWebPlacementForPdf(ctx) || "—";
-  drawSectionBox(cursor, fonts, brand, "Identifikace reklamního podkladu", [
-    { label: "ID kreativity:", value: ctx.creative_id || "—" },
-    {
-      label: "Hash kreativity:",
-      value: ctx.creative_content_hash || "—",
-      valueStackFullWidth: !!ctx.creative_content_hash,
-    },
-    {
-      label: "Režim kreativity:",
-      value: ctx.creative_mode_label_cs || premiumCreativeModeLabelCs(ctx.creative_mode),
-    },
-    {
-      label: "Datum nahrání:",
-      value: ctx.creative_uploaded_at ? formatAdminPragueDateTime(ctx.creative_uploaded_at) : "—",
-    },
-    { label: "Datum schválení:", value: formatAdminPragueDateTime(ctx.approved_at) },
-    { label: "Schválil:", value: ctx.approver_display_name || "—" },
-  ]);
+  drawSectionBox(cursor, fonts, brand, "Identifikace reklamního podkladu", attachmentIdentRows);
 
-  drawSectionBox(cursor, fonts, brand, "Zobrazení a použití", [
-    { label: "Umístění reklamy:", value: placementUrl, linkBlue: true },
-    { label: "Cílová URL tlačítka:", value: ctx.target_url, linkBlue: true },
-  ], { bodySize: 8.5, labelW: 118 });
+  drawSectionBox(cursor, fonts, brand, "Zobrazení a použití", attachmentUseRows, { bodySize: 8.5, labelW: 118 });
 
   cursor.lockPageCount = false;
 

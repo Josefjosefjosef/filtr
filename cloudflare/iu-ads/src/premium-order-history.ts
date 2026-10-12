@@ -93,6 +93,73 @@ const PREMIUM_HISTORY_FIELD_LABELS: Record<string, string> = {
   price: "cena reklamní služby",
 };
 
+/** Map stored doc_type / doc_kind to Czech document label for timeline (no guessing from missing data). */
+export function premiumHistoryDocumentLabelFromPayload(payload: Record<string, unknown>): string | null {
+  const title = typeof payload.title === "string" ? payload.title.trim() : "";
+  if (title.startsWith("Faktura ")) return title.slice("Faktura ".length).trim() || null;
+  if (title.startsWith("Storno objednávky ")) return title.slice("Storno objednávky ".length).trim() || null;
+  if (title.startsWith("Dobropis ")) return title.slice("Dobropis ".length).trim() || null;
+  if (typeof payload.invoice_number === "string" && payload.invoice_number.trim()) return payload.invoice_number.trim();
+  if (typeof payload.storno_number === "string" && payload.storno_number.trim()) return payload.storno_number.trim();
+  if (typeof payload.credit_note_number === "string" && payload.credit_note_number.trim()) {
+    return payload.credit_note_number.trim();
+  }
+  if (typeof payload.evidence_reference === "string" && payload.evidence_reference.trim()) {
+    return payload.evidence_reference.trim();
+  }
+  const docType = String(payload.doc_type || payload.doc_kind || "");
+  if (docType === "premium_invoice_pdf" || payload.doc_kind === "invoice_pdf") return null;
+  return null;
+}
+
+function premiumHistoryDocumentKindCs(payload: Record<string, unknown>): string {
+  const docType = String(payload.doc_type || "");
+  const docKind = String(payload.doc_kind || "");
+  if (docType === "premium_order_confirmation" || docKind === "order_confirmation") return "Potvrzení objednávky";
+  if (docType === "premium_invoice_pdf" || docKind === "invoice_pdf") return "Faktura";
+  if (docType === "premium_order_cancellation" || docKind === "order_cancellation") {
+    return payload.storno_kind === "rejection" ? "Potvrzení o zamítnutí objednávky" : "Storno objednávky";
+  }
+  if (docType === "premium_credit_note_pdf" || docKind === "credit_note_pdf") return "Dobropis";
+  return "Dokument";
+}
+
+function formatDocumentHistoryLine(payload: Record<string, unknown>, op: "created" | "updated"): string {
+  const kind = premiumHistoryDocumentKindCs(payload);
+  const num = premiumHistoryDocumentLabelFromPayload(payload);
+  const ver =
+    payload.new_version != null
+      ? Number(payload.new_version)
+      : payload.version != null
+        ? Number(payload.version)
+        : null;
+  const idPart = num ? " " + num : "";
+  if (op === "created") {
+    if (kind === "Faktura") return "Faktura" + idPart + " vystavena a PDF uloženo.";
+    if (kind === "Dobropis") return "Dobropis" + idPart + " vystaven.";
+    if (kind === "Storno objednávky") return "Storno objednávky" + idPart + " vytvořeno.";
+    if (kind === "Potvrzení o zamítnutí objednávky") {
+      return "Potvrzení o zamítnutí objednávky" + idPart + " vytvořeno.";
+    }
+    if (kind === "Potvrzení objednávky") {
+      return ver && ver > 1
+        ? "Potvrzení objednávky" + idPart + " vytvořeno – verze " + String(ver) + "."
+        : "Potvrzení objednávky" + idPart + " vytvořeno.";
+    }
+    return kind + idPart + " vytvořeno.";
+  }
+  const verSuffix = ver && ver > 1 ? " – verze " + String(ver) : "";
+  if (kind === "Potvrzení objednávky") {
+    return "Potvrzení objednávky" + idPart + " aktualizováno – předchozí verze archivována" + verSuffix + ".";
+  }
+  if (kind === "Faktura") return "Faktura" + idPart + " aktualizována – předchozí verze archivována" + verSuffix + ".";
+  if (kind === "Dobropis") return "Dobropis" + idPart + " aktualizován – předchozí verze archivována" + verSuffix + ".";
+  if (kind === "Storno objednávky" || kind === "Potvrzení o zamítnutí objednávky") {
+    return kind + idPart + " aktualizováno – předchozí verze archivována" + verSuffix + ".";
+  }
+  return kind + idPart + " aktualizován – předchozí verze archivována" + verSuffix + ".";
+}
+
 function historyActorLabel(event: {
   payload: Record<string, unknown>;
   actor_user_id: string | null;
@@ -168,26 +235,22 @@ export function formatPremiumOrderEventLineCs(event: {
       }
       return line;
     }
-    case "order_confirmation_pdf_created": {
-      const ver = event.payload.version != null ? Number(event.payload.version) : 1;
-      return ver > 1
-        ? "Vygenerováno nové potvrzení objednávky – verze " + String(ver)
-        : "Potvrzení objednávky vytvořeno";
-    }
+    case "order_confirmation_pdf_created":
+      return formatDocumentHistoryLine(
+        { ...event.payload, doc_kind: "order_confirmation", doc_type: "premium_order_confirmation" },
+        "created"
+      );
     case "invoice_pdf_created":
-      return "Faktura vystavena (PDF uloženo)";
+      return formatDocumentHistoryLine(
+        { ...event.payload, doc_kind: "invoice_pdf", doc_type: "premium_invoice_pdf" },
+        "created"
+      );
     case "document_generation_failed":
       return "Chyba generování dokumentu" + (event.payload.error ? ": " + String(event.payload.error) : "");
     case "document_generation_retried":
       return "Opakované generování dokumentů dokončeno";
-    case "document_pdf_replaced": {
-      const kind = String(event.payload.doc_kind || "dokument");
-      const ver = event.payload.version != null ? Number(event.payload.version) : null;
-      if (kind === "order_confirmation" && ver) {
-        return "Vygenerováno nové potvrzení objednávky – verze " + String(ver);
-      }
-      return "Dokument aktualizován (archiv předchozí verze zachován)";
-    }
+    case "document_pdf_replaced":
+      return formatDocumentHistoryLine(event.payload, "updated");
     case "ad_turned_off":
       return "Reklama definitivně vypnuta" + (event.payload.reason ? ": " + String(event.payload.reason) : "");
     case "order_accounting_cancelled":
@@ -196,9 +259,15 @@ export function formatPremiumOrderEventLineCs(event: {
         (event.payload.storno_number ? " (" + String(event.payload.storno_number) + ")" : "")
       );
     case "storno_pdf_created":
-      return "Potvrzení o stornování objednávky vytvořeno";
+      return formatDocumentHistoryLine(
+        { ...event.payload, doc_kind: "order_cancellation", doc_type: "premium_order_cancellation" },
+        "created"
+      );
     case "credit_note_pdf_created":
-      return "Dobropis vystaven";
+      return formatDocumentHistoryLine(
+        { ...event.payload, doc_kind: "credit_note_pdf", doc_type: "premium_credit_note_pdf" },
+        "created"
+      );
     case "rejected_order_credit_note_issued":
       return "Dobropis k zamítnuté objednávce vystaven";
     default:

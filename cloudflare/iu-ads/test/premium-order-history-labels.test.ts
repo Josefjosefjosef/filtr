@@ -10,7 +10,38 @@ describe("premium order history Czech labels", () => {
       actor_user_id: null,
     });
     expect(replaced.toLowerCase()).toContain("verze 2");
+    expect(replaced).toContain("Potvrzení objednávky");
     expect(replaced).not.toContain("document_pdf_replaced");
+    expect(replaced).not.toContain("Dokument aktualizován");
+
+    const stornoReplaced = formatPremiumOrderEventLineCs({
+      event_type: "document_pdf_replaced",
+      payload: {
+        doc_type: "premium_order_cancellation",
+        title: "Storno objednávky STO-2026-000006",
+        new_version: 2,
+      },
+      created_at_label_cs: "11. 10. 2026 22:44",
+      actor_user_id: null,
+    });
+    expect(stornoReplaced).toContain("STO-2026-000006");
+    expect(stornoReplaced).toContain("aktualizováno");
+
+    const stornoCreated = formatPremiumOrderEventLineCs({
+      event_type: "storno_pdf_created",
+      payload: { storno_number: "STO-2026-000006", title: "Storno objednávky STO-2026-000006" },
+      created_at_label_cs: "11. 10. 2026 22:44",
+      actor_user_id: null,
+    });
+    expect(stornoCreated).toContain("STO-2026-000006 vytvořeno");
+
+    const creditCreated = formatPremiumOrderEventLineCs({
+      event_type: "credit_note_pdf_created",
+      payload: { credit_note_number: "DOB-2026-000001", title: "Dobropis DOB-2026-000001" },
+      created_at_label_cs: "11. 10. 2026 22:44",
+      actor_user_id: null,
+    });
+    expect(creditCreated).toContain("DOB-2026-000001 vystaven");
 
     const paid = formatPremiumOrderEventLineCs({
       event_type: "payment_status_changed",
