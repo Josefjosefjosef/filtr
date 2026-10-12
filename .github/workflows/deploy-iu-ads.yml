@@ -177,6 +177,10 @@ jobs:
         working-directory: .
         run: node scripts/iu-premium-order-confirmation-pdf-freeze-guard-v1.mjs
 
+      - name: Premium ad web placement URL guard
+        working-directory: .
+        run: node scripts/iu-premium-ad-web-placement-url-guard-v1.mjs
+
       - name: Premium dev operational reset guard
         working-directory: .
         run: node scripts/iu-premium-dev-operational-reset-guard-v1.mjs

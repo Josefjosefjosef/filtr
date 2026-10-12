@@ -743,6 +743,7 @@ async function generateOneDocument(
         category_title_cs: ctx.category_title_cs,
         position_label: ctx.position_label,
         duration_months: ctx.duration_months,
+        ad_web_placement_url: ctx.ad_web_placement_url,
       });
       docType = PREMIUM_DOC_TYPE_INVOICE;
       title = "Faktura " + inv.invoice_number;

@@ -25,6 +25,10 @@ const checks = [
   ["ORDER_CONFIRMATION_SUPPLIER_CONFIG", orderPdf.includes("PREMIUM_INVOICE_SUPPLIER")],
   ["ORDER_CONFIRMATION_SECTION_URL_SNAPSHOT", fields.includes("ad_web_placement_url") && placement.includes("resolvePremiumAdWebPlacementUrl")],
   ["ORDER_SUBMIT_URL_SNAPSHOT", publicOrder.includes("ad_web_placement_url") && publicOrder.includes("buildPremiumAdWebPlacementUrl")],
+  [
+    "ORDER_WEB_PLACEMENT_IU_WINDOW",
+    placement.includes("PREMIUM_AD_WEB_PLACEMENT_WINDOW_PARAM") && placement.includes('"tool"'),
+  ],
   ["ORDER_WEB_PLACEMENT_LABEL", orderPdf.includes("Webové umístění reklamy")],
   ["ORDER_SERVICE_PERIOD_BOX", orderPdf.includes("Období poskytování")],
   [

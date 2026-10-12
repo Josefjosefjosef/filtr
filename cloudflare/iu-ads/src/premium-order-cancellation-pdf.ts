@@ -1,5 +1,6 @@
 import { PDFDocument, rgb } from "pdf-lib";
 import { PREMIUM_AD_WEB_PLACEMENT } from "./premium-invoice-brand";
+import { premiumOrderAdWebPlacementForPdf } from "./premium-order-pdf-fields";
 import {
   drawWrappedText,
   measureWrappedHeight,
@@ -171,7 +172,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     "Reklamní pozice: " + input.ctx.position_label,
     "Délka poskytování: " + String(input.ctx.duration_months) + " měsíců",
     "Režim kreativy: " + input.ctx.creative_mode_label_cs,
-    "Webové umístění: " + (input.ctx.ad_web_placement_url || PREMIUM_AD_WEB_PLACEMENT),
+    "Webové umístění: " + (premiumOrderAdWebPlacementForPdf(input.ctx) || PREMIUM_AD_WEB_PLACEMENT),
     "Cílová URL: " + input.ctx.target_url,
   ];
   const blockTop = serviceBodyTop;
