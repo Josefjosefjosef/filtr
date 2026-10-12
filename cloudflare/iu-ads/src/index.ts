@@ -203,6 +203,17 @@ async function pingDb(env: Env): Promise<boolean> {
   }
 }
 
+async function readSchemaVersionFromDb(env: Env): Promise<string> {
+  if (!env.DB) return "unbound";
+  try {
+    const row = await env.DB.prepare("SELECT value FROM system_settings WHERE key = 'SCHEMA_VERSION'").first<{ value: string }>();
+    const v = row?.value?.trim();
+    return v || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
 function corsHeaders(env: Env, request?: Request): HeadersInit {
   const allowed = new Set(["https://infouzel.cz", "https://www.infouzel.cz", "https://ads.infouzel.cz"]);
   const reqOrigin = request?.headers.get("Origin") || "";
@@ -260,6 +271,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
 
     if (path === "/health" || path === "/") {
       const dbOk = await pingDb(env);
+      const schemaVersion = dbOk ? await readSchemaVersionFromDb(env) : env.DB ? "unavailable" : "unbound";
       const creativesBound = !!env.CREATIVES;
       const documentsBound = !!env.DOCUMENTS;
       const r2Ok = creativesBound && documentsBound;
@@ -269,7 +281,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
           service: "infouzel-ads",
           mode: "ads-business",
           storageMode: dbOk ? "d1" : env.DB ? "unavailable" : "unbound",
-          schemaVersion: "0015",
+          schemaVersion,
           safeMode: flags.safeMode,
           publicDeliveryEnabled: flags.publicDeliveryEnabled,
           adminApiEnabled: flags.adminApiEnabled,

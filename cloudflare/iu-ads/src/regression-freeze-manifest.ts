@@ -33,6 +33,7 @@ export const DEPLOY_IU_ADS_GUARD_SCRIPTS = [
   "scripts/iu-premium-invoice-pdf-freeze-guard-v1.mjs",
   "scripts/iu-premium-order-confirmation-pdf-freeze-guard-v1.mjs",
   "scripts/iu-premium-dev-operational-reset-guard-v1.mjs",
+  "scripts/iu-future-pc-banner-boundary-guard-v1.mjs",
 ] as const;
 
 export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
@@ -87,6 +88,7 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/reservations.test.ts",
       "test/premium-admin-extend-new-order.integration.test.ts",
       "test/premium-order-submit-d1.integration.test.ts",
+      "test/premium-admin-approve-d1.integration.test.ts",
     ],
     guard_scripts: ["scripts/iu-premium-public-admin-consistency-guard-v1.mjs"],
     on_deploy_iu_ads: true,
@@ -127,6 +129,7 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/ui-shells.test.ts",
       "test/admin-finance.test.ts",
       "test/premium-order-history-labels.test.ts",
+      "test/premium-admin-approve-d1.integration.test.ts",
     ],
     guard_scripts: [
       "scripts/iu-ads-admin-menu-guard-v1.mjs",
@@ -172,6 +175,7 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/public-inject.test.ts",
       "test/premium-extend-public-delivery.integration.test.ts",
       "test/premium-display-compaction.test.ts",
+      "test/premium-public-delivery-d1.integration.test.ts",
     ],
     guard_scripts: [
       "scripts/iu-premium-display-compaction-guard-v1.mjs",
@@ -195,11 +199,11 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
   {
     id: "future_pc_banner_boundary",
     label_cs: "Budoucí PC bannery (hraniční architektura, bez produktu)",
-    vitest: [],
-    guard_scripts: [],
-    on_deploy_iu_ads: false,
-    on_pr_regression_workflow: false,
-    gaps: "Placeholder admin route handleAdminBannerPcPlaceholder; P1–P8 selected_services oddělené — nový produkt nesmí měnit premium_selected_* ceníky.",
+    vitest: ["test/future-pc-banner-boundary.test.ts"],
+    guard_scripts: ["scripts/iu-future-pc-banner-boundary-guard-v1.mjs"],
+    on_deploy_iu_ads: true,
+    on_pr_regression_workflow: true,
+    gaps: "Produkt PC bannerů neimplementován — pouze placeholder /v1/admin/banner-pc.",
   },
 ];
 
