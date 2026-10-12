@@ -2,10 +2,10 @@
   "freezeId": "iu-premium-p1-p8-v1-20261005",
   "preStabilizationProductionSha": "405ad803e6892a84c6554ce0ea3dfed8f879be21",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-10-11T11:00:00.000Z",
-  "note": "Freeze bump: PWA external return v5-20261011 (cancel settle diag, mailbox post-hydrate rerender).",
+  "updatedAt": "2026-10-12T23:45:00.000Z",
+  "note": "Freeze bump: iCentrum PWA return recorder v6-20261013 (local diagnostic log, no telemetry).",
   "files": {
-    "projects/index.html": "ec826a289f457ebca8d65a7fada8d4e47884b1c40894f2f030d4e2c30566b463",
+    "projects/index.html": "3d785efdf8c19500d656d10ff40d380556b8dd79e895142a02710e5a2d1a5646",
     "assets/app.css": "8b7211631821a618d82c419b95a930ff6ff61f5c343382e62c210810cedc539a",
     "assets/app.js": "f004d21d8371a8190c3a13edb10a68038cc4198268796af16180b256beb543f8",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "eb5857e3da4429b24ed1ae1ac0ff91531367557152c0ad150f304c63e02a6944",
@@ -17,7 +17,7 @@
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
     "sw.js": "7ad29b686193531dddc80b6eb6c65668d34b9a868a011ade521837ede3b9d2ca",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
-    "assets/iu-network-connectivity-v1.js": "96b6123aee24460bb3035f7342286355b444c9f06b07f68cd4113eb4555ea00e",
+    "assets/iu-network-connectivity-v1.js": "8d06e3866fc5d5f1bda79e2c7c50f60f8f933dd69ce7d8515a6efeacf75f4397",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "51a894bf146f3f7cdc9dc7ddd62a36e0811805f0fb982e43d066ce02fba8f246",
     "assets/iu-user-data-backup-core.js": "b349b4a391e5c2c928ba50330df57eac40a46dbeeabedbc4c4a8cce490c9620b",
@@ -171,7 +171,11 @@
       "menu-nav-scroll-restore-v1-20260918",
       "mindmenu-pwa-box-nav-flush-v1-20260918",
       "affiliate-header-frame-v1-20260918",
-      "affiliate-brainmarket-zdravi-doplnky-v1-20260926"
+      "affiliate-brainmarket-zdravi-doplnky-v1-20260926",
+      "pwa-return-recorder-v1-20261013-icentrum-diag",
+      "iu-pwa-return-recorder-v1.js",
+      "Diagnostika PWA",
+      "pwa-external-return-unified-v6-20261013-icentrum-diag"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -234,7 +238,9 @@
     "assets/iu-network-connectivity-v1.js": [
       "isAiAssistantsOverlayOpen",
       "reassertIntentionalOverlayShell",
-      "armExternalReturn"
+      "armExternalReturn",
+      "pwa-external-return-unified-v6-20261013-icentrum-diag",
+      "iuPwaReturnRecorder"
     ]
   }
 }
