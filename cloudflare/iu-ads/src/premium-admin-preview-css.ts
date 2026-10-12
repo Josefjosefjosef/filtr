@@ -18,7 +18,11 @@ export function buildAdminPremiumPreviewScopedCss(): string {
     s +
     " a.iuPremiumSlot--banner img.iuPremiumSlotImg{object-fit:cover;object-position:center center;padding:0;box-sizing:border-box}" +
     s +
-    " a.iuPremiumSlot--blend img.iuPremiumSlotImg{display:block;padding:0;box-sizing:border-box;object-fit:contain}"
+    " a.iuPremiumSlot--blend img.iuPremiumSlotImg{display:block;padding:0;box-sizing:border-box;object-fit:contain}" +
+    "@media(min-width:1025px){" +
+    s +
+    " a.iuPremiumSlot--sold{height:var(--iuPremiumSoldChipH,124px);max-height:var(--iuPremiumSoldChipH,124px)}" +
+    "}"
   );
 }
 

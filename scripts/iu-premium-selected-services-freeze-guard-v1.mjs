@@ -126,6 +126,24 @@ must(/createObjectURL/.test(orderUiScriptTs), "creative preview uses object URL"
 must(/id="previewSlot"/.test(orderUiTs), "order preview uses production slot markup");
 must(/PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs), "order preview injects live slot CSS");
 must(/height:var\(--iuChipH,110px\)/.test(liveSlotCssTs.replace(/\s/g, "")), "live slot CSS height token");
+must(
+  /@media\(min-width:1025px\)[\s\S]*iuPremiumSlot--sold[\s\S]*--iuPremiumSoldChipH,124px/.test(
+    premiumCss.replace(/\s/g, "")
+  ),
+  "active sold slot taller on desktop PC"
+);
+must(
+  /@media\(min-width:1025px\)[\s\S]*iuPremiumSlot--sold[\s\S]*--iuPremiumSoldChipH,124px/.test(
+    liveSlotCssTs.replace(/\s/g, "")
+  ),
+  "order preview sold desktop height synced"
+);
+must(
+  /@media\(min-width:1025px\)[\s\S]*iuPremiumSlot--sold[\s\S]*--iuPremiumSoldChipH,124px/.test(
+    read("cloudflare/iu-ads/src/premium-admin-preview-css.ts").replace(/\s/g, "")
+  ),
+  "admin preview sold desktop height synced"
+);
 must(/premium-selected-services-b2b-v3-/.test(termsTs), "premium terms v3 current");
 must(/buildPremiumTermsV1Html/.test(termsTs), "premium terms v1 archive");
 must(/buildPremiumTermsV2Html/.test(termsTs), "premium terms v2 archive");
@@ -199,6 +217,15 @@ const freezeContract = {
   LEGACY_PREMIUM_UNLOCK_LOGIC_REMOVED:
     !/capacityAfterP2FirstPublish/.test(premiumTs) && !/premium_capacity becomes 4/.test(premiumTs),
   PREVIEW_EQUALS_LIVE_SLOT: /id="previewSlot"/.test(orderUiTs) && /PREMIUM_LIVE_SLOT_CSS/.test(orderUiTs),
+  ACTIVE_PC_SOLD_CHIP_PROPORTION:
+    /@media\(min-width:1025px\)[\s\S]*iuPremiumSlot--sold[\s\S]*--iuPremiumSoldChipH,124px/.test(
+      premiumCss.replace(/\s/g, "")
+    ) &&
+    /@media\(min-width:1025px\)[\s\S]*iuPremiumSlot--sold[\s\S]*--iuPremiumSoldChipH,124px/.test(
+      liveSlotCssTs.replace(/\s/g, "")
+    ),
+  MOBILE_TABLET_SOLD_CHIP_HEIGHT_110:
+    !/@media\s*\(\s*max-width:\s*1024px\)[\s\S]*iuPremiumSlot--sold[\s\S]*124px/.test(premiumCss.replace(/\s/g, "")),
   ICO_REQUIRED: /validateCzechIco/.test(publicOrderTs),
   B2B_ONLY: /b2b_only:\s*true/.test(publicOrderTs),
   NO_TRACKING: !/\/v1\/public\/premium\/selected-services\/click/.test(indexTs),
