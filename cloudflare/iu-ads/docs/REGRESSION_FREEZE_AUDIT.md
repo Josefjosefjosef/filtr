@@ -40,7 +40,7 @@ HAVING COUNT(*) > 1;
 
 | Kontrola | Výsledek |
 |---|---|
-| Index 0024 v produkční D1 (přímý SQL) | **NOT VERIFIED** lokálně (chybí `CLOUDFLARE_API_TOKEN`); ověřeno automaticky krokem **Production D1 read-only verify index 0024** v Deploy IU Ads po merge B5 |
+| Index 0024 v produkční D1 (přímý SQL) | **NOT VERIFIED** lokálně (chybí `CLOUDFLARE_API_TOKEN`); po merge B5 povinný deploy krok **Production D1 read-only verify index 0024** → očekáváno `IU_ADS_PROD_D1_VERIFY=PASS` |
 | `/health.schemaVersion` | **PASS** — `0024` (D1 `system_settings`, nasazeno B4) |
 | Kolize pending rezervací | **NOT VERIFIED** lokálně; deploy skript **FAIL** pokud `HAVING COUNT(*) > 1` vrátí řádky |
 
