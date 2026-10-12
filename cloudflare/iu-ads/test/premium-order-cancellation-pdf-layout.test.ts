@@ -78,6 +78,26 @@ describe("premium order cancellation PDF layout", () => {
     expect(pdfBytes.byteLength).toBeGreaterThan(8_000);
   });
 
+  it("does not leave a footer-only second page for standard published storno", async () => {
+    const pdfBytes = await buildPremiumOrderCancellationPdf({
+      ctx: baseCtx(),
+      storno_number: "STO-2026-000123",
+      storno_kind: "cancellation",
+      reason: "Klient požádal o zrušení objednávky. Reklamní službu již nechce.",
+      issued_at: "2026-10-12T12:27:00.000Z",
+      issuer_display_name: "Hlavní administrátor",
+      invoice_number: "INV-2026-1FE6BE48",
+      credit_note_number: "DOB-2026-000001",
+      order_was_approved: true,
+      ad_was_published: true,
+      ad_turned_off_at: "2026-10-12T11:00:00.000Z",
+      payment_status_label: "Neuhrazeno",
+      storno_amount_cents: 599000,
+      variable_symbol: "20261648",
+    });
+    expect((await PDFDocument.load(pdfBytes)).getPageCount()).toBe(1);
+  });
+
   it("keeps published storno with normal reason on one A4 page", async () => {
     const pdfBytes = await buildPremiumOrderCancellationPdf({
       ctx: baseCtx(),

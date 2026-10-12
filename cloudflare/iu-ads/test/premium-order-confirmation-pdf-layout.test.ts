@@ -105,6 +105,13 @@ describe("premium order confirmation PDF layout scenarios", () => {
       }),
     },
     {
+      name: "long_terms_version",
+      ctx: baseCtx({
+        terms_version:
+          "premium-selected-v1-long-identifier-2026-revision-final-archive-" + "term".repeat(12),
+      }),
+    },
+    {
       name: "long_target_url",
       ctx: baseCtx({
         target_url:

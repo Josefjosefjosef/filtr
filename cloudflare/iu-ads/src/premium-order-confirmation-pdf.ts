@@ -95,7 +95,12 @@ type KvRow = {
   linkBlue?: boolean;
   /** Hash-like values: label row + full-width break-all lines below. */
   valueStackFullWidth?: boolean;
+  /** Long identifiers / URLs: break-all within the value column. */
+  valueBreakAll?: boolean;
 };
+
+/** ~1 mm upward shift for the period box in the service section (72 dpi). */
+const SERVICE_PERIOD_BOX_SHIFT_UP_PT = 2.835;
 
 function measureSectionBody(
   rows: KvRow[],
@@ -116,7 +121,9 @@ function measureSectionBody(
     }
     const valueFont = row.valueBold ? fonts.bold : fonts.regular;
     const valueW = Math.max(80, innerW - labelW - 8);
-    const lines = wrapTextLines(valueFont, row.value, bodySize, valueW);
+    const lines = row.valueBreakAll
+      ? wrapTextLinesBreakAll(valueFont, row.value, bodySize, valueW)
+      : wrapTextLines(valueFont, row.value, bodySize, valueW);
     h += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.32) + 2;
   }
   return h;
@@ -182,7 +189,9 @@ function drawSectionBox(
       y = drawWrappedTextBreakAll(cursor.page, valueFont, row.value, x + pad, y, innerW, bodySize, valueColor, 1.32);
     } else {
       const valueW = innerW - labelW - 8;
-      y = drawWrappedText(cursor.page, valueFont, row.value, x + pad + labelW, y, valueW, bodySize, valueColor, 1.32);
+      y = row.valueBreakAll
+        ? drawWrappedTextBreakAll(cursor.page, valueFont, row.value, x + pad + labelW, y, valueW, bodySize, valueColor, 1.32)
+        : drawWrappedText(cursor.page, valueFont, row.value, x + pad + labelW, y, valueW, bodySize, valueColor, 1.32);
     }
     y -= 3;
   }
@@ -416,9 +425,10 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
     bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 3;
   }
   const periodH = 56;
-  bodyH = Math.max(bodyH, periodH + 6);
+  bodyH = Math.max(bodyH, periodH + SERVICE_PERIOD_BOX_SHIFT_UP_PT + 6);
+  const urlValueW = Math.max(80, leftW - labelW);
   for (const row of fullWidthRows) {
-    const lines = wrapTextLines(fonts.regular, row.value, bodySize, innerW - labelW);
+    const lines = wrapTextLinesBreakAll(fonts.regular, row.value, bodySize, urlValueW);
     bodyH += measureWrappedHeight(Math.max(1, lines.length), bodySize, 1.28) + 3;
   }
   const blockH = headH + PREMIUM_PDF_HEADER_BODY_GAP_PT + bodyH + 4;
@@ -438,7 +448,7 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
   });
 
   const periodX = x + w - pad - periodBoxW;
-  const periodTop = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT;
+  const periodTop = yTop - headH - PREMIUM_PDF_HEADER_BODY_GAP_PT + SERVICE_PERIOD_BOX_SHIFT_UP_PT;
   cursor.page.drawRectangle({
     x: periodX,
     y: periodTop - periodH,
@@ -486,12 +496,12 @@ function drawServiceSection(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFo
     y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, valueW, bodySize, TEXT_MAIN, 1.28);
     y -= 4;
   }
-  const urlStartY = yTop - headH - periodH - PREMIUM_PDF_HEADER_BODY_GAP_PT - 6;
+  const urlStartY = periodTop - periodH - 6;
   y = Math.min(y, urlStartY);
   for (const row of fullWidthRows) {
     cursor.page.drawText(row.label, { x: x + pad, y, size: bodySize, font: fonts.regular, color: TEXT_MUTED });
     const color = row.link ? brand : TEXT_MAIN;
-    y = drawWrappedText(cursor.page, fonts.regular, row.value, x + pad + labelW, y, innerW - labelW, bodySize, color, 1.28);
+    y = drawWrappedTextBreakAll(cursor.page, fonts.regular, row.value, x + pad + labelW, y, urlValueW, bodySize, color, 1.28);
     y -= 4;
   }
 
@@ -695,7 +705,7 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   const halfW = (PREMIUM_INVOICE_CONTENT_W - halfGap) / 2;
   const twinRowY = cursor.y;
   const termsRows: KvRow[] = [
-    { label: "Verze OP:", value: ctx.terms_version || "—" },
+    { label: "Verze OP:", value: ctx.terms_version || "—", valueBreakAll: true },
     { label: "Účinnost:", value: ctx.terms_effective_at ? formatAdminPragueDateTime(ctx.terms_effective_at) : "—" },
     { label: "Souhlas OP:", value: ctx.authorization_confirmed ? "ano" : "ne" },
     { label: "B2B režim:", value: ctx.b2b_only ? "ano" : "ne" },
@@ -714,25 +724,33 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
     twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(termsRows, fonts, termsInner, 8.5, 86) + 2;
   const approvalH =
     twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(approvalRows, fonts, termsInner, 8.5, 72) + 2;
-  cursor.ensureSpace(Math.max(termsH, approvalH) + PAGE1_SECTION_GAP);
-  cursor.y = twinRowY;
-  drawSectionBox(cursor, fonts, brand, "Obchodní podmínky a souhlasy", termsRows, {
-    x: PREMIUM_INVOICE_MARGIN,
-    w: halfW,
-    bodySize: 8.5,
-    labelW: 86,
-    skipEnsureSpace: true,
-  });
-  const termsBottom = cursor.y;
-  cursor.y = twinRowY;
-  drawSectionBox(cursor, fonts, brand, "Schválení a zveřejnění reklamní služby", approvalRows, {
-    x: PREMIUM_INVOICE_MARGIN + halfW + halfGap,
-    w: halfW,
-    bodySize: 8.5,
-    labelW: 72,
-    skipEnsureSpace: true,
-  });
-  cursor.y = Math.min(termsBottom, cursor.y) - PAGE1_SECTION_GAP;
+  const twinNeedH = Math.max(termsH, approvalH) + PAGE1_SECTION_GAP;
+  let deferredTwinToPage2 = false;
+  if (twinRowY - twinNeedH >= PREMIUM_ORDER_CONFIRMATION_CONTENT_MIN_Y) {
+    const pageIndexBeforeTwin = cursor.pages.length;
+    cursor.ensureSpace(twinNeedH);
+    const twinStartY = cursor.pages.length === pageIndexBeforeTwin ? twinRowY : cursor.y;
+    cursor.y = twinStartY;
+    drawSectionBox(cursor, fonts, brand, "Obchodní podmínky a souhlasy", termsRows, {
+      x: PREMIUM_INVOICE_MARGIN,
+      w: halfW,
+      bodySize: 8.5,
+      labelW: 86,
+      skipEnsureSpace: true,
+    });
+    const termsBottom = cursor.y;
+    cursor.y = twinStartY;
+    drawSectionBox(cursor, fonts, brand, "Schválení a zveřejnění reklamní služby", approvalRows, {
+      x: PREMIUM_INVOICE_MARGIN + halfW + halfGap,
+      w: halfW,
+      bodySize: 8.5,
+      labelW: 72,
+      skipEnsureSpace: true,
+    });
+    cursor.y = Math.min(termsBottom, cursor.y) - PAGE1_SECTION_GAP;
+  } else {
+    deferredTwinToPage2 = true;
+  }
 
   const techRows: KvRow[] = [
     { label: "ID objednávky:", value: ctx.evidence_reference, valueBold: true },
@@ -773,6 +791,31 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   cursor.y = PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN;
 
   drawPage2Header(cursor, fonts, brand, ctx);
+
+  if (deferredTwinToPage2) {
+    const page2TwinY = cursor.y;
+    const pageIndexBeforeTwin = cursor.pages.length;
+    cursor.ensureSpace(twinNeedH);
+    const twinStartY = cursor.pages.length === pageIndexBeforeTwin ? page2TwinY : cursor.y;
+    cursor.y = twinStartY;
+    drawSectionBox(cursor, fonts, brand, "Obchodní podmínky a souhlasy", termsRows, {
+      x: PREMIUM_INVOICE_MARGIN,
+      w: halfW,
+      bodySize: 8.5,
+      labelW: 86,
+      skipEnsureSpace: true,
+    });
+    const termsBottom = cursor.y;
+    cursor.y = twinStartY;
+    drawSectionBox(cursor, fonts, brand, "Schválení a zveřejnění reklamní služby", approvalRows, {
+      x: PREMIUM_INVOICE_MARGIN + halfW + halfGap,
+      w: halfW,
+      bodySize: 8.5,
+      labelW: 72,
+      skipEnsureSpace: true,
+    });
+    cursor.y = Math.min(termsBottom, cursor.y) - PAGE1_SECTION_GAP;
+  }
 
   if (deferredTechRows) {
     drawSectionBox(cursor, fonts, brand, "Technické údaje", deferredTechRows, {
