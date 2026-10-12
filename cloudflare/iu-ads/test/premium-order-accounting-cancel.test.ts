@@ -81,7 +81,7 @@ describe("rejected order document list", () => {
     },
     {
       kind: "order_cancellation",
-      title: "Potvrzení o stornování objednávky",
+      title: "Potvrzení o stornu objednávky",
       subtitle: "",
       status: "ready",
       document_id: "d2",

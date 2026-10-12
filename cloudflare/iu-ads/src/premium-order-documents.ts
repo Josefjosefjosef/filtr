@@ -1029,16 +1029,13 @@ export async function listPremiumOrderDocumentsForAdmin(
   )
     .bind(orderId)
     .first<{ storno_kind: string }>();
-  const cancellationTitle =
-    stornoMeta?.storno_kind === "rejection"
-      ? "Potvrzení o zamítnutí objednávky"
-      : "Potvrzení o stornování objednávky";
+  const cancellationTitle = "Potvrzení o stornu objednávky";
 
   const cards: AdminOrderDocumentCard[] = [];
   const kinds: { kind: PremiumOrderDocKind; title: string; subtitle: string }[] = [
     { kind: "order_confirmation", title: "Potvrzení objednávky", subtitle: "PDF · Automaticky vytvořeno při schválení" },
     { kind: "invoice_pdf", title: "Faktura", subtitle: "PDF · Splatnost 3 kalendářní dny" },
-    { kind: "order_cancellation", title: cancellationTitle, subtitle: "PDF · Storno / zamítnutí" },
+    { kind: "order_cancellation", title: cancellationTitle, subtitle: "PDF · Storno objednávky" },
     { kind: "credit_note_pdf", title: "Dobropis k faktuře", subtitle: "PDF · Opravný účetní doklad" },
   ];
 
@@ -1329,7 +1326,7 @@ async function generateStornoKindDocument(
       docType = PREMIUM_DOC_TYPE_CANCELLATION;
       title =
         storno.storno_kind === "rejection"
-          ? "Potvrzení o zamítnutí " + storno.storno_number
+          ? "Potvrzení o stornu " + storno.storno_number
           : "Storno objednávky " + storno.storno_number;
       linkInvoiceId = storno.invoice_id;
     } else {

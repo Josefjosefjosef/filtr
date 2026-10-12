@@ -94,8 +94,7 @@ describe("premium storno + credit note visual proof", () => {
 
     const stornoDoc = await PDFDocument.load(stornoPdf);
     const creditDoc = await PDFDocument.load(creditPdf);
-    expect(stornoDoc.getPageCount()).toBeGreaterThanOrEqual(1);
-    expect(stornoDoc.getPageCount()).toBeLessThanOrEqual(2);
+    expect(stornoDoc.getPageCount()).toBe(1);
     expect(creditDoc.getPageCount()).toBeGreaterThanOrEqual(1);
     expect(creditDoc.getPageCount()).toBeLessThanOrEqual(2);
 

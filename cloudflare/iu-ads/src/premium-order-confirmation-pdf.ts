@@ -340,7 +340,7 @@ function vatNoticeCs(): string {
 }
 
 function drawPriceBand(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFonts, brand: ReturnType<typeof hexRgb>, ctx: PremiumOrderPdfContext) {
-  const bandH = 38;
+  const bandH = 46;
   cursor.ensureSpace(bandH + PAGE1_SECTION_GAP);
   const x = PREMIUM_INVOICE_MARGIN;
   const w = PREMIUM_INVOICE_CONTENT_W;
@@ -373,11 +373,11 @@ function drawPriceBand(cursor: PremiumInvoicePdfCursor, fonts: PremiumPdfFonts, 
   });
   cursor.page.drawText(vatNoticeCs(), {
     x: x + 12,
-    y: yBottom + 10,
+    y: yBottom + 12,
     size: 8,
     font: fonts.regular,
     color: TEXT_MUTED,
-    maxWidth: w - 24,
+    maxWidth: w - 140,
   });
   cursor.y = yBottom - PAGE1_SECTION_GAP;
   cursor.recordBlock("price_band", yTop, yBottom, x, w);
@@ -711,7 +711,7 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
   const termsInner = halfW - 16;
   const twinHeadH = 10.5 * 1.4 + 3;
   const termsH =
-    twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(termsRows, fonts, termsInner, 8.5, 72) + 2;
+    twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(termsRows, fonts, termsInner, 8.5, 86) + 2;
   const approvalH =
     twinHeadH + PREMIUM_PDF_HEADER_BODY_GAP_PT + measureSectionBody(approvalRows, fonts, termsInner, 8.5, 72) + 2;
   cursor.ensureSpace(Math.max(termsH, approvalH) + PAGE1_SECTION_GAP);
@@ -720,7 +720,7 @@ export async function buildPremiumOrderConfirmationPdfWithLayout(
     x: PREMIUM_INVOICE_MARGIN,
     w: halfW,
     bodySize: 8.5,
-    labelW: 72,
+    labelW: 86,
     skipEnsureSpace: true,
   });
   const termsBottom = cursor.y;

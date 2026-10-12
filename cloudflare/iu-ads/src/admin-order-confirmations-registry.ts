@@ -82,7 +82,7 @@ export async function handleAdminOrderConfirmationsRegistry(
     const kind =
       docType === "premium_order_cancellation" ? "order_cancellation" : "order_confirmation";
     const title =
-      kind === "order_cancellation" ? "Potvrzení o stornování objednávky" : "Potvrzení objednávky";
+      kind === "order_cancellation" ? "Potvrzení o stornu objednávky" : "Potvrzení objednávky";
     const oid = String(row.order_id || "");
     const ver = Number(row.version) || 1;
     const accessBase =

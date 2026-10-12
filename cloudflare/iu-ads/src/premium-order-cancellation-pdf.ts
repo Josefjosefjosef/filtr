@@ -9,11 +9,13 @@ import {
   PREMIUM_INVOICE_FOOTER_Y,
   PREMIUM_INVOICE_MARGIN,
   PREMIUM_INVOICE_PAGE,
+  PREMIUM_PDF_HEADER_BODY_GAP_PT,
   wrapTextLines,
 } from "./premium-invoice-pdf-layout";
 import {
   drawPremiumPdfBrandLogo,
   drawPremiumPdfPartyBox,
+  drawPremiumPdfPriceBodyRow,
   drawPremiumPdfSectionHeader,
   fmtPremiumPdfMoney,
   premiumPdfBrandRgb,
@@ -23,6 +25,7 @@ import {
   PREMIUM_PDF_TEXT_MAIN,
   PREMIUM_PDF_TEXT_MUTED,
 } from "./premium-pdf-party-blocks";
+import { PREMIUM_INVOICE_SUPPLIER } from "./premium-invoice-supplier";
 import { registerPremiumPdfFonts } from "./premium-pdf-font";
 import { formatAdminPragueDateTime } from "./premium-order-workflow";
 import type { PremiumOrderPdfContext } from "./premium-order-pdf-fields";
@@ -44,6 +47,39 @@ export type PremiumOrderCancellationPdfInput = {
   variable_symbol?: string | null;
 };
 
+const VAT_NOTICE_CS =
+  PREMIUM_INVOICE_SUPPLIER.vatPayer
+    ? "Cena je uvedena v režimu plátce DPH."
+    : "Cena je uvedena bez DPH (poskytovatel není plátce DPH).";
+
+function buildStornoConsequenceBullets(input: PremiumOrderCancellationPdfInput): string[] {
+  const bullets: string[] = [];
+  if (input.ad_was_published) {
+    bullets.push("Objednávka byla stornována po zveřejnění reklamy.");
+    bullets.push("Poskytování reklamní služby bylo ukončeno.");
+    if (input.ad_turned_off_at) {
+      bullets.push(
+        "Reklama byla odstraněna z veřejného zobrazení dne " + formatAdminPragueDateTime(input.ad_turned_off_at) + "."
+      );
+    } else if (input.ctx.published_at) {
+      bullets.push("Reklama byla zveřejněna dne " + formatAdminPragueDateTime(input.ctx.published_at) + ".");
+    }
+  } else {
+    bullets.push("Objednávka byla stornována před zveřejněním reklamy.");
+    bullets.push("Reklamní služba nebyla poskytnuta.");
+    bullets.push("Reklama nebyla zveřejněna na webu infoUzel.cz.");
+  }
+  bullets.push(
+    "Reklamní pozice " +
+      input.ctx.position_label +
+      " v kategorii „" +
+      input.ctx.category_title_cs +
+      "“ byla uvolněna pro další objednávky."
+  );
+  bullets.push("Tento dokument slouží jako potvrzení o stornu objednávky.");
+  return bullets;
+}
+
 export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancellationPdfInput): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
   const page = pdf.addPage([PREMIUM_INVOICE_PAGE.w, PREMIUM_INVOICE_PAGE.h]);
@@ -55,8 +91,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   let cursor = new PremiumInvoicePdfCursor(page, pages, pdf, PREMIUM_INVOICE_PAGE.h - PREMIUM_INVOICE_MARGIN, PREMIUM_INVOICE_CONTENT_MIN_Y);
 
   drawPremiumPdfBrandLogo(cursor.page, fonts, PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN, cursor.y + 4);
-  const docTitle =
-    input.storno_kind === "rejection" ? "Potvrzení o zamítnutí objednávky" : "Storno objednávky";
+  const docTitle = "Potvrzení o stornu objednávky";
   cursor.page.drawText(docTitle, {
     x: PREMIUM_INVOICE_MARGIN,
     y: cursor.y,
@@ -65,18 +100,13 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     color: brand,
   });
   cursor.y -= 22;
-  cursor.page.drawText(
-    input.storno_kind === "rejection"
-      ? "— Objednávka nebyla schválena a reklama nebyla zveřejněna"
-      : "— Potvrzení o zrušení objednávky reklamní služby",
-    {
-      x: PREMIUM_INVOICE_MARGIN,
-      y: cursor.y,
-      size: 10,
-      font: fonts.regular,
-      color: brand,
-    }
-  );
+  cursor.page.drawText("— Potvrzení o zrušení objednávky reklamní služby", {
+    x: PREMIUM_INVOICE_MARGIN,
+    y: cursor.y,
+    size: 10,
+    font: fonts.regular,
+    color: brand,
+  });
   cursor.y -= 20;
 
   const boxW = 158;
@@ -116,10 +146,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   }
   cursor.y = metaBottomY;
 
-  const stornoNote =
-    input.storno_kind === "rejection"
-      ? "Objednávka byla zamítnuta."
-      : "Objednávka a reklamní služba byla zrušena.";
+  const stornoNote = "Objednávka byla stornována.";
   const boxInnerW = boxW - 16;
   const boxH = Math.max(52, 34 + measureWrappedHeight(wrapTextLines(fonts.regular, stornoNote, 7.5, boxInnerW).length, 7.5, 1.2));
   const boxY = metaStartY - boxH + 6;
@@ -147,7 +174,6 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     "Webové umístění: " + (input.ctx.ad_web_placement_url || PREMIUM_AD_WEB_PLACEMENT),
     "Cílová URL: " + input.ctx.target_url,
   ];
-  cursor.ensureSpace(90);
   const blockTop = serviceBodyTop;
   let yLeft = blockTop;
   for (const line of serviceLeft) {
@@ -167,11 +193,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
     borderWidth: 0.6,
     color: rgb(0.97, 0.98, 1),
   });
-  const periodTitle = input.ad_was_published
-    ? "Období poskytování (původní)"
-    : input.storno_kind === "rejection"
-      ? "Plánované období (neskutečně poskytnuto)"
-      : "Období poskytování (původní)";
+  const periodTitle = input.ad_was_published ? "Období poskytování (původní)" : "Plánované období (neskutečně poskytnuto)";
   cursor.page.drawText(periodTitle, {
     x: periodX + 8,
     y: periodTop - 14,
@@ -185,7 +207,7 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
       "Od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at),
       "Do: " + formatAdminPragueDateTime(input.ctx.campaign_end_at),
     ];
-  } else if (input.storno_kind === "rejection") {
+  } else if (!input.ad_was_published) {
     periodLines = [];
     if (input.ctx.campaign_start_at && input.ctx.campaign_end_at) {
       periodLines.push("Plánováno od: " + formatAdminPragueDateTime(input.ctx.campaign_start_at));
@@ -210,58 +232,41 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   cursor.y = Math.min(yLeft, yP, periodTop - periodH) - 10;
 
   drawPremiumPdfSectionHeader(cursor, fonts, brand, "Cena reklamní služby (původní objednávka)", PREMIUM_INVOICE_CONTENT_W);
-  const priceY = cursor.y;
-  cursor.page.drawText("Cena je uvedena bez DPH (poskytovatel není plátce DPH).", {
-    x: PREMIUM_INVOICE_MARGIN,
-    y: priceY,
-    size: 8,
-    font: fonts.regular,
-    color: PREMIUM_PDF_TEXT_MUTED,
-  });
-  cursor.page.drawText(fmtPremiumPdfMoney(input.ctx.price_cents, input.ctx.currency), {
-    x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 120,
-    y: priceY - 2,
-    size: 16,
-    font: fonts.bold,
-    color: brand,
-  });
-  cursor.y -= 28;
+  drawPremiumPdfPriceBodyRow(
+    cursor,
+    fonts,
+    brand,
+    VAT_NOTICE_CS,
+    input.ctx.price_cents,
+    input.ctx.currency,
+    PREMIUM_INVOICE_CONTENT_W
+  );
 
-  const statusLeft: string[] = [];
-  if (input.storno_kind === "rejection") {
-    statusLeft.push("Stav: Objednávka zamítnuta");
-    if (input.ctx.order_created_at) {
-      statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
-    }
-    if (input.ctx.order_submitted_at) {
-      statusLeft.push("Odesláno ke schválení: " + formatAdminPragueDateTime(input.ctx.order_submitted_at));
-    }
-    statusLeft.push("Zamítnuto: " + formatAdminPragueDateTime(input.issued_at));
-  } else {
-    statusLeft.push("Stav objednávky:");
-    statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
-    if (input.order_was_approved && input.ctx.approved_at) {
-      statusLeft.push("Schváleno: " + formatAdminPragueDateTime(input.ctx.approved_at));
-    }
-    if (input.ad_was_published && input.ctx.published_at) {
-      statusLeft.push("Zveřejněno: " + formatAdminPragueDateTime(input.ctx.published_at));
-    }
-    if (input.ctx.campaign_end_at) {
-      statusLeft.push("Plánované ukončení služby: " + formatAdminPragueDateTime(input.ctx.campaign_end_at));
-    }
-    if (input.ad_was_published && input.ad_turned_off_at) {
-      statusLeft.push("Reklama vypnuta na webu: " + formatAdminPragueDateTime(input.ad_turned_off_at));
-    }
-    statusLeft.push("Datum storna (doklad): " + formatAdminPragueDateTime(input.issued_at));
+  const statusLeft: string[] = ["Stav: Objednávka stornována"];
+  statusLeft.push("Vytvořeno: " + formatAdminPragueDateTime(input.ctx.order_created_at));
+  if (input.ctx.order_submitted_at) {
+    statusLeft.push("Odesláno ke schválení: " + formatAdminPragueDateTime(input.ctx.order_submitted_at));
   }
+  if (input.order_was_approved && input.ctx.approved_at) {
+    statusLeft.push("Schváleno: " + formatAdminPragueDateTime(input.ctx.approved_at));
+  }
+  if (input.ad_was_published && input.ad_turned_off_at) {
+    statusLeft.push("Reklama vypnuta na webu: " + formatAdminPragueDateTime(input.ad_turned_off_at));
+  }
+  statusLeft.push("Stornováno: " + formatAdminPragueDateTime(input.issued_at));
 
   const statusRight: string[] = ["Související doklady:"];
   statusRight.push("Objednávka: " + input.ctx.evidence_reference);
   if (input.invoice_number) statusRight.push("Faktura: " + input.invoice_number);
   if (input.variable_symbol) statusRight.push("Variabilní symbol: " + input.variable_symbol);
   if (input.credit_note_number) statusRight.push("Dobropis: " + input.credit_note_number);
+  if (input.storno_kind === "cancellation") {
+    statusRight.push("Stav úhrady faktury: " + input.payment_status_label);
+    if (input.storno_amount_cents != null) {
+      statusRight.push("Stornovaná částka: " + fmtPremiumPdfMoney(input.storno_amount_cents, input.ctx.currency));
+    }
+  }
 
-  cursor.ensureSpace(70);
   const stY = cursor.y;
   cursor.page.drawText("Stav objednávky", { x: leftX, y: stY, size: 10, font: fonts.bold, color: brand });
   cursor.page.drawText("Související doklady", { x: rightX, y: stY, size: 10, font: fonts.bold, color: brand });
@@ -277,71 +282,54 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   }
   cursor.y = Math.min(ySL, ySR) - 8;
 
-  drawPremiumPdfSectionHeader(
-    cursor,
-    fonts,
-    brand,
-    input.storno_kind === "rejection" ? "Důvod zamítnutí" : "Důvod storna",
-    PREMIUM_INVOICE_CONTENT_W
-  );
+  drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důvod storna", PREMIUM_INVOICE_CONTENT_W);
   const reasonY = cursor.y;
   cursor.y =
     drawWrappedText(cursor.page, fonts.regular, input.reason, PREMIUM_INVOICE_MARGIN, reasonY, PREMIUM_INVOICE_CONTENT_W, 9.5, PREMIUM_PDF_TEXT_MAIN) - 6;
-  cursor.page.drawText(
-    (input.storno_kind === "rejection" ? "Datum zamítnutí: " : "Datum storna: ") +
-      formatAdminPragueDateTime(input.issued_at),
-    {
-      x: PREMIUM_INVOICE_MARGIN,
-      y: cursor.y,
-      size: 8.5,
-      font: fonts.regular,
-      color: PREMIUM_PDF_TEXT_MAIN,
-    }
-  );
-  cursor.page.drawText(
-    (input.storno_kind === "rejection" ? "Zamítnutí provedl: " : "Storno provedl: ") + input.issuer_display_name,
-    {
-      x: PREMIUM_INVOICE_MARGIN + colW,
-      y: cursor.y,
-      size: 8.5,
-      font: fonts.regular,
-      color: PREMIUM_PDF_TEXT_MAIN,
-    }
-  );
-  cursor.y -= 18;
+  cursor.page.drawText("Datum storna: " + formatAdminPragueDateTime(input.issued_at), {
+    x: PREMIUM_INVOICE_MARGIN,
+    y: cursor.y,
+    size: 8.5,
+    font: fonts.regular,
+    color: PREMIUM_PDF_TEXT_MAIN,
+  });
+  cursor.page.drawText("Storno provedl: " + input.issuer_display_name, {
+    x: PREMIUM_INVOICE_MARGIN + colW,
+    y: cursor.y,
+    size: 8.5,
+    font: fonts.regular,
+    color: PREMIUM_PDF_TEXT_MAIN,
+  });
+  cursor.y -= 10;
 
-  if (input.storno_kind === "rejection") {
-    cursor.ensureSpace(60);
-    drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledek zamítnutí", PREMIUM_INVOICE_CONTENT_W);
-    const rejBullets = [
-      "Objednávka nebyla schválena a reklamní služba nebyla poskytnuta.",
-      "Reklama nebyla zveřejněna na webu infoUzel.cz.",
-      "Tento dokument slouží jako potvrzení o zamítnutí objednávky.",
-    ];
-    for (const b of rejBullets) {
-      cursor.y =
-        drawWrappedText(cursor.page, fonts.regular, "• " + b, PREMIUM_INVOICE_MARGIN + 4, cursor.y, PREMIUM_INVOICE_CONTENT_W - 8, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
-    }
-  } else if (input.storno_kind === "cancellation") {
-    cursor.ensureSpace(95);
-    drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledek storna", PREMIUM_INVOICE_CONTENT_W);
-    const bullets = [
-      "Objednávka je stornována a reklamní služba nebude poskytována.",
-      input.ad_turned_off_at
-        ? "Reklama byla odstraněna z veřejného zobrazení dne " +
-          formatAdminPragueDateTime(input.ad_turned_off_at) +
-          "."
-        : input.ad_was_published
-          ? "Reklamní zobrazení bylo ukončeno dle stavu objednávky (čas vypnutí není v evidenci k dispozici)."
-          : "Reklamní zobrazení nebylo aktivní v době storna.",
-      "Reklamní pozice " + input.ctx.position_label + " v kategorii „" + input.ctx.category_title_cs + "“ byla uvolněna pro další objednávky.",
-      "Tento dokument slouží jako potvrzení o stornování objednávky.",
-      "Stav úhrady faktury: " + input.payment_status_label + (input.storno_amount_cents ? " · Stornovaná částka: " + fmtPremiumPdfMoney(input.storno_amount_cents, input.ctx.currency) : ""),
-    ];
-    for (const b of bullets) {
-      cursor.y = drawWrappedText(cursor.page, fonts.regular, "• " + b, PREMIUM_INVOICE_MARGIN + 4, cursor.y, PREMIUM_INVOICE_CONTENT_W - 8, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
-    }
+  const consequenceBullets = buildStornoConsequenceBullets(input);
+  const consColGap = 8;
+  const consColW = (PREMIUM_INVOICE_CONTENT_W - consColGap) / 2;
+  const consLeftX = PREMIUM_INVOICE_MARGIN + 4;
+  const consRightX = PREMIUM_INVOICE_MARGIN + consColW + consColGap;
+  drawPremiumPdfSectionHeader(cursor, fonts, brand, "Důsledky storna", PREMIUM_INVOICE_CONTENT_W);
+  let consLeftY = cursor.y;
+  let consRightY = cursor.y;
+  for (let i = 0; i < consequenceBullets.length; i++) {
+    const useLeft = i % 2 === 0;
+    const x = useLeft ? consLeftX : consRightX;
+    const colW = consColW - 8;
+    const yStart = useLeft ? consLeftY : consRightY;
+    const nextY = drawWrappedText(
+      cursor.page,
+      fonts.regular,
+      "• " + consequenceBullets[i]!,
+      x,
+      yStart,
+      colW,
+      8,
+      PREMIUM_PDF_TEXT_MAIN,
+      1.22
+    );
+    if (useLeft) consLeftY = nextY - 2;
+    else consRightY = nextY - 2;
   }
+  cursor.y = Math.min(consLeftY, consRightY) - 4;
 
   cursor.ensureSpace(PREMIUM_INVOICE_FOOTER_Y - PREMIUM_INVOICE_CONTENT_MIN_Y + 8);
   const footerPage = cursor.page;
