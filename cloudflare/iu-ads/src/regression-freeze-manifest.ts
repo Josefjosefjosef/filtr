@@ -63,6 +63,7 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/premium-sales-availability.test.ts",
       "test/premium-affiliate-catalog-titles.test.ts",
       "test/collision.test.ts",
+      "test/premium-order-submit-d1.integration.test.ts",
     ],
     guard_scripts: [
       "scripts/iu-premium-selected-services-freeze-guard-v1.mjs",
@@ -84,6 +85,7 @@ export const REGRESSION_FREEZE_AREAS: RegressionFreezeArea[] = [
       "test/premium-order-accounting-cancel.test.ts",
       "test/reservations.test.ts",
       "test/premium-admin-extend-new-order.integration.test.ts",
+      "test/premium-order-submit-d1.integration.test.ts",
     ],
     guard_scripts: ["scripts/iu-premium-public-admin-consistency-guard-v1.mjs"],
     on_deploy_iu_ads: true,
