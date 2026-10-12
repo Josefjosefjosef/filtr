@@ -55,6 +55,12 @@ jobs:
           # shellcheck disable=SC2086
           npm test -- $VITEST_FILES
 
+      - name: Install root deps (freeze guard scripts)
+        run: npm ci --ignore-scripts
+
+      - name: Install Playwright chromium (file-flow / preview guards)
+        run: node node_modules/playwright/cli.js install chromium
+
       - name: Repo freeze guard scripts
         run: |
           set -euo pipefail
