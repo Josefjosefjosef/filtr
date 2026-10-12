@@ -282,4 +282,29 @@ describe("premium test data reset", () => {
     expect(stats3.orders_removed).toBe(0);
     expectNoPremiumOperationalRows(sqlite);
   });
+
+  it("reset clears D1 operational rows even when R2 delete throws", async () => {
+    const sqlite = createIuAdsSchemaDb();
+    seedMinimalCatalog(sqlite);
+    seedRichPublishedOrder(sqlite, "ord_r2fail", "IU-R2");
+    const env = {
+      DB: d1FromSqlite(sqlite),
+      DOCUMENTS: {
+        delete: async () => {
+          throw new Error("r2 unavailable");
+        },
+      },
+      CREATIVES: {
+        delete: async () => {
+          throw new Error("r2 unavailable");
+        },
+      },
+      PREMIUM_DEV_OPERATIONAL_RESET_ENABLED: "1",
+    } as Env;
+
+    const stats = await resetAllPremiumTestOperationalData(env, "adm_test");
+    expect(stats.orders_removed).toBe(1);
+    expectNoPremiumOperationalRows(sqlite);
+    expect(countRow(sqlite, "SELECT COUNT(*) AS c FROM premium_selected_categories")).toBeGreaterThan(0);
+  });
 });
