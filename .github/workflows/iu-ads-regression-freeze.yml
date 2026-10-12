@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  regression-freeze:
+  iu-ads-regression-freeze:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -52,6 +52,7 @@ jobs:
           set -euo pipefail
           eval "$(node --experimental-strip-types scripts/print-regression-freeze-lists.ts | grep '^VITEST_FILES=')"
           test -n "${VITEST_FILES:-}"
+          # shellcheck disable=SC2086
           npm test -- $VITEST_FILES
 
       - name: Repo freeze guard scripts
@@ -61,19 +62,3 @@ jobs:
             test -n "$script"
             node "$script"
           done
-
-      - name: Post status (iu-ads-regression-freeze)
-        if: always()
-        uses: actions/github-script@60a0d83039c774a2a286fca6b3589c8800423b3a # v7.0.1
-        with:
-          script: |
-            const sha = context.payload.pull_request?.head?.sha || context.sha;
-            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha,
-              state,
-              context: 'iu-ads-regression-freeze',
-              description: state === 'success' ? 'Ads regression bundle passed' : 'Ads regression bundle failed',
-            });
