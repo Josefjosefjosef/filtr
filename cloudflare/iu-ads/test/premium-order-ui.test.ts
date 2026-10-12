@@ -29,7 +29,10 @@ describe("premium order UI shell", () => {
     expect(html).toContain("Jméno a příjmení objednávající osoby");
     expect(html).not.toMatch(/<h1>Prémiová reklamní pozice<\/h1>\s*<p class="muted">infoUzel\.cz nesleduje/);
     expect(html).toContain("iuPremiumPreviewGrid--p2");
-    expect(html).toContain("Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.");
+    expect(html).toContain(
+      "Takto bude vaše reklama přibližně vypadat na tomto zařízení. Velikost a proporce reklamní plochy se automaticky přizpůsobují zařízení. Na jiných zařízeních proto může být obrázek zobrazen v odlišném poměru stran a u některých typů kreativ může dojít k oříznutí jeho okrajů. Důležité prvky, zejména texty a loga, doporučujeme umístit do středové části tlačítka.",
+    );
+    expect(html).not.toContain("Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.");
     expect(html).toContain("invalid_ico_checksum");
     expect(html).toContain("Zadané IČO není platné");
     expect(html).not.toContain('err.textContent=(j1&&j1.error)');

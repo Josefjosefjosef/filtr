@@ -39,7 +39,16 @@ ok("b2b_plain_cs", /Reklamní služba je určena výhradně podnikatelům a firm
 ok("phone_required_label", /Telefon \*/.test(orderUi));
 ok("phone_required_attr", /id="phone"[^>]*required/.test(orderUi.replace(/\s+/g, " ")));
 ok("cancel_button", /id="cancel_btn"/.test(orderUi) && /Zrušit a zavřít/.test(orderUi));
-ok("preview_hint_device", /Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení/.test(orderUi));
+ok(
+  "preview_hint_device",
+  /Takto bude vaše reklama přibližně vypadat na tomto zařízení\. Velikost a proporce reklamní plochy se automaticky přizpůsobují zařízení\./.test(
+    orderUi,
+  ),
+);
+ok(
+  "preview_hint_no_legacy",
+  !/Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení/.test(orderUi),
+);
 ok("preview_position_grid", /iuPremiumPreviewGrid--p/.test(orderUi));
 ok("no_preview_fullwidth_hack", !/previewWrap[\s\S]*\.iuPremiumSlot\{[^}]*width:100%/.test(liveSlot.replace(/\n/g, "")) || /justify-self:stretch/.test(liveSlot));
 ok("preview_grid_centered_slot", /iuPremiumPreviewGrid[\s\S]*justify-content:center/.test(liveSlot));
