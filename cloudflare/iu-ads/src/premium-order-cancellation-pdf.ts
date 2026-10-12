@@ -331,8 +331,15 @@ export async function buildPremiumOrderCancellationPdf(input: PremiumOrderCancel
   }
   cursor.y = Math.min(consLeftY, consRightY) - 4;
 
-  cursor.ensureSpace(PREMIUM_INVOICE_FOOTER_Y - PREMIUM_INVOICE_CONTENT_MIN_Y + 8);
-  const footerPage = cursor.page;
+  const contentEndPage = cursor.page;
+  const contentEndPageIndex = cursor.pages.indexOf(contentEndPage);
+  if (cursor.pages.length === 2 && contentEndPageIndex === 0) {
+    pdf.removePage(1);
+    cursor.pages.pop();
+    cursor.page = cursor.pages[0]!;
+  }
+
+  const footerPage = contentEndPageIndex === 0 ? cursor.pages[0]! : cursor.page;
   const footerText =
     "Tento dokument byl automaticky vytvořen administrátorským systémem infoUzel.cz. Všechny uvedené údaje jsou v místním čase České republiky (Praha).";
   const footerTextW = PREMIUM_INVOICE_CONTENT_W - 120;
