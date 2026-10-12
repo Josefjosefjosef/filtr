@@ -1,0 +1,84 @@
+# Deterministic InfoUzel Ads regression bundle. Job iu-ads-regression-freeze runs on every PR;
+# full bundle only when diff touches ads freeze scope (see scripts/iu-ads-regression-freeze-scope.mjs).
+name: IU Ads regression freeze
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+concurrency:
+  group: iu-ads-regression-freeze-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  iu-ads-regression-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 64
+
+      - name: Detect ads freeze scope
+        id: scope
+        env:
+          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+        run: node scripts/iu-ads-regression-freeze-scope.mjs
+
+      - name: Out of scope (required check ack)
+        if: steps.scope.outputs.run_bundle != 'true'
+        run: |
+          set -euo pipefail
+          echo "IU_ADS_REGRESSION_FREEZE_SKIP=OUT_OF_SCOPE"
+          echo "IU_ADS_REGRESSION_FREEZE_PASS=YES"
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        if: steps.scope.outputs.run_bundle == 'true'
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
+      - name: Install (iu-ads)
+        if: steps.scope.outputs.run_bundle == 'true'
+        working-directory: cloudflare/iu-ads
+        run: npm ci
+
+      - name: Manifest contract
+        if: steps.scope.outputs.run_bundle == 'true'
+        working-directory: cloudflare/iu-ads
+        run: npm test -- test/regression-freeze-manifest.test.ts
+
+      - name: Vitest regression bundle
+        if: steps.scope.outputs.run_bundle == 'true'
+        working-directory: cloudflare/iu-ads
+        run: |
+          set -euo pipefail
+          eval "$(node --experimental-strip-types scripts/print-regression-freeze-lists.ts | grep '^export VITEST_FILES=')"
+          test -n "${VITEST_FILES:-}"
+          # shellcheck disable=SC2086
+          npm test -- $VITEST_FILES
+
+      - name: Install root deps (freeze guard scripts)
+        if: steps.scope.outputs.run_bundle == 'true'
+        run: npm ci --ignore-scripts
+
+      - name: Install Playwright chromium (file-flow / preview guards)
+        if: steps.scope.outputs.run_bundle == 'true'
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Repo freeze guard scripts
+        if: steps.scope.outputs.run_bundle == 'true'
+        run: |
+          set -euo pipefail
+          node --experimental-strip-types cloudflare/iu-ads/scripts/print-regression-freeze-lists.ts | grep '^GUARD_SCRIPT=' | sed 's/^GUARD_SCRIPT=//' | while IFS= read -r script; do
+            test -n "$script"
+            node "$script"
+          done
