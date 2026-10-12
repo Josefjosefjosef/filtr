@@ -1213,6 +1213,15 @@ body.iu-theme-dark .iuDataMgmtConfirm__btn--ghost{
   color: #b42318;
   font-size: 0.88rem;
 }
+.iuInfoCenter__btnRow{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0.75rem 0 1rem;
+}
+.iuInfoCenter__btnRow .iuInfoCenter__btn{
+  width: 100%;
+}
 .iuInfoCenter__btn,
 .iuVaultLockOverlay__panel .iuInfoCenter__btn{
   appearance: none;

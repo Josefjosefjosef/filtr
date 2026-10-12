@@ -36,7 +36,8 @@ const SNIPPET = `(function iuPwaReturnDiag(){
 async function main() {
   console.log("=== PWA external return — device verification ===");
   console.log("");
-  console.log("Expected build id: pwa-external-return-unified-v5-20261011");
+  console.log("Expected build id: pwa-external-return-unified-v6-20261013-icentrum-diag");
+  console.log("Preferred enable: iCentrum → Diagnostika PWA (7× logo still works on desktop).");
   console.log("Installed PWA (same origin, no Safari tab):");
   console.log("  A) 7× tap logo infoUzel.cz (a.iuBrand) within 4 s → panel + trace ON");
   console.log("  B) In-PWA navigation to hash #iu-pwa-return-diag-enable (e.g. internal link / bookmark in PWA)");

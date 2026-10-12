@@ -6940,7 +6940,8 @@ require-trusted-types-for 'script';
     })();
     </script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="crash-shield" data-iu-src="/assets/app-crash-shield.js?v=perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v5-20261011"></script>
+    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v6-20261013-icentrum-diag"></script>
+    <script defer src="/assets/iu-pwa-return-recorder-v1.js?v=pwa-return-recorder-v1-20261013-icentrum-diag"></script>
     <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
     <script>
     (function(){
@@ -8198,8 +8199,37 @@ require-trusted-types-for 'script';
                 <span class="iuInfoCenter__tileLabel">Provozovatel a kontakt</span>
                 <span class="iuInfoCenter__tileHint">Identifikační údaje provozovatele, kontakt, ochrana soukromí a bezpečnostní hlášení.</span>
               </button>
+              <button type="button" class="iuInfoCenter__tile" data-iu-info-section="pwa-diag">
+                <span class="iuInfoCenter__tileIcon" aria-hidden="true">🩺</span>
+                <span class="iuInfoCenter__tileLabel">Diagnostika PWA</span>
+                <span class="iuInfoCenter__tileHint">Lokální záznam průběhu návratu z externí stránky (bez odesílání dat). Pomáhá při řešení chyb v instalované aplikaci.</span>
+              </button>
             </nav>
           </div>
+
+          <article id="iuInfoCenterDetailPwaDiag" class="iuInfoCenter__detail" data-iu-info-section="pwa-diag" hidden>
+            <div class="iuInfoCenter__detailInner">
+              <p class="iuInfoCenter__lead">Diagnostika zaznamenává pouze technický průběh zobrazení a navigace v tomto zařízení. Neukládá obsah poznámek, úkolů, kalendáře, hesel ani citlivé parametry odkazů. Nic se neodesílá na server.</p>
+              <p class="iuInfoCenter__p">Verze aplikace: <strong data-iu-pwa-diag-version>—</strong></p>
+              <p class="iuInfoCenter__p" aria-live="polite">Stav: <strong data-iu-pwa-diag-state data-recording="0">Záznam vypnutý</strong></p>
+              <div class="iuInfoCenter__btnRow" role="group" aria-label="Ovládání diagnostického záznamu">
+                <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--primary" id="iuPwaDiagStartBtn">Spustit záznam</button>
+                <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuPwaDiagStopBtn">Zastavit záznam</button>
+                <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--secondary" id="iuPwaDiagCopyBtn">Kopírovat záznam</button>
+                <button type="button" class="iuInfoCenter__btn iuInfoCenter__btn--danger" id="iuPwaDiagClearBtn">Smazat diagnostický záznam</button>
+              </div>
+              <p class="iuInfoCenter__p iuInfoCenter__meta" id="iuPwaDiagCopyStatus" hidden role="status">Zkopírováno.</p>
+              <div class="iuInfoCenter__box" role="note">
+                <strong>Postup pro telefon</strong>
+                <ol class="iuInfoCenter__steps">
+                  <li>Spusťte záznam a zavřete toto okno (záznam pokračuje).</li>
+                  <li>Menu → Cestovní kanceláře → Resistance → externí stránka → Hotovo.</li>
+                  <li>Počkejte 5 s, znovu otevřete iCentrum → Diagnostika PWA → Zastavit → Kopírovat.</li>
+                </ol>
+              </div>
+              <footer class="iuInfoCenter__meta">Zavření panelu nezastaví probíhající záznam.</footer>
+            </div>
+          </article>
 
           <article id="iuInfoCenterDetailPwa" class="iuInfoCenter__detail" data-iu-info-section="pwa" data-iu-info-view="pwa" hidden>
             <div class="iuInfoCenter__detailInner">
