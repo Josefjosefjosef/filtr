@@ -50,7 +50,7 @@ jobs:
         working-directory: cloudflare/iu-ads
         run: |
           set -euo pipefail
-          eval "$(node --experimental-strip-types scripts/print-regression-freeze-lists.ts | grep '^VITEST_FILES=')"
+          eval "$(node --experimental-strip-types scripts/print-regression-freeze-lists.ts | grep '^export VITEST_FILES=')"
           test -n "${VITEST_FILES:-}"
           # shellcheck disable=SC2086
           npm test -- $VITEST_FILES
