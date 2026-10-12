@@ -142,7 +142,7 @@ ${keyTerms}
 <input type="hidden" id="creative_mode" name="creative_mode" value="logo"/>
 <div class="previewBlock">
 <h2 class="summary-h">Náhled reklamní pozice</h2>
-<p class="previewHint muted">Takto bude vaše reklama vypadat v prémiové pozici na tomto zařízení.</p>
+<p class="previewHint muted">Takto bude vaše reklama přibližně vypadat na tomto zařízení. Velikost a proporce reklamní plochy se automaticky přizpůsobují zařízení. Na jiných zařízeních proto může být obrázek zobrazen v odlišném poměru stran a u některých typů kreativ může dojít k oříznutí jeho okrajů. Důležité prvky, zejména texty a loga, doporučujeme umístit do středové části tlačítka.</p>
 <div class="previewWrap" id="iuAffiliateView">
 <div class="iuJRGrid iuPremiumGrid iuPremiumPreviewGrid ${previewPosClass}">
 <a id="previewSlot" class="iuPremiumSlot iuPremiumSlot--sold iuPremiumSlot--logo" href="#" tabindex="-1" aria-hidden="true"></a>
