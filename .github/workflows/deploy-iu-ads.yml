@@ -97,6 +97,30 @@ jobs:
           path: ${{ runner.temp }}/iu-order-confirmation-visual/
           if-no-files-found: error
 
+      - name: Premium PDF seven-scenario visual suite (PNG artifact)
+        env:
+          IU_PDF_VISUAL_SUITE_OUT: ${{ runner.temp }}/iu-pdf-visual-suite
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_PDF_VISUAL_SUITE_OUT"
+          IU_PDF_VISUAL_SUITE_OUT="$IU_PDF_VISUAL_SUITE_OUT" npm test -- test/premium-pdf-seven-scenarios-visual.test.ts
+          test -s "$IU_PDF_VISUAL_SUITE_OUT/visual-suite-report.json"
+          test -s "$IU_PDF_VISUAL_SUITE_OUT/04-storno-after-publish.pdf"
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+          for pdf in "$IU_PDF_VISUAL_SUITE_OUT"/*.pdf; do
+            base="${pdf%.pdf}"
+            pdftoppm -png -r 150 "$pdf" "$base"
+          done
+          test -n "$(find "$IU_PDF_VISUAL_SUITE_OUT" -name '*.png' -size +500c | head -1)"
+
+      - name: Upload premium PDF seven-scenario visual artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.6.0
+        with:
+          name: premium-pdf-seven-scenario-deploy-${{ github.run_id }}
+          path: ${{ runner.temp }}/iu-pdf-visual-suite/
+          if-no-files-found: error
+
       - name: Premium storno + credit note PDF visual proof
         env:
           IU_STORNO_CREDIT_VISUAL_OUT: ${{ runner.temp }}/iu-storno-credit-visual

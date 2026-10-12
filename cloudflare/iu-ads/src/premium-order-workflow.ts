@@ -55,7 +55,7 @@ export function premiumWorkflowStatusLabelCs(
     case "published":
       return "Schváleno a zveřejněno";
     case "rejected":
-      return "Zamítnuto";
+      return "Stornováno";
     case "cancelled":
       return "Stornováno (účetně)";
     default:

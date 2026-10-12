@@ -439,7 +439,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     var ws=ord.workflow_status||"";
     var payPart=ord.invoice_issued?premiumInvoicePaymentBadgeHtml(ord,false):premiumPaymentStatusSpan(ord);
     if(ws==="rejected"){
-      return '<p class="detail-status-line"><span class="order-status order-status--rejected">Zamítnuto</span> – '+payPart+"</p>";
+      return '<p class="detail-status-line"><span class="order-status order-status--rejected">Stornováno</span> – '+payPart+"</p>";
     }
     if(ord.is_ad_turned_off){
       return '<p class="detail-status-line"><span class="order-status order-status--turned-off">Reklama vypnuta</span> '+payPart+"</p>";
@@ -915,7 +915,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(rc&&rc.detail){
       var inv=rc.detail.invoice;
       var remain=rc.detail.invoice_accounting?Number(rc.detail.invoice_accounting.remaining_correctable_cents||inv.total_cents):Number(inv.total_cents);
-      h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Dobropis u zamítnuté objednávky</h3>'+
+      h+='<div class="modal-backdrop" role="dialog" aria-modal="true"><div class="modal-card modal-wide"><h3>Dobropis u stornované objednávky</h3>'+
         '<p>Faktura '+esc(inv.invoice_number)+' · max. '+esc(formatKc(remain))+'</p>'+
         '<p><label>Částka ke stornování (Kč)<input id="rc-storno" type="text" inputmode="decimal" value="'+esc(rc.form.storno_kc||"")+'"></label></p>'+
         '<p><label>Důvod<textarea id="rc-reason" rows="3">'+esc(rc.form.reason||"")+'</textarea></label></p>'+
@@ -1090,14 +1090,14 @@ export const ADMIN_UI_SCRIPT = String.raw`
         if(!id) return;
         var row=rowsById[id]||{};
         var ref=row.customer_order_code||row.order_number||id;
-        var reason=window.prompt("Opravdu zamítnout objednávku "+ref+"?\n\nDůvod zamítnutí (povinný):","");
+        var reason=window.prompt("Opravdu stornovat objednávku "+ref+"?\n\nDůvod storna (povinný):","");
         if(reason===null) return;
-        if(!String(reason).trim()){ state.flash="Zadejte důvod zamítnutí."; render(); return; }
+        if(!String(reason).trim()){ state.flash="Zadejte důvod storna."; render(); return; }
         var r=await api("/v1/admin/premium/orders/"+encodeURIComponent(id)+"/reject",{method:"POST",body:JSON.stringify({reason:String(reason).trim()})});
         if(r.res.ok){
           state.flash=r.body&&r.body.accounting_invoice_settlement_required?
-            "Objednávka zamítnuta. Existuje faktura — dobropis vystavte explicitně tlačítkem „Vystavit dobropis“.":
-            "Objednávka zamítnuta.";
+            "Objednávka stornována. Existuje faktura — dobropis vystavte explicitně tlačítkem „Vystavit dobropis“.":
+            "Objednávka stornována.";
         } else {
           state.flash=(r.body&&r.body.message_cs)?r.body.message_cs:("Chyba: "+apiError(r.body));
         }
@@ -1393,7 +1393,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     if(!docs.length){
       var ws=body.order&&body.order.workflow_status;
       var emptyMsg=(ws==="rejected"||ws==="cancelled")
-        ? "Dokumenty ke stornu nebo zamítnutí se dokončují — obnovte detail za chvíli, případně použijte dokončení PDF v administraci."
+        ? "Dokumenty ke stornu se dokončují — obnovte detail za chvíli, případně použijte dokončení PDF v administraci."
         : "Dokumenty vzniknou po schválení a zveřejnění reklamy.";
       return '<div class="card order-docs-card"><div class="order-docs-head"><h3>Dokumenty objednávky</h3></div>'+chainHint+'<p class="muted">'+esc(emptyMsg)+'</p></div>';
     }
@@ -1629,7 +1629,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
         ["ad_turned_off","Vypnuto administrátorem"],
         ["paused","Pozastaveno"],
         ["ended","Ukončeno"],
-        ["rejected","Zamítnuto"]
+        ["rejected","Stornováno"]
       ],f.filter||"")+
       sel("premium-filter-payment","Platba",[["","Vše"],["unpaid","Neuhrazeno"],["paid","Uhrazeno"]],f.payment||"")+
       sel("premium-filter-ending","Konec do",[
@@ -2372,7 +2372,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
             ["ad_turned_off","Vypnuto administrátorem"],
             ["paused","Pozastaveno"],
             ["ended","Ukončeno"],
-            ["rejected","Zamítnuto"]
+            ["rejected","Stornováno"]
           ],sf.filter||"")+
           sel("search-filter-payment","Platba",[["","Vše"],["unpaid","Neuhrazeno"],["paid","Uhrazeno"]],sf.payment||"")+
           sel("search-filter-ending","Konec do",[["","—"],["30","30 dnů"],["14","14 dnů"],["7","7 dnů"]],sf.ending_days||"")+

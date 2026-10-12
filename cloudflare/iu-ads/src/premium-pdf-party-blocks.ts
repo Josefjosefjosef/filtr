@@ -169,9 +169,40 @@ export function drawPremiumPdfSectionHeader(
   cursor.y = yTop - h - PREMIUM_PDF_HEADER_BODY_GAP_PT;
 }
 
+/** Price body under a section header: VAT notice (left) and amount (right), without overlapping the header band. */
+export function drawPremiumPdfPriceBodyRow(
+  cursor: PremiumInvoicePdfCursor,
+  fonts: PremiumPdfFonts,
+  brand: ReturnType<typeof premiumPdfBrandRgb>,
+  vatNotice: string,
+  priceCents: number,
+  currency: string,
+  fullWidth: number
+): void {
+  const x = PREMIUM_INVOICE_MARGIN;
+  const amountSize = 16;
+  const amount = fmtPremiumPdfMoney(priceCents, currency);
+  const amountW = fonts.bold.widthOfTextAtSize(amount, amountSize);
+  const vatMaxW = Math.max(120, fullWidth - amountW - 36);
+  const vatLines = wrapTextLines(fonts.regular, vatNotice, 8, vatMaxW);
+  const vatBlockH = measureWrappedHeight(Math.max(1, vatLines.length), 8, 1.28);
+  const rowH = Math.max(22, vatBlockH + 4);
+  cursor.ensureSpace(rowH + 6);
+  const yTop = cursor.y;
+  drawWrappedText(cursor.page, fonts.regular, vatNotice, x, yTop, vatMaxW, 8, PREMIUM_PDF_TEXT_MUTED, 1.28);
+  cursor.page.drawText(amount, {
+    x: x + fullWidth - amountW,
+    y: yTop - 2,
+    size: amountSize,
+    font: fonts.bold,
+    color: brand,
+  });
+  cursor.y = yTop - rowH - 6;
+}
+
 export function fmtPremiumPdfMoney(cents: number, currency: string): string {
   const major = cents / 100;
   const formatted = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(major);
-  if (cents < 0) return "− " + formatted.replace(/^-/, "") + " " + currency;
+  if (cents < 0) return "- " + formatted.replace(/^-/, "") + " " + currency;
   return formatted + " " + currency;
 }

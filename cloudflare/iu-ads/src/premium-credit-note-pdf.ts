@@ -210,8 +210,15 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     font: fonts.bold,
     color: brand,
   });
-  cursor.y = tableTop - tableH - 8;
+  cursor.y = tableTop - tableH - 10;
 
+  const totalY = cursor.y;
+  cursor.page.drawLine({
+    start: { x: leftX, y: totalY + 6 },
+    end: { x: leftX + PREMIUM_INVOICE_CONTENT_W, y: totalY + 6 },
+    thickness: 0.6,
+    color: PREMIUM_PDF_LINE_GRAY,
+  });
   cursor.page.drawText("CELKOVÁ OPRAVA", { x: leftX, y: cursor.y, size: 10, font: fonts.bold, color: brand });
   cursor.page.drawText(fmtPremiumPdfMoney(input.correction_cents, input.currency), {
     x: PREMIUM_INVOICE_PAGE.w - PREMIUM_INVOICE_MARGIN - 90,
@@ -247,7 +254,7 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     input.amount_paid_cents > 0
       ? "Skutečně přijatá úhrada: " + fmtPremiumPdfMoney(input.amount_paid_cents, input.currency)
       : "Přijatá úhrada nebyla evidována (0 Kč).",
-    "Způsob vypořádání: dle dohody (nutno ověřit).",
+    "Způsob finančního vypořádání není v tomto dokladu automaticky evidován — vyřiďte jej mimo systém dle skutečné situace.",
     "Zbývající cena služby po opravě: " + fmtPremiumPdfMoney(input.new_total_cents, input.currency),
   ];
   if ((input.remaining_due_cents ?? 0) > 0) {
@@ -261,9 +268,9 @@ export async function buildPremiumCreditNotePdf(input: PremiumCreditNotePdfInput
     yFinL = drawWrappedText(cursor.page, fonts.regular, line, leftX, yFinL, colW, 8.5, PREMIUM_PDF_TEXT_MAIN, 1.28) - 2;
   }
   const accLines = [
-    "Datum zaúčtování: dle interní účetní evidence",
-    "Odpovědná osoba: dle podpisového záznamu v účetním systému",
-    "Podpisové záznamy jsou vedeny v prokazatelně propojené účetní evidenci.",
+    "Datum zaúčtování: uvedeno v interním účetním systému mimo tento PDF doklad.",
+    "Odpovědná osoba: dle interního postupu provozovatele.",
+    "Tento dobropis je propojen s původní fakturou " + input.invoice_number + " a objednávkou " + input.ctx.evidence_reference + ".",
   ];
   for (const line of accLines) {
     yFinR = drawWrappedText(cursor.page, fonts.regular, line, rightX, yFinR, colW, 8.5, PREMIUM_PDF_TEXT_MUTED, 1.28) - 2;

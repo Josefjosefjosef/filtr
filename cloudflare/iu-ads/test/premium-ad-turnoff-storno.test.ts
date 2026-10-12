@@ -109,8 +109,7 @@ describe("storno PDF generators", () => {
       variable_symbol: "20261648",
     });
     const doc = await PDFDocument.load(pdf);
-    expect(doc.getPageCount()).toBeGreaterThanOrEqual(1);
-    expect(doc.getPageCount()).toBeLessThanOrEqual(2);
+    expect(doc.getPageCount()).toBe(1);
   });
 
   it("builds credit note PDF", async () => {
