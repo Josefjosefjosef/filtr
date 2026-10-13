@@ -34,6 +34,9 @@ function staticGate() {
   must(html.includes("iu-pwa-return-recorder-v1.js"), "static:script_tag");
   must(/window\.iuPwaReturnRecorder\s*=/.test(rec), "static:recorder_api");
   must(/iu:pwa-return-recorder-log:v1/.test(rec), "static:log_key");
+  must(/pwa-return-recorder-v2-20261013-session-flags/.test(rec), "static:recorder_build_id");
+  must(/mmArmed:/.test(rec), "static:session_mmArmed_field");
+  must(html.includes("pwa-return-recorder-v2-20261013-session-flags"), "static:recorder_cache_bust");
 }
 
 function startServer() {
@@ -130,9 +133,19 @@ async function runUiGate(page) {
 
   const exportOk = await page.evaluate(() => {
     const txt = window.iuPwaReturnRecorder.exportText();
-    return typeof txt === "string" && txt.length > 40 && txt.indexOf("recorder:start") >= 0;
+    let parsed = null;
+    try {
+      parsed = JSON.parse(txt);
+    } catch (_) {}
+    return {
+      ok: typeof txt === "string" && txt.length > 40 && txt.indexOf("recorder:start") >= 0,
+      recorderBuildId: parsed && parsed.recorderBuildId,
+      hasSessionMmArmed: txt.indexOf('"mmArmed"') >= 0,
+    };
   });
-  must(exportOk, "ui:export_has_entries");
+  must(exportOk.ok === true, "ui:export_has_entries");
+  must(exportOk.recorderBuildId === "pwa-return-recorder-v2-20261013-session-flags", "ui:export_recorder_build");
+  must(exportOk.hasSessionMmArmed === true, "ui:export_session_mmArmed");
 
   await page.locator("#iuPwaDiagClearBtn").click();
   const cleared = await page.evaluate(() => {

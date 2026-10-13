@@ -5,9 +5,11 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v2-20261013-session-flags";
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
   var PAGE_SID_KEY = "iu:pwa-return-recorder-page-sid:v1";
+  var SECTION_OPEN_T0_KEY = "iu:pwa-recorder-section-open-t0:v1";
   var MAX_ENTRIES = 220;
   var MAX_JSON_CHARS = 480000;
   var pageSid = "";
@@ -203,18 +205,35 @@
     }
   }
 
+  function readLastReloadReason() {
+    try {
+      var raw = sessionStorage.getItem("iu:pwa:ver:last-reload-reason") || "";
+      if (!raw) return null;
+      var o = safeJsonParse(raw);
+      return o && typeof o === "object" ? o : { reason: raw };
+    } catch (_) {
+      return null;
+    }
+  }
+
   function onDocumentBoot() {
     markPageSid();
     if (!isRecording()) return;
+    var reloadMeta = readLastReloadReason();
     appendEntry(
       "document:boot",
       {
         navType: navigationEntryType(),
         sameTabSession: true,
         appVersion: appVersionLabel(),
+        recorderBuildId: RECORDER_BUILD_ID,
+        reloadReason: reloadMeta,
       },
       "boot"
     );
+    try {
+      sessionStorage.removeItem("iu:pwa:ver:last-reload-reason");
+    } catch (_) {}
   }
 
   function startRecording() {
@@ -267,6 +286,7 @@
       recording: isRecording(),
       appVersion: appVersionLabel(),
       pwaReturnBuildId: window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId,
+      recorderBuildId: RECORDER_BUILD_ID,
       pageSid: pageSid,
       log: store,
     };
@@ -475,6 +495,7 @@
       "iuMobileWebNavArmForExternalFromMenu",
       "iuMobileWebNavSyncFromHistory",
       "iuMindMenuSyncGateFromHistory",
+      "iuApplySectionFromURL",
     ].forEach(function (name) {
       wrapFn(name, "fn:" + name);
     });
@@ -489,6 +510,7 @@
         "iuMobileWebNavArmForExternalFromMenu",
         "iuMobileWebNavSyncFromHistory",
         "iuMindMenuSyncGateFromHistory",
+        "iuApplySectionFromURL",
       ].forEach(function (name) {
         wrapFn(name, "fn:" + name);
       });
@@ -534,7 +556,7 @@
       try {
         bid = window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId ? String(window.iuNetwork.pwaExternalReturnBuildId) : "";
       } catch (_) {}
-      ver.textContent = bid || appVersionLabel();
+      ver.textContent = (bid ? bid + " · " : "") + RECORDER_BUILD_ID;
     }
     if (state) {
       state.textContent = isRecording() ? "Záznam probíhá" : "Záznam vypnutý";
