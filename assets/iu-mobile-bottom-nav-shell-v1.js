@@ -293,7 +293,11 @@
       /* Always setTab("tools") when boot/guard live — even if pin already wrote tools. */
       if (
         document.documentElement.classList.contains("iu-mm-return-boot") ||
-        (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard())
+        (typeof window.iuMindMenuShouldPinToolsOnGateInit === "function" &&
+          window.iuMindMenuShouldPinToolsOnGateInit()) ||
+        (typeof window.iuMindMenuShouldPinToolsOnGateInit !== "function" &&
+          typeof window.iuMindMenuHasReturnGuard === "function" &&
+          window.iuMindMenuHasReturnGuard())
       ) {
         setTab("tools");
       }

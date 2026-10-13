@@ -180,7 +180,8 @@ async function runScenarioMindMenu(page) {
 
 async function main() {
   const root = await fetchText(ORIGIN + "/");
-  const tokenV5 = root.text.includes("pwa-external-return-unified-v7-20261013-hub-section-return");
+  const expectedBuild = "pwa-external-return-unified-v8-20261013-hub-latch-gate";
+  const tokenV5 = root.text.includes(expectedBuild);
   const netMatch = root.text.match(/iu-network-connectivity-v1\.js\?v=([^"']+)/);
   const netUrl = netMatch
     ? new URL("/assets/iu-network-connectivity-v1.js?v=" + netMatch[1], ORIGIN).href
@@ -251,7 +252,7 @@ async function main() {
     mobile.menu.pass &&
     mobile.mind &&
     mobile.mind.pass;
-  const delPass = tokenV5 && buildMatch && buildMatch[1].includes("v5-20261011");
+  const delPass = tokenV5 && buildMatch && buildMatch[1] === expectedBuild;
   console.log("IU_PWA_PROD_DELIVERY_PASS=" + delPass);
   console.log("IU_PWA_PROD_RETURN_SCENARIOS_PASS=" + behPass);
   if (!delPass || !behPass) process.exitCode = 1;
