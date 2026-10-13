@@ -14,7 +14,7 @@
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
   var EXTERNAL_RETURN_SETTLE_MS = 1600;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v5-20261011";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v6-20261013-icentrum-diag";
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -283,6 +283,11 @@
       try {
         if (localStorage.getItem(PWA_RETURN_TRACE_LS) === "1") {
           refreshExternalReturnDiagPanel();
+        }
+      } catch (_) {}
+      try {
+        if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestTrace === "function") {
+          window.iuPwaReturnRecorder.ingestTrace(String(tag || ""), entry.detail);
         }
       } catch (_) {}
     } catch (_) {}

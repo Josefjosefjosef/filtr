@@ -19,7 +19,8 @@
     "data-sources": "Zdroje dat",
     stats: "Statistiky a transparentnost",
     "gdpr-vop": "GDPR a Všeobecné obchodní podmínky",
-    contact: "Provozovatel a kontakt"
+    contact: "Provozovatel a kontakt",
+    "pwa-diag": "Diagnostika PWA"
   };
 
   var DOC_VERSION = "2.0";
@@ -232,6 +233,16 @@
       if (currentSection === "gdpr-vop") {
         var gdprPanel = document.getElementById("iuInfoCenterDetailGdprVop");
         if (gdprPanel) ensureGdprVopMounted(gdprPanel);
+      }
+      if (currentSection === "pwa-diag") {
+        try {
+          if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.bindIcentrumPanel === "function") {
+            window.iuPwaReturnRecorder.bindIcentrumPanel();
+          }
+          if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.refreshIcentrumPanel === "function") {
+            window.iuPwaReturnRecorder.refreshIcentrumPanel();
+          }
+        } catch (_) {}
       }
     }
 

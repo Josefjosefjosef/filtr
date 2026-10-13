@@ -69,7 +69,10 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v5-20261011/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v6-20261013-icentrum-diag/.test(net), "static:pwa_build_id");
+  must(/Diagnostika PWA/.test(read("projects/index.html")), "static:icentrum_pwa_diag_tile");
+  must(/iu-pwa-return-recorder-v1\.js/.test(read("projects/index.html")), "static:recorder_script_tag");
+  must(/iuPwaReturnRecorder/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export");
   must(/cancelExternalReturnRestore/.test(net), "static:cancel_external_return");
   must(/enableExternalReturnDiagPanel/.test(net), "static:diag_enable_api");
   must(/iu-pwa-return-diag-enable/.test(net), "static:diag_hash_route");
