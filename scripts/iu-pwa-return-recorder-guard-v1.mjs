@@ -34,6 +34,11 @@ function staticGate() {
   must(html.includes("iu-pwa-return-recorder-v1.js"), "static:script_tag");
   must(/window\.iuPwaReturnRecorder\s*=/.test(rec), "static:recorder_api");
   must(/iu:pwa-return-recorder-log:v1/.test(rec), "static:log_key");
+  must(/pwa-return-recorder-v3-20261013-display-nav-proof/.test(rec), "static:recorder_build_id");
+  must(/mmArmed:/.test(rec), "static:session_mmArmed_field");
+  must(/visualLayerSnapshot/.test(rec), "static:display_snapshot");
+  must(/tabSessionSid/.test(rec), "static:tab_session_sid");
+  must(html.includes("pwa-return-recorder-v3-20261013-display-nav-proof"), "static:recorder_cache_bust");
 }
 
 function startServer() {
@@ -130,9 +135,30 @@ async function runUiGate(page) {
 
   const exportOk = await page.evaluate(() => {
     const txt = window.iuPwaReturnRecorder.exportText();
-    return typeof txt === "string" && txt.length > 40 && txt.indexOf("recorder:start") >= 0;
+    let parsed = null;
+    try {
+      parsed = JSON.parse(txt);
+    } catch (_) {}
+    return {
+      ok: typeof txt === "string" && txt.length > 40 && txt.indexOf("recorder:start") >= 0,
+      recorderBuildId: parsed && parsed.recorderBuildId,
+      hasSessionMmArmed: txt.indexOf('"mmArmed"') >= 0,
+      hasDisplay: txt.indexOf('"homeFeedVisible"') >= 0,
+      hasDelivery: !!(
+        parsed &&
+        parsed.delivery &&
+        typeof parsed.delivery === "object" &&
+        parsed.delivery.recorderBuildId === "pwa-return-recorder-v3-20261013-display-nav-proof"
+      ),
+      tabSid: parsed && parsed.tabSessionSid,
+      docSid: parsed && parsed.documentSid,
+    };
   });
-  must(exportOk, "ui:export_has_entries");
+  must(exportOk.ok === true, "ui:export_has_entries");
+  must(exportOk.recorderBuildId === "pwa-return-recorder-v3-20261013-display-nav-proof", "ui:export_recorder_build");
+  must(exportOk.hasSessionMmArmed === true, "ui:export_session_mmArmed");
+  must(exportOk.hasDisplay === true, "ui:export_display_field");
+  must(exportOk.hasDelivery === true, "ui:export_delivery_proof");
 
   await page.locator("#iuPwaDiagClearBtn").click();
   const cleared = await page.evaluate(() => {

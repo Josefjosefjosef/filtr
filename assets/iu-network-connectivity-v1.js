@@ -13,11 +13,14 @@
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
+  var EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY = "iuPwaExternalReturnVersionDeferUntil";
   var EXTERNAL_RETURN_SETTLE_MS = 1600;
+  /** After settle, keep hold so PWA version-check does not full-reload mid external-return paint. */
+  var EXTERNAL_RETURN_POST_HOLD_MS = 6500;
   var HUB_SECTION_RETURN_LS = "iuPwaHubSectionReturnV1";
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v8-20261013-hub-latch-gate";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v9-20261013-reload-flash-phone";
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -517,6 +520,7 @@
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
       sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY);
       sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
       sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
@@ -579,11 +583,20 @@
     return false;
   }
 
+  function isExternalReturnVersionDeferActive() {
+    try {
+      var until = parseInt(sessionStorage.getItem(EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY) || "0", 10);
+      if (Number.isFinite(until) && until > Date.now()) return true;
+    } catch (_) {}
+    return false;
+  }
+
   function finishExternalReturnRestore() {
     try {
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
       sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
+      sessionStorage.setItem(EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY, String(Date.now() + EXTERNAL_RETURN_POST_HOLD_MS));
       sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
     } catch (_) {}
     externalRestoreInFlight = false;
@@ -1113,6 +1126,7 @@
     restoreAppShellAfterReturn: restoreAppShellAfterReturn,
     isExternalReturnRestoreActive: isExternalReturnRestoreActive,
     isExternalReturnHoldActive: isExternalReturnHoldActive,
+    isExternalReturnVersionDeferActive: isExternalReturnVersionDeferActive,
     cancelExternalReturnRestore: cancelExternalReturnRestore,
     enableExternalReturnDiagPanel: enableExternalReturnDiagPanel,
     getExternalReturnDiagSnapshot: externalReturnDiagSnapshot,

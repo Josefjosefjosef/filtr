@@ -69,7 +69,11 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v8-20261013-hub-latch-gate/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v9-20261013-reload-flash-phone/.test(net), "static:pwa_build_id");
+  const verCheck = read("assets/iu-pwa-version-check.js");
+  must(/externalReturnBlocksDeployReload/.test(verCheck), "static:version_check_external_defer");
+  must(/EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY/.test(net), "static:version_defer_after_settle");
+  must(/max-width: 900px/.test(read("projects/index.html")), "static:phone_early_mobile_main");
   must(/iuMindMenuShouldPinToolsOnGateInit/.test(feed), "static:pin_tools_gate_init_hub_guard");
   must(
     /gateBeforeLatch\s*===\s*"tools"\s*\|\|\s*gateHintLatch\s*===\s*"tools"/.test(net),
@@ -743,6 +747,7 @@ async function runBehaviorAffHubLatchColdNoToolsGate(page, label) {
       section: u.searchParams.get("section") || "",
       mmBoot: document.documentElement.classList.contains("iu-mm-return-boot"),
       hubMainVisible,
+      mobileMainVisible: document.body.classList.contains("iu-mobileMainVisible"),
     };
   });
   must(snap.section === AFF, label + ":latch_cold:section:" + snap.section);
@@ -750,6 +755,82 @@ async function runBehaviorAffHubLatchColdNoToolsGate(page, label) {
   must(snap.overlay !== true, label + ":latch_cold:no_overlay:" + snap.overlay);
   must(snap.mmBoot !== true, label + ":latch_cold:no_mm_boot");
   must(snap.hubMainVisible === true, label + ":latch_cold:hub_main_visible:" + snap.hubMainVisible);
+  must(snap.mobileMainVisible === true, label + ":latch_cold:mobile_main_class:" + snap.mobileMainVisible);
+}
+
+/** Phone cold ?section=aff-* must set iu-mobileMainVisible before deferred app.js (home flash). */
+async function runBehaviorAffHubPhoneEarlyMainVisible(page, label) {
+  const AFF = "aff-cestovni-kancelare";
+  const affUrl = new URL(BASE);
+  affUrl.searchParams.set("section", AFF);
+  await page.goto(affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  const early = await page.evaluate(() => {
+    const feed = document.getElementById("feed");
+    let feedVisible = false;
+    try {
+      if (feed) {
+        const st = getComputedStyle(feed);
+        const r = feed.getBoundingClientRect();
+        feedVisible = st.visibility !== "hidden" && st.display !== "none" && r.height > 8 && r.width > 8;
+      }
+    } catch (_) {}
+    return {
+      mobileMainVisible: document.body.classList.contains("iu-mobileMainVisible"),
+      toolMain: document.body.getAttribute("data-iu-tool-main"),
+      feedVisible,
+    };
+  });
+  must(early.toolMain === "1", label + ":phone_early:tool_main:" + early.toolMain);
+  must(early.mobileMainVisible === true, label + ":phone_early:mobile_main:" + early.mobileMainVisible);
+  must(early.feedVisible !== true, label + ":phone_early:feed_hidden:" + early.feedVisible);
+  await waitRuntime(page);
+}
+
+/** Hub ?section= scroll preserved across simulated external return (non-zero mainY). */
+async function runBehaviorHubSectionScrollExternalReturn(page, label) {
+  const AFF = "aff-cestovni-kancelare";
+  const affUrl = new URL(BASE);
+  affUrl.searchParams.set("section", AFF);
+  await page.goto(affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  await waitRuntime(page);
+  const TARGET = 220;
+  const result = await page.evaluate(async (targetY) => {
+    const samples = [];
+    const record = () => {
+      samples.push(typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : window.scrollY || 0);
+    };
+    try {
+      const lc = document.getElementById("leftContent");
+      if (lc && lc.scrollHeight <= lc.clientHeight + targetY + 20) {
+        const pad = document.createElement("div");
+        pad.setAttribute("data-iu-guard-hub-pad", "1");
+        pad.style.height = String(targetY + 360) + "px";
+        lc.appendChild(pad);
+      }
+    } catch (_) {}
+    if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(targetY);
+    record();
+    const yBefore = samples[samples.length - 1];
+    window.iuNetwork.openExternalSync("https://example.com/iu-guard-hub-section-scroll");
+    record();
+    window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: false }));
+    record();
+    window.iuNetwork.restoreAppShellAfterReturn();
+    const holdAfterRestore =
+      window.iuNetwork && typeof window.iuNetwork.isExternalReturnHoldActive === "function"
+        ? window.iuNetwork.isExternalReturnHoldActive()
+        : false;
+    record();
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await new Promise((resolve) => setTimeout(resolve, 120));
+    record();
+    const minY = Math.min.apply(null, samples);
+    const finalY = samples[samples.length - 1];
+    return { yBefore, minY, finalY, holdAfterRestore, samplesLen: samples.length };
+  }, TARGET);
+  must(result.yBefore >= TARGET * 0.35, label + ":hub_ext:before_y:" + result.yBefore);
+  must(result.finalY >= TARGET * 0.35, label + ":hub_ext:final_y:" + result.finalY);
+  must(result.holdAfterRestore === true, label + ":hub_ext:post_hold:" + result.holdAfterRestore);
 }
 
 /** Menu → ?section= must not stay blocked while return arm is set (forward nav regression). */
@@ -1103,6 +1184,8 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     await runBehaviorMenuForwardSectionApplyAllowed(page, label);
     await runBehaviorNavMenuExternalLink(page, label);
     await runBehaviorHomeScrollExternalReturn(page, label);
+    await runBehaviorAffHubPhoneEarlyMainVisible(page, label);
+    await runBehaviorHubSectionScrollExternalReturn(page, label);
     await runBehaviorLegacyB6InvokeSyncOrder(page, label);
     await runBehaviorSyncGateCloseMechanism(page, label);
     await runBehaviorV5RestoreWithoutSyncClose(page, label);

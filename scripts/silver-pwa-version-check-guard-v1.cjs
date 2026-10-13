@@ -66,6 +66,8 @@ function runStaticChecks() {
     "/projects/version.json",
     "IU_SW_DEPLOY_RELOAD",
     "location.reload",
+    "externalReturnBlocksDeployReload",
+    "iu:pwa:ver:pending-reload",
   ];
   for (const needle of requiredJs) {
     const err = assertIncludes(js, needle, "iu-pwa-version-check.js");

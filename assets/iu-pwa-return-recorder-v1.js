@@ -5,16 +5,40 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v3-20261013-display-nav-proof";
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
-  var PAGE_SID_KEY = "iu:pwa-return-recorder-page-sid:v1";
-  var MAX_ENTRIES = 220;
-  var MAX_JSON_CHARS = 480000;
+  var TAB_SESSION_KEY = "iu:pwa-return-recorder-tab-sid:v1";
+  var DOCUMENT_SID_KEY = "iu:pwa-return-recorder-document-sid:v1";
+  var DOC_BOOT_SEQ_KEY = "iu:pwa-return-recorder-doc-boot-seq:v1";
+  var MAX_ENTRIES = 280;
+  var MAX_JSON_CHARS = 520000;
+  var tabSessionSid = "";
+  var documentSid = "";
+  var documentBootSeq = 0;
   var pageSid = "";
   var hooksBound = false;
   var lastGate = "";
   var lastSection = "";
   var scrollLogTimer = null;
+  var paintBurstLock = false;
+  var STORAGE_WATCH = {
+    session: [
+      "iu_external_nav_armed",
+      "iuPwaExternalReturnRestoringV1",
+      "iuPwaExternalReturnMainScrollY",
+      "iuMobileWebNavReturnArmed",
+      "iuPwaExternalReturnGateTab",
+      "iuMindMenuReturnArmed",
+      "iuMindMenuReturnLatchTs",
+      "iuPwaExternalReturnHubSectionAtArm",
+      "iuPwaExternalReturnHoldUntil",
+      "iuPwaExternalReturnVersionDeferUntil",
+      "iu:pwa:ver:pending-reload",
+      "iu:pwa:ver:last-reload-reason",
+    ],
+    local: ["iuMindMenuReturnPendingV1"],
+  };
 
   function safeJsonParse(raw) {
     try {
@@ -43,12 +67,18 @@
 
   function writeLogStore(store) {
     try {
-      while (store.entries.length > MAX_ENTRIES) store.entries.shift();
+      if (typeof store.droppedEntries !== "number") store.droppedEntries = 0;
+      while (store.entries.length > MAX_ENTRIES) {
+        store.entries.shift();
+        store.droppedEntries += 1;
+      }
       var txt = JSON.stringify(store);
       while (txt.length > MAX_JSON_CHARS && store.entries.length > 1) {
         store.entries.shift();
+        store.droppedEntries += 1;
         txt = JSON.stringify(store);
       }
+      if (txt.length >= MAX_JSON_CHARS) store.truncatedExportLikely = true;
       localStorage.setItem(LOG_KEY, txt);
     } catch (_) {}
   }
@@ -98,6 +128,98 @@
     }
   }
 
+  function captureStack(maxLines) {
+    try {
+      var err = new Error("iu-pwa-rec-stack");
+      if (!err.stack) return "";
+      return String(err.stack)
+        .split("\n")
+        .slice(1, maxLines || 6)
+        .join("\n");
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function isElementVisuallyPresent(el) {
+    if (!el) return false;
+    try {
+      if (el.hidden) return false;
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity) === 0) return false;
+      var r = el.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) return false;
+      return r.bottom > 0 && r.right > 0 && r.top < (window.innerHeight || 0) && r.left < (window.innerWidth || 0);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function visualLayerSnapshot() {
+    var feed = document.getElementById("feed");
+    var aff = document.getElementById("iuAffiliateView");
+    var gateWrap = document.getElementById("iuMobileGateWrap");
+    var navPanel = document.getElementById("iuMobileGatePanelNav");
+    var grid = document.getElementById("iuAffiliateGrid");
+    var hubSec = hubSectionFromUrl();
+    var gate = gateWrap ? String(gateWrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    var body = document.body;
+    var mobileMain = !!(body && body.classList.contains("iu-mobileMainVisible"));
+    var toolMain = !!(body && body.getAttribute("data-iu-tool-main") === "1");
+    var btnCount = 0;
+    try {
+      if (grid) btnCount = grid.querySelectorAll('a[href], button[type="button"]').length;
+    } catch (_) {}
+    return {
+      proof: "dom_geometry_heuristic_not_framebuffer",
+      intended: {
+        hubSection: hubSec,
+        gate: gate,
+        hash: String(location.hash || ""),
+      },
+      homeFeedVisible: isElementVisuallyPresent(feed) && !mobileMain && !toolMain,
+      hubMainColumnVisible: mobileMain || toolMain,
+      menuOverlayVisible: !!(body && body.classList.contains("iu-mobileGateOverlayOpen") && gate === "nav"),
+      toolsGateVisible: gate === "tools" && !!(body && body.classList.contains("iu-mobileGateOverlayOpen")),
+      mindMenuVisible:
+        !!(body && body.classList.contains("iu-myinfouzel-open")) ||
+        String(location.hash || "").replace("#", "") === "iu-mindmenu",
+      sectionShellVisible: isElementVisuallyPresent(aff) || isElementVisuallyPresent(document.getElementById("iuCenterStage")),
+      sectionButtonsVisible: btnCount > 0,
+      sectionButtonCount: btnCount,
+      navPanelVisible: isElementVisuallyPresent(navPanel),
+    };
+  }
+
+  function collectDeliveryProof() {
+    var out = {
+      metaIuBuild: "",
+      scriptTokens: {},
+      pwaReturnBuildIdRuntime: "",
+      recorderBuildId: RECORDER_BUILD_ID,
+      proofNote: "script_tokens_from_dom_src_query_not_sw_cache_body",
+    };
+    try {
+      var meta = document.querySelector('meta[name="iu-build"]');
+      if (meta) out.metaIuBuild = String(meta.getAttribute("content") || "").trim();
+    } catch (_) {}
+    try {
+      if (window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId) {
+        out.pwaReturnBuildIdRuntime = String(window.iuNetwork.pwaExternalReturnBuildId);
+      }
+    } catch (_) {}
+    try {
+      var list = document.querySelectorAll("script[src]");
+      for (var i = 0; i < list.length; i++) {
+        var src = String(list[i].getAttribute("src") || "");
+        if (src.indexOf("iu-network-connectivity") >= 0) out.scriptTokens.network = src.split("?v=")[1] || src;
+        if (src.indexOf("iu-pwa-return-recorder") >= 0) out.scriptTokens.recorder = src.split("?v=")[1] || src;
+        if (src.indexOf("iu-pwa-version-check") >= 0) out.scriptTokens.versionCheck = src.split("?v=")[1] || src;
+      }
+    } catch (_) {}
+    return out;
+  }
+
   function viewSnapshot() {
     var wrap = document.getElementById("iuMobileGateWrap");
     var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
@@ -126,11 +248,15 @@
       }
     } catch (_) {}
     return {
-      pageSid: pageSid,
+      tabSessionSid: tabSessionSid,
+      documentSid: documentSid,
+      documentBootSeq: documentBootSeq,
+      pageSid: documentSid || pageSid,
       href: sanitizeUrl(location.href),
       hash: String(location.hash || ""),
       hubSection: hubSectionFromUrl(),
       gate: gate,
+      display: visualLayerSnapshot(),
       body: {
         mobileGateOpen: !!(document.body && document.body.classList.contains("iu-mobileGateOverlayOpen")),
         mindMenuOpen: !!(document.body && document.body.classList.contains("iu-myinfouzel-open")),
@@ -191,30 +317,80 @@
     return "unknown";
   }
 
-  function markPageSid() {
+  function markDocumentIdentity() {
     try {
-      pageSid = sessionStorage.getItem(PAGE_SID_KEY) || "";
-      if (!pageSid) {
-        pageSid = "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-        sessionStorage.setItem(PAGE_SID_KEY, pageSid);
+      tabSessionSid = sessionStorage.getItem(TAB_SESSION_KEY) || "";
+      if (!tabSessionSid) {
+        tabSessionSid = "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        sessionStorage.setItem(TAB_SESSION_KEY, tabSessionSid);
       }
+      documentSid = "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      sessionStorage.setItem(DOCUMENT_SID_KEY, documentSid);
+      documentBootSeq = parseInt(sessionStorage.getItem(DOC_BOOT_SEQ_KEY) || "0", 10);
+      if (!Number.isFinite(documentBootSeq)) documentBootSeq = 0;
+      documentBootSeq += 1;
+      sessionStorage.setItem(DOC_BOOT_SEQ_KEY, String(documentBootSeq));
+      pageSid = documentSid;
     } catch (_) {
-      pageSid = "p-fallback";
+      documentSid = "d-fallback";
+      pageSid = documentSid;
     }
   }
 
+  function readLastReloadReason() {
+    try {
+      var raw = sessionStorage.getItem("iu:pwa:ver:last-reload-reason") || "";
+      if (!raw) return null;
+      var o = safeJsonParse(raw);
+      return o && typeof o === "object" ? o : { reason: raw };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function schedulePaintBurst(reason) {
+    if (!isRecording() || paintBurstLock) return;
+    paintBurstLock = true;
+    var frame = 0;
+    var maxFrames = 5;
+    function tick() {
+      frame += 1;
+      appendEntry(
+        "view:frame",
+        { phase: String(reason || ""), frame: frame, display: visualLayerSnapshot() },
+        "paint"
+      );
+      if (frame < maxFrames) requestAnimationFrame(tick);
+      else paintBurstLock = false;
+    }
+    requestAnimationFrame(tick);
+  }
+
   function onDocumentBoot() {
-    markPageSid();
+    markDocumentIdentity();
+    if (isRecording()) {
+      bindHooks();
+      schedulePaintBurst("document_boot");
+    }
     if (!isRecording()) return;
+    var reloadMeta = readLastReloadReason();
     appendEntry(
       "document:boot",
       {
         navType: navigationEntryType(),
-        sameTabSession: true,
+        tabSessionSid: tabSessionSid,
+        documentSid: documentSid,
+        documentBootSeq: documentBootSeq,
         appVersion: appVersionLabel(),
+        recorderBuildId: RECORDER_BUILD_ID,
+        delivery: collectDeliveryProof(),
+        reloadReason: reloadMeta,
       },
       "boot"
     );
+    try {
+      sessionStorage.removeItem("iu:pwa:ver:last-reload-reason");
+    } catch (_) {}
   }
 
   function startRecording() {
@@ -267,7 +443,19 @@
       recording: isRecording(),
       appVersion: appVersionLabel(),
       pwaReturnBuildId: window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId,
-      pageSid: pageSid,
+      recorderBuildId: RECORDER_BUILD_ID,
+      tabSessionSid: tabSessionSid || sessionStorage.getItem(TAB_SESSION_KEY) || "",
+      documentSid: documentSid || sessionStorage.getItem(DOCUMENT_SID_KEY) || "",
+      documentBootSeq: documentBootSeq || parseInt(sessionStorage.getItem(DOC_BOOT_SEQ_KEY) || "0", 10) || 0,
+      pageSid: documentSid || pageSid,
+      delivery: collectDeliveryProof(),
+      logMeta: {
+        droppedEntries: store.droppedEntries || 0,
+        truncatedExportLikely: !!store.truncatedExportLikely,
+        entryCount: store.entries ? store.entries.length : 0,
+        maxEntries: MAX_ENTRIES,
+        maxJsonChars: MAX_JSON_CHARS,
+      },
       log: store,
     };
     return JSON.stringify(payload, null, 2);
@@ -300,7 +488,9 @@
 
   function ingestTrace(tag, detail) {
     if (!isRecording()) return;
-    appendEntry("trace:" + String(tag || ""), detail || {}, "iuNetwork");
+    var t = String(tag || "");
+    appendEntry("trace:" + t, detail || {}, "iuNetwork");
+    if (t === "restore_start" || t === "settle_done" || t === "version_reload") schedulePaintBurst(t);
   }
 
   function wrapFn(fnName, evName) {
@@ -316,10 +506,163 @@
             else argsSummary.push(String(arguments[i]).slice(0, 40));
           }
         } catch (_) {}
-        appendEntry(evName || "fn:" + fnName, { args: argsSummary, fn: fnName }, "wrap");
+        appendEntry(
+          evName || "fn:" + fnName,
+          { args: argsSummary, fn: fnName, stack: captureStack(5) },
+          "wrap"
+        );
         return cur.apply(this, arguments);
       };
       window[fnName].__iuPwaRecWrap = true;
+    } catch (_) {}
+  }
+
+  function scheduleSectionReadyPoll(t0) {
+    var attempts = 0;
+    function poll() {
+      if (!isRecording()) return;
+      attempts += 1;
+      var grid = document.getElementById("iuAffiliateGrid");
+      var btnCount = 0;
+      try {
+        if (grid) btnCount = grid.querySelectorAll('a[href], button[type="button"]').length;
+      } catch (_) {}
+      var affVis = isElementVisuallyPresent(document.getElementById("iuAffiliateView"));
+      if (btnCount > 0 || affVis || attempts >= 48) {
+        appendEntry(
+          "section:ready",
+          { ms: Date.now() - t0, btnCount: btnCount, affVis: affVis, attempts: attempts },
+          "section"
+        );
+        return;
+      }
+      requestAnimationFrame(poll);
+    }
+    requestAnimationFrame(poll);
+  }
+
+  function wrapSectionApply() {
+    try {
+      var cur = window.iuApplySectionFromURL;
+      if (typeof cur !== "function" || cur.__iuPwaRecSection) return;
+      window.iuApplySectionFromURL = function () {
+        var t0 = Date.now();
+        appendEntry("section:apply_start", { t0: t0, hubSection: hubSectionFromUrl(), stack: captureStack(5) }, "section");
+        var rv = cur.apply(this, arguments);
+        scheduleSectionReadyPoll(t0);
+        schedulePaintBurst("section_apply");
+        return rv;
+      };
+      window.iuApplySectionFromURL.__iuPwaRecSection = true;
+    } catch (_) {}
+  }
+
+  function shouldWatchStorageKey(area, key) {
+    var list = area === "session" ? STORAGE_WATCH.session : STORAGE_WATCH.local;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] === key) return true;
+    }
+    return false;
+  }
+
+  function patchStorageWrites() {
+    if (window.__iuPwaRecStoragePatch) return;
+    window.__iuPwaRecStoragePatch = true;
+    try {
+      var proto = Storage.prototype;
+      var origSet = proto.setItem;
+      var origRemove = proto.removeItem;
+      proto.setItem = function (key, value) {
+        if (isRecording()) {
+          var area = "local";
+          try {
+            if (this === sessionStorage) area = "session";
+          } catch (_) {}
+          if (shouldWatchStorageKey(area, String(key))) {
+            appendEntry(
+              "storage:set",
+              { area: area, key: String(key), len: String(value).length },
+              "storage"
+            );
+          }
+        }
+        return origSet.apply(this, arguments);
+      };
+      proto.removeItem = function (key) {
+        if (isRecording()) {
+          var area = "local";
+          try {
+            if (this === sessionStorage) area = "session";
+          } catch (_) {}
+          if (shouldWatchStorageKey(area, String(key))) {
+            appendEntry("storage:remove", { area: area, key: String(key) }, "storage");
+          }
+        }
+        return origRemove.apply(this, arguments);
+      };
+    } catch (_) {}
+  }
+
+  function patchHistoryApi() {
+    if (window.__iuPwaRecHistoryPatch) return;
+    window.__iuPwaRecHistoryPatch = true;
+    ["pushState", "replaceState"].forEach(function (method) {
+      try {
+        var orig = history[method];
+        if (typeof orig !== "function") return;
+        history[method] = function (state, title, url) {
+          if (isRecording()) {
+            appendEntry(
+              "history:" + method,
+              {
+                url: url ? sanitizeUrl(String(url)) : "",
+                hrefBefore: sanitizeUrl(location.href),
+                stack: captureStack(5),
+              },
+              "history"
+            );
+          }
+          return orig.apply(history, arguments);
+        };
+      } catch (_) {}
+    });
+  }
+
+  function patchNavigationApi() {
+    if (window.__iuPwaRecNavPatch) return;
+    window.__iuPwaRecNavPatch = true;
+    try {
+      var proto = window.Location && window.Location.prototype;
+      if (!proto) return;
+      var origReload = proto.reload;
+      var origReplace = proto.replace;
+      if (typeof origReload === "function") {
+        proto.reload = function () {
+          if (isRecording()) {
+            appendEntry("nav:reload", { stack: captureStack(8) }, "nav");
+          }
+          return origReload.apply(this, arguments);
+        };
+      }
+      if (typeof origReplace === "function") {
+        proto.replace = function (url) {
+          if (isRecording()) {
+            appendEntry("nav:replace", { url: sanitizeUrl(String(url || "")), stack: captureStack(8) }, "nav");
+          }
+          return origReplace.apply(this, arguments);
+        };
+      }
+    } catch (_) {}
+    try {
+      if (navigator.serviceWorker && !window.__iuPwaRecSwMsg) {
+        window.__iuPwaRecSwMsg = true;
+        navigator.serviceWorker.addEventListener("message", function (ev) {
+          if (!isRecording() || !ev || !ev.data) return;
+          if (ev.data.type === "IU_SW_DEPLOY_RELOAD") {
+            appendEntry("sw:deploy_reload", { type: ev.data.type }, "sw");
+          }
+        });
+      }
     } catch (_) {}
   }
 
@@ -333,12 +676,19 @@
           var orig = net[name];
           net[name] = function () {
             var arg0 = arguments[0];
-            var detail = { fn: name };
+            var detail = { fn: name, stack: captureStack(5) };
             if (name === "openExternalSync" || name === "openExternalUrl") {
               detail.url = sanitizeUrl(arg0);
             }
             if (name === "cancelExternalReturnRestore") detail.reason = String(arg0 || "");
+            try {
+              if (typeof net.getExternalReturnDiagSnapshot === "function") {
+                var diag = net.getExternalReturnDiagSnapshot();
+                if (diag && typeof diag.gen === "number") detail.gen = diag.gen;
+              }
+            } catch (_) {}
             appendEntry("net:" + name, detail, "iuNetwork");
+            if (name === "restoreAppShellAfterReturn") schedulePaintBurst("restore_start");
             return orig.apply(this, arguments);
           };
           net[name].__iuPwaRecWrap = true;
@@ -423,6 +773,9 @@
             href: sanitizeUrl(location.href),
           };
           appendEntry("life:" + name, detail, "life");
+          if (name === "visibilitychange" && document.visibilityState === "visible") {
+            schedulePaintBurst("visibility_visible");
+          }
           if (name === "pageshow" && ev && ev.persisted) {
             appendEntry("document:bfcache_restore", { navType: "back_forward_cache" }, "life");
           }
@@ -437,18 +790,27 @@
         var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
         if (!a) return;
         var href = String(a.getAttribute("href") || "").trim();
-        if (!/^https?:\/\//i.test(href)) return;
-        if (isSameOriginHttp(href)) return;
-        appendEntry(
-          "click:external_link",
-          {
-            url: sanitizeUrl(href),
-            inMenu: !!(a.closest && a.closest("#iuMobileGatePanelNav")),
-            inMindMenu: !!(a.closest && a.closest(".mindMenu")),
-            handler: "capture:click",
-          },
-          "click"
-        );
+        if (!href) return;
+        if (/^https?:\/\//i.test(href) && !isSameOriginHttp(href)) {
+          appendEntry(
+            "click:external_link",
+            {
+              url: sanitizeUrl(href),
+              inMenu: !!(a.closest && a.closest("#iuMobileGatePanelNav")),
+              inMindMenu: !!(a.closest && a.closest(".mindMenu")),
+              handler: "capture:click",
+            },
+            "click"
+          );
+          return;
+        }
+        if (href.indexOf("section=") >= 0 || href.indexOf("#iu-") === 0 || href.indexOf("/?") === 0) {
+          appendEntry(
+            "click:internal_link",
+            { url: sanitizeUrl(href), handler: "capture:click" },
+            "click"
+          );
+        }
       },
       true
     );
@@ -468,6 +830,10 @@
     patchNetwork();
     observeGate();
     bindLifecycleEvents();
+    patchStorageWrites();
+    patchHistoryApi();
+    patchNavigationApi();
+    wrapSectionApply();
     [
       "iuMindMenuArmReturnState",
       "iuMindMenuRestoreIfArmed",
@@ -492,6 +858,7 @@
       ].forEach(function (name) {
         wrapFn(name, "fn:" + name);
       });
+      wrapSectionApply();
       observeGate();
       if (poll >= 24) clearInterval(pollId);
     }, 400);
@@ -534,7 +901,7 @@
       try {
         bid = window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId ? String(window.iuNetwork.pwaExternalReturnBuildId) : "";
       } catch (_) {}
-      ver.textContent = bid || appVersionLabel();
+      ver.textContent = (bid ? bid + " · " : "") + RECORDER_BUILD_ID;
     }
     if (state) {
       state.textContent = isRecording() ? "Záznam probíhá" : "Záznam vypnutý";
