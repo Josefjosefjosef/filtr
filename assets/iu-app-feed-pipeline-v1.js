@@ -17866,7 +17866,11 @@ function buildVideoAsArticleCard(it) {
          data-iu-mobile-gate=tools. Skipping left iu-mm-return-boot stuck and #leftContent
          pointer-events:none on PC/tablet after #11037/#11090. */
       if (
-        (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
+        (typeof window.iuMindMenuShouldPinToolsOnGateInit === "function" &&
+          window.iuMindMenuShouldPinToolsOnGateInit()) ||
+        (typeof window.iuMindMenuShouldPinToolsOnGateInit !== "function" &&
+          typeof window.iuMindMenuHasReturnGuard === "function" &&
+          window.iuMindMenuHasReturnGuard()) ||
         document.documentElement.classList.contains("iu-mm-return-boot")
       ) {
         setTab("tools");
@@ -26244,6 +26248,28 @@ function buildVideoAsArticleCard(it) {
     return !!iuMindMenuReadReturnPending();
   }
 
+  /** Gate init / shell boot: latch-only must not open tools over hub ?section= (PWA recorder 20261013). */
+  function iuMindMenuShouldPinToolsOnGateInit() {
+    try {
+      if (document.documentElement.classList.contains("iu-mm-return-boot")) return true;
+    } catch (_) {}
+    try {
+      if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return true;
+    } catch (_) {}
+    if (iuMindMenuReadReturnPending()) return true;
+    if (!iuMindMenuIsReturnLatchActive()) return false;
+    try {
+      var sec = String(new URL(location.href).searchParams.get("section") || "").trim();
+      if (sec && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        try {
+          sessionStorage.removeItem(IU_MINDMENU_RETURN_LATCH_KEY);
+        } catch (_) {}
+        return false;
+      }
+    } catch (_) {}
+    return true;
+  }
+
   /** MindMenu gate scroller is #iuMobileGatePanelTools (window.scrollY is locked at 0). */
   function iuMindMenuCapturePanelScrollY() {
     try {
@@ -26628,6 +26654,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
     window.iuMindMenuClearReturnPending = iuMindMenuClearReturnPending;
     window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
+    window.iuMindMenuShouldPinToolsOnGateInit = iuMindMenuShouldPinToolsOnGateInit;
     window.iuMindMenuTouchReturnLatch = iuMindMenuTouchReturnLatch;
   } catch (_) {}
 

@@ -17,7 +17,7 @@
   var HUB_SECTION_RETURN_LS = "iuPwaHubSectionReturnV1";
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v7-20261013-hub-section-return";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v8-20261013-hub-latch-gate";
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -361,7 +361,7 @@
     panel.style.cssText =
       "position:fixed;left:8px;right:8px;bottom:calc(var(--iu-mobile-bottom-nav-safe-space,72px) + 8px);z-index:10040;max-height:42vh;overflow:auto;padding:8px 10px;border-radius:10px;background:rgba(12,16,24,.94);color:#e8eef8;font:11px/1.35 ui-monospace,Consolas,monospace;box-shadow:0 6px 24px rgba(0,0,0,.35);";
     var title = document.createElement("div");
-    title.textContent = "PWA return diag (no upload)";
+    title.textContent = "PWA return diag · " + PWA_EXTERNAL_RETURN_BUILD_ID;
     title.style.cssText = "font-weight:600;margin-bottom:6px;font-family:system-ui,sans-serif;font-size:12px;";
     panel.appendChild(title);
     var pre = document.createElement("pre");
@@ -439,6 +439,11 @@
       sessionStorage.removeItem("iuMindMenuReturnArmed");
       sessionStorage.removeItem("iuMindMenuReturnScrollY");
       sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+    } catch (_) {}
+    try {
+      if (String(reason || "") === "section_apply") {
+        sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+      }
     } catch (_) {}
     try {
       var qs = new URLSearchParams(String(location.search || ""));
@@ -728,8 +733,25 @@
         if (menuY > 0) window.iuMenuNavApplyScroll(menuY);
       }
     } catch (_) {}
+    /* MindMenu latch belongs only on tools restore — not hub-section external (recorder 20261013). */
     try {
-      if (typeof window.iuMindMenuTouchReturnLatch === "function") window.iuMindMenuTouchReturnLatch();
+      if (
+        !shouldSkipMindMenuRestoreOnExternalReturn() &&
+        typeof window.iuMindMenuTouchReturnLatch === "function"
+      ) {
+        var gateBeforeLatch = "";
+        try {
+          var wLatch = document.getElementById("iuMobileGateWrap");
+          gateBeforeLatch = wLatch ? String(wLatch.getAttribute("data-iu-mobile-gate") || "") : "";
+        } catch (_) {}
+        var gateHintLatch = "";
+        try {
+          gateHintLatch = sessionStorage.getItem(EXTERNAL_RETURN_GATE_KEY) || "";
+        } catch (_) {}
+        if (gateBeforeLatch === "tools" || gateHintLatch === "tools") {
+          window.iuMindMenuTouchReturnLatch();
+        }
+      }
     } catch (_) {}
     try {
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);

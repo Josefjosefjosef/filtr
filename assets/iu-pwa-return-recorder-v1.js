@@ -147,6 +147,12 @@
         mainY: sessionStorage.getItem("iuPwaExternalReturnMainScrollY") || "",
         navArm: sessionStorage.getItem("iuMobileWebNavReturnArmed") || "",
         gateTab: sessionStorage.getItem("iuPwaExternalReturnGateTab") || "",
+        mmArmed: sessionStorage.getItem("iuMindMenuReturnArmed") || "",
+        mmLatch: sessionStorage.getItem("iuMindMenuReturnLatchTs") || "",
+        hubArm: sessionStorage.getItem("iuPwaExternalReturnHubSectionAtArm") || "",
+        mmHist:
+          !!(history.state && history.state.iu_mindmenu_overlay === true) ||
+          String(location.hash || "").replace("#", "") === "iu-mindmenu",
       },
       restoreActive: !!(window.iuNetwork && window.iuNetwork.isExternalReturnRestoreActive && window.iuNetwork.isExternalReturnRestoreActive()),
       pending: pendingMeta,
@@ -342,10 +348,37 @@
     } catch (_) {}
   }
 
+  function wrapGateSetTab(wrap) {
+    if (!wrap || !isRecording()) return;
+    try {
+      var cur = wrap.__iuMobileGateSetTab;
+      if (typeof cur !== "function" || cur.__iuPwaRecGateWrap) return;
+      wrap.__iuMobileGateSetTab = function (value) {
+        var stack = "";
+        try {
+          var err = new Error("gate-setTab");
+          if (err.stack) stack = String(err.stack).split("\n").slice(1, 6).join("\n");
+        } catch (_) {}
+        appendEntry(
+          "gate:setTab",
+          {
+            to: String(value || ""),
+            hubSection: hubSectionFromUrl(),
+            stack: stack,
+          },
+          "gate"
+        );
+        return cur.apply(this, arguments);
+      };
+      wrap.__iuMobileGateSetTab.__iuPwaRecGateWrap = true;
+    } catch (_) {}
+  }
+
   function observeGate() {
     var wrap = document.getElementById("iuMobileGateWrap");
     if (!wrap || wrap.__iuPwaRecObs) return;
     wrap.__iuPwaRecObs = true;
+    wrapGateSetTab(wrap);
     lastGate = String(wrap.getAttribute("data-iu-mobile-gate") || "");
     try {
       var mo = new MutationObserver(function () {
@@ -496,7 +529,13 @@
     if (!panel) return;
     var ver = panel.querySelector("[data-iu-pwa-diag-version]");
     var state = panel.querySelector("[data-iu-pwa-diag-state]");
-    if (ver) ver.textContent = appVersionLabel();
+    if (ver) {
+      var bid = "";
+      try {
+        bid = window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId ? String(window.iuNetwork.pwaExternalReturnBuildId) : "";
+      } catch (_) {}
+      ver.textContent = bid || appVersionLabel();
+    }
     if (state) {
       state.textContent = isRecording() ? "Záznam probíhá" : "Záznam vypnutý";
       state.setAttribute("data-recording", isRecording() ? "1" : "0");

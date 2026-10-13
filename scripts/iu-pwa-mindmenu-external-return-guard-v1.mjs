@@ -69,7 +69,12 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v7-20261013-hub-section-return/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v8-20261013-hub-latch-gate/.test(net), "static:pwa_build_id");
+  must(/iuMindMenuShouldPinToolsOnGateInit/.test(feed), "static:pin_tools_gate_init_hub_guard");
+  must(
+    /gateBeforeLatch\s*===\s*"tools"\s*\|\|\s*gateHintLatch\s*===\s*"tools"/.test(net),
+    "static:net_latch_only_on_tools_external"
+  );
   must(/iuPwaHubSectionReturnV1/.test(net) && /shouldSkipMindMenuRestoreOnExternalReturn/.test(net), "static:hub_section_return_skip_mindmenu");
   must(/iuPwaHubSectionReturnV1/.test(read("projects/index.html")) && /hubReturnSectionAtHead/.test(read("projects/index.html")), "static:head_hub_section_resume");
   must(/window\.iuMindMenuClearReturnPending/.test(feed), "static:clear_return_pending_export");
@@ -694,6 +699,59 @@ async function runBehaviorAffHubStalePendingExternalReturnSim(page, label) {
   must(cold.mmBoot !== true, label + ":aff_sim:cold_no_mm_boot");
 }
 
+/**
+ * PWA recorder 20261013: hub ?section= + stale MindMenu latch after external (no pending) must not
+ * auto-open tools on cold document / gate init.
+ */
+async function runBehaviorAffHubLatchColdNoToolsGate(page, label) {
+  const AFF = "aff-cestovni-kancelare";
+  await page.goto(BASE + "?section=" + AFF, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await waitRuntime(page);
+  await page.evaluate(() => {
+    sessionStorage.setItem("iuMindMenuReturnLatchTs", String(Date.now()));
+    sessionStorage.removeItem("iuMindMenuReturnArmed");
+    localStorage.removeItem("iuMindMenuReturnPendingV1");
+  });
+  const coldUrl = `http://127.0.0.1:${PORT}/?section=${AFF}&iuInfoSystem=cutover&nosw=1`;
+  await page.goto(coldUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await waitRuntime(page);
+  await page.waitForTimeout(500);
+  const snap = await page.evaluate(() => {
+    const wrap = document.getElementById("iuMobileGateWrap");
+    const gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    const overlay = document.body.classList.contains("iu-mobileGateOverlayOpen");
+    const u = new URL(location.href);
+    let hubMainVisible = false;
+    try {
+      const lc = document.getElementById("leftContent");
+      const feed = document.getElementById("feed");
+      const candidates = [lc, feed, document.getElementById("iuSilverHeroPremium")];
+      for (const el of candidates) {
+        if (!el) continue;
+        const st = getComputedStyle(el);
+        const r = el.getBoundingClientRect();
+        if (st.display === "none" || st.visibility === "hidden") continue;
+        if (r.width > 40 && r.height > 40 && r.bottom > 0) {
+          hubMainVisible = true;
+          break;
+        }
+      }
+    } catch (_) {}
+    return {
+      gate,
+      overlay,
+      section: u.searchParams.get("section") || "",
+      mmBoot: document.documentElement.classList.contains("iu-mm-return-boot"),
+      hubMainVisible,
+    };
+  });
+  must(snap.section === AFF, label + ":latch_cold:section:" + snap.section);
+  must(snap.gate !== "tools", label + ":latch_cold:no_tools_gate:" + snap.gate);
+  must(snap.overlay !== true, label + ":latch_cold:no_overlay:" + snap.overlay);
+  must(snap.mmBoot !== true, label + ":latch_cold:no_mm_boot");
+  must(snap.hubMainVisible === true, label + ":latch_cold:hub_main_visible:" + snap.hubMainVisible);
+}
+
 /** Menu → ?section= must not stay blocked while return arm is set (forward nav regression). */
 async function runBehaviorMenuForwardSectionApplyAllowed(page, label) {
   const probe = await page.evaluate(() => {
@@ -1235,6 +1293,7 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     must(cold.sawHome !== true && cold.gate === "tools", label + ":colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
 
     await runBehaviorAffHubStalePendingExternalReturnSim(page, label);
+    await runBehaviorAffHubLatchColdNoToolsGate(page, label);
 
     return { platform: label, visibleHomeFrames: cold.visibleHomeFrames || 0 };
   } finally {
