@@ -26421,6 +26421,21 @@ function buildVideoAsArticleCard(it) {
     } catch (_) {}
     if (!sessionArmed && !pending) return;
     try {
+      var hubSec = new URL(location.href).searchParams.get("section");
+      hubSec = String(hubSec || "").trim();
+      if (hubSec && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+        var gateNow = "";
+        try {
+          var wrapHub = document.getElementById("iuMobileGateWrap");
+          gateNow = wrapHub ? String(wrapHub.getAttribute("data-iu-mobile-gate") || "") : "";
+        } catch (_) {}
+        if (gateNow !== "tools") {
+          if (!sessionArmed) iuMindMenuClearReturnPending();
+          return;
+        }
+      }
+    } catch (_) {}
+    try {
       if (typeof window.iuIsProjectsRoute === "function" && !window.iuIsProjectsRoute()) return;
     } catch (_) {
       return;
@@ -26611,6 +26626,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuSyncGateFromHistory = iuMindMenuSyncGateFromHistory;
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
+    window.iuMindMenuClearReturnPending = iuMindMenuClearReturnPending;
     window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
     window.iuMindMenuTouchReturnLatch = iuMindMenuTouchReturnLatch;
   } catch (_) {}

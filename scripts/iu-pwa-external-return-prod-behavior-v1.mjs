@@ -180,7 +180,7 @@ async function runScenarioMindMenu(page) {
 
 async function main() {
   const root = await fetchText(ORIGIN + "/");
-  const tokenV5 = root.text.includes("pwa-external-return-unified-v6-20261013-icentrum-diag");
+  const tokenV5 = root.text.includes("pwa-external-return-unified-v7-20261013-hub-section-return");
   const netMatch = root.text.match(/iu-network-connectivity-v1\.js\?v=([^"']+)/);
   const netUrl = netMatch
     ? new URL("/assets/iu-network-connectivity-v1.js?v=" + netMatch[1], ORIGIN).href

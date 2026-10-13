@@ -14,7 +14,10 @@
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
   var EXTERNAL_RETURN_SETTLE_MS = 1600;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v6-20261013-icentrum-diag";
+  var HUB_SECTION_RETURN_LS = "iuPwaHubSectionReturnV1";
+  var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
+  var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v7-20261013-hub-section-return";
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -423,10 +426,82 @@
     refreshExternalReturnDiagPanel();
   }
 
+  function clearStaleMindMenuPendingForHubNav(reason) {
+    if (String(reason || "") !== "section_apply") return;
+    try {
+      if (typeof window.iuMindMenuClearReturnPending === "function") {
+        window.iuMindMenuClearReturnPending();
+      } else {
+        localStorage.removeItem("iuMindMenuReturnPendingV1");
+      }
+    } catch (_) {}
+    try {
+      sessionStorage.removeItem("iuMindMenuReturnArmed");
+      sessionStorage.removeItem("iuMindMenuReturnScrollY");
+      sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+    } catch (_) {}
+    try {
+      var qs = new URLSearchParams(String(location.search || ""));
+      if (!qs.has("section")) {
+        localStorage.removeItem(HUB_SECTION_RETURN_LS);
+      }
+    } catch (_) {}
+  }
+
+  function readHubSectionReturnResume() {
+    try {
+      var raw = localStorage.getItem(HUB_SECTION_RETURN_LS);
+      if (!raw) return "";
+      var obj = JSON.parse(raw);
+      var sec = String(obj && obj.section ? obj.section : "").trim();
+      var ts = Number(obj && obj.t);
+      if (!sec || !Number.isFinite(ts) || ts <= 0) return "";
+      if (Date.now() - ts > HUB_SECTION_RETURN_TTL_MS) {
+        localStorage.removeItem(HUB_SECTION_RETURN_LS);
+        return "";
+      }
+      return sec;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function writeHubSectionReturnResume() {
+    try {
+      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) {
+        sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
+        return;
+      }
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+      if (gate === "tools") {
+        sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
+        return;
+      }
+      var sec = new URL(location.href).searchParams.get("section");
+      sec = String(sec || "").trim();
+      if (!sec) {
+        sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
+        return;
+      }
+      sessionStorage.setItem(HUB_SECTION_ARM_SESSION_KEY, sec);
+      localStorage.setItem(HUB_SECTION_RETURN_LS, JSON.stringify({ section: sec, t: Date.now() }));
+    } catch (_) {}
+  }
+
+  function shouldSkipMindMenuRestoreOnExternalReturn() {
+    try {
+      var armed = sessionStorage.getItem(HUB_SECTION_ARM_SESSION_KEY);
+      return !!(armed && String(armed).trim());
+    } catch (_) {}
+    return false;
+  }
+
   /** User navigation / new view — drop stale return arms so delayed restore cannot overwrite. */
   function cancelExternalReturnRestore(reason) {
     externalReturnGeneration += 1;
     traceExternalReturn("cancel", { reason: String(reason || "") });
+    clearStaleMindMenuPendingForHubNav(reason);
     try {
       if (externalReturnSettleTimer) clearTimeout(externalReturnSettleTimer);
       externalReturnSettleTimer = null;
@@ -439,6 +514,7 @@
       sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
       sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+      sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
       sessionStorage.removeItem("iuMobileWebNavReturnArmed");
     } catch (_) {}
     externalRestoreInFlight = false;
@@ -503,6 +579,7 @@
       sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
       sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
+      sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
     } catch (_) {}
     externalRestoreInFlight = false;
     externalReturnSettleTimer = null;
@@ -577,6 +654,7 @@
         window.iuMobileWebNavArmForExternalFromMenu();
       }
     } catch (_) {}
+    writeHubSectionReturnResume();
   }
 
   function restorePwaExternalMainScrollIfNeeded() {
@@ -632,7 +710,9 @@
     }
     ensureWebNavHistoryForExternalReturn();
     try {
-      if (typeof window.iuMindMenuRestoreIfArmed === "function") window.iuMindMenuRestoreIfArmed();
+      if (!shouldSkipMindMenuRestoreOnExternalReturn() && typeof window.iuMindMenuRestoreIfArmed === "function") {
+        window.iuMindMenuRestoreIfArmed();
+      }
     } catch (_) {}
     /* Do not call iuMindMenuSyncGateFromHistory here — restoreIfArmed + EnsureHistoryEntry
        already re-open tools; SyncGate on the same tick closed tools → Home (visible flicker). */
