@@ -180,7 +180,7 @@ async function runScenarioMindMenu(page) {
 
 async function main() {
   const root = await fetchText(ORIGIN + "/");
-  const expectedBuild = "pwa-external-return-unified-v9-20261013-reload-flash-phone";
+  const expectedBuild = "pwa-external-return-unified-v10-20261013-menu-section-back-flash";
   const tokenV5 = root.text.includes(expectedBuild);
   const netMatch = root.text.match(/iu-network-connectivity-v1\.js\?v=([^"']+)/);
   const netUrl = netMatch

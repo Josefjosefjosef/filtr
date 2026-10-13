@@ -20,7 +20,7 @@
   var HUB_SECTION_RETURN_LS = "iuPwaHubSectionReturnV1";
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v9-20261013-reload-flash-phone";
+  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v10-20261013-menu-section-back-flash";
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -710,9 +710,11 @@
         gateHint = sessionStorage.getItem(EXTERNAL_RETURN_GATE_KEY) || "";
       } catch (_) {}
       if (!armed && gateHint !== "nav") return;
+      var u = new URL(location.href);
+      /* P0: never graft #iu-nav onto ?section= — corrupts URL, duplicates history, can trigger iOS PWA reload. */
+      if (u.searchParams.has("section")) return;
       var h = String(location.hash || "");
       if (h === "#iu-nav" || h === "#nav") return;
-      var u = new URL(location.href);
       u.hash = "iu-nav";
       history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
     } catch (_) {}
@@ -1068,6 +1070,14 @@
   }
 
   function bindLifecycle() {
+    window.addEventListener("pagehide", function () {
+      try {
+        var u = new URL(location.href);
+        if (u.searchParams.has("section")) {
+          sessionStorage.setItem("iuPwaPagehideSectionCanonV1", u.pathname + u.search);
+        }
+      } catch (_) {}
+    });
     window.addEventListener("pageshow", function () {
       restoreAppShellAfterReturn();
     });

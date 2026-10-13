@@ -69,7 +69,8 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v9-20261013-reload-flash-phone/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v10-20261013-menu-section-back-flash/.test(net), "static:pwa_build_id");
+  must(/if \(u\.searchParams\.has\("section"\)\) return/.test(net), "static:ensure_webnav_no_section_hash");
   const verCheck = read("assets/iu-pwa-version-check.js");
   must(/externalReturnBlocksDeployReload/.test(verCheck), "static:version_check_external_defer");
   must(/EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY/.test(net), "static:version_defer_after_settle");

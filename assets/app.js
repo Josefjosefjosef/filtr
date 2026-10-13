@@ -7439,23 +7439,32 @@ try {
   function iuMobileWebNavArmForExternalFromMenu() {
     try {
       if (typeof window.matchMedia !== "function" || !window.matchMedia("(max-width: 900px)").matches) return;
+      var uArm = new URL(location.href);
+      var fromSectionDetail = uArm.searchParams.has("section");
       var wrapArm = document.getElementById("iuMobileGateWrap");
-      if (!wrapArm || String(wrapArm.getAttribute("data-iu-mobile-gate") || "") !== "nav") return;
+      var gateNav = wrapArm && String(wrapArm.getAttribute("data-iu-mobile-gate") || "") === "nav";
+      if (!fromSectionDetail && !gateNav) return;
       try {
         window.__iuMobileWebNavReturnArmed = true;
-        window.__iuMobileWebNavOrigin = "overlay";
+        window.__iuMobileWebNavOrigin = fromSectionDetail ? "section_detail" : "overlay";
       } catch (_) {}
       try {
         sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
       } catch (_) {}
+      if (fromSectionDetail) {
+        try {
+          sessionStorage.setItem("iuWebNavDetailFromGateV1", "1");
+          if (document.body) document.body.classList.add("iu-webnavDetailFromGate");
+        } catch (_) {}
+        return;
+      }
       try {
         if (typeof window.iuNavOverlayLockArm === "function") window.iuNavOverlayLockArm();
       } catch (_) {}
       var h = String(location.hash || "");
       if (h !== "#iu-nav" && h !== "#nav") {
-        var u = new URL(location.href);
-        u.hash = "iu-nav";
-        history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+        uArm.hash = "iu-nav";
+        history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", uArm.toString());
       }
     } catch (_) {}
   }
@@ -7495,6 +7504,13 @@ try {
           window.matchMedia &&
           window.matchMedia("(max-width: 900px)").matches;
       } catch (_){}
+      if (usePush) {
+        try {
+          var curU = new URL(window.location.href);
+          var curSec = String(curU.searchParams.get("section") || "").toLowerCase();
+          if (curSec && curSec === sec) usePush = false;
+        } catch (_dup) {}
+      }
       if (usePush) {
         var pushSt = null;
         try {
@@ -8091,6 +8107,15 @@ try {
       u.searchParams.delete("panel");
       /* P0: strip Menu overlay hash — retaining #iu-nav reopens gate scroll-lock after assign. */
       u.hash = "";
+      try {
+        if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestNavIntent === "function") {
+          window.iuPwaReturnRecorder.ingestNavIntent("location_assign", {
+            url: u.toString(),
+            reason: "tablet_menu_tool_hard_nav",
+            documentSid: "",
+          });
+        }
+      } catch (_ni) {}
       window.location.assign(u.toString());
       return true;
     } catch (_) {}
@@ -8099,6 +8124,12 @@ try {
 
   function applySectionFromURL(accentOverride){
     void accentOverride;
+    var __iuSecApplyT0 = Date.now();
+    try {
+      if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestSectionApplyStart === "function") {
+        window.iuPwaReturnRecorder.ingestSectionApplyStart(__iuSecApplyT0);
+      }
+    } catch (_recSec0) {}
     /* P0 web-nav return controller: jeden tick bez obecného section apply při řízeném návratu do overlaye. */
     try {
       if (window.__iuMobileWebNavReturnSuppress === true) return;
@@ -8448,6 +8479,11 @@ try {
 
       });
     } catch (_) {}
+    try {
+      if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestSectionApplyScheduledReady === "function") {
+        window.iuPwaReturnRecorder.ingestSectionApplyScheduledReady(__iuSecApplyT0);
+      }
+    } catch (_recSec1) {}
   }
   try { window.iuApplySectionFromURL = applySectionFromURL; } catch (e) {}
   try { window.iuPersistNavState = persistNavState; } catch (e) {}
@@ -8561,6 +8597,77 @@ try {
     iuDesktopSectionCloseScrollRestoreBegin(restoreY);
   }
   try { window.iuDesktopSectionCloseApply = iuDesktopSectionCloseApply; } catch (e) {}
+
+  function iuPwaWebNavMarkDetailFromGatePersist() {
+    try {
+      sessionStorage.setItem("iuWebNavDetailFromGateV1", "1");
+    } catch (_) {}
+  }
+
+  /**
+   * iOS PWA: duplicate history entry with same ?section= makes first Back a full reload (back_forward) instead of Menu.
+   * When pagehide canon matches back_forward landing, open Menu overlay and strip section query (one Back semantics).
+   */
+  function iuPwaWebNavCoalesceSameSectionBackForward() {
+    try {
+      if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return false;
+      if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return false;
+      var navEnt =
+        typeof performance !== "undefined" && performance.getEntriesByType
+          ? performance.getEntriesByType("navigation")[0]
+          : null;
+      if (!navEnt || navEnt.type !== "back_forward") return false;
+      var u = new URL(location.href);
+      if (!u.searchParams.has("section")) return false;
+      if (sessionStorage.getItem("iuWebNavDetailFromGateV1") !== "1") return false;
+      var canon = u.pathname + u.search;
+      if (sessionStorage.getItem("iuPwaPagehideSectionCanonV1") !== canon) return false;
+      sessionStorage.removeItem("iuPwaPagehideSectionCanonV1");
+      var wrap = document.getElementById("iuMobileGateWrap");
+      if (!wrap || typeof wrap.__iuMobileGateSetTab !== "function") return false;
+      try {
+        window.__iuMobileWebNavReturnSuppress = true;
+      } catch (_) {}
+      wrap.__iuMobileGateSetTab("nav");
+      u.searchParams.delete("section");
+      u.searchParams.delete("topic");
+      u.searchParams.delete("mode");
+      u.hash = "iu-nav";
+      history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      try {
+        sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
+      } catch (_) {}
+      try {
+        if (typeof window.iuMenuNavApplyScroll === "function" && typeof window.iuMenuNavReadScroll === "function") {
+          var menuY = window.iuMenuNavReadScroll();
+          if (menuY > 0) window.iuMenuNavApplyScroll(menuY);
+        }
+      } catch (_) {}
+      try {
+        document.documentElement.classList.add("iu-mobileGateOverlayOpen");
+        document.body.classList.add("iu-mobileGateOverlayOpen");
+      } catch (_) {}
+      try {
+        if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestNavIntent === "function") {
+          window.iuPwaReturnRecorder.ingestNavIntent("back_forward_same_section_coalesce", {
+            canon: canon,
+            actionId: "iuPwaWebNavCoalesceSameSectionBackForward",
+          });
+        }
+      } catch (_) {}
+      requestAnimationFrame(function () {
+        try {
+          window.__iuMobileWebNavReturnSuppress = false;
+        } catch (_) {}
+      });
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+  try {
+    window.iuPwaWebNavCoalesceSameSectionBackForward = iuPwaWebNavCoalesceSameSectionBackForward;
+  } catch (_) {}
 
   function initNavRouter(){
     iuStripProjectsNavParamsForHomeLanding();
@@ -8712,8 +8819,10 @@ try {
           var mb = document.getElementById("iuMobileMainBackBar");
           if (mb) mb.hidden = true;
           try {
-            if (fromWebNavGateNav) document.body.classList.add("iu-webnavDetailFromGate");
-            else document.body.classList.remove("iu-webnavDetailFromGate");
+            if (fromWebNavGateNav) {
+              document.body.classList.add("iu-webnavDetailFromGate");
+              iuPwaWebNavMarkDetailFromGatePersist();
+            } else document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
@@ -8784,8 +8893,10 @@ try {
           var mbHexNav = document.getElementById("iuMobileMainBackBar");
           if (mbHexNav) mbHexNav.hidden = true;
           try {
-            if (fromWebNavGateHex) document.body.classList.add("iu-webnavDetailFromGate");
-            else document.body.classList.remove("iu-webnavDetailFromGate");
+            if (fromWebNavGateHex) {
+              document.body.classList.add("iu-webnavDetailFromGate");
+              iuPwaWebNavMarkDetailFromGatePersist();
+            } else document.body.classList.remove("iu-webnavDetailFromGate");
           } catch (_) {}
           try {
             if (typeof window.iuWebNavDetailBackBarHostSync === "function") window.iuWebNavDetailBackBarHostSync();
@@ -9085,6 +9196,9 @@ try {
 
     try{
       window.addEventListener("pageshow", function(ev){
+        try {
+          if (!ev.persisted) iuPwaWebNavCoalesceSameSectionBackForward();
+        } catch (_co) {}
         if (!ev.persisted) return;
         try{
           iuStripProjectsNavParamsForHomeLanding();

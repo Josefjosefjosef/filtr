@@ -5,7 +5,8 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v3-20261013-display-nav-proof";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v4-20261013-nav-back-section-proof";
+  var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
   var TAB_SESSION_KEY = "iu:pwa-return-recorder-tab-sid:v1";
@@ -178,6 +179,8 @@
         hash: String(location.hash || ""),
       },
       homeFeedVisible: isElementVisuallyPresent(feed) && !mobileMain && !toolMain,
+      feedBlockVisible: isElementVisuallyPresent(feed),
+      silverSlotVisible: isElementVisuallyPresent(document.getElementById("silver-slot")),
       hubMainColumnVisible: mobileMain || toolMain,
       menuOverlayVisible: !!(body && body.classList.contains("iu-mobileGateOverlayOpen") && gate === "nav"),
       toolsGateVisible: gate === "tools" && !!(body && body.classList.contains("iu-mobileGateOverlayOpen")),
@@ -374,6 +377,10 @@
     }
     if (!isRecording()) return;
     var reloadMeta = readLastReloadReason();
+    var navEnt =
+      typeof performance !== "undefined" && performance.getEntriesByType
+        ? performance.getEntriesByType("navigation")[0]
+        : null;
     appendEntry(
       "document:boot",
       {
@@ -385,6 +392,13 @@
         recorderBuildId: RECORDER_BUILD_ID,
         delivery: collectDeliveryProof(),
         reloadReason: reloadMeta,
+        navEntry: navEnt
+          ? {
+              type: navEnt.type,
+              redirectCount: navEnt.redirectCount,
+              transferSize: navEnt.transferSize,
+            }
+          : null,
       },
       "boot"
     );
@@ -581,7 +595,13 @@
           if (shouldWatchStorageKey(area, String(key))) {
             appendEntry(
               "storage:set",
-              { area: area, key: String(key), len: String(value).length },
+              {
+                area: area,
+                key: String(key),
+                len: String(value).length,
+                origin: "unknown",
+                stack: captureStack(4),
+              },
               "storage"
             );
           }
@@ -595,7 +615,11 @@
             if (this === sessionStorage) area = "session";
           } catch (_) {}
           if (shouldWatchStorageKey(area, String(key))) {
-            appendEntry("storage:remove", { area: area, key: String(key) }, "storage");
+            appendEntry(
+              "storage:remove",
+              { area: area, key: String(key), origin: "unknown", stack: captureStack(4) },
+              "storage"
+            );
           }
         }
         return origRemove.apply(this, arguments);
@@ -606,6 +630,28 @@
   function patchHistoryApi() {
     if (window.__iuPwaRecHistoryPatch) return;
     window.__iuPwaRecHistoryPatch = true;
+    try {
+      var goOrig = history.go;
+      if (typeof goOrig === "function" && !history.__iuPwaRecGoWrap) {
+        history.__iuPwaRecGoWrap = true;
+        history.go = function (delta) {
+          if (isRecording()) {
+            navActionSeq += 1;
+            appendEntry(
+              "nav:history_go",
+              {
+                actionId: "nav" + navActionSeq,
+                delta: delta,
+                hrefBefore: sanitizeUrl(location.href),
+                stack: captureStack(6),
+              },
+              "nav"
+            );
+          }
+          return goOrig.apply(history, arguments);
+        };
+      }
+    } catch (_) {}
     ["pushState", "replaceState"].forEach(function (method) {
       try {
         var orig = history[method];
@@ -878,6 +924,42 @@
       },
       { passive: true, capture: true }
     );
+    function bindBackButtons() {
+      if (window.__iuPwaRecBackBtns) return;
+      window.__iuPwaRecBackBtns = true;
+      ["iuMobileMainBackBar", "iuMobileGateBack"].forEach(function (id) {
+        var btn = document.getElementById(id);
+        if (!btn || btn.__iuPwaRecBack) return;
+        btn.__iuPwaRecBack = true;
+        btn.addEventListener(
+          "click",
+          function () {
+            if (!isRecording()) return;
+            navActionSeq += 1;
+            appendEntry(
+              "back:click",
+              {
+                actionId: "nav" + navActionSeq,
+                targetId: id,
+                href: sanitizeUrl(location.href),
+                hash: String(location.hash || ""),
+                hubSection: hubSectionFromUrl(),
+                handler: "ui:click",
+              },
+              "back"
+            );
+          },
+          true
+        );
+      });
+    }
+    bindBackButtons();
+    var backPoll = 0;
+    var backPollId = setInterval(function () {
+      bindBackButtons();
+      backPoll += 1;
+      if (backPoll >= 20) clearInterval(backPollId);
+    }, 500);
     ["iuMobileGatePanelNav", "iuMobileGatePanelTools"].forEach(function (id) {
       var el = document.getElementById(id);
       if (!el) return;
@@ -952,6 +1034,37 @@
     refreshIcentrumPanel(panel);
   }
 
+  function ingestNavIntent(reason, detail) {
+    if (!isRecording()) return;
+    navActionSeq += 1;
+    var payload = detail && typeof detail === "object" ? detail : {};
+    payload.actionId = payload.actionId || "nav" + navActionSeq;
+    payload.reason = String(reason || "");
+    payload.documentSid = documentSid;
+    payload.href = sanitizeUrl(location.href);
+    appendEntry("nav:intent", payload, "nav");
+  }
+
+  function ingestSectionApplyStart(t0) {
+    if (!isRecording()) return;
+    appendEntry(
+      "section:apply_start",
+      { t0: t0 || Date.now(), hubSection: hubSectionFromUrl(), stack: captureStack(5), via: "app_applySectionFromURL" },
+      "section"
+    );
+    scheduleSectionReadyPoll(t0 || Date.now());
+    schedulePaintBurst("section_apply");
+  }
+
+  function ingestSectionApplyScheduledReady(t0) {
+    if (!isRecording()) return;
+    appendEntry(
+      "section:apply_scheduled",
+      { ms: Date.now() - (t0 || Date.now()), hubSection: hubSectionFromUrl() },
+      "section"
+    );
+  }
+
   window.iuPwaReturnRecorder = {
     startRecording: startRecording,
     stopRecording: stopRecording,
@@ -960,9 +1073,13 @@
     exportText: exportText,
     isRecording: isRecording,
     ingestTrace: ingestTrace,
+    ingestNavIntent: ingestNavIntent,
+    ingestSectionApplyStart: ingestSectionApplyStart,
+    ingestSectionApplyScheduledReady: ingestSectionApplyScheduledReady,
     refreshIcentrumPanel: refreshIcentrumPanel,
     bindIcentrumPanel: bindIcentrumPanel,
     getViewSnapshot: viewSnapshot,
+    recorderBuildId: RECORDER_BUILD_ID,
   };
 
   onDocumentBoot();

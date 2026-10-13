@@ -2,12 +2,12 @@
   "freezeId": "iu-premium-p1-p8-v1-20261005",
   "preStabilizationProductionSha": "405ad803e6892a84c6554ce0ea3dfed8f879be21",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-10-13T12:35:00.000Z",
-  "note": "Freeze bump: PWA external return v9 (defer deploy reload, phone hub flash, recorder v2).",
+  "updatedAt": "2026-10-13T19:30:00.000Z",
+  "note": "Freeze bump: PWA external return v10 (menu section back coalesce, cold section flash, recorder v4).",
   "files": {
-    "projects/index.html": "f754bad1a203f308a4fc2931a0ba03882501df39d035392479086756f657b5ad",
+    "projects/index.html": "11b413dd1a7fa72fd361b1a3bffe389d9503d820bd3dd54236294c1acda48ae1",
     "assets/app.css": "8b7211631821a618d82c419b95a930ff6ff61f5c343382e62c210810cedc539a",
-    "assets/app.js": "f004d21d8371a8190c3a13edb10a68038cc4198268796af16180b256beb543f8",
+    "assets/app.js": "3a90857e1dd9b4f6c8106c620aa3e0b9cc90efc11a011cb659597b2841977ae7",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "c18a117039f4a6b37f72b54fd7f6b4b8f19f5774a46da2302be5d0329619852f",
     "assets/iu-app-feed-pipeline-v1.js": "47cdf08941c378990c5a36ee957fe7e24df7aaa315232ab7349567a710d98cf4",
     "assets/iu-calendar-overlay-v1.js": "d96efddb6b3b85843babbf942859d8aefbb66fa1429a162ffeb3bf75546bdda2",
@@ -17,7 +17,7 @@
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
     "sw.js": "7ad29b686193531dddc80b6eb6c65668d34b9a868a011ade521837ede3b9d2ca",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
-    "assets/iu-network-connectivity-v1.js": "73fe27f9db19b4764aed57dae325b5476edec02008ff5003836ddfabaf1beec5",
+    "assets/iu-network-connectivity-v1.js": "da2ff8f8f481f4c9f6698535079a790a39f2d8ec4d2f126086da3d3bc46bd4cb",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "51a894bf146f3f7cdc9dc7ddd62a36e0811805f0fb982e43d066ce02fba8f246",
     "assets/iu-user-data-backup-core.js": "b349b4a391e5c2c928ba50330df57eac40a46dbeeabedbc4c4a8cce490c9620b",
@@ -172,12 +172,13 @@
       "mindmenu-pwa-box-nav-flush-v1-20260918",
       "affiliate-header-frame-v1-20260918",
       "affiliate-brainmarket-zdravi-doplnky-v1-20260926",
-      "pwa-return-recorder-v3-20261013-display-nav-proof",
+      "pwa-return-recorder-v4-20261013-nav-back-section-proof",
       "pwa-ver-check-v4-external-return-defer",
       "iu-pwa-return-recorder-v1.js",
       "Diagnostika PWA",
-      "pwa-external-return-unified-v9-20261013-reload-flash-phone",
-      "iuPwaHubSectionReturnV1"
+      "pwa-external-return-unified-v10-20261013-menu-section-back-flash",
+      "iuPwaHubSectionReturnV1",
+      "data-iu-cold-section"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -216,7 +217,9 @@
       "silver-info-cards-collapse-v1-20260915",
       "calendar-nav-external-open-v1-20260916",
       "menu-nav-scroll-restore-v1-20260918",
-      "Keep overlay open for PWA return"
+      "Keep overlay open for PWA return",
+      "iuPwaWebNavCoalesceSameSectionBackForward",
+      "iuWebNavDetailFromGateV1"
     ],
     "assets/app.css": [
       "mindmenu-pwa-box-nav-flush-v1-20260918",
@@ -242,8 +245,9 @@
       "isAiAssistantsOverlayOpen",
       "reassertIntentionalOverlayShell",
       "armExternalReturn",
-      "pwa-external-return-unified-v9-20261013-reload-flash-phone",
+      "pwa-external-return-unified-v10-20261013-menu-section-back-flash",
       "EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY",
+      "iuPwaPagehideSectionCanonV1",
       "iuPwaHubSectionReturnV1",
       "shouldSkipMindMenuRestoreOnExternalReturn",
       "iuPwaReturnRecorder"
