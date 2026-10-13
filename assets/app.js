@@ -8294,6 +8294,12 @@ try {
     try {
       if (section.indexOf("aff-") === 0 && typeof window.iuAffiliateApplySection === "function") {
         window.iuAffiliateApplySection(section);
+        try {
+          if (typeof window.iuPremiumSelectedMount === "function" && typeof window.iuAffiliateGetCategory === "function") {
+            var affCat = window.iuAffiliateGetCategory(section);
+            if (affCat && affCat.id) window.iuPremiumSelectedMount(affCat.id);
+          }
+        } catch (_pm) {}
       }
     } catch (_) {}
     try {
