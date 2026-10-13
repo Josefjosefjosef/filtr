@@ -121,6 +121,7 @@
   var mountSeq = 0;
   var salesOpen = false;
   var lastCatalog = null;
+  var fetchCache = Object.create(null);
 
   function ensureCss() {
     if (global.document.getElementById(CSS_ID)) return;
@@ -139,13 +140,16 @@
   }
 
   function fetchJson(url) {
-    return fetch(url, { credentials: "omit", mode: "cors" })
+    var key = String(url || "");
+    if (fetchCache[key]) return fetchCache[key];
+    fetchCache[key] = fetch(key, { credentials: "omit", mode: "cors" })
       .then(function (r) {
         return r.json();
       })
       .catch(function () {
         return null;
       });
+    return fetchCache[key];
   }
 
   function buildSoldSlot(item) {
@@ -301,6 +305,7 @@
     }
     while (host.firstChild) host.removeChild(host.firstChild);
     host.hidden = true;
+    host.classList.add("iuPremiumGrid--loading");
 
     var panel = global.document.getElementById("iuPremiumSalesPanel");
     if (panel) {
@@ -333,6 +338,7 @@
       }
 
       renderSalesPanel(catalog);
+      host.classList.remove("iuPremiumGrid--loading");
     });
   }
 

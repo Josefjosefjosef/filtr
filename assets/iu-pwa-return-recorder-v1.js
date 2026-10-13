@@ -5,7 +5,8 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v4-20261013-nav-back-section-proof";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v5-20261013-layout-section-external";
+  var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
@@ -154,6 +155,70 @@
     } catch (_) {
       return false;
     }
+  }
+
+  function rectBrief(el) {
+    if (!el) return null;
+    try {
+      var r = el.getBoundingClientRect();
+      return {
+        t: Math.round(r.top),
+        l: Math.round(r.left),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function layoutGeometrySnapshot() {
+    var vv = window.visualViewport;
+    var scrollHost = document.getElementById("content") || document.documentElement;
+    var scrollHostY = 0;
+    try {
+      scrollHostY = scrollHost && scrollHost.scrollTop ? scrollHost.scrollTop : window.scrollY || 0;
+    } catch (_) {}
+    return {
+      scrollY: Math.round(window.scrollY || 0),
+      scrollHostY: Math.round(scrollHostY),
+      innerH: Math.round(window.innerHeight || 0),
+      vv: vv
+        ? {
+            h: Math.round(vv.height),
+            offsetTop: Math.round(vv.offsetTop || 0),
+            scale: vv.scale,
+          }
+        : null,
+      center: rectBrief(document.getElementById("iuCenterStage")),
+      affView: rectBrief(document.getElementById("iuAffiliateView")),
+      affGrid: rectBrief(document.getElementById("iuAffiliateGrid")),
+      premiumGrid: rectBrief(document.getElementById("iuPremiumSelectedGrid")),
+      salesLink: rectBrief(document.getElementById("iuPremiumSalesToggle")),
+      topbar: rectBrief(document.getElementById("iuTopbar") || document.querySelector(".iuTopbar")),
+    };
+  }
+
+  function affiliateContentMetrics() {
+    var grid = document.getElementById("iuAffiliateGrid");
+    var partnerReady = 0;
+    var chipTotal = 0;
+    try {
+      if (grid) {
+        chipTotal = grid.querySelectorAll(".iuAffiliateChip").length;
+        partnerReady = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="1"]').length;
+      }
+    } catch (_) {}
+    var prem = document.getElementById("iuPremiumSelectedGrid");
+    var sales = document.getElementById("iuPremiumSalesToggle");
+    return {
+      affVis: isElementVisuallyPresent(document.getElementById("iuAffiliateView")),
+      partnerReadyCount: partnerReady,
+      chipTotal: chipTotal,
+      premiumGridVis: !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
+      salesLinkVis: isElementVisuallyPresent(sales),
+      premiumLoading: !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
+    };
   }
 
   function visualLayerSnapshot() {
@@ -388,10 +453,12 @@
         tabSessionSid: tabSessionSid,
         documentSid: documentSid,
         documentBootSeq: documentBootSeq,
+        recordingAttemptId: sessionStorage.getItem(ATTEMPT_KEY) || "",
         appVersion: appVersionLabel(),
         recorderBuildId: RECORDER_BUILD_ID,
         delivery: collectDeliveryProof(),
         reloadReason: reloadMeta,
+        geom: layoutGeometrySnapshot(),
         navEntry: navEnt
           ? {
               type: navEnt.type,
@@ -402,6 +469,7 @@
       },
       "boot"
     );
+    scheduleSectionLayoutWatch(Date.now(), "document_boot");
     try {
       sessionStorage.removeItem("iu:pwa:ver:last-reload-reason");
     } catch (_) {}
@@ -411,12 +479,21 @@
     try {
       localStorage.setItem(ACTIVE_KEY, "1");
     } catch (_) {}
+    var attemptId = "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    try {
+      sessionStorage.setItem(ATTEMPT_KEY, attemptId);
+    } catch (_) {}
     var store = readLogStore();
     if (!store.startedAt) store.startedAt = Date.now();
     store.stoppedAt = null;
     store.appVersion = appVersionLabel();
+    store.recordingAttemptId = attemptId;
     writeLogStore(store);
-    appendEntry("recorder:start", { appVersion: appVersionLabel() }, "ui");
+    appendEntry(
+      "recorder:start",
+      { appVersion: appVersionLabel(), recordingAttemptId: attemptId, recorderBuildId: RECORDER_BUILD_ID },
+      "ui"
+    );
     bindHooks();
     scheduleScrollSample(true);
   }
@@ -463,6 +540,7 @@
       documentBootSeq: documentBootSeq || parseInt(sessionStorage.getItem(DOC_BOOT_SEQ_KEY) || "0", 10) || 0,
       pageSid: documentSid || pageSid,
       delivery: collectDeliveryProof(),
+      recordingAttemptId: store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "",
       logMeta: {
         droppedEntries: store.droppedEntries || 0,
         truncatedExportLikely: !!store.truncatedExportLikely,
@@ -504,7 +582,15 @@
     if (!isRecording()) return;
     var t = String(tag || "");
     appendEntry("trace:" + t, detail || {}, "iuNetwork");
-    if (t === "restore_start" || t === "settle_done" || t === "version_reload") schedulePaintBurst(t);
+    if (
+      t === "restore_start" ||
+      t === "settle_done" ||
+      t === "version_reload" ||
+      t === "external_handoff"
+    ) {
+      schedulePaintBurst(t);
+    }
+    if (t === "settle_done" || t === "restore_start") scheduleSectionLayoutWatch(Date.now(), "external_" + t);
   }
 
   function wrapFn(fnName, evName) {
@@ -531,23 +617,80 @@
     } catch (_) {}
   }
 
+  function scheduleSectionLayoutWatch(t0, reason) {
+    var lastSig = "";
+    var samples = 0;
+    var maxMs = 4500;
+    function tick() {
+      if (!isRecording()) return;
+      samples += 1;
+      var geom = layoutGeometrySnapshot();
+      var sig = JSON.stringify(geom);
+      if (sig !== lastSig) {
+        lastSig = sig;
+        appendEntry(
+          "layout:geometry",
+          { ms: Date.now() - t0, reason: reason || "section", sample: samples, geom: geom },
+          "layout"
+        );
+      }
+      if (Date.now() - t0 < maxMs && samples < 72) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function scheduleSectionContentReady(t0) {
+    var attempts = 0;
+    function poll() {
+      if (!isRecording()) return;
+      attempts += 1;
+      var m = affiliateContentMetrics();
+      var ready =
+        m.affVis &&
+        m.partnerReadyCount > 0 &&
+        m.salesLinkVis &&
+        (!m.premiumLoading || m.premiumGridVis);
+      if (ready || attempts >= 120) {
+        appendEntry(
+          "section:content_ready",
+          {
+            ms: Date.now() - t0,
+            attempts: attempts,
+            metrics: m,
+            geom: layoutGeometrySnapshot(),
+          },
+          "section"
+        );
+        return;
+      }
+      requestAnimationFrame(poll);
+    }
+    requestAnimationFrame(poll);
+  }
+
   function scheduleSectionReadyPoll(t0) {
     var attempts = 0;
     function poll() {
       if (!isRecording()) return;
       attempts += 1;
-      var grid = document.getElementById("iuAffiliateGrid");
-      var btnCount = 0;
-      try {
-        if (grid) btnCount = grid.querySelectorAll('a[href], button[type="button"]').length;
-      } catch (_) {}
-      var affVis = isElementVisuallyPresent(document.getElementById("iuAffiliateView"));
-      if (btnCount > 0 || affVis || attempts >= 48) {
+      var m = affiliateContentMetrics();
+      var btnCount = m.chipTotal;
+      if (btnCount > 0 || m.affVis || attempts >= 48) {
         appendEntry(
           "section:ready",
-          { ms: Date.now() - t0, btnCount: btnCount, affVis: affVis, attempts: attempts },
+          {
+            ms: Date.now() - t0,
+            btnCount: btnCount,
+            affVis: m.affVis,
+            partnerReadyCount: m.partnerReadyCount,
+            salesLinkVis: m.salesLinkVis,
+            premiumGridVis: m.premiumGridVis,
+            attempts: attempts,
+          },
           "section"
         );
+        scheduleSectionContentReady(t0);
+        scheduleSectionLayoutWatch(t0, "section_apply");
         return;
       }
       requestAnimationFrame(poll);
@@ -870,9 +1013,31 @@
     }
   }
 
+  function bindLayoutShiftObserver() {
+    if (window.__iuPwaRecClsObs || !window.PerformanceObserver) return;
+    try {
+      window.__iuPwaRecClsObs = true;
+      var po = new PerformanceObserver(function (list) {
+        if (!isRecording()) return;
+        var entries = list.getEntries();
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          if (e.hadRecentInput) continue;
+          appendEntry(
+            "layout:shift",
+            { value: e.value, hadRecentInput: !!e.hadRecentInput, sourceCount: (e.sources || []).length },
+            "layout"
+          );
+        }
+      });
+      po.observe({ type: "layout-shift", buffered: true });
+    } catch (_) {}
+  }
+
   function bindHooks() {
     if (hooksBound) return;
     hooksBound = true;
+    bindLayoutShiftObserver();
     patchNetwork();
     observeGate();
     bindLifecycleEvents();

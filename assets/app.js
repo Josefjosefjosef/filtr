@@ -8612,28 +8612,46 @@ try {
     try {
       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return false;
       if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return false;
+      var earlyDone = false;
+      try {
+        earlyDone = sessionStorage.getItem("iuPwaEarlyCoalesceV1") === "1";
+        if (earlyDone) sessionStorage.removeItem("iuPwaEarlyCoalesceV1");
+      } catch (_) {}
       var navEnt =
         typeof performance !== "undefined" && performance.getEntriesByType
           ? performance.getEntriesByType("navigation")[0]
           : null;
-      if (!navEnt || navEnt.type !== "back_forward") return false;
+      if (!earlyDone) {
+        if (!navEnt || navEnt.type !== "back_forward") return false;
+      } else if (navEnt && navEnt.type !== "back_forward") {
+        return false;
+      }
       var u = new URL(location.href);
-      if (!u.searchParams.has("section")) return false;
+      if (earlyDone) {
+        if (u.searchParams.has("section")) return false;
+        if (String(u.hash || "") !== "#iu-nav" && String(u.hash || "") !== "#nav") return false;
+      } else {
+        if (!u.searchParams.has("section")) return false;
+      }
       if (sessionStorage.getItem("iuWebNavDetailFromGateV1") !== "1") return false;
       var canon = u.pathname + u.search;
-      if (sessionStorage.getItem("iuPwaPagehideSectionCanonV1") !== canon) return false;
-      sessionStorage.removeItem("iuPwaPagehideSectionCanonV1");
+      if (!earlyDone) {
+        if (sessionStorage.getItem("iuPwaPagehideSectionCanonV1") !== canon) return false;
+        sessionStorage.removeItem("iuPwaPagehideSectionCanonV1");
+      }
       var wrap = document.getElementById("iuMobileGateWrap");
       if (!wrap || typeof wrap.__iuMobileGateSetTab !== "function") return false;
       try {
         window.__iuMobileWebNavReturnSuppress = true;
       } catch (_) {}
       wrap.__iuMobileGateSetTab("nav");
-      u.searchParams.delete("section");
-      u.searchParams.delete("topic");
-      u.searchParams.delete("mode");
-      u.hash = "iu-nav";
-      history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      if (!earlyDone) {
+        u.searchParams.delete("section");
+        u.searchParams.delete("topic");
+        u.searchParams.delete("mode");
+        u.hash = "iu-nav";
+        history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      }
       try {
         sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
       } catch (_) {}
@@ -8651,6 +8669,7 @@ try {
         if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestNavIntent === "function") {
           window.iuPwaReturnRecorder.ingestNavIntent("back_forward_same_section_coalesce", {
             canon: canon,
+            earlyInline: earlyDone,
             actionId: "iuPwaWebNavCoalesceSameSectionBackForward",
           });
         }

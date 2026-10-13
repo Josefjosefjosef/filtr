@@ -28,7 +28,8 @@ function staticGate() {
   const net = read("assets/iu-network-connectivity-v1.js");
   const app = read("assets/app.js");
   const html = read("projects/index.html");
-  must(/pwa-external-return-unified-v10-20261013-menu-section-back-flash/.test(net), "static:v10_build");
+  must(/pwa-external-return-unified-v11-20261013-section-layout-external-handoff/.test(net), "static:v11_build");
+  must(/iuPwaEarlyCoalesceV1/.test(html), "static:early_coalesce_inline");
   must(/iuPwaPagehideSectionCanonV1/.test(net), "static:pagehide_canon");
   must(/iuPwaWebNavCoalesceSameSectionBackForward/.test(app), "static:coalesce_fn");
   must(/iuWebNavDetailFromGateV1/.test(app), "static:detail_gate_ss");
