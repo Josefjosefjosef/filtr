@@ -36,7 +36,7 @@ const SNIPPET = `(function iuPwaReturnDiag(){
 async function main() {
   console.log("=== PWA external return — device verification ===");
   console.log("");
-  console.log("Expected build id: pwa-external-return-unified-v11-20261013-section-layout-external-handoff");
+  console.log("Expected build id: pwa-external-return-unified-v11-20261014-home-hub-resume-handoff");
   console.log("Preferred enable: iCentrum → Diagnostika PWA (7× logo still works on desktop).");
   console.log("Installed PWA (same origin, no Safari tab):");
   console.log("  A) 7× tap logo infoUzel.cz (a.iuBrand) within 4 s → panel + trace ON");

@@ -5,7 +5,8 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v5-20261013-layout-section-external";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v5-20261014-home-visible-probes";
+  var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
@@ -146,7 +147,13 @@
   function isElementVisuallyPresent(el) {
     if (!el) return false;
     try {
-      if (el.hidden) return false;
+      var node = el;
+      while (node && node.nodeType === 1) {
+        if (node.hidden) return false;
+        var pst = getComputedStyle(node);
+        if (pst.display === "none" || pst.visibility === "hidden" || Number(pst.opacity) === 0) return false;
+        node = node.parentElement;
+      }
       var st = getComputedStyle(el);
       if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity) === 0) return false;
       var r = el.getBoundingClientRect();
@@ -243,8 +250,14 @@
         gate: gate,
         hash: String(location.hash || ""),
       },
+      iuHomeClass: !!(body && body.classList.contains("iu-home")),
+      coldSectionAttr: !!(body && body.getAttribute("data-iu-cold-section") === "1"),
+      hubResumePending: !!(document.documentElement && document.documentElement.classList.contains("iu-hub-section-resume-pending")),
       homeFeedVisible: isElementVisuallyPresent(feed) && !mobileMain && !toolMain,
       feedBlockVisible: isElementVisuallyPresent(feed),
+      homeHubSilverVisible: isElementVisuallyPresent(
+        document.getElementById("silver-slot") || document.querySelector("#iuMobileSilverSlot .silver-slot")
+      ),
       silverSlotVisible: isElementVisuallyPresent(document.getElementById("silver-slot")),
       hubMainColumnVisible: mobileMain || toolMain,
       menuOverlayVisible: !!(body && body.classList.contains("iu-mobileGateOverlayOpen") && gate === "nav"),
@@ -669,13 +682,17 @@
   }
 
   function scheduleSectionReadyPoll(t0) {
+    var hub = hubSectionFromUrl();
+    if (hub.indexOf("aff-") !== 0 && !/^(pocasi|mapy|maps|jr|tvprogram|tvonline|radio)/.test(hub)) {
+      return;
+    }
     var attempts = 0;
     function poll() {
       if (!isRecording()) return;
       attempts += 1;
       var m = affiliateContentMetrics();
       var btnCount = m.chipTotal;
-      if (btnCount > 0 || m.affVis || attempts >= 48) {
+      if ((hub.indexOf("aff-") === 0 && (m.affVis || btnCount > 0)) || attempts >= 48) {
         appendEntry(
           "section:ready",
           {
@@ -703,11 +720,24 @@
       var cur = window.iuApplySectionFromURL;
       if (typeof cur !== "function" || cur.__iuPwaRecSection) return;
       window.iuApplySectionFromURL = function () {
-        var t0 = Date.now();
-        appendEntry("section:apply_start", { t0: t0, hubSection: hubSectionFromUrl(), stack: captureStack(5) }, "section");
+        var op = window.__iuPwaRecSectionApplyOp;
+        var t0 = op && op.t0 ? op.t0 : Date.now();
+        if (!op || !op.logged) {
+          sectionApplyOpSeq += 1;
+          var opId = op && op.id ? op.id : "sec" + sectionApplyOpSeq;
+          appendEntry(
+            "section:apply_start",
+            { t0: t0, opId: opId, hubSection: hubSectionFromUrl(), stack: captureStack(5), via: "wrap" },
+            "section"
+          );
+          if (op) op.logged = true;
+        }
         var rv = cur.apply(this, arguments);
-        scheduleSectionReadyPoll(t0);
+        if (!op) scheduleSectionReadyPoll(t0);
         schedulePaintBurst("section_apply");
+        try {
+          window.__iuPwaRecSectionApplyOp = null;
+        } catch (_) {}
         return rv;
       };
       window.iuApplySectionFromURL.__iuPwaRecSection = true;
@@ -1212,12 +1242,11 @@
 
   function ingestSectionApplyStart(t0) {
     if (!isRecording()) return;
-    appendEntry(
-      "section:apply_start",
-      { t0: t0 || Date.now(), hubSection: hubSectionFromUrl(), stack: captureStack(5), via: "app_applySectionFromURL" },
-      "section"
-    );
-    scheduleSectionReadyPoll(t0 || Date.now());
+    sectionApplyOpSeq += 1;
+    var opId = "sec" + sectionApplyOpSeq;
+    var t = t0 || Date.now();
+    window.__iuPwaRecSectionApplyOp = { id: opId, t0: t, logged: false };
+    scheduleSectionReadyPoll(t);
     schedulePaintBurst("section_apply");
   }
 

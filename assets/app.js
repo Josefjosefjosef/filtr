@@ -7845,6 +7845,24 @@ try {
   }
   try { window.iuStripProjectsNavParamsForHomeLanding = iuStripProjectsNavParamsForHomeLanding; } catch(_){}
 
+  /** P0: stale data-iu-cold-section hides #feed/#silver-slot on hub after Menu→Domů or hub reset. */
+  function iuPwaClearColdSectionAttrsForHub() {
+    try {
+      if (document.documentElement) {
+        document.documentElement.removeAttribute("data-iu-cold-section");
+        document.documentElement.classList.remove("iu-pwaEarlyCoalesceV1");
+      }
+      if (document.body) {
+        document.body.removeAttribute("data-iu-cold-section");
+        document.body.classList.remove("iu-pwaEarlyCoalesceV1");
+      }
+      if (document.documentElement) document.documentElement.classList.remove("iu-hub-section-resume-pending");
+    } catch (_) {}
+  }
+  try {
+    window.iuPwaClearColdSectionAttrsForHub = iuPwaClearColdSectionAttrsForHub;
+  } catch (_) {}
+
   /**
    * P0: Keep body.iu-home in sync with URL: global article hub (section feed/media, no topic filter).
    * Feed visibility handler skips full loadData() when iu-home is set (tab return on default /projects/ hub).
@@ -7875,6 +7893,7 @@ try {
       if (document.body) {
         document.body.classList.toggle("iu-home", globalArticleHub === true);
       }
+      if (globalArticleHub === true) iuPwaClearColdSectionAttrsForHub();
     } catch (_) {
       try {
         if (document.body) document.body.classList.remove("iu-home");

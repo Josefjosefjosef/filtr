@@ -21,7 +21,8 @@
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
   var PWA_EXTERNAL_RETURN_BUILD_ID =
-    "pwa-external-return-unified-v11-20261013-section-layout-external-handoff";
+    "pwa-external-return-unified-v11-20261014-home-hub-resume-handoff";
+  var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -673,19 +674,32 @@
         if (gateArm === "tools") window.iuMindMenuArmReturnState();
       }
     } catch (_) {}
+    writeHubSectionReturnResume();
+    try {
+      if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+    } catch (_) {}
+  }
+
+  function runDeferredExternalReturnSnapshotWork() {
+    externalReturnDeferredSnapshotPending = false;
+    touchExternalReturnHoldUntil();
+    try {
+      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+    } catch (_) {}
   }
 
   function deferExternalReturnSnapshotAfterHandoff() {
-    setTimeout(function () {
-      touchExternalReturnHoldUntil();
-      try {
-        if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
-      } catch (_) {}
-      try {
-        if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
-      } catch (_) {}
-      writeHubSectionReturnResume();
-    }, 0);
+    externalReturnDeferredSnapshotPending = true;
+    var flushed = false;
+    function flushOnce() {
+      if (flushed) return;
+      flushed = true;
+      runDeferredExternalReturnSnapshotWork();
+    }
+    setTimeout(flushOnce, 0);
+    try {
+      window.addEventListener("pagehide", flushOnce, { once: true, capture: true });
+    } catch (_) {}
   }
 
   function capturePwaExternalReturnSnapshot() {
@@ -1110,6 +1124,9 @@
 
   function bindLifecycle() {
     window.addEventListener("pagehide", function () {
+      try {
+        if (externalReturnDeferredSnapshotPending) runDeferredExternalReturnSnapshotWork();
+      } catch (_) {}
       try {
         var u = new URL(location.href);
         if (u.searchParams.has("section")) {
