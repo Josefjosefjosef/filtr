@@ -223,6 +223,7 @@ function main() {
       "Statistiky a transparentnost",
       "GDPR a Všeobecné obchodní podmínky",
       "Provozovatel a kontakt",
+      "Diagnostika PWA",
     ];
     if (labels.join("|") !== expected.join("|")) {
       fail("icentrum_menu_order_mismatch:" + labels.join(">"));
