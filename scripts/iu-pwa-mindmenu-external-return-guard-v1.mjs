@@ -69,7 +69,11 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v6-20261013-icentrum-diag/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v7-20261013-hub-section-return/.test(net), "static:pwa_build_id");
+  must(/iuPwaHubSectionReturnV1/.test(net) && /shouldSkipMindMenuRestoreOnExternalReturn/.test(net), "static:hub_section_return_skip_mindmenu");
+  must(/iuPwaHubSectionReturnV1/.test(read("projects/index.html")) && /hubReturnSectionAtHead/.test(read("projects/index.html")), "static:head_hub_section_resume");
+  must(/window\.iuMindMenuClearReturnPending/.test(feed), "static:clear_return_pending_export");
+  must(/gateNow\s*!==\s*"tools"[\s\S]{0,120}iuMindMenuClearReturnPending/.test(feed), "static:restore_skip_hub_section_stale_pending");
   must(/Diagnostika PWA/.test(read("projects/index.html")), "static:icentrum_pwa_diag_tile");
   must(/iu-pwa-return-recorder-v1\.js/.test(read("projects/index.html")), "static:recorder_script_tag");
   must(/iuPwaReturnRecorder/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export");
@@ -622,6 +626,74 @@ async function runBehaviorHubApplySectionArmPreserved(page, label) {
   must(probe.gate === "nav", label + ":hub_arm:gate_nav:" + probe.gate);
 }
 
+/**
+ * Regression sim (PWA recorder log 20261013, not physical Done button):
+ * stale MindMenu pending → hub affiliate section → external arm → visibility restore → cold / boot.
+ */
+async function runBehaviorAffHubStalePendingExternalReturnSim(page, label) {
+  const AFF = "aff-cestovni-kancelare";
+  const sim = await page.evaluate(async (affSec) => {
+    const HUB_KEY = "iuPwaHubSectionReturnV1";
+    const PENDING_KEY = "iuMindMenuReturnPendingV1";
+    const staleT = Date.now() - 120000;
+    localStorage.setItem(PENDING_KEY, JSON.stringify({ t: staleT, y: 120, ai: 0, aiY: 0 }));
+    const u = new URL(location.href);
+    u.searchParams.set("section", affSec);
+    u.hash = "";
+    history.replaceState({}, "", u.toString());
+    if (window.iuNetwork && typeof window.iuNetwork.cancelExternalReturnRestore === "function") {
+      window.iuNetwork.cancelExternalReturnRestore("section_apply");
+    }
+    const pendingAfterSection = localStorage.getItem(PENDING_KEY) || "";
+    const wrap = document.getElementById("iuMobileGateWrap");
+    if (wrap && typeof wrap.__iuMobileGateSetTab === "function") wrap.__iuMobileGateSetTab("");
+    if (window.iuNetwork && typeof window.iuNetwork.armExternalReturn === "function") {
+      window.iuNetwork.armExternalReturn();
+    }
+    try {
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+    } catch (_) {}
+    if (window.iuNetwork && typeof window.iuNetwork.restoreAppShellAfterReturn === "function") {
+      window.iuNetwork.restoreAppShellAfterReturn();
+    }
+    await new Promise((r) => setTimeout(r, 100));
+    const gateAfterRestore = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
+    const secAfterRestore = new URL(location.href).searchParams.get("section") || "";
+    return { pendingAfterSection: pendingAfterSection ? "1" : "", gateAfterRestore, secAfterRestore };
+  }, AFF);
+  must(sim.pendingAfterSection === "", label + ":aff_sim:stale_pending_cleared");
+  must(sim.gateAfterRestore !== "tools", label + ":aff_sim:restore_no_mindmenu:" + sim.gateAfterRestore);
+  must(sim.secAfterRestore === AFF, label + ":aff_sim:section_kept:" + sim.secAfterRestore);
+
+  await page.evaluate(
+    ({ affSec, staleT }) => {
+      const PENDING_KEY = "iuMindMenuReturnPendingV1";
+      const HUB_KEY = "iuPwaHubSectionReturnV1";
+      localStorage.setItem(PENDING_KEY, JSON.stringify({ t: staleT, y: 120, ai: 0, aiY: 0 }));
+      localStorage.setItem(HUB_KEY, JSON.stringify({ section: affSec, t: Date.now() }));
+      sessionStorage.clear();
+    },
+    { affSec: AFF, staleT: Date.now() - 120000 }
+  );
+  const bootUrl = `http://127.0.0.1:${PORT}/projects/?iuInfoSystem=cutover&nosw=1`;
+  await page.goto(bootUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await waitRuntime(page);
+  const cold = await page.evaluate(() => {
+    const u = new URL(location.href);
+    return {
+      section: u.searchParams.get("section") || "",
+      gate: (() => {
+        const w = document.getElementById("iuMobileGateWrap");
+        return w ? w.getAttribute("data-iu-mobile-gate") || "" : "";
+      })(),
+      mmBoot: document.documentElement.classList.contains("iu-mm-return-boot"),
+    };
+  });
+  must(cold.section === AFF, label + ":aff_sim:cold_url_section:" + cold.section);
+  must(cold.gate !== "tools", label + ":aff_sim:cold_not_tools_gate:" + cold.gate);
+  must(cold.mmBoot !== true, label + ":aff_sim:cold_no_mm_boot");
+}
+
 /** Menu → ?section= must not stay blocked while return arm is set (forward nav regression). */
 async function runBehaviorMenuForwardSectionApplyAllowed(page, label) {
   const probe = await page.evaluate(() => {
@@ -1161,6 +1233,8 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     must(cold.guard === true, label + ":colddoc:guard_still_true");
     must(cold.boot !== true, label + ":colddoc:boot_released_after_setTab_tools");
     must(cold.sawHome !== true && cold.gate === "tools", label + ":colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
+
+    await runBehaviorAffHubStalePendingExternalReturnSim(page, label);
 
     return { platform: label, visibleHomeFrames: cold.visibleHomeFrames || 0 };
   } finally {

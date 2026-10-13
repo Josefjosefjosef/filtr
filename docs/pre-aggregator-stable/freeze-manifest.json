@@ -2,14 +2,14 @@
   "freezeId": "iu-premium-p1-p8-v1-20261005",
   "preStabilizationProductionSha": "405ad803e6892a84c6554ce0ea3dfed8f879be21",
   "createdAt": "2026-07-20T08:15:00Z",
-  "updatedAt": "2026-10-12T23:45:00.000Z",
-  "note": "Freeze bump: iCentrum PWA return recorder v6-20261013 (local diagnostic log, no telemetry).",
+  "updatedAt": "2026-10-13T08:00:00.000Z",
+  "note": "Freeze bump: PWA hub-section external return v7 (stale MindMenu pending vs affiliate return).",
   "files": {
-    "projects/index.html": "3d785efdf8c19500d656d10ff40d380556b8dd79e895142a02710e5a2d1a5646",
+    "projects/index.html": "2a1d96f1df0fe35ec9af89d1e24810cd327cf4dc01afb55810f503a34320e7fa",
     "assets/app.css": "8b7211631821a618d82c419b95a930ff6ff61f5c343382e62c210810cedc539a",
     "assets/app.js": "f004d21d8371a8190c3a13edb10a68038cc4198268796af16180b256beb543f8",
     "assets/iu-mobile-bottom-nav-shell-v1.js": "eb5857e3da4429b24ed1ae1ac0ff91531367557152c0ad150f304c63e02a6944",
-    "assets/iu-app-feed-pipeline-v1.js": "08e7f58db8494676c6da8a03c8b4a80ec1774ea5c47f34d10f96ab31281070cc",
+    "assets/iu-app-feed-pipeline-v1.js": "c1fc1cc1740f4d721dedec56a010426949fec7d0f233f2945f4b6e52e37f8612",
     "assets/iu-calendar-overlay-v1.js": "d96efddb6b3b85843babbf942859d8aefbb66fa1429a162ffeb3bf75546bdda2",
     "assets/iu-notes-overlay-v1.js": "29c78398f38f7f47a7ecf798a5c7719052e7a953a7d215dee8dcf0117cb70630",
     "assets/iu-silver-p0-engine.js": "4c2406ea7d4850f1150d506e85ff2144faf52092a57eb69fe87ddc12769b848f",
@@ -17,7 +17,7 @@
     "assets/iu-invoice-pdf-legacy-export.js": "ed0dc8c4fdaf12da2b9b2e11167d79efa61c0469acad9c1ee4e829752f1972ed",
     "sw.js": "7ad29b686193531dddc80b6eb6c65668d34b9a868a011ade521837ede3b9d2ca",
     "projects/version.json": "bb8bff4b268d2a3b0d792a84cc1c0432b34479f2697db1ef1c0562257c7754c3",
-    "assets/iu-network-connectivity-v1.js": "8d06e3866fc5d5f1bda79e2c7c50f60f8f933dd69ce7d8515a6efeacf75f4397",
+    "assets/iu-network-connectivity-v1.js": "e9d563dcc2d6a1494aa92d25694d3068b8a6a6652ec73fab26b1828289186176",
     "assets/iu-article-chunk-loader.js": "1ab6ffd5cbffd50cfb7acb225e6c4379a80f921d115ff4b410efc9b843015b3d",
     "assets/iu-user-data-backup-v1.js": "51a894bf146f3f7cdc9dc7ddd62a36e0811805f0fb982e43d066ce02fba8f246",
     "assets/iu-user-data-backup-core.js": "b349b4a391e5c2c928ba50330df57eac40a46dbeeabedbc4c4a8cce490c9620b",
@@ -175,7 +175,8 @@
       "pwa-return-recorder-v1-20261013-icentrum-diag",
       "iu-pwa-return-recorder-v1.js",
       "Diagnostika PWA",
-      "pwa-external-return-unified-v6-20261013-icentrum-diag"
+      "pwa-external-return-unified-v7-20261013-hub-section-return",
+      "iuPwaHubSectionReturnV1"
     ],
     "assets/iu-app-feed-pipeline-v1.js": [
       "iuWeatherOnNetworkReconnect",
@@ -239,7 +240,9 @@
       "isAiAssistantsOverlayOpen",
       "reassertIntentionalOverlayShell",
       "armExternalReturn",
-      "pwa-external-return-unified-v6-20261013-icentrum-diag",
+      "pwa-external-return-unified-v7-20261013-hub-section-return",
+      "iuPwaHubSectionReturnV1",
+      "shouldSkipMindMenuRestoreOnExternalReturn",
       "iuPwaReturnRecorder"
     ]
   }

@@ -30,10 +30,29 @@
     <script>
     (function(){
       var KEY = "iuMindMenuReturnPendingV1";
+      var HUB_KEY = "iuPwaHubSectionReturnV1";
       var ARMED = "iuMindMenuReturnArmed";
       var LATCH = "iuMindMenuReturnLatchTs";
       var LATCH_MS = 2500;
       var TTL = 30 * 60 * 1000;
+      var HUB_TTL = 30 * 60 * 1000;
+      function hubReturnSectionAtHead() {
+        try {
+          var raw = localStorage.getItem(HUB_KEY);
+          if (!raw) return "";
+          var obj = JSON.parse(raw);
+          var sec = String(obj && obj.section ? obj.section : "").trim();
+          var ts = Number(obj && obj.t);
+          if (!sec || !isFinite(ts) || ts <= 0) return "";
+          if (Date.now() - ts > HUB_TTL) {
+            localStorage.removeItem(HUB_KEY);
+            return "";
+          }
+          return sec;
+        } catch (eHub) {
+          return "";
+        }
+      }
       var diag = {
         bootId: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
         pendingAtHead: false,
@@ -90,6 +109,23 @@
           if (window.matchMedia("(min-width: 1024px)").matches) return true;
         } catch (e6b) {}
         return false;
+      }
+      var hubSecHead = hubReturnSectionAtHead();
+      if (hubSecHead && standaloneOrMobile() && !isDesktopBand()) {
+        try {
+          var uHub = new URL(location.href);
+          var curSec = String(uHub.searchParams.get("section") || "").trim();
+          if (!curSec) {
+            try { localStorage.removeItem(KEY); } catch (eClr) {}
+            uHub.searchParams.set("section", hubSecHead);
+            location.replace(uHub.toString());
+            return;
+          }
+          if (curSec === hubSecHead) {
+            try { localStorage.removeItem(KEY); } catch (eClr2) {}
+            return;
+          }
+        } catch (eHubNav) {}
       }
       if (!pendingAlive() || !standaloneOrMobile()) return;
       if (isDesktopBand()) {
@@ -6940,7 +6976,7 @@ require-trusted-types-for 'script';
     })();
     </script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="crash-shield" data-iu-src="/assets/app-crash-shield.js?v=perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v6-20261013-icentrum-diag"></script>
+    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v7-20261013-hub-section-return"></script>
     <script defer src="/assets/iu-pwa-return-recorder-v1.js?v=pwa-return-recorder-v1-20261013-icentrum-diag"></script>
     <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
     <script>
