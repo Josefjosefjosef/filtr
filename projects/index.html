@@ -123,8 +123,10 @@
           }
           if (curSec === hubSecHead) {
             try { localStorage.removeItem(KEY); } catch (eClr2) {}
+            try { localStorage.removeItem(HUB_KEY); } catch (eClr3) {}
             return;
           }
+          try { localStorage.removeItem(HUB_KEY); } catch (eClr4) {}
         } catch (eHubNav) {}
       }
       if (!pendingAlive() || !standaloneOrMobile()) return;
