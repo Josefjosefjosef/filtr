@@ -34,8 +34,9 @@ jobs:
         run: |
           set -euo pipefail
           NUM="${{ github.event.inputs.pr_number }}"
-          BASE=$(gh pr view "$NUM" --json baseRefOid -q .baseRefOid)
-          HEAD=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          REPO="${{ github.repository }}"
+          BASE=$(gh api "repos/${REPO}/pulls/${NUM}" -q .base.sha)
+          HEAD=$(gh api "repos/${REPO}/pulls/${NUM}" -q .head.sha)
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
           echo "head=$HEAD" >> "$GITHUB_OUTPUT"
           echo "[IU_ADS] dispatch pr=$NUM base=$BASE head=$HEAD"
