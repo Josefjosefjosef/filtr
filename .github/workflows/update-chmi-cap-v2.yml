@@ -207,10 +207,12 @@ jobs:
             --pushed=false
           JSON="$CAND/chmi_cap_v2/orchestrator_e2e.json"
           test -f "$JSON"
-          echo "## CHMI orchestrator noop (NO_CHANGES)" >> "$GITHUB_STEP_SUMMARY"
-          echo '```json' >> "$GITHUB_STEP_SUMMARY"
-          cat "$JSON" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## CHMI orchestrator noop (NO_CHANGES)"
+            echo '```json'
+            cat "$JSON"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload noop attempt artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -375,7 +377,6 @@ jobs:
           [ -z "$NUM" ] && exit 0
           SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
           echo "[WAIT] PR #$NUM sha=$SHA"
-          REQUIRED='repo-guard smoke layout-guard iu-ads-regression-freeze'
           for i in $(seq 1 48); do
             MERGED=$(gh pr view "$NUM" --json state -q .state)
             if [ "$MERGED" = "MERGED" ]; then
