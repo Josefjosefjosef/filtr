@@ -20,7 +20,9 @@
   var HUB_SECTION_RETURN_LS = "iuPwaHubSectionReturnV1";
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
-  var PWA_EXTERNAL_RETURN_BUILD_ID = "pwa-external-return-unified-v10-20261013-menu-section-back-flash";
+  var PWA_EXTERNAL_RETURN_BUILD_ID =
+    "pwa-external-return-unified-v11-20261014-home-hub-resume-handoff";
+  var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
   var lastProbe = { ok: null, ts: 0 };
@@ -646,11 +648,7 @@
     externalReturnSettleTimer = setTimeout(finishIfCurrent, EXTERNAL_RETURN_SETTLE_MS + 48);
   }
 
-  function capturePwaExternalReturnSnapshot() {
-    touchExternalReturnHoldUntil();
-    try {
-      if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
-    } catch (_) {}
+  function syncExternalReturnArmBeforeHandoff() {
     try {
       var y = 0;
       if (typeof window.iuPwaGetMainScrollY === "function") y = window.iuPwaGetMainScrollY();
@@ -665,12 +663,53 @@
       if (gateTab) sessionStorage.setItem(EXTERNAL_RETURN_GATE_KEY, gateTab);
     } catch (_) {}
     try {
-      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
-    } catch (_) {}
-    try {
       if (typeof window.iuMobileWebNavArmForExternalFromMenu === "function") {
         window.iuMobileWebNavArmForExternalFromMenu();
       }
+    } catch (_) {}
+    try {
+      if (typeof window.iuMindMenuArmReturnState === "function") {
+        var wrapArm = document.getElementById("iuMobileGateWrap");
+        var gateArm = wrapArm ? String(wrapArm.getAttribute("data-iu-mobile-gate") || "") : "";
+        if (gateArm === "tools") window.iuMindMenuArmReturnState();
+      }
+    } catch (_) {}
+    writeHubSectionReturnResume();
+    try {
+      if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+    } catch (_) {}
+  }
+
+  function runDeferredExternalReturnSnapshotWork() {
+    externalReturnDeferredSnapshotPending = false;
+    touchExternalReturnHoldUntil();
+    try {
+      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
+    } catch (_) {}
+  }
+
+  function deferExternalReturnSnapshotAfterHandoff() {
+    externalReturnDeferredSnapshotPending = true;
+    var flushed = false;
+    function flushOnce() {
+      if (flushed) return;
+      flushed = true;
+      runDeferredExternalReturnSnapshotWork();
+    }
+    setTimeout(flushOnce, 0);
+    try {
+      window.addEventListener("pagehide", flushOnce, { once: true, capture: true });
+    } catch (_) {}
+  }
+
+  function capturePwaExternalReturnSnapshot() {
+    touchExternalReturnHoldUntil();
+    try {
+      if (typeof window.iuScrollRestoreSaveNow === "function") window.iuScrollRestoreSaveNow();
+    } catch (_) {}
+    syncExternalReturnArmBeforeHandoff();
+    try {
+      if (typeof window.iuMenuNavCaptureScroll === "function") window.iuMenuNavCaptureScroll();
     } catch (_) {}
     writeHubSectionReturnResume();
   }
@@ -876,7 +915,12 @@
   }
 
   function openExternalSync(url, isMailTel) {
-    armExternalReturn();
+    externalReturnGeneration += 1;
+    traceExternalReturn("arm", { gen: externalReturnGeneration, phase: "pre_handoff" });
+    try {
+      sessionStorage.setItem(EXTERNAL_ARMED_KEY, "1");
+    } catch (_) {}
+    syncExternalReturnArmBeforeHandoff();
     /* Do not clear shell/modal locks on depart — menu/MindMenu overlay must stay armed until return settle. */
     try {
       var now = Date.now();
@@ -884,6 +928,7 @@
       if (last && last.url === url && now - last.ts < 600) return { ok: true, reason: "deduped" };
       window.__iuMindMenuLastExternalOpen = { url: url, ts: now };
     } catch (_) {}
+    var handoffT0 = Date.now();
     var opened = false;
     var reason = "blocked";
     try {
@@ -922,7 +967,15 @@
     }
     if (!opened && reason !== "deduped") {
       abortExternalReturnArmsAfterFailedOpen();
+    } else if (opened) {
+      deferExternalReturnSnapshotAfterHandoff();
     }
+    traceExternalReturn("external_handoff", {
+      ms: Date.now() - handoffT0,
+      ok: !!opened,
+      reason: reason,
+      gen: externalReturnGeneration,
+    });
     return { ok: !!opened, reason: reason };
   }
 
@@ -1071,6 +1124,9 @@
 
   function bindLifecycle() {
     window.addEventListener("pagehide", function () {
+      try {
+        if (externalReturnDeferredSnapshotPending) runDeferredExternalReturnSnapshotWork();
+      } catch (_) {}
       try {
         var u = new URL(location.href);
         if (u.searchParams.has("section")) {

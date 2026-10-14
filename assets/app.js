@@ -7845,6 +7845,24 @@ try {
   }
   try { window.iuStripProjectsNavParamsForHomeLanding = iuStripProjectsNavParamsForHomeLanding; } catch(_){}
 
+  /** P0: stale data-iu-cold-section hides #feed/#silver-slot on hub after Menu→Domů or hub reset. */
+  function iuPwaClearColdSectionAttrsForHub() {
+    try {
+      if (document.documentElement) {
+        document.documentElement.removeAttribute("data-iu-cold-section");
+        document.documentElement.classList.remove("iu-pwaEarlyCoalesceV1");
+      }
+      if (document.body) {
+        document.body.removeAttribute("data-iu-cold-section");
+        document.body.classList.remove("iu-pwaEarlyCoalesceV1");
+      }
+      if (document.documentElement) document.documentElement.classList.remove("iu-hub-section-resume-pending");
+    } catch (_) {}
+  }
+  try {
+    window.iuPwaClearColdSectionAttrsForHub = iuPwaClearColdSectionAttrsForHub;
+  } catch (_) {}
+
   /**
    * P0: Keep body.iu-home in sync with URL: global article hub (section feed/media, no topic filter).
    * Feed visibility handler skips full loadData() when iu-home is set (tab return on default /projects/ hub).
@@ -7875,6 +7893,7 @@ try {
       if (document.body) {
         document.body.classList.toggle("iu-home", globalArticleHub === true);
       }
+      if (globalArticleHub === true) iuPwaClearColdSectionAttrsForHub();
     } catch (_) {
       try {
         if (document.body) document.body.classList.remove("iu-home");
@@ -8294,6 +8313,12 @@ try {
     try {
       if (section.indexOf("aff-") === 0 && typeof window.iuAffiliateApplySection === "function") {
         window.iuAffiliateApplySection(section);
+        try {
+          if (typeof window.iuPremiumSelectedMount === "function" && typeof window.iuAffiliateGetCategory === "function") {
+            var affCat = window.iuAffiliateGetCategory(section);
+            if (affCat && affCat.id) window.iuPremiumSelectedMount(affCat.id);
+          }
+        } catch (_pm) {}
       }
     } catch (_) {}
     try {
@@ -8612,28 +8637,46 @@ try {
     try {
       if (!window.matchMedia || !window.matchMedia("(max-width: 900px)").matches) return false;
       if (typeof window.iuIsProjectsRoute !== "function" || !window.iuIsProjectsRoute()) return false;
+      var earlyDone = false;
+      try {
+        earlyDone = sessionStorage.getItem("iuPwaEarlyCoalesceV1") === "1";
+        if (earlyDone) sessionStorage.removeItem("iuPwaEarlyCoalesceV1");
+      } catch (_) {}
       var navEnt =
         typeof performance !== "undefined" && performance.getEntriesByType
           ? performance.getEntriesByType("navigation")[0]
           : null;
-      if (!navEnt || navEnt.type !== "back_forward") return false;
+      if (!earlyDone) {
+        if (!navEnt || navEnt.type !== "back_forward") return false;
+      } else if (navEnt && navEnt.type !== "back_forward") {
+        return false;
+      }
       var u = new URL(location.href);
-      if (!u.searchParams.has("section")) return false;
+      if (earlyDone) {
+        if (u.searchParams.has("section")) return false;
+        if (String(u.hash || "") !== "#iu-nav" && String(u.hash || "") !== "#nav") return false;
+      } else {
+        if (!u.searchParams.has("section")) return false;
+      }
       if (sessionStorage.getItem("iuWebNavDetailFromGateV1") !== "1") return false;
       var canon = u.pathname + u.search;
-      if (sessionStorage.getItem("iuPwaPagehideSectionCanonV1") !== canon) return false;
-      sessionStorage.removeItem("iuPwaPagehideSectionCanonV1");
+      if (!earlyDone) {
+        if (sessionStorage.getItem("iuPwaPagehideSectionCanonV1") !== canon) return false;
+        sessionStorage.removeItem("iuPwaPagehideSectionCanonV1");
+      }
       var wrap = document.getElementById("iuMobileGateWrap");
       if (!wrap || typeof wrap.__iuMobileGateSetTab !== "function") return false;
       try {
         window.__iuMobileWebNavReturnSuppress = true;
       } catch (_) {}
       wrap.__iuMobileGateSetTab("nav");
-      u.searchParams.delete("section");
-      u.searchParams.delete("topic");
-      u.searchParams.delete("mode");
-      u.hash = "iu-nav";
-      history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      if (!earlyDone) {
+        u.searchParams.delete("section");
+        u.searchParams.delete("topic");
+        u.searchParams.delete("mode");
+        u.hash = "iu-nav";
+        history.replaceState({ iu_nav_overlay: true, iu_nav_origin: "homepage" }, "", u.toString());
+      }
       try {
         sessionStorage.setItem("iuMobileWebNavReturnArmed", "1");
       } catch (_) {}
@@ -8651,6 +8694,7 @@ try {
         if (window.iuPwaReturnRecorder && typeof window.iuPwaReturnRecorder.ingestNavIntent === "function") {
           window.iuPwaReturnRecorder.ingestNavIntent("back_forward_same_section_coalesce", {
             canon: canon,
+            earlyInline: earlyDone,
             actionId: "iuPwaWebNavCoalesceSameSectionBackForward",
           });
         }

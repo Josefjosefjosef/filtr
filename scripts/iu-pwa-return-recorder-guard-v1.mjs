@@ -34,14 +34,14 @@ function staticGate() {
   must(html.includes("iu-pwa-return-recorder-v1.js"), "static:script_tag");
   must(/window\.iuPwaReturnRecorder\s*=/.test(rec), "static:recorder_api");
   must(/iu:pwa-return-recorder-log:v1/.test(rec), "static:log_key");
-  must(/pwa-return-recorder-v4-20261013-nav-back-section-proof/.test(rec), "static:recorder_build_id");
+  must(/pwa-return-recorder-v5-20261014-home-visible-probes/.test(rec), "static:recorder_build_id");
   must(/ingestSectionApplyStart/.test(rec), "static:section_apply_ingest");
   must(/ingestNavIntent/.test(rec), "static:nav_intent_ingest");
   must(/back:click/.test(rec), "static:back_click_event");
   must(/mmArmed:/.test(rec), "static:session_mmArmed_field");
   must(/visualLayerSnapshot/.test(rec), "static:display_snapshot");
   must(/tabSessionSid/.test(rec), "static:tab_session_sid");
-  must(html.includes("pwa-return-recorder-v4-20261013-nav-back-section-proof"), "static:recorder_cache_bust");
+  must(html.includes("pwa-return-recorder-v5-20261014-home-visible-probes"), "static:recorder_cache_bust");
 }
 
 function startServer() {
@@ -151,14 +151,14 @@ async function runUiGate(page) {
         parsed &&
         parsed.delivery &&
         typeof parsed.delivery === "object" &&
-        parsed.delivery.recorderBuildId === "pwa-return-recorder-v4-20261013-nav-back-section-proof"
+        parsed.delivery.recorderBuildId === "pwa-return-recorder-v5-20261014-home-visible-probes"
       ),
       tabSid: parsed && parsed.tabSessionSid,
       docSid: parsed && parsed.documentSid,
     };
   });
   must(exportOk.ok === true, "ui:export_has_entries");
-  must(exportOk.recorderBuildId === "pwa-return-recorder-v4-20261013-nav-back-section-proof", "ui:export_recorder_build");
+  must(exportOk.recorderBuildId === "pwa-return-recorder-v5-20261014-home-visible-probes", "ui:export_recorder_build");
   must(exportOk.hasSessionMmArmed === true, "ui:export_session_mmArmed");
   must(exportOk.hasDisplay === true, "ui:export_display_field");
   must(exportOk.hasDelivery === true, "ui:export_delivery_proof");

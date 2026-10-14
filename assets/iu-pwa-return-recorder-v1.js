@@ -5,7 +5,9 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v4-20261013-nav-back-section-proof";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v5-20261014-home-visible-probes";
+  var sectionApplyOpSeq = 0;
+  var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
@@ -145,7 +147,13 @@
   function isElementVisuallyPresent(el) {
     if (!el) return false;
     try {
-      if (el.hidden) return false;
+      var node = el;
+      while (node && node.nodeType === 1) {
+        if (node.hidden) return false;
+        var pst = getComputedStyle(node);
+        if (pst.display === "none" || pst.visibility === "hidden" || Number(pst.opacity) === 0) return false;
+        node = node.parentElement;
+      }
       var st = getComputedStyle(el);
       if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity) === 0) return false;
       var r = el.getBoundingClientRect();
@@ -154,6 +162,70 @@
     } catch (_) {
       return false;
     }
+  }
+
+  function rectBrief(el) {
+    if (!el) return null;
+    try {
+      var r = el.getBoundingClientRect();
+      return {
+        t: Math.round(r.top),
+        l: Math.round(r.left),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function layoutGeometrySnapshot() {
+    var vv = window.visualViewport;
+    var scrollHost = document.getElementById("content") || document.documentElement;
+    var scrollHostY = 0;
+    try {
+      scrollHostY = scrollHost && scrollHost.scrollTop ? scrollHost.scrollTop : window.scrollY || 0;
+    } catch (_) {}
+    return {
+      scrollY: Math.round(window.scrollY || 0),
+      scrollHostY: Math.round(scrollHostY),
+      innerH: Math.round(window.innerHeight || 0),
+      vv: vv
+        ? {
+            h: Math.round(vv.height),
+            offsetTop: Math.round(vv.offsetTop || 0),
+            scale: vv.scale,
+          }
+        : null,
+      center: rectBrief(document.getElementById("iuCenterStage")),
+      affView: rectBrief(document.getElementById("iuAffiliateView")),
+      affGrid: rectBrief(document.getElementById("iuAffiliateGrid")),
+      premiumGrid: rectBrief(document.getElementById("iuPremiumSelectedGrid")),
+      salesLink: rectBrief(document.getElementById("iuPremiumSalesToggle")),
+      topbar: rectBrief(document.getElementById("iuTopbar") || document.querySelector(".iuTopbar")),
+    };
+  }
+
+  function affiliateContentMetrics() {
+    var grid = document.getElementById("iuAffiliateGrid");
+    var partnerReady = 0;
+    var chipTotal = 0;
+    try {
+      if (grid) {
+        chipTotal = grid.querySelectorAll(".iuAffiliateChip").length;
+        partnerReady = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="1"]').length;
+      }
+    } catch (_) {}
+    var prem = document.getElementById("iuPremiumSelectedGrid");
+    var sales = document.getElementById("iuPremiumSalesToggle");
+    return {
+      affVis: isElementVisuallyPresent(document.getElementById("iuAffiliateView")),
+      partnerReadyCount: partnerReady,
+      chipTotal: chipTotal,
+      premiumGridVis: !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
+      salesLinkVis: isElementVisuallyPresent(sales),
+      premiumLoading: !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
+    };
   }
 
   function visualLayerSnapshot() {
@@ -178,8 +250,14 @@
         gate: gate,
         hash: String(location.hash || ""),
       },
+      iuHomeClass: !!(body && body.classList.contains("iu-home")),
+      coldSectionAttr: !!(body && body.getAttribute("data-iu-cold-section") === "1"),
+      hubResumePending: !!(document.documentElement && document.documentElement.classList.contains("iu-hub-section-resume-pending")),
       homeFeedVisible: isElementVisuallyPresent(feed) && !mobileMain && !toolMain,
       feedBlockVisible: isElementVisuallyPresent(feed),
+      homeHubSilverVisible: isElementVisuallyPresent(
+        document.getElementById("silver-slot") || document.querySelector("#iuMobileSilverSlot .silver-slot")
+      ),
       silverSlotVisible: isElementVisuallyPresent(document.getElementById("silver-slot")),
       hubMainColumnVisible: mobileMain || toolMain,
       menuOverlayVisible: !!(body && body.classList.contains("iu-mobileGateOverlayOpen") && gate === "nav"),
@@ -388,10 +466,12 @@
         tabSessionSid: tabSessionSid,
         documentSid: documentSid,
         documentBootSeq: documentBootSeq,
+        recordingAttemptId: sessionStorage.getItem(ATTEMPT_KEY) || "",
         appVersion: appVersionLabel(),
         recorderBuildId: RECORDER_BUILD_ID,
         delivery: collectDeliveryProof(),
         reloadReason: reloadMeta,
+        geom: layoutGeometrySnapshot(),
         navEntry: navEnt
           ? {
               type: navEnt.type,
@@ -402,6 +482,7 @@
       },
       "boot"
     );
+    scheduleSectionLayoutWatch(Date.now(), "document_boot");
     try {
       sessionStorage.removeItem("iu:pwa:ver:last-reload-reason");
     } catch (_) {}
@@ -411,12 +492,21 @@
     try {
       localStorage.setItem(ACTIVE_KEY, "1");
     } catch (_) {}
+    var attemptId = "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    try {
+      sessionStorage.setItem(ATTEMPT_KEY, attemptId);
+    } catch (_) {}
     var store = readLogStore();
     if (!store.startedAt) store.startedAt = Date.now();
     store.stoppedAt = null;
     store.appVersion = appVersionLabel();
+    store.recordingAttemptId = attemptId;
     writeLogStore(store);
-    appendEntry("recorder:start", { appVersion: appVersionLabel() }, "ui");
+    appendEntry(
+      "recorder:start",
+      { appVersion: appVersionLabel(), recordingAttemptId: attemptId, recorderBuildId: RECORDER_BUILD_ID },
+      "ui"
+    );
     bindHooks();
     scheduleScrollSample(true);
   }
@@ -463,6 +553,7 @@
       documentBootSeq: documentBootSeq || parseInt(sessionStorage.getItem(DOC_BOOT_SEQ_KEY) || "0", 10) || 0,
       pageSid: documentSid || pageSid,
       delivery: collectDeliveryProof(),
+      recordingAttemptId: store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "",
       logMeta: {
         droppedEntries: store.droppedEntries || 0,
         truncatedExportLikely: !!store.truncatedExportLikely,
@@ -504,7 +595,15 @@
     if (!isRecording()) return;
     var t = String(tag || "");
     appendEntry("trace:" + t, detail || {}, "iuNetwork");
-    if (t === "restore_start" || t === "settle_done" || t === "version_reload") schedulePaintBurst(t);
+    if (
+      t === "restore_start" ||
+      t === "settle_done" ||
+      t === "version_reload" ||
+      t === "external_handoff"
+    ) {
+      schedulePaintBurst(t);
+    }
+    if (t === "settle_done" || t === "restore_start") scheduleSectionLayoutWatch(Date.now(), "external_" + t);
   }
 
   function wrapFn(fnName, evName) {
@@ -531,23 +630,84 @@
     } catch (_) {}
   }
 
-  function scheduleSectionReadyPoll(t0) {
+  function scheduleSectionLayoutWatch(t0, reason) {
+    var lastSig = "";
+    var samples = 0;
+    var maxMs = 4500;
+    function tick() {
+      if (!isRecording()) return;
+      samples += 1;
+      var geom = layoutGeometrySnapshot();
+      var sig = JSON.stringify(geom);
+      if (sig !== lastSig) {
+        lastSig = sig;
+        appendEntry(
+          "layout:geometry",
+          { ms: Date.now() - t0, reason: reason || "section", sample: samples, geom: geom },
+          "layout"
+        );
+      }
+      if (Date.now() - t0 < maxMs && samples < 72) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function scheduleSectionContentReady(t0) {
     var attempts = 0;
     function poll() {
       if (!isRecording()) return;
       attempts += 1;
-      var grid = document.getElementById("iuAffiliateGrid");
-      var btnCount = 0;
-      try {
-        if (grid) btnCount = grid.querySelectorAll('a[href], button[type="button"]').length;
-      } catch (_) {}
-      var affVis = isElementVisuallyPresent(document.getElementById("iuAffiliateView"));
-      if (btnCount > 0 || affVis || attempts >= 48) {
+      var m = affiliateContentMetrics();
+      var ready =
+        m.affVis &&
+        m.partnerReadyCount > 0 &&
+        m.salesLinkVis &&
+        (!m.premiumLoading || m.premiumGridVis);
+      if (ready || attempts >= 120) {
         appendEntry(
-          "section:ready",
-          { ms: Date.now() - t0, btnCount: btnCount, affVis: affVis, attempts: attempts },
+          "section:content_ready",
+          {
+            ms: Date.now() - t0,
+            attempts: attempts,
+            metrics: m,
+            geom: layoutGeometrySnapshot(),
+          },
           "section"
         );
+        return;
+      }
+      requestAnimationFrame(poll);
+    }
+    requestAnimationFrame(poll);
+  }
+
+  function scheduleSectionReadyPoll(t0) {
+    var hub = hubSectionFromUrl();
+    if (hub.indexOf("aff-") !== 0 && !/^(pocasi|mapy|maps|jr|tvprogram|tvonline|radio)/.test(hub)) {
+      return;
+    }
+    var attempts = 0;
+    function poll() {
+      if (!isRecording()) return;
+      attempts += 1;
+      var m = affiliateContentMetrics();
+      var btnCount = m.chipTotal;
+      if ((hub.indexOf("aff-") === 0 && (m.affVis || btnCount > 0)) || attempts >= 48) {
+        appendEntry(
+          "section:ready",
+          {
+            ms: Date.now() - t0,
+            btnCount: btnCount,
+            affVis: m.affVis,
+            partnerReadyCount: m.partnerReadyCount,
+            salesLinkVis: m.salesLinkVis,
+            premiumGridVis: m.premiumGridVis,
+            attempts: attempts,
+          },
+          "section"
+        );
+        scheduleSectionContentReady(t0);
+        scheduleSectionLayoutWatch(t0, "section_apply");
         return;
       }
       requestAnimationFrame(poll);
@@ -560,11 +720,24 @@
       var cur = window.iuApplySectionFromURL;
       if (typeof cur !== "function" || cur.__iuPwaRecSection) return;
       window.iuApplySectionFromURL = function () {
-        var t0 = Date.now();
-        appendEntry("section:apply_start", { t0: t0, hubSection: hubSectionFromUrl(), stack: captureStack(5) }, "section");
+        var op = window.__iuPwaRecSectionApplyOp;
+        var t0 = op && op.t0 ? op.t0 : Date.now();
+        if (!op || !op.logged) {
+          sectionApplyOpSeq += 1;
+          var opId = op && op.id ? op.id : "sec" + sectionApplyOpSeq;
+          appendEntry(
+            "section:apply_start",
+            { t0: t0, opId: opId, hubSection: hubSectionFromUrl(), stack: captureStack(5), via: "wrap" },
+            "section"
+          );
+          if (op) op.logged = true;
+        }
         var rv = cur.apply(this, arguments);
-        scheduleSectionReadyPoll(t0);
+        if (!op) scheduleSectionReadyPoll(t0);
         schedulePaintBurst("section_apply");
+        try {
+          window.__iuPwaRecSectionApplyOp = null;
+        } catch (_) {}
         return rv;
       };
       window.iuApplySectionFromURL.__iuPwaRecSection = true;
@@ -870,9 +1043,31 @@
     }
   }
 
+  function bindLayoutShiftObserver() {
+    if (window.__iuPwaRecClsObs || !window.PerformanceObserver) return;
+    try {
+      window.__iuPwaRecClsObs = true;
+      var po = new PerformanceObserver(function (list) {
+        if (!isRecording()) return;
+        var entries = list.getEntries();
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          if (e.hadRecentInput) continue;
+          appendEntry(
+            "layout:shift",
+            { value: e.value, hadRecentInput: !!e.hadRecentInput, sourceCount: (e.sources || []).length },
+            "layout"
+          );
+        }
+      });
+      po.observe({ type: "layout-shift", buffered: true });
+    } catch (_) {}
+  }
+
   function bindHooks() {
     if (hooksBound) return;
     hooksBound = true;
+    bindLayoutShiftObserver();
     patchNetwork();
     observeGate();
     bindLifecycleEvents();
@@ -1047,12 +1242,11 @@
 
   function ingestSectionApplyStart(t0) {
     if (!isRecording()) return;
-    appendEntry(
-      "section:apply_start",
-      { t0: t0 || Date.now(), hubSection: hubSectionFromUrl(), stack: captureStack(5), via: "app_applySectionFromURL" },
-      "section"
-    );
-    scheduleSectionReadyPoll(t0 || Date.now());
+    sectionApplyOpSeq += 1;
+    var opId = "sec" + sectionApplyOpSeq;
+    var t = t0 || Date.now();
+    window.__iuPwaRecSectionApplyOp = { id: opId, t0: t, logged: false };
+    scheduleSectionReadyPoll(t);
     schedulePaintBurst("section_apply");
   }
 

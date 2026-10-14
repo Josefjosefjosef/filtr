@@ -16841,6 +16841,9 @@ function buildVideoAsArticleCard(it) {
       document.body.classList.remove("iu-mobileMainVisible", "iu-webnavDetailFromGate");
     } catch (_) {}
     try {
+      if (typeof window.iuPwaClearColdSectionAttrsForHub === "function") window.iuPwaClearColdSectionAttrsForHub();
+    } catch (_) {}
+    try {
       if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
     } catch (_) {}
     try {

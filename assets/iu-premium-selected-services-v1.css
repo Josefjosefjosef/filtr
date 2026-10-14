@@ -2,6 +2,13 @@
 #iuAffiliateView .iuPremiumGrid {
   margin: 0 0 10px;
 }
+#iuPremiumSelectedGrid.iuPremiumGrid--loading {
+  display: block;
+  visibility: hidden;
+  min-height: calc(var(--iuChipH, 110px) + 10px);
+  margin: 0 0 10px;
+  pointer-events: none;
+}
 #iuAffiliateView a.iuPremiumSlot {
   box-sizing: border-box;
   display: flex;
