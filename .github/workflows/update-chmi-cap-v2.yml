@@ -199,6 +199,9 @@ jobs:
           gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
           gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
           echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+          # iu-ads-regression-freeze is pull_request-only; nudge PR synchronize for required context.
+          git commit --allow-empty -m "chore(data): post-write check nudge" || true
+          git push origin "HEAD:refs/heads/${REF}" || echo "[CHECKS] nudge push skipped"
 
       - name: Create or update PR
         id: pr
