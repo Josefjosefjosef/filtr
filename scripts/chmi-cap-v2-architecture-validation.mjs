@@ -109,6 +109,11 @@ function listedForStreams(streamCount, filesPerStream = 3) {
   ok("no_maxCapMessagesPerRun", !/maxCapMessagesPerRun/.test(fs.readFileSync(path.join(REPO, "scripts/chmi-cap-v2/config.mjs"), "utf8")), "dead maxCapMessages");
   ok("discovery_selection_streams", /latest_per_product_stream/.test(discSrc), "selection marker");
   ok("sync_fixedLimit_false", /fixedLimit:\s*false/.test(syncSrc), "fixedLimit");
+  ok("postwrite_scope_uses_pr_diff", /gh pr diff "\$NUM" --name-only/.test(wfSrc), "pr diff scope");
+  ok("postwrite_no_git_fetch_scope", !/Diff scope check[\s\S]{0,400}git fetch origin main/.test(wfSrc), "scope git fetch");
+  ok("postwrite_no_fake_ads_status", !/context=iu-ads-regression-freeze/.test(wfSrc), "manual ads status");
+  ok("postwrite_ensure_ads_check", /Ensure iu-ads-regression-freeze/.test(wfSrc), "ensure ads");
+  ok("orchestrator_e2e_record_script", fs.existsSync(path.join(REPO, "scripts/chmi-cap-v2-orchestrator-e2e-record.mjs")), "e2e record");
   const resolved = resolveDiscoveryAdapter({}, { kind: "opendata_active_streams" });
   ok("resolve_active_streams", resolved.type === "opendata_active_streams" && resolved.selection === "latest_per_product_stream", resolved.type);
 }

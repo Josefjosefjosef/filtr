@@ -84,6 +84,12 @@ jobs:
           export IU_INFO_EVENTS_DATA_DIR="$CAND"
           echo "discoveredAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           node scripts/chmi-cap-v2-prod-sync.mjs
+          node scripts/chmi-cap-v2-orchestrator-e2e-record.mjs \
+            --data-dir="$CAND" \
+            --run-id="${{ github.run_id }}" \
+            --run-attempt="${{ github.run_attempt }}" \
+            --phase=prep \
+            --outcome=source_processed
           echo "transformedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "candidate_dir=$CAND" >> "$GITHUB_OUTPUT"
 
@@ -188,21 +194,6 @@ jobs:
           lfs: false
           persist-credentials: true
 
-      - name: Dispatch required checks
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          REF="${{ env.AUTOMATION_BRANCH }}"
-          REPO="${{ github.repository }}"
-          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
-          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
-          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
-          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
-          # iu-ads-regression-freeze is pull_request-only; nudge PR synchronize for required context.
-          git commit --allow-empty -m "chore(data): post-write check nudge" || true
-          git push origin "HEAD:refs/heads/${REF}" || echo "[CHECKS] nudge push skipped"
-
       - name: Create or update PR
         id: pr
         env:
@@ -233,13 +224,19 @@ jobs:
           [ -z "$NUM" ] && exit 0
           gh api --method PUT "repos/${{ github.repository }}/pulls/${NUM}/update-branch" || echo "[SYNC] update-branch skipped"
 
-      - name: Diff scope check (data-only Ă˘â€ â€™ allow auto-merge)
+      - name: Diff scope check (data-only → allow auto-merge)
         id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git fetch origin main
-          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only main...HEAD)
-          echo "[SCOPE] Changed files:"
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && { echo "data_only=false" >> "$GITHUB_OUTPUT"; exit 1; }
+          BASE=$(gh pr view "$NUM" --json baseRefOid -q .baseRefOid)
+          HEAD=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[SCOPE] pr=$NUM base=$BASE head=$HEAD"
+          CHANGED=$(gh pr diff "$NUM" --name-only)
+          echo "[SCOPE] PR changed files:"
           echo "$CHANGED"
           DATA_ONLY=true
           while IFS= read -r f; do
@@ -251,26 +248,73 @@ jobs:
           done <<< "$CHANGED"
           if [ "$DATA_ONLY" = true ]; then
             echo "data_only=true" >> "$GITHUB_OUTPUT"
-            echo "[SCOPE] data-only Ă˘â‚¬â€ť auto-merge allowed"
+            echo "[SCOPE] data-only — auto-merge allowed"
           else
             echo "data_only=false" >> "$GITHUB_OUTPUT"
-            echo "[SCOPE] non-data change Ă˘â‚¬â€ť auto-merge disabled"
+            echo "[SCOPE] non-data change — auto-merge disabled (FAIL)"
+            exit 1
           fi
 
-      - name: Ack iu-ads-regression-freeze (data-only out of scope)
+      - name: Dispatch required checks
         if: steps.scope.outputs.data_only == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+
+      - name: Ensure iu-ads-regression-freeze (GHA check on PR head)
+        if: steps.scope.outputs.data_only == 'true'
+        id: ensure_ads
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
-          [ -z "$NUM" ] && exit 0
-          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
-          gh api "repos/${{ github.repository }}/statuses/${SHA}" \
-            -f state=success \
-            -f context=iu-ads-regression-freeze \
-            -f description="Data-only CHMI sync (ads regression freeze out of scope)"
-          echo "[STATUS] Posted iu-ads-regression-freeze success for ${SHA}"
+          REPO="${{ github.repository }}"
+          NUDGED=0
+          for i in $(seq 1 36); do
+            SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+            echo "[ADS] attempt=$i sha=$SHA"
+            CR=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --paginate \
+              --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze")] | sort_by(.started_at) | last // empty')
+            if [ -n "$CR" ]; then
+              APP=$(echo "$CR" | jq -r '.app.slug // ""')
+              ST=$(echo "$CR" | jq -r '.status // ""')
+              CO=$(echo "$CR" | jq -r '.conclusion // ""')
+              RID=$(echo "$CR" | jq -r '.id // ""')
+              echo "[ADS] check_run id=$RID app=$APP status=$ST conclusion=$CO"
+              if [ "$CO" = "success" ] && [ "$APP" = "github-actions" ]; then
+                echo "ads_ok=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              if [ "$CO" = "failure" ] || [ "$CO" = "timed_out" ]; then
+                echo "[ADS] check failed"
+                exit 1
+              fi
+              if { [ "$CO" = "cancelled" ] || [ "$CO" = "action_required" ] || [ "$CO" = "skipped" ]; } && [ "$ST" = "completed" ]; then
+                RUN_ID=$(gh run list --workflow=iu-ads-regression-freeze.yml --limit 20 --json databaseId,headSha,conclusion,status \
+                  -q "map(select(.headSha==\"${SHA}\")) | .[0].databaseId // empty")
+                if [ -n "$RUN_ID" ]; then
+                  gh run rerun "$RUN_ID" || true
+                fi
+              fi
+            elif [ "$NUDGED" = "0" ]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit --allow-empty -m "chore(data): trigger iu-ads-regression-freeze (PR sync)"
+              git push origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}"
+              NUDGED=1
+            fi
+            sleep 15
+          done
+          echo "[ADS] timeout waiting for GHA iu-ads-regression-freeze"
+          exit 1
 
       - name: Enable auto-merge (squash) when data-only
         if: steps.scope.outputs.data_only == 'true'
