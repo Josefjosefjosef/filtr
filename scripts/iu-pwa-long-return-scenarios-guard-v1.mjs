@@ -28,7 +28,8 @@ function read(rel) {
 
 function staticGate() {
   const rec = read("assets/iu-pwa-return-recorder-v1.js");
-  must(/pwa-return-recorder-v8-20261014-correlated-diag-perf/.test(rec), "static:recorder_v8");
+  must(/pwa-return-recorder-v9-20261014-correlation-scoped-probes/.test(rec), "static:recorder_v9");
+  must(/attempt:milestone/.test(rec), "static:attempt_milestones");
   must(/exportAttemptText/.test(rec), "static:export_attempt");
   must(/buildMetricCapabilities/.test(rec), "static:metric_capabilities");
   must(/section:content_cancelled/.test(rec), "static:content_cancelled");
@@ -149,6 +150,7 @@ async function runRecorderOverhead(page) {
     return { off, on, ratio: on / Math.max(off, 1) };
   }, TARGET);
   must(times.ratio < 4, "rt:recorder_overhead_ratio:" + JSON.stringify(times));
+  console.log("IU_PWA_RECORDER_OVERHEAD_MS=" + JSON.stringify(times));
 }
 
 async function main() {
