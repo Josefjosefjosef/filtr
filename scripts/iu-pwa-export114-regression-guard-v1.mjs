@@ -31,6 +31,7 @@ must(/partnerHrefSlots/.test(rec), "static:aff_partner_href_slots");
 must(/contentReadinessScope/.test(rec), "static:content_readiness_scope");
 must(/CRITICAL_WINDOW_ANCHOR_KEY/.test(rec), "static:critical_window_anchor");
 must(/touchCriticalWindowAnchor/.test(rec), "static:critical_window_touch");
+must(/Sliding 120s from the most recent settle/.test(rec), "static:critical_window_sliding");
 must(/affLayoutMounted/.test(rec), "static:aff_layout_mounted_field");
 must(/export114ParadoxNote/.test(rec), "static:export114_paradox_note");
 must(/scheduleReturnRelativeMilestones/.test(rec), "static:return_relative_milestones");

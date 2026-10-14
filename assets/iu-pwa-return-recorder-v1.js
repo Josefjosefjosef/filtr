@@ -134,14 +134,12 @@
   }
 
   function touchCriticalWindowAnchor() {
-    var now = Date.now();
-    var prev = getCriticalWindowAnchorMs();
-    if (!prev || now - prev >= 120000) {
-      criticalWindowAnchorAtMs = now;
-      try {
-        sessionStorage.setItem(CRITICAL_WINDOW_ANCHOR_KEY, String(now));
-      } catch (_) {}
-    }
+    /* Sliding 120s from the most recent settle (each return extends protection; gap >120s starts a new window). */
+    var now = lastSettleAtMs || Date.now();
+    criticalWindowAnchorAtMs = now;
+    try {
+      sessionStorage.setItem(CRITICAL_WINDOW_ANCHOR_KEY, String(now));
+    } catch (_) {}
   }
 
   function findEvictIndex(entries, cur) {

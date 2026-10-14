@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 /**
  * Regression guard for physical export 115 (Dokument 115.docx baseline).
- * Validates affiliate probe semantics and MindMenu boot defer (export 114/115 shared recorder build).
+ *
+ * CI failure 38634183194 @ 90f2c70 (static:aff_in_scope_strict):
+ * - Guard required source line: affInScope = mode === "affiliate" && probeState.sectionActive
+ * - After schema split, affInScope = contentReadinessScope && probeState.sectionActive
+ *   (expected section vs scoped active shell are different fields).
+ * - Old regex was a stale proxy for "do not widen sectionActive with mobileMain only";
+ *   replacement checks contentReadinessScope + scoped affInScope + export114ParadoxNote.
+ * Behavioral paradox repro: npm run iu-pwa-affiliate-paradox-repro-guard
  */
 import fs from "fs";
 import path from "path";
