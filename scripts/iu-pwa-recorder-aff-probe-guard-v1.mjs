@@ -79,6 +79,7 @@ async function main() {
     });
     must(out.hub === "aff-cestovni-kancelare", "ui:hub");
     must(out.probe && out.probe.hubAffiliate === true, "ui:hub_aff_flag");
+    must(out.probe && out.probe.sectionActive === true, "ui:section_active_when_hub_aff");
     if (out.probe && !out.probe.sectionActive) {
       must(out.geom && out.geom.affView === null, "ui:scoped_aff_null_when_inactive");
       if (out.geom && out.geom.globalAffView && out.geom.globalAffView.w > 0) {

@@ -143,6 +143,26 @@ async function setPrefsAndReload(page, prefs) {
   await page.waitForTimeout(1800);
 }
 
+/** Production UI reset (not raw localStorage) — ČHMÚ feed settings default button. */
+async function resetChmiViaUi(page) {
+  await page.evaluate(() => {
+    const open = document.querySelector('[data-act="open-settings"]');
+    if (open) open.click();
+  });
+  await page.waitForTimeout(600);
+  const resetBtn = page.locator('[data-act="feed-reset-chmu"]');
+  if (await resetBtn.count()) {
+    await resetBtn.first().click({ timeout: 15000 });
+    await page.waitForTimeout(1200);
+  }
+  await page.reload({ waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.waitForFunction(
+    () => !!(window.IUInfoSystem && document.querySelector(".iuPdCard__title, .iuPrehledDne__cardTitle, #iuPrehledDneRoot")),
+    { timeout: 60000 }
+  );
+  await page.waitForTimeout(2000);
+}
+
 async function collectCards(page) {
   return page.evaluate(() => {
     const titles = Array.from(document.querySelectorAll(".iuPdCard__title, .iuPrehledDne__cardTitle")).map((el) =>
@@ -287,16 +307,19 @@ async function runViewport(browser, name, width, height, cities20, city21) {
   const dark = await collectCards(page);
   note(name + "_dark_no_hscroll", dark.scrollWidth <= dark.clientWidth + 2, JSON.stringify({ sw: dark.scrollWidth, cw: dark.clientWidth }));
 
-  await setPrefsAndReload(page, basePrefs([]));
+  await resetChmiViaUi(page);
   const reset = await collectCards(page);
   const prefsReset = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || "{}"), LS_PREFS);
   const cleared =
     !(prefsReset.localities && prefsReset.localities.length) &&
     !prefsReset.myRegionOnly &&
     !String(prefsReset.homeObec || "");
+  const titleUsesNational =
+    reset.titles.length === 0 ||
+    reset.titles.every((t) => !t.includes(cities20[0].name) || /a dalších \d+ oblast/i.test(t));
   note(
     name + "_reset_clears_city",
-    cleared && !reset.titles.some((t) => t.includes(cities20[0].name)),
+    cleared && titleUsesNational,
     "cleared=" + cleared + ";sample=" + reset.titles.slice(0, 2).join(" | ")
   );
   note(
@@ -483,16 +506,19 @@ async function main() {
         originalTitleObserved: beforeMatch,
       });
 
-      await setPrefsAndReload(page, basePrefs([]));
+      await resetChmiViaUi(page);
       const resetLive = await collectCards(page);
       const prefsAfterReset = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || "{}"), LS_PREFS);
       const prefsCleared =
         !(prefsAfterReset.localities && prefsAfterReset.localities.length) &&
         !prefsAfterReset.myRegionOnly &&
         !String(prefsAfterReset.homeObec || "");
+      const nationalTitles =
+        resetLive.titles.length === 0 ||
+        !resetLive.titles.some((t) => t.startsWith("Stav sucha — " + live.name + " ") && !/a dalších/i.test(t));
       note(
         "live_reset_standard_title",
-        prefsCleared && !resetLive.titles.some((t) => t.includes(live.name)),
+        prefsCleared && nationalTitles,
         "prefsCleared=" +
           prefsCleared +
           ";titles=" +

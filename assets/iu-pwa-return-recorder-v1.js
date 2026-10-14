@@ -5,7 +5,13 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261014-correlation-scoped-probes";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export114-fixes";
+  var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
+  var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
+  var returnMilestoneCleanups = [];
+  var lastSettleAtMs = 0;
+  var lastHandoffAtMs = 0;
+  var attemptStartedAtMs = 0;
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var CORRELATION_KEY = "iu:pwa:return-recorder-correlation:v1";
@@ -101,11 +107,16 @@
     if (/^section:(open_start|apply_start|content_ready|content_timeout|content_cancelled)/.test(e)) return -1;
     if (/^attempt:milestone/.test(e)) return -1;
     if (/^layout:geometry/.test(e)) return 4;
-    if (/^view:frame/.test(e)) return 4;
+    if (/^view:frame/.test(e)) return 3;
     if (/^net:fetch_done/.test(e)) return 3;
-    if (/^scroll:sample/.test(e)) return 3;
+    if (/^scroll:sample/.test(e)) return 2;
     if (/^life:/.test(e)) return 2;
     return 1;
+  }
+
+  function inReturnCriticalWindow() {
+    if (!lastSettleAtMs) return false;
+    return Date.now() - lastSettleAtMs < 120000;
   }
 
   function findEvictIndex(entries, cur) {
@@ -119,6 +130,7 @@
     for (var j = 0; j < entries.length; j++) {
       var tier = entryEvictTier(entries[j].ev);
       if (tier < 0) continue;
+      if (inReturnCriticalWindow() && tier >= 3 && (entries[j].attemptId || "") === cur) continue;
       if (tier > bestTier) {
         bestTier = tier;
         bestIdx = j;
@@ -137,6 +149,9 @@
     if (idx < 0) return;
     var removed = store.entries.splice(idx, 1)[0];
     store.droppedEntries = (store.droppedEntries || 0) + 1;
+    if (!store.droppedByEv) store.droppedByEv = {};
+    var evKey = removed && removed.ev ? String(removed.ev) : "unknown";
+    store.droppedByEv[evKey] = (store.droppedByEv[evKey] || 0) + 1;
     var ea = removed && removed.attemptId ? removed.attemptId : "";
     if (ea && cur && ea !== cur) {
       store.droppedOtherAttempts = (store.droppedOtherAttempts || 0) + 1;
@@ -314,6 +329,7 @@
   }
 
   function correlationPayload(extra) {
+    var now = Date.now();
     var o = {
       recordingAttemptId: activeAttemptId(),
       documentSid: documentSid,
@@ -322,6 +338,9 @@
       sectionOpenId: activeSectionOpenId || "",
       handoffId: externalHandoffSeq ? composeHandoffId() : "",
       monoMs: monoNow(),
+      attemptElapsedMs: attemptStartedAtMs ? now - attemptStartedAtMs : null,
+      msSinceLastSettle: lastSettleAtMs ? now - lastSettleAtMs : null,
+      msSinceLastHandoff: lastHandoffAtMs ? now - lastHandoffAtMs : null,
     };
     if (extra && typeof extra === "object") {
       for (var k in extra) {
@@ -364,6 +383,10 @@
           resourceCountsBefore: before,
           resourceCountsAfter: after,
           idleHooksRemain: after.listeners,
+          idleHookKinds: [
+            "pointerdown_move_up_wheel_key (user input, removed on teardown)",
+            "serviceWorker controllerchange (passive, cleanup noop)",
+          ],
           quality: "measured",
         },
         "diag"
@@ -456,6 +479,7 @@
       window.removeEventListener("pointerup", onPointerUp, true);
       window.removeEventListener("wheel", onWheel, true);
       window.removeEventListener("keydown", onKey, true);
+      diagResourceCounts.listeners = Math.max(0, diagResourceCounts.listeners - 5);
     });
   }
 
@@ -612,6 +636,14 @@
                 errType: err && err.name ? String(err.name) : "Error",
                 err: String(err && err.message ? err.message : err).slice(0, 80),
                 docHidden: document.visibilityState === "hidden",
+                externalArmed: (function () {
+                  try {
+                    return sessionStorage.getItem("iu_external_nav_armed") === "1";
+                  } catch (_) {
+                    return false;
+                  }
+                })(),
+                duringPageHide: document.visibilityState !== "visible",
                 correlation: correlationPayload({ reqId: reqId }),
               },
               "net"
@@ -765,7 +797,7 @@
     var hubAff = /^aff-/.test(h);
     var shellMounted = hubAff && isElementLayoutMounted(aff);
     var shellVisible = hubAff && isElementVisuallyPresent(aff);
-    var sectionActive = hubAff && (shellVisible || mobileMain || toolMain);
+    var sectionActive = hubAff && (shellMounted || shellVisible || mobileMain || toolMain);
     return {
       hubSection: h,
       hubAffiliate: hubAff,
@@ -1182,7 +1214,12 @@
     }
     if (!isRecording()) return;
     var restoredCorr = restoreCorrelationState();
+    try {
+      lastSettleAtMs = parseInt(sessionStorage.getItem(LAST_SETTLE_KEY) || "0", 10) || 0;
+      lastHandoffAtMs = parseInt(sessionStorage.getItem(LAST_HANDOFF_KEY) || "0", 10) || 0;
+    } catch (_) {}
     var reloadMeta = readLastReloadReason();
+    var msSinceSettleAtBoot = lastSettleAtMs ? Date.now() - lastSettleAtMs : null;
     var navEnt =
       typeof performance !== "undefined" && performance.getEntriesByType
         ? performance.getEntriesByType("navigation")[0]
@@ -1202,6 +1239,9 @@
         recorderBuildId: RECORDER_BUILD_ID,
         delivery: collectDeliveryProof(),
         reloadReason: reloadMeta,
+        msSinceLastSettle: msSinceSettleAtBoot,
+        msSinceLastHandoff: lastHandoffAtMs ? Date.now() - lastHandoffAtMs : null,
+        navigationOrigin: reloadMeta ? "app_version_reload" : "unknown",
         geom: layoutGeometrySnapshot(),
         navEntry: navEnt
           ? {
@@ -1234,6 +1274,10 @@
     store.recordingAttemptId = attemptId;
     store.metricCapabilities = buildMetricCapabilities();
     store.attemptStartedMonoMs = monoNow();
+    attemptStartedAtMs = Date.now();
+    lastSettleAtMs = 0;
+    lastHandoffAtMs = 0;
+    clearReturnRelativeMilestones();
     writeLogStore(store);
     returnOpSeq = 0;
     sectionOpenSeq = 0;
@@ -1269,6 +1313,7 @@
           {
             ms: ms,
             label: ms / 1000 + "s",
+            anchor: "attempt_start",
             scroll: scrollContainerMetrics(),
             returnOpId: activeReturnOpId || "",
             quality: "measured",
@@ -1277,6 +1322,41 @@
         );
       }, ms);
       registerDiagCleanup(function () {
+        clearTimeout(t);
+      });
+    });
+  }
+
+  function clearReturnRelativeMilestones() {
+    while (returnMilestoneCleanups.length) {
+      try {
+        var fn = returnMilestoneCleanups.pop();
+        fn();
+      } catch (_) {}
+    }
+  }
+
+  function scheduleReturnRelativeMilestones() {
+    clearReturnRelativeMilestones();
+    if (!lastSettleAtMs) return;
+    [15000, 50000].forEach(function (ms) {
+      var t = setTimeout(function () {
+        if (!isRecording()) return;
+        appendEntry(
+          "attempt:milestone",
+          {
+            ms: ms,
+            label: "return+" + ms / 1000 + "s",
+            anchor: "last_settle_done",
+            msSinceSettle: Date.now() - lastSettleAtMs,
+            scroll: scrollContainerMetrics(),
+            returnOpId: activeReturnOpId || "",
+            quality: "measured",
+          },
+          "attempt"
+        );
+      }, ms);
+      returnMilestoneCleanups.push(function () {
         clearTimeout(t);
       });
     });
@@ -1348,6 +1428,7 @@
         droppedOtherAttempts: store.droppedOtherAttempts || 0,
         droppedAggregatedUnits: store.droppedAggregatedUnits || 0,
         aggregatedNetFetchUnits: store.aggregatedNetFetchUnits || 0,
+        droppedByEv: store.droppedByEv || {},
         truncatedExportLikely: !!store.truncatedExportLikely,
         entryCount: store.entries ? store.entries.length : 0,
         exportedEntryCount: attemptCount,
@@ -1427,6 +1508,10 @@
       d.handoffId = composeHandoffId();
       d.returnOpId = activeReturnOpId;
       d.newDocumentExpected = true;
+      lastHandoffAtMs = Date.now();
+      try {
+        sessionStorage.setItem(LAST_HANDOFF_KEY, String(lastHandoffAtMs));
+      } catch (_) {}
       persistCorrelationState();
     }
     if (t === "restore_start") {
@@ -1445,6 +1530,11 @@
     }
     if (t === "settle_done") {
       d.returnOpId = activeReturnOpId;
+      lastSettleAtMs = Date.now();
+      try {
+        sessionStorage.setItem(LAST_SETTLE_KEY, String(lastSettleAtMs));
+      } catch (_) {}
+      scheduleReturnRelativeMilestones();
     }
     appendEntry("trace:" + t, d, "iuNetwork");
     if (
@@ -1517,8 +1607,8 @@
     if (mode !== "affiliate") return u;
     if (u.indexOf("aff_section_inactive") >= 0) return u;
     if (!m.affShell) u.push("aff_shell");
-    if (!(m.partnerReadyCount > 0)) u.push("partners_ready");
-    if (!m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
+    else if (m.chipTotal > 0 && !(m.partnerReadyCount > 0)) u.push("partners_ready");
+    else if (m.chipTotal === 0 && !m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
     if (m.premiumLoading && !m.premiumGridMounted) u.push("premium_loading");
     return u;
   }
@@ -1589,6 +1679,7 @@
         return;
       }
       if (attempts >= maxAttempts) {
+        m.probeUnmetReasons = unmet.slice();
         appendEntry(
           "section:content_timeout",
           {
@@ -1625,13 +1716,16 @@
         appendEntry(
           "section:ready",
           {
+            readyPhase: "shell_or_lane",
             ms: Date.now() - t0,
             btnCount: btnCount,
             affVis: m.affVis,
+            affShell: m.affShell,
             partnerReadyCount: m.partnerReadyCount,
             salesLinkVis: m.salesLinkVis,
             premiumGridVis: m.premiumGridVis,
             attempts: attempts,
+            note: "shell_ready_not_full_content",
           },
           "section"
         );
@@ -1784,10 +1878,16 @@
       if (!proto) return;
       var origReload = proto.reload;
       var origReplace = proto.replace;
+      var origAssign = proto.assign;
       if (typeof origReload === "function") {
         proto.reload = function () {
           if (isRecording()) {
-            appendEntry("nav:reload", { stack: captureStack(8) }, "nav");
+            navActionSeq += 1;
+            appendEntry(
+              "nav:reload",
+              { actionId: "nav" + navActionSeq, stack: captureStack(8), origin: "location.reload" },
+              "nav"
+            );
           }
           return origReload.apply(this, arguments);
         };
@@ -1795,9 +1895,27 @@
       if (typeof origReplace === "function") {
         proto.replace = function (url) {
           if (isRecording()) {
-            appendEntry("nav:replace", { url: sanitizeUrl(String(url || "")), stack: captureStack(8) }, "nav");
+            navActionSeq += 1;
+            appendEntry(
+              "nav:replace",
+              { actionId: "nav" + navActionSeq, url: sanitizeUrl(String(url || "")), stack: captureStack(8) },
+              "nav"
+            );
           }
           return origReplace.apply(this, arguments);
+        };
+      }
+      if (typeof origAssign === "function") {
+        proto.assign = function (url) {
+          if (isRecording()) {
+            navActionSeq += 1;
+            appendEntry(
+              "nav:assign",
+              { actionId: "nav" + navActionSeq, url: sanitizeUrl(String(url || "")), stack: captureStack(8) },
+              "nav"
+            );
+          }
+          return origAssign.apply(this, arguments);
         };
       }
     } catch (_) {}
@@ -1857,9 +1975,11 @@
           var err = new Error("gate-setTab");
           if (err.stack) stack = String(err.stack).split("\n").slice(1, 6).join("\n");
         } catch (_) {}
+        navActionSeq += 1;
         appendEntry(
           "gate:setTab",
           {
+            actionId: "nav" + navActionSeq,
             to: String(value || ""),
             hubSection: hubSectionFromUrl(),
             stack: stack,
