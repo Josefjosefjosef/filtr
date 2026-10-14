@@ -178,11 +178,56 @@ jobs:
           echo "pushed=true" >> "$GITHUB_OUTPUT"
           echo "committedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
+  orchestrator-noop-report:
+    needs: [prep, shared-write]
+    if: needs.shared-write.outputs.pushed != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Download CHMI candidate (noop attempt record)
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: chmi-ie-candidate-${{ github.run_id }}
+          path: ${{ runner.temp }}/chmi-ie-candidate
+
+      - name: Write orchestrator noop summary (no repo commit)
+        run: |
+          set -euo pipefail
+          CAND="${RUNNER_TEMP}/chmi-ie-candidate"
+          node scripts/chmi-cap-v2-orchestrator-e2e-record.mjs \
+            --data-dir="$CAND" \
+            --run-id="${{ github.run_id }}" \
+            --run-attempt="${{ github.run_attempt }}" \
+            --phase=shared-write \
+            --outcome=no_data_change \
+            --pushed=false
+          JSON="$CAND/chmi_cap_v2/orchestrator_e2e.json"
+          test -f "$JSON"
+          {
+            echo "## CHMI orchestrator noop (NO_CHANGES)"
+            echo '```json'
+            cat "$JSON"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload noop attempt artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: chmi-orchestrator-noop-${{ github.run_id }}
+          path: ${{ runner.temp }}/chmi-ie-candidate/chmi_cap_v2/orchestrator_e2e.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+
   post-write:
     needs: shared-write
     if: needs.shared-write.outputs.pushed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     # NO info-events-data-writers Ă˘â‚¬â€ť checks/Pages must not hold the shared writer lock.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -238,6 +283,11 @@ jobs:
           CHANGED=$(gh pr diff "$NUM" --name-only)
           echo "[SCOPE] PR changed files:"
           echo "$CHANGED"
+          if [ -z "$(echo "$CHANGED" | tr -d '[:space:]')" ]; then
+            echo "[SCOPE] empty PR diff — FAIL (no auto-merge)"
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
           DATA_ONLY=true
           while IFS= read -r f; do
             [ -z "$f" ] && continue
@@ -327,7 +377,6 @@ jobs:
           [ -z "$NUM" ] && exit 0
           SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
           echo "[WAIT] PR #$NUM sha=$SHA"
-          REQUIRED='repo-guard smoke layout-guard iu-ads-regression-freeze'
           for i in $(seq 1 48); do
             MERGED=$(gh pr view "$NUM" --json state -q .state)
             if [ "$MERGED" = "MERGED" ]; then
@@ -336,43 +385,48 @@ jobs:
               echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
               exit 0
             fi
+            SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+            REPO="${{ github.repository }}"
             ROLLUP=$(gh pr view "$NUM" --json mergeStateStatus,statusCheckRollup -q '{m:.mergeStateStatus,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
-            echo "[WAIT] attempt=$i $ROLLUP"
+            echo "[WAIT] attempt=$i sha=$SHA $ROLLUP"
             FAIL=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "failure" or ((.conclusion // "")|ascii_downcase) == "cancelled" or ((.conclusion // "")|ascii_downcase) == "error")] | length')
-            if [ "$FAIL" != "0" ]; then
-              echo "[WAIT] required check failed"
+            ADS_FAIL=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze" and (.conclusion=="failure" or .conclusion=="timed_out"))] | length')
+            if [ "$FAIL" != "0" ] || [ "$ADS_FAIL" != "0" ]; then
+              echo "[WAIT] required check failed rollup_fail=$FAIL ads_fail=$ADS_FAIL"
               gh pr checks "$NUM" || true
               exit 1
             fi
             HAVE=0
-            for ctx in $REQUIRED; do
-              HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase))] | length')
+            for ctx in repo-guard smoke layout-guard; do
+              HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase) and ((.conclusion|ascii_downcase)=="success"))] | length')
               if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
             done
+            ADS_OK=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze" and .conclusion=="success" and .app.slug=="github-actions")] | length')
+            if [ "$ADS_OK" != "0" ]; then HAVE=$((HAVE + 1)); fi
+            echo "[WAIT] required contexts ready ($HAVE/4) ads_ok=$ADS_OK"
             if [ "$HAVE" -lt 4 ]; then
-              echo "[WAIT] required contexts starting ($HAVE/4) — sleeping"
+              if [ "$ADS_OK" = "0" ] && [ "$i" = "6" ]; then
+                echo "[WAIT] re-dispatch iu-ads-regression-freeze"
+                gh workflow run iu-ads-regression-freeze.yml --ref "${{ env.AUTOMATION_BRANCH }}" --repo "$REPO" -f "pr_number=${NUM}" || true
+              fi
               sleep 15
               continue
             fi
-            PENDING=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "pending" or .conclusion == "" or .conclusion == null or ((.conclusion // "")|ascii_downcase) == "in_progress" or ((.conclusion // "")|ascii_downcase) == "queued" or ((.conclusion // "")|ascii_downcase) == "waiting")] | length')
+            echo "[WAIT] all 4 required contexts satisfied (iu-ads via check-runs API)"
+            for _try in $(seq 1 36); do
+              ST=$(gh pr view "$NUM" --json state -q .state)
+              if [ "$ST" = "MERGED" ]; then
+                echo "[WAIT] auto-merge completed (try=$_try)"
+                echo "merged=true" >> "$GITHUB_OUTPUT"
+                echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              sleep 10
+            done
             MS=$(echo "$ROLLUP" | jq -r .m)
-            if [ "$PENDING" = "0" ] && { [ "$MS" = "CLEAN" ] || [ "$MS" = "HAS_HOOKS" ] || [ "$MS" = "UNSTABLE" ]; }; then
-              echo "[WAIT] checks ready (mergeState=$MS)"
-              for _try in $(seq 1 12); do
-                ST=$(gh pr view "$NUM" --json state -q .state)
-                if [ "$ST" = "MERGED" ]; then
-                  echo "[WAIT] auto-merge completed (try=$_try)"
-                  echo "merged=true" >> "$GITHUB_OUTPUT"
-                  echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
-                  exit 0
-                fi
-                sleep 10
-              done
-              echo "[WAIT] checks green but PR not merged yet Ă˘â‚¬â€ť leaving auto-merge enabled"
-              echo "merged=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            sleep 15
+            echo "[WAIT] checks satisfied but PR not merged (mergeState=$MS) — leaving auto-merge enabled"
+            echo "merged=false" >> "$GITHUB_OUTPUT"
+            exit 0
           done
           echo "[WAIT] timeout waiting for checks"
           gh pr checks "$NUM" || true
