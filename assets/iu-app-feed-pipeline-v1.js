@@ -17390,7 +17390,16 @@ function buildVideoAsArticleCard(it) {
             if (content.scrollTop) content.scrollTop = 0;
             /* Keep panelNav scrollTop intact while Menu is hidden (≤900 restore on return). */
             if (!iuMenuNavIsMobileBand() && panelNav && panelNav.scrollTop) panelNav.scrollTop = 0;
-            if (panelTools && panelTools.scrollTop) panelTools.scrollTop = 0;
+            var mmHoldY = 0;
+            try {
+              if (typeof window.iuMindMenuReadPendingScrollY === "function") mmHoldY = window.iuMindMenuReadPendingScrollY();
+            } catch (_mmHy) {
+              mmHoldY = 0;
+            }
+            if (panelTools) {
+              if (mmHoldY > 0) panelTools.scrollTop = mmHoldY;
+              else if (panelTools.scrollTop) panelTools.scrollTop = 0;
+            }
           } catch (_) {}
           try {
             window.requestAnimationFrame(function () {
@@ -17451,13 +17460,15 @@ function buildVideoAsArticleCard(it) {
                 } else if (panelNav && panelNav.scrollTop && !iuMenuNavIsMobileBand()) {
                   panelNav.scrollTop = 0;
                 }
-                if (value === "tools" && panelTools && panelTools.scrollTop) {
-                  /* MindMenu has its own restore; only zero when no pending MindMenu scroll. */
-                  var mmArmed = false;
+                if (value === "tools" && panelTools) {
+                  var mmHoldY2 = 0;
                   try {
-                    mmArmed = sessionStorage.getItem("iuMindMenuReturnArmed") === "1";
-                  } catch (_mmA) {}
-                  if (!mmArmed) panelTools.scrollTop = 0;
+                    if (typeof window.iuMindMenuReadPendingScrollY === "function") mmHoldY2 = window.iuMindMenuReadPendingScrollY();
+                  } catch (_mmHy2) {
+                    mmHoldY2 = 0;
+                  }
+                  if (mmHoldY2 > 0) panelTools.scrollTop = mmHoldY2;
+                  else if (panelTools.scrollTop) panelTools.scrollTop = 0;
                 } else if (value !== "tools" && panelTools && panelTools.scrollTop) {
                   panelTools.scrollTop = 0;
                 }
@@ -17484,6 +17495,21 @@ function buildVideoAsArticleCard(it) {
             if (typeof window !== "undefined") window.__iuWebNavGateDetailLatch = false;
           } catch (_) {}
           try {
+            var gateEarlyBack = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
+            if (gateEarlyBack === "tools") {
+              if (typeof window.iuMindMenuClearAllReturnMarkers === "function") {
+                window.iuMindMenuClearAllReturnMarkers();
+              } else {
+                try {
+                  sessionStorage.removeItem("iuMindMenuReturnArmed");
+                  sessionStorage.removeItem("iuMindMenuReturnScrollY");
+                  sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+                  localStorage.removeItem("iuMindMenuReturnPendingV1");
+                } catch (_mmInlineClr) {}
+              }
+            }
+          } catch (_mmEarlyBack) {}
+          try {
             if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
               var stBb = history.state && history.state.iu_nav_overlay === true;
               if (stBb) {
@@ -17492,7 +17518,28 @@ function buildVideoAsArticleCard(it) {
                    Pouze MindMenu (tools) necháváme na back(); u nav vždy sync + URL jako po popstate. */
                 var gateNow = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
                 if (gateNow === "tools") {
-                  history.back();
+                  try {
+                    var hMm = String(window.location.hash || "");
+                    var mmSt = !!(history.state && history.state.iu_mindmenu_overlay === true);
+                    if (hMm === "#iu-mindmenu" || mmSt) {
+                      if (typeof window.history !== "undefined" && window.history.length > 1) {
+                        history.back();
+                      } else {
+                        setTab("");
+                        try {
+                          var uMm = new URL(window.location.href);
+                          uMm.hash = "";
+                          history.replaceState({}, "", uMm.toString());
+                        } catch (_mmRep) {}
+                      }
+                      return;
+                    }
+                  } catch (_mmBackHist) {}
+                  if (typeof window.history !== "undefined" && window.history.length > 1) {
+                    history.back();
+                  } else {
+                    setTab("");
+                  }
                   return;
                 }
                 try {
@@ -17504,6 +17551,14 @@ function buildVideoAsArticleCard(it) {
               }
             }
           } catch (_) {}
+          try {
+            var hEndBack = String(window.location.hash || "");
+            if (hEndBack === "#iu-mindmenu" || hEndBack === "#nav" || hEndBack === "#iu-nav") {
+              var uEnd = new URL(window.location.href);
+              uEnd.hash = "";
+              history.replaceState(history.state && typeof history.state === "object" ? history.state : {}, "", uEnd.toString());
+            }
+          } catch (_hEnd) {}
           setTab("");
         });
       }
@@ -26282,15 +26337,62 @@ function buildVideoAsArticleCard(it) {
     return 0;
   }
 
+  function iuMindMenuReadPendingScrollY() {
+    var scrollY = -1;
+    try {
+      var ySs = parseInt(sessionStorage.getItem(IU_MINDMENU_RETURN_SCROLL_KEY) || "", 10);
+      if (Number.isFinite(ySs) && ySs >= 0) scrollY = ySs;
+    } catch (_) {}
+    if (scrollY < 0) {
+      try {
+        var pending = iuMindMenuReadReturnPending();
+        if (pending && Number.isFinite(pending.y) && pending.y >= 0) scrollY = pending.y;
+      } catch (_) {}
+    }
+    return scrollY;
+  }
+
   function iuMindMenuApplyPanelScrollY(y) {
     if (!Number.isFinite(y) || y < 0) return;
+    var target = Math.round(y);
     var apply = function () {
       try {
         var panel = document.getElementById("iuMobileGatePanelTools");
-        if (panel) panel.scrollTop = y;
+        if (panel) panel.scrollTop = target;
       } catch (_) {}
     };
     apply();
+    try {
+      var panel = document.getElementById("iuMobileGatePanelTools");
+      if (panel && target > 0) {
+        try {
+          panel.style.visibility = "hidden";
+        } catch (_vis) {}
+        var until = Date.now() + 1400;
+        var tick = function () {
+          apply();
+          try {
+            var max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+            var top = panel.scrollTop || 0;
+            if ((max >= target - 2 && Math.abs(top - target) <= 8) || Date.now() >= until) {
+              try {
+                panel.style.removeProperty("visibility");
+              } catch (_rv) {}
+              return;
+            }
+          } catch (_) {}
+          try {
+            requestAnimationFrame(tick);
+          } catch (_) {
+            try {
+              panel.style.removeProperty("visibility");
+            } catch (_rv2) {}
+          }
+        };
+        requestAnimationFrame(tick);
+        return;
+      }
+    } catch (_) {}
     try {
       requestAnimationFrame(function () {
         apply();
@@ -26656,6 +26758,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuPushHistoryEntryIfMobile = iuMindMenuPushHistoryEntryIfMobile;
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
     window.iuMindMenuClearReturnPending = iuMindMenuClearReturnPending;
+    window.iuMindMenuReadPendingScrollY = iuMindMenuReadPendingScrollY;
     window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
     window.iuMindMenuShouldPinToolsOnGateInit = iuMindMenuShouldPinToolsOnGateInit;
     window.iuMindMenuTouchReturnLatch = iuMindMenuTouchReturnLatch;

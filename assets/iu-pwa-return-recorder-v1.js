@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v5-20261014-home-visible-probes";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v6-20261014-two-phase-scroll";
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
@@ -14,8 +14,9 @@
   var TAB_SESSION_KEY = "iu:pwa-return-recorder-tab-sid:v1";
   var DOCUMENT_SID_KEY = "iu:pwa-return-recorder-document-sid:v1";
   var DOC_BOOT_SEQ_KEY = "iu:pwa-return-recorder-doc-boot-seq:v1";
-  var MAX_ENTRIES = 280;
-  var MAX_JSON_CHARS = 520000;
+  var MAX_ENTRIES = 420;
+  var MAX_JSON_CHARS = 640000;
+  var SCROLL_LOG_MIN_INTERVAL_MS = 900;
   var tabSessionSid = "";
   var documentSid = "";
   var documentBootSeq = 0;
@@ -24,12 +25,14 @@
   var lastGate = "";
   var lastSection = "";
   var scrollLogTimer = null;
+  var lastScrollLogAt = 0;
   var paintBurstLock = false;
   var STORAGE_WATCH = {
     session: [
       "iu_external_nav_armed",
       "iuPwaExternalReturnRestoringV1",
       "iuPwaExternalReturnMainScrollY",
+      "iuPwaExternalReturnMainScrollPersistV1",
       "iuMobileWebNavReturnArmed",
       "iuPwaExternalReturnGateTab",
       "iuMindMenuReturnArmed",
@@ -40,7 +43,7 @@
       "iu:pwa:ver:pending-reload",
       "iu:pwa:ver:last-reload-reason",
     ],
-    local: ["iuMindMenuReturnPendingV1"],
+    local: ["iuMindMenuReturnPendingV1", "iuPwaExternalReturnMainScrollPersistV1"],
   };
 
   function safeJsonParse(raw) {
@@ -967,12 +970,15 @@
   function scheduleScrollSample(force) {
     if (!isRecording()) return;
     if (scrollLogTimer) return;
+    var delay = force ? 0 : SCROLL_LOG_MIN_INTERVAL_MS;
     scrollLogTimer = setTimeout(function () {
       scrollLogTimer = null;
+      var now = Date.now();
+      if (!force && now - lastScrollLogAt < SCROLL_LOG_MIN_INTERVAL_MS) return;
+      lastScrollLogAt = now;
       var snap = viewSnapshot();
       appendEntry("scroll:sample", { scroll: snap.scroll, gate: snap.gate, hubSection: snap.hubSection }, "scroll");
-      if (force) scheduleScrollSample(false);
-    }, force ? 0 : 280);
+    }, delay);
   }
 
   function bindLifecycleEvents() {
