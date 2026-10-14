@@ -250,12 +250,28 @@
           } catch (e8) {}
         }
       }
+      var mmBootWatchdog = null;
+      function scheduleMmBootWatchdog() {
+        try {
+          if (mmBootWatchdog) clearTimeout(mmBootWatchdog);
+          mmBootWatchdog = setTimeout(function () {
+            try {
+              if (document.documentElement.classList.contains("iu-mm-return-boot")) {
+                window.__iuMmReturnBootRelease("boot-watchdog-2400ms");
+              }
+            } catch (_wd) {}
+          }, 2400);
+        } catch (_sw) {}
+      }
       window.__iuMmReturnBootRelease = function (reason) {
         diag.clearedBy = String(reason || "");
+        try { if (mmBootWatchdog) clearTimeout(mmBootWatchdog); } catch (_cw) {}
+        mmBootWatchdog = null;
         try { document.documentElement.classList.remove("iu-mm-return-boot"); } catch (e9) {}
         try { document.documentElement.removeAttribute("data-iu-mm-return-boot"); } catch (e10) {}
         try { if (mo) mo.disconnect(); } catch (e11) {}
       };
+      scheduleMmBootWatchdog();
       try {
         mo = new MutationObserver(function () { schedulePin(); });
         mo.observe(document.documentElement, { childList: true, subtree: true });

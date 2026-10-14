@@ -8,6 +8,7 @@
   var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export114-115-fixes";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
+  var CRITICAL_WINDOW_ANCHOR_KEY = "iu:pwa:return-recorder:critical-window-anchor:v1";
   var returnMilestoneCleanups = [];
   var lastSettleAtMs = 0;
   var lastHandoffAtMs = 0;
@@ -114,9 +115,33 @@
     return 1;
   }
 
+  var criticalWindowAnchorAtMs = 0;
+
+  function getCriticalWindowAnchorMs() {
+    if (criticalWindowAnchorAtMs > 0) return criticalWindowAnchorAtMs;
+    try {
+      var raw = sessionStorage.getItem(CRITICAL_WINDOW_ANCHOR_KEY);
+      var n = parseInt(raw || "0", 10);
+      if (n > 0) criticalWindowAnchorAtMs = n;
+    } catch (_) {}
+    return criticalWindowAnchorAtMs || lastSettleAtMs || 0;
+  }
+
   function inReturnCriticalWindow() {
-    if (!lastSettleAtMs) return false;
-    return Date.now() - lastSettleAtMs < 120000;
+    var anchor = getCriticalWindowAnchorMs();
+    if (!anchor) return false;
+    return Date.now() - anchor < 120000;
+  }
+
+  function touchCriticalWindowAnchor() {
+    var now = Date.now();
+    var prev = getCriticalWindowAnchorMs();
+    if (!prev || now - prev >= 120000) {
+      criticalWindowAnchorAtMs = now;
+      try {
+        sessionStorage.setItem(CRITICAL_WINDOW_ANCHOR_KEY, String(now));
+      } catch (_) {}
+    }
   }
 
   function findEvictIndex(entries, cur) {
@@ -770,6 +795,52 @@
     }
   }
 
+  function sectionAppliedHubFromDom() {
+    try {
+      var fromBody = document.body && document.body.getAttribute("data-section");
+      if (fromBody) return String(fromBody).trim().toLowerCase();
+      var center = document.getElementById("iuCenterStage");
+      if (center && center.dataset && center.dataset.view) return String(center.dataset.view).trim().toLowerCase();
+    } catch (_) {}
+    return "";
+  }
+
+  function elementDomProbe(el) {
+    if (!el) {
+      return { present: false, connected: false };
+    }
+    var connected = false;
+    try {
+      connected = !!el.isConnected;
+    } catch (_) {
+      connected = !!document.getElementById(el.id);
+    }
+    var layoutMounted = isElementLayoutMounted(el);
+    var visible = isElementVisuallyPresent(el);
+    var r = null;
+    try {
+      r = el.getBoundingClientRect();
+    } catch (_) {}
+    var layoutBox = !!(r && r.width >= 8 && r.height >= 8);
+    var inViewport = false;
+    if (layoutBox && r) {
+      inViewport = r.bottom > 0 && r.right > 0 && r.top < (window.innerHeight || 0) && r.left < (window.innerWidth || 0);
+    }
+    return {
+      present: true,
+      connected: connected,
+      id: el.id || "",
+      htmlHidden: !!el.hidden,
+      layoutMounted: layoutMounted,
+      visible: visible,
+      layoutBox: layoutBox,
+      inViewport: inViewport,
+      rect: rectBrief(el),
+      mountBlockers: layoutMountBlockers(el),
+      probeNote: "layoutMounted!=visible; layoutBox may be true under visibility:hidden ancestors",
+    };
+  }
+
   function layoutMountBlockers(el) {
     var reasons = [];
     if (!el) {
@@ -828,19 +899,26 @@
     var mobileMain = !!(body && body.classList.contains("iu-mobileMainVisible"));
     var toolMain = !!(body && body.getAttribute("data-iu-tool-main") === "1");
     var hubAff = /^aff-/.test(h);
+    var sectionExpectedAffiliate = hubAff;
+    var applied = sectionAppliedHubFromDom();
     var shellMounted = hubAff && isElementLayoutMounted(aff);
     var shellVisible = hubAff && isElementVisuallyPresent(aff);
     /* mobileMain/toolMain = route chrome only; must not imply #iuAffiliateView is mounted (export 114/115). */
     var routeChromeActive = hubAff && (mobileMain || toolMain);
     var sectionActive = hubAff && (shellMounted || shellVisible);
     var mountBlockers = hubAff && aff ? layoutMountBlockers(aff) : [];
+    var affDom = hubAff ? elementDomProbe(aff) : null;
     return {
       hubSection: h,
+      sectionExpectedHub: h,
+      sectionAppliedHub: applied,
       hubAffiliate: hubAff,
+      sectionExpectedAffiliate: sectionExpectedAffiliate,
       sectionActive: sectionActive,
       routeChromeActive: routeChromeActive,
       affShellMounted: shellMounted,
       affShellVisible: shellVisible,
+      affDomProbe: affDom,
       affMountBlockers: mountBlockers,
       mobileMain: mobileMain,
       toolMain: toolMain,
@@ -967,41 +1045,65 @@
     var prem = document.getElementById("iuPremiumSelectedGrid");
     var sales = document.getElementById("iuPremiumSalesToggle");
     var affEl = document.getElementById("iuAffiliateView");
-    var affInScope = mode === "affiliate" && probeState.sectionActive;
-    var premMounted = affInScope && !!(prem && !prem.hidden && isElementLayoutMounted(prem));
+    var contentReadinessScope = mode === "affiliate";
+    var affInScope = contentReadinessScope && probeState.sectionActive;
+    var affLayoutMounted = contentReadinessScope && isElementLayoutMounted(affEl);
+    var affVisible = contentReadinessScope && isElementVisuallyPresent(affEl);
+    var metricsScope = contentReadinessScope;
+    var premMounted = metricsScope && !!(prem && !prem.hidden && isElementLayoutMounted(prem));
+    var partnerCatalogExpected = 0;
+    try {
+      if (grid && contentReadinessScope) {
+        partnerCatalogExpected = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="1"], .iuAffiliateChip[href^="https"]').length;
+      }
+    } catch (_) {}
     var unmetReasons = [];
-    if (mode === "affiliate" && !probeState.sectionActive) {
+    if (contentReadinessScope && !probeState.sectionActive) {
       if (probeState.routeChromeActive) unmetReasons.push("aff_route_chrome_without_shell");
       else unmetReasons.push("aff_section_inactive");
+      unmetReasons.push("aff_shell");
       if (probeState.affMountBlockers && probeState.affMountBlockers.length) {
         for (var bi = 0; bi < probeState.affMountBlockers.length && bi < 6; bi++) {
           unmetReasons.push("aff_mount:" + probeState.affMountBlockers[bi]);
         }
       }
       if (probeState.affShellMounted && !probeState.affShellVisible) unmetReasons.push("aff_mounted_not_visible");
-    } else if (mode === "affiliate" && affInScope && !isElementLayoutMounted(affEl)) {
+    } else if (contentReadinessScope && !affLayoutMounted) {
       unmetReasons.push("aff_shell");
       var blockers = layoutMountBlockers(affEl);
       for (var bj = 0; bj < blockers.length && bj < 6; bj++) unmetReasons.push("aff_mount:" + blockers[bj]);
     }
     var out = {
       probeMode: mode,
+      probeSchemaNote:
+        "affInScope=scoped_active_shell; contentReadinessScope=expected_hub_affiliate; affLayoutMounted/affVisible always when expected",
+      contentReadinessScope: contentReadinessScope,
+      sectionExpectedHub: probeState.sectionExpectedHub || hub,
+      sectionAppliedHub: probeState.sectionAppliedHub || "",
       affInScope: affInScope,
       affiliateProbe: probeState,
+      affDomProbe: probeState.affDomProbe || elementDomProbe(affEl),
       probeUnmetReasons: unmetReasons,
       partnerHrefSlots: partnerHrefSlots,
       partnerEmptySlots: partnerEmptySlots,
+      partnerCatalogExpected: partnerCatalogExpected,
       salesOrPlaceholderChips: salesButtons,
-      affVis: affInScope && isElementVisuallyPresent(affEl),
-      affShell: affInScope && isElementLayoutMounted(affEl),
+      affVis: affVisible,
+      affVisible: affVisible,
+      affShell: affLayoutMounted,
+      affLayoutMounted: affLayoutMounted,
       partnerReadyCount: partnerReady,
       chipTotal: chipTotal,
-      premiumGridVis: affInScope && !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
+      premiumGridVis: metricsScope && !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
       premiumGridMounted: premMounted,
-      salesLinkVis: affInScope && isElementVisuallyPresent(sales),
-      salesLinkMounted: affInScope && isElementLayoutMounted(sales),
-      premiumLoading: affInScope && !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
-      staleDomNote: !affInScope ? "affiliate_ids_present_globally_not_active_section" : "",
+      salesLinkVis: metricsScope && isElementVisuallyPresent(sales),
+      salesLinkMounted: metricsScope && isElementLayoutMounted(sales),
+      premiumLoading: metricsScope && !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
+      staleDomNote: contentReadinessScope && !affInScope ? "expected_affiliate_section_metrics_while_shell_inactive" : "",
+      export114ParadoxNote:
+        contentReadinessScope && probeState.routeChromeActive && !affLayoutMounted
+          ? "pre_fix_had_affInScope_true_via_mobileMain_in_sectionActive"
+          : "",
     };
     if (mode === "chmi_feed") {
       var chmi = chmiFeedContentMetrics();
@@ -1274,6 +1376,7 @@
     try {
       lastSettleAtMs = parseInt(sessionStorage.getItem(LAST_SETTLE_KEY) || "0", 10) || 0;
       lastHandoffAtMs = parseInt(sessionStorage.getItem(LAST_HANDOFF_KEY) || "0", 10) || 0;
+      criticalWindowAnchorAtMs = parseInt(sessionStorage.getItem(CRITICAL_WINDOW_ANCHOR_KEY) || "0", 10) || 0;
     } catch (_) {}
     var reloadMeta = readLastReloadReason();
     var msSinceSettleAtBoot = lastSettleAtMs ? Date.now() - lastSettleAtMs : null;
@@ -1334,6 +1437,10 @@
     attemptStartedAtMs = Date.now();
     lastSettleAtMs = 0;
     lastHandoffAtMs = 0;
+    criticalWindowAnchorAtMs = 0;
+    try {
+      sessionStorage.removeItem(CRITICAL_WINDOW_ANCHOR_KEY);
+    } catch (_) {}
     clearReturnRelativeMilestones();
     writeLogStore(store);
     returnOpSeq = 0;
@@ -1591,6 +1698,7 @@
       try {
         sessionStorage.setItem(LAST_SETTLE_KEY, String(lastSettleAtMs));
       } catch (_) {}
+      touchCriticalWindowAnchor();
       scheduleReturnRelativeMilestones();
     }
     appendEntry("trace:" + t, d, "iuNetwork");
@@ -1662,10 +1770,16 @@
       return u;
     }
     if (mode !== "affiliate") return u;
-    if (u.indexOf("aff_section_inactive") >= 0 || u.indexOf("aff_route_chrome_without_shell") >= 0) return u;
-    if (!m.affShell) u.push("aff_shell");
-    else if ((m.partnerHrefSlots > 0 || m.partnerReadyCount > 0) && !(m.partnerReadyCount > 0)) u.push("partners_ready");
-    else if (m.chipTotal === 0 && !m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
+    if (!m.contentReadinessScope) return u;
+    if (!m.affLayoutMounted && !m.affShell) {
+      if (u.indexOf("aff_shell") < 0) u.push("aff_shell");
+      return u;
+    }
+    var partnerExpected = m.partnerCatalogExpected > 0 ? m.partnerCatalogExpected : m.partnerHrefSlots;
+    if (partnerExpected > 0 && !(m.partnerReadyCount > 0)) u.push("partners_ready");
+    else if (m.chipTotal === 0 && partnerExpected === 0 && !m.salesLinkMounted && !m.premiumGridMounted) {
+      u.push("sales_or_premium_shell");
+    } else if (m.chipTotal === 0 && partnerExpected > 0) u.push("partners_catalog_not_rendered");
     if (m.premiumLoading && !m.premiumGridMounted) u.push("premium_loading");
     return u;
   }
@@ -1767,22 +1881,27 @@
       var m = affiliateContentMetrics(hub);
       var btnCount = m.chipTotal;
       var chmiReady = mode === "chmi_feed" && (m.feedMounted || m.chmiCardCount > 0);
-      var affReady = mode === "affiliate" && (m.affVis || btnCount > 0);
+      var probe = m.affiliateProbe || affiliateSectionProbeState(hub);
+      var affShellLane = mode === "affiliate" && probe.sectionActive;
+      var affRouteLane = mode === "affiliate" && probe.routeChromeActive && !probe.sectionActive;
+      var affReady = affShellLane && (m.affVisible || m.affVis);
       var laneReady = mode === "hub_lane" && attempts >= 8;
-      if (affReady || chmiReady || laneReady || attempts >= 48) {
+      if (affReady || chmiReady || laneReady || (affRouteLane && attempts >= 12) || attempts >= 48) {
         appendEntry(
           "section:ready",
           {
-            readyPhase: "shell_or_lane",
+            readyPhase: affShellLane ? "shell_or_lane" : affRouteLane ? "route_chrome_only" : "shell_or_lane",
             ms: Date.now() - t0,
             btnCount: btnCount,
             affVis: m.affVis,
             affShell: m.affShell,
+            affLayoutMounted: m.affLayoutMounted,
+            contentReadinessScope: m.contentReadinessScope,
             partnerReadyCount: m.partnerReadyCount,
             salesLinkVis: m.salesLinkVis,
             premiumGridVis: m.premiumGridVis,
             attempts: attempts,
-            note: "shell_ready_not_full_content",
+            note: affShellLane ? "shell_ready_not_full_content" : "route_chrome_not_shell",
           },
           "section"
         );

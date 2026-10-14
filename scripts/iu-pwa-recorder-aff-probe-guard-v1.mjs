@@ -83,14 +83,18 @@ async function main() {
       return { m: m, geom: geom, hub: new URL(location.href).searchParams.get("section") };
     });
     must(paradox.hub === "aff-cestovni-kancelare", "ui:hub");
+    must(paradox.m && paradox.m.contentReadinessScope === true, "ui:content_readiness_scope");
     must(paradox.m && paradox.m.affiliateProbe && paradox.m.affiliateProbe.routeChromeActive === true, "ui:route_chrome");
     must(paradox.m && paradox.m.affiliateProbe.sectionActive === false, "ui:section_not_active_hidden_shell");
-    must(paradox.m && paradox.m.affInScope === false, "ui:aff_not_in_scope_export115_shape");
+    must(paradox.m && paradox.m.affInScope === false, "ui:aff_in_scope_scoped_false");
+    must(paradox.m && paradox.m.affLayoutMounted === false, "ui:aff_layout_mounted_false");
     must(paradox.m && Array.isArray(paradox.m.probeUnmetReasons) && paradox.m.probeUnmetReasons.length > 0, "ui:unmet_not_empty");
     must(
       paradox.m.probeUnmetReasons.indexOf("aff_route_chrome_without_shell") >= 0,
       "ui:route_chrome_unmet_reason"
     );
+    must(paradox.m.probeUnmetReasons.indexOf("aff_shell") >= 0, "ui:aff_shell_unmet");
+    must(paradox.m && paradox.m.affDomProbe && paradox.m.affDomProbe.htmlHidden === true, "ui:html_hidden_separate");
 
     const mounted = await page.evaluate(() => {
       var aff = document.getElementById("iuAffiliateView");

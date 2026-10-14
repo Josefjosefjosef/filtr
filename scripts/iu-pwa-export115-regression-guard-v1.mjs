@@ -29,6 +29,9 @@ must(/partnerHrefSlots/.test(rec), "static:partner_href");
 must(html.includes("iuMobileSilverSlot"), "static:mm_boot_hide_silver");
 must(/deferMmBootRelease/.test(feed), "static:defer_boot_release");
 must(/mindmenu-scroll-restored/.test(feed), "static:boot_release_after_scroll");
+must(/boot-watchdog-2400ms/.test(html), "static:mm_boot_watchdog");
+must(/mindmenu-scroll-zero/.test(feed), "static:mm_boot_release_zero_scroll");
+must(/mindmenu-scroll-timeout/.test(feed), "static:mm_boot_release_timeout");
 
 /* Export 115 paradox shape: affInScope must not be true when only route chrome is active. */
 must(

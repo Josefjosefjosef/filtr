@@ -26370,9 +26370,30 @@ function buildVideoAsArticleCard(it) {
         if (panel) panel.scrollTop = target;
       } catch (_) {}
     };
+    var releaseBootIfNeeded = function (why) {
+      try {
+        if (typeof window.__iuMmReturnBootRelease === "function" && document.documentElement.classList.contains("iu-mm-return-boot")) {
+          window.__iuMmReturnBootRelease(why || "mindmenu-scroll-done");
+        }
+      } catch (_) {}
+    };
     apply();
     try {
       var panel = document.getElementById("iuMobileGatePanelTools");
+      if (!panel) {
+        releaseBootIfNeeded("mindmenu-scroll-no-panel");
+        return;
+      }
+      if (target === 0) {
+        try {
+          requestAnimationFrame(function () {
+            releaseBootIfNeeded("mindmenu-scroll-zero");
+          });
+        } catch (_) {
+          releaseBootIfNeeded("mindmenu-scroll-zero");
+        }
+        return;
+      }
       if (panel && target > 0) {
         try {
           panel.style.visibility = "hidden";
@@ -26387,11 +26408,7 @@ function buildVideoAsArticleCard(it) {
               try {
                 panel.style.removeProperty("visibility");
               } catch (_rv) {}
-              try {
-                if (typeof window.__iuMmReturnBootRelease === "function") {
-                  window.__iuMmReturnBootRelease("mindmenu-scroll-restored");
-                }
-              } catch (_relScr) {}
+              releaseBootIfNeeded(Date.now() >= until ? "mindmenu-scroll-timeout" : "mindmenu-scroll-restored");
               return;
             }
           } catch (_) {}
