@@ -28,7 +28,7 @@ function read(rel) {
 
 function staticGate() {
   const rec = read("assets/iu-pwa-return-recorder-v1.js");
-  must(/pwa-return-recorder-v9-20261015-export114-fixes/.test(rec), "static:recorder_v9");
+  must(/pwa-return-recorder-v9-20261015-export114-115-fixes/.test(rec), "static:recorder_v9");
   must(/attempt:milestone/.test(rec), "static:attempt_milestones");
   must(/exportAttemptText/.test(rec), "static:export_attempt");
   must(/buildMetricCapabilities/.test(rec), "static:metric_capabilities");

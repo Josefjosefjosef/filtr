@@ -20,9 +20,14 @@ function read(rel) {
 const rec = read("assets/iu-pwa-return-recorder-v1.js");
 const html = read("projects/index.html");
 
-must(/pwa-return-recorder-v9-20261015-export114-fixes/.test(rec), "static:recorder_build");
-must(html.includes("pwa-return-recorder-v9-20261015-export114-fixes"), "static:html_bust");
-must(/shellMounted \|\| shellVisible/.test(rec), "static:aff_section_active_mounted");
+must(/pwa-return-recorder-v9-20261015-export114-115-fixes/.test(rec), "static:recorder_build");
+must(html.includes("pwa-return-recorder-v9-20261015-export114-115-fixes"), "static:html_bust");
+must(/routeChromeActive/.test(rec), "static:aff_route_chrome_split");
+must(/sectionActive = hubAff && \(shellMounted \|\| shellVisible\)/.test(rec), "static:aff_section_active_shell_only");
+must(!/shellVisible \|\| mobileMain/.test(rec), "static:aff_section_not_mobile_main");
+must(/aff_route_chrome_without_shell/.test(rec), "static:aff_route_chrome_unmet");
+must(/layoutMountBlockers/.test(rec), "static:aff_mount_blockers");
+must(/partnerHrefSlots/.test(rec), "static:aff_partner_href_slots");
 must(/scheduleReturnRelativeMilestones/.test(rec), "static:return_relative_milestones");
 must(/anchor: "last_settle_done"/.test(rec), "static:milestone_anchor_settle");
 must(/readyPhase: "shell_or_lane"/.test(rec), "static:ready_phase_shell");
@@ -30,7 +35,7 @@ must(/droppedByEv/.test(rec), "static:dropped_by_ev");
 must(/probeUnmetReasons = unmet/.test(rec), "static:timeout_probe_unmet");
 must(/nav:assign/.test(rec), "static:nav_assign_logged");
 must(/msSinceLastSettle/.test(rec), "static:correlation_settle_ms");
-must(/chipTotal > 0 && !\(m\.partnerReadyCount > 0\)/.test(rec), "static:aff_partner_ready_conditional");
+must(/partnerHrefSlots > 0/.test(rec), "static:aff_partner_ready_href_slots");
 
 if (fails.length) {
   console.log("IU_PWA_EXPORT114_REGRESSION_GUARD=FAIL");

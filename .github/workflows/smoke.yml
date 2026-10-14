@@ -256,6 +256,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-export114-regression-guard
 
+      - name: PWA export 115 regression guard (MindMenu boot + affiliate probe)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-export115-regression-guard
+
       - name: External open no blank/duplicate context guard (mobile/PWA)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-external-open-no-blank-duplicate-guard

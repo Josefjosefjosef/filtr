@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+/**
+ * Regression guard for physical export 115 (Dokument 115.docx baseline).
+ * Validates affiliate probe semantics and MindMenu boot defer (export 114/115 shared recorder build).
+ */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const fails = [];
+
+function must(cond, id) {
+  if (!cond) fails.push(id);
+}
+
+function read(rel) {
+  return fs.readFileSync(path.join(REPO, rel), "utf8");
+}
+
+const rec = read("assets/iu-pwa-return-recorder-v1.js");
+const html = read("projects/index.html");
+const feed = read("assets/iu-app-feed-pipeline-v1.js");
+
+must(/pwa-return-recorder-v9-20261015-export114-115-fixes/.test(rec), "static:recorder_build");
+must(/routeChromeActive/.test(rec), "static:route_chrome");
+must(/aff_route_chrome_without_shell/.test(rec), "static:route_unmet");
+must(/partnerHrefSlots/.test(rec), "static:partner_href");
+must(html.includes("iuMobileSilverSlot"), "static:mm_boot_hide_silver");
+must(/deferMmBootRelease/.test(feed), "static:defer_boot_release");
+must(/mindmenu-scroll-restored/.test(feed), "static:boot_release_after_scroll");
+
+/* Export 115 paradox shape: affInScope must not be true when only route chrome is active. */
+must(
+  /affInScope = mode === "affiliate" && probeState\.sectionActive/.test(rec),
+  "static:aff_in_scope_strict"
+);
+
+if (fails.length) {
+  console.log("IU_PWA_EXPORT115_REGRESSION_GUARD=FAIL");
+  console.log(fails.join(","));
+  process.exit(1);
+}
+console.log("IU_PWA_EXPORT115_REGRESSION_GUARD=PASS");

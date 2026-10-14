@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export114-fixes";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export114-115-fixes";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
   var returnMilestoneCleanups = [];
@@ -770,6 +770,39 @@
     }
   }
 
+  function layoutMountBlockers(el) {
+    var reasons = [];
+    if (!el) {
+      reasons.push("missing_element");
+      return reasons;
+    }
+    try {
+      if (el.hidden) reasons.push("html_hidden");
+      var node = el;
+      while (node && node.nodeType === 1) {
+        if (node.id) reasons.push("ancestor:" + node.id);
+        if (node.hidden) reasons.push("ancestor_hidden:" + (node.id || node.tagName));
+        var pst = getComputedStyle(node);
+        if (pst.display === "none") {
+          reasons.push("ancestor_display_none:" + (node.id || node.tagName));
+          break;
+        }
+        if (pst.visibility === "hidden") reasons.push("ancestor_visibility_hidden:" + (node.id || node.tagName));
+        if (Number(pst.opacity) === 0) reasons.push("ancestor_opacity_zero:" + (node.id || node.tagName));
+        node = node.parentElement;
+      }
+      var st = getComputedStyle(el);
+      if (st.display === "none") reasons.push("display_none");
+      if (st.visibility === "hidden") reasons.push("visibility_hidden");
+      if (Number(st.opacity) === 0) reasons.push("opacity_zero");
+      var r = el.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) reasons.push("rect_too_small");
+    } catch (_) {
+      reasons.push("probe_error");
+    }
+    return reasons;
+  }
+
   function rectBrief(el) {
     if (!el) return null;
     try {
@@ -797,13 +830,18 @@
     var hubAff = /^aff-/.test(h);
     var shellMounted = hubAff && isElementLayoutMounted(aff);
     var shellVisible = hubAff && isElementVisuallyPresent(aff);
-    var sectionActive = hubAff && (shellMounted || shellVisible || mobileMain || toolMain);
+    /* mobileMain/toolMain = route chrome only; must not imply #iuAffiliateView is mounted (export 114/115). */
+    var routeChromeActive = hubAff && (mobileMain || toolMain);
+    var sectionActive = hubAff && (shellMounted || shellVisible);
+    var mountBlockers = hubAff && aff ? layoutMountBlockers(aff) : [];
     return {
       hubSection: h,
       hubAffiliate: hubAff,
       sectionActive: sectionActive,
+      routeChromeActive: routeChromeActive,
       affShellMounted: shellMounted,
       affShellVisible: shellVisible,
+      affMountBlockers: mountBlockers,
       mobileMain: mobileMain,
       toolMain: toolMain,
       ids: {
@@ -914,10 +952,16 @@
     var grid = document.getElementById("iuAffiliateGrid");
     var partnerReady = 0;
     var chipTotal = 0;
+    var partnerHrefSlots = 0;
+    var partnerEmptySlots = 0;
+    var salesButtons = 0;
     try {
       if (grid && mode === "affiliate") {
         chipTotal = grid.querySelectorAll(".iuAffiliateChip").length;
         partnerReady = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="1"]').length;
+        partnerHrefSlots = grid.querySelectorAll('.iuAffiliateChip[href^="https"]').length;
+        partnerEmptySlots = grid.querySelectorAll('.iuAffiliateChip[href="#"]').length;
+        salesButtons = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="0"]').length;
       }
     } catch (_) {}
     var prem = document.getElementById("iuPremiumSelectedGrid");
@@ -927,14 +971,27 @@
     var premMounted = affInScope && !!(prem && !prem.hidden && isElementLayoutMounted(prem));
     var unmetReasons = [];
     if (mode === "affiliate" && !probeState.sectionActive) {
-      unmetReasons.push("aff_section_inactive");
+      if (probeState.routeChromeActive) unmetReasons.push("aff_route_chrome_without_shell");
+      else unmetReasons.push("aff_section_inactive");
+      if (probeState.affMountBlockers && probeState.affMountBlockers.length) {
+        for (var bi = 0; bi < probeState.affMountBlockers.length && bi < 6; bi++) {
+          unmetReasons.push("aff_mount:" + probeState.affMountBlockers[bi]);
+        }
+      }
       if (probeState.affShellMounted && !probeState.affShellVisible) unmetReasons.push("aff_mounted_not_visible");
+    } else if (mode === "affiliate" && affInScope && !isElementLayoutMounted(affEl)) {
+      unmetReasons.push("aff_shell");
+      var blockers = layoutMountBlockers(affEl);
+      for (var bj = 0; bj < blockers.length && bj < 6; bj++) unmetReasons.push("aff_mount:" + blockers[bj]);
     }
     var out = {
       probeMode: mode,
       affInScope: affInScope,
       affiliateProbe: probeState,
       probeUnmetReasons: unmetReasons,
+      partnerHrefSlots: partnerHrefSlots,
+      partnerEmptySlots: partnerEmptySlots,
+      salesOrPlaceholderChips: salesButtons,
       affVis: affInScope && isElementVisuallyPresent(affEl),
       affShell: affInScope && isElementLayoutMounted(affEl),
       partnerReadyCount: partnerReady,
@@ -1605,9 +1662,9 @@
       return u;
     }
     if (mode !== "affiliate") return u;
-    if (u.indexOf("aff_section_inactive") >= 0) return u;
+    if (u.indexOf("aff_section_inactive") >= 0 || u.indexOf("aff_route_chrome_without_shell") >= 0) return u;
     if (!m.affShell) u.push("aff_shell");
-    else if (m.chipTotal > 0 && !(m.partnerReadyCount > 0)) u.push("partners_ready");
+    else if ((m.partnerHrefSlots > 0 || m.partnerReadyCount > 0) && !(m.partnerReadyCount > 0)) u.push("partners_ready");
     else if (m.chipTotal === 0 && !m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
     if (m.premiumLoading && !m.premiumGridMounted) u.push("premium_loading");
     return u;
@@ -2340,6 +2397,9 @@
     getViewSnapshot: viewSnapshot,
     getAffiliateSectionProbeState: function () {
       return affiliateSectionProbeState(hubSectionFromUrl());
+    },
+    getAffiliateContentMetrics: function (hub) {
+      return affiliateContentMetrics(hub);
     },
     getLayoutGeometrySnapshot: function () {
       return layoutGeometrySnapshot();
