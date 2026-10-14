@@ -10,6 +10,10 @@
   var DEFAULT_FETCH_TIMEOUT_MS = 9000;
   var EXTERNAL_ARMED_KEY = "iu_external_nav_armed";
   var EXTERNAL_MAIN_SCROLL_KEY = "iuPwaExternalReturnMainScrollY";
+  /** Survives document teardown (iOS PWA return from external browser) — TTL-bound, local-only. */
+  var EXTERNAL_MAIN_SCROLL_PERSIST_LS = "iuPwaExternalReturnMainScrollPersistV1";
+  var EXTERNAL_MAIN_SCROLL_PERSIST_TTL_MS = 45000;
+  var EXTERNAL_MAIN_SCROLL_RESTORE_MS = 8000;
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
@@ -21,7 +25,8 @@
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
   var PWA_EXTERNAL_RETURN_BUILD_ID =
-    "pwa-external-return-unified-v11-20261014-home-hub-resume-handoff";
+    "pwa-external-return-unified-v12-20261014-scroll-survive-boot";
+  var externalMainScrollRestoreState = null;
   var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
   var PWA_RETURN_TRACE_LS = "iu:pwa-external-return-trace:v1";
@@ -507,6 +512,162 @@
     return false;
   }
 
+  function writeExternalMainScrollPersist(y) {
+    try {
+      if (!Number.isFinite(y) || y <= 0) return;
+      localStorage.setItem(
+        EXTERNAL_MAIN_SCROLL_PERSIST_LS,
+        JSON.stringify({ y: Math.round(y), t: Date.now(), gen: externalReturnGeneration, route: "home" })
+      );
+    } catch (_) {}
+  }
+
+  function readExternalMainScrollPersist() {
+    try {
+      var raw = localStorage.getItem(EXTERNAL_MAIN_SCROLL_PERSIST_LS);
+      if (!raw) return null;
+      var o = JSON.parse(raw);
+      if (!o || !Number.isFinite(o.y) || o.y <= 0) return null;
+      var ts = Number(o.t);
+      if (!Number.isFinite(ts) || Date.now() - ts > EXTERNAL_MAIN_SCROLL_PERSIST_TTL_MS) {
+        localStorage.removeItem(EXTERNAL_MAIN_SCROLL_PERSIST_LS);
+        return null;
+      }
+      return o;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function clearExternalMainScrollPersist() {
+    try {
+      localStorage.removeItem(EXTERNAL_MAIN_SCROLL_PERSIST_LS);
+    } catch (_) {}
+  }
+
+  function clearExternalMainScrollKeys() {
+    try {
+      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
+    } catch (_) {}
+    clearExternalMainScrollPersist();
+    externalMainScrollRestoreState = null;
+  }
+
+  function externalMainScrollTargetY() {
+    try {
+      var raw = sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY);
+      var y = parseInt(raw || "0", 10);
+      if (Number.isFinite(y) && y > 0) return y;
+    } catch (_) {}
+    var p = readExternalMainScrollPersist();
+    return p && Number.isFinite(p.y) ? p.y : 0;
+  }
+
+  function cancelExternalMainScrollRestoreTick() {
+    externalMainScrollRestoreState = null;
+  }
+
+  function startExternalMainScrollRestoreTick(gen) {
+    var target = externalMainScrollTargetY();
+    if (!(target > 0)) return;
+    externalMainScrollRestoreState = { y: target, until: Date.now() + EXTERNAL_MAIN_SCROLL_RESTORE_MS, gen: gen };
+    function tick() {
+      if (!externalMainScrollRestoreState || externalMainScrollRestoreState.gen !== gen) return;
+      var wrap = document.getElementById("iuMobileGateWrap");
+      var gateOpen = wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "";
+      if (gateOpen || document.body.classList.contains("iu-mobileGateOverlayOpen")) {
+        try {
+          requestAnimationFrame(tick);
+        } catch (_) {}
+        return;
+      }
+      if (Date.now() > externalMainScrollRestoreState.until) {
+        try {
+          if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(target);
+        } catch (_) {}
+        cancelExternalMainScrollRestoreTick();
+        return;
+      }
+      var cur = 0;
+      try {
+        cur = typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : window.scrollY || 0;
+      } catch (_) {}
+      if (Math.abs(cur - target) > 2) {
+        try {
+          if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(target);
+        } catch (_) {}
+      }
+      if (Math.abs(cur - target) <= 4) {
+        cancelExternalMainScrollRestoreTick();
+        return;
+      }
+      try {
+        requestAnimationFrame(tick);
+      } catch (_) {
+        cancelExternalMainScrollRestoreTick();
+      }
+    }
+    try {
+      requestAnimationFrame(tick);
+    } catch (_) {
+      tick();
+    }
+  }
+
+  function bootRestoreExternalMainScrollAfterDocumentLoad() {
+    var p = readExternalMainScrollPersist();
+    if (!p) return;
+    try {
+      if (new URL(location.href).searchParams.has("section")) return;
+    } catch (_) {}
+    try {
+      sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(p.y)));
+    } catch (_) {}
+    startExternalMainScrollRestoreTick(externalReturnGeneration);
+    traceExternalReturn("boot_main_scroll_restore", { y: p.y });
+  }
+
+  function shouldPreserveExternalMainScrollOnHubSectionApply() {
+    try {
+      if (new URL(location.href).searchParams.has("section")) return false;
+    } catch (_) {
+      return false;
+    }
+    if (readExternalMainScrollPersist()) return true;
+    try {
+      if (sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY)) return true;
+    } catch (_) {}
+    if (isExternalReturnVersionDeferActive()) return true;
+    if (isExternalReturnHoldActive()) return true;
+    return false;
+  }
+
+  function cancelExternalReturnRestoreForSectionApply() {
+    if (!shouldPreserveExternalMainScrollOnHubSectionApply()) {
+      cancelExternalReturnRestore("section_apply");
+      return;
+    }
+    externalReturnGeneration += 1;
+    traceExternalReturn("cancel", { reason: "section_apply_preserve_main" });
+    clearStaleMindMenuPendingForHubNav("section_apply");
+    try {
+      if (externalReturnSettleTimer) clearTimeout(externalReturnSettleTimer);
+      externalReturnSettleTimer = null;
+      if (externalReturnSettleRaf) cancelAnimationFrame(externalReturnSettleRaf);
+      externalReturnSettleRaf = 0;
+    } catch (_) {}
+    try {
+      sessionStorage.removeItem(EXTERNAL_ARMED_KEY);
+      sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
+      sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
+      sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
+      sessionStorage.removeItem("iuMobileWebNavReturnArmed");
+    } catch (_) {}
+    externalRestoreInFlight = false;
+    refreshExternalReturnDiagPanel();
+    bootRestoreExternalMainScrollAfterDocumentLoad();
+  }
+
   /** User navigation / new view — drop stale return arms so delayed restore cannot overwrite. */
   function cancelExternalReturnRestore(reason) {
     externalReturnGeneration += 1;
@@ -523,7 +684,7 @@
       sessionStorage.removeItem(EXTERNAL_RESTORE_ACTIVE_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_HOLD_UNTIL_KEY);
       sessionStorage.removeItem(EXTERNAL_RETURN_VERSION_DEFER_UNTIL_KEY);
-      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
+      clearExternalMainScrollKeys();
       sessionStorage.removeItem(EXTERNAL_RETURN_GATE_KEY);
       sessionStorage.removeItem(HUB_SECTION_ARM_SESSION_KEY);
       sessionStorage.removeItem("iuMobileWebNavReturnArmed");
@@ -655,6 +816,7 @@
       else y = window.scrollY || 0;
       if (Number.isFinite(y) && y > 0) {
         sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(y)));
+        writeExternalMainScrollPersist(y);
       }
     } catch (_) {}
     try {
@@ -717,24 +879,15 @@
   function restorePwaExternalMainScrollIfNeeded() {
     var scrollGen = externalReturnGeneration;
     try {
-      var raw = sessionStorage.getItem(EXTERNAL_MAIN_SCROLL_KEY);
-      sessionStorage.removeItem(EXTERNAL_MAIN_SCROLL_KEY);
-      var y = parseInt(raw || "0", 10);
+      var y = externalMainScrollTargetY();
       if (!Number.isFinite(y) || y <= 0) return;
       var wrap = document.getElementById("iuMobileGateWrap");
       var gateOpen = wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "";
       if (gateOpen || document.body.classList.contains("iu-mobileGateOverlayOpen")) return;
-      if (typeof window.iuPwaApplyMainScrollY === "function") {
-        window.iuPwaApplyMainScrollY(y);
-        try {
-          requestAnimationFrame(function () {
-            if (scrollGen !== externalReturnGeneration) return;
-            try {
-              window.iuPwaApplyMainScrollY(y);
-            } catch (_) {}
-          });
-        } catch (_) {}
-      }
+      try {
+        sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(y)));
+      } catch (_) {}
+      startExternalMainScrollRestoreTick(scrollGen);
     } catch (_) {}
   }
 
@@ -1128,6 +1281,13 @@
         if (externalReturnDeferredSnapshotPending) runDeferredExternalReturnSnapshotWork();
       } catch (_) {}
       try {
+        var yHide = externalMainScrollTargetY();
+        if (!(yHide > 0)) {
+          if (typeof window.iuPwaGetMainScrollY === "function") yHide = window.iuPwaGetMainScrollY();
+        }
+        if (Number.isFinite(yHide) && yHide > 0) writeExternalMainScrollPersist(yHide);
+      } catch (_) {}
+      try {
         var u = new URL(location.href);
         if (u.searchParams.has("section")) {
           sessionStorage.setItem("iuPwaPagehideSectionCanonV1", u.pathname + u.search);
@@ -1179,8 +1339,18 @@
     bindUserNavigationCancel();
     bindLifecycle();
     try {
+      bootRestoreExternalMainScrollAfterDocumentLoad();
+    } catch (_) {}
+    try {
       if (document.readyState === "complete") ensureExternalReturnDiagPanel();
       else window.addEventListener("load", ensureExternalReturnDiagPanel, { once: true });
+    } catch (_) {}
+    try {
+      window.addEventListener("load", function () {
+        try {
+          bootRestoreExternalMainScrollAfterDocumentLoad();
+        } catch (_) {}
+      });
     } catch (_) {}
   }
 
@@ -1194,6 +1364,7 @@
     isExternalReturnHoldActive: isExternalReturnHoldActive,
     isExternalReturnVersionDeferActive: isExternalReturnVersionDeferActive,
     cancelExternalReturnRestore: cancelExternalReturnRestore,
+    cancelExternalReturnRestoreForSectionApply: cancelExternalReturnRestoreForSectionApply,
     enableExternalReturnDiagPanel: enableExternalReturnDiagPanel,
     getExternalReturnDiagSnapshot: externalReturnDiagSnapshot,
     pwaExternalReturnBuildId: PWA_EXTERNAL_RETURN_BUILD_ID,

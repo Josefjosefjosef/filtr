@@ -8068,6 +8068,14 @@ try {
       if (!hasSection) {
         if (sessionStorage.getItem("iu_external_nav_armed") === "1") return true;
         if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return true;
+        try {
+          var rawPersist = localStorage.getItem("iuPwaExternalReturnMainScrollPersistV1");
+          if (rawPersist) {
+            var op = JSON.parse(rawPersist);
+            var tsP = Number(op && op.t);
+            if (op && Number(op.y) > 0 && Number.isFinite(tsP) && Date.now() - tsP < 45000) return true;
+          }
+        } catch (_pPersist) {}
       }
       if (typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) return true;
       if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") {
@@ -8157,7 +8165,9 @@ try {
       if (iuPwaExternalReturnBlocksSectionApply()) return;
     } catch (_pwaExt) {}
     try {
-      if (window.iuNetwork && typeof window.iuNetwork.cancelExternalReturnRestore === "function") {
+      if (window.iuNetwork && typeof window.iuNetwork.cancelExternalReturnRestoreForSectionApply === "function") {
+        window.iuNetwork.cancelExternalReturnRestoreForSectionApply();
+      } else if (window.iuNetwork && typeof window.iuNetwork.cancelExternalReturnRestore === "function") {
         window.iuNetwork.cancelExternalReturnRestore("section_apply");
       }
     } catch (_pwaCancel) {}
