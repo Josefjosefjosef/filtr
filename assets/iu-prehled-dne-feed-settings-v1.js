@@ -674,4 +674,8 @@ export function resetTraffic(ff) {
 
 export function resetChmu(ff) {
   ff.chmu = defaultChmuFilter();
+  // City picks are mirrored between Doprava and ČHMÚ; reset ČHMÚ area to Celá ČR clears cities in both.
+  ff.traffic.localities = (ff.traffic.localities || []).filter(
+    (l) => l && String(l.level || "") !== "mesto"
+  );
 }

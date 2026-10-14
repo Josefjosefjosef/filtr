@@ -3403,7 +3403,19 @@ function wire() {
         void loadFeedSettings().then(() => wire());
         return;
       }
-      mutateFeedFilter((ff) => feedSettingsMod.resetChmu(ff));
+      mutateFeedFilter((ff) => {
+        feedSettingsMod.resetChmu(ff);
+        if (state.draft) {
+          const tmp = Object.assign({}, state.draft, { feedFilter: sanitizeFeedFilter(ff) });
+          const synced = prefsForChmuFilter(tmp, tmp.feedFilter);
+          state.draft.localities = synced.localities;
+          state.draft.myRegionOnly = synced.myRegionOnly;
+          state.draft.homeObec = synced.homeObec;
+          state.draft.homeKraj = synced.homeKraj;
+          state.draft.homeOkres = synced.homeOkres;
+          state.draft.localityQuery = synced.localityQuery || "";
+        }
+      });
       return;
     }
     if (act === "open-section") {

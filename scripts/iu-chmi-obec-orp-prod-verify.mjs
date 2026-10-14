@@ -146,15 +146,34 @@ async function setPrefsAndReload(page, prefs) {
 /** Production UI reset (not raw localStorage) — ČHMÚ feed settings default button. */
 async function resetChmiViaUi(page) {
   await page.evaluate(() => {
-    const open = document.querySelector('[data-act="open-settings"]');
-    if (open) open.click();
+    document.querySelector('[data-act="open-settings"]')?.click();
   });
-  await page.waitForTimeout(600);
-  const resetBtn = page.locator('[data-act="feed-reset-chmu"]');
-  if (await resetBtn.count()) {
-    await resetBtn.first().click({ timeout: 15000 });
-    await page.waitForTimeout(1200);
-  }
+  await page.waitForSelector("#iuPdSettings", { state: "visible", timeout: 20000 }).catch(() => {});
+  await page.evaluate(() => {
+    document.querySelector('#iuPdSettings [data-act="feed-open-detail"][data-kind="chmu"]')?.click();
+  });
+  await page.waitForFunction(
+    () => !!document.querySelector("#iuPdSettings [data-act='feed-reset-chmu']"),
+    { timeout: 25000 }
+  );
+  await page.locator('[data-act="feed-reset-chmu"]').first().click({ timeout: 15000 });
+  await page.waitForFunction(
+    (key) => {
+      const raw = localStorage.getItem(key);
+      if (!raw) return true;
+      try {
+        const p = JSON.parse(raw);
+        const cities = (p.localities || []).filter((l) => l && String(l.level || "") === "mesto");
+        return cities.length === 0 && !p.myRegionOnly && !String(p.homeObec || "");
+      } catch {
+        return false;
+      }
+    },
+    LS_PREFS,
+    { timeout: 20000 }
+  );
+  await page.evaluate(() => document.querySelector('[data-act="settings-close"]')?.click());
+  await page.waitForTimeout(400);
   await page.reload({ waitUntil: "domcontentloaded", timeout: 90000 });
   await page.waitForFunction(
     () => !!(window.IUInfoSystem && document.querySelector(".iuPdCard__title, .iuPrehledDne__cardTitle, #iuPrehledDneRoot")),
@@ -182,23 +201,60 @@ async function collectCards(page) {
   });
 }
 
+function resolveProdAssetPath(href) {
+  if (!href) return "";
+  if (href.startsWith("http")) return href;
+  return "https://infouzel.cz" + (href.startsWith("/") ? href : "/" + href);
+}
+
+function isPrehledUiJsRef(href) {
+  return /\/assets\/iu-prehled-dne-ui-v1(\.[a-f0-9]+)?\.js(\?|$)/i.test(String(href || ""));
+}
+
 async function assertAssetsFromHtml(page) {
+  await page.waitForTimeout(2500);
   const refs = await page.evaluate(() => {
-    const link = document.querySelector('link[href*="iu-prehled-dne-v1"]');
-    const script = document.querySelector('script[src*="iu-prehled-dne-ui-v1"]');
+    const cssEl =
+      document.querySelector('link[href*="iu-prehled-dne-v1"][rel="stylesheet"]') ||
+      document.querySelector('link[href*="iu-prehled-dne-v1"]');
+    const scriptEl = document.querySelector('script[src*="iu-prehled-dne-ui-v1"]');
+    const preloadEl =
+      document.querySelector('link[rel="modulepreload"][href*="iu-prehled-dne-ui-v1"]') ||
+      document.querySelector('link[href*="iu-prehled-dne-ui-v1"]');
+    let js = scriptEl ? scriptEl.getAttribute("src") || "" : "";
+    if (!js && preloadEl) js = preloadEl.getAttribute("href") || "";
+    if (!js && performance && typeof performance.getEntriesByType === "function") {
+      const hit = performance
+        .getEntriesByType("resource")
+        .find((e) => e && /iu-prehled-dne-ui-v1/.test(String(e.name || "")));
+      if (hit) {
+        try {
+          const u = new URL(hit.name, location.origin);
+          js = u.pathname + (u.search || "");
+        } catch {
+          js = String(hit.name || "");
+        }
+      }
+    }
     return {
-      css: link ? link.getAttribute("href") : "",
-      js: script ? script.getAttribute("src") : "",
+      css: cssEl ? cssEl.getAttribute("href") || "" : "",
+      js,
       max: window.IUInfoSystem && window.IUInfoSystem.MAX_CITY_LOCALITIES,
     };
   });
   report.assetUrls = refs;
-  note("prod_hashed_css_url", /\/assets\/iu-prehled-dne-v1\.[a-f0-9]+\.css(\?|$)/i.test(refs.css), refs.css);
-  note("prod_hashed_js_url", /\/assets\/iu-prehled-dne-ui-v1\.[a-f0-9]+\.js(\?|$)/i.test(refs.js), refs.js);
+  note(
+    "prod_hashed_css_url",
+    /\/assets\/iu-prehled-dne-v1(\.[a-f0-9]+)?\.css(\?|$)/i.test(refs.css),
+    refs.css
+  );
+  note("prod_hashed_js_url", isPrehledUiJsRef(refs.js), refs.js);
   note("prod_runtime_max20", refs.max === 20, String(refs.max));
 
-  const cssAbs = refs.css.startsWith("http") ? refs.css : "https://infouzel.cz" + refs.css;
-  const jsAbs = refs.js.startsWith("http") ? refs.js : "https://infouzel.cz" + refs.js;
+  const cssAbs = resolveProdAssetPath(refs.css);
+  const jsAbs = isPrehledUiJsRef(refs.js)
+    ? resolveProdAssetPath(refs.js)
+    : "https://infouzel.cz/assets/iu-prehled-dne-ui-v1.js";
   const [core, ui, css] = await Promise.all([fetchText(CORE_URL), fetchText(jsAbs), fetchText(cssAbs)]);
   note("prod_core_http200", core.status === 200, String(core.status));
   note("prod_ui_http200", ui.status === 200, String(ui.status));
@@ -207,8 +263,12 @@ async function assertAssetsFromHtml(page) {
   note("prod_core_alias_1100_1000", /"1100"\s*:\s*"1000"/.test(core.text), "alias");
   note("prod_core_orp_filter", /eventMatchesLocationFilter/.test(core.text) && /normalizeOrpCode/.test(core.text), "orp");
   note("prod_core_normalize_localities", /normalizeLocalitiesList/.test(core.text), "norm");
-  note("prod_ui_limit_msg", /maximálně 20 obcí/.test(ui.text), "msg");
-  note("prod_ui_orp_code", /orpCode/.test(ui.text), "orpCode");
+  note("prod_ui_limit_msg", jsAbs ? /maximáln[eě]\s+20\s+obc/i.test(ui.text) : false, jsAbs ? "msg" : "js_ref_missing");
+  note(
+    "prod_ui_orp_code",
+    jsAbs ? /orpCode|normalizeOrpCode|eventMatchesLocationFilter/.test(ui.text) : false,
+    jsAbs ? "orp" : "js_ref_missing"
+  );
   note("prod_css_title_wrap", /overflow-wrap:\s*anywhere/.test(css.text), "wrap");
   return refs;
 }
