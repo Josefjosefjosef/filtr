@@ -28,7 +28,7 @@ function staticGate() {
   const net = read("assets/iu-network-connectivity-v1.js");
   const app = read("assets/app.js");
   const html = read("projects/index.html");
-  must(/pwa-external-return-unified-v12-20261014-scroll-survive-boot/.test(net), "static:v12_build");
+  must(/pwa-external-return-unified-v13-20261014-scroll-coordinated/.test(net), "static:v12_build");
   must(/iuPwaEarlyCoalesceV1/.test(html), "static:early_coalesce_inline");
   must(/iuPwaClearColdSectionAttrsForHub/.test(read("assets/app.js")), "static:clear_cold_section_hub");
   must(/iu-hub-section-resume-pending/.test(html), "static:hub_resume_pending");

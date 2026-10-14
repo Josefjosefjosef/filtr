@@ -180,7 +180,7 @@ async function runScenarioMindMenu(page) {
 
 async function main() {
   const root = await fetchText(ORIGIN + "/");
-  const expectedBuild = "pwa-external-return-unified-v12-20261014-scroll-survive-boot";
+  const expectedBuild = "pwa-external-return-unified-v13-20261014-scroll-coordinated";
   const tokenV5 = root.text.includes(expectedBuild);
   const netMatch = root.text.match(/iu-network-connectivity-v1\.js\?v=([^"']+)/);
   const netUrl = netMatch

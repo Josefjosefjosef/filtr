@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v6-20261014-two-phase-scroll";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v7-20261014-attempt-aware-content-probes";
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
@@ -71,17 +71,41 @@
     }
   }
 
+  function activeAttemptId() {
+    try {
+      return sessionStorage.getItem(ATTEMPT_KEY) || "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function evictOneLogEntry(store) {
+    var cur = activeAttemptId() || store.recordingAttemptId || "";
+    if (cur && store.entries && store.entries.length) {
+      for (var i = 0; i < store.entries.length; i++) {
+        var ea = store.entries[i].attemptId || "";
+        if (ea && ea !== cur) {
+          store.entries.splice(i, 1);
+          store.droppedEntries = (store.droppedEntries || 0) + 1;
+          store.droppedOtherAttempts = (store.droppedOtherAttempts || 0) + 1;
+          return;
+        }
+      }
+    }
+    store.entries.shift();
+    store.droppedEntries = (store.droppedEntries || 0) + 1;
+    store.droppedCurrentAttempt = (store.droppedCurrentAttempt || 0) + 1;
+  }
+
   function writeLogStore(store) {
     try {
       if (typeof store.droppedEntries !== "number") store.droppedEntries = 0;
       while (store.entries.length > MAX_ENTRIES) {
-        store.entries.shift();
-        store.droppedEntries += 1;
+        evictOneLogEntry(store);
       }
       var txt = JSON.stringify(store);
       while (txt.length > MAX_JSON_CHARS && store.entries.length > 1) {
-        store.entries.shift();
-        store.droppedEntries += 1;
+        evictOneLogEntry(store);
         txt = JSON.stringify(store);
       }
       if (txt.length >= MAX_JSON_CHARS) store.truncatedExportLikely = true;
@@ -167,6 +191,25 @@
     }
   }
 
+  function isElementLayoutMounted(el) {
+    if (!el || el.hidden) return false;
+    try {
+      var node = el;
+      while (node && node.nodeType === 1) {
+        if (node.hidden) return false;
+        var pst = getComputedStyle(node);
+        if (pst.display === "none" || pst.visibility === "hidden" || Number(pst.opacity) === 0) return false;
+        node = node.parentElement;
+      }
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity) === 0) return false;
+      var r = el.getBoundingClientRect();
+      return r.width >= 8 && r.height >= 8;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function rectBrief(el) {
     if (!el) return null;
     try {
@@ -221,12 +264,17 @@
     } catch (_) {}
     var prem = document.getElementById("iuPremiumSelectedGrid");
     var sales = document.getElementById("iuPremiumSalesToggle");
+    var affEl = document.getElementById("iuAffiliateView");
+    var premMounted = !!(prem && !prem.hidden && isElementLayoutMounted(prem));
     return {
-      affVis: isElementVisuallyPresent(document.getElementById("iuAffiliateView")),
+      affVis: isElementVisuallyPresent(affEl),
+      affShell: isElementLayoutMounted(affEl),
       partnerReadyCount: partnerReady,
       chipTotal: chipTotal,
       premiumGridVis: !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
+      premiumGridMounted: premMounted,
       salesLinkVis: isElementVisuallyPresent(sales),
+      salesLinkMounted: isElementLayoutMounted(sales),
       premiumLoading: !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
     };
   }
@@ -386,6 +434,7 @@
       t: Date.now(),
       ev: String(ev || ""),
       src: source || "recorder",
+      attemptId: activeAttemptId() || store.recordingAttemptId || "",
       detail: detail && typeof detail === "object" ? detail : {},
       view: viewSnapshot(),
     };
@@ -557,13 +606,27 @@
       pageSid: documentSid || pageSid,
       delivery: collectDeliveryProof(),
       recordingAttemptId: store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "",
-      logMeta: {
-        droppedEntries: store.droppedEntries || 0,
-        truncatedExportLikely: !!store.truncatedExportLikely,
-        entryCount: store.entries ? store.entries.length : 0,
-        maxEntries: MAX_ENTRIES,
-        maxJsonChars: MAX_JSON_CHARS,
-      },
+      logMeta: (function () {
+        var cur = store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "";
+        var attemptCount = 0;
+        try {
+          if (store.entries && cur) {
+            for (var ai = 0; ai < store.entries.length; ai++) {
+              if ((store.entries[ai].attemptId || "") === cur) attemptCount += 1;
+            }
+          }
+        } catch (_) {}
+        return {
+          droppedEntries: store.droppedEntries || 0,
+          droppedCurrentAttempt: store.droppedCurrentAttempt || 0,
+          droppedOtherAttempts: store.droppedOtherAttempts || 0,
+          truncatedExportLikely: !!store.truncatedExportLikely,
+          entryCount: store.entries ? store.entries.length : 0,
+          currentAttemptEntryCount: attemptCount,
+          maxEntries: MAX_ENTRIES,
+          maxJsonChars: MAX_JSON_CHARS,
+        };
+      })(),
       log: store,
     };
     return JSON.stringify(payload, null, 2);
@@ -655,23 +718,70 @@
     requestAnimationFrame(tick);
   }
 
+  function sectionContentUnmet(m) {
+    var u = [];
+    if (!m.affShell) u.push("aff_shell");
+    if (!(m.partnerReadyCount > 0)) u.push("partners_ready");
+    if (!m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
+    if (m.premiumLoading && !m.premiumGridMounted) u.push("premium_loading");
+    return u;
+  }
+
   function scheduleSectionContentReady(t0) {
     var attempts = 0;
+    var maxAttempts = 120;
+    var milestones = { partners: false, sales: false, premium: false };
     function poll() {
       if (!isRecording()) return;
       attempts += 1;
       var m = affiliateContentMetrics();
-      var ready =
-        m.affVis &&
-        m.partnerReadyCount > 0 &&
-        m.salesLinkVis &&
-        (!m.premiumLoading || m.premiumGridVis);
-      if (ready || attempts >= 120) {
+      if (!milestones.partners && m.partnerReadyCount > 0) {
+        milestones.partners = true;
+        appendEntry(
+          "section:milestone",
+          { kind: "partners_ready", ms: Date.now() - t0, attempts: attempts, metrics: m },
+          "section"
+        );
+      }
+      if (!milestones.sales && m.salesLinkMounted) {
+        milestones.sales = true;
+        appendEntry(
+          "section:milestone",
+          { kind: "sales_cta_mounted", ms: Date.now() - t0, attempts: attempts, metrics: m },
+          "section"
+        );
+      }
+      if (!milestones.premium && m.premiumGridMounted && !m.premiumLoading) {
+        milestones.premium = true;
+        appendEntry(
+          "section:milestone",
+          { kind: "premium_grid_mounted", ms: Date.now() - t0, attempts: attempts, metrics: m },
+          "section"
+        );
+      }
+      var unmet = sectionContentUnmet(m);
+      if (unmet.length === 0) {
         appendEntry(
           "section:content_ready",
           {
+            outcome: "ready",
             ms: Date.now() - t0,
             attempts: attempts,
+            metrics: m,
+            geom: layoutGeometrySnapshot(),
+          },
+          "section"
+        );
+        return;
+      }
+      if (attempts >= maxAttempts) {
+        appendEntry(
+          "section:content_timeout",
+          {
+            outcome: "timeout",
+            ms: Date.now() - t0,
+            attempts: attempts,
+            unmet: unmet,
             metrics: m,
             geom: layoutGeometrySnapshot(),
           },
@@ -1088,6 +1198,7 @@
       "iuMobileWebNavArmForExternalFromMenu",
       "iuMobileWebNavSyncFromHistory",
       "iuMindMenuSyncGateFromHistory",
+      "iuPwaCoordinatedMainScrollRestore",
     ].forEach(function (name) {
       wrapFn(name, "fn:" + name);
     });
@@ -1102,6 +1213,7 @@
         "iuMobileWebNavArmForExternalFromMenu",
         "iuMobileWebNavSyncFromHistory",
         "iuMindMenuSyncGateFromHistory",
+        "iuPwaCoordinatedMainScrollRestore",
       ].forEach(function (name) {
         wrapFn(name, "fn:" + name);
       });

@@ -406,9 +406,26 @@ try {
     else iuSrBindLeftContentScroll();
   } catch (_) {}
 
-  var iuSrRestoreState = null; /* { y, until } */
+  var iuSrRestoreState = null; /* { y, until, coord?, onUserCancel? } */
+  function iuSrMaxMainScrollY() {
+    try {
+      var srRoot = iuSrScrollRoot();
+      var doc = srRoot || document.scrollingElement || document.documentElement;
+      var viewH = srRoot ? srRoot.clientHeight : (window.innerHeight || 0);
+      try {
+        var vv = window.visualViewport;
+        if (!srRoot && vv && vv.height) viewH = Math.max(viewH, Math.round(vv.height));
+      } catch (_) {}
+      return doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
   function iuSrCancelRestore() {
     if (!iuSrRestoreState) return;
+    try {
+      if (iuSrRestoreState.onUserCancel) iuSrRestoreState.onUserCancel("user_input");
+    } catch (_) {}
     iuSrRestoreState = null;
     try { window.__iuScrollRestorePendingNav = null; } catch (_) {}
   }
@@ -422,6 +439,10 @@ try {
 
   function iuSrRestoreTick() {
     if (!iuSrRestoreState) return;
+    if (iuSrRestoreState.coord && typeof iuSrRestoreState.coordTick === "function") {
+      iuSrRestoreState.coordTick();
+      return;
+    }
     var target = iuSrRestoreState.y;
     if (Date.now() > iuSrRestoreState.until) {
       iuSrSetY(target); /* best effort: clamps to max reachable height */
@@ -430,14 +451,111 @@ try {
     }
     /* HOLD until the window expires: the back-navigation re-render (view swap, async feed batches,
        mobile shell sync) can scroll to 0 AFTER a successful restore — a one-shot restore loses. */
-    var srRoot = iuSrScrollRoot();
-    var doc = srRoot || document.scrollingElement || document.documentElement;
-    var viewH = srRoot ? srRoot.clientHeight : (window.innerHeight || 0);
-    var maxY = doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
+    var maxY = iuSrMaxMainScrollY();
     if (maxY >= target - 2 && Math.abs(iuSrGetY() - target) > 2) {
       iuSrSetY(target);
     }
     try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { iuSrCancelRestore(); }
+  }
+  function iuPwaCoordinatedMainScrollRestore(opts) {
+    opts = opts || {};
+    var target = Math.max(0, Math.round(Number(opts.targetY) || 0));
+    if (!(target > 0)) return false;
+    iuSrCancelRestore();
+    var started = Date.now();
+    var stableFrames = 0;
+    var vvWait = false;
+    function finish(kind, extra) {
+      try {
+        if (kind === "complete" && typeof opts.onComplete === "function") opts.onComplete(extra || {});
+        if (kind === "cancel" && typeof opts.onCancel === "function") opts.onCancel(extra || {});
+      } catch (_) {}
+      iuSrRestoreState = null;
+    }
+    function gateBlocksRestore() {
+      try {
+        var wrap = document.getElementById("iuMobileGateWrap");
+        var gateOpen = wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "";
+        return gateOpen || document.body.classList.contains("iu-mobileGateOverlayOpen");
+      } catch (_) {
+        return false;
+      }
+    }
+    function viewportOffsetSettling() {
+      try {
+        var vv = window.visualViewport;
+        if (!vv) return false;
+        return Math.abs(vv.offsetTop || 0) > 12;
+      } catch (_) {
+        return false;
+      }
+    }
+    function coordTick() {
+      if (!iuSrRestoreState || !iuSrRestoreState.coord) return;
+      if (opts.shouldContinue && !opts.shouldContinue()) {
+        finish("cancel", { reason: "generation", ms: Date.now() - started });
+        return;
+      }
+      if (gateBlocksRestore()) {
+        try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { finish("cancel", { reason: "gate" }); }
+        return;
+      }
+      if (Date.now() > iuSrRestoreState.until) {
+        var maxTimeout = iuSrMaxMainScrollY();
+        if (maxTimeout >= target - 2) iuSrSetY(Math.min(target, maxTimeout));
+        finish("complete", {
+          reason: "timeout",
+          ms: Date.now() - started,
+          y: iuSrGetY(),
+          maxY: maxTimeout,
+          target: target,
+        });
+        return;
+      }
+      if (viewportOffsetSettling()) {
+        if (!vvWait) {
+          vvWait = true;
+          try {
+            if (typeof opts.onTrace === "function") opts.onTrace({ phase: "vv_wait", ms: Date.now() - started });
+          } catch (_) {}
+        }
+        try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { finish("cancel", { reason: "vv_wait" }); }
+        return;
+      }
+      var maxY = iuSrMaxMainScrollY();
+      var cur = iuSrGetY();
+      if (maxY >= target - 2) {
+        if (Math.abs(cur - target) > 2) {
+          iuSrSetY(Math.min(target, maxY));
+          stableFrames = 0;
+        } else {
+          stableFrames += 1;
+        }
+        if (stableFrames >= 4) {
+          finish("complete", {
+            reason: "stable",
+            ms: Date.now() - started,
+            y: cur,
+            maxY: maxY,
+            target: target,
+            stableFrames: stableFrames,
+          });
+          return;
+        }
+      }
+      try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { finish("cancel", { reason: "tick" }); }
+    }
+    iuSrRestoreState = {
+      y: target,
+      until: Date.now() + RESTORE_TIMEOUT_MS,
+      coord: true,
+      coordTick: coordTick,
+      onUserCancel: function (why) {
+        finish("cancel", { reason: why || "user_input", ms: Date.now() - started, y: iuSrGetY() });
+      },
+    };
+    try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { coordTick(); }
+    return true;
   }
   function iuSrRequestRestore(key) {
     var m = iuSrReadMap();
@@ -463,6 +581,8 @@ try {
     window.iuScrollRestoreRequest = function (key) { return iuSrRequestRestore(key); };
     window.iuPwaGetMainScrollY = iuSrGetY;
     window.iuPwaApplyMainScrollY = iuSrSetY;
+    window.iuPwaCoordinatedMainScrollRestore = iuPwaCoordinatedMainScrollRestore;
+    window.iuPwaMainScrollMaxY = iuSrMaxMainScrollY;
   } catch (_) {}
 
   /* popstate fires after location changed; scroll listener saved the left route continuously.
