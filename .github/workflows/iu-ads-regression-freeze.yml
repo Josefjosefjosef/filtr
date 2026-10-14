@@ -2,14 +2,20 @@
 # full bundle only when diff touches ads freeze scope (see scripts/iu-ads-regression-freeze-scope.mjs).
 name: IU Ads regression freeze
 
-permissions:
-  contents: read
-
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number (CHMI data-only bot PRs need explicit dispatch)
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: read
 
 concurrency:
   group: iu-ads-regression-freeze-${{ github.event.pull_request.head.sha || github.sha }}
@@ -20,16 +26,31 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Resolve PR SHAs (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        id: prmeta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ github.event.inputs.pr_number }}"
+          BASE=$(gh pr view "$NUM" --json baseRefOid -q .baseRefOid)
+          HEAD=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "head=$HEAD" >> "$GITHUB_OUTPUT"
+          echo "[IU_ADS] dispatch pr=$NUM base=$BASE head=$HEAD"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || steps.prmeta.outputs.head || github.sha }}
           fetch-depth: 64
 
       - name: Detect ads freeze scope
         id: scope
         env:
-          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
-          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          SMOKE_BASE_SHA: ${{ github.event.pull_request.base.sha || steps.prmeta.outputs.base || github.event.before || '' }}
+          SMOKE_HEAD_SHA: ${{ github.event.pull_request.head.sha || steps.prmeta.outputs.head || github.sha }}
+          GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha || steps.prmeta.outputs.base || '' }}
         run: node scripts/iu-ads-regression-freeze-scope.mjs
 
       - name: Out of scope (required check ack)
