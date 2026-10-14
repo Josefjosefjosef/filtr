@@ -13,7 +13,6 @@
   /** Survives document teardown (iOS PWA return from external browser) — TTL-bound, local-only. */
   var EXTERNAL_MAIN_SCROLL_PERSIST_LS = "iuPwaExternalReturnMainScrollPersistV1";
   var EXTERNAL_MAIN_SCROLL_PERSIST_TTL_MS = 45000;
-  var EXTERNAL_MAIN_SCROLL_RESTORE_MS = 8000;
   var EXTERNAL_RETURN_GATE_KEY = "iuPwaExternalReturnGateTab";
   var EXTERNAL_RESTORE_ACTIVE_KEY = "iuPwaExternalReturnRestoringV1";
   var EXTERNAL_RETURN_HOLD_UNTIL_KEY = "iuPwaExternalReturnHoldUntil";
@@ -25,7 +24,7 @@
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
   var PWA_EXTERNAL_RETURN_BUILD_ID =
-    "pwa-external-return-unified-v12-20261014-scroll-survive-boot";
+    "pwa-external-return-unified-v13-20261014-scroll-coordinated";
   var externalMainScrollRestoreState = null;
   var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
@@ -567,51 +566,37 @@
     externalMainScrollRestoreState = null;
   }
 
-  function startExternalMainScrollRestoreTick(gen) {
+  function startExternalMainScrollRestoreCoordinated(gen) {
     var target = externalMainScrollTargetY();
     if (!(target > 0)) return;
-    externalMainScrollRestoreState = { y: target, until: Date.now() + EXTERNAL_MAIN_SCROLL_RESTORE_MS, gen: gen };
-    function tick() {
-      if (!externalMainScrollRestoreState || externalMainScrollRestoreState.gen !== gen) return;
-      var wrap = document.getElementById("iuMobileGateWrap");
-      var gateOpen = wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "";
-      if (gateOpen || document.body.classList.contains("iu-mobileGateOverlayOpen")) {
-        try {
-          requestAnimationFrame(tick);
-        } catch (_) {}
-        return;
-      }
-      if (Date.now() > externalMainScrollRestoreState.until) {
-        try {
-          if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(target);
-        } catch (_) {}
-        cancelExternalMainScrollRestoreTick();
-        return;
-      }
-      var cur = 0;
+    cancelExternalMainScrollRestoreTick();
+    externalMainScrollRestoreState = { y: target, gen: gen };
+    if (typeof window.iuPwaCoordinatedMainScrollRestore !== "function") {
       try {
-        cur = typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : window.scrollY || 0;
+        if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(target);
       } catch (_) {}
-      if (Math.abs(cur - target) > 2) {
-        try {
-          if (typeof window.iuPwaApplyMainScrollY === "function") window.iuPwaApplyMainScrollY(target);
-        } catch (_) {}
-      }
-      if (Math.abs(cur - target) <= 4) {
-        cancelExternalMainScrollRestoreTick();
-        return;
-      }
-      try {
-        requestAnimationFrame(tick);
-      } catch (_) {
-        cancelExternalMainScrollRestoreTick();
-      }
+      cancelExternalMainScrollRestoreTick();
+      return;
     }
-    try {
-      requestAnimationFrame(tick);
-    } catch (_) {
-      tick();
-    }
+    window.iuPwaCoordinatedMainScrollRestore({
+      targetY: target,
+      shouldContinue: function () {
+        return !!(externalMainScrollRestoreState && externalMainScrollRestoreState.gen === gen);
+      },
+      onTrace: function (detail) {
+        traceExternalReturn("main_scroll_restore_trace", detail || {});
+      },
+      onComplete: function (detail) {
+        if (!externalMainScrollRestoreState || externalMainScrollRestoreState.gen !== gen) return;
+        cancelExternalMainScrollRestoreTick();
+        traceExternalReturn("main_scroll_restore_done", detail || {});
+      },
+      onCancel: function (detail) {
+        if (!externalMainScrollRestoreState || externalMainScrollRestoreState.gen !== gen) return;
+        cancelExternalMainScrollRestoreTick();
+        traceExternalReturn("main_scroll_restore_cancel", detail || {});
+      },
+    });
   }
 
   function bootRestoreExternalMainScrollAfterDocumentLoad() {
@@ -623,7 +608,7 @@
     try {
       sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(p.y)));
     } catch (_) {}
-    startExternalMainScrollRestoreTick(externalReturnGeneration);
+    startExternalMainScrollRestoreCoordinated(externalReturnGeneration);
     traceExternalReturn("boot_main_scroll_restore", { y: p.y });
   }
 
@@ -887,7 +872,7 @@
       try {
         sessionStorage.setItem(EXTERNAL_MAIN_SCROLL_KEY, String(Math.round(y)));
       } catch (_) {}
-      startExternalMainScrollRestoreTick(scrollGen);
+      startExternalMainScrollRestoreCoordinated(scrollGen);
     } catch (_) {}
   }
 
