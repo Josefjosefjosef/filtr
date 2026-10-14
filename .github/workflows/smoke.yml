@@ -236,6 +236,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-external-return-two-phase-scroll-guard
 
+      - name: PWA long return scenarios guard (50s + recorder export)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-long-return-scenarios-guard
+
       - name: External open no blank/duplicate context guard (mobile/PWA)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-external-open-no-blank-duplicate-guard

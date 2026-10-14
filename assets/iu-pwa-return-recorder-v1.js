@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v7-20261014-attempt-aware-content-probes";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v8-20261014-correlated-diag-perf";
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var navActionSeq = 0;
@@ -27,6 +27,15 @@
   var scrollLogTimer = null;
   var lastScrollLogAt = 0;
   var paintBurstLock = false;
+  var returnOpSeq = 0;
+  var sectionOpenSeq = 0;
+  var externalHandoffSeq = 0;
+  var activeReturnOpId = "";
+  var activeSectionOpenId = "";
+  var diagCleanups = [];
+  var diagPerfObservers = [];
+  var diagPointerSession = null;
+  var diagResourceCounts = { observers: 0, listeners: 0, intervals: 0, fetchWrap: 0 };
   var STORAGE_WATCH = {
     session: [
       "iu_external_nav_armed",
@@ -111,6 +120,389 @@
       if (txt.length >= MAX_JSON_CHARS) store.truncatedExportLikely = true;
       localStorage.setItem(LOG_KEY, txt);
     } catch (_) {}
+  }
+
+  function monoNow() {
+    try {
+      return Math.round(performance.now() * 1000) / 1000;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function buildMetricCapabilities() {
+    var out = {
+      quality: "measured",
+      performanceObserver: typeof PerformanceObserver !== "undefined",
+      supportedEntryTypes: [],
+      unsupportedEntryTypes: [],
+      memoryApi: typeof performance !== "undefined" && !!performance.memory,
+      eventTiming: "unavailable",
+      longAnimationFrames: "unavailable",
+      resourceTiming: typeof performance !== "undefined" && typeof performance.getEntriesByType === "function",
+      visualViewport: typeof window.visualViewport !== "undefined",
+      serviceWorker: typeof navigator !== "undefined" && "serviceWorker" in navigator,
+    };
+    var types = ["layout-shift", "largest-contentful-paint", "longtask", "event", "navigation", "long-animation-frame"];
+    for (var i = 0; i < types.length; i++) {
+      var ty = types[i];
+      try {
+        if (out.performanceObserver && PerformanceObserver.supportedEntryTypes && PerformanceObserver.supportedEntryTypes.indexOf(ty) >= 0) {
+          out.supportedEntryTypes.push(ty);
+        } else {
+          out.unsupportedEntryTypes.push(ty);
+        }
+      } catch (_) {
+        out.unsupportedEntryTypes.push(ty);
+      }
+    }
+    if (out.supportedEntryTypes.indexOf("event") >= 0) out.eventTiming = "supported";
+    if (out.supportedEntryTypes.indexOf("long-animation-frame") >= 0) out.longAnimationFrames = "supported";
+    return out;
+  }
+
+  function scrollContainerMetrics() {
+    var root = document.getElementById("leftContent");
+    var useRoot = false;
+    try {
+      if (root && root.clientHeight > 0 && root.scrollHeight > root.clientHeight + 1) {
+        var st = getComputedStyle(root);
+        if (st.overflowY === "auto" || st.overflowY === "scroll") useRoot = true;
+      }
+    } catch (_) {}
+    var doc = useRoot ? root : document.scrollingElement || document.documentElement;
+    var viewH = useRoot ? root.clientHeight : window.innerHeight || 0;
+    try {
+      var vv = window.visualViewport;
+      if (!useRoot && vv && vv.height) viewH = Math.max(viewH, Math.round(vv.height));
+    } catch (_) {}
+    var scrollY = 0;
+    try {
+      scrollY = typeof window.iuPwaGetMainScrollY === "function" ? window.iuPwaGetMainScrollY() : window.scrollY || 0;
+    } catch (_) {}
+    var maxY = 0;
+    try {
+      maxY = typeof window.iuPwaMainScrollMaxY === "function" ? window.iuPwaMainScrollMaxY() : 0;
+    } catch (_) {
+      if (doc) maxY = Math.max(0, doc.scrollHeight - viewH);
+    }
+    var vvSnap = null;
+    try {
+      var vv2 = window.visualViewport;
+      if (vv2) {
+        vvSnap = {
+          pageTop: Math.round(vv2.pageTop || 0),
+          offsetTop: Math.round(vv2.offsetTop || 0),
+          offsetLeft: Math.round(vv2.offsetLeft || 0),
+          h: Math.round(vv2.height || 0),
+          w: Math.round(vv2.width || 0),
+          scale: vv2.scale,
+        };
+      }
+    } catch (_) {}
+    var scrollRestoration = "unavailable";
+    try {
+      scrollRestoration = history.scrollRestoration || "unknown";
+    } catch (_) {}
+    return {
+      container: useRoot ? "leftContent" : "document",
+      scrollY: Math.round(scrollY),
+      scrollTop: doc ? Math.round(doc.scrollTop || 0) : 0,
+      scrollHeight: doc ? doc.scrollHeight : 0,
+      clientHeight: doc ? doc.clientHeight : 0,
+      maxY: Math.round(maxY),
+      vv: vvSnap,
+      scrollRestoration: scrollRestoration,
+      activeElement: document.activeElement && document.activeElement.id ? document.activeElement.id : "",
+    };
+  }
+
+  function correlationPayload(extra) {
+    var o = {
+      recordingAttemptId: activeAttemptId(),
+      documentSid: documentSid,
+      documentBootSeq: documentBootSeq,
+      returnOpId: activeReturnOpId || "",
+      sectionOpenId: activeSectionOpenId || "",
+      monoMs: monoNow(),
+    };
+    if (extra && typeof extra === "object") {
+      for (var k in extra) {
+        if (Object.prototype.hasOwnProperty.call(extra, k)) o[k] = extra[k];
+      }
+    }
+    return o;
+  }
+
+  function registerDiagCleanup(fn) {
+    if (typeof fn === "function") diagCleanups.push(fn);
+  }
+
+  function teardownDiagSession() {
+    while (diagCleanups.length) {
+      try {
+        var fn = diagCleanups.pop();
+        fn();
+      } catch (_) {}
+    }
+    diagPerfObservers = [];
+    diagPointerSession = null;
+    if (isRecording()) {
+      appendEntry(
+        "recorder:teardown",
+        {
+          resourceCounts: diagResourceCounts,
+          quality: "measured",
+        },
+        "diag"
+      );
+    }
+  }
+
+  function bindScrollApplyWrap() {
+    try {
+      var cur = window.iuPwaApplyMainScrollY;
+      if (typeof cur !== "function" || cur.__iuPwaRecScrollApply) return;
+      window.iuPwaApplyMainScrollY = function (y) {
+        var before = scrollContainerMetrics();
+        var rv = cur.apply(this, arguments);
+        var after = scrollContainerMetrics();
+        if (isRecording()) {
+          appendEntry(
+            "scroll:apply",
+            {
+              quality: "measured",
+              origin: "iuPwaApplyMainScrollY",
+              requestedY: Math.round(Number(y) || 0),
+              beforeY: before.scrollY,
+              afterY: after.scrollY,
+              maxY: after.maxY,
+              container: after.container,
+              vv: after.vv,
+              correlation: correlationPayload(),
+            },
+            "scroll"
+          );
+        }
+        return rv;
+      };
+      window.iuPwaApplyMainScrollY.__iuPwaRecScrollApply = true;
+    } catch (_) {}
+  }
+
+  function bindUserInputSignals() {
+    var down = false;
+    var startX = 0;
+    var startY = 0;
+    var moved = false;
+    function onPointerDown(e) {
+      if (!isRecording()) return;
+      down = true;
+      moved = false;
+      startX = e.clientX || 0;
+      startY = e.clientY || 0;
+      diagPointerSession = { t: Date.now(), type: e.pointerType || "unknown" };
+    }
+    function onPointerMove(e) {
+      if (!down || !isRecording()) return;
+      var dx = (e.clientX || 0) - startX;
+      var dy = (e.clientY || 0) - startY;
+      if (dx * dx + dy * dy > 64) moved = true;
+    }
+    function onPointerUp() {
+      if (!isRecording() || !down) return;
+      down = false;
+      if (moved) {
+        appendEntry(
+          "input:user_scroll_intent",
+          { quality: "estimated", via: "pointer_move", correlation: correlationPayload() },
+          "input"
+        );
+      }
+      diagPointerSession = null;
+    }
+    function onWheel() {
+      if (!isRecording()) return;
+      appendEntry("input:user_scroll_intent", { quality: "measured", via: "wheel", correlation: correlationPayload() }, "input");
+    }
+    function onKey(e) {
+      if (!isRecording()) return;
+      var k = e.key || "";
+      if (k === "ArrowUp" || k === "ArrowDown" || k === "PageUp" || k === "PageDown" || k === "Home" || k === "End" || k === " ") {
+        appendEntry("input:user_scroll_intent", { quality: "measured", via: "key", key: k, correlation: correlationPayload() }, "input");
+      }
+    }
+    window.addEventListener("pointerdown", onPointerDown, { passive: true, capture: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true, capture: true });
+    window.addEventListener("pointerup", onPointerUp, { passive: true, capture: true });
+    window.addEventListener("wheel", onWheel, { passive: true, capture: true });
+    window.addEventListener("keydown", onKey, true);
+    diagResourceCounts.listeners += 5;
+    registerDiagCleanup(function () {
+      window.removeEventListener("pointerdown", onPointerDown, true);
+      window.removeEventListener("pointermove", onPointerMove, true);
+      window.removeEventListener("pointerup", onPointerUp, true);
+      window.removeEventListener("wheel", onWheel, true);
+      window.removeEventListener("keydown", onKey, true);
+    });
+  }
+
+  function bindPerfObservers() {
+    if (typeof PerformanceObserver === "undefined") return;
+    var caps = buildMetricCapabilities();
+    function observeType(type, evName, mapFn) {
+      if (caps.supportedEntryTypes.indexOf(type) < 0) return;
+      try {
+        var po = new PerformanceObserver(function (list) {
+          if (!isRecording()) return;
+          var entries = list.getEntries();
+          for (var i = 0; i < entries.length; i++) {
+            var mapped = mapFn(entries[i]);
+            if (mapped) appendEntry(evName, mapped, "perf");
+          }
+        });
+        po.observe({ type: type, buffered: true });
+        diagPerfObservers.push(po);
+        diagResourceCounts.observers += 1;
+        registerDiagCleanup(function () {
+          try {
+            po.disconnect();
+          } catch (_) {}
+        });
+      } catch (_) {}
+    }
+    observeType("largest-contentful-paint", "perf:lcp", function (e) {
+      return {
+        quality: "measured",
+        size: e.size,
+        startTime: Math.round(e.startTime),
+        renderTime: Math.round(e.renderTime || 0),
+        id: e.id || "",
+        url: e.url ? sanitizeUrl(e.url) : "",
+        visibility: document.visibilityState || "unknown",
+        correlation: correlationPayload(),
+      };
+    });
+    observeType("longtask", "perf:longtask", function (e) {
+      if (e.duration < 50) return null;
+      return {
+        quality: "measured",
+        duration: Math.round(e.duration),
+        startTime: Math.round(e.startTime),
+        name: e.name || "",
+        correlation: correlationPayload(),
+      };
+    });
+    observeType("event", "perf:event_timing", function (e) {
+      if (e.name !== "click" && e.name !== "keydown" && e.name !== "pointerdown") return null;
+      return {
+        quality: "measured",
+        name: e.name,
+        duration: Math.round(e.duration || 0),
+        startTime: Math.round(e.startTime),
+        processingStart: Math.round(e.processingStart || 0),
+        processingEnd: Math.round(e.processingEnd || 0),
+        note: "not_inp_label",
+        correlation: correlationPayload(),
+      };
+    });
+  }
+
+  function bindServiceWorkerDiag() {
+    try {
+      if (!navigator.serviceWorker) return;
+      function logSw(state) {
+        if (!isRecording()) return;
+        appendEntry(
+          "sw:state",
+          {
+            quality: "measured",
+            controller: !!(navigator.serviceWorker.controller),
+            state: state || "",
+            correlation: correlationPayload(),
+          },
+          "sw"
+        );
+      }
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        logSw("controllerchange");
+      });
+      diagResourceCounts.listeners += 1;
+      registerDiagCleanup(function () {});
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        if (!reg || !isRecording()) return;
+        appendEntry(
+          "sw:registration",
+          {
+            quality: "measured",
+            scope: reg.scope ? sanitizeUrl(reg.scope) : "",
+            active: !!(reg.active && reg.active.state),
+            waiting: !!(reg.waiting && reg.waiting.state),
+            installing: !!(reg.installing && reg.installing.state),
+            correlation: correlationPayload(),
+          },
+          "sw"
+        );
+      });
+    } catch (_) {}
+  }
+
+  function bindFetchTiming() {
+    try {
+      var cur = window.fetch;
+      if (typeof cur !== "function" || cur.__iuPwaRecFetch) return;
+      window.fetch = function (input, init) {
+        var url = typeof input === "string" ? input : input && input.url ? input.url : "";
+        var same = false;
+        try {
+          same = new URL(url, location.href).origin === location.origin;
+        } catch (_) {}
+        var t0 = monoNow();
+        var p = cur.apply(this, arguments);
+        if (!isRecording() || !same) return p;
+        return p.then(
+          function (res) {
+            appendEntry(
+              "net:fetch_done",
+              {
+                quality: "measured",
+                url: sanitizeUrl(url),
+                status: res.status,
+                ms: Math.round((monoNow() - t0) * 1000) / 1000,
+                cache: "unknown",
+                correlation: correlationPayload(),
+              },
+              "net"
+            );
+            return res;
+          },
+          function (err) {
+            appendEntry(
+              "net:fetch_error",
+              {
+                quality: "measured",
+                url: sanitizeUrl(url),
+                ms: Math.round((monoNow() - t0) * 1000) / 1000,
+                err: String(err && err.message ? err.message : err).slice(0, 80),
+                correlation: correlationPayload(),
+              },
+              "net"
+            );
+            throw err;
+          }
+        );
+      };
+      window.fetch.__iuPwaRecFetch = true;
+      diagResourceCounts.fetchWrap = 1;
+    } catch (_) {}
+  }
+
+  function bindExtendedDiagHooks() {
+    bindScrollApplyWrap();
+    bindUserInputSignals();
+    bindPerfObservers();
+    bindServiceWorkerDiag();
+    bindFetchTiming();
   }
 
   function appVersionLabel() {
@@ -432,12 +824,16 @@
     var entry = {
       n: store.seq,
       t: Date.now(),
+      monoMs: monoNow(),
       ev: String(ev || ""),
       src: source || "recorder",
       attemptId: activeAttemptId() || store.recordingAttemptId || "",
       detail: detail && typeof detail === "object" ? detail : {},
       view: viewSnapshot(),
     };
+    try {
+      entry.detail.correlation = entry.detail.correlation || correlationPayload();
+    } catch (_) {}
     store.entries.push(entry);
     writeLogStore(store);
   }
@@ -553,18 +949,33 @@
     store.stoppedAt = null;
     store.appVersion = appVersionLabel();
     store.recordingAttemptId = attemptId;
+    store.metricCapabilities = buildMetricCapabilities();
+    store.attemptStartedMonoMs = monoNow();
     writeLogStore(store);
+    returnOpSeq = 0;
+    sectionOpenSeq = 0;
+    externalHandoffSeq = 0;
+    activeReturnOpId = "";
+    activeSectionOpenId = "";
     appendEntry(
       "recorder:start",
-      { appVersion: appVersionLabel(), recordingAttemptId: attemptId, recorderBuildId: RECORDER_BUILD_ID },
+      {
+        appVersion: appVersionLabel(),
+        recordingAttemptId: attemptId,
+        recorderBuildId: RECORDER_BUILD_ID,
+        metricCapabilities: store.metricCapabilities,
+        quality: "measured",
+      },
       "ui"
     );
     bindHooks();
+    bindExtendedDiagHooks();
     scheduleScrollSample(true);
   }
 
   function stopRecording() {
-    appendEntry("recorder:stop", {}, "ui");
+    appendEntry("recorder:stop", { resourceCounts: diagResourceCounts, quality: "measured" }, "ui");
+    teardownDiagSession();
     try {
       localStorage.setItem(ACTIVE_KEY, "0");
     } catch (_) {}
@@ -592,8 +1003,16 @@
     }
   }
 
-  function exportText() {
+  function buildExportPayload(attemptOnly) {
     var store = readLogStore();
+    var cur = store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "";
+    var entries = store.entries || [];
+    if (attemptOnly && cur) {
+      entries = entries.filter(function (e) {
+        return (e.attemptId || "") === cur;
+      });
+    }
+    var attemptCount = entries.length;
     var payload = {
       exportedAt: Date.now(),
       recording: isRecording(),
@@ -605,35 +1024,48 @@
       documentBootSeq: documentBootSeq || parseInt(sessionStorage.getItem(DOC_BOOT_SEQ_KEY) || "0", 10) || 0,
       pageSid: documentSid || pageSid,
       delivery: collectDeliveryProof(),
-      recordingAttemptId: store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "",
-      logMeta: (function () {
-        var cur = store.recordingAttemptId || sessionStorage.getItem(ATTEMPT_KEY) || "";
-        var attemptCount = 0;
-        try {
-          if (store.entries && cur) {
-            for (var ai = 0; ai < store.entries.length; ai++) {
-              if ((store.entries[ai].attemptId || "") === cur) attemptCount += 1;
-            }
-          }
-        } catch (_) {}
-        return {
-          droppedEntries: store.droppedEntries || 0,
-          droppedCurrentAttempt: store.droppedCurrentAttempt || 0,
-          droppedOtherAttempts: store.droppedOtherAttempts || 0,
-          truncatedExportLikely: !!store.truncatedExportLikely,
-          entryCount: store.entries ? store.entries.length : 0,
-          currentAttemptEntryCount: attemptCount,
-          maxEntries: MAX_ENTRIES,
-          maxJsonChars: MAX_JSON_CHARS,
-        };
-      })(),
-      log: store,
+      recordingAttemptId: cur,
+      metricCapabilities: store.metricCapabilities || buildMetricCapabilities(),
+      exportScope: attemptOnly ? "current_attempt_only" : "full_archive",
+      logMeta: {
+        droppedEntries: store.droppedEntries || 0,
+        droppedCurrentAttempt: store.droppedCurrentAttempt || 0,
+        droppedOtherAttempts: store.droppedOtherAttempts || 0,
+        truncatedExportLikely: !!store.truncatedExportLikely,
+        entryCount: store.entries ? store.entries.length : 0,
+        exportedEntryCount: attemptCount,
+        currentAttemptEntryCount: attemptCount,
+        maxEntries: MAX_ENTRIES,
+        maxJsonChars: MAX_JSON_CHARS,
+      },
+      log: {
+        v: store.v,
+        seq: store.seq,
+        startedAt: store.startedAt,
+        stoppedAt: store.stoppedAt,
+        appVersion: store.appVersion,
+        recordingAttemptId: store.recordingAttemptId,
+        metricCapabilities: store.metricCapabilities,
+        entries: entries,
+        droppedEntries: store.droppedEntries,
+        droppedCurrentAttempt: store.droppedCurrentAttempt,
+        droppedOtherAttempts: store.droppedOtherAttempts,
+        truncatedExportLikely: store.truncatedExportLikely,
+      },
     };
-    return JSON.stringify(payload, null, 2);
+    return payload;
+  }
+
+  function exportText() {
+    return JSON.stringify(buildExportPayload(false), null, 2);
+  }
+
+  function exportAttemptText() {
+    return JSON.stringify(buildExportPayload(true), null, 2);
   }
 
   function copyLog() {
-    var txt = exportText();
+    var txt = exportAttemptText();
     return Promise.resolve()
       .then(function () {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -660,7 +1092,30 @@
   function ingestTrace(tag, detail) {
     if (!isRecording()) return;
     var t = String(tag || "");
-    appendEntry("trace:" + t, detail || {}, "iuNetwork");
+    var d = detail && typeof detail === "object" ? detail : {};
+    if (t === "external_handoff") {
+      externalHandoffSeq += 1;
+      returnOpSeq += 1;
+      activeReturnOpId = "ret" + returnOpSeq;
+      d.handoffId = "ext" + externalHandoffSeq;
+      d.returnOpId = activeReturnOpId;
+    }
+    if (t === "restore_start") {
+      if (!activeReturnOpId) {
+        returnOpSeq += 1;
+        activeReturnOpId = "ret" + returnOpSeq;
+      }
+      d.returnOpId = activeReturnOpId;
+    }
+    if (t === "main_scroll_restore_done" || t === "main_scroll_restore_cancel" || t === "main_scroll_restore_trace") {
+      d.returnOpId = activeReturnOpId;
+      d.scroll = scrollContainerMetrics();
+      d.quality = "measured";
+    }
+    if (t === "settle_done") {
+      d.returnOpId = activeReturnOpId;
+    }
+    appendEntry("trace:" + t, d, "iuNetwork");
     if (
       t === "restore_start" ||
       t === "settle_done" ||
@@ -730,9 +1185,27 @@
   function scheduleSectionContentReady(t0) {
     var attempts = 0;
     var maxAttempts = 120;
+    var startHub = hubSectionFromUrl();
+    var openId = activeSectionOpenId;
     var milestones = { partners: false, sales: false, premium: false };
     function poll() {
       if (!isRecording()) return;
+      if (hubSectionFromUrl() !== startHub) {
+        appendEntry(
+          "section:content_cancelled",
+          {
+            outcome: "cancelled",
+            reason: "hub_changed",
+            ms: Date.now() - t0,
+            attempts: attempts,
+            fromHub: startHub,
+            toHub: hubSectionFromUrl(),
+            sectionOpenId: openId,
+          },
+          "section"
+        );
+        return;
+      }
       attempts += 1;
       var m = affiliateContentMetrics();
       if (!milestones.partners && m.partnerReadyCount > 0) {
@@ -1267,6 +1740,7 @@
       });
     }
     bindBackButtons();
+    if (isRecording()) bindExtendedDiagHooks();
     var backPoll = 0;
     var backPollId = setInterval(function () {
       bindBackButtons();
@@ -1361,9 +1835,16 @@
   function ingestSectionApplyStart(t0) {
     if (!isRecording()) return;
     sectionApplyOpSeq += 1;
+    sectionOpenSeq += 1;
+    activeSectionOpenId = "secopen" + sectionOpenSeq;
     var opId = "sec" + sectionApplyOpSeq;
     var t = t0 || Date.now();
-    window.__iuPwaRecSectionApplyOp = { id: opId, t0: t, logged: false };
+    window.__iuPwaRecSectionApplyOp = { id: opId, t0: t, logged: false, sectionOpenId: activeSectionOpenId };
+    appendEntry(
+      "section:open_start",
+      { sectionOpenId: activeSectionOpenId, opId: opId, hubSection: hubSectionFromUrl(), t0: t, quality: "measured" },
+      "section"
+    );
     scheduleSectionReadyPoll(t);
     schedulePaintBurst("section_apply");
   }
@@ -1383,6 +1864,8 @@
     clearLog: clearLog,
     copyLog: copyLog,
     exportText: exportText,
+    exportAttemptText: exportAttemptText,
+    buildMetricCapabilities: buildMetricCapabilities,
     isRecording: isRecording,
     ingestTrace: ingestTrace,
     ingestNavIntent: ingestNavIntent,
