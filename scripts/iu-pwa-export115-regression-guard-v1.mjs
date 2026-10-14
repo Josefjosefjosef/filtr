@@ -33,11 +33,9 @@ must(/boot-watchdog-2400ms/.test(html), "static:mm_boot_watchdog");
 must(/mindmenu-scroll-zero/.test(feed), "static:mm_boot_release_zero_scroll");
 must(/mindmenu-scroll-timeout/.test(feed), "static:mm_boot_release_timeout");
 
-/* Export 115 paradox shape: affInScope must not be true when only route chrome is active. */
-must(
-  /affInScope = mode === "affiliate" && probeState\.sectionActive/.test(rec),
-  "static:aff_in_scope_strict"
-);
+must(/contentReadinessScope = mode === "affiliate"/.test(rec), "static:content_readiness_scope");
+must(/affInScope = contentReadinessScope && probeState\.sectionActive/.test(rec), "static:aff_in_scope_scoped_shell");
+must(/export114ParadoxNote/.test(rec), "static:export114_paradox_documented");
 
 if (fails.length) {
   console.log("IU_PWA_EXPORT115_REGRESSION_GUARD=FAIL");
