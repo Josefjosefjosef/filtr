@@ -16,6 +16,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  statuses: write
 
 concurrency:
   group: iu-ads-regression-freeze-${{ github.event.pull_request.head.sha || github.sha }}
@@ -104,3 +105,16 @@ jobs:
             test -n "$script"
             node "$script"
           done
+
+      - name: Set required status context (iu-ads-regression-freeze)
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha || steps.prmeta.outputs.head }}
+          MERGE_GROUP_HEAD_SHA: ${{ github.event.merge_group.head_sha }}
+          TARGET_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/ci/post-required-status.sh
+          scripts/ci/post-required-status.sh iu-ads-regression-freeze

@@ -289,7 +289,16 @@ async function runViewport(browser, name, width, height, cities20, city21) {
 
   await setPrefsAndReload(page, basePrefs([]));
   const reset = await collectCards(page);
-  note(name + "_reset_clears_city", !reset.titles.some((t) => t.includes(cities20[0].name)), "ok");
+  const prefsReset = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || "{}"), LS_PREFS);
+  const cleared =
+    !(prefsReset.localities && prefsReset.localities.length) &&
+    !prefsReset.myRegionOnly &&
+    !String(prefsReset.homeObec || "");
+  note(
+    name + "_reset_clears_city",
+    cleared && !reset.titles.some((t) => t.includes(cities20[0].name)),
+    "cleared=" + cleared + ";sample=" + reset.titles.slice(0, 2).join(" | ")
+  );
   note(
     name + "_console_clean",
     consoleErrors.filter((e) => !/favicon|ResizeObserver|net::ERR/i.test(e)).length === 0,
@@ -450,8 +459,12 @@ async function main() {
       const afterAreas = areaCountFromTitle(filteredSameEvent || "");
       note("live_city_in_relevant_title", !!filteredSameEvent || !!anyFiltered, filteredSameEvent || anyFiltered);
       note(
-        "live_area_count_stable_same_event",
-        !filteredSameEvent || beforeAreas == null || afterAreas == null || beforeAreas === afterAreas,
+        "live_filter_orp_subset",
+        !!filteredSameEvent &&
+          afterAreas != null &&
+          beforeAreas != null &&
+          afterAreas <= beforeAreas &&
+          filteredSameEvent.includes(live.name),
         "event=" +
           eventPrefix +
           ";before=" +
@@ -472,10 +485,18 @@ async function main() {
 
       await setPrefsAndReload(page, basePrefs([]));
       const resetLive = await collectCards(page);
+      const prefsAfterReset = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || "{}"), LS_PREFS);
+      const prefsCleared =
+        !(prefsAfterReset.localities && prefsAfterReset.localities.length) &&
+        !prefsAfterReset.myRegionOnly &&
+        !String(prefsAfterReset.homeObec || "");
       note(
         "live_reset_standard_title",
-        !resetLive.titles.some((t) => t.includes(live.name)),
-        resetLive.titles.slice(0, 2).join(" | ")
+        prefsCleared && !resetLive.titles.some((t) => t.includes(live.name)),
+        "prefsCleared=" +
+          prefsCleared +
+          ";titles=" +
+          resetLive.titles.slice(0, 2).join(" | ")
       );
     }
 

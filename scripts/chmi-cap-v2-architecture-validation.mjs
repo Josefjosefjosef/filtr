@@ -111,6 +111,16 @@ function listedForStreams(streamCount, filesPerStream = 3) {
   ok("sync_fixedLimit_false", /fixedLimit:\s*false/.test(syncSrc), "fixedLimit");
   ok("postwrite_scope_uses_pr_diff", /gh pr diff "\$NUM" --name-only/.test(wfSrc), "pr diff scope");
   ok("postwrite_no_git_fetch_scope", !/Diff scope check[\s\S]{0,400}git fetch origin main/.test(wfSrc), "scope git fetch");
+  ok("postwrite_empty_diff_fail", /empty PR diff — FAIL/.test(wfSrc), "empty diff fail");
+  ok("postwrite_wait_ads_check_runs", /commits\/\$\{SHA\}\/check-runs/.test(wfSrc), "ads check-runs wait");
+  ok("postwrite_noop_report_job", /orchestrator-noop-report/.test(wfSrc), "noop report job");
+  ok(
+    "iu_ads_required_status_context",
+    /post-required-status\.sh iu-ads-regression-freeze/.test(
+      fs.readFileSync(path.join(REPO, ".github/workflows/iu-ads-regression-freeze.yml"), "utf8")
+    ),
+    "iu-ads status context"
+  );
   ok("postwrite_no_fake_ads_status", !/context=iu-ads-regression-freeze/.test(wfSrc), "manual ads status");
   ok("postwrite_dispatch_ads_workflow", /gh workflow run iu-ads-regression-freeze\.yml/.test(wfSrc), "dispatch ads");
   ok("iu_ads_workflow_dispatch_input", /workflow_dispatch:[\s\S]{0,200}pr_number:/.test(fs.readFileSync(path.join(REPO, ".github/workflows/iu-ads-regression-freeze.yml"), "utf8")), "ads dispatch input");
