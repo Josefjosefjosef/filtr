@@ -5,9 +5,10 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v8-20261014-correlated-diag-perf";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261014-attempt-priority-correlation";
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
+  var CORRELATION_KEY = "iu:pwa:return-recorder-correlation:v1";
   var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
   var ACTIVE_KEY = "iu:pwa-return-recorder-active:v1";
@@ -16,6 +17,9 @@
   var DOC_BOOT_SEQ_KEY = "iu:pwa-return-recorder-doc-boot-seq:v1";
   var MAX_ENTRIES = 420;
   var MAX_JSON_CHARS = 640000;
+  var netFetchAggWindowMs = 900;
+  var lastNetFetchAgg = null;
+  var origWindowFetch = null;
   var SCROLL_LOG_MIN_INTERVAL_MS = 900;
   var tabSessionSid = "";
   var documentSid = "";
@@ -88,22 +92,114 @@
     }
   }
 
-  function evictOneLogEntry(store) {
-    var cur = activeAttemptId() || store.recordingAttemptId || "";
-    if (cur && store.entries && store.entries.length) {
-      for (var i = 0; i < store.entries.length; i++) {
-        var ea = store.entries[i].attemptId || "";
-        if (ea && ea !== cur) {
-          store.entries.splice(i, 1);
-          store.droppedEntries = (store.droppedEntries || 0) + 1;
-          store.droppedOtherAttempts = (store.droppedOtherAttempts || 0) + 1;
-          return;
-        }
+  function entryEvictTier(ev) {
+    var e = String(ev || "");
+    if (/^recorder:(start|stop)/.test(e)) return -1;
+    if (/^document:boot/.test(e)) return -1;
+    if (/^trace:(external_handoff|restore_start|settle_done)/.test(e)) return -1;
+    if (/^(nav:(intent|reload|replace|history_go)|back:click|gate:setTab)/.test(e)) return -1;
+    if (/^section:(open_start|apply_start|content_ready|content_timeout|content_cancelled)/.test(e)) return -1;
+    if (/^attempt:milestone/.test(e)) return -1;
+    if (/^layout:geometry/.test(e)) return 4;
+    if (/^view:frame/.test(e)) return 4;
+    if (/^net:fetch_done/.test(e)) return 3;
+    if (/^scroll:sample/.test(e)) return 3;
+    if (/^life:/.test(e)) return 2;
+    return 1;
+  }
+
+  function findEvictIndex(entries, cur) {
+    if (!entries || !entries.length) return -1;
+    for (var i = 0; i < entries.length; i++) {
+      var ea = entries[i].attemptId || "";
+      if (ea && cur && ea !== cur) return i;
+    }
+    var bestIdx = -1;
+    var bestTier = -1;
+    for (var j = 0; j < entries.length; j++) {
+      var tier = entryEvictTier(entries[j].ev);
+      if (tier < 0) continue;
+      if (tier > bestTier) {
+        bestTier = tier;
+        bestIdx = j;
       }
     }
-    store.entries.shift();
+    if (bestIdx >= 0) return bestIdx;
+    for (var k = 0; k < entries.length; k++) {
+      if (entryEvictTier(entries[k].ev) >= 0) return k;
+    }
+    return 0;
+  }
+
+  function evictOneLogEntry(store) {
+    var cur = activeAttemptId() || store.recordingAttemptId || "";
+    var idx = findEvictIndex(store.entries, cur);
+    if (idx < 0) return;
+    var removed = store.entries.splice(idx, 1)[0];
     store.droppedEntries = (store.droppedEntries || 0) + 1;
-    store.droppedCurrentAttempt = (store.droppedCurrentAttempt || 0) + 1;
+    var ea = removed && removed.attemptId ? removed.attemptId : "";
+    if (ea && cur && ea !== cur) {
+      store.droppedOtherAttempts = (store.droppedOtherAttempts || 0) + 1;
+    } else {
+      store.droppedCurrentAttempt = (store.droppedCurrentAttempt || 0) + 1;
+      if (removed && removed.detail && removed.detail.aggregatedFrom) {
+        store.droppedAggregatedUnits = (store.droppedAggregatedUnits || 0) + (removed.detail.aggregatedFrom - 1);
+      }
+    }
+  }
+
+  function persistCorrelationState() {
+    try {
+      var attemptId = activeAttemptId();
+      if (!attemptId) return;
+      sessionStorage.setItem(
+        CORRELATION_KEY,
+        JSON.stringify({
+          attemptId: attemptId,
+          returnOpSeq: returnOpSeq,
+          externalHandoffSeq: externalHandoffSeq,
+          activeReturnOpId: activeReturnOpId,
+          activeSectionOpenId: activeSectionOpenId,
+          sectionOpenSeq: sectionOpenSeq,
+          tabSessionSid: tabSessionSid,
+        })
+      );
+    } catch (_) {}
+  }
+
+  function restoreCorrelationState() {
+    try {
+      var attemptId = activeAttemptId();
+      if (!attemptId) return null;
+      var raw = sessionStorage.getItem(CORRELATION_KEY);
+      if (!raw) return null;
+      var o = safeJsonParse(raw);
+      if (!o || o.attemptId !== attemptId) return null;
+      returnOpSeq = typeof o.returnOpSeq === "number" ? o.returnOpSeq : returnOpSeq;
+      externalHandoffSeq = typeof o.externalHandoffSeq === "number" ? o.externalHandoffSeq : externalHandoffSeq;
+      activeReturnOpId = o.activeReturnOpId || activeReturnOpId;
+      activeSectionOpenId = o.activeSectionOpenId || activeSectionOpenId;
+      sectionOpenSeq = typeof o.sectionOpenSeq === "number" ? o.sectionOpenSeq : sectionOpenSeq;
+      return o;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function composeReturnOpId() {
+    var attemptId = activeAttemptId() || "attempt";
+    var shortA = attemptId.length > 10 ? attemptId.slice(-10) : attemptId;
+    return shortA + ":ret" + returnOpSeq;
+  }
+
+  function composeHandoffId() {
+    var attemptId = activeAttemptId() || "attempt";
+    var shortA = attemptId.length > 10 ? attemptId.slice(-10) : attemptId;
+    return shortA + ":ext" + externalHandoffSeq;
+  }
+
+  function composeSectionOpenId() {
+    return (documentSid || "doc") + ":secopen" + sectionOpenSeq;
   }
 
   function writeLogStore(store) {
@@ -224,6 +320,7 @@
       documentBootSeq: documentBootSeq,
       returnOpId: activeReturnOpId || "",
       sectionOpenId: activeSectionOpenId || "",
+      handoffId: externalHandoffSeq ? composeHandoffId() : "",
       monoMs: monoNow(),
     };
     if (extra && typeof extra === "object") {
@@ -239,6 +336,12 @@
   }
 
   function teardownDiagSession() {
+    var before = {
+      observers: diagResourceCounts.observers,
+      listeners: diagResourceCounts.listeners,
+      intervals: diagResourceCounts.intervals,
+      fetchWrap: diagResourceCounts.fetchWrap,
+    };
     while (diagCleanups.length) {
       try {
         var fn = diagCleanups.pop();
@@ -247,11 +350,20 @@
     }
     diagPerfObservers = [];
     diagPointerSession = null;
+    lastNetFetchAgg = null;
+    var after = {
+      observers: diagResourceCounts.observers,
+      listeners: diagResourceCounts.listeners,
+      intervals: diagResourceCounts.intervals,
+      fetchWrap: diagResourceCounts.fetchWrap,
+    };
     if (isRecording()) {
       appendEntry(
         "recorder:teardown",
         {
-          resourceCounts: diagResourceCounts,
+          resourceCountsBefore: before,
+          resourceCountsAfter: after,
+          idleHooksRemain: after.listeners,
           quality: "measured",
         },
         "diag"
@@ -451,6 +563,8 @@
     try {
       var cur = window.fetch;
       if (typeof cur !== "function" || cur.__iuPwaRecFetch) return;
+      if (!origWindowFetch) origWindowFetch = cur;
+      var netReqSeq = 0;
       window.fetch = function (input, init) {
         var url = typeof input === "string" ? input : input && input.url ? input.url : "";
         var same = false;
@@ -458,6 +572,8 @@
           same = new URL(url, location.href).origin === location.origin;
         } catch (_) {}
         var t0 = monoNow();
+        netReqSeq += 1;
+        var reqId = "fetch" + netReqSeq;
         var p = cur.apply(this, arguments);
         if (!isRecording() || !same) return p;
         return p.then(
@@ -470,7 +586,10 @@
                 status: res.status,
                 ms: Math.round((monoNow() - t0) * 1000) / 1000,
                 cache: "unknown",
-                correlation: correlationPayload(),
+                reqId: reqId,
+                opId: activeReturnOpId || "",
+                cancelled: false,
+                correlation: correlationPayload({ reqId: reqId }),
               },
               "net"
             );
@@ -483,8 +602,12 @@
                 quality: "measured",
                 url: sanitizeUrl(url),
                 ms: Math.round((monoNow() - t0) * 1000) / 1000,
+                reqId: reqId,
+                opId: activeReturnOpId || "",
+                errType: err && err.name ? String(err.name) : "Error",
                 err: String(err && err.message ? err.message : err).slice(0, 80),
-                correlation: correlationPayload(),
+                docHidden: document.visibilityState === "hidden",
+                correlation: correlationPayload({ reqId: reqId }),
               },
               "net"
             );
@@ -494,6 +617,14 @@
       };
       window.fetch.__iuPwaRecFetch = true;
       diagResourceCounts.fetchWrap = 1;
+      registerDiagCleanup(function () {
+        try {
+          if (origWindowFetch && window.fetch && window.fetch.__iuPwaRecFetch) {
+            window.fetch = origWindowFetch;
+            diagResourceCounts.fetchWrap = 0;
+          }
+        } catch (_) {}
+      });
     } catch (_) {}
   }
 
@@ -644,12 +775,41 @@
     };
   }
 
-  function affiliateContentMetrics() {
+  function sectionProbeMode(hub) {
+    var h = hub || hubSectionFromUrl();
+    if (/^aff-/.test(h)) return "affiliate";
+    if (/^(pocasi|chmi)/.test(h)) return "chmi_feed";
+    if (/^(mapy|maps|jr|tvprogram|tvonline|radio)/.test(h)) return "hub_lane";
+    return "none";
+  }
+
+  function chmiFeedContentMetrics() {
+    var feed = document.getElementById("feed");
+    var cards = 0;
+    var activeCards = 0;
+    try {
+      if (feed) {
+        cards = feed.querySelectorAll("[data-iu-chmi-cap], .iuInfoEventCard, .iuChmiCapCard").length;
+        activeCards = feed.querySelectorAll('[data-iu-chmi-lifecycle="ACTIVE"], [data-chmi-lifecycle="ACTIVE"]').length;
+      }
+    } catch (_) {}
+    return {
+      probeMode: "chmi_feed",
+      feedMounted: isElementLayoutMounted(feed),
+      feedVisible: isElementVisuallyPresent(feed),
+      chmiCardCount: cards,
+      chmiActiveCardCount: activeCards,
+      feedRect: rectBrief(feed),
+    };
+  }
+
+  function affiliateContentMetrics(hub) {
+    var mode = sectionProbeMode(hub);
     var grid = document.getElementById("iuAffiliateGrid");
     var partnerReady = 0;
     var chipTotal = 0;
     try {
-      if (grid) {
+      if (grid && mode === "affiliate") {
         chipTotal = grid.querySelectorAll(".iuAffiliateChip").length;
         partnerReady = grid.querySelectorAll('.iuAffiliateChip[data-aff-ready="1"]').length;
       }
@@ -657,18 +817,29 @@
     var prem = document.getElementById("iuPremiumSelectedGrid");
     var sales = document.getElementById("iuPremiumSalesToggle");
     var affEl = document.getElementById("iuAffiliateView");
-    var premMounted = !!(prem && !prem.hidden && isElementLayoutMounted(prem));
-    return {
-      affVis: isElementVisuallyPresent(affEl),
-      affShell: isElementLayoutMounted(affEl),
+    var affInScope = mode === "affiliate";
+    var premMounted = affInScope && !!(prem && !prem.hidden && isElementLayoutMounted(prem));
+    var out = {
+      probeMode: mode,
+      affInScope: affInScope,
+      affVis: affInScope && isElementVisuallyPresent(affEl),
+      affShell: affInScope && isElementLayoutMounted(affEl),
       partnerReadyCount: partnerReady,
       chipTotal: chipTotal,
-      premiumGridVis: !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
+      premiumGridVis: affInScope && !!(prem && !prem.hidden && isElementVisuallyPresent(prem)),
       premiumGridMounted: premMounted,
-      salesLinkVis: isElementVisuallyPresent(sales),
-      salesLinkMounted: isElementLayoutMounted(sales),
-      premiumLoading: !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
+      salesLinkVis: affInScope && isElementVisuallyPresent(sales),
+      salesLinkMounted: affInScope && isElementLayoutMounted(sales),
+      premiumLoading: affInScope && !!(prem && prem.classList && prem.classList.contains("iuPremiumGrid--loading")),
+      staleDomNote: !affInScope ? "affiliate_ids_present_globally_not_active_section" : "",
     };
+    if (mode === "chmi_feed") {
+      var chmi = chmiFeedContentMetrics();
+      for (var k in chmi) {
+        if (Object.prototype.hasOwnProperty.call(chmi, k)) out[k] = chmi[k];
+      }
+    }
+    return out;
   }
 
   function visualLayerSnapshot() {
@@ -817,9 +988,36 @@
     }
   }
 
+  function tryAggregateNetFetch(store, ev, detail) {
+    if (ev !== "net:fetch_done" || !detail || !detail.url) return false;
+    var now = Date.now();
+    if (
+      lastNetFetchAgg &&
+      lastNetFetchAgg.url === detail.url &&
+      now - lastNetFetchAgg.t <= netFetchAggWindowMs &&
+      store.entries.length
+    ) {
+      var last = store.entries[store.entries.length - 1];
+      if (last && last.ev === "net:fetch_done" && last.detail && last.detail.url === detail.url) {
+        last.detail.aggregatedFrom = (last.detail.aggregatedFrom || 1) + 1;
+        last.detail.lastStatus = detail.status;
+        last.detail.lastMs = detail.ms;
+        last.t = now;
+        last.monoMs = monoNow();
+        store.aggregatedNetFetchUnits = (store.aggregatedNetFetchUnits || 0) + 1;
+        lastNetFetchAgg.t = now;
+        writeLogStore(store);
+        return true;
+      }
+    }
+    lastNetFetchAgg = { url: detail.url, t: now };
+    return false;
+  }
+
   function appendEntry(ev, detail, source) {
     if (!isRecording()) return;
     var store = readLogStore();
+    if (tryAggregateNetFetch(store, String(ev || ""), detail)) return;
     store.seq = (store.seq || 0) + 1;
     var entry = {
       n: store.seq,
@@ -902,6 +1100,7 @@
       schedulePaintBurst("document_boot");
     }
     if (!isRecording()) return;
+    var restoredCorr = restoreCorrelationState();
     var reloadMeta = readLastReloadReason();
     var navEnt =
       typeof performance !== "undefined" && performance.getEntriesByType
@@ -915,6 +1114,9 @@
         documentSid: documentSid,
         documentBootSeq: documentBootSeq,
         recordingAttemptId: sessionStorage.getItem(ATTEMPT_KEY) || "",
+        returnOpId: activeReturnOpId || "",
+        correlationRestored: !!restoredCorr,
+        correlationSnapshot: restoredCorr,
         appVersion: appVersionLabel(),
         recorderBuildId: RECORDER_BUILD_ID,
         delivery: collectDeliveryProof(),
@@ -957,6 +1159,9 @@
     externalHandoffSeq = 0;
     activeReturnOpId = "";
     activeSectionOpenId = "";
+    try {
+      sessionStorage.removeItem(CORRELATION_KEY);
+    } catch (_) {}
     appendEntry(
       "recorder:start",
       {
@@ -971,10 +1176,39 @@
     bindHooks();
     bindExtendedDiagHooks();
     scheduleScrollSample(true);
+    scheduleAttemptMilestones();
+  }
+
+  function scheduleAttemptMilestones() {
+    [15000, 45000, 50000].forEach(function (ms) {
+      var t = setTimeout(function () {
+        if (!isRecording()) return;
+        appendEntry(
+          "attempt:milestone",
+          {
+            ms: ms,
+            label: ms / 1000 + "s",
+            scroll: scrollContainerMetrics(),
+            returnOpId: activeReturnOpId || "",
+            quality: "measured",
+          },
+          "attempt"
+        );
+      }, ms);
+      registerDiagCleanup(function () {
+        clearTimeout(t);
+      });
+    });
   }
 
   function stopRecording() {
-    appendEntry("recorder:stop", { resourceCounts: diagResourceCounts, quality: "measured" }, "ui");
+    var countsBefore = {
+      observers: diagResourceCounts.observers,
+      listeners: diagResourceCounts.listeners,
+      intervals: diagResourceCounts.intervals,
+      fetchWrap: diagResourceCounts.fetchWrap,
+    };
+    appendEntry("recorder:stop", { resourceCountsBefore: countsBefore, quality: "measured" }, "ui");
     teardownDiagSession();
     try {
       localStorage.setItem(ACTIVE_KEY, "0");
@@ -1031,12 +1265,24 @@
         droppedEntries: store.droppedEntries || 0,
         droppedCurrentAttempt: store.droppedCurrentAttempt || 0,
         droppedOtherAttempts: store.droppedOtherAttempts || 0,
+        droppedAggregatedUnits: store.droppedAggregatedUnits || 0,
+        aggregatedNetFetchUnits: store.aggregatedNetFetchUnits || 0,
         truncatedExportLikely: !!store.truncatedExportLikely,
         entryCount: store.entries ? store.entries.length : 0,
         exportedEntryCount: attemptCount,
         currentAttemptEntryCount: attemptCount,
         maxEntries: MAX_ENTRIES,
         maxJsonChars: MAX_JSON_CHARS,
+        evictPolicy: "tiered_priority_v9",
+      },
+      correlationExport: {
+        attemptId: cur,
+        returnOpId: activeReturnOpId || "",
+        sectionOpenId: activeSectionOpenId || "",
+        handoffId: externalHandoffSeq ? composeHandoffId() : "",
+        documentSid: documentSid,
+        documentBootSeq: documentBootSeq,
+        idScheme: "attemptScoped:retN|extN|doc:secopenN",
       },
       log: {
         v: store.v,
@@ -1096,16 +1342,20 @@
     if (t === "external_handoff") {
       externalHandoffSeq += 1;
       returnOpSeq += 1;
-      activeReturnOpId = "ret" + returnOpSeq;
-      d.handoffId = "ext" + externalHandoffSeq;
+      activeReturnOpId = composeReturnOpId();
+      d.handoffId = composeHandoffId();
       d.returnOpId = activeReturnOpId;
+      d.newDocumentExpected = true;
+      persistCorrelationState();
     }
     if (t === "restore_start") {
       if (!activeReturnOpId) {
         returnOpSeq += 1;
-        activeReturnOpId = "ret" + returnOpSeq;
+        activeReturnOpId = composeReturnOpId();
+        persistCorrelationState();
       }
       d.returnOpId = activeReturnOpId;
+      d.continuation = !d.newDocumentExpected;
     }
     if (t === "main_scroll_restore_done" || t === "main_scroll_restore_cancel" || t === "main_scroll_restore_trace") {
       d.returnOpId = activeReturnOpId;
@@ -1175,6 +1425,12 @@
 
   function sectionContentUnmet(m) {
     var u = [];
+    var mode = m.probeMode || sectionProbeMode();
+    if (mode === "chmi_feed") {
+      if (!m.feedMounted) u.push("chmi_feed_mount");
+      return u;
+    }
+    if (mode !== "affiliate") return u;
     if (!m.affShell) u.push("aff_shell");
     if (!(m.partnerReadyCount > 0)) u.push("partners_ready");
     if (!m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
@@ -1269,16 +1525,18 @@
 
   function scheduleSectionReadyPoll(t0) {
     var hub = hubSectionFromUrl();
-    if (hub.indexOf("aff-") !== 0 && !/^(pocasi|mapy|maps|jr|tvprogram|tvonline|radio)/.test(hub)) {
-      return;
-    }
+    var mode = sectionProbeMode(hub);
+    if (mode === "none") return;
     var attempts = 0;
     function poll() {
       if (!isRecording()) return;
       attempts += 1;
-      var m = affiliateContentMetrics();
+      var m = affiliateContentMetrics(hub);
       var btnCount = m.chipTotal;
-      if ((hub.indexOf("aff-") === 0 && (m.affVis || btnCount > 0)) || attempts >= 48) {
+      var chmiReady = mode === "chmi_feed" && (m.feedMounted || m.chmiCardCount > 0);
+      var affReady = mode === "affiliate" && (m.affVis || btnCount > 0);
+      var laneReady = mode === "hub_lane" && attempts >= 8;
+      if (affReady || chmiReady || laneReady || attempts >= 48) {
         appendEntry(
           "section:ready",
           {
@@ -1836,8 +2094,9 @@
     if (!isRecording()) return;
     sectionApplyOpSeq += 1;
     sectionOpenSeq += 1;
-    activeSectionOpenId = "secopen" + sectionOpenSeq;
-    var opId = "sec" + sectionApplyOpSeq;
+    activeSectionOpenId = composeSectionOpenId();
+    persistCorrelationState();
+    var opId = (documentSid || "doc") + ":sec" + sectionApplyOpSeq;
     var t = t0 || Date.now();
     window.__iuPwaRecSectionApplyOp = { id: opId, t0: t, logged: false, sectionOpenId: activeSectionOpenId };
     appendEntry(
