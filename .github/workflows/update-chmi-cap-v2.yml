@@ -268,7 +268,7 @@ jobs:
           gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
           echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
 
-      - name: Ensure iu-ads-regression-freeze (GHA check on PR head)
+      - name: Dispatch iu-ads-regression-freeze (bot PR workflow_dispatch)
         if: steps.scope.outputs.data_only == 'true'
         id: ensure_ads
         env:
@@ -277,18 +277,20 @@ jobs:
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
           REPO="${{ github.repository }}"
-          NUDGED=0
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[ADS] dispatch pr=$NUM ref=$REF head=$SHA"
+          gh workflow run iu-ads-regression-freeze.yml --ref "$REF" --repo "$REPO" -f "pr_number=${NUM}"
           for i in $(seq 1 36); do
             SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
-            echo "[ADS] attempt=$i sha=$SHA"
-            CR=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --paginate \
+            echo "[ADS] wait attempt=$i sha=$SHA"
+            CR=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" \
               --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze")] | sort_by(.started_at) | last // empty')
-            if [ -n "$CR" ]; then
+            if [ -n "$CR" ] && [ "$CR" != "null" ]; then
               APP=$(echo "$CR" | jq -r '.app.slug // ""')
               ST=$(echo "$CR" | jq -r '.status // ""')
               CO=$(echo "$CR" | jq -r '.conclusion // ""')
-              RID=$(echo "$CR" | jq -r '.id // ""')
-              echo "[ADS] check_run id=$RID app=$APP status=$ST conclusion=$CO"
+              echo "[ADS] check app=$APP status=$ST conclusion=$CO"
               if [ "$CO" = "success" ] && [ "$APP" = "github-actions" ]; then
                 echo "ads_ok=true" >> "$GITHUB_OUTPUT"
                 exit 0
@@ -297,23 +299,10 @@ jobs:
                 echo "[ADS] check failed"
                 exit 1
               fi
-              if { [ "$CO" = "cancelled" ] || [ "$CO" = "action_required" ] || [ "$CO" = "skipped" ]; } && [ "$ST" = "completed" ]; then
-                RUN_ID=$(gh run list --workflow=iu-ads-regression-freeze.yml --limit 20 --json databaseId,headSha,conclusion,status \
-                  -q "map(select(.headSha==\"${SHA}\")) | .[0].databaseId // empty")
-                if [ -n "$RUN_ID" ]; then
-                  gh run rerun "$RUN_ID" || true
-                fi
-              fi
-            elif [ "$NUDGED" = "0" ]; then
-              git config user.name "github-actions[bot]"
-              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              git commit --allow-empty -m "chore(data): trigger iu-ads-regression-freeze (PR sync)"
-              git push origin "HEAD:refs/heads/${{ env.AUTOMATION_BRANCH }}"
-              NUDGED=1
             fi
             sleep 15
           done
-          echo "[ADS] timeout waiting for GHA iu-ads-regression-freeze"
+          echo "[ADS] timeout waiting for GHA iu-ads-regression-freeze on PR head"
           exit 1
 
       - name: Enable auto-merge (squash) when data-only
