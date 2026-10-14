@@ -257,6 +257,21 @@ jobs:
             echo "[SCOPE] non-data change Ă˘â‚¬â€ť auto-merge disabled"
           fi
 
+      - name: Ack iu-ads-regression-freeze (data-only out of scope)
+        if: steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          gh api "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state=success \
+            -f context=iu-ads-regression-freeze \
+            -f description="Data-only CHMI sync (ads regression freeze out of scope)"
+          echo "[STATUS] Posted iu-ads-regression-freeze success for ${SHA}"
+
       - name: Enable auto-merge (squash) when data-only
         if: steps.scope.outputs.data_only == 'true'
         env:
@@ -279,7 +294,7 @@ jobs:
           [ -z "$NUM" ] && exit 0
           SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
           echo "[WAIT] PR #$NUM sha=$SHA"
-          REQUIRED='repo-guard smoke layout-guard'
+          REQUIRED='repo-guard smoke layout-guard iu-ads-regression-freeze'
           for i in $(seq 1 48); do
             MERGED=$(gh pr view "$NUM" --json state -q .state)
             if [ "$MERGED" = "MERGED" ]; then
@@ -301,8 +316,8 @@ jobs:
               HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase))] | length')
               if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
             done
-            if [ "$HAVE" -lt 3 ]; then
-              echo "[WAIT] required contexts starting ($HAVE/3) Ă˘â‚¬â€ť sleeping"
+            if [ "$HAVE" -lt 4 ]; then
+              echo "[WAIT] required contexts starting ($HAVE/4) — sleeping"
               sleep 15
               continue
             fi
