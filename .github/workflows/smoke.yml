@@ -248,6 +248,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-chmi-lifecycle-display-guard
 
+      - name: PWA recorder affiliate probe guard (aff-cestovni-kancelare)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-recorder-aff-probe-guard
+
       - name: External open no blank/duplicate context guard (mobile/PWA)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-external-open-no-blank-duplicate-guard

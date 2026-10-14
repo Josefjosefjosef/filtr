@@ -26,6 +26,11 @@ on:
     # Do NOT disable/enable for rebind; keep workflow active.
     - cron: "*/5 * * * *"
 
+# One orchestrator at a time — overlapping schedule/dispatch must not cancel a running post-write E2E.
+concurrency:
+  group: update-chmi-cap-v2-orchestrator
+  cancel-in-progress: false
+
 # Intentionally NO workflow-level info-events-data-writers lock (overbroad / NDIC starvation).
 # Shared lock lives only on job shared-write below.
 
@@ -177,7 +182,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.AUTOMATION_BRANCH }}
-          fetch-depth: 0
+          fetch-depth: 1
           fetch-tags: false
           submodules: false
           lfs: false

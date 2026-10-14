@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261014-attempt-priority-correlation";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261014-correlation-scoped-probes";
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
   var CORRELATION_KEY = "iu:pwa:return-recorder-correlation:v1";
@@ -578,6 +578,10 @@
         if (!isRecording() || !same) return p;
         return p.then(
           function (res) {
+            var rt = null;
+            try {
+              rt = resourceTimingBrief(typeof url === "string" ? url : String(url));
+            } catch (_) {}
             appendEntry(
               "net:fetch_done",
               {
@@ -585,10 +589,11 @@
                 url: sanitizeUrl(url),
                 status: res.status,
                 ms: Math.round((monoNow() - t0) * 1000) / 1000,
-                cache: "unknown",
+                cache: rt && rt.transferSize === 0 && rt.decodedBodySize === 0 ? "unknown" : "network_or_cache_api",
                 reqId: reqId,
                 opId: activeReturnOpId || "",
                 cancelled: false,
+                resourceTiming: rt,
                 correlation: correlationPayload({ reqId: reqId }),
               },
               "net"
@@ -748,6 +753,37 @@
     }
   }
 
+  function affiliateSectionProbeState(hub) {
+    var h = hub || hubSectionFromUrl();
+    var aff = document.getElementById("iuAffiliateView");
+    var grid = document.getElementById("iuAffiliateGrid");
+    var prem = document.getElementById("iuPremiumSelectedGrid");
+    var sales = document.getElementById("iuPremiumSalesToggle");
+    var body = document.body;
+    var mobileMain = !!(body && body.classList.contains("iu-mobileMainVisible"));
+    var toolMain = !!(body && body.getAttribute("data-iu-tool-main") === "1");
+    var hubAff = /^aff-/.test(h);
+    var shellMounted = hubAff && isElementLayoutMounted(aff);
+    var shellVisible = hubAff && isElementVisuallyPresent(aff);
+    var sectionActive = hubAff && (shellVisible || mobileMain || toolMain);
+    return {
+      hubSection: h,
+      hubAffiliate: hubAff,
+      sectionActive: sectionActive,
+      affShellMounted: shellMounted,
+      affShellVisible: shellVisible,
+      mobileMain: mobileMain,
+      toolMain: toolMain,
+      ids: {
+        affView: aff ? aff.id : "",
+        affGrid: grid ? grid.id : "",
+        premiumGrid: prem ? prem.id : "",
+        salesLink: sales ? sales.id : "",
+      },
+      globalRectNote: hubAff && !sectionActive ? "global_dom_rect_may_exist_while_section_inactive" : "",
+    };
+  }
+
   function layoutGeometrySnapshot() {
     var vv = window.visualViewport;
     var scrollHost = document.getElementById("content") || document.documentElement;
@@ -755,10 +791,22 @@
     try {
       scrollHostY = scrollHost && scrollHost.scrollTop ? scrollHost.scrollTop : window.scrollY || 0;
     } catch (_) {}
+    var hub = hubSectionFromUrl();
+    var probe = affiliateSectionProbeState(hub);
+    var aff = document.getElementById("iuAffiliateView");
+    var grid = document.getElementById("iuAffiliateGrid");
+    var prem = document.getElementById("iuPremiumSelectedGrid");
+    var sales = document.getElementById("iuPremiumSalesToggle");
+    var scopedAff = probe.sectionActive ? aff : null;
+    var scopedGrid = probe.sectionActive ? grid : null;
+    var scopedPrem = probe.sectionActive ? prem : null;
+    var scopedSales = probe.sectionActive ? sales : null;
     return {
       scrollY: Math.round(window.scrollY || 0),
       scrollHostY: Math.round(scrollHostY),
       innerH: Math.round(window.innerHeight || 0),
+      hubSection: hub,
+      affiliateProbe: probe,
       vv: vv
         ? {
             h: Math.round(vv.height),
@@ -767,10 +815,11 @@
           }
         : null,
       center: rectBrief(document.getElementById("iuCenterStage")),
-      affView: rectBrief(document.getElementById("iuAffiliateView")),
-      affGrid: rectBrief(document.getElementById("iuAffiliateGrid")),
-      premiumGrid: rectBrief(document.getElementById("iuPremiumSelectedGrid")),
-      salesLink: rectBrief(document.getElementById("iuPremiumSalesToggle")),
+      affView: rectBrief(scopedAff),
+      affGrid: rectBrief(scopedGrid),
+      premiumGrid: rectBrief(scopedPrem),
+      salesLink: rectBrief(scopedSales),
+      globalAffView: probe.hubAffiliate && !probe.sectionActive ? rectBrief(aff) : null,
       topbar: rectBrief(document.getElementById("iuTopbar") || document.querySelector(".iuTopbar")),
     };
   }
@@ -803,8 +852,33 @@
     };
   }
 
+  function resourceTimingBrief(url) {
+    try {
+      if (!performance || typeof performance.getEntriesByName !== "function") return null;
+      var list = performance.getEntriesByName(url);
+      if (!list || !list.length) return null;
+      var e = list[list.length - 1];
+      return {
+        quality: "measured",
+        initiatorType: e.initiatorType || "",
+        transferSize: e.transferSize,
+        encodedBodySize: e.encodedBodySize,
+        decodedBodySize: e.decodedBodySize,
+        dns: Math.round((e.domainLookupEnd - e.domainLookupStart) * 1000) / 1000,
+        connect: Math.round((e.connectEnd - e.connectStart) * 1000) / 1000,
+        tls: Math.round((e.secureConnectionStart > 0 ? e.connectEnd - e.secureConnectionStart : 0) * 1000) / 1000,
+        ttfb: Math.round((e.responseStart - e.requestStart) * 1000) / 1000,
+        total: Math.round((e.responseEnd - e.startTime) * 1000) / 1000,
+        timingAllowOrigin: e.transferSize > 0 || e.decodedBodySize > 0 ? "likely_allowed" : "restricted_or_opaque",
+      };
+    } catch (_) {
+      return null;
+    }
+  }
+
   function affiliateContentMetrics(hub) {
     var mode = sectionProbeMode(hub);
+    var probeState = affiliateSectionProbeState(hub);
     var grid = document.getElementById("iuAffiliateGrid");
     var partnerReady = 0;
     var chipTotal = 0;
@@ -817,11 +891,18 @@
     var prem = document.getElementById("iuPremiumSelectedGrid");
     var sales = document.getElementById("iuPremiumSalesToggle");
     var affEl = document.getElementById("iuAffiliateView");
-    var affInScope = mode === "affiliate";
+    var affInScope = mode === "affiliate" && probeState.sectionActive;
     var premMounted = affInScope && !!(prem && !prem.hidden && isElementLayoutMounted(prem));
+    var unmetReasons = [];
+    if (mode === "affiliate" && !probeState.sectionActive) {
+      unmetReasons.push("aff_section_inactive");
+      if (probeState.affShellMounted && !probeState.affShellVisible) unmetReasons.push("aff_mounted_not_visible");
+    }
     var out = {
       probeMode: mode,
       affInScope: affInScope,
+      affiliateProbe: probeState,
+      probeUnmetReasons: unmetReasons,
       affVis: affInScope && isElementVisuallyPresent(affEl),
       affShell: affInScope && isElementLayoutMounted(affEl),
       partnerReadyCount: partnerReady,
@@ -1426,11 +1507,15 @@
   function sectionContentUnmet(m) {
     var u = [];
     var mode = m.probeMode || sectionProbeMode();
+    if (Array.isArray(m.probeUnmetReasons) && m.probeUnmetReasons.length) {
+      for (var ri = 0; ri < m.probeUnmetReasons.length; ri++) u.push(m.probeUnmetReasons[ri]);
+    }
     if (mode === "chmi_feed") {
       if (!m.feedMounted) u.push("chmi_feed_mount");
       return u;
     }
     if (mode !== "affiliate") return u;
+    if (u.indexOf("aff_section_inactive") >= 0) return u;
     if (!m.affShell) u.push("aff_shell");
     if (!(m.partnerReadyCount > 0)) u.push("partners_ready");
     if (!m.salesLinkMounted && !m.premiumGridMounted) u.push("sales_or_premium_shell");
@@ -2133,6 +2218,12 @@
     refreshIcentrumPanel: refreshIcentrumPanel,
     bindIcentrumPanel: bindIcentrumPanel,
     getViewSnapshot: viewSnapshot,
+    getAffiliateSectionProbeState: function () {
+      return affiliateSectionProbeState(hubSectionFromUrl());
+    },
+    getLayoutGeometrySnapshot: function () {
+      return layoutGeometrySnapshot();
+    },
     recorderBuildId: RECORDER_BUILD_ID,
   };
 

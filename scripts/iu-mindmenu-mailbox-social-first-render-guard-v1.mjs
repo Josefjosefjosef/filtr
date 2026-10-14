@@ -73,6 +73,24 @@ async function installConsent(ctx) {
   });
 }
 
+async function waitMailboxAddInteractive(page) {
+  await page.waitForFunction(
+    () => {
+      const add = document.getElementById("iuMailboxAdd");
+      const controls = document.getElementById("iuMailboxControls");
+      if (!add || !controls) return false;
+      const st = getComputedStyle(add);
+      if (st.display === "none") return false;
+      if (add.offsetParent === null) return false;
+      const cs = getComputedStyle(controls);
+      if (cs.display === "none" || cs.visibility === "hidden") return false;
+      return true;
+    },
+    null,
+    { timeout: 45000 }
+  );
+}
+
 async function openMindMenu(page) {
   await page.waitForFunction(
     () =>
@@ -220,8 +238,8 @@ async function main() {
       expectFreshSocials(reloaded, "fresh_reload");
 
       // C) Add → LinkedIn on 5th
+      await waitMailboxAddInteractive(page);
       const addBtn = page.locator("#iuMailboxAdd");
-      await addBtn.waitFor({ state: "visible", timeout: 45000 });
       await addBtn.click({ force: true });
       await page.waitForTimeout(120);
       const afterAdd = await snapSocial(page);
@@ -232,8 +250,15 @@ async function main() {
       }
 
       // Remove back to 4
+      await page.waitForFunction(
+        () => {
+          const rem = document.getElementById("iuMailboxRemove");
+          return rem && getComputedStyle(rem).display !== "none" && rem.offsetParent !== null;
+        },
+        null,
+        { timeout: 45000 }
+      );
       const remBtn = page.locator("#iuMailboxRemove");
-      await remBtn.waitFor({ state: "visible", timeout: 45000 });
       await remBtn.click({ force: true });
       await page.waitForTimeout(120);
       const afterRem = await snapSocial(page);
