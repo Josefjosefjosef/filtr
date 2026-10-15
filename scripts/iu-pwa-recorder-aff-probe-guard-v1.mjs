@@ -96,6 +96,28 @@ async function main() {
     must(paradox.m.probeUnmetReasons.indexOf("aff_shell") >= 0, "ui:aff_shell_unmet");
     must(paradox.m && paradox.m.affDomProbe && paradox.m.affDomProbe.htmlHidden === true, "ui:html_hidden_separate");
 
+    const physicalHiddenBox = await page.evaluate(() => {
+      var aff = document.getElementById("iuAffiliateView");
+      if (aff) {
+        aff.hidden = true;
+        aff.style.width = "402px";
+        aff.style.minHeight = "1290px";
+        aff.style.display = "block";
+      }
+      var r = aff ? aff.getBoundingClientRect() : null;
+      var m = window.iuPwaReturnRecorder.getAffiliateContentMetrics();
+      return { w: r ? Math.round(r.width) : 0, h: r ? Math.round(r.height) : 0, m: m };
+    });
+    must(physicalHiddenBox.w >= 8 && physicalHiddenBox.h >= 8, "ui:physical_nonzero_box");
+    must(physicalHiddenBox.m && physicalHiddenBox.m.affInScope === false, "ui:physical_hidden_aff_out_of_scope");
+    must(physicalHiddenBox.m && physicalHiddenBox.m.affLayoutMounted === false, "ui:physical_hidden_not_layout_mounted");
+    must(
+      physicalHiddenBox.m &&
+        physicalHiddenBox.m.probeUnmetReasons &&
+        physicalHiddenBox.m.probeUnmetReasons.indexOf("aff_shell") >= 0,
+      "ui:physical_hidden_shell_unmet"
+    );
+
     const mounted = await page.evaluate(() => {
       var aff = document.getElementById("iuAffiliateView");
       if (aff) {

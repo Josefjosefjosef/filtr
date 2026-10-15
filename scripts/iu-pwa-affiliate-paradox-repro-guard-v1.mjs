@@ -112,6 +112,39 @@ async function main() {
     must(out.fixed.probeUnmetReasons && out.fixed.probeUnmetReasons.length > 0, "fixed:unmet_nonempty");
     must(out.fixed.probeUnmetReasons.indexOf("aff_route_chrome_without_shell") >= 0, "fixed:route_chrome_unmet");
     must(out.fixed.probeUnmetReasons.indexOf("aff_shell") >= 0, "fixed:aff_shell_unmet");
+
+    const physical = await page.evaluate(() => {
+      var aff = document.getElementById("iuAffiliateView");
+      var grid = document.getElementById("iuAffiliateGrid");
+      if (aff) {
+        aff.hidden = true;
+        aff.style.width = "402px";
+        aff.style.minHeight = "1290px";
+        aff.style.display = "block";
+      }
+      if (grid) {
+        grid.style.width = "378px";
+        grid.style.minHeight = "470px";
+      }
+      document.body.classList.add("iu-mobileMainVisible");
+      document.body.setAttribute("data-iu-tool-main", "1");
+      var rect = aff ? aff.getBoundingClientRect() : null;
+      var m = window.iuPwaReturnRecorder.getAffiliateContentMetrics();
+      return {
+        geom: rect ? { w: Math.round(rect.width), h: Math.round(rect.height) } : null,
+        fixed: m,
+        htmlHidden: aff ? !!aff.hidden : null,
+      };
+    });
+    must(physical.htmlHidden === true, "physical:hidden_attr");
+    must(physical.geom && physical.geom.w >= 8 && physical.geom.h >= 8, "physical:nonzero_layout_box");
+    must(physical.fixed.affInScope === false, "physical:aff_in_scope_false");
+    must(physical.fixed.affLayoutMounted === false, "physical:layout_mounted_false_hidden");
+    must(
+      physical.fixed.probeUnmetReasons && physical.fixed.probeUnmetReasons.indexOf("aff_shell") >= 0,
+      "physical:aff_shell_unmet"
+    );
+
     console.log(
       JSON.stringify({
         IU_PWA_AFFILIATE_PARADOX_REPRO: fails.length ? "FAIL" : "PASS",
@@ -124,6 +157,11 @@ async function main() {
         },
         htmlHidden: out.htmlHidden,
         globalRect: out.geom,
+        physicalExport114115: {
+          geom: physical.geom,
+          affInScope: physical.fixed.affInScope,
+          probeUnmetReasons: physical.fixed.probeUnmetReasons,
+        },
       })
     );
   } finally {

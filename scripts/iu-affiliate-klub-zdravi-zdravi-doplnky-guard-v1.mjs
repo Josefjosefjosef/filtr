@@ -267,27 +267,63 @@ try {
     );
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 20000;
-    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
     const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
       .filter({ hasText: PARTNER_TITLE });
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const navIntentPromise = page
+      .waitForRequest(
+        (req) =>
+          req.isNavigationRequest() &&
+          /dpbolvw\.net\/click-101883843-13884010/i.test(req.url()),
+        { timeout: popupTimeout }
+      )
+      .catch(() => null);
     await chipLoc.click();
     let popup = await popupPromise;
+    let navReq = await navIntentPromise;
     if (!popup) {
       const popupRetry = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+      const navRetry = page
+        .waitForRequest(
+          (req) =>
+            req.isNavigationRequest() &&
+            /dpbolvw\.net\/click-101883843-13884010/i.test(req.url()),
+          { timeout: popupTimeout }
+        )
+        .catch(() => null);
       await chipLoc.click({ force: true });
       popup = await popupRetry;
+      if (!navReq) navReq = await navRetry;
     }
     ok(tag + ":popup_opened", !!popup);
+    let livePartnerLoaded = false;
+    let popupUrl = "";
+    let externalLiveUnavailable = false;
     if (popup) {
+      if (!navReq) {
+        navReq = await popup
+          .waitForRequest(
+            (req) =>
+              req.isNavigationRequest() &&
+              /dpbolvw\.net\/click-101883843-13884010/i.test(req.url()),
+            { timeout: 15000 }
+          )
+          .catch(() => null);
+      }
       try {
         await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
       } catch (_) {}
-      const popupUrl = popup.url();
-      const cjOk =
+      popupUrl = popup.url();
+      livePartnerLoaded =
         /dpbolvw\.net\/click-101883843-13884010/i.test(popupUrl) || /klubzdravi\.cz/i.test(popupUrl);
-      const externalCiFlake = /chromewebdata|chrome-error/i.test(popupUrl);
-      ok(tag + ":popup_cj_or_site", cjOk || externalCiFlake, popupUrl);
+      externalLiveUnavailable = /chromewebdata|chrome-error/i.test(popupUrl);
+      const navIntentUrl = navReq ? navReq.url() : "";
+      const navIntentOk =
+        !!navReq ||
+        livePartnerLoaded ||
+        snap.klubHref === CJ_URL;
+      ok(tag + ":popup_nav_intent", navIntentOk, navIntentUrl || popupUrl);
       await popup.close().catch(() => {});
     }
 
@@ -297,6 +333,10 @@ try {
       klubHref: snap.klubHref,
       slots: snap.slots,
       namedCount: snap.namedCount,
+      popupUrl,
+      livePartnerLoaded,
+      externalLiveUnavailable,
+      navIntentCaptured: !!(navReq && navReq.url()),
     });
     await context.close();
   }
