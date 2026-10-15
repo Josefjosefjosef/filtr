@@ -34,7 +34,7 @@ function staticGate() {
   must(html.includes("iu-pwa-return-recorder-v1.js"), "static:script_tag");
   must(/window\.iuPwaReturnRecorder\s*=/.test(rec), "static:recorder_api");
   must(/iu:pwa-return-recorder-log:v1/.test(rec), "static:log_key");
-  must(/pwa-return-recorder-v9-20261014-correlation-scoped-probes/.test(rec), "static:recorder_build_id");
+  must(/pwa-return-recorder-v9-20261015-export114-115-fixes/.test(rec), "static:recorder_build_id");
   must(/ingestSectionApplyStart/.test(rec), "static:section_apply_ingest");
   must(/ingestNavIntent/.test(rec), "static:nav_intent_ingest");
   must(/section:content_timeout/.test(rec), "static:content_timeout_event");
@@ -46,7 +46,7 @@ function staticGate() {
   must(/mmArmed:/.test(rec), "static:session_mmArmed_field");
   must(/visualLayerSnapshot/.test(rec), "static:display_snapshot");
   must(/tabSessionSid/.test(rec), "static:tab_session_sid");
-  must(html.includes("pwa-return-recorder-v9-20261014-correlation-scoped-probes"), "static:recorder_cache_bust");
+  must(html.includes("pwa-return-recorder-v9-20261015-export114-115-fixes"), "static:recorder_cache_bust");
   must(/persistCorrelationState/.test(rec), "static:correlation_persist");
   must(/entryEvictTier/.test(rec), "static:priority_evict");
 }
@@ -158,7 +158,7 @@ async function runUiGate(page) {
         parsed &&
         parsed.delivery &&
         typeof parsed.delivery === "object" &&
-        parsed.delivery.recorderBuildId === "pwa-return-recorder-v9-20261014-correlation-scoped-probes"
+        parsed.delivery.recorderBuildId === "pwa-return-recorder-v9-20261015-export114-115-fixes"
       ),
       tabSid: parsed && parsed.tabSessionSid,
       docSid: parsed && parsed.documentSid,
@@ -166,7 +166,7 @@ async function runUiGate(page) {
     };
   });
   must(exportOk.ok === true, "ui:export_has_entries");
-  must(exportOk.recorderBuildId === "pwa-return-recorder-v9-20261014-correlation-scoped-probes", "ui:export_recorder_build");
+  must(exportOk.recorderBuildId === "pwa-return-recorder-v9-20261015-export114-115-fixes", "ui:export_recorder_build");
   must(exportOk.hasCorrelation === true, "ui:export_correlation_block");
   must(exportOk.hasSessionMmArmed === true, "ui:export_session_mmArmed");
   must(exportOk.hasDisplay === true, "ui:export_display_field");

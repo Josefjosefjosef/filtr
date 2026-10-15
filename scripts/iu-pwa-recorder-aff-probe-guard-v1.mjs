@@ -30,6 +30,7 @@ function staticGate() {
   must(/globalAffView/.test(rec), "static:scoped_geometry");
   must(/aff_section_inactive/.test(rec), "static:inactive_reason");
   must(/getAffiliateSectionProbeState/.test(rec), "static:probe_api");
+  must(/getAffiliateContentMetrics/.test(rec), "static:metrics_api");
 }
 
 function startServer() {
@@ -69,22 +70,67 @@ async function main() {
   try {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
-    await page.waitForFunction(() => window.iuPwaReturnRecorder && window.iuPwaReturnRecorder.getAffiliateSectionProbeState, null, {
+    await page.waitForFunction(() => window.iuPwaReturnRecorder && window.iuPwaReturnRecorder.getAffiliateContentMetrics, null, {
       timeout: 90000,
     });
-    const out = await page.evaluate(() => {
-      const probe = window.iuPwaReturnRecorder.getAffiliateSectionProbeState();
-      const geom = window.iuPwaReturnRecorder.getLayoutGeometrySnapshot();
-      return { probe, geom, hub: new URL(location.href).searchParams.get("section") };
+    const paradox = await page.evaluate(() => {
+      document.body.classList.add("iu-mobileMainVisible");
+      document.body.setAttribute("data-iu-tool-main", "1");
+      var aff = document.getElementById("iuAffiliateView");
+      if (aff) aff.hidden = true;
+      var m = window.iuPwaReturnRecorder.getAffiliateContentMetrics();
+      var geom = window.iuPwaReturnRecorder.getLayoutGeometrySnapshot();
+      return { m: m, geom: geom, hub: new URL(location.href).searchParams.get("section") };
     });
-    must(out.hub === "aff-cestovni-kancelare", "ui:hub");
-    must(out.probe && out.probe.hubAffiliate === true, "ui:hub_aff_flag");
-    if (out.probe && !out.probe.sectionActive) {
-      must(out.geom && out.geom.affView === null, "ui:scoped_aff_null_when_inactive");
-      if (out.geom && out.geom.globalAffView && out.geom.globalAffView.w > 0) {
-        must(!!out.geom.affiliateProbe.globalRectNote, "ui:global_rect_note");
+    must(paradox.hub === "aff-cestovni-kancelare", "ui:hub");
+    must(paradox.m && paradox.m.contentReadinessScope === true, "ui:content_readiness_scope");
+    must(paradox.m && paradox.m.affiliateProbe && paradox.m.affiliateProbe.routeChromeActive === true, "ui:route_chrome");
+    must(paradox.m && paradox.m.affiliateProbe.sectionActive === false, "ui:section_not_active_hidden_shell");
+    must(paradox.m && paradox.m.affInScope === false, "ui:aff_in_scope_scoped_false");
+    must(paradox.m && paradox.m.affLayoutMounted === false, "ui:aff_layout_mounted_false");
+    must(paradox.m && Array.isArray(paradox.m.probeUnmetReasons) && paradox.m.probeUnmetReasons.length > 0, "ui:unmet_not_empty");
+    must(
+      paradox.m.probeUnmetReasons.indexOf("aff_route_chrome_without_shell") >= 0,
+      "ui:route_chrome_unmet_reason"
+    );
+    must(paradox.m.probeUnmetReasons.indexOf("aff_shell") >= 0, "ui:aff_shell_unmet");
+    must(paradox.m && paradox.m.affDomProbe && paradox.m.affDomProbe.htmlHidden === true, "ui:html_hidden_separate");
+
+    const physicalHiddenBox = await page.evaluate(() => {
+      var aff = document.getElementById("iuAffiliateView");
+      if (aff) {
+        aff.hidden = true;
+        aff.style.width = "402px";
+        aff.style.minHeight = "1290px";
+        aff.style.display = "block";
       }
-    }
+      var r = aff ? aff.getBoundingClientRect() : null;
+      var m = window.iuPwaReturnRecorder.getAffiliateContentMetrics();
+      return { w: r ? Math.round(r.width) : 0, h: r ? Math.round(r.height) : 0, m: m };
+    });
+    must(physicalHiddenBox.w >= 8 && physicalHiddenBox.h >= 8, "ui:physical_nonzero_box");
+    must(physicalHiddenBox.m && physicalHiddenBox.m.affInScope === false, "ui:physical_hidden_aff_out_of_scope");
+    must(physicalHiddenBox.m && physicalHiddenBox.m.affLayoutMounted === false, "ui:physical_hidden_not_layout_mounted");
+    must(
+      physicalHiddenBox.m &&
+        physicalHiddenBox.m.probeUnmetReasons &&
+        physicalHiddenBox.m.probeUnmetReasons.indexOf("aff_shell") >= 0,
+      "ui:physical_hidden_shell_unmet"
+    );
+
+    const mounted = await page.evaluate(() => {
+      var aff = document.getElementById("iuAffiliateView");
+      if (aff) {
+        aff.hidden = false;
+        aff.style.minHeight = "480px";
+        aff.style.display = "block";
+      }
+      var m = window.iuPwaReturnRecorder.getAffiliateContentMetrics();
+      return m;
+    });
+    must(mounted && mounted.affiliateProbe && mounted.affiliateProbe.sectionActive === true, "ui:mounted_section");
+    must(mounted && mounted.affInScope === true, "ui:aff_in_scope_when_unhidden");
+    must(mounted && mounted.affShell === true, "ui:aff_shell_when_unhidden");
   } finally {
     await browser.close();
     server.close();

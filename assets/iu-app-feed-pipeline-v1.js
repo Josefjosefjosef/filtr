@@ -17437,7 +17437,16 @@ function buildVideoAsArticleCard(it) {
             document.documentElement.classList.add("iu-mobileGateOverlayOpen");
             document.body.classList.add("iu-mobileGateOverlayOpen");
             if (value === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
-              window.__iuMmReturnBootRelease("feed-setTab-tools");
+              var deferMmBootRelease = false;
+              try {
+                deferMmBootRelease =
+                  document.documentElement.classList.contains("iu-mm-return-boot") &&
+                  typeof window.iuMindMenuReadPendingScrollY === "function" &&
+                  window.iuMindMenuReadPendingScrollY() > 0;
+              } catch (_dbr) {
+                deferMmBootRelease = false;
+              }
+              if (!deferMmBootRelease) window.__iuMmReturnBootRelease("feed-setTab-tools");
             }
           } else {
             document.documentElement.classList.remove("iu-mobileGateOverlayOpen");
@@ -26361,9 +26370,30 @@ function buildVideoAsArticleCard(it) {
         if (panel) panel.scrollTop = target;
       } catch (_) {}
     };
+    var releaseBootIfNeeded = function (why) {
+      try {
+        if (typeof window.__iuMmReturnBootRelease === "function" && document.documentElement.classList.contains("iu-mm-return-boot")) {
+          window.__iuMmReturnBootRelease(why || "mindmenu-scroll-done");
+        }
+      } catch (_) {}
+    };
     apply();
     try {
       var panel = document.getElementById("iuMobileGatePanelTools");
+      if (!panel) {
+        releaseBootIfNeeded("mindmenu-scroll-no-panel");
+        return;
+      }
+      if (target === 0) {
+        try {
+          requestAnimationFrame(function () {
+            releaseBootIfNeeded("mindmenu-scroll-zero");
+          });
+        } catch (_) {
+          releaseBootIfNeeded("mindmenu-scroll-zero");
+        }
+        return;
+      }
       if (panel && target > 0) {
         try {
           panel.style.visibility = "hidden";
@@ -26378,6 +26408,7 @@ function buildVideoAsArticleCard(it) {
               try {
                 panel.style.removeProperty("visibility");
               } catch (_rv) {}
+              releaseBootIfNeeded(Date.now() >= until ? "mindmenu-scroll-timeout" : "mindmenu-scroll-restored");
               return;
             }
           } catch (_) {}

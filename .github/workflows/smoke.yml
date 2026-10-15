@@ -252,6 +252,22 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-recorder-aff-probe-guard
 
+      - name: PWA affiliate export 114/115 paradox repro guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-affiliate-paradox-repro-guard
+
+      - name: PWA export 114 regression guard (recorder milestones and affiliate scope)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-export114-regression-guard
+
+      - name: PWA export 115 regression guard (MindMenu boot + affiliate probe)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-export115-regression-guard
+
+      - name: PWA recorder perf matrix guard (n>=10 local)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-recorder-perf-matrix-guard
+
       - name: External open no blank/duplicate context guard (mobile/PWA)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-external-open-no-blank-duplicate-guard
