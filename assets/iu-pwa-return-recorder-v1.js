@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export114-115-fixes";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export116-aff-mm-log";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
   var CRITICAL_WINDOW_ANCHOR_KEY = "iu:pwa:return-recorder:critical-window-anchor:v1";
@@ -15,6 +15,7 @@
   var attemptStartedAtMs = 0;
   var sectionApplyOpSeq = 0;
   var ATTEMPT_KEY = "iu:pwa:return-recorder-attempt:v1";
+  var ATTEMPT_STARTED_AT_KEY = "iu:pwa:return-recorder-attempt-started-at:v1";
   var CORRELATION_KEY = "iu:pwa:return-recorder-correlation:v1";
   var navActionSeq = 0;
   var LOG_KEY = "iu:pwa-return-recorder-log:v1";
@@ -22,8 +23,8 @@
   var TAB_SESSION_KEY = "iu:pwa-return-recorder-tab-sid:v1";
   var DOCUMENT_SID_KEY = "iu:pwa-return-recorder-document-sid:v1";
   var DOC_BOOT_SEQ_KEY = "iu:pwa-return-recorder-doc-boot-seq:v1";
-  var MAX_ENTRIES = 420;
-  var MAX_JSON_CHARS = 640000;
+  var MAX_ENTRIES = 520;
+  var MAX_JSON_CHARS = 720000;
   var netFetchAggWindowMs = 900;
   var lastNetFetchAgg = null;
   var origWindowFetch = null;
@@ -101,7 +102,7 @@
 
   function entryEvictTier(ev) {
     var e = String(ev || "");
-    if (/^recorder:(start|stop)/.test(e)) return -1;
+    if (/^recorder:(start|stop|teardown|cleared)/.test(e)) return -1;
     if (/^document:boot/.test(e)) return -1;
     if (/^trace:(external_handoff|restore_start|settle_done)/.test(e)) return -1;
     if (/^(nav:(intent|reload|replace|history_go)|back:click|gate:setTab)/.test(e)) return -1;
@@ -153,7 +154,7 @@
     for (var j = 0; j < entries.length; j++) {
       var tier = entryEvictTier(entries[j].ev);
       if (tier < 0) continue;
-      if (inReturnCriticalWindow() && tier >= 3 && (entries[j].attemptId || "") === cur) continue;
+      if (inReturnCriticalWindow() && tier >= 2 && (entries[j].attemptId || "") === cur) continue;
       if (tier > bestTier) {
         bestTier = tier;
         bestIdx = j;
@@ -202,6 +203,30 @@
           tabSessionSid: tabSessionSid,
         })
       );
+    } catch (_) {}
+  }
+
+  function restoreAttemptStartedAtMs() {
+    try {
+      var attemptId = activeAttemptId();
+      if (!attemptId) return;
+      var raw = sessionStorage.getItem(ATTEMPT_STARTED_AT_KEY);
+      if (raw) {
+        var n = parseInt(raw, 10);
+        if (isFinite(n) && n > 0) {
+          attemptStartedAtMs = n;
+          return;
+        }
+      }
+      var rawLs = localStorage.getItem(ATTEMPT_STARTED_AT_KEY);
+      if (!rawLs) return;
+      var o = safeJsonParse(rawLs);
+      if (o && o.id === attemptId && isFinite(o.t) && o.t > 0) {
+        attemptStartedAtMs = o.t;
+        try {
+          sessionStorage.setItem(ATTEMPT_STARTED_AT_KEY, String(o.t));
+        } catch (_) {}
+      }
     } catch (_) {}
   }
 
@@ -1370,6 +1395,7 @@
       schedulePaintBurst("document_boot");
     }
     if (!isRecording()) return;
+    restoreAttemptStartedAtMs();
     var restoredCorr = restoreCorrelationState();
     try {
       lastSettleAtMs = parseInt(sessionStorage.getItem(LAST_SETTLE_KEY) || "0", 10) || 0;
@@ -1433,6 +1459,13 @@
     store.metricCapabilities = buildMetricCapabilities();
     store.attemptStartedMonoMs = monoNow();
     attemptStartedAtMs = Date.now();
+    try {
+      sessionStorage.setItem(ATTEMPT_STARTED_AT_KEY, String(attemptStartedAtMs));
+      localStorage.setItem(
+        ATTEMPT_STARTED_AT_KEY,
+        JSON.stringify({ id: attemptId, t: attemptStartedAtMs })
+      );
+    } catch (_) {}
     lastSettleAtMs = 0;
     lastHandoffAtMs = 0;
     criticalWindowAnchorAtMs = 0;
@@ -1597,7 +1630,10 @@
         currentAttemptEntryCount: attemptCount,
         maxEntries: MAX_ENTRIES,
         maxJsonChars: MAX_JSON_CHARS,
-        evictPolicy: "tiered_priority_v9",
+        evictPolicy: "tiered_priority_v10_export116",
+        serializedExportChars: 0,
+        exportCompletenessNote:
+          "export116_class: prefer return/trace/boot over layout/fetch; full 14-return reconstruct requires attemptOnly export after Stop",
       },
       correlationExport: {
         attemptId: cur,
@@ -1623,6 +1659,9 @@
         truncatedExportLikely: store.truncatedExportLikely,
       },
     };
+    try {
+      payload.logMeta.serializedExportChars = JSON.stringify(payload).length;
+    } catch (_) {}
     return payload;
   }
 
@@ -1800,7 +1839,8 @@
             attempts: attempts,
             fromHub: startHub,
             toHub: hubSectionFromUrl(),
-            sectionOpenId: openId,
+            sectionOpenId: activeSectionOpenId || openId,
+            pollOpenId: openId,
           },
           "section"
         );
@@ -2293,6 +2333,7 @@
   function bindHooks() {
     if (hooksBound) return;
     hooksBound = true;
+    if (isRecording()) restoreAttemptStartedAtMs();
     bindLayoutShiftObserver();
     patchNetwork();
     observeGate();

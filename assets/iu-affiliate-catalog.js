@@ -1211,6 +1211,10 @@
     }
 
     view.setAttribute("data-aff-category", cat.id);
+    try {
+      view.removeAttribute("hidden");
+      if (view.style && view.style.display === "none") view.style.removeProperty("display");
+    } catch (_) {}
     renderAffiliateSeo(cat);
     ensureAffiliateViewMountPoint();
     return true;

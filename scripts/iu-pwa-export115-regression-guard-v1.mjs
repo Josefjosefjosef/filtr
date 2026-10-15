@@ -29,7 +29,7 @@ const rec = read("assets/iu-pwa-return-recorder-v1.js");
 const html = read("projects/index.html");
 const feed = read("assets/iu-app-feed-pipeline-v1.js");
 
-must(/pwa-return-recorder-v9-20261015-export114-115-fixes/.test(rec), "static:recorder_build");
+must(/pwa-return-recorder-v9-20261015-export116-aff-mm-log/.test(rec), "static:recorder_build");
 must(/routeChromeActive/.test(rec), "static:route_chrome");
 must(/aff_route_chrome_without_shell/.test(rec), "static:route_unmet");
 must(/partnerHrefSlots/.test(rec), "static:partner_href");

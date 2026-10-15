@@ -26315,6 +26315,20 @@ function buildVideoAsArticleCard(it) {
     return !!iuMindMenuReadReturnPending();
   }
 
+  /** Re-apply head boot hide after process-death / navigate document before feed restore paints Home/Silver. */
+  function iuMindMenuEnsureReturnBootClass() {
+    try {
+      if (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) return;
+      if (!iuMindMenuHasReturnGuard()) return;
+      document.documentElement.classList.add("iu-mm-return-boot");
+      document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+    } catch (_) {}
+  }
+  try {
+    window.iuMindMenuEnsureReturnBootClass = iuMindMenuEnsureReturnBootClass;
+    window.iuMindMenuReadPendingScrollY = iuMindMenuReadPendingScrollY;
+  } catch (_) {}
+
   /** Gate init / shell boot: latch-only must not open tools over hub ?section= (PWA recorder 20261013). */
   function iuMindMenuShouldPinToolsOnGateInit() {
     try {
@@ -26582,6 +26596,7 @@ function buildVideoAsArticleCard(it) {
       pending = iuMindMenuReadReturnPending();
     } catch (_) {}
     if (!sessionArmed && !pending) return;
+    iuMindMenuEnsureReturnBootClass();
     try {
       var hubSec = new URL(location.href).searchParams.get("section");
       hubSec = String(hubSec || "").trim();
@@ -26664,11 +26679,6 @@ function buildVideoAsArticleCard(it) {
         } catch (_mo) {}
       }
     } catch (_aiRest) {}
-    try {
-      if (typeof window.__iuMmReturnBootRelease === "function") {
-        window.__iuMmReturnBootRelease("restore-if-armed");
-      }
-    } catch (_relBoot) {}
   }
 
   /**
