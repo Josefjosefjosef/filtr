@@ -59,7 +59,9 @@
         /* P0 PWA MindMenu external-return: shell setTab("") must honor return guard only while
            tools gate is open (same as feed-pipeline). Global block broke section Back. */
         try {
-          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+          if (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome()) {
+            return;
+          }
         } catch (_mmBoot) {}
         try {
           var curGateForReturn = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
@@ -274,7 +276,9 @@
         } catch (_) {}
         /* P0: same MindMenu return guard as feed-pipeline CloseForMainNav — only while tools. */
         try {
-          if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+          if (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome()) {
+            return;
+          }
         } catch (_mmBoot) {}
         try {
           var gClose = String(wrap.getAttribute("data-iu-mobile-gate") || "").trim();
@@ -292,7 +296,7 @@
     try {
       /* Always setTab("tools") when boot/guard live — even if pin already wrote tools. */
       if (
-        document.documentElement.classList.contains("iu-mm-return-boot") ||
+        (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome()) ||
         (typeof window.iuMindMenuShouldPinToolsOnGateInit === "function" &&
           window.iuMindMenuShouldPinToolsOnGateInit()) ||
         (typeof window.iuMindMenuShouldPinToolsOnGateInit !== "function" &&

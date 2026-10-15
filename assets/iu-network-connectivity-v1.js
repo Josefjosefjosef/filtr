@@ -680,7 +680,6 @@
 
   function externalReturnSettleReady() {
     try {
-      if (document.documentElement.classList.contains("iu-mm-return-boot")) return false;
       var pending = null;
       try {
         pending = localStorage.getItem("iuMindMenuReturnPendingV1");
@@ -689,6 +688,12 @@
       var gate = wrap ? String(wrap.getAttribute("data-iu-mobile-gate") || "") : "";
       if (pending) {
         return gate === "tools" || gate === "nav";
+      }
+      if (
+        typeof window.iuMindMenuReturnBootHidesHome === "function" &&
+        window.iuMindMenuReturnBootHidesHome()
+      ) {
+        return false;
       }
       try {
         if (sessionStorage.getItem("iuMobileWebNavReturnArmed") === "1") {
