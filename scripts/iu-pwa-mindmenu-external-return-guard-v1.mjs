@@ -132,7 +132,7 @@ function staticGate() {
       /if \(!gateVal\)\s*\{[\s\S]{0,700}iuMindMenuHasReturnGuard/.test(shell),
       "static:shell_settab_empty_respects_return_guard"
     );
-    must(/iu-mm-return-boot/.test(shell), "static:shell_boot_class");
+    must(/iuMindMenuReturnBootHidesHome/.test(shell), "static:shell_boot_class");
     const html = read("projects/index.html");
     must(/pwa-mindmenu-return-boot-release-v1-20260920/.test(html), "static:boot_release_marker");
     must(/pwa-mindmenu-visible-home-overlay-v1-20260919/.test(html), "static:visible_home_overlay_marker");
@@ -146,9 +146,10 @@ function staticGate() {
       "static:boot_css_hides_feed_for_entire_boot"
     );
     must(
-      /classList\.contains\("iu-mm-return-boot"\)[\s\S]{0,120}setTab\("tools"\)/.test(feed),
+      /iuMindMenuReturnBootHidesHome[\s\S]{0,200}setTab\("tools"\)/.test(feed),
       "static:gate_init_always_setTab_tools_on_boot"
     );
+    must(/function iuMindMenuReturnBootHidesHome/.test(feed), "static:return_boot_hides_home_helper");
     must(
       !/iu-mm-return-boot[\s\S]{0,200}if\s*\(\s*!String\(wrap\.getAttribute\("data-iu-mobile-gate"\)[\s\S]{0,80}setTab\("tools"\)/.test(
         feed

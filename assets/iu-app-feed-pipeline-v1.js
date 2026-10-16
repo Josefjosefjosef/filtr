@@ -17247,7 +17247,9 @@ function buildVideoAsArticleCard(it) {
              Do NOT block setTab("") globally — that broke Back from Weather/sections while
              durable pending was still alive after external return (#11037/#11090). */
           try {
-            if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+            if (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome()) {
+              return;
+            }
           } catch (_mmBoot) {}
           try {
             var curGateForReturn =
@@ -17938,7 +17940,7 @@ function buildVideoAsArticleCard(it) {
         (typeof window.iuMindMenuShouldPinToolsOnGateInit !== "function" &&
           typeof window.iuMindMenuHasReturnGuard === "function" &&
           window.iuMindMenuHasReturnGuard()) ||
-        document.documentElement.classList.contains("iu-mm-return-boot")
+        (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome())
       ) {
         setTab("tools");
       } else if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
@@ -17959,7 +17961,9 @@ function buildVideoAsArticleCard(it) {
        Intentional Domů / tools-close clears markers first. Do not block close when gate is
        already nav/empty — that broke section Back while durable pending lingered. */
     try {
-      if (document.documentElement.classList.contains("iu-mm-return-boot")) return;
+      if (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome()) {
+        return;
+      }
     } catch (_mmBootClose) {}
     try {
       var wGuard = document.getElementById("iuMobileGateWrap");
@@ -26315,10 +26319,35 @@ function buildVideoAsArticleCard(it) {
     return !!iuMindMenuReadReturnPending();
   }
 
+  /** Boot hide is only meaningful while return markers are still live (async scroll may outlive armed). */
+  function iuMindMenuReturnBootHidesHome() {
+    try {
+      if (!document.documentElement.classList.contains("iu-mm-return-boot")) return false;
+    } catch (_) {
+      return false;
+    }
+    return iuMindMenuHasReturnGuard();
+  }
+
+  /** Re-apply head boot hide after process-death / navigate document before feed restore paints Home/Silver. */
+  function iuMindMenuEnsureReturnBootClass() {
+    try {
+      if (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) return;
+      if (!iuMindMenuHasReturnGuard()) return;
+      document.documentElement.classList.add("iu-mm-return-boot");
+      document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+    } catch (_) {}
+  }
+  try {
+    window.iuMindMenuEnsureReturnBootClass = iuMindMenuEnsureReturnBootClass;
+    window.iuMindMenuReadPendingScrollY = iuMindMenuReadPendingScrollY;
+    window.iuMindMenuReturnBootHidesHome = iuMindMenuReturnBootHidesHome;
+  } catch (_) {}
+
   /** Gate init / shell boot: latch-only must not open tools over hub ?section= (PWA recorder 20261013). */
   function iuMindMenuShouldPinToolsOnGateInit() {
     try {
-      if (document.documentElement.classList.contains("iu-mm-return-boot")) return true;
+      if (iuMindMenuReturnBootHidesHome()) return true;
     } catch (_) {}
     try {
       if (sessionStorage.getItem(IU_MINDMENU_RETURN_ARMED_KEY) === "1") return true;
@@ -26582,6 +26611,7 @@ function buildVideoAsArticleCard(it) {
       pending = iuMindMenuReadReturnPending();
     } catch (_) {}
     if (!sessionArmed && !pending) return;
+    iuMindMenuEnsureReturnBootClass();
     try {
       var hubSec = new URL(location.href).searchParams.get("section");
       hubSec = String(hubSec || "").trim();
@@ -26664,11 +26694,6 @@ function buildVideoAsArticleCard(it) {
         } catch (_mo) {}
       }
     } catch (_aiRest) {}
-    try {
-      if (typeof window.__iuMmReturnBootRelease === "function") {
-        window.__iuMmReturnBootRelease("restore-if-armed");
-      }
-    } catch (_relBoot) {}
   }
 
   /**

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regression: premium P1/P2 must render visibly when #iuAffiliateView stays [hidden] (CSS-shown affiliate section).
+ * Regression: premium P1/P2 must render visibly on active affiliate section (#iuAffiliateView unhidden via showView).
  * Run: npm run iu-premium-selected-render-guard
  */
 import fs from "node:fs";
@@ -248,11 +248,19 @@ try {
     .waitForSelector("#iuAffiliateGrid a.iuAffiliateChip", { timeout: 120000 })
     .catch(() => null);
 
-  const prodHidden = await page.evaluate(() => {
+  const affHostState = await page.evaluate(() => {
     const view = document.getElementById("iuAffiliateView");
-    return !!(view && view.hasAttribute("hidden"));
+    const cs = document.getElementById("iuCenterStage");
+    return {
+      hiddenAttr: !!(view && view.hasAttribute("hidden")),
+      dataView: cs ? cs.getAttribute("data-view") || "" : "",
+    };
   });
-  ok("dom:affiliate_view_hidden_attr", prodHidden);
+  ok(
+    "dom:affiliate_view_unhidden_when_active",
+    affHostState.dataView === "affiliate" && affHostState.hiddenAttr === false,
+    JSON.stringify(affHostState)
+  );
 
   await page
     .waitForFunction(

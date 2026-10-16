@@ -264,6 +264,14 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-export115-regression-guard
 
+      - name: PWA export 116 regression guard (affiliate unhide + MindMenu boot + log schema)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-export116-regression-guard
+
+      - name: PWA recorder export 116 load guard (multi-boot export completeness)
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-recorder-export116-load-guard
+
       - name: PWA recorder perf matrix guard (n>=10 local)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-recorder-perf-matrix-guard

@@ -7430,8 +7430,19 @@ try {
     try { if (window.__iuSectionViewsLazyMount) window.__iuSectionViewsLazyMount.ensure(key); } catch (_) {}
     const center = document.getElementById('iuCenterStage');
     if (!center) return;
-    center.dataset.view = key || 'media';
-    const activeEl = center.querySelector('[data-view-host="' + (key || 'media') + '"]');
+    const k = key || 'media';
+    center.dataset.view = k;
+    try {
+      const hosts = center.querySelectorAll('[data-view-host]');
+      hosts.forEach(function (el) {
+        const hostKey = String(el.getAttribute('data-view-host') || '');
+        const open = hostKey === k;
+        if (typeof iuSetElOpenVisible === 'function') iuSetElOpenVisible(el, open);
+        else if (open) el.removeAttribute('hidden');
+        else el.setAttribute('hidden', '');
+      });
+    } catch (_) {}
+    const activeEl = center.querySelector('[data-view-host="' + k + '"]');
     try{
       if (activeEl) requestAnimationFrame(function(){ try{ iuInitNotesInView(activeEl); }catch{} });
     }catch{

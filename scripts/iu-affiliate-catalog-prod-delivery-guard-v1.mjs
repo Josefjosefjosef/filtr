@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
@@ -32,6 +33,29 @@ function ok(id, cond, detail) {
 
 function sha256(text) {
   return crypto.createHash("sha256").update(text, "utf8").digest("hex");
+}
+
+/** PR changed catalog vs merge base — prod SHA cannot match until Pages deploy after merge. */
+function affiliateCatalogChangedInPr() {
+  try {
+    const base = process.env.GITHUB_BASE_SHA || process.env.SMOKE_BASE_SHA || "origin/main";
+    const head = process.env.SMOKE_HEAD_SHA || "HEAD";
+    const out = execSync(`git diff --name-only ${base} ${head} -- assets/iu-affiliate-catalog.js`, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return String(out || "").trim().length > 0;
+  } catch (_) {
+    try {
+      const out2 = execSync("git diff --name-only origin/main HEAD -- assets/iu-affiliate-catalog.js", {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      });
+      return String(out2 || "").trim().length > 0;
+    } catch (_2) {
+      return false;
+    }
+  }
 }
 
 function extractCatalogSrc(html) {
@@ -87,7 +111,16 @@ async function auditProdHttp() {
 
   if (prodBust === CATALOG_BUST) {
     ok("prod:catalog_has_bust_comment", catBody.includes("iu-affiliate-catalog-bust: " + CATALOG_BUST));
-    ok("prod:catalog_sha_matches_repo", sha256(catBody) === sha256(localCatalog));
+    const catalogPrDirty = affiliateCatalogChangedInPr();
+    if (catalogPrDirty) {
+      ok(
+        "prod:catalog_sha_pending_deploy",
+        sha256(localCatalog) !== sha256(catBody),
+        "pr_touches_catalog_prod_catches_up_after_merge"
+      );
+    } else {
+      ok("prod:catalog_sha_matches_repo", sha256(catBody) === sha256(localCatalog));
+    }
   }
 
   return { catalogUrl, cacheControl: cc, cfCacheStatus: cf, etag, prodBust };
